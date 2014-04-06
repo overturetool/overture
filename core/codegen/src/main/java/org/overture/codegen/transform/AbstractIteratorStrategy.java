@@ -15,7 +15,7 @@ import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.constants.TempVarPrefixes;
 import org.overture.codegen.utils.TempVarNameGen;
 
-public abstract class AbstractIterationStrategy
+public abstract class AbstractIteratorStrategy implements IIterationStrategy
 {
 	protected String iteratorName;
 	
@@ -25,8 +25,13 @@ public abstract class AbstractIterationStrategy
 	protected boolean firstBind;
 	protected boolean lastBind;
 	
-	abstract public List<? extends SLocalDeclCG> getOuterBlockDecls(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids) throws AnalysisException;
+	@Override
+	public List<? extends SLocalDeclCG> getOuterBlockDecls(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids) throws AnalysisException
+	{
+		return null;
+	}
 	
+	@Override
 	public AVarLocalDeclCG getForLoopInit(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 	{
 		iteratorName = tempGen.nextVarName(varPrefixes.getIteratorNamePrefix());
@@ -45,33 +50,49 @@ public abstract class AbstractIterationStrategy
 		return iteratorDecl;
 	}
 
-	abstract public PExpCG getForLoopCond(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id) throws AnalysisException;
+	@Override
+	public PExpCG getForLoopCond(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id) throws AnalysisException
+	{
+		return null;
+	}
 
+	@Override
 	public PExpCG getForLoopInc(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 	{
 		return null;
 	}
 	
-	abstract public ABlockStmCG getForLoopBody(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id) throws AnalysisException;
+	@Override
+	public ABlockStmCG getForLoopBody(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id) throws AnalysisException
+	{
+		return null;
+	}
 
-	abstract public List<PStmCG> getLastForLoopStms(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id);
+	@Override
+	public List<PStmCG> getLastForLoopStms(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
+	{
+		return null;
+	}
 	
+	@Override
 	public List<PStmCG> getOuterBlockStms(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids)
 	{
 		return null;
 	}
 	
-	public AbstractIterationStrategy(ITransformationConfig config, TransformationAssistantCG transformationAssistant)
+	public AbstractIteratorStrategy(ITransformationConfig config, TransformationAssistantCG transformationAssistant)
 	{
 		this.config = config;
 		this.transformationAssistant = transformationAssistant;
 	}
 	
+	@Override
 	public void setFirstBind(boolean firstBind)
 	{
 		this.firstBind = firstBind;
 	}
 
+	@Override
 	public void setLastBind(boolean lastBind)
 	{
 		this.lastBind = lastBind;

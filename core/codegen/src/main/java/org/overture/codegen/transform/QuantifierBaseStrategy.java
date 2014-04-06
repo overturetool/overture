@@ -11,7 +11,7 @@ import org.overture.codegen.constants.TempVarPrefixes;
 import org.overture.codegen.utils.TempVarNameGen;
 
 public abstract class QuantifierBaseStrategy extends
-		AbstractIterationStrategy
+		AbstractIteratorStrategy
 {
 	protected PExpCG predicate;
 	protected String resultVarName;

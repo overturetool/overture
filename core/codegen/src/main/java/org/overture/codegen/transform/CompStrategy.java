@@ -14,7 +14,7 @@ import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.constants.TempVarPrefixes;
 import org.overture.codegen.utils.TempVarNameGen;
 
-public abstract class CompStrategy extends AbstractIterationStrategy
+public abstract class CompStrategy extends AbstractIteratorStrategy
 {
 	protected PExpCG predicate;
 	protected String var;

@@ -15,7 +15,7 @@ import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.constants.TempVarPrefixes;
 import org.overture.codegen.utils.TempVarNameGen;
 
-public class LetBeStStrategy extends AbstractIterationStrategy
+public class LetBeStStrategy extends AbstractIteratorStrategy
 {
 	private String successVarName;
 	private PExpCG suchThat;
