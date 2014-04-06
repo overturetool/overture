@@ -6,39 +6,60 @@ import java.util.List;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
 import org.overture.codegen.cgast.declarations.SLocalDeclCG;
+import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
+import org.overture.codegen.cgast.types.AClassTypeCG;
+import org.overture.codegen.constants.TempVarPrefixes;
+import org.overture.codegen.utils.TempVarNameGen;
 
 public abstract class AbstractIterationStrategy
 {
-	abstract public List<? extends SLocalDeclCG> getOuterBlockDecls(List<AIdentifierPatternCG> ids) throws AnalysisException;
-
-	public AVarLocalDeclCG getForLoopInit(String iteratorName, String setTypeName, String setName,
-			String getIteratorMethod)
-	{
-		return transformationAssistant.consIteratorDecl(config.iteratorType(), iteratorName, setTypeName, setName, getIteratorMethod);
-	}
-
-	abstract public PExpCG getForLoopCond(String iteratorName) throws AnalysisException;
-
-	public PExpCG getForLoopInc(String iteratorName)
-	{
-		return null;
-	}
-	
-	abstract public ABlockStmCG getForLoopBody(PExpCG set, AIdentifierPatternCG id, String iteratorName) throws AnalysisException;
-
-	abstract public List<PStmCG> getLastForLoopStms();
-	
-	abstract public List<PStmCG> getOuterBlockStms();
+	protected String iteratorName;
 	
 	protected ITransformationConfig config;
 	protected TransformationAssistantCG transformationAssistant;
 	
 	protected boolean firstBind;
 	protected boolean lastBind;
+	
+	abstract public List<? extends SLocalDeclCG> getOuterBlockDecls(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids) throws AnalysisException;
+	
+	public AVarLocalDeclCG getForLoopInit(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
+	{
+		iteratorName = tempGen.nextVarName(varPrefixes.getIteratorNamePrefix());
+		String setName = setVar.getOriginal();
+		
+		AClassTypeCG iteratorType = transformationAssistant.consClassType(config.iteratorType());
+		AClassTypeCG setType = transformationAssistant.consClassType(config.setUtilFile());
+		
+		PExpCG getIteratorCall = transformationAssistant.consInstanceCall(setType, setName, iteratorType.clone(), config.iteratorMethod(), null);
+		
+		AVarLocalDeclCG iteratorDecl = new AVarLocalDeclCG();
+		iteratorDecl.setName(iteratorName);
+		iteratorDecl.setType(iteratorType);
+		iteratorDecl.setExp(getIteratorCall);
+		
+		return iteratorDecl;
+	}
+
+	abstract public PExpCG getForLoopCond(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id) throws AnalysisException;
+
+	public PExpCG getForLoopInc(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
+	{
+		return null;
+	}
+	
+	abstract public ABlockStmCG getForLoopBody(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id) throws AnalysisException;
+
+	abstract public List<PStmCG> getLastForLoopStms(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id);
+	
+	public List<PStmCG> getOuterBlockStms(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids)
+	{
+		return null;
+	}
 	
 	public AbstractIterationStrategy(ITransformationConfig config, TransformationAssistantCG transformationAssistant)
 	{

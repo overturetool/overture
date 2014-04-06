@@ -4,9 +4,12 @@ import java.util.List;
 
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.SLocalDeclCG;
+import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.PStmCG;
+import org.overture.codegen.constants.TempVarPrefixes;
+import org.overture.codegen.utils.TempVarNameGen;
 
 public class OrdinaryQuantifierStrategy extends QuantifierBaseStrategy
 {
@@ -20,20 +23,19 @@ public class OrdinaryQuantifierStrategy extends QuantifierBaseStrategy
 	}
 
 	@Override
-	public List<? extends SLocalDeclCG> getOuterBlockDecls(
-			List<AIdentifierPatternCG> ids) throws AnalysisException
+	public List<? extends SLocalDeclCG> getOuterBlockDecls(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids) throws AnalysisException
 	{
 		return firstBind ? packDecl(transformationAssistant.consBoolVarDecl(resultVarName, quantifier == OrdinaryQuantifier.FORALL)) : null;
 	}
 
 	@Override
-	public PExpCG getForLoopCond(String iteratorName) throws AnalysisException
+	public PExpCG getForLoopCond(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id) throws AnalysisException
 	{
 		return transformationAssistant.consForCondition(config.iteratorType(), iteratorName, resultVarName, quantifier == OrdinaryQuantifier.EXISTS, config.hasNextElement());
 	}
 
 	@Override
-	public List<PStmCG> getLastForLoopStms()
+	public List<PStmCG> getLastForLoopStms(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 	{
 		return lastBind ? packStm(transformationAssistant.consBoolVarAssignment(predicate, resultVarName)) : null;
 	}

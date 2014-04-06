@@ -1,6 +1,5 @@
 package org.overture.codegen.transform;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.codegen.cgast.INode;
@@ -151,7 +150,7 @@ public class TransformationAssistantCG
 		AAndBoolBinaryExpCG andExp = new AAndBoolBinaryExpCG();
 		
 		andExp.setType(new ABoolBasicTypeCG());
-		andExp.setLeft(consInstanceCall(consIteratorType(iteratorTypeName), iteratorName, new ABoolBasicTypeCG(), hasNextMethodName, null));
+		andExp.setLeft(consInstanceCall(consClassType(iteratorTypeName), iteratorName, new ABoolBasicTypeCG(), hasNextMethodName, null));
 		andExp.setRight(exp);
 		
 		return andExp;
@@ -243,11 +242,6 @@ public class TransformationAssistantCG
 		return identifier;
 	}
 	
-	public AClassTypeCG consIteratorType(String iteratorType)
-	{
-		return consClassType(iteratorType);
-	}
-	
 	public AClassTypeCG consClassType(String classTypeName)
 	{
 		AClassTypeCG iteratorType = new AClassTypeCG();
@@ -277,16 +271,6 @@ public class TransformationAssistantCG
 		}
 			
 		return instanceCall;
-	}
-	
-	public AVarLocalDeclCG consIteratorDecl(String iteratorType, String iteratorName, String collectionTypeName, String collectionName, String getIteratorMethod)
-	{
-		AVarLocalDeclCG iterator = new AVarLocalDeclCG();
-		iterator.setName(iteratorName);
-		iterator.setType(consIteratorType(iteratorType));
-		iterator.setExp(consInstanceCall(consClassType(collectionTypeName), collectionName, consIteratorType(iteratorType), getIteratorMethod, null));
-		
-		return iterator;
 	}
 	
 	public ABlockStmCG consForBodyNextElementAssigned(String iteratorTypeName, PTypeCG elementType, String id, String iteratorName, String nextElementMethod) throws AnalysisException
@@ -335,7 +319,7 @@ public class TransformationAssistantCG
 	{
 		ACastUnaryExpCG cast = new ACastUnaryExpCG();
 		cast.setType(elementType.clone());
-		cast.setExp(consInstanceCall(consIteratorType(iteratorType), iteratorName, elementType.clone(), nextElementMethod, null));
+		cast.setExp(consInstanceCall(consClassType(iteratorType), iteratorName, elementType.clone(), nextElementMethod, null));
 		return cast;
 	}
 	
@@ -415,6 +399,21 @@ public class TransformationAssistantCG
 		return outerBlock;
 	}
 	
+	public AIdentifierVarExpCG consSetVar(String setName, PExpCG set)
+	{
+		if(set == null)
+			return null;
+		
+		AIdentifierVarExpCG setVar = new AIdentifierVarExpCG();
+
+		PTypeCG setType = set.getType().clone();
+		
+		setVar.setOriginal(setName);
+		setVar.setType(setType);
+		
+		return setVar;
+	}
+	
 	protected ABlockStmCG consIterationBlock(ABlockStmCG outerBlock,
 			List<AIdentifierPatternCG> ids, PExpCG set,
 			TempVarNameGen tempGen, AbstractIterationStrategy strategy, String iteratorTypeName, String getIteratorMethod, String setTypeName)
@@ -422,20 +421,19 @@ public class TransformationAssistantCG
 	{
 		// Variable names
 		String setName = tempGen.nextVarName(varPrefixes.getSetNamePrefix());
-
-		LinkedList<SLocalDeclCG> outerBlockDecls = outerBlock.getLocalDefs();
-
+		AIdentifierVarExpCG setVar = consSetVar(setName, set);
+		
 		ABlockStmCG forBody = null;
-		List<? extends SLocalDeclCG> extraDecls = strategy.getOuterBlockDecls(ids);
+		List<? extends SLocalDeclCG> extraDecls = strategy.getOuterBlockDecls(setVar, tempGen, varPrefixes, ids);
 		
 		if (extraDecls != null)
 		{
-			outerBlockDecls.addAll(extraDecls);
+			outerBlock.getLocalDefs().addAll(extraDecls);
 		}
 		
-		if (set != null)
+		if (setVar != null)
 		{
-			outerBlockDecls.add(consSetBindDecl(setName, set));
+			outerBlock.getLocalDefs().add(consSetBindDecl(setName, set));
 
 			ABlockStmCG nextBlock = outerBlock;
 
@@ -444,15 +442,13 @@ public class TransformationAssistantCG
 				AIdentifierPatternCG id = ids.get(i);
 
 				// Construct next for loop
-				String iteratorName = tempGen.nextVarName(varPrefixes.getIteratorNamePrefix());
-
 				AForLoopStmCG forLoop = new AForLoopStmCG();
 				
-				forLoop.setInit(strategy.getForLoopInit(iteratorName, setTypeName, setName, getIteratorMethod));
-				forLoop.setCond(strategy.getForLoopCond(iteratorName));
-				forLoop.setInc(strategy.getForLoopInc(iteratorName));
+				forLoop.setInit(strategy.getForLoopInit(setVar, tempGen, varPrefixes, ids, id));
+				forLoop.setCond(strategy.getForLoopCond(setVar, tempGen, varPrefixes, ids, id));
+				forLoop.setInc(strategy.getForLoopInc(setVar, tempGen, varPrefixes, ids, id));
 
-				forBody = strategy.getForLoopBody(set, id, iteratorName);
+				forBody = strategy.getForLoopBody(setVar, tempGen, varPrefixes, ids, id);
 				forLoop.setBody(forBody);
 
 				nextBlock.getStatements().add(forLoop);
@@ -462,7 +458,7 @@ public class TransformationAssistantCG
 					nextBlock = forBody;
 				} else
 				{
-					List<PStmCG> extraForLoopStatements = strategy.getLastForLoopStms();
+					List<PStmCG> extraForLoopStatements = strategy.getLastForLoopStms(setVar, tempGen, varPrefixes, ids, id);
 
 					if (extraForLoopStatements != null)
 					{
@@ -474,7 +470,7 @@ public class TransformationAssistantCG
 			}
 		}
 		
-		List<PStmCG> extraOuterBlockStms = strategy.getOuterBlockStms();
+		List<PStmCG> extraOuterBlockStms = strategy.getOuterBlockStms(setVar, tempGen, varPrefixes, ids);
 
 		if (extraOuterBlockStms != null)
 		{
@@ -555,7 +551,7 @@ public class TransformationAssistantCG
 		
 		PTypeCG elementType = getSeqTypeCloned(seqComp).getSeqOf();
 		
-		PExpCG nextCall = consInstanceCall(consIteratorType(iteratorTypeName) , instance, elementType.clone(), member , null);
+		PExpCG nextCall = consInstanceCall(consClassType(iteratorTypeName) , instance, elementType.clone(), member , null);
 		ACastUnaryExpCG cast = new ACastUnaryExpCG();
 		cast.setType(elementType.clone());
 		cast.setExp(nextCall);

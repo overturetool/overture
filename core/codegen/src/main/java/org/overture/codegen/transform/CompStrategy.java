@@ -4,13 +4,15 @@ import java.util.List;
 
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.SLocalDeclCG;
+import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
-import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
+import org.overture.codegen.constants.TempVarPrefixes;
+import org.overture.codegen.utils.TempVarNameGen;
 
 public abstract class CompStrategy extends AbstractIterationStrategy
 {
@@ -32,7 +34,7 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 	}
 	
 	@Override
-	public List<? extends SLocalDeclCG> getOuterBlockDecls(List<AIdentifierPatternCG> ids) throws AnalysisException
+	public List<? extends SLocalDeclCG> getOuterBlockDecls(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids) throws AnalysisException
 	{
 		String className = getClassName();
 		String memberName = getMemberName();
@@ -42,23 +44,17 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 	}
 
 	@Override
-	public PExpCG getForLoopCond(String iteratorName)
+	public PExpCG getForLoopCond(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 			throws AnalysisException
 	{
-		AClassTypeCG iteratorType = transformationAssistant.consIteratorType(config.iteratorType());
+		AClassTypeCG iteratorType = transformationAssistant.consClassType(config.iteratorType());
 		
 		return transformationAssistant.consInstanceCall(iteratorType, iteratorName, new ABoolBasicTypeCG(), config.hasNextElement(), null);
 	}
 
 	@Override
-	public ABlockStmCG getForLoopBody(PExpCG set, AIdentifierPatternCG id, String iteratorName) throws AnalysisException
+	public ABlockStmCG getForLoopBody(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id) throws AnalysisException
 	{
-		return transformationAssistant.consForBodyNextElementDeclared(config.iteratorType(), transformationAssistant.getSetTypeCloned(set).getSetOf(), id.getName(), iteratorName, config.nextElement());
-	}
-	
-	@Override
-	public List<PStmCG> getOuterBlockStms()
-	{
-		return null;//Indicates that there are no extra statements to be added to the outer block
+		return transformationAssistant.consForBodyNextElementDeclared(config.iteratorType(), transformationAssistant.getSetTypeCloned(setVar).getSetOf(), id.getName(), iteratorName, config.nextElement());
 	}
 }
