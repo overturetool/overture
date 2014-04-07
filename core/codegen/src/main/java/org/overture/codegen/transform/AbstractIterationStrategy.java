@@ -50,7 +50,7 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 	public AVarLocalDeclCG getForLoopInit(AIdentifierVarExpCG setVar,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 	{
-		return langIterator.getForLoopInit(setVar, tempGen, varPrefixes, ids, id);
+		return langIterator.getForLoopInit(setVar, ids, id);
 	}
 
 	@Override
@@ -58,14 +58,14 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 			throws AnalysisException
 	{
-		return langIterator.getForLoopCond(setVar, tempGen, varPrefixes, ids, id);
+		return langIterator.getForLoopCond(setVar, ids, id);
 	}
 
 	@Override
 	public PExpCG getForLoopInc(AIdentifierVarExpCG setVar,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 	{
-		return langIterator.getForLoopInc(setVar, tempGen, varPrefixes, ids, id);
+		return langIterator.getForLoopInc(setVar, ids, id);
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 			throws AnalysisException
 	{
-		return langIterator.getNextElementDeclared(setVar, tempGen, varPrefixes, ids, id);
+		return langIterator.getNextElementDeclared(setVar, ids, id);
 	}
 
 	@Override

@@ -17,38 +17,39 @@ public abstract class AbstractLanguageIterator implements ILanguageIterator
 {
 	protected ITransformationConfig config;
 	protected TransformationAssistantCG transformationAssistant;
+	protected ITempVarGen tempGen;
+	protected TempVarPrefixes varPrefixes;
 	
-	public AbstractLanguageIterator(ITransformationConfig config, TransformationAssistantCG transformationAssistant)
+	public AbstractLanguageIterator(ITransformationConfig config,
+			TransformationAssistantCG transformationAssistant,
+			ITempVarGen tempGen, TempVarPrefixes varPrefixes)
 	{
 		this.config = config;
 		this.transformationAssistant = transformationAssistant;
+		this.tempGen = tempGen;
+		this.varPrefixes = varPrefixes;
 	}
 	
 	@Override
 	abstract public AVarLocalDeclCG getForLoopInit(AIdentifierVarExpCG setVar,
-			ITempVarGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id);
 
 	@Override
 	abstract public PExpCG getForLoopCond(AIdentifierVarExpCG setVar,
-			ITempVarGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 			throws AnalysisException;
 
 	@Override
 	abstract public PExpCG getForLoopInc(AIdentifierVarExpCG setVar,
-			ITempVarGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id);
 	
 	@Override
 	abstract public AVarLocalDeclCG getNextElementDeclared(AIdentifierVarExpCG setVar,
-			ITempVarGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 			throws AnalysisException;
 	
 	@Override
 	abstract public AAssignmentStmCG getNextElementAssigned(AIdentifierVarExpCG setVar,
-			ITempVarGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 			throws AnalysisException;
 }

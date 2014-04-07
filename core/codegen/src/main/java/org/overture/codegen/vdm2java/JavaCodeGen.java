@@ -151,8 +151,9 @@ public class JavaCodeGen
 			statuses.add(generator.generateFrom(classDef));
 		}
 
-		ITempVarGen tempVarNameGen = generator.getOoAstInfo().getTempVarNameGen();
-		AssistantManager assistantManager = generator.getOoAstInfo().getAssistantManager();
+		OoAstInfo ooAstInfo = generator.getOoAstInfo();
+		ITempVarGen tempVarNameGen = ooAstInfo.getTempVarNameGen();
+		AssistantManager assistantManager = ooAstInfo.getAssistantManager();
 		
 		JavaFormat javaFormat = new JavaFormat(getClassDecls(statuses), varPrefixes, tempVarNameGen, assistantManager);
 		
@@ -172,11 +173,11 @@ public class JavaCodeGen
 
 				if (status.canBeGenerated())
 				{
-					TransformationAssistantCG transformationAssistant = new TransformationAssistantCG(generator.getOoAstInfo(), varPrefixes);
+					TransformationAssistantCG transformationAssistant = new TransformationAssistantCG(ooAstInfo, varPrefixes);
 					ITransformationConfig config = new JavaTransformationConfig();
-					ILanguageIterator langIterator = new JavaLanguageIterator(config, transformationAssistant);
+					ILanguageIterator langIterator = new JavaLanguageIterator(config, transformationAssistant, ooAstInfo.getTempVarNameGen(), varPrefixes);
 					
-					classCg.apply(new TransformationVisitor(generator.getOoAstInfo(), config, varPrefixes, transformationAssistant, langIterator));
+					classCg.apply(new TransformationVisitor(ooAstInfo, config, varPrefixes, transformationAssistant, langIterator));
 					classCg.apply(mergeVisitor, writer);
 					String code = writer.toString();
 					

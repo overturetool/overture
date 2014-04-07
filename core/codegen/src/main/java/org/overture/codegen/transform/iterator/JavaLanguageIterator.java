@@ -18,16 +18,15 @@ import org.overture.codegen.utils.ITempVarGen;
 public class JavaLanguageIterator extends AbstractLanguageIterator
 {
 	public JavaLanguageIterator(ITransformationConfig config,
-			TransformationAssistantCG transformationAssistant)
+			TransformationAssistantCG transformationAssistant, ITempVarGen tempGen, TempVarPrefixes varPrefixes)
 	{
-		super(config, transformationAssistant);
+		super(config, transformationAssistant, tempGen, varPrefixes);
 	}
 
 	protected String iteratorName;
 		
 	@Override
 	public AVarLocalDeclCG getForLoopInit(AIdentifierVarExpCG setVar,
-			ITempVarGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 	{
 		iteratorName = tempGen.nextVarName(varPrefixes.getIteratorNamePrefix());
@@ -48,7 +47,6 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 
 	@Override
 	public PExpCG getForLoopCond(AIdentifierVarExpCG setVar,
-			ITempVarGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 			throws AnalysisException
 	{
@@ -59,7 +57,6 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 
 	@Override
 	public PExpCG getForLoopInc(AIdentifierVarExpCG setVar,
-			ITempVarGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 	{
 		return null;
@@ -67,7 +64,6 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 
 	@Override
 	public AVarLocalDeclCG getNextElementDeclared(AIdentifierVarExpCG setVar,
-			ITempVarGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 			throws AnalysisException
 	{
@@ -76,7 +72,6 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 
 	@Override
 	public AAssignmentStmCG getNextElementAssigned(AIdentifierVarExpCG setVar,
-			ITempVarGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 			throws AnalysisException
 	{

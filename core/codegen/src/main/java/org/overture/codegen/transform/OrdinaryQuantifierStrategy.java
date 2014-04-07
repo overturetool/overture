@@ -33,7 +33,7 @@ public class OrdinaryQuantifierStrategy extends QuantifierBaseStrategy
 	@Override
 	public PExpCG getForLoopCond(AIdentifierVarExpCG setVar, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id) throws AnalysisException
 	{
-		PExpCG left = langIterator.getForLoopCond(setVar, tempGen, varPrefixes, ids, id);
+		PExpCG left = langIterator.getForLoopCond(setVar, ids, id);
 		PExpCG right = transformationAssistant.consBoolCheck(resultVarName, quantifier == OrdinaryQuantifier.EXISTS);
 		
 		return transformationAssistant.consAndExp(left, right);
