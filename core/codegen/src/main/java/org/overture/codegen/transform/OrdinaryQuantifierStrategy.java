@@ -9,6 +9,7 @@ import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.constants.TempVarPrefixes;
+import org.overture.codegen.transform.iterator.AbstractLanguageIterator;
 import org.overture.codegen.utils.TempVarNameGen;
 
 public class OrdinaryQuantifierStrategy extends QuantifierBaseStrategy
@@ -16,9 +17,9 @@ public class OrdinaryQuantifierStrategy extends QuantifierBaseStrategy
 	protected OrdinaryQuantifier quantifier;
 	
 	public OrdinaryQuantifierStrategy(ITransformationConfig config, TransformationAssistantCG transformationAssistant,
-			PExpCG predicate, String resultVarName, OrdinaryQuantifier quantifier)
+			PExpCG predicate, String resultVarName, OrdinaryQuantifier quantifier, AbstractLanguageIterator langIterator)
 	{
-		super(config, transformationAssistant, predicate, resultVarName);
+		super(config, transformationAssistant, predicate, resultVarName, langIterator);
 		this.quantifier = quantifier;
 	}
 
@@ -31,11 +32,14 @@ public class OrdinaryQuantifierStrategy extends QuantifierBaseStrategy
 	@Override
 	public PExpCG getForLoopCond(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id) throws AnalysisException
 	{
-		return transformationAssistant.consForCondition(config.iteratorType(), iteratorName, resultVarName, quantifier == OrdinaryQuantifier.EXISTS, config.hasNextElement());
+		PExpCG left = langIterator.getForLoopCond(setVar, tempGen, varPrefixes, ids, id);
+		PExpCG right = transformationAssistant.consBoolCheck(resultVarName, quantifier == OrdinaryQuantifier.EXISTS);
+		
+		return transformationAssistant.consAndExp(left, right);
 	}
 
 	@Override
-	public List<PStmCG> getLastForLoopStms(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
+	public List<PStmCG> getForLoopStms(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 	{
 		return lastBind ? packStm(transformationAssistant.consBoolVarAssignment(predicate, resultVarName)) : null;
 	}

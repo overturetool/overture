@@ -9,21 +9,22 @@ import org.overture.codegen.cgast.declarations.SLocalDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
-import org.overture.codegen.cgast.statements.ABlockStmCG;
+import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.constants.TempVarPrefixes;
+import org.overture.codegen.transform.iterator.AbstractLanguageIterator;
 import org.overture.codegen.utils.TempVarNameGen;
 
-public class LetBeStStrategy extends AbstractIteratorStrategy
+public class LetBeStStrategy extends AbstractIterationStrategy
 {
 	private String successVarName;
 	private PExpCG suchThat;
 	private SSetTypeCG setType;
 	
-	public LetBeStStrategy(ITransformationConfig config, TransformationAssistantCG transformationAssistant, PExpCG suchThat, SSetTypeCG setType)
+	public LetBeStStrategy(ITransformationConfig config, TransformationAssistantCG transformationAssistant, PExpCG suchThat, SSetTypeCG setType, AbstractLanguageIterator langIterator)
 	{
-		super(config, transformationAssistant);
+		super(config, transformationAssistant, langIterator);
 		
 		String successVarNamePrefix = transformationAssistant.getVarPrefixes().getSuccessVarNamePrefix();
 		TempVarNameGen tempVarNameGen = transformationAssistant.getInfo().getTempVarNameGen();
@@ -51,17 +52,32 @@ public class LetBeStStrategy extends AbstractIteratorStrategy
 	@Override
 	public PExpCG getForLoopCond(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id) throws AnalysisException
 	{
-		return transformationAssistant.consForCondition(config.iteratorType(), iteratorName, successVarName, true, config.hasNextElement());
+		PExpCG left = langIterator.getForLoopCond(setVar, tempGen, varPrefixes, ids, id);
+		PExpCG right = transformationAssistant.consBoolCheck(successVarName, true);
+		
+		return transformationAssistant.consAndExp(left, right);
 	}
 	
 	@Override
-	public ABlockStmCG getForLoopBody(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id) throws AnalysisException
+	public AVarLocalDeclCG getNextElementDeclared(AIdentifierVarExpCG setVar,
+			TempVarNameGen tempGen, TempVarPrefixes varPrefixes,
+			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
+			throws AnalysisException
 	{
-		return transformationAssistant.consForBodyNextElementAssigned(config.iteratorType(), transformationAssistant.getSetTypeCloned(setVar).getSetOf(), id.getName(), iteratorName, config.nextElement());
+		return null;
 	}
-
+	
 	@Override
-	public List<PStmCG> getLastForLoopStms(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
+	public AAssignmentStmCG getNextElementAssigned(AIdentifierVarExpCG setVar,
+			TempVarNameGen tempGen, TempVarPrefixes varPrefixes,
+			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
+			throws AnalysisException
+	{
+		return langIterator.getNextElementAssigned(setVar, tempGen, varPrefixes, ids, id);
+	}
+	
+	@Override
+	public List<PStmCG> getForLoopStms(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 	{
 		return packStm(transformationAssistant.consBoolVarAssignment(suchThat, successVarName));
 	}

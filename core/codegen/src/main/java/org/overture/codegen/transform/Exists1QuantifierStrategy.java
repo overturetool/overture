@@ -10,14 +10,15 @@ import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.constants.TempVarPrefixes;
+import org.overture.codegen.transform.iterator.AbstractLanguageIterator;
 import org.overture.codegen.utils.TempVarNameGen;
 
 public class Exists1QuantifierStrategy extends QuantifierBaseStrategy
 {
 	public Exists1QuantifierStrategy(ITransformationConfig config, TransformationAssistantCG transformationAssistant,
-			PExpCG predicate, String resultVarName)
+			PExpCG predicate, String resultVarName, AbstractLanguageIterator langIterator)
 	{
-		super(config, transformationAssistant, predicate, resultVarName);
+		super(config, transformationAssistant, predicate, resultVarName, langIterator);
 	}
 	
 	@Override
@@ -33,11 +34,14 @@ public class Exists1QuantifierStrategy extends QuantifierBaseStrategy
 	@Override
 	public PExpCG getForLoopCond(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id) throws AnalysisException
 	{
-		return transformationAssistant.consForCondition(config.iteratorType(), iteratorName, resultVarName, transformationAssistant.consLessThanCheck(resultVarName, 2), config.hasNextElement());
+		PExpCG left = langIterator.getForLoopCond(setVar, tempGen, varPrefixes, ids, id);
+		PExpCG right = transformationAssistant.consLessThanCheck(resultVarName, 2);
+		
+		return transformationAssistant.consAndExp(left, right);
 	}
 	
 	@Override
-	public List<PStmCG> getLastForLoopStms(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
+	public List<PStmCG> getForLoopStms(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 	{
 		return lastBind ? packStm(transformationAssistant.consConditionalIncrement(resultVarName, predicate)) : null;
 	}

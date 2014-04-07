@@ -9,9 +9,10 @@ import org.overture.codegen.cgast.declarations.SLocalDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
-import org.overture.codegen.cgast.statements.ABlockStmCG;
+import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.constants.TempVarPrefixes;
+import org.overture.codegen.transform.iterator.AbstractLanguageIterator;
 import org.overture.codegen.utils.TempVarNameGen;
 
 public abstract class AbstractIterationStrategy
@@ -21,12 +22,14 @@ public abstract class AbstractIterationStrategy
 
 	protected ITransformationConfig config;
 	protected TransformationAssistantCG transformationAssistant;
+	protected AbstractLanguageIterator langIterator;
 	
 	public AbstractIterationStrategy(ITransformationConfig config,
-			TransformationAssistantCG transformationAssistant)
+			TransformationAssistantCG transformationAssistant, AbstractLanguageIterator langIterator)
 	{
 		this.config = config;
 		this.transformationAssistant = transformationAssistant;
+		this.langIterator = langIterator;
 	}
 
 	public List<? extends SLocalDeclCG> getOuterBlockDecls(
@@ -41,7 +44,7 @@ public abstract class AbstractIterationStrategy
 			TempVarNameGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 	{
-		return null;
+		return langIterator.getForLoopInit(setVar, tempGen, varPrefixes, ids, id);
 	}
 
 	public PExpCG getForLoopCond(AIdentifierVarExpCG setVar,
@@ -49,17 +52,25 @@ public abstract class AbstractIterationStrategy
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 			throws AnalysisException
 	{
-		return null;
+		return langIterator.getForLoopCond(setVar, tempGen, varPrefixes, ids, id);
 	}
 
 	public PExpCG getForLoopInc(AIdentifierVarExpCG setVar,
 			TempVarNameGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 	{
-		return null;
+		return langIterator.getForLoopInc(setVar, tempGen, varPrefixes, ids, id);
 	}
 
-	public ABlockStmCG getForLoopBody(AIdentifierVarExpCG setVar,
+	public AVarLocalDeclCG getNextElementDeclared(AIdentifierVarExpCG setVar,
+			TempVarNameGen tempGen, TempVarPrefixes varPrefixes,
+			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
+			throws AnalysisException
+	{
+		return langIterator.getNextElementDeclared(setVar, tempGen, varPrefixes, ids, id);
+	}
+	
+	public AAssignmentStmCG getNextElementAssigned(AIdentifierVarExpCG setVar,
 			TempVarNameGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 			throws AnalysisException
@@ -67,7 +78,7 @@ public abstract class AbstractIterationStrategy
 		return null;
 	}
 
-	public List<PStmCG> getLastForLoopStms(AIdentifierVarExpCG setVar,
+	public List<PStmCG> getForLoopStms(AIdentifierVarExpCG setVar,
 			TempVarNameGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 	{

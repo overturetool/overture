@@ -7,14 +7,12 @@ import org.overture.codegen.cgast.declarations.SLocalDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
-import org.overture.codegen.cgast.statements.ABlockStmCG;
-import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
-import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.constants.TempVarPrefixes;
+import org.overture.codegen.transform.iterator.AbstractLanguageIterator;
 import org.overture.codegen.utils.TempVarNameGen;
 
-public abstract class CompStrategy extends AbstractIteratorStrategy
+public abstract class CompStrategy extends AbstractIterationStrategy
 {
 	protected PExpCG predicate;
 	protected String var;
@@ -24,9 +22,9 @@ public abstract class CompStrategy extends AbstractIteratorStrategy
 	public abstract String getMemberName();
 	public abstract PTypeCG getCollectionType() throws AnalysisException;
 	
-	public CompStrategy(ITransformationConfig config, TransformationAssistantCG transformationAssistant, PExpCG predicate, String var, PTypeCG compType)
+	public CompStrategy(ITransformationConfig config, TransformationAssistantCG transformationAssistant, PExpCG predicate, String var, PTypeCG compType, AbstractLanguageIterator langIterator)
 	{
-		super(config, transformationAssistant);
+		super(config, transformationAssistant, langIterator);
 		
 		this.predicate = predicate;
 		this.var = var;
@@ -41,20 +39,5 @@ public abstract class CompStrategy extends AbstractIteratorStrategy
 		PTypeCG collectionType = getCollectionType();
 		
 		return packDecl(transformationAssistant.consCompResultDecl(collectionType, var, className, memberName));
-	}
-
-	@Override
-	public PExpCG getForLoopCond(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
-			throws AnalysisException
-	{
-		AClassTypeCG iteratorType = transformationAssistant.consClassType(config.iteratorType());
-		
-		return transformationAssistant.consInstanceCall(iteratorType, iteratorName, new ABoolBasicTypeCG(), config.hasNextElement(), null);
-	}
-
-	@Override
-	public ABlockStmCG getForLoopBody(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id) throws AnalysisException
-	{
-		return transformationAssistant.consForBodyNextElementDeclared(config.iteratorType(), transformationAssistant.getSetTypeCloned(setVar).getSetOf(), id.getName(), iteratorName, config.nextElement());
 	}
 }

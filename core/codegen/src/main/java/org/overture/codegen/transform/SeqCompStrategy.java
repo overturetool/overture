@@ -9,6 +9,7 @@ import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.constants.TempVarPrefixes;
+import org.overture.codegen.transform.iterator.AbstractLanguageIterator;
 import org.overture.codegen.utils.TempVarNameGen;
 
 public class SeqCompStrategy extends CompStrategy
@@ -16,9 +17,9 @@ public class SeqCompStrategy extends CompStrategy
 	protected PExpCG first;
 	
 	public SeqCompStrategy(ITransformationConfig config, TransformationAssistantCG transformationAssitant,
-			PExpCG first, PExpCG predicate, String var, PTypeCG compType)
+			PExpCG first, PExpCG predicate, String var, PTypeCG compType, AbstractLanguageIterator langIterator)
 	{
-		super(config, transformationAssitant, predicate, var, compType);
+		super(config, transformationAssitant, predicate, var, compType, langIterator);
 		
 		this.first = first;
 	}
@@ -42,7 +43,7 @@ public class SeqCompStrategy extends CompStrategy
 	}
 
 	@Override
-	public List<PStmCG> getLastForLoopStms(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
+	public List<PStmCG> getForLoopStms(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 	{
 		return packStm(transformationAssistant.consConditionalAdd(config.addElementToSeq(), var, predicate, first));
 	}
