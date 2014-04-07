@@ -36,7 +36,6 @@ import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
-import org.overture.codegen.cgast.types.ASetSetTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
@@ -140,18 +139,12 @@ public class TransformationAssistantCG
 		return boolVarDecl;
 	}
 	
-	public PExpCG consForCondition(String iteratorTypeName, String iteratorName, String successVarName, boolean negate, String hasNextMethodName) throws AnalysisException
-	{
-		return consForCondition(iteratorTypeName, iteratorName, successVarName, consBoolCheck(successVarName, negate), hasNextMethodName);
-	}
-	
-	public PExpCG consForCondition(String iteratorTypeName, String iteratorName, String successVarName, PExpCG exp, String hasNextMethodName) throws AnalysisException
+	public PExpCG consAndExp(PExpCG left, PExpCG right)
 	{
 		AAndBoolBinaryExpCG andExp = new AAndBoolBinaryExpCG();
-		
 		andExp.setType(new ABoolBasicTypeCG());
-		andExp.setLeft(consInstanceCall(consClassType(iteratorTypeName), iteratorName, new ABoolBasicTypeCG(), hasNextMethodName, null));
-		andExp.setRight(exp);
+		andExp.setLeft(left);
+		andExp.setRight(right);
 		
 		return andExp;
 	}
@@ -271,24 +264,6 @@ public class TransformationAssistantCG
 		}
 			
 		return instanceCall;
-	}
-	
-	public ABlockStmCG consForBodyNextElementAssigned(String iteratorTypeName, PTypeCG elementType, String id, String iteratorName, String nextElementMethod) throws AnalysisException
-	{
-		ABlockStmCG forBody = new ABlockStmCG();
-		
-		forBody.getStatements().add(consNextElementAssignment(iteratorTypeName, elementType, id, iteratorName, nextElementMethod));
-		
-		return forBody;
-	}
-	
-	public ABlockStmCG consForBodyNextElementDeclared(String iteratorTypeName, PTypeCG elementType, String id, String iteratorName, String nextElementMethod) throws AnalysisException
-	{
-		ABlockStmCG forBody = new ABlockStmCG();
-		
-		info.getStmAssistant().injectDeclAsStm(forBody, consNextElementDeclared(iteratorTypeName, elementType, id, iteratorName, nextElementMethod));
-		
-		return forBody;
 	}
 	
 	public AVarLocalDeclCG consNextElementDeclared(String iteratorTypeName, PTypeCG elementType, String id, String iteratorName, String nextElementMethod) throws AnalysisException
@@ -448,7 +423,20 @@ public class TransformationAssistantCG
 				forLoop.setCond(strategy.getForLoopCond(setVar, tempGen, varPrefixes, ids, id));
 				forLoop.setInc(strategy.getForLoopInc(setVar, tempGen, varPrefixes, ids, id));
 
-				forBody = strategy.getForLoopBody(setVar, tempGen, varPrefixes, ids, id);
+				ABlockStmCG stmCollector = new ABlockStmCG();
+				
+				AVarLocalDeclCG nextElementDeclared = strategy.getNextElementDeclared(setVar, tempGen, varPrefixes, ids, id);
+				
+				if(nextElementDeclared != null)
+					stmCollector.getLocalDefs().add(nextElementDeclared);
+				
+				AAssignmentStmCG assignment = strategy.getNextElementAssigned(setVar, tempGen, varPrefixes, ids, id);
+				
+				if(assignment != null)
+					stmCollector.getStatements().add(assignment);
+				
+				forBody = stmCollector;
+				
 				forLoop.setBody(forBody);
 
 				nextBlock.getStatements().add(forLoop);
@@ -458,7 +446,7 @@ public class TransformationAssistantCG
 					nextBlock = forBody;
 				} else
 				{
-					List<PStmCG> extraForLoopStatements = strategy.getLastForLoopStms(setVar, tempGen, varPrefixes, ids, id);
+					List<PStmCG> extraForLoopStatements = strategy.getForLoopStms(setVar, tempGen, varPrefixes, ids, id);
 
 					if (extraForLoopStatements != null)
 					{
@@ -573,35 +561,6 @@ public class TransformationAssistantCG
 		idDecl.setExp(initExp);
 		
 		return idDecl;
-	}
-	
-	public AVarLocalDeclCG consSetBindDecl(String setBindName, ACompSeqExpCG seqComp) throws AnalysisException
-	{	
-		ASetSetTypeCG setType = new ASetSetTypeCG();
-		setType.setSetOf(getSeqTypeCloned(seqComp).getSeqOf());
-		
-		AVarLocalDeclCG setBindDecl = new AVarLocalDeclCG();
-		
-		setBindDecl.setType(setType);
-		setBindDecl.setName(setBindName);
-		setBindDecl.setExp(seqComp.getSet());
-		
-		return setBindDecl;
-	}
-	
-	public AVarLocalDeclCG consResultSeqDecl(String varDeclName, ACompSeqExpCG seqComp, String seqUtilFile, String seqUtilEmptySeqCall) throws AnalysisException
-	{
-		return consCompResultDecl(getSeqTypeCloned(seqComp), varDeclName, seqUtilFile, seqUtilEmptySeqCall);
-	}
-	
-	public ABlockStmCG consForBody(ACompSeqExpCG seqComp, String iteratorTypeName, String iteratorName,
-			String resSeqName, String nextElementMethod, String addElementToSeqMethod) throws AnalysisException
-	{
-		ABlockStmCG forBody = new ABlockStmCG();
-		forBody.getLocalDefs().add(consSetBindIdDecl(iteratorTypeName, iteratorName, nextElementMethod, seqComp));
-		forBody.getStatements().add(consConditionalAdd(addElementToSeqMethod, resSeqName, seqComp.getPredicate(), seqComp.getFirst()));
-		
-		return forBody;
 	}
 	
 	public Boolean hasEmptySet(ASetMultipleBindCG binding)
