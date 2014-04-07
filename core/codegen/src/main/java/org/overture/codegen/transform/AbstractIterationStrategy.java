@@ -15,7 +15,7 @@ import org.overture.codegen.constants.TempVarPrefixes;
 import org.overture.codegen.transform.iterator.ILanguageIterator;
 import org.overture.codegen.utils.TempVarNameGen;
 
-public abstract class AbstractIterationStrategy
+public abstract class AbstractIterationStrategy implements IIterationStrategy
 {
 	protected boolean firstBind;
 	protected boolean lastBind;
@@ -32,6 +32,7 @@ public abstract class AbstractIterationStrategy
 		this.langIterator = langIterator;
 	}
 
+	@Override
 	public List<? extends SLocalDeclCG> getOuterBlockDecls(
 			AIdentifierVarExpCG setVar, TempVarNameGen tempGen,
 			TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids)
@@ -40,6 +41,7 @@ public abstract class AbstractIterationStrategy
 		return null;
 	}
 
+	@Override
 	public AVarLocalDeclCG getForLoopInit(AIdentifierVarExpCG setVar,
 			TempVarNameGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
@@ -47,6 +49,7 @@ public abstract class AbstractIterationStrategy
 		return langIterator.getForLoopInit(setVar, tempGen, varPrefixes, ids, id);
 	}
 
+	@Override
 	public PExpCG getForLoopCond(AIdentifierVarExpCG setVar,
 			TempVarNameGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
@@ -55,6 +58,7 @@ public abstract class AbstractIterationStrategy
 		return langIterator.getForLoopCond(setVar, tempGen, varPrefixes, ids, id);
 	}
 
+	@Override
 	public PExpCG getForLoopInc(AIdentifierVarExpCG setVar,
 			TempVarNameGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
@@ -62,6 +66,7 @@ public abstract class AbstractIterationStrategy
 		return langIterator.getForLoopInc(setVar, tempGen, varPrefixes, ids, id);
 	}
 
+	@Override
 	public AVarLocalDeclCG getNextElementDeclared(AIdentifierVarExpCG setVar,
 			TempVarNameGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
@@ -70,6 +75,7 @@ public abstract class AbstractIterationStrategy
 		return langIterator.getNextElementDeclared(setVar, tempGen, varPrefixes, ids, id);
 	}
 	
+	@Override
 	public AAssignmentStmCG getNextElementAssigned(AIdentifierVarExpCG setVar,
 			TempVarNameGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
@@ -78,6 +84,7 @@ public abstract class AbstractIterationStrategy
 		return null;
 	}
 
+	@Override
 	public List<PStmCG> getForLoopStms(AIdentifierVarExpCG setVar,
 			TempVarNameGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
@@ -85,6 +92,7 @@ public abstract class AbstractIterationStrategy
 		return null;
 	}
 
+	@Override
 	public List<PStmCG> getOuterBlockStms(AIdentifierVarExpCG setVar,
 			TempVarNameGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids)
@@ -92,11 +100,13 @@ public abstract class AbstractIterationStrategy
 		return null;
 	}
 	
+	@Override
 	public void setFirstBind(boolean firstBind)
 	{
 		this.firstBind = firstBind;
 	}
 
+	@Override
 	public void setLastBind(boolean lastBind)
 	{
 		this.lastBind = lastBind;
