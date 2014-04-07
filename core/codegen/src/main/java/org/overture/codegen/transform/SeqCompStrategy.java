@@ -17,9 +17,10 @@ public class SeqCompStrategy extends CompStrategy
 	protected PExpCG first;
 	
 	public SeqCompStrategy(ITransformationConfig config, TransformationAssistantCG transformationAssitant,
-			PExpCG first, PExpCG predicate, String var, PTypeCG compType, ILanguageIterator langIterator)
+			PExpCG first, PExpCG predicate, String var, PTypeCG compType, ILanguageIterator langIterator, ITempVarGen tempGen,
+			TempVarPrefixes varPrefixes)
 	{
-		super(config, transformationAssitant, predicate, var, compType, langIterator);
+		super(config, transformationAssitant, predicate, var, compType, langIterator, tempGen, varPrefixes);
 		
 		this.first = first;
 	}
@@ -43,7 +44,7 @@ public class SeqCompStrategy extends CompStrategy
 	}
 
 	@Override
-	public List<PStmCG> getForLoopStms(AIdentifierVarExpCG setVar, ITempVarGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
+	public List<PStmCG> getForLoopStms(AIdentifierVarExpCG setVar, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 	{
 		return packStm(transformationAssistant.consConditionalAdd(config.addElementToSeq(), var, predicate, first));
 	}

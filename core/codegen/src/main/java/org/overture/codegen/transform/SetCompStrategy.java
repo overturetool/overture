@@ -6,16 +6,19 @@ import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.PTypeCG;
+import org.overture.codegen.constants.TempVarPrefixes;
 import org.overture.codegen.transform.iterator.ILanguageIterator;
+import org.overture.codegen.utils.ITempVarGen;
 
 public class SetCompStrategy extends ComplexCompStrategy
 {
 	protected PExpCG first;
 	
 	public SetCompStrategy(ITransformationConfig config, TransformationAssistantCG transformationAssitant,
-			PExpCG first, PExpCG predicate, String var, PTypeCG compType, ILanguageIterator langIterator)
+			PExpCG first, PExpCG predicate, String var, PTypeCG compType, ILanguageIterator langIterator, ITempVarGen tempGen,
+			TempVarPrefixes varPrefixes)
 	{
-		super(config, transformationAssitant, predicate, var, compType, langIterator);
+		super(config, transformationAssitant, predicate, var, compType, langIterator, tempGen, varPrefixes);
 		
 		this.first = first;
 	}

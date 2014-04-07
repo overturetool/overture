@@ -7,16 +7,19 @@ import org.overture.codegen.cgast.expressions.AMapletExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.PTypeCG;
+import org.overture.codegen.constants.TempVarPrefixes;
 import org.overture.codegen.transform.iterator.ILanguageIterator;
+import org.overture.codegen.utils.ITempVarGen;
 
 public class MapCompStrategy extends ComplexCompStrategy
 {
 	protected AMapletExpCG first;
 	
 	public MapCompStrategy(ITransformationConfig config, TransformationAssistantCG transformationAssitant,
-			AMapletExpCG first, PExpCG predicate, String var, PTypeCG compType, ILanguageIterator langIterator)
+			AMapletExpCG first, PExpCG predicate, String var, PTypeCG compType, ILanguageIterator langIterator, ITempVarGen tempGen,
+			TempVarPrefixes varPrefixes)
 	{
-		super(config, transformationAssitant, predicate, var, compType, langIterator);
+		super(config, transformationAssitant, predicate, var, compType, langIterator, tempGen, varPrefixes);
 		
 		this.first = first;
 	}

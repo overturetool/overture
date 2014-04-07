@@ -22,9 +22,10 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 	private PExpCG suchThat;
 	private SSetTypeCG setType;
 	
-	public LetBeStStrategy(ITransformationConfig config, TransformationAssistantCG transformationAssistant, PExpCG suchThat, SSetTypeCG setType, ILanguageIterator langIterator)
+	public LetBeStStrategy(ITransformationConfig config, TransformationAssistantCG transformationAssistant, PExpCG suchThat, SSetTypeCG setType, ILanguageIterator langIterator, ITempVarGen tempGen,
+			TempVarPrefixes varPrefixes)
 	{
-		super(config, transformationAssistant, langIterator);
+		super(config, transformationAssistant, langIterator, tempGen, varPrefixes);
 		
 		String successVarNamePrefix = transformationAssistant.getVarPrefixes().getSuccessVarNamePrefix();
 		ITempVarGen tempVarNameGen = transformationAssistant.getInfo().getTempVarNameGen();
@@ -35,7 +36,7 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 	}
 
 	@Override
-	public List<? extends SLocalDeclCG> getOuterBlockDecls(AIdentifierVarExpCG setVar, ITempVarGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids) throws AnalysisException
+	public List<? extends SLocalDeclCG> getOuterBlockDecls(AIdentifierVarExpCG setVar, List<AIdentifierPatternCG> ids) throws AnalysisException
 	{
 		List<AVarLocalDeclCG> outerBlockDecls = new LinkedList<AVarLocalDeclCG>();
 		
@@ -50,7 +51,7 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 	}
 
 	@Override
-	public PExpCG getForLoopCond(AIdentifierVarExpCG setVar, ITempVarGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id) throws AnalysisException
+	public PExpCG getForLoopCond(AIdentifierVarExpCG setVar, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id) throws AnalysisException
 	{
 		PExpCG left = langIterator.getForLoopCond(setVar, tempGen, varPrefixes, ids, id);
 		PExpCG right = transformationAssistant.consBoolCheck(successVarName, true);
@@ -60,7 +61,6 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 	
 	@Override
 	public AVarLocalDeclCG getNextElementDeclared(AIdentifierVarExpCG setVar,
-			ITempVarGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 			throws AnalysisException
 	{
@@ -69,7 +69,6 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 	
 	@Override
 	public AAssignmentStmCG getNextElementAssigned(AIdentifierVarExpCG setVar,
-			ITempVarGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 			throws AnalysisException
 	{
@@ -77,13 +76,13 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 	}
 	
 	@Override
-	public List<PStmCG> getForLoopStms(AIdentifierVarExpCG setVar, ITempVarGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
+	public List<PStmCG> getForLoopStms(AIdentifierVarExpCG setVar, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 	{
 		return packStm(transformationAssistant.consBoolVarAssignment(suchThat, successVarName));
 	}
 
 	@Override
-	public List<PStmCG> getOuterBlockStms(AIdentifierVarExpCG setVar, ITempVarGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids)
+	public List<PStmCG> getOuterBlockStms(AIdentifierVarExpCG setVar, List<AIdentifierPatternCG> ids)
 	{
 		return packStm(transformationAssistant.consIfCheck(successVarName, config.runtimeExceptionTypeName(), "Let Be St found no applicable bindings"));
 	}

@@ -17,21 +17,22 @@ public abstract class ComplexCompStrategy extends CompStrategy
 {
 	public ComplexCompStrategy(ITransformationConfig config,
 			TransformationAssistantCG transformationAssitant, PExpCG predicate,
-			String var, PTypeCG compType, ILanguageIterator langIterator)
+			String var, PTypeCG compType, ILanguageIterator langIterator, ITempVarGen tempGen,
+			TempVarPrefixes varPrefixes)
 	{
-		super(config, transformationAssitant, predicate, var, compType, langIterator);
+		super(config, transformationAssitant, predicate, var, compType, langIterator, tempGen, varPrefixes);
 	}
 	
 	protected abstract List<PStmCG> getConditionalAdd();
 	
 	@Override
-	public List<? extends SLocalDeclCG> getOuterBlockDecls(AIdentifierVarExpCG setVar, ITempVarGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids) throws AnalysisException
+	public List<? extends SLocalDeclCG> getOuterBlockDecls(AIdentifierVarExpCG setVar, List<AIdentifierPatternCG> ids) throws AnalysisException
 	{
-		return firstBind ? super.getOuterBlockDecls(setVar, tempGen, varPrefixes, ids) : null;
+		return firstBind ? super.getOuterBlockDecls(setVar, ids) : null;
 	}
 	
 	@Override
-	public List<PStmCG> getForLoopStms(AIdentifierVarExpCG setVar, ITempVarGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
+	public List<PStmCG> getForLoopStms(AIdentifierVarExpCG setVar, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 	{
 		return lastBind ? getConditionalAdd() : null;
 	}

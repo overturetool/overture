@@ -399,7 +399,7 @@ public class TransformationAssistantCG
 		AIdentifierVarExpCG setVar = consSetVar(setName, set);
 		
 		ABlockStmCG forBody = null;
-		List<? extends SLocalDeclCG> extraDecls = strategy.getOuterBlockDecls(setVar, tempGen, varPrefixes, ids);
+		List<? extends SLocalDeclCG> extraDecls = strategy.getOuterBlockDecls(setVar, ids);
 		
 		if (extraDecls != null)
 		{
@@ -419,18 +419,18 @@ public class TransformationAssistantCG
 				// Construct next for loop
 				AForLoopStmCG forLoop = new AForLoopStmCG();
 				
-				forLoop.setInit(strategy.getForLoopInit(setVar, tempGen, varPrefixes, ids, id));
-				forLoop.setCond(strategy.getForLoopCond(setVar, tempGen, varPrefixes, ids, id));
-				forLoop.setInc(strategy.getForLoopInc(setVar, tempGen, varPrefixes, ids, id));
+				forLoop.setInit(strategy.getForLoopInit(setVar, ids, id));
+				forLoop.setCond(strategy.getForLoopCond(setVar, ids, id));
+				forLoop.setInc(strategy.getForLoopInc(setVar, ids, id));
 
 				ABlockStmCG stmCollector = new ABlockStmCG();
 				
-				AVarLocalDeclCG nextElementDeclared = strategy.getNextElementDeclared(setVar, tempGen, varPrefixes, ids, id);
+				AVarLocalDeclCG nextElementDeclared = strategy.getNextElementDeclared(setVar, ids, id);
 				
 				if(nextElementDeclared != null)
 					stmCollector.getLocalDefs().add(nextElementDeclared);
 				
-				AAssignmentStmCG assignment = strategy.getNextElementAssigned(setVar, tempGen, varPrefixes, ids, id);
+				AAssignmentStmCG assignment = strategy.getNextElementAssigned(setVar, ids, id);
 				
 				if(assignment != null)
 					stmCollector.getStatements().add(assignment);
@@ -446,7 +446,7 @@ public class TransformationAssistantCG
 					nextBlock = forBody;
 				} else
 				{
-					List<PStmCG> extraForLoopStatements = strategy.getForLoopStms(setVar, tempGen, varPrefixes, ids, id);
+					List<PStmCG> extraForLoopStatements = strategy.getForLoopStms(setVar, ids, id);
 
 					if (extraForLoopStatements != null)
 					{
@@ -458,7 +458,7 @@ public class TransformationAssistantCG
 			}
 		}
 		
-		List<PStmCG> extraOuterBlockStms = strategy.getOuterBlockStms(setVar, tempGen, varPrefixes, ids);
+		List<PStmCG> extraOuterBlockStms = strategy.getOuterBlockStms(setVar, ids);
 
 		if (extraOuterBlockStms != null)
 		{

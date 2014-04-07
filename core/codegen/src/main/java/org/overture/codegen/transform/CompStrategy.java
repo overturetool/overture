@@ -22,9 +22,10 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 	public abstract String getMemberName();
 	public abstract PTypeCG getCollectionType() throws AnalysisException;
 	
-	public CompStrategy(ITransformationConfig config, TransformationAssistantCG transformationAssistant, PExpCG predicate, String var, PTypeCG compType, ILanguageIterator langIterator)
+	public CompStrategy(ITransformationConfig config, TransformationAssistantCG transformationAssistant, PExpCG predicate, String var, PTypeCG compType, ILanguageIterator langIterator, ITempVarGen tempGen,
+			TempVarPrefixes varPrefixes)
 	{
-		super(config, transformationAssistant, langIterator);
+		super(config, transformationAssistant, langIterator, tempGen, varPrefixes);
 		
 		this.predicate = predicate;
 		this.var = var;
@@ -32,7 +33,7 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 	}
 	
 	@Override
-	public List<? extends SLocalDeclCG> getOuterBlockDecls(AIdentifierVarExpCG setVar, ITempVarGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids) throws AnalysisException
+	public List<? extends SLocalDeclCG> getOuterBlockDecls(AIdentifierVarExpCG setVar, List<AIdentifierPatternCG> ids) throws AnalysisException
 	{
 		String className = getClassName();
 		String memberName = getMemberName();

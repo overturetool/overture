@@ -17,20 +17,21 @@ public class OrdinaryQuantifierStrategy extends QuantifierBaseStrategy
 	protected OrdinaryQuantifier quantifier;
 	
 	public OrdinaryQuantifierStrategy(ITransformationConfig config, TransformationAssistantCG transformationAssistant,
-			PExpCG predicate, String resultVarName, OrdinaryQuantifier quantifier, ILanguageIterator langIterator)
+			PExpCG predicate, String resultVarName, OrdinaryQuantifier quantifier, ILanguageIterator langIterator, ITempVarGen tempGen,
+			TempVarPrefixes varPrefixes)
 	{
-		super(config, transformationAssistant, predicate, resultVarName, langIterator);
+		super(config, transformationAssistant, predicate, resultVarName, langIterator, tempGen, varPrefixes);
 		this.quantifier = quantifier;
 	}
 
 	@Override
-	public List<? extends SLocalDeclCG> getOuterBlockDecls(AIdentifierVarExpCG setVar, ITempVarGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids) throws AnalysisException
+	public List<? extends SLocalDeclCG> getOuterBlockDecls(AIdentifierVarExpCG setVar, List<AIdentifierPatternCG> ids) throws AnalysisException
 	{
 		return firstBind ? packDecl(transformationAssistant.consBoolVarDecl(resultVarName, quantifier == OrdinaryQuantifier.FORALL)) : null;
 	}
 
 	@Override
-	public PExpCG getForLoopCond(AIdentifierVarExpCG setVar, ITempVarGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id) throws AnalysisException
+	public PExpCG getForLoopCond(AIdentifierVarExpCG setVar, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id) throws AnalysisException
 	{
 		PExpCG left = langIterator.getForLoopCond(setVar, tempGen, varPrefixes, ids, id);
 		PExpCG right = transformationAssistant.consBoolCheck(resultVarName, quantifier == OrdinaryQuantifier.EXISTS);
@@ -39,7 +40,7 @@ public class OrdinaryQuantifierStrategy extends QuantifierBaseStrategy
 	}
 
 	@Override
-	public List<PStmCG> getForLoopStms(AIdentifierVarExpCG setVar, ITempVarGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
+	public List<PStmCG> getForLoopStms(AIdentifierVarExpCG setVar, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 	{
 		return lastBind ? packStm(transformationAssistant.consBoolVarAssignment(predicate, resultVarName)) : null;
 	}
