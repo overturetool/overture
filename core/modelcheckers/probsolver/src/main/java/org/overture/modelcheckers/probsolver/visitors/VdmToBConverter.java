@@ -51,6 +51,7 @@ import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.expressions.ALenUnaryExp;
 import org.overture.ast.expressions.ALessEqualNumericBinaryExp;
 import org.overture.ast.expressions.ALessNumericBinaryExp;
+import org.overture.ast.expressions.AMapCompMapExp;
 import org.overture.ast.expressions.AMapDomainUnaryExp;
 import org.overture.ast.expressions.AMapEnumMapExp;
 import org.overture.ast.expressions.AMapInverseUnaryExp;
@@ -879,6 +880,46 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	}
 
 	@Override
+	public Node caseAMapCompMapExp(AMapCompMapExp node)
+			throws AnalysisException
+	{
+	    AComprehensionSetExpression mapcomp = new AComprehensionSetExpression();
+
+	    AMapletExp maplet = node.getFirst();
+	    List<PMultipleBind> bindings = node.getBindings();
+
+	    //{a|->a+1 | a in set {1,2,3] & true } --> {from, to | a : {1,2,3} & true & _from = a & _to_ = a+1 }
+	    List<TIdentifierLiteral> ident1 = new ArrayList<TIdentifierLiteral>();
+	    List<TIdentifierLiteral> ident2 = new ArrayList<TIdentifierLiteral>();
+  	    ident1.add(new TIdentifierLiteral("_from_"));
+  	    ident2.add(new TIdentifierLiteral("_to_"));
+	    PExpression from = new AIdentifierExpression(ident1);
+	    PExpression to = new AIdentifierExpression(ident2);
+	    mapcomp.getIdentifiers().add(from);
+	    mapcomp.getIdentifiers().add(to);
+
+	    mapcomp.getIdentifiers().add(exp(bindings.get(0).getPlist().get(0)));
+	    mapcomp.setPredicates(new AMemberPredicate(exp(bindings.get(0).getPlist().get(0)), exp(bindings.get(0))));
+
+	    for (int i = 1; i < bindings.size(); i++)
+	    {
+		for (int j = 0; j < bindings.get(i).getPlist().size(); j++)
+		{
+		    mapcomp.getIdentifiers().add(exp(bindings.get(i).getPlist().get(j)));
+	            mapcomp.setPredicates(new AConjunctPredicate(
+						mapcomp.getPredicates(), 
+						new AMemberPredicate(exp(bindings.get(i).getPlist().get(j)), exp(bindings.get(i)))));
+		}
+	    }
+
+	    mapcomp.setPredicates(new AConjunctPredicate(mapcomp.getPredicates(), pred(node.getPredicate())));
+	    mapcomp.setPredicates(new AConjunctPredicate(mapcomp.getPredicates(), new AEqualPredicate(from, exp(maplet.getLeft()))));
+	    mapcomp.setPredicates(new AConjunctPredicate(mapcomp.getPredicates(), new AEqualPredicate(to, exp(maplet.getRight()))));
+
+	    return new ADomainExpression(mapcomp);
+	}
+
+	@Override
 	public Node caseAMapDomainUnaryExp(AMapDomainUnaryExp node)
 			throws AnalysisException
 	{
@@ -943,7 +984,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 
 		for (PExp arg : node.getArgs())
 		{
-			args.add(exp(arg));
+		    args.add(exp(arg));
 		}
 
 		return new AFunctionExpression(exp(node.getRoot()), args);
@@ -1078,19 +1119,11 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		}
 
 		ASequenceExtensionExpression seq = new ASequenceExtensionExpression();
-
-		seq.getExpression().add(exp(seqlist.get(0)));
 		LinkedList<PExp> temp = new LinkedList<PExp>();
-		temp.add(seqlist.get(0));
 
-		for (int i = 1; i < seqlist.size(); i++)
+		for (PExp m : seqlist)
 		{
-			PExp m = seqlist.get(i);
-
-			if (temp.indexOf(m) == -1)
-			{
-				seq.getExpression().add(exp(m));
-			}
+		    seq.getExpression().add(exp(m));
 		}
 		return new AGeneralConcatExpression(seq);
 	}
