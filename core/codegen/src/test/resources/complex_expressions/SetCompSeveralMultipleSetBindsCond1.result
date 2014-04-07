@@ -16,8 +16,8 @@ public class Entry {
         VDMSet set_1 = SetUtil.set(1L, 2L, 3L);
 
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
-            VDMSet set_2 = SetUtil.set(6L, 7L, 8L);
             Number x = ((Number) iterator_1.next());
+            VDMSet set_2 = SetUtil.set(6L, 7L, 8L);
 
             for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext();) {
                 Number y = ((Number) iterator_2.next());
