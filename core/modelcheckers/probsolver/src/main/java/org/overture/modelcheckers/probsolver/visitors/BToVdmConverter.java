@@ -18,11 +18,13 @@ import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.intf.lex.ILexQuoteToken;
+import org.overture.ast.intf.lex.ILexStringToken;
 import org.overture.ast.lex.LexBooleanToken;
 import org.overture.ast.lex.LexIdentifierToken;
 import org.overture.ast.lex.LexIntegerToken;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexQuoteToken;
+import org.overture.ast.lex.LexStringToken;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AFieldField;
@@ -222,13 +224,16 @@ public class BToVdmConverter extends DepthFirstAdapter
 	@Override
 	public void caseAEmptySetExpression(AEmptySetExpression node)
 	{
-	    /*
+
 	    if(expectedType instanceof AMapMapType) {
-		List<AMapletExp> mems = new Vector<AMapletExp>();
-		result = AstFactory.newAMapEnumMapExp(loc, mems.add(new AMapletExp()));
+		//System.err.println("in caseAEmptySetExpression: " + expectedType);
+		System.err.println("\"{|->}\" may be wrong");
+		ILexStringToken value = new LexStringToken("{|->}", loc);
+		result = AstFactory.newAStringLiteralExp(value);
+
+	    } else {
+		result = AstFactory.newASetEnumSetExp(loc);
 	    }
-	    */
-	    result = AstFactory.newASetEnumSetExp(loc);
 	}
 
 	@Override

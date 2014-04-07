@@ -912,7 +912,9 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		}
 	    }
 
-	    mapcomp.setPredicates(new AConjunctPredicate(mapcomp.getPredicates(), pred(node.getPredicate())));
+	    if(node.getPredicate()!=null)
+		mapcomp.setPredicates(new AConjunctPredicate(mapcomp.getPredicates(), pred(node.getPredicate())));
+
 	    mapcomp.setPredicates(new AConjunctPredicate(mapcomp.getPredicates(), new AEqualPredicate(from, exp(maplet.getLeft()))));
 	    mapcomp.setPredicates(new AConjunctPredicate(mapcomp.getPredicates(), new AEqualPredicate(to, exp(maplet.getRight()))));
 
