@@ -125,7 +125,6 @@ public class Account {
 
         for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext();) {
             Number i = ((Number) iterator_2.next());
-
             setCompResult_1.add(((Transaction) ts.get(Utils.index(i))).date);
         }
 
@@ -135,7 +134,6 @@ public class Account {
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && forAllExpResult_1;) {
             String date = ((String) iterator_1.next());
-
             forAllExpResult_1 = DateTotal(date, ts).longValue() <= dailyLimit.longValue();
         }
 
@@ -343,7 +341,6 @@ public class CentralResource {
 
         for (Iterator iterator_4 = set_4.iterator(); iterator_4.hasNext();) {
             Number cId = ((Number) iterator_4.next());
-
             mapCompResult_1.put(cId, 0L);
         }
 

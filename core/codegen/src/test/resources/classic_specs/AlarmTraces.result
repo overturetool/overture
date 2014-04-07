@@ -66,7 +66,6 @@ public class Plant {
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && forAllExpResult_1;) {
             Token p = ((Token) iterator_1.next());
-
             forAllExpResult_1 = !(((VDMSet) sch.get(p)).isEmpty());
         }
 
@@ -76,21 +75,18 @@ public class Plant {
         for (Iterator iterator_2 = set_2.iterator();
                 iterator_2.hasNext() && forAllExpResult_2;) {
             Alarm a = ((Alarm) iterator_2.next());
-
             boolean forAllExpResult_3 = true;
             VDMSet set_3 = MapUtil.dom(sch.clone());
 
             for (Iterator iterator_3 = set_3.iterator();
                     iterator_3.hasNext() && forAllExpResult_3;) {
                 Token p = ((Token) iterator_3.next());
-
                 boolean existsExpResult_1 = false;
                 VDMSet set_4 = ((VDMSet) sch.get(p)).clone();
 
                 for (Iterator iterator_4 = set_4.iterator();
                         iterator_4.hasNext() && !(existsExpResult_1);) {
                     Expert expert = ((Expert) iterator_4.next());
-
                     existsExpResult_1 = expert.GetQuali()
                                               .contains(a.GetReqQuali());
                 }
