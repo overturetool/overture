@@ -10,7 +10,7 @@ import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.constants.TempVarPrefixes;
 import org.overture.codegen.transform.iterator.ILanguageIterator;
-import org.overture.codegen.utils.TempVarNameGen;
+import org.overture.codegen.utils.ITempVarGen;
 
 public abstract class CompStrategy extends AbstractIterationStrategy
 {
@@ -32,7 +32,7 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 	}
 	
 	@Override
-	public List<? extends SLocalDeclCG> getOuterBlockDecls(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids) throws AnalysisException
+	public List<? extends SLocalDeclCG> getOuterBlockDecls(AIdentifierVarExpCG setVar, ITempVarGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids) throws AnalysisException
 	{
 		String className = getClassName();
 		String memberName = getMemberName();

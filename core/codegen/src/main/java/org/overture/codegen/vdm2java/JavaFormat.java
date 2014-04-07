@@ -80,6 +80,7 @@ import org.overture.codegen.constants.IJavaCodeGenConstants;
 import org.overture.codegen.constants.TempVarPrefixes;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.ooast.OoAstAnalysis;
+import org.overture.codegen.utils.ITempVarGen;
 import org.overture.codegen.utils.TempVarNameGen;
 
 public class JavaFormat
@@ -96,10 +97,10 @@ public class JavaFormat
 	
 	private List<AClassDeclCG> classes;
 	private TempVarPrefixes varPrefixes;
-	private TempVarNameGen tempVarNameGen;
+	private ITempVarGen tempVarNameGen;
 	private AssistantManager assistantManager;
 	
-	public JavaFormat(List<AClassDeclCG> classes, TempVarPrefixes varPrefixes,TempVarNameGen tempVarNameGen, AssistantManager assistantManager)
+	public JavaFormat(List<AClassDeclCG> classes, TempVarPrefixes varPrefixes,ITempVarGen tempVarNameGen, AssistantManager assistantManager)
 	{
 		this.classes = classes;
 		this.varPrefixes = varPrefixes;

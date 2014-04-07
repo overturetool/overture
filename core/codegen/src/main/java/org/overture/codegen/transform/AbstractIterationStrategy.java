@@ -13,7 +13,7 @@ import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.constants.TempVarPrefixes;
 import org.overture.codegen.transform.iterator.ILanguageIterator;
-import org.overture.codegen.utils.TempVarNameGen;
+import org.overture.codegen.utils.ITempVarGen;
 
 public abstract class AbstractIterationStrategy implements IIterationStrategy
 {
@@ -34,7 +34,7 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 
 	@Override
 	public List<? extends SLocalDeclCG> getOuterBlockDecls(
-			AIdentifierVarExpCG setVar, TempVarNameGen tempGen,
+			AIdentifierVarExpCG setVar, ITempVarGen tempGen,
 			TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids)
 			throws AnalysisException
 	{
@@ -43,7 +43,7 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 
 	@Override
 	public AVarLocalDeclCG getForLoopInit(AIdentifierVarExpCG setVar,
-			TempVarNameGen tempGen, TempVarPrefixes varPrefixes,
+			ITempVarGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 	{
 		return langIterator.getForLoopInit(setVar, tempGen, varPrefixes, ids, id);
@@ -51,7 +51,7 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 
 	@Override
 	public PExpCG getForLoopCond(AIdentifierVarExpCG setVar,
-			TempVarNameGen tempGen, TempVarPrefixes varPrefixes,
+			ITempVarGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 			throws AnalysisException
 	{
@@ -60,7 +60,7 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 
 	@Override
 	public PExpCG getForLoopInc(AIdentifierVarExpCG setVar,
-			TempVarNameGen tempGen, TempVarPrefixes varPrefixes,
+			ITempVarGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 	{
 		return langIterator.getForLoopInc(setVar, tempGen, varPrefixes, ids, id);
@@ -68,7 +68,7 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 
 	@Override
 	public AVarLocalDeclCG getNextElementDeclared(AIdentifierVarExpCG setVar,
-			TempVarNameGen tempGen, TempVarPrefixes varPrefixes,
+			ITempVarGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 			throws AnalysisException
 	{
@@ -77,7 +77,7 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 	
 	@Override
 	public AAssignmentStmCG getNextElementAssigned(AIdentifierVarExpCG setVar,
-			TempVarNameGen tempGen, TempVarPrefixes varPrefixes,
+			ITempVarGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 			throws AnalysisException
 	{
@@ -86,7 +86,7 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 
 	@Override
 	public List<PStmCG> getForLoopStms(AIdentifierVarExpCG setVar,
-			TempVarNameGen tempGen, TempVarPrefixes varPrefixes,
+			ITempVarGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 	{
 		return null;
@@ -94,7 +94,7 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 
 	@Override
 	public List<PStmCG> getOuterBlockStms(AIdentifierVarExpCG setVar,
-			TempVarNameGen tempGen, TempVarPrefixes varPrefixes,
+			ITempVarGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids)
 	{
 		return null;

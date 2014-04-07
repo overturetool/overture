@@ -13,7 +13,7 @@ import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.constants.TempVarPrefixes;
 import org.overture.codegen.transform.ITransformationConfig;
 import org.overture.codegen.transform.TransformationAssistantCG;
-import org.overture.codegen.utils.TempVarNameGen;
+import org.overture.codegen.utils.ITempVarGen;
 
 public class JavaLanguageIterator extends AbstractLanguageIterator
 {
@@ -27,7 +27,7 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 		
 	@Override
 	public AVarLocalDeclCG getForLoopInit(AIdentifierVarExpCG setVar,
-			TempVarNameGen tempGen, TempVarPrefixes varPrefixes,
+			ITempVarGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 	{
 		iteratorName = tempGen.nextVarName(varPrefixes.getIteratorNamePrefix());
@@ -48,7 +48,7 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 
 	@Override
 	public PExpCG getForLoopCond(AIdentifierVarExpCG setVar,
-			TempVarNameGen tempGen, TempVarPrefixes varPrefixes,
+			ITempVarGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 			throws AnalysisException
 	{
@@ -59,7 +59,7 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 
 	@Override
 	public PExpCG getForLoopInc(AIdentifierVarExpCG setVar,
-			TempVarNameGen tempGen, TempVarPrefixes varPrefixes,
+			ITempVarGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 	{
 		return null;
@@ -67,7 +67,7 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 
 	@Override
 	public AVarLocalDeclCG getNextElementDeclared(AIdentifierVarExpCG setVar,
-			TempVarNameGen tempGen, TempVarPrefixes varPrefixes,
+			ITempVarGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 			throws AnalysisException
 	{
@@ -76,7 +76,7 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 
 	@Override
 	public AAssignmentStmCG getNextElementAssigned(AIdentifierVarExpCG setVar,
-			TempVarNameGen tempGen, TempVarPrefixes varPrefixes,
+			ITempVarGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 			throws AnalysisException
 	{

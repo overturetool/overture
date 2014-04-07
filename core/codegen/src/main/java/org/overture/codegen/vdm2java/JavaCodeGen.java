@@ -44,7 +44,7 @@ import org.overture.codegen.transform.iterator.JavaLanguageIterator;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedModule;
-import org.overture.codegen.utils.TempVarNameGen;
+import org.overture.codegen.utils.ITempVarGen;
 
 public class JavaCodeGen
 {
@@ -151,7 +151,7 @@ public class JavaCodeGen
 			statuses.add(generator.generateFrom(classDef));
 		}
 
-		TempVarNameGen tempVarNameGen = generator.getOoAstInfo().getTempVarNameGen();
+		ITempVarGen tempVarNameGen = generator.getOoAstInfo().getTempVarNameGen();
 		AssistantManager assistantManager = generator.getOoAstInfo().getAssistantManager();
 		
 		JavaFormat javaFormat = new JavaFormat(getClassDecls(statuses), varPrefixes, tempVarNameGen, assistantManager);

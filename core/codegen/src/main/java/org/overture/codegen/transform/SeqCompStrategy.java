@@ -10,7 +10,7 @@ import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.constants.TempVarPrefixes;
 import org.overture.codegen.transform.iterator.ILanguageIterator;
-import org.overture.codegen.utils.TempVarNameGen;
+import org.overture.codegen.utils.ITempVarGen;
 
 public class SeqCompStrategy extends CompStrategy
 {
@@ -43,7 +43,7 @@ public class SeqCompStrategy extends CompStrategy
 	}
 
 	@Override
-	public List<PStmCG> getForLoopStms(AIdentifierVarExpCG setVar, TempVarNameGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
+	public List<PStmCG> getForLoopStms(AIdentifierVarExpCG setVar, ITempVarGen tempGen, TempVarPrefixes varPrefixes, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 	{
 		return packStm(transformationAssistant.consConditionalAdd(config.addElementToSeq(), var, predicate, first));
 	}

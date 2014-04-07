@@ -44,7 +44,7 @@ import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.constants.TempVarPrefixes;
 import org.overture.codegen.ooast.OoAstInfo;
-import org.overture.codegen.utils.TempVarNameGen;
+import org.overture.codegen.utils.ITempVarGen;
 
 public class TransformationAssistantCG
 {
@@ -365,7 +365,7 @@ public class TransformationAssistantCG
 		return callStm;
 	}
 	
-	public ABlockStmCG consIterationBlock(List<AIdentifierPatternCG> ids, PExpCG set, TempVarNameGen tempGen, IIterationStrategy strategy) throws AnalysisException
+	public ABlockStmCG consIterationBlock(List<AIdentifierPatternCG> ids, PExpCG set, ITempVarGen tempGen, IIterationStrategy strategy) throws AnalysisException
 	{
 		ABlockStmCG outerBlock = new ABlockStmCG(); 
 		
@@ -391,7 +391,7 @@ public class TransformationAssistantCG
 	
 	protected ABlockStmCG consIterationBlock(ABlockStmCG outerBlock,
 			List<AIdentifierPatternCG> ids, PExpCG set,
-			TempVarNameGen tempGen, IIterationStrategy strategy)
+			ITempVarGen tempGen, IIterationStrategy strategy)
 			throws AnalysisException
 	{
 		// Variable names
@@ -468,7 +468,7 @@ public class TransformationAssistantCG
 		return forBody;
 	}
 	
-	public ABlockStmCG consComplexCompIterationBlock(List<ASetMultipleBindCG> multipleSetBinds, TempVarNameGen tempGen, IIterationStrategy strategy) throws AnalysisException
+	public ABlockStmCG consComplexCompIterationBlock(List<ASetMultipleBindCG> multipleSetBinds, ITempVarGen tempGen, IIterationStrategy strategy) throws AnalysisException
 	{
 		ABlockStmCG outerBlock = new ABlockStmCG();
 		

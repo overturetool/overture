@@ -11,7 +11,7 @@ import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.constants.TempVarPrefixes;
 import org.overture.codegen.transform.ITransformationConfig;
 import org.overture.codegen.transform.TransformationAssistantCG;
-import org.overture.codegen.utils.TempVarNameGen;
+import org.overture.codegen.utils.ITempVarGen;
 
 public abstract class AbstractLanguageIterator implements ILanguageIterator
 {
@@ -26,29 +26,29 @@ public abstract class AbstractLanguageIterator implements ILanguageIterator
 	
 	@Override
 	abstract public AVarLocalDeclCG getForLoopInit(AIdentifierVarExpCG setVar,
-			TempVarNameGen tempGen, TempVarPrefixes varPrefixes,
+			ITempVarGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id);
 
 	@Override
 	abstract public PExpCG getForLoopCond(AIdentifierVarExpCG setVar,
-			TempVarNameGen tempGen, TempVarPrefixes varPrefixes,
+			ITempVarGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 			throws AnalysisException;
 
 	@Override
 	abstract public PExpCG getForLoopInc(AIdentifierVarExpCG setVar,
-			TempVarNameGen tempGen, TempVarPrefixes varPrefixes,
+			ITempVarGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id);
 	
 	@Override
 	abstract public AVarLocalDeclCG getNextElementDeclared(AIdentifierVarExpCG setVar,
-			TempVarNameGen tempGen, TempVarPrefixes varPrefixes,
+			ITempVarGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 			throws AnalysisException;
 	
 	@Override
 	abstract public AAssignmentStmCG getNextElementAssigned(AIdentifierVarExpCG setVar,
-			TempVarNameGen tempGen, TempVarPrefixes varPrefixes,
+			ITempVarGen tempGen, TempVarPrefixes varPrefixes,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 			throws AnalysisException;
 }
