@@ -9,7 +9,7 @@ import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.constants.TempVarPrefixes;
-import org.overture.codegen.transform.iterator.AbstractLanguageIterator;
+import org.overture.codegen.transform.iterator.ILanguageIterator;
 import org.overture.codegen.utils.TempVarNameGen;
 
 public class OrdinaryQuantifierStrategy extends QuantifierBaseStrategy
@@ -17,7 +17,7 @@ public class OrdinaryQuantifierStrategy extends QuantifierBaseStrategy
 	protected OrdinaryQuantifier quantifier;
 	
 	public OrdinaryQuantifierStrategy(ITransformationConfig config, TransformationAssistantCG transformationAssistant,
-			PExpCG predicate, String resultVarName, OrdinaryQuantifier quantifier, AbstractLanguageIterator langIterator)
+			PExpCG predicate, String resultVarName, OrdinaryQuantifier quantifier, ILanguageIterator langIterator)
 	{
 		super(config, transformationAssistant, predicate, resultVarName, langIterator);
 		this.quantifier = quantifier;

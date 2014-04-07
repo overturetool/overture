@@ -9,7 +9,7 @@ import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.constants.TempVarPrefixes;
-import org.overture.codegen.transform.iterator.AbstractLanguageIterator;
+import org.overture.codegen.transform.iterator.ILanguageIterator;
 import org.overture.codegen.utils.TempVarNameGen;
 
 public abstract class CompStrategy extends AbstractIterationStrategy
@@ -22,7 +22,7 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 	public abstract String getMemberName();
 	public abstract PTypeCG getCollectionType() throws AnalysisException;
 	
-	public CompStrategy(ITransformationConfig config, TransformationAssistantCG transformationAssistant, PExpCG predicate, String var, PTypeCG compType, AbstractLanguageIterator langIterator)
+	public CompStrategy(ITransformationConfig config, TransformationAssistantCG transformationAssistant, PExpCG predicate, String var, PTypeCG compType, ILanguageIterator langIterator)
 	{
 		super(config, transformationAssistant, langIterator);
 		

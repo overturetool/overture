@@ -13,7 +13,7 @@ import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.constants.TempVarPrefixes;
-import org.overture.codegen.transform.iterator.AbstractLanguageIterator;
+import org.overture.codegen.transform.iterator.ILanguageIterator;
 import org.overture.codegen.utils.TempVarNameGen;
 
 public class LetBeStStrategy extends AbstractIterationStrategy
@@ -22,7 +22,7 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 	private PExpCG suchThat;
 	private SSetTypeCG setType;
 	
-	public LetBeStStrategy(ITransformationConfig config, TransformationAssistantCG transformationAssistant, PExpCG suchThat, SSetTypeCG setType, AbstractLanguageIterator langIterator)
+	public LetBeStStrategy(ITransformationConfig config, TransformationAssistantCG transformationAssistant, PExpCG suchThat, SSetTypeCG setType, ILanguageIterator langIterator)
 	{
 		super(config, transformationAssistant, langIterator);
 		

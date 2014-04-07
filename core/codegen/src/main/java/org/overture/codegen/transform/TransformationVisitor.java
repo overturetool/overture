@@ -22,7 +22,7 @@ import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
 import org.overture.codegen.constants.TempVarPrefixes;
 import org.overture.codegen.ooast.OoAstInfo;
-import org.overture.codegen.transform.iterator.AbstractLanguageIterator;
+import org.overture.codegen.transform.iterator.ILanguageIterator;
 
 public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 {
@@ -32,9 +32,9 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	
 	private ITransformationConfig config;
 	
-	private AbstractLanguageIterator langIterator;
+	private ILanguageIterator langIterator;
 	
-	public TransformationVisitor(OoAstInfo info, ITransformationConfig config, TempVarPrefixes varPrefixes, TransformationAssistantCG transformationAssistant, AbstractLanguageIterator langIterator)
+	public TransformationVisitor(OoAstInfo info, ITransformationConfig config, TempVarPrefixes varPrefixes, TransformationAssistantCG transformationAssistant, ILanguageIterator langIterator)
 	{
 		this.info = info;
 		this.config = config;

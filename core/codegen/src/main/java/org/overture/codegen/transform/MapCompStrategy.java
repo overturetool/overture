@@ -7,14 +7,14 @@ import org.overture.codegen.cgast.expressions.AMapletExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.PTypeCG;
-import org.overture.codegen.transform.iterator.AbstractLanguageIterator;
+import org.overture.codegen.transform.iterator.ILanguageIterator;
 
 public class MapCompStrategy extends ComplexCompStrategy
 {
 	protected AMapletExpCG first;
 	
 	public MapCompStrategy(ITransformationConfig config, TransformationAssistantCG transformationAssitant,
-			AMapletExpCG first, PExpCG predicate, String var, PTypeCG compType, AbstractLanguageIterator langIterator)
+			AMapletExpCG first, PExpCG predicate, String var, PTypeCG compType, ILanguageIterator langIterator)
 	{
 		super(config, transformationAssitant, predicate, var, compType, langIterator);
 		

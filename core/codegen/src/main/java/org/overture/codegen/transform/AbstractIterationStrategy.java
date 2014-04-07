@@ -12,7 +12,7 @@ import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.constants.TempVarPrefixes;
-import org.overture.codegen.transform.iterator.AbstractLanguageIterator;
+import org.overture.codegen.transform.iterator.ILanguageIterator;
 import org.overture.codegen.utils.TempVarNameGen;
 
 public abstract class AbstractIterationStrategy
@@ -22,10 +22,10 @@ public abstract class AbstractIterationStrategy
 
 	protected ITransformationConfig config;
 	protected TransformationAssistantCG transformationAssistant;
-	protected AbstractLanguageIterator langIterator;
+	protected ILanguageIterator langIterator;
 	
 	public AbstractIterationStrategy(ITransformationConfig config,
-			TransformationAssistantCG transformationAssistant, AbstractLanguageIterator langIterator)
+			TransformationAssistantCG transformationAssistant, ILanguageIterator langIterator)
 	{
 		this.config = config;
 		this.transformationAssistant = transformationAssistant;
