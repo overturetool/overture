@@ -23,7 +23,7 @@ public class Entry {
             }
         }
 
-        VDMSeq x = seqCompResult_1;
+        VDMSeq x = seqCompResult_1.clone();
 
         return x.clone();
     }

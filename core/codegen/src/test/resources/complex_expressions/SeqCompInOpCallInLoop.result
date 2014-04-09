@@ -27,7 +27,7 @@ public class Entry {
             }
         }
 
-        return seqCompResult_1;
+        return seqCompResult_1.clone();
     }
 
     public static Number Test() {
