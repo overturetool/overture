@@ -766,7 +766,6 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		PExpCG firstCg = first.apply(question.getExpVisitor(), question);
 		PExpCG setCg = set.apply(question.getExpVisitor(), question);
 		PExpCG predicateCg = predicate != null ? predicate.apply(question.getExpVisitor(), question) : null;
-		String varCg = question.getTempVarNameGen().nextVarName(IOoAstConstants.GENERATED_TEMP_SEQ_COMP_NAME_PREFIX);
 		
 		ACompSeqExpCG seqComp = new ACompSeqExpCG();
 		seqComp.setId(id);
@@ -774,7 +773,6 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		seqComp.setFirst(firstCg);
 		seqComp.setSet(setCg);
 		seqComp.setPredicate(predicateCg);
-		seqComp.setVar(varCg);
 		
 		return seqComp;
 	}

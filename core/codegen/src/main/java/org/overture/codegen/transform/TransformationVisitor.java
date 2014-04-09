@@ -9,6 +9,7 @@ import org.overture.codegen.cgast.expressions.ACompMapExpCG;
 import org.overture.codegen.cgast.expressions.ACompSeqExpCG;
 import org.overture.codegen.cgast.expressions.ACompSetExpCG;
 import org.overture.codegen.cgast.expressions.AEnumMapExpCG;
+import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSetExpCG;
 import org.overture.codegen.cgast.expressions.AExists1QuantifierExpCG;
 import org.overture.codegen.cgast.expressions.AExistsQuantifierExpCG;
@@ -210,16 +211,21 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 
 		PExpCG first = node.getFirst();
 		PExpCG predicate = node.getPredicate();
-		String var = node.getVar();
 		PTypeCG type = node.getType();
-		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
+		ITempVarGen tempVarNameGen = info.getTempVarNameGen();		
+		String var = tempVarNameGen.nextVarName(IOoAstConstants.GENERATED_TEMP_SEQ_COMP_NAME_PREFIX);
 		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
 		
 		SeqCompStrategy strategy = new SeqCompStrategy(config, transformationAssistant, first, predicate, var, type, langIterator, tempVarNameGen, varPrefixes);
 
 		if (transformationAssistant.isEmptySet(node.getSet()))
 		{
-			node.setSet(null);
+			//In case the block has no statements the result of the sequence comprehension is the empty sequence
+			AEnumSeqExpCG emptySeq = new AEnumSeqExpCG();
+			emptySeq.setType(type.clone());
+			
+			//Replace the sequence comprehension with the empty sequence
+			transformationAssistant.replaceNodeWith(node, emptySeq);
 		}
 		else
 		{
@@ -228,9 +234,8 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 
 			ABlockStmCG block = transformationAssistant.consIterationBlock(ids, node.getSet(), info.getTempVarNameGen(), strategy);
 
-			transformationAssistant.replaceNodeWith(enclosingStm, block);
-
-			block.getStatements().add(enclosingStm);
+			replaceCompWithTransformation(node, enclosingStm, type, var, block);
+			
 			block.apply(this);
 		}
 	}
