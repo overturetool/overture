@@ -344,7 +344,8 @@ public class CentralResource {
             mapCompResult_1.put(cId, 0L);
         }
 
-        numberOfTries = MapUtil.override(numberOfTries.clone(), mapCompResult_1);
+        numberOfTries = MapUtil.override(numberOfTries.clone(),
+                mapCompResult_1.clone());
     }
 
     public void AddIllegalCard(Number cId) {

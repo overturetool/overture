@@ -23,7 +23,7 @@ public class Entry {
             }
         }
 
-        VDMMap x = mapCompResult_1;
+        VDMMap x = mapCompResult_1.clone();
 
         return x.clone();
     }

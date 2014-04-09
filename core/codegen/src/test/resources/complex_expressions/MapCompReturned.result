@@ -19,7 +19,7 @@ public class Entry {
             }
         }
 
-        return mapCompResult_1;
+        return mapCompResult_1.clone();
     }
 }
 
