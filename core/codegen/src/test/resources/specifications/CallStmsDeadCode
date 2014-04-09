@@ -1,0 +1,16 @@
+class A
+
+operations
+
+public op1 : () ==> nat
+op1 () == return 1;
+
+public q2 : () ==> nat
+q2 () == 
+(
+	op1();
+	op1(); -- Dead code
+	op1(); -- Dead code
+); 
+
+end A

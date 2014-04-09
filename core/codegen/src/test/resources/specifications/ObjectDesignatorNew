@@ -1,0 +1,21 @@
+class A
+
+operations 
+
+public A : (nat) ==> A
+A (x) == skip;
+
+public op : () ==> nat
+op () ==
+	new A(2).A`f(1);
+
+public op1 : () ==> nat
+op1 () ==
+	new A(2).f(1);
+
+functions 
+
+public f :  (nat) -> nat
+f (x) == x;
+
+end A

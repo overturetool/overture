@@ -1,0 +1,13 @@
+class Entry
+
+operations 
+
+public static Run : () ==> ?
+Run () ==
+	Test();
+
+public static Test : () ==> map nat to nat 
+Test () ==
+	return {x*y |-> y*x | x in set {1,2,3}, y in set {6,7,8} & 1 = 1};
+
+end Entry

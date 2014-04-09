@@ -76,6 +76,8 @@ bin
 # Added by Jenkins for local mvn repos #
 ########################################
 .repository/
+# same, but by Joey on local builds
+repository/
 
 # Java files created by ASTgen &c #
 ###################################

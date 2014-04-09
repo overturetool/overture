@@ -1,0 +1,6 @@
+#set( $end = ";")
+#if ( $JavaFormat.isLoopVar($node) )
+	#set( $end = "")
+#end
+##
+$JavaFormat.format($node.getType()) $node.getName() = $JavaFormat.format($node.getExp())${end}

@@ -1,0 +1,5 @@
+#if ( $node.getBindings().isEmpty() )
+	SetUtil.set()
+#else
+	$node.getVar()
+#end

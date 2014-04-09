@@ -1,0 +1,8 @@
+class Entry
+
+operations 
+
+public static Run : () ==> bool 
+Run () == return forall x in set {1,2,3} & x < 3;
+
+end Entry

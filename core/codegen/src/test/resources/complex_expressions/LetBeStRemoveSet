@@ -1,0 +1,20 @@
+class Entry
+
+values
+
+s = {}
+
+operations 
+
+public static Run : () ==> ?
+Run () ==
+(
+	if true then return true;	
+	(
+		let x in set s in return x; 
+	
+		return 4;
+	)
+)
+ 
+end Entry

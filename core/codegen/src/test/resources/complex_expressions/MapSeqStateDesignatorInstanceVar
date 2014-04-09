@@ -1,0 +1,16 @@
+class Entry
+
+instance variables 
+
+static x : map nat to bool := {1 |-> true};
+
+operations 
+
+public static Run : () ==> ?
+Run () ==
+(
+	x(4) := false;
+	return x;
+)
+
+end Entry 

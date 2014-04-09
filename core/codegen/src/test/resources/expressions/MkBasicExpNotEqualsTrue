@@ -1,0 +1,1 @@
+mk_token({mk_(true,false)}) <> mk_token({mk_(false,true)})

@@ -1,0 +1,16 @@
+class A
+
+values
+
+a = {1 |-> 2};
+
+x = dom {1 |-> 2};
+y = dom op();
+z = dom a;
+
+operations 
+
+public static op : () ==> map nat to nat 
+op () == return {1 |-> 2, 3 |-> 4};
+
+end A

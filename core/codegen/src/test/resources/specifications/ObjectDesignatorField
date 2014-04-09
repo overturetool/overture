@@ -1,0 +1,33 @@
+class A
+
+instance variables
+
+x : A;
+
+operations 
+
+public op : () ==> nat
+op () ==
+let a = new A()
+in
+	a.x.f(1);
+
+public op1 : () ==> nat
+op1 () ==
+let a = new A()
+in
+	a.x.A`f(1);
+
+public op2 : () ==> nat
+op2 () ==
+let a = new A()
+in
+	a.x.x.A`x.A`f(1);
+
+
+functions 
+
+public f :  (nat) -> nat
+f (x) == x;
+
+end A
