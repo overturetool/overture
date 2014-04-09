@@ -1,5 +1,6 @@
 package org.overture.interpreter.assistant.type;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.types.AInMapMapType;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
@@ -19,7 +20,7 @@ public class AInMapMapTypeAssistantInterpreter
 	}
 
 	public static ValueList getAllValues(AInMapMapType type, Context ctxt)
-			throws ValueException
+			throws AnalysisException
 	{
 		ValueList maps = SMapTypeAssistantInterpreter.getAllValues(type, ctxt);
 		ValueList result = new ValueList();

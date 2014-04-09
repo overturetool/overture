@@ -1,5 +1,6 @@
 package org.overture.interpreter.assistant.pattern;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PBind;
@@ -22,13 +23,16 @@ public class PBindAssistantInterpreter extends PBindAssistantTC
 	}
 
 	public static ValueList getBindValues(PBind bind, Context ctxt)
-			throws ValueException
+			throws AnalysisException
 	{
-		if (bind instanceof ASetBind) {
+		if (bind instanceof ASetBind)
+		{
 			return ASetBindAssistantInterpreter.getBindValues((ASetBind) bind, ctxt);
-		} else if (bind instanceof ATypeBind) {
+		} else if (bind instanceof ATypeBind)
+		{
 			return ATypeBindAssistantInterpreter.getBindValues((ATypeBind) bind, ctxt);
-		} else {
+		} else
+		{
 			assert false : "Should not happen";
 			return null;
 		}
@@ -36,11 +40,14 @@ public class PBindAssistantInterpreter extends PBindAssistantTC
 
 	public static ValueList getValues(PBind bind, ObjectContext ctxt)
 	{
-		if (bind instanceof ASetBind) {
+		if (bind instanceof ASetBind)
+		{
 			return ASetBindAssistantInterpreter.getValues((ASetBind) bind, ctxt);
-		} else if (bind instanceof ATypeBind) {
+		} else if (bind instanceof ATypeBind)
+		{
 			return ATypeBindAssistantInterpreter.getValues((ATypeBind) bind, ctxt);
-		} else {
+		} else
+		{
 			return new ValueList();
 		}
 	}

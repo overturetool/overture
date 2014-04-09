@@ -23,11 +23,11 @@
 
 package org.overture.interpreter.values;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ValueException;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 
 public class VoidValue extends Value
@@ -71,9 +71,9 @@ public class VoidValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt) throws ValueException
+	public Value convertValueTo(PType to, Context ctxt) throws AnalysisException
 	{
-		if (PTypeAssistantTC.isType(to,AVoidType.class))
+		if (ctxt.assistantFactory.createPTypeAssistant().isType(to,AVoidType.class))
 		{
 			return new VoidValue();
 		}

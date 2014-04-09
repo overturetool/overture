@@ -1,0 +1,26 @@
+class A
+
+values
+
+as = [];
+bs = [1, 2];
+cs = [1.2, 3.3];
+ds = [true, false];
+es = ['a', 'b'];
+fs = ["a", "b"]
+		
+operations 
+
+public op : () ==> ()
+op () ==
+let as_ = reverse as,
+		bs_ = reverse bs,
+		cs_ = reverse cs,
+		ds_ = reverse ds,
+		es_ = reverse es,
+		fs_ = reverse fs
+		 
+in 
+	skip		
+		
+end A

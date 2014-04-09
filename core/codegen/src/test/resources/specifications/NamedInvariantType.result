@@ -1,0 +1,13 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class A {
+    private static final String x = "hej";
+
+    public A() {
+    }
+}
+
+##########

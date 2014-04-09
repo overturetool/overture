@@ -25,6 +25,7 @@ package org.overture.interpreter.values;
 
 import java.io.Serializable;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.config.Settings;
 import org.overture.interpreter.runtime.Context;
@@ -43,7 +44,7 @@ public class ClassInvariantListener implements ValueListener, Serializable
 		this.invopvalue = invopvalue;
 	}
 
-	public void changedValue(ILexLocation location, Value value, Context ctxt)
+	public void changedValue(ILexLocation location, Value value, Context ctxt) throws AnalysisException
 	{
 		if (doInvariantChecks && Settings.invchecks)
 		{
@@ -54,14 +55,20 @@ public class ClassInvariantListener implements ValueListener, Serializable
     			// conversion. This also stops VDM-RT from performing "time step"
     			// calculations.
     			
-    			ctxt.threadState.setAtomic(true);
-    			boolean inv = invopvalue.eval(location, new ValueList(), ctxt).boolValue(ctxt);
-    			ctxt.threadState.setAtomic(false);
-    			
-    			if (!inv)
+    			try
     			{
-    				throw new ContextException(
-    					4130, "Instance invariant violated: " + invopvalue.name, location, ctxt);
+	    			ctxt.threadState.setAtomic(true);
+	    			boolean inv = invopvalue.eval(location, new ValueList(), ctxt).boolValue(ctxt);
+	    			
+	    			if (!inv)
+	    			{
+	    				throw new ContextException(
+	    					4130, "Instance invariant violated: " + invopvalue.name, location, ctxt);
+	    			}
+    			}
+    			finally
+    			{
+    				ctxt.threadState.setAtomic(false);
     			}
     		}
     		catch (ValueException e)

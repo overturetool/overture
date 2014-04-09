@@ -23,9 +23,12 @@
 
 package org.overture.interpreter.values;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
@@ -33,6 +36,7 @@ import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
@@ -42,23 +46,30 @@ import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexKeywordToken;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.lex.VDMToken;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.PStm;
+import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.Utils;
 import org.overture.config.Settings;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.definition.AStateDefinitionAssistantInterpreter;
+import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
+import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.messages.rtlog.RTExtendedTextMessage;
 import org.overture.interpreter.messages.rtlog.RTLogger;
 import org.overture.interpreter.messages.rtlog.RTMessage.MessageType;
 import org.overture.interpreter.messages.rtlog.RTOperationMessage;
 import org.overture.interpreter.runtime.ClassContext;
+import org.overture.interpreter.runtime.ClassInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.Interpreter;
+import org.overture.interpreter.runtime.ModuleInterpreter;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.PatternMatchException;
 import org.overture.interpreter.runtime.RootContext;
@@ -72,15 +83,13 @@ import org.overture.interpreter.scheduler.CPUResource;
 import org.overture.interpreter.scheduler.Holder;
 import org.overture.interpreter.scheduler.ISchedulableThread;
 import org.overture.interpreter.scheduler.InitThread;
+import org.overture.interpreter.scheduler.Lock;
 import org.overture.interpreter.scheduler.MessageRequest;
 import org.overture.interpreter.scheduler.MessageResponse;
 import org.overture.interpreter.scheduler.ResourceScheduler;
+import org.overture.interpreter.solver.IConstraintSolver;
+import org.overture.interpreter.solver.SolverFactory;
 import org.overture.parser.config.Properties;
-import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
-import org.overture.typechecker.assistant.expression.PExpAssistantTC;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
-
-
 
 public class OperationValue extends Value
 {
@@ -109,17 +118,17 @@ public class OperationValue extends Value
 	private int hashAct = 0; // Number of activations
 	private int hashFin = 0; // Number of finishes
 	private int hashReq = 0; // Number of requests
-	
+
 	public int getHashAct()
 	{
 		return this.hashAct;
 	}
-	
+
 	public int getHashFin()
 	{
 		return this.hashFin;
 	}
-	
+
 	public int getHashReq()
 	{
 		return this.hashReq;
@@ -129,8 +138,16 @@ public class OperationValue extends Value
 	private boolean traceRT = true;
 
 	public OperationValue(AExplicitOperationDefinition def,
-		FunctionValue precondition, FunctionValue postcondition,
-		AStateDefinition state)
+			FunctionValue precondition, FunctionValue postcondition,
+			AStateDefinition state,
+			IInterpreterAssistantFactory assistantFactory)
+	{
+		this(def, precondition, postcondition, state, assistantFactory.createPAccessSpecifierAssistant().isAsync(def.getAccess()));
+	}
+
+	private OperationValue(AExplicitOperationDefinition def,
+			FunctionValue precondition, FunctionValue postcondition,
+			AStateDefinition state, boolean async)
 	{
 		this.expldef = def;
 		this.impldef = null;
@@ -142,21 +159,27 @@ public class OperationValue extends Value
 		this.postcondition = postcondition;
 		this.state = state;
 		this.classdef = def.getClassDefinition();
-		this.isAsync = PAccessSpecifierAssistantTC.isAsync(def.getAccess());
+		this.isAsync = async;
 
-		traceRT =
-			Settings.dialect == Dialect.VDM_RT &&
-			classdef != null &&
-			!(classdef instanceof ASystemClassDefinition) &&
-			!classdef.getName().getName().equals("CPU") &&
-			!classdef.getName().getName().equals("BUS") &&
-			!name.getName().equals("thread") &&
-			!name.getName().startsWith("inv_");
+		traceRT = Settings.dialect == Dialect.VDM_RT && classdef != null
+				&& !(classdef instanceof ASystemClassDefinition)
+				&& !classdef.getName().getName().equals("CPU")
+				&& !classdef.getName().getName().equals("BUS")
+				&& !name.getName().equals("thread")
+				&& !name.getName().startsWith("inv_");
 	}
 
 	public OperationValue(AImplicitOperationDefinition def,
-		FunctionValue precondition, FunctionValue postcondition,
-		AStateDefinition state)
+			FunctionValue precondition, FunctionValue postcondition,
+			AStateDefinition state,
+			IInterpreterAssistantFactory assistantFactory)
+	{
+		this(def, precondition, postcondition, state, assistantFactory.createPAccessSpecifierAssistant().isAsync(def.getAccess()));
+	}
+
+	private OperationValue(AImplicitOperationDefinition def,
+			FunctionValue precondition, FunctionValue postcondition,
+			AStateDefinition state, boolean async)
 	{
 		this.impldef = def;
 		this.expldef = null;
@@ -174,15 +197,13 @@ public class OperationValue extends Value
 		this.postcondition = postcondition;
 		this.state = state;
 		this.classdef = def.getClassDefinition();
-		this.isAsync = PAccessSpecifierAssistantTC.isAsync(def.getAccess());
+		this.isAsync = async;
 
-		traceRT =
-			Settings.dialect == Dialect.VDM_RT &&
-			classdef != null &&
-			!(classdef instanceof ASystemClassDefinition) &&
-			!classdef.getName().getName().equals("CPU") &&
-			!classdef.getName().getName().equals("BUS") &&
-			!name.getName().equals("thread");
+		traceRT = Settings.dialect == Dialect.VDM_RT && classdef != null
+				&& !(classdef instanceof ASystemClassDefinition)
+				&& !classdef.getName().getName().equals("CPU")
+				&& !classdef.getName().getName().equals("BUS")
+				&& !name.getName().equals("thread");
 	}
 
 	@Override
@@ -209,15 +230,14 @@ public class OperationValue extends Value
 		if (guard == null)
 		{
 			guard = add;
-		}
-		else
+		} else
 		{
 			// Create "old and new" expression
 
-			ILexLocation where = isMutex ? guard.getLocation() : add.getLocation();
+			ILexLocation where = isMutex ? guard.getLocation()
+					: add.getLocation();
 
-			guard = AstFactory.newAAndBooleanBinaryExp(guard.clone(),
-				new LexKeywordToken(VDMToken.AND, where), add.clone());
+			guard = AstFactory.newAAndBooleanBinaryExp(guard.clone(), new LexKeywordToken(VDMToken.AND, where), add.clone());
 		}
 	}
 
@@ -227,16 +247,16 @@ public class OperationValue extends Value
 		{
 			ValueListener vl = new GuardValueListener(self);
 
-			for (Value v: PExpAssistantInterpreter.getValues(guard,ctxt))
+			for (Value v : PExpAssistantInterpreter.getValues(guard, ctxt))
 			{
-				UpdatableValue uv = (UpdatableValue)v;
+				UpdatableValue uv = (UpdatableValue) v;
 				uv.addListener(vl);
 			}
 		}
 	}
 
 	public Value eval(ILexLocation from, ValueList argValues, Context ctxt)
-		throws ValueException
+			throws AnalysisException
 	{
 		// Note args cannot be Updateable, so we convert them here. This means
 		// that TransactionValues pass the local "new" value to the far end.
@@ -247,27 +267,19 @@ public class OperationValue extends Value
 			if (!isStatic && (ctxt.threadState.CPU != self.getCPU() || isAsync))
 			{
 				return asyncEval(constValues, ctxt);
-			}
-			else
+			} else
 			{
 				return localEval(from, constValues, ctxt, true);
 			}
-		}
-		else
+		} else
 		{
 			return localEval(from, constValues, ctxt, true);
 		}
 	}
 
-	public Value localEval(
-		ILexLocation from, ValueList argValues, Context ctxt, boolean logreq)
-		throws ValueException
+	public Value localEval(ILexLocation from, ValueList argValues,
+			Context ctxt, boolean logreq) throws AnalysisException
 	{
-		if (body == null)
-		{
-			abort(4066, "Cannot call implicit operation: " + name, ctxt);
-		}
-
 		if (state != null && stateName == null)
 		{
 			stateName = state.getName();
@@ -282,10 +294,9 @@ public class OperationValue extends Value
 		if (guard != null)
 		{
 			guard(argContext);
-		}
-		else
+		} else
 		{
-			act();		// Still activated, even if no guard
+			act(); // Still activated, even if no guard
 		}
 
 		notifySelf();
@@ -306,27 +317,26 @@ public class OperationValue extends Value
 				// Note values are assumed to be constant, as enforced by eval()
 				Value pv = valIter.next().convertTo(typeIter.next(), ctxt);
 
-				for (NameValuePair nvp : PPatternAssistantInterpreter.getNamedValues(p,pv, ctxt))
+				for (NameValuePair nvp : PPatternAssistantInterpreter.getNamedValues(p, pv, ctxt))
 				{
 					Value v = args.get(nvp.name);
 
 					if (v == null)
 					{
 						args.put(nvp);
-					}
-					else	// Names match, so values must also
+					} else
+					// Names match, so values must also
 					{
 						if (!v.equals(nvp.value))
 						{
-							abort(4069,	"Parameter patterns do not match arguments", ctxt);
+							abort(4069, "Parameter patterns do not match arguments", ctxt);
 						}
 					}
 				}
-			}
-			catch (PatternMatchException e)
+			} catch (PatternMatchException e)
 			{
 				abort(e.number, e, ctxt);
-			}
+			} 
 		}
 
 		if (self != null)
@@ -345,14 +355,17 @@ public class OperationValue extends Value
 			if (stateName != null)
 			{
 				Value sigma = argContext.lookup(stateName);
-				originalSigma = (Value)sigma.clone();
-			}
-
-			if (self != null)
+				originalSigma = (Value) sigma.clone();
+			} else if (self != null)
 			{
 				// originalSelf = self.shallowCopy();
 				LexNameList oldnames = ctxt.assistantFactory.createPExpAssistant().getOldNames(postcondition.body);
 				originalValues = self.getOldValues(oldnames);
+			} else if (classdef != null)
+			{
+				LexNameList oldnames = ctxt.assistantFactory.createPExpAssistant().getOldNames(postcondition.body);
+				SClassDefinitionAssistantInterpreter assistant = ctxt.assistantFactory.createSClassDefinitionAssistant();
+				originalValues = assistant.getOldValues(classdef, oldnames);
 			}
 		}
 
@@ -361,88 +374,182 @@ public class OperationValue extends Value
 
 		Value rv = null;
 
-		boolean evalFailed = false;
 		try
 		{
-    		if (precondition != null && Settings.prechecks)
-    		{
-    			ValueList preArgs = new ValueList(argValues);
+			if (precondition != null && Settings.prechecks)
+			{
+				ValueList preArgs = new ValueList(argValues);
 
-    			if (stateName != null)
-    			{
-    				preArgs.add(argContext.lookup(stateName));
-    			}
-    			else if (self != null)
-    			{
-    				preArgs.add(self);
-    			}
+				if (stateName != null)
+				{
+					preArgs.add(argContext.lookup(stateName));
+				} else if (self != null)
+				{
+					preArgs.add(self);
+				}
 
-    			// We disable the swapping and time (RT) as precondition checks should be "free".
+				// We disable the swapping and time (RT) as precondition checks should be "free".
 
-				ctxt.threadState.setAtomic(true);
-    			ctxt.setPrepost(4071, "Precondition failure: ");
-    			precondition.eval(from, preArgs, ctxt);
-    			ctxt.setPrepost(0, null);
-				ctxt.threadState.setAtomic(false);
-    		}
-    		
-			
-			rv = body.apply(VdmRuntime.getStatementEvaluator(), argContext);
-			
-    		
-    		if (isConstructor)
-    		{
-    			rv = self;
-    		}
-    		else
-    		{
-    			rv = rv.convertTo(type.getResult(), argContext);
-    		}
+				try
+				{
+					ctxt.threadState.setAtomic(true);
+					ctxt.setPrepost(4071, "Precondition failure: ");
+					precondition.eval(from, preArgs, ctxt);
+				} finally
+				{
+					ctxt.setPrepost(0, null);
+					ctxt.threadState.setAtomic(false);
+				}
+			}
 
-    		if (postcondition != null && Settings.postchecks)
-    		{
-    			ValueList postArgs = new ValueList(argValues);
+			if (body == null)
+			{
 
-    			if (!(rv instanceof VoidValue))
-    			{
-    				postArgs.add(rv);
-    			}
+				IConstraintSolver solver = SolverFactory.getSolver(Settings.dialect);
 
-    			if (stateName != null)
-    			{
-    				postArgs.add(originalSigma);
-    				Value sigma = argContext.lookup(stateName);
-    				postArgs.add(sigma);
-    			}
-    			else if (self != null)
-    			{
-    				postArgs.add(originalValues);
-    				postArgs.add(self);
-    			}
+				if (solver != null)
+				{
+					rv = invokeSolver(ctxt, argContext, args, rv, solver);
 
-    			// We disable the swapping and time (RT) as postcondition checks should be "free".
+				} else
+				{
+					abort(4066, "Cannot call implicit operation: " + name, ctxt);
+				}
 
-				ctxt.threadState.setAtomic(true);
-    			ctxt.setPrepost(4072, "Postcondition failure: ");
-    			postcondition.eval(from, postArgs, ctxt);
-    			ctxt.setPrepost(0, null);
-				ctxt.threadState.setAtomic(false);
-    		}
-		
+			} else
+			{
+
+				rv = body.apply(VdmRuntime.getStatementEvaluator(), argContext);
+			}
+
+			if (isConstructor)
+			{
+				rv = self;
+			} else
+			{
+				rv = rv.convertTo(type.getResult(), argContext);
+			}
+
+			if (postcondition != null && Settings.postchecks)
+			{
+				ValueList postArgs = new ValueList(argValues);
+
+				if (!(rv instanceof VoidValue))
+				{
+					postArgs.add(rv);
+				}
+
+				if (stateName != null)
+				{
+					postArgs.add(originalSigma);
+					Value sigma = argContext.lookup(stateName);
+					postArgs.add(sigma);
+				} else if (self != null)
+				{
+					postArgs.add(originalValues);
+					postArgs.add(self);
+				} else if (classdef != null)
+				{
+					postArgs.add(originalValues);
+				}
+
+				// We disable the swapping and time (RT) as postcondition checks should be "free".
+
+				try
+				{
+					ctxt.threadState.setAtomic(true);
+					ctxt.setPrepost(4072, "Postcondition failure: ");
+					postcondition.eval(from, postArgs, ctxt);
+				} finally
+				{
+					ctxt.setPrepost(0, null);
+					ctxt.threadState.setAtomic(false);
+				}
+			}
+
 		} catch (AnalysisException e)
 		{
-			if(e instanceof ValueException)
+			if (e instanceof ValueException)
 			{
 				throw (ValueException) e;
 			}
 			e.printStackTrace();
-		}
-		finally
+		} finally
 		{
-    		fin();
-    		notifySelf();
+			fin();
+			notifySelf();
 		}
 
+		return rv;
+	}
+
+	public Value invokeSolver(Context ctxt, RootContext argContext,
+			NameValuePairMap args, Value rv, IConstraintSolver solver)
+			throws ValueException
+	{
+		try
+		{
+			Map<String, String> argExps = new HashMap<String, String>();
+			for (Entry<ILexNameToken, Value> argVal : args.entrySet())
+			{
+				argExps.put(argVal.getKey().getName(), argVal.getValue().toString());
+			}
+
+			Map<String, String> stateExps = new HashMap<String, String>();
+
+			if (stateContext != null)
+			{
+				for (Entry<ILexNameToken, Value> argVal : stateContext.entrySet())
+				{
+					if (argVal.getKey().parent() instanceof AFieldField)
+					{
+						stateExps.put(argVal.getKey().getName(), argVal.getValue().toString());
+					}
+				}
+			} else
+			{
+				// TODO
+				if (self != null)
+				{
+					for (Entry<ILexNameToken, Value> argVal : self.getMemberValues().entrySet())
+					{
+						if (argVal.getValue() instanceof FunctionValue
+								|| argVal.getValue() instanceof OperationValue)
+						{
+							continue;
+						}
+						if (argVal.getValue() instanceof UpdatableValue)
+						{
+							stateExps.put(argVal.getKey().getName(), argVal.getValue().toString());
+						}
+					}
+				}
+			}
+
+			Interpreter interpreter = Interpreter.getInstance();
+			List<PDefinition> allDefs = new Vector<PDefinition>();
+			if (interpreter instanceof ClassInterpreter)
+			{
+				for (SClassDefinition c : ((ClassInterpreter) interpreter).getClasses())
+				{
+					allDefs.addAll(c.getDefinitions());
+				}
+			} else if (interpreter instanceof ModuleInterpreter)
+			{
+				for (AModuleModules c : ((ModuleInterpreter) interpreter).getModules())
+				{
+					allDefs.addAll(c.getDefs());
+				}
+			}
+
+			PStm res = solver.solve(allDefs,name.getName(), this.impldef, stateExps, argExps, Console.out, Console.err);
+
+			rv = res.apply(VdmRuntime.getStatementEvaluator(), argContext);
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+			abort(4066, "Cannot call implicit operation: " + name, ctxt);
+		}
 		return rv;
 	}
 
@@ -452,61 +559,90 @@ public class OperationValue extends Value
 
 		if (self != null)
 		{
-			argContext = new ObjectContext(Interpreter.getInstance().getAssistantFactory(),from, title, ctxt, self);
-		}
-		else if (classdef != null)
+			argContext = new ObjectContext(Interpreter.getInstance().getAssistantFactory(), from, title, ctxt, self);
+		} else if (classdef != null)
 		{
-			argContext = new ClassContext(Interpreter.getInstance().getAssistantFactory(),from, title, ctxt, classdef);
-		}
-		else
+			argContext = new ClassContext(Interpreter.getInstance().getAssistantFactory(), from, title, ctxt, classdef);
+		} else
 		{
-			argContext = new StateContext(Interpreter.getInstance().getAssistantFactory(),from, title, ctxt, stateContext);
+			argContext = new StateContext(Interpreter.getInstance().getAssistantFactory(), from, title, ctxt, stateContext);
 		}
 
 		return argContext;
 	}
 
+	private Lock getGuardLock(Context ctxt)
+	{
+		if (ctxt instanceof ClassContext)
+		{
+			ClassContext cctxt = (ClassContext) ctxt;
+			return VdmRuntime.getNodeState(ctxt.assistantFactory, cctxt.classdef).guardLock;
+		} else
+		{
+			return self.guardLock;
+		}
+	}
+
+	private Object getGuardObject(Context ctxt)
+	{
+		if (ctxt instanceof ClassContext)
+		{
+			ClassContext cctxt = (ClassContext) ctxt;
+			return cctxt.classdef;
+		} else
+		{
+			return self;
+		}
+	}
+
 	private void guard(Context ctxt) throws ValueException
 	{
 		ISchedulableThread th = BasicSchedulableThread.getThread(Thread.currentThread());
-		if (th == null || th instanceof InitThread )
+		if (th == null || th instanceof InitThread)
 		{
 			act();
-			return;		// Probably during initialization.
+			return; // Probably during initialization.
 		}
 
-		self.guardLock.lock(ctxt, guard.getLocation());
+		Lock lock = getGuardLock(ctxt);
+		lock.lock(ctxt, guard.getLocation());
 
 		while (true)
 		{
-			synchronized (self)		// So that test and act() are atomic
+			synchronized (getGuardObject(ctxt)) // So that test and act() are atomic
 			{
 				// We have to suspend thread swapping round the guard,
 				// else we will reschedule another CPU thread while
 				// having self locked, and that locks up everything!
+				boolean ok = false;
 
-				debug("guard TEST");
-				ctxt.threadState.setAtomic(true);
-    			boolean ok = false;
 				try
 				{
-					ok = guard.apply(VdmRuntime.getExpressionEvaluator(), ctxt).boolValue(ctxt);
-				} catch (AnalysisException e)
-				{
-					if(e instanceof ValueException)
-					{
-						throw (ValueException) e;
-					}
-					e.printStackTrace();
-				}
-    			ctxt.threadState.setAtomic(false);
+					debug("guard TEST");
+					ctxt.threadState.setAtomic(true);
 
-    			if (ok)
-    			{
-    				debug("guard OK");
-    				act();
-    				break;	// Out of while loop
-    			}
+					try
+					{
+						ok = guard.apply(VdmRuntime.getExpressionEvaluator(), ctxt).boolValue(ctxt);
+					} catch (AnalysisException e)
+					{
+						if (e instanceof ValueException)
+						{
+							throw (ValueException) e;
+						}
+						e.printStackTrace();
+					}
+				} finally
+				{
+					ctxt.threadState.setAtomic(false);
+				}
+
+				if (ok)
+				{
+					debug("guard OK");
+					act();
+					break; // Out of while loop
+				}
 			}
 
 			// The guardLock list is signalled by the GuardValueListener
@@ -515,12 +651,12 @@ public class OperationValue extends Value
 
 			debug("guard WAIT");
 			ctxt.guardOp = this;
-			self.guardLock.block(ctxt, guard.getLocation());
+			lock.block(ctxt, guard.getLocation());
 			ctxt.guardOp = null;
 			debug("guard WAKE");
 		}
 
-		self.guardLock.unlock();
+		lock.unlock();
 	}
 
 	private void notifySelf()
@@ -532,7 +668,8 @@ public class OperationValue extends Value
 		}
 	}
 
-	private Value asyncEval(ValueList argValues, Context ctxt) throws ValueException
+	private Value asyncEval(ValueList argValues, Context ctxt)
+			throws ValueException
 	{
 		// Spawn a thread, send a message, wait for a reply...
 
@@ -546,44 +683,40 @@ public class OperationValue extends Value
 
 		RTLogger.log(new RTOperationMessage(MessageType.Request, this, from.resource, threadId));
 
-		if (from != to)		// Remote CPU call
+		if (from != to) // Remote CPU call
 		{
-    		BUSValue bus = BUSValue.lookupBUS(from, to);
+			BUSValue bus = BUSValue.lookupBUS(from, to);
 
-    		if (bus == null)
-    		{
-    			abort(4140,
-    				"No BUS between CPUs " + from.getName() + " and " + to.getName(), ctxt);
-    		}
+			if (bus == null)
+			{
+				abort(4140, "No BUS between CPUs " + from.getName() + " and "
+						+ to.getName(), ctxt);
+			}
 
-    		if (isAsync)	// Don't wait
-    		{
-        		MessageRequest request = new MessageRequest(ctxt.threadState.dbgp,
-        			bus, from, to, self, this, argValues, null, stepping);
+			if (isAsync) // Don't wait
+			{
+				MessageRequest request = new MessageRequest(ctxt.threadState.dbgp, bus, from, to, self, this, argValues, null, stepping);
 
-        		bus.transmit(request);
-        		return new VoidValue();
-    		}
-    		else
-    		{
-        		Holder<MessageResponse> result = new Holder<MessageResponse>();
-        		MessageRequest request = new MessageRequest(ctxt.threadState.dbgp,
-        			bus, from, to, self, this, argValues, result, stepping);
+				bus.transmit(request);
+				return new VoidValue();
+			} else
+			{
+				Holder<MessageResponse> result = new Holder<MessageResponse>();
+				MessageRequest request = new MessageRequest(ctxt.threadState.dbgp, bus, from, to, self, this, argValues, result, stepping);
 
-        		bus.transmit(request);
-        		MessageResponse reply = result.get(ctxt, name.getLocation());
-        		return reply.getValue();	// Can throw a returned exception
-    		}
-		}
-		else	// local, must be async so don't wait
+				bus.transmit(request);
+				MessageResponse reply = result.get(ctxt, name.getLocation());
+				return reply.getValue(); // Can throw a returned exception
+			}
+		} else
+		// local, must be async so don't wait
 		{
-    		MessageRequest request = new MessageRequest(ctxt.threadState.dbgp,
-    			null, from, to, self, this, argValues, null, stepping);
+			MessageRequest request = new MessageRequest(ctxt.threadState.dbgp, null, from, to, self, this, argValues, null, stepping);
 
-    		AsyncThread t = new AsyncThread(request);
-    		t.start();
-    		RuntimeValidator.validateAsync(this,t);
-    		return new VoidValue();
+			AsyncThread t = new AsyncThread(request);
+			t.start();
+			RuntimeValidator.validateAsync(this, t);
+			return new VoidValue();
 		}
 	}
 
@@ -592,11 +725,11 @@ public class OperationValue extends Value
 	{
 		if (other instanceof Value)
 		{
-			Value val = ((Value)other).deref();
+			Value val = ((Value) other).deref();
 
 			if (val instanceof OperationValue)
 			{
-				OperationValue ov = (OperationValue)val;
+				OperationValue ov = (OperationValue) val;
 				return ov.type.equals(type);
 			}
 		}
@@ -617,13 +750,12 @@ public class OperationValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt) throws ValueException
+	public Value convertValueTo(PType to, Context ctxt) throws AnalysisException
 	{
-		if (PTypeAssistantTC.isType(to,AOperationType.class))
+		if (ctxt.assistantFactory.createPTypeAssistant().isType(to, AOperationType.class))
 		{
 			return this;
-		}
-		else
+		} else
 		{
 			return super.convertValueTo(to, ctxt);
 		}
@@ -640,24 +772,21 @@ public class OperationValue extends Value
 	{
 		if (expldef != null)
 		{
-			return new OperationValue(expldef, precondition, postcondition,
-				state);
-		}
-		else
+			return new OperationValue(expldef, precondition, postcondition, state, isAsync);
+		} else
 		{
-			return new OperationValue(impldef, precondition, postcondition,
-				state);
+			return new OperationValue(impldef, precondition, postcondition, state, isAsync);
 		}
 	}
 
 	private synchronized void req(boolean logreq)
 	{
 		hashReq++;
-		
+
 		MessageType type = MessageType.Request;
 		RuntimeValidator.validate(this, type);
 
-		if (logreq)		// Async OpRequests are made in asyncEval
+		if (logreq) // Async OpRequests are made in asyncEval
 		{
 			trace(type);
 		}
@@ -671,8 +800,8 @@ public class OperationValue extends Value
 
 		if (!ResourceScheduler.isStopping())
 		{
-			MessageType type = MessageType.Activate; 
-			RuntimeValidator.validate(this,type);
+			MessageType type = MessageType.Activate;
+			RuntimeValidator.validate(this, type);
 			trace(type);
 			debug("#act = " + hashAct);
 		}
@@ -702,16 +831,14 @@ public class OperationValue extends Value
 				CPUResource cpu = null;
 				if (ct instanceof InitThread)
 				{
-					cpu = CPUValue.vCPU.resource;	// Initialization on vCPU
-				}
-				else
+					cpu = CPUValue.vCPU.resource; // Initialization on vCPU
+				} else
 				{
 					cpu = ct.getCPUResource();
 				}
 
 				RTLogger.log(new RTOperationMessage(kind, this, cpu, ct.getId()));
-			}
-			else
+			} else
 			{
 				RTLogger.log(new RTOperationMessage(kind, this, self.getCPU().resource, ct.getId()));
 			}
@@ -728,13 +855,10 @@ public class OperationValue extends Value
 		{
 			if (Settings.dialect == Dialect.VDM_PP)
 			{
-				System.err.println(String.format("%s %s %s",
-						BasicSchedulableThread.getThread(Thread.currentThread()), name, string));
-			}
-			else
+				System.err.println(String.format("%s %s %s", BasicSchedulableThread.getThread(Thread.currentThread()), name, string));
+			} else
 			{
-				RTLogger.log(new RTExtendedTextMessage(String.format("-- %s %s %s",
-						BasicSchedulableThread.getThread(Thread.currentThread()), name, string)));
+				RTLogger.log(new RTExtendedTextMessage(String.format("-- %s %s %s", BasicSchedulableThread.getThread(Thread.currentThread()), name, string)));
 			}
 		}
 	}
@@ -756,6 +880,7 @@ public class OperationValue extends Value
 
 	public String toTitle()
 	{
-		return name.getName() + Utils.listToString("(", paramPatterns, ", ", ")");
+		return name.getName()
+				+ Utils.listToString("(", paramPatterns, ", ", ")");
 	}
 }

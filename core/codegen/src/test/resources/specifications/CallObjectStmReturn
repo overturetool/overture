@@ -1,0 +1,17 @@
+class A
+
+operations 
+
+public op : () ==> ()
+op () == 
+let a = new A()
+in
+	a.op();
+
+public op1 : () ==> nat1
+op1 () ==
+let a = new A()
+in 
+	a.op1();
+
+end A

@@ -1,0 +1,4 @@
+operations
+
+   add() r : nat
+    post r = 4 + 1

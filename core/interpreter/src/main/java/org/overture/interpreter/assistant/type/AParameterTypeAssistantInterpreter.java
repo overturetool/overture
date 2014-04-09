@@ -1,5 +1,7 @@
 package org.overture.interpreter.assistant.type;
 
+import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.assistant.type.AParameterTypeAssistant;
 import org.overture.ast.types.AParameterType;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
@@ -7,10 +9,8 @@ import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.values.ParameterValue;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
-import org.overture.typechecker.assistant.type.AParameterTypeAssistantTC;
 
-public class AParameterTypeAssistantInterpreter extends
-		AParameterTypeAssistantTC
+public class AParameterTypeAssistantInterpreter extends AParameterTypeAssistant
 {
 	protected static IInterpreterAssistantFactory af;
 
@@ -22,7 +22,7 @@ public class AParameterTypeAssistantInterpreter extends
 	}
 
 	public static ValueList getAllValues(AParameterType type, Context ctxt)
-			throws ValueException
+			throws AnalysisException
 	{
 		Value t = ctxt.lookup(type.getName());
 

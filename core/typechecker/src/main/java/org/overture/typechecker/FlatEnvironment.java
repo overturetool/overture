@@ -33,8 +33,6 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 
 /**
  * Define the type checking environment for a list of definitions.
@@ -80,7 +78,7 @@ public class FlatEnvironment extends Environment
 	@Override
 	public PDefinition findName(ILexNameToken name, NameScope scope)
 	{
-		PDefinition def = PDefinitionListAssistantTC.findName(definitions, name, scope);
+		PDefinition def = af.createPDefinitionListAssistant().findName(definitions, name, scope);
 
 		if (def != null)
 		{
@@ -104,33 +102,33 @@ public class FlatEnvironment extends Environment
 	@Override
 	public PDefinition findType(ILexNameToken name, String fromModule)
 	{
-		PDefinition def = PDefinitionAssistantTC.findType(definitions, name, fromModule);
+		PDefinition def = af.createPDefinitionAssistant().findType(definitions, name, fromModule);
 
 		if (def != null)
 		{
 			return def;
 		}
 
-		return (outer == null) ? null : outer.findType(name, fromModule);
+		return outer == null ? null : outer.findType(name, fromModule);
 	}
 
 	@Override
 	public AStateDefinition findStateDefinition()
 	{
-		AStateDefinition def = PDefinitionListAssistantTC.findStateDefinition(definitions);
+		AStateDefinition def = af.createPDefinitionListAssistant().findStateDefinition(definitions);
 
 		if (def != null)
 		{
 			return def;
 		}
 
-		return (outer == null) ? null : outer.findStateDefinition();
+		return outer == null ? null : outer.findStateDefinition();
 	}
 
 	@Override
 	public void unusedCheck()
 	{
-		PDefinitionListAssistantTC.unusedCheck(definitions);
+		af.createPDefinitionListAssistant().unusedCheck(definitions);
 	}
 
 	@Override
@@ -173,7 +171,7 @@ public class FlatEnvironment extends Environment
 	@Override
 	public void markUsed()
 	{
-		PDefinitionListAssistantTC.markUsed(definitions);
+		af.createPDefinitionListAssistant().markUsed(definitions);
 	}
 
 	public void setLimitStateScope(boolean limitStateScope)

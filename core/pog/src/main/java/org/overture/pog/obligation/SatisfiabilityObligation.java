@@ -139,7 +139,7 @@ public class SatisfiabilityObligation extends ProofObligation
 		{
 			for (PPattern pattern : pltp.getPatterns())
 			{
-				arglist.add(patternToExp(pattern));
+				arglist.add(patternToExp(pattern.clone()));
 			}
 		}
 
@@ -149,7 +149,7 @@ public class SatisfiabilityObligation extends ProofObligation
 
 		if (op.getPredef() != null)
 		{
-			preApply = getApplyExp(getVarExp(op.getPredef().getName()), arglist);
+			preApply = getApplyExp(getVarExp(op.getPredef().getName().clone()), arglist);
 		}
 
 		PExp mainExp;
@@ -236,11 +236,11 @@ public class SatisfiabilityObligation extends ProofObligation
 		if (stateDefinition instanceof AStateDefinition)
 		{
 			postArglist.add(getVarExp(NEW_STATE_ARG));
-			exists_binds = getMultipleTypeBindList(stateDefinition.getType(), NEW_STATE_ARG);
+			exists_binds = getMultipleTypeBindList(((AStateDefinition) stateDefinition).getRecordType().clone(), NEW_STATE_ARG);
 		} else
 		{
 			postArglist.add(getVarExp(NEW_SELF_ARG));
-			exists_binds = getMultipleTypeBindList(stateDefinition.getType(), NEW_SELF_ARG);
+			exists_binds = getMultipleTypeBindList(stateDefinition.getType().clone(), NEW_SELF_ARG);
 		}
 	}
 

@@ -22,7 +22,6 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 /**
  * Used to get a Function type from a type
@@ -31,54 +30,58 @@ import org.overture.typechecker.assistant.type.PTypeAssistantTC;
  */
 public class FunctionTypeFinder extends AnswerAdaptor<AFunctionType>
 {
-	private static final long serialVersionUID = 1L;
 	protected ITypeCheckerAssistantFactory af;
 
 	public FunctionTypeFinder(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
+
 	@Override
 	public AFunctionType caseABracketType(ABracketType type)
 			throws AnalysisException
 	{
 		return type.getType().apply(THIS);
 	}
+
 	@Override
 	public AFunctionType caseANamedInvariantType(ANamedInvariantType type)
 			throws AnalysisException
 	{
 		return type.getType().apply(THIS);
 	}
+
 	@Override
 	public AFunctionType defaultSInvariantType(SInvariantType type)
 			throws AnalysisException
 	{
 		return null;
 	}
+
 	@Override
 	public AFunctionType caseAFunctionType(AFunctionType type)
 			throws AnalysisException
 	{
 		return type;
 	}
+
 	@Override
 	public AFunctionType caseAOptionalType(AOptionalType type)
 			throws AnalysisException
 	{
-		
+
 		return type.getType().apply(THIS);
 	}
-	
+
 	@Override
 	public AFunctionType caseAUnionType(AUnionType type)
 			throws AnalysisException
 	{
-		
+
 		if (!type.getFuncDone())
 		{
 			type.setFuncDone(true);
-			type.setFuncType(PTypeAssistantTC.getFunction(AstFactory.newAUnknownType(type.getLocation())));
+			type.setFuncType(af.createPTypeAssistant().getFunction(AstFactory.newAUnknownType(type.getLocation())));
 
 			PTypeSet result = new PTypeSet();
 			Map<Integer, PTypeSet> params = new HashMap<Integer, PTypeSet>();
@@ -86,12 +89,14 @@ public class FunctionTypeFinder extends AnswerAdaptor<AFunctionType>
 
 			for (PType t : type.getTypes())
 			{
-				if (PTypeAssistantTC.isFunction(t))
+				if (af.createPTypeAssistant().isFunction(t))
 				{
 					if (t.getDefinitions() != null)
+					{
 						defs.addAll(t.getDefinitions());
-					AFunctionType f = PTypeAssistantTC.getFunction(t);
-					result.add(f.getResult());
+
+						AFunctionType f = af.createPTypeAssistant().getFunction(t);
+						result.add(f.getResult());
 
 					for (int p = 0; p < f.getParameters().size(); p++)
 					{
@@ -127,15 +132,16 @@ public class FunctionTypeFinder extends AnswerAdaptor<AFunctionType>
 			{
 				type.setFuncType(null);
 			}
+			}
 		}
-
 		return (AFunctionType) type.getFuncType();
 	}
+
 	@Override
 	public AFunctionType caseAUnknownType(AUnknownType type)
 			throws AnalysisException
 	{
-		
+
 		return AstFactory.newAFunctionType(type.getLocation(), true, new NodeList<PType>(null), AstFactory.newAUnknownType(type.getLocation()));
 	}
 
@@ -154,6 +160,5 @@ public class FunctionTypeFinder extends AnswerAdaptor<AFunctionType>
 		assert false : "Can't getFunction of a non-function";
 		return null;
 	}
-	
 
 }

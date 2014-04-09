@@ -12,8 +12,6 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.node.INode;
 import org.overture.ast.types.AParameterType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
-
 
 /**
  * This class implements a way to check if a node is a function.
@@ -22,61 +20,57 @@ import org.overture.typechecker.assistant.type.PTypeAssistantTC;
  */
 public class FunctionChecker extends AnswerAdaptor<Boolean>
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	protected ITypeCheckerAssistantFactory af;
 
 	public FunctionChecker(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public Boolean caseAExplicitFunctionDefinition(
 			AExplicitFunctionDefinition node) throws AnalysisException
 	{
 		return true;
 	}
-	
+
 	@Override
 	public Boolean caseAImplicitFunctionDefinition(
 			AImplicitFunctionDefinition node) throws AnalysisException
 	{
 		return true;
 	}
-	
+
 	@Override
 	public Boolean caseAImportedDefinition(AImportedDefinition node)
 			throws AnalysisException
 	{
 		return node.getDef().apply(THIS);
 	}
-	
+
 	@Override
 	public Boolean caseAInheritedDefinition(AInheritedDefinition node)
 			throws AnalysisException
 	{
 		return node.getSuperdef().apply(THIS);
 	}
-	
+
 	@Override
 	public Boolean caseALocalDefinition(ALocalDefinition node)
 			throws AnalysisException
 	{
-		
-		return (node.getValueDefinition() || PTypeAssistantTC.isType(af.createPDefinitionAssistant().getType(node), AParameterType.class)) ? false
-		:PTypeAssistantTC.isFunction(af.createPDefinitionAssistant().getType(node)); 
+		return node.getValueDefinition()
+				|| af.createPTypeAssistant().isType(af.createPDefinitionAssistant().getType(node), AParameterType.class) ? false
+				: af.createPTypeAssistant().isFunction(af.createPDefinitionAssistant().getType(node));
 	}
-	
+
 	@Override
 	public Boolean caseARenamedDefinition(ARenamedDefinition node)
 			throws AnalysisException
 	{
 		return node.getDef().apply(THIS);
 	}
-	
+
 	@Override
 	public Boolean defaultPDefinition(PDefinition node)
 			throws AnalysisException

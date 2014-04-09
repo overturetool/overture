@@ -1,0 +1,13 @@
+#set( $type = $JavaFormat.formatTemplateParam($node.getType()) )
+#set( $index = $node.getField() - 1 )
+##
+#set( $tuple = $JavaFormat.format($node.getTuple()) )
+#set( $method = ".get($index)" )
+##
+#set( $clone = "")
+##
+#if ($JavaFormat.cloneMember($node))
+	#set( $clone = ".clone()")
+#end
+((${type}) ${tuple}${method})${clone}
+  

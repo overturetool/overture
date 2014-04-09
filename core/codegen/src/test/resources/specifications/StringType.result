@@ -1,0 +1,15 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class StringType {
+    public StringType() {
+    }
+
+    public String op1() {
+        return "kattebakke";
+    }
+}
+
+##########

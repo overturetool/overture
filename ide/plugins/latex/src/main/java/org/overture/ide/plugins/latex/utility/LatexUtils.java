@@ -25,7 +25,7 @@ import org.overture.ast.util.modules.ModuleList;
 import org.overture.config.Settings;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.resources.IVdmProject;
-import org.overture.ide.plugins.latex.Activator;
+import org.overture.ide.plugins.latex.LatexPlugin;
 import org.overture.ide.ui.VdmUIPlugin;
 import org.overture.ide.ui.utility.VdmTypeCheckerUi;
 import org.overture.interpreter.runtime.LatexSourceFile;
@@ -58,13 +58,22 @@ public class LatexUtils extends LatexUtilsBase
 
 					File projectRoot = project.getLocation().toFile();
 					File outputFolder = LatexBuilder.makeOutputFolder(project);
-					LatexBuilder latexBuilder = new LatexBuilder();
+					PdfBuilder latexBuilder = null;
+					if (LatexPlugin.usePdfLatex())
+					{
+						latexBuilder = new LatexBuilder();
+					} else
+					{
+						latexBuilder = new XetexBuilder();
+					}
 
 					latexBuilder.prepare(project, dialect);
 
 					File outputFolderForGeneratedModelFiles = new File(outputFolder, "specification");
 					if (!outputFolderForGeneratedModelFiles.exists())
+					{
 						outputFolderForGeneratedModelFiles.mkdirs();
+					}
 
 					IVdmModel model = selectedProject.getModel();
 					if (model == null || !model.isTypeCorrect())
@@ -119,13 +128,14 @@ public class LatexUtils extends LatexUtilsBase
 
 					latexBuilder.saveDocument(project, projectRoot, documentFileName);
 					if (hasGenerateMainDocument(vdmProject))
+					{
 						buildPdf(project, monitor, outputFolder, documentFileName);
-					else
+					} else
 					{
 						documentFileName = getDocument(vdmProject);
 						if (!new File(documentFileName).exists())
 						{
-							return new Status(IStatus.ERROR, Activator.PLUGIN_ID, IStatus.OK, "Main document does not exist: "
+							return new Status(IStatus.ERROR, LatexPlugin.PLUGIN_ID, IStatus.OK, "Main document does not exist: "
 									+ documentFileName, null);
 						}
 						outputFolder = LatexBuilder.makeOutputFolder(project);
@@ -135,13 +145,13 @@ public class LatexUtils extends LatexUtilsBase
 				{
 
 					e.printStackTrace();
-					return new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Unknown error", e);
+					return new Status(IStatus.ERROR, LatexPlugin.PLUGIN_ID, "Unknown error", e);
 				}
 
 				monitor.done();
 				// expandCompleted = true;
 
-				return new Status(IStatus.OK, Activator.PLUGIN_ID, IStatus.OK, "Translation completed", null);
+				return new Status(IStatus.OK, LatexPlugin.PLUGIN_ID, IStatus.OK, "Translation completed", null);
 
 			}
 
@@ -150,33 +160,52 @@ public class LatexUtils extends LatexUtilsBase
 					String documentFileName) throws InterruptedException,
 					CoreException
 			{
-				PdfLatex pdflatex = new PdfLatex(selectedProject, outputFolder, documentFileName);
+				PdfGenerator pdflatex = null;
+				if (LatexPlugin.usePdfLatex())
+				{
+					pdflatex = new PdfLatex(selectedProject, outputFolder, documentFileName);
+				} else
+				{
+					pdflatex = new Xetex(selectedProject, outputFolder, documentFileName);
+				}
 				pdflatex.start();
 
-				while (!monitor.isCanceled() && !pdflatex.isFinished
-						&& !pdflatex.hasFailed)
+				while (!monitor.isCanceled() && !pdflatex.isFinished()
+						&& !pdflatex.hasFailed())
+				{
 					Thread.sleep(500);
+				}
 
-				if (monitor.isCanceled() || pdflatex.hasFailed)
+				if (monitor.isCanceled() || pdflatex.hasFailed())
 				{
 					pdflatex.kill();
-					if (pdflatex.hasFailed)
+					if (pdflatex.hasFailed())
 					{
 						VdmUIPlugin.logErrorMessage("PDF creation failed. Please inspect the pdf console for further information.");
 					}
 				} else
 				{
-					PdfLatex pdflatex2 = new PdfLatex(selectedProject, outputFolder, documentFileName);
+					PdfGenerator pdflatex2 = null;
+
+					if (LatexPlugin.usePdfLatex())
+					{
+						pdflatex2 = new PdfLatex(selectedProject, outputFolder, documentFileName);
+					} else
+					{
+						pdflatex2 = new Xetex(selectedProject, outputFolder, documentFileName);
+					}
 					pdflatex2.start();
 
-					while (!monitor.isCanceled() && !pdflatex2.isFinished
-							&& !pdflatex.hasFailed)
+					while (!monitor.isCanceled() && !pdflatex2.isFinished()
+							&& !pdflatex.hasFailed())
+					{
 						Thread.sleep(500);
+					}
 
-					if (monitor.isCanceled() || pdflatex.hasFailed)
+					if (monitor.isCanceled() || pdflatex.hasFailed())
 					{
 						pdflatex2.kill();
-						if (pdflatex.hasFailed)
+						if (pdflatex.hasFailed())
 						{
 							VdmUIPlugin.logErrorMessage("PDF creation failed. Please inspect the pdf console for further information.");
 						}
@@ -186,21 +215,27 @@ public class LatexUtils extends LatexUtilsBase
 				selectedProject.refreshLocal(IResource.DEPTH_INFINITE, null);
 			}
 
-			private void createCoverage(LatexBuilder latexBuilder,
+			private void createCoverage(PdfBuilder latexBuilder,
 					File outputFolderForGeneratedModelFiles,
 					List<File> outputFiles, File moduleFile, boolean modelOnly)
 					throws IOException, FileNotFoundException, CoreException
 			{
 				if (isStandardLibarary(moduleFile))
+				{
 					return;
+				}
 
 				if (!outputFolderForGeneratedModelFiles.exists())
+				{
 					outputFolderForGeneratedModelFiles.mkdirs();
+				}
 
 				File texFile = new File(outputFolderForGeneratedModelFiles, moduleFile.getName().replace(" ", "")
 						+ ".tex");
 				if (texFile.exists())
+				{
 					texFile.delete();
+				}
 
 				for (int i = 0; i < outputFiles.size(); i++)
 				{
@@ -208,7 +243,7 @@ public class LatexUtils extends LatexUtilsBase
 					// System.out.println("Compare with file: "
 					// + file.getName());
 					if (file.getName().toLowerCase().endsWith(".covtbl")
-							&& (moduleFile.getName()).equals(getFileName(file)))
+							&& moduleFile.getName().equals(getFileName(file)))
 					{
 						// System.out.println("Match");
 						LexLocation.mergeHits(moduleFile, file);
@@ -222,7 +257,6 @@ public class LatexUtils extends LatexUtilsBase
 				String charset = selectedModelFile.getCharset();
 				latexBuilder.addInclude(texFile.getAbsolutePath());
 				// VDMJ.filecharset = "utf-8";
-				LatexSourceFile f = new LatexSourceFile(moduleFile, charset);
 
 				PrintWriter pw = new PrintWriter(texFile, charset);
 				IProject project = (IProject) selectedProject.getAdapter(IProject.class);
@@ -231,10 +265,22 @@ public class LatexUtils extends LatexUtilsBase
 				Settings.dialect = vdmProject.getDialect();
 				if (markCoverage(vdmProject))
 				{
-					f.printCoverage(pw, false, modelOnly, insertCoverageTable(vdmProject));
+					if (LatexPlugin.usePdfLatex())
+					{
+						new LatexSourceFile(moduleFile, charset).printCoverage(pw, false, modelOnly, insertCoverageTable(vdmProject));
+					} else
+					{
+						new XetexSourceFile(moduleFile, charset).printCoverage(pw, false, modelOnly, insertCoverageTable(vdmProject));
+					}
 				} else
 				{
-					f.print(pw, false, modelOnly, insertCoverageTable(vdmProject), false);
+					if (LatexPlugin.usePdfLatex())
+					{
+						new LatexSourceFile(moduleFile, charset).print(pw, false, modelOnly, insertCoverageTable(vdmProject), false);
+					} else
+					{
+						new XetexSourceFile(moduleFile, charset).print(pw, false, modelOnly, insertCoverageTable(vdmProject), false);
+					}
 				}
 				// ConsoleWriter cw = new ConsoleWriter("LATEX");
 				// f.printCoverage(cw);

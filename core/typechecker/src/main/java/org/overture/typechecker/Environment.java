@@ -33,8 +33,6 @@ import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 
 /**
  * The parent class of all type checking environments.
@@ -79,7 +77,7 @@ abstract public class Environment
 
 	protected void dupHideCheck(List<PDefinition> list, NameScope scope)
 	{
-		LexNameList allnames = PDefinitionListAssistantTC.getVariableNames(list);
+		LexNameList allnames = af.createPDefinitionListAssistant().getVariableNames(list);
 
 		for (ILexNameToken n1 : allnames)
 		{
@@ -105,7 +103,9 @@ abstract public class Environment
 				// TODO: RWL: This is not sound, however the behaviour below is not sound
 				// in case def.getNameScope is null.
 				if (def != null && def.getNameScope() == null)
+				{
 					def.setNameScope(NameScope.GLOBAL);
+				}
 
 				if (def != null && def.getLocation() != n1.getLocation()
 						&& def.getNameScope().matches(scope))
@@ -183,7 +183,7 @@ abstract public class Environment
 	{
 		for (PDefinition possible : findMatches(name))
 		{
-			if (PDefinitionAssistantTC.isFunctionOrOperation(possible))
+			if (af.createPDefinitionAssistant().isFunctionOrOperation(possible))
 			{
 				TypeChecker.detail("Possible", possible.getName());
 			}

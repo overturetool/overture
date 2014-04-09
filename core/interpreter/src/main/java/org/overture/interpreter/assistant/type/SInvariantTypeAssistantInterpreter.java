@@ -1,5 +1,6 @@
 package org.overture.interpreter.assistant.type;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ARecordInvariantType;
@@ -41,7 +42,7 @@ public class SInvariantTypeAssistantInterpreter
 	}
 
 	public static ValueList getAllValues(SInvariantType type, Context ctxt)
-			throws ValueException
+			throws AnalysisException
 	{
 		if (type instanceof ANamedInvariantType)
 		{

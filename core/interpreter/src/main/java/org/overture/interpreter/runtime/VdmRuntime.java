@@ -11,6 +11,7 @@ import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.eval.DelegateStatementEvaluator;
 import org.overture.interpreter.runtime.state.AExplicitFunctionDefinitionRuntimeState;
 import org.overture.interpreter.runtime.state.AImplicitFunctionDefinitionRuntimeState;
@@ -100,13 +101,13 @@ public class VdmRuntime
 		return state;
 	}
 	
-	public static SClassDefinitionRuntime getNodeState(SClassDefinition node)
+	public static SClassDefinitionRuntime getNodeState(IInterpreterAssistantFactory assistantFactory,SClassDefinition node)
 	{
 		SClassDefinitionRuntime state = (SClassDefinitionRuntime) runtimeState.get(node);
 		
 		if(state == null)
 		{
-			state = new SClassDefinitionRuntime(node);
+			state = new SClassDefinitionRuntime(assistantFactory,node);
 			runtimeState.put(node, state );
 		}
 		
@@ -115,13 +116,13 @@ public class VdmRuntime
 	
 	
 	
-	public static ASystemClassDefinitionRuntime getNodeState(ASystemClassDefinition node)
+	public static ASystemClassDefinitionRuntime getNodeState(IInterpreterAssistantFactory assistantFactory,ASystemClassDefinition node)
 	{
 		ASystemClassDefinitionRuntime state = (ASystemClassDefinitionRuntime) runtimeState.get(node);
 		
 		if(state == null)
-		{
-			state = new ASystemClassDefinitionRuntime(node);
+		{	
+			state = new ASystemClassDefinitionRuntime(assistantFactory,node);
 			runtimeState.put(node, state );
 		}
 		

@@ -9,10 +9,9 @@ import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.values.NameValuePair;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.Value;
-import org.overture.typechecker.assistant.pattern.AIdentifierPatternAssistantTC;
 
-public class AIdentifierPatternAssistantInterpreter extends
-		AIdentifierPatternAssistantTC
+public class AIdentifierPatternAssistantInterpreter
+
 {
 	protected static IInterpreterAssistantFactory af;
 
@@ -20,7 +19,6 @@ public class AIdentifierPatternAssistantInterpreter extends
 	public AIdentifierPatternAssistantInterpreter(
 			IInterpreterAssistantFactory af)
 	{
-		super(af);
 		this.af = af;
 	}
 
@@ -34,22 +32,22 @@ public class AIdentifierPatternAssistantInterpreter extends
 		return result;
 	}
 
-	public static boolean isConstrained(AIdentifierPattern pattern)
-	{
-		return pattern.getConstrained(); // The variable may be constrained to be the same as another occurrence
-	}
+//	public static boolean isConstrained(AIdentifierPattern pattern)
+//	{
+//		return pattern.getConstrained(); // The variable may be constrained to be the same as another occurrence
+//	}
 
-	public static int getLength(AIdentifierPattern pattern)
-	{
-		return PPatternAssistantInterpreter.ANY; // Special value meaning "any length"
-	}
+//	public static int getLength(AIdentifierPattern pattern)
+//	{
+//		return PPatternAssistantInterpreter.ANY; // Special value meaning "any length"
+//	}
 
-	public static List<AIdentifierPattern> findIdentifiers(
-			AIdentifierPattern pattern)
-	{
-		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
-		list.add(pattern);
-		return list;
-	}
+//	public static List<AIdentifierPattern> findIdentifiers(
+//			AIdentifierPattern pattern)
+//	{
+//		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
+//		list.add(pattern);
+//		return list;
+//	}
 
 }

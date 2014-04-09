@@ -1,0 +1,12 @@
+class A
+
+types
+
+  private Vector2D ::
+    x : nat
+    y : nat;
+
+	public Real ::
+		r : real
+
+end A

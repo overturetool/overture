@@ -1,0 +1,19 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    private static VDMMap x = MapUtil.map(new Maplet(1L, true));
+
+    public Entry() {
+    }
+
+    public static Object Run() {
+        x.put(4L, false);
+
+        return x.clone();
+    }
+}
+
+##########

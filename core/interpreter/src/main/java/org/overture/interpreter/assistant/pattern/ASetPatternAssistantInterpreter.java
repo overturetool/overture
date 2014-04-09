@@ -8,28 +8,25 @@ import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.ASetPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
-import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.ValueException;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.traces.Permutor;
 import org.overture.interpreter.values.NameValuePair;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.NameValuePairMap;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueSet;
-import org.overture.typechecker.assistant.pattern.ASetPatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
 
-public class ASetPatternAssistantInterpreter extends ASetPatternAssistantTC
+public class ASetPatternAssistantInterpreter
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
 	public ASetPatternAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		super(af);
+		//super(af);
 		this.af = af;
 	}
 
@@ -144,10 +141,10 @@ public class ASetPatternAssistantInterpreter extends ASetPatternAssistantTC
 		return finalResults;
 	}
 
-	static boolean isConstrained(ASetPattern pattern)
+	public static boolean isConstrained(ASetPattern pattern)
 	{
 
-		if (PTypeAssistantInterpreter.isUnion(PPatternListAssistantTC.getPossibleType(pattern.getPlist(), pattern.getLocation())))
+		if (af.createPTypeAssistant().isUnion(af.createPPatternListAssistant().getPossibleType(pattern.getPlist(), pattern.getLocation())))
 		{
 			return true; // Set types are various, so we must permute
 		}
@@ -155,20 +152,20 @@ public class ASetPatternAssistantInterpreter extends ASetPatternAssistantTC
 		return PPatternListAssistantInterpreter.isConstrained(pattern.getPlist());
 	}
 
-	public static int getLength(ASetPattern pattern)
-	{
-		return pattern.getPlist().size();
-	}
+//	public static int getLength(ASetPattern pattern)
+//	{
+//		return pattern.getPlist().size();
+//	}
 
-	public static List<AIdentifierPattern> findIdentifiers(ASetPattern pattern)
-	{
-		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
-
-		for (PPattern p : pattern.getPlist())
-		{
-			list.addAll(PPatternAssistantInterpreter.findIdentifiers(p));
-		}
-
-		return list;
-	}
+//	public static List<AIdentifierPattern> findIdentifiers(ASetPattern pattern)
+//	{
+//		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
+//
+//		for (PPattern p : pattern.getPlist())
+//		{
+//			list.addAll(PPatternAssistantInterpreter.findIdentifiers(p));
+//		}
+//
+//		return list;
+//	}
 }

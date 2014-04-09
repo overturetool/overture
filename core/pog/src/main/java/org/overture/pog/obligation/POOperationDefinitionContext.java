@@ -43,6 +43,7 @@ import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
+import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.typechecker.assistant.definition.AImplicitOperationDefinitionAssistantTC;
 
 public class POOperationDefinitionContext extends POContext
@@ -72,12 +73,12 @@ public class POOperationDefinitionContext extends POContext
 
 	public POOperationDefinitionContext(
 			AImplicitOperationDefinition definition, boolean precond,
-			PDefinition stateDefinition)
+			PDefinition stateDefinition,IPogAssistantFactory assistantFactory )
 	{
 		this.name = definition.getName();
 		this.deftype = (AOperationType) definition.getType();
 		this.addPrecond = precond;
-		this.paramPatternList = AImplicitOperationDefinitionAssistantTC.getParamPatternList(definition);
+		this.paramPatternList = assistantFactory.createAImplicitOperationDefinitionAssistant().getParamPatternList(definition);
 		this.precondition = definition.getPrecondition();
 		this.stateDefinition = stateDefinition;
 		this.opDef = definition;
@@ -140,12 +141,12 @@ public class POOperationDefinitionContext extends POContext
 				AStateDefinition def = (AStateDefinition) stateDefinition;
 
 				tmBind2.setType(def.getRecordType().clone());
-				pattern.setName(OLD_STATE_ARG);
+				pattern.setName(OLD_STATE_ARG.clone());
 			} else
 			{
 				SClassDefinition def = (SClassDefinition) stateDefinition;
 				tmBind2.setType(def.getClasstype().clone());
-				pattern.setName(OLD_SELF_ARG);
+				pattern.setName(OLD_SELF_ARG.clone());
 			}
 
 			List<PPattern> plist = new LinkedList<PPattern>();

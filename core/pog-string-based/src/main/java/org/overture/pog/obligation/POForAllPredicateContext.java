@@ -29,6 +29,7 @@ import org.overture.ast.expressions.AMapCompMapExp;
 import org.overture.ast.expressions.ASeqCompSeqExp;
 import org.overture.ast.expressions.ASetCompSetExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class POForAllPredicateContext extends POForAllContext
 {
@@ -46,21 +47,21 @@ public class POForAllPredicateContext extends POForAllContext
 		this.predicate = exp.getPredicate();
 	}
 
-	public POForAllPredicateContext(ASeqCompSeqExp exp)
+	public POForAllPredicateContext(ASeqCompSeqExp exp, ITypeCheckerAssistantFactory assistantFactory)
 	{
-		super(exp);
+		super(exp, assistantFactory);
 		this.predicate = exp.getPredicate();
 	}
 
-	public POForAllPredicateContext(AExists1Exp exp)
+	public POForAllPredicateContext(ITypeCheckerAssistantFactory af,AExists1Exp exp)
 	{
-		super(exp);
+		super(af,exp);
 		this.predicate = exp.getPredicate();
 	}
 
-	public POForAllPredicateContext(ALetBeStExp exp)
+	public POForAllPredicateContext(ALetBeStExp exp, ITypeCheckerAssistantFactory assistantFactory)
 	{
-		super(exp);
+		super(exp, assistantFactory);
 		this.predicate = exp.getSuchThat();
 	}
 

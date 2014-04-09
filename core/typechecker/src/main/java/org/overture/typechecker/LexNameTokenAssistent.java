@@ -1,10 +1,18 @@
 package org.overture.typechecker;
 
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class LexNameTokenAssistent
 {
-	public static boolean isEqual(ILexNameToken token, Object other)
+	public ITypeCheckerAssistantFactory af;
+	
+	public LexNameTokenAssistent(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
+	}
+	
+	public boolean isEqual(ILexNameToken token, Object other)
 	{
 		if (!(other instanceof ILexNameToken))
 		{
@@ -16,12 +24,14 @@ public class LexNameTokenAssistent
 		if (token.getTypeQualifier() != null
 				&& lother.getTypeQualifier() != null)
 		{
-			if (!TypeComparator.compatible(token.getTypeQualifier(), lother.getTypeQualifier()))
+			if (!TypeComparator.compatible(token.getTypeQualifier(), lother.getTypeQualifier(), af ))
 			{
 				return false;
 			}
-		} else if ((token.getTypeQualifier() != null && lother.getTypeQualifier() == null)
-				|| (token.getTypeQualifier() == null && lother.getTypeQualifier() != null))
+		} else if (token.getTypeQualifier() != null
+				&& lother.getTypeQualifier() == null
+				|| token.getTypeQualifier() == null
+				&& lother.getTypeQualifier() != null)
 		{
 			return false;
 		}

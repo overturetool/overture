@@ -29,12 +29,11 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import org.junit.Assert;
-import org.junit.Assume;
 import org.overture.test.framework.results.IMessage;
 import org.overture.test.framework.results.IResultCombiner;
 import org.overture.test.framework.results.Result;
-import org.overture.test.util.XmlResultReaderWritter;
-import org.overture.test.util.XmlResultReaderWritter.IResultStore;
+import org.overture.test.util.XmlResultReaderWriter;
+import org.overture.test.util.XmlResultReaderWriter.IResultStore;
 
 public abstract class ResultTestCase4<R>  implements IResultStore<R>
 {
@@ -58,21 +57,16 @@ public abstract class ResultTestCase4<R>  implements IResultStore<R>
 	{
 		if(Properties.recordTestResults)
 		{
-			//MessageReaderWritter mrw = new MessageReaderWritter(createResultFile(filename));
-			//mrw.set(result);
-			//mrw.save();
 			File resultFile = createResultFile(filename);
 			resultFile.getParentFile().mkdirs();
-			XmlResultReaderWritter<R> xmlResult = new XmlResultReaderWritter<R>(resultFile,this);
+			XmlResultReaderWriter<R> xmlResult = new XmlResultReaderWriter<R>(resultFile,this);
 			xmlResult.setResult(this.getClass().getName(),result);
 			try {
 				xmlResult.saveInXml();
 			} catch (ParserConfigurationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw new RuntimeException("Failed to encode recorded test result xml",e);
 			} catch (TransformerException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw new RuntimeException("Failed to transform recorded test result xml",e);
 			}
 			
 			return;
@@ -80,12 +74,17 @@ public abstract class ResultTestCase4<R>  implements IResultStore<R>
 		
 		File file = getResultFile(filename);
 
-		Assert.assertNotNull("Result file " + file.getName() + " was not found", file);
-		Assume.assumeTrue(file.exists());
+		Assert.assertNotNull("Result file " + filename + " was not found", file);
+		Assert.assertTrue("The result files does not exist: "+file.getPath()+ "\n\n Cannot compare result:\n "+result,file.exists());
+		if(!file.exists())
+		{
+			//Assume doesn't always work.
+			return;
+		}
 		Assert.assertTrue("Result file " + file.getAbsolutePath() + " does not exist", file.exists());
 		
-		//MessageReaderWritter mrw = new MessageReaderWritter(file);
-		XmlResultReaderWritter<R> xmlResult = new XmlResultReaderWritter<R>(file,this);
+		//MessageReaderWriter mrw = new MessageReaderWriter(file);
+		XmlResultReaderWriter<R> xmlResult = new XmlResultReaderWriter<R>(file,this);
 		boolean parsed = xmlResult.loadFromXml();
 
 		Assert.assertTrue("Could not read result file: " + file.getName(), parsed);
@@ -96,7 +95,7 @@ public abstract class ResultTestCase4<R>  implements IResultStore<R>
 			PrintWriter pw = new PrintWriter(os );
 			boolean errorsFound = checkMessages("warning", xmlResult.getWarnings(), result.warnings,pw);
 			errorsFound = checkMessages("error", xmlResult.getErrors(), result.errors,pw) || errorsFound;
-			errorsFound = !assertEqualResults( xmlResult.getResult().result, result.result) || errorsFound;
+			errorsFound = !assertEqualResults( xmlResult.getResult().result, result.result,pw) || errorsFound;
 			pw.flush();
 			pw.close();
 			Assert.assertFalse("Errors found in file \"" + filename + "\"\n\n"+ os.toString(), errorsFound);
@@ -110,7 +109,7 @@ public abstract class ResultTestCase4<R>  implements IResultStore<R>
 	 * @return If equal true or check has to be ignored true is returned else false
 	 */
 	protected abstract boolean assertEqualResults(R expected,
-			R actual);
+			R actual,PrintWriter out);
 
 	protected abstract File createResultFile(String filename);
 

@@ -9,57 +9,57 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.modules.AModuleExports;
 import org.overture.ast.modules.PExport;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
 public class AModuleExportsAssistantTC
 {
-	protected static ITypeCheckerAssistantFactory af;
+	protected ITypeCheckerAssistantFactory af;
 
-	@SuppressWarnings("static-access")
 	public AModuleExportsAssistantTC(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
-	public static Collection<? extends PDefinition> getDefinitions(
+
+	public Collection<? extends PDefinition> getDefinitions(
 			AModuleExports aModuleExports, LinkedList<PDefinition> actualDefs)
 	{
 		List<PDefinition> exportDefs = new Vector<PDefinition>();
 
-		for (List<PExport> etype: aModuleExports.getExports())
+		for (List<PExport> etype : aModuleExports.getExports())
 		{
-			for (PExport exp: etype)
+			for (PExport exp : etype)
 			{
-				exportDefs.addAll(PExportAssistantTC.getDefinition(exp,actualDefs));
+				exportDefs.addAll(af.createPExportAssistant().getDefinition(exp, actualDefs));
 			}
 		}
 
 		// Mark all exports as used
 
-		for (PDefinition d: exportDefs)
+		for (PDefinition d : exportDefs)
 		{
-			PDefinitionAssistantTC.markUsed(d);
+			af.createPDefinitionAssistant().markUsed(d);
 		}
 
 		return exportDefs;
 	}
-	
-	public static Collection<? extends PDefinition> getDefinitions(AModuleExports aModuleExports)
+
+	public Collection<? extends PDefinition> getDefinitions(
+			AModuleExports aModuleExports)
 	{
 		List<PDefinition> exportDefs = new Vector<PDefinition>();
 
-		for (List<PExport> etype: aModuleExports.getExports())
+		for (List<PExport> etype : aModuleExports.getExports())
 		{
-			for (PExport exp: etype)
+			for (PExport exp : etype)
 			{
-				exportDefs.addAll(PExportAssistantTC.getDefinition(exp));
+				exportDefs.addAll(af.createPExportAssistant().getDefinition(exp));
 			}
 		}
 
 		// Mark all exports as used
 
-		for (PDefinition d: exportDefs)
+		for (PDefinition d : exportDefs)
 		{
-			PDefinitionAssistantTC.markUsed(d);
+			af.createPDefinitionAssistant().markUsed(d);
 		}
 
 		return exportDefs;

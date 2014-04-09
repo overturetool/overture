@@ -33,6 +33,8 @@ import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PType;
+import org.overture.pog.assistant.IPogAssistantFactory;
+import org.overture.pog.assistant.PogAssistantFactory;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 
@@ -43,25 +45,28 @@ public class POFunctionDefinitionContext extends POContext
 	public final List<List<PPattern>> paramPatternList;
 	public final boolean addPrecond;
 	public final PExp precondition;
+	public final IPogAssistantFactory assistantFactory;
 
 	public POFunctionDefinitionContext(AExplicitFunctionDefinition definition,
-			boolean precond)
+			boolean precond, IPogAssistantFactory question)
 	{
 		this.name = definition.getName();
 		this.deftype = (AFunctionType) definition.getType();
 		this.paramPatternList = definition.getParamPatternList();
 		this.addPrecond = precond;
 		this.precondition = definition.getPrecondition();
+		this.assistantFactory = question;
 	}
 
 	public POFunctionDefinitionContext(AImplicitFunctionDefinition definition,
-			boolean precond)
+			boolean precond, IPogAssistantFactory question)
 	{
 		this.name = definition.getName();
 		this.deftype = (AFunctionType) definition.getType();
 		this.addPrecond = precond;
-		this.paramPatternList = AImplicitFunctionDefinitionAssistantTC.getParamPatternList(definition);
+		this.paramPatternList = question.createAImplicitFunctionDefinitionAssistant().getParamPatternList(definition);
 		this.precondition = definition.getPrecondition();
+		this.assistantFactory = question;
 	}
 
 	@Override
@@ -82,7 +87,7 @@ public class POFunctionDefinitionContext extends POContext
 				for (PPattern p : pl)
 				{
 					sb.append(sep);
-					sb.append(PPatternAssistantTC.getMatchingExpression(p)); // Expands anys
+					sb.append(assistantFactory.createPPatternAssistant().getMatchingExpression(p)); // Expands anys
 					sb.append(":");
 					sb.append(types.next());
 					sep = ", ";

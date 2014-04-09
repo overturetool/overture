@@ -16,16 +16,14 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class AStateDefinitionAssistantTC
 {
-	protected static ITypeCheckerAssistantFactory af;
+	protected ITypeCheckerAssistantFactory af;
 
-	@SuppressWarnings("static-access")
 	public AStateDefinitionAssistantTC(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
 
-
-	public static AExplicitFunctionDefinition getInitDefinition(
+	public AExplicitFunctionDefinition getInitDefinition(
 			AStateDefinition d)
 	{
 		ILexLocation loc = d.getInitPattern().getLocation();
@@ -46,7 +44,7 @@ public class AStateDefinitionAssistantTC
 		return def;
 	}
 
-	public static AExplicitFunctionDefinition getInvDefinition(
+	public AExplicitFunctionDefinition getInvDefinition(
 			AStateDefinition d)
 	{
 

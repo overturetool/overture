@@ -1,0 +1,15 @@
+class A
+
+operations 
+
+public double : nat ==> ()
+double (Character) == 
+	if true then
+	(
+		return;
+	  double(3) 
+	) 
+	else
+			double(3)
+			
+end A

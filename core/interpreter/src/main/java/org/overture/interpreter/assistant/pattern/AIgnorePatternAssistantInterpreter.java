@@ -8,17 +8,15 @@ import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.Value;
-import org.overture.typechecker.assistant.pattern.AIgnorePatternAssistantTC;
 
-public class AIgnorePatternAssistantInterpreter extends
-		AIgnorePatternAssistantTC
+public class AIgnorePatternAssistantInterpreter
+
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
 	public AIgnorePatternAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		super(af);
 		this.af = af;
 	}
 
@@ -30,14 +28,14 @@ public class AIgnorePatternAssistantInterpreter extends
 		return result;
 	}
 
-	public static boolean isConstrained(AIgnorePattern pattern)
-	{
-		return false;
-	}
+//	public static boolean isConstrained(AIgnorePattern pattern)
+//	{
+//		return false;
+//	}
 
-	public static int getLength(AIgnorePattern pattern)
-	{
-		return PPatternAssistantInterpreter.ANY; // Special value meaning "any length"
-	}
+//	public static int getLength(AIgnorePattern pattern)
+//	{
+//		return PPatternAssistantInterpreter.ANY; // Special value meaning "any length"
+//	}
 
 }

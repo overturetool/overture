@@ -1,0 +1,15 @@
+class C
+
+operations
+
+public op : () ==> real   
+op () == return Q`pi;
+
+end C
+
+class Q
+
+values
+	public pi = 3.14;
+
+end Q

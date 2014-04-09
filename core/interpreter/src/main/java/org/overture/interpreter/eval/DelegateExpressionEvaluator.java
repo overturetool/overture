@@ -32,10 +32,6 @@ import org.overture.interpreter.values.ValueList;
 
 public class DelegateExpressionEvaluator extends ExpressionEvaluator
 {
-	/**
-	 * Serial version UID
-	 */
-	private static final long serialVersionUID = 4591747505913606307L;
 
 	@Override
 	public Value caseANotYetSpecifiedExp(ANotYetSpecifiedExp node,
@@ -111,7 +107,7 @@ public class DelegateExpressionEvaluator extends ExpressionEvaluator
 
     			if (cls != null)
     			{
-    				SClassDefinitionRuntime state =VdmRuntime.getNodeState(cls);
+    				SClassDefinitionRuntime state =VdmRuntime.getNodeState(ctxt.assistantFactory,cls);
     				if (state.hasDelegate())
     				{
     					return state.invokeDelegate(ctxt);

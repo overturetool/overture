@@ -2,6 +2,7 @@ package org.overture.interpreter.assistant.type;
 
 import java.util.List;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.types.ASetType;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
@@ -9,21 +10,19 @@ import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.values.SetValue;
 import org.overture.interpreter.values.ValueList;
 import org.overture.interpreter.values.ValueSet;
-import org.overture.typechecker.assistant.type.ASetTypeAssistantTC;
 
-public class ASetTypeAssistantInterpreter extends ASetTypeAssistantTC
+public class ASetTypeAssistantInterpreter
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
 	public ASetTypeAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		super(af);
 		this.af = af;
 	}
 
 	public static ValueList getAllValues(ASetType type, Context ctxt)
-			throws ValueException
+			throws AnalysisException
 	{
 		ValueList list = PTypeAssistantInterpreter.getAllValues(type.getSetof(), ctxt);
 		ValueSet set = new ValueSet(list.size());

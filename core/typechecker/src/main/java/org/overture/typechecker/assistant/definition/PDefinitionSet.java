@@ -15,9 +15,8 @@ public class PDefinitionSet extends HashSet<PDefinition>
 	 */
 	private static final long serialVersionUID = 2315113629324204849L;
 
-	protected static ITypeCheckerAssistantFactory af;
+	protected ITypeCheckerAssistantFactory af;
 
-	@SuppressWarnings("static-access")
 	public PDefinitionSet(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;

@@ -6,7 +6,6 @@ import java.util.Set;
 import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.definition.PDefinitionAssistant;
 import org.overture.ast.definitions.PDefinition;
@@ -22,11 +21,10 @@ import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.util.HelpLexNameToken;
+import org.overture.typechecker.utilities.DefinitionFinder;
+import org.overture.typechecker.utilities.DefinitionTypeResolver;
 import org.overture.typechecker.utilities.NameFinder;
-import org.overture.typechecker.utilities.TypeFinder;
-import org.overture.typechecker.utilities.TypeResolver;
 
 //TODO Add assistant Javadoc
 /** Top-Level assistant. Will probably remain present
@@ -36,9 +34,8 @@ import org.overture.typechecker.utilities.TypeResolver;
  */
 public class PDefinitionAssistantTC extends PDefinitionAssistant
 {
-	protected static ITypeCheckerAssistantFactory af;
+	protected ITypeCheckerAssistantFactory af;
 
-	@SuppressWarnings("static-access")
 	public PDefinitionAssistantTC(ITypeCheckerAssistantFactory af)
 	{
 		super(af);
@@ -56,11 +53,11 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 		}
 	}
 
-	public static boolean hasSupertype(SClassDefinition aClassDefDefinition,
+	public boolean hasSupertype(SClassDefinition aClassDefDefinition,
 			PType other)
 	{
 
-		if (PTypeAssistantTC.equals(af.createPDefinitionAssistant().getType(aClassDefDefinition), other))
+		if (af.createPTypeAssistant().equals(af.createPDefinitionAssistant().getType(aClassDefDefinition), other))
 		{
 			return true;
 		} else
@@ -69,7 +66,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 			{
 				AClassType sclass = (AClassType) type;
 
-				if (PTypeAssistantTC.hasSupertype(sclass, other))
+				if (af.createPTypeAssistant().hasSupertype(sclass, other))
 				{
 					return true;
 				}
@@ -78,13 +75,14 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 		return false;
 
 	}
-
-	public static boolean isFunctionOrOperation(PDefinition possible)
+	
+	
+	public boolean isFunctionOrOperation(PDefinition possible)
 	{
-		return isFunction(possible) || isOperation(possible);
+		return af.createPDefinitionAssistant().isFunction(possible) || af.createPDefinitionAssistant().isOperation(possible);
 	}
 
-	public static PDefinition findType(List<PDefinition> definitions,
+	public PDefinition findType(List<PDefinition> definitions,
 			ILexNameToken name, String fromModule)
 	{
 
@@ -102,39 +100,45 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	}
 
-	public static PDefinition findType(PDefinition d, ILexNameToken sought,
+	public PDefinition findType(PDefinition d, ILexNameToken sought,
 			String fromModule)
 	{
 		try
 		{
-			return d.apply(af.getTypeFinder(),new TypeFinder.Newquestion(sought, fromModule));// FIXME: should we handle exceptions like this
+			return d.apply(af.getDefinitionFinder(), new DefinitionFinder.Newquestion(sought, fromModule));// FIXME:
+																											// should we
+			// handle exceptions
+			// like this
 		} catch (AnalysisException e)
 		{
 			return null;
 		}
 	}
 
-	public static PDefinition findName(PDefinition d, ILexNameToken sought,
+	public PDefinition findName(PDefinition d, ILexNameToken sought,
 			NameScope scope)
 	{
-		
+
 		try
 		{
-			return d.apply(af.getNameFinder(),new NameFinder.Newquestion(sought, scope));// FIXME: should we handle exceptions like this
+			return d.apply(af.getNameFinder(), new NameFinder.Newquestion(sought, scope));// FIXME: should we handle
+																							// exceptions like this
 		} catch (AnalysisException e)
 		{
 			return null;
 		}
-		
+
 	}
 
-	public static PDefinition findNameBaseCase(PDefinition d,
+	public PDefinition findNameBaseCase(PDefinition d,
 			ILexNameToken sought, NameScope scope)
 	{
 		if (HelpLexNameToken.isEqual(d.getName(), sought))
 		{
-			if ((d.getNameScope() == NameScope.STATE && !scope.matches(NameScope.STATE))
-					|| (d.getNameScope() == NameScope.OLDSTATE && !scope.matches(NameScope.OLDSTATE)))
+			if (d.getNameScope() == NameScope.STATE
+					&& !scope.matches(NameScope.STATE)
+					|| d.getNameScope() == NameScope.OLDSTATE
+					&& !scope.matches(NameScope.OLDSTATE))
 			{
 
 				TypeChecker.report(3302, "State variable '"
@@ -150,31 +154,31 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	}
 
-	public static void markUsed(PDefinition d)
+	public void markUsed(PDefinition d)
 	{
 		try
 		{
-			 d.apply(af.getUsedMarker());// FIXME: should we handle exceptions like this
+			d.apply(af.getUsedMarker());// FIXME: should we handle exceptions like this
 		} catch (AnalysisException e)
 		{
-			
+
 		}
 	}
 
-	public static void unusedCheck(PDefinition d)
+	public void unusedCheck(PDefinition d)
 	{
 		try
 		{
-			 d.apply(af.getUnusedChecker());// FIXME: should we handle exceptions like this
+			d.apply(af.getUnusedChecker());// FIXME: should we handle exceptions like this
 		} catch (AnalysisException e)
 		{
-			
+
 		}
 	}
 
 	public void unusedCheckBaseCase(PDefinition d)
 	{
-		if (!PDefinitionAssistantTC.isUsed(d))
+		if (!af.createPDefinitionAssistant().isUsed(d))
 		{
 			TypeCheckerErrors.warning(5000, "Definition '" + d.getName()
 					+ "' not used", d.getLocation(), d);
@@ -183,7 +187,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	}
 
-	public static List<PDefinition> getDefinitions(PDefinition d)
+	public List<PDefinition> getDefinitions(PDefinition d)
 	{
 		try
 		{
@@ -195,7 +199,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	}
 
-	public static PDefinition getSelfDefinition(PDefinition d)
+	public PDefinition getSelfDefinition(PDefinition d)
 	{
 		try
 		{
@@ -207,7 +211,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	}
 
-	public static LexNameList getVariableNames(PDefinition d)
+	public LexNameList getVariableNames(PDefinition d)
 	{
 		try
 		{
@@ -219,12 +223,12 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	}
 
-	public static boolean isStatic(PDefinition fdef)
+	public boolean isStatic(PDefinition fdef)
 	{
-		return PAccessSpecifierAssistantTC.isStatic(fdef.getAccess());
+		return af.createPAccessSpecifierAssistant().isStatic(fdef.getAccess());
 	}
 
-	public static PDefinition deref(PDefinition d)
+	public PDefinition deref(PDefinition d)
 	{
 		try
 		{
@@ -236,7 +240,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	}
 
-	public static boolean isCallableOperation(PDefinition d)
+	public boolean isCallableOperation(PDefinition d)
 	{
 		try
 		{
@@ -248,7 +252,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	}
 
-	public static boolean isUsed(PDefinition d)
+	public boolean isUsed(PDefinition d)
 	{
 		try
 		{
@@ -260,28 +264,32 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	}
 
-	public static void implicitDefinitions(PDefinition d, Environment env)
+	public void implicitDefinitions(PDefinition d, Environment env)
 	{
 		try
 		{
-			 d.apply(af.getImplicitDefinitionFinder(), env);// FIXME: should we handle exceptions like this
+			d.apply(af.getImplicitDefinitionFinder(), env);// FIXME: should we handle exceptions like this
 		} catch (AnalysisException e)
 		{
-			
+
 		}
 
 	}
 
-	public static void typeResolve(PDefinition d,
+	public void typeResolve(PDefinition d,
 			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) throws AnalysisException
 	{
 		try
 		{
-			d.apply(af.getTypeResolver(), new TypeResolver.NewQuestion(rootVisitor, question));// FIXME: should we handle exceptions like this
+			d.apply(af.getDefinitionTypeResolver(), new DefinitionTypeResolver.NewQuestion(rootVisitor, question));// FIXME:
+																													// should
+																													// we
+			// handle exceptions
+			// like this
 		} catch (AnalysisException e)
 		{
-			
+
 		}
 
 	}
@@ -309,7 +317,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 		}
 	}
 
-	public static String kind(PDefinition d)
+	public String kind(PDefinition d)
 	{
 		try
 		{
@@ -319,10 +327,9 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 			return null;
 		}
 
-
 	}
 
-	public static boolean isFunction(PDefinition d)
+	public boolean isFunction(PDefinition d)
 	{
 		try
 		{
@@ -333,8 +340,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 		}
 	}
 
-	
-	public static boolean isOperation(PDefinition d)
+	public boolean isOperation(PDefinition d)
 	{
 		try
 		{
@@ -345,11 +351,10 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 		}
 	}
 
-
 	/**
 	 * Check a DefinitionList for incompatible duplicate pattern definitions.
 	 */
-	public static List<PDefinition> checkDuplicatePatterns(PDefinition d,
+	public List<PDefinition> checkDuplicatePatterns(PDefinition d,
 			List<PDefinition> defs)
 	{
 		Set<PDefinition> noDuplicates = new HashSet<PDefinition>();

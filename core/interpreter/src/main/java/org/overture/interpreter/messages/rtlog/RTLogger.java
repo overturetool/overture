@@ -23,154 +23,109 @@
 
 package org.overture.interpreter.messages.rtlog;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.LinkedList;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.List;
+import java.util.Vector;
 
-import org.overture.interpreter.messages.Console;
-import org.overture.interpreter.messages.rtlog.RTThreadSwapMessage.SwapType;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
 
-
+/**
+ * Real-time logger. This logger delegates the actual logging to its internal loggers that each must have an output
+ * location specified through {@link RTLogger#setLogfile(Class, File)}
+ * 
+ * @author kel
+ */
 public class RTLogger
 {
-	private static boolean enabled = false;
-	private static List<RTMessage> events = new LinkedList<RTMessage>();
-	private static PrintWriter logfile = null;
-	private static RTMessage cached = null;
-	private static NextGenRTLogger nextGenLog = NextGenRTLogger.getInstance();
-	
+	static int eventCount = 0;
+	static boolean enabled = false;
+
+	private static List<IRTLogger> loggers = new Vector<IRTLogger>();
+
+	static
+	{
+		loggers.add(new RTTextLogger());
+		loggers.add(new NextGenRTLogger());
+	}
+
+	/**
+	 * Turns the logging on or off
+	 * 
+	 * @param on
+	 */
 	public static synchronized void enable(boolean on)
 	{
-		if (!on)
+		for (IRTLogger logger : loggers)
 		{
-			dump(true);
-			cached = null;
+			logger.enable(on);
 		}
-
+		
 		enabled = on;
 	}
 
-	
+	/**
+	 * Log a message
+	 * 
+	 * @param message
+	 */
 	public static synchronized void log(RTMessage message)
 	{
-		oldLog(message);
-		nextGenLog.log(message);
-	}
-	
-	public static synchronized void oldLog(RTMessage message)
-	{
-		if (!enabled)
+		if (enabled)
 		{
-			return;
+			eventCount++;
+			
+			for (IRTLogger logger : loggers)
+			{
+				logger.log(message);
+			}
 		}
-		// generate any static deploys required for this message
-		message.generateStaticDeploys();
+	}
+
+	/**
+	 * Configure the logger output types
+	 * 
+	 * @param logger
+	 * @param output
+	 * @throws FileNotFoundException
+	 */
+	public static void setLogfile(Class<? extends IRTLogger> loggerClass,
+			File outputFile) throws FileNotFoundException
+	{
+		for (IRTLogger logger : loggers)
+		{
+			if (logger.getClass() == loggerClass)
+			{
+				logger.setLogfile(outputFile);
+				logger.dump(true); // Write out and close previous
+			}
+		}
 		
-		doLog(message);
-
+		enable(true);
 	}
 
-	
-	private static synchronized void doLog(RTMessage message)
-	{
-		RTMessage event = message;
-
-		if (event instanceof RTThreadSwapMessage && (((RTThreadSwapMessage)event).getType()==SwapType.In 
-				|| ((RTThreadSwapMessage)event).getType()==SwapType.DelayedIn))
-		{
-			if (cached != null)
-			{
-				doInternalLog(cached);
-			}
-
-			cached = event;
-			return;
-		}
-
-		if (cached != null)
-		{
-			if (event instanceof RTThreadSwapMessage && ((RTThreadSwapMessage)event).getType()==SwapType.Out)
-			{
-				RTThreadMessage eventThreadMessage = (RTThreadMessage) event;
-				if(cached instanceof RTThreadSwapMessage)
-				{
-					RTThreadSwapMessage cachedThreadSwap = (RTThreadSwapMessage) cached;
-					
-					if((cachedThreadSwap.getType() == SwapType.DelayedIn || cachedThreadSwap.getType() == SwapType.In)
-							&& cachedThreadSwap.equals(eventThreadMessage.getThread())
-							&& cachedThreadSwap.getLogTime().equals(eventThreadMessage.getLogTime()))
-					{
-						cached = null;
-						return;
-					}
-						
-				}
-			}
-
-			doInternalLog(cached);
-			cached = null;
-		}
-
-		doInternalLog(event);
-	}
-
-	
-	private static void doInternalLog(RTMessage event)
-	{
-		if (logfile == null)
-		{
-			Console.out.println(event);
-		} else
-		{
-			events.add(event);
-
-			if (events.size() > 1000)
-			{
-				dump(false);
-			}
-		}
-	}
-
-	public static void setLogfile(PrintWriter out)
-	{
-		enabled = true;
-		dump(true); // Write out and close previous
-		logfile = out;
-		cached = null;
-	}
-
+	/**
+	 * Gets an estimate of events that may not already have been persisted
+	 * 
+	 * @return
+	 */
 	public static int getLogSize()
 	{
-		return events.size();
+		return eventCount;
 	}
 
+	/**
+	 * Force a dump of cached log messages if any
+	 * 
+	 * @param close
+	 */
 	public static synchronized void dump(boolean close)
 	{
-		if (logfile != null)
+		for (IRTLogger logger : loggers)
 		{
-			for (RTMessage event : events)
-			{
-				logfile.println(event.getMessage());
-			}
-
-			logfile.flush();
-			events.clear();
-
-			if (close)
-			{
-				logfile.close();
-			}
-			
-			try
-			{
-				nextGenLog.persistToFile();
-			} catch (IOException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			logger.dump(close);
 		}
+		
+		eventCount = 0;
 	}
 }

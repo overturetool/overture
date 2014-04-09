@@ -1,7 +1,6 @@
 package org.overture.typechecker.assistant.type;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.type.SNumericBasicTypeAssistant;
 import org.overture.ast.expressions.SNumericBinaryExp;
@@ -14,9 +13,8 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class SNumericBasicTypeAssistantTC extends SNumericBasicTypeAssistant
 {
-	protected static ITypeCheckerAssistantFactory af;
+	protected ITypeCheckerAssistantFactory af;
 
-	@SuppressWarnings("static-access")
 	public SNumericBasicTypeAssistantTC(ITypeCheckerAssistantFactory af)
 	{
 		super(af);
@@ -27,8 +25,8 @@ public class SNumericBasicTypeAssistantTC extends SNumericBasicTypeAssistant
 			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) throws AnalysisException
 	{
-		node.getLeft().apply(rootVisitor, question);
-		node.getRight().apply(rootVisitor, question);
+		node.getLeft().apply(rootVisitor, question.newConstraint(null));
+		node.getRight().apply(rootVisitor, question.newConstraint(null));
 
 		if (!PTypeAssistantTC.isNumeric(node.getLeft().getType()))
 		{

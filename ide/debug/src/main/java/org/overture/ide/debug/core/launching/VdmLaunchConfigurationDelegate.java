@@ -23,7 +23,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
@@ -32,9 +34,12 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
@@ -42,6 +47,7 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
+import org.osgi.framework.Bundle;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.debug.core.IDbgpService;
@@ -49,6 +55,7 @@ import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.IDebugPreferenceConstants;
 import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.model.internal.VdmDebugTarget;
+import org.overture.ide.debug.utils.ClassPathCollector;
 import org.overture.ide.debug.utils.VdmProjectClassPathCollector;
 import org.overture.ide.ui.utility.VdmTypeCheckerUi;
 import org.overture.util.Base64;
@@ -61,6 +68,7 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 
 {
 
+	public static final String ORG_OVERTURE_IDE_PLUGINS_PROBRUNTIME = "org.overture.ide.plugins.probruntime.core";
 	static int sessionId = 0;;
 
 	public void launch(ILaunchConfiguration configuration, String mode,
@@ -170,14 +178,14 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 		commandList.add("localhost");
 		commandList.add("-p");
 		int port = VdmDebugPlugin.getDefault().getDbgpService().getPort();
-		
-		//Hook for external tools to direct the debugger to listen on a specific port
-		int overridePort =configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_OVERRIDE_PORT, IDebugPreferenceConstants.DBGP_AVAILABLE_PORT);
-		if(overridePort!=IDebugPreferenceConstants.DBGP_AVAILABLE_PORT)
+
+		// Hook for external tools to direct the debugger to listen on a specific port
+		int overridePort = configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_OVERRIDE_PORT, IDebugPreferenceConstants.DBGP_AVAILABLE_PORT);
+		if (overridePort != IDebugPreferenceConstants.DBGP_AVAILABLE_PORT)
 		{
 			port = VdmDebugPlugin.getDefault().getDbgpService(overridePort).getPort();
 		}
-		
+
 		commandList.add(Integer.valueOf(port).toString());
 
 		commandList.add("-k");
@@ -256,7 +264,8 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 		commandList.add(0, "java");
 
 		File vdmjPropertiesFile = prepareCustomDebuggerProperties(vdmProject, configuration);
-		commandList.addAll(1, VdmProjectClassPathCollector.getClassPath(getProject(configuration), IDebugConstants.DEBUG_ENGINE_BUNDLE_IDS, vdmjPropertiesFile));
+		String classpath = VdmProjectClassPathCollector.toCpCliArgument(VdmProjectClassPathCollector.getClassPath(getProject(configuration), getDebugEngineBundleIds(), vdmjPropertiesFile));
+		commandList.addAll(1, Arrays.asList(new String[]{"-cp", classpath}));
 		commandList.add(3, IDebugConstants.DEBUG_ENGINE_CLASS);
 		commandList.addAll(1, getVmArguments(configuration));
 
@@ -303,6 +312,17 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 
 		}
 		return commandList;
+	}
+
+	private String[] getDebugEngineBundleIds()
+	{
+		List<String> ids = new ArrayList<String>(Arrays.asList(IDebugConstants.DEBUG_ENGINE_BUNDLE_IDS));
+
+		if (VdmDebugPlugin.getDefault().getPreferenceStore().getBoolean(IDebugPreferenceConstants.PREF_DBGP_ENABLE_EXPERIMENTAL_MODELCHECKER))
+		{
+			ids.add(ORG_OVERTURE_IDE_PLUGINS_PROBRUNTIME);
+		}
+		return ids.toArray(new String[] {});
 	}
 
 	private File prepareCustomDebuggerProperties(IVdmProject vdmProject,
@@ -366,6 +386,42 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 				}
 			}
 		}
+
+		if (VdmDebugPlugin.getDefault().getPreferenceStore().getBoolean(IDebugPreferenceConstants.PREF_DBGP_ENABLE_EXPERIMENTAL_MODELCHECKER))
+		{
+			final Bundle bundle = Platform.getBundle(ORG_OVERTURE_IDE_PLUGINS_PROBRUNTIME);
+			if (bundle != null)
+			{
+				URL buildInfoUrl = FileLocator.find(bundle, new Path("build_info.txt"), null);
+
+				try
+				{
+					if (buildInfoUrl != null)
+					{
+						URL buildInfofileUrl = FileLocator.toFileURL(buildInfoUrl);
+						if (buildInfofileUrl != null)
+						{
+							File file = new File(buildInfofileUrl.getFile());
+
+							if (ClassPathCollector.isWindowsPlatform())
+							{
+								options.add("-Dprob.home=\""
+										+ file.getParentFile().getPath() + "\"");
+							} else
+							{
+								options.add("-Dprob.home="
+										+ file.getParentFile().getPath());
+							}
+						}
+
+					}
+				} catch (IOException e)
+				{
+				}
+			}
+
+		}
+
 		return options;
 	}
 

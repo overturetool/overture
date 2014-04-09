@@ -9,8 +9,8 @@ import org.overture.ast.patterns.AUnionPattern;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
-import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.ValueException;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.traces.Permutor;
 import org.overture.interpreter.values.NameValuePair;
 import org.overture.interpreter.values.NameValuePairList;
@@ -18,16 +18,15 @@ import org.overture.interpreter.values.NameValuePairMap;
 import org.overture.interpreter.values.SetValue;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueSet;
-import org.overture.typechecker.assistant.pattern.AUnionPatternAssistantTC;
 
-public class AUnionPatternAssistantInterpreter extends AUnionPatternAssistantTC
+public class AUnionPatternAssistantInterpreter
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
 	public AUnionPatternAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		super(af);
+		//super(af);
 		this.af = af;
 	}
 
@@ -49,11 +48,11 @@ public class AUnionPatternAssistantInterpreter extends AUnionPatternAssistantTC
 		int rlen = PPatternAssistantInterpreter.getLength(pattern.getRight());
 		int size = values.size();
 
-		if ((llen == PPatternAssistantInterpreter.ANY && rlen > size)
-				|| (rlen == PPatternAssistantInterpreter.ANY && llen > size)
-				|| (rlen != PPatternAssistantInterpreter.ANY
-						&& llen != PPatternAssistantInterpreter.ANY && size != llen
-						+ rlen))
+		if (llen == PPatternAssistantInterpreter.ANY && rlen > size
+				|| rlen == PPatternAssistantInterpreter.ANY && llen > size
+				|| rlen != PPatternAssistantInterpreter.ANY
+				&& llen != PPatternAssistantInterpreter.ANY
+				&& size != llen + rlen)
 		{
 			VdmRuntimeError.patternFail(4125, "Set union pattern does not match expression", pattern.getLocation());
 		}
@@ -71,33 +70,37 @@ public class AUnionPatternAssistantInterpreter extends AUnionPatternAssistantTC
 				if (size == 0)
 				{
 					// Can't match a union b with {}
-				}
-				else if (size % 2 == 1)
+				} else if (size % 2 == 1)
 				{
 					// Odd => add the middle, then those either side
-					int half = size/2 + 1;
-					if (half > 0) leftSizes.add(half);
+					int half = size / 2 + 1;
+					if (half > 0)
+					{
+						leftSizes.add(half);
+					}
 
-					for (int delta=1; half - delta > 0; delta++)
+					for (int delta = 1; half - delta > 0; delta++)
 					{
 						leftSizes.add(half + delta);
 						leftSizes.add(half - delta);
 					}
 
 					leftSizes.add(0);
-				}
-				else
+				} else
 				{
 					// Even => add those either side of the middle
-					int half = size/2;
-					if (half > 0) leftSizes.add(half);
+					int half = size / 2;
+					if (half > 0)
+					{
+						leftSizes.add(half);
+					}
 
-					for (int delta=1; half - delta > 0; delta++)
+					for (int delta = 1; half - delta > 0; delta++)
 					{
 						leftSizes.add(half + delta);
 						leftSizes.add(half - delta);
 					}
-					
+
 					leftSizes.add(size);
 					leftSizes.add(0);
 				}
@@ -215,26 +218,27 @@ public class AUnionPatternAssistantInterpreter extends AUnionPatternAssistantTC
 		return finalResults;
 	}
 
-	static boolean isConstrained(AUnionPattern pattern)
+	public static boolean isConstrained(AUnionPattern pattern)
 	{
 		return PPatternAssistantInterpreter.isConstrained(pattern.getLeft())
 				|| PPatternAssistantInterpreter.isConstrained(pattern.getRight());
 	}
 
-	public static int getLength(AUnionPattern pattern)
-	{
-		int llen = PPatternAssistantInterpreter.getLength(pattern.getLeft());
-		int rlen = PPatternAssistantInterpreter.getLength(pattern.getRight());
-		return (llen == PPatternAssistantInterpreter.ANY || rlen == PPatternAssistantInterpreter.ANY) ? PPatternAssistantInterpreter.ANY
-				: llen + rlen;
-	}
+//	public static int getLength(AUnionPattern pattern)
+//	{
+//		int llen = PPatternAssistantInterpreter.getLength(pattern.getLeft());
+//		int rlen = PPatternAssistantInterpreter.getLength(pattern.getRight());
+//		return llen == PPatternAssistantInterpreter.ANY
+//				|| rlen == PPatternAssistantInterpreter.ANY ? PPatternAssistantInterpreter.ANY
+//				: llen + rlen;
+//	}
 
-	public static List<AIdentifierPattern> findIdentifiers(AUnionPattern pattern)
-	{
-		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
-		list.addAll(PPatternAssistantInterpreter.findIdentifiers(pattern.getLeft()));
-		list.addAll(PPatternAssistantInterpreter.findIdentifiers(pattern.getRight()));
-		return list;
-	}
+//	public static List<AIdentifierPattern> findIdentifiers(AUnionPattern pattern)
+//	{
+//		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
+//		list.addAll(PPatternAssistantInterpreter.findIdentifiers(pattern.getLeft()));
+//		list.addAll(PPatternAssistantInterpreter.findIdentifiers(pattern.getRight()));
+//		return list;
+//	}
 
 }

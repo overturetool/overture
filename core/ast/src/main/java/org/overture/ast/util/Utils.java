@@ -61,6 +61,32 @@ public class Utils
 		sb.append(after);
 		return sb.toString();
 	}
+	
+	public static <T> String listToString(String separator,List<T> list)
+	{
+		return listToString("", separator, list,  "");
+	}
+	
+	public static <T> String listToString(String before,String separator,  List<T> list, String after)
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append(before);
+
+		if (!list.isEmpty())
+		{
+			sb.append(separator);
+			sb.append(list.get(0).toString());
+
+			for (int i=1; i<list.size(); i++)
+			{
+				sb.append(separator);
+				sb.append(list.get(i).toString());
+			}
+		}
+
+		sb.append(after);
+		return sb.toString();
+	}
 
 	public static <T> String setToString(Collection<T> set, String separator)
 	{

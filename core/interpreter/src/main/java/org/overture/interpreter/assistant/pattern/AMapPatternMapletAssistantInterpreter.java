@@ -1,28 +1,27 @@
 package org.overture.interpreter.assistant.pattern;
 
 import java.util.List;
-import java.util.Vector;
 import java.util.Map.Entry;
+import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AMapletPatternMaplet;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.Value;
-import org.overture.typechecker.assistant.pattern.AMapPatternAssistantTC;
 
-public class AMapPatternMapletAssistantInterpreter extends
-		AMapPatternAssistantTC
+public class AMapPatternMapletAssistantInterpreter
+
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
 	public AMapPatternMapletAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		super(af);
+		//super(af);
 		this.af = af;
 	}
 
@@ -34,12 +33,13 @@ public class AMapPatternMapletAssistantInterpreter extends
 			return true;
 		}
 
-		return (PTypeAssistantInterpreter.isUnion(PPatternAssistantInterpreter.getPossibleType(p.getFrom())) || PTypeAssistantInterpreter.isUnion(PPatternAssistantInterpreter.getPossibleType(p.getTo())));
+		return af.createPTypeAssistant().isUnion(af.createPPatternAssistant().getPossibleType(p.getFrom()))
+				|| af.createPTypeAssistant().isUnion(af.createPPatternAssistant().getPossibleType(p.getTo()));
 	}
 
 	public static List<NameValuePairList> getAllNamedValues(
 			AMapletPatternMaplet p, Entry<Value, Value> maplet, Context ctxt)
-			throws PatternMatchException
+			throws AnalysisException
 	{
 		List<NameValuePairList> flist = PPatternAssistantInterpreter.getAllNamedValues(p.getFrom(), maplet.getKey(), ctxt);
 		List<NameValuePairList> tlist = PPatternAssistantInterpreter.getAllNamedValues(p.getTo(), maplet.getValue(), ctxt);

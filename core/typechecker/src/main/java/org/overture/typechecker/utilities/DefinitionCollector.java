@@ -31,7 +31,6 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.node.INode;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 
 /**
  * This class implements a way to collect definitions from a node in the AST
@@ -40,11 +39,6 @@ import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
  */
 public class DefinitionCollector extends AnswerAdaptor<List<PDefinition>>
 {
-
-	/**
-	 * Generated serial version
-	 */
-	private static final long serialVersionUID = 1L;
 
 	protected ITypeCheckerAssistantFactory af;
 
@@ -69,7 +63,7 @@ public class DefinitionCollector extends AnswerAdaptor<List<PDefinition>>
 		List<PDefinition> all = new Vector<PDefinition>();
 
 		all.addAll(node.getAllInheritedDefinitions());
-		all.addAll(PDefinitionListAssistantTC.singleDefinitions(node.getDefinitions()));
+		all.addAll(af.createPDefinitionListAssistant().singleDefinitions(node.getDefinitions()));
 
 		return all;
 	}

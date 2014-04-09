@@ -1,24 +1,38 @@
 package org.overture.typechecker.tests;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
+import java.io.File;
+import java.util.Collection;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
+import org.overture.ast.lex.Dialect;
+import org.overture.typechecker.tests.framework.CommonTypeCheckerTest;
+import org.overture.typechecker.tests.utils.TestSourceFinder;
 
-import org.overture.ast.lex.LexLocation;
-import org.overture.typechecker.tests.framework.ClassRtTestCase;
-import org.overture.test.framework.BaseTestSuite;
-
-public class ClassesRtTypeCheckTest extends BaseTestSuite
+@RunWith(value = Parameterized.class)
+public class ClassesRtTypeCheckTest extends CommonTypeCheckerTest
 {
-	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
+
+	public ClassesRtTypeCheckTest(Dialect dialect, String suiteName,
+			File testSuiteRoot, File file)
 	{
-		LexLocation.absoluteToStringLocation = false;
+		super(dialect, file, suiteName, testSuiteRoot);
+	}
+
+	@Parameters(name = "{1}")
+	public static Collection<Object[]> getData()
+	{
 		String name = "Type Check Classes TestSuite";
 		String root = "src\\test\\resources\\classesRT";
-		//String root = "src\\test\\resources\\test";
-		TestSuite test =  createTestCompleteFile(name, root, ClassRtTestCase.class,"");
-		return test;
+
+		Collection<Object[]> tests = TestSourceFinder.createTestCompleteFile(Dialect.VDM_RT, name, root, "", "");
+		return tests;
+	}
+
+	@Override
+	protected String getPropertyId()
+	{
+		return "class.rt";
 	}
 }

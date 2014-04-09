@@ -1,5 +1,6 @@
 package org.overture.interpreter.assistant.type;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.types.AInMapMapType;
 import org.overture.ast.types.AMapMapType;
 import org.overture.ast.types.AOptionalType;
@@ -30,7 +31,7 @@ public class PTypeAssistantInterpreter extends PTypeAssistantTC
 	}
 
 	public static ValueList getAllValues(PType type, Context ctxt)
-			throws ValueException
+			throws AnalysisException
 	{
 		if (type instanceof SBasicType)
 		{

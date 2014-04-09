@@ -1,0 +1,7 @@
+#set( $exp = $JavaFormat.format($node.getExp()) )
+##
+#if ($JavaFormat.isStringType($node.getExp().getType()))
+	new StringBuilder($exp).reverse().toString()
+#else
+	SeqUtil.reverse($exp)
+#end

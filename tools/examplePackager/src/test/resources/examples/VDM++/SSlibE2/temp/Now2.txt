@@ -1,2 +1,0 @@
--- File for getting now
-mk_(12, 34, 56, 789)

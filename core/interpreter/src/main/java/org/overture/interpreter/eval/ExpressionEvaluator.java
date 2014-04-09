@@ -83,8 +83,8 @@ import org.overture.interpreter.assistant.pattern.ASetBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PMultipleBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.type.ARecordInvariantTypeAssistantInterpreter;
 import org.overture.interpreter.debug.BreakpointManager;
+import org.overture.interpreter.runtime.ClassContext;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.PatternMatchException;
@@ -123,10 +123,6 @@ import org.overture.typechecker.assistant.pattern.PatternListTC;
 
 public class ExpressionEvaluator extends BinaryExpressionEvaluator
 {
-	/**
-	 * Serial version UID
-	 */
-	private static final long serialVersionUID = -3877784873512750134L;
 
 	@Override
 	public Value caseAApplyExp(AApplyExp node, Context ctxt)
@@ -524,10 +520,10 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			if (node.getExpdef() == null)
 			{
-				rv = AImplicitFunctionDefinitionAssistantInterpreter.getPolymorphicValue(node.getImpdef(), fixed);
+				rv = AImplicitFunctionDefinitionAssistantInterpreter.getPolymorphicValue(ctxt.assistantFactory,node.getImpdef(), fixed);
 			} else
 			{
-				rv = AExplicitFunctionDefinitionAssistantInterpreter.getPolymorphicValue(node.getExpdef(), fixed);
+				rv = AExplicitFunctionDefinitionAssistantInterpreter.getPolymorphicValue(ctxt.assistantFactory,node.getExpdef(), fixed);
 			}
 
 			rv.setSelf(fv.self);
@@ -551,11 +547,37 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			// own operation history counters...
 
 			ValueList operations = new ValueList();
-			ObjectValue self = ((ObjectContext) ctxt).self;
-
-			for (ILexNameToken opname : node.getOpnames())
+			
+			if (ctxt instanceof ObjectContext)
 			{
-				operations.addAll(self.getOverloads(opname));
+				ObjectValue self = ((ObjectContext)ctxt).self;
+	
+				for (ILexNameToken opname: node.getOpnames())
+				{
+					operations.addAll(self.getOverloads(opname));
+				}
+			}
+			else if (ctxt instanceof ClassContext)
+			{
+				ClassContext cctxt = (ClassContext)ctxt;
+				Context statics = SClassDefinitionAssistantInterpreter.getStatics(cctxt.classdef);
+				
+				for (ILexNameToken opname: node.getOpnames())
+				{
+					for (ILexNameToken sname: statics.keySet())
+					{
+						if (opname.matches(sname))
+						{
+							operations.add(ctxt.check(sname));
+						}
+					}
+				}
+			}
+			
+			if (operations.isEmpty())
+			{
+				VdmRuntimeError.abort(node.getLocation(), 4011,
+						"Illegal history operator: " + node.getHop().toString(), ctxt);
 			}
 
 			int result = 0;
@@ -999,7 +1021,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			for (ARecordModifier rm : node.getModifiers())
 			{
-				AFieldField f = ARecordInvariantTypeAssistantInterpreter.findField(r.type, rm.getTag().getName());
+				AFieldField f = ctxt.assistantFactory.createARecordInvariantTypeAssistant().findField(r.type, rm.getTag().getName());
 
 				if (f == null)
 				{
@@ -1141,8 +1163,12 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 				// If the opname was defined in a superclass of "self", we have
 				// to discover the subobject to populate its state variables.
-
+				
 				ObjectValue subself = APostOpExpAssistantInterpreter.findObject(node, node.getOpname().getModule(), self);
+				
+				if(self.superobjects.size() == 0)
+					subself = self;
+					
 
 				if (subself == null)
 				{
@@ -1164,6 +1190,13 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 				APostOpExpAssistantInterpreter.populate(node, ctxt, subself.type.getName().getName(), oldvalues); // To add old "~"
 																									// values
 			}
+    		else if (ctxt instanceof ClassContext)
+    		{
+    			ILexNameToken selfname = node.getOpname().getSelfName();
+    			ILexNameToken oldselfname = selfname.getOldName();
+    			ValueMap oldvalues = ctxt.lookup(oldselfname).mapValue(ctxt);
+    			APostOpExpAssistantInterpreter.populate(node, ctxt, node.getOpname().getModule(), oldvalues);
+    		}
 
 			// If there are errs clauses, and there is a precondition defined, then
 			// we evaluate that as well as the postcondition.

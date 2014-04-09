@@ -66,7 +66,7 @@ exp {-> package='org.overture.ast.expressions'
     |   {field} [object]:exp [memberName]:LexNameToken [field]:LexIdentifierToken
     |   {fieldNumber} [tuple]:exp [field]:LexIntegerToken
     |   {forAll} [bindList]:multipleBind* [predicate]:exp
-    |   {funcInstatiation} [function]:exp (actualTypes):type* [expdef]:definition.#Function.explicit (impdef):definition.#Function.implicit
+    |   {funcInstatiation} [function]:exp (actualTypes):type* (expdef):definition.#Function.explicit (impdef):definition.#Function.implicit
     |   {history} [hop]:LexToken [opnames]:LexNameToken*
     |   {if} [test]:exp [then]:exp [elseList]:elseIf* [else]:exp
     |   {intLiteral} [value]:LexIntegerToken
@@ -261,7 +261,7 @@ type {-> package='org.overture.ast.types'
 	|	(opaque):java_Boolean
     |   (invDef):definition.#Function.explicit}
     =   {named} (name):LexNameToken (type):type //[invdef]:#Function.explicit //super = invariant type
-    |   {record} [name]:LexNameToken (fields):field.field* (infinite):java_Boolean //[invdef]:#Function.explicit //super = invariant type
+    |   {record} [name]:LexNameToken (fields):field.field* (infinite):java_Boolean (composed):java_Boolean //[invdef]:#Function.explicit //super = invariant type
     ;
 
 #basic {-> package='org.overture.ast.types'}
@@ -382,6 +382,7 @@ definition {-> package='org.overture.ast.definitions'
     |   {thread} [statement]:stm [operationName]:LexNameToken [operationDef]:definition.#Operation.explicit
     |   {type} (invType):type.#invariant [invPattern]:pattern [invExpression]:exp 
                [invdef]:definition.#Function.explicit [infinite]:java_Boolean (name):LexNameToken//is access missing here
+               (composeDefinitions):definition*
     |   {untyped}
     |   {value} [pattern]:pattern [expression]:exp [defs]:definition* (expType):type //is access missing here
     ;
@@ -527,9 +528,6 @@ import {-> package='org.overture.ast.modules'
     |   {operation}
     ;
     
-//util {-> package='org.overture.ast.util'}
-//    =   {file} [file]:java_file
-//    ;
     
 exports {-> package='org.overture.ast.modules'}
     =   {module} [exports]:export**
@@ -544,9 +542,6 @@ export {-> package='org.overture.ast.modules'
     |   {type} [name]:LexNameToken [struct]:java_Boolean
     |   {value} [nameList]:LexNameToken* (exportType):type
     ;
-//patternList {-> package='org.overture.ast.patterns'}
-//    = {pattern_inner_list} [list]:pattern*
-//    ;
     
 /*
     Statements
@@ -582,21 +577,15 @@ stm {-> package='org.overture.ast.statements'
     |   {skip}
     |   {specification} [externals]:clause.external* [precondition]:exp [postcondition]:exp [errors]:case.error*
     |   {start} [obj]:exp
+    |   {stop} [obj]:exp
     |   {subclassResponsibility}
     |   {tixe} [traps]:stmtAlternative.tixe* [body]:stm
     //|   {traceVariable} //TODO why does this have a value inside?
     |   {trap} [patternBind]:patternBind.def [with]:stm [body]:stm
     |   {while} [exp]:exp [statement]:stm
     |   {periodic} [opname]:LexNameToken [args]:exp* (period):java_Long (jitter):java_Long (delay):java_Long (offset):java_Long
+    |   {sporadic} [opname]:LexNameToken [args]:exp* (minDelay):java_Long (maxDelay):java_Long (offset):java_Long
     ; 
-    
-
-/* FIXME (future) -- why does #LetDef have a subclass?, vdmj has a letdef="let" and this then had a subclass def="def" */
-/*#LetDef {-> package='org.overture.ast.statements'
-	|	[localDefs]:definition* 
-	|	[statement]:stm}
-    =   {def}
-    ;*/
     
 #SimpleBlock {-> package='org.overture.ast.statements'
 	|	[statements]:stm*}
@@ -638,121 +627,3 @@ case {-> package='org.overture.ast.statements'}
     = {error} [name]:LexIdentifierToken [left]:exp [right]:exp
     ;
     
-//Aspect Declaration
-/* This section allows fields of root types to be declared e.g. exp*/
-
-//%exp->#Unary =  [exp]:exp
-//    ;
-
-//%exp = (type):type [location]:location
-//    ;
-
-//%exp->#Binary = [left]:exp [op]:LexToken [right]:exp 
-//    ; 
-    
-//%exp->#set 
-//    = (setType):type.set
-//    ;
-
-//%type = [location]:location [resolved]:java_Boolean (definitions):definition*
-//     ; 
-
-//%pattern = [location]:location [definitions]:definition* [resolved]:java_Boolean
-//    ;
-
-//%bind = [location]:location (pattern):pattern
-//    ;
-
-//%multipleBind = [location]:location [plist]:pattern*
-//    ;
-    
-/*%definition 
-    =   [location]:location 
-        (name):LexNameToken // try out () 
-        [nameScope]:nameScope 
-        [used]:java_Boolean 
-        (classDefinition):definition.#class 
-        [access]:accessSpecifier.accessSpecifier
-        (type):type 
-        [pass]:Pass
-    ;
-*/
-
-//%definition->#class
-//    =   (supertypes):type* 
-//        (supernames):LexNameToken*// try out () 
-//        (definitions):definition* 
-//        (allInheritedDefinitions):definition*
-//        (localInheritedDefinitions):definition* 
-//        [hasContructors]:java_Boolean
-//        [settingHierarchy]:ClassDefinitionSettings
-//        (superDefs):definition.#class*
-//        [gettingInheritable]:java_Boolean
-//        (superInheritedDefinitions):definition*
-//        [gettingInvDefs]:java_Boolean
-//        [isAbstract]:java_Boolean
-//        [isUndefined]:java_Boolean
-//        (classtype):type
-//        (typeChecked):java_Boolean
-//        (invariant):definition.explicitOperation
-//    ;
-    
-//%stm
-//    = [location]:location (type):type
-//    ;
-    
-//%stm->#LetDef
-//    = [localDefs]:definition* [statement]:stm
-//    ;
-    
-//%stm->#SimpleBlock 
-//    =   [statements]:stm*
-//    ;
- 
-//%import
-//    =   [location]:location [name]:LexNameToken [renamed]:LexNameToken (from):modules.module
-//    ;  
-    
-//%import->#value 
-//    = (importType):type
-//    ;
-     
-//%type->#Map = (from):type (to):type [empty]:java_Boolean
-//    ;
-
-//%type->#invariant = [inNarrower]:java_Boolean
-//    ;    
-
-//%export 
-//    =   [location]:location [definition]:definition*
-//    ;
-
-//%traceDefinition
-//    =   [location]:location
-//    ;
-    
-//%traceCoreDefinition
-//    =   [location]:location
-//    ;
-    
-//%pair
-//    = [resolved]:java_Boolean
-//    ;
-    
-//%type->#invariant
-//    =   (opaque):java_Boolean
-//        (invDef):definition.explicitFunction
-//    ; 
-    
-//%type->#seq
-//    = (seqof):type [empty]:java_Boolean
-//    ;
-    
-//%stateDesignator 
-//    = [location]:location (type):type
-//    ;
-    
-//%objectDesignator
- //   = [location]:location
- //   ;  
- 

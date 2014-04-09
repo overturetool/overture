@@ -6,6 +6,8 @@ import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.statements.ANotYetSpecifiedStm;
 import org.overture.ast.types.AClassType;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
+import org.overture.interpreter.messages.rtlog.RTDeclareCPUMessage;
+import org.overture.interpreter.messages.rtlog.RTLogger;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.ObjectContext;
@@ -53,7 +55,11 @@ public class ACpuClassDefinitionAssistantInterpreter extends
 					+ sarg.value + " Hz", ctxt.location, ctxt);
 		}
 
-		return new CPUValue((AClassType) node.getClasstype(), map, argvals);
+		CPUValue cpu = new CPUValue((AClassType) node.getClasstype(), map, argvals);
+		
+		RTLogger.log(new RTDeclareCPUMessage(cpu.resource.getNumber(), node.getName().getName()));
+		
+		return cpu;
 	}
 
 	public static Value deploy(ANotYetSpecifiedStm node, Context ctxt)

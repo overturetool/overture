@@ -30,24 +30,17 @@ import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.node.INode;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.AInheritedDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
-import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 
 //TODO Add assistant Javadoc
 /**
  * A refactored assistant / functionality visitor.
  * 
- * This class implements a way to collect variable names from any node in the AST
+ * This class implements a way to collect variable names from a node in the AST
  * 
  * @author kel
  */
 public class VariableNameCollector extends AnswerAdaptor<LexNameList>
 {
-	/**
-	 * Generated serial version
-	 */
-	private static final long serialVersionUID = 1L;
 
 	protected ITypeCheckerAssistantFactory af;
 
@@ -67,7 +60,7 @@ public class VariableNameCollector extends AnswerAdaptor<LexNameList>
 	public LexNameList defaultSClassDefinition(SClassDefinition node)
 			throws AnalysisException
 	{
-		return PDefinitionListAssistantTC.getVariableNames(node.getDefinitions());
+		return af.createPDefinitionListAssistant().getVariableNames(node.getDefinitions());
 	}
 
 	@Override
@@ -82,7 +75,7 @@ public class VariableNameCollector extends AnswerAdaptor<LexNameList>
 			throws AnalysisException
 	{
 		return node.getDefs() == null ? new LexNameList()
-				: PDefinitionListAssistantTC.getVariableNames(node.getDefs());
+				: af.createPDefinitionListAssistant().getVariableNames(node.getDefs());
 	}
 
 	@Override
@@ -134,7 +127,8 @@ public class VariableNameCollector extends AnswerAdaptor<LexNameList>
 		// return AInheritedDefinitionAssistantTC.getVariableNames((AInheritedDefinition) node);
 		LexNameList names = new LexNameList();
 		// TODO:What About Here, how to I need to handle it. like I have it or Bring the method to this class?
-		AInheritedDefinitionAssistantTC.checkSuperDefinition(node);
+		DefinitionTypeFinder.checkSuperDefinition(node);
+		
 
 		for (ILexNameToken vn : node.getSuperdef().apply(THIS))
 		{
@@ -163,7 +157,7 @@ public class VariableNameCollector extends AnswerAdaptor<LexNameList>
 			AMultiBindListDefinition node) throws AnalysisException
 	{
 		return node.getDefs() == null ? new LexNameList()
-				: PDefinitionListAssistantTC.getVariableNames(node.getDefs());
+				: af.createPDefinitionListAssistant().getVariableNames(node.getDefs());
 	}
 
 	@Override
@@ -200,7 +194,7 @@ public class VariableNameCollector extends AnswerAdaptor<LexNameList>
 	public LexNameList caseAStateDefinition(AStateDefinition node)
 			throws AnalysisException
 	{
-		return PDefinitionListAssistantTC.getVariableNames(node.getStateDefs());
+		return af.createPDefinitionListAssistant().getVariableNames(node.getStateDefs());
 	}
 
 	@Override
@@ -231,7 +225,7 @@ public class VariableNameCollector extends AnswerAdaptor<LexNameList>
 	{
 		try
 		{
-			return PPatternAssistantTC.getVariableNames(node.getPattern());
+			return af.createPPatternAssistant().getVariableNames(node.getPattern());
 		} catch (InvocationAssistantException e)
 		{
 			// TODO Auto-generated catch block; needs to be smarter

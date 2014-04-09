@@ -48,13 +48,13 @@ public abstract class AbstractVdmBuilder
 	protected void addWarningMarker(File file, String message, ILexLocation location,
 			String sourceId)
 	{
-		FileUtility.addMarker(project.findIFile( file),message,location,IMarker.SEVERITY_WARNING,sourceId);
+		FileUtility.addMarker(project.findIFile( file),message,location,IMarker.SEVERITY_WARNING,sourceId,-1);
 	}
 	
 	protected void addErrorMarker(File file, String message, ILexLocation location,
 			String sourceId)
 	{
-		FileUtility.addMarker(project.findIFile(file), message, location, IMarker.SEVERITY_ERROR,sourceId);
+		FileUtility.addMarker(project.findIFile(file), message, location, IMarker.SEVERITY_ERROR,sourceId,-1);
 	}
 
 	protected void addWarningMarker(IFile file, String message, int lineNumber)

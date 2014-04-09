@@ -1,0 +1,12 @@
+class A
+
+instance variables
+
+x : nat * nat := op();
+
+operations
+
+public op : () ==> (nat * nat)
+op () == return mk_(2,3);
+
+end A

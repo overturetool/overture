@@ -187,9 +187,21 @@ public class SourceFile
 		out.println("<h1 align=center style='text-align:center'>" + filename.getName() + "</h1>");
 		out.println(htmlLine());
 		out.println(htmlLine());
+		
+		LexNameList spans = LexLocation.getSpanNames(filename);
 
 		for (int lnum = 1; lnum <= lines.size(); lnum++)
 		{
+			for (ILexNameToken name : spans)
+			{
+				if (name.getLocation().getStartLine() == lnum)
+				{
+					out.println("<a name=\"" + name.getName() + ":"
+							+ name.getLocation().getStartLine() + "\" />");
+					
+				}
+			}
+						
 			String line = lines.get(lnum - 1);
 			String spaced = detab(line, Properties.parser_tabstop);
 			List<LexLocation> list = hits.get(lnum);
@@ -206,7 +218,7 @@ public class SourceFile
 
 		long total = 0;
 
-		LexNameList spans = LexLocation.getSpanNames(filename);
+		
 		Collections.sort(spans);
 
 		for (ILexNameToken name: spans)
@@ -215,7 +227,8 @@ public class SourceFile
 			total += calls;
 
 			out.println(rowHTML(false,
-				htmlQuote(name.toString()),
+			"<a href=\"#"+name.getName() + ":"
+					+ name.getLocation().getStartLine()+"\">"+	htmlQuote(name.toString())+"</a>",
 				Float.toString(LexLocation.getSpanPercent(name)) + "%",
 				Long.toString(calls)));
 		}

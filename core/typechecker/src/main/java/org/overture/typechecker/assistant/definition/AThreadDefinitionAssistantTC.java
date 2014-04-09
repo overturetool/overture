@@ -11,17 +11,14 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class AThreadDefinitionAssistantTC
 {
-	protected static ITypeCheckerAssistantFactory af;
+	protected ITypeCheckerAssistantFactory af;
 
-	@SuppressWarnings("static-access")
 	public AThreadDefinitionAssistantTC(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
 
-
-	public AExplicitOperationDefinition getThreadDefinition(
-			AThreadDefinition d)
+	public AExplicitOperationDefinition getThreadDefinition(AThreadDefinition d)
 	{
 
 		AOperationType type = AstFactory.newAOperationType(d.getLocation()); // () ==> ()

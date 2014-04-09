@@ -4,6 +4,7 @@ import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.AnswerAdaptor;
+import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AEqualsDefinition;
@@ -26,18 +27,14 @@ import org.overture.ast.definitions.AThreadDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.definitions.AValueDefinition;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.node.INode;
+import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.AEqualsDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AExternalDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AInheritedDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AMultiBindListDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AValueDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
-//TODO Add assistant Javadoc
+
 /**
  * A refactored assistant/ functionality visitor.
  * 
@@ -51,12 +48,8 @@ import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC
  */
 public class DefinitionTypeFinder extends AnswerAdaptor<PType>
 {
-	/**
-	 * Generated serial version
-	 */
-	private static final long serialVersionUID = 1L;
 
-	protected ITypeCheckerAssistantFactory af;
+	protected static ITypeCheckerAssistantFactory af;
 
 	public DefinitionTypeFinder(ITypeCheckerAssistantFactory af)
 	{
@@ -74,7 +67,7 @@ public class DefinitionTypeFinder extends AnswerAdaptor<PType>
 	public PType defaultSClassDefinition(SClassDefinition node)
 			throws AnalysisException
 	{
-		return SClassDefinitionAssistantTC.getType((SClassDefinition) node);
+		return af.createSClassDefinitionAssistant().getType((SClassDefinition) node);
 	}
 
 	@Override
@@ -88,7 +81,8 @@ public class DefinitionTypeFinder extends AnswerAdaptor<PType>
 	public PType caseAEqualsDefinition(AEqualsDefinition node)
 			throws AnalysisException
 	{
-		return AEqualsDefinitionAssistantTC.getType((AEqualsDefinition) node);
+		return node.getDefType() != null ? node.getDefType()
+				: AstFactory.newAUnknownType(node.getLocation());
 	}
 
 	@Override
@@ -109,19 +103,19 @@ public class DefinitionTypeFinder extends AnswerAdaptor<PType>
 	public PType caseAExternalDefinition(AExternalDefinition node)
 			throws AnalysisException
 	{
-		return AExternalDefinitionAssistantTC.getType((AExternalDefinition) node);
+		return af.createPDefinitionAssistant().getType(node.getState());
 	}
 
 	@Override
-	public PType caseAImplicitFunctionDefinition(
-			AImplicitFunctionDefinition node) throws AnalysisException
+	public PType caseAImplicitFunctionDefinition(AImplicitFunctionDefinition node) 
+			throws AnalysisException
 	{
 		return node.getType();
 	}
 
 	@Override
-	public PType caseAImplicitOperationDefinition(
-			AImplicitOperationDefinition node) throws AnalysisException
+	public PType caseAImplicitOperationDefinition(AImplicitOperationDefinition node) 
+			throws AnalysisException
 	{
 		return node.getType();
 	}
@@ -133,11 +127,30 @@ public class DefinitionTypeFinder extends AnswerAdaptor<PType>
 		return ((AImportedDefinition) node).getDef().apply(THIS);
 	}
 
+	public static void checkSuperDefinition(AInheritedDefinition d)
+	{
+		// This is used to get over the case where an inherited definition
+		// is a ValueDefinition that has since been replaced with a new
+		// LocalDefinition. It would be better to somehow list the
+		// inherited definitions that refer to a LocalDefinition and update
+		// them...
+ 
+		if (d.getSuperdef() instanceof AUntypedDefinition)
+		{
+			if (d.getClassDefinition() != null)
+			{
+				d.setSuperdef(af.createPDefinitionAssistant().findName(d.getClassDefinition(), d.getSuperdef().getName(), d.getNameScope()));
+			}
+		}
+	}
+
 	@Override
 	public PType caseAInheritedDefinition(AInheritedDefinition node)
 			throws AnalysisException
 	{
-		return AInheritedDefinitionAssistantTC.getType((AInheritedDefinition) node);
+
+		checkSuperDefinition(node);
+		return af.createPDefinitionAssistant().getType(node.getSuperdef());
 	}
 
 	@Override
@@ -159,7 +172,16 @@ public class DefinitionTypeFinder extends AnswerAdaptor<PType>
 	public PType caseAMultiBindListDefinition(AMultiBindListDefinition node)
 			throws AnalysisException
 	{
-		return AMultiBindListDefinitionAssistantTC.getType((AMultiBindListDefinition) node);
+		PTypeList types = new PTypeList();
+
+		for (PDefinition definition : node.getDefs())
+		{
+			types.add(definition.getType());
+		}
+
+		AUnionType result = AstFactory.newAUnionType(node.getLocation(), types);
+
+		return result;
 	}
 
 	@Override
@@ -222,7 +244,10 @@ public class DefinitionTypeFinder extends AnswerAdaptor<PType>
 	public PType caseAValueDefinition(AValueDefinition node)
 			throws AnalysisException
 	{
-		return AValueDefinitionAssistantTC.getType((AValueDefinition) node);
+		//return AValueDefinitionAssistantTC.getType((AValueDefinition) node);
+		return node.getType() != null ? node.getType()
+				: (node.getExpType() != null ? node.getExpType()
+						: AstFactory.newAUnknownType(node.getLocation()));
 	}
 
 	@Override

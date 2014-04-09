@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.definition.PDefinitionAssistant;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
@@ -25,31 +24,30 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class PDefinitionListAssistantTC
 {
-	protected static ITypeCheckerAssistantFactory af;
+	protected ITypeCheckerAssistantFactory af;
 
-	@SuppressWarnings("static-access")
 	public PDefinitionListAssistantTC(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
 
-	public static void implicitDefinitions(List<PDefinition> paramDefinitions,
+	public void implicitDefinitions(List<PDefinition> paramDefinitions,
 			Environment env)
 	{
 		for (PDefinition d : paramDefinitions)
 		{
-			PDefinitionAssistantTC.implicitDefinitions(d, env);
+			af.createPDefinitionAssistant().implicitDefinitions(d, env);
 			// System.out.println();
 		}
 
 	}
 
-	public static PDefinition findName(List<PDefinition> definitions,
+	public PDefinition findName(List<PDefinition> definitions,
 			ILexNameToken name, NameScope scope)
 	{
 		for (PDefinition d : definitions)
 		{
-			PDefinition def = PDefinitionAssistantTC.findName(d, name, scope);
+			PDefinition def = af.createPDefinitionAssistant().findName(d, name, scope);
 
 			if (def != null)
 			{
@@ -60,7 +58,7 @@ public class PDefinitionListAssistantTC
 		return null;
 	}
 
-	public static AStateDefinition findStateDefinition(
+	public AStateDefinition findStateDefinition(
 			List<PDefinition> definitions)
 	{
 		for (PDefinition d : definitions)
@@ -74,16 +72,16 @@ public class PDefinitionListAssistantTC
 		return null;
 	}
 
-	public static void unusedCheck(List<PDefinition> definitions)
+	public void unusedCheck(List<PDefinition> definitions)
 	{
 		for (PDefinition d : definitions)
 		{
-			PDefinitionAssistantTC.unusedCheck(d);
+			af.createPDefinitionAssistant().unusedCheck(d);
 		}
 
 	}
 
-	public  Set<PDefinition> findMatches(List<PDefinition> definitions,
+	public Set<PDefinition> findMatches(List<PDefinition> definitions,
 			ILexNameToken name)
 	{
 
@@ -91,7 +89,7 @@ public class PDefinitionListAssistantTC
 
 		for (PDefinition d : singleDefinitions(definitions))
 		{
-			if (PDefinitionAssistantTC.isFunctionOrOperation(d)
+			if (af.createPDefinitionAssistant().isFunctionOrOperation(d)
 					&& d.getName().matches(name))
 			{
 				set.add(d);
@@ -101,7 +99,7 @@ public class PDefinitionListAssistantTC
 		return set;
 	}
 
-	public static List<PDefinition> singleDefinitions(
+	public List<PDefinition> singleDefinitions(
 			List<PDefinition> definitions)
 	{
 		List<PDefinition> all = new ArrayList<PDefinition>();
@@ -114,16 +112,16 @@ public class PDefinitionListAssistantTC
 		return all;
 	}
 
-	public static void markUsed(List<PDefinition> definitions)
+	public void markUsed(List<PDefinition> definitions)
 	{
 		for (PDefinition d : definitions)
 		{
-			PDefinitionAssistantTC.markUsed(d);
+			af.createPDefinitionAssistant().markUsed(d);
 		}
 
 	}
 
-	public static void typeCheck(List<PDefinition> defs,
+	public void typeCheck(List<PDefinition> defs,
 			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) throws AnalysisException
 	{
@@ -133,20 +131,20 @@ public class PDefinitionListAssistantTC
 		}
 	}
 
-	public static LexNameList getVariableNames(List<PDefinition> list)
+	public LexNameList getVariableNames(List<PDefinition> list)
 	{
 
 		LexNameList variableNames = new LexNameList();
 
 		for (PDefinition d : list)
 		{
-			variableNames.addAll(PDefinitionAssistantTC.getVariableNames(d));
+			variableNames.addAll(af.createPDefinitionAssistant().getVariableNames(d));
 		}
 
 		return variableNames;
 	}
 
-	public static void setAccessibility(List<PDefinition> defs,
+	public void setAccessibility(List<PDefinition> defs,
 			AAccessSpecifierAccessSpecifier access)
 	{
 		for (PDefinition d : defs)
@@ -156,23 +154,23 @@ public class PDefinitionListAssistantTC
 
 	}
 
-	public static void typeResolve(List<PDefinition> definitions,
+	public void typeResolve(List<PDefinition> definitions,
 			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) throws AnalysisException
 	{
 		for (PDefinition definition : definitions)
 		{
-			PDefinitionAssistantTC.typeResolve(definition, rootVisitor, question);
+			af.createPDefinitionAssistant().typeResolve(definition, rootVisitor, question);
 		}
 
 	}
 
-	public static PDefinition findType(LinkedList<PDefinition> actualDefs,
+	public PDefinition findType(LinkedList<PDefinition> actualDefs,
 			ILexNameToken name, String fromModule)
 	{
 		for (PDefinition d : actualDefs)
 		{
-			PDefinition def = PDefinitionAssistantTC.findType(d, name, fromModule);
+			PDefinition def = af.createPDefinitionAssistant().findType(d, name, fromModule);
 
 			if (def != null)
 			{
@@ -183,21 +181,19 @@ public class PDefinitionListAssistantTC
 		return null;
 	}
 
-	public static void initializedCheck(LinkedList<PDefinition> definitions)
+	public void initializedCheck(LinkedList<PDefinition> definitions)
 	{
 		for (PDefinition d : definitions)
 		{
 			if (d instanceof AInstanceVariableDefinition)
 			{
 				AInstanceVariableDefinition ivd = (AInstanceVariableDefinition) d;
-				AInstanceVariableDefinitionAssistantTC.initializedCheck(ivd);
+				af.createAInstanceVariableDefinitionAssistant().initializedCheck(ivd);
 			}
 		}
 	}
 
-
-
-	public static void setClassDefinition(List<PDefinition> defs,
+	public void setClassDefinition(List<PDefinition> defs,
 			SClassDefinition classDefinition)
 	{
 		PDefinitionAssistant.setClassDefinition(defs, classDefinition);

@@ -6,19 +6,17 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 public class ALocalDefinitionAssistantTC
 {
 
-	protected static ITypeCheckerAssistantFactory af;
+	protected ITypeCheckerAssistantFactory af;
 
-	@SuppressWarnings("static-access")
 	public ALocalDefinitionAssistantTC(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
 
-	public static void setValueDefinition(ALocalDefinition ld)
+	public void setValueDefinition(ALocalDefinition ld)
 	{
 		ld.setValueDefinition(true);
 
 	}
-
 
 }

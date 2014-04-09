@@ -1,12 +1,13 @@
 package org.overture.interpreter.runtime.state;
 
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.IRuntimeState;
+import org.overture.interpreter.scheduler.Lock;
 import org.overture.interpreter.util.Delegate;
 import org.overture.interpreter.values.NameValuePairMap;
 import org.overture.interpreter.values.Value;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
 public class SClassDefinitionRuntime implements IRuntimeState {
 
@@ -20,18 +21,25 @@ public class SClassDefinitionRuntime implements IRuntimeState {
 	public boolean staticInit = false;
 	/** True if the class' static values are initialized. */
 	public boolean staticValuesInit = false;
+	/** A lock for static permission guards - see readObject() */
+	public Lock guardLock;
 
 	/** A delegate Java object for any native methods. */
-	private Delegate delegate = null;
+	protected Delegate delegate = null;
+	
+	// I instanciate the assistantFactory to pass it as parameter to the needed method.
+	public final IInterpreterAssistantFactory assistantFactory;
 
-	public SClassDefinitionRuntime(SClassDefinition def)
+	public SClassDefinitionRuntime(IInterpreterAssistantFactory assistantFactory,SClassDefinition def)
 	{
-		delegate = new Delegate(def.getName().getName(), PDefinitionAssistantTC.getDefinitions(def));
+		this.assistantFactory =assistantFactory;
+		delegate = new Delegate(def.getName().getName(), assistantFactory.createPDefinitionAssistant().getDefinitions(def));
+		guardLock = new Lock();
 	}
 	
 	public boolean hasDelegate()
 	{
-		return delegate.hasDelegate();
+		return delegate.hasDelegate(assistantFactory);
 	}
 
 	public Object newInstance()
@@ -48,5 +56,4 @@ public class SClassDefinitionRuntime implements IRuntimeState {
 	{
 		return delegate.invokeDelegate(null, ctxt);
 	}
-	
 }

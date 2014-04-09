@@ -17,6 +17,11 @@ public class RTDeclareCPUMessage extends RTArchitectureMessage
 		this.cpuName = cpuName;
 	}
 
+	public RTDeclareCPUMessage(int cpuId, String cpuName)
+	{
+		this(cpuId,false,"",cpuName);
+	}
+
 	@Override
 	String getInnerMessage()
 	{

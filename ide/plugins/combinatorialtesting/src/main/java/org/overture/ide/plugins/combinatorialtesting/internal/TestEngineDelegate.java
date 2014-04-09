@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
@@ -99,8 +100,8 @@ public class TestEngineDelegate
 		commandList.add("-consoleName");
 		commandList.add("LaunchConfigurationExpression");
 
-		commandList.add("-t");
-		commandList.add(texe.traceName);
+		commandList.add("-t64");
+		commandList.add(Base64.encode(texe.traceName.getBytes(charSet)).toString());
 
 		commandList.add("-tracefolder");
 		commandList.add(traceFolder.toURI().toASCIIString());
@@ -127,7 +128,8 @@ public class TestEngineDelegate
 		}
 		commandList.add(0, "java");
 
-		commandList.addAll(1, VdmProjectClassPathCollector.getClassPath(project, ITracesConstants.TEST_ENGINE_BUNDLE_IDs, new String[] {}));
+		String classPath =VdmProjectClassPathCollector.toCpCliArgument( VdmProjectClassPathCollector.getClassPath(project, ITracesConstants.TEST_ENGINE_BUNDLE_IDs, new String[] {}));
+		commandList.addAll(1,Arrays.asList(new String[]{"-cp", classPath}));
 		commandList.add(3, ITracesConstants.TEST_ENGINE_CLASS);
 		commandList.addAll(1, getVmArguments(preferences));
 
@@ -149,7 +151,7 @@ public class TestEngineDelegate
 	private synchronized int getSessionId()
 	{
 
-		return (sessionId++);
+		return sessionId++;
 	}
 
 	private boolean useRemoteDebug(IPreferenceStore preferences)

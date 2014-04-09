@@ -1,0 +1,17 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class A {
+    public static final A a0 = new A();
+    public static final A a1 = new A();
+    public static final boolean x = a0 == a0;
+    public static final boolean y = a0 == a1;
+    public static final boolean z = new A() == new A();
+
+    public A() {
+    }
+}
+
+##########

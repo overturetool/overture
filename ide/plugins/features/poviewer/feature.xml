@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.overture.ide.plugins.features.poviewer"
-      label="Proof Obligation Viewer"
-      version="2.0.1.qualifier">
+      label="New POG Plugin"
+      version="2.0.7.qualifier">
 
    <description>
       %description

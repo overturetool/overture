@@ -1,0 +1,9 @@
+
+package quotes;
+
+public interface $node.getName()
+{
+#foreach( $field in $node.getFields() )
+$JavaFormat.format($field)
+#end
+}

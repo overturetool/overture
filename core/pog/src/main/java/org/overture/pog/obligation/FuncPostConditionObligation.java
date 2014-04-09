@@ -36,6 +36,7 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.patterns.PPattern;
 import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
@@ -50,14 +51,14 @@ public class FuncPostConditionObligation extends ProofObligation
 	private static final long serialVersionUID = 1L;
 
 	public FuncPostConditionObligation(AExplicitFunctionDefinition func,
-			IPOContextStack ctxt)
+			IPOContextStack ctxt, IPogAssistantFactory assistantFactory)
 	{
 		super(func, POType.FUNC_POST_CONDITION, ctxt, func.getLocation());
 
 		List<PExp> params = new LinkedList<PExp>();
 		for (List<PPattern> pl : func.getParamPatternList())
 		{
-			params.addAll(cloneListPExp(PPatternListAssistantTC.getMatchingExpressionList(pl)));
+			params.addAll(cloneListPExp(assistantFactory.createPPatternListAssistant().getMatchingExpressionList(pl)));
 		}
 
 		PExp body = null;
@@ -81,20 +82,20 @@ public class FuncPostConditionObligation extends ProofObligation
 		}
 
 	//	valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(generateWithPreCond(func.getPredef().clone(), func.getPostdef().clone(), params, body)));
+		valuetree.setPredicate(ctxt.getPredWithContext(generatePredicate(func.getPredef(), func.getPostdef().clone(), params, body)));
 	}
 
 	public FuncPostConditionObligation(AImplicitFunctionDefinition func,
-			IPOContextStack ctxt)
+			IPOContextStack ctxt, IPogAssistantFactory assistantFactory)
 	{
 		super(func, POType.FUNC_POST_CONDITION, ctxt, func.getLocation());
 
 		List<PExp> params = new LinkedList<PExp>();
 
 		
-		for (List<PPattern> pl : AImplicitFunctionDefinitionAssistantTC.getParamPatternList(func))
+		for (List<PPattern> pl : assistantFactory.createAImplicitFunctionDefinitionAssistant().getParamPatternList(func))
 		{
-			params.addAll(PPatternListAssistantTC.getMatchingExpressionList(pl));
+			params.addAll(assistantFactory.createPPatternListAssistant().getMatchingExpressionList(pl));
 		}
 
 		
@@ -105,7 +106,7 @@ public class FuncPostConditionObligation extends ProofObligation
 		{
 			List<PPattern> aux = new LinkedList<PPattern>();
 			aux.add(func.getResult().getPattern());
-			List<PExp> aux2 = PPatternListAssistantTC.getMatchingExpressionList(aux);
+			List<PExp> aux2 = assistantFactory.createPPatternListAssistant().getMatchingExpressionList(aux);
 			body = aux2.get(0);
 
 		} else if (func.getBody() instanceof ANotYetSpecifiedExp
@@ -123,11 +124,11 @@ public class FuncPostConditionObligation extends ProofObligation
 		}
 
 //		valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(generateWithPreCond(func.getPredef(), func.getPostdef(), cloneListPExp(params), body)));
+		valuetree.setPredicate(ctxt.getPredWithContext(generatePredicate(func.getPredef(), func.getPostdef(), cloneListPExp(params), body)));
 
 	}
 
-	private PExp generateWithPreCond(AExplicitFunctionDefinition predef,
+	private PExp generatePredicate(AExplicitFunctionDefinition predef,
 			AExplicitFunctionDefinition postdef, List<PExp> params, PExp body)
 	{
 		

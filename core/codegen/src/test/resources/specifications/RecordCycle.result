@@ -1,0 +1,82 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class A {
+    public A() {
+    }
+
+    public static class RecA implements Record {
+        public B.RecB b;
+
+        public RecA(B.RecB _b) {
+            b = (_b != null) ? _b.clone() : null;
+        }
+
+        public boolean equals(Object obj) {
+            if (!(obj instanceof RecA)) {
+                return false;
+            }
+
+            RecA other = ((RecA) obj);
+
+            return b.equals(other.b);
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(b);
+        }
+
+        public RecA clone() {
+            return new RecA(b);
+        }
+
+        public String toString() {
+            return Utils.recordToString(this, b);
+        }
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class B {
+    public B() {
+    }
+
+    public static class RecB implements Record {
+        public A.RecA a;
+
+        public RecB(A.RecA _a) {
+            a = (_a != null) ? _a.clone() : null;
+        }
+
+        public boolean equals(Object obj) {
+            if (!(obj instanceof RecB)) {
+                return false;
+            }
+
+            RecB other = ((RecB) obj);
+
+            return a.equals(other.a);
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(a);
+        }
+
+        public RecB clone() {
+            return new RecB(a);
+        }
+
+        public String toString() {
+            return Utils.recordToString(this, a);
+        }
+    }
+}
+
+##########

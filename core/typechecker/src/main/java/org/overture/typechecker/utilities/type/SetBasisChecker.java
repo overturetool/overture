@@ -17,50 +17,49 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 public class SetBasisChecker extends TypeUnwrapper<Boolean>
 {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	protected ITypeCheckerAssistantFactory af;
 
 	public SetBasisChecker(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public Boolean caseASetType(ASetType type) throws AnalysisException
 	{
 		return true;
 	}
-	
+
 	@Override
 	public Boolean defaultSInvariantType(SInvariantType type)
 			throws AnalysisException
 	{
 		if (type instanceof ANamedInvariantType)
 		{
-			if (type.getOpaque()) return false;
+			if (type.getOpaque())
+			{
+				return false;
+			}
 			return ((ANamedInvariantType) type).getType().apply(THIS);
-		}
-		else
+		} else
 		{
 			return false;
 		}
 	}
-	
+
 	@Override
 	public Boolean caseAUnionType(AUnionType type) throws AnalysisException
 	{
-		return af.createAUnionTypeAssistant().getSet(type) != null;
+		//return af.createAUnionTypeAssistant().getSet(type) != null;
+		return type.apply(af.getSetTypeFinder()) != null;
 	}
-	
+
 	@Override
 	public Boolean caseAUnknownType(AUnknownType type) throws AnalysisException
 	{
 		return true;
 	}
-	
+
 	@Override
 	public Boolean defaultPType(PType type) throws AnalysisException
 	{

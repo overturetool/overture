@@ -1,0 +1,9 @@
+class Entry
+
+operations 
+
+public static Run : () ==> ?
+Run () ==
+	return {x |-> x*x | x in set {1,2,3} & 1 = 1};
+
+end Entry

@@ -1,7 +1,5 @@
 package org.overture.interpreter.eval;
 
-import java.util.Iterator;
-
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.AAndBooleanBinaryExp;
 import org.overture.ast.expressions.ACompBinaryExp;
@@ -37,9 +35,9 @@ import org.overture.ast.expressions.ASubsetBinaryExp;
 import org.overture.ast.expressions.ASubtractNumericBinaryExp;
 import org.overture.ast.expressions.ATimesNumericBinaryExp;
 import org.overture.interpreter.runtime.Context;
-import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.values.BooleanValue;
 import org.overture.interpreter.values.CompFunctionValue;
 import org.overture.interpreter.values.FunctionValue;
@@ -56,14 +54,6 @@ import org.overture.interpreter.values.ValueSet;
 
 public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 {
-	/**
-	 * Serial version UID
-	 */
-	private static final long serialVersionUID = -3877784873512750134L;
-
-	
-	
-	
 	
 	/*
 	 * Boolean
@@ -233,6 +223,12 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 					for (Value v: rm.keySet())
 					{
 						Value rng = lm.get(rm.get(v));
+						
+						if (rng == null)
+						{
+							VdmRuntimeError.abort(node.getLocation(), 4162, "The RHS range is not a subset of the LHS domain", ctxt);
+						}
+						
 						Value old = result.put(v, rng);
 
 						if (old != null && !old.equals(rng))
@@ -381,11 +377,9 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 
 				ValueMap result = new ValueMap();
 				result.putAll(lm);
-				Iterator<Value> i = rm.keySet().iterator();
-
-				while (i.hasNext())
+				
+				for (Value k: rm.keySet())
 				{
-					Value k = i.next();
 					Value rng = rm.get(k);
 					Value old = result.put(k, rng);
 

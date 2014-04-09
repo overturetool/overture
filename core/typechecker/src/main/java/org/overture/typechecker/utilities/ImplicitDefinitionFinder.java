@@ -8,23 +8,28 @@ import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
+import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.AThreadDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.expressions.AIntLiteralExp;
+import org.overture.ast.expressions.ANewExp;
+import org.overture.ast.expressions.ARealLiteralExp;
+import org.overture.ast.expressions.AUndefinedExp;
+import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.node.INode;
+import org.overture.ast.types.ANamedInvariantType;
+import org.overture.ast.types.ARecordInvariantType;
+import org.overture.ast.types.AUnresolvedType;
+import org.overture.ast.types.PType;
 import org.overture.typechecker.Environment;
+import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AExplicitOperationDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AImplicitOperationDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AStateDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.ASystemClassDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
+import org.overture.typechecker.assistant.definition.ACpuClassDefinitionAssistantTC;
 
 /**
  * This class implements a way to find ImplicitDefinitions from nodes from the AST.
@@ -33,52 +38,125 @@ import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC
  */
 public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 5570219609306178637L;
-	
+
 	protected ITypeCheckerAssistantFactory af;
 
 	public ImplicitDefinitionFinder(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
-	protected AStateDefinition findStateDefinition(Environment question, INode node)
+
+	protected AStateDefinition findStateDefinition(Environment question,
+			INode node)
 	{
 		return question.findStateDefinition();
 	}
-	
-	
+
 	@Override
 	public void defaultSClassDefinition(SClassDefinition node,
 			Environment question) throws AnalysisException
 	{
-		//TODO: should I expand this even more?
+		// TODO: should I expand this even more?
 		if (node instanceof ASystemClassDefinition)
 		{
-			ASystemClassDefinitionAssistantTC.implicitDefinitions((ASystemClassDefinition)node, question);
-		} else
+			//af.createASystemClassDefinitionAssistant().implicitDefinitions((ASystemClassDefinition)node, question);
+
+			af.createSClassDefinitionAssistant().implicitDefinitionsBase(node, question);
+
+			for (PDefinition d : node.getDefinitions())
+			{
+				if (d instanceof AInstanceVariableDefinition)
+				{
+					AInstanceVariableDefinition iv = (AInstanceVariableDefinition) d;
+
+					PType ivType = af.createPDefinitionAssistant().getType(iv);
+					if (ivType instanceof AUnresolvedType
+							&& iv.getExpression() instanceof AUndefinedExp)
+					{
+						AUnresolvedType ut = (AUnresolvedType) ivType;
+
+						if (ut.getName().getFullName().equals("BUS"))
+						{
+							TypeCheckerErrors.warning(5014, "Uninitialized BUS ignored", d.getLocation(), d);
+						}
+					} else if (ivType instanceof AUnresolvedType
+							&& iv.getExpression() instanceof ANewExp)
+					{
+						AUnresolvedType ut = (AUnresolvedType) ivType;
+
+						if (ut.getName().getFullName().equals("CPU"))
+						{
+							ANewExp newExp = (ANewExp) iv.getExpression();
+							PExp exp = newExp.getArgs().get(1);
+							double speed = 0;
+							if (exp instanceof AIntLiteralExp)
+							{
+								AIntLiteralExp frequencyExp = (AIntLiteralExp) newExp.getArgs().get(1);
+								speed = frequencyExp.getValue().getValue();
+							} else if (exp instanceof ARealLiteralExp)
+							{
+								ARealLiteralExp frequencyExp = (ARealLiteralExp) newExp.getArgs().get(1);
+								speed = frequencyExp.getValue().getValue();
+							}
+
+							if (speed == 0)
+							{
+								TypeCheckerErrors.report(3305, "CPU frequency to slow: "
+										+ speed + " Hz", d.getLocation(), d);
+							} else if (speed > ACpuClassDefinitionAssistantTC.CPU_MAX_FREQUENCY)
+							{
+								TypeCheckerErrors.report(3306, "CPU frequency to fast: "
+										+ speed + " Hz", d.getLocation(), d);
+							}
+						}
+					}
+				} else if (d instanceof AExplicitOperationDefinition)
+				{
+					AExplicitOperationDefinition edef = (AExplicitOperationDefinition) d;
+
+					if (!edef.getName().getName().equals(node.getName().getName())
+							|| !edef.getParameterPatterns().isEmpty())
+					{
+						TypeCheckerErrors.report(3285, "System class can only define a default constructor", d.getLocation(), d);
+					}
+				} else if (d instanceof AImplicitOperationDefinition)
+				{
+					AImplicitOperationDefinition idef = (AImplicitOperationDefinition) d;
+
+					if (!d.getName().getName().equals(node.getName().getName()))
+					{
+						TypeCheckerErrors.report(3285, "System class can only define a default constructor", d.getLocation(), d);
+					}
+
+					if (idef.getBody() == null)
+					{
+						TypeCheckerErrors.report(3283, "System class constructor cannot be implicit", d.getLocation(), d);
+					}
+				} else
+				{
+					TypeCheckerErrors.report(3284, "System class can only define instance variables and a constructor", d.getLocation(), d);
+				}
+			}
+		}
 		{
-			SClassDefinitionAssistantTC.implicitDefinitionsBase(node, question);
+			af.createSClassDefinitionAssistant().implicitDefinitionsBase(node, question);
 		}
 	}
-	
+
 	@Override
 	public void caseAClassInvariantDefinition(AClassInvariantDefinition node,
-				Environment question) throws AnalysisException
+			Environment question) throws AnalysisException
 	{
-			
+
 	}
-	
+
 	@Override
 	public void caseAEqualsDefinition(AEqualsDefinition node,
 			Environment question) throws AnalysisException
 	{
-		
+
 	}
-	
+
 	@Override
 	public void caseAExplicitFunctionDefinition(
 			AExplicitFunctionDefinition node, Environment question)
@@ -86,7 +164,7 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 	{
 		if (node.getPrecondition() != null)
 		{
-			node.setPredef(AExplicitFunctionDefinitionAssistantTC.getPreDefinition(node));
+			node.setPredef(af.createAExplicitFunctionDefinitionAssistant().getPreDefinition(node));
 			//PDefinitionAssistantTC.markUsed(d.getPredef());//ORIGINAL CODE
 			af.getUsedMarker().caseAExplicitFunctionDefinition(node.getPredef());
 		} else
@@ -96,7 +174,7 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 
 		if (node.getPostcondition() != null)
 		{
-			node.setPostdef(AExplicitFunctionDefinitionAssistantTC.getPostDefinition(node));
+			node.setPostdef(af.createAExplicitFunctionDefinitionAssistant().getPostDefinition(node));
 			//PDefinitionAssistantTC.markUsed(d.getPostdef());//ORIGINAL CODE
 			af.getUsedMarker().caseAExplicitFunctionDefinition(node.getPostdef());
 		} else
@@ -104,41 +182,37 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 			node.setPostdef(null);
 		}
 	}
-	
 
 	@Override
 	public void caseAExplicitOperationDefinition(
 			AExplicitOperationDefinition node, Environment question)
 			throws AnalysisException
 	{
-		node.setState(findStateDefinition(question,node));
+		node.setState(findStateDefinition(question, node));
 
 		if (node.getPrecondition() != null)
 		{
-			node.setPredef(AExplicitOperationDefinitionAssistantTC.getPreDefinition(node, question));
-			PDefinitionAssistantTC.markUsed(node.getPredef()); //ORIGINAL CODE
-			
+			node.setPredef(af.createAExplicitOperationDefinitionAssistant().getPreDefinition(node, question));
+			af.createPDefinitionAssistant().markUsed(node.getPredef()); //ORIGINAL CODE
 		}
 
 		if (node.getPostcondition() != null)
 		{
-			node.setPostdef(AExplicitOperationDefinitionAssistantTC.getPostDefinition(node, question));
-			PDefinitionAssistantTC.markUsed(node.getPostdef());
+			node.setPostdef(af.createAExplicitOperationDefinitionAssistant().getPostDefinition(node, question));
+			af.createPDefinitionAssistant().markUsed(node.getPostdef());
 		}
 	}
-
-	
 
 	@Override
 	public void caseAImplicitFunctionDefinition(
 			AImplicitFunctionDefinition node, Environment question)
 			throws AnalysisException
 	{
-		
+
 		if (node.getPrecondition() != null)
 		{
-			node.setPredef(AImplicitFunctionDefinitionAssistantTC.getPreDefinition(node));
-			PDefinitionAssistantTC.markUsed(node.getPredef());
+			node.setPredef(af.createAImplicitFunctionDefinitionAssistant().getPreDefinition(node));
+			af.createPDefinitionAssistant().markUsed(node.getPredef());
 			//af.createPDefinitionAssistant().markUsed(node.getPredef());
 		} else
 		{
@@ -147,79 +221,92 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 
 		if (node.getPostcondition() != null)
 		{
-			node.setPostdef(AImplicitFunctionDefinitionAssistantTC.getPostDefinition(node));
-			PDefinitionAssistantTC.markUsed(node.getPostdef());
-			
-			
+			node.setPostdef(af.createAImplicitFunctionDefinitionAssistant().getPostDefinition(node));
+			af.createPDefinitionAssistant().markUsed(node.getPostdef());
 		} else
 		{
 			node.setPostdef(null);
 		}
 	}
+
 	@Override
 	public void caseAImplicitOperationDefinition(
 			AImplicitOperationDefinition node, Environment question)
 			throws AnalysisException
 	{
-		node.setState(findStateDefinition(question,node));
+		node.setState(findStateDefinition(question, node));
 
 		if (node.getPrecondition() != null)
 		{
-			node.setPredef(AImplicitOperationDefinitionAssistantTC.getPreDefinition(node, question));
-			PDefinitionAssistantTC.markUsed(node.getPredef());
-			
+			node.setPredef(af.createAImplicitOperationDefinitionAssistant().getPreDefinition(node, question));
+			af.createPDefinitionAssistant().markUsed(node.getPredef());
 		}
 
 		if (node.getPostcondition() != null)
 		{
-			node.setPostdef(AImplicitOperationDefinitionAssistantTC.getPostDefinition(node, question));
-			PDefinitionAssistantTC.markUsed(node.getPostdef());
-			
+			node.setPostdef(af.createAImplicitOperationDefinitionAssistant().getPostDefinition(node, question));
+			af.createPDefinitionAssistant().markUsed(node.getPostdef());
 		}
 	}
+
 	@Override
 	public void caseAStateDefinition(AStateDefinition node, Environment question)
 			throws AnalysisException
 	{
 		if (node.getInvPattern() != null)
 		{
-			node.setInvdef(AStateDefinitionAssistantTC.getInvDefinition(node));
+			node.setInvdef(af.createAStateDefinitionAssistant().getInvDefinition(node));
 		}
 
 		if (node.getInitPattern() != null)
 		{
-			node.setInitdef(AStateDefinitionAssistantTC.getInitDefinition(node));
+			node.setInitdef(af.createAStateDefinitionAssistant().getInitDefinition(node));
 		}
 	}
+
 	@Override
 	public void caseAThreadDefinition(AThreadDefinition node,
 			Environment question) throws AnalysisException
 	{
-		//ORIGINAL CODE FROM ASSISTANT
-		//node.setOperationDef(AThreadDefinitionAssistantTC.getThreadDefinition(node)); 
-		//Mine non static call of the code.
+		// ORIGINAL CODE FROM ASSISTANT
+		// node.setOperationDef(AThreadDefinitionAssistantTC.getThreadDefinition(node));
+		// Mine non static call of the code.
 		node.setOperationDef(af.createAThreadDefinitionAssistant().getThreadDefinition(node));
-	}	
+	}
+
 	@Override
 	public void caseATypeDefinition(ATypeDefinition node, Environment question)
 			throws AnalysisException
-	{		
+	{
 		if (node.getInvPattern() != null)
 		{
-			//node.setInvdef(getInvDefinition(d)); //Original code from Assistant.
+			// node.setInvdef(getInvDefinition(d)); //Original code from Assistant.
 			node.setInvdef(af.createATypeDefinitionAssistant().getInvDefinition(node));
 			node.getInvType().setInvDef(node.getInvdef());
-		} else
+		}
+		else
 		{
 			node.setInvdef(null);
 		}
+		
+		if (node.getInvType() instanceof ANamedInvariantType)
+		{
+			ANamedInvariantType ntype = (ANamedInvariantType)node.getInvType();
+			node.getComposeDefinitions().clear();
+			
+			for (PType compose: af.createPTypeAssistant().getComposeTypes(ntype.getType()))
+			{
+				ARecordInvariantType rtype = (ARecordInvariantType) compose;
+				node.getComposeDefinitions().add(AstFactory.newATypeDefinition(rtype.getName(), rtype, null, null));
+			}
+		}
 	}
+
 	@Override
 	public void defaultPDefinition(PDefinition node, Environment question)
 			throws AnalysisException
 	{
-		return ;
+		return;
 	}
-	
-	
+
 }

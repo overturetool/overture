@@ -1,0 +1,18 @@
+class A
+
+operations
+
+public op : () ==> nat
+op () == 
+(
+	dcl n : nat := 1;
+	dcl b : bool := true;
+	dcl r : real := 1.0;
+	dcl c : char := '1';
+	dcl s1 : seq of char := "1";
+	dcl a : A := new A();
+	
+	return 0;
+)
+
+end A

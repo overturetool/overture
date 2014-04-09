@@ -9,6 +9,7 @@ import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.ASetBind;
@@ -49,7 +50,9 @@ import org.overture.ast.statements.AReturnStm;
 import org.overture.ast.statements.ASelfObjectDesignator;
 import org.overture.ast.statements.ASkipStm;
 import org.overture.ast.statements.ASpecificationStm;
+import org.overture.ast.statements.ASporadicStm;
 import org.overture.ast.statements.AStartStm;
+import org.overture.ast.statements.AStopStm;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.ast.statements.ATixeStm;
 import org.overture.ast.statements.ATixeStmtAlternative;
@@ -67,6 +70,7 @@ import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.messages.rtlog.RTExtendedTextMessage;
 import org.overture.interpreter.messages.rtlog.RTLogger;
 import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.ExitException;
 import org.overture.interpreter.runtime.PatternMatchException;
 import org.overture.interpreter.runtime.ValueException;
@@ -74,6 +78,8 @@ import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.scheduler.BasicSchedulableThread;
 import org.overture.interpreter.scheduler.ISchedulableThread;
+import org.overture.interpreter.scheduler.ObjectThread;
+import org.overture.interpreter.scheduler.PeriodicThread;
 import org.overture.interpreter.scheduler.SharedStateListner;
 import org.overture.interpreter.values.BooleanValue;
 import org.overture.interpreter.values.FunctionValue;
@@ -101,10 +107,6 @@ import org.overture.parser.config.Properties;
 
 public class StatementEvaluator extends DelegateExpressionEvaluator
 {
-	/**
-	 * Serial version UID
-	 */
-	private static final long serialVersionUID = -8502928171757367740L;
 
 	@Override
 	public Value caseAAlwaysStm(AAlwaysStm node, Context ctxt)
@@ -233,29 +235,34 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		// Finally, we re-enable the thread swapping and time stepping, before returning
 		// a void value.
 
-		ctxt.threadState.setAtomic(true);
-		List<ValueListenerList> listenerLists = new Vector<ValueListenerList>(size);
-
-		for (int i = 0; i < size; i++)
+		try
 		{
-			UpdatableValue target = (UpdatableValue) targets.get(i);
-			listenerLists.add(target.listeners);
-			target.listeners = null;
-			target.set(node.getLocation(), values.get(i), ctxt); // No invariant listeners
-			target.listeners = listenerLists.get(i);
-		}
-
-		for (int i = 0; i < size; i++)
-		{
-			ValueListenerList listeners = listenerLists.get(i);
-
-			if (listeners != null)
+			ctxt.threadState.setAtomic(true);
+			List<ValueListenerList> listenerLists = new Vector<ValueListenerList>(size);
+	
+			for (int i = 0; i < size; i++)
 			{
-				listeners.changedValue(node.getLocation(), values.get(i), ctxt);
+				UpdatableValue target = (UpdatableValue) targets.get(i);
+				listenerLists.add(target.listeners);
+				target.listeners = null;
+				target.set(node.getLocation(), values.get(i), ctxt); // No invariant listeners
+				target.listeners = listenerLists.get(i);
+			}
+	
+			for (int i = 0; i < size; i++)
+			{
+				ValueListenerList listeners = listenerLists.get(i);
+	
+				if (listeners != null)
+				{
+					listeners.changedValue(node.getLocation(), values.get(i), ctxt);
+				}
 			}
 		}
-
-		ctxt.threadState.setAtomic(false);
+		finally
+		{
+			ctxt.threadState.setAtomic(false);
+		}
 
 		return new VoidValue();
 	}
@@ -414,12 +421,26 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		{
 			// Already in a timed step, so ignore nesting
 			return node.getStatement().apply(VdmRuntime.getStatementEvaluator(), ctxt);
-		} else
+		}
+		else
 		{
+			// We disable the swapping and time (RT) as cycles evaluation should be "free".
+			Long cycles;
+			
+			try
+			{
+				ctxt.threadState.setAtomic(true);
+				cycles = node.getCycles().apply(VdmRuntime.getStatementEvaluator(), ctxt).natValue(ctxt);;
+			}
+			finally
+			{
+				ctxt.threadState.setAtomic(false);
+			}
+			
 			me.inOuterTimestep(true);
 			Value rv = node.getStatement().apply(VdmRuntime.getStatementEvaluator(), ctxt);
 			me.inOuterTimestep(false);
-			me.duration(ctxt.threadState.CPU.getDuration(node.getValue()), ctxt, node.getLocation());
+			me.duration(ctxt.threadState.CPU.getDuration(cycles), ctxt, node.getLocation());
 			return rv;
 		}
 	}
@@ -437,12 +458,21 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		{
 			// Already in a timed step, so ignore nesting
 			return node.getStatement().apply(VdmRuntime.getStatementEvaluator(), ctxt);
-		} else
+		}
+		else
 		{
 			// We disable the swapping and time (RT) as duration evaluation should be "free".
-			ctxt.threadState.setAtomic(true);
-			long step = node.getDuration().apply(VdmRuntime.getStatementEvaluator(), ctxt).intValue(ctxt);
-			ctxt.threadState.setAtomic(false);
+			long step;
+			
+			try
+			{
+				ctxt.threadState.setAtomic(true);
+				step = node.getDuration().apply(VdmRuntime.getStatementEvaluator(), ctxt).natValue(ctxt);
+			}
+			finally
+			{
+				ctxt.threadState.setAtomic(false);
+			}
 
 			me.inOuterTimestep(true);
 			Value rv = node.getStatement().apply(VdmRuntime.getStatementEvaluator(), ctxt);
@@ -893,6 +923,76 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 	}
+	
+	@Override
+	public Value caseAStopStm(AStopStm node, Context ctxt)
+			throws AnalysisException
+	{
+		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
+
+		try
+		{
+			Value value = node.getObj().apply(VdmRuntime.getStatementEvaluator(), ctxt);
+
+			if (value.isType(SetValue.class))
+			{
+				ValueSet set = value.setValue(ctxt);
+
+				for (Value v: set)
+				{
+					ObjectValue target = v.objectValue(ctxt);
+					stop(target, node.getLocation(), ctxt);
+				}
+			}
+			else
+			{
+				ObjectValue target = value.objectValue(ctxt);
+				stop(target, node.getLocation(), ctxt);
+			}
+
+			// Cause a reschedule so that this thread is stopped, if necessary
+			ISchedulableThread th = BasicSchedulableThread.getThread(Thread.currentThread());
+			th.reschedule(ctxt, node.getLocation());
+			
+			return new VoidValue();
+		}
+		catch (ValueException e)
+		{
+			return VdmRuntimeError.abort(node.getLocation(), e);
+		}
+	}
+	
+	private void stop(ObjectValue target, ILexLocation location, Context ctxt) throws ValueException
+	{
+		List<ISchedulableThread> threads = BasicSchedulableThread.findThreads(target);
+		int count = 0;
+		
+		if (target.getCPU() != ctxt.threadState.CPU)
+		{
+			throw new ContextException(4161,
+					"Cannot stop object " + target.objectReference +
+					" on CPU " + target.getCPU().getName() +
+					" from CPU " + ctxt.threadState.CPU,
+					location, ctxt);
+		}
+		
+		for (ISchedulableThread th: threads)
+		{
+			if (th instanceof ObjectThread || th instanceof PeriodicThread)
+			{
+				if (th.stopThread())	// This may stop current thread at next reschedule
+				{
+					count++;
+				}
+			}
+		}
+
+		if (count == 0)
+		{
+			throw new ContextException(4160,
+				"Object #" + target.objectReference + " is not running a thread to stop", location, ctxt);
+		}
+	}
 
 	@Override
 	public Value caseASubclassResponsibilityStm(
@@ -1044,12 +1144,13 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		{
 			PExp arg = node.getArgs().get(i);
 			long value = -1;
+			Value argval = null;
 
 			try
 			{
-
 				arg.getLocation().hit();
-				value = arg.apply(VdmRuntime.getExpressionEvaluator(), ctxt).intValue(ctxt);
+				argval = arg.apply(VdmRuntime.getExpressionEvaluator(), ctxt);
+				value = argval.intValue(ctxt);
 
 				if (value < 0)
 				{
@@ -1065,10 +1166,11 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 					node.setDelay(value);
 				else if (i == OFFSET)
 					node.setOffset(value);
-			} catch (ValueException e)
+			}
+			catch (ValueException e)
 			{
 				VdmRuntimeError.abort(node.getLocation(), 4157, "Expecting +ive integer in periodic argument "
-						+ (i + 1) + ", was " + value, ctxt);
+						+ (i + 1) + ", was " + argval, ctxt);
 			}
 		}
 
@@ -1091,6 +1193,55 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 
 		return null; // Not actually used - see StartStatement
 	}
+	
+	@Override
+	public Value caseASporadicStm(ASporadicStm node, Context ctxt) throws AnalysisException
+	{
+		final int MINDELAY = 0;
+		final int MAXDELAY = 1;
+		final int OFFSET = 2;
+
+		node.setMinDelay(0L);
+		node.setMaxDelay(0L);
+		node.setOffset(0L);
+
+		int i = 0;
+		
+		for (PExp arg: node.getArgs())
+		{
+			Value argval = null;
+			
+			try
+			{
+				arg.getLocation().hit();
+				argval = arg.apply(VdmRuntime.getExpressionEvaluator(), ctxt);
+				long value = argval.intValue(ctxt);
+
+				if (value < 0)
+				{
+					VdmRuntimeError.abort(node.getLocation(), 4157,
+						"Expecting +ive integer in sporadic argument " + (i+1) + ", was " + value, ctxt);
+				}
+				
+				if (i == MINDELAY)
+					node.setMinDelay(value);
+				else if (i == MAXDELAY)
+					node.setMaxDelay(value);
+				else if (i == OFFSET)
+					node.setOffset(value);
+			}
+			catch (ValueException e)
+			{
+				VdmRuntimeError.abort(node.getLocation(), 4157,
+						"Expecting +ive integer in sporadic argument " + (i+1) + ", was " + argval, ctxt);
+			}
+
+			i++;
+		}
+
+		return null;	// Not actually used - see StartStatement
+	}
+
 
 	@Override
 	public Value caseAIdentifierStateDesignator(

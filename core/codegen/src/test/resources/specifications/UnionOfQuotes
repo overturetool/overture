@@ -1,0 +1,22 @@
+class A
+    
+types
+	
+	public Colors = <Red> | <Green> | <Blue>;
+
+	public X = <A> | <B>;
+	
+operations 
+
+public op : Colors ==> ()
+op (v) ==
+	if v = <Red> then skip;
+
+public op2 : X ==> ()
+op2 (v) ==
+	if v = <A> then skip;
+	
+public op3 : () ==> Colors
+op3 () == return <Red>;
+    
+end A

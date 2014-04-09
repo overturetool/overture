@@ -7,21 +7,18 @@ import org.overture.ast.patterns.AStringPattern;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
-import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.ValueException;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.Value;
-import org.overture.typechecker.assistant.pattern.AStringPatternAssistantTC;
 
-public class AStringPatternAssistantInterpreter extends
-		AStringPatternAssistantTC
+public class AStringPatternAssistantInterpreter
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
 	public AStringPatternAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		super(af);
 		this.af = af;
 	}
 
@@ -45,9 +42,9 @@ public class AStringPatternAssistantInterpreter extends
 		return result;
 	}
 
-	public static int getLength(AStringPattern pattern)
-	{
-		return pattern.getValue().getValue().length();
-	}
+//	public static int getLength(AStringPattern pattern)
+//	{
+//		return pattern.getValue().getValue().length();
+//	}
 
 }

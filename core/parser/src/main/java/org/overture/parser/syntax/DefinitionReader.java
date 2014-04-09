@@ -1242,13 +1242,25 @@ public class DefinitionReader extends SyntaxReader
 			nextToken();
 			checkFor(VDMToken.BRA, 2112, "Expecting '(' after periodic");
 			List<PExp> args = getExpressionReader().readExpressionList();
-			checkFor(VDMToken.KET, 2113, "Expecting ')' after period arguments");
+			checkFor(VDMToken.KET, 2113, "Expecting ')' after periodic arguments");
 			checkFor(VDMToken.BRA, 2114, "Expecting '(' after periodic(...)");
 			LexNameToken name = readNameToken("Expecting (name) after periodic(...)");
 			checkFor(VDMToken.KET, 2115, "Expecting (name) after periodic(...)");
 			//PStm statement = AstFactory.newAPeriodicStm(token.location, name, args);
-			return AstFactory.newAThreadDefinition(name,args);
-		} else
+			return AstFactory.newPeriodicAThreadDefinition(name,args);
+		}
+		else if (token.is(VDMToken.SPORADIC))
+		{
+			nextToken();
+			checkFor(VDMToken.BRA, 2312, "Expecting '(' after sporadic");
+			List<PExp> args = getExpressionReader().readExpressionList();
+			checkFor(VDMToken.KET, 2313, "Expecting ')' after sporadic arguments");
+			checkFor(VDMToken.BRA, 2314, "Expecting '(' after sporadic(...)");
+			LexNameToken name = readNameToken("Expecting (name) after sporadic(...)");
+			checkFor(VDMToken.KET, 2315, "Expecting (name) after sporadic(...)");
+			return AstFactory.newSporadicAThreadDefinition(name,args);
+		}
+		else
 		{
 			PStm stmt = getStatementReader().readStatement();
 			return AstFactory.newAThreadDefinition(stmt);

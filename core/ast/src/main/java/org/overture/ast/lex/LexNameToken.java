@@ -133,7 +133,7 @@ public class LexNameToken extends LexToken implements ILexNameToken,
 
 	public LexNameToken getModifiedName(String classname)
 	{
-		LexNameToken mod = new LexNameToken(classname, name, location);
+		LexNameToken mod = new LexNameToken(classname, name, location,old,explicit);
 		mod.setTypeQualifier(typeQualifier);
 		return mod;
 	}
@@ -235,6 +235,7 @@ public class LexNameToken extends LexToken implements ILexNameToken,
 					+ (old ? 1 : 0)
 					+ (typeQualifier == null ? 0
 							: PTypeAssistant.hashCode(typeQualifier));
+							
 		}
 
 		return hashcode;

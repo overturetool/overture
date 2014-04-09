@@ -1,0 +1,40 @@
+class A
+
+values
+
+public x = {mk_(1,2) |-> new A()};
+
+operations
+
+public no : () ==> nat
+no () == return 50;
+
+public op1 : () ==> nat
+op1 () ==
+	let a = mk_(1,2)
+	in
+		x(a).no();	
+
+public op2 : () ==> nat
+op2 () ==
+	let a = mk_('x','y'),
+		  b = mk_(1,2)
+	in
+		m(a,a)(b).no();
+
+public m : (char * char) * (char * char) ==> map (nat * nat) to A
+m (p,q) == return x;
+
+end A
+
+class Entry
+
+operations 
+
+public static Run : () ==> ?
+Run () ==
+let a = new A()
+in 
+	return a.op1() + a.op2();
+
+end Entry

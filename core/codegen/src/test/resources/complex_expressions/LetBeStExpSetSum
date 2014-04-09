@@ -1,0 +1,20 @@
+class Entry
+
+operations 
+
+public static Run : () ==> nat 
+Run () ==
+	return sum({1,2,3,4,5,6});
+	
+functions
+
+public sum :  set of nat -> nat
+sum (xs) == 
+	if xs = {} then
+		0
+	else
+		let x in set xs
+		in
+			x + sum(xs\{x});
+	 
+end Entry

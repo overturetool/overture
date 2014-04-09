@@ -1,0 +1,20 @@
+class Entry
+
+values
+
+s = [1,2,3];
+
+operations 
+
+public static Run : () ==> ?
+Run () ==
+	Test();
+		
+public static Test : () ==> map nat to nat 
+Test () ==
+(
+	dcl a : map nat to nat := { x |-> x+1 | x in set elems s & 1 = 1 };
+	return a;
+);
+
+end Entry

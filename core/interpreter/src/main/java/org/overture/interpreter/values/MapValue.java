@@ -23,12 +23,12 @@
 
 package org.overture.interpreter.values;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.types.AInMapMapType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ValueException;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 
 public class MapValue extends Value
@@ -128,7 +128,7 @@ public class MapValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt) throws ValueException
+	public Value convertValueTo(PType to, Context ctxt) throws AnalysisException
 	{
 		if (to instanceof SMapType)
 		{
@@ -137,7 +137,7 @@ public class MapValue extends Value
 				abort(4062, "Cannot convert non-injective map to an inmap", ctxt);
 			}
 
-			SMapType mapto = PTypeAssistantTC.getMap(to);
+			SMapType mapto = ctxt.assistantFactory.createPTypeAssistant().getMap(to);
 			ValueMap nm = new ValueMap();
 
 			for (Value k: values.keySet())

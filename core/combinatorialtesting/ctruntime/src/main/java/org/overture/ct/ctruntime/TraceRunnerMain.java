@@ -1,7 +1,6 @@
 package org.overture.ct.ctruntime;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -20,12 +19,14 @@ import java.util.Vector;
 import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
 import org.overture.config.Settings;
+import org.overture.ct.utils.TraceXmlWrapper;
 import org.overture.interpreter.VDMJ;
 import org.overture.interpreter.VDMPP;
 import org.overture.interpreter.VDMRT;
 import org.overture.interpreter.VDMSL;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.messages.rtlog.RTLogger;
+import org.overture.interpreter.messages.rtlog.RTTextLogger;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.Interpreter;
@@ -36,7 +37,6 @@ import org.overture.interpreter.util.ExitStatus;
 import org.overture.parser.config.Properties;
 import org.overture.parser.lex.LexTokenReader;
 import org.overture.util.Base64;
-import org.overture.ct.utils.TraceXmlWrapper;
 
 public class TraceRunnerMain implements IProgressMonitor
 {
@@ -100,6 +100,7 @@ public class TraceRunnerMain implements IProgressMonitor
 		boolean quiet = false;
 		String logfile = null;
 		boolean expBase64 = false;
+		boolean traceNameBase64 = false;
 		File coverage = null;
 		String defaultName = null;
 		String traceName = null;
@@ -276,6 +277,16 @@ public class TraceRunnerMain implements IProgressMonitor
 				{
 					usage("-t option requires a Trace Name");
 				}
+			}else if (arg.equals("-t64"))
+			{
+				if (i.hasNext())
+				{
+					traceName = i.next();
+					traceNameBase64 = true;
+				} else
+				{
+					usage("-t option requires a Trace Name");
+				}
 			} else if (arg.equals("-tracefolder"))
 			{
 				if (i.hasNext())
@@ -379,6 +390,17 @@ public class TraceRunnerMain implements IProgressMonitor
 				usage("Malformed -e64 base64 expression");
 			}
 		}
+		if (traceNameBase64)
+		{
+			try
+			{
+				byte[] bytes = Base64.decode(traceName);
+				traceName = new String(bytes, VDMJ.filecharset);
+			} catch (Exception e)
+			{
+				usage("Malformed -t64 base64 trace name");
+			}
+		}
 
 		if (defaultName != null)
 		{
@@ -417,9 +439,8 @@ public class TraceRunnerMain implements IProgressMonitor
 				{
 					if (logfile != null)
 					{
-						PrintWriter p = new PrintWriter(new FileOutputStream(logfile, false));
-						RTLogger.setLogfile(p);
-						NextGenRTLogger.getInstance().setLogfile(new File(logfile));
+						RTLogger.setLogfile(RTTextLogger.class,new File(logfile));
+						RTLogger.setLogfile(NextGenRTLogger.class,new File(logfile));
 					}
 
 					Interpreter i = controller.getInterpreter();

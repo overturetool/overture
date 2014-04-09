@@ -1,0 +1,16 @@
+class Entry
+
+operations 
+
+public static Run : () ==> ?
+Run () == return sum({1,2,3,4,5});
+
+public static sum : set of nat ==> nat
+sum (xs) == 
+if xs = {} then 
+	return 0
+else let x in set xs 
+in
+	return x + sum(xs\{x});
+
+end Entry

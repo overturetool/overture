@@ -1583,6 +1583,7 @@ when they are used as an (abstract) specification notation. Therefore,
 this restriction cannot be considered very important in our situation.
 \newpage
 \bibliographystyle{nnewalpha}
+%% note: retrieve dan.bib from https://github.com/overturetool/overture/tree/development/documentation/bib
 \bibliography{dan}
 
 \appendix

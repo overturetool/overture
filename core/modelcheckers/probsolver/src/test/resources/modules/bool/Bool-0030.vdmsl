@@ -1,0 +1,4 @@
+operations
+rem1() m : nat
+  post m = 7 rem 2
+

@@ -26,6 +26,7 @@ package org.overture.pog.obligation;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
+import org.overture.pog.assistant.IPogAssistantFactory;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 
 public class POCaseContext extends POContext
@@ -33,12 +34,14 @@ public class POCaseContext extends POContext
 	public final PPattern pattern;
 	public final PType type;
 	public final PExp exp;
+	public final IPogAssistantFactory assistantFactory;
 
-	public POCaseContext(PPattern pattern, PType type, PExp exp)
+	public POCaseContext(PPattern pattern, PType type, PExp exp, IPogAssistantFactory assistantFactory)
 	{
 		this.pattern = pattern;
 		this.type = type;
 		this.exp = exp;
+		this.assistantFactory = assistantFactory;
 	}
 
 	@Override
@@ -46,7 +49,7 @@ public class POCaseContext extends POContext
 	{
 		StringBuilder sb = new StringBuilder();
 
-		if (PPatternAssistantTC.isSimple(pattern))
+		if (assistantFactory.createPPatternAssistant().isSimple(pattern))
 		{
 			sb.append(pattern);
 			sb.append(" = ");
@@ -54,7 +57,7 @@ public class POCaseContext extends POContext
 			sb.append(" => ");
 		} else
 		{
-			PExp matching = PPatternAssistantTC.getMatchingExpression(pattern);
+			PExp matching = assistantFactory.createPPatternAssistant().getMatchingExpression(pattern);
 
 			sb.append("exists ");
 			sb.append(matching);

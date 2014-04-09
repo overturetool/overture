@@ -24,6 +24,7 @@ import org.overture.typechecker.FlatEnvironment;
 import org.overture.typechecker.ModuleTypeChecker;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeChecker;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.typechecker.visitor.TypeCheckVisitor;
 
@@ -44,26 +45,26 @@ public class TypeCheckerUtil
 			this.warnings = warnings;
 			this.errors = errors;
 		}
-		
+
 		@Override
 		public String toString()
 		{
-		StringBuilder sb = new StringBuilder();
-		sb.append("Parse result:\n"+parserResult);
-		sb.append("\n\n\n");
-		sb.append("TypeCheck result:\n");
-		sb.append("\tErrors:");
-		for (VDMError err : errors)
-		{
-			sb.append("\n\t"+err);
-		}
-		sb.append("\tWarnings:");
-		for (VDMWarning err : warnings)
-		{
-			sb.append("\n\t"+err);
-		}
-		
-		return sb.toString();
+			StringBuilder sb = new StringBuilder();
+			sb.append("Parse result:\n" + parserResult);
+			sb.append("\n\n\n");
+			sb.append("TypeCheck result:\n");
+			sb.append("\tErrors:");
+			for (VDMError err : errors)
+			{
+				sb.append("\n\t" + err);
+			}
+			sb.append("\tWarnings:");
+			for (VDMWarning err : warnings)
+			{
+				sb.append("\n\t" + err);
+			}
+
+			return sb.toString();
 		}
 	}
 
@@ -81,7 +82,8 @@ public class TypeCheckerUtil
 
 		public ExpressionTypeChecker(PExp expression)
 		{
-			this(expression, new FlatEnvironment(new TypeCheckerAssistantFactory(),new Vector<PDefinition>()));// new ModuleEnvironment(""));
+			this(expression, new FlatEnvironment(new TypeCheckerAssistantFactory(), new Vector<PDefinition>()));// new
+																												// ModuleEnvironment(""));
 		}
 
 		@Override
@@ -89,7 +91,7 @@ public class TypeCheckerUtil
 		{
 			try
 			{
-				type = expression.apply(new TypeCheckVisitor(), new TypeCheckInfo(assistantFactory,env, NameScope.NAMESANDSTATE));
+				type = expression.apply(new TypeCheckVisitor(), new TypeCheckInfo(assistantFactory, env, NameScope.NAMESANDSTATE));
 			} catch (AnalysisException e)
 			{
 				// TODO Auto-generated catch block
@@ -128,15 +130,17 @@ public class TypeCheckerUtil
 	public static TypeCheckResult<List<SClassDefinition>> typeCheckRt(File file)
 			throws ParserException, LexException
 	{
+		ITypeCheckerAssistantFactory af = new TypeCheckerAssistantFactory();
 		ParserResult<List<SClassDefinition>> parserResult = ParserUtil.parseOo(file);
 		List<SClassDefinition> classes = new Vector<SClassDefinition>();
 		classes.addAll(parserResult.result);
-		classes.add(AstFactoryTC.newACpuClassDefinition());
-		classes.add(AstFactoryTC.newABusClassDefinition());
-		return typeCheck(parserResult, classes, new ClassTypeChecker(classes));
+		classes.add(AstFactoryTC.newACpuClassDefinition(af));
+		classes.add(AstFactoryTC.newABusClassDefinition(af));
+		return typeCheck(parserResult, classes, new ClassTypeChecker(classes,af));
 	}
 
-	public static TypeCheckResult<PExp> typeCheckExpression(String content) throws ParserException, LexException
+	public static TypeCheckResult<PExp> typeCheckExpression(String content)
+			throws ParserException, LexException
 	{
 		ParserResult<PExp> parserResult = ParserUtil.parseExpression(content);
 		return typeCheck(parserResult, parserResult.result, new ExpressionTypeChecker(parserResult.result));
@@ -145,12 +149,13 @@ public class TypeCheckerUtil
 	public static TypeCheckResult<List<SClassDefinition>> typeCheckRt(
 			String content) throws ParserException, LexException
 	{
+		ITypeCheckerAssistantFactory af = new TypeCheckerAssistantFactory();
 		ParserResult<List<SClassDefinition>> parserResult = ParserUtil.parseOo(content);
 		List<SClassDefinition> classes = new Vector<SClassDefinition>();
 		classes.addAll(parserResult.result);
-		classes.add(AstFactoryTC.newACpuClassDefinition());
-		classes.add(AstFactoryTC.newABusClassDefinition());
-		return typeCheck(parserResult, classes, new ClassTypeChecker(classes));
+		classes.add(AstFactoryTC.newACpuClassDefinition(af));
+		classes.add(AstFactoryTC.newABusClassDefinition(af));
+		return typeCheck(parserResult, classes, new ClassTypeChecker(classes,af));
 	}
 
 	public static <P> TypeCheckResult<P> typeCheck(

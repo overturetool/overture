@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.interpreter.tests.ClassesPpClassicTest">
+<result>
+<output object="Error 3133: Class name UseKLV not in scope in 'Beacon' (console) at line 1:1" resource="KLVPP" value="Error 3133: Class name UseKLV not in scope in 'Beacon' (console) at line 1:1"/>
+</result>
+</testResult>

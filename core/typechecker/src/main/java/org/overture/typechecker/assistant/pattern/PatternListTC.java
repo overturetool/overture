@@ -17,9 +17,8 @@ public class PatternListTC extends Vector<PPattern>
 	 */
 	private static final long serialVersionUID = 8197456560367128159L;
 
-	protected static ITypeCheckerAssistantFactory af;
+	protected ITypeCheckerAssistantFactory af;
 
-	@SuppressWarnings("static-access")
 	public PatternListTC(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
@@ -32,7 +31,7 @@ public class PatternListTC extends Vector<PPattern>
 
 		for (PPattern pPattern : this)
 		{
-			PPatternAssistantTC.typeResolve(pPattern, rootVisitor, question);
+			af.createPPatternAssistant().typeResolve(pPattern, rootVisitor, question);
 		}
 	}
 
@@ -41,7 +40,7 @@ public class PatternListTC extends Vector<PPattern>
 
 		for (PPattern pPattern : this)
 		{
-			PPatternAssistantTC.unResolve(pPattern);
+			af.createPPatternAssistant().unResolve(pPattern);
 		}
 	}
 

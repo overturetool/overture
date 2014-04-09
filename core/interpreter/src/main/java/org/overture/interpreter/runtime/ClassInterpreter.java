@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -52,12 +53,12 @@ import org.overture.interpreter.messages.rtlog.RTThreadCreateMessage;
 import org.overture.interpreter.messages.rtlog.RTThreadKillMessage;
 import org.overture.interpreter.messages.rtlog.RTThreadSwapMessage;
 import org.overture.interpreter.messages.rtlog.RTThreadSwapMessage.SwapType;
-import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
 import org.overture.interpreter.scheduler.BasicSchedulableThread;
 import org.overture.interpreter.scheduler.CTMainThread;
 import org.overture.interpreter.scheduler.ISchedulableThread;
 import org.overture.interpreter.scheduler.InitThread;
 import org.overture.interpreter.scheduler.MainThread;
+import org.overture.interpreter.scheduler.RunState;
 import org.overture.interpreter.scheduler.Signal;
 import org.overture.interpreter.scheduler.SystemClock;
 import org.overture.interpreter.traces.CallSequence;
@@ -77,7 +78,6 @@ import org.overture.typechecker.Environment;
 import org.overture.typechecker.FlatCheckedEnvironment;
 import org.overture.typechecker.PrivateClassEnvironment;
 import org.overture.typechecker.PublicClassEnvironment;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionSet;
 
 
@@ -180,7 +180,7 @@ public class ClassInterpreter extends Interpreter
 
 		scheduler.init();
 		SystemClock.init();
-		CPUValue.init(scheduler);
+		CPUValue.init(scheduler, assistantFactory);
 		BUSValue.init();
 		ObjectValue.init();
 
@@ -239,7 +239,7 @@ public class ClassInterpreter extends Interpreter
 		
 		if (Settings.dialect == Dialect.VDM_RT && RTLogger.getLogSize() > 0) 
 		{
-			NextGenRTLogger.getInstance().persistToFile();
+			RTLogger.dump(true);
 		}
 		
 		RuntimeValidator.stop();
@@ -308,13 +308,13 @@ public class ClassInterpreter extends Interpreter
 	public SClassDefinition findClass(String classname)
 	{
 		LexNameToken name = new LexNameToken("CLASS", classname, null);
-		return (SClassDefinition)SClassDefinitionAssistantInterpreter.findType(classes, name);
+		return (SClassDefinition)assistantFactory.createSClassDefinitionAssistant().findType(classes, name);
 	}
 
 	@Override
 	protected ANamedTraceDefinition findTraceDefinition(LexNameToken name)
 	{
-		PDefinition d = SClassDefinitionAssistantInterpreter.findName(classes,name, NameScope.NAMESANDSTATE);
+		PDefinition d = assistantFactory.createSClassDefinitionAssistant().findName(classes,name, NameScope.NAMESANDSTATE);
 
 		if (d == null || !(d instanceof ANamedTraceDefinition))
 		{
@@ -334,7 +334,7 @@ public class ClassInterpreter extends Interpreter
 		{
 			for (PDefinition d: c.getDefinitions())
 			{
-				if (PDefinitionAssistantTC.isFunctionOrOperation(d))
+				if (assistantFactory.createPDefinitionAssistant().isFunctionOrOperation(d))
 				{
 					NameValuePairList nvpl = PDefinitionAssistantInterpreter.getNamedValues(d,initialContext);
 
@@ -350,7 +350,7 @@ public class ClassInterpreter extends Interpreter
 
 			for (PDefinition d: c.getAllInheritedDefinitions())
 			{
-				if (PDefinitionAssistantInterpreter.isFunctionOrOperation(d))
+				if (assistantFactory.createPDefinitionAssistant().isFunctionOrOperation(d))
 				{
 					NameValuePairList nvpl = PDefinitionAssistantInterpreter.getNamedValues(d,initialContext);
 
@@ -425,7 +425,7 @@ public class ClassInterpreter extends Interpreter
 
 
 	@Override
-	public Context getInitialTraceContext(ANamedTraceDefinition tracedef,boolean debug) throws ValueException
+	public Context getInitialTraceContext(ANamedTraceDefinition tracedef,boolean debug) throws AnalysisException
 	{
 		ObjectValue object = null;
 
@@ -446,7 +446,7 @@ public class ClassInterpreter extends Interpreter
 
 	@Override
 	public List<Object> runOneTrace(
-			ANamedTraceDefinition tracedef, CallSequence test,boolean debug)
+			ANamedTraceDefinition tracedef, CallSequence test,boolean debug) throws AnalysisException
 	{
 		List<Object> list = new Vector<Object>();
 		Context ctxt = null;
@@ -470,6 +470,18 @@ public class ClassInterpreter extends Interpreter
 
 		//Ensures all threads are terminated for next trace run
 		BasicSchedulableThread.signalAll(Signal.TERMINATE);
+
+		while (main.getRunState() != RunState.COMPLETE)
+		{
+			try
+            {
+                Thread.sleep(10);
+            }
+            catch (InterruptedException e)
+            {
+                break;
+            }
+		}
 
 		return main.getList();
 	}

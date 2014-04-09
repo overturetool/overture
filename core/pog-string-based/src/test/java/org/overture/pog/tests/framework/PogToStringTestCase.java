@@ -46,14 +46,14 @@ public abstract class PogToStringTestCase extends ResultTestCase<List<String>>
 		return new File(filename + ".result");
 	}
 
-	public void encondeResult(List<String> result, Document doc,
+	public void encodeResult(List<String> result, Document doc,
 			Element resultElement)
 	{
 		// TODO Auto-generated method stub
 
 	}
 
-	public void encondeResult(ProofObligationList result, Document doc,
+	public void encodeResult(ProofObligationList result, Document doc,
 			Element resultElement)
 	{
 		for (ProofObligation po : result)

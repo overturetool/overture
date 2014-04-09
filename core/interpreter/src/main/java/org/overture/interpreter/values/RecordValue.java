@@ -25,12 +25,13 @@ package org.overture.interpreter.values;
 
 import java.util.Iterator;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.config.Settings;
-import org.overture.interpreter.assistant.type.ARecordInvariantTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
+import org.overture.interpreter.assistant.InterpreterAssistantFactory;
 import org.overture.interpreter.assistant.type.SInvariantTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ValueException;
@@ -43,10 +44,11 @@ public class RecordValue extends Value
 	public final ARecordInvariantType type;
 	public final FieldMap fieldmap;
 	public final FunctionValue invariant;
+	public final IInterpreterAssistantFactory assistantFactory = new InterpreterAssistantFactory();
 
 	// mk_ expressions
 	public RecordValue(ARecordInvariantType type,	ValueList values, Context ctxt)
-		throws ValueException
+		throws AnalysisException
 	{
 		this.type = type;
 		this.fieldmap = new FieldMap();
@@ -70,7 +72,7 @@ public class RecordValue extends Value
 
 	// mu_ expressions
 	public RecordValue(ARecordInvariantType type,	FieldMap mapvalues, Context ctxt)
-		throws ValueException
+		throws AnalysisException
 	{
 		this.type = type;
 		this.fieldmap = new FieldMap();
@@ -108,7 +110,8 @@ public class RecordValue extends Value
 	}
 
 	// State records - invariant handled separately
-	public RecordValue(ARecordInvariantType type, NameValuePairList mapvalues)
+	//gkanos: added a parameter here the context.
+	public RecordValue(ARecordInvariantType type, NameValuePairList mapvalues, Context ctxt)
 	{
 		this.type = type;
 		this.invariant = null;
@@ -116,12 +119,12 @@ public class RecordValue extends Value
 
 		for (NameValuePair nvp: mapvalues)
 		{
-			AFieldField f = ARecordInvariantTypeAssistantInterpreter.findField(type,nvp.name.getName());
+			AFieldField f = ctxt.assistantFactory.createARecordInvariantTypeAssistant().findField(type,nvp.name.getName());
 			this.fieldmap.add(nvp.name.getName(), nvp.value, !f.getEqualityAbstraction());
 		}
 	}
 
-	public void checkInvariant(Context ctxt) throws ValueException
+	public void checkInvariant(Context ctxt) throws AnalysisException
 	{
 		if (invariant != null && Settings.invchecks)
 		{
@@ -130,13 +133,19 @@ public class RecordValue extends Value
 			// conversion. This also stops VDM-RT from performing "time step"
 			// calculations.
 
-			ctxt.threadState.setAtomic(true);
-			boolean inv = invariant.eval(invariant.location, this, ctxt).boolValue(ctxt);
-			ctxt.threadState.setAtomic(false);
-
-			if (!inv)
+			try
 			{
-				abort(4079, "Type invariant violated by mk_ arguments", ctxt);
+				ctxt.threadState.setAtomic(true);
+				boolean inv = invariant.eval(invariant.location, this, ctxt).boolValue(ctxt);
+
+				if (!inv)
+				{
+					abort(4079, "Type invariant violated by mk_ arguments", ctxt);
+				}
+			}
+			finally
+			{
+				ctxt.threadState.setAtomic(false);
 			}
 		}
 	}
@@ -223,7 +232,7 @@ public class RecordValue extends Value
 		{
 			RecordValue ot = (RecordValue)val;
 
-			if (PTypeAssistantInterpreter.equals(ot.type,type))
+			if (assistantFactory.createPTypeAssistant().equals(ot.type,type))
 			{
 				for (AFieldField f: type.getFields())
 				{
@@ -290,9 +299,9 @@ public class RecordValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt) throws ValueException
+	public Value convertValueTo(PType to, Context ctxt) throws AnalysisException
 	{
-		if (PTypeAssistantInterpreter.equals(to, type))
+		if (ctxt.assistantFactory.createPTypeAssistant().equals(to, type))
 		{
 			return this;
 		}

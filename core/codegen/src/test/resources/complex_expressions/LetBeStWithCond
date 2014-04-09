@@ -1,0 +1,11 @@
+class Entry
+
+operations 
+
+public static Run : () ==> ?
+Run () ==
+	let x in set {3, 5, 7, 8, 9} be st x mod 2 = 0
+	in
+		return x;
+
+end Entry

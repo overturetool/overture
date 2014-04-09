@@ -1,0 +1,56 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.overturetool</groupId>
+    <artifactId>root</artifactId>
+    <version>2.0.3-SNAPSHOT</version>
+    <relativePath>../../pom.xml</relativePath>
+  </parent>
+
+  <packaging>pom</packaging>
+
+  <groupId>org.overturetool</groupId>
+  <artifactId>examples</artifactId>
+  <name>Overture Examples</name>
+
+  <properties>
+    <example-packager.version>2.0.2</example-packager.version>
+  </properties>
+  
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.overturetool.build</groupId>
+        <artifactId>example-packager-plugin</artifactId>
+        <version>${example-packager.version}</version>
+        <configuration>
+          <!-- <outputDirectory>${project.build.directory}</outputDirectory> -->
+          <!-- <outputPrefix>Examples-</outputPrefix> -->
+          <outputZipFiles>true</outputZipFiles>
+          <outputWebFiles>true</outputWebFiles>
+          <slExamples>
+            <param>${project.basedir}/VDMSL</param>
+          </slExamples>
+          <ppExamples>
+            <param>${project.basedir}/VDM++</param>
+          </ppExamples>
+          <rtExamples>
+            <param>${project.basedir}/VDMRT</param>
+          </rtExamples>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>package-examples</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+
+  
+

@@ -23,6 +23,7 @@
 
 package org.overture.interpreter.values;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.config.Settings;
@@ -38,7 +39,7 @@ public class InvariantValue extends ReferenceValue
 	private FunctionValue invariant;
 
 	public InvariantValue(ANamedInvariantType type, Value value, Context ctxt)
-		throws ValueException
+		throws AnalysisException
 	{
 		super(value);
 		this.type = type;
@@ -47,7 +48,7 @@ public class InvariantValue extends ReferenceValue
 		checkInvariant(ctxt);
 	}
 
-	public void checkInvariant(Context ctxt) throws ValueException
+	public void checkInvariant(Context ctxt) throws AnalysisException
 	{
 		if (invariant != null && Settings.invchecks)
 		{
@@ -56,13 +57,19 @@ public class InvariantValue extends ReferenceValue
 			// so we set the atomic flag around the conversion. This also stops
 			// VDM-RT from performing "time step" calculations.
 
-			ctxt.threadState.setAtomic(true);
-			boolean inv = invariant.eval(invariant.location, value, ctxt).boolValue(ctxt);
-			ctxt.threadState.setAtomic(false);
-
-			if (!inv)
+			try
 			{
-				abort(4060, "Type invariant violated for " + type.getName(), ctxt);
+				ctxt.threadState.setAtomic(true);
+				boolean inv = invariant.eval(invariant.location, value, ctxt).boolValue(ctxt);
+
+				if (!inv)
+				{
+					abort(4060, "Type invariant violated for " + type.getName(), ctxt);
+				}
+			} 
+			finally
+			{
+				ctxt.threadState.setAtomic(false);
 			}
 		}
 	}
@@ -76,7 +83,7 @@ public class InvariantValue extends ReferenceValue
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt) throws ValueException
+	public Value convertValueTo(PType to, Context ctxt) throws AnalysisException
 	{
 		if (to.equals(type))
 		{

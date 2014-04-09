@@ -26,11 +26,11 @@ package org.overture.interpreter.values;
 import java.util.FormattableFlags;
 import java.util.Formatter;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.types.ACharBasicType;
 import org.overture.ast.types.PType;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ValueException;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 
 public class CharacterValue extends Value
@@ -109,9 +109,9 @@ public class CharacterValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt) throws ValueException
+	public Value convertValueTo(PType to, Context ctxt) throws AnalysisException
 	{
-		if (PTypeAssistantTC.isType(to,ACharBasicType.class))
+		if (ctxt.assistantFactory.createPTypeAssistant().isType(to,ACharBasicType.class))
 		{
 			return this;
 		}

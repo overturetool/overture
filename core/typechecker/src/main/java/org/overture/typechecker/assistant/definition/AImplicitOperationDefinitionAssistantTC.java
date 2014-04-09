@@ -17,22 +17,19 @@ import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AOperationType;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.AOperationTypeAssistantTC;
 
 public class AImplicitOperationDefinitionAssistantTC
 {
-	protected static ITypeCheckerAssistantFactory af;
+	protected ITypeCheckerAssistantFactory af;
 
-	@SuppressWarnings("static-access")
 	public AImplicitOperationDefinitionAssistantTC(
 			ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
 
-
 	@SuppressWarnings("unchecked")
-	public static AExplicitFunctionDefinition getPostDefinition(
+	public AExplicitFunctionDefinition getPostDefinition(
 			AImplicitOperationDefinition d, Environment base)
 	{
 
@@ -55,30 +52,33 @@ public class AImplicitOperationDefinitionAssistantTC
 		{
 			plist.add(AstFactory.newAIdentifierPattern(state.getName().getOldName()));
 			plist.add(AstFactory.newAIdentifierPattern(state.getName().clone()));
-		} else if (base.isVDMPP()
-				&& !PAccessSpecifierAssistantTC.isStatic(d.getAccess()))
+		}
+		else if (base.isVDMPP())
 		{
 			plist.add(AstFactory.newAIdentifierPattern(d.getName().getSelfName().getOldName()));
-			plist.add(AstFactory.newAIdentifierPattern(d.getName().getSelfName()));
+			
+			if (!af.createPAccessSpecifierAssistant().isStatic(d.getAccess()))
+			{
+				plist.add(AstFactory.newAIdentifierPattern(d.getName().getSelfName()));
+			}
 		}
 
 		parameters.add(plist);
 		PExp postop = AstFactory.newAPostOpExp(d.getName().clone(), d.getPrecondition(), d.getPostcondition(), d.getErrors(), d.getState());
 
-		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(d.getName().getPostName(d.getPostcondition().getLocation()), NameScope.GLOBAL, null, AOperationTypeAssistantTC.getPostType((AOperationType) d.getType(), state, d.getClassDefinition(), PAccessSpecifierAssistantTC.isStatic(d.getAccess())), parameters, postop, null, null, false, null);
+		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(d.getName().getPostName(d.getPostcondition().getLocation()), NameScope.GLOBAL, null, af.createAOperationTypeAssistant().getPostType((AOperationType) d.getType(), state, d.getClassDefinition(), af.createPAccessSpecifierAssistant().isStatic(d.getAccess())), parameters, postop, null, null, false, null);
 
 		// Operation postcondition functions are effectively not static as
 		// their expression can directly refer to instance variables, even
 		// though at runtime these are passed via a "self" parameter.
 
-		def.setAccess(PAccessSpecifierAssistantTC.getStatic(d, false));
+		def.setAccess(af.createPAccessSpecifierAssistant().getStatic(d, false));
 		def.setClassDefinition(d.getClassDefinition());
 		return def;
 	}
 
 	@SuppressWarnings("unchecked")
-	public
-	static AExplicitFunctionDefinition getPreDefinition(
+	public AExplicitFunctionDefinition getPreDefinition(
 			AImplicitOperationDefinition d, Environment base)
 	{
 
@@ -96,7 +96,7 @@ public class AImplicitOperationDefinitionAssistantTC
 		{
 			plist.add(AstFactory.newAIdentifierPattern(state.getName().clone()));
 		} else if (base.isVDMPP()
-				&& !PAccessSpecifierAssistantTC.isStatic(d.getAccess()))
+				&& !af.createPAccessSpecifierAssistant().isStatic(d.getAccess()))
 		{
 			plist.add(AstFactory.newAIdentifierPattern(d.getName().getSelfName()));
 		}
@@ -104,26 +104,18 @@ public class AImplicitOperationDefinitionAssistantTC
 		parameters.add(plist);
 		PExp preop = AstFactory.newAPreOpExp(d.getName().clone(), d.getPrecondition(), d.getErrors(), d.getState());
 
-		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(d.getName().getPreName(d.getPrecondition().getLocation()), NameScope.GLOBAL, null, AOperationTypeAssistantTC.getPreType((AOperationType) d.getType(), state, d.getClassDefinition(), PAccessSpecifierAssistantTC.isStatic(d.getAccess())), parameters, preop, null, null, false, null);
-		// new AExplicitFunctionDefinition(d.getPrecondition().getLocation(),
-		// d.getName().getPreName(d.getPrecondition().getLocation()),
-		// NameScope.GLOBAL, false, null, PAccessSpecifierAssistantTC.getDefault(), null,
-		// parameters,
-		// AOperationTypeAssistantTC.getPreType(d.getType(), state, d.getClassDefinition(),
-		// PAccessSpecifierAssistantTC.isStatic(d.getAccess())),
-		// preop, null, null, null, null, null, null, null, false, false, null, null, null, null, parameters.size() > 1,
-		// null);
+		AExplicitFunctionDefinition def = AstFactory.newAExplicitFunctionDefinition(d.getName().getPreName(d.getPrecondition().getLocation()), NameScope.GLOBAL, null, af.createAOperationTypeAssistant().getPreType((AOperationType) d.getType(), state, d.getClassDefinition(), af.createPAccessSpecifierAssistant().isStatic(d.getAccess())), parameters, preop, null, null, false, null);
 
 		// Operation precondition functions are effectively not static as
 		// their expression can directly refer to instance variables, even
 		// though at runtime these are passed via a "self" parameter.
 
-		def.setAccess(PAccessSpecifierAssistantTC.getStatic(d, false));
+		def.setAccess(af.createPAccessSpecifierAssistant().getStatic(d, false));
 		def.setClassDefinition(d.getClassDefinition());
 		return def;
 	}
 
-	public static List<PPattern> getParamPatternList(
+	public List<PPattern> getParamPatternList(
 			AImplicitOperationDefinition definition)
 	{
 		List<PPattern> plist = new ArrayList<PPattern>();
@@ -136,7 +128,7 @@ public class AImplicitOperationDefinitionAssistantTC
 		return plist;
 	}
 
-	public static List<List<PPattern>> getListParamPatternList(
+	public List<List<PPattern>> getListParamPatternList(
 			AImplicitOperationDefinition func)
 	{
 		List<List<PPattern>> parameters = new ArrayList<List<PPattern>>();

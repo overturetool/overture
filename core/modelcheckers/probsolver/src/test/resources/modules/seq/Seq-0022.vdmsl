@@ -1,0 +1,4 @@
+operations
+
+inds2() m : bool
+  post m = 1 in set inds [3,1,4];
