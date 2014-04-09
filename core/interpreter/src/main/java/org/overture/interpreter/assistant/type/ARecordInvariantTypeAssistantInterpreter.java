@@ -3,6 +3,7 @@ package org.overture.interpreter.assistant.type;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
@@ -29,7 +30,7 @@ public class ARecordInvariantTypeAssistantInterpreter extends
 	}
 
 	public static ValueList getAllValues(ARecordInvariantType type, Context ctxt)
-			throws ValueException
+			throws AnalysisException
 	{
 		List<PType> types = new Vector<PType>();
 

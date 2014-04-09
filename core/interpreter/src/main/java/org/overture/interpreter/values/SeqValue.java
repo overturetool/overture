@@ -26,6 +26,7 @@ package org.overture.interpreter.values;
 import java.util.FormattableFlags;
 import java.util.Formatter;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.lex.LexStringToken;
 import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.PType;
@@ -165,7 +166,7 @@ public class SeqValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt) throws ValueException
+	public Value convertValueTo(PType to, Context ctxt) throws AnalysisException
 	{
 		// We can't use the isSeq method as it plucks out one sequence
 		// value from a union. We need to try all union members. So we

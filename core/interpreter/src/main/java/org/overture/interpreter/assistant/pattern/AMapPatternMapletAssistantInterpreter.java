@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AMapletPatternMaplet;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
@@ -38,7 +39,7 @@ public class AMapPatternMapletAssistantInterpreter
 
 	public static List<NameValuePairList> getAllNamedValues(
 			AMapletPatternMaplet p, Entry<Value, Value> maplet, Context ctxt)
-			throws PatternMatchException
+			throws AnalysisException
 	{
 		List<NameValuePairList> flist = PPatternAssistantInterpreter.getAllNamedValues(p.getFrom(), maplet.getKey(), ctxt);
 		List<NameValuePairList> tlist = PPatternAssistantInterpreter.getAllNamedValues(p.getTo(), maplet.getValue(), ctxt);

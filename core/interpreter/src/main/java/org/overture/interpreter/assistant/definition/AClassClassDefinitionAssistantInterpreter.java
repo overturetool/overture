@@ -2,6 +2,7 @@ package org.overture.interpreter.assistant.definition;
 
 import java.util.HashMap;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
@@ -25,7 +26,7 @@ public class AClassClassDefinitionAssistantInterpreter
 
 	public static ObjectValue newInstance(AClassClassDefinition node,
 			PDefinition ctorDefinition, ValueList argvals, Context ctxt)
-			throws ValueException
+			throws AnalysisException
 	{
 		if (node.getIsAbstract())
 		{

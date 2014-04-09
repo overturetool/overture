@@ -1,5 +1,6 @@
 package org.overture.interpreter.assistant.type;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.assistant.type.ANamedInvariantTypeAssistant;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.config.Settings;
@@ -24,7 +25,7 @@ public class ANamedInvariantTypeAssistantInterpreter extends ANamedInvariantType
 	}
 
 	public static ValueList getAllValues(ANamedInvariantType type, Context ctxt)
-			throws ValueException
+			throws AnalysisException
 	{
 		ValueList raw = PTypeAssistantInterpreter.getAllValues(type.getType(), ctxt);
 		boolean checks = Settings.invchecks;

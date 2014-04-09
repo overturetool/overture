@@ -1,5 +1,6 @@
 package org.overture.interpreter.assistant.type;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.types.AProductType;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
@@ -17,7 +18,7 @@ public class AProductTypeAssistantInterpreter
 	}
 
 	public static ValueList getAllValues(AProductType type, Context ctxt)
-			throws ValueException
+			throws AnalysisException
 	{
 		return PTypeListAssistant.getAllValues(type.getTypes(), ctxt);
 	}

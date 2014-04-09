@@ -1,5 +1,6 @@
 package org.overture.interpreter.assistant.type;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.assistant.type.AOptionalTypeAssistant;
 import org.overture.ast.types.AOptionalType;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
@@ -20,7 +21,7 @@ public class AOptionalTypeAssistantInterpreter extends AOptionalTypeAssistant
 	}
 
 	public static ValueList getAllValues(AOptionalType type, Context ctxt)
-			throws ValueException
+			throws AnalysisException
 	{
 		ValueList list = PTypeAssistantInterpreter.getAllValues(type.getType(), ctxt);
 		list.add(new NilValue());

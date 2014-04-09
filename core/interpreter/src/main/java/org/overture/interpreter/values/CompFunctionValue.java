@@ -23,6 +23,7 @@
 
 package org.overture.interpreter.values;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.interpreter.runtime.Context;
@@ -54,7 +55,7 @@ public class CompFunctionValue extends FunctionValue
 
 	@Override
 	public Value eval(
-		ILexLocation from, ValueList argValues, Context ctxt) throws ValueException
+		ILexLocation from, ValueList argValues, Context ctxt) throws AnalysisException
 	{
 		ValueList f1arg = new ValueList();
 		f1arg.add(ff2.eval(from, argValues, ctxt));
