@@ -9,6 +9,7 @@ import org.overture.codegen.cgast.expressions.ACompMapExpCG;
 import org.overture.codegen.cgast.expressions.ACompSeqExpCG;
 import org.overture.codegen.cgast.expressions.ACompSetExpCG;
 import org.overture.codegen.cgast.expressions.AEnumMapExpCG;
+import org.overture.codegen.cgast.expressions.AEnumSetExpCG;
 import org.overture.codegen.cgast.expressions.AExists1QuantifierExpCG;
 import org.overture.codegen.cgast.expressions.AExistsQuantifierExpCG;
 import org.overture.codegen.cgast.expressions.AForAllQuantifierExpCG;
@@ -162,18 +163,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		}
 		else
 		{
-			AIdentifierVarExpCG mapCompResult = new AIdentifierVarExpCG();
-			mapCompResult.setType(type.clone());
-			mapCompResult.setOriginal(var);
-			
-			//Replace the map comprehension with the map comprehension result
-			transformationAssistant.replaceNodeWith(node, mapCompResult);
-			
-			//Replace the enclosing statement with the transformation
-			transformationAssistant.replaceNodeWith(enclosingStm, block);
-			
-			//And make sure to have the enclosing statement in the transformed tree
-			block.getStatements().add(enclosingStm);
+			replaceCompWithTransformation(node, enclosingStm, type, var, block);
 		}
 		
 		block.apply(this);
@@ -186,19 +176,30 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		
 		PExpCG first = node.getFirst();
 		PExpCG predicate = node.getPredicate();
-		String var = node.getVar();
 		PTypeCG type = node.getType();
 		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
+		String var = tempVarNameGen.nextVarName(IOoAstConstants.GENERATED_TEMP_SET_COMP_NAME_PREFIX);
 		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
 		
 		ComplexCompStrategy strategy = new SetCompStrategy(config, transformationAssistant, first, predicate, var, type, langIterator, tempVarNameGen, varPrefixes);
 		
 		LinkedList<ASetMultipleBindCG> bindings = node.getBindings();
 		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(bindings, tempVarNameGen, strategy);
+
+		if(block.getStatements().isEmpty())
+		{
+			//In case the block has no statements the result of the set comprehension is the empty set
+			AEnumSetExpCG emptySet = new AEnumSetExpCG();
+			emptySet.setType(type.clone());
+			
+			//Replace the set comprehension with the empty set
+			transformationAssistant.replaceNodeWith(node, emptySet);
+		}
+		else
+		{
+			replaceCompWithTransformation(node, enclosingStm, type, var, block);
+		}
 		
-		transformationAssistant.replaceNodeWith(enclosingStm, block);
-		
-		block.getStatements().add(enclosingStm);
 		block.apply(this);
 	}
 	
@@ -269,6 +270,23 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
 		Exists1QuantifierStrategy strategy = new Exists1QuantifierStrategy(config, transformationAssistant, predicate, var, langIterator, tempVarNameGen, varPrefixes);
 		handleQuantifier(node, "exists1 expression", strategy);
+	}
+
+	private void replaceCompWithTransformation(PExpCG comp, PStmCG enclosingStm,
+			PTypeCG type, String var, ABlockStmCG block)
+	{
+		AIdentifierVarExpCG compResult = new AIdentifierVarExpCG();
+		compResult.setType(type.clone());
+		compResult.setOriginal(var);
+		
+		//Replace the comprehension with the comprehension result
+		transformationAssistant.replaceNodeWith(comp, compResult);
+		
+		//Replace the enclosing statement with the transformation
+		transformationAssistant.replaceNodeWith(enclosingStm, block);
+		
+		//And make sure to have the enclosing statement in the transformed tree
+		block.getStatements().add(enclosingStm);
 	}
 
 	private void handleQuantifier(SQuantifierExpCG node, String nodeStr, QuantifierBaseStrategy strategy) throws AnalysisException
