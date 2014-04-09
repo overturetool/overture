@@ -32,22 +32,22 @@ public class AIdentifierPatternAssistantInterpreter
 		return result;
 	}
 
-	public static boolean isConstrained(AIdentifierPattern pattern)
-	{
-		return pattern.getConstrained(); // The variable may be constrained to be the same as another occurrence
-	}
+//	public static boolean isConstrained(AIdentifierPattern pattern)
+//	{
+//		return pattern.getConstrained(); // The variable may be constrained to be the same as another occurrence
+//	}
 
-	public static int getLength(AIdentifierPattern pattern)
-	{
-		return PPatternAssistantInterpreter.ANY; // Special value meaning "any length"
-	}
+//	public static int getLength(AIdentifierPattern pattern)
+//	{
+//		return PPatternAssistantInterpreter.ANY; // Special value meaning "any length"
+//	}
 
-	public static List<AIdentifierPattern> findIdentifiers(
-			AIdentifierPattern pattern)
-	{
-		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
-		list.add(pattern);
-		return list;
-	}
+//	public static List<AIdentifierPattern> findIdentifiers(
+//			AIdentifierPattern pattern)
+//	{
+//		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
+//		list.add(pattern);
+//		return list;
+//	}
 
 }

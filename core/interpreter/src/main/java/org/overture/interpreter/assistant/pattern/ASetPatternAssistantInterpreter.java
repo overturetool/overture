@@ -141,7 +141,7 @@ public class ASetPatternAssistantInterpreter
 		return finalResults;
 	}
 
-	static boolean isConstrained(ASetPattern pattern)
+	public static boolean isConstrained(ASetPattern pattern)
 	{
 
 		if (af.createPTypeAssistant().isUnion(af.createPPatternListAssistant().getPossibleType(pattern.getPlist(), pattern.getLocation())))
@@ -152,20 +152,20 @@ public class ASetPatternAssistantInterpreter
 		return PPatternListAssistantInterpreter.isConstrained(pattern.getPlist());
 	}
 
-	public static int getLength(ASetPattern pattern)
-	{
-		return pattern.getPlist().size();
-	}
+//	public static int getLength(ASetPattern pattern)
+//	{
+//		return pattern.getPlist().size();
+//	}
 
-	public static List<AIdentifierPattern> findIdentifiers(ASetPattern pattern)
-	{
-		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
-
-		for (PPattern p : pattern.getPlist())
-		{
-			list.addAll(PPatternAssistantInterpreter.findIdentifiers(p));
-		}
-
-		return list;
-	}
+//	public static List<AIdentifierPattern> findIdentifiers(ASetPattern pattern)
+//	{
+//		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
+//
+//		for (PPattern p : pattern.getPlist())
+//		{
+//			list.addAll(PPatternAssistantInterpreter.findIdentifiers(p));
+//		}
+//
+//		return list;
+//	}
 }

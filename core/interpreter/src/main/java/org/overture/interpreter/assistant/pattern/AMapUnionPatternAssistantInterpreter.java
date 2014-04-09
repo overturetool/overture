@@ -223,28 +223,28 @@ public class AMapUnionPatternAssistantInterpreter extends
 		return finalResults;
 	}
 
-	static boolean isConstrained(AMapUnionPattern pattern)
+	public static boolean isConstrained(AMapUnionPattern pattern)
 	{
 		return PPatternAssistantInterpreter.isConstrained(pattern.getLeft())
 				|| PPatternAssistantInterpreter.isConstrained(pattern.getRight());
 	}
 
-	public static int getLength(AMapUnionPattern pattern)
-	{
-		int llen = PPatternAssistantInterpreter.getLength(pattern.getLeft());
-		int rlen = PPatternAssistantInterpreter.getLength(pattern.getRight());
-		return llen == PPatternAssistantInterpreter.ANY
-				|| rlen == PPatternAssistantInterpreter.ANY ? PPatternAssistantInterpreter.ANY
-				: llen + rlen;
-	}
+//	public static int getLength(AMapUnionPattern pattern)
+//	{
+//		int llen = PPatternAssistantInterpreter.getLength(pattern.getLeft());
+//		int rlen = PPatternAssistantInterpreter.getLength(pattern.getRight());
+//		return llen == PPatternAssistantInterpreter.ANY
+//				|| rlen == PPatternAssistantInterpreter.ANY ? PPatternAssistantInterpreter.ANY
+//				: llen + rlen;
+//	}
 
-	public static List<AIdentifierPattern> findIdentifiers(
-			AMapUnionPattern pattern)
-	{
-		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
-		list.addAll(PPatternAssistantInterpreter.findIdentifiers(pattern.getLeft()));
-		list.addAll(PPatternAssistantInterpreter.findIdentifiers(pattern.getRight()));
-		return list;
-	}
+//	public static List<AIdentifierPattern> findIdentifiers(
+//			AMapUnionPattern pattern)
+//	{
+//		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
+//		list.addAll(PPatternAssistantInterpreter.findIdentifiers(pattern.getLeft()));
+//		list.addAll(PPatternAssistantInterpreter.findIdentifiers(pattern.getRight()));
+//		return list;
+//	}
 
 }

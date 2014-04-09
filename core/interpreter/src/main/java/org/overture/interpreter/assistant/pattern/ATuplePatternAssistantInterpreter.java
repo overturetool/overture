@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.ATuplePattern;
 import org.overture.ast.patterns.PPattern;
@@ -58,6 +59,7 @@ public class ATuplePatternAssistantInterpreter
 		for (PPattern p : pattern.getPlist())
 		{
 			List<NameValuePairList> pnvps = PPatternAssistantInterpreter.getAllNamedValues(p, iter.next(), ctxt);
+			
 			nvplists.add(pnvps);
 			counts[i++] = pnvps.size();
 		}
@@ -107,21 +109,21 @@ public class ATuplePatternAssistantInterpreter
 		return finalResults;
 	}
 
-	public static boolean isConstrained(ATuplePattern pattern)
-	{
-		return PPatternListAssistantInterpreter.isConstrained(pattern.getPlist());
-	}
+//	public static boolean isConstrained(ATuplePattern pattern)
+//	{
+//		return PPatternListAssistantInterpreter.isConstrained(pattern.getPlist());
+//	}
 
-	public static List<AIdentifierPattern> findIdentifiers(ATuplePattern pattern)
-	{
-		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
-
-		for (PPattern p : pattern.getPlist())
-		{
-			list.addAll(PPatternAssistantInterpreter.findIdentifiers(p));
-		}
-
-		return list;
-	}
+//	public static List<AIdentifierPattern> findIdentifiers(ATuplePattern pattern)
+//	{
+//		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
+//
+//		for (PPattern p : pattern.getPlist())
+//		{
+//			list.addAll(PPatternAssistantInterpreter.findIdentifiers(p));
+//		}
+//
+//		return list;
+//	}
 
 }

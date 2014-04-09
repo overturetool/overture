@@ -4,22 +4,15 @@ import java.util.LinkedList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AAssignmentDefinition;
-import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AEqualsDefinition;
-import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
-import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AImportedDefinition;
 import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
-import org.overture.ast.definitions.ALocalDefinition;
-import org.overture.ast.definitions.APerSyncDefinition;
 import org.overture.ast.definitions.ARenamedDefinition;
-import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.AThreadDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
-import org.overture.ast.definitions.AUntypedDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
@@ -50,55 +43,62 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 	public static NameValuePairList getNamedValues(PDefinition def,
 			Context initialContext)
 	{
-		if (def instanceof AAssignmentDefinition)
+		try
 		{
-			return AAssignmentDefinitionAssistantInterpreter.getNamedValues((AAssignmentDefinition) def, initialContext);
-		} else if (def instanceof AEqualsDefinition)
+			return def.apply(af.getNamedValueLister(), initialContext);
+		} catch (AnalysisException e)
 		{
-			return AEqualsDefinitionAssistantInterpreter.getNamedValues((AEqualsDefinition) def, initialContext);
-		} else if (def instanceof AExplicitFunctionDefinition)
-		{
-			return AExplicitFunctionDefinitionAssistantInterpreter.getNamedValues((AExplicitFunctionDefinition) def, initialContext);
-		} else if (def instanceof AExplicitOperationDefinition)
-		{
-			return AExplicitOperationDefinitionAssistantInterpreter.getNamedValues((AExplicitOperationDefinition) def, initialContext);
-		} else if (def instanceof AImplicitFunctionDefinition)
-		{
-			return AImplicitFunctionDefinitionAssistantInterpreter.getNamedValues((AImplicitFunctionDefinition) def, initialContext);
-		} else if (def instanceof AImplicitOperationDefinition)
-		{
-			return AImplicitOperationDefinitionAssistantInterpreter.getNamedValues((AImplicitOperationDefinition) def, initialContext);
-		} else if (def instanceof AImportedDefinition)
-		{
-			return AImportedDefinitionAssistantInterpreter.getNamedValues((AImportedDefinition) def, initialContext);
-		} else if (def instanceof AInheritedDefinition)
-		{
-			return AInheritedDefinitionAssistantInterpreter.getNamedValues((AInheritedDefinition) def, initialContext);
-		} else if (def instanceof AInstanceVariableDefinition)
-		{
-			return AInstanceVariableDefinitionAssistantInterpreter.getNamedValues((AInstanceVariableDefinition) def, initialContext);
-		} else if (def instanceof ALocalDefinition)
-		{
-			return ALocalDefinitionAssistantInterpreter.getNamedValues((ALocalDefinition) def, initialContext);
-		} else if (def instanceof ARenamedDefinition)
-		{
-			return ARenamedDefinitionAssistantInterpreter.getNamedValues((ARenamedDefinition) def, initialContext);
-		} else if (def instanceof AThreadDefinition)
-		{
-			return AThreadDefinitionAssistantInterpreter.getNamedValues((AThreadDefinition) def, initialContext);
-		} else if (def instanceof ATypeDefinition)
-		{
-			return ATypeDefinitionAssistantInterpreter.getNamedValues((ATypeDefinition) def, initialContext);
-		} else if (def instanceof AUntypedDefinition)
-		{
-			return AUntypedDefinitionAssistantInterpreter.getNamedValues((AUntypedDefinition) def, initialContext);
-		} else if (def instanceof AValueDefinition)
-		{
-			return AValueDefinitionAssistantInterpreter.getNamedValues((AValueDefinition) def, initialContext);
-		} else
-		{
-			return new NameValuePairList(); // Overridden
+			return null;
 		}
+//		if (def instanceof AAssignmentDefinition)
+//		{
+//			return AAssignmentDefinitionAssistantInterpreter.getNamedValues((AAssignmentDefinition) def, initialContext);
+//		} else if (def instanceof AEqualsDefinition)
+//		{
+//			return AEqualsDefinitionAssistantInterpreter.getNamedValues((AEqualsDefinition) def, initialContext);
+//		} else if (def instanceof AExplicitFunctionDefinition)
+//		{
+//			return AExplicitFunctionDefinitionAssistantInterpreter.getNamedValues((AExplicitFunctionDefinition) def, initialContext);
+//		} else if (def instanceof AExplicitOperationDefinition)
+//		{
+//			return AExplicitOperationDefinitionAssistantInterpreter.getNamedValues((AExplicitOperationDefinition) def, initialContext);
+//		} else if (def instanceof AImplicitFunctionDefinition)
+//		{
+//			return AImplicitFunctionDefinitionAssistantInterpreter.getNamedValues((AImplicitFunctionDefinition) def, initialContext);
+//		} else if (def instanceof AImplicitOperationDefinition)
+//		{
+//			return AImplicitOperationDefinitionAssistantInterpreter.getNamedValues((AImplicitOperationDefinition) def, initialContext);
+//		} else if (def instanceof AImportedDefinition)
+//		{
+//			return AImportedDefinitionAssistantInterpreter.getNamedValues((AImportedDefinition) def, initialContext);
+//		} else if (def instanceof AInheritedDefinition)
+//		{
+//			return AInheritedDefinitionAssistantInterpreter.getNamedValues((AInheritedDefinition) def, initialContext);
+//		} else if (def instanceof AInstanceVariableDefinition)
+//		{
+//			return AInstanceVariableDefinitionAssistantInterpreter.getNamedValues((AInstanceVariableDefinition) def, initialContext);
+//		} else if (def instanceof ALocalDefinition)
+//		{
+//			return ALocalDefinitionAssistantInterpreter.getNamedValues((ALocalDefinition) def, initialContext);
+//		} else if (def instanceof ARenamedDefinition)
+//		{
+//			return ARenamedDefinitionAssistantInterpreter.getNamedValues((ARenamedDefinition) def, initialContext);
+//		} else if (def instanceof AThreadDefinition)
+//		{
+//			return AThreadDefinitionAssistantInterpreter.getNamedValues((AThreadDefinition) def, initialContext);
+//		} else if (def instanceof ATypeDefinition)
+//		{
+//			return ATypeDefinitionAssistantInterpreter.getNamedValues((ATypeDefinition) def, initialContext);
+//		} else if (def instanceof AUntypedDefinition)
+//		{
+//			return AUntypedDefinitionAssistantInterpreter.getNamedValues((AUntypedDefinition) def, initialContext);
+//		} else if (def instanceof AValueDefinition)
+//		{
+//			return AValueDefinitionAssistantInterpreter.getNamedValues((AValueDefinition) def, initialContext);
+//		} else
+//		{
+//			return new NameValuePairList(); // Overridden
+//		}
 	}
 
 	public static ProofObligationList getProofObligations(PDefinition def,
@@ -123,96 +123,117 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 	 */
 	public static ValueList getValues(PDefinition def, ObjectContext ctxt)
 	{
-		if (def instanceof AAssignmentDefinition)
+		try
 		{
-			return AAssignmentDefinitionAssistantInterpreter.getValues((AAssignmentDefinition) def, ctxt);
-		} else if (def instanceof AEqualsDefinition)
+			return def.apply(af.getValuesDefinitionLocator(),ctxt);
+		} catch (AnalysisException e)
 		{
-			return AEqualsDefinitionAssistantInterpreter.getValues((AEqualsDefinition) def, ctxt);
-		} else if (def instanceof AInstanceVariableDefinition)
-		{
-			return AInstanceVariableDefinitionAssistantInterpreter.getValues((AInstanceVariableDefinition) def, ctxt);
-		} else if (def instanceof AValueDefinition)
-		{
-			return AValueDefinitionAssistantInterpreter.getValues((AValueDefinition) def, ctxt);
-		} else
-		{
-			return new ValueList();
+			return null;
 		}
+//		if (def instanceof AAssignmentDefinition)
+//		{
+//			return AAssignmentDefinitionAssistantInterpreter.getValues((AAssignmentDefinition) def, ctxt);
+//		} else if (def instanceof AEqualsDefinition)
+//		{
+//			return AEqualsDefinitionAssistantInterpreter.getValues((AEqualsDefinition) def, ctxt);
+//		} else if (def instanceof AInstanceVariableDefinition)
+//		{
+//			return AInstanceVariableDefinitionAssistantInterpreter.getValues((AInstanceVariableDefinition) def, ctxt);
+//		} else if (def instanceof AValueDefinition)
+//		{
+//			return AValueDefinitionAssistantInterpreter.getValues((AValueDefinition) def, ctxt);
+//		} else
+//		{
+//			return new ValueList();
+//		}
 
 	}
 
 	public static PExp findExpression(PDefinition def, int lineno)
 	{
-		if (def instanceof AAssignmentDefinition)
+		try
 		{
-			return AAssignmentDefinitionAssistantInterpreter.findExpression((AAssignmentDefinition) def, lineno);
-		} else if (def instanceof SClassDefinition)
-		{
-			return SClassDefinitionAssistantInterpreter.findExpression((SClassDefinition) def, lineno);
-		} else if (def instanceof AClassInvariantDefinition)
-		{
-			return AClassInvariantDefinitionAssistantInterpreter.findExpression((AClassInvariantDefinition)def, lineno);
-		} else if (def instanceof AEqualsDefinition)
-		{
-			return AEqualsDefinitionAssistantInterpreter.findExpression((AEqualsDefinition) def, lineno);
-		} else if (def instanceof AExplicitFunctionDefinition)
-		{
-			return AExplicitFunctionDefinitionAssistantInterpreter.findExpression((AExplicitFunctionDefinition) def, lineno);
-		} else if (def instanceof AExplicitOperationDefinition)
-		{
-			return AExplicitOperationDefinitionAssistantInterpreter.findExpression((AExplicitOperationDefinition) def, lineno);
-		} else if (def instanceof AImplicitFunctionDefinition)
-		{
-			return AImplicitFunctionDefinitionAssistantInterpreter.findExpression((AImplicitFunctionDefinition) def, lineno);
-		} else if (def instanceof AImplicitOperationDefinition)
-		{
-			return AImplicitOperationDefinitionAssistantInterpreter.findExpression((AImplicitOperationDefinition) def, lineno);
-		} else if (def instanceof AInstanceVariableDefinition)
-		{
-			return AInstanceVariableDefinitionAssistantInterpreter.findExpression((AInstanceVariableDefinition) def, lineno);
-		} else if (def instanceof APerSyncDefinition)
-		{
-			return APerSyncDefinitionAssistantInterpreter.findExpression((APerSyncDefinition) def, lineno);
-		} else if (def instanceof AStateDefinition)
-		{
-			return AStateDefinitionAssistantInterpreter.findExpression((AStateDefinition) def, lineno);
-		} else if (def instanceof AThreadDefinition)
-		{
-			return AThreadDefinitionAssistantInterpreter.findExpression((AThreadDefinition) def, lineno);
-		} else if (def instanceof ATypeDefinition)
-		{
-			return ATypeDefinitionAssistantInterpreter.findExpression((ATypeDefinition) def, lineno);
-		} else if (def instanceof AValueDefinition)
-		{
-			return AValueDefinitionAssistantInterpreter.findExpression((AValueDefinition) def, lineno);
-		} else
+			return def.apply(af.getExpressionFinder(),lineno);
+		} catch (AnalysisException e)
 		{
 			return null;
 		}
+//		if (def instanceof AAssignmentDefinition)
+//		{
+//			return AAssignmentDefinitionAssistantInterpreter.findExpression((AAssignmentDefinition) def, lineno);
+//		} else if (def instanceof SClassDefinition)
+//		{
+//			return SClassDefinitionAssistantInterpreter.findExpression((SClassDefinition) def, lineno);
+//		} else if (def instanceof AClassInvariantDefinition)
+//		{
+//			return AClassInvariantDefinitionAssistantInterpreter.findExpression((AClassInvariantDefinition)def, lineno);
+//		} else if (def instanceof AEqualsDefinition)
+//		{
+//			return AEqualsDefinitionAssistantInterpreter.findExpression((AEqualsDefinition) def, lineno);
+//		} else if (def instanceof AExplicitFunctionDefinition)
+//		{
+//			return AExplicitFunctionDefinitionAssistantInterpreter.findExpression((AExplicitFunctionDefinition) def, lineno);
+//		} else if (def instanceof AExplicitOperationDefinition)
+//		{
+//			return AExplicitOperationDefinitionAssistantInterpreter.findExpression((AExplicitOperationDefinition) def, lineno);
+//		} else if (def instanceof AImplicitFunctionDefinition)
+//		{
+//			return AImplicitFunctionDefinitionAssistantInterpreter.findExpression((AImplicitFunctionDefinition) def, lineno);
+//		} else if (def instanceof AImplicitOperationDefinition)
+//		{
+//			return AImplicitOperationDefinitionAssistantInterpreter.findExpression((AImplicitOperationDefinition) def, lineno);
+//		} else if (def instanceof AInstanceVariableDefinition)
+//		{
+//			return AInstanceVariableDefinitionAssistantInterpreter.findExpression((AInstanceVariableDefinition) def, lineno);
+//		} else if (def instanceof APerSyncDefinition)
+//		{
+//			return APerSyncDefinitionAssistantInterpreter.findExpression((APerSyncDefinition) def, lineno);
+//		} else if (def instanceof AStateDefinition)
+//		{
+//			return AStateDefinitionAssistantInterpreter.findExpression((AStateDefinition) def, lineno);
+//		} else if (def instanceof AThreadDefinition)
+//		{
+//			return AThreadDefinitionAssistantInterpreter.findExpression((AThreadDefinition) def, lineno);
+//		} else if (def instanceof ATypeDefinition)
+//		{
+//			return ATypeDefinitionAssistantInterpreter.findExpression((ATypeDefinition) def, lineno);
+//		} else if (def instanceof AValueDefinition)
+//		{
+//			return AValueDefinitionAssistantInterpreter.findExpression((AValueDefinition) def, lineno);
+//		} else
+//		{
+//			return null;
+//		}
 	}
 
 	public static boolean isTypeDefinition(PDefinition def)
 	{
-		if (def instanceof SClassDefinition)
+		try
 		{
-			return SClassDefinitionAssistantInterpreter.isTypeDefinition((SClassDefinition) def);
-		} else if (def instanceof AImportedDefinition)
-		{
-			return AImportedDefinitionAssistantInterpreter.isTypeDefinition((AImportedDefinition) def);
-		} else if (def instanceof AInheritedDefinition)
-		{
-			return AInheritedDefinitionAssistantInterpreter.isTypeDefinition((AInheritedDefinition) def);
-		} else if (def instanceof ARenamedDefinition)
-		{
-			return ARenamedDefinitionAssistantInterpreter.isTypeDefinition((ARenamedDefinition) def);
-		} else if (def instanceof ATypeDefinition)
-		{
-			return ATypeDefinitionAssistantInterpreter.isTypeDefinition((ATypeDefinition) def);
-		} else
+			return def.apply(af.getTypeDefinitionChecker());
+		} catch (AnalysisException e)
 		{
 			return false;
 		}
+//		if (def instanceof SClassDefinition)
+//		{
+//			return SClassDefinitionAssistantInterpreter.isTypeDefinition((SClassDefinition) def);
+//		} else if (def instanceof AImportedDefinition)
+//		{
+//			return AImportedDefinitionAssistantInterpreter.isTypeDefinition((AImportedDefinition) def);
+//		} else if (def instanceof AInheritedDefinition)
+//		{
+//			return AInheritedDefinitionAssistantInterpreter.isTypeDefinition((AInheritedDefinition) def);
+//		} else if (def instanceof ARenamedDefinition)
+//		{
+//			return ARenamedDefinitionAssistantInterpreter.isTypeDefinition((ARenamedDefinition) def);
+//		} else if (def instanceof ATypeDefinition)
+//		{
+//			return ATypeDefinitionAssistantInterpreter.isTypeDefinition((ATypeDefinition) def);
+//		} else
+//		{
+//			return false;
+//		}
 	}
 
 	public static boolean isRuntime(PDefinition def)

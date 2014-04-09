@@ -155,21 +155,21 @@ public class AMapPatternAssistantInterpreter
 		return false;
 	}
 
-	public static int getLength(AMapPattern pattern)
-	{
-		return pattern.getMaplets().size();
-	}
+//	public static int getLength(AMapPattern pattern)
+//	{
+//		return pattern.getMaplets().size();
+//	}
 
-	public static List<AIdentifierPattern> findIdentifiers(AMapPattern pattern)
-	{
-		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
-
-		for (AMapletPatternMaplet p : pattern.getMaplets())
-		{
-			list.addAll(AMapPatternMapletAssistantInterpreter.findIdentifiers(p));
-		}
-
-		return list;
-	}
+//	public static List<AIdentifierPattern> findIdentifiers(AMapPattern pattern)
+//	{
+//		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
+//
+//		for (AMapletPatternMaplet p : pattern.getMaplets())
+//		{
+//			list.addAll(AMapPatternMapletAssistantInterpreter.findIdentifiers(p));
+//		}
+//
+//		return list;
+//	}
 
 }

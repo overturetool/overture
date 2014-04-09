@@ -118,21 +118,21 @@ public class ASeqPatternAssistantInterpreter
 		return PPatternListAssistantInterpreter.isConstrained(pattern.getPlist());
 	}
 
-	public static int getLength(ASeqPattern pattern)
-	{
-		return pattern.getPlist().size();
-	}
+//	public static int getLength(ASeqPattern pattern)
+//	{
+//		return pattern.getPlist().size();
+//	}
 
-	public static List<AIdentifierPattern> findIdentifiers(ASeqPattern pattern)
-	{
-		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
-
-		for (PPattern p : pattern.getPlist())
-		{
-			list.addAll(PPatternAssistantInterpreter.findIdentifiers(p));
-		}
-
-		return list;
-	}
+//	public static List<AIdentifierPattern> findIdentifiers(ASeqPattern pattern)
+//	{
+//		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
+//
+//		for (PPattern p : pattern.getPlist())
+//		{
+//			list.addAll(PPatternAssistantInterpreter.findIdentifiers(p));
+//		}
+//
+//		return list;
+//	}
 
 }

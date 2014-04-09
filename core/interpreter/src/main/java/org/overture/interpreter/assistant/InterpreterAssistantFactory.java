@@ -1,9 +1,14 @@
 package org.overture.interpreter.assistant;
 
 import java.io.Serializable;
+import java.util.List;
 
+import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.analysis.intf.IAnswer;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.LexNameList;
+import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.interpreter.assistant.definition.AApplyExpressionTraceCoreDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AAssignmentDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ABracketedExpressionTraceCoreDefinitionAssitantInterpreter;
@@ -154,7 +159,21 @@ import org.overture.interpreter.assistant.type.PTypeListAssistant;
 import org.overture.interpreter.assistant.type.SBasicTypeAssistantInterpreter;
 import org.overture.interpreter.assistant.type.SInvariantTypeAssistantInterpreter;
 import org.overture.interpreter.assistant.type.SMapTypeAssistantInterpreter;
+import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.utilities.OldNameCollector;
+import org.overture.interpreter.utilities.definition.ExpressionFinder;
+import org.overture.interpreter.utilities.definition.NamedValueLister;
+import org.overture.interpreter.utilities.definition.TypeDefinitionChecker;
+import org.overture.interpreter.utilities.definition.ValuesDefinitionLocator;
+import org.overture.interpreter.utilities.pattern.AllNamedValuesLocator;
+import org.overture.interpreter.utilities.pattern.BindValuesCollector;
+import org.overture.interpreter.utilities.pattern.ConstrainedPatternChecker;
+import org.overture.interpreter.utilities.pattern.IdentifierPatternFinder;
+import org.overture.interpreter.utilities.pattern.LengthFinder;
+import org.overture.interpreter.utilities.pattern.ValueCollector;
+import org.overture.interpreter.values.NameValuePairList;
+import org.overture.interpreter.values.ValueList;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 
 public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
@@ -938,6 +957,66 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	public IAnswer<LexNameList> getOldNameCollector()
 	{
 		return new OldNameCollector(this);
+	}
+
+	@Override
+	public QuestionAnswerAdaptor<Context, ValueList> getBindValuesCollector()
+	{
+		return new BindValuesCollector(this);
+	}
+	
+	@Override
+	public QuestionAnswerAdaptor<ObjectContext, ValueList> getValueCollector()
+	{
+		return new ValueCollector(this);
+	}
+	
+	@Override
+	public IAnswer<List<AIdentifierPattern>> getIdentifierPatternFinder()
+	{
+		return new IdentifierPatternFinder(this);
+	}
+	
+	@Override
+	public IAnswer<Integer> getLengthFinder()
+	{
+		return new LengthFinder(this);
+	}
+	
+	@Override
+	public IAnswer<Boolean> getConstrainedPatternChecker()
+	{
+		return new ConstrainedPatternChecker(this);
+	}
+	
+	@Override
+	public QuestionAnswerAdaptor<AllNamedValuesLocator.Newquestion, List<NameValuePairList>> getAllNamedValuesLocator()
+	{
+		return new AllNamedValuesLocator(this);
+	}
+
+	@Override
+	public QuestionAnswerAdaptor<Context, NameValuePairList> getNamedValueLister()
+	{
+		return new NamedValueLister(this);
+	}
+
+	@Override
+	public QuestionAnswerAdaptor<Integer, PExp> getExpressionFinder()
+	{
+		return new ExpressionFinder(this);
+	}
+	
+	@Override
+	public IQuestionAnswer<ObjectContext, ValueList> getValuesDefinitionLocator()
+	{
+		return new ValuesDefinitionLocator(this);
+	}
+	
+	@Override
+	public IAnswer<Boolean> getTypeDefinitionChecker()
+	{
+		return new TypeDefinitionChecker(this);
 	}
 
 }
