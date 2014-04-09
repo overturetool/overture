@@ -258,7 +258,7 @@ public class ExpAssistantCG extends AssistantBase
 		return exp.getAncestor(SOperationDefinition.class) == null && exp.getAncestor(SFunctionDefinition.class) == null;
 	}
 	
-	public PExpCG handleQuantifier(PExp node, List<PMultipleBind> bindings, PExp predicate, SQuantifierExpCG quantifier, String varCg, OoAstInfo question, String nodeStr)
+	public PExpCG handleQuantifier(PExp node, List<PMultipleBind> bindings, PExp predicate, SQuantifierExpCG quantifier, OoAstInfo question, String nodeStr)
 			throws AnalysisException
 	{
 		if(question.getExpAssistant().existsOutsideOpOrFunc(node))
@@ -295,7 +295,6 @@ public class ExpAssistantCG extends AssistantBase
 		quantifier.setType(typeCg);
 		quantifier.setBindList(bindingsCg);
 		quantifier.setPredicate(predicateCg);
-		quantifier.setVar(varCg);
 		
 		return quantifier;
 	}

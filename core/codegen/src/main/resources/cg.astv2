@@ -387,7 +387,7 @@ Aspect Declaration
 	;
 	
 %expCG->#Quantifier //The Overture AST uses a multiplebind
-	= [bindList]:multipleBindCG.set* [predicate]:expCG [var]:java_String
+	= [bindList]:multipleBindCG.set* [predicate]:expCG
 	;
 	
 //TODO: Consider moving seq, set and map up to typeCG	

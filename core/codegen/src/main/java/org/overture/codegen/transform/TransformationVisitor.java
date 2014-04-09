@@ -5,12 +5,14 @@ import java.util.LinkedList;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
+import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACompMapExpCG;
 import org.overture.codegen.cgast.expressions.ACompSeqExpCG;
 import org.overture.codegen.cgast.expressions.ACompSetExpCG;
 import org.overture.codegen.cgast.expressions.AEnumMapExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSetExpCG;
+import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AExists1QuantifierExpCG;
 import org.overture.codegen.cgast.expressions.AExistsQuantifierExpCG;
 import org.overture.codegen.cgast.expressions.AForAllQuantifierExpCG;
@@ -19,12 +21,13 @@ import org.overture.codegen.cgast.expressions.ALetBeStExpCG;
 import org.overture.codegen.cgast.expressions.AMapletExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
-import org.overture.codegen.cgast.expressions.SQuantifierExpCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ALetBeStStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
+import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
+import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
@@ -164,7 +167,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		}
 		else
 		{
-			replaceCompWithTransformation(node, enclosingStm, type, var, block);
+			replaceCompWithTransformation(enclosingStm, block, type, var, node);
 		}
 		
 		block.apply(this);
@@ -198,7 +201,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		}
 		else
 		{
-			replaceCompWithTransformation(node, enclosingStm, type, var, block);
+			replaceCompWithTransformation(enclosingStm, block, type, var, node);
 		}
 		
 		block.apply(this);
@@ -234,7 +237,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 
 			ABlockStmCG block = transformationAssistant.consIterationBlock(ids, node.getSet(), info.getTempVarNameGen(), strategy);
 
-			replaceCompWithTransformation(node, enclosingStm, type, var, block);
+			replaceCompWithTransformation(enclosingStm, block, type, var, node);
 			
 			block.apply(this);
 		}
@@ -243,69 +246,121 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseAForAllQuantifierExpCG(AForAllQuantifierExpCG node) throws AnalysisException
 	{
+		PStmCG enclosingStm = getEnclosingStm(node, "forall expression");
+		
 		PExpCG predicate = node.getPredicate();
-		String var = node.getVar();
 		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
+		String var = tempVarNameGen.nextVarName(IOoAstConstants.GENERATED_TEMP_FORALL_EXP_NAME_PREFIX);
 		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
 		
 		OrdinaryQuantifierStrategy strategy = new OrdinaryQuantifierStrategy(config, transformationAssistant, predicate, var, OrdinaryQuantifier.FORALL, langIterator, tempVarNameGen, varPrefixes);
-		handleQuantifier(node, "forall expression", strategy);
+		
+		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(node.getBindList(), tempVarNameGen, strategy);
+
+		if(node.getBindList().isEmpty())
+		{
+			ABoolLiteralExpCG forAllResult = info.getExpAssistant().consBoolLiteral(true);
+			transformationAssistant.replaceNodeWith(node, forAllResult);
+		}
+		else
+		{
+			AIdentifierVarExpCG forAllResult = new AIdentifierVarExpCG();
+			forAllResult.setType(new ABoolBasicTypeCG());
+			forAllResult.setOriginal(var);
+			
+			transform(enclosingStm, block, forAllResult, node);
+			block.apply(this);
+		}
 	}
 	
 	@Override
 	public void caseAExistsQuantifierExpCG(
 			AExistsQuantifierExpCG node) throws AnalysisException
 	{
+		PStmCG enclosingStm = getEnclosingStm(node, "exists expression");
+		
 		PExpCG predicate = node.getPredicate();
-		String var = node.getVar();
 		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
+		String var = tempVarNameGen.nextVarName(IOoAstConstants.GENERATED_TEMP_EXISTS_EXP_NAME_PREFIX);
 		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
 		
 		OrdinaryQuantifierStrategy strategy = new OrdinaryQuantifierStrategy(config, transformationAssistant, predicate, var, OrdinaryQuantifier.EXISTS, langIterator, tempVarNameGen, varPrefixes);
-		handleQuantifier(node, "exists expression", strategy);
+		
+		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(node.getBindList(), tempVarNameGen, strategy);
+
+		if(node.getBindList().isEmpty())
+		{
+			ABoolLiteralExpCG existsResult = info.getExpAssistant().consBoolLiteral(false);
+			transformationAssistant.replaceNodeWith(node, existsResult);
+		}
+		else
+		{
+			AIdentifierVarExpCG existsResult = new AIdentifierVarExpCG();
+			existsResult.setType(new ABoolBasicTypeCG());
+			existsResult.setOriginal(var);
+			
+			transform(enclosingStm, block, existsResult, node);
+			block.apply(this);
+		}
 	}
 	
 	@Override
 	public void caseAExists1QuantifierExpCG(
 			AExists1QuantifierExpCG node) throws AnalysisException
 	{
+		PStmCG enclosingStm = getEnclosingStm(node, "exists1 expression");
+		
 		PExpCG predicate = node.getPredicate();
-		String var = node.getVar();
 		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
+		String var = tempVarNameGen.nextVarName(IOoAstConstants.GENERATED_TEMP_EXISTS1_EXP_NAME_PREFIX);
 		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
+		
 		Exists1QuantifierStrategy strategy = new Exists1QuantifierStrategy(config, transformationAssistant, predicate, var, langIterator, tempVarNameGen, varPrefixes);
-		handleQuantifier(node, "exists1 expression", strategy);
+		
+		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(node.getBindList(), tempVarNameGen, strategy);
+
+		if(node.getBindList().isEmpty())
+		{
+			ABoolLiteralExpCG exists1Result = info.getExpAssistant().consBoolLiteral(false);
+			transformationAssistant.replaceNodeWith(node, exists1Result);
+		}
+		else
+		{
+			AIdentifierVarExpCG counter = new AIdentifierVarExpCG();
+			counter.setType(new AIntNumericBasicTypeCG());
+			counter.setOriginal(var);
+			
+			AEqualsBinaryExpCG exists1Result = new AEqualsBinaryExpCG();
+			exists1Result.setType(new ABoolBasicTypeCG());
+			exists1Result.setLeft(counter);
+			exists1Result.setRight(info.getExpAssistant().consIntLiteral(1));
+			
+			transform(enclosingStm, block, exists1Result, node);
+			block.apply(this);
+		}
 	}
 
-	private void replaceCompWithTransformation(PExpCG comp, PStmCG enclosingStm,
-			PTypeCG type, String var, ABlockStmCG block)
+	private void replaceCompWithTransformation(PStmCG enclosingStm, ABlockStmCG block,
+			PTypeCG type, String var, PExpCG comp)
 	{
 		AIdentifierVarExpCG compResult = new AIdentifierVarExpCG();
 		compResult.setType(type.clone());
 		compResult.setOriginal(var);
 		
-		//Replace the comprehension with the comprehension result
-		transformationAssistant.replaceNodeWith(comp, compResult);
+		transform(enclosingStm, block, compResult, comp);
+	}
+
+	private void transform(PStmCG enclosingStm, ABlockStmCG block,
+			PExpCG nodeResult, PExpCG node)
+	{
+		//Replace the node with the node result
+		transformationAssistant.replaceNodeWith(node, nodeResult);
 		
 		//Replace the enclosing statement with the transformation
 		transformationAssistant.replaceNodeWith(enclosingStm, block);
 		
 		//And make sure to have the enclosing statement in the transformed tree
 		block.getStatements().add(enclosingStm);
-	}
-
-	private void handleQuantifier(SQuantifierExpCG node, String nodeStr, QuantifierBaseStrategy strategy) throws AnalysisException
-	{
-		PStmCG enclosingStm = getEnclosingStm(node, nodeStr);
-		
-		LinkedList<ASetMultipleBindCG> bindList = node.getBindList();
-		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
-		
-		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(bindList, tempVarNameGen, strategy);
-		
-		transformationAssistant.replaceNodeWith(enclosingStm, block);
-		block.getStatements().add(enclosingStm);
-		block.apply(this);
 	}
 	
 	private PStmCG getEnclosingStm(PExpCG node, String nodeStr) throws AnalysisException

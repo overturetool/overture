@@ -198,7 +198,6 @@ import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
-import org.overture.codegen.constants.IOoAstConstants;
 import org.overture.codegen.ooast.OoAstInfo;
 import org.overture.codegen.utils.AnalysisExceptionCG;
 
@@ -367,20 +366,16 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	public PExpCG caseAForAllExp(AForAllExp node, OoAstInfo question)
 			throws AnalysisException
 	{
-		String varCg = question.getTempVarNameGen().nextVarName(IOoAstConstants.GENERATED_TEMP_FORALL_EXP_NAME_PREFIX);
-
 		//The inheritance hierarchy of the VDM AST tree is structured such that the bindings and the predicate
 		//must also be passed to the method that handles the forall and the exists quantifiers
-		return question.getExpAssistant().handleQuantifier(node, node.getBindList(), node.getPredicate(), new AForAllQuantifierExpCG(), varCg, question, "forall expression");
+		return question.getExpAssistant().handleQuantifier(node, node.getBindList(), node.getPredicate(), new AForAllQuantifierExpCG(), question, "forall expression");
 	}
 	
 	@Override
 	public PExpCG caseAExistsExp(AExistsExp node, OoAstInfo question)
 			throws AnalysisException
 	{
-		String varCg = question.getTempVarNameGen().nextVarName(IOoAstConstants.GENERATED_TEMP_EXISTS_EXP_NAME_PREFIX);
-		
-		return question.getExpAssistant().handleQuantifier(node, node.getBindList(), node.getPredicate(), new AExistsQuantifierExpCG(), varCg, question, "exists expression");
+		return question.getExpAssistant().handleQuantifier(node, node.getBindList(), node.getPredicate(), new AExistsQuantifierExpCG(), question, "exists expression");
 	}
 	
 	@Override
@@ -411,13 +406,11 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		ASetMultipleBindCG multipleSetBind = question.getBindAssistant().convertToMultipleSetBind(setBind);
 		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 		PExpCG predicateCg = predicate.apply(question.getExpVisitor(), question);
-		String varCg = question.getTempVarNameGen().nextVarName(IOoAstConstants.GENERATED_TEMP_EXISTS1_EXP_NAME_PREFIX);
 		
 		AExists1QuantifierExpCG exists1Exp = new AExists1QuantifierExpCG();
 		exists1Exp.getBindList().add(multipleSetBind);
 		exists1Exp.setType(typeCg);
 		exists1Exp.setPredicate(predicateCg);
-		exists1Exp.setVar(varCg);
 		
 		return exists1Exp;
 	}
