@@ -635,7 +635,6 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 		PExpCG suchThatCg = suchThat != null ? suchThat.apply(question.getExpVisitor(), question) : null;
 		PExpCG valueCg = value.apply(question.getExpVisitor(), question);
-		String varCg = question.getTempVarNameGen().nextVarName(IOoAstConstants.GENERATED_TEMP_LET_BE_ST_EXP_NAME_PREFIX);
 		
 		ALetBeStExpCG letBeStExp = new ALetBeStExpCG();
 		
@@ -644,7 +643,6 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		letBeStExp.setType(typeCg);
 		letBeStExp.setHeader(header);
 		letBeStExp.setValue(valueCg);
-		letBeStExp.setVar(varCg);
 		
 		return letBeStExp;
 	}

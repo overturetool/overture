@@ -11,8 +11,10 @@ import org.overture.codegen.cgast.expressions.ACompSetExpCG;
 import org.overture.codegen.cgast.expressions.AExists1QuantifierExpCG;
 import org.overture.codegen.cgast.expressions.AExistsQuantifierExpCG;
 import org.overture.codegen.cgast.expressions.AForAllQuantifierExpCG;
+import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.ALetBeStExpCG;
 import org.overture.codegen.cgast.expressions.AMapletExpCG;
+import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.expressions.SQuantifierExpCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
@@ -23,6 +25,7 @@ import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
+import org.overture.codegen.constants.IOoAstConstants;
 import org.overture.codegen.constants.TempVarPrefixes;
 import org.overture.codegen.ooast.OoAstInfo;
 import org.overture.codegen.transform.iterator.ILanguageIterator;
@@ -94,24 +97,38 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 
 		ABlockStmCG outerBlock = new ABlockStmCG();
 
+		PExpCG letBeStResult = null;
+		
 		if (transformationAssistant.hasEmptySet(binding))
 		{
 			transformationAssistant.cleanUpBinding(binding);
+			letBeStResult = new ANullExpCG();
 		}
 		else
 		{
-			String var = node.getVar();
+			String var = tempVarNameGen.nextVarName(IOoAstConstants.GENERATED_TEMP_LET_BE_ST_EXP_NAME_PREFIX);
 			PExpCG value = node.getValue();
 			
 			AVarLocalDeclCG resultDecl = transformationAssistant.consDecl(var, value);
 			info.getStmAssistant().injectDeclAsStm(outerBlock, resultDecl);
+			
+			AIdentifierVarExpCG varExpResult = new AIdentifierVarExpCG();
+			varExpResult.setType(value.getType().clone());
+			varExpResult.setOriginal(var);
+			letBeStResult = varExpResult;
 		}
+		
+		//Replace the let be st expression with the result expression
+		transformationAssistant.replaceNodeWith(node, letBeStResult);
 		
 		LinkedList<AIdentifierPatternCG> patterns = binding.getPatterns();
 		ABlockStmCG block = transformationAssistant.consIterationBlock(patterns, binding.getSet(), tempVarNameGen, strategy);
 		outerBlock.getStatements().addFirst(block);
 
+		//Replace the enclosing statement with the transformation
 		transformationAssistant.replaceNodeWith(enclosingStm, outerBlock);
+		
+		//And make sure to have the enclosing statement in the transformed tree
 		outerBlock.getStatements().add(enclosingStm);
 		outerBlock.apply(this);
 	}

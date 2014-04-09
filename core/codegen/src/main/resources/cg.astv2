@@ -190,7 +190,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{fieldNumber} [field]:java_Long [tuple]:expCG
     |	{ternaryIf} [condition]:expCG [trueValue]:expCG [falseValue]:expCG
     |   {maplet}  [left]:expCG [right]:expCG
-    |	{letBeSt} [header]:letBeStCG.header [value]:expCG [var]:java_String
+    |	{letBeSt} [header]:letBeStCG.header [value]:expCG
     |	#Seq
     |	#Set
     |	#Map
