@@ -8,6 +8,7 @@ import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
 import org.overture.codegen.cgast.expressions.ACompMapExpCG;
 import org.overture.codegen.cgast.expressions.ACompSeqExpCG;
 import org.overture.codegen.cgast.expressions.ACompSetExpCG;
+import org.overture.codegen.cgast.expressions.AEnumMapExpCG;
 import org.overture.codegen.cgast.expressions.AExists1QuantifierExpCG;
 import org.overture.codegen.cgast.expressions.AExistsQuantifierExpCG;
 import org.overture.codegen.cgast.expressions.AForAllQuantifierExpCG;
@@ -140,9 +141,9 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		
 		AMapletExpCG first = node.getFirst();
 		PExpCG predicate = node.getPredicate();
-		String var = node.getVar();
 		PTypeCG type = node.getType();
 		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
+		String var = tempVarNameGen.nextVarName(IOoAstConstants.GENERATED_TEMP_MAP_COMP_NAME_PREFIX);
 		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
 		
 		ComplexCompStrategy strategy = new MapCompStrategy(config, transformationAssistant, first, predicate, var, type, langIterator, tempVarNameGen, varPrefixes);
@@ -150,9 +151,31 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		LinkedList<ASetMultipleBindCG> bindings = node.getBindings();
 		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(bindings, tempVarNameGen, strategy);
 		
-		transformationAssistant.replaceNodeWith(enclosingStm, block);
+		if(block.getStatements().isEmpty())
+		{
+			//In case the block has no statements the result of the map comprehension is the empty map
+			AEnumMapExpCG emptyMap = new AEnumMapExpCG();
+			emptyMap.setType(type.clone());
+			
+			//Replace the map comprehension with the empty map
+			transformationAssistant.replaceNodeWith(node, emptyMap);
+		}
+		else
+		{
+			AIdentifierVarExpCG mapCompResult = new AIdentifierVarExpCG();
+			mapCompResult.setType(type.clone());
+			mapCompResult.setOriginal(var);
+			
+			//Replace the map comprehension with the map comprehension result
+			transformationAssistant.replaceNodeWith(node, mapCompResult);
+			
+			//Replace the enclosing statement with the transformation
+			transformationAssistant.replaceNodeWith(enclosingStm, block);
+			
+			//And make sure to have the enclosing statement in the transformed tree
+			block.getStatements().add(enclosingStm);
+		}
 		
-		block.getStatements().add(enclosingStm);
 		block.apply(this);
 	}
 	
