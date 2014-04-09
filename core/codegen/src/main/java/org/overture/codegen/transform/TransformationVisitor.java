@@ -68,8 +68,12 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		LinkedList<AIdentifierPatternCG> patterns = binding.getPatterns();
 		ABlockStmCG outerBlock = transformationAssistant.consIterationBlock(patterns, binding.getSet(), tempVarNameGen, strategy);
 		
+		//Only the statement of the let be st statement is added to the outer block statements.
+		//We obtain the equivalent functionality of the remaining part of the let be st statement
+		//from the transformation in the outer block
 		outerBlock.getStatements().add(node.getStatement());
 		
+		//Replace the let be st statement with the transformation
 		transformationAssistant.replaceNodeWith(node, outerBlock);
 		outerBlock.apply(this);
 	}
