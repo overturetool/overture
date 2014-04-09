@@ -1,5 +1,6 @@
 package org.overture.interpreter.assistant.pattern;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PBind;
@@ -22,7 +23,7 @@ public class PBindAssistantInterpreter extends PBindAssistantTC
 	}
 
 	public static ValueList getBindValues(PBind bind, Context ctxt)
-			throws ValueException
+			throws AnalysisException
 	{
 		if (bind instanceof ASetBind)
 		{

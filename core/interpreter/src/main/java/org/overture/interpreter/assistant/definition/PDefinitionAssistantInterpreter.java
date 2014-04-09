@@ -3,19 +3,7 @@ package org.overture.interpreter.assistant.definition;
 import java.util.LinkedList;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.definitions.AAssignmentDefinition;
-import org.overture.ast.definitions.AEqualsDefinition;
-import org.overture.ast.definitions.AExplicitOperationDefinition;
-import org.overture.ast.definitions.AImplicitOperationDefinition;
-import org.overture.ast.definitions.AImportedDefinition;
-import org.overture.ast.definitions.AInheritedDefinition;
-import org.overture.ast.definitions.AInstanceVariableDefinition;
-import org.overture.ast.definitions.ARenamedDefinition;
-import org.overture.ast.definitions.AThreadDefinition;
-import org.overture.ast.definitions.ATypeDefinition;
-import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.statements.PStm;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
@@ -238,62 +226,83 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 
 	public static boolean isRuntime(PDefinition def)
 	{
-		if (def instanceof AImportedDefinition)
+		try
 		{
-			return isRuntime(((AImportedDefinition) def).getDef());
-		} else if (def instanceof AInheritedDefinition)
-		{
-			return isRuntime(((AInheritedDefinition) def).getSuperdef());
-		} else if (def instanceof ARenamedDefinition)
-		{
-			return isRuntime(((ARenamedDefinition) def).getDef());
-		} else if (def instanceof ATypeDefinition)
-		{
-			return false;
-		} else
+			return def.apply(af.getDefinitionRunTimeChecker());
+		} catch (AnalysisException e)
 		{
 			return true;
 		}
+//		if (def instanceof AImportedDefinition)
+//		{
+//			return isRuntime(((AImportedDefinition) def).getDef());
+//		} else if (def instanceof AInheritedDefinition)
+//		{
+//			return isRuntime(((AInheritedDefinition) def).getSuperdef());
+//		} else if (def instanceof ARenamedDefinition)
+//		{
+//			return isRuntime(((ARenamedDefinition) def).getDef());
+//		} else if (def instanceof ATypeDefinition)
+//		{
+//			return false;
+//		} else
+//		{
+//			return true;
+//		}
 	}
 
 	public static boolean isValueDefinition(PDefinition def)
 	{
-		if (def instanceof AImportedDefinition)
+		try
 		{
-			return isValueDefinition(((AImportedDefinition) def).getDef());
-		} else if (def instanceof AInheritedDefinition)
-		{
-			return isValueDefinition(((AInheritedDefinition) def).getSuperdef());
-		} else if (def instanceof ARenamedDefinition)
-		{
-			return isValueDefinition(((ARenamedDefinition) def).getDef());
-		} else if (def instanceof AValueDefinition)
-		{
-			return true;
-		} else
+			return def.apply(af.getDefintionValueChecker());
+		} catch (AnalysisException e)
 		{
 			return false;
 		}
+//		if (def instanceof AImportedDefinition)
+//		{
+//			return isValueDefinition(((AImportedDefinition) def).getDef());
+//		} else if (def instanceof AInheritedDefinition)
+//		{
+//			return isValueDefinition(((AInheritedDefinition) def).getSuperdef());
+//		} else if (def instanceof ARenamedDefinition)
+//		{
+//			return isValueDefinition(((ARenamedDefinition) def).getDef());
+//		} else if (def instanceof AValueDefinition)
+//		{
+//			return true;
+//		} else
+//		{
+//			return false;
+//		}
 	}
 
 	public static boolean isInstanceVariable(PDefinition def)
 	{
-		if (def instanceof AImportedDefinition)
+		try
 		{
-			return isInstanceVariable(((AImportedDefinition) def).getDef());
-		} else if (def instanceof AInheritedDefinition)
-		{
-			return isInstanceVariable(((AInheritedDefinition) def).getSuperdef());
-		} else if (def instanceof ARenamedDefinition)
-		{
-			return isInstanceVariable(((ARenamedDefinition) def).getDef());
-		} else if (def instanceof AInstanceVariableDefinition)
-		{
-			return true;
-		} else
+			return def.apply(af.getInstanceVariableChecker());
+		} catch (AnalysisException e)
 		{
 			return false;
 		}
+//		if (def instanceof AImportedDefinition)
+//		{
+//			return isInstanceVariable(((AImportedDefinition) def).getDef());
+//		} else if (def instanceof AInheritedDefinition)
+//		{
+//			return isInstanceVariable(((AInheritedDefinition) def).getSuperdef());
+//		} else if (def instanceof ARenamedDefinition)
+//		{
+//			return isInstanceVariable(((ARenamedDefinition) def).getDef());
+//		} else if (def instanceof AInstanceVariableDefinition)
+//		{
+//			return true;
+//		} else
+//		{
+//			return false;
+//		}
 	}
 
 	public static PStm findStatement(LinkedList<PDefinition> definitions,
@@ -314,22 +323,30 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 
 	private static PStm findStatement(PDefinition def, int lineno)
 	{
-		if (def instanceof SClassDefinition)
+		try
 		{
-			return SClassDefinitionAssistantInterpreter.findStatement((SClassDefinition) def, lineno);
-		} else if (def instanceof AExplicitOperationDefinition)
-		{
-			return AExplicitOperationDefinitionAssistantInterpreter.findStatement((AExplicitOperationDefinition) def, lineno);
-		} else if (def instanceof AImplicitOperationDefinition)
-		{
-			return AImplicitOperationDefinitionAssistantInterpreter.findStatement((AImplicitOperationDefinition) def, lineno);
-		} else if (def instanceof AThreadDefinition)
-		{
-			return AThreadDefinitionAssistantInterpreter.findStatement((AThreadDefinition) def, lineno);
-		} else
+			return def.apply(af.getStatementFinder(),lineno);
+		} catch (AnalysisException e)
 		{
 			return null;
 		}
+		
+//		if (def instanceof SClassDefinition)
+//		{
+//			return SClassDefinitionAssistantInterpreter.findStatement((SClassDefinition) def, lineno);
+//		} else if (def instanceof AExplicitOperationDefinition)
+//		{
+//			return AExplicitOperationDefinitionAssistantInterpreter.findStatement((AExplicitOperationDefinition) def, lineno);
+//		} else if (def instanceof AImplicitOperationDefinition)
+//		{
+//			return AImplicitOperationDefinitionAssistantInterpreter.findStatement((AImplicitOperationDefinition) def, lineno);
+//		} else if (def instanceof AThreadDefinition)
+//		{
+//			return AThreadDefinitionAssistantInterpreter.findStatement((AThreadDefinition) def, lineno);
+//		} else
+//		{
+//			return null;
+//		}
 	}
 
 }

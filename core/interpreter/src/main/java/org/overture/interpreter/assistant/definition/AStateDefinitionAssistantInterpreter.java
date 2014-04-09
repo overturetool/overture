@@ -1,10 +1,7 @@
 package org.overture.interpreter.assistant.definition;
 
 import org.overture.ast.definitions.AStateDefinition;
-import org.overture.ast.expressions.AEqualsBinaryExp;
-import org.overture.ast.expressions.PExp;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.StateContext;
 import org.overture.interpreter.runtime.VdmRuntime;

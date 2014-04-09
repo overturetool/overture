@@ -26,6 +26,7 @@ package org.overture.interpreter.values;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.patterns.PPattern;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
@@ -44,7 +45,7 @@ public class Quantifier
 		this.nvlist = new Vector<NameValuePairList>(values.size());
 	}
 
-	public int size(Context ctxt, boolean allPossibilities)
+	public int size(Context ctxt, boolean allPossibilities) throws AnalysisException
 	{
 		for (Value value : values)
 		{

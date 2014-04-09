@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.ABusClassDefinition;
 import org.overture.ast.definitions.AClassClassDefinition;
@@ -129,7 +130,7 @@ public class SClassDefinitionAssistantInterpreter extends
 
 	public static ObjectValue newInstance(SClassDefinition node,
 			PDefinition ctorDefinition, ValueList argvals, Context ctxt)
-			throws ValueException
+			throws AnalysisException
 	{
 		if (node instanceof ABusClassDefinition)
 		{
@@ -151,7 +152,7 @@ public class SClassDefinitionAssistantInterpreter extends
 
 	protected static ObjectValue makeNewInstance(SClassDefinition node,
 			PDefinition ctorDefinition, ValueList argvals, Context ctxt,
-			Map<ILexNameToken, ObjectValue> done) throws ValueException
+			Map<ILexNameToken, ObjectValue> done) throws AnalysisException
 	{
 		setStaticDefinitions(node, ctxt.getGlobal()); // When static member := new X()
 		setStaticValues(node, ctxt.getGlobal()); // When static member := new X()
@@ -586,10 +587,10 @@ public class SClassDefinitionAssistantInterpreter extends
 		return PDefinitionListAssistantInterpreter.findExpression(d.getDefinitions(), lineno);
 	}
 
-	public static boolean isTypeDefinition(SClassDefinition def)
-	{
-		return true;
-	}
+//	public static boolean isTypeDefinition(SClassDefinition def)
+//	{
+//		return true;
+//	}
 
 	public static PStm findStatement(ClassListInterpreter classes, File file,
 			int lineno)

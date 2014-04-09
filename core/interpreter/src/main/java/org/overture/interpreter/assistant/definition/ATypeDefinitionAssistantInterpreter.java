@@ -1,6 +1,5 @@
 package org.overture.interpreter.assistant.definition;
 
-import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.typechecker.assistant.definition.ATypeDefinitionAssistantTC;
 
@@ -44,9 +43,9 @@ public class ATypeDefinitionAssistantInterpreter extends
 //		return null;
 //	}
 
-	public static boolean isTypeDefinition(ATypeDefinition def)
-	{
-		return true;
-	}
+//	public static boolean isTypeDefinition(ATypeDefinition def)
+//	{
+//		return true;
+//	}
 
 }

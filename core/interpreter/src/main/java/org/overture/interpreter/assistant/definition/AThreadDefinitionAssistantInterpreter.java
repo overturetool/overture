@@ -1,10 +1,6 @@
 package org.overture.interpreter.assistant.definition;
 
-import org.overture.ast.definitions.AThreadDefinition;
-import org.overture.ast.expressions.PExp;
-import org.overture.ast.statements.PStm;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.statement.PStmAssistantInterpreter;
 import org.overture.typechecker.assistant.definition.AThreadDefinitionAssistantTC;
 
 public class AThreadDefinitionAssistantInterpreter extends
@@ -30,9 +26,9 @@ public class AThreadDefinitionAssistantInterpreter extends
 //		return PStmAssistantInterpreter.findExpression(d.getStatement(), lineno);
 //	}
 
-	public static PStm findStatement(AThreadDefinition d, int lineno)
-	{
-		return PStmAssistantInterpreter.findStatement(d.getStatement(), lineno);
-	}
+//	public static PStm findStatement(AThreadDefinition d, int lineno)
+//	{
+//		return PStmAssistantInterpreter.findStatement(d.getStatement(), lineno);
+//	}
 
 }

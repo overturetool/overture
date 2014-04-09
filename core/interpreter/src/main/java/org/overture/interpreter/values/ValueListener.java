@@ -23,11 +23,12 @@
 
 package org.overture.interpreter.values;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.interpreter.runtime.Context;
 
 
 public interface ValueListener
 {
-	public void changedValue(ILexLocation location, Value value, Context ctxt);
+	public void changedValue(ILexLocation location, Value value, Context ctxt) throws AnalysisException;
 }

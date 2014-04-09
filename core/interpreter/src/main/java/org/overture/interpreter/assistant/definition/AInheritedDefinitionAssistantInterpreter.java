@@ -1,6 +1,5 @@
 package org.overture.interpreter.assistant.definition;
 
-import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 
 public class AInheritedDefinitionAssistantInterpreter
@@ -36,9 +35,9 @@ public class AInheritedDefinitionAssistantInterpreter
 //		return renamed;
 //	}
 
-	public static boolean isTypeDefinition(AInheritedDefinition def)
-	{
-		return PDefinitionAssistantInterpreter.isTypeDefinition(def.getSuperdef());
-	}
+//	public static boolean isTypeDefinition(AInheritedDefinition def)
+//	{
+//		return PDefinitionAssistantInterpreter.isTypeDefinition(def.getSuperdef());
+//	}
 
 }

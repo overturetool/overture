@@ -1,5 +1,6 @@
 package org.overture.interpreter.assistant.pattern;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
@@ -21,7 +22,7 @@ public class ATypeBindAssistantInterpreter extends ATypeBindAssistantTC
 	}
 
 	public static ValueList getBindValues(ATypeBind bind, Context ctxt)
-			throws ValueException
+			throws AnalysisException
 	{
 		return PTypeAssistantInterpreter.getAllValues(bind.getType(), ctxt);
 	}

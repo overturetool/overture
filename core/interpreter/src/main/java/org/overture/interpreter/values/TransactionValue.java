@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.types.PType;
@@ -86,13 +87,13 @@ public class TransactionValue extends UpdatableValue
 	}
 
 	@Override
-	public synchronized Value convertValueTo(PType to, Context ctxt) throws ValueException
+	public synchronized Value convertValueTo(PType to, Context ctxt) throws AnalysisException
 	{
 		return select().convertValueTo(to, ctxt).getUpdatable(listeners);
 	}
 
 	@Override
-	public void set(ILexLocation location, Value newval, Context ctxt)
+	public void set(ILexLocation location, Value newval, Context ctxt) throws AnalysisException
 	{
 		long current = BasicSchedulableThread.getThread(Thread.currentThread()).getId();
 

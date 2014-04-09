@@ -2,6 +2,7 @@ package org.overture.interpreter.assistant.type;
 
 import java.util.List;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.types.SMapType;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
@@ -25,7 +26,7 @@ public class SMapTypeAssistantInterpreter
 	}
 
 	public static ValueList getAllValues(SMapType type, Context ctxt)
-			throws ValueException
+			throws AnalysisException
 	{
 		PTypeList tuple = new PTypeList();
 		tuple.add(type.getFrom());

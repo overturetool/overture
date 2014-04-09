@@ -9,6 +9,7 @@ import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.patterns.AIdentifierPattern;
+import org.overture.ast.statements.PStm;
 import org.overture.interpreter.assistant.definition.AApplyExpressionTraceCoreDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AAssignmentDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ABracketedExpressionTraceCoreDefinitionAssitantInterpreter;
@@ -162,8 +163,12 @@ import org.overture.interpreter.assistant.type.SMapTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.utilities.OldNameCollector;
+import org.overture.interpreter.utilities.definition.DefinitionRunTimeChecker;
+import org.overture.interpreter.utilities.definition.DefinitionValueChecker;
 import org.overture.interpreter.utilities.definition.ExpressionFinder;
+import org.overture.interpreter.utilities.definition.InstanceVariableChecker;
 import org.overture.interpreter.utilities.definition.NamedValueLister;
+import org.overture.interpreter.utilities.definition.StatementFinder;
 import org.overture.interpreter.utilities.definition.TypeDefinitionChecker;
 import org.overture.interpreter.utilities.definition.ValuesDefinitionLocator;
 import org.overture.interpreter.utilities.pattern.AllNamedValuesLocator;
@@ -1017,6 +1022,30 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	public IAnswer<Boolean> getTypeDefinitionChecker()
 	{
 		return new TypeDefinitionChecker(this);
+	}
+	
+	@Override
+	public IAnswer<Boolean> getDefinitionRunTimeChecker()
+	{
+		return new DefinitionRunTimeChecker(this);
+	}
+	
+	@Override
+	public IAnswer<Boolean> getDefintionValueChecker()
+	{
+		return new DefinitionValueChecker(this);
+	}
+	
+	@Override
+	public IAnswer<Boolean> getInstanceVariableChecker()
+	{
+		return new InstanceVariableChecker(this);
+	}
+	
+	@Override
+	public IQuestionAnswer<Integer, PStm> getStatementFinder()
+	{
+		return new StatementFinder(this);
 	}
 
 }

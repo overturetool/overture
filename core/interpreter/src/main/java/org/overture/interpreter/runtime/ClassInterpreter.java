@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -424,7 +425,7 @@ public class ClassInterpreter extends Interpreter
 
 
 	@Override
-	public Context getInitialTraceContext(ANamedTraceDefinition tracedef,boolean debug) throws ValueException
+	public Context getInitialTraceContext(ANamedTraceDefinition tracedef,boolean debug) throws AnalysisException
 	{
 		ObjectValue object = null;
 
@@ -445,7 +446,7 @@ public class ClassInterpreter extends Interpreter
 
 	@Override
 	public List<Object> runOneTrace(
-			ANamedTraceDefinition tracedef, CallSequence test,boolean debug)
+			ANamedTraceDefinition tracedef, CallSequence test,boolean debug) throws AnalysisException
 	{
 		List<Object> list = new Vector<Object>();
 		Context ctxt = null;
