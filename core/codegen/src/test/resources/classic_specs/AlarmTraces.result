@@ -134,7 +134,7 @@ public class Plant {
             }
         }
 
-        return setCompResult_1;
+        return setCompResult_1.clone();
     }
 
     public void AddExpertToSchedule(Token p, Expert ex) {

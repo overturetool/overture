@@ -129,7 +129,7 @@ public class Account {
         }
 
         boolean forAllExpResult_1 = true;
-        VDMSet set_1 = setCompResult_1;
+        VDMSet set_1 = setCompResult_1.clone();
 
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && forAllExpResult_1;) {

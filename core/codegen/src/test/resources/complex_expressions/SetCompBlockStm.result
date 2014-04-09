@@ -25,7 +25,7 @@ public class Entry {
             }
         }
 
-        VDMSet a = setCompResult_1;
+        VDMSet a = setCompResult_1.clone();
 
         return a.clone();
     }

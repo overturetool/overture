@@ -49,7 +49,7 @@ public class Entry {
             }
         }
 
-        return setCompResult_1;
+        return setCompResult_1.clone();
     }
 }
 
