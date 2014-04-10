@@ -333,38 +333,6 @@ public class TransformationAssistantCG
 		return ifStm;
 	}
 	
-	public PStmCG consConditionalAdd(String addMethod, String resCollectionName, PExpCG predicate, PExpCG... args)
-	{
-		//TODO: Set type
-		AIdentifierVarExpCG col = new AIdentifierVarExpCG();
-		col.setOriginal(resCollectionName);
-		
-		AIdentifierObjectDesignatorCG identifier = new AIdentifierObjectDesignatorCG();
-		identifier.setExp(col);
-		
-		ACallObjectStmCG callStm = new ACallObjectStmCG();
-		callStm.setType(new AVoidTypeCG());
-		callStm.setClassName(null);
-		callStm.setFieldName(addMethod);
-		callStm.setDesignator(identifier);
-		
-		for(PExpCG arg : args)
-		{
-			callStm.getArgs().add(arg);
-		}
-		
-		if(predicate != null)
-		{
-			AIfStmCG ifStm = new AIfStmCG();
-			ifStm.setIfExp(predicate);
-			ifStm.setThenStm(callStm);
-			
-			return ifStm;
-		}
-		
-		return callStm;
-	}
-	
 	public ABlockStmCG consIterationBlock(List<AIdentifierPatternCG> ids, PExpCG set, ITempVarGen tempGen, IIterationStrategy strategy) throws AnalysisException
 	{
 		ABlockStmCG outerBlock = new ABlockStmCG(); 
