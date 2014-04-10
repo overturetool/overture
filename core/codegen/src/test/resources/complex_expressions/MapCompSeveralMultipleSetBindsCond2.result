@@ -27,9 +27,12 @@ public class Entry {
                     Number z = ((Number) iterator_3.next());
 
                     if ((x.longValue() + y.longValue() + z.longValue()) > 3L) {
-                        mapCompResult_1.put(x.longValue() + y.longValue() +
-                            z.longValue(),
-                            z.longValue() + y.longValue() + x.longValue());
+                        mapCompResult_1 = MapUtil.munion(mapCompResult_1.clone(),
+                                MapUtil.map(
+                                    new Maplet(x.longValue() + y.longValue() +
+                                        z.longValue(),
+                                        z.longValue() + y.longValue() +
+                                        x.longValue())));
                     }
                 }
             }

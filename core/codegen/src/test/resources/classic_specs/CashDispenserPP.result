@@ -125,7 +125,8 @@ public class Account {
 
         for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext();) {
             Number i = ((Number) iterator_2.next());
-            setCompResult_1.add(((Transaction) ts.get(Utils.index(i))).date);
+            setCompResult_1 = SetUtil.union(setCompResult_1.clone(),
+                    SetUtil.set(((Transaction) ts.get(Utils.index(i))).date));
         }
 
         boolean forAllExpResult_1 = true;
@@ -148,7 +149,9 @@ public class Account {
             Number i = ((Number) iterator_3.next());
 
             if (((Transaction) ts.get(Utils.index(i))).date.equals(date)) {
-                seqCompResult_1.add(((Transaction) ts.get(Utils.index(i))).amount);
+                seqCompResult_1 = SeqUtil.conc(seqCompResult_1.clone(),
+                        SeqUtil.seq(
+                            ((Transaction) ts.get(Utils.index(i))).amount));
             }
         }
 
@@ -341,7 +344,8 @@ public class CentralResource {
 
         for (Iterator iterator_4 = set_4.iterator(); iterator_4.hasNext();) {
             Number cId = ((Number) iterator_4.next());
-            mapCompResult_1.put(cId, 0L);
+            mapCompResult_1 = MapUtil.munion(mapCompResult_1.clone(),
+                    MapUtil.map(new Maplet(cId, 0L)));
         }
 
         numberOfTries = MapUtil.override(numberOfTries.clone(),

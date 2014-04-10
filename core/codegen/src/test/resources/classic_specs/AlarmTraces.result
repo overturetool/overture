@@ -130,7 +130,8 @@ public class Plant {
             Token p = ((Token) iterator_6.next());
 
             if (((VDMSet) schedule.get(p)).contains(ex)) {
-                setCompResult_1.add(p);
+                setCompResult_1 = SetUtil.union(setCompResult_1.clone(),
+                        SetUtil.set(p));
             }
         }
 

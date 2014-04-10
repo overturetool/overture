@@ -19,7 +19,8 @@ public class Entry {
             Number x = ((Number) iterator_1.next());
 
             if (1L == 1L) {
-                setCompResult_1.add(x.longValue() * 2L);
+                setCompResult_1 = SetUtil.union(setCompResult_1.clone(),
+                        SetUtil.set(x.longValue() * 2L));
             }
         }
 

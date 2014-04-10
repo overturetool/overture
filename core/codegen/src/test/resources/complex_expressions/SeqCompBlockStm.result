@@ -21,7 +21,8 @@ public class Entry {
             Number x = ((Number) iterator_1.next());
 
             if (1L == 1L) {
-                seqCompResult_1.add(x);
+                seqCompResult_1 = SeqUtil.conc(seqCompResult_1.clone(),
+                        SeqUtil.seq(x));
             }
         }
 

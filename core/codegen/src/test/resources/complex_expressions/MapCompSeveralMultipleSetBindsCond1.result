@@ -23,8 +23,10 @@ public class Entry {
                 Number y = ((Number) iterator_2.next());
 
                 if (1L == 1L) {
-                    mapCompResult_1.put(x.longValue() * y.longValue(),
-                        y.longValue() * x.longValue());
+                    mapCompResult_1 = MapUtil.munion(mapCompResult_1.clone(),
+                            MapUtil.map(
+                                new Maplet(x.longValue() * y.longValue(),
+                                    y.longValue() * x.longValue())));
                 }
             }
         }

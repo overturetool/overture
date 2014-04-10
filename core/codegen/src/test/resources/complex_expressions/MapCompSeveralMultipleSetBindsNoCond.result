@@ -38,13 +38,15 @@ public class Entry {
                             for (Iterator iterator_6 = set_3.iterator();
                                     iterator_6.hasNext();) {
                                 Number f = ((Number) iterator_6.next());
-                                mapCompResult_1.put(a.longValue() +
-                                    b.longValue() + c.longValue() +
-                                    d.longValue() + e.longValue() +
-                                    f.longValue(),
-                                    f.longValue() + e.longValue() +
-                                    d.longValue() + c.longValue() +
-                                    b.longValue() + a.longValue());
+                                mapCompResult_1 = MapUtil.munion(mapCompResult_1.clone(),
+                                        MapUtil.map(
+                                            new Maplet(a.longValue() +
+                                                b.longValue() + c.longValue() +
+                                                d.longValue() + e.longValue() +
+                                                f.longValue(),
+                                                f.longValue() + e.longValue() +
+                                                d.longValue() + c.longValue() +
+                                                b.longValue() + a.longValue())));
                             }
                         }
                     }

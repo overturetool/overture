@@ -22,9 +22,12 @@ public class Entry {
                     Number z = ((Number) iterator_3.next());
 
                     if (1L == 1L) {
-                        mapCompResult_1.put(x.longValue() + y.longValue() +
-                            z.longValue(),
-                            x.longValue() + y.longValue() + z.longValue());
+                        mapCompResult_1 = MapUtil.munion(mapCompResult_1.clone(),
+                                MapUtil.map(
+                                    new Maplet(x.longValue() + y.longValue() +
+                                        z.longValue(),
+                                        x.longValue() + y.longValue() +
+                                        z.longValue())));
                     }
                 }
             }
