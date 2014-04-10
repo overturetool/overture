@@ -2,8 +2,9 @@ package org.overture.codegen.transform;
 
 import java.util.List;
 
-import org.overture.codegen.cgast.analysis.AnalysisException;
+import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
+import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.PStmCG;
@@ -24,28 +25,37 @@ public class SeqCompStrategy extends CompStrategy
 		
 		this.first = first;
 	}
-
+	
 	@Override
-	public String getClassName()
+	protected PExpCG getEmptyCollection()
 	{
-		return config.seqUtilFile();
+		return new AEnumSeqExpCG();
 	}
-
+	
 	@Override
-	public String getMemberName()
+	protected List<PStmCG> getConditionalAdd(AIdentifierVarExpCG setVar,
+			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 	{
-		return config.seqUtilEmptySeqCall();
+		AIdentifierVarExpCG seqCompResult = new AIdentifierVarExpCG();
+		seqCompResult.setType(compType.clone());
+		seqCompResult.setOriginal(var);
+
+		AEnumSeqExpCG seqToConcat = new AEnumSeqExpCG();
+		seqToConcat.setType(compType.clone());
+		seqToConcat.getMembers().add(first.clone());
+		
+		ASeqConcatBinaryExpCG seqConcat = new ASeqConcatBinaryExpCG();
+		seqConcat.setType(compType.clone());
+		seqConcat.setLeft(seqCompResult.clone());
+		seqConcat.setRight(seqToConcat);
+		
+		return consConditionalAdd(seqCompResult, seqConcat);
 	}
-
+	
 	@Override
-	public PTypeCG getCollectionType() throws AnalysisException
+	public List<PStmCG> getForLoopStms(AIdentifierVarExpCG setVar,
+			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 	{
-		return transformationAssistant.getSeqTypeCloned(compType);
-	}
-
-	@Override
-	public List<PStmCG> getForLoopStms(AIdentifierVarExpCG setVar, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
-	{
-		return packStm(transformationAssistant.consConditionalAdd(config.addElementToSeq(), var, predicate, first));
+		return getConditionalAdd(setVar, ids, id);
 	}
 }

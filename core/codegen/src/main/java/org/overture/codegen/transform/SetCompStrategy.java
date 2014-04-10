@@ -2,8 +2,11 @@ package org.overture.codegen.transform;
 
 import java.util.List;
 
-import org.overture.codegen.cgast.analysis.AnalysisException;
+import org.overture.codegen.cgast.expressions.AEnumSetExpCG;
+import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
+import org.overture.codegen.cgast.expressions.ASetUnionBinaryExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
+import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.constants.TempVarPrefixes;
@@ -22,28 +25,29 @@ public class SetCompStrategy extends ComplexCompStrategy
 		
 		this.first = first;
 	}
-
+	
 	@Override
-	public String getClassName()
+	protected PExpCG getEmptyCollection()
 	{
-		return config.setUtilFile();
+		return new AEnumSetExpCG();
 	}
 
 	@Override
-	public String getMemberName()
+	protected List<PStmCG> getConditionalAdd(AIdentifierVarExpCG setVar, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 	{
-		return config.setUtilEmptySetCall();
-	}
+		AIdentifierVarExpCG setCompResult = new AIdentifierVarExpCG();
+		setCompResult.setType(compType.clone());
+		setCompResult.setOriginal(var);
 
-	@Override
-	public PTypeCG getCollectionType() throws AnalysisException
-	{
-		return transformationAssistant.getSetTypeCloned(compType);
-	}
+		AEnumSetExpCG setToUnion = new AEnumSetExpCG();
+		setToUnion.setType(compType.clone());
+		setToUnion.getMembers().add(first.clone());
 
-	@Override
-	protected List<PStmCG> getConditionalAdd()
-	{
-		return packStm(transformationAssistant.consConditionalAdd(config.addElementToSet(), var, predicate, first));
+		ASetUnionBinaryExpCG setUnion = new ASetUnionBinaryExpCG();
+		setUnion.setType(compType.clone());
+		setUnion.setLeft(setCompResult.clone());
+		setUnion.setRight(setToUnion);
+		
+		return consConditionalAdd(setCompResult, setUnion);
 	}
 }

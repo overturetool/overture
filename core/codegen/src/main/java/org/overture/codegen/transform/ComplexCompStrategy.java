@@ -23,8 +23,6 @@ public abstract class ComplexCompStrategy extends CompStrategy
 		super(config, transformationAssitant, predicate, var, compType, langIterator, tempGen, varPrefixes);
 	}
 	
-	protected abstract List<PStmCG> getConditionalAdd();
-	
 	@Override
 	public List<? extends SLocalDeclCG> getOuterBlockDecls(AIdentifierVarExpCG setVar, List<AIdentifierPatternCG> ids) throws AnalysisException
 	{
@@ -34,6 +32,6 @@ public abstract class ComplexCompStrategy extends CompStrategy
 	@Override
 	public List<PStmCG> getForLoopStms(AIdentifierVarExpCG setVar, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 	{
-		return lastBind ? getConditionalAdd() : null;
+		return lastBind ? getConditionalAdd(setVar, ids, id) : null;
 	}
 }
