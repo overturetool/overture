@@ -1,8 +1,6 @@
 package org.overture.interpreter.assistant.definition;
 
-import org.overture.ast.definitions.traces.AApplyExpressionTraceCoreDefinition;
-import org.overture.ast.definitions.traces.ABracketedExpressionTraceCoreDefinition;
-import org.overture.ast.definitions.traces.AConcurrentExpressionTraceCoreDefinition;
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.traces.PTraceCoreDefinition;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
@@ -21,20 +19,27 @@ public class PTraceCoreDefinitionAssistantInterpreter
 
 	public static TraceNode expand(PTraceCoreDefinition core, Context ctxt)
 	{
-		if (core instanceof AApplyExpressionTraceCoreDefinition)
+		try
 		{
-			return AApplyExpressionTraceCoreDefinitionAssistantInterpreter.expand((AApplyExpressionTraceCoreDefinition) core, ctxt);
-		} else if (core instanceof ABracketedExpressionTraceCoreDefinition)
+			return core.apply(af.getCoreTraceExpander(), ctxt);
+		} catch (AnalysisException e)
 		{
-			return ABracketedExpressionTraceCoreDefinitionAssitantInterpreter.expand((ABracketedExpressionTraceCoreDefinition) core, ctxt);
-		} else if (core instanceof AConcurrentExpressionTraceCoreDefinition)
-		{
-			return AConcurrentExpressionTraceCoreDefinitionAssistantInterpreter.expand((AConcurrentExpressionTraceCoreDefinition) core, ctxt);
-		} else
-		{
-			assert false : "Should not happen";
 			return null;
 		}
+//		if (core instanceof AApplyExpressionTraceCoreDefinition)
+//		{
+//			return AApplyExpressionTraceCoreDefinitionAssistantInterpreter.expand((AApplyExpressionTraceCoreDefinition) core, ctxt);
+//		} else if (core instanceof ABracketedExpressionTraceCoreDefinition)
+//		{
+//			return ABracketedExpressionTraceCoreDefinitionAssitantInterpreter.expand((ABracketedExpressionTraceCoreDefinition) core, ctxt);
+//		} else if (core instanceof AConcurrentExpressionTraceCoreDefinition)
+//		{
+//			return AConcurrentExpressionTraceCoreDefinitionAssistantInterpreter.expand((AConcurrentExpressionTraceCoreDefinition) core, ctxt);
+//		} else
+//		{
+//			assert false : "Should not happen";
+//			return null;
+//		}
 	}
 
 }

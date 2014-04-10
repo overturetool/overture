@@ -162,7 +162,9 @@ import org.overture.interpreter.assistant.type.SInvariantTypeAssistantInterprete
 import org.overture.interpreter.assistant.type.SMapTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
+import org.overture.interpreter.traces.TraceNode;
 import org.overture.interpreter.utilities.OldNameCollector;
+import org.overture.interpreter.utilities.definition.CoreTraceExpander;
 import org.overture.interpreter.utilities.definition.DefinitionRunTimeChecker;
 import org.overture.interpreter.utilities.definition.DefinitionValueChecker;
 import org.overture.interpreter.utilities.definition.ExpressionFinder;
@@ -1046,6 +1048,12 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	public IQuestionAnswer<Integer, PStm> getStatementFinder()
 	{
 		return new StatementFinder(this);
+	}
+	
+	@Override
+	public IQuestionAnswer<Context, TraceNode> getCoreTraceExpander()
+	{
+		return new CoreTraceExpander(this);
 	}
 
 }

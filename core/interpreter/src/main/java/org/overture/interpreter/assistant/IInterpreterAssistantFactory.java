@@ -161,6 +161,7 @@ import org.overture.interpreter.assistant.type.SInvariantTypeAssistantInterprete
 import org.overture.interpreter.assistant.type.SMapTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
+import org.overture.interpreter.traces.TraceNode;
 import org.overture.interpreter.utilities.pattern.AllNamedValuesLocator;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.ValueList;
@@ -511,5 +512,7 @@ public interface IInterpreterAssistantFactory extends
 	IAnswer<Boolean> getInstanceVariableChecker();
 	
 	IQuestionAnswer<Integer, PStm> getStatementFinder();
+	
+	IQuestionAnswer<Context, TraceNode> getCoreTraceExpander();
 	
 }
