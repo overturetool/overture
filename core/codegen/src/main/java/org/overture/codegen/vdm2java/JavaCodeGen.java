@@ -36,7 +36,6 @@ import org.overture.codegen.ooast.ExpStatus;
 import org.overture.codegen.ooast.OoAstAnalysis;
 import org.overture.codegen.ooast.OoAstGenerator;
 import org.overture.codegen.ooast.OoAstInfo;
-import org.overture.codegen.transform.ITransformationConfig;
 import org.overture.codegen.transform.TransformationAssistantCG;
 import org.overture.codegen.transform.TransformationVisitor;
 import org.overture.codegen.transform.iterator.ILanguageIterator;
@@ -174,8 +173,7 @@ public class JavaCodeGen
 				if (status.canBeGenerated())
 				{
 					TransformationAssistantCG transformationAssistant = new TransformationAssistantCG(ooAstInfo, varPrefixes);
-					ITransformationConfig config = new JavaTransformationConfig();
-					ILanguageIterator langIterator = new JavaLanguageIterator(config, transformationAssistant, ooAstInfo.getTempVarNameGen(), varPrefixes);
+					ILanguageIterator langIterator = new JavaLanguageIterator(transformationAssistant, ooAstInfo.getTempVarNameGen(), varPrefixes);
 					
 					classCg.apply(new TransformationVisitor(ooAstInfo, varPrefixes, transformationAssistant, langIterator));
 					classCg.apply(mergeVisitor, writer);
