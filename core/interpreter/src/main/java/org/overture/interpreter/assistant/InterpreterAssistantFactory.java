@@ -171,6 +171,7 @@ import org.overture.interpreter.utilities.definition.ExpressionFinder;
 import org.overture.interpreter.utilities.definition.InstanceVariableChecker;
 import org.overture.interpreter.utilities.definition.NamedValueLister;
 import org.overture.interpreter.utilities.definition.StatementFinder;
+import org.overture.interpreter.utilities.definition.TermTraceExpander;
 import org.overture.interpreter.utilities.definition.TypeDefinitionChecker;
 import org.overture.interpreter.utilities.definition.ValuesDefinitionLocator;
 import org.overture.interpreter.utilities.pattern.AllNamedValuesLocator;
@@ -1054,6 +1055,12 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	public IQuestionAnswer<Context, TraceNode> getCoreTraceExpander()
 	{
 		return new CoreTraceExpander(this);
+	}
+
+	@Override
+	public IQuestionAnswer<Context, TraceNode> getTermTraceExpander()
+	{
+		return new TermTraceExpander(this);
 	}
 
 }

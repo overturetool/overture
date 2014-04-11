@@ -515,4 +515,6 @@ public interface IInterpreterAssistantFactory extends
 	
 	IQuestionAnswer<Context, TraceNode> getCoreTraceExpander();
 	
+	IQuestionAnswer<Context, TraceNode> getTermTraceExpander();
+	
 }
