@@ -24,10 +24,10 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 	protected String var;
 	protected PTypeCG compType;
 	
-	public CompStrategy(ITransformationConfig config, TransformationAssistantCG transformationAssistant, PExpCG predicate, String var, PTypeCG compType, ILanguageIterator langIterator, ITempVarGen tempGen,
+	public CompStrategy(TransformationAssistantCG transformationAssistant, PExpCG predicate, String var, PTypeCG compType, ILanguageIterator langIterator, ITempVarGen tempGen,
 			TempVarPrefixes varPrefixes)
 	{
-		super(config, transformationAssistant, langIterator, tempGen, varPrefixes);
+		super(transformationAssistant, langIterator, tempGen, varPrefixes);
 		
 		this.predicate = predicate;
 		this.var = var;

@@ -177,7 +177,7 @@ public class JavaCodeGen
 					ITransformationConfig config = new JavaTransformationConfig();
 					ILanguageIterator langIterator = new JavaLanguageIterator(config, transformationAssistant, ooAstInfo.getTempVarNameGen(), varPrefixes);
 					
-					classCg.apply(new TransformationVisitor(ooAstInfo, config, varPrefixes, transformationAssistant, langIterator));
+					classCg.apply(new TransformationVisitor(ooAstInfo, varPrefixes, transformationAssistant, langIterator));
 					classCg.apply(mergeVisitor, writer);
 					String code = writer.toString();
 					

@@ -17,16 +17,17 @@ import org.overture.codegen.utils.ITempVarGen;
 public class MapCompStrategy extends ComplexCompStrategy
 {
 	protected AMapletExpCG first;
-	
-	public MapCompStrategy(ITransformationConfig config, TransformationAssistantCG transformationAssitant,
-			AMapletExpCG first, PExpCG predicate, String var, PTypeCG compType, ILanguageIterator langIterator, ITempVarGen tempGen,
+
+	public MapCompStrategy(TransformationAssistantCG transformationAssitant,
+			AMapletExpCG first, PExpCG predicate, String var, PTypeCG compType,
+			ILanguageIterator langIterator, ITempVarGen tempGen,
 			TempVarPrefixes varPrefixes)
 	{
-		super(config, transformationAssitant, predicate, var, compType, langIterator, tempGen, varPrefixes);
-		
+		super(transformationAssitant, predicate, var, compType, langIterator, tempGen, varPrefixes);
+
 		this.first = first;
 	}
-	
+
 	@Override
 	protected PExpCG getEmptyCollection()
 	{
@@ -34,7 +35,8 @@ public class MapCompStrategy extends ComplexCompStrategy
 	}
 
 	@Override
-	protected List<PStmCG> getConditionalAdd(AIdentifierVarExpCG setVar, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
+	protected List<PStmCG> getConditionalAdd(AIdentifierVarExpCG setVar,
+			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 	{
 		AIdentifierVarExpCG mapCompResult = new AIdentifierVarExpCG();
 		mapCompResult.setType(compType.clone());
@@ -43,12 +45,12 @@ public class MapCompStrategy extends ComplexCompStrategy
 		AEnumMapExpCG mapToUnion = new AEnumMapExpCG();
 		mapToUnion.setType(compType.clone());
 		mapToUnion.getMembers().add(first.clone());
-		
+
 		AMapUnionBinaryExpCG mapUnion = new AMapUnionBinaryExpCG();
 		mapUnion.setType(compType.clone());
 		mapUnion.setLeft(mapCompResult.clone());
 		mapUnion.setRight(mapToUnion);
-		
+
 		return consConditionalAdd(mapCompResult, mapUnion);
 	}
 }

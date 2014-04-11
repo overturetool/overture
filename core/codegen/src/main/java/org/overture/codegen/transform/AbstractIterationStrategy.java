@@ -20,18 +20,15 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 	protected boolean firstBind;
 	protected boolean lastBind;
 
-	protected ITransformationConfig config;
 	protected TransformationAssistantCG transformationAssistant;
 	protected ILanguageIterator langIterator;
 	protected ITempVarGen tempGen;
 	protected TempVarPrefixes varPrefixes;
 
-	public AbstractIterationStrategy(ITransformationConfig config,
-			TransformationAssistantCG transformationAssistant,
+	public AbstractIterationStrategy(TransformationAssistantCG transformationAssistant,
 			ILanguageIterator langIterator, ITempVarGen tempGen,
 			TempVarPrefixes varPrefixes)
 	{
-		this.config = config;
 		this.transformationAssistant = transformationAssistant;
 		this.langIterator = langIterator;
 		this.tempGen = tempGen;

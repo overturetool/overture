@@ -17,11 +17,11 @@ public class SetCompStrategy extends ComplexCompStrategy
 {
 	protected PExpCG first;
 	
-	public SetCompStrategy(ITransformationConfig config, TransformationAssistantCG transformationAssitant,
+	public SetCompStrategy(TransformationAssistantCG transformationAssitant,
 			PExpCG first, PExpCG predicate, String var, PTypeCG compType, ILanguageIterator langIterator, ITempVarGen tempGen,
 			TempVarPrefixes varPrefixes)
 	{
-		super(config, transformationAssitant, predicate, var, compType, langIterator, tempGen, varPrefixes);
+		super(transformationAssitant, predicate, var, compType, langIterator, tempGen, varPrefixes);
 		
 		this.first = first;
 	}

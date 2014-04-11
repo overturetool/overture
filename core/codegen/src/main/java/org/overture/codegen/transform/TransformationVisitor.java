@@ -43,14 +43,11 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	
 	private TransformationAssistantCG transformationAssistant;
 	
-	private ITransformationConfig config;
-	
 	private ILanguageIterator langIterator;
 	
-	public TransformationVisitor(OoAstInfo info, ITransformationConfig config, TempVarPrefixes varPrefixes, TransformationAssistantCG transformationAssistant, ILanguageIterator langIterator)
+	public TransformationVisitor(OoAstInfo info, TempVarPrefixes varPrefixes, TransformationAssistantCG transformationAssistant, ILanguageIterator langIterator)
 	{
 		this.info = info;
-		this.config = config;
 		this.transformationAssistant = transformationAssistant;
 		this.langIterator = langIterator;
 	}
@@ -64,7 +61,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
 		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
 		
-		LetBeStStrategy strategy = new LetBeStStrategy(config, transformationAssistant, suchThat, setType, langIterator, tempVarNameGen, varPrefixes);
+		LetBeStStrategy strategy = new LetBeStStrategy(transformationAssistant, suchThat, setType, langIterator, tempVarNameGen, varPrefixes);
 		
 		ASetMultipleBindCG binding = header.getBinding();
 		
@@ -99,7 +96,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
 		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
 		
-		LetBeStStrategy strategy = new LetBeStStrategy(config, transformationAssistant, suchThat, setType, langIterator, tempVarNameGen, varPrefixes);
+		LetBeStStrategy strategy = new LetBeStStrategy(transformationAssistant, suchThat, setType, langIterator, tempVarNameGen, varPrefixes);
 
 		ABlockStmCG outerBlock = new ABlockStmCG();
 
@@ -151,7 +148,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		String var = tempVarNameGen.nextVarName(IOoAstConstants.GENERATED_TEMP_MAP_COMP_NAME_PREFIX);
 		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
 		
-		ComplexCompStrategy strategy = new MapCompStrategy(config, transformationAssistant, first, predicate, var, type, langIterator, tempVarNameGen, varPrefixes);
+		ComplexCompStrategy strategy = new MapCompStrategy(transformationAssistant, first, predicate, var, type, langIterator, tempVarNameGen, varPrefixes);
 		
 		LinkedList<ASetMultipleBindCG> bindings = node.getBindings();
 		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(bindings, tempVarNameGen, strategy);
@@ -185,7 +182,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		String var = tempVarNameGen.nextVarName(IOoAstConstants.GENERATED_TEMP_SET_COMP_NAME_PREFIX);
 		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
 		
-		ComplexCompStrategy strategy = new SetCompStrategy(config, transformationAssistant, first, predicate, var, type, langIterator, tempVarNameGen, varPrefixes);
+		ComplexCompStrategy strategy = new SetCompStrategy(transformationAssistant, first, predicate, var, type, langIterator, tempVarNameGen, varPrefixes);
 		
 		LinkedList<ASetMultipleBindCG> bindings = node.getBindings();
 		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(bindings, tempVarNameGen, strategy);
@@ -219,7 +216,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		String var = tempVarNameGen.nextVarName(IOoAstConstants.GENERATED_TEMP_SEQ_COMP_NAME_PREFIX);
 		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
 		
-		SeqCompStrategy strategy = new SeqCompStrategy(config, transformationAssistant, first, predicate, var, type, langIterator, tempVarNameGen, varPrefixes);
+		SeqCompStrategy strategy = new SeqCompStrategy(transformationAssistant, first, predicate, var, type, langIterator, tempVarNameGen, varPrefixes);
 
 		if (transformationAssistant.isEmptySet(node.getSet()))
 		{
@@ -253,7 +250,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		String var = tempVarNameGen.nextVarName(IOoAstConstants.GENERATED_TEMP_FORALL_EXP_NAME_PREFIX);
 		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
 		
-		OrdinaryQuantifierStrategy strategy = new OrdinaryQuantifierStrategy(config, transformationAssistant, predicate, var, OrdinaryQuantifier.FORALL, langIterator, tempVarNameGen, varPrefixes);
+		OrdinaryQuantifierStrategy strategy = new OrdinaryQuantifierStrategy(transformationAssistant, predicate, var, OrdinaryQuantifier.FORALL, langIterator, tempVarNameGen, varPrefixes);
 		
 		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(node.getBindList(), tempVarNameGen, strategy);
 
@@ -284,7 +281,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		String var = tempVarNameGen.nextVarName(IOoAstConstants.GENERATED_TEMP_EXISTS_EXP_NAME_PREFIX);
 		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
 		
-		OrdinaryQuantifierStrategy strategy = new OrdinaryQuantifierStrategy(config, transformationAssistant, predicate, var, OrdinaryQuantifier.EXISTS, langIterator, tempVarNameGen, varPrefixes);
+		OrdinaryQuantifierStrategy strategy = new OrdinaryQuantifierStrategy(transformationAssistant, predicate, var, OrdinaryQuantifier.EXISTS, langIterator, tempVarNameGen, varPrefixes);
 		
 		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(node.getBindList(), tempVarNameGen, strategy);
 
@@ -315,7 +312,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		String var = tempVarNameGen.nextVarName(IOoAstConstants.GENERATED_TEMP_EXISTS1_EXP_NAME_PREFIX);
 		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
 		
-		Exists1QuantifierStrategy strategy = new Exists1QuantifierStrategy(config, transformationAssistant, predicate, var, langIterator, tempVarNameGen, varPrefixes);
+		Exists1QuantifierStrategy strategy = new Exists1QuantifierStrategy(transformationAssistant, predicate, var, langIterator, tempVarNameGen, varPrefixes);
 		
 		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(node.getBindList(), tempVarNameGen, strategy);
 

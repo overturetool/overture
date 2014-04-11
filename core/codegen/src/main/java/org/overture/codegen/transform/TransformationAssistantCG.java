@@ -15,29 +15,21 @@ import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
-import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
-import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
-import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
-import org.overture.codegen.cgast.statements.ACallObjectStmCG;
 import org.overture.codegen.cgast.statements.AForLoopStmCG;
-import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.AIncrementStmCG;
-import org.overture.codegen.cgast.statements.AThrowStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
-import org.overture.codegen.cgast.types.AStringTypeCG;
-import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
@@ -466,40 +458,6 @@ public class TransformationAssistantCG
 		}
 
 		return outerBlock;
-	}
-	
-	public AThrowStmCG consThrowException(String runtimeExceptionTypeName, String exceptionMessage)
-	{
-		AStringLiteralExpCG runtimeErrorMessage = new AStringLiteralExpCG();
-		runtimeErrorMessage.setIsNull(false);
-		runtimeErrorMessage.setType(new AStringTypeCG());
-		runtimeErrorMessage.setValue(exceptionMessage);
-		
-		AClassTypeCG exceptionType = new AClassTypeCG();
-		exceptionType.setName(runtimeExceptionTypeName);
-		
-		ATypeNameCG exceptionTypeName = new ATypeNameCG();
-		exceptionTypeName.setDefiningClass(null);
-		exceptionTypeName.setName(runtimeExceptionTypeName);
-		
-		ANewExpCG runtimeException = new ANewExpCG();
-		runtimeException.setType(exceptionType);
-		runtimeException.setName(exceptionTypeName);
-		runtimeException.getArgs().add(runtimeErrorMessage);
-		
-		AThrowStmCG throwStm = new AThrowStmCG();
-		throwStm.setExp(runtimeException);
-		
-		return throwStm;
-	}
-	
-	public AIfStmCG consIfCheck(String successVarName, String runtimeExceptionTypeName, String exceptionMessage)
-	{
-		AIfStmCG ifStm = new AIfStmCG();
-		ifStm.setIfExp(consBoolCheck(successVarName, true));
-		ifStm.setThenStm(consThrowException(runtimeExceptionTypeName, exceptionMessage));
-		
-		return ifStm;
 	}
 	
 	public ACastUnaryExpCG consNextElementCall(String iteratorTypeName, String instance, String member, ACompSeqExpCG seqComp) throws AnalysisException

@@ -17,11 +17,11 @@ public class SeqCompStrategy extends CompStrategy
 {
 	protected PExpCG first;
 	
-	public SeqCompStrategy(ITransformationConfig config, TransformationAssistantCG transformationAssitant,
+	public SeqCompStrategy(TransformationAssistantCG transformationAssitant,
 			PExpCG first, PExpCG predicate, String var, PTypeCG compType, ILanguageIterator langIterator, ITempVarGen tempGen,
 			TempVarPrefixes varPrefixes)
 	{
-		super(config, transformationAssitant, predicate, var, compType, langIterator, tempGen, varPrefixes);
+		super(transformationAssitant, predicate, var, compType, langIterator, tempGen, varPrefixes);
 		
 		this.first = first;
 	}

@@ -15,22 +15,25 @@ import org.overture.codegen.utils.ITempVarGen;
 
 public abstract class ComplexCompStrategy extends CompStrategy
 {
-	public ComplexCompStrategy(ITransformationConfig config,
+	public ComplexCompStrategy(
 			TransformationAssistantCG transformationAssitant, PExpCG predicate,
-			String var, PTypeCG compType, ILanguageIterator langIterator, ITempVarGen tempGen,
-			TempVarPrefixes varPrefixes)
+			String var, PTypeCG compType, ILanguageIterator langIterator,
+			ITempVarGen tempGen, TempVarPrefixes varPrefixes)
 	{
-		super(config, transformationAssitant, predicate, var, compType, langIterator, tempGen, varPrefixes);
+		super(transformationAssitant, predicate, var, compType, langIterator, tempGen, varPrefixes);
 	}
-	
+
 	@Override
-	public List<? extends SLocalDeclCG> getOuterBlockDecls(AIdentifierVarExpCG setVar, List<AIdentifierPatternCG> ids) throws AnalysisException
+	public List<? extends SLocalDeclCG> getOuterBlockDecls(
+			AIdentifierVarExpCG setVar, List<AIdentifierPatternCG> ids)
+			throws AnalysisException
 	{
 		return firstBind ? super.getOuterBlockDecls(setVar, ids) : null;
 	}
-	
+
 	@Override
-	public List<PStmCG> getForLoopStms(AIdentifierVarExpCG setVar, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
+	public List<PStmCG> getForLoopStms(AIdentifierVarExpCG setVar,
+			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 	{
 		return lastBind ? getConditionalAdd(setVar, ids, id) : null;
 	}
