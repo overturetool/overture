@@ -219,7 +219,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 		for (PDefinition d : node.getLocalDefs())
 		{
-			evalContext.putList(PDefinitionAssistantInterpreter.getNamedValues(d, evalContext));
+			evalContext.putList(ctxt.assistantFactory.createPDefinitionAssistant().getNamedValues(d, evalContext));
 		}
 
 		return node.getExpression().apply(VdmRuntime.getExpressionEvaluator(), evalContext);
@@ -829,7 +829,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 		for (PDefinition d : node.getLocalDefs())
 		{
-			NameValuePairList values = PDefinitionAssistantInterpreter.getNamedValues(d, evalContext);
+			NameValuePairList values = ctxt.assistantFactory.createPDefinitionAssistant().getNamedValues(d, evalContext);
 
 			if (self != null && d instanceof AExplicitFunctionDefinition)
 			{

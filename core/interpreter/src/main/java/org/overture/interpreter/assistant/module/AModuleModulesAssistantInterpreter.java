@@ -114,7 +114,7 @@ public class AModuleModulesAssistantInterpreter extends
 			{
 				try
 				{
-					initialContext.putList(PDefinitionAssistantInterpreter.getNamedValues(d, initialContext));
+					initialContext.putList(af.createPDefinitionAssistant().getNamedValues(d, initialContext));
 				} catch (ContextException e)
 				{
 					trouble.add(e); // Carry on...
@@ -126,7 +126,7 @@ public class AModuleModulesAssistantInterpreter extends
 		{
 			try
 			{
-				initialContext.putList(PDefinitionAssistantInterpreter.getNamedValues(d, initialContext));
+				initialContext.putList(af.createPDefinitionAssistant().getNamedValues(d, initialContext));
 			} catch (ContextException e)
 			{
 				trouble.add(e); // Carry on...

@@ -804,7 +804,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 
 		for (PDefinition d : node.getLocalDefs())
 		{
-			NameValuePairList values = PDefinitionAssistantInterpreter.getNamedValues(d, evalContext);
+			NameValuePairList values = ctxt.assistantFactory.createPDefinitionAssistant().getNamedValues(d, evalContext);
 
 			if (self != null && d instanceof AExplicitFunctionDefinition)
 			{
@@ -857,7 +857,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 
 		for (PDefinition d : node.getAssignmentDefs())
 		{
-			evalContext.putList(PDefinitionAssistantInterpreter.getNamedValues(d, evalContext));
+			evalContext.putList(ctxt.assistantFactory.createPDefinitionAssistant().getNamedValues(d, evalContext));
 		}
 
 		return SSimpleBlockStmAssistantInterpreter.evalBlock(node, evalContext);

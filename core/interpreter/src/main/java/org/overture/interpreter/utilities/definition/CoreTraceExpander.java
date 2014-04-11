@@ -20,8 +20,6 @@ import org.overture.ast.statements.ACallStm;
 import org.overture.ast.statements.PStm;
 import org.overture.config.Settings;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.definition.ATraceDefinitionTermAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.PTraceDefinitionAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.traces.ConcurrentTraceNode;
@@ -140,7 +138,8 @@ public class CoreTraceExpander extends QuestionAnswerAdaptor<Context, TraceNode>
 
 		for (ATraceDefinitionTerm term : core.getTerms())
 		{
-			node.nodes.add(ATraceDefinitionTermAssistantInterpreter.expand(term, ctxt));
+			//node.nodes.add(ATraceDefinitionTermAssistantInterpreter.expand(term, ctxt));
+			node.nodes.add(term.apply(THIS,ctxt));
 		}
 
 		return node;
@@ -156,7 +155,8 @@ public class CoreTraceExpander extends QuestionAnswerAdaptor<Context, TraceNode>
 
 		for (PTraceDefinition term : core.getDefs())
 		{
-			node.nodes.add(PTraceDefinitionAssistantInterpreter.expand(term, ctxt));
+			//node.nodes.add(PTraceDefinitionAssistantInterpreter.expand(term, ctxt));
+			node.nodes.add(term.apply(THIS, ctxt));
 		}
 
 		return node;

@@ -243,7 +243,7 @@ public class SClassDefinitionAssistantInterpreter extends
 			if (!af.createPDefinitionAssistant().isStatic(d)
 					&& af.createPDefinitionAssistant().isFunctionOrOperation(d))
 			{
-				NameValuePairList nvpl = PDefinitionAssistantInterpreter.getNamedValues(d, empty);
+				NameValuePairList nvpl = af.createPDefinitionAssistant().getNamedValues(d, empty);
 				initCtxt.putList(nvpl);
 				members.putAll(nvpl);
 			}
@@ -254,7 +254,7 @@ public class SClassDefinitionAssistantInterpreter extends
 			if (!af.createPDefinitionAssistant().isStatic(d)
 					&& !af.createPDefinitionAssistant().isFunctionOrOperation(d))
 			{
-				NameValuePairList nvpl = PDefinitionAssistantInterpreter.getNamedValues(d, initCtxt).getUpdatable(null);
+				NameValuePairList nvpl = af.createPDefinitionAssistant().getNamedValues(d, initCtxt).getUpdatable(null);
 
 				initCtxt.putList(nvpl);
 				members.putAll(nvpl);
@@ -432,11 +432,11 @@ public class SClassDefinitionAssistantInterpreter extends
 			{
 				if (PDefinitionAssistantInterpreter.isValueDefinition(d))
 				{
-					nvl = PDefinitionAssistantInterpreter.getNamedValues(d, initCtxt);
+					nvl = af.createPDefinitionAssistant().getNamedValues(d, initCtxt);
 				} else if (af.createPDefinitionAssistant().isStatic(d)
 						&& PDefinitionAssistantInterpreter.isInstanceVariable(d))
 				{
-					nvl = PDefinitionAssistantInterpreter.getNamedValues(d, initCtxt).getUpdatable(null);
+					nvl = af.createPDefinitionAssistant().getNamedValues(d, initCtxt).getUpdatable(null);
 				}
 			}
 
@@ -526,7 +526,7 @@ public class SClassDefinitionAssistantInterpreter extends
 				// which there are none at static func/op creation...
 
 				Context empty = new Context(af, node.getLocation(), "empty", null);
-				NameValuePairList nvl = PDefinitionAssistantInterpreter.getNamedValues(d, empty);
+				NameValuePairList nvl = af.createPDefinitionAssistant().getNamedValues(d, empty);
 
 				PAccess pAccess = d.getAccess().getAccess();
 				if (pAccess instanceof APrivateAccess

@@ -336,7 +336,7 @@ public class ClassInterpreter extends Interpreter
 			{
 				if (assistantFactory.createPDefinitionAssistant().isFunctionOrOperation(d))
 				{
-					NameValuePairList nvpl = PDefinitionAssistantInterpreter.getNamedValues(d,initialContext);
+					NameValuePairList nvpl = assistantFactory.createPDefinitionAssistant().getNamedValues(d,initialContext);
 
 					for (NameValuePair n: nvpl)
 					{
@@ -352,7 +352,7 @@ public class ClassInterpreter extends Interpreter
 			{
 				if (assistantFactory.createPDefinitionAssistant().isFunctionOrOperation(d))
 				{
-					NameValuePairList nvpl = PDefinitionAssistantInterpreter.getNamedValues(d,initialContext);
+					NameValuePairList nvpl = assistantFactory.createPDefinitionAssistant().getNamedValues(d,initialContext);
 
 					for (NameValuePair n: nvpl)
 					{

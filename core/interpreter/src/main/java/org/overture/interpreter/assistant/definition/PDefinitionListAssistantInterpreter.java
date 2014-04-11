@@ -78,7 +78,7 @@ public class PDefinitionListAssistantInterpreter extends
 
 		for (PDefinition d : definitions)
 		{
-			nvl.addAll(PDefinitionAssistantInterpreter.getNamedValues(d, ctxt));
+			nvl.addAll(af.createPDefinitionAssistant().getNamedValues(d, ctxt));
 		}
 
 		return nvl;

@@ -28,7 +28,7 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 		this.af = af;
 	}
 
-	public static NameValuePairList getNamedValues(PDefinition def,
+	public NameValuePairList getNamedValues(PDefinition def,
 			Context initialContext)
 	{
 		try

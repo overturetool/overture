@@ -13,7 +13,6 @@ import org.overture.ast.node.INode;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PTraceCoreDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PTraceDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PMultipleBindAssistantInterpreter;
@@ -141,7 +140,7 @@ public class TermTraceExpander extends QuestionAnswerAdaptor<Context, TraceNode>
 
 		for (PDefinition d : term.getLocalDefs())
 		{
-			evalContext.putList(PDefinitionAssistantInterpreter.getNamedValues(d, evalContext));
+			evalContext.putList(af.createPDefinitionAssistant().getNamedValues(d, evalContext));
 		}
 
 		TraceNode node = PTraceDefinitionAssistantInterpreter.expand(term.getBody(), evalContext);

@@ -22,7 +22,6 @@ import org.overture.ast.lex.Dialect;
 import org.overture.ast.node.INode;
 import org.overture.config.Settings;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
@@ -314,7 +313,7 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 		//return AImportedDefinitionAssistantInterpreter.getNamedValues(def, initialContext);
 		NameValuePairList renamed = new NameValuePairList();
 
-		for (NameValuePair nv : PDefinitionAssistantInterpreter.getNamedValues(def.getDef(), initialContext))
+		for (NameValuePair nv : af.createPDefinitionAssistant().getNamedValues(def.getDef(), initialContext))
 		{
 			if (nv.name.equals(def.getDef().getName())) // NB. excludes pre/post/inv functions
 			{
@@ -341,7 +340,7 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 			}
 		}
 
-		for (NameValuePair nv : PDefinitionAssistantInterpreter.getNamedValues(def.getSuperdef(), initialContext))
+		for (NameValuePair nv : af.createPDefinitionAssistant().getNamedValues(def.getSuperdef(), initialContext))
 		{
 			renamed.add(new NameValuePair(nv.name.getModifiedName(def.getName().getModule()), nv.value));
 		}
@@ -393,7 +392,7 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 		//return ARenamedDefinitionAssistantInterpreter.getNamedValues(def, initialContext);
 		NameValuePairList renamed = new NameValuePairList();
 
-		for (NameValuePair nv : PDefinitionAssistantInterpreter.getNamedValues(def.getDef(), initialContext))
+		for (NameValuePair nv : af.createPDefinitionAssistant().getNamedValues(def.getDef(), initialContext))
 		{
 			// We exclude any name from the definition other than the one
 			// explicitly renamed. Otherwise, generated names like pre_f
