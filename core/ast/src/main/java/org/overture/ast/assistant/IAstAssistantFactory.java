@@ -15,33 +15,155 @@ import org.overture.ast.assistant.type.SNumericBasicTypeAssistant;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.types.SNumericBasicType;
 
-//TODO Add assistant Javadoc
 /**
- * This is the main Assistant factory interface. Everyone will see this
- * so it should be well documented.
- * @author ldc
- *
+ * The {@link IAstAssistantFactory} defines the main interface for assistant
+ * factories. Assistants are responsible for providing generic functionality
+ * that is required on multiple occasions and that (for various reasons) cannot
+ * be implemented directly in the visitors. <br>
+ * <br>
+ * Factories are responsible for providing users with extensible access to the
+ * assistant functionality. Each module that needs assistants should create a
+ * factory and access a visitor by calling factory.createXAssistant where X is
+ * the node type that the functionality acts upon. <br>
+ * <br>
+ * All factories should subclass either this interface or one of its subclasses.
+ * These classes are in a straight hierarchy chain as follows:
+ * {@link IAstAssistantFactory} <- {@link ITypeCheckerAssistantFactory} <-
+ * *PluginLevelFactory <br>
+ * <br>
+ * By following this inheritance chain, at every level a single factory can
+ * provide all assistants. Extensions should hook into the hierarchy by
+ * subclassing their extension superclass, if one extist. Otherwise, subclass
+ * their Overture counterpart.
+ * 
+ * 
+ * @author ldc, kel, gkanos, pvj
+ * 
  */
-public interface IAstAssistantFactory
-{
+public interface IAstAssistantFactory {
+
+	/**
+	 * Creates a new {@link PAccessSpecifierAssistant}. This assistant provides
+	 * functionality to check if an PAccessSpecifier is a "static", "public"
+	 * specifier, etc.
+	 * 
+	 * @return the p access specifier assistant
+	 */
 	PAccessSpecifierAssistant createPAccessSpecifierAssistant();
+
+	/**
+	 * Creates a new {@link PDefinitionAssistant}. This assistant provides
+	 * functionality for getting the name of a definition and for setting its
+	 * internal class definition.
+	 * 
+	 * @return the p definition assistant
+	 */
 	PDefinitionAssistant createPDefinitionAssistant();
-	
+
+	/**
+	 * Creates a new {@link PPatternAssistant}. This assistant provides
+	 * functionality for extracting variable names from the pattern.
+	 * 
+	 * @return the p pattern assistant
+	 */
 	PPatternAssistant createPPatternAssistant();
-	//PTypeList??? thats not an assistant
-	
+
+	/**
+	 * Creates a new {@link ABracketTypeAssistant}. This assistant does nothing
+	 * and is probably a candidate for deletion.
+	 * 
+	 * @return the a bracket type assistant
+	 */
+	@Deprecated
 	ABracketTypeAssistant createABracketTypeAssistant();
+
+	/**
+	 * Creates a new ANamedInvariantTypeAssistant. This assistant does nothing
+	 * and is probably a candidate for deletion.
+	 * 
+	 * @return the a named invariant type assistant
+	 */
+	@Deprecated
 	ANamedInvariantTypeAssistant createANamedInvariantTypeAssistant();
+
+	/**
+	 * Creates a new {@link AOptionalTypeAssistant}. This assistant does nothing
+	 * and is probably a candidate for deletion.
+	 * 
+	 * @return the a optional type assistant
+	 */
+	@Deprecated
 	AOptionalTypeAssistant createAOptionalTypeAssistant();
+
+	/**
+	 * Creates a new {@link AParameterTypeAssistant}. This assistant does
+	 * nothing and is probably a candidate for deletion.
+	 * 
+	 * @return the a parameter type assistant
+	 */
+	@Deprecated
 	AParameterTypeAssistant createAParameterTypeAssistant();
+
+	/**
+	 * Creates a new {@link AUnionTypeAssistant}. This assistant provides
+	 * functionality for expanding a Union type and checking if it's numeric.
+	 * 
+	 * @return the a union type assistant
+	 */
 	AUnionTypeAssistant createAUnionTypeAssistant();
+
+	/**
+	 * Creates a new {@link AUnknownTypeAssistant}. This assistant does nothing
+	 * and is probably a candidate for deletion.
+	 * 
+	 * @return the a unknown type assistant
+	 */
+	@Deprecated
 	AUnknownTypeAssistant createAUnknownTypeAssistant();
+
+	/**
+	 * Creates a new {@link PTypeAssistant}. This assistant provides
+	 * functionality to get a type's name and check if a type is numeric.
+	 * 
+	 * @return the p type assistant
+	 */
 	PTypeAssistant createPTypeAssistant();
+
+	/**
+	 * Creates a new {@link SNumericBasicTypeAssistant}. This assistant provides
+	 * functionality to get the weight of a numeric type.
+	 * 
+	 * @return the s numeric basic type assistant
+	 */
 	SNumericBasicTypeAssistant createSNumericBasicTypeAssistant();
-	
-	//visitors
+
+	/**
+	 * Returns the visitor for locating all variable names in a pattern.
+	 * 
+	 * @return the all variable name locator
+	 */
 	IAnswer<LexNameList> getAllVariableNameLocator();
+
+	/**
+	 * Returns the visitor to check if a type is numeric. Probably needs a
+	 * better name.
+	 * 
+	 * @return the numeric finder
+	 */
 	IAnswer<Boolean> getNumericFinder();
+
+	/**
+	 * Returns the visitor that, given a numeric type, gets the 
+	 * the actual {@link SNumericBasicType} associated with it.
+	 * 
+	 * @return the numeric basis checker
+	 */
 	IAnswer<SNumericBasicType> getNumericBasisChecker();
+
+	/**
+	 * Return the visitor that gets the hashcode of a type.
+	 * 
+	 * @return the hash checker
+	 */
 	IAnswer<Integer> getHashChecker();
 }

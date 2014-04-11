@@ -5,12 +5,6 @@ import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 public class PogAssistantFactory extends TypeCheckerAssistantFactory implements
 		IPogAssistantFactory
 {
-	static
-	{
-		// FIXME: remove this when conversion to factory obtained assistants are completed.
-		// init(new AstAssistantFactory());
-		init(new PogAssistantFactory());
-	}
 
 	@Override
 	public PDefinitionAssistantPOG createPDefinitionAssistant()
