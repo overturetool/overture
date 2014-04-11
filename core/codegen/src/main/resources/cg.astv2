@@ -167,6 +167,7 @@ stmCG {-> package='org.overture.codegen.cgast.statements'}
            |	{forLoop} [init]:declCG.#Local.var [cond]:expCG [inc]:expCG [body]:stmCG
            |	{increment} [var]:expCG
            |	{decrement} [var]:expCG
+           |	{raiseError} [error]:expCG.#RuntimeError
            ;
            
 letBeStCG {-> package='org.overture.codegen.cgast.utils'}
@@ -201,6 +202,11 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{postInc} [exp]:expCG
     |	{postDec} [exp]:expCG
     |	{deRef} [exp]:expCG //For pointer dereference
+    |	#RuntimeError
+    ;
+
+#RuntimeError {-> package='org.overture.codegen.cgast.expressions'}
+    =   {LetBeStNoBinding}
     ;
 
 #Var {-> package='org.overture.codegen.cgast.expressions'}
@@ -331,6 +337,7 @@ typeCG {-> package='org.overture.codegen.cgast.types'}
     |	#set
     |	#seq
     |	#basicTypeWrappers
+    |	{error}
     ;
     
 externalType {-> package='org.overture.codegen.cgast.utils'}
