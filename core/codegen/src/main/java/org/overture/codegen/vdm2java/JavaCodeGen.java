@@ -47,7 +47,11 @@ import org.overture.codegen.utils.ITempVarGen;
 
 public class JavaCodeGen
 {
-	public static final TemplateStructure JAVA_TEMPLATE_STRUCTURE = new TemplateStructure(IJavaCodeGenConstants.JAVA_TEMPLATES_ROOT_FOLDER);
+	public static final String JAVA_TEMPLATES_ROOT_FOLDER = "JavaTemplates";
+	
+	public static final String[] CLASSES_NOT_TO_BE_GENERATED = IOoAstConstants.CLASS_NAMES_USED_IN_VDM;
+	
+	public static final TemplateStructure JAVA_TEMPLATE_STRUCTURE = new TemplateStructure(JAVA_TEMPLATES_ROOT_FOLDER);
 	
 	private OoAstGenerator generator;
 	
@@ -286,8 +290,8 @@ public class JavaCodeGen
 	
 	private static boolean shouldBeGenerated(String className)
 	{
-		for(int i = 0; i < IJavaCodeGenConstants.CLASSES_NOT_TO_BE_GENERATED.length; i++)
-			if(IJavaCodeGenConstants.CLASSES_NOT_TO_BE_GENERATED[i].equals(className))
+		for(int i = 0; i < CLASSES_NOT_TO_BE_GENERATED.length; i++)
+			if(CLASSES_NOT_TO_BE_GENERATED[i].equals(className))
 				return false;
 		
 		return true;
