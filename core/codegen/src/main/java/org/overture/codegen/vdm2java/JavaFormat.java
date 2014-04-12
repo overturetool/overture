@@ -80,7 +80,6 @@ import org.overture.codegen.constants.TempVarPrefixes;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.ooast.OoAstAnalysis;
 import org.overture.codegen.utils.ITempVarGen;
-import org.overture.codegen.utils.TempVarNameGen;
 
 public class JavaFormat
 {
@@ -101,22 +100,33 @@ public class JavaFormat
 	private static final String JAVA_INT = "int";
 	
 	private List<AClassDeclCG> classes;
-	private TempVarPrefixes varPrefixes;
 	private ITempVarGen tempVarNameGen;
 	private AssistantManager assistantManager;
+	private MergeVisitor mergeVisitor;
 	
-	public JavaFormat(List<AClassDeclCG> classes, TempVarPrefixes varPrefixes,ITempVarGen tempVarNameGen, AssistantManager assistantManager)
+	public JavaFormat(TempVarPrefixes varPrefixes,ITempVarGen tempVarNameGen, AssistantManager assistantManager)
 	{
-		this.classes = classes;
-		this.varPrefixes = varPrefixes;
 		this.tempVarNameGen = tempVarNameGen;
 		this.assistantManager = assistantManager;
+		this.mergeVisitor = new MergeVisitor(JavaCodeGen.JAVA_TEMPLATE_STRUCTURE, JavaCodeGen.constructTemplateCallables(this, OoAstAnalysis.class, varPrefixes));
 	}
 	
-	public JavaFormat()
+	public void setClasses(List<AClassDeclCG> classes)
 	{
-		this.tempVarNameGen = new TempVarNameGen();
-		this.assistantManager = new AssistantManager();
+		this.classes = classes != null ? classes : new LinkedList<AClassDeclCG>();
+	}
+	
+	public void clearClasses()
+	{
+		if(classes != null)
+			classes.clear();
+		else
+			classes = new LinkedList<AClassDeclCG>();
+	}
+	
+	public MergeVisitor getMergeVisitor()
+	{
+		return mergeVisitor;
 	}
 	
 	public String format(INode node) throws AnalysisException
@@ -131,8 +141,6 @@ public class JavaFormat
 	
 	private String format(INode node, boolean ignoreContext) throws AnalysisException
 	{
-		MergeVisitor mergeVisitor = new MergeVisitor(JavaCodeGen.JAVA_TEMPLATE_STRUCTURE, JavaCodeGen.constructTemplateCallables(this, OoAstAnalysis.class, varPrefixes));
-		
 		StringWriter writer = new StringWriter();
 		node.apply(mergeVisitor, writer);
 

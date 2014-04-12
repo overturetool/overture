@@ -28,12 +28,10 @@ import org.overture.codegen.constants.IOoAstConstants;
 import org.overture.codegen.constants.TempVarPrefixes;
 import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateCallable;
 import org.overture.codegen.merging.TemplateStructure;
 import org.overture.codegen.ooast.ClassDeclStatus;
 import org.overture.codegen.ooast.ExpStatus;
-import org.overture.codegen.ooast.OoAstAnalysis;
 import org.overture.codegen.ooast.OoAstGenerator;
 import org.overture.codegen.ooast.OoAstInfo;
 import org.overture.codegen.transform.TransformationAssistantCG;
@@ -53,8 +51,6 @@ public class JavaCodeGen
 	
 	public static final TemplateStructure JAVA_TEMPLATE_STRUCTURE = new TemplateStructure(JAVA_TEMPLATES_ROOT_FOLDER);
 	
-	private OoAstGenerator generator;
-	
 	public static final String[] RESERVED_TYPE_NAMES = {
 		//Classes used from the Java standard library
 		"Utils", "Record","Long", "Double", "Character", "String", "List", "Set"
@@ -66,12 +62,16 @@ public class JavaCodeGen
 	
 	public final static TempVarPrefixes varPrefixes = new TempVarPrefixes();
 	
-	public final static TemplateCallable[] DEFAULT_TEMPLATE_CALLABLES = constructTemplateCallables(new JavaFormat(), OoAstAnalysis.class, varPrefixes);
-	
 	public final static TemplateCallable[] constructTemplateCallables(Object javaFormat, Object ooAstAnalysis, Object tempVarPrefixes)
 	{
 		return new TemplateCallable[]{new TemplateCallable(JAVA_FORMAT_KEY, javaFormat), new TemplateCallable(OO_AST_ANALYSIS_KEY, ooAstAnalysis), new TemplateCallable(TEMP_VAR, tempVarPrefixes)};
 	}
+	
+	private OoAstGenerator generator;
+	private OoAstInfo ooAstInfo;
+	private ITempVarGen tempVarNameGen;
+	private AssistantManager assistantManager;
+	private JavaFormat javaFormat;
 	
 	public JavaCodeGen()
 	{
@@ -87,6 +87,10 @@ public class JavaCodeGen
 	{
 		initVelocity();
 		this.generator = new OoAstGenerator(log);
+		this.ooAstInfo = generator.getOoAstInfo();
+		this.tempVarNameGen = ooAstInfo.getTempVarNameGen();
+		this.assistantManager = ooAstInfo.getAssistantManager();
+		this.javaFormat = new JavaFormat(varPrefixes, tempVarNameGen, assistantManager);
 	}
 
 	private void initVelocity()
@@ -104,7 +108,6 @@ public class JavaCodeGen
 	{
 		try
 		{
-			MergeVisitor mergeVisitor = new MergeVisitor(JAVA_TEMPLATE_STRUCTURE, DEFAULT_TEMPLATE_CALLABLES);
 			StringWriter writer = new StringWriter();
 
 			AInterfaceDeclCG quotesInterface = generator.getQuotes();
@@ -112,7 +115,7 @@ public class JavaCodeGen
 			if (quotesInterface.getFields().size() == 0)
 				return null; // Nothing to generate
 
-			quotesInterface.apply(mergeVisitor, writer);
+			quotesInterface.apply(javaFormat.getMergeVisitor(), writer);
 			String code = writer.toString();
 
 			String formattedJavaCode = JavaCodeGenUtil.formatJavaCode(code);
@@ -154,16 +157,8 @@ public class JavaCodeGen
 			statuses.add(generator.generateFrom(classDef));
 		}
 
-		OoAstInfo ooAstInfo = generator.getOoAstInfo();
-		ITempVarGen tempVarNameGen = ooAstInfo.getTempVarNameGen();
-		AssistantManager assistantManager = ooAstInfo.getAssistantManager();
+		javaFormat.setClasses(getClassDecls(statuses));
 		
-		JavaFormat javaFormat = new JavaFormat(getClassDecls(statuses), varPrefixes, tempVarNameGen, assistantManager);
-		
-		OoAstAnalysis ooAstAnalysis = new OoAstAnalysis();
-		
-		MergeVisitor mergeVisitor = new MergeVisitor(JAVA_TEMPLATE_STRUCTURE, constructTemplateCallables(javaFormat, ooAstAnalysis, varPrefixes));
-
 		List<GeneratedModule> generated = new ArrayList<GeneratedModule>();
 		for (ClassDeclStatus status : statuses)
 		{
@@ -180,7 +175,7 @@ public class JavaCodeGen
 					ILanguageIterator langIterator = new JavaLanguageIterator(transformationAssistant, ooAstInfo.getTempVarNameGen(), varPrefixes);
 					
 					classCg.apply(new TransformationVisitor(ooAstInfo, varPrefixes, transformationAssistant, langIterator));
-					classCg.apply(mergeVisitor, writer);
+					classCg.apply(javaFormat.getMergeVisitor(), writer);
 					String code = writer.toString();
 					
 					formattedJavaCode = JavaCodeGenUtil.formatJavaCode(code);
@@ -196,6 +191,8 @@ public class JavaCodeGen
 				e.printStackTrace();
 			}
 		}
+		
+		javaFormat.clearClasses();
 
 		return generated;
 	}
@@ -218,7 +215,6 @@ public class JavaCodeGen
 
 		ExpStatus expStatus = generator.generateFrom(exp);
 
-		MergeVisitor mergeVisitor = new MergeVisitor(JAVA_TEMPLATE_STRUCTURE, DEFAULT_TEMPLATE_CALLABLES);
 		StringWriter writer = new StringWriter();
 
 		try
@@ -227,7 +223,7 @@ public class JavaCodeGen
 
 			if (expCg != null)
 			{
-				expCg.apply(mergeVisitor, writer);
+				expCg.apply(javaFormat.getMergeVisitor(), writer);
 				String code = writer.toString();
 
 				return new Generated(code, expStatus.getUnsupportedNodes());
