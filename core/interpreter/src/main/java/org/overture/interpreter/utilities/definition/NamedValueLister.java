@@ -101,7 +101,7 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 		{
 			try
 			{
-				nvpl = PPatternAssistantInterpreter.getNamedValues(def.getPattern(), v, initialContext);
+				nvpl = af.createPPatternAssistant().getNamedValues(def.getPattern(), v, initialContext);
 			} catch (PatternMatchException e)
 			{
 				VdmRuntimeError.abort(e, initialContext);
@@ -111,7 +111,7 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 			try
 			{
 				Value converted = v.convertTo(def.getTypebind().getType(), initialContext);
-				nvpl = PPatternAssistantInterpreter.getNamedValues(def.getTypebind().getPattern(), converted, initialContext);
+				nvpl = af.createPPatternAssistant().getNamedValues(def.getTypebind().getPattern(), converted, initialContext);
 			} catch (PatternMatchException e)
 			{
 				VdmRuntimeError.abort(e, initialContext);
@@ -130,7 +130,7 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 					VdmRuntimeError.abort(def.getLocation(), 4002, "Expression value is not in set bind", initialContext);
 				}
 
-				nvpl = PPatternAssistantInterpreter.getNamedValues(def.getSetbind().getPattern(), v, initialContext);
+				nvpl = af.createPPatternAssistant().getNamedValues(def.getSetbind().getPattern(), v, initialContext);
 			} catch (AnalysisException e)
 			{
 				if (e instanceof PatternMatchException)
@@ -452,7 +452,7 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 		{
 			// UpdatableValues are constantized as they cannot be updated.
 			v = def.getExpression().apply(VdmRuntime.getExpressionEvaluator(), initialContext).convertTo(af.createPDefinitionAssistant().getType(def), initialContext).getConstant();
-			return PPatternAssistantInterpreter.getNamedValues(def.getPattern(), v, initialContext);
+			return af.createPPatternAssistant().getNamedValues(def.getPattern(), v, initialContext);
 		} catch (ValueException e)
 		{
 			VdmRuntimeError.abort(def.getLocation(), e);

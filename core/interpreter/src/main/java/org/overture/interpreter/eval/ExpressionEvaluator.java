@@ -241,7 +241,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 		try
 		{
-			evalContext.putList(PPatternAssistantInterpreter.getNamedValues(node.getPattern(), val, ctxt));
+			evalContext.putList(ctxt.assistantFactory.createPPatternAssistant().getNamedValues(node.getPattern(), val, ctxt));
 			return node.getResult().apply(VdmRuntime.getExpressionEvaluator(), evalContext);
 		} catch (PatternMatchException e)
 		{
@@ -288,7 +288,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			try
 			{
 				Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "exists1", ctxt);
-				evalContext.putList(PPatternAssistantInterpreter.getNamedValues(node.getBind().getPattern(), val, ctxt));
+				evalContext.putList(ctxt.assistantFactory.createPPatternAssistant().getNamedValues(node.getBind().getPattern(), val, ctxt));
 
 				if (node.getPredicate().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctxt))
 				{
@@ -711,7 +711,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			try
 			{
 				Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "iota", ctxt);
-				evalContext.putList(PPatternAssistantInterpreter.getNamedValues(node.getBind().getPattern(), val, ctxt));
+				evalContext.putList(ctxt.assistantFactory.createPPatternAssistant().getNamedValues(node.getBind().getPattern(), val, ctxt));
 
 				if (node.getPredicate().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctxt))
 				{
@@ -1435,7 +1435,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			try
 			{
 				Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "seq comprehension", ctxt);
-				NameValuePairList nvpl = PPatternAssistantInterpreter.getNamedValues(node.getSetBind().getPattern(), val, ctxt);
+				NameValuePairList nvpl = ctxt.assistantFactory.createPPatternAssistant().getNamedValues(node.getSetBind().getPattern(), val, ctxt);
 				Value sortOn = nvpl.get(0).value;
 
 				if (map.get(sortOn) == null)

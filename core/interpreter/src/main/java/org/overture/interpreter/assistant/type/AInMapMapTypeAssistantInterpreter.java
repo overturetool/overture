@@ -4,7 +4,6 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.types.AInMapMapType;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
-import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.values.MapValue;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;

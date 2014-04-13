@@ -44,7 +44,6 @@ import org.overture.ast.types.PType;
 import org.overture.ast.util.Utils;
 import org.overture.ast.util.definitions.ClassList;
 import org.overture.config.Settings;
-import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.debug.DBGPReader;
 import org.overture.interpreter.messages.Console;

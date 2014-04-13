@@ -21,7 +21,7 @@ public class PPatternListAssistantInterpreter extends PPatternListAssistantTC
 	{
 		for (PPattern p : plist)
 		{
-			if (PPatternAssistantInterpreter.isConstrained(p))
+			if (af.createPPatternAssistant().isConstrained(p))
 			{
 				return true; // NB. OR
 			}

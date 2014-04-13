@@ -28,7 +28,6 @@ import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.patterns.PPattern;
-import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
 
@@ -53,10 +52,10 @@ public class Quantifier
 			{
 				if (allPossibilities)
 				{
-					nvlist.addAll(PPatternAssistantInterpreter.getAllNamedValues(pattern, value, ctxt));
+					nvlist.addAll(ctxt.assistantFactory.createPPatternAssistant().getAllNamedValues(pattern, value, ctxt));
 				} else
 				{
-					nvlist.add(PPatternAssistantInterpreter.getNamedValues(pattern, value, ctxt));
+					nvlist.add(ctxt.assistantFactory.createPPatternAssistant().getNamedValues(pattern, value, ctxt));
 				}
 			} catch (PatternMatchException e)
 			{

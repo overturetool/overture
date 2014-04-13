@@ -142,18 +142,18 @@ public class AMapPatternAssistantInterpreter
 //		return finalResults;
 //	}
 
-	public static boolean isConstrained(AMapPattern pattern)
-	{
-		for (AMapletPatternMaplet p : pattern.getMaplets())
-		{
-			if (AMapPatternMapletAssistantInterpreter.isConstrained(p))
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
+//	public static boolean isConstrained(AMapPattern pattern)
+//	{
+//		for (AMapletPatternMaplet p : pattern.getMaplets())
+//		{
+//			if (AMapPatternMapletAssistantInterpreter.isConstrained(p))
+//			{
+//				return true;
+//			}
+//		}
+//
+//		return false;
+//	}
 
 //	public static int getLength(AMapPattern pattern)
 //	{
