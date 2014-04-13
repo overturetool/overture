@@ -17,13 +17,13 @@ public class AForAllStmAssistantInterpreter// extends AForAllStmAssistantTC
 		this.af = af;
 	}
 
-	public static PExp findExpression(AForAllStm stm, int lineno)
-	{
-		PExp found = PExpAssistantInterpreter.findExpression(stm.getSet(), lineno);
-		if (found != null)
-			return found;
-		return PStmAssistantInterpreter.findExpression(stm.getStatement(), lineno);
-	}
+//	public static PExp findExpression(AForAllStm stm, int lineno)
+//	{
+//		PExp found = PExpAssistantInterpreter.findExpression(stm.getSet(), lineno);
+//		if (found != null)
+//			return found;
+//		return PStmAssistantInterpreter.findExpression(stm.getStatement(), lineno);
+//	}
 
 	public static PStm findStatement(AForAllStm stm, int lineno)
 	{

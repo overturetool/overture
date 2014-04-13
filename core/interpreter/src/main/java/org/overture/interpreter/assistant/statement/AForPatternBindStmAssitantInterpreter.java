@@ -18,13 +18,13 @@ public class AForPatternBindStmAssitantInterpreter // extends
 		this.af = af;
 	}
 
-	public static PExp findExpression(AForPatternBindStm stm, int lineno)
-	{
-		PExp found = PExpAssistantInterpreter.findExpression(stm.getExp(), lineno);
-		if (found != null)
-			return found;
-		return PStmAssistantInterpreter.findExpression(stm.getStatement(), lineno);
-	}
+//	public static PExp findExpression(AForPatternBindStm stm, int lineno)
+//	{
+//		PExp found = PExpAssistantInterpreter.findExpression(stm.getExp(), lineno);
+//		if (found != null)
+//			return found;
+//		return PStmAssistantInterpreter.findExpression(stm.getStatement(), lineno);
+//	}
 
 	public static PStm findStatement(AForPatternBindStm stm, int lineno)
 	{

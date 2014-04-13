@@ -1,10 +1,8 @@
 package org.overture.interpreter.assistant.statement;
 
-import org.overture.ast.expressions.PExp;
 import org.overture.ast.statements.AElseIfStm;
 import org.overture.ast.statements.PStm;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 
 public class AElseIfStmAssistantInterpreter // extends AElseIfStmAssistantTC
 {
@@ -17,10 +15,10 @@ public class AElseIfStmAssistantInterpreter // extends AElseIfStmAssistantTC
 		this.af = af;
 	}
 
-	public static PExp findExpression(AElseIfStm stm, int lineno)
-	{
-		return PExpAssistantInterpreter.findExpression(stm.getElseIf(), lineno);
-	}
+//	public static PExp findExpression(AElseIfStm stm, int lineno)
+//	{
+//		return PExpAssistantInterpreter.findExpression(stm.getElseIf(), lineno);
+//	}
 
 	public static PStm findStatement(AElseIfStm stm, int lineno)
 	{

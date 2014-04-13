@@ -1,6 +1,5 @@
 package org.overture.interpreter.assistant.statement;
 
-import org.overture.ast.expressions.PExp;
 import org.overture.ast.statements.ACaseAlternativeStm;
 import org.overture.ast.statements.ACasesStm;
 import org.overture.ast.statements.PStm;
@@ -17,19 +16,19 @@ public class ACasesStmAssistantInterpreter // extends ACasesStmAssistantTC
 		this.af = af;
 	}
 
-	public static PExp findExpression(ACasesStm stm, int lineno)
-	{
-		PExp found = null;
-
-		for (ACaseAlternativeStm stmt : stm.getCases())
-		{
-			found = PStmAssistantInterpreter.findExpression(stmt.getResult(), lineno);
-			if (found != null)
-				break;
-		}
-
-		return found;
-	}
+//	public static PExp findExpression(ACasesStm stm, int lineno)
+//	{
+//		PExp found = null;
+//
+//		for (ACaseAlternativeStm stmt : stm.getCases())
+//		{
+//			found = PStmAssistantInterpreter.findExpression(stmt.getResult(), lineno);
+//			if (found != null)
+//				break;
+//		}
+//
+//		return found;
+//	}
 
 	public static PStm findStatement(ACasesStm stm, int lineno)
 	{

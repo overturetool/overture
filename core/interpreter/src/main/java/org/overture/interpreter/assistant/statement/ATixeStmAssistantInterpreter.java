@@ -17,21 +17,21 @@ public class ATixeStmAssistantInterpreter // extends ATixeStmAssistantTC
 		this.af = af;
 	}
 
-	public static PExp findExpression(ATixeStm stm, int lineno)
-	{
-		PExp found = PStmAssistantInterpreter.findExpression(stm.getBody(), lineno);
-		if (found != null)
-			return found;
-
-		for (ATixeStmtAlternative tsa : stm.getTraps())
-		{
-			found = PStmAssistantInterpreter.findExpression(tsa.getStatement(), lineno);
-			if (found != null)
-				break;
-		}
-
-		return found;
-	}
+//	public static PExp findExpression(ATixeStm stm, int lineno)
+//	{
+//		PExp found = PStmAssistantInterpreter.findExpression(stm.getBody(), lineno);
+//		if (found != null)
+//			return found;
+//
+//		for (ATixeStmtAlternative tsa : stm.getTraps())
+//		{
+//			found = PStmAssistantInterpreter.findExpression(tsa.getStatement(), lineno);
+//			if (found != null)
+//				break;
+//		}
+//
+//		return found;
+//	}
 
 	public static PStm findStatement(ATixeStm stm, int lineno)
 	{

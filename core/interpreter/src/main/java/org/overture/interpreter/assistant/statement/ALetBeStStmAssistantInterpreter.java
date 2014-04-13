@@ -17,17 +17,17 @@ public class ALetBeStStmAssistantInterpreter // extends ALetBeStStmAssistantTC
 		this.af = af;
 	}
 
-	public static PExp findExpression(ALetBeStStm stm, int lineno)
-	{
-		if (stm.getSuchThat() != null)
-		{
-			PExp found = PExpAssistantInterpreter.findExpression(stm.getSuchThat(), lineno);
-			if (found != null)
-				return found;
-		}
-
-		return PStmAssistantInterpreter.findExpression(stm.getStatement(), lineno);
-	}
+//	public static PExp findExpression(ALetBeStStm stm, int lineno)
+//	{
+//		if (stm.getSuchThat() != null)
+//		{
+//			PExp found = PExpAssistantInterpreter.findExpression(stm.getSuchThat(), lineno);
+//			if (found != null)
+//				return found;
+//		}
+//
+//		return PStmAssistantInterpreter.findExpression(stm.getStatement(), lineno);
+//	}
 
 	public static PStm findStatement(ALetBeStStm stm, int lineno)
 	{

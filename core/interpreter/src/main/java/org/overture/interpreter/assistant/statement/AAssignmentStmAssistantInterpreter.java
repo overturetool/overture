@@ -17,9 +17,9 @@ public class AAssignmentStmAssistantInterpreter// extends
 		this.af = af;
 	}
 
-	public static PExp findExpression(AAssignmentStm stm, int lineno)
-	{
-		return PExpAssistantInterpreter.findExpression(stm.getExp(), lineno);
-	}
+//	public static PExp findExpression(AAssignmentStm stm, int lineno)
+//	{
+//		return PExpAssistantInterpreter.findExpression(stm.getExp(), lineno);
+//	}
 
 }

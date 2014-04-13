@@ -16,19 +16,19 @@ public class AAtomicStmAssistantInterpreter
 		this.af = af;
 	}
 
-	public static PExp findExpression(AAtomicStm stm, int lineno)
-	{
-		PExp found = null;
-
-		for (AAssignmentStm stmt : stm.getAssignments())
-		{
-			found = AAssignmentStmAssistantInterpreter.findExpression(stmt, lineno);
-			if (found != null)
-				break;
-		}
-
-		return found;
-	}
+//	public static PExp findExpression(AAtomicStm stm, int lineno)
+//	{
+//		PExp found = null;
+//
+//		for (AAssignmentStm stmt : stm.getAssignments())
+//		{
+//			found = AAssignmentStmAssistantInterpreter.findExpression(stmt, lineno);
+//			if (found != null)
+//				break;
+//		}
+//
+//		return found;
+//	}
 
 	public static PStm findStatement(AAtomicStm stm, int lineno)
 	{

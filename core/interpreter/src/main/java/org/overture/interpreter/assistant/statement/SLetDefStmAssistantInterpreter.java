@@ -18,14 +18,14 @@ public class SLetDefStmAssistantInterpreter// extends SLetDefStmAssistantTC
 		this.af = af;
 	}
 
-	public static PExp findExpression(ALetStm stm, int lineno)
-	{
-		PExp found = PDefinitionListAssistantInterpreter.findExpression(stm.getLocalDefs(), lineno);
-		if (found != null)
-			return found;
-
-		return PStmAssistantInterpreter.findExpression(stm.getStatement(), lineno);
-	}
+//	public static PExp findExpression(ALetStm stm, int lineno)
+//	{
+//		PExp found = PDefinitionListAssistantInterpreter.findExpression(stm.getLocalDefs(), lineno);
+//		if (found != null)
+//			return found;
+//
+//		return PStmAssistantInterpreter.findExpression(stm.getStatement(), lineno);
+//	}
 
 	public static PStm findStatement(ALetStm stm, int lineno)
 	{
