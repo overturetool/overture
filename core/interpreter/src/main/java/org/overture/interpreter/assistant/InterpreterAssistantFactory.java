@@ -180,6 +180,7 @@ import org.overture.interpreter.utilities.pattern.ConstrainedPatternChecker;
 import org.overture.interpreter.utilities.pattern.IdentifierPatternFinder;
 import org.overture.interpreter.utilities.pattern.LengthFinder;
 import org.overture.interpreter.utilities.pattern.ValueCollector;
+import org.overture.interpreter.utilities.statement.StatementExpressionFinder;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.ValueList;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
@@ -1061,6 +1062,12 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	public IQuestionAnswer<Context, TraceNode> getTermTraceExpander()
 	{
 		return new TermTraceExpander(this);
+	}
+
+	@Override
+	public IQuestionAnswer<Integer, PExp> getStatementExpressionFinder()
+	{
+		return new StatementExpressionFinder(this);
 	}
 
 }

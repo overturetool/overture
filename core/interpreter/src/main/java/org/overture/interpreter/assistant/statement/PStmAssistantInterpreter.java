@@ -1,6 +1,10 @@
 package org.overture.interpreter.assistant.statement;
 
+import java.util.Vector;
+
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.statements.AAlwaysStm;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.statements.AAtomicStm;
@@ -41,79 +45,86 @@ public class PStmAssistantInterpreter extends PStmAssistantTC
 
 	public static PExp findExpression(PStm stm, int lineno)
 	{
-		if (stm instanceof AAlwaysStm)
+		try
 		{
-			return AAlwaysStmAssistantInterpreter.findExpression((AAlwaysStm) stm, lineno);
-		} else if (stm instanceof AAssignmentStm)
+			return stm.apply(af.getStatementExpressionFinder(),lineno);// FIXME: should we handle exceptions like this
+		} catch (AnalysisException e)
 		{
-			return AAssignmentStmAssistantInterpreter.findExpression((AAssignmentStm) stm, lineno);
-		} else if (stm instanceof AAtomicStm)
-		{
-			return AAtomicStmAssistantInterpreter.findExpression((AAtomicStm) stm, lineno);
-		} else if (stm instanceof ACallStm)
-		{
-			return ACallStmAssistantInterpreter.findExpression((ACallStm) stm, lineno);
-		} else if (stm instanceof ACallObjectStm)
-		{
-			return ACallObjectStatementAssistantInterpreter.findExpression((ACallObjectStm) stm, lineno);
-		} else if (stm instanceof ACasesStm)
-		{
-			return ACasesStmAssistantInterpreter.findExpression((ACasesStm) stm, lineno);
-		} else if (stm instanceof ACyclesStm)
-		{
-			return ACyclesStmAssistantInterpreter.findExpression((ACyclesStm) stm, lineno);
-		} else if (stm instanceof ADurationStm)
-		{
-			return ADurationStmAssistantInterpreter.findExpression((ADurationStm) stm, lineno);
-		} else if (stm instanceof AElseIfStm)
-		{
-			return AElseIfStmAssistantInterpreter.findExpression((AElseIfStm) stm, lineno);
-		} else if (stm instanceof AExitStm)
-		{
-			return AExitStmAssistantInterpreter.findExpression((AExitStm) stm, lineno);
-		} else if (stm instanceof AForAllStm)
-		{
-			return AForAllStmAssistantInterpreter.findExpression((AForAllStm) stm, lineno);
-		} else if (stm instanceof AForIndexStm)
-		{
-			return AForIndexStmAssistantInterpreter.findExpression((AForIndexStm) stm, lineno);
-		} else if (stm instanceof AForPatternBindStm)
-		{
-			return AForPatternBindStmAssitantInterpreter.findExpression((AForPatternBindStm) stm, lineno);
-		} else if (stm instanceof AIfStm)
-		{
-			return AIfStmAssistantInterpreter.findExpression((AIfStm) stm, lineno);
-		} else if (stm instanceof ALetBeStStm)
-		{
-			return ALetBeStStmAssistantInterpreter.findExpression((ALetBeStStm) stm, lineno);
-		} else if (stm instanceof ALetStm)
-		{
-			return SLetDefStmAssistantInterpreter.findExpression((ALetStm) stm, lineno);
-		} else if (stm instanceof AReturnStm)
-		{
-			return AReturnStmAssistantInterpreter.findExpression((AReturnStm) stm, lineno);
-		} else if (stm instanceof SSimpleBlockStm)
-		{
-			return SSimpleBlockStmAssistantInterpreter.findExpression((SSimpleBlockStm) stm, lineno);
-		} else if (stm instanceof AStartStm)
-		{
-			return AStartStmAssistantInterpreter.findExpression((AStartStm) stm, lineno);
-		} else if (stm instanceof AStopStm)
-		{
-			return AStartStmAssistantInterpreter.findExpression((AStopStm) stm, lineno);
-		} else if (stm instanceof ATixeStm)
-		{
-			return ATixeStmAssistantInterpreter.findExpression((ATixeStm) stm, lineno);
-		} else if (stm instanceof ATrapStm)
-		{
-			return ATrapStmAssistantInterpreter.findExpression((ATrapStm) stm, lineno);
-		} else if (stm instanceof AWhileStm)
-		{
-			return AWhileStmAssistantInterpreter.findExpression((AWhileStm) stm, lineno);
-		} else
-		{
-			return null;
+			return null; // Most have none
 		}
+//		if (stm instanceof AAlwaysStm)
+//		{
+//			return AAlwaysStmAssistantInterpreter.findExpression((AAlwaysStm) stm, lineno);
+//		} else if (stm instanceof AAssignmentStm)
+//		{
+//			return AAssignmentStmAssistantInterpreter.findExpression((AAssignmentStm) stm, lineno);
+//		} else if (stm instanceof AAtomicStm)
+//		{
+//			return AAtomicStmAssistantInterpreter.findExpression((AAtomicStm) stm, lineno);
+//		} else if (stm instanceof ACallStm)
+//		{
+//			return ACallStmAssistantInterpreter.findExpression((ACallStm) stm, lineno);
+//		} else if (stm instanceof ACallObjectStm)
+//		{
+//			return ACallObjectStatementAssistantInterpreter.findExpression((ACallObjectStm) stm, lineno);
+//		} else if (stm instanceof ACasesStm)
+//		{
+//			return ACasesStmAssistantInterpreter.findExpression((ACasesStm) stm, lineno);
+//		} else if (stm instanceof ACyclesStm)
+//		{
+//			return ACyclesStmAssistantInterpreter.findExpression((ACyclesStm) stm, lineno);
+//		} else if (stm instanceof ADurationStm)
+//		{
+//			return ADurationStmAssistantInterpreter.findExpression((ADurationStm) stm, lineno);
+//		} else if (stm instanceof AElseIfStm)
+//		{
+//			return AElseIfStmAssistantInterpreter.findExpression((AElseIfStm) stm, lineno);
+//		} else if (stm instanceof AExitStm)
+//		{
+//			return AExitStmAssistantInterpreter.findExpression((AExitStm) stm, lineno);
+//		} else if (stm instanceof AForAllStm)
+//		{
+//			return AForAllStmAssistantInterpreter.findExpression((AForAllStm) stm, lineno);
+//		} else if (stm instanceof AForIndexStm)
+//		{
+//			return AForIndexStmAssistantInterpreter.findExpression((AForIndexStm) stm, lineno);
+//		} else if (stm instanceof AForPatternBindStm)
+//		{
+//			return AForPatternBindStmAssitantInterpreter.findExpression((AForPatternBindStm) stm, lineno);
+//		} else if (stm instanceof AIfStm)
+//		{
+//			return AIfStmAssistantInterpreter.findExpression((AIfStm) stm, lineno);
+//		} else if (stm instanceof ALetBeStStm)
+//		{
+//			return ALetBeStStmAssistantInterpreter.findExpression((ALetBeStStm) stm, lineno);
+//		} else if (stm instanceof ALetStm)
+//		{
+//			return SLetDefStmAssistantInterpreter.findExpression((ALetStm) stm, lineno);
+//		} else if (stm instanceof AReturnStm)
+//		{
+//			return AReturnStmAssistantInterpreter.findExpression((AReturnStm) stm, lineno);
+//		} else if (stm instanceof SSimpleBlockStm)
+//		{
+//			return SSimpleBlockStmAssistantInterpreter.findExpression((SSimpleBlockStm) stm, lineno);
+//		} else if (stm instanceof AStartStm)
+//		{
+//			return AStartStmAssistantInterpreter.findExpression((AStartStm) stm, lineno);
+//		} else if (stm instanceof AStopStm)
+//		{
+//			return AStartStmAssistantInterpreter.findExpression((AStopStm) stm, lineno);
+//		} else if (stm instanceof ATixeStm)
+//		{
+//			return ATixeStmAssistantInterpreter.findExpression((ATixeStm) stm, lineno);
+//		} else if (stm instanceof ATrapStm)
+//		{
+//			return ATrapStmAssistantInterpreter.findExpression((ATrapStm) stm, lineno);
+//		} else if (stm instanceof AWhileStm)
+//		{
+//			return AWhileStmAssistantInterpreter.findExpression((AWhileStm) stm, lineno);
+//		} else
+//		{
+//			return null;
+//		}
 	}
 
 	/**

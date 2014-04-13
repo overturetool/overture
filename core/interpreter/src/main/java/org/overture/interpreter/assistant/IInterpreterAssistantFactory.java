@@ -517,4 +517,6 @@ public interface IInterpreterAssistantFactory extends
 	
 	IQuestionAnswer<Context, TraceNode> getTermTraceExpander();
 	
+	IQuestionAnswer<Integer, PExp> getStatementExpressionFinder();
+	
 }
