@@ -111,6 +111,11 @@ public class JavaFormat
 		this.mergeVisitor = new MergeVisitor(JavaCodeGen.JAVA_TEMPLATE_STRUCTURE, JavaCodeGen.constructTemplateCallables(this, OoAstAnalysis.class, varPrefixes));
 	}
 	
+	public void init()
+	{
+		mergeVisitor.dropMergeErrors();
+	}
+	
 	public void setClasses(List<AClassDeclCG> classes)
 	{
 		this.classes = classes != null ? classes : new LinkedList<AClassDeclCG>();

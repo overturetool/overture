@@ -28,6 +28,7 @@ import org.overture.codegen.constants.IOoAstConstants;
 import org.overture.codegen.constants.TempVarPrefixes;
 import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.logging.Logger;
+import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateCallable;
 import org.overture.codegen.merging.TemplateStructure;
 import org.overture.codegen.ooast.ClassDeclStatus;
@@ -112,9 +113,10 @@ public class JavaCodeGen
 
 			AInterfaceDeclCG quotesInterface = generator.getQuotes();
 
-			if (quotesInterface.getFields().size() == 0)
+			if (quotesInterface.getFields().isEmpty())
 				return null; // Nothing to generate
 
+			javaFormat.init();
 			quotesInterface.apply(javaFormat.getMergeVisitor(), writer);
 			String code = writer.toString();
 
@@ -167,21 +169,36 @@ public class JavaCodeGen
 			{
 				AClassDeclCG classCg = status.getClassCg();
 
+				String className = status.getClassName();
 				String formattedJavaCode = "";
-
+				
 				if (status.canBeGenerated())
 				{
 					TransformationAssistantCG transformationAssistant = new TransformationAssistantCG(ooAstInfo, varPrefixes);
 					ILanguageIterator langIterator = new JavaLanguageIterator(transformationAssistant, ooAstInfo.getTempVarNameGen(), varPrefixes);
 					
 					classCg.apply(new TransformationVisitor(ooAstInfo, varPrefixes, transformationAssistant, langIterator));
-					classCg.apply(javaFormat.getMergeVisitor(), writer);
-					String code = writer.toString();
 					
-					formattedJavaCode = JavaCodeGenUtil.formatJavaCode(code);
+					javaFormat.init();
+					MergeVisitor mergeVisitor = javaFormat.getMergeVisitor();
+					classCg.apply(mergeVisitor, writer);
+					
+					if(mergeVisitor.hasMergeErrors())
+					{
+						generated.add(new GeneratedModule(className, mergeVisitor.getMergeErrors()));
+					}
+					else
+					{
+						String code = writer.toString();
+						formattedJavaCode = JavaCodeGenUtil.formatJavaCode(code);
+						
+						generated.add(new GeneratedModule(className, formattedJavaCode));
+					}
 				}
-				
-				generated.add(new GeneratedModule(status.getClassName(), formattedJavaCode, status.getUnsupportedNodes()));
+				else
+				{
+					generated.add(new GeneratedModule(className, status.getUnsupportedNodes()));					
+				}
 
 			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 			{
@@ -221,16 +238,26 @@ public class JavaCodeGen
 		{
 			PExpCG expCg = expStatus.getExpCg();
 
-			if (expCg != null)
+			if (expStatus.canBeGenerated())
 			{
-				expCg.apply(javaFormat.getMergeVisitor(), writer);
-				String code = writer.toString();
-
-				return new Generated(code, expStatus.getUnsupportedNodes());
+				javaFormat.init();
+				MergeVisitor mergeVisitor = javaFormat.getMergeVisitor();
+				expCg.apply(mergeVisitor, writer);
+				
+				if(mergeVisitor.hasMergeErrors())
+				{
+					return new Generated(mergeVisitor.getMergeErrors());
+				}
+				else
+				{
+					String code = writer.toString();
+					
+					return new Generated(code); 
+				}
 			} else
 			{
 
-				return new Generated("", expStatus.getUnsupportedNodes());
+				return new Generated(expStatus.getUnsupportedNodes());
 			}
 
 		} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
@@ -244,7 +271,7 @@ public class JavaCodeGen
 
 	public void generateJavaSourceFile(File file, GeneratedModule generatedModule)
 	{
-		if(generatedModule != null && generatedModule.canBeGenerated())
+		if(generatedModule != null && generatedModule.canBeGenerated() && !generatedModule.hasMergeErrors())
 		{
 			JavaCodeGenUtil.saveJavaClass(file, generatedModule.getName() + IJavaCodeGenConstants.JAVA_FILE_EXTENSION, generatedModule.getContent());
 		}
