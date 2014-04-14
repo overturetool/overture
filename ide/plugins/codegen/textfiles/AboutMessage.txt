@@ -9,19 +9,17 @@ output in the generated/java folder.
 Code generation runtime:
 
 The generated Java code depends on a runtime/library to represent VDM
-collections, VDM types etc. The binaries, along with the attached source
-code, can be downloaded from
-<link>
+collections, VDM types etc. The source code for the runtime can be found
+in the Overture Github repository:
 
-Alternative you can checkout the sources for the code generator runtime from
 <overture repository>\core\codegen-runtime
 
 Try to code generate your own VDM++ models:
 
-Alternatively, the VDM++ to Java code generator can be tried on some
-of the VDM++ models bundled with Overture - simply import them from the
-Overture examples. The code generator is confirmed to work with the
-AlarmPP and CashDispenserPP models.
+The VDM++ to Java code generator can be tried on some of the VDM++ models
+bundled with Overture - simply import them from the Overture examples.
+The code generator is confirmed to work with the AlarmPP and 
+CashDispenserPP models.
  
 Please report bugs, problems, and other issues with the tool at
 https://github.com/overturetool/overture/issues
