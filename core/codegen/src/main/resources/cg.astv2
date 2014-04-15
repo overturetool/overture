@@ -167,6 +167,7 @@ stmCG {-> package='org.overture.codegen.cgast.statements'}
            |	{forLoop} [init]:declCG.#Local.var [cond]:expCG [inc]:expCG [body]:stmCG
            |	{increment} [var]:expCG
            |	{decrement} [var]:expCG
+           |	{raiseError} [error]:expCG.#RuntimeError
            ;
            
 letBeStCG {-> package='org.overture.codegen.cgast.utils'}
@@ -190,7 +191,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{fieldNumber} [field]:java_Long [tuple]:expCG
     |	{ternaryIf} [condition]:expCG [trueValue]:expCG [falseValue]:expCG
     |   {maplet}  [left]:expCG [right]:expCG
-    |	{letBeSt} [header]:letBeStCG.header [value]:expCG [var]:java_String
+    |	{letBeSt} [header]:letBeStCG.header [value]:expCG
     |	#Seq
     |	#Set
     |	#Map
@@ -201,6 +202,11 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{postInc} [exp]:expCG
     |	{postDec} [exp]:expCG
     |	{deRef} [exp]:expCG //For pointer dereference
+    |	#RuntimeError
+    ;
+
+#RuntimeError {-> package='org.overture.codegen.cgast.expressions'}
+    =   {LetBeStNoBinding}
     ;
 
 #Var {-> package='org.overture.codegen.cgast.expressions'}
@@ -297,20 +303,20 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     
 #Seq {-> package='org.overture.codegen.cgast.expressions'}
 	= {enum} [members]:expCG*// (types):typeCG*
-	| {comp} [first]:expCG [id]:patternCG.identifier [set]:expCG [predicate]:expCG [var]:java_String
+	| {comp} [first]:expCG [id]:patternCG.identifier [set]:expCG [predicate]:expCG
 	//=   {seqComp} [first]:exp [setBind]:bind.set [predicate]:exp
 	//|   {seqEnum} [members]:exp* (types):type*
 	;
 
 #Set {-> package='org.overture.codegen.cgast.expressions'}
 	= {enum} [members]:expCG*
-	| {comp} [first]:expCG [bindings]:multipleBindCG.set* [predicate]:expCG [var]:java_String //In the Overture AST bindings are of type multipleBind* as it also allows type binds.
+	| {comp} [first]:expCG [bindings]:multipleBindCG.set* [predicate]:expCG//In the Overture AST bindings are of type multipleBind* as it also allows type binds.
 	| {range} [first]:expCG [last]:expCG
 	;
 
 #Map {-> package='org.overture.codegen.cgast.expressions'}
 	= {enum} [members]:expCG.maplet*
-	| {comp} [first]:expCG.maplet [bindings]:multipleBindCG.set* [predicate]:expCG [var]:java_String
+	| {comp} [first]:expCG.maplet [bindings]:multipleBindCG.set* [predicate]:expCG
 	;
 
 typeCG {-> package='org.overture.codegen.cgast.types'}
@@ -331,6 +337,7 @@ typeCG {-> package='org.overture.codegen.cgast.types'}
     |	#set
     |	#seq
     |	#basicTypeWrappers
+    |	{error}
     ;
     
 externalType {-> package='org.overture.codegen.cgast.utils'}
@@ -387,7 +394,7 @@ Aspect Declaration
 	;
 	
 %expCG->#Quantifier //The Overture AST uses a multiplebind
-	= [bindList]:multipleBindCG.set* [predicate]:expCG [var]:java_String
+	= [bindList]:multipleBindCG.set* [predicate]:expCG
 	;
 	
 //TODO: Consider moving seq, set and map up to typeCG	

@@ -22,34 +22,6 @@ import org.overture.config.Settings;
 
 public class JavaCodeGenMain
 {
-	private static void printUnsupportedNodes(Set<NodeInfo> unsupportedNodes)
-	{
-		AssistantManager assistantManager = new AssistantManager();
-		LocationAssistantCG locationAssistant = assistantManager.getLocationAssistant();
-		
-		List<NodeInfo> nodesSorted = assistantManager.getLocationAssistant().getNodesLocationSorted(unsupportedNodes);
-		
-		Logger.getLog().println("Following constructs are not supported: ");
-		
-		for (NodeInfo nodeInfo : nodesSorted)
-		{
-			Logger.getLog().print(nodeInfo.getNode().toString());
-			
-			ILexLocation location = locationAssistant.findLocation(nodeInfo.getNode());
-			
-			Logger.getLog().print(location != null ? " at [line, pos] = [" + location.getStartLine() + ", " + location.getStartPos() + "]": "");
-			
-			String reason = nodeInfo.getReason();
-			
-			if(reason != null)
-			{
-				Logger.getLog().print(". Reason: " + reason);
-			}
-			
-			Logger.getLog().println("");
-		}
-	}
-	
 	public static void main(String[] args)
 	{
 		Settings.release = Release.VDM_10;
@@ -75,14 +47,20 @@ public class JavaCodeGenMain
 				{
 					Logger.getLog().println("**********");
 					
-					if(generatedClass.canBeGenerated())
+					if(generatedClass.hasMergeErrors())
 					{
-						Logger.getLog().println(generatedClass.getContent());
+						Logger.getLog().println(String.format("Class %s could not be merged. Following merge errors were found:", generatedClass.getName()));
+
+						printMergeErrors(generatedClass.getMergeErrors());
 					}
-					else
+					else if(!generatedClass.canBeGenerated())
 					{
 						Logger.getLog().println("Could not generate class: " + generatedClass.getName() + "\n");
 						printUnsupportedNodes(generatedClass.getUnsupportedNodes());
+					}
+					else
+					{
+						Logger.getLog().println(generatedClass.getContent());
 					}
 					
 					Logger.getLog().println("\n");
@@ -123,18 +101,61 @@ public class JavaCodeGenMain
 			{
 				Generated generated = JavaCodeGenUtil.generateJavaFromExp(args[1]);
 				
-				if(generated.canBeGenerated())
-					Logger.getLog().println(generated.getContent());
-				else
+				if(generated.hasMergeErrors())
+				{
+					Logger.getLog().println(String.format("VDM expression '%s' could not be merged. Following merge errors were found:", args[1]));
+					printMergeErrors(generated.getMergeErrors());
+				}
+				else if(!generated.canBeGenerated())
 				{
 					Logger.getLog().println("Could not generate VDM expression: " + args[1]);
 					printUnsupportedNodes(generated.getUnsupportedNodes());
+				}
+				else
+				{
+					Logger.getLog().println(generated.getContent().trim());
 				}
 				
 			} catch (AnalysisException e)
 			{
 				Logger.getLog().println(e.getMessage());
 			}
+		}
+	}
+
+	private static void printMergeErrors(List<Exception> mergeErrors)
+	{
+		for(Exception error : mergeErrors)
+		{
+			Logger.getLog().println(error.toString());
+		}
+	}
+	
+	private static void printUnsupportedNodes(Set<NodeInfo> unsupportedNodes)
+	{
+		AssistantManager assistantManager = new AssistantManager();
+		LocationAssistantCG locationAssistant = assistantManager.getLocationAssistant();
+		
+		List<NodeInfo> nodesSorted = assistantManager.getLocationAssistant().getNodesLocationSorted(unsupportedNodes);
+		
+		Logger.getLog().println("Following constructs are not supported: ");
+		
+		for (NodeInfo nodeInfo : nodesSorted)
+		{
+			Logger.getLog().print(nodeInfo.getNode().toString());
+			
+			ILexLocation location = locationAssistant.findLocation(nodeInfo.getNode());
+			
+			Logger.getLog().print(location != null ? " at [line, pos] = [" + location.getStartLine() + ", " + location.getStartPos() + "]": "");
+			
+			String reason = nodeInfo.getReason();
+			
+			if(reason != null)
+			{
+				Logger.getLog().print(". Reason: " + reason);
+			}
+			
+			Logger.getLog().println("");
 		}
 	}
 }

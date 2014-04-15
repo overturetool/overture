@@ -23,11 +23,12 @@ public class Entry {
             Number x = ((Number) iterator_1.next());
 
             if (pick()) {
-                mapCompResult_1.put(x, x.longValue() * 2L);
+                mapCompResult_1 = MapUtil.munion(mapCompResult_1.clone(),
+                        MapUtil.map(new Maplet(x, x.longValue() * 2L)));
             }
         }
 
-        return mapCompResult_1;
+        return mapCompResult_1.clone();
     }
 
     public static Number Test() {

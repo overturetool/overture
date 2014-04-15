@@ -76,15 +76,20 @@ import org.overture.codegen.cgast.types.SBasicTypeCGBase;
 import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
-import org.overture.codegen.constants.IJavaCodeGenConstants;
 import org.overture.codegen.constants.TempVarPrefixes;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.ooast.OoAstAnalysis;
-import org.overture.codegen.utils.TempVarNameGen;
+import org.overture.codegen.utils.ITempVarGen;
 
 public class JavaFormat
 {
 	private static final String JAVA_NUMBER = "Number";
+	public static final String ADD_ELEMENT_TO_MAP = "put";
+	
+	public static final String UTILS_FILE = "Utils";
+	public static final String SEQ_UTIL_FILE = "SeqUtil";
+	public static final String SET_UTIL_FILE = "SetUtil";
+	public static final String MAP_UTIL_FILE = "MapUtil";
 	
 	public String getJavaNumber()
 	{
@@ -95,22 +100,38 @@ public class JavaFormat
 	private static final String JAVA_INT = "int";
 	
 	private List<AClassDeclCG> classes;
-	private TempVarPrefixes varPrefixes;
-	private TempVarNameGen tempVarNameGen;
+	private ITempVarGen tempVarNameGen;
 	private AssistantManager assistantManager;
+	private MergeVisitor mergeVisitor;
 	
-	public JavaFormat(List<AClassDeclCG> classes, TempVarPrefixes varPrefixes,TempVarNameGen tempVarNameGen, AssistantManager assistantManager)
+	public JavaFormat(TempVarPrefixes varPrefixes,ITempVarGen tempVarNameGen, AssistantManager assistantManager)
 	{
-		this.classes = classes;
-		this.varPrefixes = varPrefixes;
 		this.tempVarNameGen = tempVarNameGen;
 		this.assistantManager = assistantManager;
+		this.mergeVisitor = new MergeVisitor(JavaCodeGen.JAVA_TEMPLATE_STRUCTURE, JavaCodeGen.constructTemplateCallables(this, OoAstAnalysis.class, varPrefixes));
 	}
 	
-	public JavaFormat()
+	public void init()
 	{
-		this.tempVarNameGen = new TempVarNameGen();
-		this.assistantManager = new AssistantManager();
+		mergeVisitor.dropMergeErrors();
+	}
+	
+	public void setClasses(List<AClassDeclCG> classes)
+	{
+		this.classes = classes != null ? classes : new LinkedList<AClassDeclCG>();
+	}
+	
+	public void clearClasses()
+	{
+		if(classes != null)
+			classes.clear();
+		else
+			classes = new LinkedList<AClassDeclCG>();
+	}
+	
+	public MergeVisitor getMergeVisitor()
+	{
+		return mergeVisitor;
 	}
 	
 	public String format(INode node) throws AnalysisException
@@ -125,8 +146,6 @@ public class JavaFormat
 	
 	private String format(INode node, boolean ignoreContext) throws AnalysisException
 	{
-		MergeVisitor mergeVisitor = new MergeVisitor(JavaCodeGen.JAVA_TEMPLATE_STRUCTURE, JavaCodeGen.constructTemplateCallables(this, OoAstAnalysis.class, varPrefixes));
-		
 		StringWriter writer = new StringWriter();
 		node.apply(mergeVisitor, writer);
 
@@ -173,7 +192,7 @@ public class JavaFormat
 		String rngValStr = format(rngValue);
 		
 		//e.g. counters.put("c1", 4);
-		return stateDesignatorStr + "." + IJavaCodeGenConstants.ADD_ELEMENT_TO_MAP + "(" + domValStr + ", " + rngValStr + ")";
+		return stateDesignatorStr + "." + ADD_ELEMENT_TO_MAP + "(" + domValStr + ", " + rngValStr + ")";
 	}
 	
 	private static String getNumberDereference(INode node, boolean ignoreContext)
@@ -498,17 +517,17 @@ public class JavaFormat
 	
 	private String handleSetComparison(AEqualsBinaryExpCG node) throws AnalysisException
 	{
-		return handleCollectionComparison(node, IJavaCodeGenConstants.SET_UTIL_FILE);
+		return handleCollectionComparison(node, SET_UTIL_FILE);
 	}
 	
 	private String handleSeqComparison(SBinaryExpCGBase node) throws AnalysisException
 	{
-		return handleCollectionComparison(node, IJavaCodeGenConstants.SEQ_UTIL_FILE);
+		return handleCollectionComparison(node, SEQ_UTIL_FILE);
 	}
 	
 	private String handleMapComparison(SBinaryExpCGBase node) throws AnalysisException
 	{
-		return handleCollectionComparison(node, IJavaCodeGenConstants.MAP_UTIL_FILE);
+		return handleCollectionComparison(node, MAP_UTIL_FILE);
 	}
 	
 	private String handleCollectionComparison(SBinaryExpCGBase node, String className) throws AnalysisException
@@ -788,7 +807,7 @@ public class JavaFormat
 		
 		AClassTypeCG classType = explicitVar.getClassType();
 		
-		return classType != null && classType.getName().equals(IJavaCodeGenConstants.UTILS_FILE);
+		return classType != null && classType.getName().equals(UTILS_FILE);
 	}
 	
 	private boolean usesStructuralEquivalence(PTypeCG type)
