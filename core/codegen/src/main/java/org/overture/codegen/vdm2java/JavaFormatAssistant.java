@@ -27,7 +27,6 @@ import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
-import org.overture.codegen.constants.IJavaCodeGenConstants;
 
 public class JavaFormatAssistant
 {
@@ -127,7 +126,7 @@ public class JavaFormatAssistant
 		ACallStmCG call = new ACallStmCG();
 		
 		AClassTypeCG classType = new AClassTypeCG();
-		classType.setName(IJavaCodeGenConstants.UTILS_FILE);
+		classType.setName(JavaFormat.UTILS_FILE);
 		
 		AIdentifierVarExpCG root = new AIdentifierVarExpCG();
 		root.setType(classType);
@@ -195,7 +194,7 @@ public class JavaFormatAssistant
 		AExplicitVarExpCG member = new AExplicitVarExpCG();
 		member.setType(returnType.clone());
 		AClassTypeCG classType = new AClassTypeCG();
-		classType.setName(IJavaCodeGenConstants.UTILS_FILE);
+		classType.setName(JavaFormat.UTILS_FILE);
 		member.setClassType(classType);
 		member.setName(memberName);
 		AApplyExpCG call = new AApplyExpCG();
