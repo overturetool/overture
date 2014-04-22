@@ -1051,12 +1051,17 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		applyExp.setType(typeCg);
 		applyExp.setRoot(rootCg);
 
-		LinkedList<PExp> applyArgs = node.getArgs();
-
-		for (int i = 0; i < applyArgs.size(); i++)
+		for (PExp arg : node.getArgs())
 		{
-			PExpCG arg = applyArgs.get(i).apply(question.getExpVisitor(), question);
-			applyExp.getArgs().add(arg);
+			PExpCG argCg = arg.apply(question.getExpVisitor(), question);
+			
+			if(argCg == null)
+			{
+				question.addUnsupportedNode(node, "Apply expression is not supported for the argument: " + arg);
+				return null;
+			}
+			
+			applyExp.getArgs().add(argCg);
 		}
 
 		return applyExp;
