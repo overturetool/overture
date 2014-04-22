@@ -1,10 +1,10 @@
-module quote0001
-definitions
+--module quote0001
+--definitions
 
-types
-  countries = <France> | <England> } <Denmark>;
+--types
+--  countries = <France> | <England> } <Denmark>;
 
 operations
   quote1() r : bool
   post r = (<France> = <England>)
-end quote0001
+--end quote0001
