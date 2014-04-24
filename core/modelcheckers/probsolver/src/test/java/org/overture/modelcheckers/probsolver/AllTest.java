@@ -2,9 +2,12 @@ package org.overture.modelcheckers.probsolver;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -39,24 +42,43 @@ public abstract class AllTest extends ProbConverterTestBase
 	//
 	// return tests;
 	// }
+	
+	final static String[] EMPTY_FILTER = new String[]{};
 
 	protected static Collection<Object[]> getTests(File root)
 	{
+		return getTests(root, EMPTY_FILTER);
+	}
+
+	protected static Collection<Object[]> getTests(File root, String... filter)
+	{
+
+		Set<String> filterSet =new HashSet<String>( Arrays.asList(filter));
 		Collection<Object[]> tests = new LinkedList<Object[]>();
 		if (root.isFile())
 		{
-			if (root.getName().endsWith(".vdmsl"))
+			final String fn = root.getName();
+
+			if (fn.indexOf('.') != -1
+					&& filterSet.contains(fn.substring(0, fn.indexOf('.'))))
 			{
-				tests.addAll(extractSlTests(root));
-			} else if (root.getName().endsWith(".vdmpp"))
+				// skip
+			} else
 			{
-				tests.addAll(extractPpTests(root));
+
+				if (fn.endsWith(".vdmsl"))
+				{
+					tests.addAll(extractSlTests(root));
+				} else if (root.getName().endsWith(".vdmpp"))
+				{
+					tests.addAll(extractPpTests(root));
+				}
 			}
 		} else
 		{
 			for (File f : root.listFiles())
 			{
-				tests.addAll(getTests(f));
+				tests.addAll(getTests(f,filter));
 			}
 		}
 		return tests;

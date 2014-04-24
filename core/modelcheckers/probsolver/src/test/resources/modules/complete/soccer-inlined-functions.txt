@@ -50,7 +50,6 @@ ext wr on_field_players : set of player
 CHANGE_GOALKEEPER (p : player)
 ext wr goalkeeper : player
     rd on_field_players : set of player
-    rd potential_substitutes : set of player
   pre p in set on_field_players
   post goalkeeper = p
       ;
@@ -112,27 +111,6 @@ pre (pl = goalkeeper =>
           pre_SUBSTITUTION_FP(pl,subs,
                               mk_R_Book(on_field_players,potential_substitutes,
                                         goalkeeper,nb_gk_subs,nb_fp_subs)))
-;
-/*
-test:()==> R_Book
-test() == let red=1, out1=10, in1=12, out2=2, in2=13, out3=3, in3=14 in (
-  RED_CARD(red);
-  SUBSTITUTION(out1, in1);
-  SUBSTITUTION(out2, in2);
-  SUBSTITUTION(out3, in3);
-  return mk_R_Book(on_field_players, potential_substitutes, goalkeeper, nb_gk_subs, nb_fp_subs);
-);
-*/
-test:()==> R_Book
-test() == let red=1, gp=10, out1=10, in1=12, out2=2, in2=13, out3=3, in3=14 in (
-  RED_CARD(red);
-  CHANGE_GOALKEEPER(gp);
-  SUBSTITUTION(out1, in1);
-  SUBSTITUTION(out2, in2);
-  SUBSTITUTION(out3, in3);
-  return mk_R_Book(on_field_players, potential_substitutes, goalkeeper, nb_gk_subs, nb_fp_subs);
-);
-
 end SOCCER_IMPL
 
 
@@ -174,7 +152,7 @@ end SOCCER_IMPL
 --SUBSTITUTION(3,14)
 --\end{verbatim}
 
-/********************************************************************
+
 module SOCCER_EXPL
 
 exports all
@@ -300,7 +278,7 @@ pre (pl = goalkeeper =>
 
 end SOCCER_EXPL
 
-********************************************************************/
+
 
 --\section{Execution of the explicit specification}\label{VDMexe}
 --
