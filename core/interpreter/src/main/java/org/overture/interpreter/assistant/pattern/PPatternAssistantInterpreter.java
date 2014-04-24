@@ -28,7 +28,7 @@ public class PPatternAssistantInterpreter extends PPatternAssistantTC
 	/** A value for getLength meaning "any length" */
 	public static int ANY = -1;
 
-	public NameValuePairList getNamedValues(PPattern p, Value expval,
+	public static NameValuePairList getNamedValues(PPattern p, Value expval,
 			Context ctxt) throws AnalysisException
 	{
 		List<AIdentifierPattern> ids = af.createPPatternAssistant().findIdentifiers(p);
@@ -58,7 +58,7 @@ public class PPatternAssistantInterpreter extends PPatternAssistantTC
 		return all.get(0); // loose choice here!
 	}
 
-	public List<AIdentifierPattern> findIdentifiers(PPattern pattern)
+	public static List<AIdentifierPattern> findIdentifiers(PPattern pattern)
 	{
 		try
 		{
@@ -100,7 +100,7 @@ public class PPatternAssistantInterpreter extends PPatternAssistantTC
 		// }
 	}
 
-	public List<NameValuePairList> getAllNamedValues(PPattern pattern,
+	public static List<NameValuePairList> getAllNamedValues(PPattern pattern,
 			Value expval, Context ctxt) throws AnalysisException
 	{
 		
@@ -186,7 +186,7 @@ public class PPatternAssistantInterpreter extends PPatternAssistantTC
 	 * @return The "length" of the pattern (eg. sequence and set patterns).
 	 */
 
-	public int getLength(PPattern pattern)
+	public static int getLength(PPattern pattern)
 	{
 		try
 		{
@@ -232,7 +232,7 @@ public class PPatternAssistantInterpreter extends PPatternAssistantTC
 	 * @return True if the pattern has constraints, such that matching values should be permuted, where necessary, to
 	 *         find a match.
 	 */
-	public boolean isConstrained(PPattern pattern)
+	public static boolean isConstrained(PPattern pattern)
 	{
 		try
 		{
