@@ -180,7 +180,7 @@ public class DefinitionTypeResolver extends
 		if (node.getResult() != null)
 		{
 			af.createAPatternTypePairAssistant().typeResolve(node.getResult(), question.rootVisitor, question.question);
-			//node.getResult().apply(af.getPatternResolver(), question);
+			//node.getResult().apply(af.getPatternResolver(), question); //FIXME: This does work. I cannot remove the method for the assistant
 		}
 
 		if (question.question.env.isVDMPP())
@@ -226,6 +226,7 @@ public class DefinitionTypeResolver extends
 		if (node.getResult() != null)
 		{
 			af.createAPatternTypePairAssistant().typeResolve(node.getResult(), question.rootVisitor, question.question);
+			
 		}
 
 		if (question.question.env.isVDMPP())

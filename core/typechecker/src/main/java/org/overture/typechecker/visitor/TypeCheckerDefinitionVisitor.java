@@ -74,10 +74,6 @@ import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.TypeComparator;
-import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AExplicitOperationDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.util.HelpLexNameToken;
 import org.overture.typechecker.utilities.DefinitionTypeResolver;
 

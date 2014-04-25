@@ -518,12 +518,9 @@ public class PTypeResolver extends
 	public PType caseAUnresolvedType(AUnresolvedType type, Newquestion question)
 			throws AnalysisException
 	{
-//<<<<<<< HEAD
-//		//return AUnresolvedTypeAssistantTC.typeResolve(type, question.root, question.rootVisitor, question.question);
-//		PType deref = af.createAUnresolvedTypeAssistant().dereference(type, question.question.env, question.root);
-//=======
+
 		PType deref = dereference(type, question.question.env, question.root, question.question.assistantFactory);
-//>>>>>>> origin/pvj/main
+
 
 		if (!(deref instanceof AClassType))
 		{
@@ -589,6 +586,13 @@ public class PTypeResolver extends
 		r.setDefinitions(tempDefs);
 		return r;
 	}
+	
+//	@Override
+//	public PType caseATypeBind(ATypeBind type, Newquestion question)
+//			throws AnalysisException
+//	{
+//		type.setType(af.createPTypeAssistant().typeResolve(type.getType(), null, question.rootVisitor, question.question));
+//	}
 
 	@Override
 	public PType defaultPType(PType type, Newquestion question)

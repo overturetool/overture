@@ -1,18 +1,14 @@
 package org.overture.interpreter.assistant.pattern;
 
-import org.overture.ast.patterns.AMapUnionPattern;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.typechecker.assistant.pattern.AMapUnionPatternAssistantTC;
 
-public class AMapUnionPatternAssistantInterpreter extends
-		AMapUnionPatternAssistantTC
+public class AMapUnionPatternAssistantInterpreter 
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
 	public AMapUnionPatternAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		super(af);
 		this.af = af;
 	}
 
