@@ -16,57 +16,67 @@ public class MultipleWordsWordRule extends WordRule
 		super(detector, defaultToken, ignoreCase);
 	}
 
-	private StringBuffer fBuffer= new StringBuffer();
-	private boolean fIgnoreCase= false;
+	private StringBuffer fBuffer = new StringBuffer();
+	private boolean fIgnoreCase = false;
 
-
-	
-	public void addWord(String word, IToken token) {
+	@SuppressWarnings("unchecked")
+	public void addWord(String word, IToken token)
+	{
 		Assert.isNotNull(word);
 		Assert.isNotNull(token);
 
 		// If case-insensitive, convert to lower case before adding to the map
 		if (fIgnoreCase)
-			word= word.toLowerCase();
+		{
+			word = word.toLowerCase();
+		}
 		fWords.put(word, token);
 	}
-	
-	
+
 	/*
 	 * @see IRule#evaluate(ICharacterScanner)
 	 */
-	public IToken evaluate(ICharacterScanner scanner) {
-		int c= scanner.read();
-		if (c != ICharacterScanner.EOF && fDetector.isWordStart((char) c)) {
-			if (fColumn == UNDEFINED || (fColumn == scanner.getColumn() - 1)) {
+	public IToken evaluate(ICharacterScanner scanner)
+	{
+		int c = scanner.read();
+		if (c != ICharacterScanner.EOF && fDetector.isWordStart((char) c))
+		{
+			if (fColumn == UNDEFINED || fColumn == scanner.getColumn() - 1)
+			{
 
 				fBuffer.setLength(0);
-				do {
-					
-					//If the current character is a space we might already have a multiple words keyword
-					//This could be the case if we had read something like: "is subclass of"
-					if(c == ' ')
-					{		
-						IToken token= readToken();
+				do
+				{
+
+					// If the current character is a space we might already have a multiple words keyword
+					// This could be the case if we had read something like: "is subclass of"
+					if (c == ' ')
+					{
+						IToken token = readToken();
 
 						if (token != null)
+						{
 							return token;
+						}
 					}
-					
-					fBuffer.append((char) c);					
-					c= scanner.read();
-				} while (c != ICharacterScanner.EOF && fDetector.isWordPart((char) c));
+
+					fBuffer.append((char) c);
+					c = scanner.read();
+				} while (c != ICharacterScanner.EOF
+						&& fDetector.isWordPart((char) c));
 				scanner.unread();
 
-
-				
-				IToken token= readToken();
+				IToken token = readToken();
 
 				if (token != null)
+				{
 					return token;
+				}
 
 				if (fDefaultToken.isUndefined())
+				{
 					unreadBuffer(scanner);
+				}
 
 				return fDefaultToken;
 			}
@@ -75,23 +85,28 @@ public class MultipleWordsWordRule extends WordRule
 		scanner.unread();
 		return Token.UNDEFINED;
 	}
-	
-	protected void unreadBuffer(ICharacterScanner scanner) {
-		for (int i= fBuffer.length() - 1; i >= 0; i--)
+
+	protected void unreadBuffer(ICharacterScanner scanner)
+	{
+		for (int i = fBuffer.length() - 1; i >= 0; i--)
+		{
 			scanner.unread();
+		}
 	}
-	
+
 	private IToken readToken()
 	{
-		String buffer= fBuffer.toString();
+		String buffer = fBuffer.toString();
 		// If case-insensitive, convert to lower case before accessing the map
 		if (fIgnoreCase)
-			buffer= buffer.toLowerCase();
-		
-		//One or more spaces should simply be replaced by a single space
+		{
+			buffer = buffer.toLowerCase();
+		}
+
+		// One or more spaces should simply be replaced by a single space
 		buffer = buffer.replaceAll("\\s+", " ");
-		
-		return (IToken)fWords.get(buffer);
+
+		return (IToken) fWords.get(buffer);
 	}
 
 }
