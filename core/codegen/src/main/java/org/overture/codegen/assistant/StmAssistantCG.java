@@ -47,15 +47,6 @@ public class StmAssistantCG extends AssistantBase
 		return letBeStStm;
 	}
 	
-	public void generateArguments(List<PExp> args, List<PExpCG> generatedArgs, OoAstInfo question) throws AnalysisException
-	{
-		for (int i = 0; i < args.size(); i++)
-		{
-			PExpCG arg = args.get(i).apply(question.getExpVisitor(), question);
-			generatedArgs.add(arg);
-		}
-	}
-	
 	public void injectDeclAsStm(ABlockStmCG block, AVarLocalDeclCG decl)
 	{
 		ABlockStmCG wrappingBlock = new ABlockStmCG();

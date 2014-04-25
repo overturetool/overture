@@ -1,6 +1,7 @@
 package org.overture.codegen.visitor;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AAssignmentDefinition;
@@ -322,7 +323,20 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 		callStm.setClassType(classType);
 		callStm.setName(name);
 		callStm.setType(typeCg);
-		question.getStmAssistant().generateArguments(args, callStm.getArgs(), question);
+
+		for (int i = 0; i < args.size(); i++)
+		{
+			PExp arg = args.get(i);
+			PExpCG argCg = arg.apply(question.getExpVisitor(), question);
+			
+			if(argCg == null)
+			{
+				question.addUnsupportedNode(node, "A Call statement is not supported for the argument: " + arg);
+				return null;
+			}
+			
+			callStm.getArgs().add(argCg);
+		}
 		
 		return callStm;
 	}
@@ -352,7 +366,20 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 		callObject.setDesignator(objectDesignatorCg);
 		callObject.setClassName(classNameCg);
 		callObject.setFieldName(fieldNameCg);
-		question.getStmAssistant().generateArguments(args, callObject.getArgs(), question);
+		
+		for (int i = 0; i < args.size(); i++)
+		{
+			PExp arg = args.get(i);
+			PExpCG argCg = arg.apply(question.getExpVisitor(), question);
+			
+			if(argCg == null)
+			{
+				question.addUnsupportedNode(node, "A Call object statement is not supported for the argument: " + arg);
+				return null;
+			}
+			
+			callObject.getArgs().add(argCg);
+		}
 		
 		return callObject;
 	}
