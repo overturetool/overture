@@ -69,6 +69,7 @@ import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
+import org.overture.typechecker.utilities.NameFinder;
 
 public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 {
@@ -1175,7 +1176,8 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			}
 
 			memberName.setTypeQualifier(question.qualifiers);
-			PDefinition fdef = question.assistantFactory.createAClassTypeAssistant().findName(cls, memberName, question.scope);
+			PDefinition fdef = //cls.apply(question.assistantFactory.getNameFinder(), new NameFinder.Newquestion(memberName, question.scope));
+					question.assistantFactory.createAClassTypeAssistant().findName(cls, memberName, question.scope);
 
 			if (fdef == null)
 			{
@@ -1184,7 +1186,9 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 				List<PType> oldq = memberName.getTypeQualifier();
 				memberName.setTypeQualifier(null);
-				fdef = question.assistantFactory.createAClassTypeAssistant().findName(cls, memberName, question.scope);
+				fdef = 	//cls.apply(question.assistantFactory.getNameFinder(), new NameFinder.Newquestion(memberName, question.scope));
+						
+						question.assistantFactory.createAClassTypeAssistant().findName(cls, memberName, question.scope);
 				memberName.setTypeQualifier(oldq); // Just for error text!
 			}
 
@@ -2345,7 +2349,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		// node.getSetBind().setPattern(setBindPattern.clone());
 
 		if (PPatternAssistantTC.getVariableNames(node.getSetBind().getPattern()).size() != 1
-				|| !PTypeAssistantTC.isNumeric(question.assistantFactory.createPDefinitionAssistant().getType(def)))
+				|| !question.assistantFactory.createPTypeAssistant().isNumeric(question.assistantFactory.createPDefinitionAssistant().getType(def)))
 		{
 			TypeCheckerErrors.report(3155, "List comprehension must define one numeric bind variable", node.getLocation(), node);
 		}
@@ -2474,12 +2478,12 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		PType ftype = node.getFtype();
 		PType ltype = node.getLtype();
 
-		if (!PTypeAssistantTC.isNumeric(ftype))
+		if (!question.assistantFactory.createPTypeAssistant().isNumeric(ftype))
 		{
 			TypeCheckerErrors.report(3166, "Set range type must be an number", ftype.getLocation(), ftype);
 		}
 
-		if (!PTypeAssistantTC.isNumeric(ltype))
+		if (!question.assistantFactory.createPTypeAssistant().isNumeric(ltype))
 		{
 			TypeCheckerErrors.report(3167, "Set range type must be an number", ltype.getLocation(), ltype);
 		}
@@ -2800,7 +2804,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		question.qualifiers = null;
 		PType t = node.getExp().apply(THIS, question);
 
-		if (!PTypeAssistantTC.isNumeric(t))
+		if (!question.assistantFactory.createPTypeAssistant().isNumeric(t))
 		{
 			TypeCheckerErrors.report(3053, "Argument of 'abs' is not numeric", node.getLocation(), node);
 		} else if (t instanceof AIntNumericBasicType)
@@ -2943,7 +2947,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		PExp exp = node.getExp();
 		question.qualifiers = null;
 
-		if (!PTypeAssistantTC.isNumeric(exp.apply(THIS, question)))
+		if (!question.assistantFactory.createPTypeAssistant().isNumeric(exp.apply(THIS, question)))
 		{
 			TypeCheckerErrors.report(3096, "Argument to floor is not numeric", node.getLocation(), node);
 		}

@@ -13,8 +13,6 @@ import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.ABooleanConstExp;
-import org.overture.ast.expressions.AIntLiteralExp;
-import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.ASelfExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
@@ -728,12 +726,12 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		PType ft = node.getFrom().apply(THIS, question);
 		PType tt = node.getTo().apply(THIS, question);
 
-		if (!PTypeAssistantTC.isNumeric(ft))
+		if (!question.assistantFactory.createPTypeAssistant().isNumeric(ft))
 		{
 			TypeCheckerErrors.report(3220, "From type is not numeric", node.getLocation(), node);
 		}
 
-		if (!PTypeAssistantTC.isNumeric(tt))
+		if (!question.assistantFactory.createPTypeAssistant().isNumeric(tt))
 		{
 			TypeCheckerErrors.report(3221, "To type is not numeric", node.getLocation(), node);
 		}
@@ -742,7 +740,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		{
 			PType bt = node.getBy().apply(THIS, question);
 
-			if (!PTypeAssistantTC.isNumeric(bt))
+			if (!question.assistantFactory.createPTypeAssistant().isNumeric(bt))
 			{
 				TypeCheckerErrors.report(3222, "By type is not numeric", node.getLocation(), node);
 			}
@@ -1061,7 +1059,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			{
 				PType type = arg.apply(THIS, question);
 
-				if (!PTypeAssistantTC.isNumeric(type))
+				if (!question.assistantFactory.createPTypeAssistant().isNumeric(type))
 				{
 					TypeCheckerErrors.report(3316, "Expecting number in periodic argument", arg.getLocation(), arg);
 				}
@@ -1138,7 +1136,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			{
 				PType type = arg.apply(THIS, question);
 
-				if (!PTypeAssistantTC.isNumeric(type))
+				if (!question.assistantFactory.createPTypeAssistant().isNumeric(type))
 				{
 					TypeCheckerErrors.report(3316, "Expecting number in sporadic argument", arg.getLocation(), node);
 				}

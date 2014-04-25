@@ -18,7 +18,7 @@ public class PTypeAssistant
 		this.af = af;
 	}
 
-	public static boolean isNumeric(PType type)
+	public boolean isNumeric(PType type)
 	{
 		try
 		{
