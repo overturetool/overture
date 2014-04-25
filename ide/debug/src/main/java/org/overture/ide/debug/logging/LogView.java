@@ -115,10 +115,14 @@ public class LogView extends ViewPart
 		{
 			final Table table = viewer.getTable();
 			if (table.isDisposed())
+			{
 				return;
+			}
 			final Display display = table.getDisplay();
 			if (display.isDisposed())
+			{
 				return;
+			}
 			shell.getDisplay().asyncExec(new Runnable()
 			{
 
@@ -248,10 +252,14 @@ public class LogView extends ViewPart
 		{
 			final Table table = viewer.getTable();
 			if (table.isDisposed())
+			{
 				return;
+			}
 			final Display display = table.getDisplay();
 			if (display.isDisposed())
+			{
 				return;
+			}
 			shell.getDisplay().asyncExec(new Runnable()
 			{
 
@@ -277,10 +285,14 @@ public class LogView extends ViewPart
 		{
 			final Table table = viewer.getTable();
 			if (table.isDisposed())
+			{
 				return;
+			}
 			final Display display = table.getDisplay();
 			if (display.isDisposed())
+			{
 				return;
+			}
 			shell.getDisplay().asyncExec(new Runnable()
 			{
 
@@ -288,7 +300,9 @@ public class LogView extends ViewPart
 				{
 					viewer.refresh(false, false);
 					if (table.isDisposed() || table.getDisplay().isDisposed())
+					{
 						return;
+					}
 					final int itemCount = table.getItemCount();
 					if (itemCount > 0 && !scrollLockAction.isChecked())
 					{

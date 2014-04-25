@@ -162,7 +162,9 @@ public class DbgpDebugingEngine extends DbgpTermination implements
 		synchronized (terminatedLock)
 		{
 			if (terminated)
+			{
 				return;
+			}
 
 			receiver.removeTerminationListener(this);
 			try

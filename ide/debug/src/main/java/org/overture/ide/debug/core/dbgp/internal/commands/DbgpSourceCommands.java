@@ -29,18 +29,22 @@ import org.overture.ide.debug.core.dbgp.internal.utils.DbgpXmlParser;
 import org.w3c.dom.Element;
 
 public class DbgpSourceCommands extends DbgpBaseCommands implements
-		IDbgpSourceCommands {
+		IDbgpSourceCommands
+{
 
 	private static final String SOURCE_COMMAND = "source"; //$NON-NLS-1$
 
-	public DbgpSourceCommands(IDbgpCommunicator communicator) {
+	public DbgpSourceCommands(IDbgpCommunicator communicator)
+	{
 		super(communicator);
 	}
 
-	protected String parseResponseXml(Element response) throws DbgpException {
+	protected String parseResponseXml(Element response) throws DbgpException
+	{
 		boolean success = DbgpXmlParser.parseSuccess(response);
 
-		if (success) {
+		if (success)
+		{
 			return DbgpXmlParser.parseBase64Content(response);
 		}
 
@@ -48,13 +52,16 @@ public class DbgpSourceCommands extends DbgpBaseCommands implements
 	}
 
 	protected String getSource(URI uri, Integer beginLine, Integer endLine)
-			throws DbgpException {
+			throws DbgpException
+	{
 		DbgpRequest request = createRequest(SOURCE_COMMAND);
 
-		if (beginLine != null) {
+		if (beginLine != null)
+		{
 			request.addOption("-b", beginLine); //$NON-NLS-1$
 		}
-		if (endLine != null) {
+		if (endLine != null)
+		{
 			request.addOption("-e", endLine); //$NON-NLS-1$
 		}
 
@@ -63,16 +70,19 @@ public class DbgpSourceCommands extends DbgpBaseCommands implements
 		return parseResponseXml(communicate(request));
 	}
 
-	public String getSource(URI uri) throws DbgpException {
+	public String getSource(URI uri) throws DbgpException
+	{
 		return getSource(uri, null, null);
 	}
 
-	public String getSource(URI uri, int beginLine) throws DbgpException {
+	public String getSource(URI uri, int beginLine) throws DbgpException
+	{
 		return getSource(uri, new Integer(beginLine), null);
 	}
 
 	public String getSource(URI uri, int beginLine, int endLine)
-			throws DbgpException {
+			throws DbgpException
+	{
 		return getSource(uri, new Integer(beginLine), new Integer(endLine));
 	}
 }

@@ -33,7 +33,7 @@ public abstract class AbstractVdmLaunchConfigurationTabGroup extends
 	{
 		List<ILaunchConfigurationTab> tabs = new Vector<ILaunchConfigurationTab>();
 		tabs.add(getMainTab());
-		tabs.add(getRuntimeTab());		
+		tabs.add(getRuntimeTab());
 		tabs.add(new VmArgumentsLaunchConfigurationTab());
 		tabs.add(new VdmDevelopLaunchConfigurationTab());
 		tabs.addAll(getAdditionalTabs());
@@ -50,13 +50,14 @@ public abstract class AbstractVdmLaunchConfigurationTabGroup extends
 
 	/**
 	 * Provides the runtime launch tab
+	 * 
 	 * @return must return an instance of VdmRuntimeChecksLaunchConfigurationTab or a subclass
 	 */
 	protected VdmRuntimeChecksLaunchConfigurationTab getRuntimeTab()
 	{
 		return new VdmRuntimeChecksLaunchConfigurationTab();
 	}
-	
+
 	/**
 	 * Provides additional tab pages to the tab group
 	 */

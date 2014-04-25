@@ -73,7 +73,7 @@ public class VdmEvaluationContextManager implements IWindowListener,
 	private static final String SUPPORTS_INSTANCE_RETRIEVAL = VdmDebugPlugin.PLUGIN_ID
 			+ ".supportsInstanceRetrieval"; //$NON-NLS-1$
 
-	private Map<IWorkbenchPage,IVdmStackFrame> fContextsByPage = null;
+	private Map<IWorkbenchPage, IVdmStackFrame> fContextsByPage = null;
 
 	private IWorkbenchWindow fActiveWindow;
 
@@ -146,7 +146,7 @@ public class VdmEvaluationContextManager implements IWindowListener,
 
 		if (fContextsByPage == null)
 		{
-			fContextsByPage = new HashMap<IWorkbenchPage,IVdmStackFrame>();
+			fContextsByPage = new HashMap<IWorkbenchPage, IVdmStackFrame>();
 		}
 		fContextsByPage.put(page, frame);
 		System.setProperty(DEBUGGER_ACTIVE, "true"); //$NON-NLS-1$

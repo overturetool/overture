@@ -33,8 +33,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.IDebugConstants;
+import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.utils.DebuggerProperties;
 import org.overture.ide.debug.utils.ui.DebuggerPropertiesManager;
 
@@ -158,13 +158,13 @@ public class VmArgumentsLaunchConfigurationTab extends
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration)
 	{
 		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_VM_MEMORY_OPTION, "");
-//		try
-//		{
-//			propMan.setDefaults(DebuggerProperties.getDefaults(),configuration);
-//		} catch (Exception e)
-//		{
-//			e.printStackTrace();
-//		} 
+		// try
+		// {
+		// propMan.setDefaults(DebuggerProperties.getDefaults(),configuration);
+		// } catch (Exception e)
+		// {
+		// e.printStackTrace();
+		// }
 	}
 
 }

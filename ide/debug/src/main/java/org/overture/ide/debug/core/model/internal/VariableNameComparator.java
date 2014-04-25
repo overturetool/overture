@@ -33,11 +33,11 @@ public class VariableNameComparator implements Comparator<Object>
 		IVariable v2 = (IVariable) o2;
 		try
 		{
-			String v1Str = (v1 != null) ? v1.getName() : ""; //$NON-NLS-1$
+			String v1Str = v1 != null ? v1.getName() : ""; //$NON-NLS-1$
 			v1Str = v1Str.replaceAll("\\[", "").replaceAll("\\]", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			int v1Int = 0;
 			boolean v1IsInt;
-			String v2Str = (v2 != null) ? v2.getName() : ""; //$NON-NLS-1$
+			String v2Str = v2 != null ? v2.getName() : ""; //$NON-NLS-1$
 			v2Str = v2Str.replaceAll("\\[", "").replaceAll("\\]", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			int v2Int = 0;
 			boolean v2IsInt;
@@ -60,7 +60,7 @@ public class VariableNameComparator implements Comparator<Object>
 				v2IsInt = false;
 			}
 
-			if ((v1IsInt == true) && (v2IsInt == true))
+			if (v1IsInt == true && v2IsInt == true)
 			{
 				if (v1Int > v2Int)
 				{

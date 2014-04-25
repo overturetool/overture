@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.overture.ide.debug.core.dbgp;
 
-public interface IDbgpNotificationListener {
+public interface IDbgpNotificationListener
+{
 	void dbgpNotify(IDbgpNotification notification);
 }

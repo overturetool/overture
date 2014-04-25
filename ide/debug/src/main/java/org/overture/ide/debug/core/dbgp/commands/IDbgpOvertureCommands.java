@@ -22,7 +22,8 @@ import java.io.File;
 
 import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
 
-public interface IDbgpOvertureCommands {
+public interface IDbgpOvertureCommands
+{
 
 	public void getCoverage(File file) throws DbgpException;
 
@@ -38,8 +39,7 @@ public interface IDbgpOvertureCommands {
 
 	public void writeLatex(File dir, File file) throws DbgpException;
 
-	public void writeLatexdoc(File dir, File file)
-			throws DbgpException;
+	public void writeLatexdoc(File dir, File file) throws DbgpException;
 
 	public void getPog(String name) throws DbgpException;
 
@@ -55,8 +55,7 @@ public interface IDbgpOvertureCommands {
 
 	public void getDefault(String name) throws DbgpException;
 
-	public void createInstance(String var, String exp)
-			throws DbgpException;
+	public void createInstance(String var, String exp) throws DbgpException;
 
 	public void writeTrace(File file, int lnum, String display)
 			throws DbgpException;

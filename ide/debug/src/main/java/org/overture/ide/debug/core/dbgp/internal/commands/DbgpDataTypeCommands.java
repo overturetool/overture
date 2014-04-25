@@ -30,7 +30,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 public class DbgpDataTypeCommands extends DbgpBaseCommands implements
-		IDbgpDataTypeCommands {
+		IDbgpDataTypeCommands
+{
 	private static final String TYPEMAP_GET_COMMAND = "typemap_get"; //$NON-NLS-1$
 
 	private static final String ATTR_TYPE = "type"; //$NON-NLS-1$
@@ -38,16 +39,18 @@ public class DbgpDataTypeCommands extends DbgpBaseCommands implements
 
 	private static final String TAG_MAP = "map"; //$NON-NLS-1$
 
-	private final Map<String,Integer> converter;
+	private final Map<String, Integer> converter;
 
-	private Integer typeToInteger(String type) {
+	private Integer typeToInteger(String type)
+	{
 		return (Integer) converter.get(type);
 	}
 
-	public DbgpDataTypeCommands(IDbgpCommunicator communicator) {
+	public DbgpDataTypeCommands(IDbgpCommunicator communicator)
+	{
 		super(communicator);
 
-		converter = new HashMap<String,Integer>();
+		converter = new HashMap<String, Integer>();
 		converter.put("bool", new Integer(BOOL_TYPE)); //$NON-NLS-1$
 		converter.put("int", new Integer(INT_TYPE)); //$NON-NLS-1$
 		converter.put("float", new Integer(FLOAT_TYPE)); //$NON-NLS-1$
@@ -59,23 +62,25 @@ public class DbgpDataTypeCommands extends DbgpBaseCommands implements
 		converter.put("resource", new Integer(RESOURCE_TYPE)); //$NON-NLS-1$
 	}
 
-	public Map<String,Integer> getTypeMap() throws DbgpException {
+	public Map<String, Integer> getTypeMap() throws DbgpException
+	{
 		DbgpRequest request = createRequest(TYPEMAP_GET_COMMAND);
 		Element element = communicate(request);
 
-		Map<String,Integer> result = new HashMap<String,Integer>();
+		Map<String, Integer> result = new HashMap<String, Integer>();
 
 		NodeList maps = element.getElementsByTagName(TAG_MAP);
 
-		for (int i = 0; i < maps.getLength(); i++) {
+		for (int i = 0; i < maps.getLength(); i++)
+		{
 			Element map = (Element) maps.item(i);
 
 			String type = map.getAttribute(ATTR_TYPE);
 			Integer intType = typeToInteger(type);
 
-			if (intType == null) {
-				throw new DbgpException(
-						"Invalid Type Attribute");
+			if (intType == null)
+			{
+				throw new DbgpException("Invalid Type Attribute");
 			}
 
 			String name = map.getAttribute(ATTR_NAME);

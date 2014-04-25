@@ -20,38 +20,47 @@ package org.overture.ide.debug.core.model;
 
 import org.overture.ide.debug.core.IDebugOptions;
 
-public class DefaultDebugOptions implements IDebugOptions {
+public class DefaultDebugOptions implements IDebugOptions
+{
 
 	private static IDebugOptions defaultInstance = null;
 
-	public static IDebugOptions getDefaultInstance() {
-		if (defaultInstance == null) {
+	public static IDebugOptions getDefaultInstance()
+	{
+		if (defaultInstance == null)
+		{
 			defaultInstance = new DefaultDebugOptions();
 		}
 		return defaultInstance;
 	}
 
-	protected DefaultDebugOptions() {
+	protected DefaultDebugOptions()
+	{
 		// empty
 	}
 
-	public boolean get(BooleanOption option) {
+	public boolean get(BooleanOption option)
+	{
 		return option.getDefaultValue();
 	}
 
-	public int get(IntegerOption option) {
+	public int get(IntegerOption option)
+	{
 		return option.getDefaultValue();
 	}
 
-	public String get(StringOption option) {
+	public String get(StringOption option)
+	{
 		return option.getDefaultValue();
 	}
 
-	public IVdmStackFrame[] filterStackLevels(IVdmStackFrame[] frames) {
+	public IVdmStackFrame[] filterStackLevels(IVdmStackFrame[] frames)
+	{
 		return (IVdmStackFrame[]) frames.clone();
 	}
 
-	public boolean isValidStack(IVdmStackFrame[] frames) {
+	public boolean isValidStack(IVdmStackFrame[] frames)
+	{
 		return true;
 	}
 

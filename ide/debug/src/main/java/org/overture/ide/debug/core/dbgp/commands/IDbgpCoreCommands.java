@@ -22,5 +22,6 @@ public interface IDbgpCoreCommands extends IDbgpFeatureCommands,
 		IDbgpBreakpointCommands, IDbgpContextCommands,
 		IDbgpContinuationCommands, IDbgpDataTypeCommands, IDbgpSourceCommands,
 		IDbgpStatusCommands, IDbgpStackCommands, IDbgpStreamCommands,
-		IDbgpPropertyCommands {
+		IDbgpPropertyCommands
+{
 }

@@ -20,32 +20,38 @@ package org.overture.ide.debug.core.dbgp.internal;
 
 import org.overture.ide.debug.core.dbgp.IDbgpFeature;
 
-public class DbgpFeature implements IDbgpFeature {
+public class DbgpFeature implements IDbgpFeature
+{
 	private final boolean supported;
 
 	private final String name;
 
 	private final String value;
 
-	public DbgpFeature(boolean supported, String name, String value) {
+	public DbgpFeature(boolean supported, String name, String value)
+	{
 		this.supported = supported;
 		this.name = name;
 		this.value = value;
 	}
 
-	public String getValue() {
+	public String getValue()
+	{
 		return value;
 	}
 
-	public String getName() {
+	public String getName()
+	{
 		return name;
 	}
 
-	public boolean isSupported() {
+	public boolean isSupported()
+	{
 		return supported;
 	}
 
-	public String toString() {
+	public String toString()
+	{
 		return "DbgpFeature (name: " + name + "; value: " + value //$NON-NLS-1$ //$NON-NLS-2$
 				+ "; supported: " + supported + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 	}

@@ -20,16 +20,19 @@ package org.overture.ide.debug.core.dbgp.internal.packets;
 
 import org.w3c.dom.Element;
 
-public class DbgpResponsePacket extends DbgpPacket {
+public class DbgpResponsePacket extends DbgpPacket
+{
 	private final int transactionId;
 
-	public DbgpResponsePacket(Element element, int transactionId) {
+	public DbgpResponsePacket(Element element, int transactionId)
+	{
 		super(element);
 
 		this.transactionId = transactionId;
 	}
 
-	public int getTransactionId() {
+	public int getTransactionId()
+	{
 		return transactionId;
 	}
 }

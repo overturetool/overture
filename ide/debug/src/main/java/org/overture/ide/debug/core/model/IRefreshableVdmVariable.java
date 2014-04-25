@@ -22,17 +22,17 @@ import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IVariable;
 
 /**
- * {@link IScriptVariable}s could implement this interface to support value
- * change check.
+ * {@link IScriptVariable}s could implement this interface to support value change check.
  */
-public interface IRefreshableVdmVariable {
+public interface IRefreshableVdmVariable
+{
 
 	/**
 	 * Refreshes the value of the variable
 	 * 
 	 * @param newVariable
-	 * @return <code>this</code> if value was successfully refreshed or
-	 *         <code>newVariable</code> if it was not possible to refresh value.
+	 * @return <code>this</code> if value was successfully refreshed or <code>newVariable</code> if it was not possible
+	 *         to refresh value.
 	 * @throws DebugException
 	 */
 	IVariable refreshVariable(IVariable newVariable) throws DebugException;

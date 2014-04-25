@@ -27,16 +27,18 @@ import org.eclipse.debug.ui.IDebugUIConstants;
 @SuppressWarnings("restriction")
 public class VdmModelProxyFactory extends DefaultModelProxyFactory
 {
-@Override
-public IModelProxy createModelProxy(Object element,
-		IPresentationContext context)
-{
-	String id = context.getId();
-	if (IDebugUIConstants.ID_DEBUG_VIEW.equals(id)) {
-		if (element instanceof IDebugTarget) {
-			return new VdmDebugTargetProxy((IDebugTarget)element);
+	@Override
+	public IModelProxy createModelProxy(Object element,
+			IPresentationContext context)
+	{
+		String id = context.getId();
+		if (IDebugUIConstants.ID_DEBUG_VIEW.equals(id))
+		{
+			if (element instanceof IDebugTarget)
+			{
+				return new VdmDebugTargetProxy((IDebugTarget) element);
+			}
 		}
+		return super.createModelProxy(element, context);
 	}
-	return super.createModelProxy(element, context);
-}
 }
