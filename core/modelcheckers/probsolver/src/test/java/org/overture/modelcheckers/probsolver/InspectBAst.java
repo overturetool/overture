@@ -13,6 +13,7 @@ public class InspectBAst
 
 	public static void test()
 	{
+		ClassicalB f;
 		// ClassicalB f = new ClassicalB("a <: B");
 		// System.out.println(f.getAst());
 
@@ -21,15 +22,15 @@ public class InspectBAst
 
 		// f = new ClassicalB("{x,y | x:1..5 & y:1..6}");
 		// System.out.println(f.getAst());
-		ClassicalB f = new ClassicalB("1|->2");
-		System.out.println(f.getAst());
-		f.getAst().apply(new ASTPrinter(System.out));
+		//ClassicalB f = new ClassicalB("1|->2");
+		//System.out.println(f.getAst());
+		//f.getAst().apply(new ASTPrinter(System.out));
 
 		// f = new ClassicalB("{1|->10, 2|->20,3|->30,4|->40}[{2,3}]");
 		// f.getAst().apply(new ASTPrinter(System.out));
 
-		f = new ClassicalB("{1,2}*{11,12}*{101,102}");
-		f.getAst().apply(new ASTPrinter(System.out));
+		//f = new ClassicalB("{1,2}*{11,12}*{101,102}");
+		//f.getAst().apply(new ASTPrinter(System.out));
 
 		// f = new ClassicalB("[1,2,3,4,5](3)");
 		// f.getAst().apply(new ASTPrinter(System.out));
@@ -46,8 +47,8 @@ public class InspectBAst
 		// f = new ClassicalB("iterate({(1 |-> 3), (2|->1), 3 |->2}, 3)");
 		// f.getAst().apply(new ASTPrinter(System.out));
 
-		f = new ClassicalB("1..5");
-		f.getAst().apply(new ASTPrinter(System.out));
+		//f = new ClassicalB("1..5");
+		//f.getAst().apply(new ASTPrinter(System.out));
 
 		// f = new ClassicalB("max({1,2,3})");
 		// f.getAst().apply(new ASTPrinter(System.out));
@@ -76,8 +77,9 @@ public class InspectBAst
 		// f = new ClassicalB("-7-(-3)*(-7/-3)");
 		// f.getAst().apply(new ASTPrinter(System.out));
 
-		// f = new ClassicalB("TRUE");
-		// f.getAst().apply(new ASTPrinter(System.out));
+		f = new ClassicalB("bool(TRUE) & bool(TRUE))");
+		System.out.println(f.getAst());
+		f.getAst().apply(new ASTPrinter(System.out));
 
 		// f = new ClassicalB("{\"abc\"|->3, \"def\"|->2}");
 		// f.getAst().apply(new ASTPrinter(System.out));
@@ -89,6 +91,7 @@ public class InspectBAst
 		// f.getAst().apply(new ASTPrinter(System.out));
 
 		//f = new ClassicalB("{2|->3|->4}");
+		//System.out.println(f.getAst());
 		//f.getAst().apply(new ASTPrinter(System.out));
 
 		//f = new ClassicalB("\"1 - 2\"");
@@ -97,8 +100,8 @@ public class InspectBAst
 		//f = new ClassicalB("(1,2,3,4)");
 		//f.getAst().apply(new ASTPrinter(System.out));
 	
-		f = new ClassicalB("{{1|->2}|->3}");
-		f.getAst().apply(new ASTPrinter(System.out));
+		//f = new ClassicalB("{{1|->2}|->3}");
+		//f.getAst().apply(new ASTPrinter(System.out));
 	}
 
 }

@@ -1,0 +1,7 @@
+operations
+
+  f9() m:nat
+    post if 8 in set {1,2,3,4,5} then m=3  else  m=7
+    --post if 8 in set {1,2,3,4,5} then m = 3 in set {1,2,3,4,5} else m=true -- invalid result
+   --- post if 8 in set {1,2,3} then m=1 else m=2
+ 

@@ -1,0 +1,3 @@
+operations
+boolean8() m : bool
+  post m = (true or false)

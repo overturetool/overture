@@ -1,0 +1,4 @@
+operations
+
+maptest() m : map int to int
+  post m = { x |-> y | x in set {0,1,2,3}, y in set {-1,0,1} & x+y=10 }

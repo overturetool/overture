@@ -387,10 +387,21 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	{
 
 		ADisjunctPredicate dp = new ADisjunctPredicate();
+
 		if (node.getElseList().size() == 0)
 		{
-
-			dp = new ADisjunctPredicate(new AConjunctPredicate(pred(node.getTest()), pred(node.getThen())), new AConjunctPredicate(new ANegationPredicate(pred(node.getTest())), pred(node.getElse())));
+		    PPredicate ppred;
+		    if(node.getElse().toString().equals("ture")) {
+			ppred = new AEqualPredicate(new ABooleanTrueExpression(), new ABooleanTrueExpression());
+		    } else if(node.getElse().toString().equals("false")) {
+			ppred = new AEqualPredicate(new ABooleanTrueExpression(), new ABooleanFalseExpression());
+		    } else {
+			ppred = pred(node.getElse());
+		    }
+		    System.err.println("node.getElse(): " + "["+node.getElse()+"]");
+		    System.err.println("ppred: " + ppred.toString());
+			dp = new ADisjunctPredicate(new AConjunctPredicate(pred(node.getTest()), pred(node.getThen())), 
+						    new AConjunctPredicate(new ANegationPredicate(pred(node.getTest())), ppred));
 		} else
 		{
 			LinkedList<AElseIfExp> eilist = node.getElseList();
@@ -858,31 +869,36 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		return new ARevExpression(exp(node.getExp()));
 	}
 
-	/*******
+	/**********
 	@Override
 	public Node caseASeqCompSeqExp(ASeqCompSeqExp node)
 			throws AnalysisException
 	{
 
 	    //[e | id in set S & P]
-	    // create { id, _target_ | id:S & P & _target_-e }
+	    // create { id, _target_ | id:S & P & i_target_=e }
 
 	    System.err.println("first: " + node.getFirst()); //e
 	    System.err.println("pattern: " + (node.getSetBind()).getPattern()); //id
 	    System.err.println("set: " + (node.getSetBind()).getSet()); //S
 	    System.err.println("pred: " + node.getPredicate()); //P
-	    AComprehensionSetExpression scs = new AComprehensionSetExpression();
-	    scs.getIdentifiers().add(exp(node.getSetBind().getPattern()));
-	    scs.setPredicates(new AMemberPredicate(exp(node.getSetBind().getPattern()), exp(node.getSetBind().getSet())));
 
-	    scs.setPredicates(new AConjunctPredicate(scs.getPredicates(), pred(node.getPredicate())));
+	    AComprehensionSetExpression scs = new AComprehensionSetExpression();
+            // create a set
+	    scs.getIdentifiers().add(exp(node.getSetBind().getPattern()));
+	    scs.setPredicates(new AMemberPredicate(exp(node.getSetBind().getPattern()),
+                                                   exp(node.getSetBind().getSet())));
+
+	    scs.setPredicates(new AConjunctPredicate(scs.getPredicates(), 
+                                                     pred(node.getPredicate())));
 
 	    List<TIdentifierLiteral> ident = new ArrayList<TIdentifierLiteral>();
 	    ident.add(new TIdentifierLiteral("_target_"));
 	    PExpression temp = new AIdentifierExpression(ident);
 	    scs.getIdentifiers().add(temp);
 
-	    scs.setPredicates(new AConjunctPredicate(scs.getPredicates(), new AEqualPredicate(temp, exp(node.getFirst()))));
+	    scs.setPredicates(new AConjunctPredicate(scs.getPredicates(), 
+                                              new AEqualPredicate(temp, exp(node.getFirst()))));
 	    if(scs.getMembers().isEmpty()) {
 		AEmptySequeneExpression seq = new AEmptySequeneExpression();
 	    } else {
@@ -891,24 +907,11 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		    seq.add(elem.getList().getLast());
 		}
 	    }
+
 	    return seq;
-		LinkedList<PExp> seqlist = ((ASeqEnumSeqExp) node.getExp()).getMembers();
-		if (seqlist.isEmpty())
-		{
-			return new AEmptySequenceExpression();
-		}
-
-		ASequenceExtensionExpression seq = new ASequenceExtensionExpression();
-		LinkedList<PExp> temp = new LinkedList<PExp>();
-
-		for (PExp m : seqlist)
-		{
-		    seq.getExpression().add(exp(m));
-		}
-		return new AGeneralConcatExpression(seq);
-
 	}
-	**************/
+	**********/
+
 	@Override
 	public Node caseASeqConcatBinaryExp(ASeqConcatBinaryExp node)
 			throws AnalysisException
