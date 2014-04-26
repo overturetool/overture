@@ -15,11 +15,11 @@ state  R_Book of
          nb_gk_subs : nat
          nb_fp_subs : nat
 
---inv mk_R_Book(ofp,ps,gk, ngk, nfp) == 
---    leq_eleven_players(ofp) and 
---    within_allowed_limits(ngk,nfp) and
---    gk not in set ps and 
---    ofp inter ps = {}
+inv mk_R_Book(ofp,ps,gk, ngk, nfp) == 
+    leq_eleven_players(ofp) and 
+    within_allowed_limits(ngk,nfp) and
+    gk not in set ps and 
+    ofp inter ps = {}
 
 init r == r = 
        mk_R_Book({1,2,3,4,5,6,7,8,9,10,11},
@@ -38,6 +38,7 @@ within_allowed_limits (ngk , nfp ) ==
 
 operations
 
+
 RED_CARD (p : player)
 ext wr on_field_players : set of player
     wr potential_substitutes : set of player
@@ -45,10 +46,6 @@ ext wr on_field_players : set of player
   post on_field_players = on_field_players~ \ {p}
        and potential_substitutes = potential_substitutes~ \ {p}
       ;
-
--- test_RED_CARD()
---   post RED_CARD(1);
-
 
 CHANGE_GOALKEEPER (p : player)
 ext wr goalkeeper : player
@@ -115,7 +112,15 @@ pre (pl = goalkeeper =>
     and (pl <> goalkeeper => 
           pre_SUBSTITUTION_FP(pl,subs,
                               mk_R_Book(on_field_players,potential_substitutes,
-                                        goalkeeper,nb_gk_subs,nb_fp_subs)))
+                                        goalkeeper,nb_gk_subs,nb_fp_subs)));
+
+test:() ==> ()
+test() == (
+ RED_CARD(1);
+ SUBSTITUTION(10,12);
+ SUBSTITUTION(2,13);
+ SUBSTITUTION(3,14);
+)
 end SOCCER_IMPL
 
 -- RED_CARD(1);

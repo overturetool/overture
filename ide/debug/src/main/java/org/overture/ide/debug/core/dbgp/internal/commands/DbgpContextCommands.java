@@ -35,7 +35,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class DbgpContextCommands extends DbgpBaseCommands implements
-		IDbgpContextCommands {
+		IDbgpContextCommands
+{
 	private static final String CONTEXT_NAMES_COMMAND = "context_names"; //$NON-NLS-1$
 
 	private static final String CONTEXT_GET = "context_get"; //$NON-NLS-1$
@@ -46,16 +47,19 @@ public class DbgpContextCommands extends DbgpBaseCommands implements
 
 	private static final String ATTR_ID = "id"; //$NON-NLS-1$
 
-	public DbgpContextCommands(IDbgpCommunicator communicator) {
+	public DbgpContextCommands(IDbgpCommunicator communicator)
+	{
 		super(communicator);
 	}
 
-	protected Map<Integer,String> parseContextNamesResponse(Element response)
-			throws DbgpException {
-		Map<Integer,String> map = new HashMap<Integer,String>();
+	protected Map<Integer, String> parseContextNamesResponse(Element response)
+			throws DbgpException
+	{
+		Map<Integer, String> map = new HashMap<Integer, String>();
 
 		NodeList contexts = response.getElementsByTagName(TAG_CONTEXT);
-		for (int i = 0; i < contexts.getLength(); ++i) {
+		for (int i = 0; i < contexts.getLength(); ++i)
+		{
 			Element context = (Element) contexts.item(i);
 			String name = context.getAttribute(ATTR_NAME);
 			Integer id = new Integer(context.getAttribute(ATTR_ID));
@@ -66,15 +70,19 @@ public class DbgpContextCommands extends DbgpBaseCommands implements
 	}
 
 	protected IDbgpProperty[] parseContextPropertiesResponse(Element response)
-			throws DbgpException {
+			throws DbgpException
+	{
 		NodeList properties = response.getChildNodes();
 
 		List<IDbgpProperty> list = new ArrayList<IDbgpProperty>();
-		for (int i = 0; i < properties.getLength(); ++i) {
+		for (int i = 0; i < properties.getLength(); ++i)
+		{
 
 			Node item = properties.item(i);
-			if (item instanceof Element) {
-				if (item.getNodeName().equals(DbgpXmlEntityParser.TAG_PROPERTY)) {
+			if (item instanceof Element)
+			{
+				if (item.getNodeName().equals(DbgpXmlEntityParser.TAG_PROPERTY))
+				{
 					list.add(DbgpXmlEntityParser.parseProperty((Element) item));
 				}
 			}
@@ -83,21 +91,25 @@ public class DbgpContextCommands extends DbgpBaseCommands implements
 		return (IDbgpProperty[]) list.toArray(new IDbgpProperty[list.size()]);
 	}
 
-	public Map<Integer,String> getContextNames(int stackDepth) throws DbgpException {
+	public Map<Integer, String> getContextNames(int stackDepth)
+			throws DbgpException
+	{
 		DbgpRequest request = createRequest(CONTEXT_NAMES_COMMAND);
 		request.addOption("-d", stackDepth); //$NON-NLS-1$
 		return parseContextNamesResponse(communicate(request));
 	}
 
 	public IDbgpProperty[] getContextProperties(int stackDepth)
-			throws DbgpException {
+			throws DbgpException
+	{
 		DbgpRequest request = createRequest(CONTEXT_GET);
 		request.addOption("-d", stackDepth); //$NON-NLS-1$
 		return parseContextPropertiesResponse(communicate(request));
 	}
 
 	public IDbgpProperty[] getContextProperties(int stackDepth, int contextId)
-			throws DbgpException {
+			throws DbgpException
+	{
 		DbgpRequest request = createRequest(CONTEXT_GET);
 		request.addOption("-d", stackDepth); //$NON-NLS-1$
 		request.addOption("-c", contextId); //$NON-NLS-1$

@@ -20,7 +20,8 @@ package org.overture.ide.debug.core.dbgp.commands;
 
 import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
 
-public interface IDbgpStreamCommands {
+public interface IDbgpStreamCommands
+{
 	final int DISABLE = 0;
 
 	final int COPY = 1;

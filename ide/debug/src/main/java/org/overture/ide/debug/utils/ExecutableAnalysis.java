@@ -11,20 +11,20 @@ import org.overture.ast.statements.PStm;
 public class ExecutableAnalysis extends DepthFirstAnalysisAdaptor
 {
 	private final int searchLine;
-	
+
 	private String module = null;
-	
+
 	private ExecutableAnalysis(int searchLine, String module)
 	{
 		this.searchLine = searchLine;
 		this.module = module;
 	}
-	
+
 	public static boolean isExecutable(INode node, int line, boolean findModule)
 	{
-		
+
 		String nodeModule = findModule ? searchForModule(node) : null;
-				
+
 		ExecutableAnalysis analysis = new ExecutableAnalysis(line, nodeModule);
 
 		try
@@ -33,7 +33,7 @@ public class ExecutableAnalysis extends DepthFirstAnalysisAdaptor
 		} catch (ExecutableAnalysisException e)
 		{
 			return e.isExecutable();
-			
+
 		} catch (AnalysisException e)
 		{
 			e.printStackTrace();
@@ -42,39 +42,44 @@ public class ExecutableAnalysis extends DepthFirstAnalysisAdaptor
 
 		return false;
 	}
-	
+
 	private static String searchForModule(INode node)
 	{
-		
+
 		String nodeModule = null;
-		
-		SClassDefinition classDef = node.getAncestor(SClassDefinition.class); 
-		
-		if(classDef != null)
+
+		SClassDefinition classDef = node.getAncestor(SClassDefinition.class);
+
+		if (classDef != null)
 		{
 			nodeModule = classDef.getLocation().getModule();
-		}
-		else
+		} else
 		{
 			AModuleModules slModule = node.getAncestor(AModuleModules.class);
-			
-			if(slModule != null)
+
+			if (slModule != null)
 			{
 				nodeModule = slModule.getName().getName();
 			}
 		}
-		
+
 		return nodeModule;
 	}
-	
-	private boolean isValidModule(PStm node){
-		
-		return module == null || (node.getLocation().getStartLine() == searchLine &&  module.equals(node.getLocation().getModule()));
+
+	private boolean isValidModule(PStm node)
+	{
+
+		return module == null
+				|| node.getLocation().getStartLine() == searchLine
+				&& module.equals(node.getLocation().getModule());
 	}
-	
-	private boolean isValidModule(PExp node){
-		
-		return module == null || (node.getLocation().getStartLine() == searchLine &&  module.equals(node.getLocation().getModule()));
+
+	private boolean isValidModule(PExp node)
+	{
+
+		return module == null
+				|| node.getLocation().getStartLine() == searchLine
+				&& module.equals(node.getLocation().getModule());
 	}
 
 	public void defaultInPStm(PStm node) throws ExecutableAnalysisException

@@ -20,7 +20,8 @@ package org.overture.ide.debug.core.dbgp;
 
 import org.w3c.dom.Element;
 
-public interface IDbgpNotification {
+public interface IDbgpNotification
+{
 	String getName();
 
 	Element getBody();

@@ -20,7 +20,9 @@ package org.overture.ide.debug.core.model;
 
 import org.eclipse.debug.core.model.IVariable;
 
-public interface IVdmVariable extends IVariable {
+public interface IVdmVariable extends IVariable
+{
 	String getId();
+
 	boolean isConstant();
 }

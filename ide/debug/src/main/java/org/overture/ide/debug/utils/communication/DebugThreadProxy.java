@@ -586,7 +586,7 @@
 //
 //			if (stackNode.getAttr("where") != null)
 //			{
-//				where = stackNode.getAttr("´where");
+//				where = stackNode.getAttr("ï¿½where");
 //			}
 //
 //			String filename = stackNode.getAttr("filename");
@@ -1120,4 +1120,4 @@
 //		return new LogItem(sessionId, type, threadId, false, message, isError);
 //	}
 //
-//}
+// }

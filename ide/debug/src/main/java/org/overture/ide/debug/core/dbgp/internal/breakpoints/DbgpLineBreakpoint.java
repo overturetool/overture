@@ -21,24 +21,28 @@ package org.overture.ide.debug.core.dbgp.internal.breakpoints;
 import org.overture.ide.debug.core.dbgp.breakpoints.IDbgpLineBreakpoint;
 
 public class DbgpLineBreakpoint extends DbgpBreakpoint implements
-		IDbgpLineBreakpoint {
+		IDbgpLineBreakpoint
+{
 	private final String fileName;
 
 	private final int lineNumber;
 
 	public DbgpLineBreakpoint(String id, boolean enabled, int hitValue,
-			int hitCount, String hitCondition, String fileName, int lineNumber) {
+			int hitCount, String hitCondition, String fileName, int lineNumber)
+	{
 		super(id, enabled, hitValue, hitCount, hitCondition);
 
 		this.fileName = fileName;
 		this.lineNumber = lineNumber;
 	}
 
-	public String getFilename() {
+	public String getFilename()
+	{
 		return fileName;
 	}
 
-	public int getLineNumber() {
+	public int getLineNumber()
+	{
 		return lineNumber;
 	}
 }

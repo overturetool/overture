@@ -156,19 +156,20 @@ public class DebuggerPropertiesManager
 
 	public void performApply(ILaunchConfigurationWorkingCopy configuration)
 	{
-		//configuration.setAttribute(launchConfigkey, getConfigString(props));
-		try {
+		// configuration.setAttribute(launchConfigkey, getConfigString(props));
+		try
+		{
 			List<DebuggerProperty> sorted = new Vector<DebuggerProperty>();
 			sorted.addAll(props);
 			Collections.sort(sorted);
-			
-			if(!getConfigString(sorted).equals(configuration.getAttribute(launchConfigkey, "")) )
+
+			if (!getConfigString(sorted).equals(configuration.getAttribute(launchConfigkey, "")))
 			{
 				configuration.setAttribute(launchConfigkey, getConfigString(sorted));
 			}
-			
-			
-		} catch (CoreException e) {
+
+		} catch (CoreException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

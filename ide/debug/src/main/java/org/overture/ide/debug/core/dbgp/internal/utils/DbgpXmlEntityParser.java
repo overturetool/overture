@@ -23,12 +23,8 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Vector;
 
-//import org.eclipse.dltk.compiler.util.Util;
-//import org.eclipse.dltk.core.DLTKCore;
-
-import org.eclipse.osgi.util.NLS;
-import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.IDebugConstants;
+import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.dbgp.IDbgpProperty;
 import org.overture.ide.debug.core.dbgp.IDbgpSessionInfo;
 import org.overture.ide.debug.core.dbgp.IDbgpStatus;
@@ -51,8 +47,12 @@ import org.overture.ide.debug.core.dbgp.internal.breakpoints.DbgpWatchBreakpoint
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+//import org.eclipse.dltk.compiler.util.Util;
+//import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.osgi.util.NLS;
 
-public class DbgpXmlEntityParser extends DbgpXmlParser {
+public class DbgpXmlEntityParser extends DbgpXmlParser
+{
 	private static final IDbgpProperty[] NO_CHILDREN = new IDbgpProperty[0];
 
 	private static final String ENCODING_NONE = "none"; //$NON-NLS-1$
@@ -60,7 +60,8 @@ public class DbgpXmlEntityParser extends DbgpXmlParser {
 
 	public static final String TAG_PROPERTY = "property"; //$NON-NLS-1$
 
-	protected DbgpXmlEntityParser() {
+	protected DbgpXmlEntityParser()
+	{
 
 	}
 
@@ -72,7 +73,8 @@ public class DbgpXmlEntityParser extends DbgpXmlParser {
 	private static final String ATTR_WHERE = "where"; //$NON-NLS-1$
 
 	public static DbgpStackLevel parseStackLevel(Element element)
-			throws DbgpException {
+			throws DbgpException
+	{
 		int level = Integer.parseInt(element.getAttribute(ATTR_LEVEL));
 
 		String cmdBegin = element.getAttribute(ATTR_CMDBEGIN);
@@ -82,7 +84,8 @@ public class DbgpXmlEntityParser extends DbgpXmlParser {
 		int beginColumn = -1;
 		int endLine = -1;
 		int endColumn = -1;
-		if (cmdBegin.length() != 0 && cmdEnd.length() != 0) {
+		if (cmdBegin.length() != 0 && cmdEnd.length() != 0)
+		{
 			beginLine = parseLine(cmdBegin);
 			beginColumn = parseColumn(cmdBegin);
 			endLine = parseLine(cmdEnd);
@@ -92,58 +95,63 @@ public class DbgpXmlEntityParser extends DbgpXmlParser {
 		int lineNumber = Integer.parseInt(element.getAttribute(ATTR_LINENO));
 
 		/**
-		 * TODO Check ATTR_TYPE who knows when.
-		 * 
-		 * According to the http://xdebug.org/docs-dbgp.php#stack-get
-		 * <code>Valid values are "file" or "eval"</code>, but Tcl debugger also
-		 * sends "source" and "console".
+		 * TODO Check ATTR_TYPE who knows when. According to the http://xdebug.org/docs-dbgp.php#stack-get
+		 * <code>Valid values are "file" or "eval"</code>, but Tcl debugger also sends "source" and "console".
 		 */
 		final URI fileUri = parseURI(element.getAttribute(ATTR_FILENAME));
 
 		final String where = element.getAttribute(ATTR_WHERE);
 
-		return new DbgpStackLevel(fileUri, where, level, lineNumber, beginLine,
-				beginColumn, endLine, endColumn);
+		return new DbgpStackLevel(fileUri, where, level, lineNumber, beginLine, beginColumn, endLine, endColumn);
 	}
 
 	private static final String FILE_SCHEME_PREFIX = IDebugConstants.FILE_SCHEME
 			+ ":///"; //$NON-NLS-1$
 
-	private static URI parseURI(String fileName) {
+	private static URI parseURI(String fileName)
+	{
 		/*
-		 * ActiveState python debugger on windows sends URI as
-		 * "file:///C|/path/to/file.py" we need to convert it.
+		 * ActiveState python debugger on windows sends URI as "file:///C|/path/to/file.py" we need to convert it.
 		 */
-		if (fileName.startsWith(FILE_SCHEME_PREFIX)) {
+		if (fileName.startsWith(FILE_SCHEME_PREFIX))
+		{
 			final int pos = FILE_SCHEME_PREFIX.length();
-			if (fileName.length() > pos + 3) {
+			if (fileName.length() > pos + 3)
+			{
 				if (Character.isLetter(fileName.charAt(pos))
 						&& fileName.charAt(pos + 1) == '|'
-						&& fileName.charAt(pos + 2) == '/') {
+						&& fileName.charAt(pos + 2) == '/')
+				{
 					fileName = fileName.substring(0, pos + 1) + ':'
 							+ fileName.substring(pos + 2);
 				}
 			}
 		}
-		try {
+		try
+		{
 			return URI.create(fileName);
-		} catch (IllegalArgumentException e) {
-			if (VdmDebugPlugin.DEBUG) {
+		} catch (IllegalArgumentException e)
+		{
+			if (VdmDebugPlugin.DEBUG)
+			{
 				e.printStackTrace();
 			}
 		}
-		try {
-			return new URI(IDebugConstants.UNKNOWN_SCHEME, Util.EMPTY_STRING,
-					Util.EMPTY_STRING, fileName);
-		} catch (URISyntaxException e) {
-			if (VdmDebugPlugin.DEBUG) {
+		try
+		{
+			return new URI(IDebugConstants.UNKNOWN_SCHEME, Util.EMPTY_STRING, Util.EMPTY_STRING, fileName);
+		} catch (URISyntaxException e)
+		{
+			if (VdmDebugPlugin.DEBUG)
+			{
 				e.printStackTrace();
 			}
 		}
-		try {
-			return new URI(IDebugConstants.UNKNOWN_SCHEME, Util.EMPTY_STRING,
-					Util.EMPTY_STRING, "unknown");//$NON-NLS-1$
-		} catch (URISyntaxException e) {
+		try
+		{
+			return new URI(IDebugConstants.UNKNOWN_SCHEME, Util.EMPTY_STRING, Util.EMPTY_STRING, "unknown");//$NON-NLS-1$
+		} catch (URISyntaxException e)
+		{
 			throw new IllegalArgumentException(e.getMessage());
 		}
 	}
@@ -152,7 +160,8 @@ public class DbgpXmlEntityParser extends DbgpXmlParser {
 	private static final String ATTR_SUPPORTED = "supported"; //$NON-NLS-1$
 
 	public static DbgpFeature parseFeature(Element element)
-			throws DbgpProtocolException {
+			throws DbgpProtocolException
+	{
 		String name = element.getAttribute(ATTR_FEATURE_NAME);
 		boolean supported = makeBoolean(element.getAttribute(ATTR_SUPPORTED));
 		String value = parseContent(element);
@@ -170,10 +179,10 @@ public class DbgpXmlEntityParser extends DbgpXmlParser {
 	private static final String ATTR_PAGE_SIZE = "pagesize"; //$NON-NLS-1$
 	private static final String ATTR_ADDRESS = "address"; //$NON-NLS-1$
 
-	public static IDbgpProperty parseProperty(Element property) {
+	public static IDbgpProperty parseProperty(Element property)
+	{
 		/*
-		 * attributes: name, fullname, type, children, numchildren, constant,
-		 * encoding, size, key, address
+		 * attributes: name, fullname, type, children, numchildren, constant, encoding, size, key, address
 		 */
 
 		// may exist as an attribute of the property or as child element
@@ -184,44 +193,50 @@ public class DbgpXmlEntityParser extends DbgpXmlParser {
 
 		// hasChildren
 		boolean hasChildren = false;
-		if (property.hasAttribute(ATTR_CHILDREN)) {
+		if (property.hasAttribute(ATTR_CHILDREN))
+		{
 			hasChildren = makeBoolean(property.getAttribute(ATTR_CHILDREN));
 		}
 
 		// Children count
 		int childrenCount = -1;
-		if (property.hasAttribute(ATTR_NUMCHILDREN)) {
-			childrenCount = Integer.parseInt(property
-					.getAttribute(ATTR_NUMCHILDREN));
+		if (property.hasAttribute(ATTR_NUMCHILDREN))
+		{
+			childrenCount = Integer.parseInt(property.getAttribute(ATTR_NUMCHILDREN));
 		}
 
 		// Page
 		int page = 0;
-		if (property.hasAttribute(ATTR_PAGE)) {
+		if (property.hasAttribute(ATTR_PAGE))
+		{
 			page = Integer.parseInt(property.getAttribute(ATTR_PAGE));
 		}
 
 		// Page Size
 		int pagesize = -1;
-		if (property.hasAttribute(ATTR_PAGE_SIZE)) {
+		if (property.hasAttribute(ATTR_PAGE_SIZE))
+		{
 			pagesize = Integer.parseInt(property.getAttribute(ATTR_PAGE_SIZE));
 		}
 
 		// Constant
 		boolean constant = false;
-		if (property.hasAttribute(ATTR_CONSTANT)) {
+		if (property.hasAttribute(ATTR_CONSTANT))
+		{
 			constant = makeBoolean(property.getAttribute(ATTR_CONSTANT));
 		}
 
 		// Key
 		String key = null;
-		if (property.hasAttribute(ATTR_KEY)) {
+		if (property.hasAttribute(ATTR_KEY))
+		{
 			key = property.getAttribute(ATTR_KEY);
 		}
 
 		// memory address
 		String address = null;
-		if (property.hasAttribute(ATTR_ADDRESS)) {
+		if (property.hasAttribute(ATTR_ADDRESS))
+		{
 			address = property.getAttribute(ATTR_ADDRESS);
 		}
 
@@ -229,67 +244,72 @@ public class DbgpXmlEntityParser extends DbgpXmlParser {
 		String value = ""; //$NON-NLS-1$
 
 		NodeList list = property.getElementsByTagName("value"); //$NON-NLS-1$
-		if (list.getLength() == 0) {
+		if (list.getLength() == 0)
+		{
 			value = getEncodedValue(property);
-		} else {
+		} else
+		{
 			value = getEncodedValue((Element) list.item(0));
 		}
 
 		// Children
 		IDbgpProperty[] availableChildren = NO_CHILDREN;
-		if (hasChildren) {
-//			final NodeList children = property
-//					.getElementsByTagName(TAG_PROPERTY);
+		if (hasChildren)
+		{
+			// final NodeList children = property
+			// .getElementsByTagName(TAG_PROPERTY);
 			List<Element> children = getChildElements(property);
-			
-			final int length = children.size();//children.getLength();
-			if (length > 0) {
+
+			final int length = children.size();// children.getLength();
+			if (length > 0)
+			{
 				availableChildren = new IDbgpProperty[length];
-				for (int i = 0; i < length; ++i) {
+				for (int i = 0; i < length; ++i)
+				{
 					Element child = (Element) children.get(i);
 					availableChildren[i] = parseProperty(child);
 				}
 			}
 		}
 
-		if (childrenCount < 0) {
+		if (childrenCount < 0)
+		{
 			childrenCount = availableChildren.length;
 		}
 
-		return new DbgpProperty(name, fullName, type, value, childrenCount,
-				hasChildren, constant, key, address, availableChildren, page,
-				pagesize);
+		return new DbgpProperty(name, fullName, type, value, childrenCount, hasChildren, constant, key, address, availableChildren, page, pagesize);
 	}
 
 	private static final String ATTR_REASON = "reason"; //$NON-NLS-1$
 	private static final String ATTR_STATUS = "status"; //$NON-NLS-1$
-	
+
 	private static final String ELEM_INTERNAL = "internal";
 	private static final String ATTR_THREAD_ID = "threadId";
 	private static final String ATTR_THREAD_NAME = "threadName";
 	private static final String ATTR_THREAD_STATE = "threadState";
 
 	public static IDbgpStatus parseStatus(Element element)
-			throws DbgpProtocolException {
+			throws DbgpProtocolException
+	{
 
 		String status = element.getAttribute(ATTR_STATUS);
 		String reason = element.getAttribute(ATTR_REASON);
-		
+
 		IDbgpStatusInterpreterThreadState interpreterThreadState = null;
-		
+
 		NodeList internalElements = element.getElementsByTagName(ELEM_INTERNAL);
 
 		if (internalElements.getLength() > 0
 				&& internalElements.item(0).getNodeType() == Node.ELEMENT_NODE)
 		{
 			Element internalElement = (Element) internalElements.item(0);
-			
+
 			int threadId = Integer.parseInt(internalElement.getAttribute(ATTR_THREAD_ID));
 			String name = internalElement.getAttribute(ATTR_THREAD_NAME);
 			String tState = internalElement.getAttribute(ATTR_THREAD_STATE);
 			interpreterThreadState = DbgpStatusInterpreterThreadState.parse(threadId, name, tState);
 		}
-		
+
 		return DbgpStatus.parse(status, reason, interpreterThreadState);
 	}
 
@@ -339,7 +359,8 @@ public class DbgpXmlEntityParser extends DbgpXmlParser {
 
 	}
 
-	public static IDbgpBreakpoint parseBreakpoint(Element element) {
+	public static IDbgpBreakpoint parseBreakpoint(Element element)
+	{
 		// ActiveState Tcl
 
 		// ActiveState Python
@@ -364,7 +385,8 @@ public class DbgpXmlEntityParser extends DbgpXmlParser {
 		int hitValue = getIntAttribute(element, ATTR_HIT_VALUE, 0);
 		String hitCondition = getStringAttribute(element, ATTR_HIT_CONDITION);
 
-		if (type.equals(LINE_BREAKPOINT)) {
+		if (type.equals(LINE_BREAKPOINT))
+		{
 			String fileName = element.getAttribute(ATTR_FILENAME);
 
 			// ActiveState's dbgp implementation is slightly inconsistent
@@ -374,28 +396,27 @@ public class DbgpXmlEntityParser extends DbgpXmlParser {
 			}
 
 			int lineNumber = Integer.parseInt(lineno);
-			return new DbgpLineBreakpoint(id, enabled, hitValue, hitCount,
-					hitCondition, fileName, lineNumber);
-		} else if (type.equals(CALL_BREAKPOINT)) {
+			return new DbgpLineBreakpoint(id, enabled, hitValue, hitCount, hitCondition, fileName, lineNumber);
+		} else if (type.equals(CALL_BREAKPOINT))
+		{
 			String function = element.getAttribute(ATTR_FUNCTION);
-			return new DbgpCallBreakpoint(id, enabled, hitValue, hitCount,
-					hitCondition, function);
-		} else if (type.equals(RETURN_BREAKPOINT)) {
+			return new DbgpCallBreakpoint(id, enabled, hitValue, hitCount, hitCondition, function);
+		} else if (type.equals(RETURN_BREAKPOINT))
+		{
 			String function = element.getAttribute(ATTR_FUNCTION);
-			return new DbgpReturnBreakpoint(id, enabled, hitValue, hitCount,
-					hitCondition, function);
-		} else if (type.equals(EXCEPTION_BREAKPOINT)) {
+			return new DbgpReturnBreakpoint(id, enabled, hitValue, hitCount, hitCondition, function);
+		} else if (type.equals(EXCEPTION_BREAKPOINT))
+		{
 			String exception = element.getAttribute(ATTR_EXCEPTION);
-			return new DbgpExceptionBreakpoint(id, enabled, hitValue, hitCount,
-					hitCondition, exception);
-		} else if (type.equals(CONDITIONAL_BREAKPOINT)) {
+			return new DbgpExceptionBreakpoint(id, enabled, hitValue, hitCount, hitCondition, exception);
+		} else if (type.equals(CONDITIONAL_BREAKPOINT))
+		{
 			String expression = element.getAttribute(ATTR_EXPRESSION);
-			return new DbgpConditionalBreakpoint(id, enabled, hitValue,
-					hitCount, hitCondition, expression);
-		} else if (type.equals(WATCH_BREAKPOINT)) {
+			return new DbgpConditionalBreakpoint(id, enabled, hitValue, hitCount, hitCondition, expression);
+		} else if (type.equals(WATCH_BREAKPOINT))
+		{
 			String expression = element.getAttribute(ATTR_EXPRESSION);
-			return new DbgpWatchBreakpoint(id, enabled, hitValue, hitCount,
-					hitCondition, expression);
+			return new DbgpWatchBreakpoint(id, enabled, hitValue, hitCount, hitCondition, expression);
 		}
 
 		return null;
@@ -408,7 +429,8 @@ public class DbgpXmlEntityParser extends DbgpXmlParser {
 	private static final String ATTR_PARENT = "parent"; //$NON-NLS-1$
 	private static final String ATTR_LANGUAGE = "language"; //$NON-NLS-1$
 
-	public static IDbgpSessionInfo parseSession(Element element) {
+	public static IDbgpSessionInfo parseSession(Element element)
+	{
 		String appId = element.getAttribute(ATTR_APPID);
 		String ideKey = element.getAttribute(ATTR_IDEKEY);
 		String session = element.getAttribute(ATTR_SESSION);
@@ -416,39 +438,42 @@ public class DbgpXmlEntityParser extends DbgpXmlParser {
 		String parentId = element.getAttribute(ATTR_PARENT);
 		String language = element.getAttribute(ATTR_LANGUAGE);
 		DbgpException error = DbgpXmlParser.checkError(element);
-		return new DbgpSessionInfo(appId, ideKey, session, threadId, parentId,
-				language, null, error);
+		return new DbgpSessionInfo(appId, ideKey, session, threadId, parentId, language, null, error);
 	}
 
-	protected static String getFromChildOrAttr(Element property, String name) {
+	protected static String getFromChildOrAttr(Element property, String name)
+	{
 		NodeList list = property.getElementsByTagName(name);
 
-		if (list.getLength() == 0) {
+		if (list.getLength() == 0)
+		{
 			return property.getAttribute(name);
 		}
 
 		/*
-		 * this may or may not need to be base64 decoded - need to see output
-		 * from an ActiveState's python debugging session to determine. gotta
-		 * love protocol changes that have made their way back into the
-		 * published spec
+		 * this may or may not need to be base64 decoded - need to see output from an ActiveState's python debugging
+		 * session to determine. gotta love protocol changes that have made their way back into the published spec
 		 */
 		return getEncodedValue((Element) list.item(0));
 	}
 
 	private static final String ATTR_ENCODING = "encoding"; //$NON-NLS-1$
 
-	protected static String getEncodedValue(Element element) {
+	protected static String getEncodedValue(Element element)
+	{
 		String encoding = ENCODING_NONE;
-		if (element.hasAttribute(ATTR_ENCODING)) {
+		if (element.hasAttribute(ATTR_ENCODING))
+		{
 			encoding = element.getAttribute(ATTR_ENCODING);
 		}
 
-		if (ENCODING_NONE.equals(encoding)) {
+		if (ENCODING_NONE.equals(encoding))
+		{
 			return parseContent(element);
 		}
 
-		if (ENCODING_BASE64.equals(encoding)) {
+		if (ENCODING_BASE64.equals(encoding))
+		{
 			return parseBase64Content(element);
 		}
 

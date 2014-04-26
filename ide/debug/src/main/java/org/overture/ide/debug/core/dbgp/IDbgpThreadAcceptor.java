@@ -20,6 +20,7 @@ package org.overture.ide.debug.core.dbgp;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 
-public interface IDbgpThreadAcceptor {
+public interface IDbgpThreadAcceptor
+{
 	void acceptDbgpThread(IDbgpSession session, IProgressMonitor monitor);
 }

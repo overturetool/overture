@@ -199,10 +199,10 @@ public class VdmEvaluationAction implements IWorkbenchWindowActionDelegate,
 			return null;
 		}
 
-//		public IRegion getRegion()
-//		{
-//			return region;
-//		}
+		// public IRegion getRegion()
+		// {
+		// return region;
+		// }
 	}
 
 	private IWorkbenchWindow window;
@@ -421,7 +421,7 @@ public class VdmEvaluationAction implements IWorkbenchWindowActionDelegate,
 		if (textWidget != null)
 		{
 			Point docRange = textWidget.getSelectionRange();
-			int midOffset = docRange.x + (docRange.y / 2);
+			int midOffset = docRange.x + docRange.y / 2;
 			Point point = textWidget.getLocationAtOffset(midOffset);
 			point = textWidget.toDisplay(point);
 

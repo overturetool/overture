@@ -230,7 +230,7 @@ public class ProbConverterTestBase
 				|| !typeCheckResult.parserResult.errors.isEmpty())
 		{
 			throw new AnalysisException("Unable to type check expression: "
-					+ file + "\n\n" + typeCheckResult.errors);
+					+ file + "\n\n" + typeCheckResult.errors+ "\n\n" + typeCheckResult.parserResult.errors);
 		}
 
 		return typeCheckResult.result;

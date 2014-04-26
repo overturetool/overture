@@ -67,7 +67,9 @@ public class VdmWatchExpressionDelegate implements IWatchExpressionDelegate
 			{
 				IStackFrame[] frames = ((IVdmThread) context).getStackFrames();
 				if (frames.length > 0)
+				{
 					return (IVdmStackFrame) frames[0];
+				}
 			} else if (context instanceof IVdmStackFrame)
 			{
 				return (IVdmStackFrame) context;

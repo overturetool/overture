@@ -145,8 +145,8 @@ public class VdmDebugState
 		StringBuffer string = new StringBuffer();
 		for (DebugState s : states)
 		{
-			string.append( s);
-			string.append( " ");
+			string.append(s);
+			string.append(" ");
 		}
 		return string.toString();
 	}

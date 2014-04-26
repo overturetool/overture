@@ -32,7 +32,7 @@ public class SourceViewerEditorManager
 	 * A handle to the unique Singleton instance.
 	 */
 	static private SourceViewerEditorManager _instance = null;
-	static final Map<String,String> editors = new Hashtable<String,String>();
+	static final Map<String, String> editors = new Hashtable<String, String>();
 
 	/**
 	 * @return The unique instance of this class.
@@ -46,40 +46,36 @@ public class SourceViewerEditorManager
 		return _instance;
 	}
 
-	public SourceViewerEditorManager() {
+	public SourceViewerEditorManager()
+	{
 		editors.putAll(getEditors());
 	}
 
-
-
-	private Map<String,String> getEditors()
+	private Map<String, String> getEditors()
 	{
-		Map<String,String> editors = new Hashtable<String,String>();
+		Map<String, String> editors = new Hashtable<String, String>();
 
-		IConfigurationElement[] config = Platform.getExtensionRegistry()
-				.getConfigurationElementsFor(IDebugConstants.EXTENSION_SOURCEVIEWER_EDITOR);
+		IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(IDebugConstants.EXTENSION_SOURCEVIEWER_EDITOR);
 
 		for (IConfigurationElement e : config)
 		{
 			String editorId = e.getAttribute("EditorId");
-			String contentTypeId =e.getAttribute("ContentTypeId");
-			
-			editors.put( contentTypeId,editorId);
+			String contentTypeId = e.getAttribute("ContentTypeId");
+
+			editors.put(contentTypeId, editorId);
 		}
 
 		return editors;
 	}
-	
+
 	public Collection<String> getContentTypeIds()
 	{
 		return editors.keySet();
 	}
-	
+
 	public String getEditorId(String contentTypeId)
 	{
 		return editors.get(contentTypeId);
 	}
 
-	
-	
 }

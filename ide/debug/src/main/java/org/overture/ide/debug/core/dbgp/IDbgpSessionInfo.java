@@ -22,7 +22,8 @@ import java.net.URI;
 
 import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
 
-public interface IDbgpSessionInfo {
+public interface IDbgpSessionInfo
+{
 	String getApplicationId();
 
 	String getIdeKey();
@@ -36,6 +37,6 @@ public interface IDbgpSessionInfo {
 	String getLanguage();
 
 	URI getFileUri();
-	
+
 	DbgpException getError();
 }

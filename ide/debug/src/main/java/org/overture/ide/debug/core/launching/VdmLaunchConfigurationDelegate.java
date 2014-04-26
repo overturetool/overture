@@ -265,7 +265,7 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 
 		File vdmjPropertiesFile = prepareCustomDebuggerProperties(vdmProject, configuration);
 		String classpath = VdmProjectClassPathCollector.toCpCliArgument(VdmProjectClassPathCollector.getClassPath(getProject(configuration), getDebugEngineBundleIds(), vdmjPropertiesFile));
-		commandList.addAll(1, Arrays.asList(new String[]{"-cp", classpath}));
+		commandList.addAll(1, Arrays.asList(new String[] { "-cp", classpath }));
 		commandList.add(3, IDebugConstants.DEBUG_ENGINE_CLASS);
 		commandList.addAll(1, getVmArguments(configuration));
 
@@ -366,7 +366,7 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 
 	private synchronized int getSessionId()
 	{
-		return (sessionId++);
+		return sessionId++;
 	}
 
 	private Collection<? extends String> getVmArguments(

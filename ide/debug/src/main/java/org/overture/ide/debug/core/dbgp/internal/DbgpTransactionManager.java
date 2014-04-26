@@ -18,10 +18,12 @@
  *******************************************************************************/
 package org.overture.ide.debug.core.dbgp.internal;
 
-public class DbgpTransactionManager {
+public class DbgpTransactionManager
+{
 	private static DbgpTransactionManager instance = new DbgpTransactionManager();
 
-	public static DbgpTransactionManager getInstance() {
+	public static DbgpTransactionManager getInstance()
+	{
 		return instance;
 	}
 
@@ -29,12 +31,15 @@ public class DbgpTransactionManager {
 
 	private int id;
 
-	private DbgpTransactionManager() {
+	private DbgpTransactionManager()
+	{
 		this.id = 0;
 	}
 
-	public int generateId() {
-		synchronized (lock) {
+	public int generateId()
+	{
+		synchronized (lock)
+		{
 			return id++;
 		}
 	}

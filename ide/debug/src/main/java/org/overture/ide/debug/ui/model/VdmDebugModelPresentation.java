@@ -36,7 +36,6 @@ public class VdmDebugModelPresentation extends LabelProvider implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.debug.ui.IDebugModelPresentation#computeDetail(org.eclipse.debug.core.model.IValue,
 	 * org.eclipse.debug.ui.IValueDetailListener)
 	 */
@@ -45,16 +44,16 @@ public class VdmDebugModelPresentation extends LabelProvider implements
 		String detail = "";
 		try
 		{
-			if(value instanceof VdmValue)
+			if (value instanceof VdmValue)
 			{
 				VdmValue vdmValue = (VdmValue) value;
 				vdmValue.getVariables();
 				detail = vdmValue.getRawValue();
-			}else
+			} else
 			{
-				detail = value.getValueString();	
+				detail = value.getValueString();
 			}
-			
+
 		} catch (DebugException e)
 		{
 		}
@@ -63,38 +62,36 @@ public class VdmDebugModelPresentation extends LabelProvider implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.ui.ISourcePresentation#getEditorId(org.eclipse.ui.IEditorInput,
-	 * java.lang.Object)
+	 * @see org.eclipse.debug.ui.ISourcePresentation#getEditorId(org.eclipse.ui.IEditorInput, java.lang.Object)
 	 */
 	public String getEditorId(IEditorInput input, Object element)
 	{
-		if(element instanceof ILineBreakpoint)
+		if (element instanceof ILineBreakpoint)
 		{
 			ILineBreakpoint breakpoint = (ILineBreakpoint) element;
 			element = breakpoint.getMarker().getResource();
 		}
-		
+
 		if (element instanceof IFile)
 		{
 			IFile file = (IFile) element;
-				try
+			try
+			{
+				String contentTypeId = file.getContentDescription().getContentType().getId();
+				if (SourceViewerEditorManager.getInstance().getContentTypeIds().contains(contentTypeId))
 				{
-					String contentTypeId = file.getContentDescription().getContentType().getId();
-					if(SourceViewerEditorManager.getInstance().getContentTypeIds().contains(contentTypeId))
-					{
-						return SourceViewerEditorManager.getInstance().getEditorId(contentTypeId);
-					}
-					else //TODO: it fixes the source lookup for wordDocs - not sure if this has other implications  
-					{
-						return SourceViewerEditorManager.getInstance().getEditorId("org.overture.ide.vdm.external.content-type");
-					}
-				} catch (CoreException e)
+					return SourceViewerEditorManager.getInstance().getEditorId(contentTypeId);
+				} else
+				// TODO: it fixes the source lookup for wordDocs - not sure if this has other implications
 				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					return SourceViewerEditorManager.getInstance().getEditorId("org.overture.ide.vdm.external.content-type");
 				}
-			//return "org.overture.ide.vdmpp.ui.editor";
+			} catch (CoreException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			// return "org.overture.ide.vdmpp.ui.editor";
 		}
 		return null;
 	}
@@ -102,10 +99,13 @@ public class VdmDebugModelPresentation extends LabelProvider implements
 	public IEditorInput getEditorInput(Object element)
 	{
 		if (element instanceof IFile)
+		{
 			return new FileEditorInput((IFile) element);
+		}
 		if (element instanceof ILineBreakpoint)
-			return new FileEditorInput((IFile) ((ILineBreakpoint) element).getMarker()
-					.getResource());
+		{
+			return new FileEditorInput((IFile) ((ILineBreakpoint) element).getMarker().getResource());
+		}
 		return null;
 	}
 

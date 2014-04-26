@@ -26,15 +26,15 @@ import java.io.InputStreamReader;
 import org.eclipse.swt.SWT;
 import org.overture.ide.ui.internal.util.ConsoleWriter;
 
-
-
 public class ProcessConsolePrinter extends Thread
 {
 	ConsoleWriter cw = null;
 	InputStream stream = null;
 	boolean error = false;
 
-	public ProcessConsolePrinter(Boolean error ,ConsoleWriter cw, InputStream inputStream) {
+	public ProcessConsolePrinter(Boolean error, ConsoleWriter cw,
+			InputStream inputStream)
+	{
 		this.cw = cw;
 		this.stream = inputStream;
 		this.error = error;
@@ -51,21 +51,21 @@ public class ProcessConsolePrinter extends Thread
 		{
 			while ((line = input.readLine()) != null)
 			{
-				
-				
-				
+
 				if (cw != null)
 				{
-					if(error){
+					if (error)
+					{
 						cw.consolePrint(line, SWT.COLOR_RED);
-					}
-					else{
+					} else
+					{
 						cw.println(line);
 					}
-					
-				}
-				else
+
+				} else
+				{
 					System.out.println(line);
+				}
 			}
 		} catch (IOException e)
 		{

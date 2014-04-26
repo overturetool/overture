@@ -32,28 +32,34 @@ import org.overture.ide.debug.core.dbgp.exceptions.DbgpOpertionCanceledException
 import org.overture.ide.debug.core.dbgp.exceptions.DbgpTimeoutException;
 import org.overture.ide.debug.core.model.IVdmThread;
 
-public abstract class DbgpOperation {
-	private static final boolean DEBUG = false;//VdmDebugPlugin.DEBUG;
+public abstract class DbgpOperation
+{
+	private static final boolean DEBUG = false;// VdmDebugPlugin.DEBUG;
 
-	public interface IResultHandler {
+	public interface IResultHandler
+	{
 		void finish(IDbgpStatus status, DbgpException e);
 	}
 
 	private final Job job;
 	private final IDbgpCommands commands;
 
-	protected IDbgpCoreCommands getCore() {
+	protected IDbgpCoreCommands getCore()
+	{
 		return commands.getCoreCommands();
 	}
 
-	protected IDbgpExtendedCommands getExtended() {
+	protected IDbgpExtendedCommands getExtended()
+	{
 		return commands.getExtendedCommands();
 	}
 
 	private final IResultHandler resultHandler;
 
-	protected void callFinish(IDbgpStatus status) {
-		if (DEBUG) {
+	protected void callFinish(IDbgpStatus status)
+	{
+		if (DEBUG)
+		{
 			System.out.println("Status: " + status); //$NON-NLS-1$
 		}
 
@@ -61,25 +67,34 @@ public abstract class DbgpOperation {
 	}
 
 	protected DbgpOperation(IVdmThread thread, String name,
-			IResultHandler handler) {
+			IResultHandler handler)
+	{
 		this.resultHandler = handler;
 
 		this.commands = thread.getDbgpSession();
 
-		job = new Job(name) {
-			protected IStatus run(IProgressMonitor monitor) {
+		job = new Job(name)
+		{
+			protected IStatus run(IProgressMonitor monitor)
+			{
 				// TODO: improve
-				try {
+				try
+				{
 					process();
-				} catch (DbgpOpertionCanceledException e) {
+				} catch (DbgpOpertionCanceledException e)
+				{
 					// Operation was canceled cause debugger is shutting down
-				} catch (DbgpTimeoutException e) {
-					if (VdmDebugPlugin.DEBUG) {
+				} catch (DbgpTimeoutException e)
+				{
+					if (VdmDebugPlugin.DEBUG)
+					{
 						e.printStackTrace();
 					}
 					resultHandler.finish(null, e);
-				} catch (DbgpException e) {
-					if (VdmDebugPlugin.DEBUG) {
+				} catch (DbgpException e)
+				{
+					if (VdmDebugPlugin.DEBUG)
+					{
 						System.out.println("Exception: " + e.getMessage()); //$NON-NLS-1$
 						System.out.println(e.getClass());
 						e.printStackTrace();
@@ -94,8 +109,10 @@ public abstract class DbgpOperation {
 		job.setUser(false);
 	}
 
-	public void schedule() {
-		if (DEBUG) {
+	public void schedule()
+	{
+		if (DEBUG)
+		{
 			System.out.println("Starting operation: " + job.getName()); //$NON-NLS-1$
 		}
 
