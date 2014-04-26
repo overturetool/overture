@@ -12,7 +12,7 @@ analysis in VDM++. It may be used as a substitute for Chapter 3 of
 ``Validated Designs for Object-oriented Systems''\footnote{John
   Fitzgerald, Peter Gorm Larsen, Paul Mukherjee, Nico Plat and Marcel
   Verhoef. \emph{Validated Designs for Object-oriented Systems},
-  Springer, New York. 2005, ISBN 1-85233-881-4} or as a free-standing
+  Springer, New York. 2005, ISBN 1-85233-881-4.} or as a free-standing
 guide. Additional material is available on the book's web
 site\footnote{\url{www.vdmbook.com}.}. Throughout this guide we will refer to
 the textbook as ``the book'' and the book's web site simply as ``the
@@ -109,7 +109,7 @@ is necessary to install two separate tools -- Overture and Modelio.
 \item[\textbf{Overture:}] This is an open source tool developed by a
   community of volunteers and built on the Eclipse platform. The
   Overture development project is managed on
-  SourceForge\footnote{\url{https://sourceforge.net/projects/overture/}}.
+  GitHub\footnote{\url{https://github.com/overturetool/}}.
 %There are two ways of obtaining the Overture Eclipse plug-in.
 %If
 %you are already a user of Eclipse (version 3.5 or later) you can install the
@@ -369,14 +369,14 @@ for this project including specific VDM options. Note that there is a
 language version option that for the \texttt{AlarmErrPP}
 project set to \texttt{vdm10} which indicates that it include
 non-standard features such as {\bf\ttfamily traces} which is explained
-in Section~\ref{sec:CT}. In addition, options are gathered here for
+in Section~\ref{sec:CT}, but here the version should be set for \texttt{classic}. In addition, options are gathered here for
 additional checks where the \texttt{AlarmErrPP} project simply follow
 the standard settings used for new projects.
 
 \begin{figure}[!htb]
 \begin{center}
   \includegraphics[width=3.0in]{figures/settings}
-  \caption[labelInTOC]{Properties for the \texttt{AlarmErrPP} Project}
+  \caption[labelInTOC]{Properties for the \texttt{AlarmErrPP} Project (change version to \texttt{classic}}
   \label{fig:settings}
 \end{center}
 \end{figure}
@@ -848,8 +848,7 @@ examined at the end.
 
 In our simple example, the different tests in the exercise above does
 cause the majority of the VDM++ model to be executed, but for
-demonstration purposes let us start by cleaning the model (right click
-on the project and select \texttt{Clean}). If we simply take the
+demonstration purposes let us start by cleaning the model (select ``\texttt{Project}'' at the top and select \texttt{Clean...} in the menu). If we simply take the
 \texttt{AlarmPP} debug launch configuration the
 \verb|ExpertIsOnDuty| and \verb|ExpertToPage| operations in
 \verb|plant.vdmpp| are called by the
