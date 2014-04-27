@@ -44,6 +44,7 @@ import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AExists1QuantifierExpCG;
 import org.overture.codegen.cgast.expressions.AExistsQuantifierExpCG;
 import org.overture.codegen.cgast.expressions.AExplicitVarExpCG;
+import org.overture.codegen.cgast.expressions.AExternalExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AFieldNumberExpCG;
 import org.overture.codegen.cgast.expressions.AFloorUnaryExpCG;
@@ -310,6 +311,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(ALetBeStExpCG.class, templateStructure.EXP_PATH + "LetBeSt");
 		
 		nodeTemplateFileNames.put(AMkBasicExpCG.class, templateStructure.EXP_PATH + "MkBasic");
+		
+		nodeTemplateFileNames.put(AExternalExpCG.class, templateStructure.EXP_PATH + "External");
 		
 		// Quantifier expressions
 		

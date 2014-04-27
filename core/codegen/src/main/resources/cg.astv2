@@ -203,6 +203,10 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{postDec} [exp]:expCG
     |	{deRef} [exp]:expCG //For pointer dereference
     |	#RuntimeError
+        //When generating code using the abstract syntax of this tree structure "external" 
+    	//is used for refering to expressions of the target environment (e.g. that of Java) 
+    	//that are not directly mapped to by the code generator.
+    |	{external} [targetLangExp]:java_String
     ;
 
 #RuntimeError {-> package='org.overture.codegen.cgast.expressions'}
