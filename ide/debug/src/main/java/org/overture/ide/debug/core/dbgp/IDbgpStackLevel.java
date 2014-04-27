@@ -20,7 +20,8 @@ package org.overture.ide.debug.core.dbgp;
 
 import java.net.URI;
 
-public interface IDbgpStackLevel {
+public interface IDbgpStackLevel
+{
 	int getLevel();
 
 	int getLineNumber();

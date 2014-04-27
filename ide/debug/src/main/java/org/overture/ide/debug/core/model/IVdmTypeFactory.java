@@ -18,7 +18,8 @@
  *******************************************************************************/
 package org.overture.ide.debug.core.model;
 
-public interface IVdmTypeFactory {
+public interface IVdmTypeFactory
+{
 
 	static String STRING = "string"; //$NON-NLS-1$
 	static String ARRAY = "array"; //$NON-NLS-1$

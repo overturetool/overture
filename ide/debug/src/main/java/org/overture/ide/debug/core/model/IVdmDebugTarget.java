@@ -28,10 +28,11 @@ import org.overture.ide.debug.core.dbgp.IDbgpSession;
 import org.overture.ide.debug.core.model.internal.IVdmStreamProxy;
 import org.overture.ide.debug.logging.LogItem;
 
-public interface IVdmDebugTarget extends IDebugTarget {
+public interface IVdmDebugTarget extends IDebugTarget
+{
 	boolean isInitialized();
 
-	// 
+	//
 	String getSessionId();
 
 	// Listener
@@ -60,11 +61,11 @@ public interface IVdmDebugTarget extends IDebugTarget {
 
 	boolean isUseStepFilters();
 
-	//IDLTKLanguageToolkit getLanguageToolkit();
+	// IDLTKLanguageToolkit getLanguageToolkit();
 
 	/**
-	 * Returns <code>true</code> if the thread should break on the first
-	 * executable line of code, <code>false</code> otherwise.
+	 * Returns <code>true</code> if the thread should break on the first executable line of code, <code>false</code>
+	 * otherwise.
 	 */
 	boolean breakOnFirstLineEnabled();
 
@@ -94,6 +95,6 @@ public interface IVdmDebugTarget extends IDebugTarget {
 	boolean isRemote();
 
 	IVdmProject getVdmProject();
-	
+
 	public void printLog(LogItem item);
 }

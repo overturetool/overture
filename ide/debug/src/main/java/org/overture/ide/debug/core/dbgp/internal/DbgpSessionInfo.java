@@ -23,7 +23,8 @@ import java.net.URI;
 import org.overture.ide.debug.core.dbgp.IDbgpSessionInfo;
 import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
 
-public class DbgpSessionInfo implements IDbgpSessionInfo {
+public class DbgpSessionInfo implements IDbgpSessionInfo
+{
 	private final String appId;
 
 	private final String ideKey;
@@ -41,7 +42,9 @@ public class DbgpSessionInfo implements IDbgpSessionInfo {
 	private DbgpException error;
 
 	public DbgpSessionInfo(String appId, String ideKey, String session,
-			String threadId, String parentId, String language, URI fileUri, DbgpException error) {
+			String threadId, String parentId, String language, URI fileUri,
+			DbgpException error)
+	{
 		super();
 		this.appId = appId;
 		this.ideKey = ideKey;
@@ -53,35 +56,43 @@ public class DbgpSessionInfo implements IDbgpSessionInfo {
 		this.error = error;
 	}
 
-	public String getApplicationId() {
+	public String getApplicationId()
+	{
 		return appId;
 	}
 
-	public URI getFileUri() {
+	public URI getFileUri()
+	{
 		return fileUri;
 	}
 
-	public String getIdeKey() {
+	public String getIdeKey()
+	{
 		return ideKey;
 	}
 
-	public String getLanguage() {
+	public String getLanguage()
+	{
 		return language;
 	}
 
-	public String getParentAppId() {
+	public String getParentAppId()
+	{
 		return parentId;
 	}
 
-	public String getSession() {
+	public String getSession()
+	{
 		return session;
 	}
 
-	public String getThreadId() {
+	public String getThreadId()
+	{
 		return threadId;
 	}
 
-	public DbgpException getError() {
+	public DbgpException getError()
+	{
 		return error;
 	}
 

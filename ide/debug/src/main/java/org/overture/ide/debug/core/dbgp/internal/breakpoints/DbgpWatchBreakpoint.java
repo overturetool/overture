@@ -21,17 +21,20 @@ package org.overture.ide.debug.core.dbgp.internal.breakpoints;
 import org.overture.ide.debug.core.dbgp.breakpoints.IDbgpWatchBreakpoint;
 
 public class DbgpWatchBreakpoint extends DbgpBreakpoint implements
-		IDbgpWatchBreakpoint {
+		IDbgpWatchBreakpoint
+{
 
 	private final String expression;
 
 	public DbgpWatchBreakpoint(String id, boolean enabled, int hitValue,
-			int hitCount, String hitCondition, String expression) {
+			int hitCount, String hitCondition, String expression)
+	{
 		super(id, enabled, hitValue, hitCount, hitCondition);
 		this.expression = expression;
 	}
 
-	public String getExpression() {
+	public String getExpression()
+	{
 		return expression;
 	}
 }

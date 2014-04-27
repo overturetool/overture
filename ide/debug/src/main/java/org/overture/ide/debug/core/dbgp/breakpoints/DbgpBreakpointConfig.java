@@ -18,7 +18,8 @@
  *******************************************************************************/
 package org.overture.ide.debug.core.dbgp.breakpoints;
 
-public class DbgpBreakpointConfig {
+public class DbgpBreakpointConfig
+{
 	private static final String TEMPORARY_TRUE = "1"; //$NON-NLS-1$
 	private static final String TEMPORARY_FALSE = "0"; //$NON-NLS-1$
 
@@ -41,21 +42,25 @@ public class DbgpBreakpointConfig {
 	private int lineno;
 
 	// Constructors
-	public DbgpBreakpointConfig() {
+	public DbgpBreakpointConfig()
+	{
 		this(true);
 	}
 
-	public DbgpBreakpointConfig(boolean enabled) {
+	public DbgpBreakpointConfig(boolean enabled)
+	{
 		this(enabled, -1, -1, null);
 	}
 
 	public DbgpBreakpointConfig(boolean enabled, int hitValue,
-			int hitCondition, String expression) {
+			int hitCondition, String expression)
+	{
 		this(enabled, hitValue, hitCondition, false, expression, -1);
 	}
 
 	public DbgpBreakpointConfig(boolean enabled, int hitValue,
-			int hitCondition, boolean temporary, String expression, int lineno) {
+			int hitCondition, boolean temporary, String expression, int lineno)
+	{
 		this.enabled = enabled;
 		this.hitValue = hitValue;
 		this.hitCondition = hitCondition;
@@ -65,76 +70,94 @@ public class DbgpBreakpointConfig {
 	}
 
 	// Enabled
-	public boolean isEnabled() {
+	public boolean isEnabled()
+	{
 		return enabled;
 	}
 
-	public void setEnabled(boolean value) {
+	public void setEnabled(boolean value)
+	{
 		this.enabled = value;
 	}
 
 	// Temporary
-	public boolean isTemporary() {
+	public boolean isTemporary()
+	{
 		return temporary;
 	}
 
-	public void setTemporary(boolean value) {
+	public void setTemporary(boolean value)
+	{
 		this.temporary = value;
 	}
 
 	// Hit value
-	public int getHitValue() {
+	public int getHitValue()
+	{
 		return hitValue;
 	}
 
-	public void setHitValue(int hitValue) {
+	public void setHitValue(int hitValue)
+	{
 		this.hitValue = hitValue;
 	}
 
 	// Hit condition
-	public int getHitCondition() {
+	public int getHitCondition()
+	{
 		return hitCondition;
 	}
 
-	public void setHitCondition(int hitCondition) {
+	public void setHitCondition(int hitCondition)
+	{
 		this.hitCondition = hitCondition;
 	}
 
 	// Expression
-	public String getExpression() {
+	public String getExpression()
+	{
 		return expression;
 	}
 
-	public void setExpression(String expression) {
+	public void setExpression(String expression)
+	{
 		this.expression = expression;
 	}
 
 	// Strings
-	public String getTemporaryString() {
+	public String getTemporaryString()
+	{
 		return temporary ? TEMPORARY_TRUE : TEMPORARY_FALSE;
 	}
 
-	public String getStateString() {
+	public String getStateString()
+	{
 		return enabled ? STATE_ENABLED : STATE_DISABLED;
 	}
 
-	public String getHitConditionString() {
-		if (hitCondition == IDbgpBreakpoint.HIT_CONDITION_EQUAL) {
+	public String getHitConditionString()
+	{
+		if (hitCondition == IDbgpBreakpoint.HIT_CONDITION_EQUAL)
+		{
 			return HIT_CONDITION_EQUAL;
-		} else if (hitCondition == IDbgpBreakpoint.HIT_CONDITION_GREATER_OR_EQUAL) {
+		} else if (hitCondition == IDbgpBreakpoint.HIT_CONDITION_GREATER_OR_EQUAL)
+		{
 			return HIT_CONDITION_GREATER;
-		} else if (hitCondition == IDbgpBreakpoint.HIT_CONDITION_MULTIPLE) {
+		} else if (hitCondition == IDbgpBreakpoint.HIT_CONDITION_MULTIPLE)
+		{
 			return HIT_CONDITION_MULTIPLE;
 		}
 
 		return null;
 	}
-	
-	public int getLineNo() {
+
+	public int getLineNo()
+	{
 		return lineno;
 	}
-	
-	public void setLineNo(int value) {
+
+	public void setLineNo(int value)
+	{
 		lineno = value;
 	}
 }

@@ -18,7 +18,8 @@
  *******************************************************************************/
 package org.overture.ide.debug.core.dbgp;
 
-public interface IDbgpStreamListener {
+public interface IDbgpStreamListener
+{
 	void stdoutReceived(String data);
 
 	void stderrReceived(String data);
