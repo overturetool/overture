@@ -47,11 +47,14 @@ public class Utils
 		
 		StringBuilder str = new StringBuilder();
 
-		str.append(fields[0]);
-
-		for (int i = 1; i < fields.length; i++)
+		if (fields.length > 0)
 		{
-			str.append(", " + fields[i]);
+			str.append(fields[0]);
+
+			for (int i = 1; i < fields.length; i++)
+			{
+				str.append(", " + fields[i]);
+			}
 		}
 
 		return "mk_" + record.getClass().getSimpleName() + "(" + str + ")";
