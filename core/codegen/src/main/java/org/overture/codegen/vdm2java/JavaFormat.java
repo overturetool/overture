@@ -20,6 +20,7 @@ import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AEnumMapExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AExplicitVarExpCG;
+import org.overture.codegen.cgast.expressions.AExternalExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AFieldNumberExpCG;
 import org.overture.codegen.cgast.expressions.AHeadUnaryExpCG;
@@ -840,43 +841,56 @@ public class JavaFormat
 		formalParam.setType(paramType);
 		equalsMethod.getFormalParams().add(formalParam);
 		
-		//Construct the initial check:
-		//if ((!obj instanceof RecordType))
-		//	return false;
-		AIfStmCG ifStm = new AIfStmCG();
-		ANotUnaryExpCG negated = new ANotUnaryExpCG();
-		negated.setType(new ABoolBasicTypeCG());
-		negated.setExp(JavaFormatAssistant.consInstanceOf(record, paramName));
-		ifStm.setIfExp(negated);
-		AReturnStmCG returnIncompatibleTypes = new AReturnStmCG();
-		
-		returnIncompatibleTypes.setExp(assistantManager.getExpAssistant().consBoolLiteral(false));
-		ifStm.setThenStm(returnIncompatibleTypes);
-		
-		//If the inital check is passed we can safely cast the formal parameter
-		//To the record type: RecordType other = ((RecordType) obj);
-		String localVarName = "other";
-		ABlockStmCG formalParamCasted = JavaFormatAssistant.consVarFromCastedExp(record, paramName, localVarName);
-		
-		//Next compare the fields of the instance with the fields of the formal parameter "obj":
-		//return (field1 == obj.field1) && (field2 == other.field2)...
-		LinkedList<AFieldDeclCG> fields = record.getFields();
-		PExpCG previousComparisons = JavaFormatAssistant.consFieldComparison(record, fields.get(0), localVarName); 
-
-		for (int i = 1; i < fields.size(); i++)
-		{
-			previousComparisons = JavaFormatAssistant.extendAndExp(record, fields.get(i), previousComparisons, localVarName);
-		}
-
-		AReturnStmCG fieldsComparison = new AReturnStmCG();
-		fieldsComparison.setExp(previousComparisons);
-
-		//Finally add the constructed statements to the equals method body
 		ABlockStmCG equalsMethodBody = new ABlockStmCG();
 		LinkedList<PStmCG> equalsStms = equalsMethodBody.getStatements();
-		equalsStms.add(ifStm);
-		equalsStms.add(formalParamCasted);
-		equalsStms.add(fieldsComparison);
+		
+		AReturnStmCG returnTypeComp = new AReturnStmCG();
+		if (record.getFields().isEmpty())
+		{
+			//If the record has no fields equality is simply:
+			//return obj instanceof RecordType
+			returnTypeComp.setExp(JavaFormatAssistant.consInstanceOf(record, paramName));
+			equalsStms.add(returnTypeComp);
+			
+		} else
+		{
+
+			// Construct the initial check:
+			// if ((!obj instanceof RecordType))
+			// return false;
+			AIfStmCG ifStm = new AIfStmCG();
+			ANotUnaryExpCG negated = new ANotUnaryExpCG();
+			negated.setType(new ABoolBasicTypeCG());
+			negated.setExp(JavaFormatAssistant.consInstanceOf(record, paramName));
+			ifStm.setIfExp(negated);
+			
+
+			returnTypeComp.setExp(assistantManager.getExpAssistant().consBoolLiteral(false));
+			ifStm.setThenStm(returnTypeComp);
+
+			// If the inital check is passed we can safely cast the formal parameter
+			// To the record type: RecordType other = ((RecordType) obj);
+			String localVarName = "other";
+			ABlockStmCG formalParamCasted = JavaFormatAssistant.consVarFromCastedExp(record, paramName, localVarName);
+
+			// Next compare the fields of the instance with the fields of the formal parameter "obj":
+			// return (field1 == obj.field1) && (field2 == other.field2)...
+			LinkedList<AFieldDeclCG> fields = record.getFields();
+			PExpCG previousComparisons = JavaFormatAssistant.consFieldComparison(record, fields.get(0), localVarName);
+
+			for (int i = 1; i < fields.size(); i++)
+			{
+				previousComparisons = JavaFormatAssistant.extendAndExp(record, fields.get(i), previousComparisons, localVarName);
+			}
+
+			AReturnStmCG fieldsComparison = new AReturnStmCG();
+			fieldsComparison.setExp(previousComparisons);
+			
+			equalsStms.add(ifStm);
+			equalsStms.add(formalParamCasted);
+			equalsStms.add(fieldsComparison);
+		}
+
 		equalsMethod.setBody(equalsMethodBody);
 		
 		record.getMethods().add(equalsMethod);
@@ -903,7 +917,18 @@ public class JavaFormat
 		hashcodeMethod.setMethodType(methodType);
 		
 		AReturnStmCG returnStm = new AReturnStmCG();
-		returnStm.setExp(JavaFormatAssistant.consUtilCallUsingRecFields(record, intBasicType, hashCode));
+		
+		if(record.getFields().isEmpty())
+		{
+			AExternalExpCG zero = new AExternalExpCG();
+			zero.setType(intBasicType);
+			zero.setTargetLangExp("0");
+			returnStm.setExp(zero);
+		}
+		else
+		{
+			returnStm.setExp(JavaFormatAssistant.consUtilCallUsingRecFields(record, intBasicType, hashCode));
+		}
 		
 		hashcodeMethod.setBody(returnStm);
 
@@ -928,7 +953,18 @@ public class JavaFormat
 		
 		AReturnStmCG returnStm = new AReturnStmCG();
 		
-		returnStm.setExp(JavaFormatAssistant.consRecToStringCall(record, returnType, "recordToString"));
+		if (record.getFields().isEmpty())
+		{
+			AStringLiteralExpCG emptyRecStr = new AStringLiteralExpCG();
+			emptyRecStr.setIsNull(false);
+			emptyRecStr.setType(returnType);
+			emptyRecStr.setValue(String.format("mk_%s()", record.getName()));
+			
+			returnStm.setExp(emptyRecStr);
+		} else
+		{
+			returnStm.setExp(JavaFormatAssistant.consRecToStringCall(record, returnType, "recordToString"));
+		}
 		
 		toStringMethod.setBody(returnStm);
 		
