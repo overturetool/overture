@@ -1178,7 +1178,7 @@ public setInactiveRoute : nat ==> ()
 setInactiveRoute(id)==
 (
 	duration(0) (
-	inactiveRouteID := inactiveRouteID union {id};
+-- see bug #301	inactiveRouteID := inactiveRouteID union {id};
 	inactiveGrid := inactiveGrid union  
 	                {tp | tp in set grid
 	                    & exists x in set elems tp & x.id_route = id};
