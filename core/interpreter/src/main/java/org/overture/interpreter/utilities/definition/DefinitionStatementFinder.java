@@ -21,11 +21,11 @@ import org.overture.interpreter.assistant.statement.PStmAssistantInterpreter;
  *
  ****************************************/
 
-public class StatementFinder extends QuestionAnswerAdaptor<Integer, PStm>
+public class DefinitionStatementFinder extends QuestionAnswerAdaptor<Integer, PStm>
 {
 	protected IInterpreterAssistantFactory af;
 	
-	public StatementFinder(IInterpreterAssistantFactory af)
+	public DefinitionStatementFinder(IInterpreterAssistantFactory af)
 	{
 		this.af = af;
 	}

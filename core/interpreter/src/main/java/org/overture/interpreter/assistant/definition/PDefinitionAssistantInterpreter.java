@@ -325,7 +325,7 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 	{
 		try
 		{
-			return def.apply(af.getStatementFinder(),lineno);
+			return def.apply(af.getDefinitionStatementFinder(),lineno);
 		} catch (AnalysisException e)
 		{
 			return null;

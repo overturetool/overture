@@ -511,12 +511,14 @@ public interface IInterpreterAssistantFactory extends
 	
 	IAnswer<Boolean> getInstanceVariableChecker();
 	
-	IQuestionAnswer<Integer, PStm> getStatementFinder();
+	IQuestionAnswer<Integer, PStm> getDefinitionStatementFinder();
 	
 	IQuestionAnswer<Context, TraceNode> getCoreTraceExpander();
 	
 	IQuestionAnswer<Context, TraceNode> getTermTraceExpander();
 	
 	IQuestionAnswer<Integer, PExp> getStatementExpressionFinder();
+	
+	IQuestionAnswer<Integer, PStm> getStatementFinder();
 	
 }

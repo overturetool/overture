@@ -170,7 +170,7 @@ import org.overture.interpreter.utilities.definition.DefinitionValueChecker;
 import org.overture.interpreter.utilities.definition.ExpressionFinder;
 import org.overture.interpreter.utilities.definition.InstanceVariableChecker;
 import org.overture.interpreter.utilities.definition.NamedValueLister;
-import org.overture.interpreter.utilities.definition.StatementFinder;
+import org.overture.interpreter.utilities.definition.DefinitionStatementFinder;
 import org.overture.interpreter.utilities.definition.TermTraceExpander;
 import org.overture.interpreter.utilities.definition.TypeDefinitionChecker;
 import org.overture.interpreter.utilities.definition.ValuesDefinitionLocator;
@@ -181,6 +181,7 @@ import org.overture.interpreter.utilities.pattern.IdentifierPatternFinder;
 import org.overture.interpreter.utilities.pattern.LengthFinder;
 import org.overture.interpreter.utilities.pattern.ValueCollector;
 import org.overture.interpreter.utilities.statement.StatementExpressionFinder;
+import org.overture.interpreter.utilities.statement.StatementFinder;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.ValueList;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
@@ -1047,9 +1048,9 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	}
 	
 	@Override
-	public IQuestionAnswer<Integer, PStm> getStatementFinder()
+	public IQuestionAnswer<Integer, PStm> getDefinitionStatementFinder()
 	{
-		return new StatementFinder(this);
+		return new DefinitionStatementFinder(this);
 	}
 	
 	@Override
@@ -1068,6 +1069,12 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	public IQuestionAnswer<Integer, PExp> getStatementExpressionFinder()
 	{
 		return new StatementExpressionFinder(this);
+	}
+	
+	@Override
+	public IQuestionAnswer<Integer, PStm> getStatementFinder()
+	{
+		return new StatementFinder(this);
 	}
 
 }
