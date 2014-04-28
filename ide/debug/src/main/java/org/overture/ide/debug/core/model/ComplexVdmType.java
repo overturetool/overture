@@ -21,26 +21,32 @@ package org.overture.ide.debug.core.model;
 /**
  * Represents an 'complex' script type
  */
-public class ComplexVdmType extends AtomicVdmType {
+public class ComplexVdmType extends AtomicVdmType
+{
 
-	public ComplexVdmType(String name) {
+	public ComplexVdmType(String name)
+	{
 		super(name);
 	}
 
-	public boolean isAtomic() {
+	public boolean isAtomic()
+	{
 		return false;
 	}
 
-	public boolean isComplex() {
+	public boolean isComplex()
+	{
 		return true;
 	}
 
-	public String formatDetails(IVdmValue value) {
+	public String formatDetails(IVdmValue value)
+	{
 		StringBuffer sb = new StringBuffer();
 		sb.append(getName());
 
 		String address = value.getMemoryAddress();
-		if (address == null) {
+		if (address == null)
+		{
 			address = "unknown";
 		}
 
@@ -49,7 +55,8 @@ public class ComplexVdmType extends AtomicVdmType {
 		return sb.toString();
 	}
 
-	public String formatValue(IVdmValue value) {
+	public String formatValue(IVdmValue value)
+	{
 		StringBuffer sb = new StringBuffer();
 		sb.append(getName());
 

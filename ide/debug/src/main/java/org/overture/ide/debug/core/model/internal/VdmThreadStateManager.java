@@ -140,7 +140,7 @@ public class VdmThreadStateManager implements IDbgpDebuggerFeedback
 
 	private boolean canStep()
 	{
-		return (!terminated && suspended) && !errorState;
+		return !terminated && suspended && !errorState;
 	}
 
 	private void beginStep(int detail)
@@ -281,7 +281,7 @@ public class VdmThreadStateManager implements IDbgpDebuggerFeedback
 	// Resume
 	public boolean canResume()
 	{
-		return (!terminated && suspended) && !errorState;
+		return !terminated && suspended && !errorState;
 	}
 
 	public void endResume(DbgpException e, IDbgpStatus status)

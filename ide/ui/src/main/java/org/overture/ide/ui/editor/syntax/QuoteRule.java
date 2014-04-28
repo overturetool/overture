@@ -65,7 +65,7 @@ public class QuoteRule implements IRule
 			}
 			sb.append((char) c);
 			readCount++;
-			if (!Character.isJavaIdentifierStart(c)&& c!='<' && c!='>')
+			if (!Character.isJavaIdentifierStart(c)&& c!='<' && c!='>' && !Character.isDigit(c))
 			{
 
 				for (int j = 0; j < readCount; j++)

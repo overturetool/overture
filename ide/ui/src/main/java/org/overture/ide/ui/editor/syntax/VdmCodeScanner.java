@@ -44,13 +44,13 @@ public abstract class VdmCodeScanner extends RuleBasedScanner
 
 		IToken keyword = new Token(new TextAttribute(provider.getColor(VdmColorProvider.KEYWORD), null, SWT.BOLD));
 		IToken type = new Token(new TextAttribute(provider.getColor(VdmColorProvider.TYPE), null, SWT.BOLD));
-		
-		final IToken stringBold = new Token(new TextAttribute(provider.getColor(VdmColorProvider.DEFAULT),null, SWT.BOLD | SWT.ITALIC));
+
+		final IToken stringBold = new Token(new TextAttribute(provider.getColor(VdmColorProvider.DEFAULT), null, SWT.BOLD
+				| SWT.ITALIC));
 		IToken comment = new Token(new TextAttribute(provider.getColor(VdmColorProvider.SINGLE_LINE_COMMENT)));
-		 final IToken other = new Token(new TextAttribute(provider.getColor(VdmColorProvider.DEFAULT)));
-		
+		final IToken other = new Token(new TextAttribute(provider.getColor(VdmColorProvider.DEFAULT)));
+
 		List<IRule> rules = new ArrayList<IRule>();
-	
 
 		// Add generic whitespace rule.
 		rules.add(new WhitespaceRule(new VdmWhitespaceDetector()));
@@ -59,28 +59,29 @@ public abstract class VdmCodeScanner extends RuleBasedScanner
 		rules.add(new SingleLineRule("\\begin{vdm_al", "}", comment));
 		rules.add(new SingleLineRule("\\end{vdm_al", "}", comment));
 
-		if(fgKeywords.supportsQuoteTypes())
+		if (fgKeywords.supportsQuoteTypes())
 		{
 			rules.add(new QuoteRule(type));
 		}
-		
-		if(fgKeywords.supportsTypleSelect())
+
+		if (fgKeywords.supportsTypleSelect())
 		{
 			rules.add(new TupleSelectRule(stringBold));
 		}
-		
+
 		for (String prefix : fgKeywords.getUnderscorePrefixKeywords())
 		{
-			rules.add(new PrefixedUnderscoreRule(prefix,keyword));
+			rules.add(new PrefixedUnderscoreRule(prefix, keyword));
 		}
-	
+
 		for (String prefix : fgKeywords.getUnderscorePrefixReservedWords())
 		{
-			rules.add(new PrefixedUnderscoreRule(prefix,stringBold));
+			rules.add(new PrefixedUnderscoreRule(prefix, stringBold));
 		}
 		
 		// Add word rule for keywords.
-		WordRule wordRule = new WordRule(new VdmWordDetector(), other);//Not sure why Token.UNDEFINED doesn't work but it makes S'end' colored.
+		WordRule wordRule = new WordRule(new VdmWordDetector(), other);// Not sure why Token.UNDEFINED doesn't work but
+																		// it makes S'end' colored.
 
 		for (int i = 0; i < fgKeywords.getAllSingleWordKeywords().length; i++)
 		{
@@ -91,7 +92,8 @@ public abstract class VdmCodeScanner extends RuleBasedScanner
 		IRule[] result = new IRule[rules.size()];
 		rules.toArray(result);
 		setRules(result);
-		//sets the default style. If styledText.getStyleRangeAtOffset is called on the editor this default style is returned instead of null
+		// sets the default style. If styledText.getStyleRangeAtOffset is called on the editor this default style is
+		// returned instead of null
 		setDefaultReturnToken(other);
 	}
 

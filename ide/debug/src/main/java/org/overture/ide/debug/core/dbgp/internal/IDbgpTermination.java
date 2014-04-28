@@ -18,7 +18,8 @@
  *******************************************************************************/
 package org.overture.ide.debug.core.dbgp.internal;
 
-public interface IDbgpTermination {
+public interface IDbgpTermination
+{
 	void addTerminationListener(IDbgpTerminationListener listener);
 
 	void removeTerminationListener(IDbgpTerminationListener listener);

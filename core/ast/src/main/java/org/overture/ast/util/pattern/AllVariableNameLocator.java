@@ -22,10 +22,6 @@ import org.overture.ast.patterns.PPattern;
  */
 public class AllVariableNameLocator extends AnswerAdaptor<LexNameList>
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	protected static IAstAssistantFactory af;
 
 	@SuppressWarnings("static-access")

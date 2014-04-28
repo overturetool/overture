@@ -21,7 +21,8 @@ package org.overture.ide.debug.core.launching;
 /**
  * @since 2.0
  */
-public interface ILaunchStatusHandlerExtension extends ILaunchStatusHandler {
+public interface ILaunchStatusHandlerExtension extends ILaunchStatusHandler
+{
 
 	boolean isCanceled();
 

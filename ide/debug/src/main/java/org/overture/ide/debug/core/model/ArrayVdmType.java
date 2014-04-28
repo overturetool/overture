@@ -24,11 +24,13 @@ import org.eclipse.debug.core.model.IVariable;
 /**
  * Represents an 'array' script type
  */
-public class ArrayVdmType extends CollectionVdmType {
+public class ArrayVdmType extends CollectionVdmType
+{
 
 	private static String ARRAY = "sequence"; //$NON-NLS-1$
 
-	public ArrayVdmType() {
+	public ArrayVdmType()
+	{
 		super(ARRAY);
 	}
 
@@ -36,14 +38,20 @@ public class ArrayVdmType extends CollectionVdmType {
 	 * @see org.eclipse.dltk.debug.core.model.CollectionScriptType#buildDetailString(org.eclipse.debug.core.model.IVariable)
 	 */
 	protected String buildDetailString(IVariable variable)
-			throws DebugException {
+			throws DebugException
+	{
 		String name = variable.getName();
-		if (name != null && name.length() > 0) {
+		if (name != null && name.length() > 0)
+		{
 			int counter = 0;
 			if (name.startsWith("-"))
+			{
 				counter++;
-			while (counter < name.length()) {
-				if (!Character.isDigit(name.charAt(counter++))) {
+			}
+			while (counter < name.length())
+			{
+				if (!Character.isDigit(name.charAt(counter++)))
+				{
 					return name + "=" + super.buildDetailString(variable);
 				}
 			}

@@ -124,11 +124,33 @@ public class PluginVdm2JavaUtil
 		}
 	}
 	
+	public static String limitStr(String str)
+	{
+		if(str == null)
+			return "";
+		
+		int length = str.length();
+		final int limit = 100;
+		
+		String subString = null;
+		
+		if(length <= limit)
+		{
+			subString = str.substring(0, length);
+		}
+		else
+		{
+			subString = str.substring(0, limit) + "...";
+		}
+		
+		return subString.replaceAll("\\s+", " ");
+	}
+	
 	public static String formatNodeString(NodeInfo nodeInfo, LocationAssistantCG locationAssistant)
 	{
 		INode node = nodeInfo.getNode();
 		StringBuilder messageSb = new StringBuilder();
-		messageSb.append(node.toString());
+		messageSb.append(limitStr(node.toString()));
 		messageSb.append(" (" + node.getClass().getSimpleName() + ")");
 		
 		ILexLocation location = locationAssistant.findLocation(node);

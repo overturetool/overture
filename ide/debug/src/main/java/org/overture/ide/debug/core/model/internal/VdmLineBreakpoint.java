@@ -114,7 +114,9 @@ public class VdmLineBreakpoint extends AbstractVdmBreakpoint implements
 	{
 		IResource resource = ensureMarker().getResource();
 		if (!resource.equals(getWorkspaceRoot()))
+		{
 			return resource.getName();
+		}
 
 		// else
 		String portablePath = (String) ensureMarker().getAttribute(IMarker.LOCATION);
@@ -156,7 +158,9 @@ public class VdmLineBreakpoint extends AbstractVdmBreakpoint implements
 		{
 			final IResource resource = ensureMarker().getResource();
 			if (!resource.equals(getWorkspaceRoot()))
+			{
 				return ensureMarker().getResource().getFullPath();
+			}
 			final String path = (String) ensureMarker().getAttribute(IMarker.LOCATION);
 			if (path != null)
 			{

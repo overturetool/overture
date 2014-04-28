@@ -21,6 +21,7 @@ package org.overture.ide.debug.core.dbgp.commands;
 import org.overture.ide.debug.core.dbgp.IDbgpStatus;
 import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
 
-public interface IDbgpStatusCommands {
+public interface IDbgpStatusCommands
+{
 	IDbgpStatus getStatus() throws DbgpException;
 }

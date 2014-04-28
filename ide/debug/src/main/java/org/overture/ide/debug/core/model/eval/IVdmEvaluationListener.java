@@ -18,10 +18,10 @@
  *******************************************************************************/
 package org.overture.ide.debug.core.model.eval;
 
-public interface IVdmEvaluationListener {
+public interface IVdmEvaluationListener
+{
 	/**
-	 * Notifies this listener that an evaluation has completed, with the given
-	 * result.
+	 * Notifies this listener that an evaluation has completed, with the given result.
 	 * 
 	 * @param result
 	 *            The result from the evaluation

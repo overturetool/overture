@@ -21,7 +21,8 @@ package org.overture.ide.debug.core.dbgp.commands;
 import org.overture.ide.debug.core.dbgp.IDbgpFeature;
 import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
 
-public interface IDbgpFeatureCommands {
+public interface IDbgpFeatureCommands
+{
 	// These features must be available
 
 	// get [0|1]
@@ -59,10 +60,8 @@ public interface IDbgpFeatureCommands {
 	// breakpoints an engine will accept.
 	final String BREAKPOINT_LANGUAGES = "breakpoint_languages"; //$NON-NLS-1$
 	/**
-	 * returns a space separated list with all the breakpoint types that are
-	 * supported. See 7.6 breakpoints for a list of the 6 defined breakpoint
-	 * types.
-	 * 
+	 * returns a space separated list with all the breakpoint types that are supported. See 7.6 breakpoints for a list
+	 * of the 6 defined breakpoint types.
 	 */
 	final String BREAKPOINT_TYPES = "breakpoint_types"; //$NON-NLS-1$
 

@@ -1,6 +1,8 @@
 package org.overture.codegen.runtime;
 
-public interface ValueType
+import java.io.Serializable;
+
+public interface ValueType extends Serializable
 {
 	public ValueType clone();
 }

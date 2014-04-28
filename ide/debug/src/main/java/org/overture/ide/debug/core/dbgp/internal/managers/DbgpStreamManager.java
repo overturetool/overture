@@ -25,60 +25,79 @@ import org.overture.ide.debug.core.dbgp.internal.IDbgpDebugingEngine;
 import org.overture.ide.debug.core.dbgp.internal.packets.DbgpStreamPacket;
 
 public class DbgpStreamManager extends DbgpWorkingThread implements
-		IDbgpStreamManager {
+		IDbgpStreamManager
+{
 	private final ListenerList listeners = new ListenerList();
 
 	private final IDbgpDebugingEngine engine;
 
-	protected void fireStderrReceived(String data) {
+	protected void fireStderrReceived(String data)
+	{
 		if (data == null || data.length() == 0)
+		{
 			return;
+		}
 		Object[] list = listeners.getListeners();
-		for (int i = 0; i < list.length; ++i) {
+		for (int i = 0; i < list.length; ++i)
+		{
 			((IDbgpStreamListener) list[i]).stderrReceived(data);
 		}
 	}
 
-	protected void fireStdoutReceived(String data) {
+	protected void fireStdoutReceived(String data)
+	{
 		if (data == null || data.length() == 0)
+		{
 			return;
+		}
 		Object[] list = listeners.getListeners();
-		for (int i = 0; i < list.length; ++i) {
+		for (int i = 0; i < list.length; ++i)
+		{
 			((IDbgpStreamListener) list[i]).stdoutReceived(data);
 		}
 	}
 
-	protected void workingCycle() throws Exception {
-		try {
-			while (!Thread.interrupted()) {
+	protected void workingCycle() throws Exception
+	{
+		try
+		{
+			while (!Thread.interrupted())
+			{
 				final DbgpStreamPacket packet = engine.getStreamPacket();
 
-				if (packet.isStderr()) {
+				if (packet.isStderr())
+				{
 					fireStderrReceived(packet.getTextContent());
-				} else if (packet.isStdout()) {
+				} else if (packet.isStdout())
+				{
 					fireStdoutReceived(packet.getTextContent());
 				}
 			}
-		} catch (InterruptedException e) {
+		} catch (InterruptedException e)
+		{
 			// OK, interrupted
 		}
 	}
 
-	public DbgpStreamManager(IDbgpDebugingEngine engine, String name) {
+	public DbgpStreamManager(IDbgpDebugingEngine engine, String name)
+	{
 		super(name);
 
-		if (engine == null) {
+		if (engine == null)
+		{
 			throw new IllegalArgumentException();
 		}
 
 		this.engine = engine;
 	}
 
-	public void addListener(IDbgpStreamListener listener) {
+	public void addListener(IDbgpStreamListener listener)
+	{
 		listeners.add(listener);
 	}
 
-	public void removeListener(IDbgpStreamListener listener) {
+	public void removeListener(IDbgpStreamListener listener)
+	{
 		listeners.remove(listener);
 	}
 

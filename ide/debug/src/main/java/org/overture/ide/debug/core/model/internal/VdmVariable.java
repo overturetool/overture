@@ -80,14 +80,16 @@ public class VdmVariable extends VdmDebugElement implements IVdmVariable,
 	{
 		try
 		{
-			if (("String".equals(property.getType())) && //$NON-NLS-1$
+			if ("String".equals(property.getType()) && //$NON-NLS-1$
 					(!expression.startsWith("'") || !expression.endsWith("'")) && //$NON-NLS-1$ //$NON-NLS-2$
-					(!expression.startsWith("\"") || !expression.endsWith("\""))) //$NON-NLS-1$ //$NON-NLS-2$
+					(!expression.startsWith("\"") || !expression.endsWith("\"")))
+			{
 				expression = "\"" + expression.replaceAll("\\\"", "\\\\\"") + "\""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 				// if (getCoreCommands().setProperty(property.getEvalName(),
 				// frame.getLevel(), expression)) {
 				// clearEvaluationManagerCache();
 				// update();
+			}
 
 			if (getCoreCommands().setProperty(property.getEvalName(), property.getKey(), expression))
 			{

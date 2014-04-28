@@ -34,7 +34,7 @@ public class XMLTagNode extends XMLNode
 
 	public String getAttr(String name)
 	{
-		return attrs.getProperty(name);		// Can be null
+		return attrs.getProperty(name); // Can be null
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class XMLTagNode extends XMLNode
 		sb.append("<");
 		sb.append(tag);
 
-		for (Object name: attrs.keySet())
+		for (Object name : attrs.keySet())
 		{
 			sb.append(" ");
 			sb.append(name);

@@ -20,6 +20,7 @@ package org.overture.ide.debug.core.model;
 
 import org.eclipse.debug.core.model.IDebugElement;
 
-public interface IVdmDebugElement extends IDebugElement {
+public interface IVdmDebugElement extends IDebugElement
+{
 	IVdmDebugTarget getVdmDebugTarget();
 }
