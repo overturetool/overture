@@ -66,13 +66,12 @@ ext wr on_field_players : set of player
        and (pl <> goalkeeper => (nb_gk_subs <= gk_subs_max) and (nb_fp_subs+1 <= fp_subs_max))
   post on_field_players = on_field_players~ union {subs} \ {pl}
        and potential_substitutes = potential_substitutes~ \ {subs}
-       and (if(pl = goalkeeper~) then (((goalkeeper = subs) 
+       and if(pl = goalkeeper~) then ((goalkeeper = subs) 
                  and (nb_gk_subs = nb_gk_subs~ +1 )
-                 and (nb_fp_subs = nb_fp_subs~))) else false)
-       and (if(pl <> goalkeeper~) then (
-                ((goalkeeper = goalkeeper~) 
+                 and (nb_fp_subs = nb_fp_subs~)) else (
+                (goalkeeper = goalkeeper~) 
                  and (nb_gk_subs = nb_gk_subs~)
-                 and (nb_fp_subs = nb_fp_subs~ +1))) else false)
+                 and (nb_fp_subs = nb_fp_subs~ +1))
 ;
 
 SUBSTITUTION_GK (pl : player, subs: player)

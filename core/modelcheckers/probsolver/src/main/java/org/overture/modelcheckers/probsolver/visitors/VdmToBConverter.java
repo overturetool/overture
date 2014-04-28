@@ -382,11 +382,11 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	}
 
 	@Override
-	public Node caseAIfExp(AIfExp node)// TODO: under construction
+	public Node caseAIfExp(AIfExp node)// TODO: under construction (1)then/else part returns not bool, (2)else if part
 			throws AnalysisException
 	{
 
-		ADisjunctPredicate dp = new ADisjunctPredicate();
+	    AConjunctPredicate conjp;
 
 		if (node.getElseList().size() == 0)
 		{
@@ -400,10 +400,10 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		    }
 		    System.err.println("node.getElse(): " + "["+node.getElse()+"]");
 		    System.err.println("ppred: " + ppred.toString());
-			dp = new ADisjunctPredicate(new AConjunctPredicate(pred(node.getTest()), pred(node.getThen())), 
-						    new AConjunctPredicate(new ANegationPredicate(pred(node.getTest())), ppred));
+		    conjp = new AConjunctPredicate(new ADisjunctPredicate(new ANegationPredicate(pred(node.getTest())), pred(node.getThen())),
+						new ADisjunctPredicate(pred(node.getTest()), ppred));
 		} else
-		{
+		    {// elseif part underconstruction
 			LinkedList<AElseIfExp> eilist = node.getElseList();
 			eilist.get(eilist.size() - 1).getElseIf();
 			eilist.get(eilist.size() - 1).getThen();
@@ -413,10 +413,11 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 			{
 				elsePart = new ADisjunctPredicate(new AConjunctPredicate(pred(eilist.get(i).getElseIf()), pred(eilist.get(i).getThen())), new AConjunctPredicate(new ANegationPredicate(pred(eilist.get(i).getElseIf())), elsePart));
 			}
-			dp = new ADisjunctPredicate(new AConjunctPredicate(pred(node.getTest()), pred(node.getThen())), new AConjunctPredicate(new ANegationPredicate(pred(node.getTest())), elsePart));
+			conjp = new AConjunctPredicate(new ADisjunctPredicate(new ANegationPredicate(pred(node.getTest())), pred(node.getThen())), 
+						       new ADisjunctPredicate(pred(node.getTest()), elsePart));
 
 		}
-		return dp;
+		return conjp;
 	}
 
 	@Override
