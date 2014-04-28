@@ -1,7 +1,5 @@
 package org.overture.interpreter.assistant.statement;
 
-import org.overture.ast.statements.AElseIfStm;
-import org.overture.ast.statements.PStm;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 
 public class AElseIfStmAssistantInterpreter // extends AElseIfStmAssistantTC
@@ -20,12 +18,12 @@ public class AElseIfStmAssistantInterpreter // extends AElseIfStmAssistantTC
 //		return PExpAssistantInterpreter.findExpression(stm.getElseIf(), lineno);
 //	}
 
-	public static PStm findStatement(AElseIfStm stm, int lineno)
-	{
-		PStm found = PStmAssistantInterpreter.findStatementBaseCase(stm, lineno);
-		if (found != null)
-			return found;
-		return PStmAssistantInterpreter.findStatement(stm.getThenStm(), lineno);
-	}
+//	public static PStm findStatement(AElseIfStm stm, int lineno)
+//	{
+//		PStm found = PStmAssistantInterpreter.findStatementBaseCase(stm, lineno);
+//		if (found != null)
+//			return found;
+//		return PStmAssistantInterpreter.findStatement(stm.getThenStm(), lineno);
+//	}
 
 }

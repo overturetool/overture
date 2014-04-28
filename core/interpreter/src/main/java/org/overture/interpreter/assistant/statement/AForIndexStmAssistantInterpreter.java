@@ -31,12 +31,12 @@ public class AForIndexStmAssistantInterpreter// extends AForIndexStmAssistantTC
 //		return PStmAssistantInterpreter.findExpression(stm.getStatement(), lineno);
 //	}
 
-	public static PStm findStatement(AForIndexStm stm, int lineno)
-	{
-		PStm found = PStmAssistantInterpreter.findStatementBaseCase(stm, lineno);
-		if (found != null)
-			return found;
-		return PStmAssistantInterpreter.findStatement(stm.getStatement(), lineno);
-	}
+//	public static PStm findStatement(AForIndexStm stm, int lineno)
+//	{
+//		PStm found = PStmAssistantInterpreter.findStatementBaseCase(stm, lineno);
+//		if (found != null)
+//			return found;
+//		return PStmAssistantInterpreter.findStatement(stm.getStatement(), lineno);
+//	}
 
 }

@@ -1,7 +1,5 @@
 package org.overture.interpreter.assistant.statement;
 
-import org.overture.ast.statements.ADurationStm;
-import org.overture.ast.statements.PStm;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 
 public class ADurationStmAssistantInterpreter
@@ -19,9 +17,9 @@ public class ADurationStmAssistantInterpreter
 //		return PStmAssistantInterpreter.findExpression(stm.getStatement(), lineno);
 //	}
 
-	public static PStm findStatement(ADurationStm stm, int lineno)
-	{
-		return PStmAssistantInterpreter.findStatement(stm.getStatement(), lineno);
-	}
+//	public static PStm findStatement(ADurationStm stm, int lineno)
+//	{
+//		return PStmAssistantInterpreter.findStatement(stm.getStatement(), lineno);
+//	}
 
 }

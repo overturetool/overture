@@ -1,10 +1,6 @@
 package org.overture.interpreter.assistant.statement;
 
-import org.overture.ast.expressions.PExp;
-import org.overture.ast.statements.ALetBeStStm;
-import org.overture.ast.statements.PStm;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 
 public class ALetBeStStmAssistantInterpreter // extends ALetBeStStmAssistantTC
 {
@@ -29,12 +25,12 @@ public class ALetBeStStmAssistantInterpreter // extends ALetBeStStmAssistantTC
 //		return PStmAssistantInterpreter.findExpression(stm.getStatement(), lineno);
 //	}
 
-	public static PStm findStatement(ALetBeStStm stm, int lineno)
-	{
-		PStm found = PStmAssistantInterpreter.findStatementBaseCase(stm, lineno);
-		if (found != null)
-			return found;
-		return PStmAssistantInterpreter.findStatement(stm.getStatement(), lineno);
-	}
+//	public static PStm findStatement(ALetBeStStm stm, int lineno)
+//	{
+//		PStm found = PStmAssistantInterpreter.findStatementBaseCase(stm, lineno);
+//		if (found != null)
+//			return found;
+//		return PStmAssistantInterpreter.findStatement(stm.getStatement(), lineno);
+//	}
 
 }

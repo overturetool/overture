@@ -1,7 +1,6 @@
 package org.overture.interpreter.assistant.statement;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.expressions.PExp;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.statements.SSimpleBlockStm;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
@@ -54,20 +53,20 @@ public class SSimpleBlockStmAssistantInterpreter // extends
 //		return found;
 //	}
 
-	public static PStm findStatement(SSimpleBlockStm stm, int lineno)
-	{
-		if (stm.getLocation().getStartLine() == lineno)
-			return stm;
-		PStm found = null;
-
-		for (PStm stmt : stm.getStatements())
-		{
-			found = PStmAssistantInterpreter.findStatement(stmt, lineno);
-			if (found != null)
-				break;
-		}
-
-		return found;
-	}
+//	public static PStm findStatement(SSimpleBlockStm stm, int lineno)
+//	{
+//		if (stm.getLocation().getStartLine() == lineno)
+//			return stm;
+//		PStm found = null;
+//
+//		for (PStm stmt : stm.getStatements())
+//		{
+//			found = PStmAssistantInterpreter.findStatement(stmt, lineno);
+//			if (found != null)
+//				break;
+//		}
+//
+//		return found;
+//	}
 
 }
