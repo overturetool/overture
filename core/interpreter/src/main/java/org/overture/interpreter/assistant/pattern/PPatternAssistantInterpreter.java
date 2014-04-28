@@ -28,7 +28,7 @@ public class PPatternAssistantInterpreter extends PPatternAssistantTC
 	/** A value for getLength meaning "any length" */
 	public static int ANY = -1;
 
-	public static NameValuePairList getNamedValues(PPattern p, Value expval,
+	public NameValuePairList getNamedValues(PPattern p, Value expval,
 			Context ctxt) throws AnalysisException
 	{
 		List<AIdentifierPattern> ids = af.createPPatternAssistant().findIdentifiers(p);
