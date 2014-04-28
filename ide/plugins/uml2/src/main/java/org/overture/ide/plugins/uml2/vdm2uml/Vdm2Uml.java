@@ -379,7 +379,8 @@ public class Vdm2Uml
 		EList<String> names = new BasicEList<String>();
 		for (PPattern p : def.getParamPatternList().get(0))
 		{
-			List<AIdentifierPattern> ids = PPatternAssistantInterpreter.findIdentifiers(p);
+			//Downcast the assistantFactory here. Narrowing it to interpreter assistant.
+			List<AIdentifierPattern> ids = ((PPatternAssistantInterpreter) Vdm2UmlUtil.assistantFactory.createPPatternAssistant()).findIdentifiers(p);
 			if (!ids.isEmpty())
 			{
 				names.add(ids.get(0).toString());
@@ -482,7 +483,8 @@ public class Vdm2Uml
 
 		for (PPattern p : def.getParameterPatterns())
 		{
-			List<AIdentifierPattern> ids = PPatternAssistantInterpreter.findIdentifiers(p);
+			//Downcast the assistantFactory here. Narrowing it to interpreter assistant.
+			List<AIdentifierPattern> ids = ((PPatternAssistantInterpreter) Vdm2UmlUtil.assistantFactory.createPPatternAssistant()).findIdentifiers(p);
 			if (!ids.isEmpty())
 			{
 				String name = ids.get(0).toString();
