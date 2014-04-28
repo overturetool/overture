@@ -24,12 +24,10 @@ import java.util.List;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
-import org.eclipse.jface.text.rules.IWordDetector;
 import org.eclipse.jface.text.rules.RuleBasedScanner;
 import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.rules.WhitespaceRule;
-import org.eclipse.jface.text.rules.WordPatternRule;
 import org.eclipse.jface.text.rules.WordRule;
 import org.eclipse.swt.SWT;
 
@@ -59,12 +57,10 @@ public abstract class VdmCodeScanner extends RuleBasedScanner
 
 		// TODO: this is a hack to get latex related stuff commented
 		rules.add(new SingleLineRule("\\begin{vdm_al", "}", comment));
-//		rules.add(new SingleLineRule("[","]", comment));
 		rules.add(new SingleLineRule("\\end{vdm_al", "}", comment));
 
 		if(fgKeywords.supportsQuoteTypes())
 		{
-//			rules.add(new WordPatternRule(new QuoteWordDetector(), "<", ">", type));
 			rules.add(new QuoteRule(type));
 		}
 		
@@ -83,13 +79,6 @@ public abstract class VdmCodeScanner extends RuleBasedScanner
 			rules.add(new PrefixedUnderscoreRule(prefix,stringBold));
 		}
 		
-//		WordRule wordRuleWithSpaces = new MultipleWordsWordRule(new VdmMultipleWordDetector(), Token.UNDEFINED, false);
-//		for (int i = 0; i < fgKeywords.getMultipleKeywords().length; i++)
-//		{
-//			wordRuleWithSpaces.addWord(fgKeywords.getMultipleKeywords()[i], keyword);
-//		}
-//		rules.add(wordRuleWithSpaces);
-
 		// Add word rule for keywords.
 		WordRule wordRule = new WordRule(new VdmWordDetector(), other);//Not sure why Token.UNDEFINED doesn't work but it makes S'end' colored.
 
@@ -105,22 +94,6 @@ public abstract class VdmCodeScanner extends RuleBasedScanner
 		//sets the default style. If styledText.getStyleRangeAtOffset is called on the editor this default style is returned instead of null
 		setDefaultReturnToken(other);
 	}
-
-
-//	private static class QuoteWordDetector implements IWordDetector
-//	{
-//
-//		public boolean isWordPart(char c)
-//		{
-//			return Character.isJavaIdentifierPart(c) || c == '>';
-//		}
-//
-//		public boolean isWordStart(char c)
-//		{
-//			return '<' == c;
-//		}
-//
-//	}
 
 	
 	protected abstract IVdmKeywords getKeywords();
