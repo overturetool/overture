@@ -41,6 +41,20 @@ public class QuoteRule implements IRule
 		int c = -1;
 
 		int readCount = 0;
+		
+		
+		c = scanner.read();
+		if (c == EOF)
+		{
+			scanner.unread();
+			return Token.EOF;
+		}else if(c != '<')
+		{
+			scanner.unread();
+			return Token.UNDEFINED;
+		}
+		
+		
 		while (true)
 		{
 			c = scanner.read();
