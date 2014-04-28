@@ -87,7 +87,7 @@ public abstract class PogToStringTestCase extends ResultTestCase<List<String>>
 			if (cn.getNodeType() == Node.ELEMENT_NODE
 					&& cn.getNodeName().equals("po"))
 			{
-				String nodeType = cn.getAttributes().getNamedItem("toString").getNodeValue();
+				String nodeType = cn.getAttributes().getNamedItem("message").getNodeValue();
 				if (nodeType != null && !nodeType.isEmpty())
 				{
 					try
