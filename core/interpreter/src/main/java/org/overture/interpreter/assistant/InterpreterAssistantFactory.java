@@ -174,6 +174,7 @@ import org.overture.interpreter.utilities.definition.DefinitionStatementFinder;
 import org.overture.interpreter.utilities.definition.TermTraceExpander;
 import org.overture.interpreter.utilities.definition.TypeDefinitionChecker;
 import org.overture.interpreter.utilities.definition.ValuesDefinitionLocator;
+import org.overture.interpreter.utilities.expression.ExpressionValueCollector;
 import org.overture.interpreter.utilities.pattern.AllNamedValuesLocator;
 import org.overture.interpreter.utilities.pattern.BindValuesCollector;
 import org.overture.interpreter.utilities.pattern.ConstrainedPatternChecker;
@@ -1075,6 +1076,12 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	public IQuestionAnswer<Integer, PStm> getStatementFinder()
 	{
 		return new StatementFinder(this);
+	}
+
+	@Override
+	public IQuestionAnswer<ObjectContext, ValueList> getExpressionValueCollector()
+	{
+		return new ExpressionValueCollector(this);
 	}
 
 }

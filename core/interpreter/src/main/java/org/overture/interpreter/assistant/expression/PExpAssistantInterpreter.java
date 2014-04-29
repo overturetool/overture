@@ -34,7 +34,6 @@ import org.overture.ast.expressions.ASameBaseClassExp;
 import org.overture.ast.expressions.ASameClassExp;
 import org.overture.ast.expressions.ASubseqExp;
 import org.overture.ast.expressions.ATupleExp;
-import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SBinaryExp;
 import org.overture.ast.expressions.SMapExp;
@@ -68,112 +67,119 @@ public class PExpAssistantInterpreter extends PExpAssistantTC
 	 */
 	public static ValueList getValues(PExp exp, ObjectContext ctxt)
 	{
-		if (exp instanceof AApplyExp)
+		try
 		{
-			return AApplyExpAssistantInterpreter.getValues((AApplyExp) exp, ctxt);
-		} else if (exp instanceof SBinaryExp)
+			return exp.apply(af.getExpressionValueCollector(),ctxt);// FIXME: should we handle exceptions like this
+		} catch (AnalysisException e)
 		{
-			return SBinaryExpAssistantInterpreter.getValues((SBinaryExp) exp, ctxt);
-		} else if (exp instanceof ACasesExp)
-		{
-			return ACasesExpAssistantInterpreter.getValues((ACasesExp) exp, ctxt);
-		} else if (exp instanceof ADefExp)
-		{
-			return ADefExpAssistantInterpreter.getValues((ADefExp) exp, ctxt);
-		} else if (exp instanceof AElseIfExp)
-		{
-			return AElseIfExpAssistantInterpreter.getValues((AElseIfExp) exp, ctxt);
-		} else if (exp instanceof AExistsExp)
-		{
-			return AExistsExpAssistantInterpreter.getValues((AExistsExp) exp, ctxt);
-		} else if (exp instanceof AExists1Exp)
-		{
-			return AExists1ExpAssistantInterpreter.getValues((AExists1Exp) exp, ctxt);
-		} else if (exp instanceof AFieldExp)
-		{
-			return AFieldExpAssistantInterpreter.getValues((AFieldExp) exp, ctxt);
-		} else if (exp instanceof AFieldNumberExp)
-		{
-			return AFieldNumberExpAssistantInterpreter.getValues((AFieldNumberExp) exp, ctxt);
-		} else if (exp instanceof AForAllExp)
-		{
-			return AForAllExpAssistantInterpreter.getValues((AForAllExp) exp, ctxt);
-		} else if (exp instanceof AFuncInstatiationExp)
-		{
-			return AFuncInstatiationExpAssistantInterpreter.getValues((AFuncInstatiationExp) exp, ctxt);
-		} else if (exp instanceof AIfExp)
-		{
-			return AIfExpAssistantInterpreter.getValues((AIfExp) exp, ctxt);
-		} else if (exp instanceof AIotaExp)
-		{
-			return AIotaExpAssistantInterpreter.getValues((AIotaExp) exp, ctxt);
-		} else if (exp instanceof AIsExp)
-		{
-			return AIsExpAssistantInterpreter.getValues((AIsExp) exp, ctxt);
-		} else if (exp instanceof AIsOfBaseClassExp)
-		{
-			return AIsOfBaseClassExpAssistantInterpreter.getValues((AIsOfBaseClassExp) exp, ctxt);
-		} else if (exp instanceof AIsOfClassExp)
-		{
-			return AIsOfClassExpAssistantInterpreter.getValues((AIsOfClassExp) exp, ctxt);
-		} else if (exp instanceof ALambdaExp)
-		{
-			return ALambdaExpAssistantInterpreter.getValues((ALambdaExp) exp, ctxt);
-		} else if (exp instanceof ALetBeStExp)
-		{
-			return ALetBeStExpAssistantInterpreter.getValues((ALetBeStExp) exp, ctxt);
-		} else if (exp instanceof ALetDefExp)
-		{
-			return ALetDefExpAssistantInterpreter.getValues((ALetDefExp) exp, ctxt);
-		} else if (exp instanceof SMapExp)
-		{
-			return SMapExpAssistantInterpreter.getValues((SMapExp) exp, ctxt);
-		} else if (exp instanceof AMapletExp)
-		{
-			return AMapletExpAssistantInterpreter.getValues((AMapletExp) exp, ctxt);
-		} else if (exp instanceof AMkBasicExp)
-		{
-			return AMkBasicExpAssistantInterpreter.getValues((AMkBasicExp) exp, ctxt);
-		} else if (exp instanceof AMkTypeExp)
-		{
-			return AMkTypeExpAssistantInterpreter.getValues((AMkTypeExp) exp, ctxt);
-		} else if (exp instanceof AMuExp)
-		{
-			return AMuExpAssistantInterpreter.getValues((AMuExp) exp, ctxt);
-		} else if (exp instanceof ANarrowExp)
-		{
-			return ANarrowExpAssistantInterpreter.getValues((ANarrowExp) exp, ctxt);
-		} else if (exp instanceof ANewExp)
-		{
-			return ANewExpAssistantInterpreter.getValues((ANewExp) exp, ctxt);
-		} else if (exp instanceof ASameBaseClassExp)
-		{
-			return ASameBaseClassExpAssistantInterpreter.getValues((ASameBaseClassExp) exp, ctxt);
-		} else if (exp instanceof ASameClassExp)
-		{
-			return ASameClassExpAssistantInterpreter.getValues((ASameBaseClassExp) exp, ctxt);
-		} else if (exp instanceof SSeqExp)
-		{
-			return SSeqExpAssistantInterpreter.getValues((SSeqExp) exp, ctxt);
-		} else if (exp instanceof SSetExp)
-		{
-			return SSetExpAssistantInterpreter.getValues((SSetExp) exp, ctxt);
-		} else if (exp instanceof ASubseqExp)
-		{
-			return ASubseqExpAssistantInterpreter.getValues((ASubseqExp) exp, ctxt);
-		} else if (exp instanceof ATupleExp)
-		{
-			return ATupleExpAssistantInterpreter.getValues((ATupleExp) exp, ctxt);
-		} else if (exp instanceof SUnaryExp)
-		{
-			return SUnaryExpAssistantInterpreter.getValues((SUnaryExp) exp, ctxt);
-		} else if (exp instanceof AVariableExp)
-		{
-			return AVariableExpAssistantInterpreter.getVariable((AVariableExp) exp, ctxt);
-		} else
-		{
-			return new ValueList(); // Default, for expressions with no variables
+			return null; // Most have none
 		}
+//		if (exp instanceof AApplyExp)
+//		{
+//			return AApplyExpAssistantInterpreter.getValues((AApplyExp) exp, ctxt);
+//		} else if (exp instanceof SBinaryExp)
+//		{
+//			return SBinaryExpAssistantInterpreter.getValues((SBinaryExp) exp, ctxt);
+//		} else if (exp instanceof ACasesExp)
+//		{
+//			return ACasesExpAssistantInterpreter.getValues((ACasesExp) exp, ctxt);
+//		} else if (exp instanceof ADefExp)
+//		{
+//			return ADefExpAssistantInterpreter.getValues((ADefExp) exp, ctxt);
+//		} else if (exp instanceof AElseIfExp)
+//		{
+//			return AElseIfExpAssistantInterpreter.getValues((AElseIfExp) exp, ctxt);
+//		} else if (exp instanceof AExistsExp)
+//		{
+//			return AExistsExpAssistantInterpreter.getValues((AExistsExp) exp, ctxt);
+//		} else if (exp instanceof AExists1Exp)
+//		{
+//			return AExists1ExpAssistantInterpreter.getValues((AExists1Exp) exp, ctxt);
+//		} else if (exp instanceof AFieldExp)
+//		{
+//			return AFieldExpAssistantInterpreter.getValues((AFieldExp) exp, ctxt);
+//		} else if (exp instanceof AFieldNumberExp)
+//		{
+//			return AFieldNumberExpAssistantInterpreter.getValues((AFieldNumberExp) exp, ctxt);
+//		} else if (exp instanceof AForAllExp)
+//		{
+//			return AForAllExpAssistantInterpreter.getValues((AForAllExp) exp, ctxt);
+//		} else if (exp instanceof AFuncInstatiationExp)
+//		{
+//			return AFuncInstatiationExpAssistantInterpreter.getValues((AFuncInstatiationExp) exp, ctxt);
+//		} else if (exp instanceof AIfExp)
+//		{
+//			return AIfExpAssistantInterpreter.getValues((AIfExp) exp, ctxt);
+//		} else if (exp instanceof AIotaExp)
+//		{
+//			return AIotaExpAssistantInterpreter.getValues((AIotaExp) exp, ctxt);
+//		} else if (exp instanceof AIsExp)
+//		{
+//			return AIsExpAssistantInterpreter.getValues((AIsExp) exp, ctxt);
+//		} else if (exp instanceof AIsOfBaseClassExp)
+//		{
+//			return AIsOfBaseClassExpAssistantInterpreter.getValues((AIsOfBaseClassExp) exp, ctxt);
+//		} else if (exp instanceof AIsOfClassExp)
+//		{
+//			return AIsOfClassExpAssistantInterpreter.getValues((AIsOfClassExp) exp, ctxt);
+//		} else if (exp instanceof ALambdaExp)
+//		{
+//			return ALambdaExpAssistantInterpreter.getValues((ALambdaExp) exp, ctxt);
+//		} else if (exp instanceof ALetBeStExp)
+//		{
+//			return ALetBeStExpAssistantInterpreter.getValues((ALetBeStExp) exp, ctxt);
+//		} else if (exp instanceof ALetDefExp)
+//		{
+//			return ALetDefExpAssistantInterpreter.getValues((ALetDefExp) exp, ctxt);
+//		} else if (exp instanceof SMapExp)
+//		{
+//			return SMapExpAssistantInterpreter.getValues((SMapExp) exp, ctxt);
+//		} else if (exp instanceof AMapletExp)
+//		{
+//			return AMapletExpAssistantInterpreter.getValues((AMapletExp) exp, ctxt);
+//		} else if (exp instanceof AMkBasicExp)
+//		{
+//			return AMkBasicExpAssistantInterpreter.getValues((AMkBasicExp) exp, ctxt);
+//		} else if (exp instanceof AMkTypeExp)
+//		{
+//			return AMkTypeExpAssistantInterpreter.getValues((AMkTypeExp) exp, ctxt);
+//		} else if (exp instanceof AMuExp)
+//		{
+//			return AMuExpAssistantInterpreter.getValues((AMuExp) exp, ctxt);
+//		} else if (exp instanceof ANarrowExp)
+//		{
+//			return ANarrowExpAssistantInterpreter.getValues((ANarrowExp) exp, ctxt);
+//		} else if (exp instanceof ANewExp)
+//		{
+//			return ANewExpAssistantInterpreter.getValues((ANewExp) exp, ctxt);
+//		} else if (exp instanceof ASameBaseClassExp)
+//		{
+//			return ASameBaseClassExpAssistantInterpreter.getValues((ASameBaseClassExp) exp, ctxt);
+//		} else if (exp instanceof ASameClassExp)
+//		{
+//			return ASameClassExpAssistantInterpreter.getValues((ASameBaseClassExp) exp, ctxt);
+//		} else if (exp instanceof SSeqExp)
+//		{
+//			return SSeqExpAssistantInterpreter.getValues((SSeqExp) exp, ctxt);
+//		} else if (exp instanceof SSetExp)
+//		{
+//			return SSetExpAssistantInterpreter.getValues((SSetExp) exp, ctxt);
+//		} else if (exp instanceof ASubseqExp)
+//		{
+//			return ASubseqExpAssistantInterpreter.getValues((ASubseqExp) exp, ctxt);
+//		} else if (exp instanceof ATupleExp)
+//		{
+//			return ATupleExpAssistantInterpreter.getValues((ATupleExp) exp, ctxt);
+//		} else if (exp instanceof SUnaryExp)
+//		{
+//			return SUnaryExpAssistantInterpreter.getValues((SUnaryExp) exp, ctxt);
+//		} else if (exp instanceof AVariableExp)
+//		{
+//			return AVariableExpAssistantInterpreter.getVariable((AVariableExp) exp, ctxt);
+//		} else
+//		{
+//			return new ValueList(); // Default, for expressions with no variables
+//		}
 	}
 
 	/**

@@ -42,4 +42,11 @@ public class ASameClassExpAssistantInterpreter // extends ASameClassExpAssistant
 		return null;
 	}
 
+	public static ValueList getValues(ASameClassExp exp, ObjectContext ctxt)
+	{
+		ValueList list = PExpAssistantInterpreter.getValues(exp.getLeft(), ctxt);
+		list.addAll(PExpAssistantInterpreter.getValues(exp.getRight(), ctxt));
+		return list;
+	}
+
 }

@@ -521,4 +521,6 @@ public interface IInterpreterAssistantFactory extends
 	
 	IQuestionAnswer<Integer, PStm> getStatementFinder();
 	
+	IQuestionAnswer<ObjectContext, ValueList> getExpressionValueCollector();
+	
 }
