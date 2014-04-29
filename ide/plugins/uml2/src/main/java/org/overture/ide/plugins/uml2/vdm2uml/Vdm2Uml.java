@@ -252,7 +252,7 @@ public class Vdm2Uml
 		utc.create(class_, defType);
 		Type umlType = utc.getUmlType(defType);
 
-		if ((PTypeAssistantInterpreter.isClass(defType)
+		if ((Vdm2UmlUtil.assistantFactory.createPTypeAssistant().isClass(defType)
 				&& !(defType instanceof AUnknownType) && !extendedAssociationMapping)
 				|| (Vdm2UmlAssociationUtil.validType(defType) && extendedAssociationMapping))
 		{
@@ -263,7 +263,7 @@ public class Vdm2Uml
 		{
 			console.out.println("\tAdding property for value: " + name);
 			Property s = class_.createOwnedAttribute(name, umlType);
-			s.setIsStatic(PAccessSpecifierAssistantTC.isStatic(def.getAccess()));
+			s.setIsStatic(Vdm2UmlUtil.assistantFactory.createPAccessSpecifierAssistant().isStatic(def.getAccess()));
 			s.setVisibility(Vdm2UmlUtil.convertAccessSpecifierToVisibility(def.getAccess()));
 			s.setIsReadOnly(true);
 
@@ -469,7 +469,7 @@ public class Vdm2Uml
 		// Operation operation = class_.createOwnedOperation(def.getName().name, names, types, returnUmlType);
 		operation.setVisibility(Vdm2UmlUtil.convertAccessSpecifierToVisibility(def.getAccess()));
 
-		operation.setIsStatic(PAccessSpecifierAssistantTC.isStatic(def.getAccess()));
+		operation.setIsStatic(Vdm2UmlUtil.assistantFactory.createPAccessSpecifierAssistant().isStatic(def.getAccess()));
 		operation.setIsQuery(true);
 	}
 
@@ -522,7 +522,7 @@ public class Vdm2Uml
 		Operation operation = class_.createOwnedOperation(def.getName().getName(), names, types, returnUmlType);
 		operation.setVisibility(Vdm2UmlUtil.convertAccessSpecifierToVisibility(def.getAccess()));
 
-		operation.setIsStatic(PAccessSpecifierAssistantTC.isStatic(def.getAccess()));
+		operation.setIsStatic(Vdm2UmlUtil.assistantFactory.createPAccessSpecifierAssistant().isStatic(def.getAccess()));
 		operation.setIsQuery(false);
 	}
 
@@ -536,7 +536,7 @@ public class Vdm2Uml
 		utc.create(class_, defType);
 		Type type = utc.getUmlType(defType);
 
-		if ((PTypeAssistantInterpreter.isClass(defType)
+		if ((Vdm2UmlUtil.assistantFactory.createPTypeAssistant().isClass(defType)
 				&& !(defType instanceof AUnknownType) && !extendedAssociationMapping)
 				|| (Vdm2UmlAssociationUtil.validType(defType) && extendedAssociationMapping))
 		{
@@ -550,7 +550,7 @@ public class Vdm2Uml
 			console.out.println("\tAdding property for instance variable: "
 					+ def.getName().getName());
 			Property attribute = class_.createOwnedAttribute(name, type);
-			attribute.setIsStatic(PAccessSpecifierAssistantTC.isStatic(def.getAccess()));
+			attribute.setIsStatic(Vdm2UmlUtil.assistantFactory.createPAccessSpecifierAssistant().isStatic(def.getAccess()));
 			attribute.setVisibility(Vdm2UmlUtil.convertAccessSpecifierToVisibility(def.getAccess()));
 
 			if (Vdm2UmlUtil.isOptional(defType))

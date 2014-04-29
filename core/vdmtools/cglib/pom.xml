@@ -3,13 +3,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.overture.core</groupId>
+    <groupId>org.overturetool.core</groupId>
     <artifactId>vdmtools</artifactId>
     <version>2.0.1-SNAPSHOT<!--Replaceable: Main Version--></version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <groupId>org.overture.core.vdmtools</groupId>
+  <groupId>org.overturetool.core.vdmtools</groupId>
   <artifactId>cglib</artifactId>
   <name>VDM Tools Code Generator library</name>
 </project>

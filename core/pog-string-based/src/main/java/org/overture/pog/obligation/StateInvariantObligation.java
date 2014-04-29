@@ -32,6 +32,7 @@ import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.statements.AAssignmentStm;
+import org.overture.pog.assistant.IPogAssistantFactory;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 
 public class StateInvariantObligation extends ProofObligation
@@ -48,10 +49,10 @@ public class StateInvariantObligation extends ProofObligation
 		sb.append("-- After ");
 		sb.append(ass);
 		sb.append("\n");
-
+		
 		if (ass.getClassDefinition() != null)
 		{
-			sb.append(invDefs(ass.getClassDefinition()));
+			sb.append(invDefs(ass.getClassDefinition(), ctxt.assistantFactory));
 		} else
 		// must be because we have a module state invariant
 		{
@@ -74,7 +75,7 @@ public class StateInvariantObligation extends ProofObligation
 		super(def.getLocation(), POType.STATE_INVARIANT, ctxt);
 		StringBuilder sb = new StringBuilder();
 		sb.append("-- After instance variable initializers\n");
-		sb.append(invDefs(def.getClassDefinition()));
+		sb.append(invDefs(def.getClassDefinition(),ctxt.assistantFactory));
 
 		value = ctxt.getObligation(sb.toString());
 	}
@@ -87,7 +88,7 @@ public class StateInvariantObligation extends ProofObligation
 		sb.append("-- After ");
 		sb.append(def.getName());
 		sb.append(" constructor body\n");
-		sb.append(invDefs(def.getClassDefinition()));
+		sb.append(invDefs(def.getClassDefinition(), ctxt.assistantFactory));
 
 		value = ctxt.getObligation(sb.toString());
 	}
@@ -100,15 +101,15 @@ public class StateInvariantObligation extends ProofObligation
 		sb.append("-- After ");
 		sb.append(def.getName());
 		sb.append(" constructor body\n");
-		sb.append(invDefs(def.getClassDefinition()));
+		sb.append(invDefs(def.getClassDefinition(), ctxt.assistantFactory));
 
 		value = ctxt.getObligation(sb.toString());
 	}
 
-	private String invDefs(SClassDefinition def)
+	private String invDefs(SClassDefinition def, IPogAssistantFactory assistantFactory)
 	{
 		StringBuilder sb = new StringBuilder();
-		List<PDefinition> invdefs = SClassDefinitionAssistantTC.getInvDefs(def);
+		List<PDefinition> invdefs = assistantFactory.createSClassDefinitionAssistant().getInvDefs(def);
 		String sep = "";
 
 		for (PDefinition d : invdefs)

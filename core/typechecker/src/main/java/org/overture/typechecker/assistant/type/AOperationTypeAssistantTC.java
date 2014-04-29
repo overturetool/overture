@@ -16,15 +16,14 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class AOperationTypeAssistantTC
 {
-	protected static ITypeCheckerAssistantFactory af;
+	protected ITypeCheckerAssistantFactory af;
 
-	@SuppressWarnings("static-access")
 	public AOperationTypeAssistantTC(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
 
-	public static AFunctionType getPreType(AOperationType type,
+	public AFunctionType getPreType(AOperationType type,
 			AStateDefinition state, SClassDefinition classname, boolean isStatic)
 	{
 
@@ -47,7 +46,7 @@ public class AOperationTypeAssistantTC
 	}
 
 	@SuppressWarnings("unchecked")
-	public static AFunctionType getPostType(AOperationType type,
+	public AFunctionType getPostType(AOperationType type,
 			AStateDefinition state, SClassDefinition classname, boolean isStatic)
 	{
 

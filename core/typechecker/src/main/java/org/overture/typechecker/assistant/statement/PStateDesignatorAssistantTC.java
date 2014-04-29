@@ -9,15 +9,14 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class PStateDesignatorAssistantTC
 {
-	protected static ITypeCheckerAssistantFactory af;
+	protected ITypeCheckerAssistantFactory af;
 
-	@SuppressWarnings("static-access")
 	public PStateDesignatorAssistantTC(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
 
-	public static PDefinition targetDefinition(
+	public PDefinition targetDefinition(
 			PStateDesignator pStateDesignator, TypeCheckInfo question)
 	{
 		if (pStateDesignator instanceof AIdentifierStateDesignator)

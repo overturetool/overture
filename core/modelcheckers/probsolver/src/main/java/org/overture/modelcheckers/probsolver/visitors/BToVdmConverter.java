@@ -7,24 +7,29 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.expressions.AMapletExp; //added
 import org.overture.ast.expressions.AMkTypeExp;
 import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.lex.LexBooleanToken;//added
 import org.overture.ast.lex.LexIdentifierToken;
 import org.overture.ast.lex.LexIntegerToken;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AFieldField;
+import org.overture.ast.types.AMapMapType;//added
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.PType;
 
 import de.be4.classicalb.core.parser.analysis.DepthFirstAdapter;
+import de.be4.classicalb.core.parser.node.ABooleanFalseExpression;// added
+import de.be4.classicalb.core.parser.node.ABooleanTrueExpression;// added
 import de.be4.classicalb.core.parser.node.ACoupleExpression;
 import de.be4.classicalb.core.parser.node.AEmptySetExpression;
 import de.be4.classicalb.core.parser.node.AIntegerExpression;
@@ -32,9 +37,11 @@ import de.be4.classicalb.core.parser.node.ARecEntry;
 import de.be4.classicalb.core.parser.node.ARecExpression;
 import de.be4.classicalb.core.parser.node.ASequenceExtensionExpression;
 import de.be4.classicalb.core.parser.node.ASetExtensionExpression;
+import de.be4.classicalb.core.parser.node.AUnaryMinusExpression;
 import de.be4.classicalb.core.parser.node.Node;
 import de.be4.classicalb.core.parser.node.PExpression;
 import de.be4.classicalb.core.parser.node.PRecEntry;
+import de.be4.classicalb.core.parser.node.TIntegerLiteral;// added
 
 public class BToVdmConverter extends DepthFirstAdapter
 {
@@ -122,15 +129,14 @@ public class BToVdmConverter extends DepthFirstAdapter
 	}
 
 	/**
-	 * Creates a new return tuple with the approbate return expressions
+	 * Creates a new tuple with the approbate return expressions
 	 * 
-	 * @param resultType
 	 * @param exp
 	 * @return
 	 */
-	public static PStm getReturnStatement(PType resultType, List<PExp> exps)
+	public static PExp createTuple(List<PExp> exps)
 	{
-		return AstFactory.newAReturnStm(loc, AstFactory.newATupleExp(loc, exps));
+		return AstFactory.newATupleExp(loc, exps);
 	}
 
 	@Override
@@ -141,23 +147,25 @@ public class BToVdmConverter extends DepthFirstAdapter
 		{
 			List<PExp> arg_ = new Vector<PExp>();
 
-			for (PRecEntry entry : node.getEntries())
+			for (AFieldField f : ((ARecordInvariantType) expectedType).getFields())
 			{
-				ARecEntry re = (ARecEntry) entry;
-				String fieldName = re.getIdentifier().toString().trim();
-				PType fieldType = null;
-				for (AFieldField f : ((ARecordInvariantType) expectedType).getFields())
+
+				for (PRecEntry entry : node.getEntries())
 				{
+					ARecEntry re = (ARecEntry) entry;
+					String fieldName = re.getIdentifier().toString().trim();
+					PType fieldType = null;
+
 					if (f.getTagname().getName().equals(fieldName))
 					{
 						fieldType = f.getType();
+						arg_.add(convert(fieldType, re.getValue()));
 						break;
 					}
-				}
-				arg_.add(convert(fieldType, re.getValue()));
-			}
 
-			Collections.reverse(arg_);
+					
+				}
+			}
 
 			AMkTypeExp res = AstFactory.newAMkTypeExp(((ARecordInvariantType) expectedType).getName().clone(), arg_);
 			res.setRecordType((ARecordInvariantType) expectedType);
@@ -183,6 +191,9 @@ public class BToVdmConverter extends DepthFirstAdapter
 	public void caseASetExtensionExpression(ASetExtensionExpression node)
 	{
 		List<PExp> exps = new Vector<PExp>();
+		List<AMapletExp> mems = new Vector<AMapletExp>();
+
+		// System.err.println("In caseASetExtension...: " + expectedType);//added
 
 		if (expectedType instanceof ASetType)
 		{
@@ -202,9 +213,33 @@ public class BToVdmConverter extends DepthFirstAdapter
 				{
 					exps.add(convert(type, ((ACoupleExpression) pExp).getList().getLast()));
 				}
+				result = AstFactory.newASeqEnumSeqExp(loc, exps);// added
 
 			}
 			result = AstFactory.newASeqEnumSeqExp(loc, exps);
+		} else if (expectedType instanceof AMapMapType)
+		{
+			PType typeFrom = ((AMapMapType) expectedType).getFrom();
+			PType typeTo = ((AMapMapType) expectedType).getTo();
+			System.out.println("PType typeFrom " + typeFrom);
+			System.out.println("PType typeTo   " + typeTo);
+
+			for (PExpression pExp : node.getExpressions())
+			{
+				// if (pExp instanceof ACoupleExpression)
+				// {
+				PExp mapFrom = convert(typeFrom, ((ACoupleExpression) pExp).getList().getFirst());
+				PExp mapTo = convert(typeTo, ((ACoupleExpression) pExp).getList().getLast());
+				mems.add(new AMapletExp(expectedType, loc, mapFrom, mapTo));
+				// }
+
+			}
+			result = AstFactory.newAMapEnumMapExp(loc, mems);// added
+
+		} else
+		{
+			PExpression pExp = node.getExpressions().getFirst();
+			result = AstFactory.newAIntLiteralExp(new LexIntegerToken(pExp.toString().trim(), loc));
 		}
 
 	}
@@ -213,23 +248,68 @@ public class BToVdmConverter extends DepthFirstAdapter
 	public void caseASequenceExtensionExpression(
 			ASequenceExtensionExpression node)
 	{
+
 		List<PExp> list = new Vector<PExp>();
+		List<AMapletExp> mems = new Vector<AMapletExp>();
+		// System.err.println("In caseASequenceExtension...: " + expectedType);
 
-		List<PExpression> copy = new ArrayList<PExpression>(node.getExpression());
-		for (PExpression e : copy)
+		if (expectedType instanceof AMapMapType) // added from here
+		{ // map A to B
+			PType typeFrom = ((AMapMapType) expectedType).getFrom();
+			PType typeTo = ((AMapMapType) expectedType).getTo();
+			int seqNo = 1;
+			for (PExpression pExp : node.getExpression())
+			{
+
+				AIntegerExpression aint = new AIntegerExpression(new TIntegerLiteral(new String(new Integer(seqNo).toString())));
+				PExp mapFrom = convert(typeFrom, aint);
+				PExp mapTo = convert(typeTo, pExp);
+				mems.add(new AMapletExp(expectedType, loc, mapFrom, mapTo));
+
+				seqNo++;
+			}
+			result = AstFactory.newAMapEnumMapExp(loc, mems);
+		} // added to here
+		else
 		{
-			e.apply(this);
-			list.add(result);
+			/*
+			 * String size = new String(new Integer(seqmem.size()).toString()); return new AIntervalExpression(new
+			 * AIntegerExpression(new TIntegerLiteral("1")), new AIntegerExpression(new TIntegerLiteral(size)));
+			 */
+			List<PExpression> copy = new ArrayList<PExpression>(node.getExpression());
+			for (PExpression e : copy)
+			{
+				e.apply(this);
+				list.add(result);
+			}
+
+			result = AstFactory.newASeqEnumSeqExp(loc, list);
 		}
-
-		result = AstFactory.newASeqEnumSeqExp(loc, list);
-
 	}
 
 	@Override
 	public void caseAIntegerExpression(AIntegerExpression node)
 	{
 		result = AstFactory.newAIntLiteralExp(new LexIntegerToken(node.getLiteral().getText(), loc));
+	}
+
+	@Override
+	public void caseAUnaryMinusExpression(AUnaryMinusExpression node)
+	{
+		node.getExpression().apply(this);
+		result = AstFactory.newAUnaryMinusUnaryExp(loc, result);
+	}
+
+	@Override
+	public void caseABooleanTrueExpression(ABooleanTrueExpression node) // added
+	{
+		result = AstFactory.newABooleanConstExp(new LexBooleanToken(true, loc));
+	}
+
+	@Override
+	public void caseABooleanFalseExpression(ABooleanFalseExpression node) // added
+	{
+		result = AstFactory.newABooleanConstExp(new LexBooleanToken(false, loc));
 	}
 
 	public void defaultIn(Node node)

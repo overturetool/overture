@@ -26,7 +26,6 @@ package org.overture.interpreter.debug;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -77,6 +76,7 @@ import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantIn
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.messages.rtlog.RTLogger;
+import org.overture.interpreter.messages.rtlog.RTTextLogger;
 import org.overture.interpreter.messages.rtlog.nextgen.NextGenRTLogger;
 import org.overture.interpreter.runtime.Breakpoint;
 import org.overture.interpreter.runtime.ClassContext;
@@ -476,10 +476,8 @@ public class DBGPReader
 				{
 					if (logfile != null)
 					{
-		    			PrintWriter p = new PrintWriter(
-		    				new FileOutputStream(logfile, false));
-		    			RTLogger.setLogfile(p);
-		    			NextGenRTLogger.getInstance().setLogfile(new File(logfile));
+		    			RTLogger.setLogfile(RTTextLogger.class,new File(logfile));
+		    			RTLogger.setLogfile(NextGenRTLogger.class,new File(logfile));
 					}
 
 					Interpreter i = controller.getInterpreter();
@@ -2440,8 +2438,8 @@ public class DBGPReader
 					out.append("Flushing " + RTLogger.getLogSize() + " RT events\n");
 				}
 
-				RTLogger.setLogfile(null);
-				NextGenRTLogger.getInstance().setLogfile(null);
+				RTLogger.setLogfile(RTTextLogger.class,null);
+				RTLogger.setLogfile(NextGenRTLogger.class,(File)null);
 				out.append("RT events now logged to the console");
 			}
 			else if (c.data.equals("off"))
@@ -2451,8 +2449,7 @@ public class DBGPReader
 			}
 			else
 			{
-				PrintWriter p = new PrintWriter(new FileOutputStream(c.data, true));
-				RTLogger.setLogfile(p);
+				RTLogger.setLogfile(RTTextLogger.class,new File(c.data));
 				out.append("RT events now logged to " + c.data);
 			}
 		}

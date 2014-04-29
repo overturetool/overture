@@ -56,7 +56,7 @@ public class TestRunner
 
 	private static boolean isTestClass(SClassDefinition def)
 	{
-		if(def.getIsAbstract() || def.getName().equals("Test")|| def.getName().equals("TestCase")|| def.getName().equals("TestSuite"))
+		if(def.getIsAbstract() || def.getName().getName().equals("Test")|| def.getName().getName().equals("TestCase")|| def.getName().getName().equals("TestSuite"))
 		{
 			return false;
 		}
@@ -75,7 +75,7 @@ public class TestRunner
 	{
 		for (SClassDefinition superDef : def.getSuperDefs())
 		{
-			if(superDef.getName().equals(superName)|| checkForSuper(superDef, superName))
+			if(superDef.getName().getName().equals(superName)|| checkForSuper(superDef, superName))
 			{
 				return true;
 			}

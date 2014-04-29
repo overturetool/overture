@@ -7,7 +7,6 @@ import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
 
 public class PossibleBindTypeFinder extends AnswerAdaptor<PType>
 {

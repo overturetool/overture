@@ -120,6 +120,18 @@
       </consoleFactory>
    </extension>
    
+   
+      <extension
+         point="org.eclipse.ui.console.consolePageParticipants">
+      <consolePageParticipant
+            class="org.overture.ide.debug.ui.ProcessConsolePageParticipant"
+            id="org.overture.ide.debug.ui.processConsolePageParticipant">
+         <enablement>
+            <instanceof value="org.overture.ide.debug.ui.VdmDebugConsole"/>
+         </enablement>
+      </consolePageParticipant>
+   </extension>
+   
    <!-- This ensures that the debug context menu shows correctly. The solution is inspired by the blog
    found on the following link: http://www.sigasi.com/content/run-menu-item-strangely-disappearing-context-menu
    -->

@@ -22,15 +22,14 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 public class AApplyObjectDesignatorAssistantTC
 {
 
-	protected static ITypeCheckerAssistantFactory af;
+	protected ITypeCheckerAssistantFactory af;
 
-	@SuppressWarnings("static-access")
 	public AApplyObjectDesignatorAssistantTC(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
 
-	public static PType mapApply(AApplyObjectDesignator node, SMapType map,
+	public PType mapApply(AApplyObjectDesignator node, SMapType map,
 			Environment env, NameScope scope, boolean unique,
 			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor)
 			throws AnalysisException
@@ -53,7 +52,7 @@ public class AApplyObjectDesignatorAssistantTC
 		return map.getTo();
 	}
 
-	public static PType seqApply(AApplyObjectDesignator node, SSeqType seq,
+	public PType seqApply(AApplyObjectDesignator node, SSeqType seq,
 			Environment env, NameScope scope, boolean unique,
 			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor)
 			throws AnalysisException
@@ -76,7 +75,7 @@ public class AApplyObjectDesignatorAssistantTC
 		return seq.getSeqof();
 	}
 
-	public static PType functionApply(AApplyObjectDesignator node,
+	public PType functionApply(AApplyObjectDesignator node,
 			AFunctionType ftype, Environment env, NameScope scope,
 			boolean unique, IQuestionAnswer<TypeCheckInfo, PType> rootVisitor)
 			throws AnalysisException
@@ -117,7 +116,7 @@ public class AApplyObjectDesignatorAssistantTC
 		return ftype.getResult();
 	}
 
-	public static PType operationApply(AApplyObjectDesignator node,
+	public PType operationApply(AApplyObjectDesignator node,
 			AOperationType optype, Environment env, NameScope scope,
 			boolean unique, IQuestionAnswer<TypeCheckInfo, PType> rootVisitor)
 			throws AnalysisException

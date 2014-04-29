@@ -78,7 +78,7 @@ public class TokenValue extends Value
 	@Override
 	public Value convertValueTo(PType to, Context ctxt) throws ValueException
 	{
-		if (PTypeAssistantTC.isType(to,ATokenBasicType.class))
+		if (ctxt.assistantFactory.createPTypeAssistant().isType(to,ATokenBasicType.class))
 		{
 			return this;
 		}

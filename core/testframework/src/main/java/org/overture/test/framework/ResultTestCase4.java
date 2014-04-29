@@ -29,7 +29,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import org.junit.Assert;
-import org.junit.Assume;
 import org.overture.test.framework.results.IMessage;
 import org.overture.test.framework.results.IResultCombiner;
 import org.overture.test.framework.results.Result;

@@ -12,15 +12,14 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class ASetBindAssistantTC
 {
-	protected static ITypeCheckerAssistantFactory af;
+	protected ITypeCheckerAssistantFactory af;
 
-	@SuppressWarnings("static-access")
 	public ASetBindAssistantTC(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
 
-	public static List<PMultipleBind> getMultipleBindList(ASetBind bind)
+	public List<PMultipleBind> getMultipleBindList(ASetBind bind)
 	{
 
 		List<PPattern> plist = new ArrayList<PPattern>();

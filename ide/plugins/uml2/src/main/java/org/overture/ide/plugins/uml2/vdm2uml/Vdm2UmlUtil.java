@@ -38,10 +38,10 @@ public final static ITypeCheckerAssistantFactory assistantFactory = new TypeChec
 			AAccessSpecifierAccessSpecifier accessSpecifier)
 	{
 
-		if (PAccessSpecifierAssistantTC.isPrivate(accessSpecifier))
+		if (assistantFactory.createPAccessSpecifierAssistant().isPrivate(accessSpecifier))
 		{
 			return VisibilityKind.PRIVATE_LITERAL;
-		} else if (PAccessSpecifierAssistantTC.isProtected(accessSpecifier))
+		} else if (assistantFactory.createPAccessSpecifierAssistant().isProtected(accessSpecifier))
 		{
 			return VisibilityKind.PROTECTED_LITERAL;
 		}
@@ -77,19 +77,19 @@ public final static ITypeCheckerAssistantFactory assistantFactory = new TypeChec
 	{
 		Boolean isOrdered = false;
 
-		if (PTypeAssistantTC.isType(type, ASetType.class))
+		if (assistantFactory.createPTypeAssistant().isType(type, ASetType.class))
 		{
 			isOrdered = false;
-		} else if (PTypeAssistantTC.isType(type, ASeqSeqType.class))
+		} else if (assistantFactory.createPTypeAssistant().isType(type, ASeqSeqType.class))
 		{
 			isOrdered = true;
-		} else if (PTypeAssistantTC.isType(type, ASeq1SeqType.class))
+		} else if (assistantFactory.createPTypeAssistant().isType(type, ASeq1SeqType.class))
 		{
 			isOrdered = true;
-		} else if (PTypeAssistantTC.isType(type, SMapType.class))
+		} else if (assistantFactory.createPTypeAssistant().isType(type, SMapType.class))
 		{
 			isOrdered = true;
-		} else if (PTypeAssistantTC.isType(type, AOptionalType.class))
+		} else if (assistantFactory.createPTypeAssistant().isType(type, AOptionalType.class))
 		{
 
 		}
@@ -101,18 +101,18 @@ public final static ITypeCheckerAssistantFactory assistantFactory = new TypeChec
 	{
 		Boolean isUnique = true;
 
-		if (PTypeAssistantTC.isType(type, ASetType.class))
+		if (assistantFactory.createPTypeAssistant().isType(type, ASetType.class))
 		{
-		} else if (PTypeAssistantTC.isType(type, ASeqSeqType.class))
-		{
-			isUnique = false;
-		} else if (PTypeAssistantTC.isType(type, ASeq1SeqType.class))
+		} else if (assistantFactory.createPTypeAssistant().isType(type, ASeqSeqType.class))
 		{
 			isUnique = false;
-		} else if (PTypeAssistantTC.isType(type, SMapType.class))
+		} else if (assistantFactory.createPTypeAssistant().isType(type, ASeq1SeqType.class))
 		{
 			isUnique = false;
-		} else if (PTypeAssistantTC.isType(type, AOptionalType.class))
+		} else if (assistantFactory.createPTypeAssistant().isType(type, SMapType.class))
+		{
+			isUnique = false;
+		} else if (assistantFactory.createPTypeAssistant().isType(type, AOptionalType.class))
 		{
 		}
 
@@ -146,7 +146,7 @@ public final static ITypeCheckerAssistantFactory assistantFactory = new TypeChec
 	private static boolean isSubclassResponsability(PDefinition pDefinition)
 	{
 
-		if (PDefinitionAssistantTC.isOperation(pDefinition))
+		if (assistantFactory.createPDefinitionAssistant().isOperation(pDefinition))
 		{
 			if (pDefinition instanceof AExplicitOperationDefinition)
 			{
@@ -175,13 +175,13 @@ public final static ITypeCheckerAssistantFactory assistantFactory = new TypeChec
 
 		for (PType t : funcType.getParameters())
 		{
-			if (PTypeAssistantTC.isType(t, AParameterType.class))
+			if (assistantFactory.createPTypeAssistant().isType(t, AParameterType.class))
 			{
 				return true;
 			}
 		}
 
-		if (PTypeAssistantTC.isType(funcType.getResult(), AParameterType.class))
+		if (assistantFactory.createPTypeAssistant().isType(funcType.getResult(), AParameterType.class))
 		{
 			return true;
 		}
@@ -195,7 +195,7 @@ public final static ITypeCheckerAssistantFactory assistantFactory = new TypeChec
 		{
 			for (PType t : type.getTypes())
 			{
-				if (!PTypeAssistantTC.isType(t, AQuoteType.class))
+				if (!assistantFactory.createPTypeAssistant().isType(t, AQuoteType.class))
 				{
 					return false;
 				}

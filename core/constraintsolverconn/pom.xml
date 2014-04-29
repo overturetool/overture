@@ -3,39 +3,39 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.overture</groupId>
+    <groupId>org.overturetool</groupId>
     <artifactId>core</artifactId>
-    <version>2.0.1-SNAPSHOT<!--Replaceable: Main Version--></version>
+    <version>2.0.2</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <groupId>org.overture.core</groupId>
+  <groupId>org.overturetool.core</groupId>
   <artifactId>constraintsolverconn</artifactId>
   <name>Constraint Solver Connection</name>
 
   <dependencies>
     <dependency>
-      <groupId>org.overture.core</groupId>
+      <groupId>org.overturetool.core</groupId>
       <artifactId>ast</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.overture.core</groupId>
+      <groupId>org.overturetool.core</groupId>
       <artifactId>typechecker</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-	  <groupId>org.overture.core</groupId>
+	  <groupId>org.overturetool.core</groupId>
       <artifactId>interpreter</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.overture.core</groupId>
+      <groupId>org.overturetool.core</groupId>
       <artifactId>pog-string-based</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.overture.core</groupId>
+      <groupId>org.overturetool.core</groupId>
       <artifactId>testframework</artifactId>
       <version>${project.version}</version>
     </dependency>

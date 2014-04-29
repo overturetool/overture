@@ -88,10 +88,7 @@ import org.overture.typechecker.assistant.statement.PStmAssistantTC;
 import org.overture.typechecker.assistant.type.AApplyObjectDesignatorAssistantTC;
 import org.overture.typechecker.assistant.type.AClassTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AFunctionTypeAssistantTC;
-import org.overture.typechecker.assistant.type.ANamedInvariantTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AOperationTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AOptionalTypeAssistantTC;
-import org.overture.typechecker.assistant.type.AParameterTypeAssistantTC;
 import org.overture.typechecker.assistant.type.APatternListTypePairAssistantTC;
 import org.overture.typechecker.assistant.type.ARecordInvariantTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AUnionTypeAssistantTC;
@@ -201,27 +198,9 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	}
 
 	@Override
-	public ANamedInvariantTypeAssistantTC createANamedInvariantTypeAssistant()
-	{
-		return new ANamedInvariantTypeAssistantTC(this);
-	}
-
-	@Override
 	public AOperationTypeAssistantTC createAOperationTypeAssistant()
 	{
 		return new AOperationTypeAssistantTC(this);
-	}
-
-	@Override
-	public AOptionalTypeAssistantTC createAOptionalTypeAssistant()
-	{
-		return new AOptionalTypeAssistantTC(this);
-	}
-
-	@Override
-	public AParameterTypeAssistantTC createAParameterTypeAssistant()
-	{
-		return new AParameterTypeAssistantTC(this);
 	}
 
 	@Override
@@ -298,11 +277,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new AImplicitOperationDefinitionAssistantTC(this);
 	}
 
-//	@Override
-//	public AImportedDefinitionAssistantTC createAImportedDefinitionAssistant()
-//	{
-//		return new AImportedDefinitionAssistantTC(this);
-//	}
+	// @Override
+	// public AImportedDefinitionAssistantTC createAImportedDefinitionAssistant()
+	// {
+	// return new AImportedDefinitionAssistantTC(this);
+	// }
 
 	@Override
 	public AInstanceVariableDefinitionAssistantTC createAInstanceVariableDefinitionAssistant()
@@ -340,11 +319,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new ATypeDefinitionAssistantTC(this);
 	}
 
-//	@Override
-//	public AValueDefinitionAssistantTC createAValueDefinitionAssistant()
-//	{
-//		return new AValueDefinitionAssistantTC(this);
-//	}
+	// @Override
+	// public AValueDefinitionAssistantTC createAValueDefinitionAssistant()
+	// {
+	// return new AValueDefinitionAssistantTC(this);
+	// }
 
 	@Override
 	public PAccessSpecifierAssistantTC createPAccessSpecifierAssistant()
@@ -454,18 +433,17 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 
 	// pattern
 
+	// @Override
+	// public ABooleanPatternAssistantTC createABooleanPatternAssistant()
+	// {
+	// return new ABooleanPatternAssistantTC(this);
+	// }
 
-//	@Override
-//	public ABooleanPatternAssistantTC createABooleanPatternAssistant()
-//	{
-//		return new ABooleanPatternAssistantTC(this);
-//	}
-
-//	@Override
-//	public ACharacterPatternAssistantTC createACharacterPatternAssistant()
-//	{
-//		return new ACharacterPatternAssistantTC(this);
-//	}
+	// @Override
+	// public ACharacterPatternAssistantTC createACharacterPatternAssistant()
+	// {
+	// return new ACharacterPatternAssistantTC(this);
+	// }
 
 	@Override
 	public AConcatenationPatternAssistantTC createAConcatenationPatternAssistant()

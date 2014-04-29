@@ -78,7 +78,7 @@ import org.overture.typechecker.visitor.TypeCheckVisitor;
 
 abstract public class Interpreter
 {
-	protected IInterpreterAssistantFactory assistantFactory = new InterpreterAssistantFactory();
+	final public IInterpreterAssistantFactory assistantFactory = new InterpreterAssistantFactory();
 	
 	/** The main thread scheduler */
 	public ResourceScheduler scheduler;

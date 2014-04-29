@@ -6,15 +6,14 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class ARecordInvariantTypeAssistantTC
 {
-	protected static ITypeCheckerAssistantFactory af;
+	protected ITypeCheckerAssistantFactory af;
 
-	@SuppressWarnings("static-access")
 	public ARecordInvariantTypeAssistantTC(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
 
-	public static AFieldField findField(ARecordInvariantType rec, String tag)
+	public AFieldField findField(ARecordInvariantType rec, String tag)
 	{
 		for (AFieldField f : rec.getFields())
 		{

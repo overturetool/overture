@@ -20,6 +20,7 @@ public class ACharacterPatternAssistantInterpreter
 	@SuppressWarnings("static-access")
 	public ACharacterPatternAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
+		//super();
 		this.af = af;
 	}
 

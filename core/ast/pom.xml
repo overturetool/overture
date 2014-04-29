@@ -1,26 +1,25 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.overture</groupId>
+    <groupId>org.overturetool</groupId>
     <artifactId>core</artifactId>
-    <version>2.0.1-SNAPSHOT<!--Replaceable: Main Version--></version>
+    <version>2.0.5-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <groupId>org.overture.core</groupId>
+  <groupId>org.overturetool.core</groupId>
   <artifactId>ast</artifactId>
   <name>The Overture Abstract Syntax Tree </name>
 
   <properties>
-    <astcreator.version>1.6.1</astcreator.version>
+    <astcreator.version>1.6.4</astcreator.version>
   </properties>
 
   <build>
     <plugins>
       <plugin>
-	<groupId>org.overture.astcreator</groupId>
+	<groupId>org.overturetool.astcreator</groupId>
 	<artifactId>astcreator-plugin</artifactId>
 	<version>${astcreator.version}</version>
 	<executions>
@@ -74,8 +73,8 @@
 	      <pluginExecutions>
 		<pluginExecution>
 		  <pluginExecutionFilter>
-		    <groupId>org.overture.maven.tools</groupId>
-		    <artifactId>ast-creator-plugin</artifactId>
+	            <groupId>org.overturetool.astcreator</groupId>
+	            <artifactId>astcreator-plugin</artifactId>
 		    <versionRange>${astcreator.version}</versionRange>
 		    <goals>
 		      <goal>generate</goal>

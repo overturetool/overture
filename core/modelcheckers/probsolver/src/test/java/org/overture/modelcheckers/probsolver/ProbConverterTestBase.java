@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -17,6 +18,7 @@ import org.overture.ast.statements.PStm;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.modelcheckers.probsolver.ProbSolverUtil.SolverException;
+import org.overture.test.framework.ConditionalIgnoreMethodRule;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
@@ -39,6 +41,9 @@ public class ProbConverterTestBase
 		Settings.release = Release.VDM_10;
 	}
 
+	@Rule
+	public ConditionalIgnoreMethodRule rule = new ConditionalIgnoreMethodRule();
+
 	protected void testMethod(String name) throws IOException,
 			AnalysisException, SolverException
 	{
@@ -48,15 +53,19 @@ public class ProbConverterTestBase
 			AImplicitOperationDefinition opDef = findOperation(name);
 
 			HashMap<String, String> emptyMap = new HashMap<String, String>();
-		PStm stm=	ProbSolverUtil.solve(opDef.getName(), opDef, emptyMap, emptyMap, new SolverConsole());
-		
-		System.out.println("Result="+stm);
+			PStm stm = ProbSolverUtil.solve(opDef.getName().getName(), opDef, emptyMap, emptyMap, new SolverConsole());
+
+			System.out.println("Result=" + stm);
 
 		} catch (SolverException e)
 		{
 			if (e.getCause() instanceof UnsupportedTranslationException)
 			{
 				Assert.fail(e.getCause().getMessage());
+				// } else if(e.getCause() instanceof ProvisionException && e.getCause().getCause() instanceof
+				// NullPointerException)
+				// {
+				// Assume.assumeFalse("ProB not installed", false);
 			} else
 			{
 				throw e;

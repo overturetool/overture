@@ -10,15 +10,14 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class PImportAssistantTC
 {
-	protected static ITypeCheckerAssistantFactory af;
+	protected ITypeCheckerAssistantFactory af;
 
-	@SuppressWarnings("static-access")
 	public PImportAssistantTC(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
 
-	public static List<PDefinition> getDefinitions(PImport imp,
+	public List<PDefinition> getDefinitions(PImport imp,
 			AModuleModules from)
 	{
 		try

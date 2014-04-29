@@ -43,6 +43,7 @@ import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
+import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.typechecker.assistant.definition.AImplicitOperationDefinitionAssistantTC;
 
 public class POOperationDefinitionContext extends POContext
@@ -72,12 +73,12 @@ public class POOperationDefinitionContext extends POContext
 
 	public POOperationDefinitionContext(
 			AImplicitOperationDefinition definition, boolean precond,
-			PDefinition stateDefinition)
+			PDefinition stateDefinition,IPogAssistantFactory assistantFactory )
 	{
 		this.name = definition.getName();
 		this.deftype = (AOperationType) definition.getType();
 		this.addPrecond = precond;
-		this.paramPatternList = AImplicitOperationDefinitionAssistantTC.getParamPatternList(definition);
+		this.paramPatternList = assistantFactory.createAImplicitOperationDefinitionAssistant().getParamPatternList(definition);
 		this.precondition = definition.getPrecondition();
 		this.stateDefinition = stateDefinition;
 		this.opDef = definition;

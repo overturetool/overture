@@ -44,7 +44,7 @@ public class TagBasisChecker extends TypeUnwrapper<Boolean>
 	@Override
 	public Boolean caseAUnionType(AUnionType type) throws AnalysisException
 	{
-		return af.createAUnionTypeAssistant().isTag(type);
+		return false;
 	}
 
 	@Override

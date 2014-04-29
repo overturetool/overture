@@ -75,7 +75,7 @@ public class RecursiveObligation extends ProofObligation
 		sb.append(")");
 		sb.append(def.getMeasureLexical() > 0 ? " LEX"
 				+ def.getMeasureLexical() + "> " : " > ");
-		sb.append(AApplyExpAssistantTC.getMeasureApply(apply, def.getMeasure()));
+		sb.append(ctxt.assistantFactory.createAApplyExpAssistant().getMeasureApply(apply, def.getMeasure()));
 
 		value = ctxt.getObligation(sb.toString());
 	}
