@@ -15,15 +15,22 @@ import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.pub.ProofObligationGenerator;
 
 import com.google.gson.Gson;
-
+/**
+ * Class for quick testing and work on the pog
+ * @author ldc
+ *
+ */
 public class Playground {
 
-	static boolean UPDATE = true;
 	
+	// switch this flag to update a test result file
+	static boolean WRITE_RESULT = true;
+	
+	// comment this annotation out when done!
 	@Test
 	public void quickTest() throws AnalysisException, IOException, URISyntaxException{
 		List<INode> ast = TestHelper
-				.getAstFromName("src/test/resources/adhoc/sandbox.vdmsl");
+				.getAstFromName("src/test/resources/adhoc/sandbox.vdmpp");
 		IProofObligationList ipol = ProofObligationGenerator
 				.generateProofObligations(ast);
 		
@@ -31,7 +38,7 @@ public class Playground {
 			System.out.println(po.getValue());
 		}
 		
-		if (UPDATE){
+		if (WRITE_RESULT){
 			this.update(ipol);
 		}
 	}
