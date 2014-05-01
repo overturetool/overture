@@ -237,8 +237,8 @@ public class SatisfiabilityObligation extends ProofObligation {
 							.clone(), NEW_STATE_ARG);
 		} else {
 			postArglist.add(getVarExp(NEW_SELF_ARG));
-			exists_binds = getMultipleTypeBindList(stateDefinition.getType()
-					.clone(), NEW_SELF_ARG);
+			exists_binds.addAll(getMultipleTypeBindList(stateDefinition
+					.getType().clone(), NEW_SELF_ARG));
 		}
 	}
 
