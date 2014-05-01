@@ -7,8 +7,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 import org.overture.ast.definitions.SClassDefinition;
@@ -19,6 +21,8 @@ import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
+import org.overture.pog.pub.IProofObligation;
+import org.overture.pog.pub.IProofObligationList;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
@@ -29,6 +33,55 @@ public abstract class TestHelper {
 		String sResult = IOUtils.toString(new FileReader(resultPath));
 
 		return sResult;
+	}
+
+	/**
+	 * Compare a proof obligation list and a list of po result holders. This
+	 * method takes into account the size of both lists and then compares each
+	 * pair of elements with no regard for their order in each list. The comparison
+	 * is done with {@link #samePO(PoResult, IProofObligation)}
+	 * <br>
+	 * <br>
+	 * ex: [1,2,3] and [3,1,2] are considered equal
+	 * 
+	 * 
+	 * @param pRL
+	 *            a list of {@link PoResult}
+	 * @param ipol
+	 *            the {@link IProofObligationList}
+	 * @return true if lists hold same elements, false otherwise
+	 */
+	public static boolean sameElements(List<PoResult> pRL, IProofObligationList ipol) {
+		if (pRL.size() != ipol.size()) {
+			return false;
+		}
+
+		Set<PoResult> set1 = new HashSet<PoResult>(pRL);
+		Set<PoResult> set2 = new HashSet<PoResult>();
+
+		for (IProofObligation ipo : ipol) {
+			set2.add(new PoResult(ipo.getKindString(), ipo.getValue()));
+		}
+
+		return set1.equals(set2);
+	}
+
+	/**
+	 * Compare a proof obligation and stored po result to check
+	 * if they represent the same PO. This comparison
+	 * is implemented as a string comparison of the kinds and
+	 * expression values.
+	 * 
+	 * @param pR the stored {@link PoResult}
+	 * @param ipo the generated {@link IProofObligation}
+	 * @return true if same PO represented. false otherwise
+	 */
+	public static boolean samePO(PoResult pR, IProofObligation ipo) {
+		if (pR.getPoExp().equals(ipo.getValue())) {
+			return pR.getPoKind().endsWith(ipo.getKindString());
+		} else {
+			return false;
+		}
 	}
 
 	public static List<INode> getAstFromName(String name) throws IOException,
