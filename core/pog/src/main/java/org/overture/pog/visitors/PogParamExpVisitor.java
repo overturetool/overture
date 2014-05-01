@@ -1441,7 +1441,31 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			AImpliesBooleanBinaryExp node, IPOContextStack question)
 			throws AnalysisException
 	{
-		return handleBinaryBooleanExp(node, question);
+		ProofObligationList obligations = new ProofObligationList();
+
+		PExp[] leftRight = getLeftRight(node);
+		PExp lExp = leftRight[LEFT];
+		PType lType = lExp.getType();
+		PExp rExp = leftRight[RIGHT];
+		PType rType = rExp.getType();
+
+		if (assistantFactory.createPTypeAssistant().isUnion(lType))
+		{
+			obligations.add(SubTypeObligation.newInstance(lExp, AstFactory.newABooleanBasicType(lExp.getLocation()), lType, question, assistantFactory));
+		}
+
+		if (assistantFactory.createPTypeAssistant().isUnion(rType))
+		{
+			obligations.add(SubTypeObligation.newInstance(rExp, AstFactory.newABooleanBasicType(rExp.getLocation()), rType, question, assistantFactory));
+		}
+
+		obligations.addAll(lExp.apply(mainVisitor, question));
+		question.push(new POImpliesContext(lExp));
+		obligations.addAll(rExp.apply(mainVisitor, question));
+		question.pop();
+
+		return obligations;
+
 	}
 
 	@Override
