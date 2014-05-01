@@ -1,0 +1,5 @@
+operations
+
+ImplTest(n : nat) r : real
+pre n <> 0
+post r = 42 / n
