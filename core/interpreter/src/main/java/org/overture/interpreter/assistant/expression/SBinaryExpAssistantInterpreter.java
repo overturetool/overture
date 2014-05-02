@@ -20,12 +20,12 @@ public class SBinaryExpAssistantInterpreter extends SBinaryExpAssistantTC
 		this.af = af;
 	}
 
-	public static ValueList getValues(SBinaryExp exp, ObjectContext ctxt)
-	{
-		ValueList list = PExpAssistantInterpreter.getValues(exp.getLeft(), ctxt);
-		list.addAll(PExpAssistantInterpreter.getValues(exp.getRight(), ctxt));
-		return list;
-	}
+//	public static ValueList getValues(SBinaryExp exp, ObjectContext ctxt)
+//	{
+//		ValueList list = PExpAssistantInterpreter.getValues(exp.getLeft(), ctxt);
+//		list.addAll(PExpAssistantInterpreter.getValues(exp.getRight(), ctxt));
+//		return list;
+//	}
 
 	public static PExp findExpression(SBinaryExp exp, int lineno)
 	{

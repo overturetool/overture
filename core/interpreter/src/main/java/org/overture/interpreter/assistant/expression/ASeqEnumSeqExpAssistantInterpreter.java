@@ -16,10 +16,10 @@ public class ASeqEnumSeqExpAssistantInterpreter
 		this.af = af;
 	}
 
-	public static ValueList getValues(ASeqEnumSeqExp exp, ObjectContext ctxt)
-	{
-		return PExpAssistantInterpreter.getValues(exp.getMembers(), ctxt);
-	}
+//	public static ValueList getValues(ASeqEnumSeqExp exp, ObjectContext ctxt)
+//	{
+//		return PExpAssistantInterpreter.getValues(exp.getMembers(), ctxt);
+//	}
 
 	public static PExp findExpression(ASeqEnumSeqExp exp, int lineno)
 	{

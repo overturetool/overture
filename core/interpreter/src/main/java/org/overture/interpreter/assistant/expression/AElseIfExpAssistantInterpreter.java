@@ -18,12 +18,12 @@ public class AElseIfExpAssistantInterpreter // extends AElseIfExpAssistantTC
 		this.af = af;
 	}
 
-	public static ValueList getValues(AElseIfExp exp, ObjectContext ctxt)
-	{
-		ValueList list = PExpAssistantInterpreter.getValues(exp.getElseIf(), ctxt);
-		list.addAll(PExpAssistantInterpreter.getValues(exp.getThen(), ctxt));
-		return list;
-	}
+//	public static ValueList getValues(AElseIfExp exp, ObjectContext ctxt)
+//	{
+//		ValueList list = PExpAssistantInterpreter.getValues(exp.getElseIf(), ctxt);
+//		list.addAll(PExpAssistantInterpreter.getValues(exp.getThen(), ctxt));
+//		return list;
+//	}
 
 	public static PExp findExpression(AElseIfExp exp, int lineno)
 	{

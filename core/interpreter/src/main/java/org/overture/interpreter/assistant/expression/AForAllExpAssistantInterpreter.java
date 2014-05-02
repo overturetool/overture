@@ -18,18 +18,18 @@ public class AForAllExpAssistantInterpreter// extends AForAllExpAssistantTC
 		this.af = af;
 	}
 
-	public static ValueList getValues(AForAllExp exp, ObjectContext ctxt)
-	{
-		ValueList list = new ValueList();
-
-		for (PMultipleBind mb : exp.getBindList())
-		{
-			list.addAll(PMultipleBindAssistantInterpreter.getValues(mb, ctxt));
-		}
-
-		list.addAll(PExpAssistantInterpreter.getValues(exp.getPredicate(), ctxt));
-		return list;
-	}
+//	public static ValueList getValues(AForAllExp exp, ObjectContext ctxt)
+//	{
+//		ValueList list = new ValueList();
+//
+//		for (PMultipleBind mb : exp.getBindList())
+//		{
+//			list.addAll(PMultipleBindAssistantInterpreter.getValues(mb, ctxt));
+//		}
+//
+//		list.addAll(PExpAssistantInterpreter.getValues(exp.getPredicate(), ctxt));
+//		return list;
+//	}
 
 	public static PExp findExpression(AForAllExp exp, int lineno)
 	{

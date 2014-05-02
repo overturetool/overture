@@ -19,19 +19,19 @@ public class SSetExpAssistantInterpreter // extends SSetExpAssistantTC
 		this.af = af;
 	}
 
-	public static ValueList getValues(SSetExp exp, ObjectContext ctxt)
-	{
-		if (exp instanceof ASetCompSetExp)
-		{
-			return ASetCompSetExpAssistantInterpreter.getValues((ASetCompSetExp) exp, ctxt);
-		} else if (exp instanceof ASetEnumSetExp)
-		{
-			return ASetEnumSetExpAssistantInterpreter.getValues((ASetEnumSetExp) exp, ctxt);
-		} else
-		{
-			return new ValueList();
-		}
-	}
+//	public static ValueList getValues(SSetExp exp, ObjectContext ctxt)
+//	{
+//		if (exp instanceof ASetCompSetExp)
+//		{
+//			return ASetCompSetExpAssistantInterpreter.getValues((ASetCompSetExp) exp, ctxt);
+//		} else if (exp instanceof ASetEnumSetExp)
+//		{
+//			return ASetEnumSetExpAssistantInterpreter.getValues((ASetEnumSetExp) exp, ctxt);
+//		} else
+//		{
+//			return new ValueList();
+//		}
+//	}
 
 	public static PExp findExpression(SSetExp exp, int lineno)
 	{

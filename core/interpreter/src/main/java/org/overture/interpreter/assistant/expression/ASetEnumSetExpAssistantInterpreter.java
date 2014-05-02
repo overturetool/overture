@@ -16,10 +16,10 @@ public class ASetEnumSetExpAssistantInterpreter
 		this.af = af;
 	}
 
-	public static ValueList getValues(ASetEnumSetExp exp, ObjectContext ctxt)
-	{
-		return PExpAssistantInterpreter.getValues(exp.getMembers(), ctxt);
-	}
+//	public static ValueList getValues(ASetEnumSetExp exp, ObjectContext ctxt)
+//	{
+//		return PExpAssistantInterpreter.getValues(exp.getMembers(), ctxt);
+//	}
 
 	public static PExp findExpression(ASetEnumSetExp exp, int lineno)
 	{

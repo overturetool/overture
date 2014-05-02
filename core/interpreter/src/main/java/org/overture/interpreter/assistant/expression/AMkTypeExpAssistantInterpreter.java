@@ -16,10 +16,10 @@ public class AMkTypeExpAssistantInterpreter // extends AMkTypeExpAssistantTC
 		this.af = af;
 	}
 
-	public static ValueList getValues(AMkTypeExp exp, ObjectContext ctxt)
-	{
-		return PExpAssistantInterpreter.getValues(exp.getArgs(), ctxt);
-	}
+//	public static ValueList getValues(AMkTypeExp exp, ObjectContext ctxt)
+//	{
+//		return PExpAssistantInterpreter.getValues(exp.getArgs(), ctxt);
+//	}
 
 	public static PExp findExpression(AMkTypeExp exp, int lineno)
 	{

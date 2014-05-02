@@ -16,10 +16,10 @@ public class ANarrowExpAssistantInterpreter // extends ANarrowExpAssistantTC
 		this.af = af;
 	}
 
-	public static ValueList getValues(ANarrowExp exp, ObjectContext ctxt)
-	{
-		return PExpAssistantInterpreter.getValues(exp.getTest(), ctxt);
-	}
+//	public static ValueList getValues(ANarrowExp exp, ObjectContext ctxt)
+//	{
+//		return PExpAssistantInterpreter.getValues(exp.getTest(), ctxt);
+//	}
 
 	public static PExp findExpression(ANarrowExp exp, int lineno)
 	{

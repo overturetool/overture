@@ -16,10 +16,10 @@ public class AIsExpAssistantInterpreter // extends AIsExpAssistantTC
 		this.af = af;
 	}
 
-	public static ValueList getValues(AIsExp exp, ObjectContext ctxt)
-	{
-		return PExpAssistantInterpreter.getValues(exp.getTest(), ctxt);
-	}
+//	public static ValueList getValues(AIsExp exp, ObjectContext ctxt)
+//	{
+//		return PExpAssistantInterpreter.getValues(exp.getTest(), ctxt);
+//	}
 
 	public static PExp findExpression(AIsExp exp, int lineno)
 	{

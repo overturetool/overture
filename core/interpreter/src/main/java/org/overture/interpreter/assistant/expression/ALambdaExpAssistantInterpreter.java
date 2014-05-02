@@ -16,10 +16,10 @@ public class ALambdaExpAssistantInterpreter // extends ALambdaExpAssistantTC
 		this.af = af;
 	}
 
-	public static ValueList getValues(ALambdaExp exp, ObjectContext ctxt)
-	{
-		return PExpAssistantInterpreter.getValues(exp.getExpression(), ctxt);
-	}
+//	public static ValueList getValues(ALambdaExp exp, ObjectContext ctxt)
+//	{
+//		return PExpAssistantInterpreter.getValues(exp.getExpression(), ctxt);
+//	}
 
 	public static PExp findExpression(ALambdaExp exp, int lineno)
 	{

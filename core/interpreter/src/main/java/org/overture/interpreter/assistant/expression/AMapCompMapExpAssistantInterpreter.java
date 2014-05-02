@@ -18,22 +18,22 @@ public class AMapCompMapExpAssistantInterpreter
 		this.af = af;
 	}
 
-	public static ValueList getValues(AMapCompMapExp exp, ObjectContext ctxt)
-	{
-		ValueList list = PExpAssistantInterpreter.getValues(exp.getFirst(), ctxt);
-
-		for (PMultipleBind mb : exp.getBindings())
-		{
-			list.addAll(PMultipleBindAssistantInterpreter.getValues(mb, ctxt));
-		}
-
-		if (exp.getPredicate() != null)
-		{
-			list.addAll(PExpAssistantInterpreter.getValues(exp.getPredicate(), ctxt));
-		}
-
-		return list;
-	}
+//	public static ValueList getValues(AMapCompMapExp exp, ObjectContext ctxt)
+//	{
+//		ValueList list = PExpAssistantInterpreter.getValues(exp.getFirst(), ctxt);
+//
+//		for (PMultipleBind mb : exp.getBindings())
+//		{
+//			list.addAll(PMultipleBindAssistantInterpreter.getValues(mb, ctxt));
+//		}
+//
+//		if (exp.getPredicate() != null)
+//		{
+//			list.addAll(PExpAssistantInterpreter.getValues(exp.getPredicate(), ctxt));
+//		}
+//
+//		return list;
+//	}
 
 	public static PExp findExpression(AMapCompMapExp exp, int lineno)
 	{

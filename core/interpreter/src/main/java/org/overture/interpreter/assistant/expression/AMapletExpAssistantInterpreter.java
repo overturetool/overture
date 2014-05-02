@@ -16,12 +16,12 @@ public class AMapletExpAssistantInterpreter // extends AMapletExpAssistantTC
 		this.af = af;
 	}
 
-	public static ValueList getValues(AMapletExp maplet, ObjectContext ctxt)
-	{
-		ValueList list = PExpAssistantInterpreter.getValues(maplet.getLeft(), ctxt);
-		list.addAll(PExpAssistantInterpreter.getValues(maplet.getRight(), ctxt));
-		return list;
-	}
+//	public static ValueList getValues(AMapletExp maplet, ObjectContext ctxt)
+//	{
+//		ValueList list = PExpAssistantInterpreter.getValues(maplet.getLeft(), ctxt);
+//		list.addAll(PExpAssistantInterpreter.getValues(maplet.getRight(), ctxt));
+//		return list;
+//	}
 
 	public static PExp findExpression(AMapletExp m, int lineno)
 	{

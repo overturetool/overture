@@ -19,22 +19,22 @@ public class ACasesExpAssistantInterpreter // extends ACasesExpAssistantTC
 		this.af = af;
 	}
 
-	public static ValueList getValues(ACasesExp exp, ObjectContext ctxt)
-	{
-		ValueList list = PExpAssistantInterpreter.getValues(exp.getExpression(), ctxt);
-
-		for (ACaseAlternative c : exp.getCases())
-		{
-			list.addAll(ACaseAlternativeAssistantInterpreter.getValues(c, ctxt));
-		}
-
-		if (exp.getOthers() != null)
-		{
-			list.addAll(PExpAssistantInterpreter.getValues(exp.getOthers(), ctxt));
-		}
-
-		return list;
-	}
+//	public static ValueList getValues(ACasesExp exp, ObjectContext ctxt)
+//	{
+//		ValueList list = PExpAssistantInterpreter.getValues(exp.getExpression(), ctxt);
+//
+//		for (ACaseAlternative c : exp.getCases())
+//		{
+//			list.addAll(ACaseAlternativeAssistantInterpreter.getValues(c, ctxt));
+//		}
+//
+//		if (exp.getOthers() != null)
+//		{
+//			list.addAll(PExpAssistantInterpreter.getValues(exp.getOthers(), ctxt));
+//		}
+//
+//		return list;
+//	}
 
 	public static PExp findExpression(ACasesExp exp, int lineno)
 	{

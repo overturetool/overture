@@ -19,23 +19,23 @@ public class AIfExpAssistantInterpreter // extends AIfExpAssistantTC
 		this.af = af;
 	}
 
-	public static ValueList getValues(AIfExp exp, ObjectContext ctxt)
-	{
-		ValueList list = PExpAssistantInterpreter.getValues(exp.getTest(), ctxt);
-		list.addAll(PExpAssistantInterpreter.getValues(exp.getThen(), ctxt));
-
-		for (AElseIfExp elif : exp.getElseList())
-		{
-			list.addAll(PExpAssistantInterpreter.getValues(elif, ctxt));
-		}
-
-		if (exp.getElse() != null)
-		{
-			list.addAll(PExpAssistantInterpreter.getValues(exp.getElse(), ctxt));
-		}
-
-		return list;
-	}
+//	public static ValueList getValues(AIfExp exp, ObjectContext ctxt)
+//	{
+//		ValueList list = PExpAssistantInterpreter.getValues(exp.getTest(), ctxt);
+//		list.addAll(PExpAssistantInterpreter.getValues(exp.getThen(), ctxt));
+//
+//		for (AElseIfExp elif : exp.getElseList())
+//		{
+//			list.addAll(PExpAssistantInterpreter.getValues(elif, ctxt));
+//		}
+//
+//		if (exp.getElse() != null)
+//		{
+//			list.addAll(PExpAssistantInterpreter.getValues(exp.getElse(), ctxt));
+//		}
+//
+//		return list;
+//	}
 
 	public static PExp findExpression(AIfExp exp, int lineno)
 	{

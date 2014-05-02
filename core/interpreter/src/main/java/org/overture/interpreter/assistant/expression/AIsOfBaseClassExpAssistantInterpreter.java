@@ -18,10 +18,10 @@ public class AIsOfBaseClassExpAssistantInterpreter// extends
 		this.af = af;
 	}
 
-	public static ValueList getValues(AIsOfBaseClassExp exp, ObjectContext ctxt)
-	{
-		return PExpAssistantInterpreter.getValues(exp.getExp(), ctxt);
-	}
+//	public static ValueList getValues(AIsOfBaseClassExp exp, ObjectContext ctxt)
+//	{
+//		return PExpAssistantInterpreter.getValues(exp.getExp(), ctxt);
+//	}
 
 	public static PExp findExpression(AIsOfBaseClassExp exp, int lineno)
 	{

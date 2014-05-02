@@ -21,12 +21,12 @@ public class AApplyExpAssistantInterpreter extends AApplyExpAssistantTC
 		this.af = af;
 	}
 
-	public static ValueList getValues(AApplyExp exp, ObjectContext ctxt)
-	{
-		ValueList list = PExpAssistantInterpreter.getValues(exp.getArgs(), ctxt);
-		list.addAll(PExpAssistantInterpreter.getValues(exp.getRoot(), ctxt));
-		return list;
-	}
+//	public static ValueList getValues(AApplyExp exp, ObjectContext ctxt)
+//	{
+//		ValueList list = PExpAssistantInterpreter.getValues(exp.getArgs(), ctxt);
+//		list.addAll(PExpAssistantInterpreter.getValues(exp.getRoot(), ctxt));
+//		return list;
+//	}
 
 	public static PExp findExpression(AApplyExp exp, int lineno)
 	{

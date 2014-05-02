@@ -17,17 +17,17 @@ public class AMuExpAssistantInterpreter // extends AMuExpAssistantTC
 		this.af = af;
 	}
 
-	public static ValueList getValues(AMuExp exp, ObjectContext ctxt)
-	{
-		ValueList list = PExpAssistantInterpreter.getValues(exp.getRecord(), ctxt);
-
-		for (ARecordModifier rm : exp.getModifiers())
-		{
-			list.addAll(ARecordModifierAssistantInterpreter.getValues(rm, ctxt));
-		}
-
-		return list;
-	}
+//	public static ValueList getValues(AMuExp exp, ObjectContext ctxt)
+//	{
+//		ValueList list = PExpAssistantInterpreter.getValues(exp.getRecord(), ctxt);
+//
+//		for (ARecordModifier rm : exp.getModifiers())
+//		{
+//			list.addAll(ARecordModifierAssistantInterpreter.getValues(rm, ctxt));
+//		}
+//
+//		return list;
+//	}
 
 	public static PExp findExpression(AMuExp exp, int lineno)
 	{

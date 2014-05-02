@@ -17,12 +17,12 @@ public class AIotaExpAssistantInterpreter // extends AIotaExpAssistantTC
 		this.af = af;
 	}
 
-	public static ValueList getValues(AIotaExp exp, ObjectContext ctxt)
-	{
-		ValueList list = PBindAssistantInterpreter.getValues(exp.getBind(), ctxt);
-		list.addAll(PExpAssistantInterpreter.getValues(exp.getPredicate(), ctxt));
-		return list;
-	}
+//	public static ValueList getValues(AIotaExp exp, ObjectContext ctxt)
+//	{
+//		ValueList list = PBindAssistantInterpreter.getValues(exp.getBind(), ctxt);
+//		list.addAll(PExpAssistantInterpreter.getValues(exp.getPredicate(), ctxt));
+//		return list;
+//	}
 
 	public static PExp findExpression(AIotaExp exp, int lineno)
 	{

@@ -17,18 +17,18 @@ public class ALetBeStExpAssistantInterpreter // extends ALetBeStExpAssistantTC
 		this.af = af;
 	}
 
-	public static ValueList getValues(ALetBeStExp exp, ObjectContext ctxt)
-	{
-		ValueList list = PMultipleBindAssistantInterpreter.getValues(exp.getBind(), ctxt);
-
-		if (exp.getSuchThat() != null)
-		{
-			list.addAll(PExpAssistantInterpreter.getValues(exp.getSuchThat(), ctxt));
-		}
-
-		list.addAll(PExpAssistantInterpreter.getValues(exp.getValue(), ctxt));
-		return list;
-	}
+//	public static ValueList getValues(ALetBeStExp exp, ObjectContext ctxt)
+//	{
+//		ValueList list = PMultipleBindAssistantInterpreter.getValues(exp.getBind(), ctxt);
+//
+//		if (exp.getSuchThat() != null)
+//		{
+//			list.addAll(PExpAssistantInterpreter.getValues(exp.getSuchThat(), ctxt));
+//		}
+//
+//		list.addAll(PExpAssistantInterpreter.getValues(exp.getValue(), ctxt));
+//		return list;
+//	}
 
 	public static PExp findExpression(ALetBeStExp exp, int lineno)
 	{
