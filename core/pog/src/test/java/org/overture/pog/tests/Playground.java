@@ -30,7 +30,7 @@ import com.google.gson.reflect.TypeToken;
 public class Playground {
 
 	// switch this flag to update a test result file
-	static boolean WRITE_RESULT = true;
+	static boolean WRITE_RESULT = false;
 
 	// switch this flag to print the stored results
 	static boolean SHOW_RESULT = false;
@@ -41,7 +41,7 @@ public class Playground {
 	public void quickTest() throws AnalysisException, IOException,
 			URISyntaxException {
 
-		String model = "src/test/resources/adhoc/sandbox.vdmpp";
+		String model = "src/test/resources/adhoc/sandbox.vdmsl";
 		String result = "src/test/resources/adhoc/sandbox.result";
 
 		List<INode> ast = TestHelper.getAstFromName(model);
