@@ -1,34 +1,8 @@
 package org.overture.interpreter.assistant.statement;
 
-import java.util.Vector;
-
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.PExp;
-import org.overture.ast.patterns.AIdentifierPattern;
-import org.overture.ast.statements.AAlwaysStm;
-import org.overture.ast.statements.AAssignmentStm;
-import org.overture.ast.statements.AAtomicStm;
-import org.overture.ast.statements.ACallObjectStm;
-import org.overture.ast.statements.ACallStm;
-import org.overture.ast.statements.ACasesStm;
-import org.overture.ast.statements.ACyclesStm;
-import org.overture.ast.statements.ADurationStm;
-import org.overture.ast.statements.AElseIfStm;
-import org.overture.ast.statements.AExitStm;
-import org.overture.ast.statements.AForAllStm;
-import org.overture.ast.statements.AForIndexStm;
-import org.overture.ast.statements.AForPatternBindStm;
-import org.overture.ast.statements.AIfStm;
-import org.overture.ast.statements.ALetBeStStm;
-import org.overture.ast.statements.ALetStm;
-import org.overture.ast.statements.AReturnStm;
-import org.overture.ast.statements.AStartStm;
-import org.overture.ast.statements.AStopStm;
-import org.overture.ast.statements.ATixeStm;
-import org.overture.ast.statements.ATrapStm;
-import org.overture.ast.statements.AWhileStm;
 import org.overture.ast.statements.PStm;
-import org.overture.ast.statements.SSimpleBlockStm;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.typechecker.assistant.statement.PStmAssistantTC;
 

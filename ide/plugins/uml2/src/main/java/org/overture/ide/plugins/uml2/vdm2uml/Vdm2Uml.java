@@ -51,8 +51,6 @@ import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ide.plugins.uml2.UmlConsole;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
-import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 
 public class Vdm2Uml
 {
@@ -312,8 +310,6 @@ public class Vdm2Uml
 
 		}
 
-		private static final long serialVersionUID = 1L;
-
 		TemplateSignature sig = null;
 		Map<String, Classifier> templateParameters = new HashMap<String, Classifier>();
 
@@ -379,8 +375,8 @@ public class Vdm2Uml
 		EList<String> names = new BasicEList<String>();
 		for (PPattern p : def.getParamPatternList().get(0))
 		{
-			//Downcast the assistantFactory here. Narrowing it to interpreter assistant.
-			List<AIdentifierPattern> ids = ((PPatternAssistantInterpreter) Vdm2UmlUtil.assistantFactory.createPPatternAssistant()).findIdentifiers(p);
+			//HERE SEE: Downcast the assistantFactory here. Narrowing it to interpreter assistant.
+			List<AIdentifierPattern> ids =  Vdm2UmlUtil.assistantFactory.createPPatternAssistant().findIdentifiers(p);
 			if (!ids.isEmpty())
 			{
 				names.add(ids.get(0).toString());

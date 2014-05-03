@@ -24,24 +24,6 @@ import org.overture.ast.statements.AWhileStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.statements.SSimpleBlockStm;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AAlwaysStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AAtomicStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ACasesStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ACyclesStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ADurationStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AElseIfStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AForAllStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AForIndexStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AForPatternBindStmAssitantInterpreter;
-import org.overture.interpreter.assistant.statement.AIfStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ALetBeStStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ATixeStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ATrapStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AWhileStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.PStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.SLetDefStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.SSimpleBlockStmAssistantInterpreter;
 
 /***************************************
  * 
