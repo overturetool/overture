@@ -1,0 +1,9 @@
+class Entry
+
+operations 
+
+public static Run : () ==> ?
+Run () ==
+	return {forall x in set {1} & x = 10, true};
+
+end Entry

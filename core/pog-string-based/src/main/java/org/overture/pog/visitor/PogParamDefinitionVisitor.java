@@ -38,6 +38,7 @@ import org.overture.pog.obligation.OperationPostConditionObligation;
 import org.overture.pog.obligation.POContextStack;
 import org.overture.pog.obligation.POFunctionDefinitionContext;
 import org.overture.pog.obligation.POFunctionResultContext;
+import org.overture.pog.obligation.POImpliesContext;
 import org.overture.pog.obligation.PONameContext;
 import org.overture.pog.obligation.POOperationDefinitionContext;
 import org.overture.pog.obligation.ParameterPatternObligation;
@@ -48,7 +49,6 @@ import org.overture.pog.obligation.SubTypeObligation;
 import org.overture.pog.obligation.ValueBindingObligation;
 import org.overture.pog.util.POException;
 import org.overture.typechecker.TypeComparator;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class PogParamDefinitionVisitor<Q extends POContextStack, A extends ProofObligationList>
 		extends QuestionAnswerAdaptor<POContextStack, ProofObligationList>
@@ -420,7 +420,17 @@ public class PogParamDefinitionVisitor<Q extends POContextStack, A extends Proof
 
 			if (node.getPostcondition() != null)
 			{
-				obligations.addAll(node.getPostcondition().apply(rootVisitor, question));
+				if (node.getPrecondition() != null)
+				{
+					question.push(new POImpliesContext(node.getPrecondition()));
+					obligations.addAll(node.getPostcondition().apply(rootVisitor, question));
+					question.pop();
+				}
+				else
+				{
+					obligations.addAll(node.getPostcondition().apply(rootVisitor, question));
+				}
+				
 				obligations.add(new OperationPostConditionObligation(node, question));
 			}
 

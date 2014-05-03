@@ -1,0 +1,19 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class A {
+    public A() {
+    }
+
+    public static String f() {
+        return "";
+    }
+
+    public static String g() {
+        return "txt";
+    }
+}
+
+##########

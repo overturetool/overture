@@ -36,24 +36,30 @@ import org.overture.ide.debug.core.model.IVdmDebugTargetListener;
 import org.overture.ide.debug.core.model.internal.VdmDebugTarget;
 
 public class DebugSessionAcceptor implements IDbgpThreadAcceptor,
-		IVdmDebugTargetListener {
+		IVdmDebugTargetListener
+{
 
 	private static class NopLaunchStatusHandler implements
-			ILaunchStatusHandler, ILaunchStatusHandlerExtension {
+			ILaunchStatusHandler, ILaunchStatusHandlerExtension
+	{
 
-		public void initialize(IDebugTarget target, IProgressMonitor monitor) {
+		public void initialize(IDebugTarget target, IProgressMonitor monitor)
+		{
 			// empty
 		}
 
-		public void updateElapsedTime(long elapsedTime) {
+		public void updateElapsedTime(long elapsedTime)
+		{
 			// empty
 		}
 
-		public void dispose() {
+		public void dispose()
+		{
 			// empty
 		}
 
-		public boolean isCanceled() {
+		public boolean isCanceled()
+		{
 			return true;
 		}
 
@@ -65,8 +71,8 @@ public class DebugSessionAcceptor implements IDbgpThreadAcceptor,
 	private boolean connected = false;
 	private ILaunchStatusHandler statusHandler = null;
 
-	public DebugSessionAcceptor(VdmDebugTarget target,
-			IProgressMonitor monitor) {
+	public DebugSessionAcceptor(VdmDebugTarget target, IProgressMonitor monitor)
+	{
 		this.target = target;
 		this.parentMonitor = monitor;
 		target.addListener(this);
@@ -76,20 +82,25 @@ public class DebugSessionAcceptor implements IDbgpThreadAcceptor,
 	/*
 	 * @see IVdmDebugTargetListener#targetInitialized()
 	 */
-	public void targetInitialized() {
-		synchronized (this) {
+	public void targetInitialized()
+	{
+		synchronized (this)
+		{
 			initialized = true;
 			notify();
 		}
 	}
 
-	public void targetTerminating() {
+	public void targetTerminating()
+	{
 		target.getDbgpService().unregisterAcceptor(target.getSessionId());
 		disposeStatusHandler();
 	}
 
-	public void disposeStatusHandler() {
-		if (statusHandler != null) {
+	public void disposeStatusHandler()
+	{
+		if (statusHandler != null)
+		{
 			statusHandler.dispose();
 			statusHandler = null;
 		}
@@ -97,35 +108,45 @@ public class DebugSessionAcceptor implements IDbgpThreadAcceptor,
 
 	private static final int WAIT_CHUNK = 1000;
 
-	public boolean waitConnection(final int timeout) throws CoreException {
+	public boolean waitConnection(final int timeout) throws CoreException
+	{
 		final SubProgressMonitor sub = new SubProgressMonitor(parentMonitor, 1);
 		sub.beginTask(Util.EMPTY_STRING, timeout / WAIT_CHUNK);
-		try {
+		try
+		{
 			sub.setTaskName("Waiting for Connection");
 			final long start = System.currentTimeMillis();
-			try {
+			try
+			{
 				long waitStart = start;
-				for (;;) {
-					synchronized (this) {
-						if (connected) {
+				for (;;)
+				{
+					synchronized (this)
+					{
+						if (connected)
+						{
 							return true;
 						}
 					}
-					if (target.isTerminated() || sub.isCanceled()) {
+					if (target.isTerminated() || sub.isCanceled())
+					{
 						break;
 					}
 					abortIfProcessTerminated();
-					synchronized (this) {
+					synchronized (this)
+					{
 						wait(WAIT_CHUNK);
 					}
 					final long now = System.currentTimeMillis();
-					if (timeout != 0 && (now - start) > timeout) {
-						if (statusHandler == null) {
+					if (timeout != 0 && now - start > timeout)
+					{
+						if (statusHandler == null)
+						{
 							statusHandler = createStatusHandler();
 						}
 						if (statusHandler instanceof ILaunchStatusHandlerExtension
-								&& ((ILaunchStatusHandlerExtension) statusHandler)
-										.isCanceled()) {
+								&& ((ILaunchStatusHandlerExtension) statusHandler).isCanceled())
+						{
 							return false;
 						}
 						statusHandler.updateElapsedTime(now - start);
@@ -133,47 +154,47 @@ public class DebugSessionAcceptor implements IDbgpThreadAcceptor,
 					sub.worked((int) ((now - waitStart) / WAIT_CHUNK));
 					waitStart = now;
 				}
-			} catch (InterruptedException e) {
+			} catch (InterruptedException e)
+			{
 				Thread.currentThread().interrupt();
 			}
 			return false;
-		} finally {
+		} finally
+		{
 			sub.done();
 		}
 	}
 
-	private void abortIfProcessTerminated() throws CoreException {
-		if(target.getLaunch().getLaunchConfiguration().getAttribute(
-				IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_DEBUG, false))
+	private void abortIfProcessTerminated() throws CoreException
+	{
+		if (target.getLaunch().getLaunchConfiguration().getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_DEBUG, false))
+		{
 			return;
-		
-		if (target.getProcess() != null && target.getProcess().isTerminated()) {
-			throw new CoreException(
-					new Status(
-							IStatus.ERROR,
-							VdmDebugPlugin.PLUGIN_ID,
-							IDebugConstants.ERR_DEBUGGER_PROCESS_TERMINATED,
-							"DebuggerUnexpectedlyTerminated",
-							null));
+		}
+
+		if (target.getProcess() != null && target.getProcess().isTerminated())
+		{
+			throw new CoreException(new Status(IStatus.ERROR, VdmDebugPlugin.PLUGIN_ID, IDebugConstants.ERR_DEBUGGER_PROCESS_TERMINATED, "DebuggerUnexpectedlyTerminated", null));
 		}
 	}
 
 	/**
 	 * @return
 	 */
-	private ILaunchStatusHandler createStatusHandler() {
+	private ILaunchStatusHandler createStatusHandler()
+	{
 		final String extensionPointId = VdmDebugPlugin.PLUGIN_ID
 				+ ".launchStatusHandler"; //$NON-NLS-1$
-		final IConfigurationElement[] elements = Platform
-				.getExtensionRegistry().getConfigurationElementsFor(
-						extensionPointId);
-		for (int i = 0; i < elements.length; ++i) {
-			try {
-				final ILaunchStatusHandler handler = (ILaunchStatusHandler) elements[i]
-						.createExecutableExtension("class"); //$NON-NLS-1$
+		final IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(extensionPointId);
+		for (int i = 0; i < elements.length; ++i)
+		{
+			try
+			{
+				final ILaunchStatusHandler handler = (ILaunchStatusHandler) elements[i].createExecutableExtension("class"); //$NON-NLS-1$
 				handler.initialize(target, parentMonitor);
 				return handler;
-			} catch (Exception e) {
+			} catch (Exception e)
+			{
 				VdmDebugPlugin.logWarning(e);
 			}
 		}
@@ -182,68 +203,86 @@ public class DebugSessionAcceptor implements IDbgpThreadAcceptor,
 		return handler;
 	}
 
-	public void acceptDbgpThread(IDbgpSession session, IProgressMonitor monitor) {
+	public void acceptDbgpThread(IDbgpSession session, IProgressMonitor monitor)
+	{
 		final boolean isFirst;
-		synchronized (this) {
+		synchronized (this)
+		{
 			isFirst = !connected;
-			if (!connected) {
+			if (!connected)
+			{
 				connected = true;
 				notify();
 			}
 		}
-		if (isFirst) {
+		if (isFirst)
+		{
 			IProgressMonitor sub = getInitializeMonitor();
-			try {
+			try
+			{
 				target.getDbgpThreadAcceptor().acceptDbgpThread(session, sub);
-			} finally {
+			} finally
+			{
 				sub.done();
 			}
-		} else {
-			target.getDbgpThreadAcceptor().acceptDbgpThread(session,
-					new NullProgressMonitor());
+		} else
+		{
+			target.getDbgpThreadAcceptor().acceptDbgpThread(session, new NullProgressMonitor());
 		}
 	}
 
 	private IProgressMonitor initializeMonitor = null;
 
-	private synchronized IProgressMonitor getInitializeMonitor() {
-		if (initializeMonitor == null) {
+	private synchronized IProgressMonitor getInitializeMonitor()
+	{
+		if (initializeMonitor == null)
+		{
 			initializeMonitor = new SubProgressMonitor(parentMonitor, 1);
 			initializeMonitor.beginTask(Util.EMPTY_STRING, 100);
-			initializeMonitor
-					.setTaskName("waitInitialization");
+			initializeMonitor.setTaskName("waitInitialization");
 		}
 		return initializeMonitor;
 	}
 
-	public boolean waitInitialized(final int timeout) throws CoreException {
+	public boolean waitInitialized(final int timeout) throws CoreException
+	{
 		final IProgressMonitor sub = getInitializeMonitor();
-		try {
+		try
+		{
 			final long start = System.currentTimeMillis();
-			try {
-				for (;;) {
-					synchronized (this) {
-						if (initialized) {
+			try
+			{
+				for (;;)
+				{
+					synchronized (this)
+					{
+						if (initialized)
+						{
 							return true;
 						}
 					}
-					if (target.isTerminated() || sub.isCanceled()) {
+					if (target.isTerminated() || sub.isCanceled())
+					{
 						break;
 					}
 					abortIfProcessTerminated();
-					synchronized (this) {
+					synchronized (this)
+					{
 						wait(WAIT_CHUNK);
 					}
 					final long now = System.currentTimeMillis();
-					if (timeout != 0 && (now - start) > timeout) {
+					if (timeout != 0 && now - start > timeout)
+					{
 						break;
 					}
 				}
-			} catch (InterruptedException e) {
+			} catch (InterruptedException e)
+			{
 				Thread.interrupted();
 			}
 			return false;
-		} finally {
+		} finally
+		{
 			sub.done();
 		}
 	}

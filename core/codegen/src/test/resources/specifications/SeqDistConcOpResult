@@ -1,0 +1,17 @@
+class A
+
+values 
+
+x = conc op();
+
+y = conc op1();
+
+operations 
+
+public static op : () ==> seq of seq of nat 
+op () == return [[1,2,3],[1,2,3]];
+
+public static op1 : () ==> seq of seq of char 
+op1 () == return ["hej","kat"];
+
+end A

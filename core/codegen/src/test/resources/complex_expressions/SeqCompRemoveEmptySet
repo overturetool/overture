@@ -1,0 +1,13 @@
+class Entry
+
+values
+
+s = {}
+
+operations 
+
+public static Run : () ==> ? 
+Run () ==
+	return [x | x in set s];
+
+end Entry

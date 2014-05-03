@@ -48,7 +48,7 @@ public abstract class PogTestCase extends ResultTestCase<ProofObligationList>
 		return new File(filename + ".result");
 	}
 
-	public void encondeResult(ProofObligationList result, Document doc,
+	public void encodeResult(ProofObligationList result, Document doc,
 			Element resultElement)
 	{
 		for (ProofObligation po : result)

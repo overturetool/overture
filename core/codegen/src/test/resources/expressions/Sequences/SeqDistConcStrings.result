@@ -1,0 +1,1 @@
+SeqUtil.distConcStrings(SeqUtil.seq("hej", "kat", "mouse"))

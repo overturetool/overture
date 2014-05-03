@@ -22,7 +22,8 @@ import org.overture.ide.debug.core.IDebugConfigurable;
 import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
 import org.w3c.dom.Element;
 
-public interface IDbgpCommunicator extends IDebugConfigurable {
+public interface IDbgpCommunicator extends IDebugConfigurable
+{
 	Element communicate(DbgpRequest request) throws DbgpException;
 
 	void send(DbgpRequest request) throws DbgpException;

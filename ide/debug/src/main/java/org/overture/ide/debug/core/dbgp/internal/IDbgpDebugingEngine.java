@@ -26,7 +26,8 @@ import org.overture.ide.debug.core.dbgp.internal.packets.DbgpNotifyPacket;
 import org.overture.ide.debug.core.dbgp.internal.packets.DbgpResponsePacket;
 import org.overture.ide.debug.core.dbgp.internal.packets.DbgpStreamPacket;
 
-public interface IDbgpDebugingEngine extends IDbgpTermination {
+public interface IDbgpDebugingEngine extends IDbgpTermination
+{
 	// Non-blocking method
 	void sendCommand(DbgpRequest command) throws IOException;
 

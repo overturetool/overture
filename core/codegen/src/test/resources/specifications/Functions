@@ -1,0 +1,27 @@
+class Functions
+
+	functions
+
+	public f1 :  () -> nat
+	f1 () ==
+		if 1 = 1 then
+			1
+		else
+			2;
+			
+	public f2 :  () -> nat
+	f2 () ==
+		if 1 = 1 then
+			if 2 = 2 then
+				3
+			elseif 3 = 3 then
+				4
+			else
+				5
+		else
+			6;
+
+	public f3 :  () -> nat
+	f3 () == 5;		
+
+end Functions

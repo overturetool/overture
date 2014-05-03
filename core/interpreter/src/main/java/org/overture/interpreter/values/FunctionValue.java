@@ -54,6 +54,7 @@ import org.overture.ast.util.Utils;
 import org.overture.config.Settings;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
+import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.runtime.ClassContext;
 import org.overture.interpreter.runtime.ClassInterpreter;
@@ -702,10 +703,29 @@ public class FunctionValue extends Value
 	@Override
 	public Value convertValueTo(PType to, Context ctxt) throws AnalysisException
 	{
-		if (ctxt.assistantFactory.createPTypeAssistant().isType(to, AFunctionType.class))
+		PTypeAssistantInterpreter assistant = ctxt.assistantFactory.createPTypeAssistant();
+		
+		if (assistant.isFunction(to))
 		{
-			return this;
-		} else
+			if (type.equals(to) || assistant.isUnknown(to))
+			{
+				return this;
+			}
+			else
+			{
+				AFunctionType restrictedType = assistant.getFunction(to);
+				
+				// Create a new function with restricted dom/rng
+				FunctionValue restricted = new FunctionValue(location, name, restrictedType,
+						paramPatternList, body, precondition, postcondition,
+						freeVariables, checkInvariants, curriedArgs,
+						measureName, measureValues);
+
+				restricted.typeValues = typeValues;
+				return restricted;
+			}
+		}
+		else
 		{
 			return super.convertValueTo(to, ctxt);
 		}

@@ -18,44 +18,55 @@
  *******************************************************************************/
 package org.overture.ide.debug.core.model;
 
-public class AtomicVdmType implements IVdmType {
+public class AtomicVdmType implements IVdmType
+{
 	private String name;
 
-	public AtomicVdmType(String name) {
+	public AtomicVdmType(String name)
+	{
 		this.name = name;
 	}
 
-	public String getName() {
+	public String getName()
+	{
 		return name;
 	}
 
-	public boolean isAtomic() {
+	public boolean isAtomic()
+	{
 		return true;
 	}
 
-	public boolean isComplex() {
+	public boolean isComplex()
+	{
 		return false;
 	}
 
-	public boolean isCollection() {
+	public boolean isCollection()
+	{
 		return false;
 	}
 
-	public boolean isString() {
+	public boolean isString()
+	{
 		return false;
 	}
 
-	public String formatDetails(IVdmValue value) {
+	public String formatDetails(IVdmValue value)
+	{
 		return formatValue(value);
 	}
 
-	public String formatValue(IVdmValue value) {
+	public String formatValue(IVdmValue value)
+	{
 		return value.getRawValue();
 	}
 
-	protected void appendInstanceId(IVdmValue value, StringBuffer buffer) {
+	protected void appendInstanceId(IVdmValue value, StringBuffer buffer)
+	{
 		String id = value.getInstanceId();
-		if (id != null) {
+		if (id != null)
+		{
 			buffer.append(" ("); //$NON-NLS-1$
 			buffer.append("id");
 			buffer.append("="); //$NON-NLS-1$

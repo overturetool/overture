@@ -42,4 +42,4 @@
 //		// load message values from bundle file
 //		NLS.initializeMessages(BUNDLE_NAME, LaunchViewMessages.class);
 //	}
-//}
+// }

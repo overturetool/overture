@@ -21,7 +21,8 @@ package org.overture.ide.debug.core.launching;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.model.IDebugTarget;
 
-public interface ILaunchStatusHandler {
+public interface ILaunchStatusHandler
+{
 
 	/**
 	 * @param target

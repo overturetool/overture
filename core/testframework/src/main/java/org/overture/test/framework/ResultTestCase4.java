@@ -32,8 +32,8 @@ import org.junit.Assert;
 import org.overture.test.framework.results.IMessage;
 import org.overture.test.framework.results.IResultCombiner;
 import org.overture.test.framework.results.Result;
-import org.overture.test.util.XmlResultReaderWritter;
-import org.overture.test.util.XmlResultReaderWritter.IResultStore;
+import org.overture.test.util.XmlResultReaderWriter;
+import org.overture.test.util.XmlResultReaderWriter.IResultStore;
 
 public abstract class ResultTestCase4<R>  implements IResultStore<R>
 {
@@ -59,7 +59,7 @@ public abstract class ResultTestCase4<R>  implements IResultStore<R>
 		{
 			File resultFile = createResultFile(filename);
 			resultFile.getParentFile().mkdirs();
-			XmlResultReaderWritter<R> xmlResult = new XmlResultReaderWritter<R>(resultFile,this);
+			XmlResultReaderWriter<R> xmlResult = new XmlResultReaderWriter<R>(resultFile,this);
 			xmlResult.setResult(this.getClass().getName(),result);
 			try {
 				xmlResult.saveInXml();
@@ -83,8 +83,8 @@ public abstract class ResultTestCase4<R>  implements IResultStore<R>
 		}
 		Assert.assertTrue("Result file " + file.getAbsolutePath() + " does not exist", file.exists());
 		
-		//MessageReaderWritter mrw = new MessageReaderWritter(file);
-		XmlResultReaderWritter<R> xmlResult = new XmlResultReaderWritter<R>(file,this);
+		//MessageReaderWriter mrw = new MessageReaderWriter(file);
+		XmlResultReaderWriter<R> xmlResult = new XmlResultReaderWriter<R>(file,this);
 		boolean parsed = xmlResult.loadFromXml();
 
 		Assert.assertTrue("Could not read result file: " + file.getName(), parsed);

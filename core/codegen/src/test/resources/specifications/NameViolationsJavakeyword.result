@@ -1,0 +1,3 @@
+Reserved name violation: [Violation in module A: 'double'. Location: line 5 at position: 8 in NameViolationsJavakeyword]
+Reserved name violation: [Violation in module A: 'double'. Location: line 10 at position: 7 in NameViolationsJavakeyword]
+Reserved name violation: [Violation in module A: 'double'. Location: line 13 at position: 13 in NameViolationsJavakeyword]

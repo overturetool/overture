@@ -1,0 +1,14 @@
+class A
+
+values 
+
+a = {1,2};
+
+x = m1() :> a;
+
+operations 
+
+public static m1 : () ==> map nat1 to nat1
+m1 () == return {1 |-> 5, 2 |-> 10, 3|->15};  
+
+end A

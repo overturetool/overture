@@ -1,0 +1,13 @@
+class Entry
+
+operations 
+
+public static Run : () ==> ?
+Run () ==
+	Test();
+
+public static Test : () ==> set of nat 
+Test () ==
+	return {x+y+z | x,y in set{1,2,3}, z in set {2,3,4} & x+y+z > 3};
+
+end Entry

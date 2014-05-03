@@ -1,0 +1,14 @@
+class Entry
+
+operations 
+
+public static Run : () ==> nat 
+Run () ==
+	return f();
+	
+functions
+
+public f :  () -> nat
+f () == let x,y,z in set {2,4,6} be st x < y and y < z in x * y * z;
+	 
+end Entry

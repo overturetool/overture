@@ -1,0 +1,47 @@
+class A
+
+values
+
+a = mk_(mk_(1, true), 3);
+b = a;
+c = a.#1;
+d = a.#1.#1;
+e = a.#1.#2;
+f = a.#2;
+
+operations
+
+public op1 : () ==> nat
+op1 () ==
+(dcl r : nat*nat := mk_(1,2);
+	
+	return r.#1;
+);
+
+public op2 : () ==> nat
+op2 () == 
+let a = mk_(1,2),
+		b = a
+in
+	return b.#1;
+	
+public op3 : () ==> nat
+op3 () ==
+(dcl a : (nat * nat) * nat := mk_(mk_(1,2), 3);
+ dcl b : nat * nat := a.#1;
+	return a.#1.#1;
+);
+
+public op4 : () ==> (nat * nat) * nat 
+op4 () ==
+(dcl a : (nat * nat) * nat := mk_(mk_(1,2), 3);
+	return a
+);
+
+public op5 : () ==> nat * nat
+op5 () ==
+(dcl a : (nat * nat) * nat := mk_(mk_(1,2), 3);
+	return a.#1;
+)
+		
+end A

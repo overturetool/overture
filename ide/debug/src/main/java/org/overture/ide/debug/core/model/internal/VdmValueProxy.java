@@ -22,10 +22,8 @@ import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IVariable;
-import org.overture.ide.debug.core.model.IVdmThread;
 import org.overture.ide.debug.core.model.IVdmType;
 import org.overture.ide.debug.core.model.IVdmValue;
-import org.overture.ide.debug.core.model.eval.IVdmEvaluationCommand;
 
 public class VdmValueProxy implements IVdmValue
 {
@@ -37,11 +35,11 @@ public class VdmValueProxy implements IVdmValue
 		this.origin = origin;
 	}
 
-//	public IVdmEvaluationCommand createEvaluationCommand(
-//			String messageTemplate, IVdmThread thread)
-//	{
-//		return origin.createEvaluationCommand(messageTemplate, thread);
-//	}
+	// public IVdmEvaluationCommand createEvaluationCommand(
+	// String messageTemplate, IVdmThread thread)
+	// {
+	// return origin.createEvaluationCommand(messageTemplate, thread);
+	// }
 
 	public String getDetailsString()
 	{

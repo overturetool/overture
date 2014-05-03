@@ -28,88 +28,107 @@ import org.overture.ide.debug.core.dbgp.internal.utils.DbgpXmlPacketParser;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public class DbgpPacketReceiver extends DbgpWorkingThread {
-	private static class ResponcePacketWaiter {
-//		private static final int MIN_TIMEOUT = 5;
-		private final HashMap<Integer,DbgpResponsePacket> map;
+public class DbgpPacketReceiver extends DbgpWorkingThread
+{
+	private static class ResponcePacketWaiter
+	{
+		// private static final int MIN_TIMEOUT = 5;
+		private final HashMap<Integer, DbgpResponsePacket> map;
 		private boolean terminated;
 
-		public ResponcePacketWaiter() {
-			map = new HashMap<Integer,DbgpResponsePacket>();
+		public ResponcePacketWaiter()
+		{
+			map = new HashMap<Integer, DbgpResponsePacket>();
 			terminated = false;
 		}
 
-		public synchronized void put(DbgpResponsePacket packet) {
+		public synchronized void put(DbgpResponsePacket packet)
+		{
 			int id = packet.getTransactionId();
 			map.put(new Integer(id), packet);
 			notifyAll();
 		}
 
 		public synchronized DbgpResponsePacket waitPacket(int id, int timeout)
-				throws InterruptedException {
+				throws InterruptedException
+		{
 			Integer key = new Integer(id);
 			long endTime = 0;
-			if (timeout > 0) {
+			if (timeout > 0)
+			{
 				endTime = System.currentTimeMillis() + timeout;
 			}
-			while (!terminated && !map.containsKey(key)) {
+			while (!terminated && !map.containsKey(key))
+			{
 				long current = System.currentTimeMillis();
-				if (endTime != 0 && current >= endTime) {
+				if (endTime != 0 && current >= endTime)
+				{
 					break;
 				}
 				if (endTime == 0)
+				{
 					wait();
-				else
+				} else
+				{
 					wait(endTime - current);
+				}
 			}
 
-			if (map.containsKey(key)) {
+			if (map.containsKey(key))
+			{
 				return (DbgpResponsePacket) map.remove(key);
 			}
 
-			if (terminated) {
+			if (terminated)
+			{
 				System.out.println("failed to get response for packet: " + id);
-				throw new InterruptedException(
-						"responsePacketWaiterTerminated");
+				throw new InterruptedException("responsePacketWaiterTerminated");
 			}
 			System.out.println("failed to get response for packet: " + id);
 			return null;
 		}
 
-		public synchronized void terminate() {
+		public synchronized void terminate()
+		{
 			terminated = true;
 			notifyAll();
 		}
 	}
 
-	private static class PacketWaiter {
+	private static class PacketWaiter
+	{
 		private final LinkedList<DbgpPacket> queue;
 		private boolean terminated;
 
-		public PacketWaiter() {
+		public PacketWaiter()
+		{
 			terminated = false;
 			this.queue = new LinkedList<DbgpPacket>();
 		}
 
-		public synchronized void put(DbgpPacket obj) {
+		public synchronized void put(DbgpPacket obj)
+		{
 			queue.addLast(obj);
 			notifyAll();
 		}
 
-		public synchronized DbgpPacket waitPacket() throws InterruptedException {
-			while (!terminated && queue.isEmpty()) {
+		public synchronized DbgpPacket waitPacket() throws InterruptedException
+		{
+			while (!terminated && queue.isEmpty())
+			{
 				wait();
 			}
 
-			if (terminated) {
-				throw new InterruptedException(
-						"packetWaiterTerminated");
+			if (terminated)
+			{
+				throw new InterruptedException("packetWaiterTerminated");
 			}
 
 			return (DbgpPacket) queue.removeFirst();
 		}
 
-		public synchronized void terminate() {
+		public synchronized void terminate()
+		{
 			terminated = true;
 			notifyAll();
 		}
@@ -127,60 +146,74 @@ public class DbgpPacketReceiver extends DbgpWorkingThread {
 	private final InputStream input;
 	private IDbgpRawLogger logger;
 
-	protected void workingCycle() throws Exception {
-		try {
-			while (!Thread.interrupted()) {
+	protected void workingCycle() throws Exception
+	{
+		try
+		{
+			while (!Thread.interrupted())
+			{
 				DbgpRawPacket packet = DbgpRawPacket.readPacket(input);
 
-				if (logger != null) {
+				if (logger != null)
+				{
 					logger.log(packet);
 				}
 
 				addDocument(packet.getParsedXml());
 			}
-		} finally {
+		} finally
+		{
 			responseWaiter.terminate();
 			notifyWaiter.terminate();
 			streamWaiter.terminate();
 		}
 	}
 
-	protected void addDocument(Document doc) {
+	protected void addDocument(Document doc)
+	{
 		Element element = (Element) doc.getFirstChild();
 		String tag = element.getTagName();
 
 		// TODO: correct init tag handling without this hack
-		if (tag.equals(INIT_TAG)) {
+		if (tag.equals(INIT_TAG))
+		{
 			responseWaiter.put(new DbgpResponsePacket(element, -1));
-		} else if (tag.equals(RESPONSE_TAG)) {
-			DbgpResponsePacket packet = DbgpXmlPacketParser
-					.parseResponsePacket(element);			
-			
+		} else if (tag.equals(RESPONSE_TAG))
+		{
+			DbgpResponsePacket packet = DbgpXmlPacketParser.parseResponsePacket(element);
+
 			responseWaiter.put(packet);
-		} else if (tag.equals(STREAM_TAG)) {
+		} else if (tag.equals(STREAM_TAG))
+		{
 			streamWaiter.put(DbgpXmlPacketParser.parseStreamPacket(element));
-		} else if (tag.equals(NOTIFY_TAG)) {
+		} else if (tag.equals(NOTIFY_TAG))
+		{
 			notifyWaiter.put(DbgpXmlPacketParser.parseNotifyPacket(element));
 		}
 	}
 
-	public DbgpNotifyPacket getNotifyPacket() throws InterruptedException {
+	public DbgpNotifyPacket getNotifyPacket() throws InterruptedException
+	{
 		return (DbgpNotifyPacket) notifyWaiter.waitPacket();
 	}
 
-	public DbgpStreamPacket getStreamPacket() throws InterruptedException {
+	public DbgpStreamPacket getStreamPacket() throws InterruptedException
+	{
 		return (DbgpStreamPacket) streamWaiter.waitPacket();
 	}
 
 	public DbgpResponsePacket getResponsePacket(int transactionId, int timeout)
-			throws InterruptedException {
+			throws InterruptedException
+	{
 		return responseWaiter.waitPacket(transactionId, timeout);
 	}
 
-	public DbgpPacketReceiver(InputStream input) {
+	public DbgpPacketReceiver(InputStream input)
+	{
 		super("DBGP - Packet receiver"); //$NON-NLS-1$
 
-		if (input == null) {
+		if (input == null)
+		{
 			throw new IllegalArgumentException();
 		}
 
@@ -190,7 +223,8 @@ public class DbgpPacketReceiver extends DbgpWorkingThread {
 		this.responseWaiter = new ResponcePacketWaiter();
 	}
 
-	public void setLogger(IDbgpRawLogger logger) {
+	public void setLogger(IDbgpRawLogger logger)
+	{
 		this.logger = logger;
 	}
 }

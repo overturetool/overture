@@ -1,0 +1,15 @@
+class A
+
+operations
+
+public static getM: ? ==> nat
+getM(arg) ==
+    is not yet specified;
+    
+functions
+
+public static getN: ? -> nat
+getN(arg) ==
+    is not yet specified;
+
+end A

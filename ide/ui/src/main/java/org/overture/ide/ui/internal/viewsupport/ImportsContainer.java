@@ -19,11 +19,18 @@
 package org.overture.ide.ui.internal.viewsupport;
 
 import java.util.List;
+import java.util.Map;
 
+import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.analysis.intf.IAnalysis;
+import org.overture.ast.analysis.intf.IAnswer;
+import org.overture.ast.analysis.intf.IQuestion;
+import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.modules.AModuleImports;
+import org.overture.ast.node.INode;
 
-public class ImportsContainer {
+public class ImportsContainer implements INode {
 
 	
 	private AModuleImports imports = null;
@@ -40,6 +47,75 @@ public class ImportsContainer {
 	
 	public AModuleImports getImports() {
 		return imports;
+	}
+
+	@Override
+	public void apply(IAnalysis arg0) throws AnalysisException
+	{
+	}
+
+	@Override
+	public <A> A apply(IAnswer<A> arg0) throws AnalysisException
+	{
+		return null;
+	}
+
+	@Override
+	public <Q> void apply(IQuestion<Q> arg0, Q arg1) throws AnalysisException
+	{
+	}
+
+	@Override
+	public <Q, A> A apply(IQuestionAnswer<Q, A> arg0, Q arg1)
+			throws AnalysisException
+	{
+		return null;
+	}
+
+	@Override
+	public Object clone()
+	{
+		return null;
+	}
+
+	@Override
+	public INode clone(Map<INode, INode> arg0)
+	{
+		return null;
+	}
+
+	@Override
+	public void removeChild(INode arg0)
+	{
+	}
+
+	@Override
+	public <T extends INode> T getAncestor(Class<T> arg0)
+	{
+		return null;
+	}
+
+	@Override
+	public Map<String, Object> getChildren(Boolean arg0)
+	{
+		return null;
+	}
+
+	@Override
+	public INode parent()
+	{
+		return null;
+	}
+
+	@Override
+	public void parent(INode arg0)
+	{
+	}
+
+	@Override
+	public void replaceChild(INode arg0, INode arg1)
+	{
+		
 	}
 	
 }

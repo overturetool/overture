@@ -24,7 +24,8 @@ import org.eclipse.debug.core.model.IBreakpoint;
 import org.overture.ide.debug.core.dbgp.IDbgpSession;
 import org.overture.ide.debug.core.dbgp.breakpoints.IDbgpBreakpoint;
 
-public interface IVdmBreakpoint extends IBreakpoint {
+public interface IVdmBreakpoint extends IBreakpoint
+{
 
 	int HIT_CONDITION_GREATER_OR_EQUAL = IDbgpBreakpoint.HIT_CONDITION_GREATER_OR_EQUAL;
 
@@ -33,22 +34,16 @@ public interface IVdmBreakpoint extends IBreakpoint {
 	int HIT_CONDITION_MULTIPLE = IDbgpBreakpoint.HIT_CONDITION_MULTIPLE;
 
 	/**
-	 * 
 	 * @return
-	 * 
 	 * @throws CoreException
-	 * 
 	 * @deprecated
 	 */
 
 	String getIdentifier() throws CoreException;
 
 	/**
-	 * 
 	 * @param id
-	 * 
 	 * @throws CoreException
-	 * 
 	 * @deprecated
 	 */
 
@@ -69,23 +64,16 @@ public interface IVdmBreakpoint extends IBreakpoint {
 	void setMessage(String message) throws CoreException;
 
 	/**
-	 * 
 	 * Returns actual hit count during debugging or -1 if not available.
 	 */
 
 	int getHitCount() throws CoreException;
 
 	/**
-	 * 
 	 * Sets actual hit count during debugging or -1 if not available.
 	 * 
-	 * 
-	 * 
 	 * @param value
-	 * 
 	 * @throws CoreException
-	 * 
-	 * 
 	 */
 
 	void setHitCount(int value) throws CoreException;
@@ -95,20 +83,15 @@ public interface IVdmBreakpoint extends IBreakpoint {
 	void setHitCount(IDbgpSession session, int value) throws CoreException;
 
 	/**
-	 * 
 	 * Returns the hit count condition
 	 **/
 
 	int getHitValue() throws CoreException;
 
 	/**
-	 * 
 	 * Sets the hit count condition
 	 * 
-	 * 
-	 * 
 	 * @param count
-	 * 
 	 * @throws CoreException
 	 */
 
@@ -131,10 +114,7 @@ public interface IVdmBreakpoint extends IBreakpoint {
 	void setExpression(String expression) throws CoreException;
 
 	/**
-	 * 
-	 * If expression state is true, then this is not line breakpoint, but
-	 * 
-	 * conditional breakpoint.
+	 * If expression state is true, then this is not line breakpoint, but conditional breakpoint.
 	 */
 
 	boolean getExpressionState() throws CoreException;

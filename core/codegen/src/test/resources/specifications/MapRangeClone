@@ -1,0 +1,16 @@
+class A
+
+values
+
+a = {1 |-> 2};
+
+x = rng {1 |-> 2};
+y = rng op();
+z = rng a;
+
+operations 
+
+public static op : () ==> map nat to nat 
+op () == return {1 |-> 2, 3 |-> 4};
+
+end A

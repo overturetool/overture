@@ -21,7 +21,8 @@ package org.overture.ide.debug.core.dbgp.commands;
 import org.overture.ide.debug.core.dbgp.IDbgpStatus;
 import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
 
-public interface IDbgpContinuationCommands {
+public interface IDbgpContinuationCommands
+{
 	// starts or resumes the script until a new breakpoint is reached, or the
 	// end of the script is reached.
 	IDbgpStatus run() throws DbgpException;

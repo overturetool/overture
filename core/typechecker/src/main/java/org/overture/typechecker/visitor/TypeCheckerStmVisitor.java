@@ -109,9 +109,8 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	public PType caseAAssignmentStm(AAssignmentStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-
 		node.setTargetType(node.getTarget().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env)));
-		node.setExpType(node.getExp().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env, question.scope)));
+		node.setExpType(node.getExp().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env, question.scope, null, node.getTargetType(), null)));
 
 		if (!TypeComparator.compatible(node.getTargetType(), node.getExpType()))
 		{
@@ -252,6 +251,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 
 		node.setType(rtypes.isEmpty() ? AstFactory.newAVoidType(node.getLocation())
 				: rtypes.getType(node.getLocation()));
+		
 		return node.getType();
 	}
 
@@ -274,7 +274,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		// local variables. At runtime (below) they have to be treated
 		// more like (updatable) state.
 
-		PType r = defaultSSimpleBlockStm(node, new TypeCheckInfo(question.assistantFactory, local, question.scope));
+		PType r = defaultSSimpleBlockStm(node, new TypeCheckInfo(question.assistantFactory, local, question.scope, null, null, question.returnType));
 		local.unusedCheck(question.env);
 		node.setType(r);
 		return r;
@@ -387,8 +387,10 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			node.getField().setTypeQualifier(optype.getParameters());
 			question.assistantFactory.createACallObjectStatementAssistant().checkArgTypes(type, optype.getParameters(), atypes); // Not necessary?
 			node.setType(optype.getResult());
-			return node.getType();
-		} else if (question.assistantFactory.createPTypeAssistant().isFunction(type))
+			return question.assistantFactory.createPTypeAssistant().checkReturnType(
+					question.returnType, node.getType(), node.getLocation());
+		}
+		else if (question.assistantFactory.createPTypeAssistant().isFunction(type))
 		{
 			// This is the case where a function is called as an operation
 			// without
@@ -399,8 +401,10 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			node.getField().setTypeQualifier(ftype.getParameters());
 			question.assistantFactory.createACallObjectStatementAssistant().checkArgTypes(type, ftype.getParameters(), atypes); // Not necessary?
 			node.setType(ftype.getResult());
-			return node.getType();
-		} else
+			return question.assistantFactory.createPTypeAssistant().checkReturnType(
+					question.returnType, node.getType(), node.getLocation());
+		}
+		else
 		{
 			TypeCheckerErrors.report(3210, "Object member is neither a function nor an operation", node.getLocation(), node);
 			node.setType(AstFactory.newAUnknownType(node.getLocation()));
@@ -471,8 +475,10 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 
 			question.assistantFactory.createACallStmAssistant().checkArgTypes(node, optype, optype.getParameters(), atypes);
 			node.setType(optype.getResult());
-			return optype.getResult();
-		} else if (question.assistantFactory.createPTypeAssistant().isFunction(type))
+			return question.assistantFactory.createPTypeAssistant().checkReturnType(
+					question.returnType, optype.getResult(), node.getLocation());
+		}
+		else if (question.assistantFactory.createPTypeAssistant().isFunction(type))
 		{
 			// This is the case where a function is called as an operation
 			// without
@@ -491,8 +497,10 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 
 			question.assistantFactory.createACallStmAssistant().checkArgTypes(node, ftype, ftype.getParameters(), atypes);
 			node.setType(ftype.getResult());
-			return ftype.getResult();
-		} else
+			return question.assistantFactory.createPTypeAssistant().checkReturnType(
+					question.returnType, ftype.getResult(), node.getLocation());
+		}
+		else
 		{
 			TypeCheckerErrors.report(3210, "Name is neither a function nor an operation", node.getLocation(), node);
 			node.setType(AstFactory.newAUnknownType(node.getLocation()));
@@ -537,7 +545,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		}
 
 		Environment local = new FlatCheckedEnvironment(question.assistantFactory, node.getDefs(), question.env, question.scope);
-		PType r = node.getResult().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
+		PType r = node.getResult().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, null, null, question.returnType));
 		local.unusedCheck();
 
 		return r;
@@ -890,13 +898,14 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		if (node.getExpression() == null)
 		{
 			node.setType(AstFactory.newAVoidReturnType(node.getLocation()));
-			return node.getType();
 		}
 		else
 		{
 			node.setType(node.getExpression().apply(THIS, question));
-			return node.getType();
 		}
+
+		return question.assistantFactory.createPTypeAssistant().checkReturnType(
+				question.returnType, node.getType(), node.getLocation());
 	}
 
 	@Override

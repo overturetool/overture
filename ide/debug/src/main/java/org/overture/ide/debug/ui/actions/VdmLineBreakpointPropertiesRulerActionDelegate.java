@@ -24,15 +24,18 @@ import org.eclipse.ui.texteditor.AbstractRulerActionDelegate;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 public class VdmLineBreakpointPropertiesRulerActionDelegate extends
-		AbstractRulerActionDelegate {
+		AbstractRulerActionDelegate
+{
 
-	public VdmLineBreakpointPropertiesRulerActionDelegate() {
+	public VdmLineBreakpointPropertiesRulerActionDelegate()
+	{
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	protected IAction createAction(ITextEditor editor,
-			IVerticalRulerInfo rulerInfo) {
+			IVerticalRulerInfo rulerInfo)
+	{
 		return new VdmBreakpointPropertiesRulerAction(editor, rulerInfo);
 
 	}

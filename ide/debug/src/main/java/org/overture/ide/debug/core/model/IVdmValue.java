@@ -21,9 +21,9 @@ package org.overture.ide.debug.core.model;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IVariable;
-import org.overture.ide.debug.core.model.eval.IVdmEvaluationCommand;
 
-public interface IVdmValue extends IValue {
+public interface IVdmValue extends IValue
+{
 	String getInstanceId();
 
 	IVdmType getType();
@@ -33,19 +33,17 @@ public interface IVdmValue extends IValue {
 	String getRawValue();
 
 	/**
-	 * Returns the physical memory address or <code>null</code> if it is not
-	 * available.
+	 * Returns the physical memory address or <code>null</code> if it is not available.
 	 */
 	String getMemoryAddress();
 
 	/**
-	 * Returns the text that will be displayed in the 'details' pane of the
-	 * 'Variables' view.
+	 * Returns the text that will be displayed in the 'details' pane of the 'Variables' view.
 	 */
 	String getDetailsString();
 
 	IVariable getVariable(int offset) throws DebugException;
 
-//	IVdmEvaluationCommand createEvaluationCommand(String messageTemplate,
-//			IVdmThread thread);
+	// IVdmEvaluationCommand createEvaluationCommand(String messageTemplate,
+	// IVdmThread thread);
 }

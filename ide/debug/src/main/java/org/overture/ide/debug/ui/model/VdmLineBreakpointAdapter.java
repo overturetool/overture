@@ -33,7 +33,6 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.node.INode;
 import org.overture.ide.core.IVdmElement;
 import org.overture.ide.core.resources.IVdmSourceUnit;
@@ -53,7 +52,7 @@ public class VdmLineBreakpointAdapter implements IToggleBreakpointsTarget
 		IResource resource = (IResource) textEditor.getEditorInput().getAdapter(IResource.class);
 		ITextSelection textSelection = (ITextSelection) selection;
 		int lineNumber = textSelection.getStartLine() + 1;
-		
+
 		boolean executable = false;
 
 		if (textEditor != null)
@@ -117,7 +116,7 @@ public class VdmLineBreakpointAdapter implements IToggleBreakpointsTarget
 				StringBuilder message = new StringBuilder();
 				message.append("Line breakpoint:");
 				message.append(location.lastSegment());
-				message.append("[line:" + (lineNumber) + "]");
+				message.append("[line:" + lineNumber + "]");
 
 				lineBreakpoint.setMessage(message.toString());
 

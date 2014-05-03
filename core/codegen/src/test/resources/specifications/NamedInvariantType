@@ -1,0 +1,11 @@
+class A
+
+types
+
+Str = seq of char
+
+values
+
+x : Str = "hej";
+
+end A

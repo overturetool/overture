@@ -1,0 +1,1 @@
+SeqUtil.conc(SeqUtil.seq(1L, 2L, 3L), SeqUtil.seq(4L, 5L, 6L))

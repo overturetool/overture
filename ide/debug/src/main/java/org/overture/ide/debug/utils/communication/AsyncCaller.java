@@ -23,7 +23,7 @@ import java.util.Hashtable;
 import java.util.Map;
 
 public class AsyncCaller
-{	
+{
 	static Integer nextTicket = 0;
 
 	Map<Integer, Thread> threads = new Hashtable<Integer, Thread>();
@@ -36,19 +36,22 @@ public class AsyncCaller
 		return ++nextTicket;
 	}
 
-	public Object request(Integer ticket, String command) throws java.net.SocketTimeoutException
-			//throws InterruptedException
+	public Object request(Integer ticket, String command)
+			throws java.net.SocketTimeoutException
+	// throws InterruptedException
 	{
 		// Integer ticket = getNextTicket();
 
 		// final Lock lock = new ReentrantLock();
-		// lock.lock();	
-		Thread t = Thread.currentThread();		
+		// lock.lock();
+		Thread t = Thread.currentThread();
 		setLock(ticket, t);
 		write(command);
-		try {
+		try
+		{
 			Thread.sleep(100);
-		} catch (InterruptedException e1) {
+		} catch (InterruptedException e1)
+		{
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
@@ -56,7 +59,8 @@ public class AsyncCaller
 		long callTime = System.currentTimeMillis();
 		synchronized (t)
 		{
-			while (result == null && callTime >= System.currentTimeMillis()-timeOut)
+			while (result == null
+					&& callTime >= System.currentTimeMillis() - timeOut)
 			{
 				try
 				{
@@ -67,14 +71,15 @@ public class AsyncCaller
 				{
 					// What we expect
 				}
-				result = getResult(ticket);	
+				result = getResult(ticket);
 			}
-			
+
 		}
-		
-		if(result==null)
+
+		if (result == null)
 		{
-			throw new SocketTimeoutException("Timeout on ticket: "+ticket+" and command: "+ command);
+			throw new SocketTimeoutException("Timeout on ticket: " + ticket
+					+ " and command: " + command);
 		}
 
 		return result;
@@ -109,7 +114,7 @@ public class AsyncCaller
 		if (threads.containsKey(ticket))
 		{
 			results.put(ticket, result);
-			//threads.get(ticket).interrupt();
+			// threads.get(ticket).interrupt();
 			threads.remove(ticket);
 		}
 	}

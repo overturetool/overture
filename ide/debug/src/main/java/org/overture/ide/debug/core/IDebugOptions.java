@@ -20,59 +20,71 @@ package org.overture.ide.debug.core;
 
 import org.overture.ide.debug.core.model.IVdmStackFrame;
 
+public interface IDebugOptions
+{
 
-public interface IDebugOptions {
-
-	abstract class Option {
+	abstract class Option
+	{
 		private final String name;
 
-		public Option(String name) {
+		public Option(String name)
+		{
 			this.name = name;
 		}
 
-		public String getName() {
+		public String getName()
+		{
 			return name;
 		}
 
 	}
 
-	public class BooleanOption extends Option {
+	public class BooleanOption extends Option
+	{
 		private final boolean defaultValue;
 
-		public BooleanOption(String name, boolean defaultValue) {
+		public BooleanOption(String name, boolean defaultValue)
+		{
 			super(name);
 			this.defaultValue = defaultValue;
 		}
 
-		public boolean getDefaultValue() {
+		public boolean getDefaultValue()
+		{
 			return defaultValue;
 		}
 
 	}
 
-	public class IntegerOption extends Option {
+	public class IntegerOption extends Option
+	{
 		private final int defaultValue;
 
-		public IntegerOption(String name, int defaultValue) {
+		public IntegerOption(String name, int defaultValue)
+		{
 			super(name);
 			this.defaultValue = defaultValue;
 		}
 
-		public int getDefaultValue() {
+		public int getDefaultValue()
+		{
 			return defaultValue;
 		}
 
 	}
 
-	public class StringOption extends Option {
+	public class StringOption extends Option
+	{
 		private final String defaultValue;
 
-		public StringOption(String name, String defaultValue) {
+		public StringOption(String name, String defaultValue)
+		{
 			super(name);
 			this.defaultValue = defaultValue;
 		}
 
-		public String getDefaultValue() {
+		public String getDefaultValue()
+		{
 			return defaultValue;
 		}
 
@@ -85,9 +97,8 @@ public interface IDebugOptions {
 	String get(StringOption option);
 
 	/**
-	 * Filter the specified stack frames before they are returned to the client.
-	 * Implementation should return copy of the array even if there are no
-	 * modifications.
+	 * Filter the specified stack frames before they are returned to the client. Implementation should return copy of
+	 * the array even if there are no modifications.
 	 * 
 	 * @param frames
 	 * @return

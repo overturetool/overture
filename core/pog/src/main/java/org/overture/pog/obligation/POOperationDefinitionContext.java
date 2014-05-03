@@ -82,7 +82,6 @@ public class POOperationDefinitionContext extends POContext
 		this.precondition = definition.getPrecondition();
 		this.stateDefinition = stateDefinition;
 		this.opDef = definition;
-		opDef.setLocation(null);
 	}
 
 	@Override

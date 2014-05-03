@@ -1,0 +1,11 @@
+class A
+
+operations
+
+public op : () ==> char 
+op () == return s()(1);
+
+public s : () ==> seq of char
+s () == return "hej";
+
+end A

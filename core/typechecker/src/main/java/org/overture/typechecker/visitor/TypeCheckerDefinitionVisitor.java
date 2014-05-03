@@ -302,7 +302,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		// This check returns the type of the function body in the case where
 		// all of the curried parameter sets are provided.
 
-		PType actualResult = node.getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
+		PType actualResult = node.getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, null, expectedResult, null));
 
 		node.setActualResult(actualResult);
 
@@ -445,7 +445,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 				local.add(question.assistantFactory.createPDefinitionAssistant().getSelfDefinition(node));
 			}
 
-			node.setActualResult(node.getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers)));
+			node.setActualResult(node.getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers, node.getResult().getType(), null)));
 
 			if (!TypeComparator.compatible(node.getResult().getType(), node.getActualResult()))
 			{
@@ -686,9 +686,10 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
-		PType actualResult = node.getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, NameScope.NAMESANDSTATE));
+		PType expectedResult = ((AOperationType) node.getType()).getResult();
+		PType actualResult = node.getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, NameScope.NAMESANDSTATE, null, null, expectedResult));
 		node.setActualResult(actualResult);
-		boolean compatible = TypeComparator.compatible(((AOperationType) node.getType()).getResult(), node.getActualResult());
+		boolean compatible = TypeComparator.compatible(expectedResult, node.getActualResult());
 
 		if (node.getIsConstructor()
 				&& !question.assistantFactory.createPTypeAssistant().isType(node.getActualResult(), AVoidType.class)
@@ -865,9 +866,10 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 				local.add(question.assistantFactory.createPDefinitionAssistant().getSelfDefinition(node));
 			}
 
-			node.setActualResult(node.getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, NameScope.NAMESANDSTATE)));
+			PType expectedResult = ((AOperationType) node.getType()).getResult();
+			node.setActualResult(node.getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, NameScope.NAMESANDSTATE, null, null, expectedResult)));
 
-			boolean compatible = TypeComparator.compatible(((AOperationType) node.getType()).getResult(), node.getActualResult());
+			boolean compatible = TypeComparator.compatible(expectedResult, node.getActualResult());
 
 			if (node.getIsConstructor()
 					&& !question.assistantFactory.createPTypeAssistant().isType(node.getActualResult(), AVoidType.class)
@@ -1342,8 +1344,8 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			TypeComparator.checkComposeTypes(node.getType(), question.env, false);
 		}
 		
-		// Comment the following line in to enable constraint checking
-		question.constraint = node.getType();
+		// Enable constraint checking
+		question = question.newConstraint(node.getType());
 		
 		question.qualifiers = null;
 		PType expType = node.getExpression().apply(THIS, question);
@@ -1385,7 +1387,6 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
-		PPattern pattern = node.getPattern();
 		node.apply(question.assistantFactory.getDefinitionTypeResolver(),new DefinitionTypeResolver.NewQuestion(THIS,question));
 //		PPatternAssistantTC.typeResolve(pattern, THIS, question);
 //		question.assistantFactory.getTypeResolver().updateDefs(node, question);

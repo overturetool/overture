@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.overture.ide.debug.core.model;
 
-public interface IVdmBreakpointListener {
+public interface IVdmBreakpointListener
+{
 	// TODO: implement
 }

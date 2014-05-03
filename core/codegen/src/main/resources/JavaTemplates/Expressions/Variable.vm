@@ -1,0 +1,6 @@
+#set( $clone = "")
+#if ($JavaFormat.shouldClone($node))
+	#set( $clone = ".clone()")
+#end
+##
+$node.getOriginal()$clone

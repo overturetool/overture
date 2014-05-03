@@ -1,0 +1,18 @@
+class A
+
+values
+
+x0 = [];
+
+a = elems x0;
+
+
+x1 = [1, 2, 3];
+
+b = elems x1;
+
+c = elems [x1];
+
+d = elems [[x1]]
+ 
+end A
