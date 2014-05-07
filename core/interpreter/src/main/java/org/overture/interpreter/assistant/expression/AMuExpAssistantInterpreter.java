@@ -29,13 +29,13 @@ public class AMuExpAssistantInterpreter // extends AMuExpAssistantTC
 //		return list;
 //	}
 
-	public static PExp findExpression(AMuExp exp, int lineno)
-	{
-		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
-		if (found != null)
-			return found;
-
-		return PExpAssistantInterpreter.findExpression(exp.getRecord(), lineno);
-	}
+//	public static PExp findExpression(AMuExp exp, int lineno)
+//	{
+//		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
+//		if (found != null)
+//			return found;
+//
+//		return PExpAssistantInterpreter.findExpression(exp.getRecord(), lineno);
+//	}
 
 }

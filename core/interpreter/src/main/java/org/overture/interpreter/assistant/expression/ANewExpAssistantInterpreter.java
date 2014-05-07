@@ -21,13 +21,13 @@ public class ANewExpAssistantInterpreter // extends ANewExpAssistantTC
 //		return PExpAssistantInterpreter.getValues(exp.getArgs(), ctxt);
 //	}
 
-	public static PExp findExpression(ANewExp exp, int lineno)
-	{
-		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
-		if (found != null)
-			return found;
-
-		return PExpAssistantInterpreter.findExpression(exp.getArgs(), lineno);
-	}
+//	public static PExp findExpression(ANewExp exp, int lineno)
+//	{
+//		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
+//		if (found != null)
+//			return found;
+//
+//		return PExpAssistantInterpreter.findExpression(exp.getArgs(), lineno);
+//	}
 
 }

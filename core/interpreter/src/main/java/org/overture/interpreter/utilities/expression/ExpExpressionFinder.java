@@ -47,53 +47,10 @@ import org.overture.ast.expressions.SSetExp;
 import org.overture.ast.expressions.SUnaryExp;
 import org.overture.ast.node.INode;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.definition.PDefinitionListAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AApplyExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ACasesExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ADefExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AElseIfExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AExists1ExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AExistsExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AFieldExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AFieldNumberExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AForAllExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AFuncInstatiationExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AIfExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AIotaExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AIsExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AIsOfBaseClassExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AIsOfClassExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ALambdaExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ALetBeStExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ALetDefExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AMapCompMapExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AMapEnumMapExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AMapletExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AMkBasicExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AMkTypeExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AMuExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ANarrowExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ANewExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.APostOpExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ASameBaseClassExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ASameClassExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ASeqCompSeqExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ASeqEnumSeqExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ASetCompSetExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ASetEnumSetExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ASetRangeSetExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ASubseqExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ATupleExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.SBinaryExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.SMapExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.SSeqExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.SSetExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.SUnaryExpAssistantInterpreter;
 
 /***************************************
  * 
- * This method find an expression in an expression. //check to change to correct form
+ * This method find an expression in an expression. //that's what i think it does, check to change to correct form if needed.
  * 
  * @author gkanos
  *
@@ -113,7 +70,7 @@ public class ExpExpressionFinder extends QuestionAnswerAdaptor<Integer,PExp>
 			throws AnalysisException
 	{
 		//return AApplyExpAssistantInterpreter.findExpression(exp, lineno);
-		PExp found = af.createPExpAssistant().findExpressionBaseCase(exp, lineno);
+		PExp found = findExpressionBaseCase(exp, lineno);
 		if (found != null)
 			return found;
 
@@ -141,7 +98,7 @@ public class ExpExpressionFinder extends QuestionAnswerAdaptor<Integer,PExp>
 			throws AnalysisException
 	{
 		//return ACasesExpAssistantInterpreter.findExpression(exp, lineno);
-		PExp found = af.createPExpAssistant().findExpressionBaseCase(exp, lineno);
+		PExp found = findExpressionBaseCase(exp, lineno);
 		if (found != null)
 			return found;
 
@@ -167,7 +124,7 @@ public class ExpExpressionFinder extends QuestionAnswerAdaptor<Integer,PExp>
 	{
 		//return ADefExpAssistantInterpreter.findExpression(exp, lineno);
 		
-		PExp found = af.createPExpAssistant().findExpressionBaseCase(exp, lineno);
+		PExp found = findExpressionBaseCase(exp, lineno);
 		if (found != null)
 			return found;
 
@@ -183,7 +140,7 @@ public class ExpExpressionFinder extends QuestionAnswerAdaptor<Integer,PExp>
 			throws AnalysisException
 	{
 		//return AElseIfExpAssistantInterpreter.findExpression((AElseIfExp) exp, lineno);
-		PExp found = af.createPExpAssistant().findExpressionBaseCase(exp, lineno);
+		PExp found = findExpressionBaseCase(exp, lineno);
 		if (found != null)
 			return found;
 
@@ -195,7 +152,7 @@ public class ExpExpressionFinder extends QuestionAnswerAdaptor<Integer,PExp>
 			throws AnalysisException
 	{
 		//return AExistsExpAssistantInterpreter.findExpression(exp, lineno);
-		PExp found = af.createPExpAssistant().findExpressionBaseCase(exp, lineno);
+		PExp found = findExpressionBaseCase(exp, lineno);
 		if (found != null)
 			return found;
 
@@ -207,7 +164,7 @@ public class ExpExpressionFinder extends QuestionAnswerAdaptor<Integer,PExp>
 			throws AnalysisException
 	{
 		//return AExists1ExpAssistantInterpreter.findExpression(exp, lineno);
-		PExp found = af.createPExpAssistant().findExpressionBaseCase(exp, lineno);
+		PExp found = findExpressionBaseCase(exp, lineno);
 		if (found != null)
 			return found;
 
@@ -219,7 +176,7 @@ public class ExpExpressionFinder extends QuestionAnswerAdaptor<Integer,PExp>
 			throws AnalysisException
 	{
 		//return AFieldExpAssistantInterpreter.findExpression(exp, lineno);
-		PExp found = af.createPExpAssistant().findExpressionBaseCase(exp, lineno);
+		PExp found = findExpressionBaseCase(exp, lineno);
 		if (found != null)
 			return found;
 
@@ -231,7 +188,7 @@ public class ExpExpressionFinder extends QuestionAnswerAdaptor<Integer,PExp>
 			throws AnalysisException
 	{
 		//return AFieldNumberExpAssistantInterpreter.findExpression(exp, lineno);
-		PExp found = af.createPExpAssistant().findExpressionBaseCase(exp, lineno);
+		PExp found = findExpressionBaseCase(exp, lineno);
 		if (found != null)
 			return found;
 
@@ -243,7 +200,7 @@ public class ExpExpressionFinder extends QuestionAnswerAdaptor<Integer,PExp>
 			throws AnalysisException
 	{
 		//return AForAllExpAssistantInterpreter.findExpression(exp, lineno);
-		PExp found = af.createPExpAssistant().findExpressionBaseCase(exp, lineno);
+		PExp found = findExpressionBaseCase(exp, lineno);
 		if (found != null)
 			return found;
 
@@ -255,7 +212,7 @@ public class ExpExpressionFinder extends QuestionAnswerAdaptor<Integer,PExp>
 			Integer lineno) throws AnalysisException
 	{
 		//return AFuncInstatiationExpAssistantInterpreter.findExpression(exp, lineno);
-		PExp found = af.createPExpAssistant().findExpressionBaseCase(exp, lineno);
+		PExp found = findExpressionBaseCase(exp, lineno);
 		if (found != null)
 			return found;
 
@@ -267,7 +224,7 @@ public class ExpExpressionFinder extends QuestionAnswerAdaptor<Integer,PExp>
 			throws AnalysisException
 	{
 		//return AIfExpAssistantInterpreter.findExpression(exp, lineno);
-		PExp found = af.createPExpAssistant().findExpressionBaseCase(exp, lineno);
+		PExp found = findExpressionBaseCase(exp, lineno);
 		if (found != null)
 			return found;
 		found = exp.getTest().apply(THIS, lineno);//PExpAssistantInterpreter.findExpression(exp.getTest(), lineno);
@@ -297,7 +254,7 @@ public class ExpExpressionFinder extends QuestionAnswerAdaptor<Integer,PExp>
 			throws AnalysisException
 	{
 		//return AIotaExpAssistantInterpreter.findExpression(exp, lineno);
-		PExp found = af.createPExpAssistant().findExpressionBaseCase(exp, lineno);
+		PExp found = findExpressionBaseCase(exp, lineno);
 		if (found != null)
 			return found;
 
@@ -309,7 +266,7 @@ public class ExpExpressionFinder extends QuestionAnswerAdaptor<Integer,PExp>
 			throws AnalysisException
 	{
 		//return AIsExpAssistantInterpreter.findExpression(exp, lineno);
-		PExp found = af.createPExpAssistant().findExpressionBaseCase(exp, lineno);
+		PExp found = findExpressionBaseCase(exp, lineno);
 		if (found != null)
 			return found;
 
@@ -321,7 +278,7 @@ public class ExpExpressionFinder extends QuestionAnswerAdaptor<Integer,PExp>
 			throws AnalysisException
 	{
 		//return AIsOfBaseClassExpAssistantInterpreter.findExpression(exp, lineno);
-		PExp found = af.createPExpAssistant().findExpressionBaseCase(exp, lineno);
+		PExp found = findExpressionBaseCase(exp, lineno);
 		if (found != null)
 			return found;
 
@@ -333,7 +290,7 @@ public class ExpExpressionFinder extends QuestionAnswerAdaptor<Integer,PExp>
 			throws AnalysisException
 	{
 		//return AIsOfClassExpAssistantInterpreter.findExpression(exp, lineno);
-		PExp found = af.createPExpAssistant().findExpressionBaseCase(exp, lineno);
+		PExp found = findExpressionBaseCase(exp, lineno);
 		if (found != null)
 			return found;
 
@@ -345,7 +302,7 @@ public class ExpExpressionFinder extends QuestionAnswerAdaptor<Integer,PExp>
 			throws AnalysisException
 	{
 		//return ALambdaExpAssistantInterpreter.findExpression(exp, lineno);
-		PExp found = af.createPExpAssistant().findExpressionBaseCase(exp, lineno);
+		PExp found = findExpressionBaseCase(exp, lineno);
 		if (found != null)
 			return found;
 
@@ -356,7 +313,7 @@ public class ExpExpressionFinder extends QuestionAnswerAdaptor<Integer,PExp>
 	public PExp caseALetBeStExp(ALetBeStExp exp, Integer lineno)
 			throws AnalysisException
 	{
-		PExp found = af.createPExpAssistant().findExpressionBaseCase(exp, lineno);
+		PExp found = findExpressionBaseCase(exp, lineno);
 		if (found != null)
 			return found;
 
@@ -375,7 +332,7 @@ public class ExpExpressionFinder extends QuestionAnswerAdaptor<Integer,PExp>
 			throws AnalysisException
 	{
 		//return ALetDefExpAssistantInterpreter.findExpression(exp, lineno);
-		PExp found = af.createPExpAssistant().findExpressionBaseCase(exp, lineno);
+		PExp found = findExpressionBaseCase(exp, lineno);
 		if (found != null)
 			return found;
 
@@ -391,7 +348,7 @@ public class ExpExpressionFinder extends QuestionAnswerAdaptor<Integer,PExp>
 			throws AnalysisException
 	{
 		//return AMapCompMapExpAssistantInterpreter.findExpression((AMapCompMapExp) exp, lineno);
-		PExp found =af.createPExpAssistant().findExpressionBaseCase(exp, lineno);
+		PExp found =findExpressionBaseCase(exp, lineno);
 		if (found != null)
 			return found;
 
@@ -408,7 +365,7 @@ public class ExpExpressionFinder extends QuestionAnswerAdaptor<Integer,PExp>
 			throws AnalysisException
 	{
 		//return AMapEnumMapExpAssistantInterpreter.findExpression((AMapEnumMapExp) exp, lineno);
-		PExp found = af.createPExpAssistant().findExpressionBaseCase(exp, lineno);
+		PExp found = findExpressionBaseCase(exp, lineno);
 		if (found != null)
 			return found;
 
@@ -445,7 +402,7 @@ public class ExpExpressionFinder extends QuestionAnswerAdaptor<Integer,PExp>
 			throws AnalysisException
 	{
 		//return AMkBasicExpAssistantInterpreter.findExpression(exp, lineno);
-		PExp found = af.createPExpAssistant().findExpressionBaseCase(exp, lineno);
+		PExp found = findExpressionBaseCase(exp, lineno);
 		if (found != null)
 			return found;
 
@@ -457,7 +414,7 @@ public class ExpExpressionFinder extends QuestionAnswerAdaptor<Integer,PExp>
 			throws AnalysisException
 	{
 		//return AMkTypeExpAssistantInterpreter.findExpression(exp, lineno);
-		PExp found = af.createPExpAssistant().findExpressionBaseCase(exp, lineno);
+		PExp found = findExpressionBaseCase(exp, lineno);
 		if (found != null)
 			return found;
 
@@ -469,7 +426,7 @@ public class ExpExpressionFinder extends QuestionAnswerAdaptor<Integer,PExp>
 			throws AnalysisException
 	{
 		//return AMuExpAssistantInterpreter.findExpression(exp, lineno);
-		PExp found = af.createPExpAssistant().findExpressionBaseCase(exp, lineno);
+		PExp found = findExpressionBaseCase(exp, lineno);
 		if (found != null)
 			return found;
 
@@ -494,7 +451,7 @@ public class ExpExpressionFinder extends QuestionAnswerAdaptor<Integer,PExp>
 			throws AnalysisException
 	{
 		//return ANewExpAssistantInterpreter.findExpression(exp, lineno);
-		PExp found = af.createPExpAssistant().findExpressionBaseCase(exp, lineno);
+		PExp found = findExpressionBaseCase(exp, lineno);
 		if (found != null)
 			return found;
 
@@ -515,7 +472,7 @@ public class ExpExpressionFinder extends QuestionAnswerAdaptor<Integer,PExp>
 			throws AnalysisException
 	{
 		//return ASameBaseClassExpAssistantInterpreter.findExpression(exp, lineno);
-		PExp found = af.createPExpAssistant().findExpressionBaseCase(exp, lineno);
+		PExp found = findExpressionBaseCase(exp, lineno);
 		if (found != null)
 			return found;
 
@@ -535,7 +492,7 @@ public class ExpExpressionFinder extends QuestionAnswerAdaptor<Integer,PExp>
 			throws AnalysisException
 	{
 		//return ASameClassExpAssistantInterpreter.findExpression(exp, lineno);
-		PExp found = af.createPExpAssistant().findExpressionBaseCase(exp, lineno);
+		PExp found = findExpressionBaseCase(exp, lineno);
 		if (found != null)
 			return found;
 
@@ -555,7 +512,7 @@ public class ExpExpressionFinder extends QuestionAnswerAdaptor<Integer,PExp>
 			throws AnalysisException
 	{
 		//return ASeqCompSeqExpAssistantInterpreter.findExpression((ASeqCompSeqExp) exp, lineno);
-		PExp found = af.createPExpAssistant().findExpressionBaseCase(exp, lineno);
+		PExp found = findExpressionBaseCase(exp, lineno);
 		if (found != null)
 			return found;
 
@@ -573,7 +530,7 @@ public class ExpExpressionFinder extends QuestionAnswerAdaptor<Integer,PExp>
 			throws AnalysisException
 	{
 		//return ASeqEnumSeqExpAssistantInterpreter.findExpression((ASeqEnumSeqExp) exp, lineno);
-		PExp found = af.createPExpAssistant().findExpressionBaseCase(exp, lineno);
+		PExp found = findExpressionBaseCase(exp, lineno);
 		if (found != null)
 			return found;
 
@@ -593,7 +550,7 @@ public class ExpExpressionFinder extends QuestionAnswerAdaptor<Integer,PExp>
 			throws AnalysisException
 	{
 		//return ASetCompSetExpAssistantInterpreter.findExpression((ASetCompSetExp) exp, lineno);
-		PExp found = af.createPExpAssistant().findExpressionBaseCase(exp, lineno);
+		PExp found = findExpressionBaseCase(exp, lineno);
 		if (found != null)
 			return found;
 
@@ -610,7 +567,7 @@ public class ExpExpressionFinder extends QuestionAnswerAdaptor<Integer,PExp>
 			throws AnalysisException
 	{
 		//return ASetEnumSetExpAssistantInterpreter.findExpression((ASetEnumSetExp) exp, lineno);
-		PExp found = af.createPExpAssistant().findExpressionBaseCase(exp, lineno);
+		PExp found = findExpressionBaseCase(exp, lineno);
 		if (found != null)
 			return found;
 
@@ -622,7 +579,7 @@ public class ExpExpressionFinder extends QuestionAnswerAdaptor<Integer,PExp>
 			throws AnalysisException
 	{
 		//return ASetRangeSetExpAssistantInterpreter.findExpression((ASetRangeSetExp) exp, lineno);
-		PExp found = af.createPExpAssistant().findExpressionBaseCase(exp, lineno);
+		PExp found = findExpressionBaseCase(exp, lineno);
 		if (found != null)
 			return found;
 
@@ -650,7 +607,7 @@ public class ExpExpressionFinder extends QuestionAnswerAdaptor<Integer,PExp>
 			throws AnalysisException
 	{
 		//return ASubseqExpAssistantInterpreter.findExpression(exp, lineno);
-		PExp found = af.createPExpAssistant().findExpressionBaseCase(exp, lineno);
+		PExp found = findExpressionBaseCase(exp, lineno);
 		if (found != null)
 			return found;
 
@@ -674,7 +631,7 @@ public class ExpExpressionFinder extends QuestionAnswerAdaptor<Integer,PExp>
 			throws AnalysisException
 	{
 		//return ATupleExpAssistantInterpreter.findExpression(exp, lineno);
-		PExp found = af.createPExpAssistant().findExpressionBaseCase(exp, lineno);
+		PExp found = findExpressionBaseCase(exp, lineno);
 		if (found != null)
 			return found;
 
@@ -686,7 +643,7 @@ public class ExpExpressionFinder extends QuestionAnswerAdaptor<Integer,PExp>
 			throws AnalysisException
 	{
 		//return SUnaryExpAssistantInterpreter.findExpression(exp, lineno);
-		PExp found = af.createPExpAssistant().findExpressionBaseCase(exp, lineno);
+		PExp found = findExpressionBaseCase(exp, lineno);
 		if (found != null)
 			return found;
 
@@ -696,7 +653,7 @@ public class ExpExpressionFinder extends QuestionAnswerAdaptor<Integer,PExp>
 	public PExp defaultPExp(PExp exp, Integer lineno)
 			throws AnalysisException
 	{
-		return af.createPExpAssistant().findExpressionBaseCase(exp, lineno);
+		return findExpressionBaseCase(exp, lineno);
 	}
 
 	@Override
@@ -713,6 +670,11 @@ public class ExpExpressionFinder extends QuestionAnswerAdaptor<Integer,PExp>
 	{
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public static PExp findExpressionBaseCase(PExp exp, int lineno)
+	{
+		return (exp.getLocation().getStartLine() == lineno) ? exp : null;
 	}
 
 }

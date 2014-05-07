@@ -30,20 +30,20 @@ public class ALetBeStExpAssistantInterpreter // extends ALetBeStExpAssistantTC
 //		return list;
 //	}
 
-	public static PExp findExpression(ALetBeStExp exp, int lineno)
-	{
-		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
-		if (found != null)
-			return found;
-
-		if (exp.getSuchThat() != null)
-		{
-			found = PExpAssistantInterpreter.findExpression(exp.getSuchThat(), lineno);
-			if (found != null)
-				return found;
-		}
-
-		return PExpAssistantInterpreter.findExpression(exp.getValue(), lineno);
-	}
+//	public static PExp findExpression(ALetBeStExp exp, int lineno)
+//	{
+//		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
+//		if (found != null)
+//			return found;
+//
+//		if (exp.getSuchThat() != null)
+//		{
+//			found = PExpAssistantInterpreter.findExpression(exp.getSuchThat(), lineno);
+//			if (found != null)
+//				return found;
+//		}
+//
+//		return PExpAssistantInterpreter.findExpression(exp.getValue(), lineno);
+//	}
 
 }

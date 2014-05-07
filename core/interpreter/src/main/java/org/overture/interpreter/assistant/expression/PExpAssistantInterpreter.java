@@ -307,10 +307,7 @@ public class PExpAssistantInterpreter extends PExpAssistantTC
 //		}
 	}
 
-	public static PExp findExpressionBaseCase(PExp exp, int lineno)
-	{
-		return (exp.getLocation().getStartLine() == lineno) ? exp : null;
-	}
+	
 
 	public static List<PExp> getSubExpressions(PExp exp)
 	{
