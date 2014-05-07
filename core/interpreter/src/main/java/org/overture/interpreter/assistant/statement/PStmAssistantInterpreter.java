@@ -172,8 +172,5 @@ public class PStmAssistantInterpreter extends PStmAssistantTC
 //		}
 	}
 
-	public static PStm findStatementBaseCase(PStm stm, int lineno)
-	{
-		return (stm.getLocation().getStartLine() == lineno) ? stm : null;
-	}
+	
 }
