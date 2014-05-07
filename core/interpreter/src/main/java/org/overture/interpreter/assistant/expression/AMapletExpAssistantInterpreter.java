@@ -23,11 +23,11 @@ public class AMapletExpAssistantInterpreter // extends AMapletExpAssistantTC
 //		return list;
 //	}
 
-	public static PExp findExpression(AMapletExp m, int lineno)
-	{
-		PExp found = PExpAssistantInterpreter.findExpression(m.getLeft(), lineno);
-		return (found == null) ? PExpAssistantInterpreter.findExpression(m.getRight(), lineno)
-				: found;
-	}
+//	public static PExp findExpression(AMapletExp m, int lineno)
+//	{
+//		PExp found = PExpAssistantInterpreter.findExpression(m.getLeft(), lineno);
+//		return (found == null) ? PExpAssistantInterpreter.findExpression(m.getRight(), lineno)
+//				: found;
+//	}
 
 }

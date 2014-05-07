@@ -29,20 +29,20 @@ public class AMapEnumMapExpAssistantInterpreter
 //		return list;
 //	}
 
-	public static PExp findExpression(AMapEnumMapExp exp, int lineno)
-	{
-		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
-		if (found != null)
-			return found;
-
-		for (AMapletExp m : exp.getMembers())
-		{
-			found = AMapletExpAssistantInterpreter.findExpression(m, lineno);
-			if (found != null)
-				return found;
-		}
-
-		return null;
-	}
+//	public static PExp findExpression(AMapEnumMapExp exp, int lineno)
+//	{
+//		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
+//		if (found != null)
+//			return found;
+//
+//		for (AMapletExp m : exp.getMembers())
+//		{
+//			found = AMapletExpAssistantInterpreter.findExpression(m, lineno);
+//			if (found != null)
+//				return found;
+//		}
+//
+//		return null;
+//	}
 
 }

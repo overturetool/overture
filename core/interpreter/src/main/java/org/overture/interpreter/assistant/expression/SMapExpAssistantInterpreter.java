@@ -32,18 +32,18 @@ public class SMapExpAssistantInterpreter // extends SMapExpAssistantTC
 //		}
 //	}
 
-	public static PExp findExpression(SMapExp exp, int lineno)
-	{
-		if (exp instanceof AMapCompMapExp)
-		{
-			return AMapCompMapExpAssistantInterpreter.findExpression((AMapCompMapExp) exp, lineno);
-		} else if (exp instanceof AMapEnumMapExp)
-		{
-			return AMapEnumMapExpAssistantInterpreter.findExpression((AMapEnumMapExp) exp, lineno);
-		} else
-		{
-			return null;
-		}
-	}
+//	public static PExp findExpression(SMapExp exp, int lineno)
+//	{
+//		if (exp instanceof AMapCompMapExp)
+//		{
+//			return AMapCompMapExpAssistantInterpreter.findExpression((AMapCompMapExp) exp, lineno);
+//		} else if (exp instanceof AMapEnumMapExp)
+//		{
+//			return AMapEnumMapExpAssistantInterpreter.findExpression((AMapEnumMapExp) exp, lineno);
+//		} else
+//		{
+//			return null;
+//		}
+//	}
 
 }

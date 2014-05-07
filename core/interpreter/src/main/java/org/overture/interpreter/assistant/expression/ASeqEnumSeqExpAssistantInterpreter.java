@@ -20,14 +20,14 @@ public class ASeqEnumSeqExpAssistantInterpreter
 //	{
 //		return PExpAssistantInterpreter.getValues(exp.getMembers(), ctxt);
 //	}
-
-	public static PExp findExpression(ASeqEnumSeqExp exp, int lineno)
-	{
-		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
-		if (found != null)
-			return found;
-
-		return PExpAssistantInterpreter.findExpression(exp.getMembers(), lineno);
-	}
+//
+//	public static PExp findExpression(ASeqEnumSeqExp exp, int lineno)
+//	{
+//		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
+//		if (found != null)
+//			return found;
+//
+//		return PExpAssistantInterpreter.findExpression(exp.getMembers(), lineno);
+//	}
 
 }

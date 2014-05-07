@@ -25,14 +25,14 @@ public class AElseIfExpAssistantInterpreter // extends AElseIfExpAssistantTC
 //		return list;
 //	}
 
-	public static PExp findExpression(AElseIfExp exp, int lineno)
-	{
-		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
-		if (found != null)
-			return found;
-
-		return PExpAssistantInterpreter.findExpression(exp.getThen(), lineno);
-	}
+//	public static PExp findExpression(AElseIfExp exp, int lineno)
+//	{
+//		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
+//		if (found != null)
+//			return found;
+//
+//		return PExpAssistantInterpreter.findExpression(exp.getThen(), lineno);
+//	}
 
 	public static List<PExp> getSubExpressions(AElseIfExp exp)
 	{

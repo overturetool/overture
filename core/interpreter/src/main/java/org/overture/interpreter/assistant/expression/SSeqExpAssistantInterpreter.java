@@ -32,18 +32,18 @@ public class SSeqExpAssistantInterpreter // extends SSeqExpAssistantTC
 //		}
 //	}
 
-	public static PExp findExpression(SSeqExp exp, int lineno)
-	{
-		if (exp instanceof ASeqCompSeqExp)
-		{
-			return ASeqCompSeqExpAssistantInterpreter.findExpression((ASeqCompSeqExp) exp, lineno);
-		} else if (exp instanceof ASeqEnumSeqExp)
-		{
-			return ASeqEnumSeqExpAssistantInterpreter.findExpression((ASeqEnumSeqExp) exp, lineno);
-		} else
-		{
-			return null;
-		}
-	}
+//	public static PExp findExpression(SSeqExp exp, int lineno)
+//	{
+//		if (exp instanceof ASeqCompSeqExp)
+//		{
+//			return ASeqCompSeqExpAssistantInterpreter.findExpression((ASeqCompSeqExp) exp, lineno);
+//		} else if (exp instanceof ASeqEnumSeqExp)
+//		{
+//			return ASeqEnumSeqExpAssistantInterpreter.findExpression((ASeqEnumSeqExp) exp, lineno);
+//		} else
+//		{
+//			return null;
+//		}
+//	}
 
 }

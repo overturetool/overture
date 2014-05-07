@@ -28,18 +28,18 @@ public class AApplyExpAssistantInterpreter extends AApplyExpAssistantTC
 //		return list;
 //	}
 
-	public static PExp findExpression(AApplyExp exp, int lineno)
-	{
-		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
-		if (found != null)
-			return found;
-
-		found = PExpAssistantInterpreter.findExpression(exp.getRoot(), lineno);
-		if (found != null)
-			return found;
-
-		return PExpAssistantInterpreter.findExpression(exp.getArgs(), lineno);
-	}
+//	public static PExp findExpression(AApplyExp exp, int lineno)
+//	{
+//		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
+//		if (found != null)
+//			return found;
+//
+//		found = PExpAssistantInterpreter.findExpression(exp.getRoot(), lineno);
+//		if (found != null)
+//			return found;
+//
+//		return PExpAssistantInterpreter.findExpression(exp.getArgs(), lineno);
+//	}
 
 	public static List<PExp> getSubExpressions(AApplyExp exp)
 	{

@@ -174,6 +174,7 @@ import org.overture.interpreter.utilities.definition.DefinitionStatementFinder;
 import org.overture.interpreter.utilities.definition.TermTraceExpander;
 import org.overture.interpreter.utilities.definition.TypeDefinitionChecker;
 import org.overture.interpreter.utilities.definition.ValuesDefinitionLocator;
+import org.overture.interpreter.utilities.expression.ExpExpressionFinder;
 import org.overture.interpreter.utilities.expression.ExpressionValueCollector;
 import org.overture.interpreter.utilities.pattern.AllNamedValuesLocator;
 import org.overture.interpreter.utilities.pattern.BindValuesCollector;
@@ -1082,6 +1083,12 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	public IQuestionAnswer<ObjectContext, ValueList> getExpressionValueCollector()
 	{
 		return new ExpressionValueCollector(this);
+	}
+
+	@Override
+	public IQuestionAnswer<Integer, PExp> getExpExpressionFinder()
+	{
+		return new ExpExpressionFinder(this);
 	}
 
 }

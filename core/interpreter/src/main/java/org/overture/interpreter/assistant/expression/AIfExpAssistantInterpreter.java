@@ -37,32 +37,32 @@ public class AIfExpAssistantInterpreter // extends AIfExpAssistantTC
 //		return list;
 //	}
 
-	public static PExp findExpression(AIfExp exp, int lineno)
-	{
-		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
-		if (found != null)
-			return found;
-		found = PExpAssistantInterpreter.findExpression(exp.getTest(), lineno);
-		if (found != null)
-			return found;
-		found = PExpAssistantInterpreter.findExpression(exp.getThen(), lineno);
-		if (found != null)
-			return found;
-
-		for (AElseIfExp stmt : exp.getElseList())
-		{
-			found = PExpAssistantInterpreter.findExpression(stmt, lineno);
-			if (found != null)
-				return found;
-		}
-
-		if (exp.getElse() != null)
-		{
-			found = PExpAssistantInterpreter.findExpression(exp.getElse(), lineno);
-		}
-
-		return found;
-	}
+//	public static PExp findExpression(AIfExp exp, int lineno)
+//	{
+//		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
+//		if (found != null)
+//			return found;
+//		found = PExpAssistantInterpreter.findExpression(exp.getTest(), lineno);
+//		if (found != null)
+//			return found;
+//		found = PExpAssistantInterpreter.findExpression(exp.getThen(), lineno);
+//		if (found != null)
+//			return found;
+//
+//		for (AElseIfExp stmt : exp.getElseList())
+//		{
+//			found = PExpAssistantInterpreter.findExpression(stmt, lineno);
+//			if (found != null)
+//				return found;
+//		}
+//
+//		if (exp.getElse() != null)
+//		{
+//			found = PExpAssistantInterpreter.findExpression(exp.getElse(), lineno);
+//		}
+//
+//		return found;
+//	}
 
 	public static List<PExp> getSubExpressions(AIfExp exp)
 	{

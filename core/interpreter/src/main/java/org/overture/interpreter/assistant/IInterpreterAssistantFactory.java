@@ -523,4 +523,6 @@ public interface IInterpreterAssistantFactory extends
 	
 	IQuestionAnswer<ObjectContext, ValueList> getExpressionValueCollector();
 	
+	IQuestionAnswer<Integer, PExp> getExpExpressionFinder();
+	
 }

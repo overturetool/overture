@@ -22,17 +22,17 @@ public class ADefExpAssistantInterpreter
 //		return list;
 //	}
 
-	public static PExp findExpression(ADefExp exp, int lineno)
-	{
-		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
-		if (found != null)
-			return found;
-
-		found = PDefinitionListAssistantInterpreter.findExpression(exp.getLocalDefs(), lineno);
-		if (found != null)
-			return found;
-
-		return PExpAssistantInterpreter.findExpression(exp.getExpression(), lineno);
-	}
+//	public static PExp findExpression(ADefExp exp, int lineno)
+//	{
+//		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
+//		if (found != null)
+//			return found;
+//
+//		found = PDefinitionListAssistantInterpreter.findExpression(exp.getLocalDefs(), lineno);
+//		if (found != null)
+//			return found;
+//
+//		return PExpAssistantInterpreter.findExpression(exp.getExpression(), lineno);
+//	}
 
 }

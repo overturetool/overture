@@ -192,112 +192,119 @@ public class PExpAssistantInterpreter extends PExpAssistantTC
 	 */
 	public static PExp findExpression(PExp exp, int lineno)
 	{
-		if (exp instanceof AApplyExp)
+		try
 		{
-			return AApplyExpAssistantInterpreter.findExpression((AApplyExp) exp, lineno);
-		} else if (exp instanceof SBinaryExp)
+			return exp.apply(af.getExpExpressionFinder(),lineno);// FIXME: should we handle exceptions like this
+		} catch (AnalysisException e)
 		{
-			return SBinaryExpAssistantInterpreter.findExpression((SBinaryExp) exp, lineno);
-		} else if (exp instanceof ACasesExp)
-		{
-			return ACasesExpAssistantInterpreter.findExpression((ACasesExp) exp, lineno);
-		} else if (exp instanceof ADefExp)
-		{
-			return ADefExpAssistantInterpreter.findExpression((ADefExp) exp, lineno);
-		} else if (exp instanceof AElseIfExp)
-		{
-			return AElseIfExpAssistantInterpreter.findExpression((AElseIfExp) exp, lineno);
-		} else if (exp instanceof AExistsExp)
-		{
-			return AExistsExpAssistantInterpreter.findExpression((AExistsExp) exp, lineno);
-		} else if (exp instanceof AExists1Exp)
-		{
-			return AExists1ExpAssistantInterpreter.findExpression((AExists1Exp) exp, lineno);
-		} else if (exp instanceof AFieldExp)
-		{
-			return AFieldExpAssistantInterpreter.findExpression((AFieldExp) exp, lineno);
-		} else if (exp instanceof AFieldNumberExp)
-		{
-			return AFieldNumberExpAssistantInterpreter.findExpression((AFieldNumberExp) exp, lineno);
-		} else if (exp instanceof AForAllExp)
-		{
-			return AForAllExpAssistantInterpreter.findExpression((AForAllExp) exp, lineno);
-		} else if (exp instanceof AFuncInstatiationExp)
-		{
-			return AFuncInstatiationExpAssistantInterpreter.findExpression((AFuncInstatiationExp) exp, lineno);
-		} else if (exp instanceof AIfExp)
-		{
-			return AIfExpAssistantInterpreter.findExpression((AIfExp) exp, lineno);
-		} else if (exp instanceof AIotaExp)
-		{
-			return AIotaExpAssistantInterpreter.findExpression((AIotaExp) exp, lineno);
-		} else if (exp instanceof AIsExp)
-		{
-			return AIsExpAssistantInterpreter.findExpression((AIsExp) exp, lineno);
-		} else if (exp instanceof AIsOfBaseClassExp)
-		{
-			return AIsOfBaseClassExpAssistantInterpreter.findExpression((AIsOfBaseClassExp) exp, lineno);
-		} else if (exp instanceof AIsOfClassExp)
-		{
-			return AIsOfClassExpAssistantInterpreter.findExpression((AIsOfClassExp) exp, lineno);
-		} else if (exp instanceof ALambdaExp)
-		{
-			return ALambdaExpAssistantInterpreter.findExpression((ALambdaExp) exp, lineno);
-		} else if (exp instanceof ALetBeStExp)
-		{
-			return ALetBeStExpAssistantInterpreter.findExpression((ALetBeStExp) exp, lineno);
-		} else if (exp instanceof ALetDefExp)
-		{
-			return ALetDefExpAssistantInterpreter.findExpression((ALetDefExp) exp, lineno);
-		} else if (exp instanceof SMapExp)
-		{
-			return SMapExpAssistantInterpreter.findExpression((SMapExp) exp, lineno);
-		} else if (exp instanceof AMapletExp)
-		{
-			return AMapletExpAssistantInterpreter.findExpression((AMapletExp) exp, lineno);
-		} else if (exp instanceof AMkBasicExp)
-		{
-			return AMkBasicExpAssistantInterpreter.findExpression((AMkBasicExp) exp, lineno);
-		} else if (exp instanceof AMkTypeExp)
-		{
-			return AMkTypeExpAssistantInterpreter.findExpression((AMkTypeExp) exp, lineno);
-		} else if (exp instanceof AMuExp)
-		{
-			return AMuExpAssistantInterpreter.findExpression((AMuExp) exp, lineno);
-		} else if (exp instanceof ANarrowExp)
-		{
-			return ANarrowExpAssistantInterpreter.findExpression((ANarrowExp) exp, lineno);
-		} else if (exp instanceof ANewExp)
-		{
-			return ANewExpAssistantInterpreter.findExpression((ANewExp) exp, lineno);
-		} else if (exp instanceof APostOpExp)
-		{
-			return APostOpExpAssistantInterpreter.findExpression((APostOpExp) exp, lineno);
-		} else if (exp instanceof ASameBaseClassExp)
-		{
-			return ASameBaseClassExpAssistantInterpreter.findExpression((ASameBaseClassExp) exp, lineno);
-		} else if (exp instanceof ASameClassExp)
-		{
-			return ASameClassExpAssistantInterpreter.findExpression((ASameClassExp) exp, lineno);
-		} else if (exp instanceof SSeqExp)
-		{
-			return SSeqExpAssistantInterpreter.findExpression((SSeqExp) exp, lineno);
-		} else if (exp instanceof SSetExp)
-		{
-			return SSetExpAssistantInterpreter.findExpression((SSetExp) exp, lineno);
-		} else if (exp instanceof ASubseqExp)
-		{
-			return ASubseqExpAssistantInterpreter.findExpression((ASubseqExp) exp, lineno);
-		} else if (exp instanceof ATupleExp)
-		{
-			return ATupleExpAssistantInterpreter.findExpression((ATupleExp) exp, lineno);
-		} else if (exp instanceof SUnaryExp)
-		{
-			return SUnaryExpAssistantInterpreter.findExpression((SUnaryExp) exp, lineno);
-		} else
-		{
-			return findExpressionBaseCase(exp, lineno);
+			return null; // Most have none
 		}
+//		if (exp instanceof AApplyExp)
+//		{
+//			return AApplyExpAssistantInterpreter.findExpression((AApplyExp) exp, lineno);
+//		} else if (exp instanceof SBinaryExp)
+//		{
+//			return SBinaryExpAssistantInterpreter.findExpression((SBinaryExp) exp, lineno);
+//		} else if (exp instanceof ACasesExp)
+//		{
+//			return ACasesExpAssistantInterpreter.findExpression((ACasesExp) exp, lineno);
+//		} else if (exp instanceof ADefExp)
+//		{
+//			return ADefExpAssistantInterpreter.findExpression((ADefExp) exp, lineno);
+//		} else if (exp instanceof AElseIfExp)
+//		{
+//			return AElseIfExpAssistantInterpreter.findExpression((AElseIfExp) exp, lineno);
+//		} else if (exp instanceof AExistsExp)
+//		{
+//			return AExistsExpAssistantInterpreter.findExpression((AExistsExp) exp, lineno);
+//		} else if (exp instanceof AExists1Exp)
+//		{
+//			return AExists1ExpAssistantInterpreter.findExpression((AExists1Exp) exp, lineno);
+//		} else if (exp instanceof AFieldExp)
+//		{
+//			return AFieldExpAssistantInterpreter.findExpression((AFieldExp) exp, lineno);
+//		} else if (exp instanceof AFieldNumberExp)
+//		{
+//			return AFieldNumberExpAssistantInterpreter.findExpression((AFieldNumberExp) exp, lineno);
+//		} else if (exp instanceof AForAllExp)
+//		{
+//			return AForAllExpAssistantInterpreter.findExpression((AForAllExp) exp, lineno);
+//		} else if (exp instanceof AFuncInstatiationExp)
+//		{
+//			return AFuncInstatiationExpAssistantInterpreter.findExpression((AFuncInstatiationExp) exp, lineno);
+//		} else if (exp instanceof AIfExp)
+//		{
+//			return AIfExpAssistantInterpreter.findExpression((AIfExp) exp, lineno);
+//		} else if (exp instanceof AIotaExp)
+//		{
+//			return AIotaExpAssistantInterpreter.findExpression((AIotaExp) exp, lineno);
+//		} else if (exp instanceof AIsExp)
+//		{
+//			return AIsExpAssistantInterpreter.findExpression((AIsExp) exp, lineno);
+//		} else if (exp instanceof AIsOfBaseClassExp)
+//		{
+//			return AIsOfBaseClassExpAssistantInterpreter.findExpression((AIsOfBaseClassExp) exp, lineno);
+//		} else if (exp instanceof AIsOfClassExp)
+//		{
+//			return AIsOfClassExpAssistantInterpreter.findExpression((AIsOfClassExp) exp, lineno);
+//		} else if (exp instanceof ALambdaExp)
+//		{
+//			return ALambdaExpAssistantInterpreter.findExpression((ALambdaExp) exp, lineno);
+//		} else if (exp instanceof ALetBeStExp)
+//		{
+//			return ALetBeStExpAssistantInterpreter.findExpression((ALetBeStExp) exp, lineno);
+//		} else if (exp instanceof ALetDefExp)
+//		{
+//			return ALetDefExpAssistantInterpreter.findExpression((ALetDefExp) exp, lineno);
+//		} else if (exp instanceof SMapExp)
+//		{
+//			return SMapExpAssistantInterpreter.findExpression((SMapExp) exp, lineno);
+//		} else if (exp instanceof AMapletExp)
+//		{
+//			return AMapletExpAssistantInterpreter.findExpression((AMapletExp) exp, lineno);
+//		} else if (exp instanceof AMkBasicExp)
+//		{
+//			return AMkBasicExpAssistantInterpreter.findExpression((AMkBasicExp) exp, lineno);
+//		} else if (exp instanceof AMkTypeExp)
+//		{
+//			return AMkTypeExpAssistantInterpreter.findExpression((AMkTypeExp) exp, lineno);
+//		} else if (exp instanceof AMuExp)
+//		{
+//			return AMuExpAssistantInterpreter.findExpression((AMuExp) exp, lineno);
+//		} else if (exp instanceof ANarrowExp)
+//		{
+//			return ANarrowExpAssistantInterpreter.findExpression((ANarrowExp) exp, lineno);
+//		} else if (exp instanceof ANewExp)
+//		{
+//			return ANewExpAssistantInterpreter.findExpression((ANewExp) exp, lineno);
+//		} else if (exp instanceof APostOpExp)
+//		{
+//			return APostOpExpAssistantInterpreter.findExpression((APostOpExp) exp, lineno);
+//		} else if (exp instanceof ASameBaseClassExp)
+//		{
+//			return ASameBaseClassExpAssistantInterpreter.findExpression((ASameBaseClassExp) exp, lineno);
+//		} else if (exp instanceof ASameClassExp)
+//		{
+//			return ASameClassExpAssistantInterpreter.findExpression((ASameClassExp) exp, lineno);
+//		} else if (exp instanceof SSeqExp)
+//		{
+//			return SSeqExpAssistantInterpreter.findExpression((SSeqExp) exp, lineno);
+//		} else if (exp instanceof SSetExp)
+//		{
+//			return SSetExpAssistantInterpreter.findExpression((SSetExp) exp, lineno);
+//		} else if (exp instanceof ASubseqExp)
+//		{
+//			return ASubseqExpAssistantInterpreter.findExpression((ASubseqExp) exp, lineno);
+//		} else if (exp instanceof ATupleExp)
+//		{
+//			return ATupleExpAssistantInterpreter.findExpression((ATupleExp) exp, lineno);
+//		} else if (exp instanceof SUnaryExp)
+//		{
+//			return SUnaryExpAssistantInterpreter.findExpression((SUnaryExp) exp, lineno);
+//		} else
+//		{
+//			return findExpressionBaseCase(exp, lineno);
+//		}
 	}
 
 	public static PExp findExpressionBaseCase(PExp exp, int lineno)

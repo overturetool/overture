@@ -36,27 +36,27 @@ public class ACasesExpAssistantInterpreter // extends ACasesExpAssistantTC
 //		return list;
 //	}
 
-	public static PExp findExpression(ACasesExp exp, int lineno)
-	{
-		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
-		if (found != null)
-			return found;
-
-		found = PExpAssistantInterpreter.findExpression(exp.getExpression(), lineno);
-		if (found != null)
-			return found;
-
-		for (ACaseAlternative c : exp.getCases())
-		{
-			found = PExpAssistantInterpreter.findExpression(c.getResult(), lineno);
-			if (found != null)
-				break;
-		}
-
-		return found != null ? found
-				: exp.getOthers() != null ? PExpAssistantInterpreter.findExpression(exp.getOthers(), lineno)
-						: null;
-	}
+//	public static PExp findExpression(ACasesExp exp, int lineno)
+//	{
+//		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
+//		if (found != null)
+//			return found;
+//
+//		found = PExpAssistantInterpreter.findExpression(exp.getExpression(), lineno);
+//		if (found != null)
+//			return found;
+//
+//		for (ACaseAlternative c : exp.getCases())
+//		{
+//			found = PExpAssistantInterpreter.findExpression(c.getResult(), lineno);
+//			if (found != null)
+//				break;
+//		}
+//
+//		return found != null ? found
+//				: exp.getOthers() != null ? PExpAssistantInterpreter.findExpression(exp.getOthers(), lineno)
+//						: null;
+//	}
 
 	public static List<PExp> getSubExpressions(ACasesExp exp)
 	{

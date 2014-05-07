@@ -23,14 +23,14 @@ public class AIsOfBaseClassExpAssistantInterpreter// extends
 //		return PExpAssistantInterpreter.getValues(exp.getExp(), ctxt);
 //	}
 
-	public static PExp findExpression(AIsOfBaseClassExp exp, int lineno)
-	{
-		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
-		if (found != null)
-			return found;
-
-		return PExpAssistantInterpreter.findExpression(exp.getExp(), lineno);
-	}
+//	public static PExp findExpression(AIsOfBaseClassExp exp, int lineno)
+//	{
+//		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
+//		if (found != null)
+//			return found;
+//
+//		return PExpAssistantInterpreter.findExpression(exp.getExp(), lineno);
+//	}
 
 	public static boolean search(AIsOfBaseClassExp node, ObjectValue from)
 	{

@@ -24,25 +24,25 @@ public class ASubseqExpAssistantInterpreter // extends ASubseqExpAssistantTC
 //		return list;
 //	}
 
-	public static PExp findExpression(ASubseqExp exp, int lineno)
-	{
-		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
-		if (found != null)
-			return found;
-
-		found = PExpAssistantInterpreter.findExpression(exp.getSeq(), lineno);
-		if (found != null)
-			return found;
-
-		found = PExpAssistantInterpreter.findExpression(exp.getFrom(), lineno);
-		if (found != null)
-			return found;
-
-		found = PExpAssistantInterpreter.findExpression(exp.getTo(), lineno);
-		if (found != null)
-			return found;
-
-		return null;
-	}
+//	public static PExp findExpression(ASubseqExp exp, int lineno)
+//	{
+//		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
+//		if (found != null)
+//			return found;
+//
+//		found = PExpAssistantInterpreter.findExpression(exp.getSeq(), lineno);
+//		if (found != null)
+//			return found;
+//
+//		found = PExpAssistantInterpreter.findExpression(exp.getFrom(), lineno);
+//		if (found != null)
+//			return found;
+//
+//		found = PExpAssistantInterpreter.findExpression(exp.getTo(), lineno);
+//		if (found != null)
+//			return found;
+//
+//		return null;
+//	}
 
 }

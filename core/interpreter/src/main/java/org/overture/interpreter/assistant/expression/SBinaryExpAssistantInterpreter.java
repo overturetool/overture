@@ -27,14 +27,14 @@ public class SBinaryExpAssistantInterpreter extends SBinaryExpAssistantTC
 //		return list;
 //	}
 
-	public static PExp findExpression(SBinaryExp exp, int lineno)
-	{
-		PExp found = PExpAssistantInterpreter.findExpression(exp.getLeft(), lineno);
-		if (found != null)
-			return found;
-
-		return PExpAssistantInterpreter.findExpression(exp.getRight(), lineno);
-	}
+//	public static PExp findExpression(SBinaryExp exp, int lineno)
+//	{
+//		PExp found = PExpAssistantInterpreter.findExpression(exp.getLeft(), lineno);
+//		if (found != null)
+//			return found;
+//
+//		return PExpAssistantInterpreter.findExpression(exp.getRight(), lineno);
+//	}
 
 	public static List<PExp> getSubExpressions(SBinaryExp exp)
 	{

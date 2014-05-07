@@ -21,14 +21,14 @@ public class ANarrowExpAssistantInterpreter // extends ANarrowExpAssistantTC
 //		return PExpAssistantInterpreter.getValues(exp.getTest(), ctxt);
 //	}
 
-	public static PExp findExpression(ANarrowExp exp, int lineno)
-	{
-		PExp found = PExpAssistantInterpreter.findExpression(exp, lineno);
-
-		if (found != null)
-			return found;
-
-		return PExpAssistantInterpreter.findExpression(exp.getTest(), lineno);
-	}
+//	public static PExp findExpression(ANarrowExp exp, int lineno)
+//	{
+//		PExp found = PExpAssistantInterpreter.findExpression(exp, lineno);
+//
+//		if (found != null)
+//			return found;
+//
+//		return PExpAssistantInterpreter.findExpression(exp.getTest(), lineno);
+//	}
 
 }

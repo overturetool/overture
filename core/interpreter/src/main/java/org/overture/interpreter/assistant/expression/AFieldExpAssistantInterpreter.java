@@ -101,13 +101,13 @@ public class AFieldExpAssistantInterpreter // extends AFieldExpAssistantTC
 //		}
 //	}
 
-	public static PExp findExpression(AFieldExp exp, int lineno)
-	{
-		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
-		if (found != null)
-			return found;
-
-		return PExpAssistantInterpreter.findExpression(exp.getObject(), lineno);
-	}
+//	public static PExp findExpression(AFieldExp exp, int lineno)
+//	{
+//		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
+//		if (found != null)
+//			return found;
+//
+//		return PExpAssistantInterpreter.findExpression(exp.getObject(), lineno);
+//	}
 
 }

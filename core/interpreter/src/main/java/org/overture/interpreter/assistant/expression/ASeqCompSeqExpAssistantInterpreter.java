@@ -30,18 +30,18 @@ public class ASeqCompSeqExpAssistantInterpreter
 		return list;
 	}
 
-	public static PExp findExpression(ASeqCompSeqExp exp, int lineno)
-	{
-		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
-		if (found != null)
-			return found;
-
-		found = PExpAssistantInterpreter.findExpression(exp.getFirst(), lineno);
-		if (found != null)
-			return found;
-
-		return exp.getPredicate() == null ? null
-				: PExpAssistantInterpreter.findExpression(exp.getPredicate(), lineno);
-	}
+//	public static PExp findExpression(ASeqCompSeqExp exp, int lineno)
+//	{
+//		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
+//		if (found != null)
+//			return found;
+//
+//		found = PExpAssistantInterpreter.findExpression(exp.getFirst(), lineno);
+//		if (found != null)
+//			return found;
+//
+//		return exp.getPredicate() == null ? null
+//				: PExpAssistantInterpreter.findExpression(exp.getPredicate(), lineno);
+//	}
 
 }

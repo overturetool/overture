@@ -24,21 +24,21 @@ public class ASameBaseClassExpAssistantInterpreter // extends
 //		return list;
 //	}
 
-	public static PExp findExpression(ASameBaseClassExp exp, int lineno)
-	{
-		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
-		if (found != null)
-			return found;
-
-		found = PExpAssistantInterpreter.findExpression(exp.getLeft(), lineno);
-		if (found != null)
-			return found;
-
-		found = PExpAssistantInterpreter.findExpression(exp.getRight(), lineno);
-		if (found != null)
-			return found;
-
-		return null;
-	}
+//	public static PExp findExpression(ASameBaseClassExp exp, int lineno)
+//	{
+//		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
+//		if (found != null)
+//			return found;
+//
+//		found = PExpAssistantInterpreter.findExpression(exp.getLeft(), lineno);
+//		if (found != null)
+//			return found;
+//
+//		found = PExpAssistantInterpreter.findExpression(exp.getRight(), lineno);
+//		if (found != null)
+//			return found;
+//
+//		return null;
+//	}
 
 }

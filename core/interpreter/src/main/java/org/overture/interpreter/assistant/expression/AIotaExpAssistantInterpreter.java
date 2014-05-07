@@ -24,13 +24,13 @@ public class AIotaExpAssistantInterpreter // extends AIotaExpAssistantTC
 //		return list;
 //	}
 
-	public static PExp findExpression(AIotaExp exp, int lineno)
-	{
-		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
-		if (found != null)
-			return found;
-
-		return PExpAssistantInterpreter.findExpression(exp.getPredicate(), lineno);
-	}
+//	public static PExp findExpression(AIotaExp exp, int lineno)
+//	{
+//		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
+//		if (found != null)
+//			return found;
+//
+//		return PExpAssistantInterpreter.findExpression(exp.getPredicate(), lineno);
+//	}
 
 }
