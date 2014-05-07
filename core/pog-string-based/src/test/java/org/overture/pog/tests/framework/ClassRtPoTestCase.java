@@ -1,15 +1,15 @@
 package org.overture.pog.tests.framework;
 
 import java.io.File;
-import java.util.List;
 
 import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
 import org.overture.config.Settings;
+import org.overture.pog.obligation.ProofObligationList;
 import org.overture.pog.util.PogUtil;
 import org.overture.test.framework.results.Result;
 
-public class ClassRtPoTestCase extends PogToStringTestCase
+public class ClassRtPoTestCase extends PogTestCase
 {
 
 	public ClassRtPoTestCase()
@@ -33,19 +33,26 @@ public class ClassRtPoTestCase extends PogToStringTestCase
 
 	public void test() throws Exception
 	{
-		if (file == null)
+		try
 		{
-			return;
+			configureResultGeneration();
+			if (file == null)
+			{
+				return;
+			}
+			Result<ProofObligationList> result;
+			result = convert(PogUtil.pogRt(file));
+			compareResults(result, file.getAbsolutePath());
+		} finally
+		{
+			unconfigureResultGeneration();
 		}
-		Result<List<String>> result;
-		// try
-		// {
-		result = convert(PogUtil.pogRt(file));
-		compareResults(result, file.getAbsolutePath());
-		// } catch (Exception e)
-		// {
-		// assert false : "Test failed: " + e.getMessage();
-		// }
+	}
+
+	@Override
+	protected String getPropertyId()
+	{
+		return "rt";
 	}
 
 }

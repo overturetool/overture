@@ -87,8 +87,15 @@ public class AFieldExpAssistantInterpreter // extends AFieldExpAssistantTC
 		}
 		catch (ValueException e)
 		{
-			VdmRuntimeError.abort(exp.getLocation(), e);
-			return null;
+			if (e.number == 4097 || e.number == 4105)
+			{
+				return values; // Can't get record/object value of ...
+			}
+			else
+			{
+				VdmRuntimeError.abort(exp.getLocation(), e);
+				return null;
+			}
 		}
 		catch (AnalysisException e)
 		{
