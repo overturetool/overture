@@ -33,7 +33,6 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.statements.AErrorCase;
 import org.overture.pog.pub.IPOContextStack;
-import org.overture.pog.pub.POType;
 
 public class OperationPostConditionObligation extends ProofObligation {
 	/**

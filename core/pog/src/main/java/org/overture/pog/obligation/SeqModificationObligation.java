@@ -30,7 +30,6 @@ import org.overture.ast.expressions.ASubsetBinaryExp;
 import org.overture.ast.lex.LexKeywordToken;
 import org.overture.ast.lex.VDMToken;
 import org.overture.pog.pub.IPOContextStack;
-import org.overture.pog.pub.POType;
 
 
 public class SeqModificationObligation extends ProofObligation

@@ -54,8 +54,6 @@ import org.overture.ast.types.PType;
 import org.overture.pof.AVdmPoTree;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IProofObligation;
-import org.overture.pog.pub.POStatus;
-import org.overture.pog.pub.POType;
 import org.overture.pog.utility.PatternToExpVisitor;
 import org.overture.pog.utility.UniqueNameGenerator;
 

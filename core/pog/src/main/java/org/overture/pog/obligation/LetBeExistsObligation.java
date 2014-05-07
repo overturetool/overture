@@ -33,7 +33,6 @@ import org.overture.ast.lex.LexBooleanToken;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.statements.ALetBeStStm;
 import org.overture.pog.pub.IPOContextStack;
-import org.overture.pog.pub.POType;
 
 public class LetBeExistsObligation extends ProofObligation
 {

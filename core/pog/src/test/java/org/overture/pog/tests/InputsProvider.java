@@ -51,10 +51,10 @@ public class InputsProvider {
 	 * 
 	 * @param foldername
 	 *            the folder with tests. No nesting allowed.
-	 * @return A list of test file paths represented as {<folder>, <input>,
-	 *         <result>}
+	 * @return A list of test file paths represented as {folder, input,
+	 *         result}
 	 */
-	public static Collection<Object[]> files(String foldername) {
+	private static Collection<Object[]> files(String foldername) {
 
 		List<Object[]> paths = new Vector<Object[]>();
 		File folder = new File(foldername);
