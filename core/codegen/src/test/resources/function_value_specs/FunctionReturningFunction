@@ -1,0 +1,14 @@
+class Entry
+
+functions
+
+public static f :  () -> [nat -> nat] 
+f () == nil;
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	return f();
+	
+end Entry
