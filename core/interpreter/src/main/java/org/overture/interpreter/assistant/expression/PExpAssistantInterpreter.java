@@ -7,39 +7,10 @@ import java.util.Vector;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ACasesExp;
-import org.overture.ast.expressions.ADefExp;
 import org.overture.ast.expressions.AElseIfExp;
-import org.overture.ast.expressions.AExists1Exp;
-import org.overture.ast.expressions.AExistsExp;
-import org.overture.ast.expressions.AFieldExp;
-import org.overture.ast.expressions.AFieldNumberExp;
-import org.overture.ast.expressions.AForAllExp;
-import org.overture.ast.expressions.AFuncInstatiationExp;
 import org.overture.ast.expressions.AIfExp;
-import org.overture.ast.expressions.AIotaExp;
-import org.overture.ast.expressions.AIsExp;
-import org.overture.ast.expressions.AIsOfBaseClassExp;
-import org.overture.ast.expressions.AIsOfClassExp;
-import org.overture.ast.expressions.ALambdaExp;
-import org.overture.ast.expressions.ALetBeStExp;
-import org.overture.ast.expressions.ALetDefExp;
-import org.overture.ast.expressions.AMapletExp;
-import org.overture.ast.expressions.AMkBasicExp;
-import org.overture.ast.expressions.AMkTypeExp;
-import org.overture.ast.expressions.AMuExp;
-import org.overture.ast.expressions.ANarrowExp;
-import org.overture.ast.expressions.ANewExp;
-import org.overture.ast.expressions.APostOpExp;
-import org.overture.ast.expressions.ASameBaseClassExp;
-import org.overture.ast.expressions.ASameClassExp;
-import org.overture.ast.expressions.ASubseqExp;
-import org.overture.ast.expressions.ATupleExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SBinaryExp;
-import org.overture.ast.expressions.SMapExp;
-import org.overture.ast.expressions.SSeqExp;
-import org.overture.ast.expressions.SSetExp;
-import org.overture.ast.expressions.SUnaryExp;
 import org.overture.ast.lex.LexNameList;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.ObjectContext;
@@ -311,27 +282,36 @@ public class PExpAssistantInterpreter extends PExpAssistantTC
 
 	public static List<PExp> getSubExpressions(PExp exp)
 	{
-		if (exp instanceof AApplyExp)
+		try
 		{
-			return AApplyExpAssistantInterpreter.getSubExpressions((AApplyExp) exp);
-		} else if (exp instanceof SBinaryExp)
-		{
-			return SBinaryExpAssistantInterpreter.getSubExpressions((SBinaryExp) exp);
-		} else if (exp instanceof ACasesExp)
-		{
-			return ACasesExpAssistantInterpreter.getSubExpressions((ACasesExp) exp);
-		} else if (exp instanceof AElseIfExp)
-		{
-			return AElseIfExpAssistantInterpreter.getSubExpressions((AElseIfExp) exp);
-		} else if (exp instanceof AIfExp)
-		{
-			return AIfExpAssistantInterpreter.getSubExpressions((AIfExp) exp);
-		} else
+			return exp.apply(af.getSubExpressionsLocator());// FIXME: should we handle exceptions like this
+		} catch (AnalysisException e)
 		{
 			List<PExp> subs = new Vector<PExp>();
 			subs.add(exp);
-			return subs;
+			return subs; 
 		}
+//		if (exp instanceof AApplyExp)
+//		{
+//			return AApplyExpAssistantInterpreter.getSubExpressions((AApplyExp) exp);
+//		} else if (exp instanceof SBinaryExp)
+//		{
+//			return SBinaryExpAssistantInterpreter.getSubExpressions((SBinaryExp) exp);
+//		} else if (exp instanceof ACasesExp)
+//		{
+//			return ACasesExpAssistantInterpreter.getSubExpressions((ACasesExp) exp);
+//		} else if (exp instanceof AElseIfExp)
+//		{
+//			return AElseIfExpAssistantInterpreter.getSubExpressions((AElseIfExp) exp);
+//		} else if (exp instanceof AIfExp)
+//		{
+//			return AIfExpAssistantInterpreter.getSubExpressions((AIfExp) exp);
+//		} else
+//		{
+//			List<PExp> subs = new Vector<PExp>();
+//			subs.add(exp);
+//			return subs;
+//		}
 
 	}
 

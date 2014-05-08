@@ -58,22 +58,22 @@ public class ACasesExpAssistantInterpreter // extends ACasesExpAssistantTC
 //						: null;
 //	}
 
-	public static List<PExp> getSubExpressions(ACasesExp exp)
-	{
-		List<PExp> subs = PExpAssistantInterpreter.getSubExpressions(exp.getExpression());
-
-		for (ACaseAlternative c : exp.getCases())
-		{
-			subs.addAll(ACaseAlternativeAssistantInterpreter.getSubExpressions(c));
-		}
-
-		if (exp.getOthers() != null)
-		{
-			subs.addAll(PExpAssistantInterpreter.getSubExpressions(exp.getOthers()));
-		}
-
-		subs.add(exp);
-		return subs;
-	}
+//	public static List<PExp> getSubExpressions(ACasesExp exp)
+//	{
+//		List<PExp> subs = PExpAssistantInterpreter.getSubExpressions(exp.getExpression());
+//
+//		for (ACaseAlternative c : exp.getCases())
+//		{
+//			subs.addAll(ACaseAlternativeAssistantInterpreter.getSubExpressions(c));
+//		}
+//
+//		if (exp.getOthers() != null)
+//		{
+//			subs.addAll(PExpAssistantInterpreter.getSubExpressions(exp.getOthers()));
+//		}
+//
+//		subs.add(exp);
+//		return subs;
+//	}
 
 }

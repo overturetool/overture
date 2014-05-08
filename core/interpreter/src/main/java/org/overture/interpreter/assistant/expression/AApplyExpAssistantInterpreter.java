@@ -41,12 +41,12 @@ public class AApplyExpAssistantInterpreter extends AApplyExpAssistantTC
 //		return PExpAssistantInterpreter.findExpression(exp.getArgs(), lineno);
 //	}
 
-	public static List<PExp> getSubExpressions(AApplyExp exp)
-	{
-		List<PExp> subs = new Vector<PExp>();
-		subs.addAll(PExpAssistantInterpreter.getSubExpressions(exp.getRoot()));
-		subs.add(exp);
-		return subs;
-	}
+//	public static List<PExp> getSubExpressions(AApplyExp exp)
+//	{
+//		List<PExp> subs = new Vector<PExp>();
+//		subs.addAll(PExpAssistantInterpreter.getSubExpressions(exp.getRoot()));
+//		subs.add(exp);
+//		return subs;
+//	}
 
 }

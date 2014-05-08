@@ -34,12 +34,12 @@ public class AElseIfExpAssistantInterpreter // extends AElseIfExpAssistantTC
 //		return PExpAssistantInterpreter.findExpression(exp.getThen(), lineno);
 //	}
 
-	public static List<PExp> getSubExpressions(AElseIfExp exp)
-	{
-		List<PExp> subs = PExpAssistantInterpreter.getSubExpressions(exp.getElseIf());
-		subs.addAll(PExpAssistantInterpreter.getSubExpressions(exp.getThen()));
-		subs.add(exp);
-		return subs;
-	}
+//	public static List<PExp> getSubExpressions(AElseIfExp exp)
+//	{
+//		List<PExp> subs = PExpAssistantInterpreter.getSubExpressions(exp.getElseIf());
+//		subs.addAll(PExpAssistantInterpreter.getSubExpressions(exp.getThen()));
+//		subs.add(exp);
+//		return subs;
+//	}
 
 }

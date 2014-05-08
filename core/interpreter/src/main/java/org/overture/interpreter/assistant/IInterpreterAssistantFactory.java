@@ -525,4 +525,6 @@ public interface IInterpreterAssistantFactory extends
 	
 	IQuestionAnswer<Integer, PExp> getExpExpressionFinder();
 	
+	IAnswer<List<PExp>> getSubExpressionsLocator();
+	
 }

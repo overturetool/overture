@@ -36,11 +36,11 @@ public class SBinaryExpAssistantInterpreter extends SBinaryExpAssistantTC
 //		return PExpAssistantInterpreter.findExpression(exp.getRight(), lineno);
 //	}
 
-	public static List<PExp> getSubExpressions(SBinaryExp exp)
-	{
-		List<PExp> subs = PExpAssistantInterpreter.getSubExpressions(exp.getLeft());
-		subs.addAll(PExpAssistantInterpreter.getSubExpressions(exp.getRight()));
-		subs.add(exp);
-		return subs;
-	}
+//	public static List<PExp> getSubExpressions(SBinaryExp exp)
+//	{
+//		List<PExp> subs = PExpAssistantInterpreter.getSubExpressions(exp.getLeft());
+//		subs.addAll(PExpAssistantInterpreter.getSubExpressions(exp.getRight()));
+//		subs.add(exp);
+//		return subs;
+//	}
 }
