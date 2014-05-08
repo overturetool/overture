@@ -5,6 +5,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.velocity.app.Velocity;
@@ -23,6 +24,8 @@ import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
+import org.overture.codegen.cgast.types.AClassTypeCG;
+import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.constants.IJavaCodeGenConstants;
 import org.overture.codegen.constants.IOoAstConstants;
 import org.overture.codegen.constants.TempVarPrefixes;
@@ -43,6 +46,7 @@ import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.codegen.utils.ITempVarGen;
+import org.overture.typechecker.utilities.type.FunctionTypeFinder;
 
 public class JavaCodeGen
 {
@@ -171,6 +175,16 @@ public class JavaCodeGen
 
 				String className = status.getClassName();
 				String formattedJavaCode = "";
+
+				FunctionValueVisitor funcValVisitor = new FunctionValueVisitor();
+				classCg.apply(funcValVisitor);
+				
+				Map<PTypeCG, AClassTypeCG> functionTypes = funcValVisitor.getFunctionTypes();
+				
+				for(PTypeCG methodType : functionTypes.keySet())
+				{
+					System.out.println(methodType + " -> " + functionTypes.get(methodType));
+				}
 				
 				if (status.canBeGenerated())
 				{
