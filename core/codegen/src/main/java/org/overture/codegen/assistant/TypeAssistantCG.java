@@ -102,9 +102,11 @@ public class TypeAssistantCG extends AssistantBase
 
 	}
 	
-	public AMethodTypeCG consMethodType(List<PType> paramTypes, PType resultType, OoAstInfo question) throws AnalysisException
+	public AMethodTypeCG consMethodType(PType node, List<PType> paramTypes, PType resultType, OoAstInfo question) throws AnalysisException
 	{
 		AMethodTypeCG methodType = new AMethodTypeCG();
+		
+		methodType.setEquivalent(node.clone());
 		
 		PTypeCG resultCg = resultType.apply(question.getTypeVisitor(), question);
 		
