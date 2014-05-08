@@ -204,6 +204,7 @@ import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
 import org.overture.codegen.ooast.OoAstInfo;
 import org.overture.codegen.utils.AnalysisExceptionCG;
+import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 {
@@ -1047,7 +1048,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	{
 		PType type = node.getType();
 		PExp root = node.getRoot();
-
+		
 		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 		PExpCG rootCg = root.apply(question.getExpVisitor(), question);
 
@@ -1075,9 +1076,9 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	public PExpCG caseAVariableExp(AVariableExp node, OoAstInfo question)
 			throws AnalysisException
 	{
-		String name = node.getName().getName();
-
 		PDefinition varDef = node.getVardef();
+		PType type = node.getType();
+		String name = node.getName().getName();
 		
 		SClassDefinition owningClass = varDef.getAncestor(SClassDefinition.class);
 		SClassDefinition nodeParentClass = node.getAncestor(SClassDefinition.class);
@@ -1094,15 +1095,20 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 
 		boolean isImplicit = !node.getName().getExplicit();
 		
-		PTypeCG typeCg = node.getType().apply(question.getTypeVisitor(), question);
-		
+		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+
+		PTypeAssistantTC typeAssistant = question.getTcFactory().createPTypeAssistant();
+
+		boolean isLambda = typeAssistant.isFunction(type) && !(varDef instanceof SFunctionDefinition);
+
 		if (owningClass == null || nodeParentClass == null || isDefInOwningClass || isImplicit)
 		{
 			AIdentifierVarExpCG varExp = new AIdentifierVarExpCG();
 			
-			varExp.setOriginal(name);
 			varExp.setType(typeCg);
-			
+			varExp.setOriginal(name);
+			varExp.setIsLambda(isLambda);
+
 			return varExp;
 		}
 		else if(node.getName().getExplicit())
@@ -1117,6 +1123,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 			varExp.setType(typeCg);
 			varExp.setClassType(classType);
 			varExp.setName(name);
+			varExp.setIsLambda(isLambda);
 			
 			return varExp;
 		}
