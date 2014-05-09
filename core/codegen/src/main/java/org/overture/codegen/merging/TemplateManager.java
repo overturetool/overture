@@ -22,6 +22,7 @@ import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AAddrEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AAddrNotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AAnonymousClassExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
@@ -319,6 +320,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AExternalExpCG.class, templateStructure.EXP_PATH + "External");
 
 		nodeTemplateFileNames.put(ALambdaExpCG.class, templateStructure.EXP_PATH + "Lambda");
+		
+		nodeTemplateFileNames.put(AAnonymousClassExpCG.class, templateStructure.EXP_PATH + "AnonymousClass");
 		
 		// Quantifier expressions
 		
