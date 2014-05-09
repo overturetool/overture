@@ -15,8 +15,8 @@ public class A {
         public Number n;
         public Number n1;
 
-        public RecA(Number _i, char _c, Number _r, Number _q, Number _n,
-            Number _n1) {
+        public RecA(final Number _i, final char _c, final Number _r,
+            final Number _q, final Number _n, final Number _n1) {
             i = _i;
             c = _c;
             r = _r;
@@ -25,7 +25,7 @@ public class A {
             n1 = _n1;
         }
 
-        public boolean equals(Object obj) {
+        public boolean equals(final Object obj) {
             if (!(obj instanceof RecA)) {
                 return false;
             }

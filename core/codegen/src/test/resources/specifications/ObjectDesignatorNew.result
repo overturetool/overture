@@ -4,7 +4,7 @@ import java.util.*;
 
 
 public class A {
-    public A(Number x) {
+    public A(final Number x) {
         //Skip;
     }
 
@@ -19,7 +19,7 @@ public class A {
         return new A(2L).f(1L);
     }
 
-    public static Number f(Number x) {
+    public static Number f(final Number x) {
         return x;
     }
 }

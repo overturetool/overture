@@ -13,11 +13,11 @@ public class A {
     public static class RecA implements Record {
         public B.RecB b;
 
-        public RecA(B.RecB _b) {
+        public RecA(final B.RecB _b) {
             b = (_b != null) ? _b.clone() : null;
         }
 
-        public boolean equals(Object obj) {
+        public boolean equals(final Object obj) {
             if (!(obj instanceof RecA)) {
                 return false;
             }
@@ -54,11 +54,11 @@ public class B {
     public static class RecB implements Record {
         public Number b;
 
-        public RecB(Number _b) {
+        public RecB(final Number _b) {
             b = _b;
         }
 
-        public boolean equals(Object obj) {
+        public boolean equals(final Object obj) {
             if (!(obj instanceof RecB)) {
                 return false;
             }

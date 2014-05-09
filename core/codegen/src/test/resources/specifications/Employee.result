@@ -20,7 +20,7 @@ public class HourlyPaidEmployee extends Employee {
     public Number hours;
     private Number rate;
 
-    public HourlyPaidEmployee(Number pHours, Number pRate) {
+    public HourlyPaidEmployee(final Number pHours, final Number pRate) {
         hours = pHours;
         rate = pRate;
     }
@@ -32,7 +32,7 @@ public class HourlyPaidEmployee extends Employee {
         return hours.doubleValue() * rate.doubleValue();
     }
 
-    public void SetRate(Number pRate) {
+    public void SetRate(final Number pRate) {
         if (pRate.doubleValue() > 150L) {
             rate = 150L;
         } else if (pRate.doubleValue() < 0L) {
@@ -52,7 +52,7 @@ import java.util.*;
 public class FixedSalaryEmployee extends Employee {
     private Number fixedSalary;
 
-    public FixedSalaryEmployee(Number pFixedSalary) {
+    public FixedSalaryEmployee(final Number pFixedSalary) {
         fixedSalary = pFixedSalary;
     }
 
@@ -89,7 +89,7 @@ public class Company {
         return start_calc(0L, employees);
     }
 
-    private Number start_calc(Number sum, VDMSeq emps) {
+    private Number start_calc(final Number sum, final VDMSeq emps) {
         if (emps.size() == 0L) {
             return sum;
         } else {
@@ -99,11 +99,12 @@ public class Company {
         }
     }
 
-    private Number not_used(Number r, Number n1, Number n, char c, boolean b) {
+    private Number not_used(final Number r, final Number n1, final Number n,
+        final char c, final boolean b) {
         return 2.1;
     }
 
-    public Company addEmp(Employee emp) {
+    public Company addEmp(final Employee emp) {
         employees = SeqUtil.conc(employees.clone(), SeqUtil.seq(emp));
 
         return this;

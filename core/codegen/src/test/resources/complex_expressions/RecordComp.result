@@ -19,12 +19,12 @@ public class A {
         public Number x;
         public Number y;
 
-        public Vector2D(Number _x, Number _y) {
+        public Vector2D(final Number _x, final Number _y) {
             x = _x;
             y = _y;
         }
 
-        public boolean equals(Object obj) {
+        public boolean equals(final Object obj) {
             if (!(obj instanceof Vector2D)) {
                 return false;
             }

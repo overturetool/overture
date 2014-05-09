@@ -7,7 +7,7 @@ public class Alarm {
     private String descr;
     private Number reqQuali;
 
-    public Alarm(Number quali, String str) {
+    public Alarm(final Number quali, final String str) {
         descr = str;
         reqQuali = quali;
     }
@@ -29,7 +29,7 @@ import java.util.*;
 public class Expert {
     private VDMSet quali;
 
-    public Expert(VDMSet qs) {
+    public Expert(final VDMSet qs) {
         quali = qs.clone();
     }
 
@@ -51,7 +51,7 @@ public class Plant {
     private VDMSet alarms;
     private VDMMap schedule;
 
-    public Plant(VDMSet als, VDMMap sch) {
+    public Plant(final VDMSet als, final VDMMap sch) {
         alarms = als.clone();
         schedule = sch.clone();
     }
@@ -59,7 +59,7 @@ public class Plant {
     public Plant() {
     }
 
-    private static boolean PlantInv(VDMSet as, VDMMap sch) {
+    private static boolean PlantInv(final VDMSet as, final VDMMap sch) {
         boolean forAllExpResult_1 = true;
         VDMSet set_1 = MapUtil.dom(sch.clone());
 
@@ -100,7 +100,7 @@ public class Plant {
         return forAllExpResult_1 && forAllExpResult_2;
     }
 
-    public Expert ExpertToPage(Alarm a, Token p) {
+    public Expert ExpertToPage(final Alarm a, final Token p) {
         Expert expert = null;
         boolean success_1 = false;
         VDMSet set_5 = ((VDMSet) schedule.get(p)).clone();
@@ -118,11 +118,11 @@ public class Plant {
         return expert;
     }
 
-    public Number NumberOfExperts(Token p) {
+    public Number NumberOfExperts(final Token p) {
         return ((VDMSet) schedule.get(p)).size();
     }
 
-    public VDMSet ExpertIsOnDuty(Expert ex) {
+    public VDMSet ExpertIsOnDuty(final Expert ex) {
         VDMSet setCompResult_1 = SetUtil.set();
         VDMSet set_6 = MapUtil.dom(schedule.clone());
 
@@ -138,14 +138,14 @@ public class Plant {
         return setCompResult_1.clone();
     }
 
-    public void AddExpertToSchedule(Token p, Expert ex) {
+    public void AddExpertToSchedule(final Token p, final Expert ex) {
         schedule.put(p,
             MapUtil.dom(schedule.clone()).contains(p)
             ? SetUtil.union(((VDMSet) schedule.get(p)).clone(), SetUtil.set(ex))
             : SetUtil.set(ex));
     }
 
-    public void RemoveExpertFromSchedule(Token p, Expert ex) {
+    public void RemoveExpertFromSchedule(final Token p, final Expert ex) {
         VDMSet exs = ((VDMSet) schedule.get(p)).clone();
 
         schedule = (exs.size() == 1L)
