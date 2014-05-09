@@ -10,6 +10,7 @@ import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalDeclCG;
+import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
@@ -43,6 +44,7 @@ import org.overture.codegen.cgast.expressions.SBinaryExpCGBase;
 import org.overture.codegen.cgast.expressions.SLiteralExpCGBase;
 import org.overture.codegen.cgast.expressions.SNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.SUnaryExpCG;
+import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
@@ -104,12 +106,51 @@ public class JavaFormat
 	private ITempVarGen tempVarNameGen;
 	private AssistantManager assistantManager;
 	private MergeVisitor mergeVisitor;
+	private FunctionValueAssistant functionValueAssistant;
 	
 	public JavaFormat(TempVarPrefixes varPrefixes,ITempVarGen tempVarNameGen, AssistantManager assistantManager)
 	{
 		this.tempVarNameGen = tempVarNameGen;
 		this.assistantManager = assistantManager;
 		this.mergeVisitor = new MergeVisitor(JavaCodeGen.JAVA_TEMPLATE_STRUCTURE, JavaCodeGen.constructTemplateCallables(this, OoAstAnalysis.class, varPrefixes));
+		this.functionValueAssistant = null;
+	}
+	
+	public void setFunctionValueAssistant(FunctionValueAssistant functionValueAssistant)
+	{
+		this.functionValueAssistant = functionValueAssistant;
+	}
+	
+	public void clearFunctionValueAssistant()
+	{
+		this.functionValueAssistant = null;
+	}
+	
+	public String format(AMethodTypeCG methodType) throws AnalysisException
+	{
+		final String OBJ = "Object";
+		
+		if(functionValueAssistant == null)
+			return OBJ;
+
+		AInterfaceDeclCG methodTypeInterface = functionValueAssistant.findInterface(methodType);
+
+		if(methodTypeInterface == null)
+			return OBJ; //Should not happen
+		
+		AClassTypeCG methodClass = new AClassTypeCG();
+		methodClass.setName(methodTypeInterface.getName());
+		
+		LinkedList<PTypeCG> params = methodType.getParams();
+		
+		for(PTypeCG param : params)
+		{
+			methodClass.getTypes().add(param.clone());
+		}
+		
+		methodClass.getTypes().add(methodType.getResult().clone());
+		
+		return methodClass != null ? format(methodClass) : OBJ;
 	}
 	
 	public void init()
@@ -578,18 +619,39 @@ public class JavaFormat
 	
 	public String format(List<AFormalParamLocalDeclCG> params) throws AnalysisException
 	{
+		return formatParams(params, false);
+	}
+	
+	public String formatFinalParams(List<AFormalParamLocalDeclCG> params) throws AnalysisException
+	{
+		return formatParams(params, true);
+	}
+	
+	public String formatParams(List<AFormalParamLocalDeclCG> params, boolean setFinal) throws AnalysisException
+	{
 		StringWriter writer = new StringWriter();
 		
 		if(params.size() <= 0)
 			return "";
 		
+		String finalPrefix = " final ";
+
 		AFormalParamLocalDeclCG firstParam = params.get(0);
+		if(setFinal)
+		{
+			writer.append(finalPrefix);
+		}
 		writer.append(format(firstParam));
 		
 		for(int i = 1; i < params.size(); i++)
 		{
 			AFormalParamLocalDeclCG param = params.get(i);
-			writer.append(", " + format(param));
+			writer.append(", ");
+			if(setFinal)
+			{
+				writer.append(finalPrefix);
+			}
+			writer.append(format(param));
 		}
 		return writer.toString();
 	}
@@ -1106,5 +1168,20 @@ public class JavaFormat
 	public boolean isLoopVar(AVarLocalDeclCG localVar)
 	{
 		return localVar.parent() instanceof AForLoopStmCG;
+	}
+	
+	public boolean isLambda(AApplyExpCG applyExp)
+	{
+		PExpCG root = applyExp.getRoot();
+		
+		if(root instanceof AApplyExpCG && root.getType() instanceof AMethodTypeCG)
+			return true;
+		
+		if(!(root instanceof SVarExpCG))
+			return false;
+		
+		SVarExpCG varExp = (SVarExpCG) root;
+		
+		return varExp.getIsLambda() != null && varExp.getIsLambda();
 	}
 }
