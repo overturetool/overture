@@ -1490,9 +1490,6 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	{
 		LinkedList<ATypeBind> bindList = node.getBindList();
 		PExp exp = node.getExpression();
-		PType functionType = node.getFunctionType();
-		LinkedList<PDefinition> paramDefs = node.getParamDefinitions();
-		LinkedList<PPattern> paramPatterns = node.getParamPatterns();
 		PType type = node.getType();
 
 		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
