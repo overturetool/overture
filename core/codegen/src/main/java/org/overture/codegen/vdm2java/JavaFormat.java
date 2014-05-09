@@ -619,38 +619,22 @@ public class JavaFormat
 	
 	public String format(List<AFormalParamLocalDeclCG> params) throws AnalysisException
 	{
-		return formatParams(params, false);
-	}
-	
-	public String formatFinalParams(List<AFormalParamLocalDeclCG> params) throws AnalysisException
-	{
-		return formatParams(params, true);
-	}
-	
-	public String formatParams(List<AFormalParamLocalDeclCG> params, boolean setFinal) throws AnalysisException
-	{
 		StringWriter writer = new StringWriter();
 		
 		if(params.size() <= 0)
 			return "";
 		
-		String finalPrefix = " final ";
+		final String finalPrefix = " final ";
 
 		AFormalParamLocalDeclCG firstParam = params.get(0);
-		if(setFinal)
-		{
-			writer.append(finalPrefix);
-		}
+		writer.append(finalPrefix);
 		writer.append(format(firstParam));
 		
 		for(int i = 1; i < params.size(); i++)
 		{
 			AFormalParamLocalDeclCG param = params.get(i);
 			writer.append(", ");
-			if(setFinal)
-			{
-				writer.append(finalPrefix);
-			}
+			writer.append(finalPrefix);
 			writer.append(format(param));
 		}
 		return writer.toString();

@@ -1,6 +1,6 @@
 new $JavaFormat.format($node.getType())()
 {
-	public $JavaFormat.format($node.getType().getResult()) eval(${JavaFormat.formatFinalParams($node.getParams())})
+	public $JavaFormat.format($node.getType().getResult()) eval(${JavaFormat.format($node.getParams())})
 	{
 		return $JavaFormat.format($node.getExp());
 	}
