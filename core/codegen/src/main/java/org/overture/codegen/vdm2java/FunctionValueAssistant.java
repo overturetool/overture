@@ -19,12 +19,12 @@ public class FunctionValueAssistant
 	{
 		return functionValueInterfaces;
 	}
-	public void registerLambdaInterface(AInterfaceDeclCG functionValueInterface)
+	public void registerInterface(AInterfaceDeclCG functionValueInterface)
 	{
 		functionValueInterfaces.add(functionValueInterface);
 	}
 	
-	public AInterfaceDeclCG findLambdaInterface(AMethodTypeCG methodType)
+	public AInterfaceDeclCG findInterface(AMethodTypeCG methodType)
 	{
 		for(AInterfaceDeclCG functionValueInterface : functionValueInterfaces)
 		{
