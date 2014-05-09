@@ -11,20 +11,29 @@ import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.junit.Assert;
 
-
 /**
  * The class InputsProvider provides inputs for parameterized tests.
+ * 
  * @author ldc
- *
+ * 
  */
 public class InputsProvider {
 
 	private final static String RESULT_EXTENSION = ".RESULT";
 	private final static String EXAMPLES_ROOT = "src/test/resources/allexamples";
+	private final static String BUG_REG_ROOT = "src/test/resources/bug-regression";
+
+	public static Collection<Object[]> bugRegs() {
+		return files(BUG_REG_ROOT);
+	}
 
 	public static Collection<Object[]> allExamples() {
 		File dir = new File(EXAMPLES_ROOT);
 
+		return makePaths(dir);
+	}
+
+	private static Collection<Object[]> makePaths(File dir) {
 		Collection<File> files = FileUtils.listFiles(dir, new RegexFileFilter(
 				"(.*)\\.vdm(pp|rt|sl)"), DirectoryFileFilter.DIRECTORY);
 
@@ -35,13 +44,13 @@ public class InputsProvider {
 		}
 
 		return paths;
-
 	}
 
 	/**
 	 * Provides the base test input and result files off a given folder.
-	 *
-	 * @param foldername the folder with tests. No nesting allowed.
+	 * 
+	 * @param foldername
+	 *            the folder with tests. No nesting allowed.
 	 * @return A list of test file paths represented as {<folder>, <input>,
 	 *         <result>}
 	 */
