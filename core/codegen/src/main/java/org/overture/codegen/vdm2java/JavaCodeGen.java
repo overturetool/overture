@@ -176,7 +176,8 @@ public class JavaCodeGen
 		javaFormat.setClasses(getClassDecls(statuses));
 		
 		TransformationAssistantCG transformationAssistant = new TransformationAssistantCG(ooAstInfo, varPrefixes);
-		FunctionValueVisitor funcValVisitor = new FunctionValueVisitor(INTERFACE_NAME_PREFIX, TEMPLATE_TYPE_PREFIX, EVAL_METHOD_PREFIX, PARAM_NAME_PREFIX);
+		FunctionValueAssistant functionValueAssistant = new FunctionValueAssistant();
+		FunctionValueVisitor funcValVisitor = new FunctionValueVisitor(transformationAssistant, functionValueAssistant, INTERFACE_NAME_PREFIX, TEMPLATE_TYPE_PREFIX, EVAL_METHOD_PREFIX, PARAM_NAME_PREFIX);
 		ILanguageIterator langIterator = new JavaLanguageIterator(transformationAssistant, ooAstInfo.getTempVarNameGen(), varPrefixes);
 		TransformationVisitor transVisitor = new TransformationVisitor(ooAstInfo, varPrefixes, transformationAssistant, langIterator);
 		
