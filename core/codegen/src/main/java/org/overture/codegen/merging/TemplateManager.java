@@ -58,6 +58,7 @@ import org.overture.codegen.cgast.expressions.AIndicesUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
+import org.overture.codegen.cgast.expressions.ALambdaExpCG;
 import org.overture.codegen.cgast.expressions.ALessEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALetBeStExpCG;
@@ -137,6 +138,7 @@ import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AIntBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AMapMapTypeCG;
+import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
 import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
@@ -203,6 +205,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(ATemplateTypeCG.class, templateStructure.TYPE_PATH + "Template");
 		
 		nodeTemplateFileNames.put(ATupleTypeCG.class, templateStructure.TYPE_PATH + "Tuple");
+		
+		nodeTemplateFileNames.put(AMethodTypeCG.class, templateStructure.TYPE_PATH + "Method");
 		
 		//Basic type wrappers
 		
@@ -313,6 +317,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AMkBasicExpCG.class, templateStructure.EXP_PATH + "MkBasic");
 		
 		nodeTemplateFileNames.put(AExternalExpCG.class, templateStructure.EXP_PATH + "External");
+
+		nodeTemplateFileNames.put(ALambdaExpCG.class, templateStructure.EXP_PATH + "Lambda");
 		
 		// Quantifier expressions
 		

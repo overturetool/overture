@@ -43,7 +43,14 @@ public class TestUtils
 			moduleIdx = moduleContent.indexOf("interface");
 		
 		int startClassIdx = moduleContent.indexOf(" ", moduleIdx);
+		
+		
+		int endTemplateClassIdx = moduleContent.indexOf("<", 1+startClassIdx);
 		int endClassIdx = moduleContent.indexOf(" ", 1+startClassIdx);
+		
+		if(endTemplateClassIdx > 0 && endTemplateClassIdx < endClassIdx)
+			endClassIdx = endTemplateClassIdx;
+		
 		String className = moduleContent.substring(1+startClassIdx, endClassIdx);
 		
 		return className;
