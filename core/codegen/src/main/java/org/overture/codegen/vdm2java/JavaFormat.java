@@ -65,6 +65,7 @@ import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AIntBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.AInterfaceTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
 import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
@@ -138,7 +139,7 @@ public class JavaFormat
 		if(methodTypeInterface == null)
 			return OBJ; //Should not happen
 		
-		AClassTypeCG methodClass = new AClassTypeCG();
+		AInterfaceTypeCG methodClass = new AInterfaceTypeCG();
 		methodClass.setName(methodTypeInterface.getName());
 		
 		LinkedList<PTypeCG> params = methodType.getParams();

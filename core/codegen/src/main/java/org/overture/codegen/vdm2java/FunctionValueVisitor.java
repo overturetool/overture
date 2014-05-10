@@ -14,7 +14,7 @@ import org.overture.codegen.cgast.expressions.AAnonymousClassExpCG;
 import org.overture.codegen.cgast.expressions.ALambdaExpCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
-import org.overture.codegen.cgast.types.AClassTypeCG;
+import org.overture.codegen.cgast.types.AInterfaceTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
@@ -99,7 +99,7 @@ public class FunctionValueVisitor extends DepthFirstAnalysisAdaptor
 		
 		LinkedList<AFormalParamLocalDeclCG> params = node.getParams();
 		
-		AClassTypeCG classType = new AClassTypeCG();
+		AInterfaceTypeCG classType = new AInterfaceTypeCG();
 		classType.setName(lambdaInterface.getName());
 		
 		AMethodDeclCG lambdaDecl = lambdaInterface.getMethodSignatures().get(0).clone();
