@@ -18,11 +18,11 @@ import org.overture.interpreter.values.ValueList;
  * @author gkanos
  *
  ****************************************/
-public class ValueCollector extends QuestionAnswerAdaptor<ObjectContext, ValueList>
+public class MultipleValueCollector extends QuestionAnswerAdaptor<ObjectContext, ValueList>
 {
 	protected IInterpreterAssistantFactory af;
 	
-	public ValueCollector(IInterpreterAssistantFactory af)
+	public MultipleValueCollector(IInterpreterAssistantFactory af)
 	{
 		this.af = af;
 	}
