@@ -1,0 +1,13 @@
+functions
+  AuxSeqToBag : seq of nat * nat -> nat
+  AuxSeqToBag (s, b) ==
+    cases s :
+    []         -> b,
+    [e] ^ rest -> AuxSeqToBag(rest, e+ b),
+    others -> 0
+    end
+  measure LenPar1;
+
+  LenPar1 : seq of nat * nat -> nat
+  LenPar1(list,-) ==
+    len list;

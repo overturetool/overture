@@ -73,7 +73,7 @@ public class ASystemClassDefinitionAssistantInterpreter
 			}
 
 			// Run the constructor to do any deploys etc.
-			ASystemClassDefinitionRuntime.system = SClassDefinitionAssistantInterpreter.makeNewInstance(systemClass, null, new ValueList(), initialContext, new HashMap<ILexNameToken, ObjectValue>());
+			ASystemClassDefinitionRuntime.system = SClassDefinitionAssistantInterpreter.makeNewInstance(systemClass, null, new ValueList(), initialContext, new HashMap<ILexNameToken, ObjectValue>(), false);
 
 			// Bind system instances to runtime validator
 			RuntimeValidator.bindSystemVariables(systemClass);

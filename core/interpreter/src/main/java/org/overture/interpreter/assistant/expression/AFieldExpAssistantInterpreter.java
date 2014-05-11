@@ -101,6 +101,52 @@ public class AFieldExpAssistantInterpreter // extends AFieldExpAssistantTC
 //		}
 //	}
 
+//<<<<<<< HEAD
+////	public static PExp findExpression(AFieldExp exp, int lineno)
+////	{
+////		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
+////		if (found != null)
+////			return found;
+////
+////		return PExpAssistantInterpreter.findExpression(exp.getObject(), lineno);
+////	}
+//=======
+//			return values;
+//		}
+//		catch (ContextException e)
+//		{
+//			if (e.number == 4034 || e.number == 4097 || e.number == 4105)
+//			{
+//				return values; // Non existent variable, or can't get record value
+//			}
+//			else
+//			{
+//				throw e;
+//			}
+//		}
+//		catch (ValueException e)
+//		{
+//			if (e.number == 4097 || e.number == 4105)
+//			{
+//				return values; // Can't get record/object value of ...
+//			}
+//			else
+//			{
+//				VdmRuntimeError.abort(exp.getLocation(), e);
+//				return null;
+//			}
+//		}
+//		catch (AnalysisException e)
+//		{
+//			e.printStackTrace();
+//			return null;
+//		}
+//		finally
+//		{
+//			ctxt.threadState.setAtomic(false);
+//		}
+//	}
+//
 //	public static PExp findExpression(AFieldExp exp, int lineno)
 //	{
 //		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
@@ -109,5 +155,6 @@ public class AFieldExpAssistantInterpreter // extends AFieldExpAssistantTC
 //
 //		return PExpAssistantInterpreter.findExpression(exp.getObject(), lineno);
 //	}
+//>>>>>>> origin/development
 
 }

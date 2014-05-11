@@ -245,7 +245,7 @@ public class OperationValue extends Value
 	{
 		if (guard != null)
 		{
-			ValueListener vl = new GuardValueListener(self);
+			ValueListener vl = new GuardValueListener(getGuardLock());
 
 			for (Value v : PExpAssistantInterpreter.getValues(guard, ctxt))
 			{
@@ -571,15 +571,19 @@ public class OperationValue extends Value
 		return argContext;
 	}
 
-	private Lock getGuardLock(Context ctxt)
+	private Lock getGuardLock()
 	{
-		if (ctxt instanceof ClassContext)
+		if (classdef != null)
 		{
-			ClassContext cctxt = (ClassContext) ctxt;
-			return VdmRuntime.getNodeState(ctxt.assistantFactory, cctxt.classdef).guardLock;
-		} else
+			return VdmRuntime.getNodeState(Interpreter.getInstance().getAssistantFactory(), classdef).guardLock;
+		}
+		else if (self != null)
 		{
 			return self.guardLock;
+		}
+		else
+		{
+			return null;
 		}
 	}
 
@@ -604,7 +608,7 @@ public class OperationValue extends Value
 			return; // Probably during initialization.
 		}
 
-		Lock lock = getGuardLock(ctxt);
+		Lock lock = getGuardLock();
 		lock.lock(ctxt, guard.getLocation());
 
 		while (true)
@@ -661,10 +665,12 @@ public class OperationValue extends Value
 
 	private void notifySelf()
 	{
-		if (self != null && self.guardLock != null)
+		Lock lock = getGuardLock();
+		
+		if (lock != null)
 		{
 			debug("Signal guard");
-			self.guardLock.signal();
+			lock.signal();
 		}
 	}
 

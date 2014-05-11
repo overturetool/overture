@@ -26,6 +26,7 @@ import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AOperationType;
+import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.typechecker.Environment;
@@ -309,6 +310,9 @@ public class DefinitionTypeResolver extends
 		if (node.getInvPattern() != null)
 		{
 			node.getInvdef().apply(this, question);
+			
+			ARecordInvariantType rtype = (ARecordInvariantType) node.getRecordType();
+			rtype.setInvDef(node.getInvdef());
 		}
 
 		if (node.getInitPattern() != null)
