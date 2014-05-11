@@ -527,4 +527,6 @@ public interface IInterpreterAssistantFactory extends
 	
 	IAnswer<List<PExp>> getSubExpressionsLocator();
 	
+	IQuestionAnswer<Context, ValueList> getSingleBindValuesCollector();
+	
 }

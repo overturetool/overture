@@ -24,17 +24,20 @@ public class PBindAssistantInterpreter extends PBindAssistantTC
 	public static ValueList getBindValues(PBind bind, Context ctxt)
 			throws AnalysisException
 	{
-		if (bind instanceof ASetBind)
-		{
-			return ASetBindAssistantInterpreter.getBindValues((ASetBind) bind, ctxt);
-		} else if (bind instanceof ATypeBind)
-		{
-			return ATypeBindAssistantInterpreter.getBindValues((ATypeBind) bind, ctxt);
-		} else
-		{
-			assert false : "Should not happen";
-			return null;
-		}
+		
+		return bind.apply(af.getSingleBindValuesCollector(), ctxt);// FIXME: should we handle exceptions like this
+		
+//		if (bind instanceof ASetBind)
+//		{
+//			return ASetBindAssistantInterpreter.getBindValues((ASetBind) bind, ctxt);
+//		} else if (bind instanceof ATypeBind)
+//		{
+//			return ATypeBindAssistantInterpreter.getBindValues((ATypeBind) bind, ctxt);
+//		} else
+//		{
+//			assert false : "Should not happen";
+//			return null;
+//		}
 	}
 
 	public static ValueList getValues(PBind bind, ObjectContext ctxt)

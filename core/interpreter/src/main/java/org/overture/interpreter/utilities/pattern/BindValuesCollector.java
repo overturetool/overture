@@ -25,11 +25,11 @@ import org.overture.interpreter.values.ValueSet;
 *
 ****************************************/
 
-public class MultipleBindValuesCollector extends QuestionAnswerAdaptor<Context, ValueList>
+public class BindValuesCollector extends QuestionAnswerAdaptor<Context, ValueList>
 {
 	protected IInterpreterAssistantFactory af;
 	
-	public MultipleBindValuesCollector(IInterpreterAssistantFactory af)
+	public BindValuesCollector(IInterpreterAssistantFactory af)
 	{
 		this.af = af;
 	}

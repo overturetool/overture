@@ -178,11 +178,12 @@ import org.overture.interpreter.utilities.expression.ExpExpressionFinder;
 import org.overture.interpreter.utilities.expression.ExpressionValueCollector;
 import org.overture.interpreter.utilities.expression.SubExpressionsLocator;
 import org.overture.interpreter.utilities.pattern.AllNamedValuesLocator;
-import org.overture.interpreter.utilities.pattern.MultipleBindValuesCollector;
+import org.overture.interpreter.utilities.pattern.BindValuesCollector;
 import org.overture.interpreter.utilities.pattern.ConstrainedPatternChecker;
 import org.overture.interpreter.utilities.pattern.IdentifierPatternFinder;
 import org.overture.interpreter.utilities.pattern.LengthFinder;
-import org.overture.interpreter.utilities.pattern.MultipleValueCollector;
+import org.overture.interpreter.utilities.pattern.SingleBindValuesCollector;
+import org.overture.interpreter.utilities.pattern.ValueCollector;
 import org.overture.interpreter.utilities.statement.StatementExpressionFinder;
 import org.overture.interpreter.utilities.statement.StatementFinder;
 import org.overture.interpreter.values.NameValuePairList;
@@ -975,13 +976,13 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	@Override
 	public QuestionAnswerAdaptor<Context, ValueList> getBindValuesCollector()
 	{
-		return new MultipleBindValuesCollector(this);
+		return new BindValuesCollector(this);
 	}
 	
 	@Override
 	public QuestionAnswerAdaptor<ObjectContext, ValueList> getValueCollector()
 	{
-		return new MultipleValueCollector(this);
+		return new ValueCollector(this);
 	}
 	
 	@Override
@@ -1096,6 +1097,12 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	public IAnswer<List<PExp>> getSubExpressionsLocator()
 	{
 		return new SubExpressionsLocator(this);
+	}
+
+	@Override
+	public IQuestionAnswer<Context, ValueList> getSingleBindValuesCollector()
+	{
+		return new SingleBindValuesCollector(this);
 	}
 
 }
