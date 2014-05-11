@@ -41,17 +41,25 @@ public class PBindAssistantInterpreter extends PBindAssistantTC
 	}
 
 	public static ValueList getValues(PBind bind, ObjectContext ctxt)
-	{
-		if (bind instanceof ASetBind)
+	{	
+		
+		try
 		{
-			return ASetBindAssistantInterpreter.getValues((ASetBind) bind, ctxt);
-		} else if (bind instanceof ATypeBind)
-		{
-			return ATypeBindAssistantInterpreter.getValues((ATypeBind) bind, ctxt);
-		} else
+			return bind.apply(af.getBindValueCollector(),ctxt);// FIXME: should we handle exceptions like this
+		} catch (AnalysisException e)
 		{
 			return new ValueList();
 		}
+//		if (bind instanceof ASetBind)
+//		{
+//			return ASetBindAssistantInterpreter.getValues((ASetBind) bind, ctxt);
+//		} else if (bind instanceof ATypeBind)
+//		{
+//			return ATypeBindAssistantInterpreter.getValues((ATypeBind) bind, ctxt);
+//		} else
+//		{
+//			
+//		}
 	}
 
 }

@@ -1,5 +1,6 @@
 package org.overture.interpreter.assistant.expression;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.ASeqCompSeqExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
@@ -17,10 +18,10 @@ public class ASeqCompSeqExpAssistantInterpreter
 		this.af = af;
 	}
 
-	public static ValueList getValues(ASeqCompSeqExp exp, ObjectContext ctxt)
+	public static ValueList getValues(ASeqCompSeqExp exp, ObjectContext ctxt) throws AnalysisException
 	{
 		ValueList list = PExpAssistantInterpreter.getValues(exp.getFirst(), ctxt);
-		list.addAll(ASetBindAssistantInterpreter.getValues(exp.getSetBind(), ctxt));
+		list.addAll(af.createPBindAssistant().getBindValues(exp.getSetBind(), ctxt));//(ASetBindAssistantInterpreter.getValues(exp.getSetBind(), ctxt));
 
 		if (exp.getPredicate() != null)
 		{

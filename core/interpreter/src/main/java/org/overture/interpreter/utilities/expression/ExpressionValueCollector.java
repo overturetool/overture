@@ -459,7 +459,7 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 	{
 		//return ASeqCompSeqExpAssistantInterpreter.getValues((ASeqCompSeqExp) exp, ctxt);
 		ValueList list = exp.getFirst().apply(THIS, ctxt);//PExpAssistantInterpreter.getValues(exp.getFirst(), ctxt);
-		list.addAll(ASetBindAssistantInterpreter.getValues(exp.getSetBind(), ctxt));
+		list.addAll(af.createPBindAssistant().getBindValues(exp.getSetBind(), ctxt));//(ASetBindAssistantInterpreter.getValues(exp.getSetBind(), ctxt));
 
 		if (exp.getPredicate() != null)
 		{

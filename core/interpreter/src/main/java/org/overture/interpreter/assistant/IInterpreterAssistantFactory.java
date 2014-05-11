@@ -529,4 +529,6 @@ public interface IInterpreterAssistantFactory extends
 	
 	IQuestionAnswer<Context, ValueList> getSingleBindValuesCollector();
 	
+	IQuestionAnswer<ObjectContext, ValueList> getBindValueCollector();
+	
 }

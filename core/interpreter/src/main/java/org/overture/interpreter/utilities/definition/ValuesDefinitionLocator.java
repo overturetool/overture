@@ -47,7 +47,7 @@ public class ValuesDefinitionLocator extends QuestionAnswerAdaptor<ObjectContext
 
 		if (def.getSetbind() != null)
 		{
-			list.addAll(ASetBindAssistantInterpreter.getValues(def.getSetbind(), ctxt));
+			list.addAll(af.createPBindAssistant().getBindValues(def.getSetbind(), ctxt));//(ASetBindAssistantInterpreter.getValues(def.getSetbind(), ctxt));
 		}
 
 		return list;

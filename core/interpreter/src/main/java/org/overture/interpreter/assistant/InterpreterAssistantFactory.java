@@ -178,7 +178,8 @@ import org.overture.interpreter.utilities.expression.ExpExpressionFinder;
 import org.overture.interpreter.utilities.expression.ExpressionValueCollector;
 import org.overture.interpreter.utilities.expression.SubExpressionsLocator;
 import org.overture.interpreter.utilities.pattern.AllNamedValuesLocator;
-import org.overture.interpreter.utilities.pattern.BindValuesCollector;
+import org.overture.interpreter.utilities.pattern.BindValueCollector;
+import org.overture.interpreter.utilities.pattern.MultipleBindValuesCollector;
 import org.overture.interpreter.utilities.pattern.ConstrainedPatternChecker;
 import org.overture.interpreter.utilities.pattern.IdentifierPatternFinder;
 import org.overture.interpreter.utilities.pattern.LengthFinder;
@@ -976,7 +977,7 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	@Override
 	public QuestionAnswerAdaptor<Context, ValueList> getBindValuesCollector()
 	{
-		return new BindValuesCollector(this);
+		return new MultipleBindValuesCollector(this);
 	}
 	
 	@Override
@@ -1103,6 +1104,12 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	public IQuestionAnswer<Context, ValueList> getSingleBindValuesCollector()
 	{
 		return new SingleBindValuesCollector(this);
+	}
+	
+	@Override
+	public IQuestionAnswer<ObjectContext, ValueList> getBindValueCollector()
+	{
+		return new BindValueCollector(this);
 	}
 
 }
