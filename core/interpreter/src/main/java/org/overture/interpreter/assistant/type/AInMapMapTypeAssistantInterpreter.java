@@ -18,23 +18,23 @@ public class AInMapMapTypeAssistantInterpreter
 		this.af = af;
 	}
 
-	public static ValueList getAllValues(AInMapMapType type, Context ctxt)
-			throws AnalysisException
-	{
-		ValueList maps = SMapTypeAssistantInterpreter.getAllValues(type, ctxt);
-		ValueList result = new ValueList();
-
-		for (Value map : maps)
-		{
-			MapValue vm = (MapValue) map;
-
-			if (vm.values.isInjective())
-			{
-				result.add(vm);
-			}
-		}
-
-		return result;
-	}
+//	public static ValueList getAllValues(AInMapMapType type, Context ctxt)
+//			throws AnalysisException
+//	{
+//		ValueList maps = SMapTypeAssistantInterpreter.getAllValues(type, ctxt);
+//		ValueList result = new ValueList();
+//
+//		for (Value map : maps)
+//		{
+//			MapValue vm = (MapValue) map;
+//
+//			if (vm.values.isInjective())
+//			{
+//				result.add(vm);
+//			}
+//		}
+//
+//		return result;
+//	}
 
 }

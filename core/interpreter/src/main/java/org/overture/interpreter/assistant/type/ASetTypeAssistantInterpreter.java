@@ -21,21 +21,21 @@ public class ASetTypeAssistantInterpreter
 		this.af = af;
 	}
 
-	public static ValueList getAllValues(ASetType type, Context ctxt)
-			throws AnalysisException
-	{
-		ValueList list = PTypeAssistantInterpreter.getAllValues(type.getSetof(), ctxt);
-		ValueSet set = new ValueSet(list.size());
-		set.addAll(list);
-		List<ValueSet> psets = set.powerSet();
-		list.clear();
-
-		for (ValueSet v : psets)
-		{
-			list.add(new SetValue(v));
-		}
-
-		return list;
-	}
+//	public static ValueList getAllValues(ASetType type, Context ctxt)
+//			throws AnalysisException
+//	{
+//		ValueList list = PTypeAssistantInterpreter.getAllValues(type.getSetof(), ctxt);
+//		ValueSet set = new ValueSet(list.size());
+//		set.addAll(list);
+//		List<ValueSet> psets = set.powerSet();
+//		list.clear();
+//
+//		for (ValueSet v : psets)
+//		{
+//			list.add(new SetValue(v));
+//		}
+//
+//		return list;
+//	}
 
 }

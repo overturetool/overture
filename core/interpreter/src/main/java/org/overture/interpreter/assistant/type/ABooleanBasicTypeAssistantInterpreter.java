@@ -16,12 +16,12 @@ public class ABooleanBasicTypeAssistantInterpreter
 		this.af = af;
 	}
 
-	public static ValueList getAllValues(ABooleanBasicType type, Context ctxt)
-	{
-		ValueList v = new ValueList();
-		v.add(new BooleanValue(true));
-		v.add(new BooleanValue(false));
-		return v;
-	}
+//	public static ValueList getAllValues(ABooleanBasicType type, Context ctxt)
+//	{
+//		ValueList v = new ValueList();
+//		v.add(new BooleanValue(true));
+//		v.add(new BooleanValue(false));
+//		return v;
+//	}
 
 }

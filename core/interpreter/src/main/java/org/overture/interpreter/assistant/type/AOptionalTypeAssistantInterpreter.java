@@ -20,12 +20,12 @@ public class AOptionalTypeAssistantInterpreter extends AOptionalTypeAssistant
 		this.af = af;
 	}
 
-	public static ValueList getAllValues(AOptionalType type, Context ctxt)
-			throws AnalysisException
-	{
-		ValueList list = PTypeAssistantInterpreter.getAllValues(type.getType(), ctxt);
-		list.add(new NilValue());
-		return list;
-	}
+//	public static ValueList getAllValues(AOptionalType type, Context ctxt)
+//			throws AnalysisException
+//	{
+//		ValueList list = PTypeAssistantInterpreter.getAllValues(type.getType(), ctxt);
+//		list.add(new NilValue());
+//		return list;
+//	}
 
 }

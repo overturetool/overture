@@ -33,7 +33,7 @@ public class SMapTypeAssistantInterpreter
 		tuple.add(type.getTo());
 
 		ValueList results = new ValueList();
-		ValueList tuples = PTypeListAssistant.getAllValues(tuple, ctxt);
+		ValueList tuples = af.createPTypeListAssistant().getAllValues(tuple, ctxt);
 		ValueSet set = new ValueSet();
 		set.addAll(tuples);
 		List<ValueSet> psets = set.powerSet();
