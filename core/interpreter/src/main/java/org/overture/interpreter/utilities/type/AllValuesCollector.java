@@ -5,7 +5,6 @@ import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
-import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.node.INode;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AFieldField;
@@ -22,23 +21,8 @@ import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SBasicType;
 import org.overture.ast.types.SInvariantType;
-import org.overture.ast.types.SMapType;
 import org.overture.config.Settings;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.type.ABooleanBasicTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.AInMapMapTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.ANamedInvariantTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.AOptionalTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.AParameterTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.AProductTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.AQuoteTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.ARecordInvariantTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.ASetTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.AUnionTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.PTypeListAssistant;
-import org.overture.interpreter.assistant.type.SBasicTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.SInvariantTypeAssistantInterpreter;
 import org.overture.interpreter.assistant.type.SMapTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ValueException;
@@ -53,12 +37,11 @@ import org.overture.interpreter.values.SetValue;
 import org.overture.interpreter.values.TupleValue;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
-import org.overture.interpreter.values.ValueMap;
 import org.overture.interpreter.values.ValueSet;
 
 /***************************************
  * 
- * This class ...
+ * This class collects all the values exist in a type.
  * 
  * @author gkanos
  *
@@ -173,7 +156,9 @@ public class AllValuesCollector extends QuestionAnswerAdaptor<Context, ValueList
 			throws AnalysisException
 	{
 		//return AInMapMapTypeAssistantInterpreter.getAllValues(type, ctxt);
-		ValueList maps =  SMapTypeAssistantInterpreter.getAllValues(type, ctxt);
+		
+		//TODO:Here we have a strange behavior from transforming this call to type.apply(THIS,ctxt)
+		ValueList maps =  SMapTypeAssistantInterpreter.getAllValues(type, ctxt); 
 		ValueList result = new ValueList();
 
 		for (Value map : maps)
