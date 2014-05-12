@@ -187,6 +187,7 @@ import org.overture.interpreter.utilities.pattern.SingleBindValuesCollector;
 import org.overture.interpreter.utilities.pattern.ValueCollector;
 import org.overture.interpreter.utilities.statement.StatementExpressionFinder;
 import org.overture.interpreter.utilities.statement.StatementFinder;
+import org.overture.interpreter.utilities.type.AllValuesCollector;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.ValueList;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
@@ -1110,6 +1111,12 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	public IQuestionAnswer<ObjectContext, ValueList> getBindValueCollector()
 	{
 		return new BindValueCollector(this);
+	}
+
+	@Override
+	public IQuestionAnswer<Context, ValueList> getAllValuesCollector()
+	{
+		return new AllValuesCollector(this);
 	}
 
 }
