@@ -1040,6 +1040,11 @@ public class JavaFormat
 		return type instanceof AStringTypeCG; 
 	}
 	
+	public boolean isStringType(PExpCG exp)
+	{
+		return exp.getType() instanceof AStringTypeCG; 
+	}
+	
 	public boolean isCharType(PTypeCG type)
 	{
 		return type instanceof ACharBasicTypeCG; 
