@@ -3,7 +3,6 @@ package org.overture.codegen.vdm2java;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -177,10 +176,11 @@ public class JavaCodeGenUtil
 	
 	public static String formatJavaCode(String code)
 	{
+		File tempFile = null;
 		StringBuffer b = new StringBuffer();
 		try
 		{
-			File tempFile = new File("temp.java");
+			tempFile = new File("target" + File.separatorChar + "temp.java");
 			PrintWriter xwriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(tempFile, false), "UTF-8"));
 			xwriter.write(code.toString());
 			xwriter.flush();
@@ -192,7 +192,6 @@ public class JavaCodeGenUtil
 			jalopy.format();
 
 			xwriter.close();
-			tempFile.delete();
 
 			String result = null;
 			
@@ -211,6 +210,10 @@ public class JavaCodeGenUtil
 			Logger.getLog().printErrorln("Could not format code: "
 					+ e.toString());
 			e.printStackTrace();
+		}
+		finally
+		{
+			tempFile.delete();
 		}
 
 		return null;// could not be formatted
