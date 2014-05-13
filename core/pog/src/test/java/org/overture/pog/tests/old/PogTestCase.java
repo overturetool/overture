@@ -95,9 +95,20 @@ public abstract class PogTestCase extends ResultTestCase<List<String>>
 
 
 
-	protected boolean assertEqualResults(List<String> expected,
-			List<String> actual)
+	protected boolean assertEqualResults(List<String> oexpected,
+			List<String> oactual)
 	{
+		List<String> expected = new LinkedList<String>();
+		List<String> actual = new LinkedList<String>();
+
+		
+		for (String s : oexpected){
+			expected.add(s.replaceAll("\\s+", " "));
+		}
+		
+		for (String s : oactual){
+			actual.add(s.replaceAll("\\s+", " "));
+		}
 
 		if (expected.size() != actual.size())
 		{
@@ -142,8 +153,8 @@ public abstract class PogTestCase extends ResultTestCase<List<String>>
 						System.out.println("\nNo equivalent PO found Deviation:"
 								+ comp.getDistLengthRatio());
 						System.out.println();
-						System.out.println("Actual  PO: " + comp.getActual().replaceAll("\\s+", " "));
-						System.out.println("Closest PO: " + comp.getResultStr().replaceAll("\\s+",  " "));
+						System.out.println("Actual  PO: " + comp.getActual());
+						System.out.println("Closest PO: " + comp.getResultStr());
 						System.out.println("\n");
 					}
 				}

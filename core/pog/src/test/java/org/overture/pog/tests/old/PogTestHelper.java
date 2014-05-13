@@ -13,13 +13,13 @@ public class PogTestHelper
 	public static boolean containsPermutation(String str, List<String> list)
 	{
 		// clear away whitespace since it doesn't matter.
-		str = str.replaceAll("\\s+", " ");
+	//	str.replaceAll("\\s+", " ");
 		
 		for (String currentStr : list)
 		{
-			String newCurrent = currentStr.replaceAll("\\s+"," ");
+	//		String newCurrent = currentStr.replaceAll("\\s+"," ");
 
-			if (isPerm(str, newCurrent))
+			if (isPerm(str, currentStr))
 				return true;
 		}
 
