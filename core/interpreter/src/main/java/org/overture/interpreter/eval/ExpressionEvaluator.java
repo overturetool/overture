@@ -561,7 +561,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			else if (ctxt instanceof ClassContext)
 			{
 				ClassContext cctxt = (ClassContext)ctxt;
-				Context statics = SClassDefinitionAssistantInterpreter.getStatics(cctxt.classdef);
+				Context statics = cctxt.assistantFactory.createSClassDefinitionAssistant().getStatics(cctxt.classdef);
 				
 				for (ILexNameToken opname: node.getOpnames())
 				{

@@ -2084,7 +2084,7 @@ public class DBGPReader
 				else if (root instanceof ClassContext)
 				{
 					ClassContext cctxt = (ClassContext)root;
-					vars.putAll(SClassDefinitionAssistantInterpreter.getStatics(cctxt.classdef));
+					vars.putAll(cctxt.assistantFactory.createSClassDefinitionAssistant().getStatics(cctxt.classdef));
 				}
 				else if (root instanceof StateContext)
 				{

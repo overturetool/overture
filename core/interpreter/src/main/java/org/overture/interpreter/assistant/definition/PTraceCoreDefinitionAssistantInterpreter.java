@@ -17,7 +17,7 @@ public class PTraceCoreDefinitionAssistantInterpreter
 		this.af = af;
 	}
 
-	public static TraceNode expand(PTraceCoreDefinition core, Context ctxt)
+	public TraceNode expand(PTraceCoreDefinition core, Context ctxt)
 	{
 		try
 		{

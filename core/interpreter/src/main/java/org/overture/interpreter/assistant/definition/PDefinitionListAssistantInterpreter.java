@@ -56,7 +56,7 @@ public class PDefinitionListAssistantInterpreter extends
 		return list;
 	}
 
-	public static PExp findExpression(LinkedList<PDefinition> list, int lineno)
+	public PExp findExpression(LinkedList<PDefinition> list, int lineno)
 	{
 		for (PDefinition d : list)
 		{
@@ -71,7 +71,7 @@ public class PDefinitionListAssistantInterpreter extends
 		return null;
 	}
 
-	public static NameValuePairList getNamedValues(
+	public NameValuePairList getNamedValues(
 			LinkedList<PDefinition> definitions, Context ctxt)
 	{
 		NameValuePairList nvl = new NameValuePairList();
@@ -84,7 +84,7 @@ public class PDefinitionListAssistantInterpreter extends
 		return nvl;
 	}
 
-	public static LexNameList getOldNames(LinkedList<PDefinition> definitions)
+	public LexNameList getOldNames(LinkedList<PDefinition> definitions)
 	{
 		LexNameList list = new LexNameList();
 

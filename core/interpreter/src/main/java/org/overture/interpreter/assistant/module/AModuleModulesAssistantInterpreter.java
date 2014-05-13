@@ -80,7 +80,7 @@ public class AModuleModulesAssistantInterpreter extends
 
 	public static PExp findExpression(AModuleModules d, int lineno)
 	{
-		return PDefinitionListAssistantInterpreter.findExpression(d.getDefs(), lineno);
+		return af.createPDefinitionListAssistant().findExpression(d.getDefs(), lineno);
 	}
 
 	public static Context getStateContext(AModuleModules defaultModule)

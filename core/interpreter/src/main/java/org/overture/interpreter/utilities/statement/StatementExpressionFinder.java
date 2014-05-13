@@ -275,7 +275,7 @@ public class StatementExpressionFinder extends QuestionAnswerAdaptor<Integer, PE
 			throws AnalysisException
 	{
 		//return SLetDefStmAssistantInterpreter.findExpression(stm, lineno);
-		PExp found = PDefinitionListAssistantInterpreter.findExpression(stm.getLocalDefs(), lineno);
+		PExp found = af.createPDefinitionListAssistant().findExpression(stm.getLocalDefs(), lineno);
 		if (found != null)
 			return found;
 

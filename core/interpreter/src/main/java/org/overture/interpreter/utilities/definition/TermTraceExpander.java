@@ -114,7 +114,7 @@ public class TermTraceExpander extends QuestionAnswerAdaptor<Context, TraceNode>
 				if (matches
 						&& (term.getStexp() == null || term.getStexp().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctxt)))
 				{
-					TraceNode exp = PTraceDefinitionAssistantInterpreter.expand(term.getBody(), evalContext);
+					TraceNode exp = af.createPTraceDefinitionAssistant().expand(term.getBody(), evalContext);
 					exp.addVariables(new TraceVariableList(evalContext, af.createPDefinitionAssistant().getDefinitions(term.getDef())));
 					node.alternatives.add(exp);
 				}
@@ -143,7 +143,7 @@ public class TermTraceExpander extends QuestionAnswerAdaptor<Context, TraceNode>
 			evalContext.putList(af.createPDefinitionAssistant().getNamedValues(d, evalContext));
 		}
 
-		TraceNode node = PTraceDefinitionAssistantInterpreter.expand(term.getBody(), evalContext);
+		TraceNode node = af.createPTraceDefinitionAssistant().expand(term.getBody(), evalContext);
 		node.addVariables(new TraceVariableList(evalContext, term.getLocalDefs()));
 		return node;
 	}
@@ -153,7 +153,7 @@ public class TermTraceExpander extends QuestionAnswerAdaptor<Context, TraceNode>
 			Context ctxt) throws AnalysisException
 	{
 		//return ARepeatTraceDefinitionAssistantInterpreter.expand(term, ctxt);
-		TraceNode body = PTraceCoreDefinitionAssistantInterpreter.expand(term.getCore(), ctxt);
+		TraceNode body = af.createPTraceCoreDefinitionAssistant().expand(term.getCore(), ctxt);
 
 		if (term.getFrom() == 1 && term.getTo() == 1)
 		{

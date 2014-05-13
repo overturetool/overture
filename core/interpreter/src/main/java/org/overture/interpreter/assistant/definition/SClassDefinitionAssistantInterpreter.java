@@ -69,7 +69,7 @@ public class SClassDefinitionAssistantInterpreter extends
 		this.af = af;
 	}
 
-	public static Value getStatic(SClassDefinition classdef,
+	public Value getStatic(SClassDefinition classdef,
 			ILexNameToken sought)
 	{
 		ILexNameToken local = sought.getExplicit() ? sought
@@ -98,7 +98,7 @@ public class SClassDefinitionAssistantInterpreter extends
 		return v;
 	}
 
-	public static Context getStatics(SClassDefinition classdef)
+	public Context getStatics(SClassDefinition classdef)
 	{
 		Context ctxt = new Context(af, classdef.getLocation(), "Statics", null);
 		ctxt.putAll(VdmRuntime.getNodeState(af,classdef).publicStaticValues);
@@ -599,7 +599,7 @@ public class SClassDefinitionAssistantInterpreter extends
 
 	public static PExp findExpression(SClassDefinition d, int lineno)
 	{
-		return PDefinitionListAssistantInterpreter.findExpression(d.getDefinitions(), lineno);
+		return af.createPDefinitionListAssistant().findExpression(d.getDefinitions(), lineno);
 	}
 
 //	public static boolean isTypeDefinition(SClassDefinition def)
