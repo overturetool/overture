@@ -2,8 +2,11 @@ package org.overture.codegen.vdm2java;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -178,7 +181,7 @@ public class JavaCodeGenUtil
 		try
 		{
 			File tempFile = new File("temp.java");
-			FileWriter xwriter = new FileWriter(tempFile);
+			PrintWriter xwriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(tempFile, false), "UTF-8"));
 			xwriter.write(code.toString());
 			xwriter.flush();
 
@@ -220,7 +223,7 @@ public class JavaCodeGenUtil
 			File javaFile = new File(outputFolder, File.separator + javaFileName);
 			javaFile.getParentFile().mkdirs();
 			javaFile.createNewFile();
-			FileWriter writer = new FileWriter(javaFile);
+			PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(javaFile, false), "UTF-8"));
 			BufferedWriter out = new BufferedWriter(writer);
 			out.write(code);
 			out.close();
