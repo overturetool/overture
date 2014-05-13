@@ -61,10 +61,11 @@ import org.overture.pog.utility.UniqueNameGenerator;
  * New class for Proof Obligatios with a an AST based representation (wip)
  * 
  * @author ldc
+ * @param <A>
  */
 
 
-abstract public class ProofObligation implements IProofObligation, Serializable {
+abstract public class ProofObligation<A> implements IProofObligation, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	// we should store the node that generated the PO rather than just the
@@ -373,6 +374,16 @@ abstract public class ProofObligation implements IProofObligation, Serializable 
 		PatternToExpVisitor visitor = new PatternToExpVisitor(
 				getUniqueGenerator());
 		return pattern.apply(visitor);
+	}
+	
+	protected List<PMultipleBind> cloneListMultipleBind(List<PMultipleBind> binds){
+		List<PMultipleBind> r = new LinkedList<PMultipleBind>();
+		
+		for (PMultipleBind bind : binds){
+			r.add(bind.clone());
+		}
+		
+		return r;
 	}
 	
 	/**
