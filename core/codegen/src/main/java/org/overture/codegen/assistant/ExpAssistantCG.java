@@ -3,7 +3,6 @@ package org.overture.codegen.assistant;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
@@ -157,7 +156,7 @@ public class ExpAssistantCG extends AssistantBase
 
 		stringLiteral.setType(new AStringTypeCG());
 		stringLiteral.setIsNull(isNull);
-		stringLiteral.setValue(StringEscapeUtils.escapeJava(value));
+		stringLiteral.setValue(value);
 		
 		return stringLiteral;
 	}

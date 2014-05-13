@@ -10,6 +10,12 @@ import java.util.List;
 
 public class GeneralUtils
 {
+	public static boolean isEscapeSequence(char c)
+	{
+		return c == '\t' || c == '\b' || c == '\n' || c == '\r' || c == '\f'
+				|| c == '\'' || c == '\"' || c == '\\';
+	}
+	
 	public static StringBuffer readFromFile(String relativepath) throws IOException
 	{
 		InputStream input = GeneralUtils.class.getResourceAsStream('/' + relativepath.replace("\\", "/"));

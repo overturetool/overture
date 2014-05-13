@@ -4,6 +4,7 @@ import java.io.StringWriter;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
@@ -83,6 +84,7 @@ import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.constants.TempVarPrefixes;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.ooast.OoAstAnalysis;
+import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.ITempVarGen;
 
 public class JavaFormat
@@ -1173,5 +1175,17 @@ public class JavaFormat
 		SVarExpCG varExp = (SVarExpCG) root;
 		
 		return varExp.getIsLambda() != null && varExp.getIsLambda();
+	}
+	
+	public String escapeStr(String str)
+	{
+		String escaped = "";
+		for(int i = 0; i < str.length(); i++)
+		{
+			char currentChar = str.charAt(i);
+			escaped += GeneralUtils.isEscapeSequence(currentChar) ? StringEscapeUtils.escapeJava(currentChar + "") : (currentChar + "");
+		}
+		
+		return escaped;
 	}
 }
