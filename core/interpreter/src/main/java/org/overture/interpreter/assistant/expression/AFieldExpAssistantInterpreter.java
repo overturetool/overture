@@ -77,10 +77,11 @@ public class AFieldExpAssistantInterpreter // extends AFieldExpAssistantTC
 		}
 		catch (ContextException e)
 		{
-			if (e.number == 4034)
+			if (e.number == 4034 || e.number == 4097 || e.number == 4105)
 			{
-				return values; // Non existent variable
-			} else
+				return values; // Non existent variable, or can't get record value
+			}
+			else
 			{
 				throw e;
 			}

@@ -28,6 +28,7 @@ import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.statements.PStm;
+import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AClassType;
 import org.overture.config.Settings;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
@@ -151,7 +152,7 @@ public class SClassDefinitionAssistantInterpreter extends
 
 	protected static ObjectValue makeNewInstance(SClassDefinition node,
 			PDefinition ctorDefinition, ValueList argvals, Context ctxt,
-			Map<ILexNameToken, ObjectValue> done) throws ValueException
+			Map<ILexNameToken, ObjectValue> done, boolean nested) throws ValueException
 	{
 		setStaticDefinitions(node, ctxt.getGlobal()); // When static member := new X()
 		setStaticValues(node, ctxt.getGlobal()); // When static member := new X()
@@ -166,7 +167,7 @@ public class SClassDefinitionAssistantInterpreter extends
 
 			if (obj == null)
 			{
-				obj = makeNewInstance(sdef, null, null, ctxt, done);
+				obj = makeNewInstance(sdef, null, null, ctxt, done, true);
 				done.put(sdef.getName(), obj);
 			}
 
@@ -272,11 +273,17 @@ public class SClassDefinitionAssistantInterpreter extends
 		if (ctorDefinition == null)
 		{
 			argvals = new ValueList();
-			LexNameToken cname = af.createSClassDefinitionAssistant().getCtorName(node, new PTypeList());
-			ctor = object.get(cname, false);
-		} else
+			LexNameToken constructor = getCtorName(node, new PTypeList());
+			ctorDefinition = af.createPDefinitionAssistant().findName(node, constructor, NameScope.NAMES);
+			
+			if (ctorDefinition != null)
+			{
+				ctor = object.get(ctorDefinition.getName(), false);
+			}
+		}
+		else
 		{
-			ctor = object.get(ctorDefinition.getName(), false);
+     		ctor = object.get(ctorDefinition.getName(), false);
 		}
 
 		if (Settings.dialect == Dialect.VDM_RT)
@@ -293,10 +300,16 @@ public class SClassDefinitionAssistantInterpreter extends
 		{
 			OperationValue ov = ctor.operationValue(ctxt);
 
-			ObjectContext ctorCtxt = new ObjectContext(af, node.getLocation(), node.getName().getName()
+			ObjectContext ctorCtxt = new ObjectContext(af, ov.name.getLocation(), node.getName().getName()
 					+ " constructor", ctxt, object);
 
-			ov.eval(ov.name.getLocation(), argvals, ctorCtxt);
+    		if (ctorDefinition.getAccess().getAccess() instanceof APrivateAccess && nested)
+    		{
+    			VdmRuntimeError.abort(ctorDefinition.getLocation(),
+    					4163, "Cannot inherit private constructor", ctorCtxt);
+    		}
+
+    		ov.eval(ov.name.getLocation(), argvals, ctorCtxt);
 		}
 
 		// Do invariants and guards after construction, so values fields are set. The
