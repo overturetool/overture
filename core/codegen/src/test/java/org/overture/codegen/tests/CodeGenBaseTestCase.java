@@ -11,6 +11,7 @@ import junit.framework.Assert;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.logging.Logger;
+import org.overture.codegen.utils.GeneralUtils;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.parser.lex.LexException;
@@ -72,7 +73,7 @@ public abstract class CodeGenBaseTestCase extends BaseTestCase
 		assertTrue("Result file " + resultFile.getAbsolutePath()
 				+ " does not exist", resultFile.exists());
 
-		String parsedResult = CodeGenTestUtil.getFileContent(resultFile).replaceAll("\r", "");
+		String parsedResult = GeneralUtils.readFromFile(resultFile).replaceAll("\r", "");
 		boolean parsed = parsedResult != null;
 
 		Assert.assertTrue("Could not read result file: " + resultFile.getName(), parsed);
@@ -88,7 +89,7 @@ public abstract class CodeGenBaseTestCase extends BaseTestCase
 		}
 		boolean resultOk = actual.trim().equals(parsedResult);
 
-		String input = CodeGenTestUtil.getFileContent(this.file);
+		String input = GeneralUtils.readFromFile(this.file);
 
 		String testOverview = getTestOverview(input, parsedResult, actual);
 

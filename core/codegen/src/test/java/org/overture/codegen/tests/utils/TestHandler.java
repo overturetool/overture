@@ -1,8 +1,11 @@
 package org.overture.codegen.tests.utils;
 
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.constants.IJavaCodeGenConstants;
@@ -70,13 +73,10 @@ public abstract class TestHandler
 	
 	public void writeToFile(String toWrite, File file) throws IOException
 	{
-		FileWriter fileWriter = new FileWriter(file);
-
-		fileWriter.write(toWrite);
-
-		fileWriter.flush();
-		fileWriter.close();
-
+		PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(file, false), "UTF-8"));
+		BufferedWriter out = new BufferedWriter(writer);
+		out.write(toWrite);
+		out.close();
 	}
 	
 	public File getFile(File parent, String className) throws IOException
