@@ -152,7 +152,7 @@ public class AModuleModulesAssistantInterpreter extends
 
 	public static ProofObligationList getProofObligations(AModuleModules m)
 	{
-		return PDefinitionListAssistantInterpreter.getProofObligations(m.getDefs(), new POContextStack(new PogAssistantFactory()));
+		return af.createPDefinitionListAssistant().getProofObligations(m.getDefs(), new POContextStack(new PogAssistantFactory()));
 	}
 
 }

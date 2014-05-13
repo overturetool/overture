@@ -572,7 +572,7 @@ public class SClassDefinitionAssistantInterpreter extends
 	public static ProofObligationList getProofObligations(SClassDefinition c,
 			POContextStack ctxt)
 	{
-		return PDefinitionListAssistantInterpreter.getProofObligations(c.getDefinitions(), ctxt);
+		return af.createPDefinitionListAssistant().getProofObligations(c.getDefinitions(), ctxt);
 	}
 
 	public static void staticValuesInit(SClassDefinition cdef, StateContext ctxt)

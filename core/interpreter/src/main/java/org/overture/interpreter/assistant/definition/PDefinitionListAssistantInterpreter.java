@@ -28,7 +28,7 @@ public class PDefinitionListAssistantInterpreter extends
 		this.af = af;
 	}
 
-	public static ProofObligationList getProofObligations(
+	public ProofObligationList getProofObligations(
 			LinkedList<PDefinition> defs, POContextStack ctxt)
 	{
 		ProofObligationList obligations = new ProofObligationList();
@@ -43,14 +43,14 @@ public class PDefinitionListAssistantInterpreter extends
 		return obligations;
 	}
 
-	public static ValueList getValues(LinkedList<PDefinition> defs,
+	public ValueList getValues(LinkedList<PDefinition> defs,
 			ObjectContext ctxt)
 	{
 		ValueList list = new ValueList();
 
 		for (PDefinition d : defs)
 		{
-			list.addAll(PDefinitionAssistantInterpreter.getValues(d, ctxt));
+			list.addAll(af.createPDefinitionAssistant().getValues(d, ctxt));
 		}
 
 		return list;

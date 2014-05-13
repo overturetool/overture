@@ -109,7 +109,7 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 	 *            The context in which to evaluate the expressions.
 	 * @return A list of values read.
 	 */
-	public static ValueList getValues(PDefinition def, ObjectContext ctxt)
+	public ValueList getValues(PDefinition def, ObjectContext ctxt)
 	{
 		try
 		{

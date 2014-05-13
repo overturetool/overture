@@ -122,7 +122,7 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 			throws AnalysisException
 	{
 		//return ADefExpAssistantInterpreter.getValues(exp, ctxt);
-		ValueList list = PDefinitionListAssistantInterpreter.getValues(exp.getLocalDefs(), ctxt);
+		ValueList list = af.createPDefinitionListAssistant().getValues(exp.getLocalDefs(), ctxt);
 		list.addAll(exp.getExpression().apply(THIS, ctxt));//(PExpAssistantInterpreter.getValues(exp.getExpression(), ctxt));
 		return list;
 	}
@@ -328,7 +328,7 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 	{
 		//return ALetDefExpAssistantInterpreter.getValues(exp, ctxt);
 		
-		ValueList list = PDefinitionListAssistantInterpreter.getValues(exp.getLocalDefs(), ctxt);
+		ValueList list = af.createPDefinitionListAssistant().getValues(exp.getLocalDefs(), ctxt);
 		list.addAll(exp.getExpression().apply(THIS, ctxt));//(PExpAssistantInterpreter.getValues(exp.getExpression(), ctxt));
 		return list;
 	}
