@@ -339,16 +339,16 @@ public class ProbSolverUtil extends AbstractProbSolverUtil
 			Map<String, INode> arguments = new HashMap<String, INode>();
 			for (Entry<String, String> a : argContext.entrySet())
 			{
-				Settings.dialect = Dialect.VDM_PP;
-				Settings.release = Release.VDM_10;
+//				Settings.dialect = Dialect.VDM_PP;
+//				Settings.release = Release.VDM_10;
 				arguments.put(a.getKey(), ParserUtil.parseExpression(a.getValue()).result);
 			}
 
 			Map<String, INode> stateConstraints = new HashMap<String, INode>();
 			for (Entry<String, String> a : stateContext.entrySet())
 			{
-				Settings.dialect = Dialect.VDM_PP;
-				Settings.release = Release.VDM_10;
+//				Settings.dialect = Dialect.VDM_PP;
+//				Settings.release = Release.VDM_10;
 				stateConstraints.put(a.getKey(), ParserUtil.parseExpression(a.getValue()).result);
 			}
 

@@ -25,7 +25,7 @@ public class SeqTests extends AllTest
 
 		Collection<Object[]> tests = new LinkedList<Object[]>();
 
-		tests.addAll(getTests(new File(root)));
+		tests.addAll(getTests(new File(root),"Seq-0028"));//FIXME
 
 		return tests;
 	}
