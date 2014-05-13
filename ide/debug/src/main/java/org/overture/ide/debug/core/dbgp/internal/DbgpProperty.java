@@ -20,7 +20,8 @@ package org.overture.ide.debug.core.dbgp.internal;
 
 import org.overture.ide.debug.core.dbgp.IDbgpProperty;
 
-public class DbgpProperty implements IDbgpProperty {
+public class DbgpProperty implements IDbgpProperty
+{
 
 	private final String address;
 
@@ -49,7 +50,8 @@ public class DbgpProperty implements IDbgpProperty {
 	public DbgpProperty(String name, String fullName, String type,
 			String value, int childrenCount, boolean hasChildren,
 			boolean constant, String key, String address,
-			IDbgpProperty[] availableChildren, int page, int pageSize) {
+			IDbgpProperty[] availableChildren, int page, int pageSize)
+	{
 		this.name = name;
 		this.fullName = fullName;
 		this.type = type;
@@ -64,56 +66,69 @@ public class DbgpProperty implements IDbgpProperty {
 		this.pageSize = pageSize;
 	}
 
-	public String getEvalName() {
+	public String getEvalName()
+	{
 		return fullName;
 	}
 
-	public String getName() {
+	public String getName()
+	{
 		return name;
 	}
 
-	public String getType() {
+	public String getType()
+	{
 		return type;
 	}
 
-	public String getValue() {
+	public String getValue()
+	{
 		return value;
 	}
 
-	public boolean hasChildren() {
+	public boolean hasChildren()
+	{
 		return hasChildren;
 	}
 
-	public int getChildrenCount() {
+	public int getChildrenCount()
+	{
 		return childrenCount;
 	}
 
-	public IDbgpProperty[] getAvailableChildren() {
+	public IDbgpProperty[] getAvailableChildren()
+	{
 		return (IDbgpProperty[]) availableChildren.clone();
 	}
 
-	public boolean isConstant() {
+	public boolean isConstant()
+	{
 		return constant;
 	}
 
-	public String toString() {
+	public String toString()
+	{
 		return "DbgpProperty (Name: " + name + "; Full name: " + fullName //$NON-NLS-1$ //$NON-NLS-2$
 				+ "; Type: " + type + "; Value: " + value + " Address: " + address + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	}
 
-	public String getKey() {
+	public String getKey()
+	{
 		return key;
 	}
 
-	public int getPage() {
+	public int getPage()
+	{
 		return page;
 	}
 
-	public int getPageSize() {
+	public int getPageSize()
+	{
 		return pageSize;
 	}
 
-	public String getAddress() {
+	public String getAddress()
+	{
 		return address;
 	}
 }

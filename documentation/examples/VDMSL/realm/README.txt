@@ -1,4 +1,4 @@
-This document is simply an attempt to model the basic data 
+﻿This document is simply an attempt to model the basic data 
 structures and auxiliary functions necessary to represent 
 realms. A geometric realm defined here is a planner graph 
 over a finite resolution grid. This example have been 
@@ -9,7 +9,7 @@ files. Realms are used to represent geographical data.
 This document is based on: 
 
 Realms: A Foundation for Spatial Data Types in Database 
-Systems, Ralf Hartmut G�ting and Marcus Schneider, 
+Systems, Ralf Hartmut Güting and Marcus Schneider, 
 Advances in Spatial Databases - Third International 
 Symposium, SSD'93, Springer-Verlag, June 1993. 
 

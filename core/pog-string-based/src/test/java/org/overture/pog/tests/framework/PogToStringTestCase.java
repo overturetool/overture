@@ -46,14 +46,14 @@ public abstract class PogToStringTestCase extends ResultTestCase<List<String>>
 		return new File(filename + ".result");
 	}
 
-	public void encondeResult(List<String> result, Document doc,
+	public void encodeResult(List<String> result, Document doc,
 			Element resultElement)
 	{
 		// TODO Auto-generated method stub
 
 	}
 
-	public void encondeResult(ProofObligationList result, Document doc,
+	public void encodeResult(ProofObligationList result, Document doc,
 			Element resultElement)
 	{
 		for (ProofObligation po : result)
@@ -87,7 +87,7 @@ public abstract class PogToStringTestCase extends ResultTestCase<List<String>>
 			if (cn.getNodeType() == Node.ELEMENT_NODE
 					&& cn.getNodeName().equals("po"))
 			{
-				String nodeType = cn.getAttributes().getNamedItem("toString").getNodeValue();
+				String nodeType = cn.getAttributes().getNamedItem("message").getNodeValue();
 				if (nodeType != null && !nodeType.isEmpty())
 				{
 					try

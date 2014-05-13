@@ -38,10 +38,15 @@ public class PTypeAssistant
 		{
 			return null;
 		}
-		
+
 	}
 
-	public static int hashCode(PType type)
+	public int hashCode(PType type)
+	{
+		return internalHashCode(type);
+	}
+
+	protected static int internalHashCode(PType type)
 	{
 		try
 		{
@@ -56,7 +61,9 @@ public class PTypeAssistant
 	{
 		int hashCode = 1;
 		for (PType e : list)
-			hashCode = 31 * hashCode + (e == null ? 0 : hashCode(e));
+		{
+			hashCode = 31 * hashCode + (e == null ? 0 : internalHashCode(e));
+		}
 		return hashCode;
 	}
 

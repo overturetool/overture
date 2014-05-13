@@ -22,7 +22,8 @@ import java.util.Map;
 
 import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
 
-public interface IDbgpDataTypeCommands {
+public interface IDbgpDataTypeCommands
+{
 
 	final int BOOL_TYPE = 0;
 	final int INT_TYPE = 1;
@@ -34,5 +35,5 @@ public interface IDbgpDataTypeCommands {
 	final int OBJECT_TYPE = 8;
 	final int RESOURCE_TYPE = 9;
 
-	Map<String,Integer> getTypeMap() throws DbgpException;
+	Map<String, Integer> getTypeMap() throws DbgpException;
 }

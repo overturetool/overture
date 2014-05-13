@@ -22,7 +22,8 @@ import java.net.URI;
 
 import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
 
-public interface IDbgpSourceCommands {
+public interface IDbgpSourceCommands
+{
 	String getSource(URI uri) throws DbgpException;
 
 	String getSource(URI uri, int beginLine) throws DbgpException;

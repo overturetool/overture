@@ -1,0 +1,9 @@
+class Entry
+
+operations 
+
+public static Run : () ==> nat 
+Run () ==
+	let x, y, z in set {1,2} in return x * y * z;
+	 
+end Entry

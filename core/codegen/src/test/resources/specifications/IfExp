@@ -1,0 +1,12 @@
+class A
+
+values
+
+public x = 1 + if 2 = 3 then 4 else 5 + 6;
+
+public y = if 2 = 3 then 4 
+					  elseif 5 = 6 then 7 
+					 	elseif 8 = 9 then 10
+					 	else 11;
+ 
+end A

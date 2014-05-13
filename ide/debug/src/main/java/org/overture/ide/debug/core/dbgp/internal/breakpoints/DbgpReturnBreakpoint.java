@@ -18,17 +18,20 @@
  *******************************************************************************/
 package org.overture.ide.debug.core.dbgp.internal.breakpoints;
 
-public class DbgpReturnBreakpoint extends DbgpBreakpoint {
+public class DbgpReturnBreakpoint extends DbgpBreakpoint
+{
 
 	private final String function;
 
 	public DbgpReturnBreakpoint(String id, boolean enabled, int hitValue,
-			int hitCount, String hitCondition, String function) {
+			int hitCount, String hitCondition, String function)
+	{
 		super(id, enabled, hitValue, hitCount, hitCondition);
 		this.function = function;
 	}
 
-	public String getFunction() {
+	public String getFunction()
+	{
 		return function;
 	}
 }

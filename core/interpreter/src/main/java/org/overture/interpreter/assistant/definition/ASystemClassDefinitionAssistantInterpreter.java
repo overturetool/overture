@@ -13,8 +13,6 @@ import org.overture.ast.types.AClassType;
 import org.overture.ast.types.PType;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.debug.DBGPReader;
-import org.overture.interpreter.messages.rtlog.RTDeclareCPUMessage;
-import org.overture.interpreter.messages.rtlog.RTLogger;
 import org.overture.interpreter.messages.rtlog.RTOperationMessage;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.RootContext;
@@ -29,10 +27,8 @@ import org.overture.interpreter.values.RealValue;
 import org.overture.interpreter.values.UpdatableValue;
 import org.overture.interpreter.values.ValueList;
 import org.overture.interpreter.values.ValueSet;
-import org.overture.typechecker.assistant.definition.ASystemClassDefinitionAssistantTC;
 
-public class ASystemClassDefinitionAssistantInterpreter extends
-		ASystemClassDefinitionAssistantTC
+public class ASystemClassDefinitionAssistantInterpreter
 {
 	protected static IInterpreterAssistantFactory af;
 
@@ -40,7 +36,7 @@ public class ASystemClassDefinitionAssistantInterpreter extends
 	public ASystemClassDefinitionAssistantInterpreter(
 			IInterpreterAssistantFactory af)
 	{
-		super(af);
+		//super(af);
 		this.af = af;
 	}
 

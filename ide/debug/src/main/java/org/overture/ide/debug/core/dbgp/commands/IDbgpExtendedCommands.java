@@ -21,7 +21,8 @@ package org.overture.ide.debug.core.dbgp.commands;
 import org.overture.ide.debug.core.dbgp.IDbgpProperty;
 import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
 
-public interface IDbgpExtendedCommands {
+public interface IDbgpExtendedCommands
+{
 	int DISABLE = 0;
 
 	int REDIRECT = 1;
@@ -45,8 +46,8 @@ public interface IDbgpExtendedCommands {
 	IDbgpProperty evaluate(String snippet) throws DbgpException;
 
 	/**
-	 * @deprecated <code>eval</code> command does not support <code>depth</code>
-	 *             parameter, so this method will be removed
+	 * @deprecated <code>eval</code> command does not support <code>depth</code> parameter, so this method will be
+	 *             removed
 	 */
 	IDbgpProperty evaluate(String snippet, int depth) throws DbgpException;
 

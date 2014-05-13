@@ -1,0 +1,22 @@
+class A
+
+values
+
+x = mk_B`RecB(1);
+y = mk_A`RecA(mk_B`RecB(2));
+
+types
+
+public RecA :: b : B`RecB
+
+operations
+
+end A
+
+class B
+
+types
+
+public RecB :: b : int
+
+end B

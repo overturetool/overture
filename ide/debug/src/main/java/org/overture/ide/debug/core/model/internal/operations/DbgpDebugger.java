@@ -28,7 +28,8 @@ import org.overture.ide.debug.core.dbgp.commands.IDbgpStreamCommands;
 import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
 import org.overture.ide.debug.core.model.IVdmThread;
 
-public class DbgpDebugger {
+public class DbgpDebugger
+{
 	// Operations
 	private final DbgpStepIntoOperation stepIntoOperation;
 
@@ -44,282 +45,336 @@ public class DbgpDebugger {
 
 	private final IDbgpSession session;
 
-	public DbgpDebugger(IVdmThread thread, final IDbgpDebuggerFeedback end) {
+	public DbgpDebugger(IVdmThread thread, final IDbgpDebuggerFeedback end)
+	{
 
 		this.session = thread.getDbgpSession();
 
 		/*
-		 * FIXME should use single command queue here to guarantee we handle
-		 * responses in the same sequences as we send requests
+		 * FIXME should use single command queue here to guarantee we handle responses in the same sequences as we send
+		 * requests
 		 */
-		stepIntoOperation = new DbgpStepIntoOperation(thread,
-				new DbgpOperation.IResultHandler() {
-					public void finish(IDbgpStatus status, DbgpException e) {
-						end.endStepInto(e, status);
-					}
-				});
+		stepIntoOperation = new DbgpStepIntoOperation(thread, new DbgpOperation.IResultHandler()
+		{
+			public void finish(IDbgpStatus status, DbgpException e)
+			{
+				end.endStepInto(e, status);
+			}
+		});
 
-		stepOverOperation = new DbgpStepOverOperation(thread,
-				new DbgpOperation.IResultHandler() {
-					public void finish(IDbgpStatus status, DbgpException e) {
-						end.endStepOver(e, status);
-					}
-				});
+		stepOverOperation = new DbgpStepOverOperation(thread, new DbgpOperation.IResultHandler()
+		{
+			public void finish(IDbgpStatus status, DbgpException e)
+			{
+				end.endStepOver(e, status);
+			}
+		});
 
-		stepReturnOperation = new DbgpStepReturnOperation(thread,
-				new DbgpOperation.IResultHandler() {
-					public void finish(IDbgpStatus status, DbgpException e) {
-						end.endStepReturn(e, status);
-					}
-				});
+		stepReturnOperation = new DbgpStepReturnOperation(thread, new DbgpOperation.IResultHandler()
+		{
+			public void finish(IDbgpStatus status, DbgpException e)
+			{
+				end.endStepReturn(e, status);
+			}
+		});
 
-		suspendOperation = new DbgpSuspendOperation(thread,
-				new DbgpOperation.IResultHandler() {
-					public void finish(IDbgpStatus status, DbgpException e) {
-						end.endSuspend(e, status);
-					}
-				});
+		suspendOperation = new DbgpSuspendOperation(thread, new DbgpOperation.IResultHandler()
+		{
+			public void finish(IDbgpStatus status, DbgpException e)
+			{
+				end.endSuspend(e, status);
+			}
+		});
 
-		resumeOperation = new DbgpResumeOperation(thread,
-				new DbgpOperation.IResultHandler() {
-					public void finish(IDbgpStatus status, DbgpException e) {
-						end.endResume(e, status);
-					}
-				});
+		resumeOperation = new DbgpResumeOperation(thread, new DbgpOperation.IResultHandler()
+		{
+			public void finish(IDbgpStatus status, DbgpException e)
+			{
+				end.endResume(e, status);
+			}
+		});
 
-		terminateOperation = new DbgpTerminateOperation(thread,
-				new DbgpOperation.IResultHandler() {
-					public void finish(IDbgpStatus status, DbgpException e) {
-						end.endTerminate(e, status);
-					}
-				});
+		terminateOperation = new DbgpTerminateOperation(thread, new DbgpOperation.IResultHandler()
+		{
+			public void finish(IDbgpStatus status, DbgpException e)
+			{
+				end.endTerminate(e, status);
+			}
+		});
 	}
 
-	public void stepInto() {
+	public void stepInto()
+	{
 		stepIntoOperation.schedule();
 	}
 
-	public void stepOver() {
+	public void stepOver()
+	{
 		stepOverOperation.schedule();
 	}
 
-	public void stepReturn() {
+	public void stepReturn()
+	{
 		stepReturnOperation.schedule();
 	}
 
-	public void suspend() {
+	public void suspend()
+	{
 		suspendOperation.schedule();
 	}
 
-	public void resume() {
+	public void resume()
+	{
 		resumeOperation.schedule();
 	}
 
-	public void terminate() {
+	public void terminate()
+	{
 		terminateOperation.schedule();
 	}
 
 	// Feature helper methods
-	public IDbgpFeature getFeature(String name) throws DbgpException {
+	public IDbgpFeature getFeature(String name) throws DbgpException
+	{
 		IDbgpCoreCommands core = session.getCoreCommands();
 		return core.getFeature(name);
 	}
 
-	public void setFeature(String name, String value) throws DbgpException {
+	public void setFeature(String name, String value) throws DbgpException
+	{
 		IDbgpCoreCommands core = session.getCoreCommands();
 		core.setFeature(name, value);
 	}
 
-	public boolean isFeatureSupported(String name) throws DbgpException {
+	public boolean isFeatureSupported(String name) throws DbgpException
+	{
 		return getFeature(name).isSupported();
 	}
 
-	public boolean getFeatureBoolean(String name) throws DbgpException {
+	public boolean getFeatureBoolean(String name) throws DbgpException
+	{
 		return getFeature(name).getValue().equals(IDbgpFeature.ONE_VALUE);
 	}
 
 	public void setFeatureBoolean(String name, boolean value)
-			throws DbgpException {
+			throws DbgpException
+	{
 		setFeature(name, value ? IDbgpFeature.ONE_VALUE
 				: IDbgpFeature.ZERO_VALUE);
 	}
 
-	public int getFeatureInteger(String name) throws DbgpException {
+	public int getFeatureInteger(String name) throws DbgpException
+	{
 		return Integer.parseInt(getFeature(name).getValue());
 	}
 
-	public void setFeatureInteger(String name, int value) throws DbgpException {
+	public void setFeatureInteger(String name, int value) throws DbgpException
+	{
 		setFeature(name, Integer.toString(value));
 	}
 
 	// Must available features
-	public boolean isSupportsThreads() throws DbgpException {
-		return getFeature(IDbgpFeatureCommands.LANGUAGE_SUPPORTS_THREADS)
-				.getValue().equals(IDbgpFeature.ONE_VALUE);
+	public boolean isSupportsThreads() throws DbgpException
+	{
+		return getFeature(IDbgpFeatureCommands.LANGUAGE_SUPPORTS_THREADS).getValue().equals(IDbgpFeature.ONE_VALUE);
 	}
 
-	public String getLanguageName() throws DbgpException {
+	public String getLanguageName() throws DbgpException
+	{
 		return getFeature(IDbgpFeatureCommands.LANGUAGE_NAME).getValue();
 	}
 
-	public String getLanguageVersion() throws DbgpException {
+	public String getLanguageVersion() throws DbgpException
+	{
 		return getFeature(IDbgpFeatureCommands.LANGUAGE_VERSION).getValue();
 	}
 
-	public String getEncoding() throws DbgpException {
+	public String getEncoding() throws DbgpException
+	{
 		return getFeature(IDbgpFeatureCommands.ENCODING).getValue();
 	}
 
-	public String getDataEncoding() throws DbgpException {
+	public String getDataEncoding() throws DbgpException
+	{
 		return getFeature(IDbgpFeatureCommands.DATA_ENCODING).getValue();
 	}
 
-	public String getProtocolVersion() throws DbgpException {
+	public String getProtocolVersion() throws DbgpException
+	{
 		return getFeature(IDbgpFeatureCommands.PROTOCOL_VERSION).getValue();
 	}
 
-	public boolean isSupportsAsync() throws DbgpException {
-		return getFeature(IDbgpFeatureCommands.SUPPORTS_ASYNC).getValue()
-				.equals(IDbgpFeature.ONE_VALUE);
+	public boolean isSupportsAsync() throws DbgpException
+	{
+		return getFeature(IDbgpFeatureCommands.SUPPORTS_ASYNC).getValue().equals(IDbgpFeature.ONE_VALUE);
 	}
 
-	public String getBreakpointLanguages() throws DbgpException {
+	public String getBreakpointLanguages() throws DbgpException
+	{
 		return getFeature(IDbgpFeatureCommands.BREAKPOINT_LANGUAGES).getValue();
 	}
 
-	public String getBreakpointTypes() throws DbgpException {
+	public String getBreakpointTypes() throws DbgpException
+	{
 		return getFeature(IDbgpFeatureCommands.BREAKPOINT_TYPES).getValue();
 	}
 
 	// Multiple sessions
-	public boolean getMultipleSessions() throws DbgpException {
-		return getFeature(IDbgpFeatureCommands.MULTIPLE_SESSIONS).getValue()
-				.equals(IDbgpFeature.ONE_VALUE);
+	public boolean getMultipleSessions() throws DbgpException
+	{
+		return getFeature(IDbgpFeatureCommands.MULTIPLE_SESSIONS).getValue().equals(IDbgpFeature.ONE_VALUE);
 	}
 
-	public void setMultipleSessions(boolean value) throws DbgpException {
-		setFeature(IDbgpFeatureCommands.MULTIPLE_SESSIONS,
-				value ? IDbgpFeature.ONE_VALUE : IDbgpFeature.ZERO_VALUE);
+	public void setMultipleSessions(boolean value) throws DbgpException
+	{
+		setFeature(IDbgpFeatureCommands.MULTIPLE_SESSIONS, value ? IDbgpFeature.ONE_VALUE
+				: IDbgpFeature.ZERO_VALUE);
 	}
 
 	// Max children
-	public int getMaxChildren() throws DbgpException {
+	public int getMaxChildren() throws DbgpException
+	{
 		return getFeatureInteger(IDbgpFeatureCommands.MAX_CHILDREN);
 	}
 
-	public void setMaxChildren(int value) throws DbgpException {
+	public void setMaxChildren(int value) throws DbgpException
+	{
 		setFeatureInteger(IDbgpFeatureCommands.MAX_CHILDREN, value);
 	}
 
 	// Max data
-	public int getMaxData() throws DbgpException {
+	public int getMaxData() throws DbgpException
+	{
 		return getFeatureInteger(IDbgpFeatureCommands.MAX_DATA);
 	}
 
-	public void setMaxData(int value) throws DbgpException {
+	public void setMaxData(int value) throws DbgpException
+	{
 		setFeatureInteger(IDbgpFeatureCommands.MAX_DATA, value);
 	}
 
 	// Max depth
-	public int getMaxDepth() throws DbgpException {
+	public int getMaxDepth() throws DbgpException
+	{
 		return getFeatureInteger(IDbgpFeatureCommands.MAX_DEPTH);
 	}
 
-	public void setMaxDepth(int value) throws DbgpException {
+	public void setMaxDepth(int value) throws DbgpException
+	{
 		setFeatureInteger(IDbgpFeatureCommands.MAX_DEPTH, value);
 	}
 
 	// Optional features
 
 	// Post morten
-	public boolean isPostMortenSupported() throws DbgpException {
+	public boolean isPostMortenSupported() throws DbgpException
+	{
 		return isFeatureSupported(IDbgpFeatureCommands.SUPPORTS_POSTMORTEN);
 	}
 
-	public boolean getPostMorten() throws DbgpException {
+	public boolean getPostMorten() throws DbgpException
+	{
 		return getFeatureBoolean(IDbgpFeatureCommands.SUPPORTS_POSTMORTEN);
 	}
 
 	// Show hidden
-	public boolean isShowHiddenSupported() throws DbgpException {
+	public boolean isShowHiddenSupported() throws DbgpException
+	{
 		return isFeatureSupported(IDbgpFeatureCommands.SHOW_HIDDEN);
 	}
 
-	public boolean getShowHidden() throws DbgpException {
+	public boolean getShowHidden() throws DbgpException
+	{
 		return getFeatureBoolean(IDbgpFeatureCommands.SHOW_HIDDEN);
 	}
 
-	public void setShowHidden(boolean value) throws DbgpException {
+	public void setShowHidden(boolean value) throws DbgpException
+	{
 		setFeatureBoolean(IDbgpFeatureCommands.SHOW_HIDDEN, value);
 	}
 
 	// Notfy ok
-	public boolean isNotifyOkSupported() throws DbgpException {
+	public boolean isNotifyOkSupported() throws DbgpException
+	{
 		return isFeatureSupported(IDbgpFeatureCommands.NOTIFY_OK);
 	}
 
-	public boolean getNotifyOk() throws DbgpException {
+	public boolean getNotifyOk() throws DbgpException
+	{
 		return getFeatureBoolean(IDbgpFeatureCommands.NOTIFY_OK);
 	}
 
-	public void setNotifyOk(boolean value) throws DbgpException {
+	public void setNotifyOk(boolean value) throws DbgpException
+	{
 		setFeatureBoolean(IDbgpFeatureCommands.NOTIFY_OK, value);
 	}
 
-	protected void configureStdout(int value) throws DbgpException {
+	protected void configureStdout(int value) throws DbgpException
+	{
 		IDbgpCoreCommands core = session.getCoreCommands();
 		// TODO: error handling
 		core.configureStdout(value);
 	}
 
 	// Stdout
-	public void disableStdout() throws DbgpException {
+	public void disableStdout() throws DbgpException
+	{
 		configureStdout(IDbgpStreamCommands.DISABLE);
 	}
 
-	public void copyStdout() throws DbgpException {
+	public void copyStdout() throws DbgpException
+	{
 		configureStdout(IDbgpStreamCommands.COPY);
 	}
 
-	public void redirectStdout() throws DbgpException {
+	public void redirectStdout() throws DbgpException
+	{
 		configureStdout(IDbgpStreamCommands.REDIRECT);
 	}
 
 	// Stderr
-	protected void configureStderr(int value) throws DbgpException {
+	protected void configureStderr(int value) throws DbgpException
+	{
 		IDbgpCoreCommands core = session.getCoreCommands();
 		// TODO: error handling
 		core.configureStderr(value);
 	}
 
-	public void disableStderr() throws DbgpException {
+	public void disableStderr() throws DbgpException
+	{
 		configureStderr(IDbgpStreamCommands.DISABLE);
 	}
 
-	public void copyStderr() throws DbgpException {
+	public void copyStderr() throws DbgpException
+	{
 		configureStderr(IDbgpStreamCommands.COPY);
 	}
 
-	public void redirectStderr() throws DbgpException {
+	public void redirectStderr() throws DbgpException
+	{
 		configureStderr(IDbgpStreamCommands.REDIRECT);
 	}
 
 	// Stdin
-	protected void configureStdin(int value) throws DbgpException {
+	protected void configureStdin(int value) throws DbgpException
+	{
 		IDbgpExtendedCommands extended = session.getExtendedCommands();
 		// TODO: handling
 		extended.configureStdin(value);
 	}
 
-	public void disableStdin() throws DbgpException {
+	public void disableStdin() throws DbgpException
+	{
 		configureStdin(IDbgpExtendedCommands.DISABLE);
 	}
 
-	public void redirectStdin() throws DbgpException {
+	public void redirectStdin() throws DbgpException
+	{
 		configureStdin(IDbgpExtendedCommands.REDIRECT);
 	}
 
-	public static void printEngineInfo(DbgpDebugger d) throws DbgpException {
+	public static void printEngineInfo(DbgpDebugger d) throws DbgpException
+	{
 		// TODO: to debug log
 		System.out.println(IDbgpFeatureCommands.LANGUAGE_SUPPORTS_THREADS
 				+ ": " + d.isSupportsThreads()); //$NON-NLS-1$
@@ -348,33 +403,40 @@ public class DbgpDebugger {
 		System.out.println(IDbgpFeatureCommands.MAX_DEPTH + ": " //$NON-NLS-1$
 				+ d.getMaxDepth());
 
-		if (d.isPostMortenSupported()) {
+		if (d.isPostMortenSupported())
+		{
 			System.out.println("Support of " //$NON-NLS-1$
 					+ IDbgpFeatureCommands.SUPPORTS_POSTMORTEN
 					+ ": true, value: " + d.getPostMorten()); //$NON-NLS-1$
-		} else {
+		} else
+		{
 			System.out.println("Support of " //$NON-NLS-1$
 					+ IDbgpFeatureCommands.SUPPORTS_POSTMORTEN + ": false"); //$NON-NLS-1$
 		}
 
-		if (d.isShowHiddenSupported()) {
+		if (d.isShowHiddenSupported())
+		{
 			System.out.println("Support of " + IDbgpFeatureCommands.SHOW_HIDDEN //$NON-NLS-1$
 					+ ": true, value: " + d.getShowHidden()); //$NON-NLS-1$
-		} else {
+		} else
+		{
 			System.out.println("Support of " + IDbgpFeatureCommands.SHOW_HIDDEN //$NON-NLS-1$
 					+ ": false"); //$NON-NLS-1$
 		}
 
-		if (d.isNotifyOkSupported()) {
+		if (d.isNotifyOkSupported())
+		{
 			System.out.println("Support of " + IDbgpFeatureCommands.NOTIFY_OK //$NON-NLS-1$
 					+ ": true, value: " + d.getNotifyOk()); //$NON-NLS-1$
-		} else {
+		} else
+		{
 			System.out.println("Support of " + IDbgpFeatureCommands.NOTIFY_OK //$NON-NLS-1$
 					+ ": false"); //$NON-NLS-1$
 		}
 	}
 
-	public IDbgpSession getSession() {
+	public IDbgpSession getSession()
+	{
 		return this.session;
 	}
 }

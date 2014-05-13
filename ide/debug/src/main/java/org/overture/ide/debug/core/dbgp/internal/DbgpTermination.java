@@ -20,16 +20,20 @@ package org.overture.ide.debug.core.dbgp.internal;
 
 import org.eclipse.core.runtime.ListenerList;
 
-public abstract class DbgpTermination implements IDbgpTermination {
+public abstract class DbgpTermination implements IDbgpTermination
+{
 	private final ListenerList listeners = new ListenerList();
 
-	protected void fireObjectTerminated(final Exception e) {
-		Thread thread = new Thread(new Runnable() {
-			public void run() {
+	protected void fireObjectTerminated(final Exception e)
+	{
+		Thread thread = new Thread(new Runnable()
+		{
+			public void run()
+			{
 				Object[] list = listeners.getListeners();
-				for (int i = 0; i < list.length; ++i) {
-					((IDbgpTerminationListener) list[i]).objectTerminated(
-							DbgpTermination.this, e);
+				for (int i = 0; i < list.length; ++i)
+				{
+					((IDbgpTerminationListener) list[i]).objectTerminated(DbgpTermination.this, e);
 				}
 			}
 		});
@@ -37,13 +41,15 @@ public abstract class DbgpTermination implements IDbgpTermination {
 		thread.start();
 	}
 
-	public void addTerminationListener(IDbgpTerminationListener listener) {
+	public void addTerminationListener(IDbgpTerminationListener listener)
+	{
 		listeners.add(listener);
 
 	}
 
-	public void removeTerminationListener(IDbgpTerminationListener listener) {
+	public void removeTerminationListener(IDbgpTerminationListener listener)
+	{
 		listeners.remove(listener);
 	}
-	
+
 }

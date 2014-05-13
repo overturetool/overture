@@ -1,0 +1,11 @@
+class C
+
+operations
+
+public op1 : nat ==> ()
+op1 (arg) == op2(arg);
+
+public op2 : nat ==> ()
+op2 (arg) == skip;
+
+end C

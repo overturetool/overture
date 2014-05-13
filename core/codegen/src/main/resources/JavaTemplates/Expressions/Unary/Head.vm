@@ -1,0 +1,7 @@
+#set( $clone = "")
+#if ($JavaFormat.shouldClone($node))
+	#set( $clone = ".clone()")
+#end
+##
+#set( $getCall = ".get(0)")
+(($JavaFormat.format($node.getType())) $JavaFormat.format($node.getExp())$getCall)$clone

@@ -1,0 +1,22 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class A {
+    public A() {
+    }
+
+    public Number op() {
+        Number n = 1L;
+        boolean b = true;
+        Number r = 1.0;
+        char c = '1';
+        String s1 = "1";
+        A a = new A();
+
+        return 0L;
+    }
+}
+
+##########

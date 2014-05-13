@@ -1,0 +1,39 @@
+class A
+
+functions
+
+public static f :  nat -> nat
+f (x) == x;
+
+operations
+
+public q1 : () ==> ()
+q1 () == q2();
+
+public q2 : () ==> ()
+q2 () == skip;
+
+public q3 : () ==> ()
+q3 () == 
+(
+	q2();
+	q2();
+	q2()
+);
+
+public op1 : () ==> nat
+op1 () == f(1);
+
+public op2 : () ==> nat
+op2 () == B`f(1);
+		
+end A
+
+class B
+
+functions
+
+public static f :  nat -> nat
+f (x) == x;
+
+end B

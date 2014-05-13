@@ -23,12 +23,13 @@ import java.util.Map;
 import org.overture.ide.debug.core.dbgp.IDbgpProperty;
 import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
 
-public interface IDbgpContextCommands {
+public interface IDbgpContextCommands
+{
 	int LOCAL_CONTEXT_ID = 0;
 	int GLOBAL_CONTEXT_ID = 1;
 	int CLASS_CONTEXT_ID = 2;
 
-	Map<Integer,String> getContextNames(int stackDepth) throws DbgpException;
+	Map<Integer, String> getContextNames(int stackDepth) throws DbgpException;
 
 	IDbgpProperty[] getContextProperties(int stackDepth) throws DbgpException;
 

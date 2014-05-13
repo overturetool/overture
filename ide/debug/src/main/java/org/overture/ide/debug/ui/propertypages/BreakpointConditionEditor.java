@@ -50,7 +50,7 @@ import org.overture.parser.syntax.ParserException;
 public class BreakpointConditionEditor
 {
 	private VdmSourceViewer fViewer;
-//	private IContentAssistProcessor fCompletionProcessor;
+	// private IContentAssistProcessor fCompletionProcessor;
 	private String fOldValue;
 	private String fErrorMessage;
 	private VdmLineBreakpointPropertyPage fPage;
@@ -70,7 +70,8 @@ public class BreakpointConditionEditor
 	 *            the page that is associated with this widget
 	 */
 	public BreakpointConditionEditor(Composite parent,
-			VdmLineBreakpointPropertyPage page) {
+			VdmLineBreakpointPropertyPage page)
+	{
 		fPage = page;
 		fBreakpoint = (IVdmLineBreakpoint) fPage.getBreakpoint();
 		String condition = new String();
@@ -78,7 +79,7 @@ public class BreakpointConditionEditor
 		{
 			condition = fBreakpoint.getExpression();
 			fErrorMessage = "Enter a condition";
-			
+
 			fOldValue = ""; //$NON-NLS-1$
 
 			fViewer = new VdmSourceViewer(parent, null, null, false, SWT.BORDER
@@ -126,11 +127,12 @@ public class BreakpointConditionEditor
 			// });
 			fViewer.setEditable(true);
 			// if we don't check upstream tracing can throw assertion exceptions see bug 181914
-			document.set((condition == null ? "" : condition)); //$NON-NLS-1$
+			document.set(condition == null ? "" : condition); //$NON-NLS-1$
 			fViewer.setDocument(document);
 			fViewer.setUndoManager(new TextViewerUndoManager(10));
 			fViewer.getUndoManager().connect(fViewer);
-			fDocumentListener = new IDocumentListener() {
+			fDocumentListener = new IDocumentListener()
+			{
 				public void documentAboutToBeChanged(DocumentEvent event)
 				{
 				}
@@ -145,7 +147,8 @@ public class BreakpointConditionEditor
 			gd.heightHint = fPage.convertHeightInCharsToPixels(10);
 			gd.widthHint = fPage.convertWidthInCharsToPixels(40);
 			fViewer.getControl().setLayoutData(gd);
-			fHandler = new AbstractHandler() {
+			fHandler = new AbstractHandler()
+			{
 				public Object execute(ExecutionEvent event)
 						throws org.eclipse.core.commands.ExecutionException
 				{
@@ -153,10 +156,10 @@ public class BreakpointConditionEditor
 					return null;
 				}
 			};
-			fHandlerService = (IHandlerService) PlatformUI.getWorkbench()
-					.getAdapter(IHandlerService.class);
+			fHandlerService = (IHandlerService) PlatformUI.getWorkbench().getAdapter(IHandlerService.class);
 
-			fViewer.getControl().addFocusListener(new FocusAdapter() {
+			fViewer.getControl().addFocusListener(new FocusAdapter()
+			{
 				public void focusGained(FocusEvent e)
 				{
 					activateContentAssist();
@@ -201,15 +204,16 @@ public class BreakpointConditionEditor
 			} else
 			{
 				fPage.removeErrorMessage(fErrorMessage);
-				if(validateSyntax())
+				if (validateSyntax())
 				{
-				fPage.removeErrorMessage(fSyntaxErrorMessage);
-				}else{
+					fPage.removeErrorMessage(fSyntaxErrorMessage);
+				} else
+				{
 					fPage.addErrorMessage(fSyntaxErrorMessage);
 				}
-				
+
 			}
-			
+
 		}
 	}
 
@@ -222,16 +226,12 @@ public class BreakpointConditionEditor
 		fViewer.getTextWidget().setEnabled(enabled);
 		if (enabled)
 		{
-			Color color = fViewer.getControl()
-					.getDisplay()
-					.getSystemColor(SWT.COLOR_WHITE);
+			Color color = fViewer.getControl().getDisplay().getSystemColor(SWT.COLOR_WHITE);
 			fViewer.getTextWidget().setBackground(color);
 			fViewer.getTextWidget().setFocus();
 		} else
 		{
-			Color color = fViewer.getControl()
-					.getDisplay()
-					.getSystemColor(SWT.COLOR_WIDGET_BACKGROUND);
+			Color color = fViewer.getControl().getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND);
 			fViewer.getTextWidget().setBackground(color);
 		}
 		valueChanged();
@@ -246,7 +246,7 @@ public class BreakpointConditionEditor
 		if (!newValue.equals(fOldValue))
 		{
 			fOldValue = newValue;
-			
+
 		}
 		refreshValidState();
 	}
@@ -265,12 +265,12 @@ public class BreakpointConditionEditor
 		{
 			this.fSyntaxErrorMessage = e.getMessage();
 			return false;
-			
+
 		} catch (LexException e)
 		{
 			this.fSyntaxErrorMessage = e.getMessage();
 			return false;
-			
+
 		}
 		return true;
 
@@ -289,8 +289,7 @@ public class BreakpointConditionEditor
 
 	private void activateContentAssist()
 	{
-		fActivation = fHandlerService.activateHandler(ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS,
-				fHandler);
+		fActivation = fHandlerService.activateHandler(ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS, fHandler);
 	}
 
 	private void deactivateContentAssist()

@@ -1,0 +1,52 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class A {
+    public static final VDMMap x = MapUtil.map(new Maplet(Tuple.mk_(1L, 2L),
+                new A()));
+
+    public A() {
+    }
+
+    public Number no() {
+        return 50L;
+    }
+
+    public Number op1() {
+        Tuple a = Tuple.mk_(1L, 2L);
+
+        return ((A) x.get(a)).no();
+    }
+
+    public Number op2() {
+        Tuple a = Tuple.mk_('x', 'y');
+        Tuple b = Tuple.mk_(1L, 2L);
+
+        return ((A) m(a.clone(), a.clone()).get(b)).no();
+    }
+
+    public VDMMap m(Tuple p, Tuple q) {
+        return x.clone();
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        A a = new A();
+
+        return a.op1().longValue() + a.op2().longValue();
+    }
+}
+
+##########

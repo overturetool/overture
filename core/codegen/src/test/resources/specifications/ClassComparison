@@ -1,0 +1,12 @@
+class A
+
+values
+
+public a0 = new A();
+public a1 = new A();
+
+public x = a0 = a0;
+public y = a0 = a1;
+public z = new A() = new A(); 
+
+end A

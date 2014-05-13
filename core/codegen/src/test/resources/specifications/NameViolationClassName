@@ -1,0 +1,15 @@
+class Long
+
+operations 
+
+public op : nat ==> ()
+op (Character) == 
+	if true then
+	(
+		return;
+		op(3) 
+	) 
+	else
+		op(3)
+
+end Long

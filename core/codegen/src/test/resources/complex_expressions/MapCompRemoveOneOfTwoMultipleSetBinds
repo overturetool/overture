@@ -1,0 +1,13 @@
+class Entry
+
+values
+
+s = {}
+
+operations 
+
+public static Run : () ==> ?
+Run () ==
+	return {x+y+z |-> z+y+x | x,y in set s, z in set {5} & true};
+
+end Entry

@@ -1,0 +1,34 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        return Test();
+    }
+
+    public static boolean Test() {
+        Long exists1Counter_1 = 0L;
+        VDMSet set_1 = SetUtil.set(1L, 2L, 3L);
+
+        for (Iterator iterator_1 = set_1.iterator();
+                iterator_1.hasNext() && (exists1Counter_1.longValue() < 2L);) {
+            Number x = ((Number) iterator_1.next());
+
+            if ((x.longValue() -
+                    (2L * Math.round(Math.floor(x.longValue() / 2L)))) == 0L) {
+                exists1Counter_1++;
+            }
+        }
+
+        boolean x = exists1Counter_1.longValue() == 1L;
+
+        return x;
+    }
+}
+
+##########

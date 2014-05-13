@@ -1,0 +1,67 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class A {
+    public A() {
+    }
+
+    public Tuple op() {
+        Vector2D v1 = new Vector2D(1.5, 2.5);
+        Vector2D v2 = new Vector2D(2L, 3L);
+        Vector2D v3 = new Vector2D(1.5, 2.5);
+
+        return Tuple.mk_(v1.equals(v1), v1.equals(v2), v1.equals(v3));
+    }
+
+    public static class Vector2D implements Record {
+        public Number x;
+        public Number y;
+
+        public Vector2D(Number _x, Number _y) {
+            x = _x;
+            y = _y;
+        }
+
+        public boolean equals(Object obj) {
+            if (!(obj instanceof Vector2D)) {
+                return false;
+            }
+
+            Vector2D other = ((Vector2D) obj);
+
+            return (x.doubleValue() == other.x.doubleValue()) &&
+            (y.doubleValue() == other.y.doubleValue());
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(x, y);
+        }
+
+        public Vector2D clone() {
+            return new Vector2D(x, y);
+        }
+
+        public String toString() {
+            return Utils.recordToString(this, x, y);
+        }
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        return new A().op();
+    }
+}
+
+##########

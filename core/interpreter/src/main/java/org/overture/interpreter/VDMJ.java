@@ -38,6 +38,7 @@ import org.overture.config.Settings;
 import org.overture.interpreter.debug.RemoteControl;
 import org.overture.interpreter.debug.RemoteInterpreter;
 import org.overture.interpreter.messages.Console;
+import org.overture.interpreter.messages.rtlog.RTLogger;
 import org.overture.interpreter.runtime.Interpreter;
 import org.overture.interpreter.util.ExitStatus;
 import org.overture.parser.config.Properties;
@@ -510,6 +511,18 @@ abstract public class VDMJ
 	 */
 
 	abstract protected ExitStatus interpret(List<File> filenames, String defaultName);
+	
+	/**
+	 * Dump log files
+	 */
+	protected void dumpLogs()
+	{
+		if (logfile != null)
+		{
+			RTLogger.dump(true);
+			infoln("RT events dumped to " + logfile);
+		}
+	}
 
 	public void setWarnings(boolean w)
 	{

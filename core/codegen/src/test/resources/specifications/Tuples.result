@@ -1,0 +1,15 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class A {
+    public A() {
+    }
+
+    public static Tuple f2(Tuple x) {
+        return Tuple.mk_(1L, 2L);
+    }
+}
+
+##########

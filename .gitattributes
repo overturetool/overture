@@ -1,6 +1,6 @@
 # Auto detect text files and perform LF normalization
 # (I don't think we really want autodetection on -jwc/16Nov2012)
-#*        text=auto
+#*	  text=auto
 
 *.MF	 text
 *.ast	 text
@@ -17,6 +17,7 @@
 *.py	 text
 *.rule	 text
 *.sh	 text
+*.result text
 *.tex	 text
 *.txt	 text
 *.vdmsl	 text

@@ -403,7 +403,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 			// add all defined names from the function parameter list
 			AOperationType otype = (AOperationType) node.getType();
 			Iterator<PType> typeIter = otype.getParameters().iterator();
-			boolean alwaysMatches = false;
+			boolean alwaysMatches = true;
 			PatternAlwaysMatchesVisitor amVisitor = new PatternAlwaysMatchesVisitor();
 
 			for (PPattern p : node.getParameterPatterns())
@@ -414,6 +414,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 				alwaysMatches = alwaysMatches && p.apply(amVisitor);
 			}
 
+			
 			if (pids.hasDuplicates() || !alwaysMatches)
 			{
 				obligations.add(new ParameterPatternObligation(node, question,assistantFactory));

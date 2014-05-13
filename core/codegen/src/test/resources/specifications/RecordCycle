@@ -1,0 +1,17 @@
+class A
+
+types
+
+public RecA :: b : [B`RecB]
+
+operations
+
+end A
+
+class B
+
+types
+
+public RecB :: a : A`RecA
+
+end B

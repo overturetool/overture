@@ -1,0 +1,11 @@
+class A
+
+functions
+
+public f :  () -> seq of char
+f () == "";
+
+public g :  () -> seq1 of char
+g () == "txt";
+
+end A

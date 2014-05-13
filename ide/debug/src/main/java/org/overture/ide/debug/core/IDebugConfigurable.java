@@ -18,7 +18,8 @@
  *******************************************************************************/
 package org.overture.ide.debug.core;
 
-public interface IDebugConfigurable {
+public interface IDebugConfigurable
+{
 
 	IDebugOptions getDebugOptions();
 

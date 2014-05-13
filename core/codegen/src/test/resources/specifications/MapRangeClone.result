@@ -1,0 +1,20 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class A {
+    private static final VDMMap a = MapUtil.map(new Maplet(1L, 2L));
+    private static final VDMSet x = MapUtil.rng(MapUtil.map(new Maplet(1L, 2L)));
+    private static final VDMSet y = MapUtil.rng(op());
+    private static final VDMSet z = MapUtil.rng(a.clone());
+
+    public A() {
+    }
+
+    public static VDMMap op() {
+        return MapUtil.map(new Maplet(1L, 2L), new Maplet(3L, 4L));
+    }
+}
+
+##########

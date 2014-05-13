@@ -103,6 +103,11 @@ public class MainThread extends SchedulablePoolThread
 			suspendOthers();
 		}catch (Throwable e)
 		{
+			if(e instanceof ThreadDeath)
+			{
+				//ThreadDeath required re-throw by definition
+				throw (ThreadDeath)e;
+			}
 			setException(new Exception("internal error", e));
 			suspendOthers();
 		}

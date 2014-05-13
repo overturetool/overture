@@ -36,24 +36,29 @@ import org.overture.ide.debug.core.dbgp.internal.packets.DbgpResponsePacket;
 import org.overture.ide.debug.core.dbgp.internal.utils.DbgpXmlParser;
 import org.w3c.dom.Element;
 
-public class DbgpDebuggingEngineCommunicator implements IDbgpCommunicator {
+public class DbgpDebuggingEngineCommunicator implements IDbgpCommunicator
+{
 	private final int timeout;
 
 	private final IDbgpDebugingEngine engine;
 	private IDebugOptions options;
 
-	private void sendRequest(DbgpRequest command) throws IOException {
+	private void sendRequest(DbgpRequest command) throws IOException
+	{
 		engine.sendCommand(command);
 	}
 
 	private DbgpResponsePacket receiveResponse(int transactionId)
-			throws IOException, InterruptedException {
+			throws IOException, InterruptedException
+	{
 		return engine.getResponsePacket(transactionId, timeout);
 	}
 
 	public DbgpDebuggingEngineCommunicator(IDbgpDebugingEngine engine,
-			IDebugOptions options) {
-		if (engine == null) {
+			IDebugOptions options)
+	{
+		if (engine == null)
+		{
 			throw new IllegalArgumentException();
 		}
 
@@ -61,88 +66,109 @@ public class DbgpDebuggingEngineCommunicator implements IDbgpCommunicator {
 		this.options = options;
 
 		timeout = 0;
-//		timeout = VdmDebugPlugin.getDefault().getPluginPreferences().getInt(
-//				IDebugConstants.PREF_DBGP_RESPONSE_TIMEOUT);
+		// timeout = VdmDebugPlugin.getDefault().getPluginPreferences().getInt(
+		// IDebugConstants.PREF_DBGP_RESPONSE_TIMEOUT);
 	}
 
-	private final Map<DbgpRequest,DbgpRequest> activeRequests = new IdentityHashMap<DbgpRequest,DbgpRequest>();
+	private final Map<DbgpRequest, DbgpRequest> activeRequests = new IdentityHashMap<DbgpRequest, DbgpRequest>();
 
-	public Element communicate(DbgpRequest request) throws DbgpException {
-		try {
+	public Element communicate(DbgpRequest request) throws DbgpException
+	{
+		try
+		{
 			final DbgpResponsePacket packet;
-			final int requestId = Integer.parseInt(request
-					.getOption(DbgpBaseCommands.ID_OPTION));
-			if (options.get(DebugOption.DBGP_ASYNC) || request.isAsync()) {
+			final int requestId = Integer.parseInt(request.getOption(DbgpBaseCommands.ID_OPTION));
+			if (options.get(DebugOption.DBGP_ASYNC) || request.isAsync())
+			{
 				sendRequest(request);
 				packet = receiveResponse(requestId);
-			} else {
+			} else
+			{
 				final long startTime = DEBUG ? System.currentTimeMillis() : 0;
 				beginSyncRequest(request);
-				if (DEBUG) {
+				if (DEBUG)
+				{
 					final long waited = System.currentTimeMillis() - startTime;
-					if (waited > 0) {
+					if (waited > 0)
+					{
 						System.out.println("Waited " + waited + " ms"); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 				}
-				try {
+				try
+				{
 					sendRequest(request);
 					packet = receiveResponse(requestId);
-				} finally {
+				} finally
+				{
 					endSyncRequest(request);
 				}
 			}
 
-			if (packet == null) {
+			if (packet == null)
+			{
 				throw new DbgpTimeoutException(request);
 			}
 
 			Element response = packet.getContent();
 
 			DbgpException e = DbgpXmlParser.checkError(response);
-			if (e != null) {
+			if (e != null)
+			{
 				throw e;
 			}
 
 			return response;
-		} catch (InterruptedException e) {
+		} catch (InterruptedException e)
+		{
 			throw new DbgpOpertionCanceledException(e);
-		} catch (IOException e) {
+		} catch (IOException e)
+		{
 			throw new DbgpIOException(e);
 		}
 	}
 
-	private void endSyncRequest(DbgpRequest request) {
-		synchronized (activeRequests) {
+	private void endSyncRequest(DbgpRequest request)
+	{
+		synchronized (activeRequests)
+		{
 			activeRequests.remove(request);
 			activeRequests.notifyAll();
 		}
 	}
 
 	private void beginSyncRequest(DbgpRequest request)
-			throws InterruptedException {
-		synchronized (activeRequests) {
-			while (!activeRequests.isEmpty()) {
+			throws InterruptedException
+	{
+		synchronized (activeRequests)
+		{
+			while (!activeRequests.isEmpty())
+			{
 				activeRequests.wait();
 			}
 			activeRequests.put(request, request);
 		}
 	}
 
-	public void send(DbgpRequest request) throws DbgpException {
-		try {
+	public void send(DbgpRequest request) throws DbgpException
+	{
+		try
+		{
 			sendRequest(request);
-		} catch (IOException e) {
+		} catch (IOException e)
+		{
 			throw new DbgpIOException(e);
 		}
 	}
 
 	private static final boolean DEBUG = false;
 
-	public IDebugOptions getDebugOptions() {
+	public IDebugOptions getDebugOptions()
+	{
 		return options;
 	}
 
-	public void configure(IDebugOptions debugOptions) {
+	public void configure(IDebugOptions debugOptions)
+	{
 		this.options = debugOptions;
 	}
 }

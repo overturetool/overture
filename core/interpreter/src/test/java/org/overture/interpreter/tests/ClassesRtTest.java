@@ -32,7 +32,7 @@ public class ClassesRtTest extends CommonInterpreterTest
 	@Override
 	protected String getPropertyId()
 	{
-		return "class.rt";
+		return "class-classic.rt";
 	}
 
 }

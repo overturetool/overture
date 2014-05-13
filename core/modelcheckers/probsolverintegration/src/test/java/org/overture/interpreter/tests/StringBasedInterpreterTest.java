@@ -23,7 +23,7 @@ public abstract class StringBasedInterpreterTest extends
 		super(file, suiteName, testSuiteRoot);
 	}
 
-	public void encondeResult(String result, Document doc, Element resultElement)
+	public void encodeResult(String result, Document doc, Element resultElement)
 	{
 		Element message = doc.createElement("output");
 

@@ -22,26 +22,32 @@ import java.io.IOException;
 
 import org.overture.ide.debug.core.VdmDebugPlugin;
 
-public abstract class DbgpWorkingThread extends DbgpTermination {
+public abstract class DbgpWorkingThread extends DbgpTermination
+{
 	private Thread thread;
 	private final String name;
 
-	public DbgpWorkingThread(String name) {
+	public DbgpWorkingThread(String name)
+	{
 		this.name = name;
 	}
 
-	public void start() {
-		if (thread == null || !thread.isAlive()) {
-			thread = new Thread(new Runnable() {
-				public void run() {
-					try {
+	public void start()
+	{
+		if (thread == null || !thread.isAlive())
+		{
+			thread = new Thread(new Runnable()
+			{
+				public void run()
+				{
+					try
+					{
 						workingCycle();
-					} catch (Exception e) {
-						if (isLoggable(e)) {
-							VdmDebugPlugin
-									.logError(
-											"workingCycleError",
-											e);
+					} catch (Exception e)
+					{
+						if (isLoggable(e))
+						{
+							VdmDebugPlugin.logError("workingCycleError", e);
 						}
 						fireObjectTerminated(e);
 						return;
@@ -52,32 +58,37 @@ public abstract class DbgpWorkingThread extends DbgpTermination {
 			}, name);
 
 			thread.start();
-		} else {
-			throw new IllegalStateException(
-					"threadAlreadyStarted");
+		} else
+		{
+			throw new IllegalStateException("threadAlreadyStarted");
 		}
 	}
 
-	public void requestTermination() {
-		if (thread != null && thread.isAlive()) {
+	public void requestTermination()
+	{
+		if (thread != null && thread.isAlive())
+		{
 			thread.interrupt();
 		}
 	}
 
-	public void waitTerminated() throws InterruptedException {
+	public void waitTerminated() throws InterruptedException
+	{
 		if (thread != null)
+		{
 			thread.join();
+		}
 	}
 
 	/**
-	 * Tests if this exception should be logged. The rationale here is
-	 * IOExceptions/SocketExceptions occurs always after socket is closed, so
-	 * there is no point to log it.
+	 * Tests if this exception should be logged. The rationale here is IOExceptions/SocketExceptions occurs always after
+	 * socket is closed, so there is no point to log it.
 	 * 
 	 * @param e
 	 * @return
 	 */
-	protected boolean isLoggable(Exception e) {
+	protected boolean isLoggable(Exception e)
+	{
 		return !(e instanceof IOException);
 	}
 
