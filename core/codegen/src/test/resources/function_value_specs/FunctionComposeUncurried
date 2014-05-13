@@ -1,0 +1,19 @@
+class Entry
+
+functions
+
+static	
+func_compose[@A,@B,@C] : (@A -> @B) * (@B -> @C) -> (@A -> @C)
+func_compose(f,g) == (lambda x : @A & g(f(x)));
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let f = (lambda x : int & x + 1),
+		g = (lambda x : int & x + 1),
+		h = func_compose[int, int, int](f,g)
+in
+	return h(2);
+	
+end Entry

@@ -10,25 +10,34 @@ import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.cgast.expressions.AAnonymousClassExpCG;
 import org.overture.codegen.cgast.expressions.ALambdaExpCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
+import org.overture.codegen.cgast.statements.AReturnStmCG;
+import org.overture.codegen.cgast.types.AInterfaceTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.constants.IOoAstConstants;
+import org.overture.codegen.transform.TransformationAssistantCG;
 
 public class FunctionValueVisitor extends DepthFirstAnalysisAdaptor
 {
 	private int counter = 0;
 	
+	private TransformationAssistantCG transformationAssistant;
+	
 	private FunctionValueAssistant functionValueAssistant;
+	
 	private String interfaceNamePrefix;
 	private String templateTypePrefix;
 	private String evalMethodName;
 	private String paramNamePrefix;
 	
-	public FunctionValueVisitor(String interfaceNamePrefix, String templateTypePrefix, String evalMethodName, String paramNamePrefix)
+	public FunctionValueVisitor(TransformationAssistantCG transformationAssistant, FunctionValueAssistant functionValueAssistant, String interfaceNamePrefix, String templateTypePrefix, String evalMethodName, String paramNamePrefix)
 	{
+		this.transformationAssistant = transformationAssistant;
+		this.functionValueAssistant = functionValueAssistant;
 		this.interfaceNamePrefix = interfaceNamePrefix;
 		this.templateTypePrefix = templateTypePrefix;
 		this.evalMethodName = evalMethodName;
@@ -68,8 +77,8 @@ public class FunctionValueVisitor extends DepthFirstAnalysisAdaptor
 		
 		if(info == null)
 		{
-			AInterfaceDeclCG methodTypeInterface = consInterface(node);
-			functionValueAssistant.registerInterface(methodTypeInterface);
+			info = consInterface(node);
+			functionValueAssistant.registerInterface(info);
 		}
 	}
 	
@@ -77,16 +86,51 @@ public class FunctionValueVisitor extends DepthFirstAnalysisAdaptor
 	public void inALambdaExpCG(ALambdaExpCG node) throws AnalysisException
 	{
 		AMethodTypeCG methodType = (AMethodTypeCG) node.getType().clone();
-		AInterfaceDeclCG info = functionValueAssistant.findInterface(methodType);
+		AInterfaceDeclCG lambdaInterface = functionValueAssistant.findInterface(methodType);
 		
-		if(info == null)
+		if(lambdaInterface == null)
 		{
 			@SuppressWarnings("unchecked")
 			List<? extends AFormalParamLocalDeclCG> formalParams = (List<? extends AFormalParamLocalDeclCG>) node.getParams().clone();
-			AInterfaceDeclCG lambdaInterface = consInterface(methodType, formalParams);
+			lambdaInterface = consInterface(methodType, formalParams);
 			
 			functionValueAssistant.registerInterface(lambdaInterface);
 		}
+		
+		LinkedList<AFormalParamLocalDeclCG> params = node.getParams();
+		
+		AInterfaceTypeCG classType = new AInterfaceTypeCG();
+		classType.setName(lambdaInterface.getName());
+		
+		AMethodDeclCG lambdaDecl = lambdaInterface.getMethodSignatures().get(0).clone();
+		
+		for(int i = 0; i < params.size(); i++)
+		{
+			AFormalParamLocalDeclCG paramLocalDeclCG = params.get(i);
+			PTypeCG paramType = paramLocalDeclCG.getType();
+			String paramName = paramLocalDeclCG.getName();
+			
+			classType.getTypes().add(paramType.clone());
+			lambdaDecl.getFormalParams().get(i).setType(paramType.clone());
+			lambdaDecl.getFormalParams().get(i).setName(paramName);
+		}
+		
+		classType.getTypes().add(methodType.getResult().clone());
+		lambdaDecl.getMethodType().setResult(methodType.getResult().clone());
+		
+		AReturnStmCG lambdaReturn = new AReturnStmCG();
+		lambdaReturn.setExp(node.getExp().clone());
+		
+		lambdaDecl.setAbstract(false);
+		lambdaDecl.setBody(lambdaReturn);
+
+		AAnonymousClassExpCG classExp = new AAnonymousClassExpCG();
+		classExp.setType(classType);;
+		classExp.getMethods().add(lambdaDecl);
+		
+		transformationAssistant.replaceNodeWith(node, classExp);
+		
+		classExp.apply(this);
 	}
 	
 	private AInterfaceDeclCG consInterface(AMethodTypeCG methodType)

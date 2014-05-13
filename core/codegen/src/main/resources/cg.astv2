@@ -214,6 +214,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     	//that are not directly mapped to by the code generator.
     |	{external} [targetLangExp]:java_String
     |	{lambda} [params]:localDeclCG.formalParam* [exp]:expCG
+    |	{anonymousClass} [methods]:declCG.method*
     ;
 
 #RuntimeError {-> package='org.overture.codegen.cgast.expressions'}
@@ -350,6 +351,7 @@ typeCG {-> package='org.overture.codegen.cgast.types'}
     |	#seq
     |	#basicTypeWrappers
     |	{error}
+    |	{interface} [types]:typeCG* [name]:java_String
     ;
     
 externalType {-> package='org.overture.codegen.cgast.utils'}

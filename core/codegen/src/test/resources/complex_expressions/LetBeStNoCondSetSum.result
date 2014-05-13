@@ -11,7 +11,7 @@ public class Entry {
         return sum(SetUtil.set(1L, 2L, 3L, 4L, 5L));
     }
 
-    public static Number sum(VDMSet xs) {
+    public static Number sum(final VDMSet xs) {
         if (xs.isEmpty()) {
             return 0L;
         } else {

@@ -7,11 +7,11 @@ public class A {
     public A() {
     }
 
-    public static Number getM(Object arg) {
+    public static Number getM(final Object arg) {
         throw new UnsupportedOperationException();
     }
 
-    public static Number getN(Object arg) {
+    public static Number getN(final Object arg) {
         throw new UnsupportedOperationException();
     }
 }

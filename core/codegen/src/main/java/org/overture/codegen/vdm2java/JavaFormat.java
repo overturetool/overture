@@ -4,6 +4,7 @@ import java.io.StringWriter;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
@@ -65,6 +66,7 @@ import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AIntBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.AInterfaceTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
 import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
@@ -82,6 +84,7 @@ import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.constants.TempVarPrefixes;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.ooast.OoAstAnalysis;
+import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.ITempVarGen;
 
 public class JavaFormat
@@ -138,7 +141,7 @@ public class JavaFormat
 		if(methodTypeInterface == null)
 			return OBJ; //Should not happen
 		
-		AClassTypeCG methodClass = new AClassTypeCG();
+		AInterfaceTypeCG methodClass = new AInterfaceTypeCG();
 		methodClass.setName(methodTypeInterface.getName());
 		
 		LinkedList<PTypeCG> params = methodType.getParams();
@@ -619,38 +622,22 @@ public class JavaFormat
 	
 	public String format(List<AFormalParamLocalDeclCG> params) throws AnalysisException
 	{
-		return formatParams(params, false);
-	}
-	
-	public String formatFinalParams(List<AFormalParamLocalDeclCG> params) throws AnalysisException
-	{
-		return formatParams(params, true);
-	}
-	
-	public String formatParams(List<AFormalParamLocalDeclCG> params, boolean setFinal) throws AnalysisException
-	{
 		StringWriter writer = new StringWriter();
 		
 		if(params.size() <= 0)
 			return "";
 		
-		String finalPrefix = " final ";
+		final String finalPrefix = " final ";
 
 		AFormalParamLocalDeclCG firstParam = params.get(0);
-		if(setFinal)
-		{
-			writer.append(finalPrefix);
-		}
+		writer.append(finalPrefix);
 		writer.append(format(firstParam));
 		
 		for(int i = 1; i < params.size(); i++)
 		{
 			AFormalParamLocalDeclCG param = params.get(i);
 			writer.append(", ");
-			if(setFinal)
-			{
-				writer.append(finalPrefix);
-			}
+			writer.append(finalPrefix);
 			writer.append(format(param));
 		}
 		return writer.toString();
@@ -1055,6 +1042,11 @@ public class JavaFormat
 		return type instanceof AStringTypeCG; 
 	}
 	
+	public boolean isStringType(PExpCG exp)
+	{
+		return exp.getType() instanceof AStringTypeCG; 
+	}
+	
 	public boolean isCharType(PTypeCG type)
 	{
 		return type instanceof ACharBasicTypeCG; 
@@ -1183,5 +1175,17 @@ public class JavaFormat
 		SVarExpCG varExp = (SVarExpCG) root;
 		
 		return varExp.getIsLambda() != null && varExp.getIsLambda();
+	}
+	
+	public String escapeStr(String str)
+	{
+		String escaped = "";
+		for(int i = 0; i < str.length(); i++)
+		{
+			char currentChar = str.charAt(i);
+			escaped += GeneralUtils.isEscapeSequence(currentChar) ? StringEscapeUtils.escapeJava(currentChar + "") : (currentChar + "");
+		}
+		
+		return escaped;
 	}
 }
