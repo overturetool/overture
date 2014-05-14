@@ -278,7 +278,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 		try
 		{
-			allValues = PBindAssistantInterpreter.getBindValues(node.getBind(), ctxt);
+			allValues = ctxt.assistantFactory.createPBindAssistant().getBindValues(node.getBind(), ctxt);
 		} catch (ValueException e)
 		{
 			VdmRuntimeError.abort(node.getLocation(), e);
@@ -709,7 +709,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 		try
 		{
-			allValues = PBindAssistantInterpreter.getBindValues(node.getBind(), ctxt);
+			allValues = ctxt.assistantFactory.createPBindAssistant().getBindValues(node.getBind(), ctxt);
 		} catch (ValueException e)
 		{
 			VdmRuntimeError.abort(node.getLocation(), e);

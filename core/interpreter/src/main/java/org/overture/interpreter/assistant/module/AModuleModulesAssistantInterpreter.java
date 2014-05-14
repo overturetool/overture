@@ -35,7 +35,7 @@ public class AModuleModulesAssistantInterpreter extends
 		this.af = af;
 	}
 
-	public static PStm findStatement(ModuleListInterpreter modules, File file,
+	public PStm findStatement(ModuleListInterpreter modules, File file,
 			int lineno)
 	{
 		for (AModuleModules m : modules)
@@ -54,12 +54,12 @@ public class AModuleModulesAssistantInterpreter extends
 		return null;
 	}
 
-	public static PStm findStatement(AModuleModules m, int lineno)
+	public PStm findStatement(AModuleModules m, int lineno)
 	{
 		return PDefinitionAssistantInterpreter.findStatement(m.getDefs(), lineno);
 	}
 
-	public static PExp findExpression(ModuleListInterpreter modules, File file,
+	public PExp findExpression(ModuleListInterpreter modules, File file,
 			int lineno)
 	{
 		for (AModuleModules m : modules)
@@ -78,12 +78,12 @@ public class AModuleModulesAssistantInterpreter extends
 		return null;
 	}
 
-	public static PExp findExpression(AModuleModules d, int lineno)
+	public PExp findExpression(AModuleModules d, int lineno)
 	{
 		return af.createPDefinitionListAssistant().findExpression(d.getDefs(), lineno);
 	}
 
-	public static Context getStateContext(AModuleModules defaultModule)
+	public Context getStateContext(AModuleModules defaultModule)
 	{
 		AStateDefinition sdef = af.createPDefinitionListAssistant().findStateDefinition(defaultModule.getDefs());
 

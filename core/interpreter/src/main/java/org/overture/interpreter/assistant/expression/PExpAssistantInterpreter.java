@@ -327,7 +327,7 @@ public class PExpAssistantInterpreter extends PExpAssistantTC
 		return list;
 	}
 
-	public static PExp findExpression(LinkedList<PExp> args, int lineno)
+	public PExp findExpression(LinkedList<PExp> args, int lineno)
 	{
 		for (PExp exp : args)
 		{
@@ -339,7 +339,7 @@ public class PExpAssistantInterpreter extends PExpAssistantTC
 		return null;
 	}
 
-	public   LexNameList getOldNames(PExp expression)
+	public LexNameList getOldNames(PExp expression)
 	{
 		try
 		{

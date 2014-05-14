@@ -118,7 +118,7 @@ public class StatementExpressionFinder extends QuestionAnswerAdaptor<Integer, PE
 			throws AnalysisException
 	{
 		//return ACallStmAssistantInterpreter.findExpression(stm, lineno);
-		return PExpAssistantInterpreter.findExpression(stm.getArgs(), lineno);
+		return af.createPExpAssistant().findExpression(stm.getArgs(), lineno);
 	}
 	
 	@Override
@@ -126,7 +126,7 @@ public class StatementExpressionFinder extends QuestionAnswerAdaptor<Integer, PE
 			throws AnalysisException
 	{
 		//return ACallObjectStatementAssistantInterpreter.findExpression(stm, lineno);
-		return PExpAssistantInterpreter.findExpression(stm.getArgs(), lineno);
+		return af.createPExpAssistant().findExpression(stm.getArgs(), lineno);
 	}
 	
 	@Override
