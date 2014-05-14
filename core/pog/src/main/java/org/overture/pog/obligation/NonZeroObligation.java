@@ -40,7 +40,7 @@ public class NonZeroObligation extends ProofObligation
 	public NonZeroObligation(
 		ILexLocation location, PExp exp, IPOContextStack ctxt)
 	{
-		super(exp, POType.NON_ZERO, ctxt, exp.getLocation());
+		super(exp, POType.NON_ZERO, ctxt, location);
 		
 		// exp <> 0
 		
