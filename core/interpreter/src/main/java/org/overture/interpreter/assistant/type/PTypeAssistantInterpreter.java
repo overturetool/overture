@@ -19,7 +19,7 @@ public class PTypeAssistantInterpreter extends PTypeAssistantTC
 		this.af = af;
 	}
 
-	public static ValueList getAllValues(PType type, Context ctxt)
+	public ValueList getAllValues(PType type, Context ctxt)
 			throws AnalysisException
 	{
 		try

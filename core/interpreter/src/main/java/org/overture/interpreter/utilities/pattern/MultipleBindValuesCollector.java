@@ -7,7 +7,6 @@ import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
@@ -75,7 +74,7 @@ public class MultipleBindValuesCollector extends QuestionAnswerAdaptor<Context, 
 			Context ctxt) throws AnalysisException
 	{
 		//return ATypeMultipleBindAssistantInterpreter.getBindValues(node, ctxt);
-		return PTypeAssistantInterpreter.getAllValues(node.getType(), ctxt);
+		return af.createPTypeAssistant().getAllValues(node.getType(), ctxt);
 	}
 	
 	@Override

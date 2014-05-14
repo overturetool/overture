@@ -36,7 +36,7 @@ public class PTypeListAssistant
 		{
 			LexNameToken name = new LexNameToken("#", String.valueOf(n), t.getLocation());
 			PPattern p = AstFactory.newAIdentifierPattern(name);
-			Quantifier q = new Quantifier(p, PTypeAssistantInterpreter.getAllValues(t, ctxt));
+			Quantifier q = new Quantifier(p, af.createPTypeAssistant().getAllValues(t, ctxt));
 			quantifiers.add(q);
 		}
 
