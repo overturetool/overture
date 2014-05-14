@@ -670,7 +670,7 @@ public class SubTypeObligation extends ProofObligation
 		AIsExp isExp = new AIsExp();
 		isExp.setBasicType(type);
 		isExp.setType(new ABooleanBasicType());
-		isExp.setTest(exp);
+		isExp.setTest(exp.clone());
 		return isExp;
 	}
 }
