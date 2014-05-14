@@ -13,9 +13,6 @@ import org.overture.ast.node.INode;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.definition.PTraceCoreDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.PTraceDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.PMultipleBindAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.ValueException;
@@ -71,7 +68,7 @@ public class TermTraceExpander extends QuestionAnswerAdaptor<Context, TraceNode>
 
 			for (PMultipleBind mb : term.getDef().getBindings())
 			{
-				ValueList bvals = PMultipleBindAssistantInterpreter.getBindValues(mb, ctxt);
+				ValueList bvals = af.createPMultipleBindAssistant().getBindValues(mb, ctxt);
 
 				for (PPattern p : mb.getPlist())
 				{

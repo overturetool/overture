@@ -38,7 +38,7 @@ public class PBindAssistantInterpreter extends PBindAssistantTC
 //		}
 	}
 
-	public static ValueList getValues(PBind bind, ObjectContext ctxt)
+	public ValueList getValues(PBind bind, ObjectContext ctxt)
 	{	
 		
 		try

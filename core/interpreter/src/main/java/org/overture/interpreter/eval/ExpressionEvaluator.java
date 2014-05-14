@@ -324,7 +324,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			for (PMultipleBind mb : node.getBindList())
 			{
-				ValueList bvals = PMultipleBindAssistantInterpreter.getBindValues(mb, ctxt);
+				ValueList bvals = ctxt.assistantFactory.createPMultipleBindAssistant().getBindValues(mb, ctxt);
 
 				for (PPattern p : mb.getPlist())
 				{
@@ -425,7 +425,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			for (PMultipleBind mb : node.getBindList())
 			{
-				ValueList bvals = PMultipleBindAssistantInterpreter.getBindValues(mb, ctxt);
+				ValueList bvals = ctxt.assistantFactory.createPMultipleBindAssistant().getBindValues(mb, ctxt);
 
 				for (PPattern p : mb.getPlist())
 				{
@@ -777,7 +777,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			for (PMultipleBind mb : node.getDef().getBindings())
 			{
-				ValueList bvals = PMultipleBindAssistantInterpreter.getBindValues(mb, ctxt);
+				ValueList bvals = ctxt.assistantFactory.createPMultipleBindAssistant().getBindValues(mb, ctxt);
 
 				for (PPattern p : mb.getPlist())
 				{
@@ -875,7 +875,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			for (PMultipleBind mb : node.getBindings())
 			{
-				ValueList bvals = PMultipleBindAssistantInterpreter.getBindValues(mb, ctxt);
+				ValueList bvals = ctxt.assistantFactory.createPMultipleBindAssistant().getBindValues(mb, ctxt);
 
 				for (PPattern p : mb.getPlist())
 				{
@@ -1539,7 +1539,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			for (PMultipleBind mb : node.getBindings())
 			{
-				ValueList bvals = PMultipleBindAssistantInterpreter.getBindValues(mb, ctxt);
+				ValueList bvals = ctxt.assistantFactory.createPMultipleBindAssistant().getBindValues(mb, ctxt);
 
 				for (PPattern p : mb.getPlist())
 				{

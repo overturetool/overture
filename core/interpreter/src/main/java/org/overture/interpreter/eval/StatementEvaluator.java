@@ -744,7 +744,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 
 			for (PMultipleBind mb : node.getDef().getBindings())
 			{
-				ValueList bvals = PMultipleBindAssistantInterpreter.getBindValues(mb, ctxt);
+				ValueList bvals = ctxt.assistantFactory.createPMultipleBindAssistant().getBindValues(mb, ctxt);
 
 				for (PPattern p : mb.getPlist())
 				{

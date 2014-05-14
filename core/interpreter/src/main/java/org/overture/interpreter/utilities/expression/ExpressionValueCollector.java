@@ -48,10 +48,6 @@ import org.overture.ast.expressions.SUnaryExp;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.definition.PDefinitionListAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ASetBindAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.PBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PMultipleBindAssistantInterpreter;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.ObjectContext;
@@ -146,7 +142,7 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 
 		for (PMultipleBind mb : exp.getBindList())
 		{
-			list.addAll(PMultipleBindAssistantInterpreter.getValues(mb, ctxt));
+			list.addAll(ctxt.assistantFactory.createPMultipleBindAssistant().getValues(mb, ctxt));
 		}
 
 		list.addAll(exp.getPredicate().apply(THIS, ctxt));//(PExpAssistantInterpreter.getValues(exp.getPredicate(), ctxt));
@@ -158,7 +154,7 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 			throws AnalysisException
 	{
 		//return AExists1ExpAssistantInterpreter.getValues(exp, ctxt);
-		ValueList list = PBindAssistantInterpreter.getValues(exp.getBind(), ctxt);
+		ValueList list = af.createPBindAssistant().getValues(exp.getBind(), ctxt);
 		list.addAll(exp.getPredicate().apply(THIS, ctxt));//(PExpAssistantInterpreter.getValues(exp.getPredicate(), ctxt));
 		return list;
 	}
@@ -228,7 +224,7 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 
 		for (PMultipleBind mb : exp.getBindList())
 		{
-			list.addAll(PMultipleBindAssistantInterpreter.getValues(mb, ctxt));
+			list.addAll(ctxt.assistantFactory.createPMultipleBindAssistant().getValues(mb, ctxt));
 		}
 
 		list.addAll(exp.getPredicate().apply(THIS, ctxt));//(PExpAssistantInterpreter.getValues(exp.getPredicate(), ctxt));
@@ -269,7 +265,7 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 			throws AnalysisException
 	{
 		//return AIotaExpAssistantInterpreter.getValues((AIotaExp) exp, ctxt);
-		ValueList list = PBindAssistantInterpreter.getValues(exp.getBind(), ctxt);
+		ValueList list = af.createPBindAssistant().getValues(exp.getBind(), ctxt);
 		list.addAll(exp.getPredicate().apply(THIS, ctxt));//(PExpAssistantInterpreter.getValues(exp.getPredicate(), ctxt));
 		return list;
 	}
@@ -311,7 +307,7 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 			throws AnalysisException
 	{
 		//return ALetBeStExpAssistantInterpreter.getValues(exp, ctxt);
-		ValueList list = PMultipleBindAssistantInterpreter.getValues(exp.getBind(), ctxt);
+		ValueList list = ctxt.assistantFactory.createPMultipleBindAssistant().getValues(exp.getBind(), ctxt);
 
 		if (exp.getSuchThat() != null)
 		{
@@ -342,7 +338,7 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 
 		for (PMultipleBind mb : exp.getBindings())
 		{
-			list.addAll(PMultipleBindAssistantInterpreter.getValues(mb, ctxt));
+			list.addAll(ctxt.assistantFactory.createPMultipleBindAssistant().getValues(mb, ctxt));
 		}
 
 		if (exp.getPredicate() != null)
@@ -493,7 +489,7 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 
 		for (PMultipleBind mb : exp.getBindings())
 		{
-			list.addAll(PMultipleBindAssistantInterpreter.getValues(mb, ctxt));
+			list.addAll(ctxt.assistantFactory.createPMultipleBindAssistant().getValues(mb, ctxt));
 		}
 
 		if (exp.getPredicate() != null)
