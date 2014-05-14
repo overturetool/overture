@@ -33,7 +33,7 @@ public class BindValueCollector extends QuestionAnswerAdaptor<ObjectContext, Val
 			throws AnalysisException
 	{
 		//return ASetBindAssistantInterpreter.getValues((ASetBind) bind, ctxt);
-		return PExpAssistantInterpreter.getValues(bind.getSet(), ctxt);
+		return af.createPExpAssistant().getValues(bind.getSet(), ctxt);
 	}
 	
 	@Override

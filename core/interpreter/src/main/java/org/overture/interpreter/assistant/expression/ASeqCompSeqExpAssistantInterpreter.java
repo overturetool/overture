@@ -20,12 +20,12 @@ public class ASeqCompSeqExpAssistantInterpreter
 
 	public static ValueList getValues(ASeqCompSeqExp exp, ObjectContext ctxt) throws AnalysisException
 	{
-		ValueList list = PExpAssistantInterpreter.getValues(exp.getFirst(), ctxt);
+		ValueList list = af.createPExpAssistant().getValues(exp.getFirst(), ctxt);
 		list.addAll(af.createPBindAssistant().getBindValues(exp.getSetBind(), ctxt));//(ASetBindAssistantInterpreter.getValues(exp.getSetBind(), ctxt));
 
 		if (exp.getPredicate() != null)
 		{
-			list.addAll(PExpAssistantInterpreter.getValues(exp.getPredicate(), ctxt));
+			list.addAll(af.createPExpAssistant().getValues(exp.getPredicate(), ctxt));
 		}
 
 		return list;

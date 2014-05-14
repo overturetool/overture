@@ -35,7 +35,7 @@ public class ValuesDefinitionLocator extends QuestionAnswerAdaptor<ObjectContext
 			ObjectContext ctxt) throws AnalysisException
 	{
 		//return AAssignmentDefinitionAssistantInterpreter.getValues(def, ctxt);
-		return PExpAssistantInterpreter.getValues(def.getExpression(), ctxt);
+		return af.createPExpAssistant().getValues(def.getExpression(), ctxt);
 	}
 	
 	@Override
@@ -43,7 +43,7 @@ public class ValuesDefinitionLocator extends QuestionAnswerAdaptor<ObjectContext
 			ObjectContext ctxt) throws AnalysisException
 	{
 		//return AEqualsDefinitionAssistantInterpreter.getValues(def, ctxt);
-		ValueList list = PExpAssistantInterpreter.getValues(def.getTest(), ctxt);
+		ValueList list = af.createPExpAssistant().getValues(def.getTest(), ctxt);
 
 		if (def.getSetbind() != null)
 		{
@@ -59,7 +59,7 @@ public class ValuesDefinitionLocator extends QuestionAnswerAdaptor<ObjectContext
 			throws AnalysisException
 	{
 		//return AInstanceVariableDefinitionAssistantInterpreter.getValues(def, ctxt);
-		return PExpAssistantInterpreter.getValues(def.getExpression(), ctxt);
+		return af.createPExpAssistant().getValues(def.getExpression(), ctxt);
 	}
 	
 	@Override
@@ -67,7 +67,7 @@ public class ValuesDefinitionLocator extends QuestionAnswerAdaptor<ObjectContext
 			ObjectContext ctxt) throws AnalysisException
 	{
 		//return AValueDefinitionAssistantInterpreter.getValues(def, ctxt);
-		return PExpAssistantInterpreter.getValues(def.getExpression(), ctxt);
+		return af.createPExpAssistant().getValues(def.getExpression(), ctxt);
 	}
 	
 	@Override

@@ -31,7 +31,7 @@ public class ValueCollector extends QuestionAnswerAdaptor<ObjectContext, ValueLi
 	public ValueList caseASetMultipleBind(ASetMultipleBind node,
 			ObjectContext ctxt) throws AnalysisException
 	{
-		return PExpAssistantInterpreter.getValues(node.getSet(), ctxt);
+		return af.createPExpAssistant().getValues(node.getSet(), ctxt);
 	}
 	
 	@Override

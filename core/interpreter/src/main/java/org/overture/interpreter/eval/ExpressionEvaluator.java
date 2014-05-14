@@ -1100,7 +1100,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 				argvals.add(arg.apply(VdmRuntime.getExpressionEvaluator(), ctxt));
 			}
 
-			ObjectValue objval = SClassDefinitionAssistantInterpreter.newInstance(node.getClassdef(), node.getCtorDefinition(), argvals, ctxt);
+			ObjectValue objval = ctxt.assistantFactory.createSClassDefinitionAssistant().newInstance(node.getClassdef(), node.getCtorDefinition(), argvals, ctxt);
 
 			if (objval.invlistener != null)
 			{

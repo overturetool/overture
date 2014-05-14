@@ -36,7 +36,7 @@ public class PExpAssistantInterpreter extends PExpAssistantTC
 	 *            The context in which to search for values.
 	 * @return A list of values read by the expression.
 	 */
-	public static ValueList getValues(PExp exp, ObjectContext ctxt)
+	public ValueList getValues(PExp exp, ObjectContext ctxt)
 	{
 		try
 		{
@@ -161,7 +161,7 @@ public class PExpAssistantInterpreter extends PExpAssistantTC
 	 *            The line number to locate.
 	 * @return An expression starting on the line, or null.
 	 */
-	public static PExp findExpression(PExp exp, int lineno)
+	public PExp findExpression(PExp exp, int lineno)
 	{
 		try
 		{
@@ -280,7 +280,7 @@ public class PExpAssistantInterpreter extends PExpAssistantTC
 
 	
 
-	public static List<PExp> getSubExpressions(PExp exp)
+	public List<PExp> getSubExpressions(PExp exp)
 	{
 		try
 		{
@@ -315,13 +315,13 @@ public class PExpAssistantInterpreter extends PExpAssistantTC
 
 	}
 
-	public static ValueList getValues(LinkedList<PExp> args, ObjectContext ctxt)
+	public ValueList getValues(LinkedList<PExp> args, ObjectContext ctxt)
 	{
 		ValueList list = new ValueList();
 
 		for (PExp exp : args)
 		{
-			list.addAll(getValues(exp, ctxt));
+			list.addAll(af.createPExpAssistant().getValues(exp, ctxt));
 		}
 
 		return list;
@@ -331,7 +331,7 @@ public class PExpAssistantInterpreter extends PExpAssistantTC
 	{
 		for (PExp exp : args)
 		{
-			PExp found = findExpression(exp, lineno);
+			PExp found = af.createPExpAssistant().findExpression(exp, lineno);
 			if (found != null)
 				return found;
 		}

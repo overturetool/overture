@@ -2014,9 +2014,9 @@ public class DBGPReader
 
 							if (pdef.getOpname().getName().equals(opname) ||
 								pdef.getLocation().getStartLine() == line ||
-								PExpAssistantInterpreter.findExpression(pdef.getGuard(),line) != null)
+								octxt.assistantFactory.createPExpAssistant().findExpression(pdef.getGuard(),line) != null)
 							{
-	            				for (PExp sub: PExpAssistantInterpreter.getSubExpressions(pdef.getGuard()))
+	            				for (PExp sub: octxt.assistantFactory.createPExpAssistant().getSubExpressions(pdef.getGuard()))
 	            				{
 	            					if (sub instanceof AHistoryExp)
 	            					{

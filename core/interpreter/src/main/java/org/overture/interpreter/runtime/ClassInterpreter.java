@@ -431,7 +431,7 @@ public class ClassInterpreter extends Interpreter
 		SClassDefinition classdef=tracedef.getClassDefinition();
 
 		// Create a new test object
-		object = SClassDefinitionAssistantInterpreter.newInstance(classdef,null, null, initialContext);
+		object = assistantFactory.createSClassDefinitionAssistant().newInstance(classdef,null, null, initialContext);
 
 
 		Context ctxt = new ObjectContext(assistantFactory,

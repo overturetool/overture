@@ -100,6 +100,6 @@ public class AStartStmAssistantInterpreter
 
 	public static PExp findExpression(AStopStm stm, int lineno)
 	{
-		return PExpAssistantInterpreter.findExpression(stm.getObj(), lineno);
+		return af.createPExpAssistant().findExpression(stm.getObj(), lineno);
 	}
 }

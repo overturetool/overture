@@ -129,7 +129,7 @@ public class SClassDefinitionAssistantInterpreter extends
 		return new MapValue(values);
 	}
 
-	public static ObjectValue newInstance(SClassDefinition node,
+	public ObjectValue newInstance(SClassDefinition node,
 			PDefinition ctorDefinition, ValueList argvals, Context ctxt)
 			throws AnalysisException
 	{
@@ -151,7 +151,7 @@ public class SClassDefinitionAssistantInterpreter extends
 		return null;
 	}
 
-	protected static ObjectValue makeNewInstance(SClassDefinition node,
+	protected ObjectValue makeNewInstance(SClassDefinition node,
 			PDefinition ctorDefinition, ValueList argvals, Context ctxt,
 
 			Map<ILexNameToken, ObjectValue> done, boolean nested) throws AnalysisException
@@ -192,7 +192,7 @@ public class SClassDefinitionAssistantInterpreter extends
 				i.getName().setTypeQualifier(i.getSuperdef().getName().getTypeQualifier());
 			}
 
-			if (PDefinitionAssistantInterpreter.isRuntime(idef)) // eg. TypeDefinitions aren't
+			if (af.createPDefinitionAssistant().isRuntime(idef)) // eg. TypeDefinitions aren't
 			{
 				Value v = null;
 
@@ -329,7 +329,7 @@ public class SClassDefinitionAssistantInterpreter extends
 				AClassInvariantDefinition inv = (AClassInvariantDefinition) d;
 
 				// Is this correct?
-				ValueList values = PExpAssistantInterpreter.getValues(inv.getExpression(), new ObjectContext(af, node.getLocation(), node.getName().getName()
+				ValueList values = af.createPExpAssistant().getValues(inv.getExpression(), new ObjectContext(af, node.getLocation(), node.getName().getName()
 						+ " object context", initCtxt, object));
 				for (Value v : values)
 				{
@@ -390,7 +390,7 @@ public class SClassDefinitionAssistantInterpreter extends
 
 				for (ILexNameToken opname : new LexNameList(sync.getOperations()))
 				{
-					PExp exp = AMutexSyncDefinitionAssistantInterpreter.getExpression(sync.clone(), opname);
+					PExp exp = af.createAMutexSyncDefinitionAssistant().getExpression(sync.clone(), opname);
 					ValueList overloads = members.getOverloads(opname);
 
 					for (Value op : overloads)
@@ -558,7 +558,7 @@ public class SClassDefinitionAssistantInterpreter extends
 		}
 	}
 
-	public static void staticInit(SClassDefinition cdef, StateContext ctxt)
+	public void staticInit(SClassDefinition cdef, StateContext ctxt)
 	{
 		VdmRuntime.getNodeState(af,cdef).staticInit = false; // Forced initialization
 		VdmRuntime.getNodeState(af,cdef).staticValuesInit = false; // Forced initialization

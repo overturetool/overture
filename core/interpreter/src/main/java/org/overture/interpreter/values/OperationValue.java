@@ -247,7 +247,7 @@ public class OperationValue extends Value
 		{
 			ValueListener vl = new GuardValueListener(getGuardLock());
 
-			for (Value v : PExpAssistantInterpreter.getValues(guard, ctxt))
+			for (Value v : ctxt.assistantFactory.createPExpAssistant().getValues(guard, ctxt))
 			{
 				UpdatableValue uv = (UpdatableValue) v;
 				uv.addListener(vl);

@@ -82,8 +82,8 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 			throws AnalysisException
 	{
 		//return AApplyExpAssistantInterpreter.getValues(exp, ctxt);
-		ValueList list = PExpAssistantInterpreter.getValues(exp.getArgs(), ctxt);
-		list.addAll(PExpAssistantInterpreter.getValues(exp.getRoot(), ctxt));
+		ValueList list = af.createPExpAssistant().getValues(exp.getArgs(), ctxt);
+		list.addAll(exp.getRoot().apply(THIS, ctxt));//(PExpAssistantInterpreter.getValues(exp.getRoot(), ctxt));
 		return list;
 	}
 	
@@ -390,7 +390,7 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 			throws AnalysisException
 	{
 		//return AMkBasicExpAssistantInterpreter.getValues(exp, ctxt);
-		return PExpAssistantInterpreter.getValues(exp.getArg(), ctxt);
+		return  exp.getArg().apply(THIS, ctxt);//PExpAssistantInterpreter.getValues(exp.getArg(), ctxt);
 	}
 	
 	@Override
@@ -398,7 +398,7 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 			throws AnalysisException
 	{
 		//return AMkTypeExpAssistantInterpreter.getValues(exp, ctxt);
-		return PExpAssistantInterpreter.getValues(exp.getArgs(), ctxt);
+		return af.createPExpAssistant().getValues(exp.getArgs(), ctxt);
 	}
 	
 	@Override
@@ -430,7 +430,7 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 			throws AnalysisException
 	{
 		//return ANewExpAssistantInterpreter.getValues(exp, ctxt);
-		return PExpAssistantInterpreter.getValues(exp.getArgs(), ctxt);
+		return af.createPExpAssistant().getValues(exp.getArgs(), ctxt);
 	}
 	
 	@Override
@@ -474,7 +474,7 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 			ObjectContext ctxt) throws AnalysisException
 	{
 		//return ASeqEnumSeqExpAssistantInterpreter.getValues((ASeqEnumSeqExp) exp, ctxt);
-		return PExpAssistantInterpreter.getValues(exp.getMembers(), ctxt);
+		return af.createPExpAssistant().getValues(exp.getMembers(), ctxt);
 	}
 	
 	@Override
@@ -509,7 +509,7 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 			ObjectContext ctxt) throws AnalysisException
 	{
 		//return ASetEnumSetExpAssistantInterpreter.getValues(exp, ctxt);
-		return PExpAssistantInterpreter.getValues(exp.getMembers(), ctxt);
+		return af.createPExpAssistant().getValues(exp.getMembers(), ctxt);
 	}
 	
 	@Override
@@ -536,7 +536,7 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 			throws AnalysisException
 	{
 		//return ATupleExpAssistantInterpreter.getValues(exp, ctxt);
-		return PExpAssistantInterpreter.getValues(exp.getArgs(), ctxt);
+		return af.createPExpAssistant().getValues(exp.getArgs(), ctxt);
 	}
 	
 	@Override

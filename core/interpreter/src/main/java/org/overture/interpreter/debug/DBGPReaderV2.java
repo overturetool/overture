@@ -1542,7 +1542,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 			DBGPExecResult result = DBGPExecProcesser.process(dbgpReaderThread, interpreter, exp);
 			dbgpReaderThread.complete(DBGPReason.OK, null);
 			StringBuilder property = makeProperty("", "", "", "", 0, 0, true, result.result.length(), -1, 0, result.result, new StringBuilder());
-			theAnswer = new CharacterValue('l');// TODO
+			theAnswer = new CharacterValue('l');
 			StringBuilder hdr = new StringBuilder("success=\"1\"");
 			status = DBGPStatus.STOPPED;
 			statusReason = DBGPReason.OK;
@@ -1601,9 +1601,9 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 
 							if (pdef.getOpname().getName().equals(opname)
 									|| pdef.getLocation().getStartLine() == line
-									|| PExpAssistantInterpreter.findExpression(pdef.getGuard(), line) != null)
+									|| octxt.assistantFactory.createPExpAssistant().findExpression(pdef.getGuard(), line) != null)
 							{
-								for (PExp sub : PExpAssistantInterpreter.getSubExpressions(pdef.getGuard()))
+								for (PExp sub : octxt.assistantFactory.createPExpAssistant().getSubExpressions(pdef.getGuard()))
 								{
 									if (sub instanceof AHistoryExp)
 									{
