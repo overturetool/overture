@@ -329,20 +329,20 @@ you can make inside such a VDM-SL module.
 \begin{myexercise}\label{ex:tb-error}
 Try to create a new \texttt{Test} VDM-SL project and update the
 \texttt{test.vdmsl} file before {\bf\ttfamily{exports all}} with:
-\begin{lstlisting}
+\begin{vdmsl}
 imports from IO all
-\end{lstlisting}
+\end{vdmsl}
 in order to make use of the IO standard library in the \texttt{Test}
 module. Inside \texttt{IO} there is for example a definition of a
 function called \texttt{print} and that can for example be used in an
 operation as:
 %\newpage
-\begin{lstlisting}
+\begin{vdmsl}
 Try: nat ==> nat
 Try(n) ==
   (IO`print(n);
    return n + 1)
-\end{lstlisting}
+\end{vdmsl}
 Insert this and later on when you have learned how to create a debug
 configuration you can try to see what happens when \texttt{Try} is
 debugged. 
@@ -356,7 +356,7 @@ is used. The following test file (\texttt{testalarm.vdmsl}) can be
 found in the alarm project and it is provided in
 Appendix~\ref{sec:VDMModel}. 
 
-\lstset{language=VDM-SL}
+%\lstset{language=VDM-SL}
 %\input{testalarm.vdmsl}
 
 By using the values defined in this test file, it is possible to
@@ -419,13 +419,13 @@ overall expression is type correct an error will be shown at the top
 of the debug configuration window. This means that one need to change
 the \emph{Operation} line for example from:
   
-\begin{lstlisting}
+\begin{vdmsl}
 NumberOfExperts((Period) peri, (Plant) plant)
-\end{lstlisting}
+\end{vdmsl}
 \noindent to for example:
-\begin{lstlisting}
+\begin{vdmsl}
 NumberOfExperts(p2, plant1)
-\end{lstlisting}
+\end{vdmsl}
 
 \begin{figure}[htp]
 \begin{center}
@@ -560,13 +560,13 @@ Figure~\ref{fig:DebuggingVDM}.
 \begin{myexercise}
 \label{ex:tool-monitor}Use the interpreter to evaluate the
   following expressions:
-\begin{lstlisting}
+\begin{vdmsl}
 NumberOfExperts(p2,plant1)
 NumberOfExperts(p3,plant1)
 ExpertIsOnDuty(e1,plant1)
 ExpertIsOnDuty(e2,plant1)
 ExpertIsOnDuty(e3,plant1)
-\end{lstlisting}
+\end{vdmsl}
 %Rising([34,67,45,120,7])
 %OverLimit([333,321,345,399,357])
 %OverLimit([457,421,387,366,340])
@@ -700,7 +700,7 @@ out, so it is necessary to write a kind of regular expression called a
 traces can be written directly as a part of a VDM-SL model. Here the
 definition looks like:
 
-\begin{lstlisting}
+\begin{vdmsl}
 traces
 
   Test1: let a in set alarms
@@ -716,7 +716,7 @@ traces
   Test2: let ex in set exs
          in
            ExpertIsOnDuty(ex,plant1)
-\end{lstlisting}
+\end{vdmsl}
 
 \begin{figure}[htbp]
 \begin{center}
@@ -790,13 +790,13 @@ example this view looks like in Figure~\ref{fig:POview}.
 Here the fifth proof obligation is related to the satisfiability of
 the \texttt{ExpertToPage} function which is defined as follows: 
 
-\begin{lstlisting}
+\begin{vdmsl}
 ExpertToPage(a:Alarm,peri:Period,plant:Plant) r: Expert
   pre peri in set dom plant.schedule and
       a in set plant.alarms
   post r in set plant.schedule(peri) and
        a.quali in set r.quali;
-\end{lstlisting}
+\end{vdmsl}
 
 %Proof obligations can be produced either automatically from the command line
 %with the \verb|-p| option, or they can be generated from the interactive prompt
@@ -812,11 +812,11 @@ possible arguments satisfying the pre-condition, the post-condition
 allows at least one possible valid result of the function. This is
 described as a proof obligation as follows:
 
-\begin{lstlisting}
+\begin{vdmsl}
 (forall a:Alarm, peri:Period, plant:Plant &
     pre_ExpertToPage(a, peri, plant) => 
     exists r:Expert & post_ExpertToPage(a, peri, plant, r))
-\end{lstlisting}
+\end{vdmsl}
 
 In general, users check proof obligations by inspecting the VDM-SL model,
 though new Overture tools are being developed to check the majority of
@@ -865,7 +865,7 @@ java -jar Overture-2.0.0.jar -vdmsl AlarmSL
 VDM-SL model files in the \texttt{AlarmSL} directory, producing any errors and
 warning messages on the console, before terminating:
 
-\begin{lstlisting}
+\begin{lstlisting}[style=mystyle]
 Parsed 1 module in 0.11 secs. No syntax errors
 Type checked 1 module in 0.093 secs. No type errors
 \end{lstlisting}
@@ -884,7 +884,7 @@ is used, followed by a VDM expression to evaluate. You may also find
 the \verb|-q| option useful, as this suppresses the informational
 messages about the parsing and type checking:
 
-\begin{lstlisting}
+\begin{lstlisting}[style=tool]
 java -jar Overture-2.0.0.jar -vdmsl -q -e 
      "ExpertIsOnDuty(e1, pl)" AlarmSL
 \end{lstlisting}
@@ -893,9 +893,9 @@ java -jar Overture-2.0.0.jar -vdmsl -q -e
 since the parsing and checking messages are suppressed, and there are
 no warnings:
 
-\begin{lstlisting}
+\begin{vdmsl}
 {mk_token("Monday day"), mk_token("Tuesday day")}
-\end{lstlisting}
+\end{vdmsl}
 
 Clearly a batch of test evaluations could be performed automatically
 by running a series of similar commands and saving the output results
@@ -906,7 +906,7 @@ command line option must be given. Instead of terminating after the
 type check, this will cause Overture to enter its interactive mode, and
 give the interactive \verb|>| prompt:
 
-\begin{lstlisting}
+\begin{lstlisting}[style=tool]
 Parsed 1 module in 0.14 secs. No syntax errors
 Type checked 1 module in 0.11 secs. No type errors
 Initialized 1 module in 0.094 secs. 
@@ -922,7 +922,8 @@ For example, the following session illustrates the evaluation of a
 \verb|Run| operation, and a debug session with a breakpoint at the
 start of the same operation:
 
-\begin{lstlisting}
+\begin{minipage}{ \linewidth}
+\begin{lstlisting}[style=tool]
 > print Run(e1)
 = {mk_token("Monday day"), mk_token("Tuesday day")}
 Executed in 0.015 secs.
@@ -955,6 +956,7 @@ sch = {mk_token("Tuesday night") |->
 Executed in 18.281 secs. 
 > 
 \end{lstlisting}
+\end{minipage}
 
 \noindent Notice that the \verb|print| command is available at the
 breakpoint to examine the runtime state of the system. In the example,
@@ -982,7 +984,7 @@ the Overture documentation.}.
 %\end{lstlisting}
 \lstset{style=mystyle}
 
-\lstset{style=mystyle,language=VDM-SL}
+%\lstset{style=mystyle,language=VDM-SL}
 
 \section{Summary}
 
@@ -1008,12 +1010,12 @@ would enable experts to swap duties. This function is called
 yield a new plant where the plan has been changed so that the first
 expert will be replaced by the second expert in the given period. A
 first version of this function could be formulated as
-\begin{lstlisting}
+\begin{vdmsl}
 ChangeExpert: Plant * Expert * Expert * Period -> Plant
 ChangeExpert(mk_Plant(plan,alarms),ex1,ex2,peri) ==
   mk_Plant(plan ++ {peri |-> plan(peri)\{ex1} union {ex2}},
            alarms)
-\end{lstlisting}
+\end{vdmsl}
 \noindent where the \texttt{\SETDIFF} symbol removes the \texttt{ex1}
 value from the schedule for the given period \texttt{peri} and
 {\bf\ttfamily union} adds the \texttt{ex2} value.
@@ -1027,10 +1029,10 @@ in the file \texttt{changeexpert.vdmsl}.
 %interpreter can be initialised again. Now use the interpreter to
 %inspect the plant value returned from calls such as
 using this definition it is possible to debug expressions such as:
-\begin{lstlisting}
+\begin{vdmsl}
 ChangeExpert(plant1,e4,e7,p3)
 ChangeExpert(plant1,e3,e7,p3)
-\end{lstlisting}
+\end{vdmsl}
 Will the invariant on the \texttt{Plant} data type be violated?  Test
 this by setting the option for invariant checking. If the invariant is
 broken it is possible to make a break point for the invariant
