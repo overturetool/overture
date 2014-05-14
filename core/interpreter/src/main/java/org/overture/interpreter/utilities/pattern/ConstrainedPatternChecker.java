@@ -17,7 +17,6 @@ import org.overture.ast.patterns.AUnionPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.pattern.ASeqPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.PPatternListAssistantInterpreter;
 
 public class ConstrainedPatternChecker extends AnswerAdaptor<Boolean>
 {
@@ -85,7 +84,7 @@ public class ConstrainedPatternChecker extends AnswerAdaptor<Boolean>
 			throws AnalysisException
 	{
 		//return ARecordPatternAssistantInterpreter.isConstrained(pattern);
-		return PPatternListAssistantInterpreter.isConstrained(pattern.getPlist());
+		return af.createPPatternListAssistant().isConstrained(pattern.getPlist());
 		
 	}
 	@Override
@@ -103,7 +102,7 @@ public class ConstrainedPatternChecker extends AnswerAdaptor<Boolean>
 			return true; // Set types are various, so we must permute
 		}
 
-		return PPatternListAssistantInterpreter.isConstrained(pattern.getPlist());
+		return af.createPPatternListAssistant().isConstrained(pattern.getPlist());
 	}
 	
 	@Override
@@ -111,7 +110,7 @@ public class ConstrainedPatternChecker extends AnswerAdaptor<Boolean>
 			throws AnalysisException
 	{
 		//return ATuplePatternAssistantInterpreter.isConstrained(pattern);
-		return PPatternListAssistantInterpreter.isConstrained(pattern.getPlist());
+		return af.createPPatternListAssistant().isConstrained(pattern.getPlist());
 	}
 	
 	@Override

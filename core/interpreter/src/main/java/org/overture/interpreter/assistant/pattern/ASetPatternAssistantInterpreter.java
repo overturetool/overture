@@ -133,7 +133,7 @@ public class ASetPatternAssistantInterpreter
 			return true; // Set types are various, so we must permute
 		}
 
-		return PPatternListAssistantInterpreter.isConstrained(pattern.getPlist());
+		return af.createPPatternListAssistant().isConstrained(pattern.getPlist());
 	}
 
 //	public static int getLength(ASetPattern pattern)

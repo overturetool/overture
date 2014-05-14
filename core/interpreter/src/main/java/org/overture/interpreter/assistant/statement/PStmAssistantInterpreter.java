@@ -17,7 +17,7 @@ public class PStmAssistantInterpreter extends PStmAssistantTC
 		this.af = af;
 	}
 
-	public static PExp findExpression(PStm stm, int lineno)
+	public PExp findExpression(PStm stm, int lineno)
 	{
 		try
 		{
@@ -109,7 +109,7 @@ public class PStmAssistantInterpreter extends PStmAssistantTC
 	 *            The line number to locate.
 	 * @return A statement starting on the line, or null.
 	 */
-	public static PStm findStatement(PStm stm, int lineno)
+	public PStm findStatement(PStm stm, int lineno)
 	{
 		try
 		{

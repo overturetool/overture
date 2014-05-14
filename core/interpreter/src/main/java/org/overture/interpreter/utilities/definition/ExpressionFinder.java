@@ -134,7 +134,7 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 			}
 		}
 
-		return PStmAssistantInterpreter.findExpression(def.getBody(), lineno);
+		return af.createPStmAssistant().findExpression(def.getBody(), lineno);
 	}
 	
 	@Override
@@ -204,7 +204,7 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 		}
 
 		return def.getBody() == null ? null
-				: PStmAssistantInterpreter.findExpression(def.getBody(), lineno);
+				: af.createPStmAssistant().findExpression(def.getBody(), lineno);
 	}
 
 	@Override
@@ -259,7 +259,7 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 			throws AnalysisException
 	{
 		//return AThreadDefinitionAssistantInterpreter.findExpression(def, lineno);
-		return PStmAssistantInterpreter.findExpression(def.getStatement(), lineno);
+		return af.createPStmAssistant().findExpression(def.getStatement(), lineno);
 	}
 	
 	@Override

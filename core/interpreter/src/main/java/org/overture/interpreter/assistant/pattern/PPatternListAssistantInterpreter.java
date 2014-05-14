@@ -17,7 +17,7 @@ public class PPatternListAssistantInterpreter extends PPatternListAssistantTC
 		this.af = af;
 	}
 
-	public static boolean isConstrained(LinkedList<PPattern> plist)
+	public boolean isConstrained(LinkedList<PPattern> plist)
 	{
 		for (PPattern p : plist)
 		{
