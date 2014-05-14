@@ -399,7 +399,7 @@ public class ClassInterpreter extends Interpreter
 	@Override
 	public ProofObligationList getProofObligations()
 	{
-		return classes.getProofObligations();
+		return classes.getProofObligations(assistantFactory);
 	}
 
 	private void logSwapIn()
