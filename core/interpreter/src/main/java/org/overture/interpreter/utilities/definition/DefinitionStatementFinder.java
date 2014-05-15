@@ -21,11 +21,11 @@ import org.overture.interpreter.assistant.statement.PStmAssistantInterpreter;
  *
  ****************************************/
 
-public class StatementFinder extends QuestionAnswerAdaptor<Integer, PStm>
+public class DefinitionStatementFinder extends QuestionAnswerAdaptor<Integer, PStm>
 {
 	protected IInterpreterAssistantFactory af;
 	
-	public StatementFinder(IInterpreterAssistantFactory af)
+	public DefinitionStatementFinder(IInterpreterAssistantFactory af)
 	{
 		this.af = af;
 	}
@@ -45,7 +45,7 @@ public class StatementFinder extends QuestionAnswerAdaptor<Integer, PStm>
 			throws AnalysisException
 	{
 		//return AExplicitOperationDefinitionAssistantInterpreter.findStatement(def, lineno);
-		return PStmAssistantInterpreter.findStatement(def.getBody(), lineno);
+		return af.createPStmAssistant().findStatement(def.getBody(), lineno);
 	}
 	
 	@Override
@@ -55,7 +55,7 @@ public class StatementFinder extends QuestionAnswerAdaptor<Integer, PStm>
 	{
 		//return AImplicitOperationDefinitionAssistantInterpreter.findStatement(def, lineno);
 		return def.getBody() == null ? null
-				: PStmAssistantInterpreter.findStatement(def.getBody(), lineno);
+				: af.createPStmAssistant().findStatement(def.getBody(), lineno);
 	}
 	
 	@Override
@@ -63,7 +63,7 @@ public class StatementFinder extends QuestionAnswerAdaptor<Integer, PStm>
 			throws AnalysisException
 	{
 		//return AThreadDefinitionAssistantInterpreter.findStatement(def, lineno);
-		return PStmAssistantInterpreter.findStatement(def.getStatement(), lineno);
+		return af.createPStmAssistant().findStatement(def.getStatement(), lineno);
 	}
 	
 	@Override

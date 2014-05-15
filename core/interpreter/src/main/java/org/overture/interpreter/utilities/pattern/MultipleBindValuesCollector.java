@@ -7,7 +7,6 @@ import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
@@ -25,11 +24,11 @@ import org.overture.interpreter.values.ValueSet;
 *
 ****************************************/
 
-public class BindValuesCollector extends QuestionAnswerAdaptor<Context, ValueList>
+public class MultipleBindValuesCollector extends QuestionAnswerAdaptor<Context, ValueList>
 {
 	protected IInterpreterAssistantFactory af;
 	
-	public BindValuesCollector(IInterpreterAssistantFactory af)
+	public MultipleBindValuesCollector(IInterpreterAssistantFactory af)
 	{
 		this.af = af;
 	}
@@ -75,7 +74,7 @@ public class BindValuesCollector extends QuestionAnswerAdaptor<Context, ValueLis
 			Context ctxt) throws AnalysisException
 	{
 		//return ATypeMultipleBindAssistantInterpreter.getBindValues(node, ctxt);
-		return PTypeAssistantInterpreter.getAllValues(node.getType(), ctxt);
+		return af.createPTypeAssistant().getAllValues(node.getType(), ctxt);
 	}
 	
 	@Override

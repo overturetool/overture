@@ -73,10 +73,10 @@ public class ASystemClassDefinitionAssistantInterpreter
 			}
 
 			// Run the constructor to do any deploys etc.
-			ASystemClassDefinitionRuntime.system = SClassDefinitionAssistantInterpreter.makeNewInstance(systemClass, null, new ValueList(), initialContext, new HashMap<ILexNameToken, ObjectValue>(), false);
+			ASystemClassDefinitionRuntime.system = af.createSClassDefinitionAssistant().makeNewInstance(systemClass, null, new ValueList(), initialContext, new HashMap<ILexNameToken, ObjectValue>(), false);
 
 			// Bind system instances to runtime validator
-			RuntimeValidator.bindSystemVariables(systemClass);
+			RuntimeValidator.bindSystemVariables(systemClass, af);
 
 			// Do CPUs first so that default BUSses can connect all CPUs.
 

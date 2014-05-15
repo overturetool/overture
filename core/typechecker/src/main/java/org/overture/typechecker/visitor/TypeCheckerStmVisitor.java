@@ -84,7 +84,6 @@ import org.overture.typechecker.PublicClassEnvironment;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.TypeComparator;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 {
@@ -734,12 +733,12 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		PType ft = node.getFrom().apply(THIS, question);
 		PType tt = node.getTo().apply(THIS, question);
 
-		if (!PTypeAssistantTC.isNumeric(ft))
+		if (!question.assistantFactory.createPTypeAssistant().isNumeric(ft))
 		{
 			TypeCheckerErrors.report(3220, "From type is not numeric", node.getLocation(), node);
 		}
 
-		if (!PTypeAssistantTC.isNumeric(tt))
+		if (!question.assistantFactory.createPTypeAssistant().isNumeric(tt))
 		{
 			TypeCheckerErrors.report(3221, "To type is not numeric", node.getLocation(), node);
 		}
@@ -748,7 +747,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		{
 			PType bt = node.getBy().apply(THIS, question);
 
-			if (!PTypeAssistantTC.isNumeric(bt))
+			if (!question.assistantFactory.createPTypeAssistant().isNumeric(bt))
 			{
 				TypeCheckerErrors.report(3222, "By type is not numeric", node.getLocation(), node);
 			}
@@ -1068,7 +1067,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			{
 				PType type = arg.apply(THIS, question);
 
-				if (!PTypeAssistantTC.isNumeric(type))
+				if (!question.assistantFactory.createPTypeAssistant().isNumeric(type))
 				{
 					TypeCheckerErrors.report(3316, "Expecting number in periodic argument", arg.getLocation(), arg);
 				}
@@ -1145,7 +1144,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			{
 				PType type = arg.apply(THIS, question);
 
-				if (!PTypeAssistantTC.isNumeric(type))
+				if (!question.assistantFactory.createPTypeAssistant().isNumeric(type))
 				{
 					TypeCheckerErrors.report(3316, "Expecting number in sporadic argument", arg.getLocation(), node);
 				}

@@ -26,7 +26,7 @@ public class ModuleListAssistantInterpreter
 		this.af = af;
 	}
 
-	public static RootContext initialize(ModuleList modules, DBGPReader dbgp)
+	public RootContext initialize(ModuleList modules, DBGPReader dbgp)
 	{
 		StateContext initialContext = null;
 
@@ -84,7 +84,7 @@ public class ModuleListAssistantInterpreter
 		return initialContext;
 	}
 
-	public static ProofObligationList getProofObligations(ModuleList modules)
+	public ProofObligationList getProofObligations(ModuleList modules)
 	{
 		ProofObligationList obligations = new ProofObligationList();
 

@@ -10,12 +10,6 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.node.INode;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.definition.AImportedDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.AInheritedDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.ARenamedDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.ATypeDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 
 /***************************************
  * 

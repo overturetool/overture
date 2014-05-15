@@ -58,7 +58,6 @@ import org.overture.typechecker.assistant.module.AModuleModulesAssistantTC;
 import org.overture.typechecker.assistant.module.AValueValueImportAssistantTC;
 import org.overture.typechecker.assistant.module.PExportAssistantTC;
 import org.overture.typechecker.assistant.module.PImportAssistantTC;
-import org.overture.typechecker.assistant.pattern.AMapUnionPatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.AMapletPatternMapletAssistantTC;
 import org.overture.typechecker.assistant.pattern.APatternTypePairAssistant;
 import org.overture.typechecker.assistant.pattern.ASetBindAssistantTC;
@@ -102,7 +101,11 @@ import org.overture.typechecker.utilities.type.PTypeResolver;
  */
 public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 {
+
 	// Typechecker
+
+	// All this stuff will eventually be deleted
+	
 
 	// Definition
 	// AAssignmentDefinitionAssistantTC createAAssignmentDefinitionAssistant();
@@ -184,7 +187,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	//AMapPatternAssistantTC createAMapPatternAssistant();
 
-	AMapUnionPatternAssistantTC createAMapUnionPatternAssistant();
+	//AMapUnionPatternAssistantTC createAMapUnionPatternAssistant();
 
 	APatternTypePairAssistant createAPatternTypePairAssistant();
 
@@ -268,7 +271,16 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	SNumericBasicTypeAssistantTC createSNumericBasicTypeAssistant();
 
+
 	// visitors
+
+	//SSeqTypeAssistantTC createSSeqTypeAssistant();
+
+	// stuff to delete ends here
+	
+	
+	// visitor getters that we will actually keep
+
 	IAnswer<List<PDefinition>> getDefinitionCollector();
 
 	IAnswer<PType> getDefinitionTypeFinder();

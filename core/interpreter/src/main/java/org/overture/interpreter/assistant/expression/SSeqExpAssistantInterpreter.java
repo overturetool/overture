@@ -18,32 +18,32 @@ public class SSeqExpAssistantInterpreter // extends SSeqExpAssistantTC
 		this.af = af;
 	}
 
-	public static ValueList getValues(SSeqExp exp, ObjectContext ctxt)
-	{
-		if (exp instanceof ASeqCompSeqExp)
-		{
-			return ASeqCompSeqExpAssistantInterpreter.getValues((ASeqCompSeqExp) exp, ctxt);
-		} else if (exp instanceof ASeqEnumSeqExp)
-		{
-			return ASeqEnumSeqExpAssistantInterpreter.getValues((ASeqEnumSeqExp) exp, ctxt);
-		} else
-		{
-			return new ValueList();
-		}
-	}
+//	public static ValueList getValues(SSeqExp exp, ObjectContext ctxt)
+//	{
+//		if (exp instanceof ASeqCompSeqExp)
+//		{
+//			return ASeqCompSeqExpAssistantInterpreter.getValues((ASeqCompSeqExp) exp, ctxt);
+//		} else if (exp instanceof ASeqEnumSeqExp)
+//		{
+//			return ASeqEnumSeqExpAssistantInterpreter.getValues((ASeqEnumSeqExp) exp, ctxt);
+//		} else
+//		{
+//			return new ValueList();
+//		}
+//	}
 
-	public static PExp findExpression(SSeqExp exp, int lineno)
-	{
-		if (exp instanceof ASeqCompSeqExp)
-		{
-			return ASeqCompSeqExpAssistantInterpreter.findExpression((ASeqCompSeqExp) exp, lineno);
-		} else if (exp instanceof ASeqEnumSeqExp)
-		{
-			return ASeqEnumSeqExpAssistantInterpreter.findExpression((ASeqEnumSeqExp) exp, lineno);
-		} else
-		{
-			return null;
-		}
-	}
+//	public static PExp findExpression(SSeqExp exp, int lineno)
+//	{
+//		if (exp instanceof ASeqCompSeqExp)
+//		{
+//			return ASeqCompSeqExpAssistantInterpreter.findExpression((ASeqCompSeqExp) exp, lineno);
+//		} else if (exp instanceof ASeqEnumSeqExp)
+//		{
+//			return ASeqEnumSeqExpAssistantInterpreter.findExpression((ASeqEnumSeqExp) exp, lineno);
+//		} else
+//		{
+//			return null;
+//		}
+//	}
 
 }

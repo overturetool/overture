@@ -8,7 +8,6 @@ import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
-import org.overture.ast.assistant.type.PTypeAssistant;
 import org.overture.ast.definitions.ABusClassDefinition;
 import org.overture.ast.definitions.ACpuClassDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
@@ -1003,7 +1002,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		if (question.assistantFactory.createPTypeAssistant().isMap(ltype))
 		{
 			question.assistantFactory.createPTypeAssistant();
-			if (!PTypeAssistant.isNumeric(rtype))
+			if (!question.assistantFactory.createPTypeAssistant().isNumeric(rtype))
 			{
 				// rtype.report(3170,
 				// "Map iterator expects nat as right hand arg");
@@ -1012,16 +1011,16 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		} else if (question.assistantFactory.createPTypeAssistant().isFunction(ltype))
 		{
 			question.assistantFactory.createPTypeAssistant();
-			if (!PTypeAssistant.isNumeric(rtype))
+			if (!question.assistantFactory.createPTypeAssistant().isNumeric(rtype))
 			{
 				TypeCheckerErrors.report(3171, "Function iterator expects nat as right hand arg", rtype.getLocation(), rtype);
 			}
 		} else {
 			question.assistantFactory.createPTypeAssistant();
-			if (PTypeAssistant.isNumeric(ltype))
+			if (question.assistantFactory.createPTypeAssistant().isNumeric(ltype))
 			{
 				question.assistantFactory.createPTypeAssistant();
-				if (!PTypeAssistant.isNumeric(rtype))
+				if (!question.assistantFactory.createPTypeAssistant().isNumeric(rtype))
 				{
 					TypeCheckerErrors.report(3172, "'**' expects number as right hand arg", rtype.getLocation(), rtype);
 				}
@@ -1221,7 +1220,8 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			}
 
 			memberName.setTypeQualifier(question.qualifiers);
-			PDefinition fdef = question.assistantFactory.createAClassTypeAssistant().findName(cls, memberName, question.scope);
+			PDefinition fdef = //cls.apply(question.assistantFactory.getNameFinder(), new NameFinder.Newquestion(memberName, question.scope));
+					question.assistantFactory.createAClassTypeAssistant().findName(cls, memberName, question.scope);
 
 			if (fdef == null)
 			{
@@ -1230,7 +1230,9 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 				List<PType> oldq = memberName.getTypeQualifier();
 				memberName.setTypeQualifier(null);
-				fdef = question.assistantFactory.createAClassTypeAssistant().findName(cls, memberName, question.scope);
+				fdef = 	//cls.apply(question.assistantFactory.getNameFinder(), new NameFinder.Newquestion(memberName, question.scope));
+						
+						question.assistantFactory.createAClassTypeAssistant().findName(cls, memberName, question.scope);
 				memberName.setTypeQualifier(oldq); // Just for error text!
 			}
 
@@ -2378,7 +2380,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		// node.getSetBind().setPattern(setBindPattern.clone());
 
 		if (PPatternAssistantTC.getVariableNames(node.getSetBind().getPattern()).size() != 1
-				|| !PTypeAssistantTC.isNumeric(question.assistantFactory.createPDefinitionAssistant().getType(def)))
+				|| !question.assistantFactory.createPTypeAssistant().isNumeric(question.assistantFactory.createPDefinitionAssistant().getType(def)))
 		{
 			TypeCheckerErrors.report(3155, "List comprehension must define one numeric bind variable", node.getLocation(), node);
 		}
@@ -2511,12 +2513,12 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		PType ftype = node.getFtype();
 		PType ltype = node.getLtype();
 
-		if (!PTypeAssistantTC.isNumeric(ftype))
+		if (!question.assistantFactory.createPTypeAssistant().isNumeric(ftype))
 		{
 			TypeCheckerErrors.report(3166, "Set range type must be an number", ftype.getLocation(), ftype);
 		}
 
-		if (!PTypeAssistantTC.isNumeric(ltype))
+		if (!question.assistantFactory.createPTypeAssistant().isNumeric(ltype))
 		{
 			TypeCheckerErrors.report(3167, "Set range type must be an number", ltype.getLocation(), ltype);
 		}
@@ -2616,13 +2618,13 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		}
 
 		question.assistantFactory.createPTypeAssistant();
-		if (!PTypeAssistant.isNumeric(ftype))
+		if (!question.assistantFactory.createPTypeAssistant().isNumeric(ftype))
 		{
 			TypeCheckerErrors.report(3175, "Subsequence range start is not a number", node.getLocation(), node);
 		}
 
 		question.assistantFactory.createPTypeAssistant();
-		if (!PTypeAssistant.isNumeric(ttype))
+		if (!question.assistantFactory.createPTypeAssistant().isNumeric(ttype))
 		{
 			TypeCheckerErrors.report(3176, "Subsequence range end is not a number", node.getLocation(), node);
 		}
@@ -2860,7 +2862,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		question.qualifiers = null;
 		TypeCheckInfo absConstraint = question.newConstraint(null);
 		
-		if (question.constraint != null && PTypeAssistantTC.isNumeric(question.constraint))
+		if (question.constraint != null && question.assistantFactory.createPTypeAssistant().isNumeric(question.constraint))
 		{
 			if (question.constraint instanceof AIntNumericBasicType ||
 				question.constraint instanceof ANatOneNumericBasicType)
@@ -2875,7 +2877,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		PType t = node.getExp().apply(THIS, absConstraint);
 
-		if (!PTypeAssistantTC.isNumeric(t))
+		if (!question.assistantFactory.createPTypeAssistant().isNumeric(t))
 		{
 			TypeCheckerErrors.report(3053, "Argument of 'abs' is not numeric", node.getLocation(), node);
 		} else if (t instanceof AIntNumericBasicType)
@@ -3030,7 +3032,9 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		PExp exp = node.getExp();
 		question.qualifiers = null;
 
-		if (!PTypeAssistantTC.isNumeric(exp.apply(THIS, question.newConstraint(null))))
+
+		if (!question.assistantFactory.createPTypeAssistant().isNumeric(exp.apply(THIS, question.newConstraint(null))))
+
 		{
 			TypeCheckerErrors.report(3096, "Argument to floor is not numeric", node.getLocation(), node);
 		}

@@ -17,17 +17,17 @@ public class AVariableExpAssistantInterpreter // extends AVariableExpAssistantTC
 		this.af = af;
 	}
 
-	public static ValueList getVariable(AVariableExp exp, ObjectContext ctxt)
-	{
-		Value v = ctxt.check(exp.getName());
-
-		if (v == null || !(v instanceof UpdatableValue))
-		{
-			return new ValueList();
-		} else
-		{
-			return new ValueList(v);
-		}
-	}
+//	public static ValueList getVariable(AVariableExp exp, ObjectContext ctxt)
+//	{
+//		Value v = ctxt.check(exp.getName());
+//
+//		if (v == null || !(v instanceof UpdatableValue))
+//		{
+//			return new ValueList();
+//		} else
+//		{
+//			return new ValueList(v);
+//		}
+//	}
 
 }

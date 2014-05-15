@@ -29,31 +29,31 @@ public class ARecordInvariantTypeAssistantInterpreter extends
 		this.af = af;
 	}
 
-	public static ValueList getAllValues(ARecordInvariantType type, Context ctxt)
-			throws AnalysisException
-	{
-		List<PType> types = new Vector<PType>();
-
-		for (AFieldField f : type.getFields())
-		{
-			types.add(f.getType());
-		}
-
-		ValueList results = new ValueList();
-
-		for (Value v : PTypeListAssistant.getAllValues(types, ctxt))
-		{
-			try
-			{
-				TupleValue tuple = (TupleValue) v;
-				results.add(new RecordValue(type, tuple.values, ctxt));
-			} catch (ValueException e)
-			{
-				// Value does not match invariant, so ignore it
-			}
-		}
-
-		return results;
-	}
+//	public static ValueList getAllValues(ARecordInvariantType type, Context ctxt)
+//			throws AnalysisException
+//	{
+//		List<PType> types = new Vector<PType>();
+//
+//		for (AFieldField f : type.getFields())
+//		{
+//			types.add(f.getType());
+//		}
+//
+//		ValueList results = new ValueList();
+//
+//		for (Value v : PTypeListAssistant.getAllValues(types, ctxt))
+//		{
+//			try
+//			{
+//				TupleValue tuple = (TupleValue) v;
+//				results.add(new RecordValue(type, tuple.values, ctxt));
+//			} catch (ValueException e)
+//			{
+//				// Value does not match invariant, so ignore it
+//			}
+//		}
+//
+//		return results;
+//	}
 
 }

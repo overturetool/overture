@@ -16,18 +16,18 @@ public class ASetEnumSetExpAssistantInterpreter
 		this.af = af;
 	}
 
-	public static ValueList getValues(ASetEnumSetExp exp, ObjectContext ctxt)
-	{
-		return PExpAssistantInterpreter.getValues(exp.getMembers(), ctxt);
-	}
+//	public static ValueList getValues(ASetEnumSetExp exp, ObjectContext ctxt)
+//	{
+//		return PExpAssistantInterpreter.getValues(exp.getMembers(), ctxt);
+//	}
 
-	public static PExp findExpression(ASetEnumSetExp exp, int lineno)
-	{
-		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
-		if (found != null)
-			return found;
-
-		return PExpAssistantInterpreter.findExpression(exp.getMembers(), lineno);
-	}
+//	public static PExp findExpression(ASetEnumSetExp exp, int lineno)
+//	{
+//		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
+//		if (found != null)
+//			return found;
+//
+//		return PExpAssistantInterpreter.findExpression(exp.getMembers(), lineno);
+//	}
 
 }

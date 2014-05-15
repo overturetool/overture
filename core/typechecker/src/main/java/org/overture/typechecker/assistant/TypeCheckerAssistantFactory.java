@@ -58,7 +58,6 @@ import org.overture.typechecker.assistant.module.AModuleModulesAssistantTC;
 import org.overture.typechecker.assistant.module.AValueValueImportAssistantTC;
 import org.overture.typechecker.assistant.module.PExportAssistantTC;
 import org.overture.typechecker.assistant.module.PImportAssistantTC;
-import org.overture.typechecker.assistant.pattern.AMapUnionPatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.AMapletPatternMapletAssistantTC;
 import org.overture.typechecker.assistant.pattern.APatternTypePairAssistant;
 import org.overture.typechecker.assistant.pattern.ASetBindAssistantTC;
@@ -467,11 +466,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 //		return new AMapPatternAssistantTC(this);
 //	}
 
-	@Override
-	public AMapUnionPatternAssistantTC createAMapUnionPatternAssistant()
-	{
-		return new AMapUnionPatternAssistantTC(this);
-	}
+//	@Override
+//	public AMapUnionPatternAssistantTC createAMapUnionPatternAssistant()
+//	{
+//		return new AMapUnionPatternAssistantTC(this);
+//	}
 
 	@Override
 	public APatternTypePairAssistant createAPatternTypePairAssistant()

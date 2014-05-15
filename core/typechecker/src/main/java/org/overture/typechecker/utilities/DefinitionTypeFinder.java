@@ -35,6 +35,8 @@ import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
+//TODO Add assistant Javadoc
+
 /**
  * A refactored assistant/ functionality visitor.
  * 

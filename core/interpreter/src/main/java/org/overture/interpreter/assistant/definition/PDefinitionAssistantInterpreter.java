@@ -28,7 +28,7 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 		this.af = af;
 	}
 
-	public static NameValuePairList getNamedValues(PDefinition def,
+	public NameValuePairList getNamedValues(PDefinition def,
 			Context initialContext)
 	{
 		try
@@ -109,7 +109,7 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 	 *            The context in which to evaluate the expressions.
 	 * @return A list of values read.
 	 */
-	public static ValueList getValues(PDefinition def, ObjectContext ctxt)
+	public ValueList getValues(PDefinition def, ObjectContext ctxt)
 	{
 		try
 		{
@@ -325,7 +325,7 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 	{
 		try
 		{
-			return def.apply(af.getStatementFinder(),lineno);
+			return def.apply(af.getDefinitionStatementFinder(),lineno);
 		} catch (AnalysisException e)
 		{
 			return null;

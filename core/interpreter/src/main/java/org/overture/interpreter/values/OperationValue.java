@@ -247,7 +247,7 @@ public class OperationValue extends Value
 		{
 			ValueListener vl = new GuardValueListener(getGuardLock());
 
-			for (Value v : PExpAssistantInterpreter.getValues(guard, ctxt))
+			for (Value v : ctxt.assistantFactory.createPExpAssistant().getValues(guard, ctxt))
 			{
 				UpdatableValue uv = (UpdatableValue) v;
 				uv.addListener(vl);
@@ -317,7 +317,7 @@ public class OperationValue extends Value
 				// Note values are assumed to be constant, as enforced by eval()
 				Value pv = valIter.next().convertTo(typeIter.next(), ctxt);
 
-				for (NameValuePair nvp : PPatternAssistantInterpreter.getNamedValues(p, pv, ctxt))
+				for (NameValuePair nvp : ctxt.assistantFactory.createPPatternAssistant().getNamedValues(p, pv, ctxt))
 				{
 					Value v = args.get(nvp.name);
 

@@ -25,24 +25,24 @@ public class AMapPatternMapletAssistantInterpreter
 		this.af = af;
 	}
 
-	public static boolean isConstrained(AMapletPatternMaplet p)
-	{
-		if (PPatternAssistantInterpreter.isConstrained(p.getFrom())
-				|| PPatternAssistantInterpreter.isConstrained(p.getTo()))
-		{
-			return true;
-		}
-
-		return af.createPTypeAssistant().isUnion(af.createPPatternAssistant().getPossibleType(p.getFrom()))
-				|| af.createPTypeAssistant().isUnion(af.createPPatternAssistant().getPossibleType(p.getTo()));
-	}
+//	public static boolean isConstrained(AMapletPatternMaplet p)
+//	{
+//		if (af.isConstrained(p.getFrom())
+//				|| PPatternAssistantInterpreter.isConstrained(p.getTo()))
+//		{
+//			return true;
+//		}
+//
+//		return af.createPTypeAssistant().isUnion(af.createPPatternAssistant().getPossibleType(p.getFrom()))
+//				|| af.createPTypeAssistant().isUnion(af.createPPatternAssistant().getPossibleType(p.getTo()));
+//	}
 
 	public static List<NameValuePairList> getAllNamedValues(
 			AMapletPatternMaplet p, Entry<Value, Value> maplet, Context ctxt)
 			throws AnalysisException
 	{
-		List<NameValuePairList> flist = PPatternAssistantInterpreter.getAllNamedValues(p.getFrom(), maplet.getKey(), ctxt);
-		List<NameValuePairList> tlist = PPatternAssistantInterpreter.getAllNamedValues(p.getTo(), maplet.getValue(), ctxt);
+		List<NameValuePairList> flist = af.createPPatternAssistant().getAllNamedValues(p.getFrom(), maplet.getKey(), ctxt);
+		List<NameValuePairList> tlist = af.createPPatternAssistant().getAllNamedValues(p.getTo(), maplet.getValue(), ctxt);
 		List<NameValuePairList> results = new Vector<NameValuePairList>();
 
 		for (NameValuePairList f : flist)
@@ -64,8 +64,8 @@ public class AMapPatternMapletAssistantInterpreter
 	{
 		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
 
-		list.addAll(PPatternAssistantInterpreter.findIdentifiers(p.getFrom()));
-		list.addAll(PPatternAssistantInterpreter.findIdentifiers(p.getTo()));
+		list.addAll(af.createPPatternAssistant().findIdentifiers(p.getFrom()));
+		list.addAll(af.createPPatternAssistant().findIdentifiers(p.getTo()));
 
 		return list;
 	}

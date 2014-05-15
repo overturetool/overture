@@ -1,22 +1,6 @@
 package org.overture.interpreter.assistant.pattern;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
-
-import org.overture.ast.patterns.AConcatenationPattern;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.runtime.Context;
-import org.overture.interpreter.runtime.PatternMatchException;
-import org.overture.interpreter.runtime.ValueException;
-import org.overture.interpreter.runtime.VdmRuntimeError;
-import org.overture.interpreter.traces.Permutor;
-import org.overture.interpreter.values.NameValuePair;
-import org.overture.interpreter.values.NameValuePairList;
-import org.overture.interpreter.values.NameValuePairMap;
-import org.overture.interpreter.values.SeqValue;
-import org.overture.interpreter.values.Value;
-import org.overture.interpreter.values.ValueList;
 
 public class AConcatenationPatternAssistantInterpreter 
 {

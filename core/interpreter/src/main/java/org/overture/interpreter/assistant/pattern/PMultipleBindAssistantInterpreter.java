@@ -20,7 +20,7 @@ public class PMultipleBindAssistantInterpreter extends PMultipleBindAssistantTC
 		this.af = af;
 	}
 
-	public static ValueList getBindValues(PMultipleBind mb, Context ctxt)
+	public ValueList getBindValues(PMultipleBind mb, Context ctxt)
 			throws ValueException, AnalysisException
 	{
 //		try
@@ -42,7 +42,7 @@ public class PMultipleBindAssistantInterpreter extends PMultipleBindAssistantTC
 //		return null;
 	}
 
-	public static ValueList getValues(PMultipleBind mb, ObjectContext ctxt)
+	public ValueList getValues(PMultipleBind mb, ObjectContext ctxt)
 	{
 		try
 		{

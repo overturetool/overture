@@ -19,61 +19,61 @@ public class ACasesExpAssistantInterpreter // extends ACasesExpAssistantTC
 		this.af = af;
 	}
 
-	public static ValueList getValues(ACasesExp exp, ObjectContext ctxt)
-	{
-		ValueList list = PExpAssistantInterpreter.getValues(exp.getExpression(), ctxt);
+//	public static ValueList getValues(ACasesExp exp, ObjectContext ctxt)
+//	{
+//		ValueList list = PExpAssistantInterpreter.getValues(exp.getExpression(), ctxt);
+//
+//		for (ACaseAlternative c : exp.getCases())
+//		{
+//			list.addAll(ACaseAlternativeAssistantInterpreter.getValues(c, ctxt));
+//		}
+//
+//		if (exp.getOthers() != null)
+//		{
+//			list.addAll(PExpAssistantInterpreter.getValues(exp.getOthers(), ctxt));
+//		}
+//
+//		return list;
+//	}
 
-		for (ACaseAlternative c : exp.getCases())
-		{
-			list.addAll(ACaseAlternativeAssistantInterpreter.getValues(c, ctxt));
-		}
+//	public static PExp findExpression(ACasesExp exp, int lineno)
+//	{
+//		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
+//		if (found != null)
+//			return found;
+//
+//		found = PExpAssistantInterpreter.findExpression(exp.getExpression(), lineno);
+//		if (found != null)
+//			return found;
+//
+//		for (ACaseAlternative c : exp.getCases())
+//		{
+//			found = PExpAssistantInterpreter.findExpression(c.getResult(), lineno);
+//			if (found != null)
+//				break;
+//		}
+//
+//		return found != null ? found
+//				: exp.getOthers() != null ? PExpAssistantInterpreter.findExpression(exp.getOthers(), lineno)
+//						: null;
+//	}
 
-		if (exp.getOthers() != null)
-		{
-			list.addAll(PExpAssistantInterpreter.getValues(exp.getOthers(), ctxt));
-		}
-
-		return list;
-	}
-
-	public static PExp findExpression(ACasesExp exp, int lineno)
-	{
-		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
-		if (found != null)
-			return found;
-
-		found = PExpAssistantInterpreter.findExpression(exp.getExpression(), lineno);
-		if (found != null)
-			return found;
-
-		for (ACaseAlternative c : exp.getCases())
-		{
-			found = PExpAssistantInterpreter.findExpression(c.getResult(), lineno);
-			if (found != null)
-				break;
-		}
-
-		return found != null ? found
-				: exp.getOthers() != null ? PExpAssistantInterpreter.findExpression(exp.getOthers(), lineno)
-						: null;
-	}
-
-	public static List<PExp> getSubExpressions(ACasesExp exp)
-	{
-		List<PExp> subs = PExpAssistantInterpreter.getSubExpressions(exp.getExpression());
-
-		for (ACaseAlternative c : exp.getCases())
-		{
-			subs.addAll(ACaseAlternativeAssistantInterpreter.getSubExpressions(c));
-		}
-
-		if (exp.getOthers() != null)
-		{
-			subs.addAll(PExpAssistantInterpreter.getSubExpressions(exp.getOthers()));
-		}
-
-		subs.add(exp);
-		return subs;
-	}
+//	public static List<PExp> getSubExpressions(ACasesExp exp)
+//	{
+//		List<PExp> subs = PExpAssistantInterpreter.getSubExpressions(exp.getExpression());
+//
+//		for (ACaseAlternative c : exp.getCases())
+//		{
+//			subs.addAll(ACaseAlternativeAssistantInterpreter.getSubExpressions(c));
+//		}
+//
+//		if (exp.getOthers() != null)
+//		{
+//			subs.addAll(PExpAssistantInterpreter.getSubExpressions(exp.getOthers()));
+//		}
+//
+//		subs.add(exp);
+//		return subs;
+//	}
 
 }

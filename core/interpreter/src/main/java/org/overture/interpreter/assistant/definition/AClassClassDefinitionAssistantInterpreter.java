@@ -8,7 +8,6 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
-import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.values.ObjectValue;
 import org.overture.interpreter.values.ValueList;
@@ -34,7 +33,7 @@ public class AClassClassDefinitionAssistantInterpreter
 					+ node.getName(), ctxt);
 		}
 
-		return SClassDefinitionAssistantInterpreter.makeNewInstance(node, ctorDefinition, argvals, ctxt, new HashMap<ILexNameToken, ObjectValue>(), false);
+		return af.createSClassDefinitionAssistant().makeNewInstance(node, ctorDefinition, argvals, ctxt, new HashMap<ILexNameToken, ObjectValue>(), false);
 	}
 
 }

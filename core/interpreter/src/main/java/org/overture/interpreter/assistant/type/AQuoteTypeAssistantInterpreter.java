@@ -16,11 +16,11 @@ public class AQuoteTypeAssistantInterpreter
 		this.af = af;
 	}
 
-	public static ValueList getAllValues(AQuoteType type, Context ctxt)
-	{
-		ValueList v = new ValueList();
-		v.add(new QuoteValue(type.getValue().getValue()));
-		return v;
-	}
+//	public static ValueList getAllValues(AQuoteType type, Context ctxt)
+//	{
+//		ValueList v = new ValueList();
+//		v.add(new QuoteValue(type.getValue().getValue()));
+//		return v;
+//	}
 
 }

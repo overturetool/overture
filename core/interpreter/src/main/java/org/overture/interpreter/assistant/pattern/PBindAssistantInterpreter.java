@@ -1,13 +1,10 @@
 package org.overture.interpreter.assistant.pattern;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.patterns.ASetBind;
-import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PBind;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
-import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.values.ValueList;
 import org.overture.typechecker.assistant.pattern.PBindAssistantTC;
 
@@ -22,34 +19,45 @@ public class PBindAssistantInterpreter extends PBindAssistantTC
 		this.af = af;
 	}
 
-	public static ValueList getBindValues(PBind bind, Context ctxt)
+	public ValueList getBindValues(PBind bind, Context ctxt)
 			throws AnalysisException
 	{
-		if (bind instanceof ASetBind)
-		{
-			return ASetBindAssistantInterpreter.getBindValues((ASetBind) bind, ctxt);
-		} else if (bind instanceof ATypeBind)
-		{
-			return ATypeBindAssistantInterpreter.getBindValues((ATypeBind) bind, ctxt);
-		} else
-		{
-			assert false : "Should not happen";
-			return null;
-		}
+		
+		return bind.apply(af.getSingleBindValuesCollector(), ctxt);// FIXME: should we handle exceptions like this
+		
+//		if (bind instanceof ASetBind)
+//		{
+//			return ASetBindAssistantInterpreter.getBindValues((ASetBind) bind, ctxt);
+//		} else if (bind instanceof ATypeBind)
+//		{
+//			return ATypeBindAssistantInterpreter.getBindValues((ATypeBind) bind, ctxt);
+//		} else
+//		{
+//			assert false : "Should not happen";
+//			return null;
+//		}
 	}
 
-	public static ValueList getValues(PBind bind, ObjectContext ctxt)
-	{
-		if (bind instanceof ASetBind)
+	public ValueList getValues(PBind bind, ObjectContext ctxt)
+	{	
+		
+		try
 		{
-			return ASetBindAssistantInterpreter.getValues((ASetBind) bind, ctxt);
-		} else if (bind instanceof ATypeBind)
-		{
-			return ATypeBindAssistantInterpreter.getValues((ATypeBind) bind, ctxt);
-		} else
+			return bind.apply(af.getBindValueCollector(),ctxt);// FIXME: should we handle exceptions like this
+		} catch (AnalysisException e)
 		{
 			return new ValueList();
 		}
+//		if (bind instanceof ASetBind)
+//		{
+//			return ASetBindAssistantInterpreter.getValues((ASetBind) bind, ctxt);
+//		} else if (bind instanceof ATypeBind)
+//		{
+//			return ATypeBindAssistantInterpreter.getValues((ATypeBind) bind, ctxt);
+//		} else
+//		{
+//			
+//		}
 	}
 
 }

@@ -22,7 +22,6 @@ import org.overture.ast.lex.Dialect;
 import org.overture.ast.node.INode;
 import org.overture.config.Settings;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
@@ -102,7 +101,7 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 		{
 			try
 			{
-				nvpl = PPatternAssistantInterpreter.getNamedValues(def.getPattern(), v, initialContext);
+				nvpl = af.createPPatternAssistant().getNamedValues(def.getPattern(), v, initialContext);
 			} catch (PatternMatchException e)
 			{
 				VdmRuntimeError.abort(e, initialContext);
@@ -112,7 +111,7 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 			try
 			{
 				Value converted = v.convertTo(def.getTypebind().getType(), initialContext);
-				nvpl = PPatternAssistantInterpreter.getNamedValues(def.getTypebind().getPattern(), converted, initialContext);
+				nvpl = af.createPPatternAssistant().getNamedValues(def.getTypebind().getPattern(), converted, initialContext);
 			} catch (PatternMatchException e)
 			{
 				VdmRuntimeError.abort(e, initialContext);
@@ -131,7 +130,7 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 					VdmRuntimeError.abort(def.getLocation(), 4002, "Expression value is not in set bind", initialContext);
 				}
 
-				nvpl = PPatternAssistantInterpreter.getNamedValues(def.getSetbind().getPattern(), v, initialContext);
+				nvpl = af.createPPatternAssistant().getNamedValues(def.getSetbind().getPattern(), v, initialContext);
 			} catch (AnalysisException e)
 			{
 				if (e instanceof PatternMatchException)
@@ -314,7 +313,7 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 		//return AImportedDefinitionAssistantInterpreter.getNamedValues(def, initialContext);
 		NameValuePairList renamed = new NameValuePairList();
 
-		for (NameValuePair nv : PDefinitionAssistantInterpreter.getNamedValues(def.getDef(), initialContext))
+		for (NameValuePair nv : af.createPDefinitionAssistant().getNamedValues(def.getDef(), initialContext))
 		{
 			if (nv.name.equals(def.getDef().getName())) // NB. excludes pre/post/inv functions
 			{
@@ -341,7 +340,7 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 			}
 		}
 
-		for (NameValuePair nv : PDefinitionAssistantInterpreter.getNamedValues(def.getSuperdef(), initialContext))
+		for (NameValuePair nv : af.createPDefinitionAssistant().getNamedValues(def.getSuperdef(), initialContext))
 		{
 			renamed.add(new NameValuePair(nv.name.getModifiedName(def.getName().getModule()), nv.value));
 		}
@@ -393,7 +392,7 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 		//return ARenamedDefinitionAssistantInterpreter.getNamedValues(def, initialContext);
 		NameValuePairList renamed = new NameValuePairList();
 
-		for (NameValuePair nv : PDefinitionAssistantInterpreter.getNamedValues(def.getDef(), initialContext))
+		for (NameValuePair nv : af.createPDefinitionAssistant().getNamedValues(def.getDef(), initialContext))
 		{
 			// We exclude any name from the definition other than the one
 			// explicitly renamed. Otherwise, generated names like pre_f
@@ -453,7 +452,7 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 		{
 			// UpdatableValues are constantized as they cannot be updated.
 			v = def.getExpression().apply(VdmRuntime.getExpressionEvaluator(), initialContext).convertTo(af.createPDefinitionAssistant().getType(def), initialContext).getConstant();
-			return PPatternAssistantInterpreter.getNamedValues(def.getPattern(), v, initialContext);
+			return af.createPPatternAssistant().getNamedValues(def.getPattern(), v, initialContext);
 		} catch (ValueException e)
 		{
 			VdmRuntimeError.abort(def.getLocation(), e);

@@ -17,10 +17,10 @@ public class AProductTypeAssistantInterpreter
 		this.af = af;
 	}
 
-	public static ValueList getAllValues(AProductType type, Context ctxt)
-			throws AnalysisException
-	{
-		return PTypeListAssistant.getAllValues(type.getTypes(), ctxt);
-	}
+//	public static ValueList getAllValues(AProductType type, Context ctxt)
+//			throws AnalysisException
+//	{
+//		return PTypeListAssistant.getAllValues(type.getTypes(), ctxt);
+//	}
 
 }

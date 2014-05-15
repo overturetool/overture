@@ -44,7 +44,6 @@ import org.overture.ast.types.PType;
 import org.overture.ast.util.Utils;
 import org.overture.ast.util.definitions.ClassList;
 import org.overture.config.Settings;
-import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.debug.DBGPReader;
 import org.overture.interpreter.messages.Console;
@@ -336,7 +335,7 @@ public class ClassInterpreter extends Interpreter
 			{
 				if (assistantFactory.createPDefinitionAssistant().isFunctionOrOperation(d))
 				{
-					NameValuePairList nvpl = PDefinitionAssistantInterpreter.getNamedValues(d,initialContext);
+					NameValuePairList nvpl = assistantFactory.createPDefinitionAssistant().getNamedValues(d,initialContext);
 
 					for (NameValuePair n: nvpl)
 					{
@@ -352,7 +351,7 @@ public class ClassInterpreter extends Interpreter
 			{
 				if (assistantFactory.createPDefinitionAssistant().isFunctionOrOperation(d))
 				{
-					NameValuePairList nvpl = PDefinitionAssistantInterpreter.getNamedValues(d,initialContext);
+					NameValuePairList nvpl = assistantFactory.createPDefinitionAssistant().getNamedValues(d,initialContext);
 
 					for (NameValuePair n: nvpl)
 					{
@@ -432,7 +431,7 @@ public class ClassInterpreter extends Interpreter
 		SClassDefinition classdef=tracedef.getClassDefinition();
 
 		// Create a new test object
-		object = SClassDefinitionAssistantInterpreter.newInstance(classdef,null, null, initialContext);
+		object = assistantFactory.createSClassDefinitionAssistant().newInstance(classdef,null, null, initialContext);
 
 
 		Context ctxt = new ObjectContext(assistantFactory,

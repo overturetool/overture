@@ -21,12 +21,14 @@ import org.overture.ast.util.type.HashChecker;
 import org.overture.ast.util.type.NumericBasisChecker;
 import org.overture.ast.util.type.NumericFinder;
 
+
 //TODO Add assistant Javadoc
 /** 
  * This is the main AST assistant factory. everyone ultimately inherits from here.
  * @author ldc
  *
  */
+
 public class AstAssistantFactory implements IAstAssistantFactory
 {
 

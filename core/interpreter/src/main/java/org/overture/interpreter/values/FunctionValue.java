@@ -333,7 +333,7 @@ public class FunctionValue extends Value
 
 			try
 			{
-				for (NameValuePair nvp : PPatternAssistantInterpreter.getNamedValues(p, pv, ctxt))
+				for (NameValuePair nvp : ctxt.assistantFactory.createPPatternAssistant().getNamedValues(p, pv, ctxt))
 				{
 					Value v = args.get(nvp.name);
 

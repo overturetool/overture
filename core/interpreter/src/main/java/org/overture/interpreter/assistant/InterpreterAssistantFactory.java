@@ -162,21 +162,32 @@ import org.overture.interpreter.assistant.type.SInvariantTypeAssistantInterprete
 import org.overture.interpreter.assistant.type.SMapTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
+import org.overture.interpreter.traces.TraceNode;
 import org.overture.interpreter.utilities.OldNameCollector;
+import org.overture.interpreter.utilities.definition.CoreTraceExpander;
 import org.overture.interpreter.utilities.definition.DefinitionRunTimeChecker;
 import org.overture.interpreter.utilities.definition.DefinitionValueChecker;
 import org.overture.interpreter.utilities.definition.ExpressionFinder;
 import org.overture.interpreter.utilities.definition.InstanceVariableChecker;
 import org.overture.interpreter.utilities.definition.NamedValueLister;
-import org.overture.interpreter.utilities.definition.StatementFinder;
+import org.overture.interpreter.utilities.definition.DefinitionStatementFinder;
+import org.overture.interpreter.utilities.definition.TermTraceExpander;
 import org.overture.interpreter.utilities.definition.TypeDefinitionChecker;
 import org.overture.interpreter.utilities.definition.ValuesDefinitionLocator;
+import org.overture.interpreter.utilities.expression.ExpExpressionFinder;
+import org.overture.interpreter.utilities.expression.ExpressionValueCollector;
+import org.overture.interpreter.utilities.expression.SubExpressionsLocator;
 import org.overture.interpreter.utilities.pattern.AllNamedValuesLocator;
-import org.overture.interpreter.utilities.pattern.BindValuesCollector;
+import org.overture.interpreter.utilities.pattern.BindValueCollector;
+import org.overture.interpreter.utilities.pattern.MultipleBindValuesCollector;
 import org.overture.interpreter.utilities.pattern.ConstrainedPatternChecker;
 import org.overture.interpreter.utilities.pattern.IdentifierPatternFinder;
 import org.overture.interpreter.utilities.pattern.LengthFinder;
+import org.overture.interpreter.utilities.pattern.SingleBindValuesCollector;
 import org.overture.interpreter.utilities.pattern.ValueCollector;
+import org.overture.interpreter.utilities.statement.StatementExpressionFinder;
+import org.overture.interpreter.utilities.statement.StatementFinder;
+import org.overture.interpreter.utilities.type.AllValuesCollector;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.ValueList;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
@@ -967,7 +978,7 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	@Override
 	public QuestionAnswerAdaptor<Context, ValueList> getBindValuesCollector()
 	{
-		return new BindValuesCollector(this);
+		return new MultipleBindValuesCollector(this);
 	}
 	
 	@Override
@@ -1043,9 +1054,69 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	}
 	
 	@Override
+	public IQuestionAnswer<Integer, PStm> getDefinitionStatementFinder()
+	{
+		return new DefinitionStatementFinder(this);
+	}
+	
+	@Override
+	public IQuestionAnswer<Context, TraceNode> getCoreTraceExpander()
+	{
+		return new CoreTraceExpander(this);
+	}
+
+	@Override
+	public IQuestionAnswer<Context, TraceNode> getTermTraceExpander()
+	{
+		return new TermTraceExpander(this);
+	}
+
+	@Override
+	public IQuestionAnswer<Integer, PExp> getStatementExpressionFinder()
+	{
+		return new StatementExpressionFinder(this);
+	}
+	
+	@Override
 	public IQuestionAnswer<Integer, PStm> getStatementFinder()
 	{
 		return new StatementFinder(this);
+	}
+
+	@Override
+	public IQuestionAnswer<ObjectContext, ValueList> getExpressionValueCollector()
+	{
+		return new ExpressionValueCollector(this);
+	}
+
+	@Override
+	public IQuestionAnswer<Integer, PExp> getExpExpressionFinder()
+	{
+		return new ExpExpressionFinder(this);
+	}
+
+	@Override
+	public IAnswer<List<PExp>> getSubExpressionsLocator()
+	{
+		return new SubExpressionsLocator(this);
+	}
+
+	@Override
+	public IQuestionAnswer<Context, ValueList> getSingleBindValuesCollector()
+	{
+		return new SingleBindValuesCollector(this);
+	}
+	
+	@Override
+	public IQuestionAnswer<ObjectContext, ValueList> getBindValueCollector()
+	{
+		return new BindValueCollector(this);
+	}
+
+	@Override
+	public IQuestionAnswer<Context, ValueList> getAllValuesCollector()
+	{
+		return new AllValuesCollector(this);
 	}
 
 }

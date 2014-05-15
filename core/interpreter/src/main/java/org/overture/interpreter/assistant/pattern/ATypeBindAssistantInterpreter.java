@@ -21,11 +21,11 @@ public class ATypeBindAssistantInterpreter extends ATypeBindAssistantTC
 		this.af = af;
 	}
 
-	public static ValueList getBindValues(ATypeBind bind, Context ctxt)
-			throws AnalysisException
-	{
-		return PTypeAssistantInterpreter.getAllValues(bind.getType(), ctxt);
-	}
+//	public static ValueList getBindValues(ATypeBind bind, Context ctxt)
+//			throws AnalysisException
+//	{
+//		return PTypeAssistantInterpreter.getAllValues(bind.getType(), ctxt);
+//	}
 
 	public static ValueList getValues(ATypeBind bind, ObjectContext ctxt)
 	{

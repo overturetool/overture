@@ -19,9 +19,9 @@ public class ACallObjectStatementAssistantInterpreter extends
 		this.af = af;
 	}
 
-	public static PExp findExpression(ACallObjectStm stm, int lineno)
-	{
-		return PExpAssistantInterpreter.findExpression(stm.getArgs(), lineno);
-	}
+//	public static PExp findExpression(ACallObjectStm stm, int lineno)
+//	{
+//		return PExpAssistantInterpreter.findExpression(stm.getArgs(), lineno);
+//	}
 
 }

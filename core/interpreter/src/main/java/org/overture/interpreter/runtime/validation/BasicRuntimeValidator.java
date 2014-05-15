@@ -30,6 +30,8 @@ import java.util.List;
 
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
+import org.overture.interpreter.assistant.InterpreterAssistantFactory;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.messages.rtlog.RTMessage.MessageType;
@@ -86,11 +88,11 @@ public class BasicRuntimeValidator implements IRuntimeValidatior {
 		
 	}
 
-	public void bindSystemVariables(ASystemClassDefinition systemDefinition) {
+	public void bindSystemVariables(ASystemClassDefinition systemDefinition, IInterpreterAssistantFactory af) {
 	 
 		
 		List<String[]> variablesTemp = filterVariablesInSystem(systemDefinition.getName().getName(),variables);
-		Context ctxt = SClassDefinitionAssistantInterpreter.getStatics(systemDefinition);
+		Context ctxt = af.createSClassDefinitionAssistant().getStatics(systemDefinition);
 		
 		
 		for (String[] strings : variablesTemp) {
@@ -206,6 +208,9 @@ public class BasicRuntimeValidator implements IRuntimeValidatior {
 	{
 		return this.conjectures;
 	}
+
+	
+
 	
 	
 }

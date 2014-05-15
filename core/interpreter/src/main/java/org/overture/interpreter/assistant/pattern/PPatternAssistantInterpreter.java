@@ -5,28 +5,10 @@ import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.patterns.ABooleanPattern;
-import org.overture.ast.patterns.ACharacterPattern;
-import org.overture.ast.patterns.AConcatenationPattern;
-import org.overture.ast.patterns.AExpressionPattern;
 import org.overture.ast.patterns.AIdentifierPattern;
-import org.overture.ast.patterns.AIgnorePattern;
-import org.overture.ast.patterns.AIntegerPattern;
-import org.overture.ast.patterns.AMapPattern;
-import org.overture.ast.patterns.AMapUnionPattern;
-import org.overture.ast.patterns.ANilPattern;
-import org.overture.ast.patterns.AQuotePattern;
-import org.overture.ast.patterns.ARealPattern;
-import org.overture.ast.patterns.ARecordPattern;
-import org.overture.ast.patterns.ASeqPattern;
-import org.overture.ast.patterns.ASetPattern;
-import org.overture.ast.patterns.AStringPattern;
-import org.overture.ast.patterns.ATuplePattern;
-import org.overture.ast.patterns.AUnionPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
-import org.overture.interpreter.runtime.PatternMatchException;
 import org.overture.interpreter.utilities.pattern.AllNamedValuesLocator;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.Value;
@@ -46,10 +28,10 @@ public class PPatternAssistantInterpreter extends PPatternAssistantTC
 	/** A value for getLength meaning "any length" */
 	public static int ANY = -1;
 
-	public static NameValuePairList getNamedValues(PPattern p, Value expval,
+	public NameValuePairList getNamedValues(PPattern p, Value expval,
 			Context ctxt) throws AnalysisException
 	{
-		List<AIdentifierPattern> ids = findIdentifiers(p);
+		List<AIdentifierPattern> ids = af.createPPatternAssistant().findIdentifiers(p);
 
 		// Go through the list of IDs, marking duplicate names as constrained. This is
 		// because we have to permute sets that contain duplicate variables, so that
@@ -76,7 +58,7 @@ public class PPatternAssistantInterpreter extends PPatternAssistantTC
 		return all.get(0); // loose choice here!
 	}
 
-	public static List<AIdentifierPattern> findIdentifiers(PPattern pattern)
+	public List<AIdentifierPattern> findIdentifiers(PPattern pattern)
 	{
 		try
 		{
@@ -118,7 +100,7 @@ public class PPatternAssistantInterpreter extends PPatternAssistantTC
 		// }
 	}
 
-	public static List<NameValuePairList> getAllNamedValues(PPattern pattern,
+	public List<NameValuePairList> getAllNamedValues(PPattern pattern,
 			Value expval, Context ctxt) throws AnalysisException
 	{
 		
@@ -204,7 +186,7 @@ public class PPatternAssistantInterpreter extends PPatternAssistantTC
 	 * @return The "length" of the pattern (eg. sequence and set patterns).
 	 */
 
-	public static int getLength(PPattern pattern)
+	public int getLength(PPattern pattern)
 	{
 		try
 		{
@@ -250,7 +232,7 @@ public class PPatternAssistantInterpreter extends PPatternAssistantTC
 	 * @return True if the pattern has constraints, such that matching values should be permuted, where necessary, to
 	 *         find a match.
 	 */
-	public static boolean isConstrained(PPattern pattern)
+	public boolean isConstrained(PPattern pattern)
 	{
 		try
 		{

@@ -49,7 +49,7 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 			Integer lineno) throws AnalysisException
 	{
 		//return AAssignmentDefinitionAssistantInterpreter.findExpression((AAssignmentDefinition) def, lineno);
-		return PExpAssistantInterpreter.findExpression(def.getExpression(), lineno);
+		return af.createPExpAssistant().findExpression(def.getExpression(), lineno);
 		
 	}
 	
@@ -58,7 +58,7 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 			Integer lineno) throws AnalysisException
 	{
 		//return AClassInvariantDefinitionAssistantInterpreter.findExpression(def, lineno);
-		return PExpAssistantInterpreter.findExpression(def.getExpression(), lineno);
+		return af.createPExpAssistant().findExpression(def.getExpression(), lineno);
 		
 	}
 	
@@ -74,7 +74,7 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 			throws AnalysisException
 	{
 		//return AEqualsDefinitionAssistantInterpreter.findExpression(def, lineno);
-		return PExpAssistantInterpreter.findExpression(def.getTest(), lineno);
+		return af.createPExpAssistant().findExpression(def.getTest(), lineno);
 		
 	}
 	
@@ -104,7 +104,7 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 			}
 		}
 
-		return PExpAssistantInterpreter.findExpression(def.getBody(), lineno);
+		return af.createPExpAssistant().findExpression(def.getBody(), lineno);
 	
 	}
 	
@@ -134,7 +134,7 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 			}
 		}
 
-		return PStmAssistantInterpreter.findExpression(def.getBody(), lineno);
+		return af.createPStmAssistant().findExpression(def.getBody(), lineno);
 	}
 	
 	@Override
@@ -162,7 +162,7 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 			}
 		}
 		return def.getBody() == null ? null
-				: PExpAssistantInterpreter.findExpression(def.getBody(), lineno);
+				: af.createPExpAssistant().findExpression(def.getBody(), lineno);
 	}
 	
 	@Override
@@ -204,7 +204,7 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 		}
 
 		return def.getBody() == null ? null
-				: PStmAssistantInterpreter.findExpression(def.getBody(), lineno);
+				: af.createPStmAssistant().findExpression(def.getBody(), lineno);
 	}
 
 	@Override
@@ -213,7 +213,7 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 			throws AnalysisException
 	{
 		//return AInstanceVariableDefinitionAssistantInterpreter.findExpression(def, lineno);
-		return PExpAssistantInterpreter.findExpression(def.getExpression(), lineno);
+		return af.createPExpAssistant().findExpression(def.getExpression(), lineno);
 	}
 	
 	@Override
@@ -221,7 +221,7 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 			throws AnalysisException
 	{
 		//return APerSyncDefinitionAssistantInterpreter.findExpression(def, lineno);
-		return PExpAssistantInterpreter.findExpression(def.getGuard(), lineno);
+		return af.createPExpAssistant().findExpression(def.getGuard(), lineno);
 	}
 	
 	@Override
@@ -231,7 +231,7 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 		//return AStateDefinitionAssistantInterpreter.findExpression(def, lineno);
 		if (def.getInitExpression() != null)
 		{
-			PExp found = PExpAssistantInterpreter.findExpression(def.getInvExpression(), lineno);
+			PExp found = af.createPExpAssistant().findExpression(def.getInvExpression(), lineno);
 			if (found != null)
 			{
 				return found;
@@ -243,7 +243,7 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 			if (def.getInitExpression() instanceof AEqualsBinaryExp)
 			{
 				AEqualsBinaryExp ee = (AEqualsBinaryExp) def.getInitExpression();
-				PExp found = PExpAssistantInterpreter.findExpression(ee.getRight(), lineno);
+				PExp found = af.createPExpAssistant().findExpression(ee.getRight(), lineno);
 				if (found != null)
 				{
 					return found;
@@ -259,7 +259,7 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 			throws AnalysisException
 	{
 		//return AThreadDefinitionAssistantInterpreter.findExpression(def, lineno);
-		return PStmAssistantInterpreter.findExpression(def.getStatement(), lineno);
+		return af.createPStmAssistant().findExpression(def.getStatement(), lineno);
 	}
 	
 	@Override
@@ -285,7 +285,7 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 			throws AnalysisException
 	{
 		//return AValueDefinitionAssistantInterpreter.findExpression(def, lineno);
-		return PExpAssistantInterpreter.findExpression(def.getExpression(), lineno);
+		return af.createPExpAssistant().findExpression(def.getExpression(), lineno);
 	}
 	
 	@Override

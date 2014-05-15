@@ -18,19 +18,19 @@ public class AFuncInstatiationExpAssistantInterpreter // extends
 		this.af = af;
 	}
 
-	public static ValueList getValues(AFuncInstatiationExp exp,
-			ObjectContext ctxt)
-	{
-		return PExpAssistantInterpreter.getValues(exp.getFunction(), ctxt);
-	}
+//	public static ValueList getValues(AFuncInstatiationExp exp,
+//			ObjectContext ctxt)
+//	{
+//		return PExpAssistantInterpreter.getValues(exp.getFunction(), ctxt);
+//	}
 
-	public static PExp findExpression(AFuncInstatiationExp exp, int lineno)
-	{
-		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
-		if (found != null)
-			return found;
-
-		return PExpAssistantInterpreter.findExpression(exp.getFunction(), lineno);
-	}
+//	public static PExp findExpression(AFuncInstatiationExp exp, int lineno)
+//	{
+//		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
+//		if (found != null)
+//			return found;
+//
+//		return PExpAssistantInterpreter.findExpression(exp.getFunction(), lineno);
+//	}
 
 }
