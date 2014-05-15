@@ -29,7 +29,6 @@ import org.overture.ast.expressions.APreExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.pog.pub.IPOContextStack;
-import org.overture.pog.pub.POType;
 
 public class FunctionApplyObligation extends ProofObligation
 {

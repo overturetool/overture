@@ -1,5 +1,6 @@
 package org.overture.interpreter.assistant.type;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
@@ -19,17 +20,17 @@ public class AUnionTypeAssistantInterpreter extends AUnionTypeAssistantTC
 		this.af = af;
 	}
 
-	public static ValueList getAllValues(AUnionType utype, Context ctxt)
-			throws ValueException
-	{
-		ValueList v = new ValueList();
-
-		for (PType type : utype.getTypes())
-		{
-			v.addAll(PTypeAssistantInterpreter.getAllValues(type, ctxt));
-		}
-
-		return v;
-	}
+//	public static ValueList getAllValues(AUnionType utype, Context ctxt)
+//			throws AnalysisException
+//	{
+//		ValueList v = new ValueList();
+//
+//		for (PType type : utype.getTypes())
+//		{
+//			v.addAll(PTypeAssistantInterpreter.getAllValues(type, ctxt));
+//		}
+//
+//		return v;
+//	}
 
 }

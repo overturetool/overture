@@ -1055,9 +1055,12 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 
 		if (question.assistantFactory.createPTypeAssistant().isFunction(lType))
 		{
-			String pref1 = assistantFactory.createPExpAssistant().getPreName(lExp).getName();
-			String pref2 = assistantFactory.createPExpAssistant().getPreName(rExp).getName();
+			ILexNameToken lex1 = assistantFactory.createPExpAssistant().getPreName(lExp);
+			ILexNameToken lex2 = assistantFactory.createPExpAssistant().getPreName(rExp);
 
+			String pref1 = lex1 == null ? null : lex1.getName();
+			String pref2 = lex2 == null ? null : lex2.getName();
+			
 			if (pref1 == null || !pref1.equals(""))
 				obligations.add(new FuncComposeObligation(node, pref1, pref2, question));
 		}

@@ -2,13 +2,13 @@ package org.overture.interpreter.assistant.type;
 
 import java.util.List;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
-import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.values.NameValuePair;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.Quantifier;
@@ -27,7 +27,7 @@ public class PTypeListAssistant
 	}
 
 	public static ValueList getAllValues(List<PType> linkedList, Context ctxt)
-			throws ValueException
+			throws AnalysisException
 	{
 		QuantifierList quantifiers = new QuantifierList();
 		int n = 0;
@@ -36,7 +36,7 @@ public class PTypeListAssistant
 		{
 			LexNameToken name = new LexNameToken("#", String.valueOf(n), t.getLocation());
 			PPattern p = AstFactory.newAIdentifierPattern(name);
-			Quantifier q = new Quantifier(p, PTypeAssistantInterpreter.getAllValues(t, ctxt));
+			Quantifier q = new Quantifier(p, af.createPTypeAssistant().getAllValues(t, ctxt));
 			quantifiers.add(q);
 		}
 

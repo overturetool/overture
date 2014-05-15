@@ -23,6 +23,7 @@
 
 package org.overture.interpreter.values;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.PType;
 import org.overture.interpreter.runtime.Context;
@@ -64,7 +65,7 @@ public class NilValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt) throws ValueException
+	public Value convertValueTo(PType to, Context ctxt) throws AnalysisException
 	{
 		// Note, don't use isType, as this skips the OptionalType wrapper.
 

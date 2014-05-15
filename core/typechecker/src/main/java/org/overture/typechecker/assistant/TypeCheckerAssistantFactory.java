@@ -58,7 +58,6 @@ import org.overture.typechecker.assistant.module.AModuleModulesAssistantTC;
 import org.overture.typechecker.assistant.module.AValueValueImportAssistantTC;
 import org.overture.typechecker.assistant.module.PExportAssistantTC;
 import org.overture.typechecker.assistant.module.PImportAssistantTC;
-import org.overture.typechecker.assistant.pattern.AMapUnionPatternAssistantTC;
 import org.overture.typechecker.assistant.pattern.AMapletPatternMapletAssistantTC;
 import org.overture.typechecker.assistant.pattern.APatternTypePairAssistant;
 import org.overture.typechecker.assistant.pattern.ASetBindAssistantTC;
@@ -152,6 +151,13 @@ import org.overture.typechecker.utilities.type.UnionTypeFinder;
 import org.overture.typechecker.utilities.type.VoidBasisChecker;
 import org.overture.typechecker.utilities.type.VoidExistanceChecker;
 
+//TODO Add assistant Javadoc
+/**
+ * An assistant factory for the Overture Typecher. The methods supplied here
+ * only support pure VDM nodes. Override/extend as needed.
+ * @author ldc
+ *
+ */
 public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		ITypeCheckerAssistantFactory
 {
@@ -460,11 +466,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 //		return new AMapPatternAssistantTC(this);
 //	}
 
-	@Override
-	public AMapUnionPatternAssistantTC createAMapUnionPatternAssistant()
-	{
-		return new AMapUnionPatternAssistantTC(this);
-	}
+//	@Override
+//	public AMapUnionPatternAssistantTC createAMapUnionPatternAssistant()
+//	{
+//		return new AMapUnionPatternAssistantTC(this);
+//	}
 
 	@Override
 	public APatternTypePairAssistant createAPatternTypePairAssistant()

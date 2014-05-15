@@ -84,7 +84,6 @@ import org.overture.ast.types.SSeqType;
 import org.overture.ast.util.PTypeSet;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
-import org.overture.pog.pub.POType;
 import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
@@ -671,7 +670,7 @@ public class SubTypeObligation extends ProofObligation
 		AIsExp isExp = new AIsExp();
 		isExp.setBasicType(type);
 		isExp.setType(new ABooleanBasicType());
-		isExp.setTest(exp);
+		isExp.setTest(exp.clone());
 		return isExp;
 	}
 }

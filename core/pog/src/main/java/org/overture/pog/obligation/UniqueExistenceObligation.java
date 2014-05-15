@@ -26,7 +26,6 @@ package org.overture.pog.obligation;
 import org.overture.ast.expressions.AExists1Exp;
 import org.overture.ast.expressions.AIotaExp;
 import org.overture.pog.pub.IPOContextStack;
-import org.overture.pog.pub.POType;
 
 
 public class UniqueExistenceObligation extends ProofObligation

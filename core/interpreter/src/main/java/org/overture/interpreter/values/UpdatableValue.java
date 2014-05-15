@@ -23,6 +23,7 @@
 
 package org.overture.interpreter.values;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.types.PType;
@@ -97,29 +98,22 @@ public class UpdatableValue extends ReferenceValue
 	}
 
 	@Override
-	public synchronized Value convertValueTo(PType to, Context ctxt) throws ValueException
+	public synchronized Value convertValueTo(PType to, Context ctxt) throws AnalysisException
 	{
 		return value.convertValueTo(to, ctxt).getUpdatable(listeners);
 	}
 
 	@Override
-	public void set(ILexLocation location, Value newval, Context ctxt)
+	public void set(ILexLocation location, Value newval, Context ctxt) throws AnalysisException
 	{
 		// Anything with structure added to an UpdateableValue has to be
 		// updatable, otherwise you can "freeze" part of the substructure
-		// such that it can't be changed.
+		// such that it can't be changed. And we have to set the listeners
+		// to be "our" listeners, regardless of any it had before.
 
 		synchronized (this)
 		{
-    		if (newval instanceof UpdatableValue)
-    		{
-    			value = newval;
-    		}
-    		else
-    		{
-    			value = newval.getUpdatable(listeners);
-    		}
-
+   			value = newval.getUpdatable(listeners);
     		value = ((UpdatableValue)value).value;	// To avoid nested updatables
 		}
 		
@@ -136,8 +130,6 @@ public class UpdatableValue extends ReferenceValue
 		{
 			listeners.changedValue(location, value, ctxt);
 		}
-		
-		
 	}
 
 	public void addListener(ValueListener listener)

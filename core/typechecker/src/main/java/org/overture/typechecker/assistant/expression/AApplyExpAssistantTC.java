@@ -107,7 +107,7 @@ public class AApplyExpAssistantTC
 		if (node.getArgs().size() != 1)
 		{
 			TypeCheckerErrors.concern(isSimple, 3055, "Sequence selector must have one argument", node.getLocation(), node);
-		} else if (!PTypeAssistantTC.isNumeric(node.getArgtypes().get(0)))
+		} else if (!af.createPTypeAssistant().isNumeric(node.getArgtypes().get(0)))
 		{
 			TypeCheckerErrors.concern(isSimple, 3056, "Sequence application argument must be numeric", node.getLocation(), node);
 		} else if (seq.getEmpty())

@@ -1,5 +1,6 @@
 package org.overture.interpreter.assistant.expression;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.ASeqCompSeqExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
@@ -17,31 +18,31 @@ public class ASeqCompSeqExpAssistantInterpreter
 		this.af = af;
 	}
 
-	public static ValueList getValues(ASeqCompSeqExp exp, ObjectContext ctxt)
+	public static ValueList getValues(ASeqCompSeqExp exp, ObjectContext ctxt) throws AnalysisException
 	{
-		ValueList list = PExpAssistantInterpreter.getValues(exp.getFirst(), ctxt);
-		list.addAll(ASetBindAssistantInterpreter.getValues(exp.getSetBind(), ctxt));
+		ValueList list = af.createPExpAssistant().getValues(exp.getFirst(), ctxt);
+		list.addAll(af.createPBindAssistant().getBindValues(exp.getSetBind(), ctxt));//(ASetBindAssistantInterpreter.getValues(exp.getSetBind(), ctxt));
 
 		if (exp.getPredicate() != null)
 		{
-			list.addAll(PExpAssistantInterpreter.getValues(exp.getPredicate(), ctxt));
+			list.addAll(af.createPExpAssistant().getValues(exp.getPredicate(), ctxt));
 		}
 
 		return list;
 	}
 
-	public static PExp findExpression(ASeqCompSeqExp exp, int lineno)
-	{
-		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
-		if (found != null)
-			return found;
-
-		found = PExpAssistantInterpreter.findExpression(exp.getFirst(), lineno);
-		if (found != null)
-			return found;
-
-		return exp.getPredicate() == null ? null
-				: PExpAssistantInterpreter.findExpression(exp.getPredicate(), lineno);
-	}
+//	public static PExp findExpression(ASeqCompSeqExp exp, int lineno)
+//	{
+//		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
+//		if (found != null)
+//			return found;
+//
+//		found = PExpAssistantInterpreter.findExpression(exp.getFirst(), lineno);
+//		if (found != null)
+//			return found;
+//
+//		return exp.getPredicate() == null ? null
+//				: PExpAssistantInterpreter.findExpression(exp.getPredicate(), lineno);
+//	}
 
 }

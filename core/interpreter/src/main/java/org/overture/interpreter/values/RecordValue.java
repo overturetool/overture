@@ -25,6 +25,7 @@ package org.overture.interpreter.values;
 
 import java.util.Iterator;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
@@ -47,7 +48,7 @@ public class RecordValue extends Value
 
 	// mk_ expressions
 	public RecordValue(ARecordInvariantType type,	ValueList values, Context ctxt)
-		throws ValueException
+		throws AnalysisException
 	{
 		this.type = type;
 		this.fieldmap = new FieldMap();
@@ -71,7 +72,7 @@ public class RecordValue extends Value
 
 	// mu_ expressions
 	public RecordValue(ARecordInvariantType type,	FieldMap mapvalues, Context ctxt)
-		throws ValueException
+		throws AnalysisException
 	{
 		this.type = type;
 		this.fieldmap = new FieldMap();
@@ -123,7 +124,7 @@ public class RecordValue extends Value
 		}
 	}
 
-	public void checkInvariant(Context ctxt) throws ValueException
+	public void checkInvariant(Context ctxt) throws AnalysisException
 	{
 		if (invariant != null && Settings.invchecks)
 		{
@@ -298,7 +299,7 @@ public class RecordValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt) throws ValueException
+	public Value convertValueTo(PType to, Context ctxt) throws AnalysisException
 	{
 		if (ctxt.assistantFactory.createPTypeAssistant().equals(to, type))
 		{

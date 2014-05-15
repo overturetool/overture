@@ -37,19 +37,14 @@ public class PONotImpliesContext extends POContext
 		this.exp = exp;
 	}
 
-	
 	@Override
 	public PExp getContextNode(PExp stitch)
 	{
-		
-	
-		AImpliesBooleanBinaryExp impliesExp = AstExpressionFactory.newAImpliesBooleanBinaryExp(exp.clone(), stitch);
 		ANotUnaryExp notExp = new ANotUnaryExp();
-		notExp.setExp(impliesExp);
-		
-		return notExp;
+		notExp.setExp(exp.clone());
+		AImpliesBooleanBinaryExp impliesExp = AstExpressionFactory.newAImpliesBooleanBinaryExp(notExp, stitch);
+		return impliesExp;
 	}
-
 
 	@Override
 	public String getContext()

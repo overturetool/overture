@@ -490,7 +490,7 @@ public class SClassDefinitionAssistantTC
 		return af.createPDefinitionAssistant().findName(classdef, constructor, NameScope.NAMES);
 	}
 
-	public LexNameToken getCtorName(SClassDefinition classdef,
+	public static LexNameToken getCtorName(SClassDefinition classdef,
 			List<PType> argtypes)
 	{
 		ILexNameToken name = classdef.getName();

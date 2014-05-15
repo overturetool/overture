@@ -44,7 +44,7 @@ public class ABusClassDefinitionAssitantInterpreter
 	public static ObjectValue newInstance(ABusClassDefinition node,
 			PDefinition ctorDefinition, ValueList argvals, Context ctxt)
 	{
-		NameValuePairList nvpl = PDefinitionListAssistantInterpreter.getNamedValues(node.getDefinitions(), ctxt);
+		NameValuePairList nvpl = af.createPDefinitionListAssistant().getNamedValues(node.getDefinitions(), ctxt);
 		NameValuePairMap map = new NameValuePairMap();
 		map.putAll(nvpl);
 

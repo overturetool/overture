@@ -17,9 +17,9 @@ public class ACallStmAssistantInterpreter extends ACallStmAssistantTC
 		this.af = af;
 	}
 
-	public static PExp findExpression(ACallStm stm, int lineno)
-	{
-		return PExpAssistantInterpreter.findExpression(stm.getArgs(), lineno);
-	}
+//	public static PExp findExpression(ACallStm stm, int lineno)
+//	{
+//		return PExpAssistantInterpreter.findExpression(stm.getArgs(), lineno);
+//	}
 
 }

@@ -12,7 +12,6 @@ import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 /**
  * Checks if a type extending class element is of a specific PType.

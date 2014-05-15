@@ -24,6 +24,7 @@
 package org.overture.interpreter.runtime.validation;
 
 import org.overture.ast.definitions.ASystemClassDefinition;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.messages.rtlog.RTMessage.MessageType;
 import org.overture.interpreter.runtime.ClassInterpreter;
 import org.overture.interpreter.scheduler.AsyncThread;
@@ -36,7 +37,7 @@ public interface IRuntimeValidatior {
 
 	void validate(OperationValue operationValue, MessageType type);
 
-	void bindSystemVariables(ASystemClassDefinition systemDefinition);
+	void bindSystemVariables(ASystemClassDefinition systemDefinition, IInterpreterAssistantFactory af);
 
 	void validateAsync(OperationValue operationValue, AsyncThread t);
 

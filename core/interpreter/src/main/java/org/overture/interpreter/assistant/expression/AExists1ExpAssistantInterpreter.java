@@ -17,20 +17,20 @@ public class AExists1ExpAssistantInterpreter // extends AExists1ExpAssistantTC
 		this.af = af;
 	}
 
-	public static ValueList getValues(AExists1Exp exp, ObjectContext ctxt)
-	{
-		ValueList list = PBindAssistantInterpreter.getValues(exp.getBind(), ctxt);
-		list.addAll(PExpAssistantInterpreter.getValues(exp.getPredicate(), ctxt));
-		return list;
-	}
+//	public static ValueList getValues(AExists1Exp exp, ObjectContext ctxt)
+//	{
+//		ValueList list = PBindAssistantInterpreter.getValues(exp.getBind(), ctxt);
+//		list.addAll(PExpAssistantInterpreter.getValues(exp.getPredicate(), ctxt));
+//		return list;
+//	}
 
-	public static PExp findExpression(AExists1Exp exp, int lineno)
-	{
-		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
-		if (found != null)
-			return found;
-
-		return PExpAssistantInterpreter.findExpression(exp.getPredicate(), lineno);
-	}
+//	public static PExp findExpression(AExists1Exp exp, int lineno)
+//	{
+//		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
+//		if (found != null)
+//			return found;
+//
+//		return PExpAssistantInterpreter.findExpression(exp.getPredicate(), lineno);
+//	}
 
 }

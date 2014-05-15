@@ -21,7 +21,7 @@ public class ACpuClassDefinitionAssistantTC
 		this.af = af;
 	}
 
-	private static String defs = "operations "
+	private String defs = "operations "
 			+ "public CPU:(<FP>|<FCFS>) * real ==> CPU "
 			+ "	CPU(policy, speed) == is not yet specified; "
 			+ "public deploy: ? ==> () "

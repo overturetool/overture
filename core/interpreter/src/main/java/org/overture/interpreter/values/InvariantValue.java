@@ -23,6 +23,7 @@
 
 package org.overture.interpreter.values;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.config.Settings;
@@ -39,7 +40,7 @@ public class InvariantValue extends ReferenceValue
 	private FunctionValue invariant;
 
 	public InvariantValue(ANamedInvariantType type, Value value, Context ctxt)
-		throws ValueException
+		throws AnalysisException
 	{
 		super(value);
 		this.type = type;
@@ -48,7 +49,7 @@ public class InvariantValue extends ReferenceValue
 		checkInvariant(ctxt);
 	}
 
-	public void checkInvariant(Context ctxt) throws ValueException
+	public void checkInvariant(Context ctxt) throws AnalysisException
 	{
 		if (invariant != null && Settings.invchecks)
 		{
@@ -68,6 +69,7 @@ public class InvariantValue extends ReferenceValue
 			{
 				throw new ContextException(4060, e.getMessage(), invariant.location, ctxt);
 			}
+
 			finally
 			{
 				ctxt.threadState.setAtomic(false);
@@ -89,7 +91,7 @@ public class InvariantValue extends ReferenceValue
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt) throws ValueException
+	public Value convertValueTo(PType to, Context ctxt) throws AnalysisException
 	{
 		if (to.equals(type))
 		{

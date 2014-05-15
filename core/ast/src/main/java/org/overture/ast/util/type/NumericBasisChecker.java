@@ -85,7 +85,7 @@ public class NumericBasisChecker extends AnswerAdaptor<SNumericBasicType>
 
 			for (PType t : type.getTypes())
 			{
-				if (PTypeAssistant.isNumeric(t))
+				if (af.createPTypeAssistant().isNumeric(t))
 				{
 					SNumericBasicType nt = PTypeAssistant.getNumeric(t);
 

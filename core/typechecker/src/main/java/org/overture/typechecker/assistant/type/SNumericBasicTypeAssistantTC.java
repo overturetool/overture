@@ -28,7 +28,7 @@ public class SNumericBasicTypeAssistantTC extends SNumericBasicTypeAssistant
 		node.getLeft().apply(rootVisitor, question.newConstraint(null));
 		node.getRight().apply(rootVisitor, question.newConstraint(null));
 
-		if (!PTypeAssistantTC.isNumeric(node.getLeft().getType()))
+		if (!question.assistantFactory.createPTypeAssistant().isNumeric(node.getLeft().getType()))
 		{
 			TypeCheckerErrors.report(3139, "Left hand of " + node.getOp()
 					+ " is not numeric", node.getLocation(), node);
@@ -36,7 +36,7 @@ public class SNumericBasicTypeAssistantTC extends SNumericBasicTypeAssistant
 			node.getLeft().setType(AstFactory.newARealNumericBasicType(node.getLocation()));
 		}
 
-		if (!PTypeAssistantTC.isNumeric(node.getRight().getType()))
+		if (!question.assistantFactory.createPTypeAssistant().isNumeric(node.getRight().getType()))
 		{
 			TypeCheckerErrors.report(3140, "Right hand of " + node.getOp()
 					+ " is not numeric", node.getLocation(), node);
