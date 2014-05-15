@@ -54,8 +54,6 @@ import org.overture.ast.types.PType;
 import org.overture.pof.AVdmPoTree;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IProofObligation;
-import org.overture.pog.pub.POStatus;
-import org.overture.pog.pub.POType;
 import org.overture.pog.utility.PatternToExpVisitor;
 import org.overture.pog.utility.UniqueNameGenerator;
 
@@ -63,6 +61,7 @@ import org.overture.pog.utility.UniqueNameGenerator;
  * New class for Proof Obligatios with a an AST based representation (wip)
  * 
  * @author ldc
+ * @param <A>
  */
 
 
@@ -375,6 +374,16 @@ abstract public class ProofObligation implements IProofObligation, Serializable 
 		PatternToExpVisitor visitor = new PatternToExpVisitor(
 				getUniqueGenerator());
 		return pattern.apply(visitor);
+	}
+	
+	protected List<PMultipleBind> cloneListMultipleBind(List<PMultipleBind> binds){
+		List<PMultipleBind> r = new LinkedList<PMultipleBind>();
+		
+		for (PMultipleBind bind : binds){
+			r.add(bind.clone());
+		}
+		
+		return r;
 	}
 	
 	/**

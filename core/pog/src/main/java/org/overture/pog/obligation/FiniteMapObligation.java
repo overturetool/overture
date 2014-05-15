@@ -39,9 +39,10 @@ import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexKeywordToken;
 import org.overture.ast.lex.VDMToken;
 import org.overture.ast.patterns.PMultipleBind;
+import org.overture.ast.types.AMapMapType;
+import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.PType;
 import org.overture.pog.pub.IPOContextStack;
-import org.overture.pog.pub.POType;
 
 
 public class FiniteMapObligation extends ProofObligation
@@ -63,7 +64,11 @@ public class FiniteMapObligation extends ProofObligation
 		//				m(idx) = { a |-> b }
 		
 		AExistsExp existsExp = new AExistsExp();
-		existsExp.setBindList(getMultipleTypeBindList(mapType.clone(), finmap));
+		AMapMapType natmaptype = new AMapMapType();
+		natmaptype.setFrom(new ANatNumericBasicType());
+		natmaptype.setTo(mapType.clone());
+		
+		existsExp.setBindList(getMultipleTypeBindList(natmaptype, finmap));
 		existsExp.setPredicate(getForallExp(exp.clone(), finmap, findex));
 		
 		valuetree.setPredicate(ctxt.getPredWithContext(existsExp));

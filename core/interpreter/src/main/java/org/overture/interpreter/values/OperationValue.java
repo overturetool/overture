@@ -245,7 +245,7 @@ public class OperationValue extends Value
 	{
 		if (guard != null)
 		{
-			ValueListener vl = new GuardValueListener(getGuardLock());
+			ValueListener vl = new GuardValueListener(getGuardLock(ctxt.assistantFactory));
 
 			for (Value v : ctxt.assistantFactory.createPExpAssistant().getValues(guard, ctxt))
 			{
@@ -289,7 +289,7 @@ public class OperationValue extends Value
 		RootContext argContext = newContext(from, toTitle(), ctxt);
 
 		req(logreq);
-		notifySelf();
+		notifySelf(ctxt.assistantFactory);
 
 		if (guard != null)
 		{
@@ -299,7 +299,7 @@ public class OperationValue extends Value
 			act(); // Still activated, even if no guard
 		}
 
-		notifySelf();
+		notifySelf(ctxt.assistantFactory);
 
 		if (argValues.size() != paramPatterns.size())
 		{
@@ -477,7 +477,7 @@ public class OperationValue extends Value
 		} finally
 		{
 			fin();
-			notifySelf();
+			notifySelf(ctxt.assistantFactory);
 		}
 
 		return rv;
@@ -571,11 +571,11 @@ public class OperationValue extends Value
 		return argContext;
 	}
 
-	private Lock getGuardLock()
+	private Lock getGuardLock(IInterpreterAssistantFactory assistantFactory)
 	{
 		if (classdef != null)
 		{
-			return VdmRuntime.getNodeState(Interpreter.getInstance().getAssistantFactory(), classdef).guardLock;
+			return VdmRuntime.getNodeState(assistantFactory, classdef).guardLock;
 		}
 		else if (self != null)
 		{
@@ -608,7 +608,7 @@ public class OperationValue extends Value
 			return; // Probably during initialization.
 		}
 
-		Lock lock = getGuardLock();
+		Lock lock = getGuardLock(ctxt.assistantFactory);
 		lock.lock(ctxt, guard.getLocation());
 
 		while (true)
@@ -663,9 +663,9 @@ public class OperationValue extends Value
 		lock.unlock();
 	}
 
-	private void notifySelf()
+	private void notifySelf(IInterpreterAssistantFactory assistantFactory)
 	{
-		Lock lock = getGuardLock();
+		Lock lock = getGuardLock(assistantFactory);
 		
 		if (lock != null)
 		{
