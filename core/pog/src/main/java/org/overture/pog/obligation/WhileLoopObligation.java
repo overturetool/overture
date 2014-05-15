@@ -28,7 +28,6 @@ import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.statements.ASkipStm;
 import org.overture.ast.statements.AWhileStm;
 import org.overture.pog.pub.IPOContextStack;
-import org.overture.pog.pub.POType;
 
 public class WhileLoopObligation extends ProofObligation
 {

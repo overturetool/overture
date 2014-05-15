@@ -45,7 +45,6 @@ import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.pog.pub.IPOContextStack;
-import org.overture.pog.pub.POType;
 
 public class SatisfiabilityObligation extends ProofObligation {
 	private static final long serialVersionUID = -8922392508326253099L;
@@ -232,9 +231,9 @@ public class SatisfiabilityObligation extends ProofObligation {
 		// replace with super call
 		if (stateDefinition instanceof AStateDefinition) {
 			postArglist.add(getVarExp(NEW_STATE_ARG));
-			exists_binds = getMultipleTypeBindList(
+			exists_binds.addAll(getMultipleTypeBindList(
 					((AStateDefinition) stateDefinition).getRecordType()
-							.clone(), NEW_STATE_ARG);
+							.clone(), NEW_STATE_ARG));
 		} else {
 			postArglist.add(getVarExp(NEW_SELF_ARG));
 			exists_binds.addAll(getMultipleTypeBindList(stateDefinition

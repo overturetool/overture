@@ -33,7 +33,6 @@ import org.overture.ast.lex.LexBooleanToken;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.statements.ALetBeStStm;
 import org.overture.pog.pub.IPOContextStack;
-import org.overture.pog.pub.POType;
 
 public class LetBeExistsObligation extends ProofObligation
 {
@@ -41,7 +40,7 @@ public class LetBeExistsObligation extends ProofObligation
 
 	public LetBeExistsObligation(ALetBeStExp exp, IPOContextStack ctxt)
 	{
-		super(exp, POType.LET_BE_EXISTS, ctxt, exp.getLocation());
+		super(exp, POType.LET_BE_EXISTS, ctxt, exp.getBind().getLocation());
 		
 		/**
 		 * let <binds> be st <predicate> in <exp>
@@ -74,7 +73,7 @@ public class LetBeExistsObligation extends ProofObligation
 
 	public LetBeExistsObligation(ALetBeStStm stmt, IPOContextStack ctxt)
 	{
-		super(stmt, POType.LET_BE_EXISTS, ctxt, stmt.getLocation());
+		super(stmt, POType.LET_BE_EXISTS, ctxt, stmt.getBind().getLocation());
 
 		AExistsExp exists = new AExistsExp();
 		List<PMultipleBind> bindList = new Vector<PMultipleBind>();

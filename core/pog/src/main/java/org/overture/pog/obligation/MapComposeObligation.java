@@ -28,7 +28,6 @@ import org.overture.ast.expressions.AMapDomainUnaryExp;
 import org.overture.ast.expressions.AMapRangeUnaryExp;
 import org.overture.ast.expressions.ASubsetBinaryExp;
 import org.overture.pog.pub.IPOContextStack;
-import org.overture.pog.pub.POType;
 
 public class MapComposeObligation extends ProofObligation
 {

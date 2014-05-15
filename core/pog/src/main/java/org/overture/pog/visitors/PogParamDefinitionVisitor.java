@@ -438,7 +438,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 
 			AOperationType otype = (AOperationType) node.getType();
 			Iterator<PType> typeIter = otype.getParameters().iterator();
-			boolean alwaysMatches = false;
+			boolean alwaysMatches = true;
 			PatternAlwaysMatchesVisitor amVisitor = new PatternAlwaysMatchesVisitor();
 
 			for (APatternListTypePair tp : node.getParameterPatterns()) {

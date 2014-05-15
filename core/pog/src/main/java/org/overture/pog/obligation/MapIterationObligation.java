@@ -30,7 +30,6 @@ import org.overture.ast.expressions.AOrBooleanBinaryExp;
 import org.overture.ast.expressions.AStarStarBinaryExp;
 import org.overture.ast.expressions.ASubsetBinaryExp;
 import org.overture.pog.pub.IPOContextStack;
-import org.overture.pog.pub.POType;
 
 
 public class MapIterationObligation extends ProofObligation
