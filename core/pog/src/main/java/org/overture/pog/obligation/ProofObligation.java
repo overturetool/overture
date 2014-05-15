@@ -65,7 +65,7 @@ import org.overture.pog.utility.UniqueNameGenerator;
  */
 
 
-abstract public class ProofObligation<A> implements IProofObligation, Serializable {
+abstract public class ProofObligation implements IProofObligation, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	// we should store the node that generated the PO rather than just the
