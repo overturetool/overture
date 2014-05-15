@@ -33,13 +33,14 @@ public class VdmDebugTargetProxy extends DebugTargetProxy
 	{
 		super(target);
 	}
-	
+
 	@Override
 	protected DebugEventHandler[] createEventHandlers()
 	{
-		 ThreadEventHandler threadEventHandler = new VdmThreadEventHandler(this);
-			return new DebugEventHandler[] { new DebugTargetEventHandler(this), threadEventHandler,
-					new StackFrameEventHandler(this, threadEventHandler) };
+		ThreadEventHandler threadEventHandler = new VdmThreadEventHandler(this);
+		return new DebugEventHandler[] { new DebugTargetEventHandler(this),
+				threadEventHandler,
+				new StackFrameEventHandler(this, threadEventHandler) };
 	}
 
 }

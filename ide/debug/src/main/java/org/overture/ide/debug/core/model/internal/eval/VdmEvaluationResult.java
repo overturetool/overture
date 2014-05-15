@@ -24,39 +24,47 @@ import org.overture.ide.debug.core.model.IVdmValue;
 import org.overture.ide.debug.core.model.eval.IVdmEvaluationResult;
 import org.overture.ide.debug.utils.CharOperation;
 
-public class VdmEvaluationResult implements IVdmEvaluationResult {
+public class VdmEvaluationResult implements IVdmEvaluationResult
+{
 	private final IVdmThread thread;
 	private final String snippet;
 	private final IVdmValue value;
 
 	public VdmEvaluationResult(IVdmThread thread, String snippet,
-			IVdmValue value) {
+			IVdmValue value)
+	{
 		this.thread = thread;
 		this.value = value;
 		this.snippet = snippet;
 	}
 
-	public String getSnippet() {
+	public String getSnippet()
+	{
 		return snippet;
 	}
 
-	public IVdmValue getValue() {
+	public IVdmValue getValue()
+	{
 		return value;
 	}
 
-	public IVdmThread getThread() {
+	public IVdmThread getThread()
+	{
 		return thread;
 	}
 
-	public String[] getErrorMessages() {
+	public String[] getErrorMessages()
+	{
 		return CharOperation.NO_STRINGS;
 	}
 
-	public DebugException getException() {
+	public DebugException getException()
+	{
 		return null;
 	}
 
-	public boolean hasErrors() {
+	public boolean hasErrors()
+	{
 		return false;
 	}
 }

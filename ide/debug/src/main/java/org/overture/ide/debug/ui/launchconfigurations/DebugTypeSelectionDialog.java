@@ -46,21 +46,27 @@ import org.overture.ast.node.INode;
 import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.ui.utility.ast.AstNameUtil;
 
-public class DebugTypeSelectionDialog extends FilteredItemsSelectionDialog {
-	
+public class DebugTypeSelectionDialog extends FilteredItemsSelectionDialog
+{
+
 	/**
 	 * Main list label provider
 	 */
-	public class DebugTypeLabelProvider implements ILabelProvider {
-		Map<ImageDescriptor,Image> fImageMap = new HashMap<ImageDescriptor,Image>();
+	public class DebugTypeLabelProvider implements ILabelProvider
+	{
+		Map<ImageDescriptor, Image> fImageMap = new HashMap<ImageDescriptor, Image>();
 
-		public Image getImage(Object element) {
-			if(element instanceof IAdaptable) {
-				IWorkbenchAdapter adapter = (IWorkbenchAdapter) ((IAdaptable)element).getAdapter(IWorkbenchAdapter.class);
-				if(adapter != null) {
+		public Image getImage(Object element)
+		{
+			if (element instanceof IAdaptable)
+			{
+				IWorkbenchAdapter adapter = (IWorkbenchAdapter) ((IAdaptable) element).getAdapter(IWorkbenchAdapter.class);
+				if (adapter != null)
+				{
 					ImageDescriptor descriptor = adapter.getImageDescriptor(element);
 					Image image = (Image) fImageMap.get(descriptor);
-					if(image == null) {
+					if (image == null)
+					{
 						image = descriptor.createImage();
 						fImageMap.put(descriptor, image);
 					}
@@ -69,160 +75,205 @@ public class DebugTypeSelectionDialog extends FilteredItemsSelectionDialog {
 			}
 			return null;
 		}
-		public String getText(Object element) {
-			if(element instanceof INode) {
+
+		public String getText(Object element)
+		{
+			if (element instanceof INode)
+			{
 				INode type = (INode) element;
 				String label = AstNameUtil.getName(type);
 				String container = getDeclaringContainerName(type);
-				if(container != null && !"".equals(container)) { //$NON-NLS-1$
-					label += " - "+container; //$NON-NLS-1$
+				if (container != null && !"".equals(container)) { //$NON-NLS-1$
+					label += " - " + container; //$NON-NLS-1$
 				}
 				return label;
 			}
 			return null;
 		}
-		
+
 		/**
 		 * Returns the name of the declaring container name
-		 * @param type the type to find the container name for
+		 * 
+		 * @param type
+		 *            the type to find the container name for
 		 * @return the container name for the specified type
 		 */
-		protected String getDeclaringContainerName(INode type) {
-			
-			if(type instanceof AExplicitFunctionDefinition)
+		protected String getDeclaringContainerName(INode type)
+		{
+
+			if (type instanceof AExplicitFunctionDefinition)
 			{
-				return ((AExplicitFunctionDefinition)type).getLocation().getModule();
+				return ((AExplicitFunctionDefinition) type).getLocation().getModule();
 			}
-			if(type instanceof AExplicitOperationDefinition)
+			if (type instanceof AExplicitOperationDefinition)
 			{
-				return ((AExplicitOperationDefinition)type).getLocation().getModule();
+				return ((AExplicitOperationDefinition) type).getLocation().getModule();
 			}
-			
+
 			return "";
-//			INode outer = type.getDeclaringType();
-//			if(outer != null) {
-//				return outer.getFullyQualifiedName('.');
-//			}
-//			else {
-//				String name = type.getPackageFragment().getElementName();
-//				if("".equals(name)) { //$NON-NLS-1$
-//					name = LauncherMessages.MainMethodLabelProvider_0;
-//				}
-//				return name;
-//			}
+			// INode outer = type.getDeclaringType();
+			// if(outer != null) {
+			// return outer.getFullyQualifiedName('.');
+			// }
+			// else {
+			// String name = type.getPackageFragment().getElementName();
+			//				if("".equals(name)) { //$NON-NLS-1$
+			// name = LauncherMessages.MainMethodLabelProvider_0;
+			// }
+			// return name;
+			// }
 		}
-		
+
 		/**
-		 * Returns the narrowest enclosing <code>IJavaElement</code> which is either 
-		 * an <code>IType</code> (enclosing) or an <code>IPackageFragment</code> (contained in)
-		 * @param type the type to find the enclosing <code>IJavaElement</code> for.
+		 * Returns the narrowest enclosing <code>IJavaElement</code> which is either an <code>IType</code> (enclosing)
+		 * or an <code>IPackageFragment</code> (contained in)
+		 * 
+		 * @param type
+		 *            the type to find the enclosing <code>IJavaElement</code> for.
 		 * @return the enclosing element or <code>null</code> if none
 		 */
-		protected INode getDeclaringContainer(INode type) {
-//			IJavaElement outer = type.getDeclaringType();
-//			if(outer == null) {
-//				outer = type.getPackageFragment();
-//			}
-//			return outer;
-			
-			if(type instanceof AExplicitFunctionDefinition)
-			{
-				return ((AExplicitFunctionDefinition)type).getClassDefinition();
-			}
-			if(type instanceof AExplicitOperationDefinition)
-			{
-				return ((AExplicitOperationDefinition)type).getClassDefinition();
-			}
-			
-			return null;
-	}
+		protected INode getDeclaringContainer(INode type)
+		{
+			// IJavaElement outer = type.getDeclaringType();
+			// if(outer == null) {
+			// outer = type.getPackageFragment();
+			// }
+			// return outer;
 
-		public void dispose() {
+			if (type instanceof AExplicitFunctionDefinition)
+			{
+				return ((AExplicitFunctionDefinition) type).getClassDefinition();
+			}
+			if (type instanceof AExplicitOperationDefinition)
+			{
+				return ((AExplicitOperationDefinition) type).getClassDefinition();
+			}
+
+			return null;
+		}
+
+		public void dispose()
+		{
 			fImageMap.clear();
 			fImageMap = null;
 		}
-		public void addListener(ILabelProviderListener listener) {}
-		public boolean isLabelProperty(Object element, String property) {return false;}
-		public void removeListener(ILabelProviderListener listener) {}
+
+		public void addListener(ILabelProviderListener listener)
+		{
+		}
+
+		public boolean isLabelProperty(Object element, String property)
+		{
+			return false;
+		}
+
+		public void removeListener(ILabelProviderListener listener)
+		{
+		}
 	}
-	
+
 	/**
 	 * Provides a label and image for the details area of the dialog
 	 */
-	class DebugTypeDetailsLabelProvider extends DebugTypeLabelProvider {
-		public String getText(Object element) {
-			if(element instanceof INode) {
+	class DebugTypeDetailsLabelProvider extends DebugTypeLabelProvider
+	{
+		public String getText(Object element)
+		{
+			if (element instanceof INode)
+			{
 				INode type = (INode) element;
 				String name = getDeclaringContainerName(type);
-				if(name != null) {
-					if(name.equals(LauncherMessages.MainMethodLabelProvider_0)) {
-//						IProject project =vdmProject;// type.getJavaProject();
-						if(project != null) {
-//							try {
-								return project.getLocation().toOSString().substring(1)+" - "+name; //$NON-NLS-1$
-//							} 
-//							catch (JavaModelException e) {JDIDebugUIPlugin.log(e);}
+				if (name != null)
+				{
+					if (name.equals(LauncherMessages.MainMethodLabelProvider_0))
+					{
+						// IProject project =vdmProject;// type.getJavaProject();
+						if (project != null)
+						{
+							// try {
+							return project.getLocation().toOSString().substring(1)
+									+ " - " + name; //$NON-NLS-1$
+							// }
+							// catch (JavaModelException e) {JDIDebugUIPlugin.log(e);}
 						}
-					}
-					else {
+					} else
+					{
 						return name;
 					}
 				}
 			}
 			return null;
 		}
-		public Image getImage(Object element) {
-			if(element instanceof INode) {
-				return super.getImage(getDeclaringContainer(((INode) element)));
+
+		public Image getImage(Object element)
+		{
+			if (element instanceof INode)
+			{
+				return super.getImage(getDeclaringContainer((INode) element));
 			}
 			return super.getImage(element);
 		}
 	}
-	
+
 	/**
 	 * Simple items filter
 	 */
-	class DebugTypeItemsFilter extends ItemsFilter {
-		public boolean isConsistentItem(Object item) {
+	class DebugTypeItemsFilter extends ItemsFilter
+	{
+		public boolean isConsistentItem(Object item)
+		{
 			return item instanceof INode;
 		}
-		public boolean matchItem(Object item) {
-			if(!(item instanceof INode) || !Arrays.asList(fTypes).contains(item)) {
+
+		public boolean matchItem(Object item)
+		{
+			if (!(item instanceof INode)
+					|| !Arrays.asList(fTypes).contains(item))
+			{
 				return false;
 			}
-			return matches(AstNameUtil.getName(((INode)item)));
+			return matches(AstNameUtil.getName((INode) item));
 		}
 	}
-	
+
 	/**
 	 * The selection history for the dialog
 	 */
-	class DebugTypeSelectionHistory extends SelectionHistory {
-		protected Object restoreItemFromMemento(IMemento memento) {
-			//IJavaElement element = JavaCore.create(memento.getTextData()); 
+	class DebugTypeSelectionHistory extends SelectionHistory
+	{
+		protected Object restoreItemFromMemento(IMemento memento)
+		{
+			// IJavaElement element = JavaCore.create(memento.getTextData());
 			Object element = null;
-			return (element instanceof INode ? element : null);
+			return element instanceof INode ? element : null;
 		}
-		protected void storeItemToMemento(Object item, IMemento memento) {
-			if(item instanceof INode) {
-				//memento.putTextData(((INode) item).getHandleIdentifier());
+
+		protected void storeItemToMemento(Object item, IMemento memento)
+		{
+			if (item instanceof INode)
+			{
+				// memento.putTextData(((INode) item).getHandleIdentifier());
 			}
 		}
 	}
-	
-	private static final String SETTINGS_ID= "";// JDIDebugUIPlugin.getUniqueIdentifier() + ".MAIN_METHOD_SELECTION_DIALOG"; //$NON-NLS-1$
+
+	private static final String SETTINGS_ID = "";// JDIDebugUIPlugin.getUniqueIdentifier() + ".MAIN_METHOD_SELECTION_DIALOG"; //$NON-NLS-1$
 	private INode[] fTypes = null;
 	private IProject project;
 
 	/**
 	 * Constructor
-	 * @param elements the types to display in the dialog
+	 * 
+	 * @param elements
+	 *            the types to display in the dialog
 	 */
-	public DebugTypeSelectionDialog(Shell shell, INode[] elements, String title,IProject project) {
+	public DebugTypeSelectionDialog(Shell shell, INode[] elements,
+			String title, IProject project)
+	{
 		super(shell, false);
 		setTitle(title);
 		fTypes = elements;
-		this.project =project;
+		this.project = project;
 		setMessage(LauncherMessages.VdmMainTab_Choose_a_main__type_to_launch__12);
 		setInitialPattern("**"); //$NON-NLS-1$
 		setListLabelProvider(new DebugTypeLabelProvider());
@@ -230,83 +281,103 @@ public class DebugTypeSelectionDialog extends FilteredItemsSelectionDialog {
 		setSelectionHistory(new DebugTypeSelectionHistory());
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.eclipse.ui.dialogs.FilteredItemsSelectionDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
 	 */
-	protected Control createDialogArea(Composite parent) {
+	protected Control createDialogArea(Composite parent)
+	{
 		Control ctrl = super.createDialogArea(parent);
-		//PlatformUI.getWorkbench().getHelpSystem().setHelp(ctrl, IJavaDebugHelpContextIds.SELECT_MAIN_METHOD_DIALOG);
+		// PlatformUI.getWorkbench().getHelpSystem().setHelp(ctrl, IJavaDebugHelpContextIds.SELECT_MAIN_METHOD_DIALOG);
 		return ctrl;
 	}
 
 	/**
 	 * @see org.eclipse.ui.dialogs.FilteredItemsSelectionDialog#getDialogSettings()
 	 */
-	protected IDialogSettings getDialogSettings() {
+	protected IDialogSettings getDialogSettings()
+	{
 		IDialogSettings settings = VdmDebugPlugin.getDefault().getDialogSettings();
 		IDialogSettings section = settings.getSection(SETTINGS_ID);
-		if (section == null) {
+		if (section == null)
+		{
 			section = settings.addNewSection(SETTINGS_ID);
-		} 
+		}
 		return section;
-//		return null;
+		// return null;
 	}
 
 	/**
 	 * @see org.eclipse.ui.dialogs.FilteredItemsSelectionDialog#getItemsComparator()
 	 */
-	protected Comparator<Object> getItemsComparator() {
-		Comparator<Object> comp = new Comparator<Object>() {
-            public int compare(Object o1, Object o2) {
-            	if(o1 instanceof INode && o2 instanceof INode) {
-            		return (AstNameUtil.getName((INode)o1)).compareTo(AstNameUtil.getName(((INode)o2)));
-            	}
-                return -1;
-            }
-        };
-        return comp;
+	protected Comparator<Object> getItemsComparator()
+	{
+		Comparator<Object> comp = new Comparator<Object>()
+		{
+			public int compare(Object o1, Object o2)
+			{
+				if (o1 instanceof INode && o2 instanceof INode)
+				{
+					return AstNameUtil.getName((INode) o1).compareTo(AstNameUtil.getName((INode) o2));
+				}
+				return -1;
+			}
+		};
+		return comp;
 	}
-	
+
 	/**
 	 * @see org.eclipse.ui.dialogs.FilteredItemsSelectionDialog#validateItem(java.lang.Object)
 	 */
-	protected IStatus validateItem(Object item) {
+	protected IStatus validateItem(Object item)
+	{
 		return Status.OK_STATUS;
 	}
-	
+
 	/**
 	 * @see org.eclipse.ui.dialogs.FilteredItemsSelectionDialog#createExtendedContentArea(org.eclipse.swt.widgets.Composite)
 	 */
-	protected Control createExtendedContentArea(Composite parent) {
+	protected Control createExtendedContentArea(Composite parent)
+	{
 		return null;
 	}
 
 	/**
 	 * @see org.eclipse.ui.dialogs.FilteredItemsSelectionDialog#createFilter()
 	 */
-	protected ItemsFilter createFilter() {
+	protected ItemsFilter createFilter()
+	{
 		return new DebugTypeItemsFilter();
 	}
 
 	/**
-	 * @see org.eclipse.ui.dialogs.FilteredItemsSelectionDialog#fillContentProvider(org.eclipse.ui.dialogs.FilteredItemsSelectionDialog.AbstractContentProvider, org.eclipse.ui.dialogs.FilteredItemsSelectionDialog.ItemsFilter, org.eclipse.core.runtime.IProgressMonitor)
+	 * @see org.eclipse.ui.dialogs.FilteredItemsSelectionDialog#fillContentProvider(org.eclipse.ui.dialogs.FilteredItemsSelectionDialog.AbstractContentProvider,
+	 *      org.eclipse.ui.dialogs.FilteredItemsSelectionDialog.ItemsFilter, org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	protected void fillContentProvider(AbstractContentProvider contentProvider, ItemsFilter itemsFilter, IProgressMonitor progressMonitor) throws CoreException {
-		if(fTypes != null && fTypes.length > 0) {
-			for(int i = 0; i < fTypes.length; i++) {
-				if(itemsFilter.isConsistentItem(fTypes[i])) {
+	protected void fillContentProvider(AbstractContentProvider contentProvider,
+			ItemsFilter itemsFilter, IProgressMonitor progressMonitor)
+			throws CoreException
+	{
+		if (fTypes != null && fTypes.length > 0)
+		{
+			for (int i = 0; i < fTypes.length; i++)
+			{
+				if (itemsFilter.isConsistentItem(fTypes[i]))
+				{
 					contentProvider.add(fTypes[i], itemsFilter);
 				}
 			}
 		}
 	}
-	
+
 	/**
 	 * @see org.eclipse.ui.dialogs.FilteredItemsSelectionDialog#getElementName(java.lang.Object)
 	 */
-	public String getElementName(Object item) {
-		if(item instanceof INode) {
-			return (AstNameUtil.getName((INode)item));
+	public String getElementName(Object item)
+	{
+		if (item instanceof INode)
+		{
+			return AstNameUtil.getName((INode) item);
 		}
 		return null;
 	}

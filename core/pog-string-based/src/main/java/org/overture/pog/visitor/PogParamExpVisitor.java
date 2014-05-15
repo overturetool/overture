@@ -59,7 +59,6 @@ import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.expression.PExpAssistantTC;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligationList>
 		extends QuestionAnswerAdaptor<POContextStack, ProofObligationList>
@@ -1056,9 +1055,12 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 
 		if (question.assistantFactory.createPTypeAssistant().isFunction(lType))
 		{
-			String pref1 = assistantFactory.createPExpAssistant().getPreName(lExp).getName();
-			String pref2 = assistantFactory.createPExpAssistant().getPreName(rExp).getName();
+			ILexNameToken lex1 = assistantFactory.createPExpAssistant().getPreName(lExp);
+			ILexNameToken lex2 = assistantFactory.createPExpAssistant().getPreName(rExp);
 
+			String pref1 = lex1 == null ? null : lex1.getName();
+			String pref2 = lex2 == null ? null : lex2.getName();
+			
 			if (pref1 == null || !pref1.equals(""))
 				obligations.add(new FuncComposeObligation(node, pref1, pref2, question));
 		}
@@ -1362,7 +1364,30 @@ public class PogParamExpVisitor<Q extends POContextStack, A extends ProofObligat
 			AImpliesBooleanBinaryExp node, POContextStack question)
 			throws AnalysisException
 	{
-		return handleBinaryBooleanExp(node, question);
+		ProofObligationList obligations = new ProofObligationList();
+
+		PExp[] leftRight = getLeftRight(node);
+		PExp lExp = leftRight[LEFT];
+		PType lType = lExp.getType();
+		PExp rExp = leftRight[RIGHT];
+		PType rType = rExp.getType();
+
+		if (question.assistantFactory.createPTypeAssistant().isUnion(lType))
+		{
+			obligations.add(new SubTypeObligation(lExp, AstFactory.newABooleanBasicType(lExp.getLocation()), lType, question, question.assistantFactory));
+		}
+
+		if (question.assistantFactory.createPTypeAssistant().isUnion(rType))
+		{
+			obligations.add(new SubTypeObligation(rExp, AstFactory.newABooleanBasicType(rExp.getLocation()), rType, question, question.assistantFactory));
+		}
+
+		obligations.addAll(lExp.apply(mainVisitor, question));
+		question.push(new POImpliesContext(lExp));
+		obligations.addAll(rExp.apply(mainVisitor, question));
+		question.pop();
+
+		return obligations;
 	}
 
 	@Override

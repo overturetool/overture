@@ -31,8 +31,9 @@ public class LogLabelProvider extends LabelProvider implements
 		ITableLabelProvider, IColorProvider
 {
 	private final RGB textColor = new RGB(85, 85, 85);
-//	private final RGB inputColor = new RGB(0, 0, 255);
-//	private final RGB outputColor = new RGB(0, 128, 0);
+
+	// private final RGB inputColor = new RGB(0, 0, 255);
+	// private final RGB outputColor = new RGB(0, 128, 0);
 
 	public Image getColumnImage(Object element, int columnIndex)
 	{

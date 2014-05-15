@@ -1,0 +1,29 @@
+class A
+
+types
+
+public Vector2D ::
+	x : real
+	y : real 
+
+operations
+
+public op : () ==> (bool * bool * bool)
+op () ==
+let v1 = mk_Vector2D(1.5, 2.5),
+		v2 = mk_Vector2D(2, 3),
+		v3 = mk_Vector2D(1.5, 2.5)
+in
+	return mk_(v1 = v1, v1 = v2, v1 = v3);
+
+end A
+
+class Entry
+
+operations 
+
+public static Run : () ==> ?
+Run () ==
+	return new A().op();
+
+end Entry

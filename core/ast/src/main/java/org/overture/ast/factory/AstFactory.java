@@ -425,6 +425,8 @@ public class AstFactory
 		// others
 		result.setSettingHierarchy(ClassDefinitionSettings.UNSET);
 
+		//Reset parent set by member graph field
+		result.parent(null);
 	}
 
 	public static ASystemClassDefinition newASystemClassDefinition(
@@ -2096,6 +2098,10 @@ public class AstFactory
 		result.setImportdefs(new Vector<PDefinition>()); // and import nothing
 
 		result.setIsFlat(true);
+		
+		//Reset parent set by member graph field
+		result.parent(null);
+		
 		return result;
 	}
 
@@ -2133,6 +2139,9 @@ public class AstFactory
 		result.setExportdefs(new Vector<PDefinition>()); // By default, export nothing
 		result.setImportdefs(new Vector<PDefinition>()); // and import nothing
 
+		//Reset parent set by member graph field
+		result.parent(null);
+		
 		return result;
 	}
 

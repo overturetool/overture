@@ -44,6 +44,7 @@ import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AExists1QuantifierExpCG;
 import org.overture.codegen.cgast.expressions.AExistsQuantifierExpCG;
 import org.overture.codegen.cgast.expressions.AExplicitVarExpCG;
+import org.overture.codegen.cgast.expressions.AExternalExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AFieldNumberExpCG;
 import org.overture.codegen.cgast.expressions.AFloorUnaryExpCG;
@@ -60,6 +61,7 @@ import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALetBeStExpCG;
+import org.overture.codegen.cgast.expressions.ALetBeStNoBindingRuntimeErrorExpCG;
 import org.overture.codegen.cgast.expressions.ALetDefExpCG;
 import org.overture.codegen.cgast.expressions.AMapDomainUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AMapInverseUnaryExpCG;
@@ -120,6 +122,7 @@ import org.overture.codegen.cgast.statements.ALetDefStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
 import org.overture.codegen.cgast.statements.ANewObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
+import org.overture.codegen.cgast.statements.ARaiseErrorStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.ASelfObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.ASkipStmCG;
@@ -273,6 +276,8 @@ public class TemplateManager
 		
 		nodeTemplateFileNames.put(ADecrementStmCG.class, templateStructure.STM_PATH + "Decrement");
 		
+		nodeTemplateFileNames.put(ARaiseErrorStmCG.class, templateStructure.STM_PATH + "RaiseError");
+		
 		// Expressions
 		
 		nodeTemplateFileNames.put(AApplyExpCG.class, templateStructure.EXP_PATH + "Apply");
@@ -307,6 +312,8 @@ public class TemplateManager
 		
 		nodeTemplateFileNames.put(AMkBasicExpCG.class, templateStructure.EXP_PATH + "MkBasic");
 		
+		nodeTemplateFileNames.put(AExternalExpCG.class, templateStructure.EXP_PATH + "External");
+		
 		// Quantifier expressions
 		
 		nodeTemplateFileNames.put(AForAllQuantifierExpCG.class, templateStructure.QUANTIFIER_EXP_PATH + "ForAll");
@@ -314,6 +321,10 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AExistsQuantifierExpCG.class, templateStructure.QUANTIFIER_EXP_PATH + "Exists");
 		
 		nodeTemplateFileNames.put(AExists1QuantifierExpCG.class, templateStructure.QUANTIFIER_EXP_PATH + "Exists1");
+		
+		// Runtime error expressions
+		
+		nodeTemplateFileNames.put(ALetBeStNoBindingRuntimeErrorExpCG.class, templateStructure.RUNTIME_ERROR_EXP_PATH + "LetBeStNoBinding");
 		
 		// Unary expressions
 

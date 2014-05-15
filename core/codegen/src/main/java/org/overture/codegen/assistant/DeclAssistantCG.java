@@ -16,11 +16,11 @@ import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
+import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
-import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
@@ -147,13 +147,9 @@ public class DeclAssistantCG extends AssistantBase
 		{
 			localDecl.setExp(expAssistant.getDefaultBoolValue());
 		}
-		else if(typeCg instanceof AClassTypeCG)
-		{
-			localDecl.setExp(expAssistant.getDefaultClassValue());
-		}
 		else
 		{
-			throw new AnalysisException("Unexpected type in block statement: " + typeCg);
+			localDecl.setExp(new ANullExpCG());
 		}
 	}
 

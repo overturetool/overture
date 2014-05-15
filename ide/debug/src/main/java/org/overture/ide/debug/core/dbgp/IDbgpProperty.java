@@ -18,7 +18,8 @@
  *******************************************************************************/
 package org.overture.ide.debug.core.dbgp;
 
-public interface IDbgpProperty {
+public interface IDbgpProperty
+{
 	String getKey();
 
 	String getName();

@@ -10,10 +10,12 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.lex.LexLocation;
 import org.overture.parser.messages.VDMMessage;
 import org.overture.pog.obligation.ProofObligation;
 import org.overture.pog.obligation.ProofObligationList;
 import org.overture.pog.util.PogUtil.PogResult;
+import org.overture.test.framework.Properties;
 import org.overture.test.framework.ResultTestCase;
 import org.overture.test.framework.results.IMessage;
 import org.overture.test.framework.results.Message;
@@ -25,6 +27,8 @@ import org.w3c.dom.Node;
 
 public abstract class PogTestCase extends ResultTestCase<ProofObligationList>
 {
+	private static final String TESTS_PO_PROPERTY_PREFIX = "tests.po.override.";
+
 	public PogTestCase()
 	{
 		super();
@@ -48,7 +52,7 @@ public abstract class PogTestCase extends ResultTestCase<ProofObligationList>
 		return new File(filename + ".result");
 	}
 
-	public void encondeResult(ProofObligationList result, Document doc,
+	public void encodeResult(ProofObligationList result, Document doc,
 			Element resultElement)
 	{
 		for (ProofObligation po : result)
@@ -100,12 +104,92 @@ public abstract class PogTestCase extends ResultTestCase<ProofObligationList>
 	protected boolean assertEqualResults(ProofObligationList expected,
 			ProofObligationList actual)
 	{
-		// FIXME: check is not sufficient
-		if (expected == null)
+
+		if (expected == null || actual == null
+				|| expected.size() != actual.size())
 		{
-			assert false : "No result file";
+			return false;
 		}
-		return expected.size() == actual.size();
+
+		List<String> expectedList = new Vector<String>();
+		List<String> actualList = new Vector<String>();
+
+		for (ProofObligation po : expected)
+		{
+			expectedList.add(po.toString());
+		}
+
+		int i = 0;
+		for (ProofObligation po : actual)
+		{
+			i++;
+			if(i==3)
+			{
+//				continue;
+			}
+			actualList.add(po.toString());
+			
+		}
+
+		return assertEqualResults(expectedList, actualList);
+
+	}
+
+	protected boolean assertEqualResults(List<String> expected,
+			List<String> actual)
+	{
+
+		if (expected.size() != actual.size())
+		{
+			System.out.print("The expected number of generated POs differs from what was actually generated in: "
+					+ file.getName());
+			System.out.println(" #Actual: " + actual.size() + ". #Expected: "
+					+ expected.size());
+			return false;
+		}
+
+		boolean testPasssed = true;
+
+		for (String string : actual)
+		{
+
+			/*
+			 * The order of the POs is not assumed to be the same
+			 */
+			if (!expected.contains(string))
+			{
+				/*
+				 * String permutations are also accepted as valid POs. This will be the case when the parameter order is
+				 * different
+				 */
+				if (!PogTestHelper.containsPermutation(string, expected))
+				{
+
+					/*
+					 * A valid PO may still exist. Sometimes PO parameters differ in name considering two equivalent
+					 * POs. For example, a parameter may be called "any24" for an expected PO, while it is referred to
+					 * as "any32" in another. Currently this is dealt with by considering whether the closest match
+					 * passes a tolerance check.
+					 */
+					StringComparison comp = PogTestHelper.findClosestMatch(string, expected);
+
+					if (comp == null
+							|| !PogTestHelper.ToleranceCheckPassed(comp))
+					{
+						testPasssed = false;
+
+						System.out.println("\nNo equivalent PO found Deviation:"
+								+ comp.getDistLengthRatio());
+						System.out.println();
+						System.out.println("Actual  PO: " + comp.getActual());
+						System.out.println("Closest PO: " + comp.getResultStr());
+						System.out.println("\n");
+					}
+				}
+			}
+		}
+
+		return testPasssed;
 	}
 
 	/**
@@ -155,4 +239,26 @@ public abstract class PogTestCase extends ResultTestCase<ProofObligationList>
 
 		return testMessages;
 	}
+	
+	
+	
+	protected void configureResultGeneration()
+	{
+		LexLocation.absoluteToStringLocation = false;
+		if (System.getProperty(TESTS_PO_PROPERTY_PREFIX + "all") != null
+				|| getPropertyId() != null
+				&& System.getProperty(TESTS_PO_PROPERTY_PREFIX
+						+ getPropertyId()) != null)
+		{
+			Properties.recordTestResults = true;
+		}
+
+	}
+
+	protected void unconfigureResultGeneration()
+	{
+		Properties.recordTestResults = false;
+	}
+
+	protected abstract String getPropertyId();
 }

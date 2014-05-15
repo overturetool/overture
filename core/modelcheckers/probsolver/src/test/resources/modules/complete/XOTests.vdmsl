@@ -1,0 +1,52 @@
+--
+-- A simple model of a tic-tac-toe game (noughts and crosses)
+--
+
+module XOTests
+imports from XO
+	operations
+		play
+	types
+		Pos renamed Pos;
+		PlayOrder renamed PlayOrder;
+		Moves renamed Moves;
+		Player renamed Player
+	values
+		SIZE renamed SIZE
+		
+exports all
+definitions
+
+-- Test data and supporting operations/traces
+
+values
+	OX = [<NOUGHT>, <CROSS>];
+	XO = [<CROSS>, <NOUGHT>];
+	XX = [<CROSS>];
+
+	T1 = [mk_Pos(1,1), mk_Pos(1,2), mk_Pos(2,1), mk_Pos(1,3), mk_Pos(3,1)];
+	T2 = [mk_Pos(1,1), mk_Pos(1,2), mk_Pos(1,3), mk_Pos(2,2), mk_Pos(3,1), mk_Pos(3,2)];
+	E1 = [mk_Pos(1,1), mk_Pos(1,1), mk_Pos(1,2), mk_Pos(2,1), mk_Pos(1,3)];
+	
+	S = {1, ..., SIZE}
+
+operations
+	test: PlayOrder * Moves ==> Player | <DRAW> | <UNFINISHED>
+	test(playorder, moves) ==
+		XO`play(playorder, moves);
+
+traces
+	ALL:
+		let ALLPOS = { mk_Pos(r, c) | r, c in set S } in			-- All 3x3 = 9 positions
+		let m1 in set ALLPOS in										-- 9 1st moves
+		let m2 in set ALLPOS \ {m1} in								-- 72 1st-2nd pairs
+		let m3 in set ALLPOS \ {m1, m2} in							-- 504 1st-2nd-3rd etc...
+		let m4 in set ALLPOS \ {m1, m2, m3} in						-- 3024
+		let m5 in set ALLPOS \ {m1, m2, m3, m4} in					-- 15120 (minimum)
+--		let m6 in set ALLPOS \ {m1, m2, m3, m4, m5} in				-- 60480
+--		let m7 in set ALLPOS \ {m1, m2, m3, m4, m5, m6} in			-- 181440
+--		let m8 in set ALLPOS \ {m1, m2, m3, m4, m5, m6, m7} in		-- 362880
+--		let m9 in set ALLPOS \ {m1, m2, m3, m4, m5, m6, m7, m8} in	-- 362880
+			XO`play(XO, [m1, m2, m3, m4, m5]);
+
+end XOTests

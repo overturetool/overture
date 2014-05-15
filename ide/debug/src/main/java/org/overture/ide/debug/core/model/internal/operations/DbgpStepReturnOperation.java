@@ -21,14 +21,17 @@ package org.overture.ide.debug.core.model.internal.operations;
 import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
 import org.overture.ide.debug.core.model.IVdmThread;
 
-public class DbgpStepReturnOperation extends DbgpOperation {
+public class DbgpStepReturnOperation extends DbgpOperation
+{
 	private static final String JOB_NAME = "Step Return Operation";
 
-	public DbgpStepReturnOperation(IVdmThread thread, IResultHandler finish) {
+	public DbgpStepReturnOperation(IVdmThread thread, IResultHandler finish)
+	{
 		super(thread, JOB_NAME, finish);
 	}
 
-	protected void process() throws DbgpException {
+	protected void process() throws DbgpException
+	{
 		callFinish(getCore().stepOut());
 	}
 

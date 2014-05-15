@@ -21,7 +21,8 @@ package org.overture.ide.debug.core.model.internal.operations;
 import org.overture.ide.debug.core.dbgp.IDbgpStatus;
 import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
 
-public interface IDbgpDebuggerFeedback {
+public interface IDbgpDebuggerFeedback
+{
 	void endStepInto(DbgpException e, IDbgpStatus status);
 
 	void endStepOver(DbgpException e, IDbgpStatus status);

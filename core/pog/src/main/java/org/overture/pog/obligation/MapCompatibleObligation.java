@@ -57,7 +57,7 @@ public class MapCompatibleObligation extends ProofObligation {
 		AMapDomainUnaryExp domLeft = new AMapDomainUnaryExp();
 		domLeft.setExp(left.clone());
 		AMapDomainUnaryExp domRight = new AMapDomainUnaryExp();
-		domLeft.setExp(right.clone());
+		domRight.setExp(right.clone());
 		List<PMultipleBind> bindings = getMultipleSetBindList(domLeft, ldom);
 		bindings.addAll(getMultipleSetBindList(domRight, rdom));
 

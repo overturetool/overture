@@ -1,5 +1,0 @@
-#if ( $node.getBindings().isEmpty() )
-	MapUtil.map()
-#else
-	$node.getVar()
-#end

@@ -18,7 +18,8 @@
  *******************************************************************************/
 package org.overture.ide.debug.core.dbgp;
 
-public interface IDbgpStreamFilter {
+public interface IDbgpStreamFilter
+{
 
 	int STDOUT = 0;
 	int STDERR = 1;

@@ -22,37 +22,44 @@ import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
 import org.overture.ide.debug.core.dbgp.internal.DbgpTransactionManager;
 import org.w3c.dom.Element;
 
-public class DbgpBaseCommands {
+public class DbgpBaseCommands
+{
 
 	public static final String ID_OPTION = "-i"; //$NON-NLS-1$
 
 	private final IDbgpCommunicator communicator;
 
-	public DbgpBaseCommands(IDbgpCommunicator communicator) {
+	public DbgpBaseCommands(IDbgpCommunicator communicator)
+	{
 		this.communicator = communicator;
 	}
 
-	public static DbgpRequest createRequest(String command) {
+	public static DbgpRequest createRequest(String command)
+	{
 		DbgpRequest request = new DbgpRequest(command);
 		request.addOption(ID_OPTION, generateRequestId());
 		return request;
 	}
 
-	public static DbgpRequest createAsyncRequest(String command) {
+	public static DbgpRequest createAsyncRequest(String command)
+	{
 		DbgpRequest request = new DbgpRequest(command, true);
 		request.addOption(ID_OPTION, generateRequestId());
 		return request;
 	}
 
-	private static int generateRequestId() {
+	private static int generateRequestId()
+	{
 		return DbgpTransactionManager.getInstance().generateId();
 	}
 
-	protected Element communicate(DbgpRequest request) throws DbgpException {
+	protected Element communicate(DbgpRequest request) throws DbgpException
+	{
 		return communicator.communicate(request);
 	}
 
-	protected void send(DbgpRequest request) throws DbgpException {
+	protected void send(DbgpRequest request) throws DbgpException
+	{
 		communicator.send(request);
 	}
 }

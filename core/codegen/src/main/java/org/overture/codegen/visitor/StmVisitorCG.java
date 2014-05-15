@@ -1,6 +1,7 @@
 package org.overture.codegen.visitor;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AAssignmentDefinition;
@@ -188,7 +189,7 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 		
 		for (AAssignmentDefinition def : assignmentDefs)
 		{
-			//FIXME: No protection against hidden definitions
+			//No protection against hidden definitions
 			// dcl s : real := 1
 			// dcl s : real := 2
 			PType type = def.getType();
@@ -196,7 +197,6 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 			PExp exp = def.getExpression();
 			
 			PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-			PExpCG expCg = exp.apply(question.getExpVisitor(), question);
 			
 			AVarLocalDeclCG localDecl = new AVarLocalDeclCG();
 			localDecl.setType(typeCg);
@@ -208,6 +208,7 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 			}
 			else
 			{
+				PExpCG expCg = exp.apply(question.getExpVisitor(), question);
 				localDecl.setExp(expCg);
 			}
 			
@@ -221,7 +222,9 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 			PStmCG stmCg = pStm.apply(question.getStmVisitor(), question);
 			
 			if(stmCg != null)
+			{
 				blockStm.getStatements().add(stmCg);
+			}
 		}
 		
 		return blockStm;
@@ -320,7 +323,20 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 		callStm.setClassType(classType);
 		callStm.setName(name);
 		callStm.setType(typeCg);
-		question.getStmAssistant().generateArguments(args, callStm.getArgs(), question);
+
+		for (int i = 0; i < args.size(); i++)
+		{
+			PExp arg = args.get(i);
+			PExpCG argCg = arg.apply(question.getExpVisitor(), question);
+			
+			if(argCg == null)
+			{
+				question.addUnsupportedNode(node, "A Call statement is not supported for the argument: " + arg);
+				return null;
+			}
+			
+			callStm.getArgs().add(argCg);
+		}
 		
 		return callStm;
 	}
@@ -350,7 +366,20 @@ public class StmVisitorCG extends AbstractVisitorCG<OoAstInfo, PStmCG>
 		callObject.setDesignator(objectDesignatorCg);
 		callObject.setClassName(classNameCg);
 		callObject.setFieldName(fieldNameCg);
-		question.getStmAssistant().generateArguments(args, callObject.getArgs(), question);
+		
+		for (int i = 0; i < args.size(); i++)
+		{
+			PExp arg = args.get(i);
+			PExpCG argCg = arg.apply(question.getExpVisitor(), question);
+			
+			if(argCg == null)
+			{
+				question.addUnsupportedNode(node, "A Call object statement is not supported for the argument: " + arg);
+				return null;
+			}
+			
+			callObject.getArgs().add(argCg);
+		}
 		
 		return callObject;
 	}

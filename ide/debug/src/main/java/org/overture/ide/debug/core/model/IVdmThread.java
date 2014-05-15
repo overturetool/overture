@@ -26,7 +26,8 @@ import org.overture.ide.debug.core.dbgp.breakpoints.IDbgpBreakpoint;
 import org.overture.ide.debug.core.model.eval.IVdmEvaluationEngine;
 import org.overture.ide.debug.core.model.internal.IVdmStreamProxy;
 
-public interface IVdmThread extends IThread /* , IFilteredStep */{
+public interface IVdmThread extends IThread /* , IFilteredStep */
+{
 	int ERR_THREAD_NOT_SUSPENDED = -3;
 
 	IDbgpSession getDbgpSession();
@@ -50,6 +51,6 @@ public interface IVdmThread extends IThread /* , IFilteredStep */{
 	boolean retrieveLocalVariables();
 
 	void updateStackFrames();
-	
+
 	IDbgpStatusInterpreterThreadState getInterpreterState();
 }

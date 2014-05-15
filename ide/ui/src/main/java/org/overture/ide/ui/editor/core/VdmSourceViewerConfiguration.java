@@ -48,7 +48,6 @@ import org.overture.ide.ui.editor.syntax.VdmStringScanner;
 public abstract class VdmSourceViewerConfiguration extends
 		TextSourceViewerConfiguration
 {
-	private ITokenScanner vdmCodeScanner = null;
 	private PresentationReconciler reconciler = null;
 	protected String[] commentingPrefix = new String[] { "--" };
 	protected ITokenScanner vdmSingleLineCommentScanner;
@@ -117,11 +116,6 @@ public abstract class VdmSourceViewerConfiguration extends
 			reconciler = new PresentationReconciler();
 			reconciler.setDocumentPartitioning(IVdmPartitions.VDM_PARTITIONING);
 			
-			if (vdmCodeScanner == null)
-			{
-				vdmCodeScanner = getVdmCodeScanner();
-			}
-
 			DefaultDamagerRepairer dr = new DefaultDamagerRepairer(getVdmSingleLineCommentScanner());
 			reconciler.setDamager(dr, VdmPartitionScanner.SINGLELINE_COMMENT);
 			reconciler.setRepairer(dr, VdmPartitionScanner.SINGLELINE_COMMENT);

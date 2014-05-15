@@ -21,17 +21,20 @@ package org.overture.ide.debug.core.dbgp.internal.breakpoints;
 import org.overture.ide.debug.core.dbgp.breakpoints.IDbgpExceptionBreakpoint;
 
 public class DbgpExceptionBreakpoint extends DbgpBreakpoint implements
-		IDbgpExceptionBreakpoint {
+		IDbgpExceptionBreakpoint
+{
 
 	private final String exception;
 
 	public DbgpExceptionBreakpoint(String id, boolean enabled, int hitValue,
-			int hitCount, String hitCondition, String exception) {
+			int hitCount, String hitCondition, String exception)
+	{
 		super(id, enabled, hitValue, hitCount, hitCondition);
 		this.exception = exception;
 	}
 
-	public String getException() {
+	public String getException()
+	{
 		return exception;
 	}
 }

@@ -109,9 +109,8 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	public PType caseAAssignmentStm(AAssignmentStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-
 		node.setTargetType(node.getTarget().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env)));
-		node.setExpType(node.getExp().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env, question.scope)));
+		node.setExpType(node.getExp().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env, question.scope, null, node.getTargetType(), null)));
 
 		if (!TypeComparator.compatible(node.getTargetType(), node.getExpType()))
 		{

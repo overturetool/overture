@@ -8,12 +8,14 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.AValueDefinition;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SBinaryExp;
 import org.overture.ast.expressions.SUnaryExp;
+import org.overture.ast.node.INode;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
@@ -193,12 +195,32 @@ public class ExpAssistantCG extends AssistantBase
 	
 	public boolean isAssigned(PExp exp)
 	{
-		return exp.getAncestor(AInstanceVariableDefinition.class) != null ||
-			   exp.getAncestor(AValueDefinition.class) != null ||
-			   exp.getAncestor(AAssignmentDefinition.class) != null ||
-			   exp.getAncestor(AAssignmentStm.class) != null;
+		SClassDefinition classDef = exp.getAncestor(SClassDefinition.class);
+
+		if (classDef == null)
+			return false;
+
+		return hasAncestor(exp, classDef, AInstanceVariableDefinition.class)
+				|| hasAncestor(exp, classDef, AValueDefinition.class)
+				|| hasAncestor(exp, classDef, AAssignmentDefinition.class)
+				|| hasAncestor(exp, classDef, AAssignmentStm.class);
 	}
 	
+	private boolean hasAncestor(PExp exp, SClassDefinition classDef, Class<? extends INode> assignNodeClass)
+	{
+		INode ancestor = exp.getAncestor(assignNodeClass);
+		
+		if(ancestor == null)
+			return false;
+		
+		//Normally we should return true but the check below is a guard against
+		//ill formed VDM++ ASTs
+		
+		INode assignNode = classDef.getAncestor(assignNodeClass);
+		
+		return assignNode == null || assignNode == ancestor;
+	}
+
 	public LinkedList<AIdentifierPatternCG> getIdsFromPatternList(List<PPattern> patternList)
 	{
 		LinkedList<AIdentifierPatternCG> idsCg = new LinkedList<AIdentifierPatternCG>();
@@ -236,7 +258,7 @@ public class ExpAssistantCG extends AssistantBase
 		return exp.getAncestor(SOperationDefinition.class) == null && exp.getAncestor(SFunctionDefinition.class) == null;
 	}
 	
-	public PExpCG handleQuantifier(PExp node, List<PMultipleBind> bindings, PExp predicate, SQuantifierExpCG quantifier, String varCg, OoAstInfo question, String nodeStr)
+	public PExpCG handleQuantifier(PExp node, List<PMultipleBind> bindings, PExp predicate, SQuantifierExpCG quantifier, OoAstInfo question, String nodeStr)
 			throws AnalysisException
 	{
 		if(question.getExpAssistant().existsOutsideOpOrFunc(node))
@@ -273,7 +295,6 @@ public class ExpAssistantCG extends AssistantBase
 		quantifier.setType(typeCg);
 		quantifier.setBindList(bindingsCg);
 		quantifier.setPredicate(predicateCg);
-		quantifier.setVar(varCg);
 		
 		return quantifier;
 	}

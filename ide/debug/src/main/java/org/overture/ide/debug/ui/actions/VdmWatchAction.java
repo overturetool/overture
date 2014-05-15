@@ -32,39 +32,47 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.model.IVdmVariable;
 
-public class VdmWatchAction extends VdmEvaluationAction {
-	private void createWatchExpression(String snippet) {
-		IWatchExpression expression = DebugPlugin.getDefault()
-				.getExpressionManager().newWatchExpression(snippet);
+public class VdmWatchAction extends VdmEvaluationAction
+{
+	private void createWatchExpression(String snippet)
+	{
+		IWatchExpression expression = DebugPlugin.getDefault().getExpressionManager().newWatchExpression(snippet);
 		DebugPlugin.getDefault().getExpressionManager().addExpression(expression);
-		
+
 		IAdaptable object = DebugUITools.getDebugContext();
 		IDebugElement context = null;
-		if (object instanceof IDebugElement) {
+		if (object instanceof IDebugElement)
+		{
 			context = (IDebugElement) object;
-		} else if (object instanceof ILaunch) {
+		} else if (object instanceof ILaunch)
+		{
 			context = ((ILaunch) object).getDebugTarget();
 		}
-		
+
 		expression.setExpressionContext(context);
 	}
 
-	public void run() {
+	public void run()
+	{
 		Object selectedObject = getSelectedObject();
 
-		if (selectedObject instanceof IStructuredSelection) {
+		if (selectedObject instanceof IStructuredSelection)
+		{
 			IStructuredSelection selection = (IStructuredSelection) selectedObject;
 			Iterator<?> elements = selection.iterator();
-			while (elements.hasNext()) {
-				try {
-					createWatchExpression(((IVdmVariable) elements.next())
-							.getName());
-				} catch (DebugException e) {
+			while (elements.hasNext())
+			{
+				try
+				{
+					createWatchExpression(((IVdmVariable) elements.next()).getName());
+				} catch (DebugException e)
+				{
 					VdmDebugPlugin.log(e);
 					return;
 				}
 			}
-		} else if (selectedObject instanceof String) {
+		} else if (selectedObject instanceof String)
+		{
 			createWatchExpression((String) selectedObject);
 		}
 

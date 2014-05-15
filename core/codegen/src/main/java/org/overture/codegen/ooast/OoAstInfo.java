@@ -23,6 +23,7 @@ import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.constants.IOoAstConstants;
 import org.overture.codegen.utils.AnalysisExceptionCG;
+import org.overture.codegen.utils.ITempVarGen;
 import org.overture.codegen.utils.TempVarNameGen;
 import org.overture.codegen.visitor.BindVisitorCG;
 import org.overture.codegen.visitor.ClassVisitorCG;
@@ -54,7 +55,7 @@ public class OoAstInfo
 	private Set<NodeInfo> unsupportedNodes;
 
 	//For generating variable names
-	private TempVarNameGen tempVarNameGen;
+	private ITempVarGen tempVarNameGen;
 	
 	public OoAstInfo()
 	{
@@ -227,7 +228,7 @@ public class OoAstInfo
 		return unsupportedNodes;
 	}
 	
-	public TempVarNameGen getTempVarNameGen()
+	public ITempVarGen getTempVarNameGen()
 	{
 		return tempVarNameGen;
 	}

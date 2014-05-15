@@ -26,27 +26,32 @@ import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
 import org.overture.ide.debug.core.dbgp.internal.utils.DbgpXmlParser;
 
 public class DbgpStreamCommands extends DbgpBaseCommands implements
-		IDbgpStreamCommands {
+		IDbgpStreamCommands
+{
 	private static final String STDERR_COMMAND = "stderr"; //$NON-NLS-1$
 
 	private static final String STDOUT_COMMAND = "stdout"; //$NON-NLS-1$
 
 	protected boolean execCommand(String command, int value)
-			throws DbgpException {
+			throws DbgpException
+	{
 		DbgpRequest request = createRequest(command);
 		request.addOption("-c", value); //$NON-NLS-1$
 		return DbgpXmlParser.parseSuccess(communicate(request));
 	}
 
-	public DbgpStreamCommands(IDbgpCommunicator communicator) {
+	public DbgpStreamCommands(IDbgpCommunicator communicator)
+	{
 		super(communicator);
 	}
 
-	public boolean configureStdout(int value) throws DbgpException {
+	public boolean configureStdout(int value) throws DbgpException
+	{
 		return execCommand(STDOUT_COMMAND, value);
 	}
 
-	public boolean configureStderr(int value) throws DbgpException {
+	public boolean configureStderr(int value) throws DbgpException
+	{
 		return execCommand(STDERR_COMMAND, value);
 	}
 }

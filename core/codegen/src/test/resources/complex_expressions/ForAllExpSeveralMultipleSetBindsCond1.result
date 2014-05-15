@@ -17,8 +17,8 @@ public class Entry {
 
             for (Iterator iterator_2 = set_1.iterator();
                     iterator_2.hasNext() && forAllExpResult_1;) {
-                VDMSet set_2 = SetUtil.set(4L, 5L, 6L);
                 Number b = ((Number) iterator_2.next());
+                VDMSet set_2 = SetUtil.set(4L, 5L, 6L);
 
                 for (Iterator iterator_3 = set_2.iterator();
                         iterator_3.hasNext() && forAllExpResult_1;) {
@@ -26,8 +26,8 @@ public class Entry {
 
                     for (Iterator iterator_4 = set_2.iterator();
                             iterator_4.hasNext() && forAllExpResult_1;) {
-                        VDMSet set_3 = SetUtil.set(7L, 8L, 9L);
                         Number d = ((Number) iterator_4.next());
+                        VDMSet set_3 = SetUtil.set(7L, 8L, 9L);
 
                         for (Iterator iterator_5 = set_3.iterator();
                                 iterator_5.hasNext() && forAllExpResult_1;) {
@@ -36,7 +36,6 @@ public class Entry {
                             for (Iterator iterator_6 = set_3.iterator();
                                     iterator_6.hasNext() && forAllExpResult_1;) {
                                 Number f = ((Number) iterator_6.next());
-
                                 forAllExpResult_1 = 1L == 1L;
                             }
                         }

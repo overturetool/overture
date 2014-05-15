@@ -20,6 +20,7 @@ package org.overture.ide.debug.core.dbgp.internal.packets;
 
 import org.overture.ide.debug.core.dbgp.IDbgpRawPacket;
 
-public interface IDbgpRawLogger {
+public interface IDbgpRawLogger
+{
 	void log(IDbgpRawPacket packet);
 }

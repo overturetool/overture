@@ -108,19 +108,12 @@ public class UpdatableValue extends ReferenceValue
 	{
 		// Anything with structure added to an UpdateableValue has to be
 		// updatable, otherwise you can "freeze" part of the substructure
-		// such that it can't be changed.
+		// such that it can't be changed. And we have to set the listeners
+		// to be "our" listeners, regardless of any it had before.
 
 		synchronized (this)
 		{
-    		if (newval instanceof UpdatableValue)
-    		{
-    			value = newval;
-    		}
-    		else
-    		{
-    			value = newval.getUpdatable(listeners);
-    		}
-
+   			value = newval.getUpdatable(listeners);
     		value = ((UpdatableValue)value).value;	// To avoid nested updatables
 		}
 		
@@ -137,8 +130,6 @@ public class UpdatableValue extends ReferenceValue
 		{
 			listeners.changedValue(location, value, ctxt);
 		}
-		
-		
 	}
 
 	public void addListener(ValueListener listener)

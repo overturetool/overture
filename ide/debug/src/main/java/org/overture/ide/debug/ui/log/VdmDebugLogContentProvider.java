@@ -23,20 +23,25 @@ import java.util.List;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
-public class VdmDebugLogContentProvider implements
-		IStructuredContentProvider {
-	public void dispose() {
+public class VdmDebugLogContentProvider implements IStructuredContentProvider
+{
+	public void dispose()
+	{
 		// empty
 	}
 
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput)
+	{
 		// empty
 	}
 
 	@SuppressWarnings("rawtypes")
-	public Object[] getElements(Object inputElement) {
-		if (inputElement instanceof List) {
-			synchronized (inputElement) {
+	public Object[] getElements(Object inputElement)
+	{
+		if (inputElement instanceof List)
+		{
+			synchronized (inputElement)
+			{
 				return ((List) inputElement).toArray();
 			}
 		}

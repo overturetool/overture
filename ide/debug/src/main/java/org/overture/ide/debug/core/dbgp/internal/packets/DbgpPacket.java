@@ -20,18 +20,22 @@ package org.overture.ide.debug.core.dbgp.internal.packets;
 
 import org.w3c.dom.Element;
 
-public class DbgpPacket {
+public class DbgpPacket
+{
 	private final Element content;
 
-	protected DbgpPacket(Element content) {
-		if (content == null) {
+	protected DbgpPacket(Element content)
+	{
+		if (content == null)
+		{
 			throw new IllegalArgumentException();
 		}
 
 		this.content = content;
 	}
 
-	public Element getContent() {
+	public Element getContent()
+	{
 		return this.content;
 	}
 }

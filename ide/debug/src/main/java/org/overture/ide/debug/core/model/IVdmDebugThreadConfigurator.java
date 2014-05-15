@@ -23,11 +23,11 @@ import org.overture.ide.debug.core.model.internal.VdmThread;
 import org.overture.ide.debug.core.model.internal.operations.DbgpDebugger;
 
 /**
- * This class called to configure advanced thread parameters. It could be
- * registered from debugger runner to ScriptDebugTarget. One instance per
- * target.
+ * This class called to configure advanced thread parameters. It could be registered from debugger runner to
+ * ScriptDebugTarget. One instance per target.
  */
-public interface IVdmDebugThreadConfigurator {
+public interface IVdmDebugThreadConfigurator
+{
 	void configureThread(DbgpDebugger engine, VdmThread scriptThread);
 
 	void initializeBreakpoints(IVdmThread thread, IProgressMonitor monitor);

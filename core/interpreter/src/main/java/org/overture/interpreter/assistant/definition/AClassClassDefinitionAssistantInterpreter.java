@@ -34,7 +34,7 @@ public class AClassClassDefinitionAssistantInterpreter
 					+ node.getName(), ctxt);
 		}
 
-		return SClassDefinitionAssistantInterpreter.makeNewInstance(node, ctorDefinition, argvals, ctxt, new HashMap<ILexNameToken, ObjectValue>());
+		return SClassDefinitionAssistantInterpreter.makeNewInstance(node, ctorDefinition, argvals, ctxt, new HashMap<ILexNameToken, ObjectValue>(), false);
 	}
 
 }

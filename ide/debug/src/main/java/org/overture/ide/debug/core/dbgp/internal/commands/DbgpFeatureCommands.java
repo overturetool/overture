@@ -28,24 +28,28 @@ import org.overture.ide.debug.core.dbgp.internal.utils.DbgpXmlEntityParser;
 import org.overture.ide.debug.core.dbgp.internal.utils.DbgpXmlParser;
 
 public class DbgpFeatureCommands extends DbgpBaseCommands implements
-		IDbgpFeatureCommands {
+		IDbgpFeatureCommands
+{
 
 	private static final String FEATURE_SET_COMMAND = "feature_set"; //$NON-NLS-1$
 
 	private static final String FEATURE_GET_COMMAND = "feature_get"; //$NON-NLS-1$
 
-	public DbgpFeatureCommands(IDbgpCommunicator communicator) {
+	public DbgpFeatureCommands(IDbgpCommunicator communicator)
+	{
 		super(communicator);
 	}
 
-	public IDbgpFeature getFeature(String featureName) throws DbgpException {
+	public IDbgpFeature getFeature(String featureName) throws DbgpException
+	{
 		DbgpRequest request = createRequest(FEATURE_GET_COMMAND);
 		request.addOption("-n", featureName); //$NON-NLS-1$
 		return DbgpXmlEntityParser.parseFeature(communicate(request));
 	}
 
 	public boolean setFeature(String featureName, String featureValue)
-			throws DbgpException {
+			throws DbgpException
+	{
 		DbgpRequest request = createRequest(FEATURE_SET_COMMAND);
 		request.addOption("-n", featureName); //$NON-NLS-1$
 		request.addOption("-v", featureValue); //$NON-NLS-1$

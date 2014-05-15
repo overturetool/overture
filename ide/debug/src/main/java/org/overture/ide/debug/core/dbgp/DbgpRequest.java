@@ -28,67 +28,81 @@ import java.util.Map.Entry;
 import org.overture.ide.debug.core.dbgp.internal.utils.Base64Helper;
 import org.overture.ide.debug.utils.StrUtils;
 
-public class DbgpRequest implements IDbgpRawPacket {
-	private final Map<String,String> options;
+public class DbgpRequest implements IDbgpRawPacket
+{
+	private final Map<String, String> options;
 
 	private final String command;
 	private final boolean async;
 
 	private String data;
 
-	public DbgpRequest(String command) {
+	public DbgpRequest(String command)
+	{
 		this(command, false);
 	}
 
-	public DbgpRequest(String command, boolean async) {
+	public DbgpRequest(String command, boolean async)
+	{
 		this.command = command;
 		this.async = async;
-		this.options = new HashMap<String,String>();
+		this.options = new HashMap<String, String>();
 	}
 
-	public String getCommand() {
+	public String getCommand()
+	{
 		return command;
 	}
 
-	public void addOption(String optionNmae, int optionValue) {
+	public void addOption(String optionNmae, int optionValue)
+	{
 		addOption(optionNmae, new Integer(optionValue));
 	}
 
-	public void addOption(String optionName, Object optionValue) {
-		if (optionValue == null) {
+	public void addOption(String optionName, Object optionValue)
+	{
+		if (optionValue == null)
+		{
 			throw new IllegalArgumentException();
 		}
 
 		options.put(optionName, optionValue.toString());
 	}
 
-	public String getOption(String optionName) {
+	public String getOption(String optionName)
+	{
 		return (String) options.get(optionName);
 	}
 
-	public boolean hasOption(String optionName) {
+	public boolean hasOption(String optionName)
+	{
 		return options.containsKey(optionName);
 	}
 
-	public int optionCount() {
+	public int optionCount()
+	{
 		return options.size();
 	}
 
-	public void setData(String data) {
+	public void setData(String data)
+	{
 		this.data = data;
 	}
 
-	public String getData() {
+	public String getData()
+	{
 		return this.data;
 	}
 
-	public String toString() {
+	public String toString()
+	{
 		StringBuffer sb = new StringBuffer(command);
 
 		Iterator<Entry<String, String>> it = options.entrySet().iterator();
 
-		while (it.hasNext()) {
-			Entry<String, String> entry =  it.next();
+		while (it.hasNext())
+		{
+			Entry<String, String> entry = it.next();
 
 			sb.append(' ');
 			sb.append(entry.getKey());
@@ -96,7 +110,8 @@ public class DbgpRequest implements IDbgpRawPacket {
 			sb.append(entry.getValue());
 		}
 
-		if (data != null) {
+		if (data != null)
+		{
 			sb.append(" -- "); //$NON-NLS-1$
 			sb.append(Base64Helper.encodeString(data));
 		}
@@ -104,8 +119,10 @@ public class DbgpRequest implements IDbgpRawPacket {
 		return sb.toString();
 	}
 
-	public boolean equals(Object o) {
-		if (o instanceof DbgpRequest) {
+	public boolean equals(Object o)
+	{
+		if (o instanceof DbgpRequest)
+		{
 			DbgpRequest request = (DbgpRequest) o;
 
 			return command.equals(request.command) && async == request.async
@@ -119,16 +136,19 @@ public class DbgpRequest implements IDbgpRawPacket {
 	/**
 	 * @return the async
 	 */
-	public boolean isAsync() {
+	public boolean isAsync()
+	{
 		return async;
 	}
 
-	public void writeTo(OutputStream output) throws IOException {
+	public void writeTo(OutputStream output) throws IOException
+	{
 		// TODO optimize - send directly to stream without string
 		output.write(toString().getBytes("ASCII")); //$NON-NLS-1$
 	}
 
-	public String getPacketAsString() {
+	public String getPacketAsString()
+	{
 		return toString();
 	}
 }

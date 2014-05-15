@@ -35,7 +35,7 @@ public class VdmDebugLogLabelProvider extends LabelProvider implements
 
 	// private final IColorManager colorManager = new DLTKColorManager(false);
 
-//	private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); //$NON-NLS-1$
+	//	private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); //$NON-NLS-1$
 
 	private final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss.SSS"); //$NON-NLS-1$
 
@@ -58,8 +58,8 @@ public class VdmDebugLogLabelProvider extends LabelProvider implements
 			final VdmDebugLogItem item = (VdmDebugLogItem) element;
 			switch (columnIndex)
 			{
-				// case 0:
-				// return dateFormat.format(new Date(item.getTimestamp()));
+			// case 0:
+			// return dateFormat.format(new Date(item.getTimestamp()));
 				case 1 - 1:
 					return timeFormat.format(new Date(item.getTimestamp()));
 				case 2 - 1:
