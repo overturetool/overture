@@ -62,9 +62,9 @@ public class APostOpExpAssistantInterpreter // extends APostOpExpAssistantTC
 		return found;
 	}
 
-	public static PExp findExpression(APostOpExp exp, int lineno)
-	{
-		return PExpAssistantInterpreter.findExpression(exp.getPostexpression(), lineno);
-	}
+//	public static PExp findExpression(APostOpExp exp, int lineno)
+//	{
+//		return PExpAssistantInterpreter.findExpression(exp.getPostexpression(), lineno);
+//	}
 
 }

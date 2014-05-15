@@ -26,43 +26,43 @@ public class ASetBindAssistantInterpreter extends ASetBindAssistantTC
 		this.af = af;
 	}
 
-	public static ValueList getBindValues(ASetBind bind, Context ctxt)
-	{
-		try
-		{
-			ValueList results = new ValueList();
-			ValueSet elements = bind.getSet().apply(VdmRuntime.getExpressionEvaluator(), ctxt).setValue(ctxt);
-			elements.sort();
+//	public static ValueList getBindValues(ASetBind bind, Context ctxt)
+//	{
+//		try
+//		{
+//			ValueList results = new ValueList();
+//			ValueSet elements = bind.getSet().apply(VdmRuntime.getExpressionEvaluator(), ctxt).setValue(ctxt);
+//			elements.sort();
+//
+//			for (Value e : elements)
+//			{
+//				e = e.deref();
+//
+//				if (e instanceof SetValue)
+//				{
+//					SetValue sv = (SetValue) e;
+//					results.addAll(sv.permutedSets());
+//				} else
+//				{
+//					results.add(e);
+//				}
+//			}
+//
+//			return results;
+//		} catch (AnalysisException e)
+//		{
+//			if (e instanceof ValueException)
+//			{
+//				VdmRuntimeError.abort(bind.getLocation(), (ValueException) e);
+//
+//			}
+//			return null;
+//		}
+//	}
 
-			for (Value e : elements)
-			{
-				e = e.deref();
-
-				if (e instanceof SetValue)
-				{
-					SetValue sv = (SetValue) e;
-					results.addAll(sv.permutedSets());
-				} else
-				{
-					results.add(e);
-				}
-			}
-
-			return results;
-		} catch (AnalysisException e)
-		{
-			if (e instanceof ValueException)
-			{
-				VdmRuntimeError.abort(bind.getLocation(), (ValueException) e);
-
-			}
-			return null;
-		}
-	}
-
-	public static ValueList getValues(ASetBind setBind, ObjectContext ctxt)
-	{
-		return PExpAssistantInterpreter.getValues(setBind.getSet(), ctxt);
-	}
+//	public static ValueList getValues(ASetBind setBind, ObjectContext ctxt)
+//	{
+//		return PExpAssistantInterpreter.getValues(setBind.getSet(), ctxt);
+//	}
 
 }

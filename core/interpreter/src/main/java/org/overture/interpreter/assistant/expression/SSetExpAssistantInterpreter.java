@@ -19,35 +19,35 @@ public class SSetExpAssistantInterpreter // extends SSetExpAssistantTC
 		this.af = af;
 	}
 
-	public static ValueList getValues(SSetExp exp, ObjectContext ctxt)
-	{
-		if (exp instanceof ASetCompSetExp)
-		{
-			return ASetCompSetExpAssistantInterpreter.getValues((ASetCompSetExp) exp, ctxt);
-		} else if (exp instanceof ASetEnumSetExp)
-		{
-			return ASetEnumSetExpAssistantInterpreter.getValues((ASetEnumSetExp) exp, ctxt);
-		} else
-		{
-			return new ValueList();
-		}
-	}
+//	public static ValueList getValues(SSetExp exp, ObjectContext ctxt)
+//	{
+//		if (exp instanceof ASetCompSetExp)
+//		{
+//			return ASetCompSetExpAssistantInterpreter.getValues((ASetCompSetExp) exp, ctxt);
+//		} else if (exp instanceof ASetEnumSetExp)
+//		{
+//			return ASetEnumSetExpAssistantInterpreter.getValues((ASetEnumSetExp) exp, ctxt);
+//		} else
+//		{
+//			return new ValueList();
+//		}
+//	}
 
-	public static PExp findExpression(SSetExp exp, int lineno)
-	{
-		if (exp instanceof ASetCompSetExp)
-		{
-			return ASetCompSetExpAssistantInterpreter.findExpression((ASetCompSetExp) exp, lineno);
-		} else if (exp instanceof ASetEnumSetExp)
-		{
-			return ASetEnumSetExpAssistantInterpreter.findExpression((ASetEnumSetExp) exp, lineno);
-		} else if (exp instanceof ASetRangeSetExp)
-		{
-			return ASetRangeSetExpAssistantInterpreter.findExpression((ASetRangeSetExp) exp, lineno);
-		} else
-		{
-			return null;
-		}
-	}
+//	public static PExp findExpression(SSetExp exp, int lineno)
+//	{
+//		if (exp instanceof ASetCompSetExp)
+//		{
+//			return ASetCompSetExpAssistantInterpreter.findExpression((ASetCompSetExp) exp, lineno);
+//		} else if (exp instanceof ASetEnumSetExp)
+//		{
+//			return ASetEnumSetExpAssistantInterpreter.findExpression((ASetEnumSetExp) exp, lineno);
+//		} else if (exp instanceof ASetRangeSetExp)
+//		{
+//			return ASetRangeSetExpAssistantInterpreter.findExpression((ASetRangeSetExp) exp, lineno);
+//		} else
+//		{
+//			return null;
+//		}
+//	}
 
 }

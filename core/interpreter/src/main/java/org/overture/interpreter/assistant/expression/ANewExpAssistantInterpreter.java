@@ -16,18 +16,18 @@ public class ANewExpAssistantInterpreter // extends ANewExpAssistantTC
 		this.af = af;
 	}
 
-	public static ValueList getValues(ANewExp exp, ObjectContext ctxt)
-	{
-		return PExpAssistantInterpreter.getValues(exp.getArgs(), ctxt);
-	}
+//	public static ValueList getValues(ANewExp exp, ObjectContext ctxt)
+//	{
+//		return PExpAssistantInterpreter.getValues(exp.getArgs(), ctxt);
+//	}
 
-	public static PExp findExpression(ANewExp exp, int lineno)
-	{
-		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
-		if (found != null)
-			return found;
-
-		return PExpAssistantInterpreter.findExpression(exp.getArgs(), lineno);
-	}
+//	public static PExp findExpression(ANewExp exp, int lineno)
+//	{
+//		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
+//		if (found != null)
+//			return found;
+//
+//		return PExpAssistantInterpreter.findExpression(exp.getArgs(), lineno);
+//	}
 
 }

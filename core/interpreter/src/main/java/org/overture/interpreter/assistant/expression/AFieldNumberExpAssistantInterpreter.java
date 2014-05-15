@@ -17,18 +17,18 @@ public class AFieldNumberExpAssistantInterpreter // extends
 		this.af = af;
 	}
 
-	public static ValueList getValues(AFieldNumberExp exp, ObjectContext ctxt)
-	{
-		return PExpAssistantInterpreter.getValues(exp.getTuple(), ctxt);
-	}
+//	public static ValueList getValues(AFieldNumberExp exp, ObjectContext ctxt)
+//	{
+//		return PExpAssistantInterpreter.getValues(exp.getTuple(), ctxt);
+//	}
 
-	public static PExp findExpression(AFieldNumberExp exp, int lineno)
-	{
-		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
-		if (found != null)
-			return found;
-
-		return PExpAssistantInterpreter.findExpression(exp.getTuple(), lineno);
-	}
+//	public static PExp findExpression(AFieldNumberExp exp, int lineno)
+//	{
+//		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
+//		if (found != null)
+//			return found;
+//
+//		return PExpAssistantInterpreter.findExpression(exp.getTuple(), lineno);
+//	}
 
 }

@@ -245,7 +245,7 @@ public class VDMSL extends VDMJ
 
 		if (pog && terrs == 0)
 		{
-			ProofObligationList list = ModuleListAssistantInterpreter.getProofObligations(modules);
+			ProofObligationList list = assistantFactory.createModuleListAssistant().getProofObligations(modules);
 
 			if (list.isEmpty())
 			{

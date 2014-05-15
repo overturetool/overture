@@ -16,18 +16,18 @@ public class ALambdaExpAssistantInterpreter // extends ALambdaExpAssistantTC
 		this.af = af;
 	}
 
-	public static ValueList getValues(ALambdaExp exp, ObjectContext ctxt)
-	{
-		return PExpAssistantInterpreter.getValues(exp.getExpression(), ctxt);
-	}
+//	public static ValueList getValues(ALambdaExp exp, ObjectContext ctxt)
+//	{
+//		return PExpAssistantInterpreter.getValues(exp.getExpression(), ctxt);
+//	}
 
-	public static PExp findExpression(ALambdaExp exp, int lineno)
-	{
-		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
-		if (found != null)
-			return found;
-
-		return PExpAssistantInterpreter.findExpression(exp.getExpression(), lineno);
-	}
+//	public static PExp findExpression(ALambdaExp exp, int lineno)
+//	{
+//		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
+//		if (found != null)
+//			return found;
+//
+//		return PExpAssistantInterpreter.findExpression(exp.getExpression(), lineno);
+//	}
 
 }

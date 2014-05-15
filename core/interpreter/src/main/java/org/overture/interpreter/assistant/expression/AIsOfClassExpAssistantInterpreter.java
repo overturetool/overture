@@ -17,19 +17,19 @@ public class AIsOfClassExpAssistantInterpreter // extends AIsOfClassExpAssistant
 		this.af = af;
 	}
 
-	public static ValueList getValues(AIsOfClassExp exp, ObjectContext ctxt)
-	{
-		return PExpAssistantInterpreter.getValues(exp.getExp(), ctxt);
-	}
+//	public static ValueList getValues(AIsOfClassExp exp, ObjectContext ctxt)
+//	{
+//		return PExpAssistantInterpreter.getValues(exp.getExp(), ctxt);
+//	}
 
-	public static PExp findExpression(AIsOfClassExp exp, int lineno)
-	{
-		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
-		if (found != null)
-			return found;
-
-		return PExpAssistantInterpreter.findExpression(exp.getExp(), lineno);
-	}
+//	public static PExp findExpression(AIsOfClassExp exp, int lineno)
+//	{
+//		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
+//		if (found != null)
+//			return found;
+//
+//		return PExpAssistantInterpreter.findExpression(exp.getExp(), lineno);
+//	}
 
 	public static boolean isOfClass(ObjectValue obj, String name)
 	{

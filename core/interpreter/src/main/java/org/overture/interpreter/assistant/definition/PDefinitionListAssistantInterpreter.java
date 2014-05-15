@@ -28,7 +28,7 @@ public class PDefinitionListAssistantInterpreter extends
 		this.af = af;
 	}
 
-	public static ProofObligationList getProofObligations(
+	public ProofObligationList getProofObligations(
 			LinkedList<PDefinition> defs, POContextStack ctxt)
 	{
 		ProofObligationList obligations = new ProofObligationList();
@@ -43,20 +43,20 @@ public class PDefinitionListAssistantInterpreter extends
 		return obligations;
 	}
 
-	public static ValueList getValues(LinkedList<PDefinition> defs,
+	public ValueList getValues(LinkedList<PDefinition> defs,
 			ObjectContext ctxt)
 	{
 		ValueList list = new ValueList();
 
 		for (PDefinition d : defs)
 		{
-			list.addAll(PDefinitionAssistantInterpreter.getValues(d, ctxt));
+			list.addAll(af.createPDefinitionAssistant().getValues(d, ctxt));
 		}
 
 		return list;
 	}
 
-	public static PExp findExpression(LinkedList<PDefinition> list, int lineno)
+	public PExp findExpression(LinkedList<PDefinition> list, int lineno)
 	{
 		for (PDefinition d : list)
 		{
@@ -71,20 +71,20 @@ public class PDefinitionListAssistantInterpreter extends
 		return null;
 	}
 
-	public static NameValuePairList getNamedValues(
+	public NameValuePairList getNamedValues(
 			LinkedList<PDefinition> definitions, Context ctxt)
 	{
 		NameValuePairList nvl = new NameValuePairList();
 
 		for (PDefinition d : definitions)
 		{
-			nvl.addAll(PDefinitionAssistantInterpreter.getNamedValues(d, ctxt));
+			nvl.addAll(af.createPDefinitionAssistant().getNamedValues(d, ctxt));
 		}
 
 		return nvl;
 	}
 
-	public static LexNameList getOldNames(LinkedList<PDefinition> definitions)
+	public LexNameList getOldNames(LinkedList<PDefinition> definitions)
 	{
 		LexNameList list = new LexNameList();
 

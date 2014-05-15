@@ -25,6 +25,7 @@ package org.overture.interpreter.values;
 
 import java.util.List;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.PType;
 import org.overture.interpreter.runtime.Context;
@@ -144,7 +145,7 @@ public class SetValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt) throws ValueException
+	public Value convertValueTo(PType to, Context ctxt) throws AnalysisException
 	{
 		if (to instanceof ASetType)
 		{

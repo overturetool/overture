@@ -23,6 +23,7 @@
 
 package org.overture.interpreter.values;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.types.AInMapMapType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
@@ -127,7 +128,7 @@ public class MapValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt) throws ValueException
+	public Value convertValueTo(PType to, Context ctxt) throws AnalysisException
 	{
 		if (to instanceof SMapType)
 		{

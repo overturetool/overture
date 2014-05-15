@@ -23,6 +23,7 @@
 
 package org.overture.interpreter.values;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ValueException;
@@ -50,7 +51,7 @@ public class IterFunctionValue extends FunctionValue
 
 	@Override
 	public Value eval(
-		ILexLocation from, ValueList argValues, Context ctxt) throws ValueException
+		ILexLocation from, ValueList argValues, Context ctxt) throws AnalysisException
 	{
 		Value result = function.eval(from, argValues, ctxt);
 

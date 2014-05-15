@@ -14,21 +14,21 @@ public class ASetRangeSetExpAssistantInterpreter
 		this.af = af;
 	}
 
-	public static PExp findExpression(ASetRangeSetExp exp, int lineno)
-	{
-		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
-		if (found != null)
-			return found;
-
-		found = PExpAssistantInterpreter.findExpression(exp.getFirst(), lineno);
-		if (found != null)
-			return found;
-
-		found = PExpAssistantInterpreter.findExpression(exp.getLast(), lineno);
-		if (found != null)
-			return found;
-
-		return null;
-	}
+//	public static PExp findExpression(ASetRangeSetExp exp, int lineno)
+//	{
+//		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
+//		if (found != null)
+//			return found;
+//
+//		found = PExpAssistantInterpreter.findExpression(exp.getFirst(), lineno);
+//		if (found != null)
+//			return found;
+//
+//		found = PExpAssistantInterpreter.findExpression(exp.getLast(), lineno);
+//		if (found != null)
+//			return found;
+//
+//		return null;
+//	}
 
 }
