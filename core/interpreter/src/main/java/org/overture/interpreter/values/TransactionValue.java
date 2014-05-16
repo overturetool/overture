@@ -108,6 +108,11 @@ public class TransactionValue extends UpdatableValue
 			lastSetLocation = location;
    			newvalue = newval.getUpdatable(listeners);
     		newvalue = ((UpdatableValue)newvalue).value;	// To avoid nested updatables
+
+    		if (restrictedTo != null)
+    		{
+				newvalue = newvalue.convertTo(restrictedTo, ctxt);
+    		}
 		}
 
 		if (newthreadid < 0)
