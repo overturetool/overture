@@ -370,13 +370,13 @@ public class ClassInterpreter extends Interpreter
 	@Override
 	public PStm findStatement(File file, int lineno)
 	{
-		return SClassDefinitionAssistantInterpreter.findStatement(classes,file, lineno);
+		return assistantFactory.createSClassDefinitionAssistant().findStatement(classes,file, lineno);
 	}
 
 	@Override
 	public PExp findExpression(File file, int lineno)
 	{
-		return SClassDefinitionAssistantInterpreter.findExpression(classes,file, lineno);
+		return assistantFactory.createSClassDefinitionAssistant().findExpression(classes,file, lineno);
 	}
 
 	public void create(String var, String exp) throws Exception

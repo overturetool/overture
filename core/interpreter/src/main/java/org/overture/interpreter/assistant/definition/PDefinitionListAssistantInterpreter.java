@@ -60,7 +60,7 @@ public class PDefinitionListAssistantInterpreter extends
 	{
 		for (PDefinition d : list)
 		{
-			PExp found = PDefinitionAssistantInterpreter.findExpression(d, lineno);
+			PExp found = af.createPDefinitionAssistant().findExpression(d, lineno);
 
 			if (found != null)
 			{

@@ -66,7 +66,7 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 	public PExp defaultSClassDefinition(SClassDefinition def, Integer lineno)
 			throws AnalysisException
 	{
-		return SClassDefinitionAssistantInterpreter.findExpression(def, lineno);
+		return af.createSClassDefinitionAssistant().findExpression(def, lineno);
 	}
 	
 	@Override

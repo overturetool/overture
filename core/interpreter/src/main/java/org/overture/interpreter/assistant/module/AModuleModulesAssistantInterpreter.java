@@ -56,7 +56,7 @@ public class AModuleModulesAssistantInterpreter extends
 
 	public PStm findStatement(AModuleModules m, int lineno)
 	{
-		return PDefinitionAssistantInterpreter.findStatement(m.getDefs(), lineno);
+		return af.createPDefinitionAssistant().findStatement(m.getDefs(), lineno);
 	}
 
 	public PExp findExpression(ModuleListInterpreter modules, File file,

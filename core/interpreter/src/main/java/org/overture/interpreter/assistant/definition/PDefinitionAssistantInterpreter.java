@@ -137,7 +137,7 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 
 	}
 
-	public static PExp findExpression(PDefinition def, int lineno)
+	public PExp findExpression(PDefinition def, int lineno)
 	{
 		try
 		{
@@ -305,7 +305,7 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 //		}
 	}
 
-	public static PStm findStatement(LinkedList<PDefinition> definitions,
+	public PStm findStatement(LinkedList<PDefinition> definitions,
 			int lineno)
 	{
 		for (PDefinition d : definitions)
@@ -321,7 +321,7 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 		return null;
 	}
 
-	private static PStm findStatement(PDefinition def, int lineno)
+	private PStm findStatement(PDefinition def, int lineno)
 	{
 		try
 		{

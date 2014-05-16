@@ -586,18 +586,18 @@ public class SClassDefinitionAssistantInterpreter extends
 		return VdmRuntime.getNodeState(af,classdef).hasDelegate();
 	}
 
-	public static Object newInstance(SClassDefinition classdef)
+	public Object newInstance(SClassDefinition classdef)
 	{
 		return VdmRuntime.getNodeState(af,classdef).newInstance();
 	}
 
-	public static Value invokeDelegate(SClassDefinition classdef,
+	public Value invokeDelegate(SClassDefinition classdef,
 			Object delegateObject, Context ctxt)
 	{
 		return VdmRuntime.getNodeState(af,classdef).invokeDelegate(delegateObject, ctxt);
 	}
 
-	public static PExp findExpression(SClassDefinition d, int lineno)
+	public PExp findExpression(SClassDefinition d, int lineno)
 	{
 		return af.createPDefinitionListAssistant().findExpression(d.getDefinitions(), lineno);
 	}
@@ -607,7 +607,7 @@ public class SClassDefinitionAssistantInterpreter extends
 //		return true;
 //	}
 
-	public static PStm findStatement(ClassListInterpreter classes, File file,
+	public PStm findStatement(ClassListInterpreter classes, File file,
 			int lineno)
 	{
 		for (SClassDefinition c : classes)
@@ -626,9 +626,9 @@ public class SClassDefinitionAssistantInterpreter extends
 		return null;
 	}
 
-	public static PStm findStatement(SClassDefinition c, int lineno)
+	public PStm findStatement(SClassDefinition c, int lineno)
 	{
-		return PDefinitionAssistantInterpreter.findStatement(c.getDefinitions(), lineno);
+		return af.createPDefinitionAssistant().findStatement(c.getDefinitions(), lineno);
 	}
 
 	public static PExp findExpression(ClassListInterpreter classes, File file,
@@ -638,7 +638,7 @@ public class SClassDefinitionAssistantInterpreter extends
 		{
 			if (c.getName().getLocation().getFile().equals(file))
 			{
-				PExp exp = findExpression(c, lineno);
+				PExp exp = af.createSClassDefinitionAssistant().findExpression(c, lineno);
 
 				if (exp != null)
 				{
