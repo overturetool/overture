@@ -11,7 +11,6 @@ import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.statements.PStm;
 import org.overture.interpreter.assistant.definition.ABusClassDefinitionAssitantInterpreter;
 import org.overture.interpreter.assistant.definition.AClassClassDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.AConcurrentExpressionTraceCoreDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ACpuClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AEqualsDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AErrorCaseAssistantInterpreter;
@@ -179,7 +178,7 @@ public interface IInterpreterAssistantFactory extends
 
 	AClassClassDefinitionAssistantInterpreter createAClassClassDefinitionAssistant();
 
-	AConcurrentExpressionTraceCoreDefinitionAssistantInterpreter createAConcurrentExpressionTraceCoreDefinitionAssistant();
+	//AConcurrentExpressionTraceCoreDefinitionAssistantInterpreter createAConcurrentExpressionTraceCoreDefinitionAssistant();
 
 	ACpuClassDefinitionAssistantInterpreter createACpuClassDefinitionAssistant();
 
