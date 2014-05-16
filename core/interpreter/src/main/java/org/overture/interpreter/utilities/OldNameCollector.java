@@ -237,7 +237,7 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 	public LexNameList caseALetDefExp(ALetDefExp expression)
 			throws org.overture.ast.analysis.AnalysisException
 	{
-		LexNameList list = PDefinitionListAssistantInterpreter.getOldNames(expression.getLocalDefs());
+		LexNameList list = af.createPDefinitionListAssistant().getOldNames(expression.getLocalDefs());
 		list.addAll(af.createPExpAssistant().getOldNames(expression.getExpression()));
 		return list;
 	}

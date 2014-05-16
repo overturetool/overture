@@ -3,6 +3,7 @@ package org.overture.interpreter.assistant.type;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
@@ -28,31 +29,31 @@ public class ARecordInvariantTypeAssistantInterpreter extends
 		this.af = af;
 	}
 
-	public static ValueList getAllValues(ARecordInvariantType type, Context ctxt)
-			throws ValueException
-	{
-		List<PType> types = new Vector<PType>();
-
-		for (AFieldField f : type.getFields())
-		{
-			types.add(f.getType());
-		}
-
-		ValueList results = new ValueList();
-
-		for (Value v : PTypeListAssistant.getAllValues(types, ctxt))
-		{
-			try
-			{
-				TupleValue tuple = (TupleValue) v;
-				results.add(new RecordValue(type, tuple.values, ctxt));
-			} catch (ValueException e)
-			{
-				// Value does not match invariant, so ignore it
-			}
-		}
-
-		return results;
-	}
+//	public static ValueList getAllValues(ARecordInvariantType type, Context ctxt)
+//			throws AnalysisException
+//	{
+//		List<PType> types = new Vector<PType>();
+//
+//		for (AFieldField f : type.getFields())
+//		{
+//			types.add(f.getType());
+//		}
+//
+//		ValueList results = new ValueList();
+//
+//		for (Value v : PTypeListAssistant.getAllValues(types, ctxt))
+//		{
+//			try
+//			{
+//				TupleValue tuple = (TupleValue) v;
+//				results.add(new RecordValue(type, tuple.values, ctxt));
+//			} catch (ValueException e)
+//			{
+//				// Value does not match invariant, so ignore it
+//			}
+//		}
+//
+//		return results;
+//	}
 
 }

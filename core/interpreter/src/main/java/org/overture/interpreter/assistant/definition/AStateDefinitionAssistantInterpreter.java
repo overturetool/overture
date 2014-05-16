@@ -1,10 +1,7 @@
 package org.overture.interpreter.assistant.definition;
 
 import org.overture.ast.definitions.AStateDefinition;
-import org.overture.ast.expressions.AEqualsBinaryExp;
-import org.overture.ast.expressions.PExp;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.StateContext;
 import org.overture.interpreter.runtime.VdmRuntime;
@@ -51,31 +48,31 @@ public class AStateDefinitionAssistantInterpreter extends
 		state.moduleState.initialize(initialContext);
 	}
 
-	public static PExp findExpression(AStateDefinition d, int lineno)
-	{
-		if (d.getInitExpression() != null)
-		{
-			PExp found = PExpAssistantInterpreter.findExpression(d.getInvExpression(), lineno);
-			if (found != null)
-			{
-				return found;
-			}
-		}
-
-		if (d.getInitExpression() != null)
-		{
-			if (d.getInitExpression() instanceof AEqualsBinaryExp)
-			{
-				AEqualsBinaryExp ee = (AEqualsBinaryExp) d.getInitExpression();
-				PExp found = PExpAssistantInterpreter.findExpression(ee.getRight(), lineno);
-				if (found != null)
-				{
-					return found;
-				}
-			}
-		}
-
-		return null;
-	}
+//	public static PExp findExpression(AStateDefinition d, int lineno)
+//	{
+//		if (d.getInitExpression() != null)
+//		{
+//			PExp found = PExpAssistantInterpreter.findExpression(d.getInvExpression(), lineno);
+//			if (found != null)
+//			{
+//				return found;
+//			}
+//		}
+//
+//		if (d.getInitExpression() != null)
+//		{
+//			if (d.getInitExpression() instanceof AEqualsBinaryExp)
+//			{
+//				AEqualsBinaryExp ee = (AEqualsBinaryExp) d.getInitExpression();
+//				PExp found = PExpAssistantInterpreter.findExpression(ee.getRight(), lineno);
+//				if (found != null)
+//				{
+//					return found;
+//				}
+//			}
+//		}
+//
+//		return null;
+//	}
 
 }

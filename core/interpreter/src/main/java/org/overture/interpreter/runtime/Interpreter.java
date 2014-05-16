@@ -35,6 +35,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
@@ -685,8 +686,8 @@ abstract public class Interpreter
 	}
 
 	abstract public List<Object> runOneTrace(
-			ANamedTraceDefinition tracedef, CallSequence test, boolean debug);
+			ANamedTraceDefinition tracedef, CallSequence test, boolean debug) throws AnalysisException;
 
 
-	abstract public Context getInitialTraceContext(ANamedTraceDefinition tracedef, boolean debug) throws ValueException;
+	abstract public Context getInitialTraceContext(ANamedTraceDefinition tracedef, boolean debug) throws ValueException, AnalysisException;
 }

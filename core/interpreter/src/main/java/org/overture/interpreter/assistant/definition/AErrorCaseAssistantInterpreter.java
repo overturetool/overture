@@ -17,12 +17,12 @@ public class AErrorCaseAssistantInterpreter
 
 	public static PExp findExpression(AErrorCase err, int lineno)
 	{
-		PExp found = PExpAssistantInterpreter.findExpression(err.getLeft(), lineno);
+		PExp found = af.createPExpAssistant().findExpression(err.getLeft(), lineno);
 		if (found != null)
 		{
 			return found;
 		}
-		return PExpAssistantInterpreter.findExpression(err.getRight(), lineno);
+		return af.createPExpAssistant().findExpression(err.getRight(), lineno);
 	}
 
 }

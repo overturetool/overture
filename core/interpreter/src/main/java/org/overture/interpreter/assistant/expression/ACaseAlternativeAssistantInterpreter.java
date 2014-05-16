@@ -21,14 +21,14 @@ public class ACaseAlternativeAssistantInterpreter extends
 		this.af = af;
 	}
 
-	public static ValueList getValues(ACaseAlternative c, ObjectContext ctxt)
-	{
-		return PExpAssistantInterpreter.getValues(c.getResult(), ctxt);
-	}
-
-	public static List<PExp> getSubExpressions(ACaseAlternative c)
-	{
-		return PExpAssistantInterpreter.getSubExpressions(c.getResult());
-	}
+//	public static ValueList getValues(ACaseAlternative c, ObjectContext ctxt)
+//	{
+//		return PExpAssistantInterpreter.getValues(c.getResult(), ctxt);
+//	}
+//
+//	public static List<PExp> getSubExpressions(ACaseAlternative c)
+//	{
+//		return PExpAssistantInterpreter.getSubExpressions(c.getResult());
+//	}
 
 }

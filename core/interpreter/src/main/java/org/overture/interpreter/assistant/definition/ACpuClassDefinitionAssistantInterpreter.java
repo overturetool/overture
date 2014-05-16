@@ -40,7 +40,7 @@ public class ACpuClassDefinitionAssistantInterpreter extends
 	public static CPUValue newInstance(ACpuClassDefinition node, Object object,
 			ValueList argvals, Context ctxt)
 	{
-		NameValuePairList nvpl = PDefinitionListAssistantInterpreter.getNamedValues(node.getDefinitions(), ctxt);
+		NameValuePairList nvpl = af.createPDefinitionListAssistant().getNamedValues(node.getDefinitions(), ctxt);
 		NameValuePairMap map = new NameValuePairMap();
 		map.putAll(nvpl);
 

@@ -28,14 +28,14 @@ public class AIgnorePatternAssistantInterpreter
 		return result;
 	}
 
-	public static boolean isConstrained(AIgnorePattern pattern)
-	{
-		return false;
-	}
+//	public static boolean isConstrained(AIgnorePattern pattern)
+//	{
+//		return false;
+//	}
 
-	public static int getLength(AIgnorePattern pattern)
-	{
-		return PPatternAssistantInterpreter.ANY; // Special value meaning "any length"
-	}
+//	public static int getLength(AIgnorePattern pattern)
+//	{
+//		return PPatternAssistantInterpreter.ANY; // Special value meaning "any length"
+//	}
 
 }

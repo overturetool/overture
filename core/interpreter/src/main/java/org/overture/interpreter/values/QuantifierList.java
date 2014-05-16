@@ -25,6 +25,7 @@ package org.overture.interpreter.values;
 
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
 
@@ -39,7 +40,7 @@ public class QuantifierList extends Vector<Quantifier>
 	private NameValuePairList result = null;
 	private boolean done = false;
 
-	public void init(Context ctxt, boolean allPossibilities)
+	public void init(Context ctxt, boolean allPossibilities) throws AnalysisException
 	{
 		count = size();
 		size = new int[count];

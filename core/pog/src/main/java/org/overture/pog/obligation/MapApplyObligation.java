@@ -30,7 +30,6 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.statements.PStateDesignator;
 import org.overture.pog.pub.IPOContextStack;
-import org.overture.pog.pub.POType;
 import org.overture.pog.utility.StateDesignatorToExpVisitor;
 
 public class MapApplyObligation extends ProofObligation

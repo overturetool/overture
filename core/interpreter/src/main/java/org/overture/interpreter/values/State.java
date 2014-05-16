@@ -133,7 +133,7 @@ public class State implements ValueListener
 		return context;
 	}
 
-	public void changedValue(ILexLocation location, Value changed, Context ctxt)
+	public void changedValue(ILexLocation location, Value changed, Context ctxt) throws AnalysisException
 	{
 		if (doInvariantChecks && VdmRuntime.getNodeState( definition).invfunc != null && Settings.invchecks)
 		{

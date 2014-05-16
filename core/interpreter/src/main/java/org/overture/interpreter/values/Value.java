@@ -28,6 +28,7 @@ import java.util.Formattable;
 import java.util.FormattableFlags;
 import java.util.Formatter;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.ANamedInvariantType;
@@ -151,11 +152,10 @@ abstract public class Value implements Comparable<Value>, Serializable, Formatta
 	 * @param to The target type.
 	 * @param ctxt The context in which to make the conversion.
 	 * @return This value converted to the target type.
-	 *
-	 * @throws ValueException Cannot perform the type conversion.
+	 * @throws AnalysisException 
 	 */
 
-	public Value convertTo(PType to, Context ctxt) throws ValueException
+	public Value convertTo(PType to, Context ctxt) throws AnalysisException
 	{
 		if (Settings.dynamictypechecks)
 		{
@@ -183,7 +183,7 @@ abstract public class Value implements Comparable<Value>, Serializable, Formatta
 		}
 	}
 
-	public Value convertValueTo(PType to, Context ctxt) throws ValueException
+	public Value convertValueTo(PType to, Context ctxt) throws AnalysisException
 	{
 		if (to instanceof AUnionType)
 		{
@@ -258,9 +258,10 @@ abstract public class Value implements Comparable<Value>, Serializable, Formatta
 	 * @param newval The new value to set
 	 * @param ctxt The context used
 	 * @throws ValueException
+	 * @throws AnalysisException 
 	 */
 
-	public void set(ILexLocation location, Value newval, Context ctxt) throws ValueException
+	public void set(ILexLocation location, Value newval, Context ctxt) throws ValueException, AnalysisException
 	{
 		abort(4088, "Set not permitted for " + kind(), ctxt);
 	}

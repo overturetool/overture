@@ -55,7 +55,7 @@ public class ClassListInterpreter extends ClassList
 			if (cdef instanceof ASystemClassDefinition)
 			{
 				systemClass = (ASystemClassDefinition) cdef;
-				ASystemClassDefinitionAssistantInterpreter.systemInit(systemClass, scheduler, dbgp, initialContext);
+				initialContext.assistantFactory.createASystemClassDefinitionAssistant().systemInit(systemClass, scheduler, dbgp, initialContext);
 				TransactionValue.commitAll();
 			}
 		}
@@ -81,7 +81,7 @@ public class ClassListInterpreter extends ClassList
 
 		for (SClassDefinition cdef : this)
 		{
-			SClassDefinitionAssistantInterpreter.staticInit(cdef, globalContext);
+			af.createSClassDefinitionAssistant().staticInit(cdef, globalContext);
 		}
 
 		// Values can forward reference each other, which means that we don't
@@ -139,13 +139,14 @@ public class ClassListInterpreter extends ClassList
 		return globalContext;
 	}
 
-	public ProofObligationList getProofObligations()
+	public ProofObligationList getProofObligations(IInterpreterAssistantFactory assistantFactory)
 	{
+		//TODO: Check this method, where it is used.
 		ProofObligationList obligations = new ProofObligationList();
 
 		for (SClassDefinition c : this)
 		{
-			obligations.addAll(SClassDefinitionAssistantInterpreter.getProofObligations(c, new POContextStack(new PogAssistantFactory())));
+			obligations.addAll(assistantFactory.createSClassDefinitionAssistant().getProofObligations(c, new POContextStack(new PogAssistantFactory())));
 		}
 
 		obligations.trivialCheck();

@@ -15,9 +15,9 @@ public class ARecordModifierAssistantInterpreter
 		this.af = af;
 	}
 
-	public static ValueList getValues(ARecordModifier rm, ObjectContext ctxt)
-	{
-		return PExpAssistantInterpreter.getValues(rm.getValue(), ctxt);
-	}
+//	public static ValueList getValues(ARecordModifier rm, ObjectContext ctxt)
+//	{
+//		return PExpAssistantInterpreter.getValues(rm.getValue(), ctxt);
+//	}
 
 }

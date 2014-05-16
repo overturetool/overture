@@ -30,8 +30,14 @@ import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.node.INode;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
+
+
+//TODO Add assistant Javadoc
+
 /**
- * This class implements a way to collect variable names from a node in the AST
+ * A refactored assistant / functionality visitor.
+ * 
+ * This class implements a way to collect variable names from any node in the AST
  * 
  * @author kel
  */

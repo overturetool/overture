@@ -31,7 +31,7 @@ public class ACaseAlternativeStmAssistantInterpreter // extends
 		node.getLocation().hit();
 		try
 		{
-			evalContext.putList(PPatternAssistantInterpreter.getNamedValues(node.getPattern(), val, ctxt));
+			evalContext.putList(af.createPPatternAssistant().getNamedValues(node.getPattern(), val, ctxt));
 			return node.getResult().apply(VdmRuntime.getStatementEvaluator(), evalContext);
 		} catch (PatternMatchException e)
 		{

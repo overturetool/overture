@@ -84,7 +84,7 @@ public class ClassContext extends RootContext
 			}
 		}
 
-		v = SClassDefinitionAssistantInterpreter.getStatic(classdef,name);
+		v = assistantFactory.createSClassDefinitionAssistant().getStatic(classdef,name);
 
 		if (v != null)
 		{

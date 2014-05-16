@@ -18,32 +18,32 @@ public class SMapExpAssistantInterpreter // extends SMapExpAssistantTC
 		this.af = af;
 	}
 
-	public static ValueList getValues(SMapExp exp, ObjectContext ctxt)
-	{
-		if (exp instanceof AMapCompMapExp)
-		{
-			return AMapCompMapExpAssistantInterpreter.getValues((AMapCompMapExp) exp, ctxt);
-		} else if (exp instanceof AMapEnumMapExp)
-		{
-			return AMapEnumMapExpAssistantInterpreter.getValues((AMapEnumMapExp) exp, ctxt);
-		} else
-		{
-			return new ValueList();
-		}
-	}
+//	public static ValueList getValues(SMapExp exp, ObjectContext ctxt)
+//	{
+//		if (exp instanceof AMapCompMapExp)
+//		{
+//			return AMapCompMapExpAssistantInterpreter.getValues((AMapCompMapExp) exp, ctxt);
+//		} else if (exp instanceof AMapEnumMapExp)
+//		{
+//			return AMapEnumMapExpAssistantInterpreter.getValues((AMapEnumMapExp) exp, ctxt);
+//		} else
+//		{
+//			return new ValueList();
+//		}
+//	}
 
-	public static PExp findExpression(SMapExp exp, int lineno)
-	{
-		if (exp instanceof AMapCompMapExp)
-		{
-			return AMapCompMapExpAssistantInterpreter.findExpression((AMapCompMapExp) exp, lineno);
-		} else if (exp instanceof AMapEnumMapExp)
-		{
-			return AMapEnumMapExpAssistantInterpreter.findExpression((AMapEnumMapExp) exp, lineno);
-		} else
-		{
-			return null;
-		}
-	}
+//	public static PExp findExpression(SMapExp exp, int lineno)
+//	{
+//		if (exp instanceof AMapCompMapExp)
+//		{
+//			return AMapCompMapExpAssistantInterpreter.findExpression((AMapCompMapExp) exp, lineno);
+//		} else if (exp instanceof AMapEnumMapExp)
+//		{
+//			return AMapEnumMapExpAssistantInterpreter.findExpression((AMapEnumMapExp) exp, lineno);
+//		} else
+//		{
+//			return null;
+//		}
+//	}
 
 }
