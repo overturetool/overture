@@ -101,7 +101,7 @@ public class ClassListInterpreter extends ClassList
 			{
 				try
 				{
-					SClassDefinitionAssistantInterpreter.staticValuesInit(cdef, globalContext);
+					af.createSClassDefinitionAssistant().staticValuesInit(cdef, globalContext);
 				} catch (ContextException e)
 				{
 					trouble.add(e);

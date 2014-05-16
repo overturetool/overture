@@ -575,13 +575,13 @@ public class SClassDefinitionAssistantInterpreter extends
 		return af.createPDefinitionListAssistant().getProofObligations(c.getDefinitions(), ctxt);
 	}
 
-	public static void staticValuesInit(SClassDefinition cdef, StateContext ctxt)
+	public void staticValuesInit(SClassDefinition cdef, StateContext ctxt)
 	{
 		VdmRuntime.getNodeState(af,cdef).staticValuesInit = false; // Forced initialization
 		setStaticValues(cdef, ctxt);
 	}
 
-	public static boolean hasDelegate(SClassDefinition classdef)
+	public boolean hasDelegate(SClassDefinition classdef)
 	{
 		return VdmRuntime.getNodeState(af,classdef).hasDelegate();
 	}

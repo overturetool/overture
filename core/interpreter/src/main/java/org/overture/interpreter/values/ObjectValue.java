@@ -519,13 +519,13 @@ public class ObjectValue extends Value
 		return CPU == null ? CPUValue.vCPU : CPU;
 	}
 
-	public boolean hasDelegate()
+	public boolean hasDelegate(Context ctxt)
 	{
-		if (SClassDefinitionAssistantInterpreter.hasDelegate(type.getClassdef()))
+		if (ctxt.assistantFactory.createSClassDefinitionAssistant().hasDelegate(type.getClassdef()))
 		{
 			if (delegateObject == null)
 			{
-				delegateObject = SClassDefinitionAssistantInterpreter.newInstance(type.getClassdef());
+				delegateObject = ctxt.assistantFactory.createSClassDefinitionAssistant().newInstance(type.getClassdef());
 			}
 
 			return true;
@@ -536,7 +536,7 @@ public class ObjectValue extends Value
 
 	public Value invokeDelegate(Context ctxt)
 	{
-		return SClassDefinitionAssistantInterpreter.invokeDelegate(type.getClassdef(),delegateObject, ctxt);
+		return ctxt.assistantFactory.createSClassDefinitionAssistant().invokeDelegate(type.getClassdef(),delegateObject, ctxt);
 	}
 
 	public static void init()
