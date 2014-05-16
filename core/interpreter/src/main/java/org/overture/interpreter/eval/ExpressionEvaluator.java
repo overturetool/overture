@@ -640,7 +640,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			{
 				if (node.getTypedef() != null)
 				{
-					if (PDefinitionAssistantInterpreter.isTypeDefinition(node.getTypedef()))
+					if (ctxt.assistantFactory.createPDefinitionAssistant().isTypeDefinition(node.getTypedef()))
 					{
 						// NB. we skip the DTC enabled check here
 						v.convertValueTo(ctxt.assistantFactory.createPDefinitionAssistant().getType(node.getTypedef()), ctxt);
@@ -1063,7 +1063,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			if (node.getTypeName() != null)
 			{
 
-				if (PDefinitionAssistantInterpreter.isTypeDefinition(node.getTypedef()))
+				if (ctxt.assistantFactory.createPDefinitionAssistant().isTypeDefinition(node.getTypedef()))
 				{
 					// NB. we skip the DTC enabled check here
 					v = v.convertValueTo(ctxt.assistantFactory.createPDefinitionAssistant().getType(node.getTypedef()), ctxt);

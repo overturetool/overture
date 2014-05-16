@@ -89,7 +89,7 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 //		}
 	}
 
-	public static ProofObligationList getProofObligations(PDefinition def,
+	public ProofObligationList getProofObligations(PDefinition def,
 			POContextStack ctxt)
 	{
 		try
@@ -194,7 +194,7 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 //		}
 	}
 
-	public static boolean isTypeDefinition(PDefinition def)
+	public boolean isTypeDefinition(PDefinition def)
 	{
 		try
 		{
@@ -224,7 +224,7 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 //		}
 	}
 
-	public static boolean isRuntime(PDefinition def)
+	public boolean isRuntime(PDefinition def)
 	{
 		try
 		{
@@ -251,7 +251,7 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 //		}
 	}
 
-	public static boolean isValueDefinition(PDefinition def)
+	public boolean isValueDefinition(PDefinition def)
 	{
 		try
 		{
@@ -278,7 +278,7 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 //		}
 	}
 
-	public static boolean isInstanceVariable(PDefinition def)
+	public boolean isInstanceVariable(PDefinition def)
 	{
 		try
 		{

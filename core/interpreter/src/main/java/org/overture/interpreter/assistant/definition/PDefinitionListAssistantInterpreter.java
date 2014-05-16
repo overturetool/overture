@@ -36,7 +36,7 @@ public class PDefinitionListAssistantInterpreter extends
 		for (PDefinition d : defs)
 		{
 			ctxt.push(new PONameContext(af.createPDefinitionAssistant().getVariableNames(d)));
-			obligations.addAll(PDefinitionAssistantInterpreter.getProofObligations(d, ctxt));
+			obligations.addAll(af.createPDefinitionAssistant().getProofObligations(d, ctxt));
 			ctxt.pop();
 		}
 
