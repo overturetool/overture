@@ -59,9 +59,6 @@ import org.overture.ast.statements.ATixeStmtAlternative;
 import org.overture.ast.statements.ATrapStm;
 import org.overture.ast.statements.AWhileStm;
 import org.overture.config.Settings;
-import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.PMultipleBindAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.ACaseAlternativeStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.AStartStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.ATixeStmtAlternativeAssistantInterpreter;
@@ -1361,7 +1358,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 					// in order to have it updated.
 
 					UpdatableValue ur = (UpdatableValue) root;
-					result = UpdatableValue.factory(ur.listeners);
+					result = UpdatableValue.factory(ur.listeners, node.getMapType().getTo());
 					map.put(index, result);
 				}
 			} else if (root.isType(SeqValue.class))
@@ -1377,7 +1374,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 						// creates the value in order to have it updated.
 
 						UpdatableValue ur = (UpdatableValue) root;
-						seq.add(UpdatableValue.factory(ur.listeners));
+						seq.add(UpdatableValue.factory(ur.listeners, node.getSeqType().getSeqof()));
 					} else
 					{
 						VdmRuntimeError.abort(node.getExp().getLocation(), 4019, "Sequence cannot extend to key: "
