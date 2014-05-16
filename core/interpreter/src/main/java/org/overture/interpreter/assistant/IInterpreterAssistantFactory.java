@@ -15,13 +15,8 @@ import org.overture.interpreter.assistant.definition.ACpuClassDefinitionAssistan
 import org.overture.interpreter.assistant.definition.AErrorCaseAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AExplicitFunctionDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AImplicitFunctionDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.AInstanceVariableDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.ALetBeStBindingTraceDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.ALetDefBindingTraceDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.ALocalDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AMutexSyncDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ANamedTraceDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.APerSyncDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ARenamedDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ARepeatTraceDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AStateDefinitionAssistantInterpreter;
@@ -193,19 +188,19 @@ public interface IInterpreterAssistantFactory extends
 
 	//AInheritedDefinitionAssistantInterpreter createAInheritedDefinitionAssistant();
 
-	AInstanceVariableDefinitionAssistantInterpreter createAInstanceVariableDefinitionAssistant();
+	//AInstanceVariableDefinitionAssistantInterpreter createAInstanceVariableDefinitionAssistant();
 
-	ALetBeStBindingTraceDefinitionAssistantInterpreter createALetBeStBindingTraceDefinitionAssistant();
+	//ALetBeStBindingTraceDefinitionAssistantInterpreter createALetBeStBindingTraceDefinitionAssistant();
 
-	ALetDefBindingTraceDefinitionAssistantInterpreter createALetDefBindingTraceDefinitionAssistant();
+	//ALetDefBindingTraceDefinitionAssistantInterpreter createALetDefBindingTraceDefinitionAssistant();
 
-	ALocalDefinitionAssistantInterpreter createALocalDefinitionAssistant();
+	//ALocalDefinitionAssistantInterpreter createALocalDefinitionAssistant();
 
 	AMutexSyncDefinitionAssistantInterpreter createAMutexSyncDefinitionAssistant();
 
 	ANamedTraceDefinitionAssistantInterpreter createANamedTraceDefinitionAssistant();
 
-	APerSyncDefinitionAssistantInterpreter createAPerSyncDefinitionAssistant();
+	//APerSyncDefinitionAssistantInterpreter createAPerSyncDefinitionAssistant();
 
 	ARenamedDefinitionAssistantInterpreter createARenamedDefinitionAssistant();
 

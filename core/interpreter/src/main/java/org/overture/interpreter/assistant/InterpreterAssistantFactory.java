@@ -16,13 +16,8 @@ import org.overture.interpreter.assistant.definition.ACpuClassDefinitionAssistan
 import org.overture.interpreter.assistant.definition.AErrorCaseAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AExplicitFunctionDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AImplicitFunctionDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.AInstanceVariableDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.ALetBeStBindingTraceDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.ALetDefBindingTraceDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.ALocalDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AMutexSyncDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ANamedTraceDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.APerSyncDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ARenamedDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ARepeatTraceDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AStateDefinitionAssistantInterpreter;
@@ -275,25 +270,25 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 //		return new AInheritedDefinitionAssistantInterpreter(this);
 //	}
 
-	public AInstanceVariableDefinitionAssistantInterpreter createAInstanceVariableDefinitionAssistant()
-	{
-		return new AInstanceVariableDefinitionAssistantInterpreter(this);
-	}
+//	public AInstanceVariableDefinitionAssistantInterpreter createAInstanceVariableDefinitionAssistant()
+//	{
+//		return new AInstanceVariableDefinitionAssistantInterpreter(this);
+//	}
 
-	public ALetBeStBindingTraceDefinitionAssistantInterpreter createALetBeStBindingTraceDefinitionAssistant()
-	{
-		return new ALetBeStBindingTraceDefinitionAssistantInterpreter(this);
-	}
+//	public ALetBeStBindingTraceDefinitionAssistantInterpreter createALetBeStBindingTraceDefinitionAssistant()
+//	{
+//		return new ALetBeStBindingTraceDefinitionAssistantInterpreter(this);
+//	}
 
-	public ALetDefBindingTraceDefinitionAssistantInterpreter createALetDefBindingTraceDefinitionAssistant()
-	{
-		return new ALetDefBindingTraceDefinitionAssistantInterpreter(this);
-	}
+//	public ALetDefBindingTraceDefinitionAssistantInterpreter createALetDefBindingTraceDefinitionAssistant()
+//	{
+//		return new ALetDefBindingTraceDefinitionAssistantInterpreter(this);
+//	}
 
-	public ALocalDefinitionAssistantInterpreter createALocalDefinitionAssistant()
-	{
-		return new ALocalDefinitionAssistantInterpreter(this);
-	}
+//	public ALocalDefinitionAssistantInterpreter createALocalDefinitionAssistant()
+//	{
+//		return new ALocalDefinitionAssistantInterpreter(this);
+//	}
 
 	public AMutexSyncDefinitionAssistantInterpreter createAMutexSyncDefinitionAssistant()
 	{
@@ -305,10 +300,10 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 		return new ANamedTraceDefinitionAssistantInterpreter(this);
 	}
 
-	public APerSyncDefinitionAssistantInterpreter createAPerSyncDefinitionAssistant()
-	{
-		return new APerSyncDefinitionAssistantInterpreter(this);
-	}
+//	public APerSyncDefinitionAssistantInterpreter createAPerSyncDefinitionAssistant()
+//	{
+//		return new APerSyncDefinitionAssistantInterpreter(this);
+//	}
 
 	public ARenamedDefinitionAssistantInterpreter createARenamedDefinitionAssistant()
 	{
