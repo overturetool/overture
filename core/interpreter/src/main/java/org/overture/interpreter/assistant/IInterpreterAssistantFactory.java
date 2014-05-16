@@ -12,14 +12,9 @@ import org.overture.ast.statements.PStm;
 import org.overture.interpreter.assistant.definition.ABusClassDefinitionAssitantInterpreter;
 import org.overture.interpreter.assistant.definition.AClassClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ACpuClassDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.AEqualsDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AErrorCaseAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AExplicitFunctionDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.AExplicitOperationDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AImplicitFunctionDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.AImplicitOperationDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.AImportedDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.AInheritedDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AInstanceVariableDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ALetBeStBindingTraceDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ALetDefBindingTraceDefinitionAssistantInterpreter;
@@ -182,21 +177,21 @@ public interface IInterpreterAssistantFactory extends
 
 	ACpuClassDefinitionAssistantInterpreter createACpuClassDefinitionAssistant();
 
-	AEqualsDefinitionAssistantInterpreter createAEqualsDefinitionAssistant();
+	//AEqualsDefinitionAssistantInterpreter createAEqualsDefinitionAssistant();
 
 	AErrorCaseAssistantInterpreter createAErrorCaseAssistant();
 
 	AExplicitFunctionDefinitionAssistantInterpreter createAExplicitFunctionDefinitionAssistant();
 
-	AExplicitOperationDefinitionAssistantInterpreter createAExplicitOperationDefinitionAssistant();
+	//AExplicitOperationDefinitionAssistantInterpreter createAExplicitOperationDefinitionAssistant();
 
 	AImplicitFunctionDefinitionAssistantInterpreter createAImplicitFunctionDefinitionAssistant();
 
-	AImplicitOperationDefinitionAssistantInterpreter createAImplicitOperationDefinitionAssistant();
+	//AImplicitOperationDefinitionAssistantInterpreter createAImplicitOperationDefinitionAssistant();
 
-	AImportedDefinitionAssistantInterpreter createAImportedDefinitionAssistant();
+	//AImportedDefinitionAssistantInterpreter createAImportedDefinitionAssistant();
 
-	AInheritedDefinitionAssistantInterpreter createAInheritedDefinitionAssistant();
+	//AInheritedDefinitionAssistantInterpreter createAInheritedDefinitionAssistant();
 
 	AInstanceVariableDefinitionAssistantInterpreter createAInstanceVariableDefinitionAssistant();
 

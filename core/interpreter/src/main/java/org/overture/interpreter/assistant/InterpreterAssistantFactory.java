@@ -13,14 +13,9 @@ import org.overture.ast.statements.PStm;
 import org.overture.interpreter.assistant.definition.ABusClassDefinitionAssitantInterpreter;
 import org.overture.interpreter.assistant.definition.AClassClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ACpuClassDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.AEqualsDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AErrorCaseAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AExplicitFunctionDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.AExplicitOperationDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AImplicitFunctionDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.AImplicitOperationDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.AImportedDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.AInheritedDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AInstanceVariableDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ALetBeStBindingTraceDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ALetDefBindingTraceDefinitionAssistantInterpreter;
@@ -240,10 +235,10 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 		return new ACpuClassDefinitionAssistantInterpreter(this);
 	}
 
-	public AEqualsDefinitionAssistantInterpreter createAEqualsDefinitionAssistant()
-	{
-		return new AEqualsDefinitionAssistantInterpreter(this);
-	}
+//	public AEqualsDefinitionAssistantInterpreter createAEqualsDefinitionAssistant()
+//	{
+//		return new AEqualsDefinitionAssistantInterpreter(this);
+//	}
 
 	public AErrorCaseAssistantInterpreter createAErrorCaseAssistant()
 	{
@@ -255,30 +250,30 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 		return new AExplicitFunctionDefinitionAssistantInterpreter(this);
 	}
 
-	public AExplicitOperationDefinitionAssistantInterpreter createAExplicitOperationDefinitionAssistant()
-	{
-		return new AExplicitOperationDefinitionAssistantInterpreter(this);
-	}
+//	public AExplicitOperationDefinitionAssistantInterpreter createAExplicitOperationDefinitionAssistant()
+//	{
+//		return new AExplicitOperationDefinitionAssistantInterpreter(this);
+//	}
 
 	public AImplicitFunctionDefinitionAssistantInterpreter createAImplicitFunctionDefinitionAssistant()
 	{
 		return new AImplicitFunctionDefinitionAssistantInterpreter(this);
 	}
+//
+//	public AImplicitOperationDefinitionAssistantInterpreter createAImplicitOperationDefinitionAssistant()
+//	{
+//		return new AImplicitOperationDefinitionAssistantInterpreter(this);
+//	}
 
-	public AImplicitOperationDefinitionAssistantInterpreter createAImplicitOperationDefinitionAssistant()
-	{
-		return new AImplicitOperationDefinitionAssistantInterpreter(this);
-	}
+//	public AImportedDefinitionAssistantInterpreter createAImportedDefinitionAssistant()
+//	{
+//		return new AImportedDefinitionAssistantInterpreter(this);
+//	}
 
-	public AImportedDefinitionAssistantInterpreter createAImportedDefinitionAssistant()
-	{
-		return new AImportedDefinitionAssistantInterpreter(this);
-	}
-
-	public AInheritedDefinitionAssistantInterpreter createAInheritedDefinitionAssistant()
-	{
-		return new AInheritedDefinitionAssistantInterpreter(this);
-	}
+//	public AInheritedDefinitionAssistantInterpreter createAInheritedDefinitionAssistant()
+//	{
+//		return new AInheritedDefinitionAssistantInterpreter(this);
+//	}
 
 	public AInstanceVariableDefinitionAssistantInterpreter createAInstanceVariableDefinitionAssistant()
 	{
