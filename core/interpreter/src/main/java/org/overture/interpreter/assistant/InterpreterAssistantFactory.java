@@ -21,16 +21,11 @@ import org.overture.interpreter.assistant.definition.ANamedTraceDefinitionAssist
 import org.overture.interpreter.assistant.definition.ARepeatTraceDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AStateDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ASystemClassDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.AValueDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PDefinitionListAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PTraceCoreDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PTraceDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AApplyExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ACaseAlternativeAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ACasesExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ADefExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AElseIfExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AExists1ExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AExistsExpAssistantInterpreter;
@@ -340,10 +335,10 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 //		return new AUntypedDefinitionAssistantInterpreter(this);
 //	}
 
-	public AValueDefinitionAssistantInterpreter createAValueDefinitionAssistant()
-	{
-		return new AValueDefinitionAssistantInterpreter(this);
-	}
+//	public AValueDefinitionAssistantInterpreter createAValueDefinitionAssistant()
+//	{
+//		return new AValueDefinitionAssistantInterpreter(this);
+//	}
 
 	public PDefinitionAssistantInterpreter createPDefinitionAssistant()
 	{
@@ -372,25 +367,25 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 
 	// expression
 
-	public AApplyExpAssistantInterpreter createAApplyExpAssistant()
-	{
-		return new AApplyExpAssistantInterpreter(this);
-	}
+//	public AApplyExpAssistantInterpreter createAApplyExpAssistant()
+//	{
+//		return new AApplyExpAssistantInterpreter(this);
+//	}
 
-	public ACaseAlternativeAssistantInterpreter createACaseAlternativeAssistant()
-	{
-		return new ACaseAlternativeAssistantInterpreter(this);
-	}
+//	public ACaseAlternativeAssistantInterpreter createACaseAlternativeAssistant()
+//	{
+//		return new ACaseAlternativeAssistantInterpreter(this);
+//	}
 
-	public ACasesExpAssistantInterpreter createACasesExpAssistant()
-	{
-		return new ACasesExpAssistantInterpreter(this);
-	}
+//	public ACasesExpAssistantInterpreter createACasesExpAssistant()
+//	{
+//		return new ACasesExpAssistantInterpreter(this);
+//	}
 
-	public ADefExpAssistantInterpreter createADefExpAssistant()
-	{
-		return new ADefExpAssistantInterpreter(this);
-	}
+//	public ADefExpAssistantInterpreter createADefExpAssistant()
+//	{
+//		return new ADefExpAssistantInterpreter(this);
+//	}
 
 	public AElseIfExpAssistantInterpreter createAElseIfExpAssistant()
 	{

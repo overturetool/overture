@@ -20,16 +20,11 @@ import org.overture.interpreter.assistant.definition.ANamedTraceDefinitionAssist
 import org.overture.interpreter.assistant.definition.ARepeatTraceDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AStateDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ASystemClassDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.AValueDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PDefinitionListAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PTraceCoreDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PTraceDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AApplyExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ACaseAlternativeAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ACasesExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ADefExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AElseIfExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AExists1ExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AExistsExpAssistantInterpreter;
@@ -213,7 +208,7 @@ public interface IInterpreterAssistantFactory extends
 
 	///AUntypedDefinitionAssistantInterpreter createAUntypedDefinitionAssistant();
 
-	AValueDefinitionAssistantInterpreter createAValueDefinitionAssistant();
+	//AValueDefinitionAssistantInterpreter createAValueDefinitionAssistant();
 
 	PDefinitionAssistantInterpreter createPDefinitionAssistant();
 
@@ -227,13 +222,13 @@ public interface IInterpreterAssistantFactory extends
 
 	// expression
 
-	AApplyExpAssistantInterpreter createAApplyExpAssistant();
+	//AApplyExpAssistantInterpreter createAApplyExpAssistant();
 
-	ACaseAlternativeAssistantInterpreter createACaseAlternativeAssistant();
+	//ACaseAlternativeAssistantInterpreter createACaseAlternativeAssistant();
 
-	ACasesExpAssistantInterpreter createACasesExpAssistant();
+	//ACasesExpAssistantInterpreter createACasesExpAssistant();
 
-	ADefExpAssistantInterpreter createADefExpAssistant();
+	//ADefExpAssistantInterpreter createADefExpAssistant();
 
 	AElseIfExpAssistantInterpreter createAElseIfExpAssistant();
 
