@@ -18,14 +18,9 @@ import org.overture.interpreter.assistant.definition.AExplicitFunctionDefinition
 import org.overture.interpreter.assistant.definition.AImplicitFunctionDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AMutexSyncDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ANamedTraceDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.ARenamedDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ARepeatTraceDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AStateDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ASystemClassDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.AThreadDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.ATraceDefinitionTermAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.ATypeDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.AUntypedDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AValueDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PDefinitionListAssistantInterpreter;
@@ -305,10 +300,10 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 //		return new APerSyncDefinitionAssistantInterpreter(this);
 //	}
 
-	public ARenamedDefinitionAssistantInterpreter createARenamedDefinitionAssistant()
-	{
-		return new ARenamedDefinitionAssistantInterpreter(this);
-	}
+//	public ARenamedDefinitionAssistantInterpreter createARenamedDefinitionAssistant()
+//	{
+//		return new ARenamedDefinitionAssistantInterpreter(this);
+//	}
 
 	public ARepeatTraceDefinitionAssistantInterpreter createARepeatTraceDefinitionAssistant()
 	{
@@ -325,25 +320,25 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 		return new ASystemClassDefinitionAssistantInterpreter(this);
 	}
 
-	public AThreadDefinitionAssistantInterpreter createAThreadDefinitionAssistant()
-	{
-		return new AThreadDefinitionAssistantInterpreter(this);
-	}
+//	public AThreadDefinitionAssistantInterpreter createAThreadDefinitionAssistant()
+//	{
+//		return new AThreadDefinitionAssistantInterpreter(this);
+//	}
 
-	public ATraceDefinitionTermAssistantInterpreter createATraceDefinitionTermAssistant()
-	{
-		return new ATraceDefinitionTermAssistantInterpreter(this);
-	}
+//	public ATraceDefinitionTermAssistantInterpreter createATraceDefinitionTermAssistant()
+//	{
+//		return new ATraceDefinitionTermAssistantInterpreter(this);
+//	}
 
-	public ATypeDefinitionAssistantInterpreter createATypeDefinitionAssistant()
-	{
-		return new ATypeDefinitionAssistantInterpreter(this);
-	}
+//	public ATypeDefinitionAssistantInterpreter createATypeDefinitionAssistant()
+//	{
+//		return new ATypeDefinitionAssistantInterpreter(this);
+//	}
 
-	public AUntypedDefinitionAssistantInterpreter createAUntypedDefinitionAssistant()
-	{
-		return new AUntypedDefinitionAssistantInterpreter(this);
-	}
+//	public AUntypedDefinitionAssistantInterpreter createAUntypedDefinitionAssistant()
+//	{
+//		return new AUntypedDefinitionAssistantInterpreter(this);
+//	}
 
 	public AValueDefinitionAssistantInterpreter createAValueDefinitionAssistant()
 	{
