@@ -26,13 +26,8 @@ import org.overture.interpreter.assistant.definition.PTraceCoreDefinitionAssista
 import org.overture.interpreter.assistant.definition.PTraceDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AFieldExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AFuncInstatiationExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AIfExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AIotaExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AIsExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AIsOfBaseClassExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AIsOfClassExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ALambdaExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.ALetBeStExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.ALetDefExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AMapCompMapExpAssistantInterpreter;
@@ -237,19 +232,19 @@ public interface IInterpreterAssistantFactory extends
 
 	//AForAllExpAssistantInterpreter createAForAllExpAssistant();
 
-	AFuncInstatiationExpAssistantInterpreter createAFuncInstatiationExpAssistant();
+	//AFuncInstatiationExpAssistantInterpreter createAFuncInstatiationExpAssistant();
 
-	AIfExpAssistantInterpreter createAIfExpAssistant();
+	//AIfExpAssistantInterpreter createAIfExpAssistant();
 
-	AIotaExpAssistantInterpreter createAIotaExpAssistant();
+	//AIotaExpAssistantInterpreter createAIotaExpAssistant();
 
-	AIsExpAssistantInterpreter createAIsExpAssistant();
+	//AIsExpAssistantInterpreter createAIsExpAssistant();
 
 	AIsOfBaseClassExpAssistantInterpreter createAIsOfBaseClassExpAssistant();
 
 	AIsOfClassExpAssistantInterpreter createAIsOfClassExpAssistant();
 
-	ALambdaExpAssistantInterpreter createALambdaExpAssistant();
+	//ALambdaExpAssistantInterpreter createALambdaExpAssistant();
 
 	ALetBeStExpAssistantInterpreter createALetBeStExpAssistant();
 

@@ -27,13 +27,8 @@ import org.overture.interpreter.assistant.definition.PTraceCoreDefinitionAssista
 import org.overture.interpreter.assistant.definition.PTraceDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AFieldExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AFuncInstatiationExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AIfExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AIotaExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AIsExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AIsOfBaseClassExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AIsOfClassExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ALambdaExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.ALetBeStExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.ALetDefExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AMapCompMapExpAssistantInterpreter;
@@ -412,25 +407,25 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 //		return new AForAllExpAssistantInterpreter(this);
 //	}
 
-	public AFuncInstatiationExpAssistantInterpreter createAFuncInstatiationExpAssistant()
-	{
-		return new AFuncInstatiationExpAssistantInterpreter(this);
-	}
+//	public AFuncInstatiationExpAssistantInterpreter createAFuncInstatiationExpAssistant()
+//	{
+//		return new AFuncInstatiationExpAssistantInterpreter(this);
+//	}
 
-	public AIfExpAssistantInterpreter createAIfExpAssistant()
-	{
-		return new AIfExpAssistantInterpreter(this);
-	}
+//	public AIfExpAssistantInterpreter createAIfExpAssistant()
+//	{
+//		return new AIfExpAssistantInterpreter(this);
+//	}
 
-	public AIotaExpAssistantInterpreter createAIotaExpAssistant()
-	{
-		return new AIotaExpAssistantInterpreter(this);
-	}
+//	public AIotaExpAssistantInterpreter createAIotaExpAssistant()
+//	{
+//		return new AIotaExpAssistantInterpreter(this);
+//	}
 
-	public AIsExpAssistantInterpreter createAIsExpAssistant()
-	{
-		return new AIsExpAssistantInterpreter(this);
-	}
+//	public AIsExpAssistantInterpreter createAIsExpAssistant()
+//	{
+//		return new AIsExpAssistantInterpreter(this);
+//	}
 
 	public AIsOfBaseClassExpAssistantInterpreter createAIsOfBaseClassExpAssistant()
 	{
@@ -442,10 +437,10 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 		return new AIsOfClassExpAssistantInterpreter(this);
 	}
 
-	public ALambdaExpAssistantInterpreter createALambdaExpAssistant()
-	{
-		return new ALambdaExpAssistantInterpreter(this);
-	}
+//	public ALambdaExpAssistantInterpreter createALambdaExpAssistant()
+//	{
+//		return new ALambdaExpAssistantInterpreter(this);
+//	}
 
 	public ALetBeStExpAssistantInterpreter createALetBeStExpAssistant()
 	{
