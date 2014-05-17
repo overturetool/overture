@@ -29,8 +29,6 @@ import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantIn
 import org.overture.interpreter.assistant.expression.AFieldExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AIsOfBaseClassExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AIsOfClassExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ALetBeStExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ALetDefExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AMapCompMapExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AMapEnumMapExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AMapletExpAssistantInterpreter;
@@ -442,15 +440,15 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 //		return new ALambdaExpAssistantInterpreter(this);
 //	}
 
-	public ALetBeStExpAssistantInterpreter createALetBeStExpAssistant()
-	{
-		return new ALetBeStExpAssistantInterpreter(this);
-	}
+//	public ALetBeStExpAssistantInterpreter createALetBeStExpAssistant()
+//	{
+//		return new ALetBeStExpAssistantInterpreter(this);
+//	}
 
-	public ALetDefExpAssistantInterpreter createALetDefExpAssistant()
-	{
-		return new ALetDefExpAssistantInterpreter(this);
-	}
+//	public ALetDefExpAssistantInterpreter createALetDefExpAssistant()
+//	{
+//		return new ALetDefExpAssistantInterpreter(this);
+//	}
 
 	public AMapCompMapExpAssistantInterpreter createAMapCompMapExpAssistant()
 	{
