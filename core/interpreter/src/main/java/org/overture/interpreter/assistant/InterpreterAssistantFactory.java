@@ -26,12 +26,7 @@ import org.overture.interpreter.assistant.definition.PDefinitionListAssistantInt
 import org.overture.interpreter.assistant.definition.PTraceCoreDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PTraceDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AElseIfExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AExists1ExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AExistsExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AFieldExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AFieldNumberExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AForAllExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AFuncInstatiationExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AIfExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AIotaExpAssistantInterpreter;
@@ -387,35 +382,35 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 //		return new ADefExpAssistantInterpreter(this);
 //	}
 
-	public AElseIfExpAssistantInterpreter createAElseIfExpAssistant()
-	{
-		return new AElseIfExpAssistantInterpreter(this);
-	}
+//	public AElseIfExpAssistantInterpreter createAElseIfExpAssistant()
+//	{
+//		return new AElseIfExpAssistantInterpreter(this);
+//	}
 
-	public AExists1ExpAssistantInterpreter createAExists1ExpAssistant()
-	{
-		return new AExists1ExpAssistantInterpreter(this);
-	}
+//	public AExists1ExpAssistantInterpreter createAExists1ExpAssistant()
+//	{
+//		return new AExists1ExpAssistantInterpreter(this);
+//	}
 
-	public AExistsExpAssistantInterpreter createAExistsExpAssistant()
-	{
-		return new AExistsExpAssistantInterpreter(this);
-	}
+//	public AExistsExpAssistantInterpreter createAExistsExpAssistant()
+//	{
+//		return new AExistsExpAssistantInterpreter(this);
+//	}
 
 	public AFieldExpAssistantInterpreter createAFieldExpAssistant()
 	{
 		return new AFieldExpAssistantInterpreter(this);
 	}
 
-	public AFieldNumberExpAssistantInterpreter createAFieldNumberExpAssistant()
-	{
-		return new AFieldNumberExpAssistantInterpreter(this);
-	}
+//	public AFieldNumberExpAssistantInterpreter createAFieldNumberExpAssistant()
+//	{
+//		return new AFieldNumberExpAssistantInterpreter(this);
+//	}
 
-	public AForAllExpAssistantInterpreter createAForAllExpAssistant()
-	{
-		return new AForAllExpAssistantInterpreter(this);
-	}
+//	public AForAllExpAssistantInterpreter createAForAllExpAssistant()
+//	{
+//		return new AForAllExpAssistantInterpreter(this);
+//	}
 
 	public AFuncInstatiationExpAssistantInterpreter createAFuncInstatiationExpAssistant()
 	{

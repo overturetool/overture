@@ -25,12 +25,7 @@ import org.overture.interpreter.assistant.definition.PDefinitionListAssistantInt
 import org.overture.interpreter.assistant.definition.PTraceCoreDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PTraceDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AElseIfExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AExists1ExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AExistsExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AFieldExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AFieldNumberExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AForAllExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AFuncInstatiationExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AIfExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AIotaExpAssistantInterpreter;
@@ -230,17 +225,17 @@ public interface IInterpreterAssistantFactory extends
 
 	//ADefExpAssistantInterpreter createADefExpAssistant();
 
-	AElseIfExpAssistantInterpreter createAElseIfExpAssistant();
+	//AElseIfExpAssistantInterpreter createAElseIfExpAssistant();
 
-	AExists1ExpAssistantInterpreter createAExists1ExpAssistant();
+	//AExists1ExpAssistantInterpreter createAExists1ExpAssistant();
 
-	AExistsExpAssistantInterpreter createAExistsExpAssistant();
+	//AExistsExpAssistantInterpreter createAExistsExpAssistant();
 
 	AFieldExpAssistantInterpreter createAFieldExpAssistant();
 
-	AFieldNumberExpAssistantInterpreter createAFieldNumberExpAssistant();
+	//AFieldNumberExpAssistantInterpreter createAFieldNumberExpAssistant();
 
-	AForAllExpAssistantInterpreter createAForAllExpAssistant();
+	//AForAllExpAssistantInterpreter createAForAllExpAssistant();
 
 	AFuncInstatiationExpAssistantInterpreter createAFuncInstatiationExpAssistant();
 
