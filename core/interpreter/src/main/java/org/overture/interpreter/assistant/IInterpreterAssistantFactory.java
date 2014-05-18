@@ -28,12 +28,6 @@ import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantIn
 import org.overture.interpreter.assistant.expression.AFieldExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AIsOfBaseClassExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AIsOfClassExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AMapCompMapExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AMapEnumMapExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AMapletExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AMkBasicExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AMkTypeExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AMuExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.ANarrowExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.ANewExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.APostOpExpAssistantInterpreter;
@@ -248,17 +242,17 @@ public interface IInterpreterAssistantFactory extends
 
 	//ALetDefExpAssistantInterpreter createALetDefExpAssistant();
 
-	AMapCompMapExpAssistantInterpreter createAMapCompMapExpAssistant();
-
-	AMapEnumMapExpAssistantInterpreter createAMapEnumMapExpAssistant();
-
-	AMapletExpAssistantInterpreter createAMapletExpAssistant();
-
-	AMkBasicExpAssistantInterpreter createAMkBasicExpAssistant();
-
-	AMkTypeExpAssistantInterpreter createAMkTypeExpAssistant();
-
-	AMuExpAssistantInterpreter createAMuExpAssistant();
+//	AMapCompMapExpAssistantInterpreter createAMapCompMapExpAssistant();
+//
+//	AMapEnumMapExpAssistantInterpreter createAMapEnumMapExpAssistant();
+//
+//	AMapletExpAssistantInterpreter createAMapletExpAssistant();
+//
+//	AMkBasicExpAssistantInterpreter createAMkBasicExpAssistant();
+//
+//	AMkTypeExpAssistantInterpreter createAMkTypeExpAssistant();
+//
+//	AMuExpAssistantInterpreter createAMuExpAssistant();
 
 	ANarrowExpAssistantInterpreter createANarrowExpAssistant();
 

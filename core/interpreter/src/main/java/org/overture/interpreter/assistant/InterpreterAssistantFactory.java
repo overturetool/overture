@@ -29,12 +29,6 @@ import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantIn
 import org.overture.interpreter.assistant.expression.AFieldExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AIsOfBaseClassExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AIsOfClassExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AMapCompMapExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AMapEnumMapExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AMapletExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AMkBasicExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AMkTypeExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AMuExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.ANarrowExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.ANewExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.APostOpExpAssistantInterpreter;
@@ -450,35 +444,35 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 //		return new ALetDefExpAssistantInterpreter(this);
 //	}
 
-	public AMapCompMapExpAssistantInterpreter createAMapCompMapExpAssistant()
-	{
-		return new AMapCompMapExpAssistantInterpreter(this);
-	}
-
-	public AMapEnumMapExpAssistantInterpreter createAMapEnumMapExpAssistant()
-	{
-		return new AMapEnumMapExpAssistantInterpreter(this);
-	}
-
-	public AMapletExpAssistantInterpreter createAMapletExpAssistant()
-	{
-		return new AMapletExpAssistantInterpreter(this);
-	}
-
-	public AMkBasicExpAssistantInterpreter createAMkBasicExpAssistant()
-	{
-		return new AMkBasicExpAssistantInterpreter(this);
-	}
-
-	public AMkTypeExpAssistantInterpreter createAMkTypeExpAssistant()
-	{
-		return new AMkTypeExpAssistantInterpreter(this);
-	}
-
-	public AMuExpAssistantInterpreter createAMuExpAssistant()
-	{
-		return new AMuExpAssistantInterpreter(this);
-	}
+//	public AMapCompMapExpAssistantInterpreter createAMapCompMapExpAssistant()
+//	{
+//		return new AMapCompMapExpAssistantInterpreter(this);
+//	}
+//
+//	public AMapEnumMapExpAssistantInterpreter createAMapEnumMapExpAssistant()
+//	{
+//		return new AMapEnumMapExpAssistantInterpreter(this);
+//	}
+//
+//	public AMapletExpAssistantInterpreter createAMapletExpAssistant()
+//	{
+//		return new AMapletExpAssistantInterpreter(this);
+//	}
+//
+//	public AMkBasicExpAssistantInterpreter createAMkBasicExpAssistant()
+//	{
+//		return new AMkBasicExpAssistantInterpreter(this);
+//	}
+//
+//	public AMkTypeExpAssistantInterpreter createAMkTypeExpAssistant()
+//	{
+//		return new AMkTypeExpAssistantInterpreter(this);
+//	}
+//
+//	public AMuExpAssistantInterpreter createAMuExpAssistant()
+//	{
+//		return new AMuExpAssistantInterpreter(this);
+//	}
 
 	public ANarrowExpAssistantInterpreter createANarrowExpAssistant()
 	{
