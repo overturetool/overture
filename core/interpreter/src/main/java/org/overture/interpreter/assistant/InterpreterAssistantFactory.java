@@ -29,26 +29,9 @@ import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantIn
 import org.overture.interpreter.assistant.expression.AFieldExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AIsOfBaseClassExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AIsOfClassExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ANarrowExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ANewExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.APostOpExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ARecordModifierAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ASameBaseClassExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ASameClassExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.ASeqCompSeqExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ASeqEnumSeqExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ASetCompSetExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ASetEnumSetExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ASetRangeSetExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ASubseqExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ATupleExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AVariableExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.SBinaryExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.SMapExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.SSeqExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.SSetExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.SUnaryExpAssistantInterpreter;
 import org.overture.interpreter.assistant.module.AModuleModulesAssistantInterpreter;
 import org.overture.interpreter.assistant.module.ModuleListAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.ABooleanPatternAssistantInterpreter;
@@ -474,105 +457,105 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 //		return new AMuExpAssistantInterpreter(this);
 //	}
 
-	public ANarrowExpAssistantInterpreter createANarrowExpAssistant()
-	{
-		return new ANarrowExpAssistantInterpreter(this);
-	}
-
-	public ANewExpAssistantInterpreter createANewExpAssistant()
-	{
-		return new ANewExpAssistantInterpreter(this);
-	}
+//	public ANarrowExpAssistantInterpreter createANarrowExpAssistant()
+//	{
+//		return new ANarrowExpAssistantInterpreter(this);
+//	}
+//
+//	public ANewExpAssistantInterpreter createANewExpAssistant()
+//	{
+//		return new ANewExpAssistantInterpreter(this);
+//	}
 
 	public APostOpExpAssistantInterpreter createAPostOpExpAssistant()
 	{
 		return new APostOpExpAssistantInterpreter(this);
 	}
 
-	public ARecordModifierAssistantInterpreter createARecordModifierAssistant()
-	{
-		return new ARecordModifierAssistantInterpreter(this);
-	}
-
-	public ASameBaseClassExpAssistantInterpreter createASameBaseClassExpAssistant()
-	{
-		return new ASameBaseClassExpAssistantInterpreter(this);
-	}
-
-	public ASameClassExpAssistantInterpreter createASameClassExpAssistant()
-	{
-		return new ASameClassExpAssistantInterpreter(this);
-	}
+//	public ARecordModifierAssistantInterpreter createARecordModifierAssistant()
+//	{
+//		return new ARecordModifierAssistantInterpreter(this);
+//	}
+//
+//	public ASameBaseClassExpAssistantInterpreter createASameBaseClassExpAssistant()
+//	{
+//		return new ASameBaseClassExpAssistantInterpreter(this);
+//	}
+//
+//	public ASameClassExpAssistantInterpreter createASameClassExpAssistant()
+//	{
+//		return new ASameClassExpAssistantInterpreter(this);
+//	}
 
 	public ASeqCompSeqExpAssistantInterpreter createASeqCompSeqExpAssistant()
 	{
 		return new ASeqCompSeqExpAssistantInterpreter(this);
 	}
 
-	public ASeqEnumSeqExpAssistantInterpreter createASeqEnumSeqExpAssistant()
-	{
-		return new ASeqEnumSeqExpAssistantInterpreter(this);
-	}
-
-	public ASetCompSetExpAssistantInterpreter createASetCompSetExpAssistant()
-	{
-		return new ASetCompSetExpAssistantInterpreter(this);
-	}
-
-	public ASetEnumSetExpAssistantInterpreter createASetEnumSetExpAssistant()
-	{
-		return new ASetEnumSetExpAssistantInterpreter(this);
-	}
-
-	public ASetRangeSetExpAssistantInterpreter createASetRangeSetExpAssistant()
-	{
-		return new ASetRangeSetExpAssistantInterpreter(this);
-	}
-
-	public ASubseqExpAssistantInterpreter createASubseqExpAssistant()
-	{
-		return new ASubseqExpAssistantInterpreter(this);
-	}
-
-	public ATupleExpAssistantInterpreter createATupleExpAssistant()
-	{
-		return new ATupleExpAssistantInterpreter(this);
-	}
-
-	public AVariableExpAssistantInterpreter createAVariableExpAssistant()
-	{
-		return new AVariableExpAssistantInterpreter(this);
-	}
+//	public ASeqEnumSeqExpAssistantInterpreter createASeqEnumSeqExpAssistant()
+//	{
+//		return new ASeqEnumSeqExpAssistantInterpreter(this);
+//	}
+//
+//	public ASetCompSetExpAssistantInterpreter createASetCompSetExpAssistant()
+//	{
+//		return new ASetCompSetExpAssistantInterpreter(this);
+//	}
+//
+//	public ASetEnumSetExpAssistantInterpreter createASetEnumSetExpAssistant()
+//	{
+//		return new ASetEnumSetExpAssistantInterpreter(this);
+//	}
+//
+//	public ASetRangeSetExpAssistantInterpreter createASetRangeSetExpAssistant()
+//	{
+//		return new ASetRangeSetExpAssistantInterpreter(this);
+//	}
+//
+//	public ASubseqExpAssistantInterpreter createASubseqExpAssistant()
+//	{
+//		return new ASubseqExpAssistantInterpreter(this);
+//	}
+//
+//	public ATupleExpAssistantInterpreter createATupleExpAssistant()
+//	{
+//		return new ATupleExpAssistantInterpreter(this);
+//	}
+//
+//	public AVariableExpAssistantInterpreter createAVariableExpAssistant()
+//	{
+//		return new AVariableExpAssistantInterpreter(this);
+//	}
 
 	public PExpAssistantInterpreter createPExpAssistant()
 	{
 		return new PExpAssistantInterpreter(this);
 	}
 
-	public SBinaryExpAssistantInterpreter createSBinaryExpAssistant()
-	{
-		return new SBinaryExpAssistantInterpreter(this);
-	}
-
-	public SMapExpAssistantInterpreter createSMapExpAssistant()
-	{
-		return new SMapExpAssistantInterpreter(this);
-	}
-
-	public SSeqExpAssistantInterpreter createSSeqExpAssistant()
-	{
-		return new SSeqExpAssistantInterpreter(this);
-	}
-
-	public SSetExpAssistantInterpreter createSSetExpAssistant()
-	{
-		return new SSetExpAssistantInterpreter(this);
-	}
-
-	public SUnaryExpAssistantInterpreter createSUnaryExpAssistant()
-	{
-		return new SUnaryExpAssistantInterpreter(this);
-	}
+//	public SBinaryExpAssistantInterpreter createSBinaryExpAssistant()
+//	{
+//		return new SBinaryExpAssistantInterpreter(this);
+//	}
+//
+//	public SMapExpAssistantInterpreter createSMapExpAssistant()
+//	{
+//		return new SMapExpAssistantInterpreter(this);
+//	}
+//
+//	public SSeqExpAssistantInterpreter createSSeqExpAssistant()
+//	{
+//		return new SSeqExpAssistantInterpreter(this);
+//	}
+//
+//	public SSetExpAssistantInterpreter createSSetExpAssistant()
+//	{
+//		return new SSetExpAssistantInterpreter(this);
+//	}
+//
+//	public SUnaryExpAssistantInterpreter createSUnaryExpAssistant()
+//	{
+//		return new SUnaryExpAssistantInterpreter(this);
+//	}
 
 	// module
 

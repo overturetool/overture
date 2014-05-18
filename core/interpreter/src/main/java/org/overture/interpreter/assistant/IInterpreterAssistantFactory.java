@@ -28,26 +28,9 @@ import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantIn
 import org.overture.interpreter.assistant.expression.AFieldExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AIsOfBaseClassExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AIsOfClassExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ANarrowExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ANewExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.APostOpExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ARecordModifierAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ASameBaseClassExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ASameClassExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.ASeqCompSeqExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ASeqEnumSeqExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ASetCompSetExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ASetEnumSetExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ASetRangeSetExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ASubseqExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ATupleExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AVariableExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.SBinaryExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.SMapExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.SSeqExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.SSetExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.SUnaryExpAssistantInterpreter;
 import org.overture.interpreter.assistant.module.AModuleModulesAssistantInterpreter;
 import org.overture.interpreter.assistant.module.ModuleListAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.ABooleanPatternAssistantInterpreter;
@@ -254,45 +237,45 @@ public interface IInterpreterAssistantFactory extends
 //
 //	AMuExpAssistantInterpreter createAMuExpAssistant();
 
-	ANarrowExpAssistantInterpreter createANarrowExpAssistant();
-
-	ANewExpAssistantInterpreter createANewExpAssistant();
+//	ANarrowExpAssistantInterpreter createANarrowExpAssistant();
+//
+//	ANewExpAssistantInterpreter createANewExpAssistant();
 
 	APostOpExpAssistantInterpreter createAPostOpExpAssistant();
 
-	ARecordModifierAssistantInterpreter createARecordModifierAssistant();
-
-	ASameBaseClassExpAssistantInterpreter createASameBaseClassExpAssistant();
-
-	ASameClassExpAssistantInterpreter createASameClassExpAssistant();
+//	ARecordModifierAssistantInterpreter createARecordModifierAssistant();
+//
+//	ASameBaseClassExpAssistantInterpreter createASameBaseClassExpAssistant();
+//
+//	ASameClassExpAssistantInterpreter createASameClassExpAssistant();
 
 	ASeqCompSeqExpAssistantInterpreter createASeqCompSeqExpAssistant();
 
-	ASeqEnumSeqExpAssistantInterpreter createASeqEnumSeqExpAssistant();
-
-	ASetCompSetExpAssistantInterpreter createASetCompSetExpAssistant();
-
-	ASetEnumSetExpAssistantInterpreter createASetEnumSetExpAssistant();
-
-	ASetRangeSetExpAssistantInterpreter createASetRangeSetExpAssistant();
-
-	ASubseqExpAssistantInterpreter createASubseqExpAssistant();
-
-	ATupleExpAssistantInterpreter createATupleExpAssistant();
-
-	AVariableExpAssistantInterpreter createAVariableExpAssistant();
+//	ASeqEnumSeqExpAssistantInterpreter createASeqEnumSeqExpAssistant();
+//
+//	ASetCompSetExpAssistantInterpreter createASetCompSetExpAssistant();
+//
+//	ASetEnumSetExpAssistantInterpreter createASetEnumSetExpAssistant();
+//
+//	ASetRangeSetExpAssistantInterpreter createASetRangeSetExpAssistant();
+//
+//	ASubseqExpAssistantInterpreter createASubseqExpAssistant();
+//
+//	ATupleExpAssistantInterpreter createATupleExpAssistant();
+//
+//	AVariableExpAssistantInterpreter createAVariableExpAssistant();
 
 	PExpAssistantInterpreter createPExpAssistant();
 
-	SBinaryExpAssistantInterpreter createSBinaryExpAssistant();
-
-	SMapExpAssistantInterpreter createSMapExpAssistant();
-
-	SSeqExpAssistantInterpreter createSSeqExpAssistant();
-
-	SSetExpAssistantInterpreter createSSetExpAssistant();
-
-	SUnaryExpAssistantInterpreter createSUnaryExpAssistant();
+//	SBinaryExpAssistantInterpreter createSBinaryExpAssistant();
+//
+//	SMapExpAssistantInterpreter createSMapExpAssistant();
+//
+//	SSeqExpAssistantInterpreter createSSeqExpAssistant();
+//
+//	SSetExpAssistantInterpreter createSSetExpAssistant();
+//
+//	SUnaryExpAssistantInterpreter createSUnaryExpAssistant();
 
 	// module
 
