@@ -29,7 +29,6 @@ import org.overture.interpreter.assistant.expression.AFieldExpAssistantInterpret
 import org.overture.interpreter.assistant.expression.AIsOfBaseClassExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AIsOfClassExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.APostOpExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ASeqCompSeqExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.assistant.module.AModuleModulesAssistantInterpreter;
 import org.overture.interpreter.assistant.module.ModuleListAssistantInterpreter;
@@ -249,7 +248,7 @@ public interface IInterpreterAssistantFactory extends
 //
 //	ASameClassExpAssistantInterpreter createASameClassExpAssistant();
 
-	ASeqCompSeqExpAssistantInterpreter createASeqCompSeqExpAssistant();
+//	ASeqCompSeqExpAssistantInterpreter createASeqCompSeqExpAssistant();
 
 //	ASeqEnumSeqExpAssistantInterpreter createASeqEnumSeqExpAssistant();
 //

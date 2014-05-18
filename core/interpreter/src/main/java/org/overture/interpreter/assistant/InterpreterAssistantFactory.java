@@ -30,7 +30,6 @@ import org.overture.interpreter.assistant.expression.AFieldExpAssistantInterpret
 import org.overture.interpreter.assistant.expression.AIsOfBaseClassExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AIsOfClassExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.APostOpExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ASeqCompSeqExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.assistant.module.AModuleModulesAssistantInterpreter;
 import org.overture.interpreter.assistant.module.ModuleListAssistantInterpreter;
@@ -487,10 +486,10 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 //		return new ASameClassExpAssistantInterpreter(this);
 //	}
 
-	public ASeqCompSeqExpAssistantInterpreter createASeqCompSeqExpAssistant()
-	{
-		return new ASeqCompSeqExpAssistantInterpreter(this);
-	}
+//	public ASeqCompSeqExpAssistantInterpreter createASeqCompSeqExpAssistant()
+//	{
+//		return new ASeqCompSeqExpAssistantInterpreter(this);
+//	}
 
 //	public ASeqEnumSeqExpAssistantInterpreter createASeqEnumSeqExpAssistant()
 //	{
