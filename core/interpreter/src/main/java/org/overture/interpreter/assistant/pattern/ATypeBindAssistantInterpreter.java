@@ -27,9 +27,9 @@ public class ATypeBindAssistantInterpreter extends ATypeBindAssistantTC
 //		return PTypeAssistantInterpreter.getAllValues(bind.getType(), ctxt);
 //	}
 
-	public static ValueList getValues(ATypeBind bind, ObjectContext ctxt)
-	{
-		return new ValueList();
-	}
+//	public static ValueList getValues(ATypeBind bind, ObjectContext ctxt)
+//	{
+//		return new ValueList();
+//	}
 
 }

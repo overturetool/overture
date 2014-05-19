@@ -33,29 +33,12 @@ import org.overture.interpreter.assistant.expression.APostOpExpAssistantInterpre
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.assistant.module.AModuleModulesAssistantInterpreter;
 import org.overture.interpreter.assistant.module.ModuleListAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ABooleanPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ACharacterPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AConcatenationPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AExpressionPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AIdentifierPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AIgnorePatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AIntegerPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AMapPatternAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.AMapPatternMapletAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AMapUnionPatternAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.ANilPatternAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.AQuotePatternAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.ARealPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ARecordPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ASeqPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ASetBindAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ASetMultipleBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.ASetPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AStringPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ATuplePatternAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.ATypeBindAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ATypeMultipleBindAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AUnionPatternAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PMultipleBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
@@ -570,55 +553,55 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 
 	// pattern
 
-	public ABooleanPatternAssistantInterpreter createABooleanPatternAssistant()
-	{
-		return new ABooleanPatternAssistantInterpreter(this);
-	}
-
-	public ACharacterPatternAssistantInterpreter createACharacterPatternAssistant()
-	{
-		return new ACharacterPatternAssistantInterpreter(this);
-	}
-
-	public AConcatenationPatternAssistantInterpreter createAConcatenationPatternAssistant()
-	{
-		return new AConcatenationPatternAssistantInterpreter(this);
-	}
-
-	public AExpressionPatternAssistantInterpreter createAExpressionPatternAssistant()
-	{
-		return new AExpressionPatternAssistantInterpreter(this);
-	}
-
-	public AIdentifierPatternAssistantInterpreter createAIdentifierPatternAssistant()
-	{
-		return new AIdentifierPatternAssistantInterpreter(this);
-	}
-
-	public AIgnorePatternAssistantInterpreter createAIgnorePatternAssistant()
-	{
-		return new AIgnorePatternAssistantInterpreter(this);
-	}
-
-	public AIntegerPatternAssistantInterpreter createAIntegerPatternAssistant()
-	{
-		return new AIntegerPatternAssistantInterpreter(this);
-	}
-
-	public AMapPatternAssistantInterpreter createAMapPatternAssistant()
-	{
-		return new AMapPatternAssistantInterpreter(this);
-	}
+//	public ABooleanPatternAssistantInterpreter createABooleanPatternAssistant()
+//	{
+//		return new ABooleanPatternAssistantInterpreter(this);
+//	}
+//
+//	public ACharacterPatternAssistantInterpreter createACharacterPatternAssistant()
+//	{
+//		return new ACharacterPatternAssistantInterpreter(this);
+//	}
+//
+//	public AConcatenationPatternAssistantInterpreter createAConcatenationPatternAssistant()
+//	{
+//		return new AConcatenationPatternAssistantInterpreter(this);
+//	}
+//
+//	public AExpressionPatternAssistantInterpreter createAExpressionPatternAssistant()
+//	{
+//		return new AExpressionPatternAssistantInterpreter(this);
+//	}
+//
+//	public AIdentifierPatternAssistantInterpreter createAIdentifierPatternAssistant()
+//	{
+//		return new AIdentifierPatternAssistantInterpreter(this);
+//	}
+//
+//	public AIgnorePatternAssistantInterpreter createAIgnorePatternAssistant()
+//	{
+//		return new AIgnorePatternAssistantInterpreter(this);
+//	}
+//
+//	public AIntegerPatternAssistantInterpreter createAIntegerPatternAssistant()
+//	{
+//		return new AIntegerPatternAssistantInterpreter(this);
+//	}
+//
+//	public AMapPatternAssistantInterpreter createAMapPatternAssistant()
+//	{
+//		return new AMapPatternAssistantInterpreter(this);
+//	}
 
 	public AMapPatternMapletAssistantInterpreter createAMapPatternMapletAssistant()
 	{
 		return new AMapPatternMapletAssistantInterpreter(this);
 	}
 
-	public AMapUnionPatternAssistantInterpreter createAMapUnionPatternAssistant()
-	{
-		return new AMapUnionPatternAssistantInterpreter(this);
-	}
+//	public AMapUnionPatternAssistantInterpreter createAMapUnionPatternAssistant()
+//	{
+//		return new AMapUnionPatternAssistantInterpreter(this);
+//	}
 
 	public ANilPatternAssistantInterpreter createANilPatternAssistant()
 	{
@@ -635,55 +618,55 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 		return new ARealPatternAssistantInterpreter(this);
 	}
 
-	public ARecordPatternAssistantInterpreter createARecordPatternAssistant()
-	{
-		return new ARecordPatternAssistantInterpreter(this);
-	}
+//	public ARecordPatternAssistantInterpreter createARecordPatternAssistant()
+//	{
+//		return new ARecordPatternAssistantInterpreter(this);
+//	}
 
-	public ASeqPatternAssistantInterpreter createASeqPatternAssistant()
-	{
-		return new ASeqPatternAssistantInterpreter(this);
-	}
+//	public ASeqPatternAssistantInterpreter createASeqPatternAssistant()
+//	{
+//		return new ASeqPatternAssistantInterpreter(this);
+//	}
 
-	public ASetBindAssistantInterpreter createASetBindAssistant()
-	{
-		return new ASetBindAssistantInterpreter(this);
-	}
+//	public ASetBindAssistantInterpreter createASetBindAssistant()
+//	{
+//		return new ASetBindAssistantInterpreter(this);
+//	}
 
-	public ASetMultipleBindAssistantInterpreter createASetMultipleBindAssistant()
-	{
-		return new ASetMultipleBindAssistantInterpreter(this);
-	}
+//	public ASetMultipleBindAssistantInterpreter createASetMultipleBindAssistant()
+//	{
+//		return new ASetMultipleBindAssistantInterpreter(this);
+//	}
 
 	public ASetPatternAssistantInterpreter createASetPatternAssistant()
 	{
 		return new ASetPatternAssistantInterpreter(this);
 	}
 
-	public AStringPatternAssistantInterpreter createAStringPatternAssistant()
-	{
-		return new AStringPatternAssistantInterpreter(this);
-	}
+//	public AStringPatternAssistantInterpreter createAStringPatternAssistant()
+//	{
+//		return new AStringPatternAssistantInterpreter(this);
+//	}
 
-	public ATuplePatternAssistantInterpreter createATuplePatternAssistant()
-	{
-		return new ATuplePatternAssistantInterpreter(this);
-	}
+//	public ATuplePatternAssistantInterpreter createATuplePatternAssistant()
+//	{
+//		return new ATuplePatternAssistantInterpreter(this);
+//	}
 
 	public ATypeBindAssistantInterpreter createATypeBindAssistant()
 	{
 		return new ATypeBindAssistantInterpreter(this);
 	}
 
-	public ATypeMultipleBindAssistantInterpreter createATypeMultipleBindAssistant()
-	{
-		return new ATypeMultipleBindAssistantInterpreter(this);
-	}
+//	public ATypeMultipleBindAssistantInterpreter createATypeMultipleBindAssistant()
+//	{
+//		return new ATypeMultipleBindAssistantInterpreter(this);
+//	}
 
-	public AUnionPatternAssistantInterpreter createAUnionPatternAssistant()
-	{
-		return new AUnionPatternAssistantInterpreter(this);
-	}
+//	public AUnionPatternAssistantInterpreter createAUnionPatternAssistant()
+//	{
+//		return new AUnionPatternAssistantInterpreter(this);
+//	}
 
 	public PBindAssistantInterpreter createPBindAssistant()
 	{

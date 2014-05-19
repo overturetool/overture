@@ -40,7 +40,8 @@ public class BindValueCollector extends QuestionAnswerAdaptor<ObjectContext, Val
 	public ValueList caseATypeBind(ATypeBind bind, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		return ATypeBindAssistantInterpreter.getValues((ATypeBind) bind, ctxt);
+		//return ATypeBindAssistantInterpreter.getValues((ATypeBind) bind, ctxt);
+		return new ValueList();
 	}
 	
 	@Override

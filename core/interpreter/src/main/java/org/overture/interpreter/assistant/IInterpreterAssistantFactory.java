@@ -32,29 +32,11 @@ import org.overture.interpreter.assistant.expression.APostOpExpAssistantInterpre
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.assistant.module.AModuleModulesAssistantInterpreter;
 import org.overture.interpreter.assistant.module.ModuleListAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ABooleanPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ACharacterPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AConcatenationPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AExpressionPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AIdentifierPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AIgnorePatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AIntegerPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AMapPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AMapPatternMapletAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AMapUnionPatternAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.ANilPatternAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.AQuotePatternAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.ARealPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ARecordPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ASeqPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ASetBindAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ASetMultipleBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.ASetPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AStringPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ATuplePatternAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.ATypeBindAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ATypeMultipleBindAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AUnionPatternAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PMultipleBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
@@ -284,25 +266,25 @@ public interface IInterpreterAssistantFactory extends
 
 	// pattern
 
-	ABooleanPatternAssistantInterpreter createABooleanPatternAssistant();
-
-	ACharacterPatternAssistantInterpreter createACharacterPatternAssistant();
-
-	AConcatenationPatternAssistantInterpreter createAConcatenationPatternAssistant();
-
-	AExpressionPatternAssistantInterpreter createAExpressionPatternAssistant();
-
-	AIdentifierPatternAssistantInterpreter createAIdentifierPatternAssistant();
-
-	AIgnorePatternAssistantInterpreter createAIgnorePatternAssistant();
-
-	AIntegerPatternAssistantInterpreter createAIntegerPatternAssistant();
-
-	AMapPatternAssistantInterpreter createAMapPatternAssistant();
-
-	AMapPatternMapletAssistantInterpreter createAMapPatternMapletAssistant();
-
-	AMapUnionPatternAssistantInterpreter createAMapUnionPatternAssistant();
+//	ABooleanPatternAssistantInterpreter createABooleanPatternAssistant();
+//
+//	ACharacterPatternAssistantInterpreter createACharacterPatternAssistant();
+//
+//	AConcatenationPatternAssistantInterpreter createAConcatenationPatternAssistant();
+//
+//	AExpressionPatternAssistantInterpreter createAExpressionPatternAssistant();
+//
+//	AIdentifierPatternAssistantInterpreter createAIdentifierPatternAssistant();
+//
+//	AIgnorePatternAssistantInterpreter createAIgnorePatternAssistant();
+//
+//	AIntegerPatternAssistantInterpreter createAIntegerPatternAssistant();
+//
+//	AMapPatternAssistantInterpreter createAMapPatternAssistant();
+//
+//	AMapPatternMapletAssistantInterpreter createAMapPatternMapletAssistant();
+//
+//	AMapUnionPatternAssistantInterpreter createAMapUnionPatternAssistant();
 
 	ANilPatternAssistantInterpreter createANilPatternAssistant();
 
@@ -310,25 +292,25 @@ public interface IInterpreterAssistantFactory extends
 
 	ARealPatternAssistantInterpreter createARealPatternAssistant();
 
-	ARecordPatternAssistantInterpreter createARecordPatternAssistant();
+	//ARecordPatternAssistantInterpreter createARecordPatternAssistant();
 
-	ASeqPatternAssistantInterpreter createASeqPatternAssistant();
+	//ASeqPatternAssistantInterpreter createASeqPatternAssistant();
 
-	ASetBindAssistantInterpreter createASetBindAssistant();
+	//ASetBindAssistantInterpreter createASetBindAssistant();
 
-	ASetMultipleBindAssistantInterpreter createASetMultipleBindAssistant();
+	//ASetMultipleBindAssistantInterpreter createASetMultipleBindAssistant();
 
 	ASetPatternAssistantInterpreter createASetPatternAssistant();
 
-	AStringPatternAssistantInterpreter createAStringPatternAssistant();
+	//AStringPatternAssistantInterpreter createAStringPatternAssistant();
 
-	ATuplePatternAssistantInterpreter createATuplePatternAssistant();
+	//ATuplePatternAssistantInterpreter createATuplePatternAssistant();
 
 	ATypeBindAssistantInterpreter createATypeBindAssistant();
 
-	ATypeMultipleBindAssistantInterpreter createATypeMultipleBindAssistant();
+	//ATypeMultipleBindAssistantInterpreter createATypeMultipleBindAssistant();
 
-	AUnionPatternAssistantInterpreter createAUnionPatternAssistant();
+	//AUnionPatternAssistantInterpreter createAUnionPatternAssistant();
 
 	PBindAssistantInterpreter createPBindAssistant();
 

@@ -16,7 +16,6 @@ import org.overture.ast.patterns.ATuplePattern;
 import org.overture.ast.patterns.AUnionPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.pattern.ASeqPatternAssistantInterpreter;
 
 public class ConstrainedPatternChecker extends AnswerAdaptor<Boolean>
 {
