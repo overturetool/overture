@@ -40,30 +40,10 @@ import org.overture.interpreter.assistant.pattern.PBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PMultipleBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PPatternListAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AAlwaysStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AAssignmentStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AAtomicStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ACallObjectStatementAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ACallStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.ACaseAlternativeStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ACasesStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ACyclesStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ADurationStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AElseIfStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AExitStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AForAllStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AForIndexStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AForPatternBindStmAssitantInterpreter;
-import org.overture.interpreter.assistant.statement.AIfStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ALetBeStStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AReturnStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.AStartStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ATixeStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.ATixeStmtAlternativeAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ATrapStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AWhileStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.PStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.SLetDefStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.SSimpleBlockStmAssistantInterpreter;
 import org.overture.interpreter.assistant.type.ABooleanBasicTypeAssistantInterpreter;
 import org.overture.interpreter.assistant.type.AInMapMapTypeAssistantInterpreter;
@@ -321,53 +301,53 @@ public interface IInterpreterAssistantFactory extends
 
 	// statement
 
-	AAlwaysStmAssistantInterpreter createAAlwaysStmAssistant();
-
-	AAssignmentStmAssistantInterpreter createAAssignmentStmAssistant();
-
-	AAtomicStmAssistantInterpreter createAAtomicStmAssistant();
-
-	ACallObjectStatementAssistantInterpreter createACallObjectStatementAssistant();
-
-	ACallStmAssistantInterpreter createACallStmAssistant();
+//	AAlwaysStmAssistantInterpreter createAAlwaysStmAssistant();
+//
+//	AAssignmentStmAssistantInterpreter createAAssignmentStmAssistant();
+//
+//	AAtomicStmAssistantInterpreter createAAtomicStmAssistant();
+//
+//	ACallObjectStatementAssistantInterpreter createACallObjectStatementAssistant();
+//
+//	ACallStmAssistantInterpreter createACallStmAssistant();
 
 	ACaseAlternativeStmAssistantInterpreter createACaseAlternativeStmAssistant();
 
-	ACasesStmAssistantInterpreter createACasesStmAssistant();
-
-	ACyclesStmAssistantInterpreter createACyclesStmAssistant();
-
-	ADurationStmAssistantInterpreter createADurationStmAssistant();
-
-	AElseIfStmAssistantInterpreter createAElseIfStmAssistant();
-
-	AExitStmAssistantInterpreter createAExitStmAssistant();
-
-	AForAllStmAssistantInterpreter createAForAllStmAssistant();
-
-	AForIndexStmAssistantInterpreter createAForIndexStmAssistant();
-
-	AForPatternBindStmAssitantInterpreter createAForPatternBindStmAssitant();
-
-	AIfStmAssistantInterpreter createAIfStmAssistant();
-
-	ALetBeStStmAssistantInterpreter createALetBeStStmAssistant();
-
-	AReturnStmAssistantInterpreter createAReturnStmAssistant();
+//	ACasesStmAssistantInterpreter createACasesStmAssistant();
+//
+//	ACyclesStmAssistantInterpreter createACyclesStmAssistant();
+//
+//	ADurationStmAssistantInterpreter createADurationStmAssistant();
+//
+//	AElseIfStmAssistantInterpreter createAElseIfStmAssistant();
+//
+//	AExitStmAssistantInterpreter createAExitStmAssistant();
+//
+//	AForAllStmAssistantInterpreter createAForAllStmAssistant();
+//
+//	AForIndexStmAssistantInterpreter createAForIndexStmAssistant();
+//
+//	AForPatternBindStmAssitantInterpreter createAForPatternBindStmAssitant();
+//
+//	AIfStmAssistantInterpreter createAIfStmAssistant();
+//
+//	ALetBeStStmAssistantInterpreter createALetBeStStmAssistant();
+//
+//	AReturnStmAssistantInterpreter createAReturnStmAssistant();
 
 	AStartStmAssistantInterpreter createAStartStmAssistant();
 
-	ATixeStmAssistantInterpreter createATixeStmAssistant();
+	//ATixeStmAssistantInterpreter createATixeStmAssistant();
 
 	ATixeStmtAlternativeAssistantInterpreter createATixeStmtAlternativeAssistant();
 
-	ATrapStmAssistantInterpreter createATrapStmAssistant();
+	//ATrapStmAssistantInterpreter createATrapStmAssistant();
 
-	AWhileStmAssistantInterpreter createAWhileStmAssistant();
+	//AWhileStmAssistantInterpreter createAWhileStmAssistant();
 
 	PStmAssistantInterpreter createPStmAssistant();
 
-	SLetDefStmAssistantInterpreter createSLetDefStmAssistant();
+	//SLetDefStmAssistantInterpreter createSLetDefStmAssistant();
 
 	SSimpleBlockStmAssistantInterpreter createSSimpleBlockStmAssistant();
 

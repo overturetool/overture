@@ -42,30 +42,10 @@ import org.overture.interpreter.assistant.pattern.PBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PMultipleBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PPatternListAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AAlwaysStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AAssignmentStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AAtomicStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ACallObjectStatementAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ACallStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.ACaseAlternativeStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ACasesStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ACyclesStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ADurationStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AElseIfStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AExitStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AForAllStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AForIndexStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AForPatternBindStmAssitantInterpreter;
-import org.overture.interpreter.assistant.statement.AIfStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ALetBeStStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AReturnStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.AStartStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ATixeStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.ATixeStmtAlternativeAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ATrapStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AWhileStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.PStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.SLetDefStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.SSimpleBlockStmAssistantInterpreter;
 import org.overture.interpreter.assistant.type.ABooleanBasicTypeAssistantInterpreter;
 import org.overture.interpreter.assistant.type.AInMapMapTypeAssistantInterpreter;
@@ -689,125 +669,125 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 
 	// statement
 
-	public AAlwaysStmAssistantInterpreter createAAlwaysStmAssistant()
-	{
-		return new AAlwaysStmAssistantInterpreter(this);
-	}
-
-	public AAssignmentStmAssistantInterpreter createAAssignmentStmAssistant()
-	{
-		return new AAssignmentStmAssistantInterpreter(this);
-	}
-
-	public AAtomicStmAssistantInterpreter createAAtomicStmAssistant()
-	{
-		return new AAtomicStmAssistantInterpreter(this);
-	}
-
-	public ACallObjectStatementAssistantInterpreter createACallObjectStatementAssistant()
-	{
-		return new ACallObjectStatementAssistantInterpreter(this);
-	}
-
-	public ACallStmAssistantInterpreter createACallStmAssistant()
-	{
-		return new ACallStmAssistantInterpreter(this);
-	}
+//	public AAlwaysStmAssistantInterpreter createAAlwaysStmAssistant()
+//	{
+//		return new AAlwaysStmAssistantInterpreter(this);
+//	}
+//
+//	public AAssignmentStmAssistantInterpreter createAAssignmentStmAssistant()
+//	{
+//		return new AAssignmentStmAssistantInterpreter(this);
+//	}
+//
+//	public AAtomicStmAssistantInterpreter createAAtomicStmAssistant()
+//	{
+//		return new AAtomicStmAssistantInterpreter(this);
+//	}
+//
+//	public ACallObjectStatementAssistantInterpreter createACallObjectStatementAssistant()
+//	{
+//		return new ACallObjectStatementAssistantInterpreter(this);
+//	}
+//
+//	public ACallStmAssistantInterpreter createACallStmAssistant()
+//	{
+//		return new ACallStmAssistantInterpreter(this);
+//	}
 
 	public ACaseAlternativeStmAssistantInterpreter createACaseAlternativeStmAssistant()
 	{
 		return new ACaseAlternativeStmAssistantInterpreter(this);
 	}
 
-	public ACasesStmAssistantInterpreter createACasesStmAssistant()
-	{
-		return new ACasesStmAssistantInterpreter(this);
-	}
-
-	public ACyclesStmAssistantInterpreter createACyclesStmAssistant()
-	{
-		return new ACyclesStmAssistantInterpreter(this);
-	}
-
-	public ADurationStmAssistantInterpreter createADurationStmAssistant()
-	{
-		return new ADurationStmAssistantInterpreter(this);
-	}
-
-	public AElseIfStmAssistantInterpreter createAElseIfStmAssistant()
-	{
-		return new AElseIfStmAssistantInterpreter(this);
-	}
-
-	public AExitStmAssistantInterpreter createAExitStmAssistant()
-	{
-		return new AExitStmAssistantInterpreter(this);
-	}
-
-	public AForAllStmAssistantInterpreter createAForAllStmAssistant()
-	{
-		return new AForAllStmAssistantInterpreter(this);
-	}
-
-	public AForIndexStmAssistantInterpreter createAForIndexStmAssistant()
-	{
-		return new AForIndexStmAssistantInterpreter(this);
-	}
-
-	public AForPatternBindStmAssitantInterpreter createAForPatternBindStmAssitant()
-	{
-		return new AForPatternBindStmAssitantInterpreter(this);
-	}
-
-	public AIfStmAssistantInterpreter createAIfStmAssistant()
-	{
-		return new AIfStmAssistantInterpreter(this);
-	}
-
-	public ALetBeStStmAssistantInterpreter createALetBeStStmAssistant()
-	{
-		return new ALetBeStStmAssistantInterpreter(this);
-	}
-
-	public AReturnStmAssistantInterpreter createAReturnStmAssistant()
-	{
-		return new AReturnStmAssistantInterpreter(this);
-	}
+//	public ACasesStmAssistantInterpreter createACasesStmAssistant()
+//	{
+//		return new ACasesStmAssistantInterpreter(this);
+//	}
+//
+//	public ACyclesStmAssistantInterpreter createACyclesStmAssistant()
+//	{
+//		return new ACyclesStmAssistantInterpreter(this);
+//	}
+//
+//	public ADurationStmAssistantInterpreter createADurationStmAssistant()
+//	{
+//		return new ADurationStmAssistantInterpreter(this);
+//	}
+//
+//	public AElseIfStmAssistantInterpreter createAElseIfStmAssistant()
+//	{
+//		return new AElseIfStmAssistantInterpreter(this);
+//	}
+//
+//	public AExitStmAssistantInterpreter createAExitStmAssistant()
+//	{
+//		return new AExitStmAssistantInterpreter(this);
+//	}
+//
+//	public AForAllStmAssistantInterpreter createAForAllStmAssistant()
+//	{
+//		return new AForAllStmAssistantInterpreter(this);
+//	}
+//
+//	public AForIndexStmAssistantInterpreter createAForIndexStmAssistant()
+//	{
+//		return new AForIndexStmAssistantInterpreter(this);
+//	}
+//
+//	public AForPatternBindStmAssitantInterpreter createAForPatternBindStmAssitant()
+//	{
+//		return new AForPatternBindStmAssitantInterpreter(this);
+//	}
+//
+//	public AIfStmAssistantInterpreter createAIfStmAssistant()
+//	{
+//		return new AIfStmAssistantInterpreter(this);
+//	}
+//
+//	public ALetBeStStmAssistantInterpreter createALetBeStStmAssistant()
+//	{
+//		return new ALetBeStStmAssistantInterpreter(this);
+//	}
+//
+//	public AReturnStmAssistantInterpreter createAReturnStmAssistant()
+//	{
+//		return new AReturnStmAssistantInterpreter(this);
+//	}
 
 	public AStartStmAssistantInterpreter createAStartStmAssistant()
 	{
 		return new AStartStmAssistantInterpreter(this);
 	}
 
-	public ATixeStmAssistantInterpreter createATixeStmAssistant()
-	{
-		return new ATixeStmAssistantInterpreter(this);
-	}
-
+//	public ATixeStmAssistantInterpreter createATixeStmAssistant()
+//	{
+//		return new ATixeStmAssistantInterpreter(this);
+//	}
+//
 	public ATixeStmtAlternativeAssistantInterpreter createATixeStmtAlternativeAssistant()
 	{
 		return new ATixeStmtAlternativeAssistantInterpreter(this);
 	}
-
-	public ATrapStmAssistantInterpreter createATrapStmAssistant()
-	{
-		return new ATrapStmAssistantInterpreter(this);
-	}
-
-	public AWhileStmAssistantInterpreter createAWhileStmAssistant()
-	{
-		return new AWhileStmAssistantInterpreter(this);
-	}
+//
+//	public ATrapStmAssistantInterpreter createATrapStmAssistant()
+//	{
+//		return new ATrapStmAssistantInterpreter(this);
+//	}
+//
+//	public AWhileStmAssistantInterpreter createAWhileStmAssistant()
+//	{
+//		return new AWhileStmAssistantInterpreter(this);
+//	}
 
 	public PStmAssistantInterpreter createPStmAssistant()
 	{
 		return new PStmAssistantInterpreter(this);
 	}
 
-	public SLetDefStmAssistantInterpreter createSLetDefStmAssistant()
-	{
-		return new SLetDefStmAssistantInterpreter(this);
-	}
+//	public SLetDefStmAssistantInterpreter createSLetDefStmAssistant()
+//	{
+//		return new SLetDefStmAssistantInterpreter(this);
+//	}
 
 	public SSimpleBlockStmAssistantInterpreter createSSimpleBlockStmAssistant()
 	{
@@ -1040,5 +1020,6 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	{
 		return new AllValuesCollector(this);
 	}
+
 
 }
