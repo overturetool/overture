@@ -1,5 +1,7 @@
 operations
 
-mapcomp9() m : map nat1 to nat1
-  post m = {a|->a*b | a, b in set {1,2,3} }
+mapcomp9() m : map int to int
+  -- post m = {a+b|->a*b | a, b in set {1,2,3} & a+b<>a*b }
+ post m ={a|->a*b | a in set {1,2}, b in set {-1,2} & a>0} -- {1 |-> -1, 1 |-> 2, 2 |-> -2, 2 |-> 4}
+ -- post m ={a-b|->a*b | a in set {1,2}, b in set {-1,2} & a-b>0} -- {2 |-> -1, 3 |-> -2}
   -- post m = {a|->a*b | a in set {1,2,3}, b in set {1,2,3} }

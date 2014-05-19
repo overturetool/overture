@@ -952,6 +952,187 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	public Node caseAMapCompMapExp(AMapCompMapExp node)
 			throws AnalysisException
 	{
+
+	    AComprehensionSetExpression mapcomp = new AComprehensionSetExpression();
+	    AMapletExp maplet = node.getFirst();
+	    List<PMultipleBind> blist = node.getBindings();
+	    // create temporal free variables
+	    List<TIdentifierLiteral> ident1 = new ArrayList<TIdentifierLiteral>();
+	    List<TIdentifierLiteral> ident2 = new ArrayList<TIdentifierLiteral>();
+  	    ident1.add(new TIdentifierLiteral("_from_"));
+  	    ident2.add(new TIdentifierLiteral("_to_"));
+	    PExpression from = new AIdentifierExpression(ident1);
+	    PExpression to = new AIdentifierExpression(ident2);
+
+	    mapcomp.getIdentifiers().add(from);
+	    mapcomp.getIdentifiers().add(to);
+
+	    AExistsPredicate esp = new AExistsPredicate();
+		esp.getIdentifiers().add(exp(blist.get(0).getPlist().get(0)));
+		esp.setPredicate(new AMemberPredicate(exp(blist.get(0).getPlist().get(0)), exp(blist.get(0))));
+		if (blist.size() > 1)
+		{
+			for (int i = 1; i < blist.size(); i++)
+			{
+				for (int j = 0; j < blist.get(i).getPlist().size(); j++)
+				{
+					esp.getIdentifiers().add(exp(blist.get(i).getPlist().get(j)));
+					esp.setPredicate(new AConjunctPredicate(esp.getPredicate(),
+										new AMemberPredicate(exp(blist.get(i).getPlist().get(j)), exp(blist.get(i)))));
+				}
+			}
+		}
+
+		esp.setPredicate(new AConjunctPredicate(esp.getPredicate(), pred(node.getPredicate())));
+		esp.setPredicate(new AConjunctPredicate(esp.getPredicate(), new AEqualPredicate(from, exp(maplet.getLeft()))));
+		esp.setPredicate(new AConjunctPredicate(esp.getPredicate(), new AEqualPredicate(to, exp(maplet.getRight()))));
+
+		mapcomp.setPredicates(esp);
+
+	    AComprehensionSetExpression mapcomp1 = new AComprehensionSetExpression();
+	    AMapletExp maplet1 = node.getFirst();
+	    List<PMultipleBind> blist1 = node.getBindings();
+	    // create temporal free variables
+	    List<TIdentifierLiteral> ident11 = new ArrayList<TIdentifierLiteral>();
+	    List<TIdentifierLiteral> ident21 = new ArrayList<TIdentifierLiteral>();
+  	    ident11.add(new TIdentifierLiteral("_from1_"));
+  	    ident21.add(new TIdentifierLiteral("_to1_"));
+	    PExpression from1 = new AIdentifierExpression(ident11);
+	    PExpression to1 = new AIdentifierExpression(ident21);
+
+	    mapcomp1.getIdentifiers().add(from1);
+	    mapcomp1.getIdentifiers().add(to1);
+
+	    AExistsPredicate esp1 = new AExistsPredicate();
+		esp1.getIdentifiers().add(exp(blist1.get(0).getPlist().get(0)));
+		esp1.setPredicate(new AMemberPredicate(exp(blist1.get(0).getPlist().get(0)), exp(blist1.get(0))));
+		if (blist1.size() > 1)
+		{
+			for (int i = 1; i < blist1.size(); i++)
+			{
+				for (int j = 0; j < blist1.get(i).getPlist().size(); j++)
+				{
+					esp1.getIdentifiers().add(exp(blist1.get(i).getPlist().get(j)));
+					esp1.setPredicate(new AConjunctPredicate(esp1.getPredicate(),
+										new AMemberPredicate(exp(blist1.get(i).getPlist().get(j)), exp(blist1.get(i)))));
+				}
+			}
+		}
+
+		esp1.setPredicate(new AConjunctPredicate(esp1.getPredicate(), pred(node.getPredicate())));
+		esp1.setPredicate(new AConjunctPredicate(esp1.getPredicate(), new AEqualPredicate(from1, exp(maplet1.getLeft()))));
+		esp1.setPredicate(new AConjunctPredicate(esp1.getPredicate(), new AEqualPredicate(to1, exp(maplet1.getRight()))));
+
+		mapcomp1.setPredicates(esp1);
+
+	    AComprehensionSetExpression mapcomp2 = new AComprehensionSetExpression();
+	    AMapletExp maplet2 = node.getFirst();
+	    List<PMultipleBind> blist2 = node.getBindings();
+	    // create temporal free variables
+	    List<TIdentifierLiteral> ident12 = new ArrayList<TIdentifierLiteral>();
+	    List<TIdentifierLiteral> ident22 = new ArrayList<TIdentifierLiteral>();
+  	    ident12.add(new TIdentifierLiteral("_from2_"));
+  	    ident22.add(new TIdentifierLiteral("_to2_"));
+	    PExpression from2 = new AIdentifierExpression(ident12);
+	    PExpression to2 = new AIdentifierExpression(ident22);
+
+	    mapcomp2.getIdentifiers().add(from2);
+	    mapcomp2.getIdentifiers().add(to2);
+
+	    AExistsPredicate esp2 = new AExistsPredicate();
+		esp2.getIdentifiers().add(exp(blist2.get(0).getPlist().get(0)));
+		esp2.setPredicate(new AMemberPredicate(exp(blist2.get(0).getPlist().get(0)), exp(blist2.get(0))));
+		if (blist2.size() > 1)
+		{
+			for (int i = 1; i < blist2.size(); i++)
+			{
+				for (int j = 0; j < blist2.get(i).getPlist().size(); j++)
+				{
+					esp2.getIdentifiers().add(exp(blist2.get(i).getPlist().get(j)));
+					esp2.setPredicate(new AConjunctPredicate(esp2.getPredicate(),
+										new AMemberPredicate(exp(blist2.get(i).getPlist().get(j)), exp(blist2.get(i)))));
+				}
+			}
+		}
+
+		esp2.setPredicate(new AConjunctPredicate(esp2.getPredicate(), pred(node.getPredicate())));
+		esp2.setPredicate(new AConjunctPredicate(esp2.getPredicate(), new AEqualPredicate(from2, exp(maplet2.getLeft()))));
+		esp2.setPredicate(new AConjunctPredicate(esp2.getPredicate(), new AEqualPredicate(to2, exp(maplet2.getRight()))));
+
+		mapcomp2.setPredicates(esp2);
+
+
+		//return mapcomp; // not a map but a relation
+
+		AForallPredicate forallp = new AForallPredicate();
+		List<TIdentifierLiteral> id1 = new ArrayList<TIdentifierLiteral>();
+		List<TIdentifierLiteral> id2 = new ArrayList<TIdentifierLiteral>();
+		List<TIdentifierLiteral> id3 = new ArrayList<TIdentifierLiteral>();
+		id1.add(new TIdentifierLiteral("_pdom_"));
+		id2.add(new TIdentifierLiteral("_pran_"));
+		id3.add(new TIdentifierLiteral("_map_"));
+		PExpression pdom = new AIdentifierExpression(id1);
+		PExpression pran = new AIdentifierExpression(id2);
+		PExpression singlemaplet = new AIdentifierExpression(id3);
+		forallp.getIdentifiers().add(pdom);
+
+		AComprehensionSetExpression isdup = new AComprehensionSetExpression();
+		isdup.getIdentifiers().add(pran);
+		ACoupleExpression onepair = new ACoupleExpression();
+		onepair.getList().add(pdom);		onepair.getList().add(pran);
+		isdup.setPredicates(new AMemberPredicate(onepair, mapcomp));
+
+		AIntegerExpression one = new AIntegerExpression(new TIntegerLiteral(new String(new Integer("1").toString())));
+
+		AEqualPredicate equal = new AEqualPredicate(new ACardExpression(isdup), one);
+
+		forallp.setImplication(new AImplicationPredicate(new AMemberPredicate(pdom, new ADomainExpression(mapcomp1)),equal));
+
+		AComprehensionSetExpression realmap = new AComprehensionSetExpression();
+		realmap.getIdentifiers().add(singlemaplet);
+		realmap.setPredicates(new AConjunctPredicate(forallp, new AMemberPredicate(singlemaplet, mapcomp2)));
+
+		return realmap;
+
+		/*************************************************************************************
+		List<TIdentifierLiteral> mapid = new ArrayList<TIdentifierLiteral>();
+		mapid.add(new TIdentifierLiteral("_mcomp_"));
+		PExpression mcomp = new AIdentifierExpression(mapid);
+		AEqualPredicate tempmcomp = new AEqualPredicate(mcomp, mapcomp);
+
+		AForallPredicate maprestriction = new AForallPredicate();
+		AExistsPredicate maprestpred = new AExistsPredicate();
+
+		List<TIdentifierLiteral> identfa1 = new ArrayList<TIdentifierLiteral>();
+		identfa1.add(new TIdentifierLiteral("_map_dom_"));
+		PExpression map_dom = new AIdentifierExpression(identfa1);
+
+		maprestriction.getIdentifiers().add(map_dom);
+		ADomainExpression dom = new ADomainExpression(mapcomp);
+
+		List<TIdentifierLiteral> identfa2 = new ArrayList<TIdentifierLiteral>();
+		List<TIdentifierLiteral> identfa3 = new ArrayList<TIdentifierLiteral>();
+		identfa2.add(new TIdentifierLiteral("_map_ran1_"));
+		identfa3.add(new TIdentifierLiteral("_map_ran2_"));
+		PExpression map_rn1 = new AIdentifierExpression(identfa2);
+		PExpression map_rn2 = new AIdentifierExpression(identfa3);
+
+		maprestpred.getIdentifiers().add(map_rn1);
+		maprestpred.getIdentifiers().add(map_rn2);
+		ACoupleExpression cpl1 = new ACoupleExpression();
+		ACoupleExpression cpl2 = new ACoupleExpression();
+		cpl1.getList().add(map_dom);cpl1.getList().add(map_rn1);
+		cpl2.getList().add(map_dom);cpl2.getList().add(map_rn2);
+		maprestpred.setPredicate(
+					 new AConjunctPredicate(new AConjunctPredicate(new AMemberPredicate(cpl1, mapcomp), new AMemberPredicate(cpl2, mapcomp)),
+								new ANotEqualPredicate(map_rn1, map_rn2)));
+
+		maprestriction.setImplication(new AImplicationPredicate(new AMemberPredicate(map_dom, dom), new ANegationPredicate(maprestpred.getPredicate())));
+
+		return new AConjunctPredicate(tempmcomp, maprestriction);
+		*************************************************************************************/
+
+	    /* old type
 	    int domtimes=0;
 	    AComprehensionSetExpression mapcomp = new AComprehensionSetExpression();
 
@@ -1007,6 +1188,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		domexp = new ADomainExpression(domexp);
 	    }
 	    return domexp;
+	    */
 	}
 
 	@Override
@@ -1175,7 +1357,6 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	public Node caseASetMultipleBind(ASetMultipleBind node)
 			throws AnalysisException
 	{
-
 		if (((ASetEnumSetExp) node.getSet()).getMembers().isEmpty())
 		{
 			return new AEmptySetExpression();
