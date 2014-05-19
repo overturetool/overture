@@ -195,7 +195,7 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 		{
 			for (AErrorCase err : def.getErrors())
 			{
-				PExp found = AErrorCaseAssistantInterpreter.findExpression(err, lineno);
+				PExp found = err.apply(THIS, lineno);//AErrorCaseAssistantInterpreter.findExpression(err, lineno);
 				if (found != null)
 				{
 					return found;
