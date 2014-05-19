@@ -18,7 +18,6 @@ import org.overture.interpreter.assistant.definition.AExplicitFunctionDefinition
 import org.overture.interpreter.assistant.definition.AImplicitFunctionDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AMutexSyncDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ANamedTraceDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.ARepeatTraceDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AStateDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ASystemClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
@@ -215,10 +214,10 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 //		return new ARenamedDefinitionAssistantInterpreter(this);
 //	}
 
-	public ARepeatTraceDefinitionAssistantInterpreter createARepeatTraceDefinitionAssistant()
-	{
-		return new ARepeatTraceDefinitionAssistantInterpreter(this);
-	}
+//	public ARepeatTraceDefinitionAssistantInterpreter createARepeatTraceDefinitionAssistant()
+//	{
+//		return new ARepeatTraceDefinitionAssistantInterpreter(this);
+//	}
 
 	public AStateDefinitionAssistantInterpreter createAStateDefinitionAssistant()
 	{

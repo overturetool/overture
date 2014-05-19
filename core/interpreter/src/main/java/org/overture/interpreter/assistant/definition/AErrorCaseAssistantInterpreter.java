@@ -1,9 +1,6 @@
 package org.overture.interpreter.assistant.definition;
 
-import org.overture.ast.expressions.PExp;
-import org.overture.ast.statements.AErrorCase;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 
 public class AErrorCaseAssistantInterpreter
 {
