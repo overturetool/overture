@@ -90,7 +90,8 @@ public class ConstrainedPatternChecker extends AnswerAdaptor<Boolean>
 	@Override
 	public Boolean caseASeqPattern(ASeqPattern pattern) throws AnalysisException
 	{
-		return ASeqPatternAssistantInterpreter.isConstrained(pattern);
+		//return ASeqPatternAssistantInterpreter.isConstrained(pattern);
+		return af.createPPatternListAssistant().isConstrained(pattern.getPlist());
 	}
 	
 	@Override

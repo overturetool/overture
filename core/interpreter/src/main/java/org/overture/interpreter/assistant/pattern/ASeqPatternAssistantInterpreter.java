@@ -113,10 +113,10 @@ public class ASeqPatternAssistantInterpreter
 //		return finalResults;
 //	}
 
-	public static boolean isConstrained(ASeqPattern pattern)
-	{
-		return af.createPPatternListAssistant().isConstrained(pattern.getPlist());
-	}
+//	public static boolean isConstrained(ASeqPattern pattern)
+//	{
+//		return af.createPPatternListAssistant().isConstrained(pattern.getPlist());
+//	}
 
 //	public static int getLength(ASeqPattern pattern)
 //	{

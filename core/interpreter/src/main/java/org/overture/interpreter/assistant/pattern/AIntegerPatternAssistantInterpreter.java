@@ -23,24 +23,24 @@ public class AIntegerPatternAssistantInterpreter
 		this.af = af;
 	}
 
-	public static List<NameValuePairList> getAllNamedValues(AIntegerPattern p,
-			Value expval, Context ctxt) throws PatternMatchException
-	{
-		List<NameValuePairList> result = new Vector<NameValuePairList>();
-
-		try
-		{
-			if (expval.intValue(ctxt) != p.getValue().getValue())
-			{
-				VdmRuntimeError.patternFail(4111, "Integer pattern match failed", p.getLocation());
-			}
-		} catch (ValueException e)
-		{
-			VdmRuntimeError.patternFail(e, p.getLocation());
-		}
-
-		result.add(new NameValuePairList());
-		return result;
-	}
+//	public static List<NameValuePairList> getAllNamedValues(AIntegerPattern p,
+//			Value expval, Context ctxt) throws PatternMatchException
+//	{
+//		List<NameValuePairList> result = new Vector<NameValuePairList>();
+//
+//		try
+//		{
+//			if (expval.intValue(ctxt) != p.getValue().getValue())
+//			{
+//				VdmRuntimeError.patternFail(4111, "Integer pattern match failed", p.getLocation());
+//			}
+//		} catch (ValueException e)
+//		{
+//			VdmRuntimeError.patternFail(e, p.getLocation());
+//		}
+//
+//		result.add(new NameValuePairList());
+//		return result;
+//	}
 
 }

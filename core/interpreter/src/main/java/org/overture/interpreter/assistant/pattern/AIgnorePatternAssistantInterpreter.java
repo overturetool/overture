@@ -20,13 +20,13 @@ public class AIgnorePatternAssistantInterpreter
 		this.af = af;
 	}
 
-	public static List<NameValuePairList> getAllNamedValues(AIgnorePattern p,
-			Value expval, Context ctxt)
-	{
-		List<NameValuePairList> result = new Vector<NameValuePairList>();
-		result.add(new NameValuePairList());
-		return result;
-	}
+//	public static List<NameValuePairList> getAllNamedValues(AIgnorePattern p,
+//			Value expval, Context ctxt)
+//	{
+//		List<NameValuePairList> result = new Vector<NameValuePairList>();
+//		result.add(new NameValuePairList());
+//		return result;
+//	}
 
 //	public static boolean isConstrained(AIgnorePattern pattern)
 //	{

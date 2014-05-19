@@ -22,15 +22,15 @@ public class AIdentifierPatternAssistantInterpreter
 		this.af = af;
 	}
 
-	public static List<NameValuePairList> getAllNamedValues(
-			AIdentifierPattern p, Value expval, Context ctxt)
-	{
-		List<NameValuePairList> result = new Vector<NameValuePairList>();
-		NameValuePairList list = new NameValuePairList();
-		list.add(new NameValuePair(p.getName(), expval));
-		result.add(list);
-		return result;
-	}
+//	public static List<NameValuePairList> getAllNamedValues(
+//			AIdentifierPattern p, Value expval, Context ctxt)
+//	{
+//		List<NameValuePairList> result = new Vector<NameValuePairList>();
+//		NameValuePairList list = new NameValuePairList();
+//		list.add(new NameValuePair(p.getName(), expval));
+//		result.add(list);
+//		return result;
+//	}
 
 //	public static boolean isConstrained(AIdentifierPattern pattern)
 //	{
