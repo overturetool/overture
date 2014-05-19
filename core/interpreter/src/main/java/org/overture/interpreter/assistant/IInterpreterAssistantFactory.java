@@ -45,19 +45,8 @@ import org.overture.interpreter.assistant.statement.AStartStmAssistantInterprete
 import org.overture.interpreter.assistant.statement.ATixeStmtAlternativeAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.PStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.SSimpleBlockStmAssistantInterpreter;
-import org.overture.interpreter.assistant.type.ABooleanBasicTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.AInMapMapTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.ANamedInvariantTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.AOptionalTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.AParameterTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.AProductTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.AQuoteTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.ARecordInvariantTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.ASetTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.AUnionTypeAssistantInterpreter;
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.interpreter.assistant.type.PTypeListAssistant;
-import org.overture.interpreter.assistant.type.SBasicTypeAssistantInterpreter;
 import org.overture.interpreter.assistant.type.SInvariantTypeAssistantInterpreter;
 import org.overture.interpreter.assistant.type.SMapTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
@@ -353,31 +342,31 @@ public interface IInterpreterAssistantFactory extends
 
 	// type
 
-	ABooleanBasicTypeAssistantInterpreter createABooleanBasicTypeAssistant();
-
-	AInMapMapTypeAssistantInterpreter createAInMapMapTypeAssistant();
-
-	ANamedInvariantTypeAssistantInterpreter createANamedInvariantTypeAssistant();
-
-	AOptionalTypeAssistantInterpreter createAOptionalTypeAssistant();
-
-	AParameterTypeAssistantInterpreter createAParameterTypeAssistant();
-
-	AProductTypeAssistantInterpreter createAProductTypeAssistant();
-
-	AQuoteTypeAssistantInterpreter createAQuoteTypeAssistant();
-
-	ARecordInvariantTypeAssistantInterpreter createARecordInvariantTypeAssistant();
-
-	ASetTypeAssistantInterpreter createASetTypeAssistant();
-
-	AUnionTypeAssistantInterpreter createAUnionTypeAssistant();
+//	ABooleanBasicTypeAssistantInterpreter createABooleanBasicTypeAssistant();
+//
+//	AInMapMapTypeAssistantInterpreter createAInMapMapTypeAssistant();
+//
+//	ANamedInvariantTypeAssistantInterpreter createANamedInvariantTypeAssistant();
+//
+//	AOptionalTypeAssistantInterpreter createAOptionalTypeAssistant();
+//
+//	AParameterTypeAssistantInterpreter createAParameterTypeAssistant();
+//
+//	AProductTypeAssistantInterpreter createAProductTypeAssistant();
+//
+//	AQuoteTypeAssistantInterpreter createAQuoteTypeAssistant();
+//
+//	ARecordInvariantTypeAssistantInterpreter createARecordInvariantTypeAssistant();
+//
+//	ASetTypeAssistantInterpreter createASetTypeAssistant();
+//
+//	AUnionTypeAssistantInterpreter createAUnionTypeAssistant();
 
 	PTypeAssistantInterpreter createPTypeAssistant();
 
 	PTypeListAssistant createPTypeListAssistant();
 
-	SBasicTypeAssistantInterpreter createSBasicTypeAssistant();
+	//SBasicTypeAssistantInterpreter createSBasicTypeAssistant();
 
 	SInvariantTypeAssistantInterpreter createSInvariantTypeAssistant();
 
