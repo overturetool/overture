@@ -9,87 +9,27 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.statements.PStm;
-import org.overture.interpreter.assistant.definition.AApplyExpressionTraceCoreDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.AAssignmentDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.ABracketedExpressionTraceCoreDefinitionAssitantInterpreter;
 import org.overture.interpreter.assistant.definition.ABusClassDefinitionAssitantInterpreter;
 import org.overture.interpreter.assistant.definition.AClassClassDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.AConcurrentExpressionTraceCoreDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ACpuClassDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.AEqualsDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AErrorCaseAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AExplicitFunctionDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.AExplicitOperationDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AImplicitFunctionDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.AImplicitOperationDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.AImportedDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.AInheritedDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.AInstanceVariableDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.ALetBeStBindingTraceDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.ALetDefBindingTraceDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.ALocalDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AMutexSyncDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ANamedTraceDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.APerSyncDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.ARenamedDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ARepeatTraceDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AStateDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ASystemClassDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.AThreadDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.ATraceDefinitionTermAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.ATypeDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.AUntypedDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.AValueDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PDefinitionListAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PTraceCoreDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PTraceDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AApplyExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ACaseAlternativeAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ACasesExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ADefExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AElseIfExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AExists1ExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AExistsExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AFieldExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AFieldNumberExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AForAllExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AFuncInstatiationExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AIfExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AIotaExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AIsExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AIsOfBaseClassExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AIsOfClassExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ALambdaExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ALetBeStExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ALetDefExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AMapCompMapExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AMapEnumMapExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AMapletExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AMkBasicExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AMkTypeExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AMuExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ANarrowExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ANewExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.APostOpExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ARecordModifierAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ASameBaseClassExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ASameClassExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ASeqCompSeqExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ASeqEnumSeqExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ASetCompSetExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ASetEnumSetExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ASetRangeSetExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ASubseqExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ATupleExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AVariableExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.SBinaryExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.SMapExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.SSeqExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.SSetExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.SUnaryExpAssistantInterpreter;
 import org.overture.interpreter.assistant.module.AModuleModulesAssistantInterpreter;
 import org.overture.interpreter.assistant.module.ModuleListAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.ABooleanPatternAssistantInterpreter;
@@ -172,51 +112,51 @@ public interface IInterpreterAssistantFactory extends
 {
 	// definition
 
-	AApplyExpressionTraceCoreDefinitionAssistantInterpreter createAApplyExpressionTraceCoreDefinitionAssistant();
+	//AApplyExpressionTraceCoreDefinitionAssistantInterpreter createAApplyExpressionTraceCoreDefinitionAssistant();
 
-	AAssignmentDefinitionAssistantInterpreter createAAssignmentDefinitionAssistant();
+	//AAssignmentDefinitionAssistantInterpreter createAAssignmentDefinitionAssistant();
 
-	ABracketedExpressionTraceCoreDefinitionAssitantInterpreter createABracketedExpressionTraceCoreDefinitionAssitant();
+	//ABracketedExpressionTraceCoreDefinitionAssitantInterpreter createABracketedExpressionTraceCoreDefinitionAssitant();
 
 	ABusClassDefinitionAssitantInterpreter createABusClassDefinitionAssitant();
 
 	AClassClassDefinitionAssistantInterpreter createAClassClassDefinitionAssistant();
 
-	AConcurrentExpressionTraceCoreDefinitionAssistantInterpreter createAConcurrentExpressionTraceCoreDefinitionAssistant();
+	//AConcurrentExpressionTraceCoreDefinitionAssistantInterpreter createAConcurrentExpressionTraceCoreDefinitionAssistant();
 
 	ACpuClassDefinitionAssistantInterpreter createACpuClassDefinitionAssistant();
 
-	AEqualsDefinitionAssistantInterpreter createAEqualsDefinitionAssistant();
+	//AEqualsDefinitionAssistantInterpreter createAEqualsDefinitionAssistant();
 
 	AErrorCaseAssistantInterpreter createAErrorCaseAssistant();
 
 	AExplicitFunctionDefinitionAssistantInterpreter createAExplicitFunctionDefinitionAssistant();
 
-	AExplicitOperationDefinitionAssistantInterpreter createAExplicitOperationDefinitionAssistant();
+	//AExplicitOperationDefinitionAssistantInterpreter createAExplicitOperationDefinitionAssistant();
 
 	AImplicitFunctionDefinitionAssistantInterpreter createAImplicitFunctionDefinitionAssistant();
 
-	AImplicitOperationDefinitionAssistantInterpreter createAImplicitOperationDefinitionAssistant();
+	//AImplicitOperationDefinitionAssistantInterpreter createAImplicitOperationDefinitionAssistant();
 
-	AImportedDefinitionAssistantInterpreter createAImportedDefinitionAssistant();
+	//AImportedDefinitionAssistantInterpreter createAImportedDefinitionAssistant();
 
-	AInheritedDefinitionAssistantInterpreter createAInheritedDefinitionAssistant();
+	//AInheritedDefinitionAssistantInterpreter createAInheritedDefinitionAssistant();
 
-	AInstanceVariableDefinitionAssistantInterpreter createAInstanceVariableDefinitionAssistant();
+	//AInstanceVariableDefinitionAssistantInterpreter createAInstanceVariableDefinitionAssistant();
 
-	ALetBeStBindingTraceDefinitionAssistantInterpreter createALetBeStBindingTraceDefinitionAssistant();
+	//ALetBeStBindingTraceDefinitionAssistantInterpreter createALetBeStBindingTraceDefinitionAssistant();
 
-	ALetDefBindingTraceDefinitionAssistantInterpreter createALetDefBindingTraceDefinitionAssistant();
+	//ALetDefBindingTraceDefinitionAssistantInterpreter createALetDefBindingTraceDefinitionAssistant();
 
-	ALocalDefinitionAssistantInterpreter createALocalDefinitionAssistant();
+	//ALocalDefinitionAssistantInterpreter createALocalDefinitionAssistant();
 
 	AMutexSyncDefinitionAssistantInterpreter createAMutexSyncDefinitionAssistant();
 
 	ANamedTraceDefinitionAssistantInterpreter createANamedTraceDefinitionAssistant();
 
-	APerSyncDefinitionAssistantInterpreter createAPerSyncDefinitionAssistant();
+	//APerSyncDefinitionAssistantInterpreter createAPerSyncDefinitionAssistant();
 
-	ARenamedDefinitionAssistantInterpreter createARenamedDefinitionAssistant();
+	//ARenamedDefinitionAssistantInterpreter createARenamedDefinitionAssistant();
 
 	ARepeatTraceDefinitionAssistantInterpreter createARepeatTraceDefinitionAssistant();
 
@@ -224,15 +164,15 @@ public interface IInterpreterAssistantFactory extends
 
 	ASystemClassDefinitionAssistantInterpreter createASystemClassDefinitionAssistant();
 
-	AThreadDefinitionAssistantInterpreter createAThreadDefinitionAssistant();
+	//AThreadDefinitionAssistantInterpreter createAThreadDefinitionAssistant();
 
-	ATraceDefinitionTermAssistantInterpreter createATraceDefinitionTermAssistant();
+	//ATraceDefinitionTermAssistantInterpreter createATraceDefinitionTermAssistant();
 
-	ATypeDefinitionAssistantInterpreter createATypeDefinitionAssistant();
+	//ATypeDefinitionAssistantInterpreter createATypeDefinitionAssistant();
 
-	AUntypedDefinitionAssistantInterpreter createAUntypedDefinitionAssistant();
+	///AUntypedDefinitionAssistantInterpreter createAUntypedDefinitionAssistant();
 
-	AValueDefinitionAssistantInterpreter createAValueDefinitionAssistant();
+	//AValueDefinitionAssistantInterpreter createAValueDefinitionAssistant();
 
 	PDefinitionAssistantInterpreter createPDefinitionAssistant();
 
@@ -246,95 +186,95 @@ public interface IInterpreterAssistantFactory extends
 
 	// expression
 
-	AApplyExpAssistantInterpreter createAApplyExpAssistant();
+	//AApplyExpAssistantInterpreter createAApplyExpAssistant();
 
-	ACaseAlternativeAssistantInterpreter createACaseAlternativeAssistant();
+	//ACaseAlternativeAssistantInterpreter createACaseAlternativeAssistant();
 
-	ACasesExpAssistantInterpreter createACasesExpAssistant();
+	//ACasesExpAssistantInterpreter createACasesExpAssistant();
 
-	ADefExpAssistantInterpreter createADefExpAssistant();
+	//ADefExpAssistantInterpreter createADefExpAssistant();
 
-	AElseIfExpAssistantInterpreter createAElseIfExpAssistant();
+	//AElseIfExpAssistantInterpreter createAElseIfExpAssistant();
 
-	AExists1ExpAssistantInterpreter createAExists1ExpAssistant();
+	//AExists1ExpAssistantInterpreter createAExists1ExpAssistant();
 
-	AExistsExpAssistantInterpreter createAExistsExpAssistant();
+	//AExistsExpAssistantInterpreter createAExistsExpAssistant();
 
 	AFieldExpAssistantInterpreter createAFieldExpAssistant();
 
-	AFieldNumberExpAssistantInterpreter createAFieldNumberExpAssistant();
+	//AFieldNumberExpAssistantInterpreter createAFieldNumberExpAssistant();
 
-	AForAllExpAssistantInterpreter createAForAllExpAssistant();
+	//AForAllExpAssistantInterpreter createAForAllExpAssistant();
 
-	AFuncInstatiationExpAssistantInterpreter createAFuncInstatiationExpAssistant();
+	//AFuncInstatiationExpAssistantInterpreter createAFuncInstatiationExpAssistant();
 
-	AIfExpAssistantInterpreter createAIfExpAssistant();
+	//AIfExpAssistantInterpreter createAIfExpAssistant();
 
-	AIotaExpAssistantInterpreter createAIotaExpAssistant();
+	//AIotaExpAssistantInterpreter createAIotaExpAssistant();
 
-	AIsExpAssistantInterpreter createAIsExpAssistant();
+	//AIsExpAssistantInterpreter createAIsExpAssistant();
 
 	AIsOfBaseClassExpAssistantInterpreter createAIsOfBaseClassExpAssistant();
 
 	AIsOfClassExpAssistantInterpreter createAIsOfClassExpAssistant();
 
-	ALambdaExpAssistantInterpreter createALambdaExpAssistant();
+	//ALambdaExpAssistantInterpreter createALambdaExpAssistant();
 
-	ALetBeStExpAssistantInterpreter createALetBeStExpAssistant();
+	//ALetBeStExpAssistantInterpreter createALetBeStExpAssistant();
 
-	ALetDefExpAssistantInterpreter createALetDefExpAssistant();
+	//ALetDefExpAssistantInterpreter createALetDefExpAssistant();
 
-	AMapCompMapExpAssistantInterpreter createAMapCompMapExpAssistant();
+//	AMapCompMapExpAssistantInterpreter createAMapCompMapExpAssistant();
+//
+//	AMapEnumMapExpAssistantInterpreter createAMapEnumMapExpAssistant();
+//
+//	AMapletExpAssistantInterpreter createAMapletExpAssistant();
+//
+//	AMkBasicExpAssistantInterpreter createAMkBasicExpAssistant();
+//
+//	AMkTypeExpAssistantInterpreter createAMkTypeExpAssistant();
+//
+//	AMuExpAssistantInterpreter createAMuExpAssistant();
 
-	AMapEnumMapExpAssistantInterpreter createAMapEnumMapExpAssistant();
-
-	AMapletExpAssistantInterpreter createAMapletExpAssistant();
-
-	AMkBasicExpAssistantInterpreter createAMkBasicExpAssistant();
-
-	AMkTypeExpAssistantInterpreter createAMkTypeExpAssistant();
-
-	AMuExpAssistantInterpreter createAMuExpAssistant();
-
-	ANarrowExpAssistantInterpreter createANarrowExpAssistant();
-
-	ANewExpAssistantInterpreter createANewExpAssistant();
+//	ANarrowExpAssistantInterpreter createANarrowExpAssistant();
+//
+//	ANewExpAssistantInterpreter createANewExpAssistant();
 
 	APostOpExpAssistantInterpreter createAPostOpExpAssistant();
 
-	ARecordModifierAssistantInterpreter createARecordModifierAssistant();
+//	ARecordModifierAssistantInterpreter createARecordModifierAssistant();
+//
+//	ASameBaseClassExpAssistantInterpreter createASameBaseClassExpAssistant();
+//
+//	ASameClassExpAssistantInterpreter createASameClassExpAssistant();
 
-	ASameBaseClassExpAssistantInterpreter createASameBaseClassExpAssistant();
+//	ASeqCompSeqExpAssistantInterpreter createASeqCompSeqExpAssistant();
 
-	ASameClassExpAssistantInterpreter createASameClassExpAssistant();
-
-	ASeqCompSeqExpAssistantInterpreter createASeqCompSeqExpAssistant();
-
-	ASeqEnumSeqExpAssistantInterpreter createASeqEnumSeqExpAssistant();
-
-	ASetCompSetExpAssistantInterpreter createASetCompSetExpAssistant();
-
-	ASetEnumSetExpAssistantInterpreter createASetEnumSetExpAssistant();
-
-	ASetRangeSetExpAssistantInterpreter createASetRangeSetExpAssistant();
-
-	ASubseqExpAssistantInterpreter createASubseqExpAssistant();
-
-	ATupleExpAssistantInterpreter createATupleExpAssistant();
-
-	AVariableExpAssistantInterpreter createAVariableExpAssistant();
+//	ASeqEnumSeqExpAssistantInterpreter createASeqEnumSeqExpAssistant();
+//
+//	ASetCompSetExpAssistantInterpreter createASetCompSetExpAssistant();
+//
+//	ASetEnumSetExpAssistantInterpreter createASetEnumSetExpAssistant();
+//
+//	ASetRangeSetExpAssistantInterpreter createASetRangeSetExpAssistant();
+//
+//	ASubseqExpAssistantInterpreter createASubseqExpAssistant();
+//
+//	ATupleExpAssistantInterpreter createATupleExpAssistant();
+//
+//	AVariableExpAssistantInterpreter createAVariableExpAssistant();
 
 	PExpAssistantInterpreter createPExpAssistant();
 
-	SBinaryExpAssistantInterpreter createSBinaryExpAssistant();
-
-	SMapExpAssistantInterpreter createSMapExpAssistant();
-
-	SSeqExpAssistantInterpreter createSSeqExpAssistant();
-
-	SSetExpAssistantInterpreter createSSetExpAssistant();
-
-	SUnaryExpAssistantInterpreter createSUnaryExpAssistant();
+//	SBinaryExpAssistantInterpreter createSBinaryExpAssistant();
+//
+//	SMapExpAssistantInterpreter createSMapExpAssistant();
+//
+//	SSeqExpAssistantInterpreter createSSeqExpAssistant();
+//
+//	SSetExpAssistantInterpreter createSSetExpAssistant();
+//
+//	SUnaryExpAssistantInterpreter createSUnaryExpAssistant();
 
 	// module
 

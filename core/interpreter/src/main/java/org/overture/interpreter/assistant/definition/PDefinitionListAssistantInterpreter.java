@@ -36,7 +36,7 @@ public class PDefinitionListAssistantInterpreter extends
 		for (PDefinition d : defs)
 		{
 			ctxt.push(new PONameContext(af.createPDefinitionAssistant().getVariableNames(d)));
-			obligations.addAll(PDefinitionAssistantInterpreter.getProofObligations(d, ctxt));
+			obligations.addAll(af.createPDefinitionAssistant().getProofObligations(d, ctxt));
 			ctxt.pop();
 		}
 
@@ -60,7 +60,7 @@ public class PDefinitionListAssistantInterpreter extends
 	{
 		for (PDefinition d : list)
 		{
-			PExp found = PDefinitionAssistantInterpreter.findExpression(d, lineno);
+			PExp found = af.createPDefinitionAssistant().findExpression(d, lineno);
 
 			if (found != null)
 			{

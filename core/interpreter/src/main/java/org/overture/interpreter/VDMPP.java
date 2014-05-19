@@ -256,7 +256,7 @@ public class VDMPP extends VDMJ
 
 		if (pog && terrs == 0)
 		{
-			ProofObligationList list = classes.getProofObligations();
+			ProofObligationList list = classes.getProofObligations(assistantFactory);
 
 			if (list.isEmpty())
 			{
