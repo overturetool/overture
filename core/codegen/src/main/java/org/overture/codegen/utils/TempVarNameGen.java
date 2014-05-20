@@ -2,7 +2,7 @@ package org.overture.codegen.utils;
 
 import java.util.HashMap;
 
-public class TempVarNameGen
+public class TempVarNameGen implements ITempVarGen
 {
 	private static final int START_VALUE = 1;
 	
@@ -14,6 +14,7 @@ public class TempVarNameGen
 		this.counters = new HashMap<String, Integer>();
 	}
 	
+	@Override
 	public String nextVarName(String prefix)
 	{
 		int count = counters.containsKey(prefix) ? 1 + counters.get(prefix) : START_VALUE;

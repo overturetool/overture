@@ -23,29 +23,32 @@ import org.overture.ide.debug.core.dbgp.internal.packets.DbgpResponsePacket;
 import org.overture.ide.debug.core.dbgp.internal.packets.DbgpStreamPacket;
 import org.w3c.dom.Element;
 
-public class DbgpXmlPacketParser extends DbgpXmlParser {
-	protected DbgpXmlPacketParser() {
+public class DbgpXmlPacketParser extends DbgpXmlParser
+{
+	protected DbgpXmlPacketParser()
+	{
 
 	}
 
-	public static DbgpResponsePacket parseResponsePacket(Element element) {
+	public static DbgpResponsePacket parseResponsePacket(Element element)
+	{
 		final String ATTR_TRANSACTION_ID = "transaction_id"; //$NON-NLS-1$
 
-		
 		int id = Integer.parseInt(element.getAttribute(ATTR_TRANSACTION_ID));
-			return new DbgpResponsePacket(element, id);
-		
-		
+		return new DbgpResponsePacket(element, id);
+
 	}
 
-	public static DbgpNotifyPacket parseNotifyPacket(Element element) {
+	public static DbgpNotifyPacket parseNotifyPacket(Element element)
+	{
 		final String ATTR_NAME = "name"; //$NON-NLS-1$
 
 		String name = element.getAttribute(ATTR_NAME);
 		return new DbgpNotifyPacket(element, name);
 	}
 
-	public static DbgpStreamPacket parseStreamPacket(Element element) {
+	public static DbgpStreamPacket parseStreamPacket(Element element)
+	{
 		final String ATTR_TYPE = "type"; //$NON-NLS-1$
 
 		String type = element.getAttribute(ATTR_TYPE);

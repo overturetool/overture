@@ -13,6 +13,8 @@ import org.overture.config.Settings;
 
 public abstract class TestHandler
 {
+	public static final String QUOTES_PACKAGE_NAME = "quotes";
+	
 	public static final String MAIN_CLASS = "Exp";
 	
 	public static final String SERIALIZE_METHOD = 	
@@ -35,7 +37,7 @@ public abstract class TestHandler
 		  "import java.io.File;"
 		+ "import java.io.FileOutputStream;"
 		+ "import java.io.ObjectOutputStream;"
-		+ "import org.overture.codegen.javalib.*;"
+		+ "import org.overture.codegen.runtime.*;"
 		+ "import java.util.*; " 
 		+ "public class Exp { "
 		
@@ -105,7 +107,7 @@ public abstract class TestHandler
 
 		if (className.equals(IOoAstConstants.QUOTES_INTERFACE_NAME))
 		{
-			outputDir = new File(parent, IJavaCodeGenConstants.QUOTES_PACKAGE_NAME);
+			outputDir = new File(parent, QUOTES_PACKAGE_NAME);
 			outputDir.mkdirs();
 		}
 

@@ -27,20 +27,21 @@ import java.io.Serializable;
 
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.scheduler.Lock;
 
 
 public class GuardValueListener implements ValueListener, Serializable
 {
     private static final long serialVersionUID = 1L;
-	private final ObjectValue self;
+	private final Lock lock;
 
-	public GuardValueListener(ObjectValue self)
+	public GuardValueListener(Lock self)
 	{
-		this.self = self;
+		this.lock = self;
 	}
 
 	public void changedValue(ILexLocation location, Value value, Context ctxt)
 	{
-		self.guardLock.signal();
+		lock.signal();
 	}
 }

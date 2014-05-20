@@ -18,7 +18,8 @@
  *******************************************************************************/
 package org.overture.ide.debug.core.model;
 
-public interface IVdmDebugTargetListener {
+public interface IVdmDebugTargetListener
+{
 	void targetInitialized();
 
 	void targetTerminating();

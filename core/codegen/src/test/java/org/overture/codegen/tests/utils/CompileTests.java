@@ -13,6 +13,7 @@ import java.util.List;
 import org.overture.codegen.tests.ClassicSpecTest;
 import org.overture.codegen.tests.ComplexExpressionTest;
 import org.overture.codegen.tests.ExpressionTest;
+import org.overture.codegen.tests.FunctionValueTest;
 import org.overture.codegen.tests.SpecificationTest;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
@@ -23,10 +24,10 @@ public class CompileTests
 {
 	private static final String CG_VALUE_BINARY_FILE = "target\\cgtest\\myData.bin";
 	private static final String TEMP_DIR = "target\\cgtest";
-	private static final String SRC_JAVA_LIB = "src\\main\\java\\org\\overture\\codegen\\javalib";
-	private static final String TARGET_JAVA_LIB = "target\\cgtest\\org\\overture\\codegen\\javalib";
+	private static final String SRC_JAVA_LIB = "..\\codegen-runtime\\src\\main\\java\\org\\overture\\codegen\\runtime";
+	private static final String TARGET_JAVA_LIB = "target\\cgtest\\org\\overture\\codegen\\runtime";
 	
-	private static final List<String> FOLDER_NAMES_TO_AVOID = Arrays.asList(new String[]{"javalib"});
+	private static final List<String> FOLDER_NAMES_TO_AVOID = Arrays.asList(new String[]{"runtime"});
 
 	private static final String RESULT_FILE_EXTENSION = ".result";
 	
@@ -34,7 +35,8 @@ public class CompileTests
 	public static final boolean RUN_COMPLEX_EXP_TESTS = true;
 	public static final boolean RUN_EXECUTING_CLASSIC_SPEC_TESTS = true;
 	public static final boolean RUN_NON_EXECUTING_VDM10_SPEC_TESTS = true;
-
+	public static final boolean RUN_FUNCTION_VALUE_TESTS = true;
+	
 	private List<File> testInputFiles;
 	private List<File> resultFiles;
 	
@@ -74,6 +76,11 @@ public class CompileTests
 			runNonExecutingVdm10Tests();
 		}
 		
+		if(RUN_FUNCTION_VALUE_TESTS)
+		{
+			runFunctionValueTests();
+		}
+		
 		long endTimeMs = System.currentTimeMillis();
 		
 		long totalTimeMs = (endTimeMs - startTimeMs);
@@ -82,6 +89,20 @@ public class CompileTests
 		long seconds = (totalTimeMs % (60 * 1000)) / 1000;
 		
 		System.out.println("Time: " + String.format("%02d:%02d", minutes, seconds) + ".");
+	}
+
+	private void runFunctionValueTests() throws IOException
+	{
+		System.out.println("Beginning function values..\n");
+
+		testInputFiles = TestUtils.getTestInputFiles(new File(FunctionValueTest.ROOT));
+		resultFiles = TestUtils.getFiles(new File(FunctionValueTest.ROOT), RESULT_FILE_EXTENSION);
+		
+		runTests(testInputFiles, resultFiles, new ExecutableSpecTestHandler(Release.VDM_10), false);
+		
+		System.out.println("\n********");
+		System.out.println("Finished with function values");
+		System.out.println("********\n");
 	}
 
 	private void runNonExecutingVdm10Tests() throws IOException

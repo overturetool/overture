@@ -20,20 +20,24 @@ package org.overture.ide.debug.core.dbgp.internal.packets;
 
 import org.w3c.dom.Element;
 
-public class DbgpNotifyPacket extends DbgpPacket {
+public class DbgpNotifyPacket extends DbgpPacket
+{
 	private final String name;
 
-	public DbgpNotifyPacket(Element content, String name) {
+	public DbgpNotifyPacket(Element content, String name)
+	{
 		super(content);
 
-		if (name == null) {
+		if (name == null)
+		{
 			throw new IllegalArgumentException();
 		}
 
 		this.name = name;
 	}
 
-	public String getName() {
+	public String getName()
+	{
 		return name;
 	}
 }

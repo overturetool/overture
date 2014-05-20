@@ -1,4 +1,4 @@
-import org.overture.codegen.javalib.*;
+import org.overture.codegen.runtime.*;
 
 import java.util.*;
 
@@ -21,11 +21,12 @@ public class Entry {
             Number x = ((Number) iterator_1.next());
 
             if (1L == 1L) {
-                setCompResult_1.add(x);
+                setCompResult_1 = SetUtil.union(setCompResult_1.clone(),
+                        SetUtil.set(x));
             }
         }
 
-        VDMSet a = setCompResult_1;
+        VDMSet a = setCompResult_1.clone();
 
         return a.clone();
     }

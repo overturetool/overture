@@ -36,19 +36,22 @@ import org.overture.ide.debug.core.model.eval.IVdmEvaluationResult;
 import org.overture.ide.debug.core.model.internal.VdmDebugTarget;
 import org.overture.ide.debug.core.model.internal.VdmValue;
 
-public class VdmEvaluationEngine implements IVdmEvaluationEngine {
+public class VdmEvaluationEngine implements IVdmEvaluationEngine
+{
 	private final IVdmThread thread;
 
 	// private int count;
-	private final /*WeakHashMap*/ Object cache;
+	private final/* WeakHashMap */Object cache;
 
-	protected void putToCache(String snippet, IVdmEvaluationResult result) {
+	protected void putToCache(String snippet, IVdmEvaluationResult result)
+	{
 		// if (result != null) {
 		// cache.put(snippet, result);
 		// }
 	}
 
-	protected IVdmEvaluationResult getFromCache(String snippet) {
+	protected IVdmEvaluationResult getFromCache(String snippet)
+	{
 		return null;
 		// int newCount = thread.getModificationsCount();
 		// if (count != newCount) {
@@ -60,53 +63,57 @@ public class VdmEvaluationEngine implements IVdmEvaluationEngine {
 		// return (IVdmEvaluationResult) cache.get(snippet);
 	}
 
-	private IVdmEvaluationResult evaluate(String snippet,
-			IVdmStackFrame frame) {
+	private IVdmEvaluationResult evaluate(String snippet, IVdmStackFrame frame)
+	{
 		IVdmEvaluationResult result = null;
-		try {
+		try
+		{
 			final IDbgpSession session = thread.getDbgpSession();
 
-			final IDbgpExtendedCommands extended = session
-					.getExtendedCommands();
+			final IDbgpExtendedCommands extended = session.getExtendedCommands();
 
 			final IDbgpProperty property = extended.evaluate(snippet);
 
-			if (property != null) {
+			if (property != null)
+			{
 				IVdmValue value = VdmValue.createValue(frame, property);
 				result = new VdmEvaluationResult(thread, snippet, value);
-			} else {
-				result = new FailedVdmEvaluationResult(
-						thread,
-						snippet,
-						new String[] { "VdmEvaluationEngine_cantEvaluate" });
+			} else
+			{
+				result = new FailedVdmEvaluationResult(thread, snippet, new String[] { "VdmEvaluationEngine_cantEvaluate" });
 			}
 
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 			// TODO: improve
-			result = new FailedVdmEvaluationResult(thread, snippet,
-					new String[] { e.getMessage() });
+			result = new FailedVdmEvaluationResult(thread, snippet, new String[] { e.getMessage() });
 		}
 
 		return result;
 	}
 
-	public VdmEvaluationEngine(IVdmThread thread) {
+	public VdmEvaluationEngine(IVdmThread thread)
+	{
 		this.thread = thread;
 		// this.count = thread.getModificationsCount();
-		this.cache = new Object();//new WeakHashMap();
+		this.cache = new Object();// new WeakHashMap();
 	}
 
-	public IVdmDebugTarget getVdmDebugTarget() {
+	public IVdmDebugTarget getVdmDebugTarget()
+	{
 		return (VdmDebugTarget) thread.getDebugTarget();
 	}
 
 	public IVdmEvaluationResult syncEvaluate(String snippet,
-			IVdmStackFrame frame) {
+			IVdmStackFrame frame)
+	{
 		snippet = snippet.trim();
-		synchronized (cache) {
+		synchronized (cache)
+		{
 			IVdmEvaluationResult result = getFromCache(snippet);
 
-			if (result == null) {
+			if (result == null)
+			{
 				result = evaluate(snippet, frame);
 			}
 
@@ -116,16 +123,18 @@ public class VdmEvaluationEngine implements IVdmEvaluationEngine {
 		}
 	}
 
-	public void asyncEvaluate(final String snippet,
-			final IVdmStackFrame frame,
-			final IVdmEvaluationListener listener) {
-		Job job = new Job(NLS.bind(
-				"VdmEvaluationEngine_evaluationOf", snippet)) {
-			protected IStatus run(IProgressMonitor monitor) {
-				if (getVdmDebugTarget().isTerminated()) {
-					listener.evaluationComplete(new NoEvaluationResult(snippet,
-							thread));
-				} else {
+	public void asyncEvaluate(final String snippet, final IVdmStackFrame frame,
+			final IVdmEvaluationListener listener)
+	{
+		Job job = new Job(NLS.bind("VdmEvaluationEngine_evaluationOf", snippet))
+		{
+			protected IStatus run(IProgressMonitor monitor)
+			{
+				if (getVdmDebugTarget().isTerminated())
+				{
+					listener.evaluationComplete(new NoEvaluationResult(snippet, thread));
+				} else
+				{
 					listener.evaluationComplete(syncEvaluate(snippet, frame));
 				}
 				return Status.OK_STATUS;
@@ -137,7 +146,8 @@ public class VdmEvaluationEngine implements IVdmEvaluationEngine {
 		job.schedule();
 	}
 
-	public void dispose() {
+	public void dispose()
+	{
 		// TODO Auto-generated method stub
 	}
 }

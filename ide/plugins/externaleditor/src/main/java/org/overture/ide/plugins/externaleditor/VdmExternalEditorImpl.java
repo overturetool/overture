@@ -39,6 +39,13 @@ public class VdmExternalEditorImpl extends VdmExternalEditor
 		return new VdmSlSourceViewerConfiguration(preferenceStore);
 	}
 	
+	
+	@Override
+	protected boolean isPrefQuickDiffAlwaysOn()
+	{
+		return false;
+	}
+	
 	@Override
 	protected void doSetInput(IEditorInput input) throws CoreException
 	{

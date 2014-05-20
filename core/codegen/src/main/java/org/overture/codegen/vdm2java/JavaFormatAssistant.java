@@ -24,10 +24,10 @@ import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
+import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
-import org.overture.codegen.constants.IJavaCodeGenConstants;
 
 public class JavaFormatAssistant
 {
@@ -127,7 +127,7 @@ public class JavaFormatAssistant
 		ACallStmCG call = new ACallStmCG();
 		
 		AClassTypeCG classType = new AClassTypeCG();
-		classType.setName(IJavaCodeGenConstants.UTILS_FILE);
+		classType.setName(JavaFormat.UTILS_FILE);
 		
 		AIdentifierVarExpCG root = new AIdentifierVarExpCG();
 		root.setType(classType);
@@ -193,9 +193,12 @@ public class JavaFormatAssistant
 		LinkedList<AFieldDeclCG> fields = record.getFields();
 		
 		AExplicitVarExpCG member = new AExplicitVarExpCG();
-		member.setType(returnType.clone());
+
+		AMethodTypeCG methodType = new AMethodTypeCG();
+		methodType.setResult(returnType.clone());
+		member.setType(methodType);
 		AClassTypeCG classType = new AClassTypeCG();
-		classType.setName(IJavaCodeGenConstants.UTILS_FILE);
+		classType.setName(JavaFormat.UTILS_FILE);
 		member.setClassType(classType);
 		member.setName(memberName);
 		AApplyExpCG call = new AApplyExpCG();

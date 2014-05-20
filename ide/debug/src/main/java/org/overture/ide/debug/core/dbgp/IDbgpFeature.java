@@ -18,7 +18,8 @@
  *******************************************************************************/
 package org.overture.ide.debug.core.dbgp;
 
-public interface IDbgpFeature {
+public interface IDbgpFeature
+{
 	final String ZERO_VALUE = "0"; //$NON-NLS-1$
 
 	final String ONE_VALUE = "1"; //$NON-NLS-1$

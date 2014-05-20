@@ -17,28 +17,28 @@ public class ASameBaseClassExpAssistantInterpreter // extends
 		this.af = af;
 	}
 
-	public static ValueList getValues(ASameBaseClassExp exp, ObjectContext ctxt)
-	{
-		ValueList list = PExpAssistantInterpreter.getValues(exp.getLeft(), ctxt);
-		list.addAll(PExpAssistantInterpreter.getValues(exp.getRight(), ctxt));
-		return list;
-	}
+//	public static ValueList getValues(ASameBaseClassExp exp, ObjectContext ctxt)
+//	{
+//		ValueList list = PExpAssistantInterpreter.getValues(exp.getLeft(), ctxt);
+//		list.addAll(PExpAssistantInterpreter.getValues(exp.getRight(), ctxt));
+//		return list;
+//	}
 
-	public static PExp findExpression(ASameBaseClassExp exp, int lineno)
-	{
-		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
-		if (found != null)
-			return found;
-
-		found = PExpAssistantInterpreter.findExpression(exp.getLeft(), lineno);
-		if (found != null)
-			return found;
-
-		found = PExpAssistantInterpreter.findExpression(exp.getRight(), lineno);
-		if (found != null)
-			return found;
-
-		return null;
-	}
+//	public static PExp findExpression(ASameBaseClassExp exp, int lineno)
+//	{
+//		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
+//		if (found != null)
+//			return found;
+//
+//		found = PExpAssistantInterpreter.findExpression(exp.getLeft(), lineno);
+//		if (found != null)
+//			return found;
+//
+//		found = PExpAssistantInterpreter.findExpression(exp.getRight(), lineno);
+//		if (found != null)
+//			return found;
+//
+//		return null;
+//	}
 
 }

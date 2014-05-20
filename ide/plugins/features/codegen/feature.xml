@@ -2,7 +2,7 @@
 <feature
       id="org.overture.ide.plugins.features.codegen"
       label="Code Generator"
-      version="2.0.6">
+      version="2.0.8">
 
    <description>
       %description
@@ -30,5 +30,12 @@
       <import plugin="org.overture.ide.core"/>
       <import plugin="org.eclipse.core.runtime" version="3.5.0" match="compatible"/>
    </requires>
+   
+   <plugin
+         id="org.overture.ide.plugins.codegen"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>

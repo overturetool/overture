@@ -18,7 +18,8 @@
  *******************************************************************************/
 package org.overture.ide.debug.core.dbgp.commands;
 
-public interface IDbgpCommands {
+public interface IDbgpCommands
+{
 	IDbgpCoreCommands getCoreCommands();
 
 	IDbgpExtendedCommands getExtendedCommands();

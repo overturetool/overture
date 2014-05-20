@@ -8,6 +8,7 @@ import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
+import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
@@ -155,12 +156,21 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 			AExplicitFunctionDefinition node, OoAstInfo question)
 			throws AnalysisException
 	{
-		if(node.getIsCurried()|| node.getIsTypeInvariant())
+		if(node.getIsTypeInvariant())
+		{
+			question.addUnsupportedNode(node, "Explicit functions that are type invariants are not supported");
 			return null;
+		}
+		
+		if(node.getIsCurried())
+		{
+			question.addUnsupportedNode(node, "Explicit functions that are curried are not supported");
+			return null;
+		}
 		
 		String access = node.getAccess().getAccess().toString();
 		boolean isStatic = true;
-		String operationName = node.getName().getName();
+		String funcName = node.getName().getName();
 		
 		PTypeCG type = node.getType().apply(question.getTypeVisitor(), question);
 		
@@ -185,7 +195,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 		method.setAccess(access);
 		method.setStatic(isStatic);
 		method.setMethodType(methodType);
-		method.setName(operationName);		
+		method.setName(funcName);		
 		method.setBody(body);
 		method.setIsConstructor(false);
 		method.setAbstract(isAbstract);
@@ -226,7 +236,6 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 			AExplicitOperationDefinition node, OoAstInfo question)
 			throws AnalysisException
 	{
-		
 		String access = node.getAccess().getAccess().toString();
 		boolean isStatic = question.getTcFactory().createPDefinitionAssistant().isStatic(node);
 		String operationName = node.getName().getName();

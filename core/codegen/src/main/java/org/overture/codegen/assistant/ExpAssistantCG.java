@@ -3,11 +3,11 @@ package org.overture.codegen.assistant;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.AValueDefinition;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.expressions.ARealLiteralExp;
@@ -156,7 +156,7 @@ public class ExpAssistantCG extends AssistantBase
 
 		stringLiteral.setType(new AStringTypeCG());
 		stringLiteral.setIsNull(isNull);
-		stringLiteral.setValue(StringEscapeUtils.escapeJava(value));
+		stringLiteral.setValue(value);
 		
 		return stringLiteral;
 	}
@@ -193,10 +193,15 @@ public class ExpAssistantCG extends AssistantBase
 	
 	public boolean isAssigned(PExp exp)
 	{
-		return exp.getAncestor(AInstanceVariableDefinition.class) != null ||
-			   exp.getAncestor(AValueDefinition.class) != null ||
-			   exp.getAncestor(AAssignmentDefinition.class) != null ||
-			   exp.getAncestor(AAssignmentStm.class) != null;
+		SClassDefinition classDef = exp.getAncestor(SClassDefinition.class);
+
+		if (classDef == null)
+			return false;
+
+		return exp.getAncestor(AInstanceVariableDefinition.class) != null
+				|| exp.getAncestor(AValueDefinition.class) != null
+				|| exp.getAncestor(AAssignmentDefinition.class) != null
+				|| exp.getAncestor(AAssignmentStm.class) != null;
 	}
 	
 	public LinkedList<AIdentifierPatternCG> getIdsFromPatternList(List<PPattern> patternList)
@@ -236,7 +241,7 @@ public class ExpAssistantCG extends AssistantBase
 		return exp.getAncestor(SOperationDefinition.class) == null && exp.getAncestor(SFunctionDefinition.class) == null;
 	}
 	
-	public PExpCG handleQuantifier(PExp node, List<PMultipleBind> bindings, PExp predicate, SQuantifierExpCG quantifier, String varCg, OoAstInfo question, String nodeStr)
+	public PExpCG handleQuantifier(PExp node, List<PMultipleBind> bindings, PExp predicate, SQuantifierExpCG quantifier, OoAstInfo question, String nodeStr)
 			throws AnalysisException
 	{
 		if(question.getExpAssistant().existsOutsideOpOrFunc(node))
@@ -273,7 +278,6 @@ public class ExpAssistantCG extends AssistantBase
 		quantifier.setType(typeCg);
 		quantifier.setBindList(bindingsCg);
 		quantifier.setPredicate(predicateCg);
-		quantifier.setVar(varCg);
 		
 		return quantifier;
 	}

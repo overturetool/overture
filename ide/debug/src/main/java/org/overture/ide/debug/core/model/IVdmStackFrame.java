@@ -23,7 +23,8 @@ import java.net.URI;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IStackFrame;
 
-public interface IVdmStackFrame extends IStackFrame {
+public interface IVdmStackFrame extends IStackFrame
+{
 	IVdmStack getStack();
 
 	IVdmThread getVdmThread();

@@ -264,14 +264,14 @@ public class FunctionValue extends Value
 	}
 
 	public Value eval(ILexLocation from, Value arg, Context ctxt)
-			throws ValueException
+			throws AnalysisException
 	{
 		ValueList args = new ValueList(arg);
 		return eval(from, args, ctxt, null);
 	}
 
 	public Value eval(ILexLocation from, ValueList argValues, Context ctxt)
-			throws ValueException
+			throws AnalysisException
 	{
 		return eval(from, argValues, ctxt, null);
 	}
@@ -295,7 +295,7 @@ public class FunctionValue extends Value
 	}
 
 	public Value eval(ILexLocation from, ValueList argValues, Context ctxt,
-			Context sctxt) throws ValueException
+			Context sctxt) throws AnalysisException
 	{
 		if (uninstantiated)
 		{
@@ -333,7 +333,7 @@ public class FunctionValue extends Value
 
 			try
 			{
-				for (NameValuePair nvp : PPatternAssistantInterpreter.getNamedValues(p, pv, ctxt))
+				for (NameValuePair nvp : ctxt.assistantFactory.createPPatternAssistant().getNamedValues(p, pv, ctxt))
 				{
 					Value v = args.get(nvp.name);
 
@@ -701,7 +701,7 @@ public class FunctionValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt) throws ValueException
+	public Value convertValueTo(PType to, Context ctxt) throws AnalysisException
 	{
 		PTypeAssistantInterpreter assistant = ctxt.assistantFactory.createPTypeAssistant();
 		

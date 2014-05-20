@@ -74,6 +74,6 @@ If you encounter a problem with a VDM specification, please try to make a small 
 
 Please note that the interactive list is at <https://github.com/overturetool/overture/issues?milestone=15&state=closed>
 
-[#275 TC Errors propagating](https://api.github.com/repos/overturetool/overture/issues/275)
-[#194 More fine grained type checking](https://api.github.com/repos/overturetool/overture/issues/194)
-[#113 VDMJ type checker not reporting "void" paths](https://api.github.com/repos/overturetool/overture/issues/113)
+* [#275 TC Errors propagating](https://api.github.com/repos/overturetool/overture/issues/275)
+* [#194 More fine grained type checking](https://api.github.com/repos/overturetool/overture/issues/194)
+* [#113 VDMJ type checker not reporting "void" paths](https://api.github.com/repos/overturetool/overture/issues/113)

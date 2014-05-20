@@ -18,7 +18,8 @@
  *******************************************************************************/
 package org.overture.ide.debug.core.dbgp;
 
-public interface IDbgpSpawnpoint {
+public interface IDbgpSpawnpoint
+{
 	String getId();
 
 	boolean isEnabled();

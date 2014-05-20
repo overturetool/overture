@@ -1,4 +1,4 @@
-import org.overture.codegen.javalib.*;
+import org.overture.codegen.runtime.*;
 
 import java.util.*;
 
@@ -50,11 +50,11 @@ public class A {
     private static class Rec implements Record {
         public Number x;
 
-        public Rec(Number _x) {
+        public Rec(final Number _x) {
             x = _x;
         }
 
-        public boolean equals(Object obj) {
+        public boolean equals(final Object obj) {
             if (!(obj instanceof Rec)) {
                 return false;
             }

@@ -23,6 +23,7 @@
 
 package org.overture.interpreter.values;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.types.PType;
@@ -45,49 +46,62 @@ public class UpdatableValue extends ReferenceValue
 {
 	private static final long serialVersionUID = 1L;
 	public ValueListenerList listeners;
+	protected final PType restrictedTo;
 
 	public static UpdatableValue factory(Value value, ValueListenerList listeners)
+	{
+		return factory(value, listeners, null);
+	}
+
+	public static UpdatableValue factory(Value value, ValueListenerList listeners, PType type)
 	{
 		if (Settings.dialect == Dialect.VDM_RT &&
 			Properties.rt_duration_transactions)
 		{
-			return new TransactionValue(value, listeners);
+			return new TransactionValue(value, listeners, type);
 		}
 		else
 		{
-			return new UpdatableValue(value, listeners);
+			return new UpdatableValue(value, listeners, type);
 		}
 	}
 
 	public static UpdatableValue factory(ValueListenerList listeners)
 	{
+		return factory(listeners, null);
+	}
+
+	public static UpdatableValue factory(ValueListenerList listeners, PType type)
+	{
 		if (Settings.dialect == Dialect.VDM_RT &&
 			Properties.rt_duration_transactions)
 		{
-			return new TransactionValue(listeners);
+			return new TransactionValue(listeners, type);
 		}
 		else
 		{
-			return new UpdatableValue(listeners);
+			return new UpdatableValue(listeners, type);
 		}
 	}
 
-	protected UpdatableValue(Value value, ValueListenerList listeners)
+	protected UpdatableValue(Value value, ValueListenerList listeners, PType type)
 	{
 		super(value);
 		this.listeners = listeners;
+		this.restrictedTo = type;
 	}
 
-	protected UpdatableValue(ValueListenerList listeners)
+	protected UpdatableValue(ValueListenerList listeners, PType type)
 	{
 		super();
 		this.listeners = listeners;
+		this.restrictedTo = type;
 	}
 
 	@Override
 	public synchronized Value getUpdatable(ValueListenerList watch)
 	{
-		return new UpdatableValue(value, watch);
+		return new UpdatableValue(value, watch, restrictedTo);
 	}
 
 	@Override
@@ -97,30 +111,28 @@ public class UpdatableValue extends ReferenceValue
 	}
 
 	@Override
-	public synchronized Value convertValueTo(PType to, Context ctxt) throws ValueException
+	public synchronized Value convertValueTo(PType to, Context ctxt) throws AnalysisException
 	{
 		return value.convertValueTo(to, ctxt).getUpdatable(listeners);
 	}
 
 	@Override
-	public void set(ILexLocation location, Value newval, Context ctxt)
+	public void set(ILexLocation location, Value newval, Context ctxt) throws AnalysisException
 	{
 		// Anything with structure added to an UpdateableValue has to be
 		// updatable, otherwise you can "freeze" part of the substructure
-		// such that it can't be changed.
+		// such that it can't be changed. And we have to set the listeners
+		// to be "our" listeners, regardless of any it had before.
 
 		synchronized (this)
 		{
-    		if (newval instanceof UpdatableValue)
-    		{
-    			value = newval;
-    		}
-    		else
-    		{
-    			value = newval.getUpdatable(listeners);
-    		}
-
+   			value = newval.getUpdatable(listeners);
     		value = ((UpdatableValue)value).value;	// To avoid nested updatables
+    		
+    		if (restrictedTo != null)
+    		{
+				value = value.convertTo(restrictedTo, ctxt);
+    		}
 		}
 		
 		//Experimental hood added for DESTECS
@@ -136,8 +148,6 @@ public class UpdatableValue extends ReferenceValue
 		{
 			listeners.changedValue(location, value, ctxt);
 		}
-		
-		
 	}
 
 	public void addListener(ValueListener listener)
@@ -155,7 +165,7 @@ public class UpdatableValue extends ReferenceValue
 	@Override
 	public synchronized Object clone()
 	{
-		return new UpdatableValue((Value)value.clone(), listeners);
+		return new UpdatableValue((Value)value.clone(), listeners, restrictedTo);
 	}
 
 	@Override

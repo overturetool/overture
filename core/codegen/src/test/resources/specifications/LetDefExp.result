@@ -1,4 +1,4 @@
-import org.overture.codegen.javalib.*;
+import org.overture.codegen.runtime.*;
 
 import java.util.*;
 
@@ -13,7 +13,7 @@ public class A {
         return x;
     }
 
-    public static Number f(Number x) {
+    public static Number f(final Number x) {
         Number x1 = f(1L);
         Number x2 = f(2L);
         Number x3 = f(3L);

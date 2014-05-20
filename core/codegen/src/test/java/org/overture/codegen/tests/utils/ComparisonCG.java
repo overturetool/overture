@@ -13,15 +13,18 @@ import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
-import org.overture.codegen.javalib.Token;
-import org.overture.codegen.javalib.Tuple;
-import org.overture.codegen.javalib.VDMMap;
-import org.overture.codegen.javalib.VDMSeq;
-import org.overture.codegen.javalib.VDMSet;
+import org.overture.codegen.runtime.Record;
+import org.overture.codegen.runtime.Token;
+import org.overture.codegen.runtime.Tuple;
+import org.overture.codegen.runtime.VDMMap;
+import org.overture.codegen.runtime.VDMSeq;
+import org.overture.codegen.runtime.VDMSet;
 import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.interpreter.values.BooleanValue;
 import org.overture.interpreter.values.CharacterValue;
+import org.overture.interpreter.values.FieldMap;
+import org.overture.interpreter.values.FieldValue;
 import org.overture.interpreter.values.InvariantValue;
 import org.overture.interpreter.values.MapValue;
 import org.overture.interpreter.values.NameValuePairMap;
@@ -29,7 +32,7 @@ import org.overture.interpreter.values.NilValue;
 import org.overture.interpreter.values.NumericValue;
 import org.overture.interpreter.values.ObjectValue;
 import org.overture.interpreter.values.QuoteValue;
-import org.overture.interpreter.values.ReferenceValue;
+import org.overture.interpreter.values.RecordValue;
 import org.overture.interpreter.values.SeqValue;
 import org.overture.interpreter.values.SetValue;
 import org.overture.interpreter.values.TokenValue;
@@ -111,8 +114,49 @@ public class ComparisonCG
 		{
 			return handleObject(cgValue, vdmValue);
 		}
+		else if(vdmValue instanceof RecordValue)
+		{
+			return handleRecord(cgValue, vdmValue);
+		}
 		
 		return false;
+	}
+
+	private boolean handleRecord(Object cgValue, Value vdmValue)
+	{
+		if(!(cgValue instanceof Record))
+			return false;
+
+		RecordValue vdmRecord = (RecordValue) vdmValue;
+		Record cgRecord = (Record) cgValue;
+		
+		if(!cgRecord.getClass().getName().endsWith(vdmRecord.type.getName().getName()))
+			return false;
+		
+		Field[] cgRecFields = cgRecord.getClass().getFields();
+		
+		FieldMap vdmRecFields = vdmRecord.fieldmap;
+		
+		for(int i = 0; i < vdmRecFields.size(); i++)
+		{
+			FieldValue vdmField = vdmRecFields.get(i);
+			Field cgField = cgRecFields[i];
+			
+			try
+			{
+				if(!cgField.getName().equals(vdmField.name))
+					return false;
+				
+				if(!(compare(cgField.get(cgRecord), vdmField.value)))
+					return false;
+			} catch (Exception e)
+			{
+				e.printStackTrace();
+				return false;
+			}
+		}
+		
+		return true;
 	}
 
 	private boolean handleObject(Object cgValue, Value vdmValue)

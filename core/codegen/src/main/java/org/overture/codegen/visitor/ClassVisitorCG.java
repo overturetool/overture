@@ -35,6 +35,7 @@ public class ClassVisitorCG extends AbstractVisitorCG<OoAstInfo, AClassDeclCG>
 		LinkedList<ILexNameToken> superNames = node.getSupernames();
 		
 		AClassDeclCG classCg = new AClassDeclCG();
+		classCg.setPackage(null);
 		classCg.setName(name);
 		classCg.setAccess(access);
 		classCg.setAbstract(isAbstract);

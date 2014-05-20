@@ -28,45 +28,55 @@ import org.overture.ide.debug.core.dbgp.internal.IDbgpDebugingEngine;
 import org.overture.ide.debug.core.dbgp.internal.packets.DbgpNotifyPacket;
 
 public class DbgpNotificationManager extends DbgpWorkingThread implements
-		IDbgpNotificationManager {
+		IDbgpNotificationManager
+{
 	private final ListenerList listeners = new ListenerList();
 
 	private final IDbgpDebugingEngine engine;
 
-	protected void fireDbgpNotify(IDbgpNotification notification) {
+	protected void fireDbgpNotify(IDbgpNotification notification)
+	{
 		Object[] list = listeners.getListeners();
-		for (int i = 0; i < list.length; ++i) {
+		for (int i = 0; i < list.length; ++i)
+		{
 			((IDbgpNotificationListener) list[i]).dbgpNotify(notification);
 		}
 	}
 
-	protected void workingCycle() throws Exception {
-		try {
-			while (!Thread.interrupted()) {
+	protected void workingCycle() throws Exception
+	{
+		try
+		{
+			while (!Thread.interrupted())
+			{
 				DbgpNotifyPacket packet = engine.getNotifyPacket();
 
-				fireDbgpNotify(new DbgpNotification(packet.getName(), packet
-						.getContent()));
+				fireDbgpNotify(new DbgpNotification(packet.getName(), packet.getContent()));
 			}
-		} catch (InterruptedException e) {
+		} catch (InterruptedException e)
+		{
 			// OK, interrupted
 		}
 	}
 
-	public DbgpNotificationManager(IDbgpDebugingEngine engine) {
+	public DbgpNotificationManager(IDbgpDebugingEngine engine)
+	{
 		super("DBGP - Notification Manager"); //$NON-NLS-1$
-		if (engine == null) {
+		if (engine == null)
+		{
 			throw new IllegalArgumentException();
 		}
 
 		this.engine = engine;
 	}
 
-	public void addNotificationListener(IDbgpNotificationListener listener) {
+	public void addNotificationListener(IDbgpNotificationListener listener)
+	{
 		listeners.add(listener);
 	}
 
-	public void removeNotificationListener(IDbgpNotificationListener listener) {
+	public void removeNotificationListener(IDbgpNotificationListener listener)
+	{
 		listeners.remove(listener);
 	}
 }

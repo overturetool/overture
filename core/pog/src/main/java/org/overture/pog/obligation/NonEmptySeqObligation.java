@@ -30,7 +30,6 @@ import org.overture.ast.expressions.ASeqEnumSeqExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.pog.pub.IPOContextStack;
-import org.overture.pog.pub.POType;
 
 public class NonEmptySeqObligation extends ProofObligation
 {

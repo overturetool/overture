@@ -178,10 +178,14 @@ public class VdmValue extends VdmDebugElement implements IVdmValue,
 	private int getPageOffset(int page)
 	{
 		if (pageSize <= 0)
+		{
 			pageSize = frame.getVdmThread().getPropertyPageSize();
+		}
 
 		if (pageSize <= 0)
+		{
 			return 0;
+		}
 		return page * pageSize;
 	}
 

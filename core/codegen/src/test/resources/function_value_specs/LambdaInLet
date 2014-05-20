@@ -1,0 +1,10 @@
+class Entry
+
+operations 
+
+public static Run : () ==> ?
+Run () ==
+	let addOne = (lambda x : int & x + 1)
+	in
+		return addOne(2)
+end Entry

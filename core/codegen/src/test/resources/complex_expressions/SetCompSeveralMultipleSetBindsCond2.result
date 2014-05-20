@@ -1,4 +1,4 @@
-import org.overture.codegen.javalib.*;
+import org.overture.codegen.runtime.*;
 
 import java.util.*;
 
@@ -19,22 +19,23 @@ public class Entry {
             Number x = ((Number) iterator_1.next());
 
             for (Iterator iterator_2 = set_1.iterator(); iterator_2.hasNext();) {
-                VDMSet set_2 = SetUtil.set(2L, 3L, 4L);
                 Number y = ((Number) iterator_2.next());
+                VDMSet set_2 = SetUtil.set(2L, 3L, 4L);
 
                 for (Iterator iterator_3 = set_2.iterator();
                         iterator_3.hasNext();) {
                     Number z = ((Number) iterator_3.next());
 
                     if ((x.longValue() + y.longValue() + z.longValue()) > 3L) {
-                        setCompResult_1.add(x.longValue() + y.longValue() +
-                            z.longValue());
+                        setCompResult_1 = SetUtil.union(setCompResult_1.clone(),
+                                SetUtil.set(x.longValue() + y.longValue() +
+                                    z.longValue()));
                     }
                 }
             }
         }
 
-        return setCompResult_1;
+        return setCompResult_1.clone();
     }
 }
 

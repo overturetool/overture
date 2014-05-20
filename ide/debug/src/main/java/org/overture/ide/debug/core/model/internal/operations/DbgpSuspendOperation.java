@@ -21,14 +21,17 @@ package org.overture.ide.debug.core.model.internal.operations;
 import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
 import org.overture.ide.debug.core.model.IVdmThread;
 
-public class DbgpSuspendOperation extends DbgpOperation {
+public class DbgpSuspendOperation extends DbgpOperation
+{
 	private static final String JOB_NAME = "Suspend Operation";
 
-	public DbgpSuspendOperation(IVdmThread thread, IResultHandler finish) {
+	public DbgpSuspendOperation(IVdmThread thread, IResultHandler finish)
+	{
 		super(thread, JOB_NAME, finish);
 	}
 
-	protected void process() throws DbgpException {
+	protected void process() throws DbgpException
+	{
 		/* boolean success = */getExtended().makeBreak();
 		// TODO: think about what to do with this status
 	}

@@ -141,7 +141,7 @@ public class VdmDebugLogManager implements ILaunchListener,
 		}
 
 		// bail if we're not a VdmDebugTarget or logging isn't enabled
-		if (!((target instanceof IVdmDebugTarget) && loggingEnabled))
+		if (!(target instanceof IVdmDebugTarget && loggingEnabled))
 		{
 			return;
 		}

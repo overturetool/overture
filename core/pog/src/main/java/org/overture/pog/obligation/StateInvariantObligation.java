@@ -38,7 +38,6 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
-import org.overture.pog.pub.POType;
 import org.overture.pog.utility.PogAssistantFactory;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 
@@ -65,6 +64,7 @@ public class StateInvariantObligation extends ProofObligation
 			AEqualsDefinition local = new AEqualsDefinition();
 			local.setPattern(def.getInvPattern().clone());
 			local.setName(def.getName().clone());
+			local.setTest(getVarExp(def.getName()));
 			invDefs.add(local);
 			letExp.setLocalDefs(invDefs);
 			letExp.setExpression(def.getInvExpression().clone());

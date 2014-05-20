@@ -95,13 +95,13 @@ public class ModuleInterpreter extends Interpreter
 	@Override
 	public PStm findStatement(File file, int lineno)
 	{
-		return AModuleModulesAssistantInterpreter.findStatement(modules,file, lineno);
+		return assistantFactory.createAModuleModulesAssistant().findStatement(modules,file, lineno);
 	}
 
 	@Override
 	public PExp findExpression(File file, int lineno)
 	{
-		return AModuleModulesAssistantInterpreter.findExpression(modules,file, lineno);
+		return assistantFactory.createAModuleModulesAssistant().findExpression(modules,file, lineno);
 	}
 
 	/**
@@ -165,7 +165,7 @@ public class ModuleInterpreter extends Interpreter
 
 	public Context getStateContext()
 	{
-		return AModuleModulesAssistantInterpreter.getStateContext(defaultModule);
+		return assistantFactory.createAModuleModulesAssistant().getStateContext(defaultModule);
 	}
 
 	@Override
@@ -191,14 +191,14 @@ public class ModuleInterpreter extends Interpreter
 		BasicSchedulableThread.setInitialThread(iniThread);
 		scheduler.init();
 		CPUValue.init(scheduler,assistantFactory);
-		initialContext = ModuleListAssistantInterpreter.initialize(modules,dbgp);
+		initialContext = assistantFactory.createModuleListAssistant().initialize(modules,dbgp);
 	}
 
 	@Override
 	public void traceInit(DBGPReader dbgp)
 	{
 		scheduler.reset();
-		initialContext = ModuleListAssistantInterpreter.initialize(modules, dbgp);
+		initialContext = assistantFactory.createModuleListAssistant().initialize(modules, dbgp);
 	}
 
 	@Override
@@ -227,7 +227,7 @@ public class ModuleInterpreter extends Interpreter
 		typeCheck(expr, env);
 
 		Context mainContext = new StateContext(assistantFactory,defaultModule.getName().getLocation(),
-				"module scope",	null, AModuleModulesAssistantInterpreter.getStateContext(defaultModule));
+				"module scope",	null, assistantFactory.createAModuleModulesAssistant().getStateContext(defaultModule));
 
 		mainContext.putAll(initialContext);
 		mainContext.setThreadState(dbgp, null);
@@ -327,14 +327,14 @@ public class ModuleInterpreter extends Interpreter
 	@Override
 	public ProofObligationList getProofObligations()
 	{
-		return ModuleListAssistantInterpreter.getProofObligations(modules);
+		return assistantFactory.createModuleListAssistant().getProofObligations(modules);
 	}
 
 	@Override
 	public Context getInitialTraceContext(ANamedTraceDefinition tracedef, boolean debug) throws ValueException
 	{
 		Context mainContext = new StateContext(assistantFactory,defaultModule.getName().getLocation(),
-				"module scope",	null, AModuleModulesAssistantInterpreter.getStateContext(defaultModule));
+				"module scope",	null, assistantFactory.createAModuleModulesAssistant().getStateContext(defaultModule));
 
 		mainContext.putAll(initialContext);
 		mainContext.setThreadState(null, CPUValue.vCPU);

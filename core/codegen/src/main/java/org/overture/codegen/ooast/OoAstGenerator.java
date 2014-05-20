@@ -29,7 +29,7 @@ public class OoAstGenerator
 		AClassDeclCG classCg = classDef.apply(codeGenInfo.getClassVisitor(), codeGenInfo);
 		Set<NodeInfo> unsupportedNodes = copyGetUnsupportedNodes();
 		
-		return new ClassDeclStatus(classCg, unsupportedNodes);
+		return new ClassDeclStatus(classDef.getName().getName(), classCg, unsupportedNodes);
 	}
 	
 	public ExpStatus generateFrom(PExp exp) throws AnalysisException

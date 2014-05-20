@@ -1,4 +1,4 @@
-import org.overture.codegen.javalib.*;
+import org.overture.codegen.runtime.*;
 
 import java.util.*;
 
@@ -9,17 +9,17 @@ public class A {
     public A() {
     }
 
-    public A op(A pa) {
+    public A op(final A pa) {
         return pa.op1(n).op1(4L);
     }
 
-    public A op1(Number pa) {
+    public A op1(final Number pa) {
         return this;
     }
 }
 
 ##########
-import org.overture.codegen.javalib.*;
+import org.overture.codegen.runtime.*;
 
 import java.util.*;
 

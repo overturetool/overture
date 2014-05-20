@@ -51,7 +51,7 @@ public class PluginVdm2JavaUtil
 		
 	public static boolean isSupportedVdmDialect(IVdmProject vdmProject)
 	{
-		return vdmProject.getDialect() == Dialect.VDM_PP || vdmProject.getDialect() == Dialect.VDM_RT;
+		return vdmProject.getDialect() == Dialect.VDM_PP;
 	}
 	
 	public static IVdmProject getVdmProject(ExecutionEvent event)
@@ -124,11 +124,33 @@ public class PluginVdm2JavaUtil
 		}
 	}
 	
+	public static String limitStr(String str)
+	{
+		if(str == null)
+			return "";
+		
+		int length = str.length();
+		final int limit = 100;
+		
+		String subString = null;
+		
+		if(length <= limit)
+		{
+			subString = str.substring(0, length);
+		}
+		else
+		{
+			subString = str.substring(0, limit) + "...";
+		}
+		
+		return subString.replaceAll("\\s+", " ");
+	}
+	
 	public static String formatNodeString(NodeInfo nodeInfo, LocationAssistantCG locationAssistant)
 	{
 		INode node = nodeInfo.getNode();
 		StringBuilder messageSb = new StringBuilder();
-		messageSb.append(node.toString());
+		messageSb.append(limitStr(node.toString()));
 		messageSb.append(" (" + node.getClass().getSimpleName() + ")");
 		
 		ILexLocation location = locationAssistant.findLocation(node);

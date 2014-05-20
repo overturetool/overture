@@ -16,18 +16,18 @@ public class ASeqEnumSeqExpAssistantInterpreter
 		this.af = af;
 	}
 
-	public static ValueList getValues(ASeqEnumSeqExp exp, ObjectContext ctxt)
-	{
-		return PExpAssistantInterpreter.getValues(exp.getMembers(), ctxt);
-	}
-
-	public static PExp findExpression(ASeqEnumSeqExp exp, int lineno)
-	{
-		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
-		if (found != null)
-			return found;
-
-		return PExpAssistantInterpreter.findExpression(exp.getMembers(), lineno);
-	}
+//	public static ValueList getValues(ASeqEnumSeqExp exp, ObjectContext ctxt)
+//	{
+//		return PExpAssistantInterpreter.getValues(exp.getMembers(), ctxt);
+//	}
+//
+//	public static PExp findExpression(ASeqEnumSeqExp exp, int lineno)
+//	{
+//		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
+//		if (found != null)
+//			return found;
+//
+//		return PExpAssistantInterpreter.findExpression(exp.getMembers(), lineno);
+//	}
 
 }

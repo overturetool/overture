@@ -6,7 +6,6 @@ import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.statements.ATixeStmtAlternative;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
 import org.overture.interpreter.runtime.ValueException;
@@ -36,7 +35,7 @@ public class ATixeStmtAlternativeAssistantInterpreter
 			if (node.getPatternBind().getPattern() != null)
 			{
 				evalContext = new Context(af, location, "tixe pattern", ctxt);
-				evalContext.putList(PPatternAssistantInterpreter.getNamedValues(node.getPatternBind().getPattern(), exval, ctxt));
+				evalContext.putList(af.createPPatternAssistant().getNamedValues(node.getPatternBind().getPattern(), exval, ctxt));
 			} else if (node.getPatternBind().getBind() instanceof ASetBind)
 			{
 				ASetBind setbind = (ASetBind) node.getPatternBind().getBind();
@@ -45,7 +44,7 @@ public class ATixeStmtAlternativeAssistantInterpreter
 				if (set.contains(exval))
 				{
 					evalContext = new Context(af, location, "tixe set", ctxt);
-					evalContext.putList(PPatternAssistantInterpreter.getNamedValues(setbind.getPattern(), exval, ctxt));
+					evalContext.putList(af.createPPatternAssistant().getNamedValues(setbind.getPattern(), exval, ctxt));
 				} else
 				{
 					VdmRuntimeError.abort(setbind.getLocation(), 4049, "Value "
@@ -57,7 +56,7 @@ public class ATixeStmtAlternativeAssistantInterpreter
 				// Note we always perform DTC checks here...
 				Value converted = exval.convertValueTo(typebind.getType(), ctxt);
 				evalContext = new Context(af, location, "tixe type", ctxt);
-				evalContext.putList(PPatternAssistantInterpreter.getNamedValues(typebind.getPattern(), converted, ctxt));
+				evalContext.putList(af.createPPatternAssistant().getNamedValues(typebind.getPattern(), converted, ctxt));
 			}
 		} catch (ValueException ve) // Type bind convert failure
 		{

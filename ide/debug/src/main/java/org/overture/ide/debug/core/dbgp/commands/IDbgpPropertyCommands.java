@@ -21,18 +21,15 @@ package org.overture.ide.debug.core.dbgp.commands;
 import org.overture.ide.debug.core.dbgp.IDbgpProperty;
 import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
 
-public interface IDbgpPropertyCommands {
+public interface IDbgpPropertyCommands
+{
 	/*
-	 * -d stack depth (optional, debugger engine should assume zero if not
-	 * provided) -c context id (optional, retrieved by context-names, debugger
-	 * engine should assume zero if not provided) -n property long name
-	 * (required) -m max data size to retrieve (optional) -t data type
-	 * (optional) -p data page (optional, for arrays, hashes, objects, etc.) -k
-	 * property key as retrieved in a property element, optional, used for
-	 * property_get of children and property_value, required if it was provided
-	 * by the debugger engine. -a property address as retrieved in a property
-	 * element, optional, used for property_set/value, required if it was
-	 * provided by the debugger engine.
+	 * -d stack depth (optional, debugger engine should assume zero if not provided) -c context id (optional, retrieved
+	 * by context-names, debugger engine should assume zero if not provided) -n property long name (required) -m max
+	 * data size to retrieve (optional) -t data type (optional) -p data page (optional, for arrays, hashes, objects,
+	 * etc.) -k property key as retrieved in a property element, optional, used for property_get of children and
+	 * property_value, required if it was provided by the debugger engine. -a property address as retrieved in a
+	 * property element, optional, used for property_set/value, required if it was provided by the debugger engine.
 	 */
 
 	IDbgpProperty getPropertyByKey(Integer page, String name,

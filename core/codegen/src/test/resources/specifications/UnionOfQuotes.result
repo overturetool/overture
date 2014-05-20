@@ -1,4 +1,4 @@
-import org.overture.codegen.javalib.*;
+import org.overture.codegen.runtime.*;
 
 import quotes.*;
 
@@ -9,13 +9,13 @@ public class A {
     public A() {
     }
 
-    public void op(Number v) {
+    public void op(final Number v) {
         if (v.longValue() == Quotes.Red) {
             //Skip;
         }
     }
 
-    public void op2(Number v) {
+    public void op2(final Number v) {
         if (v.longValue() == Quotes.A) {
             //Skip;
         }

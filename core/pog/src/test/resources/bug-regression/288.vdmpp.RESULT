@@ -1,0 +1,1 @@
+[{"poKind":"function satisfiability","poExp":"(forall a:Alarm, peri:Period, plant:Plant \u0026 (exists r:Expert \u0026 post_ExpertToPage(a, peri, plant, r)))"}]

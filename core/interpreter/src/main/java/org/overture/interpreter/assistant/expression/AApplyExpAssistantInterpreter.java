@@ -21,32 +21,32 @@ public class AApplyExpAssistantInterpreter extends AApplyExpAssistantTC
 		this.af = af;
 	}
 
-	public static ValueList getValues(AApplyExp exp, ObjectContext ctxt)
-	{
-		ValueList list = PExpAssistantInterpreter.getValues(exp.getArgs(), ctxt);
-		list.addAll(PExpAssistantInterpreter.getValues(exp.getRoot(), ctxt));
-		return list;
-	}
+//	public static ValueList getValues(AApplyExp exp, ObjectContext ctxt)
+//	{
+//		ValueList list = PExpAssistantInterpreter.getValues(exp.getArgs(), ctxt);
+//		list.addAll(PExpAssistantInterpreter.getValues(exp.getRoot(), ctxt));
+//		return list;
+//	}
 
-	public static PExp findExpression(AApplyExp exp, int lineno)
-	{
-		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
-		if (found != null)
-			return found;
+//	public static PExp findExpression(AApplyExp exp, int lineno)
+//	{
+//		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
+//		if (found != null)
+//			return found;
+//
+//		found = PExpAssistantInterpreter.findExpression(exp.getRoot(), lineno);
+//		if (found != null)
+//			return found;
+//
+//		return PExpAssistantInterpreter.findExpression(exp.getArgs(), lineno);
+//	}
 
-		found = PExpAssistantInterpreter.findExpression(exp.getRoot(), lineno);
-		if (found != null)
-			return found;
-
-		return PExpAssistantInterpreter.findExpression(exp.getArgs(), lineno);
-	}
-
-	public static List<PExp> getSubExpressions(AApplyExp exp)
-	{
-		List<PExp> subs = new Vector<PExp>();
-		subs.addAll(PExpAssistantInterpreter.getSubExpressions(exp.getRoot()));
-		subs.add(exp);
-		return subs;
-	}
+//	public static List<PExp> getSubExpressions(AApplyExp exp)
+//	{
+//		List<PExp> subs = new Vector<PExp>();
+//		subs.addAll(PExpAssistantInterpreter.getSubExpressions(exp.getRoot()));
+//		subs.add(exp);
+//		return subs;
+//	}
 
 }

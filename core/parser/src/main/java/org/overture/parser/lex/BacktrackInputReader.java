@@ -42,13 +42,23 @@ import org.overture.ast.messages.InternalException;
 
 public class BacktrackInputReader extends Reader
 {
+	/**
+	 * The different types of reader that may be obtained from a <{@link BacktrackInputReader}
+	 * @author pvj
+	 *
+	 */
 	public enum ReaderType {Doc,Docx,Odf,Latex};
+	
+	/**
+	 * Cached empty array for reader data
+	 */
+	private static final char[] EMPTY_DATA = new char[]{};
 	
 	/** A stack of position markers for popping. */
 	private Stack<Integer> stack = new Stack<Integer>();
 
 	/** The characters from the file. */
-	private char[] data;
+	private final char[] data;
 
 	/** The current read position. */
 	private int pos = 0;
@@ -67,9 +77,9 @@ public class BacktrackInputReader extends Reader
 		try
 		{
 			InputStreamReader isr = readerFactory(file, charset);
-			data = new char[readerLength(file, isr)];
-			max = isr.read(data);
-			data = Arrays.copyOf(data, max);
+			char[]buffer = new char[readerLength(file, isr)];
+			max = isr.read(buffer);
+			data = Arrays.copyOf(buffer, max);
 			pos = 0;
 			isr.close();
 		}
@@ -99,6 +109,7 @@ public class BacktrackInputReader extends Reader
 
 	public BacktrackInputReader(String expression, String charset)
 	{
+		char[] buf = EMPTY_DATA;
     	try
         {
 	        ByteArrayInputStream is =
@@ -107,8 +118,8 @@ public class BacktrackInputReader extends Reader
 	        InputStreamReader isr =
 	        	new LatexStreamReader(is, charset);
 
-    		data = new char[expression.length() + 1];
-	        max = isr.read(data);
+    		buf = new char[expression.length() + 1];
+	        max = isr.read(buf);
 	        pos = 0;
 
 	        isr.close();
@@ -117,6 +128,8 @@ public class BacktrackInputReader extends Reader
         catch (IOException e)
         {
 	        // This can never really happen...
+        }finally{
+        	data = buf;
         }
 	}
 	
@@ -128,6 +141,7 @@ public class BacktrackInputReader extends Reader
 	 */
 	public BacktrackInputReader(String expression, String charset, File file, ReaderType streamReaderType)
 	{
+		char[] buf = EMPTY_DATA;
     	try
         {
     		if(expression.contains("\r\n"))
@@ -162,8 +176,8 @@ public class BacktrackInputReader extends Reader
 	        	expression = expression.replace("\n", " \n");
 	        }
 	        
-    		data = new char[expression.length() + 1];
-	        max = isr.read(data);
+    		buf = new char[expression.length() + 1];
+	        max = isr.read(buf);
 	        pos = 0;
 
 	        isr.close();
@@ -173,6 +187,8 @@ public class BacktrackInputReader extends Reader
         {
         	e.printStackTrace();
 	        // This can never really happen...
+        }finally{
+        	data = buf;
         }
 	}
 
@@ -273,7 +289,7 @@ public class BacktrackInputReader extends Reader
 
 	public char readCh()
 	{
-		return (pos == max-1) ? (char)-1 : data[pos++];
+		return (data.length<=pos || pos == max) ? (char)-1 : data[pos++];
 	}
 
 	/**

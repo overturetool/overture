@@ -34,7 +34,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 public class DbgpBreakpointCommands extends DbgpBaseCommands implements
-		IDbgpBreakpointCommands {
+		IDbgpBreakpointCommands
+{
 
 	private static final String BREAKPOINT_SET_COMMAND = "breakpoint_set"; //$NON-NLS-1$
 
@@ -60,58 +61,67 @@ public class DbgpBreakpointCommands extends DbgpBaseCommands implements
 
 	final String WATCH_BREAKPOINT = "watch"; //$NON-NLS-1$
 
-	protected IDbgpBreakpoint[] parseBreakpointsResponse(Element response) {
+	protected IDbgpBreakpoint[] parseBreakpointsResponse(Element response)
+	{
 		List<IDbgpBreakpoint> list = new ArrayList<IDbgpBreakpoint>();
 
 		NodeList breakpoints = response.getElementsByTagName(BREAKPOINT_TAG);
-		for (int i = 0; i < breakpoints.getLength(); ++i) {
-			list.add(DbgpXmlEntityParser.parseBreakpoint((Element) breakpoints
-					.item(i)));
+		for (int i = 0; i < breakpoints.getLength(); ++i)
+		{
+			list.add(DbgpXmlEntityParser.parseBreakpoint((Element) breakpoints.item(i)));
 		}
 
-		return (IDbgpBreakpoint[]) list
-				.toArray(new IDbgpBreakpoint[list.size()]);
+		return (IDbgpBreakpoint[]) list.toArray(new IDbgpBreakpoint[list.size()]);
 	}
 
 	protected String parseSetBreakpointResponse(Element response)
-			throws DbgpException {
+			throws DbgpException
+	{
 		return response.getAttribute("id"); //$NON-NLS-1$
 	}
 
 	protected String setBreakpoint(String type, URI uri, Integer lineNumber,
 			String function, String exception, DbgpBreakpointConfig info)
-			throws DbgpException {
+			throws DbgpException
+	{
 
 		DbgpRequest request = createRequest(BREAKPOINT_SET_COMMAND);
 		request.addOption("-t", type); //$NON-NLS-1$
 
-		if (uri != null) {
+		if (uri != null)
+		{
 			request.addOption("-f", uri.toASCIIString()); //$NON-NLS-1$
 		}
 
-		if (lineNumber != null) {
+		if (lineNumber != null)
+		{
 			request.addOption("-n", lineNumber.toString()); //$NON-NLS-1$
 		}
 
-		if (function != null) {
+		if (function != null)
+		{
 			request.addOption("-m", function); //$NON-NLS-1$
 		}
 
-		if (exception != null) {
+		if (exception != null)
+		{
 			request.addOption("-x", exception); //$NON-NLS-1$
 		}
 
-		if (info != null) {
+		if (info != null)
+		{
 			request.addOption("-s", info.getStateString()); //$NON-NLS-1$
 			request.addOption("-r", info.getTemporaryString()); //$NON-NLS-1$
 
-			if (info.getHitValue() != -1 && info.getHitCondition() != -1) {
+			if (info.getHitValue() != -1 && info.getHitCondition() != -1)
+			{
 				request.addOption("-h", info.getHitValue()); //$NON-NLS-1$
 				request.addOption("-o", info.getHitConditionString()); //$NON-NLS-1$
 			}
 
 			String expression = info.getExpression();
-			if (expression != null) {
+			if (expression != null)
+			{
 				request.setData(expression);
 			}
 		}
@@ -119,62 +129,69 @@ public class DbgpBreakpointCommands extends DbgpBaseCommands implements
 		return parseSetBreakpointResponse(communicate(request));
 	}
 
-	public DbgpBreakpointCommands(IDbgpCommunicator communicator) {
+	public DbgpBreakpointCommands(IDbgpCommunicator communicator)
+	{
 		super(communicator);
 	}
 
 	public String setLineBreakpoint(URI uri, int lineNumber,
-			DbgpBreakpointConfig info) throws DbgpException {
-		return setBreakpoint(LINE_BREAKPOINT, uri, new Integer(lineNumber),
-				null, null, info);
+			DbgpBreakpointConfig info) throws DbgpException
+	{
+		return setBreakpoint(LINE_BREAKPOINT, uri, new Integer(lineNumber), null, null, info);
 	}
 
 	public String setCallBreakpoint(URI uri, String function,
-			DbgpBreakpointConfig info) throws DbgpException {
+			DbgpBreakpointConfig info) throws DbgpException
+	{
 		return setBreakpoint(CALL_BREAKPOINT, uri, null, function, null, info);
 	}
 
 	public String setReturnBreakpoint(URI uri, String function,
-			DbgpBreakpointConfig info) throws DbgpException {
+			DbgpBreakpointConfig info) throws DbgpException
+	{
 		return setBreakpoint(RETURN_BREAKPOINT, uri, null, function, null, info);
 	}
 
 	public String setExceptionBreakpoint(String exception,
-			DbgpBreakpointConfig info) throws DbgpException {
-		return setBreakpoint(EXCEPTION_BREAKPOINT, null, null, null, exception,
-				info);
+			DbgpBreakpointConfig info) throws DbgpException
+	{
+		return setBreakpoint(EXCEPTION_BREAKPOINT, null, null, null, exception, info);
 	}
 
 	public String setConditionalBreakpoint(URI uri, DbgpBreakpointConfig info)
-			throws DbgpException {
-		return setBreakpoint(CONDITIONAL_BREAKPOINT, uri, null, null, null,
-				info);
+			throws DbgpException
+	{
+		return setBreakpoint(CONDITIONAL_BREAKPOINT, uri, null, null, null, info);
 	}
 
 	public String setConditionalBreakpoint(URI uri, int lineNumber,
-			DbgpBreakpointConfig info) throws DbgpException {
-		return setBreakpoint(CONDITIONAL_BREAKPOINT, uri, new Integer(
-				lineNumber), null, null, info);
+			DbgpBreakpointConfig info) throws DbgpException
+	{
+		return setBreakpoint(CONDITIONAL_BREAKPOINT, uri, new Integer(lineNumber), null, null, info);
 	}
 
 	public String setWatchBreakpoint(URI uri, int line,
-			DbgpBreakpointConfig info) throws DbgpException {
-		return setBreakpoint(WATCH_BREAKPOINT, uri, new Integer(line), null,
-				null, info);
+			DbgpBreakpointConfig info) throws DbgpException
+	{
+		return setBreakpoint(WATCH_BREAKPOINT, uri, new Integer(line), null, null, info);
 	}
 
-	public IDbgpBreakpoint getBreakpoint(String id) throws DbgpException {
+	public IDbgpBreakpoint getBreakpoint(String id) throws DbgpException
+	{
 		DbgpRequest request = createRequest(BREAKPOINT_GET_COMMAND);
 		request.addOption("-d", id); //$NON-NLS-1$
 		IDbgpBreakpoint[] breakpoints = parseBreakpointsResponse(communicate(request));
-		if (breakpoints.length > 0) {
+		if (breakpoints.length > 0)
+		{
 			return breakpoints[0];
 		}
 		return null;
 	}
 
-	public void removeBreakpoint(String id) throws DbgpException {
-		if (id == null) {
+	public void removeBreakpoint(String id) throws DbgpException
+	{
+		if (id == null)
+		{
 			return;
 		}
 
@@ -184,27 +201,32 @@ public class DbgpBreakpointCommands extends DbgpBaseCommands implements
 	}
 
 	public void updateBreakpoint(String id, DbgpBreakpointConfig config)
-			throws DbgpException {
+			throws DbgpException
+	{
 		DbgpRequest request = createRequest(BREAKPOINT_UPDATE_COMMAND);
 		request.addOption("-d", id); //$NON-NLS-1$
 		request.addOption("-s", config.getStateString()); //$NON-NLS-1$
 
-		if (config.getLineNo() > 0) {
+		if (config.getLineNo() > 0)
+		{
 			request.addOption("-n", config.getLineNo()); //$NON-NLS-1$
 		}
 
-		if (config.getHitValue() != -1) {
+		if (config.getHitValue() != -1)
+		{
 			request.addOption("-h", config.getHitValue()); //$NON-NLS-1$
 		}
 
-		if (config.getHitCondition() != -1) {
+		if (config.getHitCondition() != -1)
+		{
 			request.addOption("-o", config.getHitConditionString()); //$NON-NLS-1$
 		}
 
 		communicate(request);
 	}
 
-	public IDbgpBreakpoint[] getBreakpoints() throws DbgpException {
+	public IDbgpBreakpoint[] getBreakpoints() throws DbgpException
+	{
 		return parseBreakpointsResponse(communicate(createRequest(BREAKPOINT_LIST_COMMAND)));
 	}
 }

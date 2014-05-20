@@ -86,7 +86,9 @@ public class Vdm2JavaCommand extends AbstractHandler
 
 		if(!PluginVdm2JavaUtil.isSupportedVdmDialect(vdmProject))
 		{
-			CodeGenConsole.GetInstance().println("VDM dialect is not supported");
+			CodeGenConsole.GetInstance().println("Project : "
+					+ project.getName()
+					+ " is not supported by the Java code generator. Currently, VDM++ is the only supported dialect.");
 			return null;
 		}
 		
@@ -184,18 +186,23 @@ public class Vdm2JavaCommand extends AbstractHandler
 	{
 		for (GeneratedModule generatedModule : userspecifiedClasses)
 		{
-			if(generatedModule.canBeGenerated())
+			if(generatedModule.hasMergeErrors())
 			{
-				File javaFile = new File(outputFolder, generatedModule.getName() + IJavaCodeGenConstants.JAVA_FILE_EXTENSION);
-				CodeGenConsole.GetInstance().println("Generated module: " + generatedModule.getName());
-				CodeGenConsole.GetInstance().println("Java source file: " + javaFile.getAbsolutePath());
+				CodeGenConsole.GetInstance().printErrorln(String.format("Could not generate Java for class %s. Following errors were found:", generatedModule.getName()));
+				
+				List<Exception> mergeErrors = generatedModule.getMergeErrors();
+				
+				for(Exception error : mergeErrors)
+				{
+					CodeGenConsole.GetInstance().printErrorln(error.toString());
+				}
 			}
-			else
+			else if(!generatedModule.canBeGenerated())
 			{
 				LocationAssistantCG locationAssistant = assistantManager.getLocationAssistant();
 				
 				List<NodeInfo> unsupportedNodes = locationAssistant.getNodesLocationSorted(generatedModule.getUnsupportedNodes());
-				CodeGenConsole.GetInstance().println("Could not code generate module: " + generatedModule.getName() + ".");
+				CodeGenConsole.GetInstance().println("Could not code generate class: " + generatedModule.getName() + ".");
 				CodeGenConsole.GetInstance().println("Following constructs are not supported:");
 				
 				for(NodeInfo nodeInfo : unsupportedNodes)
@@ -207,6 +214,14 @@ public class Vdm2JavaCommand extends AbstractHandler
 					
 				}
 			}
+			else
+			{
+				File javaFile = new File(outputFolder, generatedModule.getName() + IJavaCodeGenConstants.JAVA_FILE_EXTENSION);
+				CodeGenConsole.GetInstance().println("Generated class: " + generatedModule.getName());
+				CodeGenConsole.GetInstance().println("Java source file: " + javaFile.getAbsolutePath());
+
+			}
+			
 			CodeGenConsole.GetInstance().println("");
 		}
 	}

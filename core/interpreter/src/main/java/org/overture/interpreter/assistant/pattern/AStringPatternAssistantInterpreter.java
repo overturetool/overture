@@ -42,9 +42,9 @@ public class AStringPatternAssistantInterpreter
 		return result;
 	}
 
-	public static int getLength(AStringPattern pattern)
-	{
-		return pattern.getValue().getValue().length();
-	}
+//	public static int getLength(AStringPattern pattern)
+//	{
+//		return pattern.getValue().getValue().length();
+//	}
 
 }

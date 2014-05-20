@@ -24,7 +24,8 @@ import org.overture.ide.debug.core.model.IVdmValue;
 import org.overture.ide.debug.core.model.eval.IVdmEvaluationResult;
 import org.overture.ide.debug.utils.CharOperation;
 
-public class NoEvaluationResult implements IVdmEvaluationResult {
+public class NoEvaluationResult implements IVdmEvaluationResult
+{
 
 	private final String snippet;
 	private final IVdmThread thread;
@@ -33,32 +34,39 @@ public class NoEvaluationResult implements IVdmEvaluationResult {
 	 * @param snippet
 	 * @param thread
 	 */
-	public NoEvaluationResult(String snippet, IVdmThread thread) {
+	public NoEvaluationResult(String snippet, IVdmThread thread)
+	{
 		this.snippet = snippet;
 		this.thread = thread;
 	}
 
-	public String[] getErrorMessages() {
+	public String[] getErrorMessages()
+	{
 		return CharOperation.NO_STRINGS;
 	}
 
-	public DebugException getException() {
+	public DebugException getException()
+	{
 		return null;
 	}
 
-	public String getSnippet() {
+	public String getSnippet()
+	{
 		return snippet;
 	}
 
-	public IVdmThread getThread() {
+	public IVdmThread getThread()
+	{
 		return thread;
 	}
 
-	public IVdmValue getValue() {
+	public IVdmValue getValue()
+	{
 		return null;
 	}
 
-	public boolean hasErrors() {
+	public boolean hasErrors()
+	{
 		return false;
 	}
 

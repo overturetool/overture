@@ -1,4 +1,4 @@
-import org.overture.codegen.javalib.*;
+import org.overture.codegen.runtime.*;
 
 import java.util.*;
 
@@ -7,15 +7,15 @@ public class A {
     public A() {
     }
 
-    public Number op1(A a) {
+    public Number op1(final A a) {
         return a.getMe().f();
     }
 
-    public Number op2(A a) {
+    public Number op2(final A a) {
         return a.getMe().getMe().f();
     }
 
-    public Number op3(A a) {
+    public Number op3(final A a) {
         return a.getMe().getMe().getMe().f();
     }
 
@@ -29,7 +29,7 @@ public class A {
 }
 
 ##########
-import org.overture.codegen.javalib.*;
+import org.overture.codegen.runtime.*;
 
 import java.util.*;
 

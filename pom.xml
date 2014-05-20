@@ -13,7 +13,7 @@
   <groupId>org.overturetool</groupId>
   <artifactId>root</artifactId>
 
-  <version>2.0.6</version>
+  <version>2.0.8</version>
 
   <name>The Overture Tool Platform root</name>
   <description>
@@ -219,6 +219,33 @@
              <tagNameFormat>Release/@{project.version}</tagNameFormat>
            </configuration>
         </plugin>
+		
+		
+		<!-- Disable the maven enforcer warning in Eclipse -->
+				 <plugin>
+          <groupId>org.eclipse.m2e</groupId>
+          <artifactId>lifecycle-mapping</artifactId>
+          <version>1.0.0</version>
+          <configuration>
+            <lifecycleMappingMetadata>
+              <pluginExecutions>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <versionRange>[1.0,)</versionRange>
+                    <goals>
+                      <goal>enforce</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore />
+                  </action>
+                </pluginExecution>
+              </pluginExecutions>
+            </lifecycleMappingMetadata>
+          </configuration>
+        </plugin>
       </plugins>
     </pluginManagement>
 
@@ -235,7 +262,7 @@
     <url>git@github.com:overturetool/overture.git</url>
     <connection>scm:git:git://github.com/overturetool/overture.git</connection>
     <developerConnection>scm:git:git@github.com:overturetool/overture.git</developerConnection>
-    <tag>Release/2.0.6</tag>
+    <tag>Release/2.0.8</tag>
   </scm>
 
   <developers>

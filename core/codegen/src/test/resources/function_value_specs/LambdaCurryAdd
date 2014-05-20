@@ -1,0 +1,13 @@
+class Entry
+
+operations 
+
+public static Run : () ==> ?
+Run () ==
+	let curryAdd = (lambda x0 : int &
+									(lambda x1 : int &
+										(lambda x2 : int &
+											(x0 + x1 + x2))))
+	in 
+		return curryAdd(1)(2)(3);
+end Entry

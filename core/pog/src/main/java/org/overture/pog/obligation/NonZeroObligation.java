@@ -29,7 +29,6 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.pog.pub.IPOContextStack;
-import org.overture.pog.pub.POType;
 
 public class NonZeroObligation extends ProofObligation
 {
@@ -41,7 +40,7 @@ public class NonZeroObligation extends ProofObligation
 	public NonZeroObligation(
 		ILexLocation location, PExp exp, IPOContextStack ctxt)
 	{
-		super(exp, POType.NON_ZERO, ctxt, exp.getLocation());
+		super(exp, POType.NON_ZERO, ctxt, location);
 		
 		// exp <> 0
 		

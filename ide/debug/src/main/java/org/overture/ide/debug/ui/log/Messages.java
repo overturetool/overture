@@ -20,7 +20,8 @@ package org.overture.ide.debug.ui.log;
 
 import org.eclipse.osgi.util.NLS;
 
-public class Messages extends NLS {
+public class Messages extends NLS
+{
 	private static final String BUNDLE_NAME = "org.overture.ide.debug.ui.log.messages"; //$NON-NLS-1$
 	public static String VdmDebugLogView_clear;
 	public static String VdmDebugLogView_copy;
@@ -39,11 +40,13 @@ public class Messages extends NLS {
 	public static String Column_Type;
 	public static String Column_Session;
 	public static String Column_Message;
-	static {
+	static
+	{
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
 
-	private Messages() {
+	private Messages()
+	{
 	}
 }

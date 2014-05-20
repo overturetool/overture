@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -243,6 +244,9 @@ public abstract class VdmEditor extends TextEditor
 		{
 			int[] offsetLength = this.locationSearcher.getNodeOffset(node);
 //			int offset = getSourceViewer().getTextWidget().getCaretOffset();
+			Assert.isNotNull(offsetLength);
+			Assert.isTrue(offsetLength[0]>0, "Illegal start offset");
+			Assert.isTrue(offsetLength[0]>0, "Illegal offset length");
 			super.setHighlightRange(offsetLength[0], offsetLength[1], true);
 		} catch (IllegalArgumentException e)
 		{

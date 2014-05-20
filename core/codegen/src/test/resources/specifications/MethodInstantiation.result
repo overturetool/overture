@@ -1,4 +1,4 @@
-import org.overture.codegen.javalib.*;
+import org.overture.codegen.runtime.*;
 
 import java.util.*;
 
@@ -15,7 +15,7 @@ public class A {
         return g(new A(), 2L);
     }
 
-    public static <T, U> T g(T arg1, U arg2) {
+    public static <T, U> T g(final T arg1, final U arg2) {
         return arg1;
     }
 }

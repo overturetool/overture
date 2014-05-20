@@ -17,32 +17,32 @@ public class AMapEnumMapExpAssistantInterpreter
 		this.af = af;
 	}
 
-	public static ValueList getValues(AMapEnumMapExp exp, ObjectContext ctxt)
-	{
-		ValueList list = new ValueList();
+//	public static ValueList getValues(AMapEnumMapExp exp, ObjectContext ctxt)
+//	{
+//		ValueList list = new ValueList();
+//
+//		for (AMapletExp maplet : exp.getMembers())
+//		{
+//			list.addAll(AMapletExpAssistantInterpreter.getValues(maplet, ctxt));
+//		}
+//
+//		return list;
+//	}
 
-		for (AMapletExp maplet : exp.getMembers())
-		{
-			list.addAll(AMapletExpAssistantInterpreter.getValues(maplet, ctxt));
-		}
-
-		return list;
-	}
-
-	public static PExp findExpression(AMapEnumMapExp exp, int lineno)
-	{
-		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
-		if (found != null)
-			return found;
-
-		for (AMapletExp m : exp.getMembers())
-		{
-			found = AMapletExpAssistantInterpreter.findExpression(m, lineno);
-			if (found != null)
-				return found;
-		}
-
-		return null;
-	}
+//	public static PExp findExpression(AMapEnumMapExp exp, int lineno)
+//	{
+//		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
+//		if (found != null)
+//			return found;
+//
+//		for (AMapletExp m : exp.getMembers())
+//		{
+//			found = AMapletExpAssistantInterpreter.findExpression(m, lineno);
+//			if (found != null)
+//				return found;
+//		}
+//
+//		return null;
+//	}
 
 }

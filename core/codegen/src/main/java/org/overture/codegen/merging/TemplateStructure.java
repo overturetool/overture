@@ -23,6 +23,7 @@ public class TemplateStructure
 	public final String SET_EXP_PATH;
 	public final String MAP_EXP_PATH;
 	public final String QUANTIFIER_EXP_PATH;
+	public final String RUNTIME_ERROR_EXP_PATH;
 	
 	public final String TYPE_PATH;
 	public final String BASIC_TYPE_PATH;
@@ -52,6 +53,7 @@ public class TemplateStructure
 		SET_EXP_PATH = EXP_PATH + "Set" + File.separatorChar;
 		MAP_EXP_PATH = EXP_PATH + "Map" + File.separatorChar;
 		QUANTIFIER_EXP_PATH = EXP_PATH + "Quantifier" + File.separatorChar;
+		RUNTIME_ERROR_EXP_PATH = EXP_PATH + "RuntimeError" + File.separatorChar;
 		
 		TYPE_PATH = root + "Types" + File.separatorChar;
 		BASIC_TYPE_PATH = TYPE_PATH + "Basic" + File.separatorChar;

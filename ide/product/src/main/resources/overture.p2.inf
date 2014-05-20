@@ -6,7 +6,13 @@ instructions.configure=\
   copy(source:${basedir}/../../documentation/tutorials/VDMRTOvertureTutorial/VDMRTGuideToOverture.pdf,target:${installFolder}/documentation/VDMRTGuideToOverture.pdf,overwrite:true);\
   copy(source:${basedir}/../../documentation/tutorials/VDMSLOvertureTutorial/VDMSLGuideToOverture.pdf,target:${installFolder}/documentation/VDMSLGuideToOverture.pdf,overwrite:true);\
   copy(source:${basedir}/../../documentation/VDMRTProcess/VDMRTProcess.pdf,target:${installFolder}/documentation/VDMRTProcess.pdf,overwrite:true);\
+  copy(source:${basedir}/../../documentation/releasenotes/,target:${installFolder}/releasenotes,overwrite:true);\
+  remove(path:${installFolder}/epl-v10.html);\
+  remove(path:${installFolder}/notice.html);\
+  remove(path:${installFolder}/readme);\
   addRepository(type:0,name:Overture,enabled:true,location:http${#58}//overture.sourceforge.net/updates/release/);\
   addRepository(type:1,name:Overture,enabled:true,location:http${#58}//overture.sourceforge.net/updates/release/);
 instructions.configure.import=\
-  org.eclipse.equinox.p2.touchpoint.natives.copy
+  org.eclipse.equinox.p2.touchpoint.natives.copy,\
+  org.eclipse.equinox.p2.touchpoint.natives.remove
+

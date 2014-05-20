@@ -24,6 +24,8 @@ import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
+import org.overture.interpreter.assistant.InterpreterAssistantFactory;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
@@ -31,7 +33,7 @@ import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 public class Vdm2UmlUtil
 {
-public final static ITypeCheckerAssistantFactory assistantFactory = new TypeCheckerAssistantFactory();
+public final static IInterpreterAssistantFactory assistantFactory = new InterpreterAssistantFactory();
 
 
 	public static VisibilityKind convertAccessSpecifierToVisibility(

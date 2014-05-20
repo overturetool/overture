@@ -18,7 +18,8 @@
  *******************************************************************************/
 package org.overture.ide.debug.core.dbgp.breakpoints;
 
-public interface IDbgpLineBreakpoint extends IDbgpBreakpoint {
+public interface IDbgpLineBreakpoint extends IDbgpBreakpoint
+{
 	String getFilename();
 
 	int getLineNumber();

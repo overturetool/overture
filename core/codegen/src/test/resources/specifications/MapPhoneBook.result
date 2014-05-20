@@ -1,4 +1,4 @@
-import org.overture.codegen.javalib.*;
+import org.overture.codegen.runtime.*;
 
 import java.util.*;
 
@@ -6,7 +6,7 @@ import java.util.*;
 public class PhoneBook {
     private VDMMap phoneNumbers = MapUtil.map();
 
-    public PhoneBook(VDMMap pPhoneNumbers) {
+    public PhoneBook(final VDMMap pPhoneNumbers) {
         phoneNumbers = pPhoneNumbers.clone();
     }
 
@@ -92,12 +92,12 @@ public class PhoneBook {
         }
     }
 
-    public void addEntry(String name, String number) {
+    public void addEntry(final String name, final String number) {
         phoneNumbers = MapUtil.munion(phoneNumbers.clone(),
                 MapUtil.map(new Maplet(name, number)));
     }
 
-    public void addTwoEntries(Tuple first, Tuple second) {
+    public void addTwoEntries(final Tuple first, final Tuple second) {
         phoneNumbers = MapUtil.merge(SetUtil.set(phoneNumbers.clone(),
                     MapUtil.map(
                         new Maplet(((String) first.get(0)),
@@ -115,11 +115,11 @@ public class PhoneBook {
         return MapUtil.rng(phoneNumbers.clone());
     }
 
-    public String getNumber(String name) {
+    public String getNumber(final String name) {
         return ((String) phoneNumbers.get(name));
     }
 
-    public String getName(String number) {
+    public String getName(final String number) {
         return ((String) MapUtil.inverse(phoneNumbers.clone()).get(number));
     }
 
@@ -127,31 +127,31 @@ public class PhoneBook {
         return new PhoneBook(MapUtil.inverse(phoneNumbers.clone()));
     }
 
-    public void override(VDMMap overrides) {
+    public void override(final VDMMap overrides) {
         phoneNumbers = MapUtil.override(phoneNumbers.clone(), overrides.clone());
     }
 
-    public void restrictToNames(VDMSet names) {
+    public void restrictToNames(final VDMSet names) {
         phoneNumbers = MapUtil.domResTo(names.clone(), phoneNumbers.clone());
     }
 
-    public void restrictByNames(VDMSet names) {
+    public void restrictByNames(final VDMSet names) {
         phoneNumbers = MapUtil.domResBy(names.clone(), phoneNumbers.clone());
     }
 
-    public void restrictToNumbers(VDMSet numbers) {
+    public void restrictToNumbers(final VDMSet numbers) {
         phoneNumbers = MapUtil.rngResTo(phoneNumbers.clone(), numbers.clone());
     }
 
-    public void restrictByNumbers(VDMSet numbers) {
+    public void restrictByNumbers(final VDMSet numbers) {
         phoneNumbers = MapUtil.rngResBy(phoneNumbers.clone(), numbers.clone());
     }
 
-    public boolean eq(PhoneBook other) {
+    public boolean eq(final PhoneBook other) {
         return MapUtil.equals(phoneNumbers, other.phoneNumbers);
     }
 
-    public boolean neq(PhoneBook other) {
+    public boolean neq(final PhoneBook other) {
         return !(MapUtil.equals(phoneNumbers, other.phoneNumbers));
     }
 }

@@ -4,12 +4,14 @@ import java.io.StringWriter;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalDeclCG;
+import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
@@ -20,6 +22,7 @@ import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AEnumMapExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AExplicitVarExpCG;
+import org.overture.codegen.cgast.expressions.AExternalExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AFieldNumberExpCG;
 import org.overture.codegen.cgast.expressions.AHeadUnaryExpCG;
@@ -42,6 +45,7 @@ import org.overture.codegen.cgast.expressions.SBinaryExpCGBase;
 import org.overture.codegen.cgast.expressions.SLiteralExpCGBase;
 import org.overture.codegen.cgast.expressions.SNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.SUnaryExpCG;
+import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
@@ -62,6 +66,7 @@ import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AIntBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.AInterfaceTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
 import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
@@ -76,15 +81,21 @@ import org.overture.codegen.cgast.types.SBasicTypeCGBase;
 import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
-import org.overture.codegen.constants.IJavaCodeGenConstants;
-import org.overture.codegen.constants.JavaTempVarPrefixes;
+import org.overture.codegen.constants.TempVarPrefixes;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.ooast.OoAstAnalysis;
-import org.overture.codegen.utils.TempVarNameGen;
+import org.overture.codegen.utils.GeneralUtils;
+import org.overture.codegen.utils.ITempVarGen;
 
 public class JavaFormat
 {
 	private static final String JAVA_NUMBER = "Number";
+	public static final String ADD_ELEMENT_TO_MAP = "put";
+	
+	public static final String UTILS_FILE = "Utils";
+	public static final String SEQ_UTIL_FILE = "SeqUtil";
+	public static final String SET_UTIL_FILE = "SetUtil";
+	public static final String MAP_UTIL_FILE = "MapUtil";
 	
 	public String getJavaNumber()
 	{
@@ -95,20 +106,77 @@ public class JavaFormat
 	private static final String JAVA_INT = "int";
 	
 	private List<AClassDeclCG> classes;
-	private TempVarNameGen tempVarNameGen;
+	private ITempVarGen tempVarNameGen;
 	private AssistantManager assistantManager;
+	private MergeVisitor mergeVisitor;
+	private FunctionValueAssistant functionValueAssistant;
 	
-	public JavaFormat(List<AClassDeclCG> classes, TempVarNameGen tempVarNameGen, AssistantManager assistantManager)
+	public JavaFormat(TempVarPrefixes varPrefixes,ITempVarGen tempVarNameGen, AssistantManager assistantManager)
 	{
 		this.tempVarNameGen = tempVarNameGen;
-		this.classes = classes;
 		this.assistantManager = assistantManager;
+		this.mergeVisitor = new MergeVisitor(JavaCodeGen.JAVA_TEMPLATE_STRUCTURE, JavaCodeGen.constructTemplateCallables(this, OoAstAnalysis.class, varPrefixes));
+		this.functionValueAssistant = null;
 	}
 	
-	public JavaFormat()
+	public void setFunctionValueAssistant(FunctionValueAssistant functionValueAssistant)
 	{
-		this.tempVarNameGen = new TempVarNameGen();
-		this.assistantManager = new AssistantManager();
+		this.functionValueAssistant = functionValueAssistant;
+	}
+	
+	public void clearFunctionValueAssistant()
+	{
+		this.functionValueAssistant = null;
+	}
+	
+	public String format(AMethodTypeCG methodType) throws AnalysisException
+	{
+		final String OBJ = "Object";
+		
+		if(functionValueAssistant == null)
+			return OBJ;
+
+		AInterfaceDeclCG methodTypeInterface = functionValueAssistant.findInterface(methodType);
+
+		if(methodTypeInterface == null)
+			return OBJ; //Should not happen
+		
+		AInterfaceTypeCG methodClass = new AInterfaceTypeCG();
+		methodClass.setName(methodTypeInterface.getName());
+		
+		LinkedList<PTypeCG> params = methodType.getParams();
+		
+		for(PTypeCG param : params)
+		{
+			methodClass.getTypes().add(param.clone());
+		}
+		
+		methodClass.getTypes().add(methodType.getResult().clone());
+		
+		return methodClass != null ? format(methodClass) : OBJ;
+	}
+	
+	public void init()
+	{
+		mergeVisitor.dropMergeErrors();
+	}
+	
+	public void setClasses(List<AClassDeclCG> classes)
+	{
+		this.classes = classes != null ? classes : new LinkedList<AClassDeclCG>();
+	}
+	
+	public void clearClasses()
+	{
+		if(classes != null)
+			classes.clear();
+		else
+			classes = new LinkedList<AClassDeclCG>();
+	}
+	
+	public MergeVisitor getMergeVisitor()
+	{
+		return mergeVisitor;
 	}
 	
 	public String format(INode node) throws AnalysisException
@@ -123,8 +191,6 @@ public class JavaFormat
 	
 	private String format(INode node, boolean ignoreContext) throws AnalysisException
 	{
-		MergeVisitor mergeVisitor = new MergeVisitor(JavaCodeGen.JAVA_TEMPLATE_STRUCTURE, JavaCodeGen.constructTemplateCallables(this, OoAstAnalysis.class, JavaTempVarPrefixes.class));
-		
 		StringWriter writer = new StringWriter();
 		node.apply(mergeVisitor, writer);
 
@@ -171,7 +237,7 @@ public class JavaFormat
 		String rngValStr = format(rngValue);
 		
 		//e.g. counters.put("c1", 4);
-		return stateDesignatorStr + "." + IJavaCodeGenConstants.ADD_ELEMENT_TO_MAP + "(" + domValStr + ", " + rngValStr + ")";
+		return stateDesignatorStr + "." + ADD_ELEMENT_TO_MAP + "(" + domValStr + ", " + rngValStr + ")";
 	}
 	
 	private static String getNumberDereference(INode node, boolean ignoreContext)
@@ -496,17 +562,17 @@ public class JavaFormat
 	
 	private String handleSetComparison(AEqualsBinaryExpCG node) throws AnalysisException
 	{
-		return handleCollectionComparison(node, IJavaCodeGenConstants.SET_UTIL_FILE);
+		return handleCollectionComparison(node, SET_UTIL_FILE);
 	}
 	
 	private String handleSeqComparison(SBinaryExpCGBase node) throws AnalysisException
 	{
-		return handleCollectionComparison(node, IJavaCodeGenConstants.SEQ_UTIL_FILE);
+		return handleCollectionComparison(node, SEQ_UTIL_FILE);
 	}
 	
 	private String handleMapComparison(SBinaryExpCGBase node) throws AnalysisException
 	{
-		return handleCollectionComparison(node, IJavaCodeGenConstants.MAP_UTIL_FILE);
+		return handleCollectionComparison(node, MAP_UTIL_FILE);
 	}
 	
 	private String handleCollectionComparison(SBinaryExpCGBase node, String className) throws AnalysisException
@@ -561,13 +627,18 @@ public class JavaFormat
 		if(params.size() <= 0)
 			return "";
 		
+		final String finalPrefix = " final ";
+
 		AFormalParamLocalDeclCG firstParam = params.get(0);
+		writer.append(finalPrefix);
 		writer.append(format(firstParam));
 		
 		for(int i = 1; i < params.size(); i++)
 		{
 			AFormalParamLocalDeclCG param = params.get(i);
-			writer.append(", " + format(param));
+			writer.append(", ");
+			writer.append(finalPrefix);
+			writer.append(format(param));
 		}
 		return writer.toString();
 	}
@@ -786,7 +857,7 @@ public class JavaFormat
 		
 		AClassTypeCG classType = explicitVar.getClassType();
 		
-		return classType != null && classType.getName().equals(IJavaCodeGenConstants.UTILS_FILE);
+		return classType != null && classType.getName().equals(UTILS_FILE);
 	}
 	
 	private boolean usesStructuralEquivalence(PTypeCG type)
@@ -819,43 +890,56 @@ public class JavaFormat
 		formalParam.setType(paramType);
 		equalsMethod.getFormalParams().add(formalParam);
 		
-		//Construct the initial check:
-		//if ((!obj instanceof RecordType))
-		//	return false;
-		AIfStmCG ifStm = new AIfStmCG();
-		ANotUnaryExpCG negated = new ANotUnaryExpCG();
-		negated.setType(new ABoolBasicTypeCG());
-		negated.setExp(JavaFormatAssistant.consInstanceOf(record, paramName));
-		ifStm.setIfExp(negated);
-		AReturnStmCG returnIncompatibleTypes = new AReturnStmCG();
-		
-		returnIncompatibleTypes.setExp(assistantManager.getExpAssistant().consBoolLiteral(false));
-		ifStm.setThenStm(returnIncompatibleTypes);
-		
-		//If the inital check is passed we can safely cast the formal parameter
-		//To the record type: RecordType other = ((RecordType) obj);
-		String localVarName = "other";
-		ABlockStmCG formalParamCasted = JavaFormatAssistant.consVarFromCastedExp(record, paramName, localVarName);
-		
-		//Next compare the fields of the instance with the fields of the formal parameter "obj":
-		//return (field1 == obj.field1) && (field2 == other.field2)...
-		LinkedList<AFieldDeclCG> fields = record.getFields();
-		PExpCG previousComparisons = JavaFormatAssistant.consFieldComparison(record, fields.get(0), localVarName); 
-
-		for (int i = 1; i < fields.size(); i++)
-		{
-			previousComparisons = JavaFormatAssistant.extendAndExp(record, fields.get(i), previousComparisons, localVarName);
-		}
-
-		AReturnStmCG fieldsComparison = new AReturnStmCG();
-		fieldsComparison.setExp(previousComparisons);
-
-		//Finally add the constructed statements to the equals method body
 		ABlockStmCG equalsMethodBody = new ABlockStmCG();
 		LinkedList<PStmCG> equalsStms = equalsMethodBody.getStatements();
-		equalsStms.add(ifStm);
-		equalsStms.add(formalParamCasted);
-		equalsStms.add(fieldsComparison);
+		
+		AReturnStmCG returnTypeComp = new AReturnStmCG();
+		if (record.getFields().isEmpty())
+		{
+			//If the record has no fields equality is simply:
+			//return obj instanceof RecordType
+			returnTypeComp.setExp(JavaFormatAssistant.consInstanceOf(record, paramName));
+			equalsStms.add(returnTypeComp);
+			
+		} else
+		{
+
+			// Construct the initial check:
+			// if ((!obj instanceof RecordType))
+			// return false;
+			AIfStmCG ifStm = new AIfStmCG();
+			ANotUnaryExpCG negated = new ANotUnaryExpCG();
+			negated.setType(new ABoolBasicTypeCG());
+			negated.setExp(JavaFormatAssistant.consInstanceOf(record, paramName));
+			ifStm.setIfExp(negated);
+			
+
+			returnTypeComp.setExp(assistantManager.getExpAssistant().consBoolLiteral(false));
+			ifStm.setThenStm(returnTypeComp);
+
+			// If the inital check is passed we can safely cast the formal parameter
+			// To the record type: RecordType other = ((RecordType) obj);
+			String localVarName = "other";
+			ABlockStmCG formalParamCasted = JavaFormatAssistant.consVarFromCastedExp(record, paramName, localVarName);
+
+			// Next compare the fields of the instance with the fields of the formal parameter "obj":
+			// return (field1 == obj.field1) && (field2 == other.field2)...
+			LinkedList<AFieldDeclCG> fields = record.getFields();
+			PExpCG previousComparisons = JavaFormatAssistant.consFieldComparison(record, fields.get(0), localVarName);
+
+			for (int i = 1; i < fields.size(); i++)
+			{
+				previousComparisons = JavaFormatAssistant.extendAndExp(record, fields.get(i), previousComparisons, localVarName);
+			}
+
+			AReturnStmCG fieldsComparison = new AReturnStmCG();
+			fieldsComparison.setExp(previousComparisons);
+			
+			equalsStms.add(ifStm);
+			equalsStms.add(formalParamCasted);
+			equalsStms.add(fieldsComparison);
+		}
+
 		equalsMethod.setBody(equalsMethodBody);
 		
 		record.getMethods().add(equalsMethod);
@@ -882,7 +966,18 @@ public class JavaFormat
 		hashcodeMethod.setMethodType(methodType);
 		
 		AReturnStmCG returnStm = new AReturnStmCG();
-		returnStm.setExp(JavaFormatAssistant.consUtilCallUsingRecFields(record, intBasicType, hashCode));
+		
+		if(record.getFields().isEmpty())
+		{
+			AExternalExpCG zero = new AExternalExpCG();
+			zero.setType(intBasicType);
+			zero.setTargetLangExp("0");
+			returnStm.setExp(zero);
+		}
+		else
+		{
+			returnStm.setExp(JavaFormatAssistant.consUtilCallUsingRecFields(record, intBasicType, hashCode));
+		}
 		
 		hashcodeMethod.setBody(returnStm);
 
@@ -907,7 +1002,18 @@ public class JavaFormat
 		
 		AReturnStmCG returnStm = new AReturnStmCG();
 		
-		returnStm.setExp(JavaFormatAssistant.consRecToStringCall(record, returnType, "recordToString"));
+		if (record.getFields().isEmpty())
+		{
+			AStringLiteralExpCG emptyRecStr = new AStringLiteralExpCG();
+			emptyRecStr.setIsNull(false);
+			emptyRecStr.setType(returnType);
+			emptyRecStr.setValue(String.format("mk_%s()", record.getName()));
+			
+			returnStm.setExp(emptyRecStr);
+		} else
+		{
+			returnStm.setExp(JavaFormatAssistant.consRecToStringCall(record, returnType, "recordToString"));
+		}
 		
 		toStringMethod.setBody(returnStm);
 		
@@ -934,6 +1040,11 @@ public class JavaFormat
 	public boolean isStringType(PTypeCG type)
 	{
 		return type instanceof AStringTypeCG; 
+	}
+	
+	public boolean isStringType(PExpCG exp)
+	{
+		return exp.getType() instanceof AStringTypeCG; 
 	}
 	
 	public boolean isCharType(PTypeCG type)
@@ -1049,5 +1160,32 @@ public class JavaFormat
 	public boolean isLoopVar(AVarLocalDeclCG localVar)
 	{
 		return localVar.parent() instanceof AForLoopStmCG;
+	}
+	
+	public boolean isLambda(AApplyExpCG applyExp)
+	{
+		PExpCG root = applyExp.getRoot();
+		
+		if(root instanceof AApplyExpCG && root.getType() instanceof AMethodTypeCG)
+			return true;
+		
+		if(!(root instanceof SVarExpCG))
+			return false;
+		
+		SVarExpCG varExp = (SVarExpCG) root;
+		
+		return varExp.getIsLambda() != null && varExp.getIsLambda();
+	}
+	
+	public String escapeStr(String str)
+	{
+		String escaped = "";
+		for(int i = 0; i < str.length(); i++)
+		{
+			char currentChar = str.charAt(i);
+			escaped += GeneralUtils.isEscapeSequence(currentChar) ? StringEscapeUtils.escapeJava(currentChar + "") : (currentChar + "");
+		}
+		
+		return escaped;
 	}
 }

@@ -18,7 +18,6 @@
  *******************************************************************************/
 package org.overture.ide.debug.ui.actions;
 
-
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.debug.ui.actions.RulerBreakpointAction;
 import org.eclipse.jface.action.Action;
@@ -32,12 +31,15 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.IUpdate;
 import org.overture.ide.debug.core.model.internal.VdmLineBreakpoint;
 
-public class VdmBreakpointPropertiesRulerAction extends RulerBreakpointAction implements IUpdate  {
+public class VdmBreakpointPropertiesRulerAction extends RulerBreakpointAction
+		implements IUpdate
+{
 
 	private IBreakpoint fBreakpoint;
-	
+
 	public VdmBreakpointPropertiesRulerAction(ITextEditor editor,
-			IVerticalRulerInfo info) {
+			IVerticalRulerInfo info)
+	{
 		super(editor, info);
 		setText("Breakpoint properties...");
 	}
@@ -45,36 +47,47 @@ public class VdmBreakpointPropertiesRulerAction extends RulerBreakpointAction im
 	/**
 	 * @see Action#run()
 	 */
-	public void run() {
-		if (getBreakpoint() != null) {
-			PropertyDialogAction action= 
-				new PropertyDialogAction(getEditor().getEditorSite(), new ISelectionProvider() {
-					public void addSelectionChangedListener(ISelectionChangedListener listener) {
-					}
-					public ISelection getSelection() {
-						return new StructuredSelection(getBreakpoint());
-					}
-					public void removeSelectionChangedListener(ISelectionChangedListener listener) {
-					}
-					public void setSelection(ISelection selection) {
-					}
-				});
-			action.run();	
+	public void run()
+	{
+		if (getBreakpoint() != null)
+		{
+			PropertyDialogAction action = new PropertyDialogAction(getEditor().getEditorSite(), new ISelectionProvider()
+			{
+				public void addSelectionChangedListener(
+						ISelectionChangedListener listener)
+				{
+				}
+
+				public ISelection getSelection()
+				{
+					return new StructuredSelection(getBreakpoint());
+				}
+
+				public void removeSelectionChangedListener(
+						ISelectionChangedListener listener)
+				{
+				}
+
+				public void setSelection(ISelection selection)
+				{
+				}
+			});
+			action.run();
 		}
 	}
-	
+
 	/**
 	 * @see IUpdate#update()
 	 */
-	public void update() {
+	public void update()
+	{
 		fBreakpoint = null;
 		IBreakpoint breakpoint = getBreakpoint();
-		if (breakpoint != null && (breakpoint instanceof VdmLineBreakpoint)) {
+		if (breakpoint != null && breakpoint instanceof VdmLineBreakpoint)
+		{
 			fBreakpoint = breakpoint;
 		}
 		setEnabled(fBreakpoint != null);
 	}
-
-	
 
 }

@@ -1,0 +1,110 @@
+types 
+
+Key = token;
+Room = token;
+Guest = token;
+
+Card :: fst : Key
+        snd : Key; 
+
+Desk :: issued : set of Key
+        prev   : map Room to Key
+inv d == rng d.prev subset d.issued; 
+
+state Hotel of 
+        desk   : Desk
+        locks  : map Room to Key
+        guests : map Guest to set of Card
+
+inv h == dom h.desk.prev subset dom h.locks and
+         dunion {{c.fst, c.snd} | c in set dunion rng h.guests}
+         subset h.desk.issued
+
+init h == h.desk.issued = {} and 
+          h.desk.prev = h.locks and 
+          rng h.guests = {{}}
+
+end
+
+operations
+
+CheckIn(g:Guest,r:Room)
+
+ext wr desk   : Desk
+    wr guests : map Guest to set of Card
+
+pre r in set dom desk.prev
+
+post exists new_k:Key &
+	new_k not in set desk~.issued            and 
+ 	let new_c = mk_Card(desk~.prev(r),new_k)
+        in
+	desk.issued = desk~.issued union {new_k} and 
+	desk.prev = desk~.prev ++ {r |-> new_k}  and 
+	if g in set dom guests~
+	then guests = guests~ ++ {g |-> guests~(g) union {new_c}}
+    else guests = guests~ munion {g |-> {new_c}};
+
+
+Enter(r:Room,g:Guest)
+
+ext wr locks  : map Room to Key
+    rd guests : map Guest to set of Card
+
+pre r in set dom locks  and 
+    g in set dom guests and
+    exists c in set guests(g) & c.fst=locks(r) or c.snd=locks(r) 
+
+post exists c in set guests(g) & 
+	c.fst = locks(r) and locks = locks~ ++ {r |-> c.snd} or
+	c.snd = locks(r) and locks = locks~;
+
+CheckInExpl: Guest * Room ==> ()
+CheckInExpl(g,r) ==
+  let new_k:Key be st new_k not in set desk.issued
+  in 
+    let new_c = mk_Card(desk.prev(r),new_k)
+    in
+      (desk.issued := desk.issued union {new_k}; 
+       desk.prev   := desk.prev ++ {r |-> new_k}; 
+       guests      := if g in set dom guests
+	                  then guests ++ {g |-> guests(g) union {new_c}}
+                      else guests munion {g |-> {new_c}}
+      )
+pre r in set dom desk.prev;
+
+--
+-- Explicit versions of operations for execution on the interpreter
+--
+
+EnterExpl: Room * Guest ==> ()
+EnterExpl(r,g) ==
+  let c in set guests(g) be st c.fst = locks(r) or c.snd = locks(r)
+  in
+    if c.fst = locks(r)
+    then locks := locks ++ {r |-> c.snd}
+pre r in set dom locks  and 
+    g in set dom guests and
+    exists c in set guests(g) & c.fst=locks(r) or c.snd=locks(r); 
+
+IssueCard: () ==> Key
+IssueCard() ==
+  let k: Key be st k not in set desk.issued
+  in
+    (desk.issued := desk.issued union {k};
+     return k
+    );
+
+AddRoom: Room * Key ==> ()
+AddRoom(r,k) ==
+  (desk.prev := desk.prev munion {r |-> k};
+   locks := locks munion {r |-> k}
+  )
+pre k in set desk.issued and r not in set dom locks;
+
+AddGuest: Guest * set of Card ==> ()
+AddGuest(g,cs) ==
+  guests := guests ++ {g |-> if g in set dom guests
+                             then guests(g) union cs
+                             else cs}
+pre forall c in set cs & {c.fst, c.snd} subset desk.issued;

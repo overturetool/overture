@@ -18,26 +18,26 @@ public class AExistsExpAssistantInterpreter // extends AExistsExpAssistantTC
 		this.af = af;
 	}
 
-	public static ValueList getValues(AExistsExp exp, ObjectContext ctxt)
-	{
-		ValueList list = new ValueList();
+//	public static ValueList getValues(AExistsExp exp, ObjectContext ctxt)
+//	{
+//		ValueList list = new ValueList();
+//
+//		for (PMultipleBind mb : exp.getBindList())
+//		{
+//			list.addAll(PMultipleBindAssistantInterpreter.getValues(mb, ctxt));
+//		}
+//
+//		list.addAll(PExpAssistantInterpreter.getValues(exp.getPredicate(), ctxt));
+//		return list;
+//	}
 
-		for (PMultipleBind mb : exp.getBindList())
-		{
-			list.addAll(PMultipleBindAssistantInterpreter.getValues(mb, ctxt));
-		}
-
-		list.addAll(PExpAssistantInterpreter.getValues(exp.getPredicate(), ctxt));
-		return list;
-	}
-
-	public static PExp findExpression(AExistsExp exp, int lineno)
-	{
-		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
-		if (found != null)
-			return found;
-
-		return PExpAssistantInterpreter.findExpression(exp.getPredicate(), lineno);
-	}
+//	public static PExp findExpression(AExistsExp exp, int lineno)
+//	{
+//		PExp found = PExpAssistantInterpreter.findExpressionBaseCase(exp, lineno);
+//		if (found != null)
+//			return found;
+//
+//		return PExpAssistantInterpreter.findExpression(exp.getPredicate(), lineno);
+//	}
 
 }

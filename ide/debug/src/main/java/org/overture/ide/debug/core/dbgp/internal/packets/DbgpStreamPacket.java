@@ -20,7 +20,8 @@ package org.overture.ide.debug.core.dbgp.internal.packets;
 
 import org.w3c.dom.Element;
 
-public class DbgpStreamPacket extends DbgpPacket {
+public class DbgpStreamPacket extends DbgpPacket
+{
 	private static final String STDERR = "stderr"; //$NON-NLS-1$
 
 	private static final String STDOUT = "stdout"; //$NON-NLS-1$
@@ -29,14 +30,17 @@ public class DbgpStreamPacket extends DbgpPacket {
 
 	private final String textContent;
 
-	public DbgpStreamPacket(String type, String textContent, Element content) {
+	public DbgpStreamPacket(String type, String textContent, Element content)
+	{
 		super(content);
-		
-		if (!STDERR.equalsIgnoreCase(type) && !STDOUT.equalsIgnoreCase(type)) {
+
+		if (!STDERR.equalsIgnoreCase(type) && !STDOUT.equalsIgnoreCase(type))
+		{
 			throw new IllegalArgumentException("invalidTypeValue");
 		}
 
-		if (textContent == null) {
+		if (textContent == null)
+		{
 			throw new IllegalArgumentException("contentCannotBeNull");
 		}
 
@@ -44,19 +48,23 @@ public class DbgpStreamPacket extends DbgpPacket {
 		this.textContent = textContent;
 	}
 
-	public boolean isStdout() {
+	public boolean isStdout()
+	{
 		return STDOUT.equalsIgnoreCase(type);
 	}
 
-	public boolean isStderr() {
+	public boolean isStderr()
+	{
 		return STDERR.equalsIgnoreCase(type);
 	}
 
-	public String getTextContent() {
+	public String getTextContent()
+	{
 		return textContent;
 	}
 
-	public String toString() {
+	public String toString()
+	{
 		return "DbgpStreamPacket (Type: " + type + "; Content: " + textContent //$NON-NLS-1$ //$NON-NLS-2$
 				+ ";)"; //$NON-NLS-1$
 	}

@@ -20,7 +20,8 @@ package org.overture.ide.debug.core;
 
 import org.overture.ide.debug.core.dbgp.IDbgpThreadAcceptor;
 
-public interface IDbgpService {
+public interface IDbgpService
+{
 	boolean available();
 
 	int getPort();

@@ -1,4 +1,4 @@
-import org.overture.codegen.javalib.*;
+import org.overture.codegen.runtime.*;
 
 import java.util.*;
 
@@ -6,7 +6,7 @@ import java.util.*;
 public class Bag {
     private VDMSet numbers;
 
-    public Bag(VDMSet pNumbers) {
+    public Bag(final VDMSet pNumbers) {
         numbers = pNumbers.clone();
 
         return;
@@ -115,39 +115,39 @@ public class Bag {
         return numbers.clone();
     }
 
-    public boolean hasNumber(Number n) {
+    public boolean hasNumber(final Number n) {
         return numbers.contains(n);
     }
 
-    public boolean hasNotNumber(Number n) {
+    public boolean hasNotNumber(final Number n) {
         return !(numbers.contains(n));
     }
 
-    public void addNumbers(Bag bag) {
+    public void addNumbers(final Bag bag) {
         numbers = SetUtil.union(numbers.clone(), bag.getNumbers());
     }
 
-    public void setSharedNumbers(Bag bag) {
+    public void setSharedNumbers(final Bag bag) {
         numbers = SetUtil.intersect(numbers.clone(), bag.getNumbers());
     }
 
-    public void removeNumbers(Bag bag) {
+    public void removeNumbers(final Bag bag) {
         numbers = SetUtil.diff(numbers.clone(), bag.getNumbers());
     }
 
-    public boolean contains(Bag bag) {
+    public boolean contains(final Bag bag) {
         return numbers.containsAll(bag.getNumbers());
     }
 
-    public boolean properContains(Bag bag) {
+    public boolean properContains(final Bag bag) {
         return SetUtil.psubset(bag.getNumbers(), numbers);
     }
 
-    public boolean eq(Bag bag) {
+    public boolean eq(final Bag bag) {
         return SetUtil.equals(numbers, bag.getNumbers());
     }
 
-    public boolean neq(Bag bag) {
+    public boolean neq(final Bag bag) {
         return !(SetUtil.equals(numbers, bag.getNumbers()));
     }
 
@@ -155,12 +155,12 @@ public class Bag {
         return numbers.size();
     }
 
-    public void addNumbersDist(Bag bag1, Bag bag2) {
+    public void addNumbersDist(final Bag bag1, final Bag bag2) {
         numbers = SetUtil.dunion(SetUtil.set(numbers.clone(),
                     bag1.getNumbers(), bag2.getNumbers()));
     }
 
-    public void setSharedNumbersDist(Bag bag1, Bag bag2) {
+    public void setSharedNumbersDist(final Bag bag1, final Bag bag2) {
         numbers = SetUtil.dinter(SetUtil.set(numbers.clone(),
                     bag1.getNumbers(), bag2.getNumbers()));
     }
