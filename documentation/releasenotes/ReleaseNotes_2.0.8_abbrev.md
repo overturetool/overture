@@ -30,6 +30,8 @@ If you encounter a problem with a VDM specification, please try to make a small 
 
 Please note that the interactive list is at <https://github.com/overturetool/overture/issues?milestone=16&state=closed>
 
+* [#306 Guards on static operations not being signalled correctly](https://api.github.com/repos/overturetool/overture/issues/306)
+* [#305 Sync guards cannot depend on uninitialized field expressions](https://api.github.com/repos/overturetool/overture/issues/305)
 * [#304 Record types for VDM-SL state should include an invariant](https://api.github.com/repos/overturetool/overture/issues/304)
 * [#300 The tool throws an exception when trying to parse empty files](https://api.github.com/repos/overturetool/overture/issues/300)
 * [#282 External editors produce unhelpful "Quick Diff" ](https://api.github.com/repos/overturetool/overture/issues/282)
@@ -42,4 +44,3 @@ Please note that the interactive list is at <https://github.com/overturetool/ove
 * [#141 Operator Precedence bug?](https://api.github.com/repos/overturetool/overture/issues/141)
 * [#12 VDMJ dynamic type check problem](https://api.github.com/repos/overturetool/overture/issues/12)
 * [#7 VDMJ permits subclasses to call private constructors](https://api.github.com/repos/overturetool/overture/issues/7)
-
