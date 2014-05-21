@@ -1022,9 +1022,15 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			throws AnalysisException
 	{
 		question.qualifiers = null;
-		node.getExp().apply(THIS, question);
-		PType stype = node.getStatement().apply(THIS, question);
+		PType etype = node.getExp().apply(THIS, question);
 		
+		if (!question.assistantFactory.createPTypeAssistant().isType(etype, ABooleanBasicType.class))
+		{
+			TypeCheckerErrors.report(3218, "Expression is not boolean", node.getLocation(), node);
+		}
+
+		PType stype = node.getStatement().apply(THIS, question);
+
 		if (node.getExp() instanceof ABooleanConstExp && stype instanceof AUnionType)
 		{
 			ABooleanConstExp boolLiteral = (ABooleanConstExp)node.getExp();
