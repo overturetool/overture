@@ -9,13 +9,13 @@ public class A {
 
     public static class RecA implements Record {
         public Number i;
-        public char c;
+        public Character c;
         public Number r;
         public Number q;
         public Number n;
         public Number n1;
 
-        public RecA(final Number _i, final char _c, final Number _r,
+        public RecA(final Number _i, final Character _c, final Number _r,
             final Number _q, final Number _n, final Number _n1) {
             i = _i;
             c = _c;

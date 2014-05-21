@@ -8,7 +8,7 @@ public class Entry {
     }
 
     public static Func_1<String, VDMSeq, Func_1<Tuple, Tuple, Number>> f(
-        final Number n, final char c) {
+        final Number n, final Character c) {
         return new Func_1<String, VDMSeq, Func_1<Tuple, Tuple, Number>>() {
                 public Func_1<Tuple, Tuple, Number> eval(final String xs,
                     final VDMSeq ys) {

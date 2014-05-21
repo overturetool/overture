@@ -32,7 +32,7 @@ public class SimpleTest {
     public SimpleTest() {
     }
 
-    public boolean Run() {
+    public Boolean Run() {
         clock.SetDate("150999");
 
         Cardholder peter = new Cardholder().Create("Peter Gorm Larsen",
@@ -67,7 +67,7 @@ public class Account {
     public Account() {
     }
 
-    private boolean ValidTransaction(final Transaction transaction) {
+    private Boolean ValidTransaction(final Transaction transaction) {
         throw new UnsupportedOperationException();
     }
 
@@ -82,7 +82,7 @@ public class Account {
         return balance;
     }
 
-    public boolean Withdrawal(final Number cardId, final Number amount,
+    public Boolean Withdrawal(final Number cardId, final Number amount,
         final String date) {
         Transaction transaction = new Transaction(date, cardId, amount);
 
@@ -120,7 +120,7 @@ public class Account {
         cards = MapUtil.domResBy(SetUtil.set(cId), cards.clone());
     }
 
-    private static boolean TransactionsInvariant(final VDMSeq ts) {
+    private static Boolean TransactionsInvariant(final VDMSeq ts) {
         VDMSet setCompResult_1 = SetUtil.set();
         VDMSet set_2 = SeqUtil.inds(ts);
 
@@ -130,7 +130,7 @@ public class Account {
                     SetUtil.set(((Transaction) ts.get(Utils.index(i))).date));
         }
 
-        boolean forAllExpResult_1 = true;
+        Boolean forAllExpResult_1 = true;
         VDMSet set_1 = setCompResult_1.clone();
 
         for (Iterator iterator_1 = set_1.iterator();
@@ -298,7 +298,7 @@ public class CentralResource {
         }
     }
 
-    public boolean Withdrawal(final Number accountId, final Number cardId,
+    public Boolean Withdrawal(final Number accountId, final Number cardId,
         final Number amount) {
         if (IsLegalCard(accountId, cardId)) {
             return ((Account) accounts.get(accountId)).Withdrawal(cardId,
@@ -308,7 +308,7 @@ public class CentralResource {
         }
     }
 
-    public boolean PostStatement(final Number accountId, final Number cardId) {
+    public Boolean PostStatement(final Number accountId, final Number cardId) {
         if (IsLegalCard(accountId, cardId)) {
             letterbox.PostStatement(((Account) accounts.get(accountId)).MakeStatement(
                     cardId, clock.GetDate()));
@@ -319,13 +319,13 @@ public class CentralResource {
         }
     }
 
-    public boolean IsLegalCard(final Number accountId, final Number cardId) {
+    public Boolean IsLegalCard(final Number accountId, final Number cardId) {
         return !(illegalCards.contains(cardId)) &&
         MapUtil.dom(accounts.clone()).contains(accountId) &&
         ((Account) accounts.get(accountId)).GetCardIds().contains(cardId);
     }
 
-    public boolean NumberOfTriesExceeded(final Number cardId) {
+    public Boolean NumberOfTriesExceeded(final Number cardId) {
         return ((Number) numberOfTries.get(cardId)).longValue() >= maxNumberOfTries.longValue();
     }
 
@@ -440,7 +440,7 @@ import java.util.*;
 
 public class Till {
     private Card curCard = null;
-    private boolean cardOk = false;
+    private Boolean cardOk = false;
     private VDMSet retainedCards = SetUtil.set();
     private CentralResource resource;
 
@@ -457,8 +457,8 @@ public class Till {
 
     public Object Validate(final Number pin) {
         Number cardId = curCard.GetCardId();
-        boolean codeOk = curCard.GetCode().longValue() == Encode(pin).longValue();
-        boolean cardLegal = IsLegalCard();
+        Boolean codeOk = curCard.GetCode().longValue() == Encode(pin).longValue();
+        Boolean cardLegal = IsLegalCard();
         cardOk = codeOk && cardLegal;
 
         if (!(cardLegal)) {
@@ -494,25 +494,25 @@ public class Till {
         return resource.GetBalance(curCard.GetAccountId());
     }
 
-    public boolean MakeWithdrawal(final Number amount) {
+    public Boolean MakeWithdrawal(final Number amount) {
         return resource.Withdrawal(curCard.GetAccountId(), curCard.GetCardId(),
             amount);
     }
 
-    public boolean RequestStatement() {
+    public Boolean RequestStatement() {
         return resource.PostStatement(curCard.GetAccountId(),
             curCard.GetCardId());
     }
 
-    public boolean IsLegalCard() {
+    public Boolean IsLegalCard() {
         return resource.IsLegalCard(curCard.GetAccountId(), curCard.GetCardId());
     }
 
-    public boolean CardValidated() {
+    public Boolean CardValidated() {
         return (curCard != null) && cardOk;
     }
 
-    public boolean CardInside() {
+    public Boolean CardInside() {
         return curCard != null;
     }
 

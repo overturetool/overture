@@ -11,7 +11,7 @@ public class Entry {
         return Test();
     }
 
-    public static boolean pick() {
+    public static Boolean pick() {
         return true;
     }
 

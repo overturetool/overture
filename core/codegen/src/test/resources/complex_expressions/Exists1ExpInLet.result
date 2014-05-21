@@ -11,7 +11,7 @@ public class Entry {
         return Test();
     }
 
-    public static boolean Test() {
+    public static Boolean Test() {
         Long exists1Counter_1 = 0L;
         VDMSet set_1 = SetUtil.set(1L, 2L, 3L);
 
@@ -25,7 +25,7 @@ public class Entry {
             }
         }
 
-        boolean x = exists1Counter_1.longValue() == 1L;
+        Boolean x = exists1Counter_1.longValue() == 1L;
 
         return x;
     }
