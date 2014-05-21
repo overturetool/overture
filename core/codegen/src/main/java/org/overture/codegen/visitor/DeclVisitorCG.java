@@ -1,5 +1,6 @@
 package org.overture.codegen.visitor;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -8,7 +9,6 @@ import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
-import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
@@ -16,7 +16,6 @@ import org.overture.ast.definitions.traces.ATraceDefinitionTerm;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AFieldField;
-import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.ARecordInvariantType;
@@ -28,8 +27,10 @@ import org.overture.codegen.cgast.declarations.AFormalParamLocalDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.PDeclCG;
+import org.overture.codegen.cgast.expressions.ALambdaExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
+import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
@@ -162,60 +163,98 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 			return null;
 		}
 		
-		if(node.getIsCurried())
+		String accessCg = node.getAccess().getAccess().toString();
+		boolean isStaticCg = true;
+		String funcNameCg = node.getName().getName();
+		
+		PTypeCG typeCg = node.getType().apply(question.getTypeVisitor(), question);
+		
+		if(!(typeCg instanceof AMethodTypeCG))
 		{
-			question.addUnsupportedNode(node, "Explicit functions that are curried are not supported");
+			question.addUnsupportedNode(node, "Expected method type for explicit function. Got: " + typeCg);
 			return null;
 		}
 		
-		String access = node.getAccess().getAccess().toString();
-		boolean isStatic = true;
-		String funcName = node.getName().getName();
-		
-		PTypeCG type = node.getType().apply(question.getTypeVisitor(), question);
-		
-		if(!(type instanceof AMethodTypeCG))
-		{
-			question.addUnsupportedNode(node, "Expected method type for explicit function. Got: " + type);
-			return null;
-		}
-		
-		AMethodTypeCG methodType = (AMethodTypeCG) type;
-		
-		PStmCG body = null;
-		if(node.getIsUndefined())
-		   body = new ANotImplementedStmCG();
-		else
-			body = node.getBody().apply(question.getStmVisitor(), question);
-		
-		boolean isAbstract = body == null;
+		AMethodTypeCG methodTypeCg = (AMethodTypeCG) typeCg;
 		
 		AMethodDeclCG method = new AMethodDeclCG();
 		
-		method.setAccess(access);
-		method.setStatic(isStatic);
-		method.setMethodType(methodType);
-		method.setName(funcName);		
-		method.setBody(body);
-		method.setIsConstructor(false);
-		method.setAbstract(isAbstract);
+		method.setAccess(accessCg);
+		method.setStatic(isStaticCg);
+		method.setMethodType(methodTypeCg);
+		method.setName(funcNameCg);		
 		
-		List<PType> ptypes = ((AFunctionType) node.getType()).getParameters();
-		List<PPattern> paramPatterns = node.getParamPatternList().get(0);
+		method.setIsConstructor(false);
+		
+		Iterator<List<PPattern>> iterator = node.getParamPatternList().iterator();
+		List<PPattern> paramPatterns = iterator.next();
 		
 		LinkedList<AFormalParamLocalDeclCG> formalParameters = method.getFormalParams();
 		
-		for(int i = 0; i < ptypes.size(); i++)
+		for(int i = 0; i < paramPatterns.size(); i++)
 		{
-			PTypeCG paramType = ptypes.get(i).apply(question.getTypeVisitor(), question);
 			String name = paramPatterns.get(i).toString();
 			
 			AFormalParamLocalDeclCG param = new AFormalParamLocalDeclCG();
-			param.setType(paramType);
+			param.setType(methodTypeCg.getParams().get(i).clone());
 			param.setName(name);
 			
 			formalParameters.add(param);
 		}
+		
+		if(node.getIsUndefined())
+		{
+			method.setBody(new ANotImplementedStmCG());
+		}
+		else if(node.getIsCurried())
+		{
+			AMethodTypeCG nextLevel = (AMethodTypeCG) methodTypeCg;
+
+			ALambdaExpCG currentLambda = new ALambdaExpCG();
+			ALambdaExpCG topLambda = currentLambda;
+			
+			while(iterator.hasNext())
+			{
+				nextLevel = (AMethodTypeCG) nextLevel.getResult();
+				paramPatterns = iterator.next();
+				
+				for (int i = 0; i < paramPatterns.size(); i++)
+				{
+					PPattern param = paramPatterns.get(i);
+					
+					AFormalParamLocalDeclCG paramCg = new AFormalParamLocalDeclCG();
+					paramCg.setName(param.toString());
+					paramCg.setType(nextLevel.getParams().get(i).clone());
+					
+					currentLambda.getParams().add(paramCg);
+				}
+			
+				currentLambda.setType(nextLevel.clone());
+
+				if (iterator.hasNext())
+				{
+					ALambdaExpCG nextLambda = new ALambdaExpCG();
+					currentLambda.setExp(nextLambda);
+					currentLambda = nextLambda;
+				}
+				
+			}
+			
+			PExpCG bodyExp = node.getBody().apply(question.getExpVisitor(), question);
+			currentLambda.setExp(bodyExp);
+			
+			AReturnStmCG returnLambda = new AReturnStmCG();
+			returnLambda.setExp(topLambda);
+			method.setBody(returnLambda);
+		}
+		else
+		{
+			PStmCG bodyCg = node.getBody().apply(question.getStmVisitor(), question);
+			method.setBody(bodyCg);
+		}
+		
+		boolean isAbstract = method.getBody() == null;
+		method.setAbstract(isAbstract);
 		
 		//If the function uses any type parameters they will be
 		//registered as part of the method declaration

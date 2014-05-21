@@ -7,7 +7,7 @@ public class A {
     public A() {
     }
 
-    public char op() {
+    public Character op() {
         return s().charAt(Utils.index(1L));
     }
 

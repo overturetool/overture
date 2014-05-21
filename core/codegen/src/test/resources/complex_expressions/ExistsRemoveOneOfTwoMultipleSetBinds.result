@@ -9,7 +9,7 @@ public class Entry {
     public Entry() {
     }
 
-    public static boolean Run() {
+    public static Boolean Run() {
         return false;
     }
 }

@@ -9,7 +9,6 @@ import org.apache.velocity.Template;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.QuestionAdaptor;
-import org.overture.codegen.logging.Logger;
 
 public class MergeVisitor extends QuestionAdaptor<StringWriter>
 {

@@ -9,7 +9,7 @@ public class Entry {
 
     public static Object Run() {
         Number x = null;
-        boolean success_1 = false;
+        Boolean success_1 = false;
         VDMSet set_1 = SetUtil.set(3L, 5L, 7L, 8L, 9L);
 
         for (Iterator iterator_1 = set_1.iterator();
