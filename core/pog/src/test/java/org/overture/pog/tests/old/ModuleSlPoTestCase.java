@@ -35,21 +35,21 @@ public class ModuleSlPoTestCase extends PogTestCase
 	public void test() throws Exception
 	{
 		//TODO continue POG SL test checks one by one
-//		try
-//		{
-//			configureResultGeneration();
-//			if (file == null)
-//			{
-//				return;
-//			}
-//
-//			Result<List<String>> result;
-//			result = convert(TestPogUtil.pogSl(file));
-//			compareResults(result, file.getAbsolutePath());
-//		} finally
-//		{
-//			unconfigureResultGeneration();
-//		}
+		try
+		{
+			configureResultGeneration();
+			if (file == null)
+			{
+				return;
+			}
+
+			Result<List<String>> result;
+			result = convert(TestPogUtil.pogSl(file));
+			compareResults(result, file.getAbsolutePath());
+		} finally
+		{
+			unconfigureResultGeneration();
+		}
 	}
 
 	@Override

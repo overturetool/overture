@@ -16,7 +16,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.lex.Dialect;
 import org.overture.ast.node.INode;
 import org.overture.config.Release;
 import org.overture.config.Settings;
@@ -30,7 +29,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 @RunWith(Parameterized.class)
-public class AdaptedOld
+public class AdaptedOldTest
 {
 	private String modelPath;
 	private String resultPath;
@@ -38,7 +37,6 @@ public class AdaptedOld
 	@Before
 	public void setup(){
 		Settings.release = Release.DEFAULT;
-		Settings.dialect = Dialect.VDM_SL;
 	}
 	
 	@Parameters
@@ -46,7 +44,7 @@ public class AdaptedOld
 		return InputsProvider.oldSL();
 	}
 
-	public AdaptedOld(String modelPath, String resultPath)
+	public AdaptedOldTest(String modelPath, String resultPath)
 	{
 		super();
 		this.modelPath = modelPath;

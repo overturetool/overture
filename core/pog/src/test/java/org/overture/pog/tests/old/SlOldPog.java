@@ -10,7 +10,7 @@ import org.overture.ast.lex.LexLocation;
 import org.overture.pog.tests.old.ModuleSlPoTestCase;
 import org.overture.test.framework.BaseTestSuite;
 
-public class SlOldPogTestSuite extends BaseTestSuite
+public class SlOldPog extends BaseTestSuite
 {
 	public static Test suite() throws IllegalArgumentException,
 			SecurityException, InstantiationException, IllegalAccessException,
