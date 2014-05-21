@@ -32,6 +32,8 @@ import de.hunsicker.jalopy.Jalopy;
 
 public class JavaCodeGenUtil
 {
+	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+
 	public static GeneratedData generateJavaFromFiles(List<File> files) throws AnalysisException, InvalidNamesException, UnsupportedModelingException
 	{
 		List<SClassDefinition> mergedParseList = consMergedParseList(files);
@@ -127,17 +129,17 @@ public class JavaCodeGenUtil
 		for (Violation violation : reservedWordViolations)
 		{
 			buffer.append("Reserved name violation: " + violation
-					+ "\n");
+					+ LINE_SEPARATOR);
 		}
 
 		for (Violation violation : typenameViolations)
 		{
-			buffer.append("Type name violation: " + violation + "\n");
+			buffer.append("Type name violation: " + violation + LINE_SEPARATOR);
 		}
 		
 		for(Violation violation : tempVarViolations)
 		{
-			buffer.append("Temporary variable violation: " + violation + "\n");
+			buffer.append("Temporary variable violation: " + violation + LINE_SEPARATOR);
 		}
 		
 		return buffer.toString();
@@ -151,13 +153,8 @@ public class JavaCodeGenUtil
 		
 		for (Violation violation : violations)
 		{
-			buffer.append(violation + "\n");
+			buffer.append(violation + LINE_SEPARATOR);
 		}
-		
-		int lastIndex = buffer.lastIndexOf("\n");
-		
-		if(lastIndex >= 0)
-			buffer.replace(lastIndex, lastIndex + 1, "");
 		
 		return buffer.toString();
 	}
@@ -203,7 +200,7 @@ public class JavaCodeGenUtil
 			else if (jalopy.getState() == Jalopy.State.ERROR)
 				 result = code; // could not be formatted
 			
-			return result.toString().replaceAll("\r", "");
+			return result.toString();
 
 		} catch (Exception e)
 		{

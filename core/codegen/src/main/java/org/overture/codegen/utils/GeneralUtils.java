@@ -54,7 +54,7 @@ public class GeneralUtils
 
 			while ((str = in.readLine()) != null)
 			{
-				data.append(str + "\n");
+				data.append(str + System.getProperty("line.separator"));
 			}
 
 		} finally
