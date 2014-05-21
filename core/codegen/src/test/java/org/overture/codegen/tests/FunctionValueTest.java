@@ -17,7 +17,7 @@ public class FunctionValueTest extends BaseTestSuite
 	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
 	{
 		LexLocation.absoluteToStringLocation = false;
-		Properties.recordTestResults = false;
+		Properties.recordTestResults = TestFlags.FUNC_VALUE_TESTS_ON;
 		
 		String name = "Function value test case";
 		TestSuite test =  createTestCompleteFile(name, ROOT, SpecificationTestCase.class,"");

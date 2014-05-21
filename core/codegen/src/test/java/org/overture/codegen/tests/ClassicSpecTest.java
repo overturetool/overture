@@ -17,7 +17,7 @@ public class ClassicSpecTest extends BaseTestSuite
 	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
 	{
 		LexLocation.absoluteToStringLocation = false;
-		Properties.recordTestResults = false;
+		Properties.recordTestResults = TestFlags.CLASSIC_SPEC_TESTS_ON;
 		
 		String name = "Classic specifications test case";
 		TestSuite test =  createTestCompleteFile(name, ROOT, ClassicSpecTestCase.class,"");
