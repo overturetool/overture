@@ -57,6 +57,9 @@ public class OoAstInfo
 	//For generating variable names
 	private ITempVarGen tempVarNameGen;
 	
+	//For configuring code generation
+	private OoAstSettings settings;
+	
 	public OoAstInfo()
 	{
 		super();
@@ -67,6 +70,8 @@ public class OoAstInfo
 		this.quoteVaues = new HashSet<String>();
 		this.unsupportedNodes = new HashSet<NodeInfo>();
 		this.tempVarNameGen = new TempVarNameGen();
+		
+		this.settings = new OoAstSettings();
 	}
 	
 	public AssistantManager getAssistantManager()
@@ -231,5 +236,10 @@ public class OoAstInfo
 	public ITempVarGen getTempVarNameGen()
 	{
 		return tempVarNameGen;
+	}
+	
+	public OoAstSettings getSettings()
+	{
+		return settings;
 	}
 }
