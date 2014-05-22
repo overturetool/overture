@@ -1,1 +1,1 @@
-"kitten".charAt(Utils.index(1L))
+((Character) SeqUtil.seq('k', 'i', 't', 't', 'e', 'n').get(Utils.index(1L)))

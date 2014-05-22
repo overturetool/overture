@@ -12,7 +12,7 @@ public class A {
         Boolean b = true;
         Number r = 1.0;
         Character c = '1';
-        String s1 = "1";
+        VDMSeq s1 = SeqUtil.seq('1');
         A a = new A();
 
         return 0L;

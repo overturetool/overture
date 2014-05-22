@@ -4,11 +4,11 @@ import java.util.*;
 
 
 public class Alarm {
-    private String descr;
+    private VDMSeq descr;
     private Number reqQuali;
 
-    public Alarm(final Number quali, final String str) {
-        descr = str;
+    public Alarm(final Number quali, final VDMSeq str) {
+        descr = str.clone();
         reqQuali = quali;
     }
 
@@ -165,13 +165,21 @@ import java.util.*;
 
 
 public class Entry {
-    private static final Token p1 = new Token("Monday day");
-    private static final Token p2 = new Token("Monday night");
-    private static final Token p3 = new Token("Tuesday day");
-    private static final Token p4 = new Token("Tuesday night");
+    private static final Token p1 = new Token(SeqUtil.seq('M', 'o', 'n', 'd',
+                'a', 'y', ' ', 'd', 'a', 'y'));
+    private static final Token p2 = new Token(SeqUtil.seq('M', 'o', 'n', 'd',
+                'a', 'y', ' ', 'n', 'i', 'g', 'h', 't'));
+    private static final Token p3 = new Token(SeqUtil.seq('T', 'u', 'e', 's',
+                'd', 'a', 'y', ' ', 'd', 'a', 'y'));
+    private static final Token p4 = new Token(SeqUtil.seq('T', 'u', 'e', 's',
+                'd', 'a', 'y', ' ', 'n', 'i', 'g', 'h', 't'));
     private static final VDMSet ps = SetUtil.set(p1, p2, p3, p4);
-    private Alarm a1 = new Alarm(Quotes.Mech, "Mechanical fault");
-    private Alarm a2 = new Alarm(Quotes.Chem, "Tank overflow");
+    private Alarm a1 = new Alarm(Quotes.Mech,
+            SeqUtil.seq('M', 'e', 'c', 'h', 'a', 'n', 'i', 'c', 'a', 'l', ' ',
+                'f', 'a', 'u', 'l', 't'));
+    private Alarm a2 = new Alarm(Quotes.Chem,
+            SeqUtil.seq('T', 'a', 'n', 'k', ' ', 'o', 'v', 'e', 'r', 'f', 'l',
+                'o', 'w'));
     private Expert ex1 = new Expert(SetUtil.set(Quotes.Mech, Quotes.Bio));
     private Expert ex2 = new Expert(SetUtil.set(Quotes.Elec));
     private Expert ex3 = new Expert(SetUtil.set(Quotes.Chem, Quotes.Bio,

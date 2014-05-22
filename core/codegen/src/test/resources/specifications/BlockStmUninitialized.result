@@ -12,7 +12,7 @@ public class A {
         Boolean b = false;
         Number r = 0.0;
         Character c = '0';
-        String s = null;
+        VDMSeq s = null;
         A a = null;
 
         return 0L;
