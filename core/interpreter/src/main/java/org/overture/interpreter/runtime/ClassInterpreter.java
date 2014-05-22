@@ -397,7 +397,7 @@ public class ClassInterpreter extends Interpreter
 	}
 
 	@Override
-	public ProofObligationList getProofObligations()
+	public ProofObligationList getProofObligations() throws AnalysisException
 	{
 		return classes.getProofObligations(assistantFactory);
 	}
