@@ -13,8 +13,8 @@ public class Entry {
         return Test();
     }
 
-    public static boolean Test() {
-        boolean existsExpResult_1 = false;
+    public static Boolean Test() {
+        Boolean existsExpResult_1 = false;
         VDMSet set_1 = SetUtil.set(1L, 2L, 3L);
 
         for (Iterator iterator_1 = set_1.iterator();
@@ -28,7 +28,7 @@ public class Entry {
             }
         }
 
-        boolean a = existsExpResult_1;
+        Boolean a = existsExpResult_1;
 
         return a;
     }

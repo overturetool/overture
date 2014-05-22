@@ -13,6 +13,7 @@ import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.expressions.AAnonymousClassExpCG;
 import org.overture.codegen.cgast.expressions.ALambdaExpCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
+import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.types.AInterfaceTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
@@ -121,8 +122,11 @@ public class FunctionValueVisitor extends DepthFirstAnalysisAdaptor
 		AReturnStmCG lambdaReturn = new AReturnStmCG();
 		lambdaReturn.setExp(node.getExp().clone());
 		
+		ABlockStmCG lambdaBody = new ABlockStmCG();
+		lambdaBody.getStatements().add(lambdaReturn);
+		
 		lambdaDecl.setAbstract(false);
-		lambdaDecl.setBody(lambdaReturn);
+		lambdaDecl.setBody(lambdaBody);
 
 		AAnonymousClassExpCG classExp = new AAnonymousClassExpCG();
 		classExp.setType(classType);;

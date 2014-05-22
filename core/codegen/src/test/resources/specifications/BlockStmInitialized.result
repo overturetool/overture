@@ -9,9 +9,9 @@ public class A {
 
     public Number op() {
         Number n = 1L;
-        boolean b = true;
+        Boolean b = true;
         Number r = 1.0;
-        char c = '1';
+        Character c = '1';
         String s1 = "1";
         A a = new A();
 
