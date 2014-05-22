@@ -117,6 +117,7 @@ import org.overture.codegen.cgast.declarations.AFormalParamLocalDeclCG;
 import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
+import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACompMapExpCG;
 import org.overture.codegen.cgast.expressions.ACompSeqExpCG;
 import org.overture.codegen.cgast.expressions.ACompSetExpCG;
@@ -197,9 +198,11 @@ import org.overture.codegen.cgast.patterns.ASetBindCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.patterns.PBindCG;
 import org.overture.codegen.cgast.patterns.PMultipleBindCG;
+import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
+import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
 import org.overture.codegen.ooast.OoAstInfo;
@@ -1465,7 +1468,33 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	public PExpCG caseAStringLiteralExp(AStringLiteralExp node,
 			OoAstInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().consStringLiteral(node.getValue().getValue(), false);
+		if (question.getSettings().getCharSeqAsString())
+		{
+			return question.getExpAssistant().consStringLiteral(node.getValue().getValue(), false);
+		} else
+		{
+			AEnumSeqExpCG enumSeq = new AEnumSeqExpCG();
+
+			ASeqSeqTypeCG seqType = new ASeqSeqTypeCG();
+			seqType.setEmpty(node.getValue().getValue().isEmpty());
+			seqType.setSeqOf(new ACharBasicTypeCG());
+
+			enumSeq.setType(seqType);
+
+			String str = node.getValue().getValue();
+
+			for (int i = 0; i < str.length(); i++)
+			{
+				char currentChar = str.charAt(i);
+				ACharLiteralExpCG charLit = new ACharLiteralExpCG();
+				charLit.setType(new ACharBasicTypeCG());
+				charLit.setValue(currentChar);
+
+				enumSeq.getMembers().add(charLit);
+			}
+
+			return enumSeq;
+		}
 	}
 	
 	@Override

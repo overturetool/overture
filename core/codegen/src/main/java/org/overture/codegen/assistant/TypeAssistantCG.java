@@ -66,9 +66,11 @@ public class TypeAssistantCG extends AssistantBase
 		boolean emptyCg = node.getEmpty();
 
 		// This is a special case since sequence of characters are strings
-		if (seqOfCg instanceof ACharBasicTypeCG)
+		if (seqOfCg instanceof ACharBasicTypeCG && question.getSettings().getCharSeqAsString())
+		{
 			return new AStringTypeCG();
-
+		}
+			
 		ASeqSeqTypeCG seqType = new ASeqSeqTypeCG();
 		seqType.setSeqOf(seqOfCg);
 		seqType.setEmpty(emptyCg);
