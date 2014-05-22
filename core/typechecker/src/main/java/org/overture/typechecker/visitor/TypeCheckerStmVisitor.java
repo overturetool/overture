@@ -84,6 +84,7 @@ import org.overture.typechecker.PublicClassEnvironment;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.TypeComparator;
+import org.overture.typechecker.utilities.type.QualifiedDefinition;
 
 public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 {
@@ -672,7 +673,20 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			TypeCheckerErrors.report(3218, "Expression is not boolean", node.getLocation(), node);
 		}
 
+		List<QualifiedDefinition> qualified = node.getElseIf().apply(question.assistantFactory.getQualificationVisitor(), question);
+
+		for (QualifiedDefinition qdef: qualified)
+		{
+			qdef.qualifyType();
+		}
+
 		node.setType(node.getThenStm().apply(THIS, question));
+
+		for (QualifiedDefinition qdef: qualified)
+		{
+			qdef.resetType();
+		}
+
 		return node.getType();
 	}
 
@@ -765,7 +779,6 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	public PType caseAIfStm(AIfStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-
 		PType test = node.getIfExp().apply(THIS, question);
 
 		if (!question.assistantFactory.createPTypeAssistant().isType(test, ABooleanBasicType.class))
@@ -773,8 +786,20 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			TypeCheckerErrors.report(3224, "If expression is not boolean", node.getIfExp().getLocation(), node.getIfExp());
 		}
 
+		List<QualifiedDefinition> qualified = node.getIfExp().apply(question.assistantFactory.getQualificationVisitor(), question);
+
+		for (QualifiedDefinition qdef: qualified)
+		{
+			qdef.qualifyType();
+		}
+
 		PTypeSet rtypes = new PTypeSet();
 		rtypes.add(node.getThenStm().apply(THIS, question));
+		
+		for (QualifiedDefinition qdef: qualified)
+		{
+			qdef.resetType();
+		}
 
 		if (node.getElseIf() != null)
 		{
@@ -787,7 +812,8 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		if (node.getElseStm() != null)
 		{
 			rtypes.add(node.getElseStm().apply(THIS, question));
-		} else
+		}
+		else
 		{
 			rtypes.add(AstFactory.newAVoidType(node.getLocation()));
 		}
@@ -1023,13 +1049,25 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	{
 		question.qualifiers = null;
 		PType etype = node.getExp().apply(THIS, question);
-		
+
 		if (!question.assistantFactory.createPTypeAssistant().isType(etype, ABooleanBasicType.class))
 		{
 			TypeCheckerErrors.report(3218, "Expression is not boolean", node.getLocation(), node);
 		}
 
+		List<QualifiedDefinition> qualified = node.getExp().apply(question.assistantFactory.getQualificationVisitor(), question);
+
+		for (QualifiedDefinition qdef: qualified)
+		{
+			qdef.qualifyType();
+		}
+
 		PType stype = node.getStatement().apply(THIS, question);
+		
+		for (QualifiedDefinition qdef: qualified)
+		{
+			qdef.resetType();
+		}
 
 		if (node.getExp() instanceof ABooleanConstExp && stype instanceof AUnionType)
 		{

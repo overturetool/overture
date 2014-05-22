@@ -94,7 +94,7 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 	{
 		try
 		{
-			return def.apply(new PogVisitor(), new POContextStack(new PogAssistantFactory()));
+			return def.apply(new PogVisitor(), ctxt); // new POContextStack(new PogAssistantFactory()));
 		} catch (AnalysisException e)
 		{
 			e.printStackTrace();

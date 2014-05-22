@@ -76,6 +76,7 @@ import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.util.HelpLexNameToken;
 import org.overture.typechecker.utilities.DefinitionTypeResolver;
+import org.overture.typechecker.utilities.type.QualifiedDefinition;
 
 public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 {
@@ -267,6 +268,8 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			local.add(question.assistantFactory.createPDefinitionAssistant().getSelfDefinition(node));
 		}
 
+		List<QualifiedDefinition> qualified = new Vector<QualifiedDefinition>(); 
+
 		if (node.getPredef() != null)
 		{
 			// building the new scope for subtypechecks
@@ -278,6 +281,13 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			{
 				TypeChecker.report(3018, "Precondition returns unexpected type", node.getLocation());
 				TypeChecker.detail2("Actual", b, "Expected", expected);
+			}
+			
+			qualified = node.getPredef().getBody().apply(question.assistantFactory.getQualificationVisitor(), new TypeCheckInfo(question.assistantFactory, local, NameScope.NAMES));
+
+			for (QualifiedDefinition qdef: qualified)
+			{
+				qdef.qualifyType();
 			}
 		}
 
@@ -305,6 +315,11 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		PType actualResult = node.getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, null, expectedResult, null));
 
 		node.setActualResult(actualResult);
+
+		for (QualifiedDefinition qdef: qualified)
+		{
+			qdef.resetType();
+		}
 
 		if (!TypeComparator.compatible(expectedResult, node.getActualResult()))
 		{
@@ -437,6 +452,27 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		question.assistantFactory.createPDefinitionListAssistant().typeCheck(defs, THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers));
 
+		List<QualifiedDefinition> qualified = new Vector<QualifiedDefinition>(); 
+
+		if (node.getPredef() != null)
+		{
+			PType b = node.getPredef().getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
+			ABooleanBasicType expected = AstFactory.newABooleanBasicType(node.getLocation());
+
+			if (!question.assistantFactory.createPTypeAssistant().isType(b, ABooleanBasicType.class))
+			{
+				TypeCheckerErrors.report(3018, "Precondition returns unexpected type", node.getLocation(), node);
+				TypeCheckerErrors.detail2("Actual", b, "Expected", expected);
+			}
+
+			qualified = node.getPredef().getBody().apply(question.assistantFactory.getQualificationVisitor(), new TypeCheckInfo(question.assistantFactory, local, question.scope));
+
+			for (QualifiedDefinition qdef: qualified)
+			{
+				qdef.qualifyType();
+			}
+		}
+
 		if (node.getBody() != null)
 		{
 			if (node.getClassDefinition() != null
@@ -454,21 +490,14 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
+		for (QualifiedDefinition qdef: qualified)
+		{
+			qdef.resetType();
+		}
+
 		if (question.assistantFactory.createPTypeAssistant().narrowerThan(question.assistantFactory.createPDefinitionAssistant().getType(node), node.getAccess()))
 		{
 			TypeCheckerErrors.report(3030, "Function parameter visibility less than function definition", node.getLocation(), node);
-		}
-
-		if (node.getPredef() != null)
-		{
-			PType b = node.getPredef().getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
-			ABooleanBasicType expected = AstFactory.newABooleanBasicType(node.getLocation());
-
-			if (!question.assistantFactory.createPTypeAssistant().isType(b, ABooleanBasicType.class))
-			{
-				TypeCheckerErrors.report(3018, "Precondition returns unexpected type", node.getLocation(), node);
-				TypeCheckerErrors.detail2("Actual", b, "Expected", expected);
-			}
 		}
 
 		// The result variables are in scope for the post condition
@@ -653,6 +682,8 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
+		List<QualifiedDefinition> qualified = new Vector<QualifiedDefinition>(); 
+
 		if (node.getPredef() != null)
 		{
 			FlatEnvironment pre = new FlatEnvironment(question.assistantFactory, new Vector<PDefinition>(), local);
@@ -666,6 +697,13 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			{
 				TypeCheckerErrors.report(3018, "Precondition returns unexpected type", node.getLocation(), node);
 				TypeCheckerErrors.detail2("Actual", b, "Expected", expected);
+			}
+
+			qualified = node.getPredef().getBody().apply(question.assistantFactory.getQualificationVisitor(), new TypeCheckInfo(question.assistantFactory, pre, NameScope.NAMESANDSTATE));
+
+			for (QualifiedDefinition qdef: qualified)
+			{
+				qdef.qualifyType();
 			}
 		}
 
@@ -690,6 +728,11 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		PType actualResult = node.getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, NameScope.NAMESANDSTATE, null, null, expectedResult));
 		node.setActualResult(actualResult);
 		boolean compatible = TypeComparator.compatible(expectedResult, node.getActualResult());
+
+		for (QualifiedDefinition qdef: qualified)
+		{
+			qdef.resetType();
+		}
 
 		if (node.getIsConstructor()
 				&& !question.assistantFactory.createPTypeAssistant().isType(node.getActualResult(), AVoidType.class)
@@ -858,6 +901,29 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
+		List<QualifiedDefinition> qualified = new Vector<QualifiedDefinition>(); 
+
+		if (node.getPredef() != null)
+		{
+			FlatEnvironment pre = new FlatEnvironment(question.assistantFactory, new Vector<PDefinition>(), local);
+			pre.setEnclosingDefinition(node.getPredef());
+			PType b = node.getPredef().getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, pre, NameScope.NAMESANDSTATE));
+			ABooleanBasicType expected = AstFactory.newABooleanBasicType(node.getLocation());
+
+			if (!question.assistantFactory.createPTypeAssistant().isType(b, ABooleanBasicType.class))
+			{
+				TypeCheckerErrors.report(3018, "Precondition returns unexpected type", node.getLocation(), node);
+				TypeCheckerErrors.detail2("Actual", b, "Expected", expected);
+			}
+
+			qualified = node.getPredef().getBody().apply(question.assistantFactory.getQualificationVisitor(), new TypeCheckInfo(question.assistantFactory, pre, NameScope.NAMESANDSTATE));
+
+			for (QualifiedDefinition qdef: qualified)
+			{
+				qdef.qualifyType();
+			}
+		}
+
 		if (node.getBody() != null)
 		{
 			if (node.getClassDefinition() != null
@@ -894,6 +960,11 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
+		for (QualifiedDefinition qdef: qualified)
+		{
+			qdef.resetType();
+		}
+
 		if (question.assistantFactory.createPAccessSpecifierAssistant().isAsync(node.getAccess())
 				&& !question.assistantFactory.createPTypeAssistant().isType(((AOperationType) node.getType()).getResult(), AVoidType.class))
 		{
@@ -904,20 +975,6 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		if (question.assistantFactory.createPTypeAssistant().narrowerThan(node.getType(), node.getAccess()))
 		{
 			TypeCheckerErrors.report(3036, "Operation parameter visibility less than operation definition", node.getLocation(), node);
-		}
-
-		if (node.getPredef() != null)
-		{
-			FlatEnvironment pre = new FlatEnvironment(question.assistantFactory, new Vector<PDefinition>(), local);
-			pre.setEnclosingDefinition(node.getPredef());
-			PType b = node.getPredef().getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, pre, NameScope.NAMESANDSTATE));
-			ABooleanBasicType expected = AstFactory.newABooleanBasicType(node.getLocation());
-
-			if (!question.assistantFactory.createPTypeAssistant().isType(b, ABooleanBasicType.class))
-			{
-				TypeCheckerErrors.report(3018, "Precondition returns unexpected type", node.getLocation(), node);
-				TypeCheckerErrors.detail2("Actual", b, "Expected", expected);
-			}
 		}
 
 		// The result variables are in scope for the post condition
