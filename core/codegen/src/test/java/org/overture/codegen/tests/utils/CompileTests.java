@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.overture.codegen.tests.ClassicSpecTest;
 import org.overture.codegen.tests.ComplexExpressionTest;
+import org.overture.codegen.tests.ConfiguredStringGenerationTest;
 import org.overture.codegen.tests.ExpressionTest;
 import org.overture.codegen.tests.FunctionValueTest;
 import org.overture.codegen.tests.SpecificationTest;
@@ -36,6 +37,7 @@ public class CompileTests
 	public static final boolean RUN_EXECUTING_CLASSIC_SPEC_TESTS = true;
 	public static final boolean RUN_NON_EXECUTING_VDM10_SPEC_TESTS = true;
 	public static final boolean RUN_FUNCTION_VALUE_TESTS = true;
+	public static final boolean RUN_CONFIGURED_STRING_GENERATION_TESTS = true;
 	
 	private List<File> testInputFiles;
 	private List<File> resultFiles;
@@ -81,6 +83,11 @@ public class CompileTests
 			runFunctionValueTests();
 		}
 		
+		if(RUN_CONFIGURED_STRING_GENERATION_TESTS)
+		{
+			runConfiguredStringTests();
+		}
+		
 		long endTimeMs = System.currentTimeMillis();
 		
 		long totalTimeMs = (endTimeMs - startTimeMs);
@@ -89,6 +96,20 @@ public class CompileTests
 		long seconds = (totalTimeMs % (60 * 1000)) / 1000;
 		
 		System.out.println("Time: " + String.format("%02d:%02d", minutes, seconds) + ".");
+	}
+
+	private void runConfiguredStringTests() throws IOException
+	{
+		System.out.println("Beginning configured strings..\n");
+
+		testInputFiles = TestUtils.getTestInputFiles(new File(ConfiguredStringGenerationTest.ROOT));
+		resultFiles = TestUtils.getFiles(new File(ConfiguredStringGenerationTest.ROOT), RESULT_FILE_EXTENSION);
+		
+		runTests(testInputFiles, resultFiles, new ExecutableSpecTestHandler(Release.VDM_10), false);
+		
+		System.out.println("\n********");
+		System.out.println("Finished with configured strings");
+		System.out.println("********\n");
 	}
 
 	private void runFunctionValueTests() throws IOException
