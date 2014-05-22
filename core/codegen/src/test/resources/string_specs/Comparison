@@ -1,0 +1,13 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+(dcl a : seq of char := "a";
+ dcl b : seq of char := "b";
+ 
+	return [a = a, a = b, b = "b", a <> a, a <> b, b <> "b"];
+);
+
+end Entry

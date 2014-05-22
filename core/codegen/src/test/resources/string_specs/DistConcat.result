@@ -1,0 +1,28 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static VDMSeq g() {
+        return SeqUtil.distConc(SeqUtil.seq(SeqUtil.seq('f', 'i', 'r', 's',
+                    't', ',', ' '),
+                SeqUtil.seq('s', 'e', 'c', 'o', 'n', 'd', ',', ' '),
+                SeqUtil.seq('t', 'h', 'i', 'r', 'd', ',', ' ')));
+    }
+
+    public static VDMSeq h() {
+        return SeqUtil.seq(SeqUtil.seq('f', 'o', 'u', 'r', 't', 'h', ',', ' '),
+            SeqUtil.seq('f', 'i', 'f', 't', 'h', ',', ' '),
+            SeqUtil.seq('s', 'i', 'x', 't', 'h'));
+    }
+
+    public static Object Run() {
+        return SeqUtil.conc(g(), SeqUtil.distConc(h()));
+    }
+}
+
+##########

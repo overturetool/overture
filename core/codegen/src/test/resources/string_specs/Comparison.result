@@ -1,0 +1,20 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        VDMSeq a = SeqUtil.seq('a');
+        VDMSeq b = SeqUtil.seq('b');
+
+        return SeqUtil.seq(SeqUtil.equals(a, a), SeqUtil.equals(a, b),
+            SeqUtil.equals(b, SeqUtil.seq('b')), !(SeqUtil.equals(a, a)),
+            !(SeqUtil.equals(a, b)), !(SeqUtil.equals(b, SeqUtil.seq('b'))));
+    }
+}
+
+##########

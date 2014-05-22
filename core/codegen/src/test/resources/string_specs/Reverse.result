@@ -1,0 +1,18 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    private static final VDMSeq a = SeqUtil.seq('j', 'e', 'h');
+
+    public Entry() {
+    }
+
+    public static Object Run() {
+        return SeqUtil.conc(SeqUtil.reverse(SeqUtil.seq('j', 'e', 'h')),
+            SeqUtil.reverse(a.clone()));
+    }
+}
+
+##########

@@ -1,0 +1,21 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    private static final VDMSeq a = SeqUtil.seq('h', 'e', 'j');
+
+    public Entry() {
+    }
+
+    public static VDMSeq f() {
+        return SeqUtil.seq('c', 'a', 't');
+    }
+
+    public static Object Run() {
+        return SeqUtil.conc(SeqUtil.conc(SeqUtil.seq('a'), a.clone()), f());
+    }
+}
+
+##########
