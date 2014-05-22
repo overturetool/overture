@@ -31,6 +31,11 @@ public abstract class CodeGenBaseTestCase extends BaseTestCase
 	{
 		super(file);
 	}
+	
+	public boolean generateCharSequencesAsStrings()
+	{
+		return false;
+	}
 
 	@Override
 	protected void setUp() throws Exception

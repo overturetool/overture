@@ -40,7 +40,7 @@ public class JavaCodeGenMain
 				List<File> libFiles = GeneralUtils.getFiles(new File("src\\test\\resources\\lib"));
 				files.addAll(libFiles);
 				
-				GeneratedData data = JavaCodeGenUtil.generateJavaFromFiles(files);
+				GeneratedData data = JavaCodeGenUtil.generateJavaFromFiles(files, true);
 				List<GeneratedModule> generatedClasses = data.getClasses();
 				
 				for (GeneratedModule generatedClass : generatedClasses)
@@ -99,7 +99,7 @@ public class JavaCodeGenMain
 		{
 			try
 			{
-				Generated generated = JavaCodeGenUtil.generateJavaFromExp(args[1]);
+				Generated generated = JavaCodeGenUtil.generateJavaFromExp(args[1], true);
 				
 				if(generated.hasMergeErrors())
 				{

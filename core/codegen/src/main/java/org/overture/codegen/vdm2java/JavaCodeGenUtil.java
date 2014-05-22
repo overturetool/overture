@@ -34,11 +34,13 @@ public class JavaCodeGenUtil
 {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
-	public static GeneratedData generateJavaFromFiles(List<File> files) throws AnalysisException, InvalidNamesException, UnsupportedModelingException
+	public static GeneratedData generateJavaFromFiles(List<File> files, boolean generateCharSequencesAsStrings) throws AnalysisException, InvalidNamesException, UnsupportedModelingException
 	{
 		List<SClassDefinition> mergedParseList = consMergedParseList(files);
 		
 		JavaCodeGen vdmCodGen = new JavaCodeGen();
+		
+		vdmCodGen.getInfo().getSettings().setCharSeqAsString(generateCharSequencesAsStrings);
 
 		List<GeneratedModule> generatedModules = generateJavaFromVdm(mergedParseList, vdmCodGen);
 		
@@ -87,7 +89,7 @@ public class JavaCodeGenUtil
 		return vdmCodGen.generateJavaFromVdm(mergedParseLists);
 	}
 
-	public static Generated generateJavaFromExp(String exp) throws AnalysisException
+	public static Generated generateJavaFromExp(String exp, boolean generateCharSequencesAsStrings) throws AnalysisException
 	{
 		TypeCheckResult<PExp> typeCheckResult = GeneralCodeGenUtils.validateExp(exp);
 		
@@ -98,6 +100,8 @@ public class JavaCodeGenUtil
 		}
 
 		JavaCodeGen vdmCodGen = new JavaCodeGen();
+		vdmCodGen.getInfo().getSettings().setCharSeqAsString(generateCharSequencesAsStrings);
+		
 		try
 		{
 			return vdmCodGen.generateJavaFromVdmExp(typeCheckResult.result);
