@@ -1,1 +1,1 @@
-'$node.getValue()'
+'${JavaFormat.escapeChar(${node.getValue()})}'

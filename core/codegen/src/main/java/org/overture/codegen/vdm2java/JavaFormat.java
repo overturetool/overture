@@ -1193,4 +1193,9 @@ public class JavaFormat
 		
 		return escaped;
 	}
+	
+	public String escapeChar(char c)
+	{
+		return GeneralUtils.isEscapeSequence(c) ? StringEscapeUtils.escapeJavaScript(c + "") : c + "";
+	}
 }
