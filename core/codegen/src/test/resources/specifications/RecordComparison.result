@@ -4,8 +4,8 @@ import java.util.*;
 
 
 public class A {
-    public static final boolean a = new R(1L).equals(new R(2L));
-    public static final boolean b = !(new R(1L).equals(new R(2L)));
+    public static final Boolean a = new R(1L).equals(new R(2L));
+    public static final Boolean b = !(new R(1L).equals(new R(2L)));
 
     public A() {
     }
@@ -13,11 +13,11 @@ public class A {
     public static class R implements Record {
         public Number x;
 
-        public R(Number _x) {
+        public R(final Number _x) {
             x = _x;
         }
 
-        public boolean equals(Object obj) {
+        public boolean equals(final Object obj) {
             if (!(obj instanceof R)) {
                 return false;
             }

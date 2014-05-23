@@ -100,15 +100,16 @@ public class NoteBook {
         }
     }
 
-    public void addMessage(String msg) {
+    public void addMessage(final String msg) {
         messages = SeqUtil.conc(SeqUtil.seq(msg), messages.clone());
     }
 
-    public void addMessages(VDMSeq newMessages) {
+    public void addMessages(final VDMSeq newMessages) {
         messages = SeqUtil.conc(newMessages.clone(), messages.clone());
     }
 
-    private void addMessagesDist(VDMSeq newMessages1, VDMSeq newMessages2) {
+    private void addMessagesDist(final VDMSeq newMessages1,
+        final VDMSeq newMessages2) {
         messages = SeqUtil.conc(SeqUtil.distConc(SeqUtil.seq(
                         newMessages1.clone(), newMessages2.clone())),
                 messages.clone());
@@ -122,7 +123,7 @@ public class NoteBook {
         messages = SeqUtil.tail(messages.clone());
     }
 
-    public void overrideMessage(Number index, String newMessage) {
+    public void overrideMessage(final Number index, final String newMessage) {
         messages = SeqUtil.mod(messages.clone(),
                 new Maplet[] { new Maplet(index, newMessage) });
     }
@@ -131,7 +132,7 @@ public class NoteBook {
         return messages.clone();
     }
 
-    public void setMessages(VDMSeq newMessages) {
+    public void setMessages(final VDMSeq newMessages) {
         messages = newMessages.clone();
     }
 
@@ -139,15 +140,15 @@ public class NoteBook {
         return getMessagesOrdered().size();
     }
 
-    public String getMessage(Number index) {
+    public String getMessage(final Number index) {
         return ((String) messages.get(Utils.index(index)));
     }
 
-    public boolean isMessage(Number index, String message) {
+    public Boolean isMessage(final Number index, final String message) {
         return message.equals(getMessage(index));
     }
 
-    public boolean isNotMessage(Number index, String message) {
+    public Boolean isNotMessage(final Number index, final String message) {
         return !(message.equals(getMessage(index)));
     }
 
@@ -163,11 +164,11 @@ public class NoteBook {
         return SeqUtil.reverse(messages.clone());
     }
 
-    public boolean eq(NoteBook other) {
+    public Boolean eq(final NoteBook other) {
         return SeqUtil.equals(messages, other.messages);
     }
 
-    public boolean neq(NoteBook other) {
+    public Boolean neq(final NoteBook other) {
         return !(SeqUtil.equals(messages, other.messages));
     }
 }

@@ -11,8 +11,8 @@ public class Entry {
         return Test();
     }
 
-    public static boolean Test() {
-        boolean forAllExpResult_1 = true;
+    public static Boolean Test() {
+        Boolean forAllExpResult_1 = true;
         VDMSet set_1 = SetUtil.set(1L, 2L, 3L);
 
         for (Iterator iterator_1 = set_1.iterator();
@@ -22,7 +22,7 @@ public class Entry {
                 (2L * Math.round(Math.floor(x.longValue() / 2L)))) == 0L;
         }
 
-        boolean x = forAllExpResult_1;
+        Boolean x = forAllExpResult_1;
 
         return x;
     }

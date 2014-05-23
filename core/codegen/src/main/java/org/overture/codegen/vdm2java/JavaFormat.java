@@ -4,12 +4,14 @@ import java.io.StringWriter;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalDeclCG;
+import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
@@ -43,6 +45,7 @@ import org.overture.codegen.cgast.expressions.SBinaryExpCGBase;
 import org.overture.codegen.cgast.expressions.SLiteralExpCGBase;
 import org.overture.codegen.cgast.expressions.SNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.SUnaryExpCG;
+import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
@@ -63,6 +66,7 @@ import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AIntBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.AInterfaceTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
 import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
@@ -80,6 +84,7 @@ import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.constants.TempVarPrefixes;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.ooast.OoAstAnalysis;
+import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.ITempVarGen;
 
 public class JavaFormat
@@ -104,12 +109,51 @@ public class JavaFormat
 	private ITempVarGen tempVarNameGen;
 	private AssistantManager assistantManager;
 	private MergeVisitor mergeVisitor;
+	private FunctionValueAssistant functionValueAssistant;
 	
 	public JavaFormat(TempVarPrefixes varPrefixes,ITempVarGen tempVarNameGen, AssistantManager assistantManager)
 	{
 		this.tempVarNameGen = tempVarNameGen;
 		this.assistantManager = assistantManager;
 		this.mergeVisitor = new MergeVisitor(JavaCodeGen.JAVA_TEMPLATE_STRUCTURE, JavaCodeGen.constructTemplateCallables(this, OoAstAnalysis.class, varPrefixes));
+		this.functionValueAssistant = null;
+	}
+	
+	public void setFunctionValueAssistant(FunctionValueAssistant functionValueAssistant)
+	{
+		this.functionValueAssistant = functionValueAssistant;
+	}
+	
+	public void clearFunctionValueAssistant()
+	{
+		this.functionValueAssistant = null;
+	}
+	
+	public String format(AMethodTypeCG methodType) throws AnalysisException
+	{
+		final String OBJ = "Object";
+		
+		if(functionValueAssistant == null)
+			return OBJ;
+
+		AInterfaceDeclCG methodTypeInterface = functionValueAssistant.findInterface(methodType);
+
+		if(methodTypeInterface == null)
+			return OBJ; //Should not happen
+		
+		AInterfaceTypeCG methodClass = new AInterfaceTypeCG();
+		methodClass.setName(methodTypeInterface.getName());
+		
+		LinkedList<PTypeCG> params = methodType.getParams();
+		
+		for(PTypeCG param : params)
+		{
+			methodClass.getTypes().add(param.clone());
+		}
+		
+		methodClass.getTypes().add(methodType.getResult().clone());
+		
+		return methodClass != null ? format(methodClass) : OBJ;
 	}
 	
 	public void init()
@@ -583,13 +627,18 @@ public class JavaFormat
 		if(params.size() <= 0)
 			return "";
 		
+		final String finalPrefix = " final ";
+
 		AFormalParamLocalDeclCG firstParam = params.get(0);
+		writer.append(finalPrefix);
 		writer.append(format(firstParam));
 		
 		for(int i = 1; i < params.size(); i++)
 		{
 			AFormalParamLocalDeclCG param = params.get(i);
-			writer.append(", " + format(param));
+			writer.append(", ");
+			writer.append(finalPrefix);
+			writer.append(format(param));
 		}
 		return writer.toString();
 	}
@@ -827,7 +876,12 @@ public class JavaFormat
 		
 		AMethodTypeCG methodType = new AMethodTypeCG();
 		methodType.getParams().add(new AObjectTypeCG());
-		methodType.setResult(new ABoolBasicTypeCG());
+		
+		AExternalTypeCG returnType = new AExternalTypeCG();
+		returnType.setInfo(null);
+		returnType.setName("boolean");
+		
+		methodType.setResult(returnType);
 		
 		equalsMethod.setAccess(JAVA_PUBLIC);
 		equalsMethod.setName("equals");
@@ -993,6 +1047,11 @@ public class JavaFormat
 		return type instanceof AStringTypeCG; 
 	}
 	
+	public boolean isStringType(PExpCG exp)
+	{
+		return exp.getType() instanceof AStringTypeCG; 
+	}
+	
 	public boolean isCharType(PTypeCG type)
 	{
 		return type instanceof ACharBasicTypeCG; 
@@ -1106,5 +1165,32 @@ public class JavaFormat
 	public boolean isLoopVar(AVarLocalDeclCG localVar)
 	{
 		return localVar.parent() instanceof AForLoopStmCG;
+	}
+	
+	public boolean isLambda(AApplyExpCG applyExp)
+	{
+		PExpCG root = applyExp.getRoot();
+		
+		if(root instanceof AApplyExpCG && root.getType() instanceof AMethodTypeCG)
+			return true;
+		
+		if(!(root instanceof SVarExpCG))
+			return false;
+		
+		SVarExpCG varExp = (SVarExpCG) root;
+		
+		return varExp.getIsLambda() != null && varExp.getIsLambda();
+	}
+	
+	public String escapeStr(String str)
+	{
+		String escaped = "";
+		for(int i = 0; i < str.length(); i++)
+		{
+			char currentChar = str.charAt(i);
+			escaped += GeneralUtils.isEscapeSequence(currentChar) ? StringEscapeUtils.escapeJava(currentChar + "") : (currentChar + "");
+		}
+		
+		return escaped;
 	}
 }

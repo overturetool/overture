@@ -975,6 +975,55 @@ public class TypeComparator
 		Set<PType> tsa = new HashSet<PType>();
 		Set<PType> tsb = new HashSet<PType>();
 
+		// Obtain the fundamental type of BracketTypes, NamedTypes and OptionalTypes.
+		boolean resolved = false;
+
+		while (!resolved)
+		{
+    		if (a instanceof ABracketType)
+    		{
+    			a = ((ABracketType)a).getType();
+    			continue;
+    		}
+
+    		if (b instanceof ABracketType)
+    		{
+    			b = ((ABracketType)b).getType();
+    			continue;
+    		}
+
+    		if (a instanceof ANamedInvariantType)
+    		{
+    			ANamedInvariantType nt = (ANamedInvariantType)a;
+
+       			if (nt.getInvDef() == null)
+       			{
+        			a = nt.getType();
+        			continue;
+        		}
+    		}
+
+    		if (b instanceof ANamedInvariantType)
+    		{
+    			ANamedInvariantType nt = (ANamedInvariantType)b;
+
+       			if (nt.getInvDef() == null)
+       			{
+        			b = nt.getType();
+        			continue;
+        		}
+    		}
+
+    		if (a instanceof AOptionalType && b instanceof AOptionalType)
+    		{
+       			a = ((AOptionalType)a).getType();
+       			b = ((AOptionalType)b).getType();
+    			continue;
+    		}
+
+    		resolved = true;
+		}
+
 		if (a instanceof AUnionType)
 		{
 			AUnionType uta = (AUnionType)a;

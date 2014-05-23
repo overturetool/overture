@@ -2,8 +2,10 @@ package org.overture.codegen.vdm2java;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,6 +32,8 @@ import de.hunsicker.jalopy.Jalopy;
 
 public class JavaCodeGenUtil
 {
+	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+
 	public static GeneratedData generateJavaFromFiles(List<File> files) throws AnalysisException, InvalidNamesException, UnsupportedModelingException
 	{
 		List<SClassDefinition> mergedParseList = consMergedParseList(files);
@@ -125,17 +129,17 @@ public class JavaCodeGenUtil
 		for (Violation violation : reservedWordViolations)
 		{
 			buffer.append("Reserved name violation: " + violation
-					+ "\n");
+					+ LINE_SEPARATOR);
 		}
 
 		for (Violation violation : typenameViolations)
 		{
-			buffer.append("Type name violation: " + violation + "\n");
+			buffer.append("Type name violation: " + violation + LINE_SEPARATOR);
 		}
 		
 		for(Violation violation : tempVarViolations)
 		{
-			buffer.append("Temporary variable violation: " + violation + "\n");
+			buffer.append("Temporary variable violation: " + violation + LINE_SEPARATOR);
 		}
 		
 		return buffer.toString();
@@ -149,13 +153,8 @@ public class JavaCodeGenUtil
 		
 		for (Violation violation : violations)
 		{
-			buffer.append(violation + "\n");
+			buffer.append(violation + LINE_SEPARATOR);
 		}
-		
-		int lastIndex = buffer.lastIndexOf("\n");
-		
-		if(lastIndex >= 0)
-			buffer.replace(lastIndex, lastIndex + 1, "");
 		
 		return buffer.toString();
 	}
@@ -174,11 +173,12 @@ public class JavaCodeGenUtil
 	
 	public static String formatJavaCode(String code)
 	{
+		File tempFile = null;
 		StringBuffer b = new StringBuffer();
 		try
 		{
-			File tempFile = new File("temp.java");
-			FileWriter xwriter = new FileWriter(tempFile);
+			tempFile = new File("target" + File.separatorChar + "temp.java");
+			PrintWriter xwriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(tempFile, false), "UTF-8"));
 			xwriter.write(code.toString());
 			xwriter.flush();
 
@@ -189,7 +189,6 @@ public class JavaCodeGenUtil
 			jalopy.format();
 
 			xwriter.close();
-			tempFile.delete();
 
 			String result = null;
 			
@@ -201,13 +200,17 @@ public class JavaCodeGenUtil
 			else if (jalopy.getState() == Jalopy.State.ERROR)
 				 result = code; // could not be formatted
 			
-			return result.toString().replaceAll("\r", "");
+			return result.toString();
 
 		} catch (Exception e)
 		{
 			Logger.getLog().printErrorln("Could not format code: "
 					+ e.toString());
 			e.printStackTrace();
+		}
+		finally
+		{
+			tempFile.delete();
 		}
 
 		return null;// could not be formatted
@@ -220,7 +223,7 @@ public class JavaCodeGenUtil
 			File javaFile = new File(outputFolder, File.separator + javaFileName);
 			javaFile.getParentFile().mkdirs();
 			javaFile.createNewFile();
-			FileWriter writer = new FileWriter(javaFile);
+			PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(javaFile, false), "UTF-8"));
 			BufferedWriter out = new BufferedWriter(writer);
 			out.write(code);
 			out.close();

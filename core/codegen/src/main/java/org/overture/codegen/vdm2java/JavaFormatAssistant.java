@@ -24,6 +24,7 @@ import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
+import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
@@ -192,7 +193,10 @@ public class JavaFormatAssistant
 		LinkedList<AFieldDeclCG> fields = record.getFields();
 		
 		AExplicitVarExpCG member = new AExplicitVarExpCG();
-		member.setType(returnType.clone());
+
+		AMethodTypeCG methodType = new AMethodTypeCG();
+		methodType.setResult(returnType.clone());
+		member.setType(methodType);
 		AClassTypeCG classType = new AClassTypeCG();
 		classType.setName(JavaFormat.UTILS_FILE);
 		member.setClassType(classType);

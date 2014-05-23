@@ -1358,7 +1358,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 					// in order to have it updated.
 
 					UpdatableValue ur = (UpdatableValue) root;
-					result = UpdatableValue.factory(ur.listeners);
+					result = UpdatableValue.factory(ur.listeners, node.getMapType().getTo());
 					map.put(index, result);
 				}
 			} else if (root.isType(SeqValue.class))
@@ -1374,7 +1374,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 						// creates the value in order to have it updated.
 
 						UpdatableValue ur = (UpdatableValue) root;
-						seq.add(UpdatableValue.factory(ur.listeners));
+						seq.add(UpdatableValue.factory(ur.listeners, node.getSeqType().getSeqof()));
 					} else
 					{
 						VdmRuntimeError.abort(node.getExp().getLocation(), 4019, "Sequence cannot extend to key: "

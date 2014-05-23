@@ -3,7 +3,6 @@ package org.overture.codegen.assistant;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
@@ -15,7 +14,6 @@ import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SBinaryExp;
 import org.overture.ast.expressions.SUnaryExp;
-import org.overture.ast.node.INode;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
@@ -158,7 +156,7 @@ public class ExpAssistantCG extends AssistantBase
 
 		stringLiteral.setType(new AStringTypeCG());
 		stringLiteral.setIsNull(isNull);
-		stringLiteral.setValue(StringEscapeUtils.escapeJava(value));
+		stringLiteral.setValue(value);
 		
 		return stringLiteral;
 	}
@@ -200,27 +198,12 @@ public class ExpAssistantCG extends AssistantBase
 		if (classDef == null)
 			return false;
 
-		return hasAncestor(exp, classDef, AInstanceVariableDefinition.class)
-				|| hasAncestor(exp, classDef, AValueDefinition.class)
-				|| hasAncestor(exp, classDef, AAssignmentDefinition.class)
-				|| hasAncestor(exp, classDef, AAssignmentStm.class);
+		return exp.getAncestor(AInstanceVariableDefinition.class) != null
+				|| exp.getAncestor(AValueDefinition.class) != null
+				|| exp.getAncestor(AAssignmentDefinition.class) != null
+				|| exp.getAncestor(AAssignmentStm.class) != null;
 	}
 	
-	private boolean hasAncestor(PExp exp, SClassDefinition classDef, Class<? extends INode> assignNodeClass)
-	{
-		INode ancestor = exp.getAncestor(assignNodeClass);
-		
-		if(ancestor == null)
-			return false;
-		
-		//Normally we should return true but the check below is a guard against
-		//ill formed VDM++ ASTs
-		
-		INode assignNode = classDef.getAncestor(assignNodeClass);
-		
-		return assignNode == null || assignNode == ancestor;
-	}
-
 	public LinkedList<AIdentifierPatternCG> getIdsFromPatternList(List<PPattern> patternList)
 	{
 		LinkedList<AIdentifierPatternCG> idsCg = new LinkedList<AIdentifierPatternCG>();

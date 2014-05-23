@@ -350,7 +350,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	{
 		AComprehensionSetExpression scs = new AComprehensionSetExpression();
 
-		LinkedList<PMultipleBind> blist = node.getBindings();
+		List<PMultipleBind> blist = node.getBindings();
 
 		scs.getIdentifiers().add(exp(blist.get(0).getPlist().get(0)));
 		scs.setPredicates(new AMemberPredicate(exp(blist.get(0).getPlist().get(0)), exp(blist.get(0))));

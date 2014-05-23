@@ -10,6 +10,8 @@ Tokens
  * external
  *  location = 'java:org.overture.ast.lex.LexLocation';
  */
+ 
+  vdmType = 'java:org.overture.ast.types.PType';
 
   
   //Java
@@ -78,6 +80,7 @@ declCG {-> package='org.overture.codegen.cgast.declarations'}
     	[initial]:expCG
     |	#Local
    	|	{class}
+   		[package]:java_String
       	[access]:java_String
       	[abstract]:java_Boolean
       	[static]:java_Boolean 
@@ -87,8 +90,11 @@ declCG {-> package='org.overture.codegen.cgast.declarations'}
     	[superName]:java_String
     	[records]:declCG.record*
     |	{interface}
+    	[templateTypes]:typeCG.template*
+    	[package]:java_String
     	[name]:java_String
     	[fields]:field*
+    	[methodSignatures]:declCG.method*
     |	{record}
     	[name]:java_String
     	[access]:java_String
@@ -207,13 +213,16 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     	//is used for refering to expressions of the target environment (e.g. that of Java) 
     	//that are not directly mapped to by the code generator.
     |	{external} [targetLangExp]:java_String
+    |	{lambda} [params]:localDeclCG.formalParam* [exp]:expCG
+    |	{anonymousClass} [methods]:declCG.method*
     ;
 
 #RuntimeError {-> package='org.overture.codegen.cgast.expressions'}
     =   {LetBeStNoBinding}
     ;
 
-#Var {-> package='org.overture.codegen.cgast.expressions'}
+#Var {-> package='org.overture.codegen.cgast.expressions'
+	|	[isLambda]:java_Boolean}
     =   {identifier} [original]:java_String //Change original to name...
 	|	{explicit} [classType]:typeCG.class [name]:java_String
     ;
@@ -327,7 +336,7 @@ typeCG {-> package='org.overture.codegen.cgast.types'}
     =   #basic
     |	{Object}
     |	{void}
-    |	{class} [name]:java_String
+    |	{class} [types]:typeCG* [name]:java_String
     	//When generating code using the abstract syntax of this tree structure "external" 
     	//is used for refering to types of the target environment (e.g. that of Java) 
     	//that are not directly mapped to by the code generator.
@@ -336,12 +345,13 @@ typeCG {-> package='org.overture.codegen.cgast.types'}
     |	{string}
     |	{template} [name]:java_String
     |	{tuple} [types]:typeCG*
-    |   {method} [params]:typeCG* [result]:typeCG
+    |   {method} [params]:typeCG* [result]:typeCG [equivalent]:vdmType
     |	#map
     |	#set
     |	#seq
     |	#basicTypeWrappers
     |	{error}
+    |	{interface} [types]:typeCG* [name]:java_String
     ;
     
 externalType {-> package='org.overture.codegen.cgast.utils'}

@@ -16,12 +16,12 @@ public class A {
         public Number e;
         public Node r;
 
-        public Node(Number _e, Node _r) {
+        public Node(final Number _e, final Node _r) {
             e = _e;
             r = (_r != null) ? _r.clone() : null;
         }
 
-        public boolean equals(Object obj) {
+        public boolean equals(final Object obj) {
             if (!(obj instanceof Node)) {
                 return false;
             }

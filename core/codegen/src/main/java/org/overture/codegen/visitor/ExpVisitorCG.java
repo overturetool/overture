@@ -44,6 +44,7 @@ import org.overture.ast.expressions.AInSetBinaryExp;
 import org.overture.ast.expressions.AIndicesUnaryExp;
 import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.expressions.AIsOfClassExp;
+import org.overture.ast.expressions.ALambdaExp;
 import org.overture.ast.expressions.ALenUnaryExp;
 import org.overture.ast.expressions.ALessEqualNumericBinaryExp;
 import org.overture.ast.expressions.ALessNumericBinaryExp;
@@ -101,6 +102,7 @@ import org.overture.ast.expressions.SBinaryExp;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ASetMultipleBind;
+import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
@@ -111,6 +113,7 @@ import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
+import org.overture.codegen.cgast.declarations.AFormalParamLocalDeclCG;
 import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
@@ -143,6 +146,7 @@ import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AInSetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AIndicesUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
+import org.overture.codegen.cgast.expressions.ALambdaExpCG;
 import org.overture.codegen.cgast.expressions.ALessEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALetBeStExpCG;
@@ -200,6 +204,7 @@ import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
 import org.overture.codegen.ooast.OoAstInfo;
 import org.overture.codegen.utils.AnalysisExceptionCG;
+import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 {
@@ -982,26 +987,26 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	public PExpCG caseASeqEnumSeqExp(ASeqEnumSeqExp node, OoAstInfo question)
 			throws AnalysisException
 	{	
+		PType type = node.getType();
+
 		AEnumSeqExpCG enumSeq = new AEnumSeqExpCG();
 		
-		PType type = node.getType();
 		if(type instanceof SSeqType)
 		{
-			PTypeCG seqType = type.apply(question.getTypeVisitor(), question);
-			enumSeq.setType(seqType);
+			PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+			enumSeq.setType(typeCg);
 		}
 		else
 		{
-			throw new AnalysisExceptionCG("Unexpected sequence type for sequence enumeration expression: " + type.getClass().getName(), node.getLocation());
+			question.addUnsupportedNode(node, "Unexpected sequence type for sequence enumeration expression: " + type.getClass().getName());
+			return null;
 		}
 		
-		//TODO: For the empty sequence [] the type is the unknown type
-		//This is a problem if the assignment var1 is a field
-		//That has a declared type or we are talking about an assignment
 		LinkedList<PExp> members = node.getMembers();
 		for (PExp member : members)
 		{
-			enumSeq.getMembers().add(member.apply(question.getExpVisitor(), question));
+			PExpCG memberCg = member.apply(question.getExpVisitor(), question);
+			enumSeq.getMembers().add(memberCg);
 		}
 		
 		return enumSeq;
@@ -1043,7 +1048,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	{
 		PType type = node.getType();
 		PExp root = node.getRoot();
-
+		
 		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 		PExpCG rootCg = root.apply(question.getExpVisitor(), question);
 
@@ -1071,9 +1076,9 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	public PExpCG caseAVariableExp(AVariableExp node, OoAstInfo question)
 			throws AnalysisException
 	{
-		String name = node.getName().getName();
-
 		PDefinition varDef = node.getVardef();
+		PType type = node.getType();
+		String name = node.getName().getName();
 		
 		SClassDefinition owningClass = varDef.getAncestor(SClassDefinition.class);
 		SClassDefinition nodeParentClass = node.getAncestor(SClassDefinition.class);
@@ -1090,15 +1095,20 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 
 		boolean isImplicit = !node.getName().getExplicit();
 		
-		PTypeCG typeCg = node.getType().apply(question.getTypeVisitor(), question);
-		
+		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+
+		PTypeAssistantTC typeAssistant = question.getTcFactory().createPTypeAssistant();
+
+		boolean isLambda = typeAssistant.isFunction(type) && !(varDef instanceof SFunctionDefinition);
+
 		if (owningClass == null || nodeParentClass == null || isDefInOwningClass || isImplicit)
 		{
 			AIdentifierVarExpCG varExp = new AIdentifierVarExpCG();
 			
-			varExp.setOriginal(name);
 			varExp.setType(typeCg);
-			
+			varExp.setOriginal(name);
+			varExp.setIsLambda(isLambda);
+
 			return varExp;
 		}
 		else if(node.getName().getExplicit())
@@ -1113,6 +1123,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 			varExp.setType(typeCg);
 			varExp.setClassType(classType);
 			varExp.setName(name);
+			varExp.setIsLambda(isLambda);
 			
 			return varExp;
 		}
@@ -1471,5 +1482,51 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		question.registerQuoteValue(value);
 		
 		return quoteLit;
+	}
+	
+	@Override
+	public PExpCG caseALambdaExp(ALambdaExp node, OoAstInfo question)
+			throws AnalysisException
+	{
+		LinkedList<ATypeBind> bindList = node.getBindList();
+		PExp exp = node.getExpression();
+		PType type = node.getType();
+
+		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		PExpCG expCg = exp.apply(question.getExpVisitor(), question);		
+		
+		ALambdaExpCG lambdaExp = new ALambdaExpCG();
+		
+		lambdaExp.setType(typeCg);
+		lambdaExp.setExp(expCg);
+		
+		LinkedList<AFormalParamLocalDeclCG> params = lambdaExp.getParams();
+		
+		for(ATypeBind typeBind : bindList)
+		{
+			PPattern bindPattern = typeBind.getPattern();
+			
+			if(!(bindPattern instanceof AIdentifierPattern))
+			{
+				question.addUnsupportedNode(node, "Expected identifier pattern for lambda expression. Got: " + bindPattern);
+				return null;
+			}
+			
+			AIdentifierPattern idPattern = (AIdentifierPattern) bindPattern;
+			PType bindType = typeBind.getType();
+			
+
+			String name = idPattern.getName().getName();
+			PTypeCG bindTypeCg = bindType.apply(question.getTypeVisitor(), question);
+			
+			AFormalParamLocalDeclCG param = new AFormalParamLocalDeclCG();
+			param.setName(name);
+			param.setType(bindTypeCg);
+			
+			params.add(param);
+		}
+		
+		
+		return lambdaExp;
 	}
 }
