@@ -95,6 +95,11 @@ public class Vdm2Uml
 		}
 		console.out.println("#\n# Starting translation of project: " + name
 				+ "\n#");
+		console.out.println("# Properties:");
+		console.out.println("# \tPrefer associations: "
+				+ (extendedAssociationMapping ? "yes" : "no"));
+		console.out.println("# \tDisable nested artifacts in deployment diagrams: "
+				+ (deployArtifactsOutsideNodes ? "yes" : "no"));
 		// console.out.println("# Into: "+outputDir+"\n#");
 		console.out.println("-------------------------------------------------------------------------");
 
@@ -257,9 +262,11 @@ public class Vdm2Uml
 		utc.create(class_, defType);
 		Type umlType = utc.getUmlType(defType);
 
-		if ((Vdm2UmlUtil.assistantFactory.createPTypeAssistant().isClass(defType)
-				&& !(defType instanceof AUnknownType) && !extendedAssociationMapping)
-				|| (Vdm2UmlAssociationUtil.validType(defType) && extendedAssociationMapping))
+		if (Vdm2UmlUtil.assistantFactory.createPTypeAssistant().isClass(defType)
+				&& !(defType instanceof AUnknownType)
+				&& !extendedAssociationMapping
+				|| Vdm2UmlAssociationUtil.validType(defType)
+				&& extendedAssociationMapping)
 		{
 			console.out.println("\tAdding association for value: " + name);
 
@@ -352,18 +359,18 @@ public class Vdm2Uml
 
 				LiteralString literalStringDefault = (LiteralString) tp.createOwnedDefault(UMLPackage.Literals.LITERAL_STRING);
 				literalStringDefault.setName(UmlTypeCreatorBase.getName(t));
-				
-				Class sss =  null;
+
+				Class sss = null;
 				Object c = question.class_.getNestedClassifier(pName);
-				if(c instanceof Class)
+				if (c instanceof Class)
 				{
-					sss = (Class)c;
-				}else
+					sss = (Class) c;
+				} else
 				{
 
-				sss=(Class) question.class_.createNestedClassifier(pName, UMLPackage.Literals.CLASS);
+					sss = (Class) question.class_.createNestedClassifier(pName, UMLPackage.Literals.CLASS);
 				}
-				
+
 				sss.setName(pName);
 				templateParameters.put(pName, sss);
 			}
@@ -374,9 +381,9 @@ public class Vdm2Uml
 		public void caseAClassClassDefinition(AClassClassDefinition node,
 				OperationContext question) throws AnalysisException
 		{
-			//stop visiting childreb
+			// stop visiting childreb
 		}
-		
+
 		public Map<String, Classifier> apply(List<PType> nodes,
 				OperationContext question) throws AnalysisException
 		{
@@ -562,9 +569,11 @@ public class Vdm2Uml
 		utc.create(class_, defType);
 		Type type = utc.getUmlType(defType);
 
-		if ((Vdm2UmlUtil.assistantFactory.createPTypeAssistant().isClass(defType)
-				&& !(defType instanceof AUnknownType) && !extendedAssociationMapping)
-				|| (Vdm2UmlAssociationUtil.validType(defType) && extendedAssociationMapping))
+		if (Vdm2UmlUtil.assistantFactory.createPTypeAssistant().isClass(defType)
+				&& !(defType instanceof AUnknownType)
+				&& !extendedAssociationMapping
+				|| Vdm2UmlAssociationUtil.validType(defType)
+				&& extendedAssociationMapping)
 		{
 			console.out.println("\tAdding association for instance variable: "
 					+ def.getName().getName());

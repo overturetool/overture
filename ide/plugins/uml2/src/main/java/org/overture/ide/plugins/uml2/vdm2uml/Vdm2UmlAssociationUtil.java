@@ -56,11 +56,6 @@ public class Vdm2UmlAssociationUtil
 			}
 		}
 
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-
 		@Override
 		public UnknownDetectorResult createNewReturnValue(INode node)
 		{
