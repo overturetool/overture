@@ -649,14 +649,14 @@ public class SClassDefinitionAssistantInterpreter extends
 		return null;
 	}
 
-	public static String getName(SClassDefinition classdef)
-	{
-		if (classdef.getName() != null)
-		{
-			return classdef.getName().getName();
-		}
-
-		return null;
-	}
+//	public String getName(SClassDefinition classdef)
+//	{
+//		if (classdef.getName() != null)
+//		{
+//			return classdef.getName().getName();
+//		}
+//
+//		return null;
+//	}
 
 }
