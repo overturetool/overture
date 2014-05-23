@@ -90,6 +90,17 @@ public class SeqUtil
 		return tail;
 	}
 	
+	public static String tail(String seq)
+	{
+		if(seq == null)
+			throw new IllegalArgumentException("Cannot take tail of null");
+		
+		if(seq.isEmpty())
+			throw new IllegalArgumentException("Cannot take tail of empty string");
+
+		return seq.substring(1, seq.length());
+	}
+	
 	@SuppressWarnings("unchecked")
 	public static VDMSet inds(VDMSeq seq)
 	{
