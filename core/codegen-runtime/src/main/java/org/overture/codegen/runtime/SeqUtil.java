@@ -29,6 +29,9 @@ public class SeqUtil
 		if(maplets == null)
 			throw new IllegalArgumentException("Cannot modify sequence from null");
 		
+		if(seq == null)
+			throw new IllegalArgumentException("Cannot modify null");
+		
 		for(Maplet maplet : maplets)
 		{
 			Object left = maplet.getLeft();
@@ -42,6 +45,36 @@ public class SeqUtil
 		}
 		
 		return seq;
+	}
+	
+	public static String mod(String string, Maplet... maplets)
+	{
+		if(maplets == null)
+			throw new IllegalArgumentException("Cannot modify sequence from null");
+
+		if(string == null)
+			throw new IllegalArgumentException("Cannot modify null");
+		
+		StringBuilder builder = new StringBuilder(string);
+		
+		for(Maplet maplet : maplets)
+		{
+			Object left = maplet.getLeft();
+			Object right = maplet.getRight();
+			
+			if(!(left instanceof Long))
+				throw new IllegalArgumentException("Domain values of maplets in a sequence modification must be of type nat1");
+
+			if(!(right instanceof Character))
+				throw new IllegalArgumentException("Range values must be characters when modifying a character sequence");
+			
+			char rightChar = (Character) right;
+			
+			Long key = (Long) left;
+			builder.setCharAt(Utils.index(key), rightChar);
+		}
+		
+		return builder.toString();
 	}
 	
 	@SuppressWarnings("unchecked")
