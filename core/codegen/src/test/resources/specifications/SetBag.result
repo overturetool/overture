@@ -115,11 +115,11 @@ public class Bag {
         return numbers.clone();
     }
 
-    public boolean hasNumber(final Number n) {
+    public Boolean hasNumber(final Number n) {
         return numbers.contains(n);
     }
 
-    public boolean hasNotNumber(final Number n) {
+    public Boolean hasNotNumber(final Number n) {
         return !(numbers.contains(n));
     }
 
@@ -135,19 +135,19 @@ public class Bag {
         numbers = SetUtil.diff(numbers.clone(), bag.getNumbers());
     }
 
-    public boolean contains(final Bag bag) {
+    public Boolean contains(final Bag bag) {
         return numbers.containsAll(bag.getNumbers());
     }
 
-    public boolean properContains(final Bag bag) {
+    public Boolean properContains(final Bag bag) {
         return SetUtil.psubset(bag.getNumbers(), numbers);
     }
 
-    public boolean eq(final Bag bag) {
+    public Boolean eq(final Bag bag) {
         return SetUtil.equals(numbers, bag.getNumbers());
     }
 
-    public boolean neq(final Bag bag) {
+    public Boolean neq(final Bag bag) {
         return !(SetUtil.equals(numbers, bag.getNumbers()));
     }
 

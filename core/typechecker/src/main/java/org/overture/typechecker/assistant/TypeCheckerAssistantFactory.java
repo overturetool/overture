@@ -30,6 +30,7 @@ import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
 import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.Environment;
+import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.definition.ABusClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ACpuClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
@@ -136,6 +137,7 @@ import org.overture.typechecker.utilities.type.ProductBasisChecker;
 import org.overture.typechecker.utilities.type.ProductExtendedChecker;
 import org.overture.typechecker.utilities.type.ProductExtendedTypeFinder;
 import org.overture.typechecker.utilities.type.ProductTypeFinder;
+import org.overture.typechecker.utilities.type.QualifiedDefinition;
 import org.overture.typechecker.utilities.type.RecordBasisChecker;
 import org.overture.typechecker.utilities.type.RecordTypeFinder;
 import org.overture.typechecker.utilities.type.SeqBasisChecker;
@@ -150,6 +152,7 @@ import org.overture.typechecker.utilities.type.UnionBasisChecker;
 import org.overture.typechecker.utilities.type.UnionTypeFinder;
 import org.overture.typechecker.utilities.type.VoidBasisChecker;
 import org.overture.typechecker.utilities.type.VoidExistanceChecker;
+import org.overture.typechecker.visitor.QualificationVisitor;
 
 //TODO Add assistant Javadoc
 /**
@@ -1086,5 +1089,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IAnswer<PTypeList> getComposeTypeCollector()
 	{
 		return new ComposeTypeCollector();
+	}
+
+	@Override
+	public IQuestionAnswer<TypeCheckInfo, List<QualifiedDefinition>> getQualificationVisitor()
+	{
+		return new QualificationVisitor();
 	}
 }

@@ -876,7 +876,12 @@ public class JavaFormat
 		
 		AMethodTypeCG methodType = new AMethodTypeCG();
 		methodType.getParams().add(new AObjectTypeCG());
-		methodType.setResult(new ABoolBasicTypeCG());
+		
+		AExternalTypeCG returnType = new AExternalTypeCG();
+		returnType.setInfo(null);
+		returnType.setName("boolean");
+		
+		methodType.setResult(returnType);
 		
 		equalsMethod.setAccess(JAVA_PUBLIC);
 		equalsMethod.setName("equals");

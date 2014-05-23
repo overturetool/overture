@@ -191,8 +191,8 @@ public class JavaCodeGen
 				
 				if (status.canBeGenerated())
 				{
-					classCg.apply(transVisitor);
 					classCg.apply(funcValVisitor);
+					classCg.apply(transVisitor);
 				}
 				else
 				{

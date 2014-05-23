@@ -987,26 +987,26 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	public PExpCG caseASeqEnumSeqExp(ASeqEnumSeqExp node, OoAstInfo question)
 			throws AnalysisException
 	{	
+		PType type = node.getType();
+
 		AEnumSeqExpCG enumSeq = new AEnumSeqExpCG();
 		
-		PType type = node.getType();
 		if(type instanceof SSeqType)
 		{
-			PTypeCG seqType = type.apply(question.getTypeVisitor(), question);
-			enumSeq.setType(seqType);
+			PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+			enumSeq.setType(typeCg);
 		}
 		else
 		{
-			throw new AnalysisExceptionCG("Unexpected sequence type for sequence enumeration expression: " + type.getClass().getName(), node.getLocation());
+			question.addUnsupportedNode(node, "Unexpected sequence type for sequence enumeration expression: " + type.getClass().getName());
+			return null;
 		}
 		
-		//TODO: For the empty sequence [] the type is the unknown type
-		//This is a problem if the assignment var1 is a field
-		//That has a declared type or we are talking about an assignment
 		LinkedList<PExp> members = node.getMembers();
 		for (PExp member : members)
 		{
-			enumSeq.getMembers().add(member.apply(question.getExpVisitor(), question));
+			PExpCG memberCg = member.apply(question.getExpVisitor(), question);
+			enumSeq.getMembers().add(memberCg);
 		}
 		
 		return enumSeq;

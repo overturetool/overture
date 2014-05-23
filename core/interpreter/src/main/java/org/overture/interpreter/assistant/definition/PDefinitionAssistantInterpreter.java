@@ -94,6 +94,7 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 	{
 		try
 		{
+
 			ProofObligationGenerator.generateProofObligations(def);
 
 		} catch (AnalysisException e)

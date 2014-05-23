@@ -1,0 +1,14 @@
+class Entry
+
+functions
+
+public static f :  nat * char -> seq of char * seq of nat -> (nat * nat) * (char * char) -> real
+f (n,c)(xs,ys)(tn,tc) == 2.1;
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	return f(1,'a')("a",[1])(mk_(1,1),mk_('a','a'));
+	
+end Entry

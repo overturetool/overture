@@ -52,7 +52,7 @@ import org.overture.ide.plugins.uml2.UmlConsole;
 public class UmlTypeCreator extends UmlTypeCreatorBase
 {
 	public static final String BASIC_VDM_TYPES_PACKAGE = "Basic VDM Types";
-	
+
 	public interface ClassTypeLookup
 	{
 		Class lookup(AClassType type);
@@ -108,55 +108,64 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 		this.modelWorkingCopy = modelWorkingCopy;
 	}
 
-	
 	public void create(Class class_, PType type)
 	{
-		System.out.println(type + " " + type.getClass().getName().toString() + " "
-				+ getName(type));
+		System.out.println(type + " " + type.getClass().getName().toString()
+				+ " " + getName(type));
 		if (types.get(getName(type)) != null)
 		{
 			return;
 		}
 
-		if (type instanceof AUnionType) {
+		if (type instanceof AUnionType)
+		{
 			createNewUmlUnionType(class_, (AUnionType) type);
 			return;
-		} else if (type instanceof SInvariantType) {
+		} else if (type instanceof SInvariantType)
+		{
 			createNewUmlInvariantType(class_, (SInvariantType) type);
 			return;
-		} else if (type instanceof SBasicType) {
+		} else if (type instanceof SBasicType)
+		{
 			convertBasicType(class_, (SBasicType) type);
 			return;
-		} else if (type instanceof SMapType) {
+		} else if (type instanceof SMapType)
+		{
 			createMapType(class_, (SMapType) type);
 			return;
-		} else if (type instanceof AOptionalType) {
+		} else if (type instanceof AOptionalType)
+		{
 			createOptionalType(class_, (AOptionalType) type);
 			return;
-		} else if (type instanceof AProductType) {
+		} else if (type instanceof AProductType)
+		{
 			createProductType(class_, (AProductType) type);
 			return;
-		} else if (type instanceof SSeqType) {
+		} else if (type instanceof SSeqType)
+		{
 			createSeqType(class_, (SSeqType) type);
 			return;
-		} else if (type instanceof ASetType) {
+		} else if (type instanceof ASetType)
+		{
 			createSetType(class_, (ASetType) type);
 			return;
-		} else if (type instanceof AUnknownType) {
+		} else if (type instanceof AUnknownType)
+		{
 			types.put(getName(type), getVdmBasicTypePackage().createOwnedPrimitiveType(ANY_TYPE));
 			return;
-		} else if (type instanceof AVoidType) {
+		} else if (type instanceof AVoidType)
+		{
 			types.put(getName(type), getVdmBasicTypePackage().createOwnedPrimitiveType(VOID_TYPE));
 			return;
-		// } else if (type instanceof ABracketType) {
-		// } else if (type instanceof AClassType) {
-		// } else if (type instanceof AFunctionType) {
-		// } else if (type instanceof AOperationType) {
-		// } else if (type instanceof AParameterType) {
-		// } else if (type instanceof AQuoteType) {
-		// } else if (type instanceof AUndefinedType) {
-		// } else if (type instanceof AUnresolvedType) {
-		// } else if (type instanceof AVoidReturnType) {
+			// } else if (type instanceof ABracketType) {
+			// } else if (type instanceof AClassType) {
+			// } else if (type instanceof AFunctionType) {
+			// } else if (type instanceof AOperationType) {
+			// } else if (type instanceof AParameterType) {
+			// } else if (type instanceof AQuoteType) {
+			// } else if (type instanceof AUndefinedType) {
+			// } else if (type instanceof AUnresolvedType) {
+			// } else if (type instanceof AVoidReturnType) {
 		}
 
 		if (type instanceof AClassType
@@ -197,7 +206,7 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 
 	private void createMapType(Class class_, SMapType type)
 	{
-            createTemplateType(class_, type, (type instanceof AInMapMapType) ? templateInMapName
+		createTemplateType(class_, type, type instanceof AInMapMapType ? templateInMapName
 				: templateMapName, new String[] { "D", "R" }, type.getFrom(), type.getTo());
 	}
 
@@ -330,7 +339,8 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 
 	private void createNewUmlInvariantType(Class class_, SInvariantType type)
 	{
-		if (type instanceof ANamedInvariantType) {
+		if (type instanceof ANamedInvariantType)
+		{
 			PType ptype = ((ANamedInvariantType) type).getType();
 			if (!getName(ptype).equals(getName(type)))
 			{
@@ -339,10 +349,10 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 
 				Class owningClass = null;
 
-				if(class_.getName().equals(type.getLocation().getModule()))
+				if (class_.getName().equals(type.getLocation().getModule()))
 				{
 					owningClass = class_;
-				}else
+				} else
 				{
 					owningClass = classLookup.lookup(type.getLocation().getModule());
 				}
@@ -356,14 +366,15 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 			{
 				create(class_, ptype);
 			}
-		} else if (type instanceof ARecordInvariantType) {
+		} else if (type instanceof ARecordInvariantType)
+		{
 			String simpleName = getName(type);
 			simpleName = simpleName.substring(simpleName.lastIndexOf(':') + 1);
 			Class owningClass = null;
-			if(class_.getName().equals(type.getLocation().getModule()))
+			if (class_.getName().equals(type.getLocation().getModule()))
 			{
 				owningClass = class_;
-			}else
+			} else
 			{
 				owningClass = classLookup.lookup(type.getLocation().getModule());
 			}
@@ -408,16 +419,21 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 	private void convertBasicType(Class class_, SBasicType type)
 	{
 		String typeName = null;
-		if (type instanceof ABooleanBasicType) {
+		if (type instanceof ABooleanBasicType)
+		{
 			typeName = "bool";
-		} else if (type instanceof ACharBasicType) {
+		} else if (type instanceof ACharBasicType)
+		{
 			typeName = "char";
-		} else if (type instanceof SNumericBasicType) {
+		} else if (type instanceof SNumericBasicType)
+		{
 			convertNumericType((SNumericBasicType) type);
 			return;
-		} else if (type instanceof ATokenBasicType) {
+		} else if (type instanceof ATokenBasicType)
+		{
 			typeName = "token";
-		} else {
+		} else
+		{
 			assert false : "Should not happen";
 		}
 
@@ -431,17 +447,23 @@ public class UmlTypeCreator extends UmlTypeCreatorBase
 	private void convertNumericType(SNumericBasicType type)
 	{
 		String typeName = null;
-		if (type instanceof AIntNumericBasicType) {
+		if (type instanceof AIntNumericBasicType)
+		{
 			typeName = "int";
-		} else if (type instanceof ANatNumericBasicType) {
+		} else if (type instanceof ANatNumericBasicType)
+		{
 			typeName = "nat";
-		} else if (type instanceof ANatOneNumericBasicType) {
+		} else if (type instanceof ANatOneNumericBasicType)
+		{
 			typeName = "nat1";
-		} else if (type instanceof ARationalNumericBasicType) {
+		} else if (type instanceof ARationalNumericBasicType)
+		{
 			typeName = "rat";
-		} else if (type instanceof ARealNumericBasicType) {
+		} else if (type instanceof ARealNumericBasicType)
+		{
 			typeName = "real";
-		} else {
+		} else
+		{
 			assert false : "Should not happen";
 			return;
 		}

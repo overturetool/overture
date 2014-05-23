@@ -1,0 +1,20 @@
+class Entry
+
+functions
+
+static	
+
+func_compose : (int -> bool) -> (bool-> int) -> (int-> int)
+func_compose(f) (g) == (lambda x : int & g(f(x)));
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let f = (lambda x : int & x >= 1),
+		g = (lambda b : bool & if not b then 1 else 0),
+		h = func_compose(f)(g)
+in
+	return [h(-2), h(-1), h(0), h(1), h(2)];
+	
+end Entry

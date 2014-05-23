@@ -147,11 +147,11 @@ public class PhoneBook {
         phoneNumbers = MapUtil.rngResBy(phoneNumbers.clone(), numbers.clone());
     }
 
-    public boolean eq(final PhoneBook other) {
+    public Boolean eq(final PhoneBook other) {
         return MapUtil.equals(phoneNumbers, other.phoneNumbers);
     }
 
-    public boolean neq(final PhoneBook other) {
+    public Boolean neq(final PhoneBook other) {
         return !(MapUtil.equals(phoneNumbers, other.phoneNumbers));
     }
 }

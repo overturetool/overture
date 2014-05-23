@@ -13,7 +13,8 @@ import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 
 public class SpecificationTestCase extends CodeGenBaseTestCase
 {
-	private static final String MODULE_DELIMITER = "\n##########\n";
+	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+	private static final String MODULE_DELIMITER = LINE_SEPARATOR + "##########" + LINE_SEPARATOR;
 
 	public SpecificationTestCase()
 	{
@@ -58,7 +59,7 @@ public class SpecificationTestCase extends CodeGenBaseTestCase
 		
 		if(quoteData != null)
 		{
-			generatedCode.append("\n" + quoteData.getContent());
+			generatedCode.append(LINE_SEPARATOR + quoteData.getContent());
 			generatedCode.append(MODULE_DELIMITER);
 		}
 				

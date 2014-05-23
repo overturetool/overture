@@ -60,16 +60,15 @@ public class Uml2Vdm
 	private UmlConsole console;
 	private PExp NEW_A_UNDEFINED_EXP = AstFactory.newAUndefinedExp(location);
 
-	
 	public Uml2Vdm()
-		{
-			console = new UmlConsole();
-			tc = new VdmTypeCreator(console);
-		}
+	{
+		console = new UmlConsole();
+		tc = new VdmTypeCreator(console);
+	}
 
 	public boolean initialize(URI uri, String extension)
 	{
-		if(extension!=null)
+		if (extension != null)
 		{
 			this.extension = extension;
 		}
@@ -153,9 +152,8 @@ public class Uml2Vdm
 				String innerTypeName = innerType.getName();
 				AAccessSpecifierAccessSpecifier access = Uml2VdmUtil.createAccessSpecifier(innerType.getVisibility());
 
-				
-				if (innerType.getNestedClassifier("record")!=null &&
-						 innerType.getGeneralizations().isEmpty())
+				if (innerType.getNestedClassifier("record") != null
+						&& innerType.getGeneralizations().isEmpty())
 				{
 					boolean createdType = false;
 					for (EObject innerElem : innerType.getOwnedElements())

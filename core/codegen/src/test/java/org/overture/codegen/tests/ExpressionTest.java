@@ -17,7 +17,7 @@ public class ExpressionTest extends BaseTestSuite
 	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
 	{
 		LexLocation.absoluteToStringLocation = false;
-		Properties.recordTestResults = false;
+		Properties.recordTestResults = TestFlags.EXP_TESTS_ON;
 		
 		String name = "Expression test case";
 		TestSuite test =  createTestCompleteFile(name, ROOT, ExpressionTestCase.class,"");

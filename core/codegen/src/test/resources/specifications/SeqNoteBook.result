@@ -144,11 +144,11 @@ public class NoteBook {
         return ((String) messages.get(Utils.index(index)));
     }
 
-    public boolean isMessage(final Number index, final String message) {
+    public Boolean isMessage(final Number index, final String message) {
         return message.equals(getMessage(index));
     }
 
-    public boolean isNotMessage(final Number index, final String message) {
+    public Boolean isNotMessage(final Number index, final String message) {
         return !(message.equals(getMessage(index)));
     }
 
@@ -164,11 +164,11 @@ public class NoteBook {
         return SeqUtil.reverse(messages.clone());
     }
 
-    public boolean eq(final NoteBook other) {
+    public Boolean eq(final NoteBook other) {
         return SeqUtil.equals(messages, other.messages);
     }
 
-    public boolean neq(final NoteBook other) {
+    public Boolean neq(final NoteBook other) {
         return !(SeqUtil.equals(messages, other.messages));
     }
 }
