@@ -57,6 +57,22 @@ public class SeqUtil
 	}
 	
 	@SuppressWarnings("unchecked")
+	public static VDMSet elems(String string)
+	{
+		if(string == null)
+			throw new IllegalArgumentException("Cannot get elems of null");
+
+		VDMSet elems = SetUtil.set();
+		
+		for(int i = 0; i < string.length(); i++)
+		{
+			elems.add(string.charAt(i));
+		}
+		
+		return elems;
+	}
+	
+	@SuppressWarnings("unchecked")
 	public static VDMSeq reverse(VDMSeq seq)
 	{
 		if(seq == null)
