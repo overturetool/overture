@@ -15,6 +15,6 @@ public class ConfiguredStringGenerationTestCase extends SpecificationTestCase
 	
 	public boolean generateCharSequencesAsStrings()
 	{
-		return false;
+		return true;
 	};
 }
