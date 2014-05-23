@@ -63,13 +63,13 @@ public class Activator extends AbstractUIPlugin
 	{
 		getDefault().getLog().log(new Status(IStatus.ERROR, IUml2Constants.PLUGIN_ID, message, exception));
 	}
-	
-	/** 
-	 * Initializes a preference store with default preference values 
-	 * for this plug-in.
+
+	/**
+	 * Initializes a preference store with default preference values for this plug-in.
 	 */
 	@Override
-	protected void initializeDefaultPreferences(IPreferenceStore store) {
+	protected void initializeDefaultPreferences(IPreferenceStore store)
+	{
 		store.setDefault(IUml2Constants.PREFER_ASSOCIATIONS_PREFERENCE, true);
 		store.setDefault(IUml2Constants.DISABLE_NESTED_ARTIFACTS_PREFERENCE, true);
 	}

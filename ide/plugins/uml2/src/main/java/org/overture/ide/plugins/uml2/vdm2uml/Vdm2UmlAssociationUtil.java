@@ -35,7 +35,6 @@ import org.overture.ast.types.SBasicType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
-import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 
 public class Vdm2UmlAssociationUtil
 {
@@ -56,11 +55,6 @@ public class Vdm2UmlAssociationUtil
 				this.hasUnknown = found;
 			}
 		}
-
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
 
 		@Override
 		public UnknownDetectorResult createNewReturnValue(INode node)
@@ -85,7 +79,7 @@ public class Vdm2UmlAssociationUtil
 		public UnknownDetectorResult mergeReturns(
 				UnknownDetectorResult original, UnknownDetectorResult new_)
 		{
-			if (new_!=null && new_.hasUnknown)
+			if (new_ != null && new_.hasUnknown)
 			{
 				original.hasUnknown = true;
 			}
@@ -116,42 +110,54 @@ public class Vdm2UmlAssociationUtil
 
 	public static boolean validType(PType type)
 	{
-		if (type instanceof SBasicType) {
+		if (type instanceof SBasicType)
+		{
 			return false;
-		} else if (type instanceof ABracketType) {
-		} else if (type instanceof AClassType) {
-		} else if (type instanceof AFunctionType) {
+		} else if (type instanceof ABracketType)
+		{
+		} else if (type instanceof AClassType)
+		{
+		} else if (type instanceof AFunctionType)
+		{
 			return false;
-		} else if (type instanceof SInvariantType) {
+		} else if (type instanceof SInvariantType)
+		{
 			return type instanceof ANamedInvariantType;
-		} else if (type instanceof SMapType) {
+		} else if (type instanceof SMapType)
+		{
 			SMapType mType = (SMapType) type;
 			// return isSimpleType(mType.getFrom())
 			// && isSimpleType(mType.getTo());
 			return validMapFromType(mType.getFrom())
 					&& validMapType(mType.getTo());
-		} else if (type instanceof AOperationType) {
+		} else if (type instanceof AOperationType)
+		{
 			return false;
-		} else if (type instanceof AOptionalType) {
+		} else if (type instanceof AOptionalType)
+		{
 			AOptionalType optionalType = (AOptionalType) type;
 			return isSimpleType(optionalType.getType());
-		} else if (type instanceof AParameterType) {
+		} else if (type instanceof AParameterType)
+		{
 			return false;
-		} else if (type instanceof AProductType) {
+		} else if (type instanceof AProductType)
+		{
 			return false;
-		} else if (type instanceof AQuoteType) {
-		} else if (type instanceof SSeqType) {
+		} else if (type instanceof AQuoteType)
+		{
+		} else if (type instanceof SSeqType)
+		{
 			SSeqType seqType = (SSeqType) type;
 			return isSimpleType(seqType.getSeqof());
-		} else if (type instanceof ASetType) {
+		} else if (type instanceof ASetType)
+		{
 			ASetType setType = (ASetType) type;
 			return isSimpleType(setType.getSetof());
-		} else if (type instanceof AUndefinedType
-				|| type instanceof AUnionType
+		} else if (type instanceof AUndefinedType || type instanceof AUnionType
 				|| type instanceof AUnknownType
-				|| type instanceof AUnresolvedType
-				|| type instanceof AVoidType
-				|| type instanceof AVoidReturnType) {
+				|| type instanceof AUnresolvedType || type instanceof AVoidType
+				|| type instanceof AVoidReturnType)
+		{
 			return false;
 		}
 
@@ -165,37 +171,44 @@ public class Vdm2UmlAssociationUtil
 
 	private static boolean validMapType(PType type)
 	{
-		if (isSimpleType(type) || Vdm2UmlUtil.assistantFactory.createPTypeAssistant().isClass(type))
+		if (isSimpleType(type)
+				|| Vdm2UmlUtil.assistantFactory.createPTypeAssistant().isClass(type))
 		{
 			return true;
 		}
 
-		if (type instanceof SSeqType) {
+		if (type instanceof SSeqType)
+		{
 			SSeqType seqType = (SSeqType) type;
 			return isSimpleType(seqType.getSeqof());
-		} else if (type instanceof ASetType) {
+		} else if (type instanceof ASetType)
+		{
 			ASetType setType = (ASetType) type;
 			return isSimpleType(setType.getSetof());
-		} else {
+		} else
+		{
 			return false;
 		}
 	}
 
 	private static boolean validMapFromType(PType type)
 	{
-		if (type instanceof SSeqType) {
+		if (type instanceof SSeqType)
+		{
 			SSeqType seqType = (SSeqType) type;
 			if (seqType.getSeqof() instanceof SBasicType)
 			{
 				return true;
 			}
-		} else if (type instanceof ASetType) {
+		} else if (type instanceof ASetType)
+		{
 			ASetType setType = (ASetType) type;
 			if (setType.getSetof() instanceof SBasicType)
 			{
 				return true;
 			}
-		} else if (type instanceof SBasicType) {
+		} else if (type instanceof SBasicType)
+		{
 			return true;
 		}
 		return validMapType(type);
@@ -212,37 +225,56 @@ public class Vdm2UmlAssociationUtil
 			return getType(classes, type);
 		}
 
-		if (type instanceof SBasicType) {
+		if (type instanceof SBasicType)
+		{
 			return getType(classes, type);
-		} else if (type instanceof ABracketType) {
-		} else if (type instanceof AClassType) {
-		} else if (type instanceof AFunctionType) {
-		} else if (type instanceof SInvariantType) {
+		} else if (type instanceof ABracketType)
+		{
+		} else if (type instanceof AClassType)
+		{
+		} else if (type instanceof AFunctionType)
+		{
+		} else if (type instanceof SInvariantType)
+		{
 			if (type instanceof ANamedInvariantType)
 			{
 				ANamedInvariantType nInvType = (ANamedInvariantType) type;
 				return getType(classes, nInvType);
 			}
-		} else if (type instanceof SMapType) {
+		} else if (type instanceof SMapType)
+		{
 			SMapType mType = (SMapType) type;
 			return getTypeForMap(classes, mType.getTo());
-		} else if (type instanceof AOperationType) {
-		} else if (type instanceof AOptionalType) {
-		} else if (type instanceof AParameterType) {
-		} else if (type instanceof AProductType) {
-		} else if (type instanceof AQuoteType) {
-		} else if (type instanceof SSeqType) {
+		} else if (type instanceof AOperationType)
+		{
+		} else if (type instanceof AOptionalType)
+		{
+		} else if (type instanceof AParameterType)
+		{
+		} else if (type instanceof AProductType)
+		{
+		} else if (type instanceof AQuoteType)
+		{
+		} else if (type instanceof SSeqType)
+		{
 			SSeqType seqType = (SSeqType) type;
 			return getType(classes, seqType.getSeqof());
-		} else if (type instanceof ASetType) {
+		} else if (type instanceof ASetType)
+		{
 			ASetType setType = (ASetType) type;
 			return getType(classes, setType.getSetof());
-		} else if (type instanceof AUndefinedType) {
-		} else if (type instanceof AUnionType) {
-		} else if (type instanceof AUnknownType) {
-		} else if (type instanceof AUnresolvedType) {
-		} else if (type instanceof AVoidType) {
-		} else if (type instanceof AVoidReturnType) {
+		} else if (type instanceof AUndefinedType)
+		{
+		} else if (type instanceof AUnionType)
+		{
+		} else if (type instanceof AUnknownType)
+		{
+		} else if (type instanceof AUnresolvedType)
+		{
+		} else if (type instanceof AVoidType)
+		{
+		} else if (type instanceof AVoidReturnType)
+		{
 		}
 
 		return null;
@@ -365,9 +397,11 @@ public class Vdm2UmlAssociationUtil
 
 	private static PType unfoldSetSeqTypes(PType type)
 	{
-		if (type instanceof SSeqType) {
+		if (type instanceof SSeqType)
+		{
 			return ((SSeqType) type).getSeqof();
-		} else if (type instanceof ASetType) {
+		} else if (type instanceof ASetType)
+		{
 			return ((ASetType) type).getSetof();
 		}
 		return type;

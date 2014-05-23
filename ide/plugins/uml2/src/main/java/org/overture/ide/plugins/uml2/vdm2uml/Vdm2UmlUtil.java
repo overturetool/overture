@@ -26,15 +26,10 @@ import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.InterpreterAssistantFactory;
-import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
+
 public class Vdm2UmlUtil
 {
-public final static IInterpreterAssistantFactory assistantFactory = new InterpreterAssistantFactory();
-
+	public final static IInterpreterAssistantFactory assistantFactory = new InterpreterAssistantFactory();
 
 	public static VisibilityKind convertAccessSpecifierToVisibility(
 			AAccessSpecifierAccessSpecifier accessSpecifier)
@@ -126,8 +121,10 @@ public final static IInterpreterAssistantFactory assistantFactory = new Interpre
 
 		for (PDefinition def : sClass.getDefinitions())
 		{
-			if (def instanceof AThreadDefinition )
+			if (def instanceof AThreadDefinition)
+			{
 				return true;
+			}
 		}
 		return false;
 	}
@@ -139,7 +136,9 @@ public final static IInterpreterAssistantFactory assistantFactory = new Interpre
 		for (PDefinition pDefinition : definitions)
 		{
 			if (isSubclassResponsability(pDefinition))
+			{
 				return true;
+			}
 		}
 
 		return false;
@@ -152,7 +151,7 @@ public final static IInterpreterAssistantFactory assistantFactory = new Interpre
 		{
 			if (pDefinition instanceof AExplicitOperationDefinition)
 			{
-				return ((AExplicitOperationDefinition)pDefinition).getBody() instanceof ASubclassResponsibilityStm ;
+				return ((AExplicitOperationDefinition) pDefinition).getBody() instanceof ASubclassResponsibilityStm;
 			} else if (pDefinition instanceof AImplicitOperationDefinition)
 			{
 				PStm body = ((AImplicitOperationDefinition) pDefinition).getBody();
@@ -202,7 +201,7 @@ public final static IInterpreterAssistantFactory assistantFactory = new Interpre
 					return false;
 				}
 			}
-		} catch (Error t)//Hack for stackoverflowError
+		} catch (Error t)// Hack for stackoverflowError
 		{
 			return false;
 		}
@@ -212,7 +211,7 @@ public final static IInterpreterAssistantFactory assistantFactory = new Interpre
 
 	public static boolean isOptional(PType defType)
 	{
-		return (defType instanceof AOptionalType);
+		return defType instanceof AOptionalType;
 
 	}
 
