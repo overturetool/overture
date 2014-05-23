@@ -4,24 +4,23 @@ import java.util.*;
 
 
 public class Entry {
-    private static final VDMSeq a = SeqUtil.seq('a', 'b', 'c');
+    private static final String a = "abc";
 
     public Entry() {
     }
 
-    public static VDMSeq s() {
-        return SeqUtil.seq('d', 'e', 'f');
+    public static String s() {
+        return "def";
     }
 
-    public static VDMSeq f() {
-        return SeqUtil.conc(SeqUtil.conc(SeqUtil.seq(
-                    ((Character) SeqUtil.seq('g', 'h', 'i').get(Utils.index(1L)))),
-                SeqUtil.seq(((Character) a.get(Utils.index(1L))))),
-            SeqUtil.seq(((Character) s().get(Utils.index(1L)))));
+    public static String f() {
+        return new String(new char[] { "ghi".charAt(Utils.index(1L)) }) +
+        new String(new char[] { a.charAt(Utils.index(1L)) }) +
+        new String(new char[] { s().charAt(Utils.index(1L)) });
     }
 
     public static Object Run() {
-        return SeqUtil.conc(SeqUtil.conc(a.clone(), s()), f());
+        return a + s() + f();
     }
 }
 

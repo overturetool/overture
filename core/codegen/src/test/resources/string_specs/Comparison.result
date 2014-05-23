@@ -8,12 +8,11 @@ public class Entry {
     }
 
     public static Object Run() {
-        VDMSeq a = SeqUtil.seq('a');
-        VDMSeq b = SeqUtil.seq('b');
+        String a = "a";
+        String b = "b";
 
-        return SeqUtil.seq(SeqUtil.equals(a, a), SeqUtil.equals(a, b),
-            SeqUtil.equals(b, SeqUtil.seq('b')), !(SeqUtil.equals(a, a)),
-            !(SeqUtil.equals(a, b)), !(SeqUtil.equals(b, SeqUtil.seq('b'))));
+        return SeqUtil.seq(a.equals(a), a.equals(b), b.equals("b"),
+            !(a.equals(a)), !(a.equals(b)), !(b.equals("b")));
     }
 }
 

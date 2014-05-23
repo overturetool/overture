@@ -4,14 +4,14 @@ import java.util.*;
 
 
 public class Entry {
-    private static final VDMSeq a = SeqUtil.seq('j', 'e', 'h');
+    private static final String a = "jeh";
 
     public Entry() {
     }
 
     public static Object Run() {
-        return SeqUtil.conc(SeqUtil.reverse(SeqUtil.seq('j', 'e', 'h')),
-            SeqUtil.reverse(a.clone()));
+        return new StringBuilder("jeh").reverse().toString() +
+        new StringBuilder(a).reverse().toString();
     }
 }
 

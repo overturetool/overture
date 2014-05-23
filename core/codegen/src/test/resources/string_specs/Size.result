@@ -4,17 +4,17 @@ import java.util.*;
 
 
 public class Entry {
-    private static final VDMSeq a = SeqUtil.seq('h', 'e', 'j');
+    private static final String a = "hej";
 
     public Entry() {
     }
 
-    public static VDMSeq f() {
-        return SeqUtil.seq('c', 'a', 't');
+    public static String f() {
+        return "cat";
     }
 
     public static Object Run() {
-        return SeqUtil.seq('a').size() + a.size() + f().size();
+        return "a".length() + a.length() + f().length();
     }
 }
 
