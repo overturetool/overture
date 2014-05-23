@@ -3,6 +3,7 @@ package org.overture.interpreter.util;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
@@ -11,7 +12,6 @@ import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.util.definitions.ClassList;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.definition.ASystemClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.debug.DBGPReader;
 import org.overture.interpreter.messages.Console;
@@ -22,9 +22,8 @@ import org.overture.interpreter.runtime.StateContext;
 import org.overture.interpreter.scheduler.ResourceScheduler;
 import org.overture.interpreter.values.CPUValue;
 import org.overture.interpreter.values.TransactionValue;
-import org.overture.pog.assistant.PogAssistantFactory;
-import org.overture.pog.obligation.POContextStack;
 import org.overture.pog.obligation.ProofObligationList;
+import org.overture.pog.pub.ProofObligationGenerator;
 
 public class ClassListInterpreter extends ClassList
 {
@@ -101,7 +100,7 @@ public class ClassListInterpreter extends ClassList
 			{
 				try
 				{
-					SClassDefinitionAssistantInterpreter.staticValuesInit(cdef, globalContext);
+					af.createSClassDefinitionAssistant().staticValuesInit(cdef, globalContext);
 				} catch (ContextException e)
 				{
 					trouble.add(e);
@@ -139,16 +138,16 @@ public class ClassListInterpreter extends ClassList
 		return globalContext;
 	}
 
-	public ProofObligationList getProofObligations(IInterpreterAssistantFactory assistantFactory)
+	public ProofObligationList getProofObligations(IInterpreterAssistantFactory assistantFactory) throws AnalysisException
 	{
 		//TODO: Check this method, where it is used.
 		ProofObligationList obligations = new ProofObligationList();
 
 		for (SClassDefinition c : this)
 		{
-			obligations.addAll(assistantFactory.createSClassDefinitionAssistant().getProofObligations(c, new POContextStack(new PogAssistantFactory())));
+			
+			obligations.addAll(ProofObligationGenerator.generateProofObligations(c));
 		}
-
 		obligations.trivialCheck();
 		return obligations;
 	}

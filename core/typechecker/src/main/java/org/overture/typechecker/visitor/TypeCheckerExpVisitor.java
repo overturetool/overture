@@ -62,9 +62,11 @@ import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
+import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
+import org.overture.typechecker.utilities.type.QualifiedDefinition;
 
 public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 {
@@ -1119,7 +1121,20 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			TypeCheckerErrors.report(3086, "Else clause is not a boolean", node.getLocation(), node);
 		}
 
+		List<QualifiedDefinition> qualified = node.getElseIf().apply(question.assistantFactory.getQualificationVisitor(), question);
+
+		for (QualifiedDefinition qdef: qualified)
+		{
+			qdef.qualifyType();
+		}
+
 		node.setType(node.getThen().apply(THIS, question));
+
+		for (QualifiedDefinition qdef: qualified)
+		{
+			qdef.resetType();
+		}
+
 		return node.getType();
 	}
 
@@ -1536,10 +1551,22 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		{
 			TypeChecker.report(3108, "If expression is not a boolean", node.getLocation());
 		}
+		
+		List<QualifiedDefinition> qualified = node.getTest().apply(question.assistantFactory.getQualificationVisitor(), question);
+
+		for (QualifiedDefinition qdef: qualified)
+		{
+			qdef.qualifyType();
+		}
 
 		PTypeSet rtypes = new PTypeSet();
 		question.qualifiers = null;
 		rtypes.add(node.getThen().apply(THIS, question));
+
+		for (QualifiedDefinition qdef: qualified)
+		{
+			qdef.resetType();
+		}
 
 		for (AElseIfExp eie : node.getElseList())
 		{
@@ -2172,7 +2199,8 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			if (!node.getArgs().isEmpty()) // Not having a default ctor is OK
 			{
 				TypeCheckerErrors.report(3134, "Class has no constructor with these parameter types", node.getLocation(), node);
-				TypeCheckerErrors.detail("Called", question.assistantFactory.createSClassDefinitionAssistant().getCtorName(classdef, argtypes));
+				question.assistantFactory.createSClassDefinitionAssistant();
+				TypeCheckerErrors.detail("Called", SClassDefinitionAssistantTC.getCtorName(classdef, argtypes));
 			} else if (classdef instanceof ACpuClassDefinition
 					|| classdef instanceof ABusClassDefinition)
 			{
@@ -2183,11 +2211,13 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			if (!question.assistantFactory.createPDefinitionAssistant().isCallableOperation(opdef))
 			{
 				TypeCheckerErrors.report(3135, "Class has no constructor with these parameter types", node.getLocation(), node);
-				TypeCheckerErrors.detail("Called", question.assistantFactory.createSClassDefinitionAssistant().getCtorName(classdef, argtypes));
+				question.assistantFactory.createSClassDefinitionAssistant();
+				TypeCheckerErrors.detail("Called", SClassDefinitionAssistantTC.getCtorName(classdef, argtypes));
 			} else if (!question.assistantFactory.createSClassDefinitionAssistant().isAccessible(question.env, opdef, false))
 			{
 				TypeCheckerErrors.report(3292, "Constructor is not accessible", node.getLocation(), node);
-				TypeCheckerErrors.detail("Called", question.assistantFactory.createSClassDefinitionAssistant().getCtorName(classdef, argtypes));
+				question.assistantFactory.createSClassDefinitionAssistant();
+				TypeCheckerErrors.detail("Called", SClassDefinitionAssistantTC.getCtorName(classdef, argtypes));
 			} else
 			{
 				node.setCtorDefinition(opdef);

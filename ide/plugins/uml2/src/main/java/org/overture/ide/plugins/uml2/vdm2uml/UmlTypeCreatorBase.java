@@ -83,38 +83,48 @@ public class UmlTypeCreatorBase
 
 	public static String getName(PType type)
 	{
-		if (type instanceof SBasicType) {
+		if (type instanceof SBasicType)
+		{
 			return type.toString();
-		} else if (type instanceof ABracketType) {
+		} else if (type instanceof ABracketType)
+		{
 			return getName(((ABracketType) type).getType());
-		} else if (type instanceof AClassType) {
+		} else if (type instanceof AClassType)
+		{
 			return ((AClassType) type).getName().getName();
-		} else if (type instanceof AFunctionType) {
+		} else if (type instanceof AFunctionType)
+		{
 			return getName(((AFunctionType) type).getResult());
-		} else if (type instanceof SInvariantType) {
-			if (type instanceof ANamedInvariantType) {
+		} else if (type instanceof SInvariantType)
+		{
+			if (type instanceof ANamedInvariantType)
+			{
 				return SClassDefinition.class.cast(type.getAncestor(SClassDefinition.class)).getName().getName()
 						+ NAME_SEPERATOR
 						+ ((ANamedInvariantType) type).getName().getName();
-			} else if (type instanceof ARecordInvariantType) {
+			} else if (type instanceof ARecordInvariantType)
+			{
 				return SClassDefinition.class.cast(type.getAncestor(SClassDefinition.class)).getName().getName()
 						+ NAME_SEPERATOR
 						+ ((ARecordInvariantType) type).getName().getName();
 			}
-		} else if (type instanceof SMapType) {
-			return (type instanceof AInMapMapType ? "In" : "")
-					+ "Map<"
-					+ getName(((SMapType) type).getFrom())
-					+ ","
+		} else if (type instanceof SMapType)
+		{
+			return (type instanceof AInMapMapType ? "In" : "") + "Map<"
+					+ getName(((SMapType) type).getFrom()) + ","
 					+ getName(((SMapType) type).getTo()) + ">";
-		} else if (type instanceof AOperationType) {
+		} else if (type instanceof AOperationType)
+		{
 			return getName(((AOperationType) type).getResult());
-		} else if (type instanceof AOptionalType) {
+		} else if (type instanceof AOptionalType)
+		{
 			return "Optional<" + getName(((AOptionalType) type).getType())
 					+ ">";
-		} else if (type instanceof AParameterType) {
+		} else if (type instanceof AParameterType)
+		{
 			return ((AParameterType) type).getName().getName();
-		} else if (type instanceof AProductType) {
+		} else if (type instanceof AProductType)
+		{
 			String name = "Product<";
 			for (Iterator<PType> itr = ((AProductType) type).getTypes().iterator(); itr.hasNext();)
 			{
@@ -126,27 +136,37 @@ public class UmlTypeCreatorBase
 
 			}
 			return name + ">";
-		} else if (type instanceof AQuoteType) {
+		} else if (type instanceof AQuoteType)
+		{
 			return ((AQuoteType) type).getValue().getValue();
-		} else if (type instanceof SSeqType) {
+		} else if (type instanceof SSeqType)
+		{
 			return "Seq<" + getName(((SSeqType) type).getSeqof()) + ">";
-		} else if (type instanceof ASetType) {
+		} else if (type instanceof ASetType)
+		{
 			return "Set<" + getName(((ASetType) type).getSetof()) + ">";
-		} else if (type instanceof AUndefinedType) {
-		} else if (type instanceof AUnionType) {
+		} else if (type instanceof AUndefinedType)
+		{
+		} else if (type instanceof AUnionType)
+		{
 			if (Vdm2UmlUtil.isUnionOfQuotes((AUnionType) type))
 			{
-				String namePostfix = "_"+type.toString().replaceAll("[^A-Za-z0-9]", "")+("_"+type.toString().hashCode()).replace('-', '_');
+				String namePostfix = "_"
+						+ type.toString().replaceAll("[^A-Za-z0-9]", "")
+						+ ("_" + type.toString().hashCode()).replace('-', '_');
 				PDefinition def = type.getAncestor(PDefinition.class);
 				if (def != null)
 				{
-					if(def instanceof AValueDefinition)
+					if (def instanceof AValueDefinition)
 					{
-						return def.getLocation().getModule()+NAME_SEPERATOR+ ((AValueDefinition) def).getPattern().toString().replace(" ", "").trim()+namePostfix; 
+						return def.getLocation().getModule()
+								+ NAME_SEPERATOR
+								+ ((AValueDefinition) def).getPattern().toString().replace(" ", "").trim()
+								+ namePostfix;
 					}
 					ILexNameToken nameTypeDef = PDefinition.class.cast(def).getName();
 					return nameTypeDef.getModule() + NAME_SEPERATOR
-							+ nameTypeDef.getName()+namePostfix;
+							+ nameTypeDef.getName() + namePostfix;
 				} else
 				{
 					String name = "GeneratedUnion";
@@ -168,12 +188,16 @@ public class UmlTypeCreatorBase
 
 			}
 			return name + ">";
-		} else if (type instanceof AUnknownType) {
+		} else if (type instanceof AUnknownType)
+		{
 			return ANY_TYPE;
-		} else if (type instanceof AUnresolvedType) {
-		} else if (type instanceof AVoidType) {
+		} else if (type instanceof AUnresolvedType)
+		{
+		} else if (type instanceof AVoidType)
+		{
 			return VOID_TYPE;
-		} else if (type instanceof AVoidReturnType) {
+		} else if (type instanceof AVoidReturnType)
+		{
 		}
 		return UNKNOWN_TYPE;
 	}

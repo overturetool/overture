@@ -51,23 +51,23 @@ public class Uml2VdmCommand extends AbstractHandler
 					{
 						progress.beginTask("Importing", 100);
 						progress.worked(5);
-						
+
 						IVdmProject p = (IVdmProject) iFile.getProject().getAdapter(IVdmProject.class);
 						String extension = null;
-						if(p!=null)
+						if (p != null)
 						{
 							for (IContentType ct : p.getContentTypeIds())
 							{
-								if(!ct.getId().contains(".external."))
+								if (!ct.getId().contains(".external."))
 								{
 									extension = ct.getFileSpecs(IContentType.FILE_EXTENSION_SPEC)[0];
 									break;
 								}
 							}
-							
+
 						}
-						
-						if (!uml2vdm.initialize(uri,extension))
+
+						if (!uml2vdm.initialize(uri, extension))
 						{
 							return new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Failed importing .uml file. Maybe it doesnt have the EMF UML format");
 						}
@@ -78,7 +78,7 @@ public class Uml2VdmCommand extends AbstractHandler
 							public void run()
 							{
 								uml2vdm.convert(new File(iFile.getProject().getLocation().toFile(), "uml_import"));
-								
+
 								try
 								{
 									iFile.getProject().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
@@ -90,7 +90,7 @@ public class Uml2VdmCommand extends AbstractHandler
 						});
 
 						progress.worked(50);
-						
+
 						progress.worked(5);
 						progress.done();
 
