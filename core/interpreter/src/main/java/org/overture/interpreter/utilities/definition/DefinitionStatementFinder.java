@@ -35,7 +35,7 @@ public class DefinitionStatementFinder extends QuestionAnswerAdaptor<Integer, PS
 			throws AnalysisException
 	{
 		//I don't think this needs to be unfolded.
-		return SClassDefinitionAssistantInterpreter.findStatement(def, lineno);
+		return af.createSClassDefinitionAssistant().findStatement(def, lineno);
 		
 	}
 	
