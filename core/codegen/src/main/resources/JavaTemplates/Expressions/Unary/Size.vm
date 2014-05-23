@@ -1,5 +1,5 @@
 #set( $sizeCall = "")
-#if ($JavaFormat.isStringType($node.getType()))
+#if ($JavaFormat.isStringType($node.getExp().getType()))
 	#set( $sizeCall = ".length()")
 #else
 	#set( $sizeCall = ".size()")
