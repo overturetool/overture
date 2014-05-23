@@ -106,6 +106,22 @@ public class SeqUtil
 		return indices;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public static VDMSet inds(String seq)
+	{
+		if(seq == null)
+			throw new IllegalArgumentException("Cannot get indices of null");
+		
+		VDMSet indices = SetUtil.set();
+		
+		for(long i = 1; i <= seq.length(); i++)
+		{
+			indices.add(i);
+		}
+		
+		return indices;
+	}
+	
 	public static boolean equals(VDMSeq left, VDMSeq right)
 	{
 		if(left == null || right == null)
