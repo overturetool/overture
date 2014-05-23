@@ -182,6 +182,9 @@ public class JavaCodeGenUtil
 		try
 		{
 			tempFile = new File("target" + File.separatorChar + "temp.java");
+			tempFile.getParentFile().mkdirs();
+			tempFile.createNewFile();
+			
 			PrintWriter xwriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(tempFile, false), "UTF-8"));
 			xwriter.write(code.toString());
 			xwriter.flush();
