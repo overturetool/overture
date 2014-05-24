@@ -2,7 +2,7 @@ package org.overture.codegen.constants;
 
 import org.apache.commons.lang.ArrayUtils;
 
-public class IOoAstConstants
+public class IRConstants
 {
 	public static final String PRIVATE = "private";
 	public static final String PUBLIC = "public";

@@ -17,8 +17,8 @@ import org.overture.ast.expressions.PExp;
 import org.overture.codegen.analysis.violations.InvalidNamesException;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.analysis.violations.Violation;
+import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.ooast.OoAstSettings;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedData;
@@ -35,7 +35,7 @@ public class JavaCodeGenUtil
 {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
-	public static GeneratedData generateJavaFromFiles(List<File> files, OoAstSettings settings) throws AnalysisException, InvalidNamesException, UnsupportedModelingException
+	public static GeneratedData generateJavaFromFiles(List<File> files, IRSettings settings) throws AnalysisException, InvalidNamesException, UnsupportedModelingException
 	{
 		List<SClassDefinition> mergedParseList = consMergedParseList(files);
 		
@@ -90,7 +90,7 @@ public class JavaCodeGenUtil
 		return vdmCodGen.generateJavaFromVdm(mergedParseLists);
 	}
 
-	public static Generated generateJavaFromExp(String exp, OoAstSettings settings) throws AnalysisException
+	public static Generated generateJavaFromExp(String exp, IRSettings settings) throws AnalysisException
 	{
 		TypeCheckResult<PExp> typeCheckResult = GeneralCodeGenUtils.validateExp(exp);
 		

@@ -1,4 +1,4 @@
-package org.overture.codegen.ooast;
+package org.overture.codegen.ir;
 
 import org.overture.ast.node.INode;
 

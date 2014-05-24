@@ -1,4 +1,4 @@
-package org.overture.codegen.ooast;
+package org.overture.codegen.ir;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,7 +21,7 @@ import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
-import org.overture.codegen.constants.IOoAstConstants;
+import org.overture.codegen.constants.IRConstants;
 import org.overture.codegen.utils.AnalysisExceptionCG;
 import org.overture.codegen.utils.ITempVarGen;
 import org.overture.codegen.utils.TempVarNameGen;
@@ -37,7 +37,7 @@ import org.overture.codegen.visitor.TypeVisitorCG;
 import org.overture.codegen.visitor.VisitorManager;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 
-public class OoAstInfo
+public class IRInfo
 {
 	//Visitors
 	private VisitorManager visitorManager;
@@ -58,9 +58,9 @@ public class OoAstInfo
 	private ITempVarGen tempVarNameGen;
 	
 	//For configuring code generation
-	private OoAstSettings settings;
+	private IRSettings settings;
 	
-	public OoAstInfo()
+	public IRInfo()
 	{
 		super();
 		
@@ -71,7 +71,7 @@ public class OoAstInfo
 		this.unsupportedNodes = new HashSet<NodeInfo>();
 		this.tempVarNameGen = new TempVarNameGen();
 		
-		this.settings = new OoAstSettings();
+		this.settings = new IRSettings();
 	}
 	
 	public AssistantManager getAssistantManager()
@@ -184,7 +184,7 @@ public class OoAstInfo
 	{
 		AInterfaceDeclCG quotes = new AInterfaceDeclCG();
 		
-		quotes.setName(IOoAstConstants.QUOTES_INTERFACE_NAME);
+		quotes.setName(IRConstants.QUOTES_INTERFACE_NAME);
 		
 		LinkedList<AFieldDeclCG> fields = quotes.getFields();
 		
@@ -194,7 +194,7 @@ public class OoAstInfo
 		{
 			AFieldDeclCG fieldDecl = new AFieldDeclCG();
 			fieldDecl.setName(quoteValuesList.get(i));
-			fieldDecl.setAccess(IOoAstConstants.PUBLIC);
+			fieldDecl.setAccess(IRConstants.PUBLIC);
 			fieldDecl.setFinal(false);
 			fieldDecl.setStatic(true);
 			fieldDecl.setType(new AIntNumericBasicTypeCG());
@@ -238,12 +238,12 @@ public class OoAstInfo
 		return tempVarNameGen;
 	}
 	
-	public OoAstSettings getSettings()
+	public IRSettings getSettings()
 	{
 		return settings;
 	}
 	
-	public void setSettings(OoAstSettings settings)
+	public void setSettings(IRSettings settings)
 	{
 		this.settings = settings;
 	}

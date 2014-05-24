@@ -1,12 +1,12 @@
-package org.overture.codegen.ooast;
+package org.overture.codegen.ir;
 
 import java.util.Set;
 
-public class OoStatus
+public class IRStatus
 {
 	protected Set<NodeInfo> unsupportedNodes;
 
-	public OoStatus(Set<NodeInfo> unsupportedNodes)
+	public IRStatus(Set<NodeInfo> unsupportedNodes)
 	{
 		this.unsupportedNodes = unsupportedNodes;
 	}

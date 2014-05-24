@@ -1,4 +1,4 @@
-package org.overture.codegen.ooast;
+package org.overture.codegen.ir;
 
 import java.util.HashMap;
 
@@ -27,7 +27,7 @@ import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AXorBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 
-public class OoAstOperatorLookup
+public class IROperatorLookup
 {
 	//TODO: Operators must be added as they come. Are there more to be added?
 
@@ -64,45 +64,45 @@ public class OoAstOperatorLookup
 	private static final int UNARY_PLUS = 13;
 	private static final int UNARY_MINUS = 13;
 	
-	private HashMap<Class<? extends PExpCG>, OoAstOperatorInfo> lookup;
+	private HashMap<Class<? extends PExpCG>, IROperatorInfo> lookup;
 	
-	public OoAstOperatorInfo find(Class<? extends PExpCG> key)
+	public IROperatorInfo find(Class<? extends PExpCG> key)
 	{
 		return lookup.get(key);
 	}
 	
-	public OoAstOperatorLookup()
+	public IROperatorLookup()
 	{
-		this.lookup = new HashMap<Class<? extends PExpCG>, OoAstOperatorInfo>();
+		this.lookup = new HashMap<Class<? extends PExpCG>, IROperatorInfo>();
 
-		lookup.put(APlusNumericBinaryExpCG.class, new OoAstOperatorInfo(PLUS, "+"));
-		lookup.put(ASubtractNumericBinaryExpCG.class, new OoAstOperatorInfo(SUB, "-"));
-		lookup.put(ATimesNumericBinaryExpCG.class, new OoAstOperatorInfo(TIMES, "*"));
-		lookup.put(ADivNumericBinaryExpCG.class, new OoAstOperatorInfo(DIVIDE, "/"));
-		lookup.put(ARemNumericBinaryExpCG.class, new OoAstOperatorInfo(REM, "%")); 
-		lookup.put(AModNumericBinaryExpCG.class, new OoAstOperatorInfo(MOD, "%")); //FIXME: Mod is special
-		lookup.put(ADivideNumericBinaryExpCG.class, new OoAstOperatorInfo(DIV, "/"));//FIXME: Divider med / er speciel
+		lookup.put(APlusNumericBinaryExpCG.class, new IROperatorInfo(PLUS, "+"));
+		lookup.put(ASubtractNumericBinaryExpCG.class, new IROperatorInfo(SUB, "-"));
+		lookup.put(ATimesNumericBinaryExpCG.class, new IROperatorInfo(TIMES, "*"));
+		lookup.put(ADivNumericBinaryExpCG.class, new IROperatorInfo(DIVIDE, "/"));
+		lookup.put(ARemNumericBinaryExpCG.class, new IROperatorInfo(REM, "%")); 
+		lookup.put(AModNumericBinaryExpCG.class, new IROperatorInfo(MOD, "%")); //FIXME: Mod is special
+		lookup.put(ADivideNumericBinaryExpCG.class, new IROperatorInfo(DIV, "/"));//FIXME: Divider med / er speciel
 
-		lookup.put(AEqualsBinaryExpCG.class, new OoAstOperatorInfo(EQUALS, "="));
-		lookup.put(ANotEqualsBinaryExpCG.class, new OoAstOperatorInfo(NOT_EQUALS, "<>"));
-		lookup.put(AAddrEqualsBinaryExpCG.class, new OoAstOperatorInfo(EQUALS, "=="));
-		lookup.put(AAddrNotEqualsBinaryExpCG.class, new OoAstOperatorInfo(NOT_EQUALS, "!="));
+		lookup.put(AEqualsBinaryExpCG.class, new IROperatorInfo(EQUALS, "="));
+		lookup.put(ANotEqualsBinaryExpCG.class, new IROperatorInfo(NOT_EQUALS, "<>"));
+		lookup.put(AAddrEqualsBinaryExpCG.class, new IROperatorInfo(EQUALS, "=="));
+		lookup.put(AAddrNotEqualsBinaryExpCG.class, new IROperatorInfo(NOT_EQUALS, "!="));
 		
-		lookup.put(AGreaterEqualNumericBinaryExpCG.class, new OoAstOperatorInfo(GREATER_EQUAL, ">="));
-		lookup.put(AGreaterNumericBinaryExpCG.class, new OoAstOperatorInfo(GREATER, ">"));
-		lookup.put(ALessEqualNumericBinaryExpCG.class, new OoAstOperatorInfo(LESS_EQUAL, "<="));
-		lookup.put(ALessNumericBinaryExpCG.class, new OoAstOperatorInfo(LESS, "<"));
+		lookup.put(AGreaterEqualNumericBinaryExpCG.class, new IROperatorInfo(GREATER_EQUAL, ">="));
+		lookup.put(AGreaterNumericBinaryExpCG.class, new IROperatorInfo(GREATER, ">"));
+		lookup.put(ALessEqualNumericBinaryExpCG.class, new IROperatorInfo(LESS_EQUAL, "<="));
+		lookup.put(ALessNumericBinaryExpCG.class, new IROperatorInfo(LESS, "<"));
 
-		lookup.put(APowerNumericBinaryExpCG.class, new OoAstOperatorInfo(POWER, "**"));
+		lookup.put(APowerNumericBinaryExpCG.class, new IROperatorInfo(POWER, "**"));
 		
-		lookup.put(AOrBoolBinaryExpCG.class, new OoAstOperatorInfo(OR, "or"));
-		lookup.put(AAndBoolBinaryExpCG.class, new OoAstOperatorInfo(AND, "and"));
-		lookup.put(AXorBoolBinaryExpCG.class, new OoAstOperatorInfo(XOR, "*^"));
-		lookup.put(ANotUnaryExpCG.class, new OoAstOperatorInfo(NOT, "not"));
+		lookup.put(AOrBoolBinaryExpCG.class, new IROperatorInfo(OR, "or"));
+		lookup.put(AAndBoolBinaryExpCG.class, new IROperatorInfo(AND, "and"));
+		lookup.put(AXorBoolBinaryExpCG.class, new IROperatorInfo(XOR, "*^"));
+		lookup.put(ANotUnaryExpCG.class, new IROperatorInfo(NOT, "not"));
 		
-		lookup.put(AMinusUnaryExpCG.class, new OoAstOperatorInfo(UNARY_MINUS, "-"));
-		lookup.put(APlusUnaryExpCG.class, new OoAstOperatorInfo(UNARY_PLUS, "+"));
+		lookup.put(AMinusUnaryExpCG.class, new IROperatorInfo(UNARY_MINUS, "-"));
+		lookup.put(APlusUnaryExpCG.class, new IROperatorInfo(UNARY_PLUS, "+"));
 		
-		lookup.put(ATernaryIfExpCG.class, new OoAstOperatorInfo(TERNARY_IF, "?:"));
+		lookup.put(ATernaryIfExpCG.class, new IROperatorInfo(TERNARY_IF, "?:"));
 	}
 }

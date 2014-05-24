@@ -2,7 +2,7 @@ package org.overture.codegen.tests;
 
 import java.io.File;
 
-import org.overture.codegen.ooast.OoAstSettings;
+import org.overture.codegen.ir.IRSettings;
 
 public class ConfiguredStringGenerationTestCase extends SpecificationTestCase
 {
@@ -17,9 +17,9 @@ public class ConfiguredStringGenerationTestCase extends SpecificationTestCase
 	
 	
 	@Override
-	public OoAstSettings getSettings()
+	public IRSettings getSettings()
 	{
-		OoAstSettings settings = new OoAstSettings();
+		IRSettings settings = new IRSettings();
 		settings.setCharSeqAsString(true);
 		
 		return settings;

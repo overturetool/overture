@@ -1,10 +1,10 @@
-package org.overture.codegen.ooast;
+package org.overture.codegen.ir;
 
 import java.util.Set;
 
 import org.overture.codegen.cgast.expressions.PExpCG;
 
-public class ExpStatus extends OoStatus
+public class ExpStatus extends IRStatus
 {
 	private PExpCG expCg;
 	

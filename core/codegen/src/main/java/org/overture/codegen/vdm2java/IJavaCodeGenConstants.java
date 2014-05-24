@@ -1,4 +1,4 @@
-package org.overture.codegen.constants;
+package org.overture.codegen.vdm2java;
 
 public interface IJavaCodeGenConstants
 {

@@ -25,8 +25,8 @@ import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SBasicTypeCGBase;
 import org.overture.codegen.cgast.types.SBasicTypeWrappersTypeCGBase;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.ooast.OoAstInfo;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
@@ -59,7 +59,7 @@ public class TypeAssistantCG extends AssistantBase
 		return typeDef;
 	}
 	
-	public PTypeCG constructSeqType(SSeqTypeBase node, OoAstInfo question)
+	public PTypeCG constructSeqType(SSeqTypeBase node, IRInfo question)
 			throws AnalysisException
 	{
 		PTypeCG seqOfCg = node.getSeqof().apply(question.getTypeVisitor(), question);
@@ -104,7 +104,7 @@ public class TypeAssistantCG extends AssistantBase
 
 	}
 	
-	public AMethodTypeCG consMethodType(PType node, List<PType> paramTypes, PType resultType, OoAstInfo question) throws AnalysisException
+	public AMethodTypeCG consMethodType(PType node, List<PType> paramTypes, PType resultType, IRInfo question) throws AnalysisException
 	{
 		AMethodTypeCG methodType = new AMethodTypeCG();
 		

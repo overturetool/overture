@@ -1,4 +1,4 @@
-package org.overture.codegen.ooast;
+package org.overture.codegen.ir;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -12,13 +12,13 @@ import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.logging.Logger;
 
-public class OoAstGenerator
+public class IRGenerator
 {
-	private OoAstInfo codeGenInfo;
+	private IRInfo codeGenInfo;
 	
-	public OoAstGenerator(ILogger log)
+	public IRGenerator(ILogger log)
 	{
-		this.codeGenInfo = new OoAstInfo();
+		this.codeGenInfo = new IRInfo();
 		Logger.setLog(log);
 	}
 			
@@ -52,7 +52,7 @@ public class OoAstGenerator
 		return codeGenInfo.getQuotes();
 	}
 	
-	public OoAstInfo getOoAstInfo()
+	public IRInfo getIRInfo()
 	{
 		return codeGenInfo;
 	}

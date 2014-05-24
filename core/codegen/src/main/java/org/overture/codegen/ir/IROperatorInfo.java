@@ -1,11 +1,11 @@
-package org.overture.codegen.ooast;
+package org.overture.codegen.ir;
 
-public class OoAstOperatorInfo
+public class IROperatorInfo
 {
 	private int precedence;
 	public String mapping;
 		
-	public OoAstOperatorInfo(int precedenceLevel, String mapping)
+	public IROperatorInfo(int precedenceLevel, String mapping)
 	{
 		this.precedence = precedenceLevel;
 		this.mapping = mapping;

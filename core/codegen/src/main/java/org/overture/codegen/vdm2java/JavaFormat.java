@@ -82,8 +82,8 @@ import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.constants.TempVarPrefixes;
+import org.overture.codegen.ir.IRAnalysis;
 import org.overture.codegen.merging.MergeVisitor;
-import org.overture.codegen.ooast.OoAstAnalysis;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.ITempVarGen;
 
@@ -115,7 +115,7 @@ public class JavaFormat
 	{
 		this.tempVarNameGen = tempVarNameGen;
 		this.assistantManager = assistantManager;
-		this.mergeVisitor = new MergeVisitor(JavaCodeGen.JAVA_TEMPLATE_STRUCTURE, JavaCodeGen.constructTemplateCallables(this, OoAstAnalysis.class, varPrefixes));
+		this.mergeVisitor = new MergeVisitor(JavaCodeGen.JAVA_TEMPLATE_STRUCTURE, JavaCodeGen.constructTemplateCallables(this, IRAnalysis.class, varPrefixes));
 		this.functionValueAssistant = null;
 	}
 	

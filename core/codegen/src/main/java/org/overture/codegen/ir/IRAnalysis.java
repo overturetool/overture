@@ -1,4 +1,4 @@
-package org.overture.codegen.ooast;
+package org.overture.codegen.ir;
 
 import org.overture.codegen.analysis.vdm.AbstractAnalysis;
 import org.overture.codegen.analysis.vdm.QuoteAnalysis;
@@ -6,7 +6,7 @@ import org.overture.codegen.analysis.vdm.UtilAnalysis;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 
-public class OoAstAnalysis
+public class IRAnalysis
 {	
 	public static boolean usesQuoteLiterals(AClassDeclCG classDecl)
 	{

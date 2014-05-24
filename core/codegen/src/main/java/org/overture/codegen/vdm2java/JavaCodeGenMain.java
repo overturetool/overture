@@ -11,9 +11,9 @@ import org.overture.codegen.analysis.violations.InvalidNamesException;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.assistant.LocationAssistantCG;
+import org.overture.codegen.ir.IRSettings;
+import org.overture.codegen.ir.NodeInfo;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.ooast.NodeInfo;
-import org.overture.codegen.ooast.OoAstSettings;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedData;
@@ -31,7 +31,7 @@ public class JavaCodeGenMain
 		if (args.length <= 1)
 			Logger.getLog().println("Wrong input!");
 		
-		OoAstSettings settings = new OoAstSettings();
+		IRSettings settings = new IRSettings();
 		settings.setCharSeqAsString(false);
 		
 		String setting = args[0];

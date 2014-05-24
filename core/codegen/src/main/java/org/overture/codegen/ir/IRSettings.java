@@ -1,10 +1,10 @@
-package org.overture.codegen.ooast;
+package org.overture.codegen.ir;
 
-public class OoAstSettings
+public class IRSettings
 {
 	private boolean charSeqAsString;
 
-	public OoAstSettings()
+	public IRSettings()
 	{
 	}
 

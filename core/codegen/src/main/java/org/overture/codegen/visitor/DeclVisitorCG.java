@@ -35,15 +35,15 @@ import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
-import org.overture.codegen.constants.IOoAstConstants;
-import org.overture.codegen.ooast.OoAstInfo;
+import org.overture.codegen.constants.IRConstants;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.utils.AnalysisExceptionCG;
 
-public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
+public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, PDeclCG>
 {
 	@Override
 	public PDeclCG caseAClassInvariantDefinition(
-			AClassInvariantDefinition node, OoAstInfo question)
+			AClassInvariantDefinition node, IRInfo question)
 			throws AnalysisException
 	{
 		//Do not report the node as unsupported and generate nothing
@@ -52,7 +52,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 	
 	@Override
 	public PDeclCG caseATraceDefinitionTerm(ATraceDefinitionTerm node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		//Do not report the node as unsupported and generate nothing
 		return null;
@@ -60,7 +60,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 	
 	@Override
 	public PDeclCG caseANamedTraceDefinition(ANamedTraceDefinition node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		//Do not report the node as unsupported and generate nothing
 		return null;
@@ -68,7 +68,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 	
 	@Override
 	public PDeclCG caseANamedInvariantType(ANamedInvariantType node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		PType type = node.getType();
 		
@@ -87,7 +87,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 	
 	@Override
 	public PDeclCG caseARecordInvariantType(ARecordInvariantType node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		ILexNameToken name = node.getName();
 		LinkedList<AFieldField> fields = node.getFields();
@@ -100,7 +100,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 		//		public R ::
 		//		    x : nat
 		//		    y : nat;
-		record.setAccess(IOoAstConstants.PUBLIC);
+		record.setAccess(IRConstants.PUBLIC);
 		record.setName(name.getName());
 		
 		LinkedList<AFieldDeclCG> recordFields = record.getFields();
@@ -121,11 +121,11 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 	}
 	
 	@Override
-	public PDeclCG caseAFieldField(AFieldField node, OoAstInfo question)
+	public PDeclCG caseAFieldField(AFieldField node, IRInfo question)
 			throws AnalysisException
 	{
 		//Record fields are public
-		String access = IOoAstConstants.PUBLIC;
+		String access = IRConstants.PUBLIC;
 		String name = node.getTag();
 		boolean isStatic = false;
 		boolean isFinal = false;
@@ -137,7 +137,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 	
 	@Override
 	public PDeclCG caseATypeDefinition(ATypeDefinition node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		String access = node.getAccess().getAccess().toString();
 		
@@ -154,7 +154,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 		
 	@Override
 	public PDeclCG caseAExplicitFunctionDefinition(
-			AExplicitFunctionDefinition node, OoAstInfo question)
+			AExplicitFunctionDefinition node, IRInfo question)
 			throws AnalysisException
 	{
 		if(node.getIsTypeInvariant())
@@ -272,7 +272,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 	
 	@Override
 	public PDeclCG caseAExplicitOperationDefinition(
-			AExplicitOperationDefinition node, OoAstInfo question)
+			AExplicitOperationDefinition node, IRInfo question)
 			throws AnalysisException
 	{
 		String access = node.getAccess().getAccess().toString();
@@ -323,7 +323,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 	
 	@Override
 	public PDeclCG caseAInstanceVariableDefinition(
-			AInstanceVariableDefinition node, OoAstInfo question)
+			AInstanceVariableDefinition node, IRInfo question)
 			throws AnalysisException
 	{
 		String access = node.getAccess().getAccess().toString();
@@ -338,7 +338,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 	}
 	
 	@Override
-	public PDeclCG caseAValueDefinition(AValueDefinition node, OoAstInfo question) throws AnalysisException
+	public PDeclCG caseAValueDefinition(AValueDefinition node, IRInfo question) throws AnalysisException
 	{
 		String access = node.getAccess().getAccess().toString();
 		String name = node.getPattern().toString();

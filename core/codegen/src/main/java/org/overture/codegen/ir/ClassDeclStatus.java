@@ -1,10 +1,10 @@
-package org.overture.codegen.ooast;
+package org.overture.codegen.ir;
 
 import java.util.Set;
 
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 
-public class ClassDeclStatus extends OoStatus
+public class ClassDeclStatus extends IRStatus
 {
 	private String className;
 	private AClassDeclCG classCg;
