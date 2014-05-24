@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -27,7 +28,6 @@ import org.overture.codegen.assistant.LocationAssistantCG;
 import org.overture.codegen.constants.IJavaCodeGenConstants;
 import org.overture.codegen.constants.IOoAstConstants;
 import org.overture.codegen.ooast.NodeInfo;
-import org.overture.codegen.ooast.OoAstInfo;
 import org.overture.codegen.ooast.OoAstSettings;
 import org.overture.codegen.utils.AnalysisExceptionCG;
 import org.overture.codegen.utils.GeneralUtils;
@@ -40,6 +40,7 @@ import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.plugins.codegen.Activator;
 import org.overture.ide.plugins.codegen.CodeGenConsole;
+import org.overture.ide.plugins.codegen.ICodeGenConstants;
 import org.overture.ide.plugins.codegen.util.PluginVdm2JavaUtil;
 import org.overture.ide.ui.utility.VdmTypeCheckerUi;
 
@@ -122,9 +123,12 @@ public class Vdm2JavaCommand extends AbstractHandler
 			{
 				// Begin code generation
 				final JavaCodeGen vdm2java = new JavaCodeGen();
+
+				IPreferenceStore preferences = Activator.getDefault().getPreferenceStore();
+				boolean generateCharSeqsAsStrings = preferences.getBoolean(ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRINGS);
 				
 				OoAstSettings settings = new OoAstSettings();
-				settings.setCharSeqAsString(true);
+				settings.setCharSeqAsString(generateCharSeqsAsStrings);
 				
 				vdm2java.setSettings(settings);
 

@@ -71,5 +71,15 @@
 		sequence="Ctrl+Alt+C">
 	</key>
 </extension>
+
+    <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.overture.ide.ui.vdm"
+            class="org.overture.ide.plugins.codegen.preferences.WorkbenchPreferencePageMain"
+            id="org.overture.ide.plugins.codegen.pageMain"
+            name="Java Code Generation">
+      </page>
+    </extension>	
  
 </plugin>
