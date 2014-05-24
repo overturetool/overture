@@ -242,4 +242,9 @@ public class OoAstInfo
 	{
 		return settings;
 	}
+	
+	public void setSettings(OoAstSettings settings)
+	{
+		this.settings = settings;
+	}
 }

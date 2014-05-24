@@ -11,6 +11,7 @@ import junit.framework.Assert;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.logging.Logger;
+import org.overture.codegen.ooast.OoAstSettings;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.config.Release;
 import org.overture.config.Settings;
@@ -32,9 +33,12 @@ public abstract class CodeGenBaseTestCase extends BaseTestCase
 		super(file);
 	}
 	
-	public boolean generateCharSequencesAsStrings()
+	public OoAstSettings getSettings()
 	{
-		return false;
+		OoAstSettings settings = new OoAstSettings();
+		settings.setCharSeqAsString(false);
+		
+		return settings;
 	}
 
 	@Override

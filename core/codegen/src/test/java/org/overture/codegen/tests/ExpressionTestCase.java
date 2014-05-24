@@ -32,7 +32,7 @@ public class ExpressionTestCase extends CodeGenBaseTestCase
 			e.printStackTrace();
 			return null;
 		}
-		String generatedJava = JavaCodeGenUtil.generateJavaFromExp(fileContent, generateCharSequencesAsStrings()).getContent().trim();
+		String generatedJava = JavaCodeGenUtil.generateJavaFromExp(fileContent, getSettings()).getContent().trim();
 		String trimmed = generatedJava.replaceAll("\\s+", " ");
 		
 		return trimmed;

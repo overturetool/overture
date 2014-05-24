@@ -38,7 +38,7 @@ public class SpecificationTestCase extends CodeGenBaseTestCase
 		
 		try
 		{
-			data = JavaCodeGenUtil.generateJavaFromFiles(files, generateCharSequencesAsStrings());
+			data = JavaCodeGenUtil.generateJavaFromFiles(files, getSettings());
 		} catch (InvalidNamesException e)
 		{
 			return JavaCodeGenUtil.constructNameViolationsString(e);

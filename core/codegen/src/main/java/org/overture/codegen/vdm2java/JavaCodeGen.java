@@ -35,6 +35,7 @@ import org.overture.codegen.ooast.ClassDeclStatus;
 import org.overture.codegen.ooast.ExpStatus;
 import org.overture.codegen.ooast.OoAstGenerator;
 import org.overture.codegen.ooast.OoAstInfo;
+import org.overture.codegen.ooast.OoAstSettings;
 import org.overture.codegen.transform.TransformationAssistantCG;
 import org.overture.codegen.transform.TransformationVisitor;
 import org.overture.codegen.transform.iterator.ILanguageIterator;
@@ -99,6 +100,11 @@ public class JavaCodeGen
 		this.tempVarNameGen = ooAstInfo.getTempVarNameGen();
 		this.assistantManager = ooAstInfo.getAssistantManager();
 		this.javaFormat = new JavaFormat(varPrefixes, tempVarNameGen, assistantManager);
+	}
+	
+	public void setSettings(OoAstSettings settings)
+	{
+		ooAstInfo.setSettings(settings);
 	}
 
 	private void initVelocity()
