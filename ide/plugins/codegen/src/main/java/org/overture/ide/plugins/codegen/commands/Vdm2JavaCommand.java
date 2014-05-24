@@ -27,6 +27,8 @@ import org.overture.codegen.assistant.LocationAssistantCG;
 import org.overture.codegen.constants.IJavaCodeGenConstants;
 import org.overture.codegen.constants.IOoAstConstants;
 import org.overture.codegen.ooast.NodeInfo;
+import org.overture.codegen.ooast.OoAstInfo;
+import org.overture.codegen.ooast.OoAstSettings;
 import org.overture.codegen.utils.AnalysisExceptionCG;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.GeneratedModule;
@@ -120,6 +122,11 @@ public class Vdm2JavaCommand extends AbstractHandler
 			{
 				// Begin code generation
 				final JavaCodeGen vdm2java = new JavaCodeGen();
+				
+				OoAstSettings settings = new OoAstSettings();
+				settings.setCharSeqAsString(true);
+				
+				vdm2java.setSettings(settings);
 
 				try
 				{
