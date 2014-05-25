@@ -6,7 +6,7 @@
 ##
 #set( $clone = "")
 ##
-#if ($JavaFormat.cloneMember($node))
+#if ($ValueSemantics.cloneMember($node))
 	#set( $clone = ".clone()")
 #end
 ((${type}) ${tuple}${method})${clone}

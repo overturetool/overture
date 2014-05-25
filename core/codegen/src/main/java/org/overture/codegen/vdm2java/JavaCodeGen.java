@@ -60,12 +60,13 @@ public class JavaCodeGen
 	private static final String JAVA_FORMAT_KEY = "JavaFormat";
 	private static final String IR_ANALYSIS_KEY = "IRAnalysis";
 	private static final String TEMP_VAR = "TempVar";
+	private static final String VALUE_SEMANTICS = "ValueSemantics";
 	
 	public final static TempVarPrefixes varPrefixes = new TempVarPrefixes();
 	
-	public final static TemplateCallable[] constructTemplateCallables(Object javaFormat, Object irAnalysis, Object tempVarPrefixes)
+	public final static TemplateCallable[] constructTemplateCallables(Object javaFormat, Object irAnalysis, Object tempVarPrefixes, Object valueSemantics)
 	{
-		return new TemplateCallable[]{new TemplateCallable(JAVA_FORMAT_KEY, javaFormat), new TemplateCallable(IR_ANALYSIS_KEY, irAnalysis), new TemplateCallable(TEMP_VAR, tempVarPrefixes)};
+		return new TemplateCallable[]{new TemplateCallable(JAVA_FORMAT_KEY, javaFormat), new TemplateCallable(IR_ANALYSIS_KEY, irAnalysis), new TemplateCallable(TEMP_VAR, tempVarPrefixes), new TemplateCallable(VALUE_SEMANTICS,  valueSemantics)};
 	}
 	
 	private IRGenerator generator;
