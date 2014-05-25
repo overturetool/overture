@@ -131,6 +131,11 @@ public class JavaFormat
 		return classes;
 	}
 	
+	public void setJavaSettings(JavaSettings javaSettings)
+	{
+		valueSemantics.setJavaSettings(javaSettings);
+	}
+	
 	public String format(AMethodTypeCG methodType) throws AnalysisException
 	{
 		final String OBJ = "Object";

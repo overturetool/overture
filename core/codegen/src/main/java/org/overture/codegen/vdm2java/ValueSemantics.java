@@ -36,14 +36,24 @@ import org.overture.codegen.cgast.types.SSetTypeCG;
 public class ValueSemantics
 {
 	private JavaFormat javaFormat;
+	private JavaSettings javaSettings;
 	
 	public ValueSemantics(JavaFormat javaFormat)
 	{
 		this.javaFormat = javaFormat;
+		this.javaSettings = new JavaSettings();
+	}
+	
+	public void setJavaSettings(JavaSettings javaSettings)
+	{
+		this.javaSettings = javaSettings;
 	}
 	
 	public boolean cloneMember(AFieldNumberExpCG exp)
 	{
+		if(javaSettings.getDisableCloning())
+			return false;
+		
 		//Generally tuples need to be cloned, for example, if they
 		//contain a record field (that must be cloned)
 		
@@ -69,6 +79,9 @@ public class ValueSemantics
 	
 	public boolean cloneMember(AFieldExpCG exp)
 	{
+		if(javaSettings.getDisableCloning())
+			return false;
+		
 		INode parent = exp.parent();
 		if (cloneNotNeeded(parent))
 			return false;
@@ -95,6 +108,9 @@ public class ValueSemantics
 	
 	public boolean shouldClone(PExpCG exp) 
 	{
+		if(javaSettings.getDisableCloning())
+			return false;
+		
 		INode parent = exp.parent();
 		if (cloneNotNeeded(parent))
 		{
@@ -129,7 +145,7 @@ public class ValueSemantics
 		
 		return false;
 	}
-	
+
 	private boolean cloneNotNeeded(INode parent)
 	{
 		return 	   parent instanceof AFieldExpCG

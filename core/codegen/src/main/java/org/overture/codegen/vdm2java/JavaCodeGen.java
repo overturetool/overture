@@ -86,6 +86,11 @@ public class JavaCodeGen
 	{
 		init(null);
 	}
+	
+	public void setJavaSettings(JavaSettings javaSettings)
+	{
+		this.javaFormat.setJavaSettings(javaSettings);
+	}
 
 	public JavaCodeGen(ILogger log)
 	{
@@ -332,19 +337,19 @@ public class JavaCodeGen
 		}
 	}
 
-	public void generateJavaSourceFile(File file, GeneratedModule generatedModule)
+	public void generateJavaSourceFile(File outputFolder, GeneratedModule generatedModule)
 	{
 		if(generatedModule != null && generatedModule.canBeGenerated() && !generatedModule.hasMergeErrors())
 		{
-			JavaCodeGenUtil.saveJavaClass(file, generatedModule.getName() + IJavaCodeGenConstants.JAVA_FILE_EXTENSION, generatedModule.getContent());
+			JavaCodeGenUtil.saveJavaClass(outputFolder, generatedModule.getName() + IJavaCodeGenConstants.JAVA_FILE_EXTENSION, generatedModule.getContent());
 		}
 	}
 	
-	public void generateJavaSourceFiles(File file, List<GeneratedModule> generatedClasses)
+	public void generateJavaSourceFiles(File outputFolder, List<GeneratedModule> generatedClasses)
 	{
 		for (GeneratedModule classCg : generatedClasses)
 		{
-			generateJavaSourceFile(file, classCg);
+			generateJavaSourceFile(outputFolder, classCg);
 		}
 	}
 	

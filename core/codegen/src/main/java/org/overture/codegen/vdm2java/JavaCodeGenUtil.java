@@ -35,13 +35,14 @@ public class JavaCodeGenUtil
 {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
-	public static GeneratedData generateJavaFromFiles(List<File> files, IRSettings settings) throws AnalysisException, InvalidNamesException, UnsupportedModelingException
+	public static GeneratedData generateJavaFromFiles(List<File> files, IRSettings irSettings, JavaSettings javaSettings) throws AnalysisException, InvalidNamesException, UnsupportedModelingException
 	{
 		List<SClassDefinition> mergedParseList = consMergedParseList(files);
 		
 		JavaCodeGen vdmCodGen = new JavaCodeGen();
 		
-		vdmCodGen.setSettings(settings);
+		vdmCodGen.setSettings(irSettings);
+		vdmCodGen.setJavaSettings(javaSettings);
 
 		List<GeneratedModule> generatedModules = generateJavaFromVdm(mergedParseList, vdmCodGen);
 		
@@ -90,7 +91,7 @@ public class JavaCodeGenUtil
 		return vdmCodGen.generateJavaFromVdm(mergedParseLists);
 	}
 
-	public static Generated generateJavaFromExp(String exp, IRSettings settings) throws AnalysisException
+	public static Generated generateJavaFromExp(String exp, IRSettings irSettings, JavaSettings javaSettings) throws AnalysisException
 	{
 		TypeCheckResult<PExp> typeCheckResult = GeneralCodeGenUtils.validateExp(exp);
 		
@@ -101,7 +102,8 @@ public class JavaCodeGenUtil
 		}
 
 		JavaCodeGen vdmCodGen = new JavaCodeGen();
-		vdmCodGen.setSettings(settings);
+		vdmCodGen.setSettings(irSettings);
+		vdmCodGen.setJavaSettings(javaSettings);
 		
 		try
 		{
@@ -164,16 +166,10 @@ public class JavaCodeGenUtil
 		return buffer.toString();
 	}
 	
-	public static void generateJavaSourceFiles(File file, List<GeneratedModule> classes)
+	public static void generateJavaSourceFiles(File outputFolder, List<GeneratedModule> classes)
 	{
 		JavaCodeGen vdmCodGen = new JavaCodeGen();
-		vdmCodGen.generateJavaSourceFiles(file, classes);
-	}
-	
-	public static void generateJavaSourceFile(File file, GeneratedModule module)
-	{
-		JavaCodeGen vdmCodGen = new JavaCodeGen();
-		vdmCodGen.generateJavaSourceFile(file, module);
+		vdmCodGen.generateJavaSourceFiles(outputFolder, classes);
 	}
 	
 	public static String formatJavaCode(String code)

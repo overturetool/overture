@@ -31,8 +31,11 @@ public class JavaCodeGenMain
 		if (args.length <= 1)
 			Logger.getLog().println("Wrong input!");
 		
-		IRSettings settings = new IRSettings();
-		settings.setCharSeqAsString(false);
+		IRSettings irSettings = new IRSettings();
+		irSettings.setCharSeqAsString(false);
+		
+		JavaSettings javaSettings = new JavaSettings();
+		javaSettings.setDisableCloning(false);
 		
 		String setting = args[0];
 		if(setting.toLowerCase().equals("oo"))
@@ -44,7 +47,7 @@ public class JavaCodeGenMain
 				List<File> libFiles = GeneralUtils.getFiles(new File("src\\test\\resources\\lib"));
 				files.addAll(libFiles);
 				
-				GeneratedData data = JavaCodeGenUtil.generateJavaFromFiles(files, settings);
+				GeneratedData data = JavaCodeGenUtil.generateJavaFromFiles(files, irSettings, javaSettings);
 				List<GeneratedModule> generatedClasses = data.getClasses();
 				
 				for (GeneratedModule generatedClass : generatedClasses)
@@ -78,10 +81,10 @@ public class JavaCodeGenMain
 					Logger.getLog().println(quotes.getContent());
 				}
 
-				File file = new File("target" + File.separatorChar + "sources"
+				File outputFolder = new File("target" + File.separatorChar + "sources"
 						+ File.separatorChar);
 
-				JavaCodeGenUtil.generateJavaSourceFiles(file, generatedClasses);
+				JavaCodeGenUtil.generateJavaSourceFiles(outputFolder, generatedClasses);
 				
 			} catch (AnalysisException e)
 			{
@@ -103,7 +106,7 @@ public class JavaCodeGenMain
 		{
 			try
 			{
-				Generated generated = JavaCodeGenUtil.generateJavaFromExp(args[1], settings);
+				Generated generated = JavaCodeGenUtil.generateJavaFromExp(args[1], irSettings, javaSettings);
 				
 				if(generated.hasMergeErrors())
 				{
