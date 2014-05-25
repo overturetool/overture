@@ -13,6 +13,7 @@ import org.overture.ast.lex.Dialect;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralUtils;
+import org.overture.codegen.vdm2java.JavaSettings;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.parser.lex.LexException;
@@ -33,12 +34,20 @@ public abstract class CodeGenBaseTestCase extends BaseTestCase
 		super(file);
 	}
 	
-	public IRSettings getSettings()
+	public IRSettings getIrSettings()
 	{
-		IRSettings settings = new IRSettings();
-		settings.setCharSeqAsString(false);
+		IRSettings irSettings = new IRSettings();
+		irSettings.setCharSeqAsString(false);
 		
-		return settings;
+		return irSettings;
+	}
+	
+	public JavaSettings getJavaSettings()
+	{
+		JavaSettings javaSettings = new JavaSettings();
+		javaSettings.setDisableCloning(false);
+		
+		return javaSettings;
 	}
 
 	@Override

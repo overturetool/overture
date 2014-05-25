@@ -17,7 +17,7 @@ public class ConfiguredStringGenerationTestCase extends SpecificationTestCase
 	
 	
 	@Override
-	public IRSettings getSettings()
+	public IRSettings getIrSettings()
 	{
 		IRSettings settings = new IRSettings();
 		settings.setCharSeqAsString(true);
