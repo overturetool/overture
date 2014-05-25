@@ -73,5 +73,6 @@ public class Activator extends AbstractUIPlugin
 	protected void initializeDefaultPreferences(IPreferenceStore store) {
 		
 		store.setDefault(ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRINGS, ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRING_DEFAULT);
+		store.setDefault(ICodeGenConstants.DISABLE_CLONING, ICodeGenConstants.DISABLE_CLONING_DEFAULT);
 	}
 }

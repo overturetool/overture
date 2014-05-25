@@ -16,6 +16,8 @@ public class WorkbenchPreferencePageMain extends FieldEditorPreferencePage
 	protected void createFieldEditors()
 	{
 		addField(new BooleanFieldEditor(ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRINGS, "Generate character sequences as strings", getFieldEditorParent()));
+		addField(new BooleanFieldEditor(ICodeGenConstants.DISABLE_CLONING, "Disable cloning", getFieldEditorParent()));
+		
 	}
 
 	@Override
@@ -29,6 +31,7 @@ public class WorkbenchPreferencePageMain extends FieldEditorPreferencePage
 	{
 		IPreferenceStore store = getPreferenceStore();
 		store.setDefault(ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRINGS, ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRING_DEFAULT);
+		store.setDefault(ICodeGenConstants.DISABLE_CLONING, ICodeGenConstants.DISABLE_CLONING_DEFAULT);
 		super.performDefaults();
 	}
 
@@ -36,6 +39,7 @@ public class WorkbenchPreferencePageMain extends FieldEditorPreferencePage
 	{
 		IPreferenceStore store = getPreferenceStore();
 		store.setDefault(ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRINGS, ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRING_DEFAULT);
+		store.setDefault(ICodeGenConstants.DISABLE_CLONING, ICodeGenConstants.DISABLE_CLONING_DEFAULT);
 	}
 
 }

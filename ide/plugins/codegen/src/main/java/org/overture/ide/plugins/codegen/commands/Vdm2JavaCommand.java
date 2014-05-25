@@ -34,6 +34,7 @@ import org.overture.codegen.utils.GeneratedModule;
 import org.overture.codegen.vdm2java.IJavaCodeGenConstants;
 import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
+import org.overture.codegen.vdm2java.JavaSettings;
 import org.overture.config.Settings;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.resources.IVdmProject;
@@ -127,10 +128,16 @@ public class Vdm2JavaCommand extends AbstractHandler
 				IPreferenceStore preferences = Activator.getDefault().getPreferenceStore();
 				boolean generateCharSeqsAsStrings = preferences.getBoolean(ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRINGS);
 				
-				IRSettings settings = new IRSettings();
-				settings.setCharSeqAsString(generateCharSeqsAsStrings);
+				IRSettings irSettings = new IRSettings();
+				irSettings.setCharSeqAsString(generateCharSeqsAsStrings);
+
+				boolean disableCloning = preferences.getBoolean(ICodeGenConstants.DISABLE_CLONING);
 				
-				vdm2java.setSettings(settings);
+				JavaSettings javaSettings = new JavaSettings();
+				javaSettings.setDisableCloning(disableCloning);
+				
+				vdm2java.setSettings(irSettings);
+				vdm2java.setJavaSettings(javaSettings);
 
 				try
 				{
