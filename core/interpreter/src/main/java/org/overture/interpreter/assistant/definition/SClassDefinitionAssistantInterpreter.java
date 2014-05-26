@@ -127,7 +127,7 @@ public class SClassDefinitionAssistantInterpreter extends
 
 		return new MapValue(values);
 	}
-
+	//TODO:rewrite this???
 	public ObjectValue newInstance(SClassDefinition node,
 			PDefinition ctorDefinition, ValueList argvals, Context ctxt)
 			throws AnalysisException
@@ -648,15 +648,5 @@ public class SClassDefinitionAssistantInterpreter extends
 
 		return null;
 	}
-
-//	public String getName(SClassDefinition classdef)
-//	{
-//		if (classdef.getName() != null)
-//		{
-//			return classdef.getName().getName();
-//		}
-//
-//		return null;
-//	}
 
 }

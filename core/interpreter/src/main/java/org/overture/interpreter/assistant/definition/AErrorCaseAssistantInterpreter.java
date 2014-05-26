@@ -12,14 +12,4 @@ public class AErrorCaseAssistantInterpreter
 		this.af = af;
 	}
 
-//	public static PExp findExpression(AErrorCase err, int lineno)
-//	{
-//		PExp found = af.createPExpAssistant().findExpression(err.getLeft(), lineno);
-//		if (found != null)
-//		{
-//			return found;
-//		}
-//		return af.createPExpAssistant().findExpression(err.getRight(), lineno);
-//	}
-
 }
