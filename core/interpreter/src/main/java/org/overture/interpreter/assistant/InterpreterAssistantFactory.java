@@ -46,7 +46,6 @@ import org.overture.interpreter.assistant.statement.SSimpleBlockStmAssistantInte
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.interpreter.assistant.type.PTypeListAssistant;
 import org.overture.interpreter.assistant.type.SInvariantTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.SMapTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.traces.TraceNode;
@@ -851,10 +850,10 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 		return new SInvariantTypeAssistantInterpreter(this);
 	}
 
-	public SMapTypeAssistantInterpreter createSMapTypeAssistant()
-	{
-		return new SMapTypeAssistantInterpreter(this);
-	}
+//	public SMapTypeAssistantInterpreter createSMapTypeAssistant()
+//	{
+//		return new SMapTypeAssistantInterpreter(this);
+//	}
 
 	@Override
 	public IAnswer<LexNameList> getOldNameCollector()
