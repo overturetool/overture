@@ -70,4 +70,10 @@ public class AirportPPTest extends ProbConverterTestBase
 		testMethod("NumberWaiting");
 	}
 
+	@Override
+	protected String getPropertyId()
+	{
+		return "pp.airport";
+	}
+
 }
