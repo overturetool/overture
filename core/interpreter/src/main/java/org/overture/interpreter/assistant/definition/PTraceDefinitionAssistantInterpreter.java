@@ -28,24 +28,6 @@ public class PTraceDefinitionAssistantInterpreter extends
 		{
 			return null;
 		}
-//		if (term instanceof AInstanceTraceDefinition)
-//		{
-//			assert false : "this one is not in Nicks tree";
-//			return null;
-//		} else if (term instanceof ALetBeStBindingTraceDefinition)
-//		{
-//			return ALetBeStBindingTraceDefinitionAssistantInterpreter.expand((ALetBeStBindingTraceDefinition) term, ctxt);
-//		} else if (term instanceof ALetDefBindingTraceDefinition)
-//		{
-//			return ALetDefBindingTraceDefinitionAssistantInterpreter.expand((ALetDefBindingTraceDefinition) term, ctxt);
-//		} else if (term instanceof ARepeatTraceDefinition)
-//		{
-//			return ARepeatTraceDefinitionAssistantInterpreter.expand((ARepeatTraceDefinition) term, ctxt);
-//		} else
-//		{
-//		}
-//
-//		return null;
 	}
 
 }

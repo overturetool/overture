@@ -26,20 +26,6 @@ public class PTraceCoreDefinitionAssistantInterpreter
 		{
 			return null;
 		}
-//		if (core instanceof AApplyExpressionTraceCoreDefinition)
-//		{
-//			return AApplyExpressionTraceCoreDefinitionAssistantInterpreter.expand((AApplyExpressionTraceCoreDefinition) core, ctxt);
-//		} else if (core instanceof ABracketedExpressionTraceCoreDefinition)
-//		{
-//			return ABracketedExpressionTraceCoreDefinitionAssitantInterpreter.expand((ABracketedExpressionTraceCoreDefinition) core, ctxt);
-//		} else if (core instanceof AConcurrentExpressionTraceCoreDefinition)
-//		{
-//			return AConcurrentExpressionTraceCoreDefinitionAssistantInterpreter.expand((AConcurrentExpressionTraceCoreDefinition) core, ctxt);
-//		} else
-//		{
-//			assert false : "Should not happen";
-//			return null;
-//		}
 	}
 
 }
