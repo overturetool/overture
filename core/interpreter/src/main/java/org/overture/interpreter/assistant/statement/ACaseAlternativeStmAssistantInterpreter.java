@@ -3,7 +3,6 @@ package org.overture.interpreter.assistant.statement;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.statements.ACaseAlternativeStm;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
 import org.overture.interpreter.runtime.VdmRuntime;
