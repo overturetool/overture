@@ -27,7 +27,6 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.config.Settings;
-import org.overture.interpreter.assistant.type.SInvariantTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.ValueException;
@@ -45,7 +44,7 @@ public class InvariantValue extends ReferenceValue
 		super(value);
 		this.type = type;
 
-		invariant = SInvariantTypeAssistantInterpreter.getInvariant(type,ctxt);
+		invariant = ctxt.assistantFactory.createSInvariantTypeAssistant().getInvariant(type,ctxt);
 		checkInvariant(ctxt);
 	}
 

@@ -23,7 +23,7 @@ public class SInvariantTypeAssistantInterpreter
 		this.af = af;
 	}
 
-	public static FunctionValue getInvariant(SInvariantType type, Context ctxt)
+	public FunctionValue getInvariant(SInvariantType type, Context ctxt)
 	{
 		AExplicitFunctionDefinition invdef = type.getInvDef();
 		if (invdef != null)
@@ -40,21 +40,5 @@ public class SInvariantTypeAssistantInterpreter
 
 		return null;
 	}
-
-//	public static ValueList getAllValues(SInvariantType type, Context ctxt)
-//			throws AnalysisException
-//	{
-//		if (type instanceof ANamedInvariantType)
-//		{
-//			return ANamedInvariantTypeAssistantInterpreter.getAllValues((ANamedInvariantType) type, ctxt);
-//		} else if (type instanceof ARecordInvariantType)
-//		{
-//			return ARecordInvariantTypeAssistantInterpreter.getAllValues((ARecordInvariantType) type, ctxt);
-//		} else
-//		{
-//			throw new ValueException(4, "Cannot get bind values for type "
-//					+ type, ctxt);
-//		}
-//	}
 
 }
