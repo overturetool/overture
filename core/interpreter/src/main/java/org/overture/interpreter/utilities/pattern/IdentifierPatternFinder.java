@@ -74,10 +74,8 @@ public class IdentifierPatternFinder extends AnswerAdaptor<List<AIdentifierPatte
 	public List<AIdentifierPattern> caseAMapUnionPattern(AMapUnionPattern pattern)
 			throws AnalysisException
 	{
-		//return AMapUnionPatternAssistantInterpreter.findIdentifiers(pattern);
 		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
-		//list.addAll(PPatternAssistantInterpreter.findIdentifiers(pattern.getLeft()));
-		//list.addAll(PPatternAssistantInterpreter.findIdentifiers(pattern.getRight()));
+		
 		list.addAll(pattern.getLeft().apply(THIS));
 		list.addAll(pattern.getRight().apply(THIS));
 		return list;
@@ -87,12 +85,10 @@ public class IdentifierPatternFinder extends AnswerAdaptor<List<AIdentifierPatte
 	public List<AIdentifierPattern> caseARecordPattern(ARecordPattern pattern)
 			throws AnalysisException
 	{
-		//return ARecordPatternAssistantInterpreter.findIndentifiers(pattern);
 		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
 
 		for (PPattern p : pattern.getPlist())
 		{
-			//list.addAll(PPatternAssistantInterpreter.findIdentifiers(p));
 			list.addAll(p.apply(THIS));
 		}
 
@@ -103,12 +99,10 @@ public class IdentifierPatternFinder extends AnswerAdaptor<List<AIdentifierPatte
 	public List<AIdentifierPattern> caseASeqPattern(ASeqPattern pattern)
 			throws AnalysisException
 	{
-		//return ASeqPatternAssistantInterpreter.findIdentifiers(pattern);
 		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
 
 		for (PPattern p : pattern.getPlist())
 		{
-			//list.addAll(PPatternAssistantInterpreter.findIdentifiers(p));
 			list.addAll(p.apply(THIS));
 		}
 
@@ -119,12 +113,10 @@ public class IdentifierPatternFinder extends AnswerAdaptor<List<AIdentifierPatte
 	public List<AIdentifierPattern> caseASetPattern(ASetPattern pattern)
 			throws AnalysisException
 	{
-		//return ASetPatternAssistantInterpreter.findIdentifiers(pattern);
 		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
 
 		for (PPattern p : pattern.getPlist())
 		{
-			//list.addAll(PPatternAssistantInterpreter.findIdentifiers(p));
 			list.addAll(p.apply(THIS));
 		}
 
@@ -135,12 +127,10 @@ public class IdentifierPatternFinder extends AnswerAdaptor<List<AIdentifierPatte
 	public List<AIdentifierPattern> caseATuplePattern(ATuplePattern pattern)
 			throws AnalysisException
 	{
-		//return ATuplePatternAssistantInterpreter.findIdentifiers(pattern);
 		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
 
 		for (PPattern p : pattern.getPlist())
 		{
-			//list.addAll(PPatternAssistantInterpreter.findIdentifiers(p));
 			list.addAll(p.apply(THIS));
 		}
 
@@ -151,10 +141,8 @@ public class IdentifierPatternFinder extends AnswerAdaptor<List<AIdentifierPatte
 	public List<AIdentifierPattern> caseAUnionPattern(AUnionPattern pattern)
 			throws AnalysisException
 	{
-		//return AUnionPatternAssistantInterpreter.findIdentifiers(pattern);
 		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
-		//list.addAll(PPatternAssistantInterpreter.findIdentifiers(pattern.getLeft()));
-		//list.addAll(PPatternAssistantInterpreter.findIdentifiers(pattern.getRight()));
+		
 		list.addAll(pattern.getLeft().apply(THIS));
 		list.addAll(pattern.getRight().apply(THIS));
 		return list;
