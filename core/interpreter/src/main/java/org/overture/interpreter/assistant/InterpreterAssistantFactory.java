@@ -23,7 +23,6 @@ import org.overture.interpreter.assistant.definition.ASystemClassDefinitionAssis
 import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PDefinitionListAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PTraceCoreDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.PTraceDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AFieldExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AIsOfBaseClassExpAssistantInterpreter;
@@ -50,16 +49,15 @@ import org.overture.interpreter.assistant.type.SInvariantTypeAssistantInterprete
 import org.overture.interpreter.assistant.type.SMapTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
+import org.overture.interpreter.traces.TraceExpander;
 import org.overture.interpreter.traces.TraceNode;
 import org.overture.interpreter.utilities.OldNameCollector;
-import org.overture.interpreter.utilities.definition.CoreTraceExpander;
 import org.overture.interpreter.utilities.definition.DefinitionRunTimeChecker;
 import org.overture.interpreter.utilities.definition.DefinitionStatementFinder;
 import org.overture.interpreter.utilities.definition.DefinitionValueChecker;
 import org.overture.interpreter.utilities.definition.ExpressionFinder;
 import org.overture.interpreter.utilities.definition.InstanceVariableChecker;
 import org.overture.interpreter.utilities.definition.NamedValueLister;
-import org.overture.interpreter.utilities.definition.TermTraceExpander;
 import org.overture.interpreter.utilities.definition.TypeDefinitionChecker;
 import org.overture.interpreter.utilities.definition.ValuesDefinitionLocator;
 import org.overture.interpreter.utilities.expression.ExpExpressionFinder;
@@ -265,11 +263,6 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	public PTraceCoreDefinitionAssistantInterpreter createPTraceCoreDefinitionAssistant()
 	{
 		return new PTraceCoreDefinitionAssistantInterpreter(this);
-	}
-
-	public PTraceDefinitionAssistantInterpreter createPTraceDefinitionAssistant()
-	{
-		return new PTraceDefinitionAssistantInterpreter(this);
 	}
 
 	public SClassDefinitionAssistantInterpreter createSClassDefinitionAssistant()
@@ -948,15 +941,9 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	}
 	
 	@Override
-	public IQuestionAnswer<Context, TraceNode> getCoreTraceExpander()
+	public IQuestionAnswer<Context, TraceNode> getTraceExpander()
 	{
-		return new CoreTraceExpander(this);
-	}
-
-	@Override
-	public IQuestionAnswer<Context, TraceNode> getTermTraceExpander()
-	{
-		return new TermTraceExpander(this);
+		return new TraceExpander(this);
 	}
 
 	@Override

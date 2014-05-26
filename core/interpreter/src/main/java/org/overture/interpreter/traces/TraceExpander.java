@@ -1,13 +1,18 @@
-package org.overture.interpreter.utilities.definition;
+package org.overture.interpreter.traces;
 
 import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.traces.AApplyExpressionTraceCoreDefinition;
 import org.overture.ast.definitions.traces.ABracketedExpressionTraceCoreDefinition;
 import org.overture.ast.definitions.traces.AConcurrentExpressionTraceCoreDefinition;
+import org.overture.ast.definitions.traces.AInstanceTraceDefinition;
+import org.overture.ast.definitions.traces.ALetBeStBindingTraceDefinition;
+import org.overture.ast.definitions.traces.ALetDefBindingTraceDefinition;
+import org.overture.ast.definitions.traces.ARepeatTraceDefinition;
 import org.overture.ast.definitions.traces.ATraceDefinitionTerm;
 import org.overture.ast.definitions.traces.PTraceCoreDefinition;
 import org.overture.ast.definitions.traces.PTraceDefinition;
@@ -15,37 +20,41 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.LexIdentifierToken;
 import org.overture.ast.node.INode;
+import org.overture.ast.patterns.PMultipleBind;
+import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.ACallObjectStm;
 import org.overture.ast.statements.ACallStm;
 import org.overture.ast.statements.PStm;
 import org.overture.config.Settings;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ContextException;
+import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
-import org.overture.interpreter.traces.ConcurrentTraceNode;
-import org.overture.interpreter.traces.SequenceTraceNode;
-import org.overture.interpreter.traces.StatementTraceNode;
-import org.overture.interpreter.traces.TraceNode;
+import org.overture.interpreter.values.NameValuePair;
+import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.ObjectValue;
+import org.overture.interpreter.values.Quantifier;
+import org.overture.interpreter.values.QuantifierList;
 import org.overture.interpreter.values.Value;
+import org.overture.interpreter.values.ValueList;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.lex.LexTokenReader;
 import org.overture.parser.syntax.ExpressionReader;
 import org.overture.parser.syntax.ParserException;
 
-/***************************************
+/**
  * 
- * This method expands the trace of a core element in the tree. 
+ * This method expands the trace of a core element in the tree.
  * 
- * @author gkanos
+ * @author pvj
  *
- ****************************************/
-
-public class CoreTraceExpander extends QuestionAnswerAdaptor<Context, TraceNode>
+ */
+public class TraceExpander extends QuestionAnswerAdaptor<Context, TraceNode>
 {
 	protected IInterpreterAssistantFactory af;
 	
-	public CoreTraceExpander(IInterpreterAssistantFactory af)
+	public TraceExpander(IInterpreterAssistantFactory af)
 	{
 		this.af = af;
 	}
@@ -139,7 +148,7 @@ public class CoreTraceExpander extends QuestionAnswerAdaptor<Context, TraceNode>
 		for (ATraceDefinitionTerm term : core.getTerms())
 		{
 			//node.nodes.add(ATraceDefinitionTermAssistantInterpreter.expand(term, ctxt));
-			node.nodes.add(term.apply(THIS,ctxt));
+			node.nodes.add(term.apply(THIS,ctxt)); 
 		}
 
 		return node;
@@ -160,6 +169,22 @@ public class CoreTraceExpander extends QuestionAnswerAdaptor<Context, TraceNode>
 		}
 
 		return node;
+	}
+	
+	
+	@Override
+	public TraceNode caseATraceDefinitionTerm(ATraceDefinitionTerm node,
+			Context question) throws AnalysisException
+	{
+		AlternativeTraceNode newNode = new AlternativeTraceNode();
+
+		for (PTraceDefinition term : node.getList())
+		{
+			newNode.alternatives.add(term.apply(THIS, question));
+			//newNode.alternatives.add(PTraceDefinitionAssistantInterpreter.expand(term, ctxt));
+		}
+
+		return newNode;
 	}
 	
 	@Override
@@ -185,4 +210,121 @@ public class CoreTraceExpander extends QuestionAnswerAdaptor<Context, TraceNode>
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public TraceNode caseAInstanceTraceDefinition(
+			AInstanceTraceDefinition term, Context ctxt)
+			throws AnalysisException
+	{
+		assert false : "this one is not in Nicks tree";
+		return null;
+	}
+	
+	@Override
+	public TraceNode caseALetBeStBindingTraceDefinition(
+			ALetBeStBindingTraceDefinition term, Context ctxt)
+			throws AnalysisException
+	{
+		//return ALetBeStBindingTraceDefinitionAssistantInterpreter.expand(term, ctxt);
+		AlternativeTraceNode node = new AlternativeTraceNode();
+
+		try
+		{
+			QuantifierList quantifiers = new QuantifierList();
+
+			for (PMultipleBind mb : term.getDef().getBindings())
+			{
+				ValueList bvals = af.createPMultipleBindAssistant().getBindValues(mb, ctxt);
+
+				for (PPattern p : mb.getPlist())
+				{
+					Quantifier q = new Quantifier(p, bvals);
+					quantifiers.add(q);
+				}
+			}
+
+			quantifiers.init(ctxt, true);
+
+			if (quantifiers.finished()) // No entries at all
+			{
+				node.alternatives.add(new StatementTraceNode(AstFactory.newASkipStm(term.getLocation())));
+				return node;
+			}
+
+			while (quantifiers.hasNext())
+			{
+				Context evalContext = new Context(af, term.getLocation(), "TRACE", ctxt);
+				NameValuePairList nvpl = quantifiers.next();
+				boolean matches = true;
+
+				for (NameValuePair nvp : nvpl)
+				{
+					Value v = evalContext.get(nvp.name);
+
+					if (v == null)
+					{
+						evalContext.put(nvp.name, nvp.value);
+					} else
+					{
+						if (!v.equals(nvp.value))
+						{
+							matches = false;
+							break; // This quantifier set does not match
+						}
+					}
+				}
+
+				if (matches
+						&& (term.getStexp() == null || term.getStexp().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctxt)))
+				{
+					TraceNode exp = term.getBody().apply(THIS, evalContext);
+					exp.addVariables(new TraceVariableList(evalContext, af.createPDefinitionAssistant().getDefinitions(term.getDef())));
+					node.alternatives.add(exp);
+				}
+			}
+		} catch (AnalysisException e)
+		{
+			if (e instanceof ValueException)
+			{
+				throw new ContextException((ValueException) e, term.getLocation());
+			}
+		}
+
+		return node;
+	}
+	
+	@Override
+	public TraceNode caseALetDefBindingTraceDefinition(
+			ALetDefBindingTraceDefinition term, Context ctxt)
+			throws AnalysisException
+	{
+		//return ALetDefBindingTraceDefinitionAssistantInterpreter.expand(term, ctxt);
+		Context evalContext = new Context(af, term.getLocation(), "TRACE", ctxt);
+
+		for (PDefinition d : term.getLocalDefs())
+		{
+			evalContext.putList(af.createPDefinitionAssistant().getNamedValues(d, evalContext));
+		}
+
+		TraceNode node = term.getBody().apply(THIS, evalContext);
+		node.addVariables(new TraceVariableList(evalContext, term.getLocalDefs()));
+		return node;
+	}
+	
+	@Override
+	public TraceNode caseARepeatTraceDefinition(ARepeatTraceDefinition term,
+			Context ctxt) throws AnalysisException
+	{
+		//return ARepeatTraceDefinitionAssistantInterpreter.expand(term, ctxt);
+		TraceNode body = af.createPTraceCoreDefinitionAssistant().expand(term.getCore(), ctxt);
+
+		if (term.getFrom() == 1 && term.getTo() == 1)
+		{
+			return body;
+		} else
+		{
+			return new RepeatTraceNode(body, term.getFrom(), term.getTo());
+		}
+	}
+
 }
