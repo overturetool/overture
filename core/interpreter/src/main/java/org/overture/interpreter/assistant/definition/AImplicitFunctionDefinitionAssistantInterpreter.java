@@ -26,7 +26,7 @@ public class AImplicitFunctionDefinitionAssistantInterpreter extends
 		this.af = af;
 	}
 
-	public static FunctionValue getPolymorphicValue(IInterpreterAssistantFactory af,
+	public FunctionValue getPolymorphicValue(IInterpreterAssistantFactory af,
 			AImplicitFunctionDefinition impdef, PTypeList actualTypes)
 	{
 
@@ -55,7 +55,7 @@ public class AImplicitFunctionDefinitionAssistantInterpreter extends
 
 		if (impdef.getPredef() != null)
 		{
-			prefv = AExplicitFunctionDefinitionAssistantInterpreter.getPolymorphicValue(af,impdef.getPredef(), actualTypes);
+			prefv = af.createAExplicitFunctionDefinitionAssistant().getPolymorphicValue(af,impdef.getPredef(), actualTypes);
 		} else
 		{
 			prefv = null;
@@ -63,7 +63,7 @@ public class AImplicitFunctionDefinitionAssistantInterpreter extends
 
 		if (impdef.getPostdef() != null)
 		{
-			postfv = AExplicitFunctionDefinitionAssistantInterpreter.getPolymorphicValue(af,impdef.getPostdef(), actualTypes);
+			postfv = af.createAExplicitFunctionDefinitionAssistant().getPolymorphicValue(af,impdef.getPostdef(), actualTypes);
 		} else
 		{
 			postfv = null;

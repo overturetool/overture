@@ -134,13 +134,13 @@ public class SClassDefinitionAssistantInterpreter extends
 	{
 		if (node instanceof ABusClassDefinition)
 		{
-			return ABusClassDefinitionAssitantInterpreter.newInstance((ABusClassDefinition) node, ctorDefinition, argvals, ctxt);
+			return af.createABusClassDefinitionAssitant().newInstance((ABusClassDefinition) node, ctorDefinition, argvals, ctxt);
 		} else if (node instanceof AClassClassDefinition)
 		{
-			return AClassClassDefinitionAssistantInterpreter.newInstance((AClassClassDefinition) node, ctorDefinition, argvals, ctxt);
+			return af.createAClassClassDefinitionAssistant().newInstance((AClassClassDefinition) node, ctorDefinition, argvals, ctxt);
 		} else if (node instanceof ACpuClassDefinition)
 		{
-			return ACpuClassDefinitionAssistantInterpreter.newInstance((ACpuClassDefinition) node, ctorDefinition, argvals, ctxt);
+			return af.createACpuClassDefinitionAssistant().newInstance((ACpuClassDefinition) node, ctorDefinition, argvals, ctxt);
 		} else if (node instanceof ASystemClassDefinition)
 		{
 			VdmRuntimeError.abort(node.getLocation(), 4135, "Cannot instantiate system class "

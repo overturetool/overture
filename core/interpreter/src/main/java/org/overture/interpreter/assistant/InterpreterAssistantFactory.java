@@ -33,7 +33,6 @@ import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.assistant.module.AModuleModulesAssistantInterpreter;
 import org.overture.interpreter.assistant.module.ModuleListAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.AMapPatternMapletAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ANilPatternAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.AQuotePatternAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PMultipleBindAssistantInterpreter;
@@ -568,10 +567,10 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 //		return new AMapUnionPatternAssistantInterpreter(this);
 //	}
 
-	public ANilPatternAssistantInterpreter createANilPatternAssistant()
-	{
-		return new ANilPatternAssistantInterpreter(this);
-	}
+//	public ANilPatternAssistantInterpreter createANilPatternAssistant()
+//	{
+//		return new ANilPatternAssistantInterpreter(this);
+//	}
 
 	public AQuotePatternAssistantInterpreter createAQuotePatternAssistant()
 	{

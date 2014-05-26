@@ -31,7 +31,6 @@ import org.overture.interpreter.assistant.expression.APostOpExpAssistantInterpre
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.assistant.module.AModuleModulesAssistantInterpreter;
 import org.overture.interpreter.assistant.module.ModuleListAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ANilPatternAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.AQuotePatternAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PMultipleBindAssistantInterpreter;
@@ -251,7 +250,7 @@ public interface IInterpreterAssistantFactory extends
 //
 //	AMapUnionPatternAssistantInterpreter createAMapUnionPatternAssistant();
 
-	ANilPatternAssistantInterpreter createANilPatternAssistant();
+//	ANilPatternAssistantInterpreter createANilPatternAssistant();
 
 	AQuotePatternAssistantInterpreter createAQuotePatternAssistant();
 

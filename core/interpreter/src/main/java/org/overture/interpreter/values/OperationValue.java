@@ -56,10 +56,7 @@ import org.overture.ast.types.PType;
 import org.overture.ast.util.Utils;
 import org.overture.config.Settings;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.definition.AStateDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.messages.rtlog.RTExtendedTextMessage;
 import org.overture.interpreter.messages.rtlog.RTLogger;
@@ -283,7 +280,7 @@ public class OperationValue extends Value
 		if (state != null && stateName == null)
 		{
 			stateName = state.getName();
-			stateContext = AStateDefinitionAssistantInterpreter.getStateContext(state);
+			stateContext = ctxt.assistantFactory.createAStateDefinitionAssistant().getStateContext(state);
 		}
 
 		RootContext argContext = newContext(from, toTitle(), ctxt);

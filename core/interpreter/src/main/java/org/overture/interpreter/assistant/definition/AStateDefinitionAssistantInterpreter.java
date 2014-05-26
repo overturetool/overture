@@ -22,12 +22,12 @@ public class AStateDefinitionAssistantInterpreter extends
 		this.af = af;
 	}
 
-	public static Context getStateContext(AStateDefinition state)
+	public Context getStateContext(AStateDefinition state)
 	{
 		return VdmRuntime.getNodeState(state).moduleState.getContext();
 	}
 
-	public static void initState(AStateDefinition sdef,
+	public void initState(AStateDefinition sdef,
 			StateContext initialContext)
 	{
 		StateDefinitionRuntimeState state = new StateDefinitionRuntimeState();

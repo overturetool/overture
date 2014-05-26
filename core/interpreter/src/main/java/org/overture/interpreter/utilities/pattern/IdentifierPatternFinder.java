@@ -40,10 +40,9 @@ public class IdentifierPatternFinder extends AnswerAdaptor<List<AIdentifierPatte
 	public List<AIdentifierPattern> caseAConcatenationPattern(
 			AConcatenationPattern pattern) throws AnalysisException
 	{
-		//return AConcatenationPatternAssistantInterpreter.findIdentifiers(pattern);
+		
 		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
-		//list.addAll(PPatternAssistantInterpreter.findIdentifiers(pattern.getLeft()));
-		//list.addAll(PPatternAssistantInterpreter.findIdentifiers(pattern.getRight()));
+	
 		list.addAll(pattern.getLeft().apply(THIS));
 		list.addAll(pattern.getRight().apply(THIS));
 		return list;
@@ -53,7 +52,6 @@ public class IdentifierPatternFinder extends AnswerAdaptor<List<AIdentifierPatte
 	public List<AIdentifierPattern> caseAIdentifierPattern(
 			AIdentifierPattern pattern) throws AnalysisException
 	{
-		//return AIdentifierPatternAssistantInterpreter.findIdentifiers(pattern);
 		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
 		list.add(pattern);
 		return list;
@@ -62,7 +60,6 @@ public class IdentifierPatternFinder extends AnswerAdaptor<List<AIdentifierPatte
 	public List<AIdentifierPattern> caseAMapPattern(AMapPattern pattern)
 			throws AnalysisException
 	{
-		//return AMapPatternAssistantInterpreter.findIdentifiers(pattern);
 		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
 
 		for (AMapletPatternMaplet p : pattern.getMaplets())

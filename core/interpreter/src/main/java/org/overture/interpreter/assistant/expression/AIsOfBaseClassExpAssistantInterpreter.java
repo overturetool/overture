@@ -15,7 +15,7 @@ public class AIsOfBaseClassExpAssistantInterpreter// extends
 		this.af = af;
 	}
 
-	public static boolean search(AIsOfBaseClassExp node, ObjectValue from)
+	public boolean search(AIsOfBaseClassExp node, ObjectValue from)
 	{
 		if (from.type.getName().getName().equals(node.getBaseClass().getName())
 				&& from.superobjects.isEmpty())

@@ -50,7 +50,7 @@ public class ModuleListAssistantInterpreter
 
 			for (AModuleModules m : modules)
 			{
-				Set<ContextException> e = AModuleModulesAssistantInterpreter.initialize(m, initialContext);
+				Set<ContextException> e = af.createAModuleModulesAssistant().initialize(m, initialContext);
 
 				if (e != null)
 				{
@@ -94,7 +94,7 @@ public class ModuleListAssistantInterpreter
 
 		for (AModuleModules m : modules)
 		{
-			obligations.addAll(AModuleModulesAssistantInterpreter.getProofObligations(m));
+			obligations.addAll(af.createAModuleModulesAssistant().getProofObligations(m));
 		}
 
 		obligations.trivialCheck();

@@ -26,7 +26,7 @@ public class AExplicitFunctionDefinitionAssistantInterpreter extends
 		this.af = af;
 	}
 
-	public static FunctionValue getPolymorphicValue(IInterpreterAssistantFactory af,
+	public FunctionValue getPolymorphicValue(IInterpreterAssistantFactory af,
 			AExplicitFunctionDefinition expdef, PTypeList actualTypes)
 	{
 		AExplicitFunctionDefinitionRuntimeState state = VdmRuntime.getNodeState(expdef);
