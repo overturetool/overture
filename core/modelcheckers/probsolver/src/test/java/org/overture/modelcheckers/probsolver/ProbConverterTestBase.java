@@ -2,10 +2,12 @@ package org.overture.modelcheckers.probsolver;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Vector;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -16,6 +18,7 @@ import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
+import org.overture.ast.lex.LexLocation;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.APatternListTypePair;
@@ -26,18 +29,28 @@ import org.overture.config.Settings;
 import org.overture.modelcheckers.probsolver.AbstractProbSolverUtil.SolverException;
 import org.overture.modelcheckers.probsolver.visitors.VdmToBConverter;
 import org.overture.test.framework.ConditionalIgnoreMethodRule;
+import org.overture.test.framework.Properties;
+import org.overture.test.framework.TestResourcesResultTestCase4;
+import org.overture.test.framework.results.IMessage;
+import org.overture.test.framework.results.Message;
+import org.overture.test.framework.results.Result;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import de.be4.classicalb.core.parser.exceptions.BException;
 
-public class ProbConverterTestBase
+public abstract class ProbConverterTestBase extends TestResourcesResultTestCase4<String>
 {
-	private File file;
+	private static final String TESTS_TC_PROPERTY_PREFIX = "tests.probsolver.override.";
+
+	// private File file;
 
 	public ProbConverterTestBase(File file)
 	{
-		this.file = file;
+		super(file);
 		Assert.assertTrue("Input file does not exist", file.exists());
 	}
 
@@ -55,6 +68,7 @@ public class ProbConverterTestBase
 	protected void testMethod(String name) throws IOException,
 			AnalysisException, SolverException
 	{
+		configureResultGeneration();
 		try
 		{
 			INode result = null;
@@ -64,32 +78,52 @@ public class ProbConverterTestBase
 
 			Set<String> quotes = calculateQuotes();
 
-			if (def instanceof AImplicitOperationDefinition)
+			List<IMessage> errors = new Vector<IMessage>();
+			try
 			{
-				HashMap<String, String> emptyMap = new HashMap<String, String>();
-				result = ProbSolverUtil.solve(def.getName().getName(), (AImplicitOperationDefinition) def, emptyMap, emptyMap, getArgTypes(def), tokenType, quotes, new SolverConsole());
+				if (def instanceof AImplicitOperationDefinition)
+				{
+					HashMap<String, String> emptyMap = new HashMap<String, String>();
+					result = ProbSolverUtil.solve(def.getName().getName(), (AImplicitOperationDefinition) def, emptyMap, emptyMap, getArgTypes(def), tokenType, quotes, new SolverConsole());
 
-			} else
+				} else
+				{
+					AImplicitFunctionDefinition funDef = (AImplicitFunctionDefinition) def;
+					HashMap<String, String> emptyMap = new HashMap<String, String>();
+
+					result = ProbSolverUtil.solve(def.getName().getName(), funDef.getPostcondition(), funDef.getResult(), emptyMap, emptyMap, getArgTypes(def), tokenType, quotes, new SolverConsole());
+				}
+			} catch (SolverException e)
 			{
-				AImplicitFunctionDefinition funDef = (AImplicitFunctionDefinition) def;
-				HashMap<String, String> emptyMap = new HashMap<String, String>();
-				result = ProbSolverUtil.solve(def.getName().getName(), funDef.getPostcondition(), funDef.getResult(), emptyMap, emptyMap, getArgTypes(def), tokenType, quotes, new SolverConsole());
+				if (e.getCause() instanceof UnsupportedTranslationException)
+				{
+					// TODO we should change to the test framework here for better handling
+					if (!e.getCause().getMessage().startsWith("Not supported"))
+					{
+						errors.add(new Message(file.getName(), 0, 0, 0, e.getCause().getMessage()));
+					}
+				} // We just test the translation so some of the invocations may not be valid
+				else
+				{
+					// if (!(e.getMessage().startsWith("no solution found") ||
+					// e.getMessage().startsWith("cannot be solved")))
+					// {
+					// throw e;
+					// } else
+					// {
+					// throw e;
+					// }
+					errors.add(new Message(file.getName(), 0, 0, 0, e.getMessage()));
+				}
 			}
 			System.out.println("Result=" + result);
 
-		} catch (SolverException e)
+			compareResults(new Result<String>(("" + result).replaceAll("(?m)^\\s", ""), new Vector<IMessage>(), errors), file.getName()
+					+ ".result");
+
+		} finally
 		{
-			if (e.getCause() instanceof UnsupportedTranslationException)
-			{
-				//TODO we should change to the test framework here for better handling
-				if (!e.getCause().getMessage().startsWith("Not supported"))
-				{
-					Assert.fail(e.getCause().getMessage());
-				}
-			} else
-			{
-				throw e;
-			}
+			unconfigureResultGeneration();
 		}
 	}
 
@@ -230,9 +264,104 @@ public class ProbConverterTestBase
 				|| !typeCheckResult.parserResult.errors.isEmpty())
 		{
 			throw new AnalysisException("Unable to type check expression: "
-					+ file + "\n\n" + typeCheckResult.errors+ "\n\n" + typeCheckResult.parserResult.errors);
+					+ file + "\n\n" + typeCheckResult.errors + "\n\n"
+					+ typeCheckResult.parserResult.errors);
 		}
 
 		return typeCheckResult.result;
 	}
+
+	protected File getStorageLocation()
+	{
+		return file.getParentFile();
+	}
+
+	@Override
+	protected File createResultFile(String filename)
+	{
+		getStorageLocation().mkdirs();
+		return getResultFile(filename);
+	}
+
+	@Override
+	protected File getResultFile(String filename)
+	{
+		return new File(getStorageLocation(), filename);
+	}
+
+	public void encodeResult(String result, Document doc, Element resultElement)
+	{
+		Element message = doc.createElement("output");
+
+		message.setAttribute("object", result);
+		message.setAttribute("resource", file.getName());
+		message.setAttribute("value", result + "");
+
+		resultElement.appendChild(message);
+	}
+
+	public String decodeResult(Node node)
+	{
+
+		String result = null;
+		for (int i = 0; i < node.getChildNodes().getLength(); i++)
+		{
+			Node cn = node.getChildNodes().item(i);
+			if (cn.getNodeType() == Node.ELEMENT_NODE
+					&& cn.getNodeName().equals("output"))
+			{
+				String nodeType = cn.getAttributes().getNamedItem("object").getNodeValue();
+				if (nodeType != null && !nodeType.isEmpty())
+				{
+					try
+					{
+						result = nodeType;
+					} catch (Exception e)
+					{
+						Assert.fail("Not able to decode object stored result");
+					}
+				}
+			}
+		}
+		return result;
+	}
+
+	@Override
+	protected boolean assertEqualResults(String expected, String actual,
+			PrintWriter out)
+	{
+		// FIXME: check is not sufficient
+		if (expected == null)
+		{
+			assert false : "No result file";
+		}
+		// return expected.size() == actual.size();
+		if (!expected.equals(actual))
+		{
+			out.println("Expected result does not match actual:\n\tExpected:\n\t"
+					+ expected + "\n\tActual:\n\t" + actual);
+			return false;
+		}
+		return true;
+	}
+
+	protected void configureResultGeneration()
+	{
+		LexLocation.absoluteToStringLocation = false;
+		if (System.getProperty(TESTS_TC_PROPERTY_PREFIX + "all") != null
+				|| getPropertyId() != null
+				&& System.getProperty(TESTS_TC_PROPERTY_PREFIX
+						+ getPropertyId()) != null)
+		{
+			Properties.recordTestResults = true;
+		}
+
+	}
+
+	protected void unconfigureResultGeneration()
+	{
+		Properties.recordTestResults = false;
+	}
+
+	protected abstract String getPropertyId();
 }

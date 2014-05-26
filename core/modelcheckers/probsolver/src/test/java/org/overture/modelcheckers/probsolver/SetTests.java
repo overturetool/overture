@@ -29,4 +29,10 @@ public class SetTests extends AllTest
 
 		return tests;
 	}
+	
+	@Override
+	protected String getPropertyId()
+	{
+		return "set";
+	}
 }

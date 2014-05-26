@@ -42,8 +42,8 @@ public abstract class AllTest extends ProbConverterTestBase
 	//
 	// return tests;
 	// }
-	
-	final static String[] EMPTY_FILTER = new String[]{};
+
+	final static String[] EMPTY_FILTER = new String[] {};
 
 	protected static Collection<Object[]> getTests(File root)
 	{
@@ -53,7 +53,7 @@ public abstract class AllTest extends ProbConverterTestBase
 	protected static Collection<Object[]> getTests(File root, String... filter)
 	{
 
-		Set<String> filterSet =new HashSet<String>( Arrays.asList(filter));
+		Set<String> filterSet = new HashSet<String>(Arrays.asList(filter));
 		Collection<Object[]> tests = new LinkedList<Object[]>();
 		if (root.isFile())
 		{
@@ -78,7 +78,7 @@ public abstract class AllTest extends ProbConverterTestBase
 		{
 			for (File f : root.listFiles())
 			{
-				tests.addAll(getTests(f,filter));
+				tests.addAll(getTests(f, filter));
 			}
 		}
 		return tests;
@@ -181,16 +181,6 @@ public abstract class AllTest extends ProbConverterTestBase
 		System.out.println("==============================================================\n\t"
 				+ name
 				+ "\n==============================================================");
-		try
-		{
-			testMethod(operationName);
-		} catch (SolverException e)
-		{
-			// We just test the translation so some of the invocations may not be valid
-			if (!(e.getMessage().startsWith("no solution found") || e.getMessage().startsWith("cannot be solved")))
-			{
-				throw e;
-			}
-		}
+		testMethod(operationName);
 	}
 }
