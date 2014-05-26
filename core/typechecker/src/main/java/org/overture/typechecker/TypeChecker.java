@@ -51,7 +51,7 @@ abstract public class TypeChecker
 	private static List<VDMError> errors = new Vector<VDMError>();
 	private static List<VDMWarning> warnings = new Vector<VDMWarning>();
 	private static VDMMessage lastMessage = null;
-	private static final int MAX = 100;
+	private static final int MAX = 200;
 
 	final protected ITypeCheckerAssistantFactory assistantFactory;
 

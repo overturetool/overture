@@ -1,0 +1,13 @@
+class Entry
+
+operations 
+
+public static Run : () ==> ?
+Run () ==
+	Test();
+
+public static Test : () ==> seq of nat 
+Test () ==
+	return [ x * 2 | x in set elems [1,2,3] & x < 3 ];
+
+end Entry

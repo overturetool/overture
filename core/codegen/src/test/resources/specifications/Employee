@@ -1,0 +1,130 @@
+
+
+class Employee
+	
+	instance variables
+	
+	--private a : seq of nat :=  [1, 2];
+	
+	operations
+	
+	public getSalary : () ==> real
+	getSalary () == is subclass responsibility;
+
+
+end Employee
+
+
+class HourlyPaidEmployee is subclass of Employee
+
+	instance variables
+	
+	public hours : real;
+	private rate: real;
+	
+	operations
+	
+		public HourlyPaidEmployee: real * real ==> HourlyPaidEmployee
+		HourlyPaidEmployee(pHours, pRate) ==
+		(
+			hours := pHours;
+			rate := pRate;
+		);
+	
+		public getSalary: () ==> real
+		getSalary() == return hours * rate;
+		
+		
+	public SetRate: real ==> ()
+	SetRate (pRate) ==
+		if(pRate > 150) then
+			rate := 150
+		elseif (pRate < 0) then
+			rate := 0
+		else
+			rate := pRate;
+		
+
+end HourlyPaidEmployee
+
+
+class FixedSalaryEmployee is subclass of Employee
+
+	instance variables
+	
+	private fixedSalary : real;
+	
+	operations
+	
+	public FixedSalaryEmployee: real ==> FixedSalaryEmployee
+	FixedSalaryEmployee(pFixedSalary) ==
+		fixedSalary := pFixedSalary;
+		
+		
+	public getSalary: () ==> real
+	getSalary() == return fixedSalary;
+		
+
+end FixedSalaryEmployee
+
+class Company
+
+instance variables 
+
+	private employees : seq of Employee;
+	
+operations
+	
+	public Company: () ==> Company
+	Company() ==
+	(
+		employees := [];
+	);
+	
+	public op1 : () ==> ()
+	op1 () == let x = len employees, y = employees, q = hd employees in skip;
+	
+	public calculateSalary: () ==> real
+	calculateSalary() == return start_calc(0, employees);
+	
+	private start_calc: real * seq of Employee ==> real
+	start_calc(sum, emps) ==
+		if len emps = 0 then
+			return sum
+		else
+			return start_calc(sum + (hd emps).getSalary(), tl emps);
+	
+	private not_used: real * nat1 * nat * char * bool ==> real
+	not_used(r, n1, n, c, b) ==
+		return 2.1;
+	
+			
+	public addEmp : Employee ==> Company
+	addEmp (emp) ==
+	(
+		employees := employees ^ [emp];
+		return self;
+	);
+		 	
+	
+
+end Company
+
+
+class World
+
+	operations
+	
+	public run : () ==> real
+	run () == 
+		let emp1 = new HourlyPaidEmployee(120.0, 100),
+			emp2 = new FixedSalaryEmployee(10000),
+			emp3 = new FixedSalaryEmployee(5000),
+			emp4 = new HourlyPaidEmployee(100.0, 100),
+			--Result: 37000
+			company = new Company().addEmp(emp1).addEmp(emp2).addEmp(emp3).addEmp(emp4)
+		in	
+			return company.calculateSalary();
+		
+
+end World

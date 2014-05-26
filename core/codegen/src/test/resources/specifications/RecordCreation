@@ -1,0 +1,17 @@
+class Records
+
+instance variables
+	v : Vector2D := mk_Vector2D(1,1)
+
+functions
+
+public f :  () -> Vector2D
+f () == mk_Vector2D(1,2);
+
+types
+
+  public Vector2D ::
+    x : nat
+    y : nat;
+    
+end Records

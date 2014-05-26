@@ -1,0 +1,48 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        A a = new A(MapUtil.map(new Maplet(1L, true)));
+        a.x.put(10L, false);
+
+        return a.x.clone();
+    }
+
+    public static class A implements Record {
+        public VDMMap x;
+
+        public A(VDMMap _x) {
+            x = (_x != null) ? _x.clone() : null;
+        }
+
+        public boolean equals(Object obj) {
+            if (!(obj instanceof A)) {
+                return false;
+            }
+
+            A other = ((A) obj);
+
+            return MapUtil.equals(x, other.x);
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(x);
+        }
+
+        public A clone() {
+            return new A(x);
+        }
+
+        public String toString() {
+            return Utils.recordToString(this, x);
+        }
+    }
+}
+
+##########

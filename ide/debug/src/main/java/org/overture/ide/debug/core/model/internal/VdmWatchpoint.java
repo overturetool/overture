@@ -92,13 +92,13 @@ public class VdmWatchpoint extends VdmLineBreakpoint implements IVdmWatchpoint
 
 	public boolean isAccess() throws CoreException
 	{
-		return (new Boolean(this.getMarker().getAttribute(ACCESS, "true"))) //$NON-NLS-1$
+		return new Boolean(this.getMarker().getAttribute(ACCESS, "true")) //$NON-NLS-1$
 		.booleanValue();
 	}
 
 	public boolean isModification() throws CoreException
 	{
-		return (new Boolean(this.getMarker().getAttribute(MODIFICATION, "true"))) //$NON-NLS-1$
+		return new Boolean(this.getMarker().getAttribute(MODIFICATION, "true")) //$NON-NLS-1$
 		.booleanValue();
 	}
 

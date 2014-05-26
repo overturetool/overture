@@ -65,6 +65,7 @@ public class StateInvariantObligation extends ProofObligation
 			AEqualsDefinition local = new AEqualsDefinition();
 			local.setPattern(def.getInvPattern().clone());
 			local.setName(def.getName().clone());
+			local.setTest(getVarExp(def.getName()));
 			invDefs.add(local);
 			letExp.setLocalDefs(invDefs);
 			letExp.setExpression(def.getInvExpression().clone());

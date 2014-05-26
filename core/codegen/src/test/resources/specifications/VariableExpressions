@@ -1,0 +1,29 @@
+class A
+
+instance variables
+
+private n : nat := 2;
+    
+operations 
+
+public getN : () ==> nat
+getN () == return n;
+
+public o1 : () ==> nat
+o1 () == return A`f() + A`g(3) + h(1,2) + op2(3) + A`op2(3); 
+
+public static op2 : nat ==> nat
+op2 (x) == return 2 + x; 
+
+functions
+
+public f :  () -> nat
+f () == 2;
+
+public g :  nat -> nat
+g (x) == x;
+
+public h :  nat * nat -> nat
+h (x, y) == x + y;
+    
+end A

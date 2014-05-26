@@ -83,10 +83,10 @@ import org.overture.interpreter.assistant.pattern.ASetBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PMultipleBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.type.ARecordInvariantTypeAssistantInterpreter;
 import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.runtime.ClassContext;
 import org.overture.interpreter.runtime.Context;
+import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.PatternMatchException;
 import org.overture.interpreter.runtime.ValueException;
@@ -657,7 +657,15 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 				v.convertValueTo(node.getBasicType(), ctxt);
 				return new BooleanValue(true);
 			}
-		} catch (ValueException ex)
+		}
+		catch (ContextException ex)
+		{
+			if (ex.number != 4060)	// Type invariant violation
+			{
+				throw ex;	// Otherwise return false
+			}
+		}
+		catch (ValueException ex)
 		{
 			// return false...
 		}

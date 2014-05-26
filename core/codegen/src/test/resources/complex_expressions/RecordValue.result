@@ -1,0 +1,64 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class A {
+    public A() {
+    }
+
+    public Node op() {
+        return new Node(1L,
+            new Node(2L, new Node(3L, new Node(4L, new Node(5L, null)))));
+    }
+
+    public static class Node implements Record {
+        public Number e;
+        public Node r;
+
+        public Node(Number _e, Node _r) {
+            e = _e;
+            r = (_r != null) ? _r.clone() : null;
+        }
+
+        public boolean equals(Object obj) {
+            if (!(obj instanceof Node)) {
+                return false;
+            }
+
+            Node other = ((Node) obj);
+
+            return (e.longValue() == other.e.longValue()) &&
+            (r.equals(other.r));
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(e, r);
+        }
+
+        public Node clone() {
+            return new Node(e, r);
+        }
+
+        public String toString() {
+            return Utils.recordToString(this, e, r);
+        }
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        return new A().op();
+    }
+}
+
+##########

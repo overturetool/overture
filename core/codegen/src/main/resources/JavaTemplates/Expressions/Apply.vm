@@ -1,0 +1,30 @@
+##Example1: t.getX(1, 1)
+##Example2: [1,2](1)
+##Example3: "kitten"(3)
+##
+#set( $root = $JavaFormat.format($node.getRoot()) )
+#set( $args = $JavaFormat.formatArgs($node.getArgs()) )
+##
+#if ($JavaFormat.isSeqType($node.getRoot()) && $node.getArgs().size() == 1)
+	#set( $index = $JavaFormat.format($node.getArgs().get(0)))
+	#set( $clone = "")
+	#if ($JavaFormat.shouldClone($node))
+		#set( $clone = ".clone()")
+	#end
+	(($JavaFormat.format($node.getType())) ${root}.get(Utils.index($index)))$clone
+##
+#elseif ($JavaFormat.isMapType($node.getRoot()) && $node.getArgs().size() == 1)
+	#set( $key = $JavaFormat.format($node.getArgs().get(0)))
+	#set( $clone = "")
+	#if ($JavaFormat.shouldClone($node))
+		#set( $clone = ".clone()")
+	#end
+	(($JavaFormat.format($node.getType())) ${root}.get(${key}))$clone
+##
+#elseif ($JavaFormat.isCharType($node.getType()))
+	#set( $index = $JavaFormat.format($node.getArgs().get(0)))
+	${root}.charAt(Utils.index($index))##
+##
+#else
+	${root}($args)##
+#end

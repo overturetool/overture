@@ -25,7 +25,8 @@ import org.overture.ide.debug.core.dbgp.internal.IDbgpTermination;
 import org.overture.ide.debug.core.dbgp.internal.managers.IDbgpStreamManager;
 
 public interface IDbgpSession extends IDbgpCommands, IDbgpTermination,
-		IDebugConfigurable {
+		IDebugConfigurable
+{
 	IDbgpSessionInfo getInfo();
 
 	IDbgpStreamManager getStreamManager();
@@ -38,6 +39,6 @@ public interface IDbgpSession extends IDbgpCommands, IDbgpTermination,
 	void removeRawListenr(IDbgpRawListener listener);
 
 	IDbgpCommunicator getCommunicator();
-	
+
 	IDbgpOvertureCommands getOvertureCommands();
 }

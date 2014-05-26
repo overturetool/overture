@@ -41,6 +41,20 @@ public class QuoteRule implements IRule
 		int c = -1;
 
 		int readCount = 0;
+		
+		
+		c = scanner.read();
+		if (c == EOF)
+		{
+			scanner.unread();
+			return Token.EOF;
+		}else if(c != '<')
+		{
+			scanner.unread();
+			return Token.UNDEFINED;
+		}
+		
+		
 		while (true)
 		{
 			c = scanner.read();
@@ -51,7 +65,7 @@ public class QuoteRule implements IRule
 			}
 			sb.append((char) c);
 			readCount++;
-			if (!Character.isJavaIdentifierStart(c)&& c!='<' && c!='>')
+			if (!Character.isJavaIdentifierStart(c)&& c!='<' && c!='>' && !Character.isDigit(c))
 			{
 
 				for (int j = 0; j < readCount; j++)

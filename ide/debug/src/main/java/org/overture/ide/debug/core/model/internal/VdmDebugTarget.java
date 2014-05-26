@@ -38,8 +38,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
@@ -81,10 +79,10 @@ import org.overture.ide.debug.utils.CharOperation;
 public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 		IVdmThreadManagerListener, IStepFilters
 {
-//	/**
-//	 * @deprecated
-//	 * @see #getVdmProject()
-//	 */
+	// /**
+	// * @deprecated
+	// * @see #getVdmProject()
+	// */
 	//	private static final String LAUNCH_CONFIGURATION_ATTR_PROJECT = "project"; //$NON-NLS-1$
 
 	private static final int THREAD_TERMINATION_TIMEOUT = 5000; // 5 seconds
@@ -275,8 +273,8 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 		// return true;
 		synchronized (processLock)
 		{
-			return threadManager.canTerminate()
-					|| (process != null && process.canTerminate());
+			return threadManager.canTerminate() || process != null
+					&& process.canTerminate();
 		}
 	}
 
@@ -290,8 +288,8 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 			try
 			{
 				// Handle the case where the debug process died because of an internal error etc.
-				res = res
-						|| (process != null && process.isTerminated() && process.getExitValue() > 0);
+				res = res || process != null && process.isTerminated()
+						&& process.getExitValue() > 0;
 			} catch (DebugException e)
 			{
 
@@ -772,7 +770,9 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 						{
 							v = page.showView(IDebugConstants.LogViewId);
 							if (v instanceof LogView)
-								logView = ((LogView) v);
+							{
+								logView = (LogView) v;
+							}
 						} catch (PartInitException e)
 						{
 							// TODO Auto-generated catch block
@@ -844,14 +844,8 @@ public class VdmDebugTarget extends VdmDebugElement implements IVdmDebugTarget,
 
 				dbgpSession.getOvertureCommands().writeCompleteCoverage(coverageDir);
 
-				
-				IContentType externalContentType = Platform.getContentTypeManager().getContentType("org.overture.ide.vdm.external.content-type");
 				for (IVdmSourceUnit source : this.vdmProject.getSpecFiles())
 				{
-					if(externalContentType.isAssociatedWith(source.getFile().getName()))
-					{
-						continue;
-					}
 					String name = source.getSystemFile().getName() + "cov";
 
 					IProject p = (IProject) vdmProject.getAdapter(IProject.class);

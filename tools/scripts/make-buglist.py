@@ -21,7 +21,7 @@ issues = loads(issues_json)
 
 issues.sort(None, lambda issue:issue['number'], True)
 for issue in issues:
-    print "[#%(number)d %(title)s](%(url)s)" % issue
+    print "* [#%(number)d %(title)s](%(url)s)" % issue
 
 
 

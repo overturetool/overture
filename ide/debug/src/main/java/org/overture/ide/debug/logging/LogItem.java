@@ -51,10 +51,10 @@ public class LogItem
 		this.isError = false;
 	}
 
-	public LogItem(String sessionId, String type, String threadId, Boolean output, XMLNode node,
-			Boolean isError)
+	public LogItem(String sessionId, String type, String threadId,
+			Boolean output, XMLNode node, Boolean isError)
 	{
-		this.sessionId= sessionId;
+		this.sessionId = sessionId;
 		this.type = type;
 		this.threadId = threadId;
 		this.output = output;
@@ -63,9 +63,10 @@ public class LogItem
 		this.isError = isError;
 	}
 
-	public LogItem(String sessionId, String type, String threadId, Boolean output, String data)
+	public LogItem(String sessionId, String type, String threadId,
+			Boolean output, String data)
 	{
-		this.sessionId= sessionId;
+		this.sessionId = sessionId;
 		this.type = type;
 		this.threadId = threadId;
 		this.output = output;
@@ -74,10 +75,10 @@ public class LogItem
 		this.isError = false;
 	}
 
-	public LogItem(String sessionId, String type, String threadId, Boolean output, String data,
-			Boolean isError)
+	public LogItem(String sessionId, String type, String threadId,
+			Boolean output, String data, Boolean isError)
 	{
-		this.sessionId= sessionId;
+		this.sessionId = sessionId;
 		this.type = type;
 		this.threadId = threadId;
 		this.output = output;
@@ -87,10 +88,11 @@ public class LogItem
 	}
 
 	public LogItem(IDbgpSessionInfo info, String type, boolean output,
-			String string2) {
+			String string2)
+	{
 		this.sessionId = info.getSession();
 		this.type = type;
-		this.threadId = (info.getThreadId().split(" ")[0]);
+		this.threadId = info.getThreadId().split(" ")[0];
 		this.output = output;
 		this.data = string2;
 		this.isError = false;

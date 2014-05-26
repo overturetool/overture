@@ -1,0 +1,9 @@
+class Entry
+
+operations 
+
+public static Run : () ==> ?
+Run () ==
+	return if forall x in set {5} & x > 2 then 42 else 49;
+
+end Entry

@@ -20,7 +20,8 @@ package org.overture.ide.debug.core.dbgp.internal.managers;
 
 import org.overture.ide.debug.core.dbgp.IDbgpStreamListener;
 
-public interface IDbgpStreamManager {
+public interface IDbgpStreamManager
+{
 	void addListener(IDbgpStreamListener listener);
 
 	void removeListener(IDbgpStreamListener listener);

@@ -1,13 +1,13 @@
-The purpose of this VDM++ model is to analyse the rules governing for
+ï»¿The purpose of this VDM++ model is to analyse the rules governing for
 distrubuting parcels with different kinds of goods is a
-warehouse. This model is made by Bjarke Møholt as a small mini-project
+warehouse. This model is made by Bjarke MÃ¸holt as a small mini-project
 in a course on "Modelling of Mission Critical Systems" (see
 https://services.brics.dk/java/courseadmin/TOMoMi/pages/Modelling+of+Mission+Critical+Systems).
 
 #******************************************************
 #  AUTOMATED TEST SETTINGS
 #------------------------------------------------------
-#AUTHOR= Bjarke Møholt
+#AUTHOR= Bjarke MÃ¸holt
 #LIB= IO
 #LANGUAGE_VERSION=classic
 #INV_CHECKS=true

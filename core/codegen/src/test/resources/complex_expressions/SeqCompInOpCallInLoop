@@ -1,0 +1,23 @@
+class Entry
+
+operations 
+
+public static Run : () ==> ?
+Run () ==
+	Test();
+
+public static pick : () ==> bool 
+pick () == return true;
+
+public static Op : () ==> seq of nat 
+Op () == return [ x * 2 | x in set elems [1,2,3] & pick() ];
+
+public static Test : () ==> nat 
+Test () ==
+(
+	dcl sum : nat := 0;
+	for e in Op() do sum := sum + e;
+	return sum;
+)
+
+end Entry

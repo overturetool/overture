@@ -26,7 +26,8 @@ import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
 import org.overture.ide.debug.core.dbgp.internal.utils.DbgpXmlEntityParser;
 
 public class DbgpContinuationCommands extends DbgpBaseCommands implements
-		IDbgpContinuationCommands {
+		IDbgpContinuationCommands
+{
 	private static final String RUN_COMMAND = "run"; //$NON-NLS-1$
 
 	private static final String STEP_INTO_COMMAND = "step_into"; //$NON-NLS-1$
@@ -39,36 +40,43 @@ public class DbgpContinuationCommands extends DbgpBaseCommands implements
 
 	private static final String DETACH_COMMAND = "detach"; //$NON-NLS-1$
 
-	protected IDbgpStatus execCommand(String command) throws DbgpException {
-		return DbgpXmlEntityParser
-				.parseStatus(communicate(createRequest(command)));
+	protected IDbgpStatus execCommand(String command) throws DbgpException
+	{
+		return DbgpXmlEntityParser.parseStatus(communicate(createRequest(command)));
 	}
 
-	public DbgpContinuationCommands(IDbgpCommunicator communicator) {
+	public DbgpContinuationCommands(IDbgpCommunicator communicator)
+	{
 		super(communicator);
 	}
 
-	public IDbgpStatus run() throws DbgpException {
+	public IDbgpStatus run() throws DbgpException
+	{
 		return execCommand(RUN_COMMAND);
 	}
 
-	public IDbgpStatus stepInto() throws DbgpException {
+	public IDbgpStatus stepInto() throws DbgpException
+	{
 		return execCommand(STEP_INTO_COMMAND);
 	}
 
-	public IDbgpStatus stepOut() throws DbgpException {
+	public IDbgpStatus stepOut() throws DbgpException
+	{
 		return execCommand(STEP_OUT_COMMAND);
 	}
 
-	public IDbgpStatus stepOver() throws DbgpException {
+	public IDbgpStatus stepOver() throws DbgpException
+	{
 		return execCommand(STEP_OVER_COMMAND);
 	}
 
-	public IDbgpStatus stop() throws DbgpException {
+	public IDbgpStatus stop() throws DbgpException
+	{
 		return execCommand(STOP_COMMAND);
 	}
 
-	public IDbgpStatus detach() throws DbgpException {
+	public IDbgpStatus detach() throws DbgpException
+	{
 		return execCommand(DETACH_COMMAND);
 	}
 }

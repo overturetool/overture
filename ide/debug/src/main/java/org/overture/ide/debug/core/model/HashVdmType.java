@@ -24,16 +24,19 @@ import org.eclipse.debug.core.model.IVariable;
 /**
  * Represents a 'hash' script type
  */
-public class HashVdmType extends CollectionVdmType {
+public class HashVdmType extends CollectionVdmType
+{
 
 	private static String HASH = "map"; //$NON-NLS-1$
 
-	public HashVdmType() {
+	public HashVdmType()
+	{
 		super(HASH);
 	}
 
 	protected String buildDetailString(IVariable variable)
-			throws DebugException {
+			throws DebugException
+	{
 		StringBuffer sb = new StringBuffer();
 
 		sb.append(getVariableName(variable));
@@ -43,28 +46,30 @@ public class HashVdmType extends CollectionVdmType {
 		return sb.toString();
 	}
 
-	protected char getCloseBrace() {
+	protected char getCloseBrace()
+	{
 		return '}';
 	}
 
-	protected char getOpenBrace() {
+	protected char getOpenBrace()
+	{
 		return '{';
 	}
 
 	/**
 	 * Returns the variable name (key) for the hash element.
-	 * 
 	 * <p>
-	 * Subclasses may override this method if they need to process the variable
-	 * name before it is displayed.
+	 * Subclasses may override this method if they need to process the variable name before it is displayed.
 	 * </p>
 	 */
-	protected String getVariableName(IVariable variable) throws DebugException {
+	protected String getVariableName(IVariable variable) throws DebugException
+	{
 		return variable.getName();
 	}
-	
+
 	@Override
-	public String formatValue(IVdmValue value) {
+	public String formatValue(IVdmValue value)
+	{
 		return super.formatValue(value);
 	}
 }

@@ -322,7 +322,9 @@ public class VdmDebugPlugin extends AbstractUIPlugin
 		Display display;
 		display = Display.getCurrent();
 		if (display == null)
+		{
 			display = Display.getDefault();
+		}
 		return display;
 	}
 

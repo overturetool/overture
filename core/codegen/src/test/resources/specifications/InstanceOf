@@ -1,0 +1,11 @@
+class A
+
+operations
+
+public op : () ==> bool
+op () ==
+let a = nil
+in
+	return isofclass(A, a);						
+		
+end A

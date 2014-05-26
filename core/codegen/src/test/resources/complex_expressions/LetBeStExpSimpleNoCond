@@ -1,0 +1,14 @@
+class Entry
+
+operations 
+
+public static Run : () ==> nat 
+Run () ==
+	return f();
+	
+functions
+
+public f :  () -> nat
+f () == let x in set {42} in x;
+	 
+end Entry

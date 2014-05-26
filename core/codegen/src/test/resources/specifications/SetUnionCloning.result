@@ -1,0 +1,14 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class A {
+    private static final VDMSet a = SetUtil.set(1L, 2L, 3L);
+    private static final VDMSet x = SetUtil.union(a.clone(), a.clone());
+
+    public A() {
+    }
+}
+
+##########

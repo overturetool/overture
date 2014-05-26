@@ -1,0 +1,63 @@
+class X
+
+values 
+
+public xs = {1 |-> new X()};
+public ys = {1 |-> {1 |-> new X()}};
+public zs = {1 |-> {1 |-> {1 |-> new X()}}};
+
+functions
+
+public f :  () -> nat
+f () == 1;
+
+operations 
+	
+public m1 : () ==> nat
+m1 () == xs(1).f();
+
+public m2 : () ==> nat
+m2 () == ys(1)(1).f();
+
+public m3 : () ==> nat
+m3 () == zs(1)(1)(1).f();
+
+public m4 : () ==> nat
+m4 () ==
+	new X().f();
+
+public m5 : () ==> nat
+m5 () ==
+(
+	map_xs(1,2)(1).f();
+);
+
+public m6 : () ==> nat
+m6 () == map_ys(1,2)(1)(1).f();
+
+public m7 : () ==> nat
+m7 () == map_zs(1,2)(1)(1)(1).f();
+
+
+public map_xs : nat * nat ==> map nat to X
+map_xs (pa, pb) == return xs;
+
+public map_ys : nat * nat ==> map nat to map nat to X
+map_ys (pa, pb) == return ys;
+
+public map_zs : nat * nat ==> map nat to map nat to map nat to X
+map_zs (pa, pb) == return zs;
+
+end X
+
+class Entry
+
+operations 
+
+public static Run : () ==> ?
+Run () ==
+let x = new X()
+in 
+	return x.m1() + x.m2() + x.m3() + x.m4() + x.m5() + x.m6() + x.m7();
+
+end Entry

@@ -1,0 +1,304 @@
+--
+-- VDM model exercising sequences
+--
+class NoteBook  
+
+instance variables
+
+private messages : seq of seq of char := []; 
+
+operations 
+
+public Test : () ==> ()
+Test () ==
+let nb1 = new NoteBook(),
+		nb2 = new NoteBook()
+in 
+(
+	IO`println("Notebooks nb1 and nb2 has been created\n");
+
+	IO`println("Adding messages for nb1 while leaving nb2 empty\n");
+	nb1.addMessage("Hello!");
+	nb1.addMessage("Bye!");
+	nb1.addMessages(["one", "two", "three", "four"]);
+	nb1.addMessagesDist(["red", "green"], ["blue", "yellow"]);
+	
+	IO`printf("nb1 and nb2 are equal: %s\n", [nb1.eq(nb2)]);
+	IO`printf("nb1 and nb2 are NOT equal: %s\n", [nb1.neq(nb2)]);
+	IO`print("\n");
+	
+	IO`println("Copying the nb1 messages to nb2..\n");
+	nb2.setMessages(nb1.getMessagesOrdered());
+	
+	IO`printf("nb1 and nb2 are equal: %s\n", [nb1.eq(nb2)]);
+	IO`printf("nb1 and nb2 are NOT equal: %s\n", [nb1.neq(nb2)]);
+	IO`print("\n");
+	
+	IO`printf("The current number of messages in nb1 is: %s\n\n", [nb1.noOfMessgages()]);
+	
+	IO`println("All messages so far: ");
+	nb1.printMessages();
+	IO`print("\n");
+	
+	IO`println("Latest message is: " ^ nb1.readLatest());
+	IO`println("Removing latest..");
+	nb1.removeLatest();
+	
+	IO`println("Latest message is: " ^ nb1.readLatest() ^ "\n");
+	
+	IO`printf("Overriding message %s with 'Hi'\n", [9]);
+	nb1.overrideMessage(9, "Hi!");
+	
+	
+	IO`println("All messages so far: ");
+	nb1.printMessages();
+	IO`print("\n");
+	
+	IO`printf("Message %s: " ^ nb1.getMessage(5) ^ "\n", [5]);
+	IO`print("\n");
+	
+	IO`printf("Message 8 is equal to 'Bye!': %s\n", [nb1.isMessage(8, "Bye!")]);
+	IO`printf("Message 1 is equal to 'Bye!': %s\n", [nb1.isMessage(1, "Bye!")]);
+	
+	IO`printf("Message 8 is NOT equal to 'Bye!': %s\n", [nb1.isNotMessage(8, "Bye!")]);
+	IO`printf("Message 1 is NOT equal to 'Bye!': %s\n", [nb1.isNotMessage(1, "Bye!")]);
+	IO`print("\n");
+	
+	IO`print("Adding duplicate message 'yellow'\n\n");
+	nb1.addMessage("yellow");
+	
+	IO`println("Printing messages reversed");
+	for i = 1 to nb1.noOfMessgages() do 
+		let reversed = nb1.getReverseMessages()
+		in
+			IO`println(reversed(i));
+			
+	IO`print("\n");
+	
+	IO`println("Printing message indices of nb1");
+	for all idx in set nb1.getMessageIndices() do
+		IO`printf("%s ", [idx]);
+	
+	IO`println("\n");
+	
+	IO`println("Printing messages of nb1 using 'elems' operator");
+	for all msg in set elems nb1.getMessagesOrdered() do
+		IO`print(msg ^ "\n");	
+	
+	IO`println("\n");
+	
+	IO`println("Printing messages of nb1 using the sequence loop");
+	for msg in nb1.getMessagesOrdered() do
+		IO`print(msg ^ "\n");	
+	
+);
+
+public printMessages : () ==> ()
+printMessages () ==
+	for i = 1 to len messages do
+	let msg = getMessage(i)
+	in
+		IO`println(msg);
+
+public addMessage : seq of char ==> ()
+addMessage (msg) ==
+	messages := [msg] ^ messages;
+	
+public addMessages : seq of seq of char ==> ()
+addMessages (newMessages) == 
+	messages := newMessages ^ messages;
+
+private addMessagesDist : seq of seq of char * seq of seq of char ==> ()
+addMessagesDist (newMessages1, newMessages2) == 
+	messages := conc [newMessages1, newMessages2] ^ messages;
+
+public readLatest : () ==> seq of char
+readLatest () ==
+	return hd messages;
+
+public removeLatest : () ==> ()
+removeLatest () == messages := tl messages;
+
+public overrideMessage : nat1 * seq of char ==> ()
+overrideMessage (index, newMessage) == 
+	messages := messages ++ {index |-> newMessage};
+	
+public getMessagesOrdered : () ==> seq of seq of char
+getMessagesOrdered () == return messages;
+
+public setMessages : (seq of seq of char) ==> ()
+setMessages (newMessages) == messages := newMessages;
+
+public noOfMessgages : () ==> nat
+noOfMessgages () ==
+	return len getMessagesOrdered();
+
+public getMessage : nat1 ==> seq of char
+getMessage (index) == return messages(index);
+
+public isMessage : nat1 * seq of char ==> bool
+isMessage (index, message) == return message = getMessage(index);
+
+public isNotMessage : nat1 * seq of char ==> bool
+isNotMessage(index, message) == return message <> getMessage(index);
+
+public getMessgaesSet : () ==> set of seq of char
+getMessgaesSet () == return elems messages;
+
+public getMessageIndices : () ==> set of nat1
+getMessageIndices () == return inds messages;
+
+public getReverseMessages : () ==> seq of seq of char
+getReverseMessages () == return reverse messages;
+
+public eq : NoteBook ==> bool
+eq (other) == return messages = other.messages;
+
+public neq : NoteBook ==> bool
+neq (other) == return messages <> other.messages;
+
+end NoteBook
+
+
+
+class IO
+
+--  Overture STANDARD LIBRARY: INPUT/OUTPUT
+--      --------------------------------------------
+-- 
+-- Standard library for the Overture Interpreter. When the interpreter
+-- evaluates the preliminary functions/operations in this file,
+-- corresponding internal functions is called instead of issuing a run
+-- time error. Signatures should not be changed, as well as name of
+-- module (VDM-SL) or class (VDM++). Pre/post conditions is 
+-- fully user customizable. 
+-- Don't care's may NOT be used in the parameter lists.
+--
+-- The in/out functions  will return false if an error occurs. In this
+-- case an internal error string will be set (see 'ferror').
+--
+-- File path:
+--  * An absolute path is accepted and used as specified.
+--  * A relative path is relative to the debugger or if running in the 
+--      Overture IDE relative to the project root.
+--
+
+types
+ 
+/**
+ * The file directive used in in/out functions.
+ */
+public filedirective = <start>|<append> 
+
+functions
+
+/**
+ * Write VDM value in ASCII format to the console.
+ *
+ * @param val the VDM value to be written
+ * @return true if successful else false
+ */
+public static writeval[@p]: @p -> bool
+writeval(val)==
+  is not yet specified;
+
+/**
+ * Write VDM value in ASCII format to file. The type of the val must be
+ * specified as fwriteval[seq of char](...) when calling the function.
+ *
+ * @param filename the name of the file
+ * @param val the VDM value to be written.
+ * @param fdir if <start> then it will overwrite an existing file, 
+ *  else <append> will append output to the existing file
+ * @return true if successful else false
+ */
+public static fwriteval[@p]:seq1 of char * @p * filedirective -> bool
+fwriteval(filename,val,fdir) ==
+  is not yet specified;
+
+/**
+ * Read VDM value in ASCII format from file. The type which should be read must be
+ * specified as freadval[seq of char](...) when calling the function.
+ *
+ * @param filename the name of the file
+ * @return mk_(success,@p) if successful success will be 
+ * set to true else false. @p will hold nil if unsuccessful or the value read.
+ */
+public static freadval[@p]:seq1 of char -> bool * [@p]
+freadval(filename) ==
+  is not yet specified
+  post let mk_(b,t) = RESULT in not b => t = nil;
+
+operations
+
+/**
+ * Write text to std out. Surrounding double quotes will be stripped,
+ * backslashed characters should be interpreted.
+ *
+ * @param text the text to write to the console
+ * @return if successful true else false.
+ */
+public echo: seq of char ==> bool
+echo(text) ==
+  fecho ("",text,nil);
+
+/**
+ * Write text to file like <code>echo</code>.
+ *
+ * @param filename the name of the file
+ * @param text the text to write to be written.
+ * @param fdir if nil or <start> then it will overwrite an existing file, 
+ *  else <append> will append output to the existing file.
+ * @return true if successful else false
+ */
+public fecho: seq of char * seq of char * [filedirective] ==> bool
+fecho (filename,text,fdir) ==
+  is not yet specified
+  pre filename = "" <=> fdir = nil;
+
+/**
+ * Returns the last error which may have occurred by any of the io/out functions
+ *
+ * @return the last error message
+ */
+public ferror:()  ==> seq of char
+ferror () ==
+  is not yet specified;
+  
+-- New simplified format printing operations
+
+
+/**
+ * Prints any VDM value to the console
+ *
+ * @param arg a VDM value of any type
+ */
+public static print: ? ==> ()
+print(arg) ==
+    is not yet specified;
+
+/**
+ * Prints any VDM value to the console as a new line
+ *
+ * @param arg a VDM value of any type
+ */
+public static println: ? ==> ()
+println(arg) ==
+    is not yet specified;
+
+/**
+ * Prints any VDM value to the console
+ *
+ * @param format standard format string used in
+ *  Java by <code>String.format(format, value)</code>,
+ *  though note that only the %s conversion is supported.
+ *  eg. <code>printf("Hello [%2$-5s][%1$5s]\n", [123, {2}])</code>
+ *  would produce <code>Hello [{2}  ][  123]</code> and a newline.
+ *
+ * @param arg a sequence of VDM values of any type
+ */
+public static printf: seq of char * seq of ? ==> ()
+printf(format, args) ==
+    is not yet specified;
+
+end IO

@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.overture.ide.debug.core.dbgp.breakpoints;
 
-public interface IDbgpWatchBreakpoint extends IDbgpBreakpoint {
+public interface IDbgpWatchBreakpoint extends IDbgpBreakpoint
+{
 	String getExpression();
 }

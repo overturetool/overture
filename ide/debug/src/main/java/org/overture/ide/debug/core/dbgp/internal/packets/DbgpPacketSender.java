@@ -23,31 +23,38 @@ import java.io.OutputStream;
 
 import org.overture.ide.debug.core.dbgp.DbgpRequest;
 
-public class DbgpPacketSender {
+public class DbgpPacketSender
+{
 	private final Object lock = new Object();
 
 	private final OutputStream output;
 
 	private IDbgpRawLogger logger;
 
-	public DbgpPacketSender(OutputStream output) {
-		if (output == null) {
+	public DbgpPacketSender(OutputStream output)
+	{
+		if (output == null)
+		{
 			throw new IllegalArgumentException();
 		}
 
 		this.output = output;
 	}
 
-	public void setLogger(IDbgpRawLogger logger) {
+	public void setLogger(IDbgpRawLogger logger)
+	{
 		this.logger = logger;
 	}
 
-	public void sendCommand(DbgpRequest command) throws IOException {
-		if (logger != null) {
+	public void sendCommand(DbgpRequest command) throws IOException
+	{
+		if (logger != null)
+		{
 			logger.log(command);
 		}
 
-		synchronized (lock) {
+		synchronized (lock)
+		{
 			command.writeTo(output);
 			output.write(0);
 			output.flush();

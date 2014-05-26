@@ -1,0 +1,19 @@
+class A
+
+values
+	x = mk_R3(1, mk_R2(mk_R1(2)));
+	y = x;
+
+types
+
+	public R1 ::
+		x : int;
+
+	public R2 :: 
+		r : R1;
+		
+	public R3 ::	
+		x : int
+		r : R2
+		
+end A

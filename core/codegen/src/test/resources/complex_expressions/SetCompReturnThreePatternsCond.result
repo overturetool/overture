@@ -1,0 +1,37 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static VDMSet Run() {
+        VDMSet setCompResult_1 = SetUtil.set();
+        VDMSet set_1 = SetUtil.set(1L, 2L, 3L);
+
+        for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
+            Number x = ((Number) iterator_1.next());
+
+            for (Iterator iterator_2 = set_1.iterator(); iterator_2.hasNext();) {
+                Number y = ((Number) iterator_2.next());
+
+                for (Iterator iterator_3 = set_1.iterator();
+                        iterator_3.hasNext();) {
+                    Number z = ((Number) iterator_3.next());
+
+                    if (1L == 1L) {
+                        setCompResult_1 = SetUtil.union(setCompResult_1.clone(),
+                                SetUtil.set(x.longValue() + y.longValue() +
+                                    z.longValue()));
+                    }
+                }
+            }
+        }
+
+        return setCompResult_1.clone();
+    }
+}
+
+##########

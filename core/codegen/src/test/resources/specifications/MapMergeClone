@@ -1,0 +1,14 @@
+class A
+
+values 
+
+a = {0 |-> 0};
+
+x = merge{a, m1()};
+
+operations 
+
+public static m1 : () ==> map nat to nat
+m1 () == return {3 |-> 4, 5 |-> 6};  
+
+end A

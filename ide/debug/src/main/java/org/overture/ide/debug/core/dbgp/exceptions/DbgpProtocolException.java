@@ -18,23 +18,28 @@
  *******************************************************************************/
 package org.overture.ide.debug.core.dbgp.exceptions;
 
-public class DbgpProtocolException extends DbgpException {
+public class DbgpProtocolException extends DbgpException
+{
 
 	private static final long serialVersionUID = 1L;
 
-	public DbgpProtocolException() {
+	public DbgpProtocolException()
+	{
 		super();
 	}
 
-	public DbgpProtocolException(String message, Throwable cause) {
+	public DbgpProtocolException(String message, Throwable cause)
+	{
 		super(message, cause);
 	}
 
-	public DbgpProtocolException(String message) {
+	public DbgpProtocolException(String message)
+	{
 		super(message);
 	}
 
-	public DbgpProtocolException(Throwable cause) {
+	public DbgpProtocolException(Throwable cause)
+	{
 		super(cause);
 	}
 }

@@ -1,0 +1,30 @@
+class A
+
+operations
+
+public op : () ==> nat
+op () ==
+(
+	dcl a : nat := 0;
+	dcl b : nat := 0;
+	
+	atomic
+	(
+		a := 2;
+		b := 4;
+	);
+
+	return a+b;
+)
+
+end A
+
+
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () == return new A().op();
+
+end Entry

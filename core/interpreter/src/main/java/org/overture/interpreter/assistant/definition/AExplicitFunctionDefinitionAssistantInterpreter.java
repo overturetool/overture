@@ -18,7 +18,6 @@ import org.overture.interpreter.values.FunctionValue;
 import org.overture.interpreter.values.NameValuePair;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 
 public class AExplicitFunctionDefinitionAssistantInterpreter extends
 		AExplicitFunctionDefinitionAssistantTC

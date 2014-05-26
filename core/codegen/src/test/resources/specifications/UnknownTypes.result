@@ -1,0 +1,19 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class A {
+    public A() {
+    }
+
+    public static Number getM(Object arg) {
+        throw new UnsupportedOperationException();
+    }
+
+    public static Number getN(Object arg) {
+        throw new UnsupportedOperationException();
+    }
+}
+
+##########

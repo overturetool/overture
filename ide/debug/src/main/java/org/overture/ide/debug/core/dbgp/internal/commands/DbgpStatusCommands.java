@@ -26,15 +26,17 @@ import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
 import org.overture.ide.debug.core.dbgp.internal.utils.DbgpXmlEntityParser;
 
 public class DbgpStatusCommands extends DbgpBaseCommands implements
-		IDbgpStatusCommands {
+		IDbgpStatusCommands
+{
 	private static final String STATUS_COMMAND = "status"; //$NON-NLS-1$
 
-	public DbgpStatusCommands(IDbgpCommunicator communicator) {
+	public DbgpStatusCommands(IDbgpCommunicator communicator)
+	{
 		super(communicator);
 	}
 
-	public IDbgpStatus getStatus() throws DbgpException {
-		return DbgpXmlEntityParser
-				.parseStatus(communicate(createAsyncRequest(STATUS_COMMAND)));
+	public IDbgpStatus getStatus() throws DbgpException
+	{
+		return DbgpXmlEntityParser.parseStatus(communicate(createAsyncRequest(STATUS_COMMAND)));
 	}
 }

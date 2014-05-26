@@ -1,0 +1,135 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+abstract public class Employee {
+    public Employee() {
+    }
+
+    public abstract Number getSalary();
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class HourlyPaidEmployee extends Employee {
+    public Number hours;
+    private Number rate;
+
+    public HourlyPaidEmployee(Number pHours, Number pRate) {
+        hours = pHours;
+        rate = pRate;
+    }
+
+    public HourlyPaidEmployee() {
+    }
+
+    public Number getSalary() {
+        return hours.doubleValue() * rate.doubleValue();
+    }
+
+    public void SetRate(Number pRate) {
+        if (pRate.doubleValue() > 150L) {
+            rate = 150L;
+        } else if (pRate.doubleValue() < 0L) {
+            rate = 0L;
+        } else {
+            rate = pRate;
+        }
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class FixedSalaryEmployee extends Employee {
+    private Number fixedSalary;
+
+    public FixedSalaryEmployee(Number pFixedSalary) {
+        fixedSalary = pFixedSalary;
+    }
+
+    public FixedSalaryEmployee() {
+    }
+
+    public Number getSalary() {
+        return fixedSalary;
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Company {
+    private VDMSeq employees;
+
+    public Company() {
+        employees = SeqUtil.seq();
+    }
+
+    public void op1() {
+        Number x = employees.size();
+        VDMSeq y = employees.clone();
+        Employee q = ((Employee) employees.get(0));
+
+        //Skip;
+    }
+
+    public Number calculateSalary() {
+        return start_calc(0L, employees);
+    }
+
+    private Number start_calc(Number sum, VDMSeq emps) {
+        if (emps.size() == 0L) {
+            return sum;
+        } else {
+            return start_calc(sum.doubleValue() +
+                ((Employee) emps.get(0)).getSalary().doubleValue(),
+                SeqUtil.tail(emps.clone()));
+        }
+    }
+
+    private Number not_used(Number r, Number n1, Number n, char c, boolean b) {
+        return 2.1;
+    }
+
+    public Company addEmp(Employee emp) {
+        employees = SeqUtil.conc(employees.clone(), SeqUtil.seq(emp));
+
+        return this;
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class World {
+    public World() {
+    }
+
+    public Number run() {
+        HourlyPaidEmployee emp1 = new HourlyPaidEmployee(120.0, 100L);
+        FixedSalaryEmployee emp2 = new FixedSalaryEmployee(10000L);
+        FixedSalaryEmployee emp3 = new FixedSalaryEmployee(5000L);
+        HourlyPaidEmployee emp4 = new HourlyPaidEmployee(100.0, 100L);
+        Company company = new Company().addEmp(emp1).addEmp(emp2).addEmp(emp3)
+                                       .addEmp(emp4);
+
+        return company.calculateSalary();
+    }
+}
+
+##########

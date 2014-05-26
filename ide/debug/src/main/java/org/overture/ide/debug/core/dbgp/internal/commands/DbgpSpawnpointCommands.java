@@ -34,7 +34,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 public class DbgpSpawnpointCommands extends DbgpBaseCommands implements
-		IDbgpSpawnpointCommands {
+		IDbgpSpawnpointCommands
+{
 
 	private static final String ELEMENT_SPAWNPOINT = "spawnpoint"; //$NON-NLS-1$
 	private static final String ATTR_ID = "id"; //$NON-NLS-1$
@@ -63,22 +64,25 @@ public class DbgpSpawnpointCommands extends DbgpBaseCommands implements
 	 * @param commands
 	 */
 	public DbgpSpawnpointCommands(IDbgpCommunicator communicator,
-			IDbgpCommands commands) {
+			IDbgpCommands commands)
+	{
 		super(communicator);
 		this.commands = commands;
 	}
 
 	private boolean initialized = false;
 
-	private void initSpawnpoints() {
-		if (initialized) {
+	private void initSpawnpoints()
+	{
+		if (initialized)
+		{
 			return;
 		}
-		try {
-			commands.getCoreCommands().setFeature(
-					IDbgpFeatureCommands.MULTIPLE_SESSIONS,
-					IDbgpFeature.ONE_VALUE);
-		} catch (DbgpException e) {
+		try
+		{
+			commands.getCoreCommands().setFeature(IDbgpFeatureCommands.MULTIPLE_SESSIONS, IDbgpFeature.ONE_VALUE);
+		} catch (DbgpException e)
+		{
 			VdmDebugPlugin.logWarning("Error setting '" //$NON-NLS-1$
 					+ IDbgpFeatureCommands.MULTIPLE_SESSIONS
 					+ "' feature to '" + IDbgpFeature.ONE_VALUE + "'", e); //$NON-NLS-1$ //$NON-NLS-2$
@@ -86,7 +90,8 @@ public class DbgpSpawnpointCommands extends DbgpBaseCommands implements
 		initialized = true;
 	}
 
-	private static abstract class AbstractSpawnpoint implements IDbgpSpawnpoint {
+	private static abstract class AbstractSpawnpoint implements IDbgpSpawnpoint
+	{
 		private final String id;
 		private final boolean enabled;
 		private final int lineNumber;
@@ -96,32 +101,38 @@ public class DbgpSpawnpointCommands extends DbgpBaseCommands implements
 		 * @param enabled
 		 * @param lineNumber
 		 */
-		public AbstractSpawnpoint(String id, boolean enabled, int lineNumber) {
+		public AbstractSpawnpoint(String id, boolean enabled, int lineNumber)
+		{
 			this.id = id;
 			this.enabled = enabled;
 			this.lineNumber = lineNumber;
 		}
 
-		public String getId() {
+		public String getId()
+		{
 			return id;
 		}
 
-		public int getLineNumber() {
+		public int getLineNumber()
+		{
 			return lineNumber;
 		}
 
-		public boolean isEnabled() {
+		public boolean isEnabled()
+		{
 			return enabled;
 		}
 
-		public String toString() {
+		public String toString()
+		{
 			return id + '/' + (enabled ? STATE_ENABLED : STATE_DISABLED) + '/'
 					+ getFilename() + ':' + lineNumber;
 		}
 
 	}
 
-	private static class DbgpSpawnpoint extends AbstractSpawnpoint {
+	private static class DbgpSpawnpoint extends AbstractSpawnpoint
+	{
 
 		private final URI uri;
 
@@ -132,17 +143,20 @@ public class DbgpSpawnpointCommands extends DbgpBaseCommands implements
 		 * @param lineNumber
 		 */
 		public DbgpSpawnpoint(String id, boolean enabled, URI uri,
-				int lineNumber) {
+				int lineNumber)
+		{
 			super(id, enabled, lineNumber);
 			this.uri = uri;
 		}
 
-		public String getFilename() {
+		public String getFilename()
+		{
 			return uri.toString();
 		}
 	}
 
-	private static class DbgpSpawnpointString extends AbstractSpawnpoint {
+	private static class DbgpSpawnpointString extends AbstractSpawnpoint
+	{
 
 		private final String filename;
 
@@ -153,59 +167,67 @@ public class DbgpSpawnpointCommands extends DbgpBaseCommands implements
 		 * @param lineNumber
 		 */
 		public DbgpSpawnpointString(String id, boolean enabled,
-				String filename, int lineNumber) {
+				String filename, int lineNumber)
+		{
 			super(id, enabled, lineNumber);
 			this.filename = filename;
 		}
 
-		public String getFilename() {
+		public String getFilename()
+		{
 			return filename;
 		}
 	}
 
 	public IDbgpSpawnpoint getSpawnpoint(String spawnpointId)
-			throws DbgpException {
+			throws DbgpException
+	{
 		initSpawnpoints();
 		final DbgpRequest request = createRequest(CMD_GET);
 		request.addOption(OPTION_ID, spawnpointId);
 		final Element response = communicate(request);
 		final String id = response.getAttribute(ATTR_ID);
-		if (id != null) {
-			return new DbgpSpawnpointString(id, parseState(response), response
-					.getAttribute(ATTR_FILENAME), parseLineNumber(response));
-		} else {
+		if (id != null)
+		{
+			return new DbgpSpawnpointString(id, parseState(response), response.getAttribute(ATTR_FILENAME), parseLineNumber(response));
+		} else
+		{
 			return null;
 		}
 	}
 
-	public IDbgpSpawnpoint[] listSpawnpoints() throws DbgpException {
+	public IDbgpSpawnpoint[] listSpawnpoints() throws DbgpException
+	{
 		initSpawnpoints();
 		final DbgpRequest request = createRequest(CMD_LIST);
 		final Element response = communicate(request);
-		final NodeList points = response
-				.getElementsByTagName(ELEMENT_SPAWNPOINT);
+		final NodeList points = response.getElementsByTagName(ELEMENT_SPAWNPOINT);
 		final IDbgpSpawnpoint[] result = new IDbgpSpawnpoint[points.getLength()];
 		int count = 0;
-		for (int i = 0; i < points.getLength(); ++i) {
+		for (int i = 0; i < points.getLength(); ++i)
+		{
 			final Element point = (Element) points.item(i);
 			final String id = point.getAttribute(ATTR_ID);
-			if (id != null) {
-				result[count++] = new DbgpSpawnpointString(id,
-						parseState(point), point.getAttribute(ATTR_FILENAME),
-						parseLineNumber(point));
+			if (id != null)
+			{
+				result[count++] = new DbgpSpawnpointString(id, parseState(point), point.getAttribute(ATTR_FILENAME), parseLineNumber(point));
 			}
 		}
-		if (count < result.length) {
+		if (count < result.length)
+		{
 			final IDbgpSpawnpoint[] newResult = new IDbgpSpawnpoint[count];
 			System.arraycopy(result, 0, newResult, 0, count);
 			return newResult;
-		} else {
+		} else
+		{
 			return result;
 		}
 	}
 
-	public void removeSpawnpoint(String spawnpointId) throws DbgpException {
-		if (spawnpointId == null) {
+	public void removeSpawnpoint(String spawnpointId) throws DbgpException
+	{
+		if (spawnpointId == null)
+		{
 			return;
 		}
 		initSpawnpoints();
@@ -215,7 +237,8 @@ public class DbgpSpawnpointCommands extends DbgpBaseCommands implements
 	}
 
 	public IDbgpSpawnpoint setSpawnpoint(URI uri, int lineNumber,
-			boolean enabled) throws DbgpException {
+			boolean enabled) throws DbgpException
+	{
 		initSpawnpoints();
 		final DbgpRequest request = createRequest(CMD_SET);
 		request.addOption(OPTION_FILENAME, uri.toString());
@@ -224,15 +247,18 @@ public class DbgpSpawnpointCommands extends DbgpBaseCommands implements
 				: STATE_DISABLED);
 		final Element response = communicate(request);
 		final String id = response.getAttribute(ATTR_ID);
-		if (id != null) {
+		if (id != null)
+		{
 			return new DbgpSpawnpoint(id, parseState(response), uri, lineNumber);
-		} else {
+		} else
+		{
 			return null;
 		}
 	}
 
 	public void updateSpawnpoint(String spawnpointId, boolean enabled)
-			throws DbgpException {
+			throws DbgpException
+	{
 		initSpawnpoints();
 		final DbgpRequest request = createRequest(CMD_UPDATE);
 		request.addOption(OPTION_ID, spawnpointId);
@@ -241,14 +267,18 @@ public class DbgpSpawnpointCommands extends DbgpBaseCommands implements
 		communicate(request);
 	}
 
-	private static boolean parseState(final Element response) {
+	private static boolean parseState(final Element response)
+	{
 		return STATE_ENABLED.equals(response.getAttribute(ATTR_STATE));
 	}
 
-	private static int parseLineNumber(final Element point) {
-		try {
+	private static int parseLineNumber(final Element point)
+	{
+		try
+		{
 			return Integer.parseInt(point.getAttribute(ATTR_LINENO));
-		} catch (NumberFormatException e) {
+		} catch (NumberFormatException e)
+		{
 			return -1;
 		}
 	}

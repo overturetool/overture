@@ -27,8 +27,5 @@ public class LauncherMessages
 	public static final String VdmLaunchShortcut_3 = "Error";
 	public static final Object MainMethodLabelProvider_0 = "(default package)";
 	public static final String VdmMainTab_Choose_a_main__type_to_launch__12 = "Select &type (? = any character, * = any String, TZ = TimeZone):";
-	
-
-	
 
 }

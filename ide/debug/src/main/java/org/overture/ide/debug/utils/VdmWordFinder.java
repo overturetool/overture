@@ -18,52 +18,66 @@
  *******************************************************************************/
 package org.overture.ide.debug.utils;
 
-
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 
-public class VdmWordFinder {
-	
-	public static IRegion findWord(IDocument document, int offset) {
+public class VdmWordFinder
+{
 
-		int start= -2;
-		int end= -1;
-		
-		try {
-			int pos= offset;
+	public static IRegion findWord(IDocument document, int offset)
+	{
+
+		int start = -2;
+		int end = -1;
+
+		try
+		{
+			int pos = offset;
 			char c;
 
-			while (pos >= 0) {
-				c= document.getChar(pos);
+			while (pos >= 0)
+			{
+				c = document.getChar(pos);
 				if (!Character.isJavaIdentifierPart(c))
+				{
 					break;
+				}
 				--pos;
 			}
-			start= pos;
+			start = pos;
 
-			pos= offset;
-			int length= document.getLength();
+			pos = offset;
+			int length = document.getLength();
 
-			while (pos < length) {
-				c= document.getChar(pos);
+			while (pos < length)
+			{
+				c = document.getChar(pos);
 				if (!Character.isJavaIdentifierPart(c))
+				{
 					break;
+				}
 				++pos;
 			}
-			end= pos;
+			end = pos;
 
-		} catch (BadLocationException x) {
+		} catch (BadLocationException x)
+		{
 		}
 
-		if (start >= -1 && end > -1) {
+		if (start >= -1 && end > -1)
+		{
 			if (start == offset && end == offset)
+			{
 				return new Region(offset, 0);
-			else if (start == offset)
+			} else if (start == offset)
+			{
 				return new Region(start, end - start);
-			else
+			} else
+			{
 				return new Region(start + 1, end - start - 1);
+			}
 		}
 
 		return null;

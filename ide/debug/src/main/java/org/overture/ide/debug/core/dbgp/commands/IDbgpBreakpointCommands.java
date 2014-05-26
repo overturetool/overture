@@ -24,7 +24,8 @@ import org.overture.ide.debug.core.dbgp.breakpoints.DbgpBreakpointConfig;
 import org.overture.ide.debug.core.dbgp.breakpoints.IDbgpBreakpoint;
 import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
 
-public interface IDbgpBreakpointCommands {
+public interface IDbgpBreakpointCommands
+{
 	// Line breakpoint
 	String setLineBreakpoint(URI uri, int lineNumber,
 			DbgpBreakpointConfig config) throws DbgpException;

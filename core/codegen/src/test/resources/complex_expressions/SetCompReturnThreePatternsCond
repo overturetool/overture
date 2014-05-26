@@ -1,0 +1,9 @@
+class Entry
+
+operations 
+
+public static Run : () ==> set of nat 
+Run () ==
+	return {x + y + z | x,y,z in set {1,2,3} & 1 = 1};
+	 
+end Entry

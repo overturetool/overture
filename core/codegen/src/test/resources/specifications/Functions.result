@@ -1,0 +1,37 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Functions {
+    public Functions() {
+    }
+
+    public static Number f1() {
+        if (1L == 1L) {
+            return 1L;
+        } else {
+            return 2L;
+        }
+    }
+
+    public static Number f2() {
+        if (1L == 1L) {
+            if (2L == 2L) {
+                return 3L;
+            } else if (3L == 3L) {
+                return 4L;
+            } else {
+                return 5L;
+            }
+        } else {
+            return 6L;
+        }
+    }
+
+    public static Number f3() {
+        return 5L;
+    }
+}
+
+##########
