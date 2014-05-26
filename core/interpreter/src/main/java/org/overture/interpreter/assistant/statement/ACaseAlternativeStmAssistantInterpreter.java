@@ -22,7 +22,7 @@ public class ACaseAlternativeStmAssistantInterpreter // extends
 		this.af = af;
 	}
 
-	public static Value eval(ACaseAlternativeStm node, Value val, Context ctxt)
+	public Value eval(ACaseAlternativeStm node, Value val, Context ctxt)
 			throws AnalysisException
 	{
 		Context evalContext = new Context(af, node.getLocation(), "case alternative", ctxt);
