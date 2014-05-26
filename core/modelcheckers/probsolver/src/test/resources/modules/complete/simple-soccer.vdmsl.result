@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<testResult type="org.overture.modelcheckers.probsolver.CompleteTests">
+<result>
+<output object="(&#10;atomic (on_field_players := {}, potential_substitutes := {}, goalkeeper := 1, nb_gk_subs := 0, nb_fp_subs := 0);&#10;return (true)&#10;)" resource="simple-soccer.vdmsl" value="(&#10;atomic (on_field_players := {}, potential_substitutes := {}, goalkeeper := 1, nb_gk_subs := 0, nb_fp_subs := 0);&#10;return (true)&#10;)"/>
+</result>
+</testResult>
