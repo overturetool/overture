@@ -18,108 +18,178 @@ public class Bag {
     public static void Test() {
         Bag bag1 = new Bag(SetUtil.set(1L, 2L, 3L));
         Bag bag2 = new Bag(SetUtil.set(3L, 4L, 5L));
-        IO.println(
-            "Creating two bags, bag1 and bag2 wih numbers {1 2 3} and {3 4 5}, respectively.\n");
-        IO.println("Printing content of bag1");
+        IO.println(SeqUtil.seq('C', 'r', 'e', 'a', 't', 'i', 'n', 'g', ' ',
+                't', 'w', 'o', ' ', 'b', 'a', 'g', 's', ',', ' ', 'b', 'a',
+                'g', '1', ' ', 'a', 'n', 'd', ' ', 'b', 'a', 'g', '2', ' ',
+                'w', 'i', 'h', ' ', 'n', 'u', 'm', 'b', 'e', 'r', 's', ' ',
+                '{', '1', ' ', '2', ' ', '3', '}', ' ', 'a', 'n', 'd', ' ',
+                '{', '3', ' ', '4', ' ', '5', '}', ',', ' ', 'r', 'e', 's',
+                'p', 'e', 'c', 't', 'i', 'v', 'e', 'l', 'y', '.', '\n'));
+        IO.println(SeqUtil.seq('P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ',
+                'c', 'o', 'n', 't', 'e', 'n', 't', ' ', 'o', 'f', ' ', 'b',
+                'a', 'g', '1'));
         bag1.printBag();
-        IO.println("\n");
-        IO.println("Printing content of bag2");
+        IO.println(SeqUtil.seq('\n'));
+        IO.println(SeqUtil.seq('P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ',
+                'c', 'o', 'n', 't', 'e', 'n', 't', ' ', 'o', 'f', ' ', 'b',
+                'a', 'g', '2'));
         bag2.printBag();
-        IO.println("\n");
-        IO.printf("bag1 has number 2: %s\n", SeqUtil.seq(bag1.hasNumber(2L)));
-        IO.printf("bag1 has number 4: %s\n", SeqUtil.seq(bag1.hasNumber(4L)));
-        IO.printf("bag1 has NOT number 2: %s\n",
-            SeqUtil.seq(bag1.hasNotNumber(2L)));
-        IO.printf("bag1 has NOT number 4: %s\n",
-            SeqUtil.seq(bag1.hasNotNumber(4L)));
-        IO.print("\n");
-        IO.print("Adding content of bag2 to bag1..\n");
+        IO.println(SeqUtil.seq('\n'));
+        IO.printf(SeqUtil.seq('b', 'a', 'g', '1', ' ', 'h', 'a', 's', ' ', 'n',
+                'u', 'm', 'b', 'e', 'r', ' ', '2', ':', ' ', '%', 's', '\n'),
+            SeqUtil.seq(bag1.hasNumber(2L)));
+        IO.printf(SeqUtil.seq('b', 'a', 'g', '1', ' ', 'h', 'a', 's', ' ', 'n',
+                'u', 'm', 'b', 'e', 'r', ' ', '4', ':', ' ', '%', 's', '\n'),
+            SeqUtil.seq(bag1.hasNumber(4L)));
+        IO.printf(SeqUtil.seq('b', 'a', 'g', '1', ' ', 'h', 'a', 's', ' ', 'N',
+                'O', 'T', ' ', 'n', 'u', 'm', 'b', 'e', 'r', ' ', '2', ':',
+                ' ', '%', 's', '\n'), SeqUtil.seq(bag1.hasNotNumber(2L)));
+        IO.printf(SeqUtil.seq('b', 'a', 'g', '1', ' ', 'h', 'a', 's', ' ', 'N',
+                'O', 'T', ' ', 'n', 'u', 'm', 'b', 'e', 'r', ' ', '4', ':',
+                ' ', '%', 's', '\n'), SeqUtil.seq(bag1.hasNotNumber(4L)));
+        IO.print(SeqUtil.seq('\n'));
+        IO.print(SeqUtil.seq('A', 'd', 'd', 'i', 'n', 'g', ' ', 'c', 'o', 'n',
+                't', 'e', 'n', 't', ' ', 'o', 'f', ' ', 'b', 'a', 'g', '2',
+                ' ', 't', 'o', ' ', 'b', 'a', 'g', '1', '.', '.', '\n'));
         bag1.addNumbers(bag2);
-        IO.println("Printing content of bag1");
+        IO.println(SeqUtil.seq('P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ',
+                'c', 'o', 'n', 't', 'e', 'n', 't', ' ', 'o', 'f', ' ', 'b',
+                'a', 'g', '1'));
         bag1.printBag();
-        IO.println("\n");
-        IO.print("Adding '6' to bag1");
+        IO.println(SeqUtil.seq('\n'));
+        IO.print(SeqUtil.seq('A', 'd', 'd', 'i', 'n', 'g', ' ', '\'', '6',
+                '\'', ' ', 't', 'o', ' ', 'b', 'a', 'g', '1'));
         bag1.addNumbers(new Bag(SetUtil.set(6L)));
-        IO.print("\n");
-        IO.println("Printing content of bag1");
+        IO.print(SeqUtil.seq('\n'));
+        IO.println(SeqUtil.seq('P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ',
+                'c', 'o', 'n', 't', 'e', 'n', 't', ' ', 'o', 'f', ' ', 'b',
+                'a', 'g', '1'));
         bag1.printBag();
-        IO.println("\n");
-        IO.print("Setting bag1 to have the numbers shared with bag 2\n");
+        IO.println(SeqUtil.seq('\n'));
+        IO.print(SeqUtil.seq('S', 'e', 't', 't', 'i', 'n', 'g', ' ', 'b', 'a',
+                'g', '1', ' ', 't', 'o', ' ', 'h', 'a', 'v', 'e', ' ', 't',
+                'h', 'e', ' ', 'n', 'u', 'm', 'b', 'e', 'r', 's', ' ', 's',
+                'h', 'a', 'r', 'e', 'd', ' ', 'w', 'i', 't', 'h', ' ', 'b',
+                'a', 'g', ' ', '2', '\n'));
         bag1.setSharedNumbers(bag2);
-        IO.println("Printing content of bag1");
+        IO.println(SeqUtil.seq('P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ',
+                'c', 'o', 'n', 't', 'e', 'n', 't', ' ', 'o', 'f', ' ', 'b',
+                'a', 'g', '1'));
         bag1.printBag();
-        IO.println("\n");
-        IO.print("Removing number '4' from bag1");
+        IO.println(SeqUtil.seq('\n'));
+        IO.print(SeqUtil.seq('R', 'e', 'm', 'o', 'v', 'i', 'n', 'g', ' ', 'n',
+                'u', 'm', 'b', 'e', 'r', ' ', '\'', '4', '\'', ' ', 'f', 'r',
+                'o', 'm', ' ', 'b', 'a', 'g', '1'));
         bag1.removeNumbers(new Bag(SetUtil.set(4L)));
-        IO.print("\n");
-        IO.println("Printing content of bag1");
+        IO.print(SeqUtil.seq('\n'));
+        IO.println(SeqUtil.seq('P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ',
+                'c', 'o', 'n', 't', 'e', 'n', 't', ' ', 'o', 'f', ' ', 'b',
+                'a', 'g', '1'));
         bag1.printBag();
-        IO.println("\n");
-        IO.printf("bag2 contains bag1: %s\n", SeqUtil.seq(bag2.contains(bag1)));
-        IO.printf("bag1 contains bag2: %s\n", SeqUtil.seq(bag1.contains(bag2)));
-        IO.print("\n");
-        IO.printf("bag2 \"proper\" contains a bag with elements {3 4 5}: %s\n",
+        IO.println(SeqUtil.seq('\n'));
+        IO.printf(SeqUtil.seq('b', 'a', 'g', '2', ' ', 'c', 'o', 'n', 't', 'a',
+                'i', 'n', 's', ' ', 'b', 'a', 'g', '1', ':', ' ', '%', 's', '\n'),
+            SeqUtil.seq(bag2.contains(bag1)));
+        IO.printf(SeqUtil.seq('b', 'a', 'g', '1', ' ', 'c', 'o', 'n', 't', 'a',
+                'i', 'n', 's', ' ', 'b', 'a', 'g', '2', ':', ' ', '%', 's', '\n'),
+            SeqUtil.seq(bag1.contains(bag2)));
+        IO.print(SeqUtil.seq('\n'));
+        IO.printf(SeqUtil.seq('b', 'a', 'g', '2', ' ', '\"', 'p', 'r', 'o',
+                'p', 'e', 'r', '\"', ' ', 'c', 'o', 'n', 't', 'a', 'i', 'n',
+                's', ' ', 'a', ' ', 'b', 'a', 'g', ' ', 'w', 'i', 't', 'h',
+                ' ', 'e', 'l', 'e', 'm', 'e', 'n', 't', 's', ' ', '{', '3',
+                ' ', '4', ' ', '5', '}', ':', ' ', '%', 's', '\n'),
             SeqUtil.seq(bag2.properContains(new Bag(SetUtil.set(3L, 4L, 5L)))));
-        IO.printf("bag2 \"proper\" contains bag1: %s\n",
+        IO.printf(SeqUtil.seq('b', 'a', 'g', '2', ' ', '\"', 'p', 'r', 'o',
+                'p', 'e', 'r', '\"', ' ', 'c', 'o', 'n', 't', 'a', 'i', 'n',
+                's', ' ', 'b', 'a', 'g', '1', ':', ' ', '%', 's', '\n'),
             SeqUtil.seq(bag2.properContains(bag1)));
-        IO.print("\n");
-        IO.printf("bag1 equals bag2: %s\n", SeqUtil.seq(bag1.eq(bag2)));
-        IO.printf("bag1 equals a bag containing elements {3 5}: %s\n",
-            SeqUtil.seq(bag1.eq(new Bag(SetUtil.set(3L, 5L)))));
-        IO.printf("bag1 NOT equals bag2: %s\n", SeqUtil.seq(bag1.neq(bag2)));
-        IO.printf("bag1 NOT equals a bag containing elements {3 5}: %s\n",
+        IO.print(SeqUtil.seq('\n'));
+        IO.printf(SeqUtil.seq('b', 'a', 'g', '1', ' ', 'e', 'q', 'u', 'a', 'l',
+                's', ' ', 'b', 'a', 'g', '2', ':', ' ', '%', 's', '\n'),
+            SeqUtil.seq(bag1.eq(bag2)));
+        IO.printf(SeqUtil.seq('b', 'a', 'g', '1', ' ', 'e', 'q', 'u', 'a', 'l',
+                's', ' ', 'a', ' ', 'b', 'a', 'g', ' ', 'c', 'o', 'n', 't',
+                'a', 'i', 'n', 'i', 'n', 'g', ' ', 'e', 'l', 'e', 'm', 'e',
+                'n', 't', 's', ' ', '{', '3', ' ', '5', '}', ':', ' ', '%',
+                's', '\n'), SeqUtil.seq(bag1.eq(new Bag(SetUtil.set(3L, 5L)))));
+        IO.printf(SeqUtil.seq('b', 'a', 'g', '1', ' ', 'N', 'O', 'T', ' ', 'e',
+                'q', 'u', 'a', 'l', 's', ' ', 'b', 'a', 'g', '2', ':', ' ',
+                '%', 's', '\n'), SeqUtil.seq(bag1.neq(bag2)));
+        IO.printf(SeqUtil.seq('b', 'a', 'g', '1', ' ', 'N', 'O', 'T', ' ', 'e',
+                'q', 'u', 'a', 'l', 's', ' ', 'a', ' ', 'b', 'a', 'g', ' ',
+                'c', 'o', 'n', 't', 'a', 'i', 'n', 'i', 'n', 'g', ' ', 'e',
+                'l', 'e', 'm', 'e', 'n', 't', 's', ' ', '{', '3', ' ', '5',
+                '}', ':', ' ', '%', 's', '\n'),
             SeqUtil.seq(bag1.neq(new Bag(SetUtil.set(3L, 5L)))));
-        IO.print("\n");
-        IO.printf("Size of bag1: %s\n", SeqUtil.seq(bag1.size()));
-        IO.print("\n");
-        IO.println(
-            "Adding numbers '4' and '6' to bag1 using distributed union..");
+        IO.print(SeqUtil.seq('\n'));
+        IO.printf(SeqUtil.seq('S', 'i', 'z', 'e', ' ', 'o', 'f', ' ', 'b', 'a',
+                'g', '1', ':', ' ', '%', 's', '\n'), SeqUtil.seq(bag1.size()));
+        IO.print(SeqUtil.seq('\n'));
+        IO.println(SeqUtil.seq('A', 'd', 'd', 'i', 'n', 'g', ' ', 'n', 'u',
+                'm', 'b', 'e', 'r', 's', ' ', '\'', '4', '\'', ' ', 'a', 'n',
+                'd', ' ', '\'', '6', '\'', ' ', 't', 'o', ' ', 'b', 'a', 'g',
+                '1', ' ', 'u', 's', 'i', 'n', 'g', ' ', 'd', 'i', 's', 't',
+                'r', 'i', 'b', 'u', 't', 'e', 'd', ' ', 'u', 'n', 'i', 'o',
+                'n', '.', '.'));
         bag1.addNumbersDist(new Bag(SetUtil.set(4L)), new Bag(SetUtil.set(6L)));
-        IO.println("Printing content of bag1");
+        IO.println(SeqUtil.seq('P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ',
+                'c', 'o', 'n', 't', 'e', 'n', 't', ' ', 'o', 'f', ' ', 'b',
+                'a', 'g', '1'));
         bag1.printBag();
-        IO.println("\n");
-        IO.println(
-            "Setting bag1 to have numbers shared with {4 5} and then {5} using disributed intersection...");
+        IO.println(SeqUtil.seq('\n'));
+        IO.println(SeqUtil.seq('S', 'e', 't', 't', 'i', 'n', 'g', ' ', 'b',
+                'a', 'g', '1', ' ', 't', 'o', ' ', 'h', 'a', 'v', 'e', ' ',
+                'n', 'u', 'm', 'b', 'e', 'r', 's', ' ', 's', 'h', 'a', 'r',
+                'e', 'd', ' ', 'w', 'i', 't', 'h', ' ', '{', '4', ' ', '5',
+                '}', ' ', 'a', 'n', 'd', ' ', 't', 'h', 'e', 'n', ' ', '{',
+                '5', '}', ' ', 'u', 's', 'i', 'n', 'g', ' ', 'd', 'i', 's',
+                'r', 'i', 'b', 'u', 't', 'e', 'd', ' ', 'i', 'n', 't', 'e',
+                'r', 's', 'e', 'c', 't', 'i', 'o', 'n', '.', '.', '.'));
         bag1.setSharedNumbersDist(new Bag(SetUtil.set(4L, 5L)),
             new Bag(SetUtil.set(5L)));
-        IO.println("Printing content of bag1");
+        IO.println(SeqUtil.seq('P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ',
+                'c', 'o', 'n', 't', 'e', 'n', 't', ' ', 'o', 'f', ' ', 'b',
+                'a', 'g', '1'));
         bag1.printBag();
-        IO.println("\n");
-        IO.print("Printing power bags of bag2..\n");
+        IO.println(SeqUtil.seq('\n'));
+        IO.print(SeqUtil.seq('P', 'r', 'i', 'n', 't', 'i', 'n', 'g', ' ', 'p',
+                'o', 'w', 'e', 'r', ' ', 'b', 'a', 'g', 's', ' ', 'o', 'f',
+                ' ', 'b', 'a', 'g', '2', '.', '.', '\n'));
 
         for (Iterator iterator_1 = bag2.powerBag().iterator();
                 iterator_1.hasNext();) {
             Bag b = (Bag) iterator_1.next();
             b.printBag();
-            IO.print("\n");
+            IO.print(SeqUtil.seq('\n'));
         }
     }
 
     public void printBag() {
-        IO.print("{");
+        IO.print(SeqUtil.seq('{'));
 
         if (numbers.size() == 0L) {
-            IO.print(" ");
+            IO.print(SeqUtil.seq(' '));
         } else {
             for (Iterator iterator_2 = numbers.iterator();
                     iterator_2.hasNext();) {
                 Number e = (Number) iterator_2.next();
-                IO.printf(" %s ", SeqUtil.seq(e));
+                IO.printf(SeqUtil.seq(' ', '%', 's', ' '), SeqUtil.seq(e));
             }
         }
 
-        IO.print("}");
+        IO.print(SeqUtil.seq('}'));
     }
 
     public VDMSet getNumbers() {
         return numbers.clone();
     }
 
-    public boolean hasNumber(final Number n) {
+    public Boolean hasNumber(final Number n) {
         return numbers.contains(n);
     }
 
-    public boolean hasNotNumber(final Number n) {
+    public Boolean hasNotNumber(final Number n) {
         return !(numbers.contains(n));
     }
 
@@ -135,19 +205,19 @@ public class Bag {
         numbers = SetUtil.diff(numbers.clone(), bag.getNumbers());
     }
 
-    public boolean contains(final Bag bag) {
+    public Boolean contains(final Bag bag) {
         return numbers.containsAll(bag.getNumbers());
     }
 
-    public boolean properContains(final Bag bag) {
+    public Boolean properContains(final Bag bag) {
         return SetUtil.psubset(bag.getNumbers(), numbers);
     }
 
-    public boolean eq(final Bag bag) {
+    public Boolean eq(final Bag bag) {
         return SetUtil.equals(numbers, bag.getNumbers());
     }
 
-    public boolean neq(final Bag bag) {
+    public Boolean neq(final Bag bag) {
         return !(SetUtil.equals(numbers, bag.getNumbers()));
     }
 

@@ -1,0 +1,23 @@
+class Entry 
+
+functions
+
+functions
+
+public static bool_nat_map : seq of bool -> (bool -> nat) -> seq of nat
+bool_nat_map(s) (f) == 
+if s = [] then 
+	[]
+else
+	[f(hd s)] ^ bool_nat_map(tl s)(f);
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let f = (lambda b : bool & if b then 1 else 0),
+		xs = [true, false, true, true, true]
+in
+	return bool_nat_map(xs)(f);
+	
+end Entry

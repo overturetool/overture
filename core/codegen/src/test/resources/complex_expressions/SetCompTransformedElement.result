@@ -8,7 +8,7 @@ public class Entry {
     }
 
     public static Object Run() {
-        boolean forAllExpResult_1 = true;
+        Boolean forAllExpResult_1 = true;
         VDMSet set_1 = SetUtil.set(1L);
 
         for (Iterator iterator_1 = set_1.iterator();

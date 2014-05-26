@@ -1,0 +1,23 @@
+class Entry
+
+functions
+
+functions
+
+public static nat_map : seq of nat -> (nat -> nat) -> seq of nat
+nat_map(s) (f) == 
+if s = [] then 
+	[]
+else
+	[f(hd s)] ^ nat_map(tl s)(f);
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let f = (lambda x : int & x*x),
+		xs = [1,2,3,4,5,6,7,8,9,10]
+in
+	return nat_map(xs)(f);
+	
+end Entry

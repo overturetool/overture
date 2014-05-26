@@ -420,7 +420,13 @@ public class NextGenRTLogger implements IRTLogger
 			return operation.getSelf().type.getName().getName();
 		} else
 		{
-			return SClassDefinitionAssistantInterpreter.getName(operation.classdef);
+			//return SClassDefinitionAssistantInterpreter.getName(operation.classdef);
+			if (operation.classdef.getName() != null)
+			{
+				return operation.classdef.getName().getName();
+			}
+
+			return null;
 		}
 	}
 

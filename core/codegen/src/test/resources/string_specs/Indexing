@@ -1,0 +1,23 @@
+class Entry
+
+values
+
+a = "abc";
+
+functions
+
+static
+public s :  () -> seq of char
+s () == "def";
+
+static
+public f :  () -> seq of char
+f () ==  ["ghi"(1)] ^ [a(1)] ^ [s()(1)];
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	return a ^ s() ^ f();
+
+end Entry

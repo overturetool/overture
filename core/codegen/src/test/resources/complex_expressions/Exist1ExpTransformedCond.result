@@ -14,7 +14,7 @@ public class Entry {
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && (exists1Counter_1.longValue() < 2L);) {
             Number x = ((Number) iterator_1.next());
-            boolean forAllExpResult_1 = true;
+            Boolean forAllExpResult_1 = true;
             VDMSet set_2 = SetUtil.set(2L);
 
             for (Iterator iterator_2 = set_2.iterator();

@@ -100,7 +100,7 @@ public class Company {
     }
 
     private Number not_used(final Number r, final Number n1, final Number n,
-        final char c, final boolean b) {
+        final Character c, final Boolean b) {
         return 2.1;
     }
 

@@ -23,7 +23,7 @@ import org.overture.ast.lex.Dialect;
 import org.overture.ast.node.INode;
 import org.overture.codegen.analysis.violations.Violation;
 import org.overture.codegen.assistant.LocationAssistantCG;
-import org.overture.codegen.ooast.NodeInfo;
+import org.overture.codegen.ir.NodeInfo;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;

@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -24,20 +25,23 @@ import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.analysis.violations.Violation;
 import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.assistant.LocationAssistantCG;
-import org.overture.codegen.constants.IJavaCodeGenConstants;
-import org.overture.codegen.constants.IOoAstConstants;
-import org.overture.codegen.ooast.NodeInfo;
+import org.overture.codegen.constants.IRConstants;
+import org.overture.codegen.ir.IRSettings;
+import org.overture.codegen.ir.NodeInfo;
 import org.overture.codegen.utils.AnalysisExceptionCG;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.GeneratedModule;
+import org.overture.codegen.vdm2java.IJavaCodeGenConstants;
 import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
+import org.overture.codegen.vdm2java.JavaSettings;
 import org.overture.config.Settings;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.plugins.codegen.Activator;
 import org.overture.ide.plugins.codegen.CodeGenConsole;
+import org.overture.ide.plugins.codegen.ICodeGenConstants;
 import org.overture.ide.plugins.codegen.util.PluginVdm2JavaUtil;
 import org.overture.ide.ui.utility.VdmTypeCheckerUi;
 
@@ -120,6 +124,20 @@ public class Vdm2JavaCommand extends AbstractHandler
 			{
 				// Begin code generation
 				final JavaCodeGen vdm2java = new JavaCodeGen();
+
+				IPreferenceStore preferences = Activator.getDefault().getPreferenceStore();
+				boolean generateCharSeqsAsStrings = preferences.getBoolean(ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRINGS);
+				
+				IRSettings irSettings = new IRSettings();
+				irSettings.setCharSeqAsString(generateCharSeqsAsStrings);
+
+				boolean disableCloning = preferences.getBoolean(ICodeGenConstants.DISABLE_CLONING);
+				
+				JavaSettings javaSettings = new JavaSettings();
+				javaSettings.setDisableCloning(disableCloning);
+				
+				vdm2java.setSettings(irSettings);
+				vdm2java.setJavaSettings(javaSettings);
 
 				try
 				{
@@ -235,7 +253,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 			vdm2java.generateJavaSourceFile(quotesFolder, quotes);
 			
 			CodeGenConsole.GetInstance().println("Quotes interface generated.");
-			File quotesFile = new File(outputFolder, IOoAstConstants.QUOTES_INTERFACE_NAME + IJavaCodeGenConstants.JAVA_FILE_EXTENSION);
+			File quotesFile = new File(outputFolder, IRConstants.QUOTES_INTERFACE_NAME + IJavaCodeGenConstants.JAVA_FILE_EXTENSION);
 			CodeGenConsole.GetInstance().println("Java source file: " + quotesFile.getAbsolutePath());
 			CodeGenConsole.GetInstance().println("");
 		}	

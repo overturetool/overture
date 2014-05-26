@@ -4,11 +4,11 @@ import java.util.*;
 
 
 public class Alarm {
-    private String descr;
+    private VDMSeq descr;
     private Number reqQuali;
 
-    public Alarm(final Number quali, final String str) {
-        descr = str;
+    public Alarm(final Number quali, final VDMSeq str) {
+        descr = str.clone();
         reqQuali = quali;
     }
 
@@ -59,8 +59,8 @@ public class Plant {
     public Plant() {
     }
 
-    private static boolean PlantInv(final VDMSet as, final VDMMap sch) {
-        boolean forAllExpResult_1 = true;
+    private static Boolean PlantInv(final VDMSet as, final VDMMap sch) {
+        Boolean forAllExpResult_1 = true;
         VDMSet set_1 = MapUtil.dom(sch.clone());
 
         for (Iterator iterator_1 = set_1.iterator();
@@ -69,19 +69,19 @@ public class Plant {
             forAllExpResult_1 = !(((VDMSet) sch.get(p)).isEmpty());
         }
 
-        boolean forAllExpResult_2 = true;
+        Boolean forAllExpResult_2 = true;
         VDMSet set_2 = as.clone();
 
         for (Iterator iterator_2 = set_2.iterator();
                 iterator_2.hasNext() && forAllExpResult_2;) {
             Alarm a = ((Alarm) iterator_2.next());
-            boolean forAllExpResult_3 = true;
+            Boolean forAllExpResult_3 = true;
             VDMSet set_3 = MapUtil.dom(sch.clone());
 
             for (Iterator iterator_3 = set_3.iterator();
                     iterator_3.hasNext() && forAllExpResult_3;) {
                 Token p = ((Token) iterator_3.next());
-                boolean existsExpResult_1 = false;
+                Boolean existsExpResult_1 = false;
                 VDMSet set_4 = ((VDMSet) sch.get(p)).clone();
 
                 for (Iterator iterator_4 = set_4.iterator();
@@ -102,7 +102,7 @@ public class Plant {
 
     public Expert ExpertToPage(final Alarm a, final Token p) {
         Expert expert = null;
-        boolean success_1 = false;
+        Boolean success_1 = false;
         VDMSet set_5 = ((VDMSet) schedule.get(p)).clone();
 
         for (Iterator iterator_5 = set_5.iterator();
@@ -165,13 +165,21 @@ import java.util.*;
 
 
 public class Entry {
-    private static final Token p1 = new Token("Monday day");
-    private static final Token p2 = new Token("Monday night");
-    private static final Token p3 = new Token("Tuesday day");
-    private static final Token p4 = new Token("Tuesday night");
+    private static final Token p1 = new Token(SeqUtil.seq('M', 'o', 'n', 'd',
+                'a', 'y', ' ', 'd', 'a', 'y'));
+    private static final Token p2 = new Token(SeqUtil.seq('M', 'o', 'n', 'd',
+                'a', 'y', ' ', 'n', 'i', 'g', 'h', 't'));
+    private static final Token p3 = new Token(SeqUtil.seq('T', 'u', 'e', 's',
+                'd', 'a', 'y', ' ', 'd', 'a', 'y'));
+    private static final Token p4 = new Token(SeqUtil.seq('T', 'u', 'e', 's',
+                'd', 'a', 'y', ' ', 'n', 'i', 'g', 'h', 't'));
     private static final VDMSet ps = SetUtil.set(p1, p2, p3, p4);
-    private Alarm a1 = new Alarm(Quotes.Mech, "Mechanical fault");
-    private Alarm a2 = new Alarm(Quotes.Chem, "Tank overflow");
+    private Alarm a1 = new Alarm(Quotes.Mech,
+            SeqUtil.seq('M', 'e', 'c', 'h', 'a', 'n', 'i', 'c', 'a', 'l', ' ',
+                'f', 'a', 'u', 'l', 't'));
+    private Alarm a2 = new Alarm(Quotes.Chem,
+            SeqUtil.seq('T', 'a', 'n', 'k', ' ', 'o', 'v', 'e', 'r', 'f', 'l',
+                'o', 'w'));
     private Expert ex1 = new Expert(SetUtil.set(Quotes.Mech, Quotes.Bio));
     private Expert ex2 = new Expert(SetUtil.set(Quotes.Elec));
     private Expert ex3 = new Expert(SetUtil.set(Quotes.Chem, Quotes.Bio,

@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import org.overture.codegen.constants.IOoAstConstants;
+import org.overture.codegen.constants.IRConstants;
 import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.config.Release;
 
@@ -43,7 +43,7 @@ public class ExecutableSpecTestHandler extends EntryBasedTestHandler
 
 	private void injectSerializableInterface(StringBuffer classCgStr, String className)
 	{
-		if(!className.equals(IOoAstConstants.QUOTES_INTERFACE_NAME) && !className.startsWith(JavaCodeGen.INTERFACE_NAME_PREFIX))
+		if(!className.equals(IRConstants.QUOTES_INTERFACE_NAME) && !className.startsWith(JavaCodeGen.INTERFACE_NAME_PREFIX))
 		{
 			int classNameIdx = classCgStr.indexOf(className);
 			

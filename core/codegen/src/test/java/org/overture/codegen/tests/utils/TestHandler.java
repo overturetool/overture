@@ -1,13 +1,16 @@
 package org.overture.codegen.tests.utils;
 
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 
 import org.overture.ast.lex.Dialect;
-import org.overture.codegen.constants.IJavaCodeGenConstants;
-import org.overture.codegen.constants.IOoAstConstants;
+import org.overture.codegen.constants.IRConstants;
 import org.overture.codegen.utils.GeneralUtils;
+import org.overture.codegen.vdm2java.IJavaCodeGenConstants;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 
@@ -70,13 +73,10 @@ public abstract class TestHandler
 	
 	public void writeToFile(String toWrite, File file) throws IOException
 	{
-		FileWriter fileWriter = new FileWriter(file);
-
-		fileWriter.write(toWrite);
-
-		fileWriter.flush();
-		fileWriter.close();
-
+		PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(file, false), "UTF-8"));
+		BufferedWriter out = new BufferedWriter(writer);
+		out.write(toWrite);
+		out.close();
 	}
 	
 	public File getFile(File parent, String className) throws IOException
@@ -105,7 +105,7 @@ public abstract class TestHandler
 	{
 		File outputDir = parent;
 
-		if (className.equals(IOoAstConstants.QUOTES_INTERFACE_NAME))
+		if (className.equals(IRConstants.QUOTES_INTERFACE_NAME))
 		{
 			outputDir = new File(parent, QUOTES_PACKAGE_NAME);
 			outputDir.mkdirs();

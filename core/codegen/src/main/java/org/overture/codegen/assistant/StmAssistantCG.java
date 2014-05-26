@@ -1,18 +1,12 @@
 package org.overture.codegen.assistant;
 
-import java.util.List;
-
-import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.expressions.PExp;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
 import org.overture.codegen.cgast.expressions.ALetBeStExpCG;
 import org.overture.codegen.cgast.expressions.ALetDefExpCG;
-import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ALetBeStStmCG;
 import org.overture.codegen.cgast.statements.ALetDefStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
-import org.overture.codegen.ooast.OoAstInfo;
 
 public class StmAssistantCG extends AssistantBase
 {
