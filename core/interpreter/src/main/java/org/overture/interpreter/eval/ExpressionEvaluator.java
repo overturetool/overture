@@ -73,16 +73,10 @@ import org.overture.ast.types.PType;
 import org.overture.config.Settings;
 import org.overture.interpreter.assistant.definition.AExplicitFunctionDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AImplicitFunctionDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AFieldExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AIsOfBaseClassExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AIsOfClassExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.APostOpExpAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ASetBindAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.PBindAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.PMultipleBindAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.runtime.ClassContext;
 import org.overture.interpreter.runtime.Context;
@@ -640,7 +634,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			{
 				if (node.getTypedef() != null)
 				{
-					if (PDefinitionAssistantInterpreter.isTypeDefinition(node.getTypedef()))
+					if (ctxt.assistantFactory.createPDefinitionAssistant().isTypeDefinition(node.getTypedef()))
 					{
 						// NB. we skip the DTC enabled check here
 						v.convertValueTo(ctxt.assistantFactory.createPDefinitionAssistant().getType(node.getTypedef()), ctxt);
@@ -1063,7 +1057,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			if (node.getTypeName() != null)
 			{
 
-				if (PDefinitionAssistantInterpreter.isTypeDefinition(node.getTypedef()))
+				if (ctxt.assistantFactory.createPDefinitionAssistant().isTypeDefinition(node.getTypedef()))
 				{
 					// NB. we skip the DTC enabled check here
 					v = v.convertValueTo(ctxt.assistantFactory.createPDefinitionAssistant().getType(node.getTypedef()), ctxt);

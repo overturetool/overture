@@ -186,9 +186,9 @@ public class LatexSourceFile extends SourceFile
 	private String createCoverageTable()
 	{
 		StringBuilder sb = new StringBuilder();
-		sb.append("\\begin{longtable}{|l|r|r|}" + "\n");
+		sb.append("\\begin{longtable}{|l|r|r|r|}" + "\n");
 		sb.append("\\hline" + "\n");
-		sb.append("Function or operation & Coverage & Calls \\\\" + "\n");
+		sb.append("Function or operation & Line & Coverage & Calls \\\\" + "\n");
 		sb.append("\\hline" + "\n");
 		sb.append("\\hline" + "\n");
 
@@ -203,14 +203,14 @@ public class LatexSourceFile extends SourceFile
 			total += calls;
 
 			sb.append("\\hyperref[" + latexLabel(name.getName()) + ":"
-					+ name.getLocation().getStartLine() + "]{"+latexQuote(name.toString()) + ": "+name.getLocation().getStartLine() + "} & "
+					+ name.getLocation().getStartLine() + "]{"+latexQuote(name.toString()) + "} & " + name.getLocation().getStartLine() + "&"
 					+ LexLocation.getSpanPercent(name) + "\\% & " + calls
 					+ " \\\\" + "\n");
 			sb.append("\\hline" + "\n");
 		}
 
 		sb.append("\\hline" + "\n");
-		sb.append(latexQuote(filename.getName()) + " & "
+		sb.append(latexQuote(filename.getName()) + " & & "
 				+ LexLocation.getHitPercent(filename) + "\\% & " + total
 				+ " \\\\" + "\n");
 

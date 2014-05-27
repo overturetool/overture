@@ -29,4 +29,11 @@ public class TokenTests extends AllTest
 
 		return tests;
 	}
+	
+	
+	@Override
+	protected String getPropertyId()
+	{
+		return "token";
+	}
 }

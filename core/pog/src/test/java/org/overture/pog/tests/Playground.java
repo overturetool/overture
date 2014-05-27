@@ -29,20 +29,22 @@ import com.google.gson.reflect.TypeToken;
  */
 public class Playground {
 
-	// switch this flag to update a test result file
-	static boolean WRITE_RESULT = false;
-
-	// switch this flag to print the stored results
-	static boolean SHOW_RESULT = false;
+	
 
 	
 	// comment this annotation out when done! no need to run the test
-	@Test
+	//@Test
 	public void quickTest() throws AnalysisException, IOException,
 			URISyntaxException {
 
-		String model = "src/test/resources/adhoc/sandbox.vdmsl";
-		String result = "src/test/resources/adhoc/sandbox.result";
+		// switch this flag to update a test result file
+		boolean write_result = false;
+
+		// switch this flag to print the stored results
+		boolean show_result = false;
+		
+		String model = "src/test/resources/adhoc/sandbox.vdmpp";
+		String result = "src/test/resources/adhoc/sandbox.RESULT";
 
 		List<INode> ast = TestHelper.getAstFromName(model);
 
@@ -54,11 +56,11 @@ public class Playground {
 			System.out.println(po.getKindString() + " / " + po.getValue());
 		}
 
-		if (WRITE_RESULT) {
+		if (write_result) {
 			this.update(ipol, result);
 		}
 
-		if (SHOW_RESULT) {
+		if (show_result) {
 			this.compareWithResults(ipol, result);
 		}
 
@@ -95,7 +97,7 @@ public class Playground {
 
 		IOUtils.write(json, new FileOutputStream(resultpath));
 		
-		System.out.println("\n" +resultpath + " file updated");
+		System.out.println("\n" +resultpath + " file updated \n");
 
 	}
 

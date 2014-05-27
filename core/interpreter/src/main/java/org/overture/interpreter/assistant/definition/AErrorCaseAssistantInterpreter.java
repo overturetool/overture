@@ -1,9 +1,6 @@
 package org.overture.interpreter.assistant.definition;
 
-import org.overture.ast.expressions.PExp;
-import org.overture.ast.statements.AErrorCase;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 
 public class AErrorCaseAssistantInterpreter
 {
@@ -15,14 +12,14 @@ public class AErrorCaseAssistantInterpreter
 		this.af = af;
 	}
 
-	public static PExp findExpression(AErrorCase err, int lineno)
-	{
-		PExp found = af.createPExpAssistant().findExpression(err.getLeft(), lineno);
-		if (found != null)
-		{
-			return found;
-		}
-		return af.createPExpAssistant().findExpression(err.getRight(), lineno);
-	}
+//	public static PExp findExpression(AErrorCase err, int lineno)
+//	{
+//		PExp found = af.createPExpAssistant().findExpression(err.getLeft(), lineno);
+//		if (found != null)
+//		{
+//			return found;
+//		}
+//		return af.createPExpAssistant().findExpression(err.getRight(), lineno);
+//	}
 
 }

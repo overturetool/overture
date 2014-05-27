@@ -46,6 +46,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AMutexSyncDefinition;
 import org.overture.ast.definitions.APerSyncDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -72,8 +73,6 @@ import org.overture.interpreter.VDMJ;
 import org.overture.interpreter.VDMPP;
 import org.overture.interpreter.VDMRT;
 import org.overture.interpreter.VDMSL;
-import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.messages.rtlog.RTLogger;
 import org.overture.interpreter.messages.rtlog.RTTextLogger;
@@ -99,8 +98,9 @@ import org.overture.parser.config.Properties;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.lex.LexTokenReader;
 import org.overture.parser.syntax.ParserException;
-import org.overture.pog.obligation.ProofObligation;
 import org.overture.pog.obligation.ProofObligationList;
+import org.overture.pog.pub.IProofObligation;
+import org.overture.pog.pub.IProofObligationList;
 import org.overture.util.Base64;
 
 
@@ -2328,7 +2328,7 @@ public class DBGPReader
 	}
 
 	protected void processOvertureCmd(DBGPCommand c)
-		throws DBGPException, IOException, URISyntaxException
+		throws DBGPException, IOException, URISyntaxException, AnalysisException
 	{
 		checkArgs(c, 2, false);
 		DBGPOption option = c.getOption(DBGPOptionType.C);
@@ -2811,10 +2811,10 @@ public class DBGPReader
 		cdataResponse(sb.toString());
 	}
 
-	protected void processPOG(DBGPCommand c) throws IOException
+	protected void processPOG(DBGPCommand c) throws IOException, AnalysisException
 	{
-		ProofObligationList all = interpreter.getProofObligations();
-		ProofObligationList list = null;
+		IProofObligationList all = interpreter.getProofObligations();
+		IProofObligationList list = null;
 
 		if (c.data.equals("*"))
 		{
@@ -2825,9 +2825,9 @@ public class DBGPReader
 			list = new ProofObligationList();
 			String name = c.data + "(";
 
-			for (ProofObligation po: all)
+			for (IProofObligation po: all)
 			{
-				if (po.name.indexOf(name) >= 0)
+				if (po.getName().indexOf(name) >= 0)
 				{
 					list.add(po);
 				}

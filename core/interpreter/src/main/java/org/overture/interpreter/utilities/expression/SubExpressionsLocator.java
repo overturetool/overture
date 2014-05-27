@@ -14,13 +14,7 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SBinaryExp;
 import org.overture.ast.node.INode;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.expression.AApplyExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ACaseAlternativeAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.ACasesExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AElseIfExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AIfExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.SBinaryExpAssistantInterpreter;
+
 /***************************************
  * 
  * This method collects and returns the subexpressions in a expression.

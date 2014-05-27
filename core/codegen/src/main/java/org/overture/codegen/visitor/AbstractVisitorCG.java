@@ -4,9 +4,9 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.node.INode;
-import org.overture.codegen.ooast.OoAstInfo;
+import org.overture.codegen.ir.IRInfo;
 
-public class AbstractVisitorCG<Q extends OoAstInfo, A extends org.overture.codegen.cgast.INode> extends QuestionAnswerAdaptor<Q, A>
+public class AbstractVisitorCG<Q extends IRInfo, A extends org.overture.codegen.cgast.INode> extends QuestionAnswerAdaptor<Q, A>
 {
 
 	@Override

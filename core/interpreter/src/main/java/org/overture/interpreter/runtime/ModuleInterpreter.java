@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -40,8 +41,6 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.modules.ModuleList;
-import org.overture.interpreter.assistant.module.AModuleModulesAssistantInterpreter;
-import org.overture.interpreter.assistant.module.ModuleListAssistantInterpreter;
 import org.overture.interpreter.debug.DBGPReader;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.scheduler.BasicSchedulableThread;
@@ -55,7 +54,7 @@ import org.overture.interpreter.values.Value;
 import org.overture.parser.lex.LexTokenReader;
 import org.overture.parser.messages.VDMErrorsException;
 import org.overture.parser.syntax.ExpressionReader;
-import org.overture.pog.obligation.ProofObligationList;
+import org.overture.pog.pub.IProofObligationList;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.ModuleEnvironment;
 
@@ -325,7 +324,7 @@ public class ModuleInterpreter extends Interpreter
 //	}
 
 	@Override
-	public ProofObligationList getProofObligations()
+	public IProofObligationList getProofObligations() throws AnalysisException
 	{
 		return assistantFactory.createModuleListAssistant().getProofObligations(modules);
 	}

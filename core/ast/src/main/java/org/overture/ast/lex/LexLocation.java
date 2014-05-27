@@ -48,9 +48,9 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 	@Override
 	public LexLocation clone()
 	{
-		LexLocation location= new LexLocation(file, module, startLine, startPos, endLine, endPos, startOffset, endOffset);
+		LexLocation location = new LexLocation(file, module, startLine, startPos, endLine, endPos, startOffset, endOffset);
 		location.hits = hits;
-		location.executable=executable;
+		location.executable = executable;
 		return location;
 	}
 
@@ -319,10 +319,10 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 			uniqueLocations = new HashMap<LexLocation, LexLocation>();
 		}
 
-//		synchronized (locationToAstNode)
-//		{
-//			locationToAstNode = new Hashtable<LexLocation, INode>();
-//		}
+		// synchronized (locationToAstNode)
+		// {
+		// locationToAstNode = new Hashtable<LexLocation, INode>();
+		// }
 		//
 		// synchronized (nameSpans)
 		// {
@@ -627,28 +627,30 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 
 		br.close();
 	}
-	
+
 	/**
-	 * This method handles the case where a location exist both with hits>0 and hits==0. It will remove the location with hits==0 when another location hits>0 exists
+	 * This method handles the case where a location exist both with hits>0 and hits==0. It will remove the location
+	 * with hits==0 when another location hits>0 exists
+	 * 
 	 * @param locations
-	 * @return
+	 * @return the list of locations where the unwanted locations have been removed
 	 */
 	public static List<LexLocation> removeDuplicates(List<LexLocation> locations)
 	{
 		List<LexLocation> tmp = new Vector<LexLocation>();
-	c:	for (LexLocation l1 : locations)
+		c: for (LexLocation l1 : locations)
 		{
-			if(l1.hits==0)
+			if (l1.hits == 0)
 			{
 				for (LexLocation l2 : locations)
 				{
-					if(l1.equals(l2)&& l2.hits>0)
+					if (l1.equals(l2) && l2.hits > 0)
 					{
 						continue c;
 					}
 				}
 				tmp.add(l1);
-			}else
+			} else
 			{
 				tmp.add(l1);
 			}

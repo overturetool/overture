@@ -7,10 +7,10 @@ public class Entry {
     public Entry() {
     }
 
-    public static Func_1<String, VDMSeq, Func_1<Tuple, Tuple, Number>> f(
+    public static Func_1<VDMSeq, VDMSeq, Func_1<Tuple, Tuple, Number>> f(
         final Number n, final Character c) {
-        return new Func_1<String, VDMSeq, Func_1<Tuple, Tuple, Number>>() {
-                public Func_1<Tuple, Tuple, Number> eval(final String xs,
+        return new Func_1<VDMSeq, VDMSeq, Func_1<Tuple, Tuple, Number>>() {
+                public Func_1<Tuple, Tuple, Number> eval(final VDMSeq xs,
                     final VDMSeq ys) {
                     return new Func_1<Tuple, Tuple, Number>() {
                             public Number eval(final Tuple tn, final Tuple tc) {
@@ -22,7 +22,7 @@ public class Entry {
     }
 
     public static Object Run() {
-        return f(1L, 'a').eval("a", SeqUtil.seq(1L))
+        return f(1L, 'a').eval(SeqUtil.seq('a'), SeqUtil.seq(1L))
                    .eval(Tuple.mk_(1L, 1L), Tuple.mk_('a', 'a'));
     }
 }

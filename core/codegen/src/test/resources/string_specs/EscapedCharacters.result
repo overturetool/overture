@@ -1,0 +1,15 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        return "\n one \n \t two \t \r three \r \" \\ four";
+    }
+}
+
+##########

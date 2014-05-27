@@ -3,6 +3,7 @@ package org.overture.interpreter.assistant.module;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.util.modules.ModuleList;
@@ -15,6 +16,7 @@ import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.RootContext;
 import org.overture.interpreter.runtime.StateContext;
 import org.overture.pog.obligation.ProofObligationList;
+import org.overture.pog.pub.IProofObligationList;
 
 public class ModuleListAssistantInterpreter
 {
@@ -84,9 +86,11 @@ public class ModuleListAssistantInterpreter
 		return initialContext;
 	}
 
-	public ProofObligationList getProofObligations(ModuleList modules)
+	public IProofObligationList getProofObligations(ModuleList modules) throws AnalysisException
 	{
-		ProofObligationList obligations = new ProofObligationList();
+		
+		
+		IProofObligationList obligations = new ProofObligationList();
 
 		for (AModuleModules m : modules)
 		{

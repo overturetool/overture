@@ -34,6 +34,7 @@ public class ModuleSlPoTestCase extends PogTestCase
 
 	public void test() throws Exception
 	{
+		//TODO continue POG SL test checks one by one
 		try
 		{
 			configureResultGeneration();

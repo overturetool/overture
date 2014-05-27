@@ -1,0 +1,23 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    private static final String a = "hej";
+
+    public Entry() {
+    }
+
+    public static String f() {
+        return "cat";
+    }
+
+    public static Object Run() {
+        return new String(new char[] { "a".charAt(0) }) +
+        new String(new char[] { a.charAt(0) }) +
+        new String(new char[] { f().charAt(0) });
+    }
+}
+
+##########

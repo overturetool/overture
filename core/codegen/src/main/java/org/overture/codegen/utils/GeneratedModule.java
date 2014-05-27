@@ -3,7 +3,7 @@ package org.overture.codegen.utils;
 import java.util.List;
 import java.util.Set;
 
-import org.overture.codegen.ooast.NodeInfo;
+import org.overture.codegen.ir.NodeInfo;
 
 public class GeneratedModule extends Generated
 {

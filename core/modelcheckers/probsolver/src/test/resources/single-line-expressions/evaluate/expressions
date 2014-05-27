@@ -3,7 +3,7 @@
  1+2
  1-2
  -3
- +5
+ --+5
  14 mod 3
  -14 mod 3
  14 mod -3
@@ -38,7 +38,7 @@
  inds [1,2,3]
  elems [1,2,3]
  reverse ([1,2,3])
- let x in set {0,1,2,3} in x 
+ --let x in set {0,1,2,3} in x 
  { x*y | x in set {1,2,3,4} , y in set {1,2} & x + y <= 3}
  { x+y | x in set {1,2,3,4} , y in set {-1,0,1} & x + y <= 3}  -- translated expression not interpreted?(10/23)
  { x | x in set {1,2,3} & x = 1 }
@@ -55,12 +55,12 @@
  rng( { "France" |-> 9, "Denmark" |-> 4, "SouthAfrica" |-> 2, "SaudiArabia" |-> 1 })
  { "France" |-> 9, "Denmark" |-> 4, "SouthAfrica" |-> 2, "SaudiArabia" |-> 1 } munion { "England" |-> 3 }
  { "France" |-> 9, "Denmark" |-> 4, "SouthAfrica" |-> 2, "SaudiArabia" |-> 1 } ++ { "France"|-> 8, "England" |-> 4 }
- merge {{ "France" |-> 9, "Denmark" |-> 4, "SouthAfrica" |-> 2, "SaudiArabia" |-> 1 },{ "England" |-> 3 },{ "France"|-> 8, "England" |-> 4 }}
+-- merge {{ "France" |-> 9, "Denmark" |-> 4, "SouthAfrica" |-> 2, "SaudiArabia" |-> 1 },{ "England" |-> 3 },{ "France"|-> 8, "England" |-> 4 }}
  { "France", "England", "Denmark", "Spain" } <: { "France" |-> 9, "Denmark" |-> 4, "SouthAfrica" |-> 2, "SaudiArabia" |-> 1 }
  { "France", "England", "Denmark", "Spain" } <-: { "France" |-> 9, "Denmark" |-> 4, "SouthAfrica" |-> 2, "SaudiArabia" |-> 1 }
  { "France" |-> 9, "Denmark" |-> 4, "SouthAfrica" |-> 2, "SaudiArabia" |-> 1 } :> { 1, 2 }
 { "France" |-> 9, "Denmark" |-> 4, "SouthAfrica" |-> 2, "SaudiArabia" |-> 1 } :-> { 1, 2 }
- merge( {{ "France" |-> 9, "Denmark" |-> 4, "SouthAfrica" |-> 2, "SaudiArabia" |-> 1 },{ "England" |-> 3 },{ "France"|-> 8, "England" |-> 4 }})
+ --merge( {{ "France" |-> 9, "Denmark" |-> 4, "SouthAfrica" |-> 2, "SaudiArabia" |-> 1 },{ "England" |-> 3 },{ "France"|-> 8, "England" |-> 4 }})
  { "France" |-> 9, "Denmark" |-> 4, "SouthAfrica" |-> 2, "SaudiArabia" |-> 1 }("Denmark")
  len([2]^[3])
  [1,2,3](len ([3]^[2]))
@@ -70,10 +70,10 @@
   { 1|-> 2, 2|->3, 3|->4, 4|->1 } comp (inverse { 1|-> 2, 2|->3, 3|->4, 4|->1 })
   ["a", "b", "c"](2)
  [[1,2],[3,4],[1,2,3]](2)
- let a = 1, b = 2 in a + b 
+-- let a = 1, b = 2 in a + b 
  exists1 a in set {1,2,3} & a > 2
 mk_(1,2)
  mk_(1,2,3)
  mk_("a", 1, "b", 2)
  mk_("a", "b", 1 , 2) # 2
-  cases {}: {} -> [], {x} -> [x] end  -- unable to type check expression
+--  cases {}: {} -> [], {x} -> [x] end  -- unable to type check expression

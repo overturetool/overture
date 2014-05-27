@@ -3,26 +3,26 @@ package org.overture.codegen.vdm2java;
 import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
-import org.overture.codegen.ooast.OoAstOperatorInfo;
-import org.overture.codegen.ooast.OoAstOperatorLookup;
+import org.overture.codegen.ir.IROperatorInfo;
+import org.overture.codegen.ir.IROperatorLookup;
 
 public class JavaPrecedence
 {
-	public OoAstOperatorLookup opLookup;
+	public IROperatorLookup opLookup;
 	
 	public JavaPrecedence()
 	{
-		this.opLookup = new OoAstOperatorLookup();
+		this.opLookup = new IROperatorLookup();
 	}
 	
 	public boolean mustIsolate(PExpCG parentExp, PExpCG exp, boolean leftChild)
 	{
-		OoAstOperatorInfo parentOpInfo = opLookup.find(parentExp.getClass());
+		IROperatorInfo parentOpInfo = opLookup.find(parentExp.getClass());
 
 		if (parentOpInfo == null)
 			return false;
 
-		OoAstOperatorInfo expOpInfo = opLookup.find(exp.getClass());
+		IROperatorInfo expOpInfo = opLookup.find(exp.getClass());
 
 		if (expOpInfo == null)
 			return false;
