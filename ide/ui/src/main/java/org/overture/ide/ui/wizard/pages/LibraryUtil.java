@@ -20,6 +20,8 @@ package org.overture.ide.ui.wizard.pages;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
@@ -35,53 +37,86 @@ import org.overture.ide.ui.utility.PluginFolderInclude;
 
 public class LibraryUtil
 {
+	public static final String LIB_VDM_UNIT = "VDMUnit";
+	public static final String LIB_CSV = "CSV";
+	public static final String LIB_VDM_UTIL = "VDMUtil";
+	public static final String LIB_MATH = "MATH";
+	public static final String LIB_IO = "IO";
+
 	public static void setSelections(IVdmProject prj, LibrarySelection selection)
 			throws CoreException
 	{
-		if(prj == null)
+		if (prj == null)
 		{
 			return;
 		}
-		String extension="vdmpp";
+		String extension = "vdmpp";
 		switch (prj.getDialect())
 		{
 			case VDM_PP:
-				extension="vdmpp";
+				extension = "vdmpp";
 				break;
 			case VDM_RT:
-				extension="vdmrt";
+				extension = "vdmrt";
 				break;
 			case VDM_SL:
-				extension="vdmsl";
+				extension = "vdmsl";
 				break;
 			case CML:
 				break;
 
 		}
-			selection.setIoChecked(prj.getModelBuildPath().getLibrary().getFile(new Path("IO."+extension)).exists());
-			selection.setMathChecked(prj.getModelBuildPath().getLibrary().getFile(new Path("MATH."+extension)).exists());
-			selection.setVdmUtilChecked(prj.getModelBuildPath().getLibrary().getFile(new Path("VDMUtil."+extension)).exists());
-			selection.setCsvChecked(prj.getModelBuildPath().getLibrary().getFile(new Path("CSV."+extension)).exists());
-			selection.setVdmUnitChecked(prj.getModelBuildPath().getLibrary().getFile(new Path("VDMUnit."+extension)).exists());
+
+		extension = "." + extension;
+
+		selection.setIoChecked(prj.getModelBuildPath().getLibrary().getFile(new Path(LIB_IO
+				+ extension)).exists());
+		selection.setMathChecked(prj.getModelBuildPath().getLibrary().getFile(new Path(LIB_MATH
+				+ extension)).exists());
+		selection.setVdmUtilChecked(prj.getModelBuildPath().getLibrary().getFile(new Path(LIB_VDM_UTIL
+				+ extension)).exists());
+		selection.setCsvChecked(prj.getModelBuildPath().getLibrary().getFile(new Path(LIB_CSV
+				+ extension)).exists());
+		selection.setVdmUnitChecked(prj.getModelBuildPath().getLibrary().getFile(new Path(LIB_VDM_UNIT
+				+ extension)).exists());
 	}
-	
-	
 
 	public static void createSelectedLibraries(IVdmProject prj,
 			LibrarySelection selection) throws CoreException
 	{
-		boolean useMath = selection.isMathSelected();
-		boolean useIo = selection.isIoSelected();
-		boolean useUtil = selection.isUtilSelected();
-		boolean useCsvIo = selection.isCsvSelected();
-		boolean useVdmUnit = selection.isVdmUnitSelected();
+		Set<String> importLibraries = new HashSet<String>();
 
-		if (useCsvIo)
+		if (selection.isMathSelected())
 		{
-			useIo = true;
+			importLibraries.add(LIB_MATH);
 		}
 
-		if (useIo || useMath || useUtil || useVdmUnit)
+		if (selection.isIoSelected())
+		{
+			importLibraries.add(LIB_IO);
+		}
+		if (selection.isUtilSelected())
+		{
+			importLibraries.add(LIB_VDM_UTIL);
+		}
+		if (selection.isCsvSelected())
+		{
+			importLibraries.add(LIB_IO);
+			importLibraries.add(LIB_CSV);
+		}
+		if (selection.isVdmUnitSelected())
+		{
+			importLibraries.add(LIB_VDM_UNIT);
+		}
+
+		createSelectedLibraries(prj, importLibraries);
+	}
+
+	public static void createSelectedLibraries(IVdmProject prj,
+			Set<String> importLibraries) throws CoreException
+	{
+
+		if (!importLibraries.isEmpty())
 		{
 			IProject project = (IProject) prj.getAdapter(IProject.class);
 			Assert.isNotNull(project, "Project could not be adapted");
@@ -108,40 +143,19 @@ public class LibraryUtil
 			extension = dialect.name().replace("_", "").toLowerCase();
 			try
 			{
-				if (useIo)
-					if (dialect == Dialect.VDM_SL)
-						copyFile(libFolder, "includes/lib/sl/IO.vdmsl", "IO."
-								+ extension);
-					else
-						copyFile(libFolder, "includes/lib/pp/IO.vdmpp", "IO."
-								+ extension);
 
-				if (useMath)
+				for (String lib : importLibraries)
+				{
+					String path = "includes/lib/";
 					if (dialect == Dialect.VDM_SL)
-						copyFile(libFolder, "includes/lib/sl/MATH.vdmsl", "MATH."
-								+ extension);
-					else
-						copyFile(libFolder, "includes/lib/pp/MATH.vdmpp", "MATH."
-								+ extension);
-
-				if (useUtil)
-					if (dialect == Dialect.VDM_SL)
-						copyFile(libFolder, "includes/lib/sl/VDMUtil.vdmsl", "VDMUtil."
-								+ extension);
-					else
-						copyFile(libFolder, "includes/lib/pp/VDMUtil.vdmpp", "VDMUtil."
-								+ extension);
-				if (useCsvIo)
-					if (dialect == Dialect.VDM_SL)
-						copyFile(libFolder, "includes/lib/sl/CSV.vdmsl", "CSV."
-								+ extension);
-					else
-						copyFile(libFolder, "includes/lib/pp/CSV.vdmpp", "CSV."
-								+ extension);
-				if (useVdmUnit)
-					if (dialect != Dialect.VDM_SL)
-						copyFile(libFolder, "includes/lib/pp/VDMUnit.vdmpp", "VDMUnit."
-								+ extension);
+					{
+						path += "sl/" + lib + ".vdmsl";
+					} else
+					{
+						path += "pp/" + lib + ".vdmpp";
+					}
+					copyFile(libFolder, path, lib + "." + extension);
+				}
 
 			} catch (IOException e)
 			{

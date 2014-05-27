@@ -29,6 +29,8 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
+import org.eclipse.jface.text.quickassist.IQuickAssistAssistant;
+import org.eclipse.jface.text.quickassist.QuickAssistAssistant;
 import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.reconciler.MonoReconciler;
 import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
@@ -36,6 +38,7 @@ import org.eclipse.jface.text.rules.ITokenScanner;
 import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
+import org.eclipse.ui.internal.editors.text.EditorsPlugin;
 import org.overture.ide.ui.IVdmUiConstants;
 import org.overture.ide.ui.VdmUIPlugin;
 import org.overture.ide.ui.editor.partitioning.IVdmPartitions;
@@ -44,6 +47,7 @@ import org.overture.ide.ui.editor.syntax.VdmColorProvider;
 import org.overture.ide.ui.editor.syntax.VdmMultiLineCommentScanner;
 import org.overture.ide.ui.editor.syntax.VdmSingleLineCommentScanner;
 import org.overture.ide.ui.editor.syntax.VdmStringScanner;
+import org.overture.ide.ui.quickfix.VdmQuickAssistantProcessor;
 
 public abstract class VdmSourceViewerConfiguration extends
 		TextSourceViewerConfiguration
@@ -225,6 +229,19 @@ public abstract class VdmSourceViewerConfiguration extends
 		}
 
 		return super.getDefaultPrefixes(sourceViewer, contentType);
+	}
+	
+	
+	@SuppressWarnings("restriction")
+	@Override
+	public IQuickAssistAssistant getQuickAssistAssistant(
+			ISourceViewer sourceViewer)
+	{
+		QuickAssistAssistant assistant= new QuickAssistAssistant();
+		assistant.setRestoreCompletionProposalSize(EditorsPlugin.getDefault().getDialogSettingsSection("quick_assist_proposal_size")); //$NON-NLS-1$
+		assistant.setQuickAssistProcessor(new VdmQuickAssistantProcessor());
+		
+		return assistant;
 	}
 
 }
