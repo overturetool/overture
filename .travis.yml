@@ -8,10 +8,6 @@ jdk:
 branches:
   except:
     - docs
-env:
-  global:
-    - SONATYPE_USERNAME=joeycoleman
-    - secure: "LV3gkLdIXN/W10xeoIZ5lxFbVGeOPjwEvWjYzoCeX/MQrSWiY+oK22mhL1H84RczHHk9jvwlRK9ZEElKOj0vl/ywL/mF7WJgoUIDMUIAQ/jeZsJ7tF4S5o1Drjgwa6dZYLgEkNXWE4cb63vDGUQhRJz3Qq3/fntmvbKL2qCmJcE="
 before_install:
   - mvn -version
   - if [ $TRAVIS_BRANCH == "development" ] ; then { sudo apt-get update -qq; sudo apt-get install -qq nsis nsis-common nsis-pluginapi; } ; fi
@@ -27,5 +23,3 @@ script:
   - echo travis_fold:start:compile_ide
   - mvn -B install -f ide/pom.xml -Dgit-commit-id.skip=true -Pall-platforms
   - echo travis_fold:end:compile_ide
-after_success:
-  - if [ $TRAVIS_BRANCH == "development" ] ; then { echo \"-*- Deploying snapshots to Sonatype -*-\"; python tools/scripts/addServer.py; mvn -Dmaven.test.skip=true -Dmaven.javadoc.skip=true deploy --settings ~/.m2/mySettings.xml; } ; fi
