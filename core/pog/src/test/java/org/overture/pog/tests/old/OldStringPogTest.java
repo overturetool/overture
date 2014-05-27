@@ -1,7 +1,5 @@
 package org.overture.pog.tests.old;
 
-import static org.junit.Assert.assertTrue;
-
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -66,8 +64,7 @@ public class OldStringPogTest
 		}.getType();
 		List<PoResult> results = gson.fromJson(json, datasetListType);
 
-		assertTrue("Generated and stored POs differ",
-				TestHelper.sameElements(results, ipol));
+		TestHelper.checkSameElements(results, ipol);
 
 	}
 
