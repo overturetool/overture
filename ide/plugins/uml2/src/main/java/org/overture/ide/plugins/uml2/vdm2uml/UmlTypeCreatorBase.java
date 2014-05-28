@@ -7,7 +7,6 @@ import java.util.Map;
 import org.eclipse.uml2.uml.Type;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.AClassType;
@@ -99,12 +98,12 @@ public class UmlTypeCreatorBase
 		{
 			if (type instanceof ANamedInvariantType)
 			{
-				return SClassDefinition.class.cast(type.getAncestor(SClassDefinition.class)).getName().getName()
+				return ((ANamedInvariantType) type).getName().getModule()//SClassDefinition.class.cast(type.getAncestor(SClassDefinition.class)).getName().getName()
 						+ NAME_SEPERATOR
 						+ ((ANamedInvariantType) type).getName().getName();
 			} else if (type instanceof ARecordInvariantType)
 			{
-				return SClassDefinition.class.cast(type.getAncestor(SClassDefinition.class)).getName().getName()
+				return ((ARecordInvariantType) type).getName().getModule()//SClassDefinition.class.cast(type.getAncestor(SClassDefinition.class)).getName().getName()
 						+ NAME_SEPERATOR
 						+ ((ARecordInvariantType) type).getName().getName();
 			}

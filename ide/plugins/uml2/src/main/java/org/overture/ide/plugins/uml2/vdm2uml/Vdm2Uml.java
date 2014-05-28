@@ -54,6 +54,55 @@ import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 
 public class Vdm2Uml
 {
+	private static class ClassesMap extends HashMap<String, Class>
+	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public String toString()
+		{
+			StringBuilder sb = new StringBuilder();
+
+			for (java.util.Map.Entry<String, Class> entry : entrySet())
+			{
+				String prefix = entry.getKey();
+				while(prefix.length()<20)
+				{
+					prefix+=" ";
+				}
+				final Class value = entry.getValue();
+				sb.append(prefix+" -> "+ formatClass(value)+"\n");
+				for (Classifier nestedValue : value.getNestedClassifiers())
+				{
+					prefix="";
+					while(prefix.length()<20)
+					{
+						prefix+=" ";
+					}
+					sb.append(prefix+ "   -> "+formatClass(nestedValue)+"\n");
+				}
+			}
+			
+			return sb.toString();
+		}
+		
+		private static String formatClass(Classifier nestedValue)
+		{
+			 String name = nestedValue.getName();
+				while(name.length()<20)
+				{
+					name+=" ";
+				}
+				
+			return 	name+"\t"+(nestedValue+"").substring(nestedValue.toString().indexOf('('));
+				
+				
+		}
+	}
+
 	private UmlConsole console = new UmlConsole();
 	UmlTypeCreator utc = new UmlTypeCreator(new UmlTypeCreator.ClassTypeLookup()
 	{
@@ -69,7 +118,7 @@ public class Vdm2Uml
 		}
 	}, console);
 	private Model modelWorkingCopy = null;
-	private Map<String, Class> classes = new HashMap<String, Class>();
+	private Map<String, Class> classes = new ClassesMap();
 	private boolean extendedAssociationMapping = false;
 	private boolean deployArtifactsOutsideNodes = false;
 
@@ -127,7 +176,7 @@ public class Vdm2Uml
 
 	public void save(URI uri) throws IOException
 	{
-		console.out.println("Saving UML model to: " + uri);
+		console.out.println("Saving UML model to: " + uri.toFileString()+".uml");
 		Resource resource = new ResourceSetImpl().createResource(uri.appendFileExtension(UMLResource.FILE_EXTENSION));
 		resource.getContents().add(modelWorkingCopy);
 
