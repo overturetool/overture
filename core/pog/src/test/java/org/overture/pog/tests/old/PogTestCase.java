@@ -98,13 +98,13 @@ public abstract class PogTestCase extends ResultTestCase<List<String>>
 		List<String> expected = new LinkedList<String>();
 		List<String> actual = new LinkedList<String>();
 
-// rewrite the strings for easier comparisons		
+// rewrite the strings for easier comparisons
 		for (String s : oexpected){
-			expected.add(s.replaceAll("\\s+", " ").replaceAll("[\\(\\)]", ""));
+			expected.add(s.replaceAll("\\s+", " ")); // .replaceAll("[\\(\\)]", ""));
 		}
 		
 		for (String s : oactual){
-			actual.add(s.replaceAll("\\s+", " ").replaceAll("[\\(\\)]", ""));
+			actual.add(s.replaceAll("\\s+", " ")); // .replaceAll("[\\(\\)]", ""));
 		}
 
 		if (expected.size() != actual.size())
