@@ -2,6 +2,7 @@ package org.overture.ide.plugins.uml2.vdm2uml;
 
 import java.util.Map;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.uml2.uml.AggregationKind;
 import org.eclipse.uml2.uml.Association;
 import org.eclipse.uml2.uml.Class;
@@ -323,6 +324,9 @@ public class Vdm2UmlAssociationUtil
 		} else if (type instanceof ASetType)
 		{
 			type = ((ASetType) type).getSetof();
+		}else if(type instanceof AOptionalType)
+		{
+			type = ((AOptionalType) type).getType();
 		}
 		return getType(classes, UmlTypeCreatorBase.getName(type));
 	}
@@ -334,6 +338,8 @@ public class Vdm2UmlAssociationUtil
 	{
 		Type referencedClass = Vdm2UmlAssociationUtil.getReferenceClass(defType, classes);
 
+		Assert.isNotNull(referencedClass, "association end with: "+defType+" cannot be found");
+		
 		int lower = Vdm2UmlUtil.extractLower(defType);
 
 		Association association = class_.createAssociation(true, AggregationKind.NONE_LITERAL, name, lower, Vdm2UmlUtil.extractUpper(defType), referencedClass, false, AggregationKind.NONE_LITERAL, "", 1, 1);
@@ -407,18 +413,4 @@ public class Vdm2UmlAssociationUtil
 		return type;
 	}
 
-	// public static Class getClassName(PType defType,Map<String, Class> classes)
-	// {
-	// switch (defType.kindPType())
-	// {
-	// case AClassType.kindPType:
-	// return classes.get(((AClassType) defType).getName().name);
-	// case AOptionalType.kindPType:
-	// return getClassName(((AOptionalType) defType).getType(),classes);
-	// default:
-	// break;
-	// }
-	//
-	// return null;
-	// }
 }
