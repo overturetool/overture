@@ -5,12 +5,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.expressions.AApplyExp;
-import org.overture.ast.expressions.ACasesExp;
-import org.overture.ast.expressions.AElseIfExp;
-import org.overture.ast.expressions.AIfExp;
 import org.overture.ast.expressions.PExp;
-import org.overture.ast.expressions.SBinaryExp;
 import org.overture.ast.lex.LexNameList;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.ObjectContext;
