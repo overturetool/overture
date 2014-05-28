@@ -59,7 +59,6 @@ public class TermTraceExpander extends QuestionAnswerAdaptor<Context, TraceNode>
 			ALetBeStBindingTraceDefinition term, Context ctxt)
 			throws AnalysisException
 	{
-		//return ALetBeStBindingTraceDefinitionAssistantInterpreter.expand(term, ctxt);
 		AlternativeTraceNode node = new AlternativeTraceNode();
 
 		try
@@ -132,7 +131,6 @@ public class TermTraceExpander extends QuestionAnswerAdaptor<Context, TraceNode>
 			ALetDefBindingTraceDefinition term, Context ctxt)
 			throws AnalysisException
 	{
-		//return ALetDefBindingTraceDefinitionAssistantInterpreter.expand(term, ctxt);
 		Context evalContext = new Context(af, term.getLocation(), "TRACE", ctxt);
 
 		for (PDefinition d : term.getLocalDefs())
@@ -149,7 +147,6 @@ public class TermTraceExpander extends QuestionAnswerAdaptor<Context, TraceNode>
 	public TraceNode caseARepeatTraceDefinition(ARepeatTraceDefinition term,
 			Context ctxt) throws AnalysisException
 	{
-		//return ARepeatTraceDefinitionAssistantInterpreter.expand(term, ctxt);
 		TraceNode body = af.createPTraceCoreDefinitionAssistant().expand(term.getCore(), ctxt);
 
 		if (term.getFrom() == 1 && term.getTo() == 1)

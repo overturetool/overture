@@ -30,7 +30,7 @@ public class DefinitionRunTimeChecker extends AnswerAdaptor<Boolean>
 	public Boolean caseAImportedDefinition(AImportedDefinition def)
 			throws AnalysisException
 	{
-		//return isRuntime(((AImportedDefinition) def).getDef());
+		
 		return def.getDef().apply(THIS);
 	}
 	
@@ -38,7 +38,7 @@ public class DefinitionRunTimeChecker extends AnswerAdaptor<Boolean>
 	public Boolean caseAInheritedDefinition(AInheritedDefinition def)
 			throws AnalysisException
 	{
-		//return isRuntime(((AInheritedDefinition) def).getSuperdef());
+		
 		return def.getSuperdef().apply(THIS);
 	}
 	
@@ -46,7 +46,7 @@ public class DefinitionRunTimeChecker extends AnswerAdaptor<Boolean>
 	public Boolean caseARenamedDefinition(ARenamedDefinition def)
 			throws AnalysisException
 	{
-		//return isRuntime(((ARenamedDefinition) def).getDef());
+		
 		return def.getDef().apply(THIS);
 	}
 	

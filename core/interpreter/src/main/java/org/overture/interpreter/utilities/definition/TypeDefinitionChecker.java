@@ -31,7 +31,6 @@ public class TypeDefinitionChecker extends AnswerAdaptor<Boolean>
 	public Boolean defaultSClassDefinition(SClassDefinition def)
 			throws AnalysisException
 	{
-		//return SClassDefinitionAssistantInterpreter.isTypeDefinition(def);
 		return true;
 	}
 	
@@ -39,8 +38,6 @@ public class TypeDefinitionChecker extends AnswerAdaptor<Boolean>
 	public Boolean caseAImportedDefinition(AImportedDefinition def)
 			throws AnalysisException
 	{
-		//return AImportedDefinitionAssistantInterpreter.isTypeDefinition(def);
-		//return PDefinitionAssistantInterpreter.isTypeDefinition(def.getDef());
 		return def.getDef().apply(THIS);
 	}
 	
@@ -48,8 +45,6 @@ public class TypeDefinitionChecker extends AnswerAdaptor<Boolean>
 	public Boolean caseAInheritedDefinition(AInheritedDefinition def)
 			throws AnalysisException
 	{
-		//return AInheritedDefinitionAssistantInterpreter.isTypeDefinition(def);
-		//return PDefinitionAssistantInterpreter.isTypeDefinition(def.getSuperdef());
 		return def.getSuperdef().apply(THIS);
 	}
 	
@@ -57,8 +52,6 @@ public class TypeDefinitionChecker extends AnswerAdaptor<Boolean>
 	public Boolean caseARenamedDefinition(ARenamedDefinition def)
 			throws AnalysisException
 	{
-		//return ARenamedDefinitionAssistantInterpreter.isTypeDefinition(def);
-		//return PDefinitionAssistantInterpreter.isTypeDefinition(def.getDef());
 		return def.getDef().apply(THIS);
 	}
 	
@@ -66,7 +59,6 @@ public class TypeDefinitionChecker extends AnswerAdaptor<Boolean>
 	public Boolean caseATypeDefinition(ATypeDefinition def)
 			throws AnalysisException
 	{
-		//return ATypeDefinitionAssistantInterpreter.isTypeDefinition((ATypeDefinition) def);
 		return true;
 	}
 	

@@ -30,7 +30,6 @@ public class InstanceVariableChecker extends AnswerAdaptor<Boolean>
 	public Boolean caseAImportedDefinition(AImportedDefinition def)
 			throws AnalysisException
 	{
-		//return isInstanceVariable(((AImportedDefinition) def).getDef());
 		return def.getDef().apply(THIS);
 	}
 	
@@ -38,7 +37,6 @@ public class InstanceVariableChecker extends AnswerAdaptor<Boolean>
 	public Boolean caseAInheritedDefinition(AInheritedDefinition def)
 			throws AnalysisException
 	{
-		//return isInstanceVariable((def).getSuperdef());
 		return def.getSuperdef().apply(THIS);
 	}
 	
@@ -46,7 +44,6 @@ public class InstanceVariableChecker extends AnswerAdaptor<Boolean>
 	public Boolean caseARenamedDefinition(ARenamedDefinition def)
 			throws AnalysisException
 	{
-		//return isInstanceVariable(((ARenamedDefinition) def).getDef());
 		return def.getDef().apply(THIS);
 	}
 	
