@@ -553,8 +553,8 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	{
 		SNumericBasicTypeAssistantTC.checkNumeric(node, THIS, question.newConstraint(null));
 
-		SNumericBasicType ln = PTypeAssistantTC.getNumeric(node.getLeft().getType());
-		SNumericBasicType rn = PTypeAssistantTC.getNumeric(node.getRight().getType());
+		SNumericBasicType ln = question.assistantFactory.createPTypeAssistant().getNumeric(node.getLeft().getType());
+		SNumericBasicType rn = question.assistantFactory.createPTypeAssistant().getNumeric(node.getRight().getType());
 
 		if (ln instanceof ARealNumericBasicType)
 		{
@@ -617,8 +617,8 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	{
 		SNumericBasicTypeAssistantTC.checkNumeric(node, THIS, question.newConstraint(null));
 
-		SNumericBasicType ln = PTypeAssistantTC.getNumeric(node.getLeft().getType());
-		SNumericBasicType rn = PTypeAssistantTC.getNumeric(node.getRight().getType());
+		SNumericBasicType ln = question.assistantFactory.createPTypeAssistant().getNumeric(node.getLeft().getType());
+		SNumericBasicType rn = question.assistantFactory.createPTypeAssistant().getNumeric(node.getRight().getType());
 
 		if (ln instanceof ARealNumericBasicType)
 		{
