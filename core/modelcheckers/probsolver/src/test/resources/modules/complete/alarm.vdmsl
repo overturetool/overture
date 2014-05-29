@@ -5,7 +5,9 @@ types
   inv mk_Plant(schedule,alarms) ==
         forall a in set alarms &
 	   forall peri in set dom schedule &
-	     QualificationOK(schedule(peri),a.quali);
+  QualificationOK(exs,reqquali) ==
+    exists ex in set schedule(peri) & a.quali in set ex.quali;
+--	     QualificationOK(schedule(peri),a.quali);
 	     
   Schedule = map Period to set of Expert
 inv sch ==

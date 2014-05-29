@@ -77,9 +77,9 @@ public class InspectBAst
 		// f = new ClassicalB("-7-(-3)*(-7/-3)");
 		// f.getAst().apply(new ASTPrinter(System.out));
 
-		f = new ClassicalB("bool(TRUE) & bool(TRUE))");
-		System.out.println(f.getAst());
-		f.getAst().apply(new ASTPrinter(System.out));
+		//f = new ClassicalB("bool(TRUE) & bool(TRUE))");
+		//System.out.println(f.getAst());
+		//f.getAst().apply(new ASTPrinter(System.out));
 
 		// f = new ClassicalB("{\"abc\"|->3, \"def\"|->2}");
 		// f.getAst().apply(new ASTPrinter(System.out));
@@ -101,6 +101,15 @@ public class InspectBAst
 		//f.getAst().apply(new ASTPrinter(System.out));
 	
 		//f = new ClassicalB("{{1|->2}|->3}");
+		//f.getAst().apply(new ASTPrinter(System.out));
+		
+		//f = new ClassicalB("[1,4,2,8,5,7](3)");
+		//f.getAst().apply(new ASTPrinter(System.out));
+		
+		f = new ClassicalB("(1,2,3)=(1|->2|->3)");
+		f.getAst().apply(new ASTPrinter(System.out));
+		
+		//f = new ClassicalB("(1,2,3,4):(NAT1*NAT1*NAT1*NAT1)");
 		//f.getAst().apply(new ASTPrinter(System.out));
 	}
 

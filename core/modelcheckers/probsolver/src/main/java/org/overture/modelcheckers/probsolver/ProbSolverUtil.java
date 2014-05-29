@@ -145,7 +145,7 @@ public class ProbSolverUtil extends AbstractProbSolverUtil
 		{
 			post = def.apply(translator);
 		} else
-		{
+	{	
 			post = new AConjunctPredicate((PPredicate) post, (PPredicate) def.apply(translator));
 		}
 

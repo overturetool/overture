@@ -1,8 +1,8 @@
 --module quote0001
 --definitions
 
---types
---  countries = <France> | <England> } <Denmark>;
+types
+  countries = <France> | <England> | <Denmark>;
 
 operations
   quote1() r : bool

@@ -12,7 +12,6 @@ import org.overture.ast.expressions.AMkTypeExp;
 import org.overture.ast.expressions.ASetEnumSetExp;
 import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.PExp;
-import org.overture.ast.expressions.ASetEnumSetExp;
 import org.overture.ast.expressions.ASeqEnumSeqExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
@@ -43,6 +42,7 @@ import de.be4.classicalb.core.parser.node.ABooleanTrueExpression;
 import de.be4.classicalb.core.parser.node.ACoupleExpression;
 import de.be4.classicalb.core.parser.node.AEmptySetExpression;
 import de.be4.classicalb.core.parser.node.AIntegerExpression;
+//import de.be4.classicalb.core.parser.node.AMultOrCarExpression;
 import de.be4.classicalb.core.parser.node.ARecEntry;
 import de.be4.classicalb.core.parser.node.ARecExpression;
 import de.be4.classicalb.core.parser.node.ASequenceExtensionExpression;
@@ -236,21 +236,19 @@ public class BToVdmConverter extends DepthFirstAdapter
 	    }
 	}
 
+
 	@Override
 	public void caseACoupleExpression(ACoupleExpression node)
 	{
-		System.err.println("In caseACouple...: " + expectedType);
+	    //System.err.println("caseACouple In BtoVdm...: " + expectedType);
+
 
 		if (expectedType instanceof AProductType)
 		{
+		    //System.err.println("in AProductType : caseACoupleExpression");
+		    /*
 			PType type;
 			List<PExp> args = new Vector<PExp>();
-			/*
-			type = ((AProductType) expectedType).getTypes().getFirst();
-			args.add(convert(type, node.getList().getFirst()));
-			type = ((AProductType) expectedType).getTypes().getLast();
-			args.add(convert(type, node.getList().getLast()));
-			*/
 			// It is needed that types of all elements are same.
 			type = ((AProductType) expectedType).getTypes().getFirst();
 
@@ -258,11 +256,47 @@ public class BToVdmConverter extends DepthFirstAdapter
 			{
 			    args.add(convert(type, pExp));
 			}
-			result = AstFactory.newATupleExp(loc, args);
+		    */
+		    PType type;
+		    PExpression pExp;
+		    List<PExp> args = new Vector<PExp>();
+
+		    /*
+		    type = ((AProductType) expectedType).getTypes().getFirst();
+		    pExp = node.getList().getFirst();
+		    System.err.println("type: " + type+" exp: " + pExp);
+		    args.add(convert(type, pExp));
+		    type = ((AProductType) expectedType).getTypes().getLast();
+		    pExp = node.getList().getLast();
+		    System.err.println("type: " + type+" exp: " + pExp);
+		    */
+		    //System.err.println("node: " + node);
+		    int numOfElems = ((AProductType) expectedType).getTypes().size();
+		    for(int i=numOfElems-1;i>=1;i--) {
+			type = ((AProductType) expectedType).getTypes().get(i);
+			pExp = node.getList().getLast();
+			//System.err.println("i: " + i + " type: " + type+" exp: " + pExp);
+
+			args.add(0, convert(type, pExp));
+			if(node.getList().getFirst() instanceof ACoupleExpression) {
+			    List<PExpression> temp = new Vector<PExpression>();
+			    temp.add(((ACoupleExpression)node.getList().getFirst()).getList().getFirst());
+			    temp.add(((ACoupleExpression)node.getList().getFirst()).getList().getLast());
+			    node.setList(temp);
+			} else {
+			    type = ((AProductType) expectedType).getTypes().get(0);
+			    pExp = node.getList().getFirst();
+			    args.add(0, convert(type, pExp));
+
+			}
+		    }
+
+		    result = AstFactory.newATupleExp(loc, args);
+
 		} else if(expectedType instanceof ATokenBasicType)
 		{ 
 		    System.err.println("In caseACouple...: reached here");
-		    //PType typeFrom = ((AMapMapType) expectedType).getFrom();
+		    //PType typeFrom = ((AMapMapType) expecte dType).getFrom();
 		    //System.err.println(typeFrom + " |-> ");
 
 		    /*
@@ -304,10 +338,10 @@ public class BToVdmConverter extends DepthFirstAdapter
 			PType type = ((ASeqSeqType) expectedType).getSeqof();
 			for (PExpression pExp : node.getExpressions())
 			{
-				if (pExp instanceof ACoupleExpression)
-				{
-					exps.add(convert(type, ((ACoupleExpression) pExp).getList().getLast()));
-				}
+			    if (pExp instanceof ACoupleExpression)
+			    {
+				exps.add(convert(type, ((ACoupleExpression) pExp).getList().getLast()));
+			    }
 				result = AstFactory.newASeqEnumSeqExp(loc, exps);
 
 			}

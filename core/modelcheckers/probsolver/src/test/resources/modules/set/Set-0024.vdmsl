@@ -1,0 +1,6 @@
+operations
+
+setran() m : set of nat1
+ post m = {1,...,5}
+
+ 

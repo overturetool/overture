@@ -39,6 +39,8 @@ import org.overture.ast.expressions.AEqualsBinaryExp;
 import org.overture.ast.expressions.AEquivalentBooleanBinaryExp;
 import org.overture.ast.expressions.AExists1Exp;
 import org.overture.ast.expressions.AExistsExp;
+import org.overture.ast.expressions.AFieldExp;
+import org.overture.ast.expressions.AFieldNumberExp;
 import org.overture.ast.expressions.AForAllExp;
 import org.overture.ast.expressions.AGreaterEqualNumericBinaryExp;
 import org.overture.ast.expressions.AGreaterNumericBinaryExp;
@@ -81,6 +83,7 @@ import org.overture.ast.expressions.ASetCompSetExp;
 import org.overture.ast.expressions.ASetDifferenceBinaryExp;
 import org.overture.ast.expressions.ASetEnumSetExp;
 import org.overture.ast.expressions.ASetIntersectBinaryExp;
+import org.overture.ast.expressions.ASetRangeSetExp;
 import org.overture.ast.expressions.ASetUnionBinaryExp;
 import org.overture.ast.expressions.AStarStarBinaryExp;
 import org.overture.ast.expressions.AStringLiteralExp;
@@ -167,6 +170,7 @@ import de.be4.classicalb.core.parser.node.AMemberPredicate;
 import de.be4.classicalb.core.parser.node.AMinusOrSetSubtractExpression;
 import de.be4.classicalb.core.parser.node.AModuloExpression;
 import de.be4.classicalb.core.parser.node.AMultiplicationExpression;
+import de.be4.classicalb.core.parser.node.AMultOrCartExpression;
 import de.be4.classicalb.core.parser.node.ANat1SetExpression;
 import de.be4.classicalb.core.parser.node.ANatSetExpression;
 import de.be4.classicalb.core.parser.node.ANegationPredicate;
@@ -193,6 +197,8 @@ import de.be4.classicalb.core.parser.node.AStringSetExpression;
 import de.be4.classicalb.core.parser.node.AStructExpression;
 import de.be4.classicalb.core.parser.node.ASubsetPredicate;
 import de.be4.classicalb.core.parser.node.ASubsetStrictPredicate;
+//import de.be4.classicalb.core.parser.node.ASuccessorExpression;
+//import de.be4.classicalb.core.parser.node.ATruthPredicate;
 import de.be4.classicalb.core.parser.node.ATailExpression;
 import de.be4.classicalb.core.parser.node.AUnaryMinusExpression;
 import de.be4.classicalb.core.parser.node.AUnionExpression;
@@ -747,6 +753,48 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	}
 
 	@Override
+	public Node caseASetRangeSetExp(ASetRangeSetExp node)
+			throws AnalysisException
+	{
+	    //fst=node.getFirst();
+	    //lst=node.getLast();
+	    //{fst,...,lst} -> {x | x:S & fst<=lst & fst<=x & x<=lst }
+	    
+	    AComprehensionSetExpression scs = new AComprehensionSetExpression();
+	    List<TIdentifierLiteral> id1 = new ArrayList<TIdentifierLiteral>();
+	    id1.add(new TIdentifierLiteral("_tgt1_"));
+	    PExpression temp = new AIdentifierExpression(id1);
+	    scs.getIdentifiers().add(temp);
+	    scs.setPredicates(new AMemberPredicate(temp, new AIntervalExpression(exp(node.getFirst()), exp(node.getLast()))));
+	    return scs;
+
+	    /*
+	    AComprehensionSetExpression scs = new AComprehensionSetExpression();
+	    List<TIdentifierLiteral> id1 = new ArrayList<TIdentifierLiteral>();
+	    id1.add(new TIdentifierLiteral("_tgt1_"));
+	    PExpression temp = new AIdentifierExpression(id1);
+	    scs.getIdentifiers().add(temp);
+
+	    List<TIdentifierLiteral> id2 = new ArrayList<TIdentifierLiteral>();
+	    id2.add(new TIdentifierLiteral("_tgt2_"));
+	    PExpression temp2 = new AIdentifierExpression(id2);
+
+	    // scs.setPredicates(new AMemberPredicate(temp, exp(node.getFirst().getFtype())));
+
+	    //scs.setPredicates(new AConjunctPredicate(scs.getPredicates(), new AGreaterEqualPredicate(exp(node.getFirst()), exp(node.getLast()))));
+	    scs.setPredicates(new ALessEqualPredicate(exp(node.getFirst()), exp(node.getLast())));
+	    scs.setPredicates(new AConjunctPredicate(scs.getPredicates(),
+						     new ALessEqualPredicate(exp(node.getFirst()), temp2)));
+	    scs.setPredicates(new AConjunctPredicate(scs.getPredicates(),
+						     new ALessEqualPredicate(temp2, exp(node.getLast()))));
+	    scs.setPredicates(new AConjunctPredicate(scs.getPredicates(), new AEqualPredicate(temp, temp2)));
+
+	    return scs;
+	    */
+	}
+
+
+	@Override
 	public Node caseADistUnionUnaryExp(ADistUnionUnaryExp node)
 			throws AnalysisException
 	{
@@ -830,16 +878,26 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	{
 		LinkedList<PExp> seqmem = ((ASeqEnumSeqExp) node.getExp()).getMembers();
 		String size = new String(new Integer(seqmem.size()).toString());
-		return new AIntervalExpression(new AIntegerExpression(new TIntegerLiteral("1")), new AIntegerExpression(new TIntegerLiteral(size)));
+
+	    AComprehensionSetExpression scs = new AComprehensionSetExpression();
+	    List<TIdentifierLiteral> id1 = new ArrayList<TIdentifierLiteral>();
+	    id1.add(new TIdentifierLiteral("_tgt1_"));
+	    PExpression temp = new AIdentifierExpression(id1);
+	    scs.getIdentifiers().add(temp);
+	    scs.setPredicates(new AMemberPredicate(temp, 
+						   new AIntervalExpression(new AIntegerExpression(new TIntegerLiteral("1")), 
+									   new AIntegerExpression(new TIntegerLiteral(size)))));
+	    return scs;
+
 	}
 
 	@Override
 	public Node caseAElementsUnaryExp(AElementsUnaryExp node)
 			throws AnalysisException
 	{
-	    System.err.println("in caseAElementsUnaryExp node: " + node);
-	    System.err.println("in caseAElementsUnaryExp node.getExp(): " + node.getExp());
-	    System.err.println("in caseAElementsUnaryExp node.getExp().apply(this): " + node.getExp().apply(this));
+	    //System.err.println("in caseAElementsUnaryExp node: " + node);
+	    //System.err.println("in caseAElementsUnaryExp node.getExp(): " + node.getExp());
+	    //System.err.println("in caseAElementsUnaryExp node.getExp().apply(this): " + node.getExp().apply(this));
 
 		if (node.getExp().equals("[]"))
 		{
@@ -869,6 +927,37 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	{
 		return new ARevExpression(exp(node.getExp()));
 	}
+	/*
+	@Override
+	public Node caseAFieldExp(AFieldExp node)
+			throws AnalysisException
+	{
+	    return ;
+	}
+	*/
+	@Override
+	public Node caseAFieldNumberExp(AFieldNumberExp node)
+			throws AnalysisException
+	{
+	    // mk_(1,2,3).#2 -> [1,2,3](2)
+	    ATupleExp tuple = (ATupleExp)node.getTuple();
+	    AIntegerExpression arg = new AIntegerExpression(new TIntegerLiteral(node.getField().toString()));
+	    List<PExpression> args = new Vector<PExpression>();
+	    args.add(arg);
+
+	    ASequenceExtensionExpression seq = new ASequenceExtensionExpression();
+	    List<PExpression> list = new Vector<PExpression>();
+	    for(PExp elem : tuple.getArgs()) {
+		list.add(exp(elem));
+	    }
+
+	    seq.setExpression(list);
+	    AFunctionExpression fun = new AFunctionExpression();
+	    fun.setIdentifier(seq);
+	    fun.setParameters(args);
+	    return fun;
+	}
+
 
 	/**********
 	@Override
@@ -983,7 +1072,11 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 			}
 		}
 
+	    if(node.getPredicate()==null) {
+		esp.setPredicate(new AConjunctPredicate(esp.getPredicate(), new AEqualPredicate(new ABooleanTrueExpression(), new ABooleanTrueExpression())));
+	    } else {
 		esp.setPredicate(new AConjunctPredicate(esp.getPredicate(), pred(node.getPredicate())));
+	    }
 		esp.setPredicate(new AConjunctPredicate(esp.getPredicate(), new AEqualPredicate(from, exp(maplet.getLeft()))));
 		esp.setPredicate(new AConjunctPredicate(esp.getPredicate(), new AEqualPredicate(to, exp(maplet.getRight()))));
 
@@ -1019,7 +1112,12 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 			}
 		}
 
+	    if(node.getPredicate()==null) {
+		esp1.setPredicate(new AConjunctPredicate(esp1.getPredicate(), new AEqualPredicate(new ABooleanTrueExpression(), new ABooleanTrueExpression())));
+	    } else {
 		esp1.setPredicate(new AConjunctPredicate(esp1.getPredicate(), pred(node.getPredicate())));
+	    }
+		//esp1.setPredicate(new AConjunctPredicate(esp1.getPredicate(), pred(node.getPredicate())));
 		esp1.setPredicate(new AConjunctPredicate(esp1.getPredicate(), new AEqualPredicate(from1, exp(maplet1.getLeft()))));
 		esp1.setPredicate(new AConjunctPredicate(esp1.getPredicate(), new AEqualPredicate(to1, exp(maplet1.getRight()))));
 
@@ -1055,7 +1153,12 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 			}
 		}
 
+	    if(node.getPredicate()==null) {
+		esp2.setPredicate(new AConjunctPredicate(esp2.getPredicate(), new AEqualPredicate(new ABooleanTrueExpression(), new ABooleanTrueExpression())));
+	    } else {
 		esp2.setPredicate(new AConjunctPredicate(esp2.getPredicate(), pred(node.getPredicate())));
+	    }
+	    //esp2.setPredicate(new AConjunctPredicate(esp2.getPredicate(), pred(node.getPredicate())));
 		esp2.setPredicate(new AConjunctPredicate(esp2.getPredicate(), new AEqualPredicate(from2, exp(maplet2.getLeft()))));
 		esp2.setPredicate(new AConjunctPredicate(esp2.getPredicate(), new AEqualPredicate(to2, exp(maplet2.getRight()))));
 
@@ -1357,7 +1460,24 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	public Node caseASetMultipleBind(ASetMultipleBind node)
 			throws AnalysisException
 	{
-		if (((ASetEnumSetExp) node.getSet()).getMembers().isEmpty())
+	    if(node.getSet() instanceof ASetCompSetExp) {
+		//return caseASetCompSetExp((ASetCompSetExp) node.getSet());
+		return node.getSet().apply(this);
+	    }
+	    if(node.getSet() instanceof AVariableExp) {
+		//return caseAVariableExp((AVariableExp) node.getSet());
+		return node.getSet().apply(this);
+	    }
+	    if(node.getSet() instanceof AMapDomainUnaryExp) {
+		//return caseAMapDomainUnaryExp((AMapDomainUnaryExp) node.getSet());
+		return node.getSet().apply(this);
+	    }
+	    if(node.getSet() instanceof AApplyExp) {
+		//return caseAApplyExp((AApplyExp) node.getSet());
+		return node.getSet().apply(this);
+	    }
+
+	        if (((ASetEnumSetExp) node.getSet()).getMembers().isEmpty())
 		{
 			return new AEmptySetExpression();
 		}
@@ -1403,21 +1523,35 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	public Node caseATupleExp(ATupleExp node) throws AnalysisException
 	{
 	    // It is necessary that tyeps of all arguments are same.
+	    /*
 		LinkedList<PExp> args = node.getArgs();
-		//System.err.println("in caseATupleExp: linkedlist: " + args);
+		System.err.println("in caseATupleExp: linkedlist: " + args);//comment out May26
+		System.err.println("in caseATupleExp: linkedlist: " + node);//comment out May26
+		System.err.println("in caseATupleExp: linkedlist: " + node.getTypes());//comment out May26
+	    */
+	    /*
 		ACoupleExpression cpl = new ACoupleExpression();
-		for(PExp elem : args) {
+		for(PExp elem : node.getArgs()) {
 		    cpl.getList().add(exp(elem));
 		}
-		/*
-		cpl.getList().add(exp(args.get(0)));
-		cpl.getList().add(exp(args.get(1)));
-		*/
-		//System.err.println("in caseATupleExp: linkedlist: " + cpl);
+	    */
+
+		ACoupleExpression cpl = new ACoupleExpression();
+		ACoupleExpression[] temp = new ACoupleExpression[10];
+		temp[0] = new ACoupleExpression();
+		temp[0].getList().add(exp(node.getArgs().get(0)));
+		temp[0].getList().add(exp(node.getArgs().get(1)));
+		for(int i=2;i<node.getArgs().size();i++) {
+		    temp[i-1] = new ACoupleExpression();
+		    temp[i-1].getList().add(temp[i-2]);
+		    temp[i-1].getList().add(exp(node.getArgs().get(i)));
+		}
+		cpl=temp[node.getArgs().size()-2];
+		System.err.println("in caseATupleExp: linkedlist: " + cpl);
+
 		return cpl;
 
 	}
-
 	// StateDefinition
 	@Override
 	public Node caseAStateDefinition(AStateDefinition node)
@@ -1431,7 +1565,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		PPredicate p = new AConjunctPredicate(before, after);
 
 		if (node.getInitExpression() != null && USE_INITIAL_FIXED_STATE)
-		{
+		    {
 			PExpression right = (PExpression) ((AEqualsBinaryExp) node.getInitExpression()).getRight().apply(this);
 			AEqualPredicate init = new AEqualPredicate(getIdentifier(nameOld), right);
 			p = new AConjunctPredicate(p, init);
@@ -1616,7 +1750,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	@Override
 	public Node caseAMkBasicExp(AMkBasicExp node) throws AnalysisException
 	{
-	    // System.err.println("In caseAMkBasicExp: " + node + " -- " + node.getArg());
+	    //System.err.println("In caseAMkBasicExp: " + node + " -- " + node.getArg());
 		if (node.getType() instanceof ATokenBasicType)
 		{
 			return node.getArg().apply(this);
@@ -1728,13 +1862,36 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		return new ASetExtensionExpression(exps);
 	}
 
-	/*
+
 	@Override
 	public Node caseAProductType(AProductType node) throws AnalysisException
 	{
-	    return
+	    //System.err.println("in caseProductType**: " + node);
+	    //System.err.println("in caseProductType**: " + node.getTypes());
+	    /*
+	    ACoupleExpression cpl = new ACoupleExpression();
+	    for(PType elem : node.getTypes()) {
+		cpl.getList().add(exp(elem));
+	    }
+	    */
+	    
+
+	    AMultOrCartExpression prod = new AMultOrCartExpression();// create NAT1*NAT1 for example
+	    AMultOrCartExpression[] temp = new AMultOrCartExpression[10];//dummpy
+	    temp[0] = new AMultOrCartExpression();
+	    temp[0].setLeft(exp(node.getTypes().get(0)));
+	    temp[0].setRight(exp(node.getTypes().get(1)));
+	    for(int i=2;i<node.getTypes().size();i++) {
+		temp[i-1] = new AMultOrCartExpression();
+		temp[i-1].setLeft(temp[i-2]);
+		temp[i-1].setRight(exp(node.getTypes().get(i)));
+	    }
+	    prod=temp[node.getTypes().size()-2];
+	    System.err.println("prod: " + prod);
+
+	    return prod;
 	}
-	*/
+
 	/**
 	 * Unknown types may exist in a type check VDM specification as the inner type for e.g. set, seq etc.
 	 * <p>

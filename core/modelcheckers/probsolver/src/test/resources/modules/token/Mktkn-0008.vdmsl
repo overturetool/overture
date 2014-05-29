@@ -1,5 +1,9 @@
 operations
 
-mktkntest8() t: nat1 * nat1 *nat1*nat1
-  post t = mk_(1,2,3,4)
+--mktkntest8() t: nat1 * nat1 * nat1 * nat1
+--mktkntest8() t: token
+--  post t = mk_(1,2,3,4)
+mkprod() t : nat1 * nat1 * nat1
+  post t = mk_(30,10,20)
+
 
