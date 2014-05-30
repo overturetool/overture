@@ -1,7 +1,5 @@
 package org.overture.pog.tests;
 
-import static org.junit.Assert.assertTrue;
-
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -26,44 +24,47 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 @RunWith(Parameterized.class)
-public class BugRegressionTest {
+public class BugRegressionTest
+{
 
 	private String modelPath;
 	private String resultPath;
 
 	@Before
-	public void setup(){
+	public void setup()
+	{
 		Settings.release = Release.DEFAULT;
 	}
-	
-	public BugRegressionTest(String folder, String model, String result) {
-		this.modelPath = folder+model;
-		this.resultPath = folder+result;
+
+	public BugRegressionTest(String folder, String model, String result)
+	{
+		this.modelPath = folder + model;
+		this.resultPath = folder + result;
 	}
-	
+
 	@Parameters(name = "{index} : {1}")
-	public static Collection<Object[]> testData() {
+	public static Collection<Object[]> testData()
+	{
 		return InputsProvider.bugRegs();
 	}
-	
+
 	@Test
 	public void testWithCompare() throws AnalysisException, IOException,
-			URISyntaxException {
+			URISyntaxException
+	{
 
-		
 		List<INode> ast = TestHelper.getAstFromName(modelPath);
-		IProofObligationList ipol = ProofObligationGenerator
-				.generateProofObligations(ast);
-		
+		IProofObligationList ipol = ProofObligationGenerator.generateProofObligations(ast);
+
 		Gson gson = new Gson();
 		String json = IOUtils.toString(new FileReader(resultPath));
-		Type datasetListType = new TypeToken<Collection<PoResult>>() {
+		Type datasetListType = new TypeToken<Collection<PoResult>>()
+		{
 		}.getType();
 		List<PoResult> results = gson.fromJson(json, datasetListType);
 
-		assertTrue("Generated and stored POs differ",
-				TestHelper.sameElements(results, ipol));
+		TestHelper.checkSameElements(results, ipol);
 
 	}
-	
+
 }

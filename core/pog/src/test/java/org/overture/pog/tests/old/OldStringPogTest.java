@@ -1,7 +1,5 @@
 package org.overture.pog.tests.old;
 
-import static org.junit.Assert.assertTrue;
-
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -29,7 +27,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 @RunWith(Parameterized.class)
-public class AdaptedOldTest
+public class OldStringPogTest
 {
 	private String modelPath;
 	private String resultPath;
@@ -39,12 +37,12 @@ public class AdaptedOldTest
 		Settings.release = Release.DEFAULT;
 	}
 	
-	@Parameters
+	@Parameters(name = "{index} : {0}")
 	public static Collection<Object[]> testData() {
-		return InputsProvider.oldSL();
+		return InputsProvider.old();
 	}
 
-	public AdaptedOldTest(String modelPath, String resultPath)
+	public OldStringPogTest(String modelPath, String resultPath)
 	{
 		super();
 		this.modelPath = modelPath;
@@ -66,8 +64,7 @@ public class AdaptedOldTest
 		}.getType();
 		List<PoResult> results = gson.fromJson(json, datasetListType);
 
-		assertTrue("Generated and stored POs differ",
-				TestHelper.sameElements(results, ipol));
+		TestHelper.checkSameElements(results, ipol);
 
 	}
 

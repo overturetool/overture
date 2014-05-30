@@ -112,19 +112,3 @@ operations
 Run: Expert ==> set of Period
 Run(e) == return ExpertIsOnDuty(e, plant1);
 
-traces 
-
-  Test1: let a in set alarms
-         in
-           let p in set ps 
-           in
-             (NumberOfExperts(p,plant1);
-              pre_ExpertToPage(a,p,plant1);
-              let ex in set exs
-              in
-                post_ExpertToPage(a,p,plant1,ex))
-               
-  Test2: let ex in set exs
-         in
-           ExpertIsOnDuty(ex,plant1)
- 

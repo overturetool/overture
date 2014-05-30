@@ -6,8 +6,6 @@ import java.util.List;
 import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
 import org.overture.config.Settings;
-import org.overture.pog.obligation.ProofObligationList;
-import org.overture.pog.utility.PogUtil;
 import org.overture.test.framework.results.Result;
 
 public class ModuleSlPoTestCase extends PogTestCase
