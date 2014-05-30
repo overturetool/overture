@@ -7,8 +7,29 @@ import org.eclipse.jface.text.rules.IWordDetector;
 import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.rules.WordRule;
 
+/**
+ * Rule scanner for multiword words like "is subclass responsibility".
+ * 
+ * @author kel
+ */
 public class MultipleWordsWordRule extends WordRule
 {
+	/**
+	 * Used as result for {@link MultipleWordsWordRule#checkMatch(String)} to hold the token and unmatched length
+	 * 
+	 * @author kel
+	 */
+	private static class WordMatch
+	{
+		public final IToken token;
+		public final Integer unMatchedLength;
+
+		public WordMatch(IToken token, Integer unMatchedLength)
+		{
+			this.token = token;
+			this.unMatchedLength = unMatchedLength;
+		}
+	}
 
 	public MultipleWordsWordRule(IWordDetector detector, IToken defaultToken,
 			boolean ignoreCase)
@@ -33,57 +54,120 @@ public class MultipleWordsWordRule extends WordRule
 		fWords.put(word, token);
 	}
 
+	/**
+	 * Calculates the maximum number of parts in the largest word in the rule scanner
+	 * 
+	 * @return the largest number of parts. (number of spaces spaced words"
+	 */
+	private int getMaxPartCount()
+	{
+		int max = 0;
+		for (Object k : super.fWords.keySet())
+		{
+			String key = k.toString();
+			int count = key.split("\\s+?").length;
+			if (count > max)
+			{
+				max = count;
+			}
+		}
+		return max;
+	}
+
 	/*
 	 * @see IRule#evaluate(ICharacterScanner)
 	 */
 	public IToken evaluate(ICharacterScanner scanner)
 	{
 		int c = scanner.read();
-		if (c != ICharacterScanner.EOF && fDetector.isWordStart((char) c))
+		char charRead = (char) c;
+		if (c != ICharacterScanner.EOF && fDetector.isWordStart(charRead))
 		{
 			if (fColumn == UNDEFINED || fColumn == scanner.getColumn() - 1)
 			{
-
 				fBuffer.setLength(0);
-				do
-				{
+				boolean abort = false;
+				fBuffer.append(charRead);
 
-					// If the current character is a space we might already have a multiple words keyword
-					// This could be the case if we had read something like: "is subclass of"
-					if (c == ' ')
+				for (int i = 0; i < getMaxPartCount(); i++)
+				{
+					// read a word for each part
+					do
 					{
-						IToken token = readToken();
+						c = scanner.read();
+						fBuffer.append((char) c);
+						System.out.println("Read: '"+c + "' - '"+(char)c+"'");
+					} while (c != ICharacterScanner.EOF && c != ' '
+							&& fDetector.isWordStart(charRead));
+				}
+				
+				//we may have read EOF so unread it
+				while(fBuffer.length()>0 && fBuffer.charAt(fBuffer.length()-1)==(char)-1)
+				{
+					fBuffer.delete(fBuffer.length()-1, fBuffer.length());
+				}
 
-						if (token != null)
+				String text = fBuffer.toString().toString().replace('\n', ' ').replace('\r', ' ').replace('\t', ' ');
+				String key = text;//text.substring(0, text.length() - 1);
+				
+				if(key.endsWith(" ")||key.endsWith("\t")||key.endsWith("\n")||key.endsWith("\r"))
+				{
+					scanner.unread();// last space
+					fBuffer.delete(fBuffer.length()-1, fBuffer.length());
+					key = key.substring(0,key.length()-1);
+				}
+
+				if (!abort)
+				{
+					WordMatch match = checkMatch(key);
+					if (match != null)
+					{
+						if (match.unMatchedLength > 0)
 						{
-							return token;
+							// unread unmatched parts
+							for (int i = 0; i < match.unMatchedLength; i++)
+							{
+								scanner.unread();
+							}
 						}
+						
+						return match.token;
 					}
-
-					fBuffer.append((char) c);
-					c = scanner.read();
-				} while (c != ICharacterScanner.EOF
-						&& fDetector.isWordPart((char) c));
-				scanner.unread();
-
-				IToken token = readToken();
-
-				if (token != null)
-				{
-					return token;
 				}
 
-				if (fDefaultToken.isUndefined())
-				{
-					unreadBuffer(scanner);
-				}
+				unreadBuffer(scanner);
 
-				return fDefaultToken;
+				return Token.UNDEFINED;
+
 			}
 		}
 
 		scanner.unread();
 		return Token.UNDEFINED;
+	}
+
+	/**
+	 * Checks if the scanned multipart word exists in the {@code fWords} maps keys collection os if the prefix exists.
+	 * 
+	 * @param key
+	 * @return
+	 */
+	private WordMatch checkMatch(String key)
+	{
+		String matchString = key;
+
+		while (matchString.indexOf(' ') > -1)
+		{
+			if (fWords.containsKey(matchString))
+			{
+				return new WordMatch((IToken) fWords.get(matchString), key.length()
+						- matchString.length());
+			}
+
+			matchString = matchString.substring(0, matchString.lastIndexOf(' '));
+		}
+
+		return null;
 	}
 
 	protected void unreadBuffer(ICharacterScanner scanner)
@@ -92,21 +176,6 @@ public class MultipleWordsWordRule extends WordRule
 		{
 			scanner.unread();
 		}
-	}
-
-	private IToken readToken()
-	{
-		String buffer = fBuffer.toString();
-		// If case-insensitive, convert to lower case before accessing the map
-		if (fIgnoreCase)
-		{
-			buffer = buffer.toLowerCase();
-		}
-
-		// One or more spaces should simply be replaced by a single space
-		buffer = buffer.replaceAll("\\s+", " ");
-
-		return (IToken) fWords.get(buffer);
 	}
 
 }
