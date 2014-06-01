@@ -63,7 +63,7 @@ public class VdmPartitionScanner extends RuleBasedPartitionScanner implements IV
 		private IToken fSuccessToken;
 		/**
 		 * Constructor for EmptyCommentRule.
-		 * @param successToken
+		 * @param successToken the token returned for success
 		 */
 		public EmptyCommentRule(IToken successToken) {
 			super(new EmptyCommentDetector());
