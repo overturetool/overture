@@ -26,6 +26,7 @@
     <module>combinatorialtesting</module>
     <module>developerutils</module>
     <module>uml2</module>
+	 <module>uml2.tests</module>
     <module>rttraceviewer</module>
 	<module>codegen</module>
 	<module>prob-runtime</module>

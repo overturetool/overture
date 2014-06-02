@@ -3,6 +3,7 @@ package org.overture.ide.plugins.uml2;
 import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.Namespace;
+import org.junit.Test;
 import org.overture.ide.plugins.uml2.vdm2uml.UmlTypeCreator;
 
 
@@ -20,41 +21,49 @@ public class TypeTestCase extends BaseUmlTestCase
 		assertIsSubClassOf(classt, typeName);
 	}
 	
+	@Test
 	public void testBoolType()
 	{
 		primitiveTest("bool");
 	}
 	
+	@Test
 	public void testCharType()
 	{
 		primitiveTest("char");
 	}
 	
+	@Test
 	public void testTokenType()
 	{
 		primitiveTest("token");
 	}
 	
+	@Test
 	public void testIntType()
 	{
 		primitiveTest("int");
 	}
 	
+	@Test
 	public void testNatType()
 	{
 		primitiveTest("nat");
 	}
 	
+	@Test
 	public void testNat1Type()
 	{
 		primitiveTest("nat1");
 	}
 	
+	@Test
 	public void testRatType()
 	{
 		primitiveTest("rat");
 	}
 	
+	@Test
 	public void testRealType()
 	{
 		primitiveTest("real");
