@@ -6,5 +6,5 @@ types
 
 operations
   quote1() r : bool
-  post r = (<France> = <England>)
+  post r = (<France> = <France>)
 --end quote0001

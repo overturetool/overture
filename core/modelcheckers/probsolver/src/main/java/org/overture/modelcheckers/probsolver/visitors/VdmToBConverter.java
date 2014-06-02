@@ -1540,6 +1540,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		ACoupleExpression[] temp = new ACoupleExpression[10];
 		temp[0] = new ACoupleExpression();
 		temp[0].getList().add(exp(node.getArgs().get(0)));
+		System.err.println("type of seq of char: " + node.getArgs().get(0).getType());
 		temp[0].getList().add(exp(node.getArgs().get(1)));
 		for(int i=2;i<node.getArgs().size();i++) {
 		    temp[i-1] = new ACoupleExpression();
@@ -1804,8 +1805,13 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 
 	@Override
 	public Node caseASeqSeqType(ASeqSeqType node) throws AnalysisException
-	{
-		return new ASeq1Expression(exp(node.getSeqof()));
+	    {System.err.println("in caseASeqSeq: " + node.getSeqof());
+
+		List<TIdentifierLiteral> ident = new ArrayList<TIdentifierLiteral>();
+		ident.add(new TIdentifierLiteral("STRING"));
+		PExpression temp = new AIdentifierExpression(ident);
+		return temp;
+	    //return new ASeq1Expression(exp(node.getSeqof()));
 	}
 
 	@Override
@@ -1859,6 +1865,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	public Node caseAQuoteType(AQuoteType node) throws AnalysisException
 	{
 		final List<PExpression> exps = Arrays.asList(new PExpression[] { createIdentifier(getQuoteLiteralName(node.getValue().getValue())) });
+		System.err.println("in caseAQuoteType: " + exps);
 		return new ASetExtensionExpression(exps);
 	}
 
@@ -1875,7 +1882,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	    }
 	    */
 	    
-
+	    if(node.getTypes().get(0).toString().equals("char")) System.err.println("in caseAProductTypes: " + "["+node.getTypes().get(0)+"]");
 	    AMultOrCartExpression prod = new AMultOrCartExpression();// create NAT1*NAT1 for example
 	    AMultOrCartExpression[] temp = new AMultOrCartExpression[10];//dummpy
 	    temp[0] = new AMultOrCartExpression();

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.expressions.ACharLiteralExp;
 import org.overture.ast.expressions.AMapletExp;
 import org.overture.ast.expressions.AMkTypeExp;
 import org.overture.ast.expressions.ASetEnumSetExp;
@@ -24,6 +25,7 @@ import org.overture.ast.lex.LexIntegerToken;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexQuoteToken;
 import org.overture.ast.lex.LexStringToken;
+import org.overture.ast.node.NodeList;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AFieldField;
@@ -53,6 +55,7 @@ import de.be4.classicalb.core.parser.node.PExpression;
 import de.be4.classicalb.core.parser.node.PRecEntry;
 import de.be4.classicalb.core.parser.node.TIdentifierLiteral;
 import de.be4.classicalb.core.parser.node.TIntegerLiteral;
+import de.be4.classicalb.core.parser.node.TStringLiteral;
 
 public class BToVdmConverter extends DepthFirstAdapter
 {
@@ -496,6 +499,18 @@ public class BToVdmConverter extends DepthFirstAdapter
 			return;
 		}
 		super.caseTIdentifierLiteral(node);
+	}
+
+	@Override
+	public void caseTStringLiteral(TStringLiteral node)
+	{
+	    System.err.println("in caseTStringLiteral: [" + node.getText().trim() +"] expectedType: " + expectedType);
+	    //super.caseTStgringLiteral(node);
+	    //result = AstFactory.newAStringLiteralExp(node.getValue());
+	    //result = AstFactory.newASeqEnumSeqExp(loc);
+	    ILexStringToken val = new LexStringToken(node.getText().trim(), loc);
+	    result = AstFactory.newAStringLiteralExp(val);
+
 	}
 
 	public void defaultCase(Node node)

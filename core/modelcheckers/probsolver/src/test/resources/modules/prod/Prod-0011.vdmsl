@@ -1,0 +1,6 @@
+operations
+
+--prodcttest10() m : (seq of char) * nat
+--  post m = mk_("str", 1)
+prodcttest10() m : nat * seq of char
+  post m = mk_(2, "str")
