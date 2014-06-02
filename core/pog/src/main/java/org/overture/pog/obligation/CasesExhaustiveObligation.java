@@ -39,7 +39,6 @@ import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
-import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 
 public class CasesExhaustiveObligation extends ProofObligation
 {

@@ -18,10 +18,12 @@
  *******************************************************************************/
 package org.overture.ide.plugins.latex.preference;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.overture.ide.plugins.latex.ILatexConstants;
@@ -30,19 +32,30 @@ import org.overture.ide.plugins.latex.LatexPlugin;
 public class WorkbenchPreferencePageLatex extends FieldEditorPreferencePage
 		implements IWorkbenchPreferencePage
 {
-
-	public void init(IWorkbench workbench)
+	class MacFieldEditor extends FileFieldEditor
 	{
+		public MacFieldEditor(String osxLatexPathPreference, String string,
+				Composite fieldEditorParent)
+		{
+			super(osxLatexPathPreference, string, fieldEditorParent);
+		}
 
+		@Override
+		protected boolean checkState()
+		{
+			if(Platform.getOS().equalsIgnoreCase(Platform.OS_MACOSX))
+				return super.checkState();
+			
+			return true;
+		}
 	}
-
+	
 	@Override
 	protected void createFieldEditors()
 	{
-
-		addField(new FileFieldEditor(ILatexConstants.OSX_LATEX_PATH_PREFERENCE, "MacOS Latex Path", getFieldEditorParent()));
+		addField(new MacFieldEditor(ILatexConstants.OSX_LATEX_PATH_PREFERENCE, "MacOS Latex Path", getFieldEditorParent()));
 		addField(new ComboFieldEditor(ILatexConstants.PDF_BUILDER, "PDF Builder", new String[][] {
-				new String[] { "PdfLaTex", "pdflatex" },
+				new String[] { "PdfLaTex", ILatexConstants.DEFAULT_PDF_BUILDER },
 				new String[] { "XeTex", "xetex" } }, getFieldEditorParent()));
 	}
 
@@ -57,7 +70,15 @@ public class WorkbenchPreferencePageLatex extends FieldEditorPreferencePage
 	{
 		IPreferenceStore store = getPreferenceStore();
 		store.setDefault(ILatexConstants.OSX_LATEX_PATH_PREFERENCE, ILatexConstants.DEFAULT_OSX_LATEX_PATH);
+		store.setDefault(ILatexConstants.PDF_BUILDER, ILatexConstants.DEFAULT_PDF_BUILDER);
+		
 		super.performDefaults();
 	}
 
+	public void init(IWorkbench workbench)
+	{
+		IPreferenceStore store = getPreferenceStore();
+		store.setDefault(ILatexConstants.OSX_LATEX_PATH_PREFERENCE, ILatexConstants.DEFAULT_OSX_LATEX_PATH);
+		store.setDefault(ILatexConstants.PDF_BUILDER, ILatexConstants.DEFAULT_PDF_BUILDER);
+	}
 }

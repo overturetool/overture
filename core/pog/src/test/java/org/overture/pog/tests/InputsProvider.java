@@ -22,16 +22,20 @@ public class InputsProvider {
 	private final static String RESULT_EXTENSION = ".RESULT";
 	private final static String EXAMPLES_ROOT = "src/test/resources/allexamples";
 	private final static String BUG_REG_ROOT = "src/test/resources/bug-regression";
-	private final static String OLD_ROOT = "src/test/resources/old";
+	private final static String OLD_ROOT = "src/test/resources/old/adapted";
+	private final static String NOPAREN_ROOT = "src/test/resources/old/noparen";
+
 
 	/**
 	 * Provides a collection of paths for the adpated test files from the old string pog.
 	 * @return A list of test file and result paths in the form {modelpath, resultpath}
 	 */
-	public static Collection<Object[]> oldSL() {
+	public static Collection<Object[]> old() {
 		File dir = new File(OLD_ROOT);
-
-		return makePathsWResults(dir);
+		Collection<Object[]> r = makePathsWResults(dir);
+		dir= new File(NOPAREN_ROOT);
+		r.addAll(makePathsWResults(dir));
+		return r;
 	}
 	
 	

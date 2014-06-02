@@ -38,7 +38,6 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.utility.ContextHelper;
-import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 
 public class POCaseContext extends POContext {
 	public final PPattern pattern;

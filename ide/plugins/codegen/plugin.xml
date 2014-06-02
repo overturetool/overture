@@ -28,7 +28,7 @@
 		<menu
 			icon="icons/codegen.png"
 			id="org.overture.ide.plugins.codegen"
-			label="Code Generation (Experimental)">
+			label="Code Generation">
 			<command
 				commandId="org.overture.ide.plugins.codegen.vdm2java"
 				label="Generate Java"
@@ -94,14 +94,14 @@
 	</key>
 </extension>
 
-    <extension
-         point="org.eclipse.ui.preferencePages">
-      <page
-            category="org.overture.ide.ui.vdm"
-            class="org.overture.ide.plugins.codegen.preferences.WorkbenchPreferencePageMain"
-            id="org.overture.ide.plugins.codegen.pageMain"
-            name="Java Code Generation">
-      </page>
-    </extension>	
+<extension
+	point="org.eclipse.ui.preferencePages">
+	<page
+		category="org.overture.ide.ui.vdm"
+		class="org.overture.ide.plugins.codegen.preferences.WorkbenchPreferencePageMain"
+		id="org.overture.ide.plugins.codegen.pageMain"
+		name="Java Code Generation">
+	</page>
+</extension>	
  
 </plugin>
