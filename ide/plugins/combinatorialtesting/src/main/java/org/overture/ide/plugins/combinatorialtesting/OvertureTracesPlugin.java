@@ -44,8 +44,8 @@ public class OvertureTracesPlugin extends AbstractUIPlugin
 	public static final String IMG_VDM_TOOLS_LOGO = "icons/clcl16/vdmt_menu.png";
 	public static final String IMG_VDM_TOOLS_LOGO_PRESSED = "icons/clcl16/vdmt_p_menu.png";
 
-	public static final String IMG_VDMJ_LOGO = "icons/clcl16/oml_menu.png";
-	public static final String IMG_VDMJ_LOGO_PRESSED = "icons/clcl16/oml_p_menu.png";
+//	public static final String IMG_VDMJ_LOGO = "icons/clcl16/oml_menu.png";
+//	public static final String IMG_VDMJ_LOGO_PRESSED = "icons/clcl16/oml_p_menu.png";
 
 	public static final String IMG_RUN_SAVE = "icons/clcl16/save_menu.png";
 	public static final String IMG_RUN_ALL_TRACES = "icons/clcl16/run_all_menu.png"; //$NON-NLS-1$
@@ -62,13 +62,13 @@ public class OvertureTracesPlugin extends AbstractUIPlugin
 	public static final String IMG_TRACE = "icons/cview16/trace_obj.png"; //$NON-NLS-1$
 
 	public static final String IMG_TRACE_TEST_SORT = "icons/clcl16/sort_menu.png"; //$NON-NLS-1$
-	public static final String IMG_TRACE_TEST_SORT_PRESSED = "icons/clcl16/sort_p_menu.png"; //$NON-NLS-1$
+	public static final String IMG_REFRESH = "icons/clcl16/refresh.gif"; //$NON-NLS-1$
 
 	public static final String IMG_TRACE_TEST_CASE_FILTER_UNDETERMINED = "icons/clcl16/undetermined_filter_menu.png"; //$NON-NLS-1$
-	public static final String IMG_TRACE_TEST_CASE_FILTER_UNDETERMINED_PRESSED = "icons/clcl16/undetermined_filter_p_menu.png"; //$NON-NLS-1$
+//	public static final String IMG_TRACE_TEST_CASE_FILTER_UNDETERMINED_PRESSED = "icons/clcl16/undetermined_filter_p_menu.png"; //$NON-NLS-1$
 
 	public static final String IMG_TRACE_TEST_CASE_FILTER_SUCCES = "icons/clcl16/ok_filter_menu.png"; //$NON-NLS-1$
-	public static final String IMG_TRACE_TEST_CASE_FILTER_SUCCES_PRESSED = "icons/clcl16/ok_filter_p_menu.png"; //$NON-NLS-1$
+//	public static final String IMG_TRACE_TEST_CASE_FILTER_SUCCES_PRESSED = "icons/clcl16/ok_filter_p_menu.png"; //$NON-NLS-1$
 
 	/**
 	 * The constructor
@@ -142,6 +142,7 @@ public class OvertureTracesPlugin extends AbstractUIPlugin
 
 	public static void initializeDefaultMainPreferences(IPreferenceStore store)
 	{
+		store.setDefault(ITracesConstants.SORT_VIEW, false);
 		store.setDefault(ITracesConstants.REMOTE_DEBUG_PREFERENCE, false);
 		store.setDefault(ITracesConstants.REMOTE_DEBUG_FIXED_PORT, false);
 		store.setDefault(ITracesConstants.TRACE_REDUCTION_TYPE, ITracesConstants.TRACE_REDUCTION_DEFAULT_TYPE);
