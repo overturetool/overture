@@ -65,8 +65,6 @@ import org.overture.interpreter.VDMJ;
 import org.overture.interpreter.VDMPP;
 import org.overture.interpreter.VDMRT;
 import org.overture.interpreter.VDMSL;
-import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.debug.DBGPExecProcesser.DBGPExecResult;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.messages.rtlog.RTLogger;
@@ -91,6 +89,7 @@ import org.overture.interpreter.values.BooleanValue;
 import org.overture.interpreter.values.CPUValue;
 import org.overture.interpreter.values.CharacterValue;
 import org.overture.interpreter.values.FieldValue;
+import org.overture.interpreter.values.FunctionValue;
 import org.overture.interpreter.values.MapValue;
 import org.overture.interpreter.values.NameValuePair;
 import org.overture.interpreter.values.NameValuePairMap;
@@ -998,6 +997,11 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		{
 			data = value.toString();
 		}
+		
+		if(value.deref() instanceof FunctionValue)
+		{
+			data = formatFunctionValue((FunctionValue)value);
+		}
 
 		if (currentDepth < depth && numChildren > 0)
 		{
@@ -1010,6 +1014,13 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 				|| !(value instanceof UpdatableValue);
 
 		return makeProperty(name, fullname, value.kind(), clazz, page, pageSize, constant, data.length(), key, numChildren, data, nestedChildren);
+	}
+
+	private String formatFunctionValue(FunctionValue value)
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append(value.name + ": " + value.toString() + " & " + value.body);
+		return sb.toString();
 	}
 
 	/**
@@ -1297,7 +1308,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 				|| v instanceof SetValue || v instanceof SeqValue
 				|| v instanceof MapValue || v instanceof TokenValue
 				|| v instanceof RecordValue || v instanceof ObjectValue
-				|| v instanceof NilValue;
+				|| v instanceof NilValue || v instanceof FunctionValue;
 	}
 
 	/**
