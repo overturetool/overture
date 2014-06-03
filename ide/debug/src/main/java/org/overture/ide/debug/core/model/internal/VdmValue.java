@@ -156,7 +156,11 @@ public class VdmValue extends VdmDebugElement implements IVdmValue,
 				IDbgpProperty p = properties[i];
 				variables[offset + i] = new VdmVariable(frame, p.getName(), p);
 			}
-			Arrays.sort(this.variables, offset, offset + size, VdmDebugManager.getInstance().getVariableNameComparator());
+			
+			if(rawValue!=null && !rawValue.startsWith("mk_"))
+			{
+				Arrays.sort(this.variables, offset, offset + size, VdmDebugManager.getInstance().getVariableNameComparator());
+			}
 		}
 		Assert.isLegal(pageSize > 0 || properties.length == variables.length);
 	}
