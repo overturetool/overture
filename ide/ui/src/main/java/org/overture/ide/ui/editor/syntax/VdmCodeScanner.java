@@ -87,7 +87,7 @@ public abstract class VdmCodeScanner extends RuleBasedScanner
 		rules.add(multipleWordRule);
 
 		// Add word rule for keywords.
-		WordRule wordRule = new WordRule(new VdmWordDetector(), Token.UNDEFINED);// Not sure why Token.UNDEFINED doesn't
+		WordRule wordRule = new WordRule(new VdmWordDetector(), other);// Not sure why Token.UNDEFINED doesn't
 																					// work but
 		// it makes S'end' colored.
 
