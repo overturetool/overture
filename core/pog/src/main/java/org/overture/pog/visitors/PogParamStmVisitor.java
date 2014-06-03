@@ -151,9 +151,22 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 		{
 			IProofObligationList obligations = new ProofObligationList();
 
+			boolean needsInv= false;
+			
+			
 			for (AAssignmentStm stmt : node.getAssignments())
 			{
-				obligations.addAll(stmt.apply(mainVisitor, question));
+				stmt.apply(mainVisitor, question); //collect the assignments
+				if (!stmt.getInConstructor()
+						&& (stmt.getClassDefinition() != null && stmt.getClassDefinition().getInvariant() != null)
+						|| (stmt.getStateDefinition() != null && stmt.getStateDefinition().getInvExpression() != null))
+				{
+					needsInv = true;
+					break;
+				}
+			}
+			if (needsInv){
+				obligations.add(new StateInvariantObligation(node.getAssignments().get(0), question));		
 			}
 
 			return obligations;
