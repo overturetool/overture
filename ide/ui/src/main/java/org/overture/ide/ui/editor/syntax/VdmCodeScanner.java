@@ -79,18 +79,18 @@ public abstract class VdmCodeScanner extends RuleBasedScanner
 			rules.add(new PrefixedUnderscoreRule(prefix, stringBold));
 		}
 
-		
-		MultipleWordsWordRule multipleWordRule = new MultipleWordsWordRule(new VdmWordDetector(), other, false);
+		MultipleWordsWordRule multipleWordRule = new MultipleWordsWordRule(new VdmWordDetector(), Token.UNDEFINED, false);
 		for (int i = 0; i < fgKeywords.getMultipleKeywords().length; i++)
 		{
 			multipleWordRule.addWord(fgKeywords.getMultipleKeywords()[i], keyword);
 		}
 		rules.add(multipleWordRule);
-		
+
 		// Add word rule for keywords.
-		WordRule wordRule = new WordRule(new VdmWordDetector(), other);// Not sure why Token.UNDEFINED doesn't work but
-																		// it makes S'end' colored.
-		
+		WordRule wordRule = new WordRule(new VdmWordDetector(), other);// Not sure why Token.UNDEFINED doesn't
+																					// work but
+		// it makes S'end' colored.
+
 		for (int i = 0; i < fgKeywords.getAllSingleWordKeywords().length; i++)
 		{
 			wordRule.addWord(fgKeywords.getAllSingleWordKeywords()[i], keyword);
@@ -105,6 +105,47 @@ public abstract class VdmCodeScanner extends RuleBasedScanner
 		setDefaultReturnToken(other);
 	}
 
-	
+//	/**
+//	 * overrides super method to debug rule scanners
+//	 */
+//	public IToken nextToken()
+//	{
+//
+//		fTokenOffset = fOffset;
+//		fColumn = UNDEFINED;
+//
+//		if (fRules != null)
+//		{
+//			for (int i = 0; i < fRules.length; i++)
+//			{
+//				int o = fOffset;
+//
+//				IToken token = (fRules[i].evaluate(this));
+//				if (o != fOffset)
+//				{
+//					try
+//					{
+//
+//						String text = fDocument.get(o, fOffset - o);
+//						System.out.println("Offset changed from: " +o+" to: "+ fOffset
+//								+ ", scanned '" + text + "' with rule "
+//								+ fRules[i].getClass().getSimpleName()
+//								+ " is token undefined: "+( token.isUndefined()?"yes":"no"));
+//					} catch (BadLocationException e)
+//					{
+//						e.printStackTrace();
+//					}
+//				}
+//
+//				if (!token.isUndefined())
+//					return token;
+//			}
+//		}
+//
+//		if (read() == EOF)
+//			return Token.EOF;
+//		return fDefaultReturnToken;
+//	}
+
 	protected abstract IVdmKeywords getKeywords();
 }

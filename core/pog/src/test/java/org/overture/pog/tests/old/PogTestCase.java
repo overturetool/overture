@@ -13,9 +13,6 @@ import java.util.Vector;
 
 import org.overture.ast.lex.LexLocation;
 import org.overture.parser.messages.VDMMessage;
-import org.overture.pog.obligation.ProofObligation;
-import org.overture.pog.obligation.ProofObligationList;
-import org.overture.pog.pub.IProofObligation;
 import org.overture.pog.tests.old.TestPogUtil.PogResult;
 import org.overture.test.framework.Properties;
 import org.overture.test.framework.ResultTestCase;
@@ -101,13 +98,13 @@ public abstract class PogTestCase extends ResultTestCase<List<String>>
 		List<String> expected = new LinkedList<String>();
 		List<String> actual = new LinkedList<String>();
 
-		
+// rewrite the strings for easier comparisons
 		for (String s : oexpected){
-			expected.add(s.replaceAll("\\s+", " "));
+			expected.add(s.replaceAll("\\s+", " ")); // .replaceAll("[\\(\\)]", ""));
 		}
 		
 		for (String s : oactual){
-			actual.add(s.replaceAll("\\s+", " "));
+			actual.add(s.replaceAll("\\s+", " ")); // .replaceAll("[\\(\\)]", ""));
 		}
 
 		if (expected.size() != actual.size())

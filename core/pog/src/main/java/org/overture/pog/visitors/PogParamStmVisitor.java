@@ -47,7 +47,6 @@ import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.utility.POException;
 import org.overture.pog.utility.PogAssistantFactory;
 import org.overture.typechecker.TypeComparator;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
 public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofObligationList>
 		extends QuestionAnswerAdaptor<IPOContextStack, IProofObligationList>

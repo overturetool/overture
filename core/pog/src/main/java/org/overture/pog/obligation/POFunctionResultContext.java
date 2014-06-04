@@ -26,6 +26,7 @@ package org.overture.pog.obligation;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.ast.definitions.AEqualsDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -111,13 +112,20 @@ public class POFunctionResultContext extends POContext
 
 		else
 		{
-			ALetDefExp letDefExp = new ALetDefExp();
-			letDefExp.setLocalDefs(result.getPattern().clone().getDefinitions());
+			ALetDefExp letDefExp = new ALetDefExp();		
+			AEqualsDefinition localDef = new AEqualsDefinition();
+			localDef.setPattern(result.getPattern().clone());
+			localDef.setType(result.getType().clone());
+			localDef.setTest(body.clone());
+			List<PDefinition> defs = new LinkedList<PDefinition>();
+			defs.add(localDef);
+			letDefExp.setLocalDefs(defs);
 			letDefExp.setExpression(stitch);
 			return letDefExp;
 		}
 
 	}
+
 
 	@Override
 	public String getContext()
