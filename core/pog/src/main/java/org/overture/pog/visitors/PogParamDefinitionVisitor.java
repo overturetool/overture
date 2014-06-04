@@ -58,14 +58,9 @@ import org.overture.pog.utility.PatternAlwaysMatchesVisitor;
 import org.overture.pog.utility.PogAssistantFactory;
 import org.overture.typechecker.TypeComparator;
 
-
 public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IProofObligationList>
 		extends QuestionAnswerAdaptor<IPOContextStack, IProofObligationList> {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -3086193431700309588L;
 	final private QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> rootVisitor;
 	final private QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> mainVisitor;
 	final private IVariableSubVisitor renameVisitor;
@@ -74,6 +69,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 
 	/**
 	 * Constructor for Extensions.
+	 * 
 	 * @param parentVisitor
 	 * @param mainVisitor
 	 * @param assistantFactory
@@ -82,7 +78,8 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 	public PogParamDefinitionVisitor(
 			QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> parentVisitor,
 			QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> mainVisitor,
-			IPogAssistantFactory assistantFactory, IVariableSubVisitor renameVisitor) {
+			IPogAssistantFactory assistantFactory,
+			IVariableSubVisitor renameVisitor) {
 		this.rootVisitor = parentVisitor;
 		this.mainVisitor = mainVisitor;
 		this.assistantFactory = assistantFactory;
@@ -91,6 +88,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 
 	/**
 	 * Overture constructor. <b>NOT</b> for use by extensions.
+	 * 
 	 * @param parentVisitor
 	 */
 	public PogParamDefinitionVisitor(
@@ -226,7 +224,8 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 						AInstanceVariableDefinition ivdef = (AInstanceVariableDefinition) pdef;
 						if (ivdef.getInitialized()) {
 							question.push(new AssignmentContext(
-									(AInstanceVariableDefinition) pdef,renameVisitor));
+									(AInstanceVariableDefinition) pdef,
+									renameVisitor));
 							assigns++;
 						}
 					}
@@ -236,10 +235,9 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 					question.pop();
 				}
 			}
-		
 
-		return list;
-			
+			return list;
+
 		} catch (Exception e) {
 			throw new POException(node, e.getMessage());
 		}
@@ -403,6 +401,15 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 			IProofObligationList obligations = new ProofObligationList();
 			LexNameList pids = new LexNameList();
 
+			Boolean precond = true;
+			if (node.getPrecondition() == null) {
+				precond = false;
+			}
+
+			// stick parameters in the context
+			question.push(new POOperationDefinitionContext(node, precond, node
+					.getState(), assistantFactory));
+
 			// add all defined names from the function parameter list
 			AOperationType otype = (AOperationType) node.getType();
 			Iterator<PType> typeIter = otype.getParameters().iterator();
@@ -495,15 +502,14 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 			}
 
 			if (node.getPostcondition() != null) {
-				if (node.getPrecondition() != null)
-				{
+				if (node.getPrecondition() != null) {
 					question.push(new POImpliesContext(node.getPrecondition()));
-					obligations.addAll(node.getPostcondition().apply(rootVisitor, question));
+					obligations.addAll(node.getPostcondition().apply(
+							rootVisitor, question));
 					question.pop();
-				}
-				else
-				{
-					obligations.addAll(node.getPostcondition().apply(rootVisitor, question));
+				} else {
+					obligations.addAll(node.getPostcondition().apply(
+							rootVisitor, question));
 				}
 			}
 
