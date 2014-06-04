@@ -42,7 +42,7 @@ public class PTypeSet extends TreeSet<PType>
 	}
 
 	@Override
-	public boolean add(PType t)
+	public boolean add(PType t) //TODO: Create visitor over this method???? Need a assistantFactory but the call is from 1770 places. gkanos
 	{
 		if (t instanceof ASeq1SeqType)
 		{
@@ -69,7 +69,7 @@ public class PTypeSet extends TreeSet<PType>
 			}
 		} else if (t instanceof SNumericBasicType)
 		{
-			for (PType x : this)
+			for (PType x : this)//what the this keyword refer to...If refer to t easy job to make visitor to apply. gkanos
 			{
 				if (x instanceof SNumericBasicType)
 				{
