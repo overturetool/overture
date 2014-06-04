@@ -58,6 +58,7 @@ import org.overture.pog.utility.PatternAlwaysMatchesVisitor;
 import org.overture.pog.utility.PogAssistantFactory;
 import org.overture.typechecker.TypeComparator;
 
+
 public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IProofObligationList>
 		extends QuestionAnswerAdaptor<IPOContextStack, IProofObligationList> {
 
@@ -67,23 +68,37 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 	private static final long serialVersionUID = -3086193431700309588L;
 	final private QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> rootVisitor;
 	final private QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> mainVisitor;
+	final private IVariableSubVisitor renameVisitor;
 
 	final private IPogAssistantFactory assistantFactory;
 
+	/**
+	 * Constructor for Extensions.
+	 * @param parentVisitor
+	 * @param mainVisitor
+	 * @param assistantFactory
+	 * @param renameVisitor
+	 */
 	public PogParamDefinitionVisitor(
 			QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> parentVisitor,
 			QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> mainVisitor,
-			IPogAssistantFactory assistantFactory) {
+			IPogAssistantFactory assistantFactory, IVariableSubVisitor renameVisitor) {
 		this.rootVisitor = parentVisitor;
 		this.mainVisitor = mainVisitor;
 		this.assistantFactory = assistantFactory;
+		this.renameVisitor = renameVisitor;
 	}
 
+	/**
+	 * Overture constructor. <b>NOT</b> for use by extensions.
+	 * @param parentVisitor
+	 */
 	public PogParamDefinitionVisitor(
 			QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> parentVisitor) {
 		this.rootVisitor = parentVisitor;
 		this.mainVisitor = this;
 		this.assistantFactory = new PogAssistantFactory();
+		this.renameVisitor = new VariableSubVisitor();
 	}
 
 	@Override
@@ -204,10 +219,27 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 			IProofObligationList list = new ProofObligationList();
 
 			if (!node.getClassDefinition().getHasContructors()) {
+				int assigns = 0;
+				for (PDefinition pdef : node.getClassDefinition()
+						.getDefinitions()) {
+					if (pdef instanceof AInstanceVariableDefinition) {
+						AInstanceVariableDefinition ivdef = (AInstanceVariableDefinition) pdef;
+						if (ivdef.getInitialized()) {
+							question.push(new AssignmentContext(
+									(AInstanceVariableDefinition) pdef,renameVisitor));
+							assigns++;
+						}
+					}
+				}
 				list.add(new StateInvariantObligation(node, question));
+				for (int i = 0; i < assigns; i++) {
+					question.pop();
+				}
 			}
+		
 
-			return list;
+		return list;
+			
 		} catch (Exception e) {
 			throw new POException(node, e.getMessage());
 		}
