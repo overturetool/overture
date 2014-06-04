@@ -192,7 +192,7 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 					&& node.getRootdef() instanceof AExplicitOperationDefinition) {
 				AExplicitOperationDefinition opdef = (AExplicitOperationDefinition) node.getRootdef();
 				if (opdef.getPrecondition()!=null){
-					obligations.add(new  OperationCallObligation(node, opdef, node.getArgs(), question));
+					obligations.add(new  OperationCallObligation(node, opdef, node.getArgs(), question,assistantFactory));
 				}
 			}
 
