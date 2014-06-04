@@ -35,7 +35,7 @@
     <module>platform</module>
     <module>features</module>
     <module>product</module>
-	<module>tests</module>
+    <!-- <module>tests</module> -->
   </modules>
 
   <reporting>
@@ -49,8 +49,8 @@
           <excludePackageNames>*org.eclipse.*</excludePackageNames>
           <stylesheetfile>${basedir}/src/main/javadoc/stylesheet.css</stylesheetfile>
           <show>public</show>
-        </configuration>
-      </plugin>
+        </configuration> 
+     </plugin>
     </plugins>
   </reporting>
 

@@ -27,22 +27,22 @@
     <module>developerutils</module>
     <module>uml2</module>
     <module>rttraceviewer</module>
-	<module>codegen</module>
-	<module>prob-runtime</module>
+    <module>codegen</module>
+    <module>prob-runtime</module>
     <!-- features last -->
     <module>features</module>
   </modules>
   
   <profiles>
     <profile>
-	<!-- This profile enabled UI tests. Must not be enabled if running on terminal server with no UI -->
+      <!-- This profile enabled UI tests. Must not be enabled if running on terminal server with no UI -->
       <id>ui-tests</id>
-	  <activation>
-		<activeByDefault>true</activeByDefault>
-		</activation>
-      <modules>
-        <module>uml2.tests</module>
-      </modules>
+      <activation>
+	<activeByDefault>true</activeByDefault>
+      </activation>
+      <!-- <modules> -->
+      <!--   <module>uml2.tests</module> -->
+      <!-- </modules> -->
     </profile>
   </profiles>
 </project>
