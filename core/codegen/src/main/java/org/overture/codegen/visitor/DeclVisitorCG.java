@@ -29,6 +29,7 @@ import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.PDeclCG;
 import org.overture.codegen.cgast.expressions.ALambdaExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
+import org.overture.codegen.cgast.pattern.PPatternCG;
 import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
@@ -193,11 +194,11 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, PDeclCG>
 		
 		for(int i = 0; i < paramPatterns.size(); i++)
 		{
-			String name = paramPatterns.get(i).toString();
+			PPatternCG pattern = paramPatterns.get(i).apply(question.getPatternVisitor(), question);
 			
 			AFormalParamLocalDeclCG param = new AFormalParamLocalDeclCG();
 			param.setType(methodTypeCg.getParams().get(i).clone());
-			param.setName(name);
+			param.setPattern(pattern);
 			
 			formalParameters.add(param);
 		}
@@ -222,8 +223,10 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, PDeclCG>
 				{
 					PPattern param = paramPatterns.get(i);
 					
+					PPatternCG patternCg = param.apply(question.getPatternVisitor(), question);
+					
 					AFormalParamLocalDeclCG paramCg = new AFormalParamLocalDeclCG();
-					paramCg.setName(param.toString());
+					paramCg.setPattern(patternCg);
 					paramCg.setType(nextLevel.getParams().get(i).clone());
 					
 					currentLambda.getParams().add(paramCg);
@@ -309,11 +312,11 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, PDeclCG>
 		for(int i = 0; i < ptypes.size(); i++)
 		{
 			PTypeCG paramType = ptypes.get(i).apply(question.getTypeVisitor(), question);
-			String name = paramPatterns.get(i).toString();
+			PPatternCG patternCg = paramPatterns.get(i).apply(question.getPatternVisitor(), question);
 			
 			AFormalParamLocalDeclCG param = new AFormalParamLocalDeclCG();
 			param.setType(paramType);
-			param.setName(name);
+			param.setPattern(patternCg);
 			
 			formalParameters.add(param);
 		}

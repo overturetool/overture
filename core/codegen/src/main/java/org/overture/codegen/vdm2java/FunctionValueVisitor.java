@@ -13,6 +13,8 @@ import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.expressions.AAnonymousClassExpCG;
 import org.overture.codegen.cgast.expressions.ALambdaExpCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
+import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
+import org.overture.codegen.cgast.pattern.PPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.types.AInterfaceTypeCG;
@@ -109,11 +111,11 @@ public class FunctionValueVisitor extends DepthFirstAnalysisAdaptor
 		{
 			AFormalParamLocalDeclCG paramLocalDeclCG = params.get(i);
 			PTypeCG paramType = paramLocalDeclCG.getType();
-			String paramName = paramLocalDeclCG.getName();
+			PPatternCG pattern = paramLocalDeclCG.getPattern();
 			
 			classType.getTypes().add(paramType.clone());
 			lambdaDecl.getFormalParams().get(i).setType(paramType.clone());
-			lambdaDecl.getFormalParams().get(i).setName(paramName);
+			lambdaDecl.getFormalParams().get(i).setPattern(pattern.clone());
 		}
 		
 		classType.getTypes().add(methodType.getResult().clone());
@@ -150,8 +152,11 @@ public class FunctionValueVisitor extends DepthFirstAnalysisAdaptor
 			AFormalParamLocalDeclCG param = new AFormalParamLocalDeclCG();
 			
 			String nextParamName = paramNamePrefix + (i + 1);
+			AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
+			idPattern.setName(nextParamName);
+			
 			param.setType(paramType.clone());
-			param.setName(nextParamName);
+			param.setPattern(idPattern);
 			
 			params.add(param);
 		}
@@ -184,7 +189,7 @@ public class FunctionValueVisitor extends DepthFirstAnalysisAdaptor
 
 			AFormalParamLocalDeclCG formalParam = new AFormalParamLocalDeclCG();
 			formalParam.setType(templateType);
-			formalParam.setName(params.get(i).getName());
+			formalParam.setPattern(params.get(i).getPattern().clone());
 			
 			evalMethod.getFormalParams().add(formalParam);
 			methodTypeInterface.getTemplateTypes().add(templateType.clone());

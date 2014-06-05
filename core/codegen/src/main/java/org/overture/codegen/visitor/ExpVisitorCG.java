@@ -194,6 +194,7 @@ import org.overture.codegen.cgast.expressions.AXorBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
+import org.overture.codegen.cgast.pattern.PPatternCG;
 import org.overture.codegen.cgast.patterns.ASetBindCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.patterns.PBindCG;
@@ -1533,23 +1534,20 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, PExpCG>
 		
 		for(ATypeBind typeBind : bindList)
 		{
-			PPattern bindPattern = typeBind.getPattern();
+			PType bindType = typeBind.getType();
+			PPattern pattern = typeBind.getPattern();
 			
-			if(!(bindPattern instanceof AIdentifierPattern))
+			if(!(pattern instanceof AIdentifierPattern))
 			{
-				question.addUnsupportedNode(node, "Expected identifier pattern for lambda expression. Got: " + bindPattern);
+				question.addUnsupportedNode(node, "Expected identifier pattern for lambda expression. Got: " + pattern);
 				return null;
 			}
 			
-			AIdentifierPattern idPattern = (AIdentifierPattern) bindPattern;
-			PType bindType = typeBind.getType();
-			
-
-			String name = idPattern.getName().getName();
 			PTypeCG bindTypeCg = bindType.apply(question.getTypeVisitor(), question);
+			PPatternCG patternCg = pattern.apply(question.getPatternVisitor(), question);
 			
 			AFormalParamLocalDeclCG param = new AFormalParamLocalDeclCG();
-			param.setName(name);
+			param.setPattern(patternCg);
 			param.setType(bindTypeCg);
 			
 			params.add(param);

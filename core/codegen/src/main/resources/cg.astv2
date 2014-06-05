@@ -149,7 +149,7 @@ objectDesignatorCG {-> package='org.overture.codegen.cgast.statements'}
     ;
     
 localDeclCG {-> package='org.overture.codegen.cgast.declarations'}
-           = {formalParam} [type]:typeCG [name]:java_String// [init]:exp
+           = {formalParam} [type]:typeCG [pattern]:patternCG// [init]:exp
            ;
 
 stmCG {-> package='org.overture.codegen.cgast.statements'}

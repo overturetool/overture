@@ -12,6 +12,7 @@ public class VisitorManager
 	private ObjectDesignatorVisitorCG objectDesignatorVisitor;
 	private MultipleBindVisitorCG multipleBindVisitor;
 	private BindVisitorCG bindVisitor;
+	private PatternVisitorCG patternVisitor;
 	
 	public VisitorManager()
 	{
@@ -24,6 +25,7 @@ public class VisitorManager
 		this.objectDesignatorVisitor = new ObjectDesignatorVisitorCG();
 		this.multipleBindVisitor = new MultipleBindVisitorCG();
 		this.bindVisitor = new BindVisitorCG();
+		this.patternVisitor = new PatternVisitorCG();
 	}
 	
 	public ClassVisitorCG getClassVisitor()
@@ -69,5 +71,10 @@ public class VisitorManager
 	public BindVisitorCG getBindVisitor()
 	{
 		return bindVisitor;
+	}
+	
+	public PatternVisitorCG getPatternVisitor()
+	{
+		return patternVisitor;
 	}
 }
