@@ -8,10 +8,9 @@ import java.util.Queue;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
-import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
-import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SOperationDefinitionBase;
 import org.overture.ast.expressions.*;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexIdentifierToken;
@@ -101,7 +100,6 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 	// RWL see [1] pg. 57: 6.12 Apply Expressions
 	public IProofObligationList caseAApplyExp(AApplyExp node,
 			IPOContextStack question) throws AnalysisException {
-		// FIXME add the post condition context stuff
 		IProofObligationList obligations = new ProofObligationList();
 	
 		PExp root = node.getRoot();
@@ -186,16 +184,9 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		
 		//stick possible op post_condition in the context
 		// FIXME change these instanceof checks to visitor application
-		PDefinition calledOp = node.apply(new GetOpCallVisitor());
+		SOperationDefinitionBase calledOp = node.apply(new GetOpCallVisitor());
 		if (calledOp != null) {
-			if (calledOp instanceof AExplicitOperationDefinition) {
-				question.push(new OpPostConditionContext(
-						(AExplicitOperationDefinition) calledOp, node, aF));
-			}
-			if (calledOp instanceof AImplicitOperationDefinition) {
-				question.push(new OpPostConditionContext(
-						(AImplicitOperationDefinition) calledOp, node, aF));
-			}
+			new OpPostConditionContext(calledOp.getPostdef(), node, aF);
 		}
 
 		return obligations;

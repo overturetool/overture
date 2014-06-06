@@ -5,8 +5,6 @@ import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
-import org.overture.ast.definitions.AExplicitOperationDefinition;
-import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstExpressionFactory;
@@ -27,24 +25,13 @@ public class OpPostConditionContext extends POContext implements
 		PExp spellPre_exp = spellCondition(postDef, af, stm);
 		this.exp = spellPre_exp;
 	}
+	
+	public OpPostConditionContext(AExplicitFunctionDefinition postDef,
+			AApplyExp exp, IPogAssistantFactory af) {
+		PExp spellPre_exp = spellCondition(postDef, af, exp);
+		this.exp = spellPre_exp;
+	}
 
-	public OpPostConditionContext(AImplicitOperationDefinition opDef,
-			ACallStm stm, IPogAssistantFactory af) {
-		PExp spellPre_exp = spellCondition(opDef.getPostdef(), af, stm);
-		this.exp = spellPre_exp;
-	}
-	
-	public OpPostConditionContext(AExplicitOperationDefinition opDef,
-			AApplyExp exp, IPogAssistantFactory af) {
-		PExp spellPre_exp = spellCondition(opDef.getPostdef(), af, exp);
-		this.exp = spellPre_exp;
-	}
-	
-	public OpPostConditionContext(AImplicitOperationDefinition opDef,
-			AApplyExp exp, IPogAssistantFactory af) {
-		PExp spellPre_exp = spellCondition(opDef.getPostdef(), af, exp);
-		this.exp = spellPre_exp;
-	}
 
 	@Override
 	public boolean isStateful() {
