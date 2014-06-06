@@ -2,7 +2,6 @@ package org.overture.codegen.transform;
 
 import java.util.List;
 
-import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
 import org.overture.codegen.cgast.declarations.SLocalDeclCG;
@@ -38,7 +37,7 @@ import org.overture.codegen.constants.TempVarPrefixes;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.utils.ITempVarGen;
 
-public class TransformationAssistantCG
+public class TransformationAssistantCG extends BaseTransformationAssistant
 {
 	protected IRInfo info;
 	protected TempVarPrefixes varPrefixes;
@@ -57,13 +56,6 @@ public class TransformationAssistantCG
 	public TempVarPrefixes getVarPrefixes()
 	{
 		return varPrefixes;
-	}
-
-	public void replaceNodeWith(INode original, INode replacement)
-	{
-		INode parent = original.parent();
-		parent.replaceChild(original, replacement);
-		original.parent(null);
 	}
 
 	public SSetTypeCG getSetTypeCloned(PExpCG set) throws AnalysisException
