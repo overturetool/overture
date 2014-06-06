@@ -39,7 +39,13 @@ abstract public class POContext implements IPOContext
 	private Map<PExp, PType> knownTypes = new HashMap<PExp, PType>();
 
 	
-	
+	@Override
+	/**
+	 * Any contexts that can be preserved regardless of state need not override this
+	 */
+	public boolean isStateful() {
+		return false;
+	}
 	
 	public String getName()
 	{

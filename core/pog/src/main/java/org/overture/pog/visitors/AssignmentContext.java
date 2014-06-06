@@ -28,6 +28,11 @@ public class AssignmentContext extends POContext {
 		}
 	}
 
+	@Override
+	public boolean isStateful() {
+		return true;
+	}
+	
 	public AssignmentContext(AInstanceVariableDefinition node,
 			IVariableSubVisitor visitor) {
 		sub = new Substitution(node.getName(), node.getExpression());

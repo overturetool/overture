@@ -155,4 +155,17 @@ public class POContextStack extends Stack<IPOContext> implements IPOContextStack
 
 		return expected;
 	}
+
+	@Override
+	public void clearStateContexts() {
+		for (int i = 0; i < this.elementCount; i++) {
+			if (this.get(i).isStateful()){
+				this.remove(0);
+			}
+			
+		}
+		
+		// TODO Auto-generated method stub
+		
+	}
 }

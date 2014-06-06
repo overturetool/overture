@@ -22,4 +22,6 @@ public interface IPOContextStack
 
 	public abstract String getObligation(String root);
 
+	public void clearStateContexts();
+
 }
