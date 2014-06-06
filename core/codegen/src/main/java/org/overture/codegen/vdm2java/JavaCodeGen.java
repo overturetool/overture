@@ -20,9 +20,9 @@ import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.analysis.violations.VdmAstAnalysis;
 import org.overture.codegen.analysis.violations.Violation;
 import org.overture.codegen.assistant.AssistantManager;
+import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
-import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.constants.IRConstants;
 import org.overture.codegen.constants.TempVarPrefixes;
 import org.overture.codegen.ir.ClassDeclStatus;
@@ -308,7 +308,7 @@ public class JavaCodeGen
 
 		try
 		{
-			PExpCG expCg = expStatus.getExpCg();
+			SExpCG expCg = expStatus.getExpCg();
 
 			if (expStatus.canBeGenerated())
 			{

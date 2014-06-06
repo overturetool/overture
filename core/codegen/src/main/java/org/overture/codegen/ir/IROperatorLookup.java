@@ -2,6 +2,7 @@ package org.overture.codegen.ir;
 
 import java.util.HashMap;
 
+import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.expressions.AAddrEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AAddrNotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
@@ -25,7 +26,6 @@ import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
 import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AXorBoolBinaryExpCG;
-import org.overture.codegen.cgast.expressions.PExpCG;
 
 public class IROperatorLookup
 {
@@ -64,16 +64,16 @@ public class IROperatorLookup
 	private static final int UNARY_PLUS = 13;
 	private static final int UNARY_MINUS = 13;
 	
-	private HashMap<Class<? extends PExpCG>, IROperatorInfo> lookup;
+	private HashMap<Class<? extends SExpCG>, IROperatorInfo> lookup;
 	
-	public IROperatorInfo find(Class<? extends PExpCG> key)
+	public IROperatorInfo find(Class<? extends SExpCG> key)
 	{
 		return lookup.get(key);
 	}
 	
 	public IROperatorLookup()
 	{
-		this.lookup = new HashMap<Class<? extends PExpCG>, IROperatorInfo>();
+		this.lookup = new HashMap<Class<? extends SExpCG>, IROperatorInfo>();
 
 		lookup.put(APlusNumericBinaryExpCG.class, new IROperatorInfo(PLUS, "+"));
 		lookup.put(ASubtractNumericBinaryExpCG.class, new IROperatorInfo(SUB, "-"));

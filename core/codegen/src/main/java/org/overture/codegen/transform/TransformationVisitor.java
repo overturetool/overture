@@ -2,6 +2,9 @@ package org.overture.codegen.transform;
 
 import java.util.LinkedList;
 
+import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.SStmCG;
+import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
@@ -20,15 +23,12 @@ import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.ALetBeStExpCG;
 import org.overture.codegen.cgast.expressions.AMapletExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
-import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ALetBeStStmCG;
-import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
-import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
 import org.overture.codegen.constants.IRConstants;
@@ -56,7 +56,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	public void caseALetBeStStmCG(ALetBeStStmCG node) throws AnalysisException
 	{
 		AHeaderLetBeStCG header = node.getHeader();
-		PExpCG suchThat = header.getSuchThat();
+		SExpCG suchThat = header.getSuchThat();
 		SSetTypeCG setType = transformationAssistant.getSetTypeCloned(header.getBinding().getSet());
 		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
 		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
@@ -87,11 +87,11 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseALetBeStExpCG(ALetBeStExpCG node) throws AnalysisException
 	{
-		PStmCG enclosingStm = getEnclosingStm(node, "let be st expressions");
+		SStmCG enclosingStm = getEnclosingStm(node, "let be st expressions");
 
 		AHeaderLetBeStCG header = node.getHeader();
 		ASetMultipleBindCG binding = header.getBinding();
-		PExpCG suchThat = header.getSuchThat();
+		SExpCG suchThat = header.getSuchThat();
 		SSetTypeCG setType = transformationAssistant.getSetTypeCloned(binding.getSet());
 		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
 		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
@@ -100,7 +100,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 
 		ABlockStmCG outerBlock = new ABlockStmCG();
 
-		PExpCG letBeStResult = null;
+		SExpCG letBeStResult = null;
 		
 		if (transformationAssistant.hasEmptySet(binding))
 		{
@@ -110,7 +110,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		else
 		{
 			String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_LET_BE_ST_EXP_NAME_PREFIX);
-			PExpCG value = node.getValue();
+			SExpCG value = node.getValue();
 			
 			AVarLocalDeclCG resultDecl = transformationAssistant.consDecl(var, value);
 			info.getStmAssistant().injectDeclAsStm(outerBlock, resultDecl);
@@ -139,11 +139,11 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseACompMapExpCG(ACompMapExpCG node) throws AnalysisException
 	{
-		PStmCG enclosingStm = getEnclosingStm(node, "map comprehension");
+		SStmCG enclosingStm = getEnclosingStm(node, "map comprehension");
 		
 		AMapletExpCG first = node.getFirst();
-		PExpCG predicate = node.getPredicate();
-		PTypeCG type = node.getType();
+		SExpCG predicate = node.getPredicate();
+		STypeCG type = node.getType();
 		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
 		String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_MAP_COMP_NAME_PREFIX);
 		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
@@ -173,11 +173,11 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseACompSetExpCG(ACompSetExpCG node) throws AnalysisException
 	{
-		PStmCG enclosingStm = getEnclosingStm(node, "set comprehension");
+		SStmCG enclosingStm = getEnclosingStm(node, "set comprehension");
 		
-		PExpCG first = node.getFirst();
-		PExpCG predicate = node.getPredicate();
-		PTypeCG type = node.getType();
+		SExpCG first = node.getFirst();
+		SExpCG predicate = node.getPredicate();
+		STypeCG type = node.getType();
 		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
 		String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_SET_COMP_NAME_PREFIX);
 		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
@@ -207,11 +207,11 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseACompSeqExpCG(ACompSeqExpCG node) throws AnalysisException
 	{
-		PStmCG enclosingStm = getEnclosingStm(node, "sequence comprehension");
+		SStmCG enclosingStm = getEnclosingStm(node, "sequence comprehension");
 
-		PExpCG first = node.getFirst();
-		PExpCG predicate = node.getPredicate();
-		PTypeCG type = node.getType();
+		SExpCG first = node.getFirst();
+		SExpCG predicate = node.getPredicate();
+		STypeCG type = node.getType();
 		ITempVarGen tempVarNameGen = info.getTempVarNameGen();		
 		String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_SEQ_COMP_NAME_PREFIX);
 		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
@@ -243,9 +243,9 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseAForAllQuantifierExpCG(AForAllQuantifierExpCG node) throws AnalysisException
 	{
-		PStmCG enclosingStm = getEnclosingStm(node, "forall expression");
+		SStmCG enclosingStm = getEnclosingStm(node, "forall expression");
 		
-		PExpCG predicate = node.getPredicate();
+		SExpCG predicate = node.getPredicate();
 		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
 		String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_FORALL_EXP_NAME_PREFIX);
 		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
@@ -274,9 +274,9 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	public void caseAExistsQuantifierExpCG(
 			AExistsQuantifierExpCG node) throws AnalysisException
 	{
-		PStmCG enclosingStm = getEnclosingStm(node, "exists expression");
+		SStmCG enclosingStm = getEnclosingStm(node, "exists expression");
 		
-		PExpCG predicate = node.getPredicate();
+		SExpCG predicate = node.getPredicate();
 		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
 		String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_EXISTS_EXP_NAME_PREFIX);
 		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
@@ -305,9 +305,9 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	public void caseAExists1QuantifierExpCG(
 			AExists1QuantifierExpCG node) throws AnalysisException
 	{
-		PStmCG enclosingStm = getEnclosingStm(node, "exists1 expression");
+		SStmCG enclosingStm = getEnclosingStm(node, "exists1 expression");
 		
-		PExpCG predicate = node.getPredicate();
+		SExpCG predicate = node.getPredicate();
 		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
 		String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_EXISTS1_EXP_NAME_PREFIX);
 		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
@@ -337,8 +337,8 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		}
 	}
 
-	private void replaceCompWithTransformation(PStmCG enclosingStm, ABlockStmCG block,
-			PTypeCG type, String var, PExpCG comp)
+	private void replaceCompWithTransformation(SStmCG enclosingStm, ABlockStmCG block,
+			STypeCG type, String var, SExpCG comp)
 	{
 		AIdentifierVarExpCG compResult = new AIdentifierVarExpCG();
 		compResult.setType(type.clone());
@@ -347,8 +347,8 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		transform(enclosingStm, block, compResult, comp);
 	}
 
-	private void transform(PStmCG enclosingStm, ABlockStmCG block,
-			PExpCG nodeResult, PExpCG node)
+	private void transform(SStmCG enclosingStm, ABlockStmCG block,
+			SExpCG nodeResult, SExpCG node)
 	{
 		//Replace the node with the node result
 		transformationAssistant.replaceNodeWith(node, nodeResult);
@@ -360,9 +360,9 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		block.getStatements().add(enclosingStm);
 	}
 	
-	private PStmCG getEnclosingStm(PExpCG node, String nodeStr) throws AnalysisException
+	private SStmCG getEnclosingStm(SExpCG node, String nodeStr) throws AnalysisException
 	{
-		PStmCG enclosingStm = node.getAncestor(PStmCG.class);
+		SStmCG enclosingStm = node.getAncestor(SStmCG.class);
 
 		//This case should never occur as it must be checked for during the construction of the OO AST
 		if (enclosingStm == null)

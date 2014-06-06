@@ -3,14 +3,14 @@ package org.overture.codegen.transform;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
 import org.overture.codegen.cgast.declarations.SLocalDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
-import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.constants.TempVarPrefixes;
 import org.overture.codegen.transform.iterator.ILanguageIterator;
 import org.overture.codegen.utils.ITempVarGen;
@@ -51,7 +51,7 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 	}
 
 	@Override
-	public PExpCG getForLoopCond(AIdentifierVarExpCG setVar,
+	public SExpCG getForLoopCond(AIdentifierVarExpCG setVar,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 			throws AnalysisException
 	{
@@ -59,7 +59,7 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 	}
 
 	@Override
-	public PExpCG getForLoopInc(AIdentifierVarExpCG setVar,
+	public SExpCG getForLoopInc(AIdentifierVarExpCG setVar,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 	{
 		return langIterator.getForLoopInc(setVar, ids, id);
@@ -82,14 +82,14 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 	}
 
 	@Override
-	public List<PStmCG> getForLoopStms(AIdentifierVarExpCG setVar,
+	public List<SStmCG> getForLoopStms(AIdentifierVarExpCG setVar,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 	{
 		return null;
 	}
 
 	@Override
-	public List<PStmCG> getOuterBlockStms(AIdentifierVarExpCG setVar,
+	public List<SStmCG> getOuterBlockStms(AIdentifierVarExpCG setVar,
 			List<AIdentifierPatternCG> ids)
 	{
 		return null;
@@ -107,9 +107,9 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 		this.lastBind = lastBind;
 	}
 
-	protected List<PStmCG> packStm(PStmCG stm)
+	protected List<SStmCG> packStm(SStmCG stm)
 	{
-		List<PStmCG> stms = new LinkedList<PStmCG>();
+		List<SStmCG> stms = new LinkedList<SStmCG>();
 
 		stms.add(stm);
 

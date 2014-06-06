@@ -2,29 +2,29 @@ package org.overture.codegen.transform;
 
 import java.util.List;
 
+import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.SStmCG;
+import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
 import org.overture.codegen.cgast.declarations.SLocalDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.expressions.SBinaryExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
-import org.overture.codegen.cgast.statements.PStmCG;
-import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.constants.TempVarPrefixes;
 import org.overture.codegen.transform.iterator.ILanguageIterator;
 import org.overture.codegen.utils.ITempVarGen;
 
 public abstract class CompStrategy extends AbstractIterationStrategy
 {
-	protected PExpCG predicate;
+	protected SExpCG predicate;
 	protected AIdentifierPatternCG idPattern;
-	protected PTypeCG compType;
+	protected STypeCG compType;
 	
-	public CompStrategy(TransformationAssistantCG transformationAssistant, PExpCG predicate, String varName, PTypeCG compType, ILanguageIterator langIterator, ITempVarGen tempGen,
+	public CompStrategy(TransformationAssistantCG transformationAssistant, SExpCG predicate, String varName, STypeCG compType, ILanguageIterator langIterator, ITempVarGen tempGen,
 			TempVarPrefixes varPrefixes)
 	{
 		super(transformationAssistant, langIterator, tempGen, varPrefixes);
@@ -38,11 +38,11 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 		this.compType = compType;
 	}
 	
-	protected abstract PExpCG getEmptyCollection();
+	protected abstract SExpCG getEmptyCollection();
 
-	protected abstract List<PStmCG> getConditionalAdd(AIdentifierVarExpCG setVar, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id);
+	protected abstract List<SStmCG> getConditionalAdd(AIdentifierVarExpCG setVar, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id);
 	
-	protected List<PStmCG> consConditionalAdd(AIdentifierVarExpCG compResult,
+	protected List<SStmCG> consConditionalAdd(AIdentifierVarExpCG compResult,
 			SBinaryExpCG collectionMerge)
 	{
 		AIdentifierStateDesignatorCG result = new AIdentifierStateDesignatorCG();
@@ -70,7 +70,7 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 			AIdentifierVarExpCG setVar, List<AIdentifierPatternCG> ids)
 			throws AnalysisException
 	{
-		PExpCG emptyCollection = getEmptyCollection();
+		SExpCG emptyCollection = getEmptyCollection();
 		emptyCollection.setType(compType.clone());
 		
 		AVarLocalDeclCG compResultInit = new AVarLocalDeclCG();

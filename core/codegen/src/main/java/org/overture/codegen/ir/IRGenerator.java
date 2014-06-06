@@ -6,9 +6,9 @@ import java.util.Set;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
-import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.logging.Logger;
 
@@ -36,7 +36,7 @@ public class IRGenerator
 	{
 		codeGenInfo.clearNodes();
 		
-		PExpCG expCg = exp.apply(codeGenInfo.getExpVisitor(), codeGenInfo);
+		SExpCG expCg = exp.apply(codeGenInfo.getExpVisitor(), codeGenInfo);
 		Set<NodeInfo> unsupportedNodes = copyGetUnsupportedNodes();
 		
 		return new ExpStatus(expCg, unsupportedNodes);

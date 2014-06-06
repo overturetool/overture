@@ -29,6 +29,7 @@ import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
+import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeWrappersTypeCG;
@@ -47,38 +48,37 @@ import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.cgast.types.ATokenBasicTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
-import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.ir.IRInfo;
 
-public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, PTypeCG>
+public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 {
 	@Override
-	public PTypeCG caseAUnionType(AUnionType node, IRInfo question)
+	public STypeCG caseAUnionType(AUnionType node, IRInfo question)
 			throws AnalysisException
 	{
 		return new AObjectTypeCG();
 	}
 	
 	@Override
-	public PTypeCG caseAUnknownType(AUnknownType node, IRInfo question)
+	public STypeCG caseAUnknownType(AUnknownType node, IRInfo question)
 			throws AnalysisException
 	{
 		return new AObjectTypeCG(); // '?' Indicates an unknown type
 	}
 	
 	@Override
-	public PTypeCG caseATokenBasicType(ATokenBasicType node, IRInfo question)
+	public STypeCG caseATokenBasicType(ATokenBasicType node, IRInfo question)
 			throws AnalysisException
 	{
 		return new ATokenBasicTypeCG();
 	}
 	
 	@Override
-	public PTypeCG caseASetType(ASetType node, IRInfo question)
+	public STypeCG caseASetType(ASetType node, IRInfo question)
 			throws AnalysisException
 	{
 		PType setOf = node.getSetof();
-		PTypeCG typeCg = setOf.apply(question.getTypeVisitor(), question);
+		STypeCG typeCg = setOf.apply(question.getTypeVisitor(), question);
 		boolean empty = node.getEmpty();
 		
 		ASetSetTypeCG setType = new ASetSetTypeCG();
@@ -89,15 +89,15 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, PTypeCG>
 	}
 	
 	@Override
-	public PTypeCG caseAMapMapType(AMapMapType node, IRInfo question)
+	public STypeCG caseAMapMapType(AMapMapType node, IRInfo question)
 			throws AnalysisException
 	{
 		PType from = node.getFrom();
 		PType to = node.getTo();
 		boolean empty = node.getEmpty();
 		
-		PTypeCG fromCg = from.apply(question.getTypeVisitor(), question);
-		PTypeCG toCg = to.apply(question.getTypeVisitor(), question);
+		STypeCG fromCg = from.apply(question.getTypeVisitor(), question);
+		STypeCG toCg = to.apply(question.getTypeVisitor(), question);
 		
 		AMapMapTypeCG mapType = new AMapMapTypeCG();
 		mapType.setFrom(fromCg);
@@ -108,7 +108,7 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, PTypeCG>
 	}
 	
 	@Override
-	public PTypeCG caseAProductType(AProductType node, IRInfo question)
+	public STypeCG caseAProductType(AProductType node, IRInfo question)
 			throws AnalysisException
 	{	
 		ATupleTypeCG tuple = new ATupleTypeCG();
@@ -117,7 +117,7 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, PTypeCG>
 		
 		for (PType type : types)
 		{
-			PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+			STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 			tuple.getTypes().add(typeCg);
 			
 		}
@@ -126,7 +126,7 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, PTypeCG>
 	}
 	
 	@Override
-	public PTypeCG caseAParameterType(AParameterType node, IRInfo question)
+	public STypeCG caseAParameterType(AParameterType node, IRInfo question)
 			throws AnalysisException
 	{
 		String name = node.getName().getName();
@@ -138,10 +138,10 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, PTypeCG>
 	}
 
 	@Override
-	public PTypeCG caseAOptionalType(AOptionalType node, IRInfo question)
+	public STypeCG caseAOptionalType(AOptionalType node, IRInfo question)
 			throws AnalysisException
 	{
-		PTypeCG type = node.getType().apply(question.getTypeVisitor(), question);
+		STypeCG type = node.getType().apply(question.getTypeVisitor(), question);
 
 		if (type instanceof AIntNumericBasicTypeCG)
 			return new AIntBasicTypeWrappersTypeCG();
@@ -156,7 +156,7 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, PTypeCG>
 	}
 
 	@Override
-	public PTypeCG caseANamedInvariantType(ANamedInvariantType node,
+	public STypeCG caseANamedInvariantType(ANamedInvariantType node,
 			IRInfo question) throws AnalysisException
 	{
 		PType type = node.getType();
@@ -176,14 +176,14 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, PTypeCG>
 	}
 
 	@Override
-	public PTypeCG caseAQuoteType(AQuoteType node, IRInfo question)
+	public STypeCG caseAQuoteType(AQuoteType node, IRInfo question)
 			throws AnalysisException
 	{
 		return new AIntNumericBasicTypeCG();
 	}
 
 	@Override
-	public PTypeCG caseARecordInvariantType(ARecordInvariantType node,
+	public STypeCG caseARecordInvariantType(ARecordInvariantType node,
 			IRInfo question) throws AnalysisException
 	{
 		ILexNameToken name = node.getName();
@@ -200,35 +200,35 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, PTypeCG>
 	}
 
 	@Override
-	public PTypeCG caseASeqSeqType(ASeqSeqType node, IRInfo question)
+	public STypeCG caseASeqSeqType(ASeqSeqType node, IRInfo question)
 			throws AnalysisException
 	{
 		return question.getTypeAssistant().constructSeqType(node, question);
 	}
 	
 	@Override
-	public PTypeCG caseASeq1SeqType(ASeq1SeqType node, IRInfo question)
+	public STypeCG caseASeq1SeqType(ASeq1SeqType node, IRInfo question)
 			throws AnalysisException
 	{
 		return question.getTypeAssistant().constructSeqType(node, question);
 	}
 
 	@Override
-	public PTypeCG caseAOperationType(AOperationType node, IRInfo question)
+	public STypeCG caseAOperationType(AOperationType node, IRInfo question)
 			throws AnalysisException
 	{
 		return question.getTypeAssistant().consMethodType(node, node.getParameters(), node.getResult(), question);
 	}
 
 	@Override
-	public PTypeCG caseAFunctionType(AFunctionType node, IRInfo question)
+	public STypeCG caseAFunctionType(AFunctionType node, IRInfo question)
 			throws AnalysisException
 	{
 		return question.getTypeAssistant().consMethodType(node, node.getParameters(), node.getResult(), question);
 	}
 	
 	@Override
-	public PTypeCG caseAClassType(AClassType node, IRInfo question)
+	public STypeCG caseAClassType(AClassType node, IRInfo question)
 			throws AnalysisException
 	{
 		String typeName = node.getClassdef().getName().getName();
@@ -240,42 +240,42 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, PTypeCG>
 	}
 
 	@Override
-	public PTypeCG caseAVoidType(AVoidType node, IRInfo question)
+	public STypeCG caseAVoidType(AVoidType node, IRInfo question)
 			throws AnalysisException
 	{
 		return new AVoidTypeCG();
 	}
 
 	@Override
-	public PTypeCG caseAIntNumericBasicType(AIntNumericBasicType node,
+	public STypeCG caseAIntNumericBasicType(AIntNumericBasicType node,
 			IRInfo question) throws AnalysisException
 	{
 		return new AIntNumericBasicTypeCG();
 	}
 
 	@Override
-	public PTypeCG caseANatOneNumericBasicType(ANatOneNumericBasicType node,
+	public STypeCG caseANatOneNumericBasicType(ANatOneNumericBasicType node,
 			IRInfo question) throws AnalysisException
 	{
 		return new AIntNumericBasicTypeCG();
 	}
 
 	@Override
-	public PTypeCG caseANatNumericBasicType(ANatNumericBasicType node,
+	public STypeCG caseANatNumericBasicType(ANatNumericBasicType node,
 			IRInfo question) throws AnalysisException
 	{
 		return new AIntNumericBasicTypeCG();
 	}
 
 	@Override
-	public PTypeCG caseARealNumericBasicType(ARealNumericBasicType node,
+	public STypeCG caseARealNumericBasicType(ARealNumericBasicType node,
 			IRInfo question) throws AnalysisException
 	{
 		return new ARealNumericBasicTypeCG();
 	}
 	
 	@Override
-	public PTypeCG caseARationalNumericBasicType(
+	public STypeCG caseARationalNumericBasicType(
 			ARationalNumericBasicType node, IRInfo question)
 			throws AnalysisException
 	{
@@ -283,14 +283,14 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, PTypeCG>
 	}
 
 	@Override
-	public PTypeCG caseACharBasicType(ACharBasicType node, IRInfo question)
+	public STypeCG caseACharBasicType(ACharBasicType node, IRInfo question)
 			throws AnalysisException
 	{
 		return new ACharBasicTypeCG();
 	}
 
 	@Override
-	public PTypeCG caseABooleanBasicType(ABooleanBasicType node,
+	public STypeCG caseABooleanBasicType(ABooleanBasicType node,
 			IRInfo question) throws AnalysisException
 	{
 		return new ABoolBasicTypeCG();

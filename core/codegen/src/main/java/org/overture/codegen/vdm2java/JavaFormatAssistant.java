@@ -2,6 +2,8 @@ package org.overture.codegen.vdm2java;
 
 import java.util.LinkedList;
 
+import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
@@ -18,7 +20,6 @@ import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.ASelfExpCG;
-import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
@@ -28,7 +29,6 @@ import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
-import org.overture.codegen.cgast.types.PTypeCG;
 
 public class JavaFormatAssistant
 {
@@ -77,7 +77,7 @@ public class JavaFormatAssistant
 		return stm;
 	}
 	
-	public static AAndBoolBinaryExpCG extendAndExp(ARecordDeclCG record, AFieldDeclCG field, PExpCG previous, String paramName) throws AnalysisException
+	public static AAndBoolBinaryExpCG extendAndExp(ARecordDeclCG record, AFieldDeclCG field, SExpCG previous, String paramName) throws AnalysisException
 	{
 		//By recursively calling this method an "and chain" of field 
 		//comparisons can be constructed: fieldComp1 && fieldComp2 && fieldComp3 ....
@@ -177,7 +177,7 @@ public class JavaFormatAssistant
 		return fieldComparison;
 	}
 	
-	public static AApplyExpCG consRecToStringCall(ARecordDeclCG record, PTypeCG returnType, String memberName) throws AnalysisException
+	public static AApplyExpCG consRecToStringCall(ARecordDeclCG record, STypeCG returnType, String memberName) throws AnalysisException
 	{
 		AApplyExpCG call = consUtilCallUsingRecFields(record, returnType, memberName);
 
@@ -191,7 +191,7 @@ public class JavaFormatAssistant
 		return call;
 	}
 	
-	public static AApplyExpCG consUtilCallUsingRecFields(ARecordDeclCG record, PTypeCG returnType, String memberName)
+	public static AApplyExpCG consUtilCallUsingRecFields(ARecordDeclCG record, STypeCG returnType, String memberName)
 	{
 		LinkedList<AFieldDeclCG> fields = record.getFields();
 		
@@ -207,7 +207,7 @@ public class JavaFormatAssistant
 		AApplyExpCG call = new AApplyExpCG();
 		call.setType(returnType.clone());
 		call.setRoot(member);
-		LinkedList<PExpCG> args = call.getArgs();
+		LinkedList<SExpCG> args = call.getArgs();
 
 		for (AFieldDeclCG field : fields)
 		{

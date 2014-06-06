@@ -5,22 +5,22 @@ import java.util.List;
 
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PType;
+import org.overture.codegen.cgast.SPatternCG;
+import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AFormalParamLocalDeclCG;
+import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.expressions.AAnonymousClassExpCG;
 import org.overture.codegen.cgast.expressions.ALambdaExpCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
-import org.overture.codegen.cgast.patterns.PPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.types.AInterfaceTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
-import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.constants.IRConstants;
 import org.overture.codegen.transform.TransformationAssistantCG;
 
@@ -94,13 +94,13 @@ public class FunctionValueVisitor extends DepthFirstAnalysisAdaptor
 		if(lambdaInterface == null)
 		{
 			@SuppressWarnings("unchecked")
-			List<? extends AFormalParamLocalDeclCG> formalParams = (List<? extends AFormalParamLocalDeclCG>) node.getParams().clone();
+			List<? extends AFormalParamLocalParamCG> formalParams = (List<? extends AFormalParamLocalParamCG>) node.getParams().clone();
 			lambdaInterface = consInterface(methodType, formalParams);
 			
 			functionValueAssistant.registerInterface(lambdaInterface);
 		}
 		
-		LinkedList<AFormalParamLocalDeclCG> params = node.getParams();
+		LinkedList<AFormalParamLocalParamCG> params = node.getParams();
 		
 		AInterfaceTypeCG classType = new AInterfaceTypeCG();
 		classType.setName(lambdaInterface.getName());
@@ -109,9 +109,9 @@ public class FunctionValueVisitor extends DepthFirstAnalysisAdaptor
 		
 		for(int i = 0; i < params.size(); i++)
 		{
-			AFormalParamLocalDeclCG paramLocalDeclCG = params.get(i);
-			PTypeCG paramType = paramLocalDeclCG.getType();
-			PPatternCG pattern = paramLocalDeclCG.getPattern();
+			AFormalParamLocalParamCG paramLocalDeclCG = params.get(i);
+			STypeCG paramType = paramLocalDeclCG.getType();
+			SPatternCG pattern = paramLocalDeclCG.getPattern();
 			
 			classType.getTypes().add(paramType.clone());
 			lambdaDecl.getFormalParams().get(i).setType(paramType.clone());
@@ -141,15 +141,15 @@ public class FunctionValueVisitor extends DepthFirstAnalysisAdaptor
 	
 	private AInterfaceDeclCG consInterface(AMethodTypeCG methodType)
 	{
-		List<AFormalParamLocalDeclCG> params = new LinkedList<AFormalParamLocalDeclCG>();
+		List<AFormalParamLocalParamCG> params = new LinkedList<AFormalParamLocalParamCG>();
 		
-		List<PTypeCG> paramTypes = methodType.getParams();
+		List<STypeCG> paramTypes = methodType.getParams();
 		
 		for(int i = 0; i < paramTypes.size(); i++)
 		{
-			PTypeCG paramType = paramTypes.get(i);
+			STypeCG paramType = paramTypes.get(i);
 			
-			AFormalParamLocalDeclCG param = new AFormalParamLocalDeclCG();
+			AFormalParamLocalParamCG param = new AFormalParamLocalParamCG();
 			
 			String nextParamName = paramNamePrefix + (i + 1);
 			AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
@@ -164,7 +164,7 @@ public class FunctionValueVisitor extends DepthFirstAnalysisAdaptor
 		return consInterface(methodType, params);
 	}
 	
-	private AInterfaceDeclCG consInterface(AMethodTypeCG methodType, List<? extends AFormalParamLocalDeclCG> params)
+	private AInterfaceDeclCG consInterface(AMethodTypeCG methodType, List<? extends AFormalParamLocalParamCG> params)
 	{
 		AInterfaceDeclCG methodTypeInterface = new AInterfaceDeclCG();
 		
@@ -187,7 +187,7 @@ public class FunctionValueVisitor extends DepthFirstAnalysisAdaptor
 			ATemplateTypeCG templateType = new ATemplateTypeCG();
 			templateType.setName(templateTypePrefix + (i + 1));
 
-			AFormalParamLocalDeclCG formalParam = new AFormalParamLocalDeclCG();
+			AFormalParamLocalParamCG formalParam = new AFormalParamLocalParamCG();
 			formalParam.setType(templateType);
 			formalParam.setPattern(params.get(i).getPattern().clone());
 			

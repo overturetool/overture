@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.cgast.INode;
+import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.expressions.AAddrEqualsBinaryExpCG;
@@ -21,14 +23,12 @@ import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetProperSubsetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetSubsetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASizeUnaryExpCG;
-import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AForAllStmCG;
 import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
-import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
@@ -60,7 +60,7 @@ public class ValueSemantics
 		if(exp.parent() instanceof AFieldNumberExpCG)
 			return false;
 		
-		PTypeCG type = exp.getTuple().getType();
+		STypeCG type = exp.getTuple().getType();
 		
 		if(type instanceof ATupleTypeCG)
 		{
@@ -68,7 +68,7 @@ public class ValueSemantics
 			ATupleTypeCG tupleType = (ATupleTypeCG) type;
 			
 			long field = exp.getField();
-			PTypeCG fieldType = tupleType.getTypes().get((int) (field - 1));
+			STypeCG fieldType = tupleType.getTypes().get((int) (field - 1));
 			
 			if(usesStructuralEquivalence(fieldType))
 				return true;
@@ -86,7 +86,7 @@ public class ValueSemantics
 		if (cloneNotNeeded(parent))
 			return false;
 		
-		PTypeCG type = exp.getObject().getType();
+		STypeCG type = exp.getObject().getType();
 		
 		if(type instanceof ARecordTypeCG)
 		{
@@ -106,7 +106,7 @@ public class ValueSemantics
 		return false;
 	}
 	
-	public boolean shouldClone(PExpCG exp) 
+	public boolean shouldClone(SExpCG exp) 
 	{
 		if(javaSettings.getDisableCloning())
 			return false;
@@ -117,7 +117,7 @@ public class ValueSemantics
 			return false;
 		}
 		
-		PTypeCG type = exp.getType();
+		STypeCG type = exp.getType();
 		
 		if(parent instanceof AIdentifierObjectDesignatorCG)
 		{
@@ -134,7 +134,7 @@ public class ValueSemantics
 			if(parent instanceof ANewExpCG)
 			{
 				ANewExpCG newExp = (ANewExpCG) parent;
-				PTypeCG newExpType = newExp.getType();
+				STypeCG newExpType = newExp.getType();
 				
 				if(usesStructuralEquivalence(newExpType))
 					return false;
@@ -186,7 +186,7 @@ public class ValueSemantics
 			return false;
 		
 		AApplyExpCG applyExp = (AApplyExpCG) node;
-		PExpCG root = applyExp.getRoot();
+		SExpCG root = applyExp.getRoot();
 		
 		if(!(root instanceof AExplicitVarExpCG))
 			return false;
@@ -198,7 +198,7 @@ public class ValueSemantics
 		return classType != null && classType.getName().equals(JavaFormat.UTILS_FILE);
 	}
 	
-	private boolean usesStructuralEquivalence(PTypeCG type)
+	private boolean usesStructuralEquivalence(STypeCG type)
 	{
 		return type instanceof ARecordTypeCG || type instanceof ATupleTypeCG
 				|| type instanceof SSeqTypeCG || type instanceof SSetTypeCG

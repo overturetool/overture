@@ -7,10 +7,15 @@ import java.util.List;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.cgast.INode;
+import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.SObjectDesignatorCG;
+import org.overture.codegen.cgast.SStateDesignatorCG;
+import org.overture.codegen.cgast.SStmCG;
+import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
-import org.overture.codegen.cgast.declarations.AFormalParamLocalDeclCG;
+import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
@@ -30,9 +35,8 @@ import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
-import org.overture.codegen.cgast.expressions.PExpCG;
-import org.overture.codegen.cgast.expressions.SBinaryExpCGBase;
-import org.overture.codegen.cgast.expressions.SLiteralExpCGBase;
+import org.overture.codegen.cgast.expressions.SBinaryExpCG;
+import org.overture.codegen.cgast.expressions.SLiteralExpCG;
 import org.overture.codegen.cgast.expressions.SNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.SUnaryExpCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
@@ -47,9 +51,6 @@ import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
-import org.overture.codegen.cgast.statements.PObjectDesignatorCG;
-import org.overture.codegen.cgast.statements.PStateDesignatorCG;
-import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
@@ -65,8 +66,7 @@ import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.ATokenBasicTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
-import org.overture.codegen.cgast.types.PTypeCG;
-import org.overture.codegen.cgast.types.SBasicTypeCGBase;
+import org.overture.codegen.cgast.types.SBasicTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
@@ -152,9 +152,9 @@ public class JavaFormat
 		AInterfaceTypeCG methodClass = new AInterfaceTypeCG();
 		methodClass.setName(methodTypeInterface.getName());
 		
-		LinkedList<PTypeCG> params = methodType.getParams();
+		LinkedList<STypeCG> params = methodType.getParams();
 		
-		for(PTypeCG param : params)
+		for(STypeCG param : params)
 		{
 			methodClass.getTypes().add(param.clone());
 		}
@@ -205,7 +205,7 @@ public class JavaFormat
 		return writer.toString() + getNumberDereference(node, ignoreContext);
 	}
 	
-	private static String findNumberDereferenceCall(PTypeCG type)
+	private static String findNumberDereferenceCall(STypeCG type)
 	{
 		if (type instanceof ARealNumericBasicTypeCG
 				|| type instanceof ARealBasicTypeWrappersTypeCG)
@@ -222,7 +222,7 @@ public class JavaFormat
 		}
 	}
 	
-	public static boolean isMapSeq(PStateDesignatorCG stateDesignator)
+	public static boolean isMapSeq(SStateDesignatorCG stateDesignator)
 	{
 		return stateDesignator instanceof AMapSeqStateDesignatorCG;
 	}
@@ -236,9 +236,9 @@ public class JavaFormat
 		
 		AAssignmentStmCG assignment = (AAssignmentStmCG) parent;
 		
-		PStateDesignatorCG stateDesignator = mapSeq.getMapseq();
-		PExpCG domValue = mapSeq.getExp();
-		PExpCG rngValue = assignment.getExp();
+		SStateDesignatorCG stateDesignator = mapSeq.getMapseq();
+		SExpCG domValue = mapSeq.getExp();
+		SExpCG rngValue = assignment.getExp();
 		
 		String stateDesignatorStr = format(stateDesignator);
 		String domValStr = format(domValue);
@@ -250,10 +250,10 @@ public class JavaFormat
 	
 	private static String getNumberDereference(INode node, boolean ignoreContext)
 	{
-		if(ignoreContext && node instanceof PExpCG)
+		if(ignoreContext && node instanceof SExpCG)
 		{
-			PExpCG exp = (PExpCG) node;
-			PTypeCG type = exp.getType();
+			SExpCG exp = (SExpCG) node;
+			STypeCG type = exp.getType();
 			
 			if(isNumberDereferenceCandidate(exp))
 			{
@@ -267,8 +267,8 @@ public class JavaFormat
 			parent instanceof AEqualsBinaryExpCG ||
 			parent instanceof ANotEqualsBinaryExpCG)
 		{
-			PExpCG exp = (PExpCG) node;
-			PTypeCG type = exp.getType();
+			SExpCG exp = (SExpCG) node;
+			STypeCG type = exp.getType();
 			
 			if(isNumberDereferenceCandidate(exp))
 			{
@@ -280,10 +280,10 @@ public class JavaFormat
 		return "";
 	}
 	
-	private static boolean isNumberDereferenceCandidate(PExpCG node)
+	private static boolean isNumberDereferenceCandidate(SExpCG node)
 	{
 		return (!(node instanceof SNumericBinaryExpCG)
-				&& !(node instanceof SLiteralExpCGBase)
+				&& !(node instanceof SLiteralExpCG) 
 				&& !(node instanceof AIsolationUnaryExpCG)
 				&& !(node instanceof SUnaryExpCG))
 				|| node instanceof AHeadUnaryExpCG;
@@ -321,7 +321,7 @@ public class JavaFormat
 		return definingClass + name;
 	}
 	
-	public String format(PExpCG exp, boolean leftChild) throws AnalysisException
+	public String format(SExpCG exp, boolean leftChild) throws AnalysisException
 	{
 		String formattedExp = format(exp);
 		
@@ -329,20 +329,20 @@ public class JavaFormat
 		
 		INode parent = exp.parent();
 		
-		if(!(parent instanceof PExpCG))
+		if(!(parent instanceof SExpCG))
 			return formattedExp;
 		
-		boolean isolate = precedence.mustIsolate((PExpCG) parent, exp, leftChild);
+		boolean isolate = precedence.mustIsolate((SExpCG) parent, exp, leftChild);
 		
 		return isolate ? "(" + formattedExp + ")" : formattedExp;
 	}
 	
-	public String formatUnary(PExpCG exp) throws AnalysisException
+	public String formatUnary(SExpCG exp) throws AnalysisException
 	{
 		return format(exp, false);
 	}
 	
-	public String formatNotUnary(PExpCG exp) throws AnalysisException
+	public String formatNotUnary(SExpCG exp) throws AnalysisException
 	{
 		String formattedExp = format(exp, false);
 
@@ -375,7 +375,7 @@ public class JavaFormat
 		ANewExpCG newExp = new ANewExpCG();
 		newExp.setType(returnType.clone());
 		newExp.setName(typeName.clone());
-		LinkedList<PExpCG> args = newExp.getArgs();
+		LinkedList<SExpCG> args = newExp.getArgs();
 		
 		LinkedList<AFieldDeclCG> fields = record.getFields();
 		for (AFieldDeclCG field : fields)
@@ -407,16 +407,16 @@ public class JavaFormat
 		constructor.setAccess(JAVA_PUBLIC);
 		constructor.setIsConstructor(true);
 		constructor.setName(record.getName());
-		LinkedList<AFormalParamLocalDeclCG> formalParams = constructor.getFormalParams();
+		LinkedList<AFormalParamLocalParamCG> formalParams = constructor.getFormalParams();
 	
 		ABlockStmCG body = new ABlockStmCG();
-		LinkedList<PStmCG> bodyStms = body.getStatements();
+		LinkedList<SStmCG> bodyStms = body.getStatements();
 		constructor.setBody(body); 
 		
 		for (AFieldDeclCG field : fields)
 		{
 			String name = field.getName();
-			PTypeCG type = field.getType().clone();
+			STypeCG type = field.getType().clone();
 			
 			String paramName = "_" + name;
 			
@@ -424,7 +424,7 @@ public class JavaFormat
 			idPattern.setName(paramName);
 
 			//Construct formal parameter of the constructor
-			AFormalParamLocalDeclCG formalParam = new AFormalParamLocalDeclCG();
+			AFormalParamLocalParamCG formalParam = new AFormalParamLocalParamCG();
 			formalParam.setPattern(idPattern);
 			formalParam.setType(type);
 			formalParams.add(formalParam);
@@ -464,26 +464,26 @@ public class JavaFormat
 		return format(constructor);
 	}
 	
-	public String formatTemplateTypes(LinkedList<PTypeCG> types) throws AnalysisException
+	public String formatTemplateTypes(LinkedList<STypeCG> types) throws AnalysisException
 	{
 		StringWriter writer = new StringWriter();
 		
 		if(types.size() <= 0)
 			return "";
 		
-		PTypeCG firstType = types.get(0);
+		STypeCG firstType = types.get(0);
 		
 		if(assistantManager.getTypeAssistant().isBasicType(firstType))
-			firstType = assistantManager.getTypeAssistant().getWrapperType((SBasicTypeCGBase) firstType);
+			firstType = assistantManager.getTypeAssistant().getWrapperType((SBasicTypeCG) firstType);
 		
 		writer.append(format(firstType));
 		
 		for(int i = 1; i < types.size(); i++)
 		{
-			PTypeCG currentType = types.get(i);
+			STypeCG currentType = types.get(i);
 			
 			if(assistantManager.getTypeAssistant().isBasicType(currentType))
-				currentType = assistantManager.getTypeAssistant().getWrapperType((SBasicTypeCGBase) currentType);
+				currentType = assistantManager.getTypeAssistant().getWrapperType((SBasicTypeCG) currentType);
 			
 			writer.append(", " + format(currentType));
 		}
@@ -493,7 +493,7 @@ public class JavaFormat
 	
 	public String formatEqualsBinaryExp(AEqualsBinaryExpCG node) throws AnalysisException
 	{
-		PTypeCG leftNodeType = node.getLeft().getType();
+		STypeCG leftNodeType = node.getLeft().getType();
 
 		if (isTupleOrRecord(leftNodeType)
 				|| leftNodeType instanceof AStringTypeCG
@@ -519,7 +519,7 @@ public class JavaFormat
 	
 	public String formatNotEqualsBinaryExp(ANotEqualsBinaryExpCG node) throws AnalysisException
 	{
-		PTypeCG leftNodeType = node.getLeft().getType();
+		STypeCG leftNodeType = node.getLeft().getType();
 
 		if (isTupleOrRecord(leftNodeType)
 				|| leftNodeType instanceof AStringTypeCG
@@ -535,7 +535,7 @@ public class JavaFormat
 		return format(node.getLeft()) + " != " + format(node.getRight());
 	}
 	
-	private static boolean isTupleOrRecord(PTypeCG type)
+	private static boolean isTupleOrRecord(STypeCG type)
 	{
 		return type instanceof ARecordTypeCG || 
 				type instanceof ATupleTypeCG;
@@ -576,21 +576,21 @@ public class JavaFormat
 		return handleCollectionComparison(node, SET_UTIL_FILE);
 	}
 	
-	private String handleSeqComparison(SBinaryExpCGBase node) throws AnalysisException
+	private String handleSeqComparison(SBinaryExpCG node) throws AnalysisException
 	{
 		return handleCollectionComparison(node, SEQ_UTIL_FILE);
 	}
 	
-	private String handleMapComparison(SBinaryExpCGBase node) throws AnalysisException
+	private String handleMapComparison(SBinaryExpCG node) throws AnalysisException
 	{
 		return handleCollectionComparison(node, MAP_UTIL_FILE);
 	}
 	
-	private String handleCollectionComparison(SBinaryExpCGBase node, String className) throws AnalysisException
+	private String handleCollectionComparison(SBinaryExpCG node, String className) throws AnalysisException
 	{
 		//In VDM the types of the equals are compatible when the AST passes the type check
-		PExpCG leftNode = node.getLeft();
-		PExpCG rightNode = node.getRight();
+		SExpCG leftNode = node.getLeft();
+		SExpCG rightNode = node.getRight();
 		
 		final String EMPTY = ".isEmpty()";
 		
@@ -607,7 +607,7 @@ public class JavaFormat
 
 	}
 	
-	private boolean isEmptyCollection(PTypeCG type)
+	private boolean isEmptyCollection(STypeCG type)
 	{
 		if(type instanceof SSeqTypeCG)
 		{
@@ -631,7 +631,7 @@ public class JavaFormat
 		return false;
 	}
 	
-	public String format(List<AFormalParamLocalDeclCG> params) throws AnalysisException
+	public String format(List<AFormalParamLocalParamCG> params) throws AnalysisException
 	{
 		StringWriter writer = new StringWriter();
 		
@@ -640,13 +640,13 @@ public class JavaFormat
 		
 		final String finalPrefix = " final ";
 
-		AFormalParamLocalDeclCG firstParam = params.get(0);
+		AFormalParamLocalParamCG firstParam = params.get(0);
 		writer.append(finalPrefix);
 		writer.append(format(firstParam));
 		
 		for(int i = 1; i < params.size(); i++)
 		{
-			AFormalParamLocalDeclCG param = params.get(i);
+			AFormalParamLocalParamCG param = params.get(i);
 			writer.append(", ");
 			writer.append(finalPrefix);
 			writer.append(format(param));
@@ -666,19 +666,19 @@ public class JavaFormat
 		return "new Maplet[]{" + formatArgs(members) + "}";
 	}
 	
-	public String formatArgs(List<? extends PExpCG> exps) throws AnalysisException
+	public String formatArgs(List<? extends SExpCG> exps) throws AnalysisException
 	{
 		StringWriter writer = new StringWriter();
 		
 		if(exps.size() <= 0)
 			return "";
 		
-		PExpCG firstExp = exps.get(0);
+		SExpCG firstExp = exps.get(0);
 		writer.append(format(firstExp));
 		
 		for(int i = 1; i < exps.size(); i++)
 		{
-			PExpCG exp = exps.get(i);
+			SExpCG exp = exps.get(i);
 			writer.append(", " + format(exp));
 		}
 		
@@ -690,12 +690,12 @@ public class JavaFormat
 		return node == null;
 	}
 	
-	public boolean isVoidType(PTypeCG node)
+	public boolean isVoidType(STypeCG node)
 	{
 		return node instanceof AVoidTypeCG;
 	}
 	
-	public String formatInitialExp(PExpCG exp) throws AnalysisException
+	public String formatInitialExp(SExpCG exp) throws AnalysisException
 	{
 		//private int a = 2; (when exp != null)
 		//private int a; (when exp == null)
@@ -703,7 +703,7 @@ public class JavaFormat
 		return exp == null ? "" : " = " + format(exp);
 	}
 	
-	public String formatOperationBody(PStmCG body) throws AnalysisException
+	public String formatOperationBody(SStmCG body) throws AnalysisException
 	{
 		String NEWLINE = "\n";
 		if(body == null)
@@ -755,7 +755,7 @@ public class JavaFormat
 		equalsMethod.setMethodType(methodType);
 		
 		//Add the formal parameter "Object obj" to the method
-		AFormalParamLocalDeclCG formalParam = new AFormalParamLocalDeclCG();
+		AFormalParamLocalParamCG formalParam = new AFormalParamLocalParamCG();
 		
 		String paramName = "obj";
 		
@@ -768,7 +768,7 @@ public class JavaFormat
 		equalsMethod.getFormalParams().add(formalParam);
 		
 		ABlockStmCG equalsMethodBody = new ABlockStmCG();
-		LinkedList<PStmCG> equalsStms = equalsMethodBody.getStatements();
+		LinkedList<SStmCG> equalsStms = equalsMethodBody.getStatements();
 		
 		AReturnStmCG returnTypeComp = new AReturnStmCG();
 		if (record.getFields().isEmpty())
@@ -802,7 +802,7 @@ public class JavaFormat
 			// Next compare the fields of the instance with the fields of the formal parameter "obj":
 			// return (field1 == obj.field1) && (field2 == other.field2)...
 			LinkedList<AFieldDeclCG> fields = record.getFields();
-			PExpCG previousComparisons = JavaFormatAssistant.consFieldComparison(record, fields.get(0), localVarName);
+			SExpCG previousComparisons = JavaFormatAssistant.consFieldComparison(record, fields.get(0), localVarName);
 
 			for (int i = 1; i < fields.size(); i++)
 			{
@@ -899,37 +899,37 @@ public class JavaFormat
 		return format(toStringMethod);
 	}
 
-	public boolean isStringLiteral(PExpCG exp)
+	public boolean isStringLiteral(SExpCG exp)
 	{
 		return exp instanceof AStringLiteralExpCG;
 	}
 	
-	public boolean isSeqType(PExpCG exp)
+	public boolean isSeqType(SExpCG exp)
 	{
 		return exp.getType() instanceof SSeqTypeCG;
 	}
 	
-	public boolean isMapType(PExpCG exp)
+	public boolean isMapType(SExpCG exp)
 	{
 		return exp.getType() instanceof SMapTypeCG;
 	}
 	
-	public boolean isStringType(PTypeCG type)
+	public boolean isStringType(STypeCG type)
 	{
 		return type instanceof AStringTypeCG; 
 	}
 	
-	public boolean isStringType(PExpCG exp)
+	public boolean isStringType(SExpCG exp)
 	{
 		return exp.getType() instanceof AStringTypeCG; 
 	}
 	
-	public boolean isCharType(PTypeCG type)
+	public boolean isCharType(STypeCG type)
 	{
 		return type instanceof ACharBasicTypeCG; 
 	}
 	
-	public String buildString(List<PExpCG> exps) throws AnalysisException
+	public String buildString(List<SExpCG> exps) throws AnalysisException
 	{
 		StringBuilder sb = new StringBuilder();
 		
@@ -950,7 +950,7 @@ public class JavaFormat
 		return sb.toString();
 	}
 	
-	public String formatElementType(PTypeCG type) throws AnalysisException
+	public String formatElementType(STypeCG type) throws AnalysisException
 	{
 		if(type instanceof SSetTypeCG)
 		{
@@ -974,11 +974,11 @@ public class JavaFormat
 		return tempVarNameGen.nextVarName(prefix);
 	}
 	
-	public PTypeCG findElementType(AApplyObjectDesignatorCG designator)
+	public STypeCG findElementType(AApplyObjectDesignatorCG designator)
 	{
 		int appliesCount = 0;
 		
-		PObjectDesignatorCG object = designator.getObject();
+		SObjectDesignatorCG object = designator.getObject();
 
 		while(object != null)
 		{
@@ -986,7 +986,7 @@ public class JavaFormat
 			{
 				AIdentifierObjectDesignatorCG id = (AIdentifierObjectDesignatorCG) object;
 			
-				PTypeCG type = id.getExp().getType();
+				STypeCG type = id.getExp().getType();
 				
 				int methodTypesCount = 0;
 				
@@ -1041,7 +1041,7 @@ public class JavaFormat
 	
 	public boolean isLambda(AApplyExpCG applyExp)
 	{
-		PExpCG root = applyExp.getRoot();
+		SExpCG root = applyExp.getRoot();
 		
 		if(root instanceof AApplyExpCG && root.getType() instanceof AMethodTypeCG)
 			return true;

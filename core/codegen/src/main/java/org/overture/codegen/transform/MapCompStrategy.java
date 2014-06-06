@@ -2,14 +2,14 @@ package org.overture.codegen.transform;
 
 import java.util.List;
 
+import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.SStmCG;
+import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.expressions.AEnumMapExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AMapUnionBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AMapletExpCG;
-import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
-import org.overture.codegen.cgast.statements.PStmCG;
-import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.constants.TempVarPrefixes;
 import org.overture.codegen.transform.iterator.ILanguageIterator;
 import org.overture.codegen.utils.ITempVarGen;
@@ -19,7 +19,7 @@ public class MapCompStrategy extends ComplexCompStrategy
 	protected AMapletExpCG first;
 
 	public MapCompStrategy(TransformationAssistantCG transformationAssitant,
-			AMapletExpCG first, PExpCG predicate, String var, PTypeCG compType,
+			AMapletExpCG first, SExpCG predicate, String var, STypeCG compType,
 			ILanguageIterator langIterator, ITempVarGen tempGen,
 			TempVarPrefixes varPrefixes)
 	{
@@ -29,13 +29,13 @@ public class MapCompStrategy extends ComplexCompStrategy
 	}
 
 	@Override
-	protected PExpCG getEmptyCollection()
+	protected SExpCG getEmptyCollection()
 	{
 		return new AEnumMapExpCG();
 	}
 
 	@Override
-	protected List<PStmCG> getConditionalAdd(AIdentifierVarExpCG setVar,
+	protected List<SStmCG> getConditionalAdd(AIdentifierVarExpCG setVar,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 	{
 		AIdentifierVarExpCG mapCompResult = new AIdentifierVarExpCG();

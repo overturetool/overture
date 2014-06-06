@@ -2,6 +2,9 @@ package org.overture.codegen.transform;
 
 import java.util.List;
 
+import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.SStmCG;
+import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
 import org.overture.codegen.cgast.declarations.SLocalDeclCG;
@@ -15,7 +18,6 @@ import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
-import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
@@ -24,12 +26,10 @@ import org.overture.codegen.cgast.statements.AForLoopStmCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.AIncrementStmCG;
-import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
-import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
@@ -58,14 +58,14 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 		return varPrefixes;
 	}
 
-	public SSetTypeCG getSetTypeCloned(PExpCG set) throws AnalysisException
+	public SSetTypeCG getSetTypeCloned(SExpCG set) throws AnalysisException
 	{
-		PTypeCG typeCg = set.getType();
+		STypeCG typeCg = set.getType();
 
 		return getSetTypeCloned(typeCg);
 	}
 
-	public SSetTypeCG getSetTypeCloned(PTypeCG typeCg) throws AnalysisException
+	public SSetTypeCG getSetTypeCloned(STypeCG typeCg) throws AnalysisException
 	{
 		if (!(typeCg instanceof SSetTypeCG))
 			throw new AnalysisException("Exptected set type. Got: " + typeCg);
@@ -75,14 +75,14 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 		return setTypeCg.clone();
 	}
 
-	public SSeqTypeCG getSeqTypeCloned(PExpCG seq) throws AnalysisException
+	public SSeqTypeCG getSeqTypeCloned(SExpCG seq) throws AnalysisException
 	{
-		PTypeCG typeCg = seq.getType();
+		STypeCG typeCg = seq.getType();
 
 		return getSeqTypeCloned(typeCg);
 	}
 
-	public SSeqTypeCG getSeqTypeCloned(PTypeCG typeCg) throws AnalysisException
+	public SSeqTypeCG getSeqTypeCloned(STypeCG typeCg) throws AnalysisException
 	{
 		if (!(typeCg instanceof SSeqTypeCG))
 			throw new AnalysisException("Exptected sequence type. Got: "
@@ -93,14 +93,14 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 		return seqTypeCg.clone();
 	}
 
-	public SMapTypeCG getMapTypeCloned(PExpCG map) throws AnalysisException
+	public SMapTypeCG getMapTypeCloned(SExpCG map) throws AnalysisException
 	{
-		PTypeCG typeCg = map.getType();
+		STypeCG typeCg = map.getType();
 
 		return getMapTypeCloned(typeCg);
 	}
 
-	public SMapTypeCG getMapTypeCloned(PTypeCG typeCg) throws AnalysisException
+	public SMapTypeCG getMapTypeCloned(STypeCG typeCg) throws AnalysisException
 	{
 		if (!(typeCg instanceof SMapTypeCG))
 			throw new AnalysisException("Exptected map type. Got: " + typeCg);
@@ -125,7 +125,7 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 		return boolVarDecl;
 	}
 
-	public PExpCG consAndExp(PExpCG left, PExpCG right)
+	public SExpCG consAndExp(SExpCG left, SExpCG right)
 	{
 		AAndBoolBinaryExpCG andExp = new AAndBoolBinaryExpCG();
 		andExp.setType(new ABoolBasicTypeCG());
@@ -135,7 +135,7 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 		return andExp;
 	}
 
-	public PExpCG consLessThanCheck(String varName, long value)
+	public SExpCG consLessThanCheck(String varName, long value)
 	{
 		AIdentifierVarExpCG left = new AIdentifierVarExpCG();
 		left.setType(new AIntNumericBasicTypeCG());
@@ -151,7 +151,7 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 		return less;
 	}
 
-	protected PExpCG consBoolCheck(String boolVarName, boolean negate)
+	protected SExpCG consBoolCheck(String boolVarName, boolean negate)
 	{
 		AIdentifierVarExpCG boolVarExp = new AIdentifierVarExpCG();
 		boolVarExp.setType(new ABoolBasicTypeCG());
@@ -170,7 +170,7 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 		}
 	}
 
-	public AAssignmentStmCG consBoolVarAssignment(PExpCG predicate,
+	public AAssignmentStmCG consBoolVarAssignment(SExpCG predicate,
 			String boolVarName)
 	{
 		AAssignmentStmCG boolVarAssignment = new AAssignmentStmCG();
@@ -182,7 +182,7 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 		return boolVarAssignment;
 	}
 
-	public AVarLocalDeclCG consSetBindDecl(String setBindName, PExpCG set)
+	public AVarLocalDeclCG consSetBindDecl(String setBindName, SExpCG set)
 			throws AnalysisException
 	{
 		AVarLocalDeclCG setBindDecl = new AVarLocalDeclCG();
@@ -198,7 +198,7 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 		return setBindDecl;
 	}
 
-	public AVarLocalDeclCG consIdDecl(PTypeCG setType, String id)
+	public AVarLocalDeclCG consIdDecl(STypeCG setType, String id)
 			throws AnalysisException
 	{
 		AVarLocalDeclCG idDecl = new AVarLocalDeclCG();
@@ -214,7 +214,7 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 		return idDecl;
 	}
 
-	public AVarLocalDeclCG consDecl(String varName, PExpCG exp)
+	public AVarLocalDeclCG consDecl(String varName, SExpCG exp)
 	{
 		AVarLocalDeclCG resultDecl = new AVarLocalDeclCG();
 
@@ -245,8 +245,8 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 		return iteratorType;
 	}
 
-	public PExpCG consInstanceCall(PTypeCG instanceType, String instanceName,
-			PTypeCG returnType, String memberName, PExpCG arg)
+	public SExpCG consInstanceCall(STypeCG instanceType, String instanceName,
+			STypeCG returnType, String memberName, SExpCG arg)
 	{
 		AIdentifierVarExpCG instance = new AIdentifierVarExpCG();
 		instance.setOriginal(instanceName);
@@ -277,7 +277,7 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 	}
 
 	public AVarLocalDeclCG consNextElementDeclared(String iteratorTypeName,
-			PTypeCG elementType, String id, String iteratorName,
+			STypeCG elementType, String id, String iteratorName,
 			String nextElementMethod) throws AnalysisException
 	{
 		ACastUnaryExpCG cast = consNextElementCall(iteratorTypeName, iteratorName, elementType, nextElementMethod);
@@ -295,7 +295,7 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 	}
 
 	public AAssignmentStmCG consNextElementAssignment(String iteratorTypeName,
-			PTypeCG elementType, String id, String iteratorName,
+			STypeCG elementType, String id, String iteratorName,
 			String nextElementMethod) throws AnalysisException
 	{
 		ACastUnaryExpCG cast = consNextElementCall(iteratorTypeName, iteratorName, elementType, nextElementMethod);
@@ -308,7 +308,7 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 	}
 
 	public ACastUnaryExpCG consNextElementCall(String iteratorType,
-			String iteratorName, PTypeCG elementType, String nextElementMethod)
+			String iteratorName, STypeCG elementType, String nextElementMethod)
 	{
 		ACastUnaryExpCG cast = new ACastUnaryExpCG();
 		cast.setType(elementType.clone());
@@ -316,7 +316,7 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 		return cast;
 	}
 
-	public PStmCG consConditionalIncrement(String counterName, PExpCG predicate)
+	public SStmCG consConditionalIncrement(String counterName, SExpCG predicate)
 	{
 		AIdentifierVarExpCG col = new AIdentifierVarExpCG();
 		col.setType(new AIntNumericBasicTypeCG());
@@ -333,7 +333,7 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 	}
 
 	public ABlockStmCG consIterationBlock(List<AIdentifierPatternCG> ids,
-			PExpCG set, ITempVarGen tempGen, IIterationStrategy strategy)
+			SExpCG set, ITempVarGen tempGen, IIterationStrategy strategy)
 			throws AnalysisException
 	{
 		ABlockStmCG outerBlock = new ABlockStmCG();
@@ -343,14 +343,14 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 		return outerBlock;
 	}
 
-	public AIdentifierVarExpCG consSetVar(String setName, PExpCG set)
+	public AIdentifierVarExpCG consSetVar(String setName, SExpCG set)
 	{
 		if (set == null)
 			return null;
 
 		AIdentifierVarExpCG setVar = new AIdentifierVarExpCG();
 
-		PTypeCG setType = set.getType().clone();
+		STypeCG setType = set.getType().clone();
 
 		setVar.setOriginal(setName);
 		setVar.setType(setType);
@@ -359,7 +359,7 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 	}
 
 	protected ABlockStmCG consIterationBlock(ABlockStmCG outerBlock,
-			List<AIdentifierPatternCG> ids, PExpCG set, ITempVarGen tempGen,
+			List<AIdentifierPatternCG> ids, SExpCG set, ITempVarGen tempGen,
 			IIterationStrategy strategy) throws AnalysisException
 	{
 		// Variable names
@@ -414,7 +414,7 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 					nextBlock = forBody;
 				} else
 				{
-					List<PStmCG> extraForLoopStatements = strategy.getForLoopStms(setVar, ids, id);
+					List<SStmCG> extraForLoopStatements = strategy.getForLoopStms(setVar, ids, id);
 
 					if (extraForLoopStatements != null)
 					{
@@ -426,7 +426,7 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 			}
 		}
 
-		List<PStmCG> extraOuterBlockStms = strategy.getOuterBlockStms(setVar, ids);
+		List<SStmCG> extraOuterBlockStms = strategy.getOuterBlockStms(setVar, ids);
 
 		if (extraOuterBlockStms != null)
 		{
@@ -475,9 +475,9 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 			throws AnalysisException
 	{
 
-		PTypeCG elementType = getSeqTypeCloned(seqComp).getSeqOf();
+		STypeCG elementType = getSeqTypeCloned(seqComp).getSeqOf();
 
-		PExpCG nextCall = consInstanceCall(consClassType(iteratorTypeName), instance, elementType.clone(), member, null);
+		SExpCG nextCall = consInstanceCall(consClassType(iteratorTypeName), instance, elementType.clone(), member, null);
 		ACastUnaryExpCG cast = new ACastUnaryExpCG();
 		cast.setType(elementType.clone());
 		cast.setExp(nextCall);
@@ -491,7 +491,7 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 		return isEmptySet(binding.getSet());
 	}
 
-	public Boolean isEmptySet(PExpCG set) throws AnalysisException
+	public Boolean isEmptySet(SExpCG set) throws AnalysisException
 	{
 		return getSetTypeCloned(set).getEmpty();
 	}

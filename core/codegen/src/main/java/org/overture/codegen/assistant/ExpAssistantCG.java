@@ -21,6 +21,9 @@ import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
 import org.overture.ast.types.PType;
+import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.SMultipleBindCG;
+import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
@@ -29,18 +32,15 @@ import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
-import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.expressions.SBinaryExpCG;
 import org.overture.codegen.cgast.expressions.SQuantifierExpCG;
 import org.overture.codegen.cgast.expressions.SUnaryExpCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
-import org.overture.codegen.cgast.patterns.PMultipleBindCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
-import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
 import org.overture.codegen.ir.IRInfo;
 
@@ -51,7 +51,7 @@ public class ExpAssistantCG extends AssistantBase
 		super(assistantManager);
 	}
 
-	public PExpCG isolateExpression(PExpCG exp)
+	public SExpCG isolateExpression(SExpCG exp)
 	{
 		AIsolationUnaryExpCG isolationExp = new AIsolationUnaryExpCG();
 		isolationExp.setExp(exp);
@@ -59,7 +59,7 @@ public class ExpAssistantCG extends AssistantBase
 		return isolationExp;
 	}
 	
-	public ANotUnaryExpCG negate(PExpCG exp)
+	public ANotUnaryExpCG negate(SExpCG exp)
 	{
 		ANotUnaryExpCG negated = new ANotUnaryExpCG();
 		negated.setType(new ABoolBasicTypeCG());
@@ -68,10 +68,10 @@ public class ExpAssistantCG extends AssistantBase
 		return negated;
 	}
 	
-	public PExpCG handleUnaryExp(SUnaryExp vdmExp, SUnaryExpCG codeGenExp, IRInfo question) throws AnalysisException
+	public SExpCG handleUnaryExp(SUnaryExp vdmExp, SUnaryExpCG codeGenExp, IRInfo question) throws AnalysisException
 	{
-		PExpCG expCg = vdmExp.getExp().apply(question.getExpVisitor(), question);
-		PTypeCG typeCg = vdmExp.getType().apply(question.getTypeVisitor(), question);
+		SExpCG expCg = vdmExp.getExp().apply(question.getExpVisitor(), question);
+		STypeCG typeCg = vdmExp.getType().apply(question.getTypeVisitor(), question);
 		
 		codeGenExp.setType(typeCg);
 		codeGenExp.setExp(expCg);
@@ -79,18 +79,18 @@ public class ExpAssistantCG extends AssistantBase
 		return codeGenExp;
 	}
 	
-	public PExpCG handleBinaryExp(SBinaryExp vdmExp, SBinaryExpCG codeGenExp, IRInfo question) throws AnalysisException
+	public SExpCG handleBinaryExp(SBinaryExp vdmExp, SBinaryExpCG codeGenExp, IRInfo question) throws AnalysisException
 	{	
 		PType type = vdmExp.getType();
 		
-		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 		codeGenExp.setType(typeCg);
 		
 		PExp vdmExpLeft = vdmExp.getLeft();
 		PExp vdmExpRight = vdmExp.getRight();
 		
-		PExpCG leftExpCg = vdmExpLeft.apply(question.getExpVisitor(), question);
-		PExpCG rightExpCg = vdmExpRight.apply(question.getExpVisitor(), question);
+		SExpCG leftExpCg = vdmExpLeft.apply(question.getExpVisitor(), question);
+		SExpCG rightExpCg = vdmExpRight.apply(question.getExpVisitor(), question);
 		
 		codeGenExp.setLeft(leftExpCg);
 		codeGenExp.setRight(rightExpCg);
@@ -201,7 +201,7 @@ public class ExpAssistantCG extends AssistantBase
 				|| exp.getAncestor(AAssignmentStm.class) != null;
 	}
 	
-	public AHeaderLetBeStCG consHeader(ASetMultipleBindCG binding, PExpCG suchThat)
+	public AHeaderLetBeStCG consHeader(ASetMultipleBindCG binding, SExpCG suchThat)
 	{
 		AHeaderLetBeStCG header = new AHeaderLetBeStCG();
 		
@@ -216,7 +216,7 @@ public class ExpAssistantCG extends AssistantBase
 		return exp.getAncestor(SOperationDefinition.class) == null && exp.getAncestor(SFunctionDefinition.class) == null;
 	}
 	
-	public PExpCG handleQuantifier(PExp node, List<PMultipleBind> bindings, PExp predicate, SQuantifierExpCG quantifier, IRInfo question, String nodeStr)
+	public SExpCG handleQuantifier(PExp node, List<PMultipleBind> bindings, PExp predicate, SQuantifierExpCG quantifier, IRInfo question, String nodeStr)
 			throws AnalysisException
 	{
 		if(question.getExpAssistant().existsOutsideOpOrFunc(node))
@@ -234,7 +234,7 @@ public class ExpAssistantCG extends AssistantBase
 				return null;
 			}
 			
-			PMultipleBindCG multipleBindCg = multipleBind.apply(question.getMultipleBindVisitor(), question);
+			SMultipleBindCG multipleBindCg = multipleBind.apply(question.getMultipleBindVisitor(), question);
 			
 			if (!(multipleBindCg instanceof ASetMultipleBindCG))
 			{
@@ -247,8 +247,8 @@ public class ExpAssistantCG extends AssistantBase
 		
 		PType type = node.getType();
 		
-		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-		PExpCG predicateCg = predicate.apply(question.getExpVisitor(), question);
+		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		SExpCG predicateCg = predicate.apply(question.getExpVisitor(), question);
 		
 		quantifier.setType(typeCg);
 		quantifier.setBindList(bindingsCg);

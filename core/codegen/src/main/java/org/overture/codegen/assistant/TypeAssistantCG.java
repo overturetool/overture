@@ -11,6 +11,7 @@ import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SSeqTypeBase;
+import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
@@ -22,9 +23,8 @@ import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
-import org.overture.codegen.cgast.types.PTypeCG;
-import org.overture.codegen.cgast.types.SBasicTypeCGBase;
-import org.overture.codegen.cgast.types.SBasicTypeWrappersTypeCGBase;
+import org.overture.codegen.cgast.types.SBasicTypeCG;
+import org.overture.codegen.cgast.types.SBasicTypeWrappersTypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
@@ -59,10 +59,10 @@ public class TypeAssistantCG extends AssistantBase
 		return typeDef;
 	}
 	
-	public PTypeCG constructSeqType(SSeqTypeBase node, IRInfo question)
+	public STypeCG constructSeqType(SSeqTypeBase node, IRInfo question)
 			throws AnalysisException
 	{
-		PTypeCG seqOfCg = node.getSeqof().apply(question.getTypeVisitor(), question);
+		STypeCG seqOfCg = node.getSeqof().apply(question.getTypeVisitor(), question);
 		boolean emptyCg = node.getEmpty();
 
 		// This is a special case since sequence of characters are strings
@@ -78,13 +78,13 @@ public class TypeAssistantCG extends AssistantBase
 		return seqType;
 	}
 	
-	public boolean isBasicType(PTypeCG type)
+	public boolean isBasicType(STypeCG type)
 	{
-		return type instanceof SBasicTypeCGBase;
+		return type instanceof SBasicTypeCG;
 	}
 
-	public SBasicTypeWrappersTypeCGBase getWrapperType(
-			SBasicTypeCGBase basicType)
+	public SBasicTypeWrappersTypeCG getWrapperType(
+			SBasicTypeCG basicType)
 	{
 
 		if (basicType instanceof AIntNumericBasicTypeCG)
@@ -110,11 +110,11 @@ public class TypeAssistantCG extends AssistantBase
 		
 		methodType.setEquivalent(node.clone());
 		
-		PTypeCG resultCg = resultType.apply(question.getTypeVisitor(), question);
+		STypeCG resultCg = resultType.apply(question.getTypeVisitor(), question);
 		
 		methodType.setResult(resultCg);
 		
-		LinkedList<PTypeCG> paramsCg = methodType.getParams();
+		LinkedList<STypeCG> paramsCg = methodType.getParams();
 		for(PType paramType : paramTypes)
 		{
 			paramsCg.add(paramType.apply(question.getTypeVisitor(), question));

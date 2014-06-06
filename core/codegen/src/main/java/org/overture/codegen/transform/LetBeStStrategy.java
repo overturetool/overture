@@ -3,17 +3,17 @@ package org.overture.codegen.transform;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
 import org.overture.codegen.cgast.declarations.SLocalDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.ALetBeStNoBindingRuntimeErrorExpCG;
-import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.ARaiseErrorStmCG;
-import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.AErrorTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.constants.TempVarPrefixes;
@@ -23,11 +23,11 @@ import org.overture.codegen.utils.ITempVarGen;
 public class LetBeStStrategy extends AbstractIterationStrategy
 {
 	private String successVarName;
-	private PExpCG suchThat;
+	private SExpCG suchThat;
 	private SSetTypeCG setType;
 
 	public LetBeStStrategy(TransformationAssistantCG transformationAssistant,
-			PExpCG suchThat, SSetTypeCG setType,
+			SExpCG suchThat, SSetTypeCG setType,
 			ILanguageIterator langIterator, ITempVarGen tempGen,
 			TempVarPrefixes varPrefixes)
 	{
@@ -59,12 +59,12 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 	}
 
 	@Override
-	public PExpCG getForLoopCond(AIdentifierVarExpCG setVar,
+	public SExpCG getForLoopCond(AIdentifierVarExpCG setVar,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 			throws AnalysisException
 	{
-		PExpCG left = langIterator.getForLoopCond(setVar, ids, id);
-		PExpCG right = transformationAssistant.consBoolCheck(successVarName, true);
+		SExpCG left = langIterator.getForLoopCond(setVar, ids, id);
+		SExpCG right = transformationAssistant.consBoolCheck(successVarName, true);
 
 		return transformationAssistant.consAndExp(left, right);
 	}
@@ -86,14 +86,14 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 	}
 
 	@Override
-	public List<PStmCG> getForLoopStms(AIdentifierVarExpCG setVar,
+	public List<SStmCG> getForLoopStms(AIdentifierVarExpCG setVar,
 			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
 	{
 		return packStm(transformationAssistant.consBoolVarAssignment(suchThat, successVarName));
 	}
 
 	@Override
-	public List<PStmCG> getOuterBlockStms(AIdentifierVarExpCG setVar,
+	public List<SStmCG> getOuterBlockStms(AIdentifierVarExpCG setVar,
 			List<AIdentifierPatternCG> ids)
 	{
 		ALetBeStNoBindingRuntimeErrorExpCG noBinding = new ALetBeStNoBindingRuntimeErrorExpCG();
