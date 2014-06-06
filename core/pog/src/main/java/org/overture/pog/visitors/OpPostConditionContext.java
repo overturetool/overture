@@ -77,6 +77,7 @@ public class OpPostConditionContext extends POContext implements
 		return rewriteExp(def, subs);
 	}
 
+	// FIXME unify expression rewrite method with the one from OperationCallObligation
 	private PExp rewriteExp(AExplicitFunctionDefinition def,
 			List<Substitution> subs) {
 		PExp pre_exp = def.getBody().clone();
@@ -85,7 +86,7 @@ public class OpPostConditionContext extends POContext implements
 			try {
 				pre_exp = pre_exp.apply(new VariableSubVisitor(), sub);
 			} catch (AnalysisException e) {
-				// TODO Auto-generated catch block
+			
 				e.printStackTrace();
 			}
 		}

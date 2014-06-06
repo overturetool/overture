@@ -13,13 +13,11 @@ public class GetOpCallVisitor extends AnswerAdaptor<SOperationDefinitionBase> {
 
 	@Override
 	public SOperationDefinitionBase createNewReturnValue(INode node) throws AnalysisException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public SOperationDefinitionBase createNewReturnValue(Object node) throws AnalysisException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	

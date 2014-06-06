@@ -55,18 +55,18 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 	final private QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> rootVisitor;
 	final private QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> mainVisitor;
-	final  private IVariableSubVisitor varSubVisitor;
+	final private IVariableSubVisitor varSubVisitor;
 	final private IPogAssistantFactory aF;
-
 
 	public PogParamStmVisitor(
 			QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> parentVisitor,
 			QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> mainVisitor,
-			IPogAssistantFactory assistantFactory, IVariableSubVisitor varSubVisitor) {
+			IPogAssistantFactory assistantFactory,
+			IVariableSubVisitor varSubVisitor) {
 		this.rootVisitor = parentVisitor;
 		this.mainVisitor = mainVisitor;
 		this.aF = assistantFactory;
-		this.varSubVisitor=varSubVisitor;
+		this.varSubVisitor = varSubVisitor;
 	}
 
 	/**
@@ -132,8 +132,7 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 				}
 			}
 
-			// TODO check that assignments can all be treated the same
-			question.push(new AssignmentContext(node,  varSubVisitor));
+			question.push(new AssignmentContext(node, varSubVisitor));
 
 			return obligations;
 		} catch (Exception e) {
@@ -197,7 +196,7 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 				obligations.addAll(exp.apply(rootVisitor, question));
 			}
 
-			// FIXME change these instanceof checks to visitor application
+			// FIXME Replace instanceof checks with visitor application
 			if (node.getRootdef() != null
 					&& node.getRootdef() instanceof AExplicitOperationDefinition) {
 				AExplicitOperationDefinition opdef = (AExplicitOperationDefinition) node
@@ -207,14 +206,12 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 							node.getArgs(), question, aF));
 				}
 				if (opdef.getPostcondition() != null) {
-					question.push(new OpPostConditionContext(opdef
-							.getPostdef(), node, aF));
+					question.push(new OpPostConditionContext(
+							opdef.getPostdef(), node, aF));
+					// FIXME implement clearing of substitutions based on frame
+					// info
 				}
 			}
-
-			// FIXME clear irrelevant
-
-	
 
 			return obligations;
 		} catch (Exception e) {

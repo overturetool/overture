@@ -43,7 +43,6 @@ public class WhileLoopObligation extends ProofObligation
 		AVariableExp nyexp = getVarExp(new LexNameToken("", "NotYetImplemented", null));
 		valuetree.setPredicate(nyexp);
 		
-		// TODO what do we do with loop invariants?
 		// valuetree.setPredicate(whileStmt);
 //		valuetree.setContext(ctxt.getContextNodeList());
 	}

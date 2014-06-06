@@ -183,12 +183,10 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		}
 		
 		//stick possible op post_condition in the context
-		// FIXME change these instanceof checks to visitor application
 		SOperationDefinitionBase calledOp = node.apply(new GetOpCallVisitor());
 		if (calledOp != null) {
 			new OpPostConditionContext(calledOp.getPostdef(), node, aF);
 		}
-
 		return obligations;
 	}
 

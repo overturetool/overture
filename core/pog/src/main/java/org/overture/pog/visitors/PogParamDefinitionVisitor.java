@@ -457,8 +457,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 				}
 
 			}
-
-			//FIXME how do we collect the statements posts and stuff			
+		
 			if (node.getPostcondition() != null) {
 				obligations.addAll(node.getPostcondition().apply(rootVisitor,
 						question));

@@ -37,7 +37,7 @@ public class OperationCallObligation extends ProofObligation {
 			try {
 				pre_exp = pre_exp.apply(new VariableSubVisitor(), sub);
 			} catch (AnalysisException e) {
-				// TODO Auto-generated catch block
+				// FIXME consider how to deal with analysis exception inside PO constructor
 				e.printStackTrace();
 			}
 		}
