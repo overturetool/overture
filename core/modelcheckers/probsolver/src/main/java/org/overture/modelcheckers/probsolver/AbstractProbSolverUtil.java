@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.overture.ast.assistant.AstAssistantFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
@@ -151,6 +152,12 @@ public class AbstractProbSolverUtil
 	private static String anomatorSets;
 
 	protected final SolverConsole console;
+	
+	/**
+	 * Create the assistant factory for use in the subclasses.
+	 */
+	public final AstAssistantFactory assistantFactory = new AstAssistantFactory();
+	
 
 	public AbstractProbSolverUtil(SolverConsole console)
 	{

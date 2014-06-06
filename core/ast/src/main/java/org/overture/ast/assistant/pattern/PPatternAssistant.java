@@ -21,7 +21,7 @@ public class PPatternAssistant
 		this.af = af;
 	}
 
-	public static LexNameList getAllVariableNames(PPattern pattern)
+	public LexNameList getAllVariableNames(PPattern pattern)
 	{
 		try
 		{
