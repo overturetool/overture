@@ -142,10 +142,10 @@ public class PPatternAssistant
 	public static LexNameList getVariableNames(PPattern pattern)
 			throws InvocationAssistantException
 	{
-		return getVariableNamesBaseCase(pattern);
+		return af.createPPatternAssistant().getVariableNamesBaseCase(pattern);
 	}
 
-	public static LexNameList getVariableNamesBaseCase(PPattern pattern)
+	public LexNameList getVariableNamesBaseCase(PPattern pattern)
 			throws InvocationAssistantException
 	{
 		Set<ILexNameToken> set = new HashSet<ILexNameToken>();
