@@ -230,7 +230,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		else
 		{
 			LinkedList<AIdentifierPatternCG> ids = new LinkedList<AIdentifierPatternCG>();
-			ids.add(node.getId());
+			ids.add(node.getSetBind().getPattern().clone());
 
 			ABlockStmCG block = transformationAssistant.consIterationBlock(ids, node.getSet(), info.getTempVarNameGen(), strategy);
 

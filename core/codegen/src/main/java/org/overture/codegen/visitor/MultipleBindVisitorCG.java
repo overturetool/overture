@@ -4,11 +4,11 @@ import java.util.LinkedList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.PExp;
-import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
+import org.overture.codegen.cgast.pattern.PPatternCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.patterns.PMultipleBindCG;
 import org.overture.codegen.ir.IRInfo;
@@ -27,17 +27,15 @@ public class MultipleBindVisitorCG extends AbstractVisitorCG<IRInfo, PMultipleBi
 		
 		for(PPattern pattern : patterns)
 		{
-			if(!(pattern instanceof AIdentifierPattern))
+			PPatternCG patternTempCg = pattern.apply(question.getPatternVisitor(), question);
+			
+			if(!(patternTempCg instanceof AIdentifierPatternCG))
 			{
-				question.addUnsupportedNode(node, "Generation of a multiple set bind only supports identifier patterns. Got: " + pattern);
+				question.addUnsupportedNode(node, "Generation of a multiple set bind only supports identifier patterns. Got: " + patternTempCg);
 				return null;
 			}
 			
-			AIdentifierPattern id = (AIdentifierPattern) pattern;
-			
-			AIdentifierPatternCG idCg = new AIdentifierPatternCG();
-			idCg.setName(id.getName().getName());
-			
+			AIdentifierPatternCG idCg = (AIdentifierPatternCG) patternTempCg;
 			patternsCg.add(idCg);
 		}
 		
