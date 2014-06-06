@@ -9,7 +9,7 @@ import org.overture.codegen.cgast.declarations.SLocalDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.ALetBeStNoBindingRuntimeErrorExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
-import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
+import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.ARaiseErrorStmCG;

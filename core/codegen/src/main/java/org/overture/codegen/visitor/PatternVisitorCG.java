@@ -3,9 +3,9 @@ package org.overture.codegen.visitor;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AIgnorePattern;
-import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
-import org.overture.codegen.cgast.pattern.AIgnorePatternCG;
-import org.overture.codegen.cgast.pattern.PPatternCG;
+import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
+import org.overture.codegen.cgast.patterns.AIgnorePatternCG;
+import org.overture.codegen.cgast.patterns.PPatternCG;
 import org.overture.codegen.ir.IRInfo;
 
 public class PatternVisitorCG extends AbstractVisitorCG<IRInfo, PPatternCG>

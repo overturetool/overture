@@ -105,7 +105,7 @@ import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
 import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATupleExpCG;
 import org.overture.codegen.cgast.expressions.AXorBoolBinaryExpCG;
-import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
+import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;

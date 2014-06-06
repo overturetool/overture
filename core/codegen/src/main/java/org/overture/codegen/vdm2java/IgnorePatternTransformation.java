@@ -2,8 +2,8 @@ package org.overture.codegen.vdm2java;
 
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
-import org.overture.codegen.cgast.pattern.AIgnorePatternCG;
+import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
+import org.overture.codegen.cgast.patterns.AIgnorePatternCG;
 import org.overture.codegen.transform.BaseTransformationAssistant;
 
 public class IgnorePatternTransformation  extends DepthFirstAnalysisAdaptor

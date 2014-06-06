@@ -35,7 +35,7 @@ Abstract Syntax Tree
 /*
     Expressions
 */
-patternCG {-> package='org.overture.codegen.cgast.pattern'}
+patternCG {-> package='org.overture.codegen.cgast.patterns'}
 	= {identifier} [name]:java_String
 	| {ignore}
 	;

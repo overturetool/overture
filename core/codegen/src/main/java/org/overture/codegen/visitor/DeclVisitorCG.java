@@ -29,7 +29,7 @@ import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.PDeclCG;
 import org.overture.codegen.cgast.expressions.ALambdaExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
-import org.overture.codegen.cgast.pattern.PPatternCG;
+import org.overture.codegen.cgast.patterns.PPatternCG;
 import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;

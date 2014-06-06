@@ -7,7 +7,7 @@ import org.overture.codegen.cgast.declarations.ACounterLocalDeclCG;
 import org.overture.codegen.cgast.declarations.SLocalDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
-import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
+import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.constants.TempVarPrefixes;
 import org.overture.codegen.transform.iterator.ILanguageIterator;

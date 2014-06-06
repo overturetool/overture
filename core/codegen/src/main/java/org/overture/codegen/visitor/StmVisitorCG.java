@@ -42,7 +42,7 @@ import org.overture.codegen.cgast.expressions.ALetBeStExpCG;
 import org.overture.codegen.cgast.expressions.ALetDefExpCG;
 import org.overture.codegen.cgast.expressions.AReverseUnaryExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
-import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
+import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.patterns.PMultipleBindCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
