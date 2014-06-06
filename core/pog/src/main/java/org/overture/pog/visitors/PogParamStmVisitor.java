@@ -55,16 +55,18 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 	final private QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> rootVisitor;
 	final private QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> mainVisitor;
+	final  private IVariableSubVisitor varSubVisitor;
+	final private IPogAssistantFactory aF;
 
-	final private IPogAssistantFactory assistantFactory;
 
 	public PogParamStmVisitor(
 			QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> parentVisitor,
 			QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> mainVisitor,
-			IPogAssistantFactory assistantFactory) {
+			IPogAssistantFactory assistantFactory, IVariableSubVisitor varSubVisitor) {
 		this.rootVisitor = parentVisitor;
 		this.mainVisitor = mainVisitor;
-		this.assistantFactory = assistantFactory;
+		this.aF = assistantFactory;
+		this.varSubVisitor=varSubVisitor;
 	}
 
 	/**
@@ -80,7 +82,8 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 			QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> parentVisitor) {
 		this.rootVisitor = parentVisitor;
 		this.mainVisitor = this;
-		this.assistantFactory = new PogAssistantFactory();
+		this.aF = new PogAssistantFactory();
+		this.varSubVisitor = new VariableSubVisitor();
 	}
 
 	@Override
@@ -107,7 +110,6 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 			IPOContextStack question) throws AnalysisException {
 		try {
 			IProofObligationList obligations = new ProofObligationList();
-
 			if (!node.getInConstructor()
 					&& (node.getClassDefinition() != null && node
 							.getClassDefinition().getInvariant() != null)
@@ -121,14 +123,17 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 			if (!TypeComparator.isSubType(
 					question.checkType(node.getExp(), node.getExpType()),
-					node.getTargetType(), assistantFactory)) {
+					node.getTargetType(), aF)) {
 				SubTypeObligation sto = SubTypeObligation.newInstance(
 						node.getExp(), node.getTargetType(), node.getExpType(),
-						question, assistantFactory);
+						question, aF);
 				if (sto != null) {
 					obligations.add(sto);
 				}
 			}
+
+			// TODO check that assignments can all be treated the same
+			question.push(new AssignmentContext(node,  varSubVisitor));
 
 			return obligations;
 		} catch (Exception e) {
@@ -188,22 +193,28 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 		try {
 			IProofObligationList obligations = new ProofObligationList();
 
-			if (node.getRootdef() != null
-					&& node.getRootdef() instanceof AExplicitOperationDefinition) {
-				AExplicitOperationDefinition opdef = (AExplicitOperationDefinition) node.getRootdef();
-				if (opdef.getPrecondition()!=null){
-					obligations.add(new  OperationCallObligation(node, opdef, node.getArgs(), question,assistantFactory));
-				}
-			}
-
 			for (PExp exp : node.getArgs()) {
 				obligations.addAll(exp.apply(rootVisitor, question));
 			}
 
-			// PDefinition opdef = question.env.findName(node.getName(),
-			// question.scope);
+			// FIXME change these instanceof checks to visitor application
+			if (node.getRootdef() != null
+					&& node.getRootdef() instanceof AExplicitOperationDefinition) {
+				AExplicitOperationDefinition opdef = (AExplicitOperationDefinition) node
+						.getRootdef();
+				if (opdef.getPrecondition() != null) {
+					obligations.add(new OperationCallObligation(node, opdef,
+							node.getArgs(), question, aF));
+				}
+				if (opdef.getPostcondition() != null) {
+					question.push(new OpPostConditionContext(opdef
+							.getPostdef(), node, aF));
+				}
+			}
 
-			// if (node.)
+			// FIXME clear irrelevant
+
+	
 
 			return obligations;
 		} catch (Exception e) {
@@ -545,8 +556,7 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 			for (PDefinition localDef : node.getLocalDefs()) {
 				// PDefinitionAssistantTC.get
-				question.push(new PONameContext(assistantFactory
-						.createPDefinitionAssistant()
+				question.push(new PONameContext(aF.createPDefinitionAssistant()
 						.getVariableNames(localDef)));
 				obligations.addAll(localDef.apply(rootVisitor, question));
 				question.pop();
@@ -583,9 +593,9 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 			ABlockSimpleBlockStm node, IPOContextStack question)
 			throws AnalysisException {
 		try {
-			IProofObligationList obligations = assistantFactory
-					.createPDefinitionAssistant().getProofObligations(
-							node.getAssignmentDefs(), rootVisitor, question);
+			IProofObligationList obligations = aF.createPDefinitionAssistant()
+					.getProofObligations(node.getAssignmentDefs(), rootVisitor,
+							question);
 
 			question.push(new POScopeContext());
 			obligations.addAll(defaultSSimpleBlockStm(node, question));

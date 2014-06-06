@@ -398,6 +398,8 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 			if (node.getBody() instanceof ANotYetSpecifiedStm) {
 				return new ProofObligationList();
 			}
+
+			
 			IProofObligationList obligations = new ProofObligationList();
 			LexNameList pids = new LexNameList();
 
@@ -435,12 +437,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 						question));
 			}
 
-			if (node.getPostcondition() != null) {
-				obligations.addAll(node.getPostcondition().apply(rootVisitor,
-						question));
-				obligations.add(new OperationPostConditionObligation(node,
-						question));
-			}
+
 
 			obligations.addAll(node.getBody().apply(rootVisitor, question));
 
@@ -459,6 +456,14 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 					obligations.add(sto);
 				}
 
+			}
+
+			//FIXME how do we collect the statements posts and stuff			
+			if (node.getPostcondition() != null) {
+				obligations.addAll(node.getPostcondition().apply(rootVisitor,
+						question));
+				obligations.add(new OperationPostConditionObligation(node,
+						question));
 			}
 
 			return obligations;
