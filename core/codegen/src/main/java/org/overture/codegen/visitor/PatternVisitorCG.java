@@ -2,7 +2,9 @@ package org.overture.codegen.visitor;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.patterns.AIdentifierPattern;
+import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
+import org.overture.codegen.cgast.pattern.AIgnorePatternCG;
 import org.overture.codegen.cgast.pattern.PPatternCG;
 import org.overture.codegen.ir.IRInfo;
 
@@ -18,5 +20,12 @@ public class PatternVisitorCG extends AbstractVisitorCG<IRInfo, PPatternCG>
 		idCg.setName(name);
 		
 		return idCg;
+	}
+	
+	@Override
+	public PPatternCG caseAIgnorePattern(AIgnorePattern node, IRInfo question)
+			throws AnalysisException
+	{
+		return new AIgnorePatternCG();
 	}
 }
