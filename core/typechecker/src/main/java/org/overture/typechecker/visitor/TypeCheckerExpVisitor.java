@@ -2409,7 +2409,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		// node.getSetBind().setSet(setBindSet.clone());
 		// node.getSetBind().setPattern(setBindPattern.clone());
 
-		if (PPatternAssistantTC.getVariableNames(node.getSetBind().getPattern()).size() != 1
+		if (question.assistantFactory.createPPatternAssistant().getVariableNames(node.getSetBind().getPattern()).size() != 1
 				|| !question.assistantFactory.createPTypeAssistant().isNumeric(question.assistantFactory.createPDefinitionAssistant().getType(def)))
 		{
 			TypeCheckerErrors.report(3155, "List comprehension must define one numeric bind variable", node.getLocation(), node);
