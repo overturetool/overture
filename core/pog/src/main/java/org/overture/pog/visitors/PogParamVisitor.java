@@ -55,10 +55,6 @@ import org.overture.pog.utility.PogAssistantFactory;
 public class PogParamVisitor<Q extends IPOContextStack, A extends IProofObligationList>
 		extends QuestionAnswerAdaptor<IPOContextStack, IProofObligationList> {
 
-	/**
-     * 
-     */
-	private static final long serialVersionUID = 1671456307479822942L;
 	private PogExpVisitor pogExpVisitor = new PogExpVisitor(this);
 	private PogStmVisitor pogStmVisitor = new PogStmVisitor(this);
 	private PogDefinitionVisitor pogDefinitionVisitor = new PogDefinitionVisitor(

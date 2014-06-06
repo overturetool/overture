@@ -10,12 +10,6 @@ public class PogExpVisitor extends PogParamExpVisitor<POContextStack, ProofOblig
 {
 
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -1791028954460642701L;
-
-    
     public PogExpVisitor( QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> parentVisitor){
 	super(parentVisitor);
     }

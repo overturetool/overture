@@ -49,8 +49,6 @@ import org.overture.ast.patterns.PPattern;
 
 public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 {
-	private static final long serialVersionUID = 1L;
-	
 	private final UniqueNameGenerator unique;
 	
 	public PatternToExpVisitor(UniqueNameGenerator unique)

@@ -19,11 +19,6 @@ public class PrettyPrinterConversion extends AnswerPOFAdaptor<String>
 		super();
 	}
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
 	@Override
 	public String defaultPPoTree(PPoTree node) throws AnalysisException
 	{

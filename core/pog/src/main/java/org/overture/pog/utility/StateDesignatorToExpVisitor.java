@@ -17,11 +17,6 @@ import org.overture.ast.statements.AMapSeqStateDesignator;
 
 public class StateDesignatorToExpVisitor extends AnswerAdaptor<PExp>{
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
 	@Override
 	public PExp caseAFieldStateDesignator(AFieldStateDesignator node)
 			throws AnalysisException {

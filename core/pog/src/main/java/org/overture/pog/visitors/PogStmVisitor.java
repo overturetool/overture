@@ -11,11 +11,6 @@ public class PogStmVisitor extends
 
 
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -8893110308150868534L;
-
     public PogStmVisitor(
 	    QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> parentVisitor) {
 	super(parentVisitor);

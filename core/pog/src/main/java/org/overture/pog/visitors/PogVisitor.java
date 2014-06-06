@@ -15,11 +15,6 @@ import org.overture.pog.obligation.ProofObligationList;
 public class PogVisitor extends PogParamVisitor<POContextStack, ProofObligationList>
 {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -97073667572118569L;
-
 
 	
 }

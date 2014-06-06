@@ -13,8 +13,6 @@ import org.overture.ast.patterns.PPattern;
 
 public class PatternAlwaysMatchesVisitor extends AnswerAdaptor<Boolean>
 {
-	private static final long serialVersionUID = 1L;
-	
 	public PatternAlwaysMatchesVisitor()
 	{
 	}

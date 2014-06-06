@@ -37,11 +37,6 @@ import org.overture.ast.types.SSeqType;
 class GetLocationVisitor extends AnswerAdaptor<ILexLocation>
 {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
 	@Override
 	public ILexLocation defaultPExp(PExp node) throws AnalysisException
 	{
