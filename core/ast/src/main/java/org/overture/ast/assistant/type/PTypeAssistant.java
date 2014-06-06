@@ -67,7 +67,7 @@ public class PTypeAssistant
 		return hashCode;
 	}
 
-	public static String getName(PType type)
+	public String getName(PType type)
 	{
 		return type.getLocation().getModule();
 	}

@@ -207,6 +207,7 @@ import org.overture.ast.util.Utils;
 @SuppressWarnings("deprecation")
 public class AstFactory
 {
+	//Should we instanience an assistant factory here? 
 	static
 	{
 		new AstAssistantFactory();// FIXME: remove when asssistant conversion is finished

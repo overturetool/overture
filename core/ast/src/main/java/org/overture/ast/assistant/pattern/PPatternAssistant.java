@@ -149,7 +149,7 @@ public class PPatternAssistant
 			throws InvocationAssistantException
 	{
 		Set<ILexNameToken> set = new HashSet<ILexNameToken>();
-		set.addAll(getAllVariableNames(pattern));
+		set.addAll(af.createPPatternAssistant().getAllVariableNames(pattern));
 		LexNameList list = new LexNameList();
 		list.addAll(set);
 		return list;

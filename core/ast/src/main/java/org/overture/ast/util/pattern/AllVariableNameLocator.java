@@ -36,8 +36,8 @@ public class AllVariableNameLocator extends AnswerAdaptor<LexNameList>
 	{
 		LexNameList list = new LexNameList();
 
-		list.addAll(PPatternAssistant.getAllVariableNames(pattern.getLeft()));
-		list.addAll(PPatternAssistant.getAllVariableNames(pattern.getRight()));
+		list.addAll(af.createPPatternAssistant().getAllVariableNames(pattern.getLeft()));
+		list.addAll(af.createPPatternAssistant().getAllVariableNames(pattern.getRight()));
 
 		return list;
 	}
@@ -59,7 +59,7 @@ public class AllVariableNameLocator extends AnswerAdaptor<LexNameList>
 
 		for (PPattern p : pattern.getPlist())
 		{
-			list.addAll(PPatternAssistant.getAllVariableNames(p));
+			list.addAll(af.createPPatternAssistant().getAllVariableNames(p));
 		}
 
 		return list;
@@ -73,7 +73,7 @@ public class AllVariableNameLocator extends AnswerAdaptor<LexNameList>
 
 		for (PPattern p : pattern.getPlist())
 		{
-			list.addAll(PPatternAssistant.getAllVariableNames(p));
+			list.addAll(af.createPPatternAssistant().getAllVariableNames(p));
 		}
 
 		return list;
@@ -87,7 +87,7 @@ public class AllVariableNameLocator extends AnswerAdaptor<LexNameList>
 
 		for (PPattern p : pattern.getPlist())
 		{
-			list.addAll(PPatternAssistant.getAllVariableNames(p));
+			list.addAll(af.createPPatternAssistant().getAllVariableNames(p));
 		}
 
 		return list;
@@ -101,7 +101,7 @@ public class AllVariableNameLocator extends AnswerAdaptor<LexNameList>
 
 		for (PPattern p : pattern.getPlist())
 		{
-			list.addAll(PPatternAssistant.getAllVariableNames(p));
+			list.addAll(af.createPPatternAssistant().getAllVariableNames(p));
 		}
 
 		return list;
@@ -113,8 +113,8 @@ public class AllVariableNameLocator extends AnswerAdaptor<LexNameList>
 	{
 		LexNameList list = new LexNameList();
 
-		list.addAll(PPatternAssistant.getAllVariableNames(pattern.getLeft()));
-		list.addAll(PPatternAssistant.getAllVariableNames(pattern.getRight()));
+		list.addAll(af.createPPatternAssistant().getAllVariableNames(pattern.getLeft()));
+		list.addAll(af.createPPatternAssistant().getAllVariableNames(pattern.getRight()));
 
 		return list;
 	}
