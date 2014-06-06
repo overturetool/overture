@@ -193,7 +193,6 @@ import org.overture.codegen.cgast.expressions.ATupleExpCG;
 import org.overture.codegen.cgast.expressions.AXorBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
-import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.pattern.PPatternCG;
 import org.overture.codegen.cgast.patterns.ASetBindCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
@@ -747,30 +746,28 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, PExpCG>
 			return null;
 		}
 		
-		PPattern pattern = node.getSetBind().getPattern();
-		
-		if(!(pattern instanceof AIdentifierPattern))
-		{
-			question.addUnsupportedNode(node, "Generation of a sequence comprehension is only supported for identifier patterns");
-			return null;
-		}
-		
-		AIdentifierPattern setBindId = (AIdentifierPattern) pattern;
+		ASetBind setBind = node.getSetBind();
 		PType type = node.getType();
 		PExp first = node.getFirst();
 		PExp set = node.getSetBind().getSet();
 		PExp predicate = node.getPredicate();
 
-		AIdentifierPatternCG id = new AIdentifierPatternCG();
-		id.setName(setBindId.getName().getName());
+		PBindCG bindTempCg = setBind.apply(question.getBindVisitor(), question);
 		
+		if(!(bindTempCg instanceof ASetBindCG))
+		{
+			question.addUnsupportedNode(node, "Expected set bind for sequence comprehension. Got: " + bindTempCg);
+			return null;
+		}
+		
+		ASetBindCG setBindCg = (ASetBindCG) bindTempCg;
 		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 		PExpCG firstCg = first.apply(question.getExpVisitor(), question);
 		PExpCG setCg = set.apply(question.getExpVisitor(), question);
 		PExpCG predicateCg = predicate != null ? predicate.apply(question.getExpVisitor(), question) : null;
 		
 		ACompSeqExpCG seqComp = new ACompSeqExpCG();
-		seqComp.setId(id);
+		seqComp.setSetBind(setBindCg);
 		seqComp.setType(typeCg);
 		seqComp.setFirst(firstCg);
 		seqComp.setSet(setCg);

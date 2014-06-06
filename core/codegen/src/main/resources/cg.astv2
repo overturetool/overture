@@ -316,7 +316,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     
 #Seq {-> package='org.overture.codegen.cgast.expressions'}
 	= {enum} [members]:expCG*// (types):typeCG*
-	| {comp} [first]:expCG [id]:patternCG.identifier [set]:expCG [predicate]:expCG
+	| {comp} [first]:expCG [setBind]:bindCG.set [set]:expCG [predicate]:expCG
 	//=   {seqComp} [first]:exp [setBind]:bind.set [predicate]:exp
 	//|   {seqEnum} [members]:exp* (types):type*
 	;
