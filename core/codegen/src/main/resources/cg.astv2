@@ -36,7 +36,8 @@ Abstract Syntax Tree
     Expressions
 */
 patternCG {-> package='org.overture.codegen.cgast.pattern'}
-	= {identifier} [name]:java_String 
+	= {identifier} [name]:java_String
+	| {ignore}
 	;
 
 bindCG {-> package='org.overture.codegen.cgast.patterns'
@@ -122,7 +123,7 @@ declCG {-> package='org.overture.codegen.cgast.declarations'}
 #Local  {-> package='org.overture.codegen.cgast.declarations'}
     =	{var}
     	[type]:typeCG
-    	[name]:java_String
+    	[pattern]:patternCG
     	[exp]:expCG
     |	{counter}
     	[name]:java_String
@@ -149,7 +150,7 @@ objectDesignatorCG {-> package='org.overture.codegen.cgast.statements'}
     ;
     
 localDeclCG {-> package='org.overture.codegen.cgast.declarations'}
-           = {formalParam} [type]:typeCG [name]:java_String// [init]:exp
+           = {formalParam} [type]:typeCG [pattern]:patternCG// [init]:exp
            ;
 
 stmCG {-> package='org.overture.codegen.cgast.statements'}
@@ -316,7 +317,7 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     
 #Seq {-> package='org.overture.codegen.cgast.expressions'}
 	= {enum} [members]:expCG*// (types):typeCG*
-	| {comp} [first]:expCG [id]:patternCG.identifier [set]:expCG [predicate]:expCG
+	| {comp} [first]:expCG [setBind]:bindCG.set [set]:expCG [predicate]:expCG
 	//=   {seqComp} [first]:exp [setBind]:bind.set [predicate]:exp
 	//|   {seqEnum} [members]:exp* (types):type*
 	;

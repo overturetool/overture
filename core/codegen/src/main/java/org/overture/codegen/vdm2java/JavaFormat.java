@@ -37,6 +37,7 @@ import org.overture.codegen.cgast.expressions.SNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.SUnaryExpCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
+import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
@@ -418,10 +419,13 @@ public class JavaFormat
 			PTypeCG type = field.getType().clone();
 			
 			String paramName = "_" + name;
+			
+			AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
+			idPattern.setName(paramName);
 
 			//Construct formal parameter of the constructor
 			AFormalParamLocalDeclCG formalParam = new AFormalParamLocalDeclCG();
-			formalParam.setName(paramName);
+			formalParam.setPattern(idPattern);
 			formalParam.setType(type);
 			formalParams.add(formalParam);
 			
@@ -752,8 +756,13 @@ public class JavaFormat
 		
 		//Add the formal parameter "Object obj" to the method
 		AFormalParamLocalDeclCG formalParam = new AFormalParamLocalDeclCG();
+		
 		String paramName = "obj";
-		formalParam.setName(paramName);
+		
+		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
+		idPattern.setName(paramName);
+		
+		formalParam.setPattern(idPattern);
 		AObjectTypeCG paramType = new AObjectTypeCG();
 		formalParam.setType(paramType);
 		equalsMethod.getFormalParams().add(formalParam);

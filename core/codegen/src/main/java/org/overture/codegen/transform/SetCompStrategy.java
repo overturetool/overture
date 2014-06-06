@@ -37,7 +37,7 @@ public class SetCompStrategy extends ComplexCompStrategy
 	{
 		AIdentifierVarExpCG setCompResult = new AIdentifierVarExpCG();
 		setCompResult.setType(compType.clone());
-		setCompResult.setOriginal(var);
+		setCompResult.setOriginal(idPattern.getName());
 
 		AEnumSetExpCG setToUnion = new AEnumSetExpCG();
 		setToUnion.setType(compType.clone());

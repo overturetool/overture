@@ -75,6 +75,7 @@ public class JavaCodeGen
 	private AssistantManager assistantManager;
 	private JavaFormat javaFormat;
 	
+	public static final String IGNORE_PATTERN_NAME_PREFIX = "ignore_";
 	public static final String INTERFACE_NAME_PREFIX = "Func_";
 	public static final String TEMPLATE_TYPE_PREFIX = "T_";
 	public static final String EVAL_METHOD_PREFIX = "eval";
@@ -188,6 +189,8 @@ public class JavaCodeGen
 		
 		TransformationAssistantCG transformationAssistant = new TransformationAssistantCG(irInfo, varPrefixes);
 		FunctionValueAssistant functionValueAssistant = new FunctionValueAssistant();
+		
+		IgnorePatternTransformation ignoreTransformation = new IgnorePatternTransformation(transformationAssistant, IGNORE_PATTERN_NAME_PREFIX);
 		FunctionValueVisitor funcValVisitor = new FunctionValueVisitor(transformationAssistant, functionValueAssistant, INTERFACE_NAME_PREFIX, TEMPLATE_TYPE_PREFIX, EVAL_METHOD_PREFIX, PARAM_NAME_PREFIX);
 		ILanguageIterator langIterator = new JavaLanguageIterator(transformationAssistant, irInfo.getTempVarNameGen(), varPrefixes);
 		TransformationVisitor transVisitor = new TransformationVisitor(irInfo, varPrefixes, transformationAssistant, langIterator);
@@ -202,6 +205,7 @@ public class JavaCodeGen
 				
 				if (status.canBeGenerated())
 				{
+					classCg.apply(ignoreTransformation);
 					classCg.apply(funcValVisitor);
 					classCg.apply(transVisitor);
 				}

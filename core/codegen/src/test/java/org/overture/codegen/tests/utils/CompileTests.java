@@ -16,6 +16,7 @@ import org.overture.codegen.tests.ConfiguredCloningTest;
 import org.overture.codegen.tests.ConfiguredStringGenerationTest;
 import org.overture.codegen.tests.ExpressionTest;
 import org.overture.codegen.tests.FunctionValueTest;
+import org.overture.codegen.tests.PatternTest;
 import org.overture.codegen.tests.SpecificationTest;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
@@ -40,6 +41,7 @@ public class CompileTests
 	public static final boolean RUN_FUNCTION_VALUE_TESTS = true;
 	public static final boolean RUN_CONFIGURED_STRING_GENERATION_TESTS = true;
 	public static final boolean RUN_CONFIGURED_CLONE_TESTS = true;
+	public static final boolean RUN_PATTERN_TESTS = true;
 	
 	private List<File> testInputFiles;
 	private List<File> resultFiles;
@@ -95,6 +97,11 @@ public class CompileTests
 			runConfiguredCloningTests();
 		}
 		
+		if(RUN_PATTERN_TESTS)
+		{
+			runPatternTests();
+		}
+		
 		long endTimeMs = System.currentTimeMillis();
 		
 		long totalTimeMs = (endTimeMs - startTimeMs);
@@ -103,6 +110,20 @@ public class CompileTests
 		long seconds = (totalTimeMs % (60 * 1000)) / 1000;
 		
 		System.out.println("Time: " + String.format("%02d:%02d", minutes, seconds) + ".");
+	}
+
+	private void runPatternTests() throws IOException
+	{
+		System.out.println("Beginning pattern tests..\n");
+
+		testInputFiles = TestUtils.getTestInputFiles(new File(PatternTest.ROOT));
+		resultFiles = TestUtils.getFiles(new File(PatternTest.ROOT), RESULT_FILE_EXTENSION);
+		
+		runTests(testInputFiles, resultFiles, new ExecutableSpecTestHandler(Release.VDM_10), false);
+		
+		System.out.println("\n********");
+		System.out.println("Finished with pattern tests");
+		System.out.println("********\n");
 	}
 
 	private void runConfiguredCloningTests() throws IOException

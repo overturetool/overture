@@ -14,10 +14,8 @@ import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SBinaryExp;
 import org.overture.ast.expressions.SUnaryExp;
-import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
-import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.ast.types.ANatNumericBasicType;
@@ -35,7 +33,6 @@ import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.expressions.SBinaryExpCG;
 import org.overture.codegen.cgast.expressions.SQuantifierExpCG;
 import org.overture.codegen.cgast.expressions.SUnaryExpCG;
-import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.patterns.PMultipleBindCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
@@ -202,28 +199,6 @@ public class ExpAssistantCG extends AssistantBase
 				|| exp.getAncestor(AValueDefinition.class) != null
 				|| exp.getAncestor(AAssignmentDefinition.class) != null
 				|| exp.getAncestor(AAssignmentStm.class) != null;
-	}
-	
-	public LinkedList<AIdentifierPatternCG> getIdsFromPatternList(List<PPattern> patternList)
-	{
-		LinkedList<AIdentifierPatternCG> idsCg = new LinkedList<AIdentifierPatternCG>();
-		
-		for (PPattern pattern : patternList)
-		{
-			if (!(pattern instanceof AIdentifierPattern))
-			{
-				return null;
-			}
-			
-			AIdentifierPattern id = (AIdentifierPattern) pattern;
-			
-			AIdentifierPatternCG idCg = new AIdentifierPatternCG();
-			idCg.setName(id.getName().getName());
-			
-			idsCg.add(idCg);
-		}
-		
-		return idsCg;
 	}
 	
 	public AHeaderLetBeStCG consHeader(ASetMultipleBindCG binding, PExpCG suchThat)

@@ -31,6 +31,7 @@ import org.overture.codegen.visitor.DeclVisitorCG;
 import org.overture.codegen.visitor.ExpVisitorCG;
 import org.overture.codegen.visitor.MultipleBindVisitorCG;
 import org.overture.codegen.visitor.ObjectDesignatorVisitorCG;
+import org.overture.codegen.visitor.PatternVisitorCG;
 import org.overture.codegen.visitor.StateDesignatorVisitorCG;
 import org.overture.codegen.visitor.StmVisitorCG;
 import org.overture.codegen.visitor.TypeVisitorCG;
@@ -122,6 +123,11 @@ public class IRInfo
 	public BindVisitorCG getBindVisitor()
 	{
 		return visitorManager.getBindVisitor();
+	}
+	
+	public PatternVisitorCG getPatternVisitor()
+	{
+		return visitorManager.getPatternVisitor();
 	}
 	
 	public ExpAssistantCG getExpAssistant()

@@ -38,7 +38,7 @@ public class SeqCompStrategy extends CompStrategy
 	{
 		AIdentifierVarExpCG seqCompResult = new AIdentifierVarExpCG();
 		seqCompResult.setType(compType.clone());
-		seqCompResult.setOriginal(var);
+		seqCompResult.setOriginal(idPattern.getName());
 
 		AEnumSeqExpCG seqToConcat = new AEnumSeqExpCG();
 		seqToConcat.setType(compType.clone());

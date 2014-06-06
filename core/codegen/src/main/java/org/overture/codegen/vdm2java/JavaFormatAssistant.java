@@ -20,6 +20,7 @@ import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.ASelfExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
+import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
@@ -58,7 +59,9 @@ public class JavaFormatAssistant
 		recordType.setName(consTypeName(record));
 		localVar.setType(recordType);
 		
-		localVar.setName(varName);
+		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
+		idPattern.setName(varName);
+		localVar.setPattern(idPattern);
 		
 		ACastUnaryExpCG cast = new ACastUnaryExpCG();
 		cast.setType(recordType.clone());
