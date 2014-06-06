@@ -42,6 +42,7 @@ import org.overture.codegen.cgast.expressions.ALetBeStExpCG;
 import org.overture.codegen.cgast.expressions.ALetDefExpCG;
 import org.overture.codegen.cgast.expressions.AReverseUnaryExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
+import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.patterns.PMultipleBindCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
@@ -199,7 +200,11 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, PStmCG>
 			
 			AVarLocalDeclCG localDecl = new AVarLocalDeclCG();
 			localDecl.setType(typeCg);
-			localDecl.setName(name);
+			
+			AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
+			idPattern.setName(name);
+			
+			localDecl.setPattern(idPattern);
 			
 			if(exp instanceof AUndefinedExp)
 			{

@@ -42,7 +42,11 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 		PExpCG getIteratorCall = transformationAssistant.consInstanceCall(setType, setName, iteratorType.clone(), GET_ITERATOR, null);
 
 		AVarLocalDeclCG iteratorDecl = new AVarLocalDeclCG();
-		iteratorDecl.setName(iteratorName);
+		
+		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
+		idPattern.setName(iteratorName);
+		
+		iteratorDecl.setPattern(idPattern);
 		iteratorDecl.setType(iteratorType);
 		iteratorDecl.setExp(getIteratorCall);
 

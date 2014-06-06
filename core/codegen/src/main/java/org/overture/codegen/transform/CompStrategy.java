@@ -21,16 +21,20 @@ import org.overture.codegen.utils.ITempVarGen;
 public abstract class CompStrategy extends AbstractIterationStrategy
 {
 	protected PExpCG predicate;
-	protected String var;
+	protected AIdentifierPatternCG idPattern;
 	protected PTypeCG compType;
 	
-	public CompStrategy(TransformationAssistantCG transformationAssistant, PExpCG predicate, String var, PTypeCG compType, ILanguageIterator langIterator, ITempVarGen tempGen,
+	public CompStrategy(TransformationAssistantCG transformationAssistant, PExpCG predicate, String varName, PTypeCG compType, ILanguageIterator langIterator, ITempVarGen tempGen,
 			TempVarPrefixes varPrefixes)
 	{
 		super(transformationAssistant, langIterator, tempGen, varPrefixes);
 		
 		this.predicate = predicate;
-		this.var = var;
+		
+		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
+		idPattern.setName(varName);
+		
+		this.idPattern = idPattern;
 		this.compType = compType;
 	}
 	
@@ -71,7 +75,7 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 		
 		AVarLocalDeclCG compResultInit = new AVarLocalDeclCG();
 		compResultInit.setType(compType.clone());
-		compResultInit.setName(var);
+		compResultInit.setPattern(idPattern.clone());
 		compResultInit.setExp(emptyCollection);
 		
 		return packDecl(compResultInit);

@@ -123,7 +123,11 @@ public class TransformationAssistantCG
 		AVarLocalDeclCG boolVarDecl = new AVarLocalDeclCG();
 
 		boolVarDecl.setType(new ABoolBasicTypeCG());
-		boolVarDecl.setName(boolVarName);
+		
+		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
+		idPattern.setName(boolVarName);
+		
+		boolVarDecl.setPattern(idPattern);
 		boolVarDecl.setExp(info.getExpAssistant().consBoolLiteral(initValue));
 
 		return boolVarDecl;
@@ -192,7 +196,11 @@ public class TransformationAssistantCG
 		AVarLocalDeclCG setBindDecl = new AVarLocalDeclCG();
 
 		setBindDecl.setType(getSetTypeCloned(set));
-		setBindDecl.setName(setBindName);
+		
+		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
+		idPattern.setName(setBindName);
+		
+		setBindDecl.setPattern(idPattern);
 		setBindDecl.setExp(set.clone());
 
 		return setBindDecl;
@@ -204,7 +212,11 @@ public class TransformationAssistantCG
 		AVarLocalDeclCG idDecl = new AVarLocalDeclCG();
 
 		idDecl.setType(getSetTypeCloned(setType).getSetOf());
-		idDecl.setName(id);
+
+		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
+		idPattern.setName(id);
+		
+		idDecl.setPattern(idPattern);
 		idDecl.setExp(new ANullExpCG());
 
 		return idDecl;
@@ -215,7 +227,11 @@ public class TransformationAssistantCG
 		AVarLocalDeclCG resultDecl = new AVarLocalDeclCG();
 
 		resultDecl.setType(exp.getType().clone());
-		resultDecl.setName(varName);
+		
+		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
+		idPattern.setName(varName);
+		
+		resultDecl.setPattern(idPattern);
 		resultDecl.setExp(exp);
 
 		return resultDecl;
@@ -276,9 +292,12 @@ public class TransformationAssistantCG
 		AVarLocalDeclCG decl = new AVarLocalDeclCG();
 
 		decl.setType(elementType);
-		decl.setName(id);
+		
+		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
+		idPattern.setName(id);
+		
+		decl.setPattern(idPattern);
 		decl.setExp(cast);
-		;
 
 		return decl;
 	}

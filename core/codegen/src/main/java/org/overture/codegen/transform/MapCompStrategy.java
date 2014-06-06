@@ -40,7 +40,7 @@ public class MapCompStrategy extends ComplexCompStrategy
 	{
 		AIdentifierVarExpCG mapCompResult = new AIdentifierVarExpCG();
 		mapCompResult.setType(compType.clone());
-		mapCompResult.setOriginal(var);
+		mapCompResult.setOriginal(idPattern.getName());
 
 		AEnumMapExpCG mapToUnion = new AEnumMapExpCG();
 		mapToUnion.setType(compType.clone());

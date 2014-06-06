@@ -3,4 +3,6 @@
 	#set( $end = "")
 #end
 ##
-$JavaFormat.format($node.getType()) $node.getName() = $JavaFormat.format($node.getExp())${end}
+#set( $pattern = $JavaFormat.format($node.getPattern()) )
+##
+$JavaFormat.format($node.getType()) $pattern = $JavaFormat.format($node.getExp())${end}

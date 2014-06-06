@@ -19,6 +19,7 @@ import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
+import org.overture.codegen.cgast.pattern.PPatternCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
@@ -51,12 +52,12 @@ public class DeclAssistantCG extends AssistantBase
 	private AVarLocalDeclCG constructLocalVarDecl(AValueDefinition valueDef, IRInfo question) throws AnalysisException
 	{
 		PTypeCG type = valueDef.getType().apply(question.getTypeVisitor(), question);
-		String name = valueDef.getPattern().toString();
+		PPatternCG pattern = valueDef.getPattern().apply(question.getPatternVisitor(), question);
 		PExpCG exp = valueDef.getExpression().apply(question.getExpVisitor(), question);
 		
 		AVarLocalDeclCG localVarDecl = new AVarLocalDeclCG();
 		localVarDecl.setType(type);
-		localVarDecl.setName(name);
+		localVarDecl.setPattern(pattern);
 		localVarDecl.setExp(exp);
 		
 		return localVarDecl;

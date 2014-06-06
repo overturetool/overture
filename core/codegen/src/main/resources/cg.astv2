@@ -122,7 +122,7 @@ declCG {-> package='org.overture.codegen.cgast.declarations'}
 #Local  {-> package='org.overture.codegen.cgast.declarations'}
     =	{var}
     	[type]:typeCG
-    	[name]:java_String
+    	[pattern]:patternCG
     	[exp]:expCG
     |	{counter}
     	[name]:java_String
