@@ -21,5 +21,5 @@ script:
   - mvn -B install
   - echo travis_fold:end:compile_core
   - echo travis_fold:start:compile_ide
-  - mvn -B install -f ide/pom.xml -Dgit-commit-id.skip=true -Pall-platforms
+  - mvn -B install -f ide/pom.xml -Dgit-commit-id.skip=true -Pall-platforms -P!ui-tests
   - echo travis_fold:end:compile_ide
