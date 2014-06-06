@@ -47,7 +47,7 @@ public class PDefinitionAssistant
 
 	}
 
-	public static String getName(PDefinition node)
+	public String getName(PDefinition node)
 	{
 		if (node.getName() != null)
 		{
@@ -68,7 +68,7 @@ public class PDefinitionAssistant
 	{
 		for (PDefinition d : defs)
 		{
-			setClassDefinition(d, classDefinition);
+			af.createPDefinitionAssistant().setClassDefinition(d, classDefinition);
 		}
 
 	}
