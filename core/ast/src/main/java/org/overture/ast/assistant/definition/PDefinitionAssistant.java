@@ -19,7 +19,7 @@ public class PDefinitionAssistant
 		this.af = af;
 	}
 
-	public static void setClassDefinition(PDefinition pDefinition,
+	public void setClassDefinition(PDefinition pDefinition,
 			SClassDefinition def)
 	{
 		if (pDefinition instanceof SClassDefinition) {

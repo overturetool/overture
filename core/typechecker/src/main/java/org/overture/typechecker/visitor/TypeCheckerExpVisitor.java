@@ -1821,7 +1821,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 				if (question.env.isVDMPP())
 				{
 					SClassDefinition cdef = question.env.findClassDefinition();
-					PDefinitionAssistantTC.setClassDefinition(d, cdef);
+					question.assistantFactory.createPDefinitionAssistant().setClassDefinition(d, cdef);
 					d.setAccess(question.assistantFactory.createPAccessSpecifierAssistant().getStatic(d, true));
 				}
 

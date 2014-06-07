@@ -208,10 +208,12 @@ import org.overture.ast.util.Utils;
 @SuppressWarnings("deprecation")
 public class AstFactory
 {
-	//Should we instanciate an assistant factory here? 
+	//Should we instanciate an assistant factory here?
+	//Added by gkanos.
 	protected static IAstAssistantFactory af;
 	static
 	{
+		//Added by gkanos.
 		af = new AstAssistantFactory();// FIXME: remove when assistant conversion is finished
 	}
 
@@ -3016,7 +3018,7 @@ public class AstFactory
 		result.setSuperdef(d);
 		result.setOldname(localname.getOldName());
 
-		PDefinitionAssistant.setClassDefinition(result, d.getClassDefinition());
+		af.createPDefinitionAssistant().setClassDefinition(result, d.getClassDefinition());
 		result.setAccess(d.getAccess().clone());
 
 		return result;
