@@ -27,7 +27,7 @@ public class PDefinitionAssistant
 				setClassDefinition(d, def);
 			}
 		} else if (pDefinition instanceof AExplicitFunctionDefinition) {
-			setClassDefinitionBaseCase(pDefinition, def);
+			af.createPDefinitionAssistant().setClassDefinitionBaseCase(pDefinition, def);
 			AExplicitFunctionDefinition efd = ((AExplicitFunctionDefinition) pDefinition);
 			if (efd.getPredef() != null) {
 				setClassDefinition(efd.getPredef(), def);
@@ -36,13 +36,13 @@ public class PDefinitionAssistant
 				setClassDefinition(efd.getPostdef(), def);
 			}
 		} else if (pDefinition instanceof AValueDefinition) {
-			setClassDefinitionBaseCase(pDefinition, def);
+			af.createPDefinitionAssistant().setClassDefinitionBaseCase(pDefinition, def);
 			AValueDefinition vd = (AValueDefinition) pDefinition;
 			for (PDefinition d : vd.getDefs()) {
 				setClassDefinition(d, def);
 			}
 		} else {
-			setClassDefinitionBaseCase(pDefinition, def);
+			af.createPDefinitionAssistant().setClassDefinitionBaseCase(pDefinition, def);
 		}
 
 	}
@@ -57,7 +57,7 @@ public class PDefinitionAssistant
 		return null;
 	}
 
-	public static void setClassDefinitionBaseCase(PDefinition pDefinition,
+	public void setClassDefinitionBaseCase(PDefinition pDefinition,
 			SClassDefinition def)
 	{
 		pDefinition.setClassDefinition(def);
