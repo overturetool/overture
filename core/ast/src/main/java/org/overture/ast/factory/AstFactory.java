@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.assistant.AstAssistantFactory;
+import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.assistant.InvocationAssistantException;
 import org.overture.ast.assistant.definition.PAccessSpecifierAssistant;
 import org.overture.ast.assistant.definition.PDefinitionAssistant;
@@ -208,9 +209,10 @@ import org.overture.ast.util.Utils;
 public class AstFactory
 {
 	//Should we instanciate an assistant factory here? 
+	protected static IAstAssistantFactory af;
 	static
 	{
-		new AstAssistantFactory();// FIXME: remove when assistant conversion is finished
+		af = new AstAssistantFactory();// FIXME: remove when assistant conversion is finished
 	}
 
 	/*
@@ -421,7 +423,7 @@ public class AstFactory
 		}
 
 		// Classes are all effectively public types
-		PDefinitionAssistant.setClassDefinition(result.getDefinitions(), result);
+		af.createPDefinitionAssistant().setClassDefinition(result.getDefinitions(), result);
 
 		// others
 		result.setSettingHierarchy(ClassDefinitionSettings.UNSET);

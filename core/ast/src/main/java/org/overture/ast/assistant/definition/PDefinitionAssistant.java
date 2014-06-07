@@ -63,7 +63,7 @@ public class PDefinitionAssistant
 		pDefinition.setClassDefinition(def);
 	}
 
-	public static void setClassDefinition(List<PDefinition> defs,
+	public void setClassDefinition(List<PDefinition> defs,
 			SClassDefinition classDefinition)
 	{
 		for (PDefinition d : defs)
