@@ -10,8 +10,6 @@ import org.overture.ast.assistant.AstAssistantFactory;
 import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.assistant.InvocationAssistantException;
 import org.overture.ast.assistant.definition.PAccessSpecifierAssistant;
-import org.overture.ast.assistant.definition.PDefinitionAssistant;
-import org.overture.ast.assistant.pattern.PPatternAssistant;
 import org.overture.ast.assistant.type.AUnionTypeAssistant;
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AClassClassDefinition;
@@ -2856,7 +2854,7 @@ public class AstFactory
 		list.add(a);
 		list.add(b);
 		result.setTypes(list);
-		AUnionTypeAssistant.expand(result);
+		af.createAUnionTypeAssistant().expand(result);
 		return result;
 	}
 
@@ -3369,7 +3367,7 @@ public class AstFactory
 		initUnionType(result);
 
 		result.setTypes(types);
-		AUnionTypeAssistant.expand(result);
+		af.createAUnionTypeAssistant().expand(result);
 		return result;
 	}
 

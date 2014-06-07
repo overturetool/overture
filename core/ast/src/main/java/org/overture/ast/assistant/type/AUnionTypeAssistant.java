@@ -21,7 +21,7 @@ public class AUnionTypeAssistant
 		this.af = af;
 	}
 
-	public static void expand(AUnionType type)
+	public void expand(AUnionType type)
 	{
 
 		if (type.getExpanded())
