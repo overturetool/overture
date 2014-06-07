@@ -58,7 +58,7 @@ public class AUnionTypeAssistant
 
 	}
 
-	public static boolean isNumeric(AUnionType type)
+	public boolean isNumeric(AUnionType type)
 	{
 		return getNumeric(type) != null;
 	}
