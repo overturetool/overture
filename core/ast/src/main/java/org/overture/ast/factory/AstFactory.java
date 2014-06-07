@@ -211,6 +211,7 @@ public class AstFactory
 	//Should we instanciate an assistant factory here?
 	//Added by gkanos.
 	protected static IAstAssistantFactory af;
+	
 	static
 	{
 		//Added by gkanos.
@@ -629,7 +630,7 @@ public class AstFactory
 
 		try
 		{
-			for (ILexNameToken var : PPatternAssistant.getVariableNames(p))
+			for (ILexNameToken var : af.createPPatternAssistant().getVariableNames(p))
 			{
 				defs.add(AstFactory.newAUntypedDefinition(result.getLocation(), var, scope));
 			}
@@ -640,7 +641,7 @@ public class AstFactory
 		}
 
 		result.setDefs(defs);
-
+		
 		return result;
 	}
 

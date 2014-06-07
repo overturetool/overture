@@ -139,7 +139,7 @@ public class PPatternAssistant
 //		}
 //	}
 
-	public static LexNameList getVariableNames(PPattern pattern)
+	public LexNameList getVariableNames(PPattern pattern)
 			throws InvocationAssistantException
 	{
 		return af.createPPatternAssistant().getVariableNamesBaseCase(pattern);
