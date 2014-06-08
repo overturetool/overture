@@ -63,7 +63,7 @@ public class AUnionTypeAssistant
 		return getNumeric(type) != null;
 	}
 
-	public static SNumericBasicType getNumeric(AUnionType type)
+	public SNumericBasicType getNumeric(AUnionType type)
 	{
 		if (!type.getNumDone())
 		{

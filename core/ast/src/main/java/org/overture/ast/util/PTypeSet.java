@@ -69,10 +69,11 @@ public class PTypeSet extends TreeSet<PType>
 			}
 		} else if (t instanceof SNumericBasicType)
 		{
-			for (PType x : this)//what the this keyword refer to...If refer to t easy job to make visitor to apply. gkanos
+			for (PType x : this)//what the this keyword refer to.. gkanos
 			{
 				if (x instanceof SNumericBasicType)
 				{
+					//this is the only call that causes problem. gkanos
 					if (SNumericBasicTypeAssistant.getWeight(PTypeAssistant.getNumeric(x)) < SNumericBasicTypeAssistant.getWeight(PTypeAssistant.getNumeric(t)))
 					{
 						remove(x);

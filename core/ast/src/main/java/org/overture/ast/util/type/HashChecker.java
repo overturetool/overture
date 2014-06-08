@@ -140,7 +140,7 @@ public class HashChecker extends AnswerAdaptor<Integer>
 	@Override
 	public Integer caseAUnionType(AUnionType type) throws AnalysisException
 	{
-		return PTypeAssistant.hashCode(type.getTypes());
+		return af.createPTypeAssistant().hashCode(type.getTypes());
 	}
 	
 	@Override
