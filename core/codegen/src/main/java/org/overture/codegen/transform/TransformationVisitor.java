@@ -80,8 +80,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		outerBlock.getStatements().add(node.getStatement());
 		
 		//Replace the let be st statement with the transformation
-		transformationAssistant.replaceNodeWith(node, outerBlock);
-		outerBlock.apply(this);
+		transformationAssistant.replaceNodeWithRecursively(node, outerBlock, this);
 	}
 
 	@Override

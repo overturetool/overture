@@ -138,9 +138,7 @@ public class FunctionValueVisitor extends DepthFirstAnalysisAdaptor
 		classExp.setType(classType);;
 		classExp.getMethods().add(lambdaDecl);
 		
-		transformationAssistant.replaceNodeWith(node, classExp);
-		
-		classExp.apply(this);
+		transformationAssistant.replaceNodeWithRecursively(node, classExp, this);
 	}
 	
 	private AInterfaceDeclCG consInterface(AMethodTypeCG methodType)
