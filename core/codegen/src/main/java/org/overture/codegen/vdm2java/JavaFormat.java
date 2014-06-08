@@ -21,6 +21,7 @@ import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
+import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AEnumMapExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AExternalExpCG;
@@ -283,7 +284,7 @@ public class JavaFormat
 		return (!(node instanceof SNumericBinaryExpCG)
 				&& !(node instanceof SLiteralExpCG) 
 				&& !(node instanceof AIsolationUnaryExpCG)
-				&& !(node instanceof SUnaryExpCG))
+				&& (!(node instanceof SUnaryExpCG) || node instanceof ACastUnaryExpCG))
 				|| node instanceof AHeadUnaryExpCG;
 	}
 
