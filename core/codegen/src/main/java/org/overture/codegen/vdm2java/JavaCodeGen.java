@@ -24,15 +24,14 @@ import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.ir.IRClassDeclStatus;
-import org.overture.codegen.ir.IRExpStatus;
 import org.overture.codegen.ir.IRConstants;
+import org.overture.codegen.ir.IRExpStatus;
 import org.overture.codegen.ir.IRGenerator;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
-import org.overture.codegen.merging.TemplateCallable;
 import org.overture.codegen.merging.TemplateStructure;
 import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.trans.TransformationVisitor;
@@ -59,18 +58,8 @@ public class JavaCodeGen
 		//Classes used from the Java standard library
 		"Utils", "Record","Long", "Double", "Character", "String", "List", "Set"
 	};
-
-	private static final String JAVA_FORMAT_KEY = "JavaFormat";
-	private static final String IR_ANALYSIS_KEY = "IRAnalysis";
-	private static final String TEMP_VAR = "TempVar";
-	private static final String VALUE_SEMANTICS = "ValueSemantics";
 	
 	public final static TempVarPrefixes varPrefixes = new TempVarPrefixes();
-	
-	public final static TemplateCallable[] constructTemplateCallables(Object javaFormat, Object irAnalysis, Object tempVarPrefixes, Object valueSemantics)
-	{
-		return new TemplateCallable[]{new TemplateCallable(JAVA_FORMAT_KEY, javaFormat), new TemplateCallable(IR_ANALYSIS_KEY, irAnalysis), new TemplateCallable(TEMP_VAR, tempVarPrefixes), new TemplateCallable(VALUE_SEMANTICS,  valueSemantics)};
-	}
 	
 	private IRGenerator generator;
 	private IRInfo irInfo;
