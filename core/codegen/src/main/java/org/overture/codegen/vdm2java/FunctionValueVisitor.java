@@ -14,6 +14,7 @@ import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.expressions.AAnonymousClassExpCG;
 import org.overture.codegen.cgast.expressions.ALambdaExpCG;
+import org.overture.codegen.cgast.expressions.AMethodInstantiationExpCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
@@ -61,6 +62,9 @@ public class FunctionValueVisitor extends DepthFirstAnalysisAdaptor
 			return;
 		
 		if(node.parent() instanceof SVarExpCG)
+			return;
+		
+		if(node.parent() instanceof AMethodInstantiationExpCG)
 			return;
 		
 		PType vdmType = node.getEquivalent();
