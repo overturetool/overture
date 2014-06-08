@@ -47,6 +47,7 @@ import org.overture.codegen.cgast.types.ASetSetTypeCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.cgast.types.ATokenBasicTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
+import org.overture.codegen.cgast.types.AUnionTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.ir.IRInfo;
 
@@ -56,7 +57,17 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 	public STypeCG caseAUnionType(AUnionType node, IRInfo question)
 			throws AnalysisException
 	{
-		return new AObjectTypeCG();
+		LinkedList<PType> types = node.getTypes();
+		
+		AUnionTypeCG unionTypeCg = new AUnionTypeCG();
+		
+		for(PType type : types)
+		{
+			STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+			unionTypeCg.getTypes().add(typeCg);
+		}
+		
+		return unionTypeCg;
 	}
 	
 	@Override

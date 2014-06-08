@@ -340,6 +340,7 @@ CG {-> package='org.overture.codegen.cgast'
     |	#basicTypeWrappers
     |	{error}
     |	{interface} [types]:CG.#type* [name]:java_String
+    |	{union} [types]:CG.#type*
     ;
     
 externalType {-> package='org.overture.codegen.cgast.utils'}

@@ -152,6 +152,7 @@ import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.cgast.types.ATokenBasicTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
+import org.overture.codegen.cgast.types.AUnionTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.utils.GeneralUtils;
 
@@ -212,6 +213,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AMethodTypeCG.class, templateStructure.TYPE_PATH + "Method");
 		
 		nodeTemplateFileNames.put(AInterfaceTypeCG.class, templateStructure.TYPE_PATH + "Interface");
+		
+		nodeTemplateFileNames.put(AUnionTypeCG.class, templateStructure.TYPE_PATH + "Union");
 		
 		//Basic type wrappers
 		
