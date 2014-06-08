@@ -77,7 +77,7 @@ public class AUnionTypeAssistant
 				{
 				SNumericBasicType nt = af.createPTypeAssistant().getNumeric(t);
 
-					if (SNumericBasicTypeAssistant.getWeight(nt) > SNumericBasicTypeAssistant.getWeight(type.getNumType()))
+					if (af.createSNumericBasicTypeAssistant().getWeight(nt) > af.createSNumericBasicTypeAssistant().getWeight(type.getNumType()))
 					{
 						type.setNumType(nt);
 					}
