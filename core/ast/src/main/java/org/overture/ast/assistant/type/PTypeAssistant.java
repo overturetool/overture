@@ -29,7 +29,7 @@ public class PTypeAssistant
 		}
 	}
 
-	public static SNumericBasicType getNumeric(PType type)
+	public SNumericBasicType getNumeric(PType type)
 	{
 		try
 		{
