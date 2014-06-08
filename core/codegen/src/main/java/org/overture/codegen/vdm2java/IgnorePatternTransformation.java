@@ -6,10 +6,10 @@ import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.AIgnorePatternCG;
 import org.overture.codegen.transform.BaseTransformationAssistant;
 
-public class IgnorePatternTransformation  extends DepthFirstAnalysisAdaptor
+public class IgnorePatternTransformation extends DepthFirstAnalysisAdaptor
 {
 	private int counter;
-	public BaseTransformationAssistant baseAssistant;
+	private BaseTransformationAssistant baseAssistant;
 	private final String NAME_PREFIX;
 	
 	public IgnorePatternTransformation(BaseTransformationAssistant baseAssistant, String namePrefix)
