@@ -61,6 +61,7 @@ import org.overture.codegen.ir.IRAnalysis;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.merging.MergeVisitor;
+import org.overture.codegen.merging.TemplateCallable;
 import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
 import org.overture.codegen.utils.GeneralUtils;
@@ -91,7 +92,8 @@ public class JavaFormat
 	{
 		this.valueSemantics = new JavaValueSemantics(this);
 		this.recordCreator = new JavaRecordCreator(this);
-		this.mergeVisitor = new MergeVisitor(JavaCodeGen.JAVA_TEMPLATE_STRUCTURE, TemplateCallableManager.constructTemplateCallables(this, IRAnalysis.class, varPrefixes, valueSemantics, recordCreator));
+		TemplateCallable[] templateCallables = TemplateCallableManager.constructTemplateCallables(this, IRAnalysis.class, varPrefixes, valueSemantics, recordCreator);
+		this.mergeVisitor = new MergeVisitor(JavaCodeGen.JAVA_TEMPLATE_STRUCTURE, templateCallables);
 		this.functionValueAssistant = null;
 		this.info = info;
 	}
@@ -126,6 +128,29 @@ public class JavaFormat
 		valueSemantics.setJavaSettings(javaSettings);
 	}
 	
+	public void init()
+	{
+		mergeVisitor.dropMergeErrors();
+	}
+	
+	public void setClasses(List<AClassDeclCG> classes)
+	{
+		this.classes = classes != null ? classes : new LinkedList<AClassDeclCG>();
+	}
+	
+	public void clearClasses()
+	{
+		if(classes != null)
+			classes.clear();
+		else
+			classes = new LinkedList<AClassDeclCG>();
+	}
+	
+	public MergeVisitor getMergeVisitor()
+	{
+		return mergeVisitor;
+	}
+	
 	public String format(AMethodTypeCG methodType) throws AnalysisException
 	{
 		final String OBJ = "Object";
@@ -151,29 +176,6 @@ public class JavaFormat
 		methodClass.getTypes().add(methodType.getResult().clone());
 		
 		return methodClass != null ? format(methodClass) : OBJ;
-	}
-	
-	public void init()
-	{
-		mergeVisitor.dropMergeErrors();
-	}
-	
-	public void setClasses(List<AClassDeclCG> classes)
-	{
-		this.classes = classes != null ? classes : new LinkedList<AClassDeclCG>();
-	}
-	
-	public void clearClasses()
-	{
-		if(classes != null)
-			classes.clear();
-		else
-			classes = new LinkedList<AClassDeclCG>();
-	}
-	
-	public MergeVisitor getMergeVisitor()
-	{
-		return mergeVisitor;
 	}
 	
 	public String format(INode node) throws AnalysisException
