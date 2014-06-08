@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.overture.ast.types.PType;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SObjectDesignatorCG;
@@ -73,8 +74,10 @@ import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.constants.TempVarPrefixes;
 import org.overture.codegen.ir.IRAnalysis;
 import org.overture.codegen.ir.IRInfo;
+import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.utils.GeneralUtils;
+import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class JavaFormat
 {
@@ -204,19 +207,40 @@ public class JavaFormat
 		return writer.toString() + getNumberDereference(node, ignoreContext);
 	}
 	
-	private static String findNumberDereferenceCall(STypeCG type)
-	{
+	private String findNumberDereferenceCall(STypeCG type)
+	{	
+		if(type == null)
+		{
+			return "";
+		}
+		
+		final String DOUBLE_VALUE = ".doubleValue()";
+		final String LONG_VALUE = ".longValue()";
+		
 		if (type instanceof ARealNumericBasicTypeCG
 				|| type instanceof ARealBasicTypeWrappersTypeCG)
 		{
-			return ".doubleValue()";
+			return DOUBLE_VALUE;
 		} else if (type instanceof AIntNumericBasicTypeCG
 				|| type instanceof AIntBasicTypeWrappersTypeCG)
 		{
-			return ".longValue()";
+			return LONG_VALUE;
 		}
 		else
 		{
+			PTypeAssistantTC typeAssistant = info.getTcFactory().createPTypeAssistant();
+			SourceNode sourceNode = type.getSourceNode();
+			
+			if (sourceNode != null && !(sourceNode.getVdmNode() instanceof PType))
+			{
+				PType vdmType = (PType) sourceNode.getVdmNode();
+
+				if (typeAssistant.isNumeric(vdmType))
+				{
+					return DOUBLE_VALUE;
+				}
+			}
+			
 			return "";
 		}
 	}
@@ -247,7 +271,7 @@ public class JavaFormat
 		return stateDesignatorStr + "." + ADD_ELEMENT_TO_MAP + "(" + domValStr + ", " + rngValStr + ")";
 	}
 	
-	private static String getNumberDereference(INode node, boolean ignoreContext)
+	private String getNumberDereference(INode node, boolean ignoreContext)
 	{
 		if(ignoreContext && node instanceof SExpCG)
 		{
