@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SObjectDesignatorCG;
@@ -72,9 +71,9 @@ import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.constants.TempVarPrefixes;
 import org.overture.codegen.ir.IRAnalysis;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.utils.GeneralUtils;
-import org.overture.codegen.utils.ITempVarGen;
 
 public class JavaFormat
 {
@@ -95,21 +94,25 @@ public class JavaFormat
 	private static final String JAVA_INT = "int";
 	
 	private List<AClassDeclCG> classes;
-	private ITempVarGen tempVarNameGen;
-	private AssistantManager assistantManager;
-	private MergeVisitor mergeVisitor;
-	private FunctionValueAssistant functionValueAssistant;
+
+	private IRInfo info;
 	
+	private FunctionValueAssistant functionValueAssistant;
+	private MergeVisitor mergeVisitor;
 	private ValueSemantics valueSemantics;
 	
-	public JavaFormat(TempVarPrefixes varPrefixes,ITempVarGen tempVarNameGen, AssistantManager assistantManager)
+	public JavaFormat(TempVarPrefixes varPrefixes, IRInfo info)
 	{
-		this.tempVarNameGen = tempVarNameGen;
-		this.assistantManager = assistantManager;
 		this.valueSemantics = new ValueSemantics(this);
-		
 		this.mergeVisitor = new MergeVisitor(JavaCodeGen.JAVA_TEMPLATE_STRUCTURE, JavaCodeGen.constructTemplateCallables(this, IRAnalysis.class, varPrefixes, valueSemantics));
 		this.functionValueAssistant = null;
+		
+		this.info = info;
+	}
+	
+	public IRInfo getIrInfo()
+	{
+		return info;
 	}
 	
 	public void setFunctionValueAssistant(FunctionValueAssistant functionValueAssistant)
@@ -120,11 +123,6 @@ public class JavaFormat
 	public void clearFunctionValueAssistant()
 	{
 		this.functionValueAssistant = null;
-	}
-	
-	public AssistantManager getAssistantManager()
-	{
-		return assistantManager;
 	}
 	
 	public List<AClassDeclCG> getClasses()
@@ -441,7 +439,7 @@ public class JavaFormat
 
 			assignment.setTarget(id);
 			
-			if (!assistantManager.getTypeAssistant().isBasicType(varExp.getType()))
+			if (!info.getAssistantManager().getTypeAssistant().isBasicType(varExp.getType()))
 			{
 				//Example: b = (_b != null) ? _b.clone() : null;
 				ATernaryIfExpCG checkedAssignment = new ATernaryIfExpCG();
@@ -473,8 +471,8 @@ public class JavaFormat
 		
 		STypeCG firstType = types.get(0);
 		
-		if(assistantManager.getTypeAssistant().isBasicType(firstType))
-			firstType = assistantManager.getTypeAssistant().getWrapperType((SBasicTypeCG) firstType);
+		if(info.getAssistantManager().getTypeAssistant().isBasicType(firstType))
+			firstType = info.getAssistantManager().getTypeAssistant().getWrapperType((SBasicTypeCG) firstType);
 		
 		writer.append(format(firstType));
 		
@@ -482,8 +480,8 @@ public class JavaFormat
 		{
 			STypeCG currentType = types.get(i);
 			
-			if(assistantManager.getTypeAssistant().isBasicType(currentType))
-				currentType = assistantManager.getTypeAssistant().getWrapperType((SBasicTypeCG) currentType);
+			if(info.getAssistantManager().getTypeAssistant().isBasicType(currentType))
+				currentType = info.getAssistantManager().getTypeAssistant().getWrapperType((SBasicTypeCG) currentType);
 			
 			writer.append(", " + format(currentType));
 		}
@@ -791,7 +789,7 @@ public class JavaFormat
 			ifStm.setIfExp(negated);
 			
 
-			returnTypeComp.setExp(assistantManager.getExpAssistant().consBoolLiteral(false));
+			returnTypeComp.setExp(info.getAssistantManager().getExpAssistant().consBoolLiteral(false));
 			ifStm.setThenStm(returnTypeComp);
 
 			// If the inital check is passed we can safely cast the formal parameter
@@ -971,7 +969,7 @@ public class JavaFormat
 	
 	public String nextVarName(String prefix)
 	{
-		return tempVarNameGen.nextVarName(prefix);
+		return info.getTempVarNameGen().nextVarName(prefix);
 	}
 	
 	public STypeCG findElementType(AApplyObjectDesignatorCG designator)

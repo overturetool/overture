@@ -95,7 +95,7 @@ public class ValueSemantics
 			String memberName = exp.getMemberName();
 			
 			List<AClassDeclCG> classes = javaFormat.getClasses();
-			AssistantManager assistantManager = javaFormat.getAssistantManager();
+			AssistantManager assistantManager = javaFormat.getIrInfo().getAssistantManager();
 			
 			AFieldDeclCG memberField = assistantManager.getDeclAssistant().getFieldDecl(classes, recordType, memberName);
 			

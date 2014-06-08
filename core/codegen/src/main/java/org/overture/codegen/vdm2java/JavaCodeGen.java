@@ -42,7 +42,6 @@ import org.overture.codegen.transform.iterator.JavaLanguageIterator;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedModule;
-import org.overture.codegen.utils.ITempVarGen;
 
 public class JavaCodeGen
 {
@@ -71,8 +70,6 @@ public class JavaCodeGen
 	
 	private IRGenerator generator;
 	private IRInfo irInfo;
-	private ITempVarGen tempVarNameGen;
-	private AssistantManager assistantManager;
 	private JavaFormat javaFormat;
 	
 	public static final String IGNORE_PATTERN_NAME_PREFIX = "ignore_";
@@ -103,9 +100,7 @@ public class JavaCodeGen
 		initVelocity();
 		this.generator = new IRGenerator(log);
 		this.irInfo = generator.getIRInfo();
-		this.tempVarNameGen = irInfo.getTempVarNameGen();
-		this.assistantManager = irInfo.getAssistantManager();
-		this.javaFormat = new JavaFormat(varPrefixes, tempVarNameGen, assistantManager);
+		this.javaFormat = new JavaFormat(varPrefixes, irInfo);
 	}
 	
 	public void setSettings(IRSettings settings)
