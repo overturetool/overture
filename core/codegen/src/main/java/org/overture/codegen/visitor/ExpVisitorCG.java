@@ -582,17 +582,21 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			IRInfo question) throws AnalysisException
 	{
 		String name = node.getExpdef().getName().getName();
-		LinkedList<PType> actualTypes = node.getActualTypes();
+		PType type = node.getType();
+		
+		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 		
 		AMethodInstantiationExpCG methodInst = new AMethodInstantiationExpCG();
-		methodInst.setType(null);
-		methodInst.setName(name);
 		
-		for (PType type : actualTypes)
+		LinkedList<PType> actualTypes = node.getActualTypes();
+		for (PType actualType : actualTypes)
 		{
-			STypeCG typeCG = type.apply(question.getTypeVisitor(), question);
-			methodInst.getActualTypes().add(typeCG);
+			STypeCG actualTypeCg = actualType.apply(question.getTypeVisitor(), question);
+			methodInst.getActualTypes().add(actualTypeCg);
 		}
+		
+		methodInst.setName(name);
+		methodInst.setType(typeCg);
 		
 		return methodInst;
 	}
