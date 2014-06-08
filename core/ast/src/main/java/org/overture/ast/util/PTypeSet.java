@@ -3,6 +3,8 @@ package org.overture.ast.util;
 import java.util.List;
 import java.util.TreeSet;
 
+import org.overture.ast.assistant.AstAssistantFactory;
+import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.assistant.type.PTypeAssistant;
 import org.overture.ast.assistant.type.SNumericBasicTypeAssistant;
@@ -16,6 +18,9 @@ import org.overture.ast.types.SNumericBasicType;
 @SuppressWarnings("serial")
 public class PTypeSet extends TreeSet<PType>
 {
+	// Create a AstAssistantFactory here because I think is the basis of calls.
+	//I don't think it's possible to pass it as an argument to the add method. gkanos
+	public final static IAstAssistantFactory assistantFactory = new AstAssistantFactory();
 
 	public PTypeSet()
 	{
@@ -74,7 +79,7 @@ public class PTypeSet extends TreeSet<PType>
 				if (x instanceof SNumericBasicType)
 				{
 					//this is the only call that causes problem. gkanos
-					if (SNumericBasicTypeAssistant.getWeight(PTypeAssistant.getNumeric(x)) < SNumericBasicTypeAssistant.getWeight(PTypeAssistant.getNumeric(t)))
+					if (assistantFactory.createSNumericBasicTypeAssistant().getWeight(assistantFactory.createPTypeAssistant().getNumeric(x)) < assistantFactory.createSNumericBasicTypeAssistant().getWeight(assistantFactory.createPTypeAssistant().getNumeric(t)))
 					{
 						remove(x);
 						break;
