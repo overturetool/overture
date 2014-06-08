@@ -1,79 +1,90 @@
 package org.overture.codegen.visitor;
 
+import org.overture.codegen.cgast.SBindCG;
+import org.overture.codegen.cgast.SDeclCG;
+import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.SMultipleBindCG;
+import org.overture.codegen.cgast.SObjectDesignatorCG;
+import org.overture.codegen.cgast.SPatternCG;
+import org.overture.codegen.cgast.SStateDesignatorCG;
+import org.overture.codegen.cgast.SStmCG;
+import org.overture.codegen.cgast.STypeCG;
+import org.overture.codegen.cgast.declarations.AClassDeclCG;
+
 
 public class VisitorManager
 {
-	private ClassVisitorCG classVisitor;
-	private DeclVisitorCG declVisitor;
-	private ExpVisitorCG expVisitor;
-	private TypeVisitorCG typeVisitor;
-	private StmVisitorCG stmVisitor;
-	private StateDesignatorVisitorCG stateDesignatorVisitor;
-	private ObjectDesignatorVisitorCG objectDesignatorVisitor;
-	private MultipleBindVisitorCG multipleBindVisitor;
-	private BindVisitorCG bindVisitor;
-	private PatternVisitorCG patternVisitor;
+	private CGVisitor<AClassDeclCG> classVisitor;
+	private CGVisitor<SDeclCG> declVisitor;
+	private CGVisitor<SExpCG> expVisitor;
+	private CGVisitor<STypeCG> typeVisitor;
+	private CGVisitor<SStmCG> stmVisitor;
+	private CGVisitor<SStateDesignatorCG> stateDesignatorVisitor;
+	private CGVisitor<SObjectDesignatorCG> objectDesignatorVisitor;
+	private CGVisitor<SMultipleBindCG> multipleBindVisitor;
+	private CGVisitor<SBindCG> bindVisitor;
+	private CGVisitor<SPatternCG> patternVisitor;
 	
 	public VisitorManager()
 	{
-		this.classVisitor = new ClassVisitorCG();
-		this.declVisitor = new DeclVisitorCG();
-		this.expVisitor = new ExpVisitorCG();
-		this.typeVisitor = new TypeVisitorCG();
-		this.stmVisitor = new StmVisitorCG();
-		this.stateDesignatorVisitor = new StateDesignatorVisitorCG();
-		this.objectDesignatorVisitor = new ObjectDesignatorVisitorCG();
-		this.multipleBindVisitor = new MultipleBindVisitorCG();
-		this.bindVisitor = new BindVisitorCG();
-		this.patternVisitor = new PatternVisitorCG();
+		this.classVisitor = new CGVisitor<AClassDeclCG>(new ClassVisitorCG());
+		this.declVisitor = new CGVisitor<SDeclCG>(new DeclVisitorCG());
+		this.expVisitor = new CGVisitor<SExpCG>(new ExpVisitorCG());
+		this.typeVisitor = new CGVisitor<STypeCG>(new TypeVisitorCG());
+		this.stmVisitor = new CGVisitor<SStmCG>(new StmVisitorCG());
+		this.stateDesignatorVisitor = new CGVisitor<SStateDesignatorCG>(new StateDesignatorVisitorCG());
+		this.objectDesignatorVisitor = new CGVisitor<SObjectDesignatorCG>(new ObjectDesignatorVisitorCG());
+		this.multipleBindVisitor = new CGVisitor<SMultipleBindCG>(new MultipleBindVisitorCG());
+		this.bindVisitor =  new CGVisitor<SBindCG>(new BindVisitorCG());
+		this.patternVisitor = new CGVisitor<SPatternCG>(new PatternVisitorCG());
 	}
 	
-	public ClassVisitorCG getClassVisitor()
+	public CGVisitor<AClassDeclCG> getClassVisitor()
 	{
 		return classVisitor;
 	}
 	
-	public DeclVisitorCG getDeclVisitor()
+	public CGVisitor<SDeclCG> getDeclVisitor()
 	{
 		return declVisitor;
 	}
 	
-	public ExpVisitorCG getExpVisitor()
+	public CGVisitor<SExpCG> getExpVisitor()
 	{
 		return expVisitor;
 	}
 	
-	public TypeVisitorCG getTypeVisitor()
+	public CGVisitor<STypeCG> getTypeVisitor()
 	{
 		return typeVisitor;
 	}
 	
-	public StmVisitorCG getStmVisitor()
+	public CGVisitor<SStmCG> getStmVisitor()
 	{
 		return stmVisitor;
 	}
 	
-	public StateDesignatorVisitorCG getStateDesignatorVisitor()
+	public CGVisitor<SStateDesignatorCG> getStateDesignatorVisitor()
 	{
 		return stateDesignatorVisitor;
 	}
 	
-	public ObjectDesignatorVisitorCG getObjectDesignatorVisitor()
+	public CGVisitor<SObjectDesignatorCG> getObjectDesignatorVisitor()
 	{
 		return objectDesignatorVisitor;
 	}
 	
-	public MultipleBindVisitorCG getMultipleBindVisitor()
+	public CGVisitor<SMultipleBindCG> getMultipleBindVisitor()
 	{
 		return multipleBindVisitor;
 	}
 	
-	public BindVisitorCG getBindVisitor()
+	public CGVisitor<SBindCG> getBindVisitor()
 	{
 		return bindVisitor;
 	}
 	
-	public PatternVisitorCG getPatternVisitor()
+	public CGVisitor<SPatternCG> getPatternVisitor()
 	{
 		return patternVisitor;
 	}

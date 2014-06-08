@@ -12,7 +12,7 @@ Tokens
  */
  
   vdmType = 'java:org.overture.ast.types.PType';
-  vdmNode = 'java:java.lang.Cloneable';
+  SourceNode = 'java:org.overture.codegen.ir.SourceNode';
 
   
   //Java
@@ -28,7 +28,7 @@ Abstract Syntax Tree
 /* This section declares the AST by giving root nodes and their possible sub classe */
 
 CG {-> package='org.overture.codegen.cgast'
-	| [vdmNode]:vdmNode}
+	| [sourceNode]:SourceNode}
 	= #pattern
 	| #bind
 	| #multipleBind

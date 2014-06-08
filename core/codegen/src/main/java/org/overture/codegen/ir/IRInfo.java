@@ -17,6 +17,16 @@ import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.assistant.LocationAssistantCG;
 import org.overture.codegen.assistant.StmAssistantCG;
 import org.overture.codegen.assistant.TypeAssistantCG;
+import org.overture.codegen.cgast.SBindCG;
+import org.overture.codegen.cgast.SDeclCG;
+import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.SMultipleBindCG;
+import org.overture.codegen.cgast.SObjectDesignatorCG;
+import org.overture.codegen.cgast.SPatternCG;
+import org.overture.codegen.cgast.SStateDesignatorCG;
+import org.overture.codegen.cgast.SStmCG;
+import org.overture.codegen.cgast.STypeCG;
+import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
@@ -25,16 +35,7 @@ import org.overture.codegen.constants.IRConstants;
 import org.overture.codegen.utils.AnalysisExceptionCG;
 import org.overture.codegen.utils.ITempVarGen;
 import org.overture.codegen.utils.TempVarNameGen;
-import org.overture.codegen.visitor.BindVisitorCG;
-import org.overture.codegen.visitor.ClassVisitorCG;
-import org.overture.codegen.visitor.DeclVisitorCG;
-import org.overture.codegen.visitor.ExpVisitorCG;
-import org.overture.codegen.visitor.MultipleBindVisitorCG;
-import org.overture.codegen.visitor.ObjectDesignatorVisitorCG;
-import org.overture.codegen.visitor.PatternVisitorCG;
-import org.overture.codegen.visitor.StateDesignatorVisitorCG;
-import org.overture.codegen.visitor.StmVisitorCG;
-import org.overture.codegen.visitor.TypeVisitorCG;
+import org.overture.codegen.visitor.CGVisitor;
 import org.overture.codegen.visitor.VisitorManager;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 
@@ -80,52 +81,52 @@ public class IRInfo
 		return assistantManager;
 	}
 
-	public ClassVisitorCG getClassVisitor()
+	public CGVisitor<AClassDeclCG> getClassVisitor()
 	{
 		return visitorManager.getClassVisitor();
 	}
 	
-	public DeclVisitorCG getDeclVisitor()
+	public CGVisitor<SDeclCG> getDeclVisitor()
 	{
 		return visitorManager.getDeclVisitor();
 	}
 	
-	public ExpVisitorCG getExpVisitor()
+	public CGVisitor<SExpCG> getExpVisitor()
 	{
 		return visitorManager.getExpVisitor();
 	}
 	
-	public TypeVisitorCG getTypeVisitor()
+	public CGVisitor<STypeCG> getTypeVisitor()
 	{
 		return visitorManager.getTypeVisitor();
 	}
 	
-	public StmVisitorCG getStmVisitor()
+	public CGVisitor<SStmCG> getStmVisitor()
 	{
 		return visitorManager.getStmVisitor();
 	}
 	
-	public StateDesignatorVisitorCG getStateDesignatorVisitor()
+	public CGVisitor<SStateDesignatorCG> getStateDesignatorVisitor()
 	{
 		return visitorManager.getStateDesignatorVisitor();
 	}
 	
-	public ObjectDesignatorVisitorCG getObjectDesignatorVisitor()
+	public CGVisitor<SObjectDesignatorCG> getObjectDesignatorVisitor()
 	{
 		return visitorManager.getObjectDesignatorVisitor();
 	}
 	
-	public MultipleBindVisitorCG getMultipleBindVisitor()
+	public CGVisitor<SMultipleBindCG> getMultipleBindVisitor()
 	{
 		return visitorManager.getMultipleBindVisitor();
 	}
 	
-	public BindVisitorCG getBindVisitor()
+	public CGVisitor<SBindCG> getBindVisitor()
 	{
 		return visitorManager.getBindVisitor();
 	}
 	
-	public PatternVisitorCG getPatternVisitor()
+	public CGVisitor<SPatternCG> getPatternVisitor()
 	{
 		return visitorManager.getPatternVisitor();
 	}
