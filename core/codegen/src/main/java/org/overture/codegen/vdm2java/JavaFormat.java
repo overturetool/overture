@@ -71,11 +71,12 @@ import org.overture.codegen.cgast.types.SBasicTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
-import org.overture.codegen.constants.TempVarPrefixes;
 import org.overture.codegen.ir.IRAnalysis;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.merging.MergeVisitor;
+import org.overture.codegen.trans.TempVarPrefixes;
+import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
@@ -103,11 +104,11 @@ public class JavaFormat
 	
 	private FunctionValueAssistant functionValueAssistant;
 	private MergeVisitor mergeVisitor;
-	private ValueSemantics valueSemantics;
+	private JavaValueSemantics valueSemantics;
 	
 	public JavaFormat(TempVarPrefixes varPrefixes, IRInfo info)
 	{
-		this.valueSemantics = new ValueSemantics(this);
+		this.valueSemantics = new JavaValueSemantics(this);
 		this.mergeVisitor = new MergeVisitor(JavaCodeGen.JAVA_TEMPLATE_STRUCTURE, JavaCodeGen.constructTemplateCallables(this, IRAnalysis.class, varPrefixes, valueSemantics));
 		this.functionValueAssistant = null;
 		

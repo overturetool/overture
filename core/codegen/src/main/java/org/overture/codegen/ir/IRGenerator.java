@@ -22,24 +22,24 @@ public class IRGenerator
 		Logger.setLog(log);
 	}
 			
-	public ClassDeclStatus generateFrom(SClassDefinition classDef) throws AnalysisException
+	public IRClassDeclStatus generateFrom(SClassDefinition classDef) throws AnalysisException
 	{
 		codeGenInfo.clearNodes();
 		
 		AClassDeclCG classCg = classDef.apply(codeGenInfo.getClassVisitor(), codeGenInfo);
 		Set<NodeInfo> unsupportedNodes = copyGetUnsupportedNodes();
 		
-		return new ClassDeclStatus(classDef.getName().getName(), classCg, unsupportedNodes);
+		return new IRClassDeclStatus(classDef.getName().getName(), classCg, unsupportedNodes);
 	}
 	
-	public ExpStatus generateFrom(PExp exp) throws AnalysisException
+	public IRExpStatus generateFrom(PExp exp) throws AnalysisException
 	{
 		codeGenInfo.clearNodes();
 		
 		SExpCG expCg = exp.apply(codeGenInfo.getExpVisitor(), codeGenInfo);
 		Set<NodeInfo> unsupportedNodes = copyGetUnsupportedNodes();
 		
-		return new ExpStatus(expCg, unsupportedNodes);
+		return new IRExpStatus(expCg, unsupportedNodes);
 	}
 	
 	private Set<NodeInfo> copyGetUnsupportedNodes()

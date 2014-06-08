@@ -23,10 +23,9 @@ import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
-import org.overture.codegen.constants.IRConstants;
-import org.overture.codegen.constants.TempVarPrefixes;
-import org.overture.codegen.ir.ClassDeclStatus;
-import org.overture.codegen.ir.ExpStatus;
+import org.overture.codegen.ir.IRClassDeclStatus;
+import org.overture.codegen.ir.IRExpStatus;
+import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRGenerator;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.IRSettings;
@@ -35,10 +34,15 @@ import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateCallable;
 import org.overture.codegen.merging.TemplateStructure;
-import org.overture.codegen.transform.TransformationAssistantCG;
-import org.overture.codegen.transform.TransformationVisitor;
-import org.overture.codegen.transform.iterator.ILanguageIterator;
-import org.overture.codegen.transform.iterator.JavaLanguageIterator;
+import org.overture.codegen.trans.TempVarPrefixes;
+import org.overture.codegen.trans.TransformationVisitor;
+import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
+import org.overture.codegen.trans.funcvalues.FunctionValueVisitor;
+import org.overture.codegen.trans.iterator.ILanguageIterator;
+import org.overture.codegen.trans.iterator.JavaLanguageIterator;
+import org.overture.codegen.trans.patterns.IgnorePatternTransformation;
+import org.overture.codegen.trans.uniontypes.UnionTypeTransformation;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedModule;
@@ -166,7 +170,7 @@ public class JavaCodeGen
 		validateVdmModelNames(toBeGenerated);
 		validateVdmModelingConstructs(toBeGenerated);
 
-		List<ClassDeclStatus> statuses = new ArrayList<ClassDeclStatus>();
+		List<IRClassDeclStatus> statuses = new ArrayList<IRClassDeclStatus>();
 
 		for (SClassDefinition classDef : toBeGenerated)
 		{
@@ -192,7 +196,7 @@ public class JavaCodeGen
 		TransformationVisitor transVisitor = new TransformationVisitor(irInfo, varPrefixes, transformationAssistant, langIterator);
 		
 		List<GeneratedModule> generated = new ArrayList<GeneratedModule>();
-		for (ClassDeclStatus status : statuses)
+		for (IRClassDeclStatus status : statuses)
 		{
 			try
 			{
@@ -224,7 +228,7 @@ public class JavaCodeGen
 		FunctionValueAssistant functionValue = funcValVisitor.getFunctionValueAssistant();
 		javaFormat.setFunctionValueAssistant(functionValue);
 		
-		for (ClassDeclStatus status : statuses)
+		for (IRClassDeclStatus status : statuses)
 		{
 			if(!status.canBeGenerated())
 				continue;
@@ -283,11 +287,11 @@ public class JavaCodeGen
 		return generated;
 	}
 
-	private List<AClassDeclCG> getClassDecls(List<ClassDeclStatus> statuses)
+	private List<AClassDeclCG> getClassDecls(List<IRClassDeclStatus> statuses)
 	{
 		List<AClassDeclCG> classDecls = new LinkedList<AClassDeclCG>();
 
-		for (ClassDeclStatus status : statuses)
+		for (IRClassDeclStatus status : statuses)
 		{
 			classDecls.add(status.getClassCg());
 		}
@@ -299,7 +303,7 @@ public class JavaCodeGen
 	{
 		// There is no name validation here.
 
-		ExpStatus expStatus = generator.generateFrom(exp);
+		IRExpStatus expStatus = generator.generateFrom(exp);
 
 		StringWriter writer = new StringWriter();
 
