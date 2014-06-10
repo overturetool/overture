@@ -44,12 +44,11 @@ public class VariableSubTest {
 		es = new VariableSubVisitor();
 	
 		AVariableExp var = new AVariableExp();
-		var.setName(new LexNameToken("", "a", null));
 
 		AIntLiteralExp lit = new AIntLiteralExp();
 		lit.setValue(new LexIntegerToken(1, null));
 		
-		sub = new Substitution(var,lit);
+		sub = new Substitution(new LexNameToken("", "a", null),lit);
 	}
 
 	@Test

@@ -5,53 +5,53 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
 
 /**
- * A class for holding variable substitutions to be performed at a later date
- * by the 
+ * A class for holding variable substitutions to be performed at a later date by the
  * 
  * @author ldc
- * 
  */
-public class Substitution {
+public class Substitution
+{
 
-	String var;
-	PExp value;
+	String original;
+	PExp newExp;
 
-	public Substitution(AVariableExp var, PExp value) {
-		super();
-		this.var = var.getName().getName();
-		this.value = value;
+	public Substitution(ILexNameToken var, PExp value)
+	{
+		this.original = var.getName();
+		this.newExp = value.clone();
 	}
 
-	public Substitution(ILexNameToken var, PExp value) {
-		super();
-		this.var = var.getName();
-		this.value = value.clone();
-	}
-	
-
-	public boolean containsKey(AVariableExp key) {
-		return var.equals(key.getName().getName());
+	public Substitution(String original, PExp exp)
+	{
+		this.original = original;
+		this.newExp = exp.clone();
 	}
 
-	public PExp get(AVariableExp key) {
-		if (var.equals(key.getName().getName())) {
-			return value;
+	public boolean containsKey(AVariableExp key)
+	{
+		return original.equals(key.getName().getName());
+	}
+
+	public PExp get(AVariableExp key)
+	{
+		if (original.equals(key.getName().getName()))
+		{
+			return newExp;
 		}
 		return null;
 
 	}
 
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		StringBuilder sb = new StringBuilder();
 		sb.append("[");
-		sb.append(var);
+		sb.append(original);
 		sb.append("/");
-		sb.append(value.toString());
+		sb.append(newExp.toString());
 		sb.append("]");
 		return sb.toString();
 	}
-	
-	
 
 }

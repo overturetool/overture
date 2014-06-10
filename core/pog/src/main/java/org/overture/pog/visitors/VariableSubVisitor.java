@@ -500,8 +500,7 @@ public class VariableSubVisitor extends QuestionAnswerAdaptor<Substitution, PExp
 	@Override
 	public PExp caseAPostOpExp(APostOpExp node, Substitution question)
 			throws AnalysisException {
-		// TODO Auto-generated method stub
-		return super.caseAPostOpExp(node, question);
+		return node.getPostexpression().apply(main,question);
 	}
 
 	@Override
