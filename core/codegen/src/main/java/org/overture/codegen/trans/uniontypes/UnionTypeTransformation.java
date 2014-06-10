@@ -38,13 +38,15 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		this.info = info;
 	}
 	
-	private SExpCG wrap(SExpCG exp, STypeCG castedType)
+	private SExpCG correctTypes(SExpCG exp, STypeCG castedType) throws AnalysisException
 	{
 		if(exp.getType() instanceof AUnionTypeCG && !(exp instanceof ACastUnaryExpCG))
 		{
 			ACastUnaryExpCG casted = new ACastUnaryExpCG();
 			casted.setType(castedType.clone());
 			casted.setExp(exp.clone());
+			
+			baseAssistant.replaceNodeWithRecursively(exp, casted, this);
 			
 			return casted;
 		}
@@ -75,20 +77,15 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 	{
 		STypeCG expectedType = node.getType();
 		
-		SExpCG newLeft = wrap(node.getLeft(), expectedType);
-		SExpCG newRight = wrap(node.getRight(), expectedType);
-
-		baseAssistant.replaceNodeWithRecursively(node.getLeft(), newLeft, this);
-		baseAssistant.replaceNodeWithRecursively(node.getRight(), newRight, this);
+		correctTypes(node.getLeft(), expectedType);
+		correctTypes(node.getRight(), expectedType);
 	}
 	
 	@Override
 	public void caseANotUnaryExpCG(ANotUnaryExpCG node)
 			throws AnalysisException
 	{
-		ABoolBasicTypeCG expectedType = new ABoolBasicTypeCG();
-		SExpCG newExp = wrap(node.getExp(), expectedType);
-		baseAssistant.replaceNodeWithRecursively(node.getExp(), newExp, this);
+		correctTypes(node.getExp(), new ABoolBasicTypeCG());
 	}
 	
 	@Override
@@ -117,8 +114,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		}
 		
 		STypeCG expectedType = notUnionTypedExp.getType();
-		SExpCG newUnionTypedExp = wrap(unionTypedExp, expectedType);
-		baseAssistant.replaceNodeWithRecursively(unionTypedExp, newUnionTypedExp, this);
+		correctTypes(unionTypedExp, expectedType);
 	}
 
 	@Override
@@ -126,15 +122,13 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 	{
 		ABoolBasicTypeCG expectedType = new ABoolBasicTypeCG();
 		
-		SExpCG newIfExp = wrap(node.getIfExp(), expectedType);
-		baseAssistant.replaceNodeWithRecursively(node.getIfExp(), newIfExp, this);
+		correctTypes(node.getIfExp(), expectedType);
 		
 		LinkedList<AElseIfStmCG> elseIfs = node.getElseIf();
 		
 		for(AElseIfStmCG currentElseIf : elseIfs)
 		{
-			SExpCG newExp = wrap(currentElseIf.getElseIf(), expectedType);
-			baseAssistant.replaceNodeWithRecursively(currentElseIf.getElseIf(), newExp, this);
+			correctTypes(currentElseIf.getElseIf(), expectedType);
 		}
 	}
 	
@@ -142,8 +136,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 	public void inAVarLocalDeclCG(AVarLocalDeclCG node)
 			throws AnalysisException
 	{
-		SExpCG newExp = wrap(node.getExp(), node.getType());
-		baseAssistant.replaceNodeWithRecursively(node.getExp(), newExp, this);
+		correctTypes(node.getExp(), node.getType());
 	}
 	
 	@Override
@@ -162,8 +155,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 				
 				if(typeCg instanceof SSeqTypeCG)
 				{
-					SExpCG newExp = wrap(exp, typeCg);
-					baseAssistant.replaceNodeWithRecursively(exp, newExp, this);
+					correctTypes(exp, typeCg);
 				}
 				
 			} catch (org.overture.ast.analysis.AnalysisException e)
@@ -188,8 +180,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 				
 				if(typeCg instanceof SMapTypeCG)
 				{
-					SExpCG newExp = wrap(exp, typeCg);
-					baseAssistant.replaceNodeWithRecursively(exp, newExp, this);
+					correctTypes(exp, typeCg);
 				}
 				
 			} catch (org.overture.ast.analysis.AnalysisException e)
