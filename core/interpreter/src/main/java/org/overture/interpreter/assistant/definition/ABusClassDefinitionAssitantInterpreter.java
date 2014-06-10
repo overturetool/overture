@@ -26,7 +26,7 @@ public class ABusClassDefinitionAssitantInterpreter
 		this.af = af;
 	}
 
-	public static BUSValue makeVirtualBUS(ValueSet cpus)
+	public BUSValue makeVirtualBUS(ValueSet cpus)
 	{
 		try
 		{
@@ -41,7 +41,7 @@ public class ABusClassDefinitionAssitantInterpreter
 		return null;
 	}
 
-	public static ObjectValue newInstance(ABusClassDefinition node,
+	public ObjectValue newInstance(ABusClassDefinition node,
 			PDefinition ctorDefinition, ValueList argvals, Context ctxt)
 	{
 		NameValuePairList nvpl = af.createPDefinitionListAssistant().getNamedValues(node.getDefinitions(), ctxt);

@@ -32,7 +32,6 @@ public class ValuesDefinitionLocator extends QuestionAnswerAdaptor<ObjectContext
 	public ValueList caseAAssignmentDefinition(AAssignmentDefinition def,
 			ObjectContext ctxt) throws AnalysisException
 	{
-		//return AAssignmentDefinitionAssistantInterpreter.getValues(def, ctxt);
 		return af.createPExpAssistant().getValues(def.getExpression(), ctxt);
 	}
 	
@@ -40,7 +39,6 @@ public class ValuesDefinitionLocator extends QuestionAnswerAdaptor<ObjectContext
 	public ValueList caseAEqualsDefinition(AEqualsDefinition def,
 			ObjectContext ctxt) throws AnalysisException
 	{
-		//return AEqualsDefinitionAssistantInterpreter.getValues(def, ctxt);
 		ValueList list = af.createPExpAssistant().getValues(def.getTest(), ctxt);
 
 		if (def.getSetbind() != null)
@@ -56,7 +54,6 @@ public class ValuesDefinitionLocator extends QuestionAnswerAdaptor<ObjectContext
 			AInstanceVariableDefinition def, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		//return AInstanceVariableDefinitionAssistantInterpreter.getValues(def, ctxt);
 		return af.createPExpAssistant().getValues(def.getExpression(), ctxt);
 	}
 	
@@ -64,7 +61,6 @@ public class ValuesDefinitionLocator extends QuestionAnswerAdaptor<ObjectContext
 	public ValueList caseAValueDefinition(AValueDefinition def,
 			ObjectContext ctxt) throws AnalysisException
 	{
-		//return AValueDefinitionAssistantInterpreter.getValues(def, ctxt);
 		return af.createPExpAssistant().getValues(def.getExpression(), ctxt);
 	}
 	

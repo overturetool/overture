@@ -196,7 +196,7 @@ public class PDefinitionListAssistantTC
 	public void setClassDefinition(List<PDefinition> defs,
 			SClassDefinition classDefinition)
 	{
-		PDefinitionAssistant.setClassDefinition(defs, classDefinition);
+		af.createPDefinitionAssistant().setClassDefinition(defs, classDefinition);
 
 	}
 }

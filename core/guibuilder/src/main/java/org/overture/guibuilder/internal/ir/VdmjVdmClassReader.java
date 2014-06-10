@@ -177,7 +177,7 @@ public class VdmjVdmClassReader implements IVdmClassReader
 					{
 						for (int n = 0; n < li.size(); ++n)
 						{
-							LexNameList varName = PPatternAssistantTC.getVariableNames(li.get(n));
+							LexNameList varName = assistantFactory.createPPatternAssistant().getVariableNames(li.get(n));
 							// the type
 							String typeName = extractTypeName(operation.getType(), n);
 							boolean flag = false;
@@ -201,7 +201,7 @@ public class VdmjVdmClassReader implements IVdmClassReader
 					int n = 0;
 					for (PPattern li : assistantFactory.createAImplicitOperationDefinitionAssistant().getParamPatternList(operation))
 					{
-						LexNameList varName = PPatternAssistantTC.getVariableNames(li);
+						LexNameList varName = assistantFactory.createPPatternAssistant().getVariableNames(li);
 						// the type
 						String typeName = extractTypeName(operation.getType(), n);
 						boolean flag = false;
@@ -253,7 +253,7 @@ public class VdmjVdmClassReader implements IVdmClassReader
 					{
 						for (int n = 0; n < li.size(); ++n)
 						{
-							LexNameList varName = PPatternAssistantTC.getVariableNames(li.get(n));
+							LexNameList varName = assistantFactory.createPPatternAssistant().getVariableNames(li.get(n));
 							// the type
 							String typeName = extractTypeName(function.getType(), n);
 							boolean flag = false;

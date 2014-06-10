@@ -267,7 +267,7 @@ public class SClassDefinitionAssistantTC
 
 		if (invariant != null)
 		{
-			PDefinitionAssistantTC.setClassDefinition(invariant, d);
+			af.createPDefinitionAssistant().setClassDefinition(invariant, d);
 		}
 
 	}

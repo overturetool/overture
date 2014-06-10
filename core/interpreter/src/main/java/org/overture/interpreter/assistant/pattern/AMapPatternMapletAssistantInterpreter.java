@@ -9,7 +9,6 @@ import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AMapletPatternMaplet;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
-import org.overture.interpreter.runtime.PatternMatchException;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.Value;
 
@@ -24,18 +23,6 @@ public class AMapPatternMapletAssistantInterpreter
 		//super(af);
 		this.af = af;
 	}
-
-//	public static boolean isConstrained(AMapletPatternMaplet p)
-//	{
-//		if (af.isConstrained(p.getFrom())
-//				|| PPatternAssistantInterpreter.isConstrained(p.getTo()))
-//		{
-//			return true;
-//		}
-//
-//		return af.createPTypeAssistant().isUnion(af.createPPatternAssistant().getPossibleType(p.getFrom()))
-//				|| af.createPTypeAssistant().isUnion(af.createPPatternAssistant().getPossibleType(p.getTo()));
-//	}
 
 	public static List<NameValuePairList> getAllNamedValues(
 			AMapletPatternMaplet p, Entry<Value, Value> maplet, Context ctxt)

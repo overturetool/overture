@@ -25,17 +25,6 @@ public class PBindAssistantInterpreter extends PBindAssistantTC
 		
 		return bind.apply(af.getSingleBindValuesCollector(), ctxt);// FIXME: should we handle exceptions like this
 		
-//		if (bind instanceof ASetBind)
-//		{
-//			return ASetBindAssistantInterpreter.getBindValues((ASetBind) bind, ctxt);
-//		} else if (bind instanceof ATypeBind)
-//		{
-//			return ATypeBindAssistantInterpreter.getBindValues((ATypeBind) bind, ctxt);
-//		} else
-//		{
-//			assert false : "Should not happen";
-//			return null;
-//		}
 	}
 
 	public ValueList getValues(PBind bind, ObjectContext ctxt)
@@ -48,16 +37,6 @@ public class PBindAssistantInterpreter extends PBindAssistantTC
 		{
 			return new ValueList();
 		}
-//		if (bind instanceof ASetBind)
-//		{
-//			return ASetBindAssistantInterpreter.getValues((ASetBind) bind, ctxt);
-//		} else if (bind instanceof ATypeBind)
-//		{
-//			return ATypeBindAssistantInterpreter.getValues((ATypeBind) bind, ctxt);
-//		} else
-//		{
-//			
-//		}
 	}
 
 }

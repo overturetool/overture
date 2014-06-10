@@ -88,7 +88,7 @@ public class AModuleModulesAssistantInterpreter extends
 
 		if (sdef != null)
 		{
-			return AStateDefinitionAssistantInterpreter.getStateContext(sdef);
+			return af.createAStateDefinitionAssistant().getStateContext(sdef);
 		}
 
 		return null;
@@ -101,7 +101,7 @@ public class AModuleModulesAssistantInterpreter extends
 	 * 
 	 * @return True if initialized OK.
 	 */
-	public static Set<ContextException> initialize(AModuleModules m,
+	public Set<ContextException> initialize(AModuleModules m,
 			StateContext initialContext)
 	{
 
@@ -138,7 +138,7 @@ public class AModuleModulesAssistantInterpreter extends
 
 			if (sdef != null)
 			{
-				AStateDefinitionAssistantInterpreter.initState(sdef, initialContext);
+				af.createAStateDefinitionAssistant().initState(sdef, initialContext);
 			}
 		} catch (ContextException e)
 		{
@@ -149,7 +149,7 @@ public class AModuleModulesAssistantInterpreter extends
 
 	}
 
-	public static IProofObligationList getProofObligations(AModuleModules m) throws AnalysisException
+	public IProofObligationList getProofObligations(AModuleModules m) throws AnalysisException
 	{
 		return ProofObligationGenerator.generateProofObligations(m);
 	}

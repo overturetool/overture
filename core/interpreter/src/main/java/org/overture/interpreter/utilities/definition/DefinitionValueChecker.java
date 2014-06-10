@@ -30,7 +30,7 @@ public class DefinitionValueChecker extends AnswerAdaptor<Boolean>
 	public Boolean caseAImportedDefinition(AImportedDefinition def)
 			throws AnalysisException
 	{
-		//return isValueDefinition(def.getDef());
+		
 		return def.getDef().apply(THIS);
 	}
 	
@@ -38,7 +38,6 @@ public class DefinitionValueChecker extends AnswerAdaptor<Boolean>
 	public Boolean caseAInheritedDefinition(AInheritedDefinition def)
 			throws AnalysisException
 	{
-		// return isValueDefinition(((AInheritedDefinition) def).getSuperdef());
 		return def.getSuperdef().apply(THIS);
 	}
 	
@@ -46,7 +45,6 @@ public class DefinitionValueChecker extends AnswerAdaptor<Boolean>
 	public Boolean caseARenamedDefinition(ARenamedDefinition def)
 			throws AnalysisException
 	{
-		// return isValueDefinition(((ARenamedDefinition) def).getDef());
 		return def.getDef().apply(THIS);
 	}
 	

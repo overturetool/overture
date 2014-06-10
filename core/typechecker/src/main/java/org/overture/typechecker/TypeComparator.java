@@ -736,7 +736,7 @@ public class TypeComparator
 					SNumericBasicType subn = (SNumericBasicType) sub;
 					SNumericBasicType supn = (SNumericBasicType) sup;
 
-					return SNumericBasicTypeAssistantTC.getWeight(subn) <= SNumericBasicTypeAssistantTC.getWeight(supn) ? Result.Yes
+					return assistantFactory.createSNumericBasicTypeAssistant().getWeight(subn) <= assistantFactory.createSNumericBasicTypeAssistant().getWeight(supn) ? Result.Yes
 							: Result.No;
 				}
 			} else if (sub instanceof AProductType)
