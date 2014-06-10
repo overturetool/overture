@@ -46,12 +46,14 @@ import org.overture.codegen.cgast.types.AIntBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AInterfaceTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
+import org.overture.codegen.cgast.types.AObjectTypeCG;
 import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.ATokenBasicTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
+import org.overture.codegen.cgast.types.AUnionTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.SBasicTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
@@ -397,7 +399,9 @@ public class JavaFormat
 
 		if (isTupleOrRecord(leftNodeType)
 				|| leftNodeType instanceof AStringTypeCG
-				|| leftNodeType instanceof ATokenBasicTypeCG)
+				|| leftNodeType instanceof ATokenBasicTypeCG
+				|| leftNodeType instanceof AUnionTypeCG
+				|| leftNodeType instanceof AObjectTypeCG)
 		{
 			return handleEquals(node);
 		}
