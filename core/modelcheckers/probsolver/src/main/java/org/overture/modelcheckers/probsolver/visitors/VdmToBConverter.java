@@ -17,6 +17,7 @@ import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.AStateDefinition;
+import org.overture.ast.definitions.ATypeDefinition;//today
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
@@ -121,6 +122,7 @@ import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.ATokenBasicType;
+import org.overture.ast.types.AUnionType;//today
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SSeqType;
@@ -240,10 +242,15 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	 */
 	public Set<String> unsupportedConstructs = new HashSet<String>();
 
+	/** today
+
+	public Set<String> quotes = new HashSet<String>();
+	public List<PExpression> quotestype = new Vector<PExpression>();
+	 */
+	public final List<PExpression> exps = new ArrayList<PExpression>();
 	/**
 	 * A map that holds substitution rules.
-	 * <p>
-	 * This may be a mapping from an old state s~ to the old state name with that field e.g. $s's
+	 * <p>	 * This may be a mapping from an old state s~ to the old state name with that field e.g. $s's
 	 * </p>
 	 */
 	Map<String, String> nameSubstitution = new HashMap<String, String>();
@@ -1678,6 +1685,29 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		return new AConjunctPredicate(old, pred(node.getExpression()));
 	}
 
+	@Override //today
+	public Node caseAUnionType(AUnionType node)
+			throws AnalysisException
+	{
+	    System.err.println("in caseAUnionType " + node);
+
+	    return  new ASetExtensionExpression(); //dummy
+	}
+
+	@Override //today
+	public Node caseATypeDefinition(ATypeDefinition node)
+			throws AnalysisException
+	{
+	    System.err.println("in caseATypeDefinition: " + node);
+	    System.err.println("in caseATypeDefinition(getInvType: " + node.getInvType());
+	    System.err.println("in caseATypeDefinition(getInvPattern: " + node.getInvPattern());
+	    System.err.println("in caseATypeDefinition(getInvExpression: " + node.getInvExpression());
+	    System.err.println("in caseATypeDefinition(getInvdef: " + node.getInvdef());
+	    System.err.println("in caseATypeDefinition(getName: " + node.getName());
+	    System.err.println("in caseATypeDefinition(getCompose: " + node.getComposeDefinitions());
+	    return new ASetExtensionExpression();//dummy
+	}
+
 	@Override
 	public Node defaultSOperationDefinition(SOperationDefinition node)
 			throws AnalysisException
@@ -1762,7 +1792,9 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	@Override
 	public Node caseAQuoteLiteralExp(AQuoteLiteralExp node)
 			throws AnalysisException
-	{
+	    {
+		//quotes.add(node.getValue().getValue());//today
+		//System.err.println("in caseAQuoteLiteralExp: " + quotes);//today
 		return createIdentifier(getQuoteLiteralName(node.getValue().getValue()));
 	}
 
@@ -1863,10 +1895,17 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 
 	@Override
 	public Node caseAQuoteType(AQuoteType node) throws AnalysisException
-	{
-		final List<PExpression> exps = Arrays.asList(new PExpression[] { createIdentifier(getQuoteLiteralName(node.getValue().getValue())) });
+	    {
+		//final List<PExpression> exps = Arrays.asList(new PExpression[] { createIdentifier(getQuoteLiteralName(node.getValue().getValue())) });
+		exps.add(createIdentifier(getQuoteLiteralName(node.getValue().getValue())));
 		System.err.println("in caseAQuoteType: " + exps);
 		return new ASetExtensionExpression(exps);
+		//today
+		/*
+		quotestype.add(createIdentifier(getQuoteLiteralName(node.getValue().getValue())));
+		System.err.println("in caseAQuoteType: " + quotestype);
+		return new ASetExtensionExpression(quotestype);
+		*/
 	}
 
 
@@ -1899,6 +1938,14 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	    return prod;
 	}
 
+	@Override //today
+	public Node caseARecordInvariantType(ARecordInvariantType node) throws AnalysisException
+	{
+	    System.err.println("in caseARecordInvariantType**: " + node);
+	    System.err.println("in caseARecordInvariantType**: " + node.getName());
+	    Node r = new ARecExpression();
+	    return r;
+	}
 	/**
 	 * Unknown types may exist in a type check VDM specification as the inner type for e.g. set, seq etc.
 	 * <p>

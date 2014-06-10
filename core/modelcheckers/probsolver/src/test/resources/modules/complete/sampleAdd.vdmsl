@@ -1,0 +1,24 @@
+types
+  String = seq of char;
+
+state Person of
+    ssn : nat
+    name : String;
+end
+
+--state Registry of
+--  persons : set of Person
+  init persons == {mk_Person(1, "Jane Doe")}
+--end
+
+operations
+  Add(name:String)
+    ext wr persons : set of Person
+    pre true
+    post mk_Person(ssn, name) in set persons and not exists p in persons~ & p.ssn = ssn
+    ;
+
+test:() ==> ()
+test() == let in="John Doe" in (
+  Add(in);
+);

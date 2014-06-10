@@ -1,3 +1,6 @@
+--types
+--QL = <A> | <B>
+
 functions
 
 compare(a:<A> , b : <B>) r:bool

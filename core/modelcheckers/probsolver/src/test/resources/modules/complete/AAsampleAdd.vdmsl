@@ -1,0 +1,23 @@
+types
+String = seq of char;
+
+Person ::
+  ssn : nat
+  name : String;
+
+Registry ::
+  persons : set of Person;
+end
+  init persons == persons = {mk_Person(1, "Jane Doe")};
+
+
+operations
+  Add(name:String)
+    ext wr persons : set of Person
+    post mk_Person(fst,snd) in set persons and not exists p in set persons~ & p.ssn = fst
+    ;
+
+test:() ==> ()
+test() == let x="John Doe" in (
+  return Add(x);
+);
