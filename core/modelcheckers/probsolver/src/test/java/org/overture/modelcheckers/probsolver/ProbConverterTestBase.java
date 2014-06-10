@@ -61,14 +61,17 @@ public abstract class ProbConverterTestBase extends TestResourcesResultTestCase4
 		Settings.release = Release.VDM_10;
 		VdmToBConverter.USE_INITIAL_FIXED_STATE = true;
 	}
+	
 
 	@Rule
 	public ConditionalIgnoreMethodRule rule = new ConditionalIgnoreMethodRule();
 
+	protected String method ="";
 	protected void testMethod(String name) throws IOException,
 			AnalysisException, SolverException
 	{
 		configureResultGeneration();
+		this.method = name;
 		try
 		{
 			INode result = null;
@@ -286,7 +289,9 @@ public abstract class ProbConverterTestBase extends TestResourcesResultTestCase4
 	@Override
 	protected File getResultFile(String filename)
 	{
-		return new File(getStorageLocation(), filename);
+		int index = filename.lastIndexOf(".result");
+		String f = filename.substring(0,index)+"-"+method+".result";
+		return new File(getStorageLocation(), f);
 	}
 
 	public void encodeResult(String result, Document doc, Element resultElement)
