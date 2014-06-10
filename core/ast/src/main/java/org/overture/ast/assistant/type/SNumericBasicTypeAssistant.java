@@ -19,7 +19,7 @@ public class SNumericBasicTypeAssistant
 		this.af = af;
 	}
 
-	public static int getWeight(SNumericBasicType subn)
+	public int getWeight(SNumericBasicType subn)
 	{
 		if (subn instanceof AIntNumericBasicType) {
 			return 2;

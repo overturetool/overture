@@ -22,10 +22,6 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.AErrorCase;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.definition.AErrorCaseAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.PStmAssistantInterpreter;
 
 
 /***************************************
@@ -48,7 +44,6 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 	public PExp caseAAssignmentDefinition(AAssignmentDefinition def,
 			Integer lineno) throws AnalysisException
 	{
-		//return AAssignmentDefinitionAssistantInterpreter.findExpression((AAssignmentDefinition) def, lineno);
 		return af.createPExpAssistant().findExpression(def.getExpression(), lineno);
 		
 	}
@@ -57,7 +52,6 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 	public PExp caseAClassInvariantDefinition(AClassInvariantDefinition def,
 			Integer lineno) throws AnalysisException
 	{
-		//return AClassInvariantDefinitionAssistantInterpreter.findExpression(def, lineno);
 		return af.createPExpAssistant().findExpression(def.getExpression(), lineno);
 		
 	}
@@ -73,7 +67,6 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 	public PExp caseAEqualsDefinition(AEqualsDefinition def, Integer lineno)
 			throws AnalysisException
 	{
-		//return AEqualsDefinitionAssistantInterpreter.findExpression(def, lineno);
 		return af.createPExpAssistant().findExpression(def.getTest(), lineno);
 		
 	}
@@ -83,10 +76,8 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 			AExplicitFunctionDefinition def, Integer lineno)
 			throws AnalysisException
 	{
-		//return AExplicitFunctionDefinitionAssistantInterpreter.findExpression(def, lineno);
 		if (def.getPredef() != null)
 		{
-			//PExp found = PDefinitionAssistantInterpreter.findExpression(d.getPredef(), lineno);
 			PExp found = def.getPredef().apply(THIS, lineno);
 			if (found != null)
 			{
@@ -96,7 +87,6 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 
 		if (def.getPostdef() != null)
 		{
-			//PExp found = PDefinitionAssistantInterpreter.findExpression(d.getPostdef(), lineno);
 			PExp found = def.getPostdef().apply(THIS, lineno);
 			if (found != null)
 			{
@@ -113,10 +103,8 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 			AExplicitOperationDefinition def, Integer lineno)
 			throws AnalysisException
 	{
-		//return AExplicitOperationDefinitionAssistantInterpreter.findExpression(def, lineno);
 		if (def.getPredef() != null)
 		{
-			//PExp found = PDefinitionAssistantInterpreter.findExpression(d.getPredef(), lineno);
 			PExp found = def.getPredef().apply(THIS, lineno);
 			if (found != null)
 			{
@@ -126,7 +114,6 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 
 		if (def.getPostdef() != null)
 		{
-			//PExp found = PDefinitionAssistantInterpreter.findExpression(d.getPostdef(), lineno);
 			PExp found = def.getPostdef().apply(THIS, lineno);
 			if (found != null)
 			{
@@ -142,10 +129,8 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 			AImplicitFunctionDefinition def, Integer lineno)
 			throws AnalysisException
 	{
-		//return AImplicitFunctionDefinitionAssistantInterpreter.findExpression(def, lineno);
 		if (def.getPredef() != null)
 		{
-			//PExp found = PDefinitionAssistantInterpreter.findExpression(d.getPredef(), lineno);
 			PExp found = def.getPredef().apply(THIS, lineno);
 			if (found != null)
 			{
@@ -170,10 +155,8 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 			AImplicitOperationDefinition def, Integer lineno)
 			throws AnalysisException
 	{
-		//return AImplicitOperationDefinitionAssistantInterpreter.findExpression(def, lineno);
 		if (def.getPredef() != null)
 		{
-			//PExp found = PDefinitionAssistantInterpreter.findExpression(d.getPredef(), lineno);
 			PExp found = def.getPredef().apply(THIS, lineno);
 			if (found != null)
 			{
@@ -183,7 +166,6 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 
 		if (def.getPostdef() != null)
 		{
-			//PExp found = PDefinitionAssistantInterpreter.findExpression(d.getPostdef(), lineno);
 			PExp found = def.getPostdef().apply(THIS, lineno);
 			if (found != null)
 			{
@@ -212,7 +194,6 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 			AInstanceVariableDefinition def, Integer lineno)
 			throws AnalysisException
 	{
-		//return AInstanceVariableDefinitionAssistantInterpreter.findExpression(def, lineno);
 		return af.createPExpAssistant().findExpression(def.getExpression(), lineno);
 	}
 	
@@ -220,7 +201,6 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 	public PExp caseAPerSyncDefinition(APerSyncDefinition def, Integer lineno)
 			throws AnalysisException
 	{
-		//return APerSyncDefinitionAssistantInterpreter.findExpression(def, lineno);
 		return af.createPExpAssistant().findExpression(def.getGuard(), lineno);
 	}
 	
@@ -228,7 +208,6 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 	public PExp caseAStateDefinition(AStateDefinition def, Integer lineno)
 			throws AnalysisException
 	{
-		//return AStateDefinitionAssistantInterpreter.findExpression(def, lineno);
 		if (def.getInitExpression() != null)
 		{
 			PExp found = af.createPExpAssistant().findExpression(def.getInvExpression(), lineno);
@@ -258,7 +237,6 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 	public PExp caseAThreadDefinition(AThreadDefinition def, Integer lineno)
 			throws AnalysisException
 	{
-		//return AThreadDefinitionAssistantInterpreter.findExpression(def, lineno);
 		return af.createPStmAssistant().findExpression(def.getStatement(), lineno);
 	}
 	
@@ -266,10 +244,8 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 	public PExp caseATypeDefinition(ATypeDefinition def, Integer lineno)
 			throws AnalysisException
 	{
-		//return ATypeDefinitionAssistantInterpreter.findExpression(def, lineno);
 		if (def.getInvdef() != null)
 		{
-			//PExp found = PDefinitionAssistantInterpreter.findExpression(d.getInvdef(), lineno);
 			PExp found = def.getInvdef().apply(THIS, lineno);
 			if (found != null)
 			{
@@ -284,7 +260,6 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 	public PExp caseAValueDefinition(AValueDefinition def, Integer lineno)
 			throws AnalysisException
 	{
-		//return AValueDefinitionAssistantInterpreter.findExpression(def, lineno);
 		return af.createPExpAssistant().findExpression(def.getExpression(), lineno);
 	}
 	

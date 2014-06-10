@@ -494,7 +494,9 @@ public class ProbSolverUtil extends AbstractProbSolverUtil
 
 		if (result != null)
 		{
-			LexNameList allReturnVariables = PPatternAssistantTC.getAllVariableNames(result.getPattern());
+			//TODO: Here I used the assistantFactory created in the superclass AbstractProbSol.
+			
+			LexNameList allReturnVariables = assistantFactory.createPPatternAssistant().getAllVariableNames(result.getPattern());
 			List<PType> allReturnTypes = new Vector<PType>();
 
 			if (allReturnVariables.size() == 1)

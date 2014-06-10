@@ -37,7 +37,7 @@ public class ACpuClassDefinitionAssistantInterpreter extends
 		this.af = af;
 	}
 
-	public static CPUValue newInstance(ACpuClassDefinition node, Object object,
+	public CPUValue newInstance(ACpuClassDefinition node, Object object,
 			ValueList argvals, Context ctxt)
 	{
 		NameValuePairList nvpl = af.createPDefinitionListAssistant().getNamedValues(node.getDefinitions(), ctxt);
@@ -64,7 +64,7 @@ public class ACpuClassDefinitionAssistantInterpreter extends
 		return cpu;
 	}
 
-	public static Value deploy(ANotYetSpecifiedStm node, Context ctxt)
+	public Value deploy(ANotYetSpecifiedStm node, Context ctxt)
 	{
 		try
 		{

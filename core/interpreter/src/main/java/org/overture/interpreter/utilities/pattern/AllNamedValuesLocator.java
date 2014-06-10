@@ -80,7 +80,6 @@ public class AllNamedValuesLocator
 	public List<NameValuePairList> caseABooleanPattern(ABooleanPattern pattern,
 			Newquestion question) throws AnalysisException
 	{
-		//return ABooleanPatternAssistantInterpreter.getAllNamedValues(pattern, question.expval, question.ctxt);
 		List<NameValuePairList> result = new Vector<NameValuePairList>();
 
 		try
@@ -103,7 +102,6 @@ public class AllNamedValuesLocator
 			ACharacterPattern pattern, Newquestion question)
 			throws AnalysisException
 	{
-		//return ACharacterPatternAssistantInterpreter.getAllNamedValues(pattern, question.expval, question.ctxt);
 		List<NameValuePairList> result = new Vector<NameValuePairList>();
 
 		try
@@ -126,7 +124,6 @@ public class AllNamedValuesLocator
 			AConcatenationPattern pattern, Newquestion question)
 			throws AnalysisException
 	{
-		//return AConcatenationPatternAssistantInterpreter.getAllNamedValues(pattern, question.expval, question.ctxt);
 		ValueList values = null;
 
 		try
@@ -296,7 +293,6 @@ public class AllNamedValuesLocator
 			AExpressionPattern pattern, Newquestion question)
 			throws AnalysisException
 	{
-		//return AExpressionPatternAssistantInterpreter.getAllNamedValues(pattern, question.expval, question.ctxt);
 		List<NameValuePairList> result = new Vector<NameValuePairList>();
 
 		try
@@ -323,7 +319,6 @@ public class AllNamedValuesLocator
 			AIdentifierPattern pattern, Newquestion question)
 			throws AnalysisException
 	{
-		//return AIdentifierPatternAssistantInterpreter.getAllNamedValues(pattern, question.expval, question.ctxt);
 		List<NameValuePairList> result = new Vector<NameValuePairList>();
 		NameValuePairList list = new NameValuePairList();
 		list.add(new NameValuePair(pattern.getName(), question.expval));
@@ -335,7 +330,6 @@ public class AllNamedValuesLocator
 	public List<NameValuePairList> caseAIgnorePattern(AIgnorePattern pattern,
 			Newquestion question) throws AnalysisException
 	{
-		//return AIgnorePatternAssistantInterpreter.getAllNamedValues(pattern, question.expval, question.ctxt);
 		List<NameValuePairList> result = new Vector<NameValuePairList>();
 		result.add(new NameValuePairList());
 		return result;
@@ -345,7 +339,6 @@ public class AllNamedValuesLocator
 	public List<NameValuePairList> caseAIntegerPattern(AIntegerPattern pattern,
 			Newquestion question) throws AnalysisException
 	{
-		//return AIntegerPatternAssistantInterpreter.getAllNamedValues(pattern, question.expval, question.ctxt);
 		List<NameValuePairList> result = new Vector<NameValuePairList>();
 
 		try
@@ -367,7 +360,6 @@ public class AllNamedValuesLocator
 	public List<NameValuePairList> caseAMapPattern(AMapPattern pattern,
 			Newquestion question) throws AnalysisException
 	{
-		//return AMapPatternAssistantInterpreter.getAllNamedValues(pattern, question.expval, question.ctxt);
 		ValueMap values = null;
 
 		try
@@ -391,7 +383,6 @@ public class AllNamedValuesLocator
 
 		List<ValueMap> allMaps;
 
-		//if (AMapPatternAssistantInterpreter.isConstrained(pattern))
 		if(pattern.apply(af.getConstrainedPatternChecker()))
 		{
 			allMaps = values.permutedMaps();
@@ -480,7 +471,6 @@ public class AllNamedValuesLocator
 	public List<NameValuePairList> caseAMapUnionPattern(AMapUnionPattern pattern,
 			Newquestion question) throws AnalysisException
 	{
-		//return AMapUnionPatternAssistantInterpreter.getAllNamedValues(pattern, question.expval, question.ctxt);
 		ValueMap values = null;
 
 		try
@@ -568,7 +558,6 @@ public class AllNamedValuesLocator
 
 		List<ValueMap> allMaps;
 
-		//if (AMapUnionPatternAssistantInterpreter.isConstrained(pattern))
 		if(pattern.apply(af.getConstrainedPatternChecker()))
 		{
 			allMaps = values.permutedMaps();
@@ -688,7 +677,6 @@ public class AllNamedValuesLocator
 	public List<NameValuePairList> caseAQuotePattern(AQuotePattern pattern,
 			Newquestion question) throws AnalysisException
 	{
-		//return AQuotePatternAssistantInterpreter.getAllNamedValues(pattern, question.expval, question.ctxt);
 		List<NameValuePairList> result = new Vector<NameValuePairList>();
 
 		try
@@ -710,7 +698,6 @@ public class AllNamedValuesLocator
 	public List<NameValuePairList> caseARealPattern(ARealPattern pattern,
 			Newquestion question) throws AnalysisException
 	{
-		//return ARealPatternAssistantInterpreter.getAllNamedValues(pattern, question.expval, question.ctxt);
 		List<NameValuePairList> result = new Vector<NameValuePairList>();
 
 		try
@@ -732,7 +719,6 @@ public class AllNamedValuesLocator
 	public List<NameValuePairList> caseARecordPattern(ARecordPattern pattern,
 			Newquestion question) throws AnalysisException
 	{
-		//return ARecordPatternAssistantInterpreter.getAllNamedValues(pattern, question.expval, question.ctxt);
 		FieldMap fields = null;
 		RecordValue exprec = null;
 
@@ -824,7 +810,6 @@ public class AllNamedValuesLocator
 	public List<NameValuePairList> caseASeqPattern(ASeqPattern pattern,
 			Newquestion question) throws AnalysisException
 	{
-		//return ASeqPatternAssistantInterpreter.getAllNamedValues(pattern, question.expval, question.ctxt);
 		ValueList values = null;
 
 		try
@@ -932,7 +917,6 @@ public class AllNamedValuesLocator
 
 		List<ValueSet> allSets;
 
-		//if (ASetPatternAssistantInterpreter.isConstrained(pattern))
 		if(pattern.apply(af.getConstrainedPatternChecker()))
 		{
 			allSets = values.permutedSets();
@@ -1021,7 +1005,6 @@ public class AllNamedValuesLocator
 	public List<NameValuePairList> caseAStringPattern(AStringPattern pattern,
 			Newquestion question) throws AnalysisException
 	{
-		//return AStringPatternAssistantInterpreter.getAllNamedValues(pattern, question.expval, question.ctxt);
 		List<NameValuePairList> result = new Vector<NameValuePairList>();
 
 		try
@@ -1042,7 +1025,6 @@ public class AllNamedValuesLocator
 	public List<NameValuePairList> caseATuplePattern(ATuplePattern pattern,
 			Newquestion question) throws AnalysisException
 	{
-		//return ATuplePatternAssistantInterpreter.getAllNamedValues(pattern, question.expval, question.ctxt);
 		ValueList values = null;
 
 		try
@@ -1121,7 +1103,6 @@ public class AllNamedValuesLocator
 	public List<NameValuePairList> caseAUnionPattern(AUnionPattern pattern,
 			Newquestion question) throws AnalysisException
 	{
-		//return AUnionPatternAssistantInterpreter.getAllNamedValues(pattern, question.expval, question.ctxt);
 		ValueSet values = null;
 
 		try
@@ -1209,7 +1190,6 @@ public class AllNamedValuesLocator
 
 		List<ValueSet> allSets;
 
-		//if (AUnionPatternAssistantInterpreter.isConstrained(pattern))
 		if(pattern.apply(af.getConstrainedPatternChecker()))
 		{
 			allSets = values.permutedSets();

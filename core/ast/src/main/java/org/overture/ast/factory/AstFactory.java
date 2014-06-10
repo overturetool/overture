@@ -7,10 +7,9 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.assistant.AstAssistantFactory;
+import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.assistant.InvocationAssistantException;
 import org.overture.ast.assistant.definition.PAccessSpecifierAssistant;
-import org.overture.ast.assistant.definition.PDefinitionAssistant;
-import org.overture.ast.assistant.pattern.PPatternAssistant;
 import org.overture.ast.assistant.type.AUnionTypeAssistant;
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AClassClassDefinition;
@@ -207,9 +206,14 @@ import org.overture.ast.util.Utils;
 @SuppressWarnings("deprecation")
 public class AstFactory
 {
+	//Should we instanciate an assistant factory here?
+	//Added by gkanos.
+	protected static IAstAssistantFactory af;
+	
 	static
 	{
-		new AstAssistantFactory();// FIXME: remove when asssistant conversion is finished
+		//Added by gkanos.
+		af = new AstAssistantFactory();// FIXME: remove when assistant conversion is finished
 	}
 
 	/*
@@ -420,7 +424,7 @@ public class AstFactory
 		}
 
 		// Classes are all effectively public types
-		PDefinitionAssistant.setClassDefinition(result.getDefinitions(), result);
+		af.createPDefinitionAssistant().setClassDefinition(result.getDefinitions(), result);
 
 		// others
 		result.setSettingHierarchy(ClassDefinitionSettings.UNSET);
@@ -624,7 +628,7 @@ public class AstFactory
 
 		try
 		{
-			for (ILexNameToken var : PPatternAssistant.getVariableNames(p))
+			for (ILexNameToken var : af.createPPatternAssistant().getVariableNames(p))
 			{
 				defs.add(AstFactory.newAUntypedDefinition(result.getLocation(), var, scope));
 			}
@@ -635,7 +639,7 @@ public class AstFactory
 		}
 
 		result.setDefs(defs);
-
+		
 		return result;
 	}
 
@@ -2850,7 +2854,7 @@ public class AstFactory
 		list.add(a);
 		list.add(b);
 		result.setTypes(list);
-		AUnionTypeAssistant.expand(result);
+		af.createAUnionTypeAssistant().expand(result);
 		return result;
 	}
 
@@ -3013,7 +3017,7 @@ public class AstFactory
 		result.setSuperdef(d);
 		result.setOldname(localname.getOldName());
 
-		PDefinitionAssistant.setClassDefinition(result, d.getClassDefinition());
+		af.createPDefinitionAssistant().setClassDefinition(result, d.getClassDefinition());
 		result.setAccess(d.getAccess().clone());
 
 		return result;
@@ -3363,7 +3367,7 @@ public class AstFactory
 		initUnionType(result);
 
 		result.setTypes(types);
-		AUnionTypeAssistant.expand(result);
+		af.createAUnionTypeAssistant().expand(result);
 		return result;
 	}
 

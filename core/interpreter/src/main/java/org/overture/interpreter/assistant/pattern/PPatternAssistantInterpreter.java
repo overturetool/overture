@@ -67,37 +67,7 @@ public class PPatternAssistantInterpreter extends PPatternAssistantTC
 		{
 			return new Vector<AIdentifierPattern>(); // Most have none
 		}
-		// if (pattern instanceof AConcatenationPattern)
-		// {
-		// return AConcatenationPatternAssistantInterpreter.findIdentifiers((AConcatenationPattern) pattern);
-		// } else if (pattern instanceof AIdentifierPattern)
-		// {
-		// return AIdentifierPatternAssistantInterpreter.findIdentifiers((AIdentifierPattern) pattern);
-		// } else if (pattern instanceof AMapPattern)
-		// {
-		// return AMapPatternAssistantInterpreter.findIdentifiers((AMapPattern) pattern);
-		// } else if (pattern instanceof AMapUnionPattern)
-		// {
-		// return AMapUnionPatternAssistantInterpreter.findIdentifiers((AMapUnionPattern) pattern);
-		// } else if (pattern instanceof ARecordPattern)
-		// {
-		// return ARecordPatternAssistantInterpreter.findIndentifiers((ARecordPattern) pattern);
-		// } else if (pattern instanceof ASeqPattern)
-		// {
-		// return ASeqPatternAssistantInterpreter.findIdentifiers((ASeqPattern) pattern);
-		// } else if (pattern instanceof ASetPattern)
-		// {
-		// return ASetPatternAssistantInterpreter.findIdentifiers((ASetPattern) pattern);
-		// } else if (pattern instanceof ATuplePattern)
-		// {
-		// return ATuplePatternAssistantInterpreter.findIdentifiers((ATuplePattern) pattern);
-		// } else if (pattern instanceof AUnionPattern)
-		// {
-		// return AUnionPatternAssistantInterpreter.findIdentifiers((AUnionPattern) pattern);
-		// } else
-		// {
-		// return new Vector<AIdentifierPattern>(); // Most have none
-		// }
+
 	}
 
 	public List<NameValuePairList> getAllNamedValues(PPattern pattern,
@@ -105,81 +75,6 @@ public class PPatternAssistantInterpreter extends PPatternAssistantTC
 	{
 		
 		return pattern.apply(af.getAllNamedValuesLocator(), new AllNamedValuesLocator.Newquestion(expval, ctxt));
-
-//Unrecommended solution
-//		try
-//		{
-//			return pattern.apply(af.getAllNamedValuesLocator(), new AllNamedValuesLocator.Newquestion(expval, ctxt));
-//		} catch (AnalysisException e) 
-//		{
-//			if (e instanceof PatternMatchException)
-//				throw (PatternMatchException) e;
-//			else
-//			{
-//				return null; // should never happen
-//			}
-//		}
-
-		// if (pattern instanceof ABooleanPattern)
-		// {
-		// return ABooleanPatternAssistantInterpreter.getAllNamedValues((ABooleanPattern) pattern, expval, ctxt);
-		// } else if (pattern instanceof ACharacterPattern)
-		// {
-		// return ACharacterPatternAssistantInterpreter.getAllNamedValues((ACharacterPattern) pattern, expval, ctxt);
-		// } else if (pattern instanceof AConcatenationPattern)
-		// {
-		// return AConcatenationPatternAssistantInterpreter.getAllNamedValues((AConcatenationPattern) pattern, expval,
-		// ctxt);
-		// } else if (pattern instanceof AExpressionPattern)
-		// {
-		// return AExpressionPatternAssistantInterpreter.getAllNamedValues((AExpressionPattern) pattern, expval, ctxt);
-		// } else if (pattern instanceof AIdentifierPattern)
-		// {
-		// return AIdentifierPatternAssistantInterpreter.getAllNamedValues((AIdentifierPattern) pattern, expval, ctxt);
-		// } else if (pattern instanceof AIgnorePattern)
-		// {
-		// return AIgnorePatternAssistantInterpreter.getAllNamedValues((AIgnorePattern) pattern, expval, ctxt);
-		// } else if (pattern instanceof AIntegerPattern)
-		// {
-		// return AIntegerPatternAssistantInterpreter.getAllNamedValues((AIntegerPattern) pattern, expval, ctxt);
-		// } else if (pattern instanceof AMapPattern)
-		// {
-		// return AMapPatternAssistantInterpreter.getAllNamedValues((AMapPattern) pattern, expval, ctxt);
-		// } else if (pattern instanceof AMapUnionPattern)
-		// {
-		// return AMapUnionPatternAssistantInterpreter.getAllNamedValues((AMapUnionPattern) pattern, expval, ctxt);
-		// } else if (pattern instanceof ANilPattern)
-		// {
-		// return ANilPatternAssistantInterpreter.getAllNamedValues((ANilPattern) pattern, expval, ctxt);
-		// } else if (pattern instanceof AQuotePattern)
-		// {
-		// return AQuotePatternAssistantInterpreter.getAllNamedValues((AQuotePattern) pattern, expval, ctxt);
-		// } else if (pattern instanceof ARealPattern)
-		// {
-		// return ARealPatternAssistantInterpreter.getAllNamedValues((ARealPattern) pattern, expval, ctxt);
-		// } else if (pattern instanceof ARecordPattern)
-		// {
-		// return ARecordPatternAssistantInterpreter.getAllNamedValues((ARecordPattern) pattern, expval, ctxt);
-		// } else if (pattern instanceof ASeqPattern)
-		// {
-		// return ASeqPatternAssistantInterpreter.getAllNamedValues((ASeqPattern) pattern, expval, ctxt);
-		// } else if (pattern instanceof ASetPattern)
-		// {
-		// return ASetPatternAssistantInterpreter.getAllNamedValues((ASetPattern) pattern, expval, ctxt);
-		// } else if (pattern instanceof AStringPattern)
-		// {
-		// return AStringPatternAssistantInterpreter.getAllNamedValues((AStringPattern) pattern, expval, ctxt);
-		// } else if (pattern instanceof ATuplePattern)
-		// {
-		// return ATuplePatternAssistantInterpreter.getAllNamedValues((ATuplePattern) pattern, expval, ctxt);
-		// } else if (pattern instanceof AUnionPattern)
-		// {
-		// return AUnionPatternAssistantInterpreter.getAllNamedValues((AUnionPattern) pattern, expval, ctxt);
-		// } else
-		// {
-		// assert false : "Should not happen!";
-		// return null;
-		// }
 	}
 
 	/**
@@ -195,37 +90,6 @@ public class PPatternAssistantInterpreter extends PPatternAssistantTC
 		{
 			return 1; // Most only identify one member
 		}
-		// if (pattern instanceof AConcatenationPattern)
-		// {
-		// return AConcatenationPatternAssistantInterpreter.getLength((AConcatenationPattern) pattern);
-		// } else if (pattern instanceof AIdentifierPattern)
-		// {
-		// return AIdentifierPatternAssistantInterpreter.getLength((AIdentifierPattern) pattern);
-		// } else if (pattern instanceof AIgnorePattern)
-		// {
-		// return AIgnorePatternAssistantInterpreter.getLength((AIgnorePattern) pattern);
-		// } else if (pattern instanceof AMapPattern)
-		// {
-		// return AMapPatternAssistantInterpreter.getLength((AMapPattern) pattern);
-		// } else if (pattern instanceof AMapUnionPattern)
-		// {
-		// return AMapUnionPatternAssistantInterpreter.getLength((AMapUnionPattern) pattern);
-		// } else if (pattern instanceof ASeqPattern)
-		// {
-		// return ASeqPatternAssistantInterpreter.getLength((ASeqPattern) pattern);
-		// } else if (pattern instanceof ASetPattern)
-		// {
-		// return ASetPatternAssistantInterpreter.getLength((ASetPattern) pattern);
-		// } else if (pattern instanceof AStringPattern)
-		// {
-		// return AStringPatternAssistantInterpreter.getLength((AStringPattern) pattern);
-		// } else if (pattern instanceof AUnionPattern)
-		// {
-		// return AUnionPatternAssistantInterpreter.getLength((AUnionPattern) pattern);
-		// } else
-		// {
-		// return 1; // Most only identify one member
-		// }
 	}
 
 	/**
@@ -241,39 +105,6 @@ public class PPatternAssistantInterpreter extends PPatternAssistantTC
 		{
 			return true;
 		}
-		// if (pattern instanceof AConcatenationPattern)
-		// {
-		// return AConcatenationPatternAssistantInterpreter.isConstrained((AConcatenationPattern) pattern);
-		// } else if (pattern instanceof AIdentifierPattern)
-		// {
-		// return AIdentifierPatternAssistantInterpreter.isConstrained((AIdentifierPattern) pattern);
-		// } else if (pattern instanceof AIgnorePattern)
-		// {
-		// return AIgnorePatternAssistantInterpreter.isConstrained((AIgnorePattern) pattern);
-		// } else if (pattern instanceof AMapPattern)
-		// {
-		// return AMapPatternAssistantInterpreter.isConstrained((AMapPattern) pattern);
-		// } else if (pattern instanceof AMapUnionPattern)
-		// {
-		// return AMapUnionPatternAssistantInterpreter.isConstrained((AMapUnionPattern) pattern);
-		// } else if (pattern instanceof ARecordPattern)
-		// {
-		// return ARecordPatternAssistantInterpreter.isConstrained((ARecordPattern) pattern);
-		// } else if (pattern instanceof ASeqPattern)
-		// {
-		// return ASeqPatternAssistantInterpreter.isConstrained((ASeqPattern) pattern);
-		// } else if (pattern instanceof ASetPattern)
-		// {
-		// return ASetPatternAssistantInterpreter.isConstrained((ASetPattern) pattern);
-		// } else if (pattern instanceof ATuplePattern)
-		// {
-		// return ATuplePatternAssistantInterpreter.isConstrained((ATuplePattern) pattern);
-		// } else if (pattern instanceof AUnionPattern)
-		// {
-		// return AUnionPatternAssistantInterpreter.isConstrained((AUnionPattern) pattern);
-		// } else
-		// {
-		// return true;
-		// }
+		
 	}
 }

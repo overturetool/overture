@@ -46,7 +46,7 @@ public class PTypeAssistant
 		return internalHashCode(type);
 	}
 
-	protected static int internalHashCode(PType type)
+	protected int internalHashCode(PType type)
 	{
 		try
 		{
@@ -62,12 +62,12 @@ public class PTypeAssistant
 		int hashCode = 1;
 		for (PType e : list)
 		{
-			hashCode = 31 * hashCode + (e == null ? 0 : internalHashCode(e));
+			hashCode = 31 * hashCode + (e == null ? 0 : af.createPTypeAssistant().internalHashCode(e));
 		}
 		return hashCode;
 	}
 
-	public static String getName(PType type)
+	public String getName(PType type)
 	{
 		return type.getLocation().getModule();
 	}

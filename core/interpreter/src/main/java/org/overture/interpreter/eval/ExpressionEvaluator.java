@@ -73,10 +73,7 @@ import org.overture.ast.types.PType;
 import org.overture.config.Settings;
 import org.overture.interpreter.assistant.definition.AExplicitFunctionDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AImplicitFunctionDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AFieldExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AIsOfBaseClassExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AIsOfClassExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.APostOpExpAssistantInterpreter;
 import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.runtime.ClassContext;
 import org.overture.interpreter.runtime.Context;
@@ -375,7 +372,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 		try
 		{
-			return AFieldExpAssistantInterpreter.evaluate(node, ctxt);
+			return ctxt.assistantFactory.createAFieldExpAssistant().evaluate(node, ctxt);
 		} catch (ValueException e)
 		{
 			return VdmRuntimeError.abort(node.getLocation(), e);
@@ -515,10 +512,10 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			if (node.getExpdef() == null)
 			{
-				rv = AImplicitFunctionDefinitionAssistantInterpreter.getPolymorphicValue(ctxt.assistantFactory,node.getImpdef(), fixed);
+				rv = ctxt.assistantFactory.createAImplicitFunctionDefinitionAssistant().getPolymorphicValue(ctxt.assistantFactory,node.getImpdef(), fixed);
 			} else
 			{
-				rv = AExplicitFunctionDefinitionAssistantInterpreter.getPolymorphicValue(ctxt.assistantFactory,node.getExpdef(), fixed);
+				rv = ctxt.assistantFactory.createAExplicitFunctionDefinitionAssistant().getPolymorphicValue(ctxt.assistantFactory,node.getExpdef(), fixed);
 			}
 
 			rv.setSelf(fv.self);
@@ -1167,7 +1164,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 				// If the opname was defined in a superclass of "self", we have
 				// to discover the subobject to populate its state variables.
 				
-				ObjectValue subself = APostOpExpAssistantInterpreter.findObject(node, node.getOpname().getModule(), self);
+				ObjectValue subself = ctxt.assistantFactory.createAPostOpExpAssistant().findObject(node, node.getOpname().getModule(), self);
 				
 				if(self.superobjects.size() == 0)
 					subself = self;
@@ -1190,7 +1187,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 					ctxt = selfctxt;
 				}
 
-				APostOpExpAssistantInterpreter.populate(node, ctxt, subself.type.getName().getName(), oldvalues); // To add old "~"
+				ctxt.assistantFactory.createAPostOpExpAssistant().populate(node, ctxt, subself.type.getName().getName(), oldvalues); // To add old "~"
 																									// values
 			}
     		else if (ctxt instanceof ClassContext)
@@ -1198,7 +1195,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
     			ILexNameToken selfname = node.getOpname().getSelfName();
     			ILexNameToken oldselfname = selfname.getOldName();
     			ValueMap oldvalues = ctxt.lookup(oldselfname).mapValue(ctxt);
-    			APostOpExpAssistantInterpreter.populate(node, ctxt, node.getOpname().getModule(), oldvalues);
+    			ctxt.assistantFactory.createAPostOpExpAssistant().populate(node, ctxt, node.getOpname().getModule(), oldvalues);
     		}
 
 			// If there are errs clauses, and there is a precondition defined, then
@@ -1773,7 +1770,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			}
 
 			ObjectValue ov = v.objectValue(ctxt);
-			return new BooleanValue(AIsOfBaseClassExpAssistantInterpreter.search(node, ov));
+			return new BooleanValue(ctxt.assistantFactory.createAIsOfBaseClassExpAssistant().search(node, ov));
 		} catch (ValueException e)
 		{
 			return VdmRuntimeError.abort(node.getLocation(), e);
@@ -1797,7 +1794,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			}
 
 			ObjectValue ov = v.objectValue(ctxt);
-			return new BooleanValue(AIsOfClassExpAssistantInterpreter.isOfClass(ov, node.getClassName().getName()));
+			return new BooleanValue(ctxt.assistantFactory.createAIsOfClassExpAssistant().isOfClass(ov, node.getClassName().getName()));
 		} catch (ValueException e)
 		{
 			return VdmRuntimeError.abort(node.getLocation(), e);

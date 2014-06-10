@@ -73,7 +73,6 @@ public class MultipleBindValuesCollector extends QuestionAnswerAdaptor<Context, 
 	public ValueList caseATypeMultipleBind(ATypeMultipleBind node,
 			Context ctxt) throws AnalysisException
 	{
-		//return ATypeMultipleBindAssistantInterpreter.getBindValues(node, ctxt);
 		return af.createPTypeAssistant().getAllValues(node.getType(), ctxt);
 	}
 	

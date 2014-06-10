@@ -1332,7 +1332,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			if (preName == null
 					|| !preName.equals(PExpAssistantTC.NO_PRECONDITION))
 			{
-				obligations.add(new org.overture.pog.obligation.FuncIterationObligation(node, preName, question));
+				obligations.add(new org.overture.pog.obligation.FuncIterationObligation(node, preName, question, assistantFactory));
 			}
 		}
 

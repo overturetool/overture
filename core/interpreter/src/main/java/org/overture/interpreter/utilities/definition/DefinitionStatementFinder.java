@@ -10,8 +10,6 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.PStm;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.PStmAssistantInterpreter;
 
 /***************************************
  * 
@@ -34,7 +32,7 @@ public class DefinitionStatementFinder extends QuestionAnswerAdaptor<Integer, PS
 	public PStm defaultSClassDefinition(SClassDefinition def, Integer lineno)
 			throws AnalysisException
 	{
-		//I don't think this needs to be unfolded.
+		//I don't think this needs to be unfolded. gk
 		return af.createSClassDefinitionAssistant().findStatement(def, lineno);
 		
 	}
@@ -44,7 +42,6 @@ public class DefinitionStatementFinder extends QuestionAnswerAdaptor<Integer, PS
 			AExplicitOperationDefinition def, Integer lineno)
 			throws AnalysisException
 	{
-		//return AExplicitOperationDefinitionAssistantInterpreter.findStatement(def, lineno);
 		return af.createPStmAssistant().findStatement(def.getBody(), lineno);
 	}
 	
@@ -53,7 +50,6 @@ public class DefinitionStatementFinder extends QuestionAnswerAdaptor<Integer, PS
 			AImplicitOperationDefinition def, Integer lineno)
 			throws AnalysisException
 	{
-		//return AImplicitOperationDefinitionAssistantInterpreter.findStatement(def, lineno);
 		return def.getBody() == null ? null
 				: af.createPStmAssistant().findStatement(def.getBody(), lineno);
 	}
@@ -62,7 +58,6 @@ public class DefinitionStatementFinder extends QuestionAnswerAdaptor<Integer, PS
 	public PStm caseAThreadDefinition(AThreadDefinition def, Integer lineno)
 			throws AnalysisException
 	{
-		//return AThreadDefinitionAssistantInterpreter.findStatement(def, lineno);
 		return af.createPStmAssistant().findStatement(def.getStatement(), lineno);
 	}
 	
