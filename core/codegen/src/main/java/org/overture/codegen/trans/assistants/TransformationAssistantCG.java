@@ -2,6 +2,8 @@ package org.overture.codegen.trans.assistants;
 
 import java.util.List;
 
+import org.overture.ast.types.ASetType;
+import org.overture.ast.types.PType;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
@@ -35,6 +37,7 @@ import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.ITempVarGen;
+import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.trans.IIterationStrategy;
 import org.overture.codegen.trans.TempVarPrefixes;
 
@@ -68,12 +71,31 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 
 	public SSetTypeCG getSetTypeCloned(STypeCG typeCg) throws AnalysisException
 	{
-		if (!(typeCg instanceof SSetTypeCG))
+		if (typeCg instanceof SSetTypeCG)
+		{
+			SSetTypeCG setTypeCg = (SSetTypeCG) typeCg;
+
+			return setTypeCg.clone();
+		} else
+		{
+			SourceNode sourceNode = typeCg.getSourceNode();
+
+			if (sourceNode != null && sourceNode.getVdmNode() instanceof PType)
+			{
+				PType vdmType = (PType) sourceNode.getVdmNode();
+				ASetType setType = info.getTcFactory().createPTypeAssistant().getSet(vdmType);
+				try
+				{
+					typeCg = setType.apply(info.getTypeVisitor(), info);
+					return (SSetTypeCG) typeCg;
+
+				} catch (org.overture.ast.analysis.AnalysisException e)
+				{
+				}
+			}
+
 			throw new AnalysisException("Exptected set type. Got: " + typeCg);
-
-		SSetTypeCG setTypeCg = (SSetTypeCG) typeCg;
-
-		return setTypeCg.clone();
+		}
 	}
 
 	public SSeqTypeCG getSeqTypeCloned(SExpCG seq) throws AnalysisException
