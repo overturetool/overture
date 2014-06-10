@@ -29,6 +29,7 @@ public class PDefinitionAssistantPOG extends PDefinitionAssistantTC {
 			ctxt.push(new PONameContext(getVariableNames(d)));
 			obligations.addAll(d.apply(pogVisitor, ctxt));
 			ctxt.pop();
+			ctxt.clearStateContexts();
 		}
 
 		return obligations;

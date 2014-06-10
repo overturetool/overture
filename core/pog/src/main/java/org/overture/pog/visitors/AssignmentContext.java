@@ -25,14 +25,13 @@ public class AssignmentContext extends POContext
 		return sub.toString();
 	}
 
-	public AssignmentContext(AAssignmentStm node, IVariableSubVisitor visitor,
-			IPogAssistantFactory af) throws AnalysisException
+	public AssignmentContext(AAssignmentStm node, IPogAssistantFactory af) throws AnalysisException
 	{
 
 		String hash = node.getTarget().apply(af.createStateDesignatorNameGetter());
 
 		sub = new Substitution(hash, node.getExp());
-		this.visitor = visitor;
+		this.visitor = af.getVarSubVisitor();
 
 	}
 

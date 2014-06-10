@@ -4,23 +4,20 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.SOperationDefinitionBase;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.ACallStm;
-import org.overture.ast.statements.ASelfObjectDesignator;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.visitors.Substitution;
-import org.overture.pog.visitors.VariableSubVisitor;
 
 public class OperationCallObligation extends ProofObligation {
 
 	public OperationCallObligation(ACallStm stm,
 			SOperationDefinitionBase def, List<PExp> args,
-			IPOContextStack ctxt, IPogAssistantFactory af) {
+			IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException {
 		super(stm, POType.OP_CALL, ctxt, stm.getLocation());
 		
 		// cannot quote pre-cond so we spell it out with rewritten arguments
@@ -36,12 +33,8 @@ public class OperationCallObligation extends ProofObligation {
 		PExp pre_exp = def.getPrecondition().clone();
 		
 		for (Substitution sub : subs){
-			try {
-				pre_exp = pre_exp.apply(new VariableSubVisitor(), sub);
-			} catch (AnalysisException e) {
-				// FIXME consider how to deal with analysis exception inside PO constructor
-				e.printStackTrace();
-			}
+				pre_exp = pre_exp.apply(af.getVarSubVisitor(), sub);
+	
 		}
 
 		valuetree.setPredicate(ctxt.getPredWithContext(pre_exp));

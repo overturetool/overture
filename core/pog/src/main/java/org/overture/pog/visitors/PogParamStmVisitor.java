@@ -2,7 +2,6 @@ package org.overture.pog.visitors;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
-import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SOperationDefinitionBase;
 import org.overture.ast.expressions.PExp;
@@ -56,18 +55,15 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 	final private QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> rootVisitor;
 	final private QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> mainVisitor;
-	final private IVariableSubVisitor varSubVisitor;
 	final private IPogAssistantFactory aF;
 
 	public PogParamStmVisitor(
 			QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> parentVisitor,
 			QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> mainVisitor,
-			IPogAssistantFactory assistantFactory,
-			IVariableSubVisitor varSubVisitor) {
+			IPogAssistantFactory assistantFactory) {
 		this.rootVisitor = parentVisitor;
 		this.mainVisitor = mainVisitor;
 		this.aF = assistantFactory;
-		this.varSubVisitor = varSubVisitor;
 	}
 
 	/**
@@ -84,7 +80,6 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 		this.rootVisitor = parentVisitor;
 		this.mainVisitor = this;
 		this.aF = new PogAssistantFactory();
-		this.varSubVisitor = new VariableSubVisitor();
 	}
 
 	@Override
@@ -133,7 +128,7 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 				}
 			}
 
-			question.push(new AssignmentContext(node, varSubVisitor, aF));
+			question.push(new AssignmentContext(node, aF));
 
 			return obligations;
 		} catch (Exception e) {
@@ -205,7 +200,7 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 					obligations.add(new OperationCallObligation(node, calledOp,
 							node.getArgs(), question, aF));
 				}question.push(
-				new OpPostConditionContext(calledOp.getPostdef(), node, calledOp, aF, question.getGenerator(), varSubVisitor));
+				new OpPostConditionContext(calledOp.getPostdef(), node, calledOp, aF, question.getGenerator()));
 				// FIXME implement clearing of substitutions based on frame
 				// info
 			}

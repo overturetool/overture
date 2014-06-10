@@ -65,8 +65,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 
 	final private QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> rootVisitor;
 	final private QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> mainVisitor;
-	final private IVariableSubVisitor renameVisitor;
-
+	
 	final private IPogAssistantFactory assistantFactory;
 
 	/**
@@ -80,13 +79,11 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 	public PogParamDefinitionVisitor(
 			QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> parentVisitor,
 			QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> mainVisitor,
-			IPogAssistantFactory assistantFactory,
-			IVariableSubVisitor renameVisitor)
+			IPogAssistantFactory assistantFactory)
 	{
 		this.rootVisitor = parentVisitor;
 		this.mainVisitor = mainVisitor;
 		this.assistantFactory = assistantFactory;
-		this.renameVisitor = renameVisitor;
 	}
 
 	/**
@@ -100,7 +97,6 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 		this.rootVisitor = parentVisitor;
 		this.mainVisitor = this;
 		this.assistantFactory = new PogAssistantFactory();
-		this.renameVisitor = new VariableSubVisitor();
 	}
 
 	@Override
@@ -248,7 +244,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 						AInstanceVariableDefinition ivdef = (AInstanceVariableDefinition) pdef;
 						if (ivdef.getInitialized())
 						{
-							question.push(new AssignmentContext((AInstanceVariableDefinition) pdef, renameVisitor));
+							question.push(new AssignmentContext((AInstanceVariableDefinition) pdef,assistantFactory.getVarSubVisitor() ));
 							assigns++;
 						}
 					}
@@ -804,7 +800,9 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 				question.push(new PONameContext(assistantFactory.createPDefinitionAssistant().getVariableNames(def)));
 				proofObligationList.addAll(def.apply(mainVisitor, question));
 				question.pop();
+				question.clearStateContexts();
 			}
+			
 
 			return proofObligationList;
 		} catch (Exception e)

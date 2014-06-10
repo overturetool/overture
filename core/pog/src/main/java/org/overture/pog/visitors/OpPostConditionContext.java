@@ -39,28 +39,26 @@ public class OpPostConditionContext extends POContext implements IPOContext
 
 	public OpPostConditionContext(AExplicitFunctionDefinition postDef,
 			ACallStm stm, SOperationDefinitionBase calledOp,
-			IPogAssistantFactory af, UniqueNameGenerator gen,
-			IVariableSubVisitor visitor)
+			IPogAssistantFactory af, UniqueNameGenerator gen)
 	{
 		this.gen = gen;
 		this.subs = new LinkedList<Substitution>();
 		this.forAll_exp = getChangedVarsExp(postDef, calledOp);
 		this.pred = spellCondition(postDef, af, stm.getArgs());
-		this.visitor = visitor;
+		this.visitor = af.getVarSubVisitor();
 	}
 
 	public OpPostConditionContext(AExplicitFunctionDefinition postDef,
 			AApplyExp exp, SOperationDefinitionBase calledOp,
-			IPogAssistantFactory af, UniqueNameGenerator gen,
-			IVariableSubVisitor visitor)
+			IPogAssistantFactory af, UniqueNameGenerator gen)
 	{
-		this.visitor = visitor;
+		this.visitor = af.getVarSubVisitor();
 		this.subs = new LinkedList<Substitution>();
 		this.gen = gen;
 		this.forAll_exp = getChangedVarsExp(postDef, calledOp);
 		this.pred = spellCondition(postDef, af, exp.getArgs());
 	}
-	
+
 	@Override
 	public String toString()
 	{
@@ -199,13 +197,13 @@ public class OpPostConditionContext extends POContext implements IPOContext
 			PExp new_exp = args.get(0).clone();
 			subs.add(new Substitution(origName, new_exp));
 		}
-		return rewriteExp(def, subs);
+		return rewriteExp(def, subs, af);
 	}
 
 	// FIXME unify expression rewrite method with the one from
 	// OperationCallObligation
 	private PExp rewriteExp(AExplicitFunctionDefinition def,
-			List<Substitution> subs)
+			List<Substitution> subs, IPogAssistantFactory af)
 	{
 		PExp pre_exp = def.getBody().clone();
 
@@ -213,7 +211,7 @@ public class OpPostConditionContext extends POContext implements IPOContext
 		{
 			try
 			{
-				pre_exp = pre_exp.apply(new VariableSubVisitor(), sub);
+				pre_exp = pre_exp.apply(af.getVarSubVisitor(), sub);
 			} catch (AnalysisException e)
 			{
 

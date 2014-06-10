@@ -1,7 +1,9 @@
 package org.overture.pog.utility;
 
 import org.overture.pog.pub.IPogAssistantFactory;
+import org.overture.pog.visitors.IVariableSubVisitor;
 import org.overture.pog.visitors.StateDesignatorNameGetter;
+import org.overture.pog.visitors.VariableSubVisitor;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 //FIXME Add assistant Javadoc
 /** 
@@ -30,5 +32,11 @@ public class PogAssistantFactory extends TypeCheckerAssistantFactory implements 
 	public StateDesignatorNameGetter createStateDesignatorNameGetter()
 	{
 		return new StateDesignatorNameGetter();
+	}
+
+	@Override
+	public IVariableSubVisitor getVarSubVisitor()
+	{
+		return new VariableSubVisitor();
 	}
 }

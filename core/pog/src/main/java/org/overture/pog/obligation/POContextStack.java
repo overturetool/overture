@@ -65,6 +65,7 @@ public class POContextStack extends Stack<IPOContext> implements
 			if (!this.get(i).isStateful())
 			{
 				removeElementAt(i);
+				return obj;
 			}
 		}
 
