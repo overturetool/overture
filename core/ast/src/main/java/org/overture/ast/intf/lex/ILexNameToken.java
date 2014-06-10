@@ -64,5 +64,9 @@ public interface ILexNameToken extends ILexIdentifierToken
 	boolean matches(ILexNameToken other);
 
 	void setTypeQualifier(List<PType> types);
+	
+	//int hashCode(IAstAssistantFactory assistantFactory);
+	//Try to declare it here as requested by eclipse.
+	//Didn't seem to work.
 
 }

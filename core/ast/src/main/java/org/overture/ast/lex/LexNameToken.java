@@ -227,7 +227,7 @@ public class LexNameToken extends LexToken implements ILexNameToken,
 				&& old == other.getOld();
 	}
 
-	@Override
+	@Override //what does this overrides?
 	public int hashCode()
 	{
 		if (hashcode == 0)
