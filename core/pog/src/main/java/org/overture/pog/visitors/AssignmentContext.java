@@ -18,6 +18,12 @@ public class AssignmentContext extends POContext
 	{
 		return null;
 	}
+	
+	@Override
+	public String toString()
+	{
+		return sub.toString();
+	}
 
 	public AssignmentContext(AAssignmentStm node, IVariableSubVisitor visitor,
 			IPogAssistantFactory af) throws AnalysisException

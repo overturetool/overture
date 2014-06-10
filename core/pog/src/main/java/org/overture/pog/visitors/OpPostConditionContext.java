@@ -60,6 +60,12 @@ public class OpPostConditionContext extends POContext implements IPOContext
 		this.forAll_exp = getChangedVarsExp(postDef, calledOp);
 		this.pred = spellCondition(postDef, af, exp.getArgs());
 	}
+	
+	@Override
+	public String toString()
+	{
+		return forAll_exp.toString() + pred.toString();
+	}
 
 	private AForAllExp getChangedVarsExp(AExplicitFunctionDefinition postDef,
 			SOperationDefinitionBase calledOp)
