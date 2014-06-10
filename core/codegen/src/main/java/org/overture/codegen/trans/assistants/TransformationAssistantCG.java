@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.PType;
+import org.overture.ast.types.SSeqType;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
@@ -32,7 +33,6 @@ import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
-import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.ir.IRInfo;
@@ -107,30 +107,31 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 
 	public SSeqTypeCG getSeqTypeCloned(STypeCG typeCg) throws AnalysisException
 	{
-		if (!(typeCg instanceof SSeqTypeCG))
-			throw new AnalysisException("Exptected sequence type. Got: "
-					+ typeCg);
+		if (typeCg instanceof SSeqTypeCG)
+		{
+			SSeqTypeCG seqTypeCg = (SSeqTypeCG) typeCg;
 
-		SSeqTypeCG seqTypeCg = (SSeqTypeCG) typeCg;
+			return seqTypeCg.clone();
+		} else
+		{
+			SourceNode sourceNode = typeCg.getSourceNode();
 
-		return seqTypeCg.clone();
-	}
+			if (sourceNode != null && sourceNode.getVdmNode() instanceof PType)
+			{
+				PType vdmType = (PType) sourceNode.getVdmNode();
+				SSeqType seqType = info.getTcFactory().createPTypeAssistant().getSeq(vdmType);
+				try
+				{
+					typeCg = seqType.apply(info.getTypeVisitor(), info);
+					return (SSeqTypeCG) typeCg;
 
-	public SMapTypeCG getMapTypeCloned(SExpCG map) throws AnalysisException
-	{
-		STypeCG typeCg = map.getType();
+				} catch (org.overture.ast.analysis.AnalysisException e)
+				{
+				}
+			}
 
-		return getMapTypeCloned(typeCg);
-	}
-
-	public SMapTypeCG getMapTypeCloned(STypeCG typeCg) throws AnalysisException
-	{
-		if (!(typeCg instanceof SMapTypeCG))
-			throw new AnalysisException("Exptected map type. Got: " + typeCg);
-
-		SMapTypeCG mapTypeCg = (SMapTypeCG) typeCg;
-
-		return mapTypeCg.clone();
+			throw new AnalysisException("Exptected sequence type. Got: " + typeCg);
+		}
 	}
 
 	public AVarLocalDeclCG consBoolVarDecl(String boolVarName, boolean initValue)
