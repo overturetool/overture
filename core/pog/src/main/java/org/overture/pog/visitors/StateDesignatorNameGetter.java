@@ -14,14 +14,14 @@ public class StateDesignatorNameGetter extends AnswerAdaptor<String>
 	public String caseAIdentifierStateDesignator(AIdentifierStateDesignator node)
 			throws AnalysisException
 	{
-		return node.getName().getName();
+		return node.getName().getFullName();
 	}
 
 	@Override
 	public String caseAFieldStateDesignator(AFieldStateDesignator node)
 			throws AnalysisException
 	{
-		return node.getField().getName() + node.getObjectfield();
+		return node.getField().getName() + node.getField();
 	}
 
 	@Override

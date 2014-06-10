@@ -8,6 +8,7 @@ import org.overture.ast.definitions.SOperationDefinitionBase;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.node.INode;
+import org.overture.ast.statements.ACallStm;
 
 public class GetOpCallVisitor extends AnswerAdaptor<SOperationDefinitionBase> {
 
@@ -29,6 +30,12 @@ public class GetOpCallVisitor extends AnswerAdaptor<SOperationDefinitionBase> {
 	@Override
 	public SOperationDefinitionBase caseAVariableExp(AVariableExp node) throws AnalysisException {
 		return node.getVardef().apply(this);
+	}
+	
+	@Override
+	public SOperationDefinitionBase caseACallStm(ACallStm node)
+			throws AnalysisException {
+		return node.getRootdef().apply(this);
 	}
 
 	@Override

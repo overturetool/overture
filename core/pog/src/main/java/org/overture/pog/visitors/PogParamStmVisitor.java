@@ -4,6 +4,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SOperationDefinitionBase;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.AIgnorePattern;
@@ -132,7 +133,7 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 				}
 			}
 
-			question.push(new AssignmentContext(node, varSubVisitor));
+			question.push(new AssignmentContext(node, varSubVisitor, aF));
 
 			return obligations;
 		} catch (Exception e) {
@@ -196,23 +197,18 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 				obligations.addAll(exp.apply(rootVisitor, question));
 			}
 
-			// FIXME Replace instanceof checks with visitor application
-			if (node.getRootdef() != null
-					&& node.getRootdef() instanceof AExplicitOperationDefinition) {
-				AExplicitOperationDefinition opdef = (AExplicitOperationDefinition) node
-						.getRootdef();
-				if (opdef.getPrecondition() != null) {
-					obligations.add(new OperationCallObligation(node, opdef,
+			// stick possible op post_condition in the context
+			SOperationDefinitionBase calledOp = node
+					.apply(new GetOpCallVisitor());
+			if (calledOp != null) {
+				if (calledOp.getPrecondition() != null) {
+					obligations.add(new OperationCallObligation(node, calledOp,
 							node.getArgs(), question, aF));
-				}
-				if (opdef.getPostcondition() != null) {
-					question.push(new OpPostConditionContext(
-							opdef.getPostdef(), node, aF));
-					// FIXME implement clearing of substitutions based on frame
-					// info
-				}
+				}question.push(
+				new OpPostConditionContext(calledOp.getPostdef(), node, calledOp, aF, question.getGenerator(), varSubVisitor));
+				// FIXME implement clearing of substitutions based on frame
+				// info
 			}
-
 			return obligations;
 		} catch (Exception e) {
 			throw new POException(node, e.getMessage());

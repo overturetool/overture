@@ -91,7 +91,20 @@ public class OpPostConditionContext extends POContext implements IPOContext
 	private void refreshAllState(SOperationDefinitionBase calledOp,
 			List<PMultipleBind> binds)
 	{
-		for (PDefinition p : calledOp.getClassDefinition().getDefinitions())
+		List<PDefinition> defs;
+		if (calledOp.getClassDefinition() != null)
+		{
+			defs = calledOp.getClassDefinition().getDefinitions();
+		} else
+		{
+			if (calledOp.getState() != null)
+			{
+				defs = calledOp.getState().getStateDefs();
+			} else
+				defs = new LinkedList<PDefinition>();
+		}
+
+		for (PDefinition p : defs)
 		{
 			if (p instanceof AInstanceVariableDefinition)
 			{
@@ -119,7 +132,7 @@ public class OpPostConditionContext extends POContext implements IPOContext
 
 		Substitution sub = new Substitution(var.getName().clone(), newVar);
 		subs.add(sub);
-		
+
 		return r;
 	}
 
@@ -175,7 +188,7 @@ public class OpPostConditionContext extends POContext implements IPOContext
 
 		for (int i = 0; i < args.size(); i++)
 		{
-			PPattern orig = def.getParamPatternList().get(i).get(0).clone();
+			PPattern orig = def.getParamPatternList().get(0).get(1).clone();
 			ILexNameToken origName = af.createPPatternAssistant().getAllVariableNames(orig).get(0).clone();
 			PExp new_exp = args.get(0).clone();
 			subs.add(new Substitution(origName, new_exp));

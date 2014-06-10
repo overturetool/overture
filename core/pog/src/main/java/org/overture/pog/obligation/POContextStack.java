@@ -30,11 +30,26 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.types.PType;
 import org.overture.pog.pub.IPOContext;
 import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.utility.UniqueNameGenerator;
 
 @SuppressWarnings("serial")
 public class POContextStack extends Stack<IPOContext> implements IPOContextStack
 {
+	private UniqueNameGenerator gen;
 	
+	
+	@Override
+	public void setGenerator(UniqueNameGenerator gen){
+		this.gen = gen;
+	}
+	
+	@Override
+	public UniqueNameGenerator getGenerator()
+	{
+		return gen;
+	}
+	
+
 	public PExp getPredWithContext(PExp initialPredicate){
 		return getContextNode(initialPredicate);
 	}
