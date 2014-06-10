@@ -58,4 +58,10 @@ public class AirportSLTest extends ProbConverterTestBase
 		testMethod("NumberWaiting");
 	}
 
+	
+	@Override
+	protected String getPropertyId()
+	{
+		return "sl.airport";
+	}
 }

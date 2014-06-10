@@ -267,3 +267,9 @@ import org.overture.ast.util.ToStringUtil;
 
 //object designator
 %objectDesignator->identifier = [name];
+%objectDesignator->apply = [object] "(" + $Utils.listToString($[args]$)$ + ")"
+%objectDesignator->field = [object]+"."+[fieldName]
+%objectDesignator->new = "new "+[expression]
+%objectDesignator->self = [self]
+
+

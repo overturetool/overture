@@ -11,10 +11,10 @@ import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.ValueList;
-import org.overture.pog.assistant.PogAssistantFactory;
 import org.overture.pog.obligation.POContextStack;
 import org.overture.pog.obligation.ProofObligationList;
-import org.overture.pog.visitor.PogVisitor;
+import org.overture.pog.pub.IProofObligationList;
+import org.overture.pog.pub.ProofObligationGenerator;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
 public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
@@ -89,12 +89,14 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 //		}
 	}
 
-	public ProofObligationList getProofObligations(PDefinition def,
+	public IProofObligationList getProofObligations(PDefinition def,
 			POContextStack ctxt)
 	{
 		try
 		{
-			return def.apply(new PogVisitor(), new POContextStack(new PogAssistantFactory()));
+
+			ProofObligationGenerator.generateProofObligations(def);
+
 		} catch (AnalysisException e)
 		{
 			e.printStackTrace();

@@ -21,7 +21,7 @@ public class ACallObjectStatementAssistantTC
 		this.af = af;
 	}
 
-	public List<PType> getArgTypes(LinkedList<PExp> args,
+	public List<PType> getArgTypes(List<PExp> args,
 			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) throws AnalysisException
 	{

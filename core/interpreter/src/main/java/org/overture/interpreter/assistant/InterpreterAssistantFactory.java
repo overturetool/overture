@@ -18,13 +18,11 @@ import org.overture.interpreter.assistant.definition.AExplicitFunctionDefinition
 import org.overture.interpreter.assistant.definition.AImplicitFunctionDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AMutexSyncDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ANamedTraceDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.ARepeatTraceDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AStateDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ASystemClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PDefinitionListAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PTraceCoreDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.PTraceDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AFieldExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AIsOfBaseClassExpAssistantInterpreter;
@@ -33,85 +31,33 @@ import org.overture.interpreter.assistant.expression.APostOpExpAssistantInterpre
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.assistant.module.AModuleModulesAssistantInterpreter;
 import org.overture.interpreter.assistant.module.ModuleListAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ABooleanPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ACharacterPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AConcatenationPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AExpressionPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AIdentifierPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AIgnorePatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AIntegerPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AMapPatternAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.AMapPatternMapletAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AMapUnionPatternAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.ANilPatternAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.AQuotePatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ARealPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ARecordPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ASeqPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ASetBindAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ASetMultipleBindAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ASetPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AStringPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ATuplePatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ATypeBindAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ATypeMultipleBindAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AUnionPatternAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PMultipleBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PPatternListAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AAlwaysStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AAssignmentStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AAtomicStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ACallObjectStatementAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ACallStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.ACaseAlternativeStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ACasesStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ACyclesStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ADurationStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AElseIfStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AExitStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AForAllStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AForIndexStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AForPatternBindStmAssitantInterpreter;
-import org.overture.interpreter.assistant.statement.AIfStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ALetBeStStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AReturnStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.AStartStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ATixeStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.ATixeStmtAlternativeAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ATrapStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AWhileStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.PStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.SLetDefStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.SSimpleBlockStmAssistantInterpreter;
-import org.overture.interpreter.assistant.type.ABooleanBasicTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.AInMapMapTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.ANamedInvariantTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.AOptionalTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.AParameterTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.AProductTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.AQuoteTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.ARecordInvariantTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.ASetTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.AUnionTypeAssistantInterpreter;
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.interpreter.assistant.type.PTypeListAssistant;
-import org.overture.interpreter.assistant.type.SBasicTypeAssistantInterpreter;
 import org.overture.interpreter.assistant.type.SInvariantTypeAssistantInterpreter;
 import org.overture.interpreter.assistant.type.SMapTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
+import org.overture.interpreter.traces.TraceExpander;
 import org.overture.interpreter.traces.TraceNode;
 import org.overture.interpreter.utilities.OldNameCollector;
-import org.overture.interpreter.utilities.definition.CoreTraceExpander;
 import org.overture.interpreter.utilities.definition.DefinitionRunTimeChecker;
 import org.overture.interpreter.utilities.definition.DefinitionStatementFinder;
 import org.overture.interpreter.utilities.definition.DefinitionValueChecker;
 import org.overture.interpreter.utilities.definition.ExpressionFinder;
 import org.overture.interpreter.utilities.definition.InstanceVariableChecker;
 import org.overture.interpreter.utilities.definition.NamedValueLister;
-import org.overture.interpreter.utilities.definition.TermTraceExpander;
 import org.overture.interpreter.utilities.definition.TypeDefinitionChecker;
 import org.overture.interpreter.utilities.definition.ValuesDefinitionLocator;
 import org.overture.interpreter.utilities.expression.ExpExpressionFinder;
@@ -264,10 +210,10 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 //		return new ARenamedDefinitionAssistantInterpreter(this);
 //	}
 
-	public ARepeatTraceDefinitionAssistantInterpreter createARepeatTraceDefinitionAssistant()
-	{
-		return new ARepeatTraceDefinitionAssistantInterpreter(this);
-	}
+//	public ARepeatTraceDefinitionAssistantInterpreter createARepeatTraceDefinitionAssistant()
+//	{
+//		return new ARepeatTraceDefinitionAssistantInterpreter(this);
+//	}
 
 	public AStateDefinitionAssistantInterpreter createAStateDefinitionAssistant()
 	{
@@ -317,11 +263,6 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	public PTraceCoreDefinitionAssistantInterpreter createPTraceCoreDefinitionAssistant()
 	{
 		return new PTraceCoreDefinitionAssistantInterpreter(this);
-	}
-
-	public PTraceDefinitionAssistantInterpreter createPTraceDefinitionAssistant()
-	{
-		return new PTraceDefinitionAssistantInterpreter(this);
 	}
 
 	public SClassDefinitionAssistantInterpreter createSClassDefinitionAssistant()
@@ -570,55 +511,55 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 
 	// pattern
 
-	public ABooleanPatternAssistantInterpreter createABooleanPatternAssistant()
-	{
-		return new ABooleanPatternAssistantInterpreter(this);
-	}
-
-	public ACharacterPatternAssistantInterpreter createACharacterPatternAssistant()
-	{
-		return new ACharacterPatternAssistantInterpreter(this);
-	}
-
-	public AConcatenationPatternAssistantInterpreter createAConcatenationPatternAssistant()
-	{
-		return new AConcatenationPatternAssistantInterpreter(this);
-	}
-
-	public AExpressionPatternAssistantInterpreter createAExpressionPatternAssistant()
-	{
-		return new AExpressionPatternAssistantInterpreter(this);
-	}
-
-	public AIdentifierPatternAssistantInterpreter createAIdentifierPatternAssistant()
-	{
-		return new AIdentifierPatternAssistantInterpreter(this);
-	}
-
-	public AIgnorePatternAssistantInterpreter createAIgnorePatternAssistant()
-	{
-		return new AIgnorePatternAssistantInterpreter(this);
-	}
-
-	public AIntegerPatternAssistantInterpreter createAIntegerPatternAssistant()
-	{
-		return new AIntegerPatternAssistantInterpreter(this);
-	}
-
-	public AMapPatternAssistantInterpreter createAMapPatternAssistant()
-	{
-		return new AMapPatternAssistantInterpreter(this);
-	}
+//	public ABooleanPatternAssistantInterpreter createABooleanPatternAssistant()
+//	{
+//		return new ABooleanPatternAssistantInterpreter(this);
+//	}
+//
+//	public ACharacterPatternAssistantInterpreter createACharacterPatternAssistant()
+//	{
+//		return new ACharacterPatternAssistantInterpreter(this);
+//	}
+//
+//	public AConcatenationPatternAssistantInterpreter createAConcatenationPatternAssistant()
+//	{
+//		return new AConcatenationPatternAssistantInterpreter(this);
+//	}
+//
+//	public AExpressionPatternAssistantInterpreter createAExpressionPatternAssistant()
+//	{
+//		return new AExpressionPatternAssistantInterpreter(this);
+//	}
+//
+//	public AIdentifierPatternAssistantInterpreter createAIdentifierPatternAssistant()
+//	{
+//		return new AIdentifierPatternAssistantInterpreter(this);
+//	}
+//
+//	public AIgnorePatternAssistantInterpreter createAIgnorePatternAssistant()
+//	{
+//		return new AIgnorePatternAssistantInterpreter(this);
+//	}
+//
+//	public AIntegerPatternAssistantInterpreter createAIntegerPatternAssistant()
+//	{
+//		return new AIntegerPatternAssistantInterpreter(this);
+//	}
+//
+//	public AMapPatternAssistantInterpreter createAMapPatternAssistant()
+//	{
+//		return new AMapPatternAssistantInterpreter(this);
+//	}
 
 	public AMapPatternMapletAssistantInterpreter createAMapPatternMapletAssistant()
 	{
 		return new AMapPatternMapletAssistantInterpreter(this);
 	}
 
-	public AMapUnionPatternAssistantInterpreter createAMapUnionPatternAssistant()
-	{
-		return new AMapUnionPatternAssistantInterpreter(this);
-	}
+//	public AMapUnionPatternAssistantInterpreter createAMapUnionPatternAssistant()
+//	{
+//		return new AMapUnionPatternAssistantInterpreter(this);
+//	}
 
 	public ANilPatternAssistantInterpreter createANilPatternAssistant()
 	{
@@ -630,60 +571,60 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 		return new AQuotePatternAssistantInterpreter(this);
 	}
 
-	public ARealPatternAssistantInterpreter createARealPatternAssistant()
-	{
-		return new ARealPatternAssistantInterpreter(this);
-	}
+//	public ARealPatternAssistantInterpreter createARealPatternAssistant()
+//	{
+//		return new ARealPatternAssistantInterpreter(this);
+//	}
 
-	public ARecordPatternAssistantInterpreter createARecordPatternAssistant()
-	{
-		return new ARecordPatternAssistantInterpreter(this);
-	}
+//	public ARecordPatternAssistantInterpreter createARecordPatternAssistant()
+//	{
+//		return new ARecordPatternAssistantInterpreter(this);
+//	}
 
-	public ASeqPatternAssistantInterpreter createASeqPatternAssistant()
-	{
-		return new ASeqPatternAssistantInterpreter(this);
-	}
+//	public ASeqPatternAssistantInterpreter createASeqPatternAssistant()
+//	{
+//		return new ASeqPatternAssistantInterpreter(this);
+//	}
 
-	public ASetBindAssistantInterpreter createASetBindAssistant()
-	{
-		return new ASetBindAssistantInterpreter(this);
-	}
+//	public ASetBindAssistantInterpreter createASetBindAssistant()
+//	{
+//		return new ASetBindAssistantInterpreter(this);
+//	}
 
-	public ASetMultipleBindAssistantInterpreter createASetMultipleBindAssistant()
-	{
-		return new ASetMultipleBindAssistantInterpreter(this);
-	}
+//	public ASetMultipleBindAssistantInterpreter createASetMultipleBindAssistant()
+//	{
+//		return new ASetMultipleBindAssistantInterpreter(this);
+//	}
 
-	public ASetPatternAssistantInterpreter createASetPatternAssistant()
-	{
-		return new ASetPatternAssistantInterpreter(this);
-	}
+//	public ASetPatternAssistantInterpreter createASetPatternAssistant()
+//	{
+//		return new ASetPatternAssistantInterpreter(this);
+//	}
 
-	public AStringPatternAssistantInterpreter createAStringPatternAssistant()
-	{
-		return new AStringPatternAssistantInterpreter(this);
-	}
+//	public AStringPatternAssistantInterpreter createAStringPatternAssistant()
+//	{
+//		return new AStringPatternAssistantInterpreter(this);
+//	}
 
-	public ATuplePatternAssistantInterpreter createATuplePatternAssistant()
-	{
-		return new ATuplePatternAssistantInterpreter(this);
-	}
+//	public ATuplePatternAssistantInterpreter createATuplePatternAssistant()
+//	{
+//		return new ATuplePatternAssistantInterpreter(this);
+//	}
 
-	public ATypeBindAssistantInterpreter createATypeBindAssistant()
-	{
-		return new ATypeBindAssistantInterpreter(this);
-	}
+//	public ATypeBindAssistantInterpreter createATypeBindAssistant()
+//	{
+//		return new ATypeBindAssistantInterpreter(this);
+//	}
 
-	public ATypeMultipleBindAssistantInterpreter createATypeMultipleBindAssistant()
-	{
-		return new ATypeMultipleBindAssistantInterpreter(this);
-	}
+//	public ATypeMultipleBindAssistantInterpreter createATypeMultipleBindAssistant()
+//	{
+//		return new ATypeMultipleBindAssistantInterpreter(this);
+//	}
 
-	public AUnionPatternAssistantInterpreter createAUnionPatternAssistant()
-	{
-		return new AUnionPatternAssistantInterpreter(this);
-	}
+//	public AUnionPatternAssistantInterpreter createAUnionPatternAssistant()
+//	{
+//		return new AUnionPatternAssistantInterpreter(this);
+//	}
 
 	public PBindAssistantInterpreter createPBindAssistant()
 	{
@@ -707,125 +648,125 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 
 	// statement
 
-	public AAlwaysStmAssistantInterpreter createAAlwaysStmAssistant()
-	{
-		return new AAlwaysStmAssistantInterpreter(this);
-	}
-
-	public AAssignmentStmAssistantInterpreter createAAssignmentStmAssistant()
-	{
-		return new AAssignmentStmAssistantInterpreter(this);
-	}
-
-	public AAtomicStmAssistantInterpreter createAAtomicStmAssistant()
-	{
-		return new AAtomicStmAssistantInterpreter(this);
-	}
-
-	public ACallObjectStatementAssistantInterpreter createACallObjectStatementAssistant()
-	{
-		return new ACallObjectStatementAssistantInterpreter(this);
-	}
-
-	public ACallStmAssistantInterpreter createACallStmAssistant()
-	{
-		return new ACallStmAssistantInterpreter(this);
-	}
+//	public AAlwaysStmAssistantInterpreter createAAlwaysStmAssistant()
+//	{
+//		return new AAlwaysStmAssistantInterpreter(this);
+//	}
+//
+//	public AAssignmentStmAssistantInterpreter createAAssignmentStmAssistant()
+//	{
+//		return new AAssignmentStmAssistantInterpreter(this);
+//	}
+//
+//	public AAtomicStmAssistantInterpreter createAAtomicStmAssistant()
+//	{
+//		return new AAtomicStmAssistantInterpreter(this);
+//	}
+//
+//	public ACallObjectStatementAssistantInterpreter createACallObjectStatementAssistant()
+//	{
+//		return new ACallObjectStatementAssistantInterpreter(this);
+//	}
+//
+//	public ACallStmAssistantInterpreter createACallStmAssistant()
+//	{
+//		return new ACallStmAssistantInterpreter(this);
+//	}
 
 	public ACaseAlternativeStmAssistantInterpreter createACaseAlternativeStmAssistant()
 	{
 		return new ACaseAlternativeStmAssistantInterpreter(this);
 	}
 
-	public ACasesStmAssistantInterpreter createACasesStmAssistant()
-	{
-		return new ACasesStmAssistantInterpreter(this);
-	}
-
-	public ACyclesStmAssistantInterpreter createACyclesStmAssistant()
-	{
-		return new ACyclesStmAssistantInterpreter(this);
-	}
-
-	public ADurationStmAssistantInterpreter createADurationStmAssistant()
-	{
-		return new ADurationStmAssistantInterpreter(this);
-	}
-
-	public AElseIfStmAssistantInterpreter createAElseIfStmAssistant()
-	{
-		return new AElseIfStmAssistantInterpreter(this);
-	}
-
-	public AExitStmAssistantInterpreter createAExitStmAssistant()
-	{
-		return new AExitStmAssistantInterpreter(this);
-	}
-
-	public AForAllStmAssistantInterpreter createAForAllStmAssistant()
-	{
-		return new AForAllStmAssistantInterpreter(this);
-	}
-
-	public AForIndexStmAssistantInterpreter createAForIndexStmAssistant()
-	{
-		return new AForIndexStmAssistantInterpreter(this);
-	}
-
-	public AForPatternBindStmAssitantInterpreter createAForPatternBindStmAssitant()
-	{
-		return new AForPatternBindStmAssitantInterpreter(this);
-	}
-
-	public AIfStmAssistantInterpreter createAIfStmAssistant()
-	{
-		return new AIfStmAssistantInterpreter(this);
-	}
-
-	public ALetBeStStmAssistantInterpreter createALetBeStStmAssistant()
-	{
-		return new ALetBeStStmAssistantInterpreter(this);
-	}
-
-	public AReturnStmAssistantInterpreter createAReturnStmAssistant()
-	{
-		return new AReturnStmAssistantInterpreter(this);
-	}
+//	public ACasesStmAssistantInterpreter createACasesStmAssistant()
+//	{
+//		return new ACasesStmAssistantInterpreter(this);
+//	}
+//
+//	public ACyclesStmAssistantInterpreter createACyclesStmAssistant()
+//	{
+//		return new ACyclesStmAssistantInterpreter(this);
+//	}
+//
+//	public ADurationStmAssistantInterpreter createADurationStmAssistant()
+//	{
+//		return new ADurationStmAssistantInterpreter(this);
+//	}
+//
+//	public AElseIfStmAssistantInterpreter createAElseIfStmAssistant()
+//	{
+//		return new AElseIfStmAssistantInterpreter(this);
+//	}
+//
+//	public AExitStmAssistantInterpreter createAExitStmAssistant()
+//	{
+//		return new AExitStmAssistantInterpreter(this);
+//	}
+//
+//	public AForAllStmAssistantInterpreter createAForAllStmAssistant()
+//	{
+//		return new AForAllStmAssistantInterpreter(this);
+//	}
+//
+//	public AForIndexStmAssistantInterpreter createAForIndexStmAssistant()
+//	{
+//		return new AForIndexStmAssistantInterpreter(this);
+//	}
+//
+//	public AForPatternBindStmAssitantInterpreter createAForPatternBindStmAssitant()
+//	{
+//		return new AForPatternBindStmAssitantInterpreter(this);
+//	}
+//
+//	public AIfStmAssistantInterpreter createAIfStmAssistant()
+//	{
+//		return new AIfStmAssistantInterpreter(this);
+//	}
+//
+//	public ALetBeStStmAssistantInterpreter createALetBeStStmAssistant()
+//	{
+//		return new ALetBeStStmAssistantInterpreter(this);
+//	}
+//
+//	public AReturnStmAssistantInterpreter createAReturnStmAssistant()
+//	{
+//		return new AReturnStmAssistantInterpreter(this);
+//	}
 
 	public AStartStmAssistantInterpreter createAStartStmAssistant()
 	{
 		return new AStartStmAssistantInterpreter(this);
 	}
 
-	public ATixeStmAssistantInterpreter createATixeStmAssistant()
-	{
-		return new ATixeStmAssistantInterpreter(this);
-	}
-
+//	public ATixeStmAssistantInterpreter createATixeStmAssistant()
+//	{
+//		return new ATixeStmAssistantInterpreter(this);
+//	}
+//
 	public ATixeStmtAlternativeAssistantInterpreter createATixeStmtAlternativeAssistant()
 	{
 		return new ATixeStmtAlternativeAssistantInterpreter(this);
 	}
-
-	public ATrapStmAssistantInterpreter createATrapStmAssistant()
-	{
-		return new ATrapStmAssistantInterpreter(this);
-	}
-
-	public AWhileStmAssistantInterpreter createAWhileStmAssistant()
-	{
-		return new AWhileStmAssistantInterpreter(this);
-	}
+//
+//	public ATrapStmAssistantInterpreter createATrapStmAssistant()
+//	{
+//		return new ATrapStmAssistantInterpreter(this);
+//	}
+//
+//	public AWhileStmAssistantInterpreter createAWhileStmAssistant()
+//	{
+//		return new AWhileStmAssistantInterpreter(this);
+//	}
 
 	public PStmAssistantInterpreter createPStmAssistant()
 	{
 		return new PStmAssistantInterpreter(this);
 	}
 
-	public SLetDefStmAssistantInterpreter createSLetDefStmAssistant()
-	{
-		return new SLetDefStmAssistantInterpreter(this);
-	}
+//	public SLetDefStmAssistantInterpreter createSLetDefStmAssistant()
+//	{
+//		return new SLetDefStmAssistantInterpreter(this);
+//	}
 
 	public SSimpleBlockStmAssistantInterpreter createSSimpleBlockStmAssistant()
 	{
@@ -834,55 +775,55 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 
 	// type
 
-	public ABooleanBasicTypeAssistantInterpreter createABooleanBasicTypeAssistant()
-	{
-		return new ABooleanBasicTypeAssistantInterpreter(this);
-	}
-
-	public AInMapMapTypeAssistantInterpreter createAInMapMapTypeAssistant()
-	{
-		return new AInMapMapTypeAssistantInterpreter(this);
-	}
-
-	public ANamedInvariantTypeAssistantInterpreter createANamedInvariantTypeAssistant()
-	{
-		return new ANamedInvariantTypeAssistantInterpreter(this);
-	}
-
-	public AOptionalTypeAssistantInterpreter createAOptionalTypeAssistant()
-	{
-		return new AOptionalTypeAssistantInterpreter(this);
-	}
-
-	public AParameterTypeAssistantInterpreter createAParameterTypeAssistant()
-	{
-		return new AParameterTypeAssistantInterpreter(this);
-	}
-
-	public AProductTypeAssistantInterpreter createAProductTypeAssistant()
-	{
-		return new AProductTypeAssistantInterpreter(this);
-	}
-
-	public AQuoteTypeAssistantInterpreter createAQuoteTypeAssistant()
-	{
-		return new AQuoteTypeAssistantInterpreter(this);
-	}
-
-	public ARecordInvariantTypeAssistantInterpreter createARecordInvariantTypeAssistant()
-	{
-		return new ARecordInvariantTypeAssistantInterpreter(this);
-	}
-
-	public ASetTypeAssistantInterpreter createASetTypeAssistant()
-	{
-		return new ASetTypeAssistantInterpreter(this);
-	}
-
-	public AUnionTypeAssistantInterpreter createAUnionTypeAssistant()
-	{
-		return new AUnionTypeAssistantInterpreter(this);
-	}
+//	public ABooleanBasicTypeAssistantInterpreter createABooleanBasicTypeAssistant()
+//	{
+//		return new ABooleanBasicTypeAssistantInterpreter(this);
+//	}
+//
+//	public AInMapMapTypeAssistantInterpreter createAInMapMapTypeAssistant()
+//	{
+//		return new AInMapMapTypeAssistantInterpreter(this);
+//	}
+//
+//	public ANamedInvariantTypeAssistantInterpreter createANamedInvariantTypeAssistant()
+//	{
+//		return new ANamedInvariantTypeAssistantInterpreter(this);
+//	}
+//
+//	public AOptionalTypeAssistantInterpreter createAOptionalTypeAssistant()
+//	{
+//		return new AOptionalTypeAssistantInterpreter(this);
+//	}
+//
+//	public AParameterTypeAssistantInterpreter createAParameterTypeAssistant()
+//	{
+//		return new AParameterTypeAssistantInterpreter(this);
+//	}
+//
+//	public AProductTypeAssistantInterpreter createAProductTypeAssistant()
+//	{
+//		return new AProductTypeAssistantInterpreter(this);
+//	}
+//
+//	public AQuoteTypeAssistantInterpreter createAQuoteTypeAssistant()
+//	{
+//		return new AQuoteTypeAssistantInterpreter(this);
+//	}
+//
+//	public ARecordInvariantTypeAssistantInterpreter createARecordInvariantTypeAssistant()
+//	{
+//		return new ARecordInvariantTypeAssistantInterpreter(this);
+//	}
+//
+//	public ASetTypeAssistantInterpreter createASetTypeAssistant()
+//	{
+//		return new ASetTypeAssistantInterpreter(this);
+//	}
+//
+//	public AUnionTypeAssistantInterpreter createAUnionTypeAssistant()
+//	{
+//		return new AUnionTypeAssistantInterpreter(this);
+//	}
 
 	public PTypeAssistantInterpreter createPTypeAssistant()
 	{
@@ -894,10 +835,10 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 		return new PTypeListAssistant(this);
 	}
 
-	public SBasicTypeAssistantInterpreter createSBasicTypeAssistant()
-	{
-		return new SBasicTypeAssistantInterpreter(this);
-	}
+//	public SBasicTypeAssistantInterpreter createSBasicTypeAssistant()
+//	{
+//		return new SBasicTypeAssistantInterpreter(this);
+//	}
 
 	public SInvariantTypeAssistantInterpreter createSInvariantTypeAssistant()
 	{
@@ -1000,15 +941,9 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	}
 	
 	@Override
-	public IQuestionAnswer<Context, TraceNode> getCoreTraceExpander()
+	public IQuestionAnswer<Context, TraceNode> getTraceExpander()
 	{
-		return new CoreTraceExpander(this);
-	}
-
-	@Override
-	public IQuestionAnswer<Context, TraceNode> getTermTraceExpander()
-	{
-		return new TermTraceExpander(this);
+		return new TraceExpander(this);
 	}
 
 	@Override
@@ -1058,5 +993,6 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	{
 		return new AllValuesCollector(this);
 	}
+
 
 }

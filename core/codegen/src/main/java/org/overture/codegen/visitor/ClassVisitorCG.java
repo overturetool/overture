@@ -15,18 +15,18 @@ import org.overture.codegen.cgast.declarations.PDeclCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
-import org.overture.codegen.constants.IOoAstConstants;
-import org.overture.codegen.ooast.OoAstInfo;
+import org.overture.codegen.constants.IRConstants;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.utils.AnalysisExceptionCG;
 
-public class ClassVisitorCG extends AbstractVisitorCG<OoAstInfo, AClassDeclCG>
+public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
 {
 	public ClassVisitorCG()
 	{
 	}
 	
 	@Override
-	public AClassDeclCG caseAClassClassDefinition(AClassClassDefinition node, OoAstInfo question) throws AnalysisException
+	public AClassDeclCG caseAClassClassDefinition(AClassClassDefinition node, IRInfo question) throws AnalysisException
 	{
 		String name = node.getName().getName();
 		String access = node.getAccess().getAccess().toString();
@@ -35,6 +35,7 @@ public class ClassVisitorCG extends AbstractVisitorCG<OoAstInfo, AClassDeclCG>
 		LinkedList<ILexNameToken> superNames = node.getSupernames();
 		
 		AClassDeclCG classCg = new AClassDeclCG();
+		classCg.setPackage(null);
 		classCg.setName(name);
 		classCg.setAccess(access);
 		classCg.setAbstract(isAbstract);
@@ -99,7 +100,7 @@ public class ClassVisitorCG extends AbstractVisitorCG<OoAstInfo, AClassDeclCG>
 			methodType.setResult(classType);
 			
 			constructor.setMethodType(methodType);
-			constructor.setAccess(IOoAstConstants.PUBLIC);
+			constructor.setAccess(IRConstants.PUBLIC);
 			constructor.setIsConstructor(true);
 			constructor.setName(name);
 			constructor.setBody(new ABlockStmCG());

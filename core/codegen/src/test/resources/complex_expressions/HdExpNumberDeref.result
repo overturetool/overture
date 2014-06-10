@@ -7,7 +7,7 @@ public class A {
     public A() {
     }
 
-    public static Number Sum(VDMSeq rs) {
+    public static Number Sum(final VDMSeq rs) {
         if (rs.isEmpty()) {
             return 0L;
         } else {
@@ -16,7 +16,7 @@ public class A {
         }
     }
 
-    public static Number add(VDMSeq natSeq, VDMSeq realSeq) {
+    public static Number add(final VDMSeq natSeq, final VDMSeq realSeq) {
         return ((Number) natSeq.get(0)).longValue() +
         ((Number) realSeq.get(0)).doubleValue();
     }

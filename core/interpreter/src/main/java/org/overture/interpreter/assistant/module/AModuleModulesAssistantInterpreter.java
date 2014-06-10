@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -13,14 +14,12 @@ import org.overture.ast.statements.PStm;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.definition.AStateDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.PDefinitionListAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.StateContext;
 import org.overture.interpreter.util.ModuleListInterpreter;
-import org.overture.pog.assistant.PogAssistantFactory;
-import org.overture.pog.obligation.POContextStack;
-import org.overture.pog.obligation.ProofObligationList;
+import org.overture.pog.pub.IProofObligationList;
+import org.overture.pog.pub.ProofObligationGenerator;
 import org.overture.typechecker.assistant.module.AModuleModulesAssistantTC;
 
 public class AModuleModulesAssistantInterpreter extends
@@ -150,9 +149,9 @@ public class AModuleModulesAssistantInterpreter extends
 
 	}
 
-	public static ProofObligationList getProofObligations(AModuleModules m)
+	public static IProofObligationList getProofObligations(AModuleModules m) throws AnalysisException
 	{
-		return af.createPDefinitionListAssistant().getProofObligations(m.getDefs(), new POContextStack(new PogAssistantFactory()));
+		return ProofObligationGenerator.generateProofObligations(m);
 	}
 
 }

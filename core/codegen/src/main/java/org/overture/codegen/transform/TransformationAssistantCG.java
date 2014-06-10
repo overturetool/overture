@@ -29,26 +29,27 @@ import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.constants.TempVarPrefixes;
-import org.overture.codegen.ooast.OoAstInfo;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.utils.ITempVarGen;
 
 public class TransformationAssistantCG
 {
-	protected OoAstInfo info;
+	protected IRInfo info;
 	protected TempVarPrefixes varPrefixes;
 
-	public TransformationAssistantCG(OoAstInfo info, TempVarPrefixes varPrefixes)
+	public TransformationAssistantCG(IRInfo info, TempVarPrefixes varPrefixes)
 	{
 		this.info = info;
 		this.varPrefixes = varPrefixes;
 	}
 
-	public OoAstInfo getInfo()
+	public IRInfo getInfo()
 	{
 		return info;
 	}
@@ -246,16 +247,23 @@ public class TransformationAssistantCG
 		AFieldExpCG fieldExp = new AFieldExpCG();
 		fieldExp.setMemberName(memberName);
 		fieldExp.setObject(instance);
-		fieldExp.setType(returnType.clone());
+		
+		AMethodTypeCG methodType = new AMethodTypeCG();
+		methodType.setResult(returnType.clone());
 
 		AApplyExpCG instanceCall = new AApplyExpCG();
-		instanceCall.setRoot(fieldExp);
+		
 		instanceCall.setType(returnType.clone());
 
 		if (arg != null)
 		{
+			methodType.getParams().add(arg.getType().clone());
 			instanceCall.getArgs().add(arg);
 		}
+		
+		fieldExp.setType(methodType.clone());
+		
+		instanceCall.setRoot(fieldExp);
 
 		return instanceCall;
 	}

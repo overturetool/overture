@@ -39,16 +39,18 @@ public class UmlDeploymentCreator
 	private boolean deployArtifactsOutsideNodes = true;
 	private UmlTypeCreator utc;
 
-	public UmlDeploymentCreator(Model model, UmlConsole console,boolean deployArtifactsOutsideNodes, UmlTypeCreator utc)
+	public UmlDeploymentCreator(Model model, UmlConsole console,
+			boolean deployArtifactsOutsideNodes, UmlTypeCreator utc)
 	{
 		this.modelWorkingCopy = model;
 		this.console = console;
 		this.utc = utc;
-//		IPreferenceStore preferences = Activator.getDefault().getPreferenceStore();
-//		if (preferences != null)
-//		{
-//			this.deployArtifactsOutsideNodes = preferences.getBoolean(IUml2Constants.DISABLE_NESTED_ARTIFACTS_PREFERENCE);
-//		}
+		// IPreferenceStore preferences = Activator.getDefault().getPreferenceStore();
+		// if (preferences != null)
+		// {
+		// this.deployArtifactsOutsideNodes =
+		// preferences.getBoolean(IUml2Constants.DISABLE_NESTED_ARTIFACTS_PREFERENCE);
+		// }
 	}
 
 	public void buildDeployment(List<SClassDefinition> classes2)
@@ -91,7 +93,8 @@ public class UmlDeploymentCreator
 				PDefinition def = ((AClassType) ind.getType()).getClassdef();
 				if (def instanceof ACpuClassDefinition)
 				{
-					console.out.println("Adding node: " + ind.getName().getName());
+					console.out.println("Adding node: "
+							+ ind.getName().getName());
 					Node n = (Node) deploymentPackage.createPackagedElement(ind.getName().getName(), UMLPackage.Literals.NODE);
 					nodes.put(ind.getName().getName(), n);
 				}
@@ -174,14 +177,14 @@ public class UmlDeploymentCreator
 														+ artifact.getName()
 														+ " is deployed onto Node "
 														+ nodeName);
-												
+
 												PType type = call.getArgs().getFirst().getType();
-												if(type instanceof AOptionalType)
+												if (type instanceof AOptionalType)
 												{
 													PType ot = ((AOptionalType) type).getType();
 													utc.create((Class) utc.getUmlType(ot), type);
 												}
-												//utc.create(utc.getBindingPackage(), type);
+												// utc.create(utc.getBindingPackage(), type);
 												nodes.get(nodeName).createOwnedAttribute(deployedName, utc.getUmlType(type));
 											} else
 											{

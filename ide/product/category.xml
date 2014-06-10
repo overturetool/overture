@@ -27,10 +27,7 @@
    <feature url="features/org.overture.ide.plugins.features.latex_0.0.0.qualifier.jar" id="org.overture.ide.plugins.features.latex" version="0.0.0">
       <category name="Overture"/>
    </feature>
-   <feature url="features/org.overture.ide.plugins.features.poviewer-string-based_0.0.0.qualifier.jar" id="org.overture.ide.plugins.features.poviewer-string-based" version="0.0.0">
-      <category name="Overture"/>
-   </feature>
-     <feature url="features/org.overture.ide.plugins.features.poviewer_0.0.0.qualifier.jar" id="org.overture.ide.plugins.features.poviewer" version="0.0.0">
+   <feature url="features/org.overture.ide.plugins.features.poviewer_0.0.0.qualifier.jar" id="org.overture.ide.plugins.features.poviewer" version="0.0.0">
       <category name="Overture"/>
    </feature>
    <feature url="features/org.overture.ide.plugins.features.quickinterpreter_0.0.0.qualifier.jar" id="org.overture.ide.plugins.features.quickinterpreter" version="0.0.0">
@@ -41,7 +38,7 @@
    </feature>
    <feature url="features/org.overture.ide.plugins.features.codegen_0.0.0.qualifier.jar" id="org.overture.ide.plugins.features.codegen" version="0.0.0">
       <category name="Overture"/>
-   </feature>  
+   </feature>
    <category-def name="Overture" label="Overture">
       <description>
          The Overture Project

@@ -30,6 +30,7 @@ import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
 import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.Environment;
+import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.definition.ABusClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ACpuClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
@@ -91,6 +92,7 @@ import org.overture.typechecker.utilities.pattern.AllDefinitionLocator;
 import org.overture.typechecker.utilities.pattern.PatternResolver;
 import org.overture.typechecker.utilities.type.ConcreateTypeImplementor;
 import org.overture.typechecker.utilities.type.PTypeResolver;
+import org.overture.typechecker.utilities.type.QualifiedDefinition;
 
 //TODO Add assistant Javadoc
 /** 
@@ -408,4 +410,6 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	IQuestionAnswer<AModuleModules, List<PDefinition>> getImportDefinitionFinder();
 
 	IAnswer<PTypeList> getComposeTypeCollector();
+
+	IQuestionAnswer<TypeCheckInfo, List<QualifiedDefinition>> getQualificationVisitor();
 }

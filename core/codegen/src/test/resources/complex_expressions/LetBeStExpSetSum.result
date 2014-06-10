@@ -11,12 +11,12 @@ public class Entry {
         return sum(SetUtil.set(1L, 2L, 3L, 4L, 5L, 6L));
     }
 
-    public static Number sum(VDMSet xs) {
+    public static Number sum(final VDMSet xs) {
         if (xs.isEmpty()) {
             return 0L;
         } else {
             Number x = null;
-            boolean success_1 = false;
+            Boolean success_1 = false;
             VDMSet set_1 = xs.clone();
 
             for (Iterator iterator_1 = set_1.iterator();

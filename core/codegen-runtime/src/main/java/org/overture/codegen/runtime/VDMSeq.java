@@ -28,25 +28,56 @@ public class VDMSeq extends ArrayList implements ValueType
 	{
 		Iterator iterator = this.iterator();
 		
-		if(!iterator.hasNext())
+		if (!iterator.hasNext())
 			return "[]";
 		
-		StringBuilder sb = new StringBuilder();
-		
-		sb.append('[');
-		
-		Object element = iterator.next();
-		sb.append(element == this ? "(this Collection)" : element);
-		
-		while(iterator.hasNext())
+		boolean seqOfChar = true;
+
+		while (iterator.hasNext())
 		{
-			element = iterator.next();
-			sb.append(", ");
-			sb.append(element == this ? "(this Collection)" : element);
+			Object element = iterator.next();
+			if (!(element instanceof Character))
+			{
+				seqOfChar = false;
+				break;
+			}
 		}
-		
-		sb.append(']');
-		
-		return sb.toString();
+
+		if (seqOfChar)
+		{
+			StringBuilder sb = new StringBuilder();
+			
+			iterator = this.iterator();
+			
+			while (iterator.hasNext())
+			{
+				Object element = iterator.next();
+				sb.append(element);
+			}
+			
+			return sb.toString();
+
+		} else
+		{
+			iterator = this.iterator();
+
+			StringBuilder sb = new StringBuilder();
+
+			sb.append('[');
+
+			Object element = iterator.next();
+			sb.append(element == this ? "(this Collection)" : element);
+
+			while (iterator.hasNext())
+			{
+				element = iterator.next();
+				sb.append(", ");
+				sb.append(element == this ? "(this Collection)" : element);
+			}
+
+			sb.append(']');
+
+			return sb.toString();
+		}
 	}
 }

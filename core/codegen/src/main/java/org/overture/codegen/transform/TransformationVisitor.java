@@ -31,21 +31,21 @@ import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
-import org.overture.codegen.constants.IOoAstConstants;
+import org.overture.codegen.constants.IRConstants;
 import org.overture.codegen.constants.TempVarPrefixes;
-import org.overture.codegen.ooast.OoAstInfo;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.transform.iterator.ILanguageIterator;
 import org.overture.codegen.utils.ITempVarGen;
 
 public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 {
-	private OoAstInfo info;
+	private IRInfo info;
 	
 	private TransformationAssistantCG transformationAssistant;
 	
 	private ILanguageIterator langIterator;
 	
-	public TransformationVisitor(OoAstInfo info, TempVarPrefixes varPrefixes, TransformationAssistantCG transformationAssistant, ILanguageIterator langIterator)
+	public TransformationVisitor(IRInfo info, TempVarPrefixes varPrefixes, TransformationAssistantCG transformationAssistant, ILanguageIterator langIterator)
 	{
 		this.info = info;
 		this.transformationAssistant = transformationAssistant;
@@ -109,7 +109,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		}
 		else
 		{
-			String var = tempVarNameGen.nextVarName(IOoAstConstants.GENERATED_TEMP_LET_BE_ST_EXP_NAME_PREFIX);
+			String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_LET_BE_ST_EXP_NAME_PREFIX);
 			PExpCG value = node.getValue();
 			
 			AVarLocalDeclCG resultDecl = transformationAssistant.consDecl(var, value);
@@ -145,7 +145,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		PExpCG predicate = node.getPredicate();
 		PTypeCG type = node.getType();
 		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
-		String var = tempVarNameGen.nextVarName(IOoAstConstants.GENERATED_TEMP_MAP_COMP_NAME_PREFIX);
+		String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_MAP_COMP_NAME_PREFIX);
 		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
 		
 		ComplexCompStrategy strategy = new MapCompStrategy(transformationAssistant, first, predicate, var, type, langIterator, tempVarNameGen, varPrefixes);
@@ -179,7 +179,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		PExpCG predicate = node.getPredicate();
 		PTypeCG type = node.getType();
 		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
-		String var = tempVarNameGen.nextVarName(IOoAstConstants.GENERATED_TEMP_SET_COMP_NAME_PREFIX);
+		String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_SET_COMP_NAME_PREFIX);
 		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
 		
 		ComplexCompStrategy strategy = new SetCompStrategy(transformationAssistant, first, predicate, var, type, langIterator, tempVarNameGen, varPrefixes);
@@ -213,7 +213,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		PExpCG predicate = node.getPredicate();
 		PTypeCG type = node.getType();
 		ITempVarGen tempVarNameGen = info.getTempVarNameGen();		
-		String var = tempVarNameGen.nextVarName(IOoAstConstants.GENERATED_TEMP_SEQ_COMP_NAME_PREFIX);
+		String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_SEQ_COMP_NAME_PREFIX);
 		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
 		
 		SeqCompStrategy strategy = new SeqCompStrategy(transformationAssistant, first, predicate, var, type, langIterator, tempVarNameGen, varPrefixes);
@@ -247,7 +247,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		
 		PExpCG predicate = node.getPredicate();
 		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
-		String var = tempVarNameGen.nextVarName(IOoAstConstants.GENERATED_TEMP_FORALL_EXP_NAME_PREFIX);
+		String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_FORALL_EXP_NAME_PREFIX);
 		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
 		
 		OrdinaryQuantifierStrategy strategy = new OrdinaryQuantifierStrategy(transformationAssistant, predicate, var, OrdinaryQuantifier.FORALL, langIterator, tempVarNameGen, varPrefixes);
@@ -278,7 +278,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		
 		PExpCG predicate = node.getPredicate();
 		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
-		String var = tempVarNameGen.nextVarName(IOoAstConstants.GENERATED_TEMP_EXISTS_EXP_NAME_PREFIX);
+		String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_EXISTS_EXP_NAME_PREFIX);
 		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
 		
 		OrdinaryQuantifierStrategy strategy = new OrdinaryQuantifierStrategy(transformationAssistant, predicate, var, OrdinaryQuantifier.EXISTS, langIterator, tempVarNameGen, varPrefixes);
@@ -309,7 +309,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		
 		PExpCG predicate = node.getPredicate();
 		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
-		String var = tempVarNameGen.nextVarName(IOoAstConstants.GENERATED_TEMP_EXISTS1_EXP_NAME_PREFIX);
+		String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_EXISTS1_EXP_NAME_PREFIX);
 		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
 		
 		Exists1QuantifierStrategy strategy = new Exists1QuantifierStrategy(transformationAssistant, predicate, var, langIterator, tempVarNameGen, varPrefixes);

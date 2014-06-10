@@ -21,7 +21,6 @@ import org.overture.ast.expressions.AMkTypeExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.modules.AModuleModules;
@@ -33,8 +32,6 @@ import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
-import org.overture.config.Release;
-import org.overture.config.Settings;
 import org.overture.modelcheckers.probsolver.visitors.BToVdmConverter;
 import org.overture.modelcheckers.probsolver.visitors.BToVdmConverter.ProBToVdmAnalysisException;
 import org.overture.modelcheckers.probsolver.visitors.VdmToBConverter;
@@ -339,16 +336,16 @@ public class ProbSolverUtil extends AbstractProbSolverUtil
 			Map<String, INode> arguments = new HashMap<String, INode>();
 			for (Entry<String, String> a : argContext.entrySet())
 			{
-				Settings.dialect = Dialect.VDM_PP;
-				Settings.release = Release.VDM_10;
+//				Settings.dialect = Dialect.VDM_PP;
+//				Settings.release = Release.VDM_10;
 				arguments.put(a.getKey(), ParserUtil.parseExpression(a.getValue()).result);
 			}
 
 			Map<String, INode> stateConstraints = new HashMap<String, INode>();
 			for (Entry<String, String> a : stateContext.entrySet())
 			{
-				Settings.dialect = Dialect.VDM_PP;
-				Settings.release = Release.VDM_10;
+//				Settings.dialect = Dialect.VDM_PP;
+//				Settings.release = Release.VDM_10;
 				stateConstraints.put(a.getKey(), ParserUtil.parseExpression(a.getValue()).result);
 			}
 

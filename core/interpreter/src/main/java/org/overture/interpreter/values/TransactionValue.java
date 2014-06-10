@@ -55,15 +55,15 @@ public class TransactionValue extends UpdatableValue
 	
 	private ILexLocation lastSetLocation = null; //The location that made the change
 
-	protected TransactionValue(Value value, ValueListenerList listeners)
+	protected TransactionValue(Value value, ValueListenerList listeners, PType type)
 	{
-		super(value, listeners);
+		super(value, listeners, type);
 		newvalue = value;
 	}
 
-	protected TransactionValue(ValueListenerList listeners)
+	protected TransactionValue(ValueListenerList listeners, PType type)
 	{
-		super(listeners);
+		super(listeners, type);
 		newvalue = value;
 	}
 
@@ -83,7 +83,7 @@ public class TransactionValue extends UpdatableValue
 	@Override
 	public synchronized Value getUpdatable(ValueListenerList watch)
 	{
-		return new TransactionValue(select(), watch);
+		return new TransactionValue(select(), watch, restrictedTo);
 	}
 
 	@Override
@@ -106,16 +106,13 @@ public class TransactionValue extends UpdatableValue
 		synchronized (this)
 		{
 			lastSetLocation = location;
-    		if (newval instanceof UpdatableValue)
-    		{
-    			newvalue = newval;
-    		}
-    		else
-    		{
-    			newvalue = newval.getUpdatable(listeners);
-    		}
-
+   			newvalue = newval.getUpdatable(listeners);
     		newvalue = ((UpdatableValue)newvalue).value;	// To avoid nested updatables
+
+    		if (restrictedTo != null)
+    		{
+				newvalue = newvalue.convertTo(restrictedTo, ctxt);
+    		}
 		}
 
 		if (newthreadid < 0)
@@ -183,7 +180,7 @@ public class TransactionValue extends UpdatableValue
 	@Override
 	public synchronized Object clone()
 	{
-		return new TransactionValue((Value)select().clone(), listeners);
+		return new TransactionValue((Value)select().clone(), listeners, restrictedTo);
 	}
 
 	@Override

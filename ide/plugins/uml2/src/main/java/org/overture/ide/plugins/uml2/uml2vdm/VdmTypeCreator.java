@@ -34,10 +34,11 @@ public class VdmTypeCreator
 	final String SEQ_TYPE = "Seq<";
 	final String PRODUCT_TYPE = "Product<";
 	final String OPTIONAL_TYPE = "Optional<";
-	 final String INMAP_TYPE = "InMap<";
+	final String INMAP_TYPE = "InMap<";
 
 	final static LexLocation location = new LexLocation(new File("generated"), "generating", 0, 0, 0, 0, 0, 0);
 	private UmlConsole console;
+
 	public VdmTypeCreator(UmlConsole console)
 	{
 		this.console = console;
@@ -85,7 +86,7 @@ public class VdmTypeCreator
 	{
 		try
 		{
-			if(type == null)
+			if (type == null)
 			{
 				console.err.println("Found no type. Inserting an \"?\" type as a replacement");
 				return convert(UmlTypeCreatorBase.ANY_TYPE, null);
@@ -96,27 +97,28 @@ public class VdmTypeCreator
 			{
 				module = type.getNamespace().getName();
 			}
-			
-			if(type.getName()==null && type instanceof MinimalEObjectImpl)
+
+			if (type.getName() == null && type instanceof MinimalEObjectImpl)
 			{
-				java.lang.reflect.Field f=	MinimalEObjectImpl.class.getDeclaredField("eStorage");
+				java.lang.reflect.Field f = MinimalEObjectImpl.class.getDeclaredField("eStorage");
 				f.setAccessible(true);
-				String storageUri =""+ f.get(type);
+				String storageUri = "" + f.get(type);
 				System.out.println(storageUri);
 				int index = storageUri.lastIndexOf("#");
-				if(index==-1)
+				if (index == -1)
 				{
-					console.err.println("Could not decode \""+storageUri+"\" inseting an \"?\" type as a replacement");
+					console.err.println("Could not decode \"" + storageUri
+							+ "\" inseting an \"?\" type as a replacement");
 					return convert(UmlTypeCreatorBase.ANY_TYPE, null);
 				}
-				String typeName = storageUri.substring(index+1);
+				String typeName = storageUri.substring(index + 1);
 				return convert(remapUmlTypes(typeName), module);
-			}else if (type.getName()==null)
+			} else if (type.getName() == null)
 			{
 				console.err.println("Type has no name. Inserting an \"?\" type as a replacement");
 				return convert(UmlTypeCreatorBase.ANY_TYPE, null);
 			}
-			
+
 			return convert(type.getName(), module);
 		} catch (Exception e)
 		{
@@ -125,30 +127,34 @@ public class VdmTypeCreator
 		}
 	}
 
-
 	private String remapUmlTypes(String name)
 	{
-		if(name.equalsIgnoreCase("Integer"))
+		if (name.equalsIgnoreCase("Integer"))
 		{
 			return "int";
-		}else if(name.equalsIgnoreCase("Boolean")|| name.equalsIgnoreCase("float")||name.equalsIgnoreCase("long"))
+		} else if (name.equalsIgnoreCase("Boolean")
+				|| name.equalsIgnoreCase("float")
+				|| name.equalsIgnoreCase("long"))
 		{
 			return "bool";
-		}else if(name.equalsIgnoreCase("short") ||name.equalsIgnoreCase("byte"))
+		} else if (name.equalsIgnoreCase("short")
+				|| name.equalsIgnoreCase("byte"))
 		{
 			return "nat";
-		}else if(name.equalsIgnoreCase("String"))
+		} else if (name.equalsIgnoreCase("String"))
 		{
 			return "Seq<Char>";
-		}else if(name.equalsIgnoreCase("Double"))
+		} else if (name.equalsIgnoreCase("Double"))
 		{
 			return "real";
 		}
-		
-		console.err.println("Could not match UML type \""+name+"\" with a VDM type. Inserting an \"?\" type as a replacement");
+
+		console.err.println("Could not match UML type \""
+				+ name
+				+ "\" with a VDM type. Inserting an \"?\" type as a replacement");
 		return UmlTypeCreatorBase.ANY_TYPE;
 	}
-	
+
 	public PType convert(String type, String module)
 	{
 
@@ -158,7 +164,7 @@ public class VdmTypeCreator
 		} else if (type.equals(UmlTypeCreatorBase.VOID_TYPE))
 		{
 			return AstFactory.newAVoidReturnType(location);
-		}else if (type.equals(UmlTypeCreatorBase.ANY_TYPE))
+		} else if (type.equals(UmlTypeCreatorBase.ANY_TYPE))
 		{
 			return AstFactory.newAUnknownType(location);
 		} else if (type.startsWith(UNION_TYPE))
@@ -175,7 +181,7 @@ public class VdmTypeCreator
 		{
 			List<PType> types = convertGeneric(type);
 			return AstFactory.newAInMapMapType(location, types.get(0), types.get(1));
-		}else if (type.startsWith(SET_TYPE))
+		} else if (type.startsWith(SET_TYPE))
 		{
 			return AstFactory.newASetType(location, convertGeneric(type).get(0));
 		} else if (type.startsWith(SEQ_TYPE))
@@ -266,7 +272,7 @@ public class VdmTypeCreator
 			{
 				types.add(convert(t, null));
 			}
-		}else
+		} else
 		{
 			types.add(convert(nameNoLessOrGreater, null));
 		}

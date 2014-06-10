@@ -25,8 +25,8 @@ import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.types.SBasicTypeCGBase;
 import org.overture.codegen.cgast.types.SBasicTypeWrappersTypeCGBase;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.ooast.OoAstInfo;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
@@ -59,16 +59,18 @@ public class TypeAssistantCG extends AssistantBase
 		return typeDef;
 	}
 	
-	public PTypeCG constructSeqType(SSeqTypeBase node, OoAstInfo question)
+	public PTypeCG constructSeqType(SSeqTypeBase node, IRInfo question)
 			throws AnalysisException
 	{
 		PTypeCG seqOfCg = node.getSeqof().apply(question.getTypeVisitor(), question);
 		boolean emptyCg = node.getEmpty();
 
 		// This is a special case since sequence of characters are strings
-		if (seqOfCg instanceof ACharBasicTypeCG)
+		if (seqOfCg instanceof ACharBasicTypeCG && question.getSettings().getCharSeqAsString())
+		{
 			return new AStringTypeCG();
-
+		}
+			
 		ASeqSeqTypeCG seqType = new ASeqSeqTypeCG();
 		seqType.setSeqOf(seqOfCg);
 		seqType.setEmpty(emptyCg);
@@ -102,9 +104,11 @@ public class TypeAssistantCG extends AssistantBase
 
 	}
 	
-	public AMethodTypeCG consMethodType(List<PType> paramTypes, PType resultType, OoAstInfo question) throws AnalysisException
+	public AMethodTypeCG consMethodType(PType node, List<PType> paramTypes, PType resultType, IRInfo question) throws AnalysisException
 	{
 		AMethodTypeCG methodType = new AMethodTypeCG();
+		
+		methodType.setEquivalent(node.clone());
 		
 		PTypeCG resultCg = resultType.apply(question.getTypeVisitor(), question);
 		

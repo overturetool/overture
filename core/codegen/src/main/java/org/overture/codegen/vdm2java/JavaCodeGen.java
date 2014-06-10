@@ -23,18 +23,18 @@ import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
-import org.overture.codegen.constants.IJavaCodeGenConstants;
-import org.overture.codegen.constants.IOoAstConstants;
+import org.overture.codegen.constants.IRConstants;
 import org.overture.codegen.constants.TempVarPrefixes;
+import org.overture.codegen.ir.ClassDeclStatus;
+import org.overture.codegen.ir.ExpStatus;
+import org.overture.codegen.ir.IRGenerator;
+import org.overture.codegen.ir.IRInfo;
+import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateCallable;
 import org.overture.codegen.merging.TemplateStructure;
-import org.overture.codegen.ooast.ClassDeclStatus;
-import org.overture.codegen.ooast.ExpStatus;
-import org.overture.codegen.ooast.OoAstGenerator;
-import org.overture.codegen.ooast.OoAstInfo;
 import org.overture.codegen.transform.TransformationAssistantCG;
 import org.overture.codegen.transform.TransformationVisitor;
 import org.overture.codegen.transform.iterator.ILanguageIterator;
@@ -48,7 +48,7 @@ public class JavaCodeGen
 {
 	public static final String JAVA_TEMPLATES_ROOT_FOLDER = "JavaTemplates";
 	
-	public static final String[] CLASSES_NOT_TO_BE_GENERATED = IOoAstConstants.CLASS_NAMES_USED_IN_VDM;
+	public static final String[] CLASSES_NOT_TO_BE_GENERATED = IRConstants.CLASS_NAMES_USED_IN_VDM;
 	
 	public static final TemplateStructure JAVA_TEMPLATE_STRUCTURE = new TemplateStructure(JAVA_TEMPLATES_ROOT_FOLDER);
 	
@@ -58,25 +58,38 @@ public class JavaCodeGen
 	};
 
 	private static final String JAVA_FORMAT_KEY = "JavaFormat";
-	private static final String OO_AST_ANALYSIS_KEY = "OoAstAnalysis";
+	private static final String IR_ANALYSIS_KEY = "IRAnalysis";
 	private static final String TEMP_VAR = "TempVar";
+	private static final String VALUE_SEMANTICS = "ValueSemantics";
 	
 	public final static TempVarPrefixes varPrefixes = new TempVarPrefixes();
 	
-	public final static TemplateCallable[] constructTemplateCallables(Object javaFormat, Object ooAstAnalysis, Object tempVarPrefixes)
+	public final static TemplateCallable[] constructTemplateCallables(Object javaFormat, Object irAnalysis, Object tempVarPrefixes, Object valueSemantics)
 	{
-		return new TemplateCallable[]{new TemplateCallable(JAVA_FORMAT_KEY, javaFormat), new TemplateCallable(OO_AST_ANALYSIS_KEY, ooAstAnalysis), new TemplateCallable(TEMP_VAR, tempVarPrefixes)};
+		return new TemplateCallable[]{new TemplateCallable(JAVA_FORMAT_KEY, javaFormat), new TemplateCallable(IR_ANALYSIS_KEY, irAnalysis), new TemplateCallable(TEMP_VAR, tempVarPrefixes), new TemplateCallable(VALUE_SEMANTICS,  valueSemantics)};
 	}
 	
-	private OoAstGenerator generator;
-	private OoAstInfo ooAstInfo;
+	private IRGenerator generator;
+	private IRInfo irInfo;
 	private ITempVarGen tempVarNameGen;
 	private AssistantManager assistantManager;
 	private JavaFormat javaFormat;
 	
+	public static final String INTERFACE_NAME_PREFIX = "Func_";
+	public static final String TEMPLATE_TYPE_PREFIX = "T_";
+	public static final String EVAL_METHOD_PREFIX = "eval";
+	public static final String PARAM_NAME_PREFIX = "param_";
+	
+	private static final String QUOTES = "quotes";
+	
 	public JavaCodeGen()
 	{
 		init(null);
+	}
+	
+	public void setJavaSettings(JavaSettings javaSettings)
+	{
+		this.javaFormat.setJavaSettings(javaSettings);
 	}
 
 	public JavaCodeGen(ILogger log)
@@ -87,11 +100,16 @@ public class JavaCodeGen
 	private void init(ILogger log)
 	{
 		initVelocity();
-		this.generator = new OoAstGenerator(log);
-		this.ooAstInfo = generator.getOoAstInfo();
-		this.tempVarNameGen = ooAstInfo.getTempVarNameGen();
-		this.assistantManager = ooAstInfo.getAssistantManager();
+		this.generator = new IRGenerator(log);
+		this.irInfo = generator.getIRInfo();
+		this.tempVarNameGen = irInfo.getTempVarNameGen();
+		this.assistantManager = irInfo.getAssistantManager();
 		this.javaFormat = new JavaFormat(varPrefixes, tempVarNameGen, assistantManager);
+	}
+	
+	public void setSettings(IRSettings settings)
+	{
+		irInfo.setSettings(settings);
 	}
 
 	private void initVelocity()
@@ -100,9 +118,9 @@ public class JavaCodeGen
 		Velocity.init();
 	}
 	
-	public OoAstInfo getInfo()
+	public IRInfo getInfo()
 	{
-		return generator.getOoAstInfo();
+		return generator.getIRInfo();
 	}
 
 	public GeneratedModule generateJavaFromVdmQuotes()
@@ -112,6 +130,7 @@ public class JavaCodeGen
 			StringWriter writer = new StringWriter();
 
 			AInterfaceDeclCG quotesInterface = generator.getQuotes();
+			quotesInterface.setPackage(QUOTES);
 
 			if (quotesInterface.getFields().isEmpty())
 				return null; // Nothing to generate
@@ -139,12 +158,16 @@ public class JavaCodeGen
 			InvalidNamesException, UnsupportedModelingException
 	{
 		List<SClassDefinition> toBeGenerated = new LinkedList<SClassDefinition>();
-		for (SClassDefinition classDef : mergedParseLists)
-			if (shouldBeGenerated(classDef.getName().getName()))
-				toBeGenerated.add(classDef);
-
-		validateVdmModelNames(toBeGenerated);
 		
+		for (SClassDefinition classDef : mergedParseLists)
+		{
+			if (shouldBeGenerated(classDef.getName().getName()))
+			{
+				toBeGenerated.add(classDef);
+			}
+		}
+		
+		validateVdmModelNames(toBeGenerated);
 		validateVdmModelingConstructs(toBeGenerated);
 
 		List<ClassDeclStatus> statuses = new ArrayList<ClassDeclStatus>();
@@ -154,46 +177,33 @@ public class JavaCodeGen
 			String className = classDef.getName().getName();
 
 			if (!shouldBeGenerated(className))
+			{
 				continue;
+			}
 
 			statuses.add(generator.generateFrom(classDef));
 		}
 
 		javaFormat.setClasses(getClassDecls(statuses));
 		
+		TransformationAssistantCG transformationAssistant = new TransformationAssistantCG(irInfo, varPrefixes);
+		FunctionValueAssistant functionValueAssistant = new FunctionValueAssistant();
+		FunctionValueVisitor funcValVisitor = new FunctionValueVisitor(transformationAssistant, functionValueAssistant, INTERFACE_NAME_PREFIX, TEMPLATE_TYPE_PREFIX, EVAL_METHOD_PREFIX, PARAM_NAME_PREFIX);
+		ILanguageIterator langIterator = new JavaLanguageIterator(transformationAssistant, irInfo.getTempVarNameGen(), varPrefixes);
+		TransformationVisitor transVisitor = new TransformationVisitor(irInfo, varPrefixes, transformationAssistant, langIterator);
+		
 		List<GeneratedModule> generated = new ArrayList<GeneratedModule>();
 		for (ClassDeclStatus status : statuses)
 		{
-			StringWriter writer = new StringWriter();
 			try
 			{
 				AClassDeclCG classCg = status.getClassCg();
-
 				String className = status.getClassName();
-				String formattedJavaCode = "";
 				
 				if (status.canBeGenerated())
 				{
-					TransformationAssistantCG transformationAssistant = new TransformationAssistantCG(ooAstInfo, varPrefixes);
-					ILanguageIterator langIterator = new JavaLanguageIterator(transformationAssistant, ooAstInfo.getTempVarNameGen(), varPrefixes);
-					
-					classCg.apply(new TransformationVisitor(ooAstInfo, varPrefixes, transformationAssistant, langIterator));
-					
-					javaFormat.init();
-					MergeVisitor mergeVisitor = javaFormat.getMergeVisitor();
-					classCg.apply(mergeVisitor, writer);
-					
-					if(mergeVisitor.hasMergeErrors())
-					{
-						generated.add(new GeneratedModule(className, mergeVisitor.getMergeErrors()));
-					}
-					else
-					{
-						String code = writer.toString();
-						formattedJavaCode = JavaCodeGenUtil.formatJavaCode(code);
-						
-						generated.add(new GeneratedModule(className, formattedJavaCode));
-					}
+					classCg.apply(funcValVisitor);
+					classCg.apply(transVisitor);
 				}
 				else
 				{
@@ -203,12 +213,70 @@ public class JavaCodeGen
 			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 			{
 				Logger.getLog().printErrorln("Error when generating code for class "
-						+ status.getClassCg().getName() + ": " + e.getMessage());
+						+ status.getClassName() + ": " + e.getMessage());
 				Logger.getLog().printErrorln("Skipping class..");
 				e.printStackTrace();
 			}
 		}
 		
+		MergeVisitor mergeVisitor = javaFormat.getMergeVisitor();
+		FunctionValueAssistant functionValue = funcValVisitor.getFunctionValueAssistant();
+		javaFormat.setFunctionValueAssistant(functionValue);
+		
+		for (ClassDeclStatus status : statuses)
+		{
+			if(!status.canBeGenerated())
+				continue;
+			
+			StringWriter writer = new StringWriter();
+			AClassDeclCG classCg = status.getClassCg();
+			String className = status.getClassName();
+
+			javaFormat.init();
+			
+			try
+			{
+				classCg.apply(mergeVisitor, writer);
+
+				if (mergeVisitor.hasMergeErrors())
+				{
+					generated.add(new GeneratedModule(className, mergeVisitor.getMergeErrors()));
+				}else
+				{
+					String formattedJavaCode = JavaCodeGenUtil.formatJavaCode(writer.toString());
+					generated.add(new GeneratedModule(className, formattedJavaCode));
+				}
+			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
+			{
+				Logger.getLog().printErrorln("Error generating code for class "
+						+ status.getClassName() + ": " + e.getMessage());
+				Logger.getLog().printErrorln("Skipping class..");
+				e.printStackTrace();
+			}
+		}
+		
+		List<AInterfaceDeclCG> funcValueInterfaces = functionValue.getFunctionValueInterfaces();
+		
+		for(AInterfaceDeclCG funcValueInterface : funcValueInterfaces)
+		{
+			StringWriter writer = new StringWriter();
+			
+			try
+			{
+				funcValueInterface.apply(mergeVisitor, writer);
+				String formattedJavaCode = JavaCodeGenUtil.formatJavaCode(writer.toString());
+				generated.add(new GeneratedModule(funcValueInterface.getName(), formattedJavaCode));
+				
+			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
+			{
+				Logger.getLog().printErrorln("Error generating code for function value interface "
+						+ funcValueInterface.getName() + ": " + e.getMessage());
+				Logger.getLog().printErrorln("Skipping interface..");
+				e.printStackTrace();
+			}
+		}
+		
+		javaFormat.clearFunctionValueAssistant();
 		javaFormat.clearClasses();
 
 		return generated;
@@ -269,31 +337,31 @@ public class JavaCodeGen
 		}
 	}
 
-	public void generateJavaSourceFile(File file, GeneratedModule generatedModule)
+	public void generateJavaSourceFile(File outputFolder, GeneratedModule generatedModule)
 	{
 		if(generatedModule != null && generatedModule.canBeGenerated() && !generatedModule.hasMergeErrors())
 		{
-			JavaCodeGenUtil.saveJavaClass(file, generatedModule.getName() + IJavaCodeGenConstants.JAVA_FILE_EXTENSION, generatedModule.getContent());
+			JavaCodeGenUtil.saveJavaClass(outputFolder, generatedModule.getName() + IJavaCodeGenConstants.JAVA_FILE_EXTENSION, generatedModule.getContent());
 		}
 	}
 	
-	public void generateJavaSourceFiles(File file, List<GeneratedModule> generatedClasses)
+	public void generateJavaSourceFiles(File outputFolder, List<GeneratedModule> generatedClasses)
 	{
 		for (GeneratedModule classCg : generatedClasses)
 		{
-			generateJavaSourceFile(file, classCg);
+			generateJavaSourceFile(outputFolder, classCg);
 		}
 	}
 	
 	private void validateVdmModelNames(List<? extends INode> mergedParseLists) throws AnalysisException, InvalidNamesException
 	{
-		AssistantManager assistantManager = generator.getOoAstInfo().getAssistantManager();
+		AssistantManager assistantManager = generator.getIRInfo().getAssistantManager();
 		VdmAstAnalysis analysis = new VdmAstAnalysis(assistantManager);
 		
 		Set<Violation> reservedWordViolations = analysis.usesIllegalNames(mergedParseLists, new ReservedWordsComparison(IJavaCodeGenConstants.RESERVED_WORDS, assistantManager));
 		Set<Violation> typenameViolations = analysis.usesIllegalNames(mergedParseLists, new TypenameComparison(RESERVED_TYPE_NAMES, assistantManager));
 		
-		String[] generatedTempVarNames = GeneralUtils.concat(IOoAstConstants.GENERATED_TEMP_NAMES, varPrefixes.GENERATED_TEMP_NAMES);
+		String[] generatedTempVarNames = GeneralUtils.concat(IRConstants.GENERATED_TEMP_NAMES, varPrefixes.GENERATED_TEMP_NAMES);
 		
 		Set<Violation> tempVarViolations = analysis.usesIllegalNames(mergedParseLists, new GeneratedVarComparison(generatedTempVarNames, assistantManager));
 		
@@ -303,7 +371,7 @@ public class JavaCodeGen
 	
 	private void validateVdmModelingConstructs(List<? extends INode> mergedParseLists) throws AnalysisException, UnsupportedModelingException
 	{
-		VdmAstAnalysis analysis = new VdmAstAnalysis(generator.getOoAstInfo().getAssistantManager());
+		VdmAstAnalysis analysis = new VdmAstAnalysis(generator.getIRInfo().getAssistantManager());
 		
 		Set<Violation> violations = analysis.usesUnsupportedModelingConstructs(mergedParseLists);
 		

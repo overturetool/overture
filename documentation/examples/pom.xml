@@ -1,35 +1,35 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>org.overturetool</groupId>
-    <artifactId>root</artifactId>
-    <version>2.0.3-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath>
-  </parent>
+  <!--parent>
+      <groupId>org.overturetool</groupId>
+      <artifactId>root</artifactId>
+      <version>2.0.3-SNAPSHOT</version>
+      <relativePath>../../pom.xml</relativePath>
+      </parent-->
 
   <packaging>pom</packaging>
-
-  <groupId>org.overturetool</groupId>
+  <version>1.0.0-NOTRELEVANT</version>
+  <groupId>org.overturetool.internal</groupId>
   <artifactId>examples</artifactId>
   <name>Overture Examples</name>
 
   <properties>
-    <example-packager.version>2.0.2</example-packager.version>
+    <example-packager.version>2.1.0-SNAPSHOT</example-packager.version>
   </properties>
-  
+
   <build>
+    <defaultGoal>package</defaultGoal>
     <plugins>
       <plugin>
         <groupId>org.overturetool.build</groupId>
         <artifactId>example-packager-plugin</artifactId>
         <version>${example-packager.version}</version>
         <configuration>
-          <!-- <outputDirectory>${project.build.directory}</outputDirectory> -->
-          <!-- <outputPrefix>Examples-</outputPrefix> -->
           <outputZipFiles>true</outputZipFiles>
-          <outputWebFiles>true</outputWebFiles>
+          <outputWebFiles>false</outputWebFiles>
+          <outputMarkdownFiles>true</outputMarkdownFiles>
           <slExamples>
             <param>${project.basedir}/VDMSL</param>
           </slExamples>
@@ -51,6 +51,3 @@
     </plugins>
   </build>
 </project>
-
-  
-

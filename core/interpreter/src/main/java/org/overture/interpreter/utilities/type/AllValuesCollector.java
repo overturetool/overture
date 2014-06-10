@@ -5,6 +5,7 @@ import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.node.INode;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AFieldField;
@@ -21,6 +22,7 @@ import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SBasicType;
 import org.overture.ast.types.SInvariantType;
+import org.overture.ast.types.SMapType;
 import org.overture.config.Settings;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.type.SMapTypeAssistantInterpreter;
@@ -37,6 +39,7 @@ import org.overture.interpreter.values.SetValue;
 import org.overture.interpreter.values.TupleValue;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
+import org.overture.interpreter.values.ValueMap;
 import org.overture.interpreter.values.ValueSet;
 
 /***************************************
@@ -156,9 +159,8 @@ public class AllValuesCollector extends QuestionAnswerAdaptor<Context, ValueList
 			throws AnalysisException
 	{
 		//return AInMapMapTypeAssistantInterpreter.getAllValues(type, ctxt);
-		
 		//TODO:Here we have a strange behavior from transforming this call to type.apply(THIS,ctxt)
-		ValueList maps =  SMapTypeAssistantInterpreter.getAllValues(type, ctxt); 
+		ValueList maps = THIS.defaultSMapType(type,ctxt);// ctxt.assistantFactory.createSMapTypeAssistant().getAllValues(type, ctxt); 
 		ValueList result = new ValueList();
 
 		for (Value map : maps)
@@ -174,12 +176,12 @@ public class AllValuesCollector extends QuestionAnswerAdaptor<Context, ValueList
 		return result;
 	}
 	
-	@Override
-	public ValueList caseAMapMapType(AMapMapType type, Context ctxt)
-			throws AnalysisException
-	{
-		return SMapTypeAssistantInterpreter.getAllValues(type, ctxt);
-	}
+//	@Override
+//	public ValueList caseAMapMapType(AMapMapType type, Context ctxt)
+//			throws AnalysisException
+//	{
+//		return //ctxt.assistantFactory.createSMapTypeAssistant().getAllValues(type, ctxt);
+//	}
 	
 	@Override
 	public ValueList caseAOptionalType(AOptionalType type, Context ctxt)
@@ -198,6 +200,36 @@ public class AllValuesCollector extends QuestionAnswerAdaptor<Context, ValueList
 		//return AProductTypeAssistantInterpreter.getAllValues(type, ctxt);
 		return af.createPTypeListAssistant().getAllValues(type.getTypes(), ctxt);
 		
+	}
+	
+	@Override
+	public ValueList defaultSMapType(SMapType type, Context ctxt)
+			throws AnalysisException
+	{
+		PTypeList tuple = new PTypeList();
+		tuple.add(type.getFrom());
+		tuple.add(type.getTo());
+
+		ValueList results = new ValueList();
+		ValueList tuples = af.createPTypeListAssistant().getAllValues(tuple, ctxt);
+		ValueSet set = new ValueSet();
+		set.addAll(tuples);
+		List<ValueSet> psets = set.powerSet();
+
+		for (ValueSet map : psets)
+		{
+			ValueMap result = new ValueMap();
+
+			for (Value v : map)
+			{
+				TupleValue tv = (TupleValue) v;
+				result.put(tv.values.get(0), tv.values.get(1));
+			}
+
+			results.add(new MapValue(result));
+		}
+
+		return results;
 	}
 	
 	@Override

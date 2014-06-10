@@ -13,11 +13,11 @@ public class A {
     public static class R1 implements Record {
         public Number x;
 
-        public R1(Number _x) {
+        public R1(final Number _x) {
             x = _x;
         }
 
-        public boolean equals(Object obj) {
+        public boolean equals(final Object obj) {
             if (!(obj instanceof R1)) {
                 return false;
             }
@@ -43,11 +43,11 @@ public class A {
     public static class R2 implements Record {
         public R1 r;
 
-        public R2(R1 _r) {
+        public R2(final R1 _r) {
             r = (_r != null) ? _r.clone() : null;
         }
 
-        public boolean equals(Object obj) {
+        public boolean equals(final Object obj) {
             if (!(obj instanceof R2)) {
                 return false;
             }
@@ -74,12 +74,12 @@ public class A {
         public Number x;
         public R2 r;
 
-        public R3(Number _x, R2 _r) {
+        public R3(final Number _x, final R2 _r) {
             x = _x;
             r = (_r != null) ? _r.clone() : null;
         }
 
-        public boolean equals(Object obj) {
+        public boolean equals(final Object obj) {
             if (!(obj instanceof R3)) {
                 return false;
             }

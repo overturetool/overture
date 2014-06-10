@@ -2,7 +2,7 @@
 <feature
       id="org.overture.ide.features.rcp"
       label="Overture RCP"
-      version="2.0.7.qualifier">
+      version="2.1.1.qualifier">
 
    <description>
       %description
@@ -22,10 +22,6 @@
 
    <includes
          id="org.overture.ide.plugins.features.latex"
-         version="0.0.0"/>
-
-   <includes
-         id="org.overture.ide.plugins.features.poviewer-string-based"
          version="0.0.0"/>
 
    <includes

@@ -11,14 +11,14 @@ import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.patterns.PMultipleBindCG;
-import org.overture.codegen.ooast.OoAstInfo;
+import org.overture.codegen.ir.IRInfo;
 
-public class MultipleBindVisitorCG extends AbstractVisitorCG<OoAstInfo, PMultipleBindCG>
+public class MultipleBindVisitorCG extends AbstractVisitorCG<IRInfo, PMultipleBindCG>
 {
 	
 	@Override
 	public PMultipleBindCG caseASetMultipleBind(ASetMultipleBind node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		LinkedList<PPattern> patterns = node.getPlist();
 		PExp set = node.getSet();

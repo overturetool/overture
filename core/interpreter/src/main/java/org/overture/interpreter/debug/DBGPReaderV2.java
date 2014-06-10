@@ -43,6 +43,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AMutexSyncDefinition;
 import org.overture.ast.definitions.APerSyncDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -1817,7 +1818,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 
 	@Override
 	protected void processOvertureCmd(DBGPCommand c) throws DBGPException,
-			IOException, URISyntaxException
+			IOException, URISyntaxException, AnalysisException
 	{
 		checkArgs(c, 2, false);
 		DBGPOption option = c.getOption(DBGPOptionType.C);

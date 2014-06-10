@@ -46,49 +46,62 @@ public class UpdatableValue extends ReferenceValue
 {
 	private static final long serialVersionUID = 1L;
 	public ValueListenerList listeners;
+	protected final PType restrictedTo;
 
 	public static UpdatableValue factory(Value value, ValueListenerList listeners)
+	{
+		return factory(value, listeners, null);
+	}
+
+	public static UpdatableValue factory(Value value, ValueListenerList listeners, PType type)
 	{
 		if (Settings.dialect == Dialect.VDM_RT &&
 			Properties.rt_duration_transactions)
 		{
-			return new TransactionValue(value, listeners);
+			return new TransactionValue(value, listeners, type);
 		}
 		else
 		{
-			return new UpdatableValue(value, listeners);
+			return new UpdatableValue(value, listeners, type);
 		}
 	}
 
 	public static UpdatableValue factory(ValueListenerList listeners)
 	{
+		return factory(listeners, null);
+	}
+
+	public static UpdatableValue factory(ValueListenerList listeners, PType type)
+	{
 		if (Settings.dialect == Dialect.VDM_RT &&
 			Properties.rt_duration_transactions)
 		{
-			return new TransactionValue(listeners);
+			return new TransactionValue(listeners, type);
 		}
 		else
 		{
-			return new UpdatableValue(listeners);
+			return new UpdatableValue(listeners, type);
 		}
 	}
 
-	protected UpdatableValue(Value value, ValueListenerList listeners)
+	protected UpdatableValue(Value value, ValueListenerList listeners, PType type)
 	{
 		super(value);
 		this.listeners = listeners;
+		this.restrictedTo = type;
 	}
 
-	protected UpdatableValue(ValueListenerList listeners)
+	protected UpdatableValue(ValueListenerList listeners, PType type)
 	{
 		super();
 		this.listeners = listeners;
+		this.restrictedTo = type;
 	}
 
 	@Override
 	public synchronized Value getUpdatable(ValueListenerList watch)
 	{
-		return new UpdatableValue(value, watch);
+		return new UpdatableValue(value, watch, restrictedTo);
 	}
 
 	@Override
@@ -115,6 +128,11 @@ public class UpdatableValue extends ReferenceValue
 		{
    			value = newval.getUpdatable(listeners);
     		value = ((UpdatableValue)value).value;	// To avoid nested updatables
+    		
+    		if (restrictedTo != null)
+    		{
+				value = value.convertTo(restrictedTo, ctxt);
+    		}
 		}
 		
 		//Experimental hood added for DESTECS
@@ -147,7 +165,7 @@ public class UpdatableValue extends ReferenceValue
 	@Override
 	public synchronized Object clone()
 	{
-		return new UpdatableValue((Value)value.clone(), listeners);
+		return new UpdatableValue((Value)value.clone(), listeners, restrictedTo);
 	}
 
 	@Override

@@ -38,7 +38,7 @@ public class Vdm2UmlCommand extends AbstractHandler
 			Object firstElement = structuredSelection.getFirstElement();
 			if (firstElement instanceof IProject)
 			{
-				IProject project = ((IProject) firstElement);
+				IProject project = (IProject) firstElement;
 				IVdmProject vdmProject = (IVdmProject) project.getAdapter(IVdmProject.class);
 
 				if (vdmProject == null)

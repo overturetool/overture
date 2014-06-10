@@ -25,8 +25,15 @@ public class TokenTests extends AllTest
 
 		Collection<Object[]> tests = new LinkedList<Object[]>();
 
-		tests.addAll(getTests(new File(root)));
+		tests.addAll(getTests(new File(root),"Mktkn-0003","Mktkn-0004"));
 
 		return tests;
+	}
+	
+	
+	@Override
+	protected String getPropertyId()
+	{
+		return "token";
 	}
 }

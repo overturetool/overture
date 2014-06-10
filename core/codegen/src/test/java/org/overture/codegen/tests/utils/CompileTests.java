@@ -12,7 +12,10 @@ import java.util.List;
 
 import org.overture.codegen.tests.ClassicSpecTest;
 import org.overture.codegen.tests.ComplexExpressionTest;
+import org.overture.codegen.tests.ConfiguredCloningTest;
+import org.overture.codegen.tests.ConfiguredStringGenerationTest;
 import org.overture.codegen.tests.ExpressionTest;
+import org.overture.codegen.tests.FunctionValueTest;
 import org.overture.codegen.tests.SpecificationTest;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
@@ -34,7 +37,10 @@ public class CompileTests
 	public static final boolean RUN_COMPLEX_EXP_TESTS = true;
 	public static final boolean RUN_EXECUTING_CLASSIC_SPEC_TESTS = true;
 	public static final boolean RUN_NON_EXECUTING_VDM10_SPEC_TESTS = true;
-
+	public static final boolean RUN_FUNCTION_VALUE_TESTS = true;
+	public static final boolean RUN_CONFIGURED_STRING_GENERATION_TESTS = true;
+	public static final boolean RUN_CONFIGURED_CLONE_TESTS = true;
+	
 	private List<File> testInputFiles;
 	private List<File> resultFiles;
 	
@@ -74,6 +80,21 @@ public class CompileTests
 			runNonExecutingVdm10Tests();
 		}
 		
+		if(RUN_FUNCTION_VALUE_TESTS)
+		{
+			runFunctionValueTests();
+		}
+		
+		if(RUN_CONFIGURED_STRING_GENERATION_TESTS)
+		{
+			runConfiguredStringTests();
+		}
+		
+		if(RUN_CONFIGURED_CLONE_TESTS)
+		{
+			runConfiguredCloningTests();
+		}
+		
 		long endTimeMs = System.currentTimeMillis();
 		
 		long totalTimeMs = (endTimeMs - startTimeMs);
@@ -84,9 +105,51 @@ public class CompileTests
 		System.out.println("Time: " + String.format("%02d:%02d", minutes, seconds) + ".");
 	}
 
+	private void runConfiguredCloningTests() throws IOException
+	{
+		System.out.println("Beginning configured cloning tests..\n");
+
+		testInputFiles = TestUtils.getTestInputFiles(new File(ConfiguredCloningTest.ROOT));
+		resultFiles = TestUtils.getFiles(new File(ConfiguredCloningTest.ROOT), RESULT_FILE_EXTENSION);
+		
+		runTests(testInputFiles, resultFiles, new ExecutableSpecTestHandler(Release.CLASSIC), false);
+		
+		System.out.println("\n********");
+		System.out.println("Finished with configured cloning tests");
+		System.out.println("********\n");
+	}
+
+	private void runConfiguredStringTests() throws IOException
+	{
+		System.out.println("Beginning configured string tests..\n");
+
+		testInputFiles = TestUtils.getTestInputFiles(new File(ConfiguredStringGenerationTest.ROOT));
+		resultFiles = TestUtils.getFiles(new File(ConfiguredStringGenerationTest.ROOT), RESULT_FILE_EXTENSION);
+		
+		runTests(testInputFiles, resultFiles, new ExecutableSpecTestHandler(Release.VDM_10), false);
+		
+		System.out.println("\n********");
+		System.out.println("Finished with configured string tests");
+		System.out.println("********\n");
+	}
+
+	private void runFunctionValueTests() throws IOException
+	{
+		System.out.println("Beginning function value tests..\n");
+
+		testInputFiles = TestUtils.getTestInputFiles(new File(FunctionValueTest.ROOT));
+		resultFiles = TestUtils.getFiles(new File(FunctionValueTest.ROOT), RESULT_FILE_EXTENSION);
+		
+		runTests(testInputFiles, resultFiles, new ExecutableSpecTestHandler(Release.VDM_10), false);
+		
+		System.out.println("\n********");
+		System.out.println("Finished with function value tests");
+		System.out.println("********\n");
+	}
+
 	private void runNonExecutingVdm10Tests() throws IOException
 	{
-		System.out.println("Beginning with specifications..");
+		System.out.println("Beginning with specification tests..");
 		
 		testInputFiles = TestUtils.getTestInputFiles(new File(SpecificationTest.ROOT));
 		resultFiles = TestUtils.getFiles(new File(SpecificationTest.ROOT), RESULT_FILE_EXTENSION);
@@ -94,13 +157,13 @@ public class CompileTests
 		runTests(testInputFiles, resultFiles, new NonExecutableSpecTestHandler(), false);
 		
 		System.out.println("\n********");
-		System.out.println("Finished with specifications");
+		System.out.println("Finished with specification tests");
 		System.out.println("********\n");
 	}
 
 	private void runExecutingClassicSpecTests() throws IOException
 	{
-		System.out.println("Beginning classic specifications..\n");
+		System.out.println("Beginning classic specification tests..\n");
 
 		testInputFiles = TestUtils.getTestInputFiles(new File(ClassicSpecTest.ROOT));
 		resultFiles = TestUtils.getFiles(new File(ClassicSpecTest.ROOT), RESULT_FILE_EXTENSION);
@@ -108,13 +171,13 @@ public class CompileTests
 		runTests(testInputFiles, resultFiles, new ExecutableSpecTestHandler(Release.CLASSIC), false);
 		
 		System.out.println("\n********");
-		System.out.println("Finished with classic specifications");
+		System.out.println("Finished with classic specification tests");
 		System.out.println("********\n");
 	}
 
 	private void runComplexExpTests() throws IOException
 	{
-		System.out.println("Beginning complex expressions..\n");
+		System.out.println("Beginning complex expression tests..\n");
 
 		testInputFiles = TestUtils.getTestInputFiles(new File(ComplexExpressionTest.ROOT));
 		resultFiles = TestUtils.getFiles(new File(ComplexExpressionTest.ROOT), RESULT_FILE_EXTENSION);
@@ -122,13 +185,13 @@ public class CompileTests
 		runTests(testInputFiles, resultFiles, new ExecutableSpecTestHandler(Release.VDM_10), false);
 		
 		System.out.println("\n********");
-		System.out.println("Finished with complex expressions");
+		System.out.println("Finished with complex expression tests");
 		System.out.println("********\n");
 	}
 
 	private void runExpTests() throws IOException
 	{
-		System.out.println("Beginning expressions..\n");
+		System.out.println("Beginning expression tests..\n");
 
 		testInputFiles = TestUtils.getTestInputFiles(new File(ExpressionTest.ROOT));
 		resultFiles = TestUtils.getFiles(new File(ExpressionTest.ROOT), RESULT_FILE_EXTENSION);
@@ -136,7 +199,7 @@ public class CompileTests
 		runTests(testInputFiles, resultFiles, new ExpressionTestHandler(Release.VDM_10), true);
 		
 		System.out.println("\n********");
-		System.out.println("Finished with expressions");
+		System.out.println("Finished with expression tests");
 		System.out.println("********\n");
 	}
 	

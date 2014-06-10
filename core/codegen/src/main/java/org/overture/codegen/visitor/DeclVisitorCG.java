@@ -1,5 +1,6 @@
 package org.overture.codegen.visitor;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,7 +16,6 @@ import org.overture.ast.definitions.traces.ATraceDefinitionTerm;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AFieldField;
-import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.ARecordInvariantType;
@@ -27,21 +27,23 @@ import org.overture.codegen.cgast.declarations.AFormalParamLocalDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.PDeclCG;
+import org.overture.codegen.cgast.expressions.ALambdaExpCG;
 import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
+import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.PStmCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
-import org.overture.codegen.constants.IOoAstConstants;
-import org.overture.codegen.ooast.OoAstInfo;
+import org.overture.codegen.constants.IRConstants;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.utils.AnalysisExceptionCG;
 
-public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
+public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, PDeclCG>
 {
 	@Override
 	public PDeclCG caseAClassInvariantDefinition(
-			AClassInvariantDefinition node, OoAstInfo question)
+			AClassInvariantDefinition node, IRInfo question)
 			throws AnalysisException
 	{
 		//Do not report the node as unsupported and generate nothing
@@ -50,7 +52,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 	
 	@Override
 	public PDeclCG caseATraceDefinitionTerm(ATraceDefinitionTerm node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		//Do not report the node as unsupported and generate nothing
 		return null;
@@ -58,7 +60,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 	
 	@Override
 	public PDeclCG caseANamedTraceDefinition(ANamedTraceDefinition node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		//Do not report the node as unsupported and generate nothing
 		return null;
@@ -66,7 +68,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 	
 	@Override
 	public PDeclCG caseANamedInvariantType(ANamedInvariantType node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		PType type = node.getType();
 		
@@ -85,7 +87,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 	
 	@Override
 	public PDeclCG caseARecordInvariantType(ARecordInvariantType node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		ILexNameToken name = node.getName();
 		LinkedList<AFieldField> fields = node.getFields();
@@ -98,7 +100,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 		//		public R ::
 		//		    x : nat
 		//		    y : nat;
-		record.setAccess(IOoAstConstants.PUBLIC);
+		record.setAccess(IRConstants.PUBLIC);
 		record.setName(name.getName());
 		
 		LinkedList<AFieldDeclCG> recordFields = record.getFields();
@@ -119,11 +121,11 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 	}
 	
 	@Override
-	public PDeclCG caseAFieldField(AFieldField node, OoAstInfo question)
+	public PDeclCG caseAFieldField(AFieldField node, IRInfo question)
 			throws AnalysisException
 	{
 		//Record fields are public
-		String access = IOoAstConstants.PUBLIC;
+		String access = IRConstants.PUBLIC;
 		String name = node.getTag();
 		boolean isStatic = false;
 		boolean isFinal = false;
@@ -135,7 +137,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 	
 	@Override
 	public PDeclCG caseATypeDefinition(ATypeDefinition node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		String access = node.getAccess().getAccess().toString();
 		
@@ -152,60 +154,107 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 		
 	@Override
 	public PDeclCG caseAExplicitFunctionDefinition(
-			AExplicitFunctionDefinition node, OoAstInfo question)
+			AExplicitFunctionDefinition node, IRInfo question)
 			throws AnalysisException
 	{
-		if(node.getIsCurried()|| node.getIsTypeInvariant())
-			return null;
-		
-		String access = node.getAccess().getAccess().toString();
-		boolean isStatic = true;
-		String operationName = node.getName().getName();
-		
-		PTypeCG type = node.getType().apply(question.getTypeVisitor(), question);
-		
-		if(!(type instanceof AMethodTypeCG))
+		if(node.getIsTypeInvariant())
 		{
-			question.addUnsupportedNode(node, "Expected method type for explicit function. Got: " + type);
+			question.addUnsupportedNode(node, "Explicit functions that are type invariants are not supported");
 			return null;
 		}
 		
-		AMethodTypeCG methodType = (AMethodTypeCG) type;
+		String accessCg = node.getAccess().getAccess().toString();
+		boolean isStaticCg = true;
+		String funcNameCg = node.getName().getName();
 		
-		PStmCG body = null;
-		if(node.getIsUndefined())
-		   body = new ANotImplementedStmCG();
-		else
-			body = node.getBody().apply(question.getStmVisitor(), question);
+		PTypeCG typeCg = node.getType().apply(question.getTypeVisitor(), question);
 		
-		boolean isAbstract = body == null;
+		if(!(typeCg instanceof AMethodTypeCG))
+		{
+			question.addUnsupportedNode(node, "Expected method type for explicit function. Got: " + typeCg);
+			return null;
+		}
+		
+		AMethodTypeCG methodTypeCg = (AMethodTypeCG) typeCg;
 		
 		AMethodDeclCG method = new AMethodDeclCG();
 		
-		method.setAccess(access);
-		method.setStatic(isStatic);
-		method.setMethodType(methodType);
-		method.setName(operationName);		
-		method.setBody(body);
-		method.setIsConstructor(false);
-		method.setAbstract(isAbstract);
+		method.setAccess(accessCg);
+		method.setStatic(isStaticCg);
+		method.setMethodType(methodTypeCg);
+		method.setName(funcNameCg);		
 		
-		List<PType> ptypes = ((AFunctionType) node.getType()).getParameters();
-		List<PPattern> paramPatterns = node.getParamPatternList().get(0);
+		method.setIsConstructor(false);
+		
+		Iterator<List<PPattern>> iterator = node.getParamPatternList().iterator();
+		List<PPattern> paramPatterns = iterator.next();
 		
 		LinkedList<AFormalParamLocalDeclCG> formalParameters = method.getFormalParams();
 		
-		for(int i = 0; i < ptypes.size(); i++)
+		for(int i = 0; i < paramPatterns.size(); i++)
 		{
-			PTypeCG paramType = ptypes.get(i).apply(question.getTypeVisitor(), question);
 			String name = paramPatterns.get(i).toString();
 			
 			AFormalParamLocalDeclCG param = new AFormalParamLocalDeclCG();
-			param.setType(paramType);
+			param.setType(methodTypeCg.getParams().get(i).clone());
 			param.setName(name);
 			
 			formalParameters.add(param);
 		}
+		
+		if(node.getIsUndefined())
+		{
+			method.setBody(new ANotImplementedStmCG());
+		}
+		else if(node.getIsCurried())
+		{
+			AMethodTypeCG nextLevel = (AMethodTypeCG) methodTypeCg;
+
+			ALambdaExpCG currentLambda = new ALambdaExpCG();
+			ALambdaExpCG topLambda = currentLambda;
+			
+			while(iterator.hasNext())
+			{
+				nextLevel = (AMethodTypeCG) nextLevel.getResult();
+				paramPatterns = iterator.next();
+				
+				for (int i = 0; i < paramPatterns.size(); i++)
+				{
+					PPattern param = paramPatterns.get(i);
+					
+					AFormalParamLocalDeclCG paramCg = new AFormalParamLocalDeclCG();
+					paramCg.setName(param.toString());
+					paramCg.setType(nextLevel.getParams().get(i).clone());
+					
+					currentLambda.getParams().add(paramCg);
+				}
+			
+				currentLambda.setType(nextLevel.clone());
+
+				if (iterator.hasNext())
+				{
+					ALambdaExpCG nextLambda = new ALambdaExpCG();
+					currentLambda.setExp(nextLambda);
+					currentLambda = nextLambda;
+				}
+				
+			}
+			
+			PExpCG bodyExp = node.getBody().apply(question.getExpVisitor(), question);
+			currentLambda.setExp(bodyExp);
+			
+			AReturnStmCG returnLambda = new AReturnStmCG();
+			returnLambda.setExp(topLambda);
+			method.setBody(returnLambda);
+		}
+		else
+		{
+			PStmCG bodyCg = node.getBody().apply(question.getStmVisitor(), question);
+			method.setBody(bodyCg);
+		}
+		
+		boolean isAbstract = method.getBody() == null;
+		method.setAbstract(isAbstract);
 		
 		//If the function uses any type parameters they will be
 		//registered as part of the method declaration
@@ -223,10 +272,9 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 	
 	@Override
 	public PDeclCG caseAExplicitOperationDefinition(
-			AExplicitOperationDefinition node, OoAstInfo question)
+			AExplicitOperationDefinition node, IRInfo question)
 			throws AnalysisException
 	{
-		
 		String access = node.getAccess().getAccess().toString();
 		boolean isStatic = question.getTcFactory().createPDefinitionAssistant().isStatic(node);
 		String operationName = node.getName().getName();
@@ -275,7 +323,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 	
 	@Override
 	public PDeclCG caseAInstanceVariableDefinition(
-			AInstanceVariableDefinition node, OoAstInfo question)
+			AInstanceVariableDefinition node, IRInfo question)
 			throws AnalysisException
 	{
 		String access = node.getAccess().getAccess().toString();
@@ -290,7 +338,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<OoAstInfo, PDeclCG>
 	}
 	
 	@Override
-	public PDeclCG caseAValueDefinition(AValueDefinition node, OoAstInfo question) throws AnalysisException
+	public PDeclCG caseAValueDefinition(AValueDefinition node, IRInfo question) throws AnalysisException
 	{
 		String access = node.getAccess().getAccess().toString();
 		String name = node.getPattern().toString();

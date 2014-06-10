@@ -7,8 +7,8 @@ public class StringType {
     public StringType() {
     }
 
-    public String op1() {
-        return "kattebakke";
+    public VDMSeq op1() {
+        return SeqUtil.seq('k', 'a', 't', 't', 'e', 'b', 'a', 'k', 'k', 'e');
     }
 }
 

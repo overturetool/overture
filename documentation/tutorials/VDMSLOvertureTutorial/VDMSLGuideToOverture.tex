@@ -1,3 +1,4 @@
+
 \documentclass{overturerepsec}
 \usepackage{url}
 \usepackage{graphics}
@@ -7,6 +8,7 @@
 \usepackage{graphicx}
 \usepackage{latexsym}
 \usepackage{longtable} % ,multirow}
+\usepackage{vdmlisting}
 
 \newcommand{\vdmtools}{VDMTools}
 \newcommand{\vdmstyle}[1]{\texttt{#1}}
@@ -38,7 +40,7 @@
   %% This macro is identified by perl script which will move the
   %% parameter to the solutions chapter.
 % definition of VDM++, JavaCC, JJTree, JTB, ANTLR and SableCC for listings
-\include{customlangdef}
+%\include{customlangdef}
 % define the layout for listings
 \lstdefinestyle{tool}{basicstyle=\ttfamily,
                          frame=trBL, 
@@ -53,27 +55,14 @@
 			 showstringspaces=false, 
 %			 linewidth=\textwidth, 
 			 frameround=fttt, 
-			 aboveskip=5mm,
-			 belowskip=5mm,
+			 aboveskip=2mm,
+			 belowskip=2mm,
 			 framexleftmargin=0mm, 
 			 framexrightmargin=0mm}
-%\lstdefinestyle{mystyle}{basicstyle=\sffamily\small,
-%			 frame=tb,
-%                         numbers=left,
-%			 gobble=0,
-%			 showstringspaces=false,
-%			 linewidth=345pt,
-%			 frameround=ffff,
-%			 framexleftmargin=8mm,
-%			 framexrightmargin=8mm,
-%			 framextopmargin=1mm,
-%			 framexbottommargin=1mm,
-%			 aboveskip=7mm,
-%			 belowskip=5mm,
-%			 xleftmargin=10mm,}
+
+
 
 \lstset{style=mystyle}
-\lstset{language=VDM-SL}
 \lstset{alsolanguage=Java}
 
 

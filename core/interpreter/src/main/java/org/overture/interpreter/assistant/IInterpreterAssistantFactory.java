@@ -17,13 +17,11 @@ import org.overture.interpreter.assistant.definition.AExplicitFunctionDefinition
 import org.overture.interpreter.assistant.definition.AImplicitFunctionDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AMutexSyncDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ANamedTraceDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.ARepeatTraceDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AStateDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ASystemClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PDefinitionListAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PTraceCoreDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.PTraceDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AFieldExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AIsOfBaseClassExpAssistantInterpreter;
@@ -32,71 +30,19 @@ import org.overture.interpreter.assistant.expression.APostOpExpAssistantInterpre
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.assistant.module.AModuleModulesAssistantInterpreter;
 import org.overture.interpreter.assistant.module.ModuleListAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ABooleanPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ACharacterPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AConcatenationPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AExpressionPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AIdentifierPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AIgnorePatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AIntegerPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AMapPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AMapPatternMapletAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AMapUnionPatternAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.ANilPatternAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.AQuotePatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ARealPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ARecordPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ASeqPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ASetBindAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ASetMultipleBindAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ASetPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AStringPatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ATuplePatternAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ATypeBindAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ATypeMultipleBindAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AUnionPatternAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PMultipleBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PPatternListAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AAlwaysStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AAssignmentStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AAtomicStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ACallObjectStatementAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ACallStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.ACaseAlternativeStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ACasesStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ACyclesStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ADurationStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AElseIfStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AExitStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AForAllStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AForIndexStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AForPatternBindStmAssitantInterpreter;
-import org.overture.interpreter.assistant.statement.AIfStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ALetBeStStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AReturnStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.AStartStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ATixeStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.ATixeStmtAlternativeAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ATrapStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AWhileStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.PStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.SLetDefStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.SSimpleBlockStmAssistantInterpreter;
-import org.overture.interpreter.assistant.type.ABooleanBasicTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.AInMapMapTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.ANamedInvariantTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.AOptionalTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.AParameterTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.AProductTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.AQuoteTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.ARecordInvariantTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.ASetTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.AUnionTypeAssistantInterpreter;
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.interpreter.assistant.type.PTypeListAssistant;
-import org.overture.interpreter.assistant.type.SBasicTypeAssistantInterpreter;
 import org.overture.interpreter.assistant.type.SInvariantTypeAssistantInterpreter;
 import org.overture.interpreter.assistant.type.SMapTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
@@ -158,7 +104,7 @@ public interface IInterpreterAssistantFactory extends
 
 	//ARenamedDefinitionAssistantInterpreter createARenamedDefinitionAssistant();
 
-	ARepeatTraceDefinitionAssistantInterpreter createARepeatTraceDefinitionAssistant();
+	//ARepeatTraceDefinitionAssistantInterpreter createARepeatTraceDefinitionAssistant();
 
 	AStateDefinitionAssistantInterpreter createAStateDefinitionAssistant();
 
@@ -179,8 +125,6 @@ public interface IInterpreterAssistantFactory extends
 	PDefinitionListAssistantInterpreter createPDefinitionListAssistant();
 
 	PTraceCoreDefinitionAssistantInterpreter createPTraceCoreDefinitionAssistant();
-
-	PTraceDefinitionAssistantInterpreter createPTraceDefinitionAssistant();
 
 	SClassDefinitionAssistantInterpreter createSClassDefinitionAssistant();
 
@@ -284,51 +228,51 @@ public interface IInterpreterAssistantFactory extends
 
 	// pattern
 
-	ABooleanPatternAssistantInterpreter createABooleanPatternAssistant();
-
-	ACharacterPatternAssistantInterpreter createACharacterPatternAssistant();
-
-	AConcatenationPatternAssistantInterpreter createAConcatenationPatternAssistant();
-
-	AExpressionPatternAssistantInterpreter createAExpressionPatternAssistant();
-
-	AIdentifierPatternAssistantInterpreter createAIdentifierPatternAssistant();
-
-	AIgnorePatternAssistantInterpreter createAIgnorePatternAssistant();
-
-	AIntegerPatternAssistantInterpreter createAIntegerPatternAssistant();
-
-	AMapPatternAssistantInterpreter createAMapPatternAssistant();
-
-	AMapPatternMapletAssistantInterpreter createAMapPatternMapletAssistant();
-
-	AMapUnionPatternAssistantInterpreter createAMapUnionPatternAssistant();
+//	ABooleanPatternAssistantInterpreter createABooleanPatternAssistant();
+//
+//	ACharacterPatternAssistantInterpreter createACharacterPatternAssistant();
+//
+//	AConcatenationPatternAssistantInterpreter createAConcatenationPatternAssistant();
+//
+//	AExpressionPatternAssistantInterpreter createAExpressionPatternAssistant();
+//
+//	AIdentifierPatternAssistantInterpreter createAIdentifierPatternAssistant();
+//
+//	AIgnorePatternAssistantInterpreter createAIgnorePatternAssistant();
+//
+//	AIntegerPatternAssistantInterpreter createAIntegerPatternAssistant();
+//
+//	AMapPatternAssistantInterpreter createAMapPatternAssistant();
+//
+//	AMapPatternMapletAssistantInterpreter createAMapPatternMapletAssistant();
+//
+//	AMapUnionPatternAssistantInterpreter createAMapUnionPatternAssistant();
 
 	ANilPatternAssistantInterpreter createANilPatternAssistant();
 
 	AQuotePatternAssistantInterpreter createAQuotePatternAssistant();
 
-	ARealPatternAssistantInterpreter createARealPatternAssistant();
+	//ARealPatternAssistantInterpreter createARealPatternAssistant();
 
-	ARecordPatternAssistantInterpreter createARecordPatternAssistant();
+	//ARecordPatternAssistantInterpreter createARecordPatternAssistant();
 
-	ASeqPatternAssistantInterpreter createASeqPatternAssistant();
+	//ASeqPatternAssistantInterpreter createASeqPatternAssistant();
 
-	ASetBindAssistantInterpreter createASetBindAssistant();
+	//ASetBindAssistantInterpreter createASetBindAssistant();
 
-	ASetMultipleBindAssistantInterpreter createASetMultipleBindAssistant();
+	//ASetMultipleBindAssistantInterpreter createASetMultipleBindAssistant();
 
-	ASetPatternAssistantInterpreter createASetPatternAssistant();
+	//ASetPatternAssistantInterpreter createASetPatternAssistant();
 
-	AStringPatternAssistantInterpreter createAStringPatternAssistant();
+	//AStringPatternAssistantInterpreter createAStringPatternAssistant();
 
-	ATuplePatternAssistantInterpreter createATuplePatternAssistant();
+	//ATuplePatternAssistantInterpreter createATuplePatternAssistant();
 
-	ATypeBindAssistantInterpreter createATypeBindAssistant();
+	//ATypeBindAssistantInterpreter createATypeBindAssistant();
 
-	ATypeMultipleBindAssistantInterpreter createATypeMultipleBindAssistant();
+	//ATypeMultipleBindAssistantInterpreter createATypeMultipleBindAssistant();
 
-	AUnionPatternAssistantInterpreter createAUnionPatternAssistant();
+	//AUnionPatternAssistantInterpreter createAUnionPatternAssistant();
 
 	PBindAssistantInterpreter createPBindAssistant();
 
@@ -340,83 +284,83 @@ public interface IInterpreterAssistantFactory extends
 
 	// statement
 
-	AAlwaysStmAssistantInterpreter createAAlwaysStmAssistant();
-
-	AAssignmentStmAssistantInterpreter createAAssignmentStmAssistant();
-
-	AAtomicStmAssistantInterpreter createAAtomicStmAssistant();
-
-	ACallObjectStatementAssistantInterpreter createACallObjectStatementAssistant();
-
-	ACallStmAssistantInterpreter createACallStmAssistant();
+//	AAlwaysStmAssistantInterpreter createAAlwaysStmAssistant();
+//
+//	AAssignmentStmAssistantInterpreter createAAssignmentStmAssistant();
+//
+//	AAtomicStmAssistantInterpreter createAAtomicStmAssistant();
+//
+//	ACallObjectStatementAssistantInterpreter createACallObjectStatementAssistant();
+//
+//	ACallStmAssistantInterpreter createACallStmAssistant();
 
 	ACaseAlternativeStmAssistantInterpreter createACaseAlternativeStmAssistant();
 
-	ACasesStmAssistantInterpreter createACasesStmAssistant();
-
-	ACyclesStmAssistantInterpreter createACyclesStmAssistant();
-
-	ADurationStmAssistantInterpreter createADurationStmAssistant();
-
-	AElseIfStmAssistantInterpreter createAElseIfStmAssistant();
-
-	AExitStmAssistantInterpreter createAExitStmAssistant();
-
-	AForAllStmAssistantInterpreter createAForAllStmAssistant();
-
-	AForIndexStmAssistantInterpreter createAForIndexStmAssistant();
-
-	AForPatternBindStmAssitantInterpreter createAForPatternBindStmAssitant();
-
-	AIfStmAssistantInterpreter createAIfStmAssistant();
-
-	ALetBeStStmAssistantInterpreter createALetBeStStmAssistant();
-
-	AReturnStmAssistantInterpreter createAReturnStmAssistant();
+//	ACasesStmAssistantInterpreter createACasesStmAssistant();
+//
+//	ACyclesStmAssistantInterpreter createACyclesStmAssistant();
+//
+//	ADurationStmAssistantInterpreter createADurationStmAssistant();
+//
+//	AElseIfStmAssistantInterpreter createAElseIfStmAssistant();
+//
+//	AExitStmAssistantInterpreter createAExitStmAssistant();
+//
+//	AForAllStmAssistantInterpreter createAForAllStmAssistant();
+//
+//	AForIndexStmAssistantInterpreter createAForIndexStmAssistant();
+//
+//	AForPatternBindStmAssitantInterpreter createAForPatternBindStmAssitant();
+//
+//	AIfStmAssistantInterpreter createAIfStmAssistant();
+//
+//	ALetBeStStmAssistantInterpreter createALetBeStStmAssistant();
+//
+//	AReturnStmAssistantInterpreter createAReturnStmAssistant();
 
 	AStartStmAssistantInterpreter createAStartStmAssistant();
 
-	ATixeStmAssistantInterpreter createATixeStmAssistant();
+	//ATixeStmAssistantInterpreter createATixeStmAssistant();
 
 	ATixeStmtAlternativeAssistantInterpreter createATixeStmtAlternativeAssistant();
 
-	ATrapStmAssistantInterpreter createATrapStmAssistant();
+	//ATrapStmAssistantInterpreter createATrapStmAssistant();
 
-	AWhileStmAssistantInterpreter createAWhileStmAssistant();
+	//AWhileStmAssistantInterpreter createAWhileStmAssistant();
 
 	PStmAssistantInterpreter createPStmAssistant();
 
-	SLetDefStmAssistantInterpreter createSLetDefStmAssistant();
+	//SLetDefStmAssistantInterpreter createSLetDefStmAssistant();
 
 	SSimpleBlockStmAssistantInterpreter createSSimpleBlockStmAssistant();
 
 	// type
 
-	ABooleanBasicTypeAssistantInterpreter createABooleanBasicTypeAssistant();
-
-	AInMapMapTypeAssistantInterpreter createAInMapMapTypeAssistant();
-
-	ANamedInvariantTypeAssistantInterpreter createANamedInvariantTypeAssistant();
-
-	AOptionalTypeAssistantInterpreter createAOptionalTypeAssistant();
-
-	AParameterTypeAssistantInterpreter createAParameterTypeAssistant();
-
-	AProductTypeAssistantInterpreter createAProductTypeAssistant();
-
-	AQuoteTypeAssistantInterpreter createAQuoteTypeAssistant();
-
-	ARecordInvariantTypeAssistantInterpreter createARecordInvariantTypeAssistant();
-
-	ASetTypeAssistantInterpreter createASetTypeAssistant();
-
-	AUnionTypeAssistantInterpreter createAUnionTypeAssistant();
+//	ABooleanBasicTypeAssistantInterpreter createABooleanBasicTypeAssistant();
+//
+//	AInMapMapTypeAssistantInterpreter createAInMapMapTypeAssistant();
+//
+//	ANamedInvariantTypeAssistantInterpreter createANamedInvariantTypeAssistant();
+//
+//	AOptionalTypeAssistantInterpreter createAOptionalTypeAssistant();
+//
+//	AParameterTypeAssistantInterpreter createAParameterTypeAssistant();
+//
+//	AProductTypeAssistantInterpreter createAProductTypeAssistant();
+//
+//	AQuoteTypeAssistantInterpreter createAQuoteTypeAssistant();
+//
+//	ARecordInvariantTypeAssistantInterpreter createARecordInvariantTypeAssistant();
+//
+//	ASetTypeAssistantInterpreter createASetTypeAssistant();
+//
+//	AUnionTypeAssistantInterpreter createAUnionTypeAssistant();
 
 	PTypeAssistantInterpreter createPTypeAssistant();
 
 	PTypeListAssistant createPTypeListAssistant();
 
-	SBasicTypeAssistantInterpreter createSBasicTypeAssistant();
+	//SBasicTypeAssistantInterpreter createSBasicTypeAssistant();
 
 	SInvariantTypeAssistantInterpreter createSInvariantTypeAssistant();
 
@@ -453,9 +397,7 @@ public interface IInterpreterAssistantFactory extends
 	
 	IQuestionAnswer<Integer, PStm> getDefinitionStatementFinder();
 	
-	IQuestionAnswer<Context, TraceNode> getCoreTraceExpander();
-	
-	IQuestionAnswer<Context, TraceNode> getTermTraceExpander();
+	IQuestionAnswer<Context, TraceNode> getTraceExpander();
 	
 	IQuestionAnswer<Integer, PExp> getStatementExpressionFinder();
 	

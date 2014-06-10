@@ -1,0 +1,6 @@
+#set( $method = $node.getMethods().get(0) )
+##
+new $JavaFormat.format($node.getType())()
+{
+	$JavaFormat.format($method)
+}

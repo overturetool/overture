@@ -7,12 +7,12 @@ public class A {
     public A() {
     }
 
-    public char op() {
-        return s().charAt(Utils.index(1L));
+    public Character op() {
+        return ((Character) s().get(Utils.index(1L)));
     }
 
-    public String s() {
-        return "hej";
+    public VDMSeq s() {
+        return SeqUtil.seq('h', 'e', 'j');
     }
 }
 

@@ -32,11 +32,13 @@ public class SimpleTest {
     public SimpleTest() {
     }
 
-    public boolean Run() {
-        clock.SetDate("150999");
+    public Boolean Run() {
+        clock.SetDate(SeqUtil.seq('1', '5', '0', '9', '9', '9'));
 
-        Cardholder peter = new Cardholder().Create("Peter Gorm Larsen",
-                "Granvej 24");
+        Cardholder peter = new Cardholder().Create(SeqUtil.seq('P', 'e', 't',
+                    'e', 'r', ' ', 'G', 'o', 'r', 'm', ' ', 'L', 'a', 'r', 's',
+                    'e', 'n'),
+                SeqUtil.seq('G', 'r', 'a', 'n', 'v', 'e', 'j', ' ', '2', '4'));
         Account pglacc1 = new Account().Create(MapUtil.map(
                     new Maplet(1L, peter)), 5000L);
         Number pglid1 = 1L;
@@ -67,11 +69,11 @@ public class Account {
     public Account() {
     }
 
-    private boolean ValidTransaction(Transaction transaction) {
+    private Boolean ValidTransaction(final Transaction transaction) {
         throw new UnsupportedOperationException();
     }
 
-    public Account Create(VDMMap cs, Number b) {
+    public Account Create(final VDMMap cs, final Number b) {
         cards = cs.clone();
         balance = b;
 
@@ -82,7 +84,8 @@ public class Account {
         return balance;
     }
 
-    public boolean Withdrawal(Number cardId, Number amount, String date) {
+    public Boolean Withdrawal(final Number cardId, final Number amount,
+        final VDMSeq date) {
         Transaction transaction = new Transaction(date, cardId, amount);
 
         if (((balance.longValue() - amount.longValue()) >= 0L) &&
@@ -99,56 +102,58 @@ public class Account {
         }
     }
 
-    public Letter MakeStatement(Number cardId, String date) {
-        String nm = ((Cardholder) cards.get(cardId)).GetName();
-        String addr = ((Cardholder) cards.get(cardId)).GetAddress();
+    public Letter MakeStatement(final Number cardId, final VDMSeq date) {
+        VDMSeq nm = ((Cardholder) cards.get(cardId)).GetName();
+        VDMSeq addr = ((Cardholder) cards.get(cardId)).GetAddress();
         Letter letter = new Letter();
 
-        return letter.Create(nm, addr, date, transactions.clone(), balance);
+        return letter.Create(nm.clone(), addr.clone(), date.clone(),
+            transactions.clone(), balance);
     }
 
     public VDMSet GetCardIds() {
         return MapUtil.dom(cards.clone());
     }
 
-    public void AddCard(Number cId, Cardholder ch) {
+    public void AddCard(final Number cId, final Cardholder ch) {
         cards = MapUtil.munion(cards.clone(), MapUtil.map(new Maplet(cId, ch)));
     }
 
-    public void RemoveCard(Number cId) {
+    public void RemoveCard(final Number cId) {
         cards = MapUtil.domResBy(SetUtil.set(cId), cards.clone());
     }
 
-    private static boolean TransactionsInvariant(VDMSeq ts) {
+    private static Boolean TransactionsInvariant(final VDMSeq ts) {
         VDMSet setCompResult_1 = SetUtil.set();
         VDMSet set_2 = SeqUtil.inds(ts);
 
         for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext();) {
             Number i = ((Number) iterator_2.next());
             setCompResult_1 = SetUtil.union(setCompResult_1.clone(),
-                    SetUtil.set(((Transaction) ts.get(Utils.index(i))).date));
+                    SetUtil.set(
+                        ((Transaction) ts.get(Utils.index(i))).date.clone()));
         }
 
-        boolean forAllExpResult_1 = true;
+        Boolean forAllExpResult_1 = true;
         VDMSet set_1 = setCompResult_1.clone();
 
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && forAllExpResult_1;) {
-            String date = ((String) iterator_1.next());
+            VDMSeq date = ((VDMSeq) iterator_1.next());
             forAllExpResult_1 = DateTotal(date, ts).longValue() <= dailyLimit.longValue();
         }
 
         return forAllExpResult_1;
     }
 
-    private static Number DateTotal(String date, VDMSeq ts) {
+    private static Number DateTotal(final VDMSeq date, final VDMSeq ts) {
         VDMSeq seqCompResult_1 = SeqUtil.seq();
         VDMSet set_3 = SeqUtil.inds(ts);
 
         for (Iterator iterator_3 = set_3.iterator(); iterator_3.hasNext();) {
             Number i = ((Number) iterator_3.next());
 
-            if (((Transaction) ts.get(Utils.index(i))).date.equals(date)) {
+            if (SeqUtil.equals(((Transaction) ts.get(Utils.index(i))).date, date)) {
                 seqCompResult_1 = SeqUtil.conc(seqCompResult_1.clone(),
                         SeqUtil.seq(
                             ((Transaction) ts.get(Utils.index(i))).amount));
@@ -158,7 +163,7 @@ public class Account {
         return Sum(seqCompResult_1);
     }
 
-    private static Number Sum(VDMSeq rs) {
+    private static Number Sum(final VDMSeq rs) {
         if (rs.isEmpty()) {
             return 0L;
         } else {
@@ -168,24 +173,25 @@ public class Account {
     }
 
     public static class Transaction implements Record {
-        public String date;
+        public VDMSeq date;
         public Number cardId;
         public Number amount;
 
-        public Transaction(String _date, Number _cardId, Number _amount) {
-            date = (_date != null) ? _date : null;
+        public Transaction(final VDMSeq _date, final Number _cardId,
+            final Number _amount) {
+            date = (_date != null) ? _date.clone() : null;
             cardId = _cardId;
             amount = _amount;
         }
 
-        public boolean equals(Object obj) {
+        public boolean equals(final Object obj) {
             if (!(obj instanceof Transaction)) {
                 return false;
             }
 
             Transaction other = ((Transaction) obj);
 
-            return (date.equals(other.date)) &&
+            return (SeqUtil.equals(date, other.date)) &&
             (cardId.longValue() == other.cardId.longValue()) &&
             (amount.longValue() == other.amount.longValue());
         }
@@ -215,7 +221,7 @@ public class Card {
     private Number cardId;
     private Number accountId;
 
-    public Card(Number c, Number cid, Number a) {
+    public Card(final Number c, final Number cid, final Number a) {
         code = c;
         cardId = cid;
         accountId = a;
@@ -244,25 +250,25 @@ import java.util.*;
 
 
 public class Cardholder {
-    private String name;
-    private String address;
+    private VDMSeq name;
+    private VDMSeq address;
 
     public Cardholder() {
     }
 
-    public Cardholder Create(String nm, String addr) {
-        name = nm;
-        address = addr;
+    public Cardholder Create(final VDMSeq nm, final VDMSeq addr) {
+        name = nm.clone();
+        address = addr.clone();
 
         return this;
     }
 
-    public String GetName() {
-        return name;
+    public VDMSeq GetName() {
+        return name.clone();
     }
 
-    public String GetAddress() {
-        return address;
+    public VDMSeq GetAddress() {
+        return address.clone();
     }
 }
 
@@ -283,12 +289,12 @@ public class CentralResource {
     public CentralResource() {
     }
 
-    public void AddLetterbox(Clock c, Letterbox l) {
+    public void AddLetterbox(final Clock c, final Letterbox l) {
         clock = c;
         letterbox = l;
     }
 
-    public Number GetBalance(Number accountId) {
+    public Number GetBalance(final Number accountId) {
         if (MapUtil.dom(accounts.clone()).contains(accountId)) {
             return ((Account) accounts.get(accountId)).GetBalance();
         } else {
@@ -296,7 +302,8 @@ public class CentralResource {
         }
     }
 
-    public boolean Withdrawal(Number accountId, Number cardId, Number amount) {
+    public Boolean Withdrawal(final Number accountId, final Number cardId,
+        final Number amount) {
         if (IsLegalCard(accountId, cardId)) {
             return ((Account) accounts.get(accountId)).Withdrawal(cardId,
                 amount, clock.GetDate());
@@ -305,7 +312,7 @@ public class CentralResource {
         }
     }
 
-    public boolean PostStatement(Number accountId, Number cardId) {
+    public Boolean PostStatement(final Number accountId, final Number cardId) {
         if (IsLegalCard(accountId, cardId)) {
             letterbox.PostStatement(((Account) accounts.get(accountId)).MakeStatement(
                     cardId, clock.GetDate()));
@@ -316,26 +323,26 @@ public class CentralResource {
         }
     }
 
-    public boolean IsLegalCard(Number accountId, Number cardId) {
+    public Boolean IsLegalCard(final Number accountId, final Number cardId) {
         return !(illegalCards.contains(cardId)) &&
         MapUtil.dom(accounts.clone()).contains(accountId) &&
         ((Account) accounts.get(accountId)).GetCardIds().contains(cardId);
     }
 
-    public boolean NumberOfTriesExceeded(Number cardId) {
+    public Boolean NumberOfTriesExceeded(final Number cardId) {
         return ((Number) numberOfTries.get(cardId)).longValue() >= maxNumberOfTries.longValue();
     }
 
-    public void ResetNumberOfTries(Number cardId) {
+    public void ResetNumberOfTries(final Number cardId) {
         numberOfTries.put(cardId, 0L);
     }
 
-    public void IncrNumberOfTries(Number cardId) {
+    public void IncrNumberOfTries(final Number cardId) {
         numberOfTries.put(cardId,
             ((Number) numberOfTries.get(cardId)).longValue() + 1L);
     }
 
-    public void AddAccount(Number accId, Account acc) {
+    public void AddAccount(final Number accId, final Account acc) {
         accounts = MapUtil.override(accounts.clone(),
                 MapUtil.map(new Maplet(accId, acc)));
 
@@ -352,7 +359,7 @@ public class CentralResource {
                 mapCompResult_1.clone());
     }
 
-    public void AddIllegalCard(Number cId) {
+    public void AddIllegalCard(final Number cId) {
         illegalCards = SetUtil.union(illegalCards.clone(), SetUtil.set(cId));
     }
 }
@@ -364,17 +371,17 @@ import java.util.*;
 
 
 public class Clock {
-    private String date = "";
+    private VDMSeq date = SeqUtil.seq();
 
     public Clock() {
     }
 
-    public void SetDate(String d) {
-        date = d;
+    public void SetDate(final VDMSeq d) {
+        date = d.clone();
     }
 
-    public String GetDate() {
-        return date;
+    public VDMSeq GetDate() {
+        return date.clone();
     }
 }
 
@@ -385,19 +392,20 @@ import java.util.*;
 
 
 public class Letter {
-    public String name;
-    public String address;
-    public String date;
+    public VDMSeq name;
+    public VDMSeq address;
+    public VDMSeq date;
     public VDMSeq transactions;
     public Number balance;
 
     public Letter() {
     }
 
-    public Letter Create(String nm, String addr, String d, VDMSeq ts, Number b) {
-        name = nm;
-        address = addr;
-        date = d;
+    public Letter Create(final VDMSeq nm, final VDMSeq addr, final VDMSeq d,
+        final VDMSeq ts, final Number b) {
+        name = nm.clone();
+        address = addr.clone();
+        date = d.clone();
         transactions = ts.clone();
         balance = b;
 
@@ -417,7 +425,7 @@ public class Letterbox {
     public Letterbox() {
     }
 
-    public void PostStatement(Letter letter) {
+    public void PostStatement(final Letter letter) {
         statements = SeqUtil.conc(statements.clone(), SeqUtil.seq(letter));
     }
 
@@ -436,25 +444,25 @@ import java.util.*;
 
 public class Till {
     private Card curCard = null;
-    private boolean cardOk = false;
+    private Boolean cardOk = false;
     private VDMSet retainedCards = SetUtil.set();
     private CentralResource resource;
 
-    public Till(CentralResource res) {
+    public Till(final CentralResource res) {
         resource = res;
     }
 
     public Till() {
     }
 
-    public void InsertCard(Card c) {
+    public void InsertCard(final Card c) {
         curCard = c;
     }
 
-    public Object Validate(Number pin) {
+    public Object Validate(final Number pin) {
         Number cardId = curCard.GetCardId();
-        boolean codeOk = curCard.GetCode().longValue() == Encode(pin).longValue();
-        boolean cardLegal = IsLegalCard();
+        Boolean codeOk = curCard.GetCode().longValue() == Encode(pin).longValue();
+        Boolean cardLegal = IsLegalCard();
         cardOk = codeOk && cardLegal;
 
         if (!(cardLegal)) {
@@ -490,29 +498,29 @@ public class Till {
         return resource.GetBalance(curCard.GetAccountId());
     }
 
-    public boolean MakeWithdrawal(Number amount) {
+    public Boolean MakeWithdrawal(final Number amount) {
         return resource.Withdrawal(curCard.GetAccountId(), curCard.GetCardId(),
             amount);
     }
 
-    public boolean RequestStatement() {
+    public Boolean RequestStatement() {
         return resource.PostStatement(curCard.GetAccountId(),
             curCard.GetCardId());
     }
 
-    public boolean IsLegalCard() {
+    public Boolean IsLegalCard() {
         return resource.IsLegalCard(curCard.GetAccountId(), curCard.GetCardId());
     }
 
-    public boolean CardValidated() {
+    public Boolean CardValidated() {
         return (curCard != null) && cardOk;
     }
 
-    public boolean CardInside() {
+    public Boolean CardInside() {
         return curCard != null;
     }
 
-    private static Number Encode(Number pin) {
+    private static Number Encode(final Number pin) {
         return pin;
     }
 }
@@ -527,7 +535,7 @@ abstract public class Event {
     public Event() {
     }
 
-    public abstract Object execute(System system);
+    public abstract Object execute(final System system);
 }
 
 ##########
@@ -542,13 +550,13 @@ public class GetBalance extends Event {
     public GetBalance() {
     }
 
-    public GetBalance Init(Number tid) {
+    public GetBalance Init(final Number tid) {
         tillid = tid;
 
         return this;
     }
 
-    public Object execute(System sys) {
+    public Object execute(final System sys) {
         Till till = sys.GetTill(tillid);
 
         if (till.CardValidated()) {
@@ -571,13 +579,13 @@ public class IllegalCard extends Event {
     public IllegalCard() {
     }
 
-    public IllegalCard Init(Number c) {
+    public IllegalCard Init(final Number c) {
         mycard = c;
 
         return this;
     }
 
-    public Object execute(System sys) {
+    public Object execute(final System sys) {
         sys.GetResource().AddIllegalCard(mycard);
 
         return true;
@@ -597,14 +605,14 @@ public class InsertCard extends Event {
     public InsertCard() {
     }
 
-    public InsertCard Init(Number tid, Card c) {
+    public InsertCard Init(final Number tid, final Card c) {
         tillid = tid;
         mycard = c;
 
         return this;
     }
 
-    public Object execute(System sys) {
+    public Object execute(final System sys) {
         sys.GetTill(tillid).InsertCard(mycard);
 
         return true;
@@ -623,13 +631,13 @@ public class ReturnCard extends Event {
     public ReturnCard() {
     }
 
-    public ReturnCard Init(Number tid) {
+    public ReturnCard Init(final Number tid) {
         tillid = tid;
 
         return this;
     }
 
-    public Object execute(System sys) {
+    public Object execute(final System sys) {
         Till till = sys.GetTill(tillid);
 
         if (till.CardInside()) {
@@ -654,13 +662,13 @@ public class SendStatement extends Event {
     public SendStatement() {
     }
 
-    public SendStatement Init(Number tid) {
+    public SendStatement Init(final Number tid) {
         tillid = tid;
 
         return this;
     }
 
-    public Object execute(System sys) {
+    public Object execute(final System sys) {
         Till till = sys.GetTill(tillid);
 
         if (till.CardValidated()) {
@@ -694,16 +702,26 @@ public class System {
     private Letterbox letterbox = new Letterbox();
 
     public System() {
-        clock.SetDate("150999");
+        clock.SetDate(SeqUtil.seq('1', '5', '0', '9', '9', '9'));
 
-        Cardholder peter = new Cardholder().Create("Peter Gorm Larsen",
-                "Granvej 24");
-        Cardholder paul = new Cardholder().Create("Paul Mukherjee",
-                "Rugaardsvej 47");
-        Cardholder sten = new Cardholder().Create("Sten Agerholm",
-                "Teisensvej ??");
-        Cardholder kim = new Cardholder().Create("Kim Sunesen", "??");
-        Cardholder CSK = new Cardholder().Create("CSK", "Forskerparken 10A");
+        Cardholder peter = new Cardholder().Create(SeqUtil.seq('P', 'e', 't',
+                    'e', 'r', ' ', 'G', 'o', 'r', 'm', ' ', 'L', 'a', 'r', 's',
+                    'e', 'n'),
+                SeqUtil.seq('G', 'r', 'a', 'n', 'v', 'e', 'j', ' ', '2', '4'));
+        Cardholder paul = new Cardholder().Create(SeqUtil.seq('P', 'a', 'u',
+                    'l', ' ', 'M', 'u', 'k', 'h', 'e', 'r', 'j', 'e', 'e'),
+                SeqUtil.seq('R', 'u', 'g', 'a', 'a', 'r', 'd', 's', 'v', 'e',
+                    'j', ' ', '4', '7'));
+        Cardholder sten = new Cardholder().Create(SeqUtil.seq('S', 't', 'e',
+                    'n', ' ', 'A', 'g', 'e', 'r', 'h', 'o', 'l', 'm'),
+                SeqUtil.seq('T', 'e', 'i', 's', 'e', 'n', 's', 'v', 'e', 'j',
+                    ' ', '?', '?'));
+        Cardholder kim = new Cardholder().Create(SeqUtil.seq('K', 'i', 'm',
+                    ' ', 'S', 'u', 'n', 'e', 's', 'e', 'n'),
+                SeqUtil.seq('?', '?'));
+        Cardholder CSK = new Cardholder().Create(SeqUtil.seq('C', 'S', 'K'),
+                SeqUtil.seq('F', 'o', 'r', 's', 'k', 'e', 'r', 'p', 'a', 'r',
+                    'k', 'e', 'n', ' ', '1', '0', 'A'));
         Account pglacc1 = new Account().Create(MapUtil.map(
                     new Maplet(1L, peter)), 5000L);
         Account saacc1 = new Account().Create(MapUtil.map(new Maplet(2L, sten)),
@@ -728,7 +746,7 @@ public class System {
         resource.AddLetterbox(clock, new Letterbox());
     }
 
-    public Till GetTill(Number tid) {
+    public Till GetTill(final Number tid) {
         return ((Till) tills.get(tid));
     }
 
@@ -750,14 +768,14 @@ public class Validate extends Event {
     public Validate() {
     }
 
-    public Validate Init(Number tid, Number pin) {
+    public Validate Init(final Number tid, final Number pin) {
         tillid = tid;
         code = pin;
 
         return this;
     }
 
-    public Object execute(System sys) {
+    public Object execute(final System sys) {
         return sys.GetTill(tillid).Validate(code);
     }
 }
@@ -775,14 +793,14 @@ public class Withdrawal extends Event {
     public Withdrawal() {
     }
 
-    public Withdrawal Init(Number t, Number a) {
+    public Withdrawal Init(final Number t, final Number a) {
         tillid = t;
         amount = a;
 
         return this;
     }
 
-    public Object execute(System sys) {
+    public Object execute(final System sys) {
         Till till = sys.GetTill(tillid);
 
         if (till.CardValidated()) {

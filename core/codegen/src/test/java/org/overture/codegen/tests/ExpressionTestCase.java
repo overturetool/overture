@@ -1,8 +1,10 @@
 package org.overture.codegen.tests;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 
 public class ExpressionTestCase extends CodeGenBaseTestCase
@@ -21,8 +23,16 @@ public class ExpressionTestCase extends CodeGenBaseTestCase
 	@Override
 	protected String generateActualOutput() throws AnalysisException
 	{
-		String fileContent = CodeGenTestUtil.getFileContent(file);
-		String generatedJava = JavaCodeGenUtil.generateJavaFromExp(fileContent).getContent().trim();
+		String fileContent;
+		try
+		{
+			fileContent = GeneralUtils.readFromFile(file);
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+		String generatedJava = JavaCodeGenUtil.generateJavaFromExp(fileContent, getIrSettings(), getJavaSettings()).getContent().trim();
 		String trimmed = generatedJava.replaceAll("\\s+", " ");
 		
 		return trimmed;
