@@ -1468,6 +1468,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	public Node caseASetMultipleBind(ASetMultipleBind node)
 			throws AnalysisException
 	{
+	    //System.err.println("in caseASetMB: " + node + "  " + node.getSet().getClass());
 	    if(node.getSet() instanceof ASetCompSetExp) {
 		//return caseASetCompSetExp((ASetCompSetExp) node.getSet());
 		return node.getSet().apply(this);
@@ -1485,7 +1486,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		return node.getSet().apply(this);
 	    }
 
-	        if (((ASetEnumSetExp) node.getSet()).getMembers().isEmpty())
+	    //if (((ASetEnumSetExp) node.getSet()).getMembers().isEmpty())
 
 		if(node.getSet() instanceof ASetEnumSetExp)
 		{
@@ -1590,7 +1591,6 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		PPredicate p = new AConjunctPredicate(before, after);
 
 		if (node.getInitExpression() != null && USE_INITIAL_FIXED_STATE)
-		    {
 		{
 			if(node.getInitExpression() instanceof AEqualsBinaryExp)
 			{

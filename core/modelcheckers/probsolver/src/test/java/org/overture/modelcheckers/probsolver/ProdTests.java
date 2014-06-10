@@ -29,4 +29,10 @@ public class ProdTests extends AllTest
 
 		return tests;
 	}
+
+	@Override
+	protected String getPropertyId()
+	{
+		return "pro";
+	}
 }
