@@ -35,21 +35,21 @@ import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.constants.TempVarPrefixes;
-import org.overture.codegen.ooast.OoAstInfo;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.utils.ITempVarGen;
 
 public class TransformationAssistantCG
 {
-	protected OoAstInfo info;
+	protected IRInfo info;
 	protected TempVarPrefixes varPrefixes;
 
-	public TransformationAssistantCG(OoAstInfo info, TempVarPrefixes varPrefixes)
+	public TransformationAssistantCG(IRInfo info, TempVarPrefixes varPrefixes)
 	{
 		this.info = info;
 		this.varPrefixes = varPrefixes;
 	}
 
-	public OoAstInfo getInfo()
+	public IRInfo getInfo()
 	{
 		return info;
 	}

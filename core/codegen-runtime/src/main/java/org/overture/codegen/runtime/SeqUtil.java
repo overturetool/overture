@@ -29,6 +29,9 @@ public class SeqUtil
 		if(maplets == null)
 			throw new IllegalArgumentException("Cannot modify sequence from null");
 		
+		if(seq == null)
+			throw new IllegalArgumentException("Cannot modify null");
+		
 		for(Maplet maplet : maplets)
 		{
 			Object left = maplet.getLeft();
@@ -44,6 +47,36 @@ public class SeqUtil
 		return seq;
 	}
 	
+	public static String mod(String string, Maplet... maplets)
+	{
+		if(maplets == null)
+			throw new IllegalArgumentException("Cannot modify sequence from null");
+
+		if(string == null)
+			throw new IllegalArgumentException("Cannot modify null");
+		
+		StringBuilder builder = new StringBuilder(string);
+		
+		for(Maplet maplet : maplets)
+		{
+			Object left = maplet.getLeft();
+			Object right = maplet.getRight();
+			
+			if(!(left instanceof Long))
+				throw new IllegalArgumentException("Domain values of maplets in a sequence modification must be of type nat1");
+
+			if(!(right instanceof Character))
+				throw new IllegalArgumentException("Range values must be characters when modifying a character sequence");
+			
+			char rightChar = (Character) right;
+			
+			Long key = (Long) left;
+			builder.setCharAt(Utils.index(key), rightChar);
+		}
+		
+		return builder.toString();
+	}
+	
 	@SuppressWarnings("unchecked")
 	public static VDMSet elems(VDMSeq seq)
 	{
@@ -52,6 +85,22 @@ public class SeqUtil
 
 		VDMSet elems = SetUtil.set();
 		elems.addAll(seq);
+		
+		return elems;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static VDMSet elems(String string)
+	{
+		if(string == null)
+			throw new IllegalArgumentException("Cannot get elems of null");
+
+		VDMSet elems = SetUtil.set();
+		
+		for(int i = 0; i < string.length(); i++)
+		{
+			elems.add(string.charAt(i));
+		}
 		
 		return elems;
 	}
@@ -90,6 +139,17 @@ public class SeqUtil
 		return tail;
 	}
 	
+	public static String tail(String seq)
+	{
+		if(seq == null)
+			throw new IllegalArgumentException("Cannot take tail of null");
+		
+		if(seq.isEmpty())
+			throw new IllegalArgumentException("Cannot take tail of empty string");
+
+		return seq.substring(1, seq.length());
+	}
+	
 	@SuppressWarnings("unchecked")
 	public static VDMSet inds(VDMSeq seq)
 	{
@@ -99,6 +159,22 @@ public class SeqUtil
 		VDMSet indices = SetUtil.set();
 		
 		for(long i = 1; i <= seq.size(); i++)
+		{
+			indices.add(i);
+		}
+		
+		return indices;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static VDMSet inds(String seq)
+	{
+		if(seq == null)
+			throw new IllegalArgumentException("Cannot get indices of null");
+		
+		VDMSet indices = SetUtil.set();
+		
+		for(long i = 1; i <= seq.length(); i++)
 		{
 			indices.add(i);
 		}

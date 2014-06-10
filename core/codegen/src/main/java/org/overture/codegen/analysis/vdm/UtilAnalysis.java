@@ -6,7 +6,7 @@ import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.expressions.ATupleExpCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
-import org.overture.codegen.constants.IOoAstConstants;
+import org.overture.codegen.constants.IRConstants;
 
 public class UtilAnalysis extends AbstractAnalysis
 {
@@ -19,8 +19,8 @@ public class UtilAnalysis extends AbstractAnalysis
 			
 			String className = classType.getName();
 			
-			for(int i = 0; i < IOoAstConstants.UTIL_NAMES.length; i++)
-				if(className.equals(IOoAstConstants.UTIL_NAMES[i]))
+			for(int i = 0; i < IRConstants.UTIL_NAMES.length; i++)
+				if(className.equals(IRConstants.UTIL_NAMES[i]))
 				{
 					setFound();
 					throw new AnalysisException();

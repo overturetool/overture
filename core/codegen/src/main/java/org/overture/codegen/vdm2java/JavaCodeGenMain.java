@@ -11,8 +11,9 @@ import org.overture.codegen.analysis.violations.InvalidNamesException;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.assistant.LocationAssistantCG;
+import org.overture.codegen.ir.IRSettings;
+import org.overture.codegen.ir.NodeInfo;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.ooast.NodeInfo;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedData;
@@ -30,6 +31,12 @@ public class JavaCodeGenMain
 		if (args.length <= 1)
 			Logger.getLog().println("Wrong input!");
 		
+		IRSettings irSettings = new IRSettings();
+		irSettings.setCharSeqAsString(false);
+		
+		JavaSettings javaSettings = new JavaSettings();
+		javaSettings.setDisableCloning(false);
+		
 		String setting = args[0];
 		if(setting.toLowerCase().equals("oo"))
 		{
@@ -40,7 +47,7 @@ public class JavaCodeGenMain
 				List<File> libFiles = GeneralUtils.getFiles(new File("src\\test\\resources\\lib"));
 				files.addAll(libFiles);
 				
-				GeneratedData data = JavaCodeGenUtil.generateJavaFromFiles(files);
+				GeneratedData data = JavaCodeGenUtil.generateJavaFromFiles(files, irSettings, javaSettings);
 				List<GeneratedModule> generatedClasses = data.getClasses();
 				
 				for (GeneratedModule generatedClass : generatedClasses)
@@ -74,10 +81,10 @@ public class JavaCodeGenMain
 					Logger.getLog().println(quotes.getContent());
 				}
 
-				File file = new File("target" + File.separatorChar + "sources"
+				File outputFolder = new File("target" + File.separatorChar + "sources"
 						+ File.separatorChar);
 
-				JavaCodeGenUtil.generateJavaSourceFiles(file, generatedClasses);
+				JavaCodeGenUtil.generateJavaSourceFiles(outputFolder, generatedClasses);
 				
 			} catch (AnalysisException e)
 			{
@@ -99,7 +106,7 @@ public class JavaCodeGenMain
 		{
 			try
 			{
-				Generated generated = JavaCodeGenUtil.generateJavaFromExp(args[1]);
+				Generated generated = JavaCodeGenUtil.generateJavaFromExp(args[1], irSettings, javaSettings);
 				
 				if(generated.hasMergeErrors())
 				{

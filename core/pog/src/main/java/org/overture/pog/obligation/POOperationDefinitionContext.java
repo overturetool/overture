@@ -44,7 +44,6 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
 import org.overture.pog.pub.IPogAssistantFactory;
-import org.overture.typechecker.assistant.definition.AImplicitOperationDefinitionAssistantTC;
 
 public class POOperationDefinitionContext extends POContext
 {

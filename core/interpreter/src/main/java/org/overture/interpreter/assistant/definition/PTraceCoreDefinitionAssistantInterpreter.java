@@ -21,7 +21,7 @@ public class PTraceCoreDefinitionAssistantInterpreter
 	{
 		try
 		{
-			return core.apply(af.getCoreTraceExpander(), ctxt);
+			return core.apply(af.getTraceExpander(), ctxt);
 		} catch (AnalysisException e)
 		{
 			return null;

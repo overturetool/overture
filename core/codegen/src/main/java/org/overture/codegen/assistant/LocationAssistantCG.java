@@ -9,7 +9,7 @@ import java.util.Set;
 
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.node.INode;
-import org.overture.codegen.ooast.NodeInfo;
+import org.overture.codegen.ir.NodeInfo;
 
 public class LocationAssistantCG extends AssistantBase
 {

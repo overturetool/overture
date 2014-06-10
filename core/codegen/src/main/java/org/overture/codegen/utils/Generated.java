@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.overture.codegen.ooast.NodeInfo;
+import org.overture.codegen.ir.NodeInfo;
 
 public class Generated
 {

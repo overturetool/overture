@@ -64,4 +64,10 @@ public class IO {
 		System.out.printf(format, args.toArray());
 		System.out.flush();
     }
+    
+    public static void printf(VDMSeq seq, List<Object> args) {
+		
+    	System.out.printf(seq.toString(), args.toArray());
+		System.out.flush();
+    }
 }

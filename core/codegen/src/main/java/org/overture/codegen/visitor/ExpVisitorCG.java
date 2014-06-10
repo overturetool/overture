@@ -117,6 +117,7 @@ import org.overture.codegen.cgast.declarations.AFormalParamLocalDeclCG;
 import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
+import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACompMapExpCG;
 import org.overture.codegen.cgast.expressions.ACompSeqExpCG;
 import org.overture.codegen.cgast.expressions.ACompSetExpCG;
@@ -197,26 +198,28 @@ import org.overture.codegen.cgast.patterns.ASetBindCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.patterns.PBindCG;
 import org.overture.codegen.cgast.patterns.PMultipleBindCG;
+import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
+import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
-import org.overture.codegen.ooast.OoAstInfo;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.utils.AnalysisExceptionCG;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
-public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
+public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, PExpCG>
 {
 	@Override
-	public PExpCG caseANilExp(ANilExp node, OoAstInfo question)
+	public PExpCG caseANilExp(ANilExp node, IRInfo question)
 			throws AnalysisException
 	{
 		return new ANullExpCG();
 	}
 	
 	@Override
-	public PExpCG caseAMkBasicExp(AMkBasicExp node, OoAstInfo question)
+	public PExpCG caseAMkBasicExp(AMkBasicExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();
@@ -240,7 +243,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	}
 	
 	@Override
-	public PExpCG caseAIsOfClassExp(AIsOfClassExp node, OoAstInfo question)
+	public PExpCG caseAIsOfClassExp(AIsOfClassExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();
@@ -267,13 +270,13 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	
 	@Override
 	public PExpCG caseACardinalityUnaryExp(ACardinalityUnaryExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		return question.getExpAssistant().handleUnaryExp(node, new ASizeUnaryExpCG(), question);
 	}
 	
 	@Override
-	public PExpCG caseAInSetBinaryExp(AInSetBinaryExp node, OoAstInfo question)
+	public PExpCG caseAInSetBinaryExp(AInSetBinaryExp node, IRInfo question)
 			throws AnalysisException
 	{
 		return question.getExpAssistant().handleBinaryExp(node,  new AInSetBinaryExpCG(), question);
@@ -281,34 +284,34 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	
 	@Override
 	public PExpCG caseANotInSetBinaryExp(ANotInSetBinaryExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		return question.getExpAssistant().negate(question.getExpAssistant().handleBinaryExp(node,  new AInSetBinaryExpCG(), question));
 	}
 	
 	@Override
 	public PExpCG caseASetUnionBinaryExp(ASetUnionBinaryExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		return question.getExpAssistant().handleBinaryExp(node,  new ASetUnionBinaryExpCG(), question);
 	}
 	
 	@Override
 	public PExpCG caseASetIntersectBinaryExp(ASetIntersectBinaryExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		return question.getExpAssistant().handleBinaryExp(node, new ASetIntersectBinaryExpCG(), question);
 	}
 	
 	@Override
 	public PExpCG caseASetDifferenceBinaryExp(ASetDifferenceBinaryExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		return question.getExpAssistant().handleBinaryExp(node, new ASetDifferenceBinaryExpCG(), question);
 	}
 	
 	@Override
-	public PExpCG caseASubsetBinaryExp(ASubsetBinaryExp node, OoAstInfo question)
+	public PExpCG caseASubsetBinaryExp(ASubsetBinaryExp node, IRInfo question)
 			throws AnalysisException
 	{
 		return question.getExpAssistant().handleBinaryExp(node, new ASetSubsetBinaryExpCG(), question);
@@ -316,34 +319,34 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	
 	@Override
 	public PExpCG caseAProperSubsetBinaryExp(AProperSubsetBinaryExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		return question.getExpAssistant().handleBinaryExp(node, new ASetProperSubsetBinaryExpCG(), question);
 	}
 	
 	@Override
 	public PExpCG caseADistUnionUnaryExp(ADistUnionUnaryExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		return question.getExpAssistant().handleUnaryExp(node, new ADistUnionUnaryExpCG(), question);
 	}
 	
 	@Override
 	public PExpCG caseADistIntersectUnaryExp(ADistIntersectUnaryExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		return question.getExpAssistant().handleUnaryExp(node, new ADistIntersectUnaryExpCG(), question);
 	}
 	
 	@Override
 	public PExpCG caseAPowerSetUnaryExp(APowerSetUnaryExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		return question.getExpAssistant().handleUnaryExp(node, new APowerSetUnaryExpCG(), question);
 	}
 	
 	@Override
-	public PExpCG caseASetEnumSetExp(ASetEnumSetExp node, OoAstInfo question)
+	public PExpCG caseASetEnumSetExp(ASetEnumSetExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();
@@ -368,7 +371,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	}
 
 	@Override
-	public PExpCG caseAForAllExp(AForAllExp node, OoAstInfo question)
+	public PExpCG caseAForAllExp(AForAllExp node, IRInfo question)
 			throws AnalysisException
 	{
 		//The inheritance hierarchy of the VDM AST tree is structured such that the bindings and the predicate
@@ -377,14 +380,14 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	}
 	
 	@Override
-	public PExpCG caseAExistsExp(AExistsExp node, OoAstInfo question)
+	public PExpCG caseAExistsExp(AExistsExp node, IRInfo question)
 			throws AnalysisException
 	{
 		return question.getExpAssistant().handleQuantifier(node, node.getBindList(), node.getPredicate(), new AExistsQuantifierExpCG(), question, "exists expression");
 	}
 	
 	@Override
-	public PExpCG caseAExists1Exp(AExists1Exp node, OoAstInfo question)
+	public PExpCG caseAExists1Exp(AExists1Exp node, IRInfo question)
 			throws AnalysisException
 	{
 		PBind bind = node.getBind();
@@ -421,7 +424,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	}
 
 	@Override
-	public PExpCG caseASetCompSetExp(ASetCompSetExp node, OoAstInfo question)
+	public PExpCG caseASetCompSetExp(ASetCompSetExp node, IRInfo question)
 			throws AnalysisException
 	{
 		if (question.getExpAssistant().existsOutsideOpOrFunc(node))
@@ -470,7 +473,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	}
 	
 	@Override
-	public PExpCG caseASetRangeSetExp(ASetRangeSetExp node, OoAstInfo question)
+	public PExpCG caseASetRangeSetExp(ASetRangeSetExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();
@@ -491,7 +494,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	}
 	
 	@Override
-	public PExpCG caseAIfExp(AIfExp node, OoAstInfo question)
+	public PExpCG caseAIfExp(AIfExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PExpCG testExp = node.getTest().apply(question.getExpVisitor(), question);
@@ -535,7 +538,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	}
 	
 	@Override
-	public PExpCG caseATupleExp(ATupleExp node, OoAstInfo question)
+	public PExpCG caseATupleExp(ATupleExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();
@@ -556,7 +559,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	}
 	
 	@Override
-	public PExpCG caseAFieldNumberExp(AFieldNumberExp node, OoAstInfo question)
+	public PExpCG caseAFieldNumberExp(AFieldNumberExp node, IRInfo question)
 			throws AnalysisException
 	{
 		long fieldCg = node.getField().getValue();
@@ -576,7 +579,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	
 	@Override
 	public PExpCG caseAFuncInstatiationExp(AFuncInstatiationExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		String name = node.getExpdef().getName().getName();
 		LinkedList<PType> actualTypes = node.getActualTypes();
@@ -595,7 +598,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	}
 	
 	@Override
-	public PExpCG caseALetBeStExp(ALetBeStExp node, OoAstInfo question)
+	public PExpCG caseALetBeStExp(ALetBeStExp node, IRInfo question)
 			throws AnalysisException
 	{
 		if (question.getExpAssistant().existsOutsideOpOrFunc(node))
@@ -644,7 +647,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	}
 	
 	@Override
-	public PExpCG caseALetDefExp(ALetDefExp node, OoAstInfo question)
+	public PExpCG caseALetDefExp(ALetDefExp node, IRInfo question)
 			throws AnalysisException
 	{
 		if(question.getExpAssistant().isAssigned(node))
@@ -665,7 +668,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 
 	
 	@Override
-	public PExpCG caseAMkTypeExp(AMkTypeExp node, OoAstInfo question)
+	public PExpCG caseAMkTypeExp(AMkTypeExp node, IRInfo question)
 			throws AnalysisException
 	{
 		ARecordInvariantType recType = node.getRecordType();
@@ -697,14 +700,14 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	}
 	
 	@Override
-	public PExpCG caseASelfExp(ASelfExp node, OoAstInfo question)
+	public PExpCG caseASelfExp(ASelfExp node, IRInfo question)
 			throws AnalysisException
 	{
 		return new ASelfExpCG();
 	}
 	
 	@Override
-	public PExpCG caseAReverseUnaryExp(AReverseUnaryExp node, OoAstInfo question)
+	public PExpCG caseAReverseUnaryExp(AReverseUnaryExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PExp exp = node.getExp();
@@ -728,13 +731,13 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	
 	@Override
 	public PExpCG caseADistConcatUnaryExp(ADistConcatUnaryExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		return question.getExpAssistant().handleUnaryExp(node, new ADistConcatUnaryExpCG(), question);
 	}
 	
 	@Override
-	public PExpCG caseASeqCompSeqExp(ASeqCompSeqExp node, OoAstInfo question)
+	public PExpCG caseASeqCompSeqExp(ASeqCompSeqExp node, IRInfo question)
 			throws AnalysisException
 	{
 		if (question.getExpAssistant().existsOutsideOpOrFunc(node))
@@ -777,14 +780,14 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	
 	@Override
 	public PExpCG caseASeqConcatBinaryExp(ASeqConcatBinaryExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		return question.getExpAssistant().handleBinaryExp(node,  new ASeqConcatBinaryExpCG(), question);
 	}
 	
 	@Override
 	public PExpCG caseAPlusPlusBinaryExp(APlusPlusBinaryExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		PType leftType = node.getLeft().getType();
 		
@@ -797,7 +800,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	}
 	
 	@Override
-	public PExpCG caseAMapEnumMapExp(AMapEnumMapExp node, OoAstInfo question)
+	public PExpCG caseAMapEnumMapExp(AMapEnumMapExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();
@@ -822,7 +825,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	}
 	
 	@Override
-	public PExpCG caseAMapletExp(AMapletExp node, OoAstInfo question)
+	public PExpCG caseAMapletExp(AMapletExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();
@@ -844,7 +847,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	}
 	
 	@Override
-	public PExpCG caseAMapCompMapExp(AMapCompMapExp node, OoAstInfo question)
+	public PExpCG caseAMapCompMapExp(AMapCompMapExp node, IRInfo question)
 			throws AnalysisException
 	{
 		if (question.getExpAssistant().existsOutsideOpOrFunc(node))
@@ -901,90 +904,90 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	
 	@Override
 	public PExpCG caseAMapDomainUnaryExp(AMapDomainUnaryExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		return question.getExpAssistant().handleUnaryExp(node, new AMapDomainUnaryExpCG(), question);
 	}
 	
 	@Override
 	public PExpCG caseAMapRangeUnaryExp(AMapRangeUnaryExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		return question.getExpAssistant().handleUnaryExp(node, new AMapRangeUnaryExpCG(), question);
 	}
 	
 	@Override
 	public PExpCG caseAMapUnionBinaryExp(AMapUnionBinaryExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		return question.getExpAssistant().handleBinaryExp(node, new AMapUnionBinaryExpCG(), question);
 	}
 	
 	@Override
 	public PExpCG caseADistMergeUnaryExp(ADistMergeUnaryExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		return question.getExpAssistant().handleUnaryExp(node, new ADistMergeUnaryExpCG(), question);
 	}
 	
 	@Override
 	public PExpCG caseADomainResToBinaryExp(ADomainResToBinaryExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		return question.getExpAssistant().handleBinaryExp(node, new ADomainResToBinaryExpCG(), question);
 	}
 	
 	@Override
 	public PExpCG caseADomainResByBinaryExp(ADomainResByBinaryExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		return question.getExpAssistant().handleBinaryExp(node, new ADomainResByBinaryExpCG(), question);
 	}
 	
 	@Override
 	public PExpCG caseARangeResToBinaryExp(ARangeResToBinaryExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		return question.getExpAssistant().handleBinaryExp(node, new ARangeResToBinaryExpCG(), question);
 	}
 	
 	@Override
 	public PExpCG caseARangeResByBinaryExp(ARangeResByBinaryExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		return question.getExpAssistant().handleBinaryExp(node, new ARangeResByBinaryExpCG(), question);
 	}
 	
 	@Override
 	public PExpCG caseAMapInverseUnaryExp(AMapInverseUnaryExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		return question.getExpAssistant().handleUnaryExp(node, new AMapInverseUnaryExpCG(), question);
 	}
 	
 	@Override
 	public PExpCG caseAEqualsBinaryExp(AEqualsBinaryExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{	
 		return question.getExpAssistant().handleBinaryExp(node, new AEqualsBinaryExpCG(), question);
 	}
 	
 	@Override
 	public PExpCG caseANotEqualBinaryExp(ANotEqualBinaryExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		return question.getExpAssistant().handleBinaryExp(node, new ANotEqualsBinaryExpCG(), question);
 	}
 	
 	@Override
-	public PExpCG caseAIndicesUnaryExp(AIndicesUnaryExp node, OoAstInfo question)
+	public PExpCG caseAIndicesUnaryExp(AIndicesUnaryExp node, IRInfo question)
 			throws AnalysisException
 	{
 		return question.getExpAssistant().handleUnaryExp(node, new AIndicesUnaryExpCG(), question);
 	}
 	
 	@Override
-	public PExpCG caseASeqEnumSeqExp(ASeqEnumSeqExp node, OoAstInfo question)
+	public PExpCG caseASeqEnumSeqExp(ASeqEnumSeqExp node, IRInfo question)
 			throws AnalysisException
 	{	
 		PType type = node.getType();
@@ -1014,14 +1017,14 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	
 	@Override
 	public PExpCG caseASubclassResponsibilityExp(
-			ASubclassResponsibilityExp node, OoAstInfo question)
+			ASubclassResponsibilityExp node, IRInfo question)
 			throws AnalysisException
 	{
 		return null;//Indicates an abstract body
 	}
 	
 	@Override
-	public PExpCG caseAFieldExp(AFieldExp node, OoAstInfo question)
+	public PExpCG caseAFieldExp(AFieldExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PExpCG object = node.getObject().apply(question.getExpVisitor(), question);
@@ -1043,7 +1046,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	}
 	
 	@Override
-	public PExpCG caseAApplyExp(AApplyExp node, OoAstInfo question)
+	public PExpCG caseAApplyExp(AApplyExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();
@@ -1073,7 +1076,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	}
 	
 	@Override
-	public PExpCG caseAVariableExp(AVariableExp node, OoAstInfo question)
+	public PExpCG caseAVariableExp(AVariableExp node, IRInfo question)
 			throws AnalysisException
 	{
 		PDefinition varDef = node.getVardef();
@@ -1132,7 +1135,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	}
 	
 	@Override
-	public PExpCG caseANewExp(ANewExp node, OoAstInfo question)
+	public PExpCG caseANewExp(ANewExp node, IRInfo question)
 			throws AnalysisException
 	{
 		String className = node.getClassdef().getName().getName();
@@ -1160,28 +1163,28 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 		
 	@Override
 	public PExpCG caseATimesNumericBinaryExp(ATimesNumericBinaryExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		return question.getExpAssistant().handleBinaryExp(node, new ATimesNumericBinaryExpCG(), question);
 	}
 	
 	@Override
 	public PExpCG caseAPlusNumericBinaryExp(APlusNumericBinaryExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		return question.getExpAssistant().handleBinaryExp(node, new APlusNumericBinaryExpCG(), question);
 	}
 	
 	@Override
 	public PExpCG caseASubtractNumericBinaryExp(ASubtractNumericBinaryExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		return question.getExpAssistant().handleBinaryExp(node, new ASubtractNumericBinaryExpCG(), question);
 	}
 	
 	@Override
 	public PExpCG caseAGreaterEqualNumericBinaryExp(
-			AGreaterEqualNumericBinaryExp node, OoAstInfo question)
+			AGreaterEqualNumericBinaryExp node, IRInfo question)
 			throws AnalysisException
 	{
 		return question.getExpAssistant().handleBinaryExp(node, new AGreaterEqualNumericBinaryExpCG(), question);
@@ -1189,21 +1192,21 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	
 	@Override
 	public PExpCG caseAStarStarBinaryExp(AStarStarBinaryExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		return question.getExpAssistant().handleBinaryExp(node, new APowerNumericBinaryExpCG(), question);
 	}
 	
 	@Override
 	public PExpCG caseAGreaterNumericBinaryExp(AGreaterNumericBinaryExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		return question.getExpAssistant().handleBinaryExp(node, new AGreaterNumericBinaryExpCG(), question);
 	}
 	
 	@Override
 	public PExpCG caseALessEqualNumericBinaryExp(
-			ALessEqualNumericBinaryExp node, OoAstInfo question)
+			ALessEqualNumericBinaryExp node, IRInfo question)
 			throws AnalysisException
 	{
 		return question.getExpAssistant().handleBinaryExp(node, new ALessEqualNumericBinaryExpCG(), question);
@@ -1212,14 +1215,14 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	
 	@Override
 	public PExpCG caseALessNumericBinaryExp(ALessNumericBinaryExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		return question.getExpAssistant().handleBinaryExp(node, new ALessNumericBinaryExpCG(), question);
 	}
 	
 	@Override
 	public PExpCG caseADivideNumericBinaryExp(ADivideNumericBinaryExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		ADivideNumericBinaryExpCG divide = (ADivideNumericBinaryExpCG) question.getExpAssistant().handleBinaryExp(node, new ADivideNumericBinaryExpCG(), question);
 		
@@ -1247,14 +1250,14 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	
 	@Override
 	public PExpCG caseADivNumericBinaryExp(ADivNumericBinaryExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		return (ADivideNumericBinaryExpCG) question.getExpAssistant().handleBinaryExp(node, new ADivideNumericBinaryExpCG(), question);
 	}
 	
 	@Override
 	public PExpCG caseAModNumericBinaryExp(AModNumericBinaryExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		//VDM Language Reference Manual:
 		//x mod y = x - y * floor(x/y)
@@ -1282,7 +1285,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	
 	@Override
 	public PExpCG caseARemNumericBinaryExp(ARemNumericBinaryExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		//VDM Language Reference Manual:
 		//x rem y = x - y * (x div y)
@@ -1308,7 +1311,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 				
 	@Override
 	public PExpCG caseAImpliesBooleanBinaryExp(AImpliesBooleanBinaryExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		//A => B is constructed as !A || B
 		
@@ -1330,7 +1333,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	
 	@Override
 	public PExpCG caseAEquivalentBooleanBinaryExp(
-			AEquivalentBooleanBinaryExp node, OoAstInfo question)
+			AEquivalentBooleanBinaryExp node, IRInfo question)
 			throws AnalysisException
 	{
 		//A <=> B is constructed as !(A ^ B)
@@ -1353,20 +1356,20 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	//Unary
 	
 	@Override
-	public PExpCG caseAUnaryPlusUnaryExp(AUnaryPlusUnaryExp node, OoAstInfo question) throws AnalysisException
+	public PExpCG caseAUnaryPlusUnaryExp(AUnaryPlusUnaryExp node, IRInfo question) throws AnalysisException
 	{
 		return question.getExpAssistant().handleUnaryExp(node, new APlusUnaryExpCG(), question);
 	}
 
 	@Override
 	public PExpCG caseAUnaryMinusUnaryExp(AUnaryMinusUnaryExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		return question.getExpAssistant().handleUnaryExp(node, new AMinusUnaryExpCG(), question);
 	}
 	
 	@Override
-	public PExpCG caseAFloorUnaryExp(AFloorUnaryExp node, OoAstInfo question)
+	public PExpCG caseAFloorUnaryExp(AFloorUnaryExp node, IRInfo question)
 			throws AnalysisException
 	{
 		return question.getExpAssistant().handleUnaryExp(node, new AFloorUnaryExpCG(), question);
@@ -1374,13 +1377,13 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	
 	@Override
 	public PExpCG caseAAbsoluteUnaryExp(AAbsoluteUnaryExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		return question.getExpAssistant().handleUnaryExp(node, new AAbsUnaryExpCG(), question);
 	}
 	
 	@Override
-	public PExpCG caseANotUnaryExp(ANotUnaryExp node, OoAstInfo question)
+	public PExpCG caseANotUnaryExp(ANotUnaryExp node, IRInfo question)
 			throws AnalysisException
 	{
 		return question.getExpAssistant().handleUnaryExp(node, new ANotUnaryExpCG(), question);
@@ -1388,20 +1391,20 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	
 	@Override
 	public PExpCG caseAOrBooleanBinaryExp(AOrBooleanBinaryExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		return question.getExpAssistant().handleBinaryExp(node,  new AOrBoolBinaryExpCG(), question);
 	}
 	
 	@Override
 	public PExpCG caseAAndBooleanBinaryExp(AAndBooleanBinaryExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		return question.getExpAssistant().handleBinaryExp(node,  new AAndBoolBinaryExpCG(), question);
 	}
 	
 	@Override
-	public PExpCG caseALenUnaryExp(ALenUnaryExp node, OoAstInfo question)
+	public PExpCG caseALenUnaryExp(ALenUnaryExp node, IRInfo question)
 			throws AnalysisException
 	{
 		return question.getExpAssistant().handleUnaryExp(node, new ASizeUnaryExpCG(), question);
@@ -1409,20 +1412,20 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	
 	@Override
 	public PExpCG caseAElementsUnaryExp(AElementsUnaryExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		return question.getExpAssistant().handleUnaryExp(node, new AElemsUnaryExpCG(), question);
 	}
 	
 	@Override
-	public PExpCG caseAHeadUnaryExp(AHeadUnaryExp node, OoAstInfo question)
+	public PExpCG caseAHeadUnaryExp(AHeadUnaryExp node, IRInfo question)
 			throws AnalysisException
 	{
 		return question.getExpAssistant().handleUnaryExp(node, new AHeadUnaryExpCG(), question);
 	}
 	
 	@Override
-	public PExpCG caseATailUnaryExp(ATailUnaryExp node, OoAstInfo question)
+	public PExpCG caseATailUnaryExp(ATailUnaryExp node, IRInfo question)
 			throws AnalysisException
 	{
 		return question.getExpAssistant().handleUnaryExp(node, new ATailUnaryExpCG(), question);
@@ -1435,27 +1438,27 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	
 	@Override
 	public PExpCG caseABooleanConstExp(ABooleanConstExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		return question.getExpAssistant().consBoolLiteral(node.getValue().getValue());
 	}
 	
 	@Override
 	public PExpCG caseARealLiteralExp(ARealLiteralExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		return question.getExpAssistant().consRealLiteral(node.getValue().getValue());
 	}
 	
 	@Override
 	public PExpCG caseAIntLiteralExp(AIntLiteralExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		return question.getExpAssistant().consIntLiteral(node.getValue().getValue());
 	}
 	
 	@Override
-	public PExpCG caseACharLiteralExp(ACharLiteralExp node, OoAstInfo question)
+	public PExpCG caseACharLiteralExp(ACharLiteralExp node, IRInfo question)
 			throws AnalysisException
 	{
 		return question.getExpAssistant().consCharLiteral(node.getValue().getValue());
@@ -1463,14 +1466,40 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	
 	@Override
 	public PExpCG caseAStringLiteralExp(AStringLiteralExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().consStringLiteral(node.getValue().getValue(), false);
+		if (question.getSettings().getCharSeqAsString())
+		{
+			return question.getExpAssistant().consStringLiteral(node.getValue().getValue(), false);
+		} else
+		{
+			AEnumSeqExpCG enumSeq = new AEnumSeqExpCG();
+
+			ASeqSeqTypeCG seqType = new ASeqSeqTypeCG();
+			seqType.setEmpty(node.getValue().getValue().isEmpty());
+			seqType.setSeqOf(new ACharBasicTypeCG());
+
+			enumSeq.setType(seqType);
+
+			String str = node.getValue().getValue();
+
+			for (int i = 0; i < str.length(); i++)
+			{
+				char currentChar = str.charAt(i);
+				ACharLiteralExpCG charLit = new ACharLiteralExpCG();
+				charLit.setType(new ACharBasicTypeCG());
+				charLit.setValue(currentChar);
+
+				enumSeq.getMembers().add(charLit);
+			}
+
+			return enumSeq;
+		}
 	}
 	
 	@Override
 	public PExpCG caseAQuoteLiteralExp(AQuoteLiteralExp node,
-			OoAstInfo question) throws AnalysisException
+			IRInfo question) throws AnalysisException
 	{
 		String value = node.getValue().getValue();
 		PTypeCG type = node.getType().apply(question.getTypeVisitor(), question);
@@ -1485,7 +1514,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<OoAstInfo, PExpCG>
 	}
 	
 	@Override
-	public PExpCG caseALambdaExp(ALambdaExp node, OoAstInfo question)
+	public PExpCG caseALambdaExp(ALambdaExp node, IRInfo question)
 			throws AnalysisException
 	{
 		LinkedList<ATypeBind> bindList = node.getBindList();

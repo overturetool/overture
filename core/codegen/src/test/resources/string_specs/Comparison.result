@@ -1,0 +1,19 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        String a = "a";
+        String b = "b";
+
+        return SeqUtil.seq(a.equals(a), a.equals(b), b.equals("b"),
+            !(a.equals(a)), !(a.equals(b)), !(b.equals("b")));
+    }
+}
+
+##########

@@ -45,9 +45,6 @@ import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.pattern.ASetBindAssistantTC;
-import org.overture.typechecker.assistant.pattern.PBindAssistantTC;
-import org.overture.typechecker.assistant.pattern.PMultipleBindAssistantTC;
 
 public class POForAllContext extends POContext
 {

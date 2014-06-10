@@ -45,7 +45,7 @@ import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
-import org.overture.codegen.ooast.OoAstInfo;
+import org.overture.codegen.ir.IRInfo;
 
 public class ExpAssistantCG extends AssistantBase
 {
@@ -71,7 +71,7 @@ public class ExpAssistantCG extends AssistantBase
 		return negated;
 	}
 	
-	public PExpCG handleUnaryExp(SUnaryExp vdmExp, SUnaryExpCG codeGenExp, OoAstInfo question) throws AnalysisException
+	public PExpCG handleUnaryExp(SUnaryExp vdmExp, SUnaryExpCG codeGenExp, IRInfo question) throws AnalysisException
 	{
 		PExpCG expCg = vdmExp.getExp().apply(question.getExpVisitor(), question);
 		PTypeCG typeCg = vdmExp.getType().apply(question.getTypeVisitor(), question);
@@ -82,7 +82,7 @@ public class ExpAssistantCG extends AssistantBase
 		return codeGenExp;
 	}
 	
-	public PExpCG handleBinaryExp(SBinaryExp vdmExp, SBinaryExpCG codeGenExp, OoAstInfo question) throws AnalysisException
+	public PExpCG handleBinaryExp(SBinaryExp vdmExp, SBinaryExpCG codeGenExp, IRInfo question) throws AnalysisException
 	{	
 		PType type = vdmExp.getType();
 		
@@ -241,7 +241,7 @@ public class ExpAssistantCG extends AssistantBase
 		return exp.getAncestor(SOperationDefinition.class) == null && exp.getAncestor(SFunctionDefinition.class) == null;
 	}
 	
-	public PExpCG handleQuantifier(PExp node, List<PMultipleBind> bindings, PExp predicate, SQuantifierExpCG quantifier, OoAstInfo question, String nodeStr)
+	public PExpCG handleQuantifier(PExp node, List<PMultipleBind> bindings, PExp predicate, SQuantifierExpCG quantifier, IRInfo question, String nodeStr)
 			throws AnalysisException
 	{
 		if(question.getExpAssistant().existsOutsideOpOrFunc(node))

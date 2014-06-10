@@ -21,7 +21,6 @@ import org.overture.interpreter.assistant.definition.ASystemClassDefinitionAssis
 import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PDefinitionListAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.PTraceCoreDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.PTraceDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AFieldExpAssistantInterpreter;
 import org.overture.interpreter.assistant.expression.AIsOfBaseClassExpAssistantInterpreter;
@@ -123,8 +122,6 @@ public interface IInterpreterAssistantFactory extends
 	PDefinitionListAssistantInterpreter createPDefinitionListAssistant();
 
 	PTraceCoreDefinitionAssistantInterpreter createPTraceCoreDefinitionAssistant();
-
-	PTraceDefinitionAssistantInterpreter createPTraceDefinitionAssistant();
 
 	SClassDefinitionAssistantInterpreter createSClassDefinitionAssistant();
 
@@ -397,9 +394,7 @@ public interface IInterpreterAssistantFactory extends
 	
 	IQuestionAnswer<Integer, PStm> getDefinitionStatementFinder();
 	
-	IQuestionAnswer<Context, TraceNode> getCoreTraceExpander();
-	
-	IQuestionAnswer<Context, TraceNode> getTermTraceExpander();
+	IQuestionAnswer<Context, TraceNode> getTraceExpander();
 	
 	IQuestionAnswer<Integer, PExp> getStatementExpressionFinder();
 	
