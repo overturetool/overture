@@ -103,14 +103,14 @@ public class FunctionValue extends Value
 	public boolean isStatic = false;
 	public boolean uninstantiated = false;
 	private SClassDefinition classdef = null;
-	private APatternTypePair result;
+	final private APatternTypePair result;
 
 	private FunctionValue(ILexLocation location, String name,
 			AFunctionType type, List<List<PPattern>> paramPatternList,
 			PExp body, FunctionValue precondition, FunctionValue postcondition,
 			Context freeVariables, boolean checkInvariants,
 			ValueList curriedArgs, ILexNameToken measureName,
-			Map<Long, Stack<Value>> measureValues)
+			Map<Long, Stack<Value>> measureValues, APatternTypePair result)
 	{
 		this.location = location;
 		this.name = name;
@@ -123,6 +123,7 @@ public class FunctionValue extends Value
 		this.freeVariables = freeVariables;
 		this.checkInvariants = checkInvariants;
 		this.curriedArgs = curriedArgs;
+		this.result = result;
 
 		if (Settings.measureChecks && measureName != null)
 		{
@@ -145,6 +146,7 @@ public class FunctionValue extends Value
 		this.postcondition = null;
 		this.freeVariables = freeVariables;
 		this.checkInvariants = true;
+		this.result = null;
 
 		paramPatternList.add(paramPatterns);
 	}
@@ -164,6 +166,7 @@ public class FunctionValue extends Value
 		this.freeVariables = freeVariables;
 		this.checkInvariants = !def.getIsTypeInvariant();
 		this.classdef = def.getClassDefinition();
+		this.result = null;
 
 		if (Settings.measureChecks && def.getMeasureDef() != null)
 		{
@@ -255,6 +258,7 @@ public class FunctionValue extends Value
 		this.postcondition = null;
 		this.freeVariables = null;
 		this.checkInvariants = true;
+		this.result = null;
 	}
 
 	@Override
@@ -584,7 +588,7 @@ public class FunctionValue extends Value
 
 				argList.addAll(argValues);
 
-				FunctionValue rv = new FunctionValue(location, "curried", (AFunctionType) type.getResult(), paramPatternList.subList(1, paramPatternList.size()), body, newpre, newpost, evalContext, false, argList, measureName, measureValues);
+				FunctionValue rv = new FunctionValue(location, "curried", (AFunctionType) type.getResult(), paramPatternList.subList(1, paramPatternList.size()), body, newpre, newpost, evalContext, false, argList, measureName, measureValues,result);
 
 				rv.setSelf(self);
 				rv.typeValues = typeValues;
@@ -719,7 +723,7 @@ public class FunctionValue extends Value
 				FunctionValue restricted = new FunctionValue(location, name, restrictedType,
 						paramPatternList, body, precondition, postcondition,
 						freeVariables, checkInvariants, curriedArgs,
-						measureName, measureValues);
+						measureName, measureValues,result);
 
 				restricted.typeValues = typeValues;
 				return restricted;
@@ -736,13 +740,13 @@ public class FunctionValue extends Value
 		// Remove first set of parameters, and set the free variables instead.
 		// And adjust the return type to be the result type (a function).
 
-		return new FunctionValue(location, name, (AFunctionType) type.getResult(), paramPatternList.subList(1, paramPatternList.size()), body, precondition, postcondition, newFreeVariables, false, null, null, null);
+		return new FunctionValue(location, name, (AFunctionType) type.getResult(), paramPatternList.subList(1, paramPatternList.size()), body, precondition, postcondition, newFreeVariables, false, null, null, null,result);
 	}
 
 	@Override
 	public Object clone()
 	{
-		FunctionValue copy = new FunctionValue(location, name, type, paramPatternList, body, precondition, postcondition, freeVariables, checkInvariants, curriedArgs, measureName, measureValues);
+		FunctionValue copy = new FunctionValue(location, name, type, paramPatternList, body, precondition, postcondition, freeVariables, checkInvariants, curriedArgs, measureName, measureValues,result);
 
 		copy.typeValues = typeValues;
 		return copy;
