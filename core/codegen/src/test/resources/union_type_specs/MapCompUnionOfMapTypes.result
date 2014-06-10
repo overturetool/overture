@@ -1,0 +1,31 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    private static final Object xs = MapUtil.map(new Maplet(1L, 1L),
+            new Maplet(2L, 2L));
+
+    public Entry() {
+    }
+
+    public static Object Run() {
+        VDMMap mapCompResult_1 = MapUtil.map();
+        VDMSet set_1 = MapUtil.dom(((VDMMap) xs));
+
+        for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
+            Object e = ((Object) iterator_1.next());
+
+            if (((Number) e).longValue() == 2L) {
+                mapCompResult_1 = MapUtil.munion(mapCompResult_1.clone(),
+                        MapUtil.map(
+                            new Maplet(e, ((Number) e).longValue() + 1L)));
+            }
+        }
+
+        return mapCompResult_1.clone();
+    }
+}
+
+##########

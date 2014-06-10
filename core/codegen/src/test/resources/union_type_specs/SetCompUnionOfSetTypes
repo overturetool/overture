@@ -1,0 +1,17 @@
+class Entry
+
+types
+
+public SetOfNatOrBool = set of nat | set of bool;
+
+values
+
+xs : SetOfNatOrBool = {true, false};
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	return {e | e in set xs & e}
+
+end Entry

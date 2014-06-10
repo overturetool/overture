@@ -1,0 +1,29 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    private static final Object xs = SeqUtil.seq(1L, 2L);
+
+    public Entry() {
+    }
+
+    public static Object Run() {
+        VDMSeq seqCompResult_1 = SeqUtil.seq();
+        VDMSet set_1 = SeqUtil.elems(((VDMSeq) xs));
+
+        for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
+            Object e = ((Object) iterator_1.next());
+
+            if (((Number) e).longValue() == 2L) {
+                seqCompResult_1 = SeqUtil.conc(seqCompResult_1.clone(),
+                        SeqUtil.seq(e));
+            }
+        }
+
+        return seqCompResult_1.clone();
+    }
+}
+
+##########
