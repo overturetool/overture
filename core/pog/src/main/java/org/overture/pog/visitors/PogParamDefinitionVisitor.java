@@ -65,7 +65,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 
 	final private QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> rootVisitor;
 	final private QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> mainVisitor;
-	
+
 	final private IPogAssistantFactory assistantFactory;
 
 	/**
@@ -121,8 +121,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 			}
 			// Insanely, we can call operations in functions so let's set it up...
 			question.setGenerator(new UniqueNameGenerator(node));
-			
-			
+
 			IProofObligationList obligations = new ProofObligationList();
 			LexNameList pids = new LexNameList();
 
@@ -183,10 +182,8 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 
 			question.push(new POFunctionDefinitionContext(node, true));
 			PExp body = node.getBody();
-			int sizeBefore = question.size();
 			obligations.addAll(body.apply(rootVisitor, question));
-			assert sizeBefore <= question.size();
-
+			
 			// do proof obligation for the return type
 			if (node.getIsUndefined()
 					|| !TypeComparator.isSubType(node.getActualResult(), node.getExpectedResult(), assistantFactory))
@@ -244,7 +241,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 						AInstanceVariableDefinition ivdef = (AInstanceVariableDefinition) pdef;
 						if (ivdef.getInitialized())
 						{
-							question.push(new AssignmentContext((AInstanceVariableDefinition) pdef,assistantFactory.getVarSubVisitor() ));
+							question.push(new AssignmentContext((AInstanceVariableDefinition) pdef, assistantFactory.getVarSubVisitor()));
 							assigns++;
 						}
 					}
@@ -794,7 +791,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 		{
 			IProofObligationList proofObligationList = new ProofObligationList();
 			question.setGenerator(new UniqueNameGenerator(node));
-			
+
 			for (PDefinition def : node.getDefinitions())
 			{
 				question.push(new PONameContext(assistantFactory.createPDefinitionAssistant().getVariableNames(def)));
@@ -802,7 +799,6 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 				question.pop();
 				question.clearStateContexts();
 			}
-			
 
 			return proofObligationList;
 		} catch (Exception e)

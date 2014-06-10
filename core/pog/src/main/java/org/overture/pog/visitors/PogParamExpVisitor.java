@@ -571,7 +571,6 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 				.createPDefinitionAssistant()
 				.getProofObligations(node.getLocalDefs(), rootVisitor, question);
 
-		// RWL Question, are we going
 		question.push(new PODefContext(node));
 		obligations.addAll(node.getExpression().apply(mainVisitor, question));
 		question.pop();
