@@ -21,7 +21,7 @@ public class AUnionTypeAssistant
 		this.af = af;
 	}
 
-	public static void expand(AUnionType type)
+	public void expand(AUnionType type)
 	{
 
 		if (type.getExpanded())
@@ -58,12 +58,12 @@ public class AUnionTypeAssistant
 
 	}
 
-	public static boolean isNumeric(AUnionType type)
+	public boolean isNumeric(AUnionType type)
 	{
 		return getNumeric(type) != null;
 	}
 
-	public static SNumericBasicType getNumeric(AUnionType type)
+	public SNumericBasicType getNumeric(AUnionType type)
 	{
 		if (!type.getNumDone())
 		{
@@ -75,9 +75,9 @@ public class AUnionTypeAssistant
 			{
 			if (af.createPTypeAssistant().isNumeric(t))
 				{
-				SNumericBasicType nt = PTypeAssistant.getNumeric(t);
+				SNumericBasicType nt = af.createPTypeAssistant().getNumeric(t);
 
-					if (SNumericBasicTypeAssistant.getWeight(nt) > SNumericBasicTypeAssistant.getWeight(type.getNumType()))
+					if (af.createSNumericBasicTypeAssistant().getWeight(nt) > af.createSNumericBasicTypeAssistant().getWeight(type.getNumType()))
 					{
 						type.setNumType(nt);
 					}

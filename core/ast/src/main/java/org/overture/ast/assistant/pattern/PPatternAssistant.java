@@ -21,7 +21,7 @@ public class PPatternAssistant
 		this.af = af;
 	}
 
-	public static LexNameList getAllVariableNames(PPattern pattern)
+	public LexNameList getAllVariableNames(PPattern pattern)
 	{
 		try
 		{
@@ -139,17 +139,17 @@ public class PPatternAssistant
 //		}
 //	}
 
-	public static LexNameList getVariableNames(PPattern pattern)
+	public LexNameList getVariableNames(PPattern pattern)
 			throws InvocationAssistantException
 	{
-		return getVariableNamesBaseCase(pattern);
+		return af.createPPatternAssistant().getVariableNamesBaseCase(pattern);
 	}
 
-	public static LexNameList getVariableNamesBaseCase(PPattern pattern)
+	public LexNameList getVariableNamesBaseCase(PPattern pattern)
 			throws InvocationAssistantException
 	{
 		Set<ILexNameToken> set = new HashSet<ILexNameToken>();
-		set.addAll(getAllVariableNames(pattern));
+		set.addAll(af.createPPatternAssistant().getAllVariableNames(pattern));
 		LexNameList list = new LexNameList();
 		list.addAll(set);
 		return list;

@@ -25,7 +25,7 @@ public class ATixeStmtAlternativeAssistantInterpreter
 		this.af = af;
 	}
 
-	public static Value eval(ATixeStmtAlternative node, ILexLocation location,
+	public Value eval(ATixeStmtAlternative node, ILexLocation location,
 			Value exval, Context ctxt) throws AnalysisException
 	{
 		Context evalContext = null;

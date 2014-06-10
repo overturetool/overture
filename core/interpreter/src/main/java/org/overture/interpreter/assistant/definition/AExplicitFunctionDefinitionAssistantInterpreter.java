@@ -26,45 +26,7 @@ public class AExplicitFunctionDefinitionAssistantInterpreter extends
 		this.af = af;
 	}
 
-//	public static NameValuePairList getNamedValues(
-//			AExplicitFunctionDefinition d, Context initialContext)
-//	{
-//		NameValuePairList nvl = new NameValuePairList();
-//		Context free = initialContext.getVisibleVariables();
-//
-//		FunctionValue prefunc = d.getPredef() == null ? null
-//				: new FunctionValue(d.getPredef(), null, null, free);
-//
-//		FunctionValue postfunc = d.getPostdef() == null ? null
-//				: new FunctionValue(d.getPostdef(), null, null, free);
-//
-//		FunctionValue func = new FunctionValue(d, prefunc, postfunc, free);
-//		func.isStatic = af.createPAccessSpecifierAssistant().isStatic(d.getAccess());
-//		func.uninstantiated = !d.getTypeParams().isEmpty();
-//		nvl.add(new NameValuePair(d.getName(), func));
-//
-//		if (d.getPredef() != null)
-//		{
-//			nvl.add(new NameValuePair(d.getPredef().getName(), prefunc));
-//			prefunc.uninstantiated = !d.getTypeParams().isEmpty();
-//		}
-//
-//		if (d.getPostdef() != null)
-//		{
-//			nvl.add(new NameValuePair(d.getPostdef().getName(), postfunc));
-//			postfunc.uninstantiated = !d.getTypeParams().isEmpty();
-//		}
-//
-//		if (Settings.dialect == Dialect.VDM_SL)
-//		{
-//			// This is needed for recursive local functions
-//			free.putList(nvl);
-//		}
-//
-//		return nvl;
-//	}
-
-	public static FunctionValue getPolymorphicValue(IInterpreterAssistantFactory af,
+	public FunctionValue getPolymorphicValue(IInterpreterAssistantFactory af,
 			AExplicitFunctionDefinition expdef, PTypeList actualTypes)
 	{
 		AExplicitFunctionDefinitionRuntimeState state = VdmRuntime.getNodeState(expdef);
@@ -114,28 +76,5 @@ public class AExplicitFunctionDefinitionAssistantInterpreter extends
 		state.polyfuncs.put(actualTypes, rv);
 		return rv;
 	}
-
-//	public static PExp findExpression(AExplicitFunctionDefinition d, int lineno)
-//	{
-//		if (d.getPredef() != null)
-//		{
-//			PExp found = PDefinitionAssistantInterpreter.findExpression(d.getPredef(), lineno);
-//			if (found != null)
-//			{
-//				return found;
-//			}
-//		}
-//
-//		if (d.getPostdef() != null)
-//		{
-//			PExp found = PDefinitionAssistantInterpreter.findExpression(d.getPostdef(), lineno);
-//			if (found != null)
-//			{
-//				return found;
-//			}
-//		}
-//
-//		return PExpAssistantInterpreter.findExpression(d.getBody(), lineno);
-//	}
 
 }

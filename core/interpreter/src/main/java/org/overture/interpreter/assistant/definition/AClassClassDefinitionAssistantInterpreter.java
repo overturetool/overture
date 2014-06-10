@@ -23,7 +23,7 @@ public class AClassClassDefinitionAssistantInterpreter
 		this.af = af;
 	}
 
-	public static ObjectValue newInstance(AClassClassDefinition node,
+	public ObjectValue newInstance(AClassClassDefinition node,
 			PDefinition ctorDefinition, ValueList argvals, Context ctxt)
 			throws AnalysisException
 	{

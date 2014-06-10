@@ -369,7 +369,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 
 		for (ACaseAlternativeStm c : node.getCases())
 		{
-			Value rv = ACaseAlternativeStmAssistantInterpreter.eval(c, val, ctxt);
+			Value rv = ctxt.assistantFactory.createACaseAlternativeStmAssistant().eval(c, val, ctxt);
 			if (rv != null)
 				return rv;
 		}
@@ -904,14 +904,14 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 					ObjectValue target = v.objectValue(ctxt);
 					OperationValue op = target.getThreadOperation(ctxt);
 
-					AStartStmAssistantInterpreter.start(node, target, op, ctxt);
+					ctxt.assistantFactory.createAStartStmAssistant().start(node, target, op, ctxt);
 				}
 			} else
 			{
 				ObjectValue target = value.objectValue(ctxt);
 				OperationValue op = target.getThreadOperation(ctxt);
 
-				AStartStmAssistantInterpreter.start(node, target, op, ctxt);
+				ctxt.assistantFactory.createAStartStmAssistant().start(node, target, op, ctxt);
 			}
 
 			return new VoidValue();
@@ -1022,7 +1022,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 				{
 					for (ATixeStmtAlternative tsa : node.getTraps())
 					{
-						rv = ATixeStmtAlternativeAssistantInterpreter.eval(tsa, node.getLocation(), exval, ctxt);
+						rv = ctxt.assistantFactory.createATixeStmtAlternativeAssistant().eval(tsa, node.getLocation(), exval, ctxt);
 
 						if (rv != null) // Statement was executed
 						{
