@@ -4,7 +4,7 @@ ValvePos = <open> | <closed>;
 
 SwitchPos = <on> | <off>;
 
-StartAttempt = nat1
+StartAttempt = nat
 inv s == s <= DVMAXNUMBERATTEMPTS;
 
 StartState = <FuelSwitchAtCut> | 

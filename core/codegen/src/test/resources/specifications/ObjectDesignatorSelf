@@ -1,0 +1,18 @@
+class A
+
+operations 
+
+public op : () ==> nat
+op () ==
+	self.A`f(1);
+
+public op1 : () ==> nat
+op1 () ==
+	self.f(1);
+
+functions 
+
+public f :  (nat) -> nat
+f (x) == x;
+
+end A

@@ -203,7 +203,7 @@ public final static boolean DEBUG = true;
 	}
 
 
-	public void encondeResult(Object result, Document doc, Element resultElement) {
+	public void encodeResult(Object result, Document doc, Element resultElement) {
 		
 	}
 

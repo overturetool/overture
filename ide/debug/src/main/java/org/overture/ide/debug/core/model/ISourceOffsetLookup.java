@@ -18,7 +18,8 @@
  *******************************************************************************/
 package org.overture.ide.debug.core.model;
 
-public interface ISourceOffsetLookup {
+public interface ISourceOffsetLookup
+{
 
 	int calculateOffset(IVdmStackFrame frame, int lineNumber, int column,
 			boolean isEndOffset);

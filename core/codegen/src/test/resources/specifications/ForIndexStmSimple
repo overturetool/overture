@@ -1,0 +1,10 @@
+class A
+
+operations
+
+public op : () ==> ()
+op () ==
+	for i = 1 to 10 do
+		skip;
+		
+end A

@@ -24,7 +24,10 @@
 package org.overture.pog.obligation;
 
 import java.util.List;
+import java.util.Vector;
 
+import org.overture.ast.definitions.AEqualsDefinition;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.ALetDefExp;
@@ -35,7 +38,6 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.utility.ContextHelper;
-import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 
 public class POCaseContext extends POContext {
 	public final PPattern pattern;
@@ -43,7 +45,8 @@ public class POCaseContext extends POContext {
 	public final PExp exp;
 	public final IPogAssistantFactory assistantFactory;
 
-	public POCaseContext(PPattern pattern, PType type, PExp exp, IPogAssistantFactory assistantFactory) {
+	public POCaseContext(PPattern pattern, PType type, PExp exp,
+			IPogAssistantFactory assistantFactory) {
 		this.pattern = pattern;
 		this.type = type;
 		this.exp = exp;
@@ -53,29 +56,40 @@ public class POCaseContext extends POContext {
 	@Override
 	public PExp getContextNode(PExp stitch) {
 		if (assistantFactory.createPPatternAssistant().isSimple(pattern)) {
-			AImpliesBooleanBinaryExp impliesExp = new AImpliesBooleanBinaryExp();
-			PExp matching = assistantFactory.createPPatternAssistant().getMatchingExpression(pattern);
-			impliesExp.setLeft(AstExpressionFactory.newAEqualsBinaryExp(
-					matching.clone(), exp.clone()));
-			impliesExp.setRight(stitch);
+			PExp matching = assistantFactory.createPPatternAssistant()
+					.getMatchingExpression(pattern);
+			PExp premise = AstExpressionFactory.newAEqualsBinaryExp(
+					matching.clone(), exp.clone());
+			AImpliesBooleanBinaryExp impliesExp = AstExpressionFactory
+					.newAImpliesBooleanBinaryExp(premise, stitch);
+
 			return impliesExp;
 		} else {
 			AExistsExp existsExp = new AExistsExp();
 			List<PMultipleBind> bindList = ContextHelper.bindListFromPattern(
 					pattern.clone(), type.clone());
 			existsExp.setBindList(bindList);
-			PExp matching = assistantFactory.createPPatternAssistant().getMatchingExpression(pattern);
+			PExp matching = assistantFactory.createPPatternAssistant()
+					.getMatchingExpression(pattern);
 
-			AImpliesBooleanBinaryExp impliesExp = new AImpliesBooleanBinaryExp();
-			impliesExp.setLeft(AstExpressionFactory.newAEqualsBinaryExp(
+			PExp premise = (AstExpressionFactory.newAEqualsBinaryExp(
 					matching.clone(), exp.clone()));
 
 			ALetDefExp letDefExp = new ALetDefExp();
-			letDefExp.setLocalDefs(pattern.clone().getDefinitions());
+			
+			AEqualsDefinition local = new AEqualsDefinition();
+			local.setPattern(pattern.clone());
+//			local.setName(def.getName().clone());
+			local.setTest(exp.clone());
+			List<PDefinition> lDefs = new Vector<PDefinition>();
+			lDefs.add(local);
+			letDefExp.setLocalDefs(lDefs);
 			letDefExp.setExpression(stitch);
 
-			impliesExp.setRight(letDefExp);
-
+			AImpliesBooleanBinaryExp impliesExp = AstExpressionFactory.newAImpliesBooleanBinaryExp(premise, letDefExp);
+					
+			
+			
 			existsExp.setPredicate(impliesExp);
 
 			return existsExp;
@@ -93,7 +107,8 @@ public class POCaseContext extends POContext {
 			sb.append(exp);
 			sb.append(" => ");
 		} else {
-			PExp matching = assistantFactory.createPPatternAssistant().getMatchingExpression(pattern);
+			PExp matching = assistantFactory.createPPatternAssistant()
+					.getMatchingExpression(pattern);
 
 			sb.append("exists ");
 			sb.append(matching);

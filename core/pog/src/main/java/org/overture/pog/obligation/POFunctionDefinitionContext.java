@@ -42,7 +42,6 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PType;
 import org.overture.pog.pub.IPogAssistantFactory;
-import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
 
 public class POFunctionDefinitionContext extends POContext
 {

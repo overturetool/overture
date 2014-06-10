@@ -1,0 +1,36 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class A {
+    public Number n = 60L;
+
+    public A() {
+    }
+
+    public A op(final A pa) {
+        return pa.op1(n).op1(4L);
+    }
+
+    public A op1(final Number pa) {
+        return this;
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        return new A().op(new A()).n;
+    }
+}
+
+##########

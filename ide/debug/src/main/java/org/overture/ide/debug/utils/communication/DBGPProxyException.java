@@ -31,11 +31,11 @@ public class DBGPProxyException extends Exception
 		super(internalException);
 		this.threadId = threadId;
 	}
-	
+
 	@Override
 	public String toString()
 	{
-		return "Debug Thread id: "+threadId+"\n"+super.toString();
+		return "Debug Thread id: " + threadId + "\n" + super.toString();
 	}
 
 }

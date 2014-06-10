@@ -1,0 +1,18 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    private static final String a = "jeh";
+
+    public Entry() {
+    }
+
+    public static Object Run() {
+        return new StringBuilder("jeh").reverse().toString() +
+        new StringBuilder(a).reverse().toString();
+    }
+}
+
+##########

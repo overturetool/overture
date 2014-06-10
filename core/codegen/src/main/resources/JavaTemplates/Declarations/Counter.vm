@@ -1,0 +1,1 @@
+Long $node.getName() = $JavaFormat.format($node.getInit());

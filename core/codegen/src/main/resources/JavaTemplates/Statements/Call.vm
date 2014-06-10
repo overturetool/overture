@@ -1,0 +1,18 @@
+##Example: A`foo(1, 1)
+##
+#set( $class = "" )
+##
+#if (!$JavaFormat.isNull($node.getClassType()))
+	#set( $separator = ".")
+	#set( $classType = "$JavaFormat.format($node.getClassType())")
+	#set( $class = "$classType$separator")
+#end
+##
+#set( $return = "")
+#if (!$JavaFormat.isVoidType($node.getType()))
+	#set( $return = "return ")
+#end
+##
+#set( $name = "$node.getName()")
+##
+$return$class$name($JavaFormat.formatArgs($node.getArgs()));

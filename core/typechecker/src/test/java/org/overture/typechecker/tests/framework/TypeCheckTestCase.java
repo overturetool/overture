@@ -21,7 +21,7 @@ public abstract class TypeCheckTestCase extends
 		super(file, suiteName, testSuiteRoot);
 	}
 
-	public void encondeResult(Boolean result, Document doc,
+	public void encodeResult(Boolean result, Document doc,
 			Element resultElement)
 	{
 

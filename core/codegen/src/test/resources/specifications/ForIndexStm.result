@@ -1,0 +1,45 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class A {
+    public A() {
+    }
+
+    public void op() {
+        long toVar_1 = 10L;
+        long byVar_1 = 5L;
+
+        for (long i = 1L; (byVar_1 < 0) ? (i >= toVar_1) : (i <= toVar_1);
+                i += byVar_1) {
+            //Skip;
+        }
+
+        long toVar_2 = -1L;
+        long byVar_2 = -2L;
+
+        for (long j = 10L; (byVar_2 < 0) ? (j >= toVar_2) : (j <= toVar_2);
+                j += byVar_2) {
+            //Skip;
+        }
+
+        long toVar_3 = 1L;
+        long byVar_3 = 1L;
+
+        for (long i = 1L; (byVar_3 < 0) ? (i >= toVar_3) : (i <= toVar_3);
+                i += byVar_3) {
+            //Skip;
+        }
+
+        long toVar_4 = 0L;
+        long byVar_4 = 1L;
+
+        for (long i = 1L; (byVar_4 < 0) ? (i >= toVar_4) : (i <= toVar_4);
+                i += byVar_4) {
+            //Skip;
+        }
+    }
+}
+
+##########

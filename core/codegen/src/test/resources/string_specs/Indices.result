@@ -1,0 +1,21 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    private static final String a = "hej";
+
+    public Entry() {
+    }
+
+    public static String f() {
+        return "cat";
+    }
+
+    public static Object Run() {
+        return SeqUtil.seq(SeqUtil.inds("a"), SeqUtil.inds(a), SeqUtil.inds(f()));
+    }
+}
+
+##########

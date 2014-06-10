@@ -54,6 +54,7 @@ import org.overture.ast.util.Utils;
 import org.overture.config.Settings;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
+import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.runtime.ClassContext;
 import org.overture.interpreter.runtime.ClassInterpreter;
@@ -263,14 +264,14 @@ public class FunctionValue extends Value
 	}
 
 	public Value eval(ILexLocation from, Value arg, Context ctxt)
-			throws ValueException
+			throws AnalysisException
 	{
 		ValueList args = new ValueList(arg);
 		return eval(from, args, ctxt, null);
 	}
 
 	public Value eval(ILexLocation from, ValueList argValues, Context ctxt)
-			throws ValueException
+			throws AnalysisException
 	{
 		return eval(from, argValues, ctxt, null);
 	}
@@ -294,7 +295,7 @@ public class FunctionValue extends Value
 	}
 
 	public Value eval(ILexLocation from, ValueList argValues, Context ctxt,
-			Context sctxt) throws ValueException
+			Context sctxt) throws AnalysisException
 	{
 		if (uninstantiated)
 		{
@@ -332,7 +333,7 @@ public class FunctionValue extends Value
 
 			try
 			{
-				for (NameValuePair nvp : PPatternAssistantInterpreter.getNamedValues(p, pv, ctxt))
+				for (NameValuePair nvp : ctxt.assistantFactory.createPPatternAssistant().getNamedValues(p, pv, ctxt))
 				{
 					Value v = args.get(nvp.name);
 
@@ -700,12 +701,31 @@ public class FunctionValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt) throws ValueException
+	public Value convertValueTo(PType to, Context ctxt) throws AnalysisException
 	{
-		if (ctxt.assistantFactory.createPTypeAssistant().isType(to, AFunctionType.class))
+		PTypeAssistantInterpreter assistant = ctxt.assistantFactory.createPTypeAssistant();
+		
+		if (assistant.isFunction(to))
 		{
-			return this;
-		} else
+			if (type.equals(to) || assistant.isUnknown(to))
+			{
+				return this;
+			}
+			else
+			{
+				AFunctionType restrictedType = assistant.getFunction(to);
+				
+				// Create a new function with restricted dom/rng
+				FunctionValue restricted = new FunctionValue(location, name, restrictedType,
+						paramPatternList, body, precondition, postcondition,
+						freeVariables, checkInvariants, curriedArgs,
+						measureName, measureValues);
+
+				restricted.typeValues = typeValues;
+				return restricted;
+			}
+		}
+		else
 		{
 			return super.convertValueTo(to, ctxt);
 		}

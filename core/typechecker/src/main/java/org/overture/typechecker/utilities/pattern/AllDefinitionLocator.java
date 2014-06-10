@@ -325,6 +325,7 @@ public class AllDefinitionLocator
 				for (AMapletPatternMaplet p : pattern.getMaplets())
 				{
 					defs.addAll(af.createAMapletPatternMapletAssistant().getDefinitions(p, map, question.scope));
+					//defs.addAll(p.apply(THIS, question));
 				}
 			}
 		}

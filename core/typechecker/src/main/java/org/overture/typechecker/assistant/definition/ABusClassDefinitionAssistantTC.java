@@ -19,7 +19,7 @@ public class ABusClassDefinitionAssistantTC
 		this.af = af;
 	}
 
-	private static String defs = "operations "
+	private String defs = "operations "
 			+ "public BUS:(<FCFS>|<CSMACD>) * real * set of CPU ==> BUS "
 			+ "	BUS(policy, speed, cpus) == is not yet specified;";
 

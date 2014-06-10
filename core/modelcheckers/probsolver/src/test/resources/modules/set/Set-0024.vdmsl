@@ -2,5 +2,8 @@ operations
 
 setran() m : set of nat1
  post m = {1,...,5}
+  setcompset2() m : nat
+    post m in set {x+y| x in set {1,2}, y in set {3,4}}
+
 
  

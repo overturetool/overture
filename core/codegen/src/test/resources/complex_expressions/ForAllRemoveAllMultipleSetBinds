@@ -1,0 +1,13 @@
+class Entry
+
+values
+
+s = {}
+
+operations 
+
+public static Run : () ==> bool 
+Run () ==
+	return forall x,y in set s & true;
+
+end Entry

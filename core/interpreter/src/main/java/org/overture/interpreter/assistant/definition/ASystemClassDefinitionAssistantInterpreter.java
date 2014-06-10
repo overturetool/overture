@@ -27,10 +27,8 @@ import org.overture.interpreter.values.RealValue;
 import org.overture.interpreter.values.UpdatableValue;
 import org.overture.interpreter.values.ValueList;
 import org.overture.interpreter.values.ValueSet;
-import org.overture.typechecker.assistant.definition.ASystemClassDefinitionAssistantTC;
 
-public class ASystemClassDefinitionAssistantInterpreter extends
-		ASystemClassDefinitionAssistantTC
+public class ASystemClassDefinitionAssistantInterpreter
 {
 	protected static IInterpreterAssistantFactory af;
 
@@ -38,7 +36,7 @@ public class ASystemClassDefinitionAssistantInterpreter extends
 	public ASystemClassDefinitionAssistantInterpreter(
 			IInterpreterAssistantFactory af)
 	{
-		super(af);
+		//super(af);
 		this.af = af;
 	}
 
@@ -75,10 +73,10 @@ public class ASystemClassDefinitionAssistantInterpreter extends
 			}
 
 			// Run the constructor to do any deploys etc.
-			ASystemClassDefinitionRuntime.system = SClassDefinitionAssistantInterpreter.makeNewInstance(systemClass, null, new ValueList(), initialContext, new HashMap<ILexNameToken, ObjectValue>());
+			ASystemClassDefinitionRuntime.system = af.createSClassDefinitionAssistant().makeNewInstance(systemClass, null, new ValueList(), initialContext, new HashMap<ILexNameToken, ObjectValue>(), false);
 
 			// Bind system instances to runtime validator
-			RuntimeValidator.bindSystemVariables(systemClass);
+			RuntimeValidator.bindSystemVariables(systemClass, af);
 
 			// Do CPUs first so that default BUSses can connect all CPUs.
 

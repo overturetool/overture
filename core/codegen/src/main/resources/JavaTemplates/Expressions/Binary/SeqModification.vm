@@ -1,0 +1,4 @@
+#set( $leftExp = $JavaFormat.format($node.getLeft()) )
+#set( $rightExp = $JavaFormat.formatMaplets($node.getRight()) )
+##
+SeqUtil.mod($leftExp, $rightExp)

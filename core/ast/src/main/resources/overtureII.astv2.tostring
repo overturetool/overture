@@ -15,7 +15,7 @@ import org.overture.ast.util.ToStringUtil;
 %exp->exists = "(exists " + $Utils.listToString($[bindList]$)$+ " & " + [predicate] + ")"
 %exp->exists1 = "(exists1 " + [bind] + " & " + [predicate] + ")" 
 %exp->field =  "(" [object] "." + $($ [memberName] $ == null ? $[field]$.getName() : $[memberName]$.getFullName())$ + ")"
-%exp->fieldNumber = "(" + [tuple] + "." + [field] + ")"
+%exp->fieldNumber = "(" + [tuple] + ".#" + [field] + ")"
 %exp->forAll = "(forall " + $Utils.listToString($ [bindList] $)$ + " & " [predicate] ")"
 %exp->funcInstatiation = "(" [function] ")[" + $Utils.listToString($[actualTypes]$)$ + "]"
 %exp->if = "" + $Utils.ifToString($[test]$, $[then]$, $[elseList]$, $[else]$)$
@@ -85,7 +85,7 @@ import org.overture.ast.util.ToStringUtil;
 %exp->#Seq->seqComp = "[" [first] " | "  [setBind] + $($[predicate]$ == null ? "]" : " & " + $[predicate]$ + "]")$
 %exp->#Seq->seqEnum = "" + $Utils.listToString("[", $[members]$, ", ", "]")$
 
-%exp->#Set->setComp = "{" [first] " | " [bindings] + $($[predicate]$ == null ? "}" : " & " + $[predicate]$ + "}")$
+%exp->#Set->setComp = "{" [first] " | " + $Utils.listToString($[bindings]$) + ($[predicate]$ == null ? "}" : " & " + $[predicate]$ + "}")$
 %exp->#Set->setEnum = "" + $Utils.listToString("{", $[members]$, ", ", "}")$
 %exp->#Set->setRange = "{" [first] ", ... ," + [last] "}"
  
@@ -267,3 +267,9 @@ import org.overture.ast.util.ToStringUtil;
 
 //object designator
 %objectDesignator->identifier = [name];
+%objectDesignator->apply = [object] "(" + $Utils.listToString($[args]$)$ + ")"
+%objectDesignator->field = [object]+"."+[fieldName]
+%objectDesignator->new = "new "+[expression]
+%objectDesignator->self = [self]
+
+

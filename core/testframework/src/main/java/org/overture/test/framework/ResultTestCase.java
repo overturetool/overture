@@ -29,8 +29,8 @@ import javax.xml.transform.TransformerException;
 import org.overture.test.framework.results.IMessage;
 import org.overture.test.framework.results.IResultCombiner;
 import org.overture.test.framework.results.Result;
-import org.overture.test.util.XmlResultReaderWritter;
-import org.overture.test.util.XmlResultReaderWritter.IResultStore;
+import org.overture.test.util.XmlResultReaderWriter;
+import org.overture.test.util.XmlResultReaderWriter.IResultStore;
 
 public abstract class ResultTestCase<R> extends BaseTestCase implements IResultStore<R>
 {
@@ -57,12 +57,12 @@ public abstract class ResultTestCase<R> extends BaseTestCase implements IResultS
 	{
 		if(Properties.recordTestResults)
 		{
-			//MessageReaderWritter mrw = new MessageReaderWritter(createResultFile(filename));
+			//MessageReaderWriter mrw = new MessageReaderWriter(createResultFile(filename));
 			//mrw.set(result);
 			//mrw.save();
 			File resultFile = createResultFile(filename);
 			resultFile.getParentFile().mkdirs();
-			XmlResultReaderWritter<R> xmlResult = new XmlResultReaderWritter<R>(resultFile,this);
+			XmlResultReaderWriter<R> xmlResult = new XmlResultReaderWriter<R>(resultFile,this);
 			xmlResult.setResult(this.getClass().getName(),result);
 			try {
 				xmlResult.saveInXml();
@@ -82,8 +82,8 @@ public abstract class ResultTestCase<R> extends BaseTestCase implements IResultS
 		assertNotNull("Result file " + file.getName() + " was not found", file);
 		assertTrue("Result file " + file.getAbsolutePath() + " does not exist", file.exists());
 		
-		//MessageReaderWritter mrw = new MessageReaderWritter(file);
-		XmlResultReaderWritter<R> xmlResult = new XmlResultReaderWritter<R>(file,this);
+		//MessageReaderWriter mrw = new MessageReaderWriter(file);
+		XmlResultReaderWriter<R> xmlResult = new XmlResultReaderWriter<R>(file,this);
 		boolean parsed = xmlResult.loadFromXml();
 
 		assertTrue("Could not read result file: " + file.getName(), parsed);

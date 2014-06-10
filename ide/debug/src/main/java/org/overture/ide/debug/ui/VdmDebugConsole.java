@@ -48,7 +48,8 @@ import org.eclipse.ui.progress.UIJob;
 import org.overture.ide.debug.core.VdmDebugPlugin;
 
 public class VdmDebugConsole extends IOConsole implements
-		IDebugEventSetListener {
+		IDebugEventSetListener
+{
 
 	/**
 	 * @since 2.0
@@ -59,18 +60,22 @@ public class VdmDebugConsole extends IOConsole implements
 	private final ILaunch launch;
 	private final IConsoleColorProvider fColorProvider;
 
-	public ILaunch getLaunch() {
+	public ILaunch getLaunch()
+	{
 		return launch;
 	}
 
 	/**
 	 * @since 2.0
 	 */
-	public IProcess getProcess() {
+	public IProcess getProcess()
+	{
 		final IProcess[] processes = launch.getProcesses();
-		if (processes.length != 0) {
+		if (processes.length != 0)
+		{
 			return processes[0];
-		} else {
+		} else
+		{
 			return null;
 		}
 	}
@@ -80,20 +85,23 @@ public class VdmDebugConsole extends IOConsole implements
 	 */
 	public VdmDebugConsole(ILaunch launch, String name,
 			ImageDescriptor imageDescriptor, String encoding,
-			IConsoleColorProvider colorProvider) {
+			IConsoleColorProvider colorProvider)
+	{
 		super(name, TYPE, imageDescriptor, encoding, true);
 		this.launch = launch;
 		this.fColorProvider = colorProvider;
 		// this.addPatternMatchListener(new ScriptDebugConsoleTraceTracker());
 	}
-	
+
 	@Override
-	public void matcherFinished() {
+	public void matcherFinished()
+	{
 		super.matcherFinished();
 	}
 
 	@Override
-	public void partitionerFinished() {
+	public void partitionerFinished()
+	{
 		super.partitionerFinished();
 	}
 
@@ -101,12 +109,14 @@ public class VdmDebugConsole extends IOConsole implements
 	 * Increase visibility
 	 */
 	@Override
-	protected void setName(String name) {
+	protected void setName(String name)
+	{
 		super.setName(name);
 	}
 
 	@Override
-	protected void dispose() {
+	protected void dispose()
+	{
 		closeStreams();
 		disposeStreams();
 		super.dispose();
@@ -118,13 +128,17 @@ public class VdmDebugConsole extends IOConsole implements
 	 * @param process
 	 * @since 2.0
 	 */
-	public synchronized void connect(IProcess process) {
-		if (connectedProcesses == null) {
+	public synchronized void connect(IProcess process)
+	{
+		if (connectedProcesses == null)
+		{
 			connectedProcesses = new HashSet<IProcess>();
 		}
-		if (connectedProcesses.add(process)) {
+		if (connectedProcesses.add(process))
+		{
 			final IStreamsProxy proxy = process.getStreamsProxy();
-			if (proxy == null) {
+			if (proxy == null)
+			{
 				return;
 			}
 			connect(proxy);
@@ -134,23 +148,26 @@ public class VdmDebugConsole extends IOConsole implements
 	/**
 	 * @since 2.0
 	 */
-	public void connect(final IStreamsProxy proxy) {
+	public void connect(final IStreamsProxy proxy)
+	{
 		IStreamMonitor streamMonitor = proxy.getErrorStreamMonitor();
-		if (streamMonitor != null) {
+		if (streamMonitor != null)
+		{
 			connect(streamMonitor, IDebugUIConstants.ID_STANDARD_ERROR_STREAM);
 		}
 		streamMonitor = proxy.getOutputStreamMonitor();
-		if (streamMonitor != null) {
+		if (streamMonitor != null)
+		{
 			connect(streamMonitor, IDebugUIConstants.ID_STANDARD_OUTPUT_STREAM);
 		}
-		
+
 		IOConsoleInputStream input = getInputStream();
-		if(input!= null){
+		if (input != null)
+		{
 			getInputStream().setColor(fColorProvider.getColor(IDebugUIConstants.ID_STANDARD_INPUT_STREAM));
 		}
-			
+
 	}
-	
 
 	private List<StreamListener> fStreamListeners = new ArrayList<StreamListener>();
 
@@ -158,8 +175,10 @@ public class VdmDebugConsole extends IOConsole implements
 	 * @param streamMonitor
 	 * @param idStandardErrorStream
 	 */
-	private void connect(IStreamMonitor streamMonitor, String streamIdentifier) {
-		synchronized (streamMonitor) {
+	private void connect(IStreamMonitor streamMonitor, String streamIdentifier)
+	{
+		synchronized (streamMonitor)
+		{
 			IOConsoleOutputStream stream = newOutputStream();
 			stream.setColor(fColorProvider.getColor(streamIdentifier));
 			StreamListener listener = new StreamListener(streamMonitor, stream);
@@ -170,18 +189,21 @@ public class VdmDebugConsole extends IOConsole implements
 	/**
 	 * cleanup method to close all of the open stream to this console
 	 */
-	private synchronized void closeStreams() {
-		for (StreamListener listener : fStreamListeners) {
+	private synchronized void closeStreams()
+	{
+		for (StreamListener listener : fStreamListeners)
+		{
 			listener.closeStream();
 		}
 	}
 
 	/**
-	 * disposes of the listeners for each of the stream associated with this
-	 * console
+	 * disposes of the listeners for each of the stream associated with this console
 	 */
-	private synchronized void disposeStreams() {
-		for (StreamListener listener : fStreamListeners) {
+	private synchronized void disposeStreams()
+	{
+		for (StreamListener listener : fStreamListeners)
+		{
 			listener.dispose();
 		}
 	}
@@ -189,14 +211,16 @@ public class VdmDebugConsole extends IOConsole implements
 	/**
 	 * This class listens to a specified IO stream
 	 */
-	private class StreamListener implements IStreamListener {
+	private class StreamListener implements IStreamListener
+	{
 		private IOConsoleOutputStream fStream;
 		private IStreamMonitor fStreamMonitor;
 		private boolean fFlushed = false;
 		private boolean fListenerRemoved = false;
 
 		public StreamListener(IStreamMonitor monitor,
-				IOConsoleOutputStream stream) {
+				IOConsoleOutputStream stream)
+		{
 			this.fStream = stream;
 			this.fStreamMonitor = monitor;
 			fStreamMonitor.addListener(this);
@@ -205,49 +229,68 @@ public class VdmDebugConsole extends IOConsole implements
 			streamAppended(null, monitor);
 		}
 
-		public void streamAppended(String text, IStreamMonitor monitor) {
+		public void streamAppended(String text, IStreamMonitor monitor)
+		{
 			String encoding = getEncoding();
-			if (fFlushed) {
-				try {
-					if (fStream != null) {
+			if (fFlushed)
+			{
+				try
+				{
+					if (fStream != null)
+					{
 						if (encoding == null)
+						{
 							fStream.write(text);
-						else
+						} else
+						{
 							fStream.write(text.getBytes(encoding));
+						}
 					}
-				} catch (IOException e) {
+				} catch (IOException e)
+				{
 					VdmDebugPlugin.log(e);
 				}
-			} else {
+			} else
+			{
 				String contents = null;
-				synchronized (fStreamMonitor) {
+				synchronized (fStreamMonitor)
+				{
 					fFlushed = true;
 					contents = fStreamMonitor.getContents();
-					if (fStreamMonitor instanceof IFlushableStreamMonitor) {
+					if (fStreamMonitor instanceof IFlushableStreamMonitor)
+					{
 						IFlushableStreamMonitor m = (IFlushableStreamMonitor) fStreamMonitor;
 						m.flushContents();
 						m.setBuffered(false);
 					}
 				}
-				try {
-					if (contents != null && contents.length() > 0) {
-						if (fStream != null) {
+				try
+				{
+					if (contents != null && contents.length() > 0)
+					{
+						if (fStream != null)
+						{
 							fStream.write(contents);
 						}
 					}
-				} catch (IOException e) {
+				} catch (IOException e)
+				{
 					VdmDebugPlugin.log(e);
 				}
 			}
 		}
 
-		public void closeStream() {
-			if (fStreamMonitor == null) {
+		public void closeStream()
+		{
+			if (fStreamMonitor == null)
+			{
 				return;
 			}
-			synchronized (fStreamMonitor) {
+			synchronized (fStreamMonitor)
+			{
 				fStreamMonitor.removeListener(this);
-				if (!fFlushed) {
+				if (!fFlushed)
+				{
 					String contents = fStreamMonitor.getContents();
 					streamAppended(contents, fStreamMonitor);
 				}
@@ -255,8 +298,10 @@ public class VdmDebugConsole extends IOConsole implements
 			}
 		}
 
-		public void dispose() {
-			if (!fListenerRemoved) {
+		public void dispose()
+		{
+			if (!fListenerRemoved)
+			{
 				closeStream();
 			}
 			fStreamMonitor = null;
@@ -269,12 +314,16 @@ public class VdmDebugConsole extends IOConsole implements
 	 * 
 	 * @see org.eclipse.debug.core.IDebugEventSetListener#handleDebugEvents(org.eclipse.debug.core.DebugEvent[])
 	 */
-	public void handleDebugEvents(DebugEvent[] events) {
-		for (int i = 0; i < events.length; i++) {
+	public void handleDebugEvents(DebugEvent[] events)
+	{
+		for (int i = 0; i < events.length; i++)
+		{
 			DebugEvent event = events[i];
-			if (event.getSource().equals(getProcess())) {
+			if (event.getSource().equals(getProcess()))
+			{
 
-				if (event.getKind() == DebugEvent.TERMINATE) {
+				if (event.getKind() == DebugEvent.TERMINATE)
+				{
 					closeStreams();
 					DebugPlugin.getDefault().removeDebugEventListener(this);
 				}
@@ -287,10 +336,12 @@ public class VdmDebugConsole extends IOConsole implements
 	/**
 	 * resets the name of this console to the original computed name
 	 */
-	private void resetName() {
+	private void resetName()
+	{
 
 		UIJob job = new UIJob("Activating Console") { //$NON-NLS-1$
-			public IStatus runInUIThread(IProgressMonitor monitor) {
+			public IStatus runInUIThread(IProgressMonitor monitor)
+			{
 
 				warnOfContentChange();
 				return Status.OK_STATUS;
@@ -304,22 +355,22 @@ public class VdmDebugConsole extends IOConsole implements
 	/**
 	 * send notification of a change of content in this console
 	 */
-	private void warnOfContentChange() {
-		IConsole[] consoles = ConsolePlugin.getDefault().getConsoleManager()
-				.getConsoles();		
-		for (IConsole iConsole : consoles) {
-			if (iConsole instanceof VdmDebugConsole) {				
-				VdmDebugConsole vdmC = (VdmDebugConsole) iConsole;								
+	private void warnOfContentChange()
+	{
+		IConsole[] consoles = ConsolePlugin.getDefault().getConsoleManager().getConsoles();
+		for (IConsole iConsole : consoles)
+		{
+			if (iConsole instanceof VdmDebugConsole)
+			{
+				VdmDebugConsole vdmC = (VdmDebugConsole) iConsole;
 				vdmC.activate();
 			}
 		}
 
-	
-		
-//		if (warn != null) {
-//			ConsolePlugin.getDefault().getConsoleManager()
-//					.warnOfContentChange(warn);
-//		}
+		// if (warn != null) {
+		// ConsolePlugin.getDefault().getConsoleManager()
+		// .warnOfContentChange(warn);
+		// }
 	}
 
 }

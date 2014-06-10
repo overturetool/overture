@@ -93,7 +93,7 @@ functions
 
 operations
 
-  colMap(r: Relation) cols : Colouring 
+/*  colMap(r: Relation) cols : Colouring 
   -- pre isRelation(r)
   ext rd cols
   pre forall mk_(c1,c2) in set r & c1 <> c2
@@ -104,11 +104,11 @@ operations
        dunion cols = dunion {{c1,c2} | mk_(c1,c2) in set r} and
        forall cn1, cn2 in set dunion {{c1,c2} | mk_(c1,c2) in set r} &
          mk_(cn1,cn2) in set r or mk_(cn2,cn1) in set r => not exists col in set cols & cn1 in set col and cn2 in set col;
+*/
 
-
-test:()==>Col
-test() == let r = {mk_(1,2),mk_(1,3),mk_(3,4)}, cols = {{1}, {2}, {3, 4}} in {
-colMap(r);
+test:()==>Colouring
+test() == let r = {mk_(1,2),mk_(1,3),mk_(3,4)}, cols = {{1}, {2}, {3, 4}} in (
+colMapExpl(r);
 );
 
 \end{vdm_al}

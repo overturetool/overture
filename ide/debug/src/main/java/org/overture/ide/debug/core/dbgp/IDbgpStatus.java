@@ -18,7 +18,8 @@
  *******************************************************************************/
 package org.overture.ide.debug.core.dbgp;
 
-public interface IDbgpStatus {
+public interface IDbgpStatus
+{
 	// State
 	boolean isStarting();
 
@@ -38,7 +39,7 @@ public interface IDbgpStatus {
 	boolean reasonAborred();
 
 	boolean reasonException();
-	
-	//additional
+
+	// additional
 	IDbgpStatusInterpreterThreadState getInterpreterThreadState();
 }

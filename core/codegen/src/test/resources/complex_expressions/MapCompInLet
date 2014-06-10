@@ -1,0 +1,15 @@
+class Entry
+
+operations 
+
+public static Run : () ==> ?
+Run () ==
+	Test();
+		
+public static Test : () ==> map nat to nat
+Test () ==
+let x = { x*2 |-> x | x in set elems [1,2,3] & 1 = 1 }
+in
+	return x;
+
+end Entry

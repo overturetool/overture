@@ -39,8 +39,6 @@ import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
-import org.overture.pog.pub.POType;
-import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 
 public class CasesExhaustiveObligation extends ProofObligation
 {
@@ -74,7 +72,7 @@ public class CasesExhaustiveObligation extends ProofObligation
 			return r;
 		}
 		
-		AOrBooleanBinaryExp orExp = AstExpressionFactory.newAOrBooleanBinaryExp(r, alt2Exp(cases.get(0), exp, assistantFactory));
+		AOrBooleanBinaryExp orExp = AstExpressionFactory.newAOrBooleanBinaryExp(r, alt2Exp(cases.get(0), exp.clone(), assistantFactory));
 		
 		List<ACaseAlternative> newCases = new LinkedList<ACaseAlternative>(cases);
 		newCases.remove(0);
@@ -86,7 +84,7 @@ public class CasesExhaustiveObligation extends ProofObligation
 	{
 		if (assistantFactory.createPPatternAssistant().isSimple(alt.getPattern()))
 		{
-			AEqualsBinaryExp equalsExp = AstExpressionFactory.newAEqualsBinaryExp(exp.getExpression().clone(), patternToExp(alt.getPattern()));
+			AEqualsBinaryExp equalsExp = AstExpressionFactory.newAEqualsBinaryExp(exp.getExpression().clone(), patternToExp(alt.getPattern().clone()));
 			return equalsExp;
 		} else
 		{
@@ -103,7 +101,7 @@ public class CasesExhaustiveObligation extends ProofObligation
 			bindList.add(tbind);
 			existsExp.setBindList(bindList);
 
-			AEqualsBinaryExp equalsExp = AstExpressionFactory.newAEqualsBinaryExp(exp.getExpression(), matching);
+			AEqualsBinaryExp equalsExp = AstExpressionFactory.newAEqualsBinaryExp(exp.getExpression().clone(), matching);
 			existsExp.setPredicate(equalsExp);
 
 			return existsExp;

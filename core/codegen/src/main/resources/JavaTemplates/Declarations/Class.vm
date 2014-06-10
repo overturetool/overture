@@ -1,0 +1,33 @@
+#set( $quoteImport = "")
+#if ($IRAnalysis.usesQuoteLiterals($node))
+	#set( $quoteImport = "import quotes.*;")
+#end
+##
+import org.overture.codegen.runtime.*;
+import java.util.*;
+$quoteImport
+##
+#set( $abstract = "")
+#if ($node.getAbstract())
+	#set( $abstract = "abstract")
+#end
+##
+#set( $static = "")
+#if ($node.getStatic())
+	#set( $static = "static")
+#end
+
+$abstract $node.getAccess() $static class $node.getName() $JavaFormat.formatSuperType($node)
+{
+	#foreach( $field in $node.getFields() )
+	$JavaFormat.format($field)
+	#end
+
+	#foreach( $method in $node.getMethods() )
+	$JavaFormat.format($method)
+	#end
+
+	#foreach( $innerClass in $node.getRecords() )
+	$JavaFormat.format($innerClass)
+	#end
+}

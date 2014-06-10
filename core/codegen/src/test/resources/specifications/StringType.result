@@ -1,0 +1,15 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class StringType {
+    public StringType() {
+    }
+
+    public VDMSeq op1() {
+        return SeqUtil.seq('k', 'a', 't', 't', 'e', 'b', 'a', 'k', 'k', 'e');
+    }
+}
+
+##########

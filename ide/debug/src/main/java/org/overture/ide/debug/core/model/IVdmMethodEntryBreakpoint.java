@@ -21,28 +21,28 @@ package org.overture.ide.debug.core.model;
 import org.eclipse.core.runtime.CoreException;
 
 /**
- * A method entry breakpoint suspends execution on the first executable line of
- * a method when entered.
+ * A method entry breakpoint suspends execution on the first executable line of a method when entered.
  */
-public interface IVdmMethodEntryBreakpoint extends IVdmLineBreakpoint {
+public interface IVdmMethodEntryBreakpoint extends IVdmLineBreakpoint
+{
 	// Method name
 	String getMethodName() throws CoreException;
 
 	// Break on entry
 	boolean breakOnEntry() throws CoreException;
-	
+
 	void setBreakOnEntry(boolean value) throws CoreException;
 
 	// Break on exit
 	boolean breakOnExit() throws CoreException;
-	
+
 	void setBreakOnExit(boolean value) throws CoreException;
 
 	// Entry breakpoint id
 	String getEntryBreakpointId() throws CoreException;
 
 	void setEntryBreakpointId(String id) throws CoreException;
-	
+
 	// Exit breakpoint id
 	String getExitBreakpointId() throws CoreException;
 

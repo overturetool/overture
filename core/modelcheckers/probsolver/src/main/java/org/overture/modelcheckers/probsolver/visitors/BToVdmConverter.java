@@ -227,16 +227,13 @@ public class BToVdmConverter extends DepthFirstAdapter
 	@Override
 	public void caseAEmptySetExpression(AEmptySetExpression node)
 	{
-
-	    if(expectedType instanceof AMapMapType) {
-		//System.err.println("in caseAEmptySetExpression: " + expectedType);
-		System.err.println("\"{|->}\" may be wrong");
-		ILexStringToken value = new LexStringToken("{|->}", loc);
-		result = AstFactory.newAStringLiteralExp(value);
-
-	    } else {
-		result = AstFactory.newASetEnumSetExp(loc);
-	    }
+		if (expectedType instanceof AMapMapType)
+		{
+			result = AstFactory.newAMapEnumMapExp(loc);
+		} else
+		{
+			result = AstFactory.newASetEnumSetExp(loc);
+		}
 	}
 
 

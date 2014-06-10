@@ -1,0 +1,12 @@
+class A
+
+end A
+
+class B
+
+operations
+
+public B : () ==> B
+B () == skip;
+
+end B

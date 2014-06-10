@@ -62,7 +62,7 @@ public class DelegateStatementEvaluator extends StatementEvaluator
     		}
     		else
     		{
-    			if (self.hasDelegate())
+    			if (self.hasDelegate(ctxt))
     			{
     				return self.invokeDelegate(ctxt);
     			}

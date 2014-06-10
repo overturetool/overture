@@ -1,0 +1,12 @@
+class Entry
+
+operations 
+
+public static Run : () ==> nat 
+Run () ==
+(
+	dcl a : nat := let x in set {9} be st x = 9 in x;
+	return a;
+)
+
+end Entry

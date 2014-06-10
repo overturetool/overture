@@ -21,16 +21,19 @@ package org.overture.ide.debug.core.dbgp.internal.breakpoints;
 import org.overture.ide.debug.core.dbgp.breakpoints.IDbgpConditionalBreakpoint;
 
 public class DbgpConditionalBreakpoint extends DbgpBreakpoint implements
-		IDbgpConditionalBreakpoint {
+		IDbgpConditionalBreakpoint
+{
 	private final String expression;
 
 	public DbgpConditionalBreakpoint(String id, boolean enabled, int hitValue,
-			int hitCount, String hitCondition, String expression) {
+			int hitCount, String hitCondition, String expression)
+	{
 		super(id, enabled, hitValue, hitCount, hitCondition);
 		this.expression = expression;
 	}
 
-	public String getExpression() {
+	public String getExpression()
+	{
 		return expression;
 	}
 

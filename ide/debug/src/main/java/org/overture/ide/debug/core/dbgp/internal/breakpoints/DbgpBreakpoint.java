@@ -20,13 +20,14 @@ package org.overture.ide.debug.core.dbgp.internal.breakpoints;
 
 import org.overture.ide.debug.core.dbgp.breakpoints.IDbgpBreakpoint;
 
-public class DbgpBreakpoint implements IDbgpBreakpoint {
+public class DbgpBreakpoint implements IDbgpBreakpoint
+{
 	private final String id;
 
 	private final boolean enabled;
-	
+
 	// Number of breakpoint hits
-	private final int hitCount;	
+	private final int hitCount;
 
 	// Hit value for hit condition
 	private final int hitValue;
@@ -34,7 +35,8 @@ public class DbgpBreakpoint implements IDbgpBreakpoint {
 	// Hit condition
 	private final int hitCondition;
 
-	protected int convertHitCondition(String s) {
+	protected int convertHitCondition(String s)
+	{
 		if (">=".equals(s)) { //$NON-NLS-1$
 			return HIT_CONDITION_GREATER_OR_EQUAL;
 		} else if ("==".equals(s)) { //$NON-NLS-1$
@@ -49,7 +51,8 @@ public class DbgpBreakpoint implements IDbgpBreakpoint {
 	}
 
 	public DbgpBreakpoint(String id, boolean enabled, int hitValue,
-			int hitCount, String hitCondition) {
+			int hitCount, String hitCondition)
+	{
 		this.id = id;
 		this.enabled = enabled;
 		this.hitValue = hitValue;
@@ -57,23 +60,28 @@ public class DbgpBreakpoint implements IDbgpBreakpoint {
 		this.hitCondition = convertHitCondition(hitCondition);
 	}
 
-	public int getHitCondition() {
+	public int getHitCondition()
+	{
 		return hitCondition;
 	}
 
-	public int getHitCount() {
+	public int getHitCount()
+	{
 		return hitCount;
 	}
 
-	public int getHitValue() {
+	public int getHitValue()
+	{
 		return hitValue;
 	}
 
-	public String getId() {
+	public String getId()
+	{
 		return id;
 	}
 
-	public boolean isEnabled() {
+	public boolean isEnabled()
+	{
 		return enabled;
 	}
 }

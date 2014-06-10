@@ -1,0 +1,13 @@
+class A
+
+values
+
+a = {1,2,3};
+x = a subset op();
+
+operations
+
+public static op : () ==> set of nat
+op () == return {1,2,3};
+
+end A

@@ -33,7 +33,6 @@ import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.pog.pub.IPOContextStack;
-import org.overture.pog.pub.POType;
 
 public class MapCompatibleObligation extends ProofObligation {
 	private static final long serialVersionUID = -7453383884893058267L;
@@ -57,7 +56,7 @@ public class MapCompatibleObligation extends ProofObligation {
 		AMapDomainUnaryExp domLeft = new AMapDomainUnaryExp();
 		domLeft.setExp(left.clone());
 		AMapDomainUnaryExp domRight = new AMapDomainUnaryExp();
-		domLeft.setExp(right.clone());
+		domRight.setExp(right.clone());
 		List<PMultipleBind> bindings = getMultipleSetBindList(domLeft, ldom);
 		bindings.addAll(getMultipleSetBindList(domRight, rdom));
 

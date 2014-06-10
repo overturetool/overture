@@ -1,0 +1,6 @@
+#set( $clone = "")
+#if ($ValueSemantics.cloneMember($node))
+	#set( $clone = ".clone()")
+#end
+##
+$JavaFormat.format($node.getObject()).$node.getMemberName()$clone

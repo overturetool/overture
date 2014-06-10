@@ -104,7 +104,9 @@ public abstract class AbstractVdmBreakpoint extends Breakpoint implements
 		Assert.isTrue(index >= 0);
 		device = device.substring(index + 1);
 		if (device.length() == 1 && device.charAt(0) == IPath.DEVICE_SEPARATOR)
+		{
 			device = null;
+		}
 
 		return path.setDevice(device);
 	}

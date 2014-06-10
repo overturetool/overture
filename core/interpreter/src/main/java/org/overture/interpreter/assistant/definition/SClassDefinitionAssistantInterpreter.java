@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.ABusClassDefinition;
 import org.overture.ast.definitions.AClassClassDefinition;
@@ -28,10 +29,10 @@ import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.statements.PStm;
+import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AClassType;
 import org.overture.config.Settings;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.StateContext;
@@ -67,7 +68,7 @@ public class SClassDefinitionAssistantInterpreter extends
 		this.af = af;
 	}
 
-	public static Value getStatic(SClassDefinition classdef,
+	public Value getStatic(SClassDefinition classdef,
 			ILexNameToken sought)
 	{
 		ILexNameToken local = sought.getExplicit() ? sought
@@ -96,7 +97,7 @@ public class SClassDefinitionAssistantInterpreter extends
 		return v;
 	}
 
-	public static Context getStatics(SClassDefinition classdef)
+	public Context getStatics(SClassDefinition classdef)
 	{
 		Context ctxt = new Context(af, classdef.getLocation(), "Statics", null);
 		ctxt.putAll(VdmRuntime.getNodeState(af,classdef).publicStaticValues);
@@ -127,9 +128,9 @@ public class SClassDefinitionAssistantInterpreter extends
 		return new MapValue(values);
 	}
 
-	public static ObjectValue newInstance(SClassDefinition node,
+	public ObjectValue newInstance(SClassDefinition node,
 			PDefinition ctorDefinition, ValueList argvals, Context ctxt)
-			throws ValueException
+			throws AnalysisException
 	{
 		if (node instanceof ABusClassDefinition)
 		{
@@ -149,9 +150,11 @@ public class SClassDefinitionAssistantInterpreter extends
 		return null;
 	}
 
-	protected static ObjectValue makeNewInstance(SClassDefinition node,
+	protected ObjectValue makeNewInstance(SClassDefinition node,
 			PDefinition ctorDefinition, ValueList argvals, Context ctxt,
-			Map<ILexNameToken, ObjectValue> done) throws ValueException
+
+			Map<ILexNameToken, ObjectValue> done, boolean nested) throws AnalysisException
+
 	{
 		setStaticDefinitions(node, ctxt.getGlobal()); // When static member := new X()
 		setStaticValues(node, ctxt.getGlobal()); // When static member := new X()
@@ -166,7 +169,7 @@ public class SClassDefinitionAssistantInterpreter extends
 
 			if (obj == null)
 			{
-				obj = makeNewInstance(sdef, null, null, ctxt, done);
+				obj = makeNewInstance(sdef, null, null, ctxt, done, true);
 				done.put(sdef.getName(), obj);
 			}
 
@@ -188,7 +191,7 @@ public class SClassDefinitionAssistantInterpreter extends
 				i.getName().setTypeQualifier(i.getSuperdef().getName().getTypeQualifier());
 			}
 
-			if (PDefinitionAssistantInterpreter.isRuntime(idef)) // eg. TypeDefinitions aren't
+			if (af.createPDefinitionAssistant().isRuntime(idef)) // eg. TypeDefinitions aren't
 			{
 				Value v = null;
 
@@ -242,7 +245,7 @@ public class SClassDefinitionAssistantInterpreter extends
 			if (!af.createPDefinitionAssistant().isStatic(d)
 					&& af.createPDefinitionAssistant().isFunctionOrOperation(d))
 			{
-				NameValuePairList nvpl = PDefinitionAssistantInterpreter.getNamedValues(d, empty);
+				NameValuePairList nvpl = af.createPDefinitionAssistant().getNamedValues(d, empty);
 				initCtxt.putList(nvpl);
 				members.putAll(nvpl);
 			}
@@ -253,7 +256,7 @@ public class SClassDefinitionAssistantInterpreter extends
 			if (!af.createPDefinitionAssistant().isStatic(d)
 					&& !af.createPDefinitionAssistant().isFunctionOrOperation(d))
 			{
-				NameValuePairList nvpl = PDefinitionAssistantInterpreter.getNamedValues(d, initCtxt).getUpdatable(null);
+				NameValuePairList nvpl = af.createPDefinitionAssistant().getNamedValues(d, initCtxt).getUpdatable(null);
 
 				initCtxt.putList(nvpl);
 				members.putAll(nvpl);
@@ -272,11 +275,17 @@ public class SClassDefinitionAssistantInterpreter extends
 		if (ctorDefinition == null)
 		{
 			argvals = new ValueList();
-			LexNameToken cname = af.createSClassDefinitionAssistant().getCtorName(node, new PTypeList());
-			ctor = object.get(cname, false);
-		} else
+			LexNameToken constructor = getCtorName(node, new PTypeList());
+			ctorDefinition = af.createPDefinitionAssistant().findName(node, constructor, NameScope.NAMES);
+			
+			if (ctorDefinition != null)
+			{
+				ctor = object.get(ctorDefinition.getName(), false);
+			}
+		}
+		else
 		{
-			ctor = object.get(ctorDefinition.getName(), false);
+     		ctor = object.get(ctorDefinition.getName(), false);
 		}
 
 		if (Settings.dialect == Dialect.VDM_RT)
@@ -293,10 +302,16 @@ public class SClassDefinitionAssistantInterpreter extends
 		{
 			OperationValue ov = ctor.operationValue(ctxt);
 
-			ObjectContext ctorCtxt = new ObjectContext(af, node.getLocation(), node.getName().getName()
+			ObjectContext ctorCtxt = new ObjectContext(af, ov.name.getLocation(), node.getName().getName()
 					+ " constructor", ctxt, object);
 
-			ov.eval(ov.name.getLocation(), argvals, ctorCtxt);
+    		if (ctorDefinition.getAccess().getAccess() instanceof APrivateAccess && nested)
+    		{
+    			VdmRuntimeError.abort(ctorDefinition.getLocation(),
+    					4163, "Cannot inherit private constructor", ctorCtxt);
+    		}
+
+    		ov.eval(ov.name.getLocation(), argvals, ctorCtxt);
 		}
 
 		// Do invariants and guards after construction, so values fields are set. The
@@ -313,7 +328,7 @@ public class SClassDefinitionAssistantInterpreter extends
 				AClassInvariantDefinition inv = (AClassInvariantDefinition) d;
 
 				// Is this correct?
-				ValueList values = PExpAssistantInterpreter.getValues(inv.getExpression(), new ObjectContext(af, node.getLocation(), node.getName().getName()
+				ValueList values = af.createPExpAssistant().getValues(inv.getExpression(), new ObjectContext(af, node.getLocation(), node.getName().getName()
 						+ " object context", initCtxt, object));
 				for (Value v : values)
 				{
@@ -345,7 +360,7 @@ public class SClassDefinitionAssistantInterpreter extends
 		return object;
 	}
 
-	private static void setPermissions(SClassDefinition node,
+	private void setPermissions(SClassDefinition node,
 			LinkedList<PDefinition> definitions, NameValuePairMap members,
 			Context initCtxt) throws ValueException
 	{
@@ -374,7 +389,7 @@ public class SClassDefinitionAssistantInterpreter extends
 
 				for (ILexNameToken opname : new LexNameList(sync.getOperations()))
 				{
-					PExp exp = AMutexSyncDefinitionAssistantInterpreter.getExpression(sync.clone(), opname);
+					PExp exp = af.createAMutexSyncDefinitionAssistant().getExpression(sync.clone(), opname);
 					ValueList overloads = members.getOverloads(opname);
 
 					for (Value op : overloads)
@@ -388,7 +403,7 @@ public class SClassDefinitionAssistantInterpreter extends
 		}
 	}
 
-	private static void setStaticValues(SClassDefinition node, Context initCtxt)
+	private void setStaticValues(SClassDefinition node, Context initCtxt)
 	{
 		if (!VdmRuntime.getNodeState(af,node).staticValuesInit)
 		{
@@ -404,7 +419,7 @@ public class SClassDefinitionAssistantInterpreter extends
 		}
 	}
 
-	private static void setStaticValues(SClassDefinition node,
+	private void setStaticValues(SClassDefinition node,
 			LinkedList<PDefinition> defs, Context initCtxt, boolean inherit)
 	{
 		for (PDefinition d : defs)
@@ -429,17 +444,17 @@ public class SClassDefinitionAssistantInterpreter extends
 				}
 			} else
 			{
-				if (PDefinitionAssistantInterpreter.isValueDefinition(d))
+				if (af.createPDefinitionAssistant().isValueDefinition(d))
 				{
-					nvl = PDefinitionAssistantInterpreter.getNamedValues(d, initCtxt);
+					nvl = af.createPDefinitionAssistant().getNamedValues(d, initCtxt);
 				} else if (af.createPDefinitionAssistant().isStatic(d)
-						&& PDefinitionAssistantInterpreter.isInstanceVariable(d))
+						&& af.createPDefinitionAssistant().isInstanceVariable(d))
 				{
-					nvl = PDefinitionAssistantInterpreter.getNamedValues(d, initCtxt).getUpdatable(null);
+					nvl = af.createPDefinitionAssistant().getNamedValues(d, initCtxt).getUpdatable(null);
 				}
 			}
 
-			if (PDefinitionAssistantInterpreter.isValueDefinition(d))
+			if (af.createPDefinitionAssistant().isValueDefinition(d))
 			{
 				// Values are implicitly static, but NOT updatable
 
@@ -455,7 +470,7 @@ public class SClassDefinitionAssistantInterpreter extends
 					initCtxt.putAllNew(nvl);
 				}
 			} else if (af.createPDefinitionAssistant().isStatic(d)
-					&& PDefinitionAssistantInterpreter.isInstanceVariable(d))
+					&& af.createPDefinitionAssistant().isInstanceVariable(d))
 			{
 				// Static instance variables are updatable
 
@@ -474,7 +489,7 @@ public class SClassDefinitionAssistantInterpreter extends
 		}
 	}
 
-	private static void setStaticDefinitions(SClassDefinition node,
+	private void setStaticDefinitions(SClassDefinition node,
 			Context initCtxt)
 	{
 		if (!VdmRuntime.getNodeState(af,node).staticInit)
@@ -500,7 +515,7 @@ public class SClassDefinitionAssistantInterpreter extends
 				NameValuePairMap members = new NameValuePairMap();
 				members.putAll(VdmRuntime.getNodeState(af,node).privateStaticValues);
 				members.putAll(VdmRuntime.getNodeState(af,node).publicStaticValues);
-				setPermissions(node, node.getDefinitions(), members, initCtxt);
+				af.createSClassDefinitionAssistant().setPermissions(node, node.getDefinitions(), members, initCtxt);
 			}
 			catch (ValueException e)
 			{
@@ -509,14 +524,14 @@ public class SClassDefinitionAssistantInterpreter extends
 		}
 	}
 
-	private static void setStaticDefinitions(SClassDefinition node,
+	private void setStaticDefinitions(SClassDefinition node,
 			LinkedList<PDefinition> defs, Context initCtxt)
 	{
 		for (PDefinition d : defs)
 		{
 			if (af.createPDefinitionAssistant().isStatic(d)
 					&& af.createPDefinitionAssistant().isFunctionOrOperation(d)
-					|| PDefinitionAssistantInterpreter.isTypeDefinition(d))
+					|| af.createPDefinitionAssistant().isTypeDefinition(d))
 			{
 				// Note function and operation values are not updatable.
 				// Type invariants are implicitly static, but not updatable
@@ -525,7 +540,7 @@ public class SClassDefinitionAssistantInterpreter extends
 				// which there are none at static func/op creation...
 
 				Context empty = new Context(af, node.getLocation(), "empty", null);
-				NameValuePairList nvl = PDefinitionAssistantInterpreter.getNamedValues(d, empty);
+				NameValuePairList nvl = af.createPDefinitionAssistant().getNamedValues(d, empty);
 
 				PAccess pAccess = d.getAccess().getAccess();
 				if (pAccess instanceof APrivateAccess
@@ -542,7 +557,7 @@ public class SClassDefinitionAssistantInterpreter extends
 		}
 	}
 
-	public static void staticInit(SClassDefinition cdef, StateContext ctxt)
+	public void staticInit(SClassDefinition cdef, StateContext ctxt)
 	{
 		VdmRuntime.getNodeState(af,cdef).staticInit = false; // Forced initialization
 		VdmRuntime.getNodeState(af,cdef).staticValuesInit = false; // Forced initialization
@@ -553,45 +568,45 @@ public class SClassDefinitionAssistantInterpreter extends
 		setStaticDefinitions(cdef, ctxt);
 	}
 
-	public static ProofObligationList getProofObligations(SClassDefinition c,
+	public ProofObligationList getProofObligations(SClassDefinition c,
 			POContextStack ctxt)
 	{
-		return PDefinitionListAssistantInterpreter.getProofObligations(c.getDefinitions(), ctxt);
+		return af.createPDefinitionListAssistant().getProofObligations(c.getDefinitions(), ctxt);
 	}
 
-	public static void staticValuesInit(SClassDefinition cdef, StateContext ctxt)
+	public void staticValuesInit(SClassDefinition cdef, StateContext ctxt)
 	{
 		VdmRuntime.getNodeState(af,cdef).staticValuesInit = false; // Forced initialization
 		setStaticValues(cdef, ctxt);
 	}
 
-	public static boolean hasDelegate(SClassDefinition classdef)
+	public boolean hasDelegate(SClassDefinition classdef)
 	{
 		return VdmRuntime.getNodeState(af,classdef).hasDelegate();
 	}
 
-	public static Object newInstance(SClassDefinition classdef)
+	public Object newInstance(SClassDefinition classdef)
 	{
 		return VdmRuntime.getNodeState(af,classdef).newInstance();
 	}
 
-	public static Value invokeDelegate(SClassDefinition classdef,
+	public Value invokeDelegate(SClassDefinition classdef,
 			Object delegateObject, Context ctxt)
 	{
 		return VdmRuntime.getNodeState(af,classdef).invokeDelegate(delegateObject, ctxt);
 	}
 
-	public static PExp findExpression(SClassDefinition d, int lineno)
+	public PExp findExpression(SClassDefinition d, int lineno)
 	{
-		return PDefinitionListAssistantInterpreter.findExpression(d.getDefinitions(), lineno);
+		return af.createPDefinitionListAssistant().findExpression(d.getDefinitions(), lineno);
 	}
 
-	public static boolean isTypeDefinition(SClassDefinition def)
-	{
-		return true;
-	}
+//	public static boolean isTypeDefinition(SClassDefinition def)
+//	{
+//		return true;
+//	}
 
-	public static PStm findStatement(ClassListInterpreter classes, File file,
+	public PStm findStatement(ClassListInterpreter classes, File file,
 			int lineno)
 	{
 		for (SClassDefinition c : classes)
@@ -610,19 +625,19 @@ public class SClassDefinitionAssistantInterpreter extends
 		return null;
 	}
 
-	public static PStm findStatement(SClassDefinition c, int lineno)
+	public PStm findStatement(SClassDefinition c, int lineno)
 	{
-		return PDefinitionAssistantInterpreter.findStatement(c.getDefinitions(), lineno);
+		return af.createPDefinitionAssistant().findStatement(c.getDefinitions(), lineno);
 	}
 
-	public static PExp findExpression(ClassListInterpreter classes, File file,
+	public PExp findExpression(ClassListInterpreter classes, File file,
 			int lineno)
 	{
 		for (SClassDefinition c : classes)
 		{
 			if (c.getName().getLocation().getFile().equals(file))
 			{
-				PExp exp = findExpression(c, lineno);
+				PExp exp = af.createSClassDefinitionAssistant().findExpression(c, lineno);
 
 				if (exp != null)
 				{
@@ -634,14 +649,14 @@ public class SClassDefinitionAssistantInterpreter extends
 		return null;
 	}
 
-	public static String getName(SClassDefinition classdef)
-	{
-		if (classdef.getName() != null)
-		{
-			return classdef.getName().getName();
-		}
-
-		return null;
-	}
+//	public String getName(SClassDefinition classdef)
+//	{
+//		if (classdef.getName() != null)
+//		{
+//			return classdef.getName().getName();
+//		}
+//
+//		return null;
+//	}
 
 }

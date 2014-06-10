@@ -42,38 +42,29 @@ public class VdmSourcePathComputerDelegate implements
 	{
 
 		IProject project = null;
-//		IVdmProject vdmProject = null;
-		project = ResourcesPlugin.getWorkspace()
-				.getRoot()
-				.getProject(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_PROJECT,
-						""));
+		// IVdmProject vdmProject = null;
+		project = ResourcesPlugin.getWorkspace().getRoot().getProject(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_PROJECT, ""));
 
-		
-		
-//		if (project != null)
-//		{
-//			vdmProject = (IVdmProject) project.getAdapter(IVdmProject.class);
-//		}
+		// if (project != null)
+		// {
+		// vdmProject = (IVdmProject) project.getAdapter(IVdmProject.class);
+		// }
 
 		String path = project.getFullPath().toOSString();
 
 		ISourceContainer sourceContainer = null;
 		if (path != null)
 		{
-			IResource resource = ResourcesPlugin.getWorkspace()
-					.getRoot()
-					.findMember(project.getFullPath());
+			IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(project.getFullPath());
 			if (resource != null)
 			{
 				IContainer container = (IContainer) resource;
 				if (container.getType() == IResource.PROJECT)
 				{
-					sourceContainer = new ProjectSourceContainer((IProject) container,
-							false);
+					sourceContainer = new ProjectSourceContainer((IProject) container, false);
 				} else if (container.getType() == IResource.FOLDER)
 				{
-					sourceContainer = new FolderSourceContainer(container,
-							false);
+					sourceContainer = new FolderSourceContainer(container, false);
 				}
 			}
 		}

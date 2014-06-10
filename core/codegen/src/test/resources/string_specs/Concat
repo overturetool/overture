@@ -1,0 +1,18 @@
+class Entry
+
+values
+
+a = "hej";
+
+functions
+
+public f :  () -> seq of char
+f () == "cat";
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	return "a" ^ a ^ f();
+	
+end Entry

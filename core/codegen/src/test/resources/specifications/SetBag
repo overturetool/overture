@@ -1,0 +1,324 @@
+class Bag
+
+instance variables
+
+private numbers : set of nat;
+
+operations 
+
+public static Test : () ==> ()
+Test () ==
+(
+	dcl bag1 : Bag := new Bag({1,2,3});
+	dcl bag2 : Bag := new Bag({3,4,5});
+	
+	IO`println("Creating two bags, bag1 and bag2 wih numbers {1 2 3} and {3 4 5}, respectively.\n");
+	
+	IO`println("Printing content of bag1");
+	bag1.printBag();
+	
+	IO`println("\n");
+	
+	IO`println("Printing content of bag2");
+	bag2.printBag();
+	
+	IO`println("\n");
+	
+	IO`printf("bag1 has number 2: %s\n", [bag1.hasNumber(2)]);
+	IO`printf("bag1 has number 4: %s\n", [bag1.hasNumber(4)]);
+	IO`printf("bag1 has NOT number 2: %s\n", [bag1.hasNotNumber(2)]);
+	IO`printf("bag1 has NOT number 4: %s\n", [bag1.hasNotNumber(4)]);
+	
+	IO`print("\n");
+	
+	IO`print("Adding content of bag2 to bag1..\n");
+	bag1.addNumbers(bag2);
+	IO`println("Printing content of bag1");
+	bag1.printBag();
+	
+	IO`println("\n");
+	
+	IO`print("Adding '6' to bag1");
+	bag1.addNumbers(new Bag({6}));
+
+	IO`print("\n");	
+	
+	IO`println("Printing content of bag1");
+	bag1.printBag();
+	
+	IO`println("\n");
+	
+	IO`print("Setting bag1 to have the numbers shared with bag 2\n");
+	bag1.setSharedNumbers(bag2);
+	IO`println("Printing content of bag1");
+	bag1.printBag();
+
+	IO`println("\n");
+	
+	IO`print("Removing number '4' from bag1");
+	bag1.removeNumbers(new Bag({4}));
+	
+	IO`print("\n");	
+	
+	IO`println("Printing content of bag1");
+	bag1.printBag();
+	
+	IO`println("\n");	
+	
+	IO`printf("bag2 contains bag1: %s\n", [bag2.contains(bag1)]);
+	IO`printf("bag1 contains bag2: %s\n", [bag1.contains(bag2)]);
+	
+	IO`print("\n");
+	
+	IO`printf("bag2 \"proper\" contains a bag with elements {3 4 5}: %s\n", [bag2.properContains(new Bag({3,4,5}))]);
+	IO`printf("bag2 \"proper\" contains bag1: %s\n", [bag2.properContains(bag1)]);
+	
+	IO`print("\n");
+	
+	IO`printf("bag1 equals bag2: %s\n", [bag1.eq(bag2)]);
+	IO`printf("bag1 equals a bag containing elements {3 5}: %s\n", [bag1.eq(new Bag({3,5}))]);
+	IO`printf("bag1 NOT equals bag2: %s\n", [bag1.neq(bag2)]);
+	IO`printf("bag1 NOT equals a bag containing elements {3 5}: %s\n", [bag1.neq(new Bag({3,5}))]);
+
+	IO`print("\n");
+	
+	IO`printf("Size of bag1: %s\n", [bag1.size()]);	
+	
+	IO`print("\n");
+	
+	IO`println("Adding numbers '4' and '6' to bag1 using distributed union..");
+	bag1.addNumbersDist(new Bag({4}), new Bag({6}));
+	IO`println("Printing content of bag1");
+	bag1.printBag();
+	
+	IO`println("\n");
+	
+	IO`println("Setting bag1 to have numbers shared with {4 5} and then {5} using disributed intersection...");
+	bag1.setSharedNumbersDist(new Bag({4,5}), new Bag({5}));
+	IO`println("Printing content of bag1");
+	bag1.printBag();
+	
+	IO`println("\n");
+
+	IO`print("Printing power bags of bag2..\n");
+	
+	for all b in set bag2.powerBag() do 
+	(
+		b.printBag();
+		IO`print("\n");
+	)
+);
+
+public Bag : set of nat ==> Bag
+Bag (pNumbers) == 
+(
+	numbers := pNumbers;
+	return self;
+);
+
+public printBag : () ==> ()
+printBag () == 
+(
+	IO`print("{");
+	if card numbers = 0 then 
+		IO`print(" ")
+	else
+		for all e in set numbers do IO`printf(" %s ", [e]);
+	IO`print("}");
+);
+
+public getNumbers : () ==> set of nat
+getNumbers () == return numbers;
+
+public hasNumber : nat ==> bool
+hasNumber (n) == return n in set numbers;
+
+public hasNotNumber : nat ==> bool
+hasNotNumber (n) == return n not in set numbers;
+
+public addNumbers : Bag ==> ()
+addNumbers (bag) == numbers := numbers union bag.getNumbers();
+
+public setSharedNumbers : Bag ==> ()
+setSharedNumbers (bag) == numbers := numbers inter bag.getNumbers();
+
+public removeNumbers : Bag ==> ()
+removeNumbers (bag) == numbers := numbers \ bag.getNumbers();
+
+public contains : Bag ==> bool
+contains (bag) == return bag.getNumbers() subset numbers;
+
+public properContains : Bag ==> bool
+properContains (bag) == return bag.getNumbers() psubset numbers;
+
+public eq : Bag ==> bool
+eq (bag) == return numbers = bag.getNumbers();
+
+public neq : Bag ==> bool
+neq (bag) == return numbers <> bag.getNumbers();
+
+public size : () ==> nat
+size () == return card numbers;
+
+public addNumbersDist : Bag * Bag ==> ()
+addNumbersDist (bag1, bag2) == numbers := dunion {numbers, bag1.getNumbers(), bag2.getNumbers()};
+
+public setSharedNumbersDist : Bag * Bag ==> ()
+setSharedNumbersDist (bag1, bag2) == numbers := dinter {numbers, bag1.getNumbers(), bag2.getNumbers()};
+
+public powerBag : () ==> set of Bag
+powerBag () == 
+(
+	dcl powerSets : set of set of nat := power numbers;
+	dcl bags : set of Bag := {};
+	
+	for all s in set powerSets do bags := bags union {new Bag(s)};
+
+	return bags;
+);
+
+end Bag
+
+
+
+class IO
+
+--  Overture STANDARD LIBRARY: INPUT/OUTPUT
+--      --------------------------------------------
+-- 
+-- Standard library for the Overture Interpreter. When the interpreter
+-- evaluates the preliminary functions/operations in this file,
+-- corresponding internal functions is called instead of issuing a run
+-- time error. Signatures should not be changed, as well as name of
+-- module (VDM-SL) or class (VDM++). Pre/post conditions is 
+-- fully user customizable. 
+-- Don't care's may NOT be used in the parameter lists.
+--
+-- The in/out functions  will return false if an error occurs. In this
+-- case an internal error string will be set (see 'ferror').
+--
+-- File path:
+--  * An absolute path is accepted and used as specified.
+--  * A relative path is relative to the debugger or if running in the 
+--      Overture IDE relative to the project root.
+--
+
+types
+ 
+/**
+ * The file directive used in in/out functions.
+ */
+public filedirective = <start>|<append> 
+
+functions
+
+/**
+ * Write VDM value in ASCII format to the console.
+ *
+ * @param val the VDM value to be written
+ * @return true if successful else false
+ */
+public static writeval[@p]: @p -> bool
+writeval(val)==
+  is not yet specified;
+
+/**
+ * Write VDM value in ASCII format to file. The type of the val must be
+ * specified as fwriteval[seq of char](...) when calling the function.
+ *
+ * @param filename the name of the file
+ * @param val the VDM value to be written.
+ * @param fdir if <start> then it will overwrite an existing file, 
+ *  else <append> will append output to the existing file
+ * @return true if successful else false
+ */
+public static fwriteval[@p]:seq1 of char * @p * filedirective -> bool
+fwriteval(filename,val,fdir) ==
+  is not yet specified;
+
+/**
+ * Read VDM value in ASCII format from file. The type which should be read must be
+ * specified as freadval[seq of char](...) when calling the function.
+ *
+ * @param filename the name of the file
+ * @return mk_(success,@p) if successful success will be 
+ * set to true else false. @p will hold nil if unsuccessful or the value read.
+ */
+public static freadval[@p]:seq1 of char -> bool * [@p]
+freadval(filename) ==
+  is not yet specified
+  post let mk_(b,t) = RESULT in not b => t = nil;
+
+operations
+
+/**
+ * Write text to std out. Surrounding double quotes will be stripped,
+ * backslashed characters should be interpreted.
+ *
+ * @param text the text to write to the console
+ * @return if successful true else false.
+ */
+public echo: seq of char ==> bool
+echo(text) ==
+  fecho ("",text,nil);
+
+/**
+ * Write text to file like <code>echo</code>.
+ *
+ * @param filename the name of the file
+ * @param text the text to write to be written.
+ * @param fdir if nil or <start> then it will overwrite an existing file, 
+ *  else <append> will append output to the existing file.
+ * @return true if successful else false
+ */
+public fecho: seq of char * seq of char * [filedirective] ==> bool
+fecho (filename,text,fdir) ==
+  is not yet specified
+  pre filename = "" <=> fdir = nil;
+
+/**
+ * Returns the last error which may have occurred by any of the io/out functions
+ *
+ * @return the last error message
+ */
+public ferror:()  ==> seq of char
+ferror () ==
+  is not yet specified;
+  
+-- New simplified format printing operations
+
+
+/**
+ * Prints any VDM value to the console
+ *
+ * @param arg a VDM value of any type
+ */
+public static print: ? ==> ()
+print(arg) ==
+    is not yet specified;
+
+/**
+ * Prints any VDM value to the console as a new line
+ *
+ * @param arg a VDM value of any type
+ */
+public static println: ? ==> ()
+println(arg) ==
+    is not yet specified;
+
+/**
+ * Prints any VDM value to the console
+ *
+ * @param format standard format string used in
+ *  Java by <code>String.format(format, value)</code>,
+ *  though note that only the %s conversion is supported.
+ *  eg. <code>printf("Hello [%2$-5s][%1$5s]\n", [123, {2}])</code>
+ *  would produce <code>Hello [{2}  ][  123]</code> and a newline.
+ *
+ * @param arg a sequence of VDM values of any type
+ */
+public static printf: seq of char * seq of ? ==> ()
+printf(format, args) ==
+    is not yet specified;
+
+end IO

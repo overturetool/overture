@@ -56,12 +56,12 @@ public class  VdmRtKeywords implements IVdmKeywords {
 	   * words like 'specified' are already reserved. This means that:
 	   * private specified : nat := 0; is not valid
 	   */
-//	  public static final String[] multipleKeywords = {
-//		  "is not yet specified", "for all", 
-//		  "in set", "be st", "not in set",
-//		  "is subclass of", "instance variables",
-//		  "is subclass responsibility"
-//	  };
+	  public static final String[] multipleKeywords = {
+		  "is not yet specified", "for all", 
+		  "in set", "be st", "not in set",
+		  "is subclass of", "instance variables",
+		  "is subclass responsibility"
+	  };
 	  
 	  public static String[] historyCounters = {
 		  "#act", "#fin", "#active", "#req", "#waiting"
@@ -104,10 +104,10 @@ public class  VdmRtKeywords implements IVdmKeywords {
 			return binaryoperators;
 		}
 
-//		public String[] getMultipleKeywords()
-//		{
-//			return multipleKeywords;
-//		}
+		public String[] getMultipleKeywords()
+		{
+			return multipleKeywords;
+		}
 
 		public String[] getReservedwords()
 		{

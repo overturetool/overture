@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -40,8 +41,6 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.modules.ModuleList;
-import org.overture.interpreter.assistant.module.AModuleModulesAssistantInterpreter;
-import org.overture.interpreter.assistant.module.ModuleListAssistantInterpreter;
 import org.overture.interpreter.debug.DBGPReader;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.scheduler.BasicSchedulableThread;
@@ -55,7 +54,7 @@ import org.overture.interpreter.values.Value;
 import org.overture.parser.lex.LexTokenReader;
 import org.overture.parser.messages.VDMErrorsException;
 import org.overture.parser.syntax.ExpressionReader;
-import org.overture.pog.obligation.ProofObligationList;
+import org.overture.pog.pub.IProofObligationList;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.ModuleEnvironment;
 
@@ -95,13 +94,13 @@ public class ModuleInterpreter extends Interpreter
 	@Override
 	public PStm findStatement(File file, int lineno)
 	{
-		return AModuleModulesAssistantInterpreter.findStatement(modules,file, lineno);
+		return assistantFactory.createAModuleModulesAssistant().findStatement(modules,file, lineno);
 	}
 
 	@Override
 	public PExp findExpression(File file, int lineno)
 	{
-		return AModuleModulesAssistantInterpreter.findExpression(modules,file, lineno);
+		return assistantFactory.createAModuleModulesAssistant().findExpression(modules,file, lineno);
 	}
 
 	/**
@@ -165,7 +164,7 @@ public class ModuleInterpreter extends Interpreter
 
 	public Context getStateContext()
 	{
-		return AModuleModulesAssistantInterpreter.getStateContext(defaultModule);
+		return assistantFactory.createAModuleModulesAssistant().getStateContext(defaultModule);
 	}
 
 	@Override
@@ -191,14 +190,14 @@ public class ModuleInterpreter extends Interpreter
 		BasicSchedulableThread.setInitialThread(iniThread);
 		scheduler.init();
 		CPUValue.init(scheduler,assistantFactory);
-		initialContext = ModuleListAssistantInterpreter.initialize(modules,dbgp);
+		initialContext = assistantFactory.createModuleListAssistant().initialize(modules,dbgp);
 	}
 
 	@Override
 	public void traceInit(DBGPReader dbgp)
 	{
 		scheduler.reset();
-		initialContext = ModuleListAssistantInterpreter.initialize(modules, dbgp);
+		initialContext = assistantFactory.createModuleListAssistant().initialize(modules, dbgp);
 	}
 
 	@Override
@@ -227,7 +226,7 @@ public class ModuleInterpreter extends Interpreter
 		typeCheck(expr, env);
 
 		Context mainContext = new StateContext(assistantFactory,defaultModule.getName().getLocation(),
-				"module scope",	null, AModuleModulesAssistantInterpreter.getStateContext(defaultModule));
+				"module scope",	null, assistantFactory.createAModuleModulesAssistant().getStateContext(defaultModule));
 
 		mainContext.putAll(initialContext);
 		mainContext.setThreadState(dbgp, null);
@@ -325,16 +324,16 @@ public class ModuleInterpreter extends Interpreter
 //	}
 
 	@Override
-	public ProofObligationList getProofObligations()
+	public IProofObligationList getProofObligations() throws AnalysisException
 	{
-		return ModuleListAssistantInterpreter.getProofObligations(modules);
+		return assistantFactory.createModuleListAssistant().getProofObligations(modules);
 	}
 
 	@Override
 	public Context getInitialTraceContext(ANamedTraceDefinition tracedef, boolean debug) throws ValueException
 	{
 		Context mainContext = new StateContext(assistantFactory,defaultModule.getName().getLocation(),
-				"module scope",	null, AModuleModulesAssistantInterpreter.getStateContext(defaultModule));
+				"module scope",	null, assistantFactory.createAModuleModulesAssistant().getStateContext(defaultModule));
 
 		mainContext.putAll(initialContext);
 		mainContext.setThreadState(null, CPUValue.vCPU);

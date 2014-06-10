@@ -22,40 +22,48 @@ import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.model.IDebugElement;
 
-public final class DebugEventHelper {
-	private DebugEventHelper() {
+public final class DebugEventHelper
+{
+	private DebugEventHelper()
+	{
 	}
 
-	private static void fireEvent(DebugEvent event) {
-		if (DebugPlugin.getDefault() != null) {
-			DebugPlugin.getDefault().fireDebugEventSet(
-					new DebugEvent[] { event });
+	private static void fireEvent(DebugEvent event)
+	{
+		if (DebugPlugin.getDefault() != null)
+		{
+			DebugPlugin.getDefault().fireDebugEventSet(new DebugEvent[] { event });
 		}
 	}
 
-	public static void fireCreateEvent(IDebugElement element) {
+	public static void fireCreateEvent(IDebugElement element)
+	{
 		fireEvent(new DebugEvent(element, DebugEvent.CREATE));
 	}
 
-	public static void fireResumeEvent(IDebugElement element, int detail) {
+	public static void fireResumeEvent(IDebugElement element, int detail)
+	{
 		fireEvent(new DebugEvent(element, DebugEvent.RESUME, detail));
 
 	}
 
-	public static void fireSuspendEvent(IDebugElement element, int detail) {
+	public static void fireSuspendEvent(IDebugElement element, int detail)
+	{
 		fireEvent(new DebugEvent(element, DebugEvent.SUSPEND, detail));
 	}
 
-	public static void fireTerminateEvent(IDebugElement element) {
+	public static void fireTerminateEvent(IDebugElement element)
+	{
 		fireEvent(new DebugEvent(element, DebugEvent.TERMINATE));
 	}
 
-	public static void fireChangeEvent(IDebugElement element) {
+	public static void fireChangeEvent(IDebugElement element)
+	{
 		fireEvent(new DebugEvent(element, DebugEvent.CHANGE));
 	}
 
-	public static void fireExtendedEvent(Object eventSource, int details) {
-		fireEvent(new DebugEvent(eventSource, DebugEvent.MODEL_SPECIFIC,
-				details));
+	public static void fireExtendedEvent(Object eventSource, int details)
+	{
+		fireEvent(new DebugEvent(eventSource, DebugEvent.MODEL_SPECIFIC, details));
 	}
 }

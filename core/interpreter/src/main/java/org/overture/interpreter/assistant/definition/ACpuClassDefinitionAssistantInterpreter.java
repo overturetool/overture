@@ -40,7 +40,7 @@ public class ACpuClassDefinitionAssistantInterpreter extends
 	public static CPUValue newInstance(ACpuClassDefinition node, Object object,
 			ValueList argvals, Context ctxt)
 	{
-		NameValuePairList nvpl = PDefinitionListAssistantInterpreter.getNamedValues(node.getDefinitions(), ctxt);
+		NameValuePairList nvpl = af.createPDefinitionListAssistant().getNamedValues(node.getDefinitions(), ctxt);
 		NameValuePairMap map = new NameValuePairMap();
 		map.putAll(nvpl);
 
@@ -56,6 +56,8 @@ public class ACpuClassDefinitionAssistantInterpreter extends
 		}
 
 		CPUValue cpu = new CPUValue((AClassType) node.getClasstype(), map, argvals);
+		
+		//TODO: Here is one basis to pass the parameter with the Context.
 		
 		RTLogger.log(new RTDeclareCPUMessage(cpu.resource.getNumber(), node.getName().getName()));
 		

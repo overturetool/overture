@@ -1,0 +1,19 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class A {
+    public A() {
+    }
+
+    public void op() {
+        while (true) {
+            //Skip;
+            //Skip;
+            //Skip;
+        }
+    }
+}
+
+##########

@@ -118,8 +118,8 @@ public class DbgpDebuggingEngineException extends DbgpException
 	public DbgpDebuggingEngineException(int code, String message)
 	{
 		super(message);
-		//super(NLS.bind("dbgpDebuggingEngineException", new Integer(code),
-//				message));
+		// super(NLS.bind("dbgpDebuggingEngineException", new Integer(code),
+		// message));
 		this.code = code;
 	}
 
@@ -132,9 +132,9 @@ public class DbgpDebuggingEngineException extends DbgpException
 	public DbgpDebuggingEngineException(int code, String message,
 			Throwable cause)
 	{
-//		super(NLS.bind("dbgpDebuggingEngineException2", message, new Integer(
-//				code)), cause);
-		super(message,cause);
+		// super(NLS.bind("dbgpDebuggingEngineException2", message, new Integer(
+		// code)), cause);
+		super(message, cause);
 		this.code = code;
 	}
 
@@ -154,6 +154,7 @@ public class DbgpDebuggingEngineException extends DbgpException
 		{
 			//
 		}
-		return protocolErrorMessage + "\nDetailed Message: " + super.getMessage();
+		return protocolErrorMessage + "\nDetailed Message: "
+				+ super.getMessage();
 	}
 }

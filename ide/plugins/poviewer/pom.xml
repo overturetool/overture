@@ -3,15 +3,15 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.overture.ide</groupId>
+    <groupId>org.overturetool.ide</groupId>
     <artifactId>org.overture.ide.plugins</artifactId>
-    <version>2.0.3-SNAPSHOT</version>
+    <version>2.1.1-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <packaging>eclipse-plugin</packaging>
 
-  <groupId>org.overture.ide.plugins</groupId>
+  <groupId>org.overturetool.ide.plugins</groupId>
   <artifactId>org.overture.ide.plugins.poviewer</artifactId>
   <name>org.overture.ide.plugins.poviewer</name>
 
@@ -35,7 +35,7 @@
               <stripVersion>true</stripVersion>
               <artifactItems>
                 <artifactItem>
-                  <groupId>org.overture.core</groupId>
+                  <groupId>org.overturetool.core</groupId>
                   <artifactId>pog</artifactId>
                   <version>${project.version}</version>
                 </artifactItem>

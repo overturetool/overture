@@ -66,7 +66,7 @@ public class AApplyObjectDesignatorAssistantTC
 
 		PType argtype = node.getArgs().get(0).apply(rootVisitor, new TypeCheckInfo(af, env, scope));
 
-		if (!PTypeAssistantTC.isNumeric(argtype))
+		if (!env.af.createPTypeAssistant().isNumeric(argtype))
 		{
 			TypeCheckerErrors.concern(unique, 3253, "Sequence argument is not numeric", node.getLocation(), node);
 			TypeCheckerErrors.detail(unique, "Type", argtype);

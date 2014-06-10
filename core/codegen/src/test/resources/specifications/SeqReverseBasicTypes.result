@@ -1,0 +1,35 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class A {
+    private static final VDMSeq as = SeqUtil.seq();
+    private static final VDMSeq bs = SeqUtil.seq(1L, 2L);
+    private static final VDMSeq cs = SeqUtil.seq(1.2, 3.3);
+    private static final VDMSeq ds = SeqUtil.seq(true, false);
+    private static final VDMSeq es = SeqUtil.seq('a', 'b');
+    private static final VDMSeq fs = SeqUtil.seq(SeqUtil.seq('a'),
+            SeqUtil.seq('b'));
+
+    public A() {
+    }
+
+    public void op() {
+        VDMSeq as_ = SeqUtil.reverse(as.clone());
+
+        VDMSeq bs_ = SeqUtil.reverse(bs.clone());
+
+        VDMSeq cs_ = SeqUtil.reverse(cs.clone());
+
+        VDMSeq ds_ = SeqUtil.reverse(ds.clone());
+
+        VDMSeq es_ = SeqUtil.reverse(es.clone());
+
+        VDMSeq fs_ = SeqUtil.reverse(fs.clone());
+
+        //Skip;
+    }
+}
+
+##########

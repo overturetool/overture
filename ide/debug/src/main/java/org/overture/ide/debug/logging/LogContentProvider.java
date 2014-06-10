@@ -29,9 +29,9 @@ public class LogContentProvider implements IStructuredContentProvider
 	@SuppressWarnings("rawtypes")
 	public Object[] getElements(Object inputElement)
 	{
-		if(inputElement instanceof List)
+		if (inputElement instanceof List)
 		{
-			return ((List)inputElement).toArray();
+			return ((List) inputElement).toArray();
 		}
 		return null;
 	}
@@ -43,7 +43,5 @@ public class LogContentProvider implements IStructuredContentProvider
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput)
 	{
 	}
-
-	
 
 }

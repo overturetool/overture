@@ -39,6 +39,7 @@ public interface ITracesConstants
 	public final String TRACE_SEED = "ct_trace_filter_seed";
 	public final String TRACE_REDUCTION_TYPE = "ct_trace_reduction_type";
 	public final String TRACE_SUBSET_LIMITATION = "ct_subset_limitation";
+	public final String SORT_VIEW = "SORT_VIEW";
 
 	/**
 	 * This string gives the plugin id that contains the core ctruntime jar file.

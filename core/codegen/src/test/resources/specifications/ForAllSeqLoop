@@ -1,0 +1,37 @@
+class A
+
+types
+
+Rec :: x : int;
+
+operations 
+
+public op : () ==> ()
+op () == 
+let x = [mk_Rec(1),mk_Rec(2),mk_Rec(3)]
+in
+	for e in x do
+	( 
+		skip;
+	);
+
+public op1 : () ==> ()
+op1 () == 
+	for n in [1,2,3] do skip;
+	
+public op2 : () ==> ()
+op2 () == for e in [] do skip;
+
+public op3 : () ==> ()
+op3 () == for n in f() do skip;
+
+public op4 : () ==> ()
+op4 () == 
+	for n in reverse [1,2,3] do skip;
+
+functions
+
+public f :  () -> seq of nat
+f () == [1,2,3];
+
+end A

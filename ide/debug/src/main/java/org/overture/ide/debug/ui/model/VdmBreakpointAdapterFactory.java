@@ -28,24 +28,25 @@ import org.overture.ide.core.resources.IVdmProject;
 public class VdmBreakpointAdapterFactory implements IAdapterFactory
 {
 
-	public Object getAdapter(Object adaptableObject, @SuppressWarnings("rawtypes") Class adapterType)
+	public Object getAdapter(Object adaptableObject,
+			@SuppressWarnings("rawtypes") Class adapterType)
 	{
 		if (adaptableObject instanceof ITextEditor)
 		{
 			ITextEditor editorPart = (ITextEditor) adaptableObject;
-			IResource resource = (IResource) editorPart.getEditorInput()
-					.getAdapter(IResource.class);
+			IResource resource = (IResource) editorPart.getEditorInput().getAdapter(IResource.class);
 			if (resource != null && resource instanceof IFile)
 			{
 				IFile file = (IFile) resource;
 				try
 				{
-					if(file==null || !file.exists() || !file.isSynchronized(IResource.DEPTH_ZERO))
+					if (file == null || !file.exists()
+							|| !file.isSynchronized(IResource.DEPTH_ZERO))
 					{
 						return null;
 					}
 					IVdmProject project = (IVdmProject) file.getProject().getAdapter(IVdmProject.class);
-					if(project != null && project.isModelFile(file))
+					if (project != null && project.isModelFile(file))
 					{
 						return new VdmLineBreakpointAdapter();
 					}

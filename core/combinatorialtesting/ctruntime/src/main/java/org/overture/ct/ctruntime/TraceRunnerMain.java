@@ -82,7 +82,7 @@ public class TraceRunnerMain implements IProgressMonitor
 	}
 
 	/**
-	 * @param args
+	 * @param args the args
 	 */
 	public static void main(String[] args)
 	{
@@ -489,7 +489,7 @@ public class TraceRunnerMain implements IProgressMonitor
 					}
 
 					RTLogger.dump(true);
-					runner.progressTerminating();
+//					runner.progressTerminating();
 					System.exit(0);
 				} catch (ContextException e)
 				{

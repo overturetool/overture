@@ -1,0 +1,19 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class C {
+    public C() {
+    }
+
+    public void op1(final Number arg) {
+        op2(arg);
+    }
+
+    public void op2(final Number arg) {
+        //Skip;
+    }
+}
+
+##########

@@ -1,0 +1,20 @@
+class Entry
+
+functions
+
+static
+public g :  () -> seq of char
+g () ==  conc["first, ", "second, ", "third, "];
+
+static
+public h :  () -> seq of seq of char
+h () ==  ["fourth, ", "fifth, ", "sixth"];
+
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	return g() ^ conc h();
+	
+end Entry

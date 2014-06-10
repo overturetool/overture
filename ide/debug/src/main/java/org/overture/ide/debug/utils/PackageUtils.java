@@ -1,7 +1,11 @@
 package org.overture.ide.debug.utils;
-import java.util.jar.*;
-import java.util.*;
-import java.io.*;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarInputStream;
 
 public class PackageUtils
 {
@@ -13,17 +17,19 @@ public class PackageUtils
 	{
 		ArrayList<String> classes = new ArrayList<String>();
 
-		if(packageName!=null)
-		packageName = packageName.replaceAll("\\.", "/");
+		if (packageName != null)
+		{
+			packageName = packageName.replaceAll("\\.", "/");
+		}
 		if (debug)
 		{
 			System.out.println("Jar " + jarName + " looking for " + packageName);
 		}
-			
+
 		JarInputStream jarFile = null;
 		try
 		{
-			 jarFile = new JarInputStream(new FileInputStream(jarName));
+			jarFile = new JarInputStream(new FileInputStream(jarName));
 			JarEntry jarEntry;
 
 			while (true)
@@ -33,32 +39,33 @@ public class PackageUtils
 				{
 					break;
 				}
-				if ((packageName==null ||jarEntry.getName().startsWith(packageName))
-						&& (jarEntry.getName().endsWith(".class")))
+				if ((packageName == null || jarEntry.getName().startsWith(packageName))
+						&& jarEntry.getName().endsWith(".class"))
 				{
-					
-					String className=jarEntry.getName().replaceAll("/", "\\.");
-					className=className.substring(0, className.length()-".class".length());
-					
-					if(className.endsWith("$1"))
+
+					String className = jarEntry.getName().replaceAll("/", "\\.");
+					className = className.substring(0, className.length()
+							- ".class".length());
+
+					if (className.endsWith("$1"))
 					{
 						continue;
 					}
-					
+
 					className = className.replace('$', '.');
-					
+
 					if (debug)
 					{
-						System.out.println("Found "+className);
+						System.out.println("Found " + className);
 					}
-					
+
 					classes.add(className);
 				}
 			}
 		} catch (Exception e)
 		{
 			e.printStackTrace();
-		}finally
+		} finally
 		{
 			try
 			{

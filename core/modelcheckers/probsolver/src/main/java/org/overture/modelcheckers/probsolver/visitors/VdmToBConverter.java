@@ -96,6 +96,7 @@ import org.overture.ast.expressions.ATupleExp;
 import org.overture.ast.expressions.AUnaryMinusUnaryExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.expressions.SSetExp;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.lex.VDMToken;
@@ -361,7 +362,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	{
 		AComprehensionSetExpression scs = new AComprehensionSetExpression();
 
-		LinkedList<PMultipleBind> blist = node.getBindings();
+		List<PMultipleBind> blist = node.getBindings();
 
 		scs.getIdentifiers().add(exp(blist.get(0).getPlist().get(0)));
 		scs.setPredicates(new AMemberPredicate(exp(blist.get(0).getPlist().get(0)), exp(blist.get(0))));
@@ -1485,17 +1486,33 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	    }
 
 	        if (((ASetEnumSetExp) node.getSet()).getMembers().isEmpty())
+
+		if(node.getSet() instanceof ASetEnumSetExp)
 		{
-			return new AEmptySetExpression();
+			ASetEnumSetExp	setEnum = (ASetEnumSetExp) node.getSet();
+			
+			if (setEnum.getMembers().isEmpty())
+			{
+				return new AEmptySetExpression();
+			}
+
+			ASetExtensionExpression set = new ASetExtensionExpression();
+			for (PExp m : setEnum.getMembers())
+			{
+				set.getExpressions().add(exp(m));
+			}
+
+			return set;
+		}else if(node.getSet() instanceof ASetCompSetExp)
+		{
+			
+		}else if(node.getSet() instanceof ASetRangeSetExp)
+		{
+			
 		}
 
-		ASetExtensionExpression set = new ASetExtensionExpression();
-		for (PExp m : ((ASetEnumSetExp) node.getSet()).getMembers())
-		{
-			set.getExpressions().add(exp(m));
-		}
-
-		return set;
+		//error case
+		return super.caseASetMultipleBind(node);
 	}
 
 	@Override
@@ -1574,9 +1591,17 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 
 		if (node.getInitExpression() != null && USE_INITIAL_FIXED_STATE)
 		    {
+		{
+			if(node.getInitExpression() instanceof AEqualsBinaryExp)
+			{
 			PExpression right = (PExpression) ((AEqualsBinaryExp) node.getInitExpression()).getRight().apply(this);
 			AEqualPredicate init = new AEqualPredicate(getIdentifier(nameOld), right);
 			p = new AConjunctPredicate(p, init);
+			}else
+			{
+				//FIXME: unsupported expression
+				
+			}
 		}
 
 		for (AFieldField f : node.getFields())

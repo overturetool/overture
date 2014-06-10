@@ -18,24 +18,15 @@
  *******************************************************************************/
 package org.overture.ide.ui.outline;
 
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.node.INode;
 import org.overture.ast.types.PType;
-import org.overture.ide.ui.utility.ast.AstNameUtil;
 
 class OutlineSorter extends ViewerSorter
 {
-	private final static int TYPES = 1;
-	private final static int VALUES = 0;
-
-	// private final static int INSTANCEVARIABLES = 2;
-	// private final static int OPERATIONS = 3;
-	// private final static int FUNCTIONS = 4;
-	// private final static int THREADS = 5;
-	// private final static int SYN = 6;
-	// private final static int TRACES = 7;
+	private final static int TYPES = 0;
+	private final static int DEFINITIONS = 1;
+	private final static int OTHER = 2;
 
 	@Override
 	public int category(Object element)
@@ -45,29 +36,9 @@ class OutlineSorter extends ViewerSorter
 			return TYPES;
 		} else if (element instanceof PDefinition)
 		{
-			return VALUES;
+			return DEFINITIONS;
 		} else
-			return super.category(element);
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public int compare(Viewer viewer, Object e1, Object e2)
-	{
-		int cat1 = category(e1);
-		int cat2 = category(e2);
-		if (cat1 != cat2)
-		{
-			return cat1 - cat2;
-		}
-
-		if (e1 instanceof INode && e2 instanceof INode)
-		{
-			return getComparator().compare(AstNameUtil.getName((INode) e1), AstNameUtil.getName(((INode) e2)));
-		} else
-		{
-			return super.compare(viewer, e1, e2);
-		}
+			return OTHER;
 	}
 
 }

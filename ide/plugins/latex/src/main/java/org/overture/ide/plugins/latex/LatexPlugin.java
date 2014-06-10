@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.overture.ide.plugins.latex;
 
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -84,4 +85,15 @@ public class LatexPlugin extends AbstractUIPlugin
 		return builder != null && builder.equals("xetex");
 	}
 
+	
+	/** 
+	 * Initializes a preference store with default preference values 
+	 * for this plug-in.
+	 */
+	@Override
+	protected void initializeDefaultPreferences(IPreferenceStore store) {
+		
+		store.setDefault(ILatexConstants.OSX_LATEX_PATH_PREFERENCE, ILatexConstants.DEFAULT_OSX_LATEX_PATH);
+		store.setDefault(ILatexConstants.PDF_BUILDER, ILatexConstants.DEFAULT_PDF_BUILDER);
+	}
 }

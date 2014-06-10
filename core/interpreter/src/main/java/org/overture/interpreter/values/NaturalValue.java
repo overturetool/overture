@@ -23,6 +23,7 @@
 
 package org.overture.interpreter.values;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.messages.InternalException;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.PType;
@@ -51,7 +52,7 @@ public class NaturalValue extends IntegerValue
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt) throws ValueException
+	public Value convertValueTo(PType to, Context ctxt) throws AnalysisException
 	{
 		if (to instanceof ANatNumericBasicType)
 		{

@@ -1,0 +1,298 @@
+--
+-- VDM model exercising maps
+--
+class PhoneBook
+
+types
+
+public Str = seq of char; 
+
+instance variables
+
+phoneNumbers : map Str to Str := {|->}; 
+
+operations 
+
+public static Test : () ==> ()
+Test () == 
+let pb1 = new PhoneBook(),
+		pb2 = new PhoneBook()
+in
+(	
+	IO`print("Creating phone books pb1 and pb2 populated with the same default entries\n");
+	pb1.loadDemo();
+	pb2.loadDemo();
+	
+	IO`print("\n");
+	
+	IO`printf("pb1 and pb2 are equal: %s\n", [pb1.eq(pb2)]);
+	IO`printf("pb1 and pb2 are NOT equal: %s\n", [pb1.neq(pb2)]);
+	
+	IO`print("\n");
+	
+	IO`println("Printing entries in pb1");
+	pb1.listEntries();
+	
+	IO`print("\n");
+
+	IO`println("Printing entries in pb1 as <number>, <name>:");
+	for all number in set pb1.getNumbers() do
+		IO`print("Number: " ^ number ^ ". Name: " ^ pb1.getName(number) ^ "\n");
+
+	IO`print("\n");
+	
+	IO`println("Overriding Martin |-> 11, Jens |-> 22, Denver |-> 8");
+	IO`println("Printing entries in pb1");
+	pb1.override({"Martin" |-> "11", "Jens" |-> "22", "Denver" |-> "8"});
+	pb1.listEntries();
+	
+	IO`print("\n");
+	
+	IO`printf("pb1 and pb2 are equal: %s\n", [pb1.eq(pb2)]);
+	IO`printf("pb1 and pb2 are NOT equal: %s\n", [pb1.neq(pb2)]);	
+
+	IO`print("\n");
+
+	IO`println("Loading default entries in pb1...");	
+	pb1.loadDemo();
+	IO`print("Resitrct to names: Jens, Lala\n");		
+	pb1.restrictToNames({"Jens", "Denver", "Lala"});
+	IO`println("Printing entries in pb1");
+	pb1.listEntries();
+	
+	IO`print("\n");
+	
+	IO`println("Loading default entries in pb1...");
+	pb1.loadDemo();		
+	IO`print("Resitrct by names: Mads, Cat, Lala\n");
+	pb1.restrictByNames({"Mads", "Cat", "Lala"});
+	IO`println("Printing entries in pb1");
+	pb1.listEntries();
+	
+	IO`print("\n");
+	
+	IO`println("Loading default entries in pb1...");
+	pb1.loadDemo();
+	IO`print("Resitrct to numbers 2, 4, 6, 8\n");
+	pb1.restrictToNumbers({"2", "4", "6", "8"});
+	IO`println("Printing entries in pb1");
+	pb1.listEntries();
+
+	IO`print("\n");
+	
+	IO`println("Loading default entries in pb1...");
+	pb1.loadDemo();
+	IO`print("Resitrct by numbers 0,1,2,3\n");
+	pb1.restrictByNumbers({"0", "1", "2", "3"});
+	IO`println("Printing entries in pb1");
+	pb1.listEntries();
+);
+
+public PhoneBook : (map Str to Str) ==> PhoneBook
+PhoneBook (pPhoneNumbers) == phoneNumbers := pPhoneNumbers;
+
+public loadDemo : () ==> ()
+loadDemo () ==
+(
+	phoneNumbers := {|->};
+	addEntry("Martin", "1");
+	addEntry("Jens", "2");
+	addEntry("Morten", "3");
+	addEntry("Cat", "4");
+	addEntry("Dog", "5");
+
+	addTwoEntries(mk_("Tom", "6"), mk_("Mads", "7"));
+);
+
+public listEntries: () ==> ()
+listEntries () == 	
+	for all name in set getNames() do
+		IO`print("Name: " ^ name ^ ". Number: " ^ getNumber(name) ^ "\n");
+
+public addEntry : Str * Str ==> ()
+addEntry (name, number) == phoneNumbers := phoneNumbers munion {name |-> number};
+
+public addTwoEntries : (Str * Str) * (Str * Str) ==> ()
+addTwoEntries (first, second) == phoneNumbers := merge {phoneNumbers, {first.#1 |-> first.#2}, {second.#1 |-> second.#2}};
+
+public getNames : () ==> set of Str
+getNames () == return dom phoneNumbers;
+
+public getNumbers : () ==> set of Str
+getNumbers () == return rng phoneNumbers;
+
+public getNumber : Str ==> Str
+getNumber (name) == return phoneNumbers(name);
+
+public getName : Str ==> Str
+getName (number) == return (inverse phoneNumbers)(number);
+
+public invertPhoneBook : () ==> PhoneBook
+invertPhoneBook () == return new PhoneBook(inverse phoneNumbers);
+
+public override : map Str to Str ==> ()
+override (overrides) == phoneNumbers := phoneNumbers ++ overrides;
+
+public restrictToNames : set of Str ==> ()
+restrictToNames (names) == phoneNumbers := names <: phoneNumbers;
+
+public restrictByNames : set of Str ==> ()
+restrictByNames (names) == phoneNumbers := names <-: phoneNumbers;
+
+public restrictToNumbers : set of Str ==> ()
+restrictToNumbers (numbers) == phoneNumbers := phoneNumbers :> numbers;
+
+public restrictByNumbers : set of Str ==> ()
+restrictByNumbers (numbers) == phoneNumbers := phoneNumbers :-> numbers;
+
+public eq : PhoneBook ==> bool
+eq (other) == return phoneNumbers = other.phoneNumbers;
+
+public neq : PhoneBook ==> bool
+neq (other) == return phoneNumbers <> other.phoneNumbers;
+
+end PhoneBook
+
+
+
+class IO
+
+--  Overture STANDARD LIBRARY: INPUT/OUTPUT
+--      --------------------------------------------
+-- 
+-- Standard library for the Overture Interpreter. When the interpreter
+-- evaluates the preliminary functions/operations in this file,
+-- corresponding internal functions is called instead of issuing a run
+-- time error. Signatures should not be changed, as well as name of
+-- module (VDM-SL) or class (VDM++). Pre/post conditions is 
+-- fully user customizable. 
+-- Don't care's may NOT be used in the parameter lists.
+--
+-- The in/out functions  will return false if an error occurs. In this
+-- case an internal error string will be set (see 'ferror').
+--
+-- File path:
+--  * An absolute path is accepted and used as specified.
+--  * A relative path is relative to the debugger or if running in the 
+--      Overture IDE relative to the project root.
+--
+
+types
+ 
+/**
+ * The file directive used in in/out functions.
+ */
+public filedirective = <start>|<append> 
+
+functions
+
+/**
+ * Write VDM value in ASCII format to the console.
+ *
+ * @param val the VDM value to be written
+ * @return true if successful else false
+ */
+public static writeval[@p]: @p -> bool
+writeval(val)==
+  is not yet specified;
+
+/**
+ * Write VDM value in ASCII format to file. The type of the val must be
+ * specified as fwriteval[seq of char](...) when calling the function.
+ *
+ * @param filename the name of the file
+ * @param val the VDM value to be written.
+ * @param fdir if <start> then it will overwrite an existing file, 
+ *  else <append> will append output to the existing file
+ * @return true if successful else false
+ */
+public static fwriteval[@p]:seq1 of char * @p * filedirective -> bool
+fwriteval(filename,val,fdir) ==
+  is not yet specified;
+
+/**
+ * Read VDM value in ASCII format from file. The type which should be read must be
+ * specified as freadval[seq of char](...) when calling the function.
+ *
+ * @param filename the name of the file
+ * @return mk_(success,@p) if successful success will be 
+ * set to true else false. @p will hold nil if unsuccessful or the value read.
+ */
+public static freadval[@p]:seq1 of char -> bool * [@p]
+freadval(filename) ==
+  is not yet specified
+  post let mk_(b,t) = RESULT in not b => t = nil;
+
+operations
+
+/**
+ * Write text to std out. Surrounding double quotes will be stripped,
+ * backslashed characters should be interpreted.
+ *
+ * @param text the text to write to the console
+ * @return if successful true else false.
+ */
+public echo: seq of char ==> bool
+echo(text) ==
+  fecho ("",text,nil);
+
+/**
+ * Write text to file like <code>echo</code>.
+ *
+ * @param filename the name of the file
+ * @param text the text to write to be written.
+ * @param fdir if nil or <start> then it will overwrite an existing file, 
+ *  else <append> will append output to the existing file.
+ * @return true if successful else false
+ */
+public fecho: seq of char * seq of char * [filedirective] ==> bool
+fecho (filename,text,fdir) ==
+  is not yet specified
+  pre filename = "" <=> fdir = nil;
+
+/**
+ * Returns the last error which may have occurred by any of the io/out functions
+ *
+ * @return the last error message
+ */
+public ferror:()  ==> seq of char
+ferror () ==
+  is not yet specified;
+  
+-- New simplified format printing operations
+
+
+/**
+ * Prints any VDM value to the console
+ *
+ * @param arg a VDM value of any type
+ */
+public static print: ? ==> ()
+print(arg) ==
+    is not yet specified;
+
+/**
+ * Prints any VDM value to the console as a new line
+ *
+ * @param arg a VDM value of any type
+ */
+public static println: ? ==> ()
+println(arg) ==
+    is not yet specified;
+
+/**
+ * Prints any VDM value to the console
+ *
+ * @param format standard format string used in
+ *  Java by <code>String.format(format, value)</code>,
+ *  though note that only the %s conversion is supported.
+ *  eg. <code>printf("Hello [%2$-5s][%1$5s]\n", [123, {2}])</code>
+ *  would produce <code>Hello [{2}  ][  123]</code> and a newline.
+ *
+ * @param arg a sequence of VDM values of any type
+ */
+public static printf: seq of char * seq of ? ==> ()
+printf(format, args) ==
+    is not yet specified;
+
+end IO

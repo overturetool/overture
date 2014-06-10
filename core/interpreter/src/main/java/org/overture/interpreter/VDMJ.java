@@ -35,6 +35,8 @@ import java.util.Map.Entry;
 import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
 import org.overture.config.Settings;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
+import org.overture.interpreter.assistant.InterpreterAssistantFactory;
 import org.overture.interpreter.debug.RemoteControl;
 import org.overture.interpreter.debug.RemoteInterpreter;
 import org.overture.interpreter.messages.Console;
@@ -62,11 +64,11 @@ abstract public class VDMJ
 	
 	public static String filecharset = Charset.defaultCharset().name();
 
-	final protected ITypeCheckerAssistantFactory assistantFactory ;//= new TypeCheckerAssistantFactory();
+	final protected IInterpreterAssistantFactory assistantFactory ;//= new TypeCheckerAssistantFactory();
 	
 	public VDMJ()
 	{
-		this.assistantFactory = new TypeCheckerAssistantFactory();
+		this.assistantFactory = new InterpreterAssistantFactory();
 	}
 
 	/**

@@ -74,12 +74,9 @@ import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.TypeComparator;
-import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AExplicitOperationDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.util.HelpLexNameToken;
 import org.overture.typechecker.utilities.DefinitionTypeResolver;
+import org.overture.typechecker.utilities.type.QualifiedDefinition;
 
 public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 {
@@ -271,6 +268,8 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			local.add(question.assistantFactory.createPDefinitionAssistant().getSelfDefinition(node));
 		}
 
+		List<QualifiedDefinition> qualified = new Vector<QualifiedDefinition>(); 
+
 		if (node.getPredef() != null)
 		{
 			// building the new scope for subtypechecks
@@ -282,6 +281,13 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			{
 				TypeChecker.report(3018, "Precondition returns unexpected type", node.getLocation());
 				TypeChecker.detail2("Actual", b, "Expected", expected);
+			}
+			
+			qualified = node.getPredef().getBody().apply(question.assistantFactory.getQualificationVisitor(), new TypeCheckInfo(question.assistantFactory, local, NameScope.NAMES));
+
+			for (QualifiedDefinition qdef: qualified)
+			{
+				qdef.qualifyType();
 			}
 		}
 
@@ -306,9 +312,14 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		// This check returns the type of the function body in the case where
 		// all of the curried parameter sets are provided.
 
-		PType actualResult = node.getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
+		PType actualResult = node.getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, null, expectedResult, null));
 
 		node.setActualResult(actualResult);
+
+		for (QualifiedDefinition qdef: qualified)
+		{
+			qdef.resetType();
+		}
 
 		if (!TypeComparator.compatible(expectedResult, node.getActualResult()))
 		{
@@ -441,27 +452,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		question.assistantFactory.createPDefinitionListAssistant().typeCheck(defs, THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers));
 
-		if (node.getBody() != null)
-		{
-			if (node.getClassDefinition() != null
-					&& !question.assistantFactory.createPAccessSpecifierAssistant().isStatic(node.getAccess()))
-			{
-				local.add(question.assistantFactory.createPDefinitionAssistant().getSelfDefinition(node));
-			}
-
-			node.setActualResult(node.getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers)));
-
-			if (!TypeComparator.compatible(node.getResult().getType(), node.getActualResult()))
-			{
-				TypeCheckerErrors.report(3029, "Function returns unexpected type", node.getLocation(), node);
-				TypeCheckerErrors.detail2("Actual", node.getActualResult(), "Expected", node.getResult().getType());
-			}
-		}
-
-		if (question.assistantFactory.createPTypeAssistant().narrowerThan(question.assistantFactory.createPDefinitionAssistant().getType(node), node.getAccess()))
-		{
-			TypeCheckerErrors.report(3030, "Function parameter visibility less than function definition", node.getLocation(), node);
-		}
+		List<QualifiedDefinition> qualified = new Vector<QualifiedDefinition>(); 
 
 		if (node.getPredef() != null)
 		{
@@ -473,6 +464,40 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 				TypeCheckerErrors.report(3018, "Precondition returns unexpected type", node.getLocation(), node);
 				TypeCheckerErrors.detail2("Actual", b, "Expected", expected);
 			}
+
+			qualified = node.getPredef().getBody().apply(question.assistantFactory.getQualificationVisitor(), new TypeCheckInfo(question.assistantFactory, local, question.scope));
+
+			for (QualifiedDefinition qdef: qualified)
+			{
+				qdef.qualifyType();
+			}
+		}
+
+		if (node.getBody() != null)
+		{
+			if (node.getClassDefinition() != null
+					&& !question.assistantFactory.createPAccessSpecifierAssistant().isStatic(node.getAccess()))
+			{
+				local.add(question.assistantFactory.createPDefinitionAssistant().getSelfDefinition(node));
+			}
+
+			node.setActualResult(node.getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers, node.getResult().getType(), null)));
+
+			if (!TypeComparator.compatible(node.getResult().getType(), node.getActualResult()))
+			{
+				TypeCheckerErrors.report(3029, "Function returns unexpected type", node.getLocation(), node);
+				TypeCheckerErrors.detail2("Actual", node.getActualResult(), "Expected", node.getResult().getType());
+			}
+		}
+
+		for (QualifiedDefinition qdef: qualified)
+		{
+			qdef.resetType();
+		}
+
+		if (question.assistantFactory.createPTypeAssistant().narrowerThan(question.assistantFactory.createPDefinitionAssistant().getType(node), node.getAccess()))
+		{
+			TypeCheckerErrors.report(3030, "Function parameter visibility less than function definition", node.getLocation(), node);
 		}
 
 		// The result variables are in scope for the post condition
@@ -657,6 +682,8 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
+		List<QualifiedDefinition> qualified = new Vector<QualifiedDefinition>(); 
+
 		if (node.getPredef() != null)
 		{
 			FlatEnvironment pre = new FlatEnvironment(question.assistantFactory, new Vector<PDefinition>(), local);
@@ -670,6 +697,13 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			{
 				TypeCheckerErrors.report(3018, "Precondition returns unexpected type", node.getLocation(), node);
 				TypeCheckerErrors.detail2("Actual", b, "Expected", expected);
+			}
+
+			qualified = node.getPredef().getBody().apply(question.assistantFactory.getQualificationVisitor(), new TypeCheckInfo(question.assistantFactory, pre, NameScope.NAMESANDSTATE));
+
+			for (QualifiedDefinition qdef: qualified)
+			{
+				qdef.qualifyType();
 			}
 		}
 
@@ -690,9 +724,15 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
-		PType actualResult = node.getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, NameScope.NAMESANDSTATE));
+		PType expectedResult = ((AOperationType) node.getType()).getResult();
+		PType actualResult = node.getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, NameScope.NAMESANDSTATE, null, null, expectedResult));
 		node.setActualResult(actualResult);
-		boolean compatible = TypeComparator.compatible(((AOperationType) node.getType()).getResult(), node.getActualResult());
+		boolean compatible = TypeComparator.compatible(expectedResult, node.getActualResult());
+
+		for (QualifiedDefinition qdef: qualified)
+		{
+			qdef.resetType();
+		}
 
 		if (node.getIsConstructor()
 				&& !question.assistantFactory.createPTypeAssistant().isType(node.getActualResult(), AVoidType.class)
@@ -861,6 +901,29 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
+		List<QualifiedDefinition> qualified = new Vector<QualifiedDefinition>(); 
+
+		if (node.getPredef() != null)
+		{
+			FlatEnvironment pre = new FlatEnvironment(question.assistantFactory, new Vector<PDefinition>(), local);
+			pre.setEnclosingDefinition(node.getPredef());
+			PType b = node.getPredef().getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, pre, NameScope.NAMESANDSTATE));
+			ABooleanBasicType expected = AstFactory.newABooleanBasicType(node.getLocation());
+
+			if (!question.assistantFactory.createPTypeAssistant().isType(b, ABooleanBasicType.class))
+			{
+				TypeCheckerErrors.report(3018, "Precondition returns unexpected type", node.getLocation(), node);
+				TypeCheckerErrors.detail2("Actual", b, "Expected", expected);
+			}
+
+			qualified = node.getPredef().getBody().apply(question.assistantFactory.getQualificationVisitor(), new TypeCheckInfo(question.assistantFactory, pre, NameScope.NAMESANDSTATE));
+
+			for (QualifiedDefinition qdef: qualified)
+			{
+				qdef.qualifyType();
+			}
+		}
+
 		if (node.getBody() != null)
 		{
 			if (node.getClassDefinition() != null
@@ -869,9 +932,10 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 				local.add(question.assistantFactory.createPDefinitionAssistant().getSelfDefinition(node));
 			}
 
-			node.setActualResult(node.getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, NameScope.NAMESANDSTATE)));
+			PType expectedResult = ((AOperationType) node.getType()).getResult();
+			node.setActualResult(node.getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, NameScope.NAMESANDSTATE, null, null, expectedResult)));
 
-			boolean compatible = TypeComparator.compatible(((AOperationType) node.getType()).getResult(), node.getActualResult());
+			boolean compatible = TypeComparator.compatible(expectedResult, node.getActualResult());
 
 			if (node.getIsConstructor()
 					&& !question.assistantFactory.createPTypeAssistant().isType(node.getActualResult(), AVoidType.class)
@@ -896,6 +960,11 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
+		for (QualifiedDefinition qdef: qualified)
+		{
+			qdef.resetType();
+		}
+
 		if (question.assistantFactory.createPAccessSpecifierAssistant().isAsync(node.getAccess())
 				&& !question.assistantFactory.createPTypeAssistant().isType(((AOperationType) node.getType()).getResult(), AVoidType.class))
 		{
@@ -906,20 +975,6 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		if (question.assistantFactory.createPTypeAssistant().narrowerThan(node.getType(), node.getAccess()))
 		{
 			TypeCheckerErrors.report(3036, "Operation parameter visibility less than operation definition", node.getLocation(), node);
-		}
-
-		if (node.getPredef() != null)
-		{
-			FlatEnvironment pre = new FlatEnvironment(question.assistantFactory, new Vector<PDefinition>(), local);
-			pre.setEnclosingDefinition(node.getPredef());
-			PType b = node.getPredef().getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, pre, NameScope.NAMESANDSTATE));
-			ABooleanBasicType expected = AstFactory.newABooleanBasicType(node.getLocation());
-
-			if (!question.assistantFactory.createPTypeAssistant().isType(b, ABooleanBasicType.class))
-			{
-				TypeCheckerErrors.report(3018, "Precondition returns unexpected type", node.getLocation(), node);
-				TypeCheckerErrors.detail2("Actual", b, "Expected", expected);
-			}
 		}
 
 		// The result variables are in scope for the post condition
@@ -1346,6 +1401,9 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			TypeComparator.checkComposeTypes(node.getType(), question.env, false);
 		}
 		
+		// Enable constraint checking
+		question = question.newConstraint(node.getType());
+		
 		question.qualifiers = null;
 		PType expType = node.getExpression().apply(THIS, question);
 		node.setExpType(expType);
@@ -1386,7 +1444,6 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
-		PPattern pattern = node.getPattern();
 		node.apply(question.assistantFactory.getDefinitionTypeResolver(),new DefinitionTypeResolver.NewQuestion(THIS,question));
 //		PPatternAssistantTC.typeResolve(pattern, THIS, question);
 //		question.assistantFactory.getTypeResolver().updateDefs(node, question);

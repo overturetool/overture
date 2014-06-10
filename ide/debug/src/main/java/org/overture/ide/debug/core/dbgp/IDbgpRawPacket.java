@@ -18,7 +18,8 @@
  *******************************************************************************/
 package org.overture.ide.debug.core.dbgp;
 
-public interface IDbgpRawPacket {
+public interface IDbgpRawPacket
+{
 
 	String getPacketAsString();
 

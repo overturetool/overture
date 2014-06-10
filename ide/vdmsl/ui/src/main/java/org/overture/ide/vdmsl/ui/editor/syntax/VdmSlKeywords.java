@@ -43,8 +43,8 @@ public class VdmSlKeywords implements IVdmKeywords {
 	 * words like 'specified' are already reserved. This means that:
 	 * specified is not a valid identifier
 	 */
-//	public static final String[] multipleKeywords = { "is not yet specified",
-//			"for all", "in set", "be st", "not in set" };
+	public static final String[] multipleKeywords = { "is not yet specified",
+			"for all", "in set", "be st", "not in set" };
 
 	public static final String[] binaryoperators = { "comp", "and", "or",
 			"in set", "not in set", "union", "inter", "munion", "subset",
@@ -73,9 +73,9 @@ public class VdmSlKeywords implements IVdmKeywords {
 		return binaryoperators;
 	}
 
-//	public String[] getMultipleKeywords() {
-//		return multipleKeywords;
-//	}
+	public String[] getMultipleKeywords() {
+		return multipleKeywords;
+	}
 
 	public String[] getReservedwords() {
 		return reservedwords;

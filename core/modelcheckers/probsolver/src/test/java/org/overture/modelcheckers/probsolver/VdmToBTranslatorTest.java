@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Vector;
 
 import org.junit.Assert;
-import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -90,7 +89,7 @@ public class VdmToBTranslatorTest
 	@Test
 	public void test() throws IOException, AnalysisException
 	{
-		Assume.assumeTrue(false);// comment this when the tests parse
+//		Assume.assumeTrue(false);// comment this when the tests parse
 		PExp exp = null;
 
 		try

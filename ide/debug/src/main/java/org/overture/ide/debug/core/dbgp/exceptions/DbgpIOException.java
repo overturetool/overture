@@ -20,10 +20,12 @@ package org.overture.ide.debug.core.dbgp.exceptions;
 
 import java.io.IOException;
 
-public class DbgpIOException extends DbgpException {
+public class DbgpIOException extends DbgpException
+{
 	private static final long serialVersionUID = 1L;
 
-	public DbgpIOException(IOException e) {
+	public DbgpIOException(IOException e)
+	{
 		super(e);
 	}
 }

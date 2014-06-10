@@ -1,8 +1,0 @@
-(forall x:nat & (not ((x = 1) => null)))
-  ((x - 1) >= 0)
-(forall x:nat & (not ((x = 1) => null)))
-  (fm(x) > fm((x - 1)))
-(forall x:nat & (not ((x = 1) => null)))
-  ((x - 1) >= 0)
-(forall x:nat & (not ((x = 1) => null)))
-  (fm(x) > fm((x - 1)))

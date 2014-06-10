@@ -24,7 +24,8 @@ import java.util.TreeMap;
 import org.overture.ide.debug.core.dbgp.IDbgpStatus;
 import org.overture.ide.debug.core.dbgp.IDbgpStatusInterpreterThreadState;
 
-public class DbgpStatus implements IDbgpStatus {
+public class DbgpStatus implements IDbgpStatus
+{
 	// Reasons
 	public static final Integer REASON_OK = new Integer(0);
 
@@ -45,13 +46,12 @@ public class DbgpStatus implements IDbgpStatus {
 
 	public static final Integer STATUS_BREAK = new Integer(4);
 
-	private static final Map<String,Integer> statusParser = new TreeMap<String,Integer>(
-			String.CASE_INSENSITIVE_ORDER);
+	private static final Map<String, Integer> statusParser = new TreeMap<String, Integer>(String.CASE_INSENSITIVE_ORDER);
 
-	private static final Map<String,Integer> reasonParser = new TreeMap<String,Integer>(
-			String.CASE_INSENSITIVE_ORDER);
+	private static final Map<String, Integer> reasonParser = new TreeMap<String, Integer>(String.CASE_INSENSITIVE_ORDER);
 
-	static {
+	static
+	{
 		statusParser.put("starting", STATUS_STARTING); //$NON-NLS-1$
 		statusParser.put("stopping", STATUS_STOPPING); //$NON-NLS-1$
 		statusParser.put("stopped", STATUS_STOPPED); //$NON-NLS-1$
@@ -64,23 +64,28 @@ public class DbgpStatus implements IDbgpStatus {
 		reasonParser.put("exception", REASON_EXCEPTION); //$NON-NLS-1$
 	}
 
-	public static IDbgpStatus parse(String status, String reason, IDbgpStatusInterpreterThreadState interpreterThreadStatus) {
-		return new DbgpStatus((Integer) statusParser.get(status),
-				(Integer) reasonParser.get(reason),interpreterThreadStatus);
+	public static IDbgpStatus parse(String status, String reason,
+			IDbgpStatusInterpreterThreadState interpreterThreadStatus)
+	{
+		return new DbgpStatus((Integer) statusParser.get(status), (Integer) reasonParser.get(reason), interpreterThreadStatus);
 	}
 
 	private final Integer status;
 
 	private final Integer reason;
-	
+
 	private final IDbgpStatusInterpreterThreadState interpreterThreadState;
 
-	public DbgpStatus(Integer status, Integer reason, IDbgpStatusInterpreterThreadState interpreterThreadState) {
-		if (status == null) {
+	public DbgpStatus(Integer status, Integer reason,
+			IDbgpStatusInterpreterThreadState interpreterThreadState)
+	{
+		if (status == null)
+		{
 			throw new IllegalArgumentException();
 		}
 
-		if (reason == null) {
+		if (reason == null)
+		{
 			throw new IllegalArgumentException();
 		}
 
@@ -88,61 +93,74 @@ public class DbgpStatus implements IDbgpStatus {
 		this.reason = reason;
 		this.interpreterThreadState = interpreterThreadState;
 	}
-	
+
 	public IDbgpStatusInterpreterThreadState getInterpreterThreadState()
 	{
 		return interpreterThreadState;
 	}
 
-	public boolean reasonAborred() {
+	public boolean reasonAborred()
+	{
 		return REASON_ABORTED == reason;
 	}
 
-	public boolean reasonError() {
+	public boolean reasonError()
+	{
 		return REASON_ERROR == reason;
 	}
 
-	public boolean reasonException() {
+	public boolean reasonException()
+	{
 		return REASON_EXCEPTION == reason;
 	}
 
-	public boolean reasonOk() {
+	public boolean reasonOk()
+	{
 		return REASON_OK == reason;
 	}
 
-	public boolean isRunning() {
+	public boolean isRunning()
+	{
 		return STATUS_RUNNING == status;
 	}
 
-	public boolean isStarting() {
+	public boolean isStarting()
+	{
 		return STATUS_STARTING == status;
 	}
 
-	public boolean isStopped() {
+	public boolean isStopped()
+	{
 		return STATUS_STOPPED == status;
 	}
 
-	public boolean isStopping() {
+	public boolean isStopping()
+	{
 		return STATUS_STOPPING == status;
 	}
 
-	public boolean isBreak() {
+	public boolean isBreak()
+	{
 		return STATUS_BREAK == status;
 	}
 
-	public boolean equals(Object obj) {
-		if (obj instanceof DbgpStatus) {
+	public boolean equals(Object obj)
+	{
+		if (obj instanceof DbgpStatus)
+		{
 			DbgpStatus s = (DbgpStatus) obj;
 			return this.status == s.status && this.reason == s.reason;
 		}
 		return false;
 	}
 
-	public int hashCode() {
-		return (status.hashCode() << 8) | reason.hashCode();
+	public int hashCode()
+	{
+		return status.hashCode() << 8 | reason.hashCode();
 	}
 
-	public String toString() {
+	public String toString()
+	{
 		return "Status: " + status.toString() + "; Reason: " //$NON-NLS-1$ //$NON-NLS-2$
 				+ reason.toString();
 	}

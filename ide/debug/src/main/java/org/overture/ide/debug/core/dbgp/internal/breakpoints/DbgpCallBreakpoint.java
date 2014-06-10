@@ -21,16 +21,19 @@ package org.overture.ide.debug.core.dbgp.internal.breakpoints;
 import org.overture.ide.debug.core.dbgp.breakpoints.IDbgpCallBreakpoint;
 
 public class DbgpCallBreakpoint extends DbgpBreakpoint implements
-		IDbgpCallBreakpoint {
+		IDbgpCallBreakpoint
+{
 	private final String function;
 
 	public DbgpCallBreakpoint(String id, boolean enabled, int hitValue,
-			int hitCount, String hitCondition, String function) {
+			int hitCount, String hitCondition, String function)
+	{
 		super(id, enabled, hitValue, hitCount, hitCondition);
 		this.function = function;
 	}
 
-	public String getFunction() {
+	public String getFunction()
+	{
 		return function;
 	}
 }

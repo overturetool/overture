@@ -18,7 +18,8 @@
  *******************************************************************************/
 package org.overture.ide.debug.core.model;
 
-public interface IVdmType {
+public interface IVdmType
+{
 	String getName();
 
 	boolean isAtomic();

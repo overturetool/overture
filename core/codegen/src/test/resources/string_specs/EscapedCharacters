@@ -1,0 +1,9 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	return "\n one \n \t two \t \r three \r \" \\ four";
+	
+end Entry

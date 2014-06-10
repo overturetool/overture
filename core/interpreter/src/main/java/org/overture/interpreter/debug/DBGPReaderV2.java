@@ -43,6 +43,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AMutexSyncDefinition;
 import org.overture.ast.definitions.APerSyncDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -64,8 +65,6 @@ import org.overture.interpreter.VDMJ;
 import org.overture.interpreter.VDMPP;
 import org.overture.interpreter.VDMRT;
 import org.overture.interpreter.VDMSL;
-import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.debug.DBGPExecProcesser.DBGPExecResult;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.messages.rtlog.RTLogger;
@@ -90,6 +89,7 @@ import org.overture.interpreter.values.BooleanValue;
 import org.overture.interpreter.values.CPUValue;
 import org.overture.interpreter.values.CharacterValue;
 import org.overture.interpreter.values.FieldValue;
+import org.overture.interpreter.values.FunctionValue;
 import org.overture.interpreter.values.MapValue;
 import org.overture.interpreter.values.NameValuePair;
 import org.overture.interpreter.values.NameValuePairMap;
@@ -997,6 +997,11 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		{
 			data = value.toString();
 		}
+		
+		if(value.deref() instanceof FunctionValue)
+		{
+			data = formatFunctionValue((FunctionValue)value);
+		}
 
 		if (currentDepth < depth && numChildren > 0)
 		{
@@ -1009,6 +1014,13 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 				|| !(value instanceof UpdatableValue);
 
 		return makeProperty(name, fullname, value.kind(), clazz, page, pageSize, constant, data.length(), key, numChildren, data, nestedChildren);
+	}
+
+	private String formatFunctionValue(FunctionValue value)
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append(value.name + ": " + value.toString() + " & " + value.body);
+		return sb.toString();
 	}
 
 	/**
@@ -1296,7 +1308,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 				|| v instanceof SetValue || v instanceof SeqValue
 				|| v instanceof MapValue || v instanceof TokenValue
 				|| v instanceof RecordValue || v instanceof ObjectValue
-				|| v instanceof NilValue;
+				|| v instanceof NilValue || v instanceof FunctionValue;
 	}
 
 	/**
@@ -1542,7 +1554,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 			DBGPExecResult result = DBGPExecProcesser.process(dbgpReaderThread, interpreter, exp);
 			dbgpReaderThread.complete(DBGPReason.OK, null);
 			StringBuilder property = makeProperty("", "", "", "", 0, 0, true, result.result.length(), -1, 0, result.result, new StringBuilder());
-			theAnswer = new CharacterValue('l');// TODO
+			theAnswer = new CharacterValue('l');
 			StringBuilder hdr = new StringBuilder("success=\"1\"");
 			status = DBGPStatus.STOPPED;
 			statusReason = DBGPReason.OK;
@@ -1601,9 +1613,9 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 
 							if (pdef.getOpname().getName().equals(opname)
 									|| pdef.getLocation().getStartLine() == line
-									|| PExpAssistantInterpreter.findExpression(pdef.getGuard(), line) != null)
+									|| octxt.assistantFactory.createPExpAssistant().findExpression(pdef.getGuard(), line) != null)
 							{
-								for (PExp sub : PExpAssistantInterpreter.getSubExpressions(pdef.getGuard()))
+								for (PExp sub : octxt.assistantFactory.createPExpAssistant().getSubExpressions(pdef.getGuard()))
 								{
 									if (sub instanceof AHistoryExp)
 									{
@@ -1676,7 +1688,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 				} else if (root instanceof ClassContext)
 				{
 					ClassContext cctxt = (ClassContext) root;
-					vars.putAll(SClassDefinitionAssistantInterpreter.getStatics(cctxt.classdef));
+					vars.putAll(cctxt.assistantFactory.createSClassDefinitionAssistant().getStatics(cctxt.classdef));
 				} else if (root instanceof StateContext)
 				{
 					StateContext sctxt = (StateContext) root;
@@ -1817,7 +1829,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 
 	@Override
 	protected void processOvertureCmd(DBGPCommand c) throws DBGPException,
-			IOException, URISyntaxException
+			IOException, URISyntaxException, AnalysisException
 	{
 		checkArgs(c, 2, false);
 		DBGPOption option = c.getOption(DBGPOptionType.C);

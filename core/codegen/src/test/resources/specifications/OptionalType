@@ -1,0 +1,11 @@
+class A
+
+instance variables
+
+private b0 : [nat] := nil;
+private b1 : [real] := nil;
+private b2 : [char] := nil;
+private b3 : [bool] := nil;
+private a : [A] := nil;
+
+end A

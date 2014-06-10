@@ -21,7 +21,8 @@ package org.overture.ide.debug.core.dbgp.commands;
 import org.overture.ide.debug.core.dbgp.IDbgpStackLevel;
 import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
 
-public interface IDbgpStackCommands {
+public interface IDbgpStackCommands
+{
 	int getStackDepth() throws DbgpException;
 
 	IDbgpStackLevel[] getStackLevels() throws DbgpException;

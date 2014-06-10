@@ -6,10 +6,10 @@ import java.util.Set;
 
 import org.overture.parser.config.Properties;
 
-
 public class DebuggerProperties
 {
-	public static class DebuggerProperty implements Comparable<DebuggerProperty>
+	public static class DebuggerProperty implements
+			Comparable<DebuggerProperty>
 	{
 		public final String name;
 		public Boolean bValue;
@@ -35,21 +35,23 @@ public class DebuggerProperties
 			this.type = ValueType.Int;
 			this.iValue = value;
 		}
-		
-		public static DebuggerProperty load(String propertyString) throws Exception
+
+		public static DebuggerProperty load(String propertyString)
+				throws Exception
 		{
-			try{
-				String[] parts=propertyString.split("=");
-				
+			try
+			{
+				String[] parts = propertyString.split("=");
+
 				String name = parts[0].trim().replace('.', '_');
-				parts[1]=parts[1].trim();
-				
-				if(parts[1].equals("true")||parts[1].equals("false"))
+				parts[1] = parts[1].trim();
+
+				if (parts[1].equals("true") || parts[1].equals("false"))
 				{
 					return new DebuggerProperty(name, Boolean.valueOf(parts[1]));
 				}
 				return new DebuggerProperty(name, Integer.valueOf(parts[1]));
-			}catch(Exception e)
+			} catch (Exception e)
 			{
 				throw new Exception("Invalid property string");
 			}
@@ -76,19 +78,21 @@ public class DebuggerProperties
 		}
 	}
 
-	public static Set<DebuggerProperty> getDefaults() throws IllegalArgumentException,
-			IllegalAccessException
+	public static Set<DebuggerProperty> getDefaults()
+			throws IllegalArgumentException, IllegalAccessException
 	{
 		Object propertiesInstance = new Properties();
 		Set<DebuggerProperty> props = new HashSet<DebuggerProperty>();
 
 		for (Field f : Properties.class.getFields())
 		{
-			if (f.getType().getName().equals(Boolean.class.getName())|| f.getType().getName().equals("boolean"))
+			if (f.getType().getName().equals(Boolean.class.getName())
+					|| f.getType().getName().equals("boolean"))
 			{
 				DebuggerProperty p = new DebuggerProperty(f.getName(), f.getBoolean(propertiesInstance));
 				props.add(p);
-			} else if (f.getType().getName().equals(Integer.class.getName())|| f.getType().getName().equals("int"))
+			} else if (f.getType().getName().equals(Integer.class.getName())
+					|| f.getType().getName().equals("int"))
 			{
 				DebuggerProperty p = new DebuggerProperty(f.getName(), f.getInt(propertiesInstance));
 				props.add(p);

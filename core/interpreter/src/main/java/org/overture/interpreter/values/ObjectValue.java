@@ -32,6 +32,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
@@ -357,7 +358,7 @@ public class ObjectValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt) throws ValueException
+	public Value convertValueTo(PType to, Context ctxt) throws AnalysisException
 	{
 		Value conv = convertToHierarchy(to);
 
@@ -518,13 +519,13 @@ public class ObjectValue extends Value
 		return CPU == null ? CPUValue.vCPU : CPU;
 	}
 
-	public boolean hasDelegate()
+	public boolean hasDelegate(Context ctxt)
 	{
-		if (SClassDefinitionAssistantInterpreter.hasDelegate(type.getClassdef()))
+		if (ctxt.assistantFactory.createSClassDefinitionAssistant().hasDelegate(type.getClassdef()))
 		{
 			if (delegateObject == null)
 			{
-				delegateObject = SClassDefinitionAssistantInterpreter.newInstance(type.getClassdef());
+				delegateObject = ctxt.assistantFactory.createSClassDefinitionAssistant().newInstance(type.getClassdef());
 			}
 
 			return true;
@@ -535,7 +536,7 @@ public class ObjectValue extends Value
 
 	public Value invokeDelegate(Context ctxt)
 	{
-		return SClassDefinitionAssistantInterpreter.invokeDelegate(type.getClassdef(),delegateObject, ctxt);
+		return ctxt.assistantFactory.createSClassDefinitionAssistant().invokeDelegate(type.getClassdef(),delegateObject, ctxt);
 	}
 
 	public static void init()

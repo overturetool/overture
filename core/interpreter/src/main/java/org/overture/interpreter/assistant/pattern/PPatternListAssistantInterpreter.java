@@ -17,11 +17,11 @@ public class PPatternListAssistantInterpreter extends PPatternListAssistantTC
 		this.af = af;
 	}
 
-	public static boolean isConstrained(LinkedList<PPattern> plist)
+	public boolean isConstrained(LinkedList<PPattern> plist)
 	{
 		for (PPattern p : plist)
 		{
-			if (PPatternAssistantInterpreter.isConstrained(p))
+			if (af.createPPatternAssistant().isConstrained(p))
 			{
 				return true; // NB. OR
 			}

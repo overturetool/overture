@@ -1,0 +1,38 @@
+import org.overture.codegen.runtime.*;
+
+import quotes.*;
+
+import java.util.*;
+
+
+public class A {
+    public A() {
+    }
+
+    public void op(final Number v) {
+        if (v.longValue() == Quotes.Red) {
+            //Skip;
+        }
+    }
+
+    public void op2(final Number v) {
+        if (v.longValue() == Quotes.A) {
+            //Skip;
+        }
+    }
+
+    public Number op3() {
+        return Quotes.Red;
+    }
+}
+
+##########
+
+package quotes;
+
+public interface Quotes {
+    public static Number A = 1L;
+    public static Number Red = 2L;
+}
+
+##########

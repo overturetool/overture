@@ -38,7 +38,7 @@ import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.VdmDebugPlugin;
 
 public class VdmRuntimeChecksLaunchConfigurationTab extends
-AbstractLaunchConfigurationTab
+		AbstractLaunchConfigurationTab
 {
 	class WidgetListener implements ModifyListener, SelectionListener
 	{
@@ -60,7 +60,7 @@ AbstractLaunchConfigurationTab
 			updateLaunchConfigurationDialog();
 		}
 	}
-	
+
 	protected WidgetListener fListener = new WidgetListener();
 	private Button checkBoxUsePostChecks = null;
 	private Button checkBoxUsePreChecks = null;
@@ -78,16 +78,17 @@ AbstractLaunchConfigurationTab
 		createInterperterGroupCheckGroup(comp);
 		createExtendableContent(comp);
 	}
-	
+
 	/**
 	 * Enables sub classes to add groups to the existing view
+	 * 
 	 * @param comp
 	 */
 	protected void createExtendableContent(Composite comp)
 	{
 
 	}
-	
+
 	void createInterperterGroupCheckGroup(Composite controlGroup)
 	{
 		Group interperterGroup = new Group(controlGroup, SWT.NONE);
@@ -95,7 +96,7 @@ AbstractLaunchConfigurationTab
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 
 		interperterGroup.setLayoutData(gd);
-		
+
 		GridLayout layout = new GridLayout();
 		layout.makeColumnsEqualWidth = false;
 		layout.numColumns = 3;
@@ -137,12 +138,12 @@ AbstractLaunchConfigurationTab
 			checkBoxUsePostChecks.setSelection(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_POST_CHECKS, true));
 			checkBoxUsePreChecks.setSelection(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_PRE_CHECKS, true));
 			checkBoxUseMeasure.setSelection(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_MEASURE_CHECKS, true));
-			
+
 		} catch (CoreException e)
 		{
 			if (VdmDebugPlugin.DEBUG)
 			{
-				VdmDebugPlugin.log(new Status(IStatus.ERROR,VdmDebugPlugin.PLUGIN_ID,"Error in vdmruntimechecks launch configuration tab",e));
+				VdmDebugPlugin.log(new Status(IStatus.ERROR, VdmDebugPlugin.PLUGIN_ID, "Error in vdmruntimechecks launch configuration tab", e));
 			}
 		}
 	}

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AMapletPatternMaplet;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
@@ -11,38 +12,37 @@ import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.Value;
-import org.overture.typechecker.assistant.pattern.AMapPatternAssistantTC;
 
-public class AMapPatternMapletAssistantInterpreter extends
-		AMapPatternAssistantTC
+public class AMapPatternMapletAssistantInterpreter
+
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
 	public AMapPatternMapletAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		super(af);
+		//super(af);
 		this.af = af;
 	}
 
-	public static boolean isConstrained(AMapletPatternMaplet p)
-	{
-		if (PPatternAssistantInterpreter.isConstrained(p.getFrom())
-				|| PPatternAssistantInterpreter.isConstrained(p.getTo()))
-		{
-			return true;
-		}
-
-		return af.createPTypeAssistant().isUnion(af.createPPatternAssistant().getPossibleType(p.getFrom()))
-				|| af.createPTypeAssistant().isUnion(af.createPPatternAssistant().getPossibleType(p.getTo()));
-	}
+//	public static boolean isConstrained(AMapletPatternMaplet p)
+//	{
+//		if (af.isConstrained(p.getFrom())
+//				|| PPatternAssistantInterpreter.isConstrained(p.getTo()))
+//		{
+//			return true;
+//		}
+//
+//		return af.createPTypeAssistant().isUnion(af.createPPatternAssistant().getPossibleType(p.getFrom()))
+//				|| af.createPTypeAssistant().isUnion(af.createPPatternAssistant().getPossibleType(p.getTo()));
+//	}
 
 	public static List<NameValuePairList> getAllNamedValues(
 			AMapletPatternMaplet p, Entry<Value, Value> maplet, Context ctxt)
-			throws PatternMatchException
+			throws AnalysisException
 	{
-		List<NameValuePairList> flist = PPatternAssistantInterpreter.getAllNamedValues(p.getFrom(), maplet.getKey(), ctxt);
-		List<NameValuePairList> tlist = PPatternAssistantInterpreter.getAllNamedValues(p.getTo(), maplet.getValue(), ctxt);
+		List<NameValuePairList> flist = af.createPPatternAssistant().getAllNamedValues(p.getFrom(), maplet.getKey(), ctxt);
+		List<NameValuePairList> tlist = af.createPPatternAssistant().getAllNamedValues(p.getTo(), maplet.getValue(), ctxt);
 		List<NameValuePairList> results = new Vector<NameValuePairList>();
 
 		for (NameValuePairList f : flist)
@@ -64,8 +64,8 @@ public class AMapPatternMapletAssistantInterpreter extends
 	{
 		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
 
-		list.addAll(PPatternAssistantInterpreter.findIdentifiers(p.getFrom()));
-		list.addAll(PPatternAssistantInterpreter.findIdentifiers(p.getTo()));
+		list.addAll(af.createPPatternAssistant().findIdentifiers(p.getFrom()));
+		list.addAll(af.createPPatternAssistant().findIdentifiers(p.getTo()));
 
 		return list;
 	}

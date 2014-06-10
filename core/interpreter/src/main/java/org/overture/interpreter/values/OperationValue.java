@@ -245,9 +245,9 @@ public class OperationValue extends Value
 	{
 		if (guard != null)
 		{
-			ValueListener vl = new GuardValueListener(self);
+			ValueListener vl = new GuardValueListener(getGuardLock(ctxt.assistantFactory));
 
-			for (Value v : PExpAssistantInterpreter.getValues(guard, ctxt))
+			for (Value v : ctxt.assistantFactory.createPExpAssistant().getValues(guard, ctxt))
 			{
 				UpdatableValue uv = (UpdatableValue) v;
 				uv.addListener(vl);
@@ -256,7 +256,7 @@ public class OperationValue extends Value
 	}
 
 	public Value eval(ILexLocation from, ValueList argValues, Context ctxt)
-			throws ValueException
+			throws AnalysisException
 	{
 		// Note args cannot be Updateable, so we convert them here. This means
 		// that TransactionValues pass the local "new" value to the far end.
@@ -278,7 +278,7 @@ public class OperationValue extends Value
 	}
 
 	public Value localEval(ILexLocation from, ValueList argValues,
-			Context ctxt, boolean logreq) throws ValueException
+			Context ctxt, boolean logreq) throws AnalysisException
 	{
 		if (state != null && stateName == null)
 		{
@@ -289,7 +289,7 @@ public class OperationValue extends Value
 		RootContext argContext = newContext(from, toTitle(), ctxt);
 
 		req(logreq);
-		notifySelf();
+		notifySelf(ctxt.assistantFactory);
 
 		if (guard != null)
 		{
@@ -299,7 +299,7 @@ public class OperationValue extends Value
 			act(); // Still activated, even if no guard
 		}
 
-		notifySelf();
+		notifySelf(ctxt.assistantFactory);
 
 		if (argValues.size() != paramPatterns.size())
 		{
@@ -317,7 +317,7 @@ public class OperationValue extends Value
 				// Note values are assumed to be constant, as enforced by eval()
 				Value pv = valIter.next().convertTo(typeIter.next(), ctxt);
 
-				for (NameValuePair nvp : PPatternAssistantInterpreter.getNamedValues(p, pv, ctxt))
+				for (NameValuePair nvp : ctxt.assistantFactory.createPPatternAssistant().getNamedValues(p, pv, ctxt))
 				{
 					Value v = args.get(nvp.name);
 
@@ -336,7 +336,7 @@ public class OperationValue extends Value
 			} catch (PatternMatchException e)
 			{
 				abort(e.number, e, ctxt);
-			}
+			} 
 		}
 
 		if (self != null)
@@ -477,7 +477,7 @@ public class OperationValue extends Value
 		} finally
 		{
 			fin();
-			notifySelf();
+			notifySelf(ctxt.assistantFactory);
 		}
 
 		return rv;
@@ -571,15 +571,19 @@ public class OperationValue extends Value
 		return argContext;
 	}
 
-	private Lock getGuardLock(Context ctxt)
+	private Lock getGuardLock(IInterpreterAssistantFactory assistantFactory)
 	{
-		if (ctxt instanceof ClassContext)
+		if (classdef != null)
 		{
-			ClassContext cctxt = (ClassContext) ctxt;
-			return VdmRuntime.getNodeState(ctxt.assistantFactory, cctxt.classdef).guardLock;
-		} else
+			return VdmRuntime.getNodeState(assistantFactory, classdef).guardLock;
+		}
+		else if (self != null)
 		{
 			return self.guardLock;
+		}
+		else
+		{
+			return null;
 		}
 	}
 
@@ -604,7 +608,7 @@ public class OperationValue extends Value
 			return; // Probably during initialization.
 		}
 
-		Lock lock = getGuardLock(ctxt);
+		Lock lock = getGuardLock(ctxt.assistantFactory);
 		lock.lock(ctxt, guard.getLocation());
 
 		while (true)
@@ -659,12 +663,14 @@ public class OperationValue extends Value
 		lock.unlock();
 	}
 
-	private void notifySelf()
+	private void notifySelf(IInterpreterAssistantFactory assistantFactory)
 	{
-		if (self != null && self.guardLock != null)
+		Lock lock = getGuardLock(assistantFactory);
+		
+		if (lock != null)
 		{
 			debug("Signal guard");
-			self.guardLock.signal();
+			lock.signal();
 		}
 	}
 
@@ -750,7 +756,7 @@ public class OperationValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt) throws ValueException
+	public Value convertValueTo(PType to, Context ctxt) throws AnalysisException
 	{
 		if (ctxt.assistantFactory.createPTypeAssistant().isType(to, AOperationType.class))
 		{

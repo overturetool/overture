@@ -28,7 +28,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import org.omg.CORBA.CTX_RESTRICT_SCOPE;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
@@ -84,10 +83,7 @@ import org.overture.ast.types.SSeqType;
 import org.overture.ast.util.PTypeSet;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
-import org.overture.pog.pub.POType;
 import org.overture.typechecker.TypeComparator;
-import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
 
 public class SubTypeObligation extends ProofObligation
@@ -671,7 +667,7 @@ public class SubTypeObligation extends ProofObligation
 		AIsExp isExp = new AIsExp();
 		isExp.setBasicType(type);
 		isExp.setType(new ABooleanBasicType());
-		isExp.setTest(exp);
+		isExp.setTest(exp.clone());
 		return isExp;
 	}
 }

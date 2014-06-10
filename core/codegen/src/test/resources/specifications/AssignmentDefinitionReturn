@@ -1,0 +1,12 @@
+class C
+
+operations
+
+public CalcProbCrossed: real ==> real
+CalcProbCrossed(n) ==
+(
+	dcl retVal : real := 0;
+	return retVal;
+);
+
+end C

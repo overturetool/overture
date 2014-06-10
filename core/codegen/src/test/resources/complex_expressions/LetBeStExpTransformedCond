@@ -1,0 +1,12 @@
+class Entry
+
+operations 
+
+public static Run : () ==> ?
+Run () ==
+	return
+	let x in set {3} be st forall q in set{10} & q > 5
+	in 
+		x;
+
+end Entry

@@ -23,11 +23,11 @@ import java.net.URI;
 import org.overture.ide.debug.core.dbgp.IDbgpSpawnpoint;
 import org.overture.ide.debug.core.dbgp.exceptions.DbgpException;
 
-public interface IDbgpSpawnpointCommands {
+public interface IDbgpSpawnpointCommands
+{
 
 	/**
-	 * Sets the spawn point at the specified location. Returns the id of created
-	 * spawn point.
+	 * Sets the spawn point at the specified location. Returns the id of created spawn point.
 	 * 
 	 * @param uri
 	 * @param lineNumber
@@ -67,8 +67,7 @@ public interface IDbgpSpawnpointCommands {
 	void removeSpawnpoint(String spawnpointId) throws DbgpException;
 
 	/**
-	 * Retrieves all spawn points. If there are no spawn points empty array is
-	 * returned.
+	 * Retrieves all spawn points. If there are no spawn points empty array is returned.
 	 * 
 	 * @return
 	 * @throws DbgpException

@@ -18,13 +18,13 @@
  *******************************************************************************/
 package org.overture.ide.debug.core.dbgp.internal.utils;
 
-
-public class Util {
+public class Util
+{
 
 	/**
 	 * Some input streams return available() as zero, so we need this value.
 	 */
-//	private static final int DEFAULT_READING_SIZE = 8192;
+	// private static final int DEFAULT_READING_SIZE = 8192;
 	public final static String UTF_8 = "UTF-8"; //$NON-NLS-1$			
 	public static String LINE_SEPARATOR = System.getProperty("line.separator"); //$NON-NLS-1$
 	public static final String EMPTY_STRING = ""; //$NON-NLS-1$

@@ -33,12 +33,12 @@ import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.messages.InternalException;
 import org.overture.ast.util.modules.ModuleList;
 import org.overture.config.Settings;
-import org.overture.interpreter.assistant.module.ModuleListAssistantInterpreter;
 import org.overture.interpreter.commands.CommandReader;
 import org.overture.interpreter.commands.ModuleCommandReader;
 import org.overture.interpreter.messages.Console;
@@ -48,7 +48,7 @@ import org.overture.interpreter.util.ExitStatus;
 import org.overture.interpreter.util.ModuleListInterpreter;
 import org.overture.parser.lex.LexTokenReader;
 import org.overture.parser.syntax.ModuleReader;
-import org.overture.pog.obligation.ProofObligationList;
+import org.overture.pog.pub.IProofObligationList;
 import org.overture.typechecker.ModuleTypeChecker;
 import org.overture.typechecker.TypeChecker;
 
@@ -245,18 +245,26 @@ public class VDMSL extends VDMJ
 
 		if (pog && terrs == 0)
 		{
-			ProofObligationList list = ModuleListAssistantInterpreter.getProofObligations(modules);
+			IProofObligationList list;
+			try
+			{
+				list = assistantFactory.createModuleListAssistant().getProofObligations(modules);
+				if (list.isEmpty())
+				{
+					println("No proof obligations generated");
+				}
+				else
+				{
+	    			println("Generated " +
+	    				plural(list.size(), "proof obligation", "s") + ":\n");
+	    			print(list.toString());
+				}
+			} catch (AnalysisException e)
+			{
+				println(e.toString());
+			}
 
-			if (list.isEmpty())
-			{
-				println("No proof obligations generated");
-			}
-			else
-			{
-    			println("Generated " +
-    				plural(list.size(), "proof obligation", "s") + ":\n");
-    			print(list.toString());
-			}
+
 		}
 
    		return terrs == 0 ? ExitStatus.EXIT_OK : ExitStatus.EXIT_ERRORS;

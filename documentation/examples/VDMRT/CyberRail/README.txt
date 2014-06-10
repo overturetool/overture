@@ -1,4 +1,4 @@
-This VDM-RT model was produced as a part of an MSn thesis investigating and analyzing
+﻿This VDM-RT model was produced as a part of an MSn thesis investigating and analyzing
 the possibility of obtaining early stage validation of potential candidate system 
 architectures, by means of formal modelling and validation. The goal was to analyze 
 recent research extensions of VDM++ for describing and analyzing such distributed 
@@ -12,7 +12,7 @@ on 2 different architectures.
 #******************************************************
 #  AUTOMATED TEST SETTINGS
 #------------------------------------------------------
-#AUTHOR=Jasper Nygaard and Rasmus S�rensen
+#AUTHOR=Jasper Nygaard and Rasmus Sørensen
 #LIB= IO
 #LANGUAGE_VERSION=classic
 #INV_CHECKS=true
