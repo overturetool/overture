@@ -17,7 +17,7 @@ import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.parser.util.ParserUtil;
 import org.overture.parser.util.ParserUtil.ParserResult;
-import org.overture.pog.visitors.Substitution;
+import org.overture.pog.utility.Substitution;
 import org.overture.pog.visitors.VariableSubVisitor;
 
 

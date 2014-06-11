@@ -38,6 +38,7 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
+import org.overture.pog.pub.POType;
 
 public class StateInvariantObligation extends ProofObligation
 {

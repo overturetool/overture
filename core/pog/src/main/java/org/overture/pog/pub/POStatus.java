@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- *	Copyright (C) 2008 Fujitsu Services Ltd.
+ *	Copyright (c) 2009 Fujitsu Services Ltd.
  *
  *	Author: Nick Battle
  *
@@ -21,40 +21,22 @@
  *
  ******************************************************************************/
 
-package org.overture.pog.obligation;
+package org.overture.pog.pub;
 
-import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
-import org.overture.ast.expressions.ANotUnaryExp;
-import org.overture.ast.expressions.PExp;
-import org.overture.ast.factory.AstExpressionFactory;
-
-public class PONotImpliesContext extends POContext
+public enum POStatus
 {
-	public final PExp exp;
+	UNPROVED("Unproved"), SUBMITTED("Submitted"), PROVED("Proved"), DISPROVED("Disproved");
 
-	public PONotImpliesContext(PExp exp)
+	private String text;
+
+	POStatus(String text)
 	{
-		this.exp = exp;
+		this.text = text;
 	}
 
 	@Override
-	public PExp getContextNode(PExp stitch)
+	public String toString()
 	{
-		ANotUnaryExp notExp = new ANotUnaryExp();
-		notExp.setExp(exp.clone());
-		AImpliesBooleanBinaryExp impliesExp = AstExpressionFactory.newAImpliesBooleanBinaryExp(notExp, stitch);
-		return impliesExp;
-	}
-
-	@Override
-	public String getContext()
-	{
-		StringBuilder sb = new StringBuilder();
-
-		sb.append("not ");
-		sb.append(exp);
-		sb.append(" =>");
-
-		return sb.toString();
+		return text;
 	}
 }

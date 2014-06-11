@@ -21,7 +21,7 @@
  *
  ******************************************************************************/
 
-package org.overture.pog.obligation;
+package org.overture.pog.pub;
 
 public enum POType
 {

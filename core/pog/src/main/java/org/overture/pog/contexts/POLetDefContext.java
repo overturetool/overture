@@ -21,43 +21,54 @@
  *
  ******************************************************************************/
 
-package org.overture.pog.obligation;
+package org.overture.pog.contexts;
 
+import org.overture.ast.expressions.ALetDefExp;
 import org.overture.ast.expressions.PExp;
-import org.overture.ast.lex.LexNameList;
+import org.overture.ast.util.Utils;
 
-public class PONameContext extends POContext
+public class POLetDefContext extends POContext
 {
-	public final LexNameList names;
+	public final ALetDefExp exp;
 
-	public PONameContext(LexNameList names)
+	public POLetDefContext(ALetDefExp exp)
 	{
-		this.names = names;
+		this.exp = exp;
 	}
-	
-	
-	
+
+	@Override
+	public boolean isScopeBoundary()
+	{
+		return true;
+	}
+
 
 	@Override
 	public PExp getContextNode(PExp stitch)
 	{
-		//empty context
-		return stitch;
+		if (!exp.getLocalDefs().isEmpty())
+		{
+			ALetDefExp letDefExp = new ALetDefExp();
+			letDefExp.setLocalDefs(exp.clone().getLocalDefs());
+			letDefExp.setExpression(stitch);
+			return letDefExp;
+
+		} else
+			return stitch;
 	}
-
-
-
-
 
 	@Override
 	public String getContext()
 	{
-		return "";
-	}
+		StringBuilder sb = new StringBuilder();
 
-	@Override
-	public String getName()
-	{
-		return names.toString();
+		if (!exp.getLocalDefs().isEmpty())
+		{
+			sb.append("let ");
+			sb.append(Utils.listToString(exp.getLocalDefs()));
+			sb.append(" in");
+		}
+
+		return sb.toString();
 	}
 }

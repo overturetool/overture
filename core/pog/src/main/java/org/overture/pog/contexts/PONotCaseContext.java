@@ -21,16 +21,14 @@
  *
  ******************************************************************************/
 
-package org.overture.pog.obligation;
+package org.overture.pog.contexts;
 
 import java.util.List;
-import java.util.Vector;
 
-import org.overture.ast.definitions.AEqualsDefinition;
-import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.expressions.AEqualsBinaryExp;
 import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
-import org.overture.ast.expressions.ALetDefExp;
+import org.overture.ast.expressions.ANotUnaryExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.patterns.PMultipleBind;
@@ -39,13 +37,13 @@ import org.overture.ast.types.PType;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.utility.ContextHelper;
 
-public class POCaseContext extends POContext {
+public class PONotCaseContext extends POContext {
 	public final PPattern pattern;
 	public final PType type;
 	public final PExp exp;
 	public final IPogAssistantFactory assistantFactory;
 
-	public POCaseContext(PPattern pattern, PType type, PExp exp,
+	public PONotCaseContext(PPattern pattern, PType type, PExp exp,
 			IPogAssistantFactory assistantFactory) {
 		this.pattern = pattern;
 		this.type = type;
@@ -55,44 +53,38 @@ public class POCaseContext extends POContext {
 
 	@Override
 	public PExp getContextNode(PExp stitch) {
-		if (assistantFactory.createPPatternAssistant().isSimple(pattern)) {
-			PExp matching = assistantFactory.createPPatternAssistant()
-					.getMatchingExpression(pattern);
-			PExp premise = AstExpressionFactory.newAEqualsBinaryExp(
-					matching.clone(), exp.clone());
-			AImpliesBooleanBinaryExp impliesExp = AstExpressionFactory
-					.newAImpliesBooleanBinaryExp(premise, stitch);
+		AImpliesBooleanBinaryExp impliesExp = AstExpressionFactory
+				.newAImpliesBooleanBinaryExp(getCaseExp(), stitch);
+		return impliesExp;
+	}
 
-			return impliesExp;
+	private PExp getCaseExp() {
+		if (assistantFactory.createPPatternAssistant().isSimple(pattern)) {
+			ANotUnaryExp notExp = new ANotUnaryExp();
+			AEqualsBinaryExp equalsExp = AstExpressionFactory
+					.newAEqualsBinaryExp(
+							assistantFactory.createPPatternAssistant()
+									.getMatchingExpression(pattern.clone()),
+							exp.clone());
+			notExp.setExp(equalsExp);
+			return notExp;
+
 		} else {
+
+			ANotUnaryExp notExp = new ANotUnaryExp();
 			AExistsExp existsExp = new AExistsExp();
 			List<PMultipleBind> bindList = ContextHelper.bindListFromPattern(
 					pattern.clone(), type.clone());
+
 			existsExp.setBindList(bindList);
 			PExp matching = assistantFactory.createPPatternAssistant()
 					.getMatchingExpression(pattern);
+			AEqualsBinaryExp equalsExp = AstExpressionFactory
+					.newAEqualsBinaryExp(matching, exp.clone());
 
-			PExp premise = (AstExpressionFactory.newAEqualsBinaryExp(
-					matching.clone(), exp.clone()));
-
-			ALetDefExp letDefExp = new ALetDefExp();
-			
-			AEqualsDefinition local = new AEqualsDefinition();
-			local.setPattern(pattern.clone());
-//			local.setName(def.getName().clone());
-			local.setTest(exp.clone());
-			List<PDefinition> lDefs = new Vector<PDefinition>();
-			lDefs.add(local);
-			letDefExp.setLocalDefs(lDefs);
-			letDefExp.setExpression(stitch);
-
-			AImpliesBooleanBinaryExp impliesExp = AstExpressionFactory.newAImpliesBooleanBinaryExp(premise, letDefExp);
-					
-			
-			
-			existsExp.setPredicate(impliesExp);
-
-			return existsExp;
+			existsExp.setPredicate(equalsExp);
+			notExp.setExp(existsExp);
+			return notExp;
 		}
 
 	}
@@ -102,15 +94,15 @@ public class POCaseContext extends POContext {
 		StringBuilder sb = new StringBuilder();
 
 		if (assistantFactory.createPPatternAssistant().isSimple(pattern)) {
+			sb.append("not ");
 			sb.append(pattern);
 			sb.append(" = ");
 			sb.append(exp);
-			sb.append(" => ");
 		} else {
 			PExp matching = assistantFactory.createPPatternAssistant()
 					.getMatchingExpression(pattern);
 
-			sb.append("exists ");
+			sb.append("not exists ");
 			sb.append(matching);
 			sb.append(":");
 			sb.append(type);
@@ -118,13 +110,9 @@ public class POCaseContext extends POContext {
 			sb.append(matching);
 			sb.append(" = ");
 			sb.append(exp);
-
-			sb.append(" =>\nlet ");
-			sb.append(pattern);
-			sb.append(" = ");
-			sb.append(exp);
-			sb.append(" in");
 		}
+
+		sb.append(" =>");
 
 		return sb.toString();
 	}

@@ -1,6 +1,6 @@
 package org.overture.pog.visitors;
 
-import org.overture.pog.obligation.POContextStack;
+import org.overture.pog.contexts.POContextStack;
 import org.overture.pog.obligation.ProofObligationList;
 
 

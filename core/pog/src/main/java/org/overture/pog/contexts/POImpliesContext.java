@@ -21,53 +21,30 @@
  *
  ******************************************************************************/
 
-package org.overture.pog.obligation;
+package org.overture.pog.contexts;
 
-import org.overture.ast.expressions.ALetDefExp;
 import org.overture.ast.expressions.PExp;
-import org.overture.ast.util.Utils;
+import org.overture.ast.factory.AstExpressionFactory;
 
-public class POLetDefContext extends POContext
-{
-	public final ALetDefExp exp;
+public class POImpliesContext extends POContext {
+	public final PExp exp;
 
-	public POLetDefContext(ALetDefExp exp)
-	{
+	public POImpliesContext(PExp exp) {
 		this.exp = exp;
 	}
 
 	@Override
-	public boolean isScopeBoundary()
-	{
-		return true;
-	}
-
-
-	@Override
-	public PExp getContextNode(PExp stitch)
-	{
-		if (!exp.getLocalDefs().isEmpty())
-		{
-			ALetDefExp letDefExp = new ALetDefExp();
-			letDefExp.setLocalDefs(exp.clone().getLocalDefs());
-			letDefExp.setExpression(stitch);
-			return letDefExp;
-
-		} else
-			return stitch;
+	public PExp getContextNode(PExp stitch) {
+		return AstExpressionFactory.newAImpliesBooleanBinaryExp(exp.clone(),
+				stitch);
 	}
 
 	@Override
-	public String getContext()
-	{
+	public String getContext() {
 		StringBuilder sb = new StringBuilder();
 
-		if (!exp.getLocalDefs().isEmpty())
-		{
-			sb.append("let ");
-			sb.append(Utils.listToString(exp.getLocalDefs()));
-			sb.append(" in");
-		}
+		sb.append(exp);
+		sb.append(" =>");
 
 		return sb.toString();
 	}

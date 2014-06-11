@@ -44,7 +44,7 @@ import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.plugins.poviewer.view.PoOverviewTableView;
 import org.overture.ide.ui.utility.VdmTypeCheckerUi;
 import org.overture.pog.pub.IProofObligationList;
-import org.overture.pog.obligation.POContextStack;
+import org.overture.pog.contexts.POContextStack;
 import org.overture.pog.visitors.PogVisitor;
 import org.overture.pog.obligation.ProofObligationList;
 

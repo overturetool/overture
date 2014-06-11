@@ -51,6 +51,7 @@ import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.PType;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
+import org.overture.pog.pub.POType;
 
 public class ParameterPatternObligation extends ProofObligation
 {

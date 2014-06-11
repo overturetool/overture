@@ -21,32 +21,33 @@
  *
  ******************************************************************************/
 
-package org.overture.pog.obligation;
+package org.overture.pog.contexts;
 
-public enum POTrivialProof
+import org.overture.ast.expressions.PExp;
+
+public class POScopeContext extends POContext
 {
-	FORALL_IN_SET("^( *\\(+(forall|let)[^\\n]+\\n)*? *\\(forall (\\w+) in set \\(([^&]+)\\) &(.+?)?\\n *\\3 in set \\4\\)+\\n$", "forall x in set s & x in set s"),
-	IMPLICATION("^( *\\(+(forall|let)[^\\n]+\\n?)*? *\\(+(\\w+) in set \\(([^&]+)\\)+ =>\\n *\\3 in set \\4\\)+\\n$", "x in set s => x in set s"),
-	NOT_EQUALITY("^( *\\(+(forall|let)[^\\n]+\\n)*? *\\(+not \\((.+?) \\= (.+?)\\) =>\\n *\\3 \\<\\> \\4\\)+\\n$", "not x = y => x <> y"),
-	NONEMPTY_SEQ("^\\(\\[.+\\] <> \\[\\]\\)\\n$", "[<expressions>] <> []");
-
-	private String pattern;
-	public String name;
-
-	POTrivialProof(String pattern, String name)
+	@Override
+	public String getContext()
 	{
-		this.pattern = pattern;
-		this.name = name;
+		return "";
 	}
-
-	public boolean proves(String PO)
-	{
-		return PO.matches(pattern);
-	}
+	
+	
 
 	@Override
-	public String toString()
+	public PExp getContextNode(PExp stitch)
 	{
-		return name;
+		// empty context
+		return stitch;
+	}
+
+
+
+
+	@Override
+	public boolean isScopeBoundary()
+	{
+		return true;
 	}
 }

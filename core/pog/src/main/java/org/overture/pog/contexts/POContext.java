@@ -21,31 +21,51 @@
  *
  ******************************************************************************/
 
-package org.overture.pog.obligation;
+package org.overture.pog.contexts;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import org.overture.ast.expressions.PExp;
-import org.overture.ast.factory.AstExpressionFactory;
+import org.overture.ast.types.PType;
+import org.overture.pog.pub.IPOContext;
 
-public class POImpliesContext extends POContext {
-	public final PExp exp;
+abstract public class POContext implements IPOContext
+{
+	abstract public String getContext();
+	//abstract public List<INode> getContextNodes(int n);
+	abstract public PExp getContextNode(PExp stitch);
+	
+	private Map<PExp, PType> knownTypes = new HashMap<PExp, PType>();
 
-	public POImpliesContext(PExp exp) {
-		this.exp = exp;
-	}
-
+	
 	@Override
-	public PExp getContextNode(PExp stitch) {
-		return AstExpressionFactory.newAImpliesBooleanBinaryExp(exp.clone(),
-				stitch);
+	/**
+	 * Any contexts that can be preserved regardless of state need not override this
+	 */
+	public boolean isStateful() {
+		return false;
+	}
+	
+	public String getName()
+	{
+		return "";		// Overridden in PONameContext
 	}
 
-	@Override
-	public String getContext() {
-		StringBuilder sb = new StringBuilder();
-
-		sb.append(exp);
-		sb.append(" =>");
-
-		return sb.toString();
+	public boolean isScopeBoundary()
+	{
+		return false;
 	}
+
+	public void noteType(PExp exp, PType type)
+	{
+		knownTypes.put(exp, type);
+	}
+
+	public PType checkType(PExp exp)
+	{
+		return knownTypes.get(exp);
+	}
+	
+
 }

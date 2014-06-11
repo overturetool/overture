@@ -1,4 +1,4 @@
-package org.overture.pog.visitors;
+package org.overture.pog.contexts;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
@@ -6,8 +6,9 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.statements.AAssignmentStm;
-import org.overture.pog.obligation.POContext;
 import org.overture.pog.pub.IPogAssistantFactory;
+import org.overture.pog.utility.Substitution;
+import org.overture.pog.visitors.IVariableSubVisitor;
 
 public class AssignmentContext extends POContext
 {

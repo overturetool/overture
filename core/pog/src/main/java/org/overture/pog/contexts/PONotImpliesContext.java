@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- *	Copyright (c) 2009 Fujitsu Services Ltd.
+ *	Copyright (C) 2008 Fujitsu Services Ltd.
  *
  *	Author: Nick Battle
  *
@@ -21,33 +21,40 @@
  *
  ******************************************************************************/
 
-package org.overture.pog.obligation;
+package org.overture.pog.contexts;
 
+import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
+import org.overture.ast.expressions.ANotUnaryExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstExpressionFactory;
 
-public class POScopeContext extends POContext
+public class PONotImpliesContext extends POContext
 {
-	@Override
-	public String getContext()
+	public final PExp exp;
+
+	public PONotImpliesContext(PExp exp)
 	{
-		return "";
+		this.exp = exp;
 	}
-	
-	
 
 	@Override
 	public PExp getContextNode(PExp stitch)
 	{
-		// empty context
-		return stitch;
+		ANotUnaryExp notExp = new ANotUnaryExp();
+		notExp.setExp(exp.clone());
+		AImpliesBooleanBinaryExp impliesExp = AstExpressionFactory.newAImpliesBooleanBinaryExp(notExp, stitch);
+		return impliesExp;
 	}
 
-
-
-
 	@Override
-	public boolean isScopeBoundary()
+	public String getContext()
 	{
-		return true;
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("not ");
+		sb.append(exp);
+		sb.append(" =>");
+
+		return sb.toString();
 	}
 }

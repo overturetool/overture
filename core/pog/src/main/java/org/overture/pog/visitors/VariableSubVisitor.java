@@ -6,6 +6,7 @@ import org.overture.ast.expressions.*;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.ACasesStm;
 import org.overture.ast.types.AFieldField;
+import org.overture.pog.utility.Substitution;
 
 //FIXME complete the variable substitution visitor
 public class VariableSubVisitor extends QuestionAnswerAdaptor<Substitution, PExp> implements IVariableSubVisitor {

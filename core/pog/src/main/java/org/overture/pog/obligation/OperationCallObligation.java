@@ -11,7 +11,8 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.ACallStm;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
-import org.overture.pog.visitors.Substitution;
+import org.overture.pog.pub.POType;
+import org.overture.pog.utility.Substitution;
 
 public class OperationCallObligation extends ProofObligation {
 

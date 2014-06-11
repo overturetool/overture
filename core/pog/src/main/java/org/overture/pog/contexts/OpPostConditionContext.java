@@ -1,4 +1,4 @@
-package org.overture.pog.visitors;
+package org.overture.pog.contexts;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -27,10 +27,11 @@ import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.ACallStm;
 import org.overture.ast.statements.AExternalClause;
-import org.overture.pog.obligation.POContext;
 import org.overture.pog.pub.IPOContext;
 import org.overture.pog.pub.IPogAssistantFactory;
+import org.overture.pog.utility.Substitution;
 import org.overture.pog.utility.UniqueNameGenerator;
+import org.overture.pog.visitors.IVariableSubVisitor;
 
 public class OpPostConditionContext extends POContext implements IPOContext
 {

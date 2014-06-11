@@ -1,4 +1,4 @@
-package org.overture.pog.utility;
+package org.overture.pog.visitors;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.AnswerAdaptor;

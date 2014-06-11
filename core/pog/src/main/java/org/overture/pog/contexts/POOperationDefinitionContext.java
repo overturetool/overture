@@ -21,7 +21,7 @@
  *
  ******************************************************************************/
 
-package org.overture.pog.obligation;
+package org.overture.pog.contexts;
 
 import java.util.Iterator;
 import java.util.LinkedList;

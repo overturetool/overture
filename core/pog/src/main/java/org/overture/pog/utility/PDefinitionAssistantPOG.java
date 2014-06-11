@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.pog.obligation.PONameContext;
+import org.overture.pog.contexts.PONameContext;
 import org.overture.pog.obligation.ProofObligationList;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IProofObligationList;

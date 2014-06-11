@@ -52,7 +52,7 @@ import org.overture.interpreter.values.UpdatableValue;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
 import org.overture.interpreter.values.ValueMap;
-import org.overture.pog.obligation.POContextStack;
+import org.overture.pog.contexts.POContextStack;
 import org.overture.pog.obligation.ProofObligationList;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 

@@ -1,4 +1,4 @@
-package org.overture.pog.visitors;
+package org.overture.pog.utility;
 
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
