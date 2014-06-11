@@ -38,27 +38,27 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
-import org.overture.pog.utility.PogAssistantFactory;
 
 public class StateInvariantObligation extends ProofObligation
 {
 	private static final long serialVersionUID = -5828298910806421399L;
-	
-	public final IPogAssistantFactory assistantFactory = new PogAssistantFactory();
 
-	public StateInvariantObligation(AAssignmentStm ass, IPOContextStack ctxt)
+	public final IPogAssistantFactory assistantFactory;
+
+	public StateInvariantObligation(AAssignmentStm ass, IPOContextStack ctxt,
+			IPogAssistantFactory af)
 	{
 		super(ass, POType.STATE_INVARIANT, ctxt, ass.getLocation());
-		
+		assistantFactory = af;
+
 		if (ass.getClassDefinition() != null)
 		{
 			valuetree.setPredicate(ctxt.getPredWithContext(invDefs(ass.getClassDefinition())));
-		}
-		else
+		} else
 		{
 			AStateDefinition def = ass.getStateDefinition();
 			ALetDefExp letExp = new ALetDefExp();
-			
+
 			List<PDefinition> invDefs = new Vector<PDefinition>();
 			AEqualsDefinition local = new AEqualsDefinition();
 			local.setPattern(def.getInvPattern().clone());
@@ -71,43 +71,52 @@ public class StateInvariantObligation extends ProofObligation
 			valuetree.setPredicate(ctxt.getPredWithContext(letExp));
 		}
 
-//		valuetree.setContext(ctxt.getContextNodeList());
+		// valuetree.setContext(ctxt.getContextNodeList());
 	}
 
-	public StateInvariantObligation(AClassInvariantDefinition def, IPOContextStack ctxt)
+	public StateInvariantObligation(AClassInvariantDefinition def,
+			IPOContextStack ctxt, IPogAssistantFactory af)
 	{
 		super(def, POType.STATE_INVARIANT, ctxt, def.getLocation());
+		assistantFactory = af;
+
 		// After instance variable initializers
 		valuetree.setPredicate(ctxt.getPredWithContext(invDefs(def.getClassDefinition())));
-//    	valuetree.setContext(ctxt.getContextNodeList());
+		// valuetree.setContext(ctxt.getContextNodeList());
 	}
 
-	public StateInvariantObligation(AExplicitOperationDefinition def, IPOContextStack ctxt)
+	public StateInvariantObligation(AExplicitOperationDefinition def,
+			IPOContextStack ctxt, IPogAssistantFactory af)
 	{
 		super(def, POType.STATE_INVARIANT, ctxt, def.getLocation());
+		assistantFactory = af;
+
 		// After def.getName() constructor body
 		valuetree.setPredicate(ctxt.getPredWithContext(invDefs(def.getClassDefinition())));
-//    	valuetree.setContext(ctxt.getContextNodeList());
+		// valuetree.setContext(ctxt.getContextNodeList());
 	}
 
-	public StateInvariantObligation(AImplicitOperationDefinition def, IPOContextStack ctxt)
+	public StateInvariantObligation(AImplicitOperationDefinition def,
+			IPOContextStack ctxt, IPogAssistantFactory af)
 	{
 		super(def, POType.STATE_INVARIANT, ctxt, def.getLocation());
+		assistantFactory = af;
+
 		// After def.getName() constructor body
 		valuetree.setPredicate(ctxt.getPredWithContext(invDefs(def.getClassDefinition())));
-//    	valuetree.setContext(ctxt.getContextNodeList());
+		// valuetree.setContext(ctxt.getContextNodeList());
 	}
 
 	private PExp invDefs(SClassDefinition def)
 	{
 		PExp root = null;
-		
-		for (PDefinition d: assistantFactory.createSClassDefinitionAssistant().getInvDefs(def.clone()))
+
+		for (PDefinition d : assistantFactory.createSClassDefinitionAssistant().getInvDefs(def.clone()))
 		{
-			AClassInvariantDefinition cid = (AClassInvariantDefinition)d;
+			AClassInvariantDefinition cid = (AClassInvariantDefinition) d;
 			root = makeAnd(root, cid.getExpression().clone());
 		}
 
-    	return root;
+		return root;
 	}
 }

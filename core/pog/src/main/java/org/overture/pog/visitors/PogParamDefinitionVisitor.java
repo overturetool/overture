@@ -233,7 +233,6 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 
 			if (!node.getClassDefinition().getHasContructors())
 			{
-				int assigns = 0;
 				for (PDefinition pdef : node.getClassDefinition().getDefinitions())
 				{
 					if (pdef instanceof AInstanceVariableDefinition)
@@ -242,15 +241,11 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 						if (ivdef.getInitialized())
 						{
 							question.push(new AssignmentContext((AInstanceVariableDefinition) pdef, assistantFactory.getVarSubVisitor()));
-							assigns++;
 						}
 					}
 				}
-				list.add(new StateInvariantObligation(node, question));
-				for (int i = 0; i < assigns; i++)
-				{
-					question.pop();
-				}
+				list.add(new StateInvariantObligation(node, question,assistantFactory));
+				question.clearStateContexts();
 			}
 
 			return list;
@@ -466,7 +461,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 			if (node.getIsConstructor() && node.getClassDefinition() != null
 					&& node.getClassDefinition().getInvariant() != null)
 			{
-				obligations.add(new StateInvariantObligation(node, question));
+				obligations.add(new StateInvariantObligation(node, question,assistantFactory));
 			}
 
 			if (!node.getIsConstructor()
@@ -550,7 +545,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 						&& node.getClassDefinition() != null
 						&& node.getClassDefinition().getInvariant() != null)
 				{
-					obligations.add(new StateInvariantObligation(node, question));
+					obligations.add(new StateInvariantObligation(node, question,assistantFactory));
 				}
 
 				if (!node.getIsConstructor()
