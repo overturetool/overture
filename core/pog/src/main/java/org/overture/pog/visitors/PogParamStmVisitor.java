@@ -198,11 +198,9 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 			if (calledOp != null) {
 				if (calledOp.getPrecondition() != null) {
 					obligations.add(new OperationCallObligation(node, calledOp,
-							node.getArgs(), question, aF));
+							question, aF));
 				}question.push(
 				new OpPostConditionContext(calledOp.getPostdef(), node, calledOp, aF, question.getGenerator()));
-				// FIXME implement clearing of substitutions based on frame
-				// info
 			}
 			return obligations;
 		} catch (Exception e) {

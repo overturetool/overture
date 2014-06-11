@@ -234,7 +234,7 @@ public class OpPostConditionContext extends POContext implements IPOContext
 
 		for (int i = 0; i < args.size(); i++)
 		{
-			PPattern orig = def.getParamPatternList().get(0).get(1).clone();
+			PPattern orig = def.getParamPatternList().get(0).get(i);
 			ILexNameToken origName = af.createPPatternAssistant().getAllVariableNames(orig).get(0).clone();
 			PExp new_exp = args.get(0).clone();
 			subs.add(new Substitution(origName, new_exp));

@@ -16,7 +16,7 @@ import org.overture.pog.visitors.Substitution;
 public class OperationCallObligation extends ProofObligation {
 
 	public OperationCallObligation(ACallStm stm,
-			SOperationDefinitionBase def, List<PExp> args,
+			SOperationDefinitionBase def,
 			IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException {
 		super(stm, POType.OP_CALL, ctxt, stm.getLocation());
 		
@@ -25,7 +25,7 @@ public class OperationCallObligation extends ProofObligation {
 		
 		for (int i = 0; i < stm.getArgs().size(); i++) {
 			PPattern orig = def.getPredef().getParamPatternList().get(0).get(i);
-			ILexNameToken origName = af.createPPatternAssistant().getAllVariableNames(orig).get(0);
+			ILexNameToken origName = af.createPPatternAssistant().getAllVariableNames(orig).get(0).clone();
 			PExp new_exp = stm.getArgs().get(0);
 			subs.add(new Substitution(origName,new_exp));
 			
@@ -44,5 +44,9 @@ public class OperationCallObligation extends ProofObligation {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+
+
+
 
 }
