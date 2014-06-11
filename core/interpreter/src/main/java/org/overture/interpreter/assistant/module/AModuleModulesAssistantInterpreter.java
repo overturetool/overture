@@ -11,9 +11,9 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.statements.PStm;
+import org.overture.ast.util.modules.CombinedDefaultModule;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.definition.AStateDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.PDefinitionAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.StateContext;
@@ -39,23 +39,44 @@ public class AModuleModulesAssistantInterpreter extends
 	{
 		for (AModuleModules m : modules)
 		{
-			if (m.getName().getLocation().getFile().equals(file))
+			PStm stmt = null;
+			if (m instanceof CombinedDefaultModule)
 			{
-				PStm stmt = findStatement(m, lineno);
+				stmt = findStatement((CombinedDefaultModule) m, file, lineno);
+			} else
+			{
+				stmt = findStatement(m, file, lineno);
+			}
 
-				if (stmt != null)
-				{
-					return stmt;
-				}
+			if (stmt != null)
+			{
+				return stmt;
 			}
 		}
-
 		return null;
 	}
 
-	public PStm findStatement(AModuleModules m, int lineno)
+	public PStm findStatement(CombinedDefaultModule m, File file, int lineno)
 	{
-		return af.createPDefinitionAssistant().findStatement(m.getDefs(), lineno);
+		for (AModuleModules module : m.getModules())
+		{
+			PStm stmt = findStatement(module, file, lineno);
+
+			if (stmt != null)
+			{
+				return stmt;
+			}
+		}
+		return null;
+	}
+
+	public PStm findStatement(AModuleModules m, File file, int lineno)
+	{
+		if (m.getName().getLocation().getFile().equals(file))
+		{
+			return af.createPDefinitionAssistant().findStatement(m.getDefs(), lineno);
+		}
+		return null;
 	}
 
 	public PExp findExpression(ModuleListInterpreter modules, File file,
@@ -63,23 +84,45 @@ public class AModuleModulesAssistantInterpreter extends
 	{
 		for (AModuleModules m : modules)
 		{
-			if (m.getName().getLocation().getFile().equals(file))
+			PExp exp = null;
+			if (m instanceof CombinedDefaultModule)
 			{
-				PExp exp = findExpression(m, lineno);
+				exp = findExpression((CombinedDefaultModule) m, file, lineno);
+			} else
+			{
+				exp = findExpression(m, file, lineno);
+			}
 
-				if (exp != null)
-				{
-					return exp;
-				}
+			if (exp != null)
+			{
+				return exp;
 			}
 		}
 
 		return null;
 	}
-
-	public PExp findExpression(AModuleModules d, int lineno)
+	
+	public PExp findExpression(CombinedDefaultModule m, File file, int lineno)
 	{
-		return af.createPDefinitionListAssistant().findExpression(d.getDefs(), lineno);
+		for (AModuleModules module : m.getModules())
+		{
+			PExp exp = findExpression(module, file, lineno);
+
+			if (exp != null)
+			{
+				return exp;
+			}
+		}
+		return null;
+	}
+
+	public PExp findExpression(AModuleModules m, File file, int lineno)
+	{
+		if (m.getName().getLocation().getFile().equals(file))
+		{
+			return af.createPDefinitionListAssistant().findExpression(m.getDefs(), lineno);
+		}
+		return null;
 	}
 
 	public Context getStateContext(AModuleModules defaultModule)

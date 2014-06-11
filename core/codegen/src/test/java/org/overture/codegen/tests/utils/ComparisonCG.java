@@ -9,10 +9,10 @@ import java.util.Set;
 
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
-import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.runtime.Record;
 import org.overture.codegen.runtime.Token;
 import org.overture.codegen.runtime.Tuple;
@@ -232,7 +232,7 @@ public class ComparisonCG
 			{
 				if(quote.getName().equals(vdmQuote.value))
 				{
-					PExpCG exp = quote.getInitial();
+					SExpCG exp = quote.getInitial();
 					
 					if(exp instanceof AIntLiteralExpCG)
 					{

@@ -105,17 +105,9 @@ public abstract class CodeGenBaseTestCase extends BaseTestCase
 			Assert.fail("Could not generate actual output from file: "
 					+ getName());
 		}
+
 		boolean resultOk = actual.trim().equals(parsedResult);
-
-		String input = GeneralUtils.readFromFile(this.file);
-
-		String testOverview = getTestOverview(input, parsedResult, actual);
-
-		System.out.println("\n*******");
-		Assert.assertTrue("The code generator did not produce the expected output: "
-				+ "\n" + testOverview, resultOk);
-		System.out.println("Test passed: \n" + testOverview);
-		System.out.println();
+		Assert.assertTrue(resultOk);
 	}
 
 	@Override
@@ -143,6 +135,4 @@ public abstract class CodeGenBaseTestCase extends BaseTestCase
 	}
 
 	abstract protected String generateActualOutput() throws AnalysisException;
-
-	abstract protected String getTestOverview(String input, String expectedResult, String actualResult);
 }

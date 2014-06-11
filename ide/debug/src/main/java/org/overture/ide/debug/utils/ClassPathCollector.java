@@ -67,14 +67,23 @@ public class ClassPathCollector
 		return System.getProperty("os.name").toLowerCase().contains("win");
 	}
 
+	public static boolean isMac()
+	{
+		return (System.getProperty("os.name").toLowerCase().indexOf("mac") >= 0);
+	}
+
 	protected static String toPlatformPath(String path)
 	{
 		if (isWindowsPlatform())
 		{
 			return "\"" + path + "\"";
-		} else
+		} else if(isMac())
 		{
-			return path.replace(" ", "\\ ");
+			return path;// Bug: 255; Since this is used in a process builder Linux/Mac must not have this escape
+						// enabled:.replace(" ", "\\ ");
+		}else
+		{
+			return path.replace(" ", "\\ ");// Bug: 255; Not sure how to fix it for Linux!
 		}
 	}
 }

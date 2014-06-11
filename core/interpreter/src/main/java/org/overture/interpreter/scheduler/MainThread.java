@@ -34,7 +34,6 @@ import org.overture.interpreter.runtime.CollectedContextException;
 import org.overture.interpreter.runtime.CollectedExceptions;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
-import org.overture.interpreter.runtime.ThreadState;
 import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.values.TransactionValue;
 import org.overture.interpreter.values.UndefinedValue;
@@ -128,8 +127,7 @@ public class MainThread extends SchedulablePoolThread
 			//If the exception is raised from the console location the debugger is stopped.
 			if (e.location.getFile().getName().equals(LexTokenReader.consoleFileName))
 			{
-				ThreadState s = ctxt.threadState;
-				s.dbgp.invocationError(e);//TODO
+				setException(e);
 				BasicSchedulableThread.signalAll(Signal.TERMINATE);
 			}
 			else
@@ -146,7 +144,7 @@ public class MainThread extends SchedulablePoolThread
 		}
 		catch(StackOverflowError e)
 		{
-			ctxt.threadState.dbgp.invocationError(e);
+			setException(new Exception("internal error", e));
 			BasicSchedulableThread.signalAll(Signal.TERMINATE);
 		}catch(ThreadDeath e)
 		{

@@ -20,29 +20,31 @@ import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.analysis.violations.VdmAstAnalysis;
 import org.overture.codegen.analysis.violations.Violation;
 import org.overture.codegen.assistant.AssistantManager;
+import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
-import org.overture.codegen.cgast.expressions.PExpCG;
-import org.overture.codegen.constants.IRConstants;
-import org.overture.codegen.constants.TempVarPrefixes;
-import org.overture.codegen.ir.ClassDeclStatus;
-import org.overture.codegen.ir.ExpStatus;
+import org.overture.codegen.ir.IRClassDeclStatus;
+import org.overture.codegen.ir.IRConstants;
+import org.overture.codegen.ir.IRExpStatus;
 import org.overture.codegen.ir.IRGenerator;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
-import org.overture.codegen.merging.TemplateCallable;
 import org.overture.codegen.merging.TemplateStructure;
-import org.overture.codegen.transform.TransformationAssistantCG;
-import org.overture.codegen.transform.TransformationVisitor;
-import org.overture.codegen.transform.iterator.ILanguageIterator;
-import org.overture.codegen.transform.iterator.JavaLanguageIterator;
+import org.overture.codegen.trans.TempVarPrefixes;
+import org.overture.codegen.trans.TransformationVisitor;
+import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
+import org.overture.codegen.trans.funcvalues.FunctionValueVisitor;
+import org.overture.codegen.trans.iterator.ILanguageIterator;
+import org.overture.codegen.trans.iterator.JavaLanguageIterator;
+import org.overture.codegen.trans.patterns.IgnorePatternTransformation;
+import org.overture.codegen.trans.uniontypes.UnionTypeTransformation;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedModule;
-import org.overture.codegen.utils.ITempVarGen;
 
 public class JavaCodeGen
 {
@@ -56,25 +58,14 @@ public class JavaCodeGen
 		//Classes used from the Java standard library
 		"Utils", "Record","Long", "Double", "Character", "String", "List", "Set"
 	};
-
-	private static final String JAVA_FORMAT_KEY = "JavaFormat";
-	private static final String IR_ANALYSIS_KEY = "IRAnalysis";
-	private static final String TEMP_VAR = "TempVar";
-	private static final String VALUE_SEMANTICS = "ValueSemantics";
 	
 	public final static TempVarPrefixes varPrefixes = new TempVarPrefixes();
 	
-	public final static TemplateCallable[] constructTemplateCallables(Object javaFormat, Object irAnalysis, Object tempVarPrefixes, Object valueSemantics)
-	{
-		return new TemplateCallable[]{new TemplateCallable(JAVA_FORMAT_KEY, javaFormat), new TemplateCallable(IR_ANALYSIS_KEY, irAnalysis), new TemplateCallable(TEMP_VAR, tempVarPrefixes), new TemplateCallable(VALUE_SEMANTICS,  valueSemantics)};
-	}
-	
 	private IRGenerator generator;
 	private IRInfo irInfo;
-	private ITempVarGen tempVarNameGen;
-	private AssistantManager assistantManager;
 	private JavaFormat javaFormat;
 	
+	public static final String IGNORE_PATTERN_NAME_PREFIX = "ignore_";
 	public static final String INTERFACE_NAME_PREFIX = "Func_";
 	public static final String TEMPLATE_TYPE_PREFIX = "T_";
 	public static final String EVAL_METHOD_PREFIX = "eval";
@@ -102,9 +93,7 @@ public class JavaCodeGen
 		initVelocity();
 		this.generator = new IRGenerator(log);
 		this.irInfo = generator.getIRInfo();
-		this.tempVarNameGen = irInfo.getTempVarNameGen();
-		this.assistantManager = irInfo.getAssistantManager();
-		this.javaFormat = new JavaFormat(varPrefixes, tempVarNameGen, assistantManager);
+		this.javaFormat = new JavaFormat(varPrefixes, irInfo);
 	}
 	
 	public void setSettings(IRSettings settings)
@@ -170,7 +159,7 @@ public class JavaCodeGen
 		validateVdmModelNames(toBeGenerated);
 		validateVdmModelingConstructs(toBeGenerated);
 
-		List<ClassDeclStatus> statuses = new ArrayList<ClassDeclStatus>();
+		List<IRClassDeclStatus> statuses = new ArrayList<IRClassDeclStatus>();
 
 		for (SClassDefinition classDef : toBeGenerated)
 		{
@@ -188,12 +177,15 @@ public class JavaCodeGen
 		
 		TransformationAssistantCG transformationAssistant = new TransformationAssistantCG(irInfo, varPrefixes);
 		FunctionValueAssistant functionValueAssistant = new FunctionValueAssistant();
+		
+		IgnorePatternTransformation ignoreTransformation = new IgnorePatternTransformation(transformationAssistant, IGNORE_PATTERN_NAME_PREFIX);
+		UnionTypeTransformation unionTypeTransformation = new UnionTypeTransformation(transformationAssistant, irInfo);
 		FunctionValueVisitor funcValVisitor = new FunctionValueVisitor(transformationAssistant, functionValueAssistant, INTERFACE_NAME_PREFIX, TEMPLATE_TYPE_PREFIX, EVAL_METHOD_PREFIX, PARAM_NAME_PREFIX);
 		ILanguageIterator langIterator = new JavaLanguageIterator(transformationAssistant, irInfo.getTempVarNameGen(), varPrefixes);
 		TransformationVisitor transVisitor = new TransformationVisitor(irInfo, varPrefixes, transformationAssistant, langIterator);
 		
 		List<GeneratedModule> generated = new ArrayList<GeneratedModule>();
-		for (ClassDeclStatus status : statuses)
+		for (IRClassDeclStatus status : statuses)
 		{
 			try
 			{
@@ -202,8 +194,10 @@ public class JavaCodeGen
 				
 				if (status.canBeGenerated())
 				{
+					classCg.apply(ignoreTransformation);
 					classCg.apply(funcValVisitor);
 					classCg.apply(transVisitor);
+					classCg.apply(unionTypeTransformation);
 				}
 				else
 				{
@@ -223,7 +217,7 @@ public class JavaCodeGen
 		FunctionValueAssistant functionValue = funcValVisitor.getFunctionValueAssistant();
 		javaFormat.setFunctionValueAssistant(functionValue);
 		
-		for (ClassDeclStatus status : statuses)
+		for (IRClassDeclStatus status : statuses)
 		{
 			if(!status.canBeGenerated())
 				continue;
@@ -282,11 +276,11 @@ public class JavaCodeGen
 		return generated;
 	}
 
-	private List<AClassDeclCG> getClassDecls(List<ClassDeclStatus> statuses)
+	private List<AClassDeclCG> getClassDecls(List<IRClassDeclStatus> statuses)
 	{
 		List<AClassDeclCG> classDecls = new LinkedList<AClassDeclCG>();
 
-		for (ClassDeclStatus status : statuses)
+		for (IRClassDeclStatus status : statuses)
 		{
 			classDecls.add(status.getClassCg());
 		}
@@ -298,13 +292,13 @@ public class JavaCodeGen
 	{
 		// There is no name validation here.
 
-		ExpStatus expStatus = generator.generateFrom(exp);
+		IRExpStatus expStatus = generator.generateFrom(exp);
 
 		StringWriter writer = new StringWriter();
 
 		try
 		{
-			PExpCG expCg = expStatus.getExpCg();
+			SExpCG expCg = expStatus.getExpCg();
 
 			if (expStatus.canBeGenerated())
 			{

@@ -13,35 +13,35 @@ import org.overture.ast.statements.AIdentifierObjectDesignator;
 import org.overture.ast.statements.ANewObjectDesignator;
 import org.overture.ast.statements.ASelfObjectDesignator;
 import org.overture.ast.statements.PObjectDesignator;
+import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.SObjectDesignatorCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
-import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AFieldObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.ANewObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.ASelfObjectDesignatorCG;
-import org.overture.codegen.cgast.statements.PObjectDesignatorCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.utils.AnalysisExceptionCG;
 
-public class ObjectDesignatorVisitorCG extends AbstractVisitorCG<IRInfo, PObjectDesignatorCG>
+public class ObjectDesignatorVisitorCG extends AbstractVisitorCG<IRInfo, SObjectDesignatorCG>
 {
 	@Override
-	public PObjectDesignatorCG caseAApplyObjectDesignator(
+	public SObjectDesignatorCG caseAApplyObjectDesignator(
 			AApplyObjectDesignator node, IRInfo question)
 			throws AnalysisException
 	{
 		PObjectDesignator obj = node.getObject();
-		PObjectDesignatorCG objCg = obj.apply(question.getObjectDesignatorVisitor(), question);
+		SObjectDesignatorCG objCg = obj.apply(question.getObjectDesignatorVisitor(), question);
 		
 		AApplyObjectDesignatorCG applyObjDesignator = new AApplyObjectDesignatorCG();
 		applyObjDesignator.setObject(objCg);
 		
-		LinkedList<PExpCG> newExpArgs = applyObjDesignator.getArgs();
+		LinkedList<SExpCG> newExpArgs = applyObjDesignator.getArgs();
 		for (PExp arg : node.getArgs())
 		{
-			PExpCG argCg = arg.apply(question.getExpVisitor(), question);
+			SExpCG argCg = arg.apply(question.getExpVisitor(), question);
 			newExpArgs.add(argCg);
 		}
 
@@ -49,7 +49,7 @@ public class ObjectDesignatorVisitorCG extends AbstractVisitorCG<IRInfo, PObject
 	}
 	
 	@Override
-	public PObjectDesignatorCG caseAFieldObjectDesignator(
+	public SObjectDesignatorCG caseAFieldObjectDesignator(
 			AFieldObjectDesignator node, IRInfo question)
 			throws AnalysisException
 	{
@@ -57,7 +57,7 @@ public class ObjectDesignatorVisitorCG extends AbstractVisitorCG<IRInfo, PObject
 		PObjectDesignator obj = node.getObject();
 		
 		String fieldCg = field.getName();
-		PObjectDesignatorCG objCg = obj.apply(question.getObjectDesignatorVisitor(), question);
+		SObjectDesignatorCG objCg = obj.apply(question.getObjectDesignatorVisitor(), question);
 		
 		AFieldObjectDesignatorCG fieldObjDesignator = new AFieldObjectDesignatorCG();
 		fieldObjDesignator.setFieldName(fieldCg);
@@ -67,13 +67,13 @@ public class ObjectDesignatorVisitorCG extends AbstractVisitorCG<IRInfo, PObject
 	}
 	
 	@Override
-	public PObjectDesignatorCG caseAIdentifierObjectDesignator(
+	public SObjectDesignatorCG caseAIdentifierObjectDesignator(
 			AIdentifierObjectDesignator node, IRInfo question)
 			throws AnalysisException
 	{
 		AVariableExp exp = node.getExpression();
 
-		PExpCG expCg = exp.apply(question.getExpVisitor(), question);
+		SExpCG expCg = exp.apply(question.getExpVisitor(), question);
 
 		AIdentifierObjectDesignatorCG idObjDesignator = new AIdentifierObjectDesignatorCG();
 		
@@ -89,13 +89,13 @@ public class ObjectDesignatorVisitorCG extends AbstractVisitorCG<IRInfo, PObject
 	}
 	
 	@Override
-	public PObjectDesignatorCG caseANewObjectDesignator(
+	public SObjectDesignatorCG caseANewObjectDesignator(
 			ANewObjectDesignator node, IRInfo question)
 			throws AnalysisException
 	{
 		ANewExp exp = node.getExpression();
 
-		PExpCG expCg = exp.apply(question.getExpVisitor(), question);
+		SExpCG expCg = exp.apply(question.getExpVisitor(), question);
 
 		ANewObjectDesignatorCG newObjDesignator = new ANewObjectDesignatorCG();
 
@@ -108,7 +108,7 @@ public class ObjectDesignatorVisitorCG extends AbstractVisitorCG<IRInfo, PObject
 	}
 	
 	@Override
-	public PObjectDesignatorCG caseASelfObjectDesignator(
+	public SObjectDesignatorCG caseASelfObjectDesignator(
 			ASelfObjectDesignator node, IRInfo question)
 			throws AnalysisException
 	{

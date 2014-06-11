@@ -34,6 +34,7 @@ public class TemplateStructure
 	
 	public final String STATE_DESIGNATOR_PATH; 
 	public final String OBJECT_DESIGNATOR_PATH;
+	public final String PATTERN_PATH;
 	
 	public TemplateStructure(String rootFolder)
 	{
@@ -64,6 +65,7 @@ public class TemplateStructure
 		
 		STATE_DESIGNATOR_PATH = root + "StateDesignator" + File.separatorChar;
 		OBJECT_DESIGNATOR_PATH = root + "ObjectDesignator" + File.separatorChar;
+		PATTERN_PATH = root + "Pattern" + File.separatorChar;
 	}
 	
 }

@@ -46,7 +46,7 @@ public class SimpleTest {
         resource.AddLetterbox(clock, new Letterbox());
         ((Till) tills.get(1L)).InsertCard(c1);
 
-        if (((Till) tills.get(1L)).Validate(123456L) == Quotes.PinOk) {
+        if (((Number) ((Till) tills.get(1L)).Validate(123456L)).longValue() == Quotes.PinOk) {
             return ((Till) tills.get(1L)).MakeWithdrawal(800L);
         } else {
             return false;

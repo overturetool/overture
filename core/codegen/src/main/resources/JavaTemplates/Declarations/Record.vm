@@ -4,10 +4,10 @@ $node.getAccess() static class $node.getName() implements Record
 	$JavaFormat.format($field)
 	#end
 	
-	$JavaFormat.formatRecordConstructor($node)
+	$RecordCreator.formatRecordConstructor($node)
 	
-	$JavaFormat.generateEqualsMethod($node)
-	$JavaFormat.generateHashcodeMethod($node)
-	$JavaFormat.generateCloneMethod($node)
-	$JavaFormat.generateToStringMethod($node)
+	$RecordCreator.generateEqualsMethod($node)
+	$RecordCreator.generateHashcodeMethod($node)
+	$RecordCreator.generateCloneMethod($node)
+	$RecordCreator.generateToStringMethod($node)
 }

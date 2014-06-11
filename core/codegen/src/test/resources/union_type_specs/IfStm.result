@@ -1,0 +1,25 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    private static final Object x = true;
+
+    public Entry() {
+    }
+
+    public static Object Run() {
+        if (!((Boolean) x)) {
+            return 1L;
+        } else if (((Boolean) x)) {
+            return 2L;
+        } else if (((Boolean) x)) {
+            return 3L;
+        } else {
+            return 4L;
+        }
+    }
+}
+
+##########

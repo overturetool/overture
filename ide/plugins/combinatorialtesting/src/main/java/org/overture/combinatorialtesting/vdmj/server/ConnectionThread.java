@@ -82,10 +82,13 @@ public class ConnectionThread extends Thread
 
 			while (connected)
 			{
-				receive(); // Blocking
+				if(!receive()) // Blocking
+				{
+					return;
+				}
 			}
 		} catch (SocketException e)
-		{
+		{e.printStackTrace();
 			monitor.traceError("Connection error: " + e.getMessage());
 			// Caused by die(), and VDMJ death
 		} catch (IOException e)
@@ -116,7 +119,7 @@ public class ConnectionThread extends Thread
 	}
 
 
-	private void receive() throws IOException
+	private boolean receive() throws IOException
 	{
 		// <ascii length> \0 <XML data> \0
 
@@ -132,7 +135,7 @@ public class ConnectionThread extends Thread
 		if (c == -1)
 		{
 			connected = false; // End of thread
-			return;
+			return false;
 		}
 
 		if (c != 0)
@@ -172,10 +175,10 @@ public class ConnectionThread extends Thread
 					+ this.id + ", got [" + new String(data) + "]");
 		}
 
-		process(data);
+	return	process(data);
 	}
 
-	private void process(byte[] data) throws IOException
+	private boolean process(byte[] data) throws IOException
 	{
 		// System.out.println(new String(data));
 		XMLParser parser = new XMLParser(data);
@@ -193,9 +196,10 @@ public class ConnectionThread extends Thread
 			if (tagnode.tag.equals("init"))
 			{
 				processInit(tagnode);
+				return true;
 			} else
 			{
-				processResponse(tagnode);
+				return processResponse(tagnode);
 			}
 		} catch (Exception e)
 		{
@@ -203,7 +207,7 @@ public class ConnectionThread extends Thread
 		}
 	}
 
-	private void processResponse(XMLTagNode tagnode)
+	private boolean processResponse(XMLTagNode tagnode)
 	{
 		String traceName = tagnode.getAttr("tracename");
 		String progress = tagnode.getAttr("progress");
@@ -233,19 +237,11 @@ public class ConnectionThread extends Thread
 			{
 			}
 			monitor.completed();
-
-		} else if (status.equals("terminating"))
-		{
-			try
-			{
-				output.write("terminating".getBytes());
-				output.flush();
-			} catch (IOException e)
-			{
-			}
 			monitor.terminating();
-			die();
-		}
+			return false;
+
+		} 
+		return true;
 	}
 
 	private void processInit(XMLTagNode tagnode)
