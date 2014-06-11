@@ -1,5 +1,6 @@
 package org.overture.pog.visitors;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,16 +14,19 @@ import org.overture.ast.definitions.SOperationDefinitionBase;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ABooleanConstExp;
 import org.overture.ast.expressions.AForAllExp;
+import org.overture.ast.expressions.APostOpExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexBooleanToken;
+import org.overture.ast.lex.VDMToken;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.ACallStm;
+import org.overture.ast.statements.AExternalClause;
 import org.overture.pog.obligation.POContext;
 import org.overture.pog.pub.IPOContext;
 import org.overture.pog.pub.IPogAssistantFactory;
@@ -81,6 +85,13 @@ public class OpPostConditionContext extends POContext implements IPOContext
 			AImplicitOperationDefinition implicitOp = (AImplicitOperationDefinition) calledOp;
 			if (implicitOp.getExternals().size() > 0)
 			{
+				for (AExternalClause external : implicitOp.getExternals())
+				{
+					if (external.getMode().getType().equals(VDMToken.WRITE))
+					{
+						binds.addAll(introduceFreshVars(external.getIdentifiers(), getStateVars(calledOp)));
+					}
+				}
 
 			} else
 			{
@@ -92,8 +103,8 @@ public class OpPostConditionContext extends POContext implements IPOContext
 		return r;
 	}
 
-	private void refreshAllState(SOperationDefinitionBase calledOp,
-			List<PMultipleBind> binds)
+	private List<AInstanceVariableDefinition> getStateVars(
+			SOperationDefinitionBase calledOp)
 	{
 		List<PDefinition> defs;
 		if (calledOp.getClassDefinition() != null)
@@ -105,16 +116,47 @@ public class OpPostConditionContext extends POContext implements IPOContext
 			{
 				defs = calledOp.getState().getStateDefs();
 			} else
-				defs = new LinkedList<PDefinition>();
+				return new LinkedList<AInstanceVariableDefinition>();
 		}
-
+		List<AInstanceVariableDefinition> r = new LinkedList<AInstanceVariableDefinition>();
 		for (PDefinition p : defs)
 		{
 			if (p instanceof AInstanceVariableDefinition)
 			{
-				binds.add(introduceFreshVar((AInstanceVariableDefinition) p));
+				r.add((AInstanceVariableDefinition) p);
 			}
 		}
+		return r;
+	}
+
+	private void refreshAllState(SOperationDefinitionBase calledOp,
+			List<PMultipleBind> binds)
+	{
+		List<AInstanceVariableDefinition> defs = getStateVars(calledOp);
+
+		for (AInstanceVariableDefinition p : defs)
+		{
+			binds.add(introduceFreshVar(p));
+		}
+	}
+
+	private Collection<? extends PMultipleBind> introduceFreshVars(
+			LinkedList<ILexNameToken> identifiers,
+			List<AInstanceVariableDefinition> defs)
+	{
+		List<PMultipleBind> r = new LinkedList<PMultipleBind>();
+		for (ILexNameToken ilt : identifiers)
+		{
+			for (AInstanceVariableDefinition d : defs)
+			{
+				if (ilt.equals(d.getName()))
+				{
+					r.add(introduceFreshVar(d));
+				}
+			}
+
+		}
+		return r;
 	}
 
 	PMultipleBind introduceFreshVar(AInstanceVariableDefinition var)
@@ -197,21 +239,26 @@ public class OpPostConditionContext extends POContext implements IPOContext
 			PExp new_exp = args.get(0).clone();
 			subs.add(new Substitution(origName, new_exp));
 		}
-		return rewriteExp(def, subs, af);
+		return rewritePost(def, subs, af);
 	}
 
 	// FIXME unify expression rewrite method with the one from
 	// OperationCallObligation
-	private PExp rewriteExp(AExplicitFunctionDefinition def,
+	private PExp rewritePost(AExplicitFunctionDefinition def,
 			List<Substitution> subs, IPogAssistantFactory af)
 	{
-		PExp pre_exp = def.getBody().clone();
-
+		PExp post_exp = def.getBody();
+		
+		if (post_exp instanceof APostOpExp){
+			// post-expression bodies are wrapped in a PostOpExp for some reason...
+			post_exp = ((APostOpExp) post_exp).getPostexpression();
+		}
+		
 		for (Substitution sub : subs)
 		{
 			try
 			{
-				pre_exp = pre_exp.apply(af.getVarSubVisitor(), sub);
+				post_exp = post_exp.apply(af.getVarSubVisitor(), sub);
 			} catch (AnalysisException e)
 			{
 
@@ -219,7 +266,7 @@ public class OpPostConditionContext extends POContext implements IPOContext
 			}
 		}
 
-		return pre_exp;
+		return post_exp;
 	}
 
 }
