@@ -205,7 +205,7 @@ public class OpPostConditionContext extends POContext implements IPOContext
 				implies_exp = implies_exp.apply(visitor, sub);
 			} catch (AnalysisException e)
 			{
-				// TODO Auto-generated catch block
+				// FIXME consider handling of exceptions inside final context construction
 				e.printStackTrace();
 			}
 		}
@@ -242,18 +242,17 @@ public class OpPostConditionContext extends POContext implements IPOContext
 		return rewritePost(def, subs, af);
 	}
 
-	// FIXME unify expression rewrite method with the one from
-	// OperationCallObligation
 	private PExp rewritePost(AExplicitFunctionDefinition def,
 			List<Substitution> subs, IPogAssistantFactory af)
 	{
 		PExp post_exp = def.getBody();
-		
-		if (post_exp instanceof APostOpExp){
+
+		if (post_exp instanceof APostOpExp)
+		{
 			// post-expression bodies are wrapped in a PostOpExp for some reason...
 			post_exp = ((APostOpExp) post_exp).getPostexpression();
 		}
-		
+
 		for (Substitution sub : subs)
 		{
 			try
