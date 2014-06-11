@@ -27,7 +27,7 @@ public class AUnionTypeAssistant
 		if (type.getExpanded())
 			return;
 
-		PTypeSet exptypes = new PTypeSet();
+		PTypeSet exptypes = new PTypeSet(af);
 
 		for (PType t : type.getTypes())
 		{

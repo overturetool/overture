@@ -198,7 +198,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			TypeCheckInfo question) throws AnalysisException
 	{
 		boolean notreached = false;
-		PTypeSet rtypes = new PTypeSet();
+		PTypeSet rtypes = new PTypeSet(question.assistantFactory);
 		PType last = null;
 
 		for (PStm stmt : node.getStatements())
@@ -558,7 +558,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 
 		PType expType = node.getExp().apply(THIS, question);
 
-		PTypeSet rtypes = new PTypeSet();
+		PTypeSet rtypes = new PTypeSet(question.assistantFactory);
 
 		for (ACaseAlternativeStm c : node.getCases())
 		{
@@ -793,7 +793,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			qdef.qualifyType();
 		}
 
-		PTypeSet rtypes = new PTypeSet();
+		PTypeSet rtypes = new PTypeSet(question.assistantFactory);
 		rtypes.add(node.getThenStm().apply(THIS, question));
 		
 		for (QualifiedDefinition qdef: qualified)
@@ -850,7 +850,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	{
 		// PType r = defaultSSimpleBlockStm(node,question);
 
-		PTypeSet rtypes = new PTypeSet();
+		PTypeSet rtypes = new PTypeSet(question.assistantFactory);
 		int rcount = 0;
 
 		for (PStm stmt : node.getStatements())
@@ -1013,7 +1013,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	public PType caseATrapStm(ATrapStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		PTypeSet rtypes = new PTypeSet();
+		PTypeSet rtypes = new PTypeSet(question.assistantFactory);
 
 		PStm body = node.getBody();
 

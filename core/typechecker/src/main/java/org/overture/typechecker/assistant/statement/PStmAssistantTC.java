@@ -21,7 +21,7 @@ public class PStmAssistantTC
 			return statement.apply(af.getExitTypeCollector());// FIXME: should we handle exceptions like this
 		} catch (AnalysisException e)
 		{
-			return new PTypeSet();
+			return new PTypeSet(af);
 		}
 
 	}

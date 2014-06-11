@@ -79,7 +79,7 @@ public class RecordTypeFinder extends TypeUnwrapper<ARecordInvariantType>
 
 						if (current == null)
 						{
-							common.put(f.getTag(), new PTypeSet(f.getType()));
+							common.put(f.getTag(), new PTypeSet(f.getType(), af));
 						} else
 						{
 							current.add(f.getType());

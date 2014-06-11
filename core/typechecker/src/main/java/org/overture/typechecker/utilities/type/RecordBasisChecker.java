@@ -81,7 +81,7 @@ public class RecordBasisChecker extends TypeUnwrapper<Boolean>
 
 						if (current == null)
 						{
-							common.put(f.getTag(), new PTypeSet(f.getType()));
+							common.put(f.getTag(), new PTypeSet(f.getType(), af));
 						} else
 						{
 							current.add(f.getType());

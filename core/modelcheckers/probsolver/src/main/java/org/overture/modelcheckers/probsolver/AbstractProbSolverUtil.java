@@ -156,12 +156,18 @@ public class AbstractProbSolverUtil
 	/**
 	 * Create the assistant factory for use in the subclasses.
 	 */
-	public final AstAssistantFactory assistantFactory = new AstAssistantFactory();
+	public AstAssistantFactory assistantFactory;// = new AstAssistantFactory();
 	
 
+	/**
+	 * This assistant factory is predefined of overture,
+	 * must be avoided in the extension
+	 * @param console
+	 */
 	public AbstractProbSolverUtil(SolverConsole console)
 	{
 		this.console = console;
+		assistantFactory = new AstAssistantFactory();
 	}
 
 	public String displayFormat(AbstractEvalElement formula)

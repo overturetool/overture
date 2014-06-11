@@ -206,8 +206,8 @@ import org.overture.ast.util.Utils;
 @SuppressWarnings("deprecation")
 public class AstFactory
 {
-	//Should we instanciate an assistant factory here?
-	//Added by gkanos.
+	//Should we instanciatte an assistant factory here?
+	//Create a setter and a getter.
 	protected static IAstAssistantFactory af;
 	
 	static
@@ -215,7 +215,8 @@ public class AstFactory
 		//Added by gkanos.
 		af = new AstAssistantFactory();// FIXME: remove when assistant conversion is finished
 	}
-
+	
+	
 	/*
 	 * Init Methods - correspond to constructors of the abstract classes, e.g. Definition, Pattern, Type, etc.
 	 */

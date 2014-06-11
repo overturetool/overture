@@ -52,8 +52,8 @@ public class MapTypeFinder extends TypeUnwrapper<SMapType>
 			// type.setMapType(PTypeAssistantTC.getMap(AstFactory.newAUnknownType(location)));
 			// Rewritten in an none static form.
 			type.setMapType(af.createPTypeAssistant().getMap(AstFactory.newAUnknownType(location)));
-			PTypeSet from = new PTypeSet();
-			PTypeSet to = new PTypeSet();
+			PTypeSet from = new PTypeSet(af);
+			PTypeSet to = new PTypeSet(af);
 
 			for (PType t : type.getTypes())
 			{
