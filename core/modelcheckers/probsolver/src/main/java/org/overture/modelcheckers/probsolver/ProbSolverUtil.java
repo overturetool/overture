@@ -193,7 +193,7 @@ public class ProbSolverUtil extends AbstractProbSolverUtil
 	 * @param r
 	 * @return
 	 * @throws SolverException
-	 * @throws UnsupportedTranslationException 
+	 * @throws UnsupportedTranslationException
 	 */
 	private VdmSolution extractSolution(VdmContext context, EvalResult r)
 			throws SolverException, UnsupportedTranslationException
@@ -299,10 +299,45 @@ public class ProbSolverUtil extends AbstractProbSolverUtil
 			Map<String, PType> argumentTypes, PType tokenType)
 			throws SolverException
 	{
+
+		try
+		{
+			Map<String, INode> arguments = new HashMap<String, INode>();
+			for (Entry<String, String> a : argContext.entrySet())
+			{
+				arguments.put(a.getKey(), ParserUtil.parseExpression(a.getValue()).result);
+			}
+
+			Map<String, INode> stateConstraints = new HashMap<String, INode>();
+			List<PDefinition> states = new Vector<PDefinition>();
+
+			if (!(opDef instanceof PExp))
+			{
+				states = findState(opDef);
+				for (Entry<String, String> a : stateContext.entrySet())
+				{
+					stateConstraints.put(a.getKey(), ParserUtil.parseExpression(a.getValue()).result);
+				}
+			}
+
+			console.out.println("---------------------------------------------------------------------------------");
+			console.out.println("Solver running for operation: " + name);
+
+			VdmContext context = translate(states, opDef, result, arguments, argumentTypes, tokenType, stateConstraints);
+
+			VdmSolution val = solve(context);
+			return val;
+		} catch (AnalysisException e)
+		{
+			throw new SolverException("Internal error in translation of the specification and post condition", e);
+		}
+	}
+
+	private List<PDefinition> findState(INode opDef)
+	{
 		List<PDefinition> states = new Vector<PDefinition>();
 
 		AModuleModules module = opDef.getAncestor(AModuleModules.class);
-
 		if (module != null)
 		{
 			for (PDefinition def : module.getDefs())
@@ -330,36 +365,7 @@ public class ProbSolverUtil extends AbstractProbSolverUtil
 				}
 			}
 		}
-
-		try
-		{
-			Map<String, INode> arguments = new HashMap<String, INode>();
-			for (Entry<String, String> a : argContext.entrySet())
-			{
-//				Settings.dialect = Dialect.VDM_PP;
-//				Settings.release = Release.VDM_10;
-				arguments.put(a.getKey(), ParserUtil.parseExpression(a.getValue()).result);
-			}
-
-			Map<String, INode> stateConstraints = new HashMap<String, INode>();
-			for (Entry<String, String> a : stateContext.entrySet())
-			{
-//				Settings.dialect = Dialect.VDM_PP;
-//				Settings.release = Release.VDM_10;
-				stateConstraints.put(a.getKey(), ParserUtil.parseExpression(a.getValue()).result);
-			}
-
-			console.out.println("---------------------------------------------------------------------------------");
-			console.out.println("Solver running for operation: " + name);
-
-			VdmContext context = translate(states, opDef, result, arguments, argumentTypes, tokenType, stateConstraints);
-
-			VdmSolution val = solve(context);
-			return val;
-		} catch (AnalysisException e)
-		{
-			throw new SolverException("Internal error in translation of the specification and post condition", e);
-		}
+		return states;
 	}
 
 	private VdmSolution solve(VdmContext context) throws SolverException
