@@ -156,7 +156,7 @@ public class AbstractProbSolverUtil
 	/**
 	 * Create the assistant factory for use in the subclasses.
 	 */
-	public AstAssistantFactory assistantFactory;// = new AstAssistantFactory();
+	public AstAssistantFactory assistantFactory;
 	
 
 	/**
