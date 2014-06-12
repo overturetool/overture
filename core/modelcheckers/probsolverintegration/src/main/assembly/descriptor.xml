@@ -13,9 +13,11 @@
 		<dependencySet>
 			<excludes>
 				<exclude>org.overture.core*:*</exclude>
+				<exclude>org.overturetool.core:*</exclude>
 				<exclude>ch.qos.logback:logback-classic</exclude>
 				<exclude>ch.qos.logback:logback-core</exclude>
 			</excludes>
+		
 			<outputDirectory>/</outputDirectory>
 			<useProjectArtifact>true</useProjectArtifact>
 			<unpack>true</unpack>
