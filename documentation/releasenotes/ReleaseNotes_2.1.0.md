@@ -1,4 +1,4 @@
-# Overture 2.1.0 Release Notes — 3 June 2014 
+# Overture 2.1.0 Release Notes — 12 June 2014 
 
 ## What's New?
 
@@ -80,22 +80,23 @@ If you encounter a problem with a VDM specification, please try to make a small 
 
 Please note that the interactive list is at <https://github.com/overturetool/overture/issues?milestone=12&state=closed>
 
-* [#258 Coverage markers are out by one character](https://api.github.com/repos/overturetool/overture/issues/258)
-* [#254 Standard Eclipse user interface features "missing" from 2.0.0](https://api.github.com/repos/overturetool/overture/issues/254)
-* [#246 The bus declarations given in the vdm real time log produced by the interpreter are incorrect](https://api.github.com/repos/overturetool/overture/issues/246)
-* [#207 Editor gives errors while editing a VDM-SL model (with errors)](https://api.github.com/repos/overturetool/overture/issues/207)
-* [#198 Inconsistent editor tabstops in Linux/Windows](https://api.github.com/repos/overturetool/overture/issues/198)
-* [#195 Warnings with IDE at startup with a large existing workspace](https://api.github.com/repos/overturetool/overture/issues/195)
-* [#193 Projects in working sets don't get error marker updates](https://api.github.com/repos/overturetool/overture/issues/193)
-* [#188 Syntax error highlightling sometimes goes to first line](https://api.github.com/repos/overturetool/overture/issues/188)
-* [#184 VDM++ Editor not correctly showing error locations](https://api.github.com/repos/overturetool/overture/issues/184)
-* [#156 External editor doesn't give hover text for error/warnings](https://api.github.com/repos/overturetool/overture/issues/156)
-* [#154 Saving](https://api.github.com/repos/overturetool/overture/issues/154)
-* [#144 Latex coverage table wrong for overloaded names](https://api.github.com/repos/overturetool/overture/issues/144)
-* [#143 Some VDMUnit error strings cause parser errors](https://api.github.com/repos/overturetool/overture/issues/143)
-* [#133 Extended explicit functions missing from launchers](https://api.github.com/repos/overturetool/overture/issues/133)
-* [#118 Generating coverage with .doc files is broken](https://api.github.com/repos/overturetool/overture/issues/118)
-* [#108 Tab expansion in Word coverage output is wrong](https://api.github.com/repos/overturetool/overture/issues/108)
-* [#96 Process console not selected when starting a debug](https://api.github.com/repos/overturetool/overture/issues/96)
-* [#63 Coverage display japanese chars](https://api.github.com/repos/overturetool/overture/issues/63)
-* [#34 UTF-VDM RT Realtime Log can't display UTF-8 Chars](https://api.github.com/repos/overturetool/overture/issues/34)
+* [#321 Problem with type checking patterns](https://api.github.com/repos/overturetool/overture/issues/321)
+* [#316 Quickfix for VDM libraries that have not yet been added to the VDM project](https://api.github.com/repos/overturetool/overture/issues/316)
+* [#315 Latex plugin initializes with wrong settings](https://api.github.com/repos/overturetool/overture/issues/315)
+* [#311 Polymorphic parameters are too restricted](https://api.github.com/repos/overturetool/overture/issues/311)
+* [#310 Set intersect can fail with named types](https://api.github.com/repos/overturetool/overture/issues/310)
+* [#307 Outline sorting of values causes exceptions to be throws](https://api.github.com/repos/overturetool/overture/issues/307)
+* [#299 Brackets inserted in PO from experiemental POG are not correct](https://api.github.com/repos/overturetool/overture/issues/299)
+* [#298 Tuple selection is not correct in POG backends](https://api.github.com/repos/overturetool/overture/issues/298)
+* [#296 Implicit operations without returns yield wrong POs](https://api.github.com/repos/overturetool/overture/issues/296)
+* [#295 Implicit op may get the experimental POG to crash](https://api.github.com/repos/overturetool/overture/issues/295)
+* [#293 pre-condition of operation should be taken as assumption for post-condition in POG](https://api.github.com/repos/overturetool/overture/issues/293)
+* [#292 Experimental POG yield "null" with munion](https://api.github.com/repos/overturetool/overture/issues/292)
+* [#291 Experimental POG has "null in POs for recursive functions](https://api.github.com/repos/overturetool/overture/issues/291)
+* [#288 POs for pattern identifiers should not be necessary](https://api.github.com/repos/overturetool/overture/issues/288)
+* [#287 Experimental POG needs to take lhs of implies into account](https://api.github.com/repos/overturetool/overture/issues/287)
+* [#278 Function values not showing in Variables view](https://api.github.com/repos/overturetool/overture/issues/278)
+* [#267 Publish to Maven Central](https://api.github.com/repos/overturetool/overture/issues/267)
+* [#263 Remove <repositories> from pom.xmls](https://api.github.com/repos/overturetool/overture/issues/263)
+* [#189 Multiple breakpoints not working in SL?](https://api.github.com/repos/overturetool/overture/issues/189)
+* [#132 Record fields in the Variables view are sorted](https://api.github.com/repos/overturetool/overture/issues/132)
