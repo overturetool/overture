@@ -122,7 +122,7 @@ public class StatementFinder extends QuestionAnswerAdaptor<Integer, PStm>
 		PStm found = findStatementBaseCase(stm, lineno);
 		if (found != null)
 			return found;
-		return stm.apply(THIS, lineno);//PStmAssistantInterpreter.findStatement(stm.getStatement(), lineno);
+		return stm.getStatement().apply(THIS, lineno);//PStmAssistantInterpreter.findStatement(stm.getStatement(), lineno);
 	}
 	
 	@Override
