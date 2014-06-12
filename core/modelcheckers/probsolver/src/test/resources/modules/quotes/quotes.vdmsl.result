@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.modelcheckers.probsolver.QuotesTests">
-<result>
-<output object="&lt;C&gt;" resource="quotes.vdmsl" value="&lt;C&gt;"/>
-</result>
-</testResult>

@@ -64,4 +64,10 @@ public class AirportSLTest extends ProbConverterTestBase
 	{
 		return "sl.airport";
 	}
+	
+	@Override
+	protected File getStorageLocation()
+	{
+		return new File(super.getStorageLocation(),this.getClass().getSimpleName());
+	}
 }

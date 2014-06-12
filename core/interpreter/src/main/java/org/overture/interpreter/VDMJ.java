@@ -29,8 +29,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 import java.util.Map.Entry;
+import java.util.Vector;
 
 import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
@@ -44,8 +44,6 @@ import org.overture.interpreter.messages.rtlog.RTLogger;
 import org.overture.interpreter.runtime.Interpreter;
 import org.overture.interpreter.util.ExitStatus;
 import org.overture.parser.config.Properties;
-import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 
 /**
  * The main class of the VDMJ parser/checker/interpreter.

@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.modelcheckers.probsolver.BoolTests">
-<result>
-<output object="(&#10;return (3)&#10;)" resource="Bool-0028.vdmsl" value="(&#10;return (3)&#10;)"/>
-</result>
-</testResult>
