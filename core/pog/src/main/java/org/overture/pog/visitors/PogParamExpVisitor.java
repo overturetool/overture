@@ -53,7 +53,7 @@ import org.overture.pog.obligation.NonZeroObligation;
 import org.overture.pog.obligation.ProofObligationList;
 import org.overture.pog.obligation.RecursiveObligation;
 import org.overture.pog.obligation.SeqApplyObligation;
-import org.overture.pog.obligation.SubTypeObligation;
+import org.overture.pog.obligation.TypeCompatibility;
 import org.overture.pog.obligation.TupleSelectObligation;
 import org.overture.pog.obligation.UniqueExistenceObligation;
 import org.overture.pog.pub.IPOContextStack;
@@ -116,7 +116,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 					.getArgtypes().get(0));
 
 			if (!TypeComparator.isSubType(aType, mapType.getFrom(), aF)) {
-				SubTypeObligation sto = SubTypeObligation.newInstance(node
+				TypeCompatibility sto = TypeCompatibility.newInstance(node
 						.getArgs().get(0), mapType.getFrom(), aType, question,
 						aF);
 				if (sto != null) {
@@ -144,7 +144,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 				PType pt = funcType.getParameters().get(i);
 
 				if (!TypeComparator.isSubType(argType, pt, aF)) {
-					SubTypeObligation sto = SubTypeObligation.newInstance(
+					TypeCompatibility sto = TypeCompatibility.newInstance(
 							argList.get(i), pt, argType, question, aF);
 					if (sto != null) {
 						obligations.add(sto);
@@ -622,7 +622,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 			if (!TypeComparator.isSubType(question.checkType(aExp, aType),
 					f.getType(), aF)) {
-				SubTypeObligation sto = SubTypeObligation.newInstance(aExp,
+				TypeCompatibility sto = TypeCompatibility.newInstance(aExp,
 						f.getType(), aType, question, aF);
 				if (sto != null) {
 					obligations.add(sto);
@@ -632,7 +632,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 		PDefinition invDef = recordType.getInvDef();
 		if (invDef != null) {
-			SubTypeObligation sto = SubTypeObligation.newInstance(node,
+			TypeCompatibility sto = TypeCompatibility.newInstance(node,
 					recordType, recordType, question, aF);
 			if (sto != null) {
 				obligations.add(sto);
@@ -669,7 +669,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			PType mType = mTypes.get(i++);
 			if (f != null)
 				if (!TypeComparator.isSubType(mType, f.getType(), aF)) {
-					SubTypeObligation sto = SubTypeObligation.newInstance(
+					TypeCompatibility sto = TypeCompatibility.newInstance(
 							mod.getValue(), f.getType(), mType, question, aF);
 					if (sto != null) {
 						obligations.add(sto);
@@ -691,7 +691,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		question.noteType(node.getTest(), expected);
 
 		if (!TypeComparator.isSubType(node.getTest().getType(), expected, aF)) {
-			SubTypeObligation sto = SubTypeObligation.newInstance(
+			TypeCompatibility sto = TypeCompatibility.newInstance(
 					node.getTest(), expected, node.getTest().getType(),
 					question, aF);
 			if (sto != null) {
@@ -1005,7 +1005,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		PType lType = lExp.getType();
 		PType rType = rExp.getType();
 		if (lType instanceof AUnionType) {
-			SubTypeObligation sto = SubTypeObligation.newInstance(lExp,
+			TypeCompatibility sto = TypeCompatibility.newInstance(lExp,
 					AstFactory.newABooleanBasicType(lExp.getLocation()), lType,
 					question, aF);
 			if (sto != null) {
@@ -1014,7 +1014,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		}
 
 		if (rType instanceof AUnionType) {
-			SubTypeObligation sto = SubTypeObligation.newInstance(rExp,
+			TypeCompatibility sto = TypeCompatibility.newInstance(rExp,
 					AstFactory.newABooleanBasicType(rExp.getLocation()), rType,
 					question, aF);
 			if (sto != null) {
@@ -1139,7 +1139,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 		if (lType instanceof AUnionType) {
 
-			SubTypeObligation sto = SubTypeObligation.newInstance(left,
+			TypeCompatibility sto = TypeCompatibility.newInstance(left,
 					AstFactory.newARealNumericBasicType(right.getLocation()),
 					lType, question, aF);
 			if (sto != null) {
@@ -1149,7 +1149,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		}
 
 		if (rType instanceof AUnionType) {
-			SubTypeObligation sto = SubTypeObligation.newInstance(right,
+			TypeCompatibility sto = TypeCompatibility.newInstance(right,
 					AstFactory.newARealNumericBasicType(right.getLocation()),
 					rType, question, aF);
 			if (sto != null) {
@@ -1271,7 +1271,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		PType rType = rExp.getType();
 
 		if (aF.createPTypeAssistant().isUnion(lType)) {
-			SubTypeObligation sto = SubTypeObligation.newInstance(lExp,
+			TypeCompatibility sto = TypeCompatibility.newInstance(lExp,
 					AstFactory.newABooleanBasicType(lExp.getLocation()), lType,
 					question, aF);
 			if (sto != null) {
@@ -1282,7 +1282,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		if (aF.createPTypeAssistant().isUnion(rType)) {
 			question.push(new POImpliesContext(lExp));
 
-			SubTypeObligation sto = SubTypeObligation.newInstance(rExp,
+			TypeCompatibility sto = TypeCompatibility.newInstance(rExp,
 					AstFactory.newABooleanBasicType(rExp.getLocation()), rType,
 					question, aF);
 			if (sto != null) {
@@ -1311,7 +1311,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		PType rType = rExp.getType();
 
 		if (aF.createPTypeAssistant().isUnion(lType)) {
-			SubTypeObligation sto = SubTypeObligation.newInstance(lExp,
+			TypeCompatibility sto = TypeCompatibility.newInstance(lExp,
 					AstFactory.newABooleanBasicType(lExp.getLocation()), lType,
 					question, aF);
 			if (sto != null) {
@@ -1320,7 +1320,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		}
 
 		if (aF.createPTypeAssistant().isUnion(rType)) {
-			SubTypeObligation sto = SubTypeObligation.newInstance(rExp,
+			TypeCompatibility sto = TypeCompatibility.newInstance(rExp,
 					AstFactory.newABooleanBasicType(rExp.getLocation()), rType,
 					question, aF);
 			if (sto != null) {
@@ -1354,13 +1354,13 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		PType rType = rExp.getType();
 
 		if (aF.createPTypeAssistant().isUnion(lType)) {
-			obligations.add(SubTypeObligation.newInstance(lExp,
+			obligations.add(TypeCompatibility.newInstance(lExp,
 					AstFactory.newABooleanBasicType(lExp.getLocation()), lType,
 					question, aF));
 		}
 
 		if (aF.createPTypeAssistant().isUnion(rType)) {
-			obligations.add(SubTypeObligation.newInstance(rExp,
+			obligations.add(TypeCompatibility.newInstance(rExp,
 					AstFactory.newABooleanBasicType(rExp.getLocation()), rType,
 					question, aF));
 		}
@@ -1387,7 +1387,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		PType rType = rExp.getType();
 
 		if (lType instanceof AUnionType) {
-			SubTypeObligation sto = SubTypeObligation.newInstance(lExp,
+			TypeCompatibility sto = TypeCompatibility.newInstance(lExp,
 					AstFactory.newABooleanBasicType(lExp.getLocation()), lType,
 					question, aF);
 			if (sto != null) {
@@ -1397,7 +1397,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 		if (rType instanceof AUnionType) {
 			question.push(new PONotImpliesContext(lExp));
-			SubTypeObligation sto = SubTypeObligation.newInstance(rExp,
+			TypeCompatibility sto = TypeCompatibility.newInstance(rExp,
 					AstFactory.newABooleanBasicType(rExp.getLocation()), rType,
 					question, aF);
 			if (sto != null) {
@@ -1476,7 +1476,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			System.out.println("fd");
 
 		if (aF.createPTypeAssistant().isUnion(ltype)) {
-			SubTypeObligation sto = SubTypeObligation.newInstance(left,
+			TypeCompatibility sto = TypeCompatibility.newInstance(left,
 					AstFactory.newARealNumericBasicType(left.getLocation()),
 					ltype, question, aF);
 			if (sto != null) {
@@ -1485,7 +1485,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		}
 
 		if (aF.createPTypeAssistant().isUnion(rtype)) {
-			SubTypeObligation sto = SubTypeObligation.newInstance(right,
+			TypeCompatibility sto = TypeCompatibility.newInstance(right,
 					AstFactory.newARealNumericBasicType(right.getLocation()),
 					rtype, question, aF);
 			if (sto != null) {

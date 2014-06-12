@@ -43,7 +43,7 @@ import org.overture.pog.obligation.LetBeExistsObligation;
 import org.overture.pog.obligation.OperationCallObligation;
 import org.overture.pog.obligation.ProofObligationList;
 import org.overture.pog.obligation.StateInvariantObligation;
-import org.overture.pog.obligation.SubTypeObligation;
+import org.overture.pog.obligation.TypeCompatibility;
 import org.overture.pog.obligation.WhileLoopObligation;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
@@ -122,7 +122,7 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 			if (!TypeComparator.isSubType(
 					question.checkType(node.getExp(), node.getExpType()),
 					node.getTargetType(), aF)) {
-				SubTypeObligation sto = SubTypeObligation.newInstance(
+				TypeCompatibility sto = TypeCompatibility.newInstance(
 						node.getExp(), node.getTargetType(), node.getExpType(),
 						question, aF);
 				if (sto != null) {

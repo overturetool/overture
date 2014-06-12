@@ -49,7 +49,7 @@ import org.overture.pog.obligation.ParameterPatternObligation;
 import org.overture.pog.obligation.ProofObligationList;
 import org.overture.pog.obligation.SatisfiabilityObligation;
 import org.overture.pog.obligation.StateInvariantObligation;
-import org.overture.pog.obligation.SubTypeObligation;
+import org.overture.pog.obligation.TypeCompatibility;
 import org.overture.pog.obligation.ValueBindingObligation;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
@@ -188,7 +188,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 			if (node.getIsUndefined()
 					|| !TypeComparator.isSubType(node.getActualResult(), node.getExpectedResult(), assistantFactory))
 			{
-				SubTypeObligation sto = SubTypeObligation.newInstance(node, node.getExpectedResult(), node.getActualResult(), question, assistantFactory);
+				TypeCompatibility sto = TypeCompatibility.newInstance(node, node.getExpectedResult(), node.getActualResult(), question, assistantFactory);
 				if (sto != null)
 				{
 					obligations.add(sto);
@@ -291,7 +291,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 						if (!TypeComparator.isSubType(question.checkType(node.getTest(), node.getExpType()), compatible, assistantFactory))
 						{
 							list.add(new ValueBindingObligation(node, question));
-							SubTypeObligation sto = SubTypeObligation.newInstance(node.getTest(), compatible, node.getExpType(), question, assistantFactory);
+							TypeCompatibility sto = TypeCompatibility.newInstance(node.getTest(), compatible, node.getExpType(), question, assistantFactory);
 							if (sto != null)
 							{
 								list.add(sto);
@@ -303,7 +303,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 			{
 				if (!TypeComparator.isSubType(question.checkType(node.getTest(), node.getExpType()), node.getDefType(), assistantFactory))
 				{
-					SubTypeObligation sto = SubTypeObligation.newInstance(node.getTest(), node.getDefType(), node.getExpType(), question, assistantFactory);
+					TypeCompatibility sto = TypeCompatibility.newInstance(node.getTest(), node.getDefType(), node.getExpType(), question, assistantFactory);
 					if (sto != null)
 					{
 						list.add(sto);
@@ -389,7 +389,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 				if (node.getIsUndefined()
 						|| !TypeComparator.isSubType(node.getActualResult(), ((AFunctionType) node.getType()).getResult(), assistantFactory))
 				{
-					SubTypeObligation sto = SubTypeObligation.newInstance(node, ((AFunctionType) node.getType()).getResult(), node.getActualResult(), question, assistantFactory);
+					TypeCompatibility sto = TypeCompatibility.newInstance(node, ((AFunctionType) node.getType()).getResult(), node.getActualResult(), question, assistantFactory);
 					if (sto != null)
 					{
 						obligations.add(sto);
@@ -467,7 +467,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 			if (!node.getIsConstructor()
 					&& !TypeComparator.isSubType(node.getActualResult(), ((AOperationType) node.getType()).getResult(), assistantFactory))
 			{
-				SubTypeObligation sto = SubTypeObligation.newInstance(node, node.getActualResult(), question, assistantFactory);
+				TypeCompatibility sto = TypeCompatibility.newInstance(node, node.getActualResult(), question, assistantFactory);
 				if (sto != null)
 				{
 					obligations.add(sto);
@@ -551,7 +551,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 				if (!node.getIsConstructor()
 						&& !TypeComparator.isSubType(node.getActualResult(), ((AOperationType) node.getType()).getResult(), assistantFactory))
 				{
-					SubTypeObligation sto = SubTypeObligation.newInstance(node, node.getActualResult(), question, assistantFactory);
+					TypeCompatibility sto = TypeCompatibility.newInstance(node, node.getActualResult(), question, assistantFactory);
 					if (sto != null)
 					{
 						obligations.add(sto);
@@ -593,7 +593,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 
 			if (!TypeComparator.isSubType(question.checkType(expression, expType), type, assistantFactory))
 			{
-				SubTypeObligation sto = SubTypeObligation.newInstance(expression, type, expType, question, assistantFactory);
+				TypeCompatibility sto = TypeCompatibility.newInstance(expression, type, expType, question, assistantFactory);
 				if (sto != null)
 				{
 					obligations.add(sto);
@@ -630,7 +630,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 
 			if (!TypeComparator.isSubType(question.checkType(expression, expType), type, assistantFactory))
 			{
-				SubTypeObligation sto = SubTypeObligation.newInstance(expression, type, expType, question, assistantFactory);
+				TypeCompatibility sto = TypeCompatibility.newInstance(expression, type, expType, question, assistantFactory);
 				if (sto != null)
 				{
 					obligations.add(sto);
@@ -736,7 +736,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 					if (!TypeComparator.isSubType(type, compatible, assistantFactory))
 					{
 						obligations.add(new ValueBindingObligation(node, question));
-						SubTypeObligation sto = SubTypeObligation.newInstance(exp, compatible, type, question, assistantFactory);
+						TypeCompatibility sto = TypeCompatibility.newInstance(exp, compatible, type, question, assistantFactory);
 						if (sto != null)
 						{
 							obligations.add(sto);
@@ -747,7 +747,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 
 			if (!TypeComparator.isSubType(question.checkType(exp, node.getExpType()), type, assistantFactory))
 			{
-				SubTypeObligation sto = SubTypeObligation.newInstance(exp, type, node.getExpType(), question, assistantFactory);
+				TypeCompatibility sto = TypeCompatibility.newInstance(exp, type, node.getExpType(), question, assistantFactory);
 				if (sto != null)
 				{
 					obligations.add(sto);
