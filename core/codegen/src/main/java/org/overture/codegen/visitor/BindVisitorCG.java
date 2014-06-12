@@ -9,12 +9,12 @@ import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.pattern.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetBindCG;
 import org.overture.codegen.cgast.patterns.PBindCG;
-import org.overture.codegen.ooast.OoAstInfo;
+import org.overture.codegen.ir.IRInfo;
 
-public class BindVisitorCG  extends AbstractVisitorCG<OoAstInfo, PBindCG>
+public class BindVisitorCG  extends AbstractVisitorCG<IRInfo, PBindCG>
 {
 	@Override
-	public PBindCG caseASetBind(ASetBind node, OoAstInfo question)
+	public PBindCG caseASetBind(ASetBind node, IRInfo question)
 			throws AnalysisException
 	{
 		PPattern pattern = node.getPattern();

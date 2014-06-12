@@ -1,0 +1,974 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () == return new SimpleTest().Run();
+
+end Entry
+
+
+class SimpleTest
+
+values
+
+  c1 : Card = new Card(123456,1,1);
+  cards : set of Card = {c1};
+  resource : CentralResource = new CentralResource();
+  tills : map TillId to Till = {1 |-> new Till(resource)};
+        
+instance variables
+
+  clock : Clock := new Clock();
+  letterbox : Letterbox := new Letterbox();
+
+types
+
+  public TillId = nat;
+
+operations 
+
+public Run : () ==> bool 
+  Run () ==
+    (clock.SetDate("150999");
+    let peter = new Cardholder().Create("Peter Gorm Larsen", "Granvej 24")
+    in
+       let pglacc1 = new Account().Create({1 |-> peter},5000),
+           pglid1 = 1
+       in 
+         (resource.AddAccount(pglid1,pglacc1);         
+          resource.AddLetterbox(clock, new Letterbox());
+          tills(1).InsertCard(c1);
+          if tills(1).Validate(123456) = <PinOk>
+          then return tills(1).MakeWithdrawal(800)
+          else return false;
+         );          
+    );
+
+end SimpleTest
+
+
+\section{The Class Account}
+
+This class models an account. A number of cards held by individual
+cardholders are associated with an account. An account has a balance
+and records transactions.
+
+\begin{vdm_al}
+class Account
+
+instance variables
+  cards : map Card`CardId to Cardholder;
+  balance : nat;
+  transactions : seq of Transaction := [];
+
+  inv TransactionsInvariant(transactions);
+\end{vdm_al}
+
+The invariant ensures that transactions performed on the same day do
+not exceed the daily limit, which is a constant value defined
+below. Note that we have chosen to not allow a negative balance.
+
+\begin{vdm_al}
+values
+  dailyLimit : nat = 2000;
+
+types
+  public AccountId = nat;
+  public Transaction :: date : Clock`Date
+                 cardId : Card`CardId
+                 amount : nat;
+\end{vdm_al}
+
+In this specification we have chosen to model transaction as a
+type. Alternatively it could have been modeled as a class, but it has
+no obvious functionality except trivial read/write
+operations. Moreover, transaction objects/values do not need to be
+shared among many objects. Our choice also illustrates the power of
+the VDM++ type system.
+
+\begin{vdm_al}
+operations
+  ValidTransaction : Transaction ==> bool
+  ValidTransaction(transaction) ==
+    is not yet specified;
+
+public Create : map Card`CardId to Cardholder * nat ==> Account
+  Create(cs,b) ==
+    (cards := cs;
+     balance := b;
+     return self);
+
+  public GetBalance : () ==> nat
+  GetBalance() ==
+    return balance;
+\end{vdm_al}
+
+The Withdrawal operation checks that an account and the daily limit
+are not overdrawn.
+
+\begin{vdm_al}
+  public Withdrawal : Card`CardId * nat * Clock`Date ==> bool
+  Withdrawal(cardId,amount,date) ==
+    let transaction = mk_Transaction(date,cardId,amount)
+    in
+      if balance - amount >= 0 and
+         DateTotal(date,transactions^[transaction]) <= dailyLimit
+      then
+       (balance := balance - amount;
+        transactions := transactions ^ [transaction];
+        return true)
+      else
+        return false
+  pre cardId in set dom cards;
+
+  public MakeStatement : Card`CardId * Clock`Date ==> Letter
+  MakeStatement(cardId,date) ==
+    let nm = cards(cardId).GetName(),
+        addr = cards(cardId).GetAddress()
+    in
+      (dcl letter : Letter := new Letter();
+       letter.Create(nm,addr,date,transactions,balance))
+  pre cardId in set dom cards;
+\end{vdm_al}
+
+The GetCardIds operation is used to obtain all cards associated with the account.
+\begin{vdm_al}
+  public GetCardIds: () ==> set of Card`CardId
+  GetCardIds() ==
+    return dom cards;
+\end{vdm_al}
+
+The following operations and functions provide auxiliary functionality of various sorts.
+
+\begin{vdm_al}
+  public AddCard : Card`CardId * Cardholder ==> ()
+  AddCard(cId,ch) ==
+    cards := cards munion {cId |-> ch}
+  pre cId not in set dom cards;
+
+  public RemoveCard : Card`CardId ==> ()
+  RemoveCard(cId) ==
+    cards := {cId} <-: cards
+  pre cId in set dom cards;
+
+functions
+  TransactionsInvariant: seq of Transaction +> bool
+  TransactionsInvariant(ts) ==
+    forall date in set {ts(i).date | i in set inds ts} &
+      DateTotal(date,ts) <= dailyLimit;
+\end{vdm_al}
+
+The transactions invariant first computes all dates in the sequence of transactions and then compares the sum of the drawn amounts for each day with the daily limit.
+
+\begin{vdm_al}
+  DateTotal : Clock`Date * seq of Transaction +> nat
+  DateTotal(date,ts) ==
+    Sum([ts(i).amount | i in set inds ts & ts(i).date = date]);
+
+  Sum: seq of real +> real
+  Sum(rs) ==
+    if rs = [] then 0
+    else
+      hd rs + Sum(tl rs);
+ 
+end Account
+\end{vdm_al}
+
+
+
+\section{The Class Card}
+
+This class models physical cards. Each card has a code, a card id and
+an account id stored on it. The class provides operations to create a
+card and to read information stored on a card.
+
+\begin{vdm_al}
+class Card
+
+types
+  public CardId = nat;
+  public Code = nat;
+  public PinCode = nat;
+
+instance variables
+  code : Code;
+  cardId : CardId;
+  accountId : Account`AccountId;
+
+operations
+  public Card : Code * CardId * Account`AccountId ==> Card
+  Card(c,cid,a) ==
+    (code := c;
+     cardId := cid;
+     accountId := a);
+
+  public GetCode : () ==> Code
+  GetCode() ==
+    return code;
+
+  public GetAccountId : () ==> Account`AccountId
+  GetAccountId() ==
+    return accountId;
+
+  public GetCardId : () ==> CardId
+  GetCardId() ==
+    return cardId;
+
+end Card
+\end{vdm_al}
+
+
+
+\section{The Class Cardholder}
+
+This class models a cardholder's name and address. This information is
+used to post an account statement. The class provides standard
+read/write operations.
+
+\begin{vdm_al}
+class Cardholder
+
+types
+  public Address = seq of char;
+  public Name = seq of char;
+
+instance variables
+  name : Name;
+  address : Address;
+
+operations
+  public Create : Name * Address ==> Cardholder
+  Create(nm,addr) ==
+    (name := nm;
+     address := addr;
+     return self);
+
+  public GetName : () ==> Name 
+  GetName () ==
+    return name;
+
+  public GetAddress : () ==> Address 
+  GetAddress() ==
+    return address;
+
+end Cardholder
+\end{vdm_al}
+
+
+
+
+\section{The Class CentralResource}
+
+This class models the central resource. We assume there is only one
+central resource in the system, though many tills can be connected to
+this. The central resource holds the accounts, ids of illegal cards,
+and connections to a clock and a letterbox.
+
+\begin{vdm_al}
+class CentralResource
+
+instance variables
+  accounts      : map Account`AccountId to Account := {|->};
+  numberOfTries : map Card`CardId to nat := {|->};
+  illegalCards  : set of Card`CardId := {};
+inv dom numberOfTries union illegalCards subset 
+    dunion {acc.GetCardIds() | acc in set rng accounts};
+
+  letterbox     : Letterbox;
+  clock         : Clock;
+\end{vdm_al}
+
+All cards for different accounts cannot be overlapping.
+
+\begin{vdm_al}
+  inv forall acc1,acc2 in set rng accounts &
+          acc1 <> acc2 =>
+          acc1.GetCardIds() inter acc2.GetCardIds() = {};
+
+values
+  maxNumberOfTries : nat = 3;
+
+operations
+  public AddLetterbox : Clock * Letterbox ==> ()
+  AddLetterbox(c,l) ==
+    (clock := c;
+     letterbox := l);
+\end{vdm_al}
+
+The following three operations provide the functionality requested in
+the requirements specification of the system. The operations first
+check that the requested functionality is allowed and then hand the
+actual processing over to each account. Note that the checks are
+necessary even though the till may have performed them as well. For
+example, a card may have been reported stolen or illegal in another
+way while it is being used at a till.
+
+\begin{vdm_al}
+  public GetBalance : Account`AccountId ==> [nat]
+  GetBalance(accountId) ==
+    if accountId in set dom accounts then
+      accounts(accountId).GetBalance()
+    else
+      return nil;
+
+  public Withdrawal : Account`AccountId * Card`CardId * nat ==> bool
+  Withdrawal(accountId,cardId,amount) ==
+    if IsLegalCard(accountId,cardId) then
+      accounts(accountId).Withdrawal(cardId,amount,clock.GetDate())
+    else
+      return false;
+
+  public PostStatement : Account`AccountId * Card`CardId ==> bool
+  PostStatement(accountId,cardId) ==
+    if IsLegalCard(accountId,cardId) then
+      (letterbox.PostStatement
+        (accounts(accountId).MakeStatement(cardId,clock.GetDate()));
+       return true)
+    else
+      return false;
+\end{vdm_al}
+
+Next some operations follow to check whether cards are legal and
+administrate number of tries stored for each card.
+
+\begin{vdm_al}
+  public IsLegalCard : Account`AccountId * Card`CardId ==> bool
+  IsLegalCard(accountId,cardId) ==
+    return
+      cardId not in set illegalCards and
+      accountId in set dom accounts and
+      cardId in set accounts(accountId).GetCardIds();
+
+  public NumberOfTriesExceeded : Card`CardId ==> bool
+  NumberOfTriesExceeded(cardId) ==
+    return numberOfTries(cardId) >= maxNumberOfTries;
+
+  public ResetNumberOfTries : Card`CardId ==> ()
+  ResetNumberOfTries(cardId) ==
+    numberOfTries(cardId) := 0;
+
+  public IncrNumberOfTries : Card`CardId ==> ()
+  IncrNumberOfTries(cardId) ==
+    numberOfTries(cardId) := numberOfTries(cardId) + 1;
+\end{vdm_al}
+
+The two operations below are used to update the central resource. 
+
+\begin{vdm_al}
+  public AddAccount : Account`AccountId * Account ==> ()
+  AddAccount(accId,acc) ==
+    atomic
+    (accounts := accounts ++ {accId |-> acc};
+     numberOfTries := numberOfTries ++
+                      {cId |-> 0 | cId in set acc.GetCardIds()};
+     )
+  pre accId not in set dom accounts;
+
+  public AddIllegalCard : Card`CardId ==> ()
+  AddIllegalCard(cId) ==
+    illegalCards := illegalCards union {cId};
+
+end CentralResource
+\end{vdm_al}
+
+
+
+\section{The Class Clock}
+
+This class models a clock which maintains a date. 
+
+\begin{vdm_al}
+class Clock
+
+types
+  public Date = seq of char;
+
+instance variables
+
+  date : Date := "";
+
+operations
+  public SetDate : Date ==> ()
+  SetDate(d) ==
+    date := d;
+
+  public GetDate : () ==> Date
+  GetDate() ==
+    return date;
+
+end Clock
+\end{vdm_al}
+
+
+
+\section{The Class Letter}
+
+The class models account statements posted to cardholders.
+
+\begin{vdm_al}
+class Letter
+
+instance variables
+  public name : Cardholder`Name;
+  public address : Cardholder`Address;
+  public date : Clock`Date;
+  public transactions : seq of Account`Transaction;
+  public balance : nat
+
+operations
+  public Create: Cardholder`Name * Cardholder`Address * Clock`Date *
+          seq of Account`Transaction * nat ==> Letter
+  Create(nm,addr,d,ts,b) ==
+    (name := nm;
+     address := addr;
+     date := d;
+     transactions := ts;
+     balance:= b;
+     return self);
+
+end Letter
+\end{vdm_al}
+
+
+
+
+\section{The Class Letterbox}
+
+This class stores account statements sent to cardholders. 
+
+\begin{vdm_al}
+class Letterbox
+
+instance variables
+  statements : seq of Letter := [];
+
+operations
+  public PostStatement : Letter ==> ()
+  PostStatement(letter) == 
+    statements := statements ^ [letter];
+
+  public GetLastStatement : () ==> Letter
+  GetLastStatement() == 
+    return statements(len statements)
+  pre statements <> [];
+
+end Letterbox
+\end{vdm_al}
+
+\section{The Class Till}
+
+This class models a till. A till is connected to a central resource
+and holds a number of retained cards, which have not been returned to
+a user of the till. It may hold a current card and it has an attribute
+to say whether the current card and its PIN code have been validated
+successfully. In this version of the till we assume that the central
+resource will always become available within a reasonable time limit.
+
+\begin{vdm_al}
+class Till
+
+instance variables
+  curCard : [Card] := nil;
+  cardOk : bool := false;
+  retainedCards : set of Card := {};
+  resource : CentralResource;
+
+  inv curCard = nil => not cardOk;
+\end{vdm_al}
+
+The invariant says that if there is no card in the till then the
+validation status of the current card shall be false.
+
+\begin{vdm_al}
+operations
+  public Till: CentralResource ==> Till
+  Till(res) == 
+    resource := res;
+\end{vdm_al}
+
+The Create operation is used once in a till object's lifetime in order to set up a connection to a central resource.
+
+\begin{vdm_al}
+  public InsertCard : Card ==> ()
+  InsertCard(c) ==
+    curCard := c
+  pre not CardInside();
+\end{vdm_al}
+
+The InsertCard operation models the activity of inserting a card into
+the till. This cannot be done if the till holds a card already, which
+is documented in the precondition.
+
+\begin{vdm_al}
+  public Validate : Card`PinCode ==> <PinOk> | <PinNotOk> | <Retained>
+  Validate(pin) ==
+    let cardId = curCard.GetCardId(),
+        codeOk = curCard.GetCode() = Encode(pin),
+        cardLegal = IsLegalCard()
+    in
+      (cardOk := codeOk and cardLegal;
+       if not cardLegal then 
+         (retainedCards := retainedCards union {curCard};
+          curCard := nil;
+          return <Retained>)
+       elseif codeOk then
+         resource.ResetNumberOfTries(cardId)
+       else
+         (resource.IncrNumberOfTries(cardId);
+          if resource.NumberOfTriesExceeded(cardId) then
+            (retainedCards := retainedCards union {curCard};
+             cardOk := false;
+             curCard := nil;
+             return <Retained>));
+       return if cardOk
+              then <PinOk>
+              else <PinNotOk>)
+  pre CardInside() and not cardOk;
+\end{vdm_al}
+
+The operation Validate is used to validate a PIN code and to check
+that a card is not illegal. The precondition ensures that the till
+currently holds a card which has not yet been validated. If a card
+turns out to be illegal, the machine keeps the card.
+
+\begin{vdm_al}
+  public ReturnCard : () ==> ()
+  ReturnCard() ==
+    (cardOk := false;
+     curCard:= nil)
+  pre CardInside();
+\end{vdm_al}
+
+The ReturnCard operation is useful to end user sessions, though it is
+not mentioned in the requirements. It allows the user to perform more
+than one transaction in each session, e.g. to first view the balance
+and then make a withdrawal.
+
+The following three operations are listed in the requirements
+document. They all require that the till holds a card which has been
+validated successfully. The operations are mirrored in the central
+resource. The GetBalance operation return the value nil if it is not
+possible to get the balance.
+
+\begin{vdm_al}
+  public GetBalance : () ==> [nat]
+  GetBalance() ==
+    resource.GetBalance(curCard.GetAccountId())
+  pre CardValidated();
+\end{vdm_al}
+
+The MakeWithdrawal and RequestStatement operations returns a boolean
+indicating whether the requested transactions could be completed.
+
+\begin{vdm_al}
+  public MakeWithdrawal : nat ==> bool
+  MakeWithdrawal(amount) ==
+    resource.Withdrawal
+      (curCard.GetAccountId(),curCard.GetCardId(),amount)
+  pre CardValidated();
+
+  public RequestStatement : () ==> bool
+  RequestStatement() ==
+    resource.PostStatement(curCard.GetAccountId(),curCard.GetCardId())
+  pre CardValidated();
+\end{vdm_al}
+
+The IsLegalCard operation below is only used internally to validate a card.
+
+\begin{vdm_al}
+  public IsLegalCard : () ==> bool
+  IsLegalCard() ==
+    return 
+      resource.IsLegalCard(curCard.GetAccountId(),curCard.GetCardId())
+  pre CardInside();
+
+  public CardValidated: () ==> bool
+  CardValidated() ==
+    return curCard <> nil and cardOk;
+
+  public CardInside: () ==> bool
+  CardInside() ==
+    return curCard <> nil;
+
+functions
+\end{vdm_al}
+
+The requirements say that the till should encode the PIN code before
+comparing it to the code on the card. We have documented this
+requirement in the function below, but not yet made a choice of
+approach to this.
+
+\begin{vdm_al}
+  Encode: Card`PinCode +> Card`Code
+  Encode(pin) ==
+    pin; -- NB! The actual encoding procedure has not yet been chosen
+
+end Till
+\end{vdm_al}
+
+
+
+\section{The Event Class}
+
+The Event class is the abstract super class of the class hierarchy of test events. Each class implementing this event class must define an execute operation.
+
+\begin{vdm_al}
+class Event
+
+operations 
+  public execute : System ==> Test`TestResult
+  execute(system) ==
+    is subclass responsibility;
+
+end Event
+\end{vdm_al}
+
+
+
+\section{The GetBalance Testing Class}
+
+The event GetBalance corresponds to a client asking for a balance at one of the tills in this system.
+
+\begin{vdm_al}
+class GetBalance is subclass of Event
+
+instance variables
+
+  tillid : System`TillId;
+
+operations
+
+  public Init : System`TillId ==> GetBalance
+  Init(tid) ==
+    (tillid := tid;
+     return self);
+
+  public execute : System ==> Test`TestResult
+  execute(sys) ==
+    let till = sys.GetTill(tillid)
+    in
+      if till.CardValidated()
+      then till.GetBalance()
+      else return false;
+
+end GetBalance
+\end{vdm_al}
+
+
+
+\section{The IllegalCard Testing Class}
+
+\begin{vdm_al}
+class IllegalCard is subclass of Event
+
+instance variables
+
+  mycard   : Card`CardId;
+
+operations
+
+  public Init : Card`CardId ==> IllegalCard
+  Init(c) ==
+    (mycard := c;
+     return self);
+
+  public execute : System ==> Test`TestResult
+  execute(sys) ==
+    (sys.GetResource().AddIllegalCard(mycard);
+     return true);
+
+end IllegalCard
+\end{vdm_al}
+
+
+
+\section{The InsertCard Testing Class}
+
+The event InsertCard corresponds to a client inserting a credit card at one of the tills in this system.
+
+\begin{vdm_al}
+class InsertCard is subclass of Event
+
+instance variables
+
+  tillid : System`TillId;
+  mycard : Card;
+
+operations
+
+  public Init : System`TillId * Card ==> InsertCard
+  Init(tid, c) ==
+    (tillid := tid;
+     mycard := c;
+     return self);
+
+  public execute : System ==> Test`TestResult
+  execute(sys) ==
+    (sys.GetTill(tillid).InsertCard(mycard);
+     return true);
+
+end InsertCard
+\end{vdm_al}
+
+
+
+\section{The ReturnCard Testing Class}
+
+The event ReturnCard corresponds to a client asking for getting the
+card out from one of the tills in this system.
+
+\begin{vdm_al}
+class ReturnCard is subclass of Event
+
+instance variables
+
+  tillid : System`TillId;
+
+operations
+
+  public Init : System`TillId ==> ReturnCard
+  Init(tid) ==
+    (tillid := tid;
+     return self);
+
+  public execute : System ==> Test`TestResult
+  execute(sys) ==
+    (let till = sys.GetTill(tillid)
+     in
+       if till.CardInside()
+       then till.ReturnCard()
+       else return false;
+     return true);
+
+end ReturnCard
+\end{vdm_al}
+
+
+
+\section{The SendStatement Testing Class}
+
+ The event SendStatement corresponds to a client asking for a
+ statement to be send by ordinary mail at one of the tills in this
+ system.
+
+\begin{vdm_al}
+class SendStatement is subclass of Event
+
+instance variables
+
+  tillid : System`TillId;
+
+operations
+  public Init : System`TillId ==> SendStatement
+  Init(tid) ==
+    (tillid := tid;
+     return self);
+
+  public execute : System ==> Test`TestResult
+  execute(sys) ==
+    let till = sys.GetTill(tillid)
+    in
+      if till.CardValidated()
+      then till.RequestStatement()
+      else return false;
+
+end SendStatement
+\end{vdm_al}
+
+
+
+\section{The System Class}
+
+The System class is collecting all the different parts of the system together.
+
+\begin{vdm_al}
+class System
+
+values
+
+  c1 : Card = new Card(123456,1,1);
+  c2 : Card = new Card(123457,2,2);
+  c3 : Card = new Card(123458,3,3);
+  c4 : Card = new Card(123459,4,4); 
+  c5 : Card = new Card(123460,5,5);
+  c6 : Card = new Card(123461,6,5);
+  c7 : Card = new Card(123462,7,5);
+  cards : set of Card = {c1,c2,c3,c4,c5,c6,c7};
+  resource : CentralResource = new CentralResource();
+  tills : map TillId to Till = 
+                   {1 |-> new Till(resource),
+                    2 |-> new Till(resource),
+                    3 |-> new Till(resource)};
+        
+instance variables
+
+  clock : Clock := new Clock();
+  letterbox : Letterbox := new Letterbox();
+
+types
+
+  public TillId = nat;
+
+operations
+
+  public GetTill: TillId ==> Till
+  GetTill(tid) ==
+    return tills(tid);
+
+  public GetResource: () ==> CentralResource
+  GetResource() ==
+    return resource;
+
+  public System: () ==> System
+  System() ==
+    (clock.SetDate("150999");
+    let peter = new Cardholder().Create("Peter Gorm Larsen",
+                                        "Granvej 24"),
+        paul = new Cardholder().Create("Paul Mukherjee",
+                                        "Rugaardsvej 47"),
+        sten = new Cardholder().Create("Sten Agerholm",
+                                        "Teisensvej ??"),
+        kim = new Cardholder().Create("Kim Sunesen",
+                                      "??"),
+        CSK = new Cardholder().Create("CSK","Forskerparken 10A")
+     in
+       let pglacc1 = new Account().Create({1 |-> peter},5000),
+           saacc1  = new Account().Create({2 |-> sten},0),
+           ksacc1  = new Account().Create({3 |-> kim},9000),
+           pmacc1  = new Account().Create({4 |-> paul},6000),
+           ifacc1  = new Account().Create({5 |-> peter,
+                                           6 |-> sten,
+                                           7 |-> CSK},70000),
+           pglid1 = 1,
+           said1  = 2,
+           ksid1  = 3,
+           pmid1  = 4,
+           ifid1  = 5
+       in 
+         (resource.AddAccount(pglid1,pglacc1);
+          resource.AddAccount(said1,saacc1);              
+          resource.AddAccount(ksid1,ksacc1);
+          resource.AddAccount(pmid1,pmacc1);
+          resource.AddAccount(ifid1,ifacc1);
+ --         tills := ;
+ --         cards := {c1,c2,c3,c4,c5,c6,c7};
+          resource.AddLetterbox(clock,new Letterbox())));
+
+traces
+ 
+  T1: let c in set cards
+      in
+        let t in set rng tills
+        in
+          let p in set {123456,123457,123458,123459,123460,123461,123462}
+          in
+            (t.InsertCard(c);t.Validate(p);t.MakeWithdrawal(1000)) 
+            
+  T2: let c in set cards 
+      in
+        let t1, t2 in set rng tills
+        in
+          let p in set {123456,123457,123458,123459,123460,123461,123462}
+          in
+            ((t1.InsertCard(c); 
+              t2.InsertCard(c);
+              t1.Validate(p);
+              t1.MakeWithdrawal(1000);
+              t2.MakeWithdrawal(1000))|
+             (t1.Validate(p);
+              t1.MakeWithdrawal(3000)) )
+end System
+\end{vdm_al}
+
+
+\section{A Test Class}
+
+The Test class defines an environment for executing test cases. The
+class maintains a reference to a KLV instance, and it provides two
+operations, runOneTest for execution of one test event, and runTests
+for execution of a sequence of test events. Different kinds of test
+events can be executed. These are defined by the Event class hierarchy
+defined below.  The data types represent different kinds of categories
+of results which in this case are simply booleans, natural numbers or
+nil.
+
+\begin{vdm_al}
+class Test
+types
+
+  public TestResult = [bool | nat | <PinOk> | <PinNotOk> | <Retained>]
+
+instance variables
+
+  system : System := new System();
+
+operations
+  public runTests : seq of Event ==> seq of TestResult
+  runTests(events) ==
+ (return [events(i).execute(system)
+         | i in set inds events ]);
+
+  public runOneTest : Event ==> TestResult
+  runOneTest(event) ==
+  return event.execute(system);
+
+end Test
+\end{vdm_al}
+
+
+\section{The Validate Testing Class}
+
+\begin{vdm_al}
+class Validate is subclass of Event
+
+instance variables
+
+  tillid : System`TillId;
+  code : Card`PinCode;
+
+operations
+  public Init : System`TillId * Card`PinCode ==> Validate
+  Init(tid, pin) ==
+    (tillid := tid;
+     code := pin;
+     return self);
+
+  public execute : System ==> Test`TestResult
+  execute(sys) ==
+    sys.GetTill(tillid).Validate(code);
+
+end Validate
+\end{vdm_al}
+
+
+
+\section{The Withdrawal Testing Class}
+
+The event Withdraval corresponds to a client asking for withdrawing money at one of the tills in this system.
+
+\begin{vdm_al}
+class Withdrawal is subclass of Event
+
+instance variables
+
+  tillid : System`TillId;
+  amount : nat;
+
+operations
+  public Init : System`TillId * nat ==> Withdrawal
+  Init(t, a) ==
+    (tillid := t;
+     amount := a;
+     return self);
+
+  public execute : System ==> Test`TestResult
+  execute(sys) ==
+    let till = sys.GetTill(tillid)
+    in
+      if till.CardValidated()
+      then till.MakeWithdrawal(amount)
+      else return false;
+
+end Withdrawal
+\end{vdm_al}

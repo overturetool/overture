@@ -1,0 +1,23 @@
+class Entry
+
+functions
+
+functions
+
+public static nat_char_map : seq of nat -> (nat -> char) -> seq of char
+nat_char_map(s) (f) == 
+if s = [] then 
+	[]
+else
+	[f(hd s)] ^ nat_char_map(tl s)(f);
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let f = (lambda x : int & 'a'),
+		xs = [1,2,3,4,5,6,7,8,9,10]
+in
+	return nat_char_map(xs)(f);
+
+end Entry

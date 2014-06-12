@@ -17,6 +17,7 @@ import org.overture.ast.expressions.PExp;
 import org.overture.codegen.analysis.violations.InvalidNamesException;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.analysis.violations.Violation;
+import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.Generated;
@@ -32,11 +33,16 @@ import de.hunsicker.jalopy.Jalopy;
 
 public class JavaCodeGenUtil
 {
-	public static GeneratedData generateJavaFromFiles(List<File> files) throws AnalysisException, InvalidNamesException, UnsupportedModelingException
+	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+
+	public static GeneratedData generateJavaFromFiles(List<File> files, IRSettings irSettings, JavaSettings javaSettings) throws AnalysisException, InvalidNamesException, UnsupportedModelingException
 	{
 		List<SClassDefinition> mergedParseList = consMergedParseList(files);
 		
 		JavaCodeGen vdmCodGen = new JavaCodeGen();
+		
+		vdmCodGen.setSettings(irSettings);
+		vdmCodGen.setJavaSettings(javaSettings);
 
 		List<GeneratedModule> generatedModules = generateJavaFromVdm(mergedParseList, vdmCodGen);
 		
@@ -85,7 +91,7 @@ public class JavaCodeGenUtil
 		return vdmCodGen.generateJavaFromVdm(mergedParseLists);
 	}
 
-	public static Generated generateJavaFromExp(String exp) throws AnalysisException
+	public static Generated generateJavaFromExp(String exp, IRSettings irSettings, JavaSettings javaSettings) throws AnalysisException
 	{
 		TypeCheckResult<PExp> typeCheckResult = GeneralCodeGenUtils.validateExp(exp);
 		
@@ -96,6 +102,9 @@ public class JavaCodeGenUtil
 		}
 
 		JavaCodeGen vdmCodGen = new JavaCodeGen();
+		vdmCodGen.setSettings(irSettings);
+		vdmCodGen.setJavaSettings(javaSettings);
+		
 		try
 		{
 			return vdmCodGen.generateJavaFromVdmExp(typeCheckResult.result);
@@ -127,17 +136,17 @@ public class JavaCodeGenUtil
 		for (Violation violation : reservedWordViolations)
 		{
 			buffer.append("Reserved name violation: " + violation
-					+ "\n");
+					+ LINE_SEPARATOR);
 		}
 
 		for (Violation violation : typenameViolations)
 		{
-			buffer.append("Type name violation: " + violation + "\n");
+			buffer.append("Type name violation: " + violation + LINE_SEPARATOR);
 		}
 		
 		for(Violation violation : tempVarViolations)
 		{
-			buffer.append("Temporary variable violation: " + violation + "\n");
+			buffer.append("Temporary variable violation: " + violation + LINE_SEPARATOR);
 		}
 		
 		return buffer.toString();
@@ -151,27 +160,16 @@ public class JavaCodeGenUtil
 		
 		for (Violation violation : violations)
 		{
-			buffer.append(violation + "\n");
+			buffer.append(violation + LINE_SEPARATOR);
 		}
-		
-		int lastIndex = buffer.lastIndexOf("\n");
-		
-		if(lastIndex >= 0)
-			buffer.replace(lastIndex, lastIndex + 1, "");
 		
 		return buffer.toString();
 	}
 	
-	public static void generateJavaSourceFiles(File file, List<GeneratedModule> classes)
+	public static void generateJavaSourceFiles(File outputFolder, List<GeneratedModule> classes)
 	{
 		JavaCodeGen vdmCodGen = new JavaCodeGen();
-		vdmCodGen.generateJavaSourceFiles(file, classes);
-	}
-	
-	public static void generateJavaSourceFile(File file, GeneratedModule module)
-	{
-		JavaCodeGen vdmCodGen = new JavaCodeGen();
-		vdmCodGen.generateJavaSourceFile(file, module);
+		vdmCodGen.generateJavaSourceFiles(outputFolder, classes);
 	}
 	
 	public static String formatJavaCode(String code)
@@ -181,6 +179,9 @@ public class JavaCodeGenUtil
 		try
 		{
 			tempFile = new File("target" + File.separatorChar + "temp.java");
+			tempFile.getParentFile().mkdirs();
+			tempFile.createNewFile();
+			
 			PrintWriter xwriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(tempFile, false), "UTF-8"));
 			xwriter.write(code.toString());
 			xwriter.flush();
@@ -203,7 +204,7 @@ public class JavaCodeGenUtil
 			else if (jalopy.getState() == Jalopy.State.ERROR)
 				 result = code; // could not be formatted
 			
-			return result.toString().replaceAll("\r", "");
+			return result.toString();
 
 		} catch (Exception e)
 		{

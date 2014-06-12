@@ -1,0 +1,14 @@
+class Entry
+
+operations
+
+public static op : () ==> set of nat
+op () == 
+let d = (lambda x: int & {z | z in set {1,2,3}})
+in
+	return d(40);
+
+public static Run : () ==> ?
+Run () == return op();
+
+end Entry

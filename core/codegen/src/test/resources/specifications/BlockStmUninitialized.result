@@ -9,10 +9,10 @@ public class A {
 
     public Number op() {
         Number n = 0L;
-        boolean b = false;
+        Boolean b = false;
         Number r = 0.0;
-        char c = '0';
-        String s = null;
+        Character c = '0';
+        VDMSeq s = null;
         A a = null;
 
         return 0L;

@@ -7,8 +7,6 @@ import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PBind;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ATypeBindAssistantInterpreter;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.values.ValueList;
 
@@ -40,7 +38,8 @@ public class BindValueCollector extends QuestionAnswerAdaptor<ObjectContext, Val
 	public ValueList caseATypeBind(ATypeBind bind, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		return ATypeBindAssistantInterpreter.getValues((ATypeBind) bind, ctxt);
+		//return ATypeBindAssistantInterpreter.getValues((ATypeBind) bind, ctxt);
+		return new ValueList();
 	}
 	
 	@Override

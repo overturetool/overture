@@ -11,10 +11,10 @@ import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.ValueList;
-import org.overture.pog.assistant.PogAssistantFactory;
 import org.overture.pog.obligation.POContextStack;
 import org.overture.pog.obligation.ProofObligationList;
-import org.overture.pog.visitor.PogVisitor;
+import org.overture.pog.pub.IProofObligationList;
+import org.overture.pog.pub.ProofObligationGenerator;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
 public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
@@ -89,12 +89,14 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 //		}
 	}
 
-	public static ProofObligationList getProofObligations(PDefinition def,
+	public IProofObligationList getProofObligations(PDefinition def,
 			POContextStack ctxt)
 	{
 		try
 		{
-			return def.apply(new PogVisitor(), new POContextStack(new PogAssistantFactory()));
+
+			ProofObligationGenerator.generateProofObligations(def);
+
 		} catch (AnalysisException e)
 		{
 			e.printStackTrace();
@@ -137,7 +139,7 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 
 	}
 
-	public static PExp findExpression(PDefinition def, int lineno)
+	public PExp findExpression(PDefinition def, int lineno)
 	{
 		try
 		{
@@ -194,7 +196,7 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 //		}
 	}
 
-	public static boolean isTypeDefinition(PDefinition def)
+	public boolean isTypeDefinition(PDefinition def)
 	{
 		try
 		{
@@ -224,7 +226,7 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 //		}
 	}
 
-	public static boolean isRuntime(PDefinition def)
+	public boolean isRuntime(PDefinition def)
 	{
 		try
 		{
@@ -251,7 +253,7 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 //		}
 	}
 
-	public static boolean isValueDefinition(PDefinition def)
+	public boolean isValueDefinition(PDefinition def)
 	{
 		try
 		{
@@ -278,7 +280,7 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 //		}
 	}
 
-	public static boolean isInstanceVariable(PDefinition def)
+	public boolean isInstanceVariable(PDefinition def)
 	{
 		try
 		{
@@ -305,7 +307,7 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 //		}
 	}
 
-	public static PStm findStatement(LinkedList<PDefinition> definitions,
+	public PStm findStatement(LinkedList<PDefinition> definitions,
 			int lineno)
 	{
 		for (PDefinition d : definitions)
@@ -321,7 +323,7 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 		return null;
 	}
 
-	private static PStm findStatement(PDefinition def, int lineno)
+	private PStm findStatement(PDefinition def, int lineno)
 	{
 		try
 		{

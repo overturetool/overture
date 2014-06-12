@@ -16,7 +16,7 @@ public class Entry {
             return 0L;
         } else {
             Number x = null;
-            boolean success_1 = false;
+            Boolean success_1 = false;
             VDMSet set_1 = xs.clone();
 
             for (Iterator iterator_1 = set_1.iterator();

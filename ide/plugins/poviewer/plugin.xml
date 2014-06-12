@@ -2,21 +2,21 @@
 <?eclipse version="3.2"?>
 <plugin>
   <extension point="org.eclipse.ui.views">
-    <view category="org.overture.ide.ui.view.category" class="org.overture.ide.plugins.poviewer.view.PoTableView" icon="icons/cview16/po_tsk.png" id="org.overture.ide.plugins.poviewer.views.PoTableView-new" name="Proof Obligation View (Experimental)"/>
-    <view category="org.overture.ide.ui.view.category" class="org.overture.ide.plugins.poviewer.view.PoOverviewTableView" icon="icons/cview16/po_tsk.png" id="org.overture.ide.plugins.poviewer.views.PoOverviewTableView-new" name="Proof Obligation Explorer (Experimental)"/>
+    <view category="org.overture.ide.ui.view.category" class="org.overture.ide.plugins.poviewer.view.PoTableView" icon="icons/cview16/po_tsk.png" id="org.overture.ide.plugins.poviewer.views.PoTableView-new" name="Proof Obligation View"/>
+    <view category="org.overture.ide.ui.view.category" class="org.overture.ide.plugins.poviewer.view.PoOverviewTableView" icon="icons/cview16/po_tsk.png" id="org.overture.ide.plugins.poviewer.views.PoOverviewTableView-new" name="Proof Obligation Explorer"/>
   </extension>
   <extension point="org.eclipse.ui.perspectives">
-    <perspective class="org.overture.ide.plugins.poviewer.ProofObligationPerspectiveFactory" icon="icons/cview16/po_tsk.png" id="org.overture.ide.plugins.poviewer.perspective-new" name="Proof Obligation (Experimental)"/>
+    <perspective class="org.overture.ide.plugins.poviewer.ProofObligationPerspectiveFactory" icon="icons/cview16/po_tsk.png" id="org.overture.ide.plugins.poviewer.perspective-new" name="Proof Obligation"/>
   </extension>
   <!-- generate pos command -->
   <extension point="org.eclipse.ui.commands">
-    <command defaultHandler="org.overture.ide.plugins.poviewer.commands.GenerateProofObligationsCommand" id="org.overture.ide.plugins.poviewer.commandGeneratedPO-new" name="Generate Proof Obligations  (Experimental)"/>
+    <command defaultHandler="org.overture.ide.plugins.poviewer.commands.GenerateProofObligationsCommand" id="org.overture.ide.plugins.poviewer.commandGeneratedPO-new" name="Generate Proof Obligations"/>
   </extension>
   <!-- generate po menu binding -->
   <extension point="org.eclipse.ui.menus">
     <menuContribution locationURI="popup:org.overture.ide.ui.VdmExplorer">
-      <menu icon="icons/cview16/po_tsk.png" id="org.overture.ide.plugins.poviewer-new" label="Proof Obligations (Experimental)">
-        <command commandId="org.overture.ide.plugins.poviewer.commandGeneratedPO-new" label="Generate Proof Obligations (Experimental)" style="push" tooltip="Show POs">
+      <menu icon="icons/cview16/po_tsk.png" id="org.overture.ide.plugins.poviewer-new" label="Proof Obligations">
+        <command commandId="org.overture.ide.plugins.poviewer.commandGeneratedPO-new" label="Generate Proof Obligations" style="push" tooltip="Show POs">
           <visibleWhen checkEnabled="false">
             <iterate ifEmpty="false">
               <or>

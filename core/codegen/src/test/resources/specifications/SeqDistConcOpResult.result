@@ -5,7 +5,7 @@ import java.util.*;
 
 public class A {
     private static final VDMSeq x = SeqUtil.distConc(op());
-    private static final String y = SeqUtil.distConcStrings(op1());
+    private static final VDMSeq y = SeqUtil.distConc(op1());
 
     public A() {
     }
@@ -15,7 +15,8 @@ public class A {
     }
 
     public static VDMSeq op1() {
-        return SeqUtil.seq("hej", "kat");
+        return SeqUtil.seq(SeqUtil.seq('h', 'e', 'j'),
+            SeqUtil.seq('k', 'a', 't'));
     }
 }
 

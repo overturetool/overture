@@ -11,7 +11,7 @@ public class Entry {
         Number x = null;
         Number y = null;
         Number z = null;
-        boolean success_1 = false;
+        Boolean success_1 = false;
         VDMSet set_1 = SetUtil.set(1L, 2L, 3L);
 
         for (Iterator iterator_1 = set_1.iterator();

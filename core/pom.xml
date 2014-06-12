@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.overturetool</groupId>
     <artifactId>root</artifactId>
-    <version>2.0.8</version>
+    <version>2.1.0</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -17,7 +17,6 @@
     <module>parser</module>
     <module>typechecker</module>
     <module>interpreter</module>
-    <module>pog-string-based</module>
     <module>pog</module>
     <module>testframework</module>
     <module>combinatorialtesting</module>

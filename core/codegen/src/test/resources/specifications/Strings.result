@@ -7,12 +7,12 @@ public class A {
     public A() {
     }
 
-    public static String f() {
-        return "";
+    public static VDMSeq f() {
+        return SeqUtil.seq();
     }
 
-    public static String g() {
-        return "txt";
+    public static VDMSeq g() {
+        return SeqUtil.seq('t', 'x', 't');
     }
 }
 

@@ -2,7 +2,7 @@
 <feature
       id="org.overture.ide.features.rcp"
       label="Overture RCP"
-      version="2.0.8">
+      version="2.1.0">
 
    <description>
       %description
@@ -22,10 +22,6 @@
 
    <includes
          id="org.overture.ide.plugins.features.latex"
-         version="0.0.0"/>
-
-   <includes
-         id="org.overture.ide.plugins.features.poviewer-string-based"
          version="0.0.0"/>
 
    <includes

@@ -1,0 +1,14 @@
+class Entry
+
+functions
+
+public static f :  nat -> nat -> nat * nat -> nat * nat -> nat
+f (a)(b)(c1, c2)(d1, d2) == a + b + c1 + c2 + d1 + d2;
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	return f(1)(2)(3,4)(5,6);
+	
+end Entry

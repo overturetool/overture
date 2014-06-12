@@ -116,7 +116,7 @@ public class DelegateExpressionEvaluator extends ExpressionEvaluator
     		}
     		else
     		{
-    			if (self.hasDelegate())
+    			if (self.hasDelegate(ctxt))
     			{
     				return self.invokeDelegate(ctxt);
     			}

@@ -1,7 +1,13 @@
-#set( $clone = "")
-#if ($JavaFormat.shouldClone($node))
-	#set( $clone = ".clone()")
-#end
+#set( $exp = $JavaFormat.format($node.getExp()))
 ##
-#set( $getCall = ".get(0)")
-(($JavaFormat.format($node.getType())) $JavaFormat.format($node.getExp())$getCall)$clone
+#if ($JavaFormat.isStringType($node.getExp().getType()))
+	#set( $getCall = ".charAt(0)")
+	${exp}${getCall}
+#else
+	#set( $getCall = ".get(0)")
+	#set( $clone = "")
+	#if ($ValueSemantics.shouldClone($node))
+		#set( $clone = ".clone()")
+	#end	
+	(($JavaFormat.format($node.getType())) ${exp}$getCall)$clone
+#end

@@ -22,14 +22,14 @@ import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.ANewObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.ASelfObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.PObjectDesignatorCG;
-import org.overture.codegen.ooast.OoAstInfo;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.utils.AnalysisExceptionCG;
 
-public class ObjectDesignatorVisitorCG extends AbstractVisitorCG<OoAstInfo, PObjectDesignatorCG>
+public class ObjectDesignatorVisitorCG extends AbstractVisitorCG<IRInfo, PObjectDesignatorCG>
 {
 	@Override
 	public PObjectDesignatorCG caseAApplyObjectDesignator(
-			AApplyObjectDesignator node, OoAstInfo question)
+			AApplyObjectDesignator node, IRInfo question)
 			throws AnalysisException
 	{
 		PObjectDesignator obj = node.getObject();
@@ -50,7 +50,7 @@ public class ObjectDesignatorVisitorCG extends AbstractVisitorCG<OoAstInfo, PObj
 	
 	@Override
 	public PObjectDesignatorCG caseAFieldObjectDesignator(
-			AFieldObjectDesignator node, OoAstInfo question)
+			AFieldObjectDesignator node, IRInfo question)
 			throws AnalysisException
 	{
 		ILexNameToken field = node.getField();
@@ -68,7 +68,7 @@ public class ObjectDesignatorVisitorCG extends AbstractVisitorCG<OoAstInfo, PObj
 	
 	@Override
 	public PObjectDesignatorCG caseAIdentifierObjectDesignator(
-			AIdentifierObjectDesignator node, OoAstInfo question)
+			AIdentifierObjectDesignator node, IRInfo question)
 			throws AnalysisException
 	{
 		AVariableExp exp = node.getExpression();
@@ -90,7 +90,7 @@ public class ObjectDesignatorVisitorCG extends AbstractVisitorCG<OoAstInfo, PObj
 	
 	@Override
 	public PObjectDesignatorCG caseANewObjectDesignator(
-			ANewObjectDesignator node, OoAstInfo question)
+			ANewObjectDesignator node, IRInfo question)
 			throws AnalysisException
 	{
 		ANewExp exp = node.getExpression();
@@ -109,7 +109,7 @@ public class ObjectDesignatorVisitorCG extends AbstractVisitorCG<OoAstInfo, PObj
 	
 	@Override
 	public PObjectDesignatorCG caseASelfObjectDesignator(
-			ASelfObjectDesignator node, OoAstInfo question)
+			ASelfObjectDesignator node, IRInfo question)
 			throws AnalysisException
 	{
 		return new ASelfObjectDesignatorCG();

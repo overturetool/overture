@@ -214,7 +214,7 @@ public class SourceFile
 
 		out.println("<div align=center>");
 		out.println("<table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0 width=\"60%\" style='width:60.0%;border-collapse:collapse'>");
-		out.println(rowHTML(true, "Function or Operation", "Coverage", "Calls"));
+		out.println(rowHTML(true, "Function or Operation", "Line", "Coverage", "Calls"));
 
 		long total = 0;
 
@@ -229,12 +229,14 @@ public class SourceFile
 			out.println(rowHTML(false,
 			"<a href=\"#"+name.getName() + ":"
 					+ name.getLocation().getStartLine()+"\">"+	htmlQuote(name.toString())+"</a>",
+					name.getLocation().getStartLine() + "",
 				Float.toString(LexLocation.getSpanPercent(name)) + "%",
 				Long.toString(calls)));
 		}
 
 		out.println(rowHTML(true,
 			htmlQuote(filename.getName()),
+			"",
 			Float.toString(LexLocation.getHitPercent(filename)) + "%",
 			Long.toString(total)));
 
@@ -250,7 +252,7 @@ public class SourceFile
 		return "<p class=MsoNormal>&nbsp;</p>";
 	}
 
-	private String rowHTML(boolean emph, String name, String coverage, String calls)
+	private String rowHTML(boolean emph, String name, String lineNumber, String coverage, String calls)
 	{
 		StringBuilder sb = new StringBuilder();
 		String b1 = emph ? "<b>" : "";
@@ -258,15 +260,24 @@ public class SourceFile
 		String bg = emph ? "background:#D9D9D9;" : "";
 
 		sb.append("<tr>\n");
+		
 		sb.append("<td width=\"50%\" valign=top style='width:50.0%;border:solid windowtext 1.0pt;" + bg + "padding:0in 0in 0in 0in'>\n");
 		sb.append("<p class=MsoNormal>" + b1 + name + b2 + "</p>\n");
 		sb.append("</td>\n");
-		sb.append("<td width=\"25%\" valign=top style='width:25.0%;border:solid windowtext 1.0pt;" + bg + "padding:0in 0in 0in 0in'>\n");
+		
+
+		sb.append("<td width=\"10%\" valign=top style='width:25.0%;border:solid windowtext 1.0pt;" + bg + "padding:0in 0in 0in 0in'>\n");
+		sb.append("<p class=MsoNormal align=right style='text-align:right'>" + b1 + lineNumber + b2 + "</p>\n");
+		sb.append("</td>\n");
+		
+		sb.append("<td width=\"20%\" valign=top style='width:25.0%;border:solid windowtext 1.0pt;" + bg + "padding:0in 0in 0in 0in'>\n");
 		sb.append("<p class=MsoNormal align=right style='text-align:right'>" + b1 + coverage + b2 + "</p>\n");
 		sb.append("</td>\n");
-		sb.append("<td width=\"25%\" valign=top style='width:25.0%;border:solid windowtext 1.0pt;" + bg + "padding:0in 0in 0in 0in'>\n");
+		
+		sb.append("<td width=\"20%\" valign=top style='width:25.0%;border:solid windowtext 1.0pt;" + bg + "padding:0in 0in 0in 0in'>\n");
 		sb.append("<p class=MsoNormal align=right style='text-align:right'>" + b1 + calls + b2 + "</p>\n");
 		sb.append("</td>\n");
+		
 		sb.append("</tr>\n");
 
 		return sb.toString();

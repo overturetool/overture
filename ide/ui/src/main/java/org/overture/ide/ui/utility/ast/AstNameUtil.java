@@ -1,5 +1,6 @@
 package org.overture.ide.ui.utility.ast;
 
+import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.modules.AModuleModules;
@@ -14,6 +15,10 @@ public class AstNameUtil
 	{
 		if(node instanceof PDefinition)
 		{
+			if(node instanceof AValueDefinition)
+			{
+				return ((AValueDefinition) node).getPattern().toString();
+			}
 			return ((PDefinition) node).getName().getName();
 		}else if(node instanceof AModuleModules)
 		{

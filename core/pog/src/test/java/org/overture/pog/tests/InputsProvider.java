@@ -22,17 +22,58 @@ public class InputsProvider {
 	private final static String RESULT_EXTENSION = ".RESULT";
 	private final static String EXAMPLES_ROOT = "src/test/resources/allexamples";
 	private final static String BUG_REG_ROOT = "src/test/resources/bug-regression";
+	private final static String OLD_ROOT = "src/test/resources/old/adapted";
+	private final static String NOPAREN_ROOT = "src/test/resources/old/noparen";
 
+
+	/**
+	 * Provides a collection of paths for the adpated test files from the old string pog.
+	 * @return A list of test file and result paths in the form {modelpath, resultpath}
+	 */
+	public static Collection<Object[]> old() {
+		File dir = new File(OLD_ROOT);
+		Collection<Object[]> r = makePathsWResults(dir);
+		dir= new File(NOPAREN_ROOT);
+		r.addAll(makePathsWResults(dir));
+		return r;
+	}
+	
+	
+	/**
+	 * Provides a collection of paths for the bug regression
+	 * tests
+	 * @return A list of test file and result paths
+	 */
 	public static Collection<Object[]> bugRegs() {
 		return files(BUG_REG_ROOT);
 	}
 
+	/**
+	 * Provides a collection of paths for the bundled overture examples
+	 * 
+	 * @param foldername
+	 *            the folder with tests. No nesting allowed.
+	 * @return A list of test file paths
+	 */
 	public static Collection<Object[]> allExamples() {
 		File dir = new File(EXAMPLES_ROOT);
 
 		return makePaths(dir);
 	}
 
+	private static Collection<Object[]> makePathsWResults(File dir) {
+		Collection<File> files = FileUtils.listFiles(dir, new RegexFileFilter(
+				"(.*)\\.vdm(pp|rt|sl)"), DirectoryFileFilter.DIRECTORY);
+
+		List<Object[]> paths = new Vector<Object[]>();
+
+		for (File file : files) {
+			paths.add(new Object[] { file.getPath(), file.getPath()+".RESULT"});
+		}
+
+		return paths;
+	}
+	
 	private static Collection<Object[]> makePaths(File dir) {
 		Collection<File> files = FileUtils.listFiles(dir, new RegexFileFilter(
 				"(.*)\\.vdm(pp|rt|sl)"), DirectoryFileFilter.DIRECTORY);

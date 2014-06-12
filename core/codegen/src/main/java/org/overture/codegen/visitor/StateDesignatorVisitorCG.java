@@ -12,13 +12,13 @@ import org.overture.codegen.cgast.statements.AFieldStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
 import org.overture.codegen.cgast.statements.PStateDesignatorCG;
 import org.overture.codegen.cgast.types.PTypeCG;
-import org.overture.codegen.ooast.OoAstInfo;
+import org.overture.codegen.ir.IRInfo;
 
-public class StateDesignatorVisitorCG extends AbstractVisitorCG<OoAstInfo, PStateDesignatorCG>
+public class StateDesignatorVisitorCG extends AbstractVisitorCG<IRInfo, PStateDesignatorCG>
 {
 	@Override
 	public PStateDesignatorCG caseAFieldStateDesignator(
-			AFieldStateDesignator node, OoAstInfo question)
+			AFieldStateDesignator node, IRInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();
@@ -38,7 +38,7 @@ public class StateDesignatorVisitorCG extends AbstractVisitorCG<OoAstInfo, PStat
 
 	@Override
 	public PStateDesignatorCG caseAIdentifierStateDesignator(
-			AIdentifierStateDesignator node, OoAstInfo question)
+			AIdentifierStateDesignator node, IRInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();
@@ -51,7 +51,7 @@ public class StateDesignatorVisitorCG extends AbstractVisitorCG<OoAstInfo, PStat
 	
 	@Override
 	public PStateDesignatorCG caseAMapSeqStateDesignator(
-			AMapSeqStateDesignator node, OoAstInfo question)
+			AMapSeqStateDesignator node, IRInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();

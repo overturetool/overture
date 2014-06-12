@@ -34,7 +34,7 @@ public class ANamedTraceDefinitionAssistantInterpreter
 		for (ATraceDefinitionTerm term : tracedef.getTerms())
 		{
 			//traces.nodes.add(ATraceDefinitionTermAssistantInterpreter.expand(term, ctxt));
-			traces.nodes.add(term.apply(af.getCoreTraceExpander(), ctxt));
+			traces.nodes.add(term.apply(af.getTraceExpander(), ctxt));
 		}
 
 		TestSequence tests = traces.getTests();

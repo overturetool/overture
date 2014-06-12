@@ -532,5 +532,12 @@ Handlers
               type="org.eclipse.ui.model.IWorkbenchAdapter3">
         </adapter>
      </factory>
+  </extension>
+  <extension
+        point="org.eclipse.ui.ide.markerResolution">
+     <markerResolutionGenerator
+           class="org.overture.ide.ui.quickfix.MarkerResolutionGenerator"
+           markerType="org.eclipse.core.resources.problemmarker">
+     </markerResolutionGenerator>
   </extension>  
 </plugin>

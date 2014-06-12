@@ -1,0 +1,13 @@
+class Entry
+
+values
+
+a = "jeh";
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	return (reverse "jeh") ^ (reverse a);
+	
+end Entry

@@ -26,7 +26,7 @@ import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.PTypeCG;
-import org.overture.codegen.ooast.OoAstInfo;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.utils.LexNameTokenWrapper;
 
 public class DeclAssistantCG extends AssistantBase
@@ -36,7 +36,7 @@ public class DeclAssistantCG extends AssistantBase
 		super(assistantManager);
 	}
 
-	public void setLocalDefs(LinkedList<PDefinition> localDefs, LinkedList<AVarLocalDeclCG> localDecls, OoAstInfo question) throws AnalysisException
+	public void setLocalDefs(LinkedList<PDefinition> localDefs, LinkedList<AVarLocalDeclCG> localDecls, IRInfo question) throws AnalysisException
 	{
 		for (PDefinition def : localDefs)
 		{
@@ -48,7 +48,7 @@ public class DeclAssistantCG extends AssistantBase
 		}
 	}
 	
-	private AVarLocalDeclCG constructLocalVarDecl(AValueDefinition valueDef, OoAstInfo question) throws AnalysisException
+	private AVarLocalDeclCG constructLocalVarDecl(AValueDefinition valueDef, IRInfo question) throws AnalysisException
 	{
 		PTypeCG type = valueDef.getType().apply(question.getTypeVisitor(), question);
 		String name = valueDef.getPattern().toString();

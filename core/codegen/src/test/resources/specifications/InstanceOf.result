@@ -7,7 +7,7 @@ public class A {
     public A() {
     }
 
-    public boolean op() {
+    public Boolean op() {
         Object a = null;
 
         return a instanceof A;

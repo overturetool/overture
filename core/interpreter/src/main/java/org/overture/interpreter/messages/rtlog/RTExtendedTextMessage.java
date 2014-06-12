@@ -1,6 +1,6 @@
 package org.overture.interpreter.messages.rtlog;
 
-public class RTExtendedTextMessage extends RTExtendedMessage
+public class RTExtendedTextMessage extends RTMessage
 {
 	final String text;
 	public RTExtendedTextMessage(String text)

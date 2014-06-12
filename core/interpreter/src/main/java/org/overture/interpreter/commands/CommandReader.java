@@ -33,11 +33,12 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexIdentifierToken;
@@ -67,8 +68,9 @@ import org.overture.interpreter.values.Value;
 import org.overture.parser.lex.LexTokenReader;
 import org.overture.parser.messages.VDMErrorsException;
 import org.overture.parser.syntax.ParserException;
-import org.overture.pog.obligation.ProofObligation;
 import org.overture.pog.obligation.ProofObligationList;
+import org.overture.pog.pub.IProofObligation;
+import org.overture.pog.pub.IProofObligationList;
 
 
 
@@ -627,10 +629,10 @@ abstract public class CommandReader
 		return true;
 	}
 
-	protected boolean doPog(String line)
+	protected boolean doPog(String line) throws AnalysisException
 	{
-		ProofObligationList all = interpreter.getProofObligations();
-		ProofObligationList list = null;
+		IProofObligationList all = interpreter.getProofObligations();
+		IProofObligationList list = null;
 
 		if (line.equals("pog"))
 		{
@@ -646,9 +648,9 @@ abstract public class CommandReader
     			list = new ProofObligationList();
     			String name = m.group(1) + (Settings.dialect == Dialect.VDM_SL ? "" : "(");
 
-    			for (ProofObligation po: all)
+    			for (IProofObligation po: all)
     			{
-    				if (po.name.indexOf(name) >= 0)
+    				if (po.getName().indexOf(name) >= 0)
     				{
     					list.add(po);
     				}
