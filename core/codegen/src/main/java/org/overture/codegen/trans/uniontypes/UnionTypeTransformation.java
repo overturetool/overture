@@ -11,6 +11,7 @@ import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
+import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AElemsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
@@ -25,6 +26,7 @@ import org.overture.codegen.cgast.types.AUnionTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.ir.IRInfo;
+import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.trans.assistants.BaseTransformationAssistant;
 
 public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
@@ -36,6 +38,39 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 	{
 		this.baseAssistant = baseAssistant;
 		this.info = info;
+	}
+	
+	private interface TypeFinder<T extends STypeCG>
+	{
+		public T findType(PType type) throws org.overture.ast.analysis.AnalysisException;
+	}
+	
+	public <T extends STypeCG> T getMapType(SExpCG exp, TypeFinder<T> typeFinder)
+	{
+		if (exp == null || exp.getType() == null)
+			return null;
+
+		SourceNode sourceNode = exp.getType().getSourceNode();
+
+		if (sourceNode == null)
+			return null;
+
+		org.overture.ast.node.INode vdmTypeNode = sourceNode.getVdmNode();
+
+		if (vdmTypeNode instanceof PType)
+		{
+			try
+			{
+				PType vdmType = (PType) vdmTypeNode;
+				
+				return typeFinder.findType(vdmType);
+
+			} catch (org.overture.ast.analysis.AnalysisException e)
+			{
+			}
+		}
+
+		return null;
 	}
 	
 	private SExpCG correctTypes(SExpCG exp, STypeCG castedType) throws AnalysisException
@@ -79,6 +114,32 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		
 		correctTypes(node.getLeft(), expectedType);
 		correctTypes(node.getRight(), expectedType);
+	}
+	
+	@Override
+	public void caseAApplyExpCG(AApplyExpCG node) throws AnalysisException
+	{
+		SExpCG root = node.getRoot();
+		
+		if(root.getType() instanceof AUnionTypeCG)
+		{
+			SMapTypeCG mapType = getMapType(root, new TypeFinder<SMapTypeCG>(){
+
+				@Override
+				public SMapTypeCG findType(PType type) throws org.overture.ast.analysis.AnalysisException
+				{
+					SMapType mapType = info.getTcFactory().createPTypeAssistant().getMap(type);
+
+					return mapType != null ? (SMapTypeCG) mapType.apply(info.getTypeVisitor(), info) : null; 
+				}});
+			
+			
+			if(mapType != null && node.getArgs().size() == 1)
+			{
+				correctTypes(root, mapType);
+				return;
+			}
+		}
 	}
 	
 	@Override
