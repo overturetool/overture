@@ -1,4 +1,4 @@
-package org.overture.pog.tests.old;
+package org.overture.pog.tests;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -19,9 +19,6 @@ import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.pub.ProofObligationGenerator;
-import org.overture.pog.tests.InputsProvider;
-import org.overture.pog.tests.PoResult;
-import org.overture.pog.tests.TestHelper;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -64,6 +61,8 @@ public class OldStringPogTest
 		}.getType();
 		List<PoResult> results = gson.fromJson(json, datasetListType);
 
+		
+		
 		TestHelper.checkSameElements(results, ipol);
 
 	}
