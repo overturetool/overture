@@ -13,9 +13,14 @@ public class VdmProjectClassPathCollector extends ClassPathCollector
 {
 
 	public static List<String> getClassPath(IProject project,
-			String[] bundleIds, File vdmProperties)
+			String[] bundleIds, File... vdmProperties)
 	{
-		return getClassPath(project, bundleIds, vdmProperties.getParentFile().getAbsolutePath());
+		String[] properties = new String[vdmProperties.length];
+		for (int i = 0; i < vdmProperties.length; i++)
+		{
+			properties[i]=vdmProperties[i].getParentFile().getAbsolutePath();
+		}
+		return getClassPath(project, bundleIds, properties);
 	}
 
 	public static List<String> getClassPath(IProject project,
