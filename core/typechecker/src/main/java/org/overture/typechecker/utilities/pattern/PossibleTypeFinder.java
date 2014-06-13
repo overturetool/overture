@@ -12,6 +12,7 @@ import org.overture.ast.patterns.AExpressionPattern;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.AIntegerPattern;
+import org.overture.ast.patterns.AMapPattern;
 import org.overture.ast.patterns.ANilPattern;
 import org.overture.ast.patterns.AQuotePattern;
 import org.overture.ast.patterns.ARealPattern;
@@ -164,6 +165,12 @@ public class PossibleTypeFinder extends AnswerAdaptor<PType>
 
 		return af.createPTypeAssistant().isUnknown(s) ? AstFactory.newASetType(pattern.getLocation(), AstFactory.newAUnknownType(pattern.getLocation()))
 				: s;
+	}
+
+	public PType caseAMapPattern(AMapPattern pattern) throws AnalysisException
+	{
+		return AstFactory.newAMapMapType(pattern.getLocation(),
+			AstFactory.newAUnknownType(pattern.getLocation()), AstFactory.newAUnknownType(pattern.getLocation())); 
 	}
 
 	@Override

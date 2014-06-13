@@ -1,7 +1,7 @@
 package org.overture.codegen.assistant;
 
+import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
-import org.overture.codegen.cgast.types.PTypeCG;
 
 public class DesignatorAssistantCG extends AssistantBase
 {
@@ -10,7 +10,7 @@ public class DesignatorAssistantCG extends AssistantBase
 		super(assistantManager);
 	}
 
-	public AIdentifierStateDesignatorCG consMember(PTypeCG type, String name)
+	public AIdentifierStateDesignatorCG consMember(STypeCG type, String name)
 	{
 		AIdentifierStateDesignatorCG member = new AIdentifierStateDesignatorCG();
 		member.setType(type);

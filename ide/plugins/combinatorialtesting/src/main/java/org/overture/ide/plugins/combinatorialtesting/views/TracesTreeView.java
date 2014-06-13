@@ -98,7 +98,6 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 	private TreeViewer viewer;
 	private Action actionRunSelected;
 	private Action actionRunSelectedAdvanced;
-	private Action actionRunAll;
 	private Action actionSetOkFilter;
 	private Action actionSetSort;
 	private Action actionSetInconclusiveFilter;
@@ -111,6 +110,7 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 
 	private ViewerFilter okFilter = new OkTraceViewerFilter();
 	private ViewerSorter traceSorter = new TraceViewerSorter();
+	private ViewerSorter defaultTraceSorter = new ViewerSorter();
 	private ViewerFilter inconclusiveFilter = new InconclusiveTraceViewerFilter();
 
 	/**
@@ -124,7 +124,7 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 	{
 		viewer.setContentProvider(new ViewContentProvider(this));
 		viewer.setLabelProvider(new ViewLabelProvider());
-		viewer.setSorter(null);
+		viewer.setSorter(defaultTraceSorter);
 		viewer.setInput(getViewSite());
 	}
 
@@ -172,8 +172,6 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 
 	private void fillLocalPullDown(IMenuManager manager)
 	{
-		manager.add(actionRunAll);
-		manager.add(new Separator());
 		manager.add(actionSetSort);
 		manager.add(new Separator());
 		manager.add(actionSetOkFilter);
@@ -202,6 +200,7 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 		}
 
 		manager.add(new Separator());
+		manager.add(refreshAction);
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
@@ -209,8 +208,6 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 	{
 		manager.add(refreshAction);
 		manager.add(actionSetSort);
-		manager.add(new Separator());
-		manager.add(actionRunAll);
 		manager.add(new Separator());
 		manager.add(actionSetOkFilter);
 		manager.add(actionSetInconclusiveFilter);
@@ -229,7 +226,7 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 
 	private void makeActions()
 	{
-		refreshAction = new Action("Refresh")
+		refreshAction = new Action("Refresh",OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_REFRESH))
 		{
 			@Override
 			public void run()
@@ -269,6 +266,7 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 				job.schedule();
 			}
 		};
+		
 
 		actionRunSelected = new Action("Full Evaluation")
 		{
@@ -283,7 +281,8 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 			}
 		};
 		actionRunSelected.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_RUN_SELECTED_TRACE));
-		actionRunSelectedAdvanced = new Action("Filtered Evaluation")
+		
+		actionRunSelectedAdvanced = new Action("Filtered Evaluation",OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_RUN_SELECTED_TRACE))
 		{
 			@Override
 			public void run()
@@ -324,24 +323,9 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 				handleEvaluateTrace(obj, d);
 			}
 		};
-		actionRunSelectedAdvanced.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_RUN_SELECTED_TRACE));
 
-		actionRunAll = new Action("Run all")
-		{
-			@Override
-			public void run()
-			{
-				for (IVdmProject project : TraceAstUtility.getProjects())
-				{
-					handleEvaluateTrace(project, null);
-				}
-			}
-		};
 
-		actionRunAll.setToolTipText("Run all");
-		actionRunAll.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_RUN_ALL_TRACES));
-
-		actionSetOkFilter = new Action("Filter ok results")
+		actionSetOkFilter = new Action("Filter ok results",Action.AS_CHECK_BOX)
 		{
 			@Override
 			public void run()
@@ -358,11 +342,9 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 				if (isSet)
 				{
 					viewer.removeFilter(okFilter);
-					actionSetOkFilter.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_TRACE_TEST_CASE_FILTER_SUCCES));
 				} else
 				{
 					viewer.addFilter(okFilter);
-					actionSetOkFilter.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_TRACE_TEST_CASE_FILTER_SUCCES_PRESSED));
 				}
 
 			}
@@ -372,7 +354,7 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 		actionSetOkFilter.setToolTipText("Filter all ok results from tree");
 		actionSetOkFilter.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_TRACE_TEST_CASE_FILTER_SUCCES));
 
-		actionSetInconclusiveFilter = new Action("Filter inconclusive results")
+		actionSetInconclusiveFilter = new Action("Filter inconclusive results",Action.AS_CHECK_BOX)
 		{
 			@Override
 			public void run()
@@ -389,11 +371,9 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 				if (isSet)
 				{
 					viewer.removeFilter(inconclusiveFilter);
-					actionSetInconclusiveFilter.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_TRACE_TEST_CASE_FILTER_UNDETERMINED));
 				} else
 				{
 					viewer.addFilter(inconclusiveFilter);
-					actionSetInconclusiveFilter.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_TRACE_TEST_CASE_FILTER_UNDETERMINED_PRESSED));
 				}
 
 			}
@@ -403,29 +383,29 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 		actionSetInconclusiveFilter.setToolTipText("Filter all inconclusive results from tree");
 		actionSetInconclusiveFilter.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_TRACE_TEST_CASE_FILTER_UNDETERMINED));
 
-		actionSetSort = new Action("Sort")
+		actionSetSort = new Action("Sort",Action.AS_CHECK_BOX)
 		{
 			@Override
 			public void run()
 			{
-				if (viewer.getSorter() != null)
+				if (!actionSetSort.isChecked())
 				{
-					viewer.setSorter(null);
-					actionSetSort.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_TRACE_TEST_SORT));
+					viewer.setSorter(defaultTraceSorter);
+					OvertureTracesPlugin.getDefault().getPreferenceStore().setValue(ITracesConstants.SORT_VIEW, false);
 				} else
 				{
 					viewer.setSorter(traceSorter);
-					actionSetSort.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_TRACE_TEST_SORT_PRESSED));
+					OvertureTracesPlugin.getDefault().getPreferenceStore().setValue(ITracesConstants.SORT_VIEW, true);
 				}
-
 			}
-
 		};
 
 		actionSetSort.setToolTipText("Sort by verdict: Fail, Inconclusive, ok, etc.");
 		actionSetSort.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_TRACE_TEST_SORT));
-
-		actionSendToInterpreter = new Action("Send to Interpreter")
+		actionSetSort.setChecked(OvertureTracesPlugin.getDefault().getPreferenceStore().getBoolean(ITracesConstants.SORT_VIEW));
+actionSetSort.run();
+		
+		actionSendToInterpreter = new Action("Send to Interpreter",OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_INTERPRETER))
 		{
 			@Override
 			public void run()
@@ -453,7 +433,6 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 			}
 		};
 
-		actionSendToInterpreter.setImageDescriptor(OvertureTracesPlugin.getImageDescriptor(OvertureTracesPlugin.IMG_INTERPRETER));
 	}
 
 	private void hookTreeAction()
@@ -587,6 +566,7 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 				{
 					viewer.refresh();
 					viewer.getControl().update();
+					actionSetSort.run();
 				}
 			}
 		});
@@ -796,6 +776,7 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 						}
 						viewer.refresh();
 						viewer.getControl().update();
+						actionSetSort.run();
 					}
 				}
 			}

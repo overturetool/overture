@@ -268,6 +268,12 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 		commandList.addAll(1, Arrays.asList(new String[] { "-cp", classpath }));
 		commandList.add(3, IDebugConstants.DEBUG_ENGINE_CLASS);
 		commandList.addAll(1, getVmArguments(configuration));
+		
+		if (useRemoteDebug(configuration))
+		{
+			System.out.println("Full Debugger Arguments:\n"
+					+ getArgumentString(commandList));
+		}
 
 		VdmDebugTarget target = null;
 		// Debug mode
@@ -392,7 +398,7 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 			final Bundle bundle = Platform.getBundle(ORG_OVERTURE_IDE_PLUGINS_PROBRUNTIME);
 			if (bundle != null)
 			{
-				URL buildInfoUrl = FileLocator.find(bundle, new Path("build_info.txt"), null);
+				URL buildInfoUrl = FileLocator.find(bundle, new Path("prob/build_info.txt"), null);
 
 				try
 				{

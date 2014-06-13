@@ -1,0 +1,17 @@
+class Entry
+
+types
+
+public SeqOfNatOrBool = seq of nat | seq of bool;
+
+values
+
+xs : SeqOfNatOrBool = [1, 2];
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	return [e | e in set elems xs & e = 2]
+
+end Entry

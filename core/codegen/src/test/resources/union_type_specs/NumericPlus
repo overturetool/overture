@@ -1,0 +1,20 @@
+class Entry
+
+types
+
+Real = seq of char | real;
+Int = bool | nat1;
+
+values
+
+a : Real  = 1.2;
+b : Real = 2.2;
+c : Int = 3;
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	return a + b + c;
+
+end Entry

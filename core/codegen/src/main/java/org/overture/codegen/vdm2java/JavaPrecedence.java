@@ -1,8 +1,8 @@
 package org.overture.codegen.vdm2java;
 
+import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
-import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.ir.IROperatorInfo;
 import org.overture.codegen.ir.IROperatorLookup;
 
@@ -15,7 +15,7 @@ public class JavaPrecedence
 		this.opLookup = new IROperatorLookup();
 	}
 	
-	public boolean mustIsolate(PExpCG parentExp, PExpCG exp, boolean leftChild)
+	public boolean mustIsolate(SExpCG parentExp, SExpCG exp, boolean leftChild)
 	{
 		IROperatorInfo parentOpInfo = opLookup.find(parentExp.getClass());
 

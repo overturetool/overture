@@ -65,10 +65,4 @@ public class SpecificationTestCase extends CodeGenBaseTestCase
 				
 		return generatedCode.toString();
 	}
-
-	@Override
-	protected String getTestOverview(String input, String expectedResult, String actualResult)
-	{
-		return getName();
-	}
 }
