@@ -63,6 +63,7 @@
 									</mapper>
 									<patternset>
 										<include name="**/probcli"/>
+										<include name="**/probcli.sh"/>
 										<include name="**/lib/**.so"/>
 										<include name="**/lib/**.jar"/>
 										<include name="**/send_user_interrupt"/>
