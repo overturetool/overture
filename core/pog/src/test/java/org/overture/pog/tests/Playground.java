@@ -39,9 +39,11 @@ public class Playground {
 
 		// switch this flag to update a test result file
 		boolean write_result = false;
+//		write_result = true;
 
 		// switch this flag to print the stored results
 		boolean show_result = false;
+//		show_result = true;
 		
 		String model = "src/test/resources/adhoc/sandbox.vdmpp";
 		String result = "src/test/resources/adhoc/sandbox.RESULT";
