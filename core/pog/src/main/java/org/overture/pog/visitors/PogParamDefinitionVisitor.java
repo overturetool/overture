@@ -66,7 +66,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 	final private QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> rootVisitor;
 	final private QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> mainVisitor;
 
-	final private IPogAssistantFactory assistantFactory;
+	final protected IPogAssistantFactory assistantFactory;
 
 	/**
 	 * Constructor for Extensions.
@@ -429,8 +429,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 				precond = false;
 			}
 
-			// stick parameters in the context
-			question.push(new POOperationDefinitionContext(node, precond, node.getState(), assistantFactory));
+			collectOpCtxt(node, question, precond);
 
 			// add all defined names from the function parameter list
 			AOperationType otype = (AOperationType) node.getType();
@@ -486,6 +485,20 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 		{
 			throw new POException(node, e.getMessage());
 		}
+	}
+
+	/**
+	 * Operation processing is identical in extension except for context generation.
+	 * So, a quick trick here.
+	 * @param node
+	 * @param question
+	 * @param precond
+	 * @throws AnalysisException 
+	 */
+	protected void collectOpCtxt(AExplicitOperationDefinition node,
+			IPOContextStack question, Boolean precond) throws AnalysisException
+	{
+		question.push(new POOperationDefinitionContext(node, precond, node.getState()));
 	}
 
 	@Override

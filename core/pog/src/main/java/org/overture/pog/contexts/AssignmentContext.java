@@ -19,7 +19,7 @@ public class AssignmentContext extends POContext
 	public AssignmentContext(AAssignmentStm node, IPogAssistantFactory af) throws AnalysisException
 	{
 
-		String hash = node.getTarget().apply(af.createStateDesignatorNameGetter());
+		String hash = node.getTarget().apply(af.getStateDesignatorNameGetter());
 
 		ILexNameToken t = new LexNameToken("", hash, null);
 		sub = new Substitution(t, node.getExp());

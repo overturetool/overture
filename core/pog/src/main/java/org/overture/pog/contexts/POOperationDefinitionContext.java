@@ -57,9 +57,9 @@ public class POOperationDefinitionContext extends POContext
 	final PDefinition opDef;
 
 	protected POOperationDefinitionContext(ILexNameToken name,
-			AOperationType deftype, List<PPattern> paramPatternList,
+			AOperationType deftype, LinkedList<PPattern> paramPatternList,
 			boolean addPrecond, PExp precondition, PDefinition stateDefinition,
-			AImplicitOperationDefinition opDef)
+			PDefinition opDef)
 	{
 		super();
 		this.name = name;
@@ -73,7 +73,7 @@ public class POOperationDefinitionContext extends POContext
 	
 	public POOperationDefinitionContext(
 			AExplicitOperationDefinition definition, boolean precond,
-			PDefinition stateDefinition,IPogAssistantFactory assistantFactory )
+			PDefinition stateDefinition)
 	{
 		this.name = definition.getName();
 		this.deftype = (AOperationType) definition.getType();
@@ -107,10 +107,14 @@ public class POOperationDefinitionContext extends POContext
 		this.opDef = definition;
 	}
 
+	protected boolean anyBinds(){
+		return !deftype.getParameters().isEmpty();
+	}
+	
 	@Override
 	public PExp getContextNode(PExp stitch)
 	{
-		if (!deftype.getParameters().isEmpty())
+		if (anyBinds())
 		{
 			AForAllExp forAllExp = new AForAllExp();
 			forAllExp.setBindList(makeBinds());
