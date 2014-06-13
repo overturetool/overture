@@ -154,7 +154,6 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 						|| (stmt.getStateDefinition() != null && stmt
 								.getStateDefinition().getInvExpression() != null)) {
 					needsInv = true;
-					break;
 				}
 			}
 			if (needsInv) {
