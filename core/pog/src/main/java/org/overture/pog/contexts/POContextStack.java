@@ -203,7 +203,7 @@ public class POContextStack extends Stack<IPOContext> implements
 		{
 			if (this.get(i).isStateful())
 			{
-				this.remove(0);
+				this.remove(i);
 			}
 
 		}
