@@ -61,8 +61,6 @@ public class OldStringPogTest
 		}.getType();
 		List<PoResult> results = gson.fromJson(json, datasetListType);
 
-		
-		
 		TestHelper.checkSameElements(results, ipol);
 
 	}

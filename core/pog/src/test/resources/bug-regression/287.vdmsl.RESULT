@@ -1,1 +1,1 @@
-[{"poKind":"type compatibility","poExp":"(forall k:(Inf | real) \u0026 ((k \u003c\u003e \u003cINFINITY\u003e) \u003d\u003e is_(k, real)))"}]
+[{"poKind":"type compatibility","poExp":"(forall k:(Inf | real) \u0026 ((k \u003c\u003e \u003cINFINITY\u003e) \u003d\u003e is_(k, real)))"},{"poKind":"type invariant satisfiable","poExp":"(exists k:Kg \u0026 ((k \u003c\u003e \u003cINFINITY\u003e) \u003d\u003e (k \u003e\u003d 0)))"}]
