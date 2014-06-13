@@ -37,7 +37,7 @@ public class VariableSubVisitor extends QuestionAnswerAdaptor<Substitution, PExp
 		PExp subr = node.getRight().apply(main,question);
 		node.setLeft(subl);
 		node.setRight(subr);
-		return node.clone();
+		return node;
 	}
 
 	@Override
@@ -769,7 +769,7 @@ public class VariableSubVisitor extends QuestionAnswerAdaptor<Substitution, PExp
 	public PExp caseAVariableExp(AVariableExp node, Substitution question)
 			throws AnalysisException {
 		if (question.containsKey(node)) {
-			return question.get(node);
+			return question.get(node).clone();
 		}
 		return node;
 	}
