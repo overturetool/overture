@@ -49,7 +49,7 @@ public class StateInvariantObligation extends ProofObligation
 	public StateInvariantObligation(AAssignmentStm ass, IPOContextStack ctxt,
 			IPogAssistantFactory af)
 	{
-		super(ass, POType.STATE_INV_INIT, ctxt, ass.getLocation());
+		super(ass, POType.STATE_INV, ctxt, ass.getLocation());
 		assistantFactory = af;
 
 		if (ass.getClassDefinition() != null)
@@ -78,7 +78,7 @@ public class StateInvariantObligation extends ProofObligation
 	public StateInvariantObligation(AClassInvariantDefinition def,
 			IPOContextStack ctxt, IPogAssistantFactory af)
 	{
-		super(def, POType.STATE_INV_INIT, ctxt, def.getLocation());
+		super(def, POType.STATE_INV, ctxt, def.getLocation());
 		assistantFactory = af;
 
 		// After instance variable initializers
@@ -89,7 +89,7 @@ public class StateInvariantObligation extends ProofObligation
 	public StateInvariantObligation(AExplicitOperationDefinition def,
 			IPOContextStack ctxt, IPogAssistantFactory af)
 	{
-		super(def, POType.STATE_INV_INIT, ctxt, def.getLocation());
+		super(def, POType.STATE_INV, ctxt, def.getLocation());
 		assistantFactory = af;
 
 		// After def.getName() constructor body
@@ -100,7 +100,7 @@ public class StateInvariantObligation extends ProofObligation
 	public StateInvariantObligation(AImplicitOperationDefinition def,
 			IPOContextStack ctxt, IPogAssistantFactory af)
 	{
-		super(def, POType.STATE_INV_INIT, ctxt, def.getLocation());
+		super(def, POType.STATE_INV, ctxt, def.getLocation());
 		assistantFactory = af;
 
 		// After def.getName() constructor body

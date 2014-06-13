@@ -53,7 +53,7 @@ public enum POType
 	RECURSIVE("recursive function"),
 	SEQ_APPLY("legal sequence application"),
 	SEQ_MODIFICATION("sequence modification"),
-	STATE_INV_INIT("initial state invariant"),
+	STATE_INV("state invariant"),
 	STATE_INV_SAT("state invariant satisfiable"),
 	TYPE_COMP("type compatibility"),
 	TYPE_INV_SAT("type invariant satisfiable"),

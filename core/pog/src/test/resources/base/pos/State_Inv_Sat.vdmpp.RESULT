@@ -1,1 +1,1 @@
-[{"poKind":"initial state invariant","poExp":"(x \u003e 10)"},{"poKind":"state invariant satisfiable","poExp":"(exists x:int \u0026 (x \u003e 10))"}]
+[{"poKind":"state invariant","poExp":"(x \u003e 10)"},{"poKind":"state invariant satisfiable","poExp":"(exists x:int \u0026 (x \u003e 10))"}]
