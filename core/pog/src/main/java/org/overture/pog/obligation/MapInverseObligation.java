@@ -27,6 +27,7 @@ import org.overture.ast.expressions.AIsExp;
 import org.overture.ast.expressions.AMapInverseUnaryExp;
 import org.overture.ast.types.AInMapMapType;
 import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.POType;
 
 
 public class MapInverseObligation extends ProofObligation

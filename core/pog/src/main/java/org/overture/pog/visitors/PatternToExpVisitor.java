@@ -1,4 +1,4 @@
-package org.overture.pog.utility;
+package org.overture.pog.visitors;
 
 import java.util.List;
 import java.util.Vector;
@@ -46,11 +46,10 @@ import org.overture.ast.patterns.AStringPattern;
 import org.overture.ast.patterns.ATuplePattern;
 import org.overture.ast.patterns.AUnionPattern;
 import org.overture.ast.patterns.PPattern;
+import org.overture.pog.utility.UniqueNameGenerator;
 
 public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 {
-	private static final long serialVersionUID = 1L;
-	
 	private final UniqueNameGenerator unique;
 	
 	public PatternToExpVisitor(UniqueNameGenerator unique)

@@ -556,7 +556,7 @@ stm {-> package='org.overture.ast.statements'
     |   {atomic} [assignments]:stm.assignment* (statedef):definition.state 
     |   {callObject} [designator]:objectDesignator [classname]:LexNameToken [fieldname]:LexIdentifierToken 
                      [field]:LexNameToken [args]:exp* [explicit]:java_Boolean
-    |   {call} [name]:LexNameToken [args]:exp*
+    |   {call} [name]:LexNameToken [args]:exp* (rootdef):definition
     |   {cases} [exp]:exp [cases]:alternativeStm.case* [others]:stm
     |   {classInvariant} [name]:LexNameToken (invDefs):definition*
     |   {cycles} [cycles]:exp [statement]:stm (value):java_Long

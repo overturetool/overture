@@ -11,7 +11,7 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.parser.messages.VDMError;
 import org.overture.parser.messages.VDMWarning;
-import org.overture.pog.obligation.POContextStack;
+import org.overture.pog.contexts.POContextStack;
 import org.overture.pog.obligation.ProofObligationList;
 import org.overture.pog.pub.IProofObligation;
 import org.overture.pog.visitors.PogVisitor;

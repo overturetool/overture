@@ -33,6 +33,7 @@ import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.POType;
 
 public class MapCompatibleObligation extends ProofObligation {
 	private static final long serialVersionUID = -7453383884893058267L;

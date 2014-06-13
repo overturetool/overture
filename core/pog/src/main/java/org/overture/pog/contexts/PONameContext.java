@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- *	Copyright (c) 2009 Fujitsu Services Ltd.
+ *	Copyright (C) 2008 Fujitsu Services Ltd.
  *
  *	Author: Nick Battle
  *
@@ -21,22 +21,43 @@
  *
  ******************************************************************************/
 
-package org.overture.pog.obligation;
+package org.overture.pog.contexts;
 
-public enum POStatus
+import org.overture.ast.expressions.PExp;
+import org.overture.ast.lex.LexNameList;
+
+public class PONameContext extends POContext
 {
-	UNPROVED("Unproved"), SUBMITTED("Submitted"), PROVED("Proved"), DISPROVED("Disproved");
+	public final LexNameList names;
 
-	private String text;
-
-	POStatus(String text)
+	public PONameContext(LexNameList names)
 	{
-		this.text = text;
+		this.names = names;
+	}
+	
+	
+	
+
+	@Override
+	public PExp getContextNode(PExp stitch)
+	{
+		//empty context
+		return stitch;
+	}
+
+
+
+
+
+	@Override
+	public String getContext()
+	{
+		return "";
 	}
 
 	@Override
-	public String toString()
+	public String getName()
 	{
-		return text;
+		return names.toString();
 	}
 }

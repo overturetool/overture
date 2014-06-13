@@ -37,7 +37,8 @@ import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.lex.LexIntegerToken;
 import org.overture.ast.statements.PStateDesignator;
 import org.overture.pog.pub.IPOContextStack;
-import org.overture.pog.utility.StateDesignatorToExpVisitor;
+import org.overture.pog.pub.POType;
+import org.overture.pog.visitors.StateDesignatorToExpVisitor;
 
 
 public class SeqApplyObligation extends ProofObligation

@@ -21,7 +21,7 @@
  *
  ******************************************************************************/
 
-package org.overture.pog.obligation;
+package org.overture.pog.contexts;
 
 import org.overture.ast.expressions.ADefExp;
 import org.overture.ast.expressions.PExp;

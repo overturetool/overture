@@ -21,7 +21,7 @@
  *
  ******************************************************************************/
 
-package org.overture.pog.obligation;
+package org.overture.pog.contexts;
 
 import java.util.ListIterator;
 import java.util.Stack;
@@ -30,18 +30,56 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.types.PType;
 import org.overture.pog.pub.IPOContext;
 import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.utility.UniqueNameGenerator;
 
 @SuppressWarnings("serial")
-public class POContextStack extends Stack<IPOContext> implements IPOContextStack
+public class POContextStack extends Stack<IPOContext> implements
+		IPOContextStack
 {
-	
-	public PExp getPredWithContext(PExp initialPredicate){
+	private UniqueNameGenerator gen;
+
+	@Override
+	public void setGenerator(UniqueNameGenerator gen)
+	{
+		this.gen = gen;
+	}
+
+	@Override
+	public UniqueNameGenerator getGenerator()
+	{
+		return gen;
+	}
+
+	/**
+	 * Pop a non-stateful context from the Stack. Stateful contexts can be removed with {@link #clearStateContexts()}
+	 */
+	@Override
+	public synchronized IPOContext pop()
+	{
+
+		IPOContext obj = peek();
+		int len = size();
+
+		for (int i = len - 1; i > 0; i--)
+		{
+			if (!this.get(i).isStateful())
+			{
+				removeElementAt(i);
+				return obj;
+			}
+		}
+
+		return obj;
+	}
+
+	public PExp getPredWithContext(PExp initialPredicate)
+	{
 		return getContextNode(initialPredicate);
 	}
 
 	private PExp getContextNode(PExp stitchPoint)
 	{
-		
+
 		for (int i = this.size() - 1; i >= 0; i--)
 		{
 			IPOContext ctxt = this.get(i);
@@ -53,7 +91,8 @@ public class POContextStack extends Stack<IPOContext> implements IPOContextStack
 		return stitchPoint;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.overture.pog.IPOContextStack#getName()
 	 */
 	@Override
@@ -77,7 +116,8 @@ public class POContextStack extends Stack<IPOContext> implements IPOContextStack
 		return result.toString();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.overture.pog.IPOContextStack#getObligation(java.lang.String)
 	 */
 	@Override
@@ -154,5 +194,18 @@ public class POContextStack extends Stack<IPOContext> implements IPOContextStack
 		}
 
 		return expected;
+	}
+
+	@Override
+	public void clearStateContexts()
+	{
+		for (int i = 0; i < this.elementCount; i++)
+		{
+			if (this.get(i).isStateful())
+			{
+				this.remove(0);
+			}
+
+		}
 	}
 }

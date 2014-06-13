@@ -28,6 +28,7 @@ import org.overture.ast.expressions.ANotUnaryExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.types.PType;
 import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.POType;
 
 public class TupleSelectObligation extends ProofObligation
 {

@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
+import org.junit.Test;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.node.INode;
 import org.overture.pog.pub.IProofObligation;
@@ -32,7 +33,7 @@ public class Playground {
 
 	
 	// comment this annotation out when done! no need to run the test
-	//@Test
+	@Test
 	public void quickTest() throws AnalysisException, IOException,
 			URISyntaxException {
 

@@ -1,4 +1,4 @@
-package org.overture.pog.utility;
+package org.overture.pog.visitors;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -16,11 +16,6 @@ import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.AMapSeqStateDesignator;
 
 public class StateDesignatorToExpVisitor extends AnswerAdaptor<PExp>{
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
 	@Override
 	public PExp caseAFieldStateDesignator(AFieldStateDesignator node)

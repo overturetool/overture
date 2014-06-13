@@ -1,4 +1,4 @@
-package org.overture.pog.utility;
+package org.overture.pog.visitors;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.AnswerAdaptor;
@@ -36,11 +36,6 @@ import org.overture.ast.types.SSeqType;
 
 class GetLocationVisitor extends AnswerAdaptor<ILexLocation>
 {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
 	@Override
 	public ILexLocation defaultPExp(PExp node) throws AnalysisException

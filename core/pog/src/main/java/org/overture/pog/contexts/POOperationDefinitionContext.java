@@ -21,12 +21,13 @@
  *
  ******************************************************************************/
 
-package org.overture.pog.obligation;
+package org.overture.pog.contexts;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -53,7 +54,7 @@ public class POOperationDefinitionContext extends POContext
 	public final boolean addPrecond;
 	public final PExp precondition;
 	public final PDefinition stateDefinition;
-	final AImplicitOperationDefinition opDef;
+	final PDefinition opDef;
 
 	protected POOperationDefinitionContext(ILexNameToken name,
 			AOperationType deftype, List<PPattern> paramPatternList,
@@ -68,6 +69,29 @@ public class POOperationDefinitionContext extends POContext
 		this.precondition = precondition;
 		this.stateDefinition = stateDefinition;
 		this.opDef = opDef;
+	}
+	
+	public POOperationDefinitionContext(
+			AExplicitOperationDefinition definition, boolean precond,
+			PDefinition stateDefinition,IPogAssistantFactory assistantFactory )
+	{
+		this.name = definition.getName();
+		this.deftype = (AOperationType) definition.getType();
+		this.addPrecond = precond;
+		this.paramPatternList = cloneList(definition.getParameterPatterns());
+		this.precondition = definition.getPrecondition();
+		this.stateDefinition = stateDefinition;
+		this.opDef = definition;
+		
+	}
+
+	private List<PPattern> cloneList(LinkedList<PPattern> parameterPatterns) {
+		List<PPattern> r = new LinkedList<PPattern>();
+	
+		for (PPattern p : parameterPatterns){
+			r.add(p.clone());
+		}
+		return r;
 	}
 
 	public POOperationDefinitionContext(

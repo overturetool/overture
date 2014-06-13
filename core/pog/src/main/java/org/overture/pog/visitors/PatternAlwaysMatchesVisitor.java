@@ -1,4 +1,4 @@
-package org.overture.pog.utility;
+package org.overture.pog.visitors;
 
 import java.util.List;
 
@@ -13,8 +13,6 @@ import org.overture.ast.patterns.PPattern;
 
 public class PatternAlwaysMatchesVisitor extends AnswerAdaptor<Boolean>
 {
-	private static final long serialVersionUID = 1L;
-	
 	public PatternAlwaysMatchesVisitor()
 	{
 	}
