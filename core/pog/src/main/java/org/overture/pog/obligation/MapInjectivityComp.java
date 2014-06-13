@@ -42,16 +42,16 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.POType;
 
-public class MapSetOfCompatibleObligation extends ProofObligation
+public class MapInjectivityComp extends ProofObligation
 {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 6082219504509442557L;
 
-	public MapSetOfCompatibleObligation(PExp exp, IPOContextStack ctxt)
+	public MapInjectivityComp(PExp exp, IPOContextStack ctxt)
 	{
-		super(exp, POType.MAP_SET_OF_COMPATIBLE, ctxt, exp.getLocation());
+		super(exp, POType.MAP_INJ_COMP, ctxt, exp.getLocation());
 
 		PExp predicate = buildPredicate(exp.clone());
 
@@ -59,9 +59,9 @@ public class MapSetOfCompatibleObligation extends ProofObligation
 		valuetree.setPredicate(ctxt.getPredWithContext(predicate));
 	}
 
-	public MapSetOfCompatibleObligation(AMapCompMapExp exp, IPOContextStack ctxt)
+	public MapInjectivityComp(AMapCompMapExp exp, IPOContextStack ctxt)
 	{
-		super(exp, POType.MAP_SET_OF_COMPATIBLE, ctxt, exp.getLocation());
+		super(exp, POType.MAP_INJ_COMP, ctxt, exp.getLocation());
 
 		PExp predicate = buildPredicate(exp.clone());
 

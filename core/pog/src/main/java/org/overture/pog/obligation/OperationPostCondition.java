@@ -35,13 +35,13 @@ import org.overture.ast.statements.AErrorCase;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.POType;
 
-public class OperationPostConditionObligation extends ProofObligation {
+public class OperationPostCondition extends ProofObligation {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 7717481924562707647L;
 
-	public OperationPostConditionObligation(AExplicitOperationDefinition op,
+	public OperationPostCondition(AExplicitOperationDefinition op,
 			IPOContextStack ctxt) {
 		super(op, POType.FUNC_POST_CONDITION, ctxt, op.getLocation());
 		// valuetree.setContext(ctxt.getContextNodeList());
@@ -49,7 +49,7 @@ public class OperationPostConditionObligation extends ProofObligation {
 				op.getPrecondition(), op.getPostcondition().clone(), null)));
 	}
 
-	public OperationPostConditionObligation(AImplicitOperationDefinition op,
+	public OperationPostCondition(AImplicitOperationDefinition op,
 			IPOContextStack ctxt) {
 		super(op, POType.FUNC_POST_CONDITION, ctxt, op.getLocation());
 		valuetree.setPredicate(ctxt.getPredWithContext(buildExp(op
