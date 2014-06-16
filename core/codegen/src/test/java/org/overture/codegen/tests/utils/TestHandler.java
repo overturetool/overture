@@ -8,7 +8,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 
 import org.overture.ast.lex.Dialect;
-import org.overture.codegen.constants.IRConstants;
+import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.vdm2java.IJavaCodeGenConstants;
 import org.overture.config.Release;

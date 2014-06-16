@@ -29,6 +29,7 @@ import org.overture.ast.expressions.ANotEqualBinaryExp;
 import org.overture.ast.expressions.ASetEnumSetExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.POType;
 
 
 public class NonEmptySetObligation extends ProofObligation

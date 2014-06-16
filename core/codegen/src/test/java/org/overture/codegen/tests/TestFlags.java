@@ -9,4 +9,6 @@ public class TestFlags
 	public static final boolean FUNC_VALUE_TESTS_ON = false;
 	public static final boolean STRING_CONFIG_TESTS_ON = false;
 	public static final boolean CLONING_CONFIG_TESTS_ON = false;
+	public static final boolean PATTERN_TESTS_ON = false;
+	public static final boolean UNION_TYPE_TESTS_ON = false;
 }

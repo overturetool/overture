@@ -28,7 +28,7 @@ public class AStartStmAssistantInterpreter
 		this.af = af;
 	}
 
-	public static void start(AStartStm node, ObjectValue target,
+	public void start(AStartStm node, ObjectValue target,
 			OperationValue op, Context ctxt) throws AnalysisException
 	{
 		if (op.body instanceof APeriodicStm)
@@ -93,12 +93,7 @@ public class AStartStmAssistantInterpreter
 		}
 	}
 
-//	public static PExp findExpression(AStartStm stm, int lineno)
-//	{
-//		return PExpAssistantInterpreter.findExpression(stm.getObj(), lineno);
-//	}
-
-	public static PExp findExpression(AStopStm stm, int lineno)
+	public PExp findExpression(AStopStm stm, int lineno)
 	{
 		return af.createPExpAssistant().findExpression(stm.getObj(), lineno);
 	}

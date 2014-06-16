@@ -44,7 +44,7 @@ public class OutlineCompatabilityChecker extends
 		return o != null;
 	}
 
-	public static boolean isValidName(ILexIdentifierToken name)
+	public boolean isValidName(ILexIdentifierToken name)
 	{
 		return isNotNull(name) && isNotNull(name.getName());
 	}

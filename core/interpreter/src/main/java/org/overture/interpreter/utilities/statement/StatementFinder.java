@@ -46,7 +46,6 @@ public class StatementFinder extends QuestionAnswerAdaptor<Integer, PStm>
 	public PStm caseAAlwaysStm(AAlwaysStm stm, Integer lineno)
 			throws AnalysisException
 	{
-		//return AAlwaysStmAssistantInterpreter.findStatement(stm, lineno);
 		PStm found = findStatementBaseCase(stm, lineno);
 		if (found != null)
 			return found;
@@ -60,7 +59,6 @@ public class StatementFinder extends QuestionAnswerAdaptor<Integer, PStm>
 	public PStm caseAAtomicStm(AAtomicStm stm, Integer lineno)
 			throws AnalysisException
 	{
-		//return AAtomicStmAssistantInterpreter.findStatement(stm, lineno);
 		PStm found = findStatementBaseCase(stm, lineno);
 		if (found != null)
 			return found;
@@ -79,7 +77,6 @@ public class StatementFinder extends QuestionAnswerAdaptor<Integer, PStm>
 	public PStm caseACasesStm(ACasesStm stm, Integer lineno)
 			throws AnalysisException
 	{
-		//return ACasesStmAssistantInterpreter.findStatement(stm, lineno);
 		PStm found = findStatementBaseCase(stm, lineno);
 		if (found != null)
 			return found;
@@ -98,8 +95,6 @@ public class StatementFinder extends QuestionAnswerAdaptor<Integer, PStm>
 	public PStm caseACyclesStm(ACyclesStm stm, Integer lineno)
 			throws AnalysisException
 	{
-		//return ACyclesStmAssistantInterpreter.findStatement(stm, lineno);
-		//return PStmAssistantInterpreter.findStatement(stm.getStatement(), lineno);
 		return stm.getStatement().apply(THIS, lineno);
 	}
 	
@@ -107,8 +102,6 @@ public class StatementFinder extends QuestionAnswerAdaptor<Integer, PStm>
 	public PStm caseADurationStm(ADurationStm stm, Integer lineno)
 			throws AnalysisException
 	{
-		//return ADurationStmAssistantInterpreter.findStatement(stm, lineno);
-		//return PStmAssistantInterpreter.findStatement(stm.getStatement(), lineno);
 		return stm.getStatement().apply(THIS, lineno);
 	}
 	
@@ -116,7 +109,6 @@ public class StatementFinder extends QuestionAnswerAdaptor<Integer, PStm>
 	public PStm caseAElseIfStm(AElseIfStm stm, Integer lineno)
 			throws AnalysisException
 	{
-		//return AElseIfStmAssistantInterpreter.findStatement(stm, lineno);
 		PStm found = findStatementBaseCase(stm, lineno);
 		if (found != null)
 			return found;
@@ -127,18 +119,16 @@ public class StatementFinder extends QuestionAnswerAdaptor<Integer, PStm>
 	public PStm caseAForAllStm(AForAllStm stm, Integer lineno)
 			throws AnalysisException
 	{
-		//return AForAllStmAssistantInterpreter.findStatement(stm, lineno);
 		PStm found = findStatementBaseCase(stm, lineno);
 		if (found != null)
 			return found;
-		return stm.apply(THIS, lineno);//PStmAssistantInterpreter.findStatement(stm.getStatement(), lineno);
+		return stm.getStatement().apply(THIS, lineno);//PStmAssistantInterpreter.findStatement(stm.getStatement(), lineno);
 	}
 	
 	@Override
 	public PStm caseAForIndexStm(AForIndexStm stm, Integer lineno)
 			throws AnalysisException
 	{
-		//return AForIndexStmAssistantInterpreter.findStatement(stm, lineno);
 		PStm found = findStatementBaseCase(stm, lineno);
 		if (found != null)
 			return found;
@@ -149,7 +139,6 @@ public class StatementFinder extends QuestionAnswerAdaptor<Integer, PStm>
 	public PStm caseAForPatternBindStm(AForPatternBindStm stm, Integer lineno)
 			throws AnalysisException
 	{
-		//return AForPatternBindStmAssitantInterpreter.findStatement(stm, lineno);
 		PStm found = findStatementBaseCase(stm, lineno);
 		if (found != null)
 			return found;
@@ -160,7 +149,6 @@ public class StatementFinder extends QuestionAnswerAdaptor<Integer, PStm>
 	public PStm caseAIfStm(AIfStm stm, Integer lineno)
 			throws AnalysisException
 	{
-		//return AIfStmAssistantInterpreter.findStatement(stm, lineno);
 		PStm found =findStatementBaseCase(stm, lineno);
 		if (found != null)
 			return found;
@@ -186,7 +174,6 @@ public class StatementFinder extends QuestionAnswerAdaptor<Integer, PStm>
 	public PStm caseALetBeStStm(ALetBeStStm stm, Integer lineno)
 			throws AnalysisException
 	{
-		//return ALetBeStStmAssistantInterpreter.findStatement(stm, lineno);
 		PStm found = findStatementBaseCase(stm, lineno);
 		if (found != null)
 			return found;
@@ -197,7 +184,6 @@ public class StatementFinder extends QuestionAnswerAdaptor<Integer, PStm>
 	public PStm caseALetStm(ALetStm stm, Integer lineno)
 			throws AnalysisException
 	{
-		//return SLetDefStmAssistantInterpreter.findStatement(stm, lineno);
 		PStm found = findStatementBaseCase(stm, lineno);
 		if (found != null)
 			return found;
@@ -213,7 +199,6 @@ public class StatementFinder extends QuestionAnswerAdaptor<Integer, PStm>
 	public PStm defaultSSimpleBlockStm(SSimpleBlockStm stm, Integer lineno)
 			throws AnalysisException
 	{
-		//return SSimpleBlockStmAssistantInterpreter.findStatement(stm, lineno);
 		if (stm.getLocation().getStartLine() == lineno)
 			return stm;
 		PStm found = null;
@@ -232,7 +217,6 @@ public class StatementFinder extends QuestionAnswerAdaptor<Integer, PStm>
 	public PStm caseATixeStm(ATixeStm stm, Integer lineno)
 			throws AnalysisException
 	{
-		//return ATixeStmAssistantInterpreter.findStatement(stm, lineno);
 		PStm found = findStatementBaseCase(stm, lineno);
 		if (found != null)
 			return found;
@@ -254,7 +238,6 @@ public class StatementFinder extends QuestionAnswerAdaptor<Integer, PStm>
 	public PStm caseATrapStm(ATrapStm stm, Integer lineno)
 			throws AnalysisException
 	{
-		//return ATrapStmAssistantInterpreter.findStatement(stm, lineno);
 		PStm found = findStatementBaseCase(stm, lineno);
 		if (found != null)
 			return found;
@@ -268,7 +251,6 @@ public class StatementFinder extends QuestionAnswerAdaptor<Integer, PStm>
 	public PStm caseAWhileStm(AWhileStm stm, Integer lineno)
 			throws AnalysisException
 	{
-		//return AWhileStmAssistantInterpreter.findStatement(stm, lineno);
 		PStm found = findStatementBaseCase(stm, lineno);
 		if (found != null)
 			return found;

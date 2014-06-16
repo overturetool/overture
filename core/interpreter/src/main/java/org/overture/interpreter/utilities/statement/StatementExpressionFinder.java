@@ -54,11 +54,11 @@ public class StatementExpressionFinder extends QuestionAnswerAdaptor<Integer, PE
 	public PExp caseAAlwaysStm(AAlwaysStm stm, Integer lineno)
 			throws AnalysisException
 	{
-		//return AAlwaysStmAssistantInterpreter.findExpression(stm, lineno);
-		PExp found = stm.getAlways().apply(THIS, lineno); //PStmAssistantInterpreter.findExpression(stm.getAlways(), lineno);
+		
+		PExp found = stm.getAlways().apply(THIS, lineno);
 		if (found != null)
 			return found;
-		//return PStmAssistantInterpreter.findExpression(stm.getBody(), lineno);
+		
 		return stm.getBody().apply(THIS, lineno);
 	}
 	
@@ -66,7 +66,6 @@ public class StatementExpressionFinder extends QuestionAnswerAdaptor<Integer, PE
 	public PExp caseAAssignmentStm(AAssignmentStm stm, Integer lineno)
 			throws AnalysisException
 	{
-		//return AAssignmentStmAssistantInterpreter.findExpression(stm, lineno);
 		return af.createPExpAssistant().findExpression(stm.getExp(), lineno);
 	}
 	
@@ -74,12 +73,10 @@ public class StatementExpressionFinder extends QuestionAnswerAdaptor<Integer, PE
 	public PExp caseAAtomicStm(AAtomicStm stm, Integer lineno)
 			throws AnalysisException
 	{
-		//return AAtomicStmAssistantInterpreter.findExpression(stm, lineno);
 		PExp found = null;
 
 		for (AAssignmentStm stmt : stm.getAssignments())
 		{
-			//found = AAssignmentStmAssistantInterpreter.findExpression(stmt, lineno);
 			found = stmt.apply(THIS, lineno);
 			if (found != null)
 				break;
@@ -92,7 +89,6 @@ public class StatementExpressionFinder extends QuestionAnswerAdaptor<Integer, PE
 	public PExp caseACallStm(ACallStm stm, Integer lineno)
 			throws AnalysisException
 	{
-		//return ACallStmAssistantInterpreter.findExpression(stm, lineno);
 		return af.createPExpAssistant().findExpression(stm.getArgs(), lineno);
 	}
 	
@@ -100,7 +96,6 @@ public class StatementExpressionFinder extends QuestionAnswerAdaptor<Integer, PE
 	public PExp caseACallObjectStm(ACallObjectStm stm, Integer lineno)
 			throws AnalysisException
 	{
-		//return ACallObjectStatementAssistantInterpreter.findExpression(stm, lineno);
 		return af.createPExpAssistant().findExpression(stm.getArgs(), lineno);
 	}
 	
@@ -108,12 +103,10 @@ public class StatementExpressionFinder extends QuestionAnswerAdaptor<Integer, PE
 	public PExp caseACasesStm(ACasesStm stm, Integer lineno)
 			throws AnalysisException
 	{
-		///return ACasesStmAssistantInterpreter.findExpression(stm, lineno);
 		PExp found = null;
 
 		for (ACaseAlternativeStm stmt : stm.getCases())
 		{
-			//found = PStmAssistantInterpreter.findExpression(stmt.getResult(), lineno);
 			found = stmt.getResult().apply(THIS, lineno);
 			if (found != null)
 				break;
@@ -126,8 +119,6 @@ public class StatementExpressionFinder extends QuestionAnswerAdaptor<Integer, PE
 	public PExp caseACyclesStm(ACyclesStm stm, Integer lineno)
 			throws AnalysisException
 	{
-		//return ACyclesStmAssistantInterpreter.findExpression(stm, lineno);
-		//return PStmAssistantInterpreter.findExpression(stm.getStatement(), lineno);
 		return stm.getStatement().apply(THIS, lineno);
 	}
 	
@@ -135,8 +126,6 @@ public class StatementExpressionFinder extends QuestionAnswerAdaptor<Integer, PE
 	public PExp caseADurationStm(ADurationStm stm, Integer lineno)
 			throws AnalysisException
 	{
-		//return ADurationStmAssistantInterpreter.findExpression(stm, lineno);
-		//return PStmAssistantInterpreter.findExpression(stm.getStatement(), lineno);
 		return stm.getStatement().apply(THIS, lineno);
 		
 	}
@@ -145,14 +134,12 @@ public class StatementExpressionFinder extends QuestionAnswerAdaptor<Integer, PE
 	public PExp caseAElseIfStm(AElseIfStm stm, Integer lineno)
 			throws AnalysisException
 	{
-		//return AElseIfStmAssistantInterpreter.findExpression(stm, lineno);
 		return af.createPExpAssistant().findExpression(stm.getElseIf(), lineno);
 	}
 	@Override
 	public PExp caseAExitStm(AExitStm stm, Integer lineno)
 			throws AnalysisException
 	{
-		//return AExitStmAssistantInterpreter.findExpression(stm, lineno);
 		return stm.getExpression() == null ? null
 				: af.createPExpAssistant().findExpression(stm.getExpression(), lineno);
 	}
@@ -161,12 +148,9 @@ public class StatementExpressionFinder extends QuestionAnswerAdaptor<Integer, PE
 	public PExp caseAForAllStm(AForAllStm stm, Integer lineno)
 			throws AnalysisException
 	{
-		//return AForAllStmAssistantInterpreter.findExpression(stm, lineno);
 		PExp found = af.createPExpAssistant().findExpression(stm.getSet(), lineno);
-		//PExp found = stm.getSet().apply(THIS, lineno);
 		if (found != null)
 			return found;
-		//return PStmAssistantInterpreter.findExpression(stm.getStatement(), lineno);
 		return stm.getStatement().apply(THIS, lineno);
 	}
 	
@@ -174,18 +158,15 @@ public class StatementExpressionFinder extends QuestionAnswerAdaptor<Integer, PE
 	public PExp caseAForIndexStm(AForIndexStm stm, Integer lineno)
 			throws AnalysisException
 	{
-		//return AForIndexStmAssistantInterpreter.findExpression(stm, lineno);
 		PExp found = af.createPExpAssistant().findExpression(stm.getFrom(), lineno);
 		if (found != null)
 			return found;
-		//found = PExpAssistantInterpreter.findExpression(stm.getTo(), lineno);
 		found = stm.getTo().apply(THIS, lineno);
 		if (found != null)
 			return found;
 		found = af.createPExpAssistant().findExpression(stm.getBy(), lineno);
 		if (found != null)
 			return found;
-		//return PStmAssistantInterpreter.findExpression(stm.getStatement(), lineno);
 		return stm.getStatement().apply(THIS, lineno);
 	}
 	
@@ -193,12 +174,9 @@ public class StatementExpressionFinder extends QuestionAnswerAdaptor<Integer, PE
 	public PExp caseAForPatternBindStm(AForPatternBindStm stm, Integer lineno)
 			throws AnalysisException
 	{
-		//return AForPatternBindStmAssitantInterpreter.findExpression(stm, lineno);
 		PExp found = af.createPExpAssistant().findExpression(stm.getExp(), lineno);
-		//PExp found = stm.getExp().apply(THIS, lineno);
 		if (found != null)
 			return found;
-		//return PStmAssistantInterpreter.findExpression(stm.getStatement(), lineno);
 		return stm.getStatement().apply(THIS, lineno);
 	}
 	
@@ -206,15 +184,12 @@ public class StatementExpressionFinder extends QuestionAnswerAdaptor<Integer, PE
 	public PExp caseAIfStm(AIfStm stm, Integer lineno)
 			throws AnalysisException
 	{
-		//return AIfStmAssistantInterpreter.findExpression(stm, lineno);
-		//PExp found = PStmAssistantInterpreter.findExpression(stm.getThenStm(), lineno);
 		PExp found = stm.getThenStm().apply(THIS, lineno);
 		if (found != null)
 			return found;
 
 		for (AElseIfStm stmt : stm.getElseIf())
 		{
-			//found = AElseIfStmAssistantInterpreter.findExpression(stmt, lineno);
 			found = stmt.apply(THIS, lineno);
 			if (found != null)
 				return found;
@@ -222,7 +197,6 @@ public class StatementExpressionFinder extends QuestionAnswerAdaptor<Integer, PE
 
 		if (stm.getElseStm() != null)
 		{
-			//found = PStmAssistantInterpreter.findExpression(stm.getElseStm(), lineno);
 			found = stm.getElseStm().apply(THIS, lineno);
 		}
 
@@ -233,7 +207,6 @@ public class StatementExpressionFinder extends QuestionAnswerAdaptor<Integer, PE
 	public PExp caseALetBeStStm(ALetBeStStm stm, Integer lineno)
 			throws AnalysisException
 	{
-		//return ALetBeStStmAssistantInterpreter.findExpression(stm, lineno);
 		if (stm.getSuchThat() != null)
 		{
 			PExp found = af.createPExpAssistant().findExpression(stm.getSuchThat(), lineno);
@@ -241,7 +214,6 @@ public class StatementExpressionFinder extends QuestionAnswerAdaptor<Integer, PE
 				return found;
 		}
 
-		//return PStmAssistantInterpreter.findExpression(stm.getStatement(), lineno);
 		return stm.getStatement().apply(THIS, lineno);
 	}
 	
@@ -249,12 +221,10 @@ public class StatementExpressionFinder extends QuestionAnswerAdaptor<Integer, PE
 	public PExp caseALetStm(ALetStm stm, Integer lineno)
 			throws AnalysisException
 	{
-		//return SLetDefStmAssistantInterpreter.findExpression(stm, lineno);
 		PExp found = af.createPDefinitionListAssistant().findExpression(stm.getLocalDefs(), lineno);
 		if (found != null)
 			return found;
 
-		//return PStmAssistantInterpreter.findExpression(stm.getStatement(), lineno);
 		return stm.getStatement().apply(THIS, lineno);
 	}
 	
@@ -262,7 +232,6 @@ public class StatementExpressionFinder extends QuestionAnswerAdaptor<Integer, PE
 	public PExp caseAReturnStm(AReturnStm stm, Integer lineno)
 			throws AnalysisException
 	{
-		//return AReturnStmAssistantInterpreter.findExpression(stm, lineno);
 		return stm.getExpression() == null ? null
 				: af.createPExpAssistant().findExpression(stm.getExpression(), lineno);
 	}
@@ -271,7 +240,6 @@ public class StatementExpressionFinder extends QuestionAnswerAdaptor<Integer, PE
 	public PExp defaultSSimpleBlockStm(SSimpleBlockStm stm, Integer lineno)
 			throws AnalysisException
 	{
-		//return SSimpleBlockStmAssistantInterpreter.findExpression(stm, lineno);
 		PExp found = null;
 
 		for (PStm stmt : stm.getStatements())
@@ -288,7 +256,6 @@ public class StatementExpressionFinder extends QuestionAnswerAdaptor<Integer, PE
 	public PExp caseAStartStm(AStartStm stm, Integer lineno)
 			throws AnalysisException
 	{
-		//return AStartStmAssistantInterpreter.findExpression(stm, lineno);
 		return af.createPExpAssistant().findExpression(stm.getObj(), lineno);
 	}
 	
@@ -296,7 +263,6 @@ public class StatementExpressionFinder extends QuestionAnswerAdaptor<Integer, PE
 	public PExp caseAStopStm(AStopStm stm, Integer lineno)
 			throws AnalysisException
 	{
-		//return AStartStmAssistantInterpreter.findExpression(stm, lineno);
 		return af.createPExpAssistant().findExpression(stm.getObj(), lineno);
 	}
 	
@@ -304,7 +270,6 @@ public class StatementExpressionFinder extends QuestionAnswerAdaptor<Integer, PE
 	public PExp caseATixeStm(ATixeStm stm, Integer lineno)
 			throws AnalysisException
 	{
-		//return ATixeStmAssistantInterpreter.findExpression(stm, lineno);
 		PExp found = stm.getBody().apply(THIS, lineno);//PStmAssistantInterpreter.findExpression(stm.getBody(), lineno);
 		if (found != null)
 			return found;
@@ -323,7 +288,6 @@ public class StatementExpressionFinder extends QuestionAnswerAdaptor<Integer, PE
 	public PExp caseATrapStm(ATrapStm stm, Integer lineno)
 			throws AnalysisException
 	{
-		//return ATrapStmAssistantInterpreter.findExpression(stm, lineno);
 		PExp found = stm.getBody().apply(THIS, lineno);//PStmAssistantInterpreter.findExpression(stm.getBody(), lineno);
 		if (found != null)
 			return found;
@@ -334,7 +298,6 @@ public class StatementExpressionFinder extends QuestionAnswerAdaptor<Integer, PE
 	public PExp caseAWhileStm(AWhileStm stm, Integer lineno)
 			throws AnalysisException
 	{
-		//return AWhileStmAssistantInterpreter.findExpression(stm, lineno);
 		PExp found = af.createPExpAssistant().findExpression(stm.getExp(), lineno);
 		if (found != null)
 			return found;

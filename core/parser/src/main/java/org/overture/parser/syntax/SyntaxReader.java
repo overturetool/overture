@@ -28,14 +28,29 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.analysis.intf.IAnswer;
+import org.overture.ast.assistant.IAstAssistantFactory;
+import org.overture.ast.assistant.definition.PAccessSpecifierAssistant;
+import org.overture.ast.assistant.definition.PDefinitionAssistant;
+import org.overture.ast.assistant.pattern.PPatternAssistant;
+import org.overture.ast.assistant.type.ABracketTypeAssistant;
+import org.overture.ast.assistant.type.ANamedInvariantTypeAssistant;
+import org.overture.ast.assistant.type.AOptionalTypeAssistant;
+import org.overture.ast.assistant.type.AParameterTypeAssistant;
+import org.overture.ast.assistant.type.AUnionTypeAssistant;
+import org.overture.ast.assistant.type.AUnknownTypeAssistant;
+import org.overture.ast.assistant.type.PTypeAssistant;
+import org.overture.ast.assistant.type.SNumericBasicTypeAssistant;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexToken;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexIdentifierToken;
+import org.overture.ast.lex.LexNameList;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.lex.LexToken;
 import org.overture.ast.lex.VDMToken;
 import org.overture.ast.messages.InternalException;
+import org.overture.ast.types.SNumericBasicType;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.lex.LexTokenReader;
 import org.overture.parser.messages.LocatedException;
@@ -80,7 +95,7 @@ public abstract class SyntaxReader
 
 	/** The maximum number of syntax errors allowed in one Reader. */
 	private static final int MAX = 100;
-
+	
 	/**
 	 * Create a reader with the given lexical analyser and VDM++ flag.
 	 */

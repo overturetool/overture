@@ -1,7 +1,6 @@
 package org.overture.interpreter.assistant.expression;
 
 import org.overture.ast.expressions.APostOpExp;
-import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
@@ -22,7 +21,7 @@ public class APostOpExpAssistantInterpreter // extends APostOpExpAssistantTC
 		this.af = af;
 	}
 
-	public static void populate(APostOpExp node, Context ctxt,
+	public void populate(APostOpExp node, Context ctxt,
 			String classname, ValueMap oldvalues) throws ValueException
 	{
 		for (Value var : oldvalues.keySet())
@@ -39,7 +38,7 @@ public class APostOpExpAssistantInterpreter // extends APostOpExpAssistantTC
 		}
 	}
 
-	public static ObjectValue findObject(APostOpExp node, String classname,
+	public ObjectValue findObject(APostOpExp node, String classname,
 			ObjectValue object)
 	{
 		if (object.type.getName().getName().equals(classname))
@@ -61,10 +60,5 @@ public class APostOpExpAssistantInterpreter // extends APostOpExpAssistantTC
 
 		return found;
 	}
-
-//	public static PExp findExpression(APostOpExp exp, int lineno)
-//	{
-//		return PExpAssistantInterpreter.findExpression(exp.getPostexpression(), lineno);
-//	}
 
 }

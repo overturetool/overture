@@ -19,7 +19,7 @@ public class PDefinitionAssistant
 		this.af = af;
 	}
 
-	public static void setClassDefinition(PDefinition pDefinition,
+	public void setClassDefinition(PDefinition pDefinition,
 			SClassDefinition def)
 	{
 		if (pDefinition instanceof SClassDefinition) {
@@ -27,7 +27,7 @@ public class PDefinitionAssistant
 				setClassDefinition(d, def);
 			}
 		} else if (pDefinition instanceof AExplicitFunctionDefinition) {
-			setClassDefinitionBaseCase(pDefinition, def);
+			af.createPDefinitionAssistant().setClassDefinitionBaseCase(pDefinition, def);
 			AExplicitFunctionDefinition efd = ((AExplicitFunctionDefinition) pDefinition);
 			if (efd.getPredef() != null) {
 				setClassDefinition(efd.getPredef(), def);
@@ -36,18 +36,18 @@ public class PDefinitionAssistant
 				setClassDefinition(efd.getPostdef(), def);
 			}
 		} else if (pDefinition instanceof AValueDefinition) {
-			setClassDefinitionBaseCase(pDefinition, def);
+			af.createPDefinitionAssistant().setClassDefinitionBaseCase(pDefinition, def);
 			AValueDefinition vd = (AValueDefinition) pDefinition;
 			for (PDefinition d : vd.getDefs()) {
 				setClassDefinition(d, def);
 			}
 		} else {
-			setClassDefinitionBaseCase(pDefinition, def);
+			af.createPDefinitionAssistant().setClassDefinitionBaseCase(pDefinition, def);
 		}
 
 	}
 
-	public static String getName(PDefinition node)
+	public String getName(PDefinition node)
 	{
 		if (node.getName() != null)
 		{
@@ -57,18 +57,18 @@ public class PDefinitionAssistant
 		return null;
 	}
 
-	public static void setClassDefinitionBaseCase(PDefinition pDefinition,
+	public void setClassDefinitionBaseCase(PDefinition pDefinition,
 			SClassDefinition def)
 	{
 		pDefinition.setClassDefinition(def);
 	}
 
-	public static void setClassDefinition(List<PDefinition> defs,
+	public void setClassDefinition(List<PDefinition> defs,
 			SClassDefinition classDefinition)
 	{
 		for (PDefinition d : defs)
 		{
-			setClassDefinition(d, classDefinition);
+			af.createPDefinitionAssistant().setClassDefinition(d, classDefinition);
 		}
 
 	}

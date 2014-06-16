@@ -25,7 +25,6 @@ import org.overture.ast.types.SInvariantType;
 import org.overture.ast.types.SMapType;
 import org.overture.config.Settings;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.type.SMapTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.values.BooleanValue;

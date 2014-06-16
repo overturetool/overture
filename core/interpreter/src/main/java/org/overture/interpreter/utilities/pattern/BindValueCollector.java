@@ -30,7 +30,6 @@ public class BindValueCollector extends QuestionAnswerAdaptor<ObjectContext, Val
 	public ValueList caseASetBind(ASetBind bind, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		//return ASetBindAssistantInterpreter.getValues((ASetBind) bind, ctxt);
 		return af.createPExpAssistant().getValues(bind.getSet(), ctxt);
 	}
 	
@@ -38,7 +37,6 @@ public class BindValueCollector extends QuestionAnswerAdaptor<ObjectContext, Val
 	public ValueList caseATypeBind(ATypeBind bind, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		//return ATypeBindAssistantInterpreter.getValues((ATypeBind) bind, ctxt);
 		return new ValueList();
 	}
 	

@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import org.overture.codegen.constants.IRConstants;
+import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.config.Release;
 

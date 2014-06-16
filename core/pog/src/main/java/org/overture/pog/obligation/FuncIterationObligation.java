@@ -37,6 +37,8 @@ import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.IPogAssistantFactory;
+import org.overture.pog.pub.POType;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class FuncIterationObligation extends ProofObligation {
@@ -52,7 +54,7 @@ public class FuncIterationObligation extends ProofObligation {
 	private static final long serialVersionUID = -6041213040266345023L;
 
 	public FuncIterationObligation(AStarStarBinaryExp exp,
-			ILexNameToken preName, IPOContextStack ctxt) {
+			ILexNameToken preName, IPOContextStack ctxt, IPogAssistantFactory assistantFactory) {
 		super(exp, POType.FUNC_ITERATION, ctxt, exp.getLocation());
 
 		// n > 1
@@ -64,7 +66,7 @@ public class FuncIterationObligation extends ProofObligation {
 		AForAllExp forAllExp = new AForAllExp();
 		ILexNameToken arg = getUnique("arg");
 		List<PMultipleBind> bindList = getMultipleTypeBindList(
-				(PTypeAssistantTC.getNumeric(exp.getRight().getType().clone())),
+				(assistantFactory.createPTypeAssistant().getNumeric(exp.getRight().getType().clone())),
 				arg);
 		forAllExp.setBindList(bindList);
 		forAllExp.setPredicate(getPredicate(exp.clone(), preName.clone(), arg));

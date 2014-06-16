@@ -43,6 +43,7 @@ import org.overture.ast.types.AMapMapType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.PType;
 import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.POType;
 
 
 public class FiniteMapObligation extends ProofObligation

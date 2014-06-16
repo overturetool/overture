@@ -834,6 +834,7 @@ public class DefinitionReader extends SyntaxReader
 			type = getTypeReader().readType();
 		}
 
+		
 		checkFor(VDMToken.EQUALS, 2096, "Expecting <pattern>[:<type>]=<exp>");
 
 		return AstFactory.newAValueDefinition(p, scope, type, getExpressionReader().readExpression());

@@ -25,7 +25,7 @@ import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.analysis.violations.Violation;
 import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.assistant.LocationAssistantCG;
-import org.overture.codegen.constants.IRConstants;
+import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.ir.NodeInfo;
 import org.overture.codegen.utils.AnalysisExceptionCG;

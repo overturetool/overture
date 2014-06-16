@@ -3,7 +3,6 @@ package org.overture.ast.util.type;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.AnswerAdaptor;
 import org.overture.ast.assistant.IAstAssistantFactory;
-import org.overture.ast.assistant.type.PTypeAssistant;
 import org.overture.ast.node.INode;
 import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.AClassType;
@@ -53,7 +52,7 @@ public class HashChecker extends AnswerAdaptor<Integer>
 	public Integer caseAFunctionType(AFunctionType type)
 			throws AnalysisException
 	{
-		return PTypeAssistant.hashCode(type.getParameters()) + af.createPTypeAssistant().hashCode(type.getResult());
+		return af.createPTypeAssistant().hashCode(type.getParameters()) + af.createPTypeAssistant().hashCode(type.getResult());
 	}
 	
 	@Override
@@ -91,7 +90,7 @@ public class HashChecker extends AnswerAdaptor<Integer>
 			throws AnalysisException
 	{
 		AOperationType otype = type;
-		return PTypeAssistant.hashCode(otype.getParameters()) + af.createPTypeAssistant().hashCode(otype.getResult());
+		return af.createPTypeAssistant().hashCode(otype.getParameters()) + af.createPTypeAssistant().hashCode(otype.getResult());
 		
 	}
 	
@@ -114,7 +113,7 @@ public class HashChecker extends AnswerAdaptor<Integer>
 	@Override
 	public Integer caseAProductType(AProductType type) throws AnalysisException
 	{
-		return PTypeAssistant.hashCode(type.getTypes());
+		return af.createPTypeAssistant().hashCode(type.getTypes());
 	}
 	
 	@Override
@@ -140,7 +139,7 @@ public class HashChecker extends AnswerAdaptor<Integer>
 	@Override
 	public Integer caseAUnionType(AUnionType type) throws AnalysisException
 	{
-		return PTypeAssistant.hashCode(type.getTypes());
+		return af.createPTypeAssistant().hashCode(type.getTypes());
 	}
 	
 	@Override

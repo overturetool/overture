@@ -73,11 +73,11 @@ public class DelegateStatementEvaluator extends StatementEvaluator
 		{
     		if (ctxt.title.equals("deploy(obj)"))
     		{
-    			return ACpuClassDefinitionAssistantInterpreter.deploy(node,ctxt);
+    			return ctxt.assistantFactory.createACpuClassDefinitionAssistant().deploy(node,ctxt);
     		}
     		else if (ctxt.title.equals("deploy(obj, name)"))
     		{
-    			return ACpuClassDefinitionAssistantInterpreter.deploy(node,ctxt);
+    			return ctxt.assistantFactory.createACpuClassDefinitionAssistant().deploy(node,ctxt);
     		}
     		else if (ctxt.title.equals("setPriority(opname, priority)"))
     		{

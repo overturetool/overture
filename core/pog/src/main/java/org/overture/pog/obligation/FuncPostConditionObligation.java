@@ -37,6 +37,7 @@ import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.patterns.PPattern;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
+import org.overture.pog.pub.POType;
 
 
 public class FuncPostConditionObligation extends ProofObligation

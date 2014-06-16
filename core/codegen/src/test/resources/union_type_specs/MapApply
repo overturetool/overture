@@ -1,0 +1,19 @@
+class Entry
+
+types
+
+A = map nat to nat | nat
+
+values
+
+x : map nat to A = {1 |-> {2 |-> 3}};
+
+b : nat = x(1)(2);
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	return b;
+
+end Entry

@@ -6,7 +6,7 @@ import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.expressions.ATupleExpCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
-import org.overture.codegen.constants.IRConstants;
+import org.overture.codegen.ir.IRConstants;
 
 public class UtilAnalysis extends AbstractAnalysis
 {

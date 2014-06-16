@@ -52,7 +52,7 @@ import org.overture.interpreter.values.UpdatableValue;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
 import org.overture.interpreter.values.ValueMap;
-import org.overture.pog.obligation.POContextStack;
+import org.overture.pog.contexts.POContextStack;
 import org.overture.pog.obligation.ProofObligationList;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 
@@ -127,20 +127,20 @@ public class SClassDefinitionAssistantInterpreter extends
 
 		return new MapValue(values);
 	}
-
+	//TODO:rewrite this???
 	public ObjectValue newInstance(SClassDefinition node,
 			PDefinition ctorDefinition, ValueList argvals, Context ctxt)
 			throws AnalysisException
 	{
 		if (node instanceof ABusClassDefinition)
 		{
-			return ABusClassDefinitionAssitantInterpreter.newInstance((ABusClassDefinition) node, ctorDefinition, argvals, ctxt);
+			return af.createABusClassDefinitionAssitant().newInstance((ABusClassDefinition) node, ctorDefinition, argvals, ctxt);
 		} else if (node instanceof AClassClassDefinition)
 		{
-			return AClassClassDefinitionAssistantInterpreter.newInstance((AClassClassDefinition) node, ctorDefinition, argvals, ctxt);
+			return af.createAClassClassDefinitionAssistant().newInstance((AClassClassDefinition) node, ctorDefinition, argvals, ctxt);
 		} else if (node instanceof ACpuClassDefinition)
 		{
-			return ACpuClassDefinitionAssistantInterpreter.newInstance((ACpuClassDefinition) node, ctorDefinition, argvals, ctxt);
+			return af.createACpuClassDefinitionAssistant().newInstance((ACpuClassDefinition) node, ctorDefinition, argvals, ctxt);
 		} else if (node instanceof ASystemClassDefinition)
 		{
 			VdmRuntimeError.abort(node.getLocation(), 4135, "Cannot instantiate system class "
@@ -648,15 +648,5 @@ public class SClassDefinitionAssistantInterpreter extends
 
 		return null;
 	}
-
-//	public String getName(SClassDefinition classdef)
-//	{
-//		if (classdef.getName() != null)
-//		{
-//			return classdef.getName().getName();
-//		}
-//
-//		return null;
-//	}
 
 }

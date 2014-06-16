@@ -19,14 +19,14 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter>
 	
 	//Since generating code is done by merging templates recursively a stack is used to manage the node contexts used by the template engine.
 	//This is needed to avoid overwriting variables already introduced by other templates e.g. #set( $type = ... ).
-	private Stack<CodeGenContext> nodeContexts;
+	private Stack<MergeContext> nodeContexts;
 	
 	private List<Exception> mergeErrors;
 	
 	public MergeVisitor(TemplateStructure templateStructure, TemplateCallable[] templateCallables)
 	{
 		this.templates = new TemplateManager(templateStructure);
-		this.nodeContexts = new Stack<CodeGenContext>();
+		this.nodeContexts = new Stack<MergeContext>();
 		this.templateCallables = templateCallables;
 		this.mergeErrors = new LinkedList<Exception>();
 	}
@@ -49,7 +49,7 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter>
 	
 	private void initCodeGenContext(INode node, TemplateCallable[] templateCallables)
 	{
-		CodeGenContext nodeContext = new CodeGenContext();
+		MergeContext nodeContext = new MergeContext();
 		nodeContext.put(NODE_KEY, node);
 		
 		for (TemplateCallable callable : templateCallables)

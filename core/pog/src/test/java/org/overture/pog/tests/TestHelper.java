@@ -154,8 +154,6 @@ public abstract class TestHelper
 
 	// These 3 methods have so much duplicated code because we cannot
 	// return the TC results since their types are all different.
-
-	// FIXME find a way to clear return TCResult dupes
 	private static List<INode> parseTcPp(String name)
 	{
 		Settings.dialect = Dialect.VDM_PP;

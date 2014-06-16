@@ -39,6 +39,7 @@ import org.overture.ast.types.AMapMapType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ASetType;
 import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.POType;
 
 public class FiniteSetObligation extends ProofObligation {
 

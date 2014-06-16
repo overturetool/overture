@@ -36,15 +36,5 @@ public class ExpressionTestCase extends CodeGenBaseTestCase
 		String trimmed = generatedJava.replaceAll("\\s+", " ");
 		
 		return trimmed;
-	}
-
-	@Override
-	protected String getTestOverview(String input, String expectedResult, String actualResult)
-	{
-		return "Input:   \t" + input
-		+ "\nExpected:\t"
-		+ expectedResult
-		+ "\nActual:  \t" + actualResult;
-	}
-		
+	}		
 }

@@ -13,7 +13,6 @@ import org.overture.ast.statements.PStm;
 import org.overture.interpreter.assistant.definition.ABusClassDefinitionAssitantInterpreter;
 import org.overture.interpreter.assistant.definition.AClassClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ACpuClassDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.AErrorCaseAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AExplicitFunctionDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AImplicitFunctionDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AMutexSyncDefinitionAssistantInterpreter;
@@ -32,7 +31,6 @@ import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.assistant.module.AModuleModulesAssistantInterpreter;
 import org.overture.interpreter.assistant.module.ModuleListAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.AMapPatternMapletAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.ANilPatternAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.AQuotePatternAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PMultipleBindAssistantInterpreter;
@@ -46,7 +44,6 @@ import org.overture.interpreter.assistant.statement.SSimpleBlockStmAssistantInte
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.interpreter.assistant.type.PTypeListAssistant;
 import org.overture.interpreter.assistant.type.SInvariantTypeAssistantInterpreter;
-import org.overture.interpreter.assistant.type.SMapTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.traces.TraceExpander;
@@ -135,10 +132,10 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 //		return new AEqualsDefinitionAssistantInterpreter(this);
 //	}
 
-	public AErrorCaseAssistantInterpreter createAErrorCaseAssistant()
-	{
-		return new AErrorCaseAssistantInterpreter(this);
-	}
+//	public AErrorCaseAssistantInterpreter createAErrorCaseAssistant()
+//	{
+//		return new AErrorCaseAssistantInterpreter(this);
+//	}
 
 	public AExplicitFunctionDefinitionAssistantInterpreter createAExplicitFunctionDefinitionAssistant()
 	{
@@ -561,10 +558,10 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 //		return new AMapUnionPatternAssistantInterpreter(this);
 //	}
 
-	public ANilPatternAssistantInterpreter createANilPatternAssistant()
-	{
-		return new ANilPatternAssistantInterpreter(this);
-	}
+//	public ANilPatternAssistantInterpreter createANilPatternAssistant()
+//	{
+//		return new ANilPatternAssistantInterpreter(this);
+//	}
 
 	public AQuotePatternAssistantInterpreter createAQuotePatternAssistant()
 	{
@@ -845,10 +842,10 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 		return new SInvariantTypeAssistantInterpreter(this);
 	}
 
-	public SMapTypeAssistantInterpreter createSMapTypeAssistant()
-	{
-		return new SMapTypeAssistantInterpreter(this);
-	}
+//	public SMapTypeAssistantInterpreter createSMapTypeAssistant()
+//	{
+//		return new SMapTypeAssistantInterpreter(this);
+//	}
 
 	@Override
 	public IAnswer<LexNameList> getOldNameCollector()

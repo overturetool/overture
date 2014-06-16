@@ -29,6 +29,7 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.POType;
 
 public class NonZeroObligation extends ProofObligation
 {

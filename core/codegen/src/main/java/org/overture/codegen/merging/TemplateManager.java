@@ -13,7 +13,7 @@ import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.ACounterLocalDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
-import org.overture.codegen.cgast.declarations.AFormalParamLocalDeclCG;
+import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
@@ -105,6 +105,7 @@ import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
 import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATupleExpCG;
 import org.overture.codegen.cgast.expressions.AXorBoolBinaryExpCG;
+import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
@@ -151,6 +152,7 @@ import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.cgast.types.ATokenBasicTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
+import org.overture.codegen.cgast.types.AUnionTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.utils.GeneralUtils;
 
@@ -189,7 +191,7 @@ public class TemplateManager
 		
 		// Local declarations
 
-		nodeTemplateFileNames.put(AFormalParamLocalDeclCG.class, templateStructure.LOCAL_DECLS_PATH + "FormalParam");
+		nodeTemplateFileNames.put(AFormalParamLocalParamCG.class, templateStructure.LOCAL_DECLS_PATH + "FormalParam");
 		
 		// Type
 		nodeTemplateFileNames.put(AClassTypeCG.class, templateStructure.TYPE_PATH + "Class");
@@ -211,6 +213,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AMethodTypeCG.class, templateStructure.TYPE_PATH + "Method");
 		
 		nodeTemplateFileNames.put(AInterfaceTypeCG.class, templateStructure.TYPE_PATH + "Interface");
+		
+		nodeTemplateFileNames.put(AUnionTypeCG.class, templateStructure.TYPE_PATH + "Union");
 		
 		//Basic type wrappers
 		
@@ -514,6 +518,9 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AIdentifierObjectDesignatorCG.class, templateStructure.OBJECT_DESIGNATOR_PATH + "Identifier");
 		nodeTemplateFileNames.put(ANewObjectDesignatorCG.class, templateStructure.OBJECT_DESIGNATOR_PATH + "New");
 		nodeTemplateFileNames.put(ASelfObjectDesignatorCG.class, templateStructure.OBJECT_DESIGNATOR_PATH + "Self");
+		
+		//Patterns
+		nodeTemplateFileNames.put(AIdentifierPatternCG.class, templateStructure.PATTERN_PATH + "Identifier");
 		
 		//Interface
 		nodeTemplateFileNames.put(AInterfaceDeclCG.class, templateStructure.DECL_PATH + "Interface");

@@ -52,7 +52,7 @@ public class RecordValue extends Value
 	{
 		this.type = type;
 		this.fieldmap = new FieldMap();
-		this.invariant = SInvariantTypeAssistantInterpreter.getInvariant(type,ctxt);
+		this.invariant = ctxt.assistantFactory.createSInvariantTypeAssistant().getInvariant(type,ctxt);
 
 		if (values.size() != type.getFields().size())
 		{
@@ -76,7 +76,7 @@ public class RecordValue extends Value
 	{
 		this.type = type;
 		this.fieldmap = new FieldMap();
-		this.invariant = SInvariantTypeAssistantInterpreter.getInvariant(type,ctxt);
+		this.invariant = ctxt.assistantFactory.createSInvariantTypeAssistant().getInvariant(type,ctxt);
 
 		if (mapvalues.size() != type.getFields().size())
 		{

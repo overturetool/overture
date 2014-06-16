@@ -37,7 +37,6 @@ public class SingleBindValuesCollector extends QuestionAnswerAdaptor<Context, Va
 	public ValueList caseASetBind(ASetBind bind, Context ctxt)
 			throws AnalysisException
 	{
-		//return ASetBindAssistantInterpreter.getBindValues(bind, ctxt);
 		try
 		{
 			ValueList results = new ValueList();
@@ -74,7 +73,6 @@ public class SingleBindValuesCollector extends QuestionAnswerAdaptor<Context, Va
 	public ValueList caseATypeBind(ATypeBind bind, Context ctxt)
 			throws AnalysisException
 	{
-		//return ATypeBindAssistantInterpreter.getBindValues(bind, ctxt);
 		return af.createPTypeAssistant().getAllValues(bind.getType(), ctxt);
 	}
 

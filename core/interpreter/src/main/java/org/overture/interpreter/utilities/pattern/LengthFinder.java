@@ -36,7 +36,6 @@ public class LengthFinder extends AnswerAdaptor<Integer>
 	public Integer caseAConcatenationPattern(AConcatenationPattern pattern)
 			throws AnalysisException
 	{
-		//return AConcatenationPatternAssistantInterpreter.getLength(pattern);
 		int llen = pattern.getLeft().apply(THIS);//PPatternAssistantInterpreter.getLength(pattern.getLeft());
 		int rlen = pattern.getRight().apply(THIS);//PPatternAssistantInterpreter.getLength(pattern.getRight());
 		return llen == PPatternAssistantInterpreter.ANY
@@ -48,7 +47,6 @@ public class LengthFinder extends AnswerAdaptor<Integer>
 	public Integer caseAIdentifierPattern(AIdentifierPattern pattern)
 			throws AnalysisException
 	{
-		//return AIdentifierPatternAssistantInterpreter.getLength(pattern);
 		return PPatternAssistantInterpreter.ANY; // Special value meaning "any length"
 	}
 	
@@ -56,14 +54,12 @@ public class LengthFinder extends AnswerAdaptor<Integer>
 	public Integer caseAIgnorePattern(AIgnorePattern pattern)
 			throws AnalysisException
 	{
-		//return AIgnorePatternAssistantInterpreter.getLength(pattern);
 		return PPatternAssistantInterpreter.ANY; // Special value meaning "any length"
 	}
 	
 	@Override
 	public Integer caseAMapPattern(AMapPattern pattern) throws AnalysisException
 	{
-		//return AMapPatternAssistantInterpreter.getLength(pattern);
 		return pattern.getMaplets().size();
 	}
 	
@@ -71,7 +67,6 @@ public class LengthFinder extends AnswerAdaptor<Integer>
 	public Integer caseAMapUnionPattern(AMapUnionPattern pattern)
 			throws AnalysisException
 	{
-		//return AMapUnionPatternAssistantInterpreter.getLength(pattern);
 		int llen = pattern.getLeft().apply(THIS);//PPatternAssistantInterpreter.getLength(pattern.getLeft());
 		int rlen = pattern.getRight().apply(THIS);//PPatternAssistantInterpreter.getLength(pattern.getRight());
 		return llen == PPatternAssistantInterpreter.ANY
@@ -82,14 +77,12 @@ public class LengthFinder extends AnswerAdaptor<Integer>
 	@Override
 	public Integer caseASeqPattern(ASeqPattern pattern) throws AnalysisException
 	{
-		//return ASeqPatternAssistantInterpreter.getLength(pattern);
 		return pattern.getPlist().size();
 	}
 	
 	@Override
 	public Integer caseASetPattern(ASetPattern pattern) throws AnalysisException
 	{
-		//return ASetPatternAssistantInterpreter.getLength(pattern);
 		return pattern.getPlist().size();
 	}
 	
@@ -97,7 +90,6 @@ public class LengthFinder extends AnswerAdaptor<Integer>
 	public Integer caseAStringPattern(AStringPattern pattern)
 			throws AnalysisException
 	{
-		//return AStringPatternAssistantInterpreter.getLength(pattern);
 		return pattern.getValue().getValue().length();
 	}
 	
@@ -105,9 +97,8 @@ public class LengthFinder extends AnswerAdaptor<Integer>
 	public Integer caseAUnionPattern(AUnionPattern pattern)
 			throws AnalysisException
 	{
-		//return AUnionPatternAssistantInterpreter.getLength(pattern);
-		int llen = pattern.getLeft().apply(THIS);//PPatternAssistantInterpreter.getLength(pattern.getLeft());
-		int rlen = pattern.getRight().apply(THIS);//PPatternAssistantInterpreter.getLength(pattern.getRight());
+		int llen = pattern.getLeft().apply(THIS);
+		int rlen = pattern.getRight().apply(THIS);
 		return llen == PPatternAssistantInterpreter.ANY
 				|| rlen == PPatternAssistantInterpreter.ANY ? PPatternAssistantInterpreter.ANY
 				: llen + rlen;
@@ -116,7 +107,7 @@ public class LengthFinder extends AnswerAdaptor<Integer>
 	@Override
 	public Integer defaultPPattern(PPattern node) throws AnalysisException
 	{
-		return 1; // Most only identify one member
+		return 1; 
 	}
 
 	@Override

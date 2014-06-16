@@ -12,12 +12,14 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.SPatternCG;
+import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
-import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
@@ -25,7 +27,6 @@ import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
-import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.utils.LexNameTokenWrapper;
 
@@ -50,19 +51,19 @@ public class DeclAssistantCG extends AssistantBase
 	
 	private AVarLocalDeclCG constructLocalVarDecl(AValueDefinition valueDef, IRInfo question) throws AnalysisException
 	{
-		PTypeCG type = valueDef.getType().apply(question.getTypeVisitor(), question);
-		String name = valueDef.getPattern().toString();
-		PExpCG exp = valueDef.getExpression().apply(question.getExpVisitor(), question);
+		STypeCG type = valueDef.getType().apply(question.getTypeVisitor(), question);
+		SPatternCG pattern = valueDef.getPattern().apply(question.getPatternVisitor(), question);
+		SExpCG exp = valueDef.getExpression().apply(question.getExpVisitor(), question);
 		
 		AVarLocalDeclCG localVarDecl = new AVarLocalDeclCG();
 		localVarDecl.setType(type);
-		localVarDecl.setName(name);
+		localVarDecl.setPattern(pattern);
 		localVarDecl.setExp(exp);
 		
 		return localVarDecl;
 	}
 	
-	public AFieldDeclCG constructField(String access, String name, boolean isStatic, boolean isFinal, PTypeCG type, PExpCG exp)
+	public AFieldDeclCG constructField(String access, String name, boolean isStatic, boolean isFinal, STypeCG type, SExpCG exp)
 	{
 		
 		AFieldDeclCG field = new AFieldDeclCG();
@@ -123,7 +124,7 @@ public class DeclAssistantCG extends AssistantBase
 		return methodNames;
 	}
 	
-	public void setDefaultValue(AVarLocalDeclCG localDecl, PTypeCG typeCg) throws AnalysisException
+	public void setDefaultValue(AVarLocalDeclCG localDecl, STypeCG typeCg) throws AnalysisException
 	{
 		ExpAssistantCG expAssistant = assistantManager.getExpAssistant();
 		

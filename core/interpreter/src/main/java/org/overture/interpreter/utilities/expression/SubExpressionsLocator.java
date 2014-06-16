@@ -33,9 +33,8 @@ public class SubExpressionsLocator extends AnswerAdaptor<List<PExp>>
 	@Override
 	public List<PExp> caseAApplyExp(AApplyExp exp) throws AnalysisException
 	{
-		//return AApplyExpAssistantInterpreter.getSubExpressions(exp);
 		List<PExp> subs = new Vector<PExp>();
-		subs.addAll(exp.getRoot().apply(THIS));//(PExpAssistantInterpreter.getSubExpressions(exp.getRoot()));
+		subs.addAll(exp.getRoot().apply(THIS));
 		subs.add(exp);
 		return subs;
 	}
@@ -44,9 +43,8 @@ public class SubExpressionsLocator extends AnswerAdaptor<List<PExp>>
 	public List<PExp> defaultSBinaryExp(SBinaryExp exp)
 			throws AnalysisException
 	{
-		//return SBinaryExpAssistantInterpreter.getSubExpressions(exp);
-		List<PExp> subs = exp.getLeft().apply(THIS);//PExpAssistantInterpreter.getSubExpressions(exp.getLeft());
-		subs.addAll(exp.getRight().apply(THIS));//(PExpAssistantInterpreter.getSubExpressions(exp.getRight()));
+		List<PExp> subs = exp.getLeft().apply(THIS);
+		subs.addAll(exp.getRight().apply(THIS));
 		subs.add(exp);
 		return subs;
 	}
@@ -55,24 +53,22 @@ public class SubExpressionsLocator extends AnswerAdaptor<List<PExp>>
 	public List<PExp> caseACaseAlternative(ACaseAlternative exp)
 			throws AnalysisException
 	{
-		//return PExpAssistantInterpreter.getSubExpressions(c.getResult());
 		return exp.getResult().apply(THIS);
 	}
 	
 	@Override
 	public List<PExp> caseACasesExp(ACasesExp exp) throws AnalysisException
 	{
-		//return ACasesExpAssistantInterpreter.getSubExpressions(exp);
-		List<PExp> subs = exp.getExpression().apply(THIS);//PExpAssistantInterpreter.getSubExpressions(exp.getExpression());
+		List<PExp> subs = exp.getExpression().apply(THIS);
 
 		for (ACaseAlternative c : exp.getCases())
 		{
-			subs.addAll(c.apply(THIS));//(ACaseAlternativeAssistantInterpreter.getSubExpressions(c));
+			subs.addAll(c.apply(THIS));
 		}
 
 		if (exp.getOthers() != null)
 		{
-			subs.addAll(exp.getOthers().apply(THIS));//(PExpAssistantInterpreter.getSubExpressions(exp.getOthers()));
+			subs.addAll(exp.getOthers().apply(THIS));
 		}
 
 		subs.add(exp);
@@ -82,9 +78,8 @@ public class SubExpressionsLocator extends AnswerAdaptor<List<PExp>>
 	@Override
 	public List<PExp> caseAElseIfExp(AElseIfExp exp) throws AnalysisException
 	{
-		//return AElseIfExpAssistantInterpreter.getSubExpressions(exp);
-		List<PExp> subs = exp.getElseIf().apply(THIS);//PExpAssistantInterpreter.getSubExpressions(exp.getElseIf());
-		subs.addAll(exp.getThen().apply(THIS));//(PExpAssistantInterpreter.getSubExpressions(exp.getThen()));
+		List<PExp> subs = exp.getElseIf().apply(THIS);
+		subs.addAll(exp.getThen().apply(THIS));
 		subs.add(exp);
 		return subs;
 	}
@@ -92,18 +87,17 @@ public class SubExpressionsLocator extends AnswerAdaptor<List<PExp>>
 	@Override
 	public List<PExp> caseAIfExp(AIfExp exp) throws AnalysisException
 	{
-		//return AIfExpAssistantInterpreter.getSubExpressions(exp);
-		List<PExp> subs = exp.getTest().apply(THIS);//PExpAssistantInterpreter.getSubExpressions(exp.getTest());
-		subs.addAll(exp.getThen().apply(THIS));//(PExpAssistantInterpreter.getSubExpressions(exp.getThen()));
+		List<PExp> subs = exp.getTest().apply(THIS);
+		subs.addAll(exp.getThen().apply(THIS));
 
 		for (AElseIfExp elif : exp.getElseList())
 		{
-			subs.addAll(elif.apply(THIS));//(AElseIfExpAssistantInterpreter.getSubExpressions(elif));
+			subs.addAll(elif.apply(THIS));
 		}
 
 		if (exp.getElse() != null)
 		{
-			subs.addAll(exp.getElse().apply(THIS));//(PExpAssistantInterpreter.getSubExpressions(exp.getElse()));
+			subs.addAll(exp.getElse().apply(THIS));
 		}
 
 		subs.add(exp);

@@ -39,34 +39,4 @@ public class SSimpleBlockStmAssistantInterpreter // extends
 		return new VoidValue();
 	}
 
-//	public static PExp findExpression(SSimpleBlockStm stm, int lineno)
-//	{
-//		PExp found = null;
-//
-//		for (PStm stmt : stm.getStatements())
-//		{
-//			found = PStmAssistantInterpreter.findExpression(stmt, lineno);
-//			if (found != null)
-//				break;
-//		}
-//
-//		return found;
-//	}
-
-//	public static PStm findStatement(SSimpleBlockStm stm, int lineno)
-//	{
-//		if (stm.getLocation().getStartLine() == lineno)
-//			return stm;
-//		PStm found = null;
-//
-//		for (PStm stmt : stm.getStatements())
-//		{
-//			found = PStmAssistantInterpreter.findStatement(stmt, lineno);
-//			if (found != null)
-//				break;
-//		}
-//
-//		return found;
-//	}
-
 }
