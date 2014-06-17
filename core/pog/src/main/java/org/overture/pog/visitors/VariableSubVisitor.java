@@ -21,14 +21,9 @@ public class VariableSubVisitor extends QuestionAnswerAdaptor<Substitution, PExp
 	public VariableSubVisitor(IVariableSubVisitor main){
 		this.main = main;
 	}
+
 	
-	@Override
-	public PExp caseAAbsoluteUnaryExp(AAbsoluteUnaryExp node,
-			Substitution question) throws AnalysisException {
-		PExp sub = node.getExp().apply(main, question);
-		node.setExp(sub);
-		return node;
-	}
+	// Let's try to do most stuff with S family
 	
 	@Override
 	public PExp defaultSBinaryExp(SBinaryExp node, Substitution question)
@@ -38,6 +33,23 @@ public class VariableSubVisitor extends QuestionAnswerAdaptor<Substitution, PExp
 		node.setLeft(subl);
 		node.setRight(subr);
 		return node;
+	}
+	
+	@Override
+	public PExp defaultSUnaryExp(SUnaryExp node, Substitution question)
+			throws AnalysisException
+	{
+		PExp sub = node.getExp().apply(main,question);
+		node.setExp(sub);
+		return node;
+	}
+	
+	// cases here for what we need
+	
+	@Override
+	public PExp caseAAbsoluteUnaryExp(AAbsoluteUnaryExp node,
+			Substitution question) throws AnalysisException {
+		return super.caseAAbsoluteUnaryExp(node, question);
 	}
 
 	@Override
@@ -192,8 +204,9 @@ public class VariableSubVisitor extends QuestionAnswerAdaptor<Substitution, PExp
 	@Override
 	public PExp caseAFieldExp(AFieldExp node, Substitution question)
 			throws AnalysisException {
-		// TODO Auto-generated method stub
-		return super.caseAFieldExp(node, question);
+		PExp obj = node.getObject().apply(main, question);
+		node.setObject(obj);
+		return node;
 	}
 
 	@Override
