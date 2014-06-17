@@ -35,6 +35,7 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.AForAllExp;
 import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.AIdentifierPattern;
@@ -121,9 +122,7 @@ public class POOperationDefinitionContext extends POContext
 
 			if (addPrecond && precondition != null)
 			{
-				AImpliesBooleanBinaryExp impliesExp = new AImpliesBooleanBinaryExp();
-				impliesExp.setLeft(precondition);
-				impliesExp.setRight(stitch);
+				AImpliesBooleanBinaryExp impliesExp = AstExpressionFactory.newAImpliesBooleanBinaryExp(precondition.clone(), stitch);
 				forAllExp.setPredicate(impliesExp);
 			} else
 			{
