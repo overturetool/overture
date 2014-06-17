@@ -10,7 +10,6 @@ import org.overture.ast.node.INode;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AInMapMapType;
-import org.overture.ast.types.AMapMapType;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AParameterType;
@@ -61,7 +60,6 @@ public class AllValuesCollector extends QuestionAnswerAdaptor<Context, ValueList
 	public ValueList caseABooleanBasicType(ABooleanBasicType type,
 			Context ctxt) throws AnalysisException
 	{
-		//return ABooleanBasicTypeAssistantInterpreter.getAllValues(type, ctxt);
 		ValueList v = new ValueList();
 		v.add(new BooleanValue(true));
 		v.add(new BooleanValue(false));
@@ -71,23 +69,16 @@ public class AllValuesCollector extends QuestionAnswerAdaptor<Context, ValueList
 	public ValueList defaultSBasicType(SBasicType type, Context ctxt)
 			throws AnalysisException
 	{
-		//return SBasicTypeAssistantInterpreter.getAllValues(type, ctxt);
-//		if (type instanceof ABooleanBasicType)
-//		{
-//			
-//		} else
-//		{
 			throw new ValueException(4, "Cannot get bind values for type "
 					+ type, ctxt);
-//		}
 	}
 	
 	@Override
 	public ValueList caseANamedInvariantType(ANamedInvariantType type,
 			Context ctxt) throws AnalysisException
 	{
-		//return ANamedInvariantTypeAssistantInterpreter.getAllValues(type, ctxt);
-		ValueList raw = type.getType().apply(THIS, ctxt);//PTypeAssistantInterpreter.getAllValues(type.getType(), ctxt);
+		
+		ValueList raw = type.getType().apply(THIS, ctxt);
 		boolean checks = Settings.invchecks;
 		Settings.invchecks = true;
 
@@ -146,7 +137,6 @@ public class AllValuesCollector extends QuestionAnswerAdaptor<Context, ValueList
 	public ValueList caseAInMapMapType(AInMapMapType type, Context ctxt)
 			throws AnalysisException
 	{
-		//return AInMapMapTypeAssistantInterpreter.getAllValues(type, ctxt);
 		//TODO:Here we have a strange behavior from transforming this call to type.apply(THIS,ctxt)
 		ValueList maps = THIS.defaultSMapType(type,ctxt);// ctxt.assistantFactory.createSMapTypeAssistant().getAllValues(type, ctxt); 
 		ValueList result = new ValueList();
@@ -163,20 +153,14 @@ public class AllValuesCollector extends QuestionAnswerAdaptor<Context, ValueList
 
 		return result;
 	}
-	
-//	@Override
-//	public ValueList caseAMapMapType(AMapMapType type, Context ctxt)
-//			throws AnalysisException
-//	{
-//		return //ctxt.assistantFactory.createSMapTypeAssistant().getAllValues(type, ctxt);
-//	}
+
 	
 	@Override
 	public ValueList caseAOptionalType(AOptionalType type, Context ctxt)
 			throws AnalysisException
 	{
-		//return AOptionalTypeAssistantInterpreter.getAllValues(type, ctxt);
-		ValueList list = type.getType().apply(THIS, ctxt);//PTypeAssistantInterpreter.getAllValues(type.getType(), ctxt);
+
+		ValueList list = type.getType().apply(THIS, ctxt);
 		list.add(new NilValue());
 		return list;
 	}
@@ -185,7 +169,7 @@ public class AllValuesCollector extends QuestionAnswerAdaptor<Context, ValueList
 	public ValueList caseAProductType(AProductType type, Context ctxt)
 			throws AnalysisException
 	{
-		//return AProductTypeAssistantInterpreter.getAllValues(type, ctxt);
+		
 		return af.createPTypeListAssistant().getAllValues(type.getTypes(), ctxt);
 		
 	}
@@ -224,7 +208,7 @@ public class AllValuesCollector extends QuestionAnswerAdaptor<Context, ValueList
 	public ValueList caseAQuoteType(AQuoteType type, Context ctxt)
 			throws AnalysisException
 	{
-		//return AQuoteTypeAssistantInterpreter.getAllValues(type, ctxt);
+		
 		ValueList v = new ValueList();
 		v.add(new QuoteValue(type.getValue().getValue()));
 		return v;
@@ -234,8 +218,8 @@ public class AllValuesCollector extends QuestionAnswerAdaptor<Context, ValueList
 	public ValueList caseASetType(ASetType type, Context ctxt)
 			throws AnalysisException
 	{
-		//return ASetTypeAssistantInterpreter.getAllValues(type, ctxt);
-		ValueList list = type.getSetof().apply(THIS, ctxt);//PTypeAssistantInterpreter.getAllValues(type.getSetof(), ctxt);
+		
+		ValueList list = type.getSetof().apply(THIS, ctxt);
 		ValueSet set = new ValueSet(list.size());
 		set.addAll(list);
 		List<ValueSet> psets = set.powerSet();
@@ -253,12 +237,12 @@ public class AllValuesCollector extends QuestionAnswerAdaptor<Context, ValueList
 	public ValueList caseAUnionType(AUnionType type, Context ctxt)
 			throws AnalysisException
 	{
-		//return AUnionTypeAssistantInterpreter.getAllValues(type, ctxt);
+		
 		ValueList v = new ValueList();
 
 		for (PType utype : type.getTypes())
 		{
-			v.addAll(utype.apply(THIS, ctxt));//(PTypeAssistantInterpreter.getAllValues(type, ctxt));
+			v.addAll(utype.apply(THIS, ctxt));
 		}
 
 		return v;
@@ -268,7 +252,7 @@ public class AllValuesCollector extends QuestionAnswerAdaptor<Context, ValueList
 	public ValueList caseAParameterType(AParameterType type, Context ctxt)
 			throws AnalysisException
 	{
-		//return AParameterTypeAssistantInterpreter.getAllValues(type, ctxt);
+		
 		Value t = ctxt.lookup(type.getName());
 
 		if (t == null)
@@ -278,66 +262,12 @@ public class AllValuesCollector extends QuestionAnswerAdaptor<Context, ValueList
 		} else if (t instanceof ParameterValue)
 		{
 			ParameterValue tv = (ParameterValue) t;
-			return tv.type.apply(THIS, ctxt);//PTypeAssistantInterpreter.getAllValues(tv.type, ctxt);
+			return tv.type.apply(THIS, ctxt);
 		}
 
 		throw new ValueException(4009, "Type parameter/local variable name clash, @"
 				+ type.getName(), ctxt);
 	}
-	
-//	@Override
-//	public ValueList defaultSMapType(SMapType type, Context ctxt)
-//			throws AnalysisException
-//	{
-//		if (type instanceof AInMapMapType)
-//		{
-//			ValueList maps =  type.apply(THIS, ctxt);//SMapTypeAssistantInterpreter.getAllValues(type, ctxt);
-//			ValueList result = new ValueList();
-//
-//			for (Value map : maps)
-//			{
-//				MapValue vm = (MapValue) map;
-//
-//				if (vm.values.isInjective())
-//				{
-//					result.add(vm);
-//				}
-//			}
-//
-//			return result;
-//		}
-//		else if(type instanceof AMapMapType)
-//		{
-//			PTypeList tuple = new PTypeList();
-//			tuple.add(type.getFrom());
-//			tuple.add(type.getTo());
-//
-//			ValueList results = new ValueList();
-//			ValueList tuples = af.createPTypeListAssistant().getAllValues(tuple, ctxt);
-//			ValueSet set = new ValueSet();
-//			set.addAll(tuples);
-//			List<ValueSet> psets = set.powerSet();
-//
-//			for (ValueSet map : psets)
-//			{
-//				ValueMap result = new ValueMap();
-//
-//				for (Value v : map)
-//				{
-//					TupleValue tv = (TupleValue) v;
-//					result.put(tv.values.get(0), tv.values.get(1));
-//				}
-//
-//				results.add(new MapValue(result));
-//			}
-//
-//			return results;
-//		}
-//		else 
-//		{
-//			throw new ValueException(4, "Cannot get bind values for type " + type, ctxt);
-//		}
-//	}
 
 	@Override
 	public ValueList createNewReturnValue(INode node, Context question)

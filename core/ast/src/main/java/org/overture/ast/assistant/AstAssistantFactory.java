@@ -6,7 +6,6 @@ import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.assistant.definition.PAccessSpecifierAssistant;
 import org.overture.ast.assistant.definition.PDefinitionAssistant;
 import org.overture.ast.assistant.pattern.PPatternAssistant;
-import org.overture.ast.assistant.type.ANamedInvariantTypeAssistant;
 import org.overture.ast.assistant.type.AOptionalTypeAssistant;
 import org.overture.ast.assistant.type.AParameterTypeAssistant;
 import org.overture.ast.assistant.type.AUnionTypeAssistant;
@@ -81,11 +80,11 @@ public class AstAssistantFactory implements IAstAssistantFactory
 //		return new ABracketTypeAssistant(this);
 //	}
 
-	@Override
-	public ANamedInvariantTypeAssistant createANamedInvariantTypeAssistant()
-	{
-		return new ANamedInvariantTypeAssistant(this);
-	}
+//	@Override
+//	public ANamedInvariantTypeAssistant createANamedInvariantTypeAssistant()
+//	{
+//		return new ANamedInvariantTypeAssistant(this);
+//	}
 
 	@Override
 	public AOptionalTypeAssistant createAOptionalTypeAssistant()
