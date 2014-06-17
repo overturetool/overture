@@ -150,9 +150,18 @@ public class JavaCodeGen
 		
 		for (SClassDefinition classDef : mergedParseLists)
 		{
-			if (shouldBeGenerated(classDef.getName().getName()))
+			if (shouldBeGenerated(classDef))
 			{
 				toBeGenerated.add(classDef);
+			}
+			else
+			{
+				String className = classDef.getName().getFullName();
+				
+				if (!classIsLibrary(classDef))
+				{
+					Logger.getLog().println("Skipping class based on library class: " + className);
+				}
 			}
 		}
 		
@@ -163,9 +172,7 @@ public class JavaCodeGen
 
 		for (SClassDefinition classDef : toBeGenerated)
 		{
-			String className = classDef.getName().getName();
-
-			if (!shouldBeGenerated(className))
+			if (!shouldBeGenerated(classDef))
 			{
 				continue;
 			}
@@ -373,12 +380,36 @@ public class JavaCodeGen
 			throw new UnsupportedModelingException("The model uses modeling constructs that are not supported for Java code Generation", violations);
 	}
 	
-	private static boolean shouldBeGenerated(String className)
+	private boolean shouldBeGenerated(SClassDefinition classDef)
 	{
-		for(int i = 0; i < CLASSES_NOT_TO_BE_GENERATED.length; i++)
-			if(CLASSES_NOT_TO_BE_GENERATED[i].equals(className))
+		if(classIsLibrary(classDef))
+		{
+			return false;
+		}
+		
+		for(SClassDefinition superDef : classDef.getSuperDefs())
+		{
+			if(classIsLibrary(superDef))
+			{
 				return false;
+			}
+		}
 		
 		return true;
+	}
+	
+	private boolean classIsLibrary(SClassDefinition classDef)
+	{
+		String className = classDef.getName().getName();
+		
+		for(int i = 0; i < CLASSES_NOT_TO_BE_GENERATED.length; i++)
+		{
+			if(CLASSES_NOT_TO_BE_GENERATED[i].equals(className))
+			{
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }
