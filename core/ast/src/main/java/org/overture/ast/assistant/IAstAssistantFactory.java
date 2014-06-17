@@ -4,7 +4,6 @@ import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.assistant.definition.PAccessSpecifierAssistant;
 import org.overture.ast.assistant.definition.PDefinitionAssistant;
 import org.overture.ast.assistant.pattern.PPatternAssistant;
-import org.overture.ast.assistant.type.AOptionalTypeAssistant;
 import org.overture.ast.assistant.type.AParameterTypeAssistant;
 import org.overture.ast.assistant.type.AUnionTypeAssistant;
 import org.overture.ast.assistant.type.AUnknownTypeAssistant;
@@ -90,8 +89,8 @@ public interface IAstAssistantFactory {
 	 * 
 	 * @return the a optional type assistant
 	 */
-	@Deprecated
-	AOptionalTypeAssistant createAOptionalTypeAssistant();
+//	@Deprecated
+//	AOptionalTypeAssistant createAOptionalTypeAssistant();
 
 	/**
 	 * Creates a new {@link AParameterTypeAssistant}. This assistant does
