@@ -109,7 +109,7 @@ public class POContextStack extends Stack<IPOContext> implements
 			{
 				result.append(prefix);
 				result.append(name);
-				prefix = ", ";
+				prefix = "-";
 			}
 		}
 

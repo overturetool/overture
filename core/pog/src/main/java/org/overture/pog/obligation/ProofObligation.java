@@ -146,7 +146,7 @@ abstract public class ProofObligation implements IProofObligation, Serializable
 
 	public String getIsaName()
 	{
-		return getName().replaceAll("\\(.*\\)", "") + getNumber();
+		return getName().replaceAll("\\(.*\\)|\\$", "") + getNumber();
 	}
 
 	@Override
