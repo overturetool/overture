@@ -17,7 +17,7 @@ public class Substitution
 
 	public Substitution(ILexNameToken var, PExp value)
 	{
-		this.original = var.getName();
+		this.original = makeFullKey(var);
 		this.newExp = value.clone();
 	}
 
@@ -29,17 +29,24 @@ public class Substitution
 
 	public boolean containsKey(AVariableExp key)
 	{
-		return original.equals(key.getName().getName());
+		String fullkey = makeFullKey(key.getName());
+		return original.equals(fullkey);
 	}
 
 	public PExp get(AVariableExp key)
 	{
-		if (original.equals(key.getName().getName()))
+		String fullkey = makeFullKey(key.getName());
+		if (original.equals(fullkey))
 		{
 			return newExp;
 		}
 		return null;
 
+	}
+
+	public String makeFullKey(ILexNameToken name)
+	{
+		return name.getName() + (name.getOld() ? "OLD" : "");
 	}
 
 	@Override
