@@ -111,7 +111,6 @@ public class AllValuesCollector extends QuestionAnswerAdaptor<Context, ValueList
 	public ValueList caseARecordInvariantType(ARecordInvariantType type,
 			Context ctxt) throws AnalysisException
 	{
-		//return ARecordInvariantTypeAssistantInterpreter.getAllValues(type, ctxt);
 		List<PType> types = new Vector<PType>();
 
 		for (AFieldField f : type.getFields())
@@ -121,7 +120,7 @@ public class AllValuesCollector extends QuestionAnswerAdaptor<Context, ValueList
 
 		ValueList results = new ValueList();
 
-		for (Value v : type.apply(THIS, ctxt))//PTypeListAssistant.getAllValues(types, ctxt))
+		for (Value v : type.apply(THIS, ctxt))
 		{
 			try
 			{
@@ -139,18 +138,8 @@ public class AllValuesCollector extends QuestionAnswerAdaptor<Context, ValueList
 	public ValueList defaultSInvariantType(SInvariantType type, Context ctxt)
 			throws AnalysisException
 	{
-		//return SInvariantTypeAssistantInterpreter.getAllValues(type, ctxt);
-//		if (type instanceof ANamedInvariantType)
-//		{
-//			return ANamedInvariantTypeAssistantInterpreter.getAllValues((ANamedInvariantType) type, ctxt);
-//		} else if (type instanceof ARecordInvariantType)
-//		{
-//			return ARecordInvariantTypeAssistantInterpreter.getAllValues((ARecordInvariantType) type, ctxt);
-//		} else
-//		{
 			throw new ValueException(4, "Cannot get bind values for type "
 					+ type, ctxt);
-//		}
 	}
 	
 	@Override

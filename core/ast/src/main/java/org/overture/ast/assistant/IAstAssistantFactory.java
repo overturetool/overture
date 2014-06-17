@@ -4,7 +4,6 @@ import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.assistant.definition.PAccessSpecifierAssistant;
 import org.overture.ast.assistant.definition.PDefinitionAssistant;
 import org.overture.ast.assistant.pattern.PPatternAssistant;
-import org.overture.ast.assistant.type.ABracketTypeAssistant;
 import org.overture.ast.assistant.type.ANamedInvariantTypeAssistant;
 import org.overture.ast.assistant.type.AOptionalTypeAssistant;
 import org.overture.ast.assistant.type.AParameterTypeAssistant;
@@ -74,8 +73,8 @@ public interface IAstAssistantFactory {
 	 * 
 	 * @return the a bracket type assistant
 	 */
-	@Deprecated
-	ABracketTypeAssistant createABracketTypeAssistant();
+//	@Deprecated
+//	ABracketTypeAssistant createABracketTypeAssistant();
 
 	/**
 	 * Creates a new ANamedInvariantTypeAssistant. This assistant does nothing
