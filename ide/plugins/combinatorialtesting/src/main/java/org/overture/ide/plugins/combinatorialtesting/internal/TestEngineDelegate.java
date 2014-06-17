@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IProject;
@@ -16,6 +17,9 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.overture.combinatorialtesting.vdmj.server.common.Utils;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
+import org.overture.ide.debug.core.IDebugPreferenceConstants;
+import org.overture.ide.debug.core.VdmDebugPlugin;
+import org.overture.ide.debug.core.launching.VdmLaunchConfigurationDelegate;
 import org.overture.ide.debug.utils.VdmProjectClassPathCollector;
 import org.overture.ide.plugins.combinatorialtesting.ITracesConstants;
 import org.overture.util.Base64;
@@ -29,13 +33,23 @@ public class TestEngineDelegate
 			throws CoreException, IOException
 	{
 		ProcessBuilder pb = new ProcessBuilder(initializeLaunch(texe, preferences, traceFolder, port));
-
+		
 		IProject project = (IProject) texe.project.getAdapter(IProject.class);
+		
+		IVdmProject vdmProject = (IVdmProject) texe.project.getAdapter(IVdmProject.class);
+		
+		File overturePropertiesFile = VdmLaunchConfigurationDelegate.prepareCustomOvertureProperties(vdmProject, null);
+		
+		String classpath =VdmProjectClassPathCollector.toCpEnvString( VdmProjectClassPathCollector.getClassPath(project, getTraceDebugEngineBundleIds(), overturePropertiesFile));
 
+		Map<String, String> env = pb.environment();
+		env.put("CLASSPATH", classpath);
+		
 		pb.directory(project.getLocation().toFile());
 
 		if (useRemoteDebug(preferences))
 		{
+			System.out.println("CLASSPATH = " + classpath);
 			return null;
 		}
 
@@ -46,6 +60,17 @@ public class TestEngineDelegate
 		Utils.inheritOutput(process); // Instead of pb.inheritIO() which is Java7 specific;
 
 		return process;
+	}
+	
+	private String[] getTraceDebugEngineBundleIds()
+	{
+		List<String> ids = new ArrayList<String>(Arrays.asList(ITracesConstants.TEST_ENGINE_BUNDLE_IDs));
+
+		if (VdmDebugPlugin.getDefault().getPreferenceStore().getBoolean(IDebugPreferenceConstants.PREF_DBGP_ENABLE_EXPERIMENTAL_MODELCHECKER))
+		{
+			ids.add(VdmLaunchConfigurationDelegate.ORG_OVERTURE_IDE_PLUGINS_PROBRUNTIME);
+		}
+		return ids.toArray(new String[] {});
 	}
 
 	private List<String> initializeLaunch(TraceExecutionSetup texe,
@@ -128,9 +153,9 @@ public class TestEngineDelegate
 		}
 		commandList.add(0, "java");
 
-		String classPath =VdmProjectClassPathCollector.toCpCliArgument( VdmProjectClassPathCollector.getClassPath(project, ITracesConstants.TEST_ENGINE_BUNDLE_IDs, new String[] {}));
-		commandList.addAll(1,Arrays.asList(new String[]{"-cp", classPath}));
-		commandList.add(3, ITracesConstants.TEST_ENGINE_CLASS);
+//		String classPath =VdmProjectClassPathCollector.toCpCliArgument( VdmProjectClassPathCollector.getClassPath(project, ITracesConstants.TEST_ENGINE_BUNDLE_IDs, new String[] {}));
+//		commandList.addAll(1,Arrays.asList(new String[]{"-cp", classPath}));
+		commandList.add(1, ITracesConstants.TEST_ENGINE_CLASS);
 		commandList.addAll(1, getVmArguments(preferences));
 
 		if (useRemoteDebug(preferences))

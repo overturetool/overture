@@ -63,6 +63,7 @@ public class VdmDevelopLaunchConfigurationTab extends
 
 	private Button checkBoxRemoteDebug = null;
 	private Button checkBoxEnableLogging = null;
+	private Button checkBoxShowVmSettings = null;
 	private Button checkBoxExperimentalTimeInvariantCheck = null;
 	private WidgetListener fListener = new WidgetListener();
 
@@ -102,6 +103,11 @@ public class VdmDevelopLaunchConfigurationTab extends
 		checkBoxExperimentalTimeInvariantCheck.setText("Enable experimental time inv checks");
 		checkBoxExperimentalTimeInvariantCheck.setSelection(false);
 		checkBoxExperimentalTimeInvariantCheck.addSelectionListener(fListener);
+		
+		checkBoxShowVmSettings = new Button(group, SWT.CHECK);
+		checkBoxShowVmSettings.setText("Show VM Settings");
+		checkBoxShowVmSettings.setSelection(false);
+		checkBoxShowVmSettings.addSelectionListener(fListener);
 	}
 
 	public String getName()
@@ -116,6 +122,7 @@ public class VdmDevelopLaunchConfigurationTab extends
 			checkBoxRemoteDebug.setSelection(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_DEBUG, false));
 			checkBoxEnableLogging.setSelection(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_LOGGING, false));
 			checkBoxExperimentalTimeInvariantCheck.setSelection(configuration.getAttribute("vdm_launch_config_enable_realtime_time_inv_checks", false));
+			checkBoxShowVmSettings.setSelection(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_SHOW_VM_SETTINGS, false));
 
 		} catch (CoreException e)
 		{
@@ -132,6 +139,7 @@ public class VdmDevelopLaunchConfigurationTab extends
 		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_DEBUG, checkBoxRemoteDebug.getSelection());
 		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_LOGGING, checkBoxEnableLogging.getSelection());
 		configuration.setAttribute("vdm_launch_config_enable_realtime_time_inv_checks", checkBoxExperimentalTimeInvariantCheck.getSelection());
+		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_SHOW_VM_SETTINGS, checkBoxShowVmSettings.getSelection());
 	}
 
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration)
@@ -139,6 +147,7 @@ public class VdmDevelopLaunchConfigurationTab extends
 		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_DEBUG, false);
 		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_LOGGING, false);
 		configuration.setAttribute("vdm_launch_config_enable_realtime_time_inv_checks", false);
+		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_SHOW_VM_SETTINGS, false);
 	}
 
 }
