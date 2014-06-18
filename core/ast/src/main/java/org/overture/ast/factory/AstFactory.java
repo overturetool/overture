@@ -907,7 +907,7 @@ public class AstFactory
 		result.setStatement(statement);
 		// used to be a static method on LexNameToken - removed when we went to interface
 		result.setOperationName(new LexNameToken(statement.getLocation().getModule(), "thread", statement.getLocation()));
-		result.setAccess(PAccessSpecifierAssistant.getProtected());
+		result.setAccess(af.createPAccessSpecifierAssistant().getProtected());
 
 		return result;
 	}

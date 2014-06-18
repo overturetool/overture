@@ -40,7 +40,7 @@ public class PAccessSpecifierAssistant
 		return AstFactory.newAAccessSpecifierAccessSpecifier(new APublicAccess(), false, false);
 	}
 
-	public static AAccessSpecifierAccessSpecifier getProtected()
+	public AAccessSpecifierAccessSpecifier getProtected()
 	{
 		return AstFactory.newAAccessSpecifierAccessSpecifier(new AProtectedAccess(), false, false);
 	}
