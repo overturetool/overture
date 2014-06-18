@@ -202,14 +202,16 @@ public class POContextStack extends Stack<IPOContext> implements
 	@Override
 	public void clearStateContexts()
 	{
-		for (int i = 0; i < this.elementCount; i++)
+		int len = size();
+
+		for (int i = len - 1; i > 0; i--)
 		{
 			if (this.get(i).isStateful())
 			{
-				this.remove(i);
+				removeElementAt(i);
 			}
-
 		}
+
 	}
 
 	@Override
