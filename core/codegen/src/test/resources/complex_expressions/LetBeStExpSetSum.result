@@ -30,8 +30,10 @@ public class Entry {
                     "Let Be St found no applicable bindings");
             }
 
-            return x.longValue() +
-            sum(SetUtil.diff(xs.clone(), SetUtil.set(x))).longValue();
+            Number letBeStExp_1 = x.longValue() +
+                sum(SetUtil.diff(xs.clone(), SetUtil.set(x))).longValue();
+
+            return letBeStExp_1;
         }
     }
 }

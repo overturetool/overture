@@ -486,7 +486,11 @@ public class Till {
             }
         }
 
-        return cardOk ? Quotes.PinOk : Quotes.PinNotOk;
+        if (cardOk) {
+            return Quotes.PinOk;
+        } else {
+            return Quotes.PinNotOk;
+        }
     }
 
     public void ReturnCard() {

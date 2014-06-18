@@ -7,20 +7,6 @@ public class Entry {
     public Entry() {
     }
 
-    private static Func_1<Func_1<Number, Number>, Func_1<Number, Number>> func_compose(
-        final Func_1<Number, Number> f) {
-        return new Func_1<Func_1<Number, Number>, Func_1<Number, Number>>() {
-                public Func_1<Number, Number> eval(
-                    final Func_1<Number, Number> g) {
-                    return new Func_1<Number, Number>() {
-                            public Number eval(final Number x) {
-                                return g.eval(f.eval(x));
-                            }
-                        };
-                }
-            };
-    }
-
     public static Object Run() {
         Func_1<Number, Number> f = new Func_1<Number, Number>() {
                 public Number eval(final Number x) {
@@ -37,6 +23,20 @@ public class Entry {
         Func_1<Number, Number> h = func_compose(f).eval(g);
 
         return h.eval(2L);
+    }
+
+    private static Func_1<Func_1<Number, Number>, Func_1<Number, Number>> func_compose(
+        final Func_1<Number, Number> f) {
+        return new Func_1<Func_1<Number, Number>, Func_1<Number, Number>>() {
+                public Func_1<Number, Number> eval(
+                    final Func_1<Number, Number> g) {
+                    return new Func_1<Number, Number>() {
+                            public Number eval(final Number x) {
+                                return g.eval(f.eval(x));
+                            }
+                        };
+                }
+            };
     }
 }
 

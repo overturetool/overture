@@ -17,8 +17,9 @@ public class A {
         Number x1 = f(1L);
         Number x2 = f(2L);
         Number x3 = f(3L);
+        Number letDefExpResult_ = x;
 
-        return x;
+        return letDefExpResult_;
     }
 }
 
