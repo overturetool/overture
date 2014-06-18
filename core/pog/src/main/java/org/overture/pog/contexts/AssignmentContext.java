@@ -1,11 +1,7 @@
 package org.overture.pog.contexts;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
-import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
@@ -18,34 +14,17 @@ import org.overture.pog.visitors.IVariableSubVisitor;
 public class AssignmentContext extends StatefulContext
 {
 
-	List<Substitution> subs;
+	Substitution sub;
 	IVariableSubVisitor visitor;
 
 	public AssignmentContext(AAssignmentStm node, IPogAssistantFactory af,
 			IPOContextStack ctxt) throws AnalysisException
 	{
 		super(ctxt);
-		subs = new LinkedList<Substitution>();
 		String hash = node.getTarget().apply(af.getStateDesignatorNameGetter());
-
 		ILexNameToken t = new LexNameToken("", hash, null);
+		sub = new Substitution(t, node.getExp());
 
-		boolean found = false;
-		for (ILexNameToken n : last_vars.keySet())
-		{
-			if (n.getName().equals(hash))
-			{
-				AVariableExp var_exp = last_vars.get(n);
-				subs.add(new Substitution(var_exp.getName(), node.getExp()));
-				subs.add(new Substitution(var_exp.getName().getOldName().clone(), var_exp.clone()));
-				found = true;
-			}
-			break;
-		}
-		if (!found)
-		{
-			subs.add(new Substitution(t, node.getExp()));
-		}
 		this.visitor = af.getVarSubVisitor();
 	}
 
@@ -53,8 +32,7 @@ public class AssignmentContext extends StatefulContext
 			IVariableSubVisitor visitor, IPOContextStack ctxt)
 	{
 		super(ctxt);
-		subs = new LinkedList<Substitution>();
-		subs.add(new Substitution(node.getName(), node.getExpression()));
+		sub = new Substitution(node.getName(), node.getExpression());
 		this.visitor = visitor;
 	}
 
@@ -71,10 +49,7 @@ public class AssignmentContext extends StatefulContext
 		PExp r = null;
 		try
 		{
-			for (Substitution sub : subs)
-			{
-				r = stitch.apply(visitor, sub);
-			}
+			r = stitch.apply(visitor, sub);
 			return r;
 		} catch (AnalysisException e)
 		{
@@ -86,7 +61,7 @@ public class AssignmentContext extends StatefulContext
 	@Override
 	public String toString()
 	{
-		return subs.toString();
+		return sub.toString();
 	}
 
 }

@@ -53,7 +53,12 @@ public class Substitution
 
 	public String makeFullKey(ILexNameToken name)
 	{
-		return name.getName() + (name.getOld() ? "$OLD" : "");
+		if (name.isOld()){
+			return name.getName()+"~";
+		}
+		else{
+			return name.getName();
+		}
 	}
 
 	@Override

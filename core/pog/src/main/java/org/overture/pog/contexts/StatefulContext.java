@@ -18,13 +18,13 @@ import org.overture.pog.utility.UniqueNameGenerator;
 
 public abstract class StatefulContext extends POContext
 {
-	
+
 	public StatefulContext(IPOContextStack ctxt)
 	{
 		this.last_vars = ctxt.getLast_Vars() == null ? new HashMap<ILexNameToken, AVariableExp>()
 				: ctxt.getLast_Vars();
-			}
-	
+	}
+
 	protected Map<ILexNameToken, AVariableExp> last_vars;
 	protected UniqueNameGenerator gen;
 	List<Substitution> subs;
@@ -64,22 +64,16 @@ public abstract class StatefulContext extends POContext
 		newVar.setName(idPat.getName().clone());
 		newVar.setOriginal(idPat.getName().getFullName());
 
-		AVariableExp var_exp = last_vars.get(var.getName());
-		if (var_exp == null)
+		AVariableExp old_var = last_vars.get(var.getName());
+		if (old_var != null)
 		{
-			var_exp = new AVariableExp();
-			var_exp.setName(var.getOldname().clone());
-			var_exp.setType(var.getType().clone());
-			var_exp.setOriginal(var.getOldname().toString());
+			Substitution sub_old = new Substitution(var.getOldname().toString(), old_var);
+			subs.add(sub_old);
 		}
 
 		Substitution sub = new Substitution(var.getName().clone(), newVar);
-		Substitution sub_old = new Substitution(var.getOldname().clone(), var_exp.clone());
-
 		last_vars.put(var.getName(), newVar);
-
 		subs.add(sub);
-		subs.add(sub_old);
 
 		return r;
 	}

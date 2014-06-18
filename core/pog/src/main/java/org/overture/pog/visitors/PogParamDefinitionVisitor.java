@@ -1,6 +1,7 @@
 package org.overture.pog.visitors;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
@@ -183,7 +184,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 			question.push(new POFunctionDefinitionContext(node, true));
 			PExp body = node.getBody();
 			obligations.addAll(body.apply(rootVisitor, question));
-			
+
 			// do proof obligation for the return type
 			if (node.getIsUndefined()
 					|| !TypeComparator.isSubType(node.getActualResult(), node.getExpectedResult(), assistantFactory))
@@ -240,11 +241,11 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 						AInstanceVariableDefinition ivdef = (AInstanceVariableDefinition) pdef;
 						if (ivdef.getInitialized())
 						{
-							question.push(new AssignmentContext((AInstanceVariableDefinition) pdef, assistantFactory.getVarSubVisitor(),question));
+							question.push(new AssignmentContext((AInstanceVariableDefinition) pdef, assistantFactory.getVarSubVisitor(), question));
 						}
 					}
 				}
-				list.add(new StateInvariantObligation(node, question,assistantFactory));
+				list.add(new StateInvariantObligation(node, question, assistantFactory));
 				question.clearStateContexts();
 				list.add(new SatisfiabilityObligation(node, question));
 			}
@@ -461,7 +462,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 			if (node.getIsConstructor() && node.getClassDefinition() != null
 					&& node.getClassDefinition().getInvariant() != null)
 			{
-				obligations.add(new StateInvariantObligation(node, question,assistantFactory));
+				obligations.add(new StateInvariantObligation(node, question, assistantFactory));
 			}
 
 			if (!node.getIsConstructor()
@@ -477,9 +478,9 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 
 			if (node.getPostcondition() != null)
 			{
-				question.lastStatement();
 				obligations.addAll(node.getPostcondition().apply(rootVisitor, question));
-				obligations.add(new OperationPostCondition(node, question));
+				List<AInstanceVariableDefinition> state = collectState(node);
+				obligations.add(new OperationPostCondition(node, state, question, assistantFactory));
 			}
 			question.clearStateContexts();
 
@@ -490,13 +491,43 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 		}
 	}
 
+	protected List<AInstanceVariableDefinition> collectState(
+			AExplicitOperationDefinition node) throws AnalysisException
+	{
+		List<AInstanceVariableDefinition> r = new LinkedList<AInstanceVariableDefinition>();
+		List<PDefinition> stateDefs;
+		if (node.getClassDefinition() != null)
+		{
+			stateDefs = node.getClassDefinition().getDefinitions();
+		} else
+		{
+			if (node.getState() != null)
+			{
+				stateDefs = node.getState().getStateDefs();
+			}
+			else {
+				return r;
+			}
+		}
+		for (PDefinition d : stateDefs)
+		{
+			if (d instanceof AInstanceVariableDefinition)
+			{
+				r.add((AInstanceVariableDefinition) d);
+			}
+		}
+
+		return r;
+
+	}
+
 	/**
-	 * Operation processing is identical in extension except for context generation.
-	 * So, a quick trick here.
+	 * Operation processing is identical in extension except for context generation. So, a quick trick here.
+	 * 
 	 * @param node
 	 * @param question
 	 * @param precond
-	 * @throws AnalysisException 
+	 * @throws AnalysisException
 	 */
 	protected void collectOpCtxt(AExplicitOperationDefinition node,
 			IPOContextStack question, Boolean precond) throws AnalysisException
@@ -561,7 +592,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 						&& node.getClassDefinition() != null
 						&& node.getClassDefinition().getInvariant() != null)
 				{
-					obligations.add(new StateInvariantObligation(node, question,assistantFactory));
+					obligations.add(new StateInvariantObligation(node, question, assistantFactory));
 				}
 
 				if (!node.getIsConstructor()
@@ -711,7 +742,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 				list.addAll(invDef.apply(mainVisitor, question));
 				list.add(new SatisfiabilityObligation(node, question));
 			}
-			
+
 			return list;
 		} catch (Exception e)
 		{

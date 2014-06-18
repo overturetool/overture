@@ -50,7 +50,6 @@ public class OpPostConditionContext extends StatefulContext implements
 		this.exists_exp = getChangedVarsExp(postDef, calledOp);
 		this.pred = spellCondition(postDef, af, stm.getArgs());
 		this.visitor = af.getVarSubVisitor();
-
 	}
 
 	public OpPostConditionContext(AExplicitFunctionDefinition postDef,
@@ -178,7 +177,7 @@ public class OpPostConditionContext extends StatefulContext implements
 				{
 					if (sub.getOriginal().contains("$OLD"))
 					{						
-						// nothing;
+						stitch=stitch.apply(visitor,sub);	// nothing;
 					} else
 					{
 						stitch = stitch.apply(visitor, sub);
