@@ -1,7 +1,6 @@
 package org.overture.pog.contexts;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -45,10 +44,9 @@ public class OpPostConditionContext extends StatefulContext implements
 			ACallStm stm, SOperationDefinitionBase calledOp,
 			IPogAssistantFactory af, IPOContextStack ctxt)
 	{
+		super(ctxt);
 		this.gen = ctxt.getGenerator();
 		this.subs = new LinkedList<Substitution>();
-		this.last_vars = ctxt.getLast_Vars() == null ? new HashMap<ILexNameToken, AVariableExp>()
-				: ctxt.getLast_Vars();
 		this.exists_exp = getChangedVarsExp(postDef, calledOp);
 		this.pred = spellCondition(postDef, af, stm.getArgs());
 		this.visitor = af.getVarSubVisitor();
@@ -59,11 +57,10 @@ public class OpPostConditionContext extends StatefulContext implements
 			AApplyExp exp, SOperationDefinitionBase calledOp,
 			IPogAssistantFactory af, IPOContextStack ctxt)
 	{
+		super(ctxt);
 		this.visitor = af.getVarSubVisitor();
 		this.gen = ctxt.getGenerator();
 		this.subs = new LinkedList<Substitution>();
-		this.last_vars = ctxt.getLast_Vars() == null ? new HashMap<ILexNameToken, AVariableExp>()
-				: ctxt.getLast_Vars();
 		this.exists_exp = getChangedVarsExp(postDef, calledOp);
 		this.pred = spellCondition(postDef, af, exp.getArgs());
 	}
@@ -180,7 +177,7 @@ public class OpPostConditionContext extends StatefulContext implements
 				for (Substitution sub : subs)
 				{
 					if (sub.getOriginal().contains("$OLD"))
-					{
+					{						
 						// nothing;
 					} else
 					{

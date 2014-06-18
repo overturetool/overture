@@ -240,7 +240,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 						AInstanceVariableDefinition ivdef = (AInstanceVariableDefinition) pdef;
 						if (ivdef.getInitialized())
 						{
-							question.push(new AssignmentContext((AInstanceVariableDefinition) pdef, assistantFactory.getVarSubVisitor()));
+							question.push(new AssignmentContext((AInstanceVariableDefinition) pdef, assistantFactory.getVarSubVisitor(),question));
 						}
 					}
 				}

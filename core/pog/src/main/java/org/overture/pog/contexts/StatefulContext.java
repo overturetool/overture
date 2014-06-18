@@ -1,5 +1,6 @@
 package org.overture.pog.contexts;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -11,11 +12,19 @@ import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
+import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.utility.Substitution;
 import org.overture.pog.utility.UniqueNameGenerator;
 
 public abstract class StatefulContext extends POContext
 {
+	
+	public StatefulContext(IPOContextStack ctxt)
+	{
+		this.last_vars = ctxt.getLast_Vars() == null ? new HashMap<ILexNameToken, AVariableExp>()
+				: ctxt.getLast_Vars();
+			}
+	
 	protected Map<ILexNameToken, AVariableExp> last_vars;
 	protected UniqueNameGenerator gen;
 	List<Substitution> subs;

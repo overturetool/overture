@@ -130,7 +130,7 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 				}
 			}
 
-			question.push(new AssignmentContext(node, aF));
+			question.push(new AssignmentContext(node, aF,question));
 
 			return obligations;
 		} catch (Exception e) {
