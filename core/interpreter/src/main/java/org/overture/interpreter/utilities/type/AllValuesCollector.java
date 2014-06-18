@@ -121,7 +121,7 @@ public class AllValuesCollector extends QuestionAnswerAdaptor<Context, ValueList
 
 		ValueList results = new ValueList();
 
-		for (Value v : ctxt.assistantFactory.createPTypeListAssistant().getAllValues(types, ctxt))// PTypeListAssistant.getAllValues(types, ctxt))
+		for (Value v : af.createPTypeListAssistant().getAllValues(types, ctxt))// PTypeListAssistant.getAllValues(types, ctxt))
 		{
 			try
 			{
