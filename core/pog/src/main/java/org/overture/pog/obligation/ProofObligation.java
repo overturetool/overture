@@ -73,6 +73,7 @@ abstract public class ProofObligation implements IProofObligation, Serializable
 	public final String name;
 
 	public AVdmPoTree valuetree;
+	public PExp stitch;
 	public POStatus status;
 
 	public final POType kind;
@@ -120,7 +121,7 @@ abstract public class ProofObligation implements IProofObligation, Serializable
 	// this method should call a visitor on the potree that creates the "value"
 	// string as it exists in the current version
 	@Override
-	public String getValue()
+	public String getFullPredString()
 	{
 		if (valuetree.getPredicate() == null)
 		{
@@ -130,6 +131,18 @@ abstract public class ProofObligation implements IProofObligation, Serializable
 		return result;
 	}
 
+
+	@Override
+	public String  getDefPredString()
+	{
+		if (stitch == null)
+		{
+			return "";
+		}
+		String result = stitch.toString();
+		return result;
+	}
+	
 	@Override
 	public void setStatus(POStatus status)
 	{
@@ -141,7 +154,7 @@ abstract public class ProofObligation implements IProofObligation, Serializable
 	public String toString()
 	{
 		return name + ": " + kind + " obligation " + "@ " + location + "\n"
-				+ getValue();
+				+ getFullPredString();
 	}
 
 	public String getIsaName()

@@ -15,7 +15,9 @@ public interface IProofObligation extends Comparable<IProofObligation>, Serializ
 	
 	String getIsaName();
 	
-	String getValue();
+	String getFullPredString();
+	
+	String getDefPredString();
 	
 	AVdmPoTree getValueTree();
 
