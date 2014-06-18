@@ -35,7 +35,7 @@ public class PAccessSpecifierAssistant
 		return access != null && access.getAccess() instanceof APublicAccess;
 	}
 
-	public static AAccessSpecifierAccessSpecifier getPublic()
+	public AAccessSpecifierAccessSpecifier getPublic()
 	{
 		return AstFactory.newAAccessSpecifierAccessSpecifier(new APublicAccess(), false, false);
 	}

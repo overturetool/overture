@@ -10,7 +10,6 @@ import org.overture.ast.assistant.AstAssistantFactory;
 import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.assistant.InvocationAssistantException;
 import org.overture.ast.assistant.definition.PAccessSpecifierAssistant;
-import org.overture.ast.assistant.type.AUnionTypeAssistant;
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AClassInvariantDefinition;
@@ -400,7 +399,7 @@ public class AstFactory
 			List<PDefinition> members)
 	{
 		initDefinition(result, Pass.DEFS, className.getLocation(), className, NameScope.CLASSNAME);
-		result.setAccess(PAccessSpecifierAssistant.getPublic());
+		result.setAccess(af.createPAccessSpecifierAssistant().getPublic());
 		result.setUsed(true);
 		result.setTypeChecked(false);
 		result.setGettingInvDefs(false);
@@ -998,7 +997,7 @@ public class AstFactory
 
 		result.setPathname(namesClonable);
 		result.setTerms(terms);
-		result.setAccess(PAccessSpecifierAssistant.getPublic());
+		result.setAccess(af.createPAccessSpecifierAssistant().getPublic());
 		result.setType(newAOperationType(location));
 
 		return result;
