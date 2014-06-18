@@ -19,5 +19,6 @@ public interface IPOContext
 
 	boolean isStateful();
 	
+	public void lastStmt();
 
 }

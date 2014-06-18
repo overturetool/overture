@@ -14,6 +14,13 @@ public class Substitution
 
 	String original;
 	PExp newExp;
+	
+	
+
+	public String getOriginal()
+	{
+		return original;
+	}
 
 	public Substitution(ILexNameToken var, PExp value)
 	{
@@ -46,7 +53,7 @@ public class Substitution
 
 	public String makeFullKey(ILexNameToken name)
 	{
-		return name.getName() + (name.getOld() ? "OLD" : "");
+		return name.getName() + (name.getOld() ? "$OLD" : "");
 	}
 
 	@Override

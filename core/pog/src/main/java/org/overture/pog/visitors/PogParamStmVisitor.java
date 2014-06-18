@@ -201,7 +201,7 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 					obligations.add(new OperationCallObligation(node, calledOp,
 							question, aF));
 				}question.push(
-				new OpPostConditionContext(calledOp.getPostdef(), node, calledOp, aF, question.getGenerator()));
+				new OpPostConditionContext(calledOp.getPostdef(), node, calledOp, aF, question));
 			}
 			return obligations;
 		} catch (Exception e) {

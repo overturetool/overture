@@ -1,6 +1,10 @@
 package org.overture.pog.pub;
 
+import java.util.Map;
+
+import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.types.PType;
 import org.overture.pog.utility.UniqueNameGenerator;
 
@@ -28,5 +32,9 @@ public interface IPOContextStack
 	public void setGenerator(UniqueNameGenerator gen);
 	
 	public UniqueNameGenerator getGenerator();
+
+	public Map<ILexNameToken, AVariableExp> getLast_Vars();
+
+	public void lastStatement();
 
 }

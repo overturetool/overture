@@ -10,7 +10,7 @@ import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.utility.Substitution;
 import org.overture.pog.visitors.IVariableSubVisitor;
 
-public class AssignmentContext extends POContext
+public class AssignmentContext extends StatefulContext
 {
 
 	Substitution sub;
@@ -59,11 +59,7 @@ public class AssignmentContext extends POContext
 		}
 	}
 
-	@Override
-	public boolean isStateful()
-	{
-		return true;
-	}
+
 	
 	@Override
 	public String toString()

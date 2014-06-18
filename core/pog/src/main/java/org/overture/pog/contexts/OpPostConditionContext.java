@@ -1,8 +1,10 @@
 package org.overture.pog.contexts;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
@@ -13,7 +15,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SOperationDefinitionBase;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ABooleanConstExp;
-import org.overture.ast.expressions.AForAllExp;
+import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.APostOpExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
@@ -21,59 +23,61 @@ import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexBooleanToken;
 import org.overture.ast.lex.VDMToken;
-import org.overture.ast.patterns.AIdentifierPattern;
-import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.ACallStm;
 import org.overture.ast.statements.AExternalClause;
 import org.overture.pog.pub.IPOContext;
+import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.utility.Substitution;
-import org.overture.pog.utility.UniqueNameGenerator;
 import org.overture.pog.visitors.IVariableSubVisitor;
 
-public class OpPostConditionContext extends POContext implements IPOContext
+public class OpPostConditionContext extends StatefulContext implements
+		IPOContext
 {
 
-	AForAllExp forAll_exp;
+	AExistsExp exists_exp;
 	PExp pred;
-	UniqueNameGenerator gen;
-	List<Substitution> subs;
 	IVariableSubVisitor visitor;
 
 	public OpPostConditionContext(AExplicitFunctionDefinition postDef,
 			ACallStm stm, SOperationDefinitionBase calledOp,
-			IPogAssistantFactory af, UniqueNameGenerator gen)
+			IPogAssistantFactory af, IPOContextStack ctxt)
 	{
-		this.gen = gen;
+		this.gen = ctxt.getGenerator();
 		this.subs = new LinkedList<Substitution>();
-		this.forAll_exp = getChangedVarsExp(postDef, calledOp);
+		this.last_vars = ctxt.getLast_Vars() == null ? new HashMap<ILexNameToken, AVariableExp>()
+				: ctxt.getLast_Vars();
+		this.exists_exp = getChangedVarsExp(postDef, calledOp);
 		this.pred = spellCondition(postDef, af, stm.getArgs());
 		this.visitor = af.getVarSubVisitor();
+
 	}
 
 	public OpPostConditionContext(AExplicitFunctionDefinition postDef,
 			AApplyExp exp, SOperationDefinitionBase calledOp,
-			IPogAssistantFactory af, UniqueNameGenerator gen)
+			IPogAssistantFactory af, IPOContextStack ctxt)
 	{
 		this.visitor = af.getVarSubVisitor();
+		this.gen = ctxt.getGenerator();
 		this.subs = new LinkedList<Substitution>();
-		this.gen = gen;
-		this.forAll_exp = getChangedVarsExp(postDef, calledOp);
+		this.last_vars = ctxt.getLast_Vars() == null ? new HashMap<ILexNameToken, AVariableExp>()
+				: ctxt.getLast_Vars();
+		this.exists_exp = getChangedVarsExp(postDef, calledOp);
 		this.pred = spellCondition(postDef, af, exp.getArgs());
 	}
 
 	@Override
 	public String toString()
 	{
-		return forAll_exp.toString() + pred.toString();
+		return exists_exp.toString() + pred.toString();
 	}
 
-	private AForAllExp getChangedVarsExp(AExplicitFunctionDefinition postDef,
+	private AExistsExp getChangedVarsExp(AExplicitFunctionDefinition postDef,
 			SOperationDefinitionBase calledOp)
 	{
-		AForAllExp r = new AForAllExp();
+		AExistsExp r = new AExistsExp();
 		List<PMultipleBind> binds = new LinkedList<PMultipleBind>();
 
 		if (calledOp instanceof AExplicitOperationDefinition)
@@ -160,35 +164,6 @@ public class OpPostConditionContext extends POContext implements IPOContext
 		return r;
 	}
 
-	PMultipleBind introduceFreshVar(AInstanceVariableDefinition var)
-	{
-		ATypeMultipleBind r = new ATypeMultipleBind();
-
-		List<PPattern> pats = new LinkedList<PPattern>();
-		AIdentifierPattern idPat = new AIdentifierPattern();
-
-		idPat.setName(gen.getUnique(var.getName().getName()));
-		pats.add(idPat);
-
-		r.setPlist(pats);
-		r.setType(var.getType().clone());
-
-		AVariableExp newVar = new AVariableExp();
-		newVar.setName(idPat.getName().clone());
-		newVar.setOriginal(idPat.getName().getFullName());
-
-		Substitution sub = new Substitution(var.getName().clone(), newVar);
-		subs.add(sub);
-
-		return r;
-	}
-
-	@Override
-	public boolean isStateful()
-	{
-		return true;
-	}
-
 	@Override
 	public String getContext()
 	{
@@ -198,27 +173,52 @@ public class OpPostConditionContext extends POContext implements IPOContext
 	@Override
 	public PExp getContextNode(PExp stitch)
 	{
-		PExp implies_exp = AstExpressionFactory.newAImpliesBooleanBinaryExp(pred.clone(), stitch.clone());
-		for (Substitution sub : subs)
+		try
 		{
-			try
+			if (isLast())
 			{
-				implies_exp = implies_exp.apply(visitor, sub);
-			} catch (AnalysisException e)
-			{
-				// FIXME consider handling of exceptions inside final context construction
-				e.printStackTrace();
-			}
-		}
-		if (forAll_exp.getBindList().size() > 0)
-		{
+				for (Substitution sub : subs)
+				{
+					if (sub.getOriginal().contains("$OLD"))
+					{
+						// nothing;
+					} else
+					{
+						stitch = stitch.apply(visitor, sub);
+					}
+				}
 
-			forAll_exp.setPredicate(implies_exp);
-			return forAll_exp.clone();
-		} else
+				// do nothing
+			} else
+			{
+				for (Substitution sub : subs)
+				{
+					stitch = stitch.apply(visitor, sub);
+				}
+			}
+
+			for (Substitution sub : subs)
+			{
+				pred = pred.apply(visitor, sub);
+			}
+
+			PExp implies_exp = AstExpressionFactory.newAImpliesBooleanBinaryExp(pred.clone(), stitch.clone());
+
+			if (exists_exp.getBindList().size() > 0)
+			{
+
+				exists_exp.setPredicate(implies_exp);
+				return exists_exp.clone();
+			} else
+			{
+				return implies_exp.clone();
+			}
+		} catch (AnalysisException e)
 		{
-			return implies_exp.clone();
+			// FIXME consider handling of exceptions inside final context construction
+			e.printStackTrace();
 		}
+		return null;
 	}
 
 	private PExp spellCondition(AExplicitFunctionDefinition def,
@@ -267,6 +267,11 @@ public class OpPostConditionContext extends POContext implements IPOContext
 		}
 
 		return post_exp;
+	}
+
+	public Map<ILexNameToken, AVariableExp> getLast_vars()
+	{
+		return last_vars;
 	}
 
 }
