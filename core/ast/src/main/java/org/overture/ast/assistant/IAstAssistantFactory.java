@@ -5,7 +5,6 @@ import org.overture.ast.assistant.definition.PAccessSpecifierAssistant;
 import org.overture.ast.assistant.definition.PDefinitionAssistant;
 import org.overture.ast.assistant.pattern.PPatternAssistant;
 import org.overture.ast.assistant.type.AUnionTypeAssistant;
-import org.overture.ast.assistant.type.AUnknownTypeAssistant;
 import org.overture.ast.assistant.type.PTypeAssistant;
 import org.overture.ast.assistant.type.SNumericBasicTypeAssistant;
 import org.overture.ast.lex.LexNameList;
@@ -114,8 +113,8 @@ public interface IAstAssistantFactory {
 	 * 
 	 * @return the a unknown type assistant
 	 */
-	@Deprecated
-	AUnknownTypeAssistant createAUnknownTypeAssistant();
+//	@Deprecated
+//	AUnknownTypeAssistant createAUnknownTypeAssistant();
 
 	/**
 	 * Creates a new {@link PTypeAssistant}. This assistant provides

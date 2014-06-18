@@ -7,7 +7,6 @@ import org.overture.ast.assistant.definition.PAccessSpecifierAssistant;
 import org.overture.ast.assistant.definition.PDefinitionAssistant;
 import org.overture.ast.assistant.pattern.PPatternAssistant;
 import org.overture.ast.assistant.type.AUnionTypeAssistant;
-import org.overture.ast.assistant.type.AUnknownTypeAssistant;
 import org.overture.ast.assistant.type.PTypeAssistant;
 import org.overture.ast.assistant.type.SNumericBasicTypeAssistant;
 import org.overture.ast.lex.LexNameList;
@@ -102,11 +101,11 @@ public class AstAssistantFactory implements IAstAssistantFactory
 		return new AUnionTypeAssistant(this);
 	}
 
-	@Override
-	public AUnknownTypeAssistant createAUnknownTypeAssistant()
-	{
-		return new AUnknownTypeAssistant(this);
-	}
+//	@Override
+//	public AUnknownTypeAssistant createAUnknownTypeAssistant()
+//	{
+//		return new AUnknownTypeAssistant(this);
+//	}
 
 	@Override
 	public PTypeAssistant createPTypeAssistant()
