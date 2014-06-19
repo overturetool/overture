@@ -39,13 +39,14 @@ import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.PTypeSet;
 import org.overture.pog.contexts.AssignmentContext;
+import org.overture.pog.contexts.OpBodyEndContext;
 import org.overture.pog.contexts.POFunctionDefinitionContext;
 import org.overture.pog.contexts.POFunctionResultContext;
 import org.overture.pog.contexts.POImpliesContext;
 import org.overture.pog.contexts.PONameContext;
 import org.overture.pog.contexts.POOperationDefinitionContext;
 import org.overture.pog.obligation.FunctionPostCondition;
-import org.overture.pog.obligation.OperationPostCondition;
+import org.overture.pog.obligation.OperationPostConditionObligation;
 import org.overture.pog.obligation.ParameterPatternObligation;
 import org.overture.pog.obligation.ProofObligationList;
 import org.overture.pog.obligation.SatisfiabilityObligation;
@@ -478,9 +479,11 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 
 			if (node.getPostcondition() != null)
 			{
-				obligations.addAll(node.getPostcondition().apply(rootVisitor, question));
+
 				List<AInstanceVariableDefinition> state = collectState(node);
-				obligations.add(new OperationPostCondition(node, state, question, assistantFactory));
+				question.push(new OpBodyEndContext(state, assistantFactory));
+				obligations.addAll(node.getPostcondition().apply(rootVisitor, question));
+				obligations.add(new OperationPostConditionObligation(node, question));
 			}
 			question.clearStateContexts();
 
@@ -504,8 +507,8 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 			if (node.getState() != null)
 			{
 				stateDefs = node.getState().getStateDefs();
-			}
-			else {
+			} else
+			{
 				return r;
 			}
 		}
