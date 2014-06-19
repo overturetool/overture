@@ -28,6 +28,7 @@ import org.overture.codegen.cgast.expressions.AMapletExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AQuoteLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.SBinaryExpCG;
 import org.overture.codegen.cgast.expressions.SLiteralExpCG;
@@ -296,11 +297,16 @@ public class JavaFormat
 	
 	private static boolean isNumberDereferenceCandidate(SExpCG node)
 	{
-		return (!(node instanceof SNumericBinaryExpCG)
-				&& !(node instanceof SLiteralExpCG) 
+		boolean fitsCategory = !(node instanceof SNumericBinaryExpCG)
+				&& !(node instanceof SLiteralExpCG)
 				&& !(node instanceof AIsolationUnaryExpCG)
-				&& (!(node instanceof SUnaryExpCG) || node instanceof ACastUnaryExpCG))
-				|| node instanceof AHeadUnaryExpCG;
+				&& !(node instanceof SUnaryExpCG);
+
+		boolean isException = node instanceof AHeadUnaryExpCG
+				|| node instanceof AQuoteLiteralExpCG
+				|| node instanceof ACastUnaryExpCG;
+		
+		return 	fitsCategory || isException;
 	}
 
 	public String formatName(INode node) throws AnalysisException
