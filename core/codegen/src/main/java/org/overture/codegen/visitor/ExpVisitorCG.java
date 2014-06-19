@@ -667,6 +667,9 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		SExpCG exp = node.getExpression().apply(question.getExpVisitor(), question);
 		localDefExp.setExp(exp);
 		
+		STypeCG type = node.getType().apply(question.getTypeVisitor(), question);
+		localDefExp.setType(type);
+		
 		return localDefExp;
 	}
 
