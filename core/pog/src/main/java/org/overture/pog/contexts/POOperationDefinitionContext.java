@@ -132,6 +132,13 @@ public class POOperationDefinitionContext extends POContext
 			return forAllExp;
 
 		}
+		else{
+			if (addPrecond && precondition != null)
+			{
+				AImpliesBooleanBinaryExp impliesExp = AstExpressionFactory.newAImpliesBooleanBinaryExp(precondition.clone(), stitch);
+				return impliesExp;
+			}
+		}
 		return stitch;
 
 	}

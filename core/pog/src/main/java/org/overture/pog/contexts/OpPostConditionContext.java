@@ -13,7 +13,6 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SOperationDefinitionBase;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ABooleanConstExp;
-import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.AForAllExp;
 import org.overture.ast.expressions.APostOpExp;
 import org.overture.ast.expressions.AVariableExp;
