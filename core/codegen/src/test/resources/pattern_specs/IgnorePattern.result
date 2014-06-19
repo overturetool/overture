@@ -19,16 +19,14 @@ public class Entry {
     public static Number f() {
         Entry ignore_2 = new Entry();
         Entry ignore_3 = new Entry();
-        Number letDefExpResult_ = 1L;
 
-        return letDefExpResult_;
+        return 1L;
     }
 
     public static Number g() {
         Number ignore_4 = 2L;
-        Number letDefExpResult_ = 2L;
 
-        return letDefExpResult_;
+        return 2L;
     }
 
     public static Number h(final Number ignore_5) {
