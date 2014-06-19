@@ -65,7 +65,7 @@ CG {-> package='org.overture.codegen.cgast'
 	;
     
 #decl {-> package='org.overture.codegen.cgast.declarations'}
-	=	{method}
+	=	{method} //rename to operation
 		[access]:java_String
 		[static]:java_Boolean
 		[abstract]:java_Boolean
@@ -75,6 +75,14 @@ CG {-> package='org.overture.codegen.cgast'
 		[isConstructor]:java_Boolean
 		[templateTypes]:CG.#type.template*
 		[body]:CG.#stm
+	|	{func}
+		[access]:java_String
+		[abstract]:java_Boolean
+		[methodType]:CG.#type.method
+		[name]:java_String
+		[formalParams]:CG.#localParam.formalParam*
+		[templateTypes]:CG.#type.template*
+		[body]:CG.#exp
 	|	{field} 
     	[access]:java_String
     	[static]:java_Boolean
@@ -91,6 +99,7 @@ CG {-> package='org.overture.codegen.cgast'
     	[name]:java_String
     	[fields]:field*
     	[methods]:CG.#decl.method*
+    	[functions]:CG.#decl.func*
     	[superName]:java_String
     	[records]:CG.#decl.record*
     |	{interface}
@@ -200,6 +209,7 @@ CG {-> package='org.overture.codegen.cgast'
     |	{external} [targetLangExp]:java_String
     |	{lambda} [params]:CG.#localParam.formalParam* [exp]:CG.#exp
     |	{anonymousClass} [methods]:CG.#decl.method*
+    |	{notImplemented}
     ;
 
 #RuntimeError {-> package='org.overture.codegen.cgast.expressions'}
