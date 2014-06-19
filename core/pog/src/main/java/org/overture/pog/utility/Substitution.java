@@ -66,9 +66,9 @@ public class Substitution
 	{
 		StringBuilder sb = new StringBuilder();
 		sb.append("[");
-		sb.append(original);
-		sb.append("/");
 		sb.append(newExp.toString());
+		sb.append("/");
+		sb.append(original);
 		sb.append("]");
 		return sb.toString();
 	}
