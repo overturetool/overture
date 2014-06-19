@@ -26,11 +26,11 @@ public class OpBodyEndContext extends StatefulContext
 		{
 			AVariableExp var_exp = new AVariableExp();
 			ILexNameToken it = i.getName();
-			String safename = it.getOldName().toString() + "$";
+			String safename = it.getName() + "$";
 			ILexNameToken safeToken = new LexNameToken(it.getModule(), safename, it.getLocation().clone());
 			var_exp.setName(safeToken);
 			var_exp.setType(i.getType().clone());
-			var_exp.setOriginal(i.getOldname().toString());
+			var_exp.setOriginal(i.getName().getName().toString());
 			subs.add(new Substitution(i.getOldname(), var_exp));
 		}
 

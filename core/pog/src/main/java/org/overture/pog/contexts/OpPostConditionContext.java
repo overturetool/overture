@@ -14,6 +14,7 @@ import org.overture.ast.definitions.SOperationDefinitionBase;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ABooleanConstExp;
 import org.overture.ast.expressions.AExistsExp;
+import org.overture.ast.expressions.AForAllExp;
 import org.overture.ast.expressions.APostOpExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
@@ -37,7 +38,7 @@ public class OpPostConditionContext extends StatefulContext implements
 		IPOContext
 {
 
-	AExistsExp exists_exp;
+	AForAllExp forall_exp;
 	PExp pred;
 	IVariableSubVisitor visitor;
 
@@ -48,7 +49,7 @@ public class OpPostConditionContext extends StatefulContext implements
 		super(ctxt);
 		this.gen = ctxt.getGenerator();
 		this.subs = new LinkedList<Substitution>();
-		this.exists_exp = getChangedVarsExp(postDef, calledOp);
+		this.forall_exp = getChangedVarsExp(postDef, calledOp);
 		this.pred = spellCondition(postDef, af, stm.getArgs());
 		this.visitor = af.getVarSubVisitor();
 	}
@@ -61,20 +62,20 @@ public class OpPostConditionContext extends StatefulContext implements
 		this.visitor = af.getVarSubVisitor();
 		this.gen = ctxt.getGenerator();
 		this.subs = new LinkedList<Substitution>();
-		this.exists_exp = getChangedVarsExp(postDef, calledOp);
+		this.forall_exp = getChangedVarsExp(postDef, calledOp);
 		this.pred = spellCondition(postDef, af, exp.getArgs());
 	}
 
 	@Override
 	public String toString()
 	{
-		return exists_exp.toString() + pred.toString();
+		return forall_exp.toString() + pred.toString();
 	}
 
-	private AExistsExp getChangedVarsExp(AExplicitFunctionDefinition postDef,
+	private AForAllExp getChangedVarsExp(AExplicitFunctionDefinition postDef,
 			SOperationDefinitionBase calledOp)
 	{
-		AExistsExp r = new AExistsExp();
+		AForAllExp r = new AForAllExp();
 		List<PMultipleBind> binds = new LinkedList<PMultipleBind>();
 
 		if (calledOp instanceof AExplicitOperationDefinition)
@@ -160,7 +161,7 @@ public class OpPostConditionContext extends StatefulContext implements
 		}
 		return r;
 	}
-	
+
 	private PMultipleBind introduceFreshVar(AInstanceVariableDefinition var)
 	{
 		ATypeMultipleBind r = new ATypeMultipleBind();
@@ -178,16 +179,26 @@ public class OpPostConditionContext extends StatefulContext implements
 		newVar.setName(idPat.getName().clone());
 		newVar.setOriginal(idPat.getName().getFullName());
 
+		Substitution sub = new Substitution(var.getName().clone(), newVar);
+		subs.add(sub);
+		
 		AVariableExp old_var = last_vars.get(var.getName());
 		if (old_var != null)
 		{
 			Substitution sub_old = new Substitution(var.getOldname().toString(), old_var);
 			subs.add(sub_old);
 		}
+		else{
+			AVariableExp var_exp = new AVariableExp();
+			var_exp.setName(var.getName().clone());
+			var_exp.setType(var.getType().clone());
+			var_exp.setOriginal(var.getName().getName());
+			Substitution sub_old = new Substitution(var.getOldname().toString(), var_exp);
+			subs.add(sub_old);
+		}
 
-		Substitution sub = new Substitution(var.getName().clone(), newVar);
 		last_vars.put(var.getName(), newVar);
-		subs.add(sub);
+		
 
 		return r;
 	}
@@ -203,18 +214,23 @@ public class OpPostConditionContext extends StatefulContext implements
 	{
 		try
 		{
-			for (Substitution sub : subs)
+			if (first)
 			{
-				pred = pred.apply(visitor, sub);
+				first = false;
 			}
-
 			PExp implies_exp = AstExpressionFactory.newAImpliesBooleanBinaryExp(pred.clone(), stitch.clone());
 
-			if (exists_exp.getBindList().size() > 0)
+			for (Substitution sub : subs)
+			{
+				implies_exp = implies_exp.apply(visitor, sub);
+			}
+
+
+			if (forall_exp.getBindList().size() > 0)
 			{
 
-				exists_exp.setPredicate(implies_exp);
-				return exists_exp.clone();
+				forall_exp.setPredicate(implies_exp);
+				return forall_exp.clone();
 			} else
 			{
 				return implies_exp.clone();
@@ -274,6 +290,5 @@ public class OpPostConditionContext extends StatefulContext implements
 
 		return post_exp;
 	}
-
 
 }

@@ -13,7 +13,6 @@ import org.overture.pog.visitors.IVariableSubVisitor;
 
 public class AssignmentContext extends StatefulContext
 {
-
 	Substitution subLast;
 	Substitution sub;
 	PExp newVal_exp;
@@ -67,7 +66,14 @@ public class AssignmentContext extends StatefulContext
 		PExp r = null;
 		try
 		{
-			r = stitch.apply(visitor, sub);
+			if (first)
+			{
+				r = stitch.apply(visitor, subLast);
+				first = false;
+			} else
+			{
+				r = stitch.apply(visitor, sub);
+			}
 			return r;
 		} catch (AnalysisException e)
 		{

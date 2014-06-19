@@ -12,6 +12,9 @@ import org.overture.pog.utility.UniqueNameGenerator;
 
 public abstract class StatefulContext extends POContext
 {
+	boolean first = true;
+	
+	
 	public StatefulContext()
 	{
 
