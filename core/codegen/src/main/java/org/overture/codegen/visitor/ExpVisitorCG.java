@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AAssignmentDefinition;
+import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -1108,8 +1109,10 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		PTypeAssistantTC typeAssistant = question.getTcFactory().createPTypeAssistant();
 
 		boolean isLambda = typeAssistant.isFunction(type) && !(varDef instanceof SFunctionDefinition);
+		
+		boolean isInheritedDef = varDef instanceof AInheritedDefinition;
 
-		if (owningClass == null || nodeParentClass == null || isDefInOwningClass || isImplicit)
+		if (owningClass == null || nodeParentClass == null || isDefInOwningClass || isInheritedDef || isImplicit)
 		{
 			AIdentifierVarExpCG varExp = new AIdentifierVarExpCG();
 			
