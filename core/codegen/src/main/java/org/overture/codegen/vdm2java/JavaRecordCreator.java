@@ -266,7 +266,7 @@ public class JavaRecordCreator
 		if(record.getFields().isEmpty())
 		{
 			AExternalExpCG zero = new AExternalExpCG();
-			zero.setType(intBasicType);
+			zero.setType(intBasicType.clone());
 			zero.setTargetLangExp("0");
 			returnStm.setExp(zero);
 		}
@@ -302,7 +302,7 @@ public class JavaRecordCreator
 		{
 			AStringLiteralExpCG emptyRecStr = new AStringLiteralExpCG();
 			emptyRecStr.setIsNull(false);
-			emptyRecStr.setType(returnType);
+			emptyRecStr.setType(returnType.clone());
 			emptyRecStr.setValue(String.format("mk_%s()", record.getName()));
 			
 			returnStm.setExp(emptyRecStr);
