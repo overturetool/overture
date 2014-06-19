@@ -174,7 +174,7 @@ CG {-> package='org.overture.codegen.cgast'
 	;
 	
 #exp {-> package='org.overture.codegen.cgast.expressions'
-	| (type):CG.#type}
+	| [type]:CG.#type}
     =	#Unary
     |	#Binary
     |	{field} [object]:CG.#exp [memberName]: java_String
