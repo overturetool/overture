@@ -222,28 +222,13 @@ public class POContextStack extends Stack<IPOContext> implements
 		while (p.hasPrevious())
 		{
 			IPOContext c = p.previous();
-			if (c instanceof OpPostConditionContext)
+			if (c instanceof StatefulContext)
 			{
-				return ((OpPostConditionContext) c).getLast_vars();
+				return ((StatefulContext) c).getLast_vars();
 			}
 
 		}
 		return null;
 	}
 
-	@Override
-	public void lastStatement()
-	{
-
-		int len = size();
-
-		for (int i = len - 1; i > 0; i--)
-		{
-			if (this.get(i).isStateful())
-			{
-				this.get(i).lastStmt();
-			}
-		}
-
-	}
 }

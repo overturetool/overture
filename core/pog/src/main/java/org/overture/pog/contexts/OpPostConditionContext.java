@@ -3,7 +3,6 @@ package org.overture.pog.contexts;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
@@ -204,28 +203,6 @@ public class OpPostConditionContext extends StatefulContext implements
 	{
 		try
 		{
-			if (isLast())
-			{
-				for (Substitution sub : subs)
-				{
-					if (sub.getOriginal().contains("$OLD"))
-					{						
-						stitch=stitch.apply(visitor,sub);	// nothing;
-					} else
-					{
-						stitch = stitch.apply(visitor, sub);
-					}
-				}
-
-				// do nothing
-			} else
-			{
-				for (Substitution sub : subs)
-				{
-					stitch = stitch.apply(visitor, sub);
-				}
-			}
-
 			for (Substitution sub : subs)
 			{
 				pred = pred.apply(visitor, sub);
@@ -298,9 +275,5 @@ public class OpPostConditionContext extends StatefulContext implements
 		return post_exp;
 	}
 
-	public Map<ILexNameToken, AVariableExp> getLast_vars()
-	{
-		return last_vars;
-	}
 
 }

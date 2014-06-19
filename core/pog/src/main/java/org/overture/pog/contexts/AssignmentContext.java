@@ -14,7 +14,10 @@ import org.overture.pog.visitors.IVariableSubVisitor;
 public class AssignmentContext extends StatefulContext
 {
 
+	Substitution subLast;
 	Substitution sub;
+	PExp newVal_exp;
+	ILexNameToken t;
 	IVariableSubVisitor visitor;
 
 	public AssignmentContext(AAssignmentStm node, IPogAssistantFactory af,
@@ -22,8 +25,23 @@ public class AssignmentContext extends StatefulContext
 	{
 		super(ctxt);
 		String hash = node.getTarget().apply(af.getStateDesignatorNameGetter());
-		ILexNameToken t = new LexNameToken("", hash, null);
-		sub = new Substitution(t, node.getExp());
+
+		t = null;
+
+		for (ILexNameToken n : last_vars.keySet())
+		{
+			if (n.getName().equals(hash))
+			{
+				t = last_vars.get(n).getName().clone();
+				break;
+			}
+		}
+		if (t == null)
+		{
+			t = new LexNameToken("", hash, null);
+		}
+		subLast = new Substitution(new LexNameToken("", hash, null), node.getExp().clone());
+		sub = new Substitution(t, node.getExp().clone());
 
 		this.visitor = af.getVarSubVisitor();
 	}

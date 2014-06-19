@@ -12,8 +12,9 @@ import org.overture.pog.utility.UniqueNameGenerator;
 
 public abstract class StatefulContext extends POContext
 {
-	public StatefulContext(){
-		
+	public StatefulContext()
+	{
+
 	}
 
 	public StatefulContext(IPOContextStack ctxt)
@@ -32,18 +33,11 @@ public abstract class StatefulContext extends POContext
 		return true;
 	}
 
-	private boolean isLast = false;
-
-	public void lastStmt()
+	public Map<ILexNameToken, AVariableExp> getLast_vars()
 	{
-		isLast = true;
+		return last_vars;
 	}
-
-	public boolean isLast()
-	{
-		return isLast;
-	}
-
+	
 	
 
 }

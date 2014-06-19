@@ -35,6 +35,5 @@ public interface IPOContextStack
 
 	public Map<ILexNameToken, AVariableExp> getLast_Vars();
 
-	public void lastStatement();
 
 }
