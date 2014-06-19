@@ -50,6 +50,7 @@ public class AssignmentContext extends StatefulContext
 	{
 		super(ctxt);
 		sub = new Substitution(node.getName(), node.getExpression());
+		subLast = sub;
 		this.visitor = visitor;
 	}
 
