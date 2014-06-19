@@ -36,10 +36,10 @@ public class BugRegressionTest
 		Settings.release = Release.DEFAULT;
 	}
 
-	public BugRegressionTest(String folder, String model, String result)
+	public BugRegressionTest(String model, String result)
 	{
-		this.modelPath = folder + model;
-		this.resultPath = folder + result;
+		this.modelPath = model;
+		this.resultPath =result;
 	}
 
 	@Parameters(name = "{index} : {1}")
