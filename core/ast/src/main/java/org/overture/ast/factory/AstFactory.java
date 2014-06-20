@@ -248,7 +248,7 @@ public class AstFactory
 		result.setLocation(location);
 		result.setName(name);
 		result.setNameScope(scope);
-		result.setAccess(PAccessSpecifierAssistant.getDefault());
+		result.setAccess(af.createPAccessSpecifierAssistant().getDefault());
 		result.setUsed(false);
 	}
 
