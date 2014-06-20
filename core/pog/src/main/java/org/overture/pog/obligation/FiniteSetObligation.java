@@ -69,6 +69,7 @@ public class FiniteSetObligation extends ProofObligation {
 		existsExp.setPredicate(getForallExp(exp.clone(), finmap, findex));
 
 		// valuetree.setContext(ctxt.getContextNodeList());
+		stitch = existsExp.clone();
 		valuetree.setPredicate(ctxt.getPredWithContext(existsExp));
 	}
 

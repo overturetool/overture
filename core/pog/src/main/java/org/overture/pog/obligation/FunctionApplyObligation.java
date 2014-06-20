@@ -61,12 +61,15 @@ public class FunctionApplyObligation extends ProofObligation
 			APreExp preExp = new APreExp();
 			preExp.setFunction(root.clone());
 			preExp.setArgs(cloneListPExp(args));
+			stitch = preExp.clone();
 			valuetree.setPredicate(ctxt.getPredWithContext(preExp));
 		}
 		else
 		{
 			// pre_f(args)
-			valuetree.setPredicate(ctxt.getPredWithContext(getApplyExp(getVarExp(prename), cloneListPExp(args))));
+			PExp pred = getApplyExp(getVarExp(prename), cloneListPExp(args));
+			stitch = pred.clone();
+			valuetree.setPredicate(ctxt.getPredWithContext(pred));
 		}
 		
 //		valuetree.setContext(ctxt.getContextNodeList());

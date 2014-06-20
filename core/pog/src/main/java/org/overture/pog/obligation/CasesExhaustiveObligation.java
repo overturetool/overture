@@ -64,6 +64,7 @@ public class CasesExhaustiveObligation extends ProofObligation
 		
 		PExp pred = recOnExp(exp.clone(), initialCases, initialExp, assistantFactory);
 		
+		stitch = pred.clone();
 		valuetree.setPredicate(ctxt.getPredWithContext(pred));
 	}
 	

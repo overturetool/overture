@@ -119,6 +119,7 @@ public class FuncComposeObligation extends ProofObligation
 		}
 
 		//valuetree.setContext(ctxt.getContextNodeList());
+		stitch = forallExp.clone();
 		valuetree.setPredicate(ctxt.getPredWithContext(forallExp));
 	}
 }
