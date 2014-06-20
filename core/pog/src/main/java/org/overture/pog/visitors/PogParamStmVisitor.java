@@ -409,7 +409,7 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 		try
 		{
 			IProofObligationList obligations = new ProofObligationList();
-			obligations.add(new LetBeExistsObligation(node, question));
+			obligations.add(new LetBeExistsObligation(node, question, aF));
 			obligations.addAll(node.getBind().apply(rootVisitor, question));
 
 			if (node.getSuchThat() != null)
@@ -587,7 +587,7 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 		try
 		{
 			IProofObligationList obligations = new ProofObligationList();
-			obligations.add(new WhileLoopObligation(node, question));
+			obligations.add(new WhileLoopObligation(node, question, aF));
 			obligations.addAll(node.getExp().apply(rootVisitor, question));
 			obligations.addAll(node.getStatement().apply(mainVisitor, question));
 

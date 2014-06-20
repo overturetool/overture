@@ -44,38 +44,30 @@ import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
 import org.overture.pog.utility.Substitution;
 
-public class StateInvariantObligation extends ProofObligation {
+public class StateInvariantObligation extends ProofObligation
+{
 	private static final long serialVersionUID = -5828298910806421399L;
 
 	public final IPogAssistantFactory assistantFactory;
 
 	public StateInvariantObligation(AAssignmentStm ass, IPOContextStack ctxt,
-			IPogAssistantFactory af) {
-		super(ass, POType.STATE_INV, ctxt, ass.getLocation());
+			IPogAssistantFactory af) throws AnalysisException
+	{
+		super(ass, POType.STATE_INV, ctxt, ass.getLocation(), af);
 		assistantFactory = af;
 
-		if (ass.getClassDefinition() != null) {
+		if (ass.getClassDefinition() != null)
+		{
 			PExp old_invs = invDefs(ass.getClassDefinition());
 
-			PExp inv = old_invs;
 			String hash;
-			try {
-				hash = ass.getTarget().apply(af.getStateDesignatorNameGetter());
-				Substitution sub = new Substitution(new LexNameToken("", hash,
-						null), ass.getExp().clone());
-				PExp new_invs = old_invs.clone().apply(af.getVarSubVisitor(),
-						sub);
+			hash = ass.getTarget().apply(af.getStateDesignatorNameGetter());
+			Substitution sub = new Substitution(new LexNameToken("", hash, null), ass.getExp().clone());
+			PExp new_invs = old_invs.clone().apply(af.getVarSubVisitor(), sub);
 
-				inv = AstExpressionFactory.newAImpliesBooleanBinaryExp(
-						old_invs, new_invs);
-			} catch (AnalysisException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-
-			}
-
-			valuetree.setPredicate(ctxt.getPredWithContext(inv));
-		} else {
+			valuetree.setPredicate(ctxt.getPredWithContext(AstExpressionFactory.newAImpliesBooleanBinaryExp(old_invs, new_invs)));
+		} else
+		{
 			AStateDefinition def = ass.getStateDefinition();
 			ALetDefExp letExp = new ALetDefExp();
 
@@ -95,43 +87,44 @@ public class StateInvariantObligation extends ProofObligation {
 	}
 
 	public StateInvariantObligation(AClassInvariantDefinition def,
-			IPOContextStack ctxt, IPogAssistantFactory af) {
-		super(def, POType.STATE_INV, ctxt, def.getLocation());
+			IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
+	{
+		super(def, POType.STATE_INV, ctxt, def.getLocation(), af);
 		assistantFactory = af;
 
 		// After instance variable initializers
-		valuetree.setPredicate(ctxt.getPredWithContext(invDefs(def
-				.getClassDefinition())));
+		valuetree.setPredicate(ctxt.getPredWithContext(invDefs(def.getClassDefinition())));
 		// valuetree.setContext(ctxt.getContextNodeList());
 	}
 
 	public StateInvariantObligation(AExplicitOperationDefinition def,
-			IPOContextStack ctxt, IPogAssistantFactory af) {
-		super(def, POType.STATE_INV, ctxt, def.getLocation());
+			IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
+	{
+		super(def, POType.STATE_INV, ctxt, def.getLocation(), af);
 		assistantFactory = af;
 
 		// After def.getName() constructor body
-		valuetree.setPredicate(ctxt.getPredWithContext(invDefs(def
-				.getClassDefinition())));
+		valuetree.setPredicate(ctxt.getPredWithContext(invDefs(def.getClassDefinition())));
 		// valuetree.setContext(ctxt.getContextNodeList());
 	}
 
 	public StateInvariantObligation(AImplicitOperationDefinition def,
-			IPOContextStack ctxt, IPogAssistantFactory af) {
-		super(def, POType.STATE_INV, ctxt, def.getLocation());
+			IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
+	{
+		super(def, POType.STATE_INV, ctxt, def.getLocation(), af);
 		assistantFactory = af;
 
 		// After def.getName() constructor body
-		valuetree.setPredicate(ctxt.getPredWithContext(invDefs(def
-				.getClassDefinition())));
+		valuetree.setPredicate(ctxt.getPredWithContext(invDefs(def.getClassDefinition())));
 		// valuetree.setContext(ctxt.getContextNodeList());
 	}
 
-	private PExp invDefs(SClassDefinition def) {
+	private PExp invDefs(SClassDefinition def)
+	{
 		PExp root = null;
 
-		for (PDefinition d : assistantFactory.createSClassDefinitionAssistant()
-				.getInvDefs(def.clone())) {
+		for (PDefinition d : assistantFactory.createSClassDefinitionAssistant().getInvDefs(def.clone()))
+		{
 			AClassInvariantDefinition cid = (AClassInvariantDefinition) d;
 			root = makeAnd(root, cid.getExpression().clone());
 		}

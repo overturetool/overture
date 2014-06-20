@@ -248,7 +248,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 				}
 				list.add(new StateInvariantObligation(node, question, assistantFactory));
 				question.clearStateContexts();
-				list.add(new SatisfiabilityObligation(node, question));
+				list.add(new SatisfiabilityObligation(node, question, assistantFactory));
 			}
 
 			return list;
@@ -293,7 +293,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 
 						if (!TypeComparator.isSubType(question.checkType(node.getTest(), node.getExpType()), compatible, assistantFactory))
 						{
-							list.add(new ValueBindingObligation(node, question));
+							list.add(new ValueBindingObligation(node, question, assistantFactory));
 							TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(node.getTest(), compatible, node.getExpType(), question, assistantFactory);
 							if (sto != null)
 							{
@@ -383,7 +383,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 			{
 				if (node.getPostcondition() != null)
 				{
-					obligations.add(new SatisfiabilityObligation(node, question));
+					obligations.add(new SatisfiabilityObligation(node, question, assistantFactory));
 				}
 			} else
 			{
@@ -483,7 +483,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 				List<AInstanceVariableDefinition> state = collectState(node);
 				question.push(new OpBodyEndContext(state, assistantFactory));
 				obligations.addAll(node.getPostcondition().apply(rootVisitor, question));
-				obligations.add(new OperationPostConditionObligation(node, question));
+				obligations.add(new OperationPostConditionObligation(node, question, assistantFactory));
 			}
 			question.clearStateContexts();
 
@@ -614,7 +614,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 					// passed 1 more argument to give the assistantFactory to
 					// the constructor.
 					question.push(new POOperationDefinitionContext(node, false, node.getStateDefinition(), assistantFactory));
-					obligations.add(new SatisfiabilityObligation(node, node.getStateDefinition(), question));
+					obligations.add(new SatisfiabilityObligation(node, node.getStateDefinition(), question,assistantFactory));
 					question.pop();
 				}
 			}
@@ -743,7 +743,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 			if (invDef != null)
 			{
 				list.addAll(invDef.apply(mainVisitor, question));
-				list.add(new SatisfiabilityObligation(node, question));
+				list.add(new SatisfiabilityObligation(node, question, assistantFactory));
 			}
 
 			return list;
@@ -786,7 +786,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 					PType compatible = set.getType(node.getLocation());
 					if (!TypeComparator.isSubType(type, compatible, assistantFactory))
 					{
-						obligations.add(new ValueBindingObligation(node, question));
+						obligations.add(new ValueBindingObligation(node, question, assistantFactory));
 						TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(exp, compatible, type, question, assistantFactory);
 						if (sto != null)
 						{

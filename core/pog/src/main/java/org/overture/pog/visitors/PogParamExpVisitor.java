@@ -111,7 +111,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		if (aF.createPTypeAssistant().isMap(type)) {
 			SMapType mapType = aF.createPTypeAssistant().getMap(type);
 			obligations.add(new MapApplyObligation(node.getRoot(), node
-					.getArgs().get(0), question));
+					.getArgs().get(0), question, aF));
 			PType aType = question.checkType(node.getArgs().get(0), node
 					.getArgtypes().get(0));
 
@@ -133,7 +133,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			if (prename == null
 					|| !prename.equals(PExpAssistantTC.NO_PRECONDITION)) {
 				obligations.add(new FunctionApplyObligation(node.getRoot(),
-						node.getArgs(), prename, question));
+						node.getArgs(), prename, question, aF));
 			}
 
 			int i = 0;
@@ -159,13 +159,13 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 					AExplicitFunctionDefinition def = (AExplicitFunctionDefinition) recursive;
 					if (def.getMeasure() != null) {
 						obligations.add(new RecursiveObligation(def, node,
-								question));
+								question, aF));
 					}
 				} else if (recursive instanceof AImplicitFunctionDefinition) {
 					AImplicitFunctionDefinition def = (AImplicitFunctionDefinition) recursive;
 					if (def.getMeasure() != null) {
 						obligations.add(new RecursiveObligation(def, node,
-								question));
+								question, aF));
 					}
 
 				}
@@ -174,7 +174,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 		if (aF.createPTypeAssistant().isSeq(type)) {
 			obligations.add(new SeqApplyObligation(node.getRoot(), node
-					.getArgs().get(0), question));
+					.getArgs().get(0), question, aF));
 		}
 
 		obligations.addAll(node.getRoot().apply(mainVisitor, question));
@@ -213,7 +213,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 		if (!aF.createPTypeAssistant()
 				.isType(exp.getType(), ASeq1SeqType.class))
-			obligations.add(new NonEmptySeqObligation(fake, question));
+			obligations.add(new NonEmptySeqObligation(fake, question, aF));
 
 		return obligations;
 	}
@@ -260,7 +260,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			IPOContextStack question) throws AnalysisException {
 		IProofObligationList obligations = new ProofObligationList();
 
-		obligations.add(new MapInjectivityComp(node, question));
+		obligations.add(new MapInjectivityComp(node, question, aF));
 
 		question.push(new POForAllPredicateContext(node));
 		obligations.addAll(node.getFirst().apply(mainVisitor, question));
@@ -276,7 +276,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 		if (finiteTest)
 			obligations.add(new FiniteMapObligation(node, node.getType(),
-					question));
+					question, aF));
 
 		PExp predicate = node.getPredicate();
 		if (predicate != null) {
@@ -387,7 +387,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 					}
 				}
 				obligations.add(new TupleSelectObligation(node.getTuple(), t,
-						question));
+						question, aF));
 			}
 		}
 
@@ -467,7 +467,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			IPOContextStack question) throws AnalysisException {
 		IProofObligationList obligations = node.getBind().apply(rootVisitor,
 				question);
-		obligations.add(new UniqueExistenceObligation(node, question));
+		obligations.add(new UniqueExistenceObligation(node, question, aF));
 
 		question.push(new POForAllContext(aF, node));
 		obligations.addAll(node.getPredicate().apply(mainVisitor, question));
@@ -528,7 +528,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 	public IProofObligationList caseALetBeStExp(ALetBeStExp node,
 			IPOContextStack question) throws AnalysisException {
 		IProofObligationList obligations = new ProofObligationList();
-		obligations.add(new LetBeExistsObligation(node, question));
+		obligations.add(new LetBeExistsObligation(node, question, aF));
 		obligations.addAll(node.getBind().apply(rootVisitor, question));
 
 		PExp suchThat = node.getSuchThat();
@@ -878,16 +878,16 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		IProofObligationList obligations = node.getExp().apply(mainVisitor,
 				question);
 		obligations.add(new org.overture.pog.obligation.NonEmptySetObligation(
-				node.getExp(), question));
+				node.getExp(), question, aF));
 		return obligations;
 	}
 
 	@Override
 	public IProofObligationList caseADistMergeUnaryExp(ADistMergeUnaryExp node,
-			IPOContextStack question) {
+			IPOContextStack question) throws AnalysisException {
 		IProofObligationList obligations = new ProofObligationList();
 		obligations.add(new MapInjectivityComp(node.getExp(),
-				question));
+				question, aF));
 		return obligations;
 	}
 
@@ -939,7 +939,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		if (!node.getMapType().getEmpty()) {
 			obligations
 					.add(new org.overture.pog.obligation.MapInverseObligation(
-							node, question));
+							node, question, aF));
 		}
 		return obligations;
 	}
@@ -976,7 +976,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 		if (!aF.createPTypeAssistant().isType(node.getExp().getType(),
 				ASeq1SeqType.class))
-			obligations.add(new NonEmptySeqObligation(node.getExp(), question));
+			obligations.add(new NonEmptySeqObligation(node.getExp(), question, aF));
 
 		return obligations;
 	}
@@ -997,7 +997,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 	@Override
 	public IProofObligationList defaultSBooleanBinaryExp(
-			SBooleanBinaryExp node, IPOContextStack question) {
+			SBooleanBinaryExp node, IPOContextStack question) throws AnalysisException {
 		IProofObligationList obligations = new ProofObligationList();
 		PExp lExp = node.getLeft();
 		PExp rExp = node.getRight();
@@ -1026,7 +1026,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 	@Override
 	public IProofObligationList caseACompBinaryExp(ACompBinaryExp node,
-			IPOContextStack question) {
+			IPOContextStack question) throws AnalysisException {
 
 		IProofObligationList obligations = new ProofObligationList();
 		PExp lExp = node.getLeft();
@@ -1044,7 +1044,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		}
 
 		if (aF.createPTypeAssistant().isMap(lType)) {
-			obligations.add(new MapComposeObligation(node, question));
+			obligations.add(new MapComposeObligation(node, question, aF));
 		}
 
 		return obligations;
@@ -1110,7 +1110,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		IProofObligationList obligations = handleBinaryExpression(node,
 				question);
 		obligations.add(new MapCompatibleObligation(node.getLeft(), node
-				.getRight(), question));
+				.getRight(), question, aF));
 		return obligations;
 	}
 
@@ -1173,7 +1173,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		if (aF.createPTypeAssistant().isSeq(lType)) {
 			obligations
 					.add(new org.overture.pog.obligation.SeqModificationObligation(
-							node, question));
+							node, question, aF));
 		}
 
 		return obligations;
@@ -1230,7 +1230,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 	@Override
 	public IProofObligationList caseAStarStarBinaryExp(AStarStarBinaryExp node,
-			IPOContextStack question) {
+			IPOContextStack question) throws AnalysisException {
 		IProofObligationList obligations = new ProofObligationList();
 
 		PExp lExp = node.getLeft();
@@ -1247,7 +1247,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		}
 
 		if (aF.createPTypeAssistant().isMap(lType)) {
-			obligations.add(new MapIterationObligation(node, question));
+			obligations.add(new MapIterationObligation(node, question, aF));
 		}
 
 		return obligations;
@@ -1425,7 +1425,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 		if (!neverZero(rExp)) {
 			obligations.add(new NonZeroObligation(node.getLocation(), rExp,
-					question));
+					question, aF));
 		}
 
 		return obligations;
@@ -1575,7 +1575,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		}
 
 		if (members.size() > 1)
-			obligations.add(new MapInjectivityEnum(node, question));
+			obligations.add(new MapInjectivityEnum(node, question, aF));
 
 		return obligations;
 	}
@@ -1641,7 +1641,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		if (finiteTest) {
 			obligations
 					.add(new org.overture.pog.obligation.FiniteSetObligation(
-							node, node.getSetType(), question));
+							node, node.getSetType(), question, aF));
 		}
 
 		if (predicate != null) {

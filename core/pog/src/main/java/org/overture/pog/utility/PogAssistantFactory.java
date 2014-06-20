@@ -1,9 +1,11 @@
 package org.overture.pog.utility;
 
 import org.overture.pog.pub.IPogAssistantFactory;
+import org.overture.pog.visitors.ILocaleExtractVisitor;
 import org.overture.pog.visitors.IVariableSubVisitor;
 import org.overture.pog.visitors.StateDesignatorNameGetter;
 import org.overture.pog.visitors.VariableSubVisitor;
+import org.overture.pog.visitors.VdmLocaleExtractor;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 
 //FIXME Add assistant Javadoc
@@ -38,6 +40,11 @@ public class PogAssistantFactory extends TypeCheckerAssistantFactory implements
 	public IVariableSubVisitor getVarSubVisitor()
 	{
 		return new VariableSubVisitor();
+	}
+	
+	@Override
+	public ILocaleExtractVisitor getLocaleExtractVisitor(){
+		return new VdmLocaleExtractor();
 	}
 
 }

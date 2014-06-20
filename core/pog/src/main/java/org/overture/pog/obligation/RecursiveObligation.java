@@ -49,6 +49,7 @@ import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
 import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
 
 public class RecursiveObligation extends ProofObligation
@@ -60,9 +61,9 @@ public class RecursiveObligation extends ProofObligation
 	private static final String RIGHT_MEASURE_NAME = "RME";
 
 	public RecursiveObligation(AExplicitFunctionDefinition def,
-			AApplyExp apply, IPOContextStack ctxt) throws AnalysisException
+			AApplyExp apply, IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
 	{
-		super(apply, POType.RECURSIVE, ctxt, apply.getLocation());
+		super(apply, POType.RECURSIVE, ctxt, apply.getLocation(), af);
 
 		PExp measureLeft_exp = buildMeasureLeft(def, apply);
 		PExp measureRight_exp = buildMeasureRight(def, apply);
@@ -74,9 +75,9 @@ public class RecursiveObligation extends ProofObligation
 
 	// Is this allowed? On hold for now
 	public RecursiveObligation(AImplicitFunctionDefinition def,
-			AApplyExp apply, IPOContextStack ctxt) throws AnalysisException
+			AApplyExp apply, IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
 	{
-		super(def, POType.RECURSIVE, ctxt, apply.getLocation());
+		super(def, POType.RECURSIVE, ctxt, apply.getLocation(), af);
 
 		PExp measureLeft_exp = buildMeasureLeft(def, apply);
 		PExp measureRight_exp = buildMeasureRight(def, apply);

@@ -49,6 +49,7 @@ import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
 
 public class SatisfiabilityObligation extends ProofObligation {
@@ -64,8 +65,8 @@ public class SatisfiabilityObligation extends ProofObligation {
 			"newself", null);
 
 	public SatisfiabilityObligation(AImplicitFunctionDefinition func,
-			IPOContextStack ctxt) throws AnalysisException {
-		super(func, POType.FUNC_SATISFIABILITY, ctxt, func.getLocation());
+			IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException {
+		super(func, POType.FUNC_SATISFIABILITY, ctxt, func.getLocation(), af);
 
 		/**
 		 * f: A * B -> R [pre ...] post ... [pre_f(a, b) =>] exists r:R &
@@ -119,9 +120,9 @@ public class SatisfiabilityObligation extends ProofObligation {
 	}
 
 	public SatisfiabilityObligation(AImplicitOperationDefinition op,
-			PDefinition stateDefinition, IPOContextStack ctxt)
+			PDefinition stateDefinition, IPOContextStack ctxt, IPogAssistantFactory af)
 			throws AnalysisException {
-		super(op, POType.OP_SATISFIABILITY, ctxt, op.getLocation());
+		super(op, POType.OP_SATISFIABILITY, ctxt, op.getLocation(), af);
 
 		/**
 		 * op: A * B ==> R [pre ...] post ... [pre_op(a, b, state) =>] exists
@@ -135,9 +136,9 @@ public class SatisfiabilityObligation extends ProofObligation {
 
 	}
 
-	public SatisfiabilityObligation(ATypeDefinition node, IPOContextStack ctxt)
+	public SatisfiabilityObligation(ATypeDefinition node, IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
 	{
-		super(node, POType.TYPE_INV_SAT, ctxt,node.getLocation());
+		super(node, POType.TYPE_INV_SAT, ctxt,node.getLocation(), af);
 		
 		AExistsExp exists_exp = new AExistsExp();
 		
@@ -156,9 +157,9 @@ public class SatisfiabilityObligation extends ProofObligation {
 	}
 
 	public SatisfiabilityObligation(AClassInvariantDefinition node,
-			IPOContextStack ctxt)
+			IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
 	{
-		super(node, POType.STATE_INV_SAT, ctxt, node.getLocation());
+		super(node, POType.STATE_INV_SAT, ctxt, node.getLocation(), af);
 		
 		AExistsExp exists_exp = new AExistsExp();
 		List<PMultipleBind> binds = stateInvBinds(node);

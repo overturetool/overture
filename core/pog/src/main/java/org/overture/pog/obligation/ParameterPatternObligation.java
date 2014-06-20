@@ -62,7 +62,7 @@ public class ParameterPatternObligation extends ProofObligation
 	public ParameterPatternObligation(AExplicitFunctionDefinition def,
 			IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
 	{
-		super(def, POType.FUNC_PATTERNS, ctxt, def.getLocation());
+		super(def, POType.FUNC_PATTERNS, ctxt, def.getLocation(),af);
 		this.assistantFactory = af;
 		// valuetree.setContext(ctxt.getContextNodeList());
 		// cannot clone getPredef as it can be null. We protect the ast in 
@@ -73,7 +73,7 @@ public class ParameterPatternObligation extends ProofObligation
 	public ParameterPatternObligation(AImplicitFunctionDefinition def,
 			IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
 	{
-		super(def, POType.FUNC_PATTERNS, ctxt, def.getLocation());
+		super(def, POType.FUNC_PATTERNS, ctxt, def.getLocation(), af);
 		this.assistantFactory = af;
 		// valuetree.setContext(ctxt.getContextNodeList());
 		valuetree.setPredicate(ctxt.getPredWithContext(generate(def.getPredef(), cloneListPatternList(assistantFactory.createAImplicitFunctionDefinitionAssistant().getParamPatternList(def)), cloneListType(((AFunctionType) def.getType()).getParameters()), ((AFunctionType) def.getType()).getResult().clone())));
@@ -82,7 +82,7 @@ public class ParameterPatternObligation extends ProofObligation
 	public ParameterPatternObligation(AExplicitOperationDefinition def,
 			IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
 	{
-		super(def, POType.OPERATION_PATTERNS, ctxt, def.getLocation());
+		super(def, POType.OPERATION_PATTERNS, ctxt, def.getLocation(), af);
 		this.assistantFactory = af;
 		// valuetree.setContext(ctxt.getContextNodeList());
 		valuetree.setPredicate(ctxt.getPredWithContext(generate(def.getPredef(), cloneListPatternList(assistantFactory.createAExplicitOperationDefinitionAssistant().getParamPatternList(def)), cloneListType(((AOperationType) def.getType()).getParameters()), ((AOperationType) def.getType()).getResult().clone())));
@@ -91,7 +91,7 @@ public class ParameterPatternObligation extends ProofObligation
 	public ParameterPatternObligation(AImplicitOperationDefinition def,
 			IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
 	{
-		super(def, POType.OPERATION_PATTERNS, ctxt, def.getLocation());
+		super(def, POType.OPERATION_PATTERNS, ctxt, def.getLocation(), af);
 		this.assistantFactory = af;
 		// valuetree.setContext(ctxt.getContextNodeList());
 		valuetree.setPredicate(ctxt.getPredWithContext(generate(def.getPredef(), cloneListPatternList(assistantFactory.createAImplicitOperationDefinitionAssistant().getListParamPatternList(def)), cloneListType(((AOperationType) def.getType()).getParameters()), ((AOperationType) def.getType()).getResult().clone())));

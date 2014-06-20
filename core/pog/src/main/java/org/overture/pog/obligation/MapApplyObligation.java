@@ -30,6 +30,7 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.statements.PStateDesignator;
 import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
 import org.overture.pog.visitors.StateDesignatorToExpVisitor;
 
@@ -37,9 +38,9 @@ public class MapApplyObligation extends ProofObligation
 {
 	private static final long serialVersionUID = -1385749421110721860L;
 
-	public MapApplyObligation(PExp root, PExp arg, IPOContextStack ctxt)
+	public MapApplyObligation(PExp root, PExp arg, IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
 	{
-		super(root, POType.MAP_APPLY, ctxt, root.getLocation());
+		super(root, POType.MAP_APPLY, ctxt, root.getLocation(),af);
 		
 		/* <arg> in set dom <root> */
 		AMapDomainUnaryExp dom_exp = new AMapDomainUnaryExp();
@@ -51,10 +52,10 @@ public class MapApplyObligation extends ProofObligation
 		valuetree.setPredicate(ctxt.getPredWithContext(inSetExp));
 	}
 
-	public MapApplyObligation(PStateDesignator root, PExp arg, IPOContextStack ctxt)
+	public MapApplyObligation(PStateDesignator root, PExp arg, IPOContextStack ctxt, IPogAssistantFactory af)
 		throws AnalysisException
 	{
-		super(root, POType.MAP_APPLY, ctxt, root.getLocation());
+		super(root, POType.MAP_APPLY, ctxt, root.getLocation(),af);
 		AMapDomainUnaryExp dom_exp = new AMapDomainUnaryExp();
 		dom_exp.setExp(root.clone().apply(new StateDesignatorToExpVisitor()));
 		

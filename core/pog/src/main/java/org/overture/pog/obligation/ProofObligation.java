@@ -53,6 +53,7 @@ import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.PType;
 import org.overture.pof.AVdmPoTree;
 import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.IProofObligation;
 import org.overture.pog.pub.POStatus;
 import org.overture.pog.pub.POType;
@@ -80,10 +81,12 @@ abstract public class ProofObligation implements IProofObligation, Serializable
 	public int number;
 	private final UniqueNameGenerator generator;
 	private ILexLocation location;
+	private String locale;
 
 	public ProofObligation(INode rootnode, POType kind,
-			IPOContextStack context, ILexLocation location)
+			IPOContextStack context, ILexLocation location, IPogAssistantFactory af) throws AnalysisException
 	{
+		this.locale = rootnode.apply(af.getLocaleExtractVisitor());
 		this.rootNode = rootnode;
 		this.location = location;
 		this.kind = kind;
@@ -92,20 +95,16 @@ abstract public class ProofObligation implements IProofObligation, Serializable
 		this.valuetree = new AVdmPoTree();
 		this.generator = new UniqueNameGenerator(rootNode);
 	}
-
-	public ProofObligation(INode rootNode, String name, AVdmPoTree valuetree,
-			POStatus status, POType kind, int number, int var,
-			ILexLocation location)
+	
+	@Override
+	public String getLocale()
 	{
-		super();
-		this.rootNode = rootNode;
-		this.location = location;
-		this.name = name;
-		this.valuetree = valuetree;
-		this.status = status;
-		this.kind = kind;
-		this.number = number;
-		this.generator = new UniqueNameGenerator(rootNode);
+		return locale;
+	}
+	
+	public void setLocale(String locale)
+	{
+		this.locale = locale;
 	}
 
 	public UniqueNameGenerator getUniqueGenerator()

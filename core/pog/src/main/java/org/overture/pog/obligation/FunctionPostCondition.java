@@ -26,6 +26,7 @@ package org.overture.pog.obligation;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.expressions.AApplyExp;
@@ -49,9 +50,9 @@ public class FunctionPostCondition extends ProofObligation
 	private static final long serialVersionUID = 1L;
 
 	public FunctionPostCondition(AExplicitFunctionDefinition func,
-			IPOContextStack ctxt, IPogAssistantFactory assistantFactory)
+			IPOContextStack ctxt, IPogAssistantFactory assistantFactory) throws AnalysisException
 	{
-		super(func, POType.FUNC_POST_CONDITION, ctxt, func.getLocation());
+		super(func, POType.FUNC_POST_CONDITION, ctxt, func.getLocation(),assistantFactory);
 
 		List<PExp> params = new LinkedList<PExp>();
 		for (List<PPattern> pl : func.getParamPatternList())
@@ -84,9 +85,9 @@ public class FunctionPostCondition extends ProofObligation
 	}
 
 	public FunctionPostCondition(AImplicitFunctionDefinition func,
-			IPOContextStack ctxt, IPogAssistantFactory assistantFactory)
+			IPOContextStack ctxt, IPogAssistantFactory assistantFactory) throws AnalysisException
 	{
-		super(func, POType.FUNC_POST_CONDITION, ctxt, func.getLocation());
+		super(func, POType.FUNC_POST_CONDITION, ctxt, func.getLocation(),assistantFactory);
 
 		List<PExp> params = new LinkedList<PExp>();
 
