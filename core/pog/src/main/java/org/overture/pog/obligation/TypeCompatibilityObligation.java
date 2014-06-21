@@ -86,7 +86,7 @@ import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
 import org.overture.typechecker.TypeComparator;
 
-public class TypeCompatibility extends ProofObligation
+public class TypeCompatibilityObligation extends ProofObligation
 {
 	private static final long serialVersionUID = 1108478780469068741L;
 	
@@ -105,11 +105,11 @@ public class TypeCompatibility extends ProofObligation
 	 *            Context Information
 	 * @return
 	 */
-	public static TypeCompatibility newInstance(PExp exp, PType etype,
+	public static TypeCompatibilityObligation newInstance(PExp exp, PType etype,
 			PType atype, IPOContextStack ctxt, IPogAssistantFactory assistantFactory)
 	{
 
-		TypeCompatibility sto = new TypeCompatibility(exp, etype, atype, ctxt,assistantFactory);
+		TypeCompatibilityObligation sto = new TypeCompatibilityObligation(exp, etype, atype, ctxt,assistantFactory);
 		if (sto.getValueTree() != null)
 		{
 			return sto;
@@ -118,11 +118,11 @@ public class TypeCompatibility extends ProofObligation
 		return null;
 	}
 
-	public static TypeCompatibility newInstance(
+	public static TypeCompatibilityObligation newInstance(
 			AExplicitFunctionDefinition func, PType etype, PType atype,
 			IPOContextStack ctxt, IPogAssistantFactory assistantFactory)
 	{
-		TypeCompatibility sto = new TypeCompatibility(func, etype, atype, ctxt, assistantFactory);
+		TypeCompatibilityObligation sto = new TypeCompatibilityObligation(func, etype, atype, ctxt, assistantFactory);
 		if (sto.getValueTree() != null)
 		{
 			return sto;
@@ -131,11 +131,11 @@ public class TypeCompatibility extends ProofObligation
 		return null;
 	}
 
-	public static TypeCompatibility newInstance(
+	public static TypeCompatibilityObligation newInstance(
 			AImplicitFunctionDefinition func, PType etype, PType atype,
 			IPOContextStack ctxt, IPogAssistantFactory assistantFactory)
 	{
-		TypeCompatibility sto = new TypeCompatibility(func, etype, atype, ctxt, assistantFactory);
+		TypeCompatibilityObligation sto = new TypeCompatibilityObligation(func, etype, atype, ctxt, assistantFactory);
 		if (sto.getValueTree() != null)
 		{
 			return sto;
@@ -144,11 +144,11 @@ public class TypeCompatibility extends ProofObligation
 		return null;
 	}
 
-	public static TypeCompatibility newInstance(
+	public static TypeCompatibilityObligation newInstance(
 			AExplicitOperationDefinition def, PType actualResult,
 			IPOContextStack ctxt, IPogAssistantFactory assistantFactory)
 	{
-		TypeCompatibility sto = new TypeCompatibility(def, actualResult, ctxt,assistantFactory);
+		TypeCompatibilityObligation sto = new TypeCompatibilityObligation(def, actualResult, ctxt,assistantFactory);
 		if (sto.getValueTree() != null)
 		{
 			return sto;
@@ -157,11 +157,11 @@ public class TypeCompatibility extends ProofObligation
 		return null;
 	}
 
-	public static TypeCompatibility newInstance(
+	public static TypeCompatibilityObligation newInstance(
 			AImplicitOperationDefinition def, PType actualResult,
 			IPOContextStack ctxt, IPogAssistantFactory af)
 	{
-		TypeCompatibility sto = new TypeCompatibility(def, actualResult, ctxt,af);
+		TypeCompatibilityObligation sto = new TypeCompatibilityObligation(def, actualResult, ctxt,af);
 		if (sto.getValueTree() != null)
 		{
 			return sto;
@@ -182,7 +182,7 @@ public class TypeCompatibility extends ProofObligation
 	 * @param actualtype The actual type
 	 * @param ctxt Context Information
 	 */
-	protected TypeCompatibility(INode root, ILexLocation loc, PExp resultexp,
+	protected TypeCompatibilityObligation(INode root, ILexLocation loc, PExp resultexp,
 			PType deftype, PType actualtype
 			, IPOContextStack ctxt, IPogAssistantFactory assistantFactory)
 	{
@@ -191,7 +191,7 @@ public class TypeCompatibility extends ProofObligation
 		valuetree.setPredicate(ctxt.getPredWithContext(oneType(false, resultexp, deftype, actualtype)));
 	}
 	
-	private TypeCompatibility(PExp exp, PType etype, PType atype,
+	private TypeCompatibilityObligation(PExp exp, PType etype, PType atype,
 			IPOContextStack ctxt, IPogAssistantFactory assistantFactory)
 	{
 		super(exp, POType.TYPE_COMP, ctxt, exp.getLocation());
@@ -208,7 +208,7 @@ public class TypeCompatibility extends ProofObligation
 		}
 	}
 
-	private TypeCompatibility(AExplicitFunctionDefinition func, PType etype,
+	private TypeCompatibilityObligation(AExplicitFunctionDefinition func, PType etype,
 			PType atype, IPOContextStack ctxt , IPogAssistantFactory assistantFactory)
 	{
 		super(func, POType.TYPE_COMP, ctxt, func.getLocation());
@@ -237,7 +237,7 @@ public class TypeCompatibility extends ProofObligation
 		valuetree.setPredicate(ctxt.getPredWithContext(oneType(false, body, etype.clone(), atype.clone())));
 	}
 
-	private TypeCompatibility(AImplicitFunctionDefinition func, PType etype,
+	private TypeCompatibilityObligation(AImplicitFunctionDefinition func, PType etype,
 			PType atype, IPOContextStack ctxt, IPogAssistantFactory assistantFactory)
 	{
 		super(func, POType.TYPE_COMP, ctxt, func.getLocation());
@@ -269,7 +269,7 @@ public class TypeCompatibility extends ProofObligation
 		valuetree.setPredicate(ctxt.getPredWithContext(oneType(false, body, etype.clone(), atype.clone())));
 	}
 
-	private TypeCompatibility(AExplicitOperationDefinition def,
+	private TypeCompatibilityObligation(AExplicitOperationDefinition def,
 			PType actualResult, IPOContextStack ctxt, IPogAssistantFactory assistantFactory)
 	{
 		super(def, POType.TYPE_COMP, ctxt, def.getLocation());
@@ -281,7 +281,7 @@ public class TypeCompatibility extends ProofObligation
 		valuetree.setPredicate(ctxt.getPredWithContext(oneType(false, result, ((AOperationType) def.getType()).getResult().clone(), actualResult.clone())));
 	}
 
-	private TypeCompatibility(AImplicitOperationDefinition def,
+	private TypeCompatibilityObligation(AImplicitOperationDefinition def,
 			PType actualResult, IPOContextStack ctxt, IPogAssistantFactory assistantFactory)
 	{
 		super(def, POType.TYPE_COMP, ctxt, def.getLocation());

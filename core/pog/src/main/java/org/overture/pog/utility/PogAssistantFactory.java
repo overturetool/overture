@@ -5,23 +5,23 @@ import org.overture.pog.visitors.IVariableSubVisitor;
 import org.overture.pog.visitors.StateDesignatorNameGetter;
 import org.overture.pog.visitors.VariableSubVisitor;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
+
 //FIXME Add assistant Javadoc
-/** 
- * THe assistant factory for the pog. It provides all the functionality of 
- * the overture typechecker (maybe that is what we parameterize?)
+/**
+ * THe assistant factory for the pog. It provides all the functionality of the overture typechecker (maybe that is what
+ * we parameterize?) PLus any new pog bits!
  * 
- * PLus any new pog bits!
  * @author ldc
- *
  */
-public class PogAssistantFactory extends TypeCheckerAssistantFactory implements IPogAssistantFactory
+public class PogAssistantFactory extends TypeCheckerAssistantFactory implements
+		IPogAssistantFactory
 {
 	@Override
 	public PDefinitionAssistantPOG createPDefinitionAssistant()
 	{
 		return new PDefinitionAssistantPOG(this);
 	}
-	
+
 	@Override
 	public ACaseAlternativeAssistantPOG createACaseAlternativeAssistant()
 	{
@@ -29,7 +29,7 @@ public class PogAssistantFactory extends TypeCheckerAssistantFactory implements 
 	}
 
 	@Override
-	public StateDesignatorNameGetter createStateDesignatorNameGetter()
+	public StateDesignatorNameGetter getStateDesignatorNameGetter()
 	{
 		return new StateDesignatorNameGetter();
 	}
@@ -39,4 +39,5 @@ public class PogAssistantFactory extends TypeCheckerAssistantFactory implements 
 	{
 		return new VariableSubVisitor();
 	}
+
 }

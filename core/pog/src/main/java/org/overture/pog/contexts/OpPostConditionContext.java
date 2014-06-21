@@ -28,46 +28,47 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.ACallStm;
 import org.overture.ast.statements.AExternalClause;
 import org.overture.pog.pub.IPOContext;
+import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.utility.Substitution;
-import org.overture.pog.utility.UniqueNameGenerator;
 import org.overture.pog.visitors.IVariableSubVisitor;
 
-public class OpPostConditionContext extends POContext implements IPOContext
+public class OpPostConditionContext extends StatefulContext implements
+		IPOContext
 {
 
-	AForAllExp forAll_exp;
+	AForAllExp forall_exp;
 	PExp pred;
-	UniqueNameGenerator gen;
-	List<Substitution> subs;
 	IVariableSubVisitor visitor;
 
 	public OpPostConditionContext(AExplicitFunctionDefinition postDef,
 			ACallStm stm, SOperationDefinitionBase calledOp,
-			IPogAssistantFactory af, UniqueNameGenerator gen)
+			IPogAssistantFactory af, IPOContextStack ctxt)
 	{
-		this.gen = gen;
+		super(ctxt);
+		this.gen = ctxt.getGenerator();
 		this.subs = new LinkedList<Substitution>();
-		this.forAll_exp = getChangedVarsExp(postDef, calledOp);
+		this.forall_exp = getChangedVarsExp(postDef, calledOp);
 		this.pred = spellCondition(postDef, af, stm.getArgs());
 		this.visitor = af.getVarSubVisitor();
 	}
 
 	public OpPostConditionContext(AExplicitFunctionDefinition postDef,
 			AApplyExp exp, SOperationDefinitionBase calledOp,
-			IPogAssistantFactory af, UniqueNameGenerator gen)
+			IPogAssistantFactory af, IPOContextStack ctxt)
 	{
+		super(ctxt);
 		this.visitor = af.getVarSubVisitor();
+		this.gen = ctxt.getGenerator();
 		this.subs = new LinkedList<Substitution>();
-		this.gen = gen;
-		this.forAll_exp = getChangedVarsExp(postDef, calledOp);
+		this.forall_exp = getChangedVarsExp(postDef, calledOp);
 		this.pred = spellCondition(postDef, af, exp.getArgs());
 	}
 
 	@Override
 	public String toString()
 	{
-		return forAll_exp.toString() + pred.toString();
+		return forall_exp.toString() + pred.toString();
 	}
 
 	private AForAllExp getChangedVarsExp(AExplicitFunctionDefinition postDef,
@@ -160,7 +161,7 @@ public class OpPostConditionContext extends POContext implements IPOContext
 		return r;
 	}
 
-	PMultipleBind introduceFreshVar(AInstanceVariableDefinition var)
+	private PMultipleBind introduceFreshVar(AInstanceVariableDefinition var)
 	{
 		ATypeMultipleBind r = new ATypeMultipleBind();
 
@@ -179,14 +180,26 @@ public class OpPostConditionContext extends POContext implements IPOContext
 
 		Substitution sub = new Substitution(var.getName().clone(), newVar);
 		subs.add(sub);
+		
+		AVariableExp old_var = last_vars.get(var.getName());
+		if (old_var != null)
+		{
+			Substitution sub_old = new Substitution(var.getOldname().toString(), old_var);
+			subs.add(sub_old);
+		}
+		else{
+			AVariableExp var_exp = new AVariableExp();
+			var_exp.setName(var.getName().clone());
+			var_exp.setType(var.getType().clone());
+			var_exp.setOriginal(var.getName().getName());
+			Substitution sub_old = new Substitution(var.getOldname().toString(), var_exp);
+			subs.add(sub_old);
+		}
+
+		last_vars.put(var.getName(), newVar);
+		
 
 		return r;
-	}
-
-	@Override
-	public boolean isStateful()
-	{
-		return true;
 	}
 
 	@Override
@@ -198,27 +211,35 @@ public class OpPostConditionContext extends POContext implements IPOContext
 	@Override
 	public PExp getContextNode(PExp stitch)
 	{
-		PExp implies_exp = AstExpressionFactory.newAImpliesBooleanBinaryExp(pred.clone(), stitch.clone());
-		for (Substitution sub : subs)
+		try
 		{
-			try
+			if (first)
+			{
+				first = false;
+			}
+			PExp implies_exp = AstExpressionFactory.newAImpliesBooleanBinaryExp(pred.clone(), stitch.clone());
+
+			for (Substitution sub : subs)
 			{
 				implies_exp = implies_exp.apply(visitor, sub);
-			} catch (AnalysisException e)
-			{
-				// FIXME consider handling of exceptions inside final context construction
-				e.printStackTrace();
 			}
-		}
-		if (forAll_exp.getBindList().size() > 0)
-		{
 
-			forAll_exp.setPredicate(implies_exp);
-			return forAll_exp.clone();
-		} else
+
+			if (forall_exp.getBindList().size() > 0)
+			{
+
+				forall_exp.setPredicate(implies_exp);
+				return forall_exp.clone();
+			} else
+			{
+				return implies_exp.clone();
+			}
+		} catch (AnalysisException e)
 		{
-			return implies_exp.clone();
+			// FIXME consider handling of exceptions inside final context construction
+			e.printStackTrace();
 		}
+		return null;
 	}
 
 	private PExp spellCondition(AExplicitFunctionDefinition def,

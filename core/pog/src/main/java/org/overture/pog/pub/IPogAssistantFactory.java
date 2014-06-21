@@ -22,8 +22,8 @@ public interface IPogAssistantFactory extends ITypeCheckerAssistantFactory
 		 */
 		PDefinitionAssistantPOG createPDefinitionAssistant();
 		
-		
-		StateDesignatorNameGetter createStateDesignatorNameGetter();
+		StateDesignatorNameGetter getStateDesignatorNameGetter();
 		IVariableSubVisitor getVarSubVisitor();
+		
 		
 }

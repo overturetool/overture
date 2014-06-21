@@ -40,7 +40,7 @@ import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
 
 
-public class FuncPostConditionObligation extends ProofObligation
+public class FunctionPostCondition extends ProofObligation
 {
 
 	/**
@@ -48,7 +48,7 @@ public class FuncPostConditionObligation extends ProofObligation
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public FuncPostConditionObligation(AExplicitFunctionDefinition func,
+	public FunctionPostCondition(AExplicitFunctionDefinition func,
 			IPOContextStack ctxt, IPogAssistantFactory assistantFactory)
 	{
 		super(func, POType.FUNC_POST_CONDITION, ctxt, func.getLocation());
@@ -83,7 +83,7 @@ public class FuncPostConditionObligation extends ProofObligation
 		valuetree.setPredicate(ctxt.getPredWithContext(generatePredicate(func.getPredef(), func.getPostdef().clone(), params, body)));
 	}
 
-	public FuncPostConditionObligation(AImplicitFunctionDefinition func,
+	public FunctionPostCondition(AImplicitFunctionDefinition func,
 			IPOContextStack ctxt, IPogAssistantFactory assistantFactory)
 	{
 		super(func, POType.FUNC_POST_CONDITION, ctxt, func.getLocation());

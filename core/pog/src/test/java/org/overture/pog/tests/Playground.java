@@ -39,9 +39,11 @@ public class Playground {
 
 		// switch this flag to update a test result file
 		boolean write_result = false;
+//		write_result = true;
 
 		// switch this flag to print the stored results
 		boolean show_result = false;
+//		show_result = true;
 		
 		String model = "src/test/resources/adhoc/sandbox.vdmpp";
 		String result = "src/test/resources/adhoc/sandbox.RESULT";
@@ -53,7 +55,7 @@ public class Playground {
 
 		System.out.println("ACTUAL POs:");
 		for (IProofObligation po : ipol) {
-			System.out.println(po.getKindString() + " / " + po.getValue());
+			System.out.println(po.getKindString() + " / " + po.getFullPredString());
 		}
 
 		if (write_result) {
@@ -83,21 +85,21 @@ public class Playground {
 
 	}
 
-	private void update(IProofObligationList ipol, String resultpath)
+	private void update(IProofObligationList ipol, String resultPath)
 			throws AnalysisException, IOException, URISyntaxException {
 
 		List<PoResult> prl = new LinkedList<PoResult>();
 
 		for (IProofObligation po : ipol) {
-			prl.add(new PoResult(po.getKindString(), po.getValue()));
+			prl.add(new PoResult(po.getKindString(), po.getFullPredString()));
 		}
 
 		Gson gson = new Gson();
 		String json = gson.toJson(prl);
 
-		IOUtils.write(json, new FileOutputStream(resultpath));
+		IOUtils.write(json, new FileOutputStream(resultPath));
 		
-		System.out.println("\n" +resultpath + " file updated \n");
+		System.out.println("\n" +resultPath + " file updated \n");
 
 	}
 

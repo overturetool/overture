@@ -33,23 +33,34 @@ import org.overture.pog.pub.IPOContext;
 abstract public class POContext implements IPOContext
 {
 	abstract public String getContext();
-	//abstract public List<INode> getContextNodes(int n);
+
+	// abstract public List<INode> getContextNodes(int n);
 	abstract public PExp getContextNode(PExp stitch);
-	
+
 	private Map<PExp, PType> knownTypes = new HashMap<PExp, PType>();
 
-	
 	@Override
 	/**
 	 * Any contexts that can be preserved regardless of state need not override this
 	 */
-	public boolean isStateful() {
+	public boolean isStateful()
+	{
 		return false;
 	}
-	
+
+	/**
+	 * Any context that is not stateful need no override this method
+	 * as it is not used.
+	 */
+	@Override
+	public void lastStmt()
+	{
+			// do nothing. Only relevant for statefuls
+	}
+
 	public String getName()
 	{
-		return "";		// Overridden in PONameContext
+		return ""; // Overridden in PONameContext
 	}
 
 	public boolean isScopeBoundary()
@@ -66,6 +77,5 @@ abstract public class POContext implements IPOContext
 	{
 		return knownTypes.get(exp);
 	}
-	
 
 }

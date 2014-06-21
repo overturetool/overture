@@ -38,13 +38,13 @@ import org.overture.ast.patterns.PMultipleBind;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.POType;
 
-public class MapSeqOfCompatibleObligation extends ProofObligation
+public class MapInjectivityEnum extends ProofObligation
 {
 	private static final long serialVersionUID = 2042036674338877124L;
 
-	public MapSeqOfCompatibleObligation(AMapEnumMapExp exp, IPOContextStack ctxt)
+	public MapInjectivityEnum(AMapEnumMapExp exp, IPOContextStack ctxt)
 	{
-		super(exp, POType.MAP_SEQ_OF_COMPATIBLE, ctxt, exp.getLocation());
+		super(exp, POType.MAP_INJ_ENUM, ctxt, exp.getLocation());
 		
 		/**
 		 * This obligation applies to a map enumeration. Given a map enum of the form

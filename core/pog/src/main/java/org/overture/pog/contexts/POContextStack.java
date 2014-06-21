@@ -24,9 +24,12 @@
 package org.overture.pog.contexts;
 
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.Stack;
 
+import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.types.PType;
 import org.overture.pog.pub.IPOContext;
 import org.overture.pog.pub.IPOContextStack;
@@ -109,7 +112,7 @@ public class POContextStack extends Stack<IPOContext> implements
 			{
 				result.append(prefix);
 				result.append(name);
-				prefix = ", ";
+				prefix = "-";
 			}
 		}
 
@@ -199,13 +202,33 @@ public class POContextStack extends Stack<IPOContext> implements
 	@Override
 	public void clearStateContexts()
 	{
-		for (int i = 0; i < this.elementCount; i++)
+		int len = size();
+
+		for (int i = len - 1; i > 0; i--)
 		{
 			if (this.get(i).isStateful())
 			{
-				this.remove(0);
+				removeElementAt(i);
+			}
+		}
+
+	}
+
+	@Override
+	public Map<ILexNameToken, AVariableExp> getLast_Vars()
+	{
+		ListIterator<IPOContext> p = this.listIterator(size());
+
+		while (p.hasPrevious())
+		{
+			IPOContext c = p.previous();
+			if (c instanceof StatefulContext)
+			{
+				return ((StatefulContext) c).getLast_vars();
 			}
 
 		}
+		return null;
 	}
+
 }

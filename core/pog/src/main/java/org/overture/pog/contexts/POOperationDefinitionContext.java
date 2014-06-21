@@ -35,6 +35,7 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.AForAllExp;
 import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.AIdentifierPattern;
@@ -57,9 +58,9 @@ public class POOperationDefinitionContext extends POContext
 	final PDefinition opDef;
 
 	protected POOperationDefinitionContext(ILexNameToken name,
-			AOperationType deftype, List<PPattern> paramPatternList,
+			AOperationType deftype, LinkedList<PPattern> paramPatternList,
 			boolean addPrecond, PExp precondition, PDefinition stateDefinition,
-			AImplicitOperationDefinition opDef)
+			PDefinition opDef)
 	{
 		super();
 		this.name = name;
@@ -73,7 +74,7 @@ public class POOperationDefinitionContext extends POContext
 	
 	public POOperationDefinitionContext(
 			AExplicitOperationDefinition definition, boolean precond,
-			PDefinition stateDefinition,IPogAssistantFactory assistantFactory )
+			PDefinition stateDefinition)
 	{
 		this.name = definition.getName();
 		this.deftype = (AOperationType) definition.getType();
@@ -107,19 +108,21 @@ public class POOperationDefinitionContext extends POContext
 		this.opDef = definition;
 	}
 
+	protected boolean anyBinds(){
+		return !deftype.getParameters().isEmpty();
+	}
+	
 	@Override
 	public PExp getContextNode(PExp stitch)
 	{
-		if (!deftype.getParameters().isEmpty())
+		if (anyBinds())
 		{
 			AForAllExp forAllExp = new AForAllExp();
 			forAllExp.setBindList(makeBinds());
 
 			if (addPrecond && precondition != null)
 			{
-				AImpliesBooleanBinaryExp impliesExp = new AImpliesBooleanBinaryExp();
-				impliesExp.setLeft(precondition);
-				impliesExp.setRight(stitch);
+				AImpliesBooleanBinaryExp impliesExp = AstExpressionFactory.newAImpliesBooleanBinaryExp(precondition.clone(), stitch);
 				forAllExp.setPredicate(impliesExp);
 			} else
 			{
@@ -128,6 +131,13 @@ public class POOperationDefinitionContext extends POContext
 
 			return forAllExp;
 
+		}
+		else{
+			if (addPrecond && precondition != null)
+			{
+				AImpliesBooleanBinaryExp impliesExp = AstExpressionFactory.newAImpliesBooleanBinaryExp(precondition.clone(), stitch);
+				return impliesExp;
+			}
 		}
 		return stitch;
 
