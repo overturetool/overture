@@ -526,7 +526,7 @@ public class TypeCompatibilityObligation extends ProofObligation
 
 				for (PExp m : set.getMembers())
 				{
-					PExp s = oneType(true, m, stype.getSetof(), it.next());
+					PExp s = oneType(true, m.clone(), stype.getSetof(), it.next().clone());
 
 					if (s != null)
 					{
