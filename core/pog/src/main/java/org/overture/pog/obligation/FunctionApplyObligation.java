@@ -71,8 +71,6 @@ public class FunctionApplyObligation extends ProofObligation
 			stitch = pred.clone();
 			valuetree.setPredicate(ctxt.getPredWithContext(pred));
 		}
-		
-//		valuetree.setContext(ctxt.getContextNodeList());
 	}
 	
 }
