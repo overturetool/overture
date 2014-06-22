@@ -90,7 +90,7 @@ public class StateInvariantObligation extends ProofObligation
 			IPOContextStack ctxt, IPogAssistantFactory af)
 			throws AnalysisException
 	{
-		super(def, POType.STATE_INV, ctxt, def.getLocation(), af);
+		super(def, POType.STATE_INV_INIT, ctxt, def.getLocation(), af);
 		assistantFactory = af;
 
 		// After instance variable initializers
