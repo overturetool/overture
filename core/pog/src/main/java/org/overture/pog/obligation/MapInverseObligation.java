@@ -56,8 +56,7 @@ public class MapInverseObligation extends ProofObligation
 		inMap_type.setTo(exp.getMapType().getTo().clone());
 		is_Exp.setBasicType(inMap_type);
 		
-		
-//		valuetree.setContext(ctxt.getContextNodeList());
+		stitch = is_Exp;
 		valuetree.setPredicate(ctxt.getPredWithContext(is_Exp));
 
 	}

@@ -51,7 +51,8 @@ public class NonZeroObligation extends ProofObligation
 		ANotEqualBinaryExp notEqualsExp = AstExpressionFactory.newANotEqualBinaryExp(exp.clone(), zeroExp);
 		
 		
-//		valuetree.setContext(ctxt.getContextNodeList());
+
+		stitch = notEqualsExp;
 		valuetree.setPredicate(ctxt.getPredWithContext(notEqualsExp));
 	}
 }

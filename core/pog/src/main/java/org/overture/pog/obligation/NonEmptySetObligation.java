@@ -54,6 +54,7 @@ public class NonEmptySetObligation extends ProofObligation
 		
 		ANotEqualBinaryExp notEqualsExp = AstExpressionFactory.newANotEqualBinaryExp(exp.clone(), setExp);
 		
+		stitch = notEqualsExp;
 		valuetree.setPredicate(ctxt.getPredWithContext(notEqualsExp));
 	}
 }

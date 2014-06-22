@@ -55,7 +55,7 @@ public class SeqModificationObligation extends ProofObligation
 		subsetExp.setLeft(domExp);
 		subsetExp.setRight(indsExp);
 		
-//		valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(subsetExp));
+		stitch = subsetExp;
+		valuetree.setPredicate(ctxt.getPredWithContext(stitch));
 	}
 }

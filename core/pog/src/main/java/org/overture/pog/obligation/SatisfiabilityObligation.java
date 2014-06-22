@@ -111,8 +111,10 @@ public class SatisfiabilityObligation extends ProofObligation {
 			implies.setLeft(preApply);
 			implies.setOp(new LexKeywordToken(VDMToken.IMPLIES, null));
 			implies.setRight(existsExp);
+			stitch = implies;
 			valuetree.setPredicate(ctxt.getPredWithContext(implies));
 		} else {
+			stitch = existsExp;
 			valuetree.setPredicate(ctxt.getPredWithContext(existsExp));
 		}
 
@@ -132,6 +134,7 @@ public class SatisfiabilityObligation extends ProofObligation {
 
 		PExp predExp = buildPredicate(op, stateDefinition);
 
+		stitch = predExp;
 		valuetree.setPredicate(ctxt.getPredWithContext(predExp));
 
 	}
@@ -153,6 +156,7 @@ public class SatisfiabilityObligation extends ProofObligation {
 		exists_exp.setBindList(binds);		
 		exists_exp.setPredicate(node.getInvExpression().clone());
 	
+		stitch = exists_exp;
 		valuetree.setPredicate(ctxt.getPredWithContext(exists_exp));
 	}
 
@@ -167,6 +171,7 @@ public class SatisfiabilityObligation extends ProofObligation {
 		exists_exp.setBindList(binds);		
 		exists_exp.setPredicate(node.getExpression().clone());
 	
+		stitch = exists_exp;
 		valuetree.setPredicate(ctxt.getPredWithContext(exists_exp));
 	}
 

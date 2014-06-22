@@ -70,7 +70,7 @@ public class LetBeExistsObligation extends ProofObligation
 			exists.setPredicate(replacementNothing_exp);		
 		}
 
-//		valuetree.setContext(ctxt.getContextNodeList());
+		stitch=exists;
 		valuetree.setPredicate(ctxt.getPredWithContext(exists));
 	}
 
@@ -87,8 +87,8 @@ public class LetBeExistsObligation extends ProofObligation
 		{
 			exists.setPredicate(stmt.getSuchThat().clone());
 		}
-
-//		valuetree.setContext(ctxt.getContextNodeList());
+		
+		stitch=exists;
 		valuetree.setPredicate(ctxt.getPredWithContext(exists));
 	}
 }

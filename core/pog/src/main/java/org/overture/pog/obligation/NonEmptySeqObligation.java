@@ -41,19 +41,19 @@ public class NonEmptySeqObligation extends ProofObligation
 	 */
 	private static final long serialVersionUID = -8245417295117901422L;
 
-	public NonEmptySeqObligation(PExp exp, IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
+	public NonEmptySeqObligation(PExp exp, IPOContextStack ctxt,
+			IPogAssistantFactory af) throws AnalysisException
 	{
 		super(exp, POType.NON_EMPTY_SEQ, ctxt, exp.getLocation(), af);
-		
+
 		// exp <> []
-		
-		
+
 		ASeqEnumSeqExp seqExp = new ASeqEnumSeqExp();
 		seqExp.setMembers(new LinkedList<PExp>()); // empty list
-				
-		ANotEqualBinaryExp notEqualsExp = AstExpressionFactory.newANotEqualBinaryExp(exp.clone(),seqExp);
-		
-//		valuetree.setContext(ctxt.getContextNodeList());
+
+		ANotEqualBinaryExp notEqualsExp = AstExpressionFactory.newANotEqualBinaryExp(exp.clone(), seqExp);
+
+		stitch = notEqualsExp;
 		valuetree.setPredicate(ctxt.getPredWithContext(notEqualsExp));
 	}
 }

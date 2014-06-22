@@ -38,31 +38,32 @@ public class MapApplyObligation extends ProofObligation
 {
 	private static final long serialVersionUID = -1385749421110721860L;
 
-	public MapApplyObligation(PExp root, PExp arg, IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
+	public MapApplyObligation(PExp root, PExp arg, IPOContextStack ctxt,
+			IPogAssistantFactory af) throws AnalysisException
 	{
-		super(root, POType.MAP_APPLY, ctxt, root.getLocation(),af);
-		
+		super(root, POType.MAP_APPLY, ctxt, root.getLocation(), af);
+
 		/* <arg> in set dom <root> */
 		AMapDomainUnaryExp dom_exp = new AMapDomainUnaryExp();
 		dom_exp.setExp(root.clone());
-		
+
 		AInSetBinaryExp inSetExp = AstExpressionFactory.newAInSetBinaryExp(arg.clone(), dom_exp);
-		
-	//	valuetree.setContext(ctxt.getContextNodeList());
+
+		stitch = inSetExp;
 		valuetree.setPredicate(ctxt.getPredWithContext(inSetExp));
 	}
 
-	public MapApplyObligation(PStateDesignator root, PExp arg, IPOContextStack ctxt, IPogAssistantFactory af)
-		throws AnalysisException
+	public MapApplyObligation(PStateDesignator root, PExp arg,
+			IPOContextStack ctxt, IPogAssistantFactory af)
+			throws AnalysisException
 	{
-		super(root, POType.MAP_APPLY, ctxt, root.getLocation(),af);
+		super(root, POType.MAP_APPLY, ctxt, root.getLocation(), af);
 		AMapDomainUnaryExp dom_exp = new AMapDomainUnaryExp();
 		dom_exp.setExp(root.clone().apply(new StateDesignatorToExpVisitor()));
-		
-		
+
 		AInSetBinaryExp inSetExp = AstExpressionFactory.newAInSetBinaryExp(arg.clone(), dom_exp);
 
-//		valuetree.setContext(ctxt.getContextNodeList());
+		stitch = inSetExp;
 		valuetree.setPredicate(ctxt.getPredWithContext(inSetExp));
 	}
 }

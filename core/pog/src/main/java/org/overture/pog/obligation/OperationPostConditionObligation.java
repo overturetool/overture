@@ -49,7 +49,8 @@ public class OperationPostConditionObligation extends ProofObligation
 	{
 		super(op, POType.OP_POST_CONDITION, ctxt, op.getLocation(), af);
 		PExp pred = buildExp(op.getPrecondition(), op.getPostcondition().clone(), null);
-		// valuetree.setContext(ctxt.getContextNodeList());
+
+		stitch = pred;
 		valuetree.setPredicate(ctxt.getPredWithContext(pred));
 	}
 
@@ -57,7 +58,9 @@ public class OperationPostConditionObligation extends ProofObligation
 			IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
 	{
 		super(op, POType.OP_POST_CONDITION, ctxt, op.getLocation(),af);
-		valuetree.setPredicate(ctxt.getPredWithContext(buildExp(op.getPrecondition(), op.getPostcondition().clone(), op.clone().getErrors())));
+		
+		stitch = buildExp(op.getPrecondition(), op.getPostcondition().clone(), op.clone().getErrors());
+		valuetree.setPredicate(ctxt.getPredWithContext(stitch));
 	}
 
 	private PExp handlePrePost(PExp preexp, PExp postexp, List<AErrorCase> errs)

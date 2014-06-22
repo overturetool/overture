@@ -80,7 +80,6 @@ public class FunctionPostCondition extends ProofObligation
 			body = func.getBody();
 		}
 
-	//	valuetree.setContext(ctxt.getContextNodeList());
 		PExp pred = generatePredicate(func.getPredef(), func.getPostdef().clone(), params, body);
 		stitch = pred;
 		valuetree.setPredicate(ctxt.getPredWithContext(pred));

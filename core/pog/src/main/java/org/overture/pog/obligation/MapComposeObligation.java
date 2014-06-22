@@ -36,23 +36,24 @@ public class MapComposeObligation extends ProofObligation
 {
 	private static final long serialVersionUID = -3501039332724576068L;
 
-	public MapComposeObligation(ACompBinaryExp exp, IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
+	public MapComposeObligation(ACompBinaryExp exp, IPOContextStack ctxt,
+			IPogAssistantFactory af) throws AnalysisException
 	{
-		super(exp, POType.MAP_COMPOSE, ctxt, exp.getLocation(),af);
-		
+		super(exp, POType.MAP_COMPOSE, ctxt, exp.getLocation(), af);
+
 		/**
-		 * The obligation for m1 comp m2 is:  rng m2 subset dom m1
+		 * The obligation for m1 comp m2 is: rng m2 subset dom m1
 		 */
 		AMapRangeUnaryExp rng = new AMapRangeUnaryExp();
 		rng.setExp(exp.getLeft().clone());
 		AMapDomainUnaryExp dom = new AMapDomainUnaryExp();
 		dom.setExp(exp.getRight().clone());
-		
+
 		ASubsetBinaryExp subset = new ASubsetBinaryExp();
 		subset.setLeft(rng);
 		subset.setRight(dom);
-		
-//		valuetree.setContext(ctxt.getContextNodeList());
+
+		stitch = subset;
 		valuetree.setPredicate(ctxt.getPredWithContext(subset));
 	}
 }

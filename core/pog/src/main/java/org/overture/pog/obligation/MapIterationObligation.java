@@ -67,7 +67,7 @@ public class MapIterationObligation extends ProofObligation
 		orExp2.setRight(subset);
 		orExp.setRight(orExp2);
 		
-//		valuetree.setContext(ctxt.getContextNodeList());
+		stitch = orExp;
 		valuetree.setPredicate(ctxt.getPredWithContext(orExp));
 	}
 }

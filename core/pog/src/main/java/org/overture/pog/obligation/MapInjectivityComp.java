@@ -55,19 +55,16 @@ public class MapInjectivityComp extends ProofObligation
 	{
 		super(exp, POType.MAP_INJ_COMP, ctxt, exp.getLocation(),af);
 
-		PExp predicate = buildPredicate(exp.clone());
-
-		// valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(predicate));
+		stitch = buildPredicate(exp.clone());
+		valuetree.setPredicate(ctxt.getPredWithContext(stitch));
 	}
 
 	public MapInjectivityComp(AMapCompMapExp exp, IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
 	{
 		super(exp, POType.MAP_INJ_COMP, ctxt, exp.getLocation(),af);
 
-		PExp predicate = buildPredicate(exp.clone());
-
-		valuetree.setPredicate(ctxt.getPredWithContext(predicate));
+		stitch = buildPredicate(exp.clone());
+		valuetree.setPredicate(ctxt.getPredWithContext(stitch));
 	}
 
 	private PPattern makePattern(ILexNameToken name)

@@ -53,7 +53,7 @@ public class TupleSelectObligation extends ProofObligation
 		
 		notExp.setExp(isExp);
 		
-//		valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(notExp));		
+		stitch=notExp;
+		valuetree.setPredicate(ctxt.getPredWithContext(stitch));		
 	}
 }

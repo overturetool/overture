@@ -65,7 +65,8 @@ public class StateInvariantObligation extends ProofObligation
 			Substitution sub = new Substitution(new LexNameToken("", hash, null), ass.getExp().clone());
 			PExp new_invs = old_invs.clone().apply(af.getVarSubVisitor(), sub);
 
-			valuetree.setPredicate(ctxt.getPredWithContext(AstExpressionFactory.newAImpliesBooleanBinaryExp(old_invs, new_invs)));
+			stitch = AstExpressionFactory.newAImpliesBooleanBinaryExp(old_invs, new_invs);
+			valuetree.setPredicate(ctxt.getPredWithContext(stitch));
 		} else
 		{
 			AStateDefinition def = ass.getStateDefinition();
@@ -80,42 +81,45 @@ public class StateInvariantObligation extends ProofObligation
 			letExp.setLocalDefs(invDefs);
 			letExp.setExpression(def.getInvExpression().clone());
 
-			valuetree.setPredicate(ctxt.getPredWithContext(letExp));
+			stitch = letExp;
+			valuetree.setPredicate(ctxt.getPredWithContext(stitch));
 		}
-
-		// valuetree.setContext(ctxt.getContextNodeList());
 	}
 
 	public StateInvariantObligation(AClassInvariantDefinition def,
-			IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
+			IPOContextStack ctxt, IPogAssistantFactory af)
+			throws AnalysisException
 	{
 		super(def, POType.STATE_INV, ctxt, def.getLocation(), af);
 		assistantFactory = af;
 
 		// After instance variable initializers
-		valuetree.setPredicate(ctxt.getPredWithContext(invDefs(def.getClassDefinition())));
-		// valuetree.setContext(ctxt.getContextNodeList());
+
+		stitch = invDefs(def.getClassDefinition());
+		valuetree.setPredicate(ctxt.getPredWithContext(stitch));
 	}
 
 	public StateInvariantObligation(AExplicitOperationDefinition def,
-			IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
+			IPOContextStack ctxt, IPogAssistantFactory af)
+			throws AnalysisException
 	{
 		super(def, POType.STATE_INV, ctxt, def.getLocation(), af);
 		assistantFactory = af;
 
 		// After def.getName() constructor body
-		valuetree.setPredicate(ctxt.getPredWithContext(invDefs(def.getClassDefinition())));
-		// valuetree.setContext(ctxt.getContextNodeList());
+		stitch = invDefs(def.getClassDefinition());
+		valuetree.setPredicate(ctxt.getPredWithContext(stitch));
 	}
 
 	public StateInvariantObligation(AImplicitOperationDefinition def,
-			IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
+			IPOContextStack ctxt, IPogAssistantFactory af)
+			throws AnalysisException
 	{
 		super(def, POType.STATE_INV, ctxt, def.getLocation(), af);
 		assistantFactory = af;
 
-		// After def.getName() constructor body
-		valuetree.setPredicate(ctxt.getPredWithContext(invDefs(def.getClassDefinition())));
+		stitch = invDefs(def.getClassDefinition());
+		valuetree.setPredicate(ctxt.getPredWithContext(stitch));
 		// valuetree.setContext(ctxt.getContextNodeList());
 	}
 
