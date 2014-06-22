@@ -29,6 +29,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.ANotEqualBinaryExp;
 import org.overture.ast.expressions.ASetEnumSetExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
@@ -47,15 +48,12 @@ public class NonEmptySetObligation extends ProofObligation
 		
 		// exp <> {}
 		
-		ANotEqualBinaryExp notEqualsExp = new ANotEqualBinaryExp();
-		notEqualsExp.setLeft(exp.clone());
 		
 		ASetEnumSetExp setExp = new ASetEnumSetExp();
 		setExp.setMembers(new LinkedList<PExp>()); // empty list
 		
-		notEqualsExp.setRight(setExp);
-	
+		ANotEqualBinaryExp notEqualsExp = AstExpressionFactory.newANotEqualBinaryExp(exp.clone(), setExp);
+		
 		valuetree.setPredicate(ctxt.getPredWithContext(notEqualsExp));
-//		valuetree.setContext(ctxt.getContextNodeList());
 	}
 }
