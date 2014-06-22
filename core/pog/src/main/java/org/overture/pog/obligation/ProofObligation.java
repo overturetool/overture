@@ -72,6 +72,7 @@ abstract public class ProofObligation implements IProofObligation, Serializable
 
 	public final INode rootNode;
 	public final String name;
+	public String isaName;
 
 	public AVdmPoTree valuetree;
 	public PExp stitch;
@@ -84,7 +85,8 @@ abstract public class ProofObligation implements IProofObligation, Serializable
 	private String locale;
 
 	public ProofObligation(INode rootnode, POType kind,
-			IPOContextStack context, ILexLocation location, IPogAssistantFactory af) throws AnalysisException
+			IPOContextStack context, ILexLocation location,
+			IPogAssistantFactory af) throws AnalysisException
 	{
 		this.locale = rootnode.apply(af.getLocaleExtractVisitor());
 		this.rootNode = rootnode;
@@ -95,13 +97,13 @@ abstract public class ProofObligation implements IProofObligation, Serializable
 		this.valuetree = new AVdmPoTree();
 		this.generator = new UniqueNameGenerator(rootNode);
 	}
-	
+
 	@Override
 	public String getLocale()
 	{
 		return locale;
 	}
-	
+
 	public void setLocale(String locale)
 	{
 		this.locale = locale;
@@ -130,9 +132,8 @@ abstract public class ProofObligation implements IProofObligation, Serializable
 		return result;
 	}
 
-
 	@Override
-	public String  getDefPredString()
+	public String getDefPredString()
 	{
 		if (stitch == null)
 		{
@@ -141,7 +142,7 @@ abstract public class ProofObligation implements IProofObligation, Serializable
 		String result = stitch.toString();
 		return result;
 	}
-	
+
 	@Override
 	public void setStatus(POStatus status)
 	{
@@ -158,7 +159,14 @@ abstract public class ProofObligation implements IProofObligation, Serializable
 
 	public String getIsaName()
 	{
-		return getName().replaceAll("\\(.*\\)|\\$", "") + getNumber();
+		if (isaName == null)
+		{
+			isaName = "PO" + name;
+			isaName = isaName.replaceAll(", ", "_");
+			isaName = isaName.replaceAll("\\(.*\\)|\\$", "");
+			isaName = isaName + getNumber();
+		}
+		return isaName;
 	}
 
 	@Override
@@ -221,7 +229,7 @@ abstract public class ProofObligation implements IProofObligation, Serializable
 	{
 		return location;
 	}
-	
+
 	/**
 	 * Create a multiple type bind with a varargs list of pattern variables, like a,b,c:T. This is used by several
 	 * obligations.
