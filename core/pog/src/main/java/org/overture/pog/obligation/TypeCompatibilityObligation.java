@@ -220,6 +220,7 @@ public class TypeCompatibilityObligation extends ProofObligation
 			valuetree = null;
 		} else
 		{
+			stitch = onetype_exp;
 			valuetree.setPredicate(ctxt.getPredWithContext(onetype_exp));
 		}
 	}
@@ -250,8 +251,8 @@ public class TypeCompatibilityObligation extends ProofObligation
 			body = func.getBody().clone();
 		}
 
-		// valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(oneType(false, body, etype.clone(), atype.clone())));
+		stitch = oneType(false, body, etype.clone(), atype.clone());
+		valuetree.setPredicate(ctxt.getPredWithContext(stitch));
 	}
 
 	private TypeCompatibilityObligation(AImplicitFunctionDefinition func,
@@ -283,8 +284,8 @@ public class TypeCompatibilityObligation extends ProofObligation
 			body = func.getBody().clone();
 		}
 
-		// valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(oneType(false, body, etype.clone(), atype.clone())));
+		stitch = oneType(false, body, etype.clone(), atype.clone());
+		valuetree.setPredicate(ctxt.getPredWithContext(stitch));
 	}
 
 	private TypeCompatibilityObligation(AExplicitOperationDefinition def,
@@ -295,9 +296,9 @@ public class TypeCompatibilityObligation extends ProofObligation
 		this.assistantFactory = assistantFactory;
 
 		AVariableExp result = AstFactory.newAVariableExp(new LexNameToken(def.getName().getModule(), "RESULT", def.getLocation()));
-
-		// valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(oneType(false, result, ((AOperationType) def.getType()).getResult().clone(), actualResult.clone())));
+		
+		stitch = oneType(false, result, ((AOperationType) def.getType()).getResult().clone(), actualResult.clone());
+		valuetree.setPredicate(ctxt.getPredWithContext(stitch));
 	}
 
 	private TypeCompatibilityObligation(AImplicitOperationDefinition def,
@@ -325,9 +326,9 @@ public class TypeCompatibilityObligation extends ProofObligation
 
 			result = AstFactory.newATupleExp(def.getLocation(), args);
 		}
-
-		// valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(oneType(false, result, ((AOperationType) def.getType()).getResult().clone(), actualResult.clone())));
+		
+		stitch = oneType(false, result, ((AOperationType) def.getType()).getResult().clone(), actualResult.clone());
+		valuetree.setPredicate(ctxt.getPredWithContext(stitch));
 	}
 
 	private PExp oneType(boolean rec, PExp exp, PType etype, PType atype)
