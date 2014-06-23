@@ -259,7 +259,7 @@ public class PogParamVisitor<Q extends IPOContextStack, A extends IProofObligati
 
 			if (node.getSeqType() != null) {
 				list.add(new SeqApplyObligation(node.getMapseq(),
-						node.getExp(), question));
+						node.getExp(), question,assistantFactory));
 			}
 
 			// Maps are OK, as you can create new map domain entries

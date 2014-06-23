@@ -25,10 +25,12 @@ package org.overture.pog.obligation;
 
 import java.util.LinkedList;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.ANotEqualBinaryExp;
 import org.overture.ast.expressions.ASetEnumSetExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
 
 
@@ -39,9 +41,9 @@ public class NonEmptySetObligation extends ProofObligation
 	 */
 	private static final long serialVersionUID = 6816002531259689986L;
 
-	public NonEmptySetObligation(PExp exp, IPOContextStack ctxt)
+	public NonEmptySetObligation(PExp exp, IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
 	{
-		super(exp, POType.NON_EMPTY_SET, ctxt, exp.getLocation());
+		super(exp, POType.NON_EMPTY_SET, ctxt, exp.getLocation(),af);
 		
 		// exp <> {}
 		

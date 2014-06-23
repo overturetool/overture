@@ -23,6 +23,7 @@
 
 package org.overture.pog.obligation;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.expressions.AMapDomainUnaryExp;
 import org.overture.ast.expressions.AMapRangeUnaryExp;
@@ -30,6 +31,7 @@ import org.overture.ast.expressions.AOrBooleanBinaryExp;
 import org.overture.ast.expressions.AStarStarBinaryExp;
 import org.overture.ast.expressions.ASubsetBinaryExp;
 import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
 
 
@@ -37,9 +39,9 @@ public class MapIterationObligation extends ProofObligation
 {
 	private static final long serialVersionUID = -9122478081832322687L;
 
-	public MapIterationObligation(AStarStarBinaryExp exp, IPOContextStack ctxt)
+	public MapIterationObligation(AStarStarBinaryExp exp, IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
 	{
-		super(exp, POType.MAP_ITERATION, ctxt, exp.getLocation());
+		super(exp, POType.MAP_ITERATION, ctxt, exp.getLocation(), af);
 		
 		/**
 		 * The obligation for m ** e is:

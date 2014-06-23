@@ -182,7 +182,7 @@ public class POContextStack extends Stack<IPOContext> implements
 		while (p.hasPrevious())
 		{
 			IPOContext c = p.previous();
-
+			
 			if (c.isScopeBoundary())
 			{
 				break; // Change of name scope for expressions.

@@ -38,4 +38,6 @@ public interface IProofObligation extends Comparable<IProofObligation>, Serializ
 	ILexLocation getLocation();
 	
 	INode getNode();
+	
+	String getLocale();
 }

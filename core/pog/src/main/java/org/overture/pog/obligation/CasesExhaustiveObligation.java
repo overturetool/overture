@@ -56,7 +56,7 @@ public class CasesExhaustiveObligation extends ProofObligation
 	//gkanos: Added parameter for the use of assistant.
 	public CasesExhaustiveObligation(ACasesExp exp, IPOContextStack ctxt, IPogAssistantFactory assistantFactory) throws AnalysisException
 	{
-		super(exp, POType.CASES_EXHAUSTIVE, ctxt, exp.getLocation());
+		super(exp, POType.CASES_EXHAUSTIVE, ctxt, exp.getLocation(),assistantFactory);
 		
 		PExp initialExp = alt2Exp(exp.getCases().getFirst(), exp, assistantFactory );
 		List<ACaseAlternative> initialCases= new LinkedList<ACaseAlternative>(exp.getCases());

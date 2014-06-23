@@ -19,7 +19,7 @@ public class OperationCallObligation extends ProofObligation {
 	public OperationCallObligation(ACallStm stm,
 			SOperationDefinitionBase def,
 			IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException {
-		super(stm, POType.OP_CALL, ctxt, stm.getLocation());
+		super(stm, POType.OP_CALL, ctxt, stm.getLocation(), af);
 		
 		// cannot quote pre-cond so we spell it out with rewritten arguments
 		List<Substitution> subs = new LinkedList<Substitution>();

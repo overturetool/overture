@@ -26,6 +26,7 @@ package org.overture.pog.obligation;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AEqualsDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
@@ -35,10 +36,13 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.ALetDefExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstExpressionFactory;
+import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
+import org.overture.pog.utility.Substitution;
 
 public class StateInvariantObligation extends ProofObligation
 {
@@ -47,14 +51,21 @@ public class StateInvariantObligation extends ProofObligation
 	public final IPogAssistantFactory assistantFactory;
 
 	public StateInvariantObligation(AAssignmentStm ass, IPOContextStack ctxt,
-			IPogAssistantFactory af)
+			IPogAssistantFactory af) throws AnalysisException
 	{
-		super(ass, POType.STATE_INV, ctxt, ass.getLocation());
+		super(ass, POType.STATE_INV, ctxt, ass.getLocation(), af);
 		assistantFactory = af;
 
 		if (ass.getClassDefinition() != null)
 		{
-			valuetree.setPredicate(ctxt.getPredWithContext(invDefs(ass.getClassDefinition())));
+			PExp old_invs = invDefs(ass.getClassDefinition());
+
+			String hash;
+			hash = ass.getTarget().apply(af.getStateDesignatorNameGetter());
+			Substitution sub = new Substitution(new LexNameToken("", hash, null), ass.getExp().clone());
+			PExp new_invs = old_invs.clone().apply(af.getVarSubVisitor(), sub);
+
+			valuetree.setPredicate(ctxt.getPredWithContext(AstExpressionFactory.newAImpliesBooleanBinaryExp(old_invs, new_invs)));
 		} else
 		{
 			AStateDefinition def = ass.getStateDefinition();
@@ -76,9 +87,9 @@ public class StateInvariantObligation extends ProofObligation
 	}
 
 	public StateInvariantObligation(AClassInvariantDefinition def,
-			IPOContextStack ctxt, IPogAssistantFactory af)
+			IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
 	{
-		super(def, POType.STATE_INV, ctxt, def.getLocation());
+		super(def, POType.STATE_INV, ctxt, def.getLocation(), af);
 		assistantFactory = af;
 
 		// After instance variable initializers
@@ -87,9 +98,9 @@ public class StateInvariantObligation extends ProofObligation
 	}
 
 	public StateInvariantObligation(AExplicitOperationDefinition def,
-			IPOContextStack ctxt, IPogAssistantFactory af)
+			IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
 	{
-		super(def, POType.STATE_INV, ctxt, def.getLocation());
+		super(def, POType.STATE_INV, ctxt, def.getLocation(), af);
 		assistantFactory = af;
 
 		// After def.getName() constructor body
@@ -98,9 +109,9 @@ public class StateInvariantObligation extends ProofObligation
 	}
 
 	public StateInvariantObligation(AImplicitOperationDefinition def,
-			IPOContextStack ctxt, IPogAssistantFactory af)
+			IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
 	{
-		super(def, POType.STATE_INV, ctxt, def.getLocation());
+		super(def, POType.STATE_INV, ctxt, def.getLocation(), af);
 		assistantFactory = af;
 
 		// After def.getName() constructor body

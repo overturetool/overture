@@ -25,6 +25,7 @@ package org.overture.pog.obligation;
 
 import java.util.List;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.expressions.AAndBooleanBinaryExp;
@@ -33,6 +34,7 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.statements.AErrorCase;
 import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
 
 public class OperationPostConditionObligation extends ProofObligation
@@ -43,18 +45,18 @@ public class OperationPostConditionObligation extends ProofObligation
 	private static final long serialVersionUID = 7717481924562707647L;
 
 	public OperationPostConditionObligation(AExplicitOperationDefinition op,
-			IPOContextStack ctxt)
+			IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
 	{
-		super(op, POType.OP_POST_CONDITION, ctxt, op.getLocation());
+		super(op, POType.OP_POST_CONDITION, ctxt, op.getLocation(), af);
 		PExp pred = buildExp(op.getPrecondition(), op.getPostcondition().clone(), null);
 		// valuetree.setContext(ctxt.getContextNodeList());
 		valuetree.setPredicate(ctxt.getPredWithContext(pred));
 	}
 
 	public OperationPostConditionObligation(AImplicitOperationDefinition op,
-			IPOContextStack ctxt)
+			IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
 	{
-		super(op, POType.OP_POST_CONDITION, ctxt, op.getLocation());
+		super(op, POType.OP_POST_CONDITION, ctxt, op.getLocation(),af);
 		valuetree.setPredicate(ctxt.getPredWithContext(buildExp(op.getPrecondition(), op.getPostcondition().clone(), op.clone().getErrors())));
 	}
 

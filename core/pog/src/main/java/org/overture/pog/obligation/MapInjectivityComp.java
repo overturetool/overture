@@ -26,6 +26,7 @@ package org.overture.pog.obligation;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.AForAllExp;
 import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.AMapCompMapExp;
@@ -40,6 +41,7 @@ import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
 
 public class MapInjectivityComp extends ProofObligation
@@ -49,9 +51,9 @@ public class MapInjectivityComp extends ProofObligation
 	 */
 	private static final long serialVersionUID = 6082219504509442557L;
 
-	public MapInjectivityComp(PExp exp, IPOContextStack ctxt)
+	public MapInjectivityComp(PExp exp, IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
 	{
-		super(exp, POType.MAP_INJ_COMP, ctxt, exp.getLocation());
+		super(exp, POType.MAP_INJ_COMP, ctxt, exp.getLocation(),af);
 
 		PExp predicate = buildPredicate(exp.clone());
 
@@ -59,9 +61,9 @@ public class MapInjectivityComp extends ProofObligation
 		valuetree.setPredicate(ctxt.getPredWithContext(predicate));
 	}
 
-	public MapInjectivityComp(AMapCompMapExp exp, IPOContextStack ctxt)
+	public MapInjectivityComp(AMapCompMapExp exp, IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
 	{
-		super(exp, POType.MAP_INJ_COMP, ctxt, exp.getLocation());
+		super(exp, POType.MAP_INJ_COMP, ctxt, exp.getLocation(),af);
 
 		PExp predicate = buildPredicate(exp.clone());
 

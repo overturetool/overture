@@ -23,10 +23,12 @@
 
 package org.overture.pog.obligation;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.AIsExp;
 import org.overture.ast.expressions.AMapInverseUnaryExp;
 import org.overture.ast.types.AInMapMapType;
 import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
 
 
@@ -40,10 +42,11 @@ public class MapInverseObligation extends ProofObligation
  * is_(exp, inmap expFromType to expToType)
  * @param exp
  * @param ctxt
+ * @throws AnalysisException 
  */
-	public MapInverseObligation(AMapInverseUnaryExp exp, IPOContextStack ctxt)
+	public MapInverseObligation(AMapInverseUnaryExp exp, IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
 	{
-		super(exp, POType.MAP_INVERSE, ctxt, exp.getLocation());
+		super(exp, POType.MAP_INVERSE, ctxt, exp.getLocation(), af);
 		
 		AIsExp is_Exp = new AIsExp();
 		is_Exp.setTest(exp.getExp().clone());
