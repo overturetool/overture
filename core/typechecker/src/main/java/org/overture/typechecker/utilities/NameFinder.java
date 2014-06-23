@@ -27,7 +27,6 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.node.INode;
 import org.overture.ast.typechecker.NameScope;
-import org.overture.ast.types.AClassType;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.util.HelpLexNameToken;
@@ -42,8 +41,8 @@ public class NameFinder extends
 {
 	public static class Newquestion
 	{
-		final ILexNameToken sought;
-		final NameScope scope;
+		public final ILexNameToken sought;
+		public final NameScope scope;
 
 		public Newquestion(ILexNameToken sought, NameScope scope)
 		{
