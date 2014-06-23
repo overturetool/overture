@@ -55,20 +55,16 @@ public class MapInjectivityComp extends ProofObligation
 	{
 		super(exp, POType.MAP_INJ_COMP, ctxt, exp.getLocation(),af);
 
-		PExp predicate = buildPredicate(exp.clone());
-
-		// valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(predicate));
+		stitch = buildPredicate(exp.clone());
+		valuetree.setPredicate(ctxt.getPredWithContext(stitch));
 	}
 
 	public MapInjectivityComp(AMapCompMapExp exp, IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
 	{
 		super(exp, POType.MAP_INJ_COMP, ctxt, exp.getLocation(),af);
 
-		PExp predicate = buildPredicate(exp.clone());
-
-		// valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(predicate));
+		stitch = buildPredicate(exp.clone());
+		valuetree.setPredicate(ctxt.getPredWithContext(stitch));
 	}
 
 	private PPattern makePattern(ILexNameToken name)
@@ -78,27 +74,6 @@ public class MapInjectivityComp extends ProofObligation
 		return pattern;
 	}
 
-	// private PExp mapCompAsSet(AMapCompMapExp exp){
-	//
-	// ASetEnumSetExp setOfMaplets = new ASetEnumSetExp();
-	// List<AMapEnumMapExp> singleMaplets = new Vector<AMapEnumMapExp>();
-	//
-	// for (AMapletExp maplet: exp.getMembers())
-	// {
-	// AMapEnumMapExp mapOfOne = new AMapEnumMapExp();
-	// List<AMapletExp> members = new Vector<AMapletExp>();
-	// members.add(maplet);
-	// mapOfOne.setMembers(members);
-	//
-	// singleMaplets.add(mapOfOne);
-	// }
-	//
-	// setOfMaplets.setMembers(singleMaplets);
-	//
-	//
-	// return "{{" + exp.getFirst() + "} | " + Utils.listToString(exp.getBindings()) +
-	// (exp.getPredicate() == null ? "}" : " & " + exp.getPredicate() + "}");
-	// }
 
 	private PExp buildPredicate(PExp mapExp)
 	{

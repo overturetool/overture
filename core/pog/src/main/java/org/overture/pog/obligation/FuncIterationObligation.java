@@ -75,7 +75,7 @@ public class FuncIterationObligation extends ProofObligation {
 		AImpliesBooleanBinaryExp impliesExp = AstExpressionFactory
 				.newAImpliesBooleanBinaryExp(gTExp, forAllExp);
 
-		// valuetree.setContext(ctxt.getContextNodeList());
+		stitch=impliesExp.clone();
 		valuetree.setPredicate(ctxt.getPredWithContext(impliesExp));
 	}
 

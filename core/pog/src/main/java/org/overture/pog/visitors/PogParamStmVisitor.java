@@ -165,6 +165,7 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 			}
 			if (needsInv)
 			{
+				//FIXME State Inv For Atomic assignments
 				obligations.add(new StateInvariantObligation(node.getAssignments().get(0), question, aF));
 			}
 

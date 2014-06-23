@@ -49,8 +49,42 @@ public class OpPostConditionContext extends StatefulContext implements
 		this.gen = ctxt.getGenerator();
 		this.subs = new LinkedList<Substitution>();
 		this.forall_exp = getChangedVarsExp(postDef, calledOp);
-		this.pred = spellCondition(postDef, af, stm.getArgs());
+		PExp inv = buildInvExp(calledOp, af);
+		this.pred = spellCondition(postDef, af, stm.getArgs(), inv);
 		this.visitor = af.getVarSubVisitor();
+
+	}
+
+	private PExp buildInvExp(SOperationDefinitionBase calledOp,
+			IPogAssistantFactory af)
+	{
+		List<PExp> invariants = new LinkedList<PExp>();
+		if (calledOp.getClassDefinition() != null)
+		{
+			try
+			{
+				invariants = calledOp.getClassDefinition().apply(af.getInvExpGetVisitor());
+				if (invariants.size() > 0)
+				{
+
+					PExp inv = invariants.get(0).clone();
+
+					for (int i = 1; i < invariants.size(); i++)
+					{
+						inv = AstExpressionFactory.newAAndBooleanBinaryExp(inv, invariants.get(i).clone());
+
+					}
+					return inv;
+				} else
+				{
+					return null;
+				}
+			} catch (AnalysisException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		return null;
 	}
 
 	public OpPostConditionContext(AExplicitFunctionDefinition postDef,
@@ -62,7 +96,8 @@ public class OpPostConditionContext extends StatefulContext implements
 		this.gen = ctxt.getGenerator();
 		this.subs = new LinkedList<Substitution>();
 		this.forall_exp = getChangedVarsExp(postDef, calledOp);
-		this.pred = spellCondition(postDef, af, exp.getArgs());
+		PExp inv = buildInvExp(calledOp, af);
+		this.pred = spellCondition(postDef, af, exp.getArgs(), inv);
 	}
 
 	@Override
@@ -180,14 +215,14 @@ public class OpPostConditionContext extends StatefulContext implements
 
 		Substitution sub = new Substitution(var.getName().clone(), newVar);
 		subs.add(sub);
-		
+
 		AVariableExp old_var = last_vars.get(var.getName());
 		if (old_var != null)
 		{
 			Substitution sub_old = new Substitution(var.getOldname().toString(), old_var);
 			subs.add(sub_old);
-		}
-		else{
+		} else
+		{
 			AVariableExp var_exp = new AVariableExp();
 			var_exp.setName(var.getName().clone());
 			var_exp.setType(var.getType().clone());
@@ -197,7 +232,6 @@ public class OpPostConditionContext extends StatefulContext implements
 		}
 
 		last_vars.put(var.getName(), newVar);
-		
 
 		return r;
 	}
@@ -224,7 +258,6 @@ public class OpPostConditionContext extends StatefulContext implements
 				implies_exp = implies_exp.apply(visitor, sub);
 			}
 
-
 			if (forall_exp.getBindList().size() > 0)
 			{
 
@@ -243,15 +276,31 @@ public class OpPostConditionContext extends StatefulContext implements
 	}
 
 	private PExp spellCondition(AExplicitFunctionDefinition def,
-			IPogAssistantFactory af, List<PExp> args)
+			IPogAssistantFactory af, List<PExp> args, PExp invariant)
 	{
+		PExp post_exp;
 		if (def == null)
 		{
-			// no postcondition: true
-			ABooleanConstExp r = new ABooleanConstExp();
-			r.setValue(new LexBooleanToken(true, null));
-			return r;
+			if (invariant == null)
+			{
+				// no postcondition: true
+				ABooleanConstExp r = new ABooleanConstExp();
+				r.setValue(new LexBooleanToken(true, null));
+				return r;
+			} else
+			{
+				return invariant;
+			}
+		} else
+		{
+			post_exp = def.getBody();
 		}
+
+		if (invariant != null)
+		{
+			post_exp = AstExpressionFactory.newAAndBooleanBinaryExp(post_exp, invariant);
+		}
+
 		List<Substitution> subs = new LinkedList<Substitution>();
 
 		for (int i = 0; i < args.size(); i++)
@@ -261,14 +310,12 @@ public class OpPostConditionContext extends StatefulContext implements
 			PExp new_exp = args.get(0).clone();
 			subs.add(new Substitution(origName, new_exp));
 		}
-		return rewritePost(def, subs, af);
+		return rewritePost(post_exp, subs, af);
 	}
 
-	private PExp rewritePost(AExplicitFunctionDefinition def,
-			List<Substitution> subs, IPogAssistantFactory af)
+	private PExp rewritePost(PExp post_exp, List<Substitution> subs,
+			IPogAssistantFactory af)
 	{
-		PExp post_exp = def.getBody();
-
 		if (post_exp instanceof APostOpExp)
 		{
 			// post-expression bodies are wrapped in a PostOpExp for some reason...

@@ -80,8 +80,9 @@ public class FunctionPostCondition extends ProofObligation
 			body = func.getBody();
 		}
 
-	//	valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(generatePredicate(func.getPredef(), func.getPostdef().clone(), params, body)));
+		PExp pred = generatePredicate(func.getPredef(), func.getPostdef().clone(), params, body);
+		stitch = pred;
+		valuetree.setPredicate(ctxt.getPredWithContext(pred));
 	}
 
 	public FunctionPostCondition(AImplicitFunctionDefinition func,
@@ -123,7 +124,9 @@ public class FunctionPostCondition extends ProofObligation
 		}
 
 //		valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(generatePredicate(func.getPredef(), func.getPostdef(), cloneListPExp(params), body)));
+		PExp pred = generatePredicate(func.getPredef(), func.getPostdef(), cloneListPExp(params), body);
+		stitch = pred;
+		valuetree.setPredicate(ctxt.getPredWithContext(pred));
 
 	}
 

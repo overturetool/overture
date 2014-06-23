@@ -118,7 +118,7 @@ public class FuncComposeObligation extends ProofObligation
 			forallExp.setPredicate(AstExpressionFactory.newAImpliesBooleanBinaryExp(firstPart, secondPart));
 		}
 
-		//valuetree.setContext(ctxt.getContextNodeList());
+		stitch = forallExp.clone();
 		valuetree.setPredicate(ctxt.getPredWithContext(forallExp));
 	}
 }

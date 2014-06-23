@@ -38,6 +38,7 @@ public class OperationCallObligation extends ProofObligation {
 	
 		}
 
+		stitch = pre_exp;
 		valuetree.setPredicate(ctxt.getPredWithContext(pre_exp));
 	}
 

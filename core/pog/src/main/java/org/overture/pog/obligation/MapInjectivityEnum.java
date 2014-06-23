@@ -104,7 +104,7 @@ public class MapInjectivityEnum extends ProofObligation
 		forallExp.setBindList(m1m2binding);
 		forallExp.setPredicate(domForallExp);
 		
-//		valuetree.setContext(ctxt.getContextNodeList());
+		stitch = forallExp;
 		valuetree.setPredicate(ctxt.getPredWithContext(forallExp));
 	}
 }

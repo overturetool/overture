@@ -74,6 +74,7 @@ public class FiniteMapObligation extends ProofObligation
 		existsExp.setBindList(getMultipleTypeBindList(natmaptype, finmap));
 		existsExp.setPredicate(getForallExp(exp.clone(), finmap, findex));
 		
+		stitch = existsExp.clone();
 		valuetree.setPredicate(ctxt.getPredWithContext(existsExp));
 	}
 
