@@ -104,7 +104,7 @@ public class ClassTypeFinder extends TypeUnwrapper<AClassType>
 
 						if (current == null)
 						{
-							common.put(synthname, new PTypeSet(ftype));
+							common.put(synthname, new PTypeSet(ftype, af));
 						} else
 						{
 							current.add(ftype);

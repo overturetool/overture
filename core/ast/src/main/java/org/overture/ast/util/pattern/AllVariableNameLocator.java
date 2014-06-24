@@ -3,7 +3,6 @@ package org.overture.ast.util.pattern;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.AnswerAdaptor;
 import org.overture.ast.assistant.IAstAssistantFactory;
-import org.overture.ast.assistant.pattern.PPatternAssistant;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.AConcatenationPattern;

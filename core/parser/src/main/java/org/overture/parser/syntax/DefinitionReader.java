@@ -27,7 +27,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
-import org.overture.ast.assistant.definition.PAccessSpecifierAssistant;
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AEqualsDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
@@ -243,7 +242,7 @@ public class DefinitionReader extends SyntaxReader
 	{
 		if (dialect == Dialect.VDM_SL)
 		{
-			return PAccessSpecifierAssistant.getDefault();
+			return AstFactory.getDefaultAccessSpecifier();
 		}
 
 		// Defaults

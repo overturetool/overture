@@ -123,7 +123,7 @@ public class ConcreateTypeImplementor extends
 			throws AnalysisException
 	{
 		// return AUnionTypeAssistantTC.polymorph(type, question.pname, question.actualType);
-		PTypeSet polytypes = new PTypeSet();
+		PTypeSet polytypes = new PTypeSet(af);
 
 		for (PType ptype : ((AUnionType) type).getTypes())
 		{

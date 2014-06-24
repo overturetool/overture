@@ -156,7 +156,7 @@ public class PossibleTypeFinder extends AnswerAdaptor<PType>
 	public PType caseAUnionPattern(AUnionPattern pattern)
 			throws AnalysisException
 	{
-		PTypeSet set = new PTypeSet();
+		PTypeSet set = new PTypeSet(af);
 
 		set.add(af.createPPatternAssistant().getPossibleType(pattern.getLeft()));
 		set.add(af.createPPatternAssistant().getPossibleType(pattern.getRight()));
