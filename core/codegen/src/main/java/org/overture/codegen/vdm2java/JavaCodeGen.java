@@ -40,6 +40,10 @@ import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
 import org.overture.codegen.trans.funcvalues.FunctionValueVisitor;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 import org.overture.codegen.trans.iterator.JavaLanguageIterator;
+import org.overture.codegen.trans.letexps.DeflattenTransformation;
+import org.overture.codegen.trans.letexps.FuncTransformation;
+import org.overture.codegen.trans.letexps.IfExpTransformation;
+import org.overture.codegen.trans.letexps.LetDefExpTransformation;
 import org.overture.codegen.trans.patterns.IgnorePatternTransformation;
 import org.overture.codegen.trans.uniontypes.UnionTypeTransformation;
 import org.overture.codegen.utils.GeneralUtils;
@@ -185,7 +189,11 @@ public class JavaCodeGen
 		TransformationAssistantCG transformationAssistant = new TransformationAssistantCG(irInfo, varPrefixes);
 		FunctionValueAssistant functionValueAssistant = new FunctionValueAssistant();
 		
+		FuncTransformation funcTransformation = new FuncTransformation();
+		IfExpTransformation ifExpTransformation = new IfExpTransformation(transformationAssistant);
+		LetDefExpTransformation letDefTransformation = new LetDefExpTransformation(transformationAssistant);
 		IgnorePatternTransformation ignoreTransformation = new IgnorePatternTransformation(transformationAssistant, IGNORE_PATTERN_NAME_PREFIX);
+		DeflattenTransformation deflattenTransformation = new DeflattenTransformation(transformationAssistant);
 		UnionTypeTransformation unionTypeTransformation = new UnionTypeTransformation(transformationAssistant, irInfo);
 		FunctionValueVisitor funcValVisitor = new FunctionValueVisitor(transformationAssistant, functionValueAssistant, INTERFACE_NAME_PREFIX, TEMPLATE_TYPE_PREFIX, EVAL_METHOD_PREFIX, PARAM_NAME_PREFIX);
 		ILanguageIterator langIterator = new JavaLanguageIterator(transformationAssistant, irInfo.getTempVarNameGen(), varPrefixes);
@@ -201,7 +209,11 @@ public class JavaCodeGen
 				
 				if (status.canBeGenerated())
 				{
+					classCg.apply(funcTransformation);
+					classCg.apply(ifExpTransformation);
+					classCg.apply(letDefTransformation);
 					classCg.apply(ignoreTransformation);
+					classCg.apply(deflattenTransformation);
 					classCg.apply(funcValVisitor);
 					classCg.apply(transVisitor);
 					classCg.apply(unionTypeTransformation);

@@ -28,6 +28,7 @@ import org.overture.codegen.cgast.expressions.AMapletExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AQuoteLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.SBinaryExpCG;
 import org.overture.codegen.cgast.expressions.SLiteralExpCG;
@@ -71,7 +72,6 @@ import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class JavaFormat
 {
-	public static final String ADD_ELEMENT_TO_MAP = "put";
 	public static final String UTILS_FILE = "Utils";
 	public static final String SEQ_UTIL_FILE = "SeqUtil";
 	public static final String SET_UTIL_FILE = "SetUtil";
@@ -244,22 +244,30 @@ public class JavaFormat
 	public String formatMapSeqStateDesignator(AMapSeqStateDesignatorCG mapSeq) throws AnalysisException
 	{
 		INode parent = mapSeq.parent();
-		
-		if(!(parent instanceof AAssignmentStmCG))
-			throw new AnalysisException("Generation of map sequence state designator was expecting an assignment statement as parent. Got : " + parent);
-		
-		AAssignmentStmCG assignment = (AAssignmentStmCG) parent;
-		
+
 		SStateDesignatorCG stateDesignator = mapSeq.getMapseq();
 		SExpCG domValue = mapSeq.getExp();
-		SExpCG rngValue = assignment.getExp();
-		
+
 		String stateDesignatorStr = format(stateDesignator);
 		String domValStr = format(domValue);
-		String rngValStr = format(rngValue);
 		
-		//e.g. counters.put("c1", 4);
-		return stateDesignatorStr + "." + ADD_ELEMENT_TO_MAP + "(" + domValStr + ", " + rngValStr + ")";
+		if(parent instanceof AAssignmentStmCG)
+		{
+			AAssignmentStmCG assignment = (AAssignmentStmCG) parent;
+			SExpCG rngValue = assignment.getExp();
+			String rngValStr = format(rngValue);
+			
+			//e.g. counters.put("c1", 4);
+			return stateDesignatorStr + ".put(" + domValStr + ", " + rngValStr + ")";
+		}
+		else
+		{
+			STypeCG type = mapSeq.getType();
+			String typeStr = format(type);
+			
+			//e.g. ((Rec) m(true)).field := 2;
+			return "( (" + typeStr + ")" + format(mapSeq.getMapseq()) + ".get(" + domValStr + "))";
+		}
 	}
 	
 	private String getNumberDereference(INode node, boolean ignoreContext)
@@ -296,11 +304,16 @@ public class JavaFormat
 	
 	private static boolean isNumberDereferenceCandidate(SExpCG node)
 	{
-		return (!(node instanceof SNumericBinaryExpCG)
-				&& !(node instanceof SLiteralExpCG) 
+		boolean fitsCategory = !(node instanceof SNumericBinaryExpCG)
+				&& !(node instanceof SLiteralExpCG)
 				&& !(node instanceof AIsolationUnaryExpCG)
-				&& (!(node instanceof SUnaryExpCG) || node instanceof ACastUnaryExpCG))
-				|| node instanceof AHeadUnaryExpCG;
+				&& !(node instanceof SUnaryExpCG);
+
+		boolean isException = node instanceof AHeadUnaryExpCG
+				|| node instanceof AQuoteLiteralExpCG
+				|| node instanceof ACastUnaryExpCG;
+		
+		return 	fitsCategory || isException;
 	}
 
 	public String formatName(INode node) throws AnalysisException

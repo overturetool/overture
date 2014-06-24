@@ -44,8 +44,6 @@ import org.overture.codegen.cgast.SStateDesignatorCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
-import org.overture.codegen.cgast.expressions.ALetBeStExpCG;
-import org.overture.codegen.cgast.expressions.ALetDefExpCG;
 import org.overture.codegen.cgast.expressions.AReverseUnaryExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
@@ -73,29 +71,6 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 {
 	public StmVisitorCG()
 	{
-	}
-	
-	@Override
-	public SStmCG defaultPExp(PExp node, IRInfo question)
-			throws AnalysisException
-	{
-		SExpCG exp =  node.apply(question.getExpVisitor(), question);
-		
-		if(exp instanceof ALetDefExpCG)
-		{
-			return question.getStmAssistant().convertToLetDefStm((ALetDefExpCG) exp);
-		}
-		else if(exp instanceof ALetBeStExpCG)
-		{
-			return question.getStmAssistant().convertToLetBeStStm((ALetBeStExpCG) exp);
-		}
-		else
-		{
-			AReturnStmCG returnStm = new AReturnStmCG();
-			returnStm.setExp(exp);
-			
-			return returnStm;
-		}
 	}
 	
 	@Override
@@ -294,9 +269,6 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 		if(exp != null)
 		{
 			SExpCG expCg = exp.apply(question.getExpVisitor(), question);
-			if(expCg instanceof ALetDefExpCG)
-				return question.getStmAssistant().convertToLetDefStm((ALetDefExpCG) expCg);
-			
 			returnStm.setExp(expCg);
 		}
 		
