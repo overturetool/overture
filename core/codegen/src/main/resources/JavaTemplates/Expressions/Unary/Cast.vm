@@ -1,1 +1,4 @@
-(($JavaFormat.format($node.getType())) $JavaFormat.format($node.getExp()))
+#set( $type = $JavaFormat.format($node.getType()))
+#set( $exp = $JavaFormat.format($node.getExp(), false))
+##
+(($type) $exp)

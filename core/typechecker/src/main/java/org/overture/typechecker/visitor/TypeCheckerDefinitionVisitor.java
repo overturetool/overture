@@ -74,6 +74,7 @@ import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.TypeComparator;
+import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
 import org.overture.typechecker.util.HelpLexNameToken;
 import org.overture.typechecker.utilities.DefinitionTypeResolver;
 import org.overture.typechecker.utilities.type.QualifiedDefinition;
@@ -331,6 +332,17 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		{
 			TypeCheckerErrors.report(3019, "Function parameter visibility less than function definition", node.getLocation(), node);
 		}
+		
+		if (question.env.isVDMPP())
+		{
+			PAccessSpecifierAssistantTC assist = question.assistantFactory.createPAccessSpecifierAssistant();
+
+			if (assist.isPrivate(node.getAccess()) &&
+				node.getBody() instanceof ASubclassResponsibilityExp)
+			{
+				TypeCheckerErrors.report(3329, "Abstract function/operation must be public or protected", node.getLocation(), node);
+			}
+		}
 
 		if (node.getMeasure() == null && node.getRecursive())
 		{
@@ -498,6 +510,17 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		if (question.assistantFactory.createPTypeAssistant().narrowerThan(question.assistantFactory.createPDefinitionAssistant().getType(node), node.getAccess()))
 		{
 			TypeCheckerErrors.report(3030, "Function parameter visibility less than function definition", node.getLocation(), node);
+		}
+
+		if (question.env.isVDMPP())
+		{
+			PAccessSpecifierAssistantTC assist = question.assistantFactory.createPAccessSpecifierAssistant();
+
+			if (assist.isPrivate(node.getAccess()) &&
+				node.getBody() instanceof ASubclassResponsibilityExp)
+			{
+				TypeCheckerErrors.report(3329, "Abstract function/operation must be public or protected", node.getLocation(), node);
+			}
 		}
 
 		// The result variables are in scope for the post condition
@@ -768,6 +791,17 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			TypeCheckerErrors.report(3028, "Operation parameter visibility less than operation definition", node.getLocation(), node);
 		}
 
+		if (question.env.isVDMPP())
+		{
+			PAccessSpecifierAssistantTC assist = question.assistantFactory.createPAccessSpecifierAssistant();
+
+			if (assist.isPrivate(node.getAccess()) &&
+				node.getBody() instanceof ASubclassResponsibilityStm)
+			{
+				TypeCheckerErrors.report(3329, "Abstract function/operation must be public or protected", node.getLocation(), node);
+			}
+		}
+
 		if (!(node.getBody() instanceof ANotYetSpecifiedStm)
 				&& !(node.getBody() instanceof ASubclassResponsibilityStm))
 		{
@@ -975,6 +1009,17 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		if (question.assistantFactory.createPTypeAssistant().narrowerThan(node.getType(), node.getAccess()))
 		{
 			TypeCheckerErrors.report(3036, "Operation parameter visibility less than operation definition", node.getLocation(), node);
+		}
+
+		if (question.env.isVDMPP())
+		{
+			PAccessSpecifierAssistantTC assist = question.assistantFactory.createPAccessSpecifierAssistant();
+
+			if (assist.isPrivate(node.getAccess()) &&
+				node.getBody() instanceof ASubclassResponsibilityStm)
+			{
+				TypeCheckerErrors.report(3329, "Abstract function/operation must be public or protected", node.getLocation(), node);
+			}
 		}
 
 		// The result variables are in scope for the post condition

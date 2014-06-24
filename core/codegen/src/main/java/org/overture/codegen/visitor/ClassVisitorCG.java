@@ -10,6 +10,7 @@ import org.overture.codegen.cgast.SDeclCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AEmptyDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
+import org.overture.codegen.cgast.declarations.AFuncDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
@@ -49,6 +50,7 @@ public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
 		LinkedList<AFieldDeclCG> fields = classCg.getFields();
 		LinkedList<AMethodDeclCG> methods = classCg.getMethods();
 		LinkedList<ARecordDeclCG> innerClasses = classCg.getRecords();
+		LinkedList<AFuncDeclCG> functions = classCg.getFunctions();
 		
 		for (PDefinition def : defs)
 		{
@@ -69,6 +71,10 @@ public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
 			else if(decl instanceof ARecordDeclCG)
 			{
 				innerClasses.add((ARecordDeclCG) decl);
+			}
+			else if(decl instanceof AFuncDeclCG)
+			{
+				functions.add((AFuncDeclCG) decl);
 			}
 			else if(decl instanceof AEmptyDeclCG)
 			;//Empty declarations are used to indicate constructs that can be ignored during the

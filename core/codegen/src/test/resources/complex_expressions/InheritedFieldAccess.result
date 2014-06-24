@@ -1,0 +1,43 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        return new B().op();
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class A {
+    protected Number x = 2L;
+
+    public A() {
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class B extends A {
+    public B() {
+    }
+
+    public Number op() {
+        return x;
+    }
+}
+
+##########

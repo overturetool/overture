@@ -10,6 +10,7 @@ import org.overture.ast.node.INode;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AInMapMapType;
+import org.overture.ast.types.AMapMapType;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AParameterType;
@@ -102,6 +103,7 @@ public class AllValuesCollector extends QuestionAnswerAdaptor<Context, ValueList
 	public ValueList caseARecordInvariantType(ARecordInvariantType type,
 			Context ctxt) throws AnalysisException
 	{
+		//return ARecordInvariantTypeAssistantInterpreter.getAllValues(type, ctxt);
 		List<PType> types = new Vector<PType>();
 
 		for (AFieldField f : type.getFields())

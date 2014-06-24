@@ -40,6 +40,10 @@ import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
 import org.overture.codegen.trans.funcvalues.FunctionValueVisitor;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 import org.overture.codegen.trans.iterator.JavaLanguageIterator;
+import org.overture.codegen.trans.letexps.DeflattenTransformation;
+import org.overture.codegen.trans.letexps.FuncTransformation;
+import org.overture.codegen.trans.letexps.IfExpTransformation;
+import org.overture.codegen.trans.letexps.LetDefExpTransformation;
 import org.overture.codegen.trans.patterns.IgnorePatternTransformation;
 import org.overture.codegen.trans.uniontypes.UnionTypeTransformation;
 import org.overture.codegen.utils.GeneralUtils;
@@ -150,9 +154,18 @@ public class JavaCodeGen
 		
 		for (SClassDefinition classDef : mergedParseLists)
 		{
-			if (shouldBeGenerated(classDef.getName().getName()))
+			if (shouldBeGenerated(classDef))
 			{
 				toBeGenerated.add(classDef);
+			}
+			else
+			{
+				String className = classDef.getName().getFullName();
+				
+				if (!classIsLibrary(classDef))
+				{
+					Logger.getLog().println("Skipping class based on library class: " + className);
+				}
 			}
 		}
 		
@@ -163,9 +176,7 @@ public class JavaCodeGen
 
 		for (SClassDefinition classDef : toBeGenerated)
 		{
-			String className = classDef.getName().getName();
-
-			if (!shouldBeGenerated(className))
+			if (!shouldBeGenerated(classDef))
 			{
 				continue;
 			}
@@ -178,7 +189,11 @@ public class JavaCodeGen
 		TransformationAssistantCG transformationAssistant = new TransformationAssistantCG(irInfo, varPrefixes);
 		FunctionValueAssistant functionValueAssistant = new FunctionValueAssistant();
 		
+		FuncTransformation funcTransformation = new FuncTransformation();
+		IfExpTransformation ifExpTransformation = new IfExpTransformation(transformationAssistant);
+		LetDefExpTransformation letDefTransformation = new LetDefExpTransformation(transformationAssistant);
 		IgnorePatternTransformation ignoreTransformation = new IgnorePatternTransformation(transformationAssistant, IGNORE_PATTERN_NAME_PREFIX);
+		DeflattenTransformation deflattenTransformation = new DeflattenTransformation(transformationAssistant);
 		UnionTypeTransformation unionTypeTransformation = new UnionTypeTransformation(transformationAssistant, irInfo);
 		FunctionValueVisitor funcValVisitor = new FunctionValueVisitor(transformationAssistant, functionValueAssistant, INTERFACE_NAME_PREFIX, TEMPLATE_TYPE_PREFIX, EVAL_METHOD_PREFIX, PARAM_NAME_PREFIX);
 		ILanguageIterator langIterator = new JavaLanguageIterator(transformationAssistant, irInfo.getTempVarNameGen(), varPrefixes);
@@ -194,7 +209,11 @@ public class JavaCodeGen
 				
 				if (status.canBeGenerated())
 				{
+					classCg.apply(funcTransformation);
+					classCg.apply(ifExpTransformation);
+					classCg.apply(letDefTransformation);
 					classCg.apply(ignoreTransformation);
+					classCg.apply(deflattenTransformation);
 					classCg.apply(funcValVisitor);
 					classCg.apply(transVisitor);
 					classCg.apply(unionTypeTransformation);
@@ -373,12 +392,36 @@ public class JavaCodeGen
 			throw new UnsupportedModelingException("The model uses modeling constructs that are not supported for Java code Generation", violations);
 	}
 	
-	private static boolean shouldBeGenerated(String className)
+	private boolean shouldBeGenerated(SClassDefinition classDef)
 	{
-		for(int i = 0; i < CLASSES_NOT_TO_BE_GENERATED.length; i++)
-			if(CLASSES_NOT_TO_BE_GENERATED[i].equals(className))
+		if(classIsLibrary(classDef))
+		{
+			return false;
+		}
+		
+		for(SClassDefinition superDef : classDef.getSuperDefs())
+		{
+			if(classIsLibrary(superDef))
+			{
 				return false;
+			}
+		}
 		
 		return true;
+	}
+	
+	private boolean classIsLibrary(SClassDefinition classDef)
+	{
+		String className = classDef.getName().getName();
+		
+		for(int i = 0; i < CLASSES_NOT_TO_BE_GENERATED.length; i++)
+		{
+			if(CLASSES_NOT_TO_BE_GENERATED[i].equals(className))
+			{
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }
