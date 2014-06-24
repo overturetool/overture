@@ -48,8 +48,8 @@ public class DefinitionTypeResolver extends
 {
 	public static class NewQuestion
 	{
-		final IQuestionAnswer<TypeCheckInfo, PType> rootVisitor;
-		final TypeCheckInfo question;
+		public final IQuestionAnswer<TypeCheckInfo, PType> rootVisitor;
+		public final TypeCheckInfo question;
 
 		public NewQuestion(IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 				TypeCheckInfo question)
