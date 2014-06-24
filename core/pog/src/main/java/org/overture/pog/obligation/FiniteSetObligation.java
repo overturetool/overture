@@ -25,6 +25,7 @@ package org.overture.pog.obligation;
 
 import java.util.List;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.AForAllExp;
@@ -39,6 +40,8 @@ import org.overture.ast.types.AMapMapType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ASetType;
 import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.IPogAssistantFactory;
+import org.overture.pog.pub.POType;
 
 public class FiniteSetObligation extends ProofObligation {
 
@@ -47,10 +50,11 @@ public class FiniteSetObligation extends ProofObligation {
 	/**
 	 * { f(a) | a:A & p(a) } yields exists m:map nat to map A to :f & forall a:A
 	 * & p(a) => exists idx in set dom m & m(idx) = f(a)
+	 * @throws AnalysisException 
 	 */
 	public FiniteSetObligation(ASetCompSetExp exp, ASetType settype,
-			IPOContextStack ctxt) {
-		super(exp, POType.FINITE_SET, ctxt, exp.getLocation());
+			IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException {
+		super(exp, POType.FINITE_SET, ctxt, exp.getLocation(), af);
 
 		ILexNameToken finmap = getUnique("finmap");
 		ILexNameToken findex = getUnique("findex");
@@ -64,7 +68,7 @@ public class FiniteSetObligation extends ProofObligation {
 		existsExp.setBindList(getMultipleTypeBindList(mapType, finmap));
 		existsExp.setPredicate(getForallExp(exp.clone(), finmap, findex));
 
-		// valuetree.setContext(ctxt.getContextNodeList());
+		stitch = existsExp.clone();
 		valuetree.setPredicate(ctxt.getPredWithContext(existsExp));
 	}
 

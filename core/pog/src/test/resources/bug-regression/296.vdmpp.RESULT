@@ -1,1 +1,1 @@
-[{"poKind":"operation satisfiability","poExp":"(forall n:nat, oldself:Test \u0026 (pre_Op1(n, oldself) \u003d\u003e (exists newself:Test \u0026 post_Op1(n, oldself, newself))))"}]
+[{"poKind":"operation postcondition satisfiable","poExp":"(forall n:nat, oldself:Test \u0026 (pre_Op1(n, oldself) \u003d\u003e (exists newself:Test \u0026 post_Op1(n, oldself, newself))))"}]

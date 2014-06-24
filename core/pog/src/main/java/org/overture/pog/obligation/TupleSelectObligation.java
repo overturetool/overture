@@ -23,11 +23,14 @@
 
 package org.overture.pog.obligation;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.AIsExp;
 import org.overture.ast.expressions.ANotUnaryExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.types.PType;
 import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.IPogAssistantFactory;
+import org.overture.pog.pub.POType;
 
 public class TupleSelectObligation extends ProofObligation
 {
@@ -37,10 +40,10 @@ public class TupleSelectObligation extends ProofObligation
 	private static final long serialVersionUID = -7776291065628025047L;
 
 	public TupleSelectObligation(
-		PExp exp, PType type, IPOContextStack ctxt)
+		PExp exp, PType type, IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
 	{
 		// not is_(exp, type)
-		super(exp, POType.TUPLE_SELECT, ctxt, exp.getLocation());
+		super(exp, POType.TUPLE_SELECT, ctxt, exp.getLocation(), af);
 
 		ANotUnaryExp notExp = new ANotUnaryExp();
 		AIsExp isExp = new AIsExp();
@@ -50,7 +53,7 @@ public class TupleSelectObligation extends ProofObligation
 		
 		notExp.setExp(isExp);
 		
-//		valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(notExp));		
+		stitch=notExp;
+		valuetree.setPredicate(ctxt.getPredWithContext(stitch));		
 	}
 }

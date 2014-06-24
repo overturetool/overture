@@ -26,6 +26,7 @@ package org.overture.pog.obligation;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.ACompBinaryExp;
 import org.overture.ast.expressions.AForAllExp;
 import org.overture.ast.expressions.APreExp;
@@ -35,6 +36,7 @@ import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.types.PType;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
+import org.overture.pog.pub.POType;
 
 
 public class FuncComposeObligation extends ProofObligation
@@ -42,9 +44,9 @@ public class FuncComposeObligation extends ProofObligation
 	private static final long serialVersionUID = 8813166638915813635L;
 	//add last parameter to pass assistantFactory to the method.
 	public FuncComposeObligation(
-		ACompBinaryExp exp, ILexNameToken pref1, ILexNameToken pref2, IPOContextStack ctxt, IPogAssistantFactory assistantFactory)
+		ACompBinaryExp exp, ILexNameToken pref1, ILexNameToken pref2, IPOContextStack ctxt, IPogAssistantFactory assistantFactory) throws AnalysisException
 	{
-		super(exp, POType.FUNC_COMPOSE, ctxt, exp.getLocation());
+		super(exp, POType.FUNC_COMPOSE, ctxt, exp.getLocation(),assistantFactory);
 		
 		// Function composition must be of two functions with a single parameter each.
 		// The obligation depends on whether the left/right expressions of the "comp"
@@ -116,7 +118,7 @@ public class FuncComposeObligation extends ProofObligation
 			forallExp.setPredicate(AstExpressionFactory.newAImpliesBooleanBinaryExp(firstPart, secondPart));
 		}
 
-		//valuetree.setContext(ctxt.getContextNodeList());
+		stitch = forallExp.clone();
 		valuetree.setPredicate(ctxt.getPredWithContext(forallExp));
 	}
 }

@@ -23,6 +23,7 @@
 
 package org.overture.pog.obligation;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.AIndicesUnaryExp;
 import org.overture.ast.expressions.AMapDomainUnaryExp;
 import org.overture.ast.expressions.APlusPlusBinaryExp;
@@ -30,15 +31,17 @@ import org.overture.ast.expressions.ASubsetBinaryExp;
 import org.overture.ast.lex.LexKeywordToken;
 import org.overture.ast.lex.VDMToken;
 import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.IPogAssistantFactory;
+import org.overture.pog.pub.POType;
 
 
 public class SeqModificationObligation extends ProofObligation
 {
 	private static final long serialVersionUID = 2541416807923302230L;
 
-	public SeqModificationObligation(APlusPlusBinaryExp arg, IPOContextStack ctxt)
+	public SeqModificationObligation(APlusPlusBinaryExp arg, IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
 	{
-		super(arg, POType.SEQ_MODIFICATION, ctxt, arg.getLocation());
+		super(arg, POType.SEQ_MODIFICATION, ctxt, arg.getLocation(),af);
 		
 		/**
 		 * "seq ++ map" produces "dom map subset inds seq"
@@ -52,7 +55,7 @@ public class SeqModificationObligation extends ProofObligation
 		subsetExp.setLeft(domExp);
 		subsetExp.setRight(indsExp);
 		
-//		valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(subsetExp));
+		stitch = subsetExp;
+		valuetree.setPredicate(ctxt.getPredWithContext(stitch));
 	}
 }

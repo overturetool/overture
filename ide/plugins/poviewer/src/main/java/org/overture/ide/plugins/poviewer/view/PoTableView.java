@@ -82,7 +82,7 @@ public class PoTableView extends ViewPart implements ISelectionListener
 			public void run()
 			{
 
-				viewer.setText(data.getValue());
+				viewer.setText(data.getFullPredString());
 			}
 
 		});

@@ -54,7 +54,7 @@ import org.overture.ide.plugins.poviewer.Activator;
 import org.overture.ide.plugins.poviewer.IPoviewerConstants;
 import org.overture.ide.ui.utility.EditorUtility;
 import org.overture.pog.obligation.ProofObligation;
-import org.overture.pog.obligation.POStatus;
+import org.overture.pog.pub.POStatus;
 import org.overture.pog.pub.IProofObligation;
 
 public class PoOverviewTableView extends ViewPart implements ISelectionListener

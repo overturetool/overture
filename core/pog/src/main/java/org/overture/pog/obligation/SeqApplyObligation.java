@@ -37,7 +37,9 @@ import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.lex.LexIntegerToken;
 import org.overture.ast.statements.PStateDesignator;
 import org.overture.pog.pub.IPOContextStack;
-import org.overture.pog.utility.StateDesignatorToExpVisitor;
+import org.overture.pog.pub.IPogAssistantFactory;
+import org.overture.pog.pub.POType;
+import org.overture.pog.visitors.StateDesignatorToExpVisitor;
 
 
 public class SeqApplyObligation extends ProofObligation
@@ -45,23 +47,24 @@ public class SeqApplyObligation extends ProofObligation
 	
 	private static final long serialVersionUID = -4022111928534078511L;
 
-	public SeqApplyObligation(PExp root, PExp arg, IPOContextStack ctxt)
+	public SeqApplyObligation(PExp root, PExp arg, IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
 	{
-		super(root, POType.SEQ_APPLY, ctxt, root.getLocation());
+		super(root, POType.SEQ_APPLY, ctxt, root.getLocation(), af);
 		
 		AIndicesUnaryExp indsExp = new AIndicesUnaryExp();
 		indsExp.setExp(root.clone());
 	
 		AInSetBinaryExp inSetExp = AstExpressionFactory.newAInSetBinaryExp(arg.clone(), indsExp);
-		valuetree.setPredicate(ctxt.getPredWithContext(inSetExp));
+		stitch = inSetExp;
+		valuetree.setPredicate(ctxt.getPredWithContext(stitch));
 	}
 	
 
 
 	public SeqApplyObligation(PStateDesignator root,
-		PExp arg, IPOContextStack ctxt) throws AnalysisException
+		PExp arg, IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
 	{
-		super(root, POType.SEQ_APPLY, ctxt, root.getLocation());
+		super(root, POType.SEQ_APPLY, ctxt, root.getLocation(), af);
 		//arg >0
 		AIntLiteralExp zeroExp = new AIntLiteralExp();
 		zeroExp.setValue(new LexIntegerToken(0, null));
@@ -84,8 +87,7 @@ public class SeqApplyObligation extends ProofObligation
 		//arg > 0 and arg <= len(root)+1
 		AAndBooleanBinaryExp andExp = AstExpressionFactory.newAAndBooleanBinaryExp(grExp, lteExp);
 
-
-//		valuetree.setContext(ctxt.getContextNodeList());
-		valuetree.setPredicate(ctxt.getPredWithContext(andExp));
+		stitch = andExp;
+		valuetree.setPredicate(ctxt.getPredWithContext(stitch));
 	}
 }
