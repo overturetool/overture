@@ -268,7 +268,7 @@ public class TypeDisplayer extends AnswerAdaptor<String>
 			return types.iterator().next().toString();
 		} else
 		{
-			return Utils.setToString(new PTypeSet(types), " | ");
+			return Utils.setToString(new PTypeSet(types,af), " | ");
 		}
 	}
 

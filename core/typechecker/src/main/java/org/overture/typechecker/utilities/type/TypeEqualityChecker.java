@@ -249,7 +249,7 @@ public class TypeEqualityChecker extends QuestionAnswerAdaptor<Object, Boolean>
 	{
 
 		other = deBracket((PType) other);
-		PTypeSet types = new PTypeSet(type.getTypes());
+		PTypeSet types = new PTypeSet(type.getTypes(), af);
 
 		if (other instanceof AUnionType)
 		{
