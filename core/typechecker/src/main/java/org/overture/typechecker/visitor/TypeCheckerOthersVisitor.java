@@ -124,7 +124,7 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 	{
 
 		PType type = node.getObject().apply(THIS, question);
-		PTypeSet result = new PTypeSet();
+		PTypeSet result = new PTypeSet(question.assistantFactory);
 		boolean unique = !question.assistantFactory.createPTypeAssistant().isUnion(type);
 		ILexIdentifierToken field = node.getField();
 
@@ -305,7 +305,7 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 	{
 		PType etype = node.getExp().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env, NameScope.NAMESANDSTATE));
 		PType rtype = node.getMapseq().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env));
-		PTypeSet result = new PTypeSet();
+		PTypeSet result = new PTypeSet(question.assistantFactory);
 
 		if (question.assistantFactory.createPTypeAssistant().isMap(rtype))
 		{
@@ -388,7 +388,7 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 
 		PType type = node.getObject().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env, null, argtypes));
 		boolean unique = !question.assistantFactory.createPTypeAssistant().isUnion(type);
-		PTypeSet result = new PTypeSet();
+		PTypeSet result = new PTypeSet(question.assistantFactory);
 
 		if (question.assistantFactory.createPTypeAssistant().isMap(type))
 		{
@@ -447,7 +447,7 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 	{
 
 		PType type = node.getObject().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env, null, question.qualifiers));
-		PTypeSet result = new PTypeSet();
+		PTypeSet result = new PTypeSet(question.assistantFactory);
 		boolean unique = !question.assistantFactory.createPTypeAssistant().isUnion(type);
 
 		if (question.assistantFactory.createPTypeAssistant().isClass(type))

@@ -63,7 +63,7 @@ public class OperationTypeFinder extends TypeUnwrapper<AOperationType>
 			// type.setOpType(PTypeAssistantTC.getOperation(AstFactory.newAUnknownType(type.getLocation())));
 			// non static call.
 			type.setOpType(af.createPTypeAssistant().getOperation(AstFactory.newAUnknownType(type.getLocation())));
-			PTypeSet result = new PTypeSet();
+			PTypeSet result = new PTypeSet(af);
 			Map<Integer, PTypeSet> params = new HashMap<Integer, PTypeSet>();
 			List<PDefinition> defs = new Vector<PDefinition>();
 
@@ -85,7 +85,7 @@ public class OperationTypeFinder extends TypeUnwrapper<AOperationType>
 
 						if (pset == null)
 						{
-							pset = new PTypeSet(pt);
+							pset = new PTypeSet(pt, af);
 							params.put(p, pset);
 						} else
 						{

@@ -18,6 +18,7 @@ public class PAccessSpecifierAssistant
 		this.af = af;
 	}
 
+	//This static removal affects the parcer and I haven't yet seen how to fix the problem
 	public static AAccessSpecifierAccessSpecifier getDefault()
 	{
 		return AstFactory.newAAccessSpecifierAccessSpecifier(new APrivateAccess(), false, false);
@@ -35,12 +36,12 @@ public class PAccessSpecifierAssistant
 		return access != null && access.getAccess() instanceof APublicAccess;
 	}
 
-	public static AAccessSpecifierAccessSpecifier getPublic()
+	public AAccessSpecifierAccessSpecifier getPublic()
 	{
 		return AstFactory.newAAccessSpecifierAccessSpecifier(new APublicAccess(), false, false);
 	}
 
-	public static AAccessSpecifierAccessSpecifier getProtected()
+	public AAccessSpecifierAccessSpecifier getProtected()
 	{
 		return AstFactory.newAAccessSpecifierAccessSpecifier(new AProtectedAccess(), false, false);
 	}
