@@ -9,7 +9,6 @@ import java.util.Vector;
 import org.overture.ast.assistant.AstAssistantFactory;
 import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.assistant.InvocationAssistantException;
-import org.overture.ast.assistant.definition.PAccessSpecifierAssistant;
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AClassInvariantDefinition;
@@ -27,6 +26,7 @@ import org.overture.ast.definitions.AMultiBindListDefinition;
 import org.overture.ast.definitions.AMutexSyncDefinition;
 import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.APerSyncDefinition;
+import org.overture.ast.definitions.APrivateAccess;
 import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
@@ -248,7 +248,7 @@ public class AstFactory
 		result.setLocation(location);
 		result.setName(name);
 		result.setNameScope(scope);
-		result.setAccess(af.createPAccessSpecifierAssistant().getDefault());
+		result.setAccess(getDefaultAccessSpecifier());
 		result.setUsed(false);
 	}
 
@@ -308,7 +308,17 @@ public class AstFactory
 		result.setOpaque(false);
 		result.setInNarrower(false);
 	}
+	
+	/*
+	 * Get various pre-built access specifiers
+	 */
 
+	public static AAccessSpecifierAccessSpecifier getDefaultAccessSpecifier()
+	{
+		return AstFactory.newAAccessSpecifierAccessSpecifier(new APrivateAccess(), false, false);
+	}
+
+	
 	/*
 	 * Constructors for each type
 	 */

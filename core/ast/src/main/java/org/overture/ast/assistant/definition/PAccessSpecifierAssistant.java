@@ -1,7 +1,6 @@
 package org.overture.ast.assistant.definition;
 
 import org.overture.ast.assistant.IAstAssistantFactory;
-import org.overture.ast.definitions.APrivateAccess;
 import org.overture.ast.definitions.AProtectedAccess;
 import org.overture.ast.definitions.APublicAccess;
 import org.overture.ast.factory.AstFactory;
@@ -18,11 +17,6 @@ public class PAccessSpecifierAssistant
 		this.af = af;
 	}
 
-	//This static removal affects the parcer and I haven't yet seen how to fix the problem
-	public static AAccessSpecifierAccessSpecifier getDefault()
-	{
-		return AstFactory.newAAccessSpecifierAccessSpecifier(new APrivateAccess(), false, false);
-	}
 
 	public boolean isStatic(AAccessSpecifierAccessSpecifier access)
 	{
