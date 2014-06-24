@@ -15,25 +15,34 @@ import org.overture.ast.statements.PStm;
 import org.overture.ast.types.PType;
 import org.overture.interpreter.messages.Redirector;
 import org.overture.interpreter.solver.IConstraintSolver;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class ProbSolverIntegration implements IConstraintSolver
-{
+public class ProbSolverIntegration implements IConstraintSolver {
+
+	final ITypeCheckerAssistantFactory af;
+
+	public ProbSolverIntegration(ITypeCheckerAssistantFactory af) {
+		this.af = af;
+	}
+
 	@Override
 	public PStm solve(Collection<? extends INode> ast, String name,
 			AImplicitOperationDefinition opDef, Map<String, String> stateExps,
 			Map<String, String> argExps, PrintWriter out, PrintWriter err)
-			throws Exception
-	{
-		return ProbSolverUtil.solve(name, opDef, stateExps, argExps, new HashMap<String, PType>(), calculateTokenType(ast), calculateQuoteNames(ast), new SolverConsole(out, err));
+			throws Exception {
+		return ProbSolverUtil.solve(name, opDef, stateExps, argExps,
+				new HashMap<String, PType>(), calculateTokenType(ast),
+				calculateQuoteNames(ast), new SolverConsole(out, err));
 	}
 
 	@Override
 	public PExp solve(Collection<? extends INode> ast, String name, PExp body,
 			APatternTypePair result, Map<String, String> stateExps,
 			Map<String, String> argExps, Redirector out, Redirector err)
-			throws Exception
-	{
-		return ProbSolverUtil.solve(name, body, result, stateExps, argExps, new HashMap<String, PType>(), calculateTokenType(ast), calculateQuoteNames(ast), new SolverConsole(out, err));
+			throws Exception {
+		return ProbSolverUtil.solve(name, body, result, stateExps, argExps,
+				new HashMap<String, PType>(), calculateTokenType(ast),
+				calculateQuoteNames(ast), new SolverConsole(out, err));
 	}
 
 	/**
@@ -44,11 +53,9 @@ public class ProbSolverIntegration implements IConstraintSolver
 	 * @throws AnalysisException
 	 */
 	public PType calculateTokenType(Collection<? extends INode> defs)
-			throws AnalysisException
-	{
-		final TokenTypeCalculator tokenTypeFinder = new TokenTypeCalculator();
-		for (INode d : defs)
-		{
+			throws AnalysisException {
+		final TokenTypeCalculator tokenTypeFinder = new TokenTypeCalculator(af);
+		for (INode d : defs) {
 			d.apply(tokenTypeFinder);
 		}
 		return tokenTypeFinder.getTokenType();
@@ -62,11 +69,9 @@ public class ProbSolverIntegration implements IConstraintSolver
 	 * @throws AnalysisException
 	 */
 	public Set<String> calculateQuoteNames(Collection<? extends INode> defs)
-			throws AnalysisException
-	{
+			throws AnalysisException {
 		final QuoteLiteralFinder finder = new QuoteLiteralFinder();
-		for (INode d : defs)
-		{
+		for (INode d : defs) {
 			d.apply(finder);
 		}
 		return finder.getQuoteLiterals();
