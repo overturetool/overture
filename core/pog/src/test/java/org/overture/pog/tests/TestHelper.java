@@ -48,7 +48,7 @@ public abstract class TestHelper
 		List<PoResult> prl_actual = new LinkedList<PoResult>();
 		for (IProofObligation ipo : ipol)
 		{
-			prl_actual.add(new PoResult(ipo.getKindString(), ipo.getValue()));
+			prl_actual.add(new PoResult(ipo.getKindString(), ipo.getFullPredString()));
 		}
 
 		Collection<PoResult> stored_notfound = CollectionUtils.removeAll(pRL, prl_actual);
@@ -92,7 +92,7 @@ public abstract class TestHelper
 	 */
 	public static boolean samePO(PoResult pR, IProofObligation ipo)
 	{
-		if (pR.getPoExp().equals(ipo.getValue()))
+		if (pR.getPoExp().equals(ipo.getFullPredString()))
 		{
 			return pR.getPoKind().endsWith(ipo.getKindString());
 		} else
@@ -154,8 +154,6 @@ public abstract class TestHelper
 
 	// These 3 methods have so much duplicated code because we cannot
 	// return the TC results since their types are all different.
-
-	// FIXME find a way to clear return TCResult dupes
 	private static List<INode> parseTcPp(String name)
 	{
 		Settings.dialect = Dialect.VDM_PP;

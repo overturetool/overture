@@ -25,18 +25,23 @@ package org.overture.pog.obligation;
 
 import java.util.List;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.APreExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.IPogAssistantFactory;
+import org.overture.pog.pub.POType;
 
 public class FunctionApplyObligation extends ProofObligation
 {
 	private static final long serialVersionUID = -7146271970744572457L;
 
-	public FunctionApplyObligation(PExp root, List<PExp> args, ILexNameToken prename, IPOContextStack ctxt)
+	public FunctionApplyObligation(PExp root, List<PExp> args,
+			ILexNameToken prename, IPOContextStack ctxt, IPogAssistantFactory af)
+			throws AnalysisException
 	{
-		super(root, POType.FUNC_APPLY, ctxt, root.getLocation());
+		super(root, POType.FUNC_APPLY, ctxt, root.getLocation(), af);
 		
 		/**
 		 * If the root is an expression that evaluates to a function, we do not know
@@ -56,15 +61,16 @@ public class FunctionApplyObligation extends ProofObligation
 			APreExp preExp = new APreExp();
 			preExp.setFunction(root.clone());
 			preExp.setArgs(cloneListPExp(args));
+			stitch = preExp.clone();
 			valuetree.setPredicate(ctxt.getPredWithContext(preExp));
 		}
 		else
 		{
 			// pre_f(args)
-			valuetree.setPredicate(ctxt.getPredWithContext(getApplyExp(getVarExp(prename), cloneListPExp(args))));
+			PExp pred = getApplyExp(getVarExp(prename), cloneListPExp(args));
+			stitch = pred.clone();
+			valuetree.setPredicate(ctxt.getPredWithContext(pred));
 		}
-		
-//		valuetree.setContext(ctxt.getContextNodeList());
 	}
 	
 }

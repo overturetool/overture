@@ -49,6 +49,8 @@ import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
 import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.IPogAssistantFactory;
+import org.overture.pog.pub.POType;
 
 public class RecursiveObligation extends ProofObligation
 {
@@ -59,32 +61,33 @@ public class RecursiveObligation extends ProofObligation
 	private static final String RIGHT_MEASURE_NAME = "RME";
 
 	public RecursiveObligation(AExplicitFunctionDefinition def,
-			AApplyExp apply, IPOContextStack ctxt) throws AnalysisException
+			AApplyExp apply, IPOContextStack ctxt, IPogAssistantFactory af)
+			throws AnalysisException
 	{
-		super(apply, POType.RECURSIVE, ctxt, apply.getLocation());
+		super(apply, POType.RECURSIVE, ctxt, apply.getLocation(), af);
 
 		PExp measureLeft_exp = buildMeasureLeft(def, apply);
 		PExp measureRight_exp = buildMeasureRight(def, apply);
 
 		PExp lt_exp = buildStructuralComparison(measureLeft_exp, measureRight_exp, def.getMeasureLexical());
 
+		stitch = lt_exp;
 		valuetree.setPredicate(ctxt.getPredWithContext(lt_exp));
 	}
 
-	// Is this allowed? On hold for now
 	public RecursiveObligation(AImplicitFunctionDefinition def,
-			AApplyExp apply, IPOContextStack ctxt) throws AnalysisException
+			AApplyExp apply, IPOContextStack ctxt, IPogAssistantFactory af)
+			throws AnalysisException
 	{
-		super(def, POType.RECURSIVE, ctxt, apply.getLocation());
+		super(def, POType.RECURSIVE, ctxt, apply.getLocation(), af);
 
 		PExp measureLeft_exp = buildMeasureLeft(def, apply);
 		PExp measureRight_exp = buildMeasureRight(def, apply);
 
 		PExp lt_exp = buildStructuralComparison(measureLeft_exp, measureRight_exp, def.getMeasureLexical());
 
-//		valuetree.setContext(ctxt.getContextNodeList());
+		stitch = lt_exp;
 		valuetree.setPredicate(ctxt.getPredWithContext(lt_exp));
-
 	}
 
 	private PExp buildMeasureLeft(AExplicitFunctionDefinition def,
@@ -274,7 +277,6 @@ public class RecursiveObligation extends ProofObligation
 		return valDef;
 	}
 
-
 	private AVariableExp wrapName(ILexNameToken name)
 	{
 		AVariableExp r = new AVariableExp();
@@ -282,8 +284,5 @@ public class RecursiveObligation extends ProofObligation
 		r.setOriginal(name.getFullName());
 		return r;
 	}
-	
-
-	
 
 }

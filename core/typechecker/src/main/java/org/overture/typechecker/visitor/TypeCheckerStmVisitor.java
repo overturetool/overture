@@ -424,7 +424,9 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		}
 
 		PDefinition opdef = question.env.findName(node.getName(), question.scope);
-
+		
+		node.setRootdef(opdef);
+		
 		if (opdef == null)
 		{
 			TypeCheckerErrors.report(3213, "Operation " + node.getName()

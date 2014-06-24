@@ -28,9 +28,12 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
+import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.AStateDefinition;
+import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.AExistsExp;
@@ -42,9 +45,12 @@ import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.lex.VDMToken;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.APatternListTypePair;
+import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.IPogAssistantFactory;
+import org.overture.pog.pub.POType;
 
 public class SatisfiabilityObligation extends ProofObligation {
 	private static final long serialVersionUID = -8922392508326253099L;
@@ -59,8 +65,8 @@ public class SatisfiabilityObligation extends ProofObligation {
 			"newself", null);
 
 	public SatisfiabilityObligation(AImplicitFunctionDefinition func,
-			IPOContextStack ctxt) throws AnalysisException {
-		super(func, POType.FUNC_SATISFIABILITY, ctxt, func.getLocation());
+			IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException {
+		super(func, POType.FUNC_SATISFIABILITY, ctxt, func.getLocation(), af);
 
 		/**
 		 * f: A * B -> R [pre ...] post ... [pre_f(a, b) =>] exists r:R &
@@ -105,8 +111,10 @@ public class SatisfiabilityObligation extends ProofObligation {
 			implies.setLeft(preApply);
 			implies.setOp(new LexKeywordToken(VDMToken.IMPLIES, null));
 			implies.setRight(existsExp);
+			stitch = implies;
 			valuetree.setPredicate(ctxt.getPredWithContext(implies));
 		} else {
+			stitch = existsExp;
 			valuetree.setPredicate(ctxt.getPredWithContext(existsExp));
 		}
 
@@ -114,9 +122,9 @@ public class SatisfiabilityObligation extends ProofObligation {
 	}
 
 	public SatisfiabilityObligation(AImplicitOperationDefinition op,
-			PDefinition stateDefinition, IPOContextStack ctxt)
+			PDefinition stateDefinition, IPOContextStack ctxt, IPogAssistantFactory af)
 			throws AnalysisException {
-		super(op, POType.OP_SATISFIABILITY, ctxt, op.getLocation());
+		super(op, POType.OP_SATISFIABILITY, ctxt, op.getLocation(), af);
 
 		/**
 		 * op: A * B ==> R [pre ...] post ... [pre_op(a, b, state) =>] exists
@@ -126,8 +134,58 @@ public class SatisfiabilityObligation extends ProofObligation {
 
 		PExp predExp = buildPredicate(op, stateDefinition);
 
+		stitch = predExp;
 		valuetree.setPredicate(ctxt.getPredWithContext(predExp));
 
+	}
+
+	public SatisfiabilityObligation(ATypeDefinition node, IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
+	{
+		super(node, POType.TYPE_INV_SAT, ctxt,node.getLocation(), af);
+		
+		AExistsExp exists_exp = new AExistsExp();
+		
+		ATypeMultipleBind tmb = new ATypeMultipleBind();
+		List<PPattern> pats = new LinkedList<PPattern>();
+		pats.add(node.getInvPattern().clone());
+		tmb.setPlist(pats);
+		tmb.setType(node.getInvType().clone());
+		List<PMultipleBind> binds = new LinkedList<PMultipleBind>();
+		binds.add(tmb);
+		
+		exists_exp.setBindList(binds);		
+		exists_exp.setPredicate(node.getInvExpression().clone());
+	
+		stitch = exists_exp;
+		valuetree.setPredicate(ctxt.getPredWithContext(exists_exp));
+	}
+
+	public SatisfiabilityObligation(AClassInvariantDefinition node,
+			IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
+	{
+		super(node, POType.STATE_INV_SAT, ctxt, node.getLocation(), af);
+		
+		AExistsExp exists_exp = new AExistsExp();
+		List<PMultipleBind> binds = stateInvBinds(node);
+		
+		exists_exp.setBindList(binds);		
+		exists_exp.setPredicate(node.getExpression().clone());
+	
+		stitch = exists_exp;
+		valuetree.setPredicate(ctxt.getPredWithContext(exists_exp));
+	}
+
+	protected List<PMultipleBind> stateInvBinds(AClassInvariantDefinition node)
+	{
+		List<PMultipleBind> binds = new LinkedList<PMultipleBind>();
+		
+		for ( PDefinition p : node.getClassDefinition().getDefinitions()){
+			if (p instanceof AInstanceVariableDefinition){
+				binds.add(getMultipleTypeBind(p.getType().clone(), p.getName().clone()));
+			}
+		}
+		
+		return binds;
 	}
 
 	PExp buildPredicate(AImplicitOperationDefinition op,

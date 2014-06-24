@@ -26,6 +26,7 @@ package org.overture.pog.obligation;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.AForAllExp;
 import org.overture.ast.expressions.AGreaterNumericBinaryExp;
@@ -38,7 +39,7 @@ import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
+import org.overture.pog.pub.POType;
 
 public class FuncIterationObligation extends ProofObligation {
 	/**
@@ -53,8 +54,8 @@ public class FuncIterationObligation extends ProofObligation {
 	private static final long serialVersionUID = -6041213040266345023L;
 
 	public FuncIterationObligation(AStarStarBinaryExp exp,
-			ILexNameToken preName, IPOContextStack ctxt, IPogAssistantFactory assistantFactory) {
-		super(exp, POType.FUNC_ITERATION, ctxt, exp.getLocation());
+			ILexNameToken preName, IPOContextStack ctxt, IPogAssistantFactory assistantFactory) throws AnalysisException {
+		super(exp, POType.FUNC_ITERATION, ctxt, exp.getLocation(), assistantFactory);
 
 		// n > 1
 		AGreaterNumericBinaryExp gTExp = AstExpressionFactory
@@ -74,7 +75,7 @@ public class FuncIterationObligation extends ProofObligation {
 		AImpliesBooleanBinaryExp impliesExp = AstExpressionFactory
 				.newAImpliesBooleanBinaryExp(gTExp, forAllExp);
 
-		// valuetree.setContext(ctxt.getContextNodeList());
+		stitch=impliesExp.clone();
 		valuetree.setPredicate(ctxt.getPredWithContext(impliesExp));
 	}
 

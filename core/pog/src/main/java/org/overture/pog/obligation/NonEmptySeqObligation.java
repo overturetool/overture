@@ -25,11 +25,14 @@ package org.overture.pog.obligation;
 
 import java.util.LinkedList;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.ANotEqualBinaryExp;
 import org.overture.ast.expressions.ASeqEnumSeqExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.IPogAssistantFactory;
+import org.overture.pog.pub.POType;
 
 public class NonEmptySeqObligation extends ProofObligation
 {
@@ -38,19 +41,19 @@ public class NonEmptySeqObligation extends ProofObligation
 	 */
 	private static final long serialVersionUID = -8245417295117901422L;
 
-	public NonEmptySeqObligation(PExp exp, IPOContextStack ctxt)
+	public NonEmptySeqObligation(PExp exp, IPOContextStack ctxt,
+			IPogAssistantFactory af) throws AnalysisException
 	{
-		super(exp, POType.NON_EMPTY_SEQ, ctxt, exp.getLocation());
-		
+		super(exp, POType.NON_EMPTY_SEQ, ctxt, exp.getLocation(), af);
+
 		// exp <> []
-		
-		
+
 		ASeqEnumSeqExp seqExp = new ASeqEnumSeqExp();
 		seqExp.setMembers(new LinkedList<PExp>()); // empty list
-				
-		ANotEqualBinaryExp notEqualsExp = AstExpressionFactory.newANotEqualBinaryExp(exp.clone(),seqExp);
-		
-//		valuetree.setContext(ctxt.getContextNodeList());
+
+		ANotEqualBinaryExp notEqualsExp = AstExpressionFactory.newANotEqualBinaryExp(exp.clone(), seqExp);
+
+		stitch = notEqualsExp;
 		valuetree.setPredicate(ctxt.getPredWithContext(notEqualsExp));
 	}
 }

@@ -1,1 +1,1 @@
-[{"poKind":"function satisfiability","poExp":"(forall a:Alarm, peri:Period, plant:Plant \u0026 (exists r:Expert \u0026 post_ExpertToPage(a, peri, plant, r)))"}]
+[{"poKind":"initial state invariant","poExp":"(x \u003e 10)"},{"poKind":"state invariant satisfiable","poExp":"(exists x:int \u0026 (x \u003e 10))"}]

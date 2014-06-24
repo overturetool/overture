@@ -99,7 +99,7 @@ public class PogTestHelper
 	}
 
 	public static String makePoString(IProofObligation ipo){
-		return ipo.getName() + ": " + ipo.getKindString() + " obligation " + ipo.getLocation() + "\n" + ipo.getValue();
+		return ipo.getName() + ": " + ipo.getKindString() + " obligation " + ipo.getLocation() + "\n" + ipo.getFullPredString();
 	}
 }
 

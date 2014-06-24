@@ -26,6 +26,7 @@ package org.overture.pog.obligation;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.AForAllExp;
@@ -43,15 +44,17 @@ import org.overture.ast.types.AMapMapType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.PType;
 import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.IPogAssistantFactory;
+import org.overture.pog.pub.POType;
 
 
 public class FiniteMapObligation extends ProofObligation
 {
 	private static final long serialVersionUID = -2891663568497319141L;
 
-	public FiniteMapObligation(AMapCompMapExp exp, PType mapType, IPOContextStack ctxt)
+	public FiniteMapObligation(AMapCompMapExp exp, PType mapType, IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
 	{
-		super(exp, POType.FINITE_MAP, ctxt, exp.getLocation());
+		super(exp, POType.FINITE_MAP, ctxt, exp.getLocation(),af);
 
 		ILexNameToken finmap = getUnique("finmap");
 		ILexNameToken findex = getUnique("findex");
@@ -71,6 +74,7 @@ public class FiniteMapObligation extends ProofObligation
 		existsExp.setBindList(getMultipleTypeBindList(natmaptype, finmap));
 		existsExp.setPredicate(getForallExp(exp.clone(), finmap, findex));
 		
+		stitch = existsExp.clone();
 		valuetree.setPredicate(ctxt.getPredWithContext(existsExp));
 	}
 
