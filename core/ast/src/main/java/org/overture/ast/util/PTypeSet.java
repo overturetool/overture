@@ -39,9 +39,10 @@ public class PTypeSet extends TreeSet<PType>
 		add(t2);
 	}
 
-	public PTypeSet(List<PType> types)
+	public PTypeSet(List<PType> types, IAstAssistantFactory af)
 	{
 		super(new PTypeComparator());
+		assistantFactory = af;
 		addAll(types);
 	}
 
