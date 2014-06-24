@@ -173,17 +173,17 @@ operations
 
 
 --Strategy-------------------------------------------------
-strategyInit : () ==> ()
+public strategyInit : () ==> ()
 strategyInit() == 
 (
 	state := <halt>
 );
 
-strategyNotify : () ==> ()
+public strategyNotify : () ==> ()
 strategyNotify() == skip; -- is subclass responsibility;
 
 
-strategyEnd : () ==> ()
+public strategyEnd : () ==> ()
 strategyEnd() == 
 (
 	state := <run>;
@@ -1233,23 +1233,23 @@ operations
 
 
 
-strategyInit : () ==> ()
+public strategyInit : () ==> ()
 strategyInit() == 
 (
 	state := <halt>
 );
 
-strategyNotify : () ==> ()
+public strategyNotify : () ==> ()
 strategyNotify() == is subclass responsibility;
 
 
-strategyEnd : () ==> ()
+public strategyEnd : () ==> ()
 strategyEnd() == 
 (
 	state := <run>;
 );
 
-handleEvents : ActivePlanManager ==> ()
+public handleEvents : ActivePlanManager ==> ()
 handleEvents(apm) == is subclass responsibility;
 
 
@@ -1268,19 +1268,19 @@ types
 
 operations
 
-strategyInit : () ==> ()
+public strategyInit : () ==> ()
 strategyInit() == 
 is subclass responsibility;
 
-strategyNotify : () ==> ()
+public strategyNotify : () ==> ()
 strategyNotify() == 
 is subclass responsibility;
 
-strategyEnd : () ==> ()
+public strategyEnd : () ==> ()
 strategyEnd() == 
 is subclass responsibility;
 
-handleEvents : () ==> ()
+public handleEvents : () ==> ()
 handleEvents() == 
 is subclass responsibility;
 
