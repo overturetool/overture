@@ -58,7 +58,7 @@ public class PPatternListAssistantTC
 				return af.createPPatternAssistant().getPossibleType(plist.get(0));
 
 			default:
-				PTypeSet list = new PTypeSet();
+				PTypeSet list = new PTypeSet(af);
 
 				for (PPattern p : plist)
 				{

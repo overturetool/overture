@@ -3,8 +3,6 @@ package org.overture.ast.util.type;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.AnswerAdaptor;
 import org.overture.ast.assistant.IAstAssistantFactory;
-import org.overture.ast.assistant.type.PTypeAssistant;
-import org.overture.ast.assistant.type.SNumericBasicTypeAssistant;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.node.INode;
 import org.overture.ast.types.ABracketType;

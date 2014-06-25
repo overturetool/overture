@@ -9,8 +9,6 @@ import java.util.Vector;
 import org.overture.ast.assistant.AstAssistantFactory;
 import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.assistant.InvocationAssistantException;
-import org.overture.ast.assistant.definition.PAccessSpecifierAssistant;
-import org.overture.ast.assistant.type.AUnionTypeAssistant;
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AClassInvariantDefinition;
@@ -28,6 +26,7 @@ import org.overture.ast.definitions.AMultiBindListDefinition;
 import org.overture.ast.definitions.AMutexSyncDefinition;
 import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.APerSyncDefinition;
+import org.overture.ast.definitions.APrivateAccess;
 import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
@@ -206,8 +205,8 @@ import org.overture.ast.util.Utils;
 @SuppressWarnings("deprecation")
 public class AstFactory
 {
-	//Should we instanciate an assistant factory here?
-	//Added by gkanos.
+	//Should we instanciatte an assistant factory here?
+	//Create a setter and a getter.
 	protected static IAstAssistantFactory af;
 	
 	static
@@ -215,7 +214,8 @@ public class AstFactory
 		//Added by gkanos.
 		af = new AstAssistantFactory();// FIXME: remove when assistant conversion is finished
 	}
-
+	
+	
 	/*
 	 * Init Methods - correspond to constructors of the abstract classes, e.g. Definition, Pattern, Type, etc.
 	 */
@@ -248,7 +248,7 @@ public class AstFactory
 		result.setLocation(location);
 		result.setName(name);
 		result.setNameScope(scope);
-		result.setAccess(PAccessSpecifierAssistant.getDefault());
+		result.setAccess(getDefaultAccessSpecifier());
 		result.setUsed(false);
 	}
 
@@ -308,7 +308,17 @@ public class AstFactory
 		result.setOpaque(false);
 		result.setInNarrower(false);
 	}
+	
+	/*
+	 * Get various pre-built access specifiers
+	 */
 
+	public static AAccessSpecifierAccessSpecifier getDefaultAccessSpecifier()
+	{
+		return AstFactory.newAAccessSpecifierAccessSpecifier(new APrivateAccess(), false, false);
+	}
+
+	
 	/*
 	 * Constructors for each type
 	 */
@@ -399,7 +409,7 @@ public class AstFactory
 			List<PDefinition> members)
 	{
 		initDefinition(result, Pass.DEFS, className.getLocation(), className, NameScope.CLASSNAME);
-		result.setAccess(PAccessSpecifierAssistant.getPublic());
+		result.setAccess(af.createPAccessSpecifierAssistant().getPublic());
 		result.setUsed(true);
 		result.setTypeChecked(false);
 		result.setGettingInvDefs(false);
@@ -906,7 +916,7 @@ public class AstFactory
 		result.setStatement(statement);
 		// used to be a static method on LexNameToken - removed when we went to interface
 		result.setOperationName(new LexNameToken(statement.getLocation().getModule(), "thread", statement.getLocation()));
-		result.setAccess(PAccessSpecifierAssistant.getProtected());
+		result.setAccess(af.createPAccessSpecifierAssistant().getProtected());
 
 		return result;
 	}
@@ -997,7 +1007,7 @@ public class AstFactory
 
 		result.setPathname(namesClonable);
 		result.setTerms(terms);
-		result.setAccess(PAccessSpecifierAssistant.getPublic());
+		result.setAccess(af.createPAccessSpecifierAssistant().getPublic());
 		result.setType(newAOperationType(location));
 
 		return result;

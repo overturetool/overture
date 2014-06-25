@@ -179,7 +179,7 @@ BaseThread() ==
   then start(self);  
  );
 
-Step : () ==> ()
+public Step : () ==> ()
 Step() ==
   is subclass responsibility
 
@@ -258,7 +258,7 @@ public Finish: () ==> ()
 Finish() ==
   finished := true;
 
-Step: () ==> ()
+public Step: () ==> ()
 Step() ==
  (if World`timerRef.GetTime() < simtime 
   then CreateSignal()   
@@ -506,7 +506,7 @@ public Finish: () ==> ()
 Finish() == 
   finished := true;
 
-Step: () ==> ()
+public Step: () ==> ()
 Step() ==
  (UpdateValues();
   Algorithm();
@@ -555,7 +555,7 @@ public IsFinished: () ==> ()
 IsFinished() ==
   skip;
 
-Step: () ==> ()
+public Step: () ==> ()
 Step() ==
   Value := Env.ReadHumid();
 
@@ -695,7 +695,7 @@ public IsFinished: () ==> ()
 IsFinished() ==
   skip;
 
-Step: () ==> ()
+public Step: () ==> ()
 Step() ==
   Value := Env.ReadTemp();
 
@@ -748,7 +748,7 @@ public IsFinished: () ==> ()
 IsFinished() ==
   skip;
 
-Step: () ==> ()
+public Step: () ==> ()
 Step() ==
  (dcl tempCorr: NetworkTypes`correction := GetCorr();
 
@@ -945,7 +945,7 @@ public IsFinished: () ==> ()
 IsFinished() ==
   skip;
 
-Step: () ==> ()
+public Step: () ==> ()
 Step() ==
  (if (GetCorr() = <OPEN>)
   then (HA`Sur.DecHumid();

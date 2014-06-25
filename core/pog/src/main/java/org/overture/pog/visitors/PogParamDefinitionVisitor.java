@@ -277,7 +277,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 					PType patternType = assistantFactory.createPPatternAssistant().getPossibleType(pattern); // With
 																												// unknowns
 					AUnionType ut = (AUnionType) node.getExpType();
-					PTypeSet set = new PTypeSet();
+					PTypeSet set = new PTypeSet(assistantFactory);
 
 					for (PType u : ut.getTypes())
 					{
@@ -773,7 +773,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 			{
 				PType patternType = assistantFactory.createPPatternAssistant().getPossibleType(pattern);
 				AUnionType ut = assistantFactory.createPTypeAssistant().getUnion(type);
-				PTypeSet set = new PTypeSet();
+				PTypeSet set = new PTypeSet(assistantFactory);
 
 				for (PType u : ut.getTypes())
 				{

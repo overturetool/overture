@@ -14,10 +14,6 @@ public class X {
     public X() {
     }
 
-    public static Number f() {
-        return 1L;
-    }
-
     public Number m1() {
         return ((X) xs.get(1L)).f();
     }
@@ -56,6 +52,10 @@ public class X {
 
     public VDMMap map_zs(final Number pa, final Number pb) {
         return zs.clone();
+    }
+
+    public static Number f() {
+        return 1L;
     }
 }
 

@@ -10,7 +10,7 @@ public class Entry {
     }
 
     public static Object Run() {
-        return !((Boolean) x);
+        return !(((Boolean) x));
     }
 }
 

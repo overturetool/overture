@@ -83,7 +83,7 @@ public class FunctionTypeFinder extends AnswerAdaptor<AFunctionType>
 			type.setFuncDone(true);
 			type.setFuncType(af.createPTypeAssistant().getFunction(AstFactory.newAUnknownType(type.getLocation())));
 
-			PTypeSet result = new PTypeSet();
+			PTypeSet result = new PTypeSet(af);
 			Map<Integer, PTypeSet> params = new HashMap<Integer, PTypeSet>();
 			List<PDefinition> defs = new Vector<PDefinition>();
 
@@ -105,7 +105,7 @@ public class FunctionTypeFinder extends AnswerAdaptor<AFunctionType>
 
 						if (pset == null)
 						{
-							pset = new PTypeSet(pt);
+							pset = new PTypeSet(pt, af);
 							params.put(p, pset);
 						} else
 						{

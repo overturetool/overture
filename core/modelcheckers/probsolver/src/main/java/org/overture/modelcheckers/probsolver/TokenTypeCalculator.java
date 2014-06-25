@@ -10,6 +10,7 @@ import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.PTypeSet;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
  * Utility class capable of extracting all token types from a node tree<b> If no mk_token's can be found to extract the
@@ -21,6 +22,12 @@ public class TokenTypeCalculator extends DepthFirstAnalysisAdaptor
 {
 	final List<PType> types = new Vector<PType>();
 
+	protected ITypeCheckerAssistantFactory af;
+	
+	public TokenTypeCalculator(ITypeCheckerAssistantFactory af){
+		this.af=af;
+	}
+	
 	@Override
 	public void caseAMkBasicExp(AMkBasicExp node) throws AnalysisException
 	{
@@ -40,7 +47,7 @@ public class TokenTypeCalculator extends DepthFirstAnalysisAdaptor
 		{
 			return new AIntNumericBasicType();
 		}
-		PTypeSet ts = new PTypeSet(types);
+		PTypeSet ts = new PTypeSet(types,af);
 		return ts.getType(null);
 	}
 }

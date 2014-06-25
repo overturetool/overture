@@ -25,6 +25,7 @@ import org.overture.modelcheckers.probsolver.visitors.VdmToBConverter;
 import org.overture.parser.util.ParserUtil;
 import org.overture.parser.util.ParserUtil.ParserResult;
 import org.overture.test.framework.ConditionalIgnoreMethodRule.ConditionalIgnore;
+import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 
 import de.be4.classicalb.core.parser.exceptions.BException;
 
@@ -159,7 +160,7 @@ public abstract class AllTest extends ProbConverterTestBase
 	public AllTest(Dialect dialect, File source, String operationName,
 			String name)
 	{
-		super(source);
+		super(source,new TypeCheckerAssistantFactory());
 		this.dialect = dialect;
 		this.operationName = operationName;
 		this.name = name;

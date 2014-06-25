@@ -13,7 +13,6 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.util.modules.CombinedDefaultModule;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.definition.AStateDefinitionAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.StateContext;
