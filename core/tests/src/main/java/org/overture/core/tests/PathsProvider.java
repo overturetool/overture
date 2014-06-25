@@ -42,10 +42,10 @@ public class PathsProvider {
 	 */
 	public static Collection<Object[]> computePaths(String... root) {
 		File dir;
-		Collection<Object[]> r = null;
-		for (int i = 0; i < root.length; i++) {
+		Collection<Object[]> r = files(new File(root[0]), true);
+
+		for (int i = 1; i < root.length; i++) {
 			dir = new File(root[i]);
-			r = files(dir, true);
 			r.addAll(files(dir, false));
 		}
 		return r;
