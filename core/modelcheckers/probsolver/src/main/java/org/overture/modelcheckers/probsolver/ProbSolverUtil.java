@@ -36,7 +36,6 @@ import org.overture.modelcheckers.probsolver.visitors.BToVdmConverter;
 import org.overture.modelcheckers.probsolver.visitors.BToVdmConverter.ProBToVdmAnalysisException;
 import org.overture.modelcheckers.probsolver.visitors.VdmToBConverter;
 import org.overture.parser.util.ParserUtil;
-import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 
 import de.be4.classicalb.core.parser.analysis.prolog.ASTProlog;
 import de.be4.classicalb.core.parser.node.AConjunctPredicate;

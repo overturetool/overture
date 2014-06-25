@@ -150,7 +150,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		}
 
 		boolean isSimple = !question.assistantFactory.createPTypeAssistant().isUnion(node.getType());
-		PTypeSet results = new PTypeSet();
+		PTypeSet results = new PTypeSet(question.assistantFactory);
 
 		if (question.assistantFactory.createPTypeAssistant().isFunction(node.getType()))
 		{
@@ -218,7 +218,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		node.getLeft().apply(THIS, noConstraint);
 		node.getRight().apply(THIS, noConstraint);
 
-		PTypeSet results = new PTypeSet();
+		PTypeSet results = new PTypeSet(question.assistantFactory);
 
 		if (question.assistantFactory.createPTypeAssistant().isMap(node.getLeft().getType()))
 		{
@@ -440,10 +440,10 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			SMapType ml = question.assistantFactory.createPTypeAssistant().getMap(node.getLeft().getType());
 			SMapType mr = question.assistantFactory.createPTypeAssistant().getMap(node.getRight().getType());
 
-			PTypeSet from = new PTypeSet();
+			PTypeSet from = new PTypeSet(question.assistantFactory);
 			from.add(ml.getFrom());
 			from.add(mr.getFrom());
-			PTypeSet to = new PTypeSet();
+			PTypeSet to = new PTypeSet(question.assistantFactory);
 			to.add(ml.getTo());
 			to.add(mr.getTo());
 
@@ -660,7 +660,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		node.getLeft().apply(THIS, noConstraint);
 		node.getRight().apply(THIS, noConstraint);
 
-		PTypeSet result = new PTypeSet();
+		PTypeSet result = new PTypeSet(question.assistantFactory);
 
 		boolean unique = !question.assistantFactory.createPTypeAssistant().isUnion(node.getLeft().getType())
 				&& !question.assistantFactory.createPTypeAssistant().isUnion(node.getRight().getType());
@@ -679,10 +679,10 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			SMapType lm = question.assistantFactory.createPTypeAssistant().getMap(node.getLeft().getType());
 			SMapType rm = question.assistantFactory.createPTypeAssistant().getMap(node.getRight().getType());
 
-			PTypeSet domain = new PTypeSet();
+			PTypeSet domain = new PTypeSet(question.assistantFactory);
 			domain.add(lm.getFrom());
 			domain.add(rm.getFrom());
-			PTypeSet range = new PTypeSet();
+			PTypeSet range = new PTypeSet(question.assistantFactory);
 			range.add(lm.getTo());
 			range.add(rm.getTo());
 
@@ -861,7 +861,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		lof = ((SSeqType) lof).getSeqof();
 		rof = ((SSeqType) rof).getSeqof();
-		PTypeSet ts = new PTypeSet();
+		PTypeSet ts = new PTypeSet(question.assistantFactory);
 		ts.add(lof);
 		ts.add(rof);
 
@@ -982,7 +982,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 					+ " is not a set", node.getLocation(), node);
 		}
 
-		PTypeSet result = new PTypeSet();
+		PTypeSet result = new PTypeSet(question.assistantFactory);
 		result.add(ltype);
 		result.add(rtype);
 		node.setType(result.getType(node.getLocation()));
@@ -1087,7 +1087,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		PType expType = node.getExpression().apply(THIS, noConstraint);
 
-		PTypeSet rtypes = new PTypeSet();
+		PTypeSet rtypes = new PTypeSet(question.assistantFactory);
 
 		for (ACaseAlternative c : node.getCases())
 		{
@@ -1201,7 +1201,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			return root;
 		}
 
-		PTypeSet results = new PTypeSet();
+		PTypeSet results = new PTypeSet(question.assistantFactory);
 		boolean recOrClass = false;
 		boolean unique = !question.assistantFactory.createPTypeAssistant().isUnion(root);
 
@@ -1403,7 +1403,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		if (question.assistantFactory.createPTypeAssistant().isFunction(ftype))
 		{
 			AFunctionType t = question.assistantFactory.createPTypeAssistant().getFunction(ftype);
-			PTypeSet set = new PTypeSet();
+			PTypeSet set = new PTypeSet(question.assistantFactory);
 
 			if (t.getDefinitions().size() == 0)
 			{
@@ -1559,7 +1559,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			qdef.qualifyType();
 		}
 
-		PTypeSet rtypes = new PTypeSet();
+		PTypeSet rtypes = new PTypeSet(question.assistantFactory);
 		question.qualifiers = null;
 		rtypes.add(node.getThen().apply(THIS, question));
 
@@ -1920,8 +1920,8 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			return node.getType();
 		}
 
-		PTypeSet dom = new PTypeSet();
-		PTypeSet rng = new PTypeSet();
+		PTypeSet dom = new PTypeSet(question.assistantFactory);
+		PTypeSet rng = new PTypeSet(question.assistantFactory);
 
 		for (AMapletExp ex : node.getMembers())
 		{
@@ -2441,7 +2441,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseASeqEnumSeqExp(ASeqEnumSeqExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		PTypeSet ts = new PTypeSet();
+		PTypeSet ts = new PTypeSet(question.assistantFactory);
 		node.setTypes(new LinkedList<PType>());
 		List<PType> types = node.getTypes();
 		TypeCheckInfo elemConstraint = question;
@@ -2502,7 +2502,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseASetEnumSetExp(ASetEnumSetExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		PTypeSet ts = new PTypeSet();
+		PTypeSet ts = new PTypeSet(question.assistantFactory);
 		node.setTypes(new LinkedList<PType>());
 		List<PType> types = node.getTypes();
 		TypeCheckInfo elemConstraint = question;
