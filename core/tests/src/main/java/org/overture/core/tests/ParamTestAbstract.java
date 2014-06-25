@@ -4,12 +4,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 import org.overture.ast.node.INode;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
@@ -37,14 +37,21 @@ import com.google.gson.reflect.TypeToken;
  * 
  * @author ldc
  */
+@RunWith(Parameterized.class)
 public abstract class ParamTestAbstract {
 
 	private String modelPath;
 	private String resultPath;
 
 	/**
-	 * Constructor for the test. Should be initialized with parameters from
-	 * {@link #testData()}.
+	 * Constructor for the test. Works with outputs gotten from
+	 * {@link PathsProvider} which must to supplied via a static method.
+	 * Subclasses must implement reate this method.<br>
+	 * <br>
+	 * In order to use JUnit parameterized tests, you must annotate the
+	 * data-supplying method with <b>
+	 * <code>@Parameters(name = "{index} : {0}")</code></b>. Supporting
+	 * parameterized tests is also the reason the method must be static.
 	 * 
 	 * @param testParameter
 	 *            filename for the VDM source to test
@@ -55,24 +62,6 @@ public abstract class ParamTestAbstract {
 			String resultParameter) {
 		this.modelPath = testParameter;
 		this.resultPath = resultParameter;
-	}
-
-	/**
-	 * Generate the test data. <b>Warning:</b>This method <b>must</b> be
-	 * overridden as it returns <code>null</code>. Subclasses must override it
-	 * to provide data specific to their tests. You should use
-	 * {@link PathsProvider} for this. <br>
-	 * <br>
-	 * In order to use JUnit parameterized tests, you must annotate the method
-	 * with <code>@Parameters(name = "{index} : {0}")</code>. Supporting
-	 * parameterized tests is also the reason this method is static rather than
-	 * abstract.
-	 * 
-	 * @return the test data as a collection of file path arrays.
-	 */
-	@Parameters(name = "{index} : {0}")
-	public static Collection<Object[]> testData() {
-		return null;
 	}
 
 	/**
@@ -111,13 +100,14 @@ public abstract class ParamTestAbstract {
 	public abstract <R extends IResult> void testCompare(R actual, R expected);
 
 	/**
-	 * Analyses a model (represented by its AST). This method must
-	 * be overridden to perform whatever analysis the functionality under
-	 * test performs.<br>
+	 * Analyses a model (represented by its AST). This method must be overridden
+	 * to perform whatever analysis the functionality under test performs.<br>
 	 * <br>
 	 * The output of this method must be of type <code>R</code> that implements
 	 * {@link IResult}.
-	 * @param ast representing the model to process
+	 * 
+	 * @param ast
+	 *            representing the model to process
 	 * @return the output of the analysis
 	 */
 	public abstract <R extends IResult> R processModel(List<INode> ast);
