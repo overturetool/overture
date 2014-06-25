@@ -9,7 +9,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.RegexFileFilter;
 
-
 /**
  * Input/Result handler for the test framework. Should be used in parametric
  * constructors of test cases. Provides paths for test inputs (typically VDM
@@ -25,7 +24,6 @@ public class PathsProvider {
 	/** The Constant VDM_EXTENSION_REGEX. */
 	private final static String VDM_EXTENSION_REGEX = "(.*)\\.vdm(pp|rt|sl)";
 
-
 	/**
 	 * Processes (recursively) a folder of source inputs and result files.
 	 * 
@@ -37,17 +35,12 @@ public class PathsProvider {
 	 * ex: Test.vdmsl, Test.vdmsl.RESULT
 	 * 
 	 * 
-	 * @param names
-	 *            a flag for whether file names should be calculated as well.
-	 *            This can be useful for naming parameterised texts without
-	 *            using the full path
 	 * @param root
 	 *            the path(s) to the root(s) folder of the test inputs
-	 * @return the a collection of test file and result paths in the form of {modelname
-	 *         (optional), modelpath, resultpath} arrays
+	 * @return the a collection of test model file and result paths in the form
+	 *         of {filename ,filepath, resultpath} arrays
 	 */
-	public static Collection<Object[]> computePaths(boolean names,
-			String... root) {
+	public static Collection<Object[]> computePaths(String... root) {
 		File dir;
 		Collection<Object[]> r = null;
 		for (int i = 0; i < root.length; i++) {
@@ -65,12 +58,9 @@ public class PathsProvider {
 		List<Object[]> paths = new Vector<Object[]>();
 
 		for (File file : files) {
-			if (result) {
-				paths.add(new Object[] { file.getName(), file.getPath(),
-						file.getPath() + RESULT_EXTENSION });
-			} else {
-				paths.add(new Object[] { file.getName(), file.getPath() });
-			}
+			paths.add(new Object[] { file.getName(), file.getPath(),
+					file.getPath() + RESULT_EXTENSION });
+
 		}
 		return paths;
 	}
