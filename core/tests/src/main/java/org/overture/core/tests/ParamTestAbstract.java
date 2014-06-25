@@ -1,6 +1,7 @@
 package org.overture.core.tests;
 
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Serializable;
@@ -9,8 +10,6 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 import org.overture.ast.node.INode;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
@@ -38,17 +37,17 @@ import com.google.gson.reflect.TypeToken;
  * 
  * @author ldc
  */
-@RunWith(Parameterized.class)
 public abstract class ParamTestAbstract<R extends Serializable> {
 
 	protected String modelPath;
 	protected String resultPath;
 	protected String testName;
+	protected boolean updateResult = false;
 
 	/**
 	 * Constructor for the test. Works with outputs gotten from
 	 * {@link PathsProvider} which must to supplied via a static method.
-	 * Subclasses must implement reate this method.<br>
+	 * Subclasses must implement this method.<br>
 	 * <br>
 	 * In order to use JUnit parameterized tests, you must annotate the
 	 * data-supplying method with <b>
@@ -83,10 +82,22 @@ public abstract class ParamTestAbstract<R extends Serializable> {
 	 */
 	@Test
 	public void testCase() throws ParserException, LexException, IOException {
+		if (updateResult) {
+			testUpdate();
+		} else {
+			List<INode> ast = InputProcessor.typedAst(modelPath);
+			R actual = processModel(ast);
+			R expected = deSerializeResult(resultPath);
+			this.testCompare(actual, expected);
+		}
+	}
+
+	private void testUpdate() throws ParserException, LexException, IOException {
 		List<INode> ast = InputProcessor.typedAst(modelPath);
 		R actual = processModel(ast);
-		R expected = deSerializeResult(resultPath);
-		this.testCompare(actual, expected);
+		Gson gson = new Gson();
+		String json = gson.toJson(actual);
+		IOUtils.write(json, new FileOutputStream(resultPath));
 	}
 
 	/**
