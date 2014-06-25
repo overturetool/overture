@@ -18,17 +18,18 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 /**
- * Main parameterized test class for the new tests. Runs tests on VDM source
- * models and compares them with stored result files. This class is meant to be
- * subclassed as a way to quickly create your own tests suites.<br>
+ * The Abstract Parameterized Basic Test is the main test class for
+ * the new tests. This class runs tests on VDM source models and compares them
+ * with stored result files. It is meant to be subclassed as a way to
+ * quickly create your own test suites.<br>
  * <br>
  * A comparison method for results must be provided. Serialization of results is
- * as automated as possible but can be overridden if your results classes are to
- * complex for auto. <br>
+ * as automated as possible but can be overridden if your results classes are too
+ * complex for auto-deserialization. <br>
  * <br>
  * These tests are meant to be used as parameterized JUnit test and so any
- * subclass of it must be annotated with
- * <code>@RunWith(Parameterized.class)</code>. <br>
+ * subclass {@link AParamBasicTest} must be annotated with
+ *  <code>@RunWith(Parameterized.class)</code>. <br>
  * <br>
  * This class is parameterized on a type <code>R</code> that represents the
  * output of of the analysis of the functionality under test. These types must
@@ -37,7 +38,7 @@ import com.google.gson.reflect.TypeToken;
  * 
  * @author ldc
  */
-public abstract class ParamTestAbstract<R extends Serializable> {
+public abstract class AParamBasicTest<R extends Serializable> {
 
 	protected String modelPath;
 	protected String resultPath;
@@ -59,7 +60,7 @@ public abstract class ParamTestAbstract<R extends Serializable> {
 	 * @param resultParameter
 	 *            test result file
 	 */
-	public ParamTestAbstract(String nameParameter, String testParameter,
+	public AParamBasicTest(String nameParameter, String testParameter,
 			String resultParameter) {
 		this.testName = testParameter;
 		this.modelPath = testParameter;
