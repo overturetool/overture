@@ -1,5 +1,6 @@
 package org.overture.codegen.tests;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
@@ -12,7 +13,9 @@ import org.overture.test.framework.Properties;
 
 public class ConcurrencyTests extends BaseTestSuite
 {
-	public static final String ROOT = "src\\test\\resources\\concurrency";
+	public static final String ROOT = "src" + File.separatorChar + "test"
+			+ File.separatorChar + "resources" + File.separatorChar
+			+ "concurrency";
 	
 	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
 	{
