@@ -587,7 +587,7 @@ BaseThread() ==
   then start(self);  
  );
 
-Step : () ==> ()
+public Step : () ==> ()
 Step() ==
   is subclass responsibility
 

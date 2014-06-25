@@ -1,0 +1,26 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	return new B().op();
+
+end Entry
+
+class A
+
+instance variables
+
+protected x : nat := 2;
+
+end A
+
+class B is subclass of A
+
+operations
+
+public op :  () ==> nat
+op () == return x;
+
+end B

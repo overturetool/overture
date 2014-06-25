@@ -34,6 +34,7 @@ import org.overture.test.framework.TestResourcesResultTestCase4;
 import org.overture.test.framework.results.IMessage;
 import org.overture.test.framework.results.Message;
 import org.overture.test.framework.results.Result;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 import org.w3c.dom.Document;
@@ -45,12 +46,14 @@ import de.be4.classicalb.core.parser.exceptions.BException;
 public abstract class ProbConverterTestBase extends TestResourcesResultTestCase4<String>
 {
 	private static final String TESTS_TC_PROPERTY_PREFIX = "tests.probsolver.override.";
-
+	private final ITypeCheckerAssistantFactory af;
+	
 	// private File file;
 
-	public ProbConverterTestBase(File file)
+	public ProbConverterTestBase(File file, ITypeCheckerAssistantFactory af)
 	{
 		super(file);
+		this.af=af;
 		Assert.assertTrue("Input file does not exist", file.exists());
 	}
 
@@ -142,7 +145,7 @@ public abstract class ProbConverterTestBase extends TestResourcesResultTestCase4
 
 	protected PType calculateTokenType() throws AnalysisException
 	{
-		final TokenTypeCalculator tokenTypeFinder = new TokenTypeCalculator();
+		final TokenTypeCalculator tokenTypeFinder = new TokenTypeCalculator(af);
 		for (PDefinition d : defs)
 		{
 			d.apply(tokenTypeFinder);

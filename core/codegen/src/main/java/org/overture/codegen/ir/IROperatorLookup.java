@@ -6,6 +6,7 @@ import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.expressions.AAddrEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AAddrNotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ADivNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
@@ -55,6 +56,8 @@ public class IROperatorLookup
 	//TODO: This is not the way to do it! Fix operator precedence!
 	private static final int POWER = 7;
 
+	private static final int CAST = 9;
+	
 	private static final int OR = 10;
 	private static final int AND = 11;
 	private static final int XOR = 12;
@@ -80,8 +83,8 @@ public class IROperatorLookup
 		lookup.put(ATimesNumericBinaryExpCG.class, new IROperatorInfo(TIMES, "*"));
 		lookup.put(ADivNumericBinaryExpCG.class, new IROperatorInfo(DIVIDE, "/"));
 		lookup.put(ARemNumericBinaryExpCG.class, new IROperatorInfo(REM, "%")); 
-		lookup.put(AModNumericBinaryExpCG.class, new IROperatorInfo(MOD, "%")); //FIXME: Mod is special
-		lookup.put(ADivideNumericBinaryExpCG.class, new IROperatorInfo(DIV, "/"));//FIXME: Divider med / er speciel
+		lookup.put(AModNumericBinaryExpCG.class, new IROperatorInfo(MOD, "%"));
+		lookup.put(ADivideNumericBinaryExpCG.class, new IROperatorInfo(DIV, "/"));
 
 		lookup.put(AEqualsBinaryExpCG.class, new IROperatorInfo(EQUALS, "="));
 		lookup.put(ANotEqualsBinaryExpCG.class, new IROperatorInfo(NOT_EQUALS, "<>"));
@@ -94,6 +97,8 @@ public class IROperatorLookup
 		lookup.put(ALessNumericBinaryExpCG.class, new IROperatorInfo(LESS, "<"));
 
 		lookup.put(APowerNumericBinaryExpCG.class, new IROperatorInfo(POWER, "**"));
+		
+		lookup.put(ACastUnaryExpCG.class, new IROperatorInfo(CAST, "()"));
 		
 		lookup.put(AOrBoolBinaryExpCG.class, new IROperatorInfo(OR, "or"));
 		lookup.put(AAndBoolBinaryExpCG.class, new IROperatorInfo(AND, "and"));
