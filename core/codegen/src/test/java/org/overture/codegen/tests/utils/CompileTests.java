@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.overture.codegen.tests.ClassicSpecTest;
 import org.overture.codegen.tests.ComplexExpressionTest;
+import org.overture.codegen.tests.ConcurrencyTests;
 import org.overture.codegen.tests.ConfiguredCloningTest;
 import org.overture.codegen.tests.ConfiguredStringGenerationTest;
 import org.overture.codegen.tests.ExpressionTest;
@@ -26,11 +27,20 @@ import org.overture.interpreter.values.Value;
 
 public class CompileTests
 {
-	private static final String CG_VALUE_BINARY_FILE = "target\\cgtest\\myData.bin";
-	private static final String TEMP_DIR = "target\\cgtest";
-	private static final String SRC_JAVA_LIB = "..\\codegen-runtime\\src\\main\\java\\org\\overture\\codegen\\runtime";
-	private static final String TARGET_JAVA_LIB = "target\\cgtest\\org\\overture\\codegen\\runtime";
-	
+	private static final String CG_VALUE_BINARY_FILE = "target"
+			+ File.separatorChar + "cgtest" + File.separatorChar + "myData.bin";
+	private static final String TEMP_DIR = "target" + File.separatorChar
+			+ "cgtest";
+	private static final String SRC_JAVA_LIB = ".." + File.separatorChar
+			+ "codegen-runtime" + File.separatorChar + "src"
+			+ File.separatorChar + "main" + File.separatorChar + "java"
+			+ File.separatorChar + "org" + File.separatorChar + "overture"
+			+ File.separatorChar + "codegen" + File.separatorChar + "runtime";
+	private static final String TARGET_JAVA_LIB = "target" + File.separatorChar
+			+ "cgtest" + File.separatorChar + "org" + File.separatorChar
+			+ "overture" + File.separatorChar + "codegen" + File.separatorChar
+			+ "runtime";
+
 	private static final List<String> FOLDER_NAMES_TO_AVOID = Arrays.asList(new String[]{"runtime"});
 
 	private static final String RESULT_FILE_EXTENSION = ".result";
@@ -43,7 +53,8 @@ public class CompileTests
 	public static final boolean RUN_CONFIGURED_STRING_GENERATION_TESTS = false;
 	public static final boolean RUN_CONFIGURED_CLONE_TESTS = false;
 	public static final boolean RUN_PATTERN_TESTS = false;
-	public static final boolean RUN_UNION_TESTS = true;
+	public static final boolean RUN_UNION_TESTS = false;
+	public static final boolean RUN_CONCURRENCY_TESTS = true;
 	
 	private List<File> testInputFiles;
 	private List<File> resultFiles;
@@ -109,6 +120,11 @@ public class CompileTests
 			runUnionTests();
 		}
 		
+		if(RUN_CONCURRENCY_TESTS)
+		{
+			runConcurrencyTests();
+		}
+		
 		long endTimeMs = System.currentTimeMillis();
 		
 		long totalTimeMs = (endTimeMs - startTimeMs);
@@ -119,6 +135,20 @@ public class CompileTests
 		System.out.println("Time: " + String.format("%02d:%02d", minutes, seconds) + ".");
 	}
 	
+	private void runConcurrencyTests() throws IOException
+	{
+		System.out.println("Beginning concurrency tests..\n");
+
+		testInputFiles = TestUtils.getTestInputFiles(new File(ConcurrencyTests.ROOT));
+		resultFiles = TestUtils.getFiles(new File(ConcurrencyTests.ROOT), RESULT_FILE_EXTENSION);
+		
+		runTests(testInputFiles, resultFiles, new ExecutableSpecTestHandler(Release.VDM_10), false);
+		
+		System.out.println("\n********");
+		System.out.println("Finished with concurrency tests");
+		System.out.println("********\n");
+	}
+
 	private void runUnionTests() throws IOException
 	{
 		System.out.println("Beginning union type tests..\n");
