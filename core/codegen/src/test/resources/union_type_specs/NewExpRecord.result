@@ -1,0 +1,66 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry(final Character c) {
+        //Skip;
+    }
+
+    public Entry(final Number n) {
+        //Skip;
+    }
+
+    public Entry(final Boolean b, final Number r) {
+        //Skip;
+    }
+
+    public Entry(final Number n, final Character c) {
+        //Skip;
+    }
+
+    public Entry() {
+    }
+
+    public static Object Run() {
+        Object x = 1L;
+        Object y = 'a';
+
+        return new Rec(((Number) x), ((Character) y));
+    }
+
+    public static class Rec implements Record {
+        public Number x;
+        public Character y;
+
+        public Rec(final Number _x, final Character _y) {
+            x = _x;
+            y = _y;
+        }
+
+        public boolean equals(final Object obj) {
+            if (!(obj instanceof Rec)) {
+                return false;
+            }
+
+            Rec other = ((Rec) obj);
+
+            return (x.longValue() == other.x.longValue()) && (y == other.y);
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(x, y);
+        }
+
+        public Rec clone() {
+            return new Rec(x, y);
+        }
+
+        public String toString() {
+            return Utils.recordToString(this, x, y);
+        }
+    }
+}
+
+##########

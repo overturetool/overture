@@ -183,7 +183,8 @@ public class JavaCodeGen
 			statuses.add(generator.generateFrom(classDef));
 		}
 
-		javaFormat.setClasses(getClassDecls(statuses));
+		List<AClassDeclCG> classes = getClassDecls(statuses);
+		javaFormat.setClasses(classes);
 		
 		TransformationAssistantCG transformationAssistant = new TransformationAssistantCG(irInfo, varPrefixes);
 		FunctionValueAssistant functionValueAssistant = new FunctionValueAssistant();
@@ -192,7 +193,7 @@ public class JavaCodeGen
 		IfExpTransformation ifExpTransformation = new IfExpTransformation(transformationAssistant);
 		IgnorePatternTransformation ignoreTransformation = new IgnorePatternTransformation(transformationAssistant, IGNORE_PATTERN_NAME_PREFIX);
 		DeflattenTransformation deflattenTransformation = new DeflattenTransformation(transformationAssistant);
-		UnionTypeTransformation unionTypeTransformation = new UnionTypeTransformation(transformationAssistant, irInfo);
+		UnionTypeTransformation unionTypeTransformation = new UnionTypeTransformation(transformationAssistant, irInfo, classes);
 		FunctionValueVisitor funcValVisitor = new FunctionValueVisitor(transformationAssistant, functionValueAssistant, INTERFACE_NAME_PREFIX, TEMPLATE_TYPE_PREFIX, EVAL_METHOD_PREFIX, PARAM_NAME_PREFIX);
 		ILanguageIterator langIterator = new JavaLanguageIterator(transformationAssistant, irInfo.getTempVarNameGen(), varPrefixes);
 		TransformationVisitor transVisitor = new TransformationVisitor(irInfo, varPrefixes, transformationAssistant, langIterator);

@@ -1,6 +1,7 @@
 package org.overture.codegen.trans.uniontypes;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import org.overture.ast.node.INode;
 import org.overture.ast.types.PType;
@@ -10,35 +11,45 @@ import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.AFieldDeclCG;
+import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AElemsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AMapDomainUnaryExpCG;
+import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
 import org.overture.codegen.cgast.expressions.SNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.SUnaryExpCG;
 import org.overture.codegen.cgast.statements.AElseIfStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
+import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
+import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.AUnionTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.trans.assistants.BaseTransformationAssistant;
+import org.overture.typechecker.TypeComparator;
 
 public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 {
 	private BaseTransformationAssistant baseAssistant;
 	private IRInfo info;
+	private List<AClassDeclCG> classes;
 	
-	public UnionTypeTransformation(BaseTransformationAssistant baseAssistant, IRInfo info)
+	public UnionTypeTransformation(BaseTransformationAssistant baseAssistant, IRInfo info, List<AClassDeclCG> classes)
 	{
 		this.baseAssistant = baseAssistant;
 		this.info = info;
+		this.classes = classes;
 	}
 	
 	private interface TypeFinder<T extends STypeCG>
@@ -195,6 +206,118 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		
 		STypeCG expectedType = notUnionTypedExp.getType();
 		correctTypes(unionTypedExp, expectedType);
+	}
+	
+	@Override
+	public void caseANewExpCG(ANewExpCG node) throws AnalysisException
+	{
+		LinkedList<SExpCG> args = node.getArgs();
+		
+		boolean hasUnionTypes = false;
+		
+		for(SExpCG arg : args)
+		{
+			if(arg.getType() instanceof AUnionTypeCG)
+			{
+				hasUnionTypes = true;
+				break;
+			}
+		}
+		
+		if(!hasUnionTypes)
+		{
+			return;
+		}
+		
+		STypeCG type = node.getType();
+
+		if (type instanceof AClassTypeCG)
+		{
+			for (AClassDeclCG classCg : classes)
+			{
+				for (AMethodDeclCG method : classCg.getMethods())
+				{
+					if (!method.getIsConstructor())
+					{
+						continue;
+					}
+
+					LinkedList<STypeCG> paramTypes = method.getMethodType().getParams();
+
+					if (paramTypes.size() != args.size())
+					{
+						continue;
+					}
+					
+					if(checkArgTypes(args, paramTypes))
+					{
+						return;
+					}
+				}
+			}
+		}
+		else if(type instanceof ARecordTypeCG)
+		{
+			ARecordTypeCG recordType = (ARecordTypeCG) type;
+			String definingClassName = recordType.getName().getDefiningClass();
+			String recordName = recordType.getName().getName();
+			
+			for(AClassDeclCG classCg : classes)
+			{
+				for(ARecordDeclCG recordCg : classCg.getRecords())
+				{
+					if(definingClassName.equals(classCg.getName()) && recordName.equals(recordCg.getName()))
+					{
+						List<AFieldDeclCG> fields = recordCg.getFields();
+						List<STypeCG> fieldTypes = new LinkedList<STypeCG>();
+						
+						for(AFieldDeclCG field : fields)
+						{
+							fieldTypes.add(field.getType());
+						}
+						if(checkArgTypes(args, fieldTypes))
+						{
+							return;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private boolean checkArgTypes(List<SExpCG> args, List<STypeCG> paramTypes)
+			throws AnalysisException
+	{
+		for (int i = 0; i < paramTypes.size(); i++)
+		{
+			SourceNode paramSourceNode = paramTypes.get(i).getSourceNode();
+			SourceNode argTypeSourceNode = args.get(i).getType().getSourceNode();
+
+			if (paramSourceNode == null || argTypeSourceNode == null)
+			{
+				return false;
+			}
+
+			INode paramTypeNode = paramSourceNode.getVdmNode();
+			INode argTypeNode = argTypeSourceNode.getVdmNode();
+
+			if (!(paramTypeNode instanceof PType) || !(argTypeNode instanceof PType))
+			{
+				return false;
+			}
+			
+			if (!TypeComparator.compatible((PType) paramTypeNode, (PType) argTypeNode))
+			{
+				return false;
+			}
+		}
+		
+		for (int k = 0; k < paramTypes.size(); k++)
+		{
+			correctTypes(args.get(k), paramTypes.get(k));
+		}
+		
+		return true;
 	}
 
 	@Override
