@@ -156,20 +156,14 @@ import org.overture.typechecker.visitor.QualificationVisitor;
 
 //TODO Add assistant Javadoc
 /**
- * An assistant factory for the Overture Typecher. The methods supplied here
- * only support pure VDM nodes. Override/extend as needed.
+ * An assistant factory for the Overture Typecher. The methods supplied here only support pure VDM nodes.
+ * Override/extend as needed.
+ * 
  * @author ldc
- *
  */
 public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		ITypeCheckerAssistantFactory
 {
-	static
-	{
-		// FIXME: remove this when conversion to factory obtained assistants are completed.
-		// init(new AstAssistantFactory());
-		init(new TypeCheckerAssistantFactory());
-	}
 
 	// Type
 
@@ -301,11 +295,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new AStateDefinitionAssistantTC(this);
 	}
 
-//	@Override
-//	public ASystemClassDefinitionAssistantTC createASystemClassDefinitionAssistant()
-//	{
-//		return new ASystemClassDefinitionAssistantTC(this);
-//	}
+	// @Override
+	// public ASystemClassDefinitionAssistantTC createASystemClassDefinitionAssistant()
+	// {
+	// return new ASystemClassDefinitionAssistantTC(this);
+	// }
 
 	@Override
 	public AThreadDefinitionAssistantTC createAThreadDefinitionAssistant()
@@ -445,17 +439,17 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	// return new ACharacterPatternAssistantTC(this);
 	// }
 
-//	@Override
-//	public AConcatenationPatternAssistantTC createAConcatenationPatternAssistant()
-//	{
-//		return new AConcatenationPatternAssistantTC(this);
-//	}
-//
-//	@Override
-//	public AExpressionPatternAssistantTC createAExpressionPatternAssistant()
-//	{
-//		return new AExpressionPatternAssistantTC(this);
-//	}
+	// @Override
+	// public AConcatenationPatternAssistantTC createAConcatenationPatternAssistant()
+	// {
+	// return new AConcatenationPatternAssistantTC(this);
+	// }
+	//
+	// @Override
+	// public AExpressionPatternAssistantTC createAExpressionPatternAssistant()
+	// {
+	// return new AExpressionPatternAssistantTC(this);
+	// }
 
 	@Override
 	public AMapletPatternMapletAssistantTC createAMapletPatternMapletAssistant()
@@ -463,17 +457,17 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new AMapletPatternMapletAssistantTC(this);
 	}
 
-//	@Override
-//	public AMapPatternAssistantTC createAMapPatternAssistant()
-//	{
-//		return new AMapPatternAssistantTC(this);
-//	}
+	// @Override
+	// public AMapPatternAssistantTC createAMapPatternAssistant()
+	// {
+	// return new AMapPatternAssistantTC(this);
+	// }
 
-//	@Override
-//	public AMapUnionPatternAssistantTC createAMapUnionPatternAssistant()
-//	{
-//		return new AMapUnionPatternAssistantTC(this);
-//	}
+	// @Override
+	// public AMapUnionPatternAssistantTC createAMapUnionPatternAssistant()
+	// {
+	// return new AMapUnionPatternAssistantTC(this);
+	// }
 
 	@Override
 	public APatternTypePairAssistant createAPatternTypePairAssistant()
@@ -481,17 +475,17 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new APatternTypePairAssistant(this);
 	}
 
-//	@Override
-//	public ARecordPatternAssistantTC createARecordPatternAssistant()
-//	{
-//		return new ARecordPatternAssistantTC(this);
-//	}
+	// @Override
+	// public ARecordPatternAssistantTC createARecordPatternAssistant()
+	// {
+	// return new ARecordPatternAssistantTC(this);
+	// }
 
-//	@Override
-//	public ASeqPatternAssistantTC createASeqPatternAssistant()
-//	{
-//		return new ASeqPatternAssistantTC(this);
-//	}
+	// @Override
+	// public ASeqPatternAssistantTC createASeqPatternAssistant()
+	// {
+	// return new ASeqPatternAssistantTC(this);
+	// }
 
 	@Override
 	public ASetBindAssistantTC createASetBindAssistant()
@@ -499,17 +493,17 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new ASetBindAssistantTC(this);
 	}
 
-//	@Override
-//	public ASetPatternAssistantTC createASetPatternAssistant()
-//	{
-//		return new ASetPatternAssistantTC(this);
-//	}
+	// @Override
+	// public ASetPatternAssistantTC createASetPatternAssistant()
+	// {
+	// return new ASetPatternAssistantTC(this);
+	// }
 
-//	@Override
-//	public ATuplePatternAssistantTC createATuplePatternAssistant()
-//	{
-//		return new ATuplePatternAssistantTC(this);
-//	}
+	// @Override
+	// public ATuplePatternAssistantTC createATuplePatternAssistant()
+	// {
+	// return new ATuplePatternAssistantTC(this);
+	// }
 
 	@Override
 	public ATypeBindAssistantTC createATypeBindAssistant()
@@ -517,11 +511,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new ATypeBindAssistantTC(this);
 	}
 
-//	@Override
-//	public AUnionPatternAssistantTC createAUnionPatternAssistant()
-//	{
-//		return new AUnionPatternAssistantTC(this);
-//	}
+	// @Override
+	// public AUnionPatternAssistantTC createAUnionPatternAssistant()
+	// {
+	// return new AUnionPatternAssistantTC(this);
+	// }
 
 	@Override
 	public PatternListTC createPatternList()

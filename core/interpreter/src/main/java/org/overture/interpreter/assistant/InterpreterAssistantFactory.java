@@ -78,17 +78,6 @@ import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 		implements IInterpreterAssistantFactory, Serializable
 {
-	/**
-	 * serial id
-	 */
-	private static final long serialVersionUID = 9172962921215037477L;
-
-	static
-	{
-		// FIXME: remove this when conversion to factory obtained assistants are completed.
-		// init(new AstAssistantFactory());
-		init(new InterpreterAssistantFactory());
-	}
 
 	// definition
 
@@ -106,6 +95,11 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 //	{
 //		return new ABracketedExpressionTraceCoreDefinitionAssitantInterpreter(this);
 //	}
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	public ABusClassDefinitionAssitantInterpreter createABusClassDefinitionAssitant()
 	{
