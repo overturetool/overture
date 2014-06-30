@@ -413,7 +413,7 @@ public class AllNamedValuesLocator
 			{
 				for (AMapletPatternMaplet p : pattern.getMaplets())
 				{
-					List<NameValuePairList> pnvps = AMapPatternMapletAssistantInterpreter.getAllNamedValues(p, iter.next(), question.ctxt);
+					List<NameValuePairList> pnvps = af.createAMapPatternMapletAssistant().getAllNamedValues(p, iter.next(), question.ctxt);
 					nvplists.add(pnvps);
 					counts[i++] = pnvps.size();
 				}
