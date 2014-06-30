@@ -2,28 +2,61 @@ package org.overture.core.npp;
 
 /**
  * The Class IndentTracker keeps track of indentation levels when printing ASTs. The indentation level is initially zero
- * (no indentation). It can be increased by one level at a time with {@link incIndent} and reset with
+ * (no indentation). It can be increased by one level at a time with {@link incrIndent} and reset with
  * {@link resetIndent}. <br>
- * Indentation is done exclusively with spaces. The default length is 2 spaces (half a tab) but this can be changed with
- * {@link setIndentLength}.
+ * Indentation is done exclusively with tabs. This allows for easy rewriting of indents in the final string.
  */
 public class IndentTracker
 {
 
 	/** The indentation counter. */
-	int count;
+	private int count;
 
-	// indent characters.
+	// indent character.
 	private String indent = "\t";
 
 	/**
-	 * Gets the indentation string.
+	 * Instantiates a new indent tracker.
+	 */
+	public IndentTracker()
+	{
+		count = 0;
+	}
+
+	/**
+	 * Decrease the level of indentation by one. Does nothing if level is zero.
+	 */
+	void decrIndent()
+	{
+		if (count > 0)
+		{
+			count--;
+		}
+	}
+
+	/**
+	 * Get the current indentation, computed as <code>indentLevel x indendtString</code>.
 	 * 
 	 * @return the indentation
 	 */
 	String getIndentation()
 	{
-		return indent;
+		StringBuilder sb = new StringBuilder();
+
+		for (int i = 0; i < count; i++)
+		{
+			sb.append(indent);
+		}
+
+		return sb.toString();
+	}
+
+	/**
+	 * Increase the level of indentation by one.
+	 */
+	void incrIndent()
+	{
+		count++;
 	}
 
 	/**
@@ -51,38 +84,10 @@ public class IndentTracker
 		}
 	}
 
-
-	/**
-	 * Increase the level of indentation by one.
-	 */
-	void incrIndent()
-	{
-		count++;
-	}
-
-	/**
-	 * Decrease the level of indentation by one. Does nothing if indentation if zero.
-	 */
-	void decrIndent()
-	{
-		if (count > 0)
-		{
-			count--;
-		}
-	}
-
-	/**
-	 * Instantiates a new indent tracker.
-	 */
-	public IndentTracker()
-	{
-		count = 0;
-	}
-
 	/**
 	 * Reset the indentation level to 0.
 	 */
-	public void resetIndent()
+	void resetIndent()
 	{
 		count = 0;
 	}

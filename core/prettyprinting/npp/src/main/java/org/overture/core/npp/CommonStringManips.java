@@ -13,7 +13,7 @@ public abstract class CommonStringManips {
 	 * @param s
 	 *            the string to be wrapped
 	 * 
-	 * @return the wrapped string: "(s)"
+	 * @return the wrapped string: <code>"(s)"</code>
 	 */
 	public static String wrap(String s) {
 		StringBuilder sb = new StringBuilder();

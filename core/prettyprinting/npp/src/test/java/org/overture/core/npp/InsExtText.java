@@ -17,8 +17,17 @@ public class InsExtText {
 
 		public ExtTable() {
 			super();
-			this.insertAttribute("extkey", "extattrib");
-			this.insertAttribute("head", "exthd");
+		}
+		
+		@Override
+		public String getHEAD()
+		{
+			return "exthd";
+
+		}
+		
+		public String getEXTKEY(){
+			return "extkey";
 		}
 	}
 
@@ -36,7 +45,7 @@ public class InsExtText {
 
 	@Test
 	public void testGetAttribute_Inherit() {
-		String actual = eTable.getAttribute("TAIL");
+		String actual = eTable.getTAIL();
 		String expected = "tl";
 
 		assertEquals(expected, actual);
@@ -44,7 +53,7 @@ public class InsExtText {
 
 	@Test
 	public void testGetAttribute_Override() {
-		String actual = eTable.getAttribute("head");
+		String actual = eTable.getHEAD();
 		String expected = "exthd";
 
 		assertEquals(expected, actual);
@@ -52,7 +61,7 @@ public class InsExtText {
 
 	@Test
 	public void testGetAttribute_NewAttrib() {
-		String actual = eTable.getAttribute("extkey");
+		String actual = eTable.getEXTKEY();
 		String expected = "extattrib";
 
 		assertEquals(expected, actual);

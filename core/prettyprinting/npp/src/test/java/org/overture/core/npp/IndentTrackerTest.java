@@ -19,14 +19,14 @@ public class IndentTrackerTest {
 
 	@Test
 	public void testGetIndentation() {
-		String expected = "  ";
+		String expected = "\t";
 		String actual = it.getIndentation();
 		assertEquals(expected, actual);
 	}
 
 	@Test
 	public void testIndent_1Level_SingleLine() {
-		String expected = "  1 line string";
+		String expected = "\t1 line string";
 		String input = "1 line string";
 		String actual = it.indent(input);
 		assertEquals(expected, actual);
@@ -42,7 +42,7 @@ public class IndentTrackerTest {
 	
 	@Test
 	public void testIndent_1Level_MultiLine() {
-		String expected = "  multi\n  line\n  string";
+		String expected = "\tmulti\n\tline\n\tstring";
 		String input = "multi\nline\nstring";
 		String actual = it.indent(input);
 		assertEquals(expected, actual);
@@ -50,7 +50,7 @@ public class IndentTrackerTest {
 
 	@Test
 	public void testIncrIndent() {
-		String expected = "    ";
+		String expected = "\t\t";
 		it.incrIndent();
 		String actual = it.getIndentation();
 		assertEquals(expected, actual);

@@ -34,7 +34,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	{
 		String l = node.getLeft().apply(this, question);
 		String r = node.getRight().apply(this, question);
-		String op = mytable.getPlus();
+		String op = mytable.getPLUS();
 
 		StringBuilder sb = new StringBuilder();
 
