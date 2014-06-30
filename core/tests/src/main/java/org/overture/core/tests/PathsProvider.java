@@ -17,12 +17,12 @@ import org.apache.commons.io.filefilter.RegexFileFilter;
  * @author ldc
  */
 public class PathsProvider {
-
+	
 	/** The Constant RESULT_EXTENSION. */
 	private final static String RESULT_EXTENSION = ".RESULT";
 
 	/** The Constant VDM_EXTENSION_REGEX. */
-	private final static String VDM_EXTENSION_REGEX = "(.*)\\.vdm(pp|rt|sl)";
+	public final static String VDM_EXTENSION_REGEX = "(.*)\\.vdm(pp|rt|sl)";
 
 	/**
 	 * Processes (recursively) a folder of source inputs and result files.
