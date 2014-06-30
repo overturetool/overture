@@ -22,7 +22,6 @@ import java.io.File;
 import java.util.List;
 import java.util.Vector;
 
-import org.overture.ast.assistant.InvocationAssistantException;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
@@ -91,14 +90,7 @@ public class VdmjVdmClassReader implements IVdmClassReader
 		// we extract the annotations (ideally this should be done by the same parser)
 		annotationReader.readFiles(files);
 		System.out.println(annotationTable.printTable());
-		try
-		{
-			readVdmjClassList(classes, annotationTable);
-		} catch (InvocationAssistantException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		readVdmjClassList(classes, annotationTable);
 
 	}
 
@@ -114,10 +106,10 @@ public class VdmjVdmClassReader implements IVdmClassReader
 	 * 
 	 * @param classes
 	 * @param annotationTable
-	 * @throws InvocationAssistantException 
+	 * @throws InvocationAssistantException
 	 */
 	private void readVdmjClassList(ClassList classes,
-			AnnotationTable annotationTable) throws InvocationAssistantException
+			AnnotationTable annotationTable)
 	{
 		// the name of the classes, this is usefull later on
 		Vector<String> classNames = new Vector<String>();
@@ -142,10 +134,10 @@ public class VdmjVdmClassReader implements IVdmClassReader
 	 * @param annotationTable
 	 *            annotation table associated with the specification
 	 * @param classNames
-	 * @throws InvocationAssistantException 
+	 * @throws InvocationAssistantException
 	 */
 	private void readVdmjClass(SClassDefinition c,
-			AnnotationTable annotationTable, Vector<String> classNames) throws InvocationAssistantException
+			AnnotationTable annotationTable, Vector<String> classNames)
 	{
 		boolean hasConstructors = c.getHasContructors();
 		VdmClass vdmClass = new VdmClass(c.getName().getName(), hasConstructors);
@@ -194,7 +186,7 @@ public class VdmjVdmClassReader implements IVdmClassReader
 					AImplicitOperationDefinition operation = ((AImplicitOperationDefinition) def);
 					VdmType type = null;
 					// FIXME: In terms of type only 'class types' are treated
-					type = getType(((AOperationType)operation.getType()).getResult(),assistantFactory);
+					type = getType(((AOperationType) operation.getType()).getResult(), assistantFactory);
 					newDefinition = new VdmMethod(operation.getName().getName(), operation.getIsConstructor(), type);
 
 					// fetching the arguments
@@ -220,7 +212,7 @@ public class VdmjVdmClassReader implements IVdmClassReader
 					AExplicitFunctionDefinition function = ((AExplicitFunctionDefinition) def);
 					VdmType type = null;
 					// FIXME: In terms of type only 'class types' are treated
-					type = getType(((AFunctionType) function.getType()).getResult(),assistantFactory);
+					type = getType(((AFunctionType) function.getType()).getResult(), assistantFactory);
 					newDefinition = new VdmMethod(function.getName().getName(), false, type);
 					// fetching the arguments
 					for (List<PPattern> li : function.getParamPatternList())
@@ -300,36 +292,37 @@ public class VdmjVdmClassReader implements IVdmClassReader
 
 	}
 
-//	public static boolean isClass(PType type)
-//	{
-//		// FIXME
-//		if (type instanceof ANamedInvariantType)
-//		{
-//			ANamedInvariantType in = (ANamedInvariantType) type;
-//			if (in.getOpaque())
-//			{
-//				return false;
-//			}
-//			return isClass(in.getType());
-//		} else if (type instanceof AOptionalType)
-//		{
-//			AOptionalType opt = (AOptionalType) type;
-//			return isClass(opt.getType());
-//		} else if (type instanceof AParameterType)
-//		{
-//			return true;
-//		} else if (type instanceof AUnionType)
-//		{
-//			AUnionType ut = (AUnionType) type;
-//			return AUnionTypeAssistantInterpreter.getClassType(ut) != null;
-//		} else if (type instanceof AUnknownType)
-//		{
-//			return true;
-//		}
-//		return false;
-//	}
+	// public static boolean isClass(PType type)
+	// {
+	// // FIXME
+	// if (type instanceof ANamedInvariantType)
+	// {
+	// ANamedInvariantType in = (ANamedInvariantType) type;
+	// if (in.getOpaque())
+	// {
+	// return false;
+	// }
+	// return isClass(in.getType());
+	// } else if (type instanceof AOptionalType)
+	// {
+	// AOptionalType opt = (AOptionalType) type;
+	// return isClass(opt.getType());
+	// } else if (type instanceof AParameterType)
+	// {
+	// return true;
+	// } else if (type instanceof AUnionType)
+	// {
+	// AUnionType ut = (AUnionType) type;
+	// return AUnionTypeAssistantInterpreter.getClassType(ut) != null;
+	// } else if (type instanceof AUnknownType)
+	// {
+	// return true;
+	// }
+	// return false;
+	// }
 
-	public static VdmType getType(PType type, ITypeCheckerAssistantFactory assistantFactory) //added parameter for the assistantFactory
+	public static VdmType getType(PType type,
+			ITypeCheckerAssistantFactory assistantFactory) // added parameter for the assistantFactory
 	{
 		if (assistantFactory.createPTypeAssistant().isClass(type))
 		{

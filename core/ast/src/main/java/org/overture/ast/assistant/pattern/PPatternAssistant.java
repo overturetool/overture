@@ -5,7 +5,6 @@ import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.assistant.IAstAssistantFactory;
-import org.overture.ast.assistant.InvocationAssistantException;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.patterns.PPattern;
@@ -32,6 +31,7 @@ public class PPatternAssistant
 		}
 	}
 
+	//FIXME Delete commented code
 //	public static LexNameList getAllVariableNames(AConcatenationPattern pattern)
 //			throws InvocationAssistantException
 //	{
@@ -140,13 +140,11 @@ public class PPatternAssistant
 //	}
 
 	public LexNameList getVariableNames(PPattern pattern)
-			throws InvocationAssistantException
 	{
 		return af.createPPatternAssistant().getVariableNamesBaseCase(pattern);
 	}
 
 	public LexNameList getVariableNamesBaseCase(PPattern pattern)
-			throws InvocationAssistantException
 	{
 		Set<ILexNameToken> set = new HashSet<ILexNameToken>();
 		set.addAll(af.createPPatternAssistant().getAllVariableNames(pattern));
