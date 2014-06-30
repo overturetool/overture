@@ -6,7 +6,7 @@ package org.overture.core.npp;
  * 
  * @author ldc
  */
-public interface InsTable
+public interface ISymbolTable
 {
 
 	String getTAIL();

@@ -14,7 +14,7 @@ public interface IPrettyPrinter extends IQuestionAnswer<IndentTracker,String> {
 	 *
 	 * @param it the new attribute table
 	 */
-	 void setInsTable(InsTable it);
+	 void setInsTable(ISymbolTable it);
 
 	
 }

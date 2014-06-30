@@ -5,21 +5,21 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-public class VdmNsTableTest
+public class VdmSymbolTableTest
 {
 
-	VdmNsTable table;
+	VdmSymbolTable table;
 
 	@Before
 	public void setup()
 	{
-		table = VdmNsTable.getInstance();
+		table = VdmSymbolTable.getInstance();
 	}
 
 	@Test
 	public void testVdmNsTable_Constructor_NoParams()
 	{
-		table = new VdmNsTable();
+		table = new VdmSymbolTable();
 
 		// just make sure it works. should not be called
 		assertNotNull(table);
@@ -34,7 +34,7 @@ public class VdmNsTableTest
 	@Test
 	public void testGetInstance_2Calls()
 	{
-		VdmNsTable table2 = VdmNsTable.getInstance();
+		VdmSymbolTable table2 = VdmSymbolTable.getInstance();
 		assertSame(table, table2);
 	}
 

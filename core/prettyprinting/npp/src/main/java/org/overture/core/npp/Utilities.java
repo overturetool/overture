@@ -1,11 +1,11 @@
 package org.overture.core.npp;
 
 /**
- * The Class CommonStringManips provides a small library of static methods that
+ * The Class Utilities provides a small library of static methods that
  * perform string manipulations. These manipulations are simples ones used
  * throughout the visitors of the pretty printer.
  */
-public abstract class CommonStringManips {
+public abstract class Utilities {
 
 	/**
 	 * Wrap a string in parenthesis.

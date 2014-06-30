@@ -1,30 +1,30 @@
 package org.overture.core.npp;
 
 /**
- * The VdmNsTable Class provides a default VDM-based implementation of {@link InsTable}. It provides attributes for all
+ * The VdmNsTable Class provides a default VDM-based implementation of {@link ISymbolTable}. It provides attributes for all
  * VDM language constructs needed to print out the Overture AST. <br>
  * Pretty Printers for language extensions may subclass VdmNsTable and override methods as necessary
  * 
  * @author ldc
  */
 
-public class VdmNsTable implements InsTable
+public class VdmSymbolTable implements ISymbolTable
 {
 
 	// singleton instance
-	private static VdmNsTable instance = null;
+	private static VdmSymbolTable instance = null;
 
-	protected VdmNsTable()
+	protected VdmSymbolTable()
 	{
 
 	}
 
 	// create initial mapping of vdm elements and attributes
-	public static VdmNsTable getInstance()
+	public static VdmSymbolTable getInstance()
 	{
 		if (instance == null)
 		{
-			instance = new VdmNsTable();
+			instance = new VdmSymbolTable();
 		}
 		return instance;
 	}

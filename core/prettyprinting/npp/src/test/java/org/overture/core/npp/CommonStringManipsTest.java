@@ -15,7 +15,7 @@ public class CommonStringManipsTest {
 	public void testWrap() {
 		String input = "a string";
 		String expected = "(a string)";
-		String actual = CommonStringManips.wrap(input);
+		String actual = Utilities.wrap(input);
 		assertEquals(expected, actual);
 	}
 

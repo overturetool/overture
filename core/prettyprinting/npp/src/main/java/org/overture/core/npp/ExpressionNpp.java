@@ -10,20 +10,20 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		implements IPrettyPrinter
 {
 
-	InsTable mytable;
+	ISymbolTable mytable;
 	IPrettyPrinter rootNpp;
 
 	private static String EXPRESSION_NOT_FOUND = "ERROR: Expression Node not found";
 	private static String space = " ";
 
-	public ExpressionNpp(NewPrettyPrinter root, InsTable nst)
+	public ExpressionNpp(NewPrettyPrinter root, ISymbolTable nst)
 	{
 		rootNpp = root;
 		mytable = nst;
 	}
 
 	@Override
-	public void setInsTable(InsTable it)
+	public void setInsTable(ISymbolTable it)
 	{
 		mytable = it;
 	}
@@ -44,7 +44,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		sb.append(space);
 		sb.append(r);
 
-		return CommonStringManips.wrap(sb.toString());
+		return Utilities.wrap(sb.toString());
 	}
 	
 

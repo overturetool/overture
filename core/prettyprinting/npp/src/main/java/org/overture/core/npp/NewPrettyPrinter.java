@@ -24,7 +24,7 @@ public class NewPrettyPrinter extends
 	/**
 	 * The attribute table for handling non abstract syntax such as separators.
 	 */
-	InsTable mytable;
+	ISymbolTable mytable;
 	ExpressionNpp expPrinter;
 
 	// PatternNpp
@@ -32,14 +32,14 @@ public class NewPrettyPrinter extends
 
 	/**
 	 * Creates a VDM-syntax pretty printer. <br>
-	 * <b>Warning:</b> this method pre-loads {@link VdmNsTable} attributes. Extensions should use
-	 * {@link NewPrettyPrinter#PrettyPrinter(InsTable)} and configure it instead.
+	 * <b>Warning:</b> this method pre-loads {@link VdmSymbolTable} attributes. Extensions should use
+	 * {@link NewPrettyPrinter#PrettyPrinter(ISymbolTable)} and configure it instead.
 	 * 
 	 * @return a new instance of {@link NewPrettyPrinter}
 	 */
 	public static NewPrettyPrinter newInstance()
 	{
-		return new NewPrettyPrinter(VdmNsTable.getInstance());
+		return new NewPrettyPrinter(VdmSymbolTable.getInstance());
 	}
 
 	public static String prettyPrint(INode node) throws AnalysisException
@@ -54,7 +54,7 @@ public class NewPrettyPrinter extends
 	 * @param nsTable
 	 *            the attributes table for the printer
 	 */
-	public NewPrettyPrinter(InsTable nsTable)
+	public NewPrettyPrinter(ISymbolTable nsTable)
 	{
 		mytable = nsTable;
 		expPrinter = new ExpressionNpp(this, nsTable);
@@ -66,7 +66,7 @@ public class NewPrettyPrinter extends
 	 * @see org.overture.core.npp.IPrettyPrinter#setInsTable(org.overture.core.npp .InsTable)
 	 */
 	@Override
-	public void setInsTable(InsTable it)
+	public void setInsTable(ISymbolTable it)
 	{
 		mytable = it;
 	}

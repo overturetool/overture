@@ -11,9 +11,9 @@ import org.junit.Test;
  * @author ldc
  *
  */
-public class InsExtText {
+public class ISymbolTableExtensibilityText {
 
-	class ExtTable extends VdmNsTable implements InsTable {
+	class ExtTable extends VdmSymbolTable implements ISymbolTable {
 
 		public ExtTable() {
 			super();
