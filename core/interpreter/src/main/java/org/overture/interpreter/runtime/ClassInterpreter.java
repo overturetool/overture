@@ -44,7 +44,8 @@ import org.overture.ast.types.PType;
 import org.overture.ast.util.Utils;
 import org.overture.ast.util.definitions.ClassList;
 import org.overture.config.Settings;
-import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
+import org.overture.interpreter.assistant.InterpreterAssistantFactory;
 import org.overture.interpreter.debug.DBGPReader;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.messages.rtlog.RTLogger;
@@ -93,6 +94,12 @@ public class ClassInterpreter extends Interpreter
 
 	public ClassInterpreter(ClassList classes) throws Exception
 	{
+		this(new InterpreterAssistantFactory(),classes);
+	}
+	
+	public ClassInterpreter(IInterpreterAssistantFactory assistantFactory,ClassList classes) throws Exception
+	{
+		super(assistantFactory);
 		this.classes = new ClassListInterpreter(classes);
 		this.createdValues = new NameValuePairMap();
 		this.createdDefinitions = assistantFactory.createPDefinitionSet();

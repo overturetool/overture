@@ -78,7 +78,8 @@ import org.overture.typechecker.visitor.TypeCheckVisitor;
 
 abstract public class Interpreter
 {
-	final public IInterpreterAssistantFactory assistantFactory = new InterpreterAssistantFactory();
+	/** the assistant factory used by this interpreter for e.g. FunctionValues */
+	protected final  IInterpreterAssistantFactory assistantFactory;
 	
 	/** The main thread scheduler */
 	public ResourceScheduler scheduler;
@@ -100,13 +101,15 @@ abstract public class Interpreter
 
 	/**
 	 * Create an Interpreter.
+	 * @param assistantFactory the assistant factory to be used by the interpreter
 	 */
 
-	public Interpreter()
+	public Interpreter(IInterpreterAssistantFactory assistantFactory)
 	{
 		scheduler = new ResourceScheduler();
 		breakpoints = new TreeMap<Integer, Breakpoint>();
 		sourceFiles = new HashMap<File, SourceFile>();
+		this.assistantFactory = assistantFactory;
 		instance = this;
 	}
 	

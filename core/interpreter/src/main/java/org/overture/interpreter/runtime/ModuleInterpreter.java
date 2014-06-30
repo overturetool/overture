@@ -41,6 +41,8 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.modules.ModuleList;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
+import org.overture.interpreter.assistant.InterpreterAssistantFactory;
 import org.overture.interpreter.debug.DBGPReader;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.scheduler.BasicSchedulableThread;
@@ -70,15 +72,28 @@ public class ModuleInterpreter extends Interpreter
 	/** The module starting execution. */
 	public AModuleModules defaultModule;
 
+	
 	/**
 	 * Create an Interpreter from the list of modules passed.
 	 *
 	 * @param modules
 	 * @throws Exception
 	 */
-
 	public ModuleInterpreter(ModuleList modules) throws Exception
 	{
+		this(new InterpreterAssistantFactory(),modules);
+	}
+	
+	/**
+	 * Create an Interpreter from the list of modules passed.
+	 * @param assistantFactory 
+	 *
+	 * @param modules
+	 * @throws Exception
+	 */
+	public ModuleInterpreter(IInterpreterAssistantFactory assistantFactory,ModuleList modules) throws Exception
+	{
+		super(assistantFactory);
 		this.modules = new ModuleListInterpreter(modules);
 
 		if (modules.isEmpty())

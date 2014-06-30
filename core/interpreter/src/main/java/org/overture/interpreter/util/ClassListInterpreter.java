@@ -181,7 +181,7 @@ public class ClassListInterpreter extends ClassList
 
 		if (d != null)
 		{
-			PDefinition def = ClassInterpreter.getInstance().assistantFactory.createPDefinitionAssistant().findName(d, name, scope);
+			PDefinition def = ClassInterpreter.getInstance().getAssistantFactory().createPDefinitionAssistant().findName(d, name, scope);
 
 			if (def != null)
 			{
