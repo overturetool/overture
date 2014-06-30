@@ -11,7 +11,6 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.config.Settings;
 import org.overture.ct.utils.TraceXmlWrapper;
-import org.overture.interpreter.assistant.definition.ANamedTraceDefinitionAssistantInterpreter;
 import org.overture.interpreter.runtime.ClassInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
@@ -172,7 +171,7 @@ public class TraceInterpreter
 			seed = 999;
 		}
 
-		TestSequence tests1 = ANamedTraceDefinitionAssistantInterpreter.getTests(mtd,ctxt, subset, traceReductionType, seed);
+		TestSequence tests1 = ctxt.assistantFactory.createANamedTraceDefinitionAssistant().getTests(mtd,ctxt, subset, traceReductionType, seed);
 		if(tests1 instanceof TypeCheckedTestSequence)
 		{
 			tests = (TypeCheckedTestSequence) tests1;

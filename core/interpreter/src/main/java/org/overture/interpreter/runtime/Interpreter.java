@@ -51,7 +51,6 @@ import org.overture.ast.types.PType;
 import org.overture.config.Settings;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.InterpreterAssistantFactory;
-import org.overture.interpreter.assistant.definition.ANamedTraceDefinitionAssistantInterpreter;
 import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.debug.DBGPReader;
 import org.overture.interpreter.messages.Console;
@@ -616,7 +615,7 @@ abstract public class Interpreter
 
 		ctxt = getInitialTraceContext(tracedef, debug);
 
-		tests =ANamedTraceDefinitionAssistantInterpreter.getTests(tracedef,ctxt, subset, type, seed);
+		tests = ctxt.assistantFactory.createANamedTraceDefinitionAssistant().getTests(tracedef,ctxt, subset, type, seed);
 
 		boolean wasDBGP = Settings.usingDBGP;
 		boolean wasCMD = Settings.usingCmdLine;

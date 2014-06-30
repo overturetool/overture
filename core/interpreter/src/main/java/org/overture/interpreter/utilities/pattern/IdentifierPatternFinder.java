@@ -64,7 +64,7 @@ public class IdentifierPatternFinder extends AnswerAdaptor<List<AIdentifierPatte
 
 		for (AMapletPatternMaplet p : pattern.getMaplets())
 		{
-			list.addAll(AMapPatternMapletAssistantInterpreter.findIdentifiers(p));
+			list.addAll(af.createAMapPatternMapletAssistant().findIdentifiers(p));
 		}
 
 		return list;
