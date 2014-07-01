@@ -10,11 +10,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import org.overture.core.tests.AllExamplesHelper;
+import org.overture.core.tests.InputProcessor;
 import org.overture.core.tests.AllExamplesHelper.ExampleAstData;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
 import org.overture.tools.examplepackager.util.ExampleTestData;
+import org.overture.tools.examplepackager.util.ExampleTestUtils;
 
 /**
  * Basic test for all the examples. Simply ensures that they all parse and type-check correctly. Examples with
@@ -38,7 +39,7 @@ public class ExampleModelsTest
 	{
 		Collection<Object[]> r = new Vector<Object[]>();
 
-		Collection<ExampleTestData> examples = AllExamplesHelper.getExamplesSources();
+		Collection<ExampleTestData> examples = ExampleTestUtils.getCorrectExamplesSources();
 
 		for (ExampleTestData e : examples)
 		{
@@ -49,10 +50,9 @@ public class ExampleModelsTest
 	}
 
 	@Test
-	public void testParseTcAllExamples() throws IOException, ParserException,
-			LexException
+	public void testParseTc() throws IOException, ParserException, LexException
 	{
-		ExampleAstData ex = AllExamplesHelper.parseExample(testData);
+		ExampleAstData ex = InputProcessor.parseExample(testData);
 		assertNotNull("Could not Parse/TC " + ex.getExampleName());
 	}
 
