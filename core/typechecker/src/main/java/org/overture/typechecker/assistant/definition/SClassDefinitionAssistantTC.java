@@ -233,14 +233,6 @@ public class SClassDefinitionAssistantTC
 //		return all;
 //	}
 
-	public static PDefinition getSelfDefinition(SClassDefinition classDefinition)
-	{
-
-		PDefinition def = AstFactory.newALocalDefinition(classDefinition.getLocation(), classDefinition.getName().getSelfName(), NameScope.LOCAL, af.createPDefinitionAssistant().getType(classDefinition));
-		af.createPDefinitionAssistant().markUsed(def);
-		return def;
-	}
-
 	public void implicitDefinitions(SClassDefinition d,
 			Environment publicClasses)
 	{
