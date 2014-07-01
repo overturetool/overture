@@ -30,6 +30,7 @@ import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
 import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.Environment;
+import org.overture.typechecker.LexNameTokenAssistant;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.definition.ABusClassDefinitionAssistantTC;
@@ -167,7 +168,7 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 
 	// instance variables of things to return
 	TypeComparator typeComp;
-	
+	LexNameTokenAssistant lnt;
 
 	@Override
 	public AApplyObjectDesignatorAssistantTC createAApplyObjectDesignatorAssistant()
@@ -1087,15 +1088,23 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new QualificationVisitor();
 	}
 
-	
 	@Override
 	public TypeComparator getTypeComparator()
 	{
-		if (typeComp == null) {
+		if (typeComp == null)
+		{
 			typeComp = new TypeComparator(this);
-			return typeComp;
 		}
 		return typeComp;
 
+	}
+
+	@Override
+	public LexNameTokenAssistant getLexNameTokenAssistant()
+	{
+		if (lnt ==null){
+			lnt = new LexNameTokenAssistant(this);
+		}
+		return lnt;
 	}
 }

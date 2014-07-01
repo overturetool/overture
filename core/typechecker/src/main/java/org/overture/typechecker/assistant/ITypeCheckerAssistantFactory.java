@@ -30,6 +30,7 @@ import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
 import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.Environment;
+import org.overture.typechecker.LexNameTokenAssistant;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.definition.ABusClassDefinitionAssistantTC;
@@ -404,6 +405,8 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	IAnswer<PTypeList> getComposeTypeCollector();
 	
 	TypeComparator getTypeComparator();
+	
+	LexNameTokenAssistant getLexNameTokenAssistant();
 
 	IQuestionAnswer<TypeCheckInfo, List<QualifiedDefinition>> getQualificationVisitor();
 }
