@@ -31,10 +31,7 @@ import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.config.Settings;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.InterpreterAssistantFactory;
-import org.overture.interpreter.assistant.type.SInvariantTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
-import org.overture.interpreter.runtime.ValueException;
 
 
 
@@ -44,13 +41,14 @@ public class RecordValue extends Value
 	public final ARecordInvariantType type;
 	public final FieldMap fieldmap;
 	public final FunctionValue invariant;
-	public final IInterpreterAssistantFactory assistantFactory = new InterpreterAssistantFactory();
+	public final IInterpreterAssistantFactory assistantFactory;
 
 	// mk_ expressions
 	public RecordValue(ARecordInvariantType type,	ValueList values, Context ctxt)
 		throws AnalysisException
 	{
 		this.type = type;
+		this.assistantFactory=ctxt.assistantFactory;
 		this.fieldmap = new FieldMap();
 		this.invariant = ctxt.assistantFactory.createSInvariantTypeAssistant().getInvariant(type,ctxt);
 
@@ -75,6 +73,7 @@ public class RecordValue extends Value
 		throws AnalysisException
 	{
 		this.type = type;
+		this.assistantFactory=ctxt.assistantFactory;
 		this.fieldmap = new FieldMap();
 		this.invariant = ctxt.assistantFactory.createSInvariantTypeAssistant().getInvariant(type,ctxt);
 
@@ -102,17 +101,18 @@ public class RecordValue extends Value
 	}
 
 	// Only called by clone()
-	private RecordValue(ARecordInvariantType type, FieldMap mapvalues, FunctionValue invariant)
+	private RecordValue(ARecordInvariantType type, FieldMap mapvalues, FunctionValue invariant, IInterpreterAssistantFactory af)
 	{
+		this.assistantFactory = af;
 		this.type = type;
 		this.invariant = invariant;
 		this.fieldmap = mapvalues;
 	}
 
-	// State records - invariant handled separately
-	//gkanos: added a parameter here the context.
+
 	public RecordValue(ARecordInvariantType type, NameValuePairList mapvalues, Context ctxt)
 	{
+		this.assistantFactory=ctxt.assistantFactory;
 		this.type = type;
 		this.invariant = null;
 		this.fieldmap = new FieldMap();
@@ -185,7 +185,7 @@ public class RecordValue extends Value
 			nm.add(fv.name, uv, fv.comparable);
 		}
 
-		UpdatableValue uval = UpdatableValue.factory(new RecordValue(type, nm, invariant), listeners);
+		UpdatableValue uval = UpdatableValue.factory(new RecordValue(type, nm, invariant,assistantFactory), listeners);
 		
 		if (invl != null)
 		{
@@ -207,7 +207,7 @@ public class RecordValue extends Value
 			nm.add(fv.name, uv, fv.comparable);
 		}
 
-		return new RecordValue(type, nm, invariant);
+		return new RecordValue(type, nm, invariant,assistantFactory);
 	}
 
 	@Override
@@ -314,6 +314,6 @@ public class RecordValue extends Value
 	@Override
 	public Object clone()
 	{
-		return new RecordValue(type, (FieldMap)fieldmap.clone(), invariant);
+		return new RecordValue(type, (FieldMap)fieldmap.clone(), invariant,assistantFactory);
 	}
 }
