@@ -84,7 +84,6 @@ import org.overture.typechecker.assistant.type.APatternListTypePairAssistantTC;
 import org.overture.typechecker.assistant.type.ARecordInvariantTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AUnionTypeAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
-import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
 import org.overture.typechecker.utilities.DefinitionFinder;
 import org.overture.typechecker.utilities.DefinitionTypeResolver;
 import org.overture.typechecker.utilities.NameFinder;
@@ -271,10 +270,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	PTypeAssistantTC createPTypeAssistant();
 
-	SNumericBasicTypeAssistantTC createSNumericBasicTypeAssistant();
-
-
-	// visitors
+		// visitors
 
 	//SSeqTypeAssistantTC createSSeqTypeAssistant();
 

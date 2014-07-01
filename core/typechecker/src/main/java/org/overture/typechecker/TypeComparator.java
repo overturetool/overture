@@ -57,7 +57,6 @@ import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.types.SSeqType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
 
 /**
  * A class for static type checking comparisons.
