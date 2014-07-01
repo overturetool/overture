@@ -3,6 +3,7 @@ package org.overture.core.tests;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Vector;
 
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.node.INode;
@@ -19,7 +20,11 @@ import org.overture.tools.examplepackager.util.ExampleTestUtils;
  */
 public class AllExamplesHelper
 {
-
+	/**
+	 * Simple wrapper class for examples data. Contains the AST (as a list of {@link INode}) and name of an example.
+	 * 
+	 * @author ldc
+	 */
 	static public class ExampleAstData
 	{
 
@@ -44,10 +49,17 @@ public class AllExamplesHelper
 
 	}
 
-	static public Collection<ExampleAstData> getCorrectExampleAsts()
+	/**
+	 * Returns the ASTs for the Overture examples. Only examples that are supposed to parse and TC are returned.
+	 * 
+	 * @return a collection of {@link ExampleAstData}, each representing one example.
+	 * @throws ParserException
+	 * @throws LexException
+	 */
+	static public Collection<ExampleAstData> getExamplesAsts()
 			throws ParserException, LexException
 	{
-		Collection<ExampleAstData> r = new LinkedList<AllExamplesHelper.ExampleAstData>();
+		Collection<ExampleAstData> r = new Vector<ExampleAstData>();
 
 		Collection<ExampleTestData> examples = ExampleTestUtils.getCorrectExamplesSources();
 
@@ -57,7 +69,6 @@ public class AllExamplesHelper
 		}
 
 		return r;
-
 	}
 
 	private static ExampleAstData parseExample(ExampleTestData e)
