@@ -74,7 +74,6 @@ import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
-import org.overture.typechecker.util.HelpLexNameToken;
 import org.overture.typechecker.utilities.DefinitionTypeResolver;
 import org.overture.typechecker.utilities.type.QualifiedDefinition;
 
@@ -691,7 +690,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 					}
 					// TODO: THIS COULD BE A HACK to code (ctype.getClassdef()
 					// != node.getClassDefinition())
-					if (!HelpLexNameToken.isEqual(ctype.getClassdef().getName(), node.getClassDefinition().getName()))
+					if (!question.assistantFactory.getLexNameTokenAssistant().isEqual(ctype.getClassdef().getName(), node.getClassDefinition().getName()))
 					{
 						TypeCheckerErrors.report(3025, "Constructor operation must have return type "
 								+ node.getClassDefinition().getName().getName(), node.getLocation(), node);
@@ -1188,7 +1187,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 			for (ILexNameToken other : node.getOperations())
 			{
-				if (opname != other && HelpLexNameToken.isEqual(opname, other))
+				if (opname != other && question.assistantFactory.getLexNameTokenAssistant().isEqual(opname, other))
 				{
 					TypeCheckerErrors.report(3041, "Duplicate mutex name", opname.getLocation(), opname);
 				}

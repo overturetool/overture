@@ -35,7 +35,6 @@ import org.overture.typechecker.FlatEnvironment;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.util.HelpLexNameToken;
 
 public class SClassDefinitionAssistantTC
 {
@@ -561,7 +560,7 @@ public class SClassDefinitionAssistantTC
 				{
 					ILexNameToken localName2 = indef2.getName().getModifiedName(c.getName().getName());
 
-					if (HelpLexNameToken.isEqual(localName, localName2))
+					if (af.getLexNameTokenAssistant().isEqual(localName, localName2))
 					{
 						PDefinition override = af.createPDefinitionListAssistant().findName(c.getDefinitions(), localName, NameScope.NAMESANDSTATE);
 

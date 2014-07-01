@@ -20,7 +20,6 @@ import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.util.HelpLexNameToken;
 import org.overture.typechecker.utilities.DefinitionFinder;
 import org.overture.typechecker.utilities.DefinitionTypeResolver;
 import org.overture.typechecker.utilities.NameFinder;
@@ -132,7 +131,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 	public PDefinition findNameBaseCase(PDefinition d,
 			ILexNameToken sought, NameScope scope)
 	{
-		if (HelpLexNameToken.isEqual(d.getName(), sought))
+		if (af.getLexNameTokenAssistant().isEqual(d.getName(), sought))
 		{
 			if (d.getNameScope() == NameScope.STATE
 					&& !scope.matches(NameScope.STATE)
