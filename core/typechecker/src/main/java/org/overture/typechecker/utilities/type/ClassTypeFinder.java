@@ -71,7 +71,7 @@ public class ClassTypeFinder extends TypeUnwrapper<AClassType>
 			// fields' types...
 
 			Map<ILexNameToken, PTypeSet> common = new HashMap<ILexNameToken, PTypeSet>();
-			Map<ILexNameToken, AAccessSpecifierAccessSpecifier> access = new LexNameTokenMap<AAccessSpecifierAccessSpecifier>(af.getLexNameTokenAssistant());
+			Map<ILexNameToken, AAccessSpecifierAccessSpecifier> access = new LexNameTokenMap<AAccessSpecifierAccessSpecifier>();
 			ILexNameToken classname = null;
 
 			for (PType t : type.getTypes())
