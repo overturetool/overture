@@ -503,7 +503,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseADivNumericBinaryExp(ADivNumericBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-		SNumericBasicTypeAssistantTC.checkNumeric(node, THIS, question.newConstraint(null));
+		checkNumeric(node, THIS, question.newConstraint(null));
 		node.setType(AstFactory.newAIntNumericBasicType(node.getLocation()));
 		return node.getType();
 	}
@@ -512,7 +512,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseADivideNumericBinaryExp(ADivideNumericBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-		SNumericBasicTypeAssistantTC.checkNumeric(node, THIS, question.newConstraint(null));
+		checkNumeric(node, THIS, question.newConstraint(null));
 		node.setType(AstFactory.newARealNumericBasicType(node.getLocation()));
 		return node.getType();
 	}
@@ -522,7 +522,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			AGreaterEqualNumericBinaryExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		SNumericBasicTypeAssistantTC.checkNumeric(node, THIS, question.newConstraint(null));
+		checkNumeric(node, THIS, question.newConstraint(null));
 		node.setType(AstFactory.newABooleanBasicType(node.getLocation()));
 		return question.assistantFactory.createPTypeAssistant().checkConstraint(
 				question.constraint, node.getType(), node.getLocation());
@@ -532,7 +532,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAGreaterNumericBinaryExp(AGreaterNumericBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-		SNumericBasicTypeAssistantTC.checkNumeric(node, THIS, question.newConstraint(null));
+		checkNumeric(node, THIS, question.newConstraint(null));
 		node.setType(AstFactory.newABooleanBasicType(node.getLocation()));
 		return question.assistantFactory.createPTypeAssistant().checkConstraint(
 				question.constraint, node.getType(), node.getLocation());
@@ -542,7 +542,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAModNumericBinaryExp(AModNumericBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-		SNumericBasicTypeAssistantTC.checkNumeric(node, THIS, question.newConstraint(null));
+		checkNumeric(node, THIS, question.newConstraint(null));
 		node.setType(AstFactory.newAIntNumericBasicType(node.getLocation()));
 		return node.getType();
 	}
@@ -551,7 +551,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAPlusNumericBinaryExp(APlusNumericBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-		SNumericBasicTypeAssistantTC.checkNumeric(node, THIS, question.newConstraint(null));
+		checkNumeric(node, THIS, question.newConstraint(null));
 
 		SNumericBasicType ln = question.assistantFactory.createPTypeAssistant().getNumeric(node.getLeft().getType());
 		SNumericBasicType rn = question.assistantFactory.createPTypeAssistant().getNumeric(node.getRight().getType());
@@ -588,7 +588,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseARemNumericBinaryExp(ARemNumericBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-		SNumericBasicTypeAssistantTC.checkNumeric(node, THIS, question.newConstraint(null));
+		checkNumeric(node, THIS, question.newConstraint(null));
 		node.setType(AstFactory.newAIntNumericBasicType(node.getLocation()));
 		return node.getType();
 	}
@@ -597,7 +597,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseASubtractNumericBinaryExp(ASubtractNumericBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-		SNumericBasicTypeAssistantTC.checkNumeric(node, THIS, question.newConstraint(null));
+		checkNumeric(node, THIS, question.newConstraint(null));
 
 		if (node.getLeft().getType() instanceof ARealNumericBasicType
 				|| node.getRight().getType() instanceof ARealNumericBasicType)
@@ -615,7 +615,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseATimesNumericBinaryExp(ATimesNumericBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-		SNumericBasicTypeAssistantTC.checkNumeric(node, THIS, question.newConstraint(null));
+		checkNumeric(node, THIS, question.newConstraint(null));
 
 		SNumericBasicType ln = question.assistantFactory.createPTypeAssistant().getNumeric(node.getLeft().getType());
 		SNumericBasicType rn = question.assistantFactory.createPTypeAssistant().getNumeric(node.getRight().getType());
@@ -2864,7 +2864,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			ALessEqualNumericBinaryExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		SNumericBasicTypeAssistantTC.checkNumeric(node, THIS, question);
+		checkNumeric(node, THIS, question);
 		node.setType(AstFactory.newABooleanBasicType(node.getLocation()));
 		return question.assistantFactory.createPTypeAssistant().checkConstraint(
 				question.constraint, node.getType(), node.getLocation());
@@ -2874,7 +2874,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseALessNumericBinaryExp(ALessNumericBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-		SNumericBasicTypeAssistantTC.checkNumeric(node, THIS, question);
+		checkNumeric(node, THIS, question);
 		node.setType(AstFactory.newABooleanBasicType(node.getLocation()));
 		return question.assistantFactory.createPTypeAssistant().checkConstraint(
 				question.constraint, node.getType(), node.getLocation());
@@ -3341,5 +3341,30 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		node.setType(seq.getEmpty() ? AstFactory.newASetType(node.getLocation())
 				: AstFactory.newASetType(node.getLocation(), seq.getSeqof()));
 		return node.getType();
+	}
+	
+	private void checkNumeric(SNumericBinaryExp node,
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
+			TypeCheckInfo question) throws AnalysisException
+	{
+		node.getLeft().apply(rootVisitor, question.newConstraint(null));
+		node.getRight().apply(rootVisitor, question.newConstraint(null));
+
+		if (!question.assistantFactory.createPTypeAssistant().isNumeric(node.getLeft().getType()))
+		{
+			TypeCheckerErrors.report(3139, "Left hand of " + node.getOp()
+					+ " is not numeric", node.getLocation(), node);
+			TypeCheckerErrors.detail("Actual", node.getLeft().getType());
+			node.getLeft().setType(AstFactory.newARealNumericBasicType(node.getLocation()));
+		}
+
+		if (!question.assistantFactory.createPTypeAssistant().isNumeric(node.getRight().getType()))
+		{
+			TypeCheckerErrors.report(3140, "Right hand of " + node.getOp()
+					+ " is not numeric", node.getLocation(), node);
+			TypeCheckerErrors.detail("Actual", node.getRight().getType());
+			node.getRight().setType(AstFactory.newARealNumericBasicType(node.getLocation()));
+		}
+
 	}
 }
