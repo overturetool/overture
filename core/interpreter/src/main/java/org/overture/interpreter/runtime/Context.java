@@ -74,6 +74,7 @@ public class Context extends LexNameTokenMap<Value>
 
 	public Context(IInterpreterAssistantFactory af,ILexLocation location, String title, Context outer)
 	{
+		super(af.getLexNameTokenAssistant());
 		this.assistantFactory = af;
 		this.location = location;
 		this.outer = outer;
