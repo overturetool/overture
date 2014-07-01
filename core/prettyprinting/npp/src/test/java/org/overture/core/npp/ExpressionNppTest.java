@@ -48,11 +48,63 @@ public class ExpressionNppTest {
 	public void testCaseAPlusBinaryExp_02() throws AnalysisException{
 		aux("1.1+1","(1.1 + 1)");
 	}
+	
+	@Test
+	public void testCaseAPlusBinaryExp_03() throws AnalysisException
+	{
+		aux("x+1", "(x + 1)");
+	}
 
 	@Test
 	public void testCaseAPlusBinaryExp_04() throws AnalysisException{
-		aux("1+1+1","(1 + 1) + 1)");
+		aux("1+1+1","((1 + 1) + 1)");
 	}
 	
-
+	
+	@Test
+	public void testCaseAMinusBinaryExp_01() throws AnalysisException
+	{
+		aux("1-1", "(1 - 1)");
+	}
+	
+	@Test
+	public void testCaseAMinusBinaryExp_02() throws AnalysisException
+	{
+		aux("1.1-1", "(1.1 - 1)");
+	}
+	
+	@Test
+	public void testCaseAMinusBinaryExp_03() throws AnalysisException
+	{
+		aux("1-1-1", "((1 - 1) - 1)");
+	}
+	
+	public void testCaseAMinusBinaryExp_04() throws AnalysisException
+	{
+		aux("x-1","(x - 1)");
+	}
+	
+	@Test
+	public void testCaseATimesBinaryExp_01() throws AnalysisException
+	{
+		aux("1*1", "(1 * 1)");
+	}
+	
+	@Test
+	public void testCaseATimesBinaryExp_02() throws AnalysisException
+	{
+		aux("1.1*1", "(1.1 * 1)");
+	}
+	
+	@Test
+	public void testCaseATimesBinaryExp_03() throws AnalysisException
+	{
+		aux("1*1*1","((1 * 1) * 1)");
+	}
+	
+	@Test
+	public void testCaseATimesBinaryExp_04() throws AnalysisException
+	{
+		aux("x*1", "(x * 1)");
+	}
 }
