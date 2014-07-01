@@ -9,98 +9,42 @@ import java.util.Map;
 import java.util.Set;
 
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.typechecker.LexNameTokenAssistant;
 
 public class LexNameTokenMap<V> implements Map<ILexNameToken, V>, Serializable
 {
 
+	
+	private final LexNameTokenAssistant lnt;
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -1122692848887584905L;
 
-	static class LexNameTokenEntry<V> implements Map.Entry<ILexNameToken, V>
+
+	
+	public LexNameTokenMap(LexNameTokenAssistant lnt)
 	{
-
-		Map.Entry<LexNameTokenWrapper, V> wrapped;
-
-		public LexNameTokenEntry(Map.Entry<LexNameTokenWrapper, V> wrapped)
-		{
-			this.wrapped = wrapped;
-		}
-
-		public ILexNameToken getKey()
-		{
-			return wrapped.getKey().token;
-		}
-
-		public V getValue()
-		{
-			return wrapped.getValue();
-		}
-
-		public V setValue(V value)
-		{
-			return wrapped.setValue(value);
-		}
-
-		@Override
-		public String toString()
-		{
-			return getKey() + "=" + getValue();
-		}
-
+		super();
+		this.lnt = lnt;
 	}
 
-	static class LexNameTokenWrapper implements Serializable
-	{
 
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = -5420007432629328108L;
-		public ILexNameToken token;
 
-		public LexNameTokenWrapper(ILexNameToken token)
-		{
-			this.token = token;
-		}
-
-		@Override
-		public boolean equals(Object obj)
-		{
-			if (obj instanceof LexNameTokenWrapper)
-			{
-				return HelpLexNameToken.isEqual(this.token, ((LexNameTokenWrapper) obj).token);
-			}
-
-			return super.equals(obj);
-		}
-
-		@Override
-		public int hashCode()
-		{
-			return this.token.hashCode();
-		}
-
-		@Override
-		public String toString()
-		{
-			return token.toString();
-		}
-	}
+	
 
 	private final HashMap<LexNameTokenWrapper, V> map = new HashMap<LexNameTokenWrapper, V>();
 
 	public V put(ILexNameToken key, V value)
 	{
-		return map.put(new LexNameTokenWrapper(key), value);
+		return map.put(new LexNameTokenWrapper(key, lnt), value);
 	};
 
 	public V get(Object key)
 	{
 		if (key instanceof ILexNameToken)
 		{
-			return map.get(new LexNameTokenWrapper((ILexNameToken) key));
+			return map.get(new LexNameTokenWrapper((ILexNameToken) key, lnt));
 		}
 		return map.get(key);
 	}
@@ -131,7 +75,7 @@ public class LexNameTokenMap<V> implements Map<ILexNameToken, V>, Serializable
 	{
 		if (key instanceof ILexNameToken)
 		{
-			return this.map.containsKey(new LexNameTokenWrapper((ILexNameToken) key));
+			return this.map.containsKey(new LexNameTokenWrapper((ILexNameToken) key,lnt));
 		}
 		return false;
 	}
@@ -145,7 +89,7 @@ public class LexNameTokenMap<V> implements Map<ILexNameToken, V>, Serializable
 	{
 		if (key instanceof ILexNameToken)
 		{
-			return this.map.remove(new LexNameTokenWrapper((ILexNameToken) key));
+			return this.map.remove(new LexNameTokenWrapper((ILexNameToken) key,lnt));
 		}
 		return null;
 	}
