@@ -107,4 +107,46 @@ public class ExpressionNppTest {
 	{
 		aux("x*1", "(x * 1)");
 	}
+	
+	@Test
+	public void testCaseADivideBinaryExp_01() throws AnalysisException
+	{
+		aux("1/1","(1 / 1)");
+	}
+	
+	@Test
+	public void testCaseADivideBinaryExp_02() throws AnalysisException
+	{
+		aux("1.1/1","(1.1 / 1)");
+	}
+	
+	@Test
+	public void testCaseADivideBinaryExp_03() throws AnalysisException
+	{
+		aux("x/1","(x / 1)");
+	}
+	
+	@Test
+	public void testCaseAModBinaryExp_01() throws AnalysisException
+	{
+		aux("1 mod 1", "(1 mod 1)");
+	}
+	
+	@Test
+	public void testCaseAModBinaryExp_02() throws AnalysisException
+	{
+		aux("1.1 mod 1", "(1.1 mod 1)");
+	}
+	
+	@Test
+	public void tetestCaseAModBinaryExp_03() throws AnalysisException
+	{
+		aux("(1 mod 1) mod 1","((1 mod 1) mod 1)");
+	}
+	
+	@Test
+	public void testCaseAModBinaryExp_04() throws AnalysisException
+	{
+		aux("x mod 1", "(x mod 1)");
+	}
 }

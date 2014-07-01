@@ -4,7 +4,9 @@ import javax.security.sasl.RealmCallback;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.expressions.ADivideNumericBinaryExp;
 import org.overture.ast.expressions.AIntLiteralExp;
+import org.overture.ast.expressions.AModNumericBinaryExp;
 import org.overture.ast.expressions.AMuExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
 import org.overture.ast.expressions.ARealLiteralExp;
@@ -40,8 +42,8 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	public String caseAPlusNumericBinaryExp(APlusNumericBinaryExp node,
 			IndentTracker question) throws AnalysisException
 	{
-		String l = node.getLeft().apply(this, question);
-		String r = node.getRight().apply(this, question);
+		String l = node.getLeft().apply(THIS, question);
+		String r = node.getRight().apply(THIS, question);
 		String op = mytable.getPLUS();
 
 		StringBuilder sb = new StringBuilder();
@@ -59,8 +61,8 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	public String caseASubtractNumericBinaryExp(ASubtractNumericBinaryExp node,
 			IndentTracker question) throws AnalysisException
 	{
-		String l = node.getLeft().apply(this, question);
-		String r = node.getRight().apply(this, question);
+		String l = node.getLeft().apply(THIS, question);
+		String r = node.getRight().apply(THIS, question);
 		String op = mytable.getMINUS();
 		
 		StringBuilder sb = new StringBuilder();
@@ -81,6 +83,44 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String l = node.getLeft().apply(THIS, question);
 		String r = node.getRight().apply(THIS,question);
 		String op = mytable.getTIMES();
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(l);
+		sb.append(space);
+		sb.append(op);
+		sb.append(space);
+		sb.append(r);
+		
+		return Utilities.wrap(sb.toString());
+	}
+	
+	@Override
+	public String caseADivideNumericBinaryExp(ADivideNumericBinaryExp node,
+			IndentTracker question) throws AnalysisException
+	{
+		String l = node.getLeft().apply(THIS, question);
+		String r = node.getRight().apply(THIS,question);
+		String op = mytable.getDIVIDE();
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(l);
+		sb.append(space);
+		sb.append(op);
+		sb.append(space);
+		sb.append(r);
+		
+		return Utilities.wrap(sb.toString());
+	}
+	
+	@Override
+	public String caseAModNumericBinaryExp(AModNumericBinaryExp node,
+			IndentTracker question) throws AnalysisException
+	{
+		String l = node.getLeft().apply(THIS, question);
+		String r = node.getRight().apply(THIS,question);
+		String op = mytable.getMOD();
 		
 		StringBuilder sb = new StringBuilder();
 		
