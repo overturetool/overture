@@ -149,4 +149,18 @@ public class ExpressionNppTest {
 	{
 		aux("x mod 1", "(x mod 1)");
 	}
+	
+	@Test
+	public void testCaseADivBinaryExp_01() throws AnalysisException
+	{
+		aux("1 div 1", "(1 div 1)");
+	}
+	
+	@Test
+	public void testCaseADivBinaryExp_02() throws AnalysisException
+	{
+		aux("1.1 div 1", "(1.1 div 1)");
+	}
+	
+	
 }
