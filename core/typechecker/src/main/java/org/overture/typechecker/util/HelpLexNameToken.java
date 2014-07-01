@@ -8,6 +8,7 @@ public class HelpLexNameToken
 {
 	protected static ITypeCheckerAssistantFactory af;
 	
+	@SuppressWarnings("static-access")
 	public HelpLexNameToken(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
