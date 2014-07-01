@@ -47,7 +47,7 @@ import org.overture.interpreter.runtime.Interpreter;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.scheduler.Lock;
-import org.overture.typechecker.util.HelpLexNameToken;
+import org.overture.typechecker.util.HackLexNameToken;
 
 
 public class ObjectValue extends Value
@@ -205,7 +205,7 @@ public class ObjectValue extends Value
 		{
     		for (ILexNameToken var: members.keySet())
     		{
-    			if (HelpLexNameToken.isEqual( var,localname))
+    			if (HackLexNameToken.isEqual( var,localname))
     			{
     				rv = members.get(var);
     				break;
