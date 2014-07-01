@@ -15,7 +15,7 @@ public class LexNameTokenMap<V> implements Map<ILexNameToken, V>, Serializable
 {
 
 	
-	private final LexNameTokenAssistant lnt;
+	protected final LexNameTokenAssistant lnt;
 	/**
 	 * 
 	 */
