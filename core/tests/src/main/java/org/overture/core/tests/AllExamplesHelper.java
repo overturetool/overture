@@ -1,5 +1,7 @@
 package org.overture.core.tests;
 
+import static org.junit.Assert.fail;
+
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,6 +11,7 @@ import org.overture.ast.lex.Dialect;
 import org.overture.ast.node.INode;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
+import org.overture.tools.examplepackager.Release;
 import org.overture.tools.examplepackager.util.ExampleTestData;
 import org.overture.tools.examplepackager.util.ExampleTestUtils;
 
@@ -71,21 +74,44 @@ public class AllExamplesHelper
 		return r;
 	}
 
-	private static ExampleAstData parseExample(ExampleTestData e)
+	/**
+	 * Returns the raw sources (ie, String-encoded models) for the Overture examples. Only examples that are supposed to
+	 * parse and TC are returned.
+	 * 
+	 * @return a collection of {@link ExampleTestData}, each representing one example.
+	 */
+	static public Collection<ExampleTestData> getExamplesSources()
+	{
+		return ExampleTestUtils.getCorrectExamplesSources();
+	}
+
+	public static ExampleAstData parseExample(ExampleTestData e)
 			throws ParserException, LexException
 	{
 		List<INode> ast = new LinkedList<INode>();
+		// conver between enums. weee....
+		org.overture.config.Release rel = org.overture.config.Release.CLASSIC;
+
+		if (e.getRelease() == Release.VDM_10)
+		{
+			rel = org.overture.config.Release.VDM_10;
+		}
+
 		switch (e.getDialect())
 		{
 			case VDM_SL:
-				ast = InputProcessor.typedAst(e.getSource(), Dialect.VDM_SL);
+				ast = InputProcessor.typedAstFromContent(e.getSource(), Dialect.VDM_SL, rel);
 				break;
-
+			case VDM_PP:
+				ast = InputProcessor.typedAstFromContent(e.getSource(), Dialect.VDM_PP, rel);
+				break;
+			case VDM_RT:
+				ast = InputProcessor.typedAstFromContent(e.getSource(), Dialect.VDM_RT, rel);
+				break;
 			default:
+				fail("Unrecognised dialect:" + e.getDialect());
 				break;
 		}
 		return new ExampleAstData(e.getName(), ast);
-
 	}
-
 }
