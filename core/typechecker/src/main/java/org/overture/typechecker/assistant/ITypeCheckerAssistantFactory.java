@@ -31,6 +31,7 @@ import org.overture.ast.types.SSeqType;
 import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.TypeCheckInfo;
+import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.definition.ABusClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ACpuClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
@@ -103,13 +104,8 @@ import org.overture.typechecker.utilities.type.QualifiedDefinition;
 public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 {
 
-	// Typechecker
 
-	// All this stuff will eventually be deleted
-	
 
-	// Definition
-	// AAssignmentDefinitionAssistantTC createAAssignmentDefinitionAssistant();
 	ABusClassDefinitionAssistantTC createABusClassDefinitionAssistant();
 
 	ACpuClassDefinitionAssistantTC createACpuClassDefinitionAssistant();
@@ -406,6 +402,8 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	IQuestionAnswer<AModuleModules, List<PDefinition>> getImportDefinitionFinder();
 
 	IAnswer<PTypeList> getComposeTypeCollector();
+	
+	TypeComparator getTypeComparator();
 
 	IQuestionAnswer<TypeCheckInfo, List<QualifiedDefinition>> getQualificationVisitor();
 }

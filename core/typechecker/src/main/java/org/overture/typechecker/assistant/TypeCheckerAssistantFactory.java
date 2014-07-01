@@ -31,6 +31,7 @@ import org.overture.ast.types.SSeqType;
 import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.TypeCheckInfo;
+import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.definition.ABusClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ACpuClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
@@ -164,7 +165,9 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		ITypeCheckerAssistantFactory
 {
 
-	// Type
+	// instance variables of things to return
+	TypeComparator typeComp;
+	
 
 	@Override
 	public AApplyObjectDesignatorAssistantTC createAApplyObjectDesignatorAssistant()
@@ -1082,5 +1085,17 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IQuestionAnswer<TypeCheckInfo, List<QualifiedDefinition>> getQualificationVisitor()
 	{
 		return new QualificationVisitor();
+	}
+
+	
+	@Override
+	public TypeComparator getTypeComparator()
+	{
+		if (typeComp == null) {
+			typeComp = new TypeComparator(this);
+			return typeComp;
+		}
+		return typeComp;
+
 	}
 }
