@@ -44,15 +44,6 @@ public class NameValuePairMap extends LexNameTokenMap<Value> implements Serializ
 		put(nvp.name, nvp.value);
 	}
 	
-	
-
-	public NameValuePairMap()
-	{
-		super(HackLexNameToken.getStaticLexNameTokenAssistant());
-	}
-
-
-
 	public void putNew(NameValuePair nvp)
 	{
 		if (get(nvp.name) == null)
