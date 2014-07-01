@@ -4,7 +4,9 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.AnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.node.INode;
+import org.overture.ast.typechecker.NameScope;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 
@@ -24,10 +26,12 @@ public class SelfDefinitionFinder extends AnswerAdaptor<PDefinition>
 	}
 
 	@Override
-	public PDefinition defaultSClassDefinition(SClassDefinition node)
+	public PDefinition defaultSClassDefinition(SClassDefinition classDefinition)
 			throws AnalysisException
 	{
-		return af.createSClassDefinitionAssistant().getSelfDefinition((SClassDefinition) node);
+		PDefinition def = AstFactory.newALocalDefinition(classDefinition.getLocation(), classDefinition.getName().getSelfName(), NameScope.LOCAL, af.createPDefinitionAssistant().getType(classDefinition));
+		af.createPDefinitionAssistant().markUsed(def);
+		return def;
 	}
 
 	@Override
