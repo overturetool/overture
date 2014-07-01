@@ -28,7 +28,7 @@ import com.google.gson.reflect.TypeToken;
  * complex for auto-deserialization. <br>
  * <br>
  * These tests are meant to be used as parameterized JUnit test and so any
- * subclass {@link AParamBasicTest} must be annotated with
+ * subclass {@link AbsParamBasicTest} must be annotated with
  *  <code>@RunWith(Parameterized.class)</code>. <br>
  * <br>
  * This class is parameterized on a type <code>R</code> that represents the
@@ -38,7 +38,7 @@ import com.google.gson.reflect.TypeToken;
  * 
  * @author ldc
  */
-public abstract class AParamBasicTest<R extends Serializable> {
+public abstract class AbsParamBasicTest<R extends Serializable> {
 
 	protected String modelPath;
 	protected String resultPath;
@@ -60,7 +60,7 @@ public abstract class AParamBasicTest<R extends Serializable> {
 	 * @param resultParameter
 	 *            test result file
 	 */
-	public AParamBasicTest(String nameParameter, String testParameter,
+	public AbsParamBasicTest(String nameParameter, String testParameter,
 			String resultParameter) {
 		this.testName = testParameter;
 		this.modelPath = testParameter;

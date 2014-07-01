@@ -12,7 +12,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.node.INode;
-import org.overture.core.tests.AParamBasicTest;
+import org.overture.core.tests.AbsParamBasicTest;
 import org.overture.core.tests.PathsProvider;
 import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.pub.ProofObligationGenerator;
@@ -27,7 +27,7 @@ import com.google.gson.reflect.TypeToken;
  * 
  */
 @RunWith(Parameterized.class)
-public class PogBugRegressionTest extends AParamBasicTest<PogTestResult> {
+public class PogBugRegressionTest extends AbsParamBasicTest<PogTestResult> {
 
 	public PogBugRegressionTest(String _, String testParameter,
 			String resultParameter) {

@@ -11,7 +11,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.node.INode;
-import org.overture.core.tests.AParamBasicTest;
+import org.overture.core.tests.AbsParamBasicTest;
 import org.overture.core.tests.PathsProvider;
 
 import com.google.gson.reflect.TypeToken;
@@ -24,7 +24,7 @@ import com.google.gson.reflect.TypeToken;
  * 
  */
 @RunWith(Parameterized.class)
-public class IdTest extends AParamBasicTest<IdTestResult> {
+public class IdTest extends AbsParamBasicTest<IdTestResult> {
 
 	public IdTest(String _, String testParameter, String resultParameter) {
 		super(_, testParameter, resultParameter);
