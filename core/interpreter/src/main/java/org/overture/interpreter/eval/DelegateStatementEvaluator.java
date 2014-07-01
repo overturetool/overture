@@ -81,7 +81,7 @@ public class DelegateStatementEvaluator extends StatementEvaluator
     		}
     		else if (ctxt.title.equals("setPriority(opname, priority)"))
     		{
-    			return ACpuClassDefinitionAssistantInterpreter.setPriority(node,ctxt);
+    			return ctxt.assistantFactory.createACpuClassDefinitionAssistant().setPriority(node,ctxt);
     		}
 		}
 
