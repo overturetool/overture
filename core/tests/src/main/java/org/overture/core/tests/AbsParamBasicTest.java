@@ -86,7 +86,7 @@ public abstract class AbsParamBasicTest<R extends Serializable> {
 		if (updateResult) {
 			testUpdate();
 		} else {
-			List<INode> ast = InputProcessor.typedAst(modelPath);
+			List<INode> ast = ParseTcFacade.typedAst(modelPath);
 			R actual = processModel(ast);
 			R expected = deSerializeResult(resultPath);
 			this.testCompare(actual, expected);
@@ -94,7 +94,7 @@ public abstract class AbsParamBasicTest<R extends Serializable> {
 	}
 
 	private void testUpdate() throws ParserException, LexException, IOException {
-		List<INode> ast = InputProcessor.typedAst(modelPath);
+		List<INode> ast = ParseTcFacade.typedAst(modelPath);
 		R actual = processModel(ast);
 		Gson gson = new Gson();
 		String json = gson.toJson(actual);

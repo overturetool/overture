@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import org.overture.core.tests.InputProcessor;
+import org.overture.core.tests.ParseTcFacade;
 import org.overture.core.tests.AllExamplesHelper.ExampleAstData;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
@@ -52,7 +52,7 @@ public class ExampleModelsTest
 	@Test
 	public void testParseTc() throws IOException, ParserException, LexException
 	{
-		ExampleAstData ex = InputProcessor.parseExample(testData);
+		ExampleAstData ex = ParseTcFacade.parseExample(testData);
 		assertNotNull("Could not Parse/TC " + ex.getExampleName());
 	}
 

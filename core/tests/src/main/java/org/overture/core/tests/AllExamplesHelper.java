@@ -63,7 +63,7 @@ public class AllExamplesHelper
 
 		for (ExampleTestData e : examples)
 		{
-			r.add(InputProcessor.parseExample(e));
+			r.add(ParseTcFacade.parseExample(e));
 		}
 
 		return r;

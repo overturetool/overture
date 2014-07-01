@@ -22,12 +22,14 @@ import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
 /**
- * Helper Class for the new test framework. Helps process test inputs. This class handles I/O and interaction with the
- * Overture TC and Parser.
+ * Helper Class for the new test framework. Responsible for processing and constructing test inputs. It construcs typed
+ * ASTs from various kinds of sources.<br>
+ * <br>
+ * This class handles I/O and interactions with the Overture TC and Parser.
  * 
  * @author ldc
  */
-public class InputProcessor
+public class ParseTcFacade
 {
 
 	/**
@@ -80,13 +82,13 @@ public class InputProcessor
 		switch (e.getDialect())
 		{
 			case VDM_SL:
-				ast = InputProcessor.typedAstFromContent(e.getSource(), Dialect.VDM_SL, rel);
+				ast = ParseTcFacade.typedAstFromContent(e.getSource(), Dialect.VDM_SL, rel);
 				break;
 			case VDM_PP:
-				ast = InputProcessor.typedAstFromContent(e.getSource(), Dialect.VDM_PP, rel);
+				ast = ParseTcFacade.typedAstFromContent(e.getSource(), Dialect.VDM_PP, rel);
 				break;
 			case VDM_RT:
-				ast = InputProcessor.typedAstFromContent(e.getSource(), Dialect.VDM_RT, rel);
+				ast = ParseTcFacade.typedAstFromContent(e.getSource(), Dialect.VDM_RT, rel);
 				break;
 			default:
 				fail("Unrecognised dialect:" + e.getDialect());
