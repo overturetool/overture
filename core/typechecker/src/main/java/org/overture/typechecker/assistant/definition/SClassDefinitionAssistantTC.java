@@ -34,7 +34,6 @@ import org.overture.typechecker.FlatCheckedEnvironment;
 import org.overture.typechecker.FlatEnvironment;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
-import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.util.HelpLexNameToken;
 
@@ -622,7 +621,7 @@ public class SClassDefinitionAssistantTC
 
 					// Note this uses the "parameters only" comparator option
 
-					if (!TypeComparator.compatible(to, from, true))
+					if (!af.getTypeComparator().compatible(to, from, true))
 					{
 						TypeCheckerErrors.report(3007, "Overriding member incompatible type: "
 								+ override.getName().getName(), override.getLocation(), override);
@@ -661,7 +660,7 @@ public class SClassDefinitionAssistantTC
 
 						// Note this uses the "parameters only" comparator option
 
-						if (TypeComparator.compatible(to, from, true))
+						if (af.getTypeComparator().compatible(to, from, true))
 						{
 							TypeCheckerErrors.report(3008, "Overloaded members indistinguishable: "
 									+ def1.getName().getName(), def1.getLocation(), def1);

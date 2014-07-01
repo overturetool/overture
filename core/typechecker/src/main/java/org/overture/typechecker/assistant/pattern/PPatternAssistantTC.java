@@ -12,7 +12,6 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckInfo;
-import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionSet;
 import org.overture.typechecker.utilities.pattern.AllDefinitionLocator;
@@ -94,7 +93,7 @@ public class PPatternAssistantTC extends PPatternAssistant
 
 	public boolean matches(PPattern pattern, PType expType)
 	{
-		return TypeComparator.compatible(af.createPPatternAssistant().getPossibleType(pattern), expType);
+		return af.getTypeComparator().compatible(af.createPPatternAssistant().getPossibleType(pattern), expType);
 	}
 
 	public PExp getMatchingExpression(PPattern pattern)

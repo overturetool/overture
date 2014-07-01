@@ -83,7 +83,6 @@ import org.overture.typechecker.PrivateClassEnvironment;
 import org.overture.typechecker.PublicClassEnvironment;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
-import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.utilities.type.QualifiedDefinition;
 
 public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
@@ -112,7 +111,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		node.setTargetType(node.getTarget().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env)));
 		node.setExpType(node.getExp().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env, question.scope, null, node.getTargetType(), null)));
 
-		if (!TypeComparator.compatible(node.getTargetType(), node.getExpType()))
+		if (!question.assistantFactory.getTypeComparator().compatible(node.getTargetType(), node.getExpType()))
 		{
 			TypeCheckerErrors.report(3239, "Incompatible types in assignment", node.getLocation(), node);
 			TypeCheckerErrors.detail2("Target", node.getTarget(), "Expression", node.getExp());
@@ -527,7 +526,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 				AExpressionPattern ep = (AExpressionPattern) node.getPattern();
 				PType ptype = ep.getExp().apply(THIS, question);
 
-				if (!TypeComparator.compatible(ptype, node.getCtype()))
+				if (!question.assistantFactory.getTypeComparator().compatible(ptype, node.getCtype()))
 				{
 					TypeCheckerErrors.report(3311, "Pattern cannot match", node.getPattern().getLocation(), node.getPattern());
 				}
@@ -596,7 +595,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 
 		PType argType = node.getCycles().apply(THIS, question);
 
-		if (!TypeComparator.compatible(AstFactory.newANatNumericBasicType(node.getLocation()), argType))
+		if (!question.assistantFactory.getTypeComparator().compatible(AstFactory.newANatNumericBasicType(node.getLocation()), argType))
 		{
 			TypeCheckerErrors.report(3282, "Arguments to cycles must be a nat", node.getLocation(), node);
 			TypeCheckerErrors.detail("Actual", argType);
@@ -657,7 +656,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 
 		PType argType = node.getDuration().apply(THIS, question);
 
-		if (!TypeComparator.compatible(AstFactory.newANatNumericBasicType(node.getLocation()), argType))
+		if (!question.assistantFactory.getTypeComparator().compatible(AstFactory.newANatNumericBasicType(node.getLocation()), argType))
 		{
 			TypeCheckerErrors.report(3281, "Arguments to duration must be a nat", node.getLocation(), node);
 			TypeCheckerErrors.detail("Actual", argType);
@@ -1398,7 +1397,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 				ATypeBind typebind = (ATypeBind) bind;
 				question.assistantFactory.createATypeBindAssistant().typeResolve(typebind, THIS, question);
 
-				if (!TypeComparator.compatible(typebind.getType(), type))
+				if (!question.assistantFactory.getTypeComparator().compatible(typebind.getType(), type))
 				{
 					TypeCheckerErrors.report(3198, "Type bind not compatible with expression", bind.getLocation(), bind);
 					TypeCheckerErrors.detail2("Bind", typebind.getType(), "Exp", type);
@@ -1408,7 +1407,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 				ASetBind setbind = (ASetBind) bind;
 				ASetType settype = question.assistantFactory.createPTypeAssistant().getSet(setbind.getSet().apply(THIS, question));
 
-				if (!TypeComparator.compatible(type, settype.getSetof()))
+				if (!question.assistantFactory.getTypeComparator().compatible(type, settype.getSetof()))
 				{
 					TypeCheckerErrors.report(3199, "Set bind not compatible with expression", bind.getLocation(), bind);
 					TypeCheckerErrors.detail2("Bind", settype.getSetof(), "Exp", type);
