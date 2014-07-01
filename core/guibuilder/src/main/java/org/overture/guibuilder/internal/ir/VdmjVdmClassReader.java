@@ -37,11 +37,6 @@ import org.overture.ast.util.definitions.ClassList;
 import org.overture.guibuilder.internal.ToolSettings;
 import org.overture.interpreter.util.ClassListInterpreter;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.AExplicitOperationDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AImplicitOperationDefinitionAssistantTC;
-import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 
 /**
  * Vdm Class Reader that uses Vdmj to extract most of the information (the exception is annotation)
@@ -53,7 +48,6 @@ public class VdmjVdmClassReader implements IVdmClassReader
 
 	private Vector<IVdmDefinition> classList = null;
 	ClassListInterpreter classes;
-	public final ITypeCheckerAssistantFactory assistantFactory = new TypeCheckerAssistantFactory();
 
 	/**
 	 * Constructor
@@ -70,7 +64,7 @@ public class VdmjVdmClassReader implements IVdmClassReader
 	}
 
 	@Override
-	public void readFiles(Vector<File> files)
+	public void readFiles(Vector<File> files, ITypeCheckerAssistantFactory af)
 	{
 		// ClassList classes = new ClassList();
 		AnnotationTable annotationTable = new AnnotationTable();
@@ -90,7 +84,7 @@ public class VdmjVdmClassReader implements IVdmClassReader
 		// we extract the annotations (ideally this should be done by the same parser)
 		annotationReader.readFiles(files);
 		System.out.println(annotationTable.printTable());
-		readVdmjClassList(classes, annotationTable);
+		readVdmjClassList(classes, annotationTable, af);
 
 	}
 
@@ -109,7 +103,7 @@ public class VdmjVdmClassReader implements IVdmClassReader
 	 * @throws InvocationAssistantException
 	 */
 	private void readVdmjClassList(ClassList classes,
-			AnnotationTable annotationTable)
+			AnnotationTable annotationTable, ITypeCheckerAssistantFactory af)
 	{
 		// the name of the classes, this is usefull later on
 		Vector<String> classNames = new Vector<String>();
@@ -120,7 +114,7 @@ public class VdmjVdmClassReader implements IVdmClassReader
 
 		for (SClassDefinition c : classes)
 		{
-			readVdmjClass(c, annotationTable, classNames);
+			readVdmjClass(c, annotationTable, classNames, af);
 		}
 
 	}
@@ -137,7 +131,7 @@ public class VdmjVdmClassReader implements IVdmClassReader
 	 * @throws InvocationAssistantException
 	 */
 	private void readVdmjClass(SClassDefinition c,
-			AnnotationTable annotationTable, Vector<String> classNames)
+			AnnotationTable annotationTable, Vector<String> classNames, ITypeCheckerAssistantFactory assistantFactory)
 	{
 		boolean hasConstructors = c.getHasContructors();
 		VdmClass vdmClass = new VdmClass(c.getName().getName(), hasConstructors);
