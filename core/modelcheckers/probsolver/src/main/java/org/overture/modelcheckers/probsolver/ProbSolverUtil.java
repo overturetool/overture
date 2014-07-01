@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
@@ -91,9 +92,9 @@ public class ProbSolverUtil extends AbstractProbSolverUtil
 	public static PStm solve(String name, AImplicitOperationDefinition opDef,
 			Map<String, String> stateContext, Map<String, String> argContext,
 			Map<String, PType> argumentTypes, PType tokenType,
-			Set<String> quotes, SolverConsole console) throws SolverException
+			Set<String> quotes, SolverConsole console, IAstAssistantFactory af) throws SolverException
 	{
-		VdmSolution solution = new ProbSolverUtil(console, quotes).solve(name, opDef, opDef.getResult(), stateContext, argContext, argumentTypes, tokenType);
+		VdmSolution solution = new ProbSolverUtil(console, quotes, af).solve(name, opDef, opDef.getResult(), stateContext, argContext, argumentTypes, tokenType);
 		if (solution.isStatement())
 		{
 			return solution.getStatement();
@@ -104,9 +105,9 @@ public class ProbSolverUtil extends AbstractProbSolverUtil
 	public static PExp solve(String name, PExp body, APatternTypePair result,
 			Map<String, String> stateContext, Map<String, String> argContext,
 			Map<String, PType> argumentTypes, PType tokenType,
-			Set<String> quotes, SolverConsole console) throws SolverException
+			Set<String> quotes, SolverConsole console, IAstAssistantFactory af) throws SolverException
 	{
-		VdmSolution solution = new ProbSolverUtil(console, quotes).solve(name, body, result, stateContext, argContext, argumentTypes, tokenType);
+		VdmSolution solution = new ProbSolverUtil(console, quotes, af).solve(name, body, result, stateContext, argContext, argumentTypes, tokenType);
 		if (solution.isExpression())
 		{
 			return solution.getExpression();
@@ -116,9 +117,9 @@ public class ProbSolverUtil extends AbstractProbSolverUtil
 
 	private final Map<String, Set<String>> sets = new HashMap<String, Set<String>>();
 
-	private ProbSolverUtil(SolverConsole console, Set<String> quotes)
+	private ProbSolverUtil(SolverConsole console, Set<String> quotes, IAstAssistantFactory af)
 	{
-		super(console);
+		super(console, af);
 		this.sets.put(VdmToBConverter.QUOTES_SET, getQuoteNames(quotes));
 	}
 

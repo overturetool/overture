@@ -32,7 +32,7 @@ public class ProbSolverIntegration implements IConstraintSolver {
 			throws Exception {
 		return ProbSolverUtil.solve(name, opDef, stateExps, argExps,
 				new HashMap<String, PType>(), calculateTokenType(ast),
-				calculateQuoteNames(ast), new SolverConsole(out, err));
+				calculateQuoteNames(ast), new SolverConsole(out, err),af);
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class ProbSolverIntegration implements IConstraintSolver {
 			throws Exception {
 		return ProbSolverUtil.solve(name, body, result, stateExps, argExps,
 				new HashMap<String, PType>(), calculateTokenType(ast),
-				calculateQuoteNames(ast), new SolverConsole(out, err));
+				calculateQuoteNames(ast), new SolverConsole(out, err), af);
 	}
 
 	/**
