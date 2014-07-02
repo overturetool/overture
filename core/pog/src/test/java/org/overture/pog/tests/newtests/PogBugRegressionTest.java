@@ -6,7 +6,6 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
@@ -44,29 +43,8 @@ public class PogBugRegressionTest extends AbsParamBasicTest<PogTestResult> {
 
 	@Override
 	public void testCompare(PogTestResult actual, PogTestResult expected) {
-		Collection<String> stored_notfound = CollectionUtils.removeAll(
-				expected, actual);
-		Collection<String> found_notstored = CollectionUtils.removeAll(
-				actual, expected);
-
-		if (stored_notfound.isEmpty() && found_notstored.isEmpty()) {
-			// Results match, tests pass;do nothing
-		} else {
-			StringBuilder sb = new StringBuilder();
-			if (!stored_notfound.isEmpty()) {
-				sb.append("Expected (but not found) POS: " + "\n");
-				for (String pr : stored_notfound) {
-					sb.append(pr + "\n");
-				}
-			}
-			if (!found_notstored.isEmpty()) {
-				sb.append("Found (but not expected) POS: " + "\n");
-				for (String pr : found_notstored) {
-					sb.append(pr+ "\n");
-				}
-			}
-			fail(sb.toString());
-		}
+		PogTestResult.compare(actual, expected);
+		
 	}
 
 	@Override
