@@ -57,7 +57,6 @@ import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.types.SSeqType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
 
 /**
  * A class for static type checking comparisons.
@@ -249,7 +248,7 @@ public class TypeComparator
 			throw new TypeCheckException("Unknown type: " + from, from.getLocation(), from);
 		}
 
-		if (assistantFactory.createPTypeAssistant().equals(to, from))
+		if (to == from)	// (assistantFactory.createPTypeAssistant().equals(to, from))
 		{
 			return Result.Yes; // Same object!
 		}

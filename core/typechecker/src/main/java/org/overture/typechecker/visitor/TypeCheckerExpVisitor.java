@@ -61,9 +61,7 @@ import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.TypeComparator;
-import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
-import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
 import org.overture.typechecker.utilities.type.QualifiedDefinition;
@@ -2055,7 +2053,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		for (PExp arg : node.getArgs())
 		{
 			PType fieldType = fiter.next().getType();
-			PType argType = arg.apply(THIS, question.newConstraint(null));
+			PType argType = arg.apply(THIS, question.newConstraint(fieldType));
 			i++;
 
 			if (!TypeComparator.compatible(fieldType, argType))
