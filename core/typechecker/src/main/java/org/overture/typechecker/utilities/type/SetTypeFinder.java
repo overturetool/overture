@@ -57,7 +57,7 @@ public class SetTypeFinder extends TypeUnwrapper<ASetType>
 			type.setSetDone(true); // Mark early to avoid recursion.
 			// type.setSetType(PTypeAssistantTC.getSet(AstFactory.newAUnknownType(location)));
 			type.setSetType(af.createPTypeAssistant().getSet(AstFactory.newAUnknownType(location)));
-			PTypeSet set = new PTypeSet();
+			PTypeSet set = new PTypeSet(af);
 
 			for (PType t : type.getTypes())
 			{

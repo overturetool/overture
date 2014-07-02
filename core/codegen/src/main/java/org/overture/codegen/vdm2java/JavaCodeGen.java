@@ -43,7 +43,6 @@ import org.overture.codegen.trans.iterator.JavaLanguageIterator;
 import org.overture.codegen.trans.letexps.DeflattenTransformation;
 import org.overture.codegen.trans.letexps.FuncTransformation;
 import org.overture.codegen.trans.letexps.IfExpTransformation;
-import org.overture.codegen.trans.letexps.LetDefExpTransformation;
 import org.overture.codegen.trans.patterns.IgnorePatternTransformation;
 import org.overture.codegen.trans.uniontypes.UnionTypeTransformation;
 import org.overture.codegen.utils.GeneralUtils;
@@ -191,7 +190,6 @@ public class JavaCodeGen
 		
 		FuncTransformation funcTransformation = new FuncTransformation();
 		IfExpTransformation ifExpTransformation = new IfExpTransformation(transformationAssistant);
-		LetDefExpTransformation letDefTransformation = new LetDefExpTransformation(transformationAssistant);
 		IgnorePatternTransformation ignoreTransformation = new IgnorePatternTransformation(transformationAssistant, IGNORE_PATTERN_NAME_PREFIX);
 		DeflattenTransformation deflattenTransformation = new DeflattenTransformation(transformationAssistant);
 		UnionTypeTransformation unionTypeTransformation = new UnionTypeTransformation(transformationAssistant, irInfo);
@@ -211,7 +209,6 @@ public class JavaCodeGen
 				{
 					classCg.apply(funcTransformation);
 					classCg.apply(ifExpTransformation);
-					classCg.apply(letDefTransformation);
 					classCg.apply(ignoreTransformation);
 					classCg.apply(deflattenTransformation);
 					classCg.apply(funcValVisitor);

@@ -25,7 +25,7 @@ public class CompleteTests extends AllTest
 
 		Collection<Object[]> tests = new LinkedList<Object[]>();
 
-		tests.addAll(getTests(new File(root),"hotel"));
+		tests.addAll(getTests(new File(root),"hotel","soccer-inlined-functions"));
 
 		return tests;
 	}

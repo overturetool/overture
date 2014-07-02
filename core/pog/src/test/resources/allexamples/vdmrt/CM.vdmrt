@@ -169,7 +169,7 @@ BaseRTThread(t) ==
   then start(registeredSelf);   
  );
 
-Step : () ==> ()
+public Step : () ==> ()
 Step() ==
   is subclass responsibility;
 
@@ -495,7 +495,7 @@ isFinished () ==
   for all id in set dom dispensers do
     dispensers(id).isFinished();
 
-Step: () ==> ()
+public Step: () ==> ()
 Step() ==
   (if threats <> []
    then (def mk_ (evid,pmt, pa, pt) = getThreat() in
@@ -594,7 +594,7 @@ addThreat (evid, pmt, ptime) ==
 pre pmt in set dom missilePriority and
     pmt in set dom responseDB;
 
-async Step: () ==> ()
+public async Step: () ==> ()
 Step () ==
   cycles (1E5) 
   (if len curplan > 0
@@ -728,7 +728,7 @@ isFinished () ==
   for all id in set dom controllers do
     controllers(id).isFinished();
 
-Step: () ==> ()
+public Step: () ==> ()
 Step() ==
  (if threats <> []
   then (def mk_ (evid,pmt, pa, pt) = getThreat() in

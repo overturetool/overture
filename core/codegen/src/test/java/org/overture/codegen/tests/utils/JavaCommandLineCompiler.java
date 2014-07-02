@@ -2,6 +2,7 @@ package org.overture.codegen.tests.utils;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.List;
@@ -36,7 +37,7 @@ public class JavaCommandLineCompiler
 		Process p = null;
 		try
 		{
-			String line;
+			String line = "";
 			ProcessBuilder pb = null;
 			String arg = "";
 
@@ -45,10 +46,10 @@ public class JavaCommandLineCompiler
 				pb = new ProcessBuilder(javac.getAbsolutePath(), (cpJar == null ? ""
 						: " -cp " + cpJar.getAbsolutePath()), arguments.trim());
 			else
-				arg = javac.getAbsolutePath()
+				arg = "javac"
 						+ (cpJar == null ? "" : " -cp "
 								+ cpJar.getAbsolutePath()) + " "
-						+ arguments.trim();
+						+ arguments.replace('\"', ' ').trim();
 
 			if (pb != null)
 			{
@@ -56,8 +57,26 @@ public class JavaCommandLineCompiler
 				pb.redirectErrorStream(true);
 				p = pb.start();
 			} else
+			{
 				p = Runtime.getRuntime().exec(arg, null, dir);
+				InputStream stderr = p.getErrorStream();
+	            InputStreamReader isr = new InputStreamReader(stderr);
 
+	            BufferedReader br = new BufferedReader(isr);
+
+	            String debugLine = null;
+	            while ( (debugLine = br.readLine()) != null)
+	            {
+	                line += debugLine + "\n";
+	            }
+	            
+	            int exitVal = p.waitFor();
+	            
+	            if(exitVal != 0)
+	            {
+	            	System.out.println(line);
+	            }
+			}
 			BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
 			String secondLastLine = "";
 			while ((line = input.readLine()) != null)

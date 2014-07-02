@@ -169,7 +169,7 @@ public SetPeriod : nat1 ==> ()
 SetPeriod(p) ==
   period := p;
 
-Step : () ==> ()
+public Step : () ==> ()
 Step() ==
   is subclass responsibility
 

@@ -93,6 +93,7 @@ import org.overture.ast.expressions.ASubclassResponsibilityExp;
 import org.overture.ast.expressions.ASubsetBinaryExp;
 import org.overture.ast.expressions.ASubtractNumericBinaryExp;
 import org.overture.ast.expressions.ATailUnaryExp;
+import org.overture.ast.expressions.AThreadIdExp;
 import org.overture.ast.expressions.ATimesNumericBinaryExp;
 import org.overture.ast.expressions.ATupleExp;
 import org.overture.ast.expressions.AUnaryMinusUnaryExp;
@@ -194,6 +195,7 @@ import org.overture.codegen.cgast.expressions.ASizeUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATailUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
+import org.overture.codegen.cgast.expressions.AThreadIdExpCG;
 import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATupleExpCG;
 import org.overture.codegen.cgast.expressions.AXorBoolBinaryExpCG;
@@ -212,6 +214,21 @@ import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 {
+	
+	@Override
+	public SExpCG caseAThreadIdExp(AThreadIdExp node, IRInfo question)
+			throws AnalysisException
+	{
+		PType type = node.getType();
+		STypeCG typeCG = type.apply(question.getTypeVisitor(),question);
+		
+		AThreadIdExpCG threadId = new AThreadIdExpCG();
+		threadId.setType(typeCG);
+		
+		return threadId;
+		
+	}
+	
 	@Override
 	public SExpCG caseANilExp(ANilExp node, IRInfo question)
 			throws AnalysisException

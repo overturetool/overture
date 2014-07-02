@@ -100,7 +100,7 @@ public class ProductExtendedTypeFinder extends
 
 						if (ts == null)
 						{
-							ts = new PTypeSet();
+							ts = new PTypeSet(af);
 							result.put(i, ts);
 						}
 

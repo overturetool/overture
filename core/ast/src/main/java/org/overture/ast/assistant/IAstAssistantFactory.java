@@ -4,12 +4,7 @@ import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.assistant.definition.PAccessSpecifierAssistant;
 import org.overture.ast.assistant.definition.PDefinitionAssistant;
 import org.overture.ast.assistant.pattern.PPatternAssistant;
-import org.overture.ast.assistant.type.ABracketTypeAssistant;
-import org.overture.ast.assistant.type.ANamedInvariantTypeAssistant;
-import org.overture.ast.assistant.type.AOptionalTypeAssistant;
-import org.overture.ast.assistant.type.AParameterTypeAssistant;
 import org.overture.ast.assistant.type.AUnionTypeAssistant;
-import org.overture.ast.assistant.type.AUnknownTypeAssistant;
 import org.overture.ast.assistant.type.PTypeAssistant;
 import org.overture.ast.assistant.type.SNumericBasicTypeAssistant;
 import org.overture.ast.lex.LexNameList;
@@ -74,8 +69,8 @@ public interface IAstAssistantFactory {
 	 * 
 	 * @return the a bracket type assistant
 	 */
-	@Deprecated
-	ABracketTypeAssistant createABracketTypeAssistant();
+//	@Deprecated
+//	ABracketTypeAssistant createABracketTypeAssistant();
 
 	/**
 	 * Creates a new ANamedInvariantTypeAssistant. This assistant does nothing
@@ -83,8 +78,8 @@ public interface IAstAssistantFactory {
 	 * 
 	 * @return the a named invariant type assistant
 	 */
-	@Deprecated
-	ANamedInvariantTypeAssistant createANamedInvariantTypeAssistant();
+//	@Deprecated
+//	ANamedInvariantTypeAssistant createANamedInvariantTypeAssistant();
 
 	/**
 	 * Creates a new {@link AOptionalTypeAssistant}. This assistant does nothing
@@ -92,8 +87,8 @@ public interface IAstAssistantFactory {
 	 * 
 	 * @return the a optional type assistant
 	 */
-	@Deprecated
-	AOptionalTypeAssistant createAOptionalTypeAssistant();
+//	@Deprecated
+//	AOptionalTypeAssistant createAOptionalTypeAssistant();
 
 	/**
 	 * Creates a new {@link AParameterTypeAssistant}. This assistant does
@@ -101,8 +96,8 @@ public interface IAstAssistantFactory {
 	 * 
 	 * @return the a parameter type assistant
 	 */
-	@Deprecated
-	AParameterTypeAssistant createAParameterTypeAssistant();
+//	@Deprecated
+//	AParameterTypeAssistant createAParameterTypeAssistant();
 
 	/**
 	 * Creates a new {@link AUnionTypeAssistant}. This assistant provides
@@ -118,8 +113,8 @@ public interface IAstAssistantFactory {
 	 * 
 	 * @return the a unknown type assistant
 	 */
-	@Deprecated
-	AUnknownTypeAssistant createAUnknownTypeAssistant();
+//	@Deprecated
+//	AUnknownTypeAssistant createAUnknownTypeAssistant();
 
 	/**
 	 * Creates a new {@link PTypeAssistant}. This assistant provides

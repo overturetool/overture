@@ -103,6 +103,7 @@ import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATailUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
+import org.overture.codegen.cgast.expressions.AThreadIdExpCG;
 import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATupleExpCG;
 import org.overture.codegen.cgast.expressions.AXorBoolBinaryExpCG;
@@ -332,6 +333,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AAnonymousClassExpCG.class, templateStructure.EXP_PATH + "AnonymousClass");
 		
 		nodeTemplateFileNames.put(ANotImplementedExpCG.class, templateStructure.EXP_PATH + "NotImplemented");
+		
+		nodeTemplateFileNames.put(AThreadIdExpCG.class, templateStructure.EXP_PATH + "ThreadId");
 		
 		// Quantifier expressions
 		

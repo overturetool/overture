@@ -21,6 +21,7 @@ import org.overture.codegen.cgast.expressions.AExistsQuantifierExpCG;
 import org.overture.codegen.cgast.expressions.AForAllQuantifierExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.ALetBeStExpCG;
+import org.overture.codegen.cgast.expressions.ALetDefExpCG;
 import org.overture.codegen.cgast.expressions.AMapletExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
@@ -342,6 +343,31 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 			transform(enclosingStm, block, exists1Result, node);
 			block.apply(this);
 		}
+	}
+	
+	public void caseALetDefExpCG(ALetDefExpCG node) throws AnalysisException
+	{
+		SStmCG enclosingStm = getEnclosingStm(node, "let def expression");
+		
+		SExpCG exp = node.getExp();
+		transformationAssistant.replaceNodeWith(node, exp);
+		
+		ABlockStmCG topBlock = new ABlockStmCG();
+		ABlockStmCG current = topBlock;
+		
+		for(AVarLocalDeclCG local : node.getLocalDefs())
+		{
+			ABlockStmCG tmp = new ABlockStmCG();
+			tmp.getLocalDefs().add(local.clone());
+			current.getStatements().add(tmp);
+			current = tmp;
+		}
+
+		transformationAssistant.replaceNodeWith(enclosingStm, topBlock);
+		topBlock.getStatements().add(enclosingStm);
+		
+		exp.apply(this);
+		topBlock.apply(this);
 	}
 
 	private void replaceCompWithTransformation(SStmCG enclosingStm, ABlockStmCG block,

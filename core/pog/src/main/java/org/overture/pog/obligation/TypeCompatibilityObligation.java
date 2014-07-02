@@ -347,7 +347,7 @@ public class TypeCompatibilityObligation extends ProofObligation
 		if (etype instanceof AUnionType)
 		{
 			AUnionType ut = (AUnionType) etype;
-			PTypeSet possibles = new PTypeSet();
+			PTypeSet possibles = new PTypeSet(assistantFactory);
 
 			for (PType pos : ut.getTypes())
 			{
