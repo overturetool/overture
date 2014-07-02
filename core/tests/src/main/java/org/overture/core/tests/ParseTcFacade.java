@@ -163,14 +163,14 @@ public class ParseTcFacade
 				Settings.release = Release.VDM_10;
 			}
 
-			if (ext.equals("vdmsl"))
+			if (ext.equals("vdmsl") | ext.equals("vdm"))
 			{
 				return parseTcSl(sourcePath);
 			}
 
 			else
 			{
-				if (ext.equals("vdmpp"))
+				if (ext.equals("vdmpp") | ext.equals("vpp"))
 				{
 					return parseTcPp(sourcePath);
 				} else
