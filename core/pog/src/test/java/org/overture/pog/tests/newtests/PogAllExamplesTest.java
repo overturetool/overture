@@ -1,15 +1,10 @@
 package org.overture.pog.tests.newtests;
+import static org.junit.Assert.fail;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 
-import org.apache.commons.io.IOUtils;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
@@ -17,36 +12,29 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.node.INode;
 import org.overture.core.tests.AllExamplesHelper;
 import org.overture.core.tests.AllExamplesHelper.ExampleAstData;
+import org.overture.core.tests.ParamExamplesTest;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
 import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.pub.ProofObligationGenerator;
-import org.overture.pog.tests.PoResult;
-import org.overture.pog.tests.TestHelper;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 /**
- * Initial attempt at constructing an All Examples test in the new test framework. Doesn't work
- * yet since some examples are crashing.
+ * Working examples of all examples tests for the pog
+ * 
  * @author ldc
- *
  */
 @RunWith(Parameterized.class)
-public class PogAllExamplesTest
+public class PogAllExamplesTest extends ParamExamplesTest<PogTestResult>
 {
 
-	String resultFile;
-	List<INode> model;
+	public PogAllExamplesTest(String _, List<INode> model, String result)
+	{
+		super(_, model, result);
+		// uncomment line below to update results
+		// updateResult = true;
+	}
 
 	private static String EXAMPLES_RESULTS_ROOT = "src/test/resources/exampleResults/";
-
-	public PogAllExamplesTest(String _, List<INode> ast, String result)
-	{
-		this.model = ast;
-		this.resultFile = result;
-	}
 
 	@Parameters(name = "{index} : {0}")
 	public static Collection<Object[]> testData() throws ParserException,
@@ -64,20 +52,28 @@ public class PogAllExamplesTest
 		return r;
 	}
 
-	@Test
-	public void examplesTest() throws AnalysisException, FileNotFoundException,
-			IOException
+	@Override
+	public PogTestResult processModel(List<INode> model)
 	{
-		IProofObligationList actual = ProofObligationGenerator.generateProofObligations(model);
-
-		Gson gson = new Gson();
-		String json = IOUtils.toString(new FileReader(resultFile));
-		Type resultType = new TypeToken<Collection<PoResult>>()
+		IProofObligationList ipol;
+		try
 		{
-		}.getType();
-		List<PoResult> expected = gson.fromJson(json, resultType);
+			ipol = ProofObligationGenerator.generateProofObligations(model);
+			PogTestResult actual = PogTestResult.convert(ipol);
+			return actual;
+		} catch (AnalysisException e)
+		{
+			fail("Could not process model.");
+			e.printStackTrace();
+		}
+		return null;
 
-		TestHelper.checkSameElements(expected, actual);
+	}
+
+	@Override
+	public void compareResults(PogTestResult actual, PogTestResult expected)
+	{
+		PogTestResult.compare(actual, expected);
 
 	}
 
