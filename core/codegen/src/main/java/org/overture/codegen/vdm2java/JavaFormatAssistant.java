@@ -93,18 +93,23 @@ public class JavaFormatAssistant
 	{
 		//Example: objRef instanceof classType
 		
-		AInstanceofExpCG instanceOfExp = new AInstanceofExpCG();
+		AClassDeclCG enclosingClass = record.getAncestor(AClassDeclCG.class);
 
-		instanceOfExp.setType(new ABoolBasicTypeCG());
+		ATypeNameCG typeName = new ATypeNameCG();
+		typeName.setDefiningClass(enclosingClass.getName());
+		typeName.setName(record.getName());
+		
+		ARecordTypeCG recordType = new ARecordTypeCG();
+		recordType.setName(typeName);
 
 		AIdentifierVarExpCG objRef = new AIdentifierVarExpCG();
 		objRef.setOriginal(formalParamName);
 		objRef.setType(new AObjectTypeCG());
-		instanceOfExp.setObjRef(objRef);
 		
-		AClassTypeCG classType = new AClassTypeCG();
-		classType.setName(record.getName());
-		instanceOfExp.setClassType(classType);
+		AInstanceofExpCG instanceOfExp = new AInstanceofExpCG();
+		instanceOfExp.setType(new ABoolBasicTypeCG());
+		instanceOfExp.setExp(objRef);
+		instanceOfExp.setCheckedType(recordType);
 		
 		return instanceOfExp;
 	}
