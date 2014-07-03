@@ -3,11 +3,12 @@ package org.overture.codegen.trans.uniontypes;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.ast.node.INode;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
+import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
@@ -20,13 +21,20 @@ import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AElemsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AFieldExpCG;
+import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
+import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
 import org.overture.codegen.cgast.expressions.AMapDomainUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
+import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.SNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.SUnaryExpCG;
+import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
+import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AElseIfStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
+import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
@@ -44,12 +52,17 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 	private BaseTransformationAssistant baseAssistant;
 	private IRInfo info;
 	private List<AClassDeclCG> classes;
+
+	private String applyExpResulPrefix;
+	private int applyExpCounter = 0;
 	
-	public UnionTypeTransformation(BaseTransformationAssistant baseAssistant, IRInfo info, List<AClassDeclCG> classes)
+	public UnionTypeTransformation(BaseTransformationAssistant baseAssistant, IRInfo info, List<AClassDeclCG> classes, String applyExpResultPrefix)
 	{
 		this.baseAssistant = baseAssistant;
 		this.info = info;
 		this.classes = classes;
+		
+		this.applyExpResulPrefix = applyExpResultPrefix;
 	}
 	
 	private interface TypeFinder<T extends STypeCG>
@@ -93,7 +106,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			casted.setType(castedType.clone());
 			casted.setExp(exp.clone());
 			
-			baseAssistant.replaceNodeWithRecursively(exp, casted, this);
+			baseAssistant.replaceNodeWith(exp, casted);
 			
 			return casted;
 		}
@@ -107,7 +120,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		
 		if(type instanceof AUnionTypeCG)
 		{
-			INode vdmNode = type.getSourceNode().getVdmNode();
+			org.overture.ast.node.INode vdmNode = type.getSourceNode().getVdmNode();
 			
 			if(vdmNode instanceof PType)
 			{
@@ -129,9 +142,107 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 	}
 	
 	@Override
+	public void caseAFieldExpCG(AFieldExpCG node) throws AnalysisException
+	{
+		node.getObject().apply(this);
+		
+		INode parent = node.parent();
+		
+		if (parent instanceof AApplyExpCG)
+		{
+			//TODO: Deflatten structure
+			
+			String name = applyExpResulPrefix + (++applyExpCounter);
+			
+			STypeCG objectType = node.getObject().getType();
+			
+			if (!(objectType instanceof AUnionTypeCG))
+			{
+				return;
+			}
+
+			SStmCG enclosingStatement = baseAssistant.getEnclosingStm(node, "field expression");
+
+			AVarLocalDeclCG resultDecl = new AVarLocalDeclCG();
+			resultDecl.setSourceNode(node.getSourceNode());
+			resultDecl.setExp(new ANullExpCG());
+			resultDecl.setType(((AApplyExpCG) parent).getType().clone());
+			AIdentifierPatternCG id = new AIdentifierPatternCG();
+			id.setName(name);
+			resultDecl.setPattern(id);
+
+			AIdentifierVarExpCG resultVar = new AIdentifierVarExpCG();
+			resultVar.setSourceNode(node.getSourceNode());
+			resultVar.setIsLambda(false);
+			resultVar.setOriginal(name);
+			resultVar.setType(resultDecl.getType().clone());
+
+			LinkedList<STypeCG> possibleTypes = ((AUnionTypeCG) objectType).getTypes();
+
+			AIfStmCG ifChecks = new AIfStmCG();
+
+			for (int i = 0; i < possibleTypes.size(); i++)
+			{
+				AApplyExpCG apply = (AApplyExpCG) parent.clone();
+				AFieldExpCG fieldExp = (AFieldExpCG) apply.getRoot();
+
+				STypeCG currentType = possibleTypes.get(i);
+
+				ACastUnaryExpCG castedFieldExp = new ACastUnaryExpCG();
+				castedFieldExp.setType(currentType.clone());
+				castedFieldExp.setExp(fieldExp.getObject());
+
+				fieldExp.setObject(castedFieldExp);
+
+				ALocalAssignmentStmCG assignment = new ALocalAssignmentStmCG();
+				assignment.setTarget(resultVar.clone());
+				assignment.setExp(apply);
+
+				if (i == 0)
+				{
+					ifChecks.setIfExp(consInstanceCheck(node, currentType));
+					ifChecks.setThenStm(assignment);
+				} else if (i < possibleTypes.size() - 1)
+				{
+					AElseIfStmCG elseIf = new AElseIfStmCG();
+					elseIf.setElseIf(consInstanceCheck(node, currentType));
+					elseIf.setThenStm(assignment);
+
+					ifChecks.getElseIf().add(elseIf);
+				} else
+				{
+					ifChecks.setElseStm(assignment);
+				}
+			}
+
+			baseAssistant.replaceNodeWith(parent, resultVar);
+			ABlockStmCG replacementBlock = new ABlockStmCG();
+			replacementBlock.getLocalDefs().add(resultDecl);
+			replacementBlock.getStatements().add(ifChecks);
+
+			baseAssistant.replaceNodeWith(enclosingStatement, replacementBlock);
+			replacementBlock.getStatements().add(enclosingStatement);
+		}
+	}
+
+	private AInstanceofExpCG consInstanceCheck(AFieldExpCG copy, STypeCG type)
+	{
+		AInstanceofExpCG check = new AInstanceofExpCG();
+		check.setType(new ABoolBasicTypeCG());
+		check.setCheckedType(type.clone());
+		check.setExp(copy.getObject().clone());
+		return check;
+	}
+	
+	@Override
 	public void caseAApplyExpCG(AApplyExpCG node) throws AnalysisException
 	{
+		for(SExpCG arg : node.getArgs())
+		{
+			arg.apply(this);
+		}
 		SExpCG root = node.getRoot();
+		root.apply(this);
 		
 		if(root.getType() instanceof AUnionTypeCG)
 		{
@@ -144,7 +255,6 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 
 					return mapType != null ? (SMapTypeCG) mapType.apply(info.getTypeVisitor(), info) : null; 
 				}});
-			
 			
 			if(mapType != null && node.getArgs().size() == 1)
 			{
@@ -173,14 +283,14 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 	}
 	
 	@Override
-	public void caseANotUnaryExpCG(ANotUnaryExpCG node)
+	public void inANotUnaryExpCG(ANotUnaryExpCG node)
 			throws AnalysisException
 	{
 		correctTypes(node.getExp(), new ABoolBasicTypeCG());
 	}
 	
 	@Override
-	public void caseAEqualsBinaryExpCG(AEqualsBinaryExpCG node)
+	public void inAEqualsBinaryExpCG(AEqualsBinaryExpCG node)
 			throws AnalysisException
 	{
 		STypeCG leftType = node.getLeft().getType();
@@ -209,7 +319,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 	}
 	
 	@Override
-	public void caseANewExpCG(ANewExpCG node) throws AnalysisException
+	public void inANewExpCG(ANewExpCG node) throws AnalysisException
 	{
 		LinkedList<SExpCG> args = node.getArgs();
 		
@@ -298,8 +408,8 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 				return false;
 			}
 
-			INode paramTypeNode = paramSourceNode.getVdmNode();
-			INode argTypeNode = argTypeSourceNode.getVdmNode();
+			org.overture.ast.node.INode paramTypeNode = paramSourceNode.getVdmNode();
+			org.overture.ast.node.INode argTypeNode = argTypeSourceNode.getVdmNode();
 
 			if (!(paramTypeNode instanceof PType) || !(argTypeNode instanceof PType))
 			{
@@ -343,7 +453,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 	}
 	
 	@Override
-	public void caseAElemsUnaryExpCG(AElemsUnaryExpCG node)
+	public void inAElemsUnaryExpCG(AElemsUnaryExpCG node)
 			throws AnalysisException
 	{
 		if(handleUnaryExp(node))
@@ -368,7 +478,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 	}
 	
 	@Override
-	public void caseAMapDomainUnaryExpCG(AMapDomainUnaryExpCG node)
+	public void inAMapDomainUnaryExpCG(AMapDomainUnaryExpCG node)
 			throws AnalysisException
 	{
 		if(handleUnaryExp(node))

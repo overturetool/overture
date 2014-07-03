@@ -1,6 +1,8 @@
 package org.overture.codegen.trans.assistants;
 
 import org.overture.codegen.cgast.INode;
+import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 
@@ -28,5 +30,17 @@ public class BaseTransformationAssistant
 		INode parent = original.parent();
 		parent.replaceChild(original, replacement);
 		original.parent(null);
+	}
+	
+	public SStmCG getEnclosingStm(SExpCG node, String nodeStr) throws AnalysisException
+	{
+		SStmCG enclosingStm = node.getAncestor(SStmCG.class);
+
+		if (enclosingStm == null)
+		{
+			throw new AnalysisException(String.format("Could not find enclosing statement for %s", node));
+		}
+		
+		return enclosingStm;
 	}
 }
