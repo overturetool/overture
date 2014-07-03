@@ -7,7 +7,6 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SSeqTypeBase;
@@ -123,17 +122,16 @@ public class TypeAssistantCG extends AssistantBase
 		return methodType;
 	}
 	
-	//TODO: Copied from UML2VDM. Factor out in assistant
-	public boolean isUnionOfQuotes(AUnionType type)
+	public boolean isUnionOfType(AUnionType unionType, Class<? extends PType> type)
 	{
 		TypeCheckerAssistantFactory factory = new TypeCheckerAssistantFactory();
 		PTypeAssistantTC typeAssistant = factory.createPTypeAssistant();
 		
 		try
 		{
-			for (PType t : type.getTypes())
+			for (PType t : unionType.getTypes())
 			{
-				if (!typeAssistant.isType(t, AQuoteType.class))
+				if (!typeAssistant.isType(t, type))
 				{
 					return false;
 				}
@@ -145,5 +143,4 @@ public class TypeAssistantCG extends AssistantBase
 
 		return true;
 	}
-	
 }
