@@ -153,6 +153,7 @@ CG {-> package='org.overture.codegen.cgast'
            |	{letDef} [localDefs]:CG.#decl.#Local.var* [stm]:CG.#stm
            |	{abstractBody}
            |	{assignment} [target]:CG.#stateDesignator [exp]:CG.#exp
+           |	{localAssignment} [target]:CG.#exp [exp]:CG.#exp
            |	{block}	[localDefs]:CG.#decl.#Local* [statements]:CG.#stm*
            |	{callObject} [type]:CG.#type [designator]:CG.#objectDesignator [className]:java_String [fieldName]:java_String 
            					 [args]:CG.#exp*
@@ -181,7 +182,7 @@ CG {-> package='org.overture.codegen.cgast'
     |	{apply} [root]:CG.#exp [args]:CG.#exp*
 	|	{new} [name]:CG.#name.type [args]:CG.#exp*
 	|	#Var
-	|	{instanceof} [classType]:CG.#type.class [objRef]:CG.#exp
+	|	{instanceof} [checkedType]:CG.#type [exp]:CG.#exp
     |	#Literal
     |	{self}
     |	{null}
