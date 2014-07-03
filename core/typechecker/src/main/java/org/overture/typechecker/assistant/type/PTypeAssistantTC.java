@@ -26,7 +26,6 @@ import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeChecker;
-import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.utilities.type.ConcreateTypeImplementor;
 import org.overture.typechecker.utilities.type.PTypeResolver;
@@ -494,7 +493,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 	{
 		if (constraint != null)
 		{
-			if (!TypeComparator.isSubType(actual, constraint, true, af))
+			if (!af.getTypeComparator().isSubType(actual, constraint, true))
 			{
 				TypeChecker.report(3327, "Value is not of the right type", location);
 				TypeChecker.detail2("Actual", actual, "Expected", constraint);
@@ -508,7 +507,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 	{
 		if (constraint != null)
 		{
-			if (!TypeComparator.compatible(constraint, actual))
+			if (!af.getTypeComparator().compatible(constraint, actual))
 			{
 				TypeChecker.report(3327, "Value is not of the right type", location);
 				TypeChecker.detail2("Actual", actual, "Expected", constraint);
@@ -529,7 +528,7 @@ public class PTypeAssistantTC extends PTypeAssistant
 				TypeChecker.report(3328, "Statement may return void value", location);
 				TypeChecker.detail2("Actual", actual, "Expected", constraint);
 			}
-			else if (!TypeComparator.compatible(constraint, actual))
+			else if (!af.getTypeComparator().compatible(constraint, actual))
 			{
 				TypeChecker.report(3327, "Value is not of the right type", location);
 				TypeChecker.detail2("Actual", actual, "Expected", constraint);

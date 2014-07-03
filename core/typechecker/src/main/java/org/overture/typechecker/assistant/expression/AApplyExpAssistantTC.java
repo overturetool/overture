@@ -16,7 +16,6 @@ import org.overture.ast.types.SSeqType;
 import org.overture.ast.util.Utils;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
-import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class AApplyExpAssistantTC
@@ -51,7 +50,7 @@ public class AApplyExpAssistantTC
 		{
 			PType pt = ptypes.get(i++);
 
-			if (!TypeComparator.compatible(pt, at))
+			if (!af.getTypeComparator().compatible(pt, at))
 			{
 				// TypeCheckerErrors.concern(isSimple, 3061, "Inappropriate type for argument " + i +
 				// ". (Expected: "+pt+" Actual: "+at+")",node.getLocation(),node);
@@ -87,7 +86,7 @@ public class AApplyExpAssistantTC
 		{
 			PType pt = ptypes.get(i++);
 
-			if (!TypeComparator.compatible(pt, at))
+			if (!af.getTypeComparator().compatible(pt, at))
 			{
 				// TypeCheckerErrors.concern(isSimple, 3064, "Inappropriate type for argument " + i
 				// +". (Expected: "+pt+" Actual: "+at+")",node.getLocation(),node);
@@ -129,7 +128,7 @@ public class AApplyExpAssistantTC
 
 		PType argtype = node.getArgtypes().get(0);
 
-		if (!TypeComparator.compatible(map.getFrom(), argtype))
+		if (!af.getTypeComparator().compatible(map.getFrom(), argtype))
 		{
 			TypeCheckerErrors.concern(isSimple, 3058, "Map application argument is incompatible type", node.getLocation(), node);
 			TypeCheckerErrors.detail2(isSimple, "Map domain", map.getFrom(), "Argument", argtype);

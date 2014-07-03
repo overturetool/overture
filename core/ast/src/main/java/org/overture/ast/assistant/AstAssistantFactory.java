@@ -27,32 +27,6 @@ import org.overture.ast.util.type.NumericFinder;
 public class AstAssistantFactory implements IAstAssistantFactory
 {
 
-	static
-	{
-		// FIXME: remove this when conversion to factory obtained assistants are completed.
-		init(new AstAssistantFactory());
-	}
-
-	/**
-	 * Remove this when conversion is completed it just configures the static factory fields in the assistants
-	 */
-	public static void init(Object o)
-	{
-		for (Method m : o.getClass().getMethods())
-		{
-			if (m.getParameterTypes().length == 0 && m.getName().startsWith("create"))
-			{
-				try
-				{
-					m.invoke(o, new Object[] {});
-				} catch (Exception e)
-				{
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-
 	@Override
 	public PAccessSpecifierAssistant createPAccessSpecifierAssistant()
 	{

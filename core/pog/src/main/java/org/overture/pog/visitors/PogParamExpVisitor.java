@@ -45,22 +45,21 @@ import org.overture.pog.obligation.LetBeExistsObligation;
 import org.overture.pog.obligation.MapApplyObligation;
 import org.overture.pog.obligation.MapCompatibleObligation;
 import org.overture.pog.obligation.MapComposeObligation;
-import org.overture.pog.obligation.MapIterationObligation;
-import org.overture.pog.obligation.MapInjectivityEnum;
 import org.overture.pog.obligation.MapInjectivityComp;
+import org.overture.pog.obligation.MapInjectivityEnum;
+import org.overture.pog.obligation.MapIterationObligation;
 import org.overture.pog.obligation.NonEmptySeqObligation;
 import org.overture.pog.obligation.NonZeroObligation;
 import org.overture.pog.obligation.ProofObligationList;
 import org.overture.pog.obligation.RecursiveObligation;
 import org.overture.pog.obligation.SeqApplyObligation;
-import org.overture.pog.obligation.TypeCompatibilityObligation;
 import org.overture.pog.obligation.TupleSelectObligation;
+import org.overture.pog.obligation.TypeCompatibilityObligation;
 import org.overture.pog.obligation.UniqueExistenceObligation;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.utility.PogAssistantFactory;
-import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.expression.PExpAssistantTC;
 
 public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofObligationList>
@@ -115,7 +114,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			PType aType = question.checkType(node.getArgs().get(0), node
 					.getArgtypes().get(0));
 
-			if (!TypeComparator.isSubType(aType, mapType.getFrom(), aF)) {
+			if (!aF.getTypeComparator().isSubType(aType, mapType.getFrom())) {
 				TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(node
 						.getArgs().get(0), mapType.getFrom(), aType, question,
 						aF);
@@ -143,7 +142,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 				argType = question.checkType(argList.get(i), argType);
 				PType pt = funcType.getParameters().get(i);
 
-				if (!TypeComparator.isSubType(argType, pt, aF)) {
+				if (!aF.getTypeComparator().isSubType(argType, pt)) {
 					TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(
 							argList.get(i), pt, argType, question, aF);
 					if (sto != null) {
@@ -620,8 +619,8 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			PType aType = argTypes.poll();
 			PExp aExp = args.poll();
 
-			if (!TypeComparator.isSubType(question.checkType(aExp, aType),
-					f.getType(), aF)) {
+			if (!aF.getTypeComparator().isSubType(question.checkType(aExp, aType),
+					f.getType())) {
 				TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(aExp,
 						f.getType(), aType, question, aF);
 				if (sto != null) {
@@ -668,7 +667,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			AFieldField f = findField(recordType, mod.getTag());
 			PType mType = mTypes.get(i++);
 			if (f != null)
-				if (!TypeComparator.isSubType(mType, f.getType(), aF)) {
+				if (!aF.getTypeComparator().isSubType(mType, f.getType())) {
 					TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(
 							mod.getValue(), f.getType(), mType, question, aF);
 					if (sto != null) {
@@ -690,7 +689,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 				.createPDefinitionAssistant().getType(node.getTypedef()));
 		question.noteType(node.getTest(), expected);
 
-		if (!TypeComparator.isSubType(node.getTest().getType(), expected, aF)) {
+		if (!aF.getTypeComparator().isSubType(node.getTest().getType(), expected)) {
 			TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(
 					node.getTest(), expected, node.getTest().getType(),
 					question, aF);

@@ -35,7 +35,6 @@ import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.ObjectValue;
 import org.overture.interpreter.values.OperationValue;
 import org.overture.interpreter.values.Value;
-import org.overture.typechecker.util.HelpLexNameToken;
 import org.overture.typechecker.util.LexNameTokenMap;
 
 /**
@@ -215,7 +214,7 @@ public class Context extends LexNameTokenMap<Value>
 		{
 			for (ILexNameToken var : keySet())
 			{
-				if (HelpLexNameToken.isEqual(var, name))
+				if (assistantFactory.getLexNameTokenAssistant().isEqual(var, name))
 				{
 					rv = super.get(var);
 					break;

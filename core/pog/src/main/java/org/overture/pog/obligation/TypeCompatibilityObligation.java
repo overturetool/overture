@@ -85,7 +85,6 @@ import org.overture.ast.util.PTypeSet;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
-import org.overture.typechecker.TypeComparator;
 
 public class TypeCompatibilityObligation extends ProofObligation
 {
@@ -335,7 +334,7 @@ public class TypeCompatibilityObligation extends ProofObligation
 	{
 		if (atype != null && rec)
 		{
-			if (TypeComparator.isSubType(atype, etype, assistantFactory))
+			if (assistantFactory.getTypeComparator().isSubType(atype, etype))
 			{
 				return null; // Means a sub-comparison is OK without PO checks
 			}
@@ -351,7 +350,7 @@ public class TypeCompatibilityObligation extends ProofObligation
 
 			for (PType pos : ut.getTypes())
 			{
-				if (atype == null || TypeComparator.compatible(pos, atype))
+				if (atype == null || assistantFactory.getTypeComparator().compatible(pos, atype))
 				{
 					possibles.add(pos);
 				}

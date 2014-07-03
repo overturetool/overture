@@ -24,7 +24,7 @@ public class AMapPatternMapletAssistantInterpreter
 		this.af = af;
 	}
 
-	public static List<NameValuePairList> getAllNamedValues(
+	public  List<NameValuePairList> getAllNamedValues(
 			AMapletPatternMaplet p, Entry<Value, Value> maplet, Context ctxt)
 			throws AnalysisException
 	{
@@ -46,7 +46,7 @@ public class AMapPatternMapletAssistantInterpreter
 		return results;
 	}
 
-	public static List<AIdentifierPattern> findIdentifiers(
+	public  List<AIdentifierPattern> findIdentifiers(
 			AMapletPatternMaplet p)
 	{
 		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
