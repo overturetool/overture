@@ -1,4 +1,4 @@
-package org.overture.core.tests.example;
+package org.overture.core.tests;
 
 import static org.junit.Assert.assertNotNull;
 
