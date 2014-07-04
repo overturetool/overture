@@ -17,67 +17,142 @@ import org.overture.core.tests.PathsProvider;
 import com.google.gson.reflect.TypeToken;
 
 /**
- * Quick usage example of new overture tests. Takes an AST and dumps the entire
- * content into a string.
+ * Quick usage example of new overture tests. Takes an AST and dumps the entire content into a string. The new tests
+ * rely heavily on JUnit Parameterized tests so the <code>@RunWith</code> annotation is essential. The test will not run
+ * otherwise.<br>
+ * <br>
+ * In addition, every tests in this new system runs a specific result type that is fed to the test as a parameter, in
+ * this case {@link IdTestResult}.
  * 
  * @author ldc
- * 
  */
 @RunWith(Parameterized.class)
-public class IdTest extends AbsParamBasicTest<IdTestResult> {
+public class IdTest extends AbsParamBasicTest<IdTestResult>
+{
 
-	public IdTest(String _, String testParameter, String resultParameter) {
-		super(_, testParameter, resultParameter);
-		// The line below enables results updating. Working to improve this...
-		//updateResult=true; 
+	// Root location of the test input and result files
+	private static final String EXAMPLE_TEST_FILES = "src/test/resources/example";
+
+	// The update property for this test
+	private static final String UPDATE_PROPERTY = "tests.update.example.ID";
+	
+	/**
+	 * The default constructor must always pass the name of the test and the paths of the test input and result. <br>
+	 * <br>
+	 * Anything else is up to you. In this case, we don't do anything else.
+	 * 
+	 * @param name
+	 *            Name of the test. Usually derived from the input file.
+	 * @param testInput
+	 *            Path to the test input file.
+	 * @param testResult
+	 *            Path to the test result file
+	 */
+	public IdTest(String name, String testInput, String testResult)
+	{
+		super(name, testInput, testResult);
 	}
 
-	private static final String EXAMPLE_RESOURCES_ROOT = "src/test/resources/example";
-
+	/**
+	 * Due to some annoying limitations to JUnit parameterized tests, we must create a new test data provider for each
+	 * test we create. In most of them, it should be enough to call {@link PathsProvider} and ask for the files. The
+	 * <code> Parameters</code> annotation is crucial for the whole thing to work. Don't forget it.
+	 * 
+	 * @return
+	 */
 	@Parameters(name = "{index} : {0}")
-	public static Collection<Object[]> testData() {
-		return PathsProvider.computePaths(EXAMPLE_RESOURCES_ROOT);
+	public static Collection<Object[]> testData()
+	{
+		return PathsProvider.computePaths(EXAMPLE_TEST_FILES);
 	}
 
+	/**
+	 * This method holds the comparison logic between 2 test results. Obviously, it must always be implemented. In our
+	 * case, we simply go through the generated strings for both results and fail the test in case they do not match. <br>
+	 * <br>
+	 * It's worth nothing that the responsibility to assert something is entirely on the user and this is the place to
+	 * put the check in.
+	 */
 	@Override
-	public void testCompare(IdTestResult actual, IdTestResult expected) {
-		Collection<String> stored_notfound = CollectionUtils.removeAll(
-				expected, actual);
-		Collection<String> found_notstored = CollectionUtils.removeAll(actual,
-				expected);
+	public void testCompare(IdTestResult actual, IdTestResult expected)
+	{
+		Collection<String> stored_notfound = CollectionUtils.removeAll(expected, actual);
+		Collection<String> found_notstored = CollectionUtils.removeAll(actual, expected);
 
-		if (stored_notfound.isEmpty() && found_notstored.isEmpty()) {
+		if (stored_notfound.isEmpty() && found_notstored.isEmpty())
+		{
 			// Results match, tests pass;do nothing
-		} else {
+		} else
+		{
 			StringBuilder sb = new StringBuilder();
-			if (!stored_notfound.isEmpty()) {
+			if (!stored_notfound.isEmpty())
+			{
 				sb.append("Expected (but not found) Strings: " + "\n");
-				for (String pr : stored_notfound) {
+				for (String pr : stored_notfound)
+				{
 					sb.append(pr + "\n");
 				}
 			}
-			if (!found_notstored.isEmpty()) {
+			if (!found_notstored.isEmpty())
+			{
 				sb.append("Found (but not expected) Strings: " + "\n");
-				for (String pr : found_notstored) {
+				for (String pr : found_notstored)
+				{
 					sb.append(pr + "\n");
 				}
 			}
-			fail(sb.toString());
+			fail("Error in test " + testName + " : \n" + sb.toString());
 		}
 	}
 
+	/**
+	 * This method is used in the main test case of the superclass to process the model and produce some kind of desired
+	 * result. Most plug-ins already have some kind of output so the easiest thing to do is to just write a conversion
+	 * method between the output of your plug-in and the new result type that you've created.<br>
+	 * <br>
+	 * Our example is just the ID function so it doesn't do anything to the AST. But we do have a conversion method. For
+	 * practicality and reuse, the conversion method is placed in the result class so it can be used in multiple tests
+	 * that use {@link IdTestResult}.
+	 */
 	@Override
-	public IdTestResult processModel(List<INode> ast) {
+	public IdTestResult processModel(List<INode> ast)
+	{
 		IdTestResult actual = IdTestResult.convert(ast);
 		return actual;
 
 	}
 
+	/**
+	 * Here we return the type of our test result, to help the JSON deserialization. In general, you can always use this
+	 * exact code and just place your result in the Type Token. <br>
+	 * <br>
+	 * The superclass system actually tries to work this type out on its own from the type parameter but it often fails
+	 * since this is done with sophisticated reflection trickery. In case it does fail, we can simply override this
+	 * method to help it out.
+	 */
 	@Override
-	public Type getResultType() {
-		Type resultType = new TypeToken<IdTestResult>() {
+	public Type getResultType()
+	{
+		Type resultType = new TypeToken<IdTestResult>()
+		{
 		}.getType();
 		return resultType;
+	}
+
+	/**
+	 * If we wish to update the test results, this is done through Java Properties (passed to the VM as arguments with
+	 * <code>-D</code>. So, we must define a specific property for this set of tests that we can then use to update
+	 * results. <br>
+	 * <br>
+	 * If you pass the property as argument, you will update all results for this test. If you want to upgrade a single
+	 * result, just prepend the test name to the submitted property: <code>-Dtests.update.example.ID.ex1.vdmsl</code>.
+	 * The easiest way to get the name is to simply report it in test failures (this is already done should the test
+	 * fail on Parse/TC errors).
+	 */
+	@Override
+	protected String getUpdatePropertyString()
+	{
+		return UPDATE_PROPERTY;
 	}
 
 }
