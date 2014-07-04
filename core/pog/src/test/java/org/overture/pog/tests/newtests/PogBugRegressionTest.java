@@ -11,7 +11,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.node.INode;
-import org.overture.core.tests.AbsParamBasicTest;
+import org.overture.core.tests.ParamStandardTest;
 import org.overture.core.tests.PathsProvider;
 import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.pub.ProofObligationGenerator;
@@ -26,7 +26,10 @@ import com.google.gson.reflect.TypeToken;
  * 
  */
 @RunWith(Parameterized.class)
-public class PogBugRegressionTest extends AbsParamBasicTest<PogTestResult> {
+public class PogBugRegressionTest extends ParamStandardTest<PogTestResult> {
+
+	
+	private static final String UPDATE_PROPERTY = "tests.update.pog.bugreg";
 
 	public PogBugRegressionTest(String _, String testParameter,
 			String resultParameter) {
@@ -67,6 +70,12 @@ public class PogBugRegressionTest extends AbsParamBasicTest<PogTestResult> {
 		Type resultType = new TypeToken<PogTestResult>() {
 		}.getType();
 		return resultType;
+	}
+
+	@Override
+	protected String getUpdatePropertyString()
+	{
+		return UPDATE_PROPERTY;
 	}
 
 }

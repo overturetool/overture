@@ -9,12 +9,12 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 @RunWith(Parameterized.class)
-public abstract class ExternalsTest<R extends Serializable> extends AbsParamBasicTest<R>
+public abstract class ParamExternalsTest<R extends Serializable> extends ParamStandardTest<R>
 {
 
 	private static String EXTERNAL_TESTS_PROPERTY = "externalTestsPath";
 
-	public ExternalsTest(String nameParameter, String testParameter,
+	public ParamExternalsTest(String nameParameter, String testParameter,
 			String resultParameter)
 	{
 		super(nameParameter, testParameter, resultParameter);
@@ -24,7 +24,6 @@ public abstract class ExternalsTest<R extends Serializable> extends AbsParamBasi
 	public static Collection<Object[]> testData()
 	{
 		String external = System.getProperty(EXTERNAL_TESTS_PROPERTY);
-		
 
 		if (external == null)
 		{

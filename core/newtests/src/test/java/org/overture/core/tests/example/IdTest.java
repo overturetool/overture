@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.node.INode;
-import org.overture.core.tests.AbsParamBasicTest;
+import org.overture.core.tests.ParamStandardTest;
 import org.overture.core.tests.PathsProvider;
 
 import com.google.gson.reflect.TypeToken;
@@ -24,7 +24,7 @@ import com.google.gson.reflect.TypeToken;
  * @author ldc
  */
 @RunWith(Parameterized.class)
-public class IdTest extends AbsParamBasicTest<IdTestResult>
+public class IdTest extends ParamStandardTest<IdTestResult>
 {
 
 	// Root location of the test input and result files

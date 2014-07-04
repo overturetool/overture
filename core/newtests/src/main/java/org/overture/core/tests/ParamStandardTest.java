@@ -27,7 +27,7 @@ import com.google.gson.reflect.TypeToken;
  * A comparison method for results must be provided. Serialization of results is as automated as possible but can be
  * overridden if your results classes are too complex for auto-deserialization. <br>
  * <br>
- * These tests are meant to be used as parameterized JUnit test and so any subclass {@link AbsParamBasicTest} must be
+ * These tests are meant to be used as parameterized JUnit test and so any subclass {@link ParamStandardTest} must be
  * annotated with <code>@RunWith(Parameterized.class)</code>. <br>
  * <br>
  * This class is parameterized on a type <code>R</code> that represents the output of of the analysis of the
@@ -36,7 +36,7 @@ import com.google.gson.reflect.TypeToken;
  * 
  * @author ldc
  */
-public abstract class AbsParamBasicTest<R extends Serializable>
+public abstract class ParamStandardTest<R extends Serializable>
 {
 
 	protected String modelPath;
@@ -59,7 +59,7 @@ public abstract class AbsParamBasicTest<R extends Serializable>
 	 * @param resultParameter
 	 *            test result file
 	 */
-	public AbsParamBasicTest(String nameParameter, String testParameter,
+	public ParamStandardTest(String nameParameter, String testParameter,
 			String resultParameter)
 	{
 		this.testName = nameParameter;
