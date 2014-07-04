@@ -8,8 +8,8 @@ import org.overture.ast.node.INode;
 import org.overture.core.tests.ParamExternalsTest;
 
 /**
- * A very simple alternate version of {@link IdTest} to work with external tests. We cannot directly reuse the
- * {@link IdTest} since we must inherit {@link ParamExternalsTest}. But since we factor most of the important code out
+ * A very simple alternate version of {@link IdStandardTest} to work with external tests. We cannot directly reuse the
+ * {@link IdStandardTest} since we must inherit {@link ParamExternalsTest}. But since we factor most of the important code out
  * to {@link IdTestResult}, this class is actually very small.<br>
  * <br>
  * Also note that since this test works with external inputs, the data provider is already set up in
@@ -23,7 +23,7 @@ import org.overture.core.tests.ParamExternalsTest;
  * @author ldc
  */
 @RunWith(Parameterized.class)
-public class ExternalsIdTest extends ParamExternalsTest<IdTestResult>
+public class IdExternalsTest extends ParamExternalsTest<IdTestResult>
 {
 
 	// the update property for this test
@@ -36,7 +36,7 @@ public class ExternalsIdTest extends ParamExternalsTest<IdTestResult>
 	 * @param testParameter
 	 * @param resultParameter
 	 */
-	public ExternalsIdTest(String nameParameter, String testParameter,
+	public IdExternalsTest(String nameParameter, String testParameter,
 			String resultParameter)
 	{
 		super(nameParameter, testParameter, resultParameter);

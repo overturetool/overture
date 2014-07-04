@@ -24,7 +24,7 @@ import com.google.gson.reflect.TypeToken;
  * @author ldc
  */
 @RunWith(Parameterized.class)
-public class IdTest extends ParamStandardTest<IdTestResult>
+public class IdStandardTest extends ParamStandardTest<IdTestResult>
 {
 
 	// Root location of the test input and result files
@@ -45,7 +45,7 @@ public class IdTest extends ParamStandardTest<IdTestResult>
 	 * @param testResult
 	 *            Path to the test result file
 	 */
-	public IdTest(String name, String testInput, String testResult)
+	public IdStandardTest(String name, String testInput, String testResult)
 	{
 		super(name, testInput, testResult);
 	}
