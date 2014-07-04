@@ -42,6 +42,7 @@ import org.overture.codegen.cgast.types.AIntBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AMapMapTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
+import org.overture.codegen.cgast.types.AQuoteTypeCG;
 import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
@@ -212,7 +213,12 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 	public STypeCG caseAQuoteType(AQuoteType node, IRInfo question)
 			throws AnalysisException
 	{
-		return new AIntNumericBasicTypeCG();
+		String value = node.getValue().getValue();
+		
+		AQuoteTypeCG quoteTypeCg = new AQuoteTypeCG();
+		quoteTypeCg.setValue(value);
+		
+		return quoteTypeCg;
 	}
 
 	@Override
