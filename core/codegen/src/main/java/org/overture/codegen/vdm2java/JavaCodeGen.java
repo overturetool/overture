@@ -74,6 +74,7 @@ public class JavaCodeGen
 	public static final String EVAL_METHOD_PREFIX = "eval";
 	public static final String PARAM_NAME_PREFIX = "param_";
 	public static final String APPLY_EXP_NAME_PREFIX = "apply_";
+	public static final String OBJ_EXP_NAME_PREFIX = "obj_";
 	
 	private static final String QUOTES = "quotes";
 	
@@ -194,7 +195,7 @@ public class JavaCodeGen
 		IfExpTransformation ifExpTransformation = new IfExpTransformation(transformationAssistant);
 		IgnorePatternTransformation ignoreTransformation = new IgnorePatternTransformation(transformationAssistant, IGNORE_PATTERN_NAME_PREFIX);
 		DeflattenTransformation deflattenTransformation = new DeflattenTransformation(transformationAssistant);
-		UnionTypeTransformation unionTypeTransformation = new UnionTypeTransformation(transformationAssistant, irInfo, classes, APPLY_EXP_NAME_PREFIX);
+		UnionTypeTransformation unionTypeTransformation = new UnionTypeTransformation(transformationAssistant, irInfo, classes, APPLY_EXP_NAME_PREFIX, OBJ_EXP_NAME_PREFIX, irInfo.getTempVarNameGen());
 		FunctionValueVisitor funcValVisitor = new FunctionValueVisitor(transformationAssistant, functionValueAssistant, INTERFACE_NAME_PREFIX, TEMPLATE_TYPE_PREFIX, EVAL_METHOD_PREFIX, PARAM_NAME_PREFIX);
 		ILanguageIterator langIterator = new JavaLanguageIterator(transformationAssistant, irInfo.getTempVarNameGen(), varPrefixes);
 		TransformationVisitor transVisitor = new TransformationVisitor(irInfo, varPrefixes, transformationAssistant, langIterator);
