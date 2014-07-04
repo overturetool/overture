@@ -1,12 +1,9 @@
 package org.overture.core.tests.example;
 
-import static org.junit.Assert.fail;
-
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
