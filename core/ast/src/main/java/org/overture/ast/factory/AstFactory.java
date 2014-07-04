@@ -8,7 +8,6 @@ import java.util.Vector;
 
 import org.overture.ast.assistant.AstAssistantFactory;
 import org.overture.ast.assistant.IAstAssistantFactory;
-import org.overture.ast.assistant.InvocationAssistantException;
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AClassInvariantDefinition;
@@ -205,17 +204,17 @@ import org.overture.ast.util.Utils;
 @SuppressWarnings("deprecation")
 public class AstFactory
 {
-	//Should we instanciatte an assistant factory here?
-	//Create a setter and a getter.
+	// Should we instanciatte an assistant factory here?
+	// Create a setter and a getter.
 	protected static IAstAssistantFactory af;
-	
+
 	static
 	{
-		//Added by gkanos.
-		af = new AstAssistantFactory();// FIXME: remove when assistant conversion is finished
+		// This static init is needed because the AstFactory is always used
+		// statically
+		af = new AstAssistantFactory();//
 	}
-	
-	
+
 	/*
 	 * Init Methods - correspond to constructors of the abstract classes, e.g. Definition, Pattern, Type, etc.
 	 */
@@ -308,7 +307,7 @@ public class AstFactory
 		result.setOpaque(false);
 		result.setInNarrower(false);
 	}
-	
+
 	/*
 	 * Get various pre-built access specifiers
 	 */
@@ -318,7 +317,6 @@ public class AstFactory
 		return AstFactory.newAAccessSpecifierAccessSpecifier(new APrivateAccess(), false, false);
 	}
 
-	
 	/*
 	 * Constructors for each type
 	 */
@@ -394,7 +392,8 @@ public class AstFactory
 	}
 
 	public static AClassClassDefinition newAClassClassDefinition(
-			ILexNameToken className, List<? extends ILexNameToken> superclasses,
+			ILexNameToken className,
+			List<? extends ILexNameToken> superclasses,
 			List<PDefinition> members)
 	{
 
@@ -405,7 +404,8 @@ public class AstFactory
 	}
 
 	protected static void initClassDefinition(SClassDefinition result,
-			ILexNameToken className, List<? extends ILexNameToken> superclasses,
+			ILexNameToken className,
+			List<? extends ILexNameToken> superclasses,
 			List<PDefinition> members)
 	{
 		initDefinition(result, Pass.DEFS, className.getLocation(), className, NameScope.CLASSNAME);
@@ -439,7 +439,7 @@ public class AstFactory
 		// others
 		result.setSettingHierarchy(ClassDefinitionSettings.UNSET);
 
-		//Reset parent set by member graph field
+		// Reset parent set by member graph field
 		result.parent(null);
 	}
 
@@ -489,13 +489,14 @@ public class AstFactory
 		ATypeDefinition result = new ATypeDefinition();
 		initDefinition(result, Pass.TYPES, name.getLocation(), name, NameScope.TYPENAME);
 
-		// Force all type defs (invs) to be static. There is no guarantee that this will say here but is should
+		// Force all type defs (invs) to be static. There is no guarantee that
+		// this will say here but is should
 		result.getAccess().setStatic(new TStatic());
 
 		result.setInvType(type);
 		result.setInvPattern(invPattern);
 		result.setInvExpression(invExpression);
-		
+
 		result.setType(type);
 
 		if (type != null)
@@ -504,10 +505,10 @@ public class AstFactory
 			{
 				type.setDefinitions(new LinkedList<PDefinition>());
 			}
-			
+
 			type.getDefinitions().add(result);
 		}
-		
+
 		return result;
 	}
 
@@ -612,7 +613,9 @@ public class AstFactory
 
 		for (int i = 0; i < node.getPatterns().size(); i++)
 		{
-			PType type = (PType) node.getType();// .clone();//Use clone since we don't want to make a switch for all
+			PType type = (PType) node.getType();// .clone();//Use clone since we
+												// don't want to make a switch
+												// for all
 												// types.
 			// type.parent(null);//new new type not in the tree yet.
 			list.add(type);
@@ -636,20 +639,14 @@ public class AstFactory
 
 		List<PDefinition> defs = new Vector<PDefinition>();
 
-		try
-		{
 			for (ILexNameToken var : af.createPPatternAssistant().getVariableNames(p))
 			{
 				defs.add(AstFactory.newAUntypedDefinition(result.getLocation(), var, scope));
 			}
-		} catch (InvocationAssistantException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
 
 		result.setDefs(defs);
-		
+
 		return result;
 	}
 
@@ -914,21 +911,22 @@ public class AstFactory
 		initDefinition(result, Pass.DEFS, statement.getLocation(), null, NameScope.GLOBAL);
 
 		result.setStatement(statement);
-		// used to be a static method on LexNameToken - removed when we went to interface
+		// used to be a static method on LexNameToken - removed when we went to
+		// interface
 		result.setOperationName(new LexNameToken(statement.getLocation().getModule(), "thread", statement.getLocation()));
 		result.setAccess(af.createPAccessSpecifierAssistant().getProtected());
 
 		return result;
 	}
 
-	public static AThreadDefinition newPeriodicAThreadDefinition(ILexNameToken opname,
-			List<PExp> args)
+	public static AThreadDefinition newPeriodicAThreadDefinition(
+			ILexNameToken opname, List<PExp> args)
 	{
 		return newAThreadDefinition(AstFactory.newAPeriodicStm(opname, args));
 	}
 
-	public static AThreadDefinition newSporadicAThreadDefinition(ILexNameToken opname,
-			List<PExp> args)
+	public static AThreadDefinition newSporadicAThreadDefinition(
+			ILexNameToken opname, List<PExp> args)
 	{
 		return newAThreadDefinition(AstFactory.newASporadicStm(opname, args));
 	}
@@ -999,7 +997,8 @@ public class AstFactory
 			namesClonable.add(new ClonableString(string));
 		}
 
-		// List<ATraceDefinitionTerm> tracesTerms = new Vector<ATraceDefinitionTerm>();
+		// List<ATraceDefinitionTerm> tracesTerms = new
+		// Vector<ATraceDefinitionTerm>();
 		// for (ATraceDefinitionTerm list : terms)
 		// {
 		// tracesTerms.add( new ATraceDefinitionTerm(list));
@@ -1575,7 +1574,8 @@ public class AstFactory
 		initExpression(result, location);
 		if (result.getLocation() != null)
 		{
-			result.getLocation().executable(false); // ie. ignore coverage for these
+			result.getLocation().executable(false); // ie. ignore coverage for
+													// these
 		}
 		return result;
 	}
@@ -1795,7 +1795,8 @@ public class AstFactory
 	public static AMapCompMapExp newAMapCompMapExp(ILexLocation start,
 			AMapletExp first, List<PMultipleBind> bindings, PExp predicate)
 	{
-		AMapCompMapExp result = new AMapCompMapExp();// start, first, bindings, predicate);
+		AMapCompMapExp result = new AMapCompMapExp();// start, first, bindings,
+														// predicate);
 		initExpression(result, start);
 
 		result.setFirst(first);
@@ -2112,10 +2113,10 @@ public class AstFactory
 		result.setImportdefs(new Vector<PDefinition>()); // and import nothing
 
 		result.setIsFlat(true);
-		
-		//Reset parent set by member graph field
+
+		// Reset parent set by member graph field
 		result.parent(null);
-		
+
 		return result;
 	}
 
@@ -2150,12 +2151,13 @@ public class AstFactory
 		result.setTypeChecked(false);
 		result.setIsDLModule(false); // TODO: this does not exist in VDMj
 
-		result.setExportdefs(new Vector<PDefinition>()); // By default, export nothing
+		result.setExportdefs(new Vector<PDefinition>()); // By default, export
+															// nothing
 		result.setImportdefs(new Vector<PDefinition>()); // and import nothing
 
-		//Reset parent set by member graph field
+		// Reset parent set by member graph field
 		result.parent(null);
-		
+
 		return result;
 	}
 
@@ -3478,7 +3480,8 @@ public class AstFactory
 	// return result;
 	// }
 	//
-	// public static AIsExp newAIsExp(ILexLocation location, PType type, PExp test) {
+	// public static AIsExp newAIsExp(ILexLocation location, PType type, PExp
+	// test) {
 	// AIsExp result = new AIsExp();
 	// initExpression(result, location);
 	//

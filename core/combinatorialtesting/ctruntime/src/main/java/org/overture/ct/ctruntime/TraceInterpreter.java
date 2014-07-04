@@ -11,7 +11,6 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.config.Settings;
 import org.overture.ct.utils.TraceXmlWrapper;
-import org.overture.interpreter.assistant.definition.ANamedTraceDefinitionAssistantInterpreter;
 import org.overture.interpreter.runtime.ClassInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
@@ -24,14 +23,12 @@ import org.overture.interpreter.traces.TraceReductionType;
 import org.overture.interpreter.traces.TypeCheckedTestSequence;
 import org.overture.interpreter.traces.Verdict;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 
-public class TraceInterpreter
-{
+public class TraceInterpreter {
 	protected long beginClass = 0;
 	protected long beginTrace = 0;
 	protected String activeClass = "";
-	protected String activeTrace; 
+	protected String activeTrace;
 
 	Interpreter interpreter;
 	protected File coverage;
@@ -42,18 +39,19 @@ public class TraceInterpreter
 	IProgressMonitor monitor = null;
 
 	private Integer currentPct = 0;
-	
-	public final ITypeCheckerAssistantFactory assistantFactory = new TypeCheckerAssistantFactory();
 
-	public TraceInterpreter(IProgressMonitor monitor)
-	{
+	public final ITypeCheckerAssistantFactory assistantFactory;
+
+	public TraceInterpreter(IProgressMonitor monitor,
+			ITypeCheckerAssistantFactory af) {
 		this.monitor = monitor;
+		this.assistantFactory = af;
 	}
 
 	public TraceInterpreter(IProgressMonitor monitor, float subset,
-			TraceReductionType traceReductionType, long seed)
-	{
-		this(monitor);
+			TraceReductionType traceReductionType, long seed,
+			ITypeCheckerAssistantFactory af) {
+		this(monitor, af);
 		this.reduce = true;
 		this.seed = seed;
 		this.traceReductionType = traceReductionType;
@@ -61,30 +59,25 @@ public class TraceInterpreter
 	}
 
 	public void run(String moduleName, String traceName,
-			Interpreter interpreter, TraceXmlWrapper store) throws Exception
-	{
+			Interpreter interpreter, TraceXmlWrapper store) throws Exception {
 		this.interpreter = interpreter;
 
 		List<PDefinition> definitions = null;
 
-		if (interpreter instanceof ModuleInterpreter)
-		{
-			for (AModuleModules module : ((ModuleInterpreter) interpreter).modules)
-			{
-				if (module.getName().getName().equals(moduleName))
-				{
+		if (interpreter instanceof ModuleInterpreter) {
+			for (AModuleModules module : ((ModuleInterpreter) interpreter).modules) {
+				if (module.getName().getName().equals(moduleName)) {
 					definitions = module.getDefs();
 				}
 			}
-		} else
-		{
-			for (SClassDefinition classDefinition : ((ClassInterpreter) interpreter).getClasses())
-			{
-				if (classDefinition.getName().getName().equals(moduleName))
-				{
-					definitions = assistantFactory.createPDefinitionAssistant().getDefinitions(classDefinition);
-					
-				}				
+		} else {
+			for (SClassDefinition classDefinition : ((ClassInterpreter) interpreter)
+					.getClasses()) {
+				if (classDefinition.getName().getName().equals(moduleName)) {
+					definitions = assistantFactory.createPDefinitionAssistant()
+							.getDefinitions(classDefinition);
+
+				}
 			}
 		}
 
@@ -92,40 +85,34 @@ public class TraceInterpreter
 	}
 
 	private void processTraces(List<PDefinition> definitions, String className,
-			String traceName, TraceXmlWrapper storage) throws Exception
-	{
-		try
-		{
+			String traceName, TraceXmlWrapper storage) throws Exception {
+		try {
 			Settings.prechecks = true;
 			Settings.postchecks = true;
 			Settings.dynamictypechecks = true;
 
-			if (storage != null)
-			{
+			if (storage != null) {
 				storage.StartClass(className);
 			}
 
 			Integer numberOfTraces = 0;
 
-			for (Object string : definitions)
-			{
-				if (string instanceof ANamedTraceDefinition)
-				{
+			for (Object string : definitions) {
+				if (string instanceof ANamedTraceDefinition) {
 					numberOfTraces++;
 				}
 
 			}
 			processingClass(className, numberOfTraces);
 
-			for (Object definition : definitions)
-			{
-				if (definition instanceof ANamedTraceDefinition)
-				{
+			for (Object definition : definitions) {
+				if (definition instanceof ANamedTraceDefinition) {
 					if (traceName == null
-							|| ((ANamedTraceDefinition) definition).getName().getName().equals(traceName))
-					{
+							|| ((ANamedTraceDefinition) definition).getName()
+									.getName().equals(traceName)) {
 						interpreter.init(null);
-						Context ctxt = interpreter.getInitialTraceContext((ANamedTraceDefinition) definition, false);
+						Context ctxt = interpreter.getInitialTraceContext(
+								(ANamedTraceDefinition) definition, false);
 
 						evaluateTests(className, storage, definition, ctxt);
 					}
@@ -134,57 +121,54 @@ public class TraceInterpreter
 
 			completed();
 			System.out.println("Completed");
-		} catch (ContextException e)
-		{
+		} catch (ContextException e) {
 			// e.printStackTrace();
 			error(e.getMessage());
 			throw e;
-		} catch (ValueException e)
-		{
+		} catch (ValueException e) {
 			// TODO Auto-generated catch block
-			//e.printStackTrace();
+			// e.printStackTrace();
 			error(e.getMessage());
 			throw e;
-		} catch (Exception e)
-		{
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			//e.printStackTrace();
+			// e.printStackTrace();
 			error(e.getMessage());
 			throw e;
-		} finally
-		{
-			if (storage != null)
-			{
+		} finally {
+			if (storage != null) {
 				storage.Stop();
 			}
 		}
 	}
 
 	private void evaluateTests(String className, TraceXmlWrapper storage,
-			Object traceDefinition, Context ctxt) throws Exception
-	{
+			Object traceDefinition, Context ctxt) throws Exception {
 		ANamedTraceDefinition mtd = (ANamedTraceDefinition) traceDefinition;
 		TypeCheckedTestSequence tests = null;
-		if (!reduce)
-		{
+		if (!reduce) {
 			subset = 1.0F;
 			traceReductionType = TraceReductionType.NONE;
 			seed = 999;
 		}
 
-		TestSequence tests1 = ANamedTraceDefinitionAssistantInterpreter.getTests(mtd,ctxt, subset, traceReductionType, seed);
-		if(tests1 instanceof TypeCheckedTestSequence)
-		{
+		TestSequence tests1 = ctxt.assistantFactory
+				.createANamedTraceDefinitionAssistant().getTests(mtd, ctxt,
+						subset, traceReductionType, seed);
+		if (tests1 instanceof TypeCheckedTestSequence) {
 			tests = (TypeCheckedTestSequence) tests1;
-		}else
-		{
+		} else {
 			throw new Exception("Failed to get tests");
 		}
 
 		processingTrace(className, mtd.getName().getName(), tests.size());
-		if (storage != null)
-		{
-			storage.StartTrace(mtd.getName().getName(), mtd.getLocation().getFile().getName(), mtd.getLocation().getStartLine(), mtd.getLocation().getStartPos(), tests.getTests().size(), new Float(subset), TraceReductionType.valueOf(traceReductionType.toString()), new Long(seed));
+		if (storage != null) {
+			storage.StartTrace(mtd.getName().getName(), mtd.getLocation()
+					.getFile().getName(), mtd.getLocation().getStartLine(), mtd
+					.getLocation().getStartPos(), tests.getTests().size(),
+					new Float(subset), TraceReductionType
+							.valueOf(traceReductionType.toString()), new Long(
+							seed));
 		}
 
 		int n = 1;
@@ -193,85 +177,75 @@ public class TraceInterpreter
 		int inconclusiveCount = 0;
 		int skippedCount = 0;
 
-		for (CallSequence test : tests.getTests())
-		{
+		for (CallSequence test : tests.getTests()) {
 			processingTest(className, mtd.getName().getName(), n, tests.size());
 			// Bodge until we figure out how to not have explicit op
 			// names.
 			String clean = test.toString().replaceAll("\\.\\w+`", ".");
 
-			if (storage != null)
-			{
+			if (storage != null) {
 				storage.StartTest(new Integer(n).toString(), clean);
 				storage.StopElement();
 			}
 
-			if (test.getFilter() > 0)
-			{
+			if (test.getFilter() > 0) {
 				skippedCount++;
 				testFiltered(n, test.getFilter(), test);
-				if (storage != null)
-				{
+				if (storage != null) {
 					storage.AddSkippedResult(new Integer(n).toString());
 				}
-			} else
-			{
+			} else {
 				List<Object> result = null;
-				
-				if(tests.isTypeCorrect(test))
-				{
-					try{
-					interpreter.init(null); // Initialize completely between
-					// every
-					// run...
-					result = interpreter.runOneTrace(mtd, test, false);
-					}
-					catch(Exception e)
-					{
+
+				if (tests.isTypeCorrect(test)) {
+					try {
+						interpreter.init(null); // Initialize completely between
+						// every
+						// run...
+						result = interpreter.runOneTrace(mtd, test, false);
+					} catch (Exception e) {
 						result = new Vector<Object>();
 						result.add(e.getMessage());
 						result.add(Verdict.FAILED);
-						
-						if (storage != null)
-						{
-							storage.AddResults(new Integer(n).toString(), result);
-							storage.AddTraceStatus(Verdict.valueOf(Verdict.FAILED.toString()), tests.getTests().size(), skippedCount, faildCount, inconclusiveCount);
+
+						if (storage != null) {
+							storage.AddResults(new Integer(n).toString(),
+									result);
+							storage.AddTraceStatus(
+									Verdict.valueOf(Verdict.FAILED.toString()),
+									tests.getTests().size(), skippedCount,
+									faildCount, inconclusiveCount);
 							storage.StopElement();
 						}
-						
-						
+
 						throw e;
 					}
-					
+
 					tests.filter(result, test, n);
-				}else
-				{
+				} else {
 					result = new Vector<Object>();
 					result.add(tests.getTypeCheckError(test));
 					result.add(Verdict.FAILED);
 				}
 
-				if (result.get(result.size() - 1) == Verdict.FAILED)
-				{
+				if (result.get(result.size() - 1) == Verdict.FAILED) {
 					faildCount++;
 				}
 
-				else if (result.get(result.size() - 1) == Verdict.INCONCLUSIVE)
-				{
+				else if (result.get(result.size() - 1) == Verdict.INCONCLUSIVE) {
 					inconclusiveCount++;
 				}
 
-//				for (int i = 0; i < result.size(); i++)
-//				{
-//					if (result.get(i) instanceof Verdict)
-//					{
-//						result.set(i, Verdict.valueOf(result.get(i).toString()));
-//					}
-//
-//				}
+				// for (int i = 0; i < result.size(); i++)
+				// {
+				// if (result.get(i) instanceof Verdict)
+				// {
+				// result.set(i, Verdict.valueOf(result.get(i).toString()));
+				// }
+				//
+				// }
 
-				if (storage != null)
-				{
+				if (storage != null) {
 					storage.AddResults(new Integer(n).toString(), result);
 				}
 
@@ -280,27 +254,26 @@ public class TraceInterpreter
 			n++;
 		}
 
-		if (storage != null)
-		{
+		if (storage != null) {
 			Verdict worstVerdict = Verdict.PASSED;
-			if (faildCount > 0)
-			{
+			if (faildCount > 0) {
 				worstVerdict = Verdict.FAILED;
-			} else if (inconclusiveCount > 0)
-			{
+			} else if (inconclusiveCount > 0) {
 				worstVerdict = Verdict.INCONCLUSIVE;
 			}
 
-			storage.AddTraceStatus(Verdict.valueOf(worstVerdict.toString()), tests.getTests().size(), skippedCount, faildCount, inconclusiveCount);
+			storage.AddTraceStatus(Verdict.valueOf(worstVerdict.toString()),
+					tests.getTests().size(), skippedCount, faildCount,
+					inconclusiveCount);
 			storage.StopElement();
 		}
 
-		processingTraceFinished(className, mtd.getName().getName(), tests.getTests().size(), faildCount, inconclusiveCount, skippedCount);
+		processingTraceFinished(className, mtd.getName().getName(), tests
+				.getTests().size(), faildCount, inconclusiveCount, skippedCount);
 	}
 
 	protected void processingTraceFinished(String className, String name,
-			int size, int faildCount, int inconclusiveCount, int skippedCount)
-	{
+			int size, int faildCount, int inconclusiveCount, int skippedCount) {
 		// System.out.println("Finished " + className + "`" + name + ":"
 		// + "faild=" + faildCount + " inc=" + inconclusiveCount
 		// + " skipped=" + skippedCount + " ok="
@@ -308,8 +281,7 @@ public class TraceInterpreter
 
 	}
 
-	private void processingClass(String className, Integer traceCount)
-	{
+	private void processingClass(String className, Integer traceCount) {
 		// beginClass = System.currentTimeMillis();
 		// activeClass = className;
 		// System.out.println("Executing: " + className + " - Trace count: "
@@ -318,16 +290,13 @@ public class TraceInterpreter
 		preProcessingClass(className, traceCount);
 	}
 
-	protected void preProcessingClass(String className, Integer traceCount)
-	{
+	protected void preProcessingClass(String className, Integer traceCount) {
 
 	}
 
 	protected void processingTrace(String className, String traceName,
-			Integer testCount) throws IOException
-	{
-		if (monitor != null)
-		{
+			Integer testCount) throws IOException {
+		if (monitor != null) {
 			monitor.progressStartTrace(className + "`" + traceName);
 			currentPct = 0;
 		}
@@ -342,19 +311,16 @@ public class TraceInterpreter
 	}
 
 	protected void preProcessingTrace(String className, String traceName,
-			Integer testCount)
-	{
+			Integer testCount) {
 
 	}
 
 	protected void processingTest(String className, String traceName,
-			Integer testNumber, Integer total) throws IOException
-	{
-		if (monitor != null)
-		{
-			Integer pct = new Double(((double) testNumber / (double) total) * 100).intValue();
-			if (currentPct + 10 <= pct)
-			{
+			Integer testNumber, Integer total) throws IOException {
+		if (monitor != null) {
+			Integer pct = new Double(
+					((double) testNumber / (double) total) * 100).intValue();
+			if (currentPct + 10 <= pct) {
 				monitor.progress(pct);
 				currentPct = pct;
 			}
@@ -362,10 +328,8 @@ public class TraceInterpreter
 		}
 	}
 
-	protected void completed() throws IOException
-	{
-		if (monitor != null)
-		{
+	protected void completed() throws IOException {
+		if (monitor != null) {
 			monitor.progressCompleted();
 		}
 		printTraceStatus();
@@ -377,45 +341,37 @@ public class TraceInterpreter
 		preCompleted();
 	}
 
-	protected void preCompleted()
-	{
+	protected void preCompleted() {
 
 	}
 
 	protected void testFiltered(Integer number, Integer filteredBy,
-			CallSequence test)
-	{
+			CallSequence test) {
 		// Console.out.println("Test " + number + " = " + test);
 		// Console.out.println("Test " + number + " FILTERED by test "
 		// + filteredBy);
 	}
 
-	protected void error(String message) throws IOException
-	{
-		System.err.println(message);	
-		if(this.monitor != null)
-		{
+	protected void error(String message) throws IOException {
+		System.err.println(message);
+		if (this.monitor != null) {
 			this.monitor.progressError(message);
 		}
 	}
 
-	protected void typeError(String message)
-	{
+	protected void typeError(String message) {
 		System.err.println(message);
 	}
 
-	protected void parseError(String message)
-	{
+	protected void parseError(String message) {
 		System.err.println(message);
 	}
 
-	protected void typeCheckStarted()
-	{
+	protected void typeCheckStarted() {
 
 	}
 
-	private void printTraceStatus()
-	{
+	private void printTraceStatus() {
 		// if (activeTrace != null && beginTrace != 0)
 		// {
 		// long endTrace = System.currentTimeMillis();
@@ -426,13 +382,11 @@ public class TraceInterpreter
 		prePrintTraceStatus();
 	}
 
-	protected void prePrintTraceStatus()
-	{
+	protected void prePrintTraceStatus() {
 
 	}
 
-	public void setCoverageDir(File coverageDir)
-	{
+	public void setCoverageDir(File coverageDir) {
 		this.coverage = coverageDir;
 	}
 

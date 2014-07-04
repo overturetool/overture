@@ -57,11 +57,17 @@ public class ModuleTypeChecker extends TypeChecker
 	 * @param modules
 	 */
 
-	public final ITypeCheckerAssistantFactory assistantFactory  = new TypeCheckerAssistantFactory();
+	public final ITypeCheckerAssistantFactory assistantFactory;
 	
+	/**
+	 * VDM-only constructor. <b>NOT</b> for use by extensions.
+	 * 
+	 * @param parentVisitor
+	 */
 	public ModuleTypeChecker(List<AModuleModules> modules)
 	{
 		super();
+		assistantFactory = new TypeCheckerAssistantFactory();
 		this.modules = modules;
 	}
 
@@ -201,7 +207,7 @@ public class ModuleTypeChecker extends TypeChecker
 		{
 			try
 			{
-				assistantFactory.createPDefinitionAssistant().typeResolve(d, tc, new TypeCheckInfo(new TypeCheckerAssistantFactory(), env));
+				assistantFactory.createPDefinitionAssistant().typeResolve(d, tc, new TypeCheckInfo(assistantFactory, env));
 			} catch (TypeCheckException te)
 			{
 				report(3430, te.getMessage(), te.location);

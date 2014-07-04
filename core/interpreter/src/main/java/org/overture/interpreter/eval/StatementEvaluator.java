@@ -58,11 +58,9 @@ import org.overture.ast.statements.ATixeStm;
 import org.overture.ast.statements.ATixeStmtAlternative;
 import org.overture.ast.statements.ATrapStm;
 import org.overture.ast.statements.AWhileStm;
+import org.overture.ast.statements.PStm;
+import org.overture.ast.statements.SSimpleBlockStm;
 import org.overture.config.Settings;
-import org.overture.interpreter.assistant.statement.ACaseAlternativeStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AStartStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ATixeStmtAlternativeAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.SSimpleBlockStmAssistantInterpreter;
 import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.messages.rtlog.RTExtendedTextMessage;
 import org.overture.interpreter.messages.rtlog.RTLogger;
@@ -857,7 +855,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			evalContext.putList(ctxt.assistantFactory.createPDefinitionAssistant().getNamedValues(d, evalContext));
 		}
 
-		return SSimpleBlockStmAssistantInterpreter.evalBlock(node, evalContext);
+		return this.evalBlock(node, evalContext);
 	}
 
 	@Override
@@ -866,7 +864,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-		return SSimpleBlockStmAssistantInterpreter.evalBlock(node, ctxt);
+		return this.evalBlock(node, ctxt);
 	}
 
 	@Override
@@ -1485,4 +1483,23 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	{
 		return ctxt.lookup(node.getSelf());
 	}
+	
+	private Value evalBlock(SSimpleBlockStm node, Context ctxt)
+			throws AnalysisException
+	{
+		// Note, no breakpoint check - designed to be called by eval
+
+		for (PStm s : node.getStatements())
+		{
+			Value rv = s.apply(VdmRuntime.getStatementEvaluator(), ctxt);
+
+			if (!rv.isVoid())
+			{
+				return rv;
+			}
+		}
+
+		return new VoidValue();
+	}
+
 }

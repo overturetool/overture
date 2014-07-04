@@ -29,7 +29,6 @@ import org.overture.ast.node.INode;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.util.HelpLexNameToken;
 
 /**
  * This class implements a way to find type from a node in the AST
@@ -300,7 +299,7 @@ public class NameFinder extends
 		ILexNameToken name = node.getName();
 		name.setTypeQualifier(node.getSuperdef().getName().getTypeQualifier());
 
-		if (HelpLexNameToken.isEqual(name, question.sought))
+		if (af.getLexNameTokenAssistant().isEqual(name, question.sought))
 		{
 			return node;
 		} else if (question.scope.matches(NameScope.OLDSTATE)

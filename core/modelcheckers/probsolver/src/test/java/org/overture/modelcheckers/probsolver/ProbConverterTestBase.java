@@ -90,14 +90,14 @@ public abstract class ProbConverterTestBase extends TestResourcesResultTestCase4
 				if (def instanceof AImplicitOperationDefinition)
 				{
 					HashMap<String, String> emptyMap = new HashMap<String, String>();
-					result = ProbSolverUtil.solve(def.getName().getName(), (AImplicitOperationDefinition) def, emptyMap, emptyMap, getArgTypes(def), tokenType, quotes, new SolverConsole());
+					result = ProbSolverUtil.solve(def.getName().getName(), (AImplicitOperationDefinition) def, emptyMap, emptyMap, getArgTypes(def), tokenType, quotes, new SolverConsole(),af);
 
 				} else
 				{
 					AImplicitFunctionDefinition funDef = (AImplicitFunctionDefinition) def;
 					HashMap<String, String> emptyMap = new HashMap<String, String>();
 
-					result = ProbSolverUtil.solve(def.getName().getName(), funDef.getPostcondition(), funDef.getResult(), emptyMap, emptyMap, getArgTypes(def), tokenType, quotes, new SolverConsole());
+					result = ProbSolverUtil.solve(def.getName().getName(), funDef.getPostcondition(), funDef.getResult(), emptyMap, emptyMap, getArgTypes(def), tokenType, quotes, new SolverConsole(),af);
 				}
 			} catch (SolverException e)
 			{

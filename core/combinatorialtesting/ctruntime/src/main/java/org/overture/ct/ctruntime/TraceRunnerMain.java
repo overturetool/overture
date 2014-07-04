@@ -36,6 +36,7 @@ import org.overture.interpreter.traces.TraceReductionType;
 import org.overture.interpreter.util.ExitStatus;
 import org.overture.parser.config.Properties;
 import org.overture.parser.lex.LexTokenReader;
+import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.util.Base64;
 
 public class TraceRunnerMain implements IProgressMonitor
@@ -650,7 +651,7 @@ public class TraceRunnerMain implements IProgressMonitor
 		TraceXmlWrapper storage = new TraceXmlWrapper(new File(traceFolder, moduleName
 				+ "-" + traceName + ".xml"));
 
-		new TraceInterpreter(this,subset,reductionType,seed).run(moduleName, traceName, interpreter, storage);
+		new TraceInterpreter(this,subset,reductionType,seed, new TypeCheckerAssistantFactory()).run(moduleName, traceName, interpreter, storage);
  
 		while (!completed)
 		{

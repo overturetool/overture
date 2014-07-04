@@ -22,6 +22,7 @@ import org.overture.codegen.cgast.expressions.SUnaryExpCG;
 import org.overture.codegen.cgast.statements.AElseIfStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
+import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AUnionTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
@@ -138,6 +139,24 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			{
 				correctTypes(root, mapType);
 				return;
+			}
+		}
+		else if(root.getType() instanceof AMethodTypeCG)
+		{
+			AMethodTypeCG methodType = (AMethodTypeCG) root.getType();
+			
+			LinkedList<STypeCG> paramTypes = methodType.getParams();
+			
+			LinkedList<SExpCG> args = node.getArgs();
+			
+			for(int i = 0; i < args.size(); i++)
+			{
+				SExpCG currentArg = args.get(i);						
+				
+				if(currentArg.getType() instanceof AUnionTypeCG)
+				{
+					correctTypes(currentArg, paramTypes.get(i));
+				}
 			}
 		}
 	}

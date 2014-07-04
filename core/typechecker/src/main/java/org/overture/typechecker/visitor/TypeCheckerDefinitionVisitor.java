@@ -73,9 +73,7 @@ import org.overture.typechecker.PrivateClassEnvironment;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.TypeCheckerErrors;
-import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.definition.PAccessSpecifierAssistantTC;
-import org.overture.typechecker.util.HelpLexNameToken;
 import org.overture.typechecker.utilities.DefinitionTypeResolver;
 import org.overture.typechecker.utilities.type.QualifiedDefinition;
 
@@ -94,7 +92,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 	{
 		question.qualifiers = null;
 		
-		TypeComparator.checkComposeTypes(node.getType(), question.env, false);
+		question.assistantFactory.getTypeComparator().checkComposeTypes(node.getType(), question.env, false);
 		
 		node.setExpType(node.getExpression().apply(THIS, question));
 		node.setType(question.assistantFactory.createPTypeAssistant().typeResolve(question.assistantFactory.createPDefinitionAssistant().getType(node), null, THIS, question));
@@ -104,7 +102,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			TypeCheckerErrors.report(3048, "Expression does not return a value", node.getExpression().getLocation(), node.getExpression());
 		}
 
-		if (!TypeComparator.compatible(node.getType(), node.getExpType()))
+		if (!question.assistantFactory.getTypeComparator().compatible(node.getType(), node.getExpType()))
 		{
 			TypeCheckerErrors.report(3000, "Expression does not match declared type", node.getLocation(), node);
 			TypeCheckerErrors.detail2("Declared", node.getType(), "Expression", node.getExpType());
@@ -145,7 +143,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			TypeCheckerErrors.report(3048, "Expression does not return a value", node.getExpression().getLocation(), node.getExpression());
 		}
 
-		if (!TypeComparator.compatible(question.assistantFactory.createPDefinitionAssistant().getType(node), node.getExpType()))
+		if (!question.assistantFactory.getTypeComparator().compatible(question.assistantFactory.createPDefinitionAssistant().getType(node), node.getExpType()))
 		{
 			TypeCheckerErrors.report(3000, "Expression does not match declared type", node.getLocation(), node);
 			TypeCheckerErrors.detail2("Declared", question.assistantFactory.createPDefinitionAssistant().getType(node), "Expression", node.getExpType());
@@ -193,7 +191,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			question.assistantFactory.createATypeBindAssistant().typeResolve(node.getTypebind(), THIS, question);
 			ATypeBind typebind = node.getTypebind();
 
-			if (!TypeComparator.compatible(typebind.getType(), node.getExpType()))
+			if (!question.assistantFactory.getTypeComparator().compatible(typebind.getType(), node.getExpType()))
 			{
 				TypeCheckerErrors.report(3014, "Expression is not compatible with type bind", typebind.getLocation(), typebind);
 			}
@@ -213,7 +211,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			{
 				PType setof = question.assistantFactory.createPTypeAssistant().getSet(st).getSetof();
 
-				if (!TypeComparator.compatible(node.getExpType(), setof))
+				if (!question.assistantFactory.getTypeComparator().compatible(node.getExpType(), setof))
 				{
 					TypeCheckerErrors.report(3016, "Expression is not compatible with set bind", node.getSetbind().getLocation(), node.getSetbind());
 				}
@@ -236,7 +234,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 	{
 
 		NodeList<PDefinition> defs = new NodeList<PDefinition>(node);
-		TypeComparator.checkComposeTypes(node.getType(), question.env, false);
+		question.assistantFactory.getTypeComparator().checkComposeTypes(node.getType(), question.env, false);
 		
 		if (node.getTypeParams() != null)
 		{
@@ -322,7 +320,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			qdef.resetType();
 		}
 
-		if (!TypeComparator.compatible(expectedResult, node.getActualResult()))
+		if (!question.assistantFactory.getTypeComparator().compatible(expectedResult, node.getActualResult()))
 		{
 			TypeChecker.report(3018, "Function returns unexpected type", node.getLocation());
 			TypeChecker.detail2("Actual", node.getActualResult(), "Expected", expectedResult);
@@ -387,7 +385,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 				AFunctionType mtype = (AFunctionType) efd.getType();
 
-				if (!TypeComparator.compatible(mtype.getParameters(), question.assistantFactory.createAExplicitFunctionDefinitionAssistant().getMeasureParams(node), question.assistantFactory))
+				if (!question.assistantFactory.getTypeComparator().compatible(mtype.getParameters(), question.assistantFactory.createAExplicitFunctionDefinitionAssistant().getMeasureParams(node)))
 				{
 					TypeCheckerErrors.report(3303, "Measure parameters different to function", node.getMeasure().getLocation(), node.getMeasure());
 					TypeChecker.detail2(node.getMeasure().getFullName(), mtype.getParameters(), "Expected", question.assistantFactory.createAExplicitFunctionDefinitionAssistant().getMeasureParams(node));
@@ -442,7 +440,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			AImplicitFunctionDefinition node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		TypeComparator.checkComposeTypes(node.getType(), question.env, false);
+		question.assistantFactory.getTypeComparator().checkComposeTypes(node.getType(), question.env, false);
 		List<PDefinition> defs = new Vector<PDefinition>();
 
 		if (node.getTypeParams() != null)
@@ -495,7 +493,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 			node.setActualResult(node.getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers, node.getResult().getType(), null)));
 
-			if (!TypeComparator.compatible(node.getResult().getType(), node.getActualResult()))
+			if (!question.assistantFactory.getTypeComparator().compatible(node.getResult().getType(), node.getActualResult()))
 			{
 				TypeCheckerErrors.report(3029, "Function returns unexpected type", node.getLocation(), node);
 				TypeCheckerErrors.detail2("Actual", node.getActualResult(), "Expected", node.getResult().getType());
@@ -594,7 +592,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 				AFunctionType mtype = (AFunctionType) node.getMeasureDef().getType();
 
-				if (!TypeComparator.compatible(mtype.getParameters(), ((AFunctionType) node.getType()).getParameters(), question.assistantFactory ))
+				if (!question.assistantFactory.getTypeComparator().compatible(mtype.getParameters(), ((AFunctionType) node.getType()).getParameters()))
 				{
 					TypeCheckerErrors.report(3303, "Measure parameters different to function", node.getMeasure().getLocation(), node.getMeasure());
 					TypeCheckerErrors.detail2(node.getMeasure().getName(), mtype.getParameters(), node.getName().getName(), ((AFunctionType) node.getType()).getParameters());
@@ -640,7 +638,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			AExplicitOperationDefinition node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		TypeComparator.checkComposeTypes(node.getType(), question.env, false);
+		question.assistantFactory.getTypeComparator().checkComposeTypes(node.getType(), question.env, false);
 		List<PType> ptypes = ((AOperationType) node.getType()).getParameters();
 
 		if (node.getParameterPatterns().size() > ptypes.size())
@@ -692,7 +690,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 					}
 					// TODO: THIS COULD BE A HACK to code (ctype.getClassdef()
 					// != node.getClassDefinition())
-					if (!HelpLexNameToken.isEqual(ctype.getClassdef().getName(), node.getClassDefinition().getName()))
+					if (!question.assistantFactory.getLexNameTokenAssistant().isEqual(ctype.getClassdef().getName(), node.getClassDefinition().getName()))
 					{
 						TypeCheckerErrors.report(3025, "Constructor operation must have return type "
 								+ node.getClassDefinition().getName().getName(), node.getLocation(), node);
@@ -750,7 +748,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		PType expectedResult = ((AOperationType) node.getType()).getResult();
 		PType actualResult = node.getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, NameScope.NAMESANDSTATE, null, null, expectedResult));
 		node.setActualResult(actualResult);
-		boolean compatible = TypeComparator.compatible(expectedResult, node.getActualResult());
+		boolean compatible = question.assistantFactory.getTypeComparator().compatible(expectedResult, node.getActualResult());
 
 		for (QualifiedDefinition qdef: qualified)
 		{
@@ -816,7 +814,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			AImplicitOperationDefinition node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		TypeComparator.checkComposeTypes(node.getType(), question.env, false);
+		question.assistantFactory.getTypeComparator().checkComposeTypes(node.getType(), question.env, false);
 		question = new TypeCheckInfo(question.assistantFactory, question.env, NameScope.NAMESANDSTATE, question.qualifiers);
 		List<PDefinition> defs = new Vector<PDefinition>();
 		List<PDefinition> argdefs = new Vector<PDefinition>();
@@ -852,7 +850,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		{
 			for (AExternalClause clause : node.getExternals())
 			{
-				TypeComparator.checkComposeTypes(clause.getType(), question.env, false);
+				question.assistantFactory.getTypeComparator().checkComposeTypes(clause.getType(), question.env, false);
 				
 				for (ILexNameToken exname : clause.getIdentifiers())
 				{
@@ -969,7 +967,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			PType expectedResult = ((AOperationType) node.getType()).getResult();
 			node.setActualResult(node.getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, NameScope.NAMESANDSTATE, null, null, expectedResult)));
 
-			boolean compatible = TypeComparator.compatible(expectedResult, node.getActualResult());
+			boolean compatible = question.assistantFactory.getTypeComparator().compatible(expectedResult, node.getActualResult());
 
 			if (node.getIsConstructor()
 					&& !question.assistantFactory.createPTypeAssistant().isType(node.getActualResult(), AVoidType.class)
@@ -1118,7 +1116,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 	{
 		if (node.getType() != null)
 		{
-			TypeComparator.checkComposeTypes(node.getType(), question.env, false);
+			question.assistantFactory.getTypeComparator().checkComposeTypes(node.getType(), question.env, false);
 		}
 		
 		List<PDefinition> defs = new Vector<PDefinition>();
@@ -1189,7 +1187,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 			for (ILexNameToken other : node.getOperations())
 			{
-				if (opname != other && HelpLexNameToken.isEqual(opname, other))
+				if (opname != other && question.assistantFactory.getLexNameTokenAssistant().isEqual(opname, other))
 				{
 					TypeCheckerErrors.report(3041, "Duplicate mutex name", opname.getLocation(), opname);
 				}
@@ -1329,7 +1327,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		{
 			if (!def.getName().getOld())	// Don't check old names
 			{
-				TypeComparator.checkComposeTypes(def.getType(), question.env, false);
+				question.assistantFactory.getTypeComparator().checkComposeTypes(def.getType(), question.env, false);
 			}
 		}
 
@@ -1403,7 +1401,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			// Rebuild the compose definitions, after we check whether they already exist
 			node.getComposeDefinitions().clear();
 
-			for (PType compose: TypeComparator.checkComposeTypes(ntype.getType(), question.env, true))
+			for (PType compose: question.assistantFactory.getTypeComparator().checkComposeTypes(ntype.getType(), question.env, true))
 			{
 				ARecordInvariantType rtype = (ARecordInvariantType) compose;
 				node.getComposeDefinitions().add(AstFactory.newATypeDefinition(rtype.getName(), rtype, null, null));
@@ -1415,7 +1413,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 			for (AFieldField field : rtype.getFields())
 			{
-				TypeComparator.checkComposeTypes(field.getType(), question.env, false);
+				question.assistantFactory.getTypeComparator().checkComposeTypes(field.getType(), question.env, false);
 				
 				if (question.assistantFactory.createPTypeAssistant().narrowerThan(field.getType(), node.getAccess()))
 				{
@@ -1443,7 +1441,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 	{
 		if (node.getType() != null)
 		{
-			TypeComparator.checkComposeTypes(node.getType(), question.env, false);
+			question.assistantFactory.getTypeComparator().checkComposeTypes(node.getType(), question.env, false);
 		}
 		
 		// Enable constraint checking
@@ -1458,7 +1456,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			TypeCheckerErrors.report(3048, "Expression does not return a value", node.getExpression().getLocation(), node.getExpression());
 		} else if (type != null)
 		{
-			if (!TypeComparator.compatible(type, expType))
+			if (!question.assistantFactory.getTypeComparator().compatible(type, expType))
 			{
 				TypeCheckerErrors.report(3051, "Expression does not match declared type", node.getLocation(), node);
 				TypeCheckerErrors.detail2("Declared", type, "Expression", expType);

@@ -1,0 +1,17 @@
+class Entry
+
+operations
+
+public op : nat * char ==> bool
+op (n,c) == return true;
+
+public static Run : () ==> bool
+Run () ==
+let e = new Entry(),
+		x : nat | char = 1,
+		y : nat | char = 'a'
+in
+	return e.op(x,y);
+		
+
+end Entry

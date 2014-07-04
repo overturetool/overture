@@ -56,8 +56,6 @@ import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.types.SSeqType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
 
 /**
  * A class for static type checking comparisons.
@@ -69,11 +67,16 @@ public class TypeComparator
 	 * A vector of type pairs that have already been compared. This is to allow recursive type definitions to be
 	 * compared without infinite regress.
 	 */
-	
+
 	private static Vector<TypePair> done = new Vector<TypePair>(256);
-	
-	
-	public final static ITypeCheckerAssistantFactory assistantFactory = new TypeCheckerAssistantFactory();
+
+	private final ITypeCheckerAssistantFactory assistantFactory;
+
+	public TypeComparator(ITypeCheckerAssistantFactory assistantFactory)
+	{
+		this.assistantFactory = assistantFactory;
+	}
+
 	/**
 	 * A result value for comparison of types. The "Maybe" value is needed so that the fact that a type's subtypes are
 	 * being actively compared in a recursive call can be recorded. For example, if a MySetType contains references to
@@ -99,8 +102,6 @@ public class TypeComparator
 			this.b = b;
 			this.result = Result.Maybe;
 		}
-		
-		
 
 		@Override
 		public boolean equals(Object other)
@@ -130,13 +131,13 @@ public class TypeComparator
 	 * @return True if types "a" and "b" are compatible.
 	 */
 
-	public synchronized static boolean compatible(PType to, PType from)
+	public synchronized boolean compatible(PType to, PType from)
 	{
 		done.clear();
 		return searchCompatible(to, from, false) == Result.Yes;
 	}
 
-	public synchronized static boolean compatible(PType to, PType from,
+	public synchronized boolean compatible(PType to, PType from,
 			boolean paramOnly)
 	{
 		done.clear();
@@ -144,15 +145,14 @@ public class TypeComparator
 	}
 
 	/**
-	 * Compare two type lists for placewise compatibility.
+	 * Compare two type lists for placewise compatibility. , assistantFactory @param to
 	 * 
-	 *, assistantFactory @param to
 	 * @param from
 	 * @return True if all types compatible.
 	 */
 
-	public synchronized static boolean compatible(List<PType> to,
-			List<PType> from, ITypeCheckerAssistantFactory assistantFactory)
+	public synchronized boolean compatible(List<PType> to,
+			List<PType> from)
 	{
 		done.clear();
 		return allCompatible(to, from, false) == Result.Yes;
@@ -167,7 +167,7 @@ public class TypeComparator
 	 * @return Yes or No.
 	 */
 
-	private static Result allCompatible(List<PType> to, List<PType> from,
+	private Result allCompatible(List<PType> to, List<PType> from,
 			boolean paramOnly)
 	{
 		if (to.size() != from.size())
@@ -193,11 +193,10 @@ public class TypeComparator
 	 * 
 	 * @param to
 	 * @param from
-	 * @param assistantFactory 
 	 * @return Yes or No.
 	 */
 
-	private static Result searchCompatible(PType to, PType from,
+	private Result searchCompatible(PType to, PType from,
 			boolean paramOnly)
 	{
 		TypePair pair = new TypePair(to, from);
@@ -237,7 +236,7 @@ public class TypeComparator
 	 * @return Yes or No.
 	 */
 
-	private static Result test(PType to, PType from, boolean paramOnly)
+	private Result test(PType to, PType from, boolean paramOnly)
 	{
 		if (to instanceof AUnresolvedType)
 		{
@@ -249,7 +248,7 @@ public class TypeComparator
 			throw new TypeCheckException("Unknown type: " + from, from.getLocation(), from);
 		}
 
-		if (assistantFactory.createPTypeAssistant().equals(to, from))
+		if (to == from)	// (assistantFactory.createPTypeAssistant().equals(to, from))
 		{
 			return Result.Yes; // Same object!
 		}
@@ -452,7 +451,8 @@ public class TypeComparator
 				ARecordInvariantType rf = (ARecordInvariantType) from;
 				ARecordInvariantType rt = (ARecordInvariantType) to;
 
-				return assistantFactory.createPTypeAssistant().equals(rf, rt) ? Result.Yes : Result.No;
+				return assistantFactory.createPTypeAssistant().equals(rf, rt) ? Result.Yes
+						: Result.No;
 			} else if (to instanceof AClassType)
 			{
 				if (!(from instanceof AClassType))
@@ -508,15 +508,16 @@ public class TypeComparator
 	 * @return True if sub is a subtype of sup.
 	 */
 
-	public synchronized static boolean isSubType(PType sub, PType sup, ITypeCheckerAssistantFactory assistantFactory)
+	public synchronized boolean isSubType(PType sub, PType sup)
 	{
-		return isSubType(sub, sup, false, assistantFactory);
+		return isSubType(sub, sup, false);
 	}
 
-	public synchronized static boolean isSubType(PType sub, PType sup, boolean invignore, ITypeCheckerAssistantFactory assistantFactory)
+	public synchronized boolean isSubType(PType sub, PType sup,
+			boolean invignore)
 	{
 		done.clear();
-		return searchSubType(sub, sup, invignore, assistantFactory) == Result.Yes;
+		return searchSubType(sub, sup, invignore) == Result.Yes;
 	}
 
 	/**
@@ -528,7 +529,8 @@ public class TypeComparator
 	 * @return Yes or No.
 	 */
 
-	private static Result allSubTypes(List<PType> sub, List<PType> sup, boolean invignore, ITypeCheckerAssistantFactory assistantFactory)
+	private Result allSubTypes(List<PType> sub, List<PType> sup,
+			boolean invignore)
 	{
 		if (sub.size() != sup.size())
 		{
@@ -537,7 +539,7 @@ public class TypeComparator
 		{
 			for (int i = 0; i < sub.size(); i++)
 			{
-				if (searchSubType(sub.get(i), sup.get(i), invignore, assistantFactory) == Result.No)
+				if (searchSubType(sub.get(i), sup.get(i), invignore) == Result.No)
 				{
 					return Result.No;
 				}
@@ -553,11 +555,12 @@ public class TypeComparator
 	 * 
 	 * @param sub
 	 * @param sup
-	 * @param invignore 
+	 * @param invignore
 	 * @return Yes or No, if sub is a subtype of sup.
 	 */
 
-	private static Result searchSubType(PType sub, PType sup, boolean invignore, ITypeCheckerAssistantFactory assistantFactory)
+	private Result searchSubType(PType sub, PType sup,
+			boolean invignore)
 	{
 		TypePair pair = new TypePair(sub, sup);
 		int i = done.indexOf(pair);
@@ -571,7 +574,7 @@ public class TypeComparator
 		}
 
 		// The pair.result is "Maybe" until this call returns.
-		pair.result = subtest(sub, sup, invignore, assistantFactory);
+		pair.result = subtest(sub, sup, invignore);
 
 		return pair.result;
 	}
@@ -592,11 +595,11 @@ public class TypeComparator
 	 * 
 	 * @param sub
 	 * @param sup
-	 * @param invignore 
+	 * @param invignore
 	 * @return Yes or No.
 	 */
 
-	private static Result subtest(PType sub, PType sup, boolean invignore, ITypeCheckerAssistantFactory assistantFactory)
+	private Result subtest(PType sub, PType sup, boolean invignore)
 	{
 		if (sub instanceof AUnresolvedType)
 		{
@@ -696,7 +699,7 @@ public class TypeComparator
 
 			for (PType suba : subu.getTypes())
 			{
-				if (searchSubType(suba, sup, invignore, assistantFactory) == Result.No)
+				if (searchSubType(suba, sup, invignore) == Result.No)
 				{
 					return Result.No;
 				}
@@ -711,7 +714,7 @@ public class TypeComparator
 
 				for (PType supt : supu.getTypes())
 				{
-					if (searchSubType(sub, supt, invignore, assistantFactory) == Result.Yes)
+					if (searchSubType(sub, supt, invignore) == Result.Yes)
 					{
 						return Result.Yes; // Can be any of them
 					}
@@ -721,14 +724,14 @@ public class TypeComparator
 			} else if (sub instanceof ANamedInvariantType)
 			{
 				ANamedInvariantType subn = (ANamedInvariantType) sub;
-				return searchSubType(subn.getType(), sup, invignore, assistantFactory);
+				return searchSubType(subn.getType(), sup, invignore);
 			} else if (sup instanceof AOptionalType)
 			{
 				// Supertype includes a nil value, and the subtype is not
 				// optional (stripped above), so we test the optional's type.
 
 				AOptionalType op = (AOptionalType) sup;
-				return searchSubType(sub, op.getType(), invignore, assistantFactory);
+				return searchSubType(sub, op.getType(), invignore);
 			} else if (sub instanceof SNumericBasicType)
 			{
 				if (sup instanceof SNumericBasicType)
@@ -749,7 +752,7 @@ public class TypeComparator
 				List<PType> subl = ((AProductType) sub).getTypes();
 				List<PType> supl = ((AProductType) sup).getTypes();
 
-				return allSubTypes(subl, supl, invignore, assistantFactory);
+				return allSubTypes(subl, supl, invignore);
 			} else if (sub instanceof SMapType)
 			{
 				if (!(sup instanceof SMapType))
@@ -765,8 +768,8 @@ public class TypeComparator
 					return Result.Yes;
 				}
 
-				if (searchSubType(subm.getFrom(), supm.getFrom(), invignore, assistantFactory) == Result.Yes
-						&& searchSubType(subm.getTo(), supm.getTo(), invignore, assistantFactory) == Result.Yes)
+				if (searchSubType(subm.getFrom(), supm.getFrom(), invignore) == Result.Yes
+						&& searchSubType(subm.getTo(), supm.getTo(), invignore) == Result.Yes)
 				{
 
 					if (!(sub instanceof AInMapMapType)
@@ -793,7 +796,7 @@ public class TypeComparator
 
 				return subs.getEmpty()
 						|| sups.getEmpty()
-						|| searchSubType(subs.getSetof(), sups.getSetof(), invignore, assistantFactory) == Result.Yes ? Result.Yes
+						|| searchSubType(subs.getSetof(), sups.getSetof(), invignore) == Result.Yes ? Result.Yes
 						: Result.No;
 			} else if (sub instanceof SSeqType) // Includes seq1
 			{
@@ -811,7 +814,7 @@ public class TypeComparator
 					return Result.Yes;
 				}
 
-				if (searchSubType(subs.getSeqof(), sups.getSeqof(), invignore, assistantFactory) == Result.Yes)
+				if (searchSubType(subs.getSeqof(), sups.getSeqof(), invignore) == Result.Yes)
 				{
 					if (!(sub instanceof ASeq1SeqType)
 							&& sup instanceof ASeq1SeqType)
@@ -834,8 +837,8 @@ public class TypeComparator
 				AFunctionType subf = (AFunctionType) sub;
 				AFunctionType supf = (AFunctionType) sup;
 
-				return allSubTypes(subf.getParameters(), supf.getParameters(), invignore, assistantFactory) == Result.Yes
-						&& searchSubType(subf.getResult(), supf.getResult(), invignore, assistantFactory) == Result.Yes ? Result.Yes
+				return allSubTypes(subf.getParameters(), supf.getParameters(), invignore) == Result.Yes
+						&& searchSubType(subf.getResult(), supf.getResult(), invignore) == Result.Yes ? Result.Yes
 						: Result.No;
 			} else if (sub instanceof AOperationType)
 			{
@@ -847,8 +850,8 @@ public class TypeComparator
 				AOperationType subo = (AOperationType) sub;
 				AOperationType supo = (AOperationType) sup;
 
-				return allSubTypes(subo.getParameters(), supo.getParameters(), invignore, assistantFactory) == Result.Yes
-						&& searchSubType(subo.getResult(), supo.getResult(), invignore, assistantFactory) == Result.Yes ? Result.Yes
+				return allSubTypes(subo.getParameters(), supo.getParameters(), invignore) == Result.Yes
+						&& searchSubType(subo.getResult(), supo.getResult(), invignore) == Result.Yes ? Result.Yes
 						: Result.No;
 			} else if (sub instanceof ARecordInvariantType)
 			{
@@ -885,78 +888,81 @@ public class TypeComparator
 
 		return Result.No;
 	}
-	
+
 	/**
-	 * Check that the compose types that are referred to in a type have a matching
-	 * definition in the environment. The method returns a list of types that do not
-	 * exist if the newTypes parameter is passed. 
+	 * Check that the compose types that are referred to in a type have a matching definition in the environment. The
+	 * method returns a list of types that do not exist if the newTypes parameter is passed.
 	 */
-	public static PTypeList checkComposeTypes(PType type, Environment env, boolean newTypes)
+	public PTypeList checkComposeTypes(PType type, Environment env,
+			boolean newTypes)
 	{
 		PTypeList undefined = new PTypeList();
-		
-		for (PType compose: env.af.createPTypeAssistant().getComposeTypes(type))
+
+		for (PType compose : env.af.createPTypeAssistant().getComposeTypes(type))
 		{
-			ARecordInvariantType composeType = (ARecordInvariantType)compose;
+			ARecordInvariantType composeType = (ARecordInvariantType) compose;
 			PDefinition existing = env.findType(composeType.getName(), null);
-			
+
 			if (existing != null)
 			{
 				// If the type is already defined, check that it has the same shape and
 				// does not have an invariant (which cannot match a compose definition).
 				boolean matches = false;
-				
+
 				if (existing instanceof ATypeDefinition)
 				{
-					ATypeDefinition edef = (ATypeDefinition)existing;
+					ATypeDefinition edef = (ATypeDefinition) existing;
 					PType etype = existing.getType();
-					
-					if (edef.getInvExpression() == null && etype instanceof ARecordInvariantType)
+
+					if (edef.getInvExpression() == null
+							&& etype instanceof ARecordInvariantType)
 					{
-						ARecordInvariantType retype = (ARecordInvariantType)etype;
-						
+						ARecordInvariantType retype = (ARecordInvariantType) etype;
+
 						if (retype.getFields().equals(composeType.getFields()))
 						{
 							matches = true;
 						}
 					}
 				}
-					
+
 				if (!matches)
 				{
-					TypeChecker.report(3325, "Mismatched compose definitions for " + composeType.getName(), composeType.getLocation());
+					TypeChecker.report(3325, "Mismatched compose definitions for "
+							+ composeType.getName(), composeType.getLocation());
 					TypeChecker.detail2(composeType.getName().getName(), composeType.getLocation(), existing.getName().getName(), existing.getLocation());
 				}
-			}
-			else
+			} else
 			{
 				if (newTypes)
 				{
 					undefined.add(composeType);
-				}
-				else
+				} else
 				{
-					TypeChecker.report(3113, "Unknown type name '" + composeType.getName() + "'", composeType.getLocation());
+					TypeChecker.report(3113, "Unknown type name '"
+							+ composeType.getName() + "'", composeType.getLocation());
 				}
 			}
 		}
-		
+
 		// Lastly, check that the compose types extracted are compatible
 		LexNameList done = new LexNameList();
-		
-		for (PType c1: undefined)
+
+		for (PType c1 : undefined)
 		{
-			for (PType c2: undefined)
+			for (PType c2 : undefined)
 			{
 				if (c1 != c2)
 				{
-					ARecordInvariantType r1 = (ARecordInvariantType)c1;
-					ARecordInvariantType r2 = (ARecordInvariantType)c2;
-					
-					if (r1.getName().equals(r2.getName()) &&
-						!done.contains(r1.getName()) && !r1.getFields().equals(r2.getFields()))
+					ARecordInvariantType r1 = (ARecordInvariantType) c1;
+					ARecordInvariantType r2 = (ARecordInvariantType) c2;
+
+					if (r1.getName().equals(r2.getName())
+							&& !done.contains(r1.getName())
+							&& !r1.getFields().equals(r2.getFields()))
 					{
-						TypeChecker.report(3325, "Mismatched compose definitions for " + r1.getName(), r1.getLocation());
+						TypeChecker.report(3325, "Mismatched compose definitions for "
+								+ r1.getName(), r1.getLocation());
 						TypeChecker.detail2(r1.getName().getName(), r1.getLocation(), r2.getName().getName(), r2.getLocation());
 						done.add(r1.getName());
 					}
@@ -970,7 +976,7 @@ public class TypeComparator
 	/**
 	 * Calculate the intersection of two types.
 	 */
-	public static PType intersect(PType a, PType b)
+	public PType intersect(PType a, PType b)
 	{
 		Set<PType> tsa = new HashSet<PType>();
 		Set<PType> tsb = new HashSet<PType>();
@@ -980,93 +986,89 @@ public class TypeComparator
 
 		while (!resolved)
 		{
-    		if (a instanceof ABracketType)
-    		{
-    			a = ((ABracketType)a).getType();
-    			continue;
-    		}
+			if (a instanceof ABracketType)
+			{
+				a = ((ABracketType) a).getType();
+				continue;
+			}
 
-    		if (b instanceof ABracketType)
-    		{
-    			b = ((ABracketType)b).getType();
-    			continue;
-    		}
+			if (b instanceof ABracketType)
+			{
+				b = ((ABracketType) b).getType();
+				continue;
+			}
 
-    		if (a instanceof ANamedInvariantType)
-    		{
-    			ANamedInvariantType nt = (ANamedInvariantType)a;
+			if (a instanceof ANamedInvariantType)
+			{
+				ANamedInvariantType nt = (ANamedInvariantType) a;
 
-       			if (nt.getInvDef() == null)
-       			{
-        			a = nt.getType();
-        			continue;
-        		}
-    		}
+				if (nt.getInvDef() == null)
+				{
+					a = nt.getType();
+					continue;
+				}
+			}
 
-    		if (b instanceof ANamedInvariantType)
-    		{
-    			ANamedInvariantType nt = (ANamedInvariantType)b;
+			if (b instanceof ANamedInvariantType)
+			{
+				ANamedInvariantType nt = (ANamedInvariantType) b;
 
-       			if (nt.getInvDef() == null)
-       			{
-        			b = nt.getType();
-        			continue;
-        		}
-    		}
+				if (nt.getInvDef() == null)
+				{
+					b = nt.getType();
+					continue;
+				}
+			}
 
-    		if (a instanceof AOptionalType && b instanceof AOptionalType)
-    		{
-       			a = ((AOptionalType)a).getType();
-       			b = ((AOptionalType)b).getType();
-    			continue;
-    		}
+			if (a instanceof AOptionalType && b instanceof AOptionalType)
+			{
+				a = ((AOptionalType) a).getType();
+				b = ((AOptionalType) b).getType();
+				continue;
+			}
 
-    		resolved = true;
+			resolved = true;
 		}
 
 		if (a instanceof AUnionType)
 		{
-			AUnionType uta = (AUnionType)a;
+			AUnionType uta = (AUnionType) a;
 			tsa.addAll(uta.getTypes());
-		}
-		else
+		} else
 		{
 			tsa.add(a);
 		}
-		
+
 		if (b instanceof AUnionType)
 		{
-			AUnionType utb = (AUnionType)b;
+			AUnionType utb = (AUnionType) b;
 			tsb.addAll(utb.getTypes());
-		}
-		else
+		} else
 		{
 			tsb.add(b);
 		}
-		
+
 		// Keep largest types which are compatible (eg. nat and int choses int)
 		Set<PType> result = new HashSet<PType>();
-		
-		for (PType atype: tsa)
+
+		for (PType atype : tsa)
 		{
-			for (PType btype: tsb)
+			for (PType btype : tsb)
 			{
-				if (isSubType(atype, btype, assistantFactory))
+				if (isSubType(atype, btype))
 				{
 					result.add(btype);
-				}
-				else if (isSubType(btype, atype, assistantFactory))
+				} else if (isSubType(btype, atype))
 				{
 					result.add(atype);
 				}
 			}
 		}
-		
+
 		if (result.isEmpty())
 		{
 			return null;
-		}
-		else
+		} else
 		{
 			List<PType> list = new Vector<PType>();
 			list.addAll(result);

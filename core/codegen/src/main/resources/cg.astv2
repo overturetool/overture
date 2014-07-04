@@ -210,6 +210,7 @@ CG {-> package='org.overture.codegen.cgast'
     |	{lambda} [params]:CG.#localParam.formalParam* [exp]:CG.#exp
     |	{anonymousClass} [methods]:CG.#decl.method*
     |	{notImplemented}
+    |	{threadId}
     ;
 
 #RuntimeError {-> package='org.overture.codegen.cgast.expressions'}

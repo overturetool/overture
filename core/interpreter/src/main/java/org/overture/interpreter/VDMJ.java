@@ -64,6 +64,9 @@ abstract public class VDMJ
 
 	final protected IInterpreterAssistantFactory assistantFactory ;//= new TypeCheckerAssistantFactory();
 	
+	/**
+	 * VDM-only constructor. <b>NOT</b> for use by extensions.
+	 */
 	public VDMJ()
 	{
 		this.assistantFactory = new InterpreterAssistantFactory();
