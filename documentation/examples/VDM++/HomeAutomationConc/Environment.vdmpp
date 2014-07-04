@@ -57,7 +57,7 @@ public Finish: () ==> ()
 Finish() ==
   finished := true;
 
-Step: () ==> ()
+protected Step: () ==> ()
 Step() ==
  (if World`timerRef.GetTime() < simtime 
   then CreateSignal()   
