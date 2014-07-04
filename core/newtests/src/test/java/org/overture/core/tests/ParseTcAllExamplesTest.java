@@ -18,8 +18,9 @@ import org.overture.tools.examplepackager.util.ExampleTestData;
 import org.overture.tools.examplepackager.util.ExampleTestUtils;
 
 /**
- * Basic test for all the examples. Simply ensures that they all parse and type-check correctly. Examples with
- * purposeful errors are not tested at all. This test needs to be improved to also check examples with expected errors.
+ * Basic test for all the examples. Simply ensures that they all parse and type-check correctly. <br>
+ * <b>Note:</b> FCurrently, models with intentional errors are not tested. This test needs to be improved to also check
+ * these examples against theexpected errors.
  * 
  * @author ldc
  */
