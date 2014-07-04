@@ -39,7 +39,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.overturetool.core</groupId>
-			<artifactId>tests</artifactId>
+			<artifactId>newtests</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
