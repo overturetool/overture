@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
@@ -39,18 +40,18 @@ public class ParseTcFacade
 	 * @return
 	 */
 	public static List<INode> typedAstFromContent(String content,
-			Dialect dialect, Release release)
+			String testName, Dialect dialect, Release release)
 	{
 		Settings.release = release;
 
 		switch (dialect)
 		{
 			case VDM_SL:
-				return parseTcSlContent(content);
+				return parseTcSlContent(content, testName);
 			case VDM_PP:
-				return parseTcPpContent(content);
+				return parseTcPpContent(content, testName);
 			case VDM_RT:
-				return parseTcRtContent(content);
+				return parseTcRtContent(content, testName);
 			default:
 				fail("Unrecognised dialect:" + dialect);
 				return null;
@@ -82,13 +83,13 @@ public class ParseTcFacade
 		switch (e.getDialect())
 		{
 			case VDM_SL:
-				ast = ParseTcFacade.typedAstFromContent(e.getSource(), Dialect.VDM_SL, rel);
+				ast = ParseTcFacade.typedAstFromContent(e.getSource(), e.getName(), Dialect.VDM_SL, rel);
 				break;
 			case VDM_PP:
-				ast = ParseTcFacade.typedAstFromContent(e.getSource(), Dialect.VDM_PP, rel);
+				ast = ParseTcFacade.typedAstFromContent(e.getSource(), e.getName(), Dialect.VDM_PP, rel);
 				break;
 			case VDM_RT:
-				ast = ParseTcFacade.typedAstFromContent(e.getSource(), Dialect.VDM_RT, rel);
+				ast = ParseTcFacade.typedAstFromContent(e.getSource(), e.getName(), Dialect.VDM_RT, rel);
 				break;
 			default:
 				fail("Unrecognised dialect:" + e.getDialect());
@@ -97,62 +98,19 @@ public class ParseTcFacade
 		return new ExampleAstData(e.getName(), ast);
 	}
 
-	private static List<INode> parseTcRtContent(String content)
-	{
-		Settings.dialect = Dialect.VDM_PP;
-
-		TypeCheckResult<List<SClassDefinition>> TC = TypeCheckerUtil.typeCheckPp(content);
-
-		assertTrue("Specification has parse errors", TC.parserResult.errors.isEmpty());
-		assertTrue("Specification has type errors", TC.errors.isEmpty());
-
-		List<INode> r = new LinkedList<INode>();
-		r.addAll(TC.result);
-
-		return r;
-	}
-
-	private static List<INode> parseTcPpContent(String content)
-	{
-		Settings.dialect = Dialect.VDM_PP;
-
-		TypeCheckResult<List<SClassDefinition>> TC = TypeCheckerUtil.typeCheckPp(content);
-
-		assertTrue("Specification has parse errors", TC.parserResult.errors.isEmpty());
-		assertTrue("Specification has type errors", TC.errors.isEmpty());
-
-		List<INode> r = new LinkedList<INode>();
-		r.addAll(TC.result);
-
-		return r;
-	}
-
-	private static List<INode> parseTcSlContent(String content)
-	{
-		Settings.dialect = Dialect.VDM_SL;
-
-		TypeCheckResult<List<AModuleModules>> TC = TypeCheckerUtil.typeCheckSl(content);
-
-		assertTrue("Specification has parse errors", TC.parserResult.errors.isEmpty());
-		assertTrue("Specification has type errors", TC.errors.isEmpty());
-
-		List<INode> r = new LinkedList<INode>();
-		r.addAll(TC.result);
-
-		return r;
-	}
-
 	/**
 	 * Parse and type check a VDM source file and return the model's AST.
 	 * 
 	 * @param sourcePath
 	 *            a {@link String} with the path to the VDM model source
+	 * @param testName
 	 * @return the AST of the model as a {@link List} of {@link INode}.
 	 */
-	public static List<INode> typedAst(String sourcePath) throws IOException,
-			ParserException, LexException
+	public static List<INode> typedAst(String sourcePath, String testName)
+			throws IOException, ParserException, LexException
 	{
 		String ext = sourcePath.split("\\.")[1];
+		File f = new File(sourcePath);
 
 		boolean switchRelease = false;
 		try
@@ -165,19 +123,20 @@ public class ParseTcFacade
 
 			if (ext.equals("vdmsl") | ext.equals("vdm"))
 			{
-				return parseTcSl(sourcePath);
+				return parseTcSlContent(FileUtils.readFileToString(f), testName);
 			}
 
 			else
 			{
 				if (ext.equals("vdmpp") | ext.equals("vpp"))
 				{
-					return parseTcPp(sourcePath);
+					return parseTcPpContent(FileUtils.readFileToString(f), testName);
+
 				} else
 				{
 					if (ext.equals("vdmrt"))
 					{
-						return parseTcRt(sourcePath);
+						return parseTcRtContent(FileUtils.readFileToString(f), testName);
 					} else
 					{
 						fail("Unexpected extension in file " + sourcePath
@@ -199,15 +158,16 @@ public class ParseTcFacade
 	// These 3 methods have so much duplicated code because we cannot
 	// return the TC results since their types are all different.
 	// FIXME unify parsing and TCing of VDM dialects
-	private static List<INode> parseTcPp(String name)
+	private static List<INode> parseTcRtContent(String content, String testName)
 	{
 		Settings.dialect = Dialect.VDM_PP;
-		File f = new File(name);
 
-		TypeCheckResult<List<SClassDefinition>> TC = TypeCheckerUtil.typeCheckPp(f);
+		TypeCheckResult<List<SClassDefinition>> TC = TypeCheckerUtil.typeCheckPp(content);
 
-		assertTrue("Specification has parse errors", TC.parserResult.errors.isEmpty());
-		assertTrue("Specification has type errors", TC.errors.isEmpty());
+		assertTrue("Error in test " + testName
+				+ " Specification has parse errors", TC.parserResult.errors.isEmpty());
+		assertTrue("Error in test " + testName
+				+ " Specification has type errors", TC.errors.isEmpty());
 
 		List<INode> r = new LinkedList<INode>();
 		r.addAll(TC.result);
@@ -215,32 +175,33 @@ public class ParseTcFacade
 		return r;
 	}
 
-	private static List<INode> parseTcSl(String name)
+	private static List<INode> parseTcPpContent(String content, String testName)
+	{
+		Settings.dialect = Dialect.VDM_PP;
+
+		TypeCheckResult<List<SClassDefinition>> TC = TypeCheckerUtil.typeCheckPp(content);
+
+		assertTrue("Error in test " + testName
+				+ " Specification has parse errors", TC.parserResult.errors.isEmpty());
+		assertTrue("Error in test " + testName
+				+ " Specification has type errors", TC.errors.isEmpty());
+
+		List<INode> r = new LinkedList<INode>();
+		r.addAll(TC.result);
+
+		return r;
+	}
+
+	private static List<INode> parseTcSlContent(String content, String testName)
 	{
 		Settings.dialect = Dialect.VDM_SL;
-		File f = new File(name);
 
-		TypeCheckResult<List<AModuleModules>> TC = TypeCheckerUtil.typeCheckSl(f);
+		TypeCheckResult<List<AModuleModules>> TC = TypeCheckerUtil.typeCheckSl(content);
 
-		assertTrue("Specification has parse errors", TC.parserResult.errors.isEmpty());
-		assertTrue("Specification has type errors", TC.errors.isEmpty());
-
-		List<INode> r = new LinkedList<INode>();
-		r.addAll(TC.result);
-
-		return r;
-	}
-
-	private static List<INode> parseTcRt(String name) throws ParserException,
-			LexException
-	{
-		Settings.dialect = Dialect.VDM_RT;
-		File f = new File(name);
-
-		TypeCheckResult<List<SClassDefinition>> TC = TypeCheckerUtil.typeCheckRt(f);
-
-		assertTrue("Specification has parse errors", TC.parserResult.errors.isEmpty());
-		assertTrue("Specification has type errors", TC.errors.isEmpty());
+		assertTrue("Error in test " + testName
+				+ " Specification has parse errors", TC.parserResult.errors.isEmpty());
+		assertTrue("Error in test " + testName
+				+ " Specification has type errors", TC.errors.isEmpty());
 
 		List<INode> r = new LinkedList<INode>();
 		r.addAll(TC.result);
