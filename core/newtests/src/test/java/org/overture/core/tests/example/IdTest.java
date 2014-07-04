@@ -35,7 +35,7 @@ public class IdTest extends AbsParamBasicTest<IdTestResult>
 
 	// The update property for this test
 	private static final String UPDATE_PROPERTY = "tests.update.example.ID";
-	
+
 	/**
 	 * The default constructor must always pass the name of the test and the paths of the test input and result. <br>
 	 * <br>
@@ -71,38 +71,16 @@ public class IdTest extends AbsParamBasicTest<IdTestResult>
 	 * case, we simply go through the generated strings for both results and fail the test in case they do not match. <br>
 	 * <br>
 	 * It's worth nothing that the responsibility to assert something is entirely on the user and this is the place to
-	 * put the check in.
+	 * put the check in.<br>
+	 * <br>
+	 * It's a good idea to implement the comparison as a public static method somewhere. That way you can reuse in
+	 * multiple tests. The test result class is a decent place for small test setups. But if you're doing more complex
+	 * stuff, the classic Utils class is also a good place.
 	 */
 	@Override
 	public void testCompare(IdTestResult actual, IdTestResult expected)
 	{
-		Collection<String> stored_notfound = CollectionUtils.removeAll(expected, actual);
-		Collection<String> found_notstored = CollectionUtils.removeAll(actual, expected);
-
-		if (stored_notfound.isEmpty() && found_notstored.isEmpty())
-		{
-			// Results match, tests pass;do nothing
-		} else
-		{
-			StringBuilder sb = new StringBuilder();
-			if (!stored_notfound.isEmpty())
-			{
-				sb.append("Expected (but not found) Strings: " + "\n");
-				for (String pr : stored_notfound)
-				{
-					sb.append(pr + "\n");
-				}
-			}
-			if (!found_notstored.isEmpty())
-			{
-				sb.append("Found (but not expected) Strings: " + "\n");
-				for (String pr : found_notstored)
-				{
-					sb.append(pr + "\n");
-				}
-			}
-			fail("Error in test " + testName + " : \n" + sb.toString());
-		}
+		IdTestResult.compare(actual, expected, testName);
 	}
 
 	/**
