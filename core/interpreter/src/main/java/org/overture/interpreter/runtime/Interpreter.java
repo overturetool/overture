@@ -51,7 +51,6 @@ import org.overture.ast.types.PType;
 import org.overture.config.Settings;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.InterpreterAssistantFactory;
-import org.overture.interpreter.assistant.definition.ANamedTraceDefinitionAssistantInterpreter;
 import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.debug.DBGPReader;
 import org.overture.interpreter.messages.Console;
@@ -79,7 +78,8 @@ import org.overture.typechecker.visitor.TypeCheckVisitor;
 
 abstract public class Interpreter
 {
-	final public IInterpreterAssistantFactory assistantFactory = new InterpreterAssistantFactory();
+	/** the assistant factory used by this interpreter for e.g. FunctionValues */
+	protected final  IInterpreterAssistantFactory assistantFactory;
 	
 	/** The main thread scheduler */
 	public ResourceScheduler scheduler;
@@ -101,13 +101,15 @@ abstract public class Interpreter
 
 	/**
 	 * Create an Interpreter.
+	 * @param assistantFactory the assistant factory to be used by the interpreter
 	 */
 
-	public Interpreter()
+	public Interpreter(IInterpreterAssistantFactory assistantFactory)
 	{
 		scheduler = new ResourceScheduler();
 		breakpoints = new TreeMap<Integer, Breakpoint>();
 		sourceFiles = new HashMap<File, SourceFile>();
+		this.assistantFactory = assistantFactory;
 		instance = this;
 	}
 	
@@ -616,7 +618,7 @@ abstract public class Interpreter
 
 		ctxt = getInitialTraceContext(tracedef, debug);
 
-		tests =ANamedTraceDefinitionAssistantInterpreter.getTests(tracedef,ctxt, subset, type, seed);
+		tests = ctxt.assistantFactory.createANamedTraceDefinitionAssistant().getTests(tracedef,ctxt, subset, type, seed);
 
 		boolean wasDBGP = Settings.usingDBGP;
 		boolean wasCMD = Settings.usingCmdLine;

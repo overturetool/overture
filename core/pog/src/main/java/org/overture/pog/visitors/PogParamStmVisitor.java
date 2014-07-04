@@ -50,7 +50,6 @@ import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.utility.POException;
 import org.overture.pog.utility.PogAssistantFactory;
-import org.overture.typechecker.TypeComparator;
 
 public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofObligationList>
 		extends QuestionAnswerAdaptor<IPOContextStack, IProofObligationList>
@@ -125,7 +124,7 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 			obligations.addAll(node.getTarget().apply(rootVisitor, question));
 			obligations.addAll(node.getExp().apply(rootVisitor, question));
 
-			if (!TypeComparator.isSubType(question.checkType(node.getExp(), node.getExpType()), node.getTargetType(), aF))
+			if (!aF.getTypeComparator().isSubType(question.checkType(node.getExp(), node.getExpType()), node.getTargetType()))
 			{
 				TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(node.getExp(), node.getTargetType(), node.getExpType(), question, aF);
 				if (sto != null)

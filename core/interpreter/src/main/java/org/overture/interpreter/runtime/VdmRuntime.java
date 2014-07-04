@@ -20,6 +20,7 @@ import org.overture.interpreter.runtime.state.ASystemClassDefinitionRuntime;
 import org.overture.interpreter.runtime.state.SClassDefinitionRuntime;
 import org.overture.interpreter.runtime.state.StateDefinitionRuntimeState;
 import org.overture.interpreter.values.Value;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
  * The runtime class must be re-initialized before an execution.
@@ -88,13 +89,13 @@ public class VdmRuntime
 		return (StateDefinitionRuntimeState) runtimeState.get(node);
 	}
 	
-	public static AModuleModulesRuntime getNodeState(AModuleModules node)
+	public static AModuleModulesRuntime getNodeState(AModuleModules node, ITypeCheckerAssistantFactory af)
 	{
 		AModuleModulesRuntime state = (AModuleModulesRuntime) runtimeState.get(node);
 
 		if(state == null)
 		{
-			state = new AModuleModulesRuntime(node);
+			state = new AModuleModulesRuntime(node, af);
 			runtimeState.put(node, state);
 		}
 		

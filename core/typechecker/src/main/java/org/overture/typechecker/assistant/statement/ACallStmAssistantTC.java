@@ -10,7 +10,6 @@ import org.overture.ast.statements.ACallStm;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
-import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class ACallStmAssistantTC
@@ -52,7 +51,7 @@ public class ACallStmAssistantTC
 			{
 				PType ptype = ptypes.get(i++);
 
-				if (!TypeComparator.compatible(ptype, atype))
+				if (!af.getTypeComparator().compatible(ptype, atype))
 				{
 					TypeCheckerErrors.report(3217, "Unexpected type for argument "
 							+ i, node.getLocation(), type);

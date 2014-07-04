@@ -9,7 +9,6 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
-import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class ACallObjectStatementAssistantTC
@@ -50,7 +49,7 @@ public class ACallObjectStatementAssistantTC
 			{
 				PType ptype = ptypes.get(i++);
 
-				if (!TypeComparator.compatible(ptype, atype))
+				if (!af.getTypeComparator().compatible(ptype, atype))
 				{
 					TypeCheckerErrors.report(3212, "Unexpected type for argument "
 							+ i, atype.getLocation(), atype);

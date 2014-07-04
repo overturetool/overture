@@ -3,11 +3,11 @@ package org.overture.typechecker;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class LexNameTokenAssistent
+public class LexNameTokenAssistant
 {
 	public ITypeCheckerAssistantFactory af;
 	
-	public LexNameTokenAssistent(ITypeCheckerAssistantFactory af)
+	public LexNameTokenAssistant(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
@@ -24,7 +24,7 @@ public class LexNameTokenAssistent
 		if (token.getTypeQualifier() != null
 				&& lother.getTypeQualifier() != null)
 		{
-			if (!TypeComparator.compatible(token.getTypeQualifier(), lother.getTypeQualifier(), af ))
+			if (!af.getTypeComparator().compatible(token.getTypeQualifier(), lother.getTypeQualifier() ))
 			{
 				return false;
 			}

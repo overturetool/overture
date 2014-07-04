@@ -39,6 +39,9 @@ import org.overture.interpreter.runtime.ClassInterpreter;
 public class GuiBuilderRemote implements
 		RemoteControl
 {
+	
+	
+	
 	//"my.swixml.schema"
 public static final String GENERATED_PACKAGE = org.overture.guibuilder.generated.swixml.schema.Applet.class.getPackage().getName();
 	static class PW extends VdmjVdmInterpreterWrapper
@@ -111,7 +114,7 @@ public static final String GENERATED_PACKAGE = org.overture.guibuilder.generated
 						}
 						files.add(file);
 					}
-					reader.readFiles(files);
+					reader.readFiles(files, interpreter.getInterpreter().getAssistantFactory());
 					UiInterface ui = new UiInterface(new PW(interpreter));
 					if (ToolSettings.GENERATE.booleanValue())
 					{

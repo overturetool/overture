@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.overture.ast.assistant.AstAssistantFactory;
+import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
@@ -156,7 +156,7 @@ public class AbstractProbSolverUtil
 	/**
 	 * Create the assistant factory for use in the subclasses.
 	 */
-	public AstAssistantFactory assistantFactory;
+	public IAstAssistantFactory assistantFactory;
 	
 
 	/**
@@ -164,10 +164,10 @@ public class AbstractProbSolverUtil
 	 * must be avoided in the extension
 	 * @param console
 	 */
-	public AbstractProbSolverUtil(SolverConsole console)
+	public AbstractProbSolverUtil(SolverConsole console, IAstAssistantFactory af)
 	{
 		this.console = console;
-		assistantFactory = new AstAssistantFactory();
+		assistantFactory = af;
 	}
 
 	public String displayFormat(AbstractEvalElement formula)

@@ -30,7 +30,6 @@ import org.overture.ast.patterns.ATuplePattern;
 import org.overture.ast.patterns.AUnionPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.pattern.AMapPatternMapletAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
@@ -52,7 +51,6 @@ import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
 import org.overture.interpreter.values.ValueMap;
 import org.overture.interpreter.values.ValueSet;
-import org.overture.typechecker.TypeComparator;
 
 public class AllNamedValuesLocator 
 	extends QuestionAnswerAdaptor<AllNamedValuesLocator.Newquestion, List<NameValuePairList>>
@@ -413,7 +411,7 @@ public class AllNamedValuesLocator
 			{
 				for (AMapletPatternMaplet p : pattern.getMaplets())
 				{
-					List<NameValuePairList> pnvps = AMapPatternMapletAssistantInterpreter.getAllNamedValues(p, iter.next(), question.ctxt);
+					List<NameValuePairList> pnvps = af.createAMapPatternMapletAssistant().getAllNamedValues(p, iter.next(), question.ctxt);
 					nvplists.add(pnvps);
 					counts[i++] = pnvps.size();
 				}
@@ -732,7 +730,7 @@ public class AllNamedValuesLocator
 		}
 
 		// if (!type.equals(exprec.type))
-		if (!TypeComparator.compatible(pattern.getType(), exprec.type))
+		if (!question.ctxt.assistantFactory.getTypeComparator().compatible(pattern.getType(), exprec.type))
 		{
 			VdmRuntimeError.patternFail(4114, "Record type does not match pattern", pattern.getLocation());
 		}

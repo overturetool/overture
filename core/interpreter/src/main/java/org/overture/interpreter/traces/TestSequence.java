@@ -27,9 +27,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Vector;
-import java.util.Map.Entry;
 
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
@@ -37,14 +37,12 @@ import org.overture.ast.messages.InternalException;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.util.Utils;
-import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.runtime.ClassInterpreter;
 import org.overture.interpreter.runtime.Interpreter;
 import org.overture.parser.messages.VDMErrorsException;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.FlatEnvironment;
 import org.overture.typechecker.PrivateClassEnvironment;
-
 
 @SuppressWarnings("serial")
 public class TestSequence extends Vector<CallSequence>
@@ -56,14 +54,13 @@ public class TestSequence extends Vector<CallSequence>
 	}
 
 	/**
-	 * Filter remaining tests based on one set of results. The result list
-	 * passed in is the result of running the test, which is the n'th test
-	 * in the TestSequence (from 1 - size).
+	 * Filter remaining tests based on one set of results. The result list passed in is the result of running the test,
+	 * which is the n'th test in the TestSequence (from 1 - size).
 	 */
 
 	public void filter(List<Object> result, CallSequence test, int n)
 	{
-		if (result.get(result.size()-1) != Verdict.PASSED)
+		if (result.get(result.size() - 1) != Verdict.PASSED)
 		{
 			int stem = result.size() - 1;
 			ListIterator<CallSequence> it = listIterator(n);
@@ -80,43 +77,39 @@ public class TestSequence extends Vector<CallSequence>
 		}
 	}
 
-	public TypeCheckedTestSequence typeCheck(SClassDefinition classdef) throws Exception
+	public TypeCheckedTestSequence typeCheck(SClassDefinition classdef)
+			throws Exception
 	{
-		Map<CallSequence,VDMErrorsException> failed = new HashMap<CallSequence,VDMErrorsException>();
-		
+		Map<CallSequence, VDMErrorsException> failed = new HashMap<CallSequence, VDMErrorsException>();
+
 		Interpreter interpreter = Interpreter.getInstance();
 
-		for (CallSequence test: this)
+		for (CallSequence test : this)
 		{
-			try{
+			try
+			{
 				Environment env = null;
-	
+
 				if (interpreter instanceof ClassInterpreter)
 				{
-					env = new FlatEnvironment(interpreter.getAssistantFactory(),
-						SClassDefinitionAssistantInterpreter.getSelfDefinition(classdef),
-						new PrivateClassEnvironment(interpreter.getAssistantFactory(),classdef, interpreter.getGlobalEnvironment()));
-				}
-				else
+					env = new FlatEnvironment(interpreter.getAssistantFactory(), classdef.apply(interpreter.getAssistantFactory().getSelfDefinitionFinder()), new PrivateClassEnvironment(interpreter.getAssistantFactory(), classdef, interpreter.getGlobalEnvironment()));
+				} else
 				{
-					env = new FlatEnvironment(interpreter.getAssistantFactory(),
-						new Vector<PDefinition>(),
-						interpreter.getGlobalEnvironment());
+					env = new FlatEnvironment(interpreter.getAssistantFactory(), new Vector<PDefinition>(), interpreter.getGlobalEnvironment());
 				}
-	
-	    		for (PStm statement: test)
-	    		{
-	    			if(statement instanceof TraceVariableStatement)
-	    			{
-	    				((TraceVariableStatement)statement).typeCheck(env, NameScope.NAMESANDSTATE);
-	    			}
-	    			else
-	    			{
-	    				interpreter.typeCheck(statement, env);	
-	    			}
-					
-	    		}
-			}catch(VDMErrorsException e)
+
+				for (PStm statement : test)
+				{
+					if (statement instanceof TraceVariableStatement)
+					{
+						((TraceVariableStatement) statement).typeCheck(env, NameScope.NAMESANDSTATE);
+					} else
+					{
+						interpreter.typeCheck(statement, env);
+					}
+
+				}
+			} catch (VDMErrorsException e)
 			{
 				failed.put(test, e);
 			}
@@ -125,7 +118,7 @@ public class TestSequence extends Vector<CallSequence>
 	}
 
 	public void reduce(float subset, TraceReductionType type, long seed)
-    {
+	{
 		Random prng = new Random(seed);
 		int s = size();
 		long n = Math.round(Math.ceil(s * subset));
@@ -134,32 +127,33 @@ public class TestSequence extends Vector<CallSequence>
 		{
 			long delta = s - n;
 
-    		switch (type)
-    		{
-    			case NONE:
-    				break;
+			switch (type)
+			{
+				case NONE:
+					break;
 
-    			case RANDOM:
-    				randomReduction(delta, prng);
-    				break;
+				case RANDOM:
+					randomReduction(delta, prng);
+					break;
 
-    			case SHAPES_NOVARS:
-    			case SHAPES_VARNAMES:
-    			case SHAPES_VARVALUES:
-    				shapesReduction(delta, type, prng);
-    				break;
+				case SHAPES_NOVARS:
+				case SHAPES_VARNAMES:
+				case SHAPES_VARVALUES:
+					shapesReduction(delta, type, prng);
+					break;
 
-    			default:
-    				throw new InternalException(53, "Unknown trace reduction");
-    		}
+				default:
+					throw new InternalException(53, "Unknown trace reduction");
+			}
 		}
-    }
+	}
 
-	private void shapesReduction(long delta, TraceReductionType type, Random prng)
-    {
+	private void shapesReduction(long delta, TraceReductionType type,
+			Random prng)
+	{
 		Map<String, TestSequence> map = new HashMap<String, TestSequence>();
 
-		for (CallSequence cs: this)
+		for (CallSequence cs : this)
 		{
 			String shape = cs.toShape(type);
 			TestSequence subset = map.get(shape);
@@ -181,7 +175,7 @@ public class TestSequence extends Vector<CallSequence>
 			delta = size() - shapes.length;
 		}
 
-		for (long i=0; i<delta; i++)
+		for (long i = 0; i < delta; i++)
 		{
 			int x = prng.nextInt(shapes.length);
 			TestSequence tests = map.get(shapes[x]);
@@ -189,9 +183,8 @@ public class TestSequence extends Vector<CallSequence>
 
 			if (s < 2)
 			{
-				i--;	// Find another group
-			}
-			else
+				i--; // Find another group
+			} else
 			{
 				tests.remove(prng.nextInt(s));
 			}
@@ -199,21 +192,21 @@ public class TestSequence extends Vector<CallSequence>
 
 		clear();
 
-		for (Entry<String, TestSequence> entry: map.entrySet())
+		for (Entry<String, TestSequence> entry : map.entrySet())
 		{
 			addAll(map.get(entry.getKey()));
 		}
-    }
+	}
 
 	private void randomReduction(long delta, Random prng)
-    {
+	{
 		int s = size();
 
-		for (long i=0; i<delta; i++)
+		for (long i = 0; i < delta; i++)
 		{
 			int x = prng.nextInt(s);
 			this.remove(x);
 			s--;
 		}
-    }
+	}
 }

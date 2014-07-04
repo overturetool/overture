@@ -9,7 +9,6 @@ import org.overture.ast.types.ASetType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
-import org.overture.typechecker.TypeComparator;
 
 public class TypeCheckerPatternVisitor extends AbstractTypeCheckVisitor
 {
@@ -43,7 +42,7 @@ public class TypeCheckerPatternVisitor extends AbstractTypeCheckVisitor
 				result = st.getSetof();
 				PType ptype = question.assistantFactory.createPMultipleBindAssistant().getPossibleType(node);
 
-				if (!TypeComparator.compatible(ptype, result))
+				if (!question.assistantFactory.getTypeComparator().compatible(ptype, result))
 				{
 					TypeCheckerErrors.report(3264, "At least one bind cannot match set", node.getSet().getLocation(), node.getSet());
 					TypeCheckerErrors.detail2("Binds", ptype, "Set of", st);
@@ -66,7 +65,7 @@ public class TypeCheckerPatternVisitor extends AbstractTypeCheckVisitor
 		PType type = question.assistantFactory.createPTypeAssistant().typeResolve(node.getType(), null, THIS, question);
 		PType ptype = question.assistantFactory.createPPatternListAssistant().getPossibleType(node.getPlist(), node.getLocation());
 
-		if (!TypeComparator.compatible(ptype, type))
+		if (!question.assistantFactory.getTypeComparator().compatible(ptype, type))
 		{
 			TypeCheckerErrors.report(3265, "At least one bind cannot match this type", type.getLocation(), type);
 			TypeCheckerErrors.detail2("Binds", ptype, "Type", type);

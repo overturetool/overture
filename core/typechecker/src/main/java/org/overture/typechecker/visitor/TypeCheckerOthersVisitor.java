@@ -41,7 +41,6 @@ import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
-import org.overture.typechecker.TypeComparator;
 
 public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 {
@@ -85,7 +84,7 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 					question.assistantFactory.createPPatternAssistant().typeResolve(node.getBind().getPattern(), THIS, question);
 				}
 
-				if (!TypeComparator.compatible(typebind.getType(), type))
+				if (!question.assistantFactory.getTypeComparator().compatible(typebind.getType(), type))
 				{
 					TypeCheckerErrors.report(3198, "Type bind not compatible with expression", node.getBind().getLocation(), node.getBind());
 					TypeCheckerErrors.detail2("Bind", typebind.getType(), "Exp", type);
@@ -94,7 +93,7 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 			{
 				ASetBind setbind = (ASetBind) node.getBind();
 				ASetType settype = question.assistantFactory.createPTypeAssistant().getSet(setbind.getSet().apply(THIS, question));
-				if (!TypeComparator.compatible(type, settype.getSetof()))
+				if (!question.assistantFactory.getTypeComparator().compatible(type, settype.getSetof()))
 				{
 					TypeCheckerErrors.report(3199, "Set bind not compatible with expression", node.getBind().getLocation(), node.getBind());
 					TypeCheckerErrors.detail2("Bind", settype.getSetof(), "Exp", type);
@@ -311,7 +310,7 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 		{
 			node.setMapType(question.assistantFactory.createPTypeAssistant().getMap(rtype));
 
-			if (!TypeComparator.compatible(node.getMapType().getFrom(), etype))
+			if (!question.assistantFactory.getTypeComparator().compatible(node.getMapType().getFrom(), etype))
 			{
 				TypeCheckerErrors.report(3242, "Map element assignment of wrong type", node.getLocation(), node);
 				TypeCheckerErrors.detail2("Expect", node.getMapType().getFrom(), "Actual", etype);

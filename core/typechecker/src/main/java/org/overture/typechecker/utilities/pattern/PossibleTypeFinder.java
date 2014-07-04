@@ -4,6 +4,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.AnswerAdaptor;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.ABooleanPattern;
 import org.overture.ast.patterns.ACharacterPattern;
@@ -88,8 +89,11 @@ public class PossibleTypeFinder extends AnswerAdaptor<PType>
 	public PType caseAIntegerPattern(AIntegerPattern pattern)
 			throws AnalysisException
 	{
-		return af.createSNumericBasicTypeAssistant().typeOf(pattern.getValue().getValue(), pattern.getLocation());
+		return typeOf(pattern.getValue().getValue(), pattern.getLocation());
 	}
+	
+
+
 
 	@Override
 	public PType caseANilPattern(ANilPattern pattern) throws AnalysisException
@@ -191,6 +195,20 @@ public class PossibleTypeFinder extends AnswerAdaptor<PType>
 	{
 		assert false : "Should not happen";
 		return null;
+	}
+	
+	private PType typeOf(long value, ILexLocation location)
+	{
+		if (value > 0)
+		{
+			return AstFactory.newANatOneNumericBasicType(location);
+		} else if (value >= 0)
+		{
+			return AstFactory.newANatNumericBasicType(location);
+		} else
+		{
+			return AstFactory.newAIntNumericBasicType(location);
+		}
 	}
 
 }

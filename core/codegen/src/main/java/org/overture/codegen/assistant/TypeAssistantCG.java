@@ -49,6 +49,7 @@ public class TypeAssistantCG extends AssistantBase
 		if (enclosingClass == null)
 			return null;
 
+		//FIXME factories cannot be instantiated inside code blocks
 		TypeCheckerAssistantFactory factory = new TypeCheckerAssistantFactory();
 		PDefinitionAssistantTC defAssistant = factory.createPDefinitionAssistant();
 		
