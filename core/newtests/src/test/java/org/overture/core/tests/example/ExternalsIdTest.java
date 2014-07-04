@@ -9,16 +9,16 @@ import org.overture.core.tests.ParamExternalsTest;
 
 /**
  * A very simple alternate version of {@link IdTest} to work with external tests. We cannot directly reuse the
- * {@link IdTest} since we must inherit {@link ParamExternalsTest}. But since we factor most of the important code out to
- * {@link IdTestResult}, this class is actually very small.<br>
+ * {@link IdTest} since we must inherit {@link ParamExternalsTest}. But since we factor most of the important code out
+ * to {@link IdTestResult}, this class is actually very small.<br>
  * <br>
  * Also note that since this test works with external inputs, the data provider is already set up in
- * {@link ParamExternalsTest}. To launch these tests simply use the property <code>-DexternalTestsPath=/path/to/files/</code>
- * .<br>
+ * {@link ParamExternalsTest}. To launch these tests simply use the property
+ * <code>-DexternalTestsPath=/path/to/files/</code> .<br>
  * <br>
- * If the property is not set, the tests will not be executed under Maven. In Eclipse, they will also not execute but
- * the test entry will show up (with no success/failure indication) and count as one test. We're working on a way to fix
- * this.
+ * Due to some quirks with Parameterized JUnit tests, if the property is not set, the test will still launch, only with
+ * 0 cases. It's fine on maven but in Eclipse you will get a single test run that does nothing. We're working on a way
+ * to fix this.
  * 
  * @author ldc
  */
