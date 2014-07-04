@@ -444,7 +444,8 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 				return false;
 			}
 			
-			if (!TypeComparator.compatible((PType) paramTypeNode, (PType) argTypeNode))
+			TypeComparator typeComparator = new TypeComparator(info.getTcFactory());
+			if (!typeComparator.compatible((PType) paramTypeNode, (PType) argTypeNode))
 			{
 				return false;
 			}
