@@ -78,6 +78,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			throws AnalysisException
 	{
 		TypeCheckInfo noConstraint = question.newConstraint(null);
+		noConstraint.qualifiers = null;
 		node.setArgtypes(new ArrayList<PType>());
 
 		for (PExp a : node.getArgs())
