@@ -25,11 +25,11 @@ import org.overture.tools.examplepackager.util.ExampleTestUtils;
  */
 
 @RunWith(Parameterized.class)
-public class ExampleModelsTest
+public class ParseTcAllExamplesTest
 {
 	ExampleTestData testData;
 
-	public ExampleModelsTest(String _, ExampleTestData testData)
+	public ParseTcAllExamplesTest(String _, ExampleTestData testData)
 	{
 		this.testData = testData;
 	}
