@@ -29,7 +29,7 @@
 	<module>guibuilder</module>
 <!--	<module>constraintsolverconn</module> -->
 	<module>modelcheckers</module>
-	<module>tests</module>
+	<module>newtests</module>
   </modules>
 
   <build>
