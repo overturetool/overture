@@ -22,7 +22,7 @@ public class PathsProvider
 	private final static String RESULT_EXTENSION = ".RESULT";
 
 	/** Path to the results folder for external test inputs */
-	private final static String RESULTS_EXTERNAL = "src/test/resources/external/";
+	private final static String RESULTS_EXTERNAL = "src/test/resources/external";
 
 	/** The Constant VDM_EXTENSION_REGEX. */
 	public final static String VDM_EXTENSION_REGEX = "(.*)\\.vdm(pp|rt|sl)";
@@ -79,8 +79,13 @@ public class PathsProvider
 
 		for (File file : files)
 		{
-			paths.add(new Object[] { file.getName(), file.getPath(),
-					RESULTS_EXTERNAL + file.getName() + RESULT_EXTENSION });
+
+			paths.add(new Object[] {
+					file.getName(),
+					file.getPath(),
+					RESULTS_EXTERNAL // FIXME figure out where to store results for external tests
+							+ file.getPath().replaceAll(dir.getPath(), "")
+							+ RESULT_EXTENSION });
 
 		}
 
