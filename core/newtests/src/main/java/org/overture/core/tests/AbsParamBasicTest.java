@@ -40,7 +40,7 @@ public abstract class AbsParamBasicTest<R extends Serializable>
 	protected String modelPath;
 	protected String resultPath;
 	protected String testName;
-	private final boolean updateResult=false;
+	private final boolean updateResult;
 
 	/** The property to be passed when updating test results. Configure this for you own tests **/
 
@@ -63,7 +63,10 @@ public abstract class AbsParamBasicTest<R extends Serializable>
 		this.testName = nameParameter;
 		this.modelPath = testParameter;
 		this.resultPath = resultParameter;
+		updateResult = updateCheck();
 	}
+
+
 
 	/**
 	 * This method tries its best to deserialize any results file. If your results are too complex for it to handle, you
@@ -86,8 +89,8 @@ public abstract class AbsParamBasicTest<R extends Serializable>
 
 	/**
 	 * Calculates the type of the result. This method does its best but doesn't always succeed. Override it if
-	 * necessary. To do this, it's usually enough to replace the type parameter <code>R</code> with the actual type of
-	 * the result (reflection is hard).
+	 * necessary. To do this, it's usually enough to replace the type parameter <code>R</code> with the actual
+	 * type of the result (reflection is hard).
 	 * 
 	 * @return the {@link Type} of the result file
 	 */
@@ -100,12 +103,11 @@ public abstract class AbsParamBasicTest<R extends Serializable>
 	}
 
 	/**
-	 * Return the Java System property to update this set of tests. Should have the following naming scheme:
-	 * <code>tests.update.[module].[testId]</code>. <br>
-	 * <br>
-	 * The test ID <b>must</b> be unique to each test class. Module is just there to avoid name clashes so the name of
-	 * the module is enough.
-	 * 
+	 * Return the Java System property to update this set of tests. Should
+	 * have the following naming scheme: <code>tests.update.[module].[testId]</code>.
+	 * <br><br> 
+	 * The test ID <b>must</b> be unique to each test class. Module is just there to avoid
+	 * name clashes so the name of the module is enough.
 	 * @return
 	 */
 	protected abstract String getUpdatePropertyString();
@@ -158,6 +160,8 @@ public abstract class AbsParamBasicTest<R extends Serializable>
 	 */
 	public abstract void testCompare(R actual, R expected);
 
+	
+	
 	private void testUpdate() throws ParserException, LexException, IOException
 	{
 		List<INode> ast = ParseTcFacade.typedAst(modelPath, testName);
@@ -166,7 +170,23 @@ public abstract class AbsParamBasicTest<R extends Serializable>
 		String json = gson.toJson(actual);
 		IOUtils.write(json, new FileOutputStream(resultPath));
 	}
+	
+	private boolean updateCheck()
+	{
+		String update_results_property = getUpdatePropertyString();
 
+		// check update this test
+		if (System.getProperty(update_results_property + "." + testName) != null)
+		{
+			return true;
+		}
 
-
+		// check update all
+		if (System.getProperty(update_results_property) != null)
+		{
+			return true;
+		}
+		return false;
+	}
+	
 }
