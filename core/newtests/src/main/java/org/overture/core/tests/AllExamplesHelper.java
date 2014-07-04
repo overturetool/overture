@@ -1,5 +1,6 @@
 package org.overture.core.tests;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
@@ -48,14 +49,28 @@ public class AllExamplesHelper
 	}
 
 	/**
+	 * Returns the sources for the Overture examples. Only examples that are supposed to parse and TC are returned. The
+	 * source for each example is a single string of the entire model, including any libraries.
+	 * 
+	 * @return a collection of {@link ExampleTestData}, each representing one example.
+	 * @throws IOException
+	 */
+	static public Collection<ExampleTestData> getExamplesSources()
+			throws IOException
+	{
+		return ExampleTestUtils.getCorrectExamplesSources();
+	}
+
+	/**
 	 * Returns the ASTs for the Overture examples. Only examples that are supposed to parse and TC are returned.
 	 * 
 	 * @return a collection of {@link ExampleAstData}, each representing one example.
 	 * @throws ParserException
 	 * @throws LexException
+	 * @throws IOException
 	 */
 	static public Collection<ExampleAstData> getExamplesAsts()
-			throws ParserException, LexException
+			throws ParserException, LexException, IOException
 	{
 		Collection<ExampleAstData> r = new Vector<ExampleAstData>();
 

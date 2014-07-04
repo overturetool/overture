@@ -35,7 +35,7 @@ public class ExampleModelsTest
 	}
 
 	@Parameters(name = "{index} : {0}")
-	public static Collection<Object[]> testData()
+	public static Collection<Object[]> testData() throws IOException
 	{
 		Collection<Object[]> r = new Vector<Object[]>();
 
