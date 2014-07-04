@@ -73,7 +73,7 @@ addThreat (evid, pmt, ptime) ==
 pre pmt in set dom missilePriority and
     pmt in set dom responseDB;
 
-private Step: () ==> ()
+protected Step: () ==> ()
 Step () ==
   (if len curplan > 0
    then (dcl curtime : Time := World`timerRef.GetTime(),
