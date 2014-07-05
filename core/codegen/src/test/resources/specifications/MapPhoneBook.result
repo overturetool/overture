@@ -51,7 +51,7 @@ public class PhoneBook {
                                 SeqUtil.seq('N', 'u', 'm', 'b', 'e', 'r', ':',
                                     ' '), number.clone()),
                             SeqUtil.seq('.', ' ', 'N', 'a', 'm', 'e', ':', ' ')),
-                        pb1.getName(number)), SeqUtil.seq('\n')));
+                        pb1.getName(number.clone())), SeqUtil.seq('\n')));
         }
 
         IO.print(SeqUtil.seq('\n'));
@@ -156,7 +156,8 @@ public class PhoneBook {
                                 SeqUtil.seq('N', 'a', 'm', 'e', ':', ' '),
                                 name.clone()),
                             SeqUtil.seq('.', ' ', 'N', 'u', 'm', 'b', 'e', 'r',
-                                ':', ' ')), getNumber(name)), SeqUtil.seq('\n')));
+                                ':', ' ')), getNumber(name.clone())),
+                    SeqUtil.seq('\n')));
         }
     }
 
