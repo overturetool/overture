@@ -2718,7 +2718,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	@Override
 	public PType caseAUndefinedExp(AUndefinedExp node, TypeCheckInfo question)
 	{
-		node.setType(AstFactory.newAUndefinedType(node.getLocation()));
+		node.setType(AstFactory.newAUnknownType(node.getLocation()));
 		return node.getType();
 	}
 
