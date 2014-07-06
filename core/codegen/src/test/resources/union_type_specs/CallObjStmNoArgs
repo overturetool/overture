@@ -1,0 +1,42 @@
+class A
+
+operations
+
+public op : () ==> nat
+op () == return 1;
+
+end A
+
+class B
+
+operations
+
+public op : () ==> nat
+op () == return 2;
+
+end B
+
+class C
+
+operations
+
+public op : () ==> nat
+op () == return 3;
+
+end C
+
+class Entry
+
+values
+
+w : A | B | C = new B();
+
+operations
+
+public static Run : () ==> nat
+Run () ==
+let e = new Entry()
+in
+	e.w.op();
+
+end Entry

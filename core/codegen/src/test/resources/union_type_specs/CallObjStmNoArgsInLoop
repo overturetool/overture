@@ -1,0 +1,45 @@
+class A
+
+operations
+
+public op : () ==> ()
+op () == skip;
+
+end A
+
+class B
+
+operations
+
+public op : () ==> ()
+op () == skip;
+
+end B
+
+class C
+
+operations
+
+public op : () ==> ()
+op () == skip;
+
+end C
+
+class Entry
+
+functions
+
+operations
+
+public static Run : () ==> nat
+Run () ==
+let xs = {new A(), new B(), new C()}
+in
+(
+	for all x in set xs do
+		x.op();
+	
+	return 1;
+);
+
+end Entry
