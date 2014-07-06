@@ -49,7 +49,7 @@ public class TypeAssistantCG extends AssistantBase
 		super(assistantManager);
 	}
 	
-	public STypeCG getMethodType(IRInfo info, List<AClassDeclCG> classes,
+	public AMethodTypeCG  getMethodType(IRInfo info, List<AClassDeclCG> classes,
 			String fieldModule, String fieldName, LinkedList<SExpCG> args)
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
@@ -130,7 +130,7 @@ public class TypeAssistantCG extends AssistantBase
 				return false;
 			}
 			
-			TypeComparator typeComparator = new TypeComparator(info.getTcFactory());
+			TypeComparator typeComparator = info.getTcFactory().getTypeComparator();
 			if (!typeComparator.compatible((PType) paramTypeNode, (PType) argTypeNode))
 			{
 				return false;

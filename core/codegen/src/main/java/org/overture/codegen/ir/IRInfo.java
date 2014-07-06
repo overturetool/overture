@@ -12,7 +12,6 @@ import org.overture.ast.node.INode;
 import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.assistant.BindAssistantCG;
 import org.overture.codegen.assistant.DeclAssistantCG;
-import org.overture.codegen.assistant.DesignatorAssistantCG;
 import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.assistant.LocationAssistantCG;
 import org.overture.codegen.assistant.StmAssistantCG;
@@ -138,11 +137,6 @@ public class IRInfo
 		return assistantManager.getDeclAssistant();
 	}
 
-	public DesignatorAssistantCG getDesignatorAssistant()
-	{
-		return assistantManager.getDesignatorAssistant();
-	}
-	
 	public StmAssistantCG getStmAssistant()
 	{
 		return assistantManager.getStmAssistant();

@@ -124,6 +124,21 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		return exp;
 	}
 	
+	private boolean correctArgTypes(List<SExpCG> args, List<STypeCG> paramTypes)
+			throws AnalysisException
+	{
+		if(info.getAssistantManager().getTypeAssistant().checkArgTypes(info, args, paramTypes))
+		{
+			for (int k = 0; k < paramTypes.size(); k++)
+			{
+				correctTypes(args.get(k), paramTypes.get(k));
+			}
+			return true;
+		}
+		
+		return false;
+	}
+	
 	private boolean handleUnaryExp(SUnaryExpCG exp) throws AnalysisException
 	{
 		STypeCG type = exp.getExp().getType();
@@ -139,6 +154,15 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		}
 		
 		return false;
+	}
+	
+	private AInstanceofExpCG consInstanceCheck(SExpCG copy, STypeCG type)
+	{
+		AInstanceofExpCG check = new AInstanceofExpCG();
+		check.setType(new ABoolBasicTypeCG());
+		check.setCheckedType(type.clone());
+		check.setExp(copy.clone());
+		return check;
 	}
 	
 	@Override
@@ -258,15 +282,6 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		}
 	}
 
-	private AInstanceofExpCG consInstanceCheck(SExpCG copy, STypeCG type)
-	{
-		AInstanceofExpCG check = new AInstanceofExpCG();
-		check.setType(new ABoolBasicTypeCG());
-		check.setCheckedType(type.clone());
-		check.setExp(copy.clone());
-		return check;
-	}
-	
 	@Override
 	public void caseAApplyExpCG(AApplyExpCG node) throws AnalysisException
 	{
@@ -303,18 +318,10 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			
 			LinkedList<SExpCG> args = node.getArgs();
 			
-			for(int i = 0; i < args.size(); i++)
-			{
-				SExpCG currentArg = args.get(i);						
-				
-				if(currentArg.getType() instanceof AUnionTypeCG)
-				{
-					correctTypes(currentArg, paramTypes.get(i));
-				}
-			}
+			correctArgTypes(args, paramTypes);
 		}
 	}
-	
+
 	@Override
 	public void inANotUnaryExpCG(ANotUnaryExpCG node)
 			throws AnalysisException
@@ -410,21 +417,6 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		}
 	}
 
-	private boolean correctArgTypes(List<SExpCG> args, List<STypeCG> paramTypes)
-			throws AnalysisException
-	{
-		if(info.getAssistantManager().getTypeAssistant().checkArgTypes(info, args, paramTypes))
-		{
-			for (int k = 0; k < paramTypes.size(); k++)
-			{
-				correctTypes(args.get(k), paramTypes.get(k));
-			}
-			return true;
-		}
-		
-		return false;
-	}
-
 	@Override
 	public void inAIfStmCG(AIfStmCG node) throws AnalysisException
 	{
@@ -509,8 +501,11 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		{
 			ACallObjectExpStmCG callCopy = call.clone();
 
-			STypeCG currentType = possibleTypes.get(i);
-
+			AClassTypeCG currentType = (AClassTypeCG) possibleTypes.get(i);
+			
+			AMethodTypeCG methodType = info.getAssistantManager().getTypeAssistant().getMethodType(info, classes, currentType.getName(), fieldName, args);
+			correctArgTypes(callCopy.getArgs(), methodType.getParams());
+			
 			ACastUnaryExpCG castedVarExp = new ACastUnaryExpCG();
 			castedVarExp.setType(currentType.clone());
 			castedVarExp.setExp(objExp.clone());
