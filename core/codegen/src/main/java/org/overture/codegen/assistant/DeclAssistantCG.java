@@ -49,6 +49,19 @@ public class DeclAssistantCG extends AssistantBase
 		}
 	}
 	
+	public AClassDeclCG findClass(List<AClassDeclCG> classes, String moduleName)
+	{
+		for(AClassDeclCG classDecl : classes)
+		{
+			if(classDecl.getName().equals(moduleName))
+			{
+				return classDecl;
+			}
+		}
+		
+		return null;
+	}
+	
 	private AVarLocalDeclCG constructLocalVarDecl(AValueDefinition valueDef, IRInfo question) throws AnalysisException
 	{
 		STypeCG type = valueDef.getType().apply(question.getTypeVisitor(), question);

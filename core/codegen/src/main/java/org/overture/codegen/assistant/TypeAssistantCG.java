@@ -10,8 +10,11 @@ import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SSeqTypeBase;
+import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SObjectDesignatorCG;
 import org.overture.codegen.cgast.STypeCG;
+import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
@@ -30,7 +33,9 @@ import org.overture.codegen.cgast.types.SBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.ir.IRInfo;
+import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.logging.Logger;
+import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
@@ -40,6 +45,62 @@ public class TypeAssistantCG extends AssistantBase
 	public TypeAssistantCG(AssistantManager assistantManager)
 	{
 		super(assistantManager);
+	}
+	
+	public STypeCG getFieldType(AClassDeclCG classDecl, String fieldName)
+	{
+		for(AFieldDeclCG field : classDecl.getFields())
+		{
+			if(field.getName().equals(fieldName))
+			{
+				return field.getType().clone();
+			}
+		}
+		
+		return null;
+	}
+	
+	public STypeCG getFieldType(List<AClassDeclCG> classes, String moduleName, String fieldName)
+	{
+		AClassDeclCG classDecl = assistantManager.getDeclAssistant().findClass(classes, moduleName);
+		return getFieldType(classDecl, fieldName);
+	}
+	
+	public boolean checkArgTypes(IRInfo info, List<SExpCG> args, List<STypeCG> paramTypes)
+			throws org.overture.codegen.cgast.analysis.AnalysisException
+	{
+		if(args.size() != paramTypes.size())
+		{
+			return false;
+		}
+		
+		
+		for (int i = 0; i < paramTypes.size(); i++)
+		{
+			SourceNode paramSourceNode = paramTypes.get(i).getSourceNode();
+			SourceNode argTypeSourceNode = args.get(i).getType().getSourceNode();
+
+			if (paramSourceNode == null || argTypeSourceNode == null)
+			{
+				return false;
+			}
+
+			org.overture.ast.node.INode paramTypeNode = paramSourceNode.getVdmNode();
+			org.overture.ast.node.INode argTypeNode = argTypeSourceNode.getVdmNode();
+
+			if (!(paramTypeNode instanceof PType) || !(argTypeNode instanceof PType))
+			{
+				return false;
+			}
+			
+			TypeComparator typeComparator = new TypeComparator(info.getTcFactory());
+			if (!typeComparator.compatible((PType) paramTypeNode, (PType) argTypeNode))
+			{
+				return false;
+			}
+		}
+		
+		return true;
 	}
 
 	public PDefinition getTypeDef(ILexNameToken nameToken)
