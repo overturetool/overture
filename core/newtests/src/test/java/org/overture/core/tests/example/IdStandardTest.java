@@ -31,7 +31,7 @@ public class IdStandardTest extends ParamStandardTest<IdTestResult>
 	private static final String EXAMPLE_TEST_FILES = "src/test/resources/example";
 
 	// The update property for this test
-	private static final String UPDATE_PROPERTY = "tests.update.example.ID";
+	private static final String UPDATE_PROPERTY = "tests.update.example.StandardID";
 
 	/**
 	 * The default constructor must always pass the name of the test and the paths of the test input and result. <br>
