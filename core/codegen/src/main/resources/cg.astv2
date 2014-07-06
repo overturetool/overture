@@ -128,7 +128,7 @@ CG {-> package='org.overture.codegen.cgast'
 	
 #stateDesignator {-> package='org.overture.codegen.cgast.statements'
 	| [type]:CG.#type}
-	= {identifier} [name]:java_String
+	= {identifier} [name]:java_String [explicit]:java_Boolean [className]:java_String
 	| {field} [object]:CG.#stateDesignator [field]:java_String
 	| {mapSeq} [mapseq]:CG.#stateDesignator [exp]:CG.#exp
 	;
