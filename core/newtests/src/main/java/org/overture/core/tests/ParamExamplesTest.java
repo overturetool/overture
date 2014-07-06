@@ -1,16 +1,12 @@
 package org.overture.core.tests;
 
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.Serializable;
-import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -20,36 +16,38 @@ import org.overture.core.tests.AllExamplesHelper.ExampleAstData;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 @RunWith(Parameterized.class)
-public abstract class ParamExamplesTest<R extends Serializable>
+public abstract class ParamExamplesTest<R extends Serializable> extends
+		AbsResultTest<R>
 {
 
 	String resultPath;
 	List<INode> model;
-	protected boolean updateResult = false;
+	protected String testName;
+	private final boolean updateResult;
 
 	private final static String RESULTS_EXAMPLES = "src/test/resources/examples/";
 
-	public ParamExamplesTest(String _, List<INode> model, String result)
+	public ParamExamplesTest(String name, List<INode> model, String result)
 	{
+		this.testName=name;
 		this.model = model;
 		this.resultPath = result;
+		this.updateResult = updateCheck();
 	}
 
 	@Test
 	public void testCase() throws FileNotFoundException, IOException,
 			ParserException, LexException
 	{
+
+		R actual = processModel(model);
+		R expected = deSerializeResult(resultPath);
 		if (updateResult)
 		{
-			testUpdate();
+			testUpdate(actual);
 		} else
 		{
-			R actual = processModel(model);
-			R expected = deSerializeResult(resultPath);
 			this.compareResults(actual, expected);
 		}
 	}
@@ -73,31 +71,5 @@ public abstract class ParamExamplesTest<R extends Serializable>
 	public abstract R processModel(List<INode> model);
 
 	public abstract void compareResults(R actual, R expected);
-
-	public R deSerializeResult(String resultPath2)
-			throws FileNotFoundException, IOException
-	{
-		Gson gson = new Gson();
-		Type resultType = getResultType();
-		String json = IOUtils.toString(new FileReader(resultPath));
-		R results = gson.fromJson(json, resultType);
-		return results;
-	}
-
-	private Type getResultType()
-	{
-		Type resultType = new TypeToken<R>()
-		{
-		}.getType();
-		return resultType;
-	}
-
-	private void testUpdate() throws ParserException, LexException, IOException
-	{
-		R actual = processModel(model);
-		Gson gson = new Gson();
-		String json = gson.toJson(actual);
-		IOUtils.write(json, new FileOutputStream(resultPath));
-	}
 
 }

@@ -1,28 +1,18 @@
 package org.overture.core.tests;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.Serializable;
-import java.lang.reflect.Type;
 import java.util.List;
 
-import org.apache.commons.io.IOUtils;
-import org.junit.Assert;
 import org.junit.Test;
 import org.overture.ast.node.INode;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 /**
- * The Abstract Parameterized Basic Test is the main test class for the new tests. This class runs tests on VDM source
- * models and compares them with stored result files. It is meant to be subclassed as a way to quickly create your own
- * test suites.<br>
+ * The Standard Parameterized Test is the main test class for the new tests. This class runs tests on VDM source models
+ * and compares them with stored result files. It is meant to be subclassed as a way to quickly create your own test
+ * suites.<br>
  * <br>
  * A comparison method for results must be provided. Serialization of results is as automated as possible but can be
  * overridden if your results classes are too complex for auto-deserialization. <br>
@@ -30,21 +20,17 @@ import com.google.gson.reflect.TypeToken;
  * These tests are meant to be used as parameterized JUnit test and so any subclass {@link ParamStandardTest} must be
  * annotated with <code>@RunWith(Parameterized.class)</code>. <br>
  * <br>
- * This class is parameterized on a type <code>R</code> that represents the output of of the analysis of the
- * functionality under test. These types must implement {@link Serializable} and you will most likely need to write some
- * kind of transformation between your native output type and <code>R</code>.
+ * This class also has a type parameter <code>R</code> that represents the output of the functionality under test. These
+ * types must implement {@link Serializable} and you will most likely need to write some kind of transformation between
+ * your native output type and <code>R</code>.
  * 
  * @author ldc
  */
-public abstract class ParamStandardTest<R extends Serializable>
+public abstract class ParamStandardTest<R extends Serializable> extends
+		AbsResultTest<R>
 {
 
 	protected String modelPath;
-	protected String resultPath;
-	protected String testName;
-	private final boolean updateResult;
-
-	/** The property to be passed when updating test results. Configure this for you own tests **/
 
 	/**
 	 * Constructor for the test. Works with outputs gotten from {@link PathsProvider} which must to supplied via a
@@ -67,62 +53,6 @@ public abstract class ParamStandardTest<R extends Serializable>
 		this.resultPath = resultParameter;
 		updateResult = updateCheck();
 	}
-
-	/**
-	 * This method tries its best to deserialize any results file. If your results are too complex for it to handle, you
-	 * should override {@link #getResultType()} to deal with it. If that fails, override this entire.
-	 * 
-	 * @param resultPath
-	 * @return the stored result
-	 * @throws IOException
-	 * @throws FileNotFoundException
-	 */
-	public R deSerializeResult(String resultPath) throws FileNotFoundException,
-			IOException
-	{
-		Gson gson = new Gson();
-		Type resultType = getResultType();
-
-		// check if exists
-		File f = new File(resultPath);
-		if (!f.exists())
-		{
-			f.getParentFile().mkdirs();
-			f.createNewFile();
-			Assert.fail("Test " + testName + " failed. No result file found. Use "
-					+ getUpdatePropertyString() + "." + testName
-					+ "to create an initial one.");
-		}
-		String json = IOUtils.toString(new FileReader(resultPath));
-		R result = gson.fromJson(json, resultType);
-		return result;
-	}
-
-	/**
-	 * Calculates the type of the result. This method does its best but doesn't always succeed. Override it if
-	 * necessary. To do this, it's usually enough to replace the type parameter <code>R</code> with the actual type of
-	 * the result.
-	 * 
-	 * @return the {@link Type} of the result file
-	 */
-	public Type getResultType()
-	{
-		Type resultType = new TypeToken<R>()
-		{
-		}.getType();
-		return resultType;
-	}
-
-	/**
-	 * Return the Java System property to update this set of tests. Should have the following naming scheme:
-	 * <code>tests.update.[module].[testId]</code>. <br>
-	 * <br>
-	 * The test ID <b>must</b> be unique to each test class. Module is just there to avoid name clashes so the name of
-	 * the module is enough.
-	 * 
-	 * @return
-	 */
-	protected abstract String getUpdatePropertyString();
 
 	/**
 	 * Analyses a model (represented by its AST). This method must be overridden to perform whatever analysis the
@@ -149,14 +79,15 @@ public abstract class ParamStandardTest<R extends Serializable>
 	@Test
 	public void testCase() throws ParserException, LexException, IOException
 	{
+
+		List<INode> ast = ParseTcFacade.typedAst(modelPath, testName);
+		R actual = processModel(ast);
+		R expected = deSerializeResult(resultPath);
 		if (updateResult)
 		{
-			testUpdate();
+			this.testUpdate(actual);
 		} else
 		{
-			List<INode> ast = ParseTcFacade.typedAst(modelPath, testName);
-			R actual = processModel(ast);
-			R expected = deSerializeResult(resultPath);
 			this.testCompare(actual, expected);
 		}
 	}
@@ -172,31 +103,6 @@ public abstract class ParamStandardTest<R extends Serializable>
 	 */
 	public abstract void testCompare(R actual, R expected);
 
-	private void testUpdate() throws ParserException, LexException, IOException
-	{
-		List<INode> ast = ParseTcFacade.typedAst(modelPath, testName);
-		R actual = processModel(ast);
-		Gson gson = new Gson();
-		String json = gson.toJson(actual);
-		IOUtils.write(json, new FileOutputStream(resultPath));
-	}
 
-	private boolean updateCheck()
-	{
-		String update_results_property = getUpdatePropertyString();
-
-		// check update this test
-		if (System.getProperty(update_results_property + "." + testName) != null)
-		{
-			return true;
-		}
-
-		// check update all
-		if (System.getProperty(update_results_property) != null)
-		{
-			return true;
-		}
-		return false;
-	}
 
 }
