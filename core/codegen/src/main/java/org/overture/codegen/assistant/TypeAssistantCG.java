@@ -10,7 +10,10 @@ import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SSeqTypeBase;
+import org.overture.codegen.cgast.SObjectDesignatorCG;
 import org.overture.codegen.cgast.STypeCG;
+import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
+import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
@@ -24,6 +27,8 @@ import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.SBasicTypeCG;
 import org.overture.codegen.cgast.types.SBasicTypeWrappersTypeCG;
+import org.overture.codegen.cgast.types.SMapTypeCG;
+import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
@@ -143,5 +148,65 @@ public class TypeAssistantCG extends AssistantBase
 		}
 
 		return true;
+	}
+	
+	public STypeCG findElementType(AApplyObjectDesignatorCG designator)
+	{
+		int appliesCount = 0;
+		
+		SObjectDesignatorCG object = designator.getObject();
+
+		while(object != null)
+		{
+			if(object instanceof AIdentifierObjectDesignatorCG)
+			{
+				AIdentifierObjectDesignatorCG id = (AIdentifierObjectDesignatorCG) object;
+			
+				STypeCG type = id.getExp().getType();
+				
+				int methodTypesCount = 0;
+				
+				while (type instanceof AMethodTypeCG)
+				{
+					methodTypesCount++;
+					AMethodTypeCG methodType = (AMethodTypeCG) type;
+					type = methodType.getResult();
+				}
+				
+				while(type instanceof SSeqTypeCG || type instanceof SMapTypeCG)
+				{
+					if(type instanceof SSeqTypeCG)
+					{
+						type = ((SSeqTypeCG) type).getSeqOf();
+					}
+
+					if(type instanceof SMapTypeCG)
+					{
+						type = ((SMapTypeCG) type).getTo();
+					}
+					
+					if (appliesCount == methodTypesCount)
+					{
+						return type;						
+					}
+					
+					methodTypesCount++;
+				}
+
+				return null;
+			}
+			else if(object instanceof AApplyObjectDesignatorCG)
+			{
+				AApplyObjectDesignatorCG applyObj = (AApplyObjectDesignatorCG) object;
+				appliesCount++;
+				object = applyObj.getObject();
+			}
+			else
+			{
+				return null;
+			}
+		}
+		
+		return null;
 	}
 }
