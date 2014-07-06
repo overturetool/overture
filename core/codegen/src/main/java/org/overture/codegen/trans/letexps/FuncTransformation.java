@@ -36,8 +36,6 @@ public class FuncTransformation extends DepthFirstAnalysisAdaptor
 		SExpCG body = node.getBody();
 		SourceNode sourceNode = node.getSourceNode();
 		
-
-		
 		AMethodDeclCG method = new AMethodDeclCG();
 		method.setSourceNode(sourceNode);
 		method.setAccess(access);

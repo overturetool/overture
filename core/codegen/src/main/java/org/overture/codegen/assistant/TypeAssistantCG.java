@@ -54,7 +54,8 @@ public class TypeAssistantCG extends AssistantBase
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
 		AClassDeclCG classDecl = assistantManager.getDeclAssistant().findClass(classes, fieldModule);
-		LinkedList<AMethodDeclCG> methods = classDecl.getMethods();
+		
+		List<AMethodDeclCG> methods = assistantManager.getDeclAssistant().getAllMethods(classDecl, classes);
 
 		for (AMethodDeclCG method : methods)
 		{
@@ -72,9 +73,9 @@ public class TypeAssistantCG extends AssistantBase
 		return null;
 	}
 	
-	public STypeCG getFieldType(AClassDeclCG classDecl, String fieldName)
+	public STypeCG getFieldType(AClassDeclCG classDecl, String fieldName, List<AClassDeclCG> classes)
 	{
-		for(AFieldDeclCG field : classDecl.getFields())
+		for(AFieldDeclCG field : assistantManager.getDeclAssistant().getAllFields(classDecl, classes))
 		{
 			if(field.getName().equals(fieldName))
 			{
@@ -100,7 +101,7 @@ public class TypeAssistantCG extends AssistantBase
 	public STypeCG getFieldType(List<AClassDeclCG> classes, String moduleName, String fieldName)
 	{
 		AClassDeclCG classDecl = assistantManager.getDeclAssistant().findClass(classes, moduleName);
-		return getFieldType(classDecl, fieldName);
+		return getFieldType(classDecl, fieldName, classes);
 	}
 	
 	public boolean checkArgTypes(IRInfo info, List<SExpCG> args, List<STypeCG> paramTypes)
@@ -110,7 +111,6 @@ public class TypeAssistantCG extends AssistantBase
 		{
 			return false;
 		}
-		
 		
 		for (int i = 0; i < paramTypes.size(); i++)
 		{
