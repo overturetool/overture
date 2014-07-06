@@ -62,6 +62,19 @@ public class DeclAssistantCG extends AssistantBase
 		return null;
 	}
 	
+	public ARecordDeclCG findRecord(AClassDeclCG definingClass, String recordName)
+	{
+		for(ARecordDeclCG recordDecl : definingClass.getRecords())
+		{
+			if(recordDecl.getName().equals(recordName))
+			{
+				return recordDecl;
+			}
+		}
+		
+		return null;
+	}
+	
 	private AVarLocalDeclCG constructLocalVarDecl(AValueDefinition valueDef, IRInfo question) throws AnalysisException
 	{
 		STypeCG type = valueDef.getType().apply(question.getTypeVisitor(), question);

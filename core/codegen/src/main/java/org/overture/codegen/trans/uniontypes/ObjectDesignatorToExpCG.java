@@ -3,6 +3,7 @@ package org.overture.codegen.trans.uniontypes;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.codegen.assistant.TypeAssistantCG;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SObjectDesignatorCG;
@@ -10,7 +11,6 @@ import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.AnswerAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
-import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.ASelfExpCG;
@@ -87,28 +87,19 @@ public class ObjectDesignatorToExpCG extends AnswerAdaptor<SExpCG>
 		
 		STypeCG fieldExpType = null;
 		
+		TypeAssistantCG typeAssistant = info.getAssistantManager().getTypeAssistant();
+
 		INode parent = node.parent();
+		
 		if(parent instanceof AApplyObjectDesignatorCG)
 		{
 			AApplyObjectDesignatorCG apply = (AApplyObjectDesignatorCG) parent;
-			
-			LinkedList<AMethodDeclCG> methods = info.getAssistantManager().getDeclAssistant().findClass(classes, fieldModule).getMethods();
-			
-			for(AMethodDeclCG method : methods)
-			{
-				LinkedList<SExpCG> args = apply.getArgs();
-				LinkedList<STypeCG> params = method.getMethodType().getParams();
-				
-				if(info.getAssistantManager().getTypeAssistant().checkArgTypes(info, args, params))
-				{
-					fieldExpType = method.getMethodType().clone();
-					break;
-				}
-			}
+			LinkedList<SExpCG> args = apply.getArgs();
+			fieldExpType = typeAssistant.getMethodType(info, classes, fieldModule, fieldName, args);
 		}
 		else 
 		{
-			fieldExpType = info.getAssistantManager().getTypeAssistant().getFieldType(classes, fieldModule, fieldName);
+			fieldExpType = typeAssistant.getFieldType(classes, fieldModule, fieldName);
 		}
 		
 		SExpCG objExp = obj.apply(this);
@@ -121,7 +112,7 @@ public class ObjectDesignatorToExpCG extends AnswerAdaptor<SExpCG>
 		
 		return fieldExp;
 	}
-	
+
 	@Override
 	public SExpCG caseAIdentifierObjectDesignatorCG(
 			AIdentifierObjectDesignatorCG node) throws AnalysisException

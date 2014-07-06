@@ -14,7 +14,6 @@ import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
-import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
@@ -399,25 +398,14 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			String definingClassName = recordType.getName().getDefiningClass();
 			String recordName = recordType.getName().getName();
 			
-			for(AClassDeclCG classCg : classes)
+			AClassDeclCG classDecl = info.getAssistantManager().getDeclAssistant().findClass(classes, definingClassName);
+			ARecordDeclCG record = info.getAssistantManager().getDeclAssistant().findRecord(classDecl, recordName);
+			
+			List<STypeCG> fieldTypes = info.getAssistantManager().getTypeAssistant().getFieldTypes(record);
+			
+			if (correctArgTypes(args, fieldTypes))
 			{
-				for(ARecordDeclCG recordCg : classCg.getRecords())
-				{
-					if(definingClassName.equals(classCg.getName()) && recordName.equals(recordCg.getName()))
-					{
-						List<AFieldDeclCG> fields = recordCg.getFields();
-						List<STypeCG> fieldTypes = new LinkedList<STypeCG>();
-						
-						for(AFieldDeclCG field : fields)
-						{
-							fieldTypes.add(field.getType());
-						}
-						if(correctArgTypes(args, fieldTypes))
-						{
-							return;
-						}
-					}
-				}
+				return;
 			}
 		}
 	}

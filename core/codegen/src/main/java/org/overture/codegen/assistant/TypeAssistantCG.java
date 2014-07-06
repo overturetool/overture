@@ -15,6 +15,8 @@ import org.overture.codegen.cgast.SObjectDesignatorCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
+import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
@@ -47,6 +49,29 @@ public class TypeAssistantCG extends AssistantBase
 		super(assistantManager);
 	}
 	
+	public STypeCG getMethodType(IRInfo info, List<AClassDeclCG> classes,
+			String fieldModule, String fieldName, LinkedList<SExpCG> args)
+			throws org.overture.codegen.cgast.analysis.AnalysisException
+	{
+		AClassDeclCG classDecl = assistantManager.getDeclAssistant().findClass(classes, fieldModule);
+		LinkedList<AMethodDeclCG> methods = classDecl.getMethods();
+
+		for (AMethodDeclCG method : methods)
+		{
+			if (method.getName().equals(fieldName))
+			{
+				LinkedList<STypeCG> params = method.getMethodType().getParams();
+
+				if (assistantManager.getTypeAssistant().checkArgTypes(info, args, params))
+				{
+					return method.getMethodType().clone();
+				}
+			}
+		}
+
+		return null;
+	}
+	
 	public STypeCG getFieldType(AClassDeclCG classDecl, String fieldName)
 	{
 		for(AFieldDeclCG field : classDecl.getFields())
@@ -58,6 +83,18 @@ public class TypeAssistantCG extends AssistantBase
 		}
 		
 		return null;
+	}
+	
+	public List<STypeCG> getFieldTypes(ARecordDeclCG record)
+	{
+		List<STypeCG> fieldTypes = new LinkedList<STypeCG>();
+
+		for (AFieldDeclCG field : record.getFields())
+		{
+			fieldTypes.add(field.getType());
+		}
+		
+		return fieldTypes;
 	}
 	
 	public STypeCG getFieldType(List<AClassDeclCG> classes, String moduleName, String fieldName)
