@@ -1,4 +1,4 @@
-package org.overture.core.tests.example;
+package org.overture.core.tests.demo;
 
 import java.util.List;
 

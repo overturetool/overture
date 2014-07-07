@@ -1,4 +1,4 @@
-package org.overture.core.tests.example;
+package org.overture.core.tests.demo;
 
 import java.lang.reflect.Type;
 import java.util.Collection;
@@ -14,9 +14,9 @@ import org.overture.core.tests.PathsProvider;
 import com.google.gson.reflect.TypeToken;
 
 /**
- * Quick usage example of new overture tests. Takes an AST and dumps the entire content into a string. The new tests
- * rely heavily on JUnit Parameterized tests so the <code>@RunWith</code> annotation is essential. The test will not run
- * otherwise.<br>
+ * Quick usage demonstration of new overture tests. Takes an AST and dumps the entire content into a string. The new
+ * tests rely heavily on JUnit Parameterized tests so the <code>@RunWith</code> annotation is essential. The test will
+ * not run otherwise.<br>
  * <br>
  * In addition, every tests in this new system runs a specific result type that is fed to the test as a parameter, in
  * this case {@link IdTestResult}.
