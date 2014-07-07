@@ -1,6 +1,7 @@
 package org.overture.codegen.visitor;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.ANewExp;
@@ -15,6 +16,9 @@ import org.overture.ast.statements.ASelfObjectDesignator;
 import org.overture.ast.statements.PObjectDesignator;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SObjectDesignatorCG;
+import org.overture.codegen.cgast.STypeCG;
+import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
@@ -57,10 +61,12 @@ public class ObjectDesignatorVisitorCG extends AbstractVisitorCG<IRInfo, SObject
 		PObjectDesignator obj = node.getObject();
 		
 		String fieldCg = field.getName();
+		String fieldModuleCg = field.getModule();
 		SObjectDesignatorCG objCg = obj.apply(question.getObjectDesignatorVisitor(), question);
 		
 		AFieldObjectDesignatorCG fieldObjDesignator = new AFieldObjectDesignatorCG();
 		fieldObjDesignator.setFieldName(fieldCg);
+		fieldObjDesignator.setFieldModule(fieldModuleCg);
 		fieldObjDesignator.setObject(objCg);
 		
 		return fieldObjDesignator;

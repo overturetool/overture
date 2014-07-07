@@ -1,0 +1,53 @@
+class A
+
+operations
+
+public op : nat * bool * nat ==> ()
+op (a,b,c) == Entry`c := Entry`c + 1;
+
+end A
+
+class B
+
+operations
+
+public op : nat * bool * bool ==> ()
+op (a,b,c) == Entry`c := Entry`c + 2;
+
+end B
+
+class C
+
+operations
+
+public op : nat * bool * char ==> ()
+op (a,b,c) == Entry`c := Entry`c + 3;
+
+end C
+
+class Entry
+
+instance variables
+
+public static c : nat := 0;
+
+operations
+
+public static Run : () ==> nat
+Run () ==
+let
+	a : nat | bool = 1,
+	b : bool | char = true,
+	c1 : nat | bool | char = 1,
+	c2 : nat | bool | char = true,
+	c3 : nat | bool | char = 'a',
+	objs = [new A(), new B(), new C()]
+in
+(
+	for i = 1 to 3 do
+		objs(i).op(a,b, if i = 1 then c1 elseif i = 2 then c2 else c3);
+		
+	return c;	
+);
+
+end Entry

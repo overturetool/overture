@@ -1,0 +1,26 @@
+class A
+
+operations
+
+public op : char * nat ==> nat
+op (a,b) == return 1;
+
+end A
+
+class B is subclass of A
+
+end B
+
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let obj : A | B = new B(),
+		a : nat | char = 'a',
+		b : nat = 2
+in
+	obj.op(a,b);
+
+end Entry

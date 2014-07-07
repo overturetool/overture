@@ -89,7 +89,7 @@ public class Account {
         Transaction transaction = new Transaction(date, cardId, amount);
 
         if (((balance.longValue() - amount.longValue()) >= 0L) &&
-                (DateTotal(date,
+                (DateTotal(date.clone(),
                     SeqUtil.conc(transactions.clone(),
                         SeqUtil.seq(transaction.clone()))).longValue() <= dailyLimit.longValue())) {
             balance = balance.longValue() - amount.longValue();
@@ -140,7 +140,7 @@ public class Account {
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && forAllExpResult_1;) {
             VDMSeq date = ((VDMSeq) iterator_1.next());
-            forAllExpResult_1 = DateTotal(date, ts).longValue() <= dailyLimit.longValue();
+            forAllExpResult_1 = DateTotal(date.clone(), ts.clone()).longValue() <= dailyLimit.longValue();
         }
 
         return forAllExpResult_1;
@@ -160,7 +160,7 @@ public class Account {
             }
         }
 
-        return Sum(seqCompResult_1);
+        return Sum(seqCompResult_1.clone());
     }
 
     private static Number Sum(final VDMSeq rs) {

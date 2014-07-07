@@ -728,62 +728,7 @@ public class JavaFormat
 	
 	public STypeCG findElementType(AApplyObjectDesignatorCG designator)
 	{
-		int appliesCount = 0;
-		
-		SObjectDesignatorCG object = designator.getObject();
-
-		while(object != null)
-		{
-			if(object instanceof AIdentifierObjectDesignatorCG)
-			{
-				AIdentifierObjectDesignatorCG id = (AIdentifierObjectDesignatorCG) object;
-			
-				STypeCG type = id.getExp().getType();
-				
-				int methodTypesCount = 0;
-				
-				while (type instanceof AMethodTypeCG)
-				{
-					methodTypesCount++;
-					AMethodTypeCG methodType = (AMethodTypeCG) type;
-					type = methodType.getResult();
-				}
-				
-				while(type instanceof SSeqTypeCG || type instanceof SMapTypeCG)
-				{
-					if(type instanceof SSeqTypeCG)
-					{
-						type = ((SSeqTypeCG) type).getSeqOf();
-					}
-
-					if(type instanceof SMapTypeCG)
-					{
-						type = ((SMapTypeCG) type).getTo();
-					}
-					
-					if (appliesCount == methodTypesCount)
-					{
-						return type;						
-					}
-					
-					methodTypesCount++;
-				}
-
-				return null;
-			}
-			else if(object instanceof AApplyObjectDesignatorCG)
-			{
-				AApplyObjectDesignatorCG applyObj = (AApplyObjectDesignatorCG) object;
-				appliesCount++;
-				object = applyObj.getObject();
-			}
-			else
-			{
-				return null;
-			}
-		}
-		
-		return null;
+		return info.getAssistantManager().getTypeAssistant().findElementType(designator);
 	}
 	
 	public boolean isLoopVar(AVarLocalDeclCG localVar)

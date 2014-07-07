@@ -28,6 +28,7 @@ import org.overture.codegen.cgast.statements.AForAllStmCG;
 import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
+import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
@@ -161,9 +162,20 @@ public class JavaValueSemantics
 
 	private boolean cloneNotNeeded(INode parent)
 	{
+		if(parent instanceof AApplyExpCG)
+		{
+			//Cloning is not needed if the expression is
+			//used to look up a value in a sequence or a map
+			SExpCG root = ((AApplyExpCG) parent).getRoot();
+			
+			if(!(root.getType() instanceof AMethodTypeCG))
+			{
+				return true;
+			}
+		}
+		
 		return 	   parent instanceof AFieldExpCG
 				|| parent instanceof AFieldNumberExpCG
-				|| parent instanceof AApplyExpCG
 				|| parent instanceof AEqualsBinaryExpCG
 				|| parent instanceof ANotEqualsBinaryExpCG
 				|| parent instanceof AAddrEqualsBinaryExpCG
