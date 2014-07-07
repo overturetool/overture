@@ -128,15 +128,15 @@ CG {-> package='org.overture.codegen.cgast'
 	
 #stateDesignator {-> package='org.overture.codegen.cgast.statements'
 	| [type]:CG.#type}
-	= {identifier} [name]:java_String
+	= {identifier} [name]:java_String [explicit]:java_Boolean [className]:java_String
 	| {field} [object]:CG.#stateDesignator [field]:java_String
 	| {mapSeq} [mapseq]:CG.#stateDesignator [exp]:CG.#exp
 	;
 
 #objectDesignator {-> package='org.overture.codegen.cgast.statements'}
 	=   {apply} [object]:CG.#objectDesignator [args]:CG.#exp*
-    |   {field} [object]:CG.#objectDesignator [fieldName]:java_String
-    |   {identifier} [exp]:CG.#exp.#Var
+    |   {field} [object]:CG.#objectDesignator [fieldModule]:java_String [fieldName]:java_String
+    |   {identifier} [exp]:CG.#exp //Normally a var (e.g. [exp]:CG.#exp.#Var) but a transformation may need to replace it with a cast expression
     |   {new} [exp]:CG.#exp.new
     |   {self}
     ;
@@ -156,6 +156,8 @@ CG {-> package='org.overture.codegen.cgast'
            |	{localAssignment} [target]:CG.#exp [exp]:CG.#exp
            |	{block}	[localDefs]:CG.#decl.#Local* [statements]:CG.#stm*
            |	{callObject} [type]:CG.#type [designator]:CG.#objectDesignator [className]:java_String [fieldName]:java_String 
+           					 [args]:CG.#exp*
+           |	{callObjectExp} [type]:CG.#type [obj]:CG.#exp [className]:java_String [fieldName]:java_String 
            					 [args]:CG.#exp*
            |	{call} [type]:CG.#type [classType]:CG.#type.class [name]:java_String [args]:CG.#exp*
            |	{notImplemented}

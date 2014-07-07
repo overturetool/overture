@@ -1,0 +1,31 @@
+class A
+
+operations
+
+protected op : char * nat ==> nat
+op (a,b) == return 1;
+
+end A
+
+class B is subclass of A
+
+operations 
+public go : () ==> nat
+go () ==
+let obj : A | B = new B(),
+		a : nat | char = 'a',
+		b : nat = 2
+in
+	obj.op(a,b);
+
+end B
+
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	new B().go();
+
+end Entry

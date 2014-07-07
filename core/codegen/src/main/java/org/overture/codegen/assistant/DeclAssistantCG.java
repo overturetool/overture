@@ -12,11 +12,13 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.codegen.cgast.SDeclCG;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
+import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
@@ -27,6 +29,7 @@ import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
+import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.utils.LexNameTokenWrapper;
 
@@ -35,6 +38,79 @@ public class DeclAssistantCG extends AssistantBase
 	public DeclAssistantCG(AssistantManager assistantManager)
 	{
 		super(assistantManager);
+	}
+	
+	public <T extends SDeclCG> List<T> getAllDecls(AClassDeclCG classDecl, List<AClassDeclCG> classes, DeclStrategy<T> strategy)
+	{
+		List<T> allDecls = new LinkedList<T>();
+		
+		allDecls.addAll(strategy.getDecls(classDecl));
+		
+		String superName = classDecl.getSuperName();
+		
+		while(superName != null)
+		{
+			AClassDeclCG superClassDecl = findClass(classes, superName);
+			
+			for(T superDecl : strategy.getDecls(superClassDecl))
+			{
+				if(isInherited(strategy.getAccess(superDecl)))
+				{
+					allDecls.add(superDecl);
+				}
+			}
+			
+			superName = superClassDecl.getSuperName();
+		}
+		
+		return allDecls;
+	}
+	
+	public List<AMethodDeclCG> getAllMethods(AClassDeclCG classDecl,
+			List<AClassDeclCG> classes)
+	{
+		DeclStrategy<AMethodDeclCG> methodDeclStrategy = new DeclStrategy<AMethodDeclCG>()
+		{
+			@Override
+			public String getAccess(AMethodDeclCG decl)
+			{
+				return decl.getAccess();
+			}
+
+			@Override
+			public List<AMethodDeclCG> getDecls(AClassDeclCG classDecl)
+			{
+				return classDecl.getMethods();
+			}
+		};
+
+		return getAllDecls(classDecl, classes, methodDeclStrategy);
+	}
+	
+	public List<AFieldDeclCG> getAllFields(AClassDeclCG classDecl,
+			List<AClassDeclCG> classes)
+	{
+		DeclStrategy<AFieldDeclCG> fieldDeclStrategy = new DeclStrategy<AFieldDeclCG>()
+		{
+			@Override
+			public String getAccess(AFieldDeclCG decl)
+			{
+				return decl.getAccess();
+			}
+			
+			@Override
+			public List<AFieldDeclCG> getDecls(AClassDeclCG classDecl)
+			{
+				return classDecl.getFields();
+			}
+		};
+		
+		return getAllDecls(classDecl, classes, fieldDeclStrategy);
+	}
+	
+	public boolean isInherited(String access)
+	{
+		return access.equals(IRConstants.PROTECTED) || access.equals(IRConstants.PUBLIC);
 	}
 
 	public void setLocalDefs(LinkedList<PDefinition> localDefs, LinkedList<AVarLocalDeclCG> localDecls, IRInfo question) throws AnalysisException
@@ -47,6 +123,33 @@ public class DeclAssistantCG extends AssistantBase
 				localDecls.add(constructLocalVarDecl(valueDef, question));
 			}
 		}
+	}
+	
+	public AClassDeclCG findClass(List<AClassDeclCG> classes, String moduleName)
+	{
+		for(AClassDeclCG classDecl : classes)
+		{
+			if(classDecl.getName().equals(moduleName))
+			{
+				return classDecl;
+			}
+		}
+		
+		return null;
+	}
+	
+	//This method assumes that the record is defined in definingClass and not a super class
+	public ARecordDeclCG findRecord(AClassDeclCG definingClass, String recordName)
+	{
+		for(ARecordDeclCG recordDecl : definingClass.getRecords())
+		{
+			if(recordDecl.getName().equals(recordName))
+			{
+				return recordDecl;
+			}
+		}
+		
+		return null;
 	}
 	
 	private AVarLocalDeclCG constructLocalVarDecl(AValueDefinition valueDef, IRInfo question) throws AnalysisException

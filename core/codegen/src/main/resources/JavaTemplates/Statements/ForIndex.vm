@@ -21,7 +21,7 @@ long ${toVar} = ${toExp};
 	#set( $step = "${index}++" )
 #end
 ##
-for(long ${index} = ${fromExp}; ${condition}; ${step})
+for(Long ${index} = ${fromExp}; ${condition}; ${step})
 {
 	$body
 }

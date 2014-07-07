@@ -1,0 +1,10 @@
+#set( $args = $JavaFormat.formatArgs($node.getArgs()) )
+#set( $field = $node.getFieldName() )
+#set( $obj = $JavaFormat.format($node.getObj()) )
+##
+#set( $return = "")
+#if (!$JavaFormat.isVoidType($node.getType()))
+	#set( $return = "return ")
+#end
+##
+${return}${obj}.${field}(${args});
