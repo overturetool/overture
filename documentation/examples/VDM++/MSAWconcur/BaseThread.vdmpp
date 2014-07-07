@@ -14,7 +14,7 @@ BaseThread() ==
   then start(self);  
  );
 
-Step : () ==> ()
+protected Step : () ==> ()
 Step() ==
   is subclass responsibility
 

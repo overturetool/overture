@@ -30,7 +30,7 @@ BaseRTThread(t) ==
   then start(registeredSelf);   
  );
 
-Step : () ==> ()
+protected Step : () ==> ()
 Step() ==
   is subclass responsibility;
 
