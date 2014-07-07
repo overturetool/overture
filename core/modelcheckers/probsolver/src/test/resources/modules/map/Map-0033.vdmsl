@@ -1,0 +1,5 @@
+operations
+
+maptest() m : map int to int
+  --post m = {2|->1} munion { b*b |-> a | a in set { 1,2 } , b in set { 3,4 } & a > 1 }
+  post m = {2|->1} munion {3|->2}

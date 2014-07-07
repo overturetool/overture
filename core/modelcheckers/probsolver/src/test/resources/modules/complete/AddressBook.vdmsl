@@ -5,7 +5,7 @@ end
 
 types
 Name = nat;
-Address = nat
+Address = nat;
 
 operations
   SAddressBook(name: Name, address: Address)
@@ -21,8 +21,8 @@ operations
   ;
 
 test:() ==> Address
-test() == let n1 = 1, a1 = 101, 
-              n2 = 2, a2 = 102, n = 3 in (
+test() == let n1 = 1, a1 = 100, 
+              n2 = 2, a2 = 200, n = 2 in (
   SAddressBook(n1, a1);
   SAddressBook(n2, a2);
   return FindAddress(n);

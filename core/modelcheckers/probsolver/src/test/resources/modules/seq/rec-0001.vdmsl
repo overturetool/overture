@@ -1,0 +1,22 @@
+types
+Ex1 ::
+  f1: int
+  f2: int
+  inv mk_Ex1(a,b) == a>0 and b>0;
+
+--Pair ::
+--  pr : Ex1
+--  init pr == pr = mk_Ex1(0, 1);
+
+
+operations
+
+  rec0001(r : Ex1, p : Ex1) m : Ex1
+    post  m = mk_Ex1(r.f1+r.f1, r.f2+p.f2);
+
+
+test:()==>Ex1
+test() == let r = mk_Ex1(1, 2), s = mk_Ex1(100, 200) in (
+  return rec0001(r, s);
+);
+

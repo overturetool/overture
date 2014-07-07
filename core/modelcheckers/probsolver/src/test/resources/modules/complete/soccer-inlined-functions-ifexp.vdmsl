@@ -18,7 +18,8 @@ state  R_Book of
 
 inv mk_R_Book(ofp,ps,gk, ngk, nfp) == 
     (card ofp) <= 11 and 
-  /*(ngk , nfp )*/   (ngk <= gk_subs_max) and (nfp <= fp_subs_max) and
+    /*within_allowed_limits(ngk , nfp )*/
+    (ngk <= gk_subs_max) and (nfp <= fp_subs_max) and
     gk not in set ps and 
     ofp inter ps = {}
 
@@ -61,7 +62,7 @@ ext wr on_field_players : set of player
     wr goalkeeper : player
     wr nb_gk_subs : nat
     wr nb_fp_subs : nat
-   pre pl in set on_field_players and subs in set potential_substitutes
+  pre pl in set on_field_players and subs in set potential_substitutes
        and (pl = goalkeeper => (nb_gk_subs+1 <= gk_subs_max) and (nb_fp_subs <= fp_subs_max))
        and (pl <> goalkeeper => (nb_gk_subs <= gk_subs_max) and (nb_fp_subs+1 <= fp_subs_max))
   post on_field_players = on_field_players~ union {subs} \ {pl}
@@ -80,8 +81,10 @@ ext wr on_field_players : set of player
     wr goalkeeper : player
     wr nb_gk_subs : nat
     rd nb_fp_subs : nat
-   pre pl in set on_field_players and subs in set potential_substitutes
-       and pl = goalkeeper  and  /*(ngk , nfp )*/   (nb_gk_subs+1 <= gk_subs_max) and (nb_fp_subs <= fp_subs_max) 
+  pre pl in set on_field_players and subs in set potential_substitutes
+       and pl = goalkeeper  and
+       /*within_allowed_limits(ngk , nfp )*/
+        (nb_gk_subs+1 <= gk_subs_max) and (nb_fp_subs <= fp_subs_max) 
   post on_field_players = on_field_players~ union {subs} \ {pl}
        and potential_substitutes = potential_substitutes~ \ {subs}
        and goalkeeper = subs and nb_gk_subs = nb_gk_subs~ +1 
@@ -92,7 +95,7 @@ ext wr on_field_players : set of player
     rd goalkeeper : player
     rd nb_gk_subs : nat
     wr nb_fp_subs : nat
-   pre pl in set on_field_players and subs in set potential_substitutes
+  pre pl in set on_field_players and subs in set potential_substitutes
        and pl <> goalkeeper and /*(ngk , nfp )*/   (nb_gk_subs <= gk_subs_max) and (nb_fp_subs+1 <= fp_subs_max)
   post on_field_players = on_field_players~ union {subs} \ {pl}
        and potential_substitutes = potential_substitutes~ \ {subs}
@@ -111,7 +114,7 @@ pre (pl = goalkeeper =>
                               mk_R_Book(on_field_players,potential_substitutes,
                                         goalkeeper,nb_gk_subs,nb_fp_subs)))
 ;
-
+/*
 test:()==> R_Book
 test() == let red=1, out1=10, in1=12, out2=2, in2=13, out3=3, in3=14 in (
   RED_CARD(red);
@@ -120,7 +123,8 @@ test() == let red=1, out1=10, in1=12, out2=2, in2=13, out3=3, in3=14 in (
   SUBSTITUTION(out3, in3);
   return mk_R_Book(on_field_players, potential_substitutes, goalkeeper, nb_gk_subs, nb_fp_subs);
 );
-/*
+*/
+--/*
 test:()==> R_Book
 test() == let red=1, gp=10, out1=10, in1=12, out2=2, in2=13, out3=3, in3=14 in (
   RED_CARD(red);
@@ -130,7 +134,7 @@ test() == let red=1, gp=10, out1=10, in1=12, out2=2, in2=13, out3=3, in3=14 in (
   SUBSTITUTION(out3, in3);
   return mk_R_Book(on_field_players, potential_substitutes, goalkeeper, nb_gk_subs, nb_fp_subs);
 );
-*/
+--*/
 end SOCCER_IMPL
 
 

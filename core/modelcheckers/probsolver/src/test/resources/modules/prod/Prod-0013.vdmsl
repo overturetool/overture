@@ -1,0 +1,12 @@
+operations
+
+--prodcttest10() m : (seq of char) * nat
+--  post m = mk_("str", 1)
+--prodcttest13() m : nat * seq of char * (nat * seq of char)
+--  post m = mk_(2, "str", mk_(3,"ishi"))
+
+--prodcttest13() m : nat * seq of char * nat * seq of char
+--  post m = mk_(2, "str", 3,"ishi")
+
+prodcttest13() m : bool
+  post m = (mk_(2, "str", mk_(3,"ishi"))=mk_(2, "str", 3,"ishi"))

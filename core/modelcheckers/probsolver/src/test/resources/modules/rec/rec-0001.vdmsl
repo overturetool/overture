@@ -1,0 +1,9 @@
+types
+Ex1 ::
+  f1: int
+  f2: int
+init r == r = mk_Ex1(10, 20);
+
+operations
+rec0001(r:Ex1) v: int
+  post  v = r.f1

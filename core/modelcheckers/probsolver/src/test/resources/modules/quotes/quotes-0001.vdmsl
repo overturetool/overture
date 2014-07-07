@@ -2,15 +2,15 @@
 --definitions
 
 types
-  countries = <France> | <England> | <Denmark>;
+  QUOTES = <France> | <England> | <Denmark>;
 
 operations
   quote1() r : bool
-  post r = (<France> = <France>)
+  post r = (<France> = <England>)
 --end quote0001
  -- countries = <France> | <England> | <Denmark>;
 
 operations
-  quote1() r : <England>
+  quote2() r : QUOTES
   post r = ( <England>)
 --end quote0001
