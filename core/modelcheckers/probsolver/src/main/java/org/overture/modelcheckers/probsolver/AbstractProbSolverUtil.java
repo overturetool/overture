@@ -170,6 +170,7 @@ public class AbstractProbSolverUtil
 		{
 			anomatorSets = currentSets;
 			animator = ServletContextListener.INJECTOR.getInstance(IAnimator.class);
+			//System.err.println("in initialize: " + sets);//today
 			AbstractCommand[] init = {
 					/* We load a machine with the token type installed */
 					new LoadBProjectFromStringCommand("MACHINE tmp1 SETS "+currentSets+" END"),

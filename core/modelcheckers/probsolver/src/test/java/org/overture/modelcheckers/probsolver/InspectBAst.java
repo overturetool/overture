@@ -106,7 +106,13 @@ public class InspectBAst
 		//f = new ClassicalB("[1,4,2,8,5,7](3)");
 		//f.getAst().apply(new ASTPrinter(System.out));
 		
-		f = new ClassicalB("(1,2,3)=(1|->2|->3)");
+		//f = new ClassicalB("(1,2,3)=(1|->2|->3)");
+		//f.getAst().apply(new ASTPrinter(System.out));
+
+		//f = new ClassicalB("a:struct(f1:NAT, f2:NAT) & a=rec(f1:10, f2:20) & m=a'f1");
+		//f.getAst().apply(new ASTPrinter(System.out));
+
+		f = new ClassicalB("{2|->20, 1|->10, 3|->30}(3)");
 		f.getAst().apply(new ASTPrinter(System.out));
 		
 		//f = new ClassicalB("(1,2,3,4):(NAT1*NAT1*NAT1*NAT1)");

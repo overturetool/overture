@@ -96,6 +96,7 @@ import org.overture.ast.expressions.ATupleExp;
 import org.overture.ast.expressions.AUnaryMinusUnaryExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.expressions.PExpBase;
 import org.overture.ast.expressions.SSetExp;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
@@ -123,7 +124,7 @@ import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.ATokenBasicType;
-import org.overture.ast.types.AUnionType;//today
+import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SSeqType;
@@ -412,8 +413,8 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		    } else {
 			ppred = pred(node.getElse());
 		    }
-		    System.err.println("node.getElse(): " + "["+node.getElse()+"]");
-		    System.err.println("ppred: " + ppred.toString());
+		    //System.err.println("node.getElse(): " + "["+node.getElse()+"]");
+		    //System.err.println("ppred: " + ppred.toString());
 		    conjp = new AConjunctPredicate(new ADisjunctPredicate(new ANegationPredicate(pred(node.getTest())), pred(node.getThen())),
 						new ADisjunctPredicate(pred(node.getTest()), ppred));
 		} else
@@ -935,14 +936,23 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	{
 		return new ARevExpression(exp(node.getExp()));
 	}
-	/*
+
 	@Override
 	public Node caseAFieldExp(AFieldExp node)
 			throws AnalysisException
-	{
-	    return ;
+	    {//Exp,ILexNameToken
+		System.err.println("in caseAFieldExp: " + node + ", object: " + node.getObject() + ", fname: " + node.getField() );
+		return new ARecordFieldExpression(exp(node.getObject()), getIdentifier(node.getField().getName()));
+		/*
+		if(!(node.getField() instanceof AFieldExp)) {
+		    return new ARecordFieldExpression(exp(node.getObject()), getIdentifier(node.getField().getName()));
+		} else {
+		    return ((AFieldExp)(node.getField())).apply(this);
+		}
+		*/
+
 	}
-	*/
+
 	@Override
 	public Node caseAFieldNumberExp(AFieldNumberExp node)
 			throws AnalysisException
@@ -1179,6 +1189,47 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		List<TIdentifierLiteral> id1 = new ArrayList<TIdentifierLiteral>();
 		List<TIdentifierLiteral> id2 = new ArrayList<TIdentifierLiteral>();
 		List<TIdentifierLiteral> id3 = new ArrayList<TIdentifierLiteral>();
+		List<TIdentifierLiteral> id4 = new ArrayList<TIdentifierLiteral>();
+		List<TIdentifierLiteral> id5 = new ArrayList<TIdentifierLiteral>();
+		id1.add(new TIdentifierLiteral("_pd1_"));
+		id2.add(new TIdentifierLiteral("_pr1_"));
+		id3.add(new TIdentifierLiteral("_pd2_"));
+		id4.add(new TIdentifierLiteral("_pr2_"));
+		id5.add(new TIdentifierLiteral("_pair_"));
+
+		PExpression pd1 = new AIdentifierExpression(id1);
+		PExpression pr1 = new AIdentifierExpression(id2);
+		PExpression pd2 = new AIdentifierExpression(id3);
+		PExpression pr2 = new AIdentifierExpression(id4);
+		PExpression ppair = new AIdentifierExpression(id5);
+		forallp.getIdentifiers().add(pd1);
+		forallp.getIdentifiers().add(pr1);
+		forallp.getIdentifiers().add(pd2);
+		forallp.getIdentifiers().add(pr2);
+
+		AComprehensionSetExpression isdup = new AComprehensionSetExpression();
+		ACoupleExpression pair1 = new ACoupleExpression();
+		pair1.getList().add(pd1);		pair1.getList().add(pr1);
+		ACoupleExpression pair2 = new ACoupleExpression();
+		pair2.getList().add(pd2);		pair2.getList().add(pr2);
+
+		isdup.setPredicates(new AMemberPredicate(pair1, mapcomp));
+		isdup.setPredicates(new AConjunctPredicate(isdup.getPredicates(),new AMemberPredicate(pair2, mapcomp1)));
+		isdup.setPredicates(new AConjunctPredicate(isdup.getPredicates(),new AEqualPredicate(pd1, pd2)));
+
+		AEqualPredicate equal = new AEqualPredicate(pr1, pr2);
+
+		forallp.setImplication(new AImplicationPredicate(isdup.getPredicates(), equal));
+
+		AComprehensionSetExpression realmap = new AComprehensionSetExpression();
+		realmap.getIdentifiers().add(ppair);
+		realmap.setPredicates(new AConjunctPredicate(forallp, new AMemberPredicate(ppair, mapcomp2)));
+
+		/**********************************************************************************
+		AForallPredicate forallp = new AForallPredicate();
+		List<TIdentifierLiteral> id1 = new ArrayList<TIdentifierLiteral>();
+		List<TIdentifierLiteral> id2 = new ArrayList<TIdentifierLiteral>();
+		List<TIdentifierLiteral> id3 = new ArrayList<TIdentifierLiteral>();
 		id1.add(new TIdentifierLiteral("_pdom_"));
 		id2.add(new TIdentifierLiteral("_pran_"));
 		id3.add(new TIdentifierLiteral("_map_"));
@@ -1202,6 +1253,7 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		AComprehensionSetExpression realmap = new AComprehensionSetExpression();
 		realmap.getIdentifiers().add(singlemaplet);
 		realmap.setPredicates(new AConjunctPredicate(forallp, new AMemberPredicate(singlemaplet, mapcomp2)));
+		**********************************************************************************/
 
 		return realmap;
 
@@ -1320,7 +1372,40 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	public Node caseAMapUnionBinaryExp(AMapUnionBinaryExp node)
 			throws AnalysisException
 	{
+	    //Both two maps assigned as arguments of mnuion are instances of ASetExtensionExpression, we can obtain map as a result
+	    if(exp(node.getLeft()) instanceof ASetExtensionExpression && exp(node.getRight()) instanceof ASetExtensionExpression) {
+		ASetExtensionExpression s1 = (ASetExtensionExpression) exp(node.getLeft());
+		ASetExtensionExpression s2 = (ASetExtensionExpression) exp(node.getRight());
+		ASetExtensionExpression s3 = new ASetExtensionExpression();
+
+		for(int d2=0;d2<s2.getExpressions().size();d2++) {
+		    boolean uniqueDom=true;
+		    //System.err.println("s2: " + ((ACoupleExpression)(s2.getExpressions().get(d2))).getList().get(0));
+		    for(int d1=0;d1<s1.getExpressions().size();d1++) {
+			//System.err.println("s2: " + s2.getExpressions().get(d2) + " s1: " + s1.getExpressions().get(d1));
+			//System.err.println("s1: " + ((ACoupleExpression)(s1.getExpressions().get(d1))).getList().get(0).toString());
+			if(((ACoupleExpression)(s2.getExpressions().get(d2))).getList().get(0).toString().equals(
+                           ((ACoupleExpression)(s1.getExpressions().get(d1))).getList().get(0).toString())) {
+			    uniqueDom = false;
+			    System.err.println(uniqueDom);
+			    if(s2.getExpressions().get(d2).toString().equals(s1.getExpressions().get(d1).toString())) {
+				s3.getExpressions().add(s2.getExpressions().get(d2));
+			    }
+			}
+		    }
+		    System.err.println(uniqueDom);
+		    if(uniqueDom) {
+			s3.getExpressions().add(s2.getExpressions().get(d2));
+		    }
+		}
+		if(s3.getExpressions().size()==0) {
+		    s1 = new ASetExtensionExpression();
+		}
+		return new AUnionExpression(s1, s3);
+	    } else {
+		//Otherwise
 		return new AUnionExpression(exp(node.getLeft()), exp(node.getRight()));
+	    }
 	}
 
 	@Override
@@ -1818,8 +1903,8 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	public Node caseAQuoteLiteralExp(AQuoteLiteralExp node)
 			throws AnalysisException
 	    {
-		//quotes.add(node.getValue().getValue());//today
-		//System.err.println("in caseAQuoteLiteralExp: " + quotes);//today
+		System.err.println("in caseAQuoteLiteralExp: " + node);
+		System.err.println("in caseAQuoteLiteralExp type: " + ((PExpBase)node).getType());
 		return createIdentifier(getQuoteLiteralName(node.getValue().getValue()));
 	}
 
@@ -1920,17 +2005,10 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 
 	@Override
 	public Node caseAQuoteType(AQuoteType node) throws AnalysisException
-	    {
-		//final List<PExpression> exps = Arrays.asList(new PExpression[] { createIdentifier(getQuoteLiteralName(node.getValue().getValue())) });
-		exps.add(createIdentifier(getQuoteLiteralName(node.getValue().getValue())));
-		System.err.println("in caseAQuoteType: " + exps);
+	{
+
+		System.err.println("in caseAQuoteType: " + node);
 		return new ASetExtensionExpression(exps);
-		//today
-		/*
-		quotestype.add(createIdentifier(getQuoteLiteralName(node.getValue().getValue())));
-		System.err.println("in caseAQuoteType: " + quotestype);
-		return new ASetExtensionExpression(quotestype);
-		*/
 	}
 
 
