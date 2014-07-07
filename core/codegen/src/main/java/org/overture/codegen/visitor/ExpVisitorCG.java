@@ -66,6 +66,7 @@ import org.overture.ast.expressions.ANilExp;
 import org.overture.ast.expressions.ANotEqualBinaryExp;
 import org.overture.ast.expressions.ANotInSetBinaryExp;
 import org.overture.ast.expressions.ANotUnaryExp;
+import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.AOrBooleanBinaryExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
 import org.overture.ast.expressions.APlusPlusBinaryExp;
@@ -109,6 +110,7 @@ import org.overture.ast.patterns.PBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AClassType;
+import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.ATokenBasicType;
@@ -124,6 +126,7 @@ import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
+import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACompMapExpCG;
 import org.overture.codegen.cgast.expressions.ACompSeqExpCG;
@@ -154,6 +157,7 @@ import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AInSetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AIndicesUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
+import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ALambdaExpCG;
 import org.overture.codegen.cgast.expressions.ALessEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
@@ -170,6 +174,7 @@ import org.overture.codegen.cgast.expressions.AMinusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AMkBasicExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ANotImplementedExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.AOrBoolBinaryExpCG;
@@ -192,6 +197,7 @@ import org.overture.codegen.cgast.expressions.ASetProperSubsetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetSubsetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetUnionBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASizeUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATailUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
@@ -206,14 +212,21 @@ import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
-import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
 import org.overture.codegen.ir.IRInfo;
+import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.utils.AnalysisExceptionCG;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 {
+	
+	@Override
+	public SExpCG caseANotYetSpecifiedExp(ANotYetSpecifiedExp node,
+			IRInfo question) throws AnalysisException
+	{
+		return new ANotImplementedExpCG();
+	}
 	
 	@Override
 	public SExpCG caseAThreadIdExp(AThreadIdExp node, IRInfo question)
@@ -233,7 +246,14 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseANilExp(ANilExp node, IRInfo question)
 			throws AnalysisException
 	{
-		return new ANullExpCG();
+		PType type = node.getType();
+		
+		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		
+		ANullExpCG nullExpCg = new ANullExpCG();
+		nullExpCg.setType(typeCg);
+		
+		return nullExpCg;
 	}
 	
 	@Override
@@ -550,7 +570,9 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		nextTernaryIf.setFalseValue(elseExp);
 		
 		if(node.parent() instanceof SBinaryExp)
+		{
 			return question.getExpAssistant().isolateExpression(ternaryIf);
+		}
 		
 		return ternaryIf;
 	}
@@ -1259,11 +1281,13 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		if(question.getExpAssistant().isIntegerType(leftExp) && question.getExpAssistant().isIntegerType(rightExp))
 		{
 			ARealLiteralExpCG one = new ARealLiteralExpCG();
-			one.setType(new ARealNumericBasicTypeCG());
+			ARealNumericBasicTypeCG realTypeCg = new ARealNumericBasicTypeCG();
+			realTypeCg.setSourceNode(new SourceNode(new ARealNumericBasicType()));
+			one.setType(realTypeCg);
 			one.setValue(1.0);
 			
 			ATimesNumericBinaryExpCG neutralMul = new ATimesNumericBinaryExpCG();
-			neutralMul.setType(new ARealNumericBasicTypeCG());
+			neutralMul.setType(realTypeCg.clone());
 			neutralMul.setLeft(one);
 			neutralMul.setRight(leftExpCG);
 			
@@ -1287,21 +1311,27 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		//VDM Language Reference Manual:
 		//x mod y = x - y * floor(x/y)
 		
+		PType type = node.getType();
 		PExp leftExp = node.getLeft();
 		PExp rightExp = node.getRight();
 		
+		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		
 		ADivideNumericBinaryExpCG div = (ADivideNumericBinaryExpCG) question.getExpAssistant().handleBinaryExp(node, new ADivideNumericBinaryExpCG(), question);
 		AFloorUnaryExpCG floor = new AFloorUnaryExpCG();
+		floor.setType(typeCg);
 		floor.setExp(div);
 		
 		SExpCG leftExpCg = leftExp.apply(question.getExpVisitor(), question);
 		SExpCG rightExpCg = rightExp.apply(question.getExpVisitor(), question);
 		
 		ATimesNumericBinaryExpCG times = new ATimesNumericBinaryExpCG();
+		times.setType(typeCg.clone());
 		times.setLeft(rightExpCg);
 		times.setRight(floor);
 		
 		ASubtractNumericBinaryExpCG sub = new ASubtractNumericBinaryExpCG();
+		sub.setType(typeCg.clone());
 		sub.setLeft(leftExpCg);
 		sub.setRight(times);
 		
@@ -1315,19 +1345,23 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		//VDM Language Reference Manual:
 		//x rem y = x - y * (x div y)
 		
+		PType type = node.getType();
 		PExp leftExp = node.getLeft();
 		PExp rightExp = node.getRight();
 		
 		ADivideNumericBinaryExpCG div = (ADivideNumericBinaryExpCG) question.getExpAssistant().handleBinaryExp(node, new ADivideNumericBinaryExpCG(), question);
 		
+		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 		SExpCG leftExpCg = leftExp.apply(question.getExpVisitor(), question);
 		SExpCG rightExpCg = rightExp.apply(question.getExpVisitor(), question);
 		
 		ATimesNumericBinaryExpCG times = new ATimesNumericBinaryExpCG();
+		times.setType(typeCg);
 		times.setLeft(rightExpCg);
 		times.setRight(question.getExpAssistant().isolateExpression(div));
 		
 		ASubtractNumericBinaryExpCG sub = new ASubtractNumericBinaryExpCG();
+		sub.setType(typeCg.clone());
 		sub.setLeft(leftExpCg);
 		sub.setRight(times);
 		
@@ -1372,7 +1406,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		xorExp.setRight(rightExpCg);
 		
 		ANotUnaryExpCG notExp = new ANotUnaryExpCG();
-		notExp.setType(typeCg);
+		notExp.setType(typeCg.clone());
 		notExp.setExp(question.getExpAssistant().isolateExpression(xorExp));
 
 		return notExp;
@@ -1465,28 +1499,64 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseABooleanConstExp(ABooleanConstExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().consBoolLiteral(node.getValue().getValue());
+		PType type = node.getType();
+		boolean value = node.getValue().getValue();
+		
+		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		
+		ABoolLiteralExpCG boolLitCg = new ABoolLiteralExpCG();
+		boolLitCg.setType(typeCg);
+		boolLitCg.setValue(value);
+		
+		return boolLitCg;
 	}
 	
 	@Override
 	public SExpCG caseARealLiteralExp(ARealLiteralExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().consRealLiteral(node.getValue().getValue());
+		PType type = node.getType();
+		double value = node.getValue().getValue();
+		
+		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		
+		ARealLiteralExpCG realLitCg = new ARealLiteralExpCG();
+		realLitCg.setType(typeCg);
+		realLitCg.setValue(value);
+		
+		return realLitCg;
 	}
 	
 	@Override
 	public SExpCG caseAIntLiteralExp(AIntLiteralExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().consIntLiteral(node.getValue().getValue());
+		PType type = node.getType();
+		long value = node.getValue().getValue();
+		
+		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		
+		AIntLiteralExpCG intLitCg = new AIntLiteralExpCG();
+		intLitCg.setType(typeCg);
+		intLitCg.setValue(value);
+		
+		return intLitCg;
 	}
 	
 	@Override
 	public SExpCG caseACharLiteralExp(ACharLiteralExp node, IRInfo question)
 			throws AnalysisException
 	{
-		return question.getExpAssistant().consCharLiteral(node.getValue().getValue());
+		PType type = node.getType();
+		char value = node.getValue().getValue();
+		
+		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		
+		ACharLiteralExpCG charLitCg = new ACharLiteralExpCG();
+		charLitCg.setType(typeCg);
+		charLitCg.setValue(value);
+		
+		return charLitCg;
 	}
 	
 	@Override
@@ -1495,14 +1565,24 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	{
 		if (question.getSettings().getCharSeqAsString())
 		{
-			return question.getExpAssistant().consStringLiteral(node.getValue().getValue(), false);
+			PType type = node.getType();
+			String value = node.getValue().getValue();
+			
+			STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+			
+			AStringLiteralExpCG stringLiteral = new AStringLiteralExpCG();
+
+			stringLiteral.setType(typeCg);
+			stringLiteral.setIsNull(false);
+			stringLiteral.setValue(value);
+			
+			return stringLiteral;
+			
 		} else
 		{
 			AEnumSeqExpCG enumSeq = new AEnumSeqExpCG();
 
-			ASeqSeqTypeCG seqType = new ASeqSeqTypeCG();
-			seqType.setEmpty(node.getValue().getValue().isEmpty());
-			seqType.setSeqOf(new ACharBasicTypeCG());
+			STypeCG seqType = node.getType().apply(question.getTypeVisitor(), question);
 
 			enumSeq.setType(seqType);
 

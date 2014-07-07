@@ -9,9 +9,14 @@ import java.util.Set;
 
 import org.apache.velocity.app.Velocity;
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.definitions.SFunctionDefinition;
+import org.overture.ast.definitions.SOperationDefinition;
+import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.node.INode;
+import org.overture.ast.statements.ANotYetSpecifiedStm;
 import org.overture.codegen.analysis.violations.GeneratedVarComparison;
 import org.overture.codegen.analysis.violations.InvalidNamesException;
 import org.overture.codegen.analysis.violations.ReservedWordsComparison;
@@ -21,8 +26,10 @@ import org.overture.codegen.analysis.violations.VdmAstAnalysis;
 import org.overture.codegen.analysis.violations.Violation;
 import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
+import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.ir.IRClassDeclStatus;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRExpStatus;
@@ -153,42 +160,41 @@ public class JavaCodeGen
 			List<SClassDefinition> mergedParseLists) throws AnalysisException,
 			InvalidNamesException, UnsupportedModelingException
 	{
-		List<SClassDefinition> toBeGenerated = new LinkedList<SClassDefinition>();
-		
 		for (SClassDefinition classDef : mergedParseLists)
 		{
-			if (shouldBeGenerated(classDef))
+			if(classIsLibrary(classDef))
 			{
-				toBeGenerated.add(classDef);
-			}
-			else
-			{
-				String className = classDef.getName().getFullName();
-				
-				if (!classIsLibrary(classDef))
-				{
-					Logger.getLog().println("Skipping class based on library class: " + className);
-				}
+				simplifyLibraryClass(classDef);
 			}
 		}
 		
-		validateVdmModelNames(toBeGenerated);
-		validateVdmModelingConstructs(toBeGenerated);
+		validateVdmModelNames(mergedParseLists);
+		validateVdmModelingConstructs(mergedParseLists);
 
 		List<IRClassDeclStatus> statuses = new ArrayList<IRClassDeclStatus>();
 
-		for (SClassDefinition classDef : toBeGenerated)
+		for (SClassDefinition classDef : mergedParseLists)
 		{
-			if (!shouldBeGenerated(classDef))
-			{
-				continue;
-			}
-
 			statuses.add(generator.generateFrom(classDef));
 		}
 
 		List<AClassDeclCG> classes = getClassDecls(statuses);
 		javaFormat.setClasses(classes);
+		
+		LinkedList<IRClassDeclStatus> canBeGenerated = new LinkedList<IRClassDeclStatus>();
+		List<GeneratedModule> generated = new ArrayList<GeneratedModule>();
+		
+		for(IRClassDeclStatus status : statuses)
+		{
+			if(status.canBeGenerated())
+			{
+				canBeGenerated.add(status);
+			}
+			else
+			{
+				generated.add(new GeneratedModule(status.getClassName(), status.getUnsupportedNodes()));
+			}
+		}
 		
 		TransformationAssistantCG transformationAssistant = new TransformationAssistantCG(irInfo, varPrefixes);
 		FunctionValueAssistant functionValueAssistant = new FunctionValueAssistant();
@@ -203,36 +209,27 @@ public class JavaCodeGen
 		ILanguageIterator langIterator = new JavaLanguageIterator(transformationAssistant, irInfo.getTempVarNameGen(), varPrefixes);
 		TransformationVisitor transVisitor = new TransformationVisitor(irInfo, varPrefixes, transformationAssistant, langIterator);
 		
-		List<GeneratedModule> generated = new ArrayList<GeneratedModule>();
-		for (IRClassDeclStatus status : statuses)
+		DepthFirstAnalysisAdaptor[] analyses = new DepthFirstAnalysisAdaptor[] {
+				funcTransformation, ifExpTransformation, ignoreTransformation,
+				deflattenTransformation, funcValVisitor, transVisitor,
+				typeTransformation, unionTypeTransformation };
+		
+		for (DepthFirstAnalysisAdaptor transformation : analyses)
 		{
-			try
+			for (IRClassDeclStatus status : canBeGenerated)
 			{
-				AClassDeclCG classCg = status.getClassCg();
-				String className = status.getClassName();
-				
-				if (status.canBeGenerated())
+				try
 				{
-					classCg.apply(funcTransformation);
-					classCg.apply(ifExpTransformation);
-					classCg.apply(ignoreTransformation);
-					classCg.apply(deflattenTransformation);
-					classCg.apply(funcValVisitor);
-					classCg.apply(transVisitor);
-					classCg.apply(typeTransformation);
-					classCg.apply(unionTypeTransformation);
-				}
-				else
-				{
-					generated.add(new GeneratedModule(className, status.getUnsupportedNodes()));					
-				}
+					AClassDeclCG classCg = status.getClassCg();
+					classCg.apply(transformation);
 
-			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
-			{
-				Logger.getLog().printErrorln("Error when generating code for class "
-						+ status.getClassName() + ": " + e.getMessage());
-				Logger.getLog().printErrorln("Skipping class..");
-				e.printStackTrace();
+				} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
+				{
+					Logger.getLog().printErrorln("Error when generating code for class "
+							+ status.getClassName() + ": " + e.getMessage());
+					Logger.getLog().printErrorln("Skipping class..");
+					e.printStackTrace();
+				}
 			}
 		}
 		
@@ -240,11 +237,8 @@ public class JavaCodeGen
 		FunctionValueAssistant functionValue = funcValVisitor.getFunctionValueAssistant();
 		javaFormat.setFunctionValueAssistant(functionValue);
 		
-		for (IRClassDeclStatus status : statuses)
+		for (IRClassDeclStatus status : canBeGenerated)
 		{
-			if(!status.canBeGenerated())
-				continue;
-			
 			StringWriter writer = new StringWriter();
 			AClassDeclCG classCg = status.getClassCg();
 			String className = status.getClassName();
@@ -253,16 +247,21 @@ public class JavaCodeGen
 			
 			try
 			{
-				classCg.apply(mergeVisitor, writer);
+				SClassDefinition vdmClass = (SClassDefinition) status.getClassCg().getSourceNode().getVdmNode();
+				if (shouldBeGenerated(vdmClass))
+				{
+					classCg.apply(mergeVisitor, writer);
 
-				if (mergeVisitor.hasMergeErrors())
-				{
-					generated.add(new GeneratedModule(className, mergeVisitor.getMergeErrors()));
-				}else
-				{
-					String formattedJavaCode = JavaCodeGenUtil.formatJavaCode(writer.toString());
-					generated.add(new GeneratedModule(className, formattedJavaCode));
+					if (mergeVisitor.hasMergeErrors())
+					{
+						generated.add(new GeneratedModule(className, mergeVisitor.getMergeErrors()));
+					} else
+					{
+						String formattedJavaCode = JavaCodeGenUtil.formatJavaCode(writer.toString());
+						generated.add(new GeneratedModule(className, formattedJavaCode));
+					}
 				}
+
 			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 			{
 				Logger.getLog().printErrorln("Error generating code for class "
@@ -297,6 +296,25 @@ public class JavaCodeGen
 		javaFormat.clearClasses();
 
 		return generated;
+	}
+
+	private void simplifyLibraryClass(SClassDefinition classDef)
+	{
+		for(PDefinition def : classDef.getDefinitions())
+		{
+			if(def instanceof SOperationDefinition)
+			{
+				SOperationDefinition op = (SOperationDefinition) def;
+				op.setBody(new ANotYetSpecifiedStm());
+			}
+			
+			if(def instanceof SFunctionDefinition)
+			{
+				SFunctionDefinition func = (SFunctionDefinition) def;
+				func.setBody(new ANotYetSpecifiedExp());
+			}
+				
+		}
 	}
 
 	private List<AClassDeclCG> getClassDecls(List<IRClassDeclStatus> statuses)

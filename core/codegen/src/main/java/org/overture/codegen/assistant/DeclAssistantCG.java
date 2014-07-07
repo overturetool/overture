@@ -216,9 +216,15 @@ public class DeclAssistantCG extends AssistantBase
 	{
 		List<LexNameTokenWrapper> methodNames = new LinkedList<LexNameTokenWrapper>();
 
-		LinkedList<PDefinition> defs = classDef.getDefinitions();
+		List<PDefinition> allDefs = new LinkedList<PDefinition>();
 		
-		for (PDefinition def : defs)
+		LinkedList<PDefinition> defs = classDef.getDefinitions();
+		LinkedList<PDefinition> inheritedDefs = classDef.getAllInheritedDefinitions();
+		
+		allDefs.addAll(defs);
+		allDefs.addAll(inheritedDefs);
+		
+		for (PDefinition def : allDefs)
 		{
 			if(def instanceof SOperationDefinition || def instanceof SFunctionDefinition)
 				methodNames.add(new LexNameTokenWrapper(def.getName()));

@@ -55,14 +55,13 @@ public class ExpAssistantCG extends AssistantBase
 	{
 		AIsolationUnaryExpCG isolationExp = new AIsolationUnaryExpCG();
 		isolationExp.setExp(exp);
-		isolationExp.setType(exp.getType());
+		isolationExp.setType(exp.getType().clone());
 		return isolationExp;
 	}
 	
-	public ANotUnaryExpCG negate(SExpCG exp)
-	{
+	public ANotUnaryExpCG negate(SExpCG exp) {
 		ANotUnaryExpCG negated = new ANotUnaryExpCG();
-		negated.setType(new ABoolBasicTypeCG());
+		negated.setType(exp.getType().clone());
 		negated.setExp(exp);
 
 		return negated;
