@@ -23,6 +23,7 @@
 
 package org.overture.pog.obligation;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
@@ -39,10 +40,12 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.statements.AAssignmentStm;
+import org.overture.ast.statements.AAtomicStm;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
 import org.overture.pog.utility.Substitution;
+import org.overture.pog.visitors.IVariableSubVisitor;
 
 public class StateInvariantObligation extends ProofObligation
 {
@@ -109,6 +112,38 @@ public class StateInvariantObligation extends ProofObligation
 		// After def.getName() constructor body
 		stitch = invDefs(def.getClassDefinition());
 		valuetree.setPredicate(ctxt.getPredWithContext(stitch));
+	}
+
+	public StateInvariantObligation(AAtomicStm atom, IPOContextStack ctxt,
+			IPogAssistantFactory af) throws AnalysisException
+	{
+		super(atom, POType.STATE_INV, ctxt, atom.getLocation(), af);
+		assistantFactory = af;
+
+		PExp inv_exp = null;
+		if (atom.getStatedef() != null)
+		{
+			inv_exp = atom.getStatedef().getInvExpression().clone();
+			;
+		} else
+		{
+			inv_exp = invDefs(atom.getAssignments().get(0).getClassDefinition());
+		}
+		PExp ant_exp = inv_exp.clone();
+		List<Substitution> subs = new LinkedList<Substitution>();
+		for (AAssignmentStm asgn : atom.getAssignments())
+		{
+			String hash = asgn.getTarget().apply(af.getStateDesignatorNameGetter());
+			subs.add(new Substitution(hash, asgn.getExp().clone()));
+		}
+		IVariableSubVisitor varSubVisitor = af.getVarSubVisitor();
+		for (Substitution sub : subs)
+		{
+			inv_exp = inv_exp.apply(varSubVisitor, sub);
+		}
+
+		stitch = AstExpressionFactory.newAImpliesBooleanBinaryExp(ant_exp, inv_exp);
+		valuetree.setPredicate(stitch);
 	}
 
 	public StateInvariantObligation(AImplicitOperationDefinition def,
