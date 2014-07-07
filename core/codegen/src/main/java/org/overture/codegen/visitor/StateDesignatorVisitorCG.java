@@ -11,6 +11,7 @@ import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SStateDesignatorCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.statements.AFieldStateDesignatorCG;
+import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
 import org.overture.codegen.ir.IRInfo;
 
@@ -43,10 +44,18 @@ public class StateDesignatorVisitorCG extends AbstractVisitorCG<IRInfo, SStateDe
 	{
 		PType type = node.getType();
 		String name = node.getName().getName();
+		String className = node.getName().getModule();
+		boolean explicit = node.getName().getExplicit();
 		
 		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 		
-		return question.getDesignatorAssistant().consMember(typeCg, name);
+		AIdentifierStateDesignatorCG idStateDesignatorCg = new AIdentifierStateDesignatorCG();
+		idStateDesignatorCg.setType(typeCg);
+		idStateDesignatorCg.setName(name);
+		idStateDesignatorCg.setClassName(className);
+		idStateDesignatorCg.setExplicit(explicit);
+		
+		return idStateDesignatorCg;
 	}
 	
 	@Override

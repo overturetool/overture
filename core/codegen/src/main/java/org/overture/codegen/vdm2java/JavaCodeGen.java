@@ -44,6 +44,7 @@ import org.overture.codegen.trans.letexps.DeflattenTransformation;
 import org.overture.codegen.trans.letexps.FuncTransformation;
 import org.overture.codegen.trans.letexps.IfExpTransformation;
 import org.overture.codegen.trans.patterns.IgnorePatternTransformation;
+import org.overture.codegen.trans.uniontypes.TypeTransformation;
 import org.overture.codegen.trans.uniontypes.UnionTypeTransformation;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
@@ -73,6 +74,9 @@ public class JavaCodeGen
 	public static final String TEMPLATE_TYPE_PREFIX = "T_";
 	public static final String EVAL_METHOD_PREFIX = "eval";
 	public static final String PARAM_NAME_PREFIX = "param_";
+	public static final String APPLY_EXP_NAME_PREFIX = "apply_";
+	public static final String OBJ_EXP_NAME_PREFIX = "obj_";
+	public static final String CALL_STM_OBJ_NAME_PREFIX = "callStmObj_";
 	
 	private static final String QUOTES = "quotes";
 	
@@ -183,7 +187,8 @@ public class JavaCodeGen
 			statuses.add(generator.generateFrom(classDef));
 		}
 
-		javaFormat.setClasses(getClassDecls(statuses));
+		List<AClassDeclCG> classes = getClassDecls(statuses);
+		javaFormat.setClasses(classes);
 		
 		TransformationAssistantCG transformationAssistant = new TransformationAssistantCG(irInfo, varPrefixes);
 		FunctionValueAssistant functionValueAssistant = new FunctionValueAssistant();
@@ -192,7 +197,8 @@ public class JavaCodeGen
 		IfExpTransformation ifExpTransformation = new IfExpTransformation(transformationAssistant);
 		IgnorePatternTransformation ignoreTransformation = new IgnorePatternTransformation(transformationAssistant, IGNORE_PATTERN_NAME_PREFIX);
 		DeflattenTransformation deflattenTransformation = new DeflattenTransformation(transformationAssistant);
-		UnionTypeTransformation unionTypeTransformation = new UnionTypeTransformation(transformationAssistant, irInfo);
+		TypeTransformation typeTransformation = new TypeTransformation(transformationAssistant);
+		UnionTypeTransformation unionTypeTransformation = new UnionTypeTransformation(transformationAssistant, irInfo, classes, APPLY_EXP_NAME_PREFIX, OBJ_EXP_NAME_PREFIX, CALL_STM_OBJ_NAME_PREFIX, irInfo.getTempVarNameGen());
 		FunctionValueVisitor funcValVisitor = new FunctionValueVisitor(transformationAssistant, functionValueAssistant, INTERFACE_NAME_PREFIX, TEMPLATE_TYPE_PREFIX, EVAL_METHOD_PREFIX, PARAM_NAME_PREFIX);
 		ILanguageIterator langIterator = new JavaLanguageIterator(transformationAssistant, irInfo.getTempVarNameGen(), varPrefixes);
 		TransformationVisitor transVisitor = new TransformationVisitor(irInfo, varPrefixes, transformationAssistant, langIterator);
@@ -213,6 +219,7 @@ public class JavaCodeGen
 					classCg.apply(deflattenTransformation);
 					classCg.apply(funcValVisitor);
 					classCg.apply(transVisitor);
+					classCg.apply(typeTransformation);
 					classCg.apply(unionTypeTransformation);
 				}
 				else

@@ -1,0 +1,34 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry(final Character c) {
+        //Skip;
+    }
+
+    public Entry(final Number n) {
+        //Skip;
+    }
+
+    public Entry(final Boolean b, final Number r) {
+        //Skip;
+    }
+
+    public Entry(final Number n, final Character c) {
+        //Skip;
+    }
+
+    public Entry() {
+    }
+
+    public static Object Run() {
+        Object x = 1L;
+        Object y = 'a';
+
+        return new Entry(((Number) x), ((Character) y));
+    }
+}
+
+##########

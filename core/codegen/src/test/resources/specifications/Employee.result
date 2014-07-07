@@ -86,7 +86,7 @@ public class Company {
     }
 
     public Number calculateSalary() {
-        return start_calc(0L, employees);
+        return start_calc(0L, employees.clone());
     }
 
     private Number start_calc(final Number sum, final VDMSeq emps) {

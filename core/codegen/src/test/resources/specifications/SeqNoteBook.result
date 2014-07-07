@@ -113,7 +113,7 @@ public class NoteBook {
 
         long toVar_1 = nb1.noOfMessgages().longValue();
 
-        for (long i = 1L; i <= toVar_1; i++) {
+        for (Long i = 1L; i <= toVar_1; i++) {
             VDMSeq reversed = nb1.getReverseMessages();
             IO.println(((VDMSeq) reversed.get(Utils.index(i))).clone());
         }
@@ -159,7 +159,7 @@ public class NoteBook {
     public void printMessages() {
         long toVar_2 = messages.size();
 
-        for (long i = 1L; i <= toVar_2; i++) {
+        for (Long i = 1L; i <= toVar_2; i++) {
             VDMSeq msg = getMessage(i);
             IO.println(msg.clone());
         }

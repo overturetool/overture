@@ -1,1 +1,7 @@
-$node.getName()
+#set( $prefix = "" )
+##
+#if ( $node.getExplicit() )
+	#set( $prefix = "${node.getClassName()}.")
+#end
+##
+${prefix}${node.getName()}

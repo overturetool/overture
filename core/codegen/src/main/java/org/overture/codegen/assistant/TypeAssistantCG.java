@@ -7,11 +7,18 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SSeqTypeBase;
+import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.SObjectDesignatorCG;
 import org.overture.codegen.cgast.STypeCG;
+import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.AFieldDeclCG;
+import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.cgast.declarations.ARecordDeclCG;
+import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
+import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
@@ -25,8 +32,12 @@ import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.SBasicTypeCG;
 import org.overture.codegen.cgast.types.SBasicTypeWrappersTypeCG;
+import org.overture.codegen.cgast.types.SMapTypeCG;
+import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.ir.IRInfo;
+import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.logging.Logger;
+import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
@@ -36,6 +47,97 @@ public class TypeAssistantCG extends AssistantBase
 	public TypeAssistantCG(AssistantManager assistantManager)
 	{
 		super(assistantManager);
+	}
+	
+	public AMethodTypeCG  getMethodType(IRInfo info, List<AClassDeclCG> classes,
+			String fieldModule, String fieldName, LinkedList<SExpCG> args)
+			throws org.overture.codegen.cgast.analysis.AnalysisException
+	{
+		AClassDeclCG classDecl = assistantManager.getDeclAssistant().findClass(classes, fieldModule);
+		
+		List<AMethodDeclCG> methods = assistantManager.getDeclAssistant().getAllMethods(classDecl, classes);
+
+		for (AMethodDeclCG method : methods)
+		{
+			if (method.getName().equals(fieldName))
+			{
+				LinkedList<STypeCG> params = method.getMethodType().getParams();
+
+				if (assistantManager.getTypeAssistant().checkArgTypes(info, args, params))
+				{
+					return method.getMethodType().clone();
+				}
+			}
+		}
+
+		return null;
+	}
+	
+	public STypeCG getFieldType(AClassDeclCG classDecl, String fieldName, List<AClassDeclCG> classes)
+	{
+		for(AFieldDeclCG field : assistantManager.getDeclAssistant().getAllFields(classDecl, classes))
+		{
+			if(field.getName().equals(fieldName))
+			{
+				return field.getType().clone();
+			}
+		}
+		
+		return null;
+	}
+	
+	public List<STypeCG> getFieldTypes(ARecordDeclCG record)
+	{
+		List<STypeCG> fieldTypes = new LinkedList<STypeCG>();
+
+		for (AFieldDeclCG field : record.getFields())
+		{
+			fieldTypes.add(field.getType());
+		}
+		
+		return fieldTypes;
+	}
+	
+	public STypeCG getFieldType(List<AClassDeclCG> classes, String moduleName, String fieldName)
+	{
+		AClassDeclCG classDecl = assistantManager.getDeclAssistant().findClass(classes, moduleName);
+		return getFieldType(classDecl, fieldName, classes);
+	}
+	
+	public boolean checkArgTypes(IRInfo info, List<SExpCG> args, List<STypeCG> paramTypes)
+			throws org.overture.codegen.cgast.analysis.AnalysisException
+	{
+		if(args.size() != paramTypes.size())
+		{
+			return false;
+		}
+		
+		for (int i = 0; i < paramTypes.size(); i++)
+		{
+			SourceNode paramSourceNode = paramTypes.get(i).getSourceNode();
+			SourceNode argTypeSourceNode = args.get(i).getType().getSourceNode();
+
+			if (paramSourceNode == null || argTypeSourceNode == null)
+			{
+				return false;
+			}
+
+			org.overture.ast.node.INode paramTypeNode = paramSourceNode.getVdmNode();
+			org.overture.ast.node.INode argTypeNode = argTypeSourceNode.getVdmNode();
+
+			if (!(paramTypeNode instanceof PType) || !(argTypeNode instanceof PType))
+			{
+				return false;
+			}
+			
+			TypeComparator typeComparator = info.getTcFactory().getTypeComparator();
+			if (!typeComparator.compatible((PType) paramTypeNode, (PType) argTypeNode))
+			{
+				return false;
+			}
+		}
+		
+		return true;
 	}
 
 	public PDefinition getTypeDef(ILexNameToken nameToken)
@@ -124,17 +226,16 @@ public class TypeAssistantCG extends AssistantBase
 		return methodType;
 	}
 	
-	//TODO: Copied from UML2VDM. Factor out in assistant
-	public boolean isUnionOfQuotes(AUnionType type)
+	public boolean isUnionOfType(AUnionType unionType, Class<? extends PType> type)
 	{
 		TypeCheckerAssistantFactory factory = new TypeCheckerAssistantFactory();
 		PTypeAssistantTC typeAssistant = factory.createPTypeAssistant();
 		
 		try
 		{
-			for (PType t : type.getTypes())
+			for (PType t : unionType.getTypes())
 			{
-				if (!typeAssistant.isType(t, AQuoteType.class))
+				if (!typeAssistant.isType(t, type))
 				{
 					return false;
 				}
@@ -147,4 +248,63 @@ public class TypeAssistantCG extends AssistantBase
 		return true;
 	}
 	
+	public STypeCG findElementType(AApplyObjectDesignatorCG designator)
+	{
+		int appliesCount = 0;
+		
+		SObjectDesignatorCG object = designator.getObject();
+
+		while(object != null)
+		{
+			if(object instanceof AIdentifierObjectDesignatorCG)
+			{
+				AIdentifierObjectDesignatorCG id = (AIdentifierObjectDesignatorCG) object;
+			
+				STypeCG type = id.getExp().getType();
+				
+				int methodTypesCount = 0;
+				
+				while (type instanceof AMethodTypeCG)
+				{
+					methodTypesCount++;
+					AMethodTypeCG methodType = (AMethodTypeCG) type;
+					type = methodType.getResult();
+				}
+				
+				while(type instanceof SSeqTypeCG || type instanceof SMapTypeCG)
+				{
+					if(type instanceof SSeqTypeCG)
+					{
+						type = ((SSeqTypeCG) type).getSeqOf();
+					}
+
+					if(type instanceof SMapTypeCG)
+					{
+						type = ((SMapTypeCG) type).getTo();
+					}
+					
+					if (appliesCount == methodTypesCount)
+					{
+						return type;						
+					}
+					
+					methodTypesCount++;
+				}
+
+				return null;
+			}
+			else if(object instanceof AApplyObjectDesignatorCG)
+			{
+				AApplyObjectDesignatorCG applyObj = (AApplyObjectDesignatorCG) object;
+				appliesCount++;
+				object = applyObj.getObject();
+			}
+			else
+			{
+				return null;
+			}
+		}
+		
+		return null;
+	}
 }

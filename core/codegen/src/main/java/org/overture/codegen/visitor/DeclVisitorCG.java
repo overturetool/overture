@@ -18,6 +18,7 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOperationType;
+import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
@@ -77,7 +78,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 		{
 			AUnionType unionType = (AUnionType) type;
 			
-			if(question.getTypeAssistant().isUnionOfQuotes(unionType))
+			if(question.getTypeAssistant().isUnionOfType(unionType, AQuoteType.class))
 				//The VDM translation ignores named invariant types that are not
 				//union of quotes as they are represented as integers instead
 				return new AEmptyDeclCG();

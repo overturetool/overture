@@ -1,0 +1,17 @@
+class Entry
+
+functions
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+if {x | x in set {1}} = {2} then
+	return 1
+else if {x | x in set {1}} = {2} then
+	return 2
+else
+	return 3;
+
+
+end Entry

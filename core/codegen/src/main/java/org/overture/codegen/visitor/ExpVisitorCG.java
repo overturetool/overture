@@ -280,8 +280,8 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 
 		AInstanceofExpCG instanceOfExp = new AInstanceofExpCG();
 		instanceOfExp.setType(typeCg);
-		instanceOfExp.setClassType((AClassTypeCG) classTypeCg);
-		instanceOfExp.setObjRef(objRefCg);
+		instanceOfExp.setCheckedType(classTypeCg);
+		instanceOfExp.setExp(objRefCg);
 		
 		return instanceOfExp;
 	}

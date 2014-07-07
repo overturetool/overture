@@ -111,6 +111,7 @@ import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
+import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectStmCG;
 import org.overture.codegen.cgast.statements.ACallStmCG;
 import org.overture.codegen.cgast.statements.ADecrementStmCG;
@@ -124,6 +125,7 @@ import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.AIncrementStmCG;
 import org.overture.codegen.cgast.statements.ALetDefStmCG;
+import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
 import org.overture.codegen.cgast.statements.ANewObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
@@ -266,11 +268,15 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(ALetDefStmCG.class, templateStructure.STM_PATH + "LetDef");
 		
+		nodeTemplateFileNames.put(ALocalAssignmentStmCG.class, templateStructure.STM_PATH + "LocalAssignment");
+		
 		nodeTemplateFileNames.put(AAssignmentStmCG.class, templateStructure.STM_PATH + "Assignment");
 		
 		nodeTemplateFileNames.put(ABlockStmCG.class, templateStructure.STM_PATH + "Block");
 		
 		nodeTemplateFileNames.put(ACallObjectStmCG.class, templateStructure.STM_PATH + "CallObject");
+		
+		nodeTemplateFileNames.put(ACallObjectExpStmCG.class, templateStructure.STM_PATH + "CallObjectExp");
 		
 		nodeTemplateFileNames.put(ACallStmCG.class, templateStructure.STM_PATH + "Call");
 		

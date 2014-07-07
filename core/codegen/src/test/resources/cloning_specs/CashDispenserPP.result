@@ -46,7 +46,7 @@ public class SimpleTest {
         resource.AddLetterbox(clock, new Letterbox());
         ((Till) tills.get(1L)).InsertCard(c1);
 
-        if (((Number) ((Till) tills.get(1L)).Validate(123456L)).longValue() == Quotes.PinOk.longValue()) {
+        if (((Till) tills.get(1L)).Validate(123456L).longValue() == Quotes.PinOk.longValue()) {
             return ((Till) tills.get(1L)).MakeWithdrawal(800L);
         } else {
             return false;
@@ -455,7 +455,7 @@ public class Till {
         curCard = c;
     }
 
-    public Object Validate(final Number pin) {
+    public Number Validate(final Number pin) {
         Number cardId = curCard.GetCardId();
         Boolean codeOk = curCard.GetCode().longValue() == Encode(pin).longValue();
         Boolean cardLegal = IsLegalCard();
