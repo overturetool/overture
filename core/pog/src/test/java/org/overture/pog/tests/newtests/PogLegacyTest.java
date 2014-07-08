@@ -31,7 +31,6 @@ public class PogLegacyTest extends ParamStandardTest<PogTestResult>
 			String resultParameter)
 	{
 		super(nameParameter, testParameter, resultParameter);
-		updateResult=true;
 	}
 
 	@Parameters(name = "{index} : {0}")
