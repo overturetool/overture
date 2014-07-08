@@ -1,4 +1,4 @@
-package org.overture.core.tests.demo;
+package org.overture.core.tests.demos;
 
 import java.lang.reflect.Type;
 import java.util.Collection;
@@ -28,7 +28,7 @@ public class IdStandardTest extends ParamStandardTest<IdTestResult>
 {
 
 	// Root location of the test input and result files
-	private static final String EXAMPLE_TEST_FILES = "src/test/resources/example";
+	private static final String EXAMPLE_TEST_FILES = "src/test/resources/demos";
 
 	// The update property for this test
 	private static final String UPDATE_PROPERTY = "tests.update.example.StandardID";
