@@ -33,7 +33,7 @@ public class Playground {
 
 	
 	// comment this annotation out when done! no need to run the test
-	@Test
+	//@Test
 	public void quickTest() throws AnalysisException, IOException,
 			URISyntaxException {
 
