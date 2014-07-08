@@ -1,4 +1,4 @@
-package org.overture.core.tests;
+package org.overture.core.tests.examples;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -12,7 +12,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.node.INode;
-import org.overture.core.tests.AllExamplesHelper.ExampleAstData;
+import org.overture.core.tests.AbsResultTest;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
 
@@ -56,7 +56,7 @@ public abstract class ParamExamplesTest<R extends Serializable> extends
 	public static Collection<Object[]> testData() throws ParserException,
 			LexException, IOException
 	{
-		Collection<ExampleAstData> examples = AllExamplesHelper.getExamplesAsts();
+		Collection<ExampleAstData> examples = ExamplesUtility.getExamplesAsts();
 		Collection<Object[]> r = new Vector<Object[]>();
 
 		for (ExampleAstData e : examples)
