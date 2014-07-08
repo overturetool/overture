@@ -1,1 +1,1 @@
-["type compatibilityobligation:(forall k:(Inf | real) \u0026 ((k \u003c\u003e \u003cINFINITY\u003e) \u003d\u003e is_(k, real)))","type invariant satisfiableobligation:(exists k:Kg \u0026 ((k \u003c\u003e \u003cINFINITY\u003e) \u003d\u003e (k \u003e\u003d 0)))"]
+["type compatibility obligation:(forall k:(Inf | real) \u0026 ((k \u003c\u003e \u003cINFINITY\u003e) \u003d\u003e is_(k, real)))","type invariant satisfiable obligation:(exists k:Kg \u0026 ((k \u003c\u003e \u003cINFINITY\u003e) \u003d\u003e (k \u003e\u003d 0)))"]
