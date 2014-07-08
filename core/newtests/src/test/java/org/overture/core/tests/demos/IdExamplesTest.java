@@ -1,11 +1,14 @@
 package org.overture.core.tests.demos;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.overture.ast.node.INode;
 import org.overture.core.tests.ParamExamplesTest;
+
+import com.google.gson.reflect.TypeToken;
 
 /**
  * Demonstration of new Overture tests on examples. Takes an AST and dumps the entire content to a string. <br>
@@ -54,13 +57,25 @@ public class IdExamplesTest extends ParamExamplesTest<IdTestResult>
 	}
 
 	/**
-	 * Get the property that signals update mode. Always a good idea
-	 * to return a constant instead of mainlining it.
+	 * Get the property that signals update mode. Always a good idea to return a constant instead of mainlining it.
 	 */
 	@Override
 	protected String getUpdatePropertyString()
 	{
 		return UPDATE_PROPERTY;
+	}
+
+	/**
+	 * Result type information for this test. Helps the main test driver along.
+	 */
+	@Override
+	public Type getResultType()
+	{
+		Type resultType = new TypeToken<IdTestResult>()
+		{
+		}.getType();
+		return resultType;
+
 	}
 
 }
