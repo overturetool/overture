@@ -16,12 +16,14 @@ import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
 
 /**
- * Special class to help handle testing of the Overture examples. The examples can either be provided as raw sources or
- * as typed ASTs.
+ * Utilities to help handle testing of Overture examples. The examples can either be provided as raw sources or as typed
+ * ASTs.<br>
+ * <br>
+ * This class only has static methods.
  * 
  * @author ldc
  */
-public class ExamplesUtility
+abstract public class ExamplesUtility
 {
 
 	private static final String SL_EXAMPLES_ROOT = "../../documentation/examples/VDMSL";

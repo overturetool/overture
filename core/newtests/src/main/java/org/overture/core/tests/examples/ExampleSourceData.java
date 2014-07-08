@@ -5,12 +5,9 @@ import java.io.Serializable;
 import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
 
-
 /**
- * Simple class for storing the essential test data for a single overture example.<br>
- * <br>
- * The class holds the name and content (the VDM model encoded in a {@link String}) as well as {@link Release} and
- * {@link Dialect} information of the example.
+ * Raw test data of an Overture example. This class holds the name and sources (the VDM model encoded as a single
+ * {@link String}). It also holds the {@link Release} and {@link Dialect} the example is in.
  * 
  * @author ldc
  */

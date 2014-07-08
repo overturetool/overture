@@ -4,31 +4,32 @@ import java.util.List;
 
 import org.overture.ast.node.INode;
 
-	/**
-	 * Simple wrapper class for examples data. Contains the AST (as a list of {@link INode}) and name of an example.
-	 * 
-	 * @author ldc
-	 */
-	public class ExampleAstData
+/**
+ * Processed test data of an Overture example. This class holds the name and AST (List of {@link INode}) of an Overture
+ * example.
+ * 
+ * @author ldc
+ */
+public class ExampleAstData
+{
+
+	String exampleName;
+	List<INode> model;
+
+	public ExampleAstData(String exampleName, List<INode> model)
 	{
-
-		String exampleName;
-		List<INode> model;
-
-		public ExampleAstData(String exampleName, List<INode> model)
-		{
-			this.exampleName = exampleName;
-			this.model = model;
-		}
-
-		public String getExampleName()
-		{
-			return exampleName;
-		}
-
-		public List<INode> getModel()
-		{
-			return model;
-		}
-
+		this.exampleName = exampleName;
+		this.model = model;
 	}
+
+	public String getExampleName()
+	{
+		return exampleName;
+	}
+
+	public List<INode> getModel()
+	{
+		return model;
+	}
+
+}
