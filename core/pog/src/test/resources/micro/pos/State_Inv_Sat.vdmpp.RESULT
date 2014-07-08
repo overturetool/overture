@@ -1,1 +1,1 @@
-[{"poKind":"state invariant initialized","poExp":"(x \u003e 10)"},{"poKind":"state invariant satisfiable","poExp":"(exists x:int \u0026 (x \u003e 10))"}]
+["state invariant initialized obligation:(x \u003e 10)","state invariant satisfiable obligation:(exists x:int \u0026 (x \u003e 10))"]
