@@ -23,7 +23,7 @@ public class PogLegacyTest extends ParamStandardTest<PogTestResult>
 {
 
 	private final static String LEGACY_ADAPTED_ROOT = "src/test/resources/old/adapted";
-	private final static String LEGACY_NOPAREN_ROOT = "src/test/resources/old/noparen";
+	private final static String LEGACY_DIRECT_ROOT = "src/test/resources/old/direct";
 
 	private static final String UPDATE_PROPERTY = "tests.update.pog.legacy";
 
@@ -37,7 +37,7 @@ public class PogLegacyTest extends ParamStandardTest<PogTestResult>
 	@Parameters(name = "{index} : {0}")
 	public static Collection<Object[]> testData()
 	{
-		return PathsProvider.computePaths(LEGACY_ADAPTED_ROOT, LEGACY_NOPAREN_ROOT);
+		return PathsProvider.computePaths(LEGACY_ADAPTED_ROOT, LEGACY_DIRECT_ROOT);
 	}
 
 	@Override
