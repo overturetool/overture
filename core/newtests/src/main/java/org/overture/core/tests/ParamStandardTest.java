@@ -25,6 +25,8 @@ import org.overture.parser.syntax.ParserException;
  * your native output type and <code>R</code>.
  * 
  * @author ldc
+ * @param R
+ *            the result type being compared by the test
  */
 public abstract class ParamStandardTest<R extends Serializable> extends
 		AbsResultTest<R>
@@ -40,8 +42,10 @@ public abstract class ParamStandardTest<R extends Serializable> extends
 	 * <code>@Parameters(name = "{index} : {0}")</code></b>. Supporting parameterized tests is also the reason the
 	 * method must be static.
 	 * 
+	 * @param nameParameter
+	 *            the name of the test. Normally derived from the test input file
 	 * @param testParameter
-	 *            filename for the VDM source to test
+	 *            file path for the VDM source to test
 	 * @param resultParameter
 	 *            test result file
 	 */
@@ -58,17 +62,17 @@ public abstract class ParamStandardTest<R extends Serializable> extends
 	 * Analyses a model (represented by its AST). This method must be overridden to perform whatever analysis the
 	 * functionality under test performs.<br>
 	 * <br>
-	 * The output of this method must be of type <code>R</code> that implements {@link IResult}.
+	 * The output of this method must be of type <code>R</code>, the result type this test runs on.
 	 * 
 	 * @param ast
-	 *            representing the model to process
+	 *            the model to process
 	 * @return the output of the analysis
 	 */
 	public abstract R processModel(List<INode> ast);
 
 	/**
 	 * The main test executor. Constructs ASTs and processes them via {@link #processModel(List)} and Results via
-	 * {@link #deSerializeResult(String)}. It then compares the two according to {@link #testCompare(Object, IResult)}.
+	 * {@link #deSerializeResult(String)}. It then compares the two according to {@link #compareResults(Object, IResult)}.
 	 * 
 	 * @param <R>
 	 *            a result type produced by the analyzed plug-in. You may need to create one.
@@ -88,21 +92,9 @@ public abstract class ParamStandardTest<R extends Serializable> extends
 		} else
 		{
 			R expected = deSerializeResult(resultPath);
-			this.testCompare(actual, expected);
+			this.compareResults(actual, expected);
 		}
 	}
-
-	/**
-	 * Compares output of the processed model with a previous. This method must be overridden to implement result
-	 * comparison behavior. Don't forget to assert something.
-	 * 
-	 * @param actual
-	 *            the processed model
-	 * @param expected
-	 *            the stored result
-	 */
-	public abstract void testCompare(R actual, R expected);
-
 
 
 }

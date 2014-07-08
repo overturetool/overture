@@ -46,7 +46,7 @@ public class IdExternalsTest extends ParamExternalsTest<IdTestResult>
 	 * Main comparison method. Simply call on {@link IdTestResult}.
 	 */
 	@Override
-	public void testCompare(IdTestResult actual, IdTestResult expected)
+	public void compareResults(IdTestResult actual, IdTestResult expected)
 	{
 		IdTestResult.compare(actual, expected, testName);
 	}

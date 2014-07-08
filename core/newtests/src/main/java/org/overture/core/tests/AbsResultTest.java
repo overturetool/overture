@@ -22,7 +22,8 @@ import com.google.gson.reflect.TypeToken;
  * instead.
  * 
  * @author ldc
- * @param <R> the (user-provided) type of results this test operates on
+ * @param <R>
+ *            the (user-provided) type of results this test operates on
  */
 abstract class AbsResultTest<R extends Serializable>
 {
@@ -87,6 +88,15 @@ abstract class AbsResultTest<R extends Serializable>
 	 */
 	protected abstract String getUpdatePropertyString();
 
+	/**
+	 * Update the result file for this test.
+	 * 
+	 * @param actual
+	 *            the new result to be saved
+	 * @throws ParserException
+	 * @throws LexException
+	 * @throws IOException
+	 */
 	protected void testUpdate(R actual) throws ParserException, LexException,
 			IOException
 	{
@@ -95,6 +105,12 @@ abstract class AbsResultTest<R extends Serializable>
 		IOUtils.write(json, new FileOutputStream(resultPath));
 	}
 
+	/**
+	 * This method check if the test is being run in result update mode, by consulting the update property as returned
+	 * by {{@link #getUpdatePropertyString()}.
+	 * 
+	 * @return true if test is running in update mode. False otherwise
+	 */
 	protected boolean updateCheck()
 	{
 		String update_results_property = getUpdatePropertyString();
@@ -112,4 +128,16 @@ abstract class AbsResultTest<R extends Serializable>
 		}
 		return false;
 	}
+
+	/**
+	 * Compares output of the processed model with a previously stored result. This method must be overridden to
+	 * implement result comparison behavior. Don't forget to assert something.
+	 * 
+	 * @param actual
+	 *            the processed model
+	 * @param expected
+	 *            the stored result
+	 */
+	public abstract void compareResults(R actual, R expected);
+
 }

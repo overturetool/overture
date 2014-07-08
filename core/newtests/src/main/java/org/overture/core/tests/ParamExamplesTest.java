@@ -17,14 +17,37 @@ import org.overture.core.tests.examples.ExamplesUtility;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
 
+/**
+ * The {@link ParamExamplesTest} class allows users to run tests on the Overture examples. Its behavior is identical to
+ * {@link ParamStandardTest} is most regards. The only difference is that the test inputs are not user-configurable.
+ * They are provided directly by this class and consist of the standard Overture examples.<br>
+ * <br>
+ * It is recommended that all plug-ins implement a version of this test to ensure that they work on the provided
+ * examples.
+ * 
+ * @author ldc
+ * @param <R>
+ */
 @RunWith(Parameterized.class)
 public abstract class ParamExamplesTest<R extends Serializable> extends
 		AbsResultTest<R>
 {
 	List<INode> model;
-	
+
 	private final static String RESULTS_EXAMPLES = "src/test/resources/examples/";
 
+	/**
+	 * The constructor for the class. The parameters for the constructor are provided by {@link #testData()}. Due to
+	 * this, subclasses of this test must have the exact same constructor parameters. If you change the constructor
+	 * parameters, you must implement your own test data provider.
+	 * 
+	 * @param name
+	 *            the name of the test. Normally derived from the example used as input
+	 * @param model
+	 *            the typed AST representing the example model under test
+	 * @param result
+	 *            the result file path. By convention it's stored under <code>src/test/resources/examples</code>
+	 */
 	public ParamExamplesTest(String name, List<INode> model, String result)
 	{
 		this.testName = name;
@@ -33,6 +56,18 @@ public abstract class ParamExamplesTest<R extends Serializable> extends
 		this.updateResult = updateCheck();
 	}
 
+	/**
+	 * The main test executor for this class. Takes the model AST and applies whatever analysis is specified in
+	 * {@link #processModel(List)}. Afterwards, results are compared with
+	 * {@link #compareResults(Serializable, Serializable)}. <br>
+	 * <br>
+	 * If the test is running in update mode, {@link #testUpdate(Serializable)} is executed instead of the comparison.
+	 * 
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws ParserException
+	 * @throws LexException
+	 */
 	@Test
 	public void testCase() throws FileNotFoundException, IOException,
 			ParserException, LexException
@@ -49,6 +84,17 @@ public abstract class ParamExamplesTest<R extends Serializable> extends
 		}
 	}
 
+	/**
+	 * Test data provider. It provides a list of of arrays to initialize the test constructor. Each array initializes a
+	 * test for a single Overture example. The arrays consist of a test name (derived from the example name), the model
+	 * AST for that example and a path to a result file. By convention, results are stored under the
+	 * <code>src/test/resources/examples</code> folder of each module using this test.
+	 * 
+	 * @return a collection of model ASTs and result paths in the form of {modelname ,modelast, resultpath} arrays
+	 * @throws ParserException
+	 * @throws LexException
+	 * @throws IOException
+	 */
 	@Parameters(name = "{index} : {0}")
 	public static Collection<Object[]> testData() throws ParserException,
 			LexException, IOException
@@ -62,14 +108,24 @@ public abstract class ParamExamplesTest<R extends Serializable> extends
 					e.getExampleName(),
 					e.getModel(),
 					RESULTS_EXAMPLES + e.getExampleName()
-							+ PathsProvider.RESULT_EXTENSION});
+							+ PathsProvider.RESULT_EXTENSION });
 		}
 
 		return r;
 	}
 
+	/**
+	 * Analyses a model (represented by its AST). This method must be overridden to perform whatever analysis the
+	 * functionality under test performs.<br>
+	 * <br>
+	 * The output of this method must be of type <code>R</code>, the result type this test runs on.
+	 * 
+	 * @param ast
+	 *            the model to process
+	 * @return the output of the analysis
+	 */
 	public abstract R processModel(List<INode> model);
 
-	public abstract void compareResults(R actual, R expected);
+
 
 }

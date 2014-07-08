@@ -75,7 +75,7 @@ public class IdStandardTest extends ParamStandardTest<IdTestResult>
 	 * stuff, the classic Utils class is also a good place.
 	 */
 	@Override
-	public void testCompare(IdTestResult actual, IdTestResult expected)
+	public void compareResults(IdTestResult actual, IdTestResult expected)
 	{
 		IdTestResult.compare(actual, expected, testName);
 	}
