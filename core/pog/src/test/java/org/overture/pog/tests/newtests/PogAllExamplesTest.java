@@ -1,6 +1,8 @@
 package org.overture.pog.tests.newtests;
+
 import static org.junit.Assert.fail;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 import org.junit.runner.RunWith;
@@ -10,6 +12,8 @@ import org.overture.ast.node.INode;
 import org.overture.core.tests.ParamExamplesTest;
 import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.pub.ProofObligationGenerator;
+
+import com.google.gson.reflect.TypeToken;
 
 /**
  * Working examples of all examples tests for the pog
@@ -24,8 +28,6 @@ public class PogAllExamplesTest extends ParamExamplesTest<PogTestResult>
 	{
 		super(name, model, result);
 	}
-
-
 
 	@Override
 	public PogTestResult processModel(List<INode> model)
@@ -51,13 +53,20 @@ public class PogAllExamplesTest extends ParamExamplesTest<PogTestResult>
 		PogTestResult.compare(actual, expected);
 	}
 
-
-
 	@Override
 	protected String getUpdatePropertyString()
 	{
 		return "tests.update.pog.allexamples";
 
+	}
+
+	@Override
+	public Type getResultType()
+	{
+		Type resultType = new TypeToken<PogTestResult>()
+		{
+		}.getType();
+		return resultType;
 	}
 
 }

@@ -2,6 +2,7 @@ package org.overture.pog.tests.newtests;
 
 import static org.junit.Assert.fail;
 
+import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
 
@@ -14,6 +15,8 @@ import org.overture.core.tests.ParamStandardTest;
 import org.overture.core.tests.PathsProvider;
 import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.pub.ProofObligationGenerator;
+
+import com.google.gson.reflect.TypeToken;
 
 @RunWith(Parameterized.class)
 public class PogBasicTest extends ParamStandardTest<PogTestResult>
@@ -59,6 +62,15 @@ public class PogBasicTest extends ParamStandardTest<PogTestResult>
 	public void compareResults(PogTestResult actual, PogTestResult expected)
 	{
 		PogTestResult.compare(actual, expected);
+	}
+	
+	@Override
+	public Type getResultType()
+	{
+		Type resultType = new TypeToken<PogTestResult>()
+		{
+		}.getType();
+		return resultType;
 	}
 
 }
