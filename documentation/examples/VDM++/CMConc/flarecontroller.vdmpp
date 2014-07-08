@@ -65,7 +65,7 @@ isFinished () ==
   for all id in set dom dispensers do
     dispensers(id).isFinished();
 
-Step: () ==> ()
+protected Step: () ==> ()
 Step() ==
   (if threats <> []
   then (def mk_ (evid,pmt, pa, pt) = getThreat() in
