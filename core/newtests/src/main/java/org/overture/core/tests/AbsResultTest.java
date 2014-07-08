@@ -10,7 +10,6 @@ import java.lang.reflect.Type;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
-import org.overture.core.tests.examples.ParamExamplesTest;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
 
@@ -25,7 +24,7 @@ import com.google.gson.reflect.TypeToken;
  * @author ldc
  * @param <R> the (user-provided) type of results this test operates on
  */
-public abstract class AbsResultTest<R extends Serializable>
+abstract class AbsResultTest<R extends Serializable>
 {
 	protected boolean updateResult;
 	protected String resultPath;

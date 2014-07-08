@@ -1,4 +1,4 @@
-package org.overture.core.tests.examples;
+package org.overture.core.tests;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -12,8 +12,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.node.INode;
-import org.overture.core.tests.AbsResultTest;
-import org.overture.core.tests.PathsProvider;
+import org.overture.core.tests.examples.ExampleAstData;
+import org.overture.core.tests.examples.ExamplesUtility;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
 

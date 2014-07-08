@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.node.INode;
-import org.overture.core.tests.examples.ParamExamplesTest;
+import org.overture.core.tests.ParamExamplesTest;
 import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.pub.ProofObligationGenerator;
 
