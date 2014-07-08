@@ -10,17 +10,16 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import org.overture.core.tests.ParseTcFacade;
-import org.overture.core.tests.AllExamplesHelper.ExampleAstData;
+import org.overture.core.tests.examples.ExampleAstData;
+import org.overture.core.tests.examples.ExampleSourceData;
+import org.overture.core.tests.examples.ExamplesUtility;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
-import org.overture.tools.examplepackager.util.ExampleTestData;
-import org.overture.tools.examplepackager.util.ExampleTestUtils;
 
 /**
  * Basic test for all the examples. Simply ensures that they all parse and type-check correctly. <br>
- * <b>Note:</b> FCurrently, models with intentional errors are not tested. This test needs to be improved to also check
- * these examples against theexpected errors.
+ * <b>Note:</b> Currently, models with intentional errors are not tested. This test needs to be improved to also check
+ * these examples against the expected errors.
  * 
  * @author ldc
  */
@@ -28,9 +27,9 @@ import org.overture.tools.examplepackager.util.ExampleTestUtils;
 @RunWith(Parameterized.class)
 public class ParseTcAllExamplesTest
 {
-	ExampleTestData testData;
+	ExampleSourceData testData;
 
-	public ParseTcAllExamplesTest(String _, ExampleTestData testData)
+	public ParseTcAllExamplesTest(String _, ExampleSourceData testData)
 	{
 		this.testData = testData;
 	}
@@ -40,9 +39,9 @@ public class ParseTcAllExamplesTest
 	{
 		Collection<Object[]> r = new Vector<Object[]>();
 
-		Collection<ExampleTestData> examples = ExampleTestUtils.getCorrectExamplesSources();
+		Collection<ExampleSourceData> examples = ExamplesUtility.getExamplesSources();
 
-		for (ExampleTestData e : examples)
+		for (ExampleSourceData e : examples)
 		{
 			r.add(new Object[] { e.getName(), e });
 		}
