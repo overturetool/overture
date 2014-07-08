@@ -63,9 +63,9 @@ abstract class AbsResultTest<R extends Serializable>
 	}
 
 	/**
-	 * Calculates the type of the result. This method does its best but doesn't always succeed. Override it if
-	 * necessary. To do this, it's usually enough to replace the type parameter <code>R</code> with the actual type of
-	 * the result.
+	 * Calculates the type of the test result. This method does its best but will most likely need to be overridden.
+	 * However, that's quite simply and you can use the same code as below but replacing the type parameter <code>R</code>
+	 * with the actual explicit type of your result.
 	 * 
 	 * @return the {@link Type} of the result file
 	 */
