@@ -10,6 +10,7 @@ import java.lang.reflect.Type;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
+import org.overture.core.tests.examples.ParamExamplesTest;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
 
@@ -17,14 +18,14 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 /**
- * Top level class for new tests framework. Simply provides common result handling to all the test classes. This class
+ * Top level class for new tests framework. Provides common result handling code to all other test classes. This class
  * should<b>not</b> be subclass. Use {@link ParamStandardTest}, {@link ParamExamplesTest} or {@link ParamExternalsTest}
  * instead.
  * 
  * @author ldc
- * @param <R>
+ * @param <R> the (user-provided) type of results this test operates on
  */
-abstract class AbsResultTest<R extends Serializable>
+public abstract class AbsResultTest<R extends Serializable>
 {
 	protected boolean updateResult;
 	protected String resultPath;

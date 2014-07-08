@@ -15,10 +15,10 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.config.Release;
 import org.overture.config.Settings;
-import org.overture.core.tests.AllExamplesHelper.ExampleAstData;
+import org.overture.core.tests.examples.ExampleAstData;
+import org.overture.core.tests.examples.ExampleSourceData;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
-import org.overture.tools.examplepackager.util.ExampleTestData;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
@@ -63,33 +63,26 @@ public class ParseTcFacade
 	 * Parse and type check an Overture example
 	 * 
 	 * @param e
-	 *            The {@link ExampleTestData} of the example to process
+	 *            The {@link ExampleSourceData} of the example to process
 	 * @return the {@link ExampleAstData} of the submitted example
 	 * @throws ParserException
 	 * @throws LexException
 	 */
-	public static ExampleAstData parseExample(ExampleTestData e)
+	public static ExampleAstData parseExample(ExampleSourceData e)
 			throws ParserException, LexException
 	{
 		List<INode> ast = new LinkedList<INode>();
-		// convert between enums. weee!
-		Release rel = Release.CLASSIC;
-
-		if (e.getRelease() == org.overture.tools.examplepackager.Release.VDM_10)
-		{
-			rel = org.overture.config.Release.VDM_10;
-		}
 
 		switch (e.getDialect())
 		{
 			case VDM_SL:
-				ast = ParseTcFacade.typedAstFromContent(e.getSource(), e.getName(), Dialect.VDM_SL, rel);
+				ast = ParseTcFacade.typedAstFromContent(e.getSource(), e.getName(), Dialect.VDM_SL, e.getRelease());
 				break;
 			case VDM_PP:
-				ast = ParseTcFacade.typedAstFromContent(e.getSource(), e.getName(), Dialect.VDM_PP, rel);
+				ast = ParseTcFacade.typedAstFromContent(e.getSource(), e.getName(), Dialect.VDM_PP, e.getRelease());
 				break;
 			case VDM_RT:
-				ast = ParseTcFacade.typedAstFromContent(e.getSource(), e.getName(), Dialect.VDM_RT, rel);
+				ast = ParseTcFacade.typedAstFromContent(e.getSource(), e.getName(), Dialect.VDM_RT, e.getRelease());
 				break;
 			default:
 				fail("Unrecognised dialect:" + e.getDialect());
