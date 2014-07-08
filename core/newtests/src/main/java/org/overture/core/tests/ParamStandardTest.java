@@ -82,12 +82,12 @@ public abstract class ParamStandardTest<R extends Serializable> extends
 
 		List<INode> ast = ParseTcFacade.typedAst(modelPath, testName);
 		R actual = processModel(ast);
-		R expected = deSerializeResult(resultPath);
 		if (updateResult)
 		{
 			this.testUpdate(actual);
 		} else
 		{
+			R expected = deSerializeResult(resultPath);
 			this.testCompare(actual, expected);
 		}
 	}

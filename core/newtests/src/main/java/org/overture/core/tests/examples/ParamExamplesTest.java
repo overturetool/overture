@@ -13,6 +13,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.node.INode;
 import org.overture.core.tests.AbsResultTest;
+import org.overture.core.tests.PathsProvider;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
 
@@ -20,17 +21,13 @@ import org.overture.parser.syntax.ParserException;
 public abstract class ParamExamplesTest<R extends Serializable> extends
 		AbsResultTest<R>
 {
-
-	String resultPath;
 	List<INode> model;
-	protected String testName;
-	private final boolean updateResult;
-
+	
 	private final static String RESULTS_EXAMPLES = "src/test/resources/examples/";
 
 	public ParamExamplesTest(String name, List<INode> model, String result)
 	{
-		this.testName=name;
+		this.testName = name;
 		this.model = model;
 		this.resultPath = result;
 		this.updateResult = updateCheck();
@@ -42,12 +39,12 @@ public abstract class ParamExamplesTest<R extends Serializable> extends
 	{
 
 		R actual = processModel(model);
-		R expected = deSerializeResult(resultPath);
 		if (updateResult)
 		{
 			testUpdate(actual);
 		} else
 		{
+			R expected = deSerializeResult(resultPath);
 			this.compareResults(actual, expected);
 		}
 	}
@@ -61,8 +58,11 @@ public abstract class ParamExamplesTest<R extends Serializable> extends
 
 		for (ExampleAstData e : examples)
 		{
-			r.add(new Object[] { e.getExampleName(), e.getModel(),
-					RESULTS_EXAMPLES + e.getExampleName() });
+			r.add(new Object[] {
+					e.getExampleName(),
+					e.getModel(),
+					RESULTS_EXAMPLES + e.getExampleName()
+							+ PathsProvider.RESULT_EXTENSION});
 		}
 
 		return r;
