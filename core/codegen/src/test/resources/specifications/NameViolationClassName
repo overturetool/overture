@@ -4,9 +4,8 @@ operations
 
 public op : nat ==> ()
 op (Character) == 
-	if true then
+	if 1 <> 2 then
 	(
-		return;
 		op(3) 
 	) 
 	else
