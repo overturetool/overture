@@ -38,9 +38,11 @@ public class ParseTcFacade
 	 * 
 	 * @param content
 	 * @return
+	 * @throws LexException 
+	 * @throws ParserException 
 	 */
 	public static List<INode> typedAstFromContent(String content,
-			String testName, Dialect dialect, Release release)
+			String testName, Dialect dialect, Release release) throws ParserException, LexException
 	{
 		Settings.release = release;
 
@@ -151,11 +153,11 @@ public class ParseTcFacade
 	// These 3 methods have so much duplicated code because we cannot
 	// return the TC results since their types are all different.
 	// FIXME unify parsing and TCing of VDM dialects
-	private static List<INode> parseTcRtContent(String content, String testName)
+	private static List<INode> parseTcRtContent(String content, String testName) throws ParserException, LexException
 	{
-		Settings.dialect = Dialect.VDM_PP;
+		Settings.dialect = Dialect.VDM_RT;
 
-		TypeCheckResult<List<SClassDefinition>> TC = TypeCheckerUtil.typeCheckPp(content);
+		TypeCheckResult<List<SClassDefinition>> TC = TypeCheckerUtil.typeCheckRt(content);
 
 		assertTrue("Error in test " + testName
 				+ " Specification has parse errors", TC.parserResult.errors.isEmpty());
