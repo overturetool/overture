@@ -45,7 +45,7 @@ public class PogBugRegressionTest extends ParamStandardTest<PogTestResult> {
 	}
 
 	@Override
-	public void testCompare(PogTestResult actual, PogTestResult expected) {
+	public void compareResults(PogTestResult actual, PogTestResult expected) {
 		PogTestResult.compare(actual, expected);
 		
 	}
