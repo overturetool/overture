@@ -51,11 +51,10 @@ abstract class AbsResultTest<R extends Serializable>
 		if (!f.exists())
 		{
 			f.getParentFile().mkdirs();
-			f.createNewFile();
 			Assert.fail("Test " + testName
-					+ " failed. No result file found. Use "
+					+ " failed. No result file found. Use \"-D"
 					+ getUpdatePropertyString() + "." + testName
-					+ "to create an initial one.");
+					+ "\" to create an initial one.");
 		}
 		String json = IOUtils.toString(new FileReader(resultPath));
 		R result = gson.fromJson(json, resultType);
