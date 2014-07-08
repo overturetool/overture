@@ -7,12 +7,14 @@ import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AClassClassDefinition;
+import org.overture.ast.definitions.AEqualsDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.node.INode;
 import org.overture.codegen.cgast.SDeclCG;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SPatternCG;
@@ -32,6 +34,7 @@ import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRInfo;
+import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.utils.LexNameTokenWrapper;
 
 public class DeclAssistantCG extends AssistantBase
@@ -134,14 +137,19 @@ public class DeclAssistantCG extends AssistantBase
 		return access.equals(IRConstants.PROTECTED) || access.equals(IRConstants.PUBLIC);
 	}
 
-	public void setLocalDefs(LinkedList<PDefinition> localDefs, LinkedList<AVarLocalDeclCG> localDecls, IRInfo question) throws AnalysisException
+	public void setLocalDefs(List<PDefinition> localDefs,
+			List<AVarLocalDeclCG> localDecls, IRInfo question)
+			throws AnalysisException
 	{
 		for (PDefinition def : localDefs)
 		{
 			if(def instanceof AValueDefinition)
 			{
-				AValueDefinition valueDef = (AValueDefinition) def;
-				localDecls.add(constructLocalVarDecl(valueDef, question));
+				localDecls.add(consLocalVarDecl((AValueDefinition) def, question));
+			}
+			else if (def instanceof AEqualsDefinition)
+			{
+				localDecls.add(consLocalVarDecl((AEqualsDefinition) def, question));
 			}
 		}
 	}
@@ -173,13 +181,31 @@ public class DeclAssistantCG extends AssistantBase
 		return null;
 	}
 	
-	private AVarLocalDeclCG constructLocalVarDecl(AValueDefinition valueDef, IRInfo question) throws AnalysisException
+	private AVarLocalDeclCG consLocalVarDecl(AValueDefinition valueDef, IRInfo question) throws AnalysisException
 	{
 		STypeCG type = valueDef.getType().apply(question.getTypeVisitor(), question);
 		SPatternCG pattern = valueDef.getPattern().apply(question.getPatternVisitor(), question);
 		SExpCG exp = valueDef.getExpression().apply(question.getExpVisitor(), question);
 		
+		return consLocalVarDecl(valueDef, type, pattern, exp);
+	
+	}
+
+	private AVarLocalDeclCG consLocalVarDecl(AEqualsDefinition equalsDef, IRInfo question) throws AnalysisException
+	{
+		STypeCG type = equalsDef.getExpType().apply(question.getTypeVisitor(), question);
+		SPatternCG pattern = equalsDef.getPattern().apply(question.getPatternVisitor(), question);
+		SExpCG exp = equalsDef.getTest().apply(question.getExpVisitor(), question);
+		
+		return consLocalVarDecl(equalsDef, type, pattern, exp);
+	
+	}
+
+	private AVarLocalDeclCG consLocalVarDecl(INode node, STypeCG type,
+			SPatternCG pattern, SExpCG exp)
+	{
 		AVarLocalDeclCG localVarDecl = new AVarLocalDeclCG();
+		localVarDecl.setSourceNode(new SourceNode(node));
 		localVarDecl.setType(type);
 		localVarDecl.setPattern(pattern);
 		localVarDecl.setExp(exp);

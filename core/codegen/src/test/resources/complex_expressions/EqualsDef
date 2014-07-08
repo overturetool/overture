@@ -1,0 +1,13 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	def a = 1
+		b = 2
+		c = true
+in
+	return if c then a + b else a - b;
+
+end Entry

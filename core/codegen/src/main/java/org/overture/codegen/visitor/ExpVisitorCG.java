@@ -162,7 +162,6 @@ import org.overture.codegen.cgast.expressions.ALambdaExpCG;
 import org.overture.codegen.cgast.expressions.ALessEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALetBeStExpCG;
-import org.overture.codegen.cgast.expressions.ALetDefExpCG;
 import org.overture.codegen.cgast.expressions.AMapDomainUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AMapInverseUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AMapOverrideBinaryExpCG;
@@ -220,7 +219,6 @@ import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 {
-	
 	@Override
 	public SExpCG caseANotYetSpecifiedExp(ANotYetSpecifiedExp node,
 			IRInfo question) throws AnalysisException
@@ -694,23 +692,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseALetDefExp(ALetDefExp node, IRInfo question)
 			throws AnalysisException
 	{
-		if(question.getExpAssistant().isAssigned(node))
-		{
-			question.addUnsupportedNode(node, "Generation of a let expression is not supported in assignments");
-			return null;
-		}
-		
-		ALetDefExpCG localDefExp = new ALetDefExpCG();
-	
-		question.getDeclAssistant().setLocalDefs(node.getLocalDefs(), localDefExp.getLocalDefs(), question);
-		
-		SExpCG exp = node.getExpression().apply(question.getExpVisitor(), question);
-		localDefExp.setExp(exp);
-		
-		STypeCG type = node.getType().apply(question.getTypeVisitor(), question);
-		localDefExp.setType(type);
-		
-		return localDefExp;
+		return question.getExpAssistant().consLetDefExp(node, node.getLocalDefs(), node.getExpression(), node.getType(), question, "Generation of a let expression is not supported in assignments");
 	}
 
 	

@@ -7,6 +7,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.AValueDefinition;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
@@ -28,6 +29,7 @@ import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
+import org.overture.codegen.cgast.expressions.ALetDefExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
@@ -49,6 +51,28 @@ public class ExpAssistantCG extends AssistantBase
 	public ExpAssistantCG(AssistantManager assistantManager)
 	{
 		super(assistantManager);
+	}
+
+	public SExpCG consLetDefExp(PExp node, List<PDefinition> defs, PExp exp, PType type, IRInfo question, String message)
+			throws AnalysisException
+	{
+		if(question.getExpAssistant().isAssigned(node))
+		{
+			question.addUnsupportedNode(node, message);
+			return null;
+		}
+		
+		ALetDefExpCG letDefExp = new ALetDefExpCG();
+	
+		question.getDeclAssistant().setLocalDefs(defs, letDefExp.getLocalDefs(), question);
+		
+		SExpCG expCg = exp.apply(question.getExpVisitor(), question);
+		letDefExp.setExp(expCg);
+		
+		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		letDefExp.setType(typeCg);
+		
+		return letDefExp;
 	}
 
 	public SExpCG isolateExpression(SExpCG exp)
