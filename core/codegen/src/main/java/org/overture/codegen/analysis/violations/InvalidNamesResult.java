@@ -1,22 +1,31 @@
 package org.overture.codegen.analysis.violations;
 
+import java.util.HashSet;
 import java.util.Set;
 
-public class InvalidNamesException extends Exception
+public class InvalidNamesResult
 {
-	private static final long serialVersionUID = -8370037325877588512L;
-	
 	private Set<Violation> reservedWordViolations;
 	private Set<Violation> typenameViolations;
 	private Set<Violation> tempVarViolations;
 	
-	public InvalidNamesException(String message, Set<Violation> reservedWordViolations,
-			Set<Violation> typenameViolations, Set<Violation> tempVarViolations)
+	private String correctionPrefix;
+	
+	public InvalidNamesResult(Set<Violation> reservedWordViolations,
+			Set<Violation> typenameViolations, Set<Violation> tempVarViolations, String correctionPrefix)
 	{
-		super(message);
 		this.reservedWordViolations = reservedWordViolations;
 		this.typenameViolations = typenameViolations;
 		this.tempVarViolations = tempVarViolations;
+		
+		this.correctionPrefix = correctionPrefix;
+	}
+	
+	public InvalidNamesResult()
+	{
+		this.reservedWordViolations = new HashSet<Violation>();
+		this.typenameViolations = new HashSet<Violation>();
+		this.tempVarViolations = new HashSet<Violation>();
 	}
 
 	public Set<Violation> getReservedWordViolations()
@@ -32,5 +41,15 @@ public class InvalidNamesException extends Exception
 	public Set<Violation> getTempVarViolations()
 	{
 		return tempVarViolations;
+	}
+	
+	public boolean isEmpty()
+	{
+		return reservedWordViolations.isEmpty() && typenameViolations.isEmpty() && tempVarViolations.isEmpty();
+	}
+
+	public String getCorrectionPrefix()
+	{
+		return correctionPrefix;
 	}
 }

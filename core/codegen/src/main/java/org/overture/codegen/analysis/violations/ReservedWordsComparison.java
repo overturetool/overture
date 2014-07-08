@@ -6,13 +6,13 @@ import org.overture.codegen.assistant.AssistantManager;
 public class ReservedWordsComparison extends NamingComparison
 {
 	public ReservedWordsComparison(String[] names,
-			AssistantManager assistantManager)
+			AssistantManager assistantManager, String correctionPrefix)
 	{
-		super(names, assistantManager);
+		super(names, assistantManager, correctionPrefix);
 	}
 
 	@Override
-	public boolean isInvalid(ILexNameToken nameToken)
+	public boolean mustHandleNameToken(ILexNameToken nameToken)
 	{
 		return this.getNames().contains(nameToken.getName());
 	}

@@ -9,6 +9,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
@@ -38,6 +39,26 @@ public class DeclAssistantCG extends AssistantBase
 	public DeclAssistantCG(AssistantManager assistantManager)
 	{
 		super(assistantManager);
+	}
+	
+	public boolean classIsLibrary(SClassDefinition classDef)
+	{
+		String className = classDef.getName().getName();
+		
+		return isLibraryName(className);
+	}
+	
+	public boolean isLibraryName(String className)
+	{
+		for(int i = 0; i < IRConstants.CLASS_NAMES_USED_IN_VDM.length; i++)
+		{
+			if(IRConstants.CLASS_NAMES_USED_IN_VDM[i].equals(className))
+			{
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	public <T extends SDeclCG> List<T> getAllDecls(AClassDeclCG classDecl, List<AClassDeclCG> classes, DeclStrategy<T> strategy)
