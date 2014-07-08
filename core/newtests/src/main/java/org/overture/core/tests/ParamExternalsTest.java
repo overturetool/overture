@@ -58,7 +58,7 @@ public abstract class ParamExternalsTest<R extends Serializable> extends
 			return new Vector<Object[]>();
 		} else
 		{
-			return PathsProvider.computePathsLegacy(external);
+			return PathsProvider.computeExternalPaths(external);
 		}
 	}
 

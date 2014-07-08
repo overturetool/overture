@@ -64,7 +64,7 @@ public class PathsProvider
 	 *            the root folder of the external tests
 	 * @return
 	 */
-	public static Collection<Object[]> computePathsLegacy(String root)
+	public static Collection<Object[]> computeExternalPaths(String root)
 	{
 		Collection<Object[]> r = externalFiles(new File(root));
 
