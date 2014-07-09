@@ -14,11 +14,11 @@ import org.overture.parser.syntax.ParserException;
  * and compares them with stored result files. It is meant to be subclassed as a way to quickly create your own test
  * suites.<br>
  * <br>
- * A comparison method for results must be provided. Serialization of results is as automated as possible but can be
- * overridden if your results classes are too complex for auto-deserialization. <br>
+ * A comparison method for results must be provided. Serialization of results is fully automated and deserialization is
+ * close to it. <br>
  * <br>
- * These tests are meant to be used as parameterized JUnit test and so any subclass {@link ParamStandardTest} must be
- * annotated with <code>@RunWith(Parameterized.class)</code>. <br>
+ * These tests are meant to be used as parameterized JUnit test and so any subclass must be annotated with
+ * <code>@RunWith(Parameterized.class)</code>. <br>
  * <br>
  * This class also has a type parameter <code>R</code> that represents the output of the functionality under test. These
  * types must implement {@link Serializable} and you will most likely need to write some kind of transformation between

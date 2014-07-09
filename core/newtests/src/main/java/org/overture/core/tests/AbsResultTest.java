@@ -62,19 +62,18 @@ abstract class AbsResultTest<R extends Serializable>
 	}
 
 	/**
-	 * Calculates the type of the test result. This method does its best but will most likely need to be overridden.
-	 * However, that's quite simply and you can use the same code as below but replacing the type parameter <code>R</code>
-	 * with the actual explicit type of your result.
+	 * Calculates the type of the test result. This method must be overridden to provide the specific type of each test.
+	 * When doing so, you can use the snippet below (replacing <code>R</code> with the actual type of your result). Keep
+	 * in mind this does not work for wildcards or type parameters. You <b>must</b> declare the actual type.
+	 * <blockquote><code>
+	 * Type resultType = new TypeToken< R >() {}.getType(); <br> 
+	 * return resultType; 
+	 * </blockquote></code>
 	 * 
+	 * @see TypeToken
 	 * @return the {@link Type} of the result file
 	 */
-	public Type getResultType()
-	{
-		Type resultType = new TypeToken<R>()
-		{
-		}.getType();
-		return resultType;
-	}
+	abstract public Type getResultType();
 
 	/**
 	 * Return the Java System property to update this set of tests. Should have the following naming scheme:
