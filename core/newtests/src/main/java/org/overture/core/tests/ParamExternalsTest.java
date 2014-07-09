@@ -17,7 +17,7 @@ import org.junit.runners.Parameterized.Parameters;
  * 
  * @author ldc
  * @param <R>
- *            the type of resul this tests operates on.
+ *            the type of result this test operates on.
  */
 @RunWith(Parameterized.class)
 public abstract class ParamExternalsTest<R extends Serializable> extends

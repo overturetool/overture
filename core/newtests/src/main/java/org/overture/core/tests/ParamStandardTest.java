@@ -71,11 +71,12 @@ public abstract class ParamStandardTest<R extends Serializable> extends
 	public abstract R processModel(List<INode> ast);
 
 	/**
-	 * The main test executor. Constructs ASTs and processes them via {@link #processModel(List)} and Results via
-	 * {@link #deSerializeResult(String)}. It then compares the two according to {@link #compareResults(Object, IResult)}.
+	 * The main test executor. Construct the AST for model and processes it via {@link #processModel(List)}. Then loads
+	 * a stored result via {@link #deSerializeResult(String)}. Finally, the two results are compared with
+	 * {@link #compareResults(Object, IResult)}.<br>
+	 * <br>
+	 * If the test is run in update mode, then no comparison is made. Instead, the new result is saved.
 	 * 
-	 * @param <R>
-	 *            a result type produced by the analyzed plug-in. You may need to create one.
 	 * @throws IOException
 	 * @throws LexException
 	 * @throws ParserException
@@ -95,6 +96,5 @@ public abstract class ParamStandardTest<R extends Serializable> extends
 			this.compareResults(actual, expected);
 		}
 	}
-
 
 }
