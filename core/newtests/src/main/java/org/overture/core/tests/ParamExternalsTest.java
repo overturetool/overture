@@ -44,7 +44,10 @@ public abstract class ParamExternalsTest<R extends Serializable> extends
 	/**
 	 * The data provider for this test. The input paths are calculated based off the external path provided. The results
 	 * are constructed using the entire path of the input so that the result folder structure mirrors that of the
-	 * external inputs.
+	 * external inputs. <br>
+	 * <br>
+	 * This method collects <b>all</b> sources in the provided path. If you with to do some kind of preliminary
+	 * filtering, you must override it.
 	 * 
 	 * @return a collection of test input and result paths in the form of {filename ,filepath, resultpath} arrays
 	 */
