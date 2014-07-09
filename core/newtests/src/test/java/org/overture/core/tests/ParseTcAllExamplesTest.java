@@ -52,7 +52,7 @@ public class ParseTcAllExamplesTest
 	@Test
 	public void testParseTc() throws IOException, ParserException, LexException
 	{
-		ExampleAstData ex = ParseTcFacade.parseExample(testData);
+		ExampleAstData ex = ParseTcFacade.parseTcExample(testData);
 		assertNotNull("Could not Parse/TC " + ex.getExampleName());
 	}
 

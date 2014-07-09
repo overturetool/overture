@@ -49,7 +49,7 @@ abstract public class ExamplesUtility
 
 		for (ExampleSourceData e : examples)
 		{
-			r.add(ParseTcFacade.parseExample(e));
+			r.add(ParseTcFacade.parseTcExample(e));
 		}
 
 		return r;

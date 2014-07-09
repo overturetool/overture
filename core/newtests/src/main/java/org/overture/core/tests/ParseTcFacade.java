@@ -19,30 +19,40 @@ import org.overture.core.tests.examples.ExampleAstData;
 import org.overture.core.tests.examples.ExampleSourceData;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
+import org.overture.parser.util.ParserUtil;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
 /**
- * Helper Class for the new test framework. Responsible for processing and constructing test inputs. It construcs typed
- * ASTs from various kinds of sources.<br>
+ * Parse and Type Check VDM Sources. This class is the main interaction point with the Overture parser and type checker.
+ * It calls on them to process and construct ASTs from various kinds of sources.<br>
  * <br>
- * This class handles I/O and interactions with the Overture TC and Parser.
+ * All methods in this class will cause test failures if they cannot process the source. If you need more fine-grained
+ * control over the parsing and type checking processes, we suggest using {@link ParserUtil} and {@link TypeCheckerUtil}
+ * .
  * 
  * @author ldc
  */
-public class ParseTcFacade
+public abstract class ParseTcFacade
 {
-
 	/**
 	 * Parse and type check a VDM model directly encoded in a String.
 	 * 
 	 * @param content
-	 * @return
-	 * @throws LexException 
-	 * @throws ParserException 
+	 *            the String representing the VDM model
+	 * @param testName
+	 *            the name of the test calling this method (used for failure reporting)
+	 * @param dialect
+	 *            the VDM {@link Dialect} the source is written in
+	 * @param release
+	 *            the VDM {@link Release} the source is written in
+	 * @return the AST of the mode, as a list of {@link INode}
+	 * @throws LexException
+	 * @throws ParserException
 	 */
 	public static List<INode> typedAstFromContent(String content,
-			String testName, Dialect dialect, Release release) throws ParserException, LexException
+			String testName, Dialect dialect, Release release)
+			throws ParserException, LexException
 	{
 		Settings.release = release;
 
@@ -62,7 +72,7 @@ public class ParseTcFacade
 	}
 
 	/**
-	 * Parse and type check an Overture example
+	 * Parse and type check an Overture example.
 	 * 
 	 * @param e
 	 *            The {@link ExampleSourceData} of the example to process
@@ -70,7 +80,7 @@ public class ParseTcFacade
 	 * @throws ParserException
 	 * @throws LexException
 	 */
-	public static ExampleAstData parseExample(ExampleSourceData e)
+	public static ExampleAstData parseTcExample(ExampleSourceData e)
 			throws ParserException, LexException
 	{
 		List<INode> ast = new LinkedList<INode>();
@@ -94,11 +104,12 @@ public class ParseTcFacade
 	}
 
 	/**
-	 * Parse and type check a VDM source file and return the model's AST.
+	 * Parse and type check a VDM source file.
 	 * 
 	 * @param sourcePath
 	 *            a {@link String} with the path to the VDM model source
 	 * @param testName
+	 *            the name of the test calling this method (used for failure reporting)
 	 * @return the AST of the model as a {@link List} of {@link INode}.
 	 */
 	public static List<INode> typedAst(String sourcePath, String testName)
@@ -153,7 +164,8 @@ public class ParseTcFacade
 	// These 3 methods have so much duplicated code because we cannot
 	// return the TC results since their types are all different.
 	// FIXME unify parsing and TCing of VDM dialects
-	private static List<INode> parseTcRtContent(String content, String testName) throws ParserException, LexException
+	private static List<INode> parseTcRtContent(String content, String testName)
+			throws ParserException, LexException
 	{
 		Settings.dialect = Dialect.VDM_RT;
 
