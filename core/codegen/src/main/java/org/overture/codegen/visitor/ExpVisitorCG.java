@@ -619,10 +619,11 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseAFuncInstatiationExp(AFuncInstatiationExp node,
 			IRInfo question) throws AnalysisException
 	{
-		String name = node.getExpdef().getName().getName();
 		PType type = node.getType();
+		PExp func = node.getFunction();
 		
 		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		SExpCG funcCg = func.apply(question.getExpVisitor(), question);
 		
 		AMethodInstantiationExpCG methodInst = new AMethodInstantiationExpCG();
 		
@@ -633,7 +634,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			methodInst.getActualTypes().add(actualTypeCg);
 		}
 		
-		methodInst.setName(name);
+		methodInst.setFunc(funcCg);
 		methodInst.setType(typeCg);
 		
 		return methodInst;
