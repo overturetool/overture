@@ -9,7 +9,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 /**
- * Test with external inputs. This test behaves exactly like {@link ParamStandardTest}. The only difference is that the
+ * Test with external inputs. This test behaves exactly like {@link ParamFineGrainTest}. The only difference is that the
  * test data provider is predefined and works with external inputs specified by passing
  * <code>-DexternalTestsPath=/path/to/files</code> to the VM.<br>
  * <br>
@@ -21,7 +21,7 @@ import org.junit.runners.Parameterized.Parameters;
  */
 @RunWith(Parameterized.class)
 public abstract class ParamExternalsTest<R extends Serializable> extends
-		ParamStandardTest<R>
+		ParamFineGrainTest<R>
 {
 
 	private static String EXTERNAL_TESTS_PROPERTY = "externalTestsPath";
