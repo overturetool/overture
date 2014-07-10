@@ -283,10 +283,11 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 		ILexNameToken nameToken = node.getName();
 		String name = nameToken.getName();
 		LinkedList<PExp> args = node.getArgs();
-
+		boolean isStatic = question.getTcFactory().createPDefinitionAssistant().isStatic(node.getRootdef());
+		
 		AClassTypeCG classType = null;
 		
-		if (nameToken != null && nameToken.getExplicit())
+		if (nameToken != null && nameToken.getExplicit() && isStatic)
 		{
 			String className = nameToken.getModule();
 			classType = new AClassTypeCG();

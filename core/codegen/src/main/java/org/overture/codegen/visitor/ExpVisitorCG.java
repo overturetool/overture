@@ -1124,7 +1124,8 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		
 		boolean isDefInOwningClass = inOwningClass && (isLocalDef || isInstanceVarDef || isExplOp || isExplFunc || isAssignmentDef);
 
-		boolean isImplicit = !node.getName().getExplicit();
+		boolean explicit = node.getName().getExplicit();
+		boolean isImplicit = !explicit;
 		
 		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 
@@ -1134,7 +1135,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		
 		boolean isInheritedDef = varDef instanceof AInheritedDefinition;
 
-		if (owningClass == null || nodeParentClass == null || isDefInOwningClass || isInheritedDef || isImplicit)
+		if (owningClass == null || nodeParentClass == null || isDefInOwningClass || isInheritedDef || isImplicit || (explicit && !question.getTcFactory().createPDefinitionAssistant().isStatic(varDef)))
 		{
 			AIdentifierVarExpCG varExp = new AIdentifierVarExpCG();
 			
@@ -1144,7 +1145,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 
 			return varExp;
 		}
-		else if(node.getName().getExplicit())
+		else if(explicit)
 		{
 			AExplicitVarExpCG varExp = new AExplicitVarExpCG();
 			
