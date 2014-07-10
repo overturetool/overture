@@ -66,6 +66,7 @@ public class PathsProvider
 	 */
 	public static Collection<Object[]> computeExternalPaths(String root)
 	{
+		//FIXME add some kind of control for the top level folder of the externals
 		Collection<Object[]> r = externalFiles(new File(root));
 
 		return r;
