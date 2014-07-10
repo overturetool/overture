@@ -18,9 +18,12 @@ import com.google.gson.reflect.TypeToken;
 
 /**
  * Top level class for new tests framework. Provides common result handling code to all other test classes. This class
- * should<b>not</b> be subclass. Use {@link ParamStandardTest}, {@link ParamExamplesTest} or {@link ParamExternalsTest}
- * instead.
+ * should <b>not</b> be subclassed. Use one of its existing subclasses instead.
  * 
+ * @see ParamExamplesTest
+ * @see ParamExternalsTest
+ * @see ParamFineGrainTest
+ * @see ParamStandardTest
  * @author ldc
  * @param <R>
  *            the (user-provided) type of results this test operates on
@@ -32,11 +35,13 @@ abstract class AbsResultTest<R extends Serializable>
 	protected String testName;
 
 	/**
-	 * This method tries its best to deserialize any results file. If your results are too complex for it to handle, you
-	 * should override {@link #getResultType()} to deal with it. If that fails, override this entire.
+	 * Deserialize test results. This method is capable of deserializing most results, provided the correct type
+	 * information is provided via {@link #getResultType()}. If your results are too complex for this method or if you
+	 * are not using JSON to store then, them you must override the entire method.
 	 * 
 	 * @param resultPath
-	 * @return the stored result
+	 *            the file path to the stored result file
+	 * @return the deserialized stored result
 	 * @throws IOException
 	 * @throws FileNotFoundException
 	 */
@@ -62,10 +67,10 @@ abstract class AbsResultTest<R extends Serializable>
 	}
 
 	/**
-	 * Calculates the type of the test result. This method must be overridden to provide the specific type of each test.
-	 * When doing so, you can use the snippet below (replacing <code>R</code> with the actual type of your result). Keep
-	 * in mind this does not work for wildcards or type parameters. You <b>must</b> declare the actual type.
-	 * <blockquote><code>
+	 * Calculate the type of the test result. This method must be overridden to provide the specific result type for
+	 * each test. When doing so, you can use the snippet below (replacing <code>R</code> with the actual type of your
+	 * result). Keep in mind this does not work for wildcards or type parameters. You <b>must</b> declare the actual
+	 * type. <blockquote><code>
 	 * Type resultType = new TypeToken< R >() {}.getType(); <br> 
 	 * return resultType; 
 	 * </blockquote></code>
@@ -87,7 +92,8 @@ abstract class AbsResultTest<R extends Serializable>
 	protected abstract String getUpdatePropertyString();
 
 	/**
-	 * Update the result file for this test.
+	 * Update the result file for this test. Result serialization is done with JSON and this should adequate for most
+	 * users. If you need an alternative format, you may override this method.
 	 * 
 	 * @param actual
 	 *            the new result to be saved
@@ -104,8 +110,8 @@ abstract class AbsResultTest<R extends Serializable>
 	}
 
 	/**
-	 * This method check if the test is being run in result update mode, by consulting the update property as returned
-	 * by {{@link #getUpdatePropertyString()}.
+	 * Check if test running in result update mode. This is done by consulting the update property as returned by {
+	 * {@link #getUpdatePropertyString()}.
 	 * 
 	 * @return true if test is running in update mode. False otherwise
 	 */
@@ -128,8 +134,8 @@ abstract class AbsResultTest<R extends Serializable>
 	}
 
 	/**
-	 * Compares output of the processed model with a previously stored result. This method must be overridden to
-	 * implement result comparison behavior. Don't forget to assert something.
+	 * Compare output of the processed model with previously stored result. This method must be overridden to
+	 * implement result comparison behavior. Don't forget to assert something!
 	 * 
 	 * @param actual
 	 *            the processed model

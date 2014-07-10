@@ -10,19 +10,18 @@ import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
 
 /**
- * The Standard Parameterized Test is the main test class for the new tests. This class runs tests on VDM source models
- * and compares them with stored result files. It is meant to be subclassed as a way to quickly create your own test
- * suites.<br>
+ * Standard test in the new Overture test framework. This class runs tests on (correct) VDM sources and compares them
+ * with stored result files. It is meant to be subclassed as a way to quickly create your own test suites.<br>
  * <br>
- * A comparison method for results must be provided. Serialization of results is fully automated and deserialization is
- * close to it. <br>
+ * A comparison method for results must be provided. JSON-based serialization of results is fully automated and
+ * deserialization is close to it.<br>
  * <br>
- * These tests are meant to be used as parameterized JUnit test and so any subclass must be annotated with
+ * These tests are meant to be run as parameterized JUnit test and so any subclass must be annotated with
  * <code>@RunWith(Parameterized.class)</code>. <br>
  * <br>
  * This class also has a type parameter <code>R</code> that represents the output of the functionality under test. These
- * types must implement {@link Serializable} and you will most likely need to write some kind of transformation between
- * your native output type and <code>R</code>.
+ * types must implement {@link Serializable} and you should create a specific <code>R</code> type for your functionality
+ * and write some kind of transformation between your native output type and <code>R</code>.
  * 
  * @author ldc
  * @param R
@@ -35,47 +34,39 @@ public abstract class ParamStandardTest<R extends Serializable> extends
 	protected String modelPath;
 
 	/**
-	 * Constructor for the test. Works with outputs gotten from {@link PathsProvider} which must to supplied via a
-	 * static method. Subclasses must implement this method.<br>
+	 * Constructor for the test. In order to use JUnit parameterized tests, the inputs for this class must be supplied
+	 * by a public static method. Subclasses must implement this method themselves and annotate with
+	 * <code>@Parameters(name = "{index} : {0}")</code>.<br>
 	 * <br>
-	 * In order to use JUnit parameterized tests, you must annotate the data-supplying method with <b>
-	 * <code>@Parameters(name = "{index} : {0}")</code></b>. Supporting parameterized tests is also the reason the
-	 * method must be static.
+	 * The {@link PathsProvider#computePaths(String...)} method produces the correct input for this constructor and
+	 * should be called with the root folder of your tests inputs as its argument.
 	 * 
 	 * @param nameParameter
 	 *            the name of the test. Normally derived from the test input file
-	 * @param testParameter
+	 * @param inputParameter
 	 *            file path for the VDM source to test
 	 * @param resultParameter
 	 *            test result file
 	 */
-	public ParamStandardTest(String nameParameter, String testParameter,
+	public ParamStandardTest(String nameParameter, String inputParameter,
 			String resultParameter)
 	{
 		this.testName = nameParameter;
-		this.modelPath = testParameter;
+		this.modelPath = inputParameter;
 		this.resultPath = resultParameter;
 		updateResult = updateCheck();
 	}
 
 	/**
-	 * Analyses a model (represented by its AST). This method must be overridden to perform whatever analysis the
-	 * functionality under test performs.<br>
-	 * <br>
-	 * The output of this method must be of type <code>R</code>, the result type this test runs on.
-	 * 
-	 * @param ast
-	 *            the model to process
-	 * @return the output of the analysis
-	 */
-	public abstract R processModel(List<INode> ast);
-
-	/**
-	 * The main test executor. Construct the AST for model and processes it via {@link #processModel(List)}. Then loads
+	 * Execute this test. Constructs the AST for the model and processes it via {@link #processModel(List)}. Then loads
 	 * a stored result via {@link #deSerializeResult(String)}. Finally, the two results are compared with
 	 * {@link #compareResults(Object, IResult)}.<br>
 	 * <br>
-	 * If the test is run in update mode, then no comparison is made. Instead, the new result is saved.
+	 * If the test is run in update mode, then no comparison is made. Instead, the new result is saved. <br>
+	 * <br>
+	 * This test is not designed to run on VDM sources with syntax or type errors. The test will fail if the source
+	 * fails to parse or type check. While this behavior can be overridden, we suggest looking at
+	 * {@link ParamFineGrainTest} if you need to cope with these errors.
 	 * 
 	 * @throws IOException
 	 * @throws LexException
@@ -97,4 +88,16 @@ public abstract class ParamStandardTest<R extends Serializable> extends
 		}
 	}
 
+	/**
+	 * Analyse a model. This method is called during test execution to produce the actual result. It must, of
+	 * course, be overridden to perform whatever analysis the functionality under test performs.<br>
+	 * <br>
+	 * The output of this method must be of type <code>R</code>, the result type this test runs on. You will will likely
+	 * need to have a conversion method between the output of your analysis and <code>R</code>.
+	 * 
+	 * @param ast
+	 *            the model to process
+	 * @return the output of the analysis
+	 */
+	public abstract R processModel(List<INode> ast);
 }

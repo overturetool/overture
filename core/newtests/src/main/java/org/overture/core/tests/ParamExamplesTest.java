@@ -18,9 +18,9 @@ import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
 
 /**
- * The {@link ParamExamplesTest} class allows users to run tests on the Overture examples. Its behavior is identical to
- * {@link ParamStandardTest} is most regards. The only difference is that the test inputs are not user-configurable.
- * They are provided directly by this class and consist of the standard Overture examples.<br>
+ * Test on the Overture examples. The behavior of class is very similar to that of {@link ParamStandardTest}. The only
+ * difference is that the test inputs are not user-configurable. They are provided directly by this class and consist of
+ * the standard Overture examples.<br>
  * <br>
  * It is recommended that all plug-ins implement a version of this test to ensure that they work on the provided
  * examples.
@@ -57,37 +57,9 @@ public abstract class ParamExamplesTest<R extends Serializable> extends
 	}
 
 	/**
-	 * The main test executor for this class. Takes the model AST and applies whatever analysis is specified in
-	 * {@link #processModel(List)}. Afterwards, results are compared with
-	 * {@link #compareResults(Serializable, Serializable)}. <br>
-	 * <br>
-	 * If the test is running in update mode, {@link #testUpdate(Serializable)} is executed instead of the comparison.
-	 * 
-	 * @throws FileNotFoundException
-	 * @throws IOException
-	 * @throws ParserException
-	 * @throws LexException
-	 */
-	@Test
-	public void testCase() throws FileNotFoundException, IOException,
-			ParserException, LexException
-	{
-
-		R actual = processModel(model);
-		if (updateResult)
-		{
-			testUpdate(actual);
-		} else
-		{
-			R expected = deSerializeResult(resultPath);
-			this.compareResults(actual, expected);
-		}
-	}
-
-	/**
-	 * Test data provider. It provides a list of of arrays to initialize the test constructor. Each array initializes a
-	 * test for a single Overture example. The arrays consist of a test name (derived from the example name), the model
-	 * AST for that example and a path to a result file. By convention, results are stored under the
+	 * Provide test data. Provides a list of of arrays to initialize the test constructor. Each array initializes a test
+	 * for a single Overture example. The arrays consist of a test name (derived from the example name), the AST for
+	 * that example and a path to the result file. By convention, results are stored under the
 	 * <code>src/test/resources/examples</code> folder of each module using this test.
 	 * 
 	 * @return a collection of model ASTs and result paths in the form of {modelname ,modelast, resultpath} arrays
@@ -115,17 +87,44 @@ public abstract class ParamExamplesTest<R extends Serializable> extends
 	}
 
 	/**
-	 * Analyses a model (represented by its AST). This method must be overridden to perform whatever analysis the
-	 * functionality under test performs.<br>
+	 * Execute this test. Takes the model AST and applies whatever analysis is implemented in
+	 * {@link #processModel(List)}. Afterwards, results are compared with
+	 * {@link #compareResults(Serializable, Serializable)}. <br>
 	 * <br>
-	 * The output of this method must be of type <code>R</code>, the result type this test runs on.
+	 * If the test is running in update mode, {@link #testUpdate(Serializable)} is executed instead of the comparison.
+	 * 
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws ParserException
+	 * @throws LexException
+	 */
+	@Test
+	public void testCase() throws FileNotFoundException, IOException,
+			ParserException, LexException
+	{
+
+		R actual = processModel(model);
+		if (updateResult)
+		{
+			testUpdate(actual);
+		} else
+		{
+			R expected = deSerializeResult(resultPath);
+			this.compareResults(actual, expected);
+		}
+	}
+
+	/**
+	 * Analyse a model. This method is called during test execution to produce the actual result. It must, of
+	 * course, be overridden to perform whatever analysis the functionality under test performs.<br>
+	 * <br>
+	 * The output of this method must be of type <code>R</code>, the result type this test runs on. You will will likely
+	 * need to have a conversion method between the output of your analysis and <code>R</code>.
 	 * 
 	 * @param ast
 	 *            the model to process
 	 * @return the output of the analysis
 	 */
 	public abstract R processModel(List<INode> model);
-
-
 
 }
