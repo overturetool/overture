@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.definitions.AInheritedDefinition;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.AElseIfExp;
 import org.overture.ast.expressions.AIfExp;
 import org.overture.ast.expressions.ASelfExp;
@@ -62,6 +64,7 @@ import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.ASkipStmCG;
 import org.overture.codegen.cgast.statements.AWhileStmCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
+import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.utils.AnalysisExceptionCG;
@@ -279,28 +282,11 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 	public SStmCG caseACallStm(ACallStm node, IRInfo question)
 			throws AnalysisException
 	{
-		PType type = node.getType();
-		ILexNameToken nameToken = node.getName();
-		String name = nameToken.getName();
+		PDefinition rootdef = node.getRootdef();
 		LinkedList<PExp> args = node.getArgs();
-		boolean isStatic = question.getTcFactory().createPDefinitionAssistant().isStatic(node.getRootdef());
-		
-		AClassTypeCG classType = null;
-		
-		if (nameToken != null && nameToken.getExplicit() && isStatic)
-		{
-			String className = nameToken.getModule();
-			classType = new AClassTypeCG();
-			classType.setName(className);
-		}
-		
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-		
-		ACallStmCG callStm = new ACallStmCG();
-		callStm.setClassType(classType);
-		callStm.setName(name);
-		callStm.setType(typeCg);
 
+		ACallStmCG callStm = new ACallStmCG();
+		
 		for (int i = 0; i < args.size(); i++)
 		{
 			PExp arg = args.get(i);
@@ -315,6 +301,47 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 			callStm.getArgs().add(argCg);
 		}
 		
+		while(rootdef instanceof AInheritedDefinition)
+		{
+			rootdef = ((AInheritedDefinition) rootdef).getSuperdef();
+		}
+		
+		if (rootdef instanceof AExplicitOperationDefinition)
+		{
+			AExplicitOperationDefinition op = (AExplicitOperationDefinition) rootdef;
+
+			if (op.getIsConstructor())
+			{
+				String initName = question.getObjectInitializerCall(op);
+
+				callStm.setType(new AVoidTypeCG());
+				callStm.setClassType(null);
+				callStm.setName(initName);
+
+				return callStm;
+			}
+		}
+		
+		PType type = node.getType();
+		ILexNameToken nameToken = node.getName();
+		String name = nameToken.getName();
+		boolean isStatic = question.getTcFactory().createPDefinitionAssistant().isStatic(rootdef);
+
+		AClassTypeCG classType = null;
+
+		if (nameToken != null && nameToken.getExplicit() && isStatic)
+		{
+			String className = nameToken.getModule();
+			classType = new AClassTypeCG();
+			classType.setName(className);
+		}
+
+		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+
+		callStm.setClassType(classType);
+		callStm.setName(name);
+		callStm.setType(typeCg);
+
 		return callStm;
 	}
 	

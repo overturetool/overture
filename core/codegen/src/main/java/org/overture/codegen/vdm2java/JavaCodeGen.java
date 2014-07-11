@@ -85,6 +85,7 @@ public class JavaCodeGen
 	public static final String CALL_STM_OBJ_NAME_PREFIX = "callStmObj_";
 	
 	public static final String INVALID_NAME_PREFIX = "cg_";
+	public static final String OBJ_INIT_CALL_NAME_PREFIX = "cg_init_";	
 	
 	private static final String QUOTES = "quotes";
 	
@@ -106,7 +107,7 @@ public class JavaCodeGen
 	private void init(ILogger log)
 	{
 		initVelocity();
-		this.generator = new IRGenerator(log);
+		this.generator = new IRGenerator(log, OBJ_INIT_CALL_NAME_PREFIX);
 		this.irInfo = generator.getIRInfo();
 		this.javaFormat = new JavaFormat(varPrefixes, irInfo);
 	}
