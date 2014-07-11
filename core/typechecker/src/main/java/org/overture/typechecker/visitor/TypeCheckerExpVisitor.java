@@ -207,6 +207,26 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	}
 
 	@Override
+	public PType caseAAndBooleanBinaryExp(AAndBooleanBinaryExp node, TypeCheckInfo question) throws AnalysisException
+	{
+		List<QualifiedDefinition> qualified = node.getLeft().apply(question.assistantFactory.getQualificationVisitor(), question);
+
+		for (QualifiedDefinition qdef: qualified)
+		{
+			qdef.qualifyType();
+		}
+
+		PType result = defaultSBooleanBinaryExp(node, question);
+
+		for (QualifiedDefinition qdef: qualified)
+		{
+			qdef.resetType();
+		}
+
+		return result;
+	}
+
+	@Override
 	public PType caseACompBinaryExp(ACompBinaryExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
@@ -2718,7 +2738,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	@Override
 	public PType caseAUndefinedExp(AUndefinedExp node, TypeCheckInfo question)
 	{
-		node.setType(AstFactory.newAUndefinedType(node.getLocation()));
+		node.setType(AstFactory.newAUnknownType(node.getLocation()));
 		return node.getType();
 	}
 

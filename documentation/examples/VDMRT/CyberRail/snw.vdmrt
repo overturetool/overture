@@ -24,7 +24,7 @@ strategyInit() ==
 	state := <halt>
 );
 
-strategyNotify : () ==> ()
+protected strategyNotify : () ==> ()
 strategyNotify() == is subclass responsibility;
 
 
@@ -34,7 +34,7 @@ strategyEnd() ==
 	state := <run>;
 );
 
-handleEvents : ActivePlanManager ==> ()
+protected handleEvents : ActivePlanManager ==> ()
 handleEvents(apm) == is subclass responsibility;
 
 

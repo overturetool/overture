@@ -73,7 +73,7 @@ addThreat (evid, pmt, ptime) ==
 pre pmt in set dom missilePriority and
     pmt in set dom responseDB;
 
-async Step: () ==> ()
+protected async Step: () ==> ()
 Step () ==
   cycles (1E5) 
   (if len curplan > 0

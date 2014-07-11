@@ -24,7 +24,7 @@ public IsFinished: () ==> ()
 IsFinished() ==
   skip;
 
-Step: () ==> ()
+protected Step: () ==> ()
 Step() ==
   Value := Env.ReadHumid();
 
