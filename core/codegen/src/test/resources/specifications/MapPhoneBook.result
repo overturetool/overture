@@ -7,7 +7,7 @@ public class PhoneBook {
     private VDMMap phoneNumbers = MapUtil.map();
 
     public PhoneBook(final VDMMap pPhoneNumbers) {
-        phoneNumbers = pPhoneNumbers.clone();
+        cg_init_PhoneBook_1(pPhoneNumbers.clone());
     }
 
     public PhoneBook() {
@@ -136,6 +136,10 @@ public class PhoneBook {
                 'e', 'n', 't', 'r', 'i', 'e', 's', ' ', 'i', 'n', ' ', 'p',
                 'b', '1'));
         pb1.listEntries();
+    }
+
+    public void cg_init_PhoneBook_1(final VDMMap pPhoneNumbers) {
+        phoneNumbers = pPhoneNumbers.clone();
     }
 
     public void loadDemo() {

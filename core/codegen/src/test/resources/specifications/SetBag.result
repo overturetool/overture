@@ -7,9 +7,7 @@ public class Bag {
     private VDMSet numbers;
 
     public Bag(final VDMSet pNumbers) {
-        numbers = pNumbers.clone();
-
-        return;
+        cg_init_Bag_1(pNumbers.clone());
     }
 
     public Bag() {
@@ -163,6 +161,12 @@ public class Bag {
             b.printBag();
             IO.print(SeqUtil.seq('\n'));
         }
+    }
+
+    public void cg_init_Bag_1(final VDMSet pNumbers) {
+        numbers = pNumbers.clone();
+
+        return;
     }
 
     public void printBag() {
