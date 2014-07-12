@@ -213,7 +213,7 @@ public class JavaCodeGen
 		
 		DepthFirstAnalysisAdaptor[] analyses = new DepthFirstAnalysisAdaptor[] {
 				funcTransformation, ifExpTransformation, deflattenTransformation,
-				funcValVisitor, transVisitor, patternTransformation,
+				funcValVisitor, transVisitor, deflattenTransformation, patternTransformation,
 				typeTransformation, unionTypeTransformation };
 		
 		for (DepthFirstAnalysisAdaptor transformation : analyses)

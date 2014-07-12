@@ -1,5 +1,8 @@
 package org.overture.codegen.trans.patterns;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.patterns.ABoolPatternCG;
 import org.overture.codegen.cgast.patterns.ACharPatternCG;
@@ -12,6 +15,32 @@ import org.overture.codegen.cgast.patterns.AStringPatternCG;
 
 public class PatternMatchConfig
 {
+	private Map<Class<? extends SPatternCG>, String> patternNamePrefixes;
+	
+	public PatternMatchConfig()
+	{
+		setupNameLookup();
+	}
+	
+	private void setupNameLookup()
+	{
+		this.patternNamePrefixes = new HashMap<Class<? extends SPatternCG>, String>();
+		
+		this.patternNamePrefixes.put(AIgnorePatternCG.class, getIgnorePatternPrefix());
+		this.patternNamePrefixes.put(ABoolPatternCG.class, getBoolPatternPrefix());
+		this.patternNamePrefixes.put(ACharPatternCG.class, getCharPatternPrefix());
+		this.patternNamePrefixes.put(AIntPatternCG.class, getIntPatternPrefix());
+		this.patternNamePrefixes.put(ANullPatternCG.class, getNullPatternPrefix());
+		this.patternNamePrefixes.put(AQuotePatternCG.class, getQuotePatternPrefix());
+		this.patternNamePrefixes.put(ARealPatternCG.class, getRealPatternPrefix());
+		this.patternNamePrefixes.put(AStringPatternCG.class, getStringPatternPrefix());
+	}
+	
+	public String getName(Class<? extends SPatternCG> patternClass)
+	{
+		return patternNamePrefixes.get(patternClass);
+	}
+	
 	public String getIgnorePatternPrefix()
 	{
 		return "ignorePattern_";

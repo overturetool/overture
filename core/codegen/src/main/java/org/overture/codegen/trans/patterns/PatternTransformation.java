@@ -1,9 +1,7 @@
 package org.overture.codegen.trans.patterns;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SPatternCG;
@@ -47,80 +45,12 @@ import org.overture.codegen.trans.assistants.TransformationAssistantCG;
 
 public class PatternTransformation extends DepthFirstAnalysisAdaptor
 {
-	class PatternInfo
-	{
-		private STypeCG type;
-		private SPatternCG pattern;
-		
-		public PatternInfo(STypeCG type ,SPatternCG pattern)
-		{
-			this.type = type;
-			this.pattern = pattern;
-		}
-
-		public STypeCG getType()
-		{
-			return type;
-		}
-		
-		public SPatternCG getPattern()
-		{
-			return pattern;
-		}
-	}
-	
-	private AIdentifierPatternCG getIdPattern(String namePrefix)
-	{
-		String name = info.getTempVarNameGen().nextVarName(namePrefix);
-		
-		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
-		idPattern.setName(name);
-		return idPattern;
-	}
-	
-	public List<PatternInfo> extractFromLocalDefs(List<SLocalDeclCG> localDefs)
-	{
-		List<PatternInfo> patternInfo = new LinkedList<PatternInfo>();
-		
-		for(SLocalDeclCG decl : localDefs)
-		{
-			if(decl instanceof AVarLocalDeclCG)
-			{
-				AVarLocalDeclCG varDecl = (AVarLocalDeclCG) decl;
-				
-				STypeCG type = varDecl.getType();
-				SPatternCG pattern = varDecl.getPattern();
-				
-				patternInfo.add(new PatternInfo(type, pattern));
-			}
-		}
-		
-		return patternInfo;
-	}
-	
-	public List<PatternInfo> extractFromParams(List<AFormalParamLocalParamCG> params)
-	{
-		List<PatternInfo> patternInfo = new LinkedList<PatternInfo>();
-		
-		for(AFormalParamLocalParamCG param : params)
-		{
-			STypeCG type = param.getType();
-			SPatternCG pattern = param.getPattern();
-			
-			patternInfo.add(new PatternInfo(type, pattern));
-		}
-		
-		return patternInfo;
-	}
-	
 	private IRInfo info;
 	private TransformationAssistantCG transformationAssistant;
 
 	private PatternMatchConfig config;
 	
 	private TempVarPrefixes varPrefixes;
-	
-	private Map<Class<? extends SPatternCG>, String> patternNamePrefixes;
 	
 	public PatternTransformation(TempVarPrefixes varPrefixes, IRInfo info, TransformationAssistantCG transformationAssistant, PatternMatchConfig config)
 	{
@@ -129,27 +59,6 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		this.varPrefixes = varPrefixes;
 		
 		this.config = config;
-		
-		setupNameLookup();
-	}
-	
-	private void setupNameLookup()
-	{
-		this.patternNamePrefixes = new HashMap<Class<? extends SPatternCG>, String>();
-		
-		this.patternNamePrefixes.put(AIgnorePatternCG.class, config.getIgnorePatternPrefix());
-		this.patternNamePrefixes.put(ABoolPatternCG.class, config.getBoolPatternPrefix());
-		this.patternNamePrefixes.put(ACharPatternCG.class, config.getCharPatternPrefix());
-		this.patternNamePrefixes.put(AIntPatternCG.class, config.getIntPatternPrefix());
-		this.patternNamePrefixes.put(ANullPatternCG.class, config.getNullPatternPrefix());
-		this.patternNamePrefixes.put(AQuotePatternCG.class, config.getQuotePatternPrefix());
-		this.patternNamePrefixes.put(ARealPatternCG.class, config.getRealPatternPrefix());
-		this.patternNamePrefixes.put(AStringPatternCG.class, config.getStringPatternPrefix());
-	}
-	
-	public String getName(Class<? extends SPatternCG> patternClass)
-	{
-		return patternNamePrefixes.get(patternClass);
 	}
 	
 	@Override
@@ -174,7 +83,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		{
 			for(AFormalParamLocalParamCG param : node.getFormalParams())
 			{
-				String prefix = getName(param.getPattern().getClass());
+				String prefix = config.getName(param.getPattern().getClass());
 				
 				if(prefix != null)
 				{
@@ -188,8 +97,6 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseABlockStmCG(ABlockStmCG node) throws AnalysisException
 	{
-		//TODO: Assumes flatten structure?
-		
 		List<PatternInfo> patternInfo = extractFromLocalDefs(node.getLocalDefs());
 		
 		ABlockStmCG patternHandlingBlock = consPatternHandlingBlock(patternInfo);
@@ -211,17 +118,18 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 
 		for (PatternInfo info : patternInfo)
 		{
-			if(info.getPattern() instanceof AIgnorePatternCG)
+			if (info.getPattern() instanceof AIgnorePatternCG)
 			{
 				AIdentifierPatternCG idPattern = getIdPattern(config.getIgnorePatternPrefix());
 				transformationAssistant.replaceNodeWith(info.getPattern(), idPattern);
-			}
-			
-			ABlockStmCG currentPatternHandlingBlock = consPatternCheck(info.getPattern(), info.getType());
-
-			if (currentPatternHandlingBlock != null)
+			} else
 			{
-				patternHandlingBlock.getStatements().add(currentPatternHandlingBlock);
+				ABlockStmCG currentPatternHandlingBlock = consPatternCheck(info.getPattern(), info.getType());
+
+				if (currentPatternHandlingBlock != null)
+				{
+					patternHandlingBlock.getStatements().add(currentPatternHandlingBlock);
+				}
 			}
 		}
 		
@@ -311,7 +219,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 
 	private <T> ABlockStmCG consPatternCheck(SPatternCG pattern, STypeCG type, SExpCG valueToMatch)
 	{
-		AIdentifierPatternCG idPattern = getIdPattern(getName(pattern.getClass()));
+		AIdentifierPatternCG idPattern = getIdPattern(config.getName(pattern.getClass()));
 		transformationAssistant.replaceNodeWith(pattern, idPattern);
 
 		AIdentifierVarExpCG var = new AIdentifierVarExpCG();
@@ -342,5 +250,49 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		block.getStatements().add(ifCheck);
 		
 		return block;
+	}
+	
+	public List<PatternInfo> extractFromLocalDefs(List<SLocalDeclCG> localDefs)
+	{
+		List<PatternInfo> patternInfo = new LinkedList<PatternInfo>();
+		
+		for(SLocalDeclCG decl : localDefs)
+		{
+			if(decl instanceof AVarLocalDeclCG)
+			{
+				AVarLocalDeclCG varDecl = (AVarLocalDeclCG) decl;
+				
+				STypeCG type = varDecl.getType();
+				SPatternCG pattern = varDecl.getPattern();
+				
+				patternInfo.add(new PatternInfo(type, pattern));
+			}
+		}
+		
+		return patternInfo;
+	}
+	
+	public List<PatternInfo> extractFromParams(List<AFormalParamLocalParamCG> params)
+	{
+		List<PatternInfo> patternInfo = new LinkedList<PatternInfo>();
+		
+		for(AFormalParamLocalParamCG param : params)
+		{
+			STypeCG type = param.getType();
+			SPatternCG pattern = param.getPattern();
+			
+			patternInfo.add(new PatternInfo(type, pattern));
+		}
+		
+		return patternInfo;
+	}
+	
+	private AIdentifierPatternCG getIdPattern(String namePrefix)
+	{
+		String name = info.getTempVarNameGen().nextVarName(namePrefix);
+		
+		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
+		idPattern.setName(name);
+		return idPattern;
 	}
 }
