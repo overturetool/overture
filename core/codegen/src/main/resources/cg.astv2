@@ -46,6 +46,13 @@ CG {-> package='org.overture.codegen.cgast'
 #pattern {-> package='org.overture.codegen.cgast.patterns'}
 	= {identifier} [name]:java_String
 	| {ignore}
+	| {bool} [value]:java_Boolean
+	| {char} [value]:java_Character
+	| {int}	[value]:java_Long
+	| {null}
+	| {quote} [value]:java_String
+	| {real} [value]:java_Double
+	| {string} [value]:java_String
 	;
 
 #bind {-> package='org.overture.codegen.cgast.patterns'
@@ -218,6 +225,7 @@ CG {-> package='org.overture.codegen.cgast'
 
 #RuntimeError {-> package='org.overture.codegen.cgast.expressions'}
     =   {LetBeStNoBinding}
+    |	{patternMatch} [message]:java_String
     ;
 
 #Var {-> package='org.overture.codegen.cgast.expressions'
@@ -356,6 +364,7 @@ CG {-> package='org.overture.codegen.cgast'
     |	{interface} [types]:CG.#type* [name]:java_String
     |	{union} [types]:CG.#type*
     |	{quote} [value]:java_String
+    |	{unknown}
     ;
     
 externalType {-> package='org.overture.codegen.cgast.utils'}

@@ -80,6 +80,7 @@ import org.overture.codegen.cgast.expressions.ANotImplementedExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.AOrBoolBinaryExpCG;
+import org.overture.codegen.cgast.expressions.APatternMatchRuntimeErrorExpCG;
 import org.overture.codegen.cgast.expressions.APlusNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.APlusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.APowerNumericBinaryExpCG;
@@ -157,6 +158,7 @@ import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.cgast.types.ATokenBasicTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AUnionTypeCG;
+import org.overture.codegen.cgast.types.AUnknownTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.utils.GeneralUtils;
 
@@ -219,6 +221,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AInterfaceTypeCG.class, templateStructure.TYPE_PATH + "Interface");
 		
 		nodeTemplateFileNames.put(AUnionTypeCG.class, templateStructure.TYPE_PATH + "Union");
+		
+		nodeTemplateFileNames.put(AUnknownTypeCG.class, templateStructure.TYPE_PATH + "Unknown");
 		
 		//Basic type wrappers
 		
@@ -353,6 +357,8 @@ public class TemplateManager
 		// Runtime error expressions
 		
 		nodeTemplateFileNames.put(ALetBeStNoBindingRuntimeErrorExpCG.class, templateStructure.RUNTIME_ERROR_EXP_PATH + "LetBeStNoBinding");
+		
+		nodeTemplateFileNames.put(APatternMatchRuntimeErrorExpCG.class, templateStructure.RUNTIME_ERROR_EXP_PATH + "PatternMatch");
 		
 		// Unary expressions
 

@@ -207,7 +207,6 @@ import org.overture.codegen.cgast.expressions.AXorBoolBinaryExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.patterns.ASetBindCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
-import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
@@ -1547,10 +1546,10 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseAStringLiteralExp(AStringLiteralExp node,
 			IRInfo question) throws AnalysisException
 	{
+		String value = node.getValue().getValue();
 		if (question.getSettings().getCharSeqAsString())
 		{
 			PType type = node.getType();
-			String value = node.getValue().getValue();
 			
 			STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 			
@@ -1564,28 +1563,11 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			
 		} else
 		{
-			AEnumSeqExpCG enumSeq = new AEnumSeqExpCG();
-
-			STypeCG seqType = node.getType().apply(question.getTypeVisitor(), question);
-
-			enumSeq.setType(seqType);
-
-			String str = node.getValue().getValue();
-
-			for (int i = 0; i < str.length(); i++)
-			{
-				char currentChar = str.charAt(i);
-				ACharLiteralExpCG charLit = new ACharLiteralExpCG();
-				charLit.setType(new ACharBasicTypeCG());
-				charLit.setValue(currentChar);
-
-				enumSeq.getMembers().add(charLit);
-			}
-
-			return enumSeq;
+			STypeCG seqTypeCg = node.getType().apply(question.getTypeVisitor(), question);
+			return question.getExpAssistant().consCharSequence(seqTypeCg, value);
 		}
 	}
-	
+
 	@Override
 	public SExpCG caseAQuoteLiteralExp(AQuoteLiteralExp node,
 			IRInfo question) throws AnalysisException
