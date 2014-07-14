@@ -11,6 +11,6 @@
 #EXPECTED_RESULT=NO_ERROR_TYPE_CHECK
 #ENCODING=
 #DOCUMENT=
-#LIB=
+#LIB=IO,MATH,VDMUtil
 #AUTHOR=
 #******************************************************
