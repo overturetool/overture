@@ -36,9 +36,18 @@ public class QualificationVisitor extends QuestionAnswerAdaptor<TypeCheckInfo, L
 				{
 					result.add(new QualifiedDefinition(existing, node.getBasicType()));
 				}
-				else if (node.getTypeName() != null && node.getTypedef() != null)
+				else if (node.getTypeName() != null)
 				{
-					result.add(new QualifiedDefinition(existing, node.getTypedef().getType()));
+					if (node.getTypedef() == null)
+					{
+						PDefinition typedef = question.env.findType(node.getTypeName(), node.getLocation().getModule());
+						node.setTypedef(typedef.clone());
+					}
+
+					if (node.getTypedef() != null)
+					{
+						result.add(new QualifiedDefinition(existing, node.getTypedef().getType()));
+					}
 				}
 			}
 		}

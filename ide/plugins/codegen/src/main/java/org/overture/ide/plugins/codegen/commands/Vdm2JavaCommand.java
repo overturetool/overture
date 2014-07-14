@@ -20,7 +20,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.overture.ast.definitions.SClassDefinition;
-import org.overture.codegen.analysis.violations.InvalidNamesException;
+import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.analysis.violations.Violation;
 import org.overture.codegen.assistant.AssistantManager;
@@ -30,6 +30,7 @@ import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.ir.NodeInfo;
 import org.overture.codegen.utils.AnalysisExceptionCG;
 import org.overture.codegen.utils.GeneralUtils;
+import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.codegen.vdm2java.IJavaCodeGenConstants;
 import org.overture.codegen.vdm2java.JavaCodeGen;
@@ -152,18 +153,22 @@ public class Vdm2JavaCommand extends AbstractHandler
 					// Generate user specified classes
 					List<IVdmSourceUnit> sources = model.getSourceUnits();
 					List<SClassDefinition> mergedParseLists = PluginVdm2JavaUtil.mergeParseLists(sources);
-					List<GeneratedModule> userspecifiedClasses = vdm2java.generateJavaFromVdm(mergedParseLists);
-					vdm2java.generateJavaSourceFiles(outputFolder, userspecifiedClasses);
-					outputUserspecifiedModules(outputFolder, userspecifiedClasses);
+					GeneratedData generatedData = vdm2java.generateJavaFromVdm(mergedParseLists);
+					vdm2java.generateJavaSourceFiles(outputFolder, generatedData.getClasses());
+					outputUserspecifiedModules(outputFolder, generatedData.getClasses());
 
 					// Quotes generation
-					handleQuotesGeneration(vdmProject, outputFolder, vdm2java);
-
+					outputQuotes(vdmProject, outputFolder, vdm2java, generatedData.getQuoteValues());
+					
+					InvalidNamesResult invalidNames = generatedData.getInvalidNamesResult();
+					
+					if (invalidNames != null && !invalidNames.isEmpty())
+					{
+						handleInvalidNames(invalidNames);
+					}
+					
 					project.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
 				
-				} catch (InvalidNamesException ex)
-				{
-					handleInvalidNames(ex);
 				} catch (UnsupportedModelingException ex)
 				{
 					handleUnsupportedModeling(ex);
@@ -244,9 +249,8 @@ public class Vdm2JavaCommand extends AbstractHandler
 		}
 	}
 
-	private void handleQuotesGeneration(IVdmProject vdmProject, File outputFolder, JavaCodeGen vdm2java) throws CoreException
+	private void outputQuotes(IVdmProject vdmProject, File outputFolder, JavaCodeGen vdm2java, GeneratedModule quotes) throws CoreException
 	{
-		GeneratedModule quotes = vdm2java.generateJavaFromVdmQuotes();
 		if(quotes != null)
 		{
 			File quotesFolder = PluginVdm2JavaUtil.getQuotesFolder(vdmProject);
@@ -281,17 +285,22 @@ public class Vdm2JavaCommand extends AbstractHandler
 		PluginVdm2JavaUtil.addMarkers("Modeling rule not supported", violations);
 	}
 
-	private void handleInvalidNames(InvalidNamesException ex)
+	private void handleInvalidNames(InvalidNamesResult invalidNames)
 	{
-		CodeGenConsole.GetInstance().println("Could not code generate VDM model: " + ex.getMessage());
+		String message = "The model either uses words that are reserved by Java, declares VDM types"
+				+ " that uses Java type names or uses variable names that potentially"
+				+ " conflict with code generated temporary variable names";
+		
+		CodeGenConsole.GetInstance().println("Warning: "
+				+ message);
 
-		String violationStr = JavaCodeGenUtil.constructNameViolationsString(ex);
+		String violationStr = JavaCodeGenUtil.constructNameViolationsString(invalidNames);
 		CodeGenConsole.GetInstance().println(violationStr);
 		
-		Set<Violation> typeNameViolations = ex.getTypenameViolations();
+		Set<Violation> typeNameViolations = invalidNames.getTypenameViolations();
 		PluginVdm2JavaUtil.addMarkers("Type name violation", typeNameViolations);
 		
-		Set<Violation> reservedWordViolations = ex.getReservedWordViolations();
+		Set<Violation> reservedWordViolations = invalidNames.getReservedWordViolations();
 		PluginVdm2JavaUtil.addMarkers("Reserved word violations", reservedWordViolations);
 	}
 }

@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.codegen.analysis.violations.InvalidNamesException;
+import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
@@ -15,6 +15,7 @@ public class SpecificationTestCase extends CodeGenBaseTestCase
 {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 	private static final String MODULE_DELIMITER = LINE_SEPARATOR + "##########" + LINE_SEPARATOR;
+	private static final String NAME_VIOLATION_INDICATOR = "*Name Violations*";
 
 	public SpecificationTestCase()
 	{
@@ -39,10 +40,8 @@ public class SpecificationTestCase extends CodeGenBaseTestCase
 		try
 		{
 			data = JavaCodeGenUtil.generateJavaFromFiles(files, getIrSettings(), getJavaSettings());
-		} catch (InvalidNamesException e)
-		{
-			return JavaCodeGenUtil.constructNameViolationsString(e);
-		} catch (UnsupportedModelingException e)
+		}
+		catch (UnsupportedModelingException e)
 		{
 			return JavaCodeGenUtil.constructUnsupportedModelingString(e);
 		}
@@ -60,6 +59,15 @@ public class SpecificationTestCase extends CodeGenBaseTestCase
 		if(quoteData != null)
 		{
 			generatedCode.append(LINE_SEPARATOR + quoteData.getContent());
+			generatedCode.append(MODULE_DELIMITER);
+		}
+		
+		InvalidNamesResult invalidNames = data.getInvalidNamesResult();
+		
+		if (invalidNames != null && !invalidNames.isEmpty())
+		{
+			generatedCode.append(NAME_VIOLATION_INDICATOR + LINE_SEPARATOR);
+			generatedCode.append(LINE_SEPARATOR + JavaCodeGenUtil.constructNameViolationsString(invalidNames));
 			generatedCode.append(MODULE_DELIMITER);
 		}
 				

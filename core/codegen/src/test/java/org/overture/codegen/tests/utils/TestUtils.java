@@ -78,7 +78,12 @@ public class TestUtils
 			if(c == DELIMITER_CHAR)
 			{
 				while(input.read() == DELIMITER_CHAR);
-				classes.add(data);
+				
+				if(!data.toString().trim().startsWith("*Name Violations*"))
+				{
+					classes.add(data);
+				}
+				
 				data = new StringBuffer();
 			}
 			else

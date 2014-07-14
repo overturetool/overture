@@ -69,6 +69,8 @@ public class TypeAssistantCG extends AssistantBase
 				}
 			}
 		}
+		
+		Logger.getLog().printError(String.format("Could not find method type for field %s in class %s", fieldName, fieldModule));
 
 		return null;
 	}
@@ -171,7 +173,10 @@ public class TypeAssistantCG extends AssistantBase
 		// This is a special case since sequence of characters are strings
 		if (seqOfCg instanceof ACharBasicTypeCG && question.getSettings().getCharSeqAsString())
 		{
-			return new AStringTypeCG();
+			AStringTypeCG stringTypeCg = new AStringTypeCG();
+			stringTypeCg.setSourceNode(new SourceNode(node));
+			
+			return stringTypeCg;
 		}
 			
 		ASeqSeqTypeCG seqType = new ASeqSeqTypeCG();

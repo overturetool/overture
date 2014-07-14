@@ -13,6 +13,7 @@ import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.traces.ATraceDefinitionTerm;
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AFieldField;
@@ -341,9 +342,12 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 		String name = node.getPattern().toString();
 		boolean isStatic = true;
 		boolean isFinal = true;
-		STypeCG type = node.getType().apply(question.getTypeVisitor(), question);
-		SExpCG exp = node.getExpression().apply(question.getExpVisitor(), question);
+		PType type = node.getType();
+		PExp exp = node.getExpression();
 		
-		return question.getDeclAssistant().constructField(access, name, isStatic, isFinal, type, exp);
+		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		SExpCG expCg = exp.apply(question.getExpVisitor(), question);
+		
+		return question.getDeclAssistant().constructField(access, name, isStatic, isFinal, typeCg, expCg);
 	}
 }

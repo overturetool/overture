@@ -1,6 +1,7 @@
 package org.overture.codegen.analysis.violations;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.node.INode;
@@ -23,13 +24,20 @@ public class NameViolationAnalysis extends ViolationAnalysis
 		{
 			ILexNameToken nameToken = (ILexNameToken) node;
 
-			if (comparison.isInvalid(nameToken))
+			if (comparison.mustHandleNameToken(nameToken))
 			{
-				String name = nameToken.getName();
-				ILexLocation location = nameToken.getLocation();
+				comparison.correctNameToken(nameToken);
+				
+				SClassDefinition enclosingClass = node.getAncestor(SClassDefinition.class);
+				
+				if (enclosingClass == null || (enclosingClass != null && !assistantManager.getDeclAssistant().classIsLibrary(enclosingClass)))
+				{
+					String name = nameToken.getName();
+					ILexLocation location = nameToken.getLocation();
 
-				Violation violation = new Violation(name, location, assistantManager.getLocationAssistant());
-				addViolation(violation);
+					Violation violation = new Violation(name, location, assistantManager.getLocationAssistant());
+					addViolation(violation);
+				}
 			}
 		}
 	}

@@ -6,6 +6,7 @@ import java.util.List;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
+import org.overture.codegen.assistant.TypeAssistantCG;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SObjectDesignatorCG;
@@ -35,6 +36,7 @@ import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectStmCG;
+import org.overture.codegen.cgast.statements.ACallStmCG;
 import org.overture.codegen.cgast.statements.AElseIfStmCG;
 import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
@@ -432,12 +434,33 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		}
 	}
 	
+	@Override
+	public void caseACallStmCG(ACallStmCG node) throws AnalysisException
+	{
+		for(SExpCG arg : node.getArgs())
+		{
+			arg.apply(this);
+		}
+		
+		AClassTypeCG classType = node.getClassType();
+		String className = classType != null ? classType.getName() : node.getAncestor(AClassDeclCG.class).getName();
+		String fieldName = node.getName();
+		LinkedList<SExpCG> args = node.getArgs();
+		
+		TypeAssistantCG typeAssistant = info.getAssistantManager().getTypeAssistant();
+		AMethodTypeCG methodType = typeAssistant.getMethodType(info, classes, className, fieldName, args);
+		
+		if(methodType != null)
+		{
+			correctArgTypes(args, methodType.getParams());
+		}
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public void inACallObjectStmCG(ACallObjectStmCG node)
 			throws AnalysisException
 	{
-		// TODO apply arguments? what if they are union typed`?
 		for(SExpCG arg : node.getArgs())
 		{
 			arg.apply(this);
@@ -493,8 +516,9 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			replacementBlock.getLocalDefs().add(objDecl);
 		}
 
-		LinkedList<STypeCG> possibleTypes = ((AUnionTypeCG) objType).getTypes();
+		TypeAssistantCG typeAssistant = info.getAssistantManager().getTypeAssistant();
 
+		LinkedList<STypeCG> possibleTypes = ((AUnionTypeCG) objType).getTypes();
 		AIfStmCG ifChecks = new AIfStmCG();
 
 		for (int i = 0; i < possibleTypes.size(); i++)
@@ -503,8 +527,12 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 
 			AClassTypeCG currentType = (AClassTypeCG) possibleTypes.get(i);
 			
-			AMethodTypeCG methodType = info.getAssistantManager().getTypeAssistant().getMethodType(info, classes, currentType.getName(), fieldName, args);
-			correctArgTypes(callCopy.getArgs(), methodType.getParams());
+			AMethodTypeCG methodType = typeAssistant.getMethodType(info, classes, currentType.getName(), fieldName, args);
+			
+			if (methodType != null)
+			{
+				correctArgTypes(callCopy.getArgs(), methodType.getParams());
+			}
 			
 			ACastUnaryExpCG castedVarExp = new ACastUnaryExpCG();
 			castedVarExp.setType(currentType.clone());

@@ -22,8 +22,18 @@ public class IO {
 
     	throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
     }
+    
+    public static <p> boolean fwriteval(VDMSeq filename, p val, int fdir) {
+
+    	throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
+    }
 
     public static <p> Tuple freadval(String filename) {
+        
+    	throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
+    }
+    
+    public static <p> Tuple freadval(VDMSeq filename) {
         
     	throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
     }
@@ -33,11 +43,24 @@ public class IO {
 		throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
 	}
     
+	protected static File getFile(VDMSeq fval)
+	{
+		throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
+	}
+	
     public boolean echo(String text) {
+    	throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
+    }
+    
+    public boolean echo(VDMSeq text) {
     	throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
     }
 
     public boolean fecho(String filename, String text, Integer fdir) {
+    	throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
+    }
+    
+    public boolean fecho(VDMSeq filename, VDMSeq text, Integer fdir) {
     	throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
     }
 

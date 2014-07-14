@@ -219,12 +219,16 @@ public class Card {
     private Number accountId;
 
     public Card(final Number c, final Number cid, final Number a) {
-        code = c;
-        cardId = cid;
-        accountId = a;
+        cg_init_Card_1(c, cid, a);
     }
 
     public Card() {
+    }
+
+    public void cg_init_Card_1(final Number c, final Number cid, final Number a) {
+        code = c;
+        cardId = cid;
+        accountId = a;
     }
 
     public Number GetCode() {
@@ -445,10 +449,14 @@ public class Till {
     private CentralResource resource;
 
     public Till(final CentralResource res) {
-        resource = res;
+        cg_init_Till_1(res);
     }
 
     public Till() {
+    }
+
+    public void cg_init_Till_1(final CentralResource res) {
+        resource = res;
     }
 
     public void InsertCard(final Card c) {
@@ -701,6 +709,18 @@ public class System {
     private Letterbox letterbox = new Letterbox();
 
     public System() {
+        cg_init_System_1();
+    }
+
+    public Till GetTill(final Number tid) {
+        return ((Till) tills.get(tid));
+    }
+
+    public CentralResource GetResource() {
+        return resource;
+    }
+
+    public void cg_init_System_1() {
         clock.SetDate(SeqUtil.seq('1', '5', '0', '9', '9', '9'));
 
         Cardholder peter = new Cardholder().Create(SeqUtil.seq('P', 'e', 't',
@@ -743,14 +763,6 @@ public class System {
         resource.AddAccount(pmid1, pmacc1);
         resource.AddAccount(ifid1, ifacc1);
         resource.AddLetterbox(clock, new Letterbox());
-    }
-
-    public Till GetTill(final Number tid) {
-        return ((Till) tills.get(tid));
-    }
-
-    public CentralResource GetResource() {
-        return resource;
     }
 }
 

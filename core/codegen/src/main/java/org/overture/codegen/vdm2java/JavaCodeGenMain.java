@@ -7,7 +7,7 @@ import java.util.Set;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
-import org.overture.codegen.analysis.violations.InvalidNamesException;
+import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.assistant.LocationAssistantCG;
@@ -80,21 +80,18 @@ public class JavaCodeGenMain
 					Logger.getLog().println("**********");
 					Logger.getLog().println(quotes.getContent());
 				}
-
-				File outputFolder = new File("target" + File.separatorChar + "sources"
-						+ File.separatorChar);
-
-				JavaCodeGenUtil.generateJavaSourceFiles(outputFolder, generatedClasses);
+				
+				InvalidNamesResult invalidName = data.getInvalidNamesResult();
+				
+				if (!invalidName.isEmpty())
+				{
+					Logger.getLog().println(JavaCodeGenUtil.constructNameViolationsString(invalidName));
+				}
 				
 			} catch (AnalysisException e)
 			{
 				Logger.getLog().println(e.getMessage());
 
-			} catch (InvalidNamesException e)
-			{
-				Logger.getLog().println("Could not generate model: "
-						+ e.getMessage());
-				Logger.getLog().println(JavaCodeGenUtil.constructNameViolationsString(e));
 			} catch (UnsupportedModelingException e)
 			{
 				Logger.getLog().println("Could not generate model: "

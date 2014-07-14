@@ -7,13 +7,13 @@ import org.overture.codegen.assistant.AssistantManager;
 
 public class TypenameComparison extends NamingComparison
 {
-	public TypenameComparison(String[] names, AssistantManager assistantManager)
+	public TypenameComparison(String[] names, AssistantManager assistantManager, String correctionPrefix)
 	{
-		super(names, assistantManager);
+		super(names, assistantManager, correctionPrefix);
 	}
 
 	@Override
-	public boolean isInvalid(ILexNameToken nameToken)
+	public boolean mustHandleNameToken(ILexNameToken nameToken)
 	{
 		if (this.getNames().contains(nameToken.getName()))
 		{

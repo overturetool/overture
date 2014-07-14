@@ -4,10 +4,7 @@ import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AClassClassDefinition;
-import org.overture.ast.expressions.ADivNumericBinaryExp;
 import org.overture.ast.expressions.AFuncInstatiationExp;
-import org.overture.ast.expressions.AModNumericBinaryExp;
-import org.overture.ast.expressions.ARemNumericBinaryExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SNumericBinaryBase;
 import org.overture.ast.intf.lex.ILexNameToken;
@@ -41,14 +38,6 @@ public class ModelingViolationAnalysis extends ViolationAnalysis
 
 			if (exp.getImpdef() != null)
 				addViolation(new Violation("Implicit functions cannot be instantiated since they are not supported.", exp.getLocation(), assistantManager.getLocationAssistant()));
-		} else if (node instanceof ADivNumericBinaryExp
-				|| node instanceof AModNumericBinaryExp
-				|| node instanceof ARemNumericBinaryExp)
-		{
-			SNumericBinaryBase binBinaryExp = (SNumericBinaryBase) node;
-
-			if (operandsAreIntegerTypes(binBinaryExp))
-				addViolation(new Violation("Expression requires that operands are guaranteed to be integers", binBinaryExp.getLocation(), assistantManager.getLocationAssistant()));
 		}
 	}
 
@@ -68,6 +57,7 @@ public class ModelingViolationAnalysis extends ViolationAnalysis
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private boolean operandsAreIntegerTypes(SNumericBinaryBase exp)
 	{
 		PExp leftExp = exp.getLeft();

@@ -21,11 +21,16 @@ public class HourlyPaidEmployee extends Employee {
     private Number rate;
 
     public HourlyPaidEmployee(final Number pHours, final Number pRate) {
-        hours = pHours;
-        rate = pRate;
+        cg_init_HourlyPaidEmployee_1(pHours, pRate);
     }
 
     public HourlyPaidEmployee() {
+    }
+
+    public void cg_init_HourlyPaidEmployee_1(final Number pHours,
+        final Number pRate) {
+        hours = pHours;
+        rate = pRate;
     }
 
     public Number getSalary() {
@@ -53,10 +58,14 @@ public class FixedSalaryEmployee extends Employee {
     private Number fixedSalary;
 
     public FixedSalaryEmployee(final Number pFixedSalary) {
-        fixedSalary = pFixedSalary;
+        cg_init_FixedSalaryEmployee_1(pFixedSalary);
     }
 
     public FixedSalaryEmployee() {
+    }
+
+    public void cg_init_FixedSalaryEmployee_1(final Number pFixedSalary) {
+        fixedSalary = pFixedSalary;
     }
 
     public Number getSalary() {
@@ -74,6 +83,10 @@ public class Company {
     private VDMSeq employees;
 
     public Company() {
+        cg_init_Company_1();
+    }
+
+    public void cg_init_Company_1() {
         employees = SeqUtil.seq();
     }
 
