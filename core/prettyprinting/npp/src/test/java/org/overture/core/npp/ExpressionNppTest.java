@@ -162,5 +162,17 @@ public class ExpressionNppTest {
 		aux("1.1 div 1", "(1.1 div 1)");
 	}
 	
+	@Test
+	public void testCaseABooleanImpliesExp_01() throws AnalysisException
+	{
+		aux("A => B", "(A => B)");
+	}
+	
+	@Test
+	public void testCaseABooleanImpliesExp_02() throws AnalysisException
+	{
+		aux("1 => 2","(1 => 2)");
+	}
+	
 	
 }
