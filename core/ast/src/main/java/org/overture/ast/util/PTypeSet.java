@@ -3,11 +3,8 @@ package org.overture.ast.util;
 import java.util.List;
 import java.util.TreeSet;
 
-import org.overture.ast.assistant.AstAssistantFactory;
 import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.assistant.pattern.PTypeList;
-import org.overture.ast.assistant.type.PTypeAssistant;
-import org.overture.ast.assistant.type.SNumericBasicTypeAssistant;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.types.ASeq1SeqType;
@@ -18,31 +15,34 @@ import org.overture.ast.types.SNumericBasicType;
 @SuppressWarnings("serial")
 public class PTypeSet extends TreeSet<PType>
 {
-	// Create a AstAssistantFactory here because I think is the basis of calls.
-	//I don't think it's possible to pass it as an argument to the add method. gkanos
-	public final static IAstAssistantFactory assistantFactory = new AstAssistantFactory();
-
-	public PTypeSet()
+	public IAstAssistantFactory assistantFactory;
+	
+	public PTypeSet(IAstAssistantFactory af)
 	{
 		super(new PTypeComparator());
+		assistantFactory = af;
 	}
 
-	public PTypeSet(PType t)
+	
+	public PTypeSet(PType t,IAstAssistantFactory af)
 	{
 		super(new PTypeComparator());
+		assistantFactory = af;
 		add(t);
 	}
 
-	public PTypeSet(PType t1, PType t2)
+	public PTypeSet(PType t1, PType t2, IAstAssistantFactory af)
 	{
 		super(new PTypeComparator());
+		assistantFactory = af;
 		add(t1);
 		add(t2);
 	}
 
-	public PTypeSet(List<PType> types)
+	public PTypeSet(List<PType> types, IAstAssistantFactory af)
 	{
 		super(new PTypeComparator());
+		assistantFactory = af;
 		addAll(types);
 	}
 

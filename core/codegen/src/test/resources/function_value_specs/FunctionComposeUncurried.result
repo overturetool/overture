@@ -7,15 +7,6 @@ public class Entry {
     public Entry() {
     }
 
-    private static <A, B, C> Func_1<A, C> func_compose(final Func_1<A, B> f,
-        final Func_1<B, C> g) {
-        return new Func_1<A, C>() {
-                public C eval(final A x) {
-                    return g.eval(f.eval(x));
-                }
-            };
-    }
-
     public static Object Run() {
         Func_1<Number, Number> f = new Func_1<Number, Number>() {
                 public Number eval(final Number x) {
@@ -32,6 +23,15 @@ public class Entry {
         Func_1<Number, Number> h = func_compose(f, g);
 
         return h.eval(2L);
+    }
+
+    private static <A, B, C> Func_1<A, C> func_compose(final Func_1<A, B> f,
+        final Func_1<B, C> g) {
+        return new Func_1<A, C>() {
+                public C eval(final A x) {
+                    return g.eval(f.eval(x));
+                }
+            };
     }
 }
 

@@ -31,7 +31,7 @@ public IsFinished: () ==> ()
 IsFinished() ==
   skip;
 
-Step: () ==> ()
+protected Step: () ==> ()
 Step() ==
  (dcl tempCorr: NetworkTypes`correction := GetCorr();
 

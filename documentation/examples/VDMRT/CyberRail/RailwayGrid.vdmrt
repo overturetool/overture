@@ -8,7 +8,7 @@ instance variables
 private routeList : set of TransportPlan`Route; 
 private grid : Grid := {};
 private inactiveGrid : Grid := {};
-private inactiveRouteID : set of TransportPlan`Route := {};
+private inactiveRouteID : set of (TransportPlan`Route | nat) := {};
 private io : IO := new IO();
 
 types

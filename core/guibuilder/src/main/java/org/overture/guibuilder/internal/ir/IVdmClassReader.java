@@ -21,6 +21,8 @@ package org.overture.guibuilder.internal.ir;
 import java.io.File;
 import java.util.Vector;
 
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
+
 /**
  * Interface for a vdm class reader.
  * 
@@ -34,7 +36,7 @@ public interface IVdmClassReader {
 	 * representation
 	 * @param files List of files containing the vdm specification
 	 */
-	abstract void readFiles(Vector<File> files);
+	abstract void readFiles(Vector<File> files, ITypeCheckerAssistantFactory af);
 	/**
 	 * Returns a list of the vdm classes that compose the vdm specification
 	 * @return List of vdm classes

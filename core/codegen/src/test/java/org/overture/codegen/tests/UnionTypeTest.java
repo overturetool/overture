@@ -1,5 +1,6 @@
 package org.overture.codegen.tests;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
@@ -12,7 +13,9 @@ import org.overture.test.framework.Properties;
 
 public class UnionTypeTest extends BaseTestSuite
 {
-	public static final String ROOT = "src\\test\\resources\\union_type_specs";
+	public static final String ROOT = "src" + File.separatorChar + "test"
+			+ File.separatorChar + "resources" + File.separatorChar
+			+ "union_type_specs";
 	
 	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
 	{

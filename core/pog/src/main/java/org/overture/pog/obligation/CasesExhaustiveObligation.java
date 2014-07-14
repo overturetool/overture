@@ -39,6 +39,7 @@ import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
+import org.overture.pog.pub.POType;
 
 public class CasesExhaustiveObligation extends ProofObligation
 {
@@ -55,7 +56,7 @@ public class CasesExhaustiveObligation extends ProofObligation
 	//gkanos: Added parameter for the use of assistant.
 	public CasesExhaustiveObligation(ACasesExp exp, IPOContextStack ctxt, IPogAssistantFactory assistantFactory) throws AnalysisException
 	{
-		super(exp, POType.CASES_EXHAUSTIVE, ctxt, exp.getLocation());
+		super(exp, POType.CASES_EXHAUSTIVE, ctxt, exp.getLocation(),assistantFactory);
 		
 		PExp initialExp = alt2Exp(exp.getCases().getFirst(), exp, assistantFactory );
 		List<ACaseAlternative> initialCases= new LinkedList<ACaseAlternative>(exp.getCases());
@@ -63,6 +64,7 @@ public class CasesExhaustiveObligation extends ProofObligation
 		
 		PExp pred = recOnExp(exp.clone(), initialCases, initialExp, assistantFactory);
 		
+		stitch = pred.clone();
 		valuetree.setPredicate(ctxt.getPredWithContext(pred));
 	}
 	

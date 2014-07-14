@@ -53,41 +53,42 @@ import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.PType;
 import org.overture.pof.AVdmPoTree;
 import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.IProofObligation;
-import org.overture.pog.utility.PatternToExpVisitor;
+import org.overture.pog.pub.POStatus;
+import org.overture.pog.pub.POType;
 import org.overture.pog.utility.UniqueNameGenerator;
+import org.overture.pog.visitors.PatternToExpVisitor;
 
 /**
- * New class for Proof Obligatios with a an AST based representation (wip)
+ * New class for Proof Obligations with a an AST-based representation of PO expressions
  * 
  * @author ldc
- * @param <A>
  */
 
-
-abstract public class ProofObligation implements IProofObligation, Serializable {
+abstract public class ProofObligation implements IProofObligation, Serializable
+{
 	private static final long serialVersionUID = 1L;
 
-	// we should store the node that generated the PO rather than just the
-	// location
 	public final INode rootNode;
 	public final String name;
+	public String isaName;
 
-	// the value will now use the vdmpotree
 	public AVdmPoTree valuetree;
-
-	// will need to be changed once we bring in the TP from compass
+	public PExp stitch;
 	public POStatus status;
 
-	// Not sure whether these will be still be needed
 	public final POType kind;
 	public int number;
-	public POTrivialProof proof;
 	private final UniqueNameGenerator generator;
 	private ILexLocation location;
+	private String locale;
 
 	public ProofObligation(INode rootnode, POType kind,
-			IPOContextStack context, ILexLocation location) {
+			IPOContextStack context, ILexLocation location,
+			IPogAssistantFactory af) throws AnalysisException
+	{
+		this.locale = rootnode.apply(af.getLocaleExtractVisitor());
 		this.rootNode = rootnode;
 		this.location = location;
 		this.kind = kind;
@@ -97,35 +98,34 @@ abstract public class ProofObligation implements IProofObligation, Serializable 
 		this.generator = new UniqueNameGenerator(rootNode);
 	}
 
-	public ProofObligation(INode rootNode, String name, AVdmPoTree valuetree,
-			POStatus status, POType kind, int number, POTrivialProof proof,
-			int var, ILexLocation location) {
-		super();
-		this.rootNode = rootNode;
-		this.location = location;
-		this.name = name;
-		this.valuetree = valuetree;
-		this.status = status;
-		this.kind = kind;
-		this.number = number;
-		this.proof = proof;
-		this.generator = new UniqueNameGenerator(rootNode);
+	@Override
+	public String getLocale()
+	{
+		return locale;
 	}
 
-	public UniqueNameGenerator getUniqueGenerator() {
+	public void setLocale(String locale)
+	{
+		this.locale = locale;
+	}
+
+	public UniqueNameGenerator getUniqueGenerator()
+	{
 		return generator;
 	}
 
-	public AVdmPoTree getValueTree() {
+	public AVdmPoTree getValueTree()
+	{
 		return valuetree;
 	}
 
 	// this method should call a visitor on the potree that creates the "value"
-	// string as it exists in the current
-	// version
+	// string as it exists in the current version
 	@Override
-	public String getValue() {
-		if (valuetree.getPredicate() == null) {
+	public String getFullPredString()
+	{
+		if (valuetree.getPredicate() == null)
+		{
 			return "";
 		}
 		String result = valuetree.getPredicate().toString();
@@ -133,90 +133,115 @@ abstract public class ProofObligation implements IProofObligation, Serializable 
 	}
 
 	@Override
-	public void setStatus(POStatus status) {
+	public String getDefPredString()
+	{
+		if (stitch == null)
+		{
+			return "";
+		}
+		String result = stitch.toString();
+		return result;
+	}
+
+	@Override
+	public void setStatus(POStatus status)
+	{
 		this.status = status;
 
 	}
 
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		return name + ": " + kind + " obligation " + "@ " + location + "\n"
-				+ getValue();
+				+ getFullPredString();
 	}
-	
-	
-	public String getIsaName(){
-		return  getName().replaceAll("\\(.*\\)", "")+getNumber();		
-	}
-	
-	@Override
-	public String getUniqueName() {
-		return getName()+getNumber();
+
+	public String getIsaName()
+	{
+		if (isaName == null)
+		{
+			isaName = "PO" + name;
+			isaName = isaName.replaceAll(", ", "_");
+			isaName = isaName.replaceAll("\\(.*\\)|\\$", "");
+			isaName = isaName + getNumber();
+		}
+		return isaName;
 	}
 
 	@Override
-	public INode getNode() {
+	public String getUniqueName()
+	{
+		return getName() + getNumber();
+	}
+
+	@Override
+	public INode getNode()
+	{
 		return rootNode;
 	}
 
 	// I'm not sure why the comparable is implemented...
-	public int compareTo(IProofObligation other) {
+	public int compareTo(IProofObligation other)
+	{
 		return number - other.getNumber();
 	}
 
 	@Override
-	public POType getKind() {
+	public POType getKind()
+	{
 		return kind;
 	}
 
 	@Override
-	public String getName() {
+	public String getName()
+	{
 		return name;
 	}
-	
-	
 
 	@Override
-	public String getKindString() {
+	public String getKindString()
+	{
 		return kind.toString();
 	}
 
 	@Override
-	public POStatus getStatus() {
+	public POStatus getStatus()
+	{
 		return status;
 	}
 
 	@Override
-	public POTrivialProof getTrivialProof() {
-		return proof;
-	}
-
-	@Override
-	public void setNumber(int i) {
+	public void setNumber(int i)
+	{
 		number = i;
 
 	}
 
 	@Override
-	public int getNumber() {
+	public int getNumber()
+	{
 		return number;
 	}
 
 	@Override
-	public ILexLocation getLocation() {
+	public ILexLocation getLocation()
+	{
 		return location;
 	}
 
 	/**
-	 * Create a multiple type bind with a varargs list of pattern variables,
-	 * like a,b,c:T. This is used by several obligations.
+	 * Create a multiple type bind with a varargs list of pattern variables, like a,b,c:T. This is used by several
+	 * obligations.
 	 */
 	protected PMultipleBind getMultipleTypeBind(PType patternType,
-			ILexNameToken... patternNames) {
+			ILexNameToken... patternNames)
+	{
 		ATypeMultipleBind typeBind = new ATypeMultipleBind();
 		List<PPattern> patternList = new Vector<PPattern>();
 
-		for (ILexNameToken patternName : patternNames) {
+		for (ILexNameToken patternName : patternNames)
+		{
 			AIdentifierPattern pattern = new AIdentifierPattern();
 			pattern.setName(patternName.clone());
 			patternList.add(pattern);
@@ -229,15 +254,17 @@ abstract public class ProofObligation implements IProofObligation, Serializable 
 	}
 
 	/**
-	 * Create a multiple set bind with a varargs list of pattern variables, like
-	 * a,b,c in set S. This is used by several obligations.
+	 * Create a multiple set bind with a varargs list of pattern variables, like a,b,c in set S. This is used by several
+	 * obligations.
 	 */
 	protected PMultipleBind getMultipleSetBind(PExp setExp,
-			ILexNameToken... patternNames) {
+			ILexNameToken... patternNames)
+	{
 		ASetMultipleBind setBind = new ASetMultipleBind();
 		List<PPattern> patternList = new Vector<PPattern>();
 
-		for (ILexNameToken patternName : patternNames) {
+		for (ILexNameToken patternName : patternNames)
+		{
 			AIdentifierPattern pattern = new AIdentifierPattern();
 			pattern.setName(patternName.clone());
 			patternList.add(pattern);
@@ -250,39 +277,40 @@ abstract public class ProofObligation implements IProofObligation, Serializable 
 	}
 
 	/**
-	 * As above, but create a List<PMultipleBind> with one element, for
-	 * convenience.
+	 * As above, but create a List<PMultipleBind> with one element, for convenience.
 	 */
 	protected List<PMultipleBind> getMultipleTypeBindList(PType patternType,
-			ILexNameToken... patternNames) {
+			ILexNameToken... patternNames)
+	{
 		List<PMultipleBind> typeBindList = new Vector<PMultipleBind>();
 		typeBindList.add(getMultipleTypeBind(patternType, patternNames));
 		return typeBindList;
 	}
 
 	/**
-	 * As above, but create a List<PMultipleBind> with one element, for
-	 * convenience.
+	 * As above, but create a List<PMultipleBind> with one element, for convenience.
 	 */
 	protected List<PMultipleBind> getMultipleSetBindList(PExp setExp,
-			ILexNameToken... patternNames) {
+			ILexNameToken... patternNames)
+	{
 		List<PMultipleBind> setBindList = new Vector<PMultipleBind>();
 		setBindList.add(getMultipleSetBind(setExp, patternNames));
 		return setBindList;
 	}
 
 	/**
-	 * Create a LexNameToken with a numbered variable name, based on the stem
-	 * passed. (See getVar above).
+	 * Create a LexNameToken with a numbered variable name, based on the stem passed. (See getVar above).
 	 */
-	protected ILexNameToken getUnique(String name) {
+	protected ILexNameToken getUnique(String name)
+	{
 		return generator.getUnique(name);
 	}
 
 	/**
 	 * Generate an AEqualsBinaryExp
 	 */
-	protected AEqualsBinaryExp getEqualsExp(PExp left, PExp right) {
+	protected AEqualsBinaryExp getEqualsExp(PExp left, PExp right)
+	{
 		AEqualsBinaryExp equals = new AEqualsBinaryExp();
 		equals.setLeft(left.clone());
 		equals.setOp(new LexKeywordToken(VDMToken.EQUALS, null));
@@ -293,7 +321,8 @@ abstract public class ProofObligation implements IProofObligation, Serializable 
 	/**
 	 * Generate an AVariableExp
 	 */
-	protected AVariableExp getVarExp(ILexNameToken name) {
+	protected AVariableExp getVarExp(ILexNameToken name)
+	{
 		AVariableExp var = new AVariableExp();
 		var.setName(name.clone());
 		var.setOriginal(name.getFullName());
@@ -303,19 +332,22 @@ abstract public class ProofObligation implements IProofObligation, Serializable 
 	/**
 	 * Generate an AApplyExp with varargs arguments
 	 */
-	protected AApplyExp getApplyExp(PExp root, PExp... arglist) {
+	protected AApplyExp getApplyExp(PExp root, PExp... arglist)
+	{
 		return getApplyExp(root, Arrays.asList(arglist));
 	}
 
 	/**
 	 * Generate an AApplyExp
 	 */
-	protected AApplyExp getApplyExp(PExp root, List<PExp> arglist) {
+	protected AApplyExp getApplyExp(PExp root, List<PExp> arglist)
+	{
 		AApplyExp apply = new AApplyExp();
 		apply.setRoot(root.clone());
 		List<PExp> args = new Vector<PExp>();
 
-		for (PExp arg : arglist) {
+		for (PExp arg : arglist)
+		{
 			args.add(arg.clone());
 		}
 
@@ -326,7 +358,8 @@ abstract public class ProofObligation implements IProofObligation, Serializable 
 	/**
 	 * Generate an AIntLiteral from a long.
 	 */
-	protected AIntLiteralExp getIntLiteral(long i) {
+	protected AIntLiteralExp getIntLiteral(long i)
+	{
 		AIntLiteralExp number = new AIntLiteralExp();
 		ILexIntegerToken literal = new LexIntegerToken(i, null);
 		number.setValue(literal);
@@ -334,35 +367,41 @@ abstract public class ProofObligation implements IProofObligation, Serializable 
 	}
 
 	/**
-	 * Chain an AND expression onto a root, or just return the new expression if
-	 * the root is null. Called in a loop, this left-associates an AND tree.
+	 * Chain an AND expression onto a root, or just return the new expression if the root is null. Called in a loop,
+	 * this left-associates an AND tree.
 	 */
-	protected PExp makeAnd(PExp root, PExp e) {
-		if (root != null) {
+	protected PExp makeAnd(PExp root, PExp e)
+	{
+		if (root != null)
+		{
 			AAndBooleanBinaryExp a = new AAndBooleanBinaryExp();
 			a.setLeft(root.clone());
 			a.setOp(new LexKeywordToken(VDMToken.AND, null));
 			a.setType(new ABooleanBasicType());
 			a.setRight(e.clone());
 			return a;
-		} else {
+		} else
+		{
 			return e;
 		}
 	}
 
 	/**
-	 * Chain an OR expression onto a root, or just return the new expression if
-	 * the root is null. Called in a loop, this left-associates an OR tree.
+	 * Chain an OR expression onto a root, or just return the new expression if the root is null. Called in a loop, this
+	 * left-associates an OR tree.
 	 */
-	protected PExp makeOr(PExp root, PExp e) {
-		if (root != null) {
+	protected PExp makeOr(PExp root, PExp e)
+	{
+		if (root != null)
+		{
 			AOrBooleanBinaryExp o = new AOrBooleanBinaryExp();
 			o.setLeft(root.clone());
 			o.setOp(new LexKeywordToken(VDMToken.OR, null));
 			o.setType(new ABooleanBasicType());
 			o.setRight(e.clone());
 			return o;
-		} else {
+		} else
+		{
 			return e;
 		}
 	}
@@ -370,25 +409,30 @@ abstract public class ProofObligation implements IProofObligation, Serializable 
 	/**
 	 * Create an expression equivalent to a pattern.
 	 */
-	protected PExp patternToExp(PPattern pattern) throws AnalysisException {
-		PatternToExpVisitor visitor = new PatternToExpVisitor(
-				getUniqueGenerator());
+	protected PExp patternToExp(PPattern pattern) throws AnalysisException
+	{
+		PatternToExpVisitor visitor = new PatternToExpVisitor(getUniqueGenerator());
 		return pattern.apply(visitor);
 	}
-	
-	protected List<PMultipleBind> cloneListMultipleBind(List<PMultipleBind> binds){
+
+	protected List<PMultipleBind> cloneListMultipleBind(
+			List<PMultipleBind> binds)
+	{
 		List<PMultipleBind> r = new LinkedList<PMultipleBind>();
-		
-		for (PMultipleBind bind : binds){
+
+		for (PMultipleBind bind : binds)
+		{
 			r.add(bind.clone());
 		}
-		
+
 		return r;
 	}
-	
+
 	/**
 	 * Clone a list of PTypes (and return a typed list)
-	 * @param the list to clone
+	 * 
+	 * @param the
+	 *            list to clone
 	 * @return a Typed list of PTypes
 	 */
 	protected List<PType> cloneListType(List<PType> types)
@@ -403,12 +447,16 @@ abstract public class ProofObligation implements IProofObligation, Serializable 
 
 	/**
 	 * Clone a list of PExps (and return a typed list)
-	 * @param the list to clone
+	 * 
+	 * @param the
+	 *            list to clone
 	 * @return a Typed list of PExps
 	 */
-	protected List<PExp> cloneListPExp(List<PExp> args){
-		List<PExp> clones = new  LinkedList<PExp>();
-		for (PExp pexp : args){
+	protected List<PExp> cloneListPExp(List<PExp> args)
+	{
+		List<PExp> clones = new LinkedList<PExp>();
+		for (PExp pexp : args)
+		{
 			clones.add(pexp.clone());
 		}
 		return clones;

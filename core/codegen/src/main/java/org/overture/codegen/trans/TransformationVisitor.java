@@ -21,6 +21,7 @@ import org.overture.codegen.cgast.expressions.AExistsQuantifierExpCG;
 import org.overture.codegen.cgast.expressions.AForAllQuantifierExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.ALetBeStExpCG;
+import org.overture.codegen.cgast.expressions.ALetDefExpCG;
 import org.overture.codegen.cgast.expressions.AMapletExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
@@ -94,7 +95,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseALetBeStExpCG(ALetBeStExpCG node) throws AnalysisException
 	{
-		SStmCG enclosingStm = getEnclosingStm(node, "let be st expressions");
+		SStmCG enclosingStm = transformationAssistant.getEnclosingStm(node, "let be st expressions");
 
 		AHeaderLetBeStCG header = node.getHeader();
 		ASetMultipleBindCG binding = header.getBinding();
@@ -146,7 +147,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseACompMapExpCG(ACompMapExpCG node) throws AnalysisException
 	{
-		SStmCG enclosingStm = getEnclosingStm(node, "map comprehension");
+		SStmCG enclosingStm = transformationAssistant.getEnclosingStm(node, "map comprehension");
 		
 		AMapletExpCG first = node.getFirst();
 		SExpCG predicate = node.getPredicate();
@@ -180,7 +181,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseACompSetExpCG(ACompSetExpCG node) throws AnalysisException
 	{
-		SStmCG enclosingStm = getEnclosingStm(node, "set comprehension");
+		SStmCG enclosingStm = transformationAssistant.getEnclosingStm(node, "set comprehension");
 		
 		SExpCG first = node.getFirst();
 		SExpCG predicate = node.getPredicate();
@@ -214,7 +215,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseACompSeqExpCG(ACompSeqExpCG node) throws AnalysisException
 	{
-		SStmCG enclosingStm = getEnclosingStm(node, "sequence comprehension");
+		SStmCG enclosingStm = transformationAssistant.getEnclosingStm(node, "sequence comprehension");
 
 		SExpCG first = node.getFirst();
 		SExpCG predicate = node.getPredicate();
@@ -250,7 +251,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseAForAllQuantifierExpCG(AForAllQuantifierExpCG node) throws AnalysisException
 	{
-		SStmCG enclosingStm = getEnclosingStm(node, "forall expression");
+		SStmCG enclosingStm = transformationAssistant.getEnclosingStm(node, "forall expression");
 		
 		SExpCG predicate = node.getPredicate();
 		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
@@ -281,7 +282,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	public void caseAExistsQuantifierExpCG(
 			AExistsQuantifierExpCG node) throws AnalysisException
 	{
-		SStmCG enclosingStm = getEnclosingStm(node, "exists expression");
+		SStmCG enclosingStm = transformationAssistant.getEnclosingStm(node, "exists expression");
 		
 		SExpCG predicate = node.getPredicate();
 		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
@@ -312,7 +313,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	public void caseAExists1QuantifierExpCG(
 			AExists1QuantifierExpCG node) throws AnalysisException
 	{
-		SStmCG enclosingStm = getEnclosingStm(node, "exists1 expression");
+		SStmCG enclosingStm = transformationAssistant.getEnclosingStm(node, "exists1 expression");
 		
 		SExpCG predicate = node.getPredicate();
 		ITempVarGen tempVarNameGen = info.getTempVarNameGen();
@@ -343,6 +344,31 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 			block.apply(this);
 		}
 	}
+	
+	public void caseALetDefExpCG(ALetDefExpCG node) throws AnalysisException
+	{
+		SStmCG enclosingStm = transformationAssistant.getEnclosingStm(node, "let def expression");
+		
+		SExpCG exp = node.getExp();
+		transformationAssistant.replaceNodeWith(node, exp);
+		
+		ABlockStmCG topBlock = new ABlockStmCG();
+		ABlockStmCG current = topBlock;
+		
+		for(AVarLocalDeclCG local : node.getLocalDefs())
+		{
+			ABlockStmCG tmp = new ABlockStmCG();
+			tmp.getLocalDefs().add(local.clone());
+			current.getStatements().add(tmp);
+			current = tmp;
+		}
+
+		transformationAssistant.replaceNodeWith(enclosingStm, topBlock);
+		topBlock.getStatements().add(enclosingStm);
+		
+		exp.apply(this);
+		topBlock.apply(this);
+	}
 
 	private void replaceCompWithTransformation(SStmCG enclosingStm, ABlockStmCG block,
 			STypeCG type, String var, SExpCG comp)
@@ -365,16 +391,5 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		
 		//And make sure to have the enclosing statement in the transformed tree
 		block.getStatements().add(enclosingStm);
-	}
-	
-	private SStmCG getEnclosingStm(SExpCG node, String nodeStr) throws AnalysisException
-	{
-		SStmCG enclosingStm = node.getAncestor(SStmCG.class);
-
-		//This case should never occur as it must be checked for during the construction of the OO AST
-		if (enclosingStm == null)
-			throw new AnalysisException(String.format("Generation of a %s is only supported within operations/functions", node));
-			
-		return enclosingStm;
 	}
 }

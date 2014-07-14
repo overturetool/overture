@@ -4,17 +4,25 @@ import java.util.LinkedList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AClassClassDefinition;
+import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.codegen.cgast.SDeclCG;
+import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AEmptyDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
+import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
+import org.overture.codegen.cgast.declarations.AFuncDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
+import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
+import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
+import org.overture.codegen.cgast.statements.ACallStmCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
+import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.utils.AnalysisExceptionCG;
@@ -41,14 +49,18 @@ public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
 		classCg.setAbstract(isAbstract);
 		classCg.setStatic(isStatic);
 		classCg.setStatic(false);
-		if(superNames.size() == 1)
+		
+		if(superNames.size() >= 1)
+		{
 			classCg.setSuperName(superNames.get(0).getName());
+		}
 		
 		LinkedList<PDefinition> defs = node.getDefinitions();
 		
 		LinkedList<AFieldDeclCG> fields = classCg.getFields();
 		LinkedList<AMethodDeclCG> methods = classCg.getMethods();
 		LinkedList<ARecordDeclCG> innerClasses = classCg.getRecords();
+		LinkedList<AFuncDeclCG> functions = classCg.getFunctions();
 		
 		for (PDefinition def : defs)
 		{
@@ -64,11 +76,55 @@ public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
 			}
 			else if(decl instanceof AMethodDeclCG)
 			{
-				methods.add((AMethodDeclCG) decl);
+				
+				AMethodDeclCG method = (AMethodDeclCG) decl;
+				
+				if(method.getIsConstructor())
+				{
+					String initName = question.getObjectInitializerCall((AExplicitOperationDefinition) def);
+					
+					AMethodDeclCG objInitializer = method.clone();
+					objInitializer.setName(initName);
+					objInitializer.getMethodType().setResult(new AVoidTypeCG());
+					objInitializer.setIsConstructor(false); 
+					
+					methods.add(objInitializer);
+					
+					ACallStmCG initCall = new ACallStmCG();
+					initCall.setType(objInitializer.getMethodType().getResult().clone());
+					initCall.setClassType(null);
+					initCall.setName(initName);
+					
+					for(AFormalParamLocalParamCG param : method.getFormalParams())
+					{
+						SPatternCG pattern = param.getPattern();
+						
+						if(pattern instanceof AIdentifierPatternCG)
+						{
+							AIdentifierPatternCG idPattern = (AIdentifierPatternCG) pattern;
+							
+							AIdentifierVarExpCG var = new AIdentifierVarExpCG();
+							var.setType(param.getType().clone());
+							var.setOriginal(idPattern.getName());
+							var.setIsLambda(false);
+							var.setSourceNode(pattern.getSourceNode());
+							
+							initCall.getArgs().add(var);							
+						}
+					}
+					
+					method.setBody(initCall);
+				}
+				
+				methods.add(method);
 			}
 			else if(decl instanceof ARecordDeclCG)
 			{
 				innerClasses.add((ARecordDeclCG) decl);
+			}
+			else if(decl instanceof AFuncDeclCG)
+			{
+				functions.add((AFuncDeclCG) decl);
 			}
 			else if(decl instanceof AEmptyDeclCG)
 			;//Empty declarations are used to indicate constructs that can be ignored during the

@@ -479,7 +479,7 @@ public class PTypeResolver extends
 
 		try
 		{
-			PTypeSet fixed = new PTypeSet();
+			PTypeSet fixed = new PTypeSet(af);
 			for (PType t : type.getTypes())
 			{
 				if (question.root != null)

@@ -15,6 +15,20 @@
   <artifactId>org.overture.ide.ui</artifactId>
   <name>org.overture.ide.ui</name>
 
+  <build>
+      <resources>
+          <resource>
+              <directory>${project.basedir}/../../documentation/examples/libs</directory>
+              <targetPath>${project.basedir}/includes/lib</targetPath>
+              <filtering>false</filtering>
+              <includes>
+                   <include>**/*.vdmsl</include>
+                   <include>**/*.vdmpp</include>
+              </includes>
+          </resource>
+      </resources>
+  </build>
+
   <reporting>
     <plugins>
       <plugin>

@@ -5,6 +5,7 @@ import org.apache.commons.lang.ArrayUtils;
 public class IRConstants
 {
 	public static final String PRIVATE = "private";
+	public static final String PROTECTED = "protected";
 	public static final String PUBLIC = "public";
 	
 	public static final String CONSTRUCTOR_FORMAL_PREFIX = "_";

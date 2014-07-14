@@ -57,10 +57,12 @@ public class ObjectDesignatorVisitorCG extends AbstractVisitorCG<IRInfo, SObject
 		PObjectDesignator obj = node.getObject();
 		
 		String fieldCg = field.getName();
+		String fieldModuleCg = field.getModule();
 		SObjectDesignatorCG objCg = obj.apply(question.getObjectDesignatorVisitor(), question);
 		
 		AFieldObjectDesignatorCG fieldObjDesignator = new AFieldObjectDesignatorCG();
 		fieldObjDesignator.setFieldName(fieldCg);
+		fieldObjDesignator.setFieldModule(fieldModuleCg);
 		fieldObjDesignator.setObject(objCg);
 		
 		return fieldObjDesignator;

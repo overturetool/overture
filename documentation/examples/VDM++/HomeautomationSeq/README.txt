@@ -10,7 +10,6 @@ Software and Informatics, Vol 3., No 2-3, June/September 2009, pp. 305-341.
 #  AUTOMATED TEST SETTINGS
 #------------------------------------------------------
 #AUTHOR= Sune Wolff
-#LIB= IO
 #LANGUAGE_VERSION=classic
 #INV_CHECKS=true
 #POST_CHECKS=true

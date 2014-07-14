@@ -16,9 +16,9 @@ public class IRGenerator
 {
 	private IRInfo codeGenInfo;
 	
-	public IRGenerator(ILogger log)
+	public IRGenerator(ILogger log, String objectInitCallPrefix)
 	{
-		this.codeGenInfo = new IRInfo();
+		this.codeGenInfo = new IRInfo(objectInitCallPrefix);
 		Logger.setLog(log);
 	}
 			

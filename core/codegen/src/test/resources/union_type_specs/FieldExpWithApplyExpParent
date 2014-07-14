@@ -1,0 +1,30 @@
+class A
+operations
+public op : () ==> nat
+op () == return 1;
+end A
+
+class B
+operations
+public op : () ==> nat
+op () == return 11;
+end B
+
+class Entry
+
+functions
+
+operations
+
+public static Run : () ==> real
+Run () ==
+	let xs = [new A(), new B()]
+	in 
+	(
+		dcl sum : real := 0;
+		for all x in set elems xs do
+			sum := sum + x.op();
+		return sum;
+	)
+
+end Entry

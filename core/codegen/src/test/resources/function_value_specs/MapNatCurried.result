@@ -7,17 +7,6 @@ public class Entry {
     public Entry() {
     }
 
-    public static Func_1<Func_1<Number, Number>, VDMSeq> nat_map(final VDMSeq s) {
-        return new Func_1<Func_1<Number, Number>, VDMSeq>() {
-                public VDMSeq eval(final Func_1<Number, Number> f) {
-                    return s.isEmpty() ? SeqUtil.seq()
-                                       : SeqUtil.conc(SeqUtil.seq(f.eval(((Number) s.get(
-                                    0)))),
-                        nat_map(SeqUtil.tail(s.clone())).eval(f));
-                }
-            };
-    }
-
     public static Object Run() {
         Func_1<Number, Number> f = new Func_1<Number, Number>() {
                 public Number eval(final Number x) {
@@ -27,7 +16,18 @@ public class Entry {
 
         VDMSeq xs = SeqUtil.seq(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L);
 
-        return nat_map(xs).eval(f);
+        return nat_map(xs.clone()).eval(f);
+    }
+
+    public static Func_1<Func_1<Number, Number>, VDMSeq> nat_map(final VDMSeq s) {
+        return new Func_1<Func_1<Number, Number>, VDMSeq>() {
+                public VDMSeq eval(final Func_1<Number, Number> f) {
+                    return s.isEmpty() ? SeqUtil.seq()
+                                       : SeqUtil.conc(SeqUtil.seq(f.eval(((Number) s.get(
+                                    0)))),
+                        nat_map(SeqUtil.tail(s.clone())).eval(f));
+                }
+            };
     }
 }
 

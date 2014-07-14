@@ -19,6 +19,7 @@ import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
+import org.overture.typechecker.visitor.TypeCheckVisitor;
 
 /**
  * This class set a pattern to resolved.
@@ -94,8 +95,9 @@ public class PatternResolver extends
 		{
 			question.question.qualifiers = null;
 			question.question.scope = NameScope.NAMESANDSTATE;
-			pattern.getExp().apply(question.rootVisitor, question.question);
-		} catch (TypeCheckException e)
+			pattern.getExp().apply(new TypeCheckVisitor(), question.question);
+		}
+		catch (TypeCheckException e)
 		{
 			af.createPPatternAssistant().unResolve(pattern);
 			throw e;

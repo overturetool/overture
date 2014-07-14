@@ -27,7 +27,7 @@ package org.overture.interpreter.values;
 import java.io.Serializable;
 
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.typechecker.util.HelpLexNameToken;
+import org.overture.typechecker.util.HackLexNameToken;
 import org.overture.typechecker.util.LexNameTokenMap;
 
 
@@ -43,7 +43,7 @@ public class NameValuePairMap extends LexNameTokenMap<Value> implements Serializ
 	{
 		put(nvp.name, nvp.value);
 	}
-
+	
 	public void putNew(NameValuePair nvp)
 	{
 		if (get(nvp.name) == null)
@@ -117,7 +117,7 @@ public class NameValuePairMap extends LexNameTokenMap<Value> implements Serializ
 		{
     		for (ILexNameToken var: keySet())
     		{
-    			if (HelpLexNameToken.isEqual(var, name))
+    			if (HackLexNameToken.isEqual(var, name))
     			{
     				rv = super.get(var);
     				break;

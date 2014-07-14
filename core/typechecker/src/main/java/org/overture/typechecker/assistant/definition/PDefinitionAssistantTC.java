@@ -19,9 +19,7 @@ import org.overture.typechecker.Environment;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.TypeCheckerErrors;
-import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.util.HelpLexNameToken;
 import org.overture.typechecker.utilities.DefinitionFinder;
 import org.overture.typechecker.utilities.DefinitionTypeResolver;
 import org.overture.typechecker.utilities.NameFinder;
@@ -133,7 +131,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 	public PDefinition findNameBaseCase(PDefinition d,
 			ILexNameToken sought, NameScope scope)
 	{
-		if (HelpLexNameToken.isEqual(d.getName(), sought))
+		if (af.getLexNameTokenAssistant().isEqual(d.getName(), sought))
 		{
 			if (d.getNameScope() == NameScope.STATE
 					&& !scope.matches(NameScope.STATE)
@@ -366,7 +364,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 				if (d1 != d2 && d1.getName() != null && d2.getName() != null
 						&& d1.getName().equals(d2.getName()))
 				{
-					if (!TypeComparator.compatible(d1.getType(), d2.getType()))
+					if (!af.getTypeComparator().compatible(d1.getType(), d2.getType()))
 					{
 						TypeCheckerErrors.report(3322, "Duplicate patterns bind to different types", d.getLocation(), d);
 						TypeCheckerErrors.detail2(d1.getName().getName(), d1.getType(), d2.getName().getName(), d2.getType());

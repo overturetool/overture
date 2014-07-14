@@ -4,7 +4,7 @@ import java.util.*;
 
 
 public class Entry {
-    private static final Object xs = MapUtil.map(new Maplet(1L, 1L),
+    private static final VDMMap xs = MapUtil.map(new Maplet(1L, 1L),
             new Maplet(2L, 2L));
 
     public Entry() {
@@ -12,7 +12,7 @@ public class Entry {
 
     public static Object Run() {
         VDMMap mapCompResult_1 = MapUtil.map();
-        VDMSet set_1 = MapUtil.dom(((VDMMap) xs));
+        VDMSet set_1 = MapUtil.dom(xs.clone());
 
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
             Object e = ((Object) iterator_1.next());

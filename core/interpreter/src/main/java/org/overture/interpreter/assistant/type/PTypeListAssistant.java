@@ -26,7 +26,7 @@ public class PTypeListAssistant
 		this.af = af;
 	}
 
-	public static ValueList getAllValues(List<PType> linkedList, Context ctxt)
+	public ValueList getAllValues(List<PType> linkedList, Context ctxt)
 			throws AnalysisException
 	{
 		QuantifierList quantifiers = new QuantifierList();

@@ -8,11 +8,15 @@ public class Alarm {
     private Number reqQuali;
 
     public Alarm(final Number quali, final VDMSeq str) {
-        descr = str;
-        reqQuali = quali;
+        cg_init_Alarm_1(quali, str);
     }
 
     public Alarm() {
+    }
+
+    public void cg_init_Alarm_1(final Number quali, final VDMSeq str) {
+        descr = str;
+        reqQuali = quali;
     }
 
     public Number GetReqQuali() {
@@ -30,10 +34,14 @@ public class Expert {
     private VDMSet quali;
 
     public Expert(final VDMSet qs) {
-        quali = qs;
+        cg_init_Expert_1(qs);
     }
 
     public Expert() {
+    }
+
+    public void cg_init_Expert_1(final VDMSet qs) {
+        quali = qs;
     }
 
     public VDMSet GetQuali() {
@@ -52,62 +60,20 @@ public class Plant {
     private VDMMap schedule;
 
     public Plant(final VDMSet als, final VDMMap sch) {
-        alarms = als;
-        schedule = sch;
+        cg_init_Plant_1(als, sch);
     }
 
     public Plant() {
     }
 
-    private static Boolean PlantInv(final VDMSet as, final VDMMap sch) {
-        Boolean forAllExpResult_1 = true;
-        VDMSet set_1 = MapUtil.dom(sch);
-
-        for (Iterator iterator_1 = set_1.iterator();
-                iterator_1.hasNext() && forAllExpResult_1;) {
-            Token p = ((Token) iterator_1.next());
-            forAllExpResult_1 = !(((VDMSet) sch.get(p)).isEmpty());
-        }
-
-        Boolean forAllExpResult_2 = true;
-        VDMSet set_2 = as;
-
-        for (Iterator iterator_2 = set_2.iterator();
-                iterator_2.hasNext() && forAllExpResult_2;) {
-            Alarm a = ((Alarm) iterator_2.next());
-            Boolean forAllExpResult_3 = true;
-            VDMSet set_3 = MapUtil.dom(sch);
-
-            for (Iterator iterator_3 = set_3.iterator();
-                    iterator_3.hasNext() && forAllExpResult_3;) {
-                Token p = ((Token) iterator_3.next());
-                Boolean existsExpResult_1 = false;
-                VDMSet set_4 = ((VDMSet) sch.get(p));
-
-                for (Iterator iterator_4 = set_4.iterator();
-                        iterator_4.hasNext() && !(existsExpResult_1);) {
-                    Expert expert = ((Expert) iterator_4.next());
-                    existsExpResult_1 = expert.GetQuali()
-                                              .contains(a.GetReqQuali());
-                }
-
-                forAllExpResult_3 = existsExpResult_1;
-            }
-
-            forAllExpResult_2 = forAllExpResult_3;
-        }
-
-        return forAllExpResult_1 && forAllExpResult_2;
-    }
-
     public Expert ExpertToPage(final Alarm a, final Token p) {
         Expert expert = null;
         Boolean success_1 = false;
-        VDMSet set_5 = ((VDMSet) schedule.get(p));
+        VDMSet set_1 = ((VDMSet) schedule.get(p));
 
-        for (Iterator iterator_5 = set_5.iterator();
-                iterator_5.hasNext() && !(success_1);) {
-            expert = ((Expert) iterator_5.next());
+        for (Iterator iterator_1 = set_1.iterator();
+                iterator_1.hasNext() && !(success_1);) {
+            expert = ((Expert) iterator_1.next());
             success_1 = expert.GetQuali().contains(a.GetReqQuali());
         }
 
@@ -124,10 +90,10 @@ public class Plant {
 
     public VDMSet ExpertIsOnDuty(final Expert ex) {
         VDMSet setCompResult_1 = SetUtil.set();
-        VDMSet set_6 = MapUtil.dom(schedule);
+        VDMSet set_2 = MapUtil.dom(schedule);
 
-        for (Iterator iterator_6 = set_6.iterator(); iterator_6.hasNext();) {
-            Token p = ((Token) iterator_6.next());
+        for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext();) {
+            Token p = ((Token) iterator_2.next());
 
             if (((VDMSet) schedule.get(p)).contains(ex)) {
                 setCompResult_1 = SetUtil.union(setCompResult_1, SetUtil.set(p));
@@ -135,6 +101,11 @@ public class Plant {
         }
 
         return setCompResult_1;
+    }
+
+    public void cg_init_Plant_1(final VDMSet als, final VDMMap sch) {
+        alarms = als;
+        schedule = sch;
     }
 
     public void AddExpertToSchedule(final Token p, final Expert ex) {
@@ -151,6 +122,47 @@ public class Plant {
             ? MapUtil.domResBy(SetUtil.set(p), schedule)
             : MapUtil.override(schedule,
                 MapUtil.map(new Maplet(p, SetUtil.diff(exs, SetUtil.set(ex)))));
+    }
+
+    private static Boolean PlantInv(final VDMSet as, final VDMMap sch) {
+        Boolean forAllExpResult_1 = true;
+        VDMSet set_3 = MapUtil.dom(sch);
+
+        for (Iterator iterator_3 = set_3.iterator();
+                iterator_3.hasNext() && forAllExpResult_1;) {
+            Token p = ((Token) iterator_3.next());
+            forAllExpResult_1 = !(((VDMSet) sch.get(p)).isEmpty());
+        }
+
+        Boolean forAllExpResult_2 = true;
+        VDMSet set_4 = as;
+
+        for (Iterator iterator_4 = set_4.iterator();
+                iterator_4.hasNext() && forAllExpResult_2;) {
+            Alarm a = ((Alarm) iterator_4.next());
+            Boolean forAllExpResult_3 = true;
+            VDMSet set_5 = MapUtil.dom(sch);
+
+            for (Iterator iterator_5 = set_5.iterator();
+                    iterator_5.hasNext() && forAllExpResult_3;) {
+                Token p = ((Token) iterator_5.next());
+                Boolean existsExpResult_1 = false;
+                VDMSet set_6 = ((VDMSet) sch.get(p));
+
+                for (Iterator iterator_6 = set_6.iterator();
+                        iterator_6.hasNext() && !(existsExpResult_1);) {
+                    Expert expert = ((Expert) iterator_6.next());
+                    existsExpResult_1 = expert.GetQuali()
+                                              .contains(a.GetReqQuali());
+                }
+
+                forAllExpResult_3 = existsExpResult_1;
+            }
+
+            forAllExpResult_2 = forAllExpResult_3;
+        }
+
+        return forAllExpResult_1 && forAllExpResult_2;
     }
 }
 

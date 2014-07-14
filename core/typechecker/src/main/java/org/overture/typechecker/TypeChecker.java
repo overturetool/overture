@@ -57,6 +57,11 @@ abstract public class TypeChecker
 
 	static List<IStatusListener> listners = new Vector<IStatusListener>();
 
+	/**
+	 * VDM-only constructor. <b>NOT</b> for use by extensions.
+	 * 
+	 * @param parentVisitor
+	 */
 	public TypeChecker()
 	{
 		clearErrors();

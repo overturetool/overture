@@ -65,7 +65,7 @@ CG {-> package='org.overture.codegen.cgast'
 	;
     
 #decl {-> package='org.overture.codegen.cgast.declarations'}
-	=	{method}
+	=	{method} //rename to operation
 		[access]:java_String
 		[static]:java_Boolean
 		[abstract]:java_Boolean
@@ -75,6 +75,14 @@ CG {-> package='org.overture.codegen.cgast'
 		[isConstructor]:java_Boolean
 		[templateTypes]:CG.#type.template*
 		[body]:CG.#stm
+	|	{func}
+		[access]:java_String
+		[abstract]:java_Boolean
+		[methodType]:CG.#type.method
+		[name]:java_String
+		[formalParams]:CG.#localParam.formalParam*
+		[templateTypes]:CG.#type.template*
+		[body]:CG.#exp
 	|	{field} 
     	[access]:java_String
     	[static]:java_Boolean
@@ -91,6 +99,7 @@ CG {-> package='org.overture.codegen.cgast'
     	[name]:java_String
     	[fields]:field*
     	[methods]:CG.#decl.method*
+    	[functions]:CG.#decl.func*
     	[superName]:java_String
     	[records]:CG.#decl.record*
     |	{interface}
@@ -119,15 +128,15 @@ CG {-> package='org.overture.codegen.cgast'
 	
 #stateDesignator {-> package='org.overture.codegen.cgast.statements'
 	| [type]:CG.#type}
-	= {identifier} [name]:java_String
+	= {identifier} [name]:java_String [explicit]:java_Boolean [className]:java_String
 	| {field} [object]:CG.#stateDesignator [field]:java_String
 	| {mapSeq} [mapseq]:CG.#stateDesignator [exp]:CG.#exp
 	;
 
 #objectDesignator {-> package='org.overture.codegen.cgast.statements'}
 	=   {apply} [object]:CG.#objectDesignator [args]:CG.#exp*
-    |   {field} [object]:CG.#objectDesignator [fieldName]:java_String
-    |   {identifier} [exp]:CG.#exp.#Var
+    |   {field} [object]:CG.#objectDesignator [fieldModule]:java_String [fieldName]:java_String
+    |   {identifier} [exp]:CG.#exp //Normally a var (e.g. [exp]:CG.#exp.#Var) but a transformation may need to replace it with a cast expression
     |   {new} [exp]:CG.#exp.new
     |   {self}
     ;
@@ -144,8 +153,11 @@ CG {-> package='org.overture.codegen.cgast'
            |	{letDef} [localDefs]:CG.#decl.#Local.var* [stm]:CG.#stm
            |	{abstractBody}
            |	{assignment} [target]:CG.#stateDesignator [exp]:CG.#exp
+           |	{localAssignment} [target]:CG.#exp [exp]:CG.#exp
            |	{block}	[localDefs]:CG.#decl.#Local* [statements]:CG.#stm*
            |	{callObject} [type]:CG.#type [designator]:CG.#objectDesignator [className]:java_String [fieldName]:java_String 
+           					 [args]:CG.#exp*
+           |	{callObjectExp} [type]:CG.#type [obj]:CG.#exp [className]:java_String [fieldName]:java_String 
            					 [args]:CG.#exp*
            |	{call} [type]:CG.#type [classType]:CG.#type.class [name]:java_String [args]:CG.#exp*
            |	{notImplemented}
@@ -165,19 +177,19 @@ CG {-> package='org.overture.codegen.cgast'
 	;
 	
 #exp {-> package='org.overture.codegen.cgast.expressions'
-	| (type):CG.#type}
+	| [type]:CG.#type}
     =	#Unary
     |	#Binary
     |	{field} [object]:CG.#exp [memberName]: java_String
     |	{apply} [root]:CG.#exp [args]:CG.#exp*
 	|	{new} [name]:CG.#name.type [args]:CG.#exp*
 	|	#Var
-	|	{instanceof} [classType]:CG.#type.class [objRef]:CG.#exp
+	|	{instanceof} [checkedType]:CG.#type [exp]:CG.#exp
     |	#Literal
     |	{self}
     |	{null}
     |	{letDef} [localDefs]:CG.#decl.#Local.var* [exp]:CG.#exp
-    |	{methodInstantiation} [name]:java_String [actualTypes]:CG.#type*
+    |	{methodInstantiation} [func]:CG.#exp [actualTypes]:CG.#type*
     |	{tuple} [args]:CG.#exp* [tupleType]:CG.#type.tuple
     |	{fieldNumber} [field]:java_Long [tuple]:CG.#exp
     |	{ternaryIf} [condition]:CG.#exp [trueValue]:CG.#exp [falseValue]:CG.#exp
@@ -200,6 +212,8 @@ CG {-> package='org.overture.codegen.cgast'
     |	{external} [targetLangExp]:java_String
     |	{lambda} [params]:CG.#localParam.formalParam* [exp]:CG.#exp
     |	{anonymousClass} [methods]:CG.#decl.method*
+    |	{notImplemented}
+    |	{threadId}
     ;
 
 #RuntimeError {-> package='org.overture.codegen.cgast.expressions'}
@@ -341,6 +355,7 @@ CG {-> package='org.overture.codegen.cgast'
     |	{error}
     |	{interface} [types]:CG.#type* [name]:java_String
     |	{union} [types]:CG.#type*
+    |	{quote} [value]:java_String
     ;
     
 externalType {-> package='org.overture.codegen.cgast.utils'}

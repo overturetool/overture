@@ -82,7 +82,7 @@ public class ACpuClassDefinitionAssistantInterpreter extends
 		}
 	}
 
-	public static Value setPriority(ANotYetSpecifiedStm node, Context ctxt)
+	public Value setPriority(ANotYetSpecifiedStm node, Context ctxt)
 	{
 		try
 		{
@@ -109,7 +109,7 @@ public class ACpuClassDefinitionAssistantInterpreter extends
 	 * @param the
 	 *            target CPU of the redeploy
 	 */
-	private static void updateCPUandChildCPUs(ObjectValue obj, CPUValue cpu)
+	private void updateCPUandChildCPUs(ObjectValue obj, CPUValue cpu)
 	{
 		if (cpu != obj.getCPU())
 		{
@@ -139,7 +139,7 @@ public class ACpuClassDefinitionAssistantInterpreter extends
 	 * @param the
 	 *            target CPU of the redeploy
 	 */
-	private static void redeploy(ObjectValue obj, CPUValue cpu)
+	private void redeploy(ObjectValue obj, CPUValue cpu)
 	{
 		updateCPUandChildCPUs(obj, cpu);
 
@@ -150,7 +150,7 @@ public class ACpuClassDefinitionAssistantInterpreter extends
 		obj.removeCreator();
 	}
 
-	private static LexNameToken varName(String name)
+	private LexNameToken varName(String name)
 	{
 		return new LexNameToken("CPU", name, new LexLocation());
 	}

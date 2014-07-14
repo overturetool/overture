@@ -11,7 +11,6 @@ import org.overture.typechecker.FlatCheckedEnvironment;
 import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
-import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class ACaseAlternativeAssistantTC
@@ -39,7 +38,7 @@ public class ACaseAlternativeAssistantTC
 				AExpressionPattern ep = (AExpressionPattern) c.getPattern();
 				PType ptype = ep.getExp().apply(rootVisitor, new TypeCheckInfo(question.assistantFactory, question.env, question.scope));
 
-				if (!TypeComparator.compatible(ptype, expType))
+				if (!af.getTypeComparator().compatible(ptype, expType))
 				{
 					TypeCheckerErrors.report(3311, "Pattern cannot match", c.getPattern().getLocation(), c.getPattern());
 				}

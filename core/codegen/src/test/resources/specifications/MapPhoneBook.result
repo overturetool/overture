@@ -7,7 +7,7 @@ public class PhoneBook {
     private VDMMap phoneNumbers = MapUtil.map();
 
     public PhoneBook(final VDMMap pPhoneNumbers) {
-        phoneNumbers = pPhoneNumbers.clone();
+        cg_init_PhoneBook_1(pPhoneNumbers.clone());
     }
 
     public PhoneBook() {
@@ -51,7 +51,7 @@ public class PhoneBook {
                                 SeqUtil.seq('N', 'u', 'm', 'b', 'e', 'r', ':',
                                     ' '), number.clone()),
                             SeqUtil.seq('.', ' ', 'N', 'a', 'm', 'e', ':', ' ')),
-                        pb1.getName(number)), SeqUtil.seq('\n')));
+                        pb1.getName(number.clone())), SeqUtil.seq('\n')));
         }
 
         IO.print(SeqUtil.seq('\n'));
@@ -138,6 +138,10 @@ public class PhoneBook {
         pb1.listEntries();
     }
 
+    public void cg_init_PhoneBook_1(final VDMMap pPhoneNumbers) {
+        phoneNumbers = pPhoneNumbers.clone();
+    }
+
     public void loadDemo() {
         phoneNumbers = MapUtil.map();
         addEntry(SeqUtil.seq('M', 'a', 'r', 't', 'i', 'n'), SeqUtil.seq('1'));
@@ -156,7 +160,8 @@ public class PhoneBook {
                                 SeqUtil.seq('N', 'a', 'm', 'e', ':', ' '),
                                 name.clone()),
                             SeqUtil.seq('.', ' ', 'N', 'u', 'm', 'b', 'e', 'r',
-                                ':', ' ')), getNumber(name)), SeqUtil.seq('\n')));
+                                ':', ' ')), getNumber(name.clone())),
+                    SeqUtil.seq('\n')));
         }
     }
 

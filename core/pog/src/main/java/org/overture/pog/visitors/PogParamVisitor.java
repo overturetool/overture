@@ -30,8 +30,9 @@ import org.overture.ast.statements.PStm;
 import org.overture.ast.types.PAccessSpecifier;
 import org.overture.ast.types.PField;
 import org.overture.ast.types.PType;
-import org.overture.pog.obligation.POCaseContext;
-import org.overture.pog.obligation.PONotCaseContext;
+import org.overture.pog.contexts.POCaseContext;
+import org.overture.pog.contexts.PONameContext;
+import org.overture.pog.contexts.PONotCaseContext;
 import org.overture.pog.obligation.ProofObligationList;
 import org.overture.pog.obligation.SeqApplyObligation;
 import org.overture.pog.pub.IPOContextStack;
@@ -55,10 +56,6 @@ import org.overture.pog.utility.PogAssistantFactory;
 public class PogParamVisitor<Q extends IPOContextStack, A extends IProofObligationList>
 		extends QuestionAnswerAdaptor<IPOContextStack, IProofObligationList> {
 
-	/**
-     * 
-     */
-	private static final long serialVersionUID = 1671456307479822942L;
 	private PogExpVisitor pogExpVisitor = new PogExpVisitor(this);
 	private PogStmVisitor pogStmVisitor = new PogStmVisitor(this);
 	private PogDefinitionVisitor pogDefinitionVisitor = new PogDefinitionVisitor(
@@ -86,8 +83,15 @@ public class PogParamVisitor<Q extends IPOContextStack, A extends IProofObligati
 	// See [1] pg. 167 for the definition
 	public IProofObligationList caseAModuleModules(AModuleModules node,
 			IPOContextStack question) throws AnalysisException {
-		return assistantFactory.createPDefinitionAssistant().getProofObligations(node.getDefs(),
-				pogDefinitionVisitor, question);
+		IProofObligationList ipol = new ProofObligationList();
+		for (PDefinition p : node.getDefs()){
+			question.push(new PONameContext(assistantFactory.createPDefinitionAssistant().getVariableNames(p)));
+			ipol.addAll(p.apply(this,question));
+			question.pop();
+			question.clearStateContexts();
+		}
+		
+		return ipol;
 
 	}
 
@@ -255,7 +259,7 @@ public class PogParamVisitor<Q extends IPOContextStack, A extends IProofObligati
 
 			if (node.getSeqType() != null) {
 				list.add(new SeqApplyObligation(node.getMapseq(),
-						node.getExp(), question));
+						node.getExp(), question,assistantFactory));
 			}
 
 			// Maps are OK, as you can create new map domain entries

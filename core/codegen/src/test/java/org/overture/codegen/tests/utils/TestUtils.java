@@ -3,6 +3,7 @@ package org.overture.codegen.tests.utils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
@@ -19,6 +20,9 @@ public class TestUtils
 			else if(f.getName().toLowerCase().endsWith(extension))
 				files.add(f);
 		}
+		
+		Collections.sort(files, new FileComparator());
+		
 		return files;
 	}
 	
@@ -27,11 +31,14 @@ public class TestUtils
 		List<File> files = new Vector<File>();
 		for (File f : file.listFiles())
 		{
-			if (f.isDirectory())
+			Collections.sort(files, new FileComparator());if (f.isDirectory())
 				files.addAll(getTestInputFiles(f));
 			else if(!f.getName().contains("."))
 				files.add(f);
 		}
+		
+		Collections.sort(files, new FileComparator());
+		
 		return files;
 	}
 	
@@ -71,7 +78,12 @@ public class TestUtils
 			if(c == DELIMITER_CHAR)
 			{
 				while(input.read() == DELIMITER_CHAR);
-				classes.add(data);
+				
+				if(!data.toString().trim().startsWith("*Name Violations*"))
+				{
+					classes.add(data);
+				}
+				
 				data = new StringBuffer();
 			}
 			else

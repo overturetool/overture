@@ -37,7 +37,9 @@ SumAux(aSet)(aSum) ==
 	cases aSet :
 	({})	-> aSum,
 	{e} union s->
-		SumAux[@T](s)(aSum + e)
+		SumAux[@T](s)(if is_real(aSum) and is_real(e)
+		              then aSum + e
+		              else undefined)
 	end
 pre
 	pre_Sum[@T](aSet);

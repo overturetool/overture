@@ -8,7 +8,6 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.overture.ast.types.PType;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.SObjectDesignatorCG;
 import org.overture.codegen.cgast.SStateDesignatorCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
@@ -28,6 +27,7 @@ import org.overture.codegen.cgast.expressions.AMapletExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AQuoteLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.SBinaryExpCG;
 import org.overture.codegen.cgast.expressions.SLiteralExpCG;
@@ -38,7 +38,6 @@ import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.AForLoopStmCG;
-import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
@@ -71,7 +70,6 @@ import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class JavaFormat
 {
-	public static final String ADD_ELEMENT_TO_MAP = "put";
 	public static final String UTILS_FILE = "Utils";
 	public static final String SEQ_UTIL_FILE = "SeqUtil";
 	public static final String SET_UTIL_FILE = "SetUtil";
@@ -244,22 +242,30 @@ public class JavaFormat
 	public String formatMapSeqStateDesignator(AMapSeqStateDesignatorCG mapSeq) throws AnalysisException
 	{
 		INode parent = mapSeq.parent();
-		
-		if(!(parent instanceof AAssignmentStmCG))
-			throw new AnalysisException("Generation of map sequence state designator was expecting an assignment statement as parent. Got : " + parent);
-		
-		AAssignmentStmCG assignment = (AAssignmentStmCG) parent;
-		
+
 		SStateDesignatorCG stateDesignator = mapSeq.getMapseq();
 		SExpCG domValue = mapSeq.getExp();
-		SExpCG rngValue = assignment.getExp();
-		
+
 		String stateDesignatorStr = format(stateDesignator);
 		String domValStr = format(domValue);
-		String rngValStr = format(rngValue);
 		
-		//e.g. counters.put("c1", 4);
-		return stateDesignatorStr + "." + ADD_ELEMENT_TO_MAP + "(" + domValStr + ", " + rngValStr + ")";
+		if(parent instanceof AAssignmentStmCG)
+		{
+			AAssignmentStmCG assignment = (AAssignmentStmCG) parent;
+			SExpCG rngValue = assignment.getExp();
+			String rngValStr = format(rngValue);
+			
+			//e.g. counters.put("c1", 4);
+			return stateDesignatorStr + ".put(" + domValStr + ", " + rngValStr + ")";
+		}
+		else
+		{
+			STypeCG type = mapSeq.getType();
+			String typeStr = format(type);
+			
+			//e.g. ((Rec) m(true)).field := 2;
+			return "( (" + typeStr + ")" + format(mapSeq.getMapseq()) + ".get(" + domValStr + "))";
+		}
 	}
 	
 	private String getNumberDereference(INode node, boolean ignoreContext)
@@ -296,11 +302,16 @@ public class JavaFormat
 	
 	private static boolean isNumberDereferenceCandidate(SExpCG node)
 	{
-		return (!(node instanceof SNumericBinaryExpCG)
-				&& !(node instanceof SLiteralExpCG) 
+		boolean fitsCategory = !(node instanceof SNumericBinaryExpCG)
+				&& !(node instanceof SLiteralExpCG)
 				&& !(node instanceof AIsolationUnaryExpCG)
-				&& (!(node instanceof SUnaryExpCG) || node instanceof ACastUnaryExpCG))
-				|| node instanceof AHeadUnaryExpCG;
+				&& !(node instanceof SUnaryExpCG);
+
+		boolean isException = node instanceof AHeadUnaryExpCG
+				|| node instanceof AQuoteLiteralExpCG
+				|| node instanceof ACastUnaryExpCG;
+		
+		return 	fitsCategory || isException;
 	}
 
 	public String formatName(INode node) throws AnalysisException
@@ -715,62 +726,7 @@ public class JavaFormat
 	
 	public STypeCG findElementType(AApplyObjectDesignatorCG designator)
 	{
-		int appliesCount = 0;
-		
-		SObjectDesignatorCG object = designator.getObject();
-
-		while(object != null)
-		{
-			if(object instanceof AIdentifierObjectDesignatorCG)
-			{
-				AIdentifierObjectDesignatorCG id = (AIdentifierObjectDesignatorCG) object;
-			
-				STypeCG type = id.getExp().getType();
-				
-				int methodTypesCount = 0;
-				
-				while (type instanceof AMethodTypeCG)
-				{
-					methodTypesCount++;
-					AMethodTypeCG methodType = (AMethodTypeCG) type;
-					type = methodType.getResult();
-				}
-				
-				while(type instanceof SSeqTypeCG || type instanceof SMapTypeCG)
-				{
-					if(type instanceof SSeqTypeCG)
-					{
-						type = ((SSeqTypeCG) type).getSeqOf();
-					}
-
-					if(type instanceof SMapTypeCG)
-					{
-						type = ((SMapTypeCG) type).getTo();
-					}
-					
-					if (appliesCount == methodTypesCount)
-					{
-						return type;						
-					}
-					
-					methodTypesCount++;
-				}
-
-				return null;
-			}
-			else if(object instanceof AApplyObjectDesignatorCG)
-			{
-				AApplyObjectDesignatorCG applyObj = (AApplyObjectDesignatorCG) object;
-				appliesCount++;
-				object = applyObj.getObject();
-			}
-			else
-			{
-				return null;
-			}
-		}
-		
-		return null;
+		return info.getAssistantManager().getTypeAssistant().findElementType(designator);
 	}
 	
 	public boolean isLoopVar(AVarLocalDeclCG localVar)

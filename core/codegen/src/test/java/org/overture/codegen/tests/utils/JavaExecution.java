@@ -3,6 +3,7 @@ package org.overture.codegen.tests.utils;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class JavaExecution
@@ -39,10 +40,33 @@ public class JavaExecution
 				}
 			} else
 			{
-				String arg = java.getAbsolutePath() + " -cp " + cpArgs + " "
+				String arg = "java" + " -cp " + cpArgs + " "
 						+ mainClassName;
 
-				p = Runtime.getRuntime().exec(arg, null, cp);
+				p = Runtime.getRuntime().exec(arg.replace('\"', ' '), null, cp);
+				InputStream stderr = p.getErrorStream();
+
+	            InputStreamReader isr = new InputStreamReader(stderr);
+
+	            BufferedReader br = new BufferedReader(isr);
+	            String debugLine = null;
+	            String line = "";
+				while ( (debugLine = br.readLine()) != null)
+	                line  += debugLine + "\n";
+	            int exitVal = -1;
+				try
+				{
+					exitVal = p.waitFor();
+					
+					if(exitVal != 0)
+					{
+						System.out.println(line);
+					}
+					
+				} catch (InterruptedException e)
+				{
+					e.printStackTrace();
+				}
 			}
 
 			StringBuilder out = new StringBuilder();
@@ -77,9 +101,11 @@ public class JavaExecution
 		
 		StringBuilder sb = new StringBuilder();
 		
+		char fileSep = JavaToolsUtils.isWindows() ? ';' : ':';
+		
 		if(file.isDirectory())
 		{
-			sb.append(file.getAbsolutePath() + ";");
+			sb.append(file.getAbsolutePath() + fileSep);
 		}
 			
 		for (int i = 0; i < allFiles.length; i++)
@@ -88,7 +114,7 @@ public class JavaExecution
 			
 			if (currentFile.isDirectory())
 			{
-				sb.append(currentFile.getAbsolutePath() + ";");
+				sb.append(currentFile.getAbsolutePath() + fileSep);
 			}
 		}
 		

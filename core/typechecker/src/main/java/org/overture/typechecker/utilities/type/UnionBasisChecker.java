@@ -5,6 +5,7 @@ import org.overture.ast.analysis.AnswerAdaptor;
 import org.overture.ast.node.INode;
 import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.ANamedInvariantType;
+import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
@@ -57,15 +58,18 @@ public class UnionBasisChecker extends AnswerAdaptor<Boolean>
 	@Override
 	public Boolean createNewReturnValue(INode node) throws AnalysisException
 	{
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public Boolean createNewReturnValue(Object node) throws AnalysisException
 	{
-		// TODO Auto-generated method stub
 		return false;
 	}
 
+	@Override
+	public Boolean caseAOptionalType(AOptionalType node) throws AnalysisException
+	{
+		return node.getType().apply(THIS);
+	}
 }

@@ -8,13 +8,14 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.modelcheckers.probsolver.AbstractProbSolverUtil.SolverException;
 import org.overture.modelcheckers.probsolver.visitors.VdmToBConverter;
 import org.overture.test.framework.ConditionalIgnoreMethodRule.ConditionalIgnore;
+import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 
 public class AirportSLTest extends ProbConverterTestBase
 {
 
 	public AirportSLTest()
 	{
-		super(new File("src/test/resources/modules/complete/AirportNat.vdmsl".replace('/', File.separatorChar)));
+		super(new File("src/test/resources/modules/complete/AirportNat.vdmsl".replace('/', File.separatorChar)),new TypeCheckerAssistantFactory());
 	}
 
 	@Test

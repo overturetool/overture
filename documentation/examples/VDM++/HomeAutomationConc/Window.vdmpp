@@ -29,7 +29,7 @@ public IsFinished: () ==> ()
 IsFinished() ==
   skip;
 
-Step: () ==> ()
+protected Step: () ==> ()
 Step() ==
  (if (GetCorr() = <OPEN>)
   then (HA`Sur.DecHumid();

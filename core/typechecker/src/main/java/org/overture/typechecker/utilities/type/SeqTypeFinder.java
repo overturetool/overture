@@ -57,7 +57,7 @@ public class SeqTypeFinder extends TypeUnwrapper<SSeqType>
 			type.setSeqDone(true); // Mark early to avoid recursion.
 			// type.setSeqType(PTypeAssistantTC.getSeq(AstFactory.newAUnknownType(type.getLocation())));
 			type.setSeqType(af.createPTypeAssistant().getSeq(AstFactory.newAUnknownType(type.getLocation())));
-			PTypeSet set = new PTypeSet();
+			PTypeSet set = new PTypeSet(af);
 
 			for (PType t : type.getTypes())
 			{

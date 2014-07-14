@@ -1,0 +1,30 @@
+class Entry
+
+types
+
+Rec :: field : nat;
+
+instance variables
+
+m : map bool to Rec := {true |-> mk_Rec(10)};
+
+operations
+
+public modify : () ==> ()
+modify () == m(true).field := 20;
+
+public read : () ==> nat
+read () == return m(true).field;
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let a = new Entry()
+in 
+(
+	a.modify();
+	return a.read();
+)
+
+end Entry

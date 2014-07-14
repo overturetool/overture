@@ -9,10 +9,15 @@ Bundle-Name: org.overture.ide.plugins.poviewer
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.overture.ide.plugins.poviewer;singleton:=true
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.overture.pog.pub,org.overture.pog.visitors,org.ove
- rture.pog.obligation,org.overture.ide.plugins.poviewer,org.overture.i
- de.plugins.poviewer.commands,org.overture.ide.plugins.poviewer.view,o
- rg.overture.pog.utility,org.overture.pof
+Export-Package: org.overture.ide.plugins.poviewer,
+ org.overture.ide.plugins.poviewer.commands,
+ org.overture.ide.plugins.poviewer.view,
+ org.overture.pof,
+ org.overture.pog.contexts,
+ org.overture.pog.obligation,
+ org.overture.pog.pub,
+ org.overture.pog.utility,
+ org.overture.pog.visitors
 Require-Bundle: org.eclipse.ui.console,
  org.overture.ide.vdmpp.core,
  org.overture.ide.vdmrt.core,

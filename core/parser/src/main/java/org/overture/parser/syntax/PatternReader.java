@@ -61,7 +61,8 @@ public class PatternReader extends SyntaxReader
 		PPattern pattern = readSimplePattern();
 
 		while (lastToken().is(VDMToken.UNION)
-				|| lastToken().is(VDMToken.CONCATENATE))
+				|| lastToken().is(VDMToken.CONCATENATE)
+				|| lastToken().is(VDMToken.MUNION))
 		{
 			LexToken token = lastToken();
 
@@ -76,6 +77,7 @@ public class PatternReader extends SyntaxReader
 					nextToken();
 					pattern = AstFactory.newAConcatenationPattern(pattern, token.location, readPattern());
 					break;
+					
 				case MUNION:
 					if(Settings.release == Release.VDM_10)
 					{

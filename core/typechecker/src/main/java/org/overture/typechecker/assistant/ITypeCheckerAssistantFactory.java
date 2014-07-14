@@ -30,7 +30,9 @@ import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
 import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.Environment;
+import org.overture.typechecker.LexNameTokenAssistant;
 import org.overture.typechecker.TypeCheckInfo;
+import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.definition.ABusClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ACpuClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
@@ -84,7 +86,6 @@ import org.overture.typechecker.assistant.type.APatternListTypePairAssistantTC;
 import org.overture.typechecker.assistant.type.ARecordInvariantTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AUnionTypeAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
-import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
 import org.overture.typechecker.utilities.DefinitionFinder;
 import org.overture.typechecker.utilities.DefinitionTypeResolver;
 import org.overture.typechecker.utilities.NameFinder;
@@ -104,13 +105,8 @@ import org.overture.typechecker.utilities.type.QualifiedDefinition;
 public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 {
 
-	// Typechecker
 
-	// All this stuff will eventually be deleted
-	
 
-	// Definition
-	// AAssignmentDefinitionAssistantTC createAAssignmentDefinitionAssistant();
 	ABusClassDefinitionAssistantTC createABusClassDefinitionAssistant();
 
 	ACpuClassDefinitionAssistantTC createACpuClassDefinitionAssistant();
@@ -271,10 +267,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	PTypeAssistantTC createPTypeAssistant();
 
-	SNumericBasicTypeAssistantTC createSNumericBasicTypeAssistant();
-
-
-	// visitors
+		// visitors
 
 	//SSeqTypeAssistantTC createSSeqTypeAssistant();
 
@@ -410,6 +403,10 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	IQuestionAnswer<AModuleModules, List<PDefinition>> getImportDefinitionFinder();
 
 	IAnswer<PTypeList> getComposeTypeCollector();
+	
+	TypeComparator getTypeComparator();
+	
+	LexNameTokenAssistant getLexNameTokenAssistant();
 
 	IQuestionAnswer<TypeCheckInfo, List<QualifiedDefinition>> getQualificationVisitor();
 }

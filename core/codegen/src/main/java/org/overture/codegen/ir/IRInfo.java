@@ -2,17 +2,20 @@ package org.overture.codegen.ir;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.node.INode;
 import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.assistant.BindAssistantCG;
 import org.overture.codegen.assistant.DeclAssistantCG;
-import org.overture.codegen.assistant.DesignatorAssistantCG;
 import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.assistant.LocationAssistantCG;
 import org.overture.codegen.assistant.StmAssistantCG;
@@ -59,7 +62,13 @@ public class IRInfo
 	//For configuring code generation
 	private IRSettings settings;
 	
-	public IRInfo()
+	//To look up object initializer call names
+	private Map<AExplicitOperationDefinition, String> objectInitCallNames;
+	
+	//Object initialization call prefix
+	private String objectInitCallPrefix;
+	
+	public IRInfo(String objectInitCallPrefix)
 	{
 		super();
 		
@@ -71,6 +80,9 @@ public class IRInfo
 		this.tempVarNameGen = new TempVarNameGen();
 		
 		this.settings = new IRSettings();
+		
+		this.objectInitCallPrefix = objectInitCallPrefix;
+		this.objectInitCallNames = new HashMap<AExplicitOperationDefinition, String>();
 	}
 	
 	public AssistantManager getAssistantManager()
@@ -138,11 +150,6 @@ public class IRInfo
 		return assistantManager.getDeclAssistant();
 	}
 
-	public DesignatorAssistantCG getDesignatorAssistant()
-	{
-		return assistantManager.getDesignatorAssistant();
-	}
-	
 	public StmAssistantCG getStmAssistant()
 	{
 		return assistantManager.getStmAssistant();
@@ -250,5 +257,21 @@ public class IRInfo
 	public void setSettings(IRSettings settings)
 	{
 		this.settings = settings;
+	}
+	
+	public String getObjectInitializerCall(AExplicitOperationDefinition vdmOp)
+	{
+		if(objectInitCallNames.containsKey(vdmOp))
+		{
+			return objectInitCallNames.get(vdmOp);
+		}
+		else
+		{
+			String enclosingClassName = vdmOp.getAncestor(SClassDefinition.class).getName().getName();
+			String initName = tempVarNameGen.nextVarName(objectInitCallPrefix + enclosingClassName + "_");
+			objectInitCallNames.put(vdmOp, initName);
+			
+			return initName;
+		}
 	}
 }

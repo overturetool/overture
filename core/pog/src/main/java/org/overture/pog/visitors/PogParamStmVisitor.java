@@ -3,6 +3,7 @@ package org.overture.pog.visitors;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SOperationDefinitionBase;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.AIgnorePattern;
@@ -34,32 +35,29 @@ import org.overture.ast.statements.ATrapStm;
 import org.overture.ast.statements.AWhileStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.statements.SSimpleBlockStm;
+import org.overture.pog.contexts.AssignmentContext;
+import org.overture.pog.contexts.OpPostConditionContext;
+import org.overture.pog.contexts.PONameContext;
+import org.overture.pog.contexts.POScopeContext;
 import org.overture.pog.obligation.LetBeExistsObligation;
-import org.overture.pog.obligation.PONameContext;
-import org.overture.pog.obligation.POScopeContext;
+import org.overture.pog.obligation.OperationCallObligation;
 import org.overture.pog.obligation.ProofObligationList;
 import org.overture.pog.obligation.StateInvariantObligation;
-import org.overture.pog.obligation.SubTypeObligation;
+import org.overture.pog.obligation.TypeCompatibilityObligation;
 import org.overture.pog.obligation.WhileLoopObligation;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.utility.POException;
 import org.overture.pog.utility.PogAssistantFactory;
-import org.overture.typechecker.TypeComparator;
 
 public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofObligationList>
 		extends QuestionAnswerAdaptor<IPOContextStack, IProofObligationList>
 {
 
-	/**
-     * 
-     */
-	private static final long serialVersionUID = -7303385814876083304L;
 	final private QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> rootVisitor;
 	final private QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> mainVisitor;
-
-	final private IPogAssistantFactory assistantFactory;
+	final private IPogAssistantFactory aF;
 
 	public PogParamStmVisitor(
 			QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> parentVisitor,
@@ -68,7 +66,7 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 	{
 		this.rootVisitor = parentVisitor;
 		this.mainVisitor = mainVisitor;
-		this.assistantFactory = assistantFactory;
+		this.aF = assistantFactory;
 	}
 
 	/**
@@ -84,7 +82,7 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 	{
 		this.rootVisitor = parentVisitor;
 		this.mainVisitor = this;
-		this.assistantFactory = new PogAssistantFactory();
+		this.aF = new PogAssistantFactory();
 	}
 
 	@Override
@@ -116,25 +114,26 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 		try
 		{
 			IProofObligationList obligations = new ProofObligationList();
-
 			if (!node.getInConstructor()
 					&& (node.getClassDefinition() != null && node.getClassDefinition().getInvariant() != null)
 					|| (node.getStateDefinition() != null && node.getStateDefinition().getInvExpression() != null))
 			{
-				obligations.add(new StateInvariantObligation(node, question));
+				obligations.add(new StateInvariantObligation(node, question, aF));
 			}
 
 			obligations.addAll(node.getTarget().apply(rootVisitor, question));
 			obligations.addAll(node.getExp().apply(rootVisitor, question));
 
-			if (!TypeComparator.isSubType(question.checkType(node.getExp(), node.getExpType()), node.getTargetType(), assistantFactory))
+			if (!aF.getTypeComparator().isSubType(question.checkType(node.getExp(), node.getExpType()), node.getTargetType()))
 			{
-				SubTypeObligation sto = SubTypeObligation.newInstance(node.getExp(), node.getTargetType(), node.getExpType(), question, assistantFactory);
+				TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(node.getExp(), node.getTargetType(), node.getExpType(), question, aF);
 				if (sto != null)
 				{
 					obligations.add(sto);
 				}
 			}
+
+			question.push(new AssignmentContext(node, aF, question));
 
 			return obligations;
 		} catch (Exception e)
@@ -151,9 +150,22 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 		{
 			IProofObligationList obligations = new ProofObligationList();
 
+			boolean needsInv = false;
+
 			for (AAssignmentStm stmt : node.getAssignments())
 			{
-				obligations.addAll(stmt.apply(mainVisitor, question));
+				stmt.apply(mainVisitor, question); // collect the assignments
+				if (!stmt.getInConstructor()
+						&& (stmt.getClassDefinition() != null && stmt.getClassDefinition().getInvariant() != null)
+						|| (stmt.getStateDefinition() != null && stmt.getStateDefinition().getInvExpression() != null))
+				{
+					needsInv = true;
+				}
+			}
+			if (needsInv)
+			{
+				//FIXME State Inv For Atomic assignments
+				obligations.add(new StateInvariantObligation(node, question, aF));
 			}
 
 			return obligations;
@@ -196,6 +208,16 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 				obligations.addAll(exp.apply(rootVisitor, question));
 			}
 
+			// stick possible op post_condition in the context
+			SOperationDefinitionBase calledOp = node.apply(new GetOpCallVisitor());
+			if (calledOp != null)
+			{
+				if (calledOp.getPrecondition() != null)
+				{
+					obligations.add(new OperationCallObligation(node, calledOp, question, aF));
+				}
+				question.push(new OpPostConditionContext(calledOp.getPostdef(), node, calledOp, aF, question));
+			}
 			return obligations;
 		} catch (Exception e)
 		{
@@ -387,7 +409,7 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 		try
 		{
 			IProofObligationList obligations = new ProofObligationList();
-			obligations.add(new LetBeExistsObligation(node, question));
+			obligations.add(new LetBeExistsObligation(node, question, aF));
 			obligations.addAll(node.getBind().apply(rootVisitor, question));
 
 			if (node.getSuchThat() != null)
@@ -565,7 +587,7 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 		try
 		{
 			IProofObligationList obligations = new ProofObligationList();
-			obligations.add(new WhileLoopObligation(node, question));
+			obligations.add(new WhileLoopObligation(node, question, aF));
 			obligations.addAll(node.getExp().apply(rootVisitor, question));
 			obligations.addAll(node.getStatement().apply(mainVisitor, question));
 
@@ -587,7 +609,7 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 			for (PDefinition localDef : node.getLocalDefs())
 			{
 				// PDefinitionAssistantTC.get
-				question.push(new PONameContext(assistantFactory.createPDefinitionAssistant().getVariableNames(localDef)));
+				question.push(new PONameContext(aF.createPDefinitionAssistant().getVariableNames(localDef)));
 				obligations.addAll(localDef.apply(rootVisitor, question));
 				question.pop();
 			}
@@ -610,8 +632,7 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 		{
 			IProofObligationList obligations = new ProofObligationList();
 
-			for (PStm stmt : node.getStatements())
-			{
+			for (PStm stmt : node.getStatements()) {
 				obligations.addAll(stmt.apply(mainVisitor, question));
 			}
 
@@ -629,7 +650,7 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 	{
 		try
 		{
-			IProofObligationList obligations = assistantFactory.createPDefinitionAssistant().getProofObligations(node.getAssignmentDefs(), rootVisitor, question);
+			IProofObligationList obligations = aF.createPDefinitionAssistant().getProofObligations(node.getAssignmentDefs(), rootVisitor, question);
 
 			question.push(new POScopeContext());
 			obligations.addAll(defaultSSimpleBlockStm(node, question));

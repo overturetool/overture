@@ -29,6 +29,8 @@ import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
+import org.overture.ast.types.SMapType;
+import org.overture.ast.types.SSeqType;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
@@ -40,6 +42,7 @@ import org.overture.codegen.cgast.types.AIntBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AMapMapTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
+import org.overture.codegen.cgast.types.AQuoteTypeCG;
 import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
@@ -50,6 +53,7 @@ import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AUnionTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.ir.IRInfo;
+import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 {
@@ -58,16 +62,36 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 			throws AnalysisException
 	{
 		LinkedList<PType> types = node.getTypes();
+
+		PTypeAssistantTC typeAssistant = question.getTcFactory().createPTypeAssistant();
 		
-		AUnionTypeCG unionTypeCg = new AUnionTypeCG();
-		
-		for(PType type : types)
+		if (question.getTypeAssistant().isUnionOfType(node, ASetType.class))
 		{
-			STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-			unionTypeCg.getTypes().add(typeCg);
+			ASetType setType = typeAssistant.getSet(node);
+			return setType.apply(question.getTypeVisitor(), question);
+			
+		} else if (question.getTypeAssistant().isUnionOfType(node, SSeqType.class))
+		{
+			SSeqType seqType = typeAssistant.getSeq(node);
+			return seqType.apply(question.getTypeVisitor(), question);
+			
+		} else if (question.getTypeAssistant().isUnionOfType(node, SMapType.class))
+		{
+			SMapType mapType = typeAssistant.getMap(node);
+			return mapType.apply(question.getTypeVisitor(), question);
+		} else
+		{
+
+			AUnionTypeCG unionTypeCg = new AUnionTypeCG();
+
+			for (PType type : types)
+			{
+				STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+				unionTypeCg.getTypes().add(typeCg);
+			}
+
+			return unionTypeCg;
 		}
-		
-		return unionTypeCg;
 	}
 	
 	@Override
@@ -176,8 +200,7 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 		{
 			AUnionType unionType = (AUnionType) type;
 
-			// Currently the code generator only supports the union of quotes case
-			if (question.getTypeAssistant().isUnionOfQuotes(unionType))
+			if (question.getTypeAssistant().isUnionOfType(unionType, AQuoteType.class))
 			{
 				return new AIntNumericBasicTypeCG();
 			}
@@ -190,7 +213,12 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 	public STypeCG caseAQuoteType(AQuoteType node, IRInfo question)
 			throws AnalysisException
 	{
-		return new AIntNumericBasicTypeCG();
+		String value = node.getValue().getValue();
+		
+		AQuoteTypeCG quoteTypeCg = new AQuoteTypeCG();
+		quoteTypeCg.setValue(value);
+		
+		return quoteTypeCg;
 	}
 
 	@Override

@@ -39,7 +39,9 @@ public class Entry {
             throw new RuntimeException("Let Be St found no applicable bindings");
         }
 
-        return x.longValue() * y.longValue() * z.longValue();
+        Number letBeStExp_1 = x.longValue() * y.longValue() * z.longValue();
+
+        return letBeStExp_1;
     }
 }
 

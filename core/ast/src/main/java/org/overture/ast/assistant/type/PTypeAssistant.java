@@ -57,7 +57,7 @@ public class PTypeAssistant
 		}
 	}
 
-	public static int hashCode(List<PType> list)
+	public int hashCode(List<PType> list)
 	{
 		int hashCode = 1;
 		for (PType e : list)

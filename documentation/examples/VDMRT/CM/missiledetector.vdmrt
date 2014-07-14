@@ -61,7 +61,7 @@ isFinished () ==
   for all id in set dom controllers do
     controllers(id).isFinished();
 
-Step: () ==> ()
+protected Step: () ==> ()
 Step() ==
  (if threats <> []
   then (def mk_ (evid,pmt, pa, pt) = getThreat() in

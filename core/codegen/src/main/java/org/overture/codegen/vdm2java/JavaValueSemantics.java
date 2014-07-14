@@ -26,7 +26,9 @@ import org.overture.codegen.cgast.expressions.ASizeUnaryExpCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AForAllStmCG;
 import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
+import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
+import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
@@ -112,24 +114,36 @@ public class JavaValueSemantics
 			return false;
 		
 		INode parent = exp.parent();
+		
 		if (cloneNotNeeded(parent))
 		{
 			return false;
 		}
-		
-		STypeCG type = exp.getType();
 		
 		if(parent instanceof AIdentifierObjectDesignatorCG)
 		{
 			//Don't clone the variable associated with an identifier object designator
 			return false;
 		}
-		else if(parent instanceof AApplyObjectDesignatorCG)
+		
+		if(parent instanceof AApplyObjectDesignatorCG)
 		{
 			//No need to clone the expression - we only use it for lookup
 			return usesStructuralEquivalence(exp.getType()) && javaFormat.findElementType((AApplyObjectDesignatorCG) parent) == null;
 		}
-		else if(usesStructuralEquivalence(type))
+		
+		if(parent instanceof ALocalAssignmentStmCG)
+		{
+			ALocalAssignmentStmCG assignment = (ALocalAssignmentStmCG) parent;
+			if(assignment.getTarget() == exp)
+			{
+				return false;
+			}
+		}
+		
+		STypeCG type = exp.getType();
+		
+		if(usesStructuralEquivalence(type))
 		{
 			if(parent instanceof ANewExpCG)
 			{
@@ -148,9 +162,20 @@ public class JavaValueSemantics
 
 	private boolean cloneNotNeeded(INode parent)
 	{
+		if(parent instanceof AApplyExpCG)
+		{
+			//Cloning is not needed if the expression is
+			//used to look up a value in a sequence or a map
+			SExpCG root = ((AApplyExpCG) parent).getRoot();
+			
+			if(!(root.getType() instanceof AMethodTypeCG))
+			{
+				return true;
+			}
+		}
+		
 		return 	   parent instanceof AFieldExpCG
 				|| parent instanceof AFieldNumberExpCG
-				|| parent instanceof AApplyExpCG
 				|| parent instanceof AEqualsBinaryExpCG
 				|| parent instanceof ANotEqualsBinaryExpCG
 				|| parent instanceof AAddrEqualsBinaryExpCG

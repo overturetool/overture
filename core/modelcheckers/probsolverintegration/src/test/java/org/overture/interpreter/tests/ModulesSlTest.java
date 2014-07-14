@@ -24,7 +24,27 @@ public class ModulesSlTest extends CommonInterpreterTest
 		String root = "src/test/resources/modules/complete/";
 
 		Collection<Object[]> tests = TestSourceFinder.createTestCompleteFile(Dialect.VDM_SL, "", root, "vdmsl", "");
+
+		remove(tests, "soccer");
+
 		return tests;
+	}
+
+	private static void remove(Collection<Object[]> tests, String string)
+	{
+		Object[] item = null;
+		for (Object[] objects : tests)
+		{
+			if (objects[1].toString().equals(string+".vdmsl"))
+			{
+				item = objects;
+				break;
+			}
+		}
+		if (item != null)
+		{
+			tests.remove(item);
+		}
 	}
 
 	@Override

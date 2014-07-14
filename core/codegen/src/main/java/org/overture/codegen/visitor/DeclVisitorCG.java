@@ -13,11 +13,13 @@ import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.traces.ATraceDefinitionTerm;
+import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOperationType;
+import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
@@ -29,11 +31,11 @@ import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.AEmptyDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
+import org.overture.codegen.cgast.declarations.AFuncDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.expressions.ALambdaExpCG;
-import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
-import org.overture.codegen.cgast.statements.AReturnStmCG;
+import org.overture.codegen.cgast.expressions.ANotImplementedExpCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.ir.IRConstants;
@@ -77,7 +79,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 		{
 			AUnionType unionType = (AUnionType) type;
 			
-			if(question.getTypeAssistant().isUnionOfQuotes(unionType))
+			if(question.getTypeAssistant().isUnionOfType(unionType, AQuoteType.class))
 				//The VDM translation ignores named invariant types that are not
 				//union of quotes as they are represented as integers instead
 				return new AEmptyDeclCG();
@@ -165,7 +167,6 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 		}
 		
 		String accessCg = node.getAccess().getAccess().toString();
-		boolean isStaticCg = true;
 		String funcNameCg = node.getName().getName();
 		
 		STypeCG typeCg = node.getType().apply(question.getTypeVisitor(), question);
@@ -178,14 +179,11 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 		
 		AMethodTypeCG methodTypeCg = (AMethodTypeCG) typeCg;
 		
-		AMethodDeclCG method = new AMethodDeclCG();
+		AFuncDeclCG method = new AFuncDeclCG();
 		
 		method.setAccess(accessCg);
-		method.setStatic(isStaticCg);
 		method.setMethodType(methodTypeCg);
 		method.setName(funcNameCg);		
-		
-		method.setIsConstructor(false);
 		
 		Iterator<List<PPattern>> iterator = node.getParamPatternList().iterator();
 		List<PPattern> paramPatterns = iterator.next();
@@ -205,7 +203,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 		
 		if(node.getIsUndefined())
 		{
-			method.setBody(new ANotImplementedStmCG());
+			method.setBody(new ANotImplementedExpCG());
 		}
 		else if(node.getIsCurried())
 		{
@@ -245,14 +243,11 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 			
 			SExpCG bodyExp = node.getBody().apply(question.getExpVisitor(), question);
 			currentLambda.setExp(bodyExp);
-			
-			AReturnStmCG returnLambda = new AReturnStmCG();
-			returnLambda.setExp(topLambda);
-			method.setBody(returnLambda);
+			method.setBody(topLambda);
 		}
 		else
 		{
-			SStmCG bodyCg = node.getBody().apply(question.getStmVisitor(), question);
+			SExpCG bodyCg = node.getBody().apply(question.getExpVisitor(), question);
 			method.setBody(bodyCg);
 		}
 		
@@ -347,9 +342,12 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 		String name = node.getPattern().toString();
 		boolean isStatic = true;
 		boolean isFinal = true;
-		STypeCG type = node.getType().apply(question.getTypeVisitor(), question);
-		SExpCG exp = node.getExpression().apply(question.getExpVisitor(), question);
+		PType type = node.getType();
+		PExp exp = node.getExpression();
 		
-		return question.getDeclAssistant().constructField(access, name, isStatic, isFinal, type, exp);
+		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		SExpCG expCg = exp.apply(question.getExpVisitor(), question);
+		
+		return question.getDeclAssistant().constructField(access, name, isStatic, isFinal, typeCg, expCg);
 	}
 }

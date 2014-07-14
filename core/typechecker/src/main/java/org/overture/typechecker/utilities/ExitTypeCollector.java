@@ -50,7 +50,7 @@ public class ExitTypeCollector extends AnswerAdaptor<PTypeSet>
 	public PTypeSet caseAAlwaysStm(AAlwaysStm statement)
 			throws AnalysisException
 	{
-		PTypeSet types = new PTypeSet();
+		PTypeSet types = new PTypeSet(af);
 		types.addAll(statement.getBody().apply(THIS));
 		types.addAll(statement.getAlways().apply(THIS));
 		return types;
@@ -61,14 +61,14 @@ public class ExitTypeCollector extends AnswerAdaptor<PTypeSet>
 			throws AnalysisException
 	{
 		// TODO We don't know what an expression call will raise
-		return new PTypeSet(AstFactory.newAUnknownType(statement.getLocation()));
+		return new PTypeSet(AstFactory.newAUnknownType(statement.getLocation()), af);
 	}
 
 	@Override
 	public PTypeSet caseACallStm(ACallStm statement) throws AnalysisException
 	{
 		// TODO We don't know what an operation call will raise
-		return new PTypeSet(AstFactory.newAUnknownType(statement.getLocation()));
+		return new PTypeSet(AstFactory.newAUnknownType(statement.getLocation()), af);
 	}
 
 	@Override
@@ -76,13 +76,13 @@ public class ExitTypeCollector extends AnswerAdaptor<PTypeSet>
 			throws AnalysisException
 	{
 		// TODO We don't know what an operation call will raise
-		return new PTypeSet(AstFactory.newAUnknownType(statement.getLocation()));
+		return new PTypeSet(AstFactory.newAUnknownType(statement.getLocation()),af);
 	}
 
 	@Override
 	public PTypeSet caseACasesStm(ACasesStm statement) throws AnalysisException
 	{
-		PTypeSet types = new PTypeSet();
+		PTypeSet types = new PTypeSet(af);
 
 		for (ACaseAlternativeStm c : statement.getCases())
 		{
@@ -109,7 +109,7 @@ public class ExitTypeCollector extends AnswerAdaptor<PTypeSet>
 	@Override
 	public PTypeSet caseAExitStm(AExitStm statement) throws AnalysisException
 	{
-		PTypeSet types = new PTypeSet();
+		PTypeSet types = new PTypeSet(af);
 
 		if (statement.getExpression() == null)
 		{
@@ -146,7 +146,7 @@ public class ExitTypeCollector extends AnswerAdaptor<PTypeSet>
 	@Override
 	public PTypeSet caseAIfStm(AIfStm statement) throws AnalysisException
 	{
-		PTypeSet types = new PTypeSet();
+		PTypeSet types = new PTypeSet(af);
 		types.addAll(statement.getThenStm().apply(THIS));
 
 		for (AElseIfStm stmt : statement.getElseIf())
@@ -182,10 +182,10 @@ public class ExitTypeCollector extends AnswerAdaptor<PTypeSet>
 		if (statement.getExpression() != null)
 		{
 			// TODO We don't know what an expression will raise
-			return new PTypeSet(AstFactory.newAUnknownType(statement.getLocation()));
+			return new PTypeSet(AstFactory.newAUnknownType(statement.getLocation()), af);
 		} else
 		{
-			return new PTypeSet();
+			return new PTypeSet(af);
 		}
 	}
 
@@ -193,7 +193,7 @@ public class ExitTypeCollector extends AnswerAdaptor<PTypeSet>
 	public PTypeSet defaultSSimpleBlockStm(SSimpleBlockStm statement)
 			throws AnalysisException
 	{
-		PTypeSet types = new PTypeSet();
+		PTypeSet types = new PTypeSet(af);
 
 		for (PStm stmt : statement.getStatements())
 		{
@@ -206,7 +206,7 @@ public class ExitTypeCollector extends AnswerAdaptor<PTypeSet>
 	@Override
 	public PTypeSet caseATixeStm(ATixeStm statement) throws AnalysisException
 	{
-		PTypeSet types = new PTypeSet();
+		PTypeSet types = new PTypeSet(af);
 		types.addAll(statement.getBody().apply(THIS));
 
 		for (ATixeStmtAlternative tsa : statement.getTraps())
@@ -226,7 +226,7 @@ public class ExitTypeCollector extends AnswerAdaptor<PTypeSet>
 	@Override
 	public PTypeSet caseATrapStm(ATrapStm statement) throws AnalysisException
 	{
-		PTypeSet types = new PTypeSet();
+		PTypeSet types = new PTypeSet(af);
 		types.addAll(statement.getBody().apply(THIS));
 		types.addAll(statement.getWith().apply(THIS));
 		return types;
@@ -241,7 +241,7 @@ public class ExitTypeCollector extends AnswerAdaptor<PTypeSet>
 	@Override
 	public PTypeSet defaultPStm(PStm statement) throws AnalysisException
 	{
-		return new PTypeSet();
+		return new PTypeSet(af);
 	}
 
 	@Override

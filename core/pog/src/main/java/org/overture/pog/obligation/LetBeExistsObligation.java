@@ -26,6 +26,7 @@ package org.overture.pog.obligation;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.ABooleanConstExp;
 import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.ALetBeStExp;
@@ -33,14 +34,16 @@ import org.overture.ast.lex.LexBooleanToken;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.statements.ALetBeStStm;
 import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.IPogAssistantFactory;
+import org.overture.pog.pub.POType;
 
 public class LetBeExistsObligation extends ProofObligation
 {
 	private static final long serialVersionUID = 4190499967249305830L;
 
-	public LetBeExistsObligation(ALetBeStExp exp, IPOContextStack ctxt)
+	public LetBeExistsObligation(ALetBeStExp exp, IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
 	{
-		super(exp, POType.LET_BE_EXISTS, ctxt, exp.getBind().getLocation());
+		super(exp, POType.LET_BE_EXISTS, ctxt, exp.getBind().getLocation(), af);
 		
 		/**
 		 * let <binds> be st <predicate> in <exp>
@@ -67,13 +70,13 @@ public class LetBeExistsObligation extends ProofObligation
 			exists.setPredicate(replacementNothing_exp);		
 		}
 
-//		valuetree.setContext(ctxt.getContextNodeList());
+		stitch=exists;
 		valuetree.setPredicate(ctxt.getPredWithContext(exists));
 	}
 
-	public LetBeExistsObligation(ALetBeStStm stmt, IPOContextStack ctxt)
+	public LetBeExistsObligation(ALetBeStStm stmt, IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
 	{
-		super(stmt, POType.LET_BE_EXISTS, ctxt, stmt.getBind().getLocation());
+		super(stmt, POType.LET_BE_EXISTS, ctxt, stmt.getBind().getLocation(),af);
 
 		AExistsExp exists = new AExistsExp();
 		List<PMultipleBind> bindList = new Vector<PMultipleBind>();
@@ -84,8 +87,8 @@ public class LetBeExistsObligation extends ProofObligation
 		{
 			exists.setPredicate(stmt.getSuchThat().clone());
 		}
-
-//		valuetree.setContext(ctxt.getContextNodeList());
+		
+		stitch=exists;
 		valuetree.setPredicate(ctxt.getPredWithContext(exists));
 	}
 }

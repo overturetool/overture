@@ -19,7 +19,6 @@ import org.overture.ast.types.SInvariantType;
 import org.overture.typechecker.FlatCheckedEnvironment;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
-import org.overture.typechecker.TypeComparator;
 
 public class TypeCheckerImportsVisitor extends AbstractTypeCheckVisitor
 {
@@ -51,7 +50,7 @@ public class TypeCheckerImportsVisitor extends AbstractTypeCheckVisitor
 			{
 				PType exptype = question.assistantFactory.createPTypeAssistant().typeResolve(expdef.getType(), null, THIS, question);
 
-				if (!TypeComparator.compatible(def.getType(), exptype))
+				if (!question.assistantFactory.getTypeComparator().compatible(def.getType(), exptype))
 				{
 					TypeCheckerErrors.report(3192, "Type import of " + name
 							+ " does not match export from " + from.getName(), node.getLocation(), node);
@@ -80,7 +79,7 @@ public class TypeCheckerImportsVisitor extends AbstractTypeCheckVisitor
 			{
 				PType exptype = question.assistantFactory.createPTypeAssistant().typeResolve(expdef.getType(), null, THIS, question);
 
-				if (!TypeComparator.compatible(type, exptype))
+				if (!question.assistantFactory.getTypeComparator().compatible(type, exptype))
 				{
 					TypeCheckerErrors.report(3194, "Type of value import "
 							+ name + " does not match export from "
