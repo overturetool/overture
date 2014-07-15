@@ -1,0 +1,71 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class A {
+    public A() {
+    }
+
+    public static Number tuplePatternFun() {
+        Tuple tuplePattern_1 = Tuple.mk_(1L, 2L,
+                Tuple.mk_(3L, 4L, Tuple.mk_(5L, 6L)));
+        Boolean success_1 = tuplePattern_1.size().longValue() == 3L;
+        Number a = null;
+        Number b = null;
+        Number c = null;
+        Number d = null;
+        Number e = null;
+        Number f = null;
+
+        if (success_1) {
+            a = ((Number) tuplePattern_1.get(0));
+
+            b = ((Number) tuplePattern_1.get(1));
+
+            Tuple tuplePattern_2 = ((Tuple) tuplePattern_1.get(2)).clone();
+
+            success_1 = tuplePattern_2.size().longValue() == 3L;
+
+            if (success_1) {
+                c = ((Number) tuplePattern_2.get(0));
+
+                d = ((Number) tuplePattern_2.get(1));
+
+                Tuple tuplePattern_3 = ((Tuple) tuplePattern_2.get(2)).clone();
+
+                success_1 = tuplePattern_3.size().longValue() == 2L;
+
+                if (success_1) {
+                    e = ((Number) tuplePattern_3.get(0));
+
+                    f = ((Number) tuplePattern_3.get(1));
+                }
+            }
+        }
+
+        if (!(success_1)) {
+            throw new RuntimeException("Tuple pattern match failed");
+        }
+
+        return a.longValue() + b.longValue() + c.longValue() + d.longValue() +
+        e.longValue() + f.longValue();
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        return A.tuplePatternFun();
+    }
+}
+
+##########
