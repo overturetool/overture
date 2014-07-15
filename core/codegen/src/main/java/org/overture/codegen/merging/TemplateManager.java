@@ -107,6 +107,8 @@ import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
 import org.overture.codegen.cgast.expressions.AThreadIdExpCG;
 import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATupleExpCG;
+import org.overture.codegen.cgast.expressions.ATupleSizeExpCG;
+import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
 import org.overture.codegen.cgast.expressions.AXorBoolBinaryExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
@@ -328,6 +330,8 @@ public class TemplateManager
 		
 		nodeTemplateFileNames.put(AFieldNumberExpCG.class, templateStructure.EXP_PATH + "FieldNumber");
 		
+		nodeTemplateFileNames.put(ATupleSizeExpCG.class, templateStructure.EXP_PATH + "TupleSize");
+		
 		nodeTemplateFileNames.put(ATernaryIfExpCG.class, templateStructure.EXP_PATH + "TernaryIf");
 		
 		nodeTemplateFileNames.put(AMapletExpCG.class, templateStructure.EXP_PATH + "Maplet");
@@ -343,6 +347,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AAnonymousClassExpCG.class, templateStructure.EXP_PATH + "AnonymousClass");
 		
 		nodeTemplateFileNames.put(ANotImplementedExpCG.class, templateStructure.EXP_PATH + "NotImplemented");
+		
+		nodeTemplateFileNames.put(AUndefinedExpCG.class, templateStructure.EXP_PATH + "Undefined");
 		
 		nodeTemplateFileNames.put(AThreadIdExpCG.class, templateStructure.EXP_PATH + "ThreadId");
 		

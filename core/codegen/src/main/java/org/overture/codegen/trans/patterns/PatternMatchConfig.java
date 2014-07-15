@@ -12,6 +12,7 @@ import org.overture.codegen.cgast.patterns.ANullPatternCG;
 import org.overture.codegen.cgast.patterns.AQuotePatternCG;
 import org.overture.codegen.cgast.patterns.ARealPatternCG;
 import org.overture.codegen.cgast.patterns.AStringPatternCG;
+import org.overture.codegen.cgast.patterns.ATuplePatternCG;
 
 public class PatternMatchConfig
 {
@@ -34,6 +35,7 @@ public class PatternMatchConfig
 		this.patternNamePrefixes.put(AQuotePatternCG.class, getQuotePatternPrefix());
 		this.patternNamePrefixes.put(ARealPatternCG.class, getRealPatternPrefix());
 		this.patternNamePrefixes.put(AStringPatternCG.class, getStringPatternPrefix());
+		this.patternNamePrefixes.put(ATuplePatternCG.class, getTuplePatternPrefix());
 	}
 	
 	public String getName(Class<? extends SPatternCG> patternClass)
@@ -81,6 +83,11 @@ public class PatternMatchConfig
 		return "stringPattern_";
 	}
 	
+	public String getTuplePatternPrefix()
+	{
+		return "tuplePattern_";
+	}
+	
 	public String getMatchFailedMessage(SPatternCG pattern)
 	{
 		return patternToString(pattern) + " pattern match failed";
@@ -119,6 +126,10 @@ public class PatternMatchConfig
 		else if(pattern instanceof AStringPatternCG)
 		{
 			return "String";
+		}
+		else if(pattern instanceof ATuplePatternCG)
+		{
+			return "Tuple";
 		}
 		else
 		{

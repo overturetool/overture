@@ -240,9 +240,14 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 
 	public AVarLocalDeclCG consDecl(String varName, SExpCG exp)
 	{
+		return consDecl(varName, exp.getType().clone(), exp);
+	}
+	
+	public AVarLocalDeclCG consDecl(String varName, STypeCG type, SExpCG exp)
+	{
 		AVarLocalDeclCG resultDecl = new AVarLocalDeclCG();
 
-		resultDecl.setType(exp.getType().clone());
+		resultDecl.setType(type);
 		
 		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
 		idPattern.setName(varName);

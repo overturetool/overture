@@ -10,6 +10,8 @@ import org.overture.ast.patterns.ANilPattern;
 import org.overture.ast.patterns.AQuotePattern;
 import org.overture.ast.patterns.ARealPattern;
 import org.overture.ast.patterns.AStringPattern;
+import org.overture.ast.patterns.ATuplePattern;
+import org.overture.ast.patterns.PPattern;
 import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.patterns.ABoolPatternCG;
 import org.overture.codegen.cgast.patterns.ACharPatternCG;
@@ -20,6 +22,7 @@ import org.overture.codegen.cgast.patterns.ANullPatternCG;
 import org.overture.codegen.cgast.patterns.AQuotePatternCG;
 import org.overture.codegen.cgast.patterns.ARealPatternCG;
 import org.overture.codegen.cgast.patterns.AStringPatternCG;
+import org.overture.codegen.cgast.patterns.ATuplePatternCG;
 import org.overture.codegen.ir.IRInfo;
 
 public class PatternVisitorCG extends AbstractVisitorCG<IRInfo, SPatternCG>
@@ -120,5 +123,20 @@ public class PatternVisitorCG extends AbstractVisitorCG<IRInfo, SPatternCG>
 		stringPatternCg.setValue(value);
 		
 		return stringPatternCg;
+	}
+	
+	@Override
+	public SPatternCG caseATuplePattern(ATuplePattern node, IRInfo question)
+			throws AnalysisException
+	{
+		ATuplePatternCG tuplePatternCg = new ATuplePatternCG();
+		
+		for(PPattern currentPattern : node.getPlist())
+		{
+			SPatternCG patternCg = currentPattern.apply(question.getPatternVisitor(), question);
+			tuplePatternCg.getPatterns().add(patternCg);
+		}
+		
+		return tuplePatternCg;
 	}
 }
