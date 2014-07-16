@@ -9,12 +9,13 @@
   </parent>
 
   <groupId>org.overturetool.core</groupId>
-  <artifactId>newtests</artifactId>
+  <artifactId>test</artifactId>
   <packaging>pom</packaging>
   <name>New Overture Tests</name>
 
   <modules>
     <module>framework</module>
+    <module>tests</module>
 </modules>
 
 </project>
