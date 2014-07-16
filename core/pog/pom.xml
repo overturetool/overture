@@ -38,8 +38,8 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.overturetool.core</groupId>
-			<artifactId>newtests</artifactId>
+			<groupId>org.overturetool.core.newtests</groupId>
+			<artifactId>framework</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

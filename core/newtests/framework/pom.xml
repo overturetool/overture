@@ -3,15 +3,15 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.overturetool</groupId>
-		<artifactId>core</artifactId>
+		<groupId>org.overturetool.core</groupId>
+		<artifactId>newtests</artifactId>
 		<version>2.1.1-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-
-	<groupId>org.overturetool.core</groupId>
-	<artifactId>newtests</artifactId>
-	<name>New Overture Tests</name>
+    
+    <groupId>org.overturetool.core.newtests</groupId>
+	<artifactId>framework</artifactId>
+	<name>New Overture Test Framework</name>
 
 	<dependencies>
 		<dependency>
