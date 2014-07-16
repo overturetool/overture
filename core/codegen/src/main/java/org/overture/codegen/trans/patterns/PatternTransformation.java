@@ -328,16 +328,25 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		//First, the tuple pattern check requires the right number of fields
 		//success_2 = tuplePattern_2.size().longValue() == 3L;
 		//if (success_2) { ... }
-		
-		AIfStmCG fieldSizeCheck = new AIfStmCG();
-		tuplePatternBlock.getStatements().add(fieldSizeCheck);
-		
-		ABlockStmCG thenPart = new ABlockStmCG();
-		fieldSizeCheck.setIfExp(successVar.clone());
-		fieldSizeCheck.setThenStm(thenPart);
-
 		LinkedList<SPatternCG> patterns = tuplePattern.getPatterns();
 		LinkedList<STypeCG> types = tupleType.getTypes();
+		
+		AIfStmCG fieldSizeCheck = new AIfStmCG();
+		fieldSizeCheck.setIfExp(successVar.clone());
+		fieldSizeCheck.setThenStm(consFieldCheckBlock(successVar, successVarDecl, declBlock, tuplePatternVar, patterns, types));
+		
+		tuplePatternBlock.getStatements().add(fieldSizeCheck);
+		
+		return tuplePatternBlock;
+	}
+
+	private ABlockStmCG consFieldCheckBlock(AIdentifierVarExpCG successVar,
+			AVarLocalDeclCG successVarDecl, ABlockStmCG declBlock,
+			AIdentifierVarExpCG tuplePatternVar,
+			LinkedList<SPatternCG> patterns, LinkedList<STypeCG> types)
+	{
+		ABlockStmCG thenPart = new ABlockStmCG();
+		ABlockStmCG topBlock = thenPart;
 		
 		for(int i = 0; i < patterns.size(); i++)
 		{
@@ -417,7 +426,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 			}
 		}
 		
-		return tuplePatternBlock;
+		return topBlock;
 	}
 
 	private <T> ABlockStmCG consPatternCheck(boolean declarePatternVar, SPatternCG pattern, STypeCG type, SExpCG valueToMatch, AIdentifierVarExpCG successVar, AVarLocalDeclCG successVarDecl)
