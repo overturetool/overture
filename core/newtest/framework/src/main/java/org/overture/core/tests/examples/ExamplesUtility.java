@@ -26,10 +26,10 @@ import org.overture.parser.syntax.ParserException;
 abstract public class ExamplesUtility
 {
 
-	private static final String SL_EXAMPLES_ROOT = "../../documentation/examples/VDMSL";
-	private static final String PP_EXAMPLES_ROOT = "../../documentation/examples/VDM++";
-	private static final String RT_EXAMPLES_ROOT = "../../documentation/examples/VDMSL";
-	private static final String LIBS_ROOT = "../../documentation/examples/libs/";
+	private static final String SL_EXAMPLES_ROOT = "../../../documentation/examples/VDMSL";
+	private static final String PP_EXAMPLES_ROOT = "../../../documentation/examples/VDM++";
+	private static final String RT_EXAMPLES_ROOT = "../../../documentation/examples/VDMSL";
+	private static final String LIBS_ROOT = "../../../documentation/examples/libs/";
 
 	/**
 	 * Get the ASTs for the Overture examples. This method only provides the trees for examples that are supposed to
