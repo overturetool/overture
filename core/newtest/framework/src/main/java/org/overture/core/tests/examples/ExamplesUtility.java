@@ -28,7 +28,7 @@ abstract public class ExamplesUtility
 
 	private static final String SL_EXAMPLES_ROOT = "../../../documentation/examples/VDMSL";
 	private static final String PP_EXAMPLES_ROOT = "../../../documentation/examples/VDM++";
-	private static final String RT_EXAMPLES_ROOT = "../../../documentation/examples/VDMSL";
+	private static final String RT_EXAMPLES_ROOT = "../../../documentation/examples/VDMRT";
 	private static final String LIBS_ROOT = "../../../documentation/examples/libs/";
 
 	/**
