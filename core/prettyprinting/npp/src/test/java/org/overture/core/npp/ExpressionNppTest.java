@@ -163,6 +163,12 @@ public class ExpressionNppTest {
 	}
 	
 	@Test
+	public void testCaseADivBinaryExp_O3() throws AnalysisException
+	{
+		aux("x div 1", "(x div 1)");
+	}
+	
+	@Test
 	public void testCaseABooleanImpliesExp_01() throws AnalysisException
 	{
 		aux("A => B", "(A => B)");
@@ -172,6 +178,12 @@ public class ExpressionNppTest {
 	public void testCaseABooleanImpliesExp_02() throws AnalysisException
 	{
 		aux("1 => 2","(1 => 2)");
+	}
+	
+	@Test
+	public void testCaseAbooleanImpliesExp_03() throws AnalysisException
+	{
+		aux("x => 1","(x => 1)");
 	}
 	
 	
