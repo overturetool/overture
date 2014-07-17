@@ -227,4 +227,22 @@ public class ExpressionNppTest {
 	{
 		aux("x and y", "(x and y)");
 	}
+	
+	@Test
+	public void testCaseAOrBooleanBinaryExp_01() throws AnalysisException
+	{
+		aux("A or B","(A or B)");
+	}
+	
+	@Test
+	public void testCaseAOrBooleanBinaryExp_02() throws AnalysisException
+	{
+		aux("1 or 1.1","(1 or 1.1)");
+	}
+	
+	@Test
+	public void testCaseAOrBooleanBinaryExp_03() throws AnalysisException
+	{
+		aux("x or 1","(x or 1)");
+	}
 }
