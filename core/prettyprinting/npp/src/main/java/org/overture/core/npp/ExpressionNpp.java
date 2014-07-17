@@ -4,6 +4,7 @@ import javax.security.sasl.RealmCallback;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.expressions.AAbsoluteUnaryExp;
 import org.overture.ast.expressions.ABooleanConstExp;
 import org.overture.ast.expressions.ADivNumericBinaryExp;
 import org.overture.ast.expressions.ADivideNumericBinaryExp;
@@ -174,6 +175,22 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		return	Utilities.wrap(sb.toString());
 	}
 	
+	@Override
+	public String caseAAbsoluteUnaryExp(AAbsoluteUnaryExp node,
+			IndentTracker question) throws AnalysisException
+	{
+		
+		String l = node.getExp().apply(THIS,question);
+		String op = mytable.getABSOLUTE();
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(op);
+		sb.append(space);
+		sb.append(l);
+		
+		return Utilities.wrap(sb.toString());
+	}
 	@Override
 	public String caseAIntLiteralExp(AIntLiteralExp node, IndentTracker question)
 			throws AnalysisException

@@ -186,5 +186,21 @@ public class ExpressionNppTest {
 		aux("x => 1","(x => 1)");
 	}
 	
+	@Test
+	public void testCaseAAbsoluteUnaryExp_01() throws AnalysisException
+	{
+		aux("abs 1","(abs 1)");
+	}
 	
+	@Test
+	public void testCaseAAbsoluteUnaryExp_02() throws AnalysisException
+	{
+		aux("abs 1.1","(abs 1.1)");
+	}
+	
+	@Test
+	public void testCaseAAbsoluteUnaryExp_03() throws AnalysisException
+	{
+		aux("abs x","(abs x)");
+	}
 }
