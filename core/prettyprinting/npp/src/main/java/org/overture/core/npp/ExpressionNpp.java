@@ -1,10 +1,12 @@
 package org.overture.core.npp;
 
+import javax.rmi.CORBA.Util;
 import javax.security.sasl.RealmCallback;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.expressions.AAbsoluteUnaryExp;
+import org.overture.ast.expressions.AAndBooleanBinaryExp;
 import org.overture.ast.expressions.ABooleanConstExp;
 import org.overture.ast.expressions.ADivNumericBinaryExp;
 import org.overture.ast.expressions.ADivideNumericBinaryExp;
@@ -191,6 +193,27 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		
 		return Utilities.wrap(sb.toString());
 	}
+	
+	@Override
+	public String caseAAndBooleanBinaryExp(AAndBooleanBinaryExp node,
+			IndentTracker question) throws AnalysisException
+	{
+		String l = node.getLeft().apply(THIS,question);
+		String r = node.getRight().apply(THIS, question);
+		String op = mytable.getAND();
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(l);
+		sb.append(space);
+		sb.append(op);
+		sb.append(space);
+		sb.append(r);
+		
+		return Utilities.wrap(sb.toString());
+		
+	}
+	
 	@Override
 	public String caseAIntLiteralExp(AIntLiteralExp node, IndentTracker question)
 			throws AnalysisException

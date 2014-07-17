@@ -203,4 +203,28 @@ public class ExpressionNppTest {
 	{
 		aux("abs x","(abs x)");
 	}
+	
+	@Test
+	public void testCaseAAndBooleanBinaryExp_01() throws AnalysisException
+	{
+		aux("A and B","(A and B)");
+	}
+	
+	@Test
+	public void testCaseAAndBooleanBinaryExp_02() throws AnalysisException
+	{
+		aux("1.1 and B","(1.1 and B)");
+	}
+	
+	@Test
+	public void testCaseΑAndBooleanBinaryExp_03() throws AnalysisException
+	{
+		aux("x and B","(x and B)");
+	}
+	
+	@Test
+	public void testCaseAAndBooleanBinaryExp_04() throws AnalysisException
+	{
+		aux("x and y", "(x and y)");
+	}
 }
