@@ -269,4 +269,22 @@ public class ExpressionNppTest {
 	{
 		aux("1 + 2 - x = 6", "(((1 + 2) - x) = 6)");
 	}
+	
+	@Test
+	public void testCaseAGreaterBinaryExp_01() throws AnalysisException
+	{
+		aux("1 > 0", "(1 > 0)");
+	}
+	
+	@Test
+	public void testCaseAGreaterBinaryExp_02() throws AnalysisException
+	{
+		aux("x - 1 > 3","((x - 1) > 3)");
+	}
+	
+	@Test
+	public void testCaseAGreaterBinaryExp_03() throws AnalysisException
+	{
+		aux("(x * 1) > 1","((x * 1) > 1)");
+	}
 }
