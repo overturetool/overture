@@ -7,6 +7,7 @@ import org.overture.ast.expressions.AAndBooleanBinaryExp;
 import org.overture.ast.expressions.ADivNumericBinaryExp;
 import org.overture.ast.expressions.ADivideNumericBinaryExp;
 import org.overture.ast.expressions.AEqualsBinaryExp;
+import org.overture.ast.expressions.AGreaterEqualNumericBinaryExp;
 import org.overture.ast.expressions.AGreaterNumericBinaryExp;
 import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.AIntLiteralExp;
@@ -276,6 +277,26 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String l = node.getLeft().apply(THIS, question);
 		String r = node.getRight().apply(THIS, question);
 		String op = mytable.getLT();
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(l);
+		sb.append(space);
+		sb.append(op);
+		sb.append(space);
+		sb.append(r);
+		
+		return Utilities.wrap(sb.toString());
+	}
+	
+	@Override
+	public String caseAGreaterEqualNumericBinaryExp(
+			AGreaterEqualNumericBinaryExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		String l = node.getLeft().apply(THIS, question);
+		String r = node.getRight().apply(THIS, question);
+		String op = mytable.getGE();
 		
 		StringBuilder sb = new StringBuilder();
 		

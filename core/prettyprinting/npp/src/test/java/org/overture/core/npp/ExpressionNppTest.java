@@ -305,4 +305,21 @@ public class ExpressionNppTest {
 	{
 		aux("(x * 1) < 1","((x * 1) < 1)");
 	}
+	@Test
+	public void testCaseAGreaterEqualBinaryExp_01() throws AnalysisException
+	{
+		aux("0 >= 1", "(0 >= 1)");
+	}
+	
+	@Test
+	public void testCaseAGreateEqualBinaryExp_02() throws AnalysisException
+	{
+		aux("x - 1 >= 3","((x - 1) >= 3)");
+	}
+	
+	@Test
+	public void testCaseAGreaterEqualBinaryExp_03() throws AnalysisException
+	{
+		aux("(x * 1) >= 1","((x * 1) >= 1)");
+	}
 }
