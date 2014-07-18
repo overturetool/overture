@@ -245,4 +245,28 @@ public class ExpressionNppTest {
 	{
 		aux("x or 1","(x or 1)");
 	}
+	
+	@Test
+	public void testCaseAEqualsBinaryExp_01() throws AnalysisException
+	{
+		aux("1 = 1", "(1 = 1)");
+	}
+	
+	@Test
+	public void testCaseAEqualsBinaryExp_02() throws AnalysisException
+	{
+		aux("x = 1", "(x = 1)");
+	}
+	
+	@Test
+	public void testCaseAEqualsBinaryExp_03() throws AnalysisException
+	{
+		aux("x + 1 = 4","((x + 1) = 4)"); 
+	}
+	
+	@Test
+	public void testCaseAEqualsBinaryExp_04() throws AnalysisException
+	{
+		aux("1 + 2 - x = 6", "(((1 + 2) - x) = 6)");
+	}
 }
