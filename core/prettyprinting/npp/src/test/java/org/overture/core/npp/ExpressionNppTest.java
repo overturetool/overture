@@ -305,6 +305,7 @@ public class ExpressionNppTest {
 	{
 		aux("(x * 1) < 1","((x * 1) < 1)");
 	}
+	
 	@Test
 	public void testCaseAGreaterEqualBinaryExp_01() throws AnalysisException
 	{
@@ -312,7 +313,7 @@ public class ExpressionNppTest {
 	}
 	
 	@Test
-	public void testCaseAGreateEqualBinaryExp_02() throws AnalysisException
+	public void testCaseAGreaterEqualBinaryExp_02() throws AnalysisException
 	{
 		aux("x - 1 >= 3","((x - 1) >= 3)");
 	}
@@ -322,4 +323,35 @@ public class ExpressionNppTest {
 	{
 		aux("(x * 1) >= 1","((x * 1) >= 1)");
 	}
+	
+	@Test
+	public void testCaseALessqualBinaryExp_01() throws AnalysisException
+	{
+		aux("0 <= 1", "(0 <= 1)");
+	}
+	
+	@Test
+	public void testCaseALessEqualBinaryExp_02() throws AnalysisException
+	{
+		aux("x - 1 <= 3","((x - 1) <= 3)");
+	}
+	
+	@Test
+	public void testCaseALessEqualBinaryExp_03() throws AnalysisException
+	{
+		aux("(x * 1) <= 1","((x * 1) <= 1)");
+	}
+	
+	@Test
+	public void testCaseACompBinaryExp_01() throws AnalysisException
+	{
+		aux("m1 comp m2", "(m1 comp m2)");
+	}
+	
+//	@Test
+//	public void testCaseACompBinaryExp_02() throws AnalysisException
+//	{
+//		aux("{1 |-> 2} comp {2 |-> 3}","(({1 |-> 2}) comp ({2 |-> 3}))");
+//	}
+	
 }

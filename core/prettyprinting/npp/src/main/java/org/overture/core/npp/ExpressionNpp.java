@@ -4,6 +4,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.expressions.AAbsoluteUnaryExp;
 import org.overture.ast.expressions.AAndBooleanBinaryExp;
+import org.overture.ast.expressions.ACompBinaryExp;
 import org.overture.ast.expressions.ADivNumericBinaryExp;
 import org.overture.ast.expressions.ADivideNumericBinaryExp;
 import org.overture.ast.expressions.AEqualsBinaryExp;
@@ -11,7 +12,9 @@ import org.overture.ast.expressions.AGreaterEqualNumericBinaryExp;
 import org.overture.ast.expressions.AGreaterNumericBinaryExp;
 import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.AIntLiteralExp;
+import org.overture.ast.expressions.ALessEqualNumericBinaryExp;
 import org.overture.ast.expressions.ALessNumericBinaryExp;
+import org.overture.ast.expressions.AMapletExp;
 import org.overture.ast.expressions.AModNumericBinaryExp;
 import org.overture.ast.expressions.AOrBooleanBinaryExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
@@ -30,6 +33,8 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 
 	private static String EXPRESSION_NOT_FOUND = "ERROR: Expression Node not found";
 	private static String space = " ";
+	private static String leftcurly = "{";
+	private static String rightcurly = "}";
 
 	public ExpressionNpp(NewPrettyPrinter root, ISymbolTable nst)
 	{
@@ -308,6 +313,67 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		
 		return Utilities.wrap(sb.toString());
 	}
+	
+	@Override
+	public String caseALessEqualNumericBinaryExp(
+			ALessEqualNumericBinaryExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		String l = node.getLeft().apply(THIS, question);
+		String r = node.getRight().apply(THIS, question);
+		String op = mytable.getLE();
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(l);
+		sb.append(space);
+		sb.append(op);
+		sb.append(space);
+		sb.append(r);
+		
+		return Utilities.wrap(sb.toString());
+	}
+	
+	@Override
+	public String caseACompBinaryExp(ACompBinaryExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		String l = node.getLeft().apply(THIS, question);
+		String r = node.getRight().apply(THIS, question);
+		String op = mytable.getCOMPOSITION();
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(l);
+		sb.append(space);
+		sb.append(op);
+		sb.append(space);
+		sb.append(r);
+		
+		return Utilities.wrap(sb.toString());
+	}
+	
+//	@Override
+//	public String caseAMapletExp(AMapletExp node, IndentTracker question)
+//			throws AnalysisException
+//	{
+//		String l = node.getLeft().apply(THIS,question);
+//		String r = node.getRight().apply(THIS, question);
+//		String op = mytable.getMAPLET();
+//		
+//		StringBuilder sb = new StringBuilder();
+//		
+//		sb.append(leftcurly);
+//		sb.append(l);
+//		sb.append(space);
+//		sb.append(op);
+//		sb.append(space);
+//		sb.append(r);
+//		sb.append(rightcurly);
+//		
+//		return Utilities.wrap(sb.toString());
+//		//return sb.toString();
+//	}
 	
 	@Override
 	public String caseAIntLiteralExp(AIntLiteralExp node, IndentTracker question)
