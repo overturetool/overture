@@ -181,6 +181,14 @@ public class DeclAssistantCG extends AssistantBase
 		return null;
 	}
 	
+	public ARecordDeclCG findRecord(List<AClassDeclCG> classes, ARecordTypeCG recordType)
+	{
+		AClassDeclCG definingClass = findClass(classes, recordType.getName().getDefiningClass());
+		ARecordDeclCG record = findRecord(definingClass, recordType.getName().getName());
+		
+		return record;
+	}
+	
 	private AVarLocalDeclCG consLocalVarDecl(AValueDefinition valueDef, IRInfo question) throws AnalysisException
 	{
 		STypeCG type = valueDef.getType().apply(question.getTypeVisitor(), question);
@@ -308,6 +316,13 @@ public class DeclAssistantCG extends AssistantBase
 		{
 			localDecl.setExp(new ANullExpCG());
 		}
+	}
+	
+	public AFieldDeclCG getFieldDecl(List<AClassDeclCG> classes, ARecordTypeCG recordType, int number)
+	{
+		ARecordDeclCG record = findRecord(classes, recordType);
+		
+		return record.getFields().get(number);
 	}
 
 	public AFieldDeclCG getFieldDecl(List<AClassDeclCG> classes, ARecordTypeCG recordType, String memberName)

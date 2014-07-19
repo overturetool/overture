@@ -43,6 +43,7 @@ import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.AQuoteTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
@@ -205,7 +206,7 @@ public class ExpAssistantCG extends AssistantBase
 	public AQuoteLiteralExpCG consQuoteLiteral(String value)
 	{
 		AQuoteLiteralExpCG quoteLiteral = new AQuoteLiteralExpCG();
-		quoteLiteral.setType(new AIntNumericBasicTypeCG());
+		quoteLiteral.setType(new AQuoteTypeCG());
 		quoteLiteral.setValue(value);
 		
 		return quoteLiteral;
