@@ -276,7 +276,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 
 	private ABlockStmCG consRecordPatternCheck(
 			ARecordPatternCG recordPattern, ARecordTypeCG recordType, PatternBlockData patternData,
-			AFieldExpCG valueToMatch)
+			SExpCG valueToMatch)
 	{
 		AIdentifierPatternCG idPattern = getIdPattern(config.getName(recordPattern.getClass()));
 		
@@ -306,7 +306,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 
 	private ABlockStmCG consTuplePatternCheck(
 			ATuplePatternCG tuplePattern, ATupleTypeCG tupleType, PatternBlockData patternData,
-			AFieldNumberExpCG valueToMatch)
+			SExpCG valueToMatch)
 	{
 		AIdentifierPatternCG idPattern = getIdPattern(config.getName(tuplePattern.getClass()));
 		
@@ -495,12 +495,8 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		{
 			ATuplePatternCG nextTuplePattern = (ATuplePatternCG) currentPattern;
 			ATupleTypeCG nextTupleType = (ATupleTypeCG) currentType;
-
-			// The next tuple pattern is a field of the previous tuple pattern
-			// Example: Tuple tuplePattern_2 = ((Tuple) tuplePattern_1.get(2))
-			AFieldNumberExpCG valueToMath = consTupleFieldExp(patternVar, i, currentType);
-
-			patternBlock = consTuplePatternCheck(nextTuplePattern, nextTupleType, patternData, valueToMath);
+			
+			patternBlock = consTuplePatternCheck(nextTuplePattern, nextTupleType, patternData, consFieldValueToMatch(patternVar, i, currentType));
 			
 		}
 		else if (currentPattern instanceof ARecordPatternCG)
@@ -508,9 +504,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 			ARecordPatternCG nextRecordPattern = (ARecordPatternCG) currentPattern;
 			ARecordTypeCG nextRecordType = (ARecordTypeCG) currentType;
 			
-			AFieldExpCG valueToMatch = consRecFieldExp(patternVar, i, currentType);
-			
-			patternBlock = consRecordPatternCheck(nextRecordPattern, nextRecordType, patternData, valueToMatch);
+			patternBlock = consRecordPatternCheck(nextRecordPattern, nextRecordType, patternData, consFieldValueToMatch(patternVar, i, currentType));
 		}
 		else
 		{
@@ -520,23 +514,19 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		return patternBlock;
 	}
 
-	private SExpCG consFieldValueToMatch(AIdentifierVarExpCG patternVar, int i,
+	private SExpCG consFieldValueToMatch(AIdentifierVarExpCG patternVar, int fieldNumber,
 			STypeCG currentType)
 	{
-		SExpCG valueToMatch = null;
-		
-		if (patternVar.getType() instanceof ATupleTypeCG)
+		if(patternVar.getType() instanceof ATupleTypeCG)
 		{
-			// Now, read the field
-			// Example: a = ((Number) tuplePattern_1.get(0));
-			valueToMatch = consTupleFieldExp(patternVar, i, currentType);
+			return consTupleFieldExp(patternVar, fieldNumber, currentType);
 		}
-		else if (patternVar.getType() instanceof ARecordTypeCG)
+		else if(patternVar.getType() instanceof ARecordTypeCG)
 		{
-			valueToMatch = consRecFieldExp(patternVar, i, currentType);
+			return consRecFieldExp(patternVar, fieldNumber, currentType);
 		}
 		
-		return valueToMatch;
+		return null;
 	}
 
 	private ALocalAssignmentStmCG consIdVarAssignment(ABlockStmCG declBlock,
