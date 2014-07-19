@@ -1,0 +1,77 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class A {
+    public A() {
+    }
+
+    public static Number recPatternFun() {
+        Rec recordPattern_1 = new Rec(1L, new Rec(2L, new Rec(3L, null)));
+        Number c = null;
+        Boolean success_1 = false;
+        Rec recordPattern_2 = recordPattern_1.next.clone();
+        Rec recordPattern_3 = recordPattern_2.next.clone();
+        c = recordPattern_3.n;
+
+        Object nullPattern_1 = null;
+        success_1 = nullPattern_1 == null;
+
+        if (!(success_1)) {
+            throw new RuntimeException("Nil pattern match failed");
+        }
+
+        return c;
+    }
+
+    public static class Rec implements Record {
+        public Number n;
+        public Rec next;
+
+        public Rec(final Number _n, final Rec _next) {
+            n = _n;
+            next = (_next != null) ? _next.clone() : null;
+        }
+
+        public boolean equals(final Object obj) {
+            if (!(obj instanceof Rec)) {
+                return false;
+            }
+
+            Rec other = ((Rec) obj);
+
+            return (n.longValue() == other.n.longValue()) &&
+            (next.equals(other.next));
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(n, next);
+        }
+
+        public Rec clone() {
+            return new Rec(n, next);
+        }
+
+        public String toString() {
+            return Utils.recordToString(this, n, next);
+        }
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        return A.recPatternFun();
+    }
+}
+
+##########
