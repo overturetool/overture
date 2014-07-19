@@ -187,6 +187,12 @@ public class ExpressionNppTest {
 	}
 	
 	@Test
+	public void testCaseABooleanImpliesExp_04() throws AnalysisException
+	{
+		aux("true => false","(true => false)");
+	}
+	
+	@Test
 	public void testCaseAAbsoluteUnaryExp_01() throws AnalysisException
 	{
 		aux("abs 1","(abs 1)");
@@ -226,6 +232,12 @@ public class ExpressionNppTest {
 	public void testCaseAAndBooleanBinaryExp_04() throws AnalysisException
 	{
 		aux("x and y", "(x and y)");
+	}
+	
+	@Test
+	public void testCaseAAndBooleanBinaryExp_05() throws AnalysisException
+	{
+		aux("true and y", "(true and y)");
 	}
 	
 	@Test
@@ -349,9 +361,9 @@ public class ExpressionNppTest {
 	}
 	
 //	@Test
-//	public void testCaseACompBinaryExp_02() throws AnalysisException
+//	public void testCaseAMapletExp_02() throws AnalysisException
 //	{
-//		aux("{1 |-> 2} comp {2 |-> 3}","(({1 |-> 2}) comp ({2 |-> 3}))");
+//		aux("{1|->2}","({1 |-> 2})");
 //	}
 	
 }

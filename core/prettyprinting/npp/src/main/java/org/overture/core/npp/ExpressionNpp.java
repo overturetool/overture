@@ -4,6 +4,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.expressions.AAbsoluteUnaryExp;
 import org.overture.ast.expressions.AAndBooleanBinaryExp;
+import org.overture.ast.expressions.ABooleanConstExp;
 import org.overture.ast.expressions.ACompBinaryExp;
 import org.overture.ast.expressions.ADivNumericBinaryExp;
 import org.overture.ast.expressions.ADivideNumericBinaryExp;
@@ -397,6 +398,13 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		
 		return var;
 		
+	}
+	
+	@Override
+	public String caseABooleanConstExp(ABooleanConstExp node,
+			IndentTracker question) throws AnalysisException
+	{
+		return Boolean.toString(node.getValue().getValue());
 	}
 
 	@Override
