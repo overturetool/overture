@@ -363,7 +363,13 @@ public class ExpressionNppTest {
 //	@Test
 //	public void testCaseAMapletExp_02() throws AnalysisException
 //	{
-//		aux("{1|->2}","({1 |-> 2})");
+//		aux("{1 |-> 2}","{1 |-> 2}");
 //	}
+	
+	@Test
+	public void testCaseACardUnaryExp_01() throws AnalysisException
+	{
+		aux("card m", "(card m)");
+	}
 	
 }
