@@ -54,6 +54,7 @@ CG {-> package='org.overture.codegen.cgast'
 	| {real} [value]:java_Double
 	| {string} [value]:java_String
 	| {tuple} [patterns]:CG.#pattern*
+	| {record} [typename]:java_String [patterns]:CG.#pattern* [type]:CG.#type
 	;
 
 #bind {-> package='org.overture.codegen.cgast.patterns'

@@ -9,10 +9,13 @@ import org.overture.ast.patterns.AIntegerPattern;
 import org.overture.ast.patterns.ANilPattern;
 import org.overture.ast.patterns.AQuotePattern;
 import org.overture.ast.patterns.ARealPattern;
+import org.overture.ast.patterns.ARecordPattern;
 import org.overture.ast.patterns.AStringPattern;
 import org.overture.ast.patterns.ATuplePattern;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.types.PType;
 import org.overture.codegen.cgast.SPatternCG;
+import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.patterns.ABoolPatternCG;
 import org.overture.codegen.cgast.patterns.ACharPatternCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
@@ -21,6 +24,7 @@ import org.overture.codegen.cgast.patterns.AIntPatternCG;
 import org.overture.codegen.cgast.patterns.ANullPatternCG;
 import org.overture.codegen.cgast.patterns.AQuotePatternCG;
 import org.overture.codegen.cgast.patterns.ARealPatternCG;
+import org.overture.codegen.cgast.patterns.ARecordPatternCG;
 import org.overture.codegen.cgast.patterns.AStringPatternCG;
 import org.overture.codegen.cgast.patterns.ATuplePatternCG;
 import org.overture.codegen.ir.IRInfo;
@@ -138,5 +142,27 @@ public class PatternVisitorCG extends AbstractVisitorCG<IRInfo, SPatternCG>
 		}
 		
 		return tuplePatternCg;
+	}
+	
+	@Override
+	public SPatternCG caseARecordPattern(ARecordPattern node, IRInfo question)
+			throws AnalysisException
+	{
+		String typeName = node.getTypename().getName();
+		PType type = node.getType();
+
+		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		
+		ARecordPatternCG recordPatternCg = new ARecordPatternCG();
+		recordPatternCg.setTypename(typeName);
+		recordPatternCg.setType(typeCg);
+		
+		for(PPattern currentPattern : node.getPlist())
+		{
+			SPatternCG patternCg = currentPattern.apply(question.getPatternVisitor(), question);
+			recordPatternCg.getPatterns().add(patternCg);
+		}
+
+		return recordPatternCg;
 	}
 }

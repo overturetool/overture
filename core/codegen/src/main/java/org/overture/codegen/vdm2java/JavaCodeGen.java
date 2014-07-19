@@ -207,7 +207,7 @@ public class JavaCodeGen
 		FunctionValueVisitor funcValVisitor = new FunctionValueVisitor(irInfo, transformationAssistant, functionValueAssistant, INTERFACE_NAME_PREFIX, TEMPLATE_TYPE_PREFIX, EVAL_METHOD_PREFIX, PARAM_NAME_PREFIX);
 		ILanguageIterator langIterator = new JavaLanguageIterator(transformationAssistant, irInfo.getTempVarNameGen(), varPrefixes);
 		TransformationVisitor transVisitor = new TransformationVisitor(irInfo, varPrefixes, transformationAssistant, langIterator);
-		PatternTransformation patternTransformation = new PatternTransformation(varPrefixes, irInfo, transformationAssistant, new PatternMatchConfig());
+		PatternTransformation patternTransformation = new PatternTransformation(classes, varPrefixes, irInfo, transformationAssistant, new PatternMatchConfig());
 		TypeTransformation typeTransformation = new TypeTransformation(transformationAssistant);
 		UnionTypeTransformation unionTypeTransformation = new UnionTypeTransformation(transformationAssistant, irInfo, classes, APPLY_EXP_NAME_PREFIX, OBJ_EXP_NAME_PREFIX, CALL_STM_OBJ_NAME_PREFIX, irInfo.getTempVarNameGen());
 		
