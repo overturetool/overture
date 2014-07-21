@@ -1,6 +1,5 @@
-#set( $clone = "")
 #if ($ValueSemantics.shouldClone($node))
-	#set( $clone = ".clone()")
+Utils.clone(${node.getOriginal()})##
+#else
+$node.getOriginal()##
 #end
-##
-$node.getOriginal()$clone
