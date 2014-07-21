@@ -21,7 +21,6 @@ public class A {
             Rec recordPattern_1 = Utils.clone(((Rec) tuplePattern_1.get(1)));
 
             Tuple tuplePattern_2 = Utils.clone(recordPattern_1.t);
-
             success_1 = tuplePattern_2.size().longValue() == 2L;
 
             if (success_1) {
@@ -30,7 +29,6 @@ public class A {
                 Rec recordPattern_2 = Utils.clone(((Rec) tuplePattern_2.get(1)));
 
                 Tuple tuplePattern_3 = Utils.clone(recordPattern_2.t);
-
                 success_1 = tuplePattern_3.size().longValue() == 2L;
 
                 if (success_1) {

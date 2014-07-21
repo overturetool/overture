@@ -12,13 +12,10 @@ public class A {
         Number c = null;
         Boolean success_1 = false;
         Rec recordPattern_2 = Utils.clone(recordPattern_1.next);
-
         Rec recordPattern_3 = Utils.clone(recordPattern_2.next);
-
         c = recordPattern_3.n;
 
         Rec nullPattern_1 = Utils.clone(recordPattern_3.next);
-
         success_1 = nullPattern_1 == null;
 
         if (!(success_1)) {

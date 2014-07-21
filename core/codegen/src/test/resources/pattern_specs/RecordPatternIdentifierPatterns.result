@@ -13,11 +13,8 @@ public class A {
         Character c1 = null;
         Number r1 = null;
         n1 = recordPattern_1.n;
-
         b1 = recordPattern_1.b;
-
         c1 = recordPattern_1.c;
-
         r1 = recordPattern_1.r;
 
         Rec recordPattern_2 = new Rec(5L, true, 'g', 2.5);
@@ -26,11 +23,8 @@ public class A {
         Character c2 = null;
         Number r2 = null;
         n2 = recordPattern_2.n;
-
         b2 = recordPattern_2.b;
-
         c2 = recordPattern_2.c;
-
         r2 = recordPattern_2.r;
 
         return new Rec(n1, b2, c1, r2);
@@ -42,11 +36,8 @@ public class A {
         Character c1 = null;
         Number r1 = null;
         n1 = recordPattern_3.n;
-
         b1 = recordPattern_3.b;
-
         c1 = recordPattern_3.c;
-
         r1 = recordPattern_3.r;
 
         Rec recordPattern_4 = new Rec(5L, true, 'g', 2.5);
@@ -55,11 +46,8 @@ public class A {
         Character c2 = null;
         Number r2 = null;
         n2 = recordPattern_4.n;
-
         b2 = recordPattern_4.b;
-
         c2 = recordPattern_4.c;
-
         r2 = recordPattern_4.r;
 
         return new Rec(n1, b2, c1, r2);

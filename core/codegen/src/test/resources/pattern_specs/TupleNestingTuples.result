@@ -20,7 +20,6 @@ public class A {
 
         if (success_1) {
             a = ((Number) tuplePattern_1.get(0));
-
             b = ((Number) tuplePattern_1.get(1));
 
             Tuple tuplePattern_2 = Utils.clone(((Tuple) tuplePattern_1.get(2)));
@@ -29,7 +28,6 @@ public class A {
 
             if (success_1) {
                 c = ((Number) tuplePattern_2.get(0));
-
                 d = ((Number) tuplePattern_2.get(1));
 
                 Tuple tuplePattern_3 = Utils.clone(((Tuple) tuplePattern_2.get(
@@ -39,7 +37,6 @@ public class A {
 
                 if (success_1) {
                     e = ((Number) tuplePattern_3.get(0));
-
                     f = ((Number) tuplePattern_3.get(1));
                 }
             }

@@ -14,7 +14,6 @@ public class A {
         a = recordPattern_1.n1;
 
         Number intPattern_1 = recordPattern_1.n2;
-
         success_1 = intPattern_1.longValue() == 5L;
 
         if (!(success_1)) {

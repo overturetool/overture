@@ -18,12 +18,10 @@ public class A {
             n = ((Number) tuplePattern_1.get(0));
 
             Boolean boolPattern_1 = ((Boolean) tuplePattern_1.get(1));
-
             success_1 = boolPattern_1 == true;
 
             if (success_1) {
                 c = ((Character) tuplePattern_1.get(2));
-
                 r = ((Number) tuplePattern_1.get(3));
             }
         }

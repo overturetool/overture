@@ -12,33 +12,27 @@ public class A {
                 SeqUtil.seq('a', 'a', 'a'), null);
         Boolean success_1 = false;
         Number intPattern_1 = recordPattern_1.n;
-
         success_1 = intPattern_1.longValue() == 1L;
 
         if (success_1) {
             Boolean boolPattern_1 = recordPattern_1.b;
-
             success_1 = boolPattern_1 == true;
 
             if (success_1) {
                 Character charPattern_1 = recordPattern_1.c;
-
                 success_1 = charPattern_1 == 'a';
 
                 if (success_1) {
                     Number realPattern_1 = recordPattern_1.r;
-
                     success_1 = realPattern_1.doubleValue() == 1.5;
 
                     if (success_1) {
                         VDMSeq stringPattern_1 = Utils.clone(recordPattern_1.s);
-
                         success_1 = SeqUtil.equals(stringPattern_1,
                                 SeqUtil.seq('a', 'a', 'a'));
 
                         if (success_1) {
                             Rec nullPattern_1 = Utils.clone(recordPattern_1.next);
-
                             success_1 = nullPattern_1 == null;
                         }
                     }

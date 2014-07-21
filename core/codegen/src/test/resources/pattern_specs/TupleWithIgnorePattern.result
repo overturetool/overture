@@ -16,7 +16,6 @@ public class A {
 
         if (success_1) {
             a = ((Number) tuplePattern_1.get(0));
-
             c = Utils.clone(((Tuple) tuplePattern_1.get(2)));
         }
 
