@@ -383,10 +383,16 @@ public class ExpressionNppTest {
 		aux("true <> false", "(true <> false)");
 	}
 	
+	@Test
+	public void testCaseANotEqualBinaryExp_05() throws AnalysisException
+	{
+		aux("'a' <> 'b'", "('a' <> 'b')");
+	}
+//	
 //	@Test
 //	public void testCaseAMapletExp_02() throws AnalysisException
 //	{
-//		aux("{1 |-> 2}","{1 |-> 2}");
+//		aux("{1 |-> 2, 2 |-> 3}","({1 |-> 2, 2 |-> 3})");
 //	}
 	
 	@Test
