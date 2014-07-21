@@ -163,6 +163,24 @@ public class ExpressionNppTest {
 	}
 	
 	@Test
+	public void testCaseARemBinaryExp_O3() throws AnalysisException
+	{
+		aux("x rem 1", "(x rem 1)");
+	}
+	
+	@Test
+	public void testCaseARemBinaryExp_01() throws AnalysisException
+	{
+		aux("1 rem 1", "(1 rem 1)");
+	}
+	
+	@Test
+	public void testCaseARemBinaryExp_02() throws AnalysisException
+	{
+		aux("1.1 rem 1", "(1.1 rem 1)");
+	}
+	
+	@Test
 	public void testCaseADivBinaryExp_O3() throws AnalysisException
 	{
 		aux("x div 1", "(x div 1)");
