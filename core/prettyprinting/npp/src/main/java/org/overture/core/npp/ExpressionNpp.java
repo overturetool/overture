@@ -22,6 +22,7 @@ import org.overture.ast.expressions.AModNumericBinaryExp;
 import org.overture.ast.expressions.ANotEqualBinaryExp;
 import org.overture.ast.expressions.AOrBooleanBinaryExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
+import org.overture.ast.expressions.APowerSetUnaryExp;
 import org.overture.ast.expressions.AQuoteLiteralExp;
 import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.ARemNumericBinaryExp;
@@ -393,6 +394,22 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		sb.append(op);
 		sb.append(space);
 		sb.append(r);
+		
+		return Utilities.wrap(sb.toString());
+	}
+	
+	@Override
+	public String caseAPowerSetUnaryExp(APowerSetUnaryExp node,
+			IndentTracker question) throws AnalysisException
+	{
+		String exp = node.getExp().apply(THIS, question);
+		String op = mytable.getPOWER();
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(op);
+		sb.append(space);
+		sb.append(exp);
 		
 		return Utilities.wrap(sb.toString());
 	}
