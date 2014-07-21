@@ -360,6 +360,29 @@ public class ExpressionNppTest {
 		aux("m1 comp m2", "(m1 comp m2)");
 	}
 	
+	public void testCaseANotEqualBinaryExp_01() throws AnalysisException
+	{
+		aux("0 <> 1", "(0 <> 1)");
+	}
+	
+	@Test
+	public void testCaseANotEqualBinaryExp_02() throws AnalysisException
+	{
+		aux("x - 1 <> 3","((x - 1) <> 3)");
+	}
+	
+	@Test
+	public void testCaseANotEqualBinaryExp_03() throws AnalysisException
+	{
+		aux("(x * 1) <> 1","((x * 1) <> 1)");
+	}
+	
+	@Test
+	public void testCaseANotEqualBinaryExp_04() throws AnalysisException
+	{
+		aux("true <> false", "(true <> false)");
+	}
+	
 //	@Test
 //	public void testCaseAMapletExp_02() throws AnalysisException
 //	{
