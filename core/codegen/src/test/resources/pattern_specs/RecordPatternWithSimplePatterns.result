@@ -11,28 +11,34 @@ public class A {
         Rec recordPattern_1 = new Rec(1L, true, 'a', 1.5,
                 SeqUtil.seq('a', 'a', 'a'), null);
         Boolean success_1 = false;
-        Number intPattern_1 = 1L;
+        Number intPattern_1 = recordPattern_1.n;
+
         success_1 = intPattern_1.longValue() == 1L;
 
         if (success_1) {
-            Boolean boolPattern_1 = true;
+            Boolean boolPattern_1 = recordPattern_1.b;
+
             success_1 = boolPattern_1 == true;
 
             if (success_1) {
-                Character charPattern_1 = 'a';
+                Character charPattern_1 = recordPattern_1.c;
+
                 success_1 = charPattern_1 == 'a';
 
                 if (success_1) {
-                    Number realPattern_1 = 1.5;
+                    Number realPattern_1 = recordPattern_1.r;
+
                     success_1 = realPattern_1.doubleValue() == 1.5;
 
                     if (success_1) {
-                        VDMSeq stringPattern_1 = SeqUtil.seq('a', 'a', 'a');
+                        VDMSeq stringPattern_1 = Utils.clone(recordPattern_1.s);
+
                         success_1 = SeqUtil.equals(stringPattern_1,
                                 SeqUtil.seq('a', 'a', 'a'));
 
                         if (success_1) {
-                            Object nullPattern_1 = null;
+                            Rec nullPattern_1 = Utils.clone(recordPattern_1.next);
+
                             success_1 = nullPattern_1 == null;
                         }
                     }
@@ -61,8 +67,8 @@ public class A {
             b = _b;
             c = _c;
             r = _r;
-            s = (_s != null) ? _s.clone() : null;
-            next = (_next != null) ? _next.clone() : null;
+            s = (_s != null) ? Utils.clone(_s) : null;
+            next = (_next != null) ? Utils.clone(_next) : null;
         }
 
         public boolean equals(final Object obj) {

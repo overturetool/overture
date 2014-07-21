@@ -11,14 +11,14 @@ public class Entry {
         A a = new A(MapUtil.map(new Maplet(1L, true)));
         a.x.put(10L, false);
 
-        return a.x.clone();
+        return Utils.clone(a.x);
     }
 
     public static class A implements Record {
         public VDMMap x;
 
         public A(final VDMMap _x) {
-            x = (_x != null) ? _x.clone() : null;
+            x = (_x != null) ? Utils.clone(_x) : null;
         }
 
         public boolean equals(final Object obj) {

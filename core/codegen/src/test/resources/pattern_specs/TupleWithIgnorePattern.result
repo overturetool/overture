@@ -17,14 +17,14 @@ public class A {
         if (success_1) {
             a = ((Number) tuplePattern_1.get(0));
 
-            c = ((Tuple) tuplePattern_1.get(2)).clone();
+            c = Utils.clone(((Tuple) tuplePattern_1.get(2)));
         }
 
         if (!(success_1)) {
             throw new RuntimeException("Tuple pattern match failed");
         }
 
-        return c.clone();
+        return Utils.clone(c);
     }
 }
 

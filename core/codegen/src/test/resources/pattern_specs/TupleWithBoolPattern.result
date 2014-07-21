@@ -17,7 +17,8 @@ public class A {
         if (success_1) {
             n = ((Number) tuplePattern_1.get(0));
 
-            Boolean boolPattern_1 = true;
+            Boolean boolPattern_1 = ((Boolean) tuplePattern_1.get(1));
+
             success_1 = boolPattern_1 == true;
 
             if (success_1) {

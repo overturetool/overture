@@ -23,7 +23,7 @@ public class A {
 
             b = ((Number) tuplePattern_1.get(1));
 
-            Tuple tuplePattern_2 = ((Tuple) tuplePattern_1.get(2)).clone();
+            Tuple tuplePattern_2 = Utils.clone(((Tuple) tuplePattern_1.get(2)));
 
             success_1 = tuplePattern_2.size().longValue() == 3L;
 
@@ -32,7 +32,8 @@ public class A {
 
                 d = ((Number) tuplePattern_2.get(1));
 
-                Tuple tuplePattern_3 = ((Tuple) tuplePattern_2.get(2)).clone();
+                Tuple tuplePattern_3 = Utils.clone(((Tuple) tuplePattern_2.get(
+                            2)));
 
                 success_1 = tuplePattern_3.size().longValue() == 2L;
 

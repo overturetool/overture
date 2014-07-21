@@ -12,21 +12,24 @@ public class A {
         Boolean success_1 = false;
         Number a = null;
         Number b = null;
-        Tuple tuplePattern_1 = recordPattern_1.t.clone();
+        Tuple tuplePattern_1 = Utils.clone(recordPattern_1.t);
+
         success_1 = tuplePattern_1.size().longValue() == 2L;
 
         if (success_1) {
             a = ((Number) tuplePattern_1.get(0));
 
-            Rec recordPattern_2 = ((Rec) tuplePattern_1.get(1)).clone();
+            Rec recordPattern_2 = Utils.clone(((Rec) tuplePattern_1.get(1)));
 
-            Tuple tuplePattern_2 = recordPattern_2.t.clone();
+            Tuple tuplePattern_2 = Utils.clone(recordPattern_2.t);
+
             success_1 = tuplePattern_2.size().longValue() == 2L;
 
             if (success_1) {
                 b = ((Number) tuplePattern_2.get(0));
 
-                Object nullPattern_1 = null;
+                Rec nullPattern_1 = Utils.clone(((Rec) tuplePattern_2.get(1)));
+
                 success_1 = nullPattern_1 == null;
             }
         }
@@ -42,7 +45,7 @@ public class A {
         public Tuple t;
 
         public Rec(final Tuple _t) {
-            t = (_t != null) ? _t.clone() : null;
+            t = (_t != null) ? Utils.clone(_t) : null;
         }
 
         public boolean equals(final Object obj) {

@@ -7,7 +7,7 @@ public class Bag {
     private VDMSet numbers;
 
     public Bag(final VDMSet pNumbers) {
-        cg_init_Bag_1(pNumbers.clone());
+        cg_init_Bag_1(Utils.clone(pNumbers));
     }
 
     public Bag() {
@@ -164,7 +164,7 @@ public class Bag {
     }
 
     public void cg_init_Bag_1(final VDMSet pNumbers) {
-        numbers = pNumbers.clone();
+        numbers = Utils.clone(pNumbers);
 
         return;
     }
@@ -186,7 +186,7 @@ public class Bag {
     }
 
     public VDMSet getNumbers() {
-        return numbers.clone();
+        return Utils.clone(numbers);
     }
 
     public Boolean hasNumber(final Number n) {
@@ -198,15 +198,15 @@ public class Bag {
     }
 
     public void addNumbers(final Bag bag) {
-        numbers = SetUtil.union(numbers.clone(), bag.getNumbers());
+        numbers = SetUtil.union(Utils.clone(numbers), bag.getNumbers());
     }
 
     public void setSharedNumbers(final Bag bag) {
-        numbers = SetUtil.intersect(numbers.clone(), bag.getNumbers());
+        numbers = SetUtil.intersect(Utils.clone(numbers), bag.getNumbers());
     }
 
     public void removeNumbers(final Bag bag) {
-        numbers = SetUtil.diff(numbers.clone(), bag.getNumbers());
+        numbers = SetUtil.diff(Utils.clone(numbers), bag.getNumbers());
     }
 
     public Boolean contains(final Bag bag) {
@@ -230,25 +230,26 @@ public class Bag {
     }
 
     public void addNumbersDist(final Bag bag1, final Bag bag2) {
-        numbers = SetUtil.dunion(SetUtil.set(numbers.clone(),
+        numbers = SetUtil.dunion(SetUtil.set(Utils.clone(numbers),
                     bag1.getNumbers(), bag2.getNumbers()));
     }
 
     public void setSharedNumbersDist(final Bag bag1, final Bag bag2) {
-        numbers = SetUtil.dinter(SetUtil.set(numbers.clone(),
+        numbers = SetUtil.dinter(SetUtil.set(Utils.clone(numbers),
                     bag1.getNumbers(), bag2.getNumbers()));
     }
 
     public VDMSet powerBag() {
-        VDMSet powerSets = SetUtil.powerset(numbers.clone());
+        VDMSet powerSets = SetUtil.powerset(Utils.clone(numbers));
         VDMSet bags = SetUtil.set();
 
         for (Iterator iterator_3 = powerSets.iterator(); iterator_3.hasNext();) {
             VDMSet s = (VDMSet) iterator_3.next();
-            bags = SetUtil.union(bags.clone(), SetUtil.set(new Bag(s.clone())));
+            bags = SetUtil.union(Utils.clone(bags),
+                    SetUtil.set(new Bag(Utils.clone(s))));
         }
 
-        return bags.clone();
+        return Utils.clone(bags);
     }
 }
 

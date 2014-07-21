@@ -11,11 +11,14 @@ public class A {
         Rec recordPattern_1 = new Rec(1L, new Rec(2L, new Rec(3L, null)));
         Number c = null;
         Boolean success_1 = false;
-        Rec recordPattern_2 = recordPattern_1.next.clone();
-        Rec recordPattern_3 = recordPattern_2.next.clone();
+        Rec recordPattern_2 = Utils.clone(recordPattern_1.next);
+
+        Rec recordPattern_3 = Utils.clone(recordPattern_2.next);
+
         c = recordPattern_3.n;
 
-        Object nullPattern_1 = null;
+        Rec nullPattern_1 = Utils.clone(recordPattern_3.next);
+
         success_1 = nullPattern_1 == null;
 
         if (!(success_1)) {
@@ -31,7 +34,7 @@ public class A {
 
         public Rec(final Number _n, final Rec _next) {
             n = _n;
-            next = (_next != null) ? _next.clone() : null;
+            next = (_next != null) ? Utils.clone(_next) : null;
         }
 
         public boolean equals(final Object obj) {
