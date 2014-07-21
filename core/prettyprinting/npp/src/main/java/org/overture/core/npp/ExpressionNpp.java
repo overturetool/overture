@@ -26,10 +26,12 @@ import org.overture.ast.expressions.APowerSetUnaryExp;
 import org.overture.ast.expressions.AQuoteLiteralExp;
 import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.ARemNumericBinaryExp;
+import org.overture.ast.expressions.ASetEnumSetExp;
 import org.overture.ast.expressions.ASubtractNumericBinaryExp;
 import org.overture.ast.expressions.ATimesNumericBinaryExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.node.INode;
+import org.overture.ast.types.ASetType;
 
 class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		implements IPrettyPrinter
@@ -414,6 +416,14 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		return Utilities.wrap(sb.toString());
 	}
 	
+	@Override
+	public String caseASetEnumSetExp(ASetEnumSetExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		//System.out.print(node.toString());
+		//return null;
+		return node.toString();
+	}
 //	@Override
 //	public String caseAMapletExp(AMapletExp node, IndentTracker question)
 //			throws AnalysisException

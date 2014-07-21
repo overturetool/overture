@@ -425,9 +425,21 @@ public class ExpressionNppTest {
 		aux("card m", "(card m)");
 	}
 	
+	@Test
+	public void testCaseACardUnaryExp_02() throws AnalysisException
+	{
+		aux("card {1,2,3}", "(card {1, 2, 3})");
+	}
+	
+	@Test
 	public void testCaseAPowerSetUnaryExp01() throws AnalysisException
 	{
 		aux("power m", "(power m)");
+	}
+	@Test
+	public void testCaseAPowerSetUnaryExp02() throws AnalysisException
+	{
+		aux("power {1,2,3}", "(power {1, 2, 3})");
 	}
 	
 }
