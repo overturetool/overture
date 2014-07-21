@@ -388,7 +388,13 @@ public class ExpressionNppTest {
 	{
 		aux("'a' <> 'b'", "('a' <> 'b')");
 	}
-//	
+	
+	@Test
+	public void testCaseANotEqualBinaryExp_06() throws AnalysisException
+	{
+		aux("<a> <> <b>", "(<a> <> <b>)");
+	}
+	//	
 //	@Test
 //	public void testCaseAMapletExp_02() throws AnalysisException
 //	{

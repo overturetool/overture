@@ -22,6 +22,7 @@ import org.overture.ast.expressions.AModNumericBinaryExp;
 import org.overture.ast.expressions.ANotEqualBinaryExp;
 import org.overture.ast.expressions.AOrBooleanBinaryExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
+import org.overture.ast.expressions.AQuoteLiteralExp;
 import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.ASubtractNumericBinaryExp;
 import org.overture.ast.expressions.ATimesNumericBinaryExp;
@@ -421,6 +422,13 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 			IndentTracker question) throws AnalysisException
 	{
 		return mytable.getCHARDELIM() + Character.toString(node.getValue().getValue()) + mytable.getCHARDELIM();
+	}
+	
+	@Override
+	public String caseAQuoteLiteralExp(AQuoteLiteralExp node,
+			IndentTracker question) throws AnalysisException
+	{
+		return mytable.getOPENQUOTE() + node.getValue().getValue().toString() + mytable.getCLOSEQUOTE();
 	}
 	
 	@Override
