@@ -54,37 +54,13 @@
     <build>
         <resources>
             <resource>
-                <directory>${project.basedir}/../../../documentation/examples/VDMSL</directory>
-                <targetPath>${project.basedir}/src/test/resources/examples/VDMSL</targetPath>
-                <filtering>false</filtering>
-                <includes>
-                    <include>**/*.vdmsl</include>
-                    <include>**/README.txt</include>
-                </includes>
-            </resource>
-            <resource>
-                <directory>${project.basedir}/../../../documentation/examples/VDM++</directory>
-                <targetPath>${project.basedir}/src/test/resources/examples/VDM++</targetPath>
-                <includes>
-                    <include>**/*.vdmpp</include>
-                    <include>**/README.txt</include>
-                </includes>
-            </resource>
-            <resource>
-                <directory>${project.basedir}/../../../documentation/examples/VDMRT</directory>
-                <targetPath>${project.basedir}/src/test/resources/examples/VDMRT</targetPath>
-                <includes>
-                    <include>**/*.vdmrt</include>
-                    <include>**/README.txt</include>
-                </includes>
-            </resource>
-            <resource>
-                <directory>${project.basedir}/../../../documentation/examples/libs</directory>
-                <targetPath>${project.basedir}/src/test/resources/examples/libs</targetPath>
+                <directory>${project.basedir}/../../../documentation/examples/</directory>
+                <targetPath>${project.basedir}/src/test/resources/examples/</targetPath>
                 <includes>
                     <include>**/*.vdmsl</include>
                     <include>**/*.vdmpp</include>
                     <include>**/*.vdmrt</include>
+                    <include>**/README.txt</include>
                 </includes>
             </resource>
         </resources>
