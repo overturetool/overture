@@ -25,6 +25,7 @@ import org.overture.ast.expressions.ANotInSetBinaryExp;
 import org.overture.ast.expressions.AOrBooleanBinaryExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
 import org.overture.ast.expressions.APowerSetUnaryExp;
+import org.overture.ast.expressions.AProperSubsetBinaryExp;
 import org.overture.ast.expressions.AQuoteLiteralExp;
 import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.ARemNumericBinaryExp;
@@ -586,6 +587,24 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		return Utilities.wrap(sb.toString());
 	}
 	
+	@Override
+	public String caseAProperSubsetBinaryExp(AProperSubsetBinaryExp node,
+			IndentTracker question) throws AnalysisException
+	{
+		String l = node.getLeft().apply(THIS, question);
+		String r = node.getRight().apply(THIS, question);
+		String op = mytable.getPSUBSET();
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(l);
+		sb.append(space);
+		sb.append(op);
+		sb.append(space);
+		sb.append(r);
+		
+		return Utilities.wrap(sb.toString());
+	}
 	@Override
 	public String caseACharLiteralExp(ACharLiteralExp node,
 			IndentTracker question) throws AnalysisException

@@ -550,4 +550,22 @@ public class ExpressionNppTest {
 		aux("{1} subset {1, 2, 3}", "({1} subset {1, 2, 3})");
 	}
 	
+	@Test
+	public void testCaseAProperSubSetBinaryExp_01() throws AnalysisException
+	{
+		aux("1 psubset y", "(1 psubset y)");
+	}
+	
+	@Test
+	public void testCaseAProperSubSetBinaryExp_02() throws AnalysisException
+	{
+		aux("x psubset y", "(x psubset y)");
+	}
+	
+	@Test
+	public void testCaseAProperSubSetBinaryExp_03() throws AnalysisException
+	{
+		aux("{1} psubset {1, 2, 3}", "({1} psubset {1, 2, 3})");
+	}
+	
 }
