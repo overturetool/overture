@@ -2,6 +2,7 @@ package org.overture.core.tests.examples;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,10 +27,10 @@ import org.overture.parser.syntax.ParserException;
 abstract public class ExamplesUtility
 {
 
-	private static final String SL_EXAMPLES_ROOT = "../../../documentation/examples/VDMSL";
-	private static final String PP_EXAMPLES_ROOT = "../../../documentation/examples/VDM++";
-	private static final String RT_EXAMPLES_ROOT = "../../../documentation/examples/VDMRT";
-	private static final String LIBS_ROOT = "../../../documentation/examples/libs/";
+	private static final String SL_EXAMPLES_ROOT = "/examples/VDMSL";
+	private static final String PP_EXAMPLES_ROOT = "/examples/VDM++";
+	private static final String RT_EXAMPLES_ROOT = "/examples/VDMRT";
+	private static final String LIBS_ROOT = "/examples/libs/";
 
 	/**
 	 * Get the ASTs for the Overture examples. This method only provides the trees for examples that are supposed to
@@ -77,9 +78,11 @@ abstract public class ExamplesUtility
 	private static Collection<ExampleSourceData> getSubSources(
 			String examplesRoot, Dialect dialect) throws IOException
 	{
+
 		List<ExampleSourceData> r = new LinkedList<ExampleSourceData>();
 
-		File dir = new File(examplesRoot);
+		URL url = ExamplesUtility.class.getResource(examplesRoot);
+		File dir = new File(url.getPath());
 
 		StringBuilder source = new StringBuilder();
 		// grab examples groups
@@ -102,7 +105,7 @@ abstract public class ExamplesUtility
 						{
 							try
 							{
-								source.append(FileUtils.readFileToString(new File(LIBS_ROOT
+								source.append(FileUtils.readFileToString(new File(ExamplesUtility.class.getResource(LIBS_ROOT).getPath()
 										+ ExamplePacker.getName(dialect)
 										+ "/"
 										+ lib)));
