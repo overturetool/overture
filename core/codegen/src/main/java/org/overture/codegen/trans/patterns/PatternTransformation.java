@@ -383,28 +383,35 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 			ATuplePatternCG tuplePattern = (ATuplePatternCG) pattern;
 			ATupleTypeCG tupleType = (ATupleTypeCG) type;
 			
-			return consTuplePatternCheck(tuplePattern, tupleType, patternData, null);
+			return consTuplePatternCheck(declarePatternVar, tuplePattern, tupleType, patternData, actualValue);
 		}
 		else if(pattern instanceof ARecordPatternCG)
 		{
 			ARecordPatternCG recordPattern = (ARecordPatternCG) pattern;
 			ARecordTypeCG recordType = (ARecordTypeCG) type;
 			
-			return consRecordPatternCheck(recordPattern, recordType, patternData, null);
+			return consRecordPatternCheck(declarePatternVar, recordPattern, recordType, patternData, actualValue);
 		}
 		
 		return null;
 	}
 
-	private ABlockStmCG consRecordPatternCheck(
+	private ABlockStmCG consRecordPatternCheck(boolean declarePattern,
 			ARecordPatternCG recordPattern, ARecordTypeCG recordType, PatternBlockData patternData,
 			SExpCG actualValue)
 	{
 		AIdentifierPatternCG idPattern = getIdPattern(config.getName(recordPattern.getClass()));
 		
-		ABlockStmCG recordPatternBlock = declarePattern(recordPattern, recordType, actualValue, idPattern);
+		ABlockStmCG recordPatternBlock = initPattern(declarePattern, recordPattern, recordType, actualValue, idPattern);
 
 		ARecordDeclCG record = info.getAssistantManager().getDeclAssistant().findRecord(classes, recordType);
+		
+		if(patternData.getSuccessVarDecl() == null)
+		{
+			consSuccessVarCheck(recordPattern, patternData);
+		}
+		
+		initSuccessVar(patternData, info.getExpAssistant().consBoolLiteral(true), recordPatternBlock);
 		
 		List<STypeCG> types = new LinkedList<STypeCG>();
 		
@@ -426,13 +433,13 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 
 	}
 
-	private ABlockStmCG consTuplePatternCheck(
+	private ABlockStmCG consTuplePatternCheck(boolean declarePatternVar,
 			ATuplePatternCG tuplePattern, ATupleTypeCG tupleType, PatternBlockData patternData,
 			SExpCG actualValue)
 	{
 		AIdentifierPatternCG idPattern = getIdPattern(config.getName(tuplePattern.getClass()));
 		
-		ABlockStmCG tuplePatternBlock = declarePattern(tuplePattern, tupleType, actualValue, idPattern);
+		ABlockStmCG tuplePatternBlock = initPattern(declarePatternVar, tuplePattern, tupleType, actualValue, idPattern);
 		
 		AIdentifierVarExpCG tuplePatternVar = new AIdentifierVarExpCG();
 		tuplePatternVar.setType(tupleType.clone());
@@ -477,7 +484,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		
 		if (!patternData.IsRootPattern(pattern))
 		{
-			init = info.getExpAssistant().consBoolLiteral(false);
+			init = info.getExpAssistant().consBoolLiteral(pattern instanceof ATuplePatternCG ? false : true);
 			init.setType(new ABoolBasicTypeCG());
 		}
 		else
@@ -529,15 +536,15 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		}
 	}
 	
-	private ABlockStmCG declarePattern(SPatternCG pattern,
+	private ABlockStmCG initPattern(boolean declare, SPatternCG pattern,
 			STypeCG type, SExpCG actualValue,
 			AIdentifierPatternCG idPattern)
 	{
 		ABlockStmCG patternBlock = new ABlockStmCG();
 		
-		if(actualValue != null)
+		if(declare)
 		{
-			AVarLocalDeclCG patternDecl = consVarDecl(type.clone(), actualValue, idPattern.clone());
+			AVarLocalDeclCG patternDecl = consVarDecl(type.clone(), actualValue.clone(), idPattern.clone());
 			patternBlock.getLocalDefs().add(patternDecl);
 		}
 		else
@@ -624,7 +631,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 			ATuplePatternCG nextTuplePattern = (ATuplePatternCG) currentPattern;
 			ATupleTypeCG nextTupleType = (ATupleTypeCG) currentType;
 			
-			patternBlock = consTuplePatternCheck(nextTuplePattern, nextTupleType, patternData, actualValue);
+			patternBlock = consTuplePatternCheck(true, nextTuplePattern, nextTupleType, patternData, actualValue);
 			
 		}
 		else if (currentPattern instanceof ARecordPatternCG)
@@ -632,7 +639,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 			ARecordPatternCG nextRecordPattern = (ARecordPatternCG) currentPattern;
 			ARecordTypeCG nextRecordType = (ARecordTypeCG) currentType;
 			
-			patternBlock = consRecordPatternCheck(nextRecordPattern, nextRecordType, patternData, actualValue);
+			patternBlock = consRecordPatternCheck(true, nextRecordPattern, nextRecordType, patternData, actualValue);
 		}
 		else
 		{
