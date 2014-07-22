@@ -514,4 +514,22 @@ public class ExpressionNppTest {
 		aux("{1} union {1, 2, 3}", "({1} union {1, 2, 3})");
 	}
 	
+	@Test
+	public void testCaseADiffBinaryExp_01() throws AnalysisException
+	{
+		aux("1 \\ y", "(1 \\ y)");
+	}
+	
+	@Test
+	public void testCaseADiffBinaryExp_02() throws AnalysisException
+	{
+		aux("x \\ y", "(x \\ y)");
+	}
+	
+	@Test
+	public void testCaseADiffBinaryExp_03() throws AnalysisException
+	{
+		aux("{1} \\ {1, 2, 3}", "({1} \\ {1, 2, 3})");
+	}
+	
 }
