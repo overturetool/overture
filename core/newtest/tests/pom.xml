@@ -28,7 +28,21 @@
 		</dependency>
 	</dependencies>
 
-	<build>
+    <build>
+        <!-- Workaround a stupid maven bug to run tests during install  -ldc,Jul22-->        
+        <resources>
+            <resource>
+                <directory>${project.basedir}/../../../documentation/examples/</directory>
+                <targetPath>${project.basedir}/src/test/resources/examples/</targetPath>
+                <includes>
+                    <include>**/*.vdmsl</include>
+                    <include>**/*.vdmpp</include>
+                    <include>**/*.vdmrt</include>
+                    <include>**/README.txt</include>
+                </includes>
+            </resource>
+        </resources>
+
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
