@@ -1,5 +1,6 @@
 package org.overture.codegen.trans.patterns;
 
+import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.STypeCG;
 
@@ -7,11 +8,13 @@ public class PatternInfo
 {
 	private STypeCG type;
 	private SPatternCG pattern;
+	private SExpCG actualValue;
 	
-	public PatternInfo(STypeCG type ,SPatternCG pattern)
+	public PatternInfo(STypeCG type ,SPatternCG pattern, SExpCG actualValue)
 	{
 		this.type = type;
 		this.pattern = pattern;
+		this.actualValue = actualValue;
 	}
 
 	public STypeCG getType()
@@ -22,5 +25,10 @@ public class PatternInfo
 	public SPatternCG getPattern()
 	{
 		return pattern;
+	}
+	
+	public SExpCG getActualValue()
+	{
+		return actualValue;
 	}
 }

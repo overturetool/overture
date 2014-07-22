@@ -179,7 +179,13 @@ CG {-> package='org.overture.codegen.cgast'
            |	{increment} [var]:CG.#exp
            |	{decrement} [var]:CG.#exp
            |	{raiseError} [error]:CG.#exp.#RuntimeError
+           |	{cases} [exp]:CG.#exp [cases]:CG.#stm.#altStm.case* [others]:CG.#stm
+           |	#altStm
            ;
+           
+#altStm {-> package='org.overture.codegen.cgast.statements'}
+    = {case} [pattern]:CG.#pattern [result]:CG.#stm 
+    ;
            
 #letBeSt {-> package='org.overture.codegen.cgast.utils'}
 	= {header} [binding]:CG.#multipleBind.set [suchThat]:CG.#exp //The Overture AST uses a multiplebind 
@@ -225,7 +231,12 @@ CG {-> package='org.overture.codegen.cgast'
     |	{notImplemented}
     |	{undefined}
     |	{threadId}
+    //|	#altExp
     ;
+
+//#altExp {-> package='org.overture.codegen.cgast.expressions'}
+//    = {case} [pattern]:CG.#pattern [result]:CG.#exp
+//    ;
 
 #RuntimeError {-> package='org.overture.codegen.cgast.expressions'}
     =   {LetBeStNoBinding}

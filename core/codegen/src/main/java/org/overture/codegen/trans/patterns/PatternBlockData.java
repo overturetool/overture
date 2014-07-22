@@ -11,11 +11,18 @@ public class PatternBlockData
 	private AVarLocalDeclCG successVarDecl;
 	private AIdentifierVarExpCG successVar;
 	private ABlockStmCG declBlock;
+	private boolean raiseErrorOnMismatch;
 
-	public PatternBlockData(SPatternCG pattern, ABlockStmCG declBlock)
+	public PatternBlockData(SPatternCG pattern, ABlockStmCG declBlock, boolean raiseErrorOnMismatch)
 	{
 		this.pattern = pattern;
 		this.declBlock = declBlock;
+		this.raiseErrorOnMismatch = raiseErrorOnMismatch;
+	}
+	
+	public PatternBlockData(boolean raiseErrorOnMismatch)
+	{
+		this(null, null, raiseErrorOnMismatch);
 	}
 	
 	public boolean IsRootPattern(SPatternCG pattern)
@@ -61,5 +68,15 @@ public class PatternBlockData
 	public void setDeclBlock(ABlockStmCG declBlock)
 	{
 		this.declBlock = declBlock;
+	}
+
+	public boolean raiseErrorOnMismatch()
+	{
+		return successVarDecl != null && raiseErrorOnMismatch;
+	}
+
+	public void raiseErrorOnMismatch(boolean raiseErrorOnMismatch)
+	{
+		this.raiseErrorOnMismatch = raiseErrorOnMismatch;
 	}
 }
