@@ -585,4 +585,21 @@ public class ExpressionNppTest {
 	{
 		aux("dunion {{},{2}}", "(dunion {{}, {2}})");
 	}
+	
+	@Test
+	public void testCaseADintersectUnaryExp_01() throws AnalysisException
+	{
+		aux("dinter {{1},{2}}", "(dinter {{1}, {2}})");
+	}
+	@Test
+	public void testCaseADintersectUnaryExp_02()throws AnalysisException
+	{
+		aux("dinter {{x},{2}}", "(dinter {{x}, {2}})");
+	}
+	
+	@Test
+	public void testCaseAintersectUnaryExp_03() throws AnalysisException
+	{
+		aux("dinter {{},{2}}", "(dinter {{}, {2}})");
+	}
 }

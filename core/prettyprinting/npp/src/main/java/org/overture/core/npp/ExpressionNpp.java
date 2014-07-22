@@ -8,6 +8,7 @@ import org.overture.ast.expressions.ABooleanConstExp;
 import org.overture.ast.expressions.ACardinalityUnaryExp;
 import org.overture.ast.expressions.ACharLiteralExp;
 import org.overture.ast.expressions.ACompBinaryExp;
+import org.overture.ast.expressions.ADistIntersectUnaryExp;
 import org.overture.ast.expressions.ADistUnionUnaryExp;
 import org.overture.ast.expressions.ADivNumericBinaryExp;
 import org.overture.ast.expressions.ADivideNumericBinaryExp;
@@ -622,6 +623,23 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		
 		return Utilities.wrap(sb.toString());
 	}
+	
+	@Override
+	public String caseADistIntersectUnaryExp(ADistIntersectUnaryExp node,
+			IndentTracker question) throws AnalysisException
+	{
+		String l = node.getExp().apply(THIS, question);
+		String op = mytable.getDINTER();
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(op);
+		sb.append(space);
+		sb.append(l);
+		
+		return Utilities.wrap(sb.toString());
+	}
+	
 	@Override
 	public String caseACharLiteralExp(ACharLiteralExp node,
 			IndentTracker question) throws AnalysisException
