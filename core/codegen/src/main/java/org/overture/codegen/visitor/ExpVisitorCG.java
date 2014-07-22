@@ -16,6 +16,8 @@ import org.overture.ast.expressions.AAndBooleanBinaryExp;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ABooleanConstExp;
 import org.overture.ast.expressions.ACardinalityUnaryExp;
+import org.overture.ast.expressions.ACaseAlternative;
+import org.overture.ast.expressions.ACasesExp;
 import org.overture.ast.expressions.ACharLiteralExp;
 import org.overture.ast.expressions.ADistConcatUnaryExp;
 import org.overture.ast.expressions.ADistIntersectUnaryExp;
@@ -127,6 +129,8 @@ import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
+import org.overture.codegen.cgast.expressions.ACaseAltExpExpCG;
+import org.overture.codegen.cgast.expressions.ACasesExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACompMapExpCG;
 import org.overture.codegen.cgast.expressions.ACompSeqExpCG;
@@ -526,6 +530,51 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		setRange.setLast(lastExpCg);
 		
 		return setRange;
+	}
+	
+	@Override
+	public SExpCG caseACasesExp(ACasesExp node, IRInfo question)
+			throws AnalysisException
+	{
+		PType type = node.getType();
+		PExp exp = node.getExpression();
+		PExp others = node.getOthers();
+		LinkedList<ACaseAlternative> cases = node.getCases();
+
+		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		SExpCG expCg = exp.apply(question.getExpVisitor(), question);
+		SExpCG othersCg = others != null ? others.apply(question.getExpVisitor(), question) : null;
+		
+		ACasesExpCG casesExpCg = new ACasesExpCG();
+		casesExpCg.setType(typeCg);
+		casesExpCg.setExp(expCg);
+		casesExpCg.setOthers(othersCg);
+		
+		for(ACaseAlternative alt : cases)
+		{
+			SExpCG altCg = alt.apply(question.getExpVisitor(), question);
+			casesExpCg.getCases().add((ACaseAltExpExpCG) altCg);
+		}
+		
+		return casesExpCg;
+	}
+	
+	@Override
+	public SExpCG caseACaseAlternative(ACaseAlternative node, IRInfo question)
+			throws AnalysisException
+	{
+		PPattern pattern = node.getPattern();
+		PExp result = node.getResult();
+		
+		SPatternCG patternCg = pattern.apply(question.getPatternVisitor(), question);
+		SExpCG resultCg = result.apply(question.getExpVisitor(), question);
+		
+		ACaseAltExpExpCG altCg = new ACaseAltExpExpCG();
+		
+		altCg.setPattern(patternCg);
+		altCg.setResult(resultCg);
+		
+		return altCg;
 	}
 	
 	@Override

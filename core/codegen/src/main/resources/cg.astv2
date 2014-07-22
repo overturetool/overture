@@ -231,12 +231,13 @@ CG {-> package='org.overture.codegen.cgast'
     |	{notImplemented}
     |	{undefined}
     |	{threadId}
-    //|	#altExp
+    |	{cases} [exp]:CG.#exp [cases]:CG.#exp.#altExp.case* [others]:CG.#exp
+    |	#altExp
     ;
 
-//#altExp {-> package='org.overture.codegen.cgast.expressions'}
-//    = {case} [pattern]:CG.#pattern [result]:CG.#exp
-//    ;
+#altExp {-> package='org.overture.codegen.cgast.expressions'}
+    = {case} [pattern]:CG.#pattern [result]:CG.#exp
+    ;
 
 #RuntimeError {-> package='org.overture.codegen.cgast.expressions'}
     =   {LetBeStNoBinding}
