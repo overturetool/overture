@@ -301,6 +301,18 @@ public class ExpressionNppTest {
 	}
 	
 	@Test
+	public void testCaseAEqualsBinaryExp_05() throws AnalysisException
+	{
+		aux("{1} = {3}", "({1} = {3})");
+	}
+	
+	@Test
+	public void testCaseAEqualsBinaryExp_06() throws AnalysisException
+	{
+		aux("true = true", "(true = true)");
+	}
+	
+	@Test
 	public void testCaseAGreaterBinaryExp_01() throws AnalysisException
 	{
 		aux("1 > 0", "(1 > 0)");
@@ -409,6 +421,12 @@ public class ExpressionNppTest {
 	
 	@Test
 	public void testCaseANotEqualBinaryExp_06() throws AnalysisException
+	{
+		aux("{2} <> {3}", "({2} <> {3})");
+	}
+	
+	@Test
+	public void testCaseANotEqualBinaryExp_07() throws AnalysisException
 	{
 		aux("<a> <> <b>", "(<a> <> <b>)");
 	}
