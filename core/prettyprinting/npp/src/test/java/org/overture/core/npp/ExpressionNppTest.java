@@ -496,4 +496,22 @@ public class ExpressionNppTest {
 		aux("{1} union {1, 2, 3}", "({1} union {1, 2, 3})");
 	}
 	
+	@Test
+	public void testCaseAIntersectBinaryExp_01() throws AnalysisException
+	{
+		aux("1 union y", "(1 union y)");
+	}
+	
+	@Test
+	public void testCaseAIntersectBinaryExp_02() throws AnalysisException
+	{
+		aux("x union y", "(x union y)");
+	}
+	
+	@Test
+	public void testCaseAIntersectBinaryExp_03() throws AnalysisException
+	{
+		aux("{1} union {1, 2, 3}", "({1} union {1, 2, 3})");
+	}
+	
 }

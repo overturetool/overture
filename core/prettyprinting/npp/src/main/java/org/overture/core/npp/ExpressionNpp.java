@@ -29,6 +29,7 @@ import org.overture.ast.expressions.AQuoteLiteralExp;
 import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.ARemNumericBinaryExp;
 import org.overture.ast.expressions.ASetEnumSetExp;
+import org.overture.ast.expressions.ASetIntersectBinaryExp;
 import org.overture.ast.expressions.ASetUnionBinaryExp;
 import org.overture.ast.expressions.ASubtractNumericBinaryExp;
 import org.overture.ast.expressions.ATimesNumericBinaryExp;
@@ -514,6 +515,25 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String l = node.getLeft().apply(THIS, question);
 		String r = node.getRight().apply(THIS, question);
 		String op = mytable.getUNION();
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(l);
+		sb.append(space);
+		sb.append(op);
+		sb.append(space);
+		sb.append(r);
+		
+		return Utilities.wrap(sb.toString());
+	}
+	
+	@Override
+	public String caseASetIntersectBinaryExp(ASetIntersectBinaryExp node,
+			IndentTracker question) throws AnalysisException
+	{
+		String l = node.getLeft().apply(THIS, question);
+		String r = node.getRight().apply(THIS, question);
+		String op = mytable.getINTER();
 		
 		StringBuilder sb = new StringBuilder();
 		
