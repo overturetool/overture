@@ -8,6 +8,7 @@ public class A {
     }
 
     public Rec recPatternOp(final Rec recordPattern_1) {
+        Boolean success_1 = true;
         Number n1 = null;
         Boolean b1 = null;
         Character c1 = null;
@@ -17,7 +18,12 @@ public class A {
         c1 = recordPattern_1.c;
         r1 = recordPattern_1.r;
 
+        if (!(success_1)) {
+            throw new RuntimeException("Record pattern match failed");
+        }
+
         Rec recordPattern_2 = new Rec(5L, true, 'g', 2.5);
+        Boolean success_2 = true;
         Number n2 = null;
         Boolean b2 = null;
         Character c2 = null;
@@ -27,10 +33,15 @@ public class A {
         c2 = recordPattern_2.c;
         r2 = recordPattern_2.r;
 
+        if (!(success_2)) {
+            throw new RuntimeException("Record pattern match failed");
+        }
+
         return new Rec(n1, b2, c1, r2);
     }
 
     public static Rec recPatternFun(final Rec recordPattern_3) {
+        Boolean success_3 = true;
         Number n1 = null;
         Boolean b1 = null;
         Character c1 = null;
@@ -40,7 +51,12 @@ public class A {
         c1 = recordPattern_3.c;
         r1 = recordPattern_3.r;
 
+        if (!(success_3)) {
+            throw new RuntimeException("Record pattern match failed");
+        }
+
         Rec recordPattern_4 = new Rec(5L, true, 'g', 2.5);
+        Boolean success_4 = true;
         Number n2 = null;
         Boolean b2 = null;
         Character c2 = null;
@@ -49,6 +65,10 @@ public class A {
         b2 = recordPattern_4.b;
         c2 = recordPattern_4.c;
         r2 = recordPattern_4.r;
+
+        if (!(success_4)) {
+            throw new RuntimeException("Record pattern match failed");
+        }
 
         return new Rec(n1, b2, c1, r2);
     }
