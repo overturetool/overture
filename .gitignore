@@ -90,9 +90,10 @@ repository/
 generated/
 
 
-# Examples copied into the test framework #
-###########################################
+# Examples resources copied into various places#
+################################################
 core/newtest/framework/src/test/resources/examples
+core/newtest/tests/src/test/resources/examples
 
 # Documents copied into the help plugin #
 #########################################
