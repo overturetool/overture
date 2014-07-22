@@ -460,4 +460,22 @@ public class ExpressionNppTest {
 		aux("{1} in set {1, 2, 3}", "({1} in set {1, 2, 3})");
 	}
 	
+	@Test
+	public void testCaseANotInSetBinaryExp_01() throws AnalysisException
+	{
+		aux("1 not in set y", "(1 not in set y)");
+	}
+	
+	@Test
+	public void testCaseANotInSetBinaryExp_02() throws AnalysisException
+	{
+		aux("x not in set y", "(x not in set y)");
+	}
+	
+	@Test
+	public void testCaseANotInSetBinaryExp_03() throws AnalysisException
+	{
+		aux("{1} not in set {1, 2, 3}", "({1} not in set {1, 2, 3})");
+	}
+	
 }
