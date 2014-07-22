@@ -568,4 +568,21 @@ public class ExpressionNppTest {
 		aux("{1} psubset {1, 2, 3}", "({1} psubset {1, 2, 3})");
 	}
 	
+	@Test
+	public void testCaseADUnionUnaryExp_01() throws AnalysisException
+	{
+		aux("dunion {{1},{2}}", "(dunion {{1}, {2}})");
+	}
+	
+	@Test
+	public void testCaseADUnionUnaryExp_02()throws AnalysisException
+	{
+		aux("dunion {{x},{2}}", "(dunion {{x}, {2}})");
+	}
+	
+	@Test
+	public void testCaseADUnionUnaryExp_03() throws AnalysisException
+	{
+		aux("dunion {{},{2}}", "(dunion {{}, {2}})");
+	}
 }

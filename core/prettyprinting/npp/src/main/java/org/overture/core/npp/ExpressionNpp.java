@@ -8,6 +8,7 @@ import org.overture.ast.expressions.ABooleanConstExp;
 import org.overture.ast.expressions.ACardinalityUnaryExp;
 import org.overture.ast.expressions.ACharLiteralExp;
 import org.overture.ast.expressions.ACompBinaryExp;
+import org.overture.ast.expressions.ADistUnionUnaryExp;
 import org.overture.ast.expressions.ADivNumericBinaryExp;
 import org.overture.ast.expressions.ADivideNumericBinaryExp;
 import org.overture.ast.expressions.AEqualsBinaryExp;
@@ -602,6 +603,22 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		sb.append(op);
 		sb.append(space);
 		sb.append(r);
+		
+		return Utilities.wrap(sb.toString());
+	}
+	
+	@Override
+	public String caseADistUnionUnaryExp(ADistUnionUnaryExp node,
+			IndentTracker question) throws AnalysisException
+	{
+		String l = node.getExp().apply(THIS, question);
+		String op = mytable.getDUNION();
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(op);
+		sb.append(space);
+		sb.append(l);
 		
 		return Utilities.wrap(sb.toString());
 	}
