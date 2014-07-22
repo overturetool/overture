@@ -412,11 +412,11 @@ public class ExpressionNppTest {
 	{
 		aux("<a> <> <b>", "(<a> <> <b>)");
 	}
-	//	
+	
 //	@Test
 //	public void testCaseAMapletExp_02() throws AnalysisException
 //	{
-//		aux("{1 |-> 2, 2 |-> 3}","({1 |-> 2, 2 |-> 3})");
+//		aux("{1 |-> 2}","({1 |-> 2})");
 //	}
 	
 	@Test
@@ -437,9 +437,27 @@ public class ExpressionNppTest {
 		aux("power m", "(power m)");
 	}
 	@Test
-	public void testCaseAPowerSetUnaryExp02() throws AnalysisException
+	public void testCaseAPowerSetUnaryExp_02() throws AnalysisException
 	{
 		aux("power {1,2,3}", "(power {1, 2, 3})");
+	}
+	
+	@Test
+	public void testCaseAInSetBinaryExp_01() throws AnalysisException
+	{
+		aux("1 in set y", "(1 in set y)");
+	}
+	
+	@Test
+	public void testCaseAInSetBinaryExp_02() throws AnalysisException
+	{
+		aux("x in set y", "(x in set y)");
+	}
+	
+	@Test
+	public void testCaseAInSetBinaryExp_03() throws AnalysisException
+	{
+		aux("{1} in set {1, 2, 3}", "({1} in set {1, 2, 3})");
 	}
 	
 }

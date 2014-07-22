@@ -14,6 +14,7 @@ import org.overture.ast.expressions.AEqualsBinaryExp;
 import org.overture.ast.expressions.AGreaterEqualNumericBinaryExp;
 import org.overture.ast.expressions.AGreaterNumericBinaryExp;
 import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
+import org.overture.ast.expressions.AInSetBinaryExp;
 import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.expressions.ALessEqualNumericBinaryExp;
 import org.overture.ast.expressions.ALessNumericBinaryExp;
@@ -428,23 +429,25 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 //	public String caseAMapletExp(AMapletExp node, IndentTracker question)
 //			throws AnalysisException
 //	{
-//		String l = node.getLeft().toString();//.apply(THIS, question);
-//		String r = node.getRight().toString();//.getType().apply(THIS, question);
-//		String op = mytable.getMAPLET();
-//		
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append(leftcurly);
-//		sb.append(l);
-//		sb.append(space);
-//		sb.append(op);
-//		sb.append(space);
-//		sb.append(r);
-//		sb.append(rightcurly);
-//		
-//		return Utilities.wrap(sb.toString());
-//		//return node.getType().toString();
-//		//return sb.toString();
+////		String l = node.getLeft().toString();//.apply(THIS, question);
+////		String r = node.getRight().toString();//.getType().apply(THIS, question);
+////		String op = mytable.getMAPLET();
+////		
+////		StringBuilder sb = new StringBuilder();
+////		
+////		sb.append(leftcurly);
+////		sb.append(l);
+////		sb.append(space);
+////		sb.append(op);
+////		sb.append(space);
+////		sb.append(r);
+////		sb.append(rightcurly);
+////		
+////		return Utilities.wrap(sb.toString());
+////		//return node.getType().toString();
+////		//return sb.toString();
+//		System.out.print(node.toString());
+//		return null;
 //	}
 	
 	@Override
@@ -462,6 +465,25 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		
 		return Utilities.wrap(sb.toString());
 	
+	}
+	
+	@Override
+	public String caseAInSetBinaryExp(AInSetBinaryExp node,
+			IndentTracker question) throws AnalysisException
+	{
+		String l = node.getLeft().apply(THIS, question);
+		String r = node.getRight().apply(THIS, question);
+		String op = mytable.getINSET();
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(l);
+		sb.append(space);
+		sb.append(op);
+		sb.append(space);
+		sb.append(r);
+		
+		return Utilities.wrap(sb.toString());
 	}
 	
 	@Override
