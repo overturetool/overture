@@ -40,12 +40,9 @@
 		<dependency>
 			<groupId>org.overturetool.core.test</groupId>
 			<artifactId>framework</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.overturetool.core</groupId>
-			<artifactId>testframework</artifactId>
-			<version>${project.version}</version>
+            <version>${project.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.overturetool.core.prettyprinting</groupId>
