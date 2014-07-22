@@ -89,6 +89,11 @@ repository/
 #########################
 generated/
 
+
+# Examples copied into the test framework #
+###########################################
+core/newtest/framework/src/test/resources/examples
+
 # Documents copied into the help plugin #
 #########################################
 ide/help/html/OvertureIDEUserGuide.pdf
