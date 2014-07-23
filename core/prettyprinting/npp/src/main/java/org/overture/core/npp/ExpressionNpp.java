@@ -732,6 +732,8 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 				sb.append(binding);
 				
 				sb.append(space);
+				
+				node.getBindList().removeFirst();
 			}
 			
 		}

@@ -661,9 +661,22 @@ public class ExpressionNppTest {
 				"exists1 1 in set {1, 2} & ((x < 2) and (x > 0))");
 	}
 	
-//	@Test
-//	public void testCaseAForAllExp_01() throws AnalysisException
-//	{
-//		aux("forall x in set {1, 2} & x > 1", "forall x in set {1, 2} & (x > 1)");
-//	}
+	@Test
+	public void testCaseAForAllExp_01() throws AnalysisException
+	{
+		aux("forall x in set {1, 2} & x > 1", "forall x in set {1, 2} & (x > 1)");
+	}
+	
+	@Test
+	public void testCaseAForAllExp_02() throws AnalysisException
+	{
+		aux("forall 1 in set {1, 2}, x in set {2, 3}, x in set {3, 4} & x < 2 and x > 0",
+				"forall 1 in set {1, 2}, x in set {2, 3}, x in set {3, 4} & ((x < 2) and (x > 0))");
+	}
+	
+	@Test
+	public void testCaseAForAllExp_03() throws AnalysisException
+	{
+		aux("forall x in set y & x = 1", "forall x in set y & (x = 1)");
+	}
 }
