@@ -412,5 +412,11 @@ public class VdmSymbolTable implements ISymbolTable
 	{
 		return "\"";
 	}
+	
+	@Override
+	public String getCOMMA()
+	{
+		return ",";
+	}
 
 }

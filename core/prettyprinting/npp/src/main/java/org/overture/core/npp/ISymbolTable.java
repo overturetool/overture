@@ -137,4 +137,6 @@ public interface ISymbolTable
 
 	String getSTRINGDELIM();
 
+	String getCOMMA();
+
 }

@@ -620,4 +620,24 @@ public class ExpressionNppTest {
 	{
 		aux("dinter {{},{2}}", "(dinter {{}, {2}})");
 	}
+	
+	@Test
+	public void testCaseAExistsExp_01() throws AnalysisException
+	{
+		aux("exists x in set y & x = 1", "exists x in set y & (x = 1)");
+	}
+	
+	@Test
+	public void testCaseAExistsExp_02() throws AnalysisException
+	{
+		aux("exists 1 in set {1, 2} & x < 2 and x > 0", 
+				"exists 1 in set {1, 2} & ((x < 2) and (x > 0))");
+	}
+	
+	@Test
+	public void testCaseAExistsExp_03()	throws AnalysisException
+	{
+		aux("exists 1 in set {1, 2}, x in set {2, 3} & x < 2 and x > 0",
+				"exists 1 in set {1, 2}, x in set {2, 3} & ((x < 2) and (x > 0))");
+	}
 }

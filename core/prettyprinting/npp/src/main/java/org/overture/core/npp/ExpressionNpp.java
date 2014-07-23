@@ -13,6 +13,7 @@ import org.overture.ast.expressions.ADistUnionUnaryExp;
 import org.overture.ast.expressions.ADivNumericBinaryExp;
 import org.overture.ast.expressions.ADivideNumericBinaryExp;
 import org.overture.ast.expressions.AEqualsBinaryExp;
+import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.AGreaterEqualNumericBinaryExp;
 import org.overture.ast.expressions.AGreaterNumericBinaryExp;
 import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
@@ -40,6 +41,7 @@ import org.overture.ast.expressions.ASubtractNumericBinaryExp;
 import org.overture.ast.expressions.ATimesNumericBinaryExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.node.INode;
+import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.types.ASetType;
 
 class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
@@ -639,6 +641,48 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		
 		return Utilities.wrap(sb.toString());
 	}
+	
+	@Override
+	public String caseAExistsExp(AExistsExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		String op = mytable.getEXISTS();
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(op);
+		sb.append(space);
+		
+		while (node.getBindList().size() != 0){
+			if (node.getBindList().size() > 1){
+				String binding = node.getBindList().getFirst().toString();
+				sb.append(binding);
+				sb.append(mytable.getCOMMA());
+				sb.append(space);
+				node.getBindList().removeFirst();
+			}
+			String binding = node.getBindList().getFirst().toString();
+		
+			//System.out.print(node.getBindList().getFirst().toString());
+		
+			sb.append(binding);
+		
+			node.getBindList().removeFirst();
+		}
+		
+		sb.append(space);
+		sb.append(mytable.getPRED());
+		
+		String pred = node.getPredicate().apply(THIS, question);
+		
+		sb.append(space);
+		
+		sb.append(pred);
+		
+		return sb.toString();
+	}
+	
+	
 	
 	@Override
 	public String caseACharLiteralExp(ACharLiteralExp node,
