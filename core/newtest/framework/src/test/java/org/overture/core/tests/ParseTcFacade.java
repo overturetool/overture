@@ -115,7 +115,15 @@ public abstract class ParseTcFacade
 	public static List<INode> typedAst(String sourcePath, String testName)
 			throws IOException, ParserException, LexException
 	{
-		String ext = sourcePath.split("\\.")[1];
+		String[] parts = sourcePath.split("\\.");
+		String ext;
+		if (parts.length == 1)
+		{
+			ext = "vdm" + sourcePath.substring(sourcePath.length() - 2, sourcePath.length()).toLowerCase();
+		} else
+		{
+			ext = parts[1];
+		}
 		File f = new File(sourcePath);
 
 		boolean switchRelease = false;
@@ -171,6 +179,14 @@ public abstract class ParseTcFacade
 
 		TypeCheckResult<List<SClassDefinition>> TC = TypeCheckerUtil.typeCheckRt(content);
 
+		// retry with VDM10
+//		if (!TC.parserResult.errors.isEmpty() || !TC.errors.isEmpty()){
+//			if (Settings.release==Release.CLASSIC){
+//				Settings.release=Release.VDM_10;
+//				return parseTcRtContent(content, testName);
+//			}
+//		}
+		
 		assertTrue("Error in test " + testName
 				+ " Specification has parse errors", TC.parserResult.errors.isEmpty());
 		assertTrue("Error in test " + testName
@@ -188,6 +204,14 @@ public abstract class ParseTcFacade
 
 		TypeCheckResult<List<SClassDefinition>> TC = TypeCheckerUtil.typeCheckPp(content);
 
+		// retry with VDM10
+//		if (!TC.parserResult.errors.isEmpty() || !TC.errors.isEmpty()){
+//			if (Settings.release==Release.CLASSIC){
+//				Settings.release=Release.VDM_10;
+//				return parseTcPpContent(content, testName);
+//			}
+//		}
+		
 		assertTrue("Error in test " + testName
 				+ " Specification has parse errors", TC.parserResult.errors.isEmpty());
 		assertTrue("Error in test " + testName
@@ -205,6 +229,14 @@ public abstract class ParseTcFacade
 
 		TypeCheckResult<List<AModuleModules>> TC = TypeCheckerUtil.typeCheckSl(content);
 
+		// retry with VDM10
+//		if (!TC.parserResult.errors.isEmpty() || !TC.errors.isEmpty()){
+//			if (Settings.release==Release.CLASSIC){
+//				Settings.release=Release.VDM_10;
+//				return parseTcSlContent(content, testName);
+//			}
+//		}
+		
 		assertTrue("Error in test " + testName
 				+ " Specification has parse errors", TC.parserResult.errors.isEmpty());
 		assertTrue("Error in test " + testName
