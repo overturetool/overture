@@ -24,6 +24,7 @@ import org.overture.ast.statements.ACallStm;
 import org.overture.ast.statements.ACaseAlternativeStm;
 import org.overture.ast.statements.ACasesStm;
 import org.overture.ast.statements.AElseIfStm;
+import org.overture.ast.statements.AErrorStm;
 import org.overture.ast.statements.AForAllStm;
 import org.overture.ast.statements.AForIndexStm;
 import org.overture.ast.statements.AForPatternBindStm;
@@ -57,6 +58,7 @@ import org.overture.codegen.cgast.statements.ACallStmCG;
 import org.overture.codegen.cgast.statements.ACaseAltStmStmCG;
 import org.overture.codegen.cgast.statements.ACasesStmCG;
 import org.overture.codegen.cgast.statements.AElseIfStmCG;
+import org.overture.codegen.cgast.statements.AErrorStmCG;
 import org.overture.codegen.cgast.statements.AForAllStmCG;
 import org.overture.codegen.cgast.statements.AForIndexStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
@@ -77,6 +79,13 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 {
 	public StmVisitorCG()
 	{
+	}
+	
+	@Override
+	public SStmCG caseAErrorStm(AErrorStm node, IRInfo question)
+			throws AnalysisException
+	{
+		return new AErrorStmCG();
 	}
 	
 	@Override

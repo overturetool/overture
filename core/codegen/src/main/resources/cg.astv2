@@ -181,6 +181,7 @@ CG {-> package='org.overture.codegen.cgast'
            |	{raiseError} [error]:CG.#exp.#RuntimeError
            |	{cases} [exp]:CG.#exp [cases]:CG.#stm.#altStm.case* [others]:CG.#stm
            |	#altStm
+           |	{error}
            ;
            
 #altStm {-> package='org.overture.codegen.cgast.statements'}
