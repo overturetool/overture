@@ -15,6 +15,7 @@ import org.overture.ast.expressions.ADivideNumericBinaryExp;
 import org.overture.ast.expressions.AEqualsBinaryExp;
 import org.overture.ast.expressions.AExists1Exp;
 import org.overture.ast.expressions.AExistsExp;
+import org.overture.ast.expressions.AForAllExp;
 import org.overture.ast.expressions.AGreaterEqualNumericBinaryExp;
 import org.overture.ast.expressions.AGreaterNumericBinaryExp;
 import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
@@ -662,11 +663,13 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 				sb.append(space);
 				node.getBindList().removeFirst();
 			}
-			String binding = node.getBindList().getFirst().toString();
+			else{
+				String binding = node.getBindList().getFirst().toString();
 		
-			sb.append(binding);
+				sb.append(binding);
 		
-			node.getBindList().removeFirst();
+				node.getBindList().removeFirst();
+			}
 		}
 		
 		sb.append(space);
@@ -698,6 +701,47 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		sb.append(space);
 		sb.append(mytable.getPRED());
 		sb.append(space);
+		sb.append(pred);
+		
+		return sb.toString();
+	}
+	
+	@Override
+	public String caseAForAllExp(AForAllExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		String op = mytable.getFORALL();
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(op);
+		sb.append(space);
+		
+		while(node.getBindList().size() !=0){
+			if(node.getBindList().size() >1){
+				String binding = node.getBindList().getFirst().toString();
+				sb.append(binding);
+				sb.append(mytable.getCOMMA());
+				sb.append(space);
+				
+				node.getBindList().removeFirst();
+			}
+			else{
+				String binding = node.getBindList().getFirst().toString();
+				
+				sb.append(binding);
+				
+				sb.append(space);
+			}
+			
+		}
+		
+		sb.append(mytable.getPRED());
+		
+		String pred = node.getPredicate().apply(THIS, question);
+		
+		sb.append(space);
+		
 		sb.append(pred);
 		
 		return sb.toString();
