@@ -1,0 +1,17 @@
+class Entry
+
+operations
+
+public static casesQuote : (<A> | <B> | <C>) ==> <A> | <B> | <C>
+casesQuote (e) ==
+	cases e:
+		<A> -> return <A>,
+		<B> -> return <B>,
+		others -> return <C>
+	end;
+	
+public static Run : () ==> ?
+Run () ==
+	return [casesQuote(<A>), casesQuote(<B>), casesQuote(<C>)];
+
+end Entry

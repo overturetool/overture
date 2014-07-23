@@ -46,9 +46,9 @@ public class Tuple implements ValueType, Comparable
 		}
 	}
 
-	public int size()
+	public Long size()
 	{
-		return values.length;
+		return (long) values.length;
 	}
 
 	public Object get(int i)
@@ -72,7 +72,7 @@ public class Tuple implements ValueType, Comparable
 		if (other.size() != size())
 			return false;
 
-		final int size = size();
+		final int size = values.length;
 		for (int i = 0; i < size; i++)
 		{
 			final Object thisNthValue = get(i);

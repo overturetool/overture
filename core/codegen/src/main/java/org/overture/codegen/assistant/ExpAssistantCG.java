@@ -27,11 +27,13 @@ import org.overture.codegen.cgast.SMultipleBindCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
+import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ALetDefExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
+import org.overture.codegen.cgast.expressions.AQuoteLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.SBinaryExpCG;
@@ -41,6 +43,7 @@ import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.AQuoteTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
@@ -179,6 +182,34 @@ public class ExpAssistantCG extends AssistantBase
 		stringLiteral.setValue(value);
 		
 		return stringLiteral;
+	}
+	
+	public SExpCG consCharSequence(STypeCG seqType, String value)
+	{
+		AEnumSeqExpCG enumSeq = new AEnumSeqExpCG();
+
+		enumSeq.setType(seqType);
+
+		for (int i = 0; i < value.length(); i++)
+		{
+			char currentChar = value.charAt(i);
+			ACharLiteralExpCG charLit = new ACharLiteralExpCG();
+			charLit.setType(new ACharBasicTypeCG());
+			charLit.setValue(currentChar);
+
+			enumSeq.getMembers().add(charLit);
+		}
+
+		return enumSeq;
+	}
+	
+	public AQuoteLiteralExpCG consQuoteLiteral(String value)
+	{
+		AQuoteLiteralExpCG quoteLiteral = new AQuoteLiteralExpCG();
+		quoteLiteral.setType(new AQuoteTypeCG());
+		quoteLiteral.setValue(value);
+		
+		return quoteLiteral;
 	}
 	
 	public AIntLiteralExpCG getDefaultIntValue()

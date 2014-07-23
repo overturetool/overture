@@ -1,0 +1,29 @@
+class A
+
+operations
+
+public intPatternOp : nat ==> nat
+intPatternOp (3) ==
+let 1 = 1
+in
+	return 2;
+
+functions
+
+public intPatternFun : nat -> nat
+intPatternFun (3) ==
+let 1 = 1
+in
+	2;
+
+end A
+
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	return [new A().intPatternOp(3), A`intPatternFun(3)];
+
+end Entry

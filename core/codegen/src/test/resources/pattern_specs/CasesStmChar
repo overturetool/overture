@@ -1,0 +1,17 @@
+class Entry
+
+operations
+
+public static casesChar : (char) ==> char
+casesChar (c) ==
+	cases c:
+		'a' -> return 'x',
+		'b' -> return 'y',
+		others -> return 'q'
+	end;
+	
+public static Run : () ==> ?
+Run () ==
+	return [casesChar('u'), casesChar('a'), casesChar('b')];
+
+end Entry

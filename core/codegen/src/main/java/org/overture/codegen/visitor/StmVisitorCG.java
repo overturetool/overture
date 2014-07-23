@@ -7,8 +7,6 @@ import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.expressions.AElseIfExp;
-import org.overture.ast.expressions.AIfExp;
 import org.overture.ast.expressions.ASelfExp;
 import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.PExp;
@@ -23,6 +21,8 @@ import org.overture.ast.statements.AAtomicStm;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
 import org.overture.ast.statements.ACallObjectStm;
 import org.overture.ast.statements.ACallStm;
+import org.overture.ast.statements.ACaseAlternativeStm;
+import org.overture.ast.statements.ACasesStm;
 import org.overture.ast.statements.AElseIfStm;
 import org.overture.ast.statements.AForAllStm;
 import org.overture.ast.statements.AForIndexStm;
@@ -42,6 +42,7 @@ import org.overture.ast.types.PType;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SMultipleBindCG;
 import org.overture.codegen.cgast.SObjectDesignatorCG;
+import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.SStateDesignatorCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
@@ -53,6 +54,8 @@ import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectStmCG;
 import org.overture.codegen.cgast.statements.ACallStmCG;
+import org.overture.codegen.cgast.statements.ACaseAltStmStmCG;
+import org.overture.codegen.cgast.statements.ACasesStmCG;
 import org.overture.codegen.cgast.statements.AElseIfStmCG;
 import org.overture.codegen.cgast.statements.AForAllStmCG;
 import org.overture.codegen.cgast.statements.AForIndexStmCG;
@@ -397,37 +400,45 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 	}
 	
 	@Override
-	public SStmCG caseAIfExp(AIfExp node, IRInfo question)
+	public SStmCG caseACasesStm(ACasesStm node, IRInfo question)
 			throws AnalysisException
 	{
-		SExpCG ifExp = node.getTest().apply(question.getExpVisitor(), question);
-		SStmCG then = node.getThen().apply(question.getStmVisitor(), question);
+		PExp exp = node.getExp();
+		PStm others = node.getOthers();
+		LinkedList<ACaseAlternativeStm> cases = node.getCases();
 
-		AIfStmCG ifStm = new AIfStmCG();
-
-		ifStm.setIfExp(ifExp);
-		ifStm.setThenStm(then);
-		LinkedList<AElseIfExp> elseIfs = node.getElseList();	
+		SExpCG expCg = exp.apply(question.getExpVisitor(), question);
+		SStmCG othersCg = others != null ? others.apply(question.getStmVisitor(), question) : null;
 		
-		for (AElseIfExp exp : elseIfs)
+		ACasesStmCG casesStmCg = new ACasesStmCG();
+		casesStmCg.setExp(expCg);
+		casesStmCg.setOthers(othersCg);;
+		
+		for(ACaseAlternativeStm alt : cases)
 		{
-			ifExp = exp.getElseIf().apply(question.getExpVisitor(), question);
-			then = exp.getThen().apply(question.getStmVisitor(), question);
-						
-			AElseIfStmCG elseIfStm = new AElseIfStmCG();
-			elseIfStm.setElseIf(ifExp);
-			elseIfStm.setThenStm(then);
+			SStmCG altCg = alt.apply(question.getStmVisitor(), question);
+			casesStmCg.getCases().add((ACaseAltStmStmCG) altCg);
 			
-			ifStm.getElseIf().add(elseIfStm);
 		}
 		
-		if(node.getElse() != null)
-		{
-			SStmCG elseStm = node.getElse().apply(question.getStmVisitor(), question);
-			ifStm.setElseStm(elseStm);
-		}
-
-		return ifStm;
+		return casesStmCg;
+	}
+	
+	@Override
+	public SStmCG caseACaseAlternativeStm(ACaseAlternativeStm node,
+			IRInfo question) throws AnalysisException
+	{
+		PPattern pattern = node.getPattern();
+		PStm result = node.getResult();
+		
+		SPatternCG patternCg = pattern.apply(question.getPatternVisitor(), question);
+		SStmCG resultCg = result.apply(question.getStmVisitor(), question);
+		
+		ACaseAltStmStmCG caseCg = new ACaseAltStmStmCG();
+		caseCg.setPattern(patternCg);
+		caseCg.setResult(resultCg);
+		
+		return caseCg;
 	}
 	
 	@Override

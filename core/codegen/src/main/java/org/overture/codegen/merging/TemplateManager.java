@@ -80,6 +80,7 @@ import org.overture.codegen.cgast.expressions.ANotImplementedExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.AOrBoolBinaryExpCG;
+import org.overture.codegen.cgast.expressions.APatternMatchRuntimeErrorExpCG;
 import org.overture.codegen.cgast.expressions.APlusNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.APlusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.APowerNumericBinaryExpCG;
@@ -106,6 +107,8 @@ import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
 import org.overture.codegen.cgast.expressions.AThreadIdExpCG;
 import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATupleExpCG;
+import org.overture.codegen.cgast.expressions.ATupleSizeExpCG;
+import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
 import org.overture.codegen.cgast.expressions.AXorBoolBinaryExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
@@ -157,6 +160,7 @@ import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.cgast.types.ATokenBasicTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AUnionTypeCG;
+import org.overture.codegen.cgast.types.AUnknownTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.utils.GeneralUtils;
 
@@ -219,6 +223,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AInterfaceTypeCG.class, templateStructure.TYPE_PATH + "Interface");
 		
 		nodeTemplateFileNames.put(AUnionTypeCG.class, templateStructure.TYPE_PATH + "Union");
+		
+		nodeTemplateFileNames.put(AUnknownTypeCG.class, templateStructure.TYPE_PATH + "Unknown");
 		
 		//Basic type wrappers
 		
@@ -324,6 +330,8 @@ public class TemplateManager
 		
 		nodeTemplateFileNames.put(AFieldNumberExpCG.class, templateStructure.EXP_PATH + "FieldNumber");
 		
+		nodeTemplateFileNames.put(ATupleSizeExpCG.class, templateStructure.EXP_PATH + "TupleSize");
+		
 		nodeTemplateFileNames.put(ATernaryIfExpCG.class, templateStructure.EXP_PATH + "TernaryIf");
 		
 		nodeTemplateFileNames.put(AMapletExpCG.class, templateStructure.EXP_PATH + "Maplet");
@@ -340,6 +348,8 @@ public class TemplateManager
 		
 		nodeTemplateFileNames.put(ANotImplementedExpCG.class, templateStructure.EXP_PATH + "NotImplemented");
 		
+		nodeTemplateFileNames.put(AUndefinedExpCG.class, templateStructure.EXP_PATH + "Undefined");
+		
 		nodeTemplateFileNames.put(AThreadIdExpCG.class, templateStructure.EXP_PATH + "ThreadId");
 		
 		// Quantifier expressions
@@ -353,6 +363,8 @@ public class TemplateManager
 		// Runtime error expressions
 		
 		nodeTemplateFileNames.put(ALetBeStNoBindingRuntimeErrorExpCG.class, templateStructure.RUNTIME_ERROR_EXP_PATH + "LetBeStNoBinding");
+		
+		nodeTemplateFileNames.put(APatternMatchRuntimeErrorExpCG.class, templateStructure.RUNTIME_ERROR_EXP_PATH + "PatternMatch");
 		
 		// Unary expressions
 

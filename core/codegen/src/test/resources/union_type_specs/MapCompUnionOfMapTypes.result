@@ -12,19 +12,19 @@ public class Entry {
 
     public static Object Run() {
         VDMMap mapCompResult_1 = MapUtil.map();
-        VDMSet set_1 = MapUtil.dom(xs.clone());
+        VDMSet set_1 = MapUtil.dom(Utils.clone(xs));
 
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
             Object e = ((Object) iterator_1.next());
 
             if (((Number) e).longValue() == 2L) {
-                mapCompResult_1 = MapUtil.munion(mapCompResult_1.clone(),
+                mapCompResult_1 = MapUtil.munion(Utils.clone(mapCompResult_1),
                         MapUtil.map(
                             new Maplet(e, ((Number) e).longValue() + 1L)));
             }
         }
 
-        return mapCompResult_1.clone();
+        return Utils.clone(mapCompResult_1);
     }
 }
 
