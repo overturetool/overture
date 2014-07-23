@@ -1,0 +1,26 @@
+class Entry
+
+types
+
+R = real
+inv r == r > 0;
+
+functions
+
+f :  (set of (R * R)) -> real
+f (tups) ==
+let e in set tups
+in
+	if 1 = 1 then
+		2.5
+	else
+		e.#1;
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	return f({mk_(2.6, 2.6)});
+
+
+end Entry
