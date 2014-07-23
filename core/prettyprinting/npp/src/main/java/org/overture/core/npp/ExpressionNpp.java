@@ -13,6 +13,7 @@ import org.overture.ast.expressions.ADistUnionUnaryExp;
 import org.overture.ast.expressions.ADivNumericBinaryExp;
 import org.overture.ast.expressions.ADivideNumericBinaryExp;
 import org.overture.ast.expressions.AEqualsBinaryExp;
+import org.overture.ast.expressions.AExists1Exp;
 import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.AGreaterEqualNumericBinaryExp;
 import org.overture.ast.expressions.AGreaterNumericBinaryExp;
@@ -663,8 +664,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 			}
 			String binding = node.getBindList().getFirst().toString();
 		
-			//System.out.print(node.getBindList().getFirst().toString());
-		
 			sb.append(binding);
 		
 			node.getBindList().removeFirst();
@@ -682,7 +681,27 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		return sb.toString();
 	}
 	
-	
+	@Override
+	public String caseAExists1Exp(AExists1Exp node, IndentTracker question)
+			throws AnalysisException
+	{
+		//String binding = node.getBind().apply(THIS, question);
+		String binding = node.getBind().toString();
+		String pred = node.getPredicate().apply(THIS, question);
+		String op = mytable.getEXISTS1();
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(op);
+		sb.append(space);
+		sb.append(binding);
+		sb.append(space);
+		sb.append(mytable.getPRED());
+		sb.append(space);
+		sb.append(pred);
+		
+		return sb.toString();
+	}
 	
 	@Override
 	public String caseACharLiteralExp(ACharLiteralExp node,

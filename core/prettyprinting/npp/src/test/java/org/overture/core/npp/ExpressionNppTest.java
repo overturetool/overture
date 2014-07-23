@@ -640,4 +640,17 @@ public class ExpressionNppTest {
 		aux("exists 1 in set {1, 2}, x in set {2, 3} & x < 2 and x > 0",
 				"exists 1 in set {1, 2}, x in set {2, 3} & ((x < 2) and (x > 0))");
 	}
+	
+	@Test
+	public void testCaseAExists1Exp_01() throws AnalysisException
+	{
+		aux("exists1 x in set y & x = 1", "exists1 x in set y & (x = 1)");
+	}
+	
+	@Test
+	public void testCaseAExists1Exp_02() throws AnalysisException
+	{
+		aux("exists1 1 in set {1, 2} & x < 2 and x > 0", 
+				"exists1 1 in set {1, 2} & ((x < 2) and (x > 0))");
+	}
 }
