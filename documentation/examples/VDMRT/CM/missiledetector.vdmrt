@@ -72,6 +72,9 @@ Step() ==
         busy := len threats > 0);
  );
 
+  public getAperture: () ==> Angle * Angle
+  getAperture () == is not yet specified;
+
 sync
 
 -- addThreat and getThreat modify the same instance variables
