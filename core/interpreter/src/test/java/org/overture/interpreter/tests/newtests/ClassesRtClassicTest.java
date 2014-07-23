@@ -1,5 +1,6 @@
 package org.overture.interpreter.tests.newtests;
 
+import java.io.File;
 import java.util.Collection;
 
 import org.junit.Before;
@@ -32,5 +33,13 @@ public class ClassesRtClassicTest extends ParamInterpreterTest
 	public void setUp() throws Exception
 	{
 		Settings.release = Release.CLASSIC;
+	}
+	
+	@Override
+	protected File getEntryFile()
+	{
+		// the rt tests have an extension for some reason...
+		String fileName = modelPath.split("\\.")[0];
+		return new File(fileName + ".entry");
 	}
 }
