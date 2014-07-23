@@ -2,7 +2,6 @@ package org.overture.interpreter.tests.newtests;
 
 import static org.junit.Assert.fail;
 
-import java.io.PrintWriter;
 import java.util.List;
 
 import org.junit.Assert;
