@@ -74,7 +74,7 @@ public abstract class ParamInterpreterTest extends
 		}
 		try
 		{
-			Value val = InterpreterUtil.interpret(Settings.dialect, entry, file);
+			Value val = InterpreterUtil.interpret(ast, entry, Settings.dialect);
 
 			Result<String> auxResult = new Result<String>(val.toString(), new Vector<IMessage>(), new Vector<IMessage>());
 			System.out.println(file.getName() + " -> " + val);
@@ -167,6 +167,10 @@ public abstract class ParamInterpreterTest extends
 		DocumentBuilder db;
 
 		File resultFile = new File(modelPath+".result");
+		
+		if (!resultFile.exists()){
+			throw new FileNotFoundException(resultFile.getPath());
+		}
 		
 		try
 		{

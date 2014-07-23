@@ -91,4 +91,13 @@ public class StringInterpreterResult
 		return result;
 	}
 
+	@Override
+	public String toString()
+	{
+		return "StringInterpreterResult [result=" + result + ", warnings="
+				+ warnings + ", errors=" + errors + "]";
+	}
+	
+	
+
 }
