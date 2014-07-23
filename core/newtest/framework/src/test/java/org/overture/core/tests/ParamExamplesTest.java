@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -108,7 +109,17 @@ public abstract class ParamExamplesTest<R> extends
 			testUpdate(actual);
 		} else
 		{
-			R expected = deSerializeResult(resultPath);
+			R expected=null;
+			try {
+				expected= deSerializeResult(resultPath);
+			}
+			catch (FileNotFoundException e){
+				Assert.fail("Test " + testName
+						+ " failed. No result file found. Use \"-D"
+						+ getUpdatePropertyString() + "." + testName
+						+ "\" to create an initial one."
+						+ "\n The test result was: "+ actual.toString());
+			}
 			this.compareResults(actual, expected);
 		}
 	}

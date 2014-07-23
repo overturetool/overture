@@ -1,7 +1,9 @@
 package org.overture.core.tests;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -65,7 +67,17 @@ abstract public class ParamFineGrainTest<R> extends
 			this.testUpdate(actual);
 		} else
 		{
-			R expected = deSerializeResult(resultPath);
+			R expected=null;
+			try {
+				expected= deSerializeResult(resultPath);
+			}
+			catch (FileNotFoundException e){
+				Assert.fail("Test " + testName
+						+ " failed. No result file found. Use \"-D"
+						+ getUpdatePropertyString() + "." + testName
+						+ "\" to create an initial one."
+						+ "\n The test result was: "+ actual.toString());
+			}
 			this.compareResults(actual, expected);
 		}
 	}

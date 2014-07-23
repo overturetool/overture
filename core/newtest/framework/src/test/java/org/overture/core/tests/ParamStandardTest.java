@@ -1,8 +1,10 @@
 package org.overture.core.tests;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.overture.ast.node.INode;
 import org.overture.parser.lex.LexException;
@@ -81,7 +83,17 @@ public abstract class ParamStandardTest<R> extends AbsResultTest<R>
 			this.testUpdate(actual);
 		} else
 		{
-			R expected = deSerializeResult(resultPath);
+			R expected=null;
+			try {
+				expected= deSerializeResult(resultPath);
+			}
+			catch (FileNotFoundException e){
+				Assert.fail("Test " + testName
+						+ " failed. No result file found. Use \"-D"
+						+ getUpdatePropertyString() + "." + testName
+						+ "\" to create an initial one."
+						+ "\n The test result was: "+ actual.toString());
+			}
 			this.compareResults(actual, expected);
 		}
 	}

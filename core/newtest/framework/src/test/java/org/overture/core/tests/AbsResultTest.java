@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 
 import org.apache.commons.io.IOUtils;
-import org.junit.Assert;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
 
@@ -55,10 +54,7 @@ abstract class AbsResultTest<R>
 		if (!f.exists())
 		{
 			f.getParentFile().mkdirs();
-			Assert.fail("Test " + testName
-					+ " failed. No result file found. Use \"-D"
-					+ getUpdatePropertyString() + "." + testName
-					+ "\" to create an initial one.");
+			throw new FileNotFoundException(resultPath);
 		}
 		String json = IOUtils.toString(new FileReader(resultPath));
 		R result = gson.fromJson(json, resultType);
