@@ -25,7 +25,7 @@ public class PathsProvider
 	private final static String RESULTS_EXTERNAL = "src/test/resources/external";
 
 	/** The Constant VDM_EXTENSION_REGEX. */
-	public final static String VDM_EXTENSION_REGEX = "(.*)\\.vdm(pp|rt|sl)";
+	public final static String VDM_EXTENSION_REGEX = "((.*)\\.vdm(pp|rt|sl))|(.*(PP|SL|RT))";
 
 	private final static String EXTERNAL_VDM_EXTENSION_REGEX = "(.*)\\.(vdm|vpp)";
 
@@ -44,12 +44,12 @@ public class PathsProvider
 	public static Collection<Object[]> computePaths(String... root)
 	{
 		File dir;
-		Collection<Object[]> r = files(new File(root[0]));
+		Collection<Object[]> r = searchForFiles(new File(root[0]));
 
 		for (int i = 1; i < root.length; i++)
 		{
 			dir = new File(root[i]);
-			r.addAll(files(dir));
+			r.addAll(searchForFiles(dir));
 		}
 		return r;
 	}
@@ -93,7 +93,7 @@ public class PathsProvider
 		return paths;
 	}
 
-	private static Collection<Object[]> files(File dir)
+	private static Collection<Object[]> searchForFiles(File dir)
 	{
 		Collection<File> files = FileUtils.listFiles(dir, new RegexFileFilter(VDM_EXTENSION_REGEX), DirectoryFileFilter.DIRECTORY);
 
