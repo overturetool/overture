@@ -6,6 +6,7 @@ import java.util.List;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.node.INode;
 import org.overture.interpreter.runtime.ClassInterpreter;
 import org.overture.interpreter.runtime.Interpreter;
 import org.overture.interpreter.runtime.ModuleInterpreter;
@@ -25,6 +26,36 @@ public class InterpreterUtil
 			throws Exception
 	{
 		return new ClassInterpreter(classes);
+	}
+
+	public static Value interpret(List<INode> ast, String entry, Dialect dialect)
+			throws Exception
+	{
+		if (dialect == Dialect.VDM_SL)
+		{
+			ModuleListInterpreter list = new ModuleListInterpreter();
+			for (INode n : ast)
+			{
+				list.add((AModuleModules) n);
+			}
+			Interpreter interpreter = getInterpreter(list);
+			interpreter.init(null);
+			interpreter.setDefaultName(list.get(0).getName().getName());
+			Value val = interpreter.execute(entry, null);
+			return val;
+		} else
+		{
+			ClassListInterpreter list = new ClassListInterpreter();
+			for (INode n : ast)
+			{
+				list.add((SClassDefinition) n);
+			}
+			Interpreter interpreter = getInterpreter(list);
+			interpreter.init(null);
+			interpreter.setDefaultName(list.get(0).getName().getName());
+			Value val = interpreter.execute(entry, null);
+			return val;
+		}
 	}
 
 	public static Value interpret(String content) throws Exception
