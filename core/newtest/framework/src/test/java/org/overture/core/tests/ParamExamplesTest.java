@@ -2,7 +2,6 @@ package org.overture.core.tests;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
@@ -29,7 +28,7 @@ import org.overture.parser.syntax.ParserException;
  * @param <R>
  */
 @RunWith(Parameterized.class)
-public abstract class ParamExamplesTest<R extends Serializable> extends
+public abstract class ParamExamplesTest<R> extends
 		AbsResultTest<R>
 {
 	List<INode> model;
@@ -89,9 +88,9 @@ public abstract class ParamExamplesTest<R extends Serializable> extends
 	/**
 	 * Execute this test. Takes the model AST and applies whatever analysis is implemented in
 	 * {@link #processModel(List)}. Afterwards, results are compared with
-	 * {@link #compareResults(Serializable, Serializable)}. <br>
+	 * {@link #compareResults(R, R)}. <br>
 	 * <br>
-	 * If the test is running in update mode, {@link #testUpdate(Serializable)} is executed instead of the comparison.
+	 * If the test is running in update mode, {@link #testUpdate(R)} is executed instead of the comparison.
 	 * 
 	 * @throws FileNotFoundException
 	 * @throws IOException

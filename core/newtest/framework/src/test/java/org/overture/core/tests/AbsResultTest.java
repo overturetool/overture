@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.Serializable;
 import java.lang.reflect.Type;
 
 import org.apache.commons.io.IOUtils;
@@ -28,7 +27,7 @@ import com.google.gson.reflect.TypeToken;
  * @param <R>
  *            the (user-provided) type of results this test operates on
  */
-abstract class AbsResultTest<R extends Serializable>
+abstract class AbsResultTest<R>
 {
 	protected boolean updateResult;
 	protected String resultPath;

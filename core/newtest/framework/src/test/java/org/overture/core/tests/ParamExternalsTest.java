@@ -1,6 +1,5 @@
 package org.overture.core.tests;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Vector;
 
@@ -20,7 +19,7 @@ import org.junit.runners.Parameterized.Parameters;
  *            the type of result this test operates on.
  */
 @RunWith(Parameterized.class)
-public abstract class ParamExternalsTest<R extends Serializable> extends
+public abstract class ParamExternalsTest<R> extends
 		ParamFineGrainTest<R>
 {
 

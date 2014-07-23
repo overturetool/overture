@@ -1,7 +1,6 @@
 package org.overture.core.tests;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.List;
 
 import org.junit.Test;
@@ -19,16 +18,15 @@ import org.overture.parser.syntax.ParserException;
  * These tests are meant to be run as parameterized JUnit test and so any subclass must be annotated with
  * <code>@RunWith(Parameterized.class)</code>. <br>
  * <br>
- * This class also has a type parameter <code>R</code> that represents the output of the functionality under test. These
- * types must implement {@link Serializable} and you should create a specific <code>R</code> type for your functionality
- * and write some kind of transformation between your native output type and <code>R</code>.
+ * This class also has a type parameter <code>R</code> that represents the output of the functionality under test. You
+ * should create a specific <code>R</code> type for your functionality and write some kind of transformation between
+ * your native output type and <code>R</code>.
  * 
  * @author ldc
  * @param R
  *            the result type being compared by the test
  */
-public abstract class ParamStandardTest<R extends Serializable> extends
-		AbsResultTest<R>
+public abstract class ParamStandardTest<R> extends AbsResultTest<R>
 {
 
 	protected String modelPath;
@@ -89,8 +87,8 @@ public abstract class ParamStandardTest<R extends Serializable> extends
 	}
 
 	/**
-	 * Analyse a model. This method is called during test execution to produce the actual result. It must, of
-	 * course, be overridden to perform whatever analysis the functionality under test performs.<br>
+	 * Analyse a model. This method is called during test execution to produce the actual result. It must, of course, be
+	 * overridden to perform whatever analysis the functionality under test performs.<br>
 	 * <br>
 	 * The output of this method must be of type <code>R</code>, the result type this test runs on. You will will likely
 	 * need to have a conversion method between the output of your analysis and <code>R</code>.

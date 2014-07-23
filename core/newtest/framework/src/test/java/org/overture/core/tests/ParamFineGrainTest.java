@@ -1,7 +1,6 @@
 package org.overture.core.tests;
 
 import java.io.IOException;
-import java.io.Serializable;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +20,7 @@ import org.overture.parser.syntax.ParserException;
  *            the type of result this test operates on
  */
 @RunWith(Parameterized.class)
-abstract public class ParamFineGrainTest<R extends Serializable> extends
+abstract public class ParamFineGrainTest<R> extends
 		AbsResultTest<R>
 {
 
@@ -49,7 +48,7 @@ abstract public class ParamFineGrainTest<R extends Serializable> extends
 	/**
 	 * The main test executor. Takes a VDM source (or any other text file) and processes it according to
 	 * {@link #processSource(String)}. It then reads a saved result via {@link #deSerializeResult(String)}. Finally, the
-	 * two results are compared via {@link #compareResults(Serializable, Serializable)}. <br>
+	 * two results are compared via {@link #compareResults(R, R)}. <br>
 	 * <br>
 	 * If the test is running in update mode, then no comparison will be made and the new result will be saved instead.
 	 * 
