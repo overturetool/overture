@@ -418,5 +418,23 @@ public class VdmSymbolTable implements ISymbolTable
 	{
 		return ",";
 	}
+	
+	@Override
+	public String getCASES()
+	{
+		return "cases";
+	}
+	
+	@Override
+	public String getCOLON()
+	{
+		return ":";
+	}
+	
+	@Override
+	public String getEND()
+	{
+		return "end";
+	}
 
 }

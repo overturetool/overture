@@ -138,5 +138,11 @@ public interface ISymbolTable
 	String getSTRINGDELIM();
 
 	String getCOMMA();
+	
+	String getCASES();
+	
+	String getCOLON();
+	
+	String getEND();
 
 }

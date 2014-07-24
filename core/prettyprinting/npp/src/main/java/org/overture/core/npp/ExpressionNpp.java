@@ -25,7 +25,6 @@ import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.expressions.AIotaExp;
 import org.overture.ast.expressions.ALessEqualNumericBinaryExp;
 import org.overture.ast.expressions.ALessNumericBinaryExp;
-import org.overture.ast.expressions.AMapletExp;
 import org.overture.ast.expressions.AModNumericBinaryExp;
 import org.overture.ast.expressions.ANotEqualBinaryExp;
 import org.overture.ast.expressions.ANotInSetBinaryExp;
@@ -45,8 +44,6 @@ import org.overture.ast.expressions.ASubtractNumericBinaryExp;
 import org.overture.ast.expressions.ATimesNumericBinaryExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.node.INode;
-import org.overture.ast.patterns.PMultipleBind;
-import org.overture.ast.types.ASetType;
 
 class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		implements IPrettyPrinter
@@ -59,7 +56,8 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	private static String space = " ";
 	private static String leftcurly = "{";
 	private static String rightcurly = "}";
-	private String tab = "\t";
+	private static String brtab = "\n\t";
+	private static String brl = "\n";
 
 	public ExpressionNpp(NewPrettyPrinter root, ISymbolTable nst)
 	{
@@ -776,24 +774,39 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		return sb.toString();
 	}
 	
-//	@Override
-//	public String caseACasesExp(ACasesExp node, IndentTracker question)
-//			throws AnalysisException
-//	{
-//		String exp = node.getExpression().apply(THIS, question);
-//		String 
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append(exp);
-//		
-//		while(node.getCases().size() !=0){
-//			
-//			String caselist = node.getCases().poll().apply(THIS, question);
-//			sb.append(caselist);
-//		}
-//		System.out.print(sb.toString());
-//		return null;
-//	}
+	@Override
+	public String caseACasesExp(ACasesExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		String exp = node.getExpression().apply(THIS, question);
+		String op  = mytable.getCASES();
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(op);
+		sb.append(space);
+		
+		sb.append(exp);
+		
+		sb.append(mytable.getCOLON());
+		sb.append(space);
+		
+		while(node.getCases().size() !=0){
+			
+			String caselist = node.getCases().poll().toString();
+			sb.append(brtab);
+			sb.append(caselist);
+			if (node.getCases().size() > 0){
+				sb.append(mytable.getCOMMA());
+			}
+			//sb.append(space);
+		}
+		sb.append(brl);
+		sb.append(mytable.getEND());
+	//	System.out.print(node.getCases().getFirst().toString());
+	//	System.out.print(sb.toString());
+		return sb.toString();
+	}
 	
 	@Override
 	public String caseACharLiteralExp(ACharLiteralExp node,

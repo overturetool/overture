@@ -703,4 +703,10 @@ public class ExpressionNppTest {
 	{
 		aux("iota 1 in set {1, 2} & x = 1", "iota 1 in set {1, 2} & (x = 1)");
 	}
+	
+	@Test
+	public void testCaseACasesExp_01() throws AnalysisException
+	{
+		aux("cases x: \n  1 -> x,\n  2 -> 2*x \nend", "cases x: \n  1 -> x,\n  2 -> (2 * x)\nend");
+	}
 }
