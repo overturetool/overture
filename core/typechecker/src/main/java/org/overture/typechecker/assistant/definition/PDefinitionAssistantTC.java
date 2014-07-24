@@ -387,7 +387,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	public boolean isSubclassResponsibility(PDefinition d)
 	{
-		if (d instanceof AInheritedDefinition)
+		while (d instanceof AInheritedDefinition)
 		{
 			AInheritedDefinition aid = (AInheritedDefinition)d;
 			d = aid.getSuperdef();
