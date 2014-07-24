@@ -8,10 +8,17 @@ import java.util.Vector;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.assistant.definition.PDefinitionAssistant;
+import org.overture.ast.definitions.AExplicitFunctionDefinition;
+import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.definitions.AImplicitFunctionDefinition;
+import org.overture.ast.definitions.AImplicitOperationDefinition;
+import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.expressions.ASubclassResponsibilityExp;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
+import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.PType;
@@ -378,4 +385,35 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 		return new Vector<PDefinition>(noDuplicates);
 	}
 
+	public boolean isSubclassResponsibility(PDefinition d)
+	{
+		if (d instanceof AInheritedDefinition)
+		{
+			AInheritedDefinition aid = (AInheritedDefinition)d;
+			d = aid.getSuperdef();
+		}
+		
+		if (d instanceof AExplicitOperationDefinition)
+		{
+			AExplicitOperationDefinition op = (AExplicitOperationDefinition)d;
+			return op.getBody() instanceof ASubclassResponsibilityStm;
+		}
+		else if (d instanceof AImplicitOperationDefinition)
+		{
+			AImplicitOperationDefinition op = (AImplicitOperationDefinition)d;
+			return op.getBody() instanceof ASubclassResponsibilityStm;
+		}
+		else if (d instanceof AExplicitFunctionDefinition)
+		{
+			AExplicitFunctionDefinition fn = (AExplicitFunctionDefinition)d;
+			return fn.getBody() instanceof ASubclassResponsibilityExp;
+		}
+		else if (d instanceof AImplicitFunctionDefinition)
+		{
+			AImplicitFunctionDefinition fn = (AImplicitFunctionDefinition)d;
+			return fn.getBody() instanceof ASubclassResponsibilityExp;
+		}
+		
+		return false;
+	}
 }

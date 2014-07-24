@@ -8,7 +8,6 @@ import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
-import org.overture.ast.assistant.definition.PDefinitionAssistant;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -198,5 +197,50 @@ public class PDefinitionListAssistantTC
 	{
 		af.createPDefinitionAssistant().setClassDefinition(defs, classDefinition);
 
+	}
+	
+	public boolean hasSubclassResponsibilities(LinkedList<PDefinition> definitions)
+	{
+		PDefinitionAssistantTC assistant = af.createPDefinitionAssistant();
+		
+		for (PDefinition d : definitions)
+		{
+			if (assistant.isSubclassResponsibility(d))
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public void removeDuplicates(LinkedList<PDefinition> definitions)
+	{
+		LinkedList<PDefinition> fixed = new LinkedList<PDefinition>();
+		
+		for (PDefinition d : definitions)
+		{
+			boolean found = false;
+			
+			for (PDefinition e : fixed)
+			{
+				if (e.getName().equals(d.getName()))
+				{
+					found = true;
+					break;
+				}
+			}
+			
+			if (!found)
+			{
+				fixed.add(d);
+			}
+		}
+		
+		if (fixed.size() < definitions.size())
+		{
+			definitions.clear();
+			definitions.addAll(fixed);
+		}
 	}
 }

@@ -259,7 +259,6 @@ public class SClassDefinitionAssistantTC
 		{
 			af.createPDefinitionAssistant().setClassDefinition(invariant, d);
 		}
-
 	}
 
 	private AExplicitOperationDefinition getInvDefinition(
@@ -698,6 +697,10 @@ public class SClassDefinitionAssistantTC
 		{
 			return;
 		}
+		
+		af.createPDefinitionListAssistant().removeDuplicates(c.getLocalInheritedDefinitions());
+		c.setIsAbstract(af.createPDefinitionListAssistant().hasSubclassResponsibilities(
+			c.getLocalInheritedDefinitions()));
 
 		for (PDefinition d : c.getDefinitions())
 		{
