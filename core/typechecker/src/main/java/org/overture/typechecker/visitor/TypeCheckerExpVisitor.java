@@ -2217,7 +2217,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			{
 				if (assistant.isSubclassResponsibility(d))
 				{
-					TypeCheckerErrors.detail("Unimplemented", d.getName().toString() + d.getType());
+					TypeCheckerErrors.detail("Unimplemented", d.getName().getName() + d.getType());
 				}
 			}
 		}
