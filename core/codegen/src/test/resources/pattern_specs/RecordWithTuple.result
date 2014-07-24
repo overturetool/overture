@@ -13,7 +13,7 @@ public class A {
         Number a = null;
         Number b = null;
         Tuple tuplePattern_1 = Utils.clone(recordPattern_1.t);
-        success_1 = tuplePattern_1.size().longValue() == 2L;
+        success_1 = tuplePattern_1.compatible(Number.class, Rec.class);
 
         if (success_1) {
             a = ((Number) tuplePattern_1.get(0));
@@ -22,7 +22,7 @@ public class A {
             success_1 = true;
 
             Tuple tuplePattern_2 = Utils.clone(recordPattern_2.t);
-            success_1 = tuplePattern_2.size().longValue() == 2L;
+            success_1 = tuplePattern_2.compatible(Number.class, Rec.class);
 
             if (success_1) {
                 b = ((Number) tuplePattern_2.get(0));

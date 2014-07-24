@@ -8,7 +8,8 @@ public class A {
     }
 
     public Tuple tuplePatternOp(final Tuple tuplePattern_1) {
-        Boolean success_1 = tuplePattern_1.size().longValue() == 4L;
+        Boolean success_1 = tuplePattern_1.compatible(Number.class,
+                Boolean.class, Character.class, Number.class);
         Number n1 = null;
         Boolean b1 = null;
         Character c1 = null;
@@ -26,7 +27,8 @@ public class A {
         }
 
         Tuple tuplePattern_2 = Tuple.mk_(5L, true, 'g', 2.5);
-        Boolean success_2 = tuplePattern_2.size().longValue() == 4L;
+        Boolean success_2 = tuplePattern_2.compatible(Number.class,
+                Boolean.class, Character.class, Number.class);
         Number n2 = null;
         Boolean b2 = null;
         Character c2 = null;
@@ -47,7 +49,8 @@ public class A {
     }
 
     public static Tuple tuplePatternFun(final Tuple tuplePattern_3) {
-        Boolean success_3 = tuplePattern_3.size().longValue() == 4L;
+        Boolean success_3 = tuplePattern_3.compatible(Number.class,
+                Boolean.class, Character.class, Number.class);
         Number n1 = null;
         Boolean b1 = null;
         Character c1 = null;
@@ -65,7 +68,8 @@ public class A {
         }
 
         Tuple tuplePattern_4 = Tuple.mk_(5L, true, 'g', 2.5);
-        Boolean success_4 = tuplePattern_4.size().longValue() == 4L;
+        Boolean success_4 = tuplePattern_4.compatible(Number.class,
+                Boolean.class, Character.class, Number.class);
         Number n2 = null;
         Boolean b2 = null;
         Character c2 = null;

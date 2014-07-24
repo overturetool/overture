@@ -10,7 +10,7 @@ public class A {
     public static Number recPatternFun() {
         Tuple tuplePattern_1 = Tuple.mk_(1L,
                 new Rec(Tuple.mk_(2L, new Rec(Tuple.mk_(3L, null)))));
-        Boolean success_1 = tuplePattern_1.size().longValue() == 2L;
+        Boolean success_1 = tuplePattern_1.compatible(Number.class, Rec.class);
         Number a = null;
         Number b = null;
         Number c = null;
@@ -22,7 +22,7 @@ public class A {
             success_1 = true;
 
             Tuple tuplePattern_2 = Utils.clone(recordPattern_1.t);
-            success_1 = tuplePattern_2.size().longValue() == 2L;
+            success_1 = tuplePattern_2.compatible(Number.class, Rec.class);
 
             if (success_1) {
                 b = ((Number) tuplePattern_2.get(0));
@@ -31,7 +31,7 @@ public class A {
                 success_1 = true;
 
                 Tuple tuplePattern_3 = Utils.clone(recordPattern_2.t);
-                success_1 = tuplePattern_3.size().longValue() == 2L;
+                success_1 = tuplePattern_3.compatible(Number.class, Rec.class);
 
                 if (success_1) {
                     c = ((Number) tuplePattern_3.get(0));
