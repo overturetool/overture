@@ -423,12 +423,7 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 		casesStmCg.setExp(expCg);
 		casesStmCg.setOthers(othersCg);;
 		
-		for(ACaseAlternativeStm alt : cases)
-		{
-			SStmCG altCg = alt.apply(question.getStmVisitor(), question);
-			casesStmCg.getCases().add((ACaseAltStmStmCG) altCg);
-			
-		}
+		question.getStmAssistant().handleAlternativesCasesStm(question, exp, cases, casesStmCg.getCases());
 		
 		return casesStmCg;
 	}

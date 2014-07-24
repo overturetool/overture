@@ -185,7 +185,7 @@ CG {-> package='org.overture.codegen.cgast'
            ;
            
 #altStm {-> package='org.overture.codegen.cgast.statements'}
-    = {case} [pattern]:CG.#pattern [result]:CG.#stm 
+    = {case} [pattern]:CG.#pattern [result]:CG.#stm [patternType]:CG.#type
     ;
            
 #letBeSt {-> package='org.overture.codegen.cgast.utils'}
@@ -232,12 +232,13 @@ CG {-> package='org.overture.codegen.cgast'
     |	{notImplemented}
     |	{undefined}
     |	{threadId}
+    |	{tupleCompatibility} [tuple]:CG.#exp [types]:CG.#type*
     |	{cases} [exp]:CG.#exp [cases]:CG.#exp.#altExp.case* [others]:CG.#exp
     |	#altExp
     ;
 
 #altExp {-> package='org.overture.codegen.cgast.expressions'}
-    = {case} [pattern]:CG.#pattern [result]:CG.#exp
+    = {case} [pattern]:CG.#pattern [result]:CG.#exp [patternType]:CG.#type
     ;
 
 #RuntimeError {-> package='org.overture.codegen.cgast.expressions'}

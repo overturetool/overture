@@ -550,11 +550,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		casesExpCg.setExp(expCg);
 		casesExpCg.setOthers(othersCg);
 		
-		for(ACaseAlternative alt : cases)
-		{
-			SExpCG altCg = alt.apply(question.getExpVisitor(), question);
-			casesExpCg.getCases().add((ACaseAltExpExpCG) altCg);
-		}
+		question.getExpAssistant().handleAlternativesCasesExp(question, exp, cases, casesExpCg.getCases());
 		
 		return casesExpCg;
 	}
