@@ -60,6 +60,7 @@ import org.overture.typechecker.FlatCheckedEnvironment;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.TypeCheckerErrors;
+import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 import org.overture.typechecker.utilities.type.QualifiedDefinition;
@@ -2200,6 +2201,25 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		{
 			TypeCheckerErrors.report(3279, "Cannot instantiate system class "
 					+ classdef.getName(), node.getLocation(), node);
+		}
+		
+		if (classdef.getIsAbstract())
+		{
+			TypeCheckerErrors.report(3330, "Cannot instantiate abstract class "
+				+ classdef.getName(), node.getLocation(), node);
+			
+			PDefinitionAssistantTC assistant = question.assistantFactory.createPDefinitionAssistant();
+    		List<PDefinition> localDefs = new LinkedList<PDefinition>();
+    		localDefs.addAll(classdef.getDefinitions());
+    		localDefs.addAll(classdef.getLocalInheritedDefinitions());
+			
+			for (PDefinition d: localDefs)
+			{
+				if (assistant.isSubclassResponsibility(d))
+				{
+					TypeCheckerErrors.detail("Unimplemented", d.getName().getName() + d.getType());
+				}
+			}
 		}
 
 		List<PType> argtypes = new LinkedList<PType>();

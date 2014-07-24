@@ -149,10 +149,10 @@ public class LibraryUtil
 					String path = "includes/lib/";
 					if (dialect == Dialect.VDM_SL)
 					{
-						path += "sl/" + lib + ".vdmsl";
+						path += "SL/" + lib + ".vdmsl";
 					} else
 					{
-						path += "pp/" + lib + ".vdmpp";
+						path += "PP/" + lib + ".vdmpp";
 					}
 					copyFile(libFolder, path, lib + "." + extension);
 				}

@@ -62,8 +62,7 @@ public class POContextStack extends Stack<IPOContext> implements
 
 		IPOContext obj = peek();
 		int len = size();
-
-		for (int i = len - 1; i > 0; i--)
+		for (int i = len - 1; i >= 0; i--)
 		{
 			if (!this.get(i).isStateful())
 			{
