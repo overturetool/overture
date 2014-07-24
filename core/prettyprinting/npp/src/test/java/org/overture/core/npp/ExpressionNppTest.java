@@ -679,4 +679,28 @@ public class ExpressionNppTest {
 	{
 		aux("forall x in set y & x = 1", "forall x in set y & (x = 1)");
 	}
+	
+	@Test
+	public void testCaseAIotaExp_01() throws AnalysisException
+	{
+		aux("iota x in set {1, 2} & x = 1", "iota x in set {1, 2} & (x = 1)");
+	}
+	
+	@Test
+	public void testCaseAIotaExp_02() throws AnalysisException
+	{
+		aux("iota x in set y & x = 1", "iota x in set y & (x = 1)");
+	}
+	
+	@Test
+	public void testCaseAIotaExp_03() throws AnalysisException
+	{
+		aux("iota 1 in set y & x = 1", "iota 1 in set y & (x = 1)");
+	}
+	
+	@Test
+	public void testCaseAIotaExp_04() throws AnalysisException
+	{
+		aux("iota 1 in set {1, 2} & x = 1", "iota 1 in set {1, 2} & (x = 1)");
+	}
 }
