@@ -56,6 +56,32 @@ public class Tuple implements ValueType, Comparable
 		return values[i];
 	}
 
+	public boolean compatible(Class... types)
+	{
+		if (this.values.length != types.length)
+		{
+			return false;
+		}
+
+		for (int i = 0; i < this.values.length; i++)
+		{
+			Object toValue = this.values[i];
+			Class type = types[i];
+
+			if (type == null)
+			{
+				return false;
+			}
+
+			if (toValue != null && !(type.isInstance(toValue)))
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+	
 	@Override
 	public boolean equals(Object obj)
 	{
