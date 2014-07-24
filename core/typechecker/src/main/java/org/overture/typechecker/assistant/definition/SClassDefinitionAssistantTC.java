@@ -1,6 +1,7 @@
 package org.overture.typechecker.assistant.definition;
 
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
@@ -698,9 +699,14 @@ public class SClassDefinitionAssistantTC
 			return;
 		}
 		
-		af.createPDefinitionListAssistant().removeDuplicates(c.getLocalInheritedDefinitions());
-		c.setIsAbstract(af.createPDefinitionListAssistant().hasSubclassResponsibilities(
-			c.getLocalInheritedDefinitions()));
+		if (p == Pass.TYPES)	// First one
+		{
+    		List<PDefinition> localDefs = new LinkedList<PDefinition>();
+    		localDefs.addAll(c.getDefinitions());
+    		localDefs.addAll(c.getLocalInheritedDefinitions());
+    		af.createPDefinitionListAssistant().removeDuplicates(localDefs);
+    		c.setIsAbstract(af.createPDefinitionListAssistant().hasSubclassResponsibilities(localDefs));
+		}
 
 		for (PDefinition d : c.getDefinitions())
 		{

@@ -2209,8 +2209,11 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 				+ classdef.getName(), node.getLocation(), node);
 			
 			PDefinitionAssistantTC assistant = question.assistantFactory.createPDefinitionAssistant();
+    		List<PDefinition> localDefs = new LinkedList<PDefinition>();
+    		localDefs.addAll(classdef.getDefinitions());
+    		localDefs.addAll(classdef.getLocalInheritedDefinitions());
 			
-			for (PDefinition d: classdef.getLocalInheritedDefinitions())
+			for (PDefinition d: localDefs)
 			{
 				if (assistant.isSubclassResponsibility(d))
 				{

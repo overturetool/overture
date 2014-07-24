@@ -199,7 +199,7 @@ public class PDefinitionListAssistantTC
 
 	}
 	
-	public boolean hasSubclassResponsibilities(LinkedList<PDefinition> definitions)
+	public boolean hasSubclassResponsibilities(List<PDefinition> definitions)
 	{
 		PDefinitionAssistantTC assistant = af.createPDefinitionAssistant();
 		
@@ -214,7 +214,7 @@ public class PDefinitionListAssistantTC
 		return false;
 	}
 	
-	public void removeDuplicates(LinkedList<PDefinition> definitions)
+	public void removeDuplicates(List<PDefinition> definitions)
 	{
 		LinkedList<PDefinition> fixed = new LinkedList<PDefinition>();
 		
@@ -224,7 +224,7 @@ public class PDefinitionListAssistantTC
 			
 			for (PDefinition e : fixed)
 			{
-				if (e.getName().equals(d.getName()))
+				if (e.getName() != null && e.getName().equals(d.getName()))
 				{
 					found = true;
 					break;
