@@ -308,7 +308,13 @@ operations
   -- implementing the abstract run operation 
   public run: TestResult ==> ()
   run (ptr) ==for ptst in fTests do ptst.run(ptr);
-     
+
+  public runOnly: seq of char * TestResult ==> ()
+  runOnly (name,ptr) ==
+  for ptst in fTests do
+  if ptst.getName() = name then
+	ptst.run(ptr);
+  
   public run: Test * TestResult ==> ()
   run (test, ptr) == test.run(ptr);
       
