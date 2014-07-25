@@ -24,6 +24,10 @@
 --
 -- Running the tests:
 -- Option 1.
+-- Use the automated reflection search to find Test classes.
+--  new TestRunner().run()
+--
+-- Option 2.
 -- Use the automated reflection search to find test operations.
 --  All operations must begin with "test".
 --  Usage:
@@ -36,7 +40,7 @@
 --          IO`print(result.toString());
 --      );
 --
--- Option 2.
+-- Option 3.
 -- Use explicit definition to call tests.
 --  All test cases must *override* the operation 
 --      "protected runTest : () ==> ()"
@@ -65,6 +69,27 @@ end Throwable
 -- forward definition of java.lang.Error
 -- do not code generate (but import from Java library)
 class Error is subclass of Throwable
+
+instance variables
+  protected fMessage : seq of char := []
+  
+operations
+  public Error: () ==> Error
+  Error () == skip;
+  
+  public Error: seq of char ==> Error
+  Error (pmessage) == fMessage := pmessage;
+
+  public hasMessage: () ==> bool
+  hasMessage () == return len fMessage > 0;
+    
+  public getMessage: () ==> seq of char
+  getMessage () == return fMessage
+    pre len fMessage > 0;--hasMessage()
+
+
+  public static throw: seq of char ==> ()
+  throw (pmessage) == exit new Error(pmessage)
 end Error
 
 --
@@ -73,23 +98,13 @@ end Error
 
 class AssertionFailedError is subclass of Error
 
-instance variables
-  fMessage : seq of char := []
-  
 operations
   public AssertionFailedError: () ==> AssertionFailedError
   AssertionFailedError () == skip;
   
   public AssertionFailedError: seq of char ==> AssertionFailedError
   AssertionFailedError (pmessage) == fMessage := pmessage;
-
-  public hasMessage: () ==> bool
-  hasMessage () == return len fMessage > 0;
-    
-  public getMessage: () ==> seq of char
-  getMessage () == return fMessage
-    pre len fMessage > 0--hasMessage()
-    
+   
 end AssertionFailedError
 
 --
@@ -367,7 +382,7 @@ class TestResult
 
 types
   private InternalError :: tcname : seq of char
-                           except : Throwable
+                           except : Error
                    
 instance variables
   -- keep track of assertions failed
@@ -484,7 +499,7 @@ operations
     tmp := tmp^"\n|";
 
     for all i in set inds fErrors do
-        tmp := tmp^"\n| "^fErrors(i).tcname;
+        tmp := tmp^"\n| Error in test "^fErrors(i).tcname^" "^fErrors(i).except.getMessage();
  
     tmp := tmp^"\n|--------------------------------------|\n";
 
@@ -521,3 +536,24 @@ GetStringFromNum(val) == ["0123456789"(val+1)]
 pre val < 10;
   
 end TestResult  
+
+
+
+class TestRunner
+
+operations
+public run : () ==> ()
+run() ==
+      let tests : set of Test = collectTests(new TestRunner()),
+          ts : TestSuite = new TestSuite(tests),
+          result : TestResult = new TestResult()
+      in
+      (
+          ts.run(result);
+          IO`print(result.toString());
+      );
+
+collectTests : TestRunner ==> set of Test
+collectTests(obj) == is not yet specified;
+
+end TestRunner
