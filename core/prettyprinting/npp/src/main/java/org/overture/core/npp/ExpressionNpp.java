@@ -40,12 +40,15 @@ import org.overture.ast.expressions.ASetCompSetExp;
 import org.overture.ast.expressions.ASetDifferenceBinaryExp;
 import org.overture.ast.expressions.ASetEnumSetExp;
 import org.overture.ast.expressions.ASetIntersectBinaryExp;
+import org.overture.ast.expressions.ASetRangeSetExp;
 import org.overture.ast.expressions.ASetUnionBinaryExp;
 import org.overture.ast.expressions.ASubsetBinaryExp;
 import org.overture.ast.expressions.ASubtractNumericBinaryExp;
 import org.overture.ast.expressions.ATimesNumericBinaryExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.node.INode;
+import org.overture.ast.patterns.ASetBind;
+import org.overture.ast.patterns.ASetMultipleBind;
 
 class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		implements IPrettyPrinter
@@ -661,7 +664,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		sb.append(exp);
 		sb.append(bar);
 		while(node.getBindings().size() != 0){
-			sb.append(node.getBindings().poll().toString());
+			sb.append(node.getBindings().poll().apply(THIS, question));
 		}
 		sb.append(space);
 		sb.append(mytable.getPRED());
@@ -669,6 +672,57 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		sb.append(pred);
 		sb.append(rightcurly);
 		
+		return sb.toString();
+	}
+	@Override
+	public String caseASetRangeSetExp(ASetRangeSetExp node,
+			IndentTracker question) throws AnalysisException
+	{
+		String start = node.getFirst().apply(THIS, question);
+		String finish = node.getLast().apply(THIS, question);
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(leftcurly);
+		sb.append(start);
+		sb.append(mytable.getCOMMA());
+		sb.append(space);
+		sb.append(mytable.getRANGE());
+		sb.append(mytable.getCOMMA());
+		sb.append(space);
+		sb.append(finish);
+		sb.append(rightcurly);
+		
+		return sb.toString();
+	}
+	@Override
+	public String caseASetMultipleBind(ASetMultipleBind node,
+			IndentTracker question) throws AnalysisException
+	{
+		StringBuilder sb = new StringBuilder();
+		while (node.getPlist().size() != 0){
+			sb.append(node.getPlist().poll().toString());
+		}
+		sb.append(space);
+		sb.append(mytable.getINSET());
+		sb.append(space);
+		sb.append(node.getSet().apply(THIS, question));
+		
+		return sb.toString();
+	}
+//	@Override
+	public String caseASetBind(ASetBind node, IndentTracker question)
+			throws AnalysisException
+	{
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(node.getPattern().toString());
+		sb.append(space);
+		sb.append(mytable.getINSET());
+		sb.append(space);
+		sb.append(node.getSet().apply(THIS, question));
+		
+		//System.out.print(sb.toString());
 		return sb.toString();
 	}
 	
@@ -685,14 +739,14 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		
 		while (node.getBindList().size() != 0){
 			if (node.getBindList().size() > 1){
-				String binding = node.getBindList().getFirst().toString();
+				String binding = node.getBindList().getFirst().apply(THIS, question);
 				sb.append(binding);
 				sb.append(mytable.getCOMMA());
 				sb.append(space);
 				node.getBindList().removeFirst();
 			}
 			else{
-				String binding = node.getBindList().getFirst().toString();
+				String binding = node.getBindList().getFirst().apply(THIS, question);
 		
 				sb.append(binding);
 		
@@ -716,8 +770,8 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	public String caseAExists1Exp(AExists1Exp node, IndentTracker question)
 			throws AnalysisException
 	{
-		//String binding = node.getBind().apply(THIS, question);
-		String binding = node.getBind().toString();
+		//String binding = node.getBind().toString();
+		String binding = node.getBind().apply(THIS, question);
 		String pred = node.getPredicate().apply(THIS, question);
 		String op = mytable.getEXISTS1();
 		
@@ -747,7 +801,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		
 		while(node.getBindList().size() !=0){
 			if(node.getBindList().size() >1){
-				String binding = node.getBindList().getFirst().toString();
+				String binding = node.getBindList().getFirst().apply(THIS, question);
 				sb.append(binding);
 				sb.append(mytable.getCOMMA());
 				sb.append(space);
@@ -781,7 +835,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	public String caseAIotaExp(AIotaExp node, IndentTracker question)
 			throws AnalysisException
 	{
-		String binding = node.getBind().toString();
+		String binding = node.getBind().apply(THIS, question);
 		String pred = node.getPredicate().apply(THIS, question);
 		String op = mytable.getIOTA();
 		

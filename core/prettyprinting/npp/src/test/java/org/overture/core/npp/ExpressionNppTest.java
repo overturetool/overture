@@ -740,4 +740,10 @@ public class ExpressionNppTest {
 	{
 		aux("{x|x in set y & x < 'z'}", "{x|x in set y & (x < 'z')}");
 	}
+	
+	@Test
+	public void testCasesAInSetExp_01() throws AnalysisException
+	{
+		aux("{1, ..., 4}", "{1, ..., 4}");
+	}
 }
