@@ -716,4 +716,28 @@ public class ExpressionNppTest {
 		aux("cases x: \n 1 -> x,\n 2 -> 2*x, others -> 3*x \nend", 
 			"cases x: \n  1 -> x,\n  2 -> (2 * x),\n  others -> (3 * x)\nend");
 	}
+	
+	@Test
+	public void testCasesASetCompExp_01() throws AnalysisException
+	{
+		aux("{x|x in set {1, 2} & x = true}", "{x|x in set {1, 2} & (x = true)}");
+	}
+	
+	@Test
+	public void testCasesASetCompExp_02() throws AnalysisException
+	{
+		aux("{x|x in set {1, 2} & x > 1}", "{x|x in set {1, 2} & (x > 1)}");
+	}
+	
+	@Test
+	public void testCasesASetCompExp_03() throws AnalysisException
+	{
+		aux("{x|x in set y & x <> true}", "{x|x in set y & (x <> true)}");
+	}
+	
+	@Test
+	public void testCasesASetCompExp_04() throws AnalysisException
+	{
+		aux("{x|x in set y & x < 'z'}", "{x|x in set y & (x < 'z')}");
+	}
 }

@@ -19,6 +19,7 @@ import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.AForAllExp;
 import org.overture.ast.expressions.AGreaterEqualNumericBinaryExp;
 import org.overture.ast.expressions.AGreaterNumericBinaryExp;
+import org.overture.ast.expressions.AIfExp;
 import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.AInSetBinaryExp;
 import org.overture.ast.expressions.AIntLiteralExp;
@@ -35,6 +36,7 @@ import org.overture.ast.expressions.AProperSubsetBinaryExp;
 import org.overture.ast.expressions.AQuoteLiteralExp;
 import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.ARemNumericBinaryExp;
+import org.overture.ast.expressions.ASetCompSetExp;
 import org.overture.ast.expressions.ASetDifferenceBinaryExp;
 import org.overture.ast.expressions.ASetEnumSetExp;
 import org.overture.ast.expressions.ASetIntersectBinaryExp;
@@ -56,6 +58,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	private static String space = " ";
 	private static String leftcurly = "{";
 	private static String rightcurly = "}";
+	private static String bar = "|";
 	private static String brtab = "\n\t";
 	private static String brl = "\n";
 
@@ -646,6 +649,30 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	}
 	
 	@Override
+	public String caseASetCompSetExp(ASetCompSetExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		String exp = node.getFirst().apply(THIS, question);
+
+		String pred = node.getPredicate().apply(THIS, question);
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(leftcurly);
+		sb.append(exp);
+		sb.append(bar);
+		while(node.getBindings().size() != 0){
+			sb.append(node.getBindings().poll().toString());
+		}
+		sb.append(space);
+		sb.append(mytable.getPRED());
+		sb.append(space);
+		sb.append(pred);
+		sb.append(rightcurly);
+		
+		return sb.toString();
+	}
+	
+	@Override
 	public String caseAExistsExp(AExistsExp node, IndentTracker question)
 			throws AnalysisException
 	{
@@ -821,6 +848,14 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		sb.append(mytable.getEND());
 		
 		return sb.toString();
+	}
+	
+	@Override
+	public String caseAIfExp(AIfExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		String test = node.getTest().apply(THIS, question);
+		return test;
 	}
 	
 	@Override
