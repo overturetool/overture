@@ -177,7 +177,12 @@ operations
     (
         result.run(self);
     );
-
+	
+	public runOnly: seq of char * TestResult ==> ()
+	runOnly (name,result) ==
+	if name = getName() then
+		result.run(self);
+		
     protected createResult : () ==> TestResult
     createResult() == return new TestResult();
  
