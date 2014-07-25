@@ -80,7 +80,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String op = mytable.getPLUS();
 
 		StringBuilder sb = new StringBuilder();
-
+		
 		sb.append(l);
 		sb.append(space);
 		sb.append(op);
@@ -794,17 +794,32 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		while(node.getCases().size() !=0){
 			
 			String caselist = node.getCases().poll().toString();
+			
 			sb.append(brtab);
 			sb.append(caselist);
 			if (node.getCases().size() > 0){
 				sb.append(mytable.getCOMMA());
 			}
+			
 			//sb.append(space);
+		}
+		if (node.getOthers() != null)
+		{
+			
+			sb.append(mytable.getCOMMA());
+			sb.append(brtab);
+			sb.append(mytable.getOTHERS());
+			sb.append(space);
+			
+			sb.append(mytable.getMINUS());
+			sb.append(mytable.getGT());
+			sb.append(space);
+			
+			sb.append(node.getOthers().apply(THIS, question));
 		}
 		sb.append(brl);
 		sb.append(mytable.getEND());
-	//	System.out.print(node.getCases().getFirst().toString());
-	//	System.out.print(sb.toString());
+		
 		return sb.toString();
 	}
 	

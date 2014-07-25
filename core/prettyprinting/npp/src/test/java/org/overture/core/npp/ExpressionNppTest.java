@@ -709,4 +709,11 @@ public class ExpressionNppTest {
 	{
 		aux("cases x: \n  1 -> x,\n  2 -> 2*x \nend", "cases x: \n  1 -> x,\n  2 -> (2 * x)\nend");
 	}
+	
+	@Test
+	public void testCaseACasesExp_02() throws AnalysisException
+	{
+		aux("cases x: \n 1 -> x,\n 2 -> 2*x, others -> 3*x \nend", 
+			"cases x: \n  1 -> x,\n  2 -> (2 * x),\n  others -> (3 * x)\nend");
+	}
 }

@@ -144,5 +144,7 @@ public interface ISymbolTable
 	String getCOLON();
 	
 	String getEND();
+	
+	String getOTHERS();
 
 }

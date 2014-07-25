@@ -436,5 +436,11 @@ public class VdmSymbolTable implements ISymbolTable
 	{
 		return "end";
 	}
+	
+	@Override
+	public String getOTHERS()
+	{
+		return "others";
+	}
 
 }
