@@ -28,7 +28,7 @@ import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.APatternMatchRuntimeErrorExpCG;
 import org.overture.codegen.cgast.expressions.AQuoteLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
-import org.overture.codegen.cgast.expressions.ATupleSizeExpCG;
+import org.overture.codegen.cgast.expressions.ATupleCompatibilityExpCG;
 import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
 import org.overture.codegen.cgast.patterns.ABoolPatternCG;
 import org.overture.codegen.cgast.patterns.ACharPatternCG;
@@ -50,7 +50,6 @@ import org.overture.codegen.cgast.statements.ARaiseErrorStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AErrorTypeCG;
-import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
@@ -433,6 +432,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 
 	}
 
+	@SuppressWarnings("unchecked")
 	private ABlockStmCG consTuplePatternCheck(boolean declarePatternVar,
 			ATuplePatternCG tuplePattern, ATupleTypeCG tupleType, PatternBlockData patternData,
 			SExpCG actualValue)
@@ -446,25 +446,18 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		tuplePatternVar.setOriginal(idPattern.getName());
 		tuplePatternVar.setIsLambda(false);
 		
-		ATupleSizeExpCG tupleSize = new ATupleSizeExpCG();
-		tupleSize.setType(new AIntNumericBasicTypeCG());
-		tupleSize.setTuple(tuplePatternVar);
+		ATupleCompatibilityExpCG tupleCheck = new ATupleCompatibilityExpCG();
+		tupleCheck.setType(new ABoolBasicTypeCG());
+		tupleCheck.setTuple(tuplePatternVar.clone());
+		tupleCheck.setTypes((List<? extends STypeCG>) tupleType.getTypes().clone());
 		
-		AEqualsBinaryExpCG fieldSizeComp = new AEqualsBinaryExpCG();
-		fieldSizeComp.setType(new ABoolBasicTypeCG());
-		fieldSizeComp.setLeft(tupleSize);
-		fieldSizeComp.setRight(info.getExpAssistant().consIntLiteral(tupleType.getTypes().size()));
-
 		if(patternData.getSuccessVarDecl() == null)
 		{
 			consSuccessVarCheck(tuplePattern, patternData);
 		}
 		
-		initSuccessVar(patternData, fieldSizeComp, tuplePatternBlock);
+		initSuccessVar(patternData, tupleCheck, tuplePatternBlock);
 		
-		//First, the tuple pattern check requires the right number of fields
-		//success_2 = tuplePattern_2.size().longValue() == 3L;
-		//if (success_2) { ... }
 		LinkedList<SPatternCG> patterns = tuplePattern.getPatterns();
 		LinkedList<STypeCG> types = tupleType.getTypes();
 		
@@ -768,9 +761,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 
 		for(ACaseAltStmStmCG alt : cases)
 		{
-			SPatternCG pattern = alt.getPattern();
-			
-			patternInfo.add(new PatternInfo(exp.getType(), pattern, exp));
+			patternInfo.add(new PatternInfo(alt.getPatternType(), alt.getPattern(), exp));
 		}
 		
 		return patternInfo;

@@ -438,6 +438,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 			ACaseAltStmStmCG altStm = new ACaseAltStmStmCG();
 			altStm.setPattern(altExp.getPattern().clone());
 			altStm.setResult(assignToVar(resultVar, altExp.getResult()));
+			altStm.setPatternType(altExp.getPatternType().clone());
 			
 			casesStm.getCases().add(altStm);
 		}

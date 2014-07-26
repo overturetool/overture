@@ -31,7 +31,8 @@ public class Entry {
         Number casesExpResult_1 = null;
 
         Tuple tuplePattern_1 = Utils.clone(t);
-        Boolean success_1 = tuplePattern_1.size().longValue() == 3L;
+        Boolean success_1 = tuplePattern_1.compatible(Number.class,
+                Number.class, Number.class);
 
         if (success_1) {
             Number intPattern_1 = ((Number) tuplePattern_1.get(0));
@@ -51,7 +52,8 @@ public class Entry {
         if (!(success_1)) {
             Tuple tuplePattern_2 = Utils.clone(t);
             Number a = null;
-            success_1 = tuplePattern_2.size().longValue() == 3L;
+            success_1 = tuplePattern_2.compatible(Number.class, Number.class,
+                    Number.class);
 
             if (success_1) {
                 a = ((Number) tuplePattern_2.get(0));
@@ -64,7 +66,8 @@ public class Entry {
                 Tuple tuplePattern_3 = Utils.clone(t);
                 Number b = null;
                 Number c = null;
-                success_1 = tuplePattern_3.size().longValue() == 3L;
+                success_1 = tuplePattern_3.compatible(Number.class,
+                        Number.class, Number.class);
 
                 if (success_1) {
                     Number intPattern_5 = ((Number) tuplePattern_3.get(0));
@@ -78,7 +81,8 @@ public class Entry {
 
                 if (!(success_1)) {
                     Tuple tuplePattern_4 = Utils.clone(t);
-                    success_1 = tuplePattern_4.size().longValue() == 3L;
+                    success_1 = tuplePattern_4.compatible(Number.class,
+                            Number.class, Number.class);
 
                     if (success_1) {
                     }

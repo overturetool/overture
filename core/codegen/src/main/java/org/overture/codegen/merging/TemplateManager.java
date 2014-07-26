@@ -106,6 +106,7 @@ import org.overture.codegen.cgast.expressions.ATailUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
 import org.overture.codegen.cgast.expressions.AThreadIdExpCG;
 import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ATupleCompatibilityExpCG;
 import org.overture.codegen.cgast.expressions.ATupleExpCG;
 import org.overture.codegen.cgast.expressions.ATupleSizeExpCG;
 import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
@@ -118,6 +119,7 @@ import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectStmCG;
 import org.overture.codegen.cgast.statements.ACallStmCG;
 import org.overture.codegen.cgast.statements.ADecrementStmCG;
+import org.overture.codegen.cgast.statements.AErrorStmCG;
 import org.overture.codegen.cgast.statements.AFieldObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AFieldStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AForAllStmCG;
@@ -304,6 +306,8 @@ public class TemplateManager
 		
 		nodeTemplateFileNames.put(ARaiseErrorStmCG.class, templateStructure.STM_PATH + "RaiseError");
 		
+		nodeTemplateFileNames.put(AErrorStmCG.class, templateStructure.STM_PATH + "Error");
+		
 		// Expressions
 		
 		nodeTemplateFileNames.put(AApplyExpCG.class, templateStructure.EXP_PATH + "Apply");
@@ -349,6 +353,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(ANotImplementedExpCG.class, templateStructure.EXP_PATH + "NotImplemented");
 		
 		nodeTemplateFileNames.put(AUndefinedExpCG.class, templateStructure.EXP_PATH + "Undefined");
+		
+		nodeTemplateFileNames.put(ATupleCompatibilityExpCG.class, templateStructure.EXP_PATH + "TupleCompatibility");
 		
 		nodeTemplateFileNames.put(AThreadIdExpCG.class, templateStructure.EXP_PATH + "ThreadId");
 		
