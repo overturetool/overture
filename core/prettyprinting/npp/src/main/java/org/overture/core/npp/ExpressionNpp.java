@@ -37,6 +37,7 @@ import org.overture.ast.expressions.AProperSubsetBinaryExp;
 import org.overture.ast.expressions.AQuoteLiteralExp;
 import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.ARemNumericBinaryExp;
+import org.overture.ast.expressions.ASeqEnumSeqExp;
 import org.overture.ast.expressions.ASetCompSetExp;
 import org.overture.ast.expressions.ASetDifferenceBinaryExp;
 import org.overture.ast.expressions.ASetEnumSetExp;
@@ -852,6 +853,13 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		sb.append(pred);
 		
 		return sb.toString();
+	}
+	
+	@Override
+	public String caseASeqEnumSeqExp(ASeqEnumSeqExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		return node.toString();
 	}
 	
 	@Override
