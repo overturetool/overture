@@ -754,8 +754,14 @@ public class ExpressionNppTest {
 	}
 	
 	@Test
-	public void testCaseASeqEnumExp_02() throws AnalysisException
+	public void testCasesASeqEnumExp_02() throws AnalysisException
 	{
 		aux("[[1,2],[2]]", "[[1, 2], [2]]");
+	}
+	
+	@Test
+	public void testCasesASeqCompExp_01() throws AnalysisException
+	{
+		aux("[x| x in set {1, 2} & i < 3]", "[x |x in set {1, 2} & (i < 3)]");
 	}
 }

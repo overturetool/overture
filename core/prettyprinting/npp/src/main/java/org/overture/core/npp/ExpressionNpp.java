@@ -1,7 +1,5 @@
 package org.overture.core.npp;
 
-import javax.rmi.CORBA.Util;
-
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.expressions.AAbsoluteUnaryExp;
@@ -37,6 +35,7 @@ import org.overture.ast.expressions.AProperSubsetBinaryExp;
 import org.overture.ast.expressions.AQuoteLiteralExp;
 import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.ARemNumericBinaryExp;
+import org.overture.ast.expressions.ASeqCompSeqExp;
 import org.overture.ast.expressions.ASeqEnumSeqExp;
 import org.overture.ast.expressions.ASetCompSetExp;
 import org.overture.ast.expressions.ASetDifferenceBinaryExp;
@@ -63,6 +62,8 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	private static String space = " ";
 	private static String leftcurly = "{";
 	private static String rightcurly = "}";
+	private static String leftsq = "[";
+	private static String rightsq = "]";
 	private static String bar = "|";
 	private static String brtab = "\n\t";
 	private static String brl = "\n";
@@ -860,6 +861,33 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 			throws AnalysisException
 	{
 		return node.toString();
+	}
+	
+	@Override
+	public String caseASeqCompSeqExp(ASeqCompSeqExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		String exp = node.getFirst().apply(THIS, question);
+		String bind = node.getSetBind().apply(THIS, question);
+		String pred = node.getPredicate().apply(THIS, question);
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(leftsq);
+		sb.append(exp);
+		sb.append(space);
+		sb.append(bar);
+		
+		sb.append(bind);
+		sb.append(space);
+		
+		sb.append(mytable.getPRED());
+		sb.append(space);
+		sb.append(pred);
+		sb.append(rightsq);
+		//System.out.print(sb.toString());
+		return sb.toString();
+		
 	}
 	
 	@Override
