@@ -74,7 +74,7 @@ public class Account {
     }
 
     public Account Create(final VDMMap cs, final Number b) {
-        cards = cs.clone();
+        cards = Utils.clone(cs);
         balance = b;
 
         return this;
@@ -89,12 +89,12 @@ public class Account {
         Transaction transaction = new Transaction(date, cardId, amount);
 
         if (((balance.longValue() - amount.longValue()) >= 0L) &&
-                (DateTotal(date.clone(),
-                    SeqUtil.conc(transactions.clone(),
-                        SeqUtil.seq(transaction.clone()))).longValue() <= dailyLimit.longValue())) {
+                (DateTotal(Utils.clone(date),
+                    SeqUtil.conc(Utils.clone(transactions),
+                        SeqUtil.seq(Utils.clone(transaction)))).longValue() <= dailyLimit.longValue())) {
             balance = balance.longValue() - amount.longValue();
-            transactions = SeqUtil.conc(transactions.clone(),
-                    SeqUtil.seq(transaction.clone()));
+            transactions = SeqUtil.conc(Utils.clone(transactions),
+                    SeqUtil.seq(Utils.clone(transaction)));
 
             return true;
         } else {
@@ -107,20 +107,21 @@ public class Account {
         VDMSeq addr = ((Cardholder) cards.get(cardId)).GetAddress();
         Letter letter = new Letter();
 
-        return letter.Create(nm.clone(), addr.clone(), date.clone(),
-            transactions.clone(), balance);
+        return letter.Create(Utils.clone(nm), Utils.clone(addr),
+            Utils.clone(date), Utils.clone(transactions), balance);
     }
 
     public VDMSet GetCardIds() {
-        return MapUtil.dom(cards.clone());
+        return MapUtil.dom(Utils.clone(cards));
     }
 
     public void AddCard(final Number cId, final Cardholder ch) {
-        cards = MapUtil.munion(cards.clone(), MapUtil.map(new Maplet(cId, ch)));
+        cards = MapUtil.munion(Utils.clone(cards),
+                MapUtil.map(new Maplet(cId, ch)));
     }
 
     public void RemoveCard(final Number cId) {
-        cards = MapUtil.domResBy(SetUtil.set(cId), cards.clone());
+        cards = MapUtil.domResBy(SetUtil.set(cId), Utils.clone(cards));
     }
 
     private static Boolean TransactionsInvariant(final VDMSeq ts) {
@@ -129,18 +130,19 @@ public class Account {
 
         for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext();) {
             Number i = ((Number) iterator_2.next());
-            setCompResult_1 = SetUtil.union(setCompResult_1.clone(),
-                    SetUtil.set(
-                        ((Transaction) ts.get(Utils.index(i))).date.clone()));
+            setCompResult_1 = SetUtil.union(Utils.clone(setCompResult_1),
+                    SetUtil.set(Utils.clone(
+                            ((Transaction) ts.get(Utils.index(i))).date)));
         }
 
         Boolean forAllExpResult_1 = true;
-        VDMSet set_1 = setCompResult_1.clone();
+        VDMSet set_1 = Utils.clone(setCompResult_1);
 
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && forAllExpResult_1;) {
             VDMSeq date = ((VDMSeq) iterator_1.next());
-            forAllExpResult_1 = DateTotal(date.clone(), ts.clone()).longValue() <= dailyLimit.longValue();
+            forAllExpResult_1 = DateTotal(Utils.clone(date), Utils.clone(ts))
+                                    .longValue() <= dailyLimit.longValue();
         }
 
         return forAllExpResult_1;
@@ -154,13 +156,13 @@ public class Account {
             Number i = ((Number) iterator_3.next());
 
             if (SeqUtil.equals(((Transaction) ts.get(Utils.index(i))).date, date)) {
-                seqCompResult_1 = SeqUtil.conc(seqCompResult_1.clone(),
+                seqCompResult_1 = SeqUtil.conc(Utils.clone(seqCompResult_1),
                         SeqUtil.seq(
                             ((Transaction) ts.get(Utils.index(i))).amount));
             }
         }
 
-        return Sum(seqCompResult_1.clone());
+        return Sum(Utils.clone(seqCompResult_1));
     }
 
     private static Number Sum(final VDMSeq rs) {
@@ -168,7 +170,7 @@ public class Account {
             return 0L;
         } else {
             return ((Number) rs.get(0)).doubleValue() +
-            Sum(SeqUtil.tail(rs.clone())).doubleValue();
+            Sum(SeqUtil.tail(Utils.clone(rs))).doubleValue();
         }
     }
 
@@ -179,7 +181,7 @@ public class Account {
 
         public Transaction(final VDMSeq _date, final Number _cardId,
             final Number _amount) {
-            date = (_date != null) ? _date.clone() : null;
+            date = (_date != null) ? Utils.clone(_date) : null;
             cardId = _cardId;
             amount = _amount;
         }
@@ -222,12 +224,16 @@ public class Card {
     private Number accountId;
 
     public Card(final Number c, final Number cid, final Number a) {
-        code = c;
-        cardId = cid;
-        accountId = a;
+        cg_init_Card_1(c, cid, a);
     }
 
     public Card() {
+    }
+
+    public void cg_init_Card_1(final Number c, final Number cid, final Number a) {
+        code = c;
+        cardId = cid;
+        accountId = a;
     }
 
     public Number GetCode() {
@@ -257,18 +263,18 @@ public class Cardholder {
     }
 
     public Cardholder Create(final VDMSeq nm, final VDMSeq addr) {
-        name = nm.clone();
-        address = addr.clone();
+        name = Utils.clone(nm);
+        address = Utils.clone(addr);
 
         return this;
     }
 
     public VDMSeq GetName() {
-        return name.clone();
+        return Utils.clone(name);
     }
 
     public VDMSeq GetAddress() {
-        return address.clone();
+        return Utils.clone(address);
     }
 }
 
@@ -295,7 +301,7 @@ public class CentralResource {
     }
 
     public Number GetBalance(final Number accountId) {
-        if (MapUtil.dom(accounts.clone()).contains(accountId)) {
+        if (MapUtil.dom(Utils.clone(accounts)).contains(accountId)) {
             return ((Account) accounts.get(accountId)).GetBalance();
         } else {
             return null;
@@ -325,7 +331,7 @@ public class CentralResource {
 
     public Boolean IsLegalCard(final Number accountId, final Number cardId) {
         return !(illegalCards.contains(cardId)) &&
-        MapUtil.dom(accounts.clone()).contains(accountId) &&
+        MapUtil.dom(Utils.clone(accounts)).contains(accountId) &&
         ((Account) accounts.get(accountId)).GetCardIds().contains(cardId);
     }
 
@@ -343,7 +349,7 @@ public class CentralResource {
     }
 
     public void AddAccount(final Number accId, final Account acc) {
-        accounts = MapUtil.override(accounts.clone(),
+        accounts = MapUtil.override(Utils.clone(accounts),
                 MapUtil.map(new Maplet(accId, acc)));
 
         VDMMap mapCompResult_1 = MapUtil.map();
@@ -351,16 +357,16 @@ public class CentralResource {
 
         for (Iterator iterator_4 = set_4.iterator(); iterator_4.hasNext();) {
             Number cId = ((Number) iterator_4.next());
-            mapCompResult_1 = MapUtil.munion(mapCompResult_1.clone(),
+            mapCompResult_1 = MapUtil.munion(Utils.clone(mapCompResult_1),
                     MapUtil.map(new Maplet(cId, 0L)));
         }
 
-        numberOfTries = MapUtil.override(numberOfTries.clone(),
-                mapCompResult_1.clone());
+        numberOfTries = MapUtil.override(Utils.clone(numberOfTries),
+                Utils.clone(mapCompResult_1));
     }
 
     public void AddIllegalCard(final Number cId) {
-        illegalCards = SetUtil.union(illegalCards.clone(), SetUtil.set(cId));
+        illegalCards = SetUtil.union(Utils.clone(illegalCards), SetUtil.set(cId));
     }
 }
 
@@ -377,11 +383,11 @@ public class Clock {
     }
 
     public void SetDate(final VDMSeq d) {
-        date = d.clone();
+        date = Utils.clone(d);
     }
 
     public VDMSeq GetDate() {
-        return date.clone();
+        return Utils.clone(date);
     }
 }
 
@@ -403,10 +409,10 @@ public class Letter {
 
     public Letter Create(final VDMSeq nm, final VDMSeq addr, final VDMSeq d,
         final VDMSeq ts, final Number b) {
-        name = nm.clone();
-        address = addr.clone();
-        date = d.clone();
-        transactions = ts.clone();
+        name = Utils.clone(nm);
+        address = Utils.clone(addr);
+        date = Utils.clone(d);
+        transactions = Utils.clone(ts);
         balance = b;
 
         return this;
@@ -426,7 +432,7 @@ public class Letterbox {
     }
 
     public void PostStatement(final Letter letter) {
-        statements = SeqUtil.conc(statements.clone(), SeqUtil.seq(letter));
+        statements = SeqUtil.conc(Utils.clone(statements), SeqUtil.seq(letter));
     }
 
     public Letter GetLastStatement() {
@@ -449,10 +455,14 @@ public class Till {
     private CentralResource resource;
 
     public Till(final CentralResource res) {
-        resource = res;
+        cg_init_Till_1(res);
     }
 
     public Till() {
+    }
+
+    public void cg_init_Till_1(final CentralResource res) {
+        resource = res;
     }
 
     public void InsertCard(final Card c) {
@@ -466,7 +476,7 @@ public class Till {
         cardOk = codeOk && cardLegal;
 
         if (!(cardLegal)) {
-            retainedCards = SetUtil.union(retainedCards.clone(),
+            retainedCards = SetUtil.union(Utils.clone(retainedCards),
                     SetUtil.set(curCard));
             curCard = null;
 
@@ -477,7 +487,7 @@ public class Till {
             resource.IncrNumberOfTries(cardId);
 
             if (resource.NumberOfTriesExceeded(cardId)) {
-                retainedCards = SetUtil.union(retainedCards.clone(),
+                retainedCards = SetUtil.union(Utils.clone(retainedCards),
                         SetUtil.set(curCard));
                 cardOk = false;
                 curCard = null;
@@ -706,6 +716,18 @@ public class System {
     private Letterbox letterbox = new Letterbox();
 
     public System() {
+        cg_init_System_1();
+    }
+
+    public Till GetTill(final Number tid) {
+        return ((Till) tills.get(tid));
+    }
+
+    public CentralResource GetResource() {
+        return resource;
+    }
+
+    public void cg_init_System_1() {
         clock.SetDate(SeqUtil.seq('1', '5', '0', '9', '9', '9'));
 
         Cardholder peter = new Cardholder().Create(SeqUtil.seq('P', 'e', 't',
@@ -748,14 +770,6 @@ public class System {
         resource.AddAccount(pmid1, pmacc1);
         resource.AddAccount(ifid1, ifacc1);
         resource.AddLetterbox(clock, new Letterbox());
-    }
-
-    public Till GetTill(final Number tid) {
-        return ((Till) tills.get(tid));
-    }
-
-    public CentralResource GetResource() {
-        return resource;
     }
 }
 

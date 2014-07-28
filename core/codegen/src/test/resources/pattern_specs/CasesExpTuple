@@ -1,0 +1,29 @@
+class Entry
+
+functions
+
+public static casesTup : (nat * nat * nat) -> int
+casesTup (t) ==
+	cases t:
+		mk_(2,2,2) -> 6,
+		mk_(a,-,1) -> a + 1,
+		mk_(1,b,c) -> 1 + b + c,
+		mk_(-,-,-) -> -1,
+		others -> 0
+	end;
+
+operations	
+
+public static Run : () ==> ?
+Run () ==
+(
+	dcl result : seq of int := [];
+	for i = 1 to 2 do
+		for j = 1 to 2 do
+			for k = 1 to 3 do
+				result := result ^ [casesTup(mk_(i, j, k))];
+	
+	return result;
+)
+
+end Entry

@@ -1,0 +1,79 @@
+class A
+
+instance variables
+
+public first : nat;
+public second : bool;
+public third : char;
+public fourth : char;
+public fifth : char;
+
+operations
+
+public A : nat * bool * char ==> A
+A (a,b,c) ==
+(
+	first := a;
+	second := b;
+	third := c;
+);
+
+public A : char * char ==> A
+A (d,e) ==
+(
+	fourth := d;
+	fifth := e;
+);
+
+end A
+
+class B is subclass of A
+
+operations
+
+public B : () ==> B
+B () ==
+(dcl a : nat := 60;
+	A(a,true,'a');
+);
+
+public B : char * char ==> B
+B (x,y) == 
+(	
+	skip;
+	skip;
+	A`(x,y);
+)
+
+end B
+
+class C is subclass of B
+
+operations
+
+public C : bool ==> C
+C (t) ==
+let z = 1
+in
+	A(z, t, 'b');
+	
+public C : () ==> C
+C () ==
+	B`A(2, false, 'b');
+
+end C
+
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let b1 = new B(),
+		b2 = new B('h','j'),
+		c1 = new C(true),
+		c2 = new C()
+in
+	return [b1.first, b2.fourth, c1.second, c2.first];
+
+end Entry

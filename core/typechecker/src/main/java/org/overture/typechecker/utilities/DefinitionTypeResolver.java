@@ -98,11 +98,6 @@ public class DefinitionTypeResolver extends
 		{
 			AFunctionType fType = (AFunctionType) question.question.assistantFactory.createPDefinitionAssistant().getType(node);
 			node.getName().setTypeQualifier(fType.getParameters());
-
-			if (node.getBody() instanceof ASubclassResponsibilityExp)
-			{
-				node.getClassDefinition().setIsAbstract(true);
-			}
 		}
 
 		if (node.getBody() instanceof ASubclassResponsibilityExp
@@ -140,11 +135,6 @@ public class DefinitionTypeResolver extends
 		if (question.question.env.isVDMPP())
 		{
 			node.getName().setTypeQualifier(((AOperationType) node.getType()).getParameters());
-
-			if (node.getBody() instanceof ASubclassResponsibilityStm)
-			{
-				node.getClassDefinition().setIsAbstract(true);
-			}
 		}
 
 		if (node.getPrecondition() != null)
@@ -188,11 +178,6 @@ public class DefinitionTypeResolver extends
 		{
 			AFunctionType fType = (AFunctionType) af.createPDefinitionAssistant().getType(node);
 			node.getName().setTypeQualifier(fType.getParameters());
-
-			if (node.getBody() instanceof ASubclassResponsibilityExp)
-			{
-				node.getClassDefinition().setIsAbstract(true);
-			}
 		}
 
 		if (node.getBody() instanceof ASubclassResponsibilityExp
@@ -233,11 +218,6 @@ public class DefinitionTypeResolver extends
 		if (question.question.env.isVDMPP())
 		{
 			node.getName().setTypeQualifier(((AOperationType) node.getType()).getParameters());
-
-			if (node.getBody() instanceof ASubclassResponsibilityStm)
-			{
-				node.getClassDefinition().setIsAbstract(true);
-			}
 		}
 
 		if (node.getPrecondition() != null)

@@ -1,2 +1,2 @@
 ##The actual types can be fetched using $node.getActualTypes()
-$node.getName()
+$JavaFormat.format($node.getFunc())

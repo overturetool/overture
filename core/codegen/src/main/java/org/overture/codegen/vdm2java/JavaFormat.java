@@ -8,7 +8,6 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.overture.ast.types.PType;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.SObjectDesignatorCG;
 import org.overture.codegen.cgast.SStateDesignatorCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
@@ -39,7 +38,6 @@ import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.AForLoopStmCG;
-import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
@@ -379,19 +377,23 @@ public class JavaFormat
 		return doNotWrap ? "!" + formattedExp : "!(" + formattedExp + ")";
 	}
 	
-	public String formatTemplateTypes(LinkedList<STypeCG> types) throws AnalysisException
+	public String formatTemplateTypes(List<STypeCG> types) throws AnalysisException
 	{
-		StringWriter writer = new StringWriter();
-		
-		if(types.size() <= 0)
+		if(types.isEmpty())
 			return "";
 		
+		return "<" + formattedTypes(types, "") + ">";
+	}
+
+	private String formattedTypes(List<STypeCG> types, String typePostFix) throws AnalysisException
+	{
 		STypeCG firstType = types.get(0);
 		
 		if(info.getAssistantManager().getTypeAssistant().isBasicType(firstType))
 			firstType = info.getAssistantManager().getTypeAssistant().getWrapperType((SBasicTypeCG) firstType);
 		
-		writer.append(format(firstType));
+		StringWriter writer = new StringWriter();
+		writer.append(format(firstType) + typePostFix);
 		
 		for(int i = 1; i < types.size(); i++)
 		{
@@ -400,10 +402,19 @@ public class JavaFormat
 			if(info.getAssistantManager().getTypeAssistant().isBasicType(currentType))
 				currentType = info.getAssistantManager().getTypeAssistant().getWrapperType((SBasicTypeCG) currentType);
 			
-			writer.append(", " + format(currentType));
+			writer.append(", " + format(currentType) + typePostFix);
 		}
 		
-		return "<" + writer.toString() + ">";
+		String result = writer.toString();
+		return result;
+	}
+	
+	public String formatTypeArgs(List<STypeCG> types) throws AnalysisException
+	{
+		if(types.isEmpty())
+			return "";
+		
+		return formattedTypes(types, ".class");
 	}
 	
 	public String formatEqualsBinaryExp(AEqualsBinaryExpCG node) throws AnalysisException

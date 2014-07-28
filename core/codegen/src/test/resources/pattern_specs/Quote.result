@@ -1,0 +1,73 @@
+import org.overture.codegen.runtime.*;
+
+import quotes.*;
+
+import java.util.*;
+
+
+public class A {
+    public A() {
+    }
+
+    public Number quotePatternOp(final Number quotePattern_1) {
+        Boolean success_1 = quotePattern_1.longValue() == Quotes.T1.longValue();
+
+        if (!(success_1)) {
+            throw new RuntimeException("Quote pattern match failed");
+        }
+
+        Number quotePattern_2 = Quotes.T1;
+        Boolean success_2 = quotePattern_2.longValue() == Quotes.T1.longValue();
+
+        if (!(success_2)) {
+            throw new RuntimeException("Quote pattern match failed");
+        }
+
+        return Quotes.T1;
+    }
+
+    public static Number quotePatternFun(final Number quotePattern_3) {
+        Boolean success_3 = quotePattern_3.longValue() == Quotes.T1.longValue();
+
+        if (!(success_3)) {
+            throw new RuntimeException("Quote pattern match failed");
+        }
+
+        Number quotePattern_4 = Quotes.T1;
+        Boolean success_4 = quotePattern_4.longValue() == Quotes.T1.longValue();
+
+        if (!(success_4)) {
+            throw new RuntimeException("Quote pattern match failed");
+        }
+
+        return Quotes.T1;
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import quotes.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        return SeqUtil.seq(new A().quotePatternOp(Quotes.T1),
+            A.quotePatternFun(Quotes.T1));
+    }
+}
+
+##########
+
+package quotes;
+
+public interface Quotes {
+    public static Number T1 = 1L;
+}
+
+##########

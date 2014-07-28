@@ -3028,6 +3028,7 @@ public class AstFactory
 
 		result.setSuperdef(d);
 		result.setOldname(localname.getOldName());
+		result.setType(d.getType());
 
 		af.createPDefinitionAssistant().setClassDefinition(result, d.getClassDefinition());
 		result.setAccess(d.getAccess().clone());

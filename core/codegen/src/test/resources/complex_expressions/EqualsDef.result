@@ -1,0 +1,23 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        Number a = 1L;
+        Number b = 2L;
+        Boolean c = true;
+
+        if (c) {
+            return a.longValue() + b.longValue();
+        } else {
+            return a.longValue() - b.longValue();
+        }
+    }
+}
+
+##########

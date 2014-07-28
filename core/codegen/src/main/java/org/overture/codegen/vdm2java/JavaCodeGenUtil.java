@@ -14,7 +14,7 @@ import java.util.Set;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
-import org.overture.codegen.analysis.violations.InvalidNamesException;
+import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.analysis.violations.Violation;
 import org.overture.codegen.ir.IRSettings;
@@ -35,7 +35,7 @@ public class JavaCodeGenUtil
 {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
-	public static GeneratedData generateJavaFromFiles(List<File> files, IRSettings irSettings, JavaSettings javaSettings) throws AnalysisException, InvalidNamesException, UnsupportedModelingException
+	public static GeneratedData generateJavaFromFiles(List<File> files, IRSettings irSettings, JavaSettings javaSettings) throws AnalysisException, UnsupportedModelingException
 	{
 		List<SClassDefinition> mergedParseList = consMergedParseList(files);
 		
@@ -44,13 +44,7 @@ public class JavaCodeGenUtil
 		vdmCodGen.setSettings(irSettings);
 		vdmCodGen.setJavaSettings(javaSettings);
 
-		List<GeneratedModule> generatedModules = generateJavaFromVdm(mergedParseList, vdmCodGen);
-		
-		GeneratedModule quoteValues = vdmCodGen.generateJavaFromVdmQuotes();
-		
-		GeneratedData dataToReturn = new GeneratedData(generatedModules, quoteValues);
-		
-		return dataToReturn;
+		return generateJavaFromVdm(mergedParseList, vdmCodGen);
 	}
 	
 	public static List<SClassDefinition> consMergedParseList(List<File> files) throws AnalysisException
@@ -85,8 +79,8 @@ public class JavaCodeGenUtil
 		return mergedParseList;
 	}
 
-	private static List<GeneratedModule> generateJavaFromVdm(
-			List<SClassDefinition> mergedParseLists, JavaCodeGen vdmCodGen) throws AnalysisException, InvalidNamesException, UnsupportedModelingException
+	private static GeneratedData generateJavaFromVdm(
+			List<SClassDefinition> mergedParseLists, JavaCodeGen vdmCodGen) throws AnalysisException, UnsupportedModelingException
 	{
 		return vdmCodGen.generateJavaFromVdm(mergedParseLists);
 	}
@@ -125,30 +119,34 @@ public class JavaCodeGenUtil
 		return list;
 	}
 	
-	public static String constructNameViolationsString(InvalidNamesException e)
+	public static String constructNameViolationsString(InvalidNamesResult invalidNames)
 	{
 		StringBuffer buffer = new StringBuffer();
-		
-		List<Violation> reservedWordViolations = asSortedList(e.getReservedWordViolations());
-		List<Violation> typenameViolations = asSortedList(e.getTypenameViolations());
-		List<Violation> tempVarViolations = asSortedList(e.getTempVarViolations());
-		
+
+		List<Violation> reservedWordViolations = asSortedList(invalidNames.getReservedWordViolations());
+		List<Violation> typenameViolations = asSortedList(invalidNames.getTypenameViolations());
+		List<Violation> tempVarViolations = asSortedList(invalidNames.getTempVarViolations());
+
+		String correctionMessage = String.format("Prefix '%s' has been added to the name" + LINE_SEPARATOR, invalidNames.getCorrectionPrefix());
+
 		for (Violation violation : reservedWordViolations)
 		{
-			buffer.append("Reserved name violation: " + violation
-					+ LINE_SEPARATOR);
+			buffer.append("Reserved name violation: " + violation + ". "
+					+ correctionMessage);
 		}
 
 		for (Violation violation : typenameViolations)
 		{
-			buffer.append("Type name violation: " + violation + LINE_SEPARATOR);
+			buffer.append("Type name violation: " + violation + ". "
+					+ correctionMessage);
 		}
-		
-		for(Violation violation : tempVarViolations)
+
+		for (Violation violation : tempVarViolations)
 		{
-			buffer.append("Temporary variable violation: " + violation + LINE_SEPARATOR);
+			buffer.append("Temporary variable violation: " + violation + ". "
+					+ correctionMessage);
 		}
-		
+
 		return buffer.toString();
 	}
 	

@@ -1,0 +1,48 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class A {
+    public A() {
+    }
+
+    protected Number op(final Number a, final Boolean b) {
+        return 1L;
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class B extends A {
+    public B() {
+    }
+
+    public Number go() {
+        Object a = 1L;
+        Object b = true;
+
+        return op(((Number) a), ((Boolean) b));
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        return new B().go();
+    }
+}
+
+##########

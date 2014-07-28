@@ -30,8 +30,8 @@ Thermostat (id, type) ==
   Corr := <NONE>;
  );
 
-private PeriodicOp: () ==> ()
-PeriodicOp() ==
+public Step: () ==> ()
+Step() ==
   --cycles(1E3)
  (dcl tempCorr: NetworkTypes`correction := GetCorrection();
   if (tempCorr = <INC>)
@@ -65,6 +65,6 @@ sync
 thread
 
 -- period of thread (period, jitter, delay, offset)
-periodic(1000E6,0,0,0) (PeriodicOp)
+periodic(1000E6,0,0,0) (Step)
 
 end Thermostat

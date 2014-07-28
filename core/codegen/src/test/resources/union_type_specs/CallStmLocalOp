@@ -1,0 +1,25 @@
+class A
+
+operations 
+
+public op : nat * bool ==> nat
+op (a,b) == return 1;
+
+public go : () ==> nat
+go () ==
+let a : nat | char = 1,
+		b : bool = true
+in
+	op(a,b);
+
+end A
+
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	new A().go();
+
+end Entry

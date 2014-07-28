@@ -9,28 +9,35 @@ import org.overture.codegen.assistant.AssistantManager;
 public class GeneratedVarComparison extends NamingComparison
 {
 	public GeneratedVarComparison(String[] names,
-			AssistantManager assistantManager)
+			AssistantManager assistantManager, String correctionPrefix)
 	{
-		super(names, assistantManager);
+		super(names, assistantManager, correctionPrefix);
 	}
 
 	@Override
-	public boolean isInvalid(ILexNameToken nameToken)
+	public boolean mustHandleNameToken(ILexNameToken nameToken)
 	{
 		if(assistantManager.getTypeAssistant().getTypeDef(nameToken) != null)
+		{
 			return false;
+		}
 		
 		PDefinition def = nameToken.getAncestor(PDefinition.class);
 		
 		if(def instanceof SOperationDefinition ||
 		   def instanceof SFunctionDefinition)
+		{
 			return false;
+		}
 		
 		for(String name : this.getNames())
+		{
 			if(nameToken.getName().startsWith(name))
+			{
 				return true;
+			}
+		}
 		
 		return false;
 	}
-
 }

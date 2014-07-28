@@ -16,12 +16,18 @@ in
 	2;
 
 public h :  nat -> nat
-h (-) == 3;
+h (-) == 
+let - = 2
+in
+  2;
 
 operations
 
 public op : nat ==> nat
-op (-) == return 4;
+op (-) ==
+let - = 4
+in
+	return 4;
 
 public static Run : () ==> ?
 Run () ==

@@ -5,9 +5,10 @@
 	${exp}${getCall}
 #else
 	#set( $getCall = ".get(0)")
-	#set( $clone = "")
+	#set ($call = "(($JavaFormat.format($node.getType())) ${exp}${getCall})")
 	#if ($ValueSemantics.shouldClone($node))
-		#set( $clone = ".clone()")
+		Utils.clone(${call})
+	#else
+		${call}
 	#end	
-	(($JavaFormat.format($node.getType())) ${exp}$getCall)$clone
 #end

@@ -43,15 +43,15 @@ public class X {
     }
 
     public VDMMap map_xs(final Number pa, final Number pb) {
-        return xs.clone();
+        return Utils.clone(xs);
     }
 
     public VDMMap map_ys(final Number pa, final Number pb) {
-        return ys.clone();
+        return Utils.clone(ys);
     }
 
     public VDMMap map_zs(final Number pa, final Number pb) {
-        return zs.clone();
+        return Utils.clone(zs);
     }
 
     public static Number f() {

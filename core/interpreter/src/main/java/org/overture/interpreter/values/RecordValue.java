@@ -30,7 +30,6 @@ import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.config.Settings;
-import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.Interpreter;
 
@@ -230,6 +229,7 @@ public class RecordValue extends Value
 
 			if (Interpreter.getInstance().getAssistantFactory().createPTypeAssistant().equals(ot.type,type))
 			{
+				
 				for (AFieldField f: type.getFields())
 				{
 					if (!f.getEqualityAbstraction())
