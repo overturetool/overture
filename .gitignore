@@ -90,11 +90,6 @@ repository/
 generated/
 
 
-# Examples resources copied into various places#
-################################################
-core/testing/framework/src/test/resources/examples
-core/testing/tests/src/test/resources/examples
-
 # Documents copied into the help plugin #
 #########################################
 ide/help/html/OvertureIDEUserGuide.pdf
