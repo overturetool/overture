@@ -39,8 +39,8 @@
       <version>4.11</version>
   </dependency>
   <dependency>
-      <groupId>org.overturetool.core.test</groupId>
-      <artifactId>framework</artifactId>
+      <groupId>org.overturetool.core.testing</groupId>
+      <artifactId>testframework</artifactId>
       <version>${project.version}</version>
       <type>test-jar</type>
       <scope>test</scope>

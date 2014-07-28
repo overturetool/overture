@@ -9,9 +9,9 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
     
-    <groupId>org.overturetool.core.test</groupId>
-	<artifactId>framework</artifactId>
-	<name>New Overture Test Framework</name>
+    <groupId>org.overturetool.core.testing</groupId>
+	<artifactId>testframework</artifactId>
+	<name>Overture Test Framework</name>
 
 	<dependencies>
 		<dependency>

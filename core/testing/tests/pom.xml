@@ -4,19 +4,19 @@
 
 	<parent>
 		<groupId>org.overturetool.core</groupId>
-		<artifactId>test</artifactId>
+		<artifactId>testing</artifactId>
 		<version>2.1.1-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
     
-    <groupId>org.overturetool.core.test</groupId>
+    <groupId>org.overturetool.core.testing</groupId>
 	<artifactId>tests</artifactId>
 	<name>Overture Tests</name>
 
     <dependencies>
 		<dependency>
-			<groupId>org.overturetool.core.test</groupId>
-			<artifactId>framework</artifactId>
+			<groupId>org.overturetool.core.testing</groupId>
+			<artifactId>testframework</artifactId>
             <version>${project.version}</version>
             <type>test-jar</type>
             <scope>test</scope>
