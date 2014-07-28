@@ -12,6 +12,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.overture.ast.lex.Dialect;
+import org.overture.config.Release;
 import org.overture.core.tests.ParseTcFacade;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
@@ -31,6 +32,10 @@ abstract public class ExamplesUtility
 	private static final String PP_EXAMPLES_ROOT = "/examples/VDM++";
 	private static final String RT_EXAMPLES_ROOT = "/examples/VDMRT";
 	private static final String LIBS_ROOT = "/examples/libs/";
+
+	private static final String SL_LIBS_ROOT = "/examples/libs/SL/";
+	private static final String PP_LIBS_ROOT = "/examples/libs/PP/";
+	private static final String RT_LIBS_ROOT = "/examples/libs/RT/";
 
 	/**
 	 * Get the ASTs for the Overture examples. This method only provides the trees for examples that are supposed to
@@ -72,6 +77,57 @@ abstract public class ExamplesUtility
 		r.addAll(getSubSources(PP_EXAMPLES_ROOT, Dialect.VDM_PP));
 		r.addAll(getSubSources(RT_EXAMPLES_ROOT, Dialect.VDM_RT));
 
+		return r;
+	}
+
+	/**
+	 * Get raw sources for the Overture VDM libraries.
+	 * 
+	 * @return a list of {@link ExampleSourceData} containing the libss sources
+	 * @throws IOException
+	 */
+	public static Collection<ExampleSourceData> getLibSources()
+			throws IOException
+	{
+		List<ExampleSourceData> r = new LinkedList<ExampleSourceData>();
+
+		r.addAll(getSubLibs(SL_LIBS_ROOT, Dialect.VDM_SL));
+		r.addAll(getSubLibs(PP_LIBS_ROOT, Dialect.VDM_PP));
+		r.addAll(getSubLibs(RT_LIBS_ROOT, Dialect.VDM_RT));
+
+		return r;
+	}
+
+	private static Collection<ExampleSourceData> getSubLibs(String libsroot,
+			Dialect dialect) throws IOException
+	{
+		URL url = ExamplesUtility.class.getResource(libsroot);
+		File dir = new File(url.getPath());
+		List<ExampleSourceData> r = new LinkedList<ExampleSourceData>();
+
+		StringBuilder sb = new StringBuilder();
+		String csvName = "";
+
+		for (File f : dir.listFiles())
+		{
+			if (f.getName().contains("CSV")) // csv needs IO to TC
+			{
+				sb.append(FileUtils.readFileToString(f));
+				sb.append("\n");
+				csvName = f.getName();
+			} else
+			{
+				r.add(new ExampleSourceData(f.getName(), dialect, Release.DEFAULT, FileUtils.readFileToString(f)));
+
+				if (f.getName().contains("IO"))
+				{
+					sb.append(FileUtils.readFileToString(f));
+					sb.append("\n");
+				}
+			}
+		}
+
+		r.add(new ExampleSourceData(csvName, dialect, Release.DEFAULT, sb.toString()));
 		return r;
 	}
 
