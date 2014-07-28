@@ -1,5 +1,5 @@
 module CSV
---  Overture STANDARD LIBRARY: INPUT/OUTPUT
+-- 	Overture STANDARD LIBRARY: INPUT/OUTPUT
 --      --------------------------------------------
 -- 
 -- Standard library for the Overture Interpreter. When the interpreter

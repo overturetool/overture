@@ -1,0 +1,29 @@
+class A
+
+operations
+
+public stringPatternOp : seq of char ==> seq of char
+stringPatternOp ("hej") ==
+let "hej" = "hej"
+in
+	return "hej";
+
+functions
+
+public stringPatternFun : seq of char -> seq of char
+stringPatternFun ("hej") ==
+let "hej" = "hej"
+in
+	"hej";
+
+end A
+
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	return [new A().stringPatternOp("hej"), A`stringPatternFun("hej")];
+
+end Entry

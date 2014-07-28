@@ -11,6 +11,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
+import org.overture.ast.expressions.ACaseAlternative;
 import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SBinaryExp;
@@ -21,17 +22,21 @@ import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
+import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SMultipleBindCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
+import org.overture.codegen.cgast.expressions.ACaseAltExpExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
+import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ALetDefExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
+import org.overture.codegen.cgast.expressions.AQuoteLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.SBinaryExpCG;
@@ -41,6 +46,7 @@ import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.AQuoteTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
@@ -181,6 +187,34 @@ public class ExpAssistantCG extends AssistantBase
 		return stringLiteral;
 	}
 	
+	public SExpCG consCharSequence(STypeCG seqType, String value)
+	{
+		AEnumSeqExpCG enumSeq = new AEnumSeqExpCG();
+
+		enumSeq.setType(seqType);
+
+		for (int i = 0; i < value.length(); i++)
+		{
+			char currentChar = value.charAt(i);
+			ACharLiteralExpCG charLit = new ACharLiteralExpCG();
+			charLit.setType(new ACharBasicTypeCG());
+			charLit.setValue(currentChar);
+
+			enumSeq.getMembers().add(charLit);
+		}
+
+		return enumSeq;
+	}
+	
+	public AQuoteLiteralExpCG consQuoteLiteral(String value)
+	{
+		AQuoteLiteralExpCG quoteLiteral = new AQuoteLiteralExpCG();
+		quoteLiteral.setType(new AQuoteTypeCG());
+		quoteLiteral.setValue(value);
+		
+		return quoteLiteral;
+	}
+	
 	public AIntLiteralExpCG getDefaultIntValue()
 	{
 		return consIntLiteral(0L);
@@ -278,5 +312,41 @@ public class ExpAssistantCG extends AssistantBase
 		quantifier.setPredicate(predicateCg);
 		
 		return quantifier;
+	}
+	
+	public void handleAlternativesCasesExp(IRInfo question, PExp exp,
+			List<ACaseAlternative> cases, List<ACaseAltExpExpCG> casesCg)
+			throws AnalysisException
+	{
+		for(ACaseAlternative alt : cases)
+		{
+			SExpCG altCg = alt.apply(question.getExpVisitor(), question);
+			casesCg.add((ACaseAltExpExpCG) altCg);
+		}	
+		
+		if(exp.getType() instanceof AUnionType)
+		{
+			AUnionType unionType = ((AUnionType) exp.getType()).clone();
+			question.getTcFactory().createAUnionTypeAssistant().expand(unionType);
+			
+			for(int i = 0; i < cases.size(); i++)
+			{
+				ACaseAlternative vdmCase = cases.get(i);
+				ACaseAltExpExpCG cgCase = casesCg.get(i);
+				
+				PType patternType = question.getAssistantManager().getTypeAssistant().getType(question, unionType, vdmCase.getPattern());
+				STypeCG patternTypeCg = patternType.apply(question.getTypeVisitor(), question);
+				cgCase.setPatternType(patternTypeCg);
+			}
+		}
+		else
+		{
+			STypeCG expType = exp.getType().apply(question.getTypeVisitor(), question);
+			
+			for(ACaseAltExpExpCG altCg : casesCg)
+			{
+				altCg.setPatternType(expType.clone());
+			}
+		}
 	}
 }

@@ -59,4 +59,10 @@ public class Utils
 
 		return "mk_" + record.getClass().getSimpleName() + "(" + str + ")";
 	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T extends ValueType> T clone(T t)
+	{
+		return (T) (t != null ? t.clone() : t);
+	}
 }

@@ -1,0 +1,29 @@
+class A
+
+operations
+
+public realPatternOp : real ==> real
+realPatternOp (2.1) ==
+let 2.1 = 2.1
+in
+	return 2.1;
+
+functions
+
+public realPatternFun : real -> real
+realPatternFun (2.1) ==
+let 2.1 = 2.1
+in
+	2.1;
+
+end A
+
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	return [new A().realPatternOp(2.1), A`realPatternFun(2.1)];
+
+end Entry

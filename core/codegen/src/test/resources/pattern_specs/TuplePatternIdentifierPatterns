@@ -1,0 +1,29 @@
+class A
+
+operations
+
+public tuplePatternOp : (nat * bool * char * real) ==> (nat * bool * char * real)
+tuplePatternOp (mk_(n1, b1, c1, r1)) ==
+let mk_(n2, b2, c2, r2) = mk_(5, true, 'g', 2.5)
+in
+	return mk_(n1, b2, c1, r2);
+
+functions
+
+public tuplePatternFun : (nat * bool * char * real) -> (nat * bool * char * real)
+tuplePatternFun (mk_(n1, b1, c1, r1)) ==
+let mk_(n2, b2, c2, r2) = mk_(5, true, 'g', 2.5)
+in
+	mk_(n1, b2, c1, r2)
+
+end A
+
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	return [new A().tuplePatternOp(mk_(77, false, 'e', 4.4)), A`tuplePatternFun(mk_(77, false, 'e', 4.4))];
+
+end Entry

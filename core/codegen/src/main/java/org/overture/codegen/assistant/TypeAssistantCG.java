@@ -6,10 +6,15 @@ import java.util.List;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.patterns.ATuplePattern;
+import org.overture.ast.patterns.PPattern;
+import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SSeqTypeBase;
+import org.overture.ast.util.PTypeSet;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SObjectDesignatorCG;
 import org.overture.codegen.cgast.STypeCG;
@@ -311,5 +316,59 @@ public class TypeAssistantCG extends AssistantBase
 		}
 		
 		return null;
+	}
+	
+	public PType getType(IRInfo question, AUnionType unionType, PPattern pattern)
+	{
+		PTypeSet possibleTypes = new PTypeSet(question.getTcFactory());
+		PType patternType = question.getTcFactory().createPPatternAssistant().getPossibleType(pattern);
+		TypeComparator comp = question.getTcFactory().getTypeComparator();
+		
+		for(PType t : unionType.getTypes())
+		{
+			if(comp.compatible(patternType, t))
+			{
+				possibleTypes.add(t);
+			}
+		}
+		
+		if(possibleTypes.isEmpty())
+		{
+			Logger.getLog().printError("Could not find any possible types for pattern: " + pattern);
+			return null;
+		}
+		else if(possibleTypes.size() == 1)
+		{
+			return possibleTypes.pollFirst();
+		}
+		else //More than one possible type
+		{
+			unionType.getTypes().clear();
+			unionType.getTypes().addAll(possibleTypes);
+			
+			if(question.getTypeAssistant().isUnionOfType(unionType, AProductType.class))
+			{
+				List<PType> fieldsTypes = new LinkedList<PType>();
+				int noOfFields = ((ATuplePattern) pattern).getPlist().size();
+				for(int i = 0; i < noOfFields; i++)
+				{
+					List<PType> currentFieldTypes = new LinkedList<PType>();
+					
+					for(PType currentPossibleType : possibleTypes)
+					{
+						AProductType currentProductType = (AProductType) currentPossibleType;
+						currentFieldTypes.add(currentProductType.getTypes().get(i).clone());
+					}
+					
+					fieldsTypes.add(AstFactory.newAUnionType(pattern.getLocation(), currentFieldTypes));
+				}
+
+				return AstFactory.newAProductType(pattern.getLocation(), fieldsTypes);
+			}
+			else
+			{
+				return unionType;
+			}
+		}
 	}
 }

@@ -23,11 +23,12 @@ import org.overture.codegen.cgast.types.AInterfaceTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.ir.IRConstants;
+import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.trans.assistants.TransformationAssistantCG;
 
 public class FunctionValueVisitor extends DepthFirstAnalysisAdaptor
 {
-	private int counter = 0;
+	private IRInfo info;
 	
 	private TransformationAssistantCG transformationAssistant;
 	
@@ -38,8 +39,9 @@ public class FunctionValueVisitor extends DepthFirstAnalysisAdaptor
 	private String evalMethodName;
 	private String paramNamePrefix;
 	
-	public FunctionValueVisitor(TransformationAssistantCG transformationAssistant, FunctionValueAssistant functionValueAssistant, String interfaceNamePrefix, String templateTypePrefix, String evalMethodName, String paramNamePrefix)
+	public FunctionValueVisitor(IRInfo info, TransformationAssistantCG transformationAssistant, FunctionValueAssistant functionValueAssistant, String interfaceNamePrefix, String templateTypePrefix, String evalMethodName, String paramNamePrefix)
 	{
+		this.info = info;
 		this.transformationAssistant = transformationAssistant;
 		this.functionValueAssistant = functionValueAssistant;
 		this.interfaceNamePrefix = interfaceNamePrefix;
@@ -171,7 +173,7 @@ public class FunctionValueVisitor extends DepthFirstAnalysisAdaptor
 		AInterfaceDeclCG methodTypeInterface = new AInterfaceDeclCG();
 		
 		methodTypeInterface.setPackage(null);
-		methodTypeInterface.setName(getTypeName());
+		methodTypeInterface.setName(info.getTempVarNameGen().nextVarName(interfaceNamePrefix));
 		
 		AMethodDeclCG evalMethod = new AMethodDeclCG();
 		evalMethod.setAbstract(true);
@@ -208,11 +210,5 @@ public class FunctionValueVisitor extends DepthFirstAnalysisAdaptor
 		evalMethod.setMethodType(evalMethodType);
 		
 		return methodTypeInterface;
-	}
-	
-	private String getTypeName()
-	{
-		String typeName = interfaceNamePrefix + (++counter);
-		return typeName;
 	}
 }

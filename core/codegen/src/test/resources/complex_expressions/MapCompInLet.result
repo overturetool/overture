@@ -19,14 +19,14 @@ public class Entry {
             Number x = ((Number) iterator_1.next());
 
             if (1L == 1L) {
-                mapCompResult_1 = MapUtil.munion(mapCompResult_1.clone(),
+                mapCompResult_1 = MapUtil.munion(Utils.clone(mapCompResult_1),
                         MapUtil.map(new Maplet(x.longValue() * 2L, x)));
             }
         }
 
-        VDMMap x = mapCompResult_1.clone();
+        VDMMap x = Utils.clone(mapCompResult_1);
 
-        return x.clone();
+        return Utils.clone(x);
     }
 }
 

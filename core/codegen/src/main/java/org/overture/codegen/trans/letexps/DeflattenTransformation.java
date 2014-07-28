@@ -41,11 +41,6 @@ public class DeflattenTransformation extends DepthFirstAnalysisAdaptor
 		int declCount = localDecls.size();
 		int statementCount = statements.size();
 		
-		if(declCount <= 1 && statementCount <= 1)
-		{
-			return;
-		}
-		
 		ABlockStmCG top = new ABlockStmCG();
 		ABlockStmCG currentBlock = top;
 

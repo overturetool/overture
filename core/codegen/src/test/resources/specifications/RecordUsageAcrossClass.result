@@ -14,7 +14,7 @@ public class A {
         public B.RecB b;
 
         public RecA(final B.RecB _b) {
-            b = (_b != null) ? _b.clone() : null;
+            b = (_b != null) ? Utils.clone(_b) : null;
         }
 
         public boolean equals(final Object obj) {

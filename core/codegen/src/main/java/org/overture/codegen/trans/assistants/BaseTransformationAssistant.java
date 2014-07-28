@@ -3,7 +3,6 @@ package org.overture.codegen.trans.assistants;
 import java.util.LinkedList;
 
 import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
@@ -37,7 +36,7 @@ public class BaseTransformationAssistant
 		original.parent(null);
 	}
 	
-	public SStmCG getEnclosingStm(SExpCG node, String nodeStr) throws AnalysisException
+	public SStmCG getEnclosingStm(INode node, String nodeStr) throws AnalysisException
 	{
 		SStmCG enclosingStm = node.getAncestor(SStmCG.class);
 

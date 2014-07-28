@@ -1,0 +1,22 @@
+class Entry
+
+functions
+
+functions
+
+public f :  ((nat * nat) | (bool * bool)) -> nat
+f (c) == 
+	cases c :
+		mk_(1,1) -> 1,
+		mk_(a, 2) -> a + a,
+		mk_(true,b) -> if b then 11 else 33,
+		others -> 3
+	end;
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	return [f(mk_(1,1)), f(mk_(10,2)), f(mk_(true, false)), f(mk_(10,3))];
+
+end Entry

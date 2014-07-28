@@ -1,0 +1,28 @@
+class A
+
+types
+
+public 
+Rec ::
+	n1 : nat
+	n2 : nat
+
+functions
+
+public recPatternFun : () -> nat
+recPatternFun () ==
+let mk_Rec(a,5) = mk_Rec(1,5)
+in
+	a;
+
+end A
+
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	return A`recPatternFun();
+
+end Entry
