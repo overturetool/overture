@@ -44,31 +44,15 @@ public abstract class ParseTcFacade
 	 *            the name of the test calling this method (used for failure reporting)
 	 * @param dialect
 	 *            the VDM {@link Dialect} the source is written in
-	 * @param release
-	 *            the VDM {@link Release} the source is written in
 	 * @return the AST of the mode, as a list of {@link INode}
 	 * @throws LexException
 	 * @throws ParserException
 	 */
 	public static List<INode> typedAstFromContent(String content,
-			String testName, Dialect dialect, Release release)
-			throws ParserException, LexException
+			String testName, Dialect dialect) throws ParserException,
+			LexException
 	{
-		Settings.release = release;
-
-		switch (dialect)
-		{
-			case VDM_SL:
-				return parseTcSlContent(content, testName);
-			case VDM_PP:
-				return parseTcPpContent(content, testName);
-			case VDM_RT:
-				return parseTcRtContent(content, testName);
-			default:
-				fail("Unrecognised dialect:" + dialect);
-				return null;
-		}
-
+		return typedAst(content, testName, dialect, true);
 	}
 
 	/**
@@ -84,22 +68,10 @@ public abstract class ParseTcFacade
 			throws ParserException, LexException
 	{
 		List<INode> ast = new LinkedList<INode>();
+		Settings.release = e.getRelease();
 
-		switch (e.getDialect())
-		{
-			case VDM_SL:
-				ast = ParseTcFacade.typedAstFromContent(e.getSource(), e.getName(), Dialect.VDM_SL, e.getRelease());
-				break;
-			case VDM_PP:
-				ast = ParseTcFacade.typedAstFromContent(e.getSource(), e.getName(), Dialect.VDM_PP, e.getRelease());
-				break;
-			case VDM_RT:
-				ast = ParseTcFacade.typedAstFromContent(e.getSource(), e.getName(), Dialect.VDM_RT, e.getRelease());
-				break;
-			default:
-				fail("Unrecognised dialect:" + e.getDialect());
-				break;
-		}
+		ast = ParseTcFacade.typedAst(e.getSource(), e.getName(),e.getDialect(), false);
+
 		return new ExampleAstData(e.getName(), ast);
 	}
 
@@ -119,74 +91,89 @@ public abstract class ParseTcFacade
 		String ext;
 		if (parts.length == 1)
 		{
-			ext = "vdm" + sourcePath.substring(sourcePath.length() - 2, sourcePath.length()).toLowerCase();
+			ext = "vdm"
+					+ sourcePath.substring(sourcePath.length() - 2, sourcePath.length()).toLowerCase();
 		} else
 		{
 			ext = parts[1];
 		}
 		File f = new File(sourcePath);
 
-		boolean switchRelease = false;
-		try
+		if (ext.equals("vdmsl") | ext.equals("vdm"))
 		{
-			if (sourcePath.contains("vdm10release"))
-			{
-				switchRelease = true;
-				Settings.release = Release.VDM_10;
-			}
+			return parseTcSlContent(FileUtils.readFileToString(f), testName, true);
+		}
 
-			if (ext.equals("vdmsl") | ext.equals("vdm"))
+		else
+		{
+			if (ext.equals("vdmpp") | ext.equals("vpp"))
 			{
-				return parseTcSlContent(FileUtils.readFileToString(f), testName);
-			}
+				return parseTcPpContent(FileUtils.readFileToString(f), testName, true);
 
-			else
+			} else
 			{
-				if (ext.equals("vdmpp") | ext.equals("vpp"))
+				if (ext.equals("vdmrt"))
 				{
-					return parseTcPpContent(FileUtils.readFileToString(f), testName);
-
+					return parseTcRtContent(FileUtils.readFileToString(f), testName, true);
 				} else
 				{
-					if (ext.equals("vdmrt"))
-					{
-						return parseTcRtContent(FileUtils.readFileToString(f), testName);
-					} else
-					{
-						fail("Unexpected extension in file " + sourcePath
-								+ ". Only .vdmpp, .vdmsl and .vdmrt allowed");
-					}
+					fail("Unexpected extension in file " + sourcePath
+							+ ". Only .vdmpp, .vdmsl and .vdmrt allowed");
 				}
 			}
-		} finally
-		{
-			if (switchRelease)
-			{
-				Settings.release = Release.DEFAULT;
-			}
 		}
+
 		// only needed to compile. will never hit because of fail()
 		return null;
+	}
+
+	private static List<INode> typedAst(String content, String testName,
+			Dialect dialect, boolean retry) throws ParserException,
+			LexException
+	{
+
+		switch (dialect)
+		{
+			case VDM_SL:
+				return parseTcSlContent(content, testName, retry);
+			case VDM_PP:
+				return parseTcPpContent(content, testName, retry);
+			case VDM_RT:
+				return parseTcRtContent(content, testName, retry);
+			default:
+				fail("Unrecognised dialect:" + dialect);
+				return null;
+		}
+
 	}
 
 	// These 3 methods have so much duplicated code because we cannot
 	// return the TC results since their types are all different.
 	// FIXME unify parsing and TCing of VDM dialects
-	private static List<INode> parseTcRtContent(String content, String testName)
-			throws ParserException, LexException
+	private static List<INode> parseTcRtContent(String content,
+			String testName, boolean retry) throws ParserException,
+			LexException
 	{
 		Settings.dialect = Dialect.VDM_RT;
 
 		TypeCheckResult<List<SClassDefinition>> TC = TypeCheckerUtil.typeCheckRt(content);
 
-		// retry with VDM10
-//		if (!TC.parserResult.errors.isEmpty() || !TC.errors.isEmpty()){
-//			if (Settings.release==Release.CLASSIC){
-//				Settings.release=Release.VDM_10;
-//				return parseTcRtContent(content, testName);
-//			}
-//		}
-		
+		// retry with other dialect
+		if (retry
+				&& (!TC.parserResult.errors.isEmpty() || !TC.errors.isEmpty()))
+		{
+			if (Settings.release == Release.CLASSIC)
+			{
+				Settings.release = Release.VDM_10;
+				return parseTcRtContent(content, testName, false);
+			}
+			if (Settings.release == Release.VDM_10)
+			{
+				Settings.release = Release.CLASSIC;
+				return parseTcRtContent(content, testName, false);
+			}
+		}
+
 		assertTrue("Error in test " + testName
 				+ " Specification has parse errors", TC.parserResult.errors.isEmpty());
 		assertTrue("Error in test " + testName
@@ -198,20 +185,29 @@ public abstract class ParseTcFacade
 		return r;
 	}
 
-	private static List<INode> parseTcPpContent(String content, String testName)
+	private static List<INode> parseTcPpContent(String content,
+			String testName, boolean retry)
 	{
 		Settings.dialect = Dialect.VDM_PP;
 
 		TypeCheckResult<List<SClassDefinition>> TC = TypeCheckerUtil.typeCheckPp(content);
 
-		// retry with VDM10
-//		if (!TC.parserResult.errors.isEmpty() || !TC.errors.isEmpty()){
-//			if (Settings.release==Release.CLASSIC){
-//				Settings.release=Release.VDM_10;
-//				return parseTcPpContent(content, testName);
-//			}
-//		}
-		
+		// retry with other dialect
+		if (retry
+				&& (!TC.parserResult.errors.isEmpty() || !TC.errors.isEmpty()))
+		{
+			if (Settings.release == Release.CLASSIC)
+			{
+				Settings.release = Release.VDM_10;
+				return parseTcPpContent(content, testName, false);
+			}
+			if (Settings.release == Release.VDM_10)
+			{
+				Settings.release = Release.CLASSIC;
+				return parseTcPpContent(content, testName, false);
+			}
+		}
+
 		assertTrue("Error in test " + testName
 				+ " Specification has parse errors", TC.parserResult.errors.isEmpty());
 		assertTrue("Error in test " + testName
@@ -223,20 +219,29 @@ public abstract class ParseTcFacade
 		return r;
 	}
 
-	private static List<INode> parseTcSlContent(String content, String testName)
+	private static List<INode> parseTcSlContent(String content,
+			String testName, boolean retry)
 	{
 		Settings.dialect = Dialect.VDM_SL;
 
 		TypeCheckResult<List<AModuleModules>> TC = TypeCheckerUtil.typeCheckSl(content);
 
-		// retry with VDM10
-//		if (!TC.parserResult.errors.isEmpty() || !TC.errors.isEmpty()){
-//			if (Settings.release==Release.CLASSIC){
-//				Settings.release=Release.VDM_10;
-//				return parseTcSlContent(content, testName);
-//			}
-//		}
-		
+		// retry with other dialect
+		if (retry
+				&& (!TC.parserResult.errors.isEmpty() || !TC.errors.isEmpty()))
+		{
+			if (Settings.release == Release.CLASSIC)
+			{
+				Settings.release = Release.VDM_10;
+				return parseTcSlContent(content, testName, false);
+			}
+			if (Settings.release == Release.VDM_10)
+			{
+				Settings.release = Release.CLASSIC;
+				return parseTcSlContent(content, testName, false);
+			}
+		}
+
 		assertTrue("Error in test " + testName
 				+ " Specification has parse errors", TC.parserResult.errors.isEmpty());
 		assertTrue("Error in test " + testName
