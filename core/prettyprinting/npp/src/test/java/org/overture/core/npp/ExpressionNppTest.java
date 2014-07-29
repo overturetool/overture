@@ -764,4 +764,28 @@ public class ExpressionNppTest {
 	{
 		aux("[x| x in set {1, 2} & i < 3]", "[x |x in set {1, 2} & (i < 3)]");
 	}
+	
+	@Test
+	public void testCasesASeqCompExp_02() throws AnalysisException
+	{
+		aux("[x*x| x in set {1, 2} & x <> 1]","[(x * x) |x in set {1, 2} & (x <> 1)]");
+	}
+	
+	@Test
+	public void testCasesAHeadUnaryExp_01() throws AnalysisException
+	{
+		aux("hd l", "(hd l)");
+	}
+	
+	@Test
+	public void testCasesAHeadUnaryExp_02() throws AnalysisException
+	{
+		aux("hd [1, 2]", "(hd [1, 2])");
+	}
+	
+	@Test
+	public void testCasesAHeadUnaryExp_03() throws AnalysisException
+	{
+		aux("hd [x*x]", "(hd [(x * x)])");
+	}
 }

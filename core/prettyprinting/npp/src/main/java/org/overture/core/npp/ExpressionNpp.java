@@ -19,6 +19,7 @@ import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.AForAllExp;
 import org.overture.ast.expressions.AGreaterEqualNumericBinaryExp;
 import org.overture.ast.expressions.AGreaterNumericBinaryExp;
+import org.overture.ast.expressions.AHeadUnaryExp;
 import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.AInSetBinaryExp;
 import org.overture.ast.expressions.AIntLiteralExp;
@@ -885,9 +886,25 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		sb.append(space);
 		sb.append(pred);
 		sb.append(rightsq);
-		//System.out.print(sb.toString());
+		//System.out.print(sb.toString()+"\n");
 		return sb.toString();
 		
+	}
+	
+	@Override
+	public String caseAHeadUnaryExp(AHeadUnaryExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		String r = node.getExp().apply(THIS, question);
+		String op = mytable.getHEAD();
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(op);
+		sb.append(space);
+		sb.append(r);
+		
+		return Utilities.wrap(sb.toString());
 	}
 	
 	@Override
@@ -936,8 +953,10 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		sb.append(brl);
 		sb.append(mytable.getEND());
 		
+		
 		return sb.toString();
 	}
+	
 	
 //	@Override
 //	public String caseAIfExp(AIfExp node, IndentTracker question)
