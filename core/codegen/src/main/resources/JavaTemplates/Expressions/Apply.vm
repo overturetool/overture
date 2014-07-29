@@ -6,20 +6,24 @@
 #set( $args = $JavaFormat.formatArgs($node.getArgs()) )
 ##
 #if ($JavaFormat.isSeqType($node.getRoot()) && $node.getArgs().size() == 1)
+##
 	#set( $index = $JavaFormat.format($node.getArgs().get(0)))
-	#set( $clone = "")
+	#set ( $seqRead = "(($JavaFormat.format($node.getType())) ${root}.get(Utils.index($index)))" )
+##
 	#if ($ValueSemantics.shouldClone($node))
-		#set( $clone = ".clone()")
+		Utils.clone(${seqRead})
+	#else
+		${seqRead}
 	#end
-	(($JavaFormat.format($node.getType())) ${root}.get(Utils.index($index)))$clone
 ##
 #elseif ($JavaFormat.isMapType($node.getRoot()) && $node.getArgs().size() == 1)
 	#set( $key = $JavaFormat.format($node.getArgs().get(0)))
-	#set( $clone = "")
+	#set ( $mapRead = "(($JavaFormat.format($node.getType())) ${root}.get(${key}))" )
 	#if ($ValueSemantics.shouldClone($node))
-		#set( $clone = ".clone()")
+		Utils.clone(${mapRead})
+	#else
+		${mapRead}
 	#end
-	(($JavaFormat.format($node.getType())) ${root}.get(${key}))$clone
 ##
 #elseif ($JavaFormat.isStringType($node.getRoot()))
 	#set( $index = $JavaFormat.format($node.getArgs().get(0)))

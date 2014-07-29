@@ -16,6 +16,8 @@ import org.overture.ast.expressions.AAndBooleanBinaryExp;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ABooleanConstExp;
 import org.overture.ast.expressions.ACardinalityUnaryExp;
+import org.overture.ast.expressions.ACaseAlternative;
+import org.overture.ast.expressions.ACasesExp;
 import org.overture.ast.expressions.ACharLiteralExp;
 import org.overture.ast.expressions.ADistConcatUnaryExp;
 import org.overture.ast.expressions.ADistIntersectUnaryExp;
@@ -127,6 +129,8 @@ import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
+import org.overture.codegen.cgast.expressions.ACaseAltExpExpCG;
+import org.overture.codegen.cgast.expressions.ACasesExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACompMapExpCG;
 import org.overture.codegen.cgast.expressions.ACompSeqExpCG;
@@ -207,7 +211,6 @@ import org.overture.codegen.cgast.expressions.AXorBoolBinaryExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.patterns.ASetBindCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
-import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
@@ -527,6 +530,47 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		setRange.setLast(lastExpCg);
 		
 		return setRange;
+	}
+	
+	@Override
+	public SExpCG caseACasesExp(ACasesExp node, IRInfo question)
+			throws AnalysisException
+	{
+		PType type = node.getType();
+		PExp exp = node.getExpression();
+		PExp others = node.getOthers();
+		LinkedList<ACaseAlternative> cases = node.getCases();
+
+		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		SExpCG expCg = exp.apply(question.getExpVisitor(), question);
+		SExpCG othersCg = others != null ? others.apply(question.getExpVisitor(), question) : null;
+		
+		ACasesExpCG casesExpCg = new ACasesExpCG();
+		casesExpCg.setType(typeCg);
+		casesExpCg.setExp(expCg);
+		casesExpCg.setOthers(othersCg);
+		
+		question.getExpAssistant().handleAlternativesCasesExp(question, exp, cases, casesExpCg.getCases());
+		
+		return casesExpCg;
+	}
+	
+	@Override
+	public SExpCG caseACaseAlternative(ACaseAlternative node, IRInfo question)
+			throws AnalysisException
+	{
+		PPattern pattern = node.getPattern();
+		PExp result = node.getResult();
+		
+		SPatternCG patternCg = pattern.apply(question.getPatternVisitor(), question);
+		SExpCG resultCg = result.apply(question.getExpVisitor(), question);
+		
+		ACaseAltExpExpCG altCg = new ACaseAltExpExpCG();
+		
+		altCg.setPattern(patternCg);
+		altCg.setResult(resultCg);
+		
+		return altCg;
 	}
 	
 	@Override
@@ -1547,10 +1591,10 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseAStringLiteralExp(AStringLiteralExp node,
 			IRInfo question) throws AnalysisException
 	{
+		String value = node.getValue().getValue();
 		if (question.getSettings().getCharSeqAsString())
 		{
 			PType type = node.getType();
-			String value = node.getValue().getValue();
 			
 			STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 			
@@ -1564,28 +1608,11 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			
 		} else
 		{
-			AEnumSeqExpCG enumSeq = new AEnumSeqExpCG();
-
-			STypeCG seqType = node.getType().apply(question.getTypeVisitor(), question);
-
-			enumSeq.setType(seqType);
-
-			String str = node.getValue().getValue();
-
-			for (int i = 0; i < str.length(); i++)
-			{
-				char currentChar = str.charAt(i);
-				ACharLiteralExpCG charLit = new ACharLiteralExpCG();
-				charLit.setType(new ACharBasicTypeCG());
-				charLit.setValue(currentChar);
-
-				enumSeq.getMembers().add(charLit);
-			}
-
-			return enumSeq;
+			STypeCG seqTypeCg = node.getType().apply(question.getTypeVisitor(), question);
+			return question.getExpAssistant().consCharSequence(seqTypeCg, value);
 		}
 	}
-	
+
 	@Override
 	public SExpCG caseAQuoteLiteralExp(AQuoteLiteralExp node,
 			IRInfo question) throws AnalysisException

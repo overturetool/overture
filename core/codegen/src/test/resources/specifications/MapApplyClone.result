@@ -4,7 +4,9 @@ import java.util.*;
 
 
 public class A {
-    private static final Tuple a = ((Tuple) op().get(Tuple.mk_(1L, true))).clone();
+    private static final Tuple a = Utils.clone(((Tuple) op()
+                                                            .get(Tuple.mk_(1L,
+                    true))));
 
     public A() {
     }

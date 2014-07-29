@@ -46,6 +46,15 @@ CG {-> package='org.overture.codegen.cgast'
 #pattern {-> package='org.overture.codegen.cgast.patterns'}
 	= {identifier} [name]:java_String
 	| {ignore}
+	| {bool} [value]:java_Boolean
+	| {char} [value]:java_Character
+	| {int}	[value]:java_Long
+	| {null}
+	| {quote} [value]:java_String
+	| {real} [value]:java_Double
+	| {string} [value]:java_String
+	| {tuple} [patterns]:CG.#pattern*
+	| {record} [typename]:java_String [patterns]:CG.#pattern* [type]:CG.#type
 	;
 
 #bind {-> package='org.overture.codegen.cgast.patterns'
@@ -170,7 +179,14 @@ CG {-> package='org.overture.codegen.cgast'
            |	{increment} [var]:CG.#exp
            |	{decrement} [var]:CG.#exp
            |	{raiseError} [error]:CG.#exp.#RuntimeError
+           |	{cases} [exp]:CG.#exp [cases]:CG.#stm.#altStm.case* [others]:CG.#stm
+           |	#altStm
+           |	{error}
            ;
+           
+#altStm {-> package='org.overture.codegen.cgast.statements'}
+    = {case} [pattern]:CG.#pattern [result]:CG.#stm [patternType]:CG.#type
+    ;
            
 #letBeSt {-> package='org.overture.codegen.cgast.utils'}
 	= {header} [binding]:CG.#multipleBind.set [suchThat]:CG.#exp //The Overture AST uses a multiplebind 
@@ -192,6 +208,7 @@ CG {-> package='org.overture.codegen.cgast'
     |	{methodInstantiation} [func]:CG.#exp [actualTypes]:CG.#type*
     |	{tuple} [args]:CG.#exp* [tupleType]:CG.#type.tuple
     |	{fieldNumber} [field]:java_Long [tuple]:CG.#exp
+    |	{tupleSize} [tuple]:CG.#exp
     |	{ternaryIf} [condition]:CG.#exp [trueValue]:CG.#exp [falseValue]:CG.#exp
     |   {maplet}  [left]:CG.#exp [right]:CG.#exp
     |	{letBeSt} [header]:CG.#letBeSt.header [value]:CG.#exp
@@ -213,11 +230,20 @@ CG {-> package='org.overture.codegen.cgast'
     |	{lambda} [params]:CG.#localParam.formalParam* [exp]:CG.#exp
     |	{anonymousClass} [methods]:CG.#decl.method*
     |	{notImplemented}
+    |	{undefined}
     |	{threadId}
+    |	{tupleCompatibility} [tuple]:CG.#exp [types]:CG.#type*
+    |	{cases} [exp]:CG.#exp [cases]:CG.#exp.#altExp.case* [others]:CG.#exp
+    |	#altExp
+    ;
+
+#altExp {-> package='org.overture.codegen.cgast.expressions'}
+    = {case} [pattern]:CG.#pattern [result]:CG.#exp [patternType]:CG.#type
     ;
 
 #RuntimeError {-> package='org.overture.codegen.cgast.expressions'}
     =   {LetBeStNoBinding}
+    |	{patternMatch} [message]:java_String
     ;
 
 #Var {-> package='org.overture.codegen.cgast.expressions'
@@ -356,6 +382,7 @@ CG {-> package='org.overture.codegen.cgast'
     |	{interface} [types]:CG.#type* [name]:java_String
     |	{union} [types]:CG.#type*
     |	{quote} [value]:java_String
+    |	{unknown}
     ;
     
 externalType {-> package='org.overture.codegen.cgast.utils'}

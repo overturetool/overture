@@ -553,6 +553,9 @@ public IsFinished: () ==> ()
 IsFinished() ==
   skip;
 
+public Step: () ==> ()
+Step() == skip;
+
 sync
   mutex(PeriodicOp);	-- ADDED
   per IsFinished => finished;
@@ -770,6 +773,9 @@ public IsFinished: () ==> ()
 IsFinished() ==
   skip;
 
+public Step: () ==> ()
+Step() == skip;
+
 sync
   mutex(PeriodicOp); -- ADDED
   per IsFinished => finished;
@@ -843,6 +849,9 @@ public IsFinished: () ==> ()
 IsFinished() ==
   skip;
 
+public Step: () ==> ()
+Step() == skip;
+
 sync
   mutex(PeriodicOp); -- ADDED
   per IsFinished => finished;
@@ -915,6 +924,9 @@ GetCorrection() ==
 public IsFinished: () ==> ()
 IsFinished() ==
   skip;
+
+public Step: () ==> ()
+Step() == skip;
 
 sync
   mutex(PeriodicOp); -- ADDED

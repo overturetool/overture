@@ -1,0 +1,17 @@
+class Entry
+
+operations
+
+public static casesBool : (bool) ==> bool
+casesBool (b) ==
+	cases b:
+		true -> return false,
+		false -> return true,
+		others -> return false
+	end;
+	
+public static Run : () ==> ?
+Run () ==
+	return [casesBool(true), casesBool(false)];
+
+end Entry

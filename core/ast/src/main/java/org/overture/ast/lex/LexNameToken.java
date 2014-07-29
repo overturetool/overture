@@ -191,8 +191,9 @@ public class LexNameToken extends LexToken implements ILexNameToken,
 
 	/**
 	 * Basic equals method for LexNameTokens. This method does not handle type qualifiers in that case use
-	 * HelpLexNameToken
+	 * {@link HackLexNameToken}
 	 */
+	@SuppressWarnings("javadoc")
 	@Override
 	public boolean equals(Object other)
 	{

@@ -1,0 +1,21 @@
+class A
+
+functions
+
+public tuplePatternFun : () -> (nat * bool * char * real)
+tuplePatternFun () ==
+let mk_(n, true, c, r) = mk_(5, true, 'v', 2.5)
+in
+	mk_(n, false, c, r);
+
+end A
+
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	return A`tuplePatternFun();
+
+end Entry

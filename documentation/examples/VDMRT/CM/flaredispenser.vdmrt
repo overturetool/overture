@@ -96,7 +96,10 @@ releaseFlare (evid, pfltp, pt1, pt2) ==
   World`env.handleEvent(evid,pfltp,aparature,pt1,pt2);
 
 public isFinished: () ==> ()
-isFinished () == skip
+isFinished () == skip;
+
+  public getAperture: () ==> Angle * Angle
+  getAperture () == is not yet specified;
 
 sync
 

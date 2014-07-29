@@ -41,7 +41,7 @@ public class RecordValue extends Value
 	public final ARecordInvariantType type;
 	public final FieldMap fieldmap;
 	public final FunctionValue invariant;
-	
+
 	// mk_ expressions
 	public RecordValue(ARecordInvariantType type,	ValueList values, Context ctxt)
 		throws AnalysisException

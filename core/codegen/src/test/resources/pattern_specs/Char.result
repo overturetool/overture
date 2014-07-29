@@ -1,0 +1,60 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class A {
+    public A() {
+    }
+
+    public Character charPatternOp(final Character charPattern_1) {
+        Boolean success_1 = charPattern_1 == 'q';
+
+        if (!(success_1)) {
+            throw new RuntimeException("Char pattern match failed");
+        }
+
+        Character charPattern_2 = 'a';
+        Boolean success_2 = charPattern_2 == 'a';
+
+        if (!(success_2)) {
+            throw new RuntimeException("Char pattern match failed");
+        }
+
+        return 'b';
+    }
+
+    public static Character charPatternFun(final Character charPattern_3) {
+        Boolean success_3 = charPattern_3 == 'q';
+
+        if (!(success_3)) {
+            throw new RuntimeException("Char pattern match failed");
+        }
+
+        Character charPattern_4 = 'a';
+        Boolean success_4 = charPattern_4 == 'a';
+
+        if (!(success_4)) {
+            throw new RuntimeException("Char pattern match failed");
+        }
+
+        return 'b';
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        return SeqUtil.seq(new A().charPatternOp('q'), A.charPatternFun('q'));
+    }
+}
+
+##########

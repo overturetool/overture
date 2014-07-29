@@ -1098,13 +1098,11 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	public PType caseAPeriodicStm(APeriodicStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		int nargs = Settings.dialect == Dialect.VDM_RT ? 4 : 1;
 		List<PExp> args = node.getArgs();
 
-		if (args.size() != nargs)
+		if (args.size() != 4)
 		{
-			TypeCheckerErrors.report(3287, "Periodic thread must have " + nargs
-					+ " argument(s)", node.getLocation(), node);
+			TypeCheckerErrors.report(3287, "Periodic thread must have 4 argument(s)", node.getLocation(), node);
 		} else
 		{
 

@@ -1,0 +1,29 @@
+class A
+
+operations
+
+public boolPatternOp : bool ==> bool
+boolPatternOp (false) ==
+let true = true
+in
+	return false;
+	
+functions
+
+public boolPatternFun : bool -> bool
+boolPatternFun (true) ==
+let true = true
+in
+	false;
+
+end A
+
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	return new A().boolPatternOp(false) and A`boolPatternFun(true);
+
+end Entry

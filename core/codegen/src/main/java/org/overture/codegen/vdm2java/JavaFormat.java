@@ -377,19 +377,23 @@ public class JavaFormat
 		return doNotWrap ? "!" + formattedExp : "!(" + formattedExp + ")";
 	}
 	
-	public String formatTemplateTypes(LinkedList<STypeCG> types) throws AnalysisException
+	public String formatTemplateTypes(List<STypeCG> types) throws AnalysisException
 	{
-		StringWriter writer = new StringWriter();
-		
-		if(types.size() <= 0)
+		if(types.isEmpty())
 			return "";
 		
+		return "<" + formattedTypes(types, "") + ">";
+	}
+
+	private String formattedTypes(List<STypeCG> types, String typePostFix) throws AnalysisException
+	{
 		STypeCG firstType = types.get(0);
 		
 		if(info.getAssistantManager().getTypeAssistant().isBasicType(firstType))
 			firstType = info.getAssistantManager().getTypeAssistant().getWrapperType((SBasicTypeCG) firstType);
 		
-		writer.append(format(firstType));
+		StringWriter writer = new StringWriter();
+		writer.append(format(firstType) + typePostFix);
 		
 		for(int i = 1; i < types.size(); i++)
 		{
@@ -398,10 +402,19 @@ public class JavaFormat
 			if(info.getAssistantManager().getTypeAssistant().isBasicType(currentType))
 				currentType = info.getAssistantManager().getTypeAssistant().getWrapperType((SBasicTypeCG) currentType);
 			
-			writer.append(", " + format(currentType));
+			writer.append(", " + format(currentType) + typePostFix);
 		}
 		
-		return "<" + writer.toString() + ">";
+		String result = writer.toString();
+		return result;
+	}
+	
+	public String formatTypeArgs(List<STypeCG> types) throws AnalysisException
+	{
+		if(types.isEmpty())
+			return "";
+		
+		return formattedTypes(types, ".class");
 	}
 	
 	public String formatEqualsBinaryExp(AEqualsBinaryExpCG node) throws AnalysisException

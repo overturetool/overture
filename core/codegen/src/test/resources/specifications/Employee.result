@@ -92,14 +92,14 @@ public class Company {
 
     public void op1() {
         Number x = employees.size();
-        VDMSeq y = employees.clone();
+        VDMSeq y = Utils.clone(employees);
         Employee q = ((Employee) employees.get(0));
 
         //Skip;
     }
 
     public Number calculateSalary() {
-        return start_calc(0L, employees.clone());
+        return start_calc(0L, Utils.clone(employees));
     }
 
     private Number start_calc(final Number sum, final VDMSeq emps) {
@@ -108,7 +108,7 @@ public class Company {
         } else {
             return start_calc(sum.doubleValue() +
                 ((Employee) emps.get(0)).getSalary().doubleValue(),
-                SeqUtil.tail(emps.clone()));
+                SeqUtil.tail(Utils.clone(emps)));
         }
     }
 
@@ -118,7 +118,7 @@ public class Company {
     }
 
     public Company addEmp(final Employee emp) {
-        employees = SeqUtil.conc(employees.clone(), SeqUtil.seq(emp));
+        employees = SeqUtil.conc(Utils.clone(employees), SeqUtil.seq(emp));
 
         return this;
     }

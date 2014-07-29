@@ -1,0 +1,21 @@
+class Entry
+
+functions
+
+functions
+
+public static f : (bool | char) -> nat
+f (c) ==
+	cases c :
+		true -> 1,
+		'a' -> 2,
+		others -> 3
+	end;
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	return [f(true), f('a'), f('b'), f(false)];
+
+end Entry
