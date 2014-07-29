@@ -24,6 +24,7 @@ import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.AInSetBinaryExp;
 import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.expressions.AIotaExp;
+import org.overture.ast.expressions.ALenUnaryExp;
 import org.overture.ast.expressions.ALessEqualNumericBinaryExp;
 import org.overture.ast.expressions.ALessNumericBinaryExp;
 import org.overture.ast.expressions.AModNumericBinaryExp;
@@ -914,6 +915,22 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	{
 		String r = node.getExp().apply(THIS, question);
 		String op = mytable.getTAIL();
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(op);
+		sb.append(space);
+		sb.append(r);
+		
+		return Utilities.wrap(sb.toString());
+	}
+	
+	@Override
+	public String caseALenUnaryExp(ALenUnaryExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		String r = node.getExp().apply(THIS, question);
+		String op = mytable.getLEN();
 		
 		StringBuilder sb = new StringBuilder();
 		
