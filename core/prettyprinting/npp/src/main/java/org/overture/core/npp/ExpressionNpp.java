@@ -46,6 +46,7 @@ import org.overture.ast.expressions.ASetRangeSetExp;
 import org.overture.ast.expressions.ASetUnionBinaryExp;
 import org.overture.ast.expressions.ASubsetBinaryExp;
 import org.overture.ast.expressions.ASubtractNumericBinaryExp;
+import org.overture.ast.expressions.ATailUnaryExp;
 import org.overture.ast.expressions.ATimesNumericBinaryExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.node.INode;
@@ -897,6 +898,22 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	{
 		String r = node.getExp().apply(THIS, question);
 		String op = mytable.getHEAD();
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(op);
+		sb.append(space);
+		sb.append(r);
+		
+		return Utilities.wrap(sb.toString());
+	}
+	
+	@Override
+	public String caseATailUnaryExp(ATailUnaryExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		String r = node.getExp().apply(THIS, question);
+		String op = mytable.getTAIL();
 		
 		StringBuilder sb = new StringBuilder();
 		

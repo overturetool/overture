@@ -788,4 +788,22 @@ public class ExpressionNppTest {
 	{
 		aux("hd [x*x]", "(hd [(x * x)])");
 	}
+	
+	@Test
+	public void testCasesATailUnaryExp_01() throws AnalysisException
+	{
+		aux("tl l", "(tl l)");
+	}
+	
+	@Test
+	public void testCasesATailUnaryExp_02() throws AnalysisException
+	{
+		aux("tl [1, 2]", "(tl [1, 2])");
+	}
+	
+	@Test
+	public void testCasesATailUnaryExp_03() throws AnalysisException
+	{
+		aux("tl [x*x]", "(tl [(x * x)])");
+	}
 }
