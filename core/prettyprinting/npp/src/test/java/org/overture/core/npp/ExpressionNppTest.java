@@ -824,4 +824,22 @@ public class ExpressionNppTest {
 	{
 		aux("len [x*x]", "(len [(x * x)])");
 	}
+	
+	@Test
+	public void testCasesAElemsUnaryExp_01() throws AnalysisException
+	{
+		aux("elems l", "(elems l)");
+	}
+	
+	@Test
+	public void testCasesAElemsUnaryExp_02() throws AnalysisException
+	{
+		aux("elems [1, 2]", "(elems [1, 2])");
+	}
+	
+	@Test
+	public void testCaseAElemsUnaryExp_03() throws AnalysisException
+	{
+		aux("elems [x*x]", "(elems [(x * x)])");
+	}
 }
