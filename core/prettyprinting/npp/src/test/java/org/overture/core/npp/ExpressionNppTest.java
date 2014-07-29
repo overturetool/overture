@@ -860,4 +860,22 @@ public class ExpressionNppTest {
 	{
 		aux("inds [x*x]", "(inds [(x * x)])");
 	}
+	
+	@Test
+	public void testCasesAConcBinaryExp_01() throws AnalysisException
+	{
+		aux("[1, 2] ^ [2, 3]", "[1, 2] ^ [2, 3]");
+	}
+	
+	@Test
+	public void testCasesAConcBinaryExp_02() throws AnalysisException
+	{
+		aux("x ^ y", "x ^ y");
+	}
+	
+	@Test
+	public void testCaseAConcBinaryExp_03() throws AnalysisException
+	{
+		aux("x ^ [true]", "x ^ [true]");
+	}
 }

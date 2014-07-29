@@ -40,6 +40,7 @@ import org.overture.ast.expressions.AQuoteLiteralExp;
 import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.ARemNumericBinaryExp;
 import org.overture.ast.expressions.ASeqCompSeqExp;
+import org.overture.ast.expressions.ASeqConcatBinaryExp;
 import org.overture.ast.expressions.ASeqEnumSeqExp;
 import org.overture.ast.expressions.ASetCompSetExp;
 import org.overture.ast.expressions.ASetDifferenceBinaryExp;
@@ -973,6 +974,17 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		sb.append(r);
 		
 		return Utilities.wrap(sb.toString());
+	}
+	
+	@Override
+	public String caseASeqConcatBinaryExp(ASeqConcatBinaryExp node,
+			IndentTracker question) throws AnalysisException
+	{
+		String l = node.getLeft().apply(THIS, question);
+		String r = node.getRight().apply(THIS, question);
+		String op = mytable.getCONCATENATE();
+		
+		return Utilities.append(l, r, op);
 	}
 	
 	@Override
