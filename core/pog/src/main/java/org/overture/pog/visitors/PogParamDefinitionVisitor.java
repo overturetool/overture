@@ -485,7 +485,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 				obligations.add(new OperationPostConditionObligation(node, question, assistantFactory));
 			}
 			question.clearStateContexts();
-
+			question.pop();
 			return obligations;
 		} catch (Exception e)
 		{
