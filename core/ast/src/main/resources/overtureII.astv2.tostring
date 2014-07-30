@@ -273,3 +273,8 @@ import org.overture.ast.util.ToStringUtil;
 %objectDesignator->self = [self]
 
 
+//traces
+%traceDefinition->repeat = [core] "{"[from]","[to]"}"
+%traceCoreDefinition->applyExpression = [callStatement]
+%traceCoreDefinition->bracketedExpression = "("[terms]")"
+
