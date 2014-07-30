@@ -24,11 +24,12 @@
 package org.overture.interpreter.traces;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.LexLocation;
+import org.overture.interpreter.traces.util.LazyTestSequence;
+import org.overture.interpreter.traces.util.Pair;
 
 public class RepeatTraceNode extends TraceNode
 {
@@ -97,60 +98,8 @@ public class RepeatTraceNode extends TraceNode
 		// return tests;
 	}
 
-	public class LazyTestSequence extends TestSequence
-	{
-
-		/**
-		 * serial
-		 */
-		private static final long serialVersionUID = 1L;
-		private RepeatTraceNode repeatTraceNode;
-
-		public LazyTestSequence(RepeatTraceNode repeatTraceNode)
-		{
-			this.repeatTraceNode = repeatTraceNode;
-		}
-
-		@Override
-		public synchronized int size()
-		{
-			return this.repeatTraceNode.size2();
-		}
-
-		@Override
-		public synchronized CallSequence get(int index)
-		{
-			return this.repeatTraceNode.get(index);
-		}
-
-		@Override
-		public synchronized Iterator<CallSequence> iterator()
-		{
-			return new Iterator<CallSequence>()
-			{
-				int index = 0;
-
-				@Override
-				public boolean hasNext()
-				{
-					return index < LazyTestSequence.this.size();
-				}
-
-				@Override
-				public CallSequence next()
-				{
-					return LazyTestSequence.this.get(index++);
-				}
-
-				@Override
-				public void remove()
-				{
-
-				}
-			};
-		}
-	}
-
+	private Map<Integer, Pair<Integer, Integer[]>> indics;
+	
 	public CallSequence get(int index)
 	{
 		if (indics == null)
@@ -185,28 +134,7 @@ public class RepeatTraceNode extends TraceNode
 	public int size()
 	{
 		return (1 + to - from) * repeat.getTests().size();
-
 	}
-
-	class Pair<T1, T2>
-	{
-		public Pair(T1 first, T2 second)
-		{
-			this.first = first;
-			this.second = second;
-		}
-
-		public T1 first;
-		public T2 second;
-
-		@Override
-		public String toString()
-		{
-			return "(" + first + ":" + second + ")";
-		}
-	}
-
-	Map<Integer, Pair<Integer, Integer[]>> indics;
 
 	public int size2()
 	{
@@ -250,8 +178,4 @@ public class RepeatTraceNode extends TraceNode
 		System.out.println(indics);
 		return size;
 	}
-
-	int read = 0;
-	int r = -1;
-	CallSequence toRepeat = null;
 }
