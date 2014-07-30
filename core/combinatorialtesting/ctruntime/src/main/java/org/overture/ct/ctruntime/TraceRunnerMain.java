@@ -41,6 +41,7 @@ import org.overture.util.Base64;
 
 public class TraceRunnerMain implements IProgressMonitor
 {
+	public static boolean USE_SYSTEM_EXIT = true;
 	protected final String host;
 	protected final int port;
 	protected final String ideKey;
@@ -491,36 +492,44 @@ public class TraceRunnerMain implements IProgressMonitor
 
 					RTLogger.dump(true);
 //					runner.progressTerminating();
-					System.exit(0);
+					exit(0);
 				} catch (ContextException e)
 				{
 					System.err.println("Initialization: " + e);
 					e.ctxt.printStackTrace(Console.out, true);
 					RTLogger.dump(true);
-					System.exit(3);
+					exit(3);
 				} catch(ValueException e)
 				{
 					System.err.println("Initialization: " + e);
 					e.ctxt.printStackTrace(Console.out, true);
 					RTLogger.dump(true);
-					System.exit(3);					
+					exit(3);					
 				}catch (Exception e)
 				
 				{
 					System.err.println("Initialization: " + e);
 					e.printStackTrace();
 					RTLogger.dump(true);
-					System.exit(3);
+					exit(3);
 				}
 			} else
 			{
-				System.exit(2);
+				exit(2);
 			}
 		} else
 		{
-			System.exit(1);
+			exit(1);
 		}
 
+	}
+	
+	private static void exit(int code)
+	{
+		if(USE_SYSTEM_EXIT)
+		{
+			System.exit(code);
+		}
 	}
 
 	private void startup() throws Exception
