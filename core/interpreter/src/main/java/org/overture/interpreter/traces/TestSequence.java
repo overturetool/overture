@@ -31,6 +31,7 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.messages.InternalException;
@@ -88,33 +89,40 @@ public class TestSequence extends Vector<CallSequence>
 		{
 			try
 			{
-				Environment env = null;
-
-				if (interpreter instanceof ClassInterpreter)
-				{
-					env = new FlatEnvironment(interpreter.getAssistantFactory(), classdef.apply(interpreter.getAssistantFactory().getSelfDefinitionFinder()), new PrivateClassEnvironment(interpreter.getAssistantFactory(), classdef, interpreter.getGlobalEnvironment()));
-				} else
-				{
-					env = new FlatEnvironment(interpreter.getAssistantFactory(), new Vector<PDefinition>(), interpreter.getGlobalEnvironment());
-				}
-
-				for (PStm statement : test)
-				{
-					if (statement instanceof TraceVariableStatement)
-					{
-						((TraceVariableStatement) statement).typeCheck(env, NameScope.NAMESANDSTATE);
-					} else
-					{
-						interpreter.typeCheck(statement, env);
-					}
-
-				}
+				typeCheck(classdef, interpreter, test);
 			} catch (VDMErrorsException e)
 			{
 				failed.put(test, e);
 			}
 		}
 		return new TypeCheckedTestSequence(this, failed);
+	}
+
+	protected void typeCheck(SClassDefinition classdef,
+			Interpreter interpreter, CallSequence test)
+			throws AnalysisException, Exception
+	{
+		Environment env = null;
+
+		if (interpreter instanceof ClassInterpreter)
+		{
+			env = new FlatEnvironment(interpreter.getAssistantFactory(), classdef.apply(interpreter.getAssistantFactory().getSelfDefinitionFinder()), new PrivateClassEnvironment(interpreter.getAssistantFactory(), classdef, interpreter.getGlobalEnvironment()));
+		} else
+		{
+			env = new FlatEnvironment(interpreter.getAssistantFactory(), new Vector<PDefinition>(), interpreter.getGlobalEnvironment());
+		}
+
+		for (PStm statement : test)
+		{
+			if (statement instanceof TraceVariableStatement)
+			{
+				((TraceVariableStatement) statement).typeCheck(env, NameScope.NAMESANDSTATE);
+			} else
+			{
+				interpreter.typeCheck(statement, env);
+			}
+
+		}
 	}
 
 	public void reduce(float subset, TraceReductionType type, long seed)

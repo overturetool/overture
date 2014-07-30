@@ -102,6 +102,7 @@ public class RepeatTraceNode extends TraceNode
 	
 	public CallSequence get(int index)
 	{
+		System.out.println("Getting test at: "+index);
 		if (indics == null)
 		{
 			size2();
@@ -138,7 +139,13 @@ public class RepeatTraceNode extends TraceNode
 
 	public int size2()
 	{
+		if(indics!=null)
+		{
+			return indics.size();
+		}
+		
 		indics = new HashMap<Integer, Pair<Integer, Integer[]>>();
+		
 		int size = 0;
 		TestSequence rtests = repeat.getTests();
 		int count = rtests.size();
@@ -175,7 +182,6 @@ public class RepeatTraceNode extends TraceNode
 			}
 		}
 
-		System.out.println(indics);
 		return size;
 	}
 }

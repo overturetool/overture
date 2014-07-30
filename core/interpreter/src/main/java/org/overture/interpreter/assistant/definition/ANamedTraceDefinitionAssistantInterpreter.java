@@ -49,7 +49,7 @@ public class ANamedTraceDefinitionAssistantInterpreter
 			tests.reduce(subset, type, seed);
 		}
 
-		return tests.typeCheck(tracedef.getClassDefinition());
+		return tests;//tests.typeCheck(tracedef.getClassDefinition());
 	}
 
 }

@@ -5,10 +5,13 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.statements.PStm;
+import org.overture.ast.typechecker.NameScope;
 import org.overture.config.Settings;
 import org.overture.ct.utils.TraceXmlWrapper;
 import org.overture.interpreter.runtime.ClassInterpreter;
@@ -20,8 +23,11 @@ import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.traces.CallSequence;
 import org.overture.interpreter.traces.TestSequence;
 import org.overture.interpreter.traces.TraceReductionType;
-import org.overture.interpreter.traces.TypeCheckedTestSequence;
+import org.overture.interpreter.traces.TraceVariableStatement;
 import org.overture.interpreter.traces.Verdict;
+import org.overture.typechecker.Environment;
+import org.overture.typechecker.FlatEnvironment;
+import org.overture.typechecker.PrivateClassEnvironment;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class TraceInterpreter
@@ -118,19 +124,11 @@ public class TraceInterpreter
 			}
 			processingClass(className, numberOfTraces);
 
-			for (Object definition : definitions)
-			{
-				if (definition instanceof ANamedTraceDefinition)
-				{
-					if (traceName == null
-							|| ((ANamedTraceDefinition) definition).getName().getName().equals(traceName))
-					{
-						interpreter.init(null);
-						Context ctxt = interpreter.getInitialTraceContext((ANamedTraceDefinition) definition, false);
+			List<ANamedTraceDefinition> traceDefs = getAllTraceDefinitions(definitions, traceName);
 
-						evaluateTests(className, storage, definition, ctxt);
-					}
-				}
+			for (ANamedTraceDefinition def : traceDefs)
+			{
+				evaluateTraceDefinition(className, storage, def);
 			}
 
 			completed();
@@ -161,11 +159,48 @@ public class TraceInterpreter
 		}
 	}
 
+	/**
+	 * obtain all trace definitions, or just the one named
+	 * 
+	 * @param definitions
+	 * @param traceName
+	 *            null or a name of a trace
+	 * @return
+	 */
+	private List<ANamedTraceDefinition> getAllTraceDefinitions(
+			List<PDefinition> definitions, String traceName)
+	{
+		List<ANamedTraceDefinition> traceDefs = new Vector<ANamedTraceDefinition>();
+
+		for (Object definition : definitions)
+		{
+			if (definition instanceof ANamedTraceDefinition)
+			{
+				if (traceName == null
+						|| ((ANamedTraceDefinition) definition).getName().getName().equals(traceName))
+				{
+					traceDefs.add((ANamedTraceDefinition) definition);
+				}
+			}
+		}
+		return traceDefs;
+	}
+
+	protected void evaluateTraceDefinition(String className,
+			TraceXmlWrapper storage, Object definition) throws ValueException,
+			AnalysisException, Exception
+	{
+		interpreter.init(null);
+		Context ctxt = interpreter.getInitialTraceContext((ANamedTraceDefinition) definition, false);
+
+		evaluateTests(className, storage, definition, ctxt);
+	}
+
 	private void evaluateTests(String className, TraceXmlWrapper storage,
 			Object traceDefinition, Context ctxt) throws Exception
 	{
 		ANamedTraceDefinition mtd = (ANamedTraceDefinition) traceDefinition;
-		TypeCheckedTestSequence tests = null;
+		TestSequence tests = null;
 		if (!reduce)
 		{
 			subset = 1.0F;
@@ -173,19 +208,12 @@ public class TraceInterpreter
 			seed = 999;
 		}
 
-		TestSequence tests1 = ctxt.assistantFactory.createANamedTraceDefinitionAssistant().getTests(mtd, ctxt, subset, traceReductionType, seed);
-		if (tests1 instanceof TypeCheckedTestSequence)
-		{
-			tests = (TypeCheckedTestSequence) tests1;
-		} else
-		{
-			throw new Exception("Failed to get tests");
-		}
+		tests = ctxt.assistantFactory.createANamedTraceDefinitionAssistant().getTests(mtd, ctxt, subset, traceReductionType, seed);
 
 		processingTrace(className, mtd.getName().getName(), tests.size());
 		if (storage != null)
 		{
-			storage.StartTrace(mtd.getName().getName(), mtd.getLocation().getFile().getName(), mtd.getLocation().getStartLine(), mtd.getLocation().getStartPos(), tests.getTests().size(), new Float(subset), TraceReductionType.valueOf(traceReductionType.toString()), new Long(seed));
+			storage.StartTrace(mtd.getName().getName(), mtd.getLocation().getFile().getName(), mtd.getLocation().getStartLine(), mtd.getLocation().getStartPos(), tests.size(), new Float(subset), TraceReductionType.valueOf(traceReductionType.toString()), new Long(seed));
 		}
 
 		int n = 1;
@@ -194,11 +222,12 @@ public class TraceInterpreter
 		int inconclusiveCount = 0;
 		int skippedCount = 0;
 
-		for (CallSequence test : tests.getTests())
+		for (CallSequence test : tests)
 		{
 			processingTest(className, mtd.getName().getName(), n, tests.size());
-			// Bodge until we figure out how to not have explicit op
-			// names.
+			/*
+			 * Bodge until we figure out how to not have explicit op names.
+			 */
 			String clean = test.toString().replaceAll("\\.\\w+`", ".");
 
 			if (storage != null)
@@ -219,36 +248,40 @@ public class TraceInterpreter
 			{
 				List<Object> result = null;
 
-				if (tests.isTypeCorrect(test))
+				// type check
+				boolean typeOk = false;
+				try
 				{
-					try
-					{
-						interpreter.init(null); // Initialize completely between
-						// every
-						// run...
-						result = interpreter.runOneTrace(mtd, test, false);
-					} catch (Exception e)
-					{
-						result = new Vector<Object>();
-						result.add(e.getMessage());
-						result.add(Verdict.FAILED);
+					typeCheck(mtd.getClassDefinition(), interpreter, test);
+					typeOk = true;
+				} catch (Exception e)
+				{
+					result = new Vector<Object>();
+					result.add(e);
+					result.add(Verdict.FAILED);
+				}
 
+				// interpret
+				if (typeOk)
+				{
+					result = evaluateCallSequence(mtd, test);
+
+					if (result.get(result.size() - 1) == Verdict.ERROR)
+					{
 						if (storage != null)
 						{
 							storage.AddResults(new Integer(n).toString(), result);
-							storage.AddTraceStatus(Verdict.valueOf(Verdict.FAILED.toString()), tests.getTests().size(), skippedCount, faildCount, inconclusiveCount);
+							storage.AddTraceStatus(Verdict.valueOf(Verdict.FAILED.toString()), tests.size(), skippedCount, faildCount, inconclusiveCount);
 							storage.StopElement();
 						}
+
+						Exception e = (Exception) result.get(result.size() - 2);
+						result.remove(result.size() - 2);
 
 						throw e;
 					}
 
 					tests.filter(result, test, n);
-				} else
-				{
-					result = new Vector<Object>();
-					result.add(tests.getTypeCheckError(test));
-					result.add(Verdict.FAILED);
 				}
 
 				if (result.get(result.size() - 1) == Verdict.FAILED)
@@ -260,15 +293,6 @@ public class TraceInterpreter
 				{
 					inconclusiveCount++;
 				}
-
-				// for (int i = 0; i < result.size(); i++)
-				// {
-				// if (result.get(i) instanceof Verdict)
-				// {
-				// result.set(i, Verdict.valueOf(result.get(i).toString()));
-				// }
-				//
-				// }
 
 				if (storage != null)
 				{
@@ -291,11 +315,57 @@ public class TraceInterpreter
 				worstVerdict = Verdict.INCONCLUSIVE;
 			}
 
-			storage.AddTraceStatus(Verdict.valueOf(worstVerdict.toString()), tests.getTests().size(), skippedCount, faildCount, inconclusiveCount);
+			storage.AddTraceStatus(Verdict.valueOf(worstVerdict.toString()), tests.size(), skippedCount, faildCount, inconclusiveCount);
 			storage.StopElement();
 		}
 
-		processingTraceFinished(className, mtd.getName().getName(), tests.getTests().size(), faildCount, inconclusiveCount, skippedCount);
+		processingTraceFinished(className, mtd.getName().getName(), tests.size(), faildCount, inconclusiveCount, skippedCount);
+	}
+
+	protected void typeCheck(SClassDefinition classdef,
+			Interpreter interpreter, CallSequence test)
+			throws AnalysisException, Exception
+	{
+		Environment env = null;
+
+		if (interpreter instanceof ClassInterpreter)
+		{
+			env = new FlatEnvironment(interpreter.getAssistantFactory(), classdef.apply(interpreter.getAssistantFactory().getSelfDefinitionFinder()), new PrivateClassEnvironment(interpreter.getAssistantFactory(), classdef, interpreter.getGlobalEnvironment()));
+		} else
+		{
+			env = new FlatEnvironment(interpreter.getAssistantFactory(), new Vector<PDefinition>(), interpreter.getGlobalEnvironment());
+		}
+
+		for (PStm statement : test)
+		{
+			if (statement instanceof TraceVariableStatement)
+			{
+				((TraceVariableStatement) statement).typeCheck(env, NameScope.NAMESANDSTATE);
+			} else
+			{
+				interpreter.typeCheck(statement, env);
+			}
+
+		}
+	}
+
+	protected List<Object> evaluateCallSequence(ANamedTraceDefinition mtd,
+			CallSequence test)
+	{
+		List<Object> result;
+		try
+		{
+			interpreter.init(null); /* Initialize completely between every run... */
+			result = interpreter.runOneTrace(mtd, test, false);
+		} catch (Exception e)
+		{
+			result = new Vector<Object>();
+			result.add(e.getMessage());
+			result.add(e);
+			result.add(Verdict.ERROR);
+
+		}
+		return result;
 	}
 
 	protected void processingTraceFinished(String className, String name,

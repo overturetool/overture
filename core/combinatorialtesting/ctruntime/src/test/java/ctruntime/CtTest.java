@@ -23,10 +23,22 @@ public class CtTest
 	}
 
 	@Test
-	public void testSimple() throws IOException
+	public void testSlT1() throws IOException
+	{
+		runTest("T1", "T1.vdmsl", "trace-output/T1");
+	}
+
+	@Test
+	public void testSlT2() throws IOException
+	{
+		runTest("T2", "T1.vdmsl", "trace-output/T2");
+	}
+
+	public void runTest(String traceName, String spec, String output)
+			throws IOException
 	{
 
-		final int port = 8888;
+		final int port = 8889;
 		final ServerSocket socket = new ServerSocket(port);
 		socket.setSoTimeout(timeout);
 		final Data data = new Data();
@@ -49,13 +61,19 @@ public class CtTest
 						while ((line = input.readLine()) != null)
 						{
 							System.out.println(line);
-							data.message = line;
+
+							line = line.trim();
+							if (!line.isEmpty())
+							{
+								data.message = line;
+							}
 
 							if (line.contains("status=\"completed\" progress=\"100\""))
 							{
 								final OutputStream out = conn.getOutputStream();
 								out.write("exit\n".getBytes());
 								out.flush();
+								socket.close();
 							}
 						}
 					} catch (IOException e)
@@ -89,10 +107,10 @@ public class CtTest
 		t.setDaemon(false);
 		t.start();
 
-		String traceName = "T1";
-		File traceFolder = new File("target/output".replace('/', File.separatorChar));
+		// String traceName = "T1";
+		File traceFolder = new File(("target/" + output).replace('/', File.separatorChar));
 		traceFolder.mkdirs();
-		File specfile = new File("src/test/resources/T1.vdmsl".replace('/', File.separatorChar));
+		File specfile = new File(("src/test/resources/" + spec).replace('/', File.separatorChar));
 		String[] args = new String[] { "-h", "localhost", "-p", port + "",
 				"-k", "whatever", "-e", "DEFAULT", "-vdmsl", "-r", "vdm10",
 				"-t", traceName, "-tracefolder",
@@ -101,7 +119,9 @@ public class CtTest
 		TraceRunnerMain.USE_SYSTEM_EXIT = false;
 		TraceRunnerMain.main(args);
 
-		Assert.assertTrue("Test did not succed", data.message.contains("status=\"completed\" progress=\"100\""));
+		final String message = data.message;
+		System.out.println("Last message: " + message);
+		Assert.assertTrue("Test did not succed", message.contains("status=\"completed\" progress=\"100\""));
 
 	}
 }
