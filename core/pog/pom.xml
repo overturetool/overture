@@ -41,7 +41,6 @@
       <groupId>org.overturetool.core.testing</groupId>
       <artifactId>testframework</artifactId>
       <version>${project.version}</version>
-      <type>test-jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -65,8 +64,6 @@
       <version>4.0</version>
     </dependency>
   </dependencies>
-
-
 
   <build>
     <plugins>
