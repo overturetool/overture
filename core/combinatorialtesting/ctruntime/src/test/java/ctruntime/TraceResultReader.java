@@ -15,7 +15,7 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.junit.Test;
+import org.overture.ct.utils.TraceXmlWrapper;
 import org.overture.interpreter.traces.Verdict;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -24,11 +24,11 @@ import org.xml.sax.SAXException;
 
 public class TraceResultReader
 {
-	@Test
-	public void test() throws XPathExpressionException, SAXException, IOException, ParserConfigurationException
-	{
-		System.out.println(read(new File("target/trace-output/T1/DEFAULT-T1.xml".replace('/', File.separatorChar))));
-	}
+//	@Test
+//	public void test() throws XPathExpressionException, SAXException, IOException, ParserConfigurationException
+//	{
+//		System.out.println(read(new File("target/trace-output/T1/DEFAULT-T1.xml".replace('/', File.separatorChar))));
+//	}
 	
 	public List<TraceResult> read(File file) throws SAXException, IOException,
 			ParserConfigurationException, XPathExpressionException
@@ -45,33 +45,33 @@ public class TraceResultReader
 		XPath xpath = xPathfactory.newXPath();
 		
 		
-		XPathExpression expr = xpath.compile("//Trace");
+		XPathExpression expr = xpath.compile("//"+TraceXmlWrapper.TRACE_TAG);
 		
 		final NodeList list = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
 		
 		for (Node n : new NodeIterator(list))
 		{
-			final String traceName = n.getAttributes().getNamedItem("Name").getNodeValue();
+			final String traceName = n.getAttributes().getNamedItem(TraceXmlWrapper.NAME_TAG).getNodeValue();
 			
 			TraceResult tr = new TraceResult();
 			results.add(tr);
 			tr.traceName = traceName;
 			
-			expr = xpath.compile("Test");
+			expr = xpath.compile(TraceXmlWrapper.TEST_CASE_TAG);
 			final NodeList tests = (NodeList) expr.evaluate(n, XPathConstants.NODESET);
 			
 			for (Node testNode : new NodeIterator(tests))
 			{
-				Integer testNo =Integer.parseInt( testNode.getAttributes().getNamedItem("No").getNodeValue());
+				Integer testNo =Integer.parseInt( testNode.getAttributes().getNamedItem(TraceXmlWrapper.NUMBER_TAG).getNodeValue());
 				String test = testNode.getTextContent().trim();
 			
-				expr = xpath.compile("Result[@No='"+testNo+"']");
+				expr = xpath.compile(TraceXmlWrapper.RESULT_TAG+"[@"+TraceXmlWrapper.NUMBER_TAG+"='"+testNo+"']");
 				
 				final NodeList resultNodeList= (NodeList) expr.evaluate(n, XPathConstants.NODESET);
 				
 				final Node resultNode = resultNodeList.item(0);
 				final String result = resultNode.getTextContent().trim();
-				final String verdict = resultNode.getAttributes().getNamedItem("Verdict").getNodeValue();
+				final String verdict = resultNode.getAttributes().getNamedItem(TraceXmlWrapper.VERDICT_TAG).getNodeValue();
 				
 				TraceTest tt = new TraceTest(testNo, test, result, Verdict.valueOf(verdict));
 				tr.tests.add(tt);

@@ -144,15 +144,6 @@ operations
 --
 
 
-    operations
-        play
-    types
-        Pos renamed Pos;
-        PlayOrder renamed PlayOrder;
-        Moves renamed Moves;
-        Player renamed Player
-    values
-        SIZE renamed SIZE
 
 
 
@@ -172,7 +163,7 @@ values
 operations
     test: PlayOrder * Moves ==> Player | <DRAW> | <UNFINISHED>
     test(playorder, moves) ==
-        XO`play(playorder, moves);
+        play(playorder, moves);
 
 traces
     ALL:
@@ -181,10 +172,10 @@ traces
         let m2 in set ALLPOS \ {m1} in                              -- 72 1st-2nd pairs
         let m3 in set ALLPOS \ {m1, m2} in                          -- 504 1st-2nd-3rd etc...
         let m4 in set ALLPOS \ {m1, m2, m3} in                      -- 3024
-        let m5 in set ALLPOS \ {m1, m2, m3, m4} in                  -- 15120 (minimum)
---      let m6 in set ALLPOS \ {m1, m2, m3, m4, m5} in              -- 60480
+ --       let m5 in set ALLPOS \ {m1, m2, m3, m4} in                  -- 15120 (minimum)
+ --     let m6 in set ALLPOS \ {m1, m2, m3, m4, m5} in              -- 60480
 --      let m7 in set ALLPOS \ {m1, m2, m3, m4, m5, m6} in          -- 181440
 --      let m8 in set ALLPOS \ {m1, m2, m3, m4, m5, m6, m7} in      -- 362880
 --      let m9 in set ALLPOS \ {m1, m2, m3, m4, m5, m6, m7, m8} in  -- 362880
-            XO`play(XO, [m1, m2, m3, m4, m5]);
+            play(XO, [m1, m2, m3, m4]);
 

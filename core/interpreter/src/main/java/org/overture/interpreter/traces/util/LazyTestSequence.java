@@ -24,6 +24,12 @@ public class LazyTestSequence extends TestSequence
 	{
 		return this.node.size();
 	}
+	
+	@Override
+	public synchronized boolean isEmpty()
+	{
+		return !iterator().hasNext();
+	}
 
 	@Override
 	public synchronized CallSequence get(int index)
@@ -47,7 +53,11 @@ public class LazyTestSequence extends TestSequence
 			@Override
 			public CallSequence next()
 			{
-				return LazyTestSequence.this.get(index++);
+				CallSequence test = LazyTestSequence.this.get(index++);
+				
+				markFiltered(test);
+				
+				return test;
 			}
 
 			@Override

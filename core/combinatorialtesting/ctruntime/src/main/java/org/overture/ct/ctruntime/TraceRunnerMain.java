@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URI;
@@ -36,6 +37,7 @@ import org.overture.interpreter.traces.TraceReductionType;
 import org.overture.interpreter.util.ExitStatus;
 import org.overture.parser.config.Properties;
 import org.overture.parser.lex.LexTokenReader;
+import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.util.Base64;
 
@@ -519,6 +521,9 @@ public class TraceRunnerMain implements IProgressMonitor
 				}
 			} else
 			{
+				final PrintWriter out = new PrintWriter(System.err);
+				TypeChecker.printErrors(out);
+				out.flush();
 				exit(2);
 			}
 		} else
@@ -659,6 +664,16 @@ public class TraceRunnerMain implements IProgressMonitor
 		});
 		t.setDaemon(true);
 		t.start();
+		t.setUncaughtExceptionHandler(new UncaughtExceptionHandler()
+		{
+			
+			@Override
+			public void uncaughtException(Thread t, Throwable e)
+			{
+				e.printStackTrace();
+				
+			}
+		});
 
 		TraceXmlWrapper storage = new TraceXmlWrapper(new File(traceFolder, moduleName
 				+ "-" + traceName + ".xml"));

@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.overture.ast.node.Node;
 import org.overture.interpreter.traces.util.LazyTestSequence;
 import org.overture.interpreter.traces.util.Pair;
 
@@ -37,49 +36,11 @@ public class AlternativeTraceNode extends TraceNode implements
 {
 	public List<TraceNode> alternatives;
 
+	private Map<Integer, Pair<Integer, Integer>> indics;
+
 	public AlternativeTraceNode()
 	{
 		this.alternatives = new Vector<TraceNode>();
-	}
-
-	@Override
-	public String toString()
-	{
-		StringBuilder sb = new StringBuilder();
-		sb.append("(");
-		String sep = "";
-
-		for (TraceNode node : alternatives)
-		{
-			sb.append(sep);
-			sb.append(node.toString());
-			sep = " | ";
-		}
-
-		sb.append(")");
-		return sb.toString();
-	}
-
-	@Override
-	public TestSequence getTests()
-	{
-		return new LazyTestSequence(this);
-//		TestSequence tests = new TestSequence();
-//
-//		for (TraceNode node : alternatives)
-//		{
-//			// Alternatives within an alternative are just like larger alts,
-//			// so we add all the lower alts to the list...
-//
-//			for (CallSequence test : node.getTests())
-//			{
-//				CallSequence seq = getVariables();
-//				seq.addAll(test);
-//				tests.add(seq);
-//			}
-//		}
-//
-//		return tests;
 	}
 
 	@Override
@@ -103,9 +64,13 @@ public class AlternativeTraceNode extends TraceNode implements
 			return tmp.getTests().get(v.second);
 		}
 	}
-	
-	private Map<Integer, Pair<Integer, Integer>> indics;
 
+	@Override
+	public TestSequence getTests()
+	{
+		return new LazyTestSequence(this);
+	}
+	
 	@Override
 	public int size()
 	{
@@ -142,5 +107,23 @@ public class AlternativeTraceNode extends TraceNode implements
 			k++;
 		}
 		return size;
+	}
+
+	@Override
+	public String toString()
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("(");
+		String sep = "";
+
+		for (TraceNode node : alternatives)
+		{
+			sb.append(sep);
+			sb.append(node.toString());
+			sep = " | ";
+		}
+
+		sb.append(")");
+		return sb.toString();
 	}
 }

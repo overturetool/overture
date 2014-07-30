@@ -23,11 +23,17 @@
 
 package org.overture.interpreter.traces;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
-public class SequenceTraceNode extends TraceNode
+import org.overture.interpreter.traces.util.LazyTestSequence;
+
+public class SequenceTraceNode extends TraceNode implements IIterableTraceNode
 {
+	private Map<Integer, Integer[]> indics;
+
 	public List<TraceNode> nodes;
 
 	public SequenceTraceNode()
@@ -36,12 +42,94 @@ public class SequenceTraceNode extends TraceNode
 	}
 
 	@Override
+	public CallSequence get(int index)
+	{
+		if (indics == null)
+		{
+			size();
+		}
+		Integer[] select = indics.get(index);
+
+		CallSequence seq = getVariables();
+
+		List<TestSequence> nodetests = new Vector<TestSequence>();
+		int count = nodes.size();
+
+		// TODO not good, poor performance
+		for (TraceNode node : nodes)
+		{
+			TestSequence nt = node.getTests();
+			nodetests.add(nt);
+		}
+
+		for (int i = 0; i < count; i++)
+		{
+			TestSequence ith = nodetests.get(i);
+
+			if (!ith.isEmpty())
+			{
+				CallSequence subseq = ith.get(select[i]);
+				seq.addAll(subseq);
+			}
+		}
+		return seq;
+	}
+
+	@Override
+	public TestSequence getTests()
+	{
+		return new LazyTestSequence(this);
+	}
+
+	@Override
+	public int size()
+	{
+		if (indics != null)
+		{
+			return indics.size();
+		}
+
+		indics = new HashMap<Integer, Integer[]>();
+
+		List<TestSequence> nodetests = new Vector<TestSequence>();
+		int count = nodes.size();
+		int[] sizes = new int[count];
+		int n = 0;
+
+		for (TraceNode node : nodes)
+		{
+			TestSequence nt = node.getTests();
+			nodetests.add(nt);
+			sizes[n++] = nt.size();
+		}
+
+		int size = 0;
+
+		Permutor p = new Permutor(sizes);
+
+		while (p.hasNext())
+		{
+			int[] next = p.next();
+
+			Integer[] select = new Integer[next.length];
+			for (int i = 0; i < next.length; i++)
+			{
+				select[i] = next[i];
+			}
+			indics.put(size, select);
+			size++;
+		}
+
+		return size;
+	}
+
+	@Override
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder();
 		String sep = "";
 
-		for (TraceNode node: nodes)
+		for (TraceNode node : nodes)
 		{
 			sb.append(sep);
 			sb.append(node.toString());
@@ -49,45 +137,5 @@ public class SequenceTraceNode extends TraceNode
 		}
 
 		return sb.toString();
-	}
-
-	@Override
-	public TestSequence getTests()
-	{
-		List<TestSequence> nodetests = new Vector<TestSequence>();
-		int count = nodes.size();
-		int[] sizes = new int[count];
-		int n = 0;
-
-		for (TraceNode node: nodes)
-		{
-			TestSequence nt = node.getTests();
-			nodetests.add(nt);
-			sizes[n++] = nt.size();
-		}
-
-		TestSequence tests = new TestSequence();
-		Permutor p = new Permutor(sizes);
-
-		while (p.hasNext())
-		{
-			int[] select = p.next();
-			CallSequence seq = getVariables();
-
-			for (int i=0; i<count; i++)
-			{
-				TestSequence ith = nodetests.get(i);
-				
-				if (!ith.isEmpty())
-				{
-					CallSequence subseq = ith.get(select[i]);
-					seq.addAll(subseq);
-				}
-			}
-
-			tests.add(seq);
-		}
-
-		return tests;
 	}
 }

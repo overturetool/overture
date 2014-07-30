@@ -32,6 +32,30 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class TraceInterpreter
 {
+	private final static boolean DEBUG = false;
+
+	private static class StopWatch
+	{
+		static long before = 0;
+
+		public static void set()
+		{
+			before = System.currentTimeMillis();
+		}
+
+		public static void stop(String msg)
+		{
+			if (DEBUG)
+			{
+				long after = System.currentTimeMillis();
+				long duration = after - before;
+				System.out.println("Completed '" + msg + "' in "
+						+ (double) duration / 1000 + " secs. ");
+			}
+		}
+
+	}
+
 	protected long beginClass = 0;
 	protected long beginTrace = 0;
 	protected String activeClass = "";
@@ -122,7 +146,7 @@ public class TraceInterpreter
 				}
 
 			}
-			processingClass(className, numberOfTraces);
+			infoProcessingClass(className, numberOfTraces);
 
 			List<ANamedTraceDefinition> traceDefs = getAllTraceDefinitions(definitions, traceName);
 
@@ -131,23 +155,18 @@ public class TraceInterpreter
 				evaluateTraceDefinition(className, storage, def);
 			}
 
-			completed();
+			infoCompleted();
 			System.out.println("Completed");
 		} catch (ContextException e)
 		{
-			// e.printStackTrace();
 			error(e.getMessage());
 			throw e;
 		} catch (ValueException e)
 		{
-			// TODO Auto-generated catch block
-			// e.printStackTrace();
 			error(e.getMessage());
 			throw e;
 		} catch (Exception e)
 		{
-			// TODO Auto-generated catch block
-			// e.printStackTrace();
 			error(e.getMessage());
 			throw e;
 		} finally
@@ -210,7 +229,7 @@ public class TraceInterpreter
 
 		tests = ctxt.assistantFactory.createANamedTraceDefinitionAssistant().getTests(mtd, ctxt, subset, traceReductionType, seed);
 
-		processingTrace(className, mtd.getName().getName(), tests.size());
+		infoProcessingTrace(className, mtd.getName().getName(), tests.size());
 		if (storage != null)
 		{
 			storage.StartTrace(mtd.getName().getName(), mtd.getLocation().getFile().getName(), mtd.getLocation().getStartLine(), mtd.getLocation().getStartPos(), tests.size(), new Float(subset), TraceReductionType.valueOf(traceReductionType.toString()), new Long(seed));
@@ -222,31 +241,21 @@ public class TraceInterpreter
 		int inconclusiveCount = 0;
 		int skippedCount = 0;
 
+		boolean saveAll = true;
+
+		StopWatch.set();
 		for (CallSequence test : tests)
 		{
-			processingTest(className, mtd.getName().getName(), n, tests.size());
-			/*
-			 * Bodge until we figure out how to not have explicit op names.
-			 */
-			String clean = test.toString().replaceAll("\\.\\w+`", ".");
+			StopWatch.stop("Getting test");
 
-			if (storage != null)
-			{
-				storage.StartTest(new Integer(n).toString(), clean);
-				storage.StopElement();
-			}
+			infoProcessingTest(className, mtd.getName().getName(), n, tests.size());
 
 			if (test.getFilter() > 0)
 			{
-				skippedCount++;
-				testFiltered(n, test.getFilter(), test);
-				if (storage != null)
-				{
-					storage.AddSkippedResult(new Integer(n).toString());
-				}
 			} else
 			{
 				List<Object> result = null;
+				Verdict verdict = null;
 
 				// type check
 				boolean typeOk = false;
@@ -258,15 +267,62 @@ public class TraceInterpreter
 				{
 					result = new Vector<Object>();
 					result.add(e);
-					result.add(Verdict.FAILED);
+					verdict = Verdict.FAILED;
+					result.add(verdict);
+
 				}
 
 				// interpret
 				if (typeOk)
 				{
+					StopWatch.set();
 					result = evaluateCallSequence(mtd, test);
+					StopWatch.stop("Executing   ");
+					StopWatch.set();
 
-					if (result.get(result.size() - 1) == Verdict.ERROR)
+					verdict = (Verdict) result.get(result.size() - 1);
+
+					if (verdict == Verdict.ERROR)
+					{
+					} else
+					{
+						tests.filter(result, test, n);
+					}
+				}
+
+				switch (verdict)
+				{
+					case FAILED:
+						faildCount++;
+						break;
+					case INCONCLUSIVE:
+						inconclusiveCount++;
+						break;
+				}
+
+				if (saveAll || verdict != Verdict.PASSED)
+				{
+
+					if (storage != null)
+					{/*
+					 * Bodge until we figure out how to not have explicit op names.
+					 */
+						String clean = test.toString().replaceAll("\\.\\w+`", ".");
+						storage.StartTest(new Integer(n).toString(), clean);
+						storage.StopElement();
+					}
+
+					if (test.getFilter() > 0)
+					{
+						skippedCount++;
+						infoTestFiltered(n, test.getFilter(), test);
+						if (storage != null)
+						{
+							storage.AddSkippedResult(new Integer(n).toString());
+						}
+					}
+
+					if (verdict == Verdict.ERROR)
 					{
 						if (storage != null)
 						{
@@ -281,27 +337,17 @@ public class TraceInterpreter
 						throw e;
 					}
 
-					tests.filter(result, test, n);
-				}
-
-				if (result.get(result.size() - 1) == Verdict.FAILED)
-				{
-					faildCount++;
-				}
-
-				else if (result.get(result.size() - 1) == Verdict.INCONCLUSIVE)
-				{
-					inconclusiveCount++;
-				}
-
-				if (storage != null)
-				{
-					storage.AddResults(new Integer(n).toString(), result);
+					if (storage != null)
+					{
+						storage.AddResults(new Integer(n).toString(), result);
+					}
 				}
 
 			}
 
 			n++;
+			StopWatch.stop("store&filter");
+			StopWatch.set();
 		}
 
 		if (storage != null)
@@ -319,9 +365,18 @@ public class TraceInterpreter
 			storage.StopElement();
 		}
 
-		processingTraceFinished(className, mtd.getName().getName(), tests.size(), faildCount, inconclusiveCount, skippedCount);
+		infoProcessingTraceFinished(className, mtd.getName().getName(), tests.size(), faildCount, inconclusiveCount, skippedCount);
 	}
 
+	/**
+	 * type check a test
+	 * 
+	 * @param classdef
+	 * @param interpreter
+	 * @param test
+	 * @throws AnalysisException
+	 * @throws Exception
+	 */
 	protected void typeCheck(SClassDefinition classdef,
 			Interpreter interpreter, CallSequence test)
 			throws AnalysisException, Exception
@@ -349,6 +404,13 @@ public class TraceInterpreter
 		}
 	}
 
+	/**
+	 * interpret a test
+	 * 
+	 * @param mtd
+	 * @param test
+	 * @return
+	 */
 	protected List<Object> evaluateCallSequence(ANamedTraceDefinition mtd,
 			CallSequence test)
 	{
@@ -368,23 +430,13 @@ public class TraceInterpreter
 		return result;
 	}
 
-	protected void processingTraceFinished(String className, String name,
+	protected void infoProcessingTraceFinished(String className, String name,
 			int size, int faildCount, int inconclusiveCount, int skippedCount)
 	{
-		// System.out.println("Finished " + className + "`" + name + ":"
-		// + "faild=" + faildCount + " inc=" + inconclusiveCount
-		// + " skipped=" + skippedCount + " ok="
-		// + (size - (faildCount + inconclusiveCount + skippedCount)));
-
 	}
 
-	private void processingClass(String className, Integer traceCount)
+	private void infoProcessingClass(String className, Integer traceCount)
 	{
-		// beginClass = System.currentTimeMillis();
-		// activeClass = className;
-		// System.out.println("Executing: " + className + " - Trace count: "
-		// + traceCount);
-
 		preProcessingClass(className, traceCount);
 	}
 
@@ -393,7 +445,7 @@ public class TraceInterpreter
 
 	}
 
-	protected void processingTrace(String className, String traceName,
+	protected void infoProcessingTrace(String className, String traceName,
 			Integer testCount) throws IOException
 	{
 		if (monitor != null)
@@ -401,12 +453,6 @@ public class TraceInterpreter
 			monitor.progressStartTrace(className + "`" + traceName);
 			currentPct = 0;
 		}
-		// printTraceStatus();
-		// beginTrace = System.currentTimeMillis();
-		// activeTrace = traceName;
-		// System.out.println(className + " - " + traceName + " Test count = "
-		// + testCount + " Reduction: seed=" + seed + " subset=" + subset
-		// + " type=" + traceReductionType);
 
 		preProcessingTrace(className, traceName, testCount);
 	}
@@ -417,7 +463,7 @@ public class TraceInterpreter
 
 	}
 
-	protected void processingTest(String className, String traceName,
+	protected void infoProcessingTest(String className, String traceName,
 			Integer testNumber, Integer total) throws IOException
 	{
 		if (monitor != null)
@@ -430,34 +476,32 @@ public class TraceInterpreter
 			}
 
 		}
+
+		if (DEBUG)
+		{
+			System.out.println(testNumber);
+		}
 	}
 
-	protected void completed() throws IOException
+	protected void infoCompleted() throws IOException
 	{
 		if (monitor != null)
 		{
 			monitor.progressCompleted();
 		}
-		printTraceStatus();
+		infoPrintTraceStatus();
 
-		// long endClass = System.currentTimeMillis();
-		// System.out.println("Class " + activeClass + " processed in "
-		// + (double) (endClass - beginClass) / 1000 + " secs");
-
-		preCompleted();
+		infoPreCompleted();
 	}
 
-	protected void preCompleted()
+	protected void infoPreCompleted()
 	{
 
 	}
 
-	protected void testFiltered(Integer number, Integer filteredBy,
+	protected void infoTestFiltered(Integer number, Integer filteredBy,
 			CallSequence test)
 	{
-		// Console.out.println("Test " + number + " = " + test);
-		// Console.out.println("Test " + number + " FILTERED by test "
-		// + filteredBy);
 	}
 
 	protected void error(String message) throws IOException
@@ -484,19 +528,12 @@ public class TraceInterpreter
 
 	}
 
-	private void printTraceStatus()
+	private void infoPrintTraceStatus()
 	{
-		// if (activeTrace != null && beginTrace != 0)
-		// {
-		// long endTrace = System.currentTimeMillis();
-		// System.out.println("Trace " + activeClass + " - " + activeTrace
-		// + " processed in " + (double) (endTrace - beginTrace)
-		// / 1000 + " secs");
-		// }
-		prePrintTraceStatus();
+		infoPrePrintTraceStatus();
 	}
 
-	protected void prePrintTraceStatus()
+	protected void infoPrePrintTraceStatus()
 	{
 
 	}
@@ -506,18 +543,4 @@ public class TraceInterpreter
 		this.coverage = coverageDir;
 	}
 
-	// private static void writeCoverage(Interpreter interpreter, File coverage)
-	// throws IOException
-	// {
-	// for (File f : interpreter.getSourceFiles())
-	// {
-	// SourceFile source = interpreter.getSourceFile(f);
-	//
-	// File data = new File(coverage.getPath() + File.separator
-	// + f.getName() + ".covtbl");
-	// PrintWriter pw = new PrintWriter(data);
-	// source.writeCoverage(pw);
-	// pw.close();
-	// }
-	// }
 }
