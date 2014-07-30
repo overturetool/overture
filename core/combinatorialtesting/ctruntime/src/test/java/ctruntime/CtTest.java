@@ -16,6 +16,8 @@ public class CtTest
 {
 
 	private static final int timeout = 0;
+	
+	private static final String TRACE_OUTPUT_FOLDER = "trace-output/";
 
 	class Data
 	{
@@ -25,13 +27,19 @@ public class CtTest
 	@Test
 	public void testSlT1() throws IOException
 	{
-		runTest("T1", "T1.vdmsl", "trace-output/T1");
+		runTest("T1", "T1.vdmsl", TRACE_OUTPUT_FOLDER + "T1");
 	}
 
 	@Test
 	public void testSlT2() throws IOException
 	{
-		runTest("T2", "T1.vdmsl", "trace-output/T2");
+		runTest("T2", "T1.vdmsl", TRACE_OUTPUT_FOLDER +"T2");
+	}
+	
+	@Test
+	public void testSlT3() throws IOException
+	{
+		runTest("T3", "T1.vdmsl", TRACE_OUTPUT_FOLDER +"T3");
 	}
 
 	public void runTest(String traceName, String spec, String output)
