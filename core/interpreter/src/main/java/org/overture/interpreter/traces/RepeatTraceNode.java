@@ -23,7 +23,6 @@
 
 package org.overture.interpreter.traces;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -255,37 +254,4 @@ public class RepeatTraceNode extends TraceNode
 	int read = 0;
 	int r = -1;
 	CallSequence toRepeat = null;
-
-	@Override
-	public boolean hasNext()
-	{
-		return read < 1 + to - from || this.repeat.hasNext();
-	}
-
-	@Override
-	public CallSequence getNext()
-	{
-		if (!hasNext())
-		{
-			return null;
-		}
-
-		if (r == -1 || read > to)
-		{
-			read = 0;
-			r = from;
-			toRepeat = this.repeat.getNext();
-		}
-
-		CallSequence seq = getVariables();
-		for (int i = r; i <= to; i++)
-		{
-			seq.addAll(toRepeat);
-		}
-
-		r++;
-		read++;
-
-		return seq;
-	}
 }
