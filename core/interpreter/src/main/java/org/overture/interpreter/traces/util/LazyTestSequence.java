@@ -3,7 +3,7 @@ package org.overture.interpreter.traces.util;
 import java.util.Iterator;
 
 import org.overture.interpreter.traces.CallSequence;
-import org.overture.interpreter.traces.RepeatTraceNode;
+import org.overture.interpreter.traces.IIterableTraceNode;
 import org.overture.interpreter.traces.TestSequence;
 
 public class LazyTestSequence extends TestSequence
@@ -12,23 +12,23 @@ public class LazyTestSequence extends TestSequence
 	 * serial
 	 */
 	private static final long serialVersionUID = 1L;
-	private RepeatTraceNode repeatTraceNode;
+	private IIterableTraceNode node;
 
-	public LazyTestSequence(RepeatTraceNode repeatTraceNode)
+	public LazyTestSequence(IIterableTraceNode node)
 	{
-		this.repeatTraceNode = repeatTraceNode;
+		this.node = node;
 	}
 
 	@Override
 	public synchronized int size()
 	{
-		return this.repeatTraceNode.size2();
+		return this.node.size();
 	}
 
 	@Override
 	public synchronized CallSequence get(int index)
 	{
-		return this.repeatTraceNode.get(index);
+		return this.node.get(index);
 	}
 
 	@Override

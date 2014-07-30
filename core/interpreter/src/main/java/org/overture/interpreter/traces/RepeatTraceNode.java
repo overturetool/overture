@@ -31,7 +31,7 @@ import org.overture.ast.lex.LexLocation;
 import org.overture.interpreter.traces.util.LazyTestSequence;
 import org.overture.interpreter.traces.util.Pair;
 
-public class RepeatTraceNode extends TraceNode
+public class RepeatTraceNode extends TraceNode implements IIterableTraceNode
 {
 	public final TraceNode repeat;
 	public final int from;
@@ -100,12 +100,16 @@ public class RepeatTraceNode extends TraceNode
 
 	private Map<Integer, Pair<Integer, Integer[]>> indics;
 	
+	/* (non-Javadoc)
+	 * @see org.overture.interpreter.traces.IIterableTraceNode#get(int)
+	 */
+	@Override
 	public CallSequence get(int index)
 	{
 		System.out.println("Getting test at: "+index);
 		if (indics == null)
 		{
-			size2();
+			size();
 		}
 		Pair<Integer, Integer[]> v = indics.get(index);
 
@@ -132,12 +136,16 @@ public class RepeatTraceNode extends TraceNode
 
 	}
 
-	public int size()
-	{
-		return (1 + to - from) * repeat.getTests().size();
-	}
+	/* (non-Javadoc)
+	 * @see org.overture.interpreter.traces.IIterableTraceNode#size()
+	 */
+	@Override
+//	public int size()
+//	{
+//		return (1 + to - from) * repeat.getTests().size();
+//	}
 
-	public int size2()
+	public int size()
 	{
 		if(indics!=null)
 		{

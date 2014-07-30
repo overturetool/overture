@@ -16,7 +16,7 @@ public class RepeatTraceNodeTest
 		RepeatTraceNode n = new RepeatTraceNode(repeat, 1, 3);
 		System.out.println(n.getTests().size());
 		System.out.println(n.size());
-		System.out.println(n.size2());
+//		System.out.println(n.size2());
 		System.out.println(n.getTests());
 		System.out.println("Test 1: " +n.getTests().get(1));
 		System.out.println("Test 1: " +n.get(1));
@@ -28,7 +28,7 @@ public class RepeatTraceNodeTest
 		RepeatTraceNode n = new RepeatTraceNode(repeat, 3, 3);
 		System.out.println(n.getTests().size());
 		System.out.println(n.size());
-		System.out.println(n.size2());
+//		System.out.println(n.size2());
 		System.out.println(n.getTests());
 		System.out.println("Test 0: " +n.getTests().get(0));
 		System.out.println("Test 0: " +n.get(0));
