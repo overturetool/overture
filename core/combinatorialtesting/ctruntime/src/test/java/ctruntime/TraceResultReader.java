@@ -1,6 +1,7 @@
 package ctruntime;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
@@ -16,33 +17,17 @@ import javax.xml.xpath.XPathFactory;
 
 import org.junit.Test;
 import org.overture.interpreter.traces.Verdict;
-import org.overture.interpreter.traces.util.LazyTestSequence;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-public class ReadXmlResult
+public class TraceResultReader
 {
 	@Test
 	public void test() throws XPathExpressionException, SAXException, IOException, ParserConfigurationException
 	{
 		System.out.println(read(new File("target/trace-output/T1/DEFAULT-T1.xml".replace('/', File.separatorChar))));
-	}
-	
-	public class TraceResult
-	{
-		public String traceName;
-		public List<TraceTest> tests = new Vector<TraceTest>();
-	}
-	
-	
-	public class TraceTest
-	{
-		public Integer no;
-		public String test;
-		public String result;
-		public Verdict verdict;
 	}
 	
 	public List<TraceResult> read(File file) throws SAXException, IOException,
@@ -54,7 +39,8 @@ public class ReadXmlResult
 		factory.setNamespaceAware(true);
 		DocumentBuilder builder = factory.newDocumentBuilder();
 
-		Document doc = builder.parse(file);
+		FileInputStream is = new FileInputStream(file);
+		Document doc = builder.parse(is);
 		XPathFactory xPathfactory = XPathFactory.newInstance();
 		XPath xpath = xPathfactory.newXPath();
 		
@@ -79,28 +65,20 @@ public class ReadXmlResult
 				Integer testNo =Integer.parseInt( testNode.getAttributes().getNamedItem("No").getNodeValue());
 				String test = testNode.getTextContent().trim();
 			
-				TraceTest tt = new TraceTest();
-				tr.tests.add(tt);
-				
-				tt.no = testNo;
-				tt.test = test;
-				
 				expr = xpath.compile("Result[@No='"+testNo+"']");
-				
 				
 				final NodeList resultNodeList= (NodeList) expr.evaluate(n, XPathConstants.NODESET);
 				
 				final Node resultNode = resultNodeList.item(0);
 				final String result = resultNode.getTextContent().trim();
 				final String verdict = resultNode.getAttributes().getNamedItem("Verdict").getNodeValue();
-				System.out.println(traceName+"("+testNo+"): "+test+" => "+result+ " Verdict: "+verdict);
 				
-				tt.result = result;
-				tt.verdict = Verdict.valueOf(verdict);
-				
+				TraceTest tt = new TraceTest(testNo, test, result, Verdict.valueOf(verdict));
+				tr.tests.add(tt);
 			}
 		}
 		
+		is.close();
 		
 		return results;
 	}
