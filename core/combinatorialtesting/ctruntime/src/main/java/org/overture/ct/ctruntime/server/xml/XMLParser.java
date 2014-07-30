@@ -35,22 +35,13 @@ public class XMLParser
 	private int pos;
 	private char ch;
 	private Token token;
-	private String value;	// Tag and quoted tokens have values
+	private String value; // Tag and quoted tokens have values
 
 	private enum Token
 	{
-		OPEN("<"),
-		CLOSE(">"),
-		QOPEN("<?"),
-		QCLOSE("?>"),
-		COMPLETE("/>"),
-		STOP("</"),
-		TAG("tag"),
-		EQUALS("="),
-		QUOTED("quoted value"),
-		CDATA("<![CDATA["),
-		CDEND("]]>"),
-		EOF("EOF");
+		OPEN("<"), CLOSE(">"), QOPEN("<?"), QCLOSE("?>"), COMPLETE("/>"), STOP(
+				"</"), TAG("tag"), EQUALS("="), QUOTED("quoted value"), CDATA(
+				"<![CDATA["), CDEND("]]>"), EOF("EOF");
 
 		private String value;
 
@@ -70,7 +61,7 @@ public class XMLParser
 	{
 		if (xml[0] == '<' && xml[1] == '?')
 		{
-			String ascii = new String(xml, "ASCII");	// header is ASCII
+			String ascii = new String(xml, "ASCII"); // header is ASCII
 			buffer = new StringBuilder(ascii);
 			end = ascii.length();
 			pos = 0;
@@ -100,16 +91,15 @@ public class XMLParser
 
 			// Re-encode the remainder using the header encoding
 
-			String body = new String(ascii.substring(pos-2).getBytes("ASCII"), encoding);
+			String body = new String(ascii.substring(pos - 2).getBytes("ASCII"), encoding);
 			buffer = new StringBuilder(body);
 			end = body.length();
 			pos = 0;
 			rdCh();
 			rdToken();
-		}
-		else
+		} else
 		{
-			String s = new String(xml);		// default platform encoding
+			String s = new String(xml); // default platform encoding
 			buffer = new StringBuilder(s);
 			end = s.length();
 			pos = 0;
@@ -122,9 +112,8 @@ public class XMLParser
 	{
 		if (pos == end)
 		{
-			ch = 0;		// EOF
-		}
-		else
+			ch = 0; // EOF
+		} else
 		{
 			ch = buffer.charAt(pos);
 			pos++;
@@ -157,7 +146,7 @@ public class XMLParser
 
 	private boolean isStart(char c)
 	{
-		return (Character.isLetter(c) || c == '_');
+		return Character.isLetter(c) || c == '_';
 	}
 
 	private String rdTag()
@@ -214,16 +203,13 @@ public class XMLParser
 					checkFor('[');
 					token = Token.CDATA;
 					rdch = false;
-				}
-				else if (ch == '?')
+				} else if (ch == '?')
 				{
 					token = Token.QOPEN;
-				}
-				else if (ch == '/')
+				} else if (ch == '/')
 				{
 					token = Token.STOP;
-				}
-				else
+				} else
 				{
 					token = Token.OPEN;
 					rdch = false;
@@ -276,15 +262,18 @@ public class XMLParser
 					value = rdTag();
 					token = Token.TAG;
 					rdch = false;
-				}
-				else
+				} else
 				{
-					throw new IOException("Unexpected char '" + ch + "' at pos " + pos);
+					throw new IOException("Unexpected char '" + ch
+							+ "' at pos " + pos);
 				}
 				break;
 		}
 
-		if (rdch) rdCh();
+		if (rdch)
+		{
+			rdCh();
+		}
 		return token;
 	}
 
@@ -315,8 +304,7 @@ public class XMLParser
 		if (token == Token.TAG)
 		{
 			attr = readAttributes();
-		}
-		else
+		} else
 		{
 			attr = new Properties();
 		}
@@ -328,16 +316,15 @@ public class XMLParser
 				{
 					children.add(new XMLTextNode(rdQuotedData()));
 					rdToken();
-				}
-				else
+				} else
 				{
-    				rdToken();
+					rdToken();
 
-    				while (token == Token.OPEN || token == Token.CDATA)
-    				{
-    					XMLNode node = readNode();
-    					children.add(node);
-    				}
+					while (token == Token.OPEN || token == Token.CDATA)
+					{
+						XMLNode node = readNode();
+						children.add(node);
+					}
 				}
 
 				String finish = readStop();
@@ -359,7 +346,7 @@ public class XMLParser
 	}
 
 	private String rdQuotedData()
-    {
+	{
 		StringBuilder sb = new StringBuilder();
 
 		while (ch != '<' && ch != 0)
@@ -371,7 +358,7 @@ public class XMLParser
 		// De-quote the text...
 
 		return sb.toString();
-    }
+	}
 
 	private XMLDataNode readDataNode() throws IOException
 	{
@@ -381,9 +368,11 @@ public class XMLParser
 		{
 			if (ch == ']')
 			{
-				if (buffer.substring(pos-1, pos+2).equals("]]>"))
+				if (buffer.substring(pos - 1, pos + 2).equals("]]>"))
 				{
-					rdCh(); rdCh(); rdCh();
+					rdCh();
+					rdCh();
+					rdCh();
 					break;
 				}
 			}
@@ -425,7 +414,7 @@ public class XMLParser
 
 	public static void main(String[] args) throws IOException
 	{
-		XMLParser p = new XMLParser(("<![CDATA[]]]>").getBytes());
+		XMLParser p = new XMLParser("<![CDATA[]]]>".getBytes());
 		System.out.println(p.readNode());
 	}
 }

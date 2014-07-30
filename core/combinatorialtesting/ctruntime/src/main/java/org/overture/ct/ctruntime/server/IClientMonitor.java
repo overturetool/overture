@@ -1,4 +1,5 @@
 package org.overture.ct.ctruntime.server;
+
 //package org.overture.traces.vdmj.server;
 //
 //public interface IClientMonitor
@@ -12,4 +13,4 @@ package org.overture.ct.ctruntime.server;
 //
 //	void traceStart(String traceName);
 //
-//}
+// }

@@ -50,8 +50,8 @@ public class CtTest
 						{
 							System.out.println(line);
 							data.message = line;
-							
-							if(line.contains("status=\"completed\" progress=\"100\""))
+
+							if (line.contains("status=\"completed\" progress=\"100\""))
 							{
 								final OutputStream out = conn.getOutputStream();
 								out.write("exit\n".getBytes());
@@ -102,8 +102,6 @@ public class CtTest
 		TraceRunnerMain.main(args);
 
 		Assert.assertTrue("Test did not succed", data.message.contains("status=\"completed\" progress=\"100\""));
-		
-		
 
 	}
 }
