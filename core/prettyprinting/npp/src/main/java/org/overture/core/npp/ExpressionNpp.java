@@ -245,16 +245,16 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 			IndentTracker question) throws AnalysisException
 	{
 		
-		String l = node.getExp().apply(THIS,question);
+		String r = node.getExp().apply(THIS,question);
 		String op = mytable.getABSOLUTE();
 		
-		StringBuilder sb = new StringBuilder();
+//		StringBuilder sb = new StringBuilder();
+//		
+//		sb.append(op);
+//		sb.append(space);
+//		sb.append(l);
 		
-		sb.append(op);
-		sb.append(space);
-		sb.append(l);
-		
-		return Utilities.wrap(sb.toString());
+		return Utilities.wrap(Utilities.unaryappend(r, op));
 	}
 	
 	@Override
@@ -438,13 +438,13 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String exp = node.getExp().apply(THIS, question);
 		String op = mytable.getPOWER();
 		
-		StringBuilder sb = new StringBuilder();
+//		StringBuilder sb = new StringBuilder();
+//		
+//		sb.append(op);
+//		sb.append(space);
+//		sb.append(exp);
 		
-		sb.append(op);
-		sb.append(space);
-		sb.append(exp);
-		
-		return Utilities.wrap(sb.toString());
+		return Utilities.wrap(Utilities.unaryappend(exp, op));
 	}
 	
 	@Override
@@ -485,13 +485,13 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String s = node.getExp().apply(THIS, question);
 		String op = mytable.getCARD();
 		
-		StringBuilder sb = new StringBuilder();
+//		StringBuilder sb = new StringBuilder();
+//		
+//		sb.append(op);
+//		sb.append(space);
+//		sb.append(s);
 		
-		sb.append(op);
-		sb.append(space);
-		sb.append(s);
-		
-		return Utilities.wrap(sb.toString());
+		return Utilities.wrap(Utilities.unaryappend(s, op));
 	
 	}
 	
@@ -632,32 +632,32 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	public String caseADistUnionUnaryExp(ADistUnionUnaryExp node,
 			IndentTracker question) throws AnalysisException
 	{
-		String l = node.getExp().apply(THIS, question);
+		String r = node.getExp().apply(THIS, question);
 		String op = mytable.getDUNION();
 		
-		StringBuilder sb = new StringBuilder();
+//		StringBuilder sb = new StringBuilder();
+//		
+//		sb.append(op);
+//		sb.append(space);
+//		sb.append(l);
 		
-		sb.append(op);
-		sb.append(space);
-		sb.append(l);
-		
-		return Utilities.wrap(sb.toString());
+		return Utilities.wrap(Utilities.unaryappend(r, op));
 	}
 	
 	@Override
 	public String caseADistIntersectUnaryExp(ADistIntersectUnaryExp node,
 			IndentTracker question) throws AnalysisException
 	{
-		String l = node.getExp().apply(THIS, question);
+		String r = node.getExp().apply(THIS, question);
 		String op = mytable.getDINTER();
 		
-		StringBuilder sb = new StringBuilder();
+//		StringBuilder sb = new StringBuilder();
+//		
+//		sb.append(op);
+//		sb.append(space);
+//		sb.append(l);
 		
-		sb.append(op);
-		sb.append(space);
-		sb.append(l);
-		
-		return Utilities.wrap(sb.toString());
+		return Utilities.wrap(Utilities.unaryappend(r, op));
 	}
 	
 	@Override
@@ -905,13 +905,13 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String r = node.getExp().apply(THIS, question);
 		String op = mytable.getHEAD();
 		
-		StringBuilder sb = new StringBuilder();
+//		StringBuilder sb = new StringBuilder();
+//		
+//		sb.append(op);
+//		sb.append(space);
+//		sb.append(r);
 		
-		sb.append(op);
-		sb.append(space);
-		sb.append(r);
-		
-		return Utilities.wrap(sb.toString());
+		return Utilities.wrap(Utilities.unaryappend(r, op));
 	}
 	
 	@Override
@@ -921,13 +921,13 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String r = node.getExp().apply(THIS, question);
 		String op = mytable.getTAIL();
 		
-		StringBuilder sb = new StringBuilder();
+//		StringBuilder sb = new StringBuilder();
+//		
+//		sb.append(op);
+//		sb.append(space);
+//		sb.append(r);
 		
-		sb.append(op);
-		sb.append(space);
-		sb.append(r);
-		
-		return Utilities.wrap(sb.toString());
+		return Utilities.wrap(Utilities.unaryappend(r, op));
 	}
 	
 	@Override
@@ -937,13 +937,13 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String r = node.getExp().apply(THIS, question);
 		String op = mytable.getLEN();
 		
-		StringBuilder sb = new StringBuilder();
+//		StringBuilder sb = new StringBuilder();
+//		
+//		sb.append(op);
+//		sb.append(space);
+//		sb.append(r);
 		
-		sb.append(op);
-		sb.append(space);
-		sb.append(r);
-		
-		return Utilities.wrap(sb.toString());
+		return Utilities.wrap(Utilities.unaryappend(r, op));
 	}
 	
 	@Override
@@ -953,13 +953,13 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String r = node.getExp().apply(THIS, question);
 		String op = mytable.getELEMS();
 		
-		StringBuilder sb = new StringBuilder();
+//		StringBuilder sb = new StringBuilder();
+//		
+//		sb.append(op);
+//		sb.append(space);
+//		sb.append(r);
 		
-		sb.append(op);
-		sb.append(space);
-		sb.append(r);
-		
-		return Utilities.wrap(sb.toString());
+		return Utilities.wrap(Utilities.unaryappend(r, op));
 	}
 	
 	@Override
@@ -969,13 +969,13 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String r = node.getExp().apply(THIS, question);
 		String op = mytable.getINDS();
 		
-		StringBuilder sb = new StringBuilder();
+//		StringBuilder sb = new StringBuilder();
+//		
+//		sb.append(op);
+//		sb.append(space);
+//		sb.append(r);
 		
-		sb.append(op);
-		sb.append(space);
-		sb.append(r);
-		
-		return Utilities.wrap(sb.toString());
+		return Utilities.wrap(Utilities.unaryappend(r, op));
 	}
 	
 	@Override
