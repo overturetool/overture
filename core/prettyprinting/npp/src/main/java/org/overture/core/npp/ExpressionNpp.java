@@ -9,6 +9,7 @@ import org.overture.ast.expressions.ACardinalityUnaryExp;
 import org.overture.ast.expressions.ACasesExp;
 import org.overture.ast.expressions.ACharLiteralExp;
 import org.overture.ast.expressions.ACompBinaryExp;
+import org.overture.ast.expressions.ADistConcatUnaryExp;
 import org.overture.ast.expressions.ADistIntersectUnaryExp;
 import org.overture.ast.expressions.ADistUnionUnaryExp;
 import org.overture.ast.expressions.ADivNumericBinaryExp;
@@ -985,6 +986,22 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String op = mytable.getCONCATENATE();
 		
 		return Utilities.append(l, r, op);
+	}
+	
+	@Override
+	public String caseADistConcatUnaryExp(ADistConcatUnaryExp node,
+			IndentTracker question) throws AnalysisException
+	{
+		String r = node.getExp().apply(THIS, question);
+		String op = mytable.getDISTCONC();
+		
+//		StringBuilder sb = new StringBuilder();
+//		
+//		sb.append(op);
+//		sb.append(space);
+//		sb.append(r);
+		
+		return Utilities.wrap(Utilities.unaryappend(r, op));
 	}
 	
 	@Override

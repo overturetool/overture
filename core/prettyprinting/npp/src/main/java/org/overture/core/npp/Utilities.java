@@ -50,5 +50,24 @@ public abstract class Utilities {
 		
 		return (sb.toString());
 	}
-
+	
+	/**
+	 * Create the String to be wrapped for the most common Unary expressions.
+	 * @param right
+	 * The string representation of the expression.
+	 * @param op
+	 * The binary operation's symbol or String in string format.
+	 * 
+	 * @return the created string. 
+	 */
+	public static String unaryappend(String right, String op)
+	{
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(op);
+		sb.append(space);
+		sb.append(right);
+		
+		return (sb.toString());
+	}
 }

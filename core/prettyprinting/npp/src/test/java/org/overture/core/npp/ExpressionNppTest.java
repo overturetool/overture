@@ -313,6 +313,12 @@ public class ExpressionNppTest {
 	}
 	
 	@Test
+	public void testCasesAEqualsBinaryExp_07() throws AnalysisException
+	{
+		aux("[1,2,2] = [1,3,3]", "([1, 2, 2] = [1, 3, 3])");
+	}
+	
+	@Test
 	public void testCaseAGreaterBinaryExp_01() throws AnalysisException
 	{
 		aux("1 > 0", "(1 > 0)");
@@ -429,6 +435,12 @@ public class ExpressionNppTest {
 	public void testCaseANotEqualBinaryExp_07() throws AnalysisException
 	{
 		aux("<a> <> <b>", "(<a> <> <b>)");
+	}
+	
+	@Test
+	public void testCaseANotEqualBinaryExp_08() throws AnalysisException
+	{
+		aux("[1,2,2] <> [1,3,3]", "([1, 2, 2] <> [1, 3, 3])");
 	}
 	
 //	@Test
@@ -874,8 +886,26 @@ public class ExpressionNppTest {
 	}
 	
 	@Test
-	public void testCaseAConcBinaryExp_03() throws AnalysisException
+	public void testCasesAConcBinaryExp_03() throws AnalysisException
 	{
 		aux("x ^ [true]", "x ^ [true]");
+	}
+	
+	@Test
+	public void testCasesADistConcUnaryExp_01() throws AnalysisException
+	{
+		aux("conc s", "(conc s)");
+	}
+	
+	@Test
+	public void testCasesADistConcUnaryExp_02() throws AnalysisException
+	{
+		aux("conc [[1,2], [2,3]]","(conc [[1, 2], [2, 3]])");
+	}
+	
+	@Test
+	public void testCasesADistConcUnaryExp_03() throws AnalysisException
+	{
+		aux("conc [[x,y], [3,4]]", "(conc [[x, y], [3, 4]])");
 	}
 }
