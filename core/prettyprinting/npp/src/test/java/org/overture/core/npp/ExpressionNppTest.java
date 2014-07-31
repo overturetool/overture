@@ -880,32 +880,50 @@ public class ExpressionNppTest {
 	}
 	
 	@Test
-	public void testCasesAConcBinaryExp_02() throws AnalysisException
+	public void testCaseAConcBinaryExp_02() throws AnalysisException
 	{
 		aux("x ^ y", "x ^ y");
 	}
 	
 	@Test
-	public void testCasesAConcBinaryExp_03() throws AnalysisException
+	public void testCaseAConcBinaryExp_03() throws AnalysisException
 	{
 		aux("x ^ [true]", "x ^ [true]");
 	}
 	
 	@Test
-	public void testCasesADistConcUnaryExp_01() throws AnalysisException
+	public void testCaseADistConcUnaryExp_01() throws AnalysisException
 	{
 		aux("conc s", "(conc s)");
 	}
 	
 	@Test
-	public void testCasesADistConcUnaryExp_02() throws AnalysisException
+	public void testCaseADistConcUnaryExp_02() throws AnalysisException
 	{
 		aux("conc [[1,2], [2,3]]","(conc [[1, 2], [2, 3]])");
 	}
 	
 	@Test
-	public void testCasesADistConcUnaryExp_03() throws AnalysisException
+	public void testCaseADistConcUnaryExp_03() throws AnalysisException
 	{
 		aux("conc [[x,y], [3,4]]", "(conc [[x, y], [3, 4]])");
+	}
+	
+	@Test
+	public void testCaseASeqModBinaryExp_01() throws AnalysisException
+	{
+		aux("l ++ m", "l ++ m");
+	}
+	
+//	@Test
+//	public void testCaseASeqModBinaryExp_02() throws AnalysisException
+//	{
+//		aux("[1,2] ++ {1 |-> 3}", "[1, 2] ++ {1 |-> 3}");
+//	}
+	
+	@Test
+	public void testCaseASeqModBinaryExp_02() throws AnalysisException
+	{
+		aux("[1,2] ++ x", "[1, 2] ++ x");
 	}
 }
