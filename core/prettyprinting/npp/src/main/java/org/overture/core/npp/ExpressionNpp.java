@@ -31,6 +31,7 @@ import org.overture.ast.expressions.AIotaExp;
 import org.overture.ast.expressions.ALenUnaryExp;
 import org.overture.ast.expressions.ALessEqualNumericBinaryExp;
 import org.overture.ast.expressions.ALessNumericBinaryExp;
+import org.overture.ast.expressions.AMapCompMapExp;
 import org.overture.ast.expressions.AMapEnumMapExp;
 import org.overture.ast.expressions.AMapletExp;
 import org.overture.ast.expressions.AModNumericBinaryExp;
@@ -1036,6 +1037,47 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 			
 		}
 		sb.append(rightcurly);
+		return sb.toString();
+	}
+	
+	@Override
+	public String caseAMapCompMapExp(AMapCompMapExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		String exp = node.getFirst().apply(THIS, question);
+		String bind ;//= node.getBindings().poll().apply(THIS, question);
+		String pred = node.getPredicate().apply(THIS, question);
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(leftcurly);
+		sb.append(exp);
+		sb.append(space);
+		sb.append(bar);
+		
+		
+		while (node.getBindings().size() != 0)
+		{
+			if (node.getBindings().size() >1)
+			{
+				bind = node.getBindings().poll().apply(THIS, question);
+				sb.append(bind);
+				sb.append(mytable.getCOMMA());
+				sb.append(space);
+			}
+			else
+			{
+				bind = node.getBindings().poll().apply(THIS, question);
+				sb.append(bind);
+				sb.append(space);
+			}
+		}
+		
+		sb.append(mytable.getPRED());
+		sb.append(space);
+		sb.append(pred);
+		sb.append(rightcurly);
+		
 		return sb.toString();
 	}
 	@Override

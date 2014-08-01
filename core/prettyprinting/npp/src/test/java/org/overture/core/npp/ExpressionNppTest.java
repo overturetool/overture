@@ -956,4 +956,24 @@ public class ExpressionNppTest {
 	{
 		aux("{x |-> 1, y |-> 2}","{x |-> 1, y |-> 2}");
 	}
+	
+	@Test
+	public void testCaseAMapCompExp_01() throws AnalysisException
+	{
+		aux("{x |-> x*x |x in set y & x > 1}","{x |-> (x * x) |x in set y & (x > 1)}");
+	}
+	
+	@Test
+	public void testCaseAMapCompExp_02() throws AnalysisException
+	{
+		aux("{x |-> x*x |x in set y, x in set {1,3} & x > 1}",
+				"{x |-> (x * x) |x in set y, x in set {1, 3} & (x > 1)}");
+	}
+	
+	@Test
+	public void testCaseAmapCompExp_03() throws AnalysisException
+	{
+		aux("{x |-> x*x+1 |x in set y, x in set {1,3} & x > 1}",
+				"{x |-> ((x * x) + 1) |x in set y, x in set {1, 3} & (x > 1)}");
+	}
 }
