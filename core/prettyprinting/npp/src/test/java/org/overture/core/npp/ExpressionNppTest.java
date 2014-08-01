@@ -926,4 +926,34 @@ public class ExpressionNppTest {
 	{
 		aux("[1,2] ++ x", "[1, 2] ++ x");
 	}
+	
+	@Test
+	public void testCaseASeqApplyExp_01() throws AnalysisException
+	{
+		aux("s(2)", "s(2)");
+	}
+	
+	@Test
+	public void testCaseASeqApplyExp_02() throws AnalysisException
+	{
+		aux("[1,2](2)", "[1, 2](2)");
+	}
+	
+	@Test
+	public void testCaseAMapletExp_01() throws AnalysisException
+	{
+		aux("{1 |-> 2, 2 |-> 3, 3 |-> 4}", "{1 |-> 2, 2 |-> 3, 3 |-> 4}");
+	}
+	
+	@Test
+	public void testCaseAMapletExp_02() throws AnalysisException
+	{
+		aux("{'P' |-> 1, 'J' |-> 2}","{'P' |-> 1, 'J' |-> 2}");
+	}
+	
+	@Test
+	public void testCaseAMapletExp_03() throws AnalysisException
+	{
+		aux("{x |-> 1, y |-> 2}","{x |-> 1, y |-> 2}");
+	}
 }

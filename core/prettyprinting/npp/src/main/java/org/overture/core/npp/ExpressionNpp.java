@@ -4,6 +4,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.expressions.AAbsoluteUnaryExp;
 import org.overture.ast.expressions.AAndBooleanBinaryExp;
+import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ABooleanConstExp;
 import org.overture.ast.expressions.ACardinalityUnaryExp;
 import org.overture.ast.expressions.ACasesExp;
@@ -30,6 +31,8 @@ import org.overture.ast.expressions.AIotaExp;
 import org.overture.ast.expressions.ALenUnaryExp;
 import org.overture.ast.expressions.ALessEqualNumericBinaryExp;
 import org.overture.ast.expressions.ALessNumericBinaryExp;
+import org.overture.ast.expressions.AMapEnumMapExp;
+import org.overture.ast.expressions.AMapletExp;
 import org.overture.ast.expressions.AModNumericBinaryExp;
 import org.overture.ast.expressions.ANotEqualBinaryExp;
 import org.overture.ast.expressions.ANotInSetBinaryExp;
@@ -58,6 +61,7 @@ import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ASetMultipleBind;
+import org.overture.ast.types.AMapMapType;
 
 class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		implements IPrettyPrinter
@@ -453,30 +457,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	{
 		return node.toString();
 	}
-//	@Override
-//	public String caseAMapletExp(AMapletExp node, IndentTracker question)
-//			throws AnalysisException
-//	{
-////		String l = node.getLeft().toString();//.apply(THIS, question);
-////		String r = node.getRight().toString();//.getType().apply(THIS, question);
-////		String op = mytable.getMAPLET();
-////		
-////		StringBuilder sb = new StringBuilder();
-////		
-////		sb.append(leftcurly);
-////		sb.append(l);
-////		sb.append(space);
-////		sb.append(op);
-////		sb.append(space);
-////		sb.append(r);
-////		sb.append(rightcurly);
-////		
-////		return Utilities.wrap(sb.toString());
-////		//return node.getType().toString();
-////		//return sb.toString();
-//		System.out.print(node.toString());
-//		return null;
-//	}
 	
 	@Override
 	public String caseACardinalityUnaryExp(ACardinalityUnaryExp node,
@@ -1016,6 +996,48 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		return Utilities.append(l, r, op);
 	}
 	
+	@Override
+	public String caseAApplyExp(AApplyExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		return node.toString();
+	}
+	
+	@Override
+	public String caseAMapletExp(AMapletExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		String l = node.getLeft().apply(THIS, question);
+		String r = node.getRight().apply(THIS, question);
+		String op = mytable.getMAPLET();
+		
+		//System.out.print(Utilities.append(l, r, op));
+		
+		return Utilities.append(l, r, op);
+	}
+	
+	@Override
+	public String caseAMapEnumMapExp(AMapEnumMapExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		//System.out.print(node.getMembers().poll().apply(THIS, question));
+		StringBuilder sb = new StringBuilder();
+		sb.append(leftcurly);
+		while(node.getMembers().size() != 0){
+			if (node.getMembers().size() >1){
+				sb.append(node.getMembers().poll().apply(THIS, question));
+				sb.append(mytable.getCOMMA());
+				sb.append(space);
+			}
+			else
+			{
+				sb.append(node.getMembers().poll().apply(THIS, question));
+			}
+			
+		}
+		sb.append(rightcurly);
+		return sb.toString();
+	}
 	@Override
 	public String caseACasesExp(ACasesExp node, IndentTracker question)
 			throws AnalysisException
