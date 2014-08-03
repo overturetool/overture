@@ -12,6 +12,7 @@ import org.overture.ast.expressions.ACharLiteralExp;
 import org.overture.ast.expressions.ACompBinaryExp;
 import org.overture.ast.expressions.ADistConcatUnaryExp;
 import org.overture.ast.expressions.ADistIntersectUnaryExp;
+import org.overture.ast.expressions.ADistMergeUnaryExp;
 import org.overture.ast.expressions.ADistUnionUnaryExp;
 import org.overture.ast.expressions.ADivNumericBinaryExp;
 import org.overture.ast.expressions.ADivideNumericBinaryExp;
@@ -1113,6 +1114,16 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String op = mytable.getMUNION();
 		
 		return Utilities.append(l, r, op);
+	}
+	
+	@Override
+	public String caseADistMergeUnaryExp(ADistMergeUnaryExp node,
+			IndentTracker question) throws AnalysisException
+	{
+		String r = node.getExp().apply(THIS, question);
+		String op = mytable.getMERGE();
+		
+		return Utilities.wrap(Utilities.unaryappend(r, op));
 	}
 	
 	@Override

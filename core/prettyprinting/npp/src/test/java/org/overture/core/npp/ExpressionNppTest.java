@@ -313,9 +313,15 @@ public class ExpressionNppTest {
 	}
 	
 	@Test
-	public void testCasesAEqualsBinaryExp_07() throws AnalysisException
+	public void testCaseAEqualsBinaryExp_07() throws AnalysisException
 	{
 		aux("[1,2,2] = [1,3,3]", "([1, 2, 2] = [1, 3, 3])");
+	}
+	
+	@Test
+	public void testCaseAEqualsBinaryExp_08() throws AnalysisException
+	{
+		aux("{1 |-> 2} = {3 |-> 3}","({1 |-> 2} = {3 |-> 3})");
 	}
 	
 	@Test
@@ -441,6 +447,12 @@ public class ExpressionNppTest {
 	public void testCaseANotEqualBinaryExp_08() throws AnalysisException
 	{
 		aux("[1,2,2] <> [1,3,3]", "([1, 2, 2] <> [1, 3, 3])");
+	}
+	
+	@Test
+	public void testCaseANotEqualBinaryExp_09() throws AnalysisException
+	{
+		aux("{1 |-> 2} <> {2 |-> 3}","({1 |-> 2} <> {2 |-> 3})");
 	}
 	
 //	@Test
@@ -1023,5 +1035,22 @@ public class ExpressionNppTest {
 	public void testCaseAMapUnionExp_02() throws AnalysisException
 	{
 		aux("x munion y", "x munion y");
+	}
+	
+	@Test
+	public void testCaseAMapMergeExp_01() throws AnalysisException
+	{
+		aux("merge {{1 |-> 2},{2 |-> 3}}", "(merge {{1 |-> 2}, {2 |-> 3}})");
+	}
+	@Test
+	public void testCaseAMapMergeExp_02() throws AnalysisException
+	{
+		aux("merge mm","(merge mm)");
+	}
+	
+	@Test
+	public void testCaseAMapMergeExp_03() throws AnalysisException
+	{
+		aux("merge {1 |-> 'a'}", "(merge {1 |-> 'a'})");
 	}
 }
