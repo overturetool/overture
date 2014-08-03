@@ -16,6 +16,7 @@ import org.overture.ast.expressions.ADistMergeUnaryExp;
 import org.overture.ast.expressions.ADistUnionUnaryExp;
 import org.overture.ast.expressions.ADivNumericBinaryExp;
 import org.overture.ast.expressions.ADivideNumericBinaryExp;
+import org.overture.ast.expressions.ADomainResByBinaryExp;
 import org.overture.ast.expressions.ADomainResToBinaryExp;
 import org.overture.ast.expressions.AElementsUnaryExp;
 import org.overture.ast.expressions.AEqualsBinaryExp;
@@ -1134,6 +1135,17 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String l = node.getLeft().apply(THIS, question);
 		String r = node.getRight().apply(THIS,question);
 		String op = mytable.getDOMRESTO();
+		
+		return Utilities.append(l, r, op);
+	}
+	
+	@Override
+	public String caseADomainResByBinaryExp(ADomainResByBinaryExp node,
+			IndentTracker question) throws AnalysisException
+	{
+		String l = node.getLeft().apply(THIS, question);
+		String r = node.getRight().apply(THIS,question);
+		String op = mytable.getDOMRESBY();
 		
 		return Utilities.append(l, r, op);
 	}

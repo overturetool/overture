@@ -1077,4 +1077,23 @@ public class ExpressionNppTest {
 	{
 		aux("{x} <: {x |->2, y|-> 3}","{x} <: {x |-> 2, y |-> 3}");
 	}
+	
+	@Test
+	public void testCaseADomainResByExp_01() throws AnalysisException
+	{
+		aux("{<a>,<d>} <-: {<a> |-> 1, <b> |-> 2, <d> |-> 3}",
+				"{<a>, <d>} <-: {<a> |-> 1, <b> |-> 2, <d> |-> 3}");
+	}
+	
+	@Test
+	public void testCaseADomainResByExp_02() throws AnalysisException
+	{
+		aux("{1,2} <-: {1 |->2, 2|-> 3}","{1, 2} <-: {1 |-> 2, 2 |-> 3}");
+	}
+	
+	@Test
+	public void testCaseADomainResByExp_03() throws AnalysisException
+	{
+		aux("{x} <-: {x |->2, y|-> 3}","{x} <-: {x |-> 2, y |-> 3}");
+	}
 }
