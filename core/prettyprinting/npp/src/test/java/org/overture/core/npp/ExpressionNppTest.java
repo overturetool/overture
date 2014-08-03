@@ -927,18 +927,23 @@ public class ExpressionNppTest {
 		aux("l ++ m", "l ++ m");
 	}
 	
-//	@Test
-//	public void testCaseASeqModBinaryExp_02() throws AnalysisException
-//	{
-//		aux("[1,2] ++ {1 |-> 3}", "[1, 2] ++ {1 |-> 3}");
-//	}
-	
 	@Test
 	public void testCaseASeqModBinaryExp_02() throws AnalysisException
 	{
 		aux("[1,2] ++ x", "[1, 2] ++ x");
 	}
 	
+	@Test
+	public void testCaseASeqModBinaryExp_03() throws AnalysisException
+	{
+		aux("[1,2] ++ {1 |-> 3}", "[1, 2] ++ {1 |-> 3}");
+	}
+	
+	@Test
+	public void testCaseAMapModBinaryExp_01() throws AnalysisException
+	{
+		aux("{1 |-> 2} ++ {1 |-> 3}", "{1 |-> 2} ++ {1 |-> 3}");
+	}
 	@Test
 	public void testCaseASeqApplyExp_01() throws AnalysisException
 	{
@@ -1052,5 +1057,24 @@ public class ExpressionNppTest {
 	public void testCaseAMapMergeExp_03() throws AnalysisException
 	{
 		aux("merge {1 |-> 'a'}", "(merge {1 |-> 'a'})");
+	}
+	
+	@Test
+	public void testCaseADomainResToExp_01() throws AnalysisException
+	{
+		aux("{<a>,<d>} <: {<a> |-> 1, <b> |-> 2, <d> |-> 3}",
+				"{<a>, <d>} <: {<a> |-> 1, <b> |-> 2, <d> |-> 3}");
+	}
+	
+	@Test
+	public void testCaseADomainResToExp_02() throws AnalysisException
+	{
+		aux("{1,2} <: {1 |->2, 2|-> 3}","{1, 2} <: {1 |-> 2, 2 |-> 3}");
+	}
+	
+	@Test
+	public void testCaseADomainResToExp_03() throws AnalysisException
+	{
+		aux("{x} <: {x |->2, y|-> 3}","{x} <: {x |-> 2, y |-> 3}");
 	}
 }

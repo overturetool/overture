@@ -16,6 +16,7 @@ import org.overture.ast.expressions.ADistMergeUnaryExp;
 import org.overture.ast.expressions.ADistUnionUnaryExp;
 import org.overture.ast.expressions.ADivNumericBinaryExp;
 import org.overture.ast.expressions.ADivideNumericBinaryExp;
+import org.overture.ast.expressions.ADomainResToBinaryExp;
 import org.overture.ast.expressions.AElementsUnaryExp;
 import org.overture.ast.expressions.AEqualsBinaryExp;
 import org.overture.ast.expressions.AExists1Exp;
@@ -1126,6 +1127,16 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		return Utilities.wrap(Utilities.unaryappend(r, op));
 	}
 	
+	@Override
+	public String caseADomainResToBinaryExp(ADomainResToBinaryExp node,
+			IndentTracker question) throws AnalysisException
+	{
+		String l = node.getLeft().apply(THIS, question);
+		String r = node.getRight().apply(THIS,question);
+		String op = mytable.getDOMRESTO();
+		
+		return Utilities.append(l, r, op);
+	}
 	@Override
 	public String caseACasesExp(ACasesExp node, IndentTracker question)
 			throws AnalysisException
