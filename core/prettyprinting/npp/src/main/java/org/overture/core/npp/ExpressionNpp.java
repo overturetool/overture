@@ -35,6 +35,7 @@ import org.overture.ast.expressions.AMapCompMapExp;
 import org.overture.ast.expressions.AMapDomainUnaryExp;
 import org.overture.ast.expressions.AMapEnumMapExp;
 import org.overture.ast.expressions.AMapRangeUnaryExp;
+import org.overture.ast.expressions.AMapUnionBinaryExp;
 import org.overture.ast.expressions.AMapletExp;
 import org.overture.ast.expressions.AModNumericBinaryExp;
 import org.overture.ast.expressions.ANotEqualBinaryExp;
@@ -1102,6 +1103,18 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		
 		return Utilities.wrap(Utilities.unaryappend(r, op));
 	}
+	
+	@Override
+	public String caseAMapUnionBinaryExp(AMapUnionBinaryExp node,
+			IndentTracker question) throws AnalysisException
+	{
+		String l = node.getLeft().apply(THIS, question);
+		String r = node.getRight().apply(THIS,question);
+		String op = mytable.getMUNION();
+		
+		return Utilities.append(l, r, op);
+	}
+	
 	@Override
 	public String caseACasesExp(ACasesExp node, IndentTracker question)
 			throws AnalysisException

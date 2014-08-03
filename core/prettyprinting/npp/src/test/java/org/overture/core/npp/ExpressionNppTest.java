@@ -1012,4 +1012,16 @@ public class ExpressionNppTest {
 	{
 		aux("rng {{1 |-> 2},{2 |-> 3}}","(rng {{1 |-> 2}, {2 |-> 3}})");
 	}
+	
+	@Test
+	public void testCaseAMapUnionExp_01() throws AnalysisException
+	{
+		aux("{1 |-> 2} munion {2 |-> 3}","{1 |-> 2} munion {2 |-> 3}");
+	}
+	
+	@Test
+	public void testCaseAMapUnionExp_02() throws AnalysisException
+	{
+		aux("x munion y", "x munion y");
+	}
 }
