@@ -994,4 +994,22 @@ public class ExpressionNppTest {
 	{
 		aux("dom {{1 |-> 2},{2 |-> 3}}","(dom {{1 |-> 2}, {2 |-> 3}})");
 	}
+	
+	@Test
+	public void testCaseAMapRngExp_01() throws AnalysisException
+	{
+		aux("rng {1 |-> 2}", "(rng {1 |-> 2})");
+	}
+	
+	@Test
+	public void testCaseAMapRngExp_02() throws AnalysisException
+	{
+		aux("rng x", "(rng x)");
+	}
+	
+	@Test
+	public void testCaseAMapRngExp_03() throws AnalysisException
+	{
+		aux("rng {{1 |-> 2},{2 |-> 3}}","(rng {{1 |-> 2}, {2 |-> 3}})");
+	}
 }
