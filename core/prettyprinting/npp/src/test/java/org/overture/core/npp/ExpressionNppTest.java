@@ -976,4 +976,22 @@ public class ExpressionNppTest {
 		aux("{x |-> x*x+1 |x in set y, x in set {1,3} & x > 1}",
 				"{x |-> ((x * x) + 1) |x in set y, x in set {1, 3} & (x > 1)}");
 	}
+	
+	@Test
+	public void testCaseAMapDomExp_01() throws AnalysisException
+	{
+		aux("dom {1 |-> 2}", "(dom {1 |-> 2})");
+	}
+	
+	@Test
+	public void testCaseAMapDomExp_02() throws AnalysisException
+	{
+		aux("dom x", "(dom x)");
+	}
+	
+	@Test
+	public void testCaseAMapDomExp_03() throws AnalysisException
+	{
+		aux("dom {{1 |-> 2},{2 |-> 3}}","(dom {{1 |-> 2}, {2 |-> 3}})");
+	}
 }
