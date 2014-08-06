@@ -22,4 +22,42 @@ public class TraceResult
 		
 		return sb.toString();
 	}
+	
+	@Override
+	public int hashCode()
+	{
+		int hashCode = 0;
+		
+		hashCode += traceName != null ? traceName.hashCode() : 0;
+		
+		for(TraceTest test : tests)
+		{
+			hashCode += test.hashCode();
+		}
+		
+		return hashCode;
+	}
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(obj == null)
+		{
+			return false;
+		}
+		
+		if(getClass() != obj.getClass())
+		{
+			return false;
+		}
+		
+		final TraceResult other = (TraceResult) obj;
+		
+		if(this.traceName == null ? other.traceName != null : !this.traceName.equals(other.traceName))
+		{
+			return false;
+		}
+
+		return tests == null ? other.tests == null : tests.equals(other.tests);
+	}
 }

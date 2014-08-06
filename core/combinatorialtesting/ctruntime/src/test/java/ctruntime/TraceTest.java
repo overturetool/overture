@@ -43,4 +43,55 @@ public class TraceTest
 	{
 		return String.format("TraceTest: Number: %s Test: %s Result: %s Verdict: %s", no, test, result, verdict);
 	}
+	
+	@Override
+	public int hashCode()
+	{
+		int hashCode = 0;
+		
+		hashCode += no != null ? no.hashCode() : 0;
+		hashCode += test != null ? test.hashCode() : 0;
+		hashCode += result != null ? result.hashCode() : 0;
+		hashCode += verdict != null ? verdict.hashCode() : 0;
+		
+		return hashCode;
+	}
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(obj == null)
+		{
+			return false;
+		}
+		
+		if(getClass() != obj.getClass())
+		{
+			return false;
+		}
+		
+		final TraceTest other = (TraceTest) obj;
+		
+		if(this.no == null ? other.no != null : !this.no.equals(other.no))
+		{
+			return false;
+		}
+		
+		if(this.test == null ? other.test != null : !this.test.equals(other.test))
+		{
+			return false;
+		}
+		
+		if(this.result == null ? other.result != null : !this.result.equals(other.result))
+		{
+			return false;
+		}
+		
+		if(this.verdict == null ? other.verdict != null : !this.verdict.equals(other.verdict))
+		{
+			return false;
+		}
+
+		return true;
+	}
 }
