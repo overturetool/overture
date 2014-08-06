@@ -393,7 +393,7 @@ public class TracesXmlStoreReader extends DefaultHandler
 			if (insertArgument)
 			{
 				List<String> arguments = new Vector<String>();
-				for (String string : XmlFileWriter.DeNormalizeValue(data.toString()).trim().split(";"))
+				for (String string : XmlFileWriter.deNormalizeValue(data.toString()).trim().split(";"))
 				{
 					arguments.add(string.trim());
 				}
@@ -402,7 +402,7 @@ public class TracesXmlStoreReader extends DefaultHandler
 			} else if (insertResult)
 			{
 				List<String> results = new Vector<String>();
-				for (String string : XmlFileWriter.DeNormalizeValue(data.toString()).trim().split(";"))
+				for (String string : XmlFileWriter.deNormalizeValue(data.toString()).trim().split(";"))
 				{
 					results.add(string.trim());
 				}
