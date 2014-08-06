@@ -37,6 +37,7 @@ import org.overture.ast.expressions.ALessNumericBinaryExp;
 import org.overture.ast.expressions.AMapCompMapExp;
 import org.overture.ast.expressions.AMapDomainUnaryExp;
 import org.overture.ast.expressions.AMapEnumMapExp;
+import org.overture.ast.expressions.AMapInverseUnaryExp;
 import org.overture.ast.expressions.AMapRangeUnaryExp;
 import org.overture.ast.expressions.AMapUnionBinaryExp;
 import org.overture.ast.expressions.AMapletExp;
@@ -1173,6 +1174,17 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		
 		return Utilities.append(l, r, op);
 	}
+	
+	@Override
+	public String caseAMapInverseUnaryExp(AMapInverseUnaryExp node,
+			IndentTracker question) throws AnalysisException
+	{
+		String r = node.getExp().apply(THIS, question);
+		String op = mytable.getINVERSE();
+		
+		return Utilities.wrap(Utilities.unaryappend(r, op));
+	}
+	
 	@Override
 	public String caseACasesExp(ACasesExp node, IndentTracker question)
 			throws AnalysisException

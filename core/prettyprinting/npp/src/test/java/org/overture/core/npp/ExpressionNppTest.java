@@ -1132,4 +1132,28 @@ public class ExpressionNppTest {
 	{
 		aux("{<a> |-> 1, <b> |-> 2} :-> {1, 2}","{<a> |-> 1, <b> |-> 2} :-> {1, 2}");
 	}
+	
+	@Test
+	public void testCaseAMapApplyExp_01() throws AnalysisException
+	{
+		aux("{<a> |-> 1, <b> |-> 2}(2)","{<a> |-> 1, <b> |-> 2}(2)");
+	}
+	
+	@Test
+	public void testCaseAMapInverseExp_01() throws AnalysisException
+	{
+		aux("inverse {<a> |-> 1, <b> |-> 2}", "(inverse {<a> |-> 1, <b> |-> 2})");
+	}
+	
+	@Test
+	public void testCaseAMapInverseExp_02() throws AnalysisException
+	{
+		aux("inverse x", "(inverse x)");
+	}
+	
+	@Test
+	public void testCaseAMapInverseExp_03() throws AnalysisException
+	{
+		aux("inverse {1 |-> x, 2|-> y}", "(inverse {1 |-> x, 2 |-> y})");
+	}
 }
