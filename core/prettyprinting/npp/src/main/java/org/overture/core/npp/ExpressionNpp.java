@@ -45,6 +45,7 @@ import org.overture.ast.expressions.AMapletExp;
 import org.overture.ast.expressions.AModNumericBinaryExp;
 import org.overture.ast.expressions.ANotEqualBinaryExp;
 import org.overture.ast.expressions.ANotInSetBinaryExp;
+import org.overture.ast.expressions.ANotUnaryExp;
 import org.overture.ast.expressions.AOrBooleanBinaryExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
 import org.overture.ast.expressions.APlusPlusBinaryExp;
@@ -64,6 +65,7 @@ import org.overture.ast.expressions.ASetEnumSetExp;
 import org.overture.ast.expressions.ASetIntersectBinaryExp;
 import org.overture.ast.expressions.ASetRangeSetExp;
 import org.overture.ast.expressions.ASetUnionBinaryExp;
+import org.overture.ast.expressions.AStarStarBinaryExp;
 import org.overture.ast.expressions.ASubsetBinaryExp;
 import org.overture.ast.expressions.ASubtractNumericBinaryExp;
 import org.overture.ast.expressions.ATailUnaryExp;
@@ -72,6 +74,7 @@ import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ASetMultipleBind;
+import org.overture.ast.types.ACharBasicType;
 import org.overture.ast.types.AMapMapType;
 
 class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
@@ -313,6 +316,27 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		return Utilities.wrap(Utilities.unaryappend(r, op));
 	}
 	
+	@Override
+	public String caseAStarStarBinaryExp(AStarStarBinaryExp node,
+			IndentTracker question) throws AnalysisException
+	{
+		String l = node.getLeft().apply(THIS, question);
+		String r = node.getRight().apply(THIS, question);
+		String op = mytable.getSTARSTAR();
+		
+		return Utilities.wrap(Utilities.append(l, r, op));
+	}
+//	@Override
+//	public String caseANotUnaryExp(ANotUnaryExp node, IndentTracker question)
+//			throws AnalysisException
+//	{
+//		String r = node.getExp().apply(THIS, question);
+//		String op = mytable.getMINUS();
+//		
+//		return Utilities.wrap(Utilities.unaryappend(r, op));
+//	}
+	
+
 	@Override
 	public String caseAEqualsBinaryExp(AEqualsBinaryExp node,
 			IndentTracker question) throws AnalysisException
@@ -1283,6 +1307,13 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		
 		return var;
 		
+	}
+	
+	@Override
+	public String caseACharBasicType(ACharBasicType node, IndentTracker question)
+			throws AnalysisException
+	{
+		return node.toString();
 	}
 	
 	@Override

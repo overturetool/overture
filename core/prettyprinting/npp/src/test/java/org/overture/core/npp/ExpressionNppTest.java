@@ -199,7 +199,7 @@ public class ExpressionNppTest {
 	}
 	
 	@Test
-	public void testCaseAbooleanImpliesExp_03() throws AnalysisException
+	public void testCaseABooleanImpliesExp_03() throws AnalysisException
 	{
 		aux("x => 1","(x => 1)");
 	}
@@ -287,6 +287,30 @@ public class ExpressionNppTest {
 	{
 		aux("floor 2.2", "(floor 2.2)");
 	}
+	
+	@Test
+	public void testCaseAPowerNumericBinaryExp_01() throws AnalysisException
+	{
+		aux("2 ** 3","(2 ** 3)");
+	}
+	
+	@Test
+	public void testCaseAPowerNumericBinaryExp_02() throws AnalysisException
+	{
+		aux("x ** 3","(x ** 3)");
+	}
+	
+	@Test 
+	public void testCaseAPowerNumericBinaryExp_03() throws AnalysisException
+	{
+		aux("3 ** x", "(3 ** x)");
+	}
+	
+//	@Test
+//	public void testCaseANotExp_01() throws AnalysisException
+//	{
+//		aux("-x", "(- x)");
+//	}
 	
 	@Test
 	public void testCaseAEqualsBinaryExp_01() throws AnalysisException
@@ -466,12 +490,6 @@ public class ExpressionNppTest {
 	{
 		aux("{1 |-> 2} <> {2 |-> 3}","({1 |-> 2} <> {2 |-> 3})");
 	}
-	
-//	@Test
-//	public void testCaseAMapletExp_02() throws AnalysisException
-//	{
-//		aux("{1 |-> 2}","({1 |-> 2})");
-//	}
 	
 	@Test
 	public void testCaseACardUnaryExp_01() throws AnalysisException
