@@ -277,6 +277,18 @@ public class ExpressionNppTest {
 	}
 	
 	@Test
+	public void testCaseAFloorExp_01() throws AnalysisException
+	{
+		aux("floor x","(floor x)");
+	}
+	
+	@Test
+	public void testCaseAFloorExp_02() throws AnalysisException
+	{
+		aux("floor 2.2", "(floor 2.2)");
+	}
+	
+	@Test
 	public void testCaseAEqualsBinaryExp_01() throws AnalysisException
 	{
 		aux("1 = 1", "(1 = 1)");

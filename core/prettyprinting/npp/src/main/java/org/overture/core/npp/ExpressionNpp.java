@@ -22,6 +22,7 @@ import org.overture.ast.expressions.AElementsUnaryExp;
 import org.overture.ast.expressions.AEqualsBinaryExp;
 import org.overture.ast.expressions.AExists1Exp;
 import org.overture.ast.expressions.AExistsExp;
+import org.overture.ast.expressions.AFloorUnaryExp;
 import org.overture.ast.expressions.AForAllExp;
 import org.overture.ast.expressions.AGreaterEqualNumericBinaryExp;
 import org.overture.ast.expressions.AGreaterNumericBinaryExp;
@@ -298,16 +299,18 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String l = node.getLeft().apply(THIS, question);
 		String r = node.getRight().apply(THIS,question);
 		String op = mytable.getOR();
-		
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append(l);
-//		sb.append(space);
-//		sb.append(op);
-//		sb.append(space);
-//		sb.append(r);
-		
+	
 		return Utilities.wrap(Utilities.append(l, r, op));
+	}
+	
+	@Override
+	public String caseAFloorUnaryExp(AFloorUnaryExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		String r = node.getExp().apply(THIS, question);
+		String op = mytable.getFLOOR();
+		
+		return Utilities.wrap(Utilities.unaryappend(r, op));
 	}
 	
 	@Override
