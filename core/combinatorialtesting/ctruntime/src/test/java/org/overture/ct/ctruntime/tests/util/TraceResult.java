@@ -1,4 +1,4 @@
-package ctruntime;
+package org.overture.ct.ctruntime.tests.util;
 
 import java.util.List;
 import java.util.Vector;

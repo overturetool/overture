@@ -1,4 +1,4 @@
-package ctruntime;
+package org.overture.ct.ctruntime.tests;
 
 import java.io.File;
 import java.io.IOException;

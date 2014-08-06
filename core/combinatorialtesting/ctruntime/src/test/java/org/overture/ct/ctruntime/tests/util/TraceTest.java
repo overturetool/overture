@@ -1,4 +1,4 @@
-package ctruntime;
+package org.overture.ct.ctruntime.tests.util;
 
 import org.overture.interpreter.traces.Verdict;
 
