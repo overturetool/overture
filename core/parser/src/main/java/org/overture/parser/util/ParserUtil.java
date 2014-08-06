@@ -31,6 +31,29 @@ public class ParserUtil
 			this.warnings = warnings;
 			this.errors = errors;
 		}
+		
+		public String getErrorString()
+		{
+			StringBuilder sb = new StringBuilder();
+			sb.append("\tErrors:");
+			for (VDMError err : errors)
+			{
+				sb.append("\n\t" + err);
+			}
+
+			return sb.toString();
+		}
+
+		public String getWarningString()
+		{
+			StringBuilder sb = new StringBuilder();
+			sb.append("\tWarnings:");
+			for (VDMWarning err : warnings)
+			{
+				sb.append("\n\t" + err);
+			}
+			return sb.toString();
+		}
 	}
 
 	public static ParserResult<List<SClassDefinition>> parseOo(File file)

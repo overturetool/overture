@@ -54,16 +54,34 @@ public class TypeCheckerUtil
 			sb.append("\n\n\n");
 			sb.append("TypeCheck result:\n");
 			sb.append("\tErrors:");
+			sb.append(getErrorString());
+			sb.append("\tWarnings:");
+			sb.append(getWarningString());
+			return sb.toString();
+		}
+		
+		
+
+		public String getErrorString()
+		{
+			StringBuilder sb = new StringBuilder();
+			
 			for (VDMError err : errors)
 			{
 				sb.append("\n\t" + err);
 			}
-			sb.append("\tWarnings:");
+
+			return sb.toString();
+		}
+
+		public String getWarningString()
+		{
+			StringBuilder sb = new StringBuilder();
+			
 			for (VDMWarning err : warnings)
 			{
 				sb.append("\n\t" + err);
 			}
-
 			return sb.toString();
 		}
 	}
@@ -136,7 +154,7 @@ public class TypeCheckerUtil
 		classes.addAll(parserResult.result);
 		classes.add(AstFactoryTC.newACpuClassDefinition(af));
 		classes.add(AstFactoryTC.newABusClassDefinition(af));
-		return typeCheck(parserResult, classes, new ClassTypeChecker(classes,af));
+		return typeCheck(parserResult, classes, new ClassTypeChecker(classes, af));
 	}
 
 	public static TypeCheckResult<PExp> typeCheckExpression(String content)
@@ -155,7 +173,7 @@ public class TypeCheckerUtil
 		classes.addAll(parserResult.result);
 		classes.add(AstFactoryTC.newACpuClassDefinition(af));
 		classes.add(AstFactoryTC.newABusClassDefinition(af));
-		return typeCheck(parserResult, classes, new ClassTypeChecker(classes,af));
+		return typeCheck(parserResult, classes, new ClassTypeChecker(classes, af));
 	}
 
 	public static <P> TypeCheckResult<P> typeCheck(
