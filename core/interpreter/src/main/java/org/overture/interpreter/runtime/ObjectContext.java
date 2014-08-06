@@ -138,7 +138,8 @@ public class ObjectContext extends RootContext
 	@Override
 	public String toString()
 	{
-		return super.toString();	// Self there anyway ...+ self.toString();
+		//return super.toString();	// Self there anyway ...+ self.toString();
+		return (DEBUG ? "#" + id + " " : "") + format("", this)+self.toString().replace(", ","\n\t")+"\n-------------------\n"+outer;
 	}
 
 	@Override
