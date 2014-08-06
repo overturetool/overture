@@ -1096,4 +1096,22 @@ public class ExpressionNppTest {
 	{
 		aux("{x} <-: {x |->2, y|-> 3}","{x} <-: {x |-> 2, y |-> 3}");
 	}
+	
+	@Test
+	public void testCaseARangeResToExp_01() throws AnalysisException
+	{
+		aux("{<a> |-> 1, <b> |-> 2} :> {<a>}","{<a> |-> 1, <b> |-> 2} :> {<a>}");
+	}
+	
+	@Test
+	public void testCaseARangeResToExp_02()	throws AnalysisException
+	{
+		aux("{<a> |-> 1, <b> |-> 2} :> x","{<a> |-> 1, <b> |-> 2} :> x");
+	}
+	
+	@Test
+	public void testCaseARangeResToExp_03() throws AnalysisException
+	{
+		aux("{<a> |-> 1, <b> |-> 2} :> {1, 2}","{<a> |-> 1, <b> |-> 2} :> {1, 2}");
+	}
 }

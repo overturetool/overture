@@ -49,6 +49,7 @@ import org.overture.ast.expressions.APlusPlusBinaryExp;
 import org.overture.ast.expressions.APowerSetUnaryExp;
 import org.overture.ast.expressions.AProperSubsetBinaryExp;
 import org.overture.ast.expressions.AQuoteLiteralExp;
+import org.overture.ast.expressions.ARangeResToBinaryExp;
 import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.ARemNumericBinaryExp;
 import org.overture.ast.expressions.ASeqCompSeqExp;
@@ -1146,6 +1147,17 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String l = node.getLeft().apply(THIS, question);
 		String r = node.getRight().apply(THIS,question);
 		String op = mytable.getDOMRESBY();
+		
+		return Utilities.append(l, r, op);
+	}
+	
+	@Override
+	public String caseARangeResToBinaryExp(ARangeResToBinaryExp node,
+			IndentTracker question) throws AnalysisException
+	{
+		String l = node.getLeft().apply(THIS, question);
+		String r = node.getRight().apply(THIS,question);
+		String op = mytable.getRANGERESTO();
 		
 		return Utilities.append(l, r, op);
 	}
