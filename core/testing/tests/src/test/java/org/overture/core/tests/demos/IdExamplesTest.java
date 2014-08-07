@@ -3,6 +3,7 @@ package org.overture.core.tests.demos;
 import java.lang.reflect.Type;
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.overture.ast.node.INode;
@@ -17,6 +18,7 @@ import com.google.gson.reflect.TypeToken;
  * 
  * @author ldc
  */
+@Ignore
 @RunWith(Parameterized.class)
 public class IdExamplesTest extends ParamExamplesTest<IdTestResult>
 {
