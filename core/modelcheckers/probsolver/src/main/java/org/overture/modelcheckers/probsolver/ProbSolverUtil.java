@@ -92,7 +92,8 @@ public class ProbSolverUtil extends AbstractProbSolverUtil
 	public static PStm solve(String name, AImplicitOperationDefinition opDef,
 			Map<String, String> stateContext, Map<String, String> argContext,
 			Map<String, PType> argumentTypes, PType tokenType,
-			Set<String> quotes, SolverConsole console, IAstAssistantFactory af) throws SolverException
+			Set<String> quotes, SolverConsole console, IAstAssistantFactory af)
+			throws SolverException
 	{
 		VdmSolution solution = new ProbSolverUtil(console, quotes, af).solve(name, opDef, opDef.getResult(), stateContext, argContext, argumentTypes, tokenType);
 		if (solution.isStatement())
@@ -105,7 +106,8 @@ public class ProbSolverUtil extends AbstractProbSolverUtil
 	public static PExp solve(String name, PExp body, APatternTypePair result,
 			Map<String, String> stateContext, Map<String, String> argContext,
 			Map<String, PType> argumentTypes, PType tokenType,
-			Set<String> quotes, SolverConsole console, IAstAssistantFactory af) throws SolverException
+			Set<String> quotes, SolverConsole console, IAstAssistantFactory af)
+			throws SolverException
 	{
 		VdmSolution solution = new ProbSolverUtil(console, quotes, af).solve(name, body, result, stateContext, argContext, argumentTypes, tokenType);
 		if (solution.isExpression())
@@ -117,7 +119,8 @@ public class ProbSolverUtil extends AbstractProbSolverUtil
 
 	private final Map<String, Set<String>> sets = new HashMap<String, Set<String>>();
 
-	private ProbSolverUtil(SolverConsole console, Set<String> quotes, IAstAssistantFactory af)
+	private ProbSolverUtil(SolverConsole console, Set<String> quotes,
+			IAstAssistantFactory af)
 	{
 		super(console, af);
 		this.sets.put(VdmToBConverter.QUOTES_SET, getQuoteNames(quotes));
@@ -500,8 +503,8 @@ public class ProbSolverUtil extends AbstractProbSolverUtil
 
 		if (result != null)
 		{
-			//TODO: Here I used the assistantFactory created in the superclass AbstractProbSol.
-			
+			// TODO: Here I used the assistantFactory created in the superclass AbstractProbSol.
+
 			LexNameList allReturnVariables = assistantFactory.createPPatternAssistant().getAllVariableNames(result.getPattern());
 			List<PType> allReturnTypes = new Vector<PType>();
 

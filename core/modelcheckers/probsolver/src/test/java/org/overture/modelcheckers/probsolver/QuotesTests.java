@@ -29,7 +29,7 @@ public class QuotesTests extends AllTest
 
 		return tests;
 	}
-	
+
 	@Override
 	protected String getPropertyId()
 	{
