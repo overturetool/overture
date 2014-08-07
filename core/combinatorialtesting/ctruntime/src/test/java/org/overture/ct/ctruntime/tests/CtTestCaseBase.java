@@ -27,7 +27,7 @@ import org.xml.sax.SAXException;
 public abstract class CtTestCaseBase extends BaseTestCase
 {
 	//The socket is used to communicate with the trace interpreter
-	protected ServerSocket thisSocket;
+	protected ServerSocket socket;
 	protected static final int SOCKET_TIMEOUT = 0;
 	protected static final int PORT = 8889;
 
@@ -64,7 +64,15 @@ public abstract class CtTestCaseBase extends BaseTestCase
 	@Override
 	protected void tearDown() throws Exception
 	{
-		this.thisSocket.close();
+		try{
+			if(this.socket != null)
+			{
+				this.socket.close();
+			}
+		}
+		catch(Exception e)
+		{
+		}
 	}
 	
 	@Override
@@ -149,8 +157,8 @@ public abstract class CtTestCaseBase extends BaseTestCase
 		Path toPath = specFileWithExt.toPath();
 		Files.copy(specFilePath, toPath, StandardCopyOption.REPLACE_EXISTING);
 		
-		thisSocket = new ServerSocket(PORT);
-		thisSocket.setSoTimeout(SOCKET_TIMEOUT);
+		socket = new ServerSocket(PORT);
+		socket.setSoTimeout(SOCKET_TIMEOUT);
 		final Data data = new Data();
 
 		File traceFolder = new File((TRACE_OUTPUT_FOLDER + traceName).replace('/', File.separatorChar));
@@ -160,7 +168,7 @@ public abstract class CtTestCaseBase extends BaseTestCase
 		final File actualOutputFile = new File(outputStrPath.replace('/', File.separatorChar));
 		actualOutputFile.getParentFile().mkdirs();
 
-		Thread t = testHelper.consCtClientThread(thisSocket, data);
+		Thread t = testHelper.consCtClientThread(socket, data);
 		t.setDaemon(false);
 		t.start();
 
