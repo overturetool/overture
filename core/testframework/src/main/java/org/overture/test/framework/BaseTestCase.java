@@ -22,22 +22,24 @@ import java.io.File;
 
 import junit.framework.TestCase;
 
-public abstract class BaseTestCase extends
-		TestCase
+public abstract class BaseTestCase extends TestCase
 {
 	protected File file;
 	protected String name;
 	protected String content;
-	protected enum ContentModed {File, String, None};
+
+	protected enum ContentModed
+	{
+		File, String, None
+	};
+
 	protected final ContentModed mode;
-	
 
 	public BaseTestCase()
 	{
 		super("skip");
 		mode = ContentModed.None;
 	}
-	
 
 	public BaseTestCase(File file)
 	{
@@ -47,7 +49,7 @@ public abstract class BaseTestCase extends
 		mode = ContentModed.File;
 	}
 
-	public BaseTestCase(File rootSource,String name, String content)
+	public BaseTestCase(File rootSource, String name, String content)
 	{
 		super("test");
 		this.content = content;
@@ -68,22 +70,21 @@ public abstract class BaseTestCase extends
 			String name = file.getName();
 			if (name.contains("."))
 			{
-				newName= name.substring(0, name.indexOf("."));
+				newName = name.substring(0, name.indexOf("."));
 			}
-			if(newName==null)
+			if (newName == null)
 			{
-				newName= file.getName();	
+				newName = file.getName();
 			}
-			
-			return newName+" <"+file.getParentFile().getName()+">";
-			
+
+			return newName + " <" + file.getParentFile().getName() + ">";
+
 		}
 		return "Generic Base Test";
 	}
 
 	public abstract void test() throws Exception;
-	
-	
+
 	public static String pad(String text, int length)
 	{
 		if (text == null)
@@ -96,6 +97,8 @@ public abstract class BaseTestCase extends
 		}
 		return text;
 	}
-	
-	public void skip(){};
+
+	public void skip()
+	{
+	};
 }
