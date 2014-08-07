@@ -12,7 +12,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
 import org.junit.Assert;
-import org.junit.Assume;
 import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
 import org.overture.config.Settings;
@@ -102,10 +101,7 @@ public abstract class CtTestCaseBase extends BaseTestCase
 		{
 			File resultFile = getResultFile(filename);
 			
-			if (!resultFile.exists())
-			{
-				Assume.assumeTrue("No result file", false);
-			}
+			Assert.assertTrue("No result file found for test: " + content, resultFile.exists());
 
 			TraceResultReader reader = new TraceResultReader();
 			List<TraceResult> expectedResults = reader.read(resultFile);
@@ -120,7 +116,7 @@ public abstract class CtTestCaseBase extends BaseTestCase
 				TraceResult expected = expectedResults.get(i);
 				TraceResult actual = actualResults.get(i);
 				
-				Assert.assertTrue(expected.equals(actual));
+				Assert.assertTrue("Actual results differs from expected results for test: " + content + "\nExpected: " + expectedResults + "\n\nActual: " + actualResults, expected.equals(actual));
 			}
 		}
 	}
@@ -169,6 +165,7 @@ public abstract class CtTestCaseBase extends BaseTestCase
 		t.start();
 
 		String[] args = getArgs(traceName, traceFolder, specFileWithExt);
+		
 		TraceRunnerMain.USE_SYSTEM_EXIT = false;
 		TraceRunnerMain.main(args);
 

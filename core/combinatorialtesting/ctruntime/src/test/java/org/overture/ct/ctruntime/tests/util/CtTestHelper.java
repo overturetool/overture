@@ -72,22 +72,25 @@ public class CtTestHelper
 						}
 					} catch (IOException e)
 					{
-						e.printStackTrace();
+						//e.printStackTrace();
 					} finally
 					{
 						try
 						{
-							conn.close();
+							if(conn != null)
+							{
+								conn.close();
+							}
 						} catch (IOException e)
 						{
-							e.printStackTrace();
+							//e.printStackTrace();
 						}
 						try
 						{
 							socket.close();
 						} catch (IOException e)
 						{
-							e.printStackTrace();
+							//e.printStackTrace();
 						}
 					}
 
