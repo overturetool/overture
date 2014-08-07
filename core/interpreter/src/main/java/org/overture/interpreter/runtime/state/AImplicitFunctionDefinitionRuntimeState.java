@@ -7,7 +7,6 @@ import org.overture.ast.types.PType;
 import org.overture.interpreter.runtime.IRuntimeState;
 import org.overture.interpreter.values.FunctionValue;
 
-
 public class AImplicitFunctionDefinitionRuntimeState implements IRuntimeState
 {
 	public Map<List<PType>, FunctionValue> polyfuncs = null;

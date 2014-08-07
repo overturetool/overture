@@ -41,7 +41,7 @@ public class ConcurrentTraceNode extends TraceNode
 		List<TestSequence> nodetests = new Vector<TestSequence>();
 		int count = nodes.size();
 
-		for (TraceNode node: nodes)
+		for (TraceNode node : nodes)
 		{
 			nodetests.add(node.getTests());
 		}
@@ -54,31 +54,31 @@ public class ConcurrentTraceNode extends TraceNode
 			int[] sizes = new int[count];
 			int[] perm = pa.next();
 
-			for (int i=0; i<count; i++)
+			for (int i = 0; i < count; i++)
 			{
 				sizes[i] = nodetests.get(perm[i]).size();
 			}
 
 			Permutor p = new Permutor(sizes);
 
-    		while (p.hasNext())
-    		{
-    			int[] select = p.next();
-    			CallSequence seq = getVariables();
+			while (p.hasNext())
+			{
+				int[] select = p.next();
+				CallSequence seq = getVariables();
 
-    			for (int i=0; i<count; i++)
-    			{
-    				TestSequence ith = nodetests.get(perm[i]);
-    				
-    				if (!ith.isEmpty())
-    				{
-    					CallSequence subseq = ith.get(select[i]);
-    					seq.addAll(subseq);
-    				}
-    			}
+				for (int i = 0; i < count; i++)
+				{
+					TestSequence ith = nodetests.get(perm[i]);
 
-    			tests.add(seq);
-    		}
+					if (!ith.isEmpty())
+					{
+						CallSequence subseq = ith.get(select[i]);
+						seq.addAll(subseq);
+					}
+				}
+
+				tests.add(seq);
+			}
 		}
 
 		return tests;
@@ -91,7 +91,7 @@ public class ConcurrentTraceNode extends TraceNode
 		sb.append("|| (");
 		String sep = "";
 
-		for (TraceNode node: nodes)
+		for (TraceNode node : nodes)
 		{
 			sb.append(sep);
 			sb.append(node.toString());

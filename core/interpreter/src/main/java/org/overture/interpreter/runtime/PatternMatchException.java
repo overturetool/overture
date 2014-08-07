@@ -26,7 +26,6 @@ package org.overture.interpreter.runtime;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.parser.messages.LocatedException;
 
-
 @SuppressWarnings("serial")
 public class PatternMatchException extends LocatedException
 {

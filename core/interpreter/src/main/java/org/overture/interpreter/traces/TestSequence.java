@@ -56,6 +56,10 @@ public class TestSequence extends Vector<CallSequence>
 	/**
 	 * Filter remaining tests based on one set of results. The result list passed in is the result of running the test,
 	 * which is the n'th test in the TestSequence (from 1 - size).
+	 * 
+	 * @param result
+	 * @param test
+	 * @param n
 	 */
 
 	public void filter(List<Object> result, CallSequence test, int n)

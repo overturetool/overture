@@ -16,7 +16,6 @@ public class ClassesPpClassicTest extends ParamInterpreterTest
 
 	private final static String CLASSES_CLASSIC_ROOT = "src/test/resources/classesClassic";
 
-	
 	public ClassesPpClassicTest(String nameParameter, String inputParameter,
 			String resultParameter)
 	{

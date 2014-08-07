@@ -33,7 +33,6 @@ import org.overture.ast.types.PType;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ValueException;
 
-
 public abstract class NumericValue extends Value
 {
 	private static final long serialVersionUID = 1L;
@@ -45,7 +44,8 @@ public abstract class NumericValue extends Value
 		this.value = value;
 	}
 
-	public static NumericValue valueOf(double d, Context ctxt) throws ValueException
+	public static NumericValue valueOf(double d, Context ctxt)
+			throws ValueException
 	{
 		if (Double.isInfinite(d) || Double.isNaN(d))
 		{
@@ -59,8 +59,7 @@ public abstract class NumericValue extends Value
 			try
 			{
 				return new RealValue(d);
-			}
-			catch (Exception e)
+			} catch (Exception e)
 			{
 				throw new ValueException(4134, e.getMessage(), ctxt);
 			}
@@ -69,15 +68,15 @@ public abstract class NumericValue extends Value
 		return valueOf(rounded, ctxt);
 	}
 
-	public static NumericValue valueOf(long iv, Context ctxt) throws ValueException
+	public static NumericValue valueOf(long iv, Context ctxt)
+			throws ValueException
 	{
 		if (iv > 0)
 		{
 			try
 			{
 				return new NaturalOneValue(iv);
-			}
-			catch (Exception e)
+			} catch (Exception e)
 			{
 				throw new ValueException(4064, e.getMessage(), ctxt);
 			}
@@ -88,8 +87,7 @@ public abstract class NumericValue extends Value
 			try
 			{
 				return new NaturalValue(iv);
-			}
-			catch (Exception e)
+			} catch (Exception e)
 			{
 				throw new ValueException(4065, e.getMessage(), ctxt);
 			}
@@ -99,57 +97,49 @@ public abstract class NumericValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt) throws AnalysisException
+	public Value convertValueTo(PType to, Context ctxt)
+			throws AnalysisException
 	{
 		if (to instanceof ARealNumericBasicType)
 		{
 			try
 			{
 				return new RealValue(realValue(ctxt));
-			}
-			catch (Exception e)
+			} catch (Exception e)
 			{
 				throw new ValueException(4134, e.getMessage(), ctxt);
 			}
-		}
-		else if (to instanceof ARationalNumericBasicType)
+		} else if (to instanceof ARationalNumericBasicType)
 		{
 			try
 			{
 				return new RationalValue(ratValue(ctxt));
-			}
-			catch (Exception e)
+			} catch (Exception e)
 			{
 				throw new ValueException(4134, e.getMessage(), ctxt);
 			}
-		}
-		else if (to instanceof AIntNumericBasicType)
+		} else if (to instanceof AIntNumericBasicType)
 		{
 			return new IntegerValue(intValue(ctxt));
-		}
-		else if (to instanceof ANatNumericBasicType)
+		} else if (to instanceof ANatNumericBasicType)
 		{
 			try
 			{
 				return new NaturalValue(natValue(ctxt));
-			}
-			catch (Exception e)
+			} catch (Exception e)
 			{
 				return abort(4065, e.getMessage(), ctxt);
 			}
-		}
-		else if (to instanceof ANatOneNumericBasicType)
+		} else if (to instanceof ANatOneNumericBasicType)
 		{
 			try
 			{
 				return new NaturalOneValue(nat1Value(ctxt));
-			}
-			catch (Exception e)
+			} catch (Exception e)
 			{
 				return abort(4064, e.getMessage(), ctxt);
 			}
-		}
-		else
+		} else
 		{
 			return super.convertValueTo(to, ctxt);
 		}
@@ -160,11 +150,11 @@ public abstract class NumericValue extends Value
 	{
 		if (other instanceof Value)
 		{
-			Value val = ((Value)other).deref();
+			Value val = ((Value) other).deref();
 
 			if (val instanceof NumericValue)
 			{
-				NumericValue nov = (NumericValue)val;
+				NumericValue nov = (NumericValue) val;
 				return nov.value == value;
 			}
 		}
@@ -174,16 +164,22 @@ public abstract class NumericValue extends Value
 
 	@Override
 	abstract public double realValue(Context ctxt) throws ValueException;
+
 	@Override
 	abstract public double ratValue(Context ctxt) throws ValueException;
+
 	@Override
 	abstract public long intValue(Context ctxt) throws ValueException;
+
 	@Override
 	abstract public long natValue(Context ctxt) throws ValueException;
+
 	@Override
 	abstract public long nat1Value(Context ctxt) throws ValueException;
+
 	@Override
 	abstract public int hashCode();
+
 	@Override
 	abstract public String toString();
 }

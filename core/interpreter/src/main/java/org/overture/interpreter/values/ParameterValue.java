@@ -27,7 +27,6 @@ import org.overture.ast.types.PType;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ValueException;
 
-
 public class ParameterValue extends Value
 {
 	private static final long serialVersionUID = 1L;
@@ -45,7 +44,7 @@ public class ParameterValue extends Value
 
 		if (other instanceof ParameterValue)
 		{
-			ParameterValue ov = (ParameterValue)other;
+			ParameterValue ov = (ParameterValue) other;
 			return ov.type.equals(type);
 		}
 

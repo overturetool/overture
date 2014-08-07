@@ -33,13 +33,10 @@ import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.scheduler.SharedStateListner;
 import org.overture.parser.config.Properties;
 
-
 /**
- * A class to hold an updatable value. This is almost identical to a
- * ReferenceValue, except that is has a set method which changes the
- * referenced value and calls a listener, and all the remaining methods
- * here are synchronized, to guarantee that the sets and gets see all
- * changes (to the same UpdateableValue) produced by other threads.
+ * A class to hold an updatable value. This is almost identical to a ReferenceValue, except that is has a set method
+ * which changes the referenced value and calls a listener, and all the remaining methods here are synchronized, to
+ * guarantee that the sets and gets see all changes (to the same UpdateableValue) produced by other threads.
  */
 
 public class UpdatableValue extends ReferenceValue
@@ -48,19 +45,20 @@ public class UpdatableValue extends ReferenceValue
 	public ValueListenerList listeners;
 	protected final PType restrictedTo;
 
-	public static UpdatableValue factory(Value value, ValueListenerList listeners)
+	public static UpdatableValue factory(Value value,
+			ValueListenerList listeners)
 	{
 		return factory(value, listeners, null);
 	}
 
-	public static UpdatableValue factory(Value value, ValueListenerList listeners, PType type)
+	public static UpdatableValue factory(Value value,
+			ValueListenerList listeners, PType type)
 	{
-		if (Settings.dialect == Dialect.VDM_RT &&
-			Properties.rt_duration_transactions)
+		if (Settings.dialect == Dialect.VDM_RT
+				&& Properties.rt_duration_transactions)
 		{
 			return new TransactionValue(value, listeners, type);
-		}
-		else
+		} else
 		{
 			return new UpdatableValue(value, listeners, type);
 		}
@@ -73,18 +71,18 @@ public class UpdatableValue extends ReferenceValue
 
 	public static UpdatableValue factory(ValueListenerList listeners, PType type)
 	{
-		if (Settings.dialect == Dialect.VDM_RT &&
-			Properties.rt_duration_transactions)
+		if (Settings.dialect == Dialect.VDM_RT
+				&& Properties.rt_duration_transactions)
 		{
 			return new TransactionValue(listeners, type);
-		}
-		else
+		} else
 		{
 			return new UpdatableValue(listeners, type);
 		}
 	}
 
-	protected UpdatableValue(Value value, ValueListenerList listeners, PType type)
+	protected UpdatableValue(Value value, ValueListenerList listeners,
+			PType type)
 	{
 		super(value);
 		this.listeners = listeners;
@@ -111,13 +109,15 @@ public class UpdatableValue extends ReferenceValue
 	}
 
 	@Override
-	public synchronized Value convertValueTo(PType to, Context ctxt) throws AnalysisException
+	public synchronized Value convertValueTo(PType to, Context ctxt)
+			throws AnalysisException
 	{
 		return value.convertValueTo(to, ctxt).getUpdatable(listeners);
 	}
 
 	@Override
-	public void set(ILexLocation location, Value newval, Context ctxt) throws AnalysisException
+	public void set(ILexLocation location, Value newval, Context ctxt)
+			throws AnalysisException
 	{
 		// Anything with structure added to an UpdateableValue has to be
 		// updatable, otherwise you can "freeze" part of the substructure
@@ -126,17 +126,17 @@ public class UpdatableValue extends ReferenceValue
 
 		synchronized (this)
 		{
-   			value = newval.getUpdatable(listeners);
-    		value = ((UpdatableValue)value).value;	// To avoid nested updatables
-    		
-    		if (restrictedTo != null)
-    		{
+			value = newval.getUpdatable(listeners);
+			value = ((UpdatableValue) value).value; // To avoid nested updatables
+
+			if (restrictedTo != null)
+			{
 				value = value.convertTo(restrictedTo, ctxt);
-    		}
+			}
 		}
-		
-		//Experimental hood added for DESTECS
-		if(Settings.dialect == Dialect.VDM_RT)
+
+		// Experimental hood added for DESTECS
+		if (Settings.dialect == Dialect.VDM_RT)
 		{
 			SharedStateListner.variableChanged(this, location);
 		}
@@ -155,8 +155,7 @@ public class UpdatableValue extends ReferenceValue
 		if (listeners != null)
 		{
 			listeners.add(listener);
-		}
-		else
+		} else
 		{
 			listeners = new ValueListenerList(listener);
 		}
@@ -165,7 +164,7 @@ public class UpdatableValue extends ReferenceValue
 	@Override
 	public synchronized Object clone()
 	{
-		return new UpdatableValue((Value)value.clone(), listeners, restrictedTo);
+		return new UpdatableValue((Value) value.clone(), listeners, restrictedTo);
 	}
 
 	@Override
@@ -229,19 +228,22 @@ public class UpdatableValue extends ReferenceValue
 	}
 
 	@Override
-	public synchronized ValueList tupleValue(Context ctxt) throws ValueException
+	public synchronized ValueList tupleValue(Context ctxt)
+			throws ValueException
 	{
 		return value.tupleValue(ctxt);
 	}
 
 	@Override
-	public synchronized RecordValue recordValue(Context ctxt) throws ValueException
+	public synchronized RecordValue recordValue(Context ctxt)
+			throws ValueException
 	{
 		return value.recordValue(ctxt);
 	}
 
 	@Override
-	public synchronized ObjectValue objectValue(Context ctxt) throws ValueException
+	public synchronized ObjectValue objectValue(Context ctxt)
+			throws ValueException
 	{
 		return value.objectValue(ctxt);
 	}
@@ -277,13 +279,15 @@ public class UpdatableValue extends ReferenceValue
 	}
 
 	@Override
-	public synchronized FunctionValue functionValue(Context ctxt) throws ValueException
+	public synchronized FunctionValue functionValue(Context ctxt)
+			throws ValueException
 	{
 		return value.functionValue(ctxt);
 	}
 
 	@Override
-	public synchronized OperationValue operationValue(Context ctxt) throws ValueException
+	public synchronized OperationValue operationValue(Context ctxt)
+			throws ValueException
 	{
 		return value.operationValue(ctxt);
 	}
@@ -293,17 +297,16 @@ public class UpdatableValue extends ReferenceValue
 	{
 		if (other instanceof Value)
 		{
-			Value val = ((Value)other).deref();
+			Value val = ((Value) other).deref();
 
-    		if (val instanceof ReferenceValue)
-    		{
-    			ReferenceValue rvo = (ReferenceValue)val;
-    			return value.equals(rvo.value);
-    		}
-    		else
-    		{
-    			return value.equals(other);
-    		}
+			if (val instanceof ReferenceValue)
+			{
+				ReferenceValue rvo = (ReferenceValue) val;
+				return value.equals(rvo.value);
+			} else
+			{
+				return value.equals(other);
+			}
 		}
 
 		return false;

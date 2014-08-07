@@ -33,14 +33,14 @@ public class PermuteArray
 	private long numLeft;
 	private long total;
 
-	//-----------------------------------------------------------
+	// -----------------------------------------------------------
 	// Constructor. WARNING: Don't make n too large.
 	// Recall that the number of permutations is n!
 	// which can be very large, even when n is as small as 20 --
 	// 20! = 2,432,902,008,176,640,000 and
 	// 21! is too big to fit into a Java long, which is
 	// why we use BigInteger instead.
-	//----------------------------------------------------------
+	// ----------------------------------------------------------
 
 	public PermuteArray(int n)
 	{
@@ -48,7 +48,7 @@ public class PermuteArray
 		{
 			throw new IllegalArgumentException("Min 1");
 		}
-		
+
 		a = new int[n];
 		total = getFactorial(n);
 		reset();
@@ -64,45 +64,45 @@ public class PermuteArray
 		numLeft = total;
 	}
 
-	//------------------------------------------------
+	// ------------------------------------------------
 	// Return number of permutations not yet generated
-	//------------------------------------------------
+	// ------------------------------------------------
 
 	public long getNumLeft()
 	{
 		return numLeft;
 	}
 
-	//------------------------------------
+	// ------------------------------------
 	// Return total number of permutations
-	//------------------------------------
+	// ------------------------------------
 
 	public long getTotal()
 	{
 		return total;
 	}
 
-	//-----------------------------
+	// -----------------------------
 	// Are there more permutations?
-	//-----------------------------
+	// -----------------------------
 
 	public boolean hasNext()
 	{
 		return numLeft > 0;
 	}
 
-	//------------------
+	// ------------------
 	// Compute factorial
-	//------------------
+	// ------------------
 
 	private static long getFactorial(int n)
 	{
-		return n == 1 ? 1 : n * getFactorial(n-1);
+		return n == 1 ? 1 : n * getFactorial(n - 1);
 	}
 
-	//--------------------------------------------------------
+	// --------------------------------------------------------
 	// Generate next permutation (algorithm from Rosen p. 284)
-	//--------------------------------------------------------
+	// --------------------------------------------------------
 
 	public int[] next()
 	{
@@ -117,7 +117,7 @@ public class PermuteArray
 		// Find largest index j with a[j] < a[j+1]
 
 		int j = a.length - 2;
-		
+
 		while (a[j] > a[j + 1])
 		{
 			j--;
@@ -127,7 +127,7 @@ public class PermuteArray
 		// greater than a[j] to the right of a[j]
 
 		int k = a.length - 1;
-		
+
 		while (a[j] > a[k])
 		{
 			k--;
@@ -156,11 +156,11 @@ public class PermuteArray
 		numLeft = numLeft - 1;
 		return a;
 	}
-	
+
 	public static void main(String[] args)
 	{
 		PermuteArray p = new PermuteArray(4);
-		
+
 		while (p.hasNext())
 		{
 			System.out.println(Arrays.toString(p.next()));

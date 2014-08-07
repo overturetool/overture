@@ -11,35 +11,34 @@ import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.values.ValueList;
 
 /***************************************
- * 
  * This class implements a way to collect values from a bind.
  * 
  * @author gkanos
- *
  ****************************************/
-public class BindValueCollector extends QuestionAnswerAdaptor<ObjectContext, ValueList>
+public class BindValueCollector extends
+		QuestionAnswerAdaptor<ObjectContext, ValueList>
 {
 	protected IInterpreterAssistantFactory af;
-	
+
 	public BindValueCollector(IInterpreterAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public ValueList caseASetBind(ASetBind bind, ObjectContext ctxt)
 			throws AnalysisException
 	{
 		return af.createPExpAssistant().getValues(bind.getSet(), ctxt);
 	}
-	
+
 	@Override
 	public ValueList caseATypeBind(ATypeBind bind, ObjectContext ctxt)
 			throws AnalysisException
 	{
 		return new ValueList();
 	}
-	
+
 	@Override
 	public ValueList defaultPBind(PBind bind, ObjectContext ctxt)
 			throws AnalysisException

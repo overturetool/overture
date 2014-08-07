@@ -29,7 +29,6 @@ import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
 
-
 /**
  * A breakpoint where something is displayed.
  */
@@ -39,7 +38,7 @@ public class Tracepoint extends Breakpoint
 	private static final long serialVersionUID = 1L;
 
 	public Tracepoint(ILexLocation location, int number, String trace)
-		throws ParserException, LexException
+			throws ParserException, LexException
 	{
 		super(location, number, trace);
 	}
@@ -57,21 +56,20 @@ public class Tracepoint extends Breakpoint
 			if (Settings.usingDBGP)
 			{
 				ctxt.threadState.dbgp.tracing(s);
-			}
-			else
+			} else
 			{
 				println(s);
 			}
-		}
-		else
+		} else
 		{
-			String s = trace + " = " +BreakpointManager.evalBreakpointCondition( parsed,ctxt) + " at [" + number + "]";//FIXME: use visitor here
+			String s = trace + " = "
+					+ BreakpointManager.evalBreakpointCondition(parsed, ctxt)
+					+ " at [" + number + "]";// FIXME: use visitor here
 
 			if (Settings.usingDBGP)
 			{
 				ctxt.threadState.dbgp.tracing(s);
-			}
-			else
+			} else
 			{
 				println(s);
 			}
@@ -81,8 +79,8 @@ public class Tracepoint extends Breakpoint
 	@Override
 	public String toString()
 	{
-		return "trace [" + number + "] " +
-				(trace == null ? "" : "show \"" + trace + "\" ") +
-				super.toString();
+		return "trace [" + number + "] "
+				+ (trace == null ? "" : "show \"" + trace + "\" ")
+				+ super.toString();
 	}
 }

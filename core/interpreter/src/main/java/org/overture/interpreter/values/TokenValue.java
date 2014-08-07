@@ -27,8 +27,6 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.PType;
 import org.overture.interpreter.runtime.Context;
-import org.overture.interpreter.runtime.ValueException;
-
 
 public class TokenValue extends Value
 {
@@ -51,13 +49,13 @@ public class TokenValue extends Value
 	{
 		if (other instanceof Value)
 		{
-			Value val = ((Value)other).deref();
+			Value val = ((Value) other).deref();
 
-    		if (val instanceof TokenValue)
-    		{
-    			TokenValue tok = (TokenValue)val;
-    			return tok.value.equals(value);
-    		}
+			if (val instanceof TokenValue)
+			{
+				TokenValue tok = (TokenValue) val;
+				return tok.value.equals(value);
+			}
 		}
 
 		return false;
@@ -76,13 +74,13 @@ public class TokenValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt) throws AnalysisException
+	public Value convertValueTo(PType to, Context ctxt)
+			throws AnalysisException
 	{
-		if (ctxt.assistantFactory.createPTypeAssistant().isType(to,ATokenBasicType.class))
+		if (ctxt.assistantFactory.createPTypeAssistant().isType(to, ATokenBasicType.class))
 		{
 			return this;
-		}
-		else
+		} else
 		{
 			return super.convertValueTo(to, ctxt);
 		}

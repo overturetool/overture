@@ -23,18 +23,15 @@ import org.overture.ast.node.INode;
 import org.overture.ast.statements.AErrorCase;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 
-
 /***************************************
- * 
- * This method finds a expession within a definition. 
+ * This method finds a expession within a definition.
  * 
  * @author gkanos
- *
  ****************************************/
 public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 {
 	protected IInterpreterAssistantFactory af;
-	
+
 	public ExpressionFinder(IInterpreterAssistantFactory af)
 	{
 		this.af = af;
@@ -45,32 +42,32 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 			Integer lineno) throws AnalysisException
 	{
 		return af.createPExpAssistant().findExpression(def.getExpression(), lineno);
-		
+
 	}
-	
+
 	@Override
 	public PExp caseAClassInvariantDefinition(AClassInvariantDefinition def,
 			Integer lineno) throws AnalysisException
 	{
 		return af.createPExpAssistant().findExpression(def.getExpression(), lineno);
-		
+
 	}
-	
+
 	@Override
 	public PExp defaultSClassDefinition(SClassDefinition def, Integer lineno)
 			throws AnalysisException
 	{
 		return af.createSClassDefinitionAssistant().findExpression(def, lineno);
 	}
-	
+
 	@Override
 	public PExp caseAEqualsDefinition(AEqualsDefinition def, Integer lineno)
 			throws AnalysisException
 	{
 		return af.createPExpAssistant().findExpression(def.getTest(), lineno);
-		
+
 	}
-	
+
 	@Override
 	public PExp caseAExplicitFunctionDefinition(
 			AExplicitFunctionDefinition def, Integer lineno)
@@ -95,9 +92,9 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 		}
 
 		return af.createPExpAssistant().findExpression(def.getBody(), lineno);
-	
+
 	}
-	
+
 	@Override
 	public PExp caseAExplicitOperationDefinition(
 			AExplicitOperationDefinition def, Integer lineno)
@@ -123,7 +120,7 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 
 		return af.createPStmAssistant().findExpression(def.getBody(), lineno);
 	}
-	
+
 	@Override
 	public PExp caseAImplicitFunctionDefinition(
 			AImplicitFunctionDefinition def, Integer lineno)
@@ -149,7 +146,7 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 		return def.getBody() == null ? null
 				: af.createPExpAssistant().findExpression(def.getBody(), lineno);
 	}
-	
+
 	@Override
 	public PExp caseAImplicitOperationDefinition(
 			AImplicitOperationDefinition def, Integer lineno)
@@ -177,7 +174,7 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 		{
 			for (AErrorCase err : def.getErrors())
 			{
-				PExp found = err.apply(THIS, lineno);//AErrorCaseAssistantInterpreter.findExpression(err, lineno);
+				PExp found = err.apply(THIS, lineno);// AErrorCaseAssistantInterpreter.findExpression(err, lineno);
 				if (found != null)
 				{
 					return found;
@@ -196,14 +193,14 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 	{
 		return af.createPExpAssistant().findExpression(def.getExpression(), lineno);
 	}
-	
+
 	@Override
 	public PExp caseAPerSyncDefinition(APerSyncDefinition def, Integer lineno)
 			throws AnalysisException
 	{
 		return af.createPExpAssistant().findExpression(def.getGuard(), lineno);
 	}
-	
+
 	@Override
 	public PExp caseAStateDefinition(AStateDefinition def, Integer lineno)
 			throws AnalysisException
@@ -232,14 +229,14 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 
 		return null;
 	}
-	
+
 	@Override
 	public PExp caseAThreadDefinition(AThreadDefinition def, Integer lineno)
 			throws AnalysisException
 	{
 		return af.createPStmAssistant().findExpression(def.getStatement(), lineno);
 	}
-	
+
 	@Override
 	public PExp caseATypeDefinition(ATypeDefinition def, Integer lineno)
 			throws AnalysisException
@@ -262,7 +259,7 @@ public class ExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 	{
 		return af.createPExpAssistant().findExpression(def.getExpression(), lineno);
 	}
-	
+
 	@Override
 	public PExp defaultPDefinition(PDefinition node, Integer question)
 			throws AnalysisException

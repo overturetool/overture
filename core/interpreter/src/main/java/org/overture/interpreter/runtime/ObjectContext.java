@@ -31,7 +31,6 @@ import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.values.ObjectValue;
 import org.overture.interpreter.values.Value;
 
-
 /**
  * A root context for object method invocations.
  */
@@ -43,25 +42,31 @@ public class ObjectContext extends RootContext
 
 	/**
 	 * Create an ObjectContext from the values passed.
-	 *
-	 * @param location The location of the context.
-	 * @param title The name of the location.
-	 * @param outer The context chain (not searched).
-	 * @param self The object context.
+	 * 
+	 * @param af
+	 * @param location
+	 *            The location of the context.
+	 * @param title
+	 *            The name of the location.
+	 * @param freeVariables
+	 * @param outer
+	 *            The context chain (not searched).
+	 * @param self
+	 *            The object context.
 	 */
 
 	public ObjectContext(IInterpreterAssistantFactory af,
-		ILexLocation location, String title, Context freeVariables,
-		Context outer, ObjectValue self)
+			ILexLocation location, String title, Context freeVariables,
+			Context outer, ObjectValue self)
 	{
-		super(af,location, title, freeVariables, outer);
+		super(af, location, title, freeVariables, outer);
 		this.self = self;
 	}
 
 	public ObjectContext(IInterpreterAssistantFactory af,
-		ILexLocation location, String title, Context outer, ObjectValue self)
+			ILexLocation location, String title, Context outer, ObjectValue self)
 	{
-		this(af,location, title, null, outer, self);
+		this(af, location, title, null, outer, self);
 	}
 
 	@Override
@@ -74,10 +79,9 @@ public class ObjectContext extends RootContext
 			below = outer.deepCopy();
 		}
 
-		Context result =
-			new ObjectContext(assistantFactory,location, title, freeVariables, below, self.deepCopy());
+		Context result = new ObjectContext(assistantFactory, location, title, freeVariables, below, self.deepCopy());
 
-		for (ILexNameToken var: keySet())
+		for (ILexNameToken var : keySet())
 		{
 			Value v = get(var);
 			result.put(var, v.deepCopy());
@@ -87,11 +91,10 @@ public class ObjectContext extends RootContext
 	}
 
 	/**
-	 * Check for the name in the current context and self, and if
-	 * not present search the global context. Note that the context
-	 * chain is not followed.
-	 *
-	 * @see org.overture.vdmj.runtime.Context#check(org.overture.vdmj.lex.LexNameToken)
+	 * Check for the name in the current context and self, and if not present search the global context. Note that the
+	 * context chain is not followed.
+	 * 
+	 * @see Context#check(ILexNameToken)
 	 */
 
 	@Override
@@ -101,7 +104,7 @@ public class ObjectContext extends RootContext
 		// context chain. It first checks any local context, then it
 		// checks the "self" context, then it goes down to the global level.
 
-		Value v = get(name);		// Local variables
+		Value v = get(name); // Local variables
 
 		if (v != null)
 		{
@@ -138,22 +141,23 @@ public class ObjectContext extends RootContext
 	@Override
 	public String toString()
 	{
-		//return super.toString();	// Self there anyway ...+ self.toString();
-		return (DEBUG ? "#" + id + " " : "") + format("", this)+self.toString().replace(", ","\n\t")+"\n-------------------\n"+outer;
+		// return super.toString(); // Self there anyway ...+ self.toString();
+		return (DEBUG ? "#" + id + " " : "") + format("", this)
+				+ self.toString().replace(", ", "\n\t")
+				+ "\n-------------------\n" + outer;
 	}
 
 	@Override
 	public void printStackTrace(PrintWriter out, boolean variables)
 	{
-		if (outer == null)		// Don't expand initial context
+		if (outer == null) // Don't expand initial context
 		{
 			out.println("In object context of " + title);
-		}
-		else
+		} else
 		{
 			if (variables)
 			{
-    			out.print(this.format("\t", this));
+				out.print(this.format("\t", this));
 			}
 
 			out.println("In object context of " + title + " " + location);

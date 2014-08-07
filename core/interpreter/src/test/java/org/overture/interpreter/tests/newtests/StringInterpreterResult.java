@@ -97,7 +97,5 @@ public class StringInterpreterResult
 		return "StringInterpreterResult [result=" + result + ", warnings="
 				+ warnings + ", errors=" + errors + "]";
 	}
-	
-	
 
 }

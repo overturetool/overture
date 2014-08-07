@@ -59,7 +59,7 @@ public class TestSuite
 				{
 					tests.add(p.name.getName());
 
-					Context mainContext = new StateContext(Interpreter.getInstance().getAssistantFactory(),p.name.getLocation(), "reflection scope");
+					Context mainContext = new StateContext(Interpreter.getInstance().getAssistantFactory(), p.name.getLocation(), "reflection scope");
 
 					mainContext.putAll(ClassInterpreter.getInstance().initialContext);
 					mainContext.setThreadState(ClassInterpreter.getInstance().initialContext.threadState.dbgp, ClassInterpreter.getInstance().initialContext.threadState.CPU);
@@ -68,8 +68,9 @@ public class TestSuite
 					{
 						AExplicitOperationDefinition ctor = getTestConstructor(instance);
 						if (ctor == null
-								|| (!ctor.getName().getModule().equals(instance.type.getName().getLocation().getModule()) && ctor.getParamDefinitions().isEmpty())
-								|| !(ClassInterpreter.getInstance().getAssistantFactory().createPAccessSpecifierAssistant().isPublic(ctor.getAccess())))
+								|| !ctor.getName().getModule().equals(instance.type.getName().getLocation().getModule())
+								&& ctor.getParamDefinitions().isEmpty()
+								|| !ClassInterpreter.getInstance().getAssistantFactory().createPAccessSpecifierAssistant().isPublic(ctor.getAccess()))
 						{
 							throw new Exception("Class "
 									+ p.name.getModule()
@@ -79,8 +80,8 @@ public class TestSuite
 						String vdmTestExpression = "";
 						if (((AOperationType) ctor.getType()).getParameters().size() == 1)
 						{
-							vdmTestExpression = "new " + p.name.getModule() + "(\""
-									+ p.name.getName() + "\")";
+							vdmTestExpression = "new " + p.name.getModule()
+									+ "(\"" + p.name.getName() + "\")";
 							vals.add(ClassInterpreter.getInstance().evaluate(vdmTestExpression, mainContext));
 						} else
 						{
@@ -99,10 +100,11 @@ public class TestSuite
 										+ instance.type.getName().getName());
 							}
 
-							vdmTestExpression = "new " + p.name.getModule() + "()";
+							vdmTestExpression = "new " + p.name.getModule()
+									+ "()";
 							Value testClassInstance = ClassInterpreter.getInstance().evaluate(vdmTestExpression, mainContext);
 							ObjectValue tmp = (ObjectValue) testClassInstance;
-							ObjectContext octxt = new ObjectContext(Interpreter.getInstance().getAssistantFactory(),mainContext.location, "TestClassContext", mainContext, tmp);
+							ObjectContext octxt = new ObjectContext(Interpreter.getInstance().getAssistantFactory(), mainContext.location, "TestClassContext", mainContext, tmp);
 							vdmTestExpression = "setName(\"" + p.name.getName()
 									+ "\")";
 
@@ -154,7 +156,7 @@ public class TestSuite
 							defaultSuperCtor = op.expldef;
 						}
 					} else if (((AOperationType) op.expldef.getType()).getParameters().size() == 1
-							&& Interpreter.getInstance().getAssistantFactory().createPTypeAssistant().isType(((AOperationType) op.expldef.getType()).getParameters().get(0),typeName) != null
+							&& Interpreter.getInstance().getAssistantFactory().createPTypeAssistant().isType(((AOperationType) op.expldef.getType()).getParameters().get(0), typeName) != null
 							&& op.expldef.getName().equals(instance.type.getName().getName()))
 					{
 						return op.expldef;

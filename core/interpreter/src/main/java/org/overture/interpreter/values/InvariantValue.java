@@ -31,7 +31,6 @@ import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.ValueException;
 
-
 public class InvariantValue extends ReferenceValue
 {
 	private static final long serialVersionUID = 1L;
@@ -39,12 +38,12 @@ public class InvariantValue extends ReferenceValue
 	private FunctionValue invariant;
 
 	public InvariantValue(ANamedInvariantType type, Value value, Context ctxt)
-		throws AnalysisException
+			throws AnalysisException
 	{
 		super(value);
 		this.type = type;
 
-		invariant = ctxt.assistantFactory.createSInvariantTypeAssistant().getInvariant(type,ctxt);
+		invariant = ctxt.assistantFactory.createSInvariantTypeAssistant().getInvariant(type, ctxt);
 		checkInvariant(ctxt);
 	}
 
@@ -58,13 +57,12 @@ public class InvariantValue extends ReferenceValue
 			// VDM-RT from performing "time step" calculations.
 
 			boolean inv = false;
-			
+
 			try
 			{
 				ctxt.threadState.setAtomic(true);
 				inv = invariant.eval(invariant.location, value, ctxt).boolValue(ctxt);
-			}
-			catch (ValueException e)
+			} catch (ValueException e)
 			{
 				throw new ContextException(4060, e.getMessage(), invariant.location, ctxt);
 			}
@@ -82,7 +80,8 @@ public class InvariantValue extends ReferenceValue
 	}
 
 	// For clone only
-	private InvariantValue(ANamedInvariantType type, Value value, FunctionValue invariant)
+	private InvariantValue(ANamedInvariantType type, Value value,
+			FunctionValue invariant)
 	{
 		super(value);
 		this.type = type;
@@ -90,13 +89,13 @@ public class InvariantValue extends ReferenceValue
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt) throws AnalysisException
+	public Value convertValueTo(PType to, Context ctxt)
+			throws AnalysisException
 	{
 		if (to.equals(type))
 		{
 			return this;
-		}
-		else
+		} else
 		{
 			return value.convertValueTo(to, ctxt);
 		}
@@ -144,6 +143,6 @@ public class InvariantValue extends ReferenceValue
 	@Override
 	public Object clone()
 	{
-		return new InvariantValue(type, (Value)value.clone(), invariant);
+		return new InvariantValue(type, (Value) value.clone(), invariant);
 	}
 }

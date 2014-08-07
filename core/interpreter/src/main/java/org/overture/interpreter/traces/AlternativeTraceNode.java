@@ -42,7 +42,7 @@ public class AlternativeTraceNode extends TraceNode
 		sb.append("(");
 		String sep = "";
 
-		for (TraceNode node: alternatives)
+		for (TraceNode node : alternatives)
 		{
 			sb.append(sep);
 			sb.append(node.toString());
@@ -58,17 +58,17 @@ public class AlternativeTraceNode extends TraceNode
 	{
 		TestSequence tests = new TestSequence();
 
-		for (TraceNode node: alternatives)
+		for (TraceNode node : alternatives)
 		{
 			// Alternatives within an alternative are just like larger alts,
 			// so we add all the lower alts to the list...
 
-    		for (CallSequence test: node.getTests())
-    		{
-    			CallSequence seq = getVariables();
-    			seq.addAll(test);
-    			tests.add(seq);
-    		}
+			for (CallSequence test : node.getTests())
+			{
+				CallSequence seq = getVariables();
+				seq.addAll(test);
+				tests.add(seq);
+			}
 		}
 
 		return tests;

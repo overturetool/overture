@@ -13,8 +13,8 @@ public class ModuleListInterpreter extends ModuleList
 
 	public ModuleListInterpreter(ModuleList modules)
 	{
-			super();
-			addAll(modules);
+		super();
+		addAll(modules);
 	}
 
 	public ModuleListInterpreter()
@@ -24,7 +24,7 @@ public class ModuleListInterpreter extends ModuleList
 
 	public void setLoaded()
 	{
-		for (AModuleModules m: this)
+		for (AModuleModules m : this)
 		{
 			m.setTypeChecked(true);
 		}
@@ -34,12 +34,15 @@ public class ModuleListInterpreter extends ModuleList
 	{
 		int count = 0;
 
-		for (AModuleModules m: this)
+		for (AModuleModules m : this)
 		{
-			if (!m.getTypeChecked()) count++;
+			if (!m.getTypeChecked())
+			{
+				count++;
+			}
 		}
 
 		return count;
 	}
-	
+
 }

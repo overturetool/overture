@@ -27,11 +27,9 @@ import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.values.ObjectValue;
 
-
 /**
- * A Context class, specialized to represent points in a context chain where
- * name resolution does not proceed further down the chain, but rather jumps to
- * the outermost level.
+ * A Context class, specialized to represent points in a context chain where name resolution does not proceed further
+ * down the chain, but rather jumps to the outermost level.
  */
 
 @SuppressWarnings("serial")
@@ -39,17 +37,17 @@ public abstract class RootContext extends Context
 {
 	protected final Context freeVariables;
 
-	public RootContext(IInterpreterAssistantFactory af,
-		ILexLocation location, String title, Context freeVariables, Context outer)
+	public RootContext(IInterpreterAssistantFactory af, ILexLocation location,
+			String title, Context freeVariables, Context outer)
 	{
-		super(af,location, title, outer);
+		super(af, location, title, outer);
 		this.freeVariables = freeVariables;
 	}
 
 	@Override
 	public Context getVisibleVariables()
 	{
-		Context visible = new Context(assistantFactory,location, title, null);
+		Context visible = new Context(assistantFactory, location, title, null);
 		visible.putAll(this);
 
 		if (freeVariables != null)
@@ -75,14 +73,13 @@ public abstract class RootContext extends Context
 	@Override
 	public final Context getFrame(int depth)
 	{
-		return depth == 0 ? this :
-				outer == null ? this :
-					outer.getFrame(depth - 1);
+		return depth == 0 ? this : outer == null ? this
+				: outer.getFrame(depth - 1);
 	}
 
 	@Override
 	public ObjectValue getSelf()
 	{
-		return null;	// Overridden in ObjectContext
+		return null; // Overridden in ObjectContext
 	}
 }

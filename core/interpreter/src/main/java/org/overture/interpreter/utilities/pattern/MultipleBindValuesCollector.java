@@ -17,25 +17,24 @@ import org.overture.interpreter.values.ValueList;
 import org.overture.interpreter.values.ValueSet;
 
 /***************************************
-* 
-* This class implements a way to collect the values that are binded.
-* 
-* @author gkanos
-*
-****************************************/
+ * This class implements a way to collect the values that are binded.
+ * 
+ * @author gkanos
+ ****************************************/
 
-public class MultipleBindValuesCollector extends QuestionAnswerAdaptor<Context, ValueList>
+public class MultipleBindValuesCollector extends
+		QuestionAnswerAdaptor<Context, ValueList>
 {
 	protected IInterpreterAssistantFactory af;
-	
+
 	public MultipleBindValuesCollector(IInterpreterAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
-	public ValueList caseASetMultipleBind(ASetMultipleBind node,
-			Context ctxt) throws AnalysisException
+	public ValueList caseASetMultipleBind(ASetMultipleBind node, Context ctxt)
+			throws AnalysisException
 	{
 		try
 		{
@@ -68,14 +67,14 @@ public class MultipleBindValuesCollector extends QuestionAnswerAdaptor<Context, 
 
 		}
 	}
-	
+
 	@Override
-	public ValueList caseATypeMultipleBind(ATypeMultipleBind node,
-			Context ctxt) throws AnalysisException
+	public ValueList caseATypeMultipleBind(ATypeMultipleBind node, Context ctxt)
+			throws AnalysisException
 	{
 		return af.createPTypeAssistant().getAllValues(node.getType(), ctxt);
 	}
-	
+
 	@Override
 	public ValueList defaultPMultipleBind(PMultipleBind node, Context question)
 			throws AnalysisException
@@ -98,6 +97,5 @@ public class MultipleBindValuesCollector extends QuestionAnswerAdaptor<Context, 
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
 
 }

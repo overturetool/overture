@@ -25,25 +25,9 @@ package org.overture.interpreter.debug;
 
 public enum DBGPOptionType
 {
-	TRANSACTION_ID("-i"),
-	N("-n"),
-	V("-v"),
-	T("-t"),
-	S("-s"),
-	F("-f"),
-	M("-m"),
-	O("-o"),
-	H("-h"),
-	X("-x"),
-	R("-r"),
-	D("-d"),
-	P("-p"),
-	K("-k"),
-	A("-a"),
-	C("-c"),
-	B("-b"),
-	E("-e"),
-	L("-l");
+	TRANSACTION_ID("-i"), N("-n"), V("-v"), T("-t"), S("-s"), F("-f"), M("-m"), O(
+			"-o"), H("-h"), X("-x"), R("-r"), D("-d"), P("-p"), K("-k"), A("-a"), C(
+			"-c"), B("-b"), E("-e"), L("-l");
 
 	public String tag;
 
@@ -54,7 +38,7 @@ public enum DBGPOptionType
 
 	public static DBGPOptionType lookup(String string) throws DBGPException
 	{
-		for (DBGPOptionType opt: values())
+		for (DBGPOptionType opt : values())
 		{
 			if (opt.tag.equals(string))
 			{

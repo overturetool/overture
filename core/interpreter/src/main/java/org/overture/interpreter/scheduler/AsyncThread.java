@@ -42,7 +42,6 @@ import org.overture.interpreter.values.TransactionValue;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
 
-
 public class AsyncThread extends SchedulablePoolThread
 {
 	private static final long serialVersionUID = 1L;
@@ -56,11 +55,7 @@ public class AsyncThread extends SchedulablePoolThread
 
 	public AsyncThread(MessageRequest request)
 	{
-		super(
-			request.target.getCPU().resource,
-			request.target,
-			request.operation.getPriority(),
-			false, 0);
+		super(request.target.getCPU().resource, request.target, request.operation.getPriority(), false, 0);
 
 		setName("AsyncThread-" + getId());
 
@@ -77,67 +72,61 @@ public class AsyncThread extends SchedulablePoolThread
 	{
 		RootContext global = ClassInterpreter.getInstance().initialContext;
 		ILexLocation from = self.type.getClassdef().getLocation();
-		Context ctxt = new ObjectContext(global.assistantFactory,from, "async", global, self);
+		Context ctxt = new ObjectContext(global.assistantFactory, from, "async", global, self);
 
 		if (Settings.usingDBGP)
 		{
 			DBGPReader reader = ctxt.threadState.dbgp.newThread(cpu);
-			ctxt.setThreadState(reader,cpu);
+			ctxt.setThreadState(reader, cpu);
 			runDBGP(ctxt);
-		}
-		else
+		} else
 		{
 			ctxt.setThreadState(null, cpu);
 			runCmd(ctxt);
 		}
 	}
-	
+
 	private void runDBGP(Context ctxt)
 	{
 		try
 		{
-    		MessageResponse response = null;
+			MessageResponse response = null;
 
-    		try
-    		{
-    			if (breakAtStart)
-    			{
-    				// Step at the first location you check (start of body)
-    				ctxt.threadState.setBreaks(new LexLocation(), null, null);
-    			}
+			try
+			{
+				if (breakAtStart)
+				{
+					// Step at the first location you check (start of body)
+					ctxt.threadState.setBreaks(new LexLocation(), null, null);
+				}
 
-        		Value rv = operation.localEval(operation.name.getLocation(), args, ctxt, false);
-       			response = new MessageResponse(rv, request);
-       			
-       			ctxt.threadState.dbgp.complete(DBGPReason.OK, null);
-    		}
-    		catch (ValueException e)
-    		{
-    			ctxt.threadState.dbgp.complete(DBGPReason.OK, new ContextException(e, operation.name.getLocation()));
-    			
-    			response = new MessageResponse(e, request);
-    		}
+				Value rv = operation.localEval(operation.name.getLocation(), args, ctxt, false);
+				response = new MessageResponse(rv, request);
 
-    		if (request.replyTo != null)
-    		{
-    			request.bus.reply(response);
-    		}
+				ctxt.threadState.dbgp.complete(DBGPReason.OK, null);
+			} catch (ValueException e)
+			{
+				ctxt.threadState.dbgp.complete(DBGPReason.OK, new ContextException(e, operation.name.getLocation()));
 
-		}
-		catch (ContextException e)
+				response = new MessageResponse(e, request);
+			}
+
+			if (request.replyTo != null)
+			{
+				request.bus.reply(response);
+			}
+
+		} catch (ContextException e)
 		{
 			suspendOthers();
 			ResourceScheduler.setException(e);
 			ctxt.threadState.dbgp.stopped(e.ctxt, e.location);
-			
-			
-		}
-		catch (Exception e)
+
+		} catch (Exception e)
 		{
 			ResourceScheduler.setException(e);
 			BasicSchedulableThread.signalAll(Signal.SUSPEND);
-		}
-		finally
+		} finally
 		{
 			TransactionValue.commitAll();
 		}
@@ -153,35 +142,30 @@ public class AsyncThread extends SchedulablePoolThread
 				ctxt.threadState.setBreaks(new LexLocation(), null, null);
 			}
 
-    		Value result = operation.localEval(
-    			operation.name.getLocation(), args, ctxt, false);
+			Value result = operation.localEval(operation.name.getLocation(), args, ctxt, false);
 
 			if (request.replyTo != null)
 			{
 				request.bus.reply(new MessageResponse(result, request));
 			}
-		}
-		catch (ValueException e)
+		} catch (ValueException e)
 		{
 			suspendOthers();
 			ResourceScheduler.setException(e);
 			DebuggerReader.stopped(e.ctxt, operation.name.getLocation());
-		}
-		catch (ContextException e)
+		} catch (ContextException e)
 		{
 			suspendOthers();
 			ResourceScheduler.setException(e);
 			DebuggerReader.stopped(e.ctxt, operation.name.getLocation());
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			ResourceScheduler.setException(e);
 			BasicSchedulableThread.signalAll(Signal.SUSPEND);
-		}
-		finally
+		} finally
 		{
 			TransactionValue.commitAll();
 		}
 	}
-	
+
 }

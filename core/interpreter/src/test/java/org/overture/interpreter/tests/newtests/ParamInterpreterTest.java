@@ -166,12 +166,13 @@ public abstract class ParamInterpreterTest extends
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db;
 
-		File resultFile = new File(modelPath+".result");
-		
-		if (!resultFile.exists()){
+		File resultFile = new File(modelPath + ".result");
+
+		if (!resultFile.exists())
+		{
 			throw new FileNotFoundException(resultFile.getPath());
 		}
-		
+
 		try
 		{
 			db = dbf.newDocumentBuilder();

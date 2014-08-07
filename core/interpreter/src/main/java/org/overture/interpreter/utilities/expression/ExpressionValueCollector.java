@@ -57,21 +57,20 @@ import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
 
 /***************************************
- * 
  * This method collects and returns the values of an expression.
  * 
  * @author gkanos
- *
  ****************************************/
-public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContext, ValueList>
+public class ExpressionValueCollector extends
+		QuestionAnswerAdaptor<ObjectContext, ValueList>
 {
 	protected IInterpreterAssistantFactory af;
-	
+
 	public ExpressionValueCollector(IInterpreterAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public ValueList caseAApplyExp(AApplyExp exp, ObjectContext ctxt)
 			throws AnalysisException
@@ -80,7 +79,7 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 		list.addAll(exp.getRoot().apply(THIS, ctxt));
 		return list;
 	}
-	
+
 	@Override
 	public ValueList defaultSBinaryExp(SBinaryExp exp, ObjectContext ctxt)
 			throws AnalysisException
@@ -89,7 +88,7 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 		list.addAll(exp.getRight().apply(THIS, ctxt));
 		return list;
 	}
-	
+
 	@Override
 	public ValueList caseACasesExp(ACasesExp exp, ObjectContext ctxt)
 			throws AnalysisException
@@ -108,7 +107,7 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 
 		return list;
 	}
-	
+
 	@Override
 	public ValueList caseADefExp(ADefExp exp, ObjectContext ctxt)
 			throws AnalysisException
@@ -117,7 +116,7 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 		list.addAll(exp.getExpression().apply(THIS, ctxt));
 		return list;
 	}
-	
+
 	@Override
 	public ValueList caseAElseIfExp(AElseIfExp exp, ObjectContext ctxt)
 			throws AnalysisException
@@ -126,7 +125,7 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 		list.addAll(exp.getThen().apply(THIS, ctxt));
 		return list;
 	}
-	
+
 	@Override
 	public ValueList caseAExistsExp(AExistsExp exp, ObjectContext ctxt)
 			throws AnalysisException
@@ -141,7 +140,7 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 		list.addAll(exp.getPredicate().apply(THIS, ctxt));
 		return list;
 	}
-	
+
 	@Override
 	public ValueList caseAExists1Exp(AExists1Exp exp, ObjectContext ctxt)
 			throws AnalysisException
@@ -150,7 +149,7 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 		list.addAll(exp.getPredicate().apply(THIS, ctxt));
 		return list;
 	}
-	
+
 	@Override
 	public ValueList caseAFieldExp(AFieldExp exp, ObjectContext ctxt)
 			throws AnalysisException
@@ -171,8 +170,7 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 			}
 
 			return values;
-		}
-		catch (ContextException e)
+		} catch (ContextException e)
 		{
 			if (e.number == 4034)
 			{
@@ -181,30 +179,27 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 			{
 				throw e;
 			}
-		}
-		catch (ValueException e)
+		} catch (ValueException e)
 		{
 			VdmRuntimeError.abort(exp.getLocation(), e);
 			return null;
-		}
-		catch (AnalysisException e)
+		} catch (AnalysisException e)
 		{
 			e.printStackTrace();
 			return null;
-		}
-		finally
+		} finally
 		{
 			ctxt.threadState.setAtomic(false);
 		}
 	}
-	
+
 	@Override
-	public ValueList caseAFieldNumberExp(AFieldNumberExp exp,
-			ObjectContext ctxt) throws AnalysisException
+	public ValueList caseAFieldNumberExp(AFieldNumberExp exp, ObjectContext ctxt)
+			throws AnalysisException
 	{
 		return exp.getTuple().apply(THIS, ctxt);
 	}
-	
+
 	@Override
 	public ValueList caseAForAllExp(AForAllExp exp, ObjectContext ctxt)
 			throws AnalysisException
@@ -219,14 +214,14 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 		list.addAll(exp.getPredicate().apply(THIS, ctxt));
 		return list;
 	}
-	
+
 	@Override
 	public ValueList caseAFuncInstatiationExp(AFuncInstatiationExp exp,
 			ObjectContext ctxt) throws AnalysisException
 	{
 		return exp.getFunction().apply(THIS, ctxt);
 	}
-	
+
 	@Override
 	public ValueList caseAIfExp(AIfExp exp, ObjectContext ctxt)
 			throws AnalysisException
@@ -246,7 +241,7 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 
 		return list;
 	}
-	
+
 	@Override
 	public ValueList caseAIotaExp(AIotaExp exp, ObjectContext ctxt)
 			throws AnalysisException
@@ -255,43 +250,44 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 		list.addAll(exp.getPredicate().apply(THIS, ctxt));
 		return list;
 	}
+
 	@Override
 	public ValueList caseAIsExp(AIsExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
 		return exp.getTest().apply(THIS, ctxt);
-				
+
 	}
-	
+
 	@Override
 	public ValueList caseAIsOfBaseClassExp(AIsOfBaseClassExp exp,
 			ObjectContext ctxt) throws AnalysisException
 	{
-		
+
 		return exp.getExp().apply(THIS, ctxt);
 	}
-	
+
 	@Override
-	public ValueList caseAIsOfClassExp(AIsOfClassExp exp,
-			ObjectContext ctxt) throws AnalysisException
+	public ValueList caseAIsOfClassExp(AIsOfClassExp exp, ObjectContext ctxt)
+			throws AnalysisException
 	{
-		
+
 		return exp.getExp().apply(THIS, ctxt);
 	}
-	
+
 	@Override
 	public ValueList caseALambdaExp(ALambdaExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		
+
 		return exp.getExpression().apply(THIS, ctxt);
 	}
-	
+
 	@Override
 	public ValueList caseALetBeStExp(ALetBeStExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		
+
 		ValueList list = ctxt.assistantFactory.createPMultipleBindAssistant().getValues(exp.getBind(), ctxt);
 
 		if (exp.getSuchThat() != null)
@@ -302,23 +298,22 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 		list.addAll(exp.getValue().apply(THIS, ctxt));
 		return list;
 	}
-	
+
 	@Override
 	public ValueList caseALetDefExp(ALetDefExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		
-		
+
 		ValueList list = af.createPDefinitionListAssistant().getValues(exp.getLocalDefs(), ctxt);
 		list.addAll(exp.getExpression().apply(THIS, ctxt));
 		return list;
 	}
-	
+
 	@Override
-	public ValueList caseAMapCompMapExp(AMapCompMapExp exp,
-			ObjectContext ctxt) throws AnalysisException
+	public ValueList caseAMapCompMapExp(AMapCompMapExp exp, ObjectContext ctxt)
+			throws AnalysisException
 	{
-		
+
 		ValueList list = exp.getFirst().apply(THIS, ctxt);
 
 		for (PMultipleBind mb : exp.getBindings())
@@ -333,12 +328,12 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 
 		return list;
 	}
-	
+
 	@Override
-	public ValueList caseAMapEnumMapExp(AMapEnumMapExp exp,
-			ObjectContext ctxt) throws AnalysisException
+	public ValueList caseAMapEnumMapExp(AMapEnumMapExp exp, ObjectContext ctxt)
+			throws AnalysisException
 	{
-		
+
 		ValueList list = new ValueList();
 
 		for (AMapletExp maplet : exp.getMembers())
@@ -348,45 +343,45 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 
 		return list;
 	}
-	
+
 	@Override
 	public ValueList defaultSMapExp(SMapExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-			return new ValueList();
+		return new ValueList();
 	}
-	
+
 	@Override
 	public ValueList caseAMapletExp(AMapletExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		
+
 		ValueList list = exp.apply(THIS, ctxt);
 		list.addAll(exp.getRight().apply(THIS, ctxt));
 		return list;
 	}
-	
+
 	@Override
 	public ValueList caseAMkBasicExp(AMkBasicExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		
-		return  exp.getArg().apply(THIS, ctxt);
+
+		return exp.getArg().apply(THIS, ctxt);
 	}
-	
+
 	@Override
 	public ValueList caseAMkTypeExp(AMkTypeExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		
+
 		return af.createPExpAssistant().getValues(exp.getArgs(), ctxt);
 	}
-	
+
 	@Override
 	public ValueList caseAMuExp(AMuExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		
+
 		ValueList list = exp.getRecord().apply(THIS, ctxt);
 
 		for (ARecordModifier rm : exp.getModifiers())
@@ -396,52 +391,51 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 
 		return list;
 	}
-	
+
 	@Override
 	public ValueList caseANarrowExp(ANarrowExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		
-		
+
 		return exp.getTest().apply(THIS, ctxt);
 	}
-	
+
 	@Override
 	public ValueList caseANewExp(ANewExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		
+
 		return af.createPExpAssistant().getValues(exp.getArgs(), ctxt);
 	}
-	
+
 	@Override
 	public ValueList caseASameBaseClassExp(ASameBaseClassExp exp,
 			ObjectContext ctxt) throws AnalysisException
 	{
-		
-		ValueList list = exp.getLeft().apply(THIS, ctxt); 
-		list.addAll(exp.getRight().apply(THIS, ctxt));
-		return list;
-	}
-	
-	@Override
-	public ValueList caseASameClassExp(ASameClassExp exp,
-			ObjectContext ctxt) throws AnalysisException
-	{
-		
+
 		ValueList list = exp.getLeft().apply(THIS, ctxt);
 		list.addAll(exp.getRight().apply(THIS, ctxt));
 		return list;
 	}
-	
+
 	@Override
-	public ValueList caseASeqCompSeqExp(ASeqCompSeqExp exp,
-			ObjectContext ctxt) throws AnalysisException
+	public ValueList caseASameClassExp(ASameClassExp exp, ObjectContext ctxt)
+			throws AnalysisException
 	{
-		
+
+		ValueList list = exp.getLeft().apply(THIS, ctxt);
+		list.addAll(exp.getRight().apply(THIS, ctxt));
+		return list;
+	}
+
+	@Override
+	public ValueList caseASeqCompSeqExp(ASeqCompSeqExp exp, ObjectContext ctxt)
+			throws AnalysisException
+	{
+
 		ValueList list = exp.getFirst().apply(THIS, ctxt);
 		list.addAll(af.createPBindAssistant().getBindValues(exp.getSetBind(), ctxt));
-		
+
 		if (exp.getPredicate() != null)
 		{
 			list.addAll(exp.getPredicate().apply(THIS, ctxt));
@@ -449,27 +443,27 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 
 		return list;
 	}
-	
+
 	@Override
-	public ValueList caseASeqEnumSeqExp(ASeqEnumSeqExp exp,
-			ObjectContext ctxt) throws AnalysisException
+	public ValueList caseASeqEnumSeqExp(ASeqEnumSeqExp exp, ObjectContext ctxt)
+			throws AnalysisException
 	{
-		
+
 		return af.createPExpAssistant().getValues(exp.getMembers(), ctxt);
 	}
-	
+
 	@Override
 	public ValueList defaultSSeqExp(SSeqExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-			return new ValueList();
+		return new ValueList();
 	}
-	
+
 	@Override
-	public ValueList caseASetCompSetExp(ASetCompSetExp exp,
-			ObjectContext ctxt) throws AnalysisException
+	public ValueList caseASetCompSetExp(ASetCompSetExp exp, ObjectContext ctxt)
+			throws AnalysisException
 	{
-		
+
 		ValueList list = exp.getFirst().apply(THIS, ctxt);
 
 		for (PMultipleBind mb : exp.getBindings())
@@ -484,21 +478,21 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 
 		return list;
 	}
-	
+
 	@Override
-	public ValueList caseASetEnumSetExp(ASetEnumSetExp exp,
-			ObjectContext ctxt) throws AnalysisException
+	public ValueList caseASetEnumSetExp(ASetEnumSetExp exp, ObjectContext ctxt)
+			throws AnalysisException
 	{
 		return af.createPExpAssistant().getValues(exp.getMembers(), ctxt);
 	}
-	
+
 	@Override
 	public ValueList defaultSSetExp(SSetExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-			return new ValueList();
+		return new ValueList();
 	}
-	
+
 	@Override
 	public ValueList caseASubseqExp(ASubseqExp exp, ObjectContext ctxt)
 			throws AnalysisException
@@ -508,21 +502,21 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 		list.addAll(exp.getTo().apply(THIS, ctxt));
 		return list;
 	}
-	
+
 	@Override
 	public ValueList caseATupleExp(ATupleExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
 		return af.createPExpAssistant().getValues(exp.getArgs(), ctxt);
 	}
-	
+
 	@Override
 	public ValueList defaultSUnaryExp(SUnaryExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
 		return exp.getExp().apply(THIS, ctxt);
 	}
-	
+
 	@Override
 	public ValueList caseAVariableExp(AVariableExp exp, ObjectContext ctxt)
 			throws AnalysisException
@@ -536,8 +530,8 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 		{
 			return new ValueList(v);
 		}
-	} 
-	
+	}
+
 	@Override
 	public ValueList defaultPExp(PExp exp, ObjectContext ctxt)
 			throws AnalysisException
@@ -560,6 +554,5 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 
 }

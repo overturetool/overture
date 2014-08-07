@@ -44,7 +44,8 @@ public class Quantifier
 		this.nvlist = new Vector<NameValuePairList>(values.size());
 	}
 
-	public int size(Context ctxt, boolean allPossibilities) throws AnalysisException
+	public int size(Context ctxt, boolean allPossibilities)
+			throws AnalysisException
 	{
 		for (Value value : values)
 		{

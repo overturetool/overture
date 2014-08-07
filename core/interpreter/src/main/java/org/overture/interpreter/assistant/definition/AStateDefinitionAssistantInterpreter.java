@@ -27,8 +27,7 @@ public class AStateDefinitionAssistantInterpreter extends
 		return VdmRuntime.getNodeState(state).moduleState.getContext();
 	}
 
-	public void initState(AStateDefinition sdef,
-			StateContext initialContext)
+	public void initState(AStateDefinition sdef, StateContext initialContext)
 	{
 		StateDefinitionRuntimeState state = new StateDefinitionRuntimeState();
 		VdmRuntime.setNodeState(sdef, state);
@@ -47,6 +46,5 @@ public class AStateDefinitionAssistantInterpreter extends
 		state.moduleState = new State(sdef);
 		state.moduleState.initialize(initialContext);
 	}
-
 
 }

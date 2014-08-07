@@ -41,7 +41,7 @@ public class SequenceTraceNode extends TraceNode
 		StringBuilder sb = new StringBuilder();
 		String sep = "";
 
-		for (TraceNode node: nodes)
+		for (TraceNode node : nodes)
 		{
 			sb.append(sep);
 			sb.append(node.toString());
@@ -59,7 +59,7 @@ public class SequenceTraceNode extends TraceNode
 		int[] sizes = new int[count];
 		int n = 0;
 
-		for (TraceNode node: nodes)
+		for (TraceNode node : nodes)
 		{
 			TestSequence nt = node.getTests();
 			nodetests.add(nt);
@@ -74,10 +74,10 @@ public class SequenceTraceNode extends TraceNode
 			int[] select = p.next();
 			CallSequence seq = getVariables();
 
-			for (int i=0; i<count; i++)
+			for (int i = 0; i < count; i++)
 			{
 				TestSequence ith = nodetests.get(i);
-				
+
 				if (!ith.isEmpty())
 				{
 					CallSequence subseq = ith.get(select[i]);

@@ -11,8 +11,8 @@ import org.overture.ast.expressions.AStringLiteralExp;
 import org.overture.ast.node.INode;
 import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.runtime.Context;
-import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.runtime.ValueException;
+import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.values.BooleanValue;
 import org.overture.interpreter.values.CharacterValue;
 import org.overture.interpreter.values.NumericValue;
@@ -32,13 +32,12 @@ public class LiteralEvaluator extends QuestionAnswerAdaptor<Context, Value>
 		try
 		{
 			return NumericValue.valueOf(node.getValue().getValue(), ctxt);
+		} catch (ValueException e)
+		{
+			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
-        catch (ValueException e)
-        {
-        	return VdmRuntimeError.abort(node.getLocation(),e);
-        }
 	}
-	
+
 	@Override
 	public Value caseACharLiteralExp(ACharLiteralExp node, Context ctxt)
 			throws AnalysisException
@@ -46,7 +45,7 @@ public class LiteralEvaluator extends QuestionAnswerAdaptor<Context, Value>
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		return new CharacterValue(node.getValue().getValue());
 	}
-	
+
 	@Override
 	public Value caseABooleanConstExp(ABooleanConstExp node, Context ctxt)
 			throws AnalysisException
@@ -54,7 +53,7 @@ public class LiteralEvaluator extends QuestionAnswerAdaptor<Context, Value>
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		return new BooleanValue(node.getValue().getValue());
 	}
-	
+
 	@Override
 	public Value caseAQuoteLiteralExp(AQuoteLiteralExp node, Context ctxt)
 			throws AnalysisException
@@ -62,7 +61,7 @@ public class LiteralEvaluator extends QuestionAnswerAdaptor<Context, Value>
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 		return new QuoteValue(node.getValue().getValue());
 	}
-	
+
 	@Override
 	public Value caseARealLiteralExp(ARealLiteralExp node, Context ctxt)
 			throws AnalysisException
@@ -72,13 +71,12 @@ public class LiteralEvaluator extends QuestionAnswerAdaptor<Context, Value>
 		try
 		{
 			return NumericValue.valueOf(node.getValue().getValue(), ctxt);
-		}
-		catch (ValueException e)
+		} catch (ValueException e)
 		{
-			return VdmRuntimeError.abort(node.getLocation(),e);
+			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 	}
-	
+
 	@Override
 	public Value caseAStringLiteralExp(AStringLiteralExp node, Context ctxt)
 			throws AnalysisException

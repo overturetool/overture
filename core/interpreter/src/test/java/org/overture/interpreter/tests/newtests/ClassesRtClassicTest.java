@@ -34,7 +34,7 @@ public class ClassesRtClassicTest extends ParamInterpreterTest
 	{
 		Settings.release = Release.CLASSIC;
 	}
-	
+
 	@Override
 	protected File getEntryFile()
 	{
