@@ -34,21 +34,25 @@ operations
 
 
 --Strategy-------------------------------------------------
-strategyInit : () ==> ()
+protected strategyInit : () ==> ()
 strategyInit() == 
 (
 	state := <halt>
 );
 
-strategyNotify : () ==> ()
+protected strategyNotify : () ==> ()
 strategyNotify() == skip; -- is subclass responsibility;
 
 
-strategyEnd : () ==> ()
+protected strategyEnd : () ==> ()
 strategyEnd() == 
 (
 	state := <run>;
 );
+
+protected handleEvents : () ==> ()
+handleEvents() == 
+is not yet specified;
 -----------------------------------------------------------
   public ActivePlanManager : ()  ==> ActivePlanManager
   ActivePlanManager() == (skip;);

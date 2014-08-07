@@ -18,7 +18,7 @@ operations
 
 
 
-strategyInit : () ==> ()
+protected strategyInit : () ==> ()
 strategyInit() == 
 (
 	state := <halt>
@@ -28,7 +28,7 @@ protected strategyNotify : () ==> ()
 strategyNotify() == is subclass responsibility;
 
 
-strategyEnd : () ==> ()
+protected strategyEnd : () ==> ()
 strategyEnd() == 
 (
 	state := <run>;
