@@ -33,6 +33,7 @@ import org.overture.ast.expressions.AInSetBinaryExp;
 import org.overture.ast.expressions.AIndicesUnaryExp;
 import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.expressions.AIotaExp;
+import org.overture.ast.expressions.ALambdaExp;
 import org.overture.ast.expressions.ALenUnaryExp;
 import org.overture.ast.expressions.ALessEqualNumericBinaryExp;
 import org.overture.ast.expressions.ALessNumericBinaryExp;
@@ -75,6 +76,7 @@ import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ASetMultipleBind;
+import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.types.ACharBasicType;
 import org.overture.ast.types.AMapMapType;
 
@@ -272,11 +274,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String r = node.getExp().apply(THIS,question);
 		String op = mytable.getABSOLUTE();
 		
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append(op);
-//		sb.append(space);
-//		sb.append(l);
 		
 		return Utilities.wrap(Utilities.unaryappend(r, op));
 	}
@@ -289,13 +286,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String r = node.getRight().apply(THIS, question);
 		String op = mytable.getAND();
 		
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append(l);
-//		sb.append(space);
-//		sb.append(op);
-//		sb.append(space);
-//		sb.append(r);
 		
 		return Utilities.wrap(Utilities.append(l, r, op));
 		
@@ -331,6 +321,56 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String op = mytable.getSTARSTAR();
 		
 		return Utilities.wrap(Utilities.append(l, r, op));
+	}
+	
+	@Override
+	public String caseALambdaExp(ALambdaExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		String exp = node.getExpression().apply(THIS, question);
+		String op = mytable.getLAMBDA();
+		String pred = mytable.getPRED();
+		String bind;
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(op);
+		sb.append(space);
+		
+		while (node.getBindList().size() != 0){
+			if(node.getBindList().size() > 1){
+				bind = node.getBindList().poll().apply(THIS, question);
+				
+				sb.append(bind);
+				sb.append(mytable.getCOMMA());
+				sb.append(space);
+			}
+			else{
+				bind = node.getBindList().poll().apply(THIS, question);
+//				sb.append(op);
+//				sb.append(space);
+				sb.append(bind);
+				sb.append(space);
+			}
+		}
+		
+		sb.append(pred);
+		sb.append(space);
+		
+		sb.append(exp);
+		
+		return sb.toString();
+	}
+	
+	@Override
+	public String caseATypeBind(ATypeBind node, IndentTracker question)
+			throws AnalysisException
+	{
+		String pattern = node.getPattern().toString();
+		String type = node.getType().toString();
+		String binding = mytable.getCOLON();
+		
+		return Utilities.append(pattern, type, binding);
 	}
 //	@Override
 //	public String caseANotUnaryExp(ANotUnaryExp node, IndentTracker question)

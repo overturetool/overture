@@ -1210,4 +1210,22 @@ public class ExpressionNppTest {
 	{
 		aux("inverse {1 |-> x, 2|-> y}", "(inverse {1 |-> x, 2 |-> y})");
 	}
+	
+	@Test
+	public void testCaseALambdaExp_01()	throws AnalysisException
+	{
+		aux("lambda x : nat & x > 1","lambda x : nat & (x > 1)");
+	}
+	
+	@Test
+	public void testCaseALambdaExp_02()	throws AnalysisException
+	{
+		aux("lambda x : nat & lambda y : real & x + y + 1","lambda x : nat & lambda y : real & ((x + y) + 1)");
+	}
+	
+	@Test
+	public void testCaseALambdaExp_03()	throws AnalysisException
+	{
+		aux("lambda x : nat, y : nat & x > y","lambda x : nat, y : nat & (x > y)");
+	}
 }
