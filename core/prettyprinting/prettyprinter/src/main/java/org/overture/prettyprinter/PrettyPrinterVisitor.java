@@ -9,11 +9,6 @@ public class PrettyPrinterVisitor extends
 		QuestionAnswerAdaptor<PrettyPrinterEnv, String>
 {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -9082823353484822934L;
-
 	private QuestionAnswerAdaptor<PrettyPrinterEnv, String> ppDefinition = new PrettyPrinterVisitorDefinitions();
 
 	@Override
@@ -36,6 +31,5 @@ public class PrettyPrinterVisitor extends
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	
+
 }

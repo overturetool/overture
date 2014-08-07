@@ -26,13 +26,10 @@ import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.Utils;
+
 public class PrettyPrinterVisitorDefinitions extends
 		QuestionAnswerAdaptor<PrettyPrinterEnv, String>
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 5018749137104836194L;
 	final static TypePrettyPrinterVisitor typePrinter = new TypePrettyPrinterVisitor();
 
 	@Override
@@ -71,7 +68,8 @@ public class PrettyPrinterVisitorDefinitions extends
 			return;
 		}
 
-		if (ATypeDefinition.class.equals(pDefClass)) {
+		if (ATypeDefinition.class.equals(pDefClass))
+		{
 			sb.append("types\n");
 			question.increaseIdent();
 			for (PDefinition def : defs)
@@ -80,7 +78,8 @@ public class PrettyPrinterVisitorDefinitions extends
 				sb.append("\n");
 			}
 			question.decreaseIdent();
-		} else if (AValueDefinition.class.equals(pDefClass)) {
+		} else if (AValueDefinition.class.equals(pDefClass))
+		{
 			sb.append("values\n");
 			question.increaseIdent();
 			for (PDefinition def : defs)
@@ -89,7 +88,8 @@ public class PrettyPrinterVisitorDefinitions extends
 				sb.append("\n");
 			}
 			question.decreaseIdent();
-		} else if (AInstanceVariableDefinition.class.equals(pDefClass)) {
+		} else if (AInstanceVariableDefinition.class.equals(pDefClass))
+		{
 			sb.append("instance variables\n");
 			question.increaseIdent();
 			for (PDefinition def : defs)
@@ -98,7 +98,8 @@ public class PrettyPrinterVisitorDefinitions extends
 				sb.append("\n");
 			}
 			question.decreaseIdent();
-		} else if (AExplicitOperationDefinition.class.equals(pDefClass)) {
+		} else if (AExplicitOperationDefinition.class.equals(pDefClass))
+		{
 			sb.append("operations\n");
 			question.increaseIdent();
 			for (PDefinition def : defs)
@@ -107,7 +108,8 @@ public class PrettyPrinterVisitorDefinitions extends
 				sb.append("\n");
 			}
 			question.decreaseIdent();
-		} else if (AExplicitFunctionDefinition.class.equals(pDefClass)) {
+		} else if (AExplicitFunctionDefinition.class.equals(pDefClass))
+		{
 			sb.append("functions\n");
 			question.increaseIdent();
 			for (PDefinition def : defs)
@@ -116,19 +118,21 @@ public class PrettyPrinterVisitorDefinitions extends
 				sb.append("\n");
 			}
 			question.decreaseIdent();
-		} else {
+		} else
+		{
 		}
 		sb.append("\n");
 	}
 
 	private List<PDefinition> getDefinitions(
-			LinkedList<PDefinition> definitions, Class<? extends PDefinition> pDefClass)
+			LinkedList<PDefinition> definitions,
+			Class<? extends PDefinition> pDefClass)
 	{
 		List<PDefinition> result = new Vector<PDefinition>();
 
 		for (PDefinition pDefinition : definitions)
 		{
-                        if (pDefClass.isInstance(pDefinition))
+			if (pDefClass.isInstance(pDefinition))
 			{
 				result.add(pDefinition);
 			}
@@ -143,7 +147,11 @@ public class PrettyPrinterVisitorDefinitions extends
 			throws AnalysisException
 	{
 		StringBuilder sb = new StringBuilder(question.getIdent());
-		sb.append( node.getName()+":"+node.getType().apply(typePrinter,question)+(node.getExpression()!=null?" := "+node.getExpression():""));
+		sb.append(node.getName()
+				+ ":"
+				+ node.getType().apply(typePrinter, question)
+				+ (node.getExpression() != null ? " := " + node.getExpression()
+						: ""));
 		return sb.toString() + ";";
 	}
 
@@ -152,7 +160,11 @@ public class PrettyPrinterVisitorDefinitions extends
 			PrettyPrinterEnv question) throws AnalysisException
 	{
 		StringBuilder sb = new StringBuilder(question.getIdent());
-		sb.append( node.getPattern()+(node.getType() == null ? "" : ":" + node.getType().apply(typePrinter,question)) +(node.getExpression()!=null? " = " +node.getExpression():""));//node.toString());
+		sb.append(node.getPattern()
+				+ (node.getType() == null ? "" : ":"
+						+ node.getType().apply(typePrinter, question))
+				+ (node.getExpression() != null ? " = " + node.getExpression()
+						: ""));// node.toString());
 		return sb.toString() + ";";
 	}
 
@@ -161,37 +173,39 @@ public class PrettyPrinterVisitorDefinitions extends
 			PrettyPrinterEnv question) throws AnalysisException
 	{
 		StringBuilder sb = new StringBuilder(question.getIdent());
-		
-		sb.append(node.getAccess().getAccess()+" ");
+
+		sb.append(node.getAccess().getAccess() + " ");
 		sb.append(node.getName());
-		if(node.getType() instanceof ARecordInvariantType)
+		if (node.getType() instanceof ARecordInvariantType)
 		{
 			ARecordInvariantType record = (ARecordInvariantType) node.getType();
-		sb.append(" :: ");	
-		for (Iterator<AFieldField> itr = record.getFields().iterator(); itr.hasNext();)
-		{
-			if(itr.hasNext())
+			sb.append(" :: ");
+			for (Iterator<AFieldField> itr = record.getFields().iterator(); itr.hasNext();)
 			{
-				sb.append("\n"+question.getIdent());
+				if (itr.hasNext())
+				{
+					sb.append("\n" + question.getIdent());
+				}
+				sb.append(itr.next().apply(this, question));
+
 			}
-			sb.append(itr.next().apply(this,question));
-			
-		}
-		}else{
+		} else
+		{
 			sb.append(" = " + node.getType().apply(typePrinter, question));
 		}
-//				+ (node.getType() instanceof ARecordInvariantType ? " :: "
-//						: " = ") + node.getType().apply(typePrinter, question));
+		// + (node.getType() instanceof ARecordInvariantType ? " :: "
+		// : " = ") + node.getType().apply(typePrinter, question));
 		return sb.toString() + ";";
 	}
-	
+
 	@Override
 	public String caseAFieldField(AFieldField node, PrettyPrinterEnv question)
 			throws AnalysisException
 	{
 		question.increaseIdent();
 		StringBuilder sb = new StringBuilder(question.getIdent());
-		sb.append(node.getTag()+" : "+node.getType().apply(typePrinter,question));
+		sb.append(node.getTag() + " : "
+				+ node.getType().apply(typePrinter, question));
 		question.decreaseIdent();
 		return sb.toString();
 	}
@@ -233,7 +247,7 @@ public class PrettyPrinterVisitorDefinitions extends
 		String type = ": ";
 
 		AOperationType optype = (AOperationType) d.getType();
-		
+
 		if (optype.getParameters().isEmpty())
 		{
 			type += "() ";
@@ -241,7 +255,7 @@ public class PrettyPrinterVisitorDefinitions extends
 		{
 			for (Iterator<PType> iterator = optype.getParameters().iterator(); iterator.hasNext();)
 			{
-				type += iterator.next().apply(typePrinter,question);
+				type += iterator.next().apply(typePrinter, question);
 				if (iterator.hasNext())
 				{
 					type += " * ";
@@ -250,7 +264,7 @@ public class PrettyPrinterVisitorDefinitions extends
 			}
 		}
 
-		type += " ==> " + optype.getResult().apply(typePrinter,question);
+		type += " ==> " + optype.getResult().apply(typePrinter, question);
 
 		String tmp = d.getAccess()
 				+ " "
@@ -290,7 +304,9 @@ public class PrettyPrinterVisitorDefinitions extends
 
 		String accessStr = d.getAccess().toString();
 		if (d.getNameScope() == NameScope.LOCAL)
+		{
 			accessStr = "";
+		}
 
 		String type = ": ";
 		if (functype.getParameters().isEmpty())
@@ -300,7 +316,7 @@ public class PrettyPrinterVisitorDefinitions extends
 		{
 			for (Iterator<PType> iterator = functype.getParameters().iterator(); iterator.hasNext();)
 			{
-				type += iterator.next().apply(typePrinter,question);
+				type += iterator.next().apply(typePrinter, question);
 				if (iterator.hasNext())
 				{
 					type += " * ";
@@ -310,7 +326,7 @@ public class PrettyPrinterVisitorDefinitions extends
 		}
 
 		type += " " + (functype.getPartial() ? "-" : "+") + "> "
-				+ functype.getResult().apply(typePrinter,question);
+				+ functype.getResult().apply(typePrinter, question);
 
 		String tmp = question.getIdent()
 				+ accessStr
@@ -331,8 +347,6 @@ public class PrettyPrinterVisitorDefinitions extends
 
 		return tmp + ";\n";
 	}
-	
-	
 
 	@Override
 	public String defaultPStm(PStm node, PrettyPrinterEnv question)
@@ -340,7 +354,6 @@ public class PrettyPrinterVisitorDefinitions extends
 	{
 		return node.toString();
 	}
-	
 
 	@Override
 	public String defaultPExp(PExp node, PrettyPrinterEnv question)
@@ -348,7 +361,7 @@ public class PrettyPrinterVisitorDefinitions extends
 	{
 		return node.toString();
 	}
-	
+
 	@Override
 	public String caseAUndefinedExp(AUndefinedExp node,
 			PrettyPrinterEnv question) throws AnalysisException
@@ -370,6 +383,4 @@ public class PrettyPrinterVisitorDefinitions extends
 		return null;
 	}
 
-	
-	
 }
