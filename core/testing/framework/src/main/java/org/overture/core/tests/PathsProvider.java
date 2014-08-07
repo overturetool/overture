@@ -84,9 +84,9 @@ public class PathsProvider
 			paths.add(new Object[] {
 					file.getName(),
 					file.getPath(),
-					RESULTS_EXTERNAL // FIXME figure out where to store results for external tests
-							+ file.getPath().replaceAll(dir.getPath(), "")
-							+ RESULT_EXTENSION });
+					(RESULTS_EXTERNAL // FIXME figure out where to store results for external tests
+							+ file.getPath().substring(dir.getPath().length(),file.getPath().length())
+							+ RESULT_EXTENSION).replace('\\', '/').replace('/', File.separatorChar) });
 
 		}
 
