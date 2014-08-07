@@ -166,7 +166,7 @@ public class IdExternalsTest extends ParamExternalsTest<IdTestResult>
 		}
 
 		r = new IdTestResult();
-		r.add("Could not test " + testName);
+		r.add("Could not test " + testName+" unable to locate model in path: "+modelPath);
 		return r;
 	}
 
