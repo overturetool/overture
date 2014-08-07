@@ -18,7 +18,8 @@ public class APatternListTypePairAssistantTC
 	{
 		this.af = af;
 	}
-	//TODO: Used in the TypeCheckerDefinitionVisitor.
+
+	// TODO: Used in the TypeCheckerDefinitionVisitor.
 	public Collection<? extends PDefinition> getDefinitions(
 			APatternListTypePair pltp, NameScope scope)
 	{

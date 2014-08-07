@@ -18,8 +18,8 @@ public class AMapletPatternMapletAssistantTC
 	{
 		this.af = af;
 	}
-	
-	//TODO: Cannot be deleted because it is used in AllDefinitionLocator visitor. 
+
+	// TODO: Cannot be deleted because it is used in AllDefinitionLocator visitor.
 	public Collection<? extends PDefinition> getDefinitions(
 			AMapletPatternMaplet p, SMapType map, NameScope scope)
 	{

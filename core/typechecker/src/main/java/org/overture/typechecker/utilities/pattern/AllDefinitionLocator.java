@@ -224,7 +224,7 @@ public class AllDefinitionLocator
 	public List<PDefinition> caseASetPattern(ASetPattern pattern,
 			NewQuestion question) throws AnalysisException
 	{
-		//return ASetPatternAssistantTC.getAllDefinitions(pattern, question.ptype, question.scope);
+		// return ASetPatternAssistantTC.getAllDefinitions(pattern, question.ptype, question.scope);
 		List<PDefinition> defs = new Vector<PDefinition>();
 
 		if (!af.createPTypeAssistant().isSet(question.ptype))
@@ -325,7 +325,7 @@ public class AllDefinitionLocator
 				for (AMapletPatternMaplet p : pattern.getMaplets())
 				{
 					defs.addAll(af.createAMapletPatternMapletAssistant().getDefinitions(p, map, question.scope));
-					//defs.addAll(p.apply(THIS, question));
+					// defs.addAll(p.apply(THIS, question));
 				}
 			}
 		}

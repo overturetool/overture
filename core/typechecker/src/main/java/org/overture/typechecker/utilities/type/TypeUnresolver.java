@@ -75,11 +75,10 @@ public class TypeUnresolver extends AnalysisAdaptor
 		}
 
 		for (PType ft : type.getParameters())
-		{	
+		{
 			ft.apply(THIS);
 		}
 
-		
 		type.getResult().apply(THIS);
 	}
 
@@ -135,7 +134,7 @@ public class TypeUnresolver extends AnalysisAdaptor
 		}
 
 		if (!type.getEmpty())
-		{			
+		{
 			type.getFrom().apply(THIS);
 			type.getTo().apply(THIS);
 		}

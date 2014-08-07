@@ -13,7 +13,6 @@ import org.overture.ast.types.AUnresolvedType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 /**
  * This class implements a way to find type of the general PType
@@ -117,7 +116,7 @@ public class PTypeFinder extends QuestionAnswerAdaptor<String, PType>
 	public PType defaultPType(PType type, String typename)
 			throws AnalysisException
 	{
-		return (af.createPTypeAssistant().toDisplay(type).equals(typename)) ? type
+		return af.createPTypeAssistant().toDisplay(type).equals(typename) ? type
 				: null;
 
 	}

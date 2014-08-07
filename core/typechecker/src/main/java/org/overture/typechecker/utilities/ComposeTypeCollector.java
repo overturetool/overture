@@ -43,13 +43,15 @@ public class ComposeTypeCollector extends AnswerAdaptor<PTypeList>
 	}
 
 	@Override
-	public PTypeList caseABracketType(ABracketType node) throws AnalysisException
+	public PTypeList caseABracketType(ABracketType node)
+			throws AnalysisException
 	{
 		return node.getType().apply(THIS);
 	}
 
 	@Override
-	public PTypeList caseAOptionalType(AOptionalType node) throws AnalysisException
+	public PTypeList caseAOptionalType(AOptionalType node)
+			throws AnalysisException
 	{
 		return node.getType().apply(THIS);
 	}
@@ -61,7 +63,8 @@ public class ComposeTypeCollector extends AnswerAdaptor<PTypeList>
 	}
 
 	@Override
-	public PTypeList caseASeq1SeqType(ASeq1SeqType node) throws AnalysisException
+	public PTypeList caseASeq1SeqType(ASeq1SeqType node)
+			throws AnalysisException
 	{
 		return node.getSeqof().apply(THIS);
 	}
@@ -73,15 +76,16 @@ public class ComposeTypeCollector extends AnswerAdaptor<PTypeList>
 	}
 
 	@Override
-	public PTypeList caseAProductType(AProductType node) throws AnalysisException
+	public PTypeList caseAProductType(AProductType node)
+			throws AnalysisException
 	{
 		PTypeList list = new PTypeList();
-		
-		for (PType ptype: node.getTypes())
+
+		for (PType ptype : node.getTypes())
 		{
 			list.addAll(ptype.apply(THIS));
 		}
-		
+
 		return list;
 	}
 
@@ -89,31 +93,33 @@ public class ComposeTypeCollector extends AnswerAdaptor<PTypeList>
 	public PTypeList caseAUnionType(AUnionType node) throws AnalysisException
 	{
 		PTypeList list = new PTypeList();
-		
-		for (PType ptype: node.getTypes())
+
+		for (PType ptype : node.getTypes())
 		{
 			list.addAll(ptype.apply(THIS));
 		}
-		
+
 		return list;
 	}
-	
+
 	@Override
-	public PTypeList caseAFunctionType(AFunctionType node) throws AnalysisException
+	public PTypeList caseAFunctionType(AFunctionType node)
+			throws AnalysisException
 	{
 		PTypeList list = new PTypeList();
-		
-		for (PType ptype: node.getParameters())
+
+		for (PType ptype : node.getParameters())
 		{
 			list.addAll(ptype.apply(THIS));
 		}
-		
+
 		list.addAll(node.getResult().apply(THIS));
 		return list;
 	}
-	
+
 	@Override
-	public PTypeList caseAInMapMapType(AInMapMapType node) throws AnalysisException
+	public PTypeList caseAInMapMapType(AInMapMapType node)
+			throws AnalysisException
 	{
 		PTypeList list = new PTypeList();
 		list.addAll(node.getFrom().apply(THIS));
@@ -129,36 +135,37 @@ public class ComposeTypeCollector extends AnswerAdaptor<PTypeList>
 		list.addAll(node.getTo().apply(THIS));
 		return list;
 	}
-	
+
 	@Override
-	public PTypeList caseAOperationType(AOperationType node) throws AnalysisException
+	public PTypeList caseAOperationType(AOperationType node)
+			throws AnalysisException
 	{
 		PTypeList list = new PTypeList();
-		
-		for (PType ptype: node.getParameters())
+
+		for (PType ptype : node.getParameters())
 		{
 			list.addAll(ptype.apply(THIS));
 		}
-		
+
 		list.addAll(node.getResult().apply(THIS));
 		return list;
 	}
-	
+
 	@Override
-	public PTypeList caseARecordInvariantType(ARecordInvariantType node) throws AnalysisException
+	public PTypeList caseARecordInvariantType(ARecordInvariantType node)
+			throws AnalysisException
 	{
 		if (node.getComposed())
 		{
 			PTypeList types = new PTypeList(node);
 
-			for (AFieldField f: node.getFields())
+			for (AFieldField f : node.getFields())
 			{
 				types.addAll(f.getType().apply(THIS));
 			}
-			
+
 			return types;
-		}
-		else
+		} else
 		{
 			return new PTypeList();
 		}

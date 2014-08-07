@@ -96,16 +96,13 @@ import org.overture.typechecker.utilities.type.PTypeResolver;
 import org.overture.typechecker.utilities.type.QualifiedDefinition;
 
 //TODO Add assistant Javadoc
-/** 
- * The Interface specifying what is offered by the Overture TC assistant
- * functionalities.
+/**
+ * The Interface specifying what is offered by the Overture TC assistant functionalities.
+ * 
  * @author ldc
- *
  */
 public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 {
-
-
 
 	ABusClassDefinitionAssistantTC createABusClassDefinitionAssistant();
 
@@ -127,7 +124,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	AStateDefinitionAssistantTC createAStateDefinitionAssistant();
 
-	//ASystemClassDefinitionAssistantTC createASystemClassDefinitionAssistant();
+	// ASystemClassDefinitionAssistantTC createASystemClassDefinitionAssistant();
 
 	AThreadDefinitionAssistantTC createAThreadDefinitionAssistant();
 
@@ -177,31 +174,31 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	// ACharacterPatternAssistantTC createACharacterPatternAssistant();
 
-	//AConcatenationPatternAssistantTC createAConcatenationPatternAssistant();
+	// AConcatenationPatternAssistantTC createAConcatenationPatternAssistant();
 
-	//AExpressionPatternAssistantTC createAExpressionPatternAssistant();
+	// AExpressionPatternAssistantTC createAExpressionPatternAssistant();
 
 	AMapletPatternMapletAssistantTC createAMapletPatternMapletAssistant();
 
-	//AMapPatternAssistantTC createAMapPatternAssistant();
+	// AMapPatternAssistantTC createAMapPatternAssistant();
 
-	//AMapUnionPatternAssistantTC createAMapUnionPatternAssistant();
+	// AMapUnionPatternAssistantTC createAMapUnionPatternAssistant();
 
 	APatternTypePairAssistant createAPatternTypePairAssistant();
 
-	//ARecordPatternAssistantTC createARecordPatternAssistant();
+	// ARecordPatternAssistantTC createARecordPatternAssistant();
 
-	//ASeqPatternAssistantTC createASeqPatternAssistant();
+	// ASeqPatternAssistantTC createASeqPatternAssistant();
 
 	ASetBindAssistantTC createASetBindAssistant();
 
-	//ASetPatternAssistantTC createASetPatternAssistant();
+	// ASetPatternAssistantTC createASetPatternAssistant();
 
-	//ATuplePatternAssistantTC createATuplePatternAssistant();
+	// ATuplePatternAssistantTC createATuplePatternAssistant();
 
 	ATypeBindAssistantTC createATypeBindAssistant();
 
-	//AUnionPatternAssistantTC createAUnionPatternAssistant();
+	// AUnionPatternAssistantTC createAUnionPatternAssistant();
 
 	PatternListTC createPatternList();
 
@@ -267,13 +264,12 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	PTypeAssistantTC createPTypeAssistant();
 
-		// visitors
+	// visitors
 
-	//SSeqTypeAssistantTC createSSeqTypeAssistant();
+	// SSeqTypeAssistantTC createSSeqTypeAssistant();
 
 	// stuff to delete ends here
-	
-	
+
 	// visitor getters that we will actually keep
 
 	IAnswer<List<PDefinition>> getDefinitionCollector();
@@ -403,9 +399,9 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	IQuestionAnswer<AModuleModules, List<PDefinition>> getImportDefinitionFinder();
 
 	IAnswer<PTypeList> getComposeTypeCollector();
-	
+
 	TypeComparator getTypeComparator();
-	
+
 	LexNameTokenAssistant getLexNameTokenAssistant();
 
 	IQuestionAnswer<TypeCheckInfo, List<QualifiedDefinition>> getQualificationVisitor();

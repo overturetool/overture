@@ -21,8 +21,8 @@ public class PMultipleBindAssistantTC
 		this.af = af;
 	}
 
-	public Collection<? extends PDefinition> getDefinitions(
-			PMultipleBind mb, PType type, TypeCheckInfo question)
+	public Collection<? extends PDefinition> getDefinitions(PMultipleBind mb,
+			PType type, TypeCheckInfo question)
 	{
 
 		List<PDefinition> defs = new Vector<PDefinition>();

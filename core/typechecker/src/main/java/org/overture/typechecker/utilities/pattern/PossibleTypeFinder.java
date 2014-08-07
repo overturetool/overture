@@ -91,9 +91,6 @@ public class PossibleTypeFinder extends AnswerAdaptor<PType>
 	{
 		return typeOf(pattern.getValue().getValue(), pattern.getLocation());
 	}
-	
-
-
 
 	@Override
 	public PType caseANilPattern(ANilPattern pattern) throws AnalysisException
@@ -173,8 +170,7 @@ public class PossibleTypeFinder extends AnswerAdaptor<PType>
 
 	public PType caseAMapPattern(AMapPattern pattern) throws AnalysisException
 	{
-		return AstFactory.newAMapMapType(pattern.getLocation(),
-			AstFactory.newAUnknownType(pattern.getLocation()), AstFactory.newAUnknownType(pattern.getLocation())); 
+		return AstFactory.newAMapMapType(pattern.getLocation(), AstFactory.newAUnknownType(pattern.getLocation()), AstFactory.newAUnknownType(pattern.getLocation()));
 	}
 
 	@Override
@@ -196,7 +192,7 @@ public class PossibleTypeFinder extends AnswerAdaptor<PType>
 		assert false : "Should not happen";
 		return null;
 	}
-	
+
 	private PType typeOf(long value, ILexLocation location)
 	{
 		if (value > 0)

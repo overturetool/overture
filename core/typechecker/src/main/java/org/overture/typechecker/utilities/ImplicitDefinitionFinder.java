@@ -59,7 +59,7 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 		// TODO: should I expand this even more?
 		if (node instanceof ASystemClassDefinition)
 		{
-			//af.createASystemClassDefinitionAssistant().implicitDefinitions((ASystemClassDefinition)node, question);
+			// af.createASystemClassDefinitionAssistant().implicitDefinitions((ASystemClassDefinition)node, question);
 
 			af.createSClassDefinitionAssistant().implicitDefinitionsBase(node, question);
 
@@ -165,7 +165,7 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 		if (node.getPrecondition() != null)
 		{
 			node.setPredef(af.createAExplicitFunctionDefinitionAssistant().getPreDefinition(node));
-			//PDefinitionAssistantTC.markUsed(d.getPredef());//ORIGINAL CODE
+			// PDefinitionAssistantTC.markUsed(d.getPredef());//ORIGINAL CODE
 			af.getUsedMarker().caseAExplicitFunctionDefinition(node.getPredef());
 		} else
 		{
@@ -175,7 +175,7 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 		if (node.getPostcondition() != null)
 		{
 			node.setPostdef(af.createAExplicitFunctionDefinitionAssistant().getPostDefinition(node));
-			//PDefinitionAssistantTC.markUsed(d.getPostdef());//ORIGINAL CODE
+			// PDefinitionAssistantTC.markUsed(d.getPostdef());//ORIGINAL CODE
 			af.getUsedMarker().caseAExplicitFunctionDefinition(node.getPostdef());
 		} else
 		{
@@ -193,7 +193,7 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 		if (node.getPrecondition() != null)
 		{
 			node.setPredef(af.createAExplicitOperationDefinitionAssistant().getPreDefinition(node, question));
-			af.createPDefinitionAssistant().markUsed(node.getPredef()); //ORIGINAL CODE
+			af.createPDefinitionAssistant().markUsed(node.getPredef()); // ORIGINAL CODE
 		}
 
 		if (node.getPostcondition() != null)
@@ -213,7 +213,7 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 		{
 			node.setPredef(af.createAImplicitFunctionDefinitionAssistant().getPreDefinition(node));
 			af.createPDefinitionAssistant().markUsed(node.getPredef());
-			//af.createPDefinitionAssistant().markUsed(node.getPredef());
+			// af.createPDefinitionAssistant().markUsed(node.getPredef());
 		} else
 		{
 			node.setPredef(null);
@@ -283,18 +283,17 @@ public class ImplicitDefinitionFinder extends QuestionAdaptor<Environment>
 			// node.setInvdef(getInvDefinition(d)); //Original code from Assistant.
 			node.setInvdef(af.createATypeDefinitionAssistant().getInvDefinition(node));
 			node.getInvType().setInvDef(node.getInvdef());
-		}
-		else
+		} else
 		{
 			node.setInvdef(null);
 		}
-		
+
 		if (node.getInvType() instanceof ANamedInvariantType)
 		{
-			ANamedInvariantType ntype = (ANamedInvariantType)node.getInvType();
+			ANamedInvariantType ntype = (ANamedInvariantType) node.getInvType();
 			node.getComposeDefinitions().clear();
-			
-			for (PType compose: af.createPTypeAssistant().getComposeTypes(ntype.getType()))
+
+			for (PType compose : af.createPTypeAssistant().getComposeTypes(ntype.getType()))
 			{
 				ARecordInvariantType rtype = (ARecordInvariantType) compose;
 				node.getComposeDefinitions().add(AstFactory.newATypeDefinition(rtype.getName(), rtype, null, null));

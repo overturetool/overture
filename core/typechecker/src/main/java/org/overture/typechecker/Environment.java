@@ -51,6 +51,7 @@ abstract public class Environment
 	/**
 	 * Create an environment linking to the given outer chain.
 	 * 
+	 * @param af
 	 * @param outer
 	 */
 
@@ -145,31 +146,68 @@ abstract public class Environment
 		enclosingDefinition = def;
 	}
 
-	/** Find a name in the environment of the given scope. */
+	/**
+	 * Find a name in the environment of the given scope.
+	 * 
+	 * @param name
+	 * @param scope
+	 * @return
+	 */
 	abstract public PDefinition findName(ILexNameToken name, NameScope scope);
 
-	/** Find a type in the environment. */
+	/**
+	 * Find a type in the environment.
+	 * 
+	 * @param name
+	 * @param fromModule
+	 * @return
+	 */
 	abstract public PDefinition findType(ILexNameToken name, String fromModule);
 
-	/** Find the state defined in the environment, if any. */
+	/**
+	 * Find the state defined in the environment, if any.
+	 * 
+	 * @return
+	 */
 	abstract public AStateDefinition findStateDefinition();
 
-	/** Find the enclosing class definition, if any. */
+	/**
+	 * Find the enclosing class definition, if any.
+	 * 
+	 * @return
+	 */
 	abstract public SClassDefinition findClassDefinition();
 
-	/** True if the calling context is a static function or operation. */
+	/**
+	 * True if the calling context is a static function or operation.
+	 * 
+	 * @return
+	 */
 	abstract public boolean isStatic();
 
 	/** Check whether any definitions in the environment were unused. */
 	abstract public void unusedCheck();
 
-	/** True if this is a VDM++ environment. */
+	/**
+	 * True if this is a VDM++ environment.
+	 * 
+	 * @return
+	 */
 	abstract public boolean isVDMPP();
 
-	/** True if this is a VDM-RT "system" environment. */
+	/**
+	 * True if this is a VDM-RT "system" environment.
+	 * 
+	 * @return
+	 */
 	abstract public boolean isSystem();
 
-	/** Find functions and operations of the given basic name. */
+	/**
+	 * Find functions and operations of the given basic name.
+	 * 
+	 * @param name
+	 * @return
+	 */
 	abstract public Set<PDefinition> findMatches(ILexNameToken name);
 
 	/** Mark all definitions, at this level, used. */
@@ -178,7 +216,11 @@ abstract public class Environment
 		// Nothing, by default. Implemented in flat environments.
 	}
 
-	/** Add details to a TC error with alternative fn/op name possibilities. */
+	/**
+	 * Add details to a TC error with alternative fn/op name possibilities.
+	 * 
+	 * @param name
+	 */
 	public void listAlternatives(ILexNameToken name)
 	{
 		for (PDefinition possible : findMatches(name))
@@ -190,7 +232,11 @@ abstract public class Environment
 		}
 	}
 
-	/** Unravelling unused check. */
+	/**
+	 * Unravelling unused check.
+	 * 
+	 * @param downTo
+	 */
 	public void unusedCheck(Environment downTo)
 	{
 		Environment p = this;

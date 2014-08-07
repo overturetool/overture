@@ -44,7 +44,6 @@ import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-
 /**
  * This class implements a way to resolve types from general PType class.
  * 
@@ -231,7 +230,7 @@ public class PTypeResolver extends
 			{
 				question.root.setInfinite(false);
 			}
-			
+
 			f.apply(THIS, question);
 
 			if (question.root != null)
@@ -521,7 +520,6 @@ public class PTypeResolver extends
 
 		PType deref = dereference(type, question.question.env, question.root, question.question.assistantFactory);
 
-
 		if (!(deref instanceof AClassType))
 		{
 			deref = af.createPTypeAssistant().typeResolve(deref, question.root, question.rootVisitor, question.question);
@@ -586,13 +584,14 @@ public class PTypeResolver extends
 		r.setDefinitions(tempDefs);
 		return r;
 	}
-	
-//	@Override
-//	public PType caseATypeBind(ATypeBind type, Newquestion question)
-//			throws AnalysisException
-//	{
-//		type.setType(af.createPTypeAssistant().typeResolve(type.getType(), null, question.rootVisitor, question.question));
-//	}
+
+	// @Override
+	// public PType caseATypeBind(ATypeBind type, Newquestion question)
+	// throws AnalysisException
+	// {
+	// type.setType(af.createPTypeAssistant().typeResolve(type.getType(), null, question.rootVisitor,
+	// question.question));
+	// }
 
 	@Override
 	public PType defaultPType(PType type, Newquestion question)
@@ -601,7 +600,7 @@ public class PTypeResolver extends
 		type.setResolved(true);
 		return type;
 	}
-	
+
 	@Override
 	public PType createNewReturnValue(INode node, Newquestion question)
 			throws AnalysisException

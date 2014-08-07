@@ -51,7 +51,7 @@ public class ProductBasisChecker extends TypeUnwrapper<Boolean>
 	@Override
 	public Boolean caseAUnionType(AUnionType type) throws AnalysisException
 	{
-		//return af.createAUnionTypeAssistant().getProduct(type) != null;
+		// return af.createAUnionTypeAssistant().getProduct(type) != null;
 		return type.apply(af.getProductTypeFinder()) != null;
 	}
 

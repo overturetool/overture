@@ -91,9 +91,9 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			TypeCheckInfo question) throws AnalysisException
 	{
 		question.qualifiers = null;
-		
+
 		question.assistantFactory.getTypeComparator().checkComposeTypes(node.getType(), question.env, false);
-		
+
 		node.setExpType(node.getExpression().apply(THIS, question));
 		node.setType(question.assistantFactory.createPTypeAssistant().typeResolve(question.assistantFactory.createPDefinitionAssistant().getType(node), null, THIS, question));
 
@@ -235,7 +235,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		NodeList<PDefinition> defs = new NodeList<PDefinition>(node);
 		question.assistantFactory.getTypeComparator().checkComposeTypes(node.getType(), question.env, false);
-		
+
 		if (node.getTypeParams() != null)
 		{
 			defs.addAll(question.assistantFactory.createAExplicitFunctionDefinitionAssistant().getTypeParamDefinitions(node));
@@ -259,7 +259,14 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		// building the new scope for subtypechecks
 
-		question.assistantFactory.createPDefinitionListAssistant().typeCheck(defs, this, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers)); // can be this because its a definition list
+		question.assistantFactory.createPDefinitionListAssistant().typeCheck(defs, this, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers)); // can
+																																													// be
+																																													// this
+																																													// because
+																																													// its
+																																													// a
+																																													// definition
+																																													// list
 
 		if (question.env.isVDMPP()
 				&& !question.assistantFactory.createPAccessSpecifierAssistant().isStatic(node.getAccess()))
@@ -267,7 +274,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			local.add(question.assistantFactory.createPDefinitionAssistant().getSelfDefinition(node));
 		}
 
-		List<QualifiedDefinition> qualified = new Vector<QualifiedDefinition>(); 
+		List<QualifiedDefinition> qualified = new Vector<QualifiedDefinition>();
 
 		if (node.getPredef() != null)
 		{
@@ -281,10 +288,10 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 				TypeChecker.report(3018, "Precondition returns unexpected type", node.getLocation());
 				TypeChecker.detail2("Actual", b, "Expected", expected);
 			}
-			
+
 			qualified = node.getPredef().getBody().apply(question.assistantFactory.getQualificationVisitor(), new TypeCheckInfo(question.assistantFactory, local, NameScope.NAMES));
 
-			for (QualifiedDefinition qdef: qualified)
+			for (QualifiedDefinition qdef : qualified)
 			{
 				qdef.qualifyType();
 			}
@@ -315,7 +322,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		node.setActualResult(actualResult);
 
-		for (QualifiedDefinition qdef: qualified)
+		for (QualifiedDefinition qdef : qualified)
 		{
 			qdef.resetType();
 		}
@@ -330,13 +337,13 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		{
 			TypeCheckerErrors.report(3019, "Function parameter visibility less than function definition", node.getLocation(), node);
 		}
-		
+
 		if (question.env.isVDMPP())
 		{
 			PAccessSpecifierAssistantTC assist = question.assistantFactory.createPAccessSpecifierAssistant();
 
-			if (assist.isPrivate(node.getAccess()) &&
-				node.getBody() instanceof ASubclassResponsibilityExp)
+			if (assist.isPrivate(node.getAccess())
+					&& node.getBody() instanceof ASubclassResponsibilityExp)
 			{
 				TypeCheckerErrors.report(3329, "Abstract function/operation must be public or protected", node.getLocation(), node);
 			}
@@ -462,7 +469,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		question.assistantFactory.createPDefinitionListAssistant().typeCheck(defs, THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers));
 
-		List<QualifiedDefinition> qualified = new Vector<QualifiedDefinition>(); 
+		List<QualifiedDefinition> qualified = new Vector<QualifiedDefinition>();
 
 		if (node.getPredef() != null)
 		{
@@ -477,7 +484,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 			qualified = node.getPredef().getBody().apply(question.assistantFactory.getQualificationVisitor(), new TypeCheckInfo(question.assistantFactory, local, question.scope));
 
-			for (QualifiedDefinition qdef: qualified)
+			for (QualifiedDefinition qdef : qualified)
 			{
 				qdef.qualifyType();
 			}
@@ -500,7 +507,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
-		for (QualifiedDefinition qdef: qualified)
+		for (QualifiedDefinition qdef : qualified)
 		{
 			qdef.resetType();
 		}
@@ -514,8 +521,8 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		{
 			PAccessSpecifierAssistantTC assist = question.assistantFactory.createPAccessSpecifierAssistant();
 
-			if (assist.isPrivate(node.getAccess()) &&
-				node.getBody() instanceof ASubclassResponsibilityExp)
+			if (assist.isPrivate(node.getAccess())
+					&& node.getBody() instanceof ASubclassResponsibilityExp)
 			{
 				TypeCheckerErrors.report(3329, "Abstract function/operation must be public or protected", node.getLocation(), node);
 			}
@@ -703,7 +710,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
-		List<QualifiedDefinition> qualified = new Vector<QualifiedDefinition>(); 
+		List<QualifiedDefinition> qualified = new Vector<QualifiedDefinition>();
 
 		if (node.getPredef() != null)
 		{
@@ -722,7 +729,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 			qualified = node.getPredef().getBody().apply(question.assistantFactory.getQualificationVisitor(), new TypeCheckInfo(question.assistantFactory, pre, NameScope.NAMESANDSTATE));
 
-			for (QualifiedDefinition qdef: qualified)
+			for (QualifiedDefinition qdef : qualified)
 			{
 				qdef.qualifyType();
 			}
@@ -750,7 +757,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		node.setActualResult(actualResult);
 		boolean compatible = question.assistantFactory.getTypeComparator().compatible(expectedResult, node.getActualResult());
 
-		for (QualifiedDefinition qdef: qualified)
+		for (QualifiedDefinition qdef : qualified)
 		{
 			qdef.resetType();
 		}
@@ -793,8 +800,8 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		{
 			PAccessSpecifierAssistantTC assist = question.assistantFactory.createPAccessSpecifierAssistant();
 
-			if (assist.isPrivate(node.getAccess()) &&
-				node.getBody() instanceof ASubclassResponsibilityStm)
+			if (assist.isPrivate(node.getAccess())
+					&& node.getBody() instanceof ASubclassResponsibilityStm)
 			{
 				TypeCheckerErrors.report(3329, "Abstract function/operation must be public or protected", node.getLocation(), node);
 			}
@@ -851,7 +858,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			for (AExternalClause clause : node.getExternals())
 			{
 				question.assistantFactory.getTypeComparator().checkComposeTypes(clause.getType(), question.env, false);
-				
+
 				for (ILexNameToken exname : clause.getIdentifiers())
 				{
 					PDefinition sdef = question.env.findName(exname, NameScope.STATE);
@@ -933,7 +940,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
-		List<QualifiedDefinition> qualified = new Vector<QualifiedDefinition>(); 
+		List<QualifiedDefinition> qualified = new Vector<QualifiedDefinition>();
 
 		if (node.getPredef() != null)
 		{
@@ -950,7 +957,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 			qualified = node.getPredef().getBody().apply(question.assistantFactory.getQualificationVisitor(), new TypeCheckInfo(question.assistantFactory, pre, NameScope.NAMESANDSTATE));
 
-			for (QualifiedDefinition qdef: qualified)
+			for (QualifiedDefinition qdef : qualified)
 			{
 				qdef.qualifyType();
 			}
@@ -992,7 +999,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
-		for (QualifiedDefinition qdef: qualified)
+		for (QualifiedDefinition qdef : qualified)
 		{
 			qdef.resetType();
 		}
@@ -1013,8 +1020,8 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		{
 			PAccessSpecifierAssistantTC assist = question.assistantFactory.createPAccessSpecifierAssistant();
 
-			if (assist.isPrivate(node.getAccess()) &&
-				node.getBody() instanceof ASubclassResponsibilityStm)
+			if (assist.isPrivate(node.getAccess())
+					&& node.getBody() instanceof ASubclassResponsibilityStm)
 			{
 				TypeCheckerErrors.report(3329, "Abstract function/operation must be public or protected", node.getLocation(), node);
 			}
@@ -1118,7 +1125,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		{
 			question.assistantFactory.getTypeComparator().checkComposeTypes(node.getType(), question.env, false);
 		}
-		
+
 		List<PDefinition> defs = new Vector<PDefinition>();
 
 		for (PMultipleBind mb : node.getBindings())
@@ -1144,7 +1151,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			// Add all locally visibly callable operations for mutex(all)
 
 			for (PDefinition def : node.getClassDefinition().apply(question.assistantFactory.getDefinitionCollector()))
-				//SClassDefinitionAssistantTC.getLocalDefinitions(node.getClassDefinition()))
+			// SClassDefinitionAssistantTC.getLocalDefinitions(node.getClassDefinition()))
 			{
 				if (question.assistantFactory.createPDefinitionAssistant().isCallableOperation(def)
 						&& !def.getName().getName().equals(classdef.getName().getName()))
@@ -1187,7 +1194,8 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 			for (ILexNameToken other : node.getOperations())
 			{
-				if (opname != other && question.assistantFactory.getLexNameTokenAssistant().isEqual(opname, other))
+				if (opname != other
+						&& question.assistantFactory.getLexNameTokenAssistant().isEqual(opname, other))
 				{
 					TypeCheckerErrors.report(3041, "Duplicate mutex name", opname.getLocation(), opname);
 				}
@@ -1240,12 +1248,12 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 							+ " is not an explicit operation", node.getOpname().getLocation(), node.getOpname());
 				}
 
-				if (isStatic != null && isStatic != question.assistantFactory.createPDefinitionAssistant().isStatic(def))
+				if (isStatic != null
+						&& isStatic != question.assistantFactory.createPDefinitionAssistant().isStatic(def))
 				{
-					TypeCheckerErrors.report(3323, "Overloaded operation cannot mix static and non-static",
-							node.getLocation(), node.getOpname());
+					TypeCheckerErrors.report(3323, "Overloaded operation cannot mix static and non-static", node.getLocation(), node.getOpname());
 				}
-				
+
 				isStatic = question.assistantFactory.createPDefinitionAssistant().isStatic(def);
 			}
 
@@ -1265,8 +1273,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		if (opfound == 0)
 		{
 			TypeCheckerErrors.report(3043, opname + " is not in scope", opname.getLocation(), opname);
-		}
-		else if (opfound > 1)
+		} else if (opfound > 1)
 		{
 			TypeCheckerErrors.warning(5003, "Permission guard of overloaded operation", opname.getLocation(), opname);
 		}
@@ -1289,7 +1296,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		{
 			local.setStatic(isStatic);
 		}
-	
+
 		PType rt = node.getGuard().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, NameScope.NAMESANDSTATE));
 
 		if (!question.assistantFactory.createPTypeAssistant().isType(rt, ABooleanBasicType.class))
@@ -1322,10 +1329,10 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			TypeCheckerErrors.report(3047, "Only one state definition allowed per module", node.getLocation(), node);
 			return null;
 		}
-		
-		for (PDefinition def: node.getStateDefs())
+
+		for (PDefinition def : node.getStateDefs())
 		{
-			if (!def.getName().getOld())	// Don't check old names
+			if (!def.getName().getOld()) // Don't check old names
 			{
 				question.assistantFactory.getTypeComparator().checkComposeTypes(def.getType(), question.env, false);
 			}
@@ -1397,24 +1404,23 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			{
 				TypeCheckerErrors.report(3321, "Type component visibility less than type's definition", node.getLocation(), node);
 			}
-			
+
 			// Rebuild the compose definitions, after we check whether they already exist
 			node.getComposeDefinitions().clear();
 
-			for (PType compose: question.assistantFactory.getTypeComparator().checkComposeTypes(ntype.getType(), question.env, true))
+			for (PType compose : question.assistantFactory.getTypeComparator().checkComposeTypes(ntype.getType(), question.env, true))
 			{
 				ARecordInvariantType rtype = (ARecordInvariantType) compose;
 				node.getComposeDefinitions().add(AstFactory.newATypeDefinition(rtype.getName(), rtype, null, null));
 			}
-		}
-		else if (type instanceof ARecordInvariantType)
+		} else if (type instanceof ARecordInvariantType)
 		{
 			ARecordInvariantType rtype = (ARecordInvariantType) type;
 
 			for (AFieldField field : rtype.getFields())
 			{
 				question.assistantFactory.getTypeComparator().checkComposeTypes(field.getType(), question.env, false);
-				
+
 				if (question.assistantFactory.createPTypeAssistant().narrowerThan(field.getType(), node.getAccess()))
 				{
 					TypeCheckerErrors.report(3321, "Field type visibility less than type's definition", field.getTagname().getLocation(), field.getTagname());
@@ -1443,10 +1449,10 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		{
 			question.assistantFactory.getTypeComparator().checkComposeTypes(node.getType(), question.env, false);
 		}
-		
+
 		// Enable constraint checking
 		question = question.newConstraint(node.getType());
-		
+
 		question.qualifiers = null;
 		PType expType = node.getExpression().apply(THIS, question);
 		node.setExpType(expType);
@@ -1487,9 +1493,9 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			}
 		}
 
-		node.apply(question.assistantFactory.getDefinitionTypeResolver(),new DefinitionTypeResolver.NewQuestion(THIS,question));
-//		PPatternAssistantTC.typeResolve(pattern, THIS, question);
-//		question.assistantFactory.getTypeResolver().updateDefs(node, question);
+		node.apply(question.assistantFactory.getDefinitionTypeResolver(), new DefinitionTypeResolver.NewQuestion(THIS, question));
+		// PPatternAssistantTC.typeResolve(pattern, THIS, question);
+		// question.assistantFactory.getTypeResolver().updateDefs(node, question);
 		question.qualifiers = null;
 		question.assistantFactory.createPDefinitionListAssistant().typeCheck(node.getDefs(), THIS, question);
 		return node.getType();

@@ -59,13 +59,11 @@ public class TypeCheckerUtil
 			sb.append(getWarningString());
 			return sb.toString();
 		}
-		
-		
 
 		public String getErrorString()
 		{
 			StringBuilder sb = new StringBuilder();
-			
+
 			for (VDMError err : errors)
 			{
 				sb.append("\n\t" + err);
@@ -77,7 +75,7 @@ public class TypeCheckerUtil
 		public String getWarningString()
 		{
 			StringBuilder sb = new StringBuilder();
-			
+
 			for (VDMWarning err : warnings)
 			{
 				sb.append("\n\t" + err);

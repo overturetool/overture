@@ -59,7 +59,7 @@ public class RecordBasisChecker extends TypeUnwrapper<Boolean>
 	@Override
 	public Boolean caseAUnionType(AUnionType type) throws AnalysisException
 	{
-		//return af.createAUnionTypeAssistant().getRecord(type) != null;
+		// return af.createAUnionTypeAssistant().getRecord(type) != null;
 		if (!type.getRecDone())
 		{
 			type.setRecDone(true); // Mark early to avoid recursion.

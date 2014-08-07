@@ -460,13 +460,13 @@ public class NameFinder extends
 
 		return null;
 	}
-	
-//	@Override
-//	public PDefinition caseAClassType(AClassType node, Newquestion question)
-//			throws AnalysisException
-//	{
-//		return node.apply(THIS, question);
-//	}
+
+	// @Override
+	// public PDefinition caseAClassType(AClassType node, Newquestion question)
+	// throws AnalysisException
+	// {
+	// return node.apply(THIS, question);
+	// }
 
 	@Override
 	public PDefinition defaultPDefinition(PDefinition node, Newquestion question)

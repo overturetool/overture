@@ -10,7 +10,6 @@ import org.overture.ast.types.SInvariantType;
 import org.overture.ast.types.SSeqType;
 import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 /**
  * Used to get a seq type from a type

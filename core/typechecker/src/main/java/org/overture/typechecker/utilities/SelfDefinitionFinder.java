@@ -8,7 +8,6 @@ import org.overture.ast.factory.AstFactory;
 import org.overture.ast.node.INode;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 
 /**
  * This class implements a way to find the self definition from a node in the AST
