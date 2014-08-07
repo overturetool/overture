@@ -10,6 +10,7 @@ import java.util.Vector;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
+import org.apache.commons.io.filefilter.FileFileFilter;
 import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
@@ -73,11 +74,21 @@ abstract public class ExamplesUtility
 	{
 		List<ExampleSourceData> r = new LinkedList<ExampleSourceData>();
 
-		r.addAll(getSubSources(SL_EXAMPLES_ROOT, Dialect.VDM_SL));
-		r.addAll(getSubSources(PP_EXAMPLES_ROOT, Dialect.VDM_PP));
-		r.addAll(getSubSources(RT_EXAMPLES_ROOT, Dialect.VDM_RT));
+		r.addAll(getSubSources(getPath(SL_EXAMPLES_ROOT), Dialect.VDM_SL));
+		r.addAll(getSubSources(getPath(PP_EXAMPLES_ROOT), Dialect.VDM_PP));
+		r.addAll(getSubSources(getPath(RT_EXAMPLES_ROOT), Dialect.VDM_RT));
 
 		return r;
+	}
+	
+	public static String getDocumentationPath()
+	{
+		return "../../../documentation/";
+	}
+	
+	public static String getPath(String relativeExamplePath)
+	{
+		return (getDocumentationPath()+relativeExamplePath).replace('/', File.separatorChar);
 	}
 
 	/**
@@ -91,9 +102,9 @@ abstract public class ExamplesUtility
 	{
 		List<ExampleSourceData> r = new LinkedList<ExampleSourceData>();
 
-		r.addAll(getSubLibs(SL_LIBS_ROOT, Dialect.VDM_SL));
-		r.addAll(getSubLibs(PP_LIBS_ROOT, Dialect.VDM_PP));
-		r.addAll(getSubLibs(RT_LIBS_ROOT, Dialect.VDM_RT));
+		r.addAll(getSubLibs(getPath(SL_LIBS_ROOT), Dialect.VDM_SL));
+		r.addAll(getSubLibs(getPath(PP_LIBS_ROOT), Dialect.VDM_PP));
+		r.addAll(getSubLibs(getPath(RT_LIBS_ROOT), Dialect.VDM_RT));
 
 		return r;
 	}
@@ -105,75 +116,68 @@ abstract public class ExamplesUtility
 		File dir = new File(url.getPath());
 		List<ExampleSourceData> r = new LinkedList<ExampleSourceData>();
 
-		StringBuilder sb = new StringBuilder();
+		List<File> sb = new Vector<File>();
 		String csvName = "";
 
 		for (File f : dir.listFiles())
 		{
 			if (f.getName().contains("CSV")) // csv needs IO to TC
 			{
-				sb.append(FileUtils.readFileToString(f));
-				sb.append("\n");
-				csvName = f.getName();
+//				sb.append(FileUtils.readFileToString(f));
+//				sb.append("\n");
+//				csvName = f.getName();
+				sb.add(f);
 			} else
 			{
-				r.add(new ExampleSourceData(f.getName(), dialect, Release.DEFAULT, FileUtils.readFileToString(f)));
+				
+				r.add(new ExampleSourceData(f.getName(), dialect, Release.DEFAULT, f));
 
 				if (f.getName().contains("IO"))
 				{
-					sb.append(FileUtils.readFileToString(f));
-					sb.append("\n");
+//					sb.append(FileUtils.readFileToString(f));
+//					sb.append("\n");
+					sb.add(f);
 				}
 			}
 		}
 
-		r.add(new ExampleSourceData(csvName, dialect, Release.DEFAULT, sb.toString()));
+		r.add(new ExampleSourceData(csvName, dialect, Release.DEFAULT, sb));
 		return r;
 	}
 
 	private static Collection<ExampleSourceData> getSubSources(
-			String examplesRoot, Dialect dialect) throws IOException
+			String examplesRoot,final  Dialect dialect) throws IOException
 	{
 
 		List<ExampleSourceData> r = new LinkedList<ExampleSourceData>();
 
 		URL url = ExamplesUtility.class.getResource(examplesRoot);
-		File dir = new File(url.getPath());
+		File dir = new File(examplesRoot.replace('/', File.separatorChar));
 
-		StringBuilder source = new StringBuilder();
+		List<File> sources =null;
 		// grab examples groups
 		for (File f : dir.listFiles())
 		{
+			sources= new Vector<File>();
 			// grab example projects
 			if (f.isDirectory())
 			{
 				ExamplePacker p = new ExamplePacker(f, dialect);
 				if (p.isCheckable())
 				{
-					for (File f2 : org.apache.commons.io.FileUtils.listFiles(dir, new RegexFileFilter(dialect.getFilter().toString()), DirectoryFileFilter.DIRECTORY))
-					{
-						source.append(FileUtils.readFileToString(f2));
-						source.append("\n\n");
-					}
+					sources.addAll(p.getSpecFiles());
+					
 					if (p.getLibs().size() > 0)
 					{
 						for (String lib : p.getLibs())
 						{
-							try
-							{
-								source.append(FileUtils.readFileToString(new File(ExamplesUtility.class.getResource(LIBS_ROOT).getPath()
-										+ ExamplePacker.getName(dialect)
-										+ "/"
-										+ lib)));
-							} catch (IOException e)
-							{
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
+							final File file = new File(getPath(LIBS_ROOT+"/"+ ExamplePacker.getName(dialect)+ "/"+ lib));
+//								source.append(FileUtils.readFileToString(file));
+							sources.add(file);
 						}
 					}
-					r.add(new ExampleSourceData(p.getName(), dialect, p.getLanguageVersion(), source.toString()));
-					source = new StringBuilder();
+					r.add(new ExampleSourceData(p.getName(), dialect, p.getLanguageVersion(), sources));
+//					source = new StringBuilder();
 				}
 			}
 		}
