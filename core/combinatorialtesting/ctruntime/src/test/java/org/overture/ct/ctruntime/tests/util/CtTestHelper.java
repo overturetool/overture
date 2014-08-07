@@ -12,12 +12,25 @@ public class CtTestHelper
 {
 	public String[] buildArgs(final String traceName, final int port,
 			File traceFolder, File specfile)
+
 	{
+		//Passing 'null' indicates no trace reduction
+		return buildArgs(traceName, port, traceFolder, specfile, null);
+	}
+	
+	public String[] buildArgs(final String traceName, final int port,
+			File traceFolder, File specfile, TraceReductionInfo info)
+	{
+		if(info == null)
+		{
+			info = new TraceReductionInfo();
+		}
+		
 		String[] args = new String[] { "-h", "localhost", "-p", port + "",
 				"-k", "whatever", "-e", "DEFAULT", "-vdmsl", "-r", "vdm10",
 				"-t", traceName, "-tracefolder",
 				traceFolder.toURI().toASCIIString(),
-				specfile.toURI().toASCIIString() };
+				specfile.toURI().toASCIIString(), "-traceReduction", "{" + info.getSubset() + "," + info.getReductionType().toString() + "," + info.getSeed() + "}"};
 		return args;
 	}
 	

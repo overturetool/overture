@@ -25,30 +25,30 @@ import org.overture.test.framework.BaseTestCase;
 import org.overture.test.framework.Properties;
 import org.xml.sax.SAXException;
 
-public class CtSlTestCase extends BaseTestCase
+public abstract class CtTestCaseBase extends BaseTestCase
 {
 	//The socket is used to communicate with the trace interpreter
-	private ServerSocket thisSocket;
-	private static final int SOCKET_TIMEOUT = 0;
-	private static final int PORT = 8889;
+	protected ServerSocket thisSocket;
+	protected static final int SOCKET_TIMEOUT = 0;
+	protected static final int PORT = 8889;
 
 	//Used a fixed trace name for simplicity
-	private static final String TRACE_NAME = "T1";
+	protected static final String TRACE_NAME = "T1";
 	
-	private static final String TRACE_OUTPUT_FOLDER = "target/trace-output/";
+	protected static final String TRACE_OUTPUT_FOLDER = "target/trace-output/";
 	
 	//Test specifications are copied to a file with proper extension before they
 	//are being parsed
-	private static final String SPEC_TEMP_FILE = TRACE_OUTPUT_FOLDER + "tmp.vdmsl";
+	protected static final String SPEC_TEMP_FILE = TRACE_OUTPUT_FOLDER + "tmp.vdmsl";
 	
-	private CtTestHelper testHelper;
+	protected CtTestHelper testHelper;
 	
-	public CtSlTestCase()
+	public CtTestCaseBase()
 	{
 		super();
 	}
 	
-	public CtSlTestCase(File file)
+	public CtTestCaseBase(File file)
 	{
 		super(file);
 	}
@@ -168,7 +168,7 @@ public class CtSlTestCase extends BaseTestCase
 		t.setDaemon(false);
 		t.start();
 
-		String[] args = testHelper.buildArgs(traceName, PORT, traceFolder, specFileWithExt);
+		String[] args = getArgs(traceName, traceFolder, specFileWithExt);
 		TraceRunnerMain.USE_SYSTEM_EXIT = false;
 		TraceRunnerMain.main(args);
 
@@ -178,4 +178,6 @@ public class CtSlTestCase extends BaseTestCase
 
 		return actualOutputFile;
 	}
+	
+	abstract public String[] getArgs(String traceName, File traceFolder, File specFileWithExt);
 }
