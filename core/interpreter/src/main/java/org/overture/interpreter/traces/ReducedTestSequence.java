@@ -6,54 +6,64 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
-import org.overture.ast.messages.InternalException;
+import org.overture.interpreter.traces.util.RandomList;
 
 public class ReducedTestSequence extends TestSequence
 {
 
 	/**
-	 * A random reduction iterator that only returns the elements within the ramdom restrictions
+	 * A random reduction iterator that only returns the elements within the random restrictions
 	 * 
 	 * @author kel
 	 */
 	private static class RandomReductionIterator implements
 			Iterator<CallSequence>
 	{
-
 		private TestSequence data;
-		private long delta;
-		private Random prng;
 		private int size;
 
-		public RandomReductionIterator(TestSequence data, int size, long delta,
-				Random prng)
+		private int nextIndex;
+		private RandomList randomList;
+		
+		public RandomReductionIterator(TestSequence data, int size, long numberOfTests, Random prng)
 		{
 			this.data = data;
-			this.delta = delta;
-			this.prng = prng;
 			this.size = size;
+			
+			final int N =  size;
+			final int R = (int) numberOfTests;
+			
+			this.randomList = new RandomList(N, R, prng);
+			
+			computeNextIndex();
+		}
+
+		private void computeNextIndex()
+		{
+			this.nextIndex = randomList.next() - 1;
 		}
 
 		@Override
 		public boolean hasNext()
 		{
-			// TODO Auto-generated method stub
-			return false;
+			return this.nextIndex >= 0 && this.nextIndex < size;
 		}
 
 		@Override
 		public CallSequence next()
 		{
-			// TODO Auto-generated method stub
-			return null;
+			CallSequence next = data.get(nextIndex);
+			
+			computeNextIndex();
+			
+			return next;
 		}
 
 		@Override
 		public void remove()
 		{
-			// not supported
+			throw new UnsupportedOperationException();
 		}
-
 	}
 
 	/**
@@ -98,7 +108,7 @@ public class ReducedTestSequence extends TestSequence
 		@Override
 		public void remove()
 		{
-			// not supported
+			throw new UnsupportedOperationException();
 		}
 
 	}
@@ -146,7 +156,7 @@ public class ReducedTestSequence extends TestSequence
 		switch (type)
 		{
 			case RANDOM:
-				return new RandomReductionIterator(this.data, size, delta, prng);
+				return new RandomReductionIterator(this.data, size, n, prng);
 			case SHAPES_NOVARS:
 			case SHAPES_VARNAMES:
 			case SHAPES_VARVALUES:
@@ -158,48 +168,49 @@ public class ReducedTestSequence extends TestSequence
 
 	}
 
-	private void randomReduction(long delta, Random prng)
-	{
-		int s = size();
+//	private void randomReduction(long delta, Random prng)
+//	{
+//		int s = size();
+//
+//		for (long i = 0; i < delta; i++)
+//		{
+//			int x = prng.nextInt(s);
+//			this.remove(x);
+//			s--;
+//		}
+//	}
 
-		for (long i = 0; i < delta; i++)
-		{
-			int x = prng.nextInt(s);
-			this.remove(x);
-			s--;
-		}
-	}
-
-	private void reduce(float subset, TraceReductionType type, long seed)
-	{
-		Random prng = new Random(seed);
-		int s = size();
-		long n = Math.round(Math.ceil(s * subset));
-
-		if (n < s)
-		{
-			long delta = s - n;
-
-			switch (type)
-			{
-				case NONE:
-					break;
-
-				case RANDOM:
-					randomReduction(delta, prng);
-					break;
-
-				case SHAPES_NOVARS:
-				case SHAPES_VARNAMES:
-				case SHAPES_VARVALUES:
-					shapesReduction(delta, type, prng);
-					break;
-
-				default:
-					throw new InternalException(53, "Unknown trace reduction");
-			}
-		}
-	}
+	//
+//	private void reduce(float subset, TraceReductionType type, long seed)
+//	{
+//		Random prng = new Random(seed);
+//		int s = size();
+//		long n = Math.round(Math.ceil(s * subset));
+//
+//		if (n < s)
+//		{
+//			long delta = s - n;
+//
+//			switch (type)
+//			{
+//				case NONE:
+//					break;
+//
+//				case RANDOM:
+//					randomReduction(delta, prng);
+//					break;
+//
+//				case SHAPES_NOVARS:
+//				case SHAPES_VARNAMES:
+//				case SHAPES_VARVALUES:
+//					shapesReduction(delta, type, prng);
+//					break;
+//
+//				default:
+//					throw new InternalException(53, "Unknown trace reduction");
+//			}
+//		}
+//	}
 
 	private void shapesReduction(long delta, TraceReductionType type,
 			Random prng)
