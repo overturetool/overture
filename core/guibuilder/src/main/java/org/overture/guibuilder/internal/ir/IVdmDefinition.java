@@ -24,44 +24,58 @@ import java.util.Vector;
  * A vdm definition.
  * 
  * @author carlos
- *
  */
-public interface IVdmDefinition {
+public interface IVdmDefinition
+{
 
 	/**
 	 * Returns the name of the definition
+	 * 
 	 * @return The name.
 	 */
 	public String getName();
+
 	/**
 	 * Returns the list of definitions contained (children)
+	 * 
 	 * @return The definition list.
 	 */
 	public Vector<IVdmDefinition> getDefinitions();
+
 	/**
 	 * Adds a definition (adds child)
+	 * 
 	 * @param def
 	 */
-	public void addDefinition( IVdmDefinition def);
+	public void addDefinition(IVdmDefinition def);
+
 	/**
 	 * Adds a new annotation to the definition
-	 * @param an the VdmAnnotation
+	 * 
+	 * @param an
+	 *            the VdmAnnotation
 	 */
 	public void addAnnotation(VdmAnnotation an);
+
 	/**
 	 * Checks if has definition (has children)
+	 * 
 	 * @return True if the definition has sub definitions.
-	 */	
+	 */
 	public boolean hasDefinitions();
+
 	/**
 	 * Checks if has annotations
+	 * 
 	 * @return True if the definition is annotated.
 	 */
 	public boolean hasAnnotations();
+
 	/**
 	 * Returns the list of annotations if any (null if there isn't)
+	 * 
 	 * @return The list of annotations.
 	 */
 	public Vector<VdmAnnotation> getAnnotations();
-	
+
 }

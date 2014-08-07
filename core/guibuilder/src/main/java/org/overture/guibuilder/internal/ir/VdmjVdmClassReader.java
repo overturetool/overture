@@ -131,7 +131,8 @@ public class VdmjVdmClassReader implements IVdmClassReader
 	 * @throws InvocationAssistantException
 	 */
 	private void readVdmjClass(SClassDefinition c,
-			AnnotationTable annotationTable, Vector<String> classNames, ITypeCheckerAssistantFactory assistantFactory)
+			AnnotationTable annotationTable, Vector<String> classNames,
+			ITypeCheckerAssistantFactory assistantFactory)
 	{
 		boolean hasConstructors = c.getHasContructors();
 		VdmClass vdmClass = new VdmClass(c.getName().getName(), hasConstructors);
@@ -151,7 +152,7 @@ public class VdmjVdmClassReader implements IVdmClassReader
 				// FIXME: Better way of doing this ?
 				if (def instanceof AExplicitOperationDefinition)
 				{
-					AExplicitOperationDefinition operation = ((AExplicitOperationDefinition) def);
+					AExplicitOperationDefinition operation = (AExplicitOperationDefinition) def;
 					// FIXME: In terms of type only 'class types' are treated
 					VdmType type = getType(((AOperationType) operation.getType()).getResult(), assistantFactory);
 					newDefinition = new VdmMethod(operation.getName().getName(), operation.getIsConstructor(), type);
@@ -170,14 +171,16 @@ public class VdmjVdmClassReader implements IVdmClassReader
 							for (String cn : classNames)
 							{
 								if (typeName.equals(cn))
+								{
 									flag = true;
+								}
 							}
 							((VdmMethod) newDefinition).addParam(new VdmParam(varName.toString(), new VdmType(typeName, flag)));
 						}
 					}
 				} else if (def instanceof AImplicitOperationDefinition)
 				{
-					AImplicitOperationDefinition operation = ((AImplicitOperationDefinition) def);
+					AImplicitOperationDefinition operation = (AImplicitOperationDefinition) def;
 					VdmType type = null;
 					// FIXME: In terms of type only 'class types' are treated
 					type = getType(((AOperationType) operation.getType()).getResult(), assistantFactory);
@@ -194,7 +197,9 @@ public class VdmjVdmClassReader implements IVdmClassReader
 						for (String cn : classNames)
 						{
 							if (typeName.equals(cn))
+							{
 								flag = true;
+							}
 						}
 						((VdmMethod) newDefinition).addParam(new VdmParam(varName.toString(), new VdmType(typeName, flag)));
 						extractTypeName(operation.getType(), n);
@@ -203,7 +208,7 @@ public class VdmjVdmClassReader implements IVdmClassReader
 
 				} else if (def instanceof AExplicitFunctionDefinition)
 				{
-					AExplicitFunctionDefinition function = ((AExplicitFunctionDefinition) def);
+					AExplicitFunctionDefinition function = (AExplicitFunctionDefinition) def;
 					VdmType type = null;
 					// FIXME: In terms of type only 'class types' are treated
 					type = getType(((AFunctionType) function.getType()).getResult(), assistantFactory);
@@ -220,7 +225,9 @@ public class VdmjVdmClassReader implements IVdmClassReader
 							for (String cn : classNames)
 							{
 								if (typeName.equals(cn))
+								{
 									flag = true;
+								}
 							}
 							((VdmMethod) newDefinition).addParam(new VdmParam(varName.toString(), new VdmType(typeName, flag)));
 							extractTypeName(function.getType(), n);
@@ -229,7 +236,7 @@ public class VdmjVdmClassReader implements IVdmClassReader
 
 				} else if (def instanceof AImplicitFunctionDefinition)
 				{
-					AImplicitFunctionDefinition function = ((AImplicitFunctionDefinition) def);
+					AImplicitFunctionDefinition function = (AImplicitFunctionDefinition) def;
 					VdmType type = null;
 					// FIXME: In terms of type only 'class types' are treated
 					type = getType(((AFunctionType) function.getType()).getResult(), assistantFactory);
@@ -246,7 +253,9 @@ public class VdmjVdmClassReader implements IVdmClassReader
 							for (String cn : classNames)
 							{
 								if (typeName.equals(cn))
+								{
 									flag = true;
+								}
 							}
 							((VdmMethod) newDefinition).addParam(new VdmParam(varName.toString(), new VdmType(typeName, flag)));
 							extractTypeName(function.getType(), n);
@@ -282,7 +291,9 @@ public class VdmjVdmClassReader implements IVdmClassReader
 		// FIXME we only have one annotation for classes, so we can get away with this, but
 		// a sanity check is needed...
 		if (!(ToolSettings.GENERATION_SETTINGS == ToolSettings.GENERATION_MODE.ANNOTATIONS && vdmClass.hasAnnotations()))
+		{
 			classList.add(vdmClass);
+		}
 
 	}
 
