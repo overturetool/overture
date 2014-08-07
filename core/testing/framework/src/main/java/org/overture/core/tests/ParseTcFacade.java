@@ -70,7 +70,7 @@ public abstract class ParseTcFacade
 		List<INode> ast = new LinkedList<INode>();
 		Settings.release = e.getRelease();
 
-		ast = ParseTcFacade.typedAst(e.getSource(), e.getName(),e.getDialect(), false);
+		ast = ParseTcFacade.typedAst(e.getSource(), e.getName(), e.getDialect(), false);
 
 		return new ExampleAstData(e.getName(), ast);
 	}
@@ -83,6 +83,9 @@ public abstract class ParseTcFacade
 	 * @param testName
 	 *            the name of the test calling this method (used for failure reporting)
 	 * @return the AST of the model as a {@link List} of {@link INode}.
+	 * @throws IOException 
+	 * @throws ParserException 
+	 * @throws LexException 
 	 */
 	public static List<INode> typedAst(String sourcePath, String testName)
 			throws IOException, ParserException, LexException

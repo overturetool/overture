@@ -165,6 +165,7 @@ class ExamplePacker
 
 	/**
 	 * Process the lib dependencies (IO, MATH, etc.) of this example.
+	 * 
 	 * @param text
 	 */
 	private void processLibs(String text)
@@ -199,8 +200,8 @@ class ExamplePacker
 	}
 
 	/**
-	 * Process a single line in the Readme file. Again, most 
-	 * entries are ignored.
+	 * Process a single line in the Readme file. Again, most entries are ignored.
+	 * 
 	 * @param line
 	 */
 	private void processLine(String line)

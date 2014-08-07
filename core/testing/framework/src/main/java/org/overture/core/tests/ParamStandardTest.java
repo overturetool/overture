@@ -25,8 +25,7 @@ import org.overture.parser.syntax.ParserException;
  * your native output type and <code>R</code>.
  * 
  * @author ldc
- * @param R
- *            the result type being compared by the test
+ * @param <R> 
  */
 public abstract class ParamStandardTest<R> extends AbsResultTest<R>
 {
@@ -60,7 +59,7 @@ public abstract class ParamStandardTest<R> extends AbsResultTest<R>
 	/**
 	 * Execute this test. Constructs the AST for the model and processes it via {@link #processModel(List)}. Then loads
 	 * a stored result via {@link #deSerializeResult(String)}. Finally, the two results are compared with
-	 * {@link #compareResults(Object, IResult)}.<br>
+	 * {@link #compareResults(Object, Object)}.<br>
 	 * <br>
 	 * If the test is run in update mode, then no comparison is made. Instead, the new result is saved. <br>
 	 * <br>
@@ -83,16 +82,17 @@ public abstract class ParamStandardTest<R> extends AbsResultTest<R>
 			this.testUpdate(actual);
 		} else
 		{
-			R expected=null;
-			try {
-				expected= deSerializeResult(resultPath);
-			}
-			catch (FileNotFoundException e){
+			R expected = null;
+			try
+			{
+				expected = deSerializeResult(resultPath);
+			} catch (FileNotFoundException e)
+			{
 				Assert.fail("Test " + testName
 						+ " failed. No result file found. Use \"-D"
 						+ getUpdatePropertyString() + "." + testName
 						+ "\" to create an initial one."
-						+ "\n The test result was: "+ actual.toString());
+						+ "\n The test result was: " + actual.toString());
 			}
 			this.compareResults(actual, expected);
 		}
