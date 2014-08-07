@@ -104,7 +104,7 @@ public class CtSlTestCase extends BaseTestCase
 			
 			if (!resultFile.exists())
 			{
-				Assume.assumeTrue("no result file", false);
+				Assume.assumeTrue("No result file", false);
 			}
 
 			TraceResultReader reader = new TraceResultReader();
@@ -120,8 +120,6 @@ public class CtSlTestCase extends BaseTestCase
 				TraceResult expected = expectedResults.get(i);
 				TraceResult actual = actualResults.get(i);
 				
-				System.out.println("Comparing: " + expected + "\t" + actual);
-
 				Assert.assertTrue(expected.equals(actual));
 			}
 		}
