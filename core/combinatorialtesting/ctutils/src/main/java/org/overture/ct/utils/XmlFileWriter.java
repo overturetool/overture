@@ -1,14 +1,13 @@
 package org.overture.ct.utils;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
 public class XmlFileWriter
 {
 
-//	FileWriter outputFileReader;
+	// FileWriter outputFileReader;
 	PrintWriter outputStream;
 	int level = 0;
 	Boolean inElement = false;
@@ -17,8 +16,8 @@ public class XmlFileWriter
 	public void StartDocument(File name, String root) throws IOException
 	{
 
-//		outputFileReader = new FileWriter(name);
-		outputStream = new PrintWriter(name,"UTF-8");//outputFileReader);
+		// outputFileReader = new FileWriter(name);
+		outputStream = new PrintWriter(name, "UTF-8");// outputFileReader);
 		rootName = root;
 		StartElement(rootName);
 
@@ -29,7 +28,7 @@ public class XmlFileWriter
 
 		StopElement(rootName);
 		outputStream.close();
-//		outputFileReader.close();
+		// outputFileReader.close();
 
 	}
 
@@ -94,9 +93,12 @@ public class XmlFileWriter
 		{
 
 			if (i % 2 == 0)
+			{
 				element += attribute[i] + "=";
-			else
+			} else
+			{
 				element += "\"" + NormalizeValue(attribute[i]) + "\" ";
+			}
 		}
 		element += ">";
 		outputStream.println(element);
@@ -121,9 +123,12 @@ public class XmlFileWriter
 	{
 
 		if (inElement)
+		{
 			outputStream.println(GetIndentation(level) + NormalizeValue(value));
-		else
+		} else
+		{
 			System.err.println("Errir priting value skipped since it was out side an element");
+		}
 
 	}
 }

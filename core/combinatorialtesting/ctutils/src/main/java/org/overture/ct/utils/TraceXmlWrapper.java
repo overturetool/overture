@@ -80,14 +80,12 @@ public class TraceXmlWrapper
 			if (object instanceof Verdict)
 			{
 				verdict = object.toString();
-			}
-			else
+			} else
 			{
 				if (object == null)
 				{
 					result += "null";
-				}
-				else
+				} else
 				{
 					result += object.toString();
 				}
