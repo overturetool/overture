@@ -20,6 +20,7 @@ import org.overture.ast.expressions.ADomainResByBinaryExp;
 import org.overture.ast.expressions.ADomainResToBinaryExp;
 import org.overture.ast.expressions.AElementsUnaryExp;
 import org.overture.ast.expressions.AEqualsBinaryExp;
+import org.overture.ast.expressions.AEquivalentBooleanBinaryExp;
 import org.overture.ast.expressions.AExists1Exp;
 import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.AFloorUnaryExp;
@@ -247,15 +248,20 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String r = node.getRight().apply(THIS,question);
 		String op = mytable.getIMPLIES();
 		
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append(l);
-//		sb.append(space);
-//		sb.append(op);
-//		sb.append(space);
-//		sb.append(r);
 		
 		return	Utilities.wrap(Utilities.append(l, r, op));
+	}
+	
+	@Override
+	public String caseAEquivalentBooleanBinaryExp(
+			AEquivalentBooleanBinaryExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		String l = node.getLeft().apply(THIS, question);
+		String r = node.getRight().apply(THIS, question);
+		String op = mytable.getEQUIV();
+		
+		return Utilities.wrap(Utilities.append(l, r, op));
 	}
 	
 	@Override

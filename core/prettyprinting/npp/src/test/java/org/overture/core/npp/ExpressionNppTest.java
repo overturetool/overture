@@ -211,6 +211,30 @@ public class ExpressionNppTest {
 	}
 	
 	@Test
+	public void testCaseABooleanEquivExp_01() throws AnalysisException
+	{
+		aux("A <=> B", "(A <=> B)");
+	}
+	
+	@Test
+	public void testCaseABooleanEquivExp_02() throws AnalysisException
+	{
+		aux("1 <=> 2","(1 <=> 2)");
+	}
+	
+	@Test
+	public void testCaseABooleanEquivExp_03() throws AnalysisException
+	{
+		aux("x <=> 1","(x <=> 1)");
+	}
+	
+	@Test
+	public void testCaseABooleanEquivsExp_04() throws AnalysisException
+	{
+		aux("true <=> false","(true <=> false)");
+	}
+	
+	@Test
 	public void testCaseAAbsoluteUnaryExp_01() throws AnalysisException
 	{
 		aux("abs 1","(abs 1)");
