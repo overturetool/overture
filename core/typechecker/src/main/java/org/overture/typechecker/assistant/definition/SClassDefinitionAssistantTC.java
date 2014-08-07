@@ -607,8 +607,8 @@ public class SClassDefinitionAssistantTC
 					TypeCheckerErrors.detail2("This", af.createPDefinitionAssistant().kind(override), "Super", af.createPDefinitionAssistant().kind(indef));
 				} else if (af.createPAccessSpecifierAssistant().narrowerThan(override.getAccess(), indef.getAccess()))
 				{
-					TypeCheckerErrors.report(3006, "Overriding definition reduces visibility", override.getName().getLocation(), override);
-					TypeCheckerErrors.detail2("This", override.getName(), "Super", indef.getName());
+					TypeCheckerErrors.report(3006, "Overriding definition reduces visibility", override.getName().getLocation(),override);
+					TypeCheckerErrors.detail2("This", override.getAccess().getAccess()+" "+ override.getName(), "Super",indef.getAccess().getAccess()+" "+ indef.getName());
 				} else
 				{
 					PType to = af.createPDefinitionAssistant().getType(indef);
