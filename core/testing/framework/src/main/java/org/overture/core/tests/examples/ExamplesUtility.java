@@ -2,16 +2,11 @@ package org.overture.core.tests.examples;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.DirectoryFileFilter;
-import org.apache.commons.io.filefilter.FileFileFilter;
-import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
 import org.overture.core.tests.ParseTcFacade;
@@ -80,15 +75,15 @@ abstract public class ExamplesUtility
 
 		return r;
 	}
-	
+
 	public static String getDocumentationPath()
 	{
 		return "../../../documentation/";
 	}
-	
+
 	public static String getPath(String relativeExamplePath)
 	{
-		return (getDocumentationPath()+relativeExamplePath).replace('/', File.separatorChar);
+		return (getDocumentationPath() + relativeExamplePath).replace('/', File.separatorChar);
 	}
 
 	/**
@@ -112,53 +107,46 @@ abstract public class ExamplesUtility
 	private static Collection<ExampleSourceData> getSubLibs(String libsroot,
 			Dialect dialect) throws IOException
 	{
-		URL url = ExamplesUtility.class.getResource(libsroot);
-		File dir = new File(url.getPath());
+		File dir = new File(libsroot);
 		List<ExampleSourceData> r = new LinkedList<ExampleSourceData>();
 
-		List<File> sb = new Vector<File>();
-		String csvName = "";
+		List<File> sb = null;
 
 		for (File f : dir.listFiles())
 		{
+			sb = new Vector<File>();
+
+			sb.add(f);
+
 			if (f.getName().contains("CSV")) // csv needs IO to TC
 			{
-//				sb.append(FileUtils.readFileToString(f));
-//				sb.append("\n");
-//				csvName = f.getName();
-				sb.add(f);
-			} else
+				sb.add(getLibrary(dialect, "IO"
+						+ dialect.getArgstring().replace('-', '.')));
+			} else if (f.getName().contains("VDMUnit")) // VDMUnit needs IO to TC
 			{
-				
-				r.add(new ExampleSourceData(f.getName(), dialect, Release.DEFAULT, f));
-
-				if (f.getName().contains("IO"))
-				{
-//					sb.append(FileUtils.readFileToString(f));
-//					sb.append("\n");
-					sb.add(f);
-				}
+				sb.add(getLibrary(dialect, "IO"
+						+ dialect.getArgstring().replace('-', '.')));
 			}
+
+			r.add(new ExampleSourceData(f.getName(), dialect, Release.DEFAULT, sb));
 		}
 
-		r.add(new ExampleSourceData(csvName, dialect, Release.DEFAULT, sb));
 		return r;
 	}
 
 	private static Collection<ExampleSourceData> getSubSources(
-			String examplesRoot,final  Dialect dialect) throws IOException
+			String examplesRoot, final Dialect dialect) throws IOException
 	{
 
 		List<ExampleSourceData> r = new LinkedList<ExampleSourceData>();
 
-		URL url = ExamplesUtility.class.getResource(examplesRoot);
 		File dir = new File(examplesRoot.replace('/', File.separatorChar));
 
-		List<File> sources =null;
+		List<File> sources = null;
 		// grab examples groups
 		for (File f : dir.listFiles())
 		{
-			sources= new Vector<File>();
+			sources = new Vector<File>();
 			// grab example projects
 			if (f.isDirectory())
 			{
@@ -166,24 +154,30 @@ abstract public class ExamplesUtility
 				if (p.isCheckable())
 				{
 					sources.addAll(p.getSpecFiles());
-					
+
 					if (p.getLibs().size() > 0)
 					{
 						for (String lib : p.getLibs())
 						{
-							final File file = new File(getPath(LIBS_ROOT+"/"+ ExamplePacker.getName(dialect)+ "/"+ lib));
-//								source.append(FileUtils.readFileToString(file));
+							final File file = getLibrary(dialect, lib);
+							// source.append(FileUtils.readFileToString(file));
 							sources.add(file);
 						}
 					}
 					r.add(new ExampleSourceData(p.getName(), dialect, p.getLanguageVersion(), sources));
-//					source = new StringBuilder();
+					// source = new StringBuilder();
 				}
 			}
 		}
 
 		return r;
 
+	}
+
+	protected static File getLibrary(final Dialect dialect, String lib)
+	{
+		return new File(getPath(LIBS_ROOT + "/"
+				+ ExamplePacker.getName(dialect) + "/" + lib));
 	}
 
 }

@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Vector;
 
 import org.apache.commons.io.filefilter.AbstractFileFilter;
-import org.apache.commons.io.filefilter.DirectoryFileFilter;
-import org.apache.commons.io.filefilter.FileFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
