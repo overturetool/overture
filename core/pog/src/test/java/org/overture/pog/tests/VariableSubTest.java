@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.AIntLiteralExp;
-import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexIntegerToken;
@@ -61,7 +60,7 @@ public class VariableSubTest
 	{
 		aux("abs a", "(abs 1)");
 	}
-	
+
 	@Test
 	public void testCaseAAbsoluteUnaryExp_NoSub() throws AnalysisException,
 			IOException
@@ -88,15 +87,16 @@ public class VariableSubTest
 	{
 		aux("a.x", "1.x");
 	}
-	
+
 	@Test
 	public void testCaseAFieldExp_NoSub() throws AnalysisException, IOException
 	{
 		aux("b.x", "b.x");
 	}
-	
+
 	@Test
-	public void testCaseAMapDomainUnaryExp_01() throws AnalysisException, IOException
+	public void testCaseAMapDomainUnaryExp_01() throws AnalysisException,
+			IOException
 	{
 		aux("dom a", "dom 1");
 	}

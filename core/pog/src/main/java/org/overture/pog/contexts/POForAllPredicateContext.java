@@ -51,44 +51,44 @@ public class POForAllPredicateContext extends POForAllContext
 		this.predicate = exp.getPredicate();
 	}
 
-	public POForAllPredicateContext(ASeqCompSeqExp exp, IPogAssistantFactory assistantFactory)
+	public POForAllPredicateContext(ASeqCompSeqExp exp,
+			IPogAssistantFactory assistantFactory)
 	{
 		super(exp, assistantFactory);
 		this.predicate = exp.getPredicate();
 	}
 
-	public POForAllPredicateContext(ITypeCheckerAssistantFactory af,AExists1Exp exp)
+	public POForAllPredicateContext(ITypeCheckerAssistantFactory af,
+			AExists1Exp exp)
 	{
-		super(af,exp);
+		super(af, exp);
 		this.predicate = exp.getPredicate();
 	}
 
-	public POForAllPredicateContext(ALetBeStExp exp, IPogAssistantFactory assistantFactory)
+	public POForAllPredicateContext(ALetBeStExp exp,
+			IPogAssistantFactory assistantFactory)
 	{
 		super(exp, assistantFactory);
 		this.predicate = exp.getSuchThat();
 	}
-	
-	
 
-	
 	@Override
 	public PExp getContextNode(PExp stitch)
 	{
-		
+
 		AForAllExp super_exp = super.getSuperContext(stitch);
-		
-		if (predicate !=null){
+
+		if (predicate != null)
+		{
 			AImpliesBooleanBinaryExp implies_exp = AstExpressionFactory.newAImpliesBooleanBinaryExp(predicate.clone(), stitch);
 			super_exp.setPredicate(implies_exp);
-		}
-		else{
+		} else
+		{
 			super_exp.setPredicate(stitch);
 		}
-		
+
 		return super_exp;
 	}
-
 
 	@Override
 	public String getContext()

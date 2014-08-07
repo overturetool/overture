@@ -37,20 +37,19 @@ import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
 
-public class MapCompatibleObligation extends ProofObligation {
+public class MapCompatibleObligation extends ProofObligation
+{
 	private static final long serialVersionUID = -7453383884893058267L;
 
-	public MapCompatibleObligation(PExp left, PExp right, IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException {
-		super(left, POType.MAP_COMPATIBLE, ctxt, left.getLocation(),af);
+	public MapCompatibleObligation(PExp left, PExp right, IPOContextStack ctxt,
+			IPogAssistantFactory af) throws AnalysisException
+	{
+		super(left, POType.MAP_COMPATIBLE, ctxt, left.getLocation(), af);
 
 		/**
-		 * This obligation occurs during a map union, and ensures that if there
-		 * are overlaps in the maps, then they map to the same thing.
-		 * 
-		 * So m1 munion m2 produces:
-		 * 
-		 * forall v1 in set dom m1, v2 in set dom m2 & (v1 = v2) => (m1(v1) =
-		 * m2(v2))
+		 * This obligation occurs during a map union, and ensures that if there are overlaps in the maps, then they map
+		 * to the same thing. So m1 munion m2 produces: forall v1 in set dom m1, v2 in set dom m2 & (v1 = v2) => (m1(v1)
+		 * = m2(v2))
 		 */
 
 		ILexNameToken ldom = getUnique("ldom");
@@ -63,11 +62,7 @@ public class MapCompatibleObligation extends ProofObligation {
 		List<PMultipleBind> bindings = getMultipleSetBindList(domLeft, ldom);
 		bindings.addAll(getMultipleSetBindList(domRight, rdom));
 
-		AImpliesBooleanBinaryExp implies = AstExpressionFactory
-				.newAImpliesBooleanBinaryExp(
-						getEqualsExp(getVarExp(ldom), getVarExp(rdom)),
-						getEqualsExp(getApplyExp(left, getVarExp(ldom)),
-								getApplyExp(right, getVarExp(rdom))));
+		AImpliesBooleanBinaryExp implies = AstExpressionFactory.newAImpliesBooleanBinaryExp(getEqualsExp(getVarExp(ldom), getVarExp(rdom)), getEqualsExp(getApplyExp(left, getVarExp(ldom)), getApplyExp(right, getVarExp(rdom))));
 
 		AForAllExp forallExp = new AForAllExp();
 

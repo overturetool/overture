@@ -32,8 +32,6 @@ public class POScopeContext extends POContext
 	{
 		return "";
 	}
-	
-	
 
 	@Override
 	public PExp getContextNode(PExp stitch)
@@ -41,9 +39,6 @@ public class POScopeContext extends POContext
 		// empty context
 		return stitch;
 	}
-
-
-
 
 	@Override
 	public boolean isScopeBoundary()

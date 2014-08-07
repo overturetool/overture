@@ -42,20 +42,15 @@ public class FunctionApplyObligation extends ProofObligation
 			throws AnalysisException
 	{
 		super(root, POType.FUNC_APPLY, ctxt, root.getLocation(), af);
-		
+
 		/**
-		 * If the root is an expression that evaluates to a function, we do not know
-		 * which pre_f to call and prename is null. So we use the "pre_(root, args)" form.
-		 * 
-		 * If the prename is defined, like "pre_f" then we can use "pre_f(args)".
-		 * 
-		 * We should not attempt to create an obligation if there is no precondition - ie.
-		 * we should not be here if prename is "".
+		 * If the root is an expression that evaluates to a function, we do not know which pre_f to call and prename is
+		 * null. So we use the "pre_(root, args)" form. If the prename is defined, like "pre_f" then we can use
+		 * "pre_f(args)". We should not attempt to create an obligation if there is no precondition - ie. we should not
+		 * be here if prename is "".
 		 */
 
-	
-		
-		if (prename == null)	// Root is an expression, so use pre_(root, args)
+		if (prename == null) // Root is an expression, so use pre_(root, args)
 		{
 			// pre_(root, args)
 			APreExp preExp = new APreExp();
@@ -63,8 +58,7 @@ public class FunctionApplyObligation extends ProofObligation
 			preExp.setArgs(cloneListPExp(args));
 			stitch = preExp.clone();
 			valuetree.setPredicate(ctxt.getPredWithContext(preExp));
-		}
-		else
+		} else
 		{
 			// pre_f(args)
 			PExp pred = getApplyExp(getVarExp(prename), cloneListPExp(args));
@@ -72,5 +66,5 @@ public class FunctionApplyObligation extends ProofObligation
 			valuetree.setPredicate(ctxt.getPredWithContext(pred));
 		}
 	}
-	
+
 }

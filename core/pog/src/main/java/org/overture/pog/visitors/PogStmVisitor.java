@@ -7,13 +7,13 @@ import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IProofObligationList;
 
 public class PogStmVisitor extends
-	PogParamStmVisitor<POContextStack, ProofObligationList> {
+		PogParamStmVisitor<POContextStack, ProofObligationList>
+{
 
-
-
-    public PogStmVisitor(
-	    QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> parentVisitor) {
-	super(parentVisitor);
-    }
+	public PogStmVisitor(
+			QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> parentVisitor)
+	{
+		super(parentVisitor);
+	}
 
 }

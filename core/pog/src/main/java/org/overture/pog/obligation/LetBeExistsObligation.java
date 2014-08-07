@@ -41,54 +41,53 @@ public class LetBeExistsObligation extends ProofObligation
 {
 	private static final long serialVersionUID = 4190499967249305830L;
 
-	public LetBeExistsObligation(ALetBeStExp exp, IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
+	public LetBeExistsObligation(ALetBeStExp exp, IPOContextStack ctxt,
+			IPogAssistantFactory af) throws AnalysisException
 	{
 		super(exp, POType.LET_BE_EXISTS, ctxt, exp.getBind().getLocation(), af);
-		
+
 		/**
-		 * let <binds> be st <predicate> in <exp>
-		 * produces
-		 * exists <binds> & <predicate>
+		 * let <binds> be st <predicate> in <exp> produces exists <binds> & <predicate>
 		 */
 
-		
 		AExistsExp exists = new AExistsExp();
 		List<PMultipleBind> bindList = new Vector<PMultipleBind>();
 		bindList.add(exp.getBind().clone());
 		exists.setBindList(bindList);
-		
+
 		if (exp.getSuchThat() != null)
 		{
 			exists.setPredicate(exp.getSuchThat().clone());
-		}
-		else{
-			// we just use true since we cannot have 
+		} else
+		{
+			// we just use true since we cannot have
 			// exists by itself
 			ABooleanConstExp replacementNothing_exp = new ABooleanConstExp();
 			replacementNothing_exp.setValue(new LexBooleanToken(true, null));
-			
-			exists.setPredicate(replacementNothing_exp);		
+
+			exists.setPredicate(replacementNothing_exp);
 		}
 
-		stitch=exists;
+		stitch = exists;
 		valuetree.setPredicate(ctxt.getPredWithContext(exists));
 	}
 
-	public LetBeExistsObligation(ALetBeStStm stmt, IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
+	public LetBeExistsObligation(ALetBeStStm stmt, IPOContextStack ctxt,
+			IPogAssistantFactory af) throws AnalysisException
 	{
-		super(stmt, POType.LET_BE_EXISTS, ctxt, stmt.getBind().getLocation(),af);
+		super(stmt, POType.LET_BE_EXISTS, ctxt, stmt.getBind().getLocation(), af);
 
 		AExistsExp exists = new AExistsExp();
 		List<PMultipleBind> bindList = new Vector<PMultipleBind>();
 		bindList.add(stmt.getBind().clone());
 		exists.setBindList(bindList);
-		
+
 		if (stmt.getSuchThat() != null)
 		{
 			exists.setPredicate(stmt.getSuchThat().clone());
 		}
-		
-		stitch=exists;
+
+		stitch = exists;
 		valuetree.setPredicate(ctxt.getPredWithContext(exists));
 	}
 }

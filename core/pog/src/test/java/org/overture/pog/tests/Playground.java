@@ -9,7 +9,6 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
-import org.junit.Test;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.node.INode;
 import org.overture.core.tests.ParseTcFacade;
@@ -30,18 +29,18 @@ public class Playground
 {
 
 	// comment this annotation out when done! no need to run the test
-	//@Test
+	// @Test
 	public void quickTest() throws AnalysisException, IOException,
 			URISyntaxException
 	{
 
 		// switch this flag to update a test result file
 		boolean write_result = false;
-		//write_result = true;
+		// write_result = true;
 
 		// switch this flag to print the stored results
 		boolean show_result = false;
-		//show_result = true;
+		// show_result = true;
 
 		String model = "src/test/resources/adhoc/sandbox.vdmpp";
 		String result = "src/test/resources/adhoc/sandbox.RESULT";
