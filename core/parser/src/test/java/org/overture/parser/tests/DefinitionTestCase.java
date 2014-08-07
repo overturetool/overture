@@ -12,19 +12,21 @@ import org.overture.parser.syntax.DefinitionReader;
 import org.overture.parser.syntax.ParserException;
 import org.overture.parser.tests.framework.BaseParserTestCase;
 
-public class DefinitionTestCase extends BaseParserTestCase<DefinitionReader,List<PDefinition>>
+public class DefinitionTestCase extends
+		BaseParserTestCase<DefinitionReader, List<PDefinition>>
 {
 	static boolean hasRunBefore = false;
+
 	public DefinitionTestCase(File file)
 	{
 		super(file);
 	}
-	
+
 	public DefinitionTestCase()
 	{
-	
+
 	}
-	
+
 	@Override
 	protected void setUp() throws Exception
 	{
@@ -32,9 +34,9 @@ public class DefinitionTestCase extends BaseParserTestCase<DefinitionReader,List
 		Settings.dialect = Dialect.VDM_RT;
 	}
 
-	public DefinitionTestCase(File rootSource,String name, String content)
+	public DefinitionTestCase(File rootSource, String name, String content)
 	{
-		super(rootSource,name, content);
+		super(rootSource, name, content);
 	}
 
 	@Override
@@ -44,7 +46,8 @@ public class DefinitionTestCase extends BaseParserTestCase<DefinitionReader,List
 	}
 
 	@Override
-	protected List<PDefinition> read(DefinitionReader reader) throws ParserException, LexException
+	protected List<PDefinition> read(DefinitionReader reader)
+			throws ParserException, LexException
 	{
 		return reader.readDefinitions();
 	}
@@ -67,6 +70,4 @@ public class DefinitionTestCase extends BaseParserTestCase<DefinitionReader,List
 		return hasRunBefore;
 	}
 
-
-	
 }

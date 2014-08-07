@@ -140,7 +140,7 @@ public class ModuleReader extends SyntaxReader
 		setCurrentModule("DEFAULT");
 		List<PDefinition> definitions = getDefinitionReader().readDefinitions();
 
-		return AstFactory.newAModuleModules(file,definitions);
+		return AstFactory.newAModuleModules(file, definitions);
 	}
 
 	private AModuleModules readModule() throws ParserException, LexException
@@ -208,7 +208,7 @@ public class ModuleReader extends SyntaxReader
 		// FIXME dlmodules not implemented
 		AModuleImports imports = null;
 		AModuleExports exports = null;
-//		LexStringToken library = null;
+		// LexStringToken library = null;
 
 		try
 		{
@@ -230,7 +230,7 @@ public class ModuleReader extends SyntaxReader
 			{
 				if (nextToken().is(VDMToken.STRING))
 				{
-					/*library = (LexStringToken)*/ lastToken();
+					/* library = (LexStringToken) */lastToken();
 					nextToken();
 				} else
 				{
@@ -338,7 +338,9 @@ public class ModuleReader extends SyntaxReader
 	{
 		boolean struct = lastToken().is(VDMToken.STRUCT);
 		if (struct)
+		{
 			nextToken();
+		}
 		LexNameToken name = readNameToken("Expecting exported type name");
 		ignore(VDMToken.SEMICOLON);
 		return AstFactory.newATypeExport(name, struct);
@@ -555,9 +557,8 @@ public class ModuleReader extends SyntaxReader
 			}
 
 			ignore(VDMToken.SEMICOLON);
-			return AstFactory.newATypeImport(def,renamed);
-		}
-		catch (ParserException e)
+			return AstFactory.newATypeImport(def, renamed);
+		} catch (ParserException e)
 		{
 			reader.pop();
 			setCurrentModule(savedModule);
@@ -659,7 +660,7 @@ public class ModuleReader extends SyntaxReader
 		}
 
 		ignore(VDMToken.SEMICOLON);
-		return AstFactory.newAFunctionValueImport(defname, type, typeParams, renamed );
+		return AstFactory.newAFunctionValueImport(defname, type, typeParams, renamed);
 	}
 
 	private List<PImport> readImportedOperations(LexIdentifierToken from)

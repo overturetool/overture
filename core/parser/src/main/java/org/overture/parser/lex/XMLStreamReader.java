@@ -43,11 +43,10 @@ abstract public class XMLStreamReader extends InputStreamReader
 	protected String fileText = null;
 	private final static int ARRAYCHUNK = 10000;
 
-	public XMLStreamReader(InputStream in, String partName)
-		throws IOException
+	public XMLStreamReader(InputStream in, String partName) throws IOException
 	{
 		super(in);
-		
+
 		ZipInputStream zis = new ZipInputStream(in);
 		ZipEntry ze = zis.getNextEntry();
 
@@ -68,17 +67,16 @@ abstract public class XMLStreamReader extends InputStreamReader
 					{
 						p += r;
 
-    					if (space - p < 1000)
-    					{
-    						space += ARRAYCHUNK;
-    						bytes = Arrays.copyOf(bytes, space);
-    					}
+						if (space - p < 1000)
+						{
+							space += ARRAYCHUNK;
+							bytes = Arrays.copyOf(bytes, space);
+						}
 					}
-				}
-				while (r > 0);
-				
+				} while (r > 0);
+
 				// Look for the XML encoding
-				String encoding = "";//VDMJ.filecharset;//TODO
+				String encoding = "";// VDMJ.filecharset;//TODO
 				String firstLine = new String(bytes, 0, 100);
 				Pattern epattern = Pattern.compile("encoding=\"([\\w-]+)\"");
 				Matcher ematch = epattern.matcher(firstLine);
@@ -114,7 +112,7 @@ abstract public class XMLStreamReader extends InputStreamReader
 			boolean capturing = true;
 			int cp = 0;
 
-			for (int p=start; p<end; p++)
+			for (int p = start; p < end; p++)
 			{
 				char c = fileText.charAt(p);
 
@@ -123,13 +121,11 @@ abstract public class XMLStreamReader extends InputStreamReader
 					if (c == '<')
 					{
 						capturing = false;
-					}
-					else
+					} else
 					{
 						clean[cp++] = c;
 					}
-				}
-				else
+				} else
 				{
 					if (c == '>')
 					{
@@ -143,7 +139,7 @@ abstract public class XMLStreamReader extends InputStreamReader
 			System.arraycopy(chars, 0, array, ap, chars.length);
 			ap += chars.length;
 
-			start = fileText.indexOf(MARKER, end+1);
+			start = fileText.indexOf(MARKER, end + 1);
 		}
 
 		return ap;
@@ -158,11 +154,6 @@ abstract public class XMLStreamReader extends InputStreamReader
 
 	protected String dequote(String in)
 	{
-		return in
-    		.replaceAll("&amp;", "&")
-    		.replaceAll("&apos;", "\'")
-    		.replaceAll("&lt;", "<")
-    		.replaceAll("&gt;", ">")
-    		.replaceAll("&quot;", "\\\"");
+		return in.replaceAll("&amp;", "&").replaceAll("&apos;", "\'").replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&quot;", "\\\"");
 	}
 }

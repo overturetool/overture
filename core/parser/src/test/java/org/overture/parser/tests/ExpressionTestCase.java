@@ -10,7 +10,8 @@ import org.overture.parser.syntax.ExpressionReader;
 import org.overture.parser.syntax.ParserException;
 import org.overture.parser.tests.framework.BaseParserTestCase;
 
-public class ExpressionTestCase extends BaseParserTestCase<ExpressionReader,List<PExp>>
+public class ExpressionTestCase extends
+		BaseParserTestCase<ExpressionReader, List<PExp>>
 {
 	static boolean hasRunBefore = false;
 
@@ -23,9 +24,9 @@ public class ExpressionTestCase extends BaseParserTestCase<ExpressionReader,List
 	{
 	}
 
-	public ExpressionTestCase(File rootSource,String name, String content)
+	public ExpressionTestCase(File rootSource, String name, String content)
 	{
-		super(rootSource,name, content);
+		super(rootSource, name, content);
 	}
 
 	@Override

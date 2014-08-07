@@ -341,8 +341,8 @@ public class DefinitionReader extends SyntaxReader
 			checkFor(VDMToken.EQUALSEQUALS, 2087, "Expecting '==' after pattern in invariant");
 			invExpression = getExpressionReader().readExpression();
 		}
-		
-		return AstFactory.newATypeDefinition(idToName(id), invtype, invPattern, invExpression); 
+
+		return AstFactory.newATypeDefinition(idToName(id), invtype, invPattern, invExpression);
 
 	}
 
@@ -613,7 +613,8 @@ public class DefinitionReader extends SyntaxReader
 
 	private PDefinition readExplicitFunctionDefinition(
 			LexIdentifierToken funcName, NameScope scope,
-			List<ILexNameToken> typeParams) throws ParserException, LexException
+			List<ILexNameToken> typeParams) throws ParserException,
+			LexException
 	{
 		// Explicit function definition, like "f: int->bool f(x) == true"
 
@@ -680,15 +681,13 @@ public class DefinitionReader extends SyntaxReader
 			measure = readNameToken("Expecting name after 'measure'");
 		}
 
-		return AstFactory.newAExplicitFunctionDefinition(
-				idToName(funcName), scope, typeParams,
-				type, parameters, body, precondition, postcondition,
-				false, measure);
+		return AstFactory.newAExplicitFunctionDefinition(idToName(funcName), scope, typeParams, type, parameters, body, precondition, postcondition, false, measure);
 	}
 
 	private PDefinition readImplicitFunctionDefinition(
 			LexIdentifierToken funcName, NameScope scope,
-			List<ILexNameToken> typeParams) throws ParserException, LexException
+			List<ILexNameToken> typeParams) throws ParserException,
+			LexException
 	{
 		// Implicit, like g(x: int) y: bool pre exp post exp
 
@@ -735,13 +734,10 @@ public class DefinitionReader extends SyntaxReader
 
 		if (resultNames.size() > 1)
 		{
-			resultPattern = AstFactory.newAPatternTypePair(
-					AstFactory.newATuplePattern(firstResult.location, resultNames),
-					AstFactory.newAProductType(firstResult.location, resultTypes)
-					);
+			resultPattern = AstFactory.newAPatternTypePair(AstFactory.newATuplePattern(firstResult.location, resultNames), AstFactory.newAProductType(firstResult.location, resultTypes));
 		} else
 		{
-			resultPattern = AstFactory.newAPatternTypePair(resultNames.get(0), resultTypes.get(0)); 
+			resultPattern = AstFactory.newAPatternTypePair(resultNames.get(0), resultTypes.get(0));
 		}
 
 		ExpressionReader expr = getExpressionReader();
@@ -781,10 +777,8 @@ public class DefinitionReader extends SyntaxReader
 			measure = readNameToken("Expecting name after 'measure'");
 		}
 
+		return AstFactory.newAImplicitFunctionDefinition(idToName(funcName), scope, typeParams, parameterPatterns, resultPattern, body, precondition, postcondition, measure);
 
-		return AstFactory.newAImplicitFunctionDefinition(idToName(funcName), scope, typeParams, parameterPatterns, resultPattern,
-				body, precondition, postcondition, measure);
-		
 	}
 
 	public PDefinition readLocalDefinition(NameScope scope)
@@ -833,7 +827,6 @@ public class DefinitionReader extends SyntaxReader
 			type = getTypeReader().readType();
 		}
 
-		
 		checkFor(VDMToken.EQUALS, 2096, "Expecting <pattern>[:<type>]=<exp>");
 
 		return AstFactory.newAValueDefinition(p, scope, type, getExpressionReader().readExpression());
@@ -868,18 +861,17 @@ public class DefinitionReader extends SyntaxReader
 		}
 
 		// Be forgiving about the inv/init order
-		if (lastToken().is(VDMToken.INV) && invExpression == null) {
+		if (lastToken().is(VDMToken.INV) && invExpression == null)
+		{
 			nextToken();
 			invPattern = getPatternReader().readPattern();
-			checkFor(VDMToken.EQUALSEQUALS, 2098,
-					"Expecting '==' after pattern in invariant");
+			checkFor(VDMToken.EQUALSEQUALS, 2098, "Expecting '==' after pattern in invariant");
 			invExpression = getExpressionReader().readExpression();
 		}
-		
+
 		checkFor(VDMToken.END, 2100, "Expecting 'end' after state definition");
 
-		return AstFactory.newAStateDefinition(idToName(name), fieldList,
-				invPattern, invExpression, initPattern, initExpression);		
+		return AstFactory.newAStateDefinition(idToName(name), fieldList, invPattern, invExpression, initPattern, initExpression);
 	}
 
 	private PDefinition readOperationDefinition() throws ParserException,
@@ -955,9 +947,8 @@ public class DefinitionReader extends SyntaxReader
 			nextToken();
 			postcondition = getExpressionReader().readExpression();
 		}
-		
-		return AstFactory.newAExplicitOperationDefinition(idToName(funcName), type,
-				parameters, precondition, postcondition, body);
+
+		return AstFactory.newAExplicitOperationDefinition(idToName(funcName), type, parameters, precondition, postcondition, body);
 	}
 
 	private PDefinition readImplicitOperationDefinition(
@@ -1009,14 +1000,10 @@ public class DefinitionReader extends SyntaxReader
 
 			if (resultNames.size() > 1)
 			{
-				resultPattern = AstFactory.newAPatternTypePair(
-						AstFactory.newATuplePattern(firstResult.location, resultNames),
-						AstFactory.newAProductType(firstResult.location, resultTypes)
-						);
+				resultPattern = AstFactory.newAPatternTypePair(AstFactory.newATuplePattern(firstResult.location, resultNames), AstFactory.newAProductType(firstResult.location, resultTypes));
 			} else
 			{
-				resultPattern = 
-						AstFactory.newAPatternTypePair(resultNames.get(0), resultTypes.get(0));
+				resultPattern = AstFactory.newAPatternTypePair(resultNames.get(0), resultTypes.get(0));
 			}
 		}
 
@@ -1103,8 +1090,7 @@ public class DefinitionReader extends SyntaxReader
 			}
 		}
 
-		return AstFactory.newASpecificationStm(location,
-				externals, precondition, postcondition, errors);
+		return AstFactory.newASpecificationStm(location, externals, precondition, postcondition, errors);
 	}
 
 	private AExternalClause readExternal() throws ParserException, LexException
@@ -1134,7 +1120,7 @@ public class DefinitionReader extends SyntaxReader
 		}
 
 		return AstFactory.newAExternalClause(mode, names, type);
-		
+
 	}
 
 	public AEqualsDefinition readEqualsDefinition() throws ParserException,
@@ -1199,8 +1185,9 @@ public class DefinitionReader extends SyntaxReader
 			ASetBind setbind = AstFactory.newASetBind(pattern, test.getLeft());
 			reader.unpush();
 			return AstFactory.newAEqualsDefinition(location, setbind, test.getRight());
-			//TODO: why does this have patterns.getDefinitions() for defs?!
-			//return new AEqualsDefinition(location, null, null, null, null, null, null, null, null, null, setbind, test.getRight(), null, null, pattern.getDefinitions());
+			// TODO: why does this have patterns.getDefinitions() for defs?!
+			// return new AEqualsDefinition(location, null, null, null, null, null, null, null, null, null, setbind,
+			// test.getRight(), null, null, pattern.getDefinitions());
 		} catch (ParserException e)
 		{
 			e.adjustDepth(reader.getTokensRead());
@@ -1226,7 +1213,7 @@ public class DefinitionReader extends SyntaxReader
 			AAccessSpecifierAccessSpecifier access = readAccessSpecifier(false);
 			AAssignmentDefinition def = getStatementReader().readAssignmentDefinition();
 			AInstanceVariableDefinition ivd = AstFactory.newAInstanceVariableDefinition(def.getName(), def.getType(), def.getExpression());
-			def.getType().parent(ivd);//the type of ivd is graph but we trough away the assignment
+			def.getType().parent(ivd);// the type of ivd is graph but we trough away the assignment
 			ivd.setAccess(access);
 			return ivd;
 		}
@@ -1251,10 +1238,9 @@ public class DefinitionReader extends SyntaxReader
 			checkFor(VDMToken.BRA, 2114, "Expecting '(' after periodic(...)");
 			LexNameToken name = readNameToken("Expecting (name) after periodic(...)");
 			checkFor(VDMToken.KET, 2115, "Expecting (name) after periodic(...)");
-			//PStm statement = AstFactory.newAPeriodicStm(token.location, name, args);
-			return AstFactory.newPeriodicAThreadDefinition(name,args);
-		}
-		else if (token.is(VDMToken.SPORADIC))
+			// PStm statement = AstFactory.newAPeriodicStm(token.location, name, args);
+			return AstFactory.newPeriodicAThreadDefinition(name, args);
+		} else if (token.is(VDMToken.SPORADIC))
 		{
 			if (dialect != Dialect.VDM_RT)
 			{
@@ -1268,9 +1254,8 @@ public class DefinitionReader extends SyntaxReader
 			checkFor(VDMToken.BRA, 2314, "Expecting '(' after sporadic(...)");
 			LexNameToken name = readNameToken("Expecting (name) after sporadic(...)");
 			checkFor(VDMToken.KET, 2315, "Expecting (name) after sporadic(...)");
-			return AstFactory.newSporadicAThreadDefinition(name,args);
-		}
-		else
+			return AstFactory.newSporadicAThreadDefinition(name, args);
+		} else
 		{
 			PStm stmt = getStatementReader().readStatement();
 			return AstFactory.newAThreadDefinition(stmt);
@@ -1375,8 +1360,8 @@ public class DefinitionReader extends SyntaxReader
 		return list;
 	}
 
-	private ATraceDefinitionTerm readTraceDefinitionTerm()
-			throws LexException, ParserException
+	private ATraceDefinitionTerm readTraceDefinitionTerm() throws LexException,
+			ParserException
 	{
 		List<PTraceDefinition> term = new Vector<PTraceDefinition>();
 		term.add(readTraceDefinition());
@@ -1602,7 +1587,7 @@ public class DefinitionReader extends SyntaxReader
 				return null;
 		}
 	}
-	
+
 	private PExp readFunctionBody() throws LexException, ParserException
 	{
 		ILexToken token = lastToken();
@@ -1616,31 +1601,29 @@ public class DefinitionReader extends SyntaxReader
 					checkFor(VDMToken.YET, 2125, "Expecting 'is not yet specified'");
 					checkFor(VDMToken.SPECIFIED, 2126, "Expecting 'is not yet specified'");
 					return AstFactory.newANotYetSpecifiedExp(token.getLocation());
-					
+
 				case SUBCLASS:
 					nextToken();
 					checkFor(VDMToken.RESPONSIBILITY, 2127, "Expecting 'is subclass responsibility'");
 					return AstFactory.newASubclassResponsibilityExp(token.getLocation());
-					
+
 				default:
 					if (dialect == Dialect.VDM_PP)
 					{
 						throwMessage(2033, "Expecting 'is not yet specified' or 'is subclass responsibility'", token);
-					}
-					else
+					} else
 					{
 						throwMessage(2033, "Expecting 'is not yet specified'", token);
 					}
 					return null;
 			}
-		}
-		else
+		} else
 		{
 			ExpressionReader expr = getExpressionReader();
 			return expr.readExpression();
 		}
 	}
-	
+
 	private PStm readOperationBody() throws LexException, ParserException
 	{
 		ILexToken token = lastToken();
@@ -1664,15 +1647,13 @@ public class DefinitionReader extends SyntaxReader
 					if (dialect == Dialect.VDM_PP)
 					{
 						throwMessage(2062, "Expecting 'is not yet specified' or 'is subclass responsibility'", token);
-					}
-					else
+					} else
 					{
 						throwMessage(2062, "Expecting 'is not yet specified'", token);
 					}
 					return null;
 			}
-		}
-		else
+		} else
 		{
 			StatementReader stmt = getStatementReader();
 			return stmt.readStatement();

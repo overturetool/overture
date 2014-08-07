@@ -10,7 +10,8 @@ import org.overture.parser.syntax.ParserException;
 import org.overture.parser.syntax.PatternReader;
 import org.overture.parser.tests.framework.BaseParserTestCase;
 
-public class PatternTestCase extends BaseParserTestCase<PatternReader,List<PPattern>>
+public class PatternTestCase extends
+		BaseParserTestCase<PatternReader, List<PPattern>>
 {
 	static boolean hasRunBefore = false;
 
@@ -24,9 +25,9 @@ public class PatternTestCase extends BaseParserTestCase<PatternReader,List<PPatt
 
 	}
 
-	public PatternTestCase(File rootSource,String name, String content)
+	public PatternTestCase(File rootSource, String name, String content)
 	{
-		super(rootSource,name, content);
+		super(rootSource, name, content);
 	}
 
 	@Override

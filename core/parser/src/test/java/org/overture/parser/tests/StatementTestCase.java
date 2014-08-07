@@ -11,24 +11,26 @@ import org.overture.parser.syntax.ParserException;
 import org.overture.parser.syntax.StatementReader;
 import org.overture.parser.tests.framework.BaseParserTestCase;
 
-public class StatementTestCase extends BaseParserTestCase<StatementReader,PStm>
+public class StatementTestCase extends
+		BaseParserTestCase<StatementReader, PStm>
 {
 	static boolean hasRunBefore = false;
+
 	public StatementTestCase(File file)
 	{
 		super(file);
 	}
-	
+
 	public StatementTestCase()
 	{
-	
+
 	}
 
-	public StatementTestCase(File rootSource,String name, String content)
+	public StatementTestCase(File rootSource, String name, String content)
 	{
-		super(rootSource,name, content);
+		super(rootSource, name, content);
 	}
-	
+
 	@Override
 	protected void setUp() throws Exception
 	{
@@ -43,7 +45,8 @@ public class StatementTestCase extends BaseParserTestCase<StatementReader,PStm>
 	}
 
 	@Override
-	protected PStm read(StatementReader reader) throws ParserException, LexException
+	protected PStm read(StatementReader reader) throws ParserException,
+			LexException
 	{
 		return reader.readStatement();
 	}

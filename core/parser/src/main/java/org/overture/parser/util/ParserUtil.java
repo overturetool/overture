@@ -31,7 +31,7 @@ public class ParserUtil
 			this.warnings = warnings;
 			this.errors = errors;
 		}
-		
+
 		public String getErrorString()
 		{
 			StringBuilder sb = new StringBuilder();
@@ -67,7 +67,7 @@ public class ParserUtil
 
 		return new ParserResult<List<SClassDefinition>>(result, reader.getWarnings(), reader.getErrors());
 	}
-	
+
 	public static ParserResult<List<SClassDefinition>> parseOo(String content)
 	{
 		LexTokenReader ltr = new LexTokenReader(content, Settings.dialect);
@@ -79,7 +79,7 @@ public class ParserUtil
 
 		return new ParserResult<List<SClassDefinition>>(result, reader.getWarnings(), reader.getErrors());
 	}
-	
+
 	public static ParserResult<List<AModuleModules>> parseSl(File file)
 	{
 		LexTokenReader ltr = new LexTokenReader(file, Settings.dialect);
@@ -91,8 +91,7 @@ public class ParserUtil
 
 		return new ParserResult<List<AModuleModules>>(result, reader.getWarnings(), reader.getErrors());
 	}
-	
-	
+
 	public static ParserResult<List<AModuleModules>> parseSl(String content)
 	{
 		LexTokenReader ltr = new LexTokenReader(content, Settings.dialect);
@@ -104,15 +103,16 @@ public class ParserUtil
 
 		return new ParserResult<List<AModuleModules>>(result, reader.getWarnings(), reader.getErrors());
 	}
-	
-	public static ParserResult<PExp> parseExpression(String content) throws ParserException, LexException
+
+	public static ParserResult<PExp> parseExpression(String content)
+			throws ParserException, LexException
 	{
 		LexTokenReader ltr = new LexTokenReader(content, Settings.dialect);
 		PExp result = null;
 		ExpressionReader reader = new ExpressionReader(ltr);
-//		reader.setCurrentModule(getDefaultName());
+		// reader.setCurrentModule(getDefaultName());
 		result = reader.readExpression();
-		
+
 		return new ParserResult<PExp>(result, reader.getWarnings(), reader.getErrors());
 	}
 
