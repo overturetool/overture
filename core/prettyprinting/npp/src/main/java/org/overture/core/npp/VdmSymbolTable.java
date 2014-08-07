@@ -442,5 +442,23 @@ public class VdmSymbolTable implements ISymbolTable
 	{
 		return "others";
 	}
+	
+	@Override
+	public String getIF()
+	{
+		return "if";
+	}
+	
+	@Override
+	public String getELSE()
+	{
+		return "else";
+	}
+	
+	@Override
+	public String getTHEN()
+	{
+		return "then";
+	}
 
 }

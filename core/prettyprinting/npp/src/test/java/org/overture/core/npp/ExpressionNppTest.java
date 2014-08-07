@@ -1228,4 +1228,23 @@ public class ExpressionNppTest {
 	{
 		aux("lambda x : nat, y : nat & x > y","lambda x : nat, y : nat & (x > y)");
 	}
+	
+	@Test
+	public void testCaseAIfExp_01()	throws AnalysisException
+	{
+		aux("if x > 1 then 1 else 2","if (x > 1)\nthen 1\nelse 2");
+	}
+	
+	@Test
+	public void testCaseAIfExp_02()	throws AnalysisException
+	{
+		aux("if x > 1 then x > y else x = 0","if (x > 1)\nthen (x > y)\nelse (x = 0)");
+	}
+	
+	@Test
+	public void testCaseAIfExp_03() throws AnalysisException
+	{
+		aux("if x mod 2 = 0 then x = 2 else x = 1", 
+				"if ((x mod 2) = 0)\nthen (x = 2)\nelse (x = 1)");
+	}
 }

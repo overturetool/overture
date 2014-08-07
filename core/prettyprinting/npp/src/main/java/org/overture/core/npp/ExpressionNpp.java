@@ -28,6 +28,7 @@ import org.overture.ast.expressions.AForAllExp;
 import org.overture.ast.expressions.AGreaterEqualNumericBinaryExp;
 import org.overture.ast.expressions.AGreaterNumericBinaryExp;
 import org.overture.ast.expressions.AHeadUnaryExp;
+import org.overture.ast.expressions.AIfExp;
 import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.AInSetBinaryExp;
 import org.overture.ast.expressions.AIndicesUnaryExp;
@@ -347,8 +348,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 			}
 			else{
 				bind = node.getBindList().poll().apply(THIS, question);
-//				sb.append(op);
-//				sb.append(space);
 				sb.append(bind);
 				sb.append(space);
 			}
@@ -391,13 +390,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String r = node.getRight().apply(THIS, question);
 		String op = mytable.getEQUALS();
 		
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append(l);
-//		sb.append(space);
-//		sb.append(op);
-//		sb.append(space);
-//		sb.append(r);
 		
 		return Utilities.wrap(Utilities.append(l, r, op));
 	}
@@ -410,13 +402,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String r = node.getRight().apply(THIS, question);
 		String op = mytable.getGT();
 		
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append(l);
-//		sb.append(space);
-//		sb.append(op);
-//		sb.append(space);
-//		sb.append(r);
 		
 		return Utilities.wrap(Utilities.append(l, r, op));
 	}
@@ -429,14 +414,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String r = node.getRight().apply(THIS, question);
 		String op = mytable.getLT();
 		
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append(l);
-//		sb.append(space);
-//		sb.append(op);
-//		sb.append(space);
-//		sb.append(r);
-		
+
 		return Utilities.wrap(Utilities.append(l, r, op));
 	}
 	
@@ -449,13 +427,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String r = node.getRight().apply(THIS, question);
 		String op = mytable.getGE();
 		
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append(l);
-//		sb.append(space);
-//		sb.append(op);
-//		sb.append(space);
-//		sb.append(r);
 		
 		return Utilities.wrap(Utilities.append(l, r, op));
 	}
@@ -469,13 +440,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String r = node.getRight().apply(THIS, question);
 		String op = mytable.getLE();
 		
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append(l);
-//		sb.append(space);
-//		sb.append(op);
-//		sb.append(space);
-//		sb.append(r);
 		
 		return Utilities.wrap(Utilities.append(l, r, op));
 	}
@@ -488,14 +452,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String r = node.getRight().apply(THIS, question);
 		String op = mytable.getNE();
 		
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append(l);
-//		sb.append(space);
-//		sb.append(op);
-//		sb.append(space);
-//		sb.append(r);
-//		
+
 		return Utilities.wrap(Utilities.append(l, r, op));
 	}
 	
@@ -507,13 +464,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String r = node.getRight().apply(THIS, question);
 		String op = mytable.getCOMPOSITION();
 		
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append(l);
-//		sb.append(space);
-//		sb.append(op);
-//		sb.append(space);
-//		sb.append(r);
 		
 		return Utilities.wrap(Utilities.append(l, r, op));
 	}
@@ -525,11 +475,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String exp = node.getExp().apply(THIS, question);
 		String op = mytable.getPOWER();
 		
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append(op);
-//		sb.append(space);
-//		sb.append(exp);
 		
 		return Utilities.wrap(Utilities.unaryappend(exp, op));
 	}
@@ -548,11 +493,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String s = node.getExp().apply(THIS, question);
 		String op = mytable.getCARD();
 		
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append(op);
-//		sb.append(space);
-//		sb.append(s);
 		
 		return Utilities.wrap(Utilities.unaryappend(s, op));
 	
@@ -566,14 +506,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String r = node.getRight().apply(THIS, question);
 		String op = mytable.getINSET();
 		
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append(l);
-//		sb.append(space);
-//		sb.append(op);
-//		sb.append(space);
-//		sb.append(r);
-//		
+		
 		return Utilities.wrap(Utilities.append(l, r, op));
 	}
 	
@@ -585,13 +518,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String r = node.getRight().apply(THIS, question);
 		String op = mytable.getNOTINSET();
 		
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append(l);
-//		sb.append(space);
-//		sb.append(op);
-//		sb.append(space);
-//		sb.append(r);
 		
 		return Utilities.wrap(Utilities.append(l, r, op));
 	}
@@ -604,14 +530,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String r = node.getRight().apply(THIS, question);
 		String op = mytable.getUNION();
 		
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append(l);
-//		sb.append(space);
-//		sb.append(op);
-//		sb.append(space);
-//		sb.append(r);
-		
 		return Utilities.wrap(Utilities.append(l, r, op));
 	}
 	
@@ -622,14 +540,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String l = node.getLeft().apply(THIS, question);
 		String r = node.getRight().apply(THIS, question);
 		String op = mytable.getINTER();
-		
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append(l);
-//		sb.append(space);
-//		sb.append(op);
-//		sb.append(space);
-//		sb.append(r);
 		
 		return Utilities.wrap(Utilities.append(l, r, op));
 	}
@@ -642,14 +552,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String r = node.getRight().apply(THIS, question);
 		String op = mytable.getSETDIFF();
 		
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append(l);
-//		sb.append(space);
-//		sb.append(op);
-//		sb.append(space);
-//		sb.append(r);
-		
 		return Utilities.wrap(Utilities.append(l, r, op));
 	}
 	
@@ -660,14 +562,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String l = node.getLeft().apply(THIS, question);
 		String r = node.getRight().apply(THIS, question);
 		String op = mytable.getSUBSET();
-		
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append(l);
-//		sb.append(space);
-//		sb.append(op);
-//		sb.append(space);
-//		sb.append(r);
 		
 		return Utilities.wrap(Utilities.append(l, r, op));
 	}
@@ -680,14 +574,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String r = node.getRight().apply(THIS, question);
 		String op = mytable.getPSUBSET();
 		
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append(l);
-//		sb.append(space);
-//		sb.append(op);
-//		sb.append(space);
-//		sb.append(r);
-		
+
 		return Utilities.wrap(Utilities.append(l, r, op));
 	}
 	
@@ -698,12 +585,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String r = node.getExp().apply(THIS, question);
 		String op = mytable.getDUNION();
 		
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append(op);
-//		sb.append(space);
-//		sb.append(l);
-		
+
 		return Utilities.wrap(Utilities.unaryappend(r, op));
 	}
 	
@@ -714,11 +596,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String r = node.getExp().apply(THIS, question);
 		String op = mytable.getDINTER();
 		
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append(op);
-//		sb.append(space);
-//		sb.append(l);
 		
 		return Utilities.wrap(Utilities.unaryappend(r, op));
 	}
@@ -794,7 +671,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		sb.append(space);
 		sb.append(node.getSet().apply(THIS, question));
 		
-		//System.out.print(sb.toString());
 		return sb.toString();
 	}
 	
@@ -842,7 +718,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	public String caseAExists1Exp(AExists1Exp node, IndentTracker question)
 			throws AnalysisException
 	{
-		//String binding = node.getBind().toString();
 		String binding = node.getBind().apply(THIS, question);
 		String pred = node.getPredicate().apply(THIS, question);
 		String op = mytable.getEXISTS1();
@@ -968,11 +843,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String r = node.getExp().apply(THIS, question);
 		String op = mytable.getHEAD();
 		
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append(op);
-//		sb.append(space);
-//		sb.append(r);
 		
 		return Utilities.wrap(Utilities.unaryappend(r, op));
 	}
@@ -984,12 +854,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String r = node.getExp().apply(THIS, question);
 		String op = mytable.getTAIL();
 		
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append(op);
-//		sb.append(space);
-//		sb.append(r);
-		
+
 		return Utilities.wrap(Utilities.unaryappend(r, op));
 	}
 	
@@ -1000,12 +865,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String r = node.getExp().apply(THIS, question);
 		String op = mytable.getLEN();
 		
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append(op);
-//		sb.append(space);
-//		sb.append(r);
-		
+
 		return Utilities.wrap(Utilities.unaryappend(r, op));
 	}
 	
@@ -1016,12 +876,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String r = node.getExp().apply(THIS, question);
 		String op = mytable.getELEMS();
 		
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append(op);
-//		sb.append(space);
-//		sb.append(r);
-		
+
 		return Utilities.wrap(Utilities.unaryappend(r, op));
 	}
 	
@@ -1032,12 +887,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String r = node.getExp().apply(THIS, question);
 		String op = mytable.getINDS();
 		
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append(op);
-//		sb.append(space);
-//		sb.append(r);
-		
+
 		return Utilities.wrap(Utilities.unaryappend(r, op));
 	}
 	
@@ -1059,12 +909,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String r = node.getExp().apply(THIS, question);
 		String op = mytable.getDISTCONC();
 		
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append(op);
-//		sb.append(space);
-//		sb.append(r);
-		
+
 		return Utilities.wrap(Utilities.unaryappend(r, op));
 	}
 	
@@ -1094,7 +939,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String r = node.getRight().apply(THIS, question);
 		String op = mytable.getMAPLET();
 		
-		//System.out.print(Utilities.append(l, r, op));
 		
 		return Utilities.append(l, r, op);
 	}
@@ -1103,7 +947,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	public String caseAMapEnumMapExp(AMapEnumMapExp node, IndentTracker question)
 			throws AnalysisException
 	{
-		//System.out.print(node.getMembers().poll().apply(THIS, question));
 		StringBuilder sb = new StringBuilder();
 		sb.append(leftcurly);
 		while(node.getMembers().size() != 0){
@@ -1127,7 +970,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 			throws AnalysisException
 	{
 		String exp = node.getFirst().apply(THIS, question);
-		String bind ;//= node.getBindings().poll().apply(THIS, question);
+		String bind ;
 		String pred = node.getPredicate().apply(THIS, question);
 		
 		StringBuilder sb = new StringBuilder();
@@ -1309,13 +1152,30 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	}
 	
 	
-//	@Override
-//	public String caseAIfExp(AIfExp node, IndentTracker question)
-//			throws AnalysisException
-//	{
-//		String test = node.getTest().apply(THIS, question);
-//		return test;
-//	}
+	@Override
+	public String caseAIfExp(AIfExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		String test = node.getTest().apply(THIS, question);
+		String exp1 = node.getThen().apply(THIS, question);
+		String exp2 = node.getElse().apply(THIS, question);
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(mytable.getIF());
+		sb.append(space);
+		sb.append(test);
+		sb.append(brl);
+		sb.append(mytable.getTHEN());
+		sb.append(space);
+		sb.append(exp1);
+		sb.append(brl);
+		sb.append(mytable.getELSE());
+		sb.append(space);
+		sb.append(exp2);
+		
+		return sb.toString();
+	}
 	
 	@Override
 	public String caseACharLiteralExp(ACharLiteralExp node,

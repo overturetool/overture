@@ -146,5 +146,11 @@ public interface ISymbolTable
 	String getEND();
 	
 	String getOTHERS();
+	
+	String getIF();
+	
+	String getTHEN();
+	
+	String getELSE();
 
 }
