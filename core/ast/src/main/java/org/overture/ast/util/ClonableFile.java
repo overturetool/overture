@@ -28,7 +28,7 @@ public class ClonableFile extends File implements ExternalNode
 
 		super(uri);
 	}
-	
+
 	public ClonableFile(File file)
 	{
 		super(file.getAbsolutePath());

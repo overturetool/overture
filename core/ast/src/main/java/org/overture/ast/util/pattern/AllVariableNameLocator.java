@@ -13,11 +13,11 @@ import org.overture.ast.patterns.ASetPattern;
 import org.overture.ast.patterns.ATuplePattern;
 import org.overture.ast.patterns.AUnionPattern;
 import org.overture.ast.patterns.PPattern;
+
 /**
  * Locates all variable names in a pattern and add them to a list.
  * 
  * @author gkanos
- * 
  */
 public class AllVariableNameLocator extends AnswerAdaptor<LexNameList>
 {
@@ -28,7 +28,7 @@ public class AllVariableNameLocator extends AnswerAdaptor<LexNameList>
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public LexNameList caseAConcatenationPattern(AConcatenationPattern pattern)
 			throws AnalysisException
@@ -40,7 +40,7 @@ public class AllVariableNameLocator extends AnswerAdaptor<LexNameList>
 
 		return list;
 	}
-	
+
 	@Override
 	public LexNameList caseAIdentifierPattern(AIdentifierPattern pattern)
 			throws AnalysisException
@@ -49,7 +49,7 @@ public class AllVariableNameLocator extends AnswerAdaptor<LexNameList>
 		list.add(pattern.getName());
 		return list;
 	}
-	
+
 	@Override
 	public LexNameList caseARecordPattern(ARecordPattern pattern)
 			throws AnalysisException
@@ -63,7 +63,7 @@ public class AllVariableNameLocator extends AnswerAdaptor<LexNameList>
 
 		return list;
 	}
-	
+
 	@Override
 	public LexNameList caseASeqPattern(ASeqPattern pattern)
 			throws AnalysisException
@@ -119,12 +119,12 @@ public class AllVariableNameLocator extends AnswerAdaptor<LexNameList>
 	}
 
 	@Override
-	public LexNameList defaultPPattern(PPattern pattern) throws AnalysisException
+	public LexNameList defaultPPattern(PPattern pattern)
+			throws AnalysisException
 	{
 		return new LexNameList();
 	}
 
-	
 	@Override
 	public LexNameList createNewReturnValue(INode node)
 			throws AnalysisException

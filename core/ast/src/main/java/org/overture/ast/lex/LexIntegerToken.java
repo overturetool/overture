@@ -51,8 +51,6 @@ public class LexIntegerToken extends LexToken implements ILexIntegerToken
 		this.value = Long.parseLong(value);
 	}
 
-	
-	
 	@Override
 	public long getValue()
 	{
@@ -64,46 +62,55 @@ public class LexIntegerToken extends LexToken implements ILexIntegerToken
 	{
 		return Long.toString(value);
 	}
-	
+
 	@Override
-	public ILexIntegerToken clone() {
+	public ILexIntegerToken clone()
+	{
 		return new LexIntegerToken(value, location);
 	}
-	
+
 	@Override
-	public void apply(IAnalysis analysis) throws AnalysisException {
+	public void apply(IAnalysis analysis) throws AnalysisException
+	{
 		analysis.caseILexIntegerToken(this);
 	}
 
 	@Override
-	public <A> A apply(IAnswer<A> caller) throws AnalysisException {
+	public <A> A apply(IAnswer<A> caller) throws AnalysisException
+	{
 		return caller.caseILexIntegerToken(this);
 	}
 
 	@Override
-	public <Q> void apply(IQuestion<Q> caller, Q question) throws AnalysisException {
+	public <Q> void apply(IQuestion<Q> caller, Q question)
+			throws AnalysisException
+	{
 		caller.caseILexIntegerToken(this, question);
 	}
 
 	@Override
-	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) throws AnalysisException {
+	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question)
+			throws AnalysisException
+	{
 		return caller.caseILexIntegerToken(this, question);
 	}
-	
+
 	/**
 	 * Creates a map of all field names and their value
-	 * @param includeInheritedFields if true all inherited fields are included
+	 * 
+	 * @param includeInheritedFields
+	 *            if true all inherited fields are included
 	 * @return a a map of names to values of all fields
 	 */
 	@Override
-	public Map<String,Object> getChildren(Boolean includeInheritedFields)
+	public Map<String, Object> getChildren(Boolean includeInheritedFields)
 	{
-		Map<String,Object> fields = new HashMap<String,Object>();
-		if(includeInheritedFields)
+		Map<String, Object> fields = new HashMap<String, Object>();
+		if (includeInheritedFields)
 		{
 			fields.putAll(super.getChildren(includeInheritedFields));
 		}
-		fields.put("value",this.value);
+		fields.put("value", this.value);
 		return fields;
 	}
 }

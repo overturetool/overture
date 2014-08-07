@@ -17,7 +17,6 @@ import org.overture.ast.node.NodeList;
 public class DotGraphVisitor extends QuestionAdaptor<DotGraphVisitor.DotPair>
 {
 
-
 	public static class DotPair
 	{
 		public DotNode parent;
@@ -47,8 +46,8 @@ public class DotGraphVisitor extends QuestionAdaptor<DotGraphVisitor.DotPair>
 
 	private StringBuilder resultString;
 	public boolean showNullPointers = false;
-	Set<INode> visitedNodes= null;
-	
+	Set<INode> visitedNodes = null;
+
 	Set<String> filterClassNames = new HashSet<String>();
 
 	public DotGraphVisitor()
@@ -58,11 +57,11 @@ public class DotGraphVisitor extends QuestionAdaptor<DotGraphVisitor.DotPair>
 		visitedNodes = new HashSet<INode>();
 		resultString.append("\tnode [shape=record];\n");
 	}
-	
-	public DotGraphVisitor(Set<String> filterClassNames )
+
+	public DotGraphVisitor(Set<String> filterClassNames)
 	{
-	this();
-	this.filterClassNames = filterClassNames;
+		this();
+		this.filterClassNames = filterClassNames;
 	}
 
 	public String getResultString()
@@ -119,33 +118,32 @@ public class DotGraphVisitor extends QuestionAdaptor<DotGraphVisitor.DotPair>
 			colour = "lightblue";
 		}
 
-		String tmp = " [color=" + colour + ",style=filled,label=\"{" + dn.name
-				;
+		String tmp = " [color=" + colour + ",style=filled,label=\"{" + dn.name;
 
-		if(node!=null)
+		if (node != null)
 		{
-			tmp+= " |{";
-		boolean firstChild = true;
-		Map<String, Object> children = new HashMap<String, Object>();
-		String nt = node.toString();
-		if (nt.length() > 150)
-		{
-			nt = nt.substring(0, 150);
-		}
-		children.put("" + nt.replaceAll("[^a-zA-Z0-9 ]","") + "", null);
-		for (Entry<String, Object> s : children.entrySet())
-		{
-			String id = dn.id + s.getKey();
-			id = id.replaceAll("[^a-zA-Z0-9]","");
-			dn.childToId.put(id, s.getValue());
-			if (!firstChild)
+			tmp += " |{";
+			boolean firstChild = true;
+			Map<String, Object> children = new HashMap<String, Object>();
+			String nt = node.toString();
+			if (nt.length() > 150)
 			{
-				tmp += " | ";
+				nt = nt.substring(0, 150);
 			}
-			firstChild = false;
-			tmp += " <" + id + "> " + s.getKey();
-		}
-		tmp+="}";
+			children.put("" + nt.replaceAll("[^a-zA-Z0-9 ]", "") + "", null);
+			for (Entry<String, Object> s : children.entrySet())
+			{
+				String id = dn.id + s.getKey();
+				id = id.replaceAll("[^a-zA-Z0-9]", "");
+				dn.childToId.put(id, s.getValue());
+				if (!firstChild)
+				{
+					tmp += " | ";
+				}
+				firstChild = false;
+				tmp += " <" + id + "> " + s.getKey();
+			}
+			tmp += "}";
 		}
 
 		resultString.append("\t" + dn.id + tmp + "}\"];\n");
@@ -160,25 +158,29 @@ public class DotGraphVisitor extends QuestionAdaptor<DotGraphVisitor.DotPair>
 	}
 
 	@Override
-	public void defaultINode(INode node, DotPair question) throws AnalysisException
+	public void defaultINode(INode node, DotPair question)
+			throws AnalysisException
 	{
-		if(!(node instanceof LexNameToken )&&visitedNodes.contains(node)|| node == null)
+		if (!(node instanceof LexNameToken) && visitedNodes.contains(node)
+				|| node == null)
 		{
 			return;
 		}
-		
-		if(!(node instanceof LexNameToken))
+
+		if (!(node instanceof LexNameToken))
 		{
-		visitedNodes.add(node);
+			visitedNodes.add(node);
 		}
-		
+
 		DotPair parentNode = new DotPair(createDotNode(question, node), null);
 
 		for (Entry<String, Object> field : node.getChildren(true).entrySet())
 		{
 
 			Object fieldObject = field.getValue();
-			if (fieldObject == null && !showNullPointers || filterClassNames.contains(fieldObject.getClass().getSimpleName()))
+			if (fieldObject == null
+					&& !showNullPointers
+					|| filterClassNames.contains(fieldObject.getClass().getSimpleName()))
 			{
 				continue;// do not show on diagram
 			}

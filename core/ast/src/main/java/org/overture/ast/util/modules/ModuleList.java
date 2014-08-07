@@ -41,7 +41,7 @@ public class ModuleList extends Vector<AModuleModules>
 	}
 
 	public Set<File> getSourceFiles()
-	{ 
+	{
 		Set<File> files = new HashSet<File>();
 
 		for (AModuleModules def : this)
@@ -72,7 +72,7 @@ public class ModuleList extends Vector<AModuleModules>
 		if (!isEmpty())
 		{
 			CombinedDefaultModule def = new CombinedDefaultModule(getFlatModules());
-			
+
 			if (Settings.release == Release.VDM_10)
 			{
 				// In VDM-10, we implicitly import all from the other

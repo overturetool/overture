@@ -19,29 +19,36 @@ public class PDefinitionAssistant
 		this.af = af;
 	}
 
-	public void setClassDefinition(PDefinition pDefinition,
-			SClassDefinition def)
+	public void setClassDefinition(PDefinition pDefinition, SClassDefinition def)
 	{
-		if (pDefinition instanceof SClassDefinition) {
-			for (PDefinition d : def.getDefinitions()) {
+		if (pDefinition instanceof SClassDefinition)
+		{
+			for (PDefinition d : def.getDefinitions())
+			{
 				setClassDefinition(d, def);
 			}
-		} else if (pDefinition instanceof AExplicitFunctionDefinition) {
+		} else if (pDefinition instanceof AExplicitFunctionDefinition)
+		{
 			af.createPDefinitionAssistant().setClassDefinitionBaseCase(pDefinition, def);
-			AExplicitFunctionDefinition efd = ((AExplicitFunctionDefinition) pDefinition);
-			if (efd.getPredef() != null) {
+			AExplicitFunctionDefinition efd = (AExplicitFunctionDefinition) pDefinition;
+			if (efd.getPredef() != null)
+			{
 				setClassDefinition(efd.getPredef(), def);
 			}
-			if (efd.getPostdef() != null) {
+			if (efd.getPostdef() != null)
+			{
 				setClassDefinition(efd.getPostdef(), def);
 			}
-		} else if (pDefinition instanceof AValueDefinition) {
+		} else if (pDefinition instanceof AValueDefinition)
+		{
 			af.createPDefinitionAssistant().setClassDefinitionBaseCase(pDefinition, def);
 			AValueDefinition vd = (AValueDefinition) pDefinition;
-			for (PDefinition d : vd.getDefs()) {
+			for (PDefinition d : vd.getDefs())
+			{
 				setClassDefinition(d, def);
 			}
-		} else {
+		} else
+		{
 			af.createPDefinitionAssistant().setClassDefinitionBaseCase(pDefinition, def);
 		}
 

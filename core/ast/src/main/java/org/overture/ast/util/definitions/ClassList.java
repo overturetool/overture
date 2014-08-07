@@ -1,4 +1,3 @@
-
 package org.overture.ast.util.definitions;
 
 import java.io.File;
@@ -13,7 +12,6 @@ import org.overture.ast.definitions.ABusClassDefinition;
 import org.overture.ast.definitions.ACpuClassDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 
-
 /**
  * A class for holding a list of ClassDefinitions.
  */
@@ -22,8 +20,7 @@ public class ClassList extends Vector<SClassDefinition>
 {
 	private static final long serialVersionUID = 1L;
 
-	protected static Map<String, SClassDefinition> map =
-					new HashMap<String, SClassDefinition>();
+	protected static Map<String, SClassDefinition> map = new HashMap<String, SClassDefinition>();
 
 	public ClassList()
 	{
@@ -38,7 +35,7 @@ public class ClassList extends Vector<SClassDefinition>
 	@Override
 	public boolean add(SClassDefinition cdef)
 	{
-		map.put(cdef.getName().getName(), cdef); 
+		map.put(cdef.getName().getName(), cdef);
 
 		return super.add(cdef);
 	}
@@ -46,7 +43,7 @@ public class ClassList extends Vector<SClassDefinition>
 	@Override
 	public boolean addAll(Collection<? extends SClassDefinition> clist)
 	{
-		for (SClassDefinition cls: clist)
+		for (SClassDefinition cls : clist)
 		{
 			add(cls);
 		}
@@ -58,7 +55,7 @@ public class ClassList extends Vector<SClassDefinition>
 	{
 		map.clear();
 
-		for (SClassDefinition d: this)
+		for (SClassDefinition d : this)
 		{
 			map.put(d.getName().getName(), d);
 		}
@@ -68,10 +65,9 @@ public class ClassList extends Vector<SClassDefinition>
 	{
 		Set<File> files = new HashSet<File>();
 
-		for (SClassDefinition def: this)
+		for (SClassDefinition def : this)
 		{
-			if (!(def instanceof ACpuClassDefinition ||
-				  def instanceof ABusClassDefinition))
+			if (!(def instanceof ACpuClassDefinition || def instanceof ABusClassDefinition))
 			{
 				files.add(def.getLocation().getFile());
 			}
@@ -80,51 +76,48 @@ public class ClassList extends Vector<SClassDefinition>
 		return files;
 	}
 
-//	public void implicitDefinitions(Environment env)
-//	{
-//		for (SClassDefinition d: this)
-//		{
-//			d.implicitDefinitions(env);
-//		}
-//	}
+	// public void implicitDefinitions(Environment env)
+	// {
+	// for (SClassDefinition d: this)
+	// {
+	// d.implicitDefinitions(env);
+	// }
+	// }
 
-//	public void setLoaded()
-//	{
-//		for (SClassDefinition d: this)
-//		{
-//			d.typechecked = true;
-//		}
-//	}
+	// public void setLoaded()
+	// {
+	// for (SClassDefinition d: this)
+	// {
+	// d.typechecked = true;
+	// }
+	// }
 
-//	public int notLoaded()
-//	{
-//		int count = 0;
-//
-//		for (SClassDefinition d: this)
-//		{
-//			if (!d.typechecked) count++;
-//		}
-//
-//		return count;
-//	}
+	// public int notLoaded()
+	// {
+	// int count = 0;
+	//
+	// for (SClassDefinition d: this)
+	// {
+	// if (!d.typechecked) count++;
+	// }
+	//
+	// return count;
+	// }
 
-//	public void unusedCheck()
-//	{
-//		for (SClassDefinition d: this)
-//		{
-//			d.unusedCheck();
-//		}
-//	}
-
-
-
+	// public void unusedCheck()
+	// {
+	// for (SClassDefinition d: this)
+	// {
+	// d.unusedCheck();
+	// }
+	// }
 
 	@Override
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder();
 
-		for (SClassDefinition c: this)
+		for (SClassDefinition c : this)
 		{
 			sb.append(c.toString());
 			sb.append("\n");
@@ -133,16 +126,16 @@ public class ClassList extends Vector<SClassDefinition>
 		return sb.toString();
 	}
 
-//	public ProofObligationList getProofObligations()
-//	{
-//		ProofObligationList obligations = new ProofObligationList();
-//
-//		for (SClassDefinition c: this)
-//		{
-//			obligations.addAll(c.getProofObligations(new POContextStack()));
-//		}
-//
-//		obligations.trivialCheck();
-//		return obligations;
-//	}
+	// public ProofObligationList getProofObligations()
+	// {
+	// ProofObligationList obligations = new ProofObligationList();
+	//
+	// for (SClassDefinition c: this)
+	// {
+	// obligations.addAll(c.getProofObligations(new POContextStack()));
+	// }
+	//
+	// obligations.trivialCheck();
+	// return obligations;
+	// }
 }
