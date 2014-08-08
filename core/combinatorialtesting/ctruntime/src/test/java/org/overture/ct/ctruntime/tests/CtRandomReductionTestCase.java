@@ -12,24 +12,24 @@ public class CtRandomReductionTestCase extends CtTestCaseBase
 {
 	protected Map<String, TraceReductionInfo> testReductionInfo;
 	protected static final int SEED = 999;
-	
+
 	public CtRandomReductionTestCase()
 	{
 		super();
 		init();
 	}
-	
+
 	public CtRandomReductionTestCase(File file)
 	{
 		super(file);
 		init();
 	}
-	
+
 	private void init()
 	{
-		this.testReductionInfo  = new HashMap<String, TraceReductionInfo>();
-		
-		//Filter the test "OpRepeated10Times" using 15% random reduction etc.
+		this.testReductionInfo = new HashMap<String, TraceReductionInfo>();
+
+		// Filter the test "OpRepeated10Times" using 15% random reduction etc.
 		this.testReductionInfo.put("OpRepeatedTenTimes", new TraceReductionInfo(0.15F, TraceReductionType.RANDOM, SEED));
 		this.testReductionInfo.put("ThreeConcurrentOpCalls", new TraceReductionInfo(0.30F, TraceReductionType.RANDOM, SEED));
 		this.testReductionInfo.put("ThreeAlternativeOpCalls", new TraceReductionInfo(0.1F, TraceReductionType.RANDOM, SEED));
@@ -43,10 +43,9 @@ public class CtRandomReductionTestCase extends CtTestCaseBase
 			File specFileWithExt)
 	{
 		TraceReductionInfo reductionInfo = testReductionInfo.get(content);
-		
-		Assert.assertTrue("Could not find reduction info for test: "
-				+ content, reductionInfo != null);
-		
+
+		Assert.assertTrue("Could not find reduction info for test: " + content, reductionInfo != null);
+
 		return testHelper.buildArgs(traceName, PORT, traceFolder, specFileWithExt, reductionInfo);
 	}
 }

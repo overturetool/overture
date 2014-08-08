@@ -16,14 +16,16 @@ public class CtRandomReductionTest extends BaseTestSuite
 	public static final String ROOT = "src" + File.separatorChar + "test"
 			+ File.separatorChar + "resources" + File.separatorChar
 			+ "random_reduction_sl_specs";
-	
-	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
+
+	public static Test suite() throws IllegalArgumentException,
+			SecurityException, InstantiationException, IllegalAccessException,
+			InvocationTargetException, NoSuchMethodException, IOException
 	{
 		LexLocation.absoluteToStringLocation = false;
 		Properties.recordTestResults = false;
-		
+
 		String name = "CT Random Rection VDM-SL test case";
-		TestSuite test =  createTestCompleteFile(name, ROOT, CtRandomReductionTestCase.class,"");
+		TestSuite test = createTestCompleteFile(name, ROOT, CtRandomReductionTestCase.class, "");
 		return test;
 	}
 }

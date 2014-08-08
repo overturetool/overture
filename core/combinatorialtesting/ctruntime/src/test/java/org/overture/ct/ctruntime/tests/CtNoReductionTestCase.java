@@ -8,14 +8,15 @@ public class CtNoReductionTestCase extends CtTestCaseBase
 	{
 		super();
 	}
-	
+
 	public CtNoReductionTestCase(File file)
 	{
 		super(file);
 	}
-	
-	public String[] getArgs(String traceName, File traceFolder, File specFileWithExt)
+
+	public String[] getArgs(String traceName, File traceFolder,
+			File specFileWithExt)
 	{
-		return testHelper.buildArgs(traceName, PORT, traceFolder, specFileWithExt); 
+		return testHelper.buildArgs(traceName, PORT, traceFolder, specFileWithExt);
 	}
 }

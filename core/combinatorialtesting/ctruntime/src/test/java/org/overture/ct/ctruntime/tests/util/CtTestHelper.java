@@ -14,26 +14,42 @@ public class CtTestHelper
 			File traceFolder, File specfile)
 
 	{
-		//Passing 'null' indicates no trace reduction
+		// Passing 'null' indicates no trace reduction
 		return buildArgs(traceName, port, traceFolder, specfile, null);
 	}
-	
+
 	public String[] buildArgs(final String traceName, final int port,
 			File traceFolder, File specfile, TraceReductionInfo info)
 	{
-		if(info == null)
+		if (info == null)
 		{
 			info = new TraceReductionInfo();
 		}
-		
-		String[] args = new String[] { "-h", "localhost", "-p", port + "",
-				"-k", "whatever", "-e", "DEFAULT", "-vdmsl", "-r", "vdm10",
-				"-t", traceName, "-tracefolder",
+
+		String[] args = new String[] {
+				"-h",
+				"localhost",
+				"-p",
+				port + "",
+				"-k",
+				"whatever",
+				"-e",
+				"DEFAULT",
+				"-vdmsl",
+				"-r",
+				"vdm10",
+				"-t",
+				traceName,
+				"-tracefolder",
 				traceFolder.toURI().toASCIIString(),
-				specfile.toURI().toASCIIString(), "-traceReduction", "{" + info.getSubset() + "," + info.getReductionType().toString() + "," + info.getSeed() + "}"};
+				specfile.toURI().toASCIIString(),
+				"-traceReduction",
+				"{" + info.getSubset() + ","
+						+ info.getReductionType().toString() + ","
+						+ info.getSeed() + "}" };
 		return args;
 	}
-	
+
 	public Thread consCtClientThread(final ServerSocket socket, final Data data)
 	{
 		Thread t = new Thread(new Runnable()
@@ -53,14 +69,14 @@ public class CtTestHelper
 						while ((line = input.readLine()) != null)
 						{
 							line = line.trim();
-							
+
 							if (!line.isEmpty())
 							{
 								data.setMessage(line);
 							}
 
 							final String TRACE_COMPLETE_MESSAGE = "status=\"completed\" progress=\"100\"";
-							
+
 							if (line.contains(TRACE_COMPLETE_MESSAGE))
 							{
 								final OutputStream out = conn.getOutputStream();
@@ -72,25 +88,25 @@ public class CtTestHelper
 						}
 					} catch (IOException e)
 					{
-						//e.printStackTrace();
+						// e.printStackTrace();
 					} finally
 					{
 						try
 						{
-							if(conn != null)
+							if (conn != null)
 							{
 								conn.close();
 							}
 						} catch (IOException e)
 						{
-							//e.printStackTrace();
+							// e.printStackTrace();
 						}
 						try
 						{
 							socket.close();
 						} catch (IOException e)
 						{
-							//e.printStackTrace();
+							// e.printStackTrace();
 						}
 					}
 

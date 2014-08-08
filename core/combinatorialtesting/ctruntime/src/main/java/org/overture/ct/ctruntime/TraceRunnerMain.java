@@ -496,7 +496,7 @@ public class TraceRunnerMain implements IProgressMonitor
 					}
 
 					RTLogger.dump(true);
-					
+
 					// runner.progressTerminating();
 					exit(0);
 				} catch (ContextException e)
@@ -666,12 +666,12 @@ public class TraceRunnerMain implements IProgressMonitor
 		t.start();
 		t.setUncaughtExceptionHandler(new UncaughtExceptionHandler()
 		{
-			
+
 			@Override
 			public void uncaughtException(Thread t, Throwable e)
 			{
 				e.printStackTrace();
-				
+
 			}
 		});
 
@@ -689,13 +689,14 @@ public class TraceRunnerMain implements IProgressMonitor
 			{
 			}
 		}
-		
-		try{
+
+		try
+		{
 			System.out.println("Closing socket");
 			socket.close();
-		}catch(IOException e)
+		} catch (IOException e)
 		{
-			
+
 		}
 
 	}
