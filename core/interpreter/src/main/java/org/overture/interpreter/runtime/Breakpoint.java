@@ -40,7 +40,6 @@ import org.overture.parser.lex.LexTokenReader;
 import org.overture.parser.syntax.ExpressionReader;
 import org.overture.parser.syntax.ParserException;
 
-
 /**
  * The root of the breakpoint class hierarchy.
  */
@@ -63,29 +62,31 @@ public class Breakpoint implements Serializable
 
 	/** The condition saying if a the breakpoint is enabled */
 	protected boolean enabled = true;
-	
+
 	public Breakpoint(ILexLocation location)
 	{
 		this.location = location;
 		this.number = 0;
 		this.trace = null;
-		this.parsed = null;		
+		this.parsed = null;
 	}
 
 	/**
-	 * Create a breakpoint at the given location. The trace string is
-	 * parsed to an Expression structure for subsequent evaluation.
-	 *
-	 * @param location The location of the breakpoint.
-	 * @param number The number that appears in the "list" command.
-	 * @param trace Any condition or trace expression.
-	 *
+	 * Create a breakpoint at the given location. The trace string is parsed to an Expression structure for subsequent
+	 * evaluation.
+	 * 
+	 * @param location
+	 *            The location of the breakpoint.
+	 * @param number
+	 *            The number that appears in the "list" command.
+	 * @param trace
+	 *            Any condition or trace expression.
 	 * @throws ParserException
 	 * @throws LexException
 	 */
 
 	public Breakpoint(ILexLocation location, int number, String trace)
-		throws ParserException, LexException
+			throws ParserException, LexException
 	{
 		this.location = location;
 		this.number = number;
@@ -119,20 +120,18 @@ public class Breakpoint implements Serializable
 				default:
 					ltr.pop();
 					ExpressionReader reader = new ExpressionReader(ltr);
-        			reader.setCurrentModule(location.getModule());
-        			parsed = reader.readExpression();
-        			break;
+					reader.setCurrentModule(location.getModule());
+					parsed = reader.readExpression();
+					break;
 			}
-		}
-		else
+		} else
 		{
 			parsed = null;
 		}
 	}
 
-	private PExp readHitCondition(
-		LexTokenReader ltr, BreakpointCondition cond)
-		throws ParserException, LexException
+	private PExp readHitCondition(LexTokenReader ltr, BreakpointCondition cond)
+			throws ParserException, LexException
 	{
 		LexToken arg = ltr.nextToken();
 
@@ -141,7 +140,7 @@ public class Breakpoint implements Serializable
 			throw new ParserException(2279, "Invalid breakpoint hit condition", location, 0);
 		}
 
-		LexIntegerToken num = (LexIntegerToken)arg;
+		LexIntegerToken num = (LexIntegerToken) arg;
 		return new BreakpointExpression(this, cond, num.value);
 	}
 
@@ -153,7 +152,9 @@ public class Breakpoint implements Serializable
 
 	public String stoppedAtString()
 	{
-		return "Stopped [" + BasicSchedulableThread.getThreadName(Thread.currentThread()) + "] " + location;
+		return "Stopped ["
+				+ BasicSchedulableThread.getThreadName(Thread.currentThread())
+				+ "] " + location;
 	}
 
 	public void clearHits()
@@ -162,25 +163,25 @@ public class Breakpoint implements Serializable
 	}
 
 	/**
-	 * Check whether to stop. The implementation in Breakpoint is used to check
-	 * for the "step" and "next" commands, using the stepline, nextctxt and
-	 * outctxt fields. If the current line is different to the last step line,
-	 * and the current context is not "above" the next context or the current
-	 * context equals the out context or neither the next or out context are
-	 * set, a {@link Stoppoint} is created and its check method is called -
-	 * which starts a DebuggerReader session.
-	 *
-	 * @param execl The execution location.
-	 * @param ctxt The execution context.
+	 * Check whether to stop. The implementation in Breakpoint is used to check for the "step" and "next" commands,
+	 * using the stepline, nextctxt and outctxt fields. If the current line is different to the last step line, and the
+	 * current context is not "above" the next context or the current context equals the out context or neither the next
+	 * or out context are set, a {@link Stoppoint} is created and its check method is called - which starts a
+	 * DebuggerReader session.
+	 * 
+	 * @param execl
+	 *            The execution location.
+	 * @param ctxt
+	 *            The execution context.
 	 */
 
 	public void check(ILexLocation execl, Context ctxt)
 	{
-		//skips if breakpoint is disabled
-//		if(!enabled){
-//			return;
-//		}
-		
+		// skips if breakpoint is disabled
+		// if(!enabled){
+		// return;
+		// }
+
 		location.hit();
 		hits++;
 
@@ -193,38 +194,38 @@ public class Breakpoint implements Serializable
 
 		if (state.stepline != null)
 		{
-			if (execl.getStartLine() != state.stepline.getStartLine())	// NB just line, not pos
+			if (execl.getStartLine() != state.stepline.getStartLine()) // NB just line, not pos
 			{
-				if ((state.nextctxt == null && state.outctxt == null) ||
-					(state.nextctxt != null && !isAboveNext(ctxt.getRoot())) ||
-					(state.outctxt != null && isOutOrBelow(ctxt)))
+				if (state.nextctxt == null && state.outctxt == null
+						|| state.nextctxt != null
+						&& !isAboveNext(ctxt.getRoot())
+						|| state.outctxt != null && isOutOrBelow(ctxt))
 				{
-        			try
-        			{
-        				new Stoppoint(location, 0, null).check(location, ctxt);
-        			}
-        			catch (DebuggerException e)
-        			{
-        				throw e;
-        			}
-        			catch (Exception e)
-        			{
-        				// This happens when the Stoppoint throws an error, which
-        				// can't happen. But we need a catch clause for it anyway.
+					try
+					{
+						new Stoppoint(location, 0, null).check(location, ctxt);
+					} catch (DebuggerException e)
+					{
+						throw e;
+					} catch (Exception e)
+					{
+						// This happens when the Stoppoint throws an error, which
+						// can't happen. But we need a catch clause for it anyway.
 
-        				throw new DebuggerException(
-        					"Breakpoint [" + number + "]: " + e.getMessage());
-        			}
+						throw new DebuggerException("Breakpoint [" + number
+								+ "]: " + e.getMessage());
+					}
 				}
 			}
 		}
 	}
 
 	/**
-	 * True, if the context passed is above nextctxt. That means that the
-	 * current context must have an "outer" chain that reaches nextctxt.
-	 *
-	 * @param current The context to test.
+	 * True, if the context passed is above nextctxt. That means that the current context must have an "outer" chain
+	 * that reaches nextctxt.
+	 * 
+	 * @param current
+	 *            The context to test.
 	 * @return True if the current context is above nextctxt.
 	 */
 
@@ -234,19 +235,22 @@ public class Breakpoint implements Serializable
 
 		while (c != null)
 		{
-			if (c == current.threadState.nextctxt) return true;
+			if (c == current.threadState.nextctxt)
+			{
+				return true;
+			}
 			c = c.outer;
 		}
 
 		return false;
 	}
 
-
 	/**
-	 * True, if the context passed is equal to or below outctxt. That means that
-	 * outctxt must have an "outer" chain that reaches current context.
-	 *
-	 * @param current The context to test.
+	 * True, if the context passed is equal to or below outctxt. That means that outctxt must have an "outer" chain that
+	 * reaches current context.
+	 * 
+	 * @param current
+	 *            The context to test.
 	 * @return True if the current context is at or below outctxt.
 	 */
 
@@ -256,7 +260,10 @@ public class Breakpoint implements Serializable
 
 		while (c != null)
 		{
-			if (c == current) return true;
+			if (c == current)
+			{
+				return true;
+			}
 			c = c.outer;
 		}
 
@@ -273,12 +280,12 @@ public class Breakpoint implements Serializable
 	{
 		Console.out.println(line);
 	}
-	
+
 	public void setEnabled(boolean bool)
 	{
 		this.enabled = bool;
 	}
-	
+
 	public boolean isEnabled()
 	{
 		return this.enabled;

@@ -18,31 +18,34 @@
  *******************************************************************************/
 package org.overture.guibuilder.internal;
 
-/** 
+/**
  * This class stores the settings of the tool.
  */
-public class ToolSettings {
+public class ToolSettings
+{
 
 	/**
 	 * Enumeration of generation modes.
+	 * 
 	 * @author carlos
-	 *
 	 */
-	public enum GENERATION_MODE { ANNOTATIONS, NO_ANNOTATIONS }; 
-	
+	public enum GENERATION_MODE
+	{
+		ANNOTATIONS, NO_ANNOTATIONS
+	};
+
 	/**
 	 * Generation mode of the tool. By default the tool uses no annotation in the generation process.
 	 */
 	public static GENERATION_MODE GENERATION_SETTINGS = GENERATION_MODE.NO_ANNOTATIONS;
 	/**
-	 * Flag for saving xml. If true the xml description of the generated user interface.
-	 * is saved.
+	 * Flag for saving xml. If true the xml description of the generated user interface. is saved.
 	 */
 	public static Boolean SAVE_XML = false;
 	/**
-	 * Flag for generation. If true a new user interface is generated. If false the tool
-	 * will use a previously generated user interface.
+	 * Flag for generation. If true a new user interface is generated. If false the tool will use a previously generated
+	 * user interface.
 	 */
 	public static Boolean GENERATE = true;
-	
+
 }

@@ -42,7 +42,6 @@ import org.overture.parser.messages.LocatedException;
 import org.overture.parser.messages.VDMError;
 import org.overture.parser.messages.VDMWarning;
 
-
 /**
  * The parent class of all syntax readers.
  */
@@ -80,7 +79,7 @@ public abstract class SyntaxReader
 
 	/** The maximum number of syntax errors allowed in one Reader. */
 	private static final int MAX = 100;
-	
+
 	/**
 	 * Create a reader with the given lexical analyser and VDM++ flag.
 	 */
@@ -98,9 +97,8 @@ public abstract class SyntaxReader
 	}
 
 	/**
-	 * Read the next token from the lexical analyser, and advance by
-	 * one token.
-	 *
+	 * Read the next token from the lexical analyser, and advance by one token.
+	 * 
 	 * @return The next token.
 	 */
 
@@ -110,10 +108,9 @@ public abstract class SyntaxReader
 	}
 
 	/**
-	 * Return the last token read by the lexical analyser without
-	 * advancing. Repeated calls to this method will return the same
-	 * result.
-	 *
+	 * Return the last token read by the lexical analyser without advancing. Repeated calls to this method will return
+	 * the same result.
+	 * 
 	 * @return The last token again.
 	 */
 
@@ -123,10 +120,9 @@ public abstract class SyntaxReader
 	}
 
 	/**
-	 * Return the last token read, and also advance by one token. This
-	 * is equivalent to calling {@link #lastToken} followed by
-	 * {@link #nextToken}, but returning the result of lastToken.
-	 *
+	 * Return the last token read, and also advance by one token. This is equivalent to calling {@link #lastToken}
+	 * followed by {@link #nextToken}, but returning the result of lastToken.
+	 * 
 	 * @return The last token.
 	 * @throws LexException
 	 */
@@ -139,9 +135,9 @@ public abstract class SyntaxReader
 	}
 
 	/**
-	 * Set the name of the current module or class. Unqualified symbol names use
-	 * this as their module/class name. See {@link #idToName}.
-	 *
+	 * Set the name of the current module or class. Unqualified symbol names use this as their module/class name. See
+	 * {@link #idToName}.
+	 * 
 	 * @param module
 	 */
 
@@ -160,11 +156,11 @@ public abstract class SyntaxReader
 	}
 
 	/**
-	 * Convert an identifier into a name. A name is an identifier that has
-	 * a module name qualifier, so this method uses the current module to
-	 * convert the identifier passed in.
-	 *
-	 * @param id The identifier to convert
+	 * Convert an identifier into a name. A name is an identifier that has a module name qualifier, so this method uses
+	 * the current module to convert the identifier passed in.
+	 * 
+	 * @param id
+	 *            The identifier to convert
 	 * @return The corresponding name.
 	 */
 
@@ -175,28 +171,27 @@ public abstract class SyntaxReader
 	}
 
 	/**
-	 * Return the last token, converted to a {@link LexIdentifierToken}. If
-	 * the last token is not an identifier token, an exception is thrown
-	 * with the message passed in.
-	 *
-	 * @return	The last token as a LexIdentifierToken.
+	 * Return the last token, converted to a {@link LexIdentifierToken}. If the last token is not an identifier token,
+	 * an exception is thrown with the message passed in.
+	 * 
+	 * @return The last token as a LexIdentifierToken.
 	 * @throws LexException
 	 */
 
-	protected LexIdentifierToken lastIdToken()
-		throws ParserException, LexException
+	protected LexIdentifierToken lastIdToken() throws ParserException,
+			LexException
 	{
 		LexToken tok = reader.getLast();
 
 		if (tok.type == VDMToken.IDENTIFIER)
 		{
-			LexIdentifierToken id = (LexIdentifierToken)tok;
-			
+			LexIdentifierToken id = (LexIdentifierToken) tok;
+
 			if (id.isOld())
 			{
 				throwMessage(2295, "Can't use old name here", tok);
 			}
-			
+
 			return id;
 		}
 
@@ -205,41 +200,37 @@ public abstract class SyntaxReader
 	}
 
 	/**
-	 * Return the last token, converted to a {@link LexNameToken}. If
-	 * the last token is not a name token, or an identifier token that can
-	 * be converted to a name, an exception is thrown with the message
-	 * passed in.
-	 *
+	 * Return the last token, converted to a {@link LexNameToken}. If the last token is not a name token, or an
+	 * identifier token that can be converted to a name, an exception is thrown with the message passed in.
+	 * 
 	 * @return The last token as a LexIdentifierToken.
 	 * @throws LexException
 	 * @throws ParserException
 	 */
 
-	protected LexNameToken lastNameToken()
-		throws LexException, ParserException
+	protected LexNameToken lastNameToken() throws LexException, ParserException
 	{
 		LexToken tok = reader.getLast();
 
 		if (tok instanceof LexNameToken)
 		{
-			LexNameToken name = (LexNameToken)tok;
-			
+			LexNameToken name = (LexNameToken) tok;
+
 			if (name.old)
 			{
 				throwMessage(2295, "Can't use old name here", tok);
 			}
-			
+
 			return name;
-		}
-		else if (tok instanceof LexIdentifierToken)
+		} else if (tok instanceof LexIdentifierToken)
 		{
-			LexIdentifierToken id = (LexIdentifierToken)tok;
-			
+			LexIdentifierToken id = (LexIdentifierToken) tok;
+
 			if (id.isOld())
 			{
 				throwMessage(2295, "Can't use old name here", tok);
 			}
-			
+
 			return new LexNameToken(reader.currentModule, id);
 		}
 
@@ -248,31 +239,31 @@ public abstract class SyntaxReader
 	}
 
 	/**
-	 * Return the last token as an identifier, and advance by one token. This
-	 * is similar to calling {@link #lastIdToken} followed by nextToken, and
-	 * returning the result of the lastIdToken.
-	 *
-	 * @param message The message to throw if the last token is not an id.
+	 * Return the last token as an identifier, and advance by one token. This is similar to calling {@link #lastIdToken}
+	 * followed by nextToken, and returning the result of the lastIdToken.
+	 * 
+	 * @param message
+	 *            The message to throw if the last token is not an id.
 	 * @return The last token as a LexIdentifierToken.
 	 * @throws LexException
 	 * @throws ParserException
 	 */
 
 	protected LexIdentifierToken readIdToken(String message)
-		throws LexException, ParserException
+			throws LexException, ParserException
 	{
 		LexToken tok = reader.getLast();
 
 		if (tok.type == VDMToken.IDENTIFIER)
 		{
 			nextToken();
-			LexIdentifierToken id = (LexIdentifierToken)tok;
-			
+			LexIdentifierToken id = (LexIdentifierToken) tok;
+
 			if (id.isOld())
 			{
 				throwMessage(2295, "Can't use old name here", tok);
 			}
-			
+
 			return id;
 		}
 
@@ -286,42 +277,41 @@ public abstract class SyntaxReader
 	}
 
 	/**
-	 * Return the last token as a name, and advance by one token. This
-	 * is similar to calling {@link #lastNameToken} followed by nextToken, and
-	 * returning the result of the lastNameToken.
-	 *
-	 * @param message The message to throw if the last token is not a name.
+	 * Return the last token as a name, and advance by one token. This is similar to calling {@link #lastNameToken}
+	 * followed by nextToken, and returning the result of the lastNameToken.
+	 * 
+	 * @param message
+	 *            The message to throw if the last token is not a name.
 	 * @return The last token as a LexNameToken.
 	 * @throws LexException
 	 * @throws ParserException
 	 */
 
-	protected LexNameToken readNameToken(String message)
-		throws LexException, ParserException
+	protected LexNameToken readNameToken(String message) throws LexException,
+			ParserException
 	{
 		LexToken tok = reader.getLast();
 		nextToken();
 
 		if (tok instanceof LexNameToken)
 		{
-			LexNameToken name = (LexNameToken)tok;
-			
+			LexNameToken name = (LexNameToken) tok;
+
 			if (name.old)
 			{
 				throwMessage(2295, "Can't use old name here", tok);
 			}
-			
+
 			return name;
-		}
-		else if (tok instanceof LexIdentifierToken)
+		} else if (tok instanceof LexIdentifierToken)
 		{
-			LexIdentifierToken id = (LexIdentifierToken)tok;
-			
+			LexIdentifierToken id = (LexIdentifierToken) tok;
+
 			if (id.isOld())
 			{
 				throwMessage(2295, "Can't use old name here", tok);
 			}
-			
+
 			return new LexNameToken(reader.currentModule, id);
 		}
 
@@ -441,21 +431,24 @@ public abstract class SyntaxReader
 
 	/**
 	 * If the last token is as expected, advance, else raise an error.
-	 * @param tok The token type to check for.
-	 * @param number The error number.
-	 * @param message The error message to raise if the token is not as expected.
+	 * 
+	 * @param tok
+	 *            The token type to check for.
+	 * @param number
+	 *            The error number.
+	 * @param message
+	 *            The error message to raise if the token is not as expected.
 	 * @throws LexException
 	 * @throws ParserException
 	 */
 
 	protected void checkFor(VDMToken tok, int number, String message)
-		throws LexException, ParserException
+			throws LexException, ParserException
 	{
 		if (lastToken().is(tok))
 		{
 			nextToken();
-		}
-		else
+		} else
 		{
 			throwMessage(number, message);
 		}
@@ -463,8 +456,9 @@ public abstract class SyntaxReader
 
 	/**
 	 * If the last token is the one passed, advance by one, else do nothing.
-	 *
-	 * @param tok The token type to check for.
+	 * 
+	 * @param tok
+	 *            The token type to check for.
 	 * @return True if the token was skipped.
 	 * @throws LexException
 	 */
@@ -475,8 +469,7 @@ public abstract class SyntaxReader
 		{
 			nextToken();
 			return true;
-		}
-		else
+		} else
 		{
 			return false;
 		}
@@ -484,57 +477,61 @@ public abstract class SyntaxReader
 
 	/**
 	 * Raise a {@link ParserException} at the current location.
-	 * @param number The error number.
-	 * @param message The error message.
-	 *
+	 * 
+	 * @param number
+	 *            The error number.
+	 * @param message
+	 *            The error message.
 	 * @throws ParserException
 	 * @throws LexException
 	 */
 
 	protected void throwMessage(int number, String message)
-		throws ParserException, LexException
+			throws ParserException, LexException
 	{
-		throw new ParserException(
-			number, message, lastToken().location, reader.getTokensRead());
+		throw new ParserException(number, message, lastToken().location, reader.getTokensRead());
 	}
 
 	/**
 	 * Raise a {@link ParserException} at the location of the token passed in.
-	 * @param number The error number.
-	 * @param message The error message.
-	 * @param token The location of the error.
-	 *
+	 * 
+	 * @param number
+	 *            The error number.
+	 * @param message
+	 *            The error message.
+	 * @param token
+	 *            The location of the error.
 	 * @throws ParserException
 	 */
 
 	protected void throwMessage(int number, String message, ILexToken token)
-		throws ParserException
+			throws ParserException
 	{
-		throw new ParserException(
-			number, message, token.getLocation(), reader.getTokensRead());
+		throw new ParserException(number, message, token.getLocation(), reader.getTokensRead());
 	}
 
 	/**
-	 * Raise a syntax error and attempt to recover. The error is added to the errors
-	 * list, and if this exceeds 100 errors the parser is aborted. The "after"
-	 * and "upto" lists of token types are then used to control the advance of the
-	 * parser to skip beyond the error. Tokens are read until one occurs in either
-	 * list or EOF is reached. If the token is in the "after" list, one more token
-	 * is read before returning; if it is in the "upto" list, the last token is
-	 * left pointing to the token before returning. If EOF is reached, the method
-	 * returns.
-	 *
-	 * @param error The exception that caused the error.
-	 * @param after A list of tokens to recover to, and step one beyond.
-	 * @param upto A list of tokens to recover to.
+	 * Raise a syntax error and attempt to recover. The error is added to the errors list, and if this exceeds 100
+	 * errors the parser is aborted. The "after" and "upto" lists of token types are then used to control the advance of
+	 * the parser to skip beyond the error. Tokens are read until one occurs in either list or EOF is reached. If the
+	 * token is in the "after" list, one more token is read before returning; if it is in the "upto" list, the last
+	 * token is left pointing to the token before returning. If EOF is reached, the method returns.
+	 * 
+	 * @param error
+	 *            The exception that caused the error.
+	 * @param after
+	 *            A list of tokens to recover to, and step one beyond.
+	 * @param upto
+	 *            A list of tokens to recover to.
 	 */
 
-	protected void report(LocatedException error, VDMToken[] after, VDMToken[] upto)
+	protected void report(LocatedException error, VDMToken[] after,
+			VDMToken[] upto)
 	{
 		VDMError vdmerror = new VDMError(error);
 		errors.add(vdmerror);
 
-		if (errors.size() >= MAX-1)
+		if (errors.size() >= MAX - 1)
 		{
 			errors.add(new VDMError(9, "Too many syntax errors", error.location));
 			throw new InternalException(9, "Too many syntax errors");
@@ -548,20 +545,19 @@ public abstract class SyntaxReader
 
 		try
 		{
-    		VDMToken tok = lastToken().type;
+			VDMToken tok = lastToken().type;
 
-    		while (!uptoList.contains(tok) && tok != VDMToken.EOF)
-    		{
-    			if (afterList.contains(tok))
-    			{
-    				nextToken();
-    				break;
-    			}
+			while (!uptoList.contains(tok) && tok != VDMToken.EOF)
+			{
+				if (afterList.contains(tok))
+				{
+					nextToken();
+					break;
+				}
 
-    			tok = nextToken().type;
-    		}
-		}
-		catch (LexException le)
+				tok = nextToken().type;
+			}
+		} catch (LexException le)
 		{
 			errors.add(new VDMError(le));
 		}
@@ -576,13 +572,12 @@ public abstract class SyntaxReader
 		VDMWarning vdmwarning = new VDMWarning(no, msg, location);
 		warnings.add(vdmwarning);
 
-		if (warnings.size() >= MAX-1)
+		if (warnings.size() >= MAX - 1)
 		{
 			errors.add(new VDMError(9, "Too many warnings", location));
 			throw new InternalException(9, "Too many warnings");
 		}
 	}
-
 
 	/**
 	 * @return The error count from all readers that can raise errors.
@@ -592,7 +587,7 @@ public abstract class SyntaxReader
 	{
 		int size = 0;
 
-		for (SyntaxReader rdr: readers)
+		for (SyntaxReader rdr : readers)
 		{
 			size += rdr.getErrorCount();
 		}
@@ -608,7 +603,7 @@ public abstract class SyntaxReader
 	{
 		List<VDMError> list = new Vector<VDMError>();
 
-		for (SyntaxReader rdr: readers)
+		for (SyntaxReader rdr : readers)
 		{
 			list.addAll(rdr.getErrors());
 		}
@@ -625,7 +620,7 @@ public abstract class SyntaxReader
 	{
 		int size = 0;
 
-		for (SyntaxReader rdr: readers)
+		for (SyntaxReader rdr : readers)
 		{
 			size += rdr.getWarningCount();
 		}
@@ -641,7 +636,7 @@ public abstract class SyntaxReader
 	{
 		List<VDMWarning> list = new Vector<VDMWarning>();
 
-		for (SyntaxReader rdr: readers)
+		for (SyntaxReader rdr : readers)
 		{
 			list.addAll(rdr.getWarnings());
 		}
@@ -652,11 +647,13 @@ public abstract class SyntaxReader
 
 	/**
 	 * Print errors and warnings to the PrintWriter passed.
+	 * 
+	 * @param out
 	 */
 
 	public void printErrors(PrintWriter out)
 	{
-		for (VDMError e: getErrors())
+		for (VDMError e : getErrors())
 		{
 			out.println(e.toString());
 		}
@@ -664,7 +661,7 @@ public abstract class SyntaxReader
 
 	public void printWarnings(PrintWriter out)
 	{
-		for (VDMWarning w: getWarnings())
+		for (VDMWarning w : getWarnings())
 		{
 			out.println(w.toString());
 		}

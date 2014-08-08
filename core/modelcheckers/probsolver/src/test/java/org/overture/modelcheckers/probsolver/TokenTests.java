@@ -27,20 +27,20 @@ public class TokenTests extends AllTest
 
 		Collection<Object[]> tests = new LinkedList<Object[]>();
 
-		tests.addAll(getTests(new File(root),"Mktkn-0003","Mktkn-0004"));
+		tests.addAll(getTests(new File(root), "Mktkn-0003", "Mktkn-0004"));
 
 		return tests;
 	}
-	
-	
+
 	@Override
 	protected String getPropertyId()
 	{
 		return "token";
 	}
+
 	@Override
 	protected void compareResults(Result<String> result, String filename)
 	{
-	Assume.assumeTrue("Currently unable to test this since the inpit parameters are non random", false);
+		Assume.assumeTrue("Currently unable to test this since the inpit parameters are non random", false);
 	}
 }

@@ -43,9 +43,6 @@ import org.overture.ast.types.PType;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.lex.LexTokenReader;
 
-
-
-
 /**
  * A syntax analyser to parse type expressions.
  */
@@ -57,13 +54,12 @@ public class TypeReader extends SyntaxReader
 		super(reader);
 	}
 
-	public PType readType()
-		throws ParserException, LexException
+	public PType readType() throws ParserException, LexException
 	{
 		PType type = readUnionType();
 
-		if (lastToken().is(VDMToken.ARROW) ||
-			lastToken().is(VDMToken.TOTAL_FUNCTION))
+		if (lastToken().is(VDMToken.ARROW)
+				|| lastToken().is(VDMToken.TOTAL_FUNCTION))
 		{
 			LexToken token = lastToken();
 			nextToken();
@@ -80,8 +76,7 @@ public class TypeReader extends SyntaxReader
 		return type;
 	}
 
-	private PType readUnionType()
-		throws ParserException, LexException
+	private PType readUnionType() throws ParserException, LexException
 	{
 		PType type = readProductType();
 
@@ -95,30 +90,28 @@ public class TypeReader extends SyntaxReader
 		return type;
 	}
 
-	private PType readProductType()
-		throws ParserException, LexException
+	private PType readProductType() throws ParserException, LexException
 	{
 		LexToken token = lastToken();
 		PType type = readComposeType();
 		List<PType> productList = new Vector<PType>();
 		productList.add(type);
-	
+
 		while (lastToken().type == VDMToken.TIMES)
 		{
 			nextToken();
 			productList.add(readComposeType());
 		}
-	
+
 		if (productList.size() == 1)
 		{
 			return type;
 		}
-	
+
 		return AstFactory.newAProductType(token.location, productList);
 	}
 
-	private PType readComposeType()
-		throws ParserException, LexException
+	private PType readComposeType() throws ParserException, LexException
 	{
 		PType type = null;
 
@@ -131,8 +124,7 @@ public class TypeReader extends SyntaxReader
 			rtype.setComposed(true);
 			checkFor(VDMToken.END, 2250, "Missing 'end' in compose type");
 			type = rtype;
-		}
-		else
+		} else
 		{
 			type = readMapType();
 		}
@@ -140,14 +132,14 @@ public class TypeReader extends SyntaxReader
 		return type;
 	}
 
-	public List<AFieldField> readFieldList()
-		throws ParserException, LexException
+	public List<AFieldField> readFieldList() throws ParserException,
+			LexException
 	{
 		List<AFieldField> list = new Vector<AFieldField>();
 
-		while (lastToken().isNot(VDMToken.END) &&
-			   lastToken().isNot(VDMToken.SEMICOLON) &&
-			   lastToken().isNot(VDMToken.INV))
+		while (lastToken().isNot(VDMToken.END)
+				&& lastToken().isNot(VDMToken.SEMICOLON)
+				&& lastToken().isNot(VDMToken.INV))
 		{
 			reader.push();
 			LexToken tag = lastToken();
@@ -161,18 +153,17 @@ public class TypeReader extends SyntaxReader
 				}
 
 				nextToken();
-				LexIdentifierToken tagid = (LexIdentifierToken)tag;
+				LexIdentifierToken tagid = (LexIdentifierToken) tag;
 
 				if (tagid.isOld())
 				{
 					throwMessage(2295, "Can't use old name here", tag);
 				}
-				
+
 				LexNameToken tagname = idToName(tagid);
 				list.add(AstFactory.newAFieldField(tagname, tagid.getName(), readType(), false));
 				reader.unpush();
-			}
-			else if (separator.is(VDMToken.EQABST))
+			} else if (separator.is(VDMToken.EQABST))
 			{
 				if (tag.isNot(VDMToken.IDENTIFIER))
 				{
@@ -180,7 +171,7 @@ public class TypeReader extends SyntaxReader
 				}
 
 				nextToken();
-				LexIdentifierToken tagid = (LexIdentifierToken)tag;
+				LexIdentifierToken tagid = (LexIdentifierToken) tag;
 
 				if (tagid.isOld())
 				{
@@ -190,20 +181,18 @@ public class TypeReader extends SyntaxReader
 				LexNameToken tagname = idToName(tagid);
 				list.add(AstFactory.newAFieldField(tagname, tagid.getName(), readType(), true));
 				reader.unpush();
-			}
-			else	// Anonymous field or end of fields
+			} else
+			// Anonymous field or end of fields
 			{
 				try
 				{
 					reader.retry();
 					String anon = Integer.toString(list.size() + 1);
 					PType ftype = readType();
-					LexNameToken tagname = new LexNameToken(
-						getCurrentModule(), anon, ftype.getLocation());
+					LexNameToken tagname = new LexNameToken(getCurrentModule(), anon, ftype.getLocation());
 					list.add(AstFactory.newAFieldField(tagname, anon, ftype, false));
 					reader.unpush();
-				}
-				catch (Exception e)
+				} catch (Exception e)
 				{
 					// End? EOF? Or badly formed type, fails elsewhere...
 					reader.pop();
@@ -212,11 +201,12 @@ public class TypeReader extends SyntaxReader
 			}
 		}
 
-		for (PField f1: list)
+		for (PField f1 : list)
 		{
-			for (PField f2: list)
+			for (PField f2 : list)
 			{
-				if (f1 != f2 && ((AFieldField)f1).getTag().equals(((AFieldField)f2).getTag()))
+				if (f1 != f2
+						&& ((AFieldField) f1).getTag().equals(((AFieldField) f2).getTag()))
 				{
 					throwMessage(2073, "Duplicate field names in record type");
 				}
@@ -226,8 +216,7 @@ public class TypeReader extends SyntaxReader
 		return list;
 	}
 
-	private PType readMapType()
-		throws ParserException, LexException
+	private PType readMapType() throws ParserException, LexException
 	{
 		PType type = null;
 		LexToken token = lastToken();
@@ -236,14 +225,14 @@ public class TypeReader extends SyntaxReader
 		{
 			case MAP:
 				nextToken();
-				type = readType();	// Effectively bracketed by 'to'
+				type = readType(); // Effectively bracketed by 'to'
 				checkFor(VDMToken.TO, 2251, "Expecting 'to' in map type");
 				type = AstFactory.newAMapMapType(token.location, type, readComposeType());
 				break;
 
 			case INMAP:
 				nextToken();
-				type = readType();	// Effectively bracketed by 'to'
+				type = readType(); // Effectively bracketed by 'to'
 				checkFor(VDMToken.TO, 2252, "Expecting 'to' in inmap type");
 				type = AstFactory.newAInMapMapType(token.location, type, readComposeType());
 				break;
@@ -256,8 +245,7 @@ public class TypeReader extends SyntaxReader
 		return type;
 	}
 
-	private PType readSetSeqType()
-		throws ParserException, LexException
+	private PType readSetSeqType() throws ParserException, LexException
 	{
 		PType type = null;
 		LexToken token = lastToken();
@@ -290,8 +278,7 @@ public class TypeReader extends SyntaxReader
 		return type;
 	}
 
-	private PType readBasicType()
-		throws ParserException, LexException
+	private PType readBasicType() throws ParserException, LexException
 	{
 		PType type = null;
 		LexToken token = lastToken();
@@ -340,7 +327,7 @@ public class TypeReader extends SyntaxReader
 				break;
 
 			case QUOTE:
-				type = AstFactory.newAQuoteType((LexQuoteToken)token);
+				type = AstFactory.newAQuoteType((LexQuoteToken) token);
 				nextToken();
 				break;
 
@@ -349,8 +336,7 @@ public class TypeReader extends SyntaxReader
 				{
 					type = AstFactory.newAVoidType(location);
 					nextToken();
-				}
-				else
+				} else
 				{
 					type = AstFactory.newABracketType(location, readType());
 					checkFor(VDMToken.KET, 2256, "Bracket mismatch");
@@ -364,13 +350,13 @@ public class TypeReader extends SyntaxReader
 				break;
 
 			case IDENTIFIER:
-				LexIdentifierToken id = (LexIdentifierToken)token;
+				LexIdentifierToken id = (LexIdentifierToken) token;
 				type = AstFactory.newAUnresolvedType(idToName(id));
 				nextToken();
 				break;
 
 			case NAME:
-				type = AstFactory.newAUnresolvedType((LexNameToken)token);
+				type = AstFactory.newAUnresolvedType((LexNameToken) token);
 				nextToken();
 				break;
 
@@ -381,7 +367,7 @@ public class TypeReader extends SyntaxReader
 
 			case QMARK:
 				nextToken();
-				type = AstFactory.newAUnknownType(location);	// Not strictly VDM :-)
+				type = AstFactory.newAUnknownType(location); // Not strictly VDM :-)
 				break;
 
 			default:
@@ -391,8 +377,8 @@ public class TypeReader extends SyntaxReader
 		return type;
 	}
 
-	public AOperationType readOperationType()
-		throws ParserException, LexException
+	public AOperationType readOperationType() throws ParserException,
+			LexException
 	{
 		PType paramtype = readType();
 		LexToken arrow = lastToken();
@@ -408,14 +394,12 @@ public class TypeReader extends SyntaxReader
 		if (parameters instanceof AProductType)
 		{
 			// Expand unbracketed product types
-			AProductType pt = (AProductType)parameters;
+			AProductType pt = (AProductType) parameters;
 			types.addAll(pt.getTypes());
-		}
-		else if (parameters instanceof AVoidType)
+		} else if (parameters instanceof AVoidType)
 		{
 			// No type
-		}
-		else
+		} else
 		{
 			// One parameter, including bracketed product types
 			types.add(parameters);

@@ -36,14 +36,12 @@ import org.overture.interpreter.debug.RemoteControl;
 import org.overture.interpreter.debug.RemoteInterpreter;
 import org.overture.interpreter.runtime.ClassInterpreter;
 
-public class GuiBuilderRemote implements
-		RemoteControl
+public class GuiBuilderRemote implements RemoteControl
 {
-	
-	
-	
-	//"my.swixml.schema"
-public static final String GENERATED_PACKAGE = org.overture.guibuilder.generated.swixml.schema.Applet.class.getPackage().getName();
+
+	// "my.swixml.schema"
+	public static final String GENERATED_PACKAGE = org.overture.guibuilder.generated.swixml.schema.Applet.class.getPackage().getName();
+
 	static class PW extends VdmjVdmInterpreterWrapper
 	{
 
@@ -90,12 +88,12 @@ public static final String GENERATED_PACKAGE = org.overture.guibuilder.generated
 	@Override
 	public void run(final RemoteInterpreter interpreter) throws Exception
 	{
-//		Object d = new SwiXMLGenerator();
+		// Object d = new SwiXMLGenerator();
 		{
 			Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
-			 JAXBContext jaxbContext = JAXBContext.newInstance(GENERATED_PACKAGE);
-		       /* Marshaller marshaller =*/ jaxbContext.createMarshaller();
-		       /* ObjectFactory objFactory = */new ObjectFactory();
+			JAXBContext jaxbContext = JAXBContext.newInstance(GENERATED_PACKAGE);
+			/* Marshaller marshaller = */jaxbContext.createMarshaller();
+			/* ObjectFactory objFactory = */new ObjectFactory();
 		}
 		EventQueue.invokeLater(new Runnable()
 		{
@@ -104,11 +102,12 @@ public static final String GENERATED_PACKAGE = org.overture.guibuilder.generated
 			{
 				try
 				{
-					IVdmClassReader reader = new VdmjVdmClassReader(((ClassInterpreter)interpreter.getInterpreter()).getClasses());
+					IVdmClassReader reader = new VdmjVdmClassReader(((ClassInterpreter) interpreter.getInterpreter()).getClasses());
 					Vector<File> files = new Vector<File>();
 					for (File file : interpreter.getInterpreter().getSourceFiles())
 					{
-						if(file.getAbsolutePath().contains(File.separatorChar+"lib"+File.separatorChar))
+						if (file.getAbsolutePath().contains(File.separatorChar
+								+ "lib" + File.separatorChar))
 						{
 							continue;
 						}
@@ -119,7 +118,8 @@ public static final String GENERATED_PACKAGE = org.overture.guibuilder.generated
 					if (ToolSettings.GENERATE.booleanValue())
 					{
 						// if (ToolSettings.SAVE_XML.booleanValue())
-						ui.buildAndRender(reader, "Unknown", files.get(0).getParentFile().getAbsolutePath()+File.separatorChar);
+						ui.buildAndRender(reader, "Unknown", files.get(0).getParentFile().getAbsolutePath()
+								+ File.separatorChar);
 						// else
 						// ui.buildAndRender(reader, "Unknown");
 					}

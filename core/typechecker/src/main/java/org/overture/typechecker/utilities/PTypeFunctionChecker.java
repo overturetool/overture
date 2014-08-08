@@ -72,7 +72,7 @@ public class PTypeFunctionChecker extends AnswerAdaptor<Boolean>
 	public Boolean caseAUnionType(AUnionType node) throws AnalysisException
 	{
 
-		//return af.createAUnionTypeAssistant().getFunction(node) != null;
+		// return af.createAUnionTypeAssistant().getFunction(node) != null;
 		return node.apply(af.getFunctionTypeFinder()) != null;
 	}
 

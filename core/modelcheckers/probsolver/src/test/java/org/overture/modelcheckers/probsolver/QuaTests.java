@@ -29,7 +29,7 @@ public class QuaTests extends AllTest
 
 		return tests;
 	}
-	
+
 	@Override
 	protected String getPropertyId()
 	{

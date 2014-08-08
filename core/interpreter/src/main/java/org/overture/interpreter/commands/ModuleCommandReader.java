@@ -29,8 +29,6 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ModuleInterpreter;
 
-
-
 /**
  * A class to read and perform module related commands from standard input.
  */
@@ -45,8 +43,9 @@ public class ModuleCommandReader extends CommandReader
 		super(interpreter, prompt);
 		minterpreter = interpreter;
 	}
-	
-	public ModuleCommandReader(ModuleInterpreter interpreter, String prompt, boolean singlePass)
+
+	public ModuleCommandReader(ModuleInterpreter interpreter, String prompt,
+			boolean singlePass)
 	{
 		super(interpreter, prompt, singlePass);
 		minterpreter = interpreter;
@@ -58,13 +57,12 @@ public class ModuleCommandReader extends CommandReader
 		String def = minterpreter.getDefaultName();
 		List<AModuleModules> modules = minterpreter.getModules();
 
-		for (AModuleModules m: modules)
+		for (AModuleModules m : modules)
 		{
 			if (m.getName().getName().equals(def))
 			{
 				println(m.getName().getName() + " (default)");
-			}
-			else
+			} else
 			{
 				println(m.getName().getName());
 			}

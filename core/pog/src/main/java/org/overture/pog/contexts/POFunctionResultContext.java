@@ -112,7 +112,7 @@ public class POFunctionResultContext extends POContext
 
 		else
 		{
-			ALetDefExp letDefExp = new ALetDefExp();		
+			ALetDefExp letDefExp = new ALetDefExp();
 			AEqualsDefinition localDef = new AEqualsDefinition();
 			localDef.setPattern(result.getPattern().clone());
 			localDef.setType(result.getType().clone());
@@ -125,7 +125,6 @@ public class POFunctionResultContext extends POContext
 		}
 
 	}
-
 
 	@Override
 	public String getContext()

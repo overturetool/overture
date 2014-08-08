@@ -71,7 +71,7 @@ public class POOperationDefinitionContext extends POContext
 		this.stateDefinition = stateDefinition;
 		this.opDef = opDef;
 	}
-	
+
 	public POOperationDefinitionContext(
 			AExplicitOperationDefinition definition, boolean precond,
 			PDefinition stateDefinition)
@@ -83,13 +83,15 @@ public class POOperationDefinitionContext extends POContext
 		this.precondition = definition.getPrecondition();
 		this.stateDefinition = stateDefinition;
 		this.opDef = definition;
-		
+
 	}
 
-	private List<PPattern> cloneList(LinkedList<PPattern> parameterPatterns) {
+	private List<PPattern> cloneList(LinkedList<PPattern> parameterPatterns)
+	{
 		List<PPattern> r = new LinkedList<PPattern>();
-	
-		for (PPattern p : parameterPatterns){
+
+		for (PPattern p : parameterPatterns)
+		{
 			r.add(p.clone());
 		}
 		return r;
@@ -97,7 +99,7 @@ public class POOperationDefinitionContext extends POContext
 
 	public POOperationDefinitionContext(
 			AImplicitOperationDefinition definition, boolean precond,
-			PDefinition stateDefinition,IPogAssistantFactory assistantFactory )
+			PDefinition stateDefinition, IPogAssistantFactory assistantFactory)
 	{
 		this.name = definition.getName();
 		this.deftype = (AOperationType) definition.getType();
@@ -108,10 +110,11 @@ public class POOperationDefinitionContext extends POContext
 		this.opDef = definition;
 	}
 
-	protected boolean anyBinds(){
+	protected boolean anyBinds()
+	{
 		return !deftype.getParameters().isEmpty();
 	}
-	
+
 	@Override
 	public PExp getContextNode(PExp stitch)
 	{
@@ -131,8 +134,8 @@ public class POOperationDefinitionContext extends POContext
 
 			return forAllExp;
 
-		}
-		else{
+		} else
+		{
 			if (addPrecond && precondition != null)
 			{
 				AImpliesBooleanBinaryExp impliesExp = AstExpressionFactory.newAImpliesBooleanBinaryExp(precondition.clone(), stitch);

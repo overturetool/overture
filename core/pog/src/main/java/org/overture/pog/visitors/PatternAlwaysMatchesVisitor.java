@@ -17,48 +17,61 @@ public class PatternAlwaysMatchesVisitor extends AnswerAdaptor<Boolean>
 	{
 	}
 
-	private Boolean alwaysMatches(List<PPattern> plist) throws AnalysisException
+	private Boolean alwaysMatches(List<PPattern> plist)
+			throws AnalysisException
 	{
-		for (PPattern p: plist)
+		for (PPattern p : plist)
 		{
 			if (!p.apply(this))
 			{
 				return Boolean.FALSE;
 			}
 		}
-		
+
 		return Boolean.TRUE;
 	}
 
 	public Boolean defaultPPattern(PPattern node) throws AnalysisException
 	{
-		return Boolean.FALSE;	// Most patterns do not always match
+		return Boolean.FALSE; // Most patterns do not always match
 	}
-	
+
 	/**
 	 * First, literal patterns always match:
+	 * 
+	 * @param node
+	 * @return
+	 * @throws AnalysisException
 	 */
 
-	public Boolean caseAIdentifierPattern(AIdentifierPattern node) throws AnalysisException
+	public Boolean caseAIdentifierPattern(AIdentifierPattern node)
+			throws AnalysisException
 	{
 		return Boolean.TRUE;
 	}
 
-	public Boolean caseAIgnorePattern(AIgnorePattern node) throws AnalysisException
+	public Boolean caseAIgnorePattern(AIgnorePattern node)
+			throws AnalysisException
 	{
 		return Boolean.TRUE;
 	}
 
 	/**
 	 * Now, a couple of patterns involve recursive calls to AND their components.
+	 * 
+	 * @param node
+	 * @return
+	 * @throws AnalysisException
 	 */
-	
-	public Boolean caseARecordPattern(ARecordPattern node) throws AnalysisException
+
+	public Boolean caseARecordPattern(ARecordPattern node)
+			throws AnalysisException
 	{
 		return alwaysMatches(node.getPlist());
 	}
 
-	public Boolean caseATuplePattern(ATuplePattern node) throws AnalysisException
+	public Boolean caseATuplePattern(ATuplePattern node)
+			throws AnalysisException
 	{
 		return alwaysMatches(node.getPlist());
 	}

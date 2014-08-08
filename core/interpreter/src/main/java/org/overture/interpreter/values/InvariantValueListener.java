@@ -32,10 +32,9 @@ import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.ValueException;
 
-
 public class InvariantValueListener implements ValueListener, Serializable
 {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 	private UpdatableValue root = null;
 
 	public InvariantValueListener()
@@ -47,13 +46,14 @@ public class InvariantValueListener implements ValueListener, Serializable
 	// updatable values has to be created with the listener before we know
 	// the objref of the object just created. See the getUpdatable method of
 	// InvariantValue.
-	
+
 	public void setValue(UpdatableValue value)
 	{
-		this.root = value;		// Always an updatable InvariantValue
+		this.root = value; // Always an updatable InvariantValue
 	}
 
-	public void changedValue(ILexLocation location, Value value, Context ctxt) throws AnalysisException 
+	public void changedValue(ILexLocation location, Value value, Context ctxt)
+			throws AnalysisException
 	{
 		// InvariantValueListeners are created at every Value point (with
 		// an inv function) in a structure, but the simplest level is actually
@@ -61,26 +61,24 @@ public class InvariantValueListener implements ValueListener, Serializable
 		// another unnecessary inv check, we also test whether root = value, which
 		// is true for these simplest levels. Note that we also check for whether
 		// we are inside an atomic block.
-		
+
 		if (root != null && root.value != value && Settings.invchecks)
 		{
-    		try
-    		{
-    			if (root.value instanceof InvariantValue)
-    			{
-    				InvariantValue ival = (InvariantValue) root.value;
-    				ival.checkInvariant(ctxt);
-    			}
-    			else if (root.value instanceof RecordValue)
-    			{
-    				RecordValue rval = (RecordValue) root.value;
-    				rval.checkInvariant(ctxt);
-    			}
-    		}
-    		catch (ValueException e)
-    		{
-    			throw new ContextException(e, location);
-    		}
+			try
+			{
+				if (root.value instanceof InvariantValue)
+				{
+					InvariantValue ival = (InvariantValue) root.value;
+					ival.checkInvariant(ctxt);
+				} else if (root.value instanceof RecordValue)
+				{
+					RecordValue rval = (RecordValue) root.value;
+					rval.checkInvariant(ctxt);
+				}
+			} catch (ValueException e)
+			{
+				throw new ContextException(e, location);
+			}
 		}
 	}
 }

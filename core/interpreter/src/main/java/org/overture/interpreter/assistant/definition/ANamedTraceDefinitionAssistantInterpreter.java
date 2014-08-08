@@ -20,15 +20,14 @@ public class ANamedTraceDefinitionAssistantInterpreter
 		this.af = af;
 	}
 
-	public TestSequence getTests(ANamedTraceDefinition tracedef,
-			Context ctxt) throws Exception
+	public TestSequence getTests(ANamedTraceDefinition tracedef, Context ctxt)
+			throws Exception
 	{
 		return getTests(tracedef, ctxt, 1.0F, TraceReductionType.NONE, System.currentTimeMillis());
 	}
 
-	public TestSequence getTests(ANamedTraceDefinition tracedef,
-			Context ctxt, float subset, TraceReductionType type, long seed)
-			throws Exception
+	public TestSequence getTests(ANamedTraceDefinition tracedef, Context ctxt,
+			float subset, TraceReductionType type, long seed) throws Exception
 	{
 		SequenceTraceNode traces = new SequenceTraceNode();
 

@@ -29,8 +29,7 @@ import org.overture.parser.syntax.ParserException;
  * @param <R>
  */
 @RunWith(Parameterized.class)
-public abstract class ParamExamplesTest<R> extends
-		AbsResultTest<R>
+public abstract class ParamExamplesTest<R> extends AbsResultTest<R>
 {
 	List<INode> model;
 
@@ -88,10 +87,9 @@ public abstract class ParamExamplesTest<R> extends
 
 	/**
 	 * Execute this test. Takes the model AST and applies whatever analysis is implemented in
-	 * {@link #processModel(List)}. Afterwards, results are compared with
-	 * {@link #compareResults(R, R)}. <br>
+	 * {@link #processModel(List)}. Afterwards, results are compared with {@link #compareResults(Object, Object)}. <br>
 	 * <br>
-	 * If the test is running in update mode, {@link #testUpdate(R)} is executed instead of the comparison.
+	 * If the test is running in update mode, testUpdate(Object) is executed instead of the comparison.
 	 * 
 	 * @throws FileNotFoundException
 	 * @throws IOException
@@ -109,29 +107,30 @@ public abstract class ParamExamplesTest<R> extends
 			testUpdate(actual);
 		} else
 		{
-			R expected=null;
-			try {
-				expected= deSerializeResult(resultPath);
-			}
-			catch (FileNotFoundException e){
+			R expected = null;
+			try
+			{
+				expected = deSerializeResult(resultPath);
+			} catch (FileNotFoundException e)
+			{
 				Assert.fail("Test " + testName
 						+ " failed. No result file found. Use \"-D"
 						+ getUpdatePropertyString() + "." + testName
 						+ "\" to create an initial one."
-						+ "\n The test result was: "+ actual.toString());
+						+ "\n The test result was: " + actual.toString());
 			}
 			this.compareResults(actual, expected);
 		}
 	}
 
 	/**
-	 * Analyse a model. This method is called during test execution to produce the actual result. It must, of
-	 * course, be overridden to perform whatever analysis the functionality under test performs.<br>
+	 * Analyse a model. This method is called during test execution to produce the actual result. It must, of course, be
+	 * overridden to perform whatever analysis the functionality under test performs.<br>
 	 * <br>
 	 * The output of this method must be of type <code>R</code>, the result type this test runs on. You will will likely
 	 * need to have a conversion method between the output of your analysis and <code>R</code>.
 	 * 
-	 * @param ast
+	 * @param model
 	 *            the model to process
 	 * @return the output of the analysis
 	 */

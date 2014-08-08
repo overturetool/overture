@@ -43,8 +43,7 @@ public class PDefinitionListAssistantInterpreter extends
 		return obligations;
 	}
 
-	public ValueList getValues(LinkedList<PDefinition> defs,
-			ObjectContext ctxt)
+	public ValueList getValues(LinkedList<PDefinition> defs, ObjectContext ctxt)
 	{
 		ValueList list = new ValueList();
 

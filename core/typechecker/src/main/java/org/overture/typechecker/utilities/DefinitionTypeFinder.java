@@ -38,9 +38,8 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 //TODO Add assistant Javadoc
 
 /**
- * A refactored assistant/ functionality visitor.
- * 
- * This class implements a way to collect definitions from a node in the AST
+ * A refactored assistant/ functionality visitor. This class implements a way to collect definitions from a node in the
+ * AST
  * <p>
  * Note that this class may be generalized to a TypeFinder class if this kind of functionality also exists for
  * non-definition nodes
@@ -55,7 +54,7 @@ public class DefinitionTypeFinder extends AnswerAdaptor<PType>
 
 	public DefinitionTypeFinder(ITypeCheckerAssistantFactory af)
 	{
-		this.af = af;
+		DefinitionTypeFinder.af = af;
 	}
 
 	@Override
@@ -109,15 +108,15 @@ public class DefinitionTypeFinder extends AnswerAdaptor<PType>
 	}
 
 	@Override
-	public PType caseAImplicitFunctionDefinition(AImplicitFunctionDefinition node) 
-			throws AnalysisException
+	public PType caseAImplicitFunctionDefinition(
+			AImplicitFunctionDefinition node) throws AnalysisException
 	{
 		return node.getType();
 	}
 
 	@Override
-	public PType caseAImplicitOperationDefinition(AImplicitOperationDefinition node) 
-			throws AnalysisException
+	public PType caseAImplicitOperationDefinition(
+			AImplicitOperationDefinition node) throws AnalysisException
 	{
 		return node.getType();
 	}
@@ -136,7 +135,7 @@ public class DefinitionTypeFinder extends AnswerAdaptor<PType>
 		// LocalDefinition. It would be better to somehow list the
 		// inherited definitions that refer to a LocalDefinition and update
 		// them...
- 
+
 		if (d.getSuperdef() instanceof AUntypedDefinition)
 		{
 			if (d.getClassDefinition() != null)
@@ -246,10 +245,10 @@ public class DefinitionTypeFinder extends AnswerAdaptor<PType>
 	public PType caseAValueDefinition(AValueDefinition node)
 			throws AnalysisException
 	{
-		//return AValueDefinitionAssistantTC.getType((AValueDefinition) node);
+		// return AValueDefinitionAssistantTC.getType((AValueDefinition) node);
 		return node.getType() != null ? node.getType()
-				: (node.getExpType() != null ? node.getExpType()
-						: AstFactory.newAUnknownType(node.getLocation()));
+				: node.getExpType() != null ? node.getExpType()
+						: AstFactory.newAUnknownType(node.getLocation());
 	}
 
 	@Override

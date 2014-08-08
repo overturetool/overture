@@ -10,43 +10,55 @@ import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.ACallStm;
 
-public class GetOpCallVisitor extends AnswerAdaptor<SOperationDefinitionBase> {
+public class GetOpCallVisitor extends AnswerAdaptor<SOperationDefinitionBase>
+{
 
 	@Override
-	public SOperationDefinitionBase createNewReturnValue(INode node) throws AnalysisException {
+	public SOperationDefinitionBase createNewReturnValue(INode node)
+			throws AnalysisException
+	{
 		return null;
 	}
 
 	@Override
-	public SOperationDefinitionBase createNewReturnValue(Object node) throws AnalysisException {
+	public SOperationDefinitionBase createNewReturnValue(Object node)
+			throws AnalysisException
+	{
 		return null;
 	}
-	
+
 	@Override
-	public SOperationDefinitionBase caseAApplyExp(AApplyExp node) throws AnalysisException {
+	public SOperationDefinitionBase caseAApplyExp(AApplyExp node)
+			throws AnalysisException
+	{
 		return node.getRoot().apply(this);
 	}
 
 	@Override
-	public SOperationDefinitionBase caseAVariableExp(AVariableExp node) throws AnalysisException {
+	public SOperationDefinitionBase caseAVariableExp(AVariableExp node)
+			throws AnalysisException
+	{
 		return node.getVardef().apply(this);
 	}
-	
+
 	@Override
 	public SOperationDefinitionBase caseACallStm(ACallStm node)
-			throws AnalysisException {
+			throws AnalysisException
+	{
 		return node.getRootdef().apply(this);
 	}
 
 	@Override
 	public SOperationDefinitionBase caseAExplicitOperationDefinition(
-			AExplicitOperationDefinition node) throws AnalysisException {
+			AExplicitOperationDefinition node) throws AnalysisException
+	{
 		return node;
 	}
 
 	@Override
 	public SOperationDefinitionBase caseAImplicitOperationDefinition(
-			AImplicitOperationDefinition node) throws AnalysisException {
+			AImplicitOperationDefinition node) throws AnalysisException
+	{
 		return node;
 	}
 

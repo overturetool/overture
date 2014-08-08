@@ -38,10 +38,9 @@ import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.scheduler.BasicSchedulableThread;
 import org.overture.interpreter.scheduler.SharedStateListner;
 
-
 /**
- * A class to hold an updatable value that can be modified by VDM-RT
- * threads in transactions, committed at a duration point.
+ * A class to hold an updatable value that can be modified by VDM-RT threads in transactions, committed at a duration
+ * point.
  */
 
 public class TransactionValue extends UpdatableValue
@@ -50,12 +49,13 @@ public class TransactionValue extends UpdatableValue
 
 	private static List<TransactionValue> commitList = new Vector<TransactionValue>();
 
-	private Value newvalue = null;		// The pending value before a commit
-	private long newthreadid = -1;		// The thread that made the change
-	
-	private ILexLocation lastSetLocation = null; //The location that made the change
+	private Value newvalue = null; // The pending value before a commit
+	private long newthreadid = -1; // The thread that made the change
 
-	protected TransactionValue(Value value, ValueListenerList listeners, PType type)
+	private ILexLocation lastSetLocation = null; // The location that made the change
+
+	protected TransactionValue(Value value, ValueListenerList listeners,
+			PType type)
 	{
 		super(value, listeners, type);
 		newvalue = value;
@@ -69,12 +69,12 @@ public class TransactionValue extends UpdatableValue
 
 	private Value select()
 	{
-		if (newthreadid > 0 && BasicSchedulableThread.getThread(Thread.currentThread()) != null &&
-				BasicSchedulableThread.getThread(Thread.currentThread()).getId() == newthreadid)
+		if (newthreadid > 0
+				&& BasicSchedulableThread.getThread(Thread.currentThread()) != null
+				&& BasicSchedulableThread.getThread(Thread.currentThread()).getId() == newthreadid)
 		{
 			return newvalue;
-		}
-		else
+		} else
 		{
 			return value;
 		}
@@ -87,32 +87,34 @@ public class TransactionValue extends UpdatableValue
 	}
 
 	@Override
-	public synchronized Value convertValueTo(PType to, Context ctxt) throws AnalysisException
+	public synchronized Value convertValueTo(PType to, Context ctxt)
+			throws AnalysisException
 	{
 		return select().convertValueTo(to, ctxt).getUpdatable(listeners);
 	}
 
 	@Override
-	public void set(ILexLocation location, Value newval, Context ctxt) throws AnalysisException
+	public void set(ILexLocation location, Value newval, Context ctxt)
+			throws AnalysisException
 	{
 		long current = BasicSchedulableThread.getThread(Thread.currentThread()).getId();
 
 		if (newthreadid > 0 && current != newthreadid)
 		{
-			throw new ContextException(
-				4142, "Value already updated by thread " + newthreadid, location, ctxt);
+			throw new ContextException(4142, "Value already updated by thread "
+					+ newthreadid, location, ctxt);
 		}
 
 		synchronized (this)
 		{
 			lastSetLocation = location;
-   			newvalue = newval.getUpdatable(listeners);
-    		newvalue = ((UpdatableValue)newvalue).value;	// To avoid nested updatables
+			newvalue = newval.getUpdatable(listeners);
+			newvalue = ((UpdatableValue) newvalue).value; // To avoid nested updatables
 
-    		if (restrictedTo != null)
-    		{
+			if (restrictedTo != null)
+			{
 				newvalue = newvalue.convertTo(restrictedTo, ctxt);
-    		}
+			}
 		}
 
 		if (newthreadid < 0)
@@ -134,12 +136,12 @@ public class TransactionValue extends UpdatableValue
 	{
 		synchronized (commitList)
 		{
-    		for (TransactionValue v: commitList)
-    		{
-    			v.commit();
-    		}
+			for (TransactionValue v : commitList)
+			{
+				v.commit();
+			}
 
-    		commitList.clear();
+			commitList.clear();
 		}
 	}
 
@@ -147,18 +149,18 @@ public class TransactionValue extends UpdatableValue
 	{
 		synchronized (commitList)
 		{
-    		ListIterator<TransactionValue> it = commitList.listIterator();
+			ListIterator<TransactionValue> it = commitList.listIterator();
 
-    		while (it.hasNext())
-    		{
-    			TransactionValue v = it.next();
+			while (it.hasNext())
+			{
+				TransactionValue v = it.next();
 
-    			if (v.newthreadid == tid)
-    			{
-    				v.commit();
-    				it.remove();
-    			}
-    		}
+				if (v.newthreadid == tid)
+				{
+					v.commit();
+					it.remove();
+				}
+			}
 		}
 	}
 
@@ -166,21 +168,21 @@ public class TransactionValue extends UpdatableValue
 	{
 		if (newthreadid > 0)
 		{
-			value = newvalue;		// Listener called for original "set"
+			value = newvalue; // Listener called for original "set"
 			newthreadid = -1;
 		}
-		
-		//Experimental hood added for DESTECS
-		if(Settings.dialect == Dialect.VDM_RT)
+
+		// Experimental hood added for DESTECS
+		if (Settings.dialect == Dialect.VDM_RT)
 		{
-			SharedStateListner.variableChanged(this,lastSetLocation);
+			SharedStateListner.variableChanged(this, lastSetLocation);
 		}
 	}
 
 	@Override
 	public synchronized Object clone()
 	{
-		return new TransactionValue((Value)select().clone(), listeners, restrictedTo);
+		return new TransactionValue((Value) select().clone(), listeners, restrictedTo);
 	}
 
 	@Override
@@ -250,19 +252,22 @@ public class TransactionValue extends UpdatableValue
 	}
 
 	@Override
-	public synchronized ValueList tupleValue(Context ctxt) throws ValueException
+	public synchronized ValueList tupleValue(Context ctxt)
+			throws ValueException
 	{
 		return select().tupleValue(ctxt);
 	}
 
 	@Override
-	public synchronized RecordValue recordValue(Context ctxt) throws ValueException
+	public synchronized RecordValue recordValue(Context ctxt)
+			throws ValueException
 	{
 		return select().recordValue(ctxt);
 	}
 
 	@Override
-	public synchronized ObjectValue objectValue(Context ctxt) throws ValueException
+	public synchronized ObjectValue objectValue(Context ctxt)
+			throws ValueException
 	{
 		return select().objectValue(ctxt);
 	}
@@ -298,13 +303,15 @@ public class TransactionValue extends UpdatableValue
 	}
 
 	@Override
-	public synchronized FunctionValue functionValue(Context ctxt) throws ValueException
+	public synchronized FunctionValue functionValue(Context ctxt)
+			throws ValueException
 	{
 		return select().functionValue(ctxt);
 	}
 
 	@Override
-	public synchronized OperationValue operationValue(Context ctxt) throws ValueException
+	public synchronized OperationValue operationValue(Context ctxt)
+			throws ValueException
 	{
 		return select().operationValue(ctxt);
 	}
@@ -314,22 +321,20 @@ public class TransactionValue extends UpdatableValue
 	{
 		if (other instanceof Value)
 		{
-			Value val = ((Value)other).deref();
+			Value val = ((Value) other).deref();
 
-    		if (val instanceof TransactionValue)
-    		{
-    			TransactionValue tvo = (TransactionValue)val;
-    			return select().equals(tvo.select());
-    		}
-    		else if (val instanceof ReferenceValue)
-    		{
-    			ReferenceValue rvo = (ReferenceValue)val;
-    			return select().equals(rvo.value);
-    		}
-    		else
-    		{
-    			return select().equals(other);
-    		}
+			if (val instanceof TransactionValue)
+			{
+				TransactionValue tvo = (TransactionValue) val;
+				return select().equals(tvo.select());
+			} else if (val instanceof ReferenceValue)
+			{
+				ReferenceValue rvo = (ReferenceValue) val;
+				return select().equals(rvo.value);
+			} else
+			{
+				return select().equals(other);
+			}
 		}
 
 		return false;

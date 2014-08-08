@@ -27,7 +27,6 @@ import org.overture.ast.types.PType;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ValueException;
 
-
 public class UndefinedValue extends Value
 {
 	private static final long serialVersionUID = 1L;

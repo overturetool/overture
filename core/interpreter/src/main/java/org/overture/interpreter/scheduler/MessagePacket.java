@@ -30,10 +30,9 @@ import org.overture.interpreter.values.CPUValue;
 import org.overture.interpreter.values.ObjectValue;
 import org.overture.interpreter.values.OperationValue;
 
-
 public abstract class MessagePacket implements Serializable
 {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 	private static long nextId = 1;
 
 	public final long msgId;
@@ -45,7 +44,7 @@ public abstract class MessagePacket implements Serializable
 	public final OperationValue operation;
 
 	public MessagePacket(BUSValue bus, CPUValue from, CPUValue to,
-		ObjectValue target, OperationValue operation)
+			ObjectValue target, OperationValue operation)
 	{
 		this.msgId = getNextId();
 		this.thread = BasicSchedulableThread.getThread(Thread.currentThread());
@@ -73,7 +72,7 @@ public abstract class MessagePacket implements Serializable
 	}
 
 	public static void init()
-    {
+	{
 		nextId = 1;
-    }
+	}
 }

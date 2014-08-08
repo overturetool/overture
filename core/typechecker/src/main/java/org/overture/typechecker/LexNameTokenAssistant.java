@@ -6,12 +6,12 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 public class LexNameTokenAssistant
 {
 	public ITypeCheckerAssistantFactory af;
-	
+
 	public LexNameTokenAssistant(ITypeCheckerAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	public boolean isEqual(ILexNameToken token, Object other)
 	{
 		if (!(other instanceof ILexNameToken))
@@ -24,7 +24,7 @@ public class LexNameTokenAssistant
 		if (token.getTypeQualifier() != null
 				&& lother.getTypeQualifier() != null)
 		{
-			if (!af.getTypeComparator().compatible(token.getTypeQualifier(), lother.getTypeQualifier() ))
+			if (!af.getTypeComparator().compatible(token.getTypeQualifier(), lother.getTypeQualifier()))
 			{
 				return false;
 			}

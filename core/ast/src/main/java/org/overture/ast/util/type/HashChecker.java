@@ -21,6 +21,7 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
+
 /**
  * Used to check if a given type is having a hash.
  * 
@@ -35,38 +36,39 @@ public class HashChecker extends AnswerAdaptor<Integer>
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public Integer caseABracketType(ABracketType type) throws AnalysisException
 	{
 		return type.getType().apply(THIS);
 	}
-	
+
 	@Override
 	public Integer caseAClassType(AClassType type) throws AnalysisException
 	{
 		return type.getName().apply(THIS);
 	}
-	
+
 	@Override
 	public Integer caseAFunctionType(AFunctionType type)
 			throws AnalysisException
 	{
-		return af.createPTypeAssistant().hashCode(type.getParameters()) + af.createPTypeAssistant().hashCode(type.getResult());
+		return af.createPTypeAssistant().hashCode(type.getParameters())
+				+ af.createPTypeAssistant().hashCode(type.getResult());
 	}
-	
+
 	@Override
 	public Integer caseANamedInvariantType(ANamedInvariantType type)
 			throws AnalysisException
 	{
 		return type.getName().apply(THIS);
 	}
-	
+
 	@Override
 	public Integer caseARecordInvariantType(ARecordInvariantType type)
 			throws AnalysisException
 	{
-		
+
 		return type.getName().apply(THIS);
 	}
 
@@ -76,85 +78,85 @@ public class HashChecker extends AnswerAdaptor<Integer>
 	{
 		return type.getClass().hashCode();
 	}
-	
+
 	@Override
 	public Integer defaultSMapType(SMapType type) throws AnalysisException
 	{
 		SMapType mtype = type;
 		return mtype.getFrom().apply(THIS) + mtype.getTo().apply(THIS);
-	
+
 	}
-	
+
 	@Override
 	public Integer caseAOperationType(AOperationType type)
 			throws AnalysisException
 	{
 		AOperationType otype = type;
-		return af.createPTypeAssistant().hashCode(otype.getParameters()) + af.createPTypeAssistant().hashCode(otype.getResult());
-		
+		return af.createPTypeAssistant().hashCode(otype.getParameters())
+				+ af.createPTypeAssistant().hashCode(otype.getResult());
+
 	}
-	
+
 	@Override
 	public Integer caseAOptionalType(AOptionalType type)
 			throws AnalysisException
 	{
 		return type.getType().apply(THIS);
-		
+
 	}
-	
+
 	@Override
 	public Integer caseAParameterType(AParameterType type)
 			throws AnalysisException
 	{
 		return type.getName().apply(THIS);
-		
+
 	}
-	
+
 	@Override
 	public Integer caseAProductType(AProductType type) throws AnalysisException
 	{
 		return af.createPTypeAssistant().hashCode(type.getTypes());
 	}
-	
+
 	@Override
 	public Integer caseAQuoteType(AQuoteType type) throws AnalysisException
 	{
 		return type.getValue().hashCode();
 	}
-	
+
 	@Override
 	public Integer defaultSSeqType(SSeqType type) throws AnalysisException
 	{
 		SSeqType stype = type;
-		return stype.getEmpty() ? 0 : stype.getSeqof().apply(THIS); //hashCode(stype.getSeqof());
+		return stype.getEmpty() ? 0 : stype.getSeqof().apply(THIS); // hashCode(stype.getSeqof());
 	}
-	
+
 	@Override
 	public Integer caseASetType(ASetType type) throws AnalysisException
 	{
 		ASetType stype = type;
-		return stype.getEmpty() ? 0 : stype.getSetof().apply(THIS); //hashCode(stype.getSetof());
+		return stype.getEmpty() ? 0 : stype.getSetof().apply(THIS); // hashCode(stype.getSetof());
 	}
-	
+
 	@Override
 	public Integer caseAUnionType(AUnionType type) throws AnalysisException
 	{
 		return af.createPTypeAssistant().hashCode(type.getTypes());
 	}
-	
+
 	@Override
 	public Integer caseAUnresolvedType(AUnresolvedType type)
 			throws AnalysisException
 	{
 		return type.getName().hashCode();
 	}
-	
+
 	@Override
 	public Integer defaultPType(PType type) throws AnalysisException
 	{
 		return type.getClass().hashCode();
 	}
-
 
 	@Override
 	public Integer createNewReturnValue(INode type) throws AnalysisException

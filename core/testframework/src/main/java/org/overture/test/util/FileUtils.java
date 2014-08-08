@@ -49,17 +49,21 @@ public class FileUtils
 			}
 		} catch (Exception e)
 		{
-//			System.err.println("Faild to read file from jar: \"" + s + "\"");
-//			e.printStackTrace();
+			// System.err.println("Faild to read file from jar: \"" + s + "\"");
+			// e.printStackTrace();
 			throw e;
 		} finally
 		{
 			try
 			{
 				if (br != null)
+				{
 					br.close();
+				}
 				if (is != null)
+				{
 					is.close();
+				}
 			} catch (IOException e)
 			{
 				e.printStackTrace();
@@ -92,16 +96,19 @@ public class FileUtils
 	private static List<String> readTextFromSource(String relativePath)
 	{
 		List<String> list = new ArrayList<String>();
-		try {
-		    BufferedReader in = new BufferedReader(new FileReader(new File(new File("."),("src/test/resources/"+relativePath).replace('/', File.separatorChar))));
-		    String str;
-		    while ((str = in.readLine()) != null) {
-		        list.add(str);
-		    }
-		    in.close();
-		} catch (IOException e) {
+		try
+		{
+			BufferedReader in = new BufferedReader(new FileReader(new File(new File("."), ("src/test/resources/" + relativePath).replace('/', File.separatorChar))));
+			String str;
+			while ((str = in.readLine()) != null)
+			{
+				list.add(str);
+			}
+			in.close();
+		} catch (IOException e)
+		{
 		}
-		
+
 		return list;
 	}
 

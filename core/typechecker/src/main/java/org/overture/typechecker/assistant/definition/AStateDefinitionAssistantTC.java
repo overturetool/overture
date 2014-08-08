@@ -23,8 +23,7 @@ public class AStateDefinitionAssistantTC
 		this.af = af;
 	}
 
-	public AExplicitFunctionDefinition getInitDefinition(
-			AStateDefinition d)
+	public AExplicitFunctionDefinition getInitDefinition(AStateDefinition d)
 	{
 		ILexLocation loc = d.getInitPattern().getLocation();
 		List<PPattern> params = new Vector<PPattern>();
@@ -44,8 +43,7 @@ public class AStateDefinitionAssistantTC
 		return def;
 	}
 
-	public AExplicitFunctionDefinition getInvDefinition(
-			AStateDefinition d)
+	public AExplicitFunctionDefinition getInvDefinition(AStateDefinition d)
 	{
 
 		ILexLocation loc = d.getInvPattern().getLocation();

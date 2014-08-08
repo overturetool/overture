@@ -36,41 +36,42 @@ public class NumericBasisChecker extends AnswerAdaptor<SNumericBasicType>
 	{
 		return type;
 	}
-	
+
 	@Override
 	public SNumericBasicType defaultSBasicType(SBasicType type)
 			throws AnalysisException
 	{
 		return null;
 	}
-	
+
 	@Override
 	public SNumericBasicType caseABracketType(ABracketType type)
 			throws AnalysisException
 	{
 		return type.getType().apply(THIS);
 	}
-	
+
 	@Override
 	public SNumericBasicType caseANamedInvariantType(ANamedInvariantType type)
 			throws AnalysisException
 	{
 		return type.getType().apply(THIS);
 	}
+
 	@Override
 	public SNumericBasicType defaultSInvariantType(SInvariantType type)
 			throws AnalysisException
 	{
 		return null;
 	}
-	
+
 	@Override
 	public SNumericBasicType caseAOptionalType(AOptionalType type)
 			throws AnalysisException
 	{
 		return type.getType().apply(THIS);
 	}
-	
+
 	@Override
 	public SNumericBasicType caseAUnionType(AUnionType type)
 			throws AnalysisException
@@ -97,26 +98,28 @@ public class NumericBasisChecker extends AnswerAdaptor<SNumericBasicType>
 			}
 
 			if (!found)
+			{
 				type.setNumType(null);
+			}
 		}
 
 		return type.getNumType();
 	}
-	
+
 	@Override
 	public SNumericBasicType caseAUnknownType(AUnknownType type)
 			throws AnalysisException
 	{
 		return AstFactory.newARealNumericBasicType(type.getLocation());
 	}
-	
+
 	@Override
 	public SNumericBasicType defaultPType(PType type) throws AnalysisException
 	{
 		assert false : "Can't getNumeric of a non-numeric";
 		return null;
 	}
-	
+
 	@Override
 	public SNumericBasicType createNewReturnValue(INode type)
 			throws AnalysisException

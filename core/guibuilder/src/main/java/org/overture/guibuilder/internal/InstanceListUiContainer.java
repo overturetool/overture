@@ -31,22 +31,24 @@ import javax.swing.table.AbstractTableModel;
 
 /**
  * A window possessing a table with the current global instances
+ * 
  * @author carlos
- *
  */
-public class InstanceListUiContainer extends JFrame implements Observer {
+public class InstanceListUiContainer extends JFrame implements Observer
+{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	/** The swing table widget requires an abstract table model
-	 *  for what we want to do
+	/**
+	 * The swing table widget requires an abstract table model for what we want to do
+	 * 
 	 * @author carlos
-	 *
 	 */
-	private class MyTableModel extends AbstractTableModel {
+	private class MyTableModel extends AbstractTableModel
+	{
 
 		/**
 		 * 
@@ -55,108 +57,130 @@ public class InstanceListUiContainer extends JFrame implements Observer {
 		private Vector<String> columnNames = null;
 		private InstanceList rowData = null;
 
-		public MyTableModel() {			
+		public MyTableModel()
+		{
 			super();
 			columnNames = new Vector<String>();
 			columnNames.addElement("Name");
 			columnNames.addElement("Value");
 		}
 
-		public boolean isCellEditable(int row, int col) {
+		public boolean isCellEditable(int row, int col)
+		{
 			return false;
 		}
 
-		public int getRowCount() {
-			if (rowData ==null) 
+		public int getRowCount()
+		{
+			if (rowData == null)
+			{
 				return 0;
+			}
 			return rowData.size();
 		}
 
-		public int getColumnCount() {
+		public int getColumnCount()
+		{
 			return columnNames.size();
 		}
 
-		public String getColumnName(int col) {
+		public String getColumnName(int col)
+		{
 			return columnNames.get(col);
 		}
 
-		public Object getValueAt(int rowIndex, int columnIndex) {
-			if ( (rowIndex > getRowCount() -1 ) || (columnIndex > getColumnCount()-1) )
+		public Object getValueAt(int rowIndex, int columnIndex)
+		{
+			if (rowIndex > getRowCount() - 1
+					|| columnIndex > getColumnCount() - 1)
+			{
 				return null;
-			// out of bound
-			if(columnIndex > columnNames.size())
-				return null;
-
-			switch(columnIndex) {
-			case 0:
-				return rowData.get(rowIndex).getName();
-			case 1:
-				return rowData.get(rowIndex).getValue();
-			default:
 			}
-			
+			// out of bound
+			if (columnIndex > columnNames.size())
+			{
+				return null;
+			}
+
+			switch (columnIndex)
+			{
+				case 0:
+					return rowData.get(rowIndex).getName();
+				case 1:
+					return rowData.get(rowIndex).getValue();
+				default:
+			}
+
 			return null;
 		}
-		
-		public void setRowData(InstanceList instanceList ) {
+
+		public void setRowData(InstanceList instanceList)
+		{
 			this.rowData = instanceList;
 		}
 	}
 
-	
-	/** subclass for JTable in order to correct a old bug... 
-	 * (http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4127936)
+	/**
+	 * subclass for JTable in order to correct a old bug... (http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4127936)
+	 * 
 	 * @author carlos
-	 *
 	 */
-	class MyJTable extends JTable {
-		
+	class MyJTable extends JTable
+	{
+
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
 
 		@Override
-		public boolean getScrollableTracksViewportWidth() {
-			if (autoResizeMode != AUTO_RESIZE_OFF) {
-				if (getParent() instanceof JViewport) {
-					return (((JViewport)getParent()).getWidth() > getPreferredSize().width);
+		public boolean getScrollableTracksViewportWidth()
+		{
+			if (autoResizeMode != AUTO_RESIZE_OFF)
+			{
+				if (getParent() instanceof JViewport)
+				{
+					return ((JViewport) getParent()).getWidth() > getPreferredSize().width;
 				}
 			}
 			return false;
 		}
-		
+
 	}
-	
+
 	private MyTableModel tableModel = null;
 	private JScrollPane scrollPane = null;
 	private JTable table = null;
 
 	/**
 	 * Constructor
-	 * @param instanceList The instance list object to monitor. The information to fill the table will be obtained from this.
+	 * 
+	 * @param instanceList
+	 *            The instance list object to monitor. The information to fill the table will be obtained from this.
 	 */
-	public InstanceListUiContainer( InstanceList instanceList ) {
-		
+	public InstanceListUiContainer(InstanceList instanceList)
+	{
+
 		super("List of Instances");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(230,130);
+		setSize(230, 130);
 		table = new MyJTable();
 		tableModel = new MyTableModel();
 		tableModel.setRowData(instanceList);
 		instanceList.addObserver(this);
 		table.setModel(tableModel);
 		scrollPane = new JScrollPane(table);
-		table.setPreferredScrollableViewportSize(new Dimension(500,70));
+		table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		table.setFillsViewportHeight(true);
-//		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-//		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		this.setContentPane(scrollPane);		
+		// table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+		// table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		this.setContentPane(scrollPane);
 	}
 
 	@Override
-	public void update(Observable arg0, Object arg1) {
+	public void update(Observable arg0, Object arg1)
+	{
 		tableModel.fireTableDataChanged();
 	}
-	
+
 }

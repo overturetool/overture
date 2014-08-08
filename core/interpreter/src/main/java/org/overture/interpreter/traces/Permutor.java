@@ -37,8 +37,8 @@ public class Permutor
 		this.count = limits.length;
 		this.current = new int[count];
 		this.done = true;
-		
-		for (int i=0; i<count; i++)
+
+		for (int i = 0; i < count; i++)
 		{
 			if (limits[i] > 0)
 			{
@@ -53,7 +53,7 @@ public class Permutor
 		int[] old = new int[count];
 		System.arraycopy(current, 0, old, 0, count);
 
-		for (int i=0; i<count; i++)
+		for (int i = 0; i < count; i++)
 		{
 			if (++current[i] < limit[i])
 			{
@@ -63,7 +63,7 @@ public class Permutor
 
 			current[i] = 0;
 
-			if (i == count-1)
+			if (i == count - 1)
 			{
 				done = true;
 			}

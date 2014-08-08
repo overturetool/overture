@@ -29,8 +29,6 @@ import java.util.Vector;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.util.Utils;
 
-
-
 @SuppressWarnings("serial")
 public class LexNameList extends Vector<ILexNameToken>
 {
@@ -44,7 +42,7 @@ public class LexNameList extends Vector<ILexNameToken>
 		super();
 		add(name);
 	}
-	
+
 	public LexNameList(Collection<? extends ILexNameToken> c)
 	{
 		super();
@@ -61,11 +59,11 @@ public class LexNameList extends Vector<ILexNameToken>
 	{
 		int len = size();
 
-		for (int i=0; i<len; i++)
+		for (int i = 0; i < len; i++)
 		{
 			ILexNameToken name = get(i);
 
-			for (int j=i+1; j<len; j++)
+			for (int j = i + 1; j < len; j++)
 			{
 				if (get(j).equals(name))
 				{

@@ -101,7 +101,7 @@ public class ParameterPatternObligation extends ProofObligation
 	{
 		super(def, POType.OPERATION_PATTERNS, ctxt, def.getLocation(), af);
 		this.assistantFactory = af;
-		
+
 		stitch = generate(def.getPredef(), cloneListPatternList(assistantFactory.createAImplicitOperationDefinitionAssistant().getListParamPatternList(def)), cloneListType(((AOperationType) def.getType()).getParameters()), ((AOperationType) def.getType()).getResult().clone());
 		valuetree.setPredicate(ctxt.getPredWithContext(stitch));
 	}

@@ -1102,7 +1102,8 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	@Override
 	public LexNameTokenAssistant getLexNameTokenAssistant()
 	{
-		if (lnt ==null){
+		if (lnt == null)
+		{
 			lnt = new LexNameTokenAssistant(this);
 		}
 		return lnt;

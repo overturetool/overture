@@ -151,10 +151,10 @@ public class DefinitionFinder extends
 	{
 		if (!node.getComposeDefinitions().isEmpty())
 		{
-			for (PDefinition compose: node.getComposeDefinitions())
+			for (PDefinition compose : node.getComposeDefinitions())
 			{
 				PDefinition found = af.createPDefinitionAssistant().findNameBaseCase(compose, question.sought, NameScope.TYPENAME);
-				
+
 				if (found != null)
 				{
 					return found;

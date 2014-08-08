@@ -38,7 +38,6 @@ public class OutlineCompatabilityChecker extends
 		return tmp;
 	}
 
-
 	public static boolean isNotNull(Object o)
 	{
 		return o != null;
@@ -74,7 +73,7 @@ public class OutlineCompatabilityChecker extends
 		{
 			if (e instanceof INode)
 			{
-				r = mergeReturns(r, check(((INode) e)));
+				r = mergeReturns(r, check((INode) e));
 			}
 		}
 
@@ -188,7 +187,7 @@ public class OutlineCompatabilityChecker extends
 	@Override
 	public Boolean mergeReturns(Boolean original, Boolean new_)
 	{
-		return (original ? new_ : original);
+		return original ? new_ : original;
 	}
 
 	@Override

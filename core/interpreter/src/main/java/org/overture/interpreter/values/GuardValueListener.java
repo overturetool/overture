@@ -29,10 +29,9 @@ import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.scheduler.Lock;
 
-
 public class GuardValueListener implements ValueListener, Serializable
 {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 	private final Lock lock;
 
 	public GuardValueListener(Lock self)

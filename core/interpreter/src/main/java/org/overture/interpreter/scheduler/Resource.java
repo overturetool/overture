@@ -27,7 +27,7 @@ import java.io.Serializable;
 
 abstract public class Resource implements Serializable
 {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 	public final SchedulingPolicy policy;
 	protected String name = "unknown";
 	protected ResourceScheduler scheduler;
@@ -68,7 +68,7 @@ abstract public class Resource implements Serializable
 	{
 		if (other instanceof Resource)
 		{
-			Resource ro = (Resource)other;
+			Resource ro = (Resource) other;
 			return name.equals(ro.name);
 		}
 

@@ -76,19 +76,19 @@ public class POFunctionDefinitionContext extends POContext
 	{
 		AForAllExp forAllExp = new AForAllExp();
 		forAllExp.setBindList(makeBinds());
-		
-		if (deftype.getParameters().isEmpty()){
+
+		if (deftype.getParameters().isEmpty())
+		{
 			return stitch;
 		}
-		
+
 		if (addPrecond && precondition != null)
 		{
-			
+
 			AImpliesBooleanBinaryExp implies = AstExpressionFactory.newAImpliesBooleanBinaryExp(precondition.clone(), stitch);
-			
+
 			forAllExp.setPredicate(implies);
-		}
-		else
+		} else
 		{
 			forAllExp.setPredicate(stitch);
 		}
@@ -101,12 +101,11 @@ public class POFunctionDefinitionContext extends POContext
 		List<PMultipleBind> result = new LinkedList<PMultipleBind>();
 		AFunctionType ftype = deftype;
 
-		for (List<PPattern> params: paramPatternList)
+		for (List<PPattern> params : paramPatternList)
 		{
 			Iterator<PType> types = ftype.getParameters().iterator();
-		
-			
-			for (PPattern param: params)
+
+			for (PPattern param : params)
 			{
 				ATypeMultipleBind typeBind = new ATypeMultipleBind();
 				List<PPattern> one = new Vector<PPattern>();
@@ -116,7 +115,7 @@ public class POFunctionDefinitionContext extends POContext
 				result.add(typeBind);
 			}
 		}
-	
+
 		return result;
 	}
 

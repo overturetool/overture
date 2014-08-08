@@ -52,8 +52,6 @@ import org.overture.pog.pub.IProofObligationList;
 import org.overture.typechecker.ModuleTypeChecker;
 import org.overture.typechecker.TypeChecker;
 
-
-
 /**
  * The main class of the VDM-SL parser/checker/interpreter.
  */
@@ -68,7 +66,7 @@ public class VDMSL extends VDMJ
 	}
 
 	/**
-	 * @see org.overture.vdmj.VDMJ#parse(java.util.List)
+	 * @see VDMJ#parse(java.util.List)
 	 */
 
 	@Override
@@ -76,99 +74,94 @@ public class VDMSL extends VDMJ
 	{
 		modules.clear();
 		LexLocation.resetLocations();
-   		int perrs = 0;
-   		int pwarn = 0;
-   		long duration = 0;
+		int perrs = 0;
+		int pwarn = 0;
+		long duration = 0;
 
-   		for (File file: files)
-   		{
-   			ModuleReader reader = null;
+		for (File file : files)
+		{
+			ModuleReader reader = null;
 
-   			try
-   			{
-   				if (file.getName().endsWith(".lib"))
-   				{
-   					FileInputStream fis = new FileInputStream(file);
-   	    	        GZIPInputStream gis = new GZIPInputStream(fis);
-   	    	        ObjectInputStream ois = new ObjectInputStream(gis);
-
-   	    	        ModuleListInterpreter loaded = null;
-   	    	        long begin = System.currentTimeMillis();
-
-   	    	        try
-   	    	        {
-   	    	        	loaded = new ModuleListInterpreter((ModuleList)ois.readObject());
-   	    	        }
-       	 			catch (Exception e)
-       				{
-       	   				println(file + " is not a valid VDM-SL library");
-       	   				perrs++;
-       	   				continue;
-       				}
-       	 			finally
-       	 			{
-       	 				ois.close();
-       	 			}
-
-   	    	        long end = System.currentTimeMillis();
-   	    	        loaded.setLoaded();
-   	    	        modules.addAll(loaded);
-
-   	    	   		infoln("Loaded " + plural(loaded.size(), "module", "s") +
-   	    	   			" from " + file + " in " + (double)(end-begin)/1000 + " secs");
-   				}
-   				else
-   				{
-   					long before = System.currentTimeMillis();
-    				LexTokenReader ltr =
-    					new LexTokenReader(file, Settings.dialect, filecharset);
-        			reader = new ModuleReader(ltr);
-        			modules.addAll(reader.readModules());
-        	   		long after = System.currentTimeMillis();
-        	   		duration += (after - before);
-   				}
-    		}
-			catch (InternalException e)
+			try
 			{
-   				println(e.toString());
-			}
-			catch (Throwable e)
+				if (file.getName().endsWith(".lib"))
+				{
+					FileInputStream fis = new FileInputStream(file);
+					GZIPInputStream gis = new GZIPInputStream(fis);
+					ObjectInputStream ois = new ObjectInputStream(gis);
+
+					ModuleListInterpreter loaded = null;
+					long begin = System.currentTimeMillis();
+
+					try
+					{
+						loaded = new ModuleListInterpreter((ModuleList) ois.readObject());
+					} catch (Exception e)
+					{
+						println(file + " is not a valid VDM-SL library");
+						perrs++;
+						continue;
+					} finally
+					{
+						ois.close();
+					}
+
+					long end = System.currentTimeMillis();
+					loaded.setLoaded();
+					modules.addAll(loaded);
+
+					infoln("Loaded " + plural(loaded.size(), "module", "s")
+							+ " from " + file + " in " + (double) (end - begin)
+							/ 1000 + " secs");
+				} else
+				{
+					long before = System.currentTimeMillis();
+					LexTokenReader ltr = new LexTokenReader(file, Settings.dialect, filecharset);
+					reader = new ModuleReader(ltr);
+					modules.addAll(reader.readModules());
+					long after = System.currentTimeMillis();
+					duration += after - before;
+				}
+			} catch (InternalException e)
 			{
-   				println(e.toString());
-   				perrs++;
+				println(e.toString());
+			} catch (Throwable e)
+			{
+				println(e.toString());
+				perrs++;
 			}
 
 			if (reader != null && reader.getErrorCount() > 0)
 			{
-    			perrs += reader.getErrorCount();
-    			reader.printErrors(Console.out);
+				perrs += reader.getErrorCount();
+				reader.printErrors(Console.out);
 			}
 
 			if (reader != null && reader.getWarningCount() > 0)
 			{
 				pwarn += reader.getWarningCount();
-    			reader.printWarnings(Console.out);
+				reader.printWarnings(Console.out);
 			}
-   		}
+		}
 
-   		perrs += modules.combineDefaults();
-   		int n = modules.notLoaded();
+		perrs += modules.combineDefaults();
+		int n = modules.notLoaded();
 
-   		if (n > 0)
-   		{
-       		info("Parsed " + plural(n, "module", "s") + " in " +
-       			(double)(duration)/1000 + " secs. ");
-       		info(perrs == 0 ? "No syntax errors" :
-       			"Found " + plural(perrs, "syntax error", "s"));
-      		infoln(pwarn == 0 ? "" : " and " +
-      			(warnings ? "" : "suppressed ") + plural(pwarn, "warning", "s"));
-   		}
+		if (n > 0)
+		{
+			info("Parsed " + plural(n, "module", "s") + " in "
+					+ (double) duration / 1000 + " secs. ");
+			info(perrs == 0 ? "No syntax errors" : "Found "
+					+ plural(perrs, "syntax error", "s"));
+			infoln(pwarn == 0 ? "" : " and " + (warnings ? "" : "suppressed ")
+					+ plural(pwarn, "warning", "s"));
+		}
 
-   		return perrs == 0 ? ExitStatus.EXIT_OK : ExitStatus.EXIT_ERRORS;
+		return perrs == 0 ? ExitStatus.EXIT_OK : ExitStatus.EXIT_ERRORS;
 	}
 
 	/**
-	 * @see org.overture.vdmj.VDMJ#typeCheck()
+	 * @see VDMJ#typeCheck()
 	 */
 
 	@Override
@@ -177,22 +170,20 @@ public class VDMSL extends VDMJ
 		int terrs = 0;
 		long before = System.currentTimeMillis();
 
-   		try
-   		{
-   			TypeChecker typeChecker = new ModuleTypeChecker(modules);
-   			typeChecker.typeCheck();
-   		}
-		catch (InternalException e)
+		try
+		{
+			TypeChecker typeChecker = new ModuleTypeChecker(modules);
+			typeChecker.typeCheck();
+		} catch (InternalException e)
 		{
 			println(e.toString());
-		}
-		catch (Throwable e)
+		} catch (Throwable e)
 		{
 			println(e.toString());
 			terrs++;
 		}
 
-   		long after = System.currentTimeMillis();
+		long after = System.currentTimeMillis();
 		terrs += TypeChecker.getErrorCount();
 
 		if (terrs > 0)
@@ -200,43 +191,42 @@ public class VDMSL extends VDMJ
 			TypeChecker.printErrors(Console.out);
 		}
 
-  		int twarn = TypeChecker.getWarningCount();
+		int twarn = TypeChecker.getWarningCount();
 
 		if (twarn > 0 && warnings)
 		{
 			TypeChecker.printWarnings(Console.out);
 		}
 
-   		int n = modules.notLoaded();
+		int n = modules.notLoaded();
 
-   		if (n > 0)
-   		{
-    		info("Type checked " + plural(n, "module", "s") +
-    			" in " + (double)(after-before)/1000 + " secs. ");
-      		info(terrs == 0 ? "No type errors" :
-      			"Found " + plural(terrs, "type error", "s"));
-      		infoln(twarn == 0 ? "" : " and " +
-      			(warnings ? "" : "suppressed ") + plural(twarn, "warning", "s"));
-   		}
+		if (n > 0)
+		{
+			info("Type checked " + plural(n, "module", "s") + " in "
+					+ (double) (after - before) / 1000 + " secs. ");
+			info(terrs == 0 ? "No type errors" : "Found "
+					+ plural(terrs, "type error", "s"));
+			infoln(twarn == 0 ? "" : " and " + (warnings ? "" : "suppressed ")
+					+ plural(twarn, "warning", "s"));
+		}
 
 		if (outfile != null && terrs == 0)
 		{
 			try
 			{
 				before = System.currentTimeMillis();
-    	        FileOutputStream fos = new FileOutputStream(outfile);
-    	        GZIPOutputStream gos = new GZIPOutputStream(fos);
-    	        ObjectOutputStream oos = new ObjectOutputStream(gos);
+				FileOutputStream fos = new FileOutputStream(outfile);
+				GZIPOutputStream gos = new GZIPOutputStream(fos);
+				ObjectOutputStream oos = new ObjectOutputStream(gos);
 
-    	        oos.writeObject(modules);
-    	        oos.close();
-    	   		after = System.currentTimeMillis();
+				oos.writeObject(modules);
+				oos.close();
+				after = System.currentTimeMillis();
 
-    	   		infoln("Saved " + plural(modules.size(), "module", "s") +
-    	   			" to " + outfile + " in " +
-    	   			(double)(after-before)/1000 + " secs. ");
-			}
-			catch (IOException e)
+				infoln("Saved " + plural(modules.size(), "module", "s")
+						+ " to " + outfile + " in " + (double) (after - before)
+						/ 1000 + " secs. ");
+			} catch (IOException e)
 			{
 				infoln("Cannot write " + outfile + ": " + e.getMessage());
 				terrs++;
@@ -252,22 +242,21 @@ public class VDMSL extends VDMJ
 				if (list.isEmpty())
 				{
 					println("No proof obligations generated");
-				}
-				else
+				} else
 				{
-	    			println("Generated " +
-	    				plural(list.size(), "proof obligation", "s") + ":\n");
-	    			print(list.toString());
+					println("Generated "
+							+ plural(list.size(), "proof obligation", "s")
+							+ ":\n");
+					print(list.toString());
 				}
 			} catch (AnalysisException e)
 			{
 				println(e.toString());
 			}
 
-
 		}
 
-   		return terrs == 0 ? ExitStatus.EXIT_OK : ExitStatus.EXIT_ERRORS;
+		return terrs == 0 ? ExitStatus.EXIT_OK : ExitStatus.EXIT_ERRORS;
 	}
 
 	/**
@@ -281,27 +270,25 @@ public class VDMSL extends VDMJ
 
 		try
 		{
-   			long before = System.currentTimeMillis();
-   			interpreter = getInterpreter();
-   			interpreter.init(null);
+			long before = System.currentTimeMillis();
+			interpreter = getInterpreter();
+			interpreter.init(null);
 
-   			if (defaultName != null)
-   			{
-   				interpreter.setDefaultName(defaultName);
-   			}
+			if (defaultName != null)
+			{
+				interpreter.setDefaultName(defaultName);
+			}
 
-   			long after = System.currentTimeMillis();
+			long after = System.currentTimeMillis();
 
-   	   		infoln("Initialized " + plural(modules.size(), "module", "s") + " in " +
-   	   			(double)(after-before)/1000 + " secs. ");
-		}
-		catch (ContextException e)
+			infoln("Initialized " + plural(modules.size(), "module", "s")
+					+ " in " + (double) (after - before) / 1000 + " secs. ");
+		} catch (ContextException e)
 		{
 			println("Initialization: " + e);
 			e.ctxt.printStackTrace(Console.out, true);
 			return ExitStatus.EXIT_ERRORS;
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			println("Initialization: " + e.getMessage());
 			return ExitStatus.EXIT_ERRORS;
@@ -313,20 +300,17 @@ public class VDMSL extends VDMJ
 			{
 				println(interpreter.execute(script, null).toString());
 				return ExitStatus.EXIT_OK;
-			}
-			else
+			} else
 			{
 				infoln("Interpreter started");
 				CommandReader reader = new ModuleCommandReader(interpreter, "> ");
 				return reader.run(filenames);
 			}
-		}
-		catch (ContextException e)
+		} catch (ContextException e)
 		{
 			println("Execution: " + e);
 			e.ctxt.printStackTrace(Console.out, true);
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			println("Execution: " + e);
 		}

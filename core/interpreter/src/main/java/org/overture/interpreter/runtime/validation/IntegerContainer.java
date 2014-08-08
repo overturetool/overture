@@ -23,16 +23,18 @@
 
 package org.overture.interpreter.runtime.validation;
 
-public class IntegerContainer implements IValidationExpression {
+public class IntegerContainer implements IValidationExpression
+{
 
 	int i;
-	
-	public IntegerContainer(int i) {
+
+	public IntegerContainer(int i)
+	{
 		this.i = i;
 	}
-	
-	public int getValue(){
+
+	public int getValue()
+	{
 		return i;
 	}
 }
-

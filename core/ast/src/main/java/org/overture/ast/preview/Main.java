@@ -27,11 +27,13 @@ import org.overture.ast.lex.VDMToken;
 import org.overture.ast.node.INode;
 import org.overture.ast.preview.GraphViz.GraphVizException;
 
-public class Main {
+public class Main
+{
 
-	public static File dot=null;
-	
-public static Set<String> filterClassNames = new HashSet<String>();
+	public static File dot = null;
+
+	public static Set<String> filterClassNames = new HashSet<String>();
+
 	// digraph ast
 	// {
 	// node [shape=record];
@@ -55,20 +57,22 @@ public static Set<String> filterClassNames = new HashSet<String>();
 
 	/**
 	 * @param args
-	 * @throws GraphVizException 
+	 * @throws GraphVizException
 	 */
-	public static void main(String[] args) throws GraphVizException {
-//		AUnaryExp un = new AUnaryExp(new ACeilUnop(), new AIdentifierSingleExp(
-//				new ACtDomain(), new ARealType(), "somename"));
-//		PExp exp = new ABinaryExp(new ABoolSingleExp(true), new AOrBinop(), un);
-		
+	public static void main(String[] args) throws GraphVizException
+	{
+		// AUnaryExp un = new AUnaryExp(new ACeilUnop(), new AIdentifierSingleExp(
+		// new ACtDomain(), new ARealType(), "somename"));
+		// PExp exp = new ABinaryExp(new ABoolSingleExp(true), new AOrBinop(), un);
+
 		LexLocation location = new LexLocation(new File("fileA"), "A", 1, 1, 2, 2, 1, 2);
-		PExp exp =AstFactory.newAAndBooleanBinaryExp( AstFactory.newAVariableExp(new LexNameToken("A", "kk",location)),new LexToken(location, VDMToken.AND),AstFactory.newABooleanConstExp( new LexBooleanToken(true, location)));
-		
+		PExp exp = AstFactory.newAAndBooleanBinaryExp(AstFactory.newAVariableExp(new LexNameToken("A", "kk", location)), new LexToken(location, VDMToken.AND), AstFactory.newABooleanConstExp(new LexBooleanToken(true, location)));
+
 		show(exp, true);
 	}
-	
-	public static void makeImage(INode node, String type,File output) throws GraphVizException
+
+	public static void makeImage(INode node, String type, File output)
+			throws GraphVizException
 	{
 		DotGraphVisitor visitor = new DotGraphVisitor(filterClassNames);
 		try
@@ -76,13 +80,14 @@ public static Set<String> filterClassNames = new HashSet<String>();
 			node.apply(visitor, null);
 		} catch (Throwable e)
 		{
-			//Ignore
+			// Ignore
 		}
-		GraphViz gv =(dot==null? new GraphViz(): new GraphViz(dot));
+		GraphViz gv = dot == null ? new GraphViz() : new GraphViz(dot);
 		gv.writeGraphToFile(gv.getGraph(visitor.getResultString(), type), output);
 	}
-	
-	public static void makeImage(List<? extends INode> nodes, String type,File output) throws GraphVizException
+
+	public static void makeImage(List<? extends INode> nodes, String type,
+			File output) throws GraphVizException
 	{
 		DotGraphVisitor visitor = new DotGraphVisitor(filterClassNames);
 		try
@@ -91,25 +96,27 @@ public static Set<String> filterClassNames = new HashSet<String>();
 			{
 				node.apply(visitor, null);
 			}
-			
+
 		} catch (Throwable e)
 		{
-			//Ignore
+			// Ignore
 		}
-		GraphViz gv =(dot==null? new GraphViz(): new GraphViz(dot));
+		GraphViz gv = dot == null ? new GraphViz() : new GraphViz(dot);
 		gv.writeGraphToFile(gv.getGraph(visitor.getResultString(), type), output);
 	}
-	
-	public static void show(INode node,final boolean exitOnClose) throws GraphVizException{
+
+	public static void show(INode node, final boolean exitOnClose)
+			throws GraphVizException
+	{
 		DotGraphVisitor visitor = new DotGraphVisitor(filterClassNames);
 		try
 		{
 			node.apply(visitor, null);
 		} catch (Throwable e)
 		{
-			//Ignore
+			// Ignore
 		}
-		GraphViz gv =(dot==null? new GraphViz(): new GraphViz(dot));
+		GraphViz gv = dot == null ? new GraphViz() : new GraphViz(dot);
 		String type = "png";
 		final File out = new File("out." + type); // out.gif in this example
 		final File out1 = new File("out1." + type);
@@ -125,66 +132,79 @@ public static Set<String> filterClassNames = new HashSet<String>();
 		scroller.setMaximumSize(panel.getPreferredSize());
 		scroller.setAutoscrolls(true);
 		Dimension dim = panel.getPreferredSize();
-		dim.setSize(dim.width+20, dim.height+20);
+		dim.setSize(dim.width + 20, dim.height + 20);
 		scroller.setPreferredSize(dim);
 		frame.getContentPane().add(scroller, BorderLayout.CENTER);
 		frame.pack();
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frame.addWindowListener(new WindowListener() {
+		frame.addWindowListener(new WindowListener()
+		{
 
-			public void windowOpened(WindowEvent arg0) {
+			public void windowOpened(WindowEvent arg0)
+			{
 			}
 
-			public void windowIconified(WindowEvent arg0) {
+			public void windowIconified(WindowEvent arg0)
+			{
 			}
 
-			public void windowDeiconified(WindowEvent arg0) {
+			public void windowDeiconified(WindowEvent arg0)
+			{
 			}
 
-			public void windowDeactivated(WindowEvent arg0) {
+			public void windowDeactivated(WindowEvent arg0)
+			{
 			}
 
-			public void windowClosing(WindowEvent arg0) {
+			public void windowClosing(WindowEvent arg0)
+			{
 				out.deleteOnExit();
 				out1.deleteOnExit();
-				if(exitOnClose)
+				if (exitOnClose)
 				{
-				System.exit(0);
+					System.exit(0);
 				}
 			}
 
-			public void windowClosed(WindowEvent arg0) {
+			public void windowClosed(WindowEvent arg0)
+			{
 			}
 
-			public void windowActivated(WindowEvent arg0) {
+			public void windowActivated(WindowEvent arg0)
+			{
 			}
 		});
 		frame.setVisible(true);
 
 	}
 
-	public static class ShowImage extends Panel {
+	public static class ShowImage extends Panel
+	{
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = 7334523949913510202L;
 		BufferedImage image;
-		
 
-		public ShowImage(File input) {
-			try {
+		public ShowImage(File input)
+		{
+			try
+			{
 				image = ImageIO.read(input);
-			} catch (IOException ie) {
+			} catch (IOException ie)
+			{
 				System.out.println("Error:" + ie.getMessage());
 			}
 		}
 
-		public void paint(Graphics g) {
+		public void paint(Graphics g)
+		{
 			g.drawImage(image, 0, 0, null);// , getWidth(), getHeight(), null);
 		}
 
 		@Override
-		public Dimension getPreferredSize() {
+		public Dimension getPreferredSize()
+		{
 			return new Dimension(image.getWidth(), image.getHeight());
 		}
 	}

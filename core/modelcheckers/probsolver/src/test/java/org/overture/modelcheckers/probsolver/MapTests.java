@@ -25,11 +25,11 @@ public class MapTests extends AllTest
 
 		Collection<Object[]> tests = new LinkedList<Object[]>();
 
-		tests.addAll(getTests(new File(root),"Map-0026"));//FIXME
+		tests.addAll(getTests(new File(root), "Map-0026"));// FIXME
 
 		return tests;
 	}
-	
+
 	@Override
 	protected String getPropertyId()
 	{

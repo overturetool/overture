@@ -32,13 +32,13 @@ import org.overture.test.framework.results.Result;
 import org.overture.test.util.XmlResultReaderWriter;
 import org.overture.test.util.XmlResultReaderWriter.IResultStore;
 
-public abstract class ResultTestCase<R> extends BaseTestCase implements IResultStore<R>
+public abstract class ResultTestCase<R> extends BaseTestCase implements
+		IResultStore<R>
 {
 	public ResultTestCase()
 	{
 		super();
 	}
-	
 
 	public ResultTestCase(File file)
 	{
@@ -47,43 +47,43 @@ public abstract class ResultTestCase<R> extends BaseTestCase implements IResultS
 
 	public ResultTestCase(File rootSource, String name, String content)
 	{
-		super(rootSource,name,content);
+		super(rootSource, name, content);
 	}
-	
-	
-	
-	
+
 	protected void compareResults(Result<R> result, String filename)
 	{
-		if(Properties.recordTestResults)
+		if (Properties.recordTestResults)
 		{
-			//MessageReaderWriter mrw = new MessageReaderWriter(createResultFile(filename));
-			//mrw.set(result);
-			//mrw.save();
+			// MessageReaderWriter mrw = new MessageReaderWriter(createResultFile(filename));
+			// mrw.set(result);
+			// mrw.save();
 			File resultFile = createResultFile(filename);
 			resultFile.getParentFile().mkdirs();
-			XmlResultReaderWriter<R> xmlResult = new XmlResultReaderWriter<R>(resultFile,this);
-			xmlResult.setResult(this.getClass().getName(),result);
-			try {
+			XmlResultReaderWriter<R> xmlResult = new XmlResultReaderWriter<R>(resultFile, this);
+			xmlResult.setResult(this.getClass().getName(), result);
+			try
+			{
 				xmlResult.saveInXml();
-			} catch (ParserConfigurationException e) {
+			} catch (ParserConfigurationException e)
+			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} catch (TransformerException e) {
+			} catch (TransformerException e)
+			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 			return;
 		}
-		
+
 		File file = getResultFile(filename);
 
 		assertNotNull("Result file " + file.getName() + " was not found", file);
 		assertTrue("Result file " + file.getAbsolutePath() + " does not exist", file.exists());
-		
-		//MessageReaderWriter mrw = new MessageReaderWriter(file);
-		XmlResultReaderWriter<R> xmlResult = new XmlResultReaderWriter<R>(file,this);
+
+		// MessageReaderWriter mrw = new MessageReaderWriter(file);
+		XmlResultReaderWriter<R> xmlResult = new XmlResultReaderWriter<R>(file, this);
 		boolean parsed = xmlResult.loadFromXml();
 
 		assertTrue("Could not read result file: " + file.getName(), parsed);
@@ -91,23 +91,26 @@ public abstract class ResultTestCase<R> extends BaseTestCase implements IResultS
 		if (parsed)
 		{
 			boolean errorsFound = checkMessages("warning", xmlResult.getWarnings(), result.warnings);
-			errorsFound = checkMessages("error", xmlResult.getErrors(), result.errors) || errorsFound;
-			errorsFound = !assertEqualResults( xmlResult.getResult().result, result.result) || errorsFound;
+			errorsFound = checkMessages("error", xmlResult.getErrors(), result.errors)
+					|| errorsFound;
+			errorsFound = !assertEqualResults(xmlResult.getResult().result, result.result)
+					|| errorsFound;
 			assertFalse("Errors found in file \"" + filename + "\"", errorsFound);
 		}
 	}
-	
+
 	/**
 	 * Checks if the results are equal.
-	 * @param expected The expected result
-	 * @param actual The actual result
+	 * 
+	 * @param expected
+	 *            The expected result
+	 * @param actual
+	 *            The actual result
 	 * @return If equal true or check has to be ignored true is returned else false
 	 */
-	protected abstract boolean assertEqualResults(R expected,
-			R actual);
+	protected abstract boolean assertEqualResults(R expected, R actual);
 
 	protected abstract File createResultFile(String filename);
-
 
 	protected abstract File getResultFile(String filename);
 
@@ -120,23 +123,23 @@ public abstract class ResultTestCase<R> extends BaseTestCase implements IResultS
 		for (IMessage w : list)
 		{
 			boolean isContainedIn = containedIn(expectedList, w);
-			if(!isContainedIn)
+			if (!isContainedIn)
 			{
 				System.out.println(TypeName + " not expected: " + w);
 				errorFound = true;
 			}
-			
-//			assertTrue(TypeName + " not expected: " + w, isContainedIn);
+
+			// assertTrue(TypeName + " not expected: " + w, isContainedIn);
 		}
 		for (IMessage w : expectedList)
 		{
 			boolean isContainedIn = containedIn(list, w);
-			if(!isContainedIn)
+			if (!isContainedIn)
 			{
 				System.out.println(TypeName + " expected but not found: " + w);
 				errorFound = true;
 			}
-			//assertTrue(TypeName + " expected but not found: " + w, isContainedIn);
+			// assertTrue(TypeName + " expected but not found: " + w, isContainedIn);
 		}
 		return errorFound;
 	}
@@ -153,7 +156,6 @@ public abstract class ResultTestCase<R> extends BaseTestCase implements IResultS
 		return false;
 	}
 
-	
 	protected <T> Result<T> mergeResults(Set<? extends Result<T>> parse,
 			IResultCombiner<T> c)
 	{

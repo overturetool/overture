@@ -26,9 +26,6 @@ package org.overture.interpreter.values;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.interpreter.runtime.Context;
-import org.overture.interpreter.runtime.ValueException;
-
-
 
 public class IterFunctionValue extends FunctionValue
 {
@@ -50,12 +47,12 @@ public class IterFunctionValue extends FunctionValue
 	}
 
 	@Override
-	public Value eval(
-		ILexLocation from, ValueList argValues, Context ctxt) throws AnalysisException
+	public Value eval(ILexLocation from, ValueList argValues, Context ctxt)
+			throws AnalysisException
 	{
 		Value result = function.eval(from, argValues, ctxt);
 
-		for (int i=1; i<iterations; i++)
+		for (int i = 1; i < iterations; i++)
 		{
 			result = function.eval(from, result, ctxt);
 		}
@@ -68,13 +65,14 @@ public class IterFunctionValue extends FunctionValue
 	{
 		if (other instanceof Value)
 		{
-			Value val = ((Value)other).deref();
+			Value val = ((Value) other).deref();
 
 			if (val instanceof IterFunctionValue)
-    		{
-    			IterFunctionValue ov = (IterFunctionValue)val;
-    			return ov.function.equals(function) && ov.iterations == iterations;
-    		}
+			{
+				IterFunctionValue ov = (IterFunctionValue) val;
+				return ov.function.equals(function)
+						&& ov.iterations == iterations;
+			}
 		}
 
 		return false;
@@ -83,7 +81,7 @@ public class IterFunctionValue extends FunctionValue
 	@Override
 	public int hashCode()
 	{
-		return function.hashCode() + (int)iterations;
+		return function.hashCode() + (int) iterations;
 	}
 
 	@Override

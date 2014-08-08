@@ -28,11 +28,10 @@ import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.values.ObjectValue;
 import org.overture.util.NotSupportedError;
 
-
 /**
  * This class is used as a wrapper class for the main Java thread which initializes VDM, it should now be used in the
  * VDM evaluation.
- *
+ * 
  * @author kela
  */
 public class InitThread implements ISchedulableThread
@@ -185,17 +184,17 @@ public class InitThread implements ISchedulableThread
 	{
 		throw new NotSupportedError();
 	}
-	
+
 	public void alarming(long expected)
 	{
 		throw new NotSupportedError();
 	}
-	
+
 	public long getAlarmWakeTime()
 	{
 		throw new NotSupportedError();
 	}
-	
+
 	public void clearAlarm()
 	{
 		throw new NotSupportedError();

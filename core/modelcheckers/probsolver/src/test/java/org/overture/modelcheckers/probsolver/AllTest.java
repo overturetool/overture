@@ -160,7 +160,7 @@ public abstract class AllTest extends ProbConverterTestBase
 	public AllTest(Dialect dialect, File source, String operationName,
 			String name)
 	{
-		super(source,new TypeCheckerAssistantFactory());
+		super(source, new TypeCheckerAssistantFactory());
 		this.dialect = dialect;
 		this.operationName = operationName;
 		this.name = name;

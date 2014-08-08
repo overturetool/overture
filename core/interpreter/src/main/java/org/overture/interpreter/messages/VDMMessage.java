@@ -28,7 +28,6 @@ import java.util.Vector;
 
 import org.overture.ast.intf.lex.ILexLocation;
 
-
 /**
  * The root of all reported messages.
  */
@@ -75,7 +74,7 @@ public class VDMMessage
 		sb.append(message);
 
 		sb.append(".");
-		for (String d: details)
+		for (String d : details)
 		{
 			sb.append(" ");
 			sb.append(d);
@@ -89,8 +88,9 @@ public class VDMMessage
 	{
 		if (other instanceof VDMMessage)
 		{
-			VDMMessage omsg = (VDMMessage)other;
-			return omsg.number == number && omsg.message.equals(message) && omsg.location.equals(location);
+			VDMMessage omsg = (VDMMessage) other;
+			return omsg.number == number && omsg.message.equals(message)
+					&& omsg.location.equals(location);
 		}
 
 		return false;

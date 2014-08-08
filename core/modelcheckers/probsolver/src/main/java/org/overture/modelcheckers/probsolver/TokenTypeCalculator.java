@@ -23,11 +23,12 @@ public class TokenTypeCalculator extends DepthFirstAnalysisAdaptor
 	final List<PType> types = new Vector<PType>();
 
 	protected ITypeCheckerAssistantFactory af;
-	
-	public TokenTypeCalculator(ITypeCheckerAssistantFactory af){
-		this.af=af;
+
+	public TokenTypeCalculator(ITypeCheckerAssistantFactory af)
+	{
+		this.af = af;
 	}
-	
+
 	@Override
 	public void caseAMkBasicExp(AMkBasicExp node) throws AnalysisException
 	{
@@ -47,7 +48,7 @@ public class TokenTypeCalculator extends DepthFirstAnalysisAdaptor
 		{
 			return new AIntNumericBasicType();
 		}
-		PTypeSet ts = new PTypeSet(types,af);
+		PTypeSet ts = new PTypeSet(types, af);
 		return ts.getType(null);
 	}
 }

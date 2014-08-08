@@ -12,13 +12,13 @@ public interface IPOContext
 	String getName();
 
 	boolean isScopeBoundary();
-	
+
 	void noteType(PExp exp, PType type);
 
 	PType checkType(PExp exp);
 
 	boolean isStateful();
-	
+
 	public void lastStmt();
 
 }

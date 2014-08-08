@@ -41,50 +41,48 @@ import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
 import org.overture.pog.visitors.StateDesignatorToExpVisitor;
 
-
 public class SeqApplyObligation extends ProofObligation
 {
-	
+
 	private static final long serialVersionUID = -4022111928534078511L;
 
-	public SeqApplyObligation(PExp root, PExp arg, IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
+	public SeqApplyObligation(PExp root, PExp arg, IPOContextStack ctxt,
+			IPogAssistantFactory af) throws AnalysisException
 	{
 		super(root, POType.SEQ_APPLY, ctxt, root.getLocation(), af);
-		
+
 		AIndicesUnaryExp indsExp = new AIndicesUnaryExp();
 		indsExp.setExp(root.clone());
-	
+
 		AInSetBinaryExp inSetExp = AstExpressionFactory.newAInSetBinaryExp(arg.clone(), indsExp);
 		stitch = inSetExp;
 		valuetree.setPredicate(ctxt.getPredWithContext(stitch));
 	}
-	
 
-
-	public SeqApplyObligation(PStateDesignator root,
-		PExp arg, IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
+	public SeqApplyObligation(PStateDesignator root, PExp arg,
+			IPOContextStack ctxt, IPogAssistantFactory af)
+			throws AnalysisException
 	{
 		super(root, POType.SEQ_APPLY, ctxt, root.getLocation(), af);
-		//arg >0
+		// arg >0
 		AIntLiteralExp zeroExp = new AIntLiteralExp();
 		zeroExp.setValue(new LexIntegerToken(0, null));
 		AGreaterNumericBinaryExp grExp = AstExpressionFactory.newAGreaterNumericBinaryExp(arg.clone(), zeroExp);
-		
-		
+
 		// len(root)
 		ALenUnaryExp lenExp = new ALenUnaryExp();
 		PExp stateExp = root.apply(new StateDesignatorToExpVisitor());
 		lenExp.setExp(stateExp.clone());
-		
+
 		// len(root)+1
 		AIntLiteralExp oneExp = new AIntLiteralExp();
 		oneExp.setValue(new LexIntegerToken(1, null));
 		APlusNumericBinaryExp plusExp = AstExpressionFactory.newAPlusNumericBinaryExp(lenExp, oneExp);
-		
-		//arg <= len(root) +1
+
+		// arg <= len(root) +1
 		ALessEqualNumericBinaryExp lteExp = AstExpressionFactory.newALessEqualNumericBinaryExp(arg.clone(), plusExp);
-		
-		//arg > 0 and arg <= len(root)+1
+
+		// arg > 0 and arg <= len(root)+1
 		AAndBooleanBinaryExp andExp = AstExpressionFactory.newAAndBooleanBinaryExp(grExp, lteExp);
 
 		stitch = andExp;

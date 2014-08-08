@@ -32,4 +32,10 @@ public class ExampleAstData
 		return model;
 	}
 
+	@Override
+	public String toString()
+	{
+		return this.exampleName;
+	}
+
 }

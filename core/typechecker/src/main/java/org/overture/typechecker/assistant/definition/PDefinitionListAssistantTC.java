@@ -57,8 +57,7 @@ public class PDefinitionListAssistantTC
 		return null;
 	}
 
-	public AStateDefinition findStateDefinition(
-			List<PDefinition> definitions)
+	public AStateDefinition findStateDefinition(List<PDefinition> definitions)
 	{
 		for (PDefinition d : definitions)
 		{
@@ -98,8 +97,7 @@ public class PDefinitionListAssistantTC
 		return set;
 	}
 
-	public List<PDefinition> singleDefinitions(
-			List<PDefinition> definitions)
+	public List<PDefinition> singleDefinitions(List<PDefinition> definitions)
 	{
 		List<PDefinition> all = new ArrayList<PDefinition>();
 
@@ -198,11 +196,11 @@ public class PDefinitionListAssistantTC
 		af.createPDefinitionAssistant().setClassDefinition(defs, classDefinition);
 
 	}
-	
+
 	public boolean hasSubclassResponsibilities(List<PDefinition> definitions)
 	{
 		PDefinitionAssistantTC assistant = af.createPDefinitionAssistant();
-		
+
 		for (PDefinition d : definitions)
 		{
 			if (assistant.isSubclassResponsibility(d))
@@ -210,18 +208,18 @@ public class PDefinitionListAssistantTC
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	public void removeDuplicates(List<PDefinition> definitions)
 	{
 		LinkedList<PDefinition> fixed = new LinkedList<PDefinition>();
-		
+
 		for (PDefinition d : definitions)
 		{
 			boolean found = false;
-			
+
 			for (PDefinition e : fixed)
 			{
 				if (e.getName() != null && e.getName().equals(d.getName()))
@@ -230,13 +228,13 @@ public class PDefinitionListAssistantTC
 					break;
 				}
 			}
-			
+
 			if (!found)
 			{
 				fixed.add(d);
 			}
 		}
-		
+
 		if (fixed.size() < definitions.size())
 		{
 			definitions.clear();

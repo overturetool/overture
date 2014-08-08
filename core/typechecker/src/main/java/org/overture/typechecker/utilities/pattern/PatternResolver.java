@@ -81,8 +81,8 @@ public class PatternResolver extends
 	public void caseAExpressionPattern(AExpressionPattern pattern,
 			NewQuestion question) throws AnalysisException
 	{
-		//af.createAExpressionPatternAssistant().typeResolve(pattern, question.rootVisitor, question.question);
-		//Have to ask how is it done.
+		// af.createAExpressionPatternAssistant().typeResolve(pattern, question.rootVisitor, question.question);
+		// Have to ask how is it done.
 		if (pattern.getResolved())
 		{
 			return;
@@ -96,8 +96,7 @@ public class PatternResolver extends
 			question.question.qualifiers = null;
 			question.question.scope = NameScope.NAMESANDSTATE;
 			pattern.getExp().apply(new TypeCheckVisitor(), question.question);
-		}
-		catch (TypeCheckException e)
+		} catch (TypeCheckException e)
 		{
 			af.createPPatternAssistant().unResolve(pattern);
 			throw e;
@@ -211,7 +210,7 @@ public class PatternResolver extends
 			pattern.getRight().apply(THIS, question);
 		} catch (TypeCheckException e)
 		{
-			//AUnionPatternAssistantTC.unResolve(pattern);
+			// AUnionPatternAssistantTC.unResolve(pattern);
 			af.createPPatternAssistant().unResolve(pattern);
 			throw e;
 		}
@@ -233,12 +232,12 @@ public class PatternResolver extends
 		{
 			for (AMapletPatternMaplet mp : pattern.getMaplets())
 			{
-				//af.createAMapletPatternMapletAssistant().typeResolve(mp, question.rootVisitor, question.question);
+				// af.createAMapletPatternMapletAssistant().typeResolve(mp, question.rootVisitor, question.question);
 				mp.apply(THIS, question);
 			}
 		} catch (TypeCheckException e)
 		{
-			//af.createAMapPatternAssistant().unResolve(pattern);
+			// af.createAMapPatternAssistant().unResolve(pattern);
 			pattern.apply(af.getPatternUnresolver());
 			throw e;
 		}
@@ -262,7 +261,7 @@ public class PatternResolver extends
 			pattern.getRight().apply(THIS, question);
 		} catch (TypeCheckException e)
 		{
-			//af.createAMapUnionPatternAssistant().unResolve(pattern);
+			// af.createAMapUnionPatternAssistant().unResolve(pattern);
 			pattern.apply(af.getPatternUnresolver());
 			throw e;
 		}

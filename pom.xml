@@ -252,6 +252,34 @@
             </lifecycleMappingMetadata>
           </configuration>
         </plugin>
+		
+		<!-- Plugin for license headers-->
+		 <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>license-maven-plugin</artifactId>
+          <version>1.7</version>
+		   <configuration>
+          <verbose>true</verbose>
+          <addSvnKeyWords>false</addSvnKeyWords>
+		  <processEndTag>#~%</processEndTag>
+		   <processStartTag>#%~</processStartTag>
+		   <addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
+		   <!--descriptionTemplate>${basedir}/src/license/myDescriptionTemplate.ftl</descriptionTemplate-->
+              <licenseName>gpl_v3</licenseName>
+              <roots>
+                <root>src/main/java</root>
+                <root>src/test/java</root>
+              </roots>
+			  
+			  <includes>
+                <include>**/*.java</include>
+              </includes>
+			  <excludes>
+                <exclude>*.ftl</exclude>
+               
+              </excludes>
+        </configuration>
+        </plugin>
       </plugins>
     </pluginManagement>
 
@@ -323,7 +351,9 @@
   </licenses>
 
   <organization>
-    <name>The Overture Tool Platform</name>
+    <name>Overture</name>
     <url>http://overturetool.org/</url>
   </organization>
+  
+    <inceptionYear>2008</inceptionYear>
 </project>

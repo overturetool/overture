@@ -25,7 +25,6 @@ package org.overture.interpreter.messages;
 
 import org.overture.ast.lex.LexLocation;
 
-
 /**
  * A VDM warning message.
  */
@@ -44,7 +43,7 @@ public class VDMWarning extends VDMMessage
 		sb.append("Warning ");
 		sb.append(super.toString());
 
-		for (String d: details)
+		for (String d : details)
 		{
 			sb.append("\n");
 			sb.append(d);

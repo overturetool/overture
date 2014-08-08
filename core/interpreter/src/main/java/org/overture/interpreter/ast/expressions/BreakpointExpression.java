@@ -39,7 +39,6 @@ import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.values.BooleanValue;
 import org.overture.interpreter.values.Value;
 
-
 public class BreakpointExpression extends PExpBase
 {
 	private static final long serialVersionUID = 1L;
@@ -48,8 +47,8 @@ public class BreakpointExpression extends PExpBase
 	private final long arg;
 
 	@SuppressWarnings("deprecation")
-	public BreakpointExpression(
-		Breakpoint breakpoint, BreakpointCondition cond, long arg)
+	public BreakpointExpression(Breakpoint breakpoint,
+			BreakpointCondition cond, long arg)
 	{
 		super(breakpoint.location);
 		this.bp = breakpoint;
@@ -62,7 +61,6 @@ public class BreakpointExpression extends PExpBase
 	{
 		return "hits " + cond + " " + arg;
 	}
-
 
 	@Override
 	public PExp clone(Map<INode, INode> oldToNewMap)
@@ -79,7 +77,7 @@ public class BreakpointExpression extends PExpBase
 	@Override
 	public void apply(IAnalysis analysis) throws AnalysisException
 	{
-		
+
 	}
 
 	@Override
@@ -89,9 +87,10 @@ public class BreakpointExpression extends PExpBase
 	}
 
 	@Override
-	public <Q> void apply(IQuestion<Q> caller, Q question) throws AnalysisException
+	public <Q> void apply(IQuestion<Q> caller, Q question)
+			throws AnalysisException
 	{
-		
+
 	}
 
 	@Override
@@ -101,13 +100,13 @@ public class BreakpointExpression extends PExpBase
 		return null;
 	}
 
-//	@Override
-//	public Type typeCheck(Environment env, TypeList qualifiers, NameScope scope)
-//	{
-//		return new BooleanType(location);
-//	}
+	// @Override
+	// public Type typeCheck(Environment env, TypeList qualifiers, NameScope scope)
+	// {
+	// return new BooleanType(location);
+	// }
 
-//	@Override
+	// @Override
 	public Value eval(Context ctxt)
 	{
 		boolean rv = false;
@@ -115,28 +114,28 @@ public class BreakpointExpression extends PExpBase
 		switch (cond)
 		{
 			case EQ:
-				rv = (bp.hits == arg);
+				rv = bp.hits == arg;
 				break;
 
 			case GT:
-				rv = (bp.hits > arg);
+				rv = bp.hits > arg;
 				break;
 
 			case GE:
-				rv = (bp.hits >= arg);
+				rv = bp.hits >= arg;
 				break;
 
 			case MOD:
-				rv = ((bp.hits % arg) == 0);
+				rv = bp.hits % arg == 0;
 				break;
 		}
 
 		return new BooleanValue(rv);
 	}
-//
-//	@Override
-//	public String kind()
-//	{
-//		return "breakpoint condition";
-//	}
+	//
+	// @Override
+	// public String kind()
+	// {
+	// return "breakpoint condition";
+	// }
 }

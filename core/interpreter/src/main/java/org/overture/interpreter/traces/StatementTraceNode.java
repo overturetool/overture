@@ -25,7 +25,6 @@ package org.overture.interpreter.traces;
 
 import org.overture.ast.statements.PStm;
 
-
 public class StatementTraceNode extends TraceNode
 {
 	public final PStm statement;

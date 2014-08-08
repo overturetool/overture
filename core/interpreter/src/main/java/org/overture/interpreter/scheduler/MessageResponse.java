@@ -37,8 +37,8 @@ public class MessageResponse extends MessagePacket
 
 	public MessageResponse(Value result, MessageRequest request)
 	{
-		super(request.bus, request.to, request.from,	// NB to->from
-			request.target, request.operation);
+		super(request.bus, request.to, request.from, // NB to->from
+		request.target, request.operation);
 
 		this.result = result;
 		this.exception = null;
@@ -49,8 +49,8 @@ public class MessageResponse extends MessagePacket
 
 	public MessageResponse(ValueException exception, MessageRequest request)
 	{
-		super(request.bus, request.to, request.from,	// NB to->from
-			request.target, request.operation);
+		super(request.bus, request.to, request.from, // NB to->from
+		request.target, request.operation);
 
 		this.result = null;
 		this.exception = exception;
@@ -77,7 +77,7 @@ public class MessageResponse extends MessagePacket
 
 	public int getSize()
 	{
-		return result == null ?
-			exception.toString().length() : result.toString().length();
+		return result == null ? exception.toString().length()
+				: result.toString().length();
 	}
 }

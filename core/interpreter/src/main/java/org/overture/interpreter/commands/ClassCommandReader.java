@@ -131,14 +131,14 @@ public class ClassCommandReader extends CommandReader
 
 			try
 			{
-				RTLogger.setLogfile(RTTextLogger.class,null);
-				RTLogger.setLogfile(NextGenRTLogger.class,null);
+				RTLogger.setLogfile(RTTextLogger.class, null);
+				RTLogger.setLogfile(NextGenRTLogger.class, null);
 				println("RT events now logged to the console");
 			} catch (FileNotFoundException e)
 			{
 				println("Cannot create RT event log: " + e.getMessage());
 			}
-			
+
 			return true;
 		}
 
@@ -155,7 +155,7 @@ public class ClassCommandReader extends CommandReader
 		{
 			try
 			{
-				RTLogger.setLogfile(RTTextLogger.class,new File(parts[1]));
+				RTLogger.setLogfile(RTTextLogger.class, new File(parts[1]));
 				println("RT events now logged to " + parts[1]);
 			} catch (FileNotFoundException e)
 			{

@@ -152,17 +152,17 @@ public class AbstractProbSolverUtil
 	private static String anomatorSets;
 
 	protected final SolverConsole console;
-	
+
 	/**
 	 * Create the assistant factory for use in the subclasses.
 	 */
 	public IAstAssistantFactory assistantFactory;
-	
 
 	/**
-	 * This assistant factory is predefined of overture,
-	 * must be avoided in the extension
+	 * This assistant factory is predefined of overture, must be avoided in the extension
+	 * 
 	 * @param console
+	 * @param af 
 	 */
 	public AbstractProbSolverUtil(SolverConsole console, IAstAssistantFactory af)
 	{
@@ -176,7 +176,7 @@ public class AbstractProbSolverUtil
 				+ formula.getCode().replace("&", " & \n\t\t\t");
 	}
 
-	protected void initialize(Map<String,Set<String>> sets) throws BException
+	protected void initialize(Map<String, Set<String>> sets) throws BException
 	{
 		String currentSets = generateBMachineSets(sets);
 		if (animator == null || !currentSets.equals(anomatorSets))
@@ -185,7 +185,8 @@ public class AbstractProbSolverUtil
 			animator = ServletContextListener.INJECTOR.getInstance(IAnimator.class);
 			AbstractCommand[] init = {
 					/* We load a machine with the token type installed */
-					new LoadBProjectFromStringCommand("MACHINE tmp1 SETS "+currentSets+" END"),
+					new LoadBProjectFromStringCommand("MACHINE tmp1 SETS "
+							+ currentSets + " END"),
 					// new LoadBProjectFromStringCommand("MACHINE empty END"),
 					new SetPreferenceCommand("CLPFD", "TRUE"),
 					new SetPreferenceCommand("BOOL_AS_PREDICATE", "TRUE"),
@@ -196,40 +197,38 @@ public class AbstractProbSolverUtil
 			animator.execute(init);
 		}
 	}
-	
-	
-	private String generateBMachineSets(Map<String,Set<String>> sets)
+
+	private String generateBMachineSets(Map<String, Set<String>> sets)
 	{
 		StringBuilder sb = new StringBuilder();
-		
+
 		for (Iterator<Entry<String, Set<String>>> itr = sets.entrySet().iterator(); itr.hasNext();)
 		{
 			Entry<String, Set<String>> set = itr.next();
 			sb.append(set.getKey());
-			
-			if(!set.getValue().isEmpty())
+
+			if (!set.getValue().isEmpty())
 			{
 				sb.append("= {");
 				for (Iterator<String> elemItr = set.getValue().iterator(); elemItr.hasNext();)
 				{
 					sb.append(elemItr.next());
-					if(elemItr.hasNext())
+					if (elemItr.hasNext())
 					{
 						sb.append(", ");
 					}
-					
+
 				}
 				sb.append("}");
 			}
-			
-			
-			if(itr.hasNext())
+
+			if (itr.hasNext())
 			{
 				sb.append("; ");
 			}
-			
+
 		}
-		
+
 		return sb.toString();
 	}
 

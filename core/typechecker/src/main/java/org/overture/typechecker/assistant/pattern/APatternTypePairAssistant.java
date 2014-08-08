@@ -19,7 +19,7 @@ public class APatternTypePairAssistant
 		this.af = af;
 	}
 
-	//FIXME:Used in the TypeCheckerDefinitionVisitor.
+	// FIXME:Used in the TypeCheckerDefinitionVisitor.
 	public List<PDefinition> getDefinitions(APatternTypePair result)
 	{
 

@@ -22,36 +22,43 @@ package org.overture.guibuilder.internal.ir;
  * A individual annotation of a vdm class or a vdm operation/function.
  * 
  * @author carlos
- *
  */
-public class VdmAnnotation {
+public class VdmAnnotation
+{
 
 	private String name = null;
 	private String value = null;
 
 	/**
-	 * 
-	 * @param name Name of the annotation (ex.: the name of "check=id" is "check")
-	 * @param value Value of the annotation (ex.: the value of "check=id" is "id")
+	 * @param name
+	 *            Name of the annotation (ex.: the name of "check=id" is "check")
+	 * @param value
+	 *            Value of the annotation (ex.: the value of "check=id" is "id")
 	 */
-	public VdmAnnotation(String name, String value) {
-		this.name = name; this.value = value;
+	public VdmAnnotation(String name, String value)
+	{
+		this.name = name;
+		this.value = value;
 	}
 
 	/**
 	 * Returns the name of the annotation (ex.: the name of "check=id" is "check")
+	 * 
 	 * @return Name of the annotation
 	 */
-	public String getName() {
+	public String getName()
+	{
 		return name;
 	}
 
 	/**
 	 * Returns the value of the annotation (ex.: the value of "check=id" is "id")
+	 * 
 	 * @return The value of the annotation
 	 */
-	public String getValue() {
+	public String getValue()
+	{
 		return value;
 	}
-	
+
 }

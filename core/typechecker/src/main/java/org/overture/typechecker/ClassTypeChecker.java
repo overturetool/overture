@@ -71,8 +71,6 @@ public class ClassTypeChecker extends TypeChecker
 
 	/**
 	 * Perform type checking across all classes in the list.
-	 * 
-	 * @throws AnalysisException
 	 */
 
 	@Override

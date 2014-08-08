@@ -32,7 +32,6 @@ import org.overture.interpreter.scheduler.ISchedulableThread;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
 
-
 /**
  * A breakpoint where execution must stop.
  */
@@ -42,7 +41,7 @@ public class Stoppoint extends Breakpoint
 	private static final long serialVersionUID = 1L;
 
 	public Stoppoint(ILexLocation location, int number, String trace)
-		throws ParserException, LexException
+			throws ParserException, LexException
 	{
 		super(location, number, trace);
 	}
@@ -50,11 +49,12 @@ public class Stoppoint extends Breakpoint
 	@Override
 	public void check(ILexLocation execl, Context ctxt)
 	{
-		//skips if breakpoint is disabled
-		if(!enabled){
+		// skips if breakpoint is disabled
+		if (!enabled)
+		{
 			return;
 		}
-		
+
 		location.hit();
 		hits++;
 
@@ -64,14 +64,14 @@ public class Stoppoint extends Breakpoint
 
 			if (!shouldBreak)
 			{
-				//Clear thread state while evaluating the expression and set
-				//the state back after. Done to prevent the debugger from stopping
+				// Clear thread state while evaluating the expression and set
+				// the state back after. Done to prevent the debugger from stopping
 				// in the expression
 				Context outctxt = ctxt.threadState.outctxt;
 				RootContext rootContext = ctxt.threadState.nextctxt;
 				ILexLocation stepline = ctxt.threadState.stepline;
 				ctxt.threadState.init();
-				shouldBreak = BreakpointManager.shouldStop(parsed,ctxt);
+				shouldBreak = BreakpointManager.shouldStop(parsed, ctxt);
 				ctxt.threadState.setBreaks(stepline, rootContext, outctxt);
 			}
 
@@ -79,7 +79,7 @@ public class Stoppoint extends Breakpoint
 			{
 				ISchedulableThread th = BasicSchedulableThread.getThread(Thread.currentThread());
 
-				if (th !=null)
+				if (th != null)
 				{
 					th.suspendOthers();
 				}
@@ -87,20 +87,18 @@ public class Stoppoint extends Breakpoint
 				if (Settings.usingDBGP)
 				{
 					ctxt.threadState.dbgp.stopped(ctxt, this);
-				}
-				else
+				} else
 				{
 					new DebuggerReader(Interpreter.getInstance(), this, ctxt).run();
 				}
 			}
-		}
-		catch (DebuggerException e)
+		} catch (DebuggerException e)
 		{
 			throw e;
-		}
-		catch (ValueException e)
+		} catch (ValueException e)
 		{
-			println("Breakpoint [" + number + "]: " + e.getMessage() + " \"" + trace + "\"");
+			println("Breakpoint [" + number + "]: " + e.getMessage() + " \""
+					+ trace + "\"");
 		}
 	}
 
@@ -110,12 +108,11 @@ public class Stoppoint extends Breakpoint
 		if (number == 0)
 		{
 			return super.toString();
-		}
-		else
+		} else
 		{
-			return "break [" + number + "] " +
-				(trace == null ? "" : "when \"" + trace + "\" ") +
-				super.toString();
+			return "break [" + number + "] "
+					+ (trace == null ? "" : "when \"" + trace + "\" ")
+					+ super.toString();
 		}
 	}
 }

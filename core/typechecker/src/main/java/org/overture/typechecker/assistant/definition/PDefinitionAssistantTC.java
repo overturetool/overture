@@ -32,10 +32,10 @@ import org.overture.typechecker.utilities.DefinitionTypeResolver;
 import org.overture.typechecker.utilities.NameFinder;
 
 //TODO Add assistant Javadoc
-/** Top-Level assistant. Will probably remain present
- *	for conveniency's sake but the static access will be disallowed.
+/**
+ * Top-Level assistant. Will probably remain present for conveniency's sake but the static access will be disallowed.
+ * 
  * @author ldc
- *
  */
 public class PDefinitionAssistantTC extends PDefinitionAssistant
 {
@@ -80,11 +80,11 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 		return false;
 
 	}
-	
-	
+
 	public boolean isFunctionOrOperation(PDefinition possible)
 	{
-		return af.createPDefinitionAssistant().isFunction(possible) || af.createPDefinitionAssistant().isOperation(possible);
+		return af.createPDefinitionAssistant().isFunction(possible)
+				|| af.createPDefinitionAssistant().isOperation(possible);
 	}
 
 	public PDefinition findType(List<PDefinition> definitions,
@@ -135,8 +135,8 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	}
 
-	public PDefinition findNameBaseCase(PDefinition d,
-			ILexNameToken sought, NameScope scope)
+	public PDefinition findNameBaseCase(PDefinition d, ILexNameToken sought,
+			NameScope scope)
 	{
 		if (af.getLexNameTokenAssistant().isEqual(d.getName(), sought))
 		{
@@ -358,6 +358,10 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	/**
 	 * Check a DefinitionList for incompatible duplicate pattern definitions.
+	 * 
+	 * @param d
+	 * @param defs
+	 * @return
 	 */
 	public List<PDefinition> checkDuplicatePatterns(PDefinition d,
 			List<PDefinition> defs)
@@ -389,31 +393,28 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 	{
 		while (d instanceof AInheritedDefinition)
 		{
-			AInheritedDefinition aid = (AInheritedDefinition)d;
+			AInheritedDefinition aid = (AInheritedDefinition) d;
 			d = aid.getSuperdef();
 		}
-		
+
 		if (d instanceof AExplicitOperationDefinition)
 		{
-			AExplicitOperationDefinition op = (AExplicitOperationDefinition)d;
+			AExplicitOperationDefinition op = (AExplicitOperationDefinition) d;
 			return op.getBody() instanceof ASubclassResponsibilityStm;
-		}
-		else if (d instanceof AImplicitOperationDefinition)
+		} else if (d instanceof AImplicitOperationDefinition)
 		{
-			AImplicitOperationDefinition op = (AImplicitOperationDefinition)d;
+			AImplicitOperationDefinition op = (AImplicitOperationDefinition) d;
 			return op.getBody() instanceof ASubclassResponsibilityStm;
-		}
-		else if (d instanceof AExplicitFunctionDefinition)
+		} else if (d instanceof AExplicitFunctionDefinition)
 		{
-			AExplicitFunctionDefinition fn = (AExplicitFunctionDefinition)d;
+			AExplicitFunctionDefinition fn = (AExplicitFunctionDefinition) d;
+			return fn.getBody() instanceof ASubclassResponsibilityExp;
+		} else if (d instanceof AImplicitFunctionDefinition)
+		{
+			AImplicitFunctionDefinition fn = (AImplicitFunctionDefinition) d;
 			return fn.getBody() instanceof ASubclassResponsibilityExp;
 		}
-		else if (d instanceof AImplicitFunctionDefinition)
-		{
-			AImplicitFunctionDefinition fn = (AImplicitFunctionDefinition)d;
-			return fn.getBody() instanceof ASubclassResponsibilityExp;
-		}
-		
+
 		return false;
 	}
 }

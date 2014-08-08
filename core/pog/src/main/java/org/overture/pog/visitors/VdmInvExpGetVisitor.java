@@ -12,43 +12,51 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.node.INode;
 
 public class VdmInvExpGetVisitor extends AnswerAdaptor<List<PExp>> implements
-		IInvExpGetVisitor {
+		IInvExpGetVisitor
+{
 
 	IInvExpGetVisitor mainVisitor;
 
-	public VdmInvExpGetVisitor() {
+	public VdmInvExpGetVisitor()
+	{
 		mainVisitor = this;
 	}
 
-	public VdmInvExpGetVisitor(IInvExpGetVisitor mainVisitor) {
+	public VdmInvExpGetVisitor(IInvExpGetVisitor mainVisitor)
+	{
 		this.mainVisitor = mainVisitor;
 	}
 
 	@Override
-	public List<PExp> createNewReturnValue(INode node) throws AnalysisException {
+	public List<PExp> createNewReturnValue(INode node) throws AnalysisException
+	{
 		return new LinkedList<PExp>();
 	}
 
 	@Override
 	public List<PExp> createNewReturnValue(Object node)
-			throws AnalysisException {
+			throws AnalysisException
+	{
 		return new LinkedList<PExp>();
 	}
 
 	@Override
 	public List<PExp> caseAClassClassDefinition(AClassClassDefinition node)
-			throws AnalysisException {
+			throws AnalysisException
+	{
 		List<PExp> r = new LinkedList<PExp>();
-		for (PDefinition p : node.getDefinitions()) {
+		for (PDefinition p : node.getDefinitions())
+		{
 			r.addAll(p.apply(mainVisitor));
 		}
 		return r;
 	}
-	
+
 	@Override
 	public List<PExp> caseAClassInvariantDefinition(
-			AClassInvariantDefinition node) throws AnalysisException {
-		List<PExp> r= new LinkedList<PExp>();
+			AClassInvariantDefinition node) throws AnalysisException
+	{
+		List<PExp> r = new LinkedList<PExp>();
 		r.add(node.getExpression());
 		return r;
 	}

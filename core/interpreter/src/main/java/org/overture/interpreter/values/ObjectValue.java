@@ -41,14 +41,12 @@ import org.overture.ast.messages.InternalException;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.Utils;
-import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.Interpreter;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.scheduler.Lock;
 import org.overture.typechecker.util.HackLexNameToken;
-
 
 public class ObjectValue extends Value
 {
@@ -79,8 +77,8 @@ public class ObjectValue extends Value
 	 */
 	public ObjectValue creator;
 
-	public ObjectValue(AClassType type,
-		NameValuePairMap members, List<ObjectValue> superobjects, CPUValue cpu, ObjectValue creator)
+	public ObjectValue(AClassType type, NameValuePairMap members,
+			List<ObjectValue> superobjects, CPUValue cpu, ObjectValue creator)
 	{
 		this.objectReference = getReference();
 		this.type = type;
@@ -90,7 +88,7 @@ public class ObjectValue extends Value
 		this.guardLock = new Lock();
 		this.children = new LinkedList<ObjectValue>();
 
-		if(creator != null)
+		if (creator != null)
 		{
 			setCreator(creator);
 		}
@@ -105,27 +103,25 @@ public class ObjectValue extends Value
 
 	private void setSelf(ObjectValue self)
 	{
-		for (NameValuePair nvp: members.asList())
- 		{
+		for (NameValuePair nvp : members.asList())
+		{
 			Value deref = nvp.value.deref();
 
- 			if (deref instanceof OperationValue)
- 			{
- 				OperationValue ov = (OperationValue)deref;
- 				ov.setSelf(self);
- 			}
- 			else if (deref instanceof FunctionValue)
- 			{
- 				FunctionValue fv = (FunctionValue)deref;
- 				fv.setSelf(self);
- 			}
- 			else if(deref instanceof ObjectValue)
+			if (deref instanceof OperationValue)
 			{
-				((ObjectValue)deref).setCreator(self);
+				OperationValue ov = (OperationValue) deref;
+				ov.setSelf(self);
+			} else if (deref instanceof FunctionValue)
+			{
+				FunctionValue fv = (FunctionValue) deref;
+				fv.setSelf(self);
+			} else if (deref instanceof ObjectValue)
+			{
+				((ObjectValue) deref).setCreator(self);
 			}
- 		}
+		}
 
-		for (ObjectValue obj: superobjects)
+		for (ObjectValue obj : superobjects)
 		{
 			obj.setSelf(self);
 		}
@@ -144,13 +140,12 @@ public class ObjectValue extends Value
 		if (superobjects.isEmpty())
 		{
 			basetypes.add(type);
-		}
-		else
+		} else
 		{
-    		for (ObjectValue sup: superobjects)
-    		{
-    			basetypes.addAll(sup.getBaseTypes());
-    		}
+			for (ObjectValue sup : superobjects)
+			{
+				basetypes.addAll(sup.getBaseTypes());
+			}
 		}
 
 		return basetypes;
@@ -167,7 +162,8 @@ public class ObjectValue extends Value
 		return UpdatableValue.factory(this, listeners);
 	}
 
-	public OperationValue getThreadOperation(Context ctxt) throws ValueException
+	public OperationValue getThreadOperation(Context ctxt)
+			throws ValueException
 	{
 		return get(type.getClassdef().getName().getThreadName(), false).operationValue(ctxt);
 	}
@@ -190,8 +186,8 @@ public class ObjectValue extends Value
 
 	public synchronized Value get(ILexNameToken field, boolean explicit)
 	{
-		ILexNameToken localname =
-			explicit ? field : field.getModifiedName(type.getName().getName());
+		ILexNameToken localname = explicit ? field
+				: field.getModifiedName(type.getName().getName());
 
 		// This is another case where we have to iterate with equals()
 		// rather than using the map's hash, because the hash doesn't
@@ -203,14 +199,14 @@ public class ObjectValue extends Value
 
 		if (rv == null)
 		{
-    		for (ILexNameToken var: members.keySet())
-    		{
-    			if (HackLexNameToken.isEqual( var,localname))
-    			{
-    				rv = members.get(var);
-    				break;
-    			}
-    		}
+			for (ILexNameToken var : members.keySet())
+			{
+				if (HackLexNameToken.isEqual(var, localname))
+				{
+					rv = members.get(var);
+					break;
+				}
+			}
 		}
 
 		if (rv != null)
@@ -218,7 +214,7 @@ public class ObjectValue extends Value
 			return rv;
 		}
 
-		for (ObjectValue svalue: superobjects)
+		for (ObjectValue svalue : superobjects)
 		{
 			rv = svalue.get(field, explicit);
 
@@ -239,9 +235,9 @@ public class ObjectValue extends Value
 		// rather than using the map's hash, because the hash includes the
 		// overloaded type qualifiers...
 
-		for (ILexNameToken var: members.keySet())
+		for (ILexNameToken var : members.keySet())
 		{
-			if (var.matches(field))		// Ignore type qualifiers
+			if (var.matches(field)) // Ignore type qualifiers
 			{
 				list.add(members.get(var));
 			}
@@ -249,10 +245,10 @@ public class ObjectValue extends Value
 
 		if (!list.isEmpty())
 		{
-			return list;	// Only names from one level
+			return list; // Only names from one level
 		}
 
-		for (ObjectValue svalue: superobjects)
+		for (ObjectValue svalue : superobjects)
 		{
 			list = svalue.getOverloads(field);
 
@@ -269,7 +265,7 @@ public class ObjectValue extends Value
 	{
 		NameValuePairMap nvpm = new NameValuePairMap();
 
-		for (ObjectValue svalue: superobjects)
+		for (ObjectValue svalue : superobjects)
 		{
 			nvpm.putAll(svalue.getMemberValues());
 		}
@@ -283,12 +279,12 @@ public class ObjectValue extends Value
 	{
 		if (other instanceof Value)
 		{
-			Value val = ((Value)other).deref();
+			Value val = ((Value) other).deref();
 
-    		if (val instanceof ObjectValue)
-    		{
-    			return val == this;		// Direct object comparison?
-    		}
+			if (val instanceof ObjectValue)
+			{
+				return val == this; // Direct object comparison?
+			}
 		}
 
 		return false;
@@ -309,13 +305,12 @@ public class ObjectValue extends Value
 		sb.append(type.toString());
 		sb.append("{#" + objectReference);
 
-		for (ILexNameToken name: members.keySet())
+		for (ILexNameToken name : members.keySet())
 		{
 			Value ov = members.get(name);
 			Value v = ov.deref();
 
-			if (!(v instanceof FunctionValue) &&
-				!(v instanceof OperationValue))
+			if (!(v instanceof FunctionValue) && !(v instanceof OperationValue))
 			{
 				sb.append(", ");
 				sb.append(name.getName());
@@ -323,8 +318,7 @@ public class ObjectValue extends Value
 				if (ov instanceof UpdatableValue)
 				{
 					sb.append(":=");
-				}
-				else
+				} else
 				{
 					sb.append("=");
 				}
@@ -358,7 +352,8 @@ public class ObjectValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt) throws AnalysisException
+	public Value convertValueTo(PType to, Context ctxt)
+			throws AnalysisException
 	{
 		Value conv = convertToHierarchy(to);
 
@@ -378,13 +373,13 @@ public class ObjectValue extends Value
 			return this;
 		}
 
-		for (ObjectValue svalue: superobjects)
+		for (ObjectValue svalue : superobjects)
 		{
 			Value conv = svalue.convertToHierarchy(to);
 
 			if (conv != null)
 			{
-				return this;	// NB. not the subtype
+				return this; // NB. not the subtype
 			}
 		}
 
@@ -407,31 +402,28 @@ public class ObjectValue extends Value
 			return mycopy;
 		}
 
-		mycopy = new ObjectValue(type,
-					new NameValuePairMap(), new Vector<ObjectValue>(), CPU, creator);
+		mycopy = new ObjectValue(type, new NameValuePairMap(), new Vector<ObjectValue>(), CPU, creator);
 
 		List<ObjectValue> supers = mycopy.superobjects;
 		NameValuePairMap memcopy = mycopy.members;
 
-   		for (ObjectValue sobj: superobjects)
-   		{
-   			supers.add(	// Type skeleton only...
-   				new ObjectValue(sobj.type,
-   					new NameValuePairMap(), new Vector<ObjectValue>(), sobj.CPU, creator));
-   		}
+		for (ObjectValue sobj : superobjects)
+		{
+			supers.add( // Type skeleton only...
+			new ObjectValue(sobj.type, new NameValuePairMap(), new Vector<ObjectValue>(), sobj.CPU, creator));
+		}
 
-		for (ILexNameToken name: members.keySet())
+		for (ILexNameToken name : members.keySet())
 		{
 			Value mv = members.get(name);
 
 			if (mv.deref() instanceof ObjectValue)
 			{
-				ObjectValue om = (ObjectValue)mv.deref();
+				ObjectValue om = (ObjectValue) mv.deref();
 				memcopy.put(name, om.shallowCopy());
-			}
-			else
+			} else
 			{
-				memcopy.put(name, (Value)mv.clone());
+				memcopy.put(name, (Value) mv.clone());
 			}
 		}
 
@@ -459,55 +451,52 @@ public class ObjectValue extends Value
 
 			ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
 			ObjectInputStream ois = new ObjectInputStream(is);
-			ObjectValue result = (ObjectValue)ois.readObject();
+			ObjectValue result = (ObjectValue) ois.readObject();
 
 			result.setSelf(result);
 			return result;
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			throw new InternalException(5, "Illegal clone: " + e);
 		}
 	}
-	
+
 	public MapValue getOldValues(LexNameList oldnames)
 	{
 		ValueMap values = new ValueMap();
-		ObjectContext ctxt = new ObjectContext(Interpreter.getInstance().getAssistantFactory(),type.getLocation(), "Old Object Creation", null, this);
+		ObjectContext ctxt = new ObjectContext(Interpreter.getInstance().getAssistantFactory(), type.getLocation(), "Old Object Creation", null, this);
 
-		for (ILexNameToken name: oldnames)
+		for (ILexNameToken name : oldnames)
 		{
 			Value mv = ctxt.check(name.getNewName()).deref();
 			SeqValue sname = new SeqValue(name.getName());
 
 			if (mv instanceof ObjectValue)
 			{
-				ObjectValue om = (ObjectValue)mv;
+				ObjectValue om = (ObjectValue) mv;
 				values.put(sname, om.deepCopy());
-			}
-			else
+			} else
 			{
-				values.put(sname, (Value)mv.clone());
+				values.put(sname, (Value) mv.clone());
 			}
 		}
 
 		return new MapValue(values);
 	}
-	
 
-//	private void writeObject(ObjectOutputStream out)
-//		throws IOException
-//	{
-//		out.defaultWriteObject();
-//	}
+	// private void writeObject(ObjectOutputStream out)
+	// throws IOException
+	// {
+	// out.defaultWriteObject();
+	// }
 
 	private void readObject(ObjectInputStream in)
-		throws ClassNotFoundException, IOException
-    {
+			throws ClassNotFoundException, IOException
+	{
 		in.defaultReadObject();
 		CPU = CPUValue.vCPU;
 		guardLock = new Lock();
-    }
+	}
 
 	public synchronized void setCPU(CPUValue cpu)
 	{
@@ -536,7 +525,7 @@ public class ObjectValue extends Value
 
 	public Value invokeDelegate(Context ctxt)
 	{
-		return ctxt.assistantFactory.createSClassDefinitionAssistant().invokeDelegate(type.getClassdef(),delegateObject, ctxt);
+		return ctxt.assistantFactory.createSClassDefinitionAssistant().invokeDelegate(type.getClassdef(), delegateObject, ctxt);
 	}
 
 	public static void init()
@@ -551,26 +540,27 @@ public class ObjectValue extends Value
 	}
 
 	/**
-	 * Sets the creator of this object value and adds this to
-	 * the newCreator parsed as argument
-	 * @param newCreator The creator of this object value
+	 * Sets the creator of this object value and adds this to the newCreator parsed as argument
+	 * 
+	 * @param newCreator
+	 *            The creator of this object value
 	 */
 	private synchronized void setCreator(ObjectValue newCreator)
 	{
-		//Do not set the creator if created by the system class. The System contains
+		// Do not set the creator if created by the system class. The System contains
 		// fields with references to Thread instances which are not Serializable and
 		// will fail a deep copy with a NotSerializableExpection for Thread
-		if(newCreator!= null && newCreator.type.getClassdef() instanceof ASystemClassDefinition)
+		if (newCreator != null
+				&& newCreator.type.getClassdef() instanceof ASystemClassDefinition)
 		{
 			return;
 		}
-		//establish transitive reference
+		// establish transitive reference
 		newCreator.addChild(this);
 	}
 
 	/**
-	 * Removed the creator of this object value by detaching from the
-	 * creator's child list
+	 * Removed the creator of this object value by detaching from the creator's child list
 	 */
 	public synchronized void removeCreator()
 	{
@@ -578,16 +568,17 @@ public class ObjectValue extends Value
 		// references from our creator, so let us remove ourself. This will prevent
 		// us from being updated if our creator is migrating in the
 		// future.
-		if(this.creator != null)
+		if (this.creator != null)
 		{
 			this.creator.removeChild(this);
-			//creator no longer needed, as we already detached ourself.
+			// creator no longer needed, as we already detached ourself.
 			this.creator = null;
 		}
 	}
 
 	/**
 	 * Add a child created by this object value
+	 * 
 	 * @param referenced
 	 */
 	private synchronized void addChild(ObjectValue referenced)
@@ -596,8 +587,9 @@ public class ObjectValue extends Value
 	}
 
 	/**
-	 * Remove a child from this object value. After this the reference will no longer
-	 * be considered as created by this object value
+	 * Remove a child from this object value. After this the reference will no longer be considered as created by this
+	 * object value
+	 * 
 	 * @param reference
 	 */
 	private synchronized void removeChild(ObjectValue reference)

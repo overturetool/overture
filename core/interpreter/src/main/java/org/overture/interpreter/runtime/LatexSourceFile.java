@@ -97,7 +97,7 @@ public class LatexSourceFile extends SourceFile
 
 		boolean endDocFound = false;
 		boolean inVdmAlModelTag = false;
-		
+
 		LexNameList spans = LexLocation.getSpanNames(filename);
 
 		for (int lnum = 1; lnum <= rawLines.size(); lnum++)
@@ -112,7 +112,7 @@ public class LatexSourceFile extends SourceFile
 					out.println(LST_ESCAPE_END);
 				}
 			}
-			
+
 			String line = rawLines.get(lnum - 1);
 
 			if (line.contains("\\end{document}"))
@@ -133,8 +133,8 @@ public class LatexSourceFile extends SourceFile
 
 			String spaced = detab(line, Properties.parser_tabstop);
 			spaced = spaced.replace(BEGIN + CURLY_BRACKET_VDM_AL, BEGIN
-					+ getListingEnvironment()).replace(END + CURLY_BRACKET_VDM_AL, END
-							+ getListingEnvironment());
+					+ getListingEnvironment()).replace(END
+					+ CURLY_BRACKET_VDM_AL, END + getListingEnvironment());
 
 			if (markCoverage)
 			{
@@ -203,7 +203,9 @@ public class LatexSourceFile extends SourceFile
 			total += calls;
 
 			sb.append("\\hyperref[" + latexLabel(name.getName()) + ":"
-					+ name.getLocation().getStartLine() + "]{"+latexQuote(name.toString()) + "} & " + name.getLocation().getStartLine() + "&"
+					+ name.getLocation().getStartLine() + "]{"
+					+ latexQuote(name.toString()) + "} & "
+					+ name.getLocation().getStartLine() + "&"
 					+ LexLocation.getSpanPercent(name) + "\\% & " + calls
 					+ " \\\\" + "\n");
 			sb.append("\\hline" + "\n");

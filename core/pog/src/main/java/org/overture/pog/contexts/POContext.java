@@ -49,13 +49,12 @@ abstract public class POContext implements IPOContext
 	}
 
 	/**
-	 * Any context that is not stateful need no override this method
-	 * as it is not used.
+	 * Any context that is not stateful need no override this method as it is not used.
 	 */
 	@Override
 	public void lastStmt()
 	{
-			// do nothing. Only relevant for statefuls
+		// do nothing. Only relevant for statefuls
 	}
 
 	public String getName()

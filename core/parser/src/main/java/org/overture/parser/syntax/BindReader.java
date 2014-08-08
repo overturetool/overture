@@ -58,7 +58,7 @@ public class BindReader extends SyntaxReader
 			reader.push();
 			PBind bind = readBind();
 			reader.unpush();
-			return AstFactory.newADefPatternBind(bind.getLocation(),bind);			
+			return AstFactory.newADefPatternBind(bind.getLocation(), bind);
 		} catch (ParserException e)
 		{
 			e.adjustDepth(reader.getTokensRead());
@@ -71,7 +71,7 @@ public class BindReader extends SyntaxReader
 			reader.push();
 			PPattern p = getPatternReader().readPattern();
 			reader.unpush();
-			return AstFactory.newADefPatternBind(p.getLocation(),p);
+			return AstFactory.newADefPatternBind(p.getLocation(), p);
 		} catch (ParserException e)
 		{
 			e.adjustDepth(reader.getTokensRead());
@@ -186,7 +186,7 @@ public class BindReader extends SyntaxReader
 
 			case COLON:
 				nextToken();
-				mb = AstFactory.newATypeMultipleBind(plist,getTypeReader().readType());
+				mb = AstFactory.newATypeMultipleBind(plist, getTypeReader().readType());
 				break;
 
 			default:

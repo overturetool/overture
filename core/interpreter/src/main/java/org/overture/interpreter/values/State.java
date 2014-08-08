@@ -37,7 +37,6 @@ import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.runtime.VdmRuntimeError;
 
-
 public class State implements ValueListener
 {
 	public final AStateDefinition definition;
@@ -51,23 +50,20 @@ public class State implements ValueListener
 		this.definition = definition;
 		NameValuePairList fieldvalues = new NameValuePairList();
 
-		for (AFieldField f: definition.getFields())
+		for (AFieldField f : definition.getFields())
 		{
-			fieldvalues.add(new NameValuePair(f.getTagname(),
-				UpdatableValue.factory(new ValueListenerList(this))));
+			fieldvalues.add(new NameValuePair(f.getTagname(), UpdatableValue.factory(new ValueListenerList(this))));
 		}
 
-		ARecordInvariantType rt = (ARecordInvariantType)definition.getRecordType();
-		this.context = new Context(Interpreter.getInstance().getAssistantFactory(),definition.getLocation(), "module state", null);
-		this.recordValue = UpdatableValue.factory(new RecordValue(rt, fieldvalues, context),
-			new ValueListenerList(this));
+		ARecordInvariantType rt = (ARecordInvariantType) definition.getRecordType();
+		this.context = new Context(Interpreter.getInstance().getAssistantFactory(), definition.getLocation(), "module state", null);
+		this.recordValue = UpdatableValue.factory(new RecordValue(rt, fieldvalues, context), new ValueListenerList(this));
 
-		
 		this.context.put(definition.getName(), recordValue);
 		this.context.putList(fieldvalues);
 	}
 
-	public void initialize(Context globals) 
+	public void initialize(Context globals)
 	{
 		try
 		{
@@ -80,27 +76,25 @@ public class State implements ValueListener
 				// so that calls to init_sigma can test their arguments without
 				// changing state. See StateInitExpression.
 
-				if (!definition.getCanBeExecuted() ||
-					!(definition.getInitExpression() instanceof AEqualsBinaryExp))
+				if (!definition.getCanBeExecuted()
+						|| !(definition.getInitExpression() instanceof AEqualsBinaryExp))
 				{
-					throw new ValueException(
-						4144, "State init expression cannot be executed", globals);
+					throw new ValueException(4144, "State init expression cannot be executed", globals);
 				}
 
-				AEqualsBinaryExp ee = (AEqualsBinaryExp)definition.getInitExpression();
+				AEqualsBinaryExp ee = (AEqualsBinaryExp) definition.getInitExpression();
 				ee.getLocation().hit();
 				ee.getLeft().getLocation().hit();
-				Value v = ee.getRight().apply(VdmRuntime.getExpressionEvaluator(),globals);
+				Value v = ee.getRight().apply(VdmRuntime.getExpressionEvaluator(), globals);
 
 				if (!(v instanceof RecordValue))
 				{
-					throw new ValueException(
-						4144, "State init expression cannot be executed", globals);
+					throw new ValueException(4144, "State init expression cannot be executed", globals);
 				}
 
-				RecordValue iv = (RecordValue)v;
+				RecordValue iv = (RecordValue) v;
 
-				for (AFieldField f: definition.getFields())
+				for (AFieldField f : definition.getFields())
 				{
 					Value sv = context.get(f.getTagname());
 					sv.set(ee.getLocation(), iv.fieldmap.get(f.getTag()), globals);
@@ -110,19 +104,18 @@ public class State implements ValueListener
 			doInvariantChecks = true;
 			changedValue(null, null, globals);
 		}
-//		catch (ValueException e)
-//		{
-//			throw new ContextException(e, definition.getLocation());
-//		}
+		// catch (ValueException e)
+		// {
+		// throw new ContextException(e, definition.getLocation());
+		// }
 		catch (AnalysisException e)
 		{
-			if(e instanceof ValueException)
+			if (e instanceof ValueException)
 			{
-				VdmRuntimeError.abort(definition.getLocation(), (ValueException) e );
+				VdmRuntimeError.abort(definition.getLocation(), (ValueException) e);
 			}
-					
-		} 
-		finally
+
+		} finally
 		{
 			doInvariantChecks = true;
 		}
@@ -133,28 +126,29 @@ public class State implements ValueListener
 		return context;
 	}
 
-	public void changedValue(ILexLocation location, Value changed, Context ctxt) throws AnalysisException
+	public void changedValue(ILexLocation location, Value changed, Context ctxt)
+			throws AnalysisException
 	{
-		if (doInvariantChecks && VdmRuntime.getNodeState( definition).invfunc != null && Settings.invchecks)
+		if (doInvariantChecks
+				&& VdmRuntime.getNodeState(definition).invfunc != null
+				&& Settings.invchecks)
 		{
 			if (location == null)
 			{
 				location = VdmRuntime.getNodeState(definition).invfunc.body.getLocation();
 			}
 
-    		try
-    		{
-    			if (!VdmRuntime.getNodeState(definition).invfunc.eval(
-    					VdmRuntime.getNodeState(definition).invfunc.location, recordValue, ctxt).boolValue(ctxt))
-    			{
-    				throw new ContextException(
-    					4131, "State invariant violated: " + VdmRuntime.getNodeState(definition).invfunc.name, location, ctxt);
-    			}
-    		}
-    		catch (ValueException e)
-    		{
-    			throw new ContextException(e, location);
-    		}
+			try
+			{
+				if (!VdmRuntime.getNodeState(definition).invfunc.eval(VdmRuntime.getNodeState(definition).invfunc.location, recordValue, ctxt).boolValue(ctxt))
+				{
+					throw new ContextException(4131, "State invariant violated: "
+							+ VdmRuntime.getNodeState(definition).invfunc.name, location, ctxt);
+				}
+			} catch (ValueException e)
+			{
+				throw new ContextException(e, location);
+			}
 		}
 	}
 }

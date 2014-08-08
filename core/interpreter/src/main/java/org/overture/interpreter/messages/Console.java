@@ -32,8 +32,6 @@ import java.nio.charset.Charset;
 import org.overture.interpreter.debug.DBGPReader;
 import org.overture.interpreter.debug.DBGPRedirect;
 
-
-
 public class Console
 {
 	/** The charset for the console. */
@@ -66,58 +64,64 @@ public class Console
 			out = new StdoutRedirector(new OutputStreamWriter(System.out, charset));
 			err = new StderrRedirector(new OutputStreamWriter(System.err, charset));
 			in = new BufferedReader(new InputStreamReader(System.in, charset));
-		}
-		catch (UnsupportedEncodingException e)
+		} catch (UnsupportedEncodingException e)
 		{
 			System.err.println("Console encoding exception: " + e);
 		}
 	}
 
-	public static synchronized void directStdout(DBGPReader reader, DBGPRedirect redirect)
+	public static synchronized void directStdout(DBGPReader reader,
+			DBGPRedirect redirect)
 	{
 		out.redirect(redirect, reader);
 	}
 
-	public static synchronized void directStderr(DBGPReader reader, DBGPRedirect redirect)
+	public static synchronized void directStderr(DBGPReader reader,
+			DBGPRedirect redirect)
 	{
 		err.redirect(redirect, reader);
 	}
-	
+
 	public static class DisabledStdOut extends StdoutRedirector
 	{
 
-		public DisabledStdOut(OutputStreamWriter out) {
+		public DisabledStdOut(OutputStreamWriter out)
+		{
 			super(out);
 		}
-		
+
 		@Override
 		public void write(String s, int off, int len)
 		{
-			
+
 		}
-		
+
 		@Override
 		public void print(String line)
 		{
-			
+
 		}
-		
+
 	}
-	
+
 	public static synchronized void disableStdout()
 	{
-		try {
-			out = new DisabledStdOut(new OutputStreamWriter(System.out, charset)) ;
-		} catch (UnsupportedEncodingException e) {
+		try
+		{
+			out = new DisabledStdOut(new OutputStreamWriter(System.out, charset));
+		} catch (UnsupportedEncodingException e)
+		{
 			System.err.println("Console encoding exception: " + e);
 		}
 	}
-	
+
 	public static synchronized void disableStderr()
 	{
-		try {
-			err = new DisabledStdOut(new OutputStreamWriter(System.err, charset)) ;
-		} catch (UnsupportedEncodingException e) {
+		try
+		{
+			err = new DisabledStdOut(new OutputStreamWriter(System.err, charset));
+		} catch (UnsupportedEncodingException e)
+		{
 			System.err.println("Console encoding exception: " + e);
 		}
 	}

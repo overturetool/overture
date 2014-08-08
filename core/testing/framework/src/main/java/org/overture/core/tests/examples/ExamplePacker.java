@@ -8,6 +8,8 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Vector;
 
+import org.apache.commons.io.filefilter.AbstractFileFilter;
+import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
 
@@ -65,12 +67,14 @@ class ExamplePacker
 	Release languageVersion;
 	Boolean checkable;
 	String name;
+	File root;
 
 	private List<String> libs = new Vector<String>();
 
 	public ExamplePacker(File root, Dialect dialect)
 	{
 		this.dialect = dialect;
+		this.root = root;
 		name = root.getName() + getName(dialect);
 
 		File readme = new File(root, VDM_README_FILENAME);
@@ -165,6 +169,7 @@ class ExamplePacker
 
 	/**
 	 * Process the lib dependencies (IO, MATH, etc.) of this example.
+	 * 
 	 * @param text
 	 */
 	private void processLibs(String text)
@@ -199,8 +204,8 @@ class ExamplePacker
 	}
 
 	/**
-	 * Process a single line in the Readme file. Again, most 
-	 * entries are ignored.
+	 * Process a single line in the Readme file. Again, most entries are ignored.
+	 * 
 	 * @param line
 	 */
 	private void processLine(String line)
@@ -219,6 +224,28 @@ class ExamplePacker
 				processExpectedResult(ResultStatus.valueOf(data[1]));
 			}
 		}
+	}
+
+	public List<File> getSpecFiles()
+	{
+		List<File> files = new Vector<File>();
+
+		for (File f2 : org.apache.commons.io.FileUtils.listFiles(this.root, new AbstractFileFilter()
+		{
+
+
+			@Override
+			public boolean accept(File dir, String name)
+			{
+				return dialect.getFilter().accept(dir, name);
+			}
+
+		}, TrueFileFilter.INSTANCE))
+		{
+			files.add(f2);
+		}
+		
+		return files;
 	}
 
 }

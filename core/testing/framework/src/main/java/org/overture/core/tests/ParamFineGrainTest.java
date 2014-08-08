@@ -22,8 +22,7 @@ import org.overture.parser.syntax.ParserException;
  *            the type of result this test operates on
  */
 @RunWith(Parameterized.class)
-abstract public class ParamFineGrainTest<R> extends
-		AbsResultTest<R>
+abstract public class ParamFineGrainTest<R> extends AbsResultTest<R>
 {
 
 	protected String modelPath;
@@ -49,8 +48,8 @@ abstract public class ParamFineGrainTest<R> extends
 
 	/**
 	 * The main test executor. Takes a VDM source (or any other text file) and processes it according to
-	 * {@link #processSource(String)}. It then reads a saved result via {@link #deSerializeResult(String)}. Finally, the
-	 * two results are compared via {@link #compareResults(R, R)}. <br>
+	 * {@link #processSource()}. It then reads a saved result via {@link #deSerializeResult(String)}. Finally, the
+	 * two results are compared via {@link #compareResults(Object, Object)}. <br>
 	 * <br>
 	 * If the test is running in update mode, then no comparison will be made and the new result will be saved instead.
 	 * 
@@ -67,16 +66,17 @@ abstract public class ParamFineGrainTest<R> extends
 			this.testUpdate(actual);
 		} else
 		{
-			R expected=null;
-			try {
-				expected= deSerializeResult(resultPath);
-			}
-			catch (FileNotFoundException e){
+			R expected = null;
+			try
+			{
+				expected = deSerializeResult(resultPath);
+			} catch (FileNotFoundException e)
+			{
 				Assert.fail("Test " + testName
 						+ " failed. No result file found. Use \"-D"
 						+ getUpdatePropertyString() + "." + testName
 						+ "\" to create an initial one."
-						+ "\n The test result was: "+ actual.toString());
+						+ "\n The test result was: " + actual.toString());
 			}
 			this.compareResults(actual, expected);
 		}

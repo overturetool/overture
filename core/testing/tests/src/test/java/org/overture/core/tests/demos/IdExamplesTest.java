@@ -3,6 +3,7 @@ package org.overture.core.tests.demos;
 import java.lang.reflect.Type;
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.overture.ast.node.INode;
@@ -14,9 +15,10 @@ import com.google.gson.reflect.TypeToken;
  * Demonstration of new Overture tests on examples. Takes an AST and dumps the entire content to a string. <br>
  * <br>
  * This test operates on result type {@link IdTestResult}.
- *
+ * 
  * @author ldc
  */
+@Ignore
 @RunWith(Parameterized.class)
 public class IdExamplesTest extends ParamExamplesTest<IdTestResult>
 {

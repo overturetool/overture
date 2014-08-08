@@ -32,10 +32,9 @@ import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.ValueException;
 
-
 public class ClassInvariantListener implements ValueListener, Serializable
 {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 	public final OperationValue invopvalue;
 	public boolean doInvariantChecks = true;
 
@@ -44,37 +43,36 @@ public class ClassInvariantListener implements ValueListener, Serializable
 		this.invopvalue = invopvalue;
 	}
 
-	public void changedValue(ILexLocation location, Value value, Context ctxt) throws AnalysisException
+	public void changedValue(ILexLocation location, Value value, Context ctxt)
+			throws AnalysisException
 	{
 		if (doInvariantChecks && Settings.invchecks)
 		{
-    		try
-    		{
-    			// In VDM++ and VDM-RT, we do not want to do thread swaps half way
-    			// through an invariant check, so we set the atomic flag around the
-    			// conversion. This also stops VDM-RT from performing "time step"
-    			// calculations.
-    			
-    			try
-    			{
-	    			ctxt.threadState.setAtomic(true);
-	    			boolean inv = invopvalue.eval(location, new ValueList(), ctxt).boolValue(ctxt);
-	    			
-	    			if (!inv)
-	    			{
-	    				throw new ContextException(
-	    					4130, "Instance invariant violated: " + invopvalue.name, location, ctxt);
-	    			}
-    			}
-    			finally
-    			{
-    				ctxt.threadState.setAtomic(false);
-    			}
-    		}
-    		catch (ValueException e)
-    		{
-    			throw new ContextException(e, location);
-    		}
+			try
+			{
+				// In VDM++ and VDM-RT, we do not want to do thread swaps half way
+				// through an invariant check, so we set the atomic flag around the
+				// conversion. This also stops VDM-RT from performing "time step"
+				// calculations.
+
+				try
+				{
+					ctxt.threadState.setAtomic(true);
+					boolean inv = invopvalue.eval(location, new ValueList(), ctxt).boolValue(ctxt);
+
+					if (!inv)
+					{
+						throw new ContextException(4130, "Instance invariant violated: "
+								+ invopvalue.name, location, ctxt);
+					}
+				} finally
+				{
+					ctxt.threadState.setAtomic(false);
+				}
+			} catch (ValueException e)
+			{
+				throw new ContextException(e, location);
+			}
 		}
 	}
 }

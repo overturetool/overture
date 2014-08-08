@@ -51,17 +51,19 @@ public class MapInjectivityComp extends ProofObligation
 	 */
 	private static final long serialVersionUID = 6082219504509442557L;
 
-	public MapInjectivityComp(PExp exp, IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
+	public MapInjectivityComp(PExp exp, IPOContextStack ctxt,
+			IPogAssistantFactory af) throws AnalysisException
 	{
-		super(exp, POType.MAP_INJ_COMP, ctxt, exp.getLocation(),af);
+		super(exp, POType.MAP_INJ_COMP, ctxt, exp.getLocation(), af);
 
 		stitch = buildPredicate(exp.clone());
 		valuetree.setPredicate(ctxt.getPredWithContext(stitch));
 	}
 
-	public MapInjectivityComp(AMapCompMapExp exp, IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
+	public MapInjectivityComp(AMapCompMapExp exp, IPOContextStack ctxt,
+			IPogAssistantFactory af) throws AnalysisException
 	{
-		super(exp, POType.MAP_INJ_COMP, ctxt, exp.getLocation(),af);
+		super(exp, POType.MAP_INJ_COMP, ctxt, exp.getLocation(), af);
 
 		stitch = buildPredicate(exp.clone());
 		valuetree.setPredicate(ctxt.getPredWithContext(stitch));
@@ -73,7 +75,6 @@ public class MapInjectivityComp extends ProofObligation
 		pattern.setName(name);
 		return pattern;
 	}
-
 
 	private PExp buildPredicate(PExp mapExp)
 	{

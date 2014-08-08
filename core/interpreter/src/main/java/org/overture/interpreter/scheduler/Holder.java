@@ -28,10 +28,9 @@ import java.io.Serializable;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.interpreter.runtime.Context;
 
-
 public class Holder<T> implements Serializable
 {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 	private ControlQueue cq = new ControlQueue();
 	private T contents = null;
 
