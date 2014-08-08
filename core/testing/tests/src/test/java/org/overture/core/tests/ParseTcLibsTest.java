@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Vector;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;

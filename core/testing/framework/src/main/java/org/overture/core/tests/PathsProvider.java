@@ -80,6 +80,10 @@ public class PathsProvider
 
 		for (File file : files)
 		{
+			if(!(file.getPath().contains("sltest")||file.getPath().contains("pptest")||file.getPath().contains("rttest")))
+			{
+				continue;
+			}
 
 			paths.add(new Object[] {
 					file.getName(),
