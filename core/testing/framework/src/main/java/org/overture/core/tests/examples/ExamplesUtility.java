@@ -1,9 +1,11 @@
 package org.overture.core.tests.examples;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -29,19 +31,18 @@ import org.overture.parser.syntax.ParserException;
 abstract public class ExamplesUtility
 {
 
+	private static final int EXAMPLE_DEPTH = 3;
+	private static final String IO_LIB_NAME = "IO";
 	private static final String VDMUNIT_LIB_NAME = "VDMUnit";
 	private static final String CSV_LIB_NAME = "CSV";
-	
-	private static final String SL_EXAMPLES_ROOT = "/examples/VDMSL";
-	private static final String PP_EXAMPLES_ROOT = "/examples/VDM++";
-	private static final String RT_EXAMPLES_ROOT = "/examples/VDMRT";
-	private static final String LIBS_ROOT = "/examples/libs/";
 
 	private static final String SL_LIBS_INDEX = "/examples/vdm-libs-sl.index";
 	private static final String PP_LIBS_INDEX = "/examples/vdm-libs-pp.index";
 	private static final String RT_LIBS_INDEX = "/examples/vdm-libs-rt.index";
 
-	private static final String EXAMPLES_INDEX = "vdm-examples-index";
+	private static final String SL_EXAMPLES_INDEX = "/examples/vdm-examples-sl.index";
+	private static final String PP_EXAMPLES_INDEX = "/examples/vdm-examples-pp.index";
+	private static final String RT_EXAMPLES_INDEX = "/examples/vdm-examples-rt.index";
 
 	/**
 	 * Get the ASTs for the Overture examples. This method only provides the trees for examples that are supposed to
@@ -51,9 +52,10 @@ abstract public class ExamplesUtility
 	 * @throws ParserException
 	 * @throws LexException
 	 * @throws IOException
+	 * @throws URISyntaxException 
 	 */
 	static public Collection<ExampleAstData> getExamplesAsts()
-			throws ParserException, LexException, IOException
+			throws ParserException, LexException, IOException, URISyntaxException
 	{
 		Collection<ExampleAstData> r = new Vector<ExampleAstData>();
 
@@ -73,37 +75,30 @@ abstract public class ExamplesUtility
 	 * 
 	 * @return a list of {@link ExampleSourceData} containing the example sources
 	 * @throws IOException
+	 * @throws URISyntaxException 
 	 */
 	public static Collection<ExampleSourceData> getExamplesSources()
-			throws IOException
+			throws IOException, URISyntaxException
 	{
 		List<ExampleSourceData> r = new LinkedList<ExampleSourceData>();
 
-		r.addAll(getSubSources(getPath(SL_EXAMPLES_ROOT), Dialect.VDM_SL));
-		r.addAll(getSubSources(getPath(PP_EXAMPLES_ROOT), Dialect.VDM_PP));
-		r.addAll(getSubSources(getPath(RT_EXAMPLES_ROOT), Dialect.VDM_RT));
+		r.addAll(getSubExamples(SL_EXAMPLES_INDEX, Dialect.VDM_SL));
+		r.addAll(getSubExamples(PP_EXAMPLES_INDEX, Dialect.VDM_PP));
+		r.addAll(getSubExamples(RT_EXAMPLES_INDEX, Dialect.VDM_RT));
 
 		return r;
 	}
 
-	public static String getDocumentationPath()
-	{
-		return "../../../documentation/";
-	}
-
-	public static String getPath(String relativeExamplePath)
-	{
-		return (getDocumentationPath() + relativeExamplePath).replace('/', File.separatorChar);
-	}
 
 	/**
 	 * Get raw sources for the Overture VDM libraries.
 	 * 
 	 * @return a list of {@link ExampleSourceData} containing the libss sources
 	 * @throws IOException
+	 * @throws URISyntaxException 
 	 */
 	public static Collection<ExampleSourceData> getLibSources()
-			throws IOException
+			throws IOException, URISyntaxException
 	{
 		List<ExampleSourceData> r = new LinkedList<ExampleSourceData>();
 
@@ -114,84 +109,142 @@ abstract public class ExamplesUtility
 		return r;
 	}
 
-	private static Collection<ExampleSourceData> getSubLibs(String index, Dialect dialect) throws IOException{
+	private static Collection<ExampleSourceData> getSubLibs(String index,
+			Dialect dialect) throws IOException, URISyntaxException
+	{
 		List<ExampleSourceData> r = new LinkedList<ExampleSourceData>();
-		URL url = ExamplesUtility.class.getResource(index);
-		File fIndex = new File(url.getPath());
-		List<String> lines = FileUtils.readLines(fIndex);
-		
+		List<String> lines = parseIndex(index);
+
 		List<File> lf;
-		
-		ListIterator<String> it = lines.listIterator();
-		File ioLib =null;
-		
-		while(it.hasNext()){
-			String s = it.next();
-			if (s.contains("IO")){
-				ioLib = new File (ExamplesUtility.class.getResource(s).getPath());
-				break;
-			}
-		}
-		
-		assertNotNull("Could not load IO lib",ioLib);
-			
-		for (String line : lines){
-			File lib = new File (ExamplesUtility.class.getResource(line).getPath());
+
+		for (String line : lines)
+		{
+			File lib = new File(ExamplesUtility.class.getResource(line).getPath());
 			lf = new Vector<File>();
-			if (lib.getName().contains(CSV_LIB_NAME) || lib.getName().contains(VDMUNIT_LIB_NAME)){
-				lf.add(ioLib); // csv and vdmunit need IO to TC
+			if (lib.getName().contains(CSV_LIB_NAME)
+					|| lib.getName().contains(VDMUNIT_LIB_NAME))
+			{
+				lf.add(getLib(IO_LIB_NAME, dialect)); // csv and vdmunit need IO to TC
+
 			}
-				lf.add(lib);
+			lf.add(lib);
 			r.add(new ExampleSourceData(lib.getName(), dialect, Release.DEFAULT, lf));
 		}
-		
+
 		return r;
 	}
 
-	private static Collection<ExampleSourceData> getSubSources(
-			String examplesRoot, final Dialect dialect) throws IOException
+	private static Collection<ExampleSourceData> getSubExamples(String index,
+			Dialect dialect) throws IOException, URISyntaxException
 	{
-
 		List<ExampleSourceData> r = new LinkedList<ExampleSourceData>();
+		List<String> lines = parseIndex(index);
+		List<File> sources = new Vector<File>();
+		Collection<ExamplePacker> packedExamples = collectExamplePacks(lines, dialect);
 
-		File dir = new File(examplesRoot.replace('/', File.separatorChar));
-
-		List<File> sources = null;
-		// grab examples groups
-		for (File f : dir.listFiles())
+		for (ExamplePacker p : packedExamples)
 		{
-			sources = new Vector<File>();
-			// grab example projects
-			if (f.isDirectory())
-			{
-				ExamplePacker p = new ExamplePacker(f, dialect);
-				if (p.isCheckable())
-				{
-					sources.addAll(p.getSpecFiles());
 
+			if (p.isCheckable())
+			{
+				{
+					for (File f : p.getSpecFiles())
+					{
+						sources.add(f);
+					}
 					if (p.getLibs().size() > 0)
 					{
 						for (String lib : p.getLibs())
 						{
-							final File file = getLibrary(dialect, lib);
-							// source.append(FileUtils.readFileToString(file));
-							sources.add(file);
+							sources.add(getLib(lib, dialect));
 						}
 					}
 					r.add(new ExampleSourceData(p.getName(), dialect, p.getLanguageVersion(), sources));
-					// source = new StringBuilder();
+					sources = new Vector<File>();
 				}
 			}
 		}
-
 		return r;
-
 	}
 
-	protected static File getLibrary(final Dialect dialect, String lib)
+	private static File getLib(String lib, Dialect dialect) throws IOException, URISyntaxException
 	{
-		return new File(getPath(LIBS_ROOT + "/"
-				+ ExamplePacker.getName(dialect) + "/" + lib));
+		String index = "";
+
+		switch (dialect)
+		{
+			case VDM_SL:
+				index = SL_LIBS_INDEX;
+				break;
+			case VDM_PP:
+				index = PP_LIBS_INDEX;
+				break;
+			case VDM_RT:
+				index = RT_LIBS_INDEX;
+				break;
+			default:
+				fail("Unknown dialect " + dialect);
+				break;
+		}
+
+		List<String> lines = parseIndex(index);
+		ListIterator<String> it = lines.listIterator();
+
+		while (it.hasNext())
+		{
+			String s = it.next();
+			if (s.contains(lib))
+			{
+				return new File(ExamplesUtility.class.getResource(s).getPath());
+			}
+		}
+
+		fail("Could not find lib " + lib);
+
+		return null;
+	}
+
+	private static Collection<ExamplePacker> collectExamplePacks(
+			List<String> indices, Dialect dialect) throws URISyntaxException
+	{
+		List<ExamplePacker> packedExamples = new LinkedList<ExamplePacker>();
+
+		ListIterator<String> it = indices.listIterator();
+		String lastName = indices.get(0).split(File.separator)[EXAMPLE_DEPTH];
+		List<File> sources = new Vector<File>();
+		File readme = null;
+		while (it.hasNext())
+		{
+			String line = it.next();
+			String name = line.split(File.separator)[EXAMPLE_DEPTH];
+			if (!name.equals(lastName))
+			{
+				assertNotNull("Could not find README file corresponding to example for "
+						+ line, readme);
+				packedExamples.add(new ExamplePacker(name, dialect, readme, sources));
+				lastName = name;
+				sources = new Vector<File>();
+				readme = null;
+			}
+
+			if (line.contains("README"))
+			{
+				readme = new File(ExamplesUtility.class.getResource(line).toURI());
+			} else
+			{
+				sources.add(new File(ExamplesUtility.class.getResource(line).toURI()));
+			}
+
+		}
+
+		return packedExamples;
+	}
+
+	private static List<String> parseIndex(String path) throws IOException, URISyntaxException
+	{
+		URL url = ExamplesUtility.class.getResource(path);
+		File f = new File(url.toURI());
+		return FileUtils.readLines(f);
 	}
 
 }

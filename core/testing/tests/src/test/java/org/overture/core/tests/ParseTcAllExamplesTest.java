@@ -3,6 +3,7 @@ package org.overture.core.tests;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Vector;
 
@@ -35,7 +36,7 @@ public class ParseTcAllExamplesTest
 	}
 
 	@Parameters(name = "{index} : {0}")
-	public static Collection<Object[]> testData() throws IOException
+	public static Collection<Object[]> testData() throws IOException, URISyntaxException
 	{
 		Collection<Object[]> r = new Vector<Object[]>();
 
