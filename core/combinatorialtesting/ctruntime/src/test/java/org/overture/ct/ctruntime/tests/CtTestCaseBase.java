@@ -2,6 +2,7 @@ package org.overture.ct.ctruntime.tests;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -11,7 +12,10 @@ import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
 import org.overture.config.Settings;
@@ -20,50 +24,56 @@ import org.overture.ct.ctruntime.tests.util.CtTestHelper;
 import org.overture.ct.ctruntime.tests.util.Data;
 import org.overture.ct.ctruntime.tests.util.TraceResult;
 import org.overture.ct.ctruntime.tests.util.TraceResultReader;
-import org.overture.test.framework.BaseTestCase;
 import org.overture.test.framework.Properties;
+import org.overture.test.framework.TestResourcesResultTestCase4;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-public abstract class CtTestCaseBase extends BaseTestCase
+@SuppressWarnings("rawtypes")
+public abstract class CtTestCaseBase extends TestResourcesResultTestCase4
 {
 	// The socket is used to communicate with the trace interpreter
 	protected ServerSocket socket;
 	protected static final int SOCKET_TIMEOUT = 0;
-	protected static final int PORT = 8889;
+	public static final int PORT = 8889;
 
 	// Used a fixed trace name for simplicity
 	protected static final String TRACE_NAME = "T1";
 
-	protected static final String TRACE_OUTPUT_FOLDER = "target/trace-output/";
+	public static final String TRACE_OUTPUT_FOLDER = "target/trace-output/";
 
 	// Test specifications are copied to a file with proper extension before they
 	// are being parsed
 	protected static final String SPEC_TEMP_FILE = TRACE_OUTPUT_FOLDER
 			+ "tmp.vdmsl";
 
-	protected CtTestHelper testHelper;
+	// protected CtTestHelper testHelper;
+	private String[] args;
+	private File traceFolder;
 
 	public CtTestCaseBase()
 	{
 		super();
 	}
 
-	public CtTestCaseBase(File file)
+	public CtTestCaseBase(File file, File traceFolder, String[] args)
 	{
 		super(file);
+		this.args = args;
+		this.traceFolder = traceFolder;
 	}
 
-	@Override
-	protected void setUp() throws Exception
+	@Before
+	public void setUp() throws Exception
 	{
-		super.setUp();
-		this.testHelper = new CtTestHelper();
 		Settings.dialect = Dialect.VDM_SL;
 		Settings.release = Release.VDM_10;
 	}
 
-	@Override
-	protected void tearDown() throws Exception
+	@After
+	public void tearDown() throws Exception
 	{
 		try
 		{
@@ -76,23 +86,21 @@ public abstract class CtTestCaseBase extends BaseTestCase
 		}
 	}
 
-	@Override
+	@Test
 	public void test() throws Exception
 	{
-		if (content == null)
+		if (file == null)
 		{
 			return;
 		}
 
-		String filename = file.getAbsolutePath();
-
-		File actualResultsFile = computeActualResults(TRACE_NAME, filename);
+		File actualResultsFile = computeActualResults(TRACE_NAME);
 
 		if (Properties.recordTestResults)
 		{
 			try
 			{
-				File resultFile = createResultFile(filename);
+				File resultFile = createResultFile(file.getAbsolutePath());
 				resultFile.getParentFile().mkdirs();
 
 				// Overwrite result file
@@ -107,9 +115,9 @@ public abstract class CtTestCaseBase extends BaseTestCase
 			}
 		} else
 		{
-			File resultFile = getResultFile(filename);
+			File resultFile = getResultFile(file.getAbsolutePath());
 
-			Assert.assertTrue("No result file found for test: " + content, resultFile.exists());
+			Assert.assertTrue("No result file found for test: " + file, resultFile.exists());
 
 			TraceResultReader reader = new TraceResultReader();
 			List<TraceResult> expectedResults = reader.read(resultFile);
@@ -125,18 +133,12 @@ public abstract class CtTestCaseBase extends BaseTestCase
 				TraceResult actual = actualResults.get(i);
 
 				Assert.assertTrue("Actual results differs from expected results for test: "
-						+ content
+						+ file
 						+ "\nExpected: "
 						+ expectedResults
 						+ "\n\nActual: " + actualResults, expected.equals(actual));
 			}
 		}
-	}
-
-	@Override
-	public String getName()
-	{
-		return this.content;
 	}
 
 	protected File createResultFile(String filename)
@@ -149,35 +151,24 @@ public abstract class CtTestCaseBase extends BaseTestCase
 		return new File(filename + ".result");
 	}
 
-	public File computeActualResults(final String traceName, final String spec)
-			throws IOException, XPathExpressionException, SAXException,
+	public File computeActualResults(final String spec) throws IOException,
+			XPathExpressionException, SAXException,
 			ParserConfigurationException
 	{
-		File specfile = new File(spec.replace('/', File.separatorChar));
-
-		Path specFilePath = specfile.toPath();
-		File specFileWithExt = new File(SPEC_TEMP_FILE.replace('/', File.separatorChar));
-		specFileWithExt.mkdirs();
-		Path toPath = specFileWithExt.toPath();
-		Files.copy(specFilePath, toPath, StandardCopyOption.REPLACE_EXISTING);
-
 		socket = new ServerSocket(PORT);
 		socket.setSoTimeout(SOCKET_TIMEOUT);
 		final Data data = new Data();
 
-		File traceFolder = new File((TRACE_OUTPUT_FOLDER + traceName).replace('/', File.separatorChar));
-		traceFolder.getParentFile().mkdirs();
+		traceFolder.mkdirs();
 
-		String outputStrPath = String.format(TRACE_OUTPUT_FOLDER + traceName
-				+ "/DEFAULT-" + traceName + ".xml").replace('/', File.separatorChar);
-		final File actualOutputFile = new File(outputStrPath.replace('/', File.separatorChar));
-		actualOutputFile.getParentFile().mkdirs();
+		String traceName = "T1";
 
+		final File actualOutputFile = new File(traceFolder,"DEFAULT-" + traceName + ".xml");
+
+		CtTestHelper testHelper = new CtTestHelper();
 		Thread t = testHelper.consCtClientThread(socket, data);
 		t.setDaemon(false);
 		t.start();
-
-		String[] args = getArgs(traceName, traceFolder, specFileWithExt);
 
 		TraceRunnerMain.USE_SYSTEM_EXIT = false;
 		TraceRunnerMain.main(args);
@@ -189,6 +180,22 @@ public abstract class CtTestCaseBase extends BaseTestCase
 		return actualOutputFile;
 	}
 
-	abstract public String[] getArgs(String traceName, File traceFolder,
-			File specFileWithExt);
+	@Override
+	public void encodeResult(Object result, Document doc, Element resultElement)
+	{
+
+	}
+
+	@Override
+	public Object decodeResult(Node node)
+	{
+		return null;
+	}
+
+	@Override
+	protected boolean assertEqualResults(Object expected, Object actual,
+			PrintWriter out)
+	{
+		return false;
+	}
 }

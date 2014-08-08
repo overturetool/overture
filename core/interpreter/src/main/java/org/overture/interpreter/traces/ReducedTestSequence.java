@@ -1,10 +1,13 @@
 package org.overture.interpreter.traces;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
+import java.util.Vector;
 
 import org.overture.interpreter.traces.util.RandomList;
 
@@ -24,17 +27,18 @@ public class ReducedTestSequence extends TestSequence
 
 		private int nextIndex;
 		private RandomList randomList;
-		
-		public RandomReductionIterator(TestSequence data, int size, long numberOfTests, Random prng)
+
+		public RandomReductionIterator(TestSequence data, int size,
+				long numberOfTests, Random prng)
 		{
 			this.data = data;
 			this.size = size;
-			
-			final int N =  size;
+
+			final int N = size;
 			final int R = (int) numberOfTests;
-			
+
 			this.randomList = new RandomList(N, R, prng);
-			
+
 			computeNextIndex();
 		}
 
@@ -53,9 +57,9 @@ public class ReducedTestSequence extends TestSequence
 		public CallSequence next()
 		{
 			CallSequence next = data.get(nextIndex);
-			
+
 			computeNextIndex();
-			
+
 			return next;
 		}
 
@@ -71,7 +75,7 @@ public class ReducedTestSequence extends TestSequence
 	 * 
 	 * @author kel
 	 */
-	private static class ShapreReductionIterator implements
+	private static class ShapeReductionIterator implements
 			Iterator<CallSequence>
 	{
 
@@ -81,7 +85,12 @@ public class ReducedTestSequence extends TestSequence
 		private int size;
 		private TraceReductionType type;
 
-		public ShapreReductionIterator(TestSequence data, int size, long delta,
+		private List<Integer> choosenTestIndices = new Vector<Integer>();
+		private int choosenIndexPtr = 0;
+		private Iterator<CallSequence> choosenTestItr;
+		private int choosenTestIndexPtr = 0;
+
+		public ShapeReductionIterator(TestSequence data, int size, long delta,
 				Random prng, TraceReductionType type)
 		{
 			this.data = data;
@@ -89,20 +98,91 @@ public class ReducedTestSequence extends TestSequence
 			this.prng = prng;
 			this.size = size;
 			this.type = type;
+
+			initialize();
+		}
+
+		private void initialize()
+		{
+			Map<String, List<Integer>> map = new HashMap<String, List<Integer>>();
+
+			int index = 0;
+			for (Iterator<CallSequence> itr = data.iterator(); itr.hasNext();)
+			{
+				String shape = itr.next().toShape(type);
+				List<Integer> subset = map.get(shape);
+
+				if (subset == null)
+				{
+					subset = new Vector<Integer>();
+					map.put(shape, subset);
+				}
+
+				subset.add(index);
+
+				index++;
+			}
+
+			String[] shapes = map.keySet().toArray(new String[0]);
+
+			if (size - delta < shapes.length)
+			{
+				// We must keep one test for each shape
+				delta = size - shapes.length;
+			}
+
+			for (long i = 0; i < delta; i++)
+			{
+				int x = prng.nextInt(shapes.length);
+				List<Integer> tests = map.get(shapes[x]);
+				int s = tests.size();
+
+				if (s < 2)
+				{
+					i--; // Find another group
+				} else
+				{
+					tests.remove(prng.nextInt(s));
+				}
+			}
+
+			for (Entry<String, List<Integer>> entry : map.entrySet())
+			{
+				choosenTestIndices.addAll(map.get(entry.getKey()));
+			}
+
+			Collections.sort(choosenTestIndices);
+			
+			System.out.println("Chosen ones: "+choosenTestIndices);
 		}
 
 		@Override
 		public boolean hasNext()
 		{
-			// TODO Auto-generated method stub
-			return false;
+			return !choosenTestIndices.isEmpty()
+					&& choosenIndexPtr < choosenTestIndices.size();
 		}
 
 		@Override
 		public CallSequence next()
 		{
-			// TODO Auto-generated method stub
-			return null;
+			if (choosenTestItr == null)
+			{
+				choosenTestItr = data.iterator();
+				choosenTestIndexPtr = -1;
+			}
+
+			int index = choosenTestIndices.get(choosenIndexPtr++);
+
+			CallSequence test = null;
+			do
+			{
+				test = choosenTestItr.next();
+				choosenTestIndexPtr++;
+			} while (choosenTestIndexPtr < index);
+			
+			return test;
+
 		}
 
 		@Override
@@ -160,7 +240,7 @@ public class ReducedTestSequence extends TestSequence
 			case SHAPES_NOVARS:
 			case SHAPES_VARNAMES:
 			case SHAPES_VARVALUES:
-				return new ShapreReductionIterator(this.data, size, delta, prng, type);
+				return new ShapeReductionIterator(this.data, size, delta, prng, type);
 			case NONE:
 			default:
 				return this.data.iterator();
@@ -168,49 +248,49 @@ public class ReducedTestSequence extends TestSequence
 
 	}
 
-//	private void randomReduction(long delta, Random prng)
-//	{
-//		int s = size();
-//
-//		for (long i = 0; i < delta; i++)
-//		{
-//			int x = prng.nextInt(s);
-//			this.remove(x);
-//			s--;
-//		}
-//	}
+	// private void randomReduction(long delta, Random prng)
+	// {
+	// int s = size();
+	//
+	// for (long i = 0; i < delta; i++)
+	// {
+	// int x = prng.nextInt(s);
+	// this.remove(x);
+	// s--;
+	// }
+	// }
 
 	//
-//	private void reduce(float subset, TraceReductionType type, long seed)
-//	{
-//		Random prng = new Random(seed);
-//		int s = size();
-//		long n = Math.round(Math.ceil(s * subset));
-//
-//		if (n < s)
-//		{
-//			long delta = s - n;
-//
-//			switch (type)
-//			{
-//				case NONE:
-//					break;
-//
-//				case RANDOM:
-//					randomReduction(delta, prng);
-//					break;
-//
-//				case SHAPES_NOVARS:
-//				case SHAPES_VARNAMES:
-//				case SHAPES_VARVALUES:
-//					shapesReduction(delta, type, prng);
-//					break;
-//
-//				default:
-//					throw new InternalException(53, "Unknown trace reduction");
-//			}
-//		}
-//	}
+	// private void reduce(float subset, TraceReductionType type, long seed)
+	// {
+	// Random prng = new Random(seed);
+	// int s = size();
+	// long n = Math.round(Math.ceil(s * subset));
+	//
+	// if (n < s)
+	// {
+	// long delta = s - n;
+	//
+	// switch (type)
+	// {
+	// case NONE:
+	// break;
+	//
+	// case RANDOM:
+	// randomReduction(delta, prng);
+	// break;
+	//
+	// case SHAPES_NOVARS:
+	// case SHAPES_VARNAMES:
+	// case SHAPES_VARVALUES:
+	// shapesReduction(delta, type, prng);
+	// break;
+	//
+	// default:
+	// throw new InternalException(53, "Unknown trace reduction");
+	// }
+	// }
+	// }
 
 	private void shapesReduction(long delta, TraceReductionType type,
 			Random prng)

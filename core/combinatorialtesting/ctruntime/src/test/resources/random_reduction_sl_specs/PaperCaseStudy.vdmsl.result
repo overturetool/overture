@@ -1,0 +1,11 @@
+<traces>
+	<class name="DEFAULT">
+		<trace name="T1" testcount="0" filename="tmp.vdmsl" line="11" column="1" subset="0.01" reduction="SHAPES_NOVARS" seed="999">
+			<test no="1">op2(5)</test>
+			<result no="1" verdict="PASSED">()</result>
+			<test no="2">op1(2, 4)</test>
+			<result no="2" verdict="PASSED">()</result>
+			<status verdict="PASSED" testcount="0" skippedcount="0" faildcount="0" inconclusivecount="0"></status>
+		</trace>
+	</class>
+</traces>

@@ -37,4 +37,10 @@ public class TraceReductionInfo
 	{
 		return seed;
 	}
+
+	@Override
+	public String toString()
+	{
+		return String.format("%.2f", subset * 100) + "%" + reductionType;
+	}
 }
