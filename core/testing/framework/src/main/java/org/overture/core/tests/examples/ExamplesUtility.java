@@ -32,6 +32,8 @@ abstract public class ExamplesUtility
 {
 
 	private static final int EXAMPLE_DEPTH = 3;
+	
+	private static final String README_FILE_NAME = "README";
 	private static final String IO_LIB_NAME = "IO";
 	private static final String VDMUNIT_LIB_NAME = "VDMUnit";
 	private static final String CSV_LIB_NAME = "CSV";
@@ -52,10 +54,11 @@ abstract public class ExamplesUtility
 	 * @throws ParserException
 	 * @throws LexException
 	 * @throws IOException
-	 * @throws URISyntaxException 
+	 * @throws URISyntaxException
 	 */
 	static public Collection<ExampleAstData> getExamplesAsts()
-			throws ParserException, LexException, IOException, URISyntaxException
+			throws ParserException, LexException, IOException,
+			URISyntaxException
 	{
 		Collection<ExampleAstData> r = new Vector<ExampleAstData>();
 
@@ -75,41 +78,40 @@ abstract public class ExamplesUtility
 	 * 
 	 * @return a list of {@link ExampleSourceData} containing the example sources
 	 * @throws IOException
-	 * @throws URISyntaxException 
+	 * @throws URISyntaxException
 	 */
 	public static Collection<ExampleSourceData> getExamplesSources()
 			throws IOException, URISyntaxException
 	{
 		List<ExampleSourceData> r = new LinkedList<ExampleSourceData>();
 
-		r.addAll(getSubExamples(SL_EXAMPLES_INDEX, Dialect.VDM_SL));
-		r.addAll(getSubExamples(PP_EXAMPLES_INDEX, Dialect.VDM_PP));
-		r.addAll(getSubExamples(RT_EXAMPLES_INDEX, Dialect.VDM_RT));
+		r.addAll(getExamples_(SL_EXAMPLES_INDEX, Dialect.VDM_SL));
+		r.addAll(getExamples_(PP_EXAMPLES_INDEX, Dialect.VDM_PP));
+		r.addAll(getExamples_(RT_EXAMPLES_INDEX, Dialect.VDM_RT));
 
 		return r;
 	}
-
 
 	/**
 	 * Get raw sources for the Overture VDM libraries.
 	 * 
 	 * @return a list of {@link ExampleSourceData} containing the libss sources
 	 * @throws IOException
-	 * @throws URISyntaxException 
+	 * @throws URISyntaxException
 	 */
 	public static Collection<ExampleSourceData> getLibSources()
 			throws IOException, URISyntaxException
 	{
 		List<ExampleSourceData> r = new LinkedList<ExampleSourceData>();
 
-		r.addAll(getSubLibs(SL_LIBS_INDEX, Dialect.VDM_SL));
-		r.addAll(getSubLibs(PP_LIBS_INDEX, Dialect.VDM_PP));
-		r.addAll(getSubLibs(RT_LIBS_INDEX, Dialect.VDM_RT));
+		r.addAll(getLibs_(SL_LIBS_INDEX, Dialect.VDM_SL));
+		r.addAll(getLibs_(PP_LIBS_INDEX, Dialect.VDM_PP));
+		r.addAll(getLibs_(RT_LIBS_INDEX, Dialect.VDM_RT));
 
 		return r;
 	}
 
-	private static Collection<ExampleSourceData> getSubLibs(String index,
+	private static Collection<ExampleSourceData> getLibs_(String index,
 			Dialect dialect) throws IOException, URISyntaxException
 	{
 		List<ExampleSourceData> r = new LinkedList<ExampleSourceData>();
@@ -134,7 +136,7 @@ abstract public class ExamplesUtility
 		return r;
 	}
 
-	private static Collection<ExampleSourceData> getSubExamples(String index,
+	private static Collection<ExampleSourceData> getExamples_(String index,
 			Dialect dialect) throws IOException, URISyntaxException
 	{
 		List<ExampleSourceData> r = new LinkedList<ExampleSourceData>();
@@ -167,7 +169,44 @@ abstract public class ExamplesUtility
 		return r;
 	}
 
-	private static File getLib(String lib, Dialect dialect) throws IOException, URISyntaxException
+	private static Collection<ExamplePacker> collectExamplePacks(
+			List<String> indices, Dialect dialect) throws URISyntaxException
+	{
+		List<ExamplePacker> packedExamples = new LinkedList<ExamplePacker>();
+
+		ListIterator<String> it = indices.listIterator();
+		String lastName = indices.get(0).split(File.separator)[EXAMPLE_DEPTH];
+		List<File> sources = new Vector<File>();
+		File readme = null;
+		while (it.hasNext())
+		{
+			String line = it.next();
+			String name = line.split(File.separator)[EXAMPLE_DEPTH];
+			if (!name.equals(lastName))
+			{
+				assertNotNull("Could not find README file corresponding to example for "
+						+ line, readme);
+				packedExamples.add(new ExamplePacker(name, dialect, readme, sources));
+				lastName = name;
+				sources = new Vector<File>();
+				readme = null;
+			}
+
+			if (line.contains(README_FILE_NAME))
+			{
+				readme = new File(ExamplesUtility.class.getResource(line).toURI());
+			} else
+			{
+				sources.add(new File(ExamplesUtility.class.getResource(line).toURI()));
+			}
+
+		}
+
+		return packedExamples;
+	}
+
+	private static File getLib(String lib, Dialect dialect) throws IOException,
+			URISyntaxException
 	{
 		String index = "";
 
@@ -204,43 +243,8 @@ abstract public class ExamplesUtility
 		return null;
 	}
 
-	private static Collection<ExamplePacker> collectExamplePacks(
-			List<String> indices, Dialect dialect) throws URISyntaxException
-	{
-		List<ExamplePacker> packedExamples = new LinkedList<ExamplePacker>();
-
-		ListIterator<String> it = indices.listIterator();
-		String lastName = indices.get(0).split(File.separator)[EXAMPLE_DEPTH];
-		List<File> sources = new Vector<File>();
-		File readme = null;
-		while (it.hasNext())
-		{
-			String line = it.next();
-			String name = line.split(File.separator)[EXAMPLE_DEPTH];
-			if (!name.equals(lastName))
-			{
-				assertNotNull("Could not find README file corresponding to example for "
-						+ line, readme);
-				packedExamples.add(new ExamplePacker(name, dialect, readme, sources));
-				lastName = name;
-				sources = new Vector<File>();
-				readme = null;
-			}
-
-			if (line.contains("README"))
-			{
-				readme = new File(ExamplesUtility.class.getResource(line).toURI());
-			} else
-			{
-				sources.add(new File(ExamplesUtility.class.getResource(line).toURI()));
-			}
-
-		}
-
-		return packedExamples;
-	}
-
-	private static List<String> parseIndex(String path) throws IOException, URISyntaxException
+	private static List<String> parseIndex(String path) throws IOException,
+			URISyntaxException
 	{
 		URL url = ExamplesUtility.class.getResource(path);
 		File f = new File(url.toURI());
