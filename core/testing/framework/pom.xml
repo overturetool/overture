@@ -84,11 +84,24 @@
             </goals>
             <configuration>
                 <target>
-                  <fileset id="vdm-lib-set" dir="${project.build.directory}/classes/examples/libs" />
-                  <pathconvert pathsep="${line.separator}" property="vdm-libs" refid="vdm-lib-set">
-                    <map from="${project.build.directory}/classes" to="" />
-                  </pathconvert>
-                  <echo file="${project.build.directory}/classes/examples/vdm-libs.index">${vdm-libs}</echo>
+                    <fileset id="vdm-lib-sl-set" dir="${project.build.directory}/classes/examples/libs/SL" />
+                    <pathconvert pathsep="${line.separator}" property="vdm-libs-sl" refid="vdm-lib-sl-set">
+                        <map from="${project.build.directory}/classes" to="" />
+                    </pathconvert>
+                    <echo file="${project.build.directory}/classes/examples/vdm-libs-sl.index">${vdm-libs-sl}</echo>
+
+                    <fileset id="vdm-lib-pp-set" dir="${project.build.directory}/classes/examples/libs/PP" />
+                    <pathconvert pathsep="${line.separator}" property="vdm-libs-pp" refid="vdm-lib-pp-set">
+                        <map from="${project.build.directory}/classes" to="" />
+                    </pathconvert>
+                    <echo file="${project.build.directory}/classes/examples/vdm-libs-pp.index">${vdm-libs-pp}</echo>
+
+                    <fileset id="vdm-lib-rt-set" dir="${project.build.directory}/classes/examples/libs/RT" />
+                    <pathconvert pathsep="${line.separator}" property="vdm-libs-rt" refid="vdm-lib-rt-set">
+                        <map from="${project.build.directory}/classes" to="" />
+                    </pathconvert>
+                    <echo file="${project.build.directory}/classes/examples/vdm-libs-rt.index">${vdm-libs-rt}</echo>
+
                   <fileset id="vdm-example-set" dir="${project.build.directory}/classes/examples/">
                     <include name="**/*.vdmsl" />
                     <include name="**/*.vdmpp" />
@@ -147,5 +160,38 @@
       <!--   </executions> -->
       <!-- </plugin> -->
     </plugins>
+    <pluginManagement>
+    	<plugins>
+    		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+    		<plugin>
+    			<groupId>org.eclipse.m2e</groupId>
+    			<artifactId>lifecycle-mapping</artifactId>
+    			<version>1.0.0</version>
+    			<configuration>
+    				<lifecycleMappingMetadata>
+    					<pluginExecutions>
+    						<pluginExecution>
+    							<pluginExecutionFilter>
+    								<groupId>
+    									org.apache.maven.plugins
+    								</groupId>
+    								<artifactId>
+    									maven-antrun-plugin
+    								</artifactId>
+    								<versionRange>[1.7,)</versionRange>
+    								<goals>
+    									<goal>run</goal>
+    								</goals>
+    							</pluginExecutionFilter>
+    							<action>
+    								<ignore></ignore>
+    							</action>
+    						</pluginExecution>
+    					</pluginExecutions>
+    				</lifecycleMappingMetadata>
+    			</configuration>
+    		</plugin>
+    	</plugins>
+    </pluginManagement>
   </build>
 </project>
