@@ -152,8 +152,6 @@ public class ReducedTestSequence extends TestSequence
 			}
 
 			Collections.sort(choosenTestIndices);
-			
-			System.out.println("Chosen ones: "+choosenTestIndices);
 		}
 
 		@Override
@@ -292,53 +290,53 @@ public class ReducedTestSequence extends TestSequence
 	// }
 	// }
 
-	private void shapesReduction(long delta, TraceReductionType type,
-			Random prng)
-	{
-		Map<String, TestSequence> map = new HashMap<String, TestSequence>();
-
-		for (CallSequence cs : this)
-		{
-			String shape = cs.toShape(type);
-			TestSequence subset = map.get(shape);
-
-			if (subset == null)
-			{
-				subset = new TestSequence();
-				map.put(shape, subset);
-			}
-
-			subset.add(cs);
-		}
-
-		String[] shapes = map.keySet().toArray(new String[0]);
-
-		if (size() - delta < shapes.length)
-		{
-			// We must keep one test for each shape
-			delta = size() - shapes.length;
-		}
-
-		for (long i = 0; i < delta; i++)
-		{
-			int x = prng.nextInt(shapes.length);
-			TestSequence tests = map.get(shapes[x]);
-			int s = tests.size();
-
-			if (s < 2)
-			{
-				i--; // Find another group
-			} else
-			{
-				tests.remove(prng.nextInt(s));
-			}
-		}
-
-		clear();
-
-		for (Entry<String, TestSequence> entry : map.entrySet())
-		{
-			addAll(map.get(entry.getKey()));
-		}
-	}
+//	private void shapesReduction(long delta, TraceReductionType type,
+//			Random prng)
+//	{
+//		Map<String, TestSequence> map = new HashMap<String, TestSequence>();
+//
+//		for (CallSequence cs : this)
+//		{
+//			String shape = cs.toShape(type);
+//			TestSequence subset = map.get(shape);
+//
+//			if (subset == null)
+//			{
+//				subset = new TestSequence();
+//				map.put(shape, subset);
+//			}
+//
+//			subset.add(cs);
+//		}
+//
+//		String[] shapes = map.keySet().toArray(new String[0]);
+//
+//		if (size() - delta < shapes.length)
+//		{
+//			// We must keep one test for each shape
+//			delta = size() - shapes.length;
+//		}
+//
+//		for (long i = 0; i < delta; i++)
+//		{
+//			int x = prng.nextInt(shapes.length);
+//			TestSequence tests = map.get(shapes[x]);
+//			int s = tests.size();
+//
+//			if (s < 2)
+//			{
+//				i--; // Find another group
+//			} else
+//			{
+//				tests.remove(prng.nextInt(s));
+//			}
+//		}
+//
+//		clear();
+//
+//		for (Entry<String, TestSequence> entry : map.entrySet())
+//		{
+//			addAll(map.get(entry.getKey()));
+//		}
+//	}
 }
