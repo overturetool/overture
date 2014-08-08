@@ -3,7 +3,9 @@ package org.overture.core.tests.examples;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -13,7 +15,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Vector;
 
-import org.apache.commons.io.FileUtils;
 import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
 import org.overture.core.tests.ParseTcFacade;
@@ -32,7 +33,7 @@ abstract public class ExamplesUtility
 {
 
 	private static final int EXAMPLE_DEPTH = 3;
-	
+
 	private static final String README_FILE_NAME = "README";
 	private static final String IO_LIB_NAME = "IO";
 	private static final String VDMUNIT_LIB_NAME = "VDMUnit";
@@ -121,7 +122,8 @@ abstract public class ExamplesUtility
 
 		for (String line : lines)
 		{
-			File lib = new File(ExamplesUtility.class.getResource(line).getPath());
+			File lib = getFileViaResource(line);
+
 			lf = new Vector<File>();
 			if (lib.getName().contains(CSV_LIB_NAME)
 					|| lib.getName().contains(VDMUNIT_LIB_NAME))
@@ -194,10 +196,10 @@ abstract public class ExamplesUtility
 
 			if (line.contains(README_FILE_NAME))
 			{
-				readme = new File(ExamplesUtility.class.getResource(line).toURI());
+				readme = getFileViaResource(line);
 			} else
 			{
-				sources.add(new File(ExamplesUtility.class.getResource(line).toURI()));
+				sources.add(getFileViaResource(line));
 			}
 
 		}
@@ -234,7 +236,7 @@ abstract public class ExamplesUtility
 			String s = it.next();
 			if (s.contains(lib))
 			{
-				return new File(ExamplesUtility.class.getResource(s).getPath());
+				return getFileViaResource(s);
 			}
 		}
 
@@ -243,12 +245,26 @@ abstract public class ExamplesUtility
 		return null;
 	}
 
+	private static File getFileViaResource(String path)
+	{
+		URL url = ExamplesUtility.class.getResource(path);
+		String fullPath = url.getFile();
+		fullPath = fullPath.replace("%20", " "); // we can have spaces in file names so hack around it...
+		File f = new File(fullPath);
+		return f;
+	}
+
 	private static List<String> parseIndex(String path) throws IOException,
 			URISyntaxException
 	{
-		URL url = ExamplesUtility.class.getResource(path);
-		File f = new File(url.toURI());
-		return FileUtils.readLines(f);
+		BufferedReader reader = new BufferedReader(new FileReader(getFileViaResource(path)));
+		List<String> r = new LinkedList<String>();
+		String line;
+		while ((line = reader.readLine()) != null)
+		{
+			r.add(line);
+		}
+		reader.close();
+		return r;
 	}
-
 }
