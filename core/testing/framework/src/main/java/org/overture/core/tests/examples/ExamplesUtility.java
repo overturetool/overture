@@ -1,12 +1,17 @@
 package org.overture.core.tests.examples;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Vector;
 
+import org.apache.commons.io.FileUtils;
 import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
 import org.overture.core.tests.ParseTcFacade;
@@ -24,14 +29,19 @@ import org.overture.parser.syntax.ParserException;
 abstract public class ExamplesUtility
 {
 
+	private static final String VDMUNIT_LIB_NAME = "VDMUnit";
+	private static final String CSV_LIB_NAME = "CSV";
+	
 	private static final String SL_EXAMPLES_ROOT = "/examples/VDMSL";
 	private static final String PP_EXAMPLES_ROOT = "/examples/VDM++";
 	private static final String RT_EXAMPLES_ROOT = "/examples/VDMRT";
 	private static final String LIBS_ROOT = "/examples/libs/";
 
-	private static final String SL_LIBS_ROOT = "/examples/libs/SL/";
-	private static final String PP_LIBS_ROOT = "/examples/libs/PP/";
-	private static final String RT_LIBS_ROOT = "/examples/libs/RT/";
+	private static final String SL_LIBS_INDEX = "/examples/vdm-libs-sl.index";
+	private static final String PP_LIBS_INDEX = "/examples/vdm-libs-pp.index";
+	private static final String RT_LIBS_INDEX = "/examples/vdm-libs-rt.index";
+
+	private static final String EXAMPLES_INDEX = "vdm-examples-index";
 
 	/**
 	 * Get the ASTs for the Overture examples. This method only provides the trees for examples that are supposed to
@@ -97,40 +107,44 @@ abstract public class ExamplesUtility
 	{
 		List<ExampleSourceData> r = new LinkedList<ExampleSourceData>();
 
-		r.addAll(getSubLibs(getPath(SL_LIBS_ROOT), Dialect.VDM_SL));
-		r.addAll(getSubLibs(getPath(PP_LIBS_ROOT), Dialect.VDM_PP));
-		r.addAll(getSubLibs(getPath(RT_LIBS_ROOT), Dialect.VDM_RT));
+		r.addAll(getSubLibs(SL_LIBS_INDEX, Dialect.VDM_SL));
+		r.addAll(getSubLibs(PP_LIBS_INDEX, Dialect.VDM_PP));
+		r.addAll(getSubLibs(RT_LIBS_INDEX, Dialect.VDM_RT));
 
 		return r;
 	}
 
-	private static Collection<ExampleSourceData> getSubLibs(String libsroot,
-			Dialect dialect) throws IOException
-	{
-		File dir = new File(libsroot);
+	private static Collection<ExampleSourceData> getSubLibs(String index, Dialect dialect) throws IOException{
 		List<ExampleSourceData> r = new LinkedList<ExampleSourceData>();
-
-		List<File> sb = null;
-
-		for (File f : dir.listFiles())
-		{
-			sb = new Vector<File>();
-
-			sb.add(f);
-
-			if (f.getName().contains("CSV")) // csv needs IO to TC
-			{
-				sb.add(getLibrary(dialect, "IO"
-						+ dialect.getArgstring().replace('-', '.')));
-			} else if (f.getName().contains("VDMUnit")) // VDMUnit needs IO to TC
-			{
-				sb.add(getLibrary(dialect, "IO"
-						+ dialect.getArgstring().replace('-', '.')));
+		URL url = ExamplesUtility.class.getResource(index);
+		File fIndex = new File(url.getPath());
+		List<String> lines = FileUtils.readLines(fIndex);
+		
+		List<File> lf;
+		
+		ListIterator<String> it = lines.listIterator();
+		File ioLib =null;
+		
+		while(it.hasNext()){
+			String s = it.next();
+			if (s.contains("IO")){
+				ioLib = new File (ExamplesUtility.class.getResource(s).getPath());
+				break;
 			}
-
-			r.add(new ExampleSourceData(f.getName(), dialect, Release.DEFAULT, sb));
 		}
-
+		
+		assertNotNull("Could not load IO lib",ioLib);
+			
+		for (String line : lines){
+			File lib = new File (ExamplesUtility.class.getResource(line).getPath());
+			lf = new Vector<File>();
+			if (lib.getName().contains(CSV_LIB_NAME) || lib.getName().contains(VDMUNIT_LIB_NAME)){
+				lf.add(ioLib); // csv and vdmunit need IO to TC
+			}
+				lf.add(lib);
+			r.add(new ExampleSourceData(lib.getName(), dialect, Release.DEFAULT, lf));
+		}
+		
 		return r;
 	}
 
