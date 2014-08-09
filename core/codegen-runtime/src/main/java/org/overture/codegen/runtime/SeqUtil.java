@@ -2,7 +2,6 @@ package org.overture.codegen.runtime;
 
 import java.util.Collections;
 
-
 public class SeqUtil
 {
 	public static VDMSeq seq()
@@ -45,6 +44,23 @@ public class SeqUtil
 		}
 		
 		return seq;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static VDMSeq subSeq(VDMSeq seq, long fromIndex, long toIndex)
+	{
+		if(fromIndex > toIndex || toIndex < 1)
+		{
+			return seq();
+		}
+		
+		fromIndex = Utils.index(Math.max(1, fromIndex));
+		toIndex = Math.min(seq.size(), toIndex);
+		
+		VDMSeq subSeq = seq();
+		subSeq.addAll(seq.subList(Utils.toInt(fromIndex), Utils.toInt(toIndex)));
+		
+		return subSeq;
 	}
 	
 	public static String mod(String string, Maplet... maplets)

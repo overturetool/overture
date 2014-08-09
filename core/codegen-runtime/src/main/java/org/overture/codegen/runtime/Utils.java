@@ -26,7 +26,7 @@ public class Utils
 		return toInt(value) - 1;
 	}
 	
-	private static int toInt(Number value) {
+	public static int toInt(Number value) {
 		
 		long valueLong = value.longValue();
 		
