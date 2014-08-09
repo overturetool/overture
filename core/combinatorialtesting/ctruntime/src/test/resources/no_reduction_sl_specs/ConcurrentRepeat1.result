@@ -1,6 +1,6 @@
 <traces>
 	<class name="DEFAULT">
-		<trace name="T1" testcount="8" filename="tmp.vdmsl" line="13" column="1" subset="1.0" reduction="NONE" seed="999">
+		<trace name="T1" testcount="8" filename="ConcurrentRepeat1" line="13" column="1" subset="1.0" reduction="NONE" seed="999">
 			<test no="1">op(); fun()</test>
 			<result no="1" verdict="PASSED">() ; 1</result>
 			<test no="2">op(); op(); fun()</test>

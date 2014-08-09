@@ -1,6 +1,6 @@
 <traces>
 	<class name="DEFAULT">
-		<trace name="T1" testcount="2" filename="tmp.vdmsl" line="13" column="1" subset="1.0" reduction="NONE" seed="999">
+		<trace name="T1" testcount="2" filename="Alternative1" line="13" column="1" subset="1.0" reduction="NONE" seed="999">
 			<test no="1">op()</test>
 			<result no="1" verdict="PASSED">32</result>
 			<test no="2">f()</test>
