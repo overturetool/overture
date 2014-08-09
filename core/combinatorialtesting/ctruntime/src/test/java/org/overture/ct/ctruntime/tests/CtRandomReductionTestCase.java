@@ -17,12 +17,24 @@ import org.overture.test.framework.Properties;
 @RunWith(value = Parameterized.class)
 public class CtRandomReductionTestCase extends CtTestCaseBase
 {
+	//The name of the test input folder
+	private static final String TEST_INPUT_FOLDER = "random_reduction_sl_specs";
+	
+	private static final String RESOURCES = ("src/test/resources/" + TEST_INPUT_FOLDER).replace('/', File.separatorChar);
+	
+	//The trace to be tested is assumed to have this trace name
+	private static final String TRACE_NAME = "T1";
+	
+	//Use a fixed seed to make the trace expansion output deterministic
 	protected static final int SEED = 999;
+	
 	final TraceReductionInfo reductionInfo;
 
 	@Parameters(name = "{0}")
 	public static Collection<Object[]> getData()
 	{
+		Properties.recordTestResults = false;
+		
 		List<Pair<String, TraceReductionInfo>> testReductionInfo2 = new Vector<Pair<String, TraceReductionInfo>>();
 		testReductionInfo2.add(new Pair<String, TraceReductionInfo>("OpRepeatedTenTimes", new TraceReductionInfo(0.15F, TraceReductionType.RANDOM, SEED)));
 		testReductionInfo2.add(new Pair<String, TraceReductionInfo>("ThreeConcurrentOpCalls", new TraceReductionInfo(0.30F, TraceReductionType.RANDOM, SEED)));
@@ -37,22 +49,21 @@ public class CtRandomReductionTestCase extends CtTestCaseBase
 		Collection<Object[]> tests = new Vector<Object[]>();
 		CtTestHelper testHelper = new CtTestHelper();
 
-		File root = new File("src/test/resources/random_reduction_sl_specs".replace('/', File.separatorChar));
+		File root = new File(RESOURCES);
 
 		for (Pair<String, TraceReductionInfo> entry : testReductionInfo2)
 		{
 			String traceName = entry.first;
 			File traceFolder = new File((TRACE_OUTPUT_FOLDER
-					+ "random_reduction_sl_specs/" + traceName).replace('/', File.separatorChar));
+					+ TEST_INPUT_FOLDER + '/' + traceName).replace('/', File.separatorChar));
 			File specFile = new File(root, traceName + ".vdmsl");
 			tests.add(new Object[] {
 					traceName + " " + entry.second,
 					specFile,
 					traceFolder,
-					testHelper.buildArgs("T1", PORT, traceFolder, specFile, entry.second),
+					testHelper.buildArgs(TRACE_NAME, PORT, traceFolder, specFile, entry.second),
 					entry.second });
 		}
-		Properties.recordTestResults = false;
 
 		return tests;
 	}
@@ -68,15 +79,24 @@ public class CtRandomReductionTestCase extends CtTestCaseBase
 	protected File getResultFile(String filename)
 	{
 		int index = filename.lastIndexOf('.');
+		String resultFileName = consResultFileName(filename, index);
 		
-		return super.getResultFile(filename.substring(0,index)+"-"+reductionInfo.toString().replace(',' ,'_').replace('.', '_')+filename.substring(index));
+		return super.getResultFile(resultFileName);
 	}
-	
+
 	@Override
 	protected File createResultFile(String filename)
 	{
 		int index = filename.lastIndexOf('.');
-		return super.createResultFile(filename.substring(0,index)+"-"+reductionInfo.toString().replace(',' ,'_').replace('.', '_')+filename.substring(index));
+		String resultFileName = consResultFileName(filename, index);
+		
+		return super.createResultFile(resultFileName);
 	}
-
+	
+	private String consResultFileName(String filename, int index)
+	{
+		return filename.substring(0, index) + "-"
+				+ reductionInfo.toString().replace(',', '_').replace('.', '_')
+				+ filename.substring(index);
+	}
 }

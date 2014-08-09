@@ -44,11 +44,6 @@ public abstract class CtTestCaseBase extends TestResourcesResultTestCase4
 
 	public static final String TRACE_OUTPUT_FOLDER = "target/trace-output/";
 
-	// Test specifications are copied to a file with proper extension before they
-	// are being parsed
-	protected static final String SPEC_TEMP_FILE = TRACE_OUTPUT_FOLDER
-			+ "tmp.vdmsl";
-
 	// protected CtTestHelper testHelper;
 	private String[] args;
 	private File traceFolder;
