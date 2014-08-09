@@ -14,28 +14,34 @@ import org.overture.interpreter.traces.util.RandomList;
 public class ReducedTestSequence extends TestSequence
 {
 
+	public interface ShapeIterator extends Iterator<CallSequence> 
+	{
+		int iterationCount();
+	}
+	
 	/**
 	 * A random reduction iterator that only returns the elements within the random restrictions
 	 * 
 	 * @author kel
 	 */
-	private static class RandomReductionIterator implements
-			Iterator<CallSequence>
+	private static class RandomReductionIterator implements ShapeIterator
 	{
 		private TestSequence data;
 		private int size;
 
 		private int nextIndex;
 		private RandomList randomList;
+		private int numberOfTests;
 
 		public RandomReductionIterator(TestSequence data, int size,
 				long numberOfTests, Random prng)
 		{
 			this.data = data;
 			this.size = size;
+			this.numberOfTests = (int) numberOfTests;
 
 			final int N = size;
-			final int R = (int) numberOfTests;
+			final int R = this.numberOfTests;
 
 			this.randomList = new RandomList(N, R, prng);
 
@@ -68,6 +74,12 @@ public class ReducedTestSequence extends TestSequence
 		{
 			throw new UnsupportedOperationException();
 		}
+
+		@Override
+		public int iterationCount()
+		{
+			return this.numberOfTests;
+		}
 	}
 
 	/**
@@ -75,8 +87,7 @@ public class ReducedTestSequence extends TestSequence
 	 * 
 	 * @author kel
 	 */
-	private static class ShapeReductionIterator implements
-			Iterator<CallSequence>
+	private static class ShapeReductionIterator implements ShapeIterator
 	{
 
 		private TestSequence data;
@@ -85,7 +96,7 @@ public class ReducedTestSequence extends TestSequence
 		private int size;
 		private TraceReductionType type;
 
-		private List<Integer> choosenTestIndices = new Vector<Integer>();
+		private List<Integer> chosenTestIndices = new Vector<Integer>();
 		private int choosenIndexPtr = 0;
 		private Iterator<CallSequence> choosenTestItr;
 		private int choosenTestIndexPtr = 0;
@@ -148,17 +159,17 @@ public class ReducedTestSequence extends TestSequence
 
 			for (Entry<String, List<Integer>> entry : map.entrySet())
 			{
-				choosenTestIndices.addAll(map.get(entry.getKey()));
+				chosenTestIndices.addAll(map.get(entry.getKey()));
 			}
 
-			Collections.sort(choosenTestIndices);
+			Collections.sort(chosenTestIndices);
 		}
 
 		@Override
 		public boolean hasNext()
 		{
-			return !choosenTestIndices.isEmpty()
-					&& choosenIndexPtr < choosenTestIndices.size();
+			return !chosenTestIndices.isEmpty()
+					&& choosenIndexPtr < chosenTestIndices.size();
 		}
 
 		@Override
@@ -170,7 +181,7 @@ public class ReducedTestSequence extends TestSequence
 				choosenTestIndexPtr = -1;
 			}
 
-			int index = choosenTestIndices.get(choosenIndexPtr++);
+			int index = chosenTestIndices.get(choosenIndexPtr++);
 
 			CallSequence test = null;
 			do
@@ -187,6 +198,12 @@ public class ReducedTestSequence extends TestSequence
 		public void remove()
 		{
 			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public int iterationCount()
+		{
+			return chosenTestIndices.size();
 		}
 
 	}
@@ -207,6 +224,8 @@ public class ReducedTestSequence extends TestSequence
 	private final float subset;
 
 	private final TraceReductionType type;
+	
+	private Iterator<CallSequence> iterator;
 
 	public ReducedTestSequence(TestSequence data, float subset,
 			TraceReductionType type, long seed)
@@ -215,7 +234,7 @@ public class ReducedTestSequence extends TestSequence
 		this.subset = subset;
 		this.type = type;
 		this.prng = new Random(seed);
-
+		
 		this.size = this.data.size();
 		long n = Math.round(Math.ceil(size * subset));
 		this.enabled = n < size;
@@ -224,9 +243,15 @@ public class ReducedTestSequence extends TestSequence
 	@Override
 	public synchronized Iterator<CallSequence> iterator()
 	{
+		if(iterator != null)
+		{
+			return iterator;
+		}
+		
 		if (!enabled || type == TraceReductionType.NONE)
 		{
-			return this.data.iterator();
+			iterator = this.data.iterator();
+			return iterator;
 		}
 
 		long n = Math.round(Math.ceil(size * subset));
@@ -234,16 +259,34 @@ public class ReducedTestSequence extends TestSequence
 		switch (type)
 		{
 			case RANDOM:
-				return new RandomReductionIterator(this.data, size, n, prng);
+				iterator = new RandomReductionIterator(this.data, size, n, prng);
+				return iterator;
 			case SHAPES_NOVARS:
 			case SHAPES_VARNAMES:
 			case SHAPES_VARVALUES:
-				return new ShapeReductionIterator(this.data, size, delta, prng, type);
+				iterator = new ShapeReductionIterator(this.data, size, delta, prng, type);
+				return iterator;
 			case NONE:
 			default:
-				return this.data.iterator();
+				iterator = this.data.iterator();
+				return iterator;
 		}
-
+	}
+	
+	@Override
+	public synchronized int size()
+	{
+		if(iterator == null)
+		{
+			iterator();
+		}
+		
+		if(iterator instanceof ShapeIterator)
+		{
+			return ((ShapeIterator) iterator).iterationCount();
+		}
+		
+		return this.data.size();
 	}
 
 	// private void randomReduction(long delta, Random prng)

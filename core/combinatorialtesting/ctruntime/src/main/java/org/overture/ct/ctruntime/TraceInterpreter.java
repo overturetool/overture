@@ -229,10 +229,12 @@ public class TraceInterpreter
 
 		tests = ctxt.assistantFactory.createANamedTraceDefinitionAssistant().getTests(mtd, ctxt, subset, traceReductionType, seed);
 
-		infoProcessingTrace(className, mtd.getName().getName(), tests.size());
+		int size = tests.size();
+		
+		infoProcessingTrace(className, mtd.getName().getName(), size);
 		if (storage != null)
 		{
-			storage.StartTrace(mtd.getName().getName(), mtd.getLocation().getFile().getName(), mtd.getLocation().getStartLine(), mtd.getLocation().getStartPos(), tests.size(), new Float(subset), TraceReductionType.valueOf(traceReductionType.toString()), new Long(seed));
+			storage.StartTrace(mtd.getName().getName(), mtd.getLocation().getFile().getName(), mtd.getLocation().getStartLine(), mtd.getLocation().getStartPos(), size, new Float(subset), TraceReductionType.valueOf(traceReductionType.toString()), new Long(seed));
 		}
 
 		int n = 1;
@@ -244,11 +246,12 @@ public class TraceInterpreter
 		boolean saveAll = true;
 
 		StopWatch.set();
+		
 		for (CallSequence test : tests)
 		{
 			StopWatch.stop("Getting test");
 
-			infoProcessingTest(className, mtd.getName().getName(), n, tests.size());
+			infoProcessingTest(className, mtd.getName().getName(), n, size);
 
 			if (test.getFilter() > 0)
 			{
@@ -327,7 +330,7 @@ public class TraceInterpreter
 						if (storage != null)
 						{
 							storage.AddResults(new Integer(n).toString(), result);
-							storage.AddTraceStatus(Verdict.valueOf(Verdict.FAILED.toString()), tests.size(), skippedCount, faildCount, inconclusiveCount);
+							storage.AddTraceStatus(Verdict.valueOf(Verdict.FAILED.toString()), size, skippedCount, faildCount, inconclusiveCount);
 							storage.StopElement();
 						}
 
@@ -361,11 +364,11 @@ public class TraceInterpreter
 				worstVerdict = Verdict.INCONCLUSIVE;
 			}
 
-			storage.AddTraceStatus(Verdict.valueOf(worstVerdict.toString()), tests.size(), skippedCount, faildCount, inconclusiveCount);
+			storage.AddTraceStatus(Verdict.valueOf(worstVerdict.toString()), size, skippedCount, faildCount, inconclusiveCount);
 			storage.StopElement();
 		}
 
-		infoProcessingTraceFinished(className, mtd.getName().getName(), tests.size(), faildCount, inconclusiveCount, skippedCount);
+		infoProcessingTraceFinished(className, mtd.getName().getName(), size, faildCount, inconclusiveCount, skippedCount);
 	}
 
 	/**
