@@ -23,6 +23,7 @@ import org.overture.ast.expressions.AEqualsBinaryExp;
 import org.overture.ast.expressions.AEquivalentBooleanBinaryExp;
 import org.overture.ast.expressions.AExists1Exp;
 import org.overture.ast.expressions.AExistsExp;
+import org.overture.ast.expressions.AFieldExp;
 import org.overture.ast.expressions.AFloorUnaryExp;
 import org.overture.ast.expressions.AForAllExp;
 import org.overture.ast.expressions.AGreaterEqualNumericBinaryExp;
@@ -38,6 +39,8 @@ import org.overture.ast.expressions.ALambdaExp;
 import org.overture.ast.expressions.ALenUnaryExp;
 import org.overture.ast.expressions.ALessEqualNumericBinaryExp;
 import org.overture.ast.expressions.ALessNumericBinaryExp;
+import org.overture.ast.expressions.ALetBeStExp;
+import org.overture.ast.expressions.ALetDefExp;
 import org.overture.ast.expressions.AMapCompMapExp;
 import org.overture.ast.expressions.AMapDomainUnaryExp;
 import org.overture.ast.expressions.AMapEnumMapExp;
@@ -329,7 +332,13 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 //		String r = node.getExp().apply(THIS, question);
 //		String op = mytable.getMINUS();
 //		
-//		return Utilities.wrap(Utilities.unaryappend(r, op));
+//		StringBuilder sb = new StringBuilder();
+//		
+//		sb.append(op);
+//		sb.append(r);
+//		return sb.toString();
+//		
+//		//return Utilities.wrap(Utilities.unaryappend(r, op));
 //	}
 	
 
@@ -1147,6 +1156,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		
 		while (node.getModifiers().size() != 0){
 			if (node.getModifiers().size() > 1){
+				
 				mod = node.getModifiers().poll().toString();
 				
 				sb2.append(mod);
@@ -1155,9 +1165,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 			}
 			else
 			{
-				mod = node.getModifiers().poll().toString();
-				
-				
+				mod = node.getModifiers().poll().toString();//.apply(THIS, question);
 				
 				sb2.append(mod);
 			}
@@ -1168,6 +1176,58 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		
 		return sb1.toString();
 	}
+	
+	@Override
+	public String caseALetDefExp(ALetDefExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		String exp = node.getExpression().apply(THIS, question);
+		String def;
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("let");
+		sb.append(space);
+		
+		while (node.getLocalDefs().size() != 0){
+			if (node.getLocalDefs().size() > 1){
+				
+				def = node.getLocalDefs().poll().toString();//.apply(THIS, question);
+				
+				sb.append(def);
+				sb.append(mytable.getCOMMA());
+				sb.append(space);
+			}
+			else
+			{
+				//System.out.print(node.getLocalDefs().getFirst().toString());
+				//TODO: this and other value definitions 
+				//will be changed to apply when the appropriate methods are created
+				def = node.getLocalDefs().poll().toString();//.apply(THIS, question);
+				
+				sb.append(def);
+				sb.append(space);
+			}
+		}
+		
+		sb.append("in");
+		sb.append(space);
+		
+		sb.append(exp);
+	//	System.out.print(sb.toString());
+		return sb.toString();
+	}
+//	@Override
+//	public String caseAFieldExp(AFieldExp node, IndentTracker question)
+//			throws AnalysisException
+//	{
+//		String exp = node.getField().apply(THIS, question);
+//		String type = node.getType().apply(THIS, question);
+//		
+//		System.out.print(exp + "  "+ type);
+//		
+//		return null;
+//	}
 	
 	@Override
 	public String caseACharLiteralExp(ACharLiteralExp node,

@@ -1253,4 +1253,17 @@ public class ExpressionNppTest {
 	{
 		aux("mu(sc, drawn |-> sc.drawn + 1, points |-> sc.points + 1)","mu(sc, drawn |-> ((sc.drawn) + 1), points |-> ((sc.points) + 1))");
 	}
+	
+	@Test
+	public void testCaseALetDefExp_01() throws AnalysisException
+	{
+		aux("let x = 1 in e","let x = 1 in e");
+	}
+	
+	@Test
+	public void testCaseALetDefExp_02() throws AnalysisException
+	{
+		aux("let x = dom m1 inter dom m2 in e", 
+				"let x = ((dom m1) inter (dom m2)) in e");
+	}
 }
