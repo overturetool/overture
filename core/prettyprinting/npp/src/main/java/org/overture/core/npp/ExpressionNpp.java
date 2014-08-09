@@ -46,6 +46,7 @@ import org.overture.ast.expressions.AMapRangeUnaryExp;
 import org.overture.ast.expressions.AMapUnionBinaryExp;
 import org.overture.ast.expressions.AMapletExp;
 import org.overture.ast.expressions.AModNumericBinaryExp;
+import org.overture.ast.expressions.AMuExp;
 import org.overture.ast.expressions.ANotEqualBinaryExp;
 import org.overture.ast.expressions.ANotInSetBinaryExp;
 import org.overture.ast.expressions.ANotUnaryExp;
@@ -118,13 +119,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String r = node.getRight().apply(THIS, question);
 		String op = mytable.getPLUS();
 
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append(l);
-//		sb.append(space);
-//		sb.append(op);
-//		sb.append(space);
-//		sb.append(r);
 
 		return Utilities.wrap(Utilities.append(l, r, op));
 	}
@@ -137,13 +131,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String r = node.getRight().apply(THIS, question);
 		String op = mytable.getMINUS();
 		
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append(l);
-//		sb.append(space);
-//		sb.append(op);
-//		sb.append(space);
-//		sb.append(r);
 		
 		return Utilities.wrap(Utilities.append(l, r, op));
 	}
@@ -156,13 +143,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String r = node.getRight().apply(THIS,question);
 		String op = mytable.getTIMES();
 		
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append(l);
-//		sb.append(space);
-//		sb.append(op);
-//		sb.append(space);
-//		sb.append(r);
 		
 		return Utilities.wrap(Utilities.append(l, r, op));
 	}
@@ -175,13 +155,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String r = node.getRight().apply(THIS,question);
 		String op = mytable.getDIVIDE();
 		
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append(l);
-//		sb.append(space);
-//		sb.append(op);
-//		sb.append(space);
-//		sb.append(r);
 		
 		return Utilities.wrap(Utilities.append(l, r, op));
 	}
@@ -194,13 +167,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String r = node.getRight().apply(THIS,question);
 		String op = mytable.getMOD();
 		
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append(l);
-//		sb.append(space);
-//		sb.append(op);
-//		sb.append(space);
-//		sb.append(r);
 		
 		return Utilities.wrap(Utilities.append(l, r, op));
 	}
@@ -213,13 +179,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String r = node.getRight().apply(THIS,question);
 		String op = mytable.getDIV();
 		
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append(l);
-//		sb.append(space);
-//		sb.append(op);
-//		sb.append(space);
-//		sb.append(r);
 		
 		return Utilities.wrap(Utilities.append(l, r, op));
 	}
@@ -231,14 +190,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String l = node.getLeft().apply(THIS, question);
 		String r = node.getRight().apply(THIS,question);
 		String op = mytable.getREM();
-		
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append(l);
-//		sb.append(space);
-//		sb.append(op);
-//		sb.append(space);
-//		sb.append(r);
 		
 		return	Utilities.wrap(Utilities.append(l, r, op));
 	}
@@ -1175,6 +1126,47 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		sb.append(exp2);
 		
 		return sb.toString();
+	}
+	
+	@Override
+	public String caseAMuExp(AMuExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		String exp = node.getRecord().apply(THIS, question);
+		String mod;
+		
+		StringBuilder sb1 = new StringBuilder();
+		StringBuilder sb2 = new StringBuilder();
+		
+		sb1.append("mu");
+		//sb1.append(space);
+		
+		sb2.append(exp);
+		sb2.append(mytable.getCOMMA());
+		sb2.append(space);
+		
+		while (node.getModifiers().size() != 0){
+			if (node.getModifiers().size() > 1){
+				mod = node.getModifiers().poll().toString();
+				
+				sb2.append(mod);
+				sb2.append(mytable.getCOMMA());
+				sb2.append(space);
+			}
+			else
+			{
+				mod = node.getModifiers().poll().toString();
+				
+				
+				
+				sb2.append(mod);
+			}
+			
+		}
+		
+		sb1.append(Utilities.wrap(sb2.toString()));
+		
+		return sb1.toString();
 	}
 	
 	@Override

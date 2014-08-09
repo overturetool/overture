@@ -1247,4 +1247,10 @@ public class ExpressionNppTest {
 		aux("if x mod 2 = 0 then x = 2 else x = 1", 
 				"if ((x mod 2) = 0)\nthen (x = 2)\nelse (x = 1)");
 	}
+	
+	@Test
+	public void testCaseAMuExp_01() throws AnalysisException
+	{
+		aux("mu(sc, drawn |-> sc.drawn + 1, points |-> sc.points + 1)","mu(sc, drawn |-> ((sc.drawn) + 1), points |-> ((sc.points) + 1))");
+	}
 }
