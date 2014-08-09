@@ -1,6 +1,6 @@
 <traces>
 	<class name="DEFAULT">
-		<trace name="T1" testcount="0" filename="PaperCaseStudy.vdmsl" line="11" column="1" subset="0.01" reduction="SHAPES_VARVALUES" seed="999">
+		<trace name="T1" testcount="21" filename="PaperCaseStudy.vdmsl" line="11" column="1" subset="0.01" reduction="SHAPES_VARVALUES" seed="999">
 			<test no="1">op1(1, 2)</test>
 			<result no="1" verdict="PASSED">()</result>
 			<test no="2">op2(3)</test>
@@ -43,7 +43,7 @@
 			<result no="20" verdict="PASSED">()</result>
 			<test no="21">op1(1, 2)</test>
 			<result no="21" verdict="PASSED">()</result>
-			<status verdict="PASSED" testcount="0" skippedcount="0" faildcount="0" inconclusivecount="0"></status>
+			<status verdict="PASSED" testcount="21" skippedcount="0" faildcount="0" inconclusivecount="0"></status>
 		</trace>
 	</class>
 </traces>
