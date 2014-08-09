@@ -235,6 +235,7 @@ CG {-> package='org.overture.codegen.cgast'
     |	{tupleCompatibility} [tuple]:CG.#exp [types]:CG.#type*
     |	{cases} [exp]:CG.#exp [cases]:CG.#exp.#altExp.case* [others]:CG.#exp
     |	#altExp
+    |	{subSeq} [seq]:CG.#exp [from]:CG.#exp [to]:CG.#exp
     ;
 
 #altExp {-> package='org.overture.codegen.cgast.expressions'}

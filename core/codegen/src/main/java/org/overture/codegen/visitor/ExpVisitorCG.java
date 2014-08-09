@@ -93,6 +93,7 @@ import org.overture.ast.expressions.ASetUnionBinaryExp;
 import org.overture.ast.expressions.AStarStarBinaryExp;
 import org.overture.ast.expressions.AStringLiteralExp;
 import org.overture.ast.expressions.ASubclassResponsibilityExp;
+import org.overture.ast.expressions.ASubseqExp;
 import org.overture.ast.expressions.ASubsetBinaryExp;
 import org.overture.ast.expressions.ASubtractNumericBinaryExp;
 import org.overture.ast.expressions.ATailUnaryExp;
@@ -201,6 +202,7 @@ import org.overture.codegen.cgast.expressions.ASetSubsetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetUnionBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASizeUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
+import org.overture.codegen.cgast.expressions.ASubSeqExpCG;
 import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATailUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
@@ -778,6 +780,26 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			throws AnalysisException
 	{
 		return new ASelfExpCG();
+	}
+	
+	@Override
+	public SExpCG caseASubseqExp(ASubseqExp node, IRInfo question)
+			throws AnalysisException
+	{
+		PExp from = node.getFrom();
+		PExp to = node.getTo();
+		PExp seq = node.getSeq();
+		
+		SExpCG fromCg = from.apply(question.getExpVisitor(), question);
+		SExpCG toCg = to.apply(question.getExpVisitor(), question);
+		SExpCG seqCg = seq.apply(question.getExpVisitor(), question);
+
+		ASubSeqExpCG subSeq = new ASubSeqExpCG();
+		subSeq.setFrom(fromCg);
+		subSeq.setTo(toCg);
+		subSeq.setSeq(seqCg);
+		
+		return subSeq;
 	}
 	
 	@Override

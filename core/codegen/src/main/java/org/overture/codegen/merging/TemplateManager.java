@@ -101,6 +101,7 @@ import org.overture.codegen.cgast.expressions.ASetSubsetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetUnionBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASizeUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
+import org.overture.codegen.cgast.expressions.ASubSeqExpCG;
 import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATailUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
@@ -357,6 +358,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(ATupleCompatibilityExpCG.class, templateStructure.EXP_PATH + "TupleCompatibility");
 		
 		nodeTemplateFileNames.put(AThreadIdExpCG.class, templateStructure.EXP_PATH + "ThreadId");
+		
+		nodeTemplateFileNames.put(ASubSeqExpCG.class, templateStructure.EXP_PATH + "SubSeq");
 		
 		// Quantifier expressions
 		
