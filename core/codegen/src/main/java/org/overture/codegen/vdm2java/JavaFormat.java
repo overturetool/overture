@@ -739,7 +739,7 @@ public class JavaFormat
 	
 	public STypeCG findElementType(AApplyObjectDesignatorCG designator)
 	{
-		return info.getAssistantManager().getTypeAssistant().findElementType(designator);
+		return info.getAssistantManager().getTypeAssistant().findElementType(designator, classes, info);
 	}
 	
 	public boolean isLoopVar(AVarLocalDeclCG localVar)
