@@ -1,10 +1,9 @@
 package org.overture.ide.plugins.combinatorialtesting.views.internal;
 
-import org.eclipse.jface.viewers.ViewerSorter;
 import org.overture.ide.plugins.combinatorialtesting.views.treeView.TraceTestTreeNode;
 import org.overture.interpreter.traces.Verdict;
 
-public class TraceViewerSorter extends ViewerSorter
+public class TraceViewerSorter extends TraceNodeSorter
 {
 	@Override
 	public int category(Object element)
@@ -24,6 +23,5 @@ public class TraceViewerSorter extends ViewerSorter
 			}
 		}
 		return 3;
-		// return super.category(element);
 	}
 }
