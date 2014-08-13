@@ -42,27 +42,29 @@ import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
 
-
 public class ValueBindingObligation extends ProofObligation
 {
 	private static final long serialVersionUID = -7549866948129324892L;
 
-	public ValueBindingObligation(AValueDefinition def, IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
+	public ValueBindingObligation(AValueDefinition def, IPOContextStack ctxt,
+			IPogAssistantFactory af) throws AnalysisException
 	{
 		this(def.getPattern(), def.getType(), def.getExpression(), ctxt, af);
 	}
 
-	public ValueBindingObligation(AEqualsDefinition def, IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
+	public ValueBindingObligation(AEqualsDefinition def, IPOContextStack ctxt,
+			IPogAssistantFactory af) throws AnalysisException
 	{
 		this(def.getPattern(), def.getType(), def.getTest(), ctxt, af);
 	}
 
-	public ValueBindingObligation(PPattern pattern, PType type, PExp exp, IPOContextStack ctxt, IPogAssistantFactory af)
-		throws AnalysisException
+	public ValueBindingObligation(PPattern pattern, PType type, PExp exp,
+			IPOContextStack ctxt, IPogAssistantFactory af)
+			throws AnalysisException
 	{
 		super(pattern, POType.VALUE_BINDING, ctxt, pattern.getLocation(), af);
 		AExistsExp existsExp = new AExistsExp();
-		
+
 		List<PPattern> patternList = new Vector<PPattern>();
 		patternList.add(pattern.clone());
 		ATypeMultipleBind typeBind = new ATypeMultipleBind();
@@ -71,7 +73,7 @@ public class ValueBindingObligation extends ProofObligation
 		List<PMultipleBind> bindList = new Vector<PMultipleBind>();
 		bindList.add(typeBind);
 		existsExp.setBindList(bindList);
-		
+
 		AEqualsBinaryExp equals = new AEqualsBinaryExp();
 		equals.setLeft(patternToExp(pattern.clone()));
 		equals.setOp(new LexKeywordToken(VDMToken.EQUALS, null));
@@ -80,6 +82,6 @@ public class ValueBindingObligation extends ProofObligation
 
 		stitch = existsExp;
 		valuetree.setPredicate(ctxt.getPredWithContext(existsExp));
-//    	valuetree.setContext(ctxt.getContextNodeList());
+		// valuetree.setContext(ctxt.getContextNodeList());
 	}
 }

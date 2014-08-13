@@ -58,7 +58,7 @@ public class PathsProvider
 	 * Processes (recursively) a folder with external test inputs. <br>
 	 * <br>
 	 * The results for these tests are <b>not</b> stored in the external directory but under each plugin's
-	 * <code>{@value #RESULTS_EXTERNAL}</code> folder. If you use these tests, please keep that folder pure.
+	 * <code>RESULTS_EXTERNAL</code> folder. If you use these tests, please keep that folder pure.
 	 * 
 	 * @param root
 	 *            the root folder of the external tests
@@ -66,7 +66,7 @@ public class PathsProvider
 	 */
 	public static Collection<Object[]> computeExternalPaths(String root)
 	{
-		//FIXME add some kind of control for the top level folder of the externals
+		// FIXME add some kind of control for the top level folder of the externals
 		Collection<Object[]> r = externalFiles(new File(root));
 
 		return r;
@@ -80,13 +80,17 @@ public class PathsProvider
 
 		for (File file : files)
 		{
+			if(!(file.getPath().contains("sltest")||file.getPath().contains("pptest")||file.getPath().contains("rttest")))
+			{
+				continue;
+			}
 
 			paths.add(new Object[] {
 					file.getName(),
 					file.getPath(),
-					RESULTS_EXTERNAL // FIXME figure out where to store results for external tests
-							+ file.getPath().replaceAll(dir.getPath(), "")
-							+ RESULT_EXTENSION });
+					(RESULTS_EXTERNAL // FIXME figure out where to store results for external tests
+							+ file.getPath().substring(dir.getPath().length(),file.getPath().length())
+							+ RESULT_EXTENSION).replace('\\', '/').replace('/', File.separatorChar) });
 
 		}
 

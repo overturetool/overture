@@ -23,88 +23,108 @@ import java.util.Observer;
 import java.util.Vector;
 
 /**
- *	This class just wraps around a Vector, 
- *  to implement the observable and singleton software patterns.
+ * This class just wraps around a Vector, to implement the observable and singleton software patterns.
  * 
  * @author carlos
- *
  */
-public class InstanceList extends Observable implements Observer {
+public class InstanceList extends Observable implements Observer
+{
 
 	private Vector<VdmInstance> instances = null;
 	// the single avaliable instance for this class
 	private static InstanceList instance = null;
-	
-	private InstanceList() {
+
+	private InstanceList()
+	{
 		super();
 		instances = new Vector<VdmInstance>();
 	}
-	
-	public static InstanceList getInstance() {
-		if ( instance == null )
+
+	public static InstanceList getInstance()
+	{
+		if (instance == null)
+		{
 			instance = new InstanceList();
-		
+		}
+
 		return instance;
 	}
-	
-	public synchronized void setChanged() {
+
+	public synchronized void setChanged()
+	{
 		super.setChanged();
 	}
-	
+
 	/**
 	 * Add a new instance to the list.
-	 * @param variable The vdm instance.
+	 * 
+	 * @param variable
+	 *            The vdm instance.
 	 */
-	public void add(VdmInstance variable) {
+	public void add(VdmInstance variable)
+	{
 		instances.add(variable);
 		variable.addObserver(this);
 		setChanged();
 		notifyObservers();
 	}
-	
+
 	/**
 	 * Remove the instance at position i.
-	 * @param index The position of the instance in the list.
+	 * 
+	 * @param index
+	 *            The position of the instance in the list.
 	 */
-	public void remove(int index) {
+	public void remove(int index)
+	{
 		instances.remove(index);
 		setChanged();
 		notifyObservers();
 	}
-	
+
 	/**
-	 *
 	 * @return The current number of instances in the list.
 	 */
-	public int size() {
+	public int size()
+	{
 		return instances.size();
 	}
-	
+
 	/**
 	 * Returns the vdm instance at a given position.
-	 * @param index The position of the vdm instance in the list.
+	 * 
+	 * @param index
+	 *            The position of the vdm instance in the list.
 	 * @return The vdm instance.
 	 */
-	public VdmInstance get(int index) {
+	public VdmInstance get(int index)
+	{
 		return instances.get(index);
 	}
-	
+
 	/**
 	 * Returns all instances of a given type.
-	 * @param type The type of instances.
+	 * 
+	 * @param type
+	 *            The type of instances.
 	 * @return The vdm instance.
 	 */
-	public Vector<VdmInstance> getInstancesOfType(String type) {
+	public Vector<VdmInstance> getInstancesOfType(String type)
+	{
 		Vector<VdmInstance> is = new Vector<VdmInstance>();
-		for( VdmInstance i : instances ) {
-			if (i.getType().equals(type) )
+		for (VdmInstance i : instances)
+		{
+			if (i.getType().equals(type))
+			{
 				is.add(i);
+			}
 		}
 		return is;
 	}
 
 	@Override
-	public void update(Observable o, Object arg) {
+	public void update(Observable o, Object arg)
+	{
 		setChanged();
 		notifyObservers();
 	}

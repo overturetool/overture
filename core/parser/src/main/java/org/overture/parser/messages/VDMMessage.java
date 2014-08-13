@@ -74,7 +74,7 @@ public class VDMMessage
 		sb.append(message);
 
 		sb.append(".");
-		for (String d: details)
+		for (String d : details)
 		{
 			sb.append(" ");
 			sb.append(d);
@@ -89,7 +89,7 @@ public class VDMMessage
 		if (other instanceof VDMMessage)
 		{
 			// Just compare numbers
-			return ((VDMMessage)other).number == number;
+			return ((VDMMessage) other).number == number;
 		}
 
 		return false;

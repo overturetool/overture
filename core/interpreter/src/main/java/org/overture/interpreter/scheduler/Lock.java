@@ -31,10 +31,9 @@ import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.messages.InternalException;
 import org.overture.interpreter.runtime.Context;
 
-
 public class Lock implements Serializable
 {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 	private ISchedulableThread lockedBy = null;
 	private Set<ISchedulableThread> waiters = new HashSet<ISchedulableThread>();
 
@@ -58,8 +57,7 @@ public class Lock implements Serializable
 			try
 			{
 				th.locking(ctxt, location);
-			}
-			finally
+			} finally
 			{
 				synchronized (waiters)
 				{
@@ -84,7 +82,7 @@ public class Lock implements Serializable
 
 		synchronized (waiters)
 		{
-			for (ISchedulableThread w: waiters)
+			for (ISchedulableThread w : waiters)
 			{
 				if (w.getRunState() == RunState.LOCKING)
 				{
@@ -103,16 +101,14 @@ public class Lock implements Serializable
 			try
 			{
 				th.waiting(ctxt, location);
-			}
-			finally
+			} finally
 			{
 				synchronized (waiters)
 				{
 					waiters.remove(th);
 				}
 			}
-		}
-		while (lockedBy != null);
+		} while (lockedBy != null);
 
 		lockedBy = th;
 	}
@@ -132,7 +128,7 @@ public class Lock implements Serializable
 	{
 		synchronized (waiters)
 		{
-			for (ISchedulableThread th: waiters)
+			for (ISchedulableThread th : waiters)
 			{
 				th.setState(RunState.RUNNABLE);
 			}

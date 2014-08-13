@@ -95,7 +95,9 @@ public class AnnotationReader
 			{
 
 				if (strLine.contains("class "))
+				{
 					className = strLine.split(" ")[1];
+				}
 
 				// found a annotation
 				// FIXME: We don't take into account multiple annotations for a class or method
@@ -104,14 +106,19 @@ public class AnnotationReader
 					String[] result = strLine.split("=");
 					annotationName = result[0].substring(3).trim();
 					if (result.length > 1)
+					{
 						value = result[1];
+					}
 					foundAnnotation = true;
 				}
 
 				if (strLine.trim().equals("operations"))
+				{
 					currentSection = SECTION.OPERATIONS;
-				else if (strLine.trim().equals("function"))
+				} else if (strLine.trim().equals("function"))
+				{
 					currentSection = SECTION.FUNCTIONS;
+				}
 
 				// if we previously found a annotation, identify it with the proper element
 				if (foundAnnotation)
@@ -131,7 +138,8 @@ public class AnnotationReader
 								String split[] = strLine.split(" ");
 								for (int i = 0; i < split.length; ++i)
 								{
-									if ((split[i].equals("public") || split[i].equals("private")))
+									if (split[i].equals("public")
+											|| split[i].equals("private"))
 									{
 										opName = split[++i];
 										// removing extra chars
@@ -155,7 +163,9 @@ public class AnnotationReader
 								{
 									opName = split[2];
 									if (opName.contains(":"))
+									{
 										opName = opName.substring(0, opName.indexOf(":") - 1);
+									}
 									annotationTable.addOpAnnotation(className, opName, annotationName, value);
 									foundAnnotation = false;
 								}

@@ -45,8 +45,9 @@ The Timer's thread ensures that the current time is incremented. We take one
 time unit for our Timer to correspond to 10 system time units.
 
 \begin{vdm_al}
-thread
-  periodic(1000)(IncTime)
+-- FIXME: Example used RT constructs must be rewritten using threads
+--thread
+--  periodic(1000)(IncTime)
 
 end Timer
 \end{vdm_al}

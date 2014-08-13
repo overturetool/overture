@@ -25,7 +25,6 @@ package org.overture.config;
 import java.io.File;
 
 import org.overture.ast.lex.Dialect;
-import org.overture.config.Release;
 
 /**
  * A class to hold global settings accessible throughout.

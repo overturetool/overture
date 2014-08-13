@@ -40,14 +40,14 @@ public class CallSequence extends Vector<PStm>
 		StringBuilder sb = new StringBuilder();
 		String sep = "";
 
-		for (PStm stmt: this)
+		for (PStm stmt : this)
 		{
-    		if (!(stmt instanceof TraceVariableStatement))
-    		{
-       			sb.append(sep);
-       			sb.append(stmt.toString());
-       			sep = "; ";
-     		}
+			if (!(stmt instanceof TraceVariableStatement))
+			{
+				sb.append(sep);
+				sb.append(stmt.toString());
+				sep = "; ";
+			}
 		}
 
 		return sb.toString();
@@ -58,47 +58,45 @@ public class CallSequence extends Vector<PStm>
 		StringBuilder sb = new StringBuilder();
 		String sep = "";
 
-		for (PStm stmt: this)
+		for (PStm stmt : this)
 		{
-    		if (stmt instanceof TraceVariableStatement)
-    		{
-    			TraceVariableStatement tvs = (TraceVariableStatement)stmt;
+			if (stmt instanceof TraceVariableStatement)
+			{
+				TraceVariableStatement tvs = (TraceVariableStatement) stmt;
 
-       			switch (type)
-    			{
-       				case SHAPES_NOVARS:
-       					break;
+				switch (type)
+				{
+					case SHAPES_NOVARS:
+						break;
 
-       				case SHAPES_VARNAMES:
-       	       			sb.append(sep);
-       					sb.append(tvs.var.name);
-       	       			sep = "; ";
-       					break;
+					case SHAPES_VARNAMES:
+						sb.append(sep);
+						sb.append(tvs.var.name);
+						sep = "; ";
+						break;
 
-       				case SHAPES_VARVALUES:
-       	       			sb.append(sep);
-       					sb.append(tvs.toString());
-       	       			sep = "; ";
-       					break;
-       					
-       				default:
-       					break;
-    			}
-     		}
-    		else if (stmt instanceof ACallStm)
-    		{
-    			ACallStm cs = (ACallStm)stmt;
-       			sb.append(sep);
-       			sb.append(cs.getName().getName());
-       			sep = "; ";
-     		}
-    		else if (stmt instanceof ACallObjectStm)
-    		{
-    			ACallObjectStm cs = (ACallObjectStm)stmt;
-       			sb.append(sep);
-       			sb.append(cs.getFieldname());
-       			sep = "; ";
-    		}
+					case SHAPES_VARVALUES:
+						sb.append(sep);
+						sb.append(tvs.toString());
+						sep = "; ";
+						break;
+
+					default:
+						break;
+				}
+			} else if (stmt instanceof ACallStm)
+			{
+				ACallStm cs = (ACallStm) stmt;
+				sb.append(sep);
+				sb.append(cs.getName().getName());
+				sep = "; ";
+			} else if (stmt instanceof ACallObjectStm)
+			{
+				ACallObjectStm cs = (ACallObjectStm) stmt;
+				sb.append(sep);
+				sb.append(cs.getFieldname());
+				sep = "; ";
+			}
 		}
 
 		return sb.toString();
@@ -113,7 +111,7 @@ public class CallSequence extends Vector<PStm>
 
 		int i = 0;
 
-		for (int count=0; count<upto;)
+		for (int count = 0; count < upto;)
 		{
 			if (!compareItem(other, i))
 			{
@@ -122,7 +120,7 @@ public class CallSequence extends Vector<PStm>
 
 			if (!(get(i) instanceof TraceVariableStatement))
 			{
-				count++;	// Only increment for non-variable statements
+				count++; // Only increment for non-variable statements
 			}
 
 			i++;

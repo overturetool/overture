@@ -25,7 +25,9 @@ public class AUnionTypeAssistant
 	{
 
 		if (type.getExpanded())
+		{
 			return;
+		}
 
 		PTypeSet exptypes = new PTypeSet(af);
 
@@ -73,9 +75,9 @@ public class AUnionTypeAssistant
 
 			for (PType t : type.getTypes())
 			{
-			if (af.createPTypeAssistant().isNumeric(t))
+				if (af.createPTypeAssistant().isNumeric(t))
 				{
-				SNumericBasicType nt = af.createPTypeAssistant().getNumeric(t);
+					SNumericBasicType nt = af.createPTypeAssistant().getNumeric(t);
 
 					if (af.createSNumericBasicTypeAssistant().getWeight(nt) > af.createSNumericBasicTypeAssistant().getWeight(type.getNumType()))
 					{
@@ -87,7 +89,9 @@ public class AUnionTypeAssistant
 			}
 
 			if (!found)
+			{
 				type.setNumType(null);
+			}
 		}
 
 		return type.getNumType();

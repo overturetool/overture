@@ -67,66 +67,65 @@ public class ValueList extends Vector<Value>
 		if (isEmpty())
 		{
 			sb.append("[]");
-		}
-		else
+		} else
 		{
 			sb.append("\"");
 
-    		for (Value v: this)
-    		{
-    			v = v.deref();
+			for (Value v : this)
+			{
+				v = v.deref();
 
-    			if (!(v instanceof CharacterValue))
-    			{
-    				return Utils.listToString("[", this, ", ", "]");
-    			}
+				if (!(v instanceof CharacterValue))
+				{
+					return Utils.listToString("[", this, ", ", "]");
+				}
 
-    			CharacterValue ch = (CharacterValue)v;
+				CharacterValue ch = (CharacterValue) v;
 
-    			switch (ch.unicode)
-    			{
-//    				case '\n':
-//    					sb.append("\\n");
-//    					break;
+				switch (ch.unicode)
+				{
+				// case '\n':
+				// sb.append("\\n");
+				// break;
 
-//    				case '\t':
-//    					sb.append("\\t");
-//    					break;
+				// case '\t':
+				// sb.append("\\t");
+				// break;
 
-//    				case '\'':
-//    					sb.append("\\\'");
-//    					break;
+				// case '\'':
+				// sb.append("\\\'");
+				// break;
 
-        		    case '\r':
-    					sb.append("\\r");
-    					break;
+					case '\r':
+						sb.append("\\r");
+						break;
 
-        		    case '\f':
-    					sb.append("\\f");
-    					break;
+					case '\f':
+						sb.append("\\f");
+						break;
 
-        		    case '\033':
-    					sb.append("\\e");
-    					break;
+					case '\033':
+						sb.append("\\e");
+						break;
 
-        		    case '\007':
-    					sb.append("\\a");
-    					break;
+					case '\007':
+						sb.append("\\a");
+						break;
 
-    				case '\"':
-    					sb.append("\\\"");
-    					break;
+					case '\"':
+						sb.append("\\\"");
+						break;
 
-    				case '\\':
-    					sb.append("\\\\");
-    					break;
+					case '\\':
+						sb.append("\\\\");
+						break;
 
-     				default:
-    					sb.append(ch.unicode);
-    			}
-    		}
+					default:
+						sb.append(ch.unicode);
+				}
+			}
 
-    		sb.append("\"");
+			sb.append("\"");
 		}
 
 		return sb.toString();
@@ -137,9 +136,9 @@ public class ValueList extends Vector<Value>
 	{
 		ValueList copy = new ValueList();
 
-		for (Value v: this)
+		for (Value v : this)
 		{
-			Value vcopy = (Value)v.clone();
+			Value vcopy = (Value) v.clone();
 			copy.add(vcopy);
 		}
 
@@ -150,7 +149,7 @@ public class ValueList extends Vector<Value>
 	{
 		ValueList nseq = new ValueList();
 
-		for (Value k: this)
+		for (Value k : this)
 		{
 			Value v = k.getConstant();
 			nseq.add(v);

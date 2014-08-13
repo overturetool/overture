@@ -155,8 +155,8 @@ public class BaseTestSuite extends TestSuite
 	{
 		if (file.getName().startsWith(".")
 				|| !isNotAcceptedFile(file, Arrays.asList(extensions)))// file.getName().endsWith(".assert")||file.getName().endsWith(".vdmj")
-																	// || file.getName().endsWith(".result")||
-																	// file.getName().endsWith(".entry"))
+																		// || file.getName().endsWith(".result")||
+																		// file.getName().endsWith(".entry"))
 		{
 			return;
 		}

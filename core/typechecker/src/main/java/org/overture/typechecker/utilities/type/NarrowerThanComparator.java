@@ -151,13 +151,14 @@ public class NarrowerThanComparator extends
 			}
 		} else if (type.getType().getDefinitions().size() == 0)
 		{
-			result = type.apply(this, accessSpecifier) || af.createPTypeAssistant().narrowerThanBaseCase(type, accessSpecifier);//PTypeAssistantTC.narrowerThan(type, accessSpecifier)
-		}
-		else
+			result = type.apply(this, accessSpecifier)
+					|| af.createPTypeAssistant().narrowerThanBaseCase(type, accessSpecifier);// PTypeAssistantTC.narrowerThan(type,
+																								// accessSpecifier)
+		} else
 		{
 			for (PDefinition d : type.getType().getDefinitions())
 			{
-				if(af.createPAccessSpecifierAssistant().narrowerThan(d.getAccess(), accessSpecifier))
+				if (af.createPAccessSpecifierAssistant().narrowerThan(d.getAccess(), accessSpecifier))
 
 				{
 					result = true;

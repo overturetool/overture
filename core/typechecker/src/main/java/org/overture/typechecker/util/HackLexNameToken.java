@@ -20,8 +20,9 @@ public class HackLexNameToken
 	{
 		return af.getLexNameTokenAssistant().isEqual(one, other);
 	}
-	
-	public static LexNameTokenAssistant getStaticLexNameTokenAssistant(){
+
+	public static LexNameTokenAssistant getStaticLexNameTokenAssistant()
+	{
 		return af.getLexNameTokenAssistant();
 	}
 

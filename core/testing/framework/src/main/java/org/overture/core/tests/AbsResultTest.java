@@ -34,7 +34,7 @@ abstract class AbsResultTest<R>
 
 	/**
 	 * Deserialize test results. This method is capable of deserializing most results, provided the correct type
-	 * information is provided via {@link #getResultType()}. If your results are too complex for this method or if you
+	 * information is provided via getResultType(). If your results are too complex for this method or if you
 	 * are not using JSON to store then, them you must override the entire method.
 	 * 
 	 * @param resultPath
@@ -129,8 +129,8 @@ abstract class AbsResultTest<R>
 	}
 
 	/**
-	 * Compare output of the processed model with previously stored result. This method must be overridden to
-	 * implement result comparison behavior. Don't forget to assert something!
+	 * Compare output of the processed model with previously stored result. This method must be overridden to implement
+	 * result comparison behavior. Don't forget to assert something!
 	 * 
 	 * @param actual
 	 *            the processed model

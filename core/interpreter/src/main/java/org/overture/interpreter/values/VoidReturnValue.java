@@ -30,7 +30,7 @@ public class VoidReturnValue extends VoidValue
 	@Override
 	public boolean isVoid()
 	{
-		return false;	// makes it look like a real value
+		return false; // makes it look like a real value
 	}
 
 	@Override

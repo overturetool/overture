@@ -22,28 +22,33 @@ import java.awt.event.ActionListener;
 import java.io.File;
 
 /**
- * Interface for all container bridges. A container bridge as well as initializing a user interface
- * window endows it with functionality, serving as a backend.
+ * Interface for all container bridges. A container bridge as well as initializing a user interface window endows it
+ * with functionality, serving as a backend.
+ * 
  * @author carlos
- *
  */
-public interface IContainerBridge extends ActionListener {
+public interface IContainerBridge extends ActionListener
+{
 
 	/**
 	 * Initializes the ui window according to a description stored in file.
-	 * @param file File containing the ui description.
+	 * 
+	 * @param file
+	 *            File containing the ui description.
 	 * @throws Exception
 	 */
 	void buildComponent(File file) throws Exception;
 
 	/**
 	 * Sets the visibility of the window.
+	 * 
 	 * @param b
 	 */
 	void setVisible(boolean b);
-	
+
 	/**
 	 * The id of the container bridge as well as the ui window.
+	 * 
 	 * @return The id in string form.
 	 */
 	String getId();

@@ -35,7 +35,8 @@ public class ParserException extends LocatedException
 {
 	private int depth;
 
-	public ParserException(int number, String message, ILexLocation location, int depth)
+	public ParserException(int number, String message, ILexLocation location,
+			int depth)
 	{
 		super(number, message, location);
 		this.depth = depth;
@@ -43,7 +44,7 @@ public class ParserException extends LocatedException
 
 	public int getDepth()
 	{
-		return depth;		// Tokens read since start, or last push
+		return depth; // Tokens read since start, or last push
 	}
 
 	public void adjustDepth(int adj)

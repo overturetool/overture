@@ -30,7 +30,6 @@ import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.values.Value;
 
-
 /**
  * A root context for non-object method invocations.
  */
@@ -43,44 +42,54 @@ public class StateContext extends RootContext
 
 	/**
 	 * Create a RootContext from the values passed.
-	 *
-	 * @param location The location of the context.
-	 * @param title The name of the location.
-	 * @param outer The context chain (not searched).
-	 * @param sctxt Any state context.
+	 * 
+	 * @param af
+	 * @param location
+	 *            The location of the context.
+	 * @param title
+	 *            The name of the location.
+	 * @param freeVariables
+	 * @param outer
+	 *            The context chain (not searched).
+	 * @param sctxt
+	 *            Any state context.
 	 */
 
-	public StateContext(IInterpreterAssistantFactory af,ILexLocation location, String title,
-		Context freeVariables, Context outer, Context sctxt)
+	public StateContext(IInterpreterAssistantFactory af, ILexLocation location,
+			String title, Context freeVariables, Context outer, Context sctxt)
 	{
-		super(af,location, title, freeVariables, outer);
+		super(af, location, title, freeVariables, outer);
 		this.stateCtxt = sctxt;
 	}
 
-	public StateContext(IInterpreterAssistantFactory af,ILexLocation location, String title,
-		Context outer, Context sctxt)
+	public StateContext(IInterpreterAssistantFactory af, ILexLocation location,
+			String title, Context outer, Context sctxt)
 	{
-		this(af,location, title, null, outer, sctxt);
+		this(af, location, title, null, outer, sctxt);
 	}
 
 	/**
 	 * Create a RootContext with no outer context or state.
-	 * @param location The location of the context.
-	 * @param title The name of the location.
+	 * 
+	 * @param af
+	 * @param location
+	 *            The location of the context.
+	 * @param title
+	 *            The name of the location.
 	 */
 
-	public StateContext(IInterpreterAssistantFactory af,ILexLocation location, String title)
+	public StateContext(IInterpreterAssistantFactory af, ILexLocation location,
+			String title)
 	{
-		super(af,location, title, null, null);
+		super(af, location, title, null, null);
 		this.stateCtxt = null;
 	}
 
 	/**
-	 * Check for the name in the current context and state, and if
-	 * not present search the global context. Note that the context
-	 * chain is not followed.
-	 *
-	 * @see org.overture.vdmj.runtime.Context#check(org.overture.vdmj.lex.LexNameToken)
+	 * Check for the name in the current context and state, and if not present search the global context. Note that the
+	 * context chain is not followed.
+	 * 
+	 * @see Context#check(ILexNameToken)
 	 */
 
 	@Override
@@ -136,8 +145,7 @@ public class StateContext extends RootContext
 		if (stateCtxt != null)
 		{
 			return super.toString() + "\tState visible\n";
-		}
-		else
+		} else
 		{
 			return super.toString();
 		}
@@ -146,20 +154,19 @@ public class StateContext extends RootContext
 	@Override
 	public void printStackTrace(PrintWriter out, boolean variables)
 	{
-		if (outer == null)		// Don't expand initial context
+		if (outer == null) // Don't expand initial context
 		{
 			out.println("In root context of " + title);
-		}
-		else
+		} else
 		{
 			if (variables)
 			{
-    			out.print(this.format("\t", this));
+				out.print(this.format("\t", this));
 
-    			if (stateCtxt != null)
-    			{
-    				out.println("\tState visible");
-    			}
+				if (stateCtxt != null)
+				{
+					out.println("\tState visible");
+				}
 			}
 
 			out.println("In root context of " + title + " " + location);

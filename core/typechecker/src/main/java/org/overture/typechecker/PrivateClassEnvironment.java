@@ -82,8 +82,8 @@ public class PrivateClassEnvironment extends Environment
 		// FIXME: Here the SClassDefinitionAssistantTC is used so I can't delete the method from the assistant
 		// What is the strategy in this case?
 		PDefinition def = af.createPDefinitionAssistant().findType(classdef, name, null);
-		//classdef.apply(af.getDefinitionFinder(),new DefinitionFinder.Newquestion(name, null));
-		//SClassDefinitionAssistantTC.findType(classdef, name, null);
+		// classdef.apply(af.getDefinitionFinder(),new DefinitionFinder.Newquestion(name, null));
+		// SClassDefinitionAssistantTC.findType(classdef, name, null);
 
 		if (def != null)
 		{

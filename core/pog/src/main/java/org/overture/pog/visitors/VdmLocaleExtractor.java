@@ -22,5 +22,4 @@ public class VdmLocaleExtractor extends AnswerAdaptor<String> implements
 		return null;
 	}
 
-	
 }

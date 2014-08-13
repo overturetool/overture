@@ -24,8 +24,6 @@ public class LexIdentifierToken extends LexToken implements ILexIdentifierToken
 		return old;
 	}
 
-
-
 	public LexIdentifierToken(String name, boolean old, ILexLocation location)
 	{
 		super(location, VDMToken.IDENTIFIER);

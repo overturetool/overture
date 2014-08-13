@@ -42,7 +42,6 @@ import org.overture.interpreter.values.TransactionValue;
 import org.overture.interpreter.values.ValueList;
 import org.overture.parser.config.Properties;
 
-
 public class PeriodicThread extends SchedulablePoolThread
 {
 	private static final long serialVersionUID = 1L;
@@ -57,9 +56,9 @@ public class PeriodicThread extends SchedulablePoolThread
 	private final boolean first;
 	private final static Random PRNG = new Random();
 
-	public PeriodicThread(
-		ObjectValue self, OperationValue operation,
-		long period, long jitter, long delay, long offset, long expected, boolean sporadic)
+	public PeriodicThread(ObjectValue self, OperationValue operation,
+			long period, long jitter, long delay, long offset, long expected,
+			boolean sporadic)
 	{
 		super(self.getCPU().resource, self, operation.getPriority(), true, expected);
 
@@ -76,8 +75,7 @@ public class PeriodicThread extends SchedulablePoolThread
 		{
 			this.first = true;
 			this.expected = SystemClock.getWallTime();
-		}
-		else
+		} else
 		{
 			this.first = false;
 			this.expected = expected;
@@ -99,18 +97,18 @@ public class PeriodicThread extends SchedulablePoolThread
 		{
 			if (sporadic)
 			{
-    			long noise = (jitter == 0) ? 0 : Math.abs(PRNG.nextLong() % jitter);
-    			wakeUpTime = offset + noise;
-			}
-			else
+				long noise = jitter == 0 ? 0 : Math.abs(PRNG.nextLong()
+						% jitter);
+				wakeUpTime = offset + noise;
+			} else
 			{
-    			if (offset > 0 || jitter > 0)
-    			{
-        			long noise = (jitter == 0) ? 0 :
-        				Math.abs(PRNG.nextLong() % (jitter + 1));
+				if (offset > 0 || jitter > 0)
+				{
+					long noise = jitter == 0 ? 0 : Math.abs(PRNG.nextLong()
+							% (jitter + 1));
 
-        			wakeUpTime = offset + noise;
-    			}
+					wakeUpTime = offset + noise;
+				}
 			}
 		}
 
@@ -122,27 +120,23 @@ public class PeriodicThread extends SchedulablePoolThread
 	{
 		RootContext global = ClassInterpreter.getInstance().initialContext;
 		ILexLocation from = object.type.getClassdef().getLocation();
-		Context ctxt = new ObjectContext(global.assistantFactory,from, "async", global, object);
+		Context ctxt = new ObjectContext(global.assistantFactory, from, "async", global, object);
 
 		if (Settings.usingDBGP)
 		{
 			DBGPReader reader = ctxt.threadState.dbgp.newThread(object.getCPU());
-			ctxt.setThreadState(reader,object.getCPU());
-		}
-		else
+			ctxt.setThreadState(reader, object.getCPU());
+		} else
 		{
 			ctxt.setThreadState(null, object.getCPU());
 		}
 
-		new PeriodicThread(
-			getObject(), operation, period, jitter, delay, 0,
-			nextTime(), sporadic).start();
+		new PeriodicThread(getObject(), operation, period, jitter, delay, 0, nextTime(), sporadic).start();
 
 		if (Settings.usingDBGP)
 		{
 			runDBGP(ctxt);
-		}
-		else
+		} else
 		{
 			runCmd(ctxt);
 		}
@@ -152,47 +146,41 @@ public class PeriodicThread extends SchedulablePoolThread
 	{
 		try
 		{
-    		try
-    		{
-    			int overlaps = object.incPeriodicCount();
-    			
-    			if (Properties.rt_max_periodic_overlaps > 0 &&
-    				overlaps >= Properties.rt_max_periodic_overlaps)
-    			{
-    				throw new ContextException(68, "Periodic threads overlapping", operation.name.getLocation(), ctxt);
-    			}
+			try
+			{
+				int overlaps = object.incPeriodicCount();
 
-        		operation.localEval(
-        			operation.name.getLocation(), new ValueList(), ctxt, true);
+				if (Properties.rt_max_periodic_overlaps > 0
+						&& overlaps >= Properties.rt_max_periodic_overlaps)
+				{
+					throw new ContextException(68, "Periodic threads overlapping", operation.name.getLocation(), ctxt);
+				}
 
-        		ctxt.threadState.dbgp.complete(DBGPReason.OK, null);
-        		object.decPeriodicCount();
-    		}
-    		catch (ValueException e)
-    		{
-    			ctxt.threadState.dbgp.complete(DBGPReason.OK, new ContextException(e, operation.name.getLocation()));
-    			throw new ContextException(e, operation.name.getLocation());
-    		}
-		}
-		catch (ContextException e)
+				operation.localEval(operation.name.getLocation(), new ValueList(), ctxt, true);
+
+				ctxt.threadState.dbgp.complete(DBGPReason.OK, null);
+				object.decPeriodicCount();
+			} catch (ValueException e)
+			{
+				ctxt.threadState.dbgp.complete(DBGPReason.OK, new ContextException(e, operation.name.getLocation()));
+				throw new ContextException(e, operation.name.getLocation());
+			}
+		} catch (ContextException e)
 		{
 			ResourceScheduler.setException(e);
-			//suspendOthers();
+			// suspendOthers();
 			setExceptionOthers();
 			ctxt.threadState.dbgp.stopped(e.ctxt, e.location);
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			ResourceScheduler.setException(e);
 			ctxt.threadState.dbgp.setErrorState();
 			BasicSchedulableThread.signalAll(Signal.ERROR);
-		}
-		catch (ThreadDeath e)
+		} catch (ThreadDeath e)
 		{
 			ctxt.threadState.dbgp.complete(DBGPReason.ABORTED, null);
 			throw e;
-		}
-		finally
+		} finally
 		{
 			TransactionValue.commitAll();
 		}
@@ -204,37 +192,32 @@ public class PeriodicThread extends SchedulablePoolThread
 		{
 			int overlaps = object.incPeriodicCount();
 
-			if (Properties.rt_max_periodic_overlaps > 0 &&
-				overlaps >= Properties.rt_max_periodic_overlaps)
+			if (Properties.rt_max_periodic_overlaps > 0
+					&& overlaps >= Properties.rt_max_periodic_overlaps)
 			{
 				throw new ContextException(68, "Periodic threads overlapping", operation.name.getLocation(), ctxt);
 			}
 
-    		ctxt.setThreadState(null, object.getCPU());
+			ctxt.setThreadState(null, object.getCPU());
 
-    		operation.localEval(
-    			operation.name.getLocation(), new ValueList(), ctxt, true);
+			operation.localEval(operation.name.getLocation(), new ValueList(), ctxt, true);
 
-    		object.decPeriodicCount();
-		}
-		catch (ValueException e)
+			object.decPeriodicCount();
+		} catch (ValueException e)
 		{
 			suspendOthers();
 			ResourceScheduler.setException(e);
 			DebuggerReader.stopped(e.ctxt, operation.name.getLocation());
-		}
-		catch (ContextException e)
+		} catch (ContextException e)
 		{
 			suspendOthers();
 			ResourceScheduler.setException(e);
 			DebuggerReader.stopped(e.ctxt, operation.name.getLocation());
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			ResourceScheduler.setException(e);
 			BasicSchedulableThread.signalAll(Signal.SUSPEND);
-		}
-		finally
+		} finally
 		{
 			TransactionValue.commitAll();
 		}
@@ -244,23 +227,22 @@ public class PeriodicThread extends SchedulablePoolThread
 	{
 		if (sporadic)
 		{
-			long noise = (jitter == 0) ? 0 : Math.abs(PRNG.nextLong() % jitter);
+			long noise = jitter == 0 ? 0 : Math.abs(PRNG.nextLong() % jitter);
 			return SystemClock.getWallTime() + delay + noise;
-		}
-		else
+		} else
 		{
 			// "expected" was last run time, the next is one "period" away, but this
 			// is influenced by jitter as long as it's at least "delay" since
 			// "expected".
-	
-			long noise = (jitter == 0) ? 0 : PRNG.nextLong() % (jitter + 1);
+
+			long noise = jitter == 0 ? 0 : PRNG.nextLong() % (jitter + 1);
 			long next = SystemClock.getWallTime() + period + noise;
-	
-			if (delay > 0 && next - expected < delay)	// Too close?
+
+			if (delay > 0 && next - expected < delay) // Too close?
 			{
 				next = expected + delay;
 			}
-	
+
 			return next;
 		}
 	}

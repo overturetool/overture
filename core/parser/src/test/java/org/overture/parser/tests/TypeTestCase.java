@@ -9,7 +9,7 @@ import org.overture.parser.syntax.ParserException;
 import org.overture.parser.syntax.TypeReader;
 import org.overture.parser.tests.framework.BaseParserTestCase;
 
-public class TypeTestCase extends BaseParserTestCase<TypeReader,INode>
+public class TypeTestCase extends BaseParserTestCase<TypeReader, INode>
 {
 	static boolean hasRunBefore = false;
 
@@ -23,9 +23,9 @@ public class TypeTestCase extends BaseParserTestCase<TypeReader,INode>
 
 	}
 
-	public TypeTestCase(File rootSource,String name, String content)
+	public TypeTestCase(File rootSource, String name, String content)
 	{
-		super(rootSource,name, content);
+		super(rootSource, name, content);
 	}
 
 	@Override
@@ -35,7 +35,8 @@ public class TypeTestCase extends BaseParserTestCase<TypeReader,INode>
 	}
 
 	@Override
-	protected INode read(TypeReader reader) throws ParserException, LexException
+	protected INode read(TypeReader reader) throws ParserException,
+			LexException
 	{
 		return reader.readType();
 	}

@@ -151,7 +151,7 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 
 			node.setObjectfield(new LexNameToken(cname, field.getName(), node.getObject().getLocation()));
 			PDefinition fdef = question.assistantFactory.createPDefinitionAssistant().findName(ctype.getClassdef(), node.getObjectfield(), NameScope.STATE);
-			//SClassDefinitionAssistantTC.findName(ctype.getClassdef(), node.getObjectfield(), NameScope.STATE);
+			// SClassDefinitionAssistantTC.findName(ctype.getClassdef(), node.getObjectfield(), NameScope.STATE);
 
 			if (fdef == null)
 			{

@@ -30,14 +30,15 @@ import org.overture.interpreter.runtime.ClassInterpreter;
 import org.overture.interpreter.scheduler.AsyncThread;
 import org.overture.interpreter.values.OperationValue;
 
-
-public interface IRuntimeValidatior {
+public interface IRuntimeValidatior
+{
 
 	void init(ClassInterpreter classInterpreter);
 
 	void validate(OperationValue operationValue, MessageType type);
 
-	void bindSystemVariables(ASystemClassDefinition systemDefinition, IInterpreterAssistantFactory af);
+	void bindSystemVariables(ASystemClassDefinition systemDefinition,
+			IInterpreterAssistantFactory af);
 
 	void validateAsync(OperationValue operationValue, AsyncThread t);
 

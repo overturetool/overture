@@ -27,25 +27,31 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
  * Interface for a vdm class reader.
  * 
  * @author carlos
- *
  */
-public interface IVdmClassReader {
+public interface IVdmClassReader
+{
 
 	/**
-	 * Reads the vdm specification, and builds an internal
-	 * representation
-	 * @param files List of files containing the vdm specification
+	 * Reads the vdm specification, and builds an internal representation
+	 * 
+	 * @param files
+	 *            List of files containing the vdm specification
+	 * @param af 
 	 */
 	abstract void readFiles(Vector<File> files, ITypeCheckerAssistantFactory af);
+
 	/**
 	 * Returns a list of the vdm classes that compose the vdm specification
+	 * 
 	 * @return List of vdm classes
 	 */
 	abstract Vector<IVdmDefinition> getClassList();
+
 	/**
-	 * Returns the list of the vdm class (names) that compose the specification 
+	 * Returns the list of the vdm class (names) that compose the specification
+	 * 
 	 * @return List of class names
 	 */
 	abstract Vector<String> getClassNames();
-	
+
 }

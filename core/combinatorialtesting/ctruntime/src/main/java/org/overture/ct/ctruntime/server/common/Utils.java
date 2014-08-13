@@ -35,8 +35,7 @@ public class Utils
 		try
 		{
 			Thread.sleep(millis);
-		}
-		catch (InterruptedException e)
+		} catch (InterruptedException e)
 		{
 			// ?
 		}
@@ -48,8 +47,7 @@ public class Utils
 		{
 			Integer.parseInt(s);
 			return true;
-		}
-		catch (NumberFormatException e)
+		} catch (NumberFormatException e)
 		{
 			return false;
 		}
@@ -60,8 +58,7 @@ public class Utils
 		try
 		{
 			return Integer.parseInt(s);
-		}
-		catch (NumberFormatException e)
+		} catch (NumberFormatException e)
 		{
 			return 0;
 		}

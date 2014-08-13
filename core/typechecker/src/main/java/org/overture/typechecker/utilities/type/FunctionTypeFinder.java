@@ -98,40 +98,40 @@ public class FunctionTypeFinder extends AnswerAdaptor<AFunctionType>
 						AFunctionType f = af.createPTypeAssistant().getFunction(t);
 						result.add(f.getResult());
 
-					for (int p = 0; p < f.getParameters().size(); p++)
-					{
-						PType pt = f.getParameters().get(p);
-						PTypeSet pset = params.get(p);
+						for (int p = 0; p < f.getParameters().size(); p++)
+						{
+							PType pt = f.getParameters().get(p);
+							PTypeSet pset = params.get(p);
 
-						if (pset == null)
-						{
-							pset = new PTypeSet(pt, af);
-							params.put(p, pset);
-						} else
-						{
-							pset.add(pt);
+							if (pset == null)
+							{
+								pset = new PTypeSet(pt, af);
+								params.put(p, pset);
+							} else
+							{
+								pset.add(pt);
+							}
 						}
 					}
 				}
-			}
 
-			if (!result.isEmpty())
-			{
-				PType rtype = result.getType(type.getLocation());
-				PTypeList plist = new PTypeList();
-
-				for (int i = 0; i < params.size(); i++)
+				if (!result.isEmpty())
 				{
-					PType pt = params.get(i).getType(type.getLocation());
-					plist.add(pt);
-				}
+					PType rtype = result.getType(type.getLocation());
+					PTypeList plist = new PTypeList();
 
-				type.setFuncType(AstFactory.newAFunctionType(type.getLocation(), true, plist, rtype));
-				type.getFuncType().setDefinitions(defs);
-			} else
-			{
-				type.setFuncType(null);
-			}
+					for (int i = 0; i < params.size(); i++)
+					{
+						PType pt = params.get(i).getType(type.getLocation());
+						plist.add(pt);
+					}
+
+					type.setFuncType(AstFactory.newAFunctionType(type.getLocation(), true, plist, rtype));
+					type.getFuncType().setDefinitions(defs);
+				} else
+				{
+					type.setFuncType(null);
+				}
 			}
 		}
 		return (AFunctionType) type.getFuncType();

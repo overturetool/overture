@@ -27,7 +27,6 @@ import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.values.ObjectValue;
 
-
 public interface ISchedulableThread
 {
 	public abstract boolean equals(Object other);
@@ -54,12 +53,13 @@ public interface ISchedulableThread
 
 	public abstract void runslice(long slice);
 
-	public abstract void duration(long pause, Context ctxt, ILexLocation location);
+	public abstract void duration(long pause, Context ctxt,
+			ILexLocation location);
 
 	public abstract void suspendOthers();
 
 	public abstract boolean stopThread();
-	
+
 	public abstract void reschedule(Context ctxt, ILexLocation location);
 
 	public abstract ObjectValue getObject();

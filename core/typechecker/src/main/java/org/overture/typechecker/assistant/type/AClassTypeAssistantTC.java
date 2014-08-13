@@ -19,14 +19,13 @@ public class AClassTypeAssistantTC
 		this.af = af;
 	}
 
-	public LexNameToken getMemberName(AClassType cls,
-			ILexIdentifierToken id)
+	public LexNameToken getMemberName(AClassType cls, ILexIdentifierToken id)
 	{
 		// Note: not explicit
 		return new LexNameToken(cls.getName().getName(), id.getName(), id.getLocation(), false, false);
 	}
-	
-	//TODO:Used in the TypeCheckerExpVisitor.
+
+	// TODO:Used in the TypeCheckerExpVisitor.
 
 	public PDefinition findName(AClassType cls, ILexNameToken tag,
 			NameScope scope)
@@ -34,7 +33,7 @@ public class AClassTypeAssistantTC
 		return af.createPDefinitionAssistant().findName(cls.getClassdef(), tag, scope);
 	}
 
-	//Used in the SClassDefinitionAssistantTC.
+	// Used in the SClassDefinitionAssistantTC.
 	public boolean hasSupertype(AClassType sclass, PType other)
 	{
 		return af.createSClassDefinitionAssistant().hasSupertype(sclass.getClassdef(), other);

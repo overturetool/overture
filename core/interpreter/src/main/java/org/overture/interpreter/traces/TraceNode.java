@@ -39,6 +39,6 @@ public abstract class TraceNode
 
 	public CallSequence getVariables()
 	{
-		return variables.getVariables();	
+		return variables.getVariables();
 	}
 }

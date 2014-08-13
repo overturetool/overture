@@ -68,7 +68,8 @@ public class UnionBasisChecker extends AnswerAdaptor<Boolean>
 	}
 
 	@Override
-	public Boolean caseAOptionalType(AOptionalType node) throws AnalysisException
+	public Boolean caseAOptionalType(AOptionalType node)
+			throws AnalysisException
 	{
 		return node.getType().apply(THIS);
 	}

@@ -21,6 +21,8 @@ public class AModuleModulesAssistantTC
 	/**
 	 * Generate the exportdefs list of definitions. The exports list of export declarations is processed by searching
 	 * the defs list of locally defined objects. The exportdefs field is populated with the result.
+	 * 
+	 * @param m
 	 */
 	public void processExports(AModuleModules m)
 	{
@@ -36,8 +38,7 @@ public class AModuleModulesAssistantTC
 		}
 	}
 
-	public void processImports(AModuleModules m,
-			List<AModuleModules> allModules)
+	public void processImports(AModuleModules m, List<AModuleModules> allModules)
 	{
 
 		if (m.getImports() != null)
@@ -78,8 +79,7 @@ public class AModuleModulesAssistantTC
 		return null;
 	}
 
-	public void typeCheckImports(AModuleModules m)
-			throws AnalysisException
+	public void typeCheckImports(AModuleModules m) throws AnalysisException
 	{
 		if (m.getImports() != null)
 		{

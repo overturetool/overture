@@ -36,7 +36,7 @@ import java.io.UnsupportedEncodingException;
 public class DocStreamReader extends InputStreamReader
 {
 	public DocStreamReader(InputStream in, String charsetName)
-		throws UnsupportedEncodingException
+			throws UnsupportedEncodingException
 	{
 		super(in, charsetName);
 	}
@@ -56,8 +56,7 @@ public class DocStreamReader extends InputStreamReader
 			if (line.endsWith(MARKER))
 			{
 				capturing = !capturing;
-			}
-			else
+			} else
 			{
 				if (capturing)
 				{

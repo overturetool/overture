@@ -27,31 +27,30 @@ import java.util.Properties;
 
 import org.overture.config.Settings;
 
-
 @SuppressWarnings("serial")
 public class DBGPFeatures extends Properties
 {
 	public static final String MAX_CHILDREN = "max_children";
 	public static final String LANGUAGE_NAME = "language_name";
 	public static final String PROTOCOL_VERSION = "protocol_version";
-	
+
 	public DBGPFeatures()
 	{
 		setProperty("lanuage_supports_threads", "1");
 		setProperty(LANGUAGE_NAME, Settings.dialect.name());
 		setProperty("language_version", "1");
 		setProperty("encoding", "UTF-8");
-    	setProperty(PROTOCOL_VERSION, "1");
-    	setProperty("supports_async", "0");
-    	setProperty("data_encoding", "base64");
-    	setProperty("breakpoint_languages", "");
-    	setProperty("breakpoint_types", "line conditional");
-    	setProperty("multiple_sessions", "1");
-    	setProperty(MAX_CHILDREN, "10");
-    	setProperty("max_data", "1000");
-    	setProperty("max_depth", "10");
-    	setProperty("supports_postmortem", "0");
-    	setProperty("show_hidden", "0");
-    	setProperty("notify_ok", "0");
+		setProperty(PROTOCOL_VERSION, "1");
+		setProperty("supports_async", "0");
+		setProperty("data_encoding", "base64");
+		setProperty("breakpoint_languages", "");
+		setProperty("breakpoint_types", "line conditional");
+		setProperty("multiple_sessions", "1");
+		setProperty(MAX_CHILDREN, "10");
+		setProperty("max_data", "1000");
+		setProperty("max_depth", "10");
+		setProperty("supports_postmortem", "0");
+		setProperty("show_hidden", "0");
+		setProperty("notify_ok", "0");
 	}
 }

@@ -14,8 +14,8 @@ public class ATypeBindAssistantTC
 	{
 		this.af = af;
 	}
-	
-	//FIXME: Used in the TypeCheckerDefinitionVisitor.
+
+	// FIXME: Used in the TypeCheckerDefinitionVisitor.
 	public void typeResolve(ATypeBind typebind,
 			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question)

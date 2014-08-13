@@ -16,7 +16,6 @@ public class ClassesPpTest extends ParamInterpreterTest
 
 	private final static String CLASSES_ROOT = "src/test/resources/classes";
 
-
 	public ClassesPpTest(String nameParameter, String inputParameter,
 			String resultParameter)
 	{
@@ -34,5 +33,5 @@ public class ClassesPpTest extends ParamInterpreterTest
 	{
 		Settings.release = Release.VDM_10;
 	}
-	
+
 }

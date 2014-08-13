@@ -35,7 +35,7 @@ public class ModulesSlTest extends CommonInterpreterTest
 		Object[] item = null;
 		for (Object[] objects : tests)
 		{
-			if (objects[1].toString().equals(string+".vdmsl"))
+			if (objects[1].toString().equals(string + ".vdmsl"))
 			{
 				item = objects;
 				break;

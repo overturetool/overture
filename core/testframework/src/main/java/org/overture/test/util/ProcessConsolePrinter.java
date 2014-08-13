@@ -32,13 +32,15 @@ public class ProcessConsolePrinter extends Thread
 	InputStream stream = null;
 	String headerMessage = null;
 
-	public ProcessConsolePrinter(File file, InputStream inputStream) {
+	public ProcessConsolePrinter(File file, InputStream inputStream)
+	{
 		this.file = file;
 		this.stream = inputStream;
 	}
 
 	public ProcessConsolePrinter(File file, InputStream inputStream,
-			String headerMessage) {
+			String headerMessage)
+	{
 		this.file = file;
 		this.stream = inputStream;
 		this.headerMessage = headerMessage;
@@ -65,11 +67,11 @@ public class ProcessConsolePrinter extends Thread
 				outputStream.write("\n" + line);
 				outputStream.flush();
 			}
-			
+
 			outputStream.close();
 		} catch (IOException e)
 		{
-			
+
 		}
 	}
 }

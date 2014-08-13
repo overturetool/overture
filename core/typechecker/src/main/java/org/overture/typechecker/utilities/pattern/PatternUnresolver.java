@@ -90,7 +90,7 @@ public class PatternUnresolver extends AnalysisAdaptor
 	{
 		for (AMapletPatternMaplet mp : pattern.getMaplets())
 		{
-			//af.createAMapletPatternMapletAssistant().unResolve(mp);
+			// af.createAMapletPatternMapletAssistant().unResolve(mp);
 			mp.apply(THIS);
 		}
 		pattern.setResolved(false);

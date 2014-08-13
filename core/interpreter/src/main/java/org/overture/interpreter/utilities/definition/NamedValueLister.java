@@ -35,21 +35,18 @@ import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueSet;
 
 /***************************************
- * 
- * 
- * 
  * @author gkanos
- *
  ****************************************/
-public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePairList>
+public class NamedValueLister extends
+		QuestionAnswerAdaptor<Context, NameValuePairList>
 {
 	protected IInterpreterAssistantFactory af;
-	
+
 	public NamedValueLister(IInterpreterAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public NameValuePairList caseAAssignmentDefinition(
 			AAssignmentDefinition def, Context initialContext)
@@ -74,7 +71,7 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 			return null;
 		}
 	}
-	
+
 	@Override
 	public NameValuePairList caseAEqualsDefinition(AEqualsDefinition def,
 			Context initialContext) throws AnalysisException
@@ -144,7 +141,7 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 
 		return nvpl;
 	}
-	
+
 	@Override
 	public NameValuePairList caseAExplicitFunctionDefinition(
 			AExplicitFunctionDefinition def, Context initialContext)
@@ -184,7 +181,7 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 
 		return nvl;
 	}
-	
+
 	@Override
 	public NameValuePairList caseAExplicitOperationDefinition(
 			AExplicitOperationDefinition def, Context initialContext)
@@ -217,7 +214,7 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 
 		return nvl;
 	}
-	
+
 	@Override
 	public NameValuePairList caseAImplicitFunctionDefinition(
 			AImplicitFunctionDefinition def, Context initialContext)
@@ -261,7 +258,7 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 
 		return nvl;
 	}
-	
+
 	@Override
 	public NameValuePairList caseAImplicitOperationDefinition(
 			AImplicitOperationDefinition def, Context initialContext)
@@ -298,7 +295,7 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 
 		return nvl;
 	}
-	
+
 	@Override
 	public NameValuePairList caseAImportedDefinition(AImportedDefinition def,
 			Context initialContext) throws AnalysisException
@@ -315,11 +312,10 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 
 		return renamed;
 	}
-	
+
 	@Override
-	public NameValuePairList caseAInheritedDefinition(
-			AInheritedDefinition def, Context initialContext)
-			throws AnalysisException
+	public NameValuePairList caseAInheritedDefinition(AInheritedDefinition def,
+			Context initialContext) throws AnalysisException
 	{
 		NameValuePairList renamed = new NameValuePairList();
 
@@ -338,7 +334,7 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 
 		return renamed;
 	}
-	
+
 	@Override
 	public NameValuePairList caseAInstanceVariableDefinition(
 			AInstanceVariableDefinition def, Context initialContext)
@@ -365,7 +361,7 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 			return null;
 		}
 	}
-	
+
 	@Override
 	public NameValuePairList caseALocalDefinition(ALocalDefinition def,
 			Context initialContext) throws AnalysisException
@@ -373,7 +369,7 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 		NameValuePair nvp = new NameValuePair(def.getName(), initialContext.lookup(def.getName()));
 		return new NameValuePairList(nvp);
 	}
-	
+
 	@Override
 	public NameValuePairList caseARenamedDefinition(ARenamedDefinition def,
 			Context initialContext) throws AnalysisException
@@ -401,7 +397,7 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 	{
 		return def.getOperationDef().apply(THIS, initialContext);
 	}
-	
+
 	@Override
 	public NameValuePairList caseATypeDefinition(ATypeDefinition def,
 			Context initialContext) throws AnalysisException
@@ -416,7 +412,7 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 
 		return nvl;
 	}
-	
+
 	@Override
 	public NameValuePairList caseAUntypedDefinition(AUntypedDefinition def,
 			Context initialContext) throws AnalysisException
@@ -424,7 +420,7 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 		assert false : "Can't get name/values of untyped definition?";
 		return null;
 	}
-	
+
 	@Override
 	public NameValuePairList caseAValueDefinition(AValueDefinition def,
 			Context initialContext) throws AnalysisException
@@ -449,13 +445,13 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 
 		return null;
 	}
-	
+
 	@Override
 	public NameValuePairList defaultPDefinition(PDefinition def,
 			Context initialContext) throws AnalysisException
 	{
 		return new NameValuePairList(); // Overridden
-	}	
+	}
 
 	@Override
 	public NameValuePairList createNewReturnValue(INode node, Context question)

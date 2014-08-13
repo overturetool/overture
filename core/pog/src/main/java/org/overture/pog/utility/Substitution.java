@@ -14,8 +14,6 @@ public class Substitution
 
 	String original;
 	PExp newExp;
-	
-	
 
 	public String getOriginal()
 	{
@@ -53,10 +51,11 @@ public class Substitution
 
 	public String makeFullKey(ILexNameToken name)
 	{
-		if (name.isOld()){
-			return name.getName()+"~";
-		}
-		else{
+		if (name.isOld())
+		{
+			return name.getName() + "~";
+		} else
+		{
 			return name.getName();
 		}
 	}

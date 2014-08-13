@@ -23,35 +23,44 @@ package org.overture.guibuilder.internal.ir;
  * 
  * @author carlos
  */
-public class VdmType {
+public class VdmType
+{
 
 	String name = null;
 	Boolean isClass = false;
-	
+
 	/**
 	 * Constructor
-	 * @param name - Name of the type (the type is identified by its name)
-	 * @param isClass - Is this a type of class.
+	 * 
+	 * @param name
+	 *            - Name of the type (the type is identified by its name)
+	 * @param isClass
+	 *            - Is this a type of class.
 	 */
-	public VdmType(String name, boolean isClass) {
+	public VdmType(String name, boolean isClass)
+	{
 		this.name = name;
 		this.isClass = isClass;
 	}
-	
+
 	/**
-	 * isClass attribute. 
+	 * isClass attribute.
+	 * 
 	 * @return - true if this is a type of class
 	 */
-	public boolean isClass() {
+	public boolean isClass()
+	{
 		return isClass;
 	}
-	
+
 	/**
-	 * Returns the name of the type. The VDM++ types representation is identified by its name. 
+	 * Returns the name of the type. The VDM++ types representation is identified by its name.
+	 * 
 	 * @return - returns the name of the type.
 	 */
-	public String getName() {
+	public String getName()
+	{
 		return name;
 	}
-	
+
 }

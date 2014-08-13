@@ -34,8 +34,7 @@ public class AExplicitFunctionDefinitionAssistantInterpreter extends
 		if (state.polyfuncs == null)
 		{
 			state.polyfuncs = new HashMap<List<PType>, FunctionValue>();
-		}
-		else
+		} else
 		{
 			// We always return the same function value for a polymorph
 			// with a given set of types. This is so that the one function
@@ -55,23 +54,21 @@ public class AExplicitFunctionDefinitionAssistantInterpreter extends
 
 		if (expdef.getPredef() != null)
 		{
-			prefv = getPolymorphicValue(af,expdef.getPredef(), actualTypes);
-		}
-		else
+			prefv = getPolymorphicValue(af, expdef.getPredef(), actualTypes);
+		} else
 		{
 			prefv = null;
 		}
 
 		if (expdef.getPostdef() != null)
 		{
-			postfv = getPolymorphicValue(af,expdef.getPostdef(), actualTypes);
-		}
-		else
+			postfv = getPolymorphicValue(af, expdef.getPostdef(), actualTypes);
+		} else
 		{
 			postfv = null;
 		}
 
-		FunctionValue rv = new FunctionValue(af,expdef, actualTypes, prefv, postfv, null);
+		FunctionValue rv = new FunctionValue(af, expdef, actualTypes, prefv, postfv, null);
 
 		state.polyfuncs.put(actualTypes, rv);
 		return rv;

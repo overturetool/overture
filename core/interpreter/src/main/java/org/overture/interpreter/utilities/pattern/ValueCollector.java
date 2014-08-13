@@ -11,38 +11,37 @@ import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.values.ValueList;
 
 /***************************************
- * 
  * This class implements a way to collect values from binds in a node type
  * 
  * @author gkanos
- *
  ****************************************/
-public class ValueCollector extends QuestionAnswerAdaptor<ObjectContext, ValueList>
+public class ValueCollector extends
+		QuestionAnswerAdaptor<ObjectContext, ValueList>
 {
 	protected IInterpreterAssistantFactory af;
-	
+
 	public ValueCollector(IInterpreterAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public ValueList caseASetMultipleBind(ASetMultipleBind node,
 			ObjectContext ctxt) throws AnalysisException
 	{
 		return af.createPExpAssistant().getValues(node.getSet(), ctxt);
 	}
-	
+
 	@Override
 	public ValueList caseATypeMultipleBind(ATypeMultipleBind node,
 			ObjectContext ctxt) throws AnalysisException
 	{
 		return new ValueList();
 	}
-	
+
 	@Override
-	public ValueList defaultPMultipleBind(PMultipleBind node,
-			ObjectContext ctxt) throws AnalysisException
+	public ValueList defaultPMultipleBind(PMultipleBind node, ObjectContext ctxt)
+			throws AnalysisException
 	{
 		return new ValueList();
 	}

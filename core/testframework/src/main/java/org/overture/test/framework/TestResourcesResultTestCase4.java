@@ -2,7 +2,8 @@ package org.overture.test.framework;
 
 import java.io.File;
 
-public abstract class TestResourcesResultTestCase4<R> extends ResultTestCase4<R>
+public abstract class TestResourcesResultTestCase4<R> extends
+		ResultTestCase4<R>
 {
 	protected final File testSuiteRoot;
 	protected final String suiteName;
@@ -21,12 +22,12 @@ public abstract class TestResourcesResultTestCase4<R> extends ResultTestCase4<R>
 		suiteName = null;
 	}
 
-//	public TestResourcesResultTestCase4(File rootSource,String name, String content)
-//	{
-//		super(rootSource,name, content);
-//		testSuiteRoot = null;
-//		suiteName = null;
-//	}
+	// public TestResourcesResultTestCase4(File rootSource,String name, String content)
+	// {
+	// super(rootSource,name, content);
+	// testSuiteRoot = null;
+	// suiteName = null;
+	// }
 
 	public TestResourcesResultTestCase4(File file, String suiteName,
 			File testSuiteRoot)
@@ -70,7 +71,7 @@ public abstract class TestResourcesResultTestCase4<R> extends ResultTestCase4<R>
 		{
 			tmp = tmp.substring(tmp.indexOf('/') + 1);
 		}
-		return ( tmp).replace('/', File.separatorChar).replaceAll(" ", "");
+		return tmp.replace('/', File.separatorChar).replaceAll(" ", "");
 	}
 
 }

@@ -59,8 +59,6 @@ abstract public class TypeChecker
 
 	/**
 	 * VDM-only constructor. <b>NOT</b> for use by extensions.
-	 * 
-	 * @param parentVisitor
 	 */
 	public TypeChecker()
 	{

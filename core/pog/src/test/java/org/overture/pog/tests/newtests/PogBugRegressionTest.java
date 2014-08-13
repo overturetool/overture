@@ -19,46 +19,49 @@ import org.overture.pog.pub.ProofObligationGenerator;
 import com.google.gson.reflect.TypeToken;
 
 /**
- * Quick usage example of new overture tests. Takes an AST and
- * dumps the entire content into a string.
+ * Quick usage example of new overture tests. Takes an AST and dumps the entire content into a string.
  * 
  * @author ldc
- * 
  */
 @RunWith(Parameterized.class)
-public class PogBugRegressionTest extends ParamStandardTest<PogTestResult> {
+public class PogBugRegressionTest extends ParamStandardTest<PogTestResult>
+{
 
-	
 	private static final String UPDATE_PROPERTY = "tests.update.pog.bugreg";
 
 	public PogBugRegressionTest(String _, String testParameter,
-			String resultParameter) {
+			String resultParameter)
+	{
 		super(_, testParameter, resultParameter);
-	//	updateResult=true;
+		// updateResult=true;
 	}
 
 	private static final String BUG_REGRESSION_ROOT = "src/test/resources/bug-regression";
 
 	@Parameters(name = "{index} : {0}")
-	public static Collection<Object[]> testData() {
+	public static Collection<Object[]> testData()
+	{
 		return PathsProvider.computePaths(BUG_REGRESSION_ROOT);
 	}
 
 	@Override
-	public void compareResults(PogTestResult actual, PogTestResult expected) {
+	public void compareResults(PogTestResult actual, PogTestResult expected)
+	{
 		PogTestResult.compare(actual, expected);
-		
+
 	}
 
 	@Override
-	public PogTestResult processModel(List<INode> ast) {
-		try {
-			IProofObligationList ipol = ProofObligationGenerator
-					.generateProofObligations(ast);
+	public PogTestResult processModel(List<INode> ast)
+	{
+		try
+		{
+			IProofObligationList ipol = ProofObligationGenerator.generateProofObligations(ast);
 			PogTestResult actual = PogTestResult.convert(ipol);
 			return actual;
 
-		} catch (AnalysisException e) {
+		} catch (AnalysisException e)
+		{
 			fail("Could not process test file " + testName);
 		}
 		// will never hit due to fail()
@@ -66,8 +69,10 @@ public class PogBugRegressionTest extends ParamStandardTest<PogTestResult> {
 	}
 
 	@Override
-	public Type getResultType() {
-		Type resultType = new TypeToken<PogTestResult>() {
+	public Type getResultType()
+	{
+		Type resultType = new TypeToken<PogTestResult>()
+		{
 		}.getType();
 		return resultType;
 	}

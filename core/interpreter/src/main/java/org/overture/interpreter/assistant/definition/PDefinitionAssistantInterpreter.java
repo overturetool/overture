@@ -57,8 +57,8 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 
 	/**
 	 * Return a list of external values that are read by the definition.
-	 * @param def 
 	 * 
+	 * @param def
 	 * @param ctxt
 	 *            The context in which to evaluate the expressions.
 	 * @return A list of values read.
@@ -84,7 +84,7 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 		{
 			return null;
 		}
-		
+
 	}
 
 	public boolean isTypeDefinition(PDefinition def)
@@ -96,7 +96,7 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 		{
 			return false;
 		}
-		
+
 	}
 
 	public boolean isRuntime(PDefinition def)
@@ -132,8 +132,7 @@ public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
 		}
 	}
 
-	public PStm findStatement(LinkedList<PDefinition> definitions,
-			int lineno)
+	public PStm findStatement(LinkedList<PDefinition> definitions, int lineno)
 	{
 		for (PDefinition d : definitions)
 		{

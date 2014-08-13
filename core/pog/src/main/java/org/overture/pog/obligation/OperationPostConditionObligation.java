@@ -45,7 +45,8 @@ public class OperationPostConditionObligation extends ProofObligation
 	private static final long serialVersionUID = 7717481924562707647L;
 
 	public OperationPostConditionObligation(AExplicitOperationDefinition op,
-			IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
+			IPOContextStack ctxt, IPogAssistantFactory af)
+			throws AnalysisException
 	{
 		super(op, POType.OP_POST_CONDITION, ctxt, op.getLocation(), af);
 		PExp pred = buildExp(op.getPrecondition(), op.getPostcondition().clone(), null);
@@ -55,10 +56,11 @@ public class OperationPostConditionObligation extends ProofObligation
 	}
 
 	public OperationPostConditionObligation(AImplicitOperationDefinition op,
-			IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
+			IPOContextStack ctxt, IPogAssistantFactory af)
+			throws AnalysisException
 	{
-		super(op, POType.OP_POST_CONDITION, ctxt, op.getLocation(),af);
-		
+		super(op, POType.OP_POST_CONDITION, ctxt, op.getLocation(), af);
+
 		stitch = buildExp(op.getPrecondition(), op.getPostcondition().clone(), op.clone().getErrors());
 		valuetree.setPredicate(ctxt.getPredWithContext(stitch));
 	}
@@ -86,7 +88,7 @@ public class OperationPostConditionObligation extends ProofObligation
 		{// handled prepost or errors
 			AOrBooleanBinaryExp orExp = new AOrBooleanBinaryExp();
 			orExp.setLeft(handlePrePost(preexp.clone(), postexp, errs));
-			PExp errorsExp = (buildErrsExp(errs));
+			PExp errorsExp = buildErrsExp(errs);
 			orExp.setRight(errorsExp);
 
 			return orExp;

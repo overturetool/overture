@@ -25,33 +25,16 @@ package org.overture.interpreter.debug;
 
 public enum DBGPCommandType
 {
-	STATUS("status"),
-	FEATURE_GET("feature_get"),
-	FEATURE_SET("feature_set"),
-	RUN("run"),
-	EVAL("eval"),
-	EXPR("expr"),
-	EXEC("exec"),
-	STEP_INTO("step_into"),
-	STEP_OVER("step_over"),
-	STEP_OUT("step_out"),
-	STOP("stop"),
-	DETACH("detach"),
-	BREAKPOINT_GET("breakpoint_get"),
-	BREAKPOINT_SET("breakpoint_set"),
-	BREAKPOINT_UPDATE("breakpoint_update"),
-	BREAKPOINT_REMOVE("breakpoint_remove"),
-	BREAKPOINT_LIST("breakpoint_list"),
-	STACK_DEPTH("stack_depth"),
-	STACK_GET("stack_get"),
-	CONTEXT_NAMES("context_names"),
-	CONTEXT_GET("context_get"),
-	PROPERTY_GET("property_get"),
-	PROPERTY_SET("property_set"),
-	SOURCE("source"),
-	STDOUT("stdout"),
-	STDERR("stderr"),
-	UNKNOWN("?"),
+	STATUS("status"), FEATURE_GET("feature_get"), FEATURE_SET("feature_set"), RUN(
+			"run"), EVAL("eval"), EXPR("expr"), EXEC("exec"), STEP_INTO(
+			"step_into"), STEP_OVER("step_over"), STEP_OUT("step_out"), STOP(
+			"stop"), DETACH("detach"), BREAKPOINT_GET("breakpoint_get"), BREAKPOINT_SET(
+			"breakpoint_set"), BREAKPOINT_UPDATE("breakpoint_update"), BREAKPOINT_REMOVE(
+			"breakpoint_remove"), BREAKPOINT_LIST("breakpoint_list"), STACK_DEPTH(
+			"stack_depth"), STACK_GET("stack_get"), CONTEXT_NAMES(
+			"context_names"), CONTEXT_GET("context_get"), PROPERTY_GET(
+			"property_get"), PROPERTY_SET("property_set"), SOURCE("source"), STDOUT(
+			"stdout"), STDERR("stderr"), UNKNOWN("?"),
 
 	// Overture extras
 	XCMD_OVERTURE_CMD("xcmd_overture_cmd");
@@ -65,7 +48,7 @@ public enum DBGPCommandType
 
 	public static DBGPCommandType lookup(String string) throws DBGPException
 	{
-		for (DBGPCommandType cmd: values())
+		for (DBGPCommandType cmd : values())
 		{
 			if (cmd.value.equals(string))
 			{

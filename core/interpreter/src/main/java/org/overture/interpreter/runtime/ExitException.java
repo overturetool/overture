@@ -26,7 +26,6 @@ package org.overture.interpreter.runtime;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.interpreter.values.Value;
 
-
 @SuppressWarnings("serial")
 public class ExitException extends ContextException
 {

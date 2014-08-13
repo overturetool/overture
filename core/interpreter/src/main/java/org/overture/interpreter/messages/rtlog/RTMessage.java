@@ -8,7 +8,6 @@ import java.util.Vector;
 import org.overture.interpreter.scheduler.CPUResource;
 import org.overture.interpreter.scheduler.SystemClock;
 
-
 public abstract class RTMessage
 {
 	public enum MessageType
@@ -24,13 +23,13 @@ public abstract class RTMessage
 	protected synchronized Long getStaticId(String name, CPUResource cpuId)
 	{
 		String nameFinal = name + cpuId.getNumber();
-		
+
 		if (staticIds.containsKey(nameFinal))
 		{
 			return staticIds.get(nameFinal);
 		} else
 		{
-			RTDeployStaticMessage deployMessage = new RTDeployStaticMessage(name,cpuId);
+			RTDeployStaticMessage deployMessage = new RTDeployStaticMessage(name, cpuId);
 			cachedStaticDeploys.add(deployMessage);
 			staticIds.put(nameFinal, deployMessage.getObjectReference());
 			return deployMessage.getObjectReference();
@@ -64,7 +63,7 @@ public abstract class RTMessage
 	{
 		return getMessage();
 	}
-	
+
 	public Long getLogTime()
 	{
 		return this.time;

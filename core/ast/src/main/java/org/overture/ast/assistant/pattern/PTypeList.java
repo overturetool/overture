@@ -8,9 +8,9 @@ import org.overture.ast.types.PType;
 import org.overture.ast.util.Utils;
 
 @SuppressWarnings("serial")
-public class PTypeList extends Vector<PType> {
+public class PTypeList extends Vector<PType>
+{
 
-	
 	public PTypeList()
 	{
 		super();
@@ -26,7 +26,7 @@ public class PTypeList extends Vector<PType> {
 	{
 		return super.add(t);
 	}
-	
+
 	public PType getType(ILexLocation location)
 	{
 		PType result = null;
@@ -34,15 +34,14 @@ public class PTypeList extends Vector<PType> {
 		if (this.size() == 1)
 		{
 			result = iterator().next();
-		}
-		else
+		} else
 		{
 			result = AstFactory.newAProductType(location, this);
 		}
 
 		return result;
 	}
-	
+
 	@Override
 	public String toString()
 	{

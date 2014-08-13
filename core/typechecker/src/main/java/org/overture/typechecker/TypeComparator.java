@@ -147,12 +147,12 @@ public class TypeComparator
 	/**
 	 * Compare two type lists for placewise compatibility. , assistantFactory @param to
 	 * 
+	 * @param to
 	 * @param from
 	 * @return True if all types compatible.
 	 */
 
-	public synchronized boolean compatible(List<PType> to,
-			List<PType> from)
+	public synchronized boolean compatible(List<PType> to, List<PType> from)
 	{
 		done.clear();
 		return allCompatible(to, from, false) == Result.Yes;
@@ -196,8 +196,7 @@ public class TypeComparator
 	 * @return Yes or No.
 	 */
 
-	private Result searchCompatible(PType to, PType from,
-			boolean paramOnly)
+	private Result searchCompatible(PType to, PType from, boolean paramOnly)
 	{
 		TypePair pair = new TypePair(to, from);
 		int i = done.indexOf(pair);
@@ -248,7 +247,7 @@ public class TypeComparator
 			throw new TypeCheckException("Unknown type: " + from, from.getLocation(), from);
 		}
 
-		if (to == from)	// (assistantFactory.createPTypeAssistant().equals(to, from))
+		if (to == from) // (assistantFactory.createPTypeAssistant().equals(to, from))
 		{
 			return Result.Yes; // Same object!
 		}
@@ -559,8 +558,7 @@ public class TypeComparator
 	 * @return Yes or No, if sub is a subtype of sup.
 	 */
 
-	private Result searchSubType(PType sub, PType sup,
-			boolean invignore)
+	private Result searchSubType(PType sub, PType sup, boolean invignore)
 	{
 		TypePair pair = new TypePair(sub, sup);
 		int i = done.indexOf(pair);
@@ -892,6 +890,11 @@ public class TypeComparator
 	/**
 	 * Check that the compose types that are referred to in a type have a matching definition in the environment. The
 	 * method returns a list of types that do not exist if the newTypes parameter is passed.
+	 * 
+	 * @param type
+	 * @param env
+	 * @param newTypes
+	 * @return
 	 */
 	public PTypeList checkComposeTypes(PType type, Environment env,
 			boolean newTypes)
@@ -975,6 +978,10 @@ public class TypeComparator
 
 	/**
 	 * Calculate the intersection of two types.
+	 * 
+	 * @param a
+	 * @param b
+	 * @return
 	 */
 	public PType intersect(PType a, PType b)
 	{

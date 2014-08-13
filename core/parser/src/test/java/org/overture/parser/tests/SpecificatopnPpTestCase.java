@@ -12,19 +12,21 @@ import org.overture.parser.syntax.ClassReader;
 import org.overture.parser.syntax.ParserException;
 import org.overture.parser.tests.framework.BaseParserTestCase;
 
-public class SpecificatopnPpTestCase extends BaseParserTestCase<ClassReader,List<SClassDefinition>>
+public class SpecificatopnPpTestCase extends
+		BaseParserTestCase<ClassReader, List<SClassDefinition>>
 {
 	static boolean hasRunBefore = false;
+
 	public SpecificatopnPpTestCase(File file)
 	{
 		super(file);
 	}
-	
+
 	public SpecificatopnPpTestCase()
 	{
-	
+
 	}
-	
+
 	@Override
 	protected void setUp() throws Exception
 	{
@@ -32,9 +34,9 @@ public class SpecificatopnPpTestCase extends BaseParserTestCase<ClassReader,List
 		Settings.dialect = Dialect.VDM_PP;
 	}
 
-	public SpecificatopnPpTestCase(File rootSource,String name, String content)
+	public SpecificatopnPpTestCase(File rootSource, String name, String content)
 	{
-		super(rootSource,name, content);
+		super(rootSource, name, content);
 	}
 
 	@Override
@@ -44,7 +46,8 @@ public class SpecificatopnPpTestCase extends BaseParserTestCase<ClassReader,List
 	}
 
 	@Override
-	protected List<SClassDefinition> read(ClassReader reader) throws ParserException, LexException
+	protected List<SClassDefinition> read(ClassReader reader)
+			throws ParserException, LexException
 	{
 		return reader.readClasses();
 	}
@@ -67,7 +70,4 @@ public class SpecificatopnPpTestCase extends BaseParserTestCase<ClassReader,List
 		return hasRunBefore;
 	}
 
-	
-
-	
 }

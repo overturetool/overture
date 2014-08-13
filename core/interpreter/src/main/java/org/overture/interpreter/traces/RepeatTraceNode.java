@@ -26,7 +26,6 @@ package org.overture.interpreter.traces;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.LexLocation;
 
-
 public class RepeatTraceNode extends TraceNode
 {
 	public final TraceNode repeat;
@@ -36,17 +35,16 @@ public class RepeatTraceNode extends TraceNode
 	public RepeatTraceNode(TraceNode repeat, long from, long to)
 	{
 		this.repeat = repeat;
-		this.from = (int)from;
-		this.to = (int)to;
+		this.from = (int) from;
+		this.to = (int) to;
 	}
 
 	@Override
 	public String toString()
 	{
-		return repeat.toString() +
-    		((from == 1 && to == 1) ? "" :
-    			(from == to) ? ("{" + from + "}") :
-    				("{" + from + ", " + to + "}"));
+		return repeat.toString()
+				+ (from == 1 && to == 1 ? "" : from == to ? "{" + from + "}"
+						: "{" + from + ", " + to + "}");
 	}
 
 	@Override
@@ -61,14 +59,14 @@ public class RepeatTraceNode extends TraceNode
 			if (r == 0)
 			{
 				CallSequence seq = getVariables();
-   				seq.add(AstFactory.newASkipStm(new LexLocation()));
-    			tests.add(seq);
+				seq.add(AstFactory.newASkipStm(new LexLocation()));
+				tests.add(seq);
 				continue;
 			}
 
- 			int[] c = new int[r];
+			int[] c = new int[r];
 
-			for (int i=0; i<r; i++)
+			for (int i = 0; i < r; i++)
 			{
 				c[i] = count;
 			}
@@ -77,15 +75,15 @@ public class RepeatTraceNode extends TraceNode
 
 			while (p.hasNext())
 			{
-	   			CallSequence seq = getVariables();
-	   			int[] select = p.next();
+				CallSequence seq = getVariables();
+				int[] select = p.next();
 
-	   			for (int i=0; i<r; i++)
-    			{
-    				seq.addAll(rtests.get(select[i]));
-    			}
+				for (int i = 0; i < r; i++)
+				{
+					seq.addAll(rtests.get(select[i]));
+				}
 
-    			tests.add(seq);
+				tests.add(seq);
 			}
 		}
 

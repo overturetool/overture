@@ -35,81 +35,82 @@ import org.overture.interpreter.runtime.validation.IRuntimeValidatior;
 import org.overture.interpreter.scheduler.AsyncThread;
 import org.overture.interpreter.values.OperationValue;
 
-
 public class RuntimeValidator
 {
 
 	public static IRuntimeValidatior validator;
 	private static PrintWriter logfile = null;
-	
-	
+
 	public static void init(ClassInterpreter classInterpreter)
 	{
-		if(Settings.timingInvChecks)
+		if (Settings.timingInvChecks)
 		{
 			validator = new BasicRuntimeValidator();
 			validator.init(classInterpreter);
 		}
 	}
-	
-	public static void bindSystemVariables(ASystemClassDefinition systemDefinition, IInterpreterAssistantFactory af)
+
+	public static void bindSystemVariables(
+			ASystemClassDefinition systemDefinition,
+			IInterpreterAssistantFactory af)
 	{
-		if(Settings.timingInvChecks)
+		if (Settings.timingInvChecks)
 		{
-			if(validator != null)
+			if (validator != null)
 			{
-				validator.bindSystemVariables(systemDefinition, af);	
+				validator.bindSystemVariables(systemDefinition, af);
 			}
-			
+
 		}
 	}
 
 	public static void validate(OperationValue operationValue, MessageType type)
 	{
-		if(Settings.timingInvChecks)
+		if (Settings.timingInvChecks)
 		{
-			if(validator != null)
+			if (validator != null)
 			{
 				validator.validate(operationValue, type);
 			}
 		}
 	}
 
-
-	public static void validateAsync(OperationValue operationValue, AsyncThread t) {
-		if(Settings.timingInvChecks)
+	public static void validateAsync(OperationValue operationValue,
+			AsyncThread t)
+	{
+		if (Settings.timingInvChecks)
 		{
-			if(validator != null)
+			if (validator != null)
 			{
 				validator.validateAsync(operationValue, t);
 			}
 		}
 	}
 
-
 	public static void stop()
 	{
-		if(Settings.timingInvChecks)
+		if (Settings.timingInvChecks)
 		{
-			if(validator != null)
+			if (validator != null)
 			{
 				String res = validator.stop();
-				if(logfile != null)
+				if (logfile != null)
 				{
 					logfile.write(res);
 					logfile.flush();
 					logfile.close();
-				}
-				else{
+				} else
+				{
 					Console.out.print(res);
 				}
-				
+
 			}
 		}
 	}
-	
-	public static void setLogFile(PrintWriter out){
-	       logfile = out;
+
+	public static void setLogFile(PrintWriter out)
+	{
+		logfile = out;
 	}
 
 }

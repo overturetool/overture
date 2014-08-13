@@ -76,7 +76,7 @@ public class ExitTypeCollector extends AnswerAdaptor<PTypeSet>
 			throws AnalysisException
 	{
 		// TODO We don't know what an operation call will raise
-		return new PTypeSet(AstFactory.newAUnknownType(statement.getLocation()),af);
+		return new PTypeSet(AstFactory.newAUnknownType(statement.getLocation()), af);
 	}
 
 	@Override

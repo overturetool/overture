@@ -12,31 +12,30 @@ import org.overture.ast.statements.PStm;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 
 /***************************************
- * 
- * This method finds a statement within a definition. 
+ * This method finds a statement within a definition.
  * 
  * @author gkanos
- *
  ****************************************/
 
-public class DefinitionStatementFinder extends QuestionAnswerAdaptor<Integer, PStm>
+public class DefinitionStatementFinder extends
+		QuestionAnswerAdaptor<Integer, PStm>
 {
 	protected IInterpreterAssistantFactory af;
-	
+
 	public DefinitionStatementFinder(IInterpreterAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public PStm defaultSClassDefinition(SClassDefinition def, Integer lineno)
 			throws AnalysisException
 	{
-		//I don't think this needs to be unfolded. gk
+		// I don't think this needs to be unfolded. gk
 		return af.createSClassDefinitionAssistant().findStatement(def, lineno);
-		
+
 	}
-	
+
 	@Override
 	public PStm caseAExplicitOperationDefinition(
 			AExplicitOperationDefinition def, Integer lineno)
@@ -44,7 +43,7 @@ public class DefinitionStatementFinder extends QuestionAnswerAdaptor<Integer, PS
 	{
 		return af.createPStmAssistant().findStatement(def.getBody(), lineno);
 	}
-	
+
 	@Override
 	public PStm caseAImplicitOperationDefinition(
 			AImplicitOperationDefinition def, Integer lineno)
@@ -53,14 +52,14 @@ public class DefinitionStatementFinder extends QuestionAnswerAdaptor<Integer, PS
 		return def.getBody() == null ? null
 				: af.createPStmAssistant().findStatement(def.getBody(), lineno);
 	}
-	
+
 	@Override
 	public PStm caseAThreadDefinition(AThreadDefinition def, Integer lineno)
 			throws AnalysisException
 	{
 		return af.createPStmAssistant().findStatement(def.getStatement(), lineno);
 	}
-	
+
 	@Override
 	public PStm defaultPDefinition(PDefinition def, Integer lineno)
 			throws AnalysisException

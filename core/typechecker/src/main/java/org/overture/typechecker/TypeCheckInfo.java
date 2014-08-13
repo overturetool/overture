@@ -52,7 +52,9 @@ public class TypeCheckInfo
 	/**
 	 * Returns the value associated with key. Implementation detail: Notice the map is shared between all instances.
 	 * 
+	 * @param <T>
 	 * @param key
+	 * @return
 	 */
 	public <T> T contextGet(Class<T> key)
 	{
@@ -71,6 +73,7 @@ public class TypeCheckInfo
 	/**
 	 * Associates the given key with the given value.
 	 * 
+	 * @param <T>
 	 * @param key
 	 * @param value
 	 */
@@ -91,6 +94,7 @@ public class TypeCheckInfo
 	/**
 	 * Returns the value associated with key, and removes that binding from the context.
 	 * 
+	 * @param <T>
 	 * @param key
 	 * @return value
 	 */
@@ -110,8 +114,8 @@ public class TypeCheckInfo
 	public final Environment env;
 	public NameScope scope;
 	public LinkedList<PType> qualifiers;
-	public final PType constraint;	// expressions
-	public final PType returnType;	// statements
+	public final PType constraint; // expressions
+	public final PType returnType; // statements
 
 	public TypeCheckInfo(ITypeCheckerAssistantFactory assistantFactory,
 			Environment env, NameScope scope, LinkedList<PType> qualifiers,

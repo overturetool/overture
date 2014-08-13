@@ -36,8 +36,8 @@ public class ACallStmAssistantTC
 		return types;
 	}
 
-	public void checkArgTypes(ACallStm node, PType type,
-			List<PType> ptypes, List<PType> atypes)
+	public void checkArgTypes(ACallStm node, PType type, List<PType> ptypes,
+			List<PType> atypes)
 	{
 		if (ptypes.size() != atypes.size())
 		{

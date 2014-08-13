@@ -58,8 +58,8 @@ public class ProductTypeFinder extends TypeUnwrapper<AProductType>
 	public AProductType caseAUnionType(AUnionType type)
 			throws AnalysisException
 	{
-		//return af.createAUnionTypeAssistant().getProduct(type, 0);
-		return type.apply(af.getProductExtendedTypeFinder(),0);
+		// return af.createAUnionTypeAssistant().getProduct(type, 0);
+		return type.apply(af.getProductExtendedTypeFinder(), 0);
 	}
 
 	@Override

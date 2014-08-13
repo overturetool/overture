@@ -1,4 +1,5 @@
 package org.overture.ct.ctruntime.server;
+
 ///*******************************************************************************
 // * Copyright (c) 2009 Fujitsu Services Ltd. Author: Nick Battle This file is part of VDMJ. VDMJ is free software: you
 // * can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free
@@ -247,4 +248,4 @@ package org.overture.ct.ctruntime.server;
 //		}
 //	}
 //
-//}
+// }
