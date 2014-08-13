@@ -16,7 +16,7 @@
   <name>Overture Examples</name>
 
   <properties>
-    <example-packager.version>2.1.0-SNAPSHOT</example-packager.version>
+    <example-packager.version>2.1.1</example-packager.version>
   </properties>
 
   <build>
