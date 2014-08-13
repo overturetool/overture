@@ -3,13 +3,13 @@ package org.overture.codegen.trans.comp;
 import java.util.List;
 
 import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.expressions.AEnumMapExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AMapUnionBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AMapletExpCG;
-import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.trans.assistants.TransformationAssistantCG;
@@ -37,7 +37,7 @@ public class MapCompStrategy extends ComplexCompStrategy
 
 	@Override
 	protected List<SStmCG> getConditionalAdd(AIdentifierVarExpCG setVar,
-			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
+			List<SPatternCG> patterns, SPatternCG pattern)
 	{
 		AIdentifierVarExpCG mapCompResult = new AIdentifierVarExpCG();
 		mapCompResult.setType(compType.clone());

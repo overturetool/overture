@@ -3,6 +3,7 @@ package org.overture.codegen.trans.comp;
 import java.util.List;
 
 import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
@@ -42,7 +43,7 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 	
 	protected abstract SExpCG getEmptyCollection();
 
-	protected abstract List<SStmCG> getConditionalAdd(AIdentifierVarExpCG setVar, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id);
+	protected abstract List<SStmCG> getConditionalAdd(AIdentifierVarExpCG setVar, List<SPatternCG> patterns, SPatternCG pattern);
 	
 	protected List<SStmCG> consConditionalAdd(AIdentifierVarExpCG compResult,
 			SBinaryExpCG collectionMerge)
@@ -69,7 +70,7 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 	
 	@Override
 	public List<? extends SLocalDeclCG> getOuterBlockDecls(
-			AIdentifierVarExpCG setVar, List<AIdentifierPatternCG> ids)
+			AIdentifierVarExpCG setVar, List<SPatternCG> patterns)
 			throws AnalysisException
 	{
 		SExpCG emptyCollection = getEmptyCollection();

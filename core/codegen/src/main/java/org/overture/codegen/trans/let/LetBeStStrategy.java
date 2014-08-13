@@ -4,15 +4,16 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
 import org.overture.codegen.cgast.declarations.SLocalDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.ALetBeStNoBindingRuntimeErrorExpCG;
-import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
-import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
+import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
+import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ARaiseErrorStmCG;
 import org.overture.codegen.cgast.types.AErrorTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
@@ -45,14 +46,14 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 
 	@Override
 	public List<? extends SLocalDeclCG> getOuterBlockDecls(
-			AIdentifierVarExpCG setVar, List<AIdentifierPatternCG> ids)
+			AIdentifierVarExpCG setVar, List<SPatternCG> patterns)
 			throws AnalysisException
 	{
 		List<AVarLocalDeclCG> outerBlockDecls = new LinkedList<AVarLocalDeclCG>();
 
-		for (AIdentifierPatternCG id : ids)
+		for (SPatternCG id : patterns)
 		{
-			outerBlockDecls.add(transformationAssistant.consIdDecl(setType, id.getName()));
+			outerBlockDecls.add(transformationAssistant.consIdDecl(setType, id));
 		}
 
 		outerBlockDecls.add(transformationAssistant.consBoolVarDecl(successVarName, false));
@@ -62,10 +63,10 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 
 	@Override
 	public SExpCG getForLoopCond(AIdentifierVarExpCG setVar,
-			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
+			List<SPatternCG> patterns, SPatternCG pattern)
 			throws AnalysisException
 	{
-		SExpCG left = langIterator.getForLoopCond(setVar, ids, id);
+		SExpCG left = langIterator.getForLoopCond(setVar, patterns, pattern);
 		SExpCG right = transformationAssistant.consBoolCheck(successVarName, true);
 
 		return transformationAssistant.consAndExp(left, right);
@@ -73,30 +74,30 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 
 	@Override
 	public AVarLocalDeclCG getNextElementDeclared(AIdentifierVarExpCG setVar,
-			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
+			List<SPatternCG> patterns, SPatternCG pattern)
 			throws AnalysisException
 	{
 		return null;
 	}
 
 	@Override
-	public AAssignmentStmCG getNextElementAssigned(AIdentifierVarExpCG setVar,
-			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
+	public ALocalPatternAssignmentStmCG getNextElementAssigned(AIdentifierVarExpCG setVar,
+			List<SPatternCG> patterns, SPatternCG pattern)
 			throws AnalysisException
 	{
-		return langIterator.getNextElementAssigned(setVar, ids, id);
+		return langIterator.getNextElementAssigned(setVar, patterns, pattern);
 	}
 
 	@Override
 	public List<SStmCG> getForLoopStms(AIdentifierVarExpCG setVar,
-			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
+			List<SPatternCG> patterns, SPatternCG pattern)
 	{
 		return packStm(transformationAssistant.consBoolVarAssignment(suchThat, successVarName));
 	}
 
 	@Override
 	public List<SStmCG> getOuterBlockStms(AIdentifierVarExpCG setVar,
-			List<AIdentifierPatternCG> ids)
+			List<SPatternCG> patterns)
 	{
 		ALetBeStNoBindingRuntimeErrorExpCG noBinding = new ALetBeStNoBindingRuntimeErrorExpCG();
 		noBinding.setType(new AErrorTypeCG());

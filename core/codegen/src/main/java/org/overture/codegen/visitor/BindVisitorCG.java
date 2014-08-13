@@ -7,7 +7,6 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.codegen.cgast.SBindCG;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SPatternCG;
-import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetBindCG;
 import org.overture.codegen.ir.IRInfo;
 
@@ -18,15 +17,7 @@ public class BindVisitorCG  extends AbstractVisitorCG<IRInfo, SBindCG>
 			throws AnalysisException
 	{
 		PPattern pattern = node.getPattern();
-		SPatternCG patternTempCg = pattern.apply(question.getPatternVisitor(), question);
-		
-		if(!(patternTempCg instanceof AIdentifierPatternCG))
-		{
-			question.addUnsupportedNode(node, "Generation of a set bind only supports identifier patterns. Got: " + patternTempCg);
-			return null;
-		}
-		
-		AIdentifierPatternCG patternCg = (AIdentifierPatternCG) patternTempCg;
+		SPatternCG patternCg = pattern.apply(question.getPatternVisitor(), question);
 		
 		PExp set = node.getSet();
 		SExpCG setCg = set.apply(question.getExpVisitor(), question);

@@ -3,6 +3,7 @@ package org.overture.codegen.trans;
 import java.util.LinkedList;
 
 import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
@@ -89,7 +90,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 			node.setStatement(new ABlockStmCG());
 		}
 		
-		LinkedList<AIdentifierPatternCG> patterns = binding.getPatterns();
+		LinkedList<SPatternCG> patterns = binding.getPatterns();
 		ABlockStmCG outerBlock = transformationAssistant.consIterationBlock(patterns, binding.getSet(), tempVarNameGen, strategy);
 		
 		//Only the statement of the let be st statement is added to the outer block statements.
@@ -141,7 +142,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		//Replace the let be st expression with the result expression
 		transformationAssistant.replaceNodeWith(node, letBeStResult);
 		
-		LinkedList<AIdentifierPatternCG> patterns = binding.getPatterns();
+		LinkedList<SPatternCG> patterns = binding.getPatterns();
 		ABlockStmCG block = transformationAssistant.consIterationBlock(patterns, binding.getSet(), tempVarNameGen, strategy);
 		outerBlock.getStatements().addFirst(block);
 
@@ -246,10 +247,10 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		}
 		else
 		{
-			LinkedList<AIdentifierPatternCG> ids = new LinkedList<AIdentifierPatternCG>();
-			ids.add(node.getSetBind().getPattern().clone());
+			LinkedList<SPatternCG> patterns = new LinkedList<SPatternCG>();
+			patterns.add(node.getSetBind().getPattern().clone());
 
-			ABlockStmCG block = transformationAssistant.consIterationBlock(ids, node.getSet(), info.getTempVarNameGen(), strategy);
+			ABlockStmCG block = transformationAssistant.consIterationBlock(patterns, node.getSet(), info.getTempVarNameGen(), strategy);
 
 			replaceCompWithTransformation(enclosingStm, block, type, var, node);
 			

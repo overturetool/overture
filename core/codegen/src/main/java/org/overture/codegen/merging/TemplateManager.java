@@ -132,6 +132,7 @@ import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.AIncrementStmCG;
 import org.overture.codegen.cgast.statements.ALetDefStmCG;
 import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
+import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
 import org.overture.codegen.cgast.statements.ANewObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
@@ -278,6 +279,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(ALetDefStmCG.class, templateStructure.STM_PATH + "LetDef");
 		
 		nodeTemplateFileNames.put(ALocalAssignmentStmCG.class, templateStructure.STM_PATH + "LocalAssignment");
+		
+		nodeTemplateFileNames.put(ALocalPatternAssignmentStmCG.class, templateStructure.STM_PATH + "LocalPatternAssignment");
 		
 		nodeTemplateFileNames.put(AAssignmentStmCG.class, templateStructure.STM_PATH + "Assignment");
 		

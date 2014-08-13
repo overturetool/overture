@@ -3,12 +3,13 @@ package org.overture.codegen.trans.iterator;
 import java.util.List;
 
 import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
-import org.overture.codegen.cgast.statements.AAssignmentStmCG;
+import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.ir.ITempVarGen;
@@ -33,7 +34,7 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 
 	@Override
 	public AVarLocalDeclCG getForLoopInit(AIdentifierVarExpCG setVar,
-			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
+			List<SPatternCG> patterns, SPatternCG pattern)
 	{
 		iteratorName = tempGen.nextVarName(varPrefixes.getIteratorNamePrefix());
 		String setName = setVar.getOriginal();
@@ -55,7 +56,7 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 
 	@Override
 	public SExpCG getForLoopCond(AIdentifierVarExpCG setVar,
-			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
+			List<SPatternCG> patterns, SPatternCG pattern)
 			throws AnalysisException
 	{
 		AClassTypeCG iteratorType = transformationAssistant.consClassType(ITERATOR_TYPE);
@@ -65,30 +66,28 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 
 	@Override
 	public SExpCG getForLoopInc(AIdentifierVarExpCG setVar,
-			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
+			List<SPatternCG> patterns, SPatternCG pattern)
 	{
 		return null;
 	}
 
 	@Override
 	public AVarLocalDeclCG getNextElementDeclared(AIdentifierVarExpCG setVar,
-			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
+			List<SPatternCG> patterns, SPatternCG pattern)
 			throws AnalysisException
 	{
 		STypeCG elementType = transformationAssistant.getSetTypeCloned(setVar).getSetOf();
-		String name = id.getName();
 
-		return transformationAssistant.consNextElementDeclared(ITERATOR_TYPE, elementType, name, iteratorName, NEXT_ELEMENT_ITERATOR);
+		return transformationAssistant.consNextElementDeclared(ITERATOR_TYPE, elementType, pattern, iteratorName, NEXT_ELEMENT_ITERATOR);
 	}
 
 	@Override
-	public AAssignmentStmCG getNextElementAssigned(AIdentifierVarExpCG setVar,
-			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
+	public ALocalPatternAssignmentStmCG getNextElementAssigned(AIdentifierVarExpCG setVar,
+			List<SPatternCG> patterns, SPatternCG pattern)
 			throws AnalysisException
 	{
 		STypeCG elementType = transformationAssistant.getSetTypeCloned(setVar).getSetOf();
-		String name = id.getName();
 
-		return transformationAssistant.consNextElementAssignment(ITERATOR_TYPE, elementType, name, iteratorName, NEXT_ELEMENT_ITERATOR);
+		return transformationAssistant.consNextElementAssignment(ITERATOR_TYPE, elementType, pattern, iteratorName, NEXT_ELEMENT_ITERATOR);
 	}
 }

@@ -3,12 +3,12 @@ package org.overture.codegen.trans.comp;
 import java.util.List;
 
 import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
-import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.trans.assistants.TransformationAssistantCG;
@@ -35,7 +35,7 @@ public class SeqCompStrategy extends CompStrategy
 	
 	@Override
 	protected List<SStmCG> getConditionalAdd(AIdentifierVarExpCG setVar,
-			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
+			List<SPatternCG> patterns, SPatternCG pattern)
 	{
 		AIdentifierVarExpCG seqCompResult = new AIdentifierVarExpCG();
 		seqCompResult.setType(compType.clone());
@@ -55,8 +55,8 @@ public class SeqCompStrategy extends CompStrategy
 	
 	@Override
 	public List<SStmCG> getForLoopStms(AIdentifierVarExpCG setVar,
-			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
+			List<SPatternCG> patterns, SPatternCG pattern)
 	{
-		return getConditionalAdd(setVar, ids, id);
+		return getConditionalAdd(setVar, patterns, pattern);
 	}
 }
