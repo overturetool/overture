@@ -2,6 +2,7 @@ package org.overture.core.npp;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.node.INode;
 
@@ -12,7 +13,7 @@ import org.overture.ast.node.INode;
  * The general operating principle is that when applied to any node, the visitor will return the corresponding string of
  * the syntax block of that node. Indentation is controlled internally and always starts at 0 levels (the discipline is
  * caller increments/decrements). <br>
- * However, due to extensibility concerns, direct application of the class requires users to feed it ausers are advised
+ * However, due to extensibility concerns, direct application of the class requires users to feed it, users are advised
  * to instead use the public utility method available at: .
  */
 public class NewPrettyPrinter extends
@@ -26,6 +27,7 @@ public class NewPrettyPrinter extends
 	 */
 	ISymbolTable mytable;
 	ExpressionNpp expPrinter;
+	DefinitionNpp defPrinter; 
 
 	// PatternNpp
 	// BindNpp...
@@ -58,6 +60,7 @@ public class NewPrettyPrinter extends
 	{
 		mytable = nsTable;
 		expPrinter = new ExpressionNpp(this, nsTable);
+		defPrinter = new DefinitionNpp(this, nsTable);
 
 	}
 
@@ -76,6 +79,13 @@ public class NewPrettyPrinter extends
 	public String defaultPExp(PExp node, IndentTracker question) throws AnalysisException
 	{
 		return node.apply(expPrinter, question);
+	}
+	
+	@Override
+	public String defaultPDefinition(PDefinition node, IndentTracker question)
+			throws AnalysisException
+	{
+		return node.apply(defPrinter, question);
 	}
 
 	

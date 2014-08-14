@@ -2,6 +2,7 @@ package org.overture.core.npp;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.expressions.AAbsoluteUnaryExp;
 import org.overture.ast.expressions.AAndBooleanBinaryExp;
 import org.overture.ast.expressions.AApplyExp;
@@ -1190,10 +1191,12 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		sb.append(space);
 		
 		while (node.getLocalDefs().size() != 0){
+			//System.out.print(node.getLocalDefs().getFirst().getClass().toString());
+
 			if (node.getLocalDefs().size() > 1){
 				
-				def = node.getLocalDefs().poll().toString();//.apply(THIS, question);
-				
+				def = node.getLocalDefs().poll().apply(THIS,question);//.apply(THIS, question);
+				//System.out.print(node.getLocalDefs().getFirst().getClass().toString());
 				sb.append(def);
 				sb.append(mytable.getCOMMA());
 				sb.append(space);
@@ -1203,7 +1206,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 				//System.out.print(node.getLocalDefs().getFirst().toString());
 				//TODO: this and other value definitions 
 				//will be changed to apply when the appropriate methods are created
-				def = node.getLocalDefs().poll().toString();//.apply(THIS, question);
+				def = node.getLocalDefs().poll().apply(THIS, question);//.toString();//.apply(THIS, question);
 				
 				sb.append(def);
 				sb.append(space);
@@ -1228,6 +1231,13 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 //		
 //		return null;
 //	}
+	
+	@Override
+	public String caseAValueDefinition(AValueDefinition node,
+			IndentTracker question) throws AnalysisException
+	{
+		return node.toString();
+	}
 	
 	@Override
 	public String caseACharLiteralExp(ACharLiteralExp node,
