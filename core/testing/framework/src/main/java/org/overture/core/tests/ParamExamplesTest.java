@@ -2,6 +2,7 @@ package org.overture.core.tests;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
@@ -65,10 +66,11 @@ public abstract class ParamExamplesTest<R> extends AbsResultTest<R>
 	 * @throws ParserException
 	 * @throws LexException
 	 * @throws IOException
+	 * @throws URISyntaxException 
 	 */
 	@Parameters(name = "{index} : {0}")
 	public static Collection<Object[]> testData() throws ParserException,
-			LexException, IOException
+			LexException, IOException, URISyntaxException
 	{
 		Collection<ExampleAstData> examples = ExamplesUtility.getExamplesAsts();
 		Collection<Object[]> r = new Vector<Object[]>();
