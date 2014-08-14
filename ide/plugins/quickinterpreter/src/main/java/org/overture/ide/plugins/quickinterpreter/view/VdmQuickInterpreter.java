@@ -21,17 +21,26 @@ package org.overture.ide.plugins.quickinterpreter.view;
 import java.util.List;
 import java.util.Vector;
 
+import org.eclipse.jface.resource.FontRegistry;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.themes.ITheme;
+import org.eclipse.ui.themes.IThemeManager;
 import org.overture.ast.lex.Dialect;
-import org.overture.ast.util.definitions.ClassList;
+import org.overture.ast.util.modules.ModuleList;
+import org.overture.config.Release;
 import org.overture.config.Settings;
-import org.overture.interpreter.runtime.ClassInterpreter;
+import org.overture.interpreter.runtime.Interpreter;
+import org.overture.interpreter.runtime.ModuleInterpreter;
+import org.overture.parser.config.Properties;
 import org.overture.parser.syntax.ParserException;
 
 public class VdmQuickInterpreter extends ViewPart
@@ -44,9 +53,10 @@ public class VdmQuickInterpreter extends ViewPart
 	private int index = -1;
 	private Text textAreaResult = null;
 	private Text textInput = null;
-	ClassInterpreter ci;
+	Interpreter interpreter;
 
-	public VdmQuickInterpreter() {
+	public VdmQuickInterpreter()
+	{
 
 		init();
 
@@ -56,9 +66,11 @@ public class VdmQuickInterpreter extends ViewPart
 	{
 		try
 		{
-			Settings.dialect = Dialect.VDM_PP;
-			ci = new ClassInterpreter(new ClassList());
-			ci.init(null);
+			Settings.dialect = Dialect.VDM_SL;
+			Settings.release = Release.VDM_10;
+			Properties.numeric_type_bind_generation = true;
+			interpreter = new ModuleInterpreter(new ModuleList());
+			interpreter.init(null);
 		} catch (Exception e)
 		{
 			// TODO Auto-generated catch block
@@ -69,12 +81,7 @@ public class VdmQuickInterpreter extends ViewPart
 	@Override
 	public void createPartControl(Composite parent)
 	{
-		// parent.setLayout(new FormLayout ());
 		GridLayout layout = new GridLayout(1, false);
-		// RowLayout layout =new RowLayout ();
-		// layout.fill= true;
-		// layout.type = SWT.VERTICAL;
-		// layout.pack=false;
 
 		FillLayout fillLayout = new FillLayout();
 
@@ -82,101 +89,123 @@ public class VdmQuickInterpreter extends ViewPart
 		fillLayout.marginHeight = 0;
 
 		fillLayout.spacing = 5;
-		// top = new Composite(parent, SWT.EMBEDDED);
-		// top.setLayout(layout);
-		// top.pack();
 		parent.setLayout(layout);
 
 		textAreaResult = new Text(parent, SWT.MULTI | SWT.V_SCROLL
 				| SWT.READ_ONLY);
-		textAreaResult.setLayoutData(new GridData(SWT.FILL,
-				SWT.FILL,
-				true,
-				true,
-				1,
-				1));
+		textAreaResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		textInput = new Text(parent, SWT.BORDER | SWT.SINGLE);
 		textInput.setLayoutData(new GridData(SWT.FILL, 10, false, false, 1, 1));
-		textInput.addKeyListener(new org.eclipse.swt.events.KeyAdapter() {
+		textInput.addKeyListener(new org.eclipse.swt.events.KeyAdapter()
+		{
 			public void keyPressed(org.eclipse.swt.events.KeyEvent e)
 			{
 				if (e.keyCode == ENTER_KEYCODE)
 				{
 					String input = textInput.getText();
+					execute(input);
 					textInput.setText("");
-					textAreaResult.append("\n" + input);
-					addEntry(input);
 				} else if (e.keyCode == UP_KEYCODE)
 				{
-					index--;
-					String input = getEntry();
-					if (input.length() > 0)
-						textInput.setText(input);
-					else
-						index = 0;
+					recallHistory(true);
+					e.doit = false;
 				} else if (e.keyCode == DOWN_KEYCODE)
 				{
-					index++;
-					String input = getEntry();
-					if (input.length() > 0)
-						textInput.setText(input);
-					else
-						index = history.size() - 1;
+					recallHistory(false);
+					e.doit = false;
 				}
 			}
 		});
 
+		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
+		ITheme currentTheme = themeManager.getCurrentTheme();
+
+		FontRegistry fontRegistry = currentTheme.getFontRegistry();
+		Font font = fontRegistry.get(JFaceResources.TEXT_FONT);
+
+		textAreaResult.setFont(font);
+		textInput.setFont(font);
+
 	}
 
-	private void addEntry(String input)
+	private void recallHistory(boolean forward)
 	{
-		index++;
-		if (index >= HISTORY_COUNT)
-			index = 0;
-		if (history.size() > index)
-			history.add(index, input);
+		textInput.setText(history.get(index));
+		textInput.setSelection(textInput.getText().length());
+
+		if (forward)
+			index++;
 		else
-			history.add(input);
+			index--;
+
+		if (index > history.size() - 1)
+		{
+			index = history.size() - 1;
+		} else if (index < 0)
+		{
+			index = 0;
+		}
+	}
+
+	private void storeCommand(String cmd)
+	{
+		index = 0;
+		history.add(0, cmd);
+		if (history.size() > HISTORY_COUNT)
+		{
+			history = history.subList(0, HISTORY_COUNT);
+		}
+	}
+
+	private void execute(String input)
+	{
+		if (input.startsWith("p ") || input.startsWith("print "))
+		{
+			input = input.substring(input.indexOf(' '));
+		}
+
+		input = input.trim();
+
+		if (input.isEmpty())
+		{
+			return;
+		}
+		
+		storeCommand(input);
+
+		if (input.equals("help"))
+		{
+			textAreaResult.append("\n\nOverture Properties: "+"\n\tEVAL_TYPE_BINDS = "
+					+ Properties.numeric_type_bind_generation + "\n\tINT_MIN = "
+					+ Properties.minint + "\n\tINT_MAX = " + Properties.maxint
+					+ "\n\tRelease = " + Settings.release + "\n\tDialect = "
+					+ Settings.dialect+"\n");
+			return;
+		}
+
+		
+		textAreaResult.append("\n" + input);
 
 		try
 		{
-
-			// long before = System.currentTimeMillis();
-			Settings.dialect = Dialect.VDM_PP;
-			if (input.startsWith("p ") || input.startsWith("print "))
-				input = input.substring(input.indexOf(' '));
-			textAreaResult.append(" = " + ci.execute(input.trim(), null));
-			// long after = System.currentTimeMillis();
-			// textAreaResult.append("Executed in " +
-			// (double)(after-before)/1000 + " secs. ");
-
-		}catch(ParserException e)
+			textAreaResult.append(" = "
+					+ interpreter.execute(input.trim(), null));
+		} catch (ParserException e)
 		{
-			textAreaResult.append(" = "+ e.toString());
+			textAreaResult.append(" = " + e.toString());
+			init();
+		} catch (Exception e)
+		{
+			textAreaResult.append(" --- " + e.getMessage());
 			init();
 		}
-		catch (Exception e)
-		{
-			textAreaResult.append(" = Fatal error");
-			init();
-			// e.printStackTrace();
-		}
 
-	}
-
-	private String getEntry()
-	{
-		if (index < history.size() && index >= 0)
-			return history.get(index);
-		else
-			return "";
 	}
 
 	@Override
 	public void setFocus()
 	{
-		// TODO Auto-generated method stub
 
 	}
 
-} // @jve:decl-index=0:visual-constraint="22,16,646,230"
+}
