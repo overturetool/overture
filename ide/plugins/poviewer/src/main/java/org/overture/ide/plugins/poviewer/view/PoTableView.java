@@ -20,12 +20,17 @@ package org.overture.ide.plugins.poviewer.view;
 
 import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.text.Document;
+import org.eclipse.jface.text.TextAttribute;
+import org.eclipse.jface.text.rules.IToken;
+import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyleRange;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
@@ -33,13 +38,17 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.themes.ITheme;
 import org.eclipse.ui.themes.IThemeManager;
 import org.overture.ide.core.resources.IVdmProject;
+import org.overture.ide.ui.editor.syntax.VdmColorProvider;
+import org.overture.ide.vdmsl.ui.editor.syntax.VdmSlCodeScanner;
 import org.overture.pog.pub.IProofObligation;
 
 public class PoTableView extends ViewPart implements ISelectionListener
 {
-	protected Text viewer;
+	protected StyledText viewer;
 	protected final Display display = Display.getCurrent();
 	protected Font font = null;
+
+	VdmSlCodeScanner scanner = new VdmSlCodeScanner(new VdmColorProvider());
 
 	/**
 	 * The constructor.
@@ -60,8 +69,9 @@ public class PoTableView extends ViewPart implements ISelectionListener
 	@Override
 	public void createPartControl(Composite parent)
 	{
-		viewer = new Text(parent, SWT.WRAP | SWT.V_SCROLL);
+		viewer = new StyledText(parent, SWT.WRAP | SWT.V_SCROLL|SWT.READ_ONLY);
 		viewer.setFont(font);
+
 	}
 
 	/**
@@ -81,8 +91,26 @@ public class PoTableView extends ViewPart implements ISelectionListener
 
 			public void run()
 			{
-
 				viewer.setText(data.getFullPredString());
+
+				scanner.setRange(new Document(data.getFullPredString()), 0, data.getFullPredString().length());
+
+				IToken token = null;
+				do
+				{
+					token = scanner.nextToken();
+					TextAttribute attribute = null;
+					int start = scanner.getTokenOffset();
+					int length = scanner.getTokenLength();
+
+					if (token.getData() instanceof TextAttribute)
+					{
+						attribute = (TextAttribute) token.getData();
+						viewer.setStyleRange(new StyleRange(start, length, attribute.getForeground(), attribute.getBackground()));
+					}
+
+				} while (token != Token.EOF);
+
 			}
 
 		});
