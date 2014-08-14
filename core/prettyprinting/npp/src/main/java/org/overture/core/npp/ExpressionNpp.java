@@ -3,6 +3,7 @@ package org.overture.core.npp;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AValueDefinition;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.AAbsoluteUnaryExp;
 import org.overture.ast.expressions.AAndBooleanBinaryExp;
 import org.overture.ast.expressions.AApplyExp;
@@ -64,6 +65,7 @@ import org.overture.ast.expressions.AQuoteLiteralExp;
 import org.overture.ast.expressions.ARangeResByBinaryExp;
 import org.overture.ast.expressions.ARangeResToBinaryExp;
 import org.overture.ast.expressions.ARealLiteralExp;
+import org.overture.ast.expressions.ARecordModifier;
 import org.overture.ast.expressions.ARemNumericBinaryExp;
 import org.overture.ast.expressions.ASeqCompSeqExp;
 import org.overture.ast.expressions.ASeqConcatBinaryExp;
@@ -79,6 +81,7 @@ import org.overture.ast.expressions.ASubsetBinaryExp;
 import org.overture.ast.expressions.ASubtractNumericBinaryExp;
 import org.overture.ast.expressions.ATailUnaryExp;
 import org.overture.ast.expressions.ATimesNumericBinaryExp;
+import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.ASetBind;
@@ -1155,11 +1158,11 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		sb2.append(exp);
 		sb2.append(mytable.getCOMMA());
 		sb2.append(space);
-		
+		//System.out.print(node.getModifiers().getFirst().getClass().toString());
 		while (node.getModifiers().size() != 0){
 			if (node.getModifiers().size() > 1){
 				
-				mod = node.getModifiers().poll().toString();
+				mod = node.getModifiers().poll().apply(THIS, question);//.toString();
 				
 				sb2.append(mod);
 				sb2.append(mytable.getCOMMA());
@@ -1167,7 +1170,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 			}
 			else
 			{
-				mod = node.getModifiers().poll().toString();//.apply(THIS, question);
+				mod = node.getModifiers().poll().apply(THIS, question);//.toString();//.apply(THIS, question);
 				
 				sb2.append(mod);
 			}
@@ -1236,13 +1239,14 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		while(node.getLocalDefs().size() != 0){
 			if(node.getLocalDefs().size() >1)
 			{
-				def = node.getLocalDefs().poll().toString();//.apply(THIS, question);
+				def = node.getLocalDefs().poll().apply(THIS, question);
 				sb.append(def);
 				sb.append(mytable.getSEP());
+				sb.append(space);
 			}
 			else
 			{
-				def = node.getLocalDefs().poll().toString();//.apply(THIS, question);
+				def = node.getLocalDefs().poll().apply(THIS, question);
 				sb.append(def);
 			}
 		}
@@ -1255,17 +1259,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		return sb.toString();
 		
 	}
-//	@Override
-//	public String caseAFieldExp(AFieldExp node, IndentTracker question)
-//			throws AnalysisException
-//	{
-//		String exp = node.getField().apply(THIS, question);
-//		String type = node.getType().apply(THIS, question);
-//		
-//		System.out.print(exp + "  "+ type);
-//		
-//		return null;
-//	}
 	
 	@Override
 	public String caseACharLiteralExp(ACharLiteralExp node,
@@ -1320,7 +1313,27 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	}
 	
 	@Override
-	public String caseAValueDefinition(AValueDefinition node,
+	public String defaultPDefinition(PDefinition node, IndentTracker question)
+			throws AnalysisException
+	{
+		return node.toString();
+	}
+//	@Override
+//	public String caseAValueDefinition(AValueDefinition node,
+//			IndentTracker question) throws AnalysisException
+//	{
+//		return node.toString();
+//	}
+	
+	@Override
+	public String caseAUndefinedExp(AUndefinedExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		return node.toString();
+	}
+	
+	@Override
+	public String caseARecordModifier(ARecordModifier node,
 			IndentTracker question) throws AnalysisException
 	{
 		return node.toString();

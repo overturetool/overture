@@ -1273,4 +1273,18 @@ public class ExpressionNppTest {
 		aux("def user = lib(copy) in if user = <OUT> then true else false",
 					"def user = lib(copy)\nin\nif (user = <OUT>)\nthen true\nelse false");
 	}
+	
+	@Test
+	public void testCaseADefExp_02() throws AnalysisException
+	{
+		aux("def user = lib(copy) in if user = <OUT> then true else undefined",
+					"def user = lib(copy)\nin\nif (user = <OUT>)\nthen true\nelse (undefined)");
+	}
+	
+	@Test
+	public void testCaseADefExp_03() throws AnalysisException
+	{
+		aux("def user = lib(copy); user = lib(copy) in if user = <OUT> then true else undefined",
+					"def user = lib(copy); user = lib(copy)\nin\nif (user = <OUT>)\nthen true\nelse (undefined)");
+	}
 }
