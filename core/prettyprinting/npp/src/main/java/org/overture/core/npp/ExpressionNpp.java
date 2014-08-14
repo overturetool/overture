@@ -1071,6 +1071,8 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 			throws AnalysisException
 	{
 		String exp = node.getExpression().apply(THIS, question);
+		
+		//System.out.print(exp);
 		String op  = mytable.getCASES();
 		
 		StringBuilder sb = new StringBuilder();
@@ -1081,7 +1083,9 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		sb.append(exp);
 		
 		sb.append(mytable.getCOLON());
-		sb.append(space);
+		sb.append(space); 
+		
+		//System.out.print(node.getCases().getFirst().toString());
 		
 		while(node.getCases().size() !=0){
 			
@@ -1113,7 +1117,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		sb.append(mytable.getEND());
 		
 		
-		return sb.toString();
+		return sb.toString(); 
 	}
 	
 	

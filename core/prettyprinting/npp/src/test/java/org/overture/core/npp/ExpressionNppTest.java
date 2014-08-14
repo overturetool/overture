@@ -785,7 +785,7 @@ public class ExpressionNppTest {
 	@Test
 	public void testCaseACasesExp_01() throws AnalysisException
 	{
-		aux("cases x: \n  1 -> x,\n  2 -> 2*x \nend", "cases x: \n  1 -> x,\n  2 -> (2 * x)\nend");
+		aux("cases x: \n  1 -> x + 1,\n  2 -> 2*x \nend", "cases x: \n  1 -> (x + 1),\n  2 -> (2 * x)\nend");
 	}
 	
 	@Test
