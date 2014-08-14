@@ -397,6 +397,10 @@ public IsFinished: () ==> ()
 IsFinished() ==
   skip;
 
+public Step: () ==> ()
+Step() ==
+  skip;
+  
 sync
 	
   per IsFinished => finished;
@@ -630,6 +634,10 @@ public IsFinished: () ==> ()
 IsFinished() ==
   skip;
 
+public Step: () ==> ()
+Step() ==
+  skip;
+
 sync
 	
   per IsFinished => finished;
@@ -678,6 +686,10 @@ public IsFinished: () ==> ()
 IsFinished() ==
   skip;
 
+public Step: () ==> ()
+Step() ==
+  skip;
+  
 sync
 	
   per IsFinished => finished;
@@ -836,6 +848,10 @@ public IsFinished: () ==> ()
 IsFinished() ==
   skip;
 
+public Step: () ==> ()
+Step() ==
+  skip;
+  
 sync
 	
   per IsFinished => finished;

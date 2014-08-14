@@ -28,7 +28,7 @@ public class MessageReaderWriter
 
 	enum MsgType
 	{
-		Warning, Error,Result
+		Warning, Error, Result
 	};
 
 	public static String WARNING_LABEL = "WARNING";
@@ -107,11 +107,11 @@ public class MessageReaderWriter
 				{
 					type = MsgType.Warning;
 					line = line.substring(WARNING_LABEL.length() + 1);
-				}else if (line.startsWith(RESULT_LABEL))
+				} else if (line.startsWith(RESULT_LABEL))
 				{
 					type = MsgType.Result;
 					line = line.substring(RESULT_LABEL.length() + 1);
-				}  else
+				} else
 				{
 					return false;
 				}
@@ -161,7 +161,8 @@ public class MessageReaderWriter
 		} catch (IOException e)
 		{
 			return false;
-		}finally{
+		} finally
+		{
 			try
 			{
 				in.close();
@@ -181,7 +182,7 @@ public class MessageReaderWriter
 
 			writeMessageSet(out, WARNING_LABEL, warnings);
 			writeMessageSet(out, ERROR_LABEL, errors);
-			writeResult(out,result);
+			writeResult(out, result);
 
 			out.flush();
 			out.close();
@@ -193,7 +194,8 @@ public class MessageReaderWriter
 		return true;
 	}
 
-	private void writeResult(BufferedWriter out, String result2) throws IOException
+	private void writeResult(BufferedWriter out, String result2)
+			throws IOException
 	{
 		StringBuffer sb = new StringBuffer();
 		sb.append(RESULT_LABEL);
@@ -208,7 +210,7 @@ public class MessageReaderWriter
 		sb.append(":");
 		sb.append(result2.replace(':', '\''));
 		out.write(sb.toString());
-		out.newLine();		
+		out.newLine();
 	}
 
 	public void writeMessageSet(BufferedWriter out, String label,

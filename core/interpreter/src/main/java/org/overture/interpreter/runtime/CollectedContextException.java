@@ -4,7 +4,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
-public class CollectedContextException extends ContextException implements ICollectedRuntimeExceptions
+public class CollectedContextException extends ContextException implements
+		ICollectedRuntimeExceptions
 {
 	public final List<Exception> exceptions;
 	String message = "";
@@ -17,11 +18,10 @@ public class CollectedContextException extends ContextException implements IColl
 		this.exceptions = exceptions;
 	}
 
-	
 	public CollectedContextException(ContextException toThrow,
 			Set<ContextException> problems)
 	{
-		this(toThrow,new Vector<Exception>(problems));
+		this(toThrow, new Vector<Exception>(problems));
 	}
 
 	/**
@@ -29,7 +29,8 @@ public class CollectedContextException extends ContextException implements IColl
 	 */
 	private static final long serialVersionUID = 1L;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.overture.interpreter.runtime.ICollectedRuntimeExceptions#getCollectedExceptions()
 	 */
 	@Override
@@ -37,7 +38,6 @@ public class CollectedContextException extends ContextException implements IColl
 	{
 		return this.exceptions;
 	}
-
 
 	@Override
 	public String getMessage()

@@ -10,7 +10,6 @@ import org.overture.ast.node.INode;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AInMapMapType;
-import org.overture.ast.types.AMapMapType;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ANatOneNumericBasicType;
 import org.overture.ast.types.AOptionalType;
@@ -191,8 +190,9 @@ public class AllValuesCollector extends
 	public ValueList caseAInMapMapType(AInMapMapType type, Context ctxt)
 			throws AnalysisException
 	{
-		//TODO:Here we have a strange behavior from transforming this call to type.apply(THIS,ctxt)
-		ValueList maps = THIS.defaultSMapType(type,ctxt);// ctxt.assistantFactory.createSMapTypeAssistant().getAllValues(type, ctxt); 
+		// TODO:Here we have a strange behavior from transforming this call to type.apply(THIS,ctxt)
+		ValueList maps = THIS.defaultSMapType(type, ctxt);// ctxt.assistantFactory.createSMapTypeAssistant().getAllValues(type,
+															// ctxt);
 		ValueList result = new ValueList();
 
 		for (Value map : maps)

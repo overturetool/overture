@@ -32,6 +32,7 @@ public class TraceTestEngine
 			@Override
 			protected IStatus run(final IProgressMonitor monitor)
 			{
+				monitor.beginTask("Executing trace: "+texe.traceName, 100);
 				IPreferenceStore preferences = OvertureTracesPlugin.getDefault().getPreferenceStore();
 
 				if (!texe.coverageFolder.exists()
@@ -55,6 +56,7 @@ public class TraceTestEngine
 					}
 					conn = new ConnectionListener(port, new IClientMonitor()
 					{
+						int worked = 0;
 
 						public void initialize(String module)
 						{
@@ -73,6 +75,21 @@ public class TraceTestEngine
 						{
 							out.println(texe.project.getName() + ":"
 									+ traceName + " Worked " + progress + "%");
+
+							int tmp = progress-worked;
+							if (worked == 0)
+							{
+								worked = progress;
+							} else
+							{
+								worked = progress ;
+							}
+
+							if (tmp > 100)
+							{
+								tmp= 100;
+							}
+							monitor.worked(tmp);
 						}
 
 						public void completed()

@@ -29,53 +29,57 @@ public class NumericFinder extends AnswerAdaptor<Boolean>
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public Boolean defaultSBasicType(SBasicType type) throws AnalysisException
 	{
 		SBasicType bType = type;
 		return bType instanceof SNumericBasicType;
 	}
-	
+
 	@Override
 	public Boolean caseABracketType(ABracketType type) throws AnalysisException
 	{
 		return type.getType().apply(THIS);
 	}
-	
+
 	@Override
 	public Boolean caseANamedInvariantType(ANamedInvariantType type)
 			throws AnalysisException
 	{
 		if (type.getOpaque())
+		{
 			return false;
+		}
 		return type.getType().apply(THIS);
 	}
+
 	@Override
 	public Boolean defaultSInvariantType(SInvariantType type)
 			throws AnalysisException
 	{
 		return false;
 	}
-	
+
 	@Override
 	public Boolean caseAOptionalType(AOptionalType type)
 			throws AnalysisException
 	{
 		return type.getType().apply(THIS);
 	}
-	
+
 	@Override
 	public Boolean caseAUnionType(AUnionType type) throws AnalysisException
 	{
 		return af.createPTypeAssistant().getNumeric(type) != null;
 	}
+
 	@Override
 	public Boolean caseAUnknownType(AUnknownType type) throws AnalysisException
 	{
 		return true;
 	}
-	
+
 	@Override
 	public Boolean defaultPType(PType type) throws AnalysisException
 	{

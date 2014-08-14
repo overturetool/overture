@@ -48,21 +48,17 @@ public class ModuleTypeChecker extends TypeChecker
 	/** The list of modules to check. */
 	private final List<AModuleModules> modules;
 
-	// private final List<AModuleModules> checkedModules = new Vector<AModuleModules>();
-
 	/**
 	 * Create a type checker with the list of modules passed. The warnings flag indicates whether warnings should be
 	 * printed or just counted.
-	 * 
-	 * @param modules
 	 */
 
 	public final ITypeCheckerAssistantFactory assistantFactory;
-	
+
 	/**
 	 * VDM-only constructor. <b>NOT</b> for use by extensions.
 	 * 
-	 * @param parentVisitor
+	 * @param modules
 	 */
 	public ModuleTypeChecker(List<AModuleModules> modules)
 	{
@@ -124,20 +120,20 @@ public class ModuleTypeChecker extends TypeChecker
 			return;
 		}
 
-   		// Mark top level definitions of flat specifications as used
-   		new PDefinitionAssistantTC(new TypeCheckerAssistantFactory());
-   		
-   		for (AModuleModules module: modules)
-   		{
-   			if (module instanceof CombinedDefaultModule)
-   			{
-	   			for (PDefinition definition: module.getDefs())
-	   			{
-   					assistantFactory.createPDefinitionAssistant().markUsed(definition);
-	   			}
-   			}
-   		}
-   		
+		// Mark top level definitions of flat specifications as used
+		new PDefinitionAssistantTC(new TypeCheckerAssistantFactory());
+
+		for (AModuleModules module : modules)
+		{
+			if (module instanceof CombinedDefaultModule)
+			{
+				for (PDefinition definition : module.getDefs())
+				{
+					assistantFactory.createPDefinitionAssistant().markUsed(definition);
+				}
+			}
+		}
+
 		// Generate implicit definitions for pre_, post_, inv_ functions etc.
 
 		for (AModuleModules m : modules)

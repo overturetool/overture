@@ -44,66 +44,58 @@ public class MapInjectivityEnum extends ProofObligation
 {
 	private static final long serialVersionUID = 2042036674338877124L;
 
-	public MapInjectivityEnum(AMapEnumMapExp exp, IPOContextStack ctxt,IPogAssistantFactory
-	af) throws AnalysisException
+	public MapInjectivityEnum(AMapEnumMapExp exp, IPOContextStack ctxt,
+			IPogAssistantFactory af) throws AnalysisException
 	{
 		super(exp, POType.MAP_INJ_ENUM, ctxt, exp.getLocation(), af);
-		
+
 		/**
-		 * This obligation applies to a map enumeration. Given a map enum of the form
-		 * { <maplet>, <maplet>, ... }, the obligation becomes:
-		 * 
-		 * forall m1, m2 in set { {<maplet>}, {<maplet>}, ... } &  -- set of maps
-		 * 		forall d1 in set dom m1, d2 in set dom m2 &
-		 * 			(d1 = d2) => (m1(d1) = m2(d2))
-		 * 
-		 * The obligation means that there are no contradictory maplets, where the same
-		 * domain key maps to different range values.
+		 * This obligation applies to a map enumeration. Given a map enum of the form { <maplet>, <maplet>, ... }, the
+		 * obligation becomes: forall m1, m2 in set { {<maplet>}, {<maplet>}, ... } & -- set of maps forall d1 in set
+		 * dom m1, d2 in set dom m2 & (d1 = d2) => (m1(d1) = m2(d2)) The obligation means that there are no
+		 * contradictory maplets, where the same domain key maps to different range values.
 		 */
 
 		ILexNameToken m1 = getUnique("m");
 		ILexNameToken m2 = getUnique("m");
-		
+
 		ASetEnumSetExp setOfMaplets = new ASetEnumSetExp();
 		List<AMapEnumMapExp> singleMaplets = new Vector<AMapEnumMapExp>();
-		
-		for (AMapletExp maplet: exp.getMembers())
+
+		for (AMapletExp maplet : exp.getMembers())
 		{
 			AMapEnumMapExp mapOfOne = new AMapEnumMapExp();
 			List<AMapletExp> members = new Vector<AMapletExp>();
 			members.add(maplet.clone());
 			mapOfOne.setMembers(members);
-			
+
 			singleMaplets.add(mapOfOne);
 		}
-		
+
 		setOfMaplets.setMembers(singleMaplets);
 		List<PMultipleBind> m1m2binding = getMultipleSetBindList(setOfMaplets, m1, m2);
-		
+
 		AForAllExp domForallExp = new AForAllExp();
 		ILexNameToken d1 = getUnique("d");
 		ILexNameToken d2 = getUnique("d");
-		
+
 		AMapDomainUnaryExp domM1 = new AMapDomainUnaryExp();
 		domM1.setExp(getVarExp(m1));
 		AMapDomainUnaryExp domM2 = new AMapDomainUnaryExp();
 		domM2.setExp(getVarExp(m2));
-		
-		AImpliesBooleanBinaryExp implies = AstExpressionFactory.newAImpliesBooleanBinaryExp(getEqualsExp(getVarExp(d1), getVarExp(d2)), getEqualsExp(
-				getApplyExp(getVarExp(m1), getVarExp(d1)),
-				getApplyExp(getVarExp(m2), getVarExp(d2))));
-		
+
+		AImpliesBooleanBinaryExp implies = AstExpressionFactory.newAImpliesBooleanBinaryExp(getEqualsExp(getVarExp(d1), getVarExp(d2)), getEqualsExp(getApplyExp(getVarExp(m1), getVarExp(d1)), getApplyExp(getVarExp(m2), getVarExp(d2))));
+
 		List<PMultipleBind> domBinding = getMultipleSetBindList(domM1, d1);
 		domBinding.addAll(getMultipleSetBindList(domM2, d2));
-	
-		
+
 		domForallExp.setBindList(domBinding);
 		domForallExp.setPredicate(implies);
-		
+
 		AForAllExp forallExp = new AForAllExp();
 		forallExp.setBindList(m1m2binding);
 		forallExp.setPredicate(domForallExp);
-		
+
 		stitch = forallExp;
 		valuetree.setPredicate(ctxt.getPredWithContext(forallExp));
 	}

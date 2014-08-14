@@ -55,7 +55,7 @@ public class AImplicitFunctionDefinitionAssistantInterpreter extends
 
 		if (impdef.getPredef() != null)
 		{
-			prefv = af.createAExplicitFunctionDefinitionAssistant().getPolymorphicValue(af,impdef.getPredef(), actualTypes);
+			prefv = af.createAExplicitFunctionDefinitionAssistant().getPolymorphicValue(af, impdef.getPredef(), actualTypes);
 		} else
 		{
 			prefv = null;
@@ -63,17 +63,16 @@ public class AImplicitFunctionDefinitionAssistantInterpreter extends
 
 		if (impdef.getPostdef() != null)
 		{
-			postfv = af.createAExplicitFunctionDefinitionAssistant().getPolymorphicValue(af,impdef.getPostdef(), actualTypes);
+			postfv = af.createAExplicitFunctionDefinitionAssistant().getPolymorphicValue(af, impdef.getPostdef(), actualTypes);
 		} else
 		{
 			postfv = null;
 		}
 
-		FunctionValue rv = new FunctionValue(af,impdef, actualTypes, prefv, postfv, null);
+		FunctionValue rv = new FunctionValue(af, impdef, actualTypes, prefv, postfv, null);
 
 		polyfuncs.put(actualTypes, rv);
 		return rv;
 	}
-
 
 }

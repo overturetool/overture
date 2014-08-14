@@ -21,15 +21,20 @@ public class SNumericBasicTypeAssistant
 
 	public int getWeight(SNumericBasicType subn)
 	{
-		if (subn instanceof AIntNumericBasicType) {
+		if (subn instanceof AIntNumericBasicType)
+		{
 			return 2;
-		} else if (subn instanceof ANatNumericBasicType) {
+		} else if (subn instanceof ANatNumericBasicType)
+		{
 			return 1;
-		} else if (subn instanceof ANatOneNumericBasicType) {
+		} else if (subn instanceof ANatOneNumericBasicType)
+		{
 			return 0;
-		} else if (subn instanceof ARationalNumericBasicType) {
+		} else if (subn instanceof ARationalNumericBasicType)
+		{
 			return 3;
-		} else if (subn instanceof ARealNumericBasicType) {
+		} else if (subn instanceof ARealNumericBasicType)
+		{
 			return 4;
 		}
 		return -1;

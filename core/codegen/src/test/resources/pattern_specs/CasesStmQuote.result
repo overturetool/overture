@@ -1,0 +1,46 @@
+import org.overture.codegen.runtime.*;
+
+import quotes.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Number casesQuote(final Number e) {
+        Number quotePattern_1 = e;
+        Boolean success_1 = quotePattern_1.longValue() == Quotes.A.longValue();
+
+        if (!(success_1)) {
+            Number quotePattern_2 = e;
+            success_1 = quotePattern_2.longValue() == Quotes.B.longValue();
+
+            if (success_1) {
+                return Quotes.B;
+            } else {
+                return Quotes.C;
+            }
+        } else {
+            return Quotes.A;
+        }
+    }
+
+    public static Object Run() {
+        return SeqUtil.seq(casesQuote(Quotes.A), casesQuote(Quotes.B),
+            casesQuote(Quotes.C));
+    }
+}
+
+##########
+
+package quotes;
+
+public interface Quotes {
+    public static Number A = 1L;
+    public static Number B = 2L;
+    public static Number C = 3L;
+}
+
+##########

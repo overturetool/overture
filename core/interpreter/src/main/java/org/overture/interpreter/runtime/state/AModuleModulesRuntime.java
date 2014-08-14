@@ -9,18 +9,19 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class AModuleModulesRuntime implements IRuntimeState
 {
-	
+
 	/** A delegate Java class, if one exists. */
 	private Delegate delegate = null;
 	/** A delegate Java object, if one exists. */
 	private Object delegateObject = null;
-	
+
 	public final ITypeCheckerAssistantFactory assistantFactory;
-	
-	public AModuleModulesRuntime(AModuleModules node, ITypeCheckerAssistantFactory af)
+
+	public AModuleModulesRuntime(AModuleModules node,
+			ITypeCheckerAssistantFactory af)
 	{
 		delegate = new Delegate(node.getName().getName(), node.getDefs());
-		this.assistantFactory=af;
+		this.assistantFactory = af;
 	}
 
 	public boolean hasDelegate()

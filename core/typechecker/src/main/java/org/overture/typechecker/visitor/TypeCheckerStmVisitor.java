@@ -250,7 +250,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 
 		node.setType(rtypes.isEmpty() ? AstFactory.newAVoidType(node.getLocation())
 				: rtypes.getType(node.getLocation()));
-		
+
 		return node.getType();
 	}
 
@@ -367,7 +367,8 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 					+ " is not in scope", node.getLocation(), node);
 			node.setType(AstFactory.newAUnknownType(node.getLocation()));
 			return node.getType();
-		} else {
+		} else
+		{
 			question.assistantFactory.createPDefinitionAssistant();
 			if (question.assistantFactory.createPDefinitionAssistant().isStatic(fdef)
 					&& !question.env.isStatic())
@@ -384,12 +385,11 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			AOperationType optype = question.assistantFactory.createPTypeAssistant().getOperation(type);
 			optype.apply(THIS, question);
 			node.getField().setTypeQualifier(optype.getParameters());
-			question.assistantFactory.createACallObjectStatementAssistant().checkArgTypes(type, optype.getParameters(), atypes); // Not necessary?
+			question.assistantFactory.createACallObjectStatementAssistant().checkArgTypes(type, optype.getParameters(), atypes); // Not
+																																	// necessary?
 			node.setType(optype.getResult());
-			return question.assistantFactory.createPTypeAssistant().checkReturnType(
-					question.returnType, node.getType(), node.getLocation());
-		}
-		else if (question.assistantFactory.createPTypeAssistant().isFunction(type))
+			return question.assistantFactory.createPTypeAssistant().checkReturnType(question.returnType, node.getType(), node.getLocation());
+		} else if (question.assistantFactory.createPTypeAssistant().isFunction(type))
 		{
 			// This is the case where a function is called as an operation
 			// without
@@ -398,12 +398,11 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			AFunctionType ftype = question.assistantFactory.createPTypeAssistant().getFunction(type);
 			ftype.apply(THIS, question);
 			node.getField().setTypeQualifier(ftype.getParameters());
-			question.assistantFactory.createACallObjectStatementAssistant().checkArgTypes(type, ftype.getParameters(), atypes); // Not necessary?
+			question.assistantFactory.createACallObjectStatementAssistant().checkArgTypes(type, ftype.getParameters(), atypes); // Not
+																																// necessary?
 			node.setType(ftype.getResult());
-			return question.assistantFactory.createPTypeAssistant().checkReturnType(
-					question.returnType, node.getType(), node.getLocation());
-		}
-		else
+			return question.assistantFactory.createPTypeAssistant().checkReturnType(question.returnType, node.getType(), node.getLocation());
+		} else
 		{
 			TypeCheckerErrors.report(3210, "Object member is neither a function nor an operation", node.getLocation(), node);
 			node.setType(AstFactory.newAUnknownType(node.getLocation()));
@@ -423,9 +422,9 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		}
 
 		PDefinition opdef = question.env.findName(node.getName(), question.scope);
-		
+
 		node.setRootdef(opdef);
-		
+
 		if (opdef == null)
 		{
 			TypeCheckerErrors.report(3213, "Operation " + node.getName()
@@ -439,19 +438,22 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		{
 			// A call like X`op() is local if X is in our hierarchy
 			// else it's a static call of a different class.
-			
+
 			SClassDefinition self = question.env.findClassDefinition();
 			PType ctype = opdef.getClassDefinition().getType();
-			
-			if (!question.assistantFactory.createPDefinitionAssistant().hasSupertype(self, ctype) && opdef.getAccess().getStatic() == null)
+
+			if (!question.assistantFactory.createPDefinitionAssistant().hasSupertype(self, ctype)
+					&& opdef.getAccess().getStatic() == null)
 			{
-				TypeCheckerErrors.report(3324, "Operation " + node.getName() + " is not static", node.getLocation(), node);
+				TypeCheckerErrors.report(3324, "Operation " + node.getName()
+						+ " is not static", node.getLocation(), node);
 				node.setType(AstFactory.newAUnknownType(node.getLocation()));
 				return node.getType();
 			}
 		}
-		
-		if (!question.assistantFactory.createPDefinitionAssistant().isStatic(opdef) && question.env.isStatic())
+
+		if (!question.assistantFactory.createPDefinitionAssistant().isStatic(opdef)
+				&& question.env.isStatic())
 		{
 			TypeCheckerErrors.report(3214, "Cannot call " + node.getName()
 					+ " from static context", node.getLocation(), node);
@@ -476,10 +478,8 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 
 			question.assistantFactory.createACallStmAssistant().checkArgTypes(node, optype, optype.getParameters(), atypes);
 			node.setType(optype.getResult());
-			return question.assistantFactory.createPTypeAssistant().checkReturnType(
-					question.returnType, optype.getResult(), node.getLocation());
-		}
-		else if (question.assistantFactory.createPTypeAssistant().isFunction(type))
+			return question.assistantFactory.createPTypeAssistant().checkReturnType(question.returnType, optype.getResult(), node.getLocation());
+		} else if (question.assistantFactory.createPTypeAssistant().isFunction(type))
 		{
 			// This is the case where a function is called as an operation
 			// without
@@ -498,10 +498,8 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 
 			question.assistantFactory.createACallStmAssistant().checkArgTypes(node, ftype, ftype.getParameters(), atypes);
 			node.setType(ftype.getResult());
-			return question.assistantFactory.createPTypeAssistant().checkReturnType(
-					question.returnType, ftype.getResult(), node.getLocation());
-		}
-		else
+			return question.assistantFactory.createPTypeAssistant().checkReturnType(question.returnType, ftype.getResult(), node.getLocation());
+		} else
 		{
 			TypeCheckerErrors.report(3210, "Name is neither a function nor an operation", node.getLocation(), node);
 			node.setType(AstFactory.newAUnknownType(node.getLocation()));
@@ -676,14 +674,14 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 
 		List<QualifiedDefinition> qualified = node.getElseIf().apply(question.assistantFactory.getQualificationVisitor(), question);
 
-		for (QualifiedDefinition qdef: qualified)
+		for (QualifiedDefinition qdef : qualified)
 		{
 			qdef.qualifyType();
 		}
 
 		node.setType(node.getThenStm().apply(THIS, question));
 
-		for (QualifiedDefinition qdef: qualified)
+		for (QualifiedDefinition qdef : qualified)
 		{
 			qdef.resetType();
 		}
@@ -789,15 +787,15 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 
 		List<QualifiedDefinition> qualified = node.getIfExp().apply(question.assistantFactory.getQualificationVisitor(), question);
 
-		for (QualifiedDefinition qdef: qualified)
+		for (QualifiedDefinition qdef : qualified)
 		{
 			qdef.qualifyType();
 		}
 
 		PTypeSet rtypes = new PTypeSet(question.assistantFactory);
 		rtypes.add(node.getThenStm().apply(THIS, question));
-		
-		for (QualifiedDefinition qdef: qualified)
+
+		for (QualifiedDefinition qdef : qualified)
 		{
 			qdef.resetType();
 		}
@@ -813,8 +811,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		if (node.getElseStm() != null)
 		{
 			rtypes.add(node.getElseStm().apply(THIS, question));
-		}
-		else
+		} else
 		{
 			rtypes.add(AstFactory.newAVoidType(node.getLocation()));
 		}
@@ -904,18 +901,17 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	{
 		PDefinition encl = question.env.getEnclosingDefinition();
 		boolean inConstructor = false;
-		
+
 		if (encl instanceof AExplicitOperationDefinition)
 		{
 			AExplicitOperationDefinition op = (AExplicitOperationDefinition) encl;
 			inConstructor = op.getIsConstructor();
-		}
-		else if (encl instanceof AImplicitOperationDefinition)
+		} else if (encl instanceof AImplicitOperationDefinition)
 		{
 			AImplicitOperationDefinition op = (AImplicitOperationDefinition) encl;
 			inConstructor = op.getIsConstructor();
 		}
-		
+
 		if (inConstructor && !(node.getExpression() instanceof ASelfExp))
 		{
 			TypeCheckerErrors.report(3326, "Constructor can only return 'self'", node.getLocation(), node);
@@ -924,14 +920,12 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		if (node.getExpression() == null)
 		{
 			node.setType(AstFactory.newAVoidReturnType(node.getLocation()));
-		}
-		else
+		} else
 		{
 			node.setType(node.getExpression().apply(THIS, question));
 		}
 
-		return question.assistantFactory.createPTypeAssistant().checkReturnType(
-				question.returnType, node.getType(), node.getLocation());
+		return question.assistantFactory.createPTypeAssistant().checkReturnType(question.returnType, node.getType(), node.getLocation());
 	}
 
 	@Override
@@ -1058,39 +1052,40 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 
 		List<QualifiedDefinition> qualified = node.getExp().apply(question.assistantFactory.getQualificationVisitor(), question);
 
-		for (QualifiedDefinition qdef: qualified)
+		for (QualifiedDefinition qdef : qualified)
 		{
 			qdef.qualifyType();
 		}
 
 		PType stype = node.getStatement().apply(THIS, question);
-		
-		for (QualifiedDefinition qdef: qualified)
+
+		for (QualifiedDefinition qdef : qualified)
 		{
 			qdef.resetType();
 		}
 
-		if (node.getExp() instanceof ABooleanConstExp && stype instanceof AUnionType)
+		if (node.getExp() instanceof ABooleanConstExp
+				&& stype instanceof AUnionType)
 		{
-			ABooleanConstExp boolLiteral = (ABooleanConstExp)node.getExp();
-			
-			if (boolLiteral.getValue().getValue())	// while true do...
+			ABooleanConstExp boolLiteral = (ABooleanConstExp) node.getExp();
+
+			if (boolLiteral.getValue().getValue()) // while true do...
 			{
 				List<PType> edited = new Vector<PType>();
-				AUnionType original = (AUnionType)stype;
-				
-				for (PType t: original.getTypes())
+				AUnionType original = (AUnionType) stype;
+
+				for (PType t : original.getTypes())
 				{
 					if (!(t instanceof AVoidType))
 					{
 						edited.add(t);
 					}
 				}
-				
+
 				stype = AstFactory.newAUnionType(node.getLocation(), edited);
 			}
 		}
-		
+
 		return stype;
 	}
 
@@ -1098,13 +1093,11 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	public PType caseAPeriodicStm(APeriodicStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		int nargs = Settings.dialect == Dialect.VDM_RT ? 4 : 1;
 		List<PExp> args = node.getArgs();
 
-		if (args.size() != nargs)
+		if (args.size() != 4)
 		{
-			TypeCheckerErrors.report(3287, "Periodic thread must have " + nargs
-					+ " argument(s)", node.getLocation(), node);
+			TypeCheckerErrors.report(3287, "Periodic thread must have 4 argument(s)", node.getLocation(), node);
 		} else
 		{
 
@@ -1172,7 +1165,6 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		return node.getType();
 	}
 
-
 	@Override
 	public PType caseASporadicStm(ASporadicStm node, TypeCheckInfo question)
 			throws AnalysisException
@@ -1182,10 +1174,9 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		if (args.size() != 3)
 		{
 			TypeCheckerErrors.report(3287, "Sporadic thread must have 3 arguments", node.getLocation(), node);
-		}
-		else
+		} else
 		{
-			for (PExp arg: args)
+			for (PExp arg : args)
 			{
 				PType type = arg.apply(THIS, question);
 
@@ -1195,7 +1186,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 				}
 			}
 		}
-		
+
 		ILexNameToken opname = node.getOpname();
 		opname.setTypeQualifier(new LinkedList<PType>());
 		opname.getLocation().hit();
@@ -1215,17 +1206,17 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 
 		if (opdef instanceof AExplicitOperationDefinition)
 		{
-			AExplicitOperationDefinition def = (AExplicitOperationDefinition)opdef;
+			AExplicitOperationDefinition def = (AExplicitOperationDefinition) opdef;
 
 			if (!question.assistantFactory.createPTypeAssistant().equals(def.getType(), expected))
 			{
-				TypeCheckerErrors.report(3229, opname + " should have no parameters or return type", node.getLocation(), node);
+				TypeCheckerErrors.report(3229, opname
+						+ " should have no parameters or return type", node.getLocation(), node);
 				TypeCheckerErrors.detail("Actual", def.getType());
 			}
-		}
-		else if (opdef instanceof AImplicitOperationDefinition)
+		} else if (opdef instanceof AImplicitOperationDefinition)
 		{
-			AImplicitOperationDefinition def = (AImplicitOperationDefinition)opdef;
+			AImplicitOperationDefinition def = (AImplicitOperationDefinition) opdef;
 
 			if (def.getBody() == null)
 			{
@@ -1234,11 +1225,11 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 
 			if (!question.assistantFactory.createPTypeAssistant().equals(def.getType(), expected))
 			{
-				TypeCheckerErrors.report(3231, opname + " should have no parameters or return type", node.getLocation(), node);
+				TypeCheckerErrors.report(3231, opname
+						+ " should have no parameters or return type", node.getLocation(), node);
 				TypeCheckerErrors.detail("Actual", def.getType());
 			}
-		}
-		else
+		} else
 		{
 			TypeCheckerErrors.report(3232, opname + " is not an operation name", node.getLocation(), node);
 		}
@@ -1246,7 +1237,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		node.setType(AstFactory.newAVoidType(node.getLocation()));
 		return node.getType();
 	}
-	
+
 	@Override
 	public PType caseAStartStm(AStartStm node, TypeCheckInfo question)
 			throws AnalysisException
@@ -1287,7 +1278,6 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		return node.getType();
 	}
 
-	
 	@Override
 	public PType caseAStopStm(AStopStm node, TypeCheckInfo question)
 			throws AnalysisException

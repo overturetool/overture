@@ -78,7 +78,7 @@ public class ConcreateTypeImplementor extends
 	@Override
 	public PType defaultSMapType(SMapType type, Newquestion question)
 			throws AnalysisException
-	{	
+	{
 		return AstFactory.newAMapMapType(type.getLocation(), af.createPTypeAssistant().polymorph(type.getFrom(), question.pname, question.actualType), af.createPTypeAssistant().polymorph(type.getTo(), question.pname, question.actualType));
 	}
 
@@ -114,7 +114,7 @@ public class ConcreateTypeImplementor extends
 	public PType caseASetType(ASetType type, Newquestion question)
 			throws AnalysisException
 	{
-		//return ASetTypeAssistantTC.polymorph(type, question.pname, question.actualType);
+		// return ASetTypeAssistantTC.polymorph(type, question.pname, question.actualType);
 		return AstFactory.newASetType(type.getLocation(), af.createPTypeAssistant().polymorph(type.getSetof(), question.pname, question.actualType));
 	}
 

@@ -96,8 +96,8 @@ public class LexNameToken extends LexToken implements ILexNameToken,
 	public String getFullName()
 	{
 		// Flat specifications have blank module names
-		return (explicit ? (module.length() > 0 ? module + "`" : "") : "")
-				+ name + (old ? "~" : ""); // NB. No qualifier
+		return (explicit ? module.length() > 0 ? module + "`" : "" : "") + name
+				+ (old ? "~" : ""); // NB. No qualifier
 	}
 
 	public LexNameToken getNewName()
@@ -132,7 +132,7 @@ public class LexNameToken extends LexToken implements ILexNameToken,
 
 	public LexNameToken getModifiedName(String classname)
 	{
-		LexNameToken mod = new LexNameToken(classname, name, location,old,explicit);
+		LexNameToken mod = new LexNameToken(classname, name, location, old, explicit);
 		mod.setTypeQualifier(typeQualifier);
 		return mod;
 	}
@@ -178,8 +178,8 @@ public class LexNameToken extends LexToken implements ILexNameToken,
 	{
 		if (hashcode != 0)
 		{
-			if ((typeQualifier == null && types != null)
-					|| (typeQualifier != null && !typeQualifier.equals(types)))
+			if (typeQualifier == null && types != null || typeQualifier != null
+					&& !typeQualifier.equals(types))
 			{
 				throw new InternalException(2, "Cannot change type qualifier: "
 						+ this + " to " + types);
@@ -191,8 +191,9 @@ public class LexNameToken extends LexToken implements ILexNameToken,
 
 	/**
 	 * Basic equals method for LexNameTokens. This method does not handle type qualifiers in that case use
-	 * HelpLexNameToken
+	 * {@link HackLexNameToken}
 	 */
+	@SuppressWarnings("javadoc")
 	@Override
 	public boolean equals(Object other)
 	{
@@ -209,8 +210,8 @@ public class LexNameToken extends LexToken implements ILexNameToken,
 			// equal method but use the HelpLexNameToken class for that
 			// throw new InternalException(-1, "Use HelpLexNameToken.isEqual to compare");
 
-		} else if ((typeQualifier != null && lother.getTypeQualifier() == null)
-				|| (typeQualifier == null && lother.getTypeQualifier() != null))
+		} else if (typeQualifier != null && lother.getTypeQualifier() == null
+				|| typeQualifier == null && lother.getTypeQualifier() != null)
 		{
 			return false;
 		}
@@ -224,7 +225,8 @@ public class LexNameToken extends LexToken implements ILexNameToken,
 				&& old == other.getOld();
 	}
 
-	@Override //what does this overrides?
+	@Override
+	// what does this overrides?
 	public int hashCode()
 	{
 		if (hashcode == 0)
@@ -233,8 +235,8 @@ public class LexNameToken extends LexToken implements ILexNameToken,
 					+ name.hashCode()
 					+ (old ? 1 : 0)
 					+ (typeQualifier == null ? 0
-							:typeQualifier.toString().hashCode());
-							
+							: typeQualifier.toString().hashCode());
+
 		}
 
 		return hashcode;

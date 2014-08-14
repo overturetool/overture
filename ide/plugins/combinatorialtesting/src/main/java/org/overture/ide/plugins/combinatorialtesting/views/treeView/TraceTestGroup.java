@@ -40,9 +40,16 @@ public class TraceTestGroup extends TraceTestTreeNode
 		super(null);
 		this.startNumber = startNumber;
 		this.stopNumber = stopNumber - 1;
+		
 		children = new ArrayList<ITreeNode>();
 		addChild(new NotYetReadyTreeNode());
 
+	}
+	
+	@Override
+	public Integer getNumber()
+	{
+	return startNumber.intValue();
 	}
 
 	private List<ITreeNode> children;

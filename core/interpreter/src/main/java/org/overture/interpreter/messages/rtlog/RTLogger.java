@@ -60,7 +60,7 @@ public class RTLogger
 		{
 			logger.enable(on);
 		}
-		
+
 		enabled = on;
 	}
 
@@ -74,7 +74,7 @@ public class RTLogger
 		if (enabled)
 		{
 			eventCount++;
-			
+
 			for (IRTLogger logger : loggers)
 			{
 				logger.log(message);
@@ -85,8 +85,10 @@ public class RTLogger
 	/**
 	 * Configure the logger output types
 	 * 
-	 * @param logger
-	 * @param output
+	 * @param loggerClass
+	 *            the logger class
+	 * @param outputFile
+	 *            the output file
 	 * @throws FileNotFoundException
 	 */
 	public static void setLogfile(Class<? extends IRTLogger> loggerClass,
@@ -100,7 +102,7 @@ public class RTLogger
 				logger.dump(true); // Write out and close previous
 			}
 		}
-		
+
 		enable(true);
 	}
 
@@ -125,7 +127,7 @@ public class RTLogger
 		{
 			logger.dump(close);
 		}
-		
+
 		eventCount = 0;
 	}
 }

@@ -36,7 +36,7 @@ public class ASystemClassDefinitionAssistantInterpreter
 	public ASystemClassDefinitionAssistantInterpreter(
 			IInterpreterAssistantFactory af)
 	{
-		//super(af);
+		// super(af);
 		this.af = af;
 	}
 
@@ -101,7 +101,8 @@ public class ASystemClassDefinitionAssistantInterpreter
 					cpu = (CPUValue) v.deref();
 				}
 
-//				RTLogger.log(new RTDeclareCPUMessage(cpu.resource.getNumber(), !v.isUndefined(), systemClass.getName().getName(), d.getName().getName()));
+				// RTLogger.log(new RTDeclareCPUMessage(cpu.resource.getNumber(), !v.isUndefined(),
+				// systemClass.getName().getName(), d.getName().getName()));
 
 				// Set the name and scheduler for the CPU resource, and
 				// associate the resource with the scheduler.

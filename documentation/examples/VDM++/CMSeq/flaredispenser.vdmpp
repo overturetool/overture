@@ -88,7 +88,10 @@ releaseFlare (evid,pfltp, pt1, pt2) ==
 
 public isFinished: () ==> bool
 isFinished () == 
-  return not busy
+  return not busy;
+
+public getAperture: () ==> Angle * Angle
+getAperture () == return mk_(0,0);
 
 end FlareDispenser
 \end{vdm_al}

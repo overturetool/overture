@@ -1,0 +1,27 @@
+class Entry
+
+operations
+
+public static casesTuple : (nat * nat * nat) ==> int
+casesTuple (t) ==
+	cases t:
+		mk_(2,2,2) -> return 6,
+		mk_(a,-,1) -> return a + 1,
+		mk_(1,b,c) -> return 1 + b + c,
+		mk_(-,-,-) -> return -1,
+		others -> return 0
+	end;
+	
+public static Run : () ==> ?
+Run () ==
+(
+	dcl result : seq of int := [];
+	for i = 1 to 2 do
+		for j = 1 to 2 do
+			for k = 1 to 3 do
+				result := result ^ [casesTuple(mk_(i, j, k))];
+	
+	return result;
+)
+
+end Entry

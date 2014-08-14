@@ -24,10 +24,11 @@ public class PTypeAssistantInterpreter extends PTypeAssistantTC
 	{
 		try
 		{
-			return type.apply(af.getAllValuesCollector(),ctxt);// FIXME: should we handle exceptions like this
+			return type.apply(af.getAllValuesCollector(), ctxt);// FIXME: should we handle exceptions like this
 		} catch (AnalysisException e)
 		{
-			throw new ValueException(4, "Cannot get bind values for type " + type, ctxt);
+			throw new ValueException(4, "Cannot get bind values for type "
+					+ type, ctxt);
 		}
 	}
 

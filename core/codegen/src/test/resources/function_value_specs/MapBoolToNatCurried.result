@@ -16,7 +16,7 @@ public class Entry {
 
         VDMSeq xs = SeqUtil.seq(true, false, true, true, true);
 
-        return bool_nat_map(xs.clone()).eval(f);
+        return bool_nat_map(Utils.clone(xs)).eval(f);
     }
 
     public static Func_1<Func_1<Boolean, Number>, VDMSeq> bool_nat_map(
@@ -26,7 +26,7 @@ public class Entry {
                     return s.isEmpty() ? SeqUtil.seq()
                                        : SeqUtil.conc(SeqUtil.seq(f.eval(((Boolean) s.get(
                                     0)))),
-                        bool_nat_map(SeqUtil.tail(s.clone())).eval(f));
+                        bool_nat_map(SeqUtil.tail(Utils.clone(s))).eval(f));
                 }
             };
     }

@@ -34,7 +34,6 @@ import org.overture.interpreter.commands.DebuggerReader;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.values.ObjectValue;
 
-
 public class BasicSchedulableThread implements Serializable
 {
 	private static final long serialVersionUID = 1L;
@@ -106,28 +105,28 @@ public class BasicSchedulableThread implements Serializable
 		return null;
 	}
 
-	public static void handleSignal(Signal sig, Context ctxt, ILexLocation location)
+	public static void handleSignal(Signal sig, Context ctxt,
+			ILexLocation location)
 	{
 		switch (sig)
 		{
 			case TERMINATE:
 				throw new ThreadDeath();
 
-			case ERROR:				
+			case ERROR:
 			case SUSPEND:
 			case DEADLOCKED:
 				if (ctxt != null)
 				{
 					if (Settings.usingDBGP)
 					{
-						if(sig == Signal.ERROR)
+						if (sig == Signal.ERROR)
 						{
 							ctxt.threadState.dbgp.setErrorState();
 						}
-						
+
 						ctxt.threadState.dbgp.stopped(ctxt, location);
-					}
-					else
+					} else
 					{
 						DebuggerReader.stopped(ctxt, location);
 					}
@@ -172,16 +171,15 @@ public class BasicSchedulableThread implements Serializable
 			}
 		}
 	}
-	
-	
+
 	public static void terminateAll()
 	{
 		synchronized (allThreads)
 		{
-    		for (ISchedulableThread th: allThreads)
-    		{
-   				th.setSignal(Signal.TERMINATE);
-    		}
+			for (ISchedulableThread th : allThreads)
+			{
+				th.setSignal(Signal.TERMINATE);
+			}
 		}
 	}
 
@@ -201,16 +199,16 @@ public class BasicSchedulableThread implements Serializable
 		synchronized (allThreads)
 		{
 			List<ISchedulableThread> list = new Vector<ISchedulableThread>();
-			
-    		for (ISchedulableThread th: allThreads)
-    		{
-   				if (th.getObject() == target)
-   				{
-   					list.add(th);
-   				}
-    		}
-    		
-    		return list;
+
+			for (ISchedulableThread th : allThreads)
+			{
+				if (th.getObject() == target)
+				{
+					list.add(th);
+				}
+			}
+
+			return list;
 		}
 	}
 

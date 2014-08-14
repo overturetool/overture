@@ -27,10 +27,11 @@ import org.swixml.SwingEngine;
 
 /**
  * Generic container brige. Used only for debugging purposes.
+ * 
  * @author carlos
- *
  */
-public class GenericContainerBridge implements IContainerBridge {
+public class GenericContainerBridge implements IContainerBridge
+{
 	// reference to the main ui inteface object
 	protected UiInterface parent = null;
 	// the swixml engine used to render the gui
@@ -39,31 +40,36 @@ public class GenericContainerBridge implements IContainerBridge {
 	private Container container = null;
 	// the id map of the component;
 	protected Map<String, Object> idMap = null;
-	
-	public GenericContainerBridge(UiInterface parent) {
+
+	public GenericContainerBridge(UiInterface parent)
+	{
 		this.parent = parent;
 		this.engine = new SwingEngine();
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public void buildComponent(File file) throws Exception {
-			container = engine.render(file);
-			idMap = engine.getIdMap();
-			engine.setActionListener(container, this);
+	public void buildComponent(File file) throws Exception
+	{
+		container = engine.render(file);
+		idMap = engine.getIdMap();
+		engine.setActionListener(container, this);
 	}
-	
-	public void setVisible(boolean b) {
-		container.setVisible(b);		
-	}
-	
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		System.out.println(arg0.getActionCommand());
-		
+
+	public void setVisible(boolean b)
+	{
+		container.setVisible(b);
 	}
 
 	@Override
-	public String getId() {
+	public void actionPerformed(ActionEvent arg0)
+	{
+		System.out.println(arg0.getActionCommand());
+
+	}
+
+	@Override
+	public String getId()
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}

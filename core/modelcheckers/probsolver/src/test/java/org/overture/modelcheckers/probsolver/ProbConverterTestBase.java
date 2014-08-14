@@ -43,17 +43,18 @@ import org.w3c.dom.Node;
 
 import de.be4.classicalb.core.parser.exceptions.BException;
 
-public abstract class ProbConverterTestBase extends TestResourcesResultTestCase4<String>
+public abstract class ProbConverterTestBase extends
+		TestResourcesResultTestCase4<String>
 {
 	private static final String TESTS_TC_PROPERTY_PREFIX = "tests.probsolver.override.";
 	private final ITypeCheckerAssistantFactory af;
-	
+
 	// private File file;
 
 	public ProbConverterTestBase(File file, ITypeCheckerAssistantFactory af)
 	{
 		super(file);
-		this.af=af;
+		this.af = af;
 		Assert.assertTrue("Input file does not exist", file.exists());
 	}
 
@@ -64,12 +65,12 @@ public abstract class ProbConverterTestBase extends TestResourcesResultTestCase4
 		Settings.release = Release.VDM_10;
 		VdmToBConverter.USE_INITIAL_FIXED_STATE = true;
 	}
-	
 
 	@Rule
 	public ConditionalIgnoreMethodRule rule = new ConditionalIgnoreMethodRule();
 
-	protected String method ="";
+	protected String method = "";
+
 	protected void testMethod(String name) throws IOException,
 			AnalysisException, SolverException
 	{
@@ -90,14 +91,14 @@ public abstract class ProbConverterTestBase extends TestResourcesResultTestCase4
 				if (def instanceof AImplicitOperationDefinition)
 				{
 					HashMap<String, String> emptyMap = new HashMap<String, String>();
-					result = ProbSolverUtil.solve(def.getName().getName(), (AImplicitOperationDefinition) def, emptyMap, emptyMap, getArgTypes(def), tokenType, quotes, new SolverConsole(),af);
+					result = ProbSolverUtil.solve(def.getName().getName(), (AImplicitOperationDefinition) def, emptyMap, emptyMap, getArgTypes(def), tokenType, quotes, new SolverConsole(), af);
 
 				} else
 				{
 					AImplicitFunctionDefinition funDef = (AImplicitFunctionDefinition) def;
 					HashMap<String, String> emptyMap = new HashMap<String, String>();
 
-					result = ProbSolverUtil.solve(def.getName().getName(), funDef.getPostcondition(), funDef.getResult(), emptyMap, emptyMap, getArgTypes(def), tokenType, quotes, new SolverConsole(),af);
+					result = ProbSolverUtil.solve(def.getName().getName(), funDef.getPostcondition(), funDef.getResult(), emptyMap, emptyMap, getArgTypes(def), tokenType, quotes, new SolverConsole(), af);
 				}
 			} catch (SolverException e)
 			{
@@ -293,7 +294,7 @@ public abstract class ProbConverterTestBase extends TestResourcesResultTestCase4
 	protected File getResultFile(String filename)
 	{
 		int index = filename.lastIndexOf(".result");
-		String f = filename.substring(0,index)+"-"+method+".result";
+		String f = filename.substring(0, index) + "-" + method + ".result";
 		return new File(getStorageLocation(), f);
 	}
 

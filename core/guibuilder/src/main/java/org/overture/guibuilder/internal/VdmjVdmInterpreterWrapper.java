@@ -21,61 +21,72 @@ package org.overture.guibuilder.internal;
 import java.io.File;
 import java.util.List;
 
-import org.overture.ast.lex.*;
-import org.overture.config.*;
-import org.overture.interpreter.*;
-import org.overture.interpreter.runtime.*;
+import org.overture.ast.lex.Dialect;
+import org.overture.config.Settings;
+import org.overture.interpreter.VDMJ;
+import org.overture.interpreter.VDMPP;
+import org.overture.interpreter.VDMRT;
+import org.overture.interpreter.VDMSL;
+import org.overture.interpreter.runtime.ClassInterpreter;
+import org.overture.interpreter.runtime.Interpreter;
 import org.overture.interpreter.util.ExitStatus;
 
-
 /**
- *	This class serves as a wrapper to the VDMJ controller classes
- *	in order to execute and evaluate vdm commands and expressions
- *	in the interpreter
+ * This class serves as a wrapper to the VDMJ controller classes in order to execute and evaluate vdm commands and
+ * expressions in the interpreter
  * 
  * @author carlos
- *
  */
-public class VdmjVdmInterpreterWrapper {
+public class VdmjVdmInterpreterWrapper
+{
 
 	private VDMJ controller = null;
 	private Interpreter interpreter = null;
 
 	/**
 	 * Constructor
-	 * @param dialect The target vdm dialect for the interpreter
+	 * 
+	 * @param dialect
+	 *            The target vdm dialect for the interpreter
 	 * @throws Exception
 	 */
-	public VdmjVdmInterpreterWrapper(Dialect dialect) throws Exception {
-	
+	public VdmjVdmInterpreterWrapper(Dialect dialect) throws Exception
+	{
+
 		// global VDMJ settings
 		Settings.usingCmdLine = true; // FIXME: not really sure what this is for...
 		Settings.usingDBGP = false;
 		Settings.dialect = dialect;
-		
-		// warning only the VDMPP dialect has been given atention, 
-		// other dialect have not been tested, and usage will certainly 
+
+		// warning only the VDMPP dialect has been given atention,
+		// other dialect have not been tested, and usage will certainly
 		// lead to unexpected behaviour
-		if (dialect == Dialect.VDM_PP) {
+		if (dialect == Dialect.VDM_PP)
+		{
 			controller = new VDMPP();
 			return;
-		} else if (dialect == Dialect.VDM_RT) {
+		} else if (dialect == Dialect.VDM_RT)
+		{
 			controller = new VDMRT();
 			return;
-		} else if (dialect == Dialect.VDM_SL) {
+		} else if (dialect == Dialect.VDM_SL)
+		{
 			controller = new VDMSL();
 			return;
 		}
-		
+
 		throw new Exception("Unknown VDM Dialect");
-		
+
 	}
 
 	/**
 	 * Parses and type checks the vdm specification files
-	 * @param filenames List of files to parse and type check
+	 * 
+	 * @param filenames
+	 *            List of files to parse and type check
 	 */
-	public void parseFilesAndTypeCheck(List<File> filenames) {
+	public void parseFilesAndTypeCheck(List<File> filenames)
+	{
 
 		ExitStatus status;
 
@@ -83,13 +94,17 @@ public class VdmjVdmInterpreterWrapper {
 		if (filenames.isEmpty())
 		{
 			System.out.println("No files specified.");
-		} else {
+		} else
+		{
 			status = controller.parse(filenames);
 
-			if(status == ExitStatus.EXIT_OK) {
+			if (status == ExitStatus.EXIT_OK)
+			{
 				status = controller.typeCheck();
-				if( status != ExitStatus.EXIT_OK )
+				if (status != ExitStatus.EXIT_OK)
+				{
 					System.out.println("Type check failed");
+				}
 			}
 		} // end if(filenames.isEmpty())
 
@@ -97,36 +112,47 @@ public class VdmjVdmInterpreterWrapper {
 
 	/**
 	 * Inits the interpreter
+	 * 
 	 * @throws Exception
 	 */
-	public void initInterpreter() throws Exception {
-		
+	public void initInterpreter() throws Exception
+	{
+
 		interpreter = controller.getInterpreter();
 		interpreter.init(null);
 	}
 
 	/**
 	 * Returns the value of global instance variable
-	 * @param line The name of the variable
+	 * 
+	 * @param line
+	 *            The name of the variable
 	 * @return The current value of the variable
 	 * @throws Exception
 	 */
-	public String getValueOf(String line) throws Exception {
+	public String getValueOf(String line) throws Exception
+	{
 		return execute(line);
 	}
 
 	/**
 	 * Executes a vdm expression
-	 * @param cmd The vdm expression in string form
+	 * 
+	 * @param cmd
+	 *            The vdm expression in string form
 	 * @return The result of the expression in string form
 	 * @throws Exception
 	 */
-	public String execute(String cmd) throws Exception {
+	public String execute(String cmd) throws Exception
+	{
 		// lazy instantion of the interpreter
-		if (interpreter == null) {
-			try {
+		if (interpreter == null)
+		{
+			try
+			{
 				initInterpreter();
-			} catch (Exception e) {
+			} catch (Exception e)
+			{
 				e.printStackTrace();
 				return null;
 			}
@@ -136,23 +162,28 @@ public class VdmjVdmInterpreterWrapper {
 
 	/**
 	 * Creates a global instance of a vdm object/type
-	 * @param var - name of the instance
-	 * @param expr - constructor expression
+	 * 
+	 * @param var
+	 *            - name of the instance
+	 * @param expr
+	 *            - constructor expression
 	 * @throws Exception
 	 */
-	public void createInstance(String var, String expr) throws Exception {
+	public void createInstance(String var, String expr) throws Exception
+	{
 		// lazy instantion of the interpreter
-		if (interpreter == null) {
-			try {
+		if (interpreter == null)
+		{
+			try
+			{
 				initInterpreter();
-			} catch (Exception e) {
+			} catch (Exception e)
+			{
 				e.printStackTrace();
 				return;
 			}
-		}		
+		}
 		((ClassInterpreter) interpreter).create(var, expr);
 	}
-
-
 
 }

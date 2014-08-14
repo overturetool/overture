@@ -39,21 +39,21 @@ public class TupleSelectObligation extends ProofObligation
 	 */
 	private static final long serialVersionUID = -7776291065628025047L;
 
-	public TupleSelectObligation(
-		PExp exp, PType type, IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
+	public TupleSelectObligation(PExp exp, PType type, IPOContextStack ctxt,
+			IPogAssistantFactory af) throws AnalysisException
 	{
 		// not is_(exp, type)
 		super(exp, POType.TUPLE_SELECT, ctxt, exp.getLocation(), af);
 
 		ANotUnaryExp notExp = new ANotUnaryExp();
 		AIsExp isExp = new AIsExp();
-		
+
 		isExp.setTest(exp.clone());
-		isExp.setBasicType(type.clone()); //Do we need the type definition instead? If so, the visitor must provide it.
-		
+		isExp.setBasicType(type.clone()); // Do we need the type definition instead? If so, the visitor must provide it.
+
 		notExp.setExp(isExp);
-		
-		stitch=notExp;
-		valuetree.setPredicate(ctxt.getPredWithContext(stitch));		
+
+		stitch = notExp;
+		valuetree.setPredicate(ctxt.getPredWithContext(stitch));
 	}
 }

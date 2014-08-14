@@ -32,10 +32,9 @@ import org.overture.interpreter.messages.rtlog.RTThreadSwapMessage.SwapType;
 import org.overture.interpreter.scheduler.SystemClock.TimeUnit;
 import org.overture.interpreter.values.ObjectValue;
 
-
 public class CPUResource extends Resource
 {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 	private static int nextCPU = 0;
 	public static CPUResource vCPU = null;
 
@@ -79,10 +78,9 @@ public class CPUResource extends Resource
 	@Override
 	public boolean reschedule()
 	{
-		if (swappedIn != null &&
-			swappedIn.getRunState() == RunState.TIMESTEP)
+		if (swappedIn != null && swappedIn.getRunState() == RunState.TIMESTEP)
 		{
-			return false;	// Can't schedule anything else and we're idle.
+			return false; // Can't schedule anything else and we're idle.
 		}
 
 		if (policy.reschedule())
@@ -93,18 +91,17 @@ public class CPUResource extends Resource
 			{
 				if (swappedIn != null)
 				{
-					RTLogger.log(new RTThreadSwapMessage(SwapType.Out,swappedIn, this, 0,0));
+					RTLogger.log(new RTThreadSwapMessage(SwapType.Out, swappedIn, this, 0, 0));
 				}
 
 				long delay = SystemClock.getWallTime() - best.getSwapInBy();
 
 				if (best.getSwapInBy() > 0 && delay > 0)
 				{
-					RTLogger.log(new RTThreadSwapMessage(SwapType.DelayedIn,best, this, 0,delay));
-				}
-				else
+					RTLogger.log(new RTThreadSwapMessage(SwapType.DelayedIn, best, this, 0, delay));
+				} else
 				{
-					RTLogger.log(new RTThreadSwapMessage(SwapType.In,best, this, 0,0));
+					RTLogger.log(new RTThreadSwapMessage(SwapType.In, best, this, 0, 0));
 				}
 			}
 
@@ -114,21 +111,20 @@ public class CPUResource extends Resource
 			switch (swappedIn.getRunState())
 			{
 				case COMPLETE:
-					RTLogger.log(new RTThreadSwapMessage(SwapType.Out,swappedIn, this, 0,0));
+					RTLogger.log(new RTThreadSwapMessage(SwapType.Out, swappedIn, this, 0, 0));
 
-        			RTLogger.log(new RTThreadKillMessage(swappedIn,this));
+					RTLogger.log(new RTThreadKillMessage(swappedIn, this));
 
-        			swappedIn = null;
-        			return true;	// We may be able to run other threads
+					swappedIn = null;
+					return true; // We may be able to run other threads
 
 				case TIMESTEP:
-					return false;	// We're definitely idle
+					return false; // We're definitely idle
 
 				default:
-					return true;	// We may be able to run other threads
+					return true; // We may be able to run other threads
 			}
-		}
-		else
+		} else
 		{
 			return false;
 		}
@@ -153,7 +149,7 @@ public class CPUResource extends Resource
 					break;
 
 				case RUNNING:
-					return -1;		// Can't timestep
+					return -1; // Can't timestep
 
 				default:
 					break;
@@ -165,18 +161,20 @@ public class CPUResource extends Resource
 
 	public void createThread(ISchedulableThread th)
 	{
-		RTLogger.log(new RTThreadCreateMessage(th,this));
+		RTLogger.log(new RTThreadCreateMessage(th, this));
 	}
 
 	public void deploy(ObjectValue object)
 	{
-		RTLogger.log(new RTDeployObjectMessage(object,this));
+		RTLogger.log(new RTDeployObjectMessage(object, this));
 	}
 
 	public long getCyclesDuration(long cycles)
 	{
-		//TODO optimize by converting the speed into the correct units only once
-		return isVirtual() ? 0 :  SystemClock.timeToInternal(TimeUnit.seconds,new Double(cycles)/clock); // cycles/cpu [Hz]
+		// TODO optimize by converting the speed into the correct units only once
+		return isVirtual() ? 0
+				: SystemClock.timeToInternal(TimeUnit.seconds, new Double(cycles)
+						/ clock); // cycles/cpu [Hz]
 	}
 
 	public int getNumber()

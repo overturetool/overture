@@ -23,6 +23,8 @@ import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetProperSubsetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetSubsetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASizeUnaryExpCG;
+import org.overture.codegen.cgast.expressions.ATupleCompatibilityExpCG;
+import org.overture.codegen.cgast.expressions.ATupleSizeExpCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AForAllStmCG;
 import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
@@ -176,6 +178,8 @@ public class JavaValueSemantics
 		
 		return 	   parent instanceof AFieldExpCG
 				|| parent instanceof AFieldNumberExpCG
+				|| parent instanceof ATupleSizeExpCG
+				|| parent instanceof ATupleCompatibilityExpCG
 				|| parent instanceof AEqualsBinaryExpCG
 				|| parent instanceof ANotEqualsBinaryExpCG
 				|| parent instanceof AAddrEqualsBinaryExpCG

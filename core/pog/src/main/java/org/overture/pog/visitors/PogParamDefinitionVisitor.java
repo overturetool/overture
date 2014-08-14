@@ -75,7 +75,6 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 	 * @param parentVisitor
 	 * @param mainVisitor
 	 * @param assistantFactory
-	 * @param renameVisitor
 	 */
 	public PogParamDefinitionVisitor(
 			QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> parentVisitor,
@@ -143,13 +142,17 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 				alwaysMatches = true;
 				PatternAlwaysMatchesVisitor amVisitor = new PatternAlwaysMatchesVisitor();
 				for (List<PPattern> patterns : node.getParamPatternList())
+				{
 					for (PPattern p : patterns)
 					{
 						for (PDefinition def : p.getDefinitions())
+						{
 							pids.add(def.getName());
+						}
 
 						alwaysMatches = alwaysMatches && p.apply(amVisitor);
 					}
+				}
 			}
 
 			// check for duplicates
@@ -347,7 +350,9 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 				for (PPattern p : pltp.getPatterns())
 				{
 					for (PDefinition def : assistantFactory.createPPatternAssistant().getDefinitions(p, typeIter.next(), NameScope.LOCAL))
+					{
 						pids.add(def.getName());
+					}
 					alwaysMatches = alwaysMatches && p.apply(amVisitor);
 				}
 
@@ -442,7 +447,9 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 			for (PPattern p : node.getParameterPatterns())
 			{
 				for (PDefinition def : assistantFactory.createPPatternAssistant().getDefinitions(p, typeIter.next(), NameScope.LOCAL))
+				{
 					pids.add(def.getName());
+				}
 
 				alwaysMatches = alwaysMatches && p.apply(amVisitor);
 			}
@@ -485,7 +492,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 				obligations.add(new OperationPostConditionObligation(node, question, assistantFactory));
 			}
 			question.clearStateContexts();
-
+			question.pop();
 			return obligations;
 		} catch (Exception e)
 		{
@@ -557,7 +564,9 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 				for (PPattern p : tp.getPatterns())
 				{
 					for (PDefinition def : assistantFactory.createPPatternAssistant().getDefinitions(p, typeIter.next(), NameScope.LOCAL))
+					{
 						pids.add(def.getName());
+					}
 
 					alwaysMatches = alwaysMatches && p.apply(amVisitor);
 				}
@@ -613,7 +622,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 					// passed 1 more argument to give the assistantFactory to
 					// the constructor.
 					question.push(new POOperationDefinitionContext(node, false, node.getStateDefinition(), assistantFactory));
-					obligations.add(new SatisfiabilityObligation(node, node.getStateDefinition(), question,assistantFactory));
+					obligations.add(new SatisfiabilityObligation(node, node.getStateDefinition(), question, assistantFactory));
 					question.pop();
 				}
 			}
@@ -777,7 +786,9 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 				for (PType u : ut.getTypes())
 				{
 					if (assistantFactory.getTypeComparator().compatible(u, patternType))
+					{
 						set.add(u);
+					}
 				}
 
 				if (!set.isEmpty())

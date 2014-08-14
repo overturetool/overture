@@ -84,6 +84,7 @@ import org.overture.ide.plugins.combinatorialtesting.internal.ITracesDisplay;
 import org.overture.ide.plugins.combinatorialtesting.internal.VdmjTracesHelper;
 import org.overture.ide.plugins.combinatorialtesting.views.internal.InconclusiveTraceViewerFilter;
 import org.overture.ide.plugins.combinatorialtesting.views.internal.OkTraceViewerFilter;
+import org.overture.ide.plugins.combinatorialtesting.views.internal.TraceNodeSorter;
 import org.overture.ide.plugins.combinatorialtesting.views.internal.TraceViewerSorter;
 import org.overture.ide.plugins.combinatorialtesting.views.treeView.ITreeNode;
 import org.overture.ide.plugins.combinatorialtesting.views.treeView.NotYetReadyTreeNode;
@@ -110,7 +111,7 @@ public class TracesTreeView extends ViewPart implements ITracesDisplay
 
 	private ViewerFilter okFilter = new OkTraceViewerFilter();
 	private ViewerSorter traceSorter = new TraceViewerSorter();
-	private ViewerSorter defaultTraceSorter = new ViewerSorter();
+	private ViewerSorter defaultTraceSorter = new TraceNodeSorter();
 	private ViewerFilter inconclusiveFilter = new InconclusiveTraceViewerFilter();
 
 	/**

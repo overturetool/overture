@@ -639,11 +639,10 @@ public class AstFactory
 
 		List<PDefinition> defs = new Vector<PDefinition>();
 
-			for (ILexNameToken var : af.createPPatternAssistant().getVariableNames(p))
-			{
-				defs.add(AstFactory.newAUntypedDefinition(result.getLocation(), var, scope));
-			}
-
+		for (ILexNameToken var : af.createPPatternAssistant().getVariableNames(p))
+		{
+			defs.add(AstFactory.newAUntypedDefinition(result.getLocation(), var, scope));
+		}
 
 		result.setDefs(defs);
 
@@ -761,8 +760,8 @@ public class AstFactory
 		{
 			ptypes.addAll(getTypeList(ptp));
 		}
-		AOperationType operationType = AstFactory.newAOperationType(result.getLocation(), ptypes, (result.getResult() == null ? AstFactory.newAVoidType(name.getLocation())
-				: result.getResult().getType()));
+		AOperationType operationType = AstFactory.newAOperationType(result.getLocation(), ptypes, result.getResult() == null ? AstFactory.newAVoidType(name.getLocation())
+				: result.getResult().getType());
 		result.setType(operationType);
 
 		return result;
@@ -811,7 +810,7 @@ public class AstFactory
 		AExternalClause result = new AExternalClause();
 		result.setMode(mode);
 		result.setIdentifiers(names);
-		result.setType((type == null) ? AstFactory.newAUnknownType(names.get(0).getLocation())
+		result.setType(type == null ? AstFactory.newAUnknownType(names.get(0).getLocation())
 				: type);
 
 		return result;
@@ -3028,6 +3027,7 @@ public class AstFactory
 
 		result.setSuperdef(d);
 		result.setOldname(localname.getOldName());
+		result.setType(d.getType());
 
 		af.createPDefinitionAssistant().setClassDefinition(result, d.getClassDefinition());
 		result.setAccess(d.getAccess().clone());

@@ -89,7 +89,7 @@ public class VdmToBTranslatorTest
 	@Test
 	public void test() throws IOException, AnalysisException
 	{
-//		Assume.assumeTrue(false);// comment this when the tests parse
+		// Assume.assumeTrue(false);// comment this when the tests parse
 		PExp exp = null;
 
 		try

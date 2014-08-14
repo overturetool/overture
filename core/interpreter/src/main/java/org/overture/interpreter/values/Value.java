@@ -41,12 +41,12 @@ import org.overture.config.Settings;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ValueException;
 
-
 /**
  * The parent of all runtime values.
  */
 
-abstract public class Value implements Comparable<Value>, Serializable, Formattable, Cloneable
+abstract public class Value implements Comparable<Value>, Serializable,
+		Formattable, Cloneable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -54,12 +54,14 @@ abstract public class Value implements Comparable<Value>, Serializable, Formatta
 	abstract public String toString();
 
 	// This is overridden in the few classes that need to change formatting
-	public void formatTo(Formatter formatter, int flags, int width, int precision)
+	public void formatTo(Formatter formatter, int flags, int width,
+			int precision)
 	{
 		formatTo(this.toString(), formatter, flags, width, precision);
 	}
 
-	protected void formatTo(String value, Formatter formatter, int flags, int width, int precision)
+	protected void formatTo(String value, Formatter formatter, int flags,
+			int width, int precision)
 	{
 		StringBuilder sb = new StringBuilder("%");
 
@@ -94,11 +96,10 @@ abstract public class Value implements Comparable<Value>, Serializable, Formatta
 	abstract public boolean equals(Object other);
 
 	/**
-	 * The method for the comparable interface. This is only implemented by
-	 * numeric types, and allows collections of them to be sorted. By default,
-	 * the method compares the string form of the values, which gives an
-	 * arbitrary, but fixed order for such values.
-	 *
+	 * The method for the comparable interface. This is only implemented by numeric types, and allows collections of
+	 * them to be sorted. By default, the method compares the string form of the values, which gives an arbitrary, but
+	 * fixed order for such values.
+	 * 
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
 
@@ -110,7 +111,11 @@ abstract public class Value implements Comparable<Value>, Serializable, Formatta
 	@Override
 	abstract public int hashCode();
 
-	/** A string with the informal kind of the value, like "set". */
+	/**
+	 * A string with the informal kind of the value, like "set".
+	 * 
+	 * @return
+	 */
 	abstract public String kind();
 
 	@Override
@@ -118,12 +123,12 @@ abstract public class Value implements Comparable<Value>, Serializable, Formatta
 
 	public Value deepCopy()
 	{
-		return (Value)clone();
+		return (Value) clone();
 	}
 
 	public Value shallowCopy()
 	{
-		return (Value)clone();
+		return (Value) clone();
 	}
 
 	public String toShortString(int max)
@@ -132,27 +137,26 @@ abstract public class Value implements Comparable<Value>, Serializable, Formatta
 
 		if (value.length() > max)
 		{
-			value = value.substring(0, max/2) +
-				"..." + value.substring(value.length() - max/2);
+			value = value.substring(0, max / 2) + "..."
+					+ value.substring(value.length() - max / 2);
 		}
 
 		return value;
 	}
 
 	/**
-	 * Performing a dynamic type conversion. This method is usually specialized
-	 * by subclasses that know how to convert themselves to other types. If they
-	 * fail, they delegate the conversion up to this superclass method which
-	 * deals with the special cases: unions, type parameters, optional types,
-	 * bracketed types and named types. If all these also fail, the method throws
-	 * a runtime dynamic type check exception - though that may be caught, for
-	 * example by the union processing, as it iterates through the types in the
-	 * union given, trying to convert the value.
-	 *
-	 * @param to The target type.
-	 * @param ctxt The context in which to make the conversion.
+	 * Performing a dynamic type conversion. This method is usually specialized by subclasses that know how to convert
+	 * themselves to other types. If they fail, they delegate the conversion up to this superclass method which deals
+	 * with the special cases: unions, type parameters, optional types, bracketed types and named types. If all these
+	 * also fail, the method throws a runtime dynamic type check exception - though that may be caught, for example by
+	 * the union processing, as it iterates through the types in the union given, trying to convert the value.
+	 * 
+	 * @param to
+	 *            The target type.
+	 * @param ctxt
+	 *            The context in which to make the conversion.
 	 * @return This value converted to the target type.
-	 * @throws AnalysisException 
+	 * @throws AnalysisException
 	 */
 
 	public Value convertTo(PType to, Context ctxt) throws AnalysisException
@@ -169,41 +173,38 @@ abstract public class Value implements Comparable<Value>, Serializable, Formatta
 			{
 				ctxt.threadState.setAtomic(true);
 				converted = convertValueTo(to, ctxt);
-			}
-			finally
+			} finally
 			{
 				ctxt.threadState.setAtomic(false);
 			}
 
 			return converted;
-		}
-		else
+		} else
 		{
-			return this;	// Good luck!!
+			return this; // Good luck!!
 		}
 	}
 
-	public Value convertValueTo(PType to, Context ctxt) throws AnalysisException
+	public Value convertValueTo(PType to, Context ctxt)
+			throws AnalysisException
 	{
 		if (to instanceof AUnionType)
 		{
-			AUnionType uto = (AUnionType)to;
+			AUnionType uto = (AUnionType) to;
 
-			for (PType ut: uto.getTypes())
+			for (PType ut : uto.getTypes())
 			{
 				try
 				{
 					return convertValueTo(ut, ctxt);
-				}
-				catch (ValueException e)
+				} catch (ValueException e)
 				{
 					// Union type not applicable
 				}
 			}
-		}
-		else if (to instanceof AParameterType)
+		} else if (to instanceof AParameterType)
 		{
-			AParameterType pt = (AParameterType)to;
+			AParameterType pt = (AParameterType) to;
 
 			// Parameter types are ParameterValues of the given name in
 			// the context. They exist in the context, if the function has
@@ -214,64 +215,65 @@ abstract public class Value implements Comparable<Value>, Serializable, Formatta
 			if (v == null)
 			{
 				abort(4147, "Polymorphic function missing @" + pt.getName(), ctxt);
-			}
-			else if (v instanceof ParameterValue)
+			} else if (v instanceof ParameterValue)
 			{
-				ParameterValue pv = (ParameterValue)v;
+				ParameterValue pv = (ParameterValue) v;
 				return convertValueTo(pv.type, ctxt);
 			}
 
 			abort(4086, "Value of type parameter is not a type", ctxt);
-		}
-		else if (to instanceof AOptionalType)
+		} else if (to instanceof AOptionalType)
 		{
-			AOptionalType ot = (AOptionalType)to;
+			AOptionalType ot = (AOptionalType) to;
 			return convertValueTo(ot.getType(), ctxt);
-		}
-		else if (to instanceof ABracketType)
+		} else if (to instanceof ABracketType)
 		{
-			ABracketType bt = (ABracketType)to;
+			ABracketType bt = (ABracketType) to;
 			return convertValueTo(bt.getType(), ctxt);
-		}
-		else if (to instanceof ANamedInvariantType)
+		} else if (to instanceof ANamedInvariantType)
 		{
-			ANamedInvariantType ntype = (ANamedInvariantType)to;
+			ANamedInvariantType ntype = (ANamedInvariantType) to;
 			Value converted = convertValueTo(ntype.getType(), ctxt);
 			return new InvariantValue(ntype, converted, ctxt);
-		}
-		else if (to instanceof AUnknownType)
+		} else if (to instanceof AUnknownType)
 		{
-			return this;	// Suppressing DTC for "?" types
+			return this; // Suppressing DTC for "?" types
 		}
 
-		abort(4087, "Cannot convert " + toShortString(100) + " (" + kind() + ") to " + to, ctxt);
+		abort(4087, "Cannot convert " + toShortString(100) + " (" + kind()
+				+ ") to " + to, ctxt);
 		return null;
 	}
 
 	/**
-	 * Change the object's value. Normally, values are immutable, but subclasses
-	 * of {@link UpdatableValue} implement this set method to replace the object
-	 * referenced with another. ReferenceValues like UpdatableValue delegate all
+	 * Change the object's value. Normally, values are immutable, but subclasses of {@link UpdatableValue} implement
+	 * this set method to replace the object referenced with another. ReferenceValues like UpdatableValue delegate all
 	 * the other Value method to the contained object.
-	 *
-	 * @param location Unused.
-	 * @param newval The new value to set
-	 * @param ctxt The context used
+	 * 
+	 * @param location
+	 *            Unused.
+	 * @param newval
+	 *            The new value to set
+	 * @param ctxt
+	 *            The context used
 	 * @throws ValueException
-	 * @throws AnalysisException 
+	 * @throws AnalysisException
 	 */
 
-	public void set(ILexLocation location, Value newval, Context ctxt) throws ValueException, AnalysisException
+	public void set(ILexLocation location, Value newval, Context ctxt)
+			throws ValueException, AnalysisException
 	{
 		abort(4088, "Set not permitted for " + kind(), ctxt);
 	}
 
-	public Value abort(int number, String msg, Context ctxt) throws ValueException
+	public Value abort(int number, String msg, Context ctxt)
+			throws ValueException
 	{
 		throw new ValueException(number, msg, ctxt);
 	}
 
-	public Value abort(int number, Exception e, Context ctxt) throws ValueException
+	public Value abort(int number, Exception e, Context ctxt)
+			throws ValueException
 	{
 		throw new ValueException(number, e.getMessage(), ctxt);
 	}
@@ -297,12 +299,10 @@ abstract public class Value implements Comparable<Value>, Serializable, Formatta
 	}
 
 	/**
-	 * Find the most primitive underlying value contained. This is typically
-	 * used to check whether a value is "really" (say) a MapValue once the
-	 * ReferenceValue (Updatablevalue) wrappers have been removed.
-	 *
-	 * Note that this strips InvariantTypes of their invariance!
-	 *
+	 * Find the most primitive underlying value contained. This is typically used to check whether a value is "really"
+	 * (say) a MapValue once the ReferenceValue (Updatablevalue) wrappers have been removed. Note that this strips
+	 * InvariantTypes of their invariance!
+	 * 
 	 * @return The primitive value
 	 */
 
@@ -312,12 +312,12 @@ abstract public class Value implements Comparable<Value>, Serializable, Formatta
 	}
 
 	/**
-	 * Return an UpdatableValue, wrapping this one. This is a deep translation
-	 * that recurses into all Values that contain other Values (sets etc),
-	 * converting their contents to UpdateableValues. The results can then be
-	 * modified in assignment statements or used as state data etc.
-	 *
-	 * @param listeners The listener to inform of updates to the value.
+	 * Return an UpdatableValue, wrapping this one. This is a deep translation that recurses into all Values that
+	 * contain other Values (sets etc), converting their contents to UpdateableValues. The results can then be modified
+	 * in assignment statements or used as state data etc.
+	 * 
+	 * @param listeners
+	 *            The listener to inform of updates to the value.
 	 * @return An UpdatableValue for this one.
 	 */
 
@@ -327,11 +327,9 @@ abstract public class Value implements Comparable<Value>, Serializable, Formatta
 	}
 
 	/**
-	 * Return a simple Value, removing any Updatable/TransactionValue wrappers.
-	 * This is the opposite of getUpdatable(), though it works for all values.
-	 *
-	 * Note that this will preserve InvariantValues' integrity (unlike deref).
-	 *
+	 * Return a simple Value, removing any Updatable/TransactionValue wrappers. This is the opposite of getUpdatable(),
+	 * though it works for all values. Note that this will preserve InvariantValues' integrity (unlike deref).
+	 * 
 	 * @return A simple value
 	 */
 

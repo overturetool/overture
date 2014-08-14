@@ -73,11 +73,11 @@ public class ModuleListAssistantInterpreter
 				}
 			}
 
-			//throw toThrow;
-			if(toThrow instanceof ContextException)
+			// throw toThrow;
+			if (toThrow instanceof ContextException)
 			{
-				throw new CollectedContextException((ContextException) toThrow,problems);
-			}else
+				throw new CollectedContextException((ContextException) toThrow, problems);
+			} else
 			{
 				throw new CollectedExceptions(problems);
 			}
@@ -86,10 +86,10 @@ public class ModuleListAssistantInterpreter
 		return initialContext;
 	}
 
-	public IProofObligationList getProofObligations(ModuleList modules) throws AnalysisException
+	public IProofObligationList getProofObligations(ModuleList modules)
+			throws AnalysisException
 	{
-		
-		
+
 		IProofObligationList obligations = new ProofObligationList();
 
 		for (AModuleModules m : modules)

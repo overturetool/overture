@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.external.ExternalModulesSlTypeCheckTest">
 <message column="7" line="11" message="Definition 'a' not used" messageType="warning" number="5000" resource="casesstmt-03.vdm"/>
-<message column="16" line="12" message="Definition 's2' not used" messageType="warning" number="5000" resource="casesstmt-03.vdm"/>
 <message column="7" line="12" message="Definition 's1' not used" messageType="warning" number="5000" resource="casesstmt-03.vdm"/>
+<message column="16" line="12" message="Definition 's2' not used" messageType="warning" number="5000" resource="casesstmt-03.vdm"/>
 <message column="22" line="12" message="Value is not of the right type" messageType="error" number="3327" resource="casesstmt-03.vdm"/>
 <message column="1" line="8" message="Operation returns void value" messageType="error" number="3313" resource="casesstmt-03.vdm"/>
 <result/>

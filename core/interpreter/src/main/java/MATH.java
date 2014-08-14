@@ -26,9 +26,10 @@
 import java.util.Random;
 
 import org.overture.interpreter.runtime.ValueException;
-import org.overture.interpreter.values.*;
-
-
+import org.overture.interpreter.values.IntegerValue;
+import org.overture.interpreter.values.NaturalOneValue;
+import org.overture.interpreter.values.RealValue;
+import org.overture.interpreter.values.Value;
 
 public class MATH
 {
@@ -52,7 +53,7 @@ public class MATH
 
 	public static Value cot(Value arg) throws ValueException, Exception
 	{
-		return new RealValue(1/Math.tan(arg.realValue(null)));
+		return new RealValue(1 / Math.tan(arg.realValue(null)));
 	}
 
 	public static Value asin(Value arg) throws ValueException, Exception
@@ -87,12 +88,10 @@ public class MATH
 		if (seed == -1)
 		{
 			return new IntegerValue(lv);
-		}
-		else if (lv == 0)
+		} else if (lv == 0)
 		{
 			return new IntegerValue(0);
-		}
-		else
+		} else
 		{
 			return new IntegerValue(Math.abs(random.nextLong() % lv));
 		}
@@ -127,6 +126,6 @@ public class MATH
 
 	private static long factorial(long n)
 	{
-		return (n < 1) ? 1 : n * factorial(n-1);
+		return n < 1 ? 1 : n * factorial(n - 1);
 	}
 }

@@ -6,7 +6,6 @@ import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.AUnionTypeAssistantTC;
 
 /**
  * Used to check if a given type is a Record type (ie. a tagged type).
@@ -32,10 +31,9 @@ public class TagBasisChecker extends TypeUnwrapper<Boolean>
 			{
 				return false;
 			}
-			
+
 			return true;
-		}
-		else
+		} else
 		{
 			return false;
 		}

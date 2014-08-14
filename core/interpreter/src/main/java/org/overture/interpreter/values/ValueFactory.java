@@ -27,14 +27,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 
-
-
-
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.Interpreter;
-
 
 public class ValueFactory
 {
@@ -45,31 +41,32 @@ public class ValueFactory
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
-		
+
 		public ValueFactoryException(String message)
 		{
 			super(message);
 		}
-		public ValueFactoryException(String message,Exception e)
+
+		public ValueFactoryException(String message, Exception e)
 		{
-			super(message,e);
+			super(message, e);
 		}
-		
+
 	}
-	
+
 	/**
 	 * Interpreter used to look up types
 	 */
 	private Interpreter interpreter;
 	public final Context context;
-	
+
 	/**
 	 * Default constructor which sets the interpreter used to look up types
 	 */
 	public ValueFactory()
 	{
-		this.interpreter= Interpreter.getInstance();
-		//This is how I got the assistantFactory for this class.
+		this.interpreter = Interpreter.getInstance();
+		// This is how I got the assistantFactory for this class.
 		this.context = (Context) Interpreter.getInstance().getAssistantFactory();
 	}
 
@@ -77,32 +74,32 @@ public class ValueFactory
 	{
 		return new BooleanValue(b);
 	}
-	
+
 	public static CharacterValue create(char c) throws ValueFactoryException
 	{
 		return new CharacterValue(c);
 	}
-	
+
 	public static IntegerValue create(int c) throws ValueFactoryException
 	{
 		return new IntegerValue(c);
 	}
-	
+
 	public static SeqValue create(String string) throws ValueFactoryException
 	{
 		return new SeqValue(string);
 	}
-	
+
 	public static NilValue createNil()
 	{
 		return new NilValue();
 	}
-	
+
 	public static VoidValue createVoid()
 	{
 		return new VoidValue();
 	}
-	
+
 	public static RealValue create(double c) throws ValueFactoryException
 	{
 		try
@@ -110,75 +107,78 @@ public class ValueFactory
 			return new RealValue(c);
 		} catch (Exception e)
 		{
-			throw new ValueFactoryException(e.getMessage(),e);
+			throw new ValueFactoryException(e.getMessage(), e);
 		}
 	}
-	
+
 	public static QuoteValue createQuote(String quote)
 	{
 		return new QuoteValue(quote);
 	}
-	
+
 	public static TokenValue createToken(Value token)
 	{
 		return new TokenValue(token);
 	}
-	
+
 	public SetValue createSet(Collection<Value> collection)
 	{
 		ValueSet vList = new ValueSet();
 		vList.addAll(collection);
 		return new SetValue(vList);
 	}
-	
+
 	public SeqValue createSeq(Collection<Value> collection)
 	{
 		ValueList vList = new ValueList();
 		vList.addAll(collection);
 		return new SeqValue(vList);
 	}
-	
-	public RecordValue createRecord(String recordName, Object... fields) throws ValueFactoryException
+
+	public RecordValue createRecord(String recordName, Object... fields)
+			throws ValueFactoryException
 	{
 		List<Value> values = new Vector<Value>();
 		for (Object object : fields)
 		{
-			if(object instanceof Boolean)
+			if (object instanceof Boolean)
 			{
-				values.add(create((Boolean)object));
-			}else if(object instanceof Character)
+				values.add(create((Boolean) object));
+			} else if (object instanceof Character)
 			{
-				values.add(create((Character)object));
-			}else if(object instanceof Integer)
+				values.add(create((Character) object));
+			} else if (object instanceof Integer)
 			{
-				values.add(create((Integer)object));
-			}else if (object instanceof Double)
+				values.add(create((Integer) object));
+			} else if (object instanceof Double)
 			{
-				values.add(create((Double)object));
-			}else if(object instanceof String)
+				values.add(create((Double) object));
+			} else if (object instanceof String)
 			{
-				values.add(create((String)object));
-			}else if(object instanceof Value)
+				values.add(create((String) object));
+			} else if (object instanceof Value)
 			{
-				values.add((Value)object);
-			}
-			else
+				values.add((Value) object);
+			} else
 			{
-				throw new ValueFactoryException("The type of field "+object+" is not supported. Only basic types and Value are allowed.");
+				throw new ValueFactoryException("The type of field "
+						+ object
+						+ " is not supported. Only basic types and Value are allowed.");
 			}
 		}
-		
+
 		return createRecord(recordName, values);
 	}
-	
-	public RecordValue createRecord(String recordName, Value... fields) throws ValueFactoryException
+
+	public RecordValue createRecord(String recordName, Value... fields)
+			throws ValueFactoryException
 	{
-		
+
 		PType type = interpreter.findType(recordName);
-		if(type instanceof ARecordInvariantType)
+		if (type instanceof ARecordInvariantType)
 		{
 			ARecordInvariantType rType = (ARecordInvariantType) type;
-			if(fields.length!=rType.getFields().size())
+			if (fields.length != rType.getFields().size())
 			{
 				throw new ValueFactoryException("Fileds count do not match record field count");
 			}
@@ -187,16 +187,16 @@ public class ValueFactory
 			{
 				list.add(rType.getFields().get(i).getTagname(), fields[i]);
 			}
-			return new RecordValue(rType,list,context); //add the context here as argument.
+			return new RecordValue(rType, list, context); // add the context here as argument.
 		}
-		throw new ValueFactoryException("Record "+recordName+ " not found");
+		throw new ValueFactoryException("Record " + recordName + " not found");
 	}
-	
+
 	public MapValue createMap(ValueMap map)
 	{
 		return new MapValue(map);
 	}
-	
+
 	public TupleValue createTuple(Value... fields)
 	{
 		ValueList list = new ValueList();

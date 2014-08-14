@@ -20,36 +20,40 @@ package org.overture.guibuilder.internal.ir;
 
 /**
  * Class to represent a vdm++ operation/function parameter
+ * 
  * @author carlos
- *
  */
-public class VdmParam {
+public class VdmParam
+{
 
 	private String paramName = null;
 	private VdmType paramType = null;
-	
+
 	/**
-	 * 
-	 * @param paramName The name given to the parameter
-	 * @param paramType The type of the parameter
+	 * @param paramName
+	 *            The name given to the parameter
+	 * @param paramType
+	 *            The type of the parameter
 	 */
-	public VdmParam(String paramName, VdmType paramType) {
-		this.paramName = paramName; this.paramType = paramType;
+	public VdmParam(String paramName, VdmType paramType)
+	{
+		this.paramName = paramName;
+		this.paramType = paramType;
 	}
-	
+
 	/**
-	 * 
 	 * @return the name of the parameter
 	 */
-	public String getParaName() {
+	public String getParaName()
+	{
 		return paramName;
 	}
-	
+
 	/**
-	 * 
 	 * @return the paramters type
 	 */
-	public VdmType getType() {
+	public VdmType getType()
+	{
 		return paramType;
 	}
 }

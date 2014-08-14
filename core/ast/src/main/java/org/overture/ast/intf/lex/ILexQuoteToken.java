@@ -6,8 +6,8 @@ public interface ILexQuoteToken extends ILexToken
 {
 
 	String getValue();
-	
+
 	LexQuoteToken clone();
-	
+
 	String toString();
 }

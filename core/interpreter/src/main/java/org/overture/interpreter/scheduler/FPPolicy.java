@@ -28,10 +28,9 @@ import java.util.Map;
 
 import org.overture.parser.config.Properties;
 
-
 public class FPPolicy extends FCFSPolicy
 {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 	private final Map<ISchedulableThread, Long> priorities;
 
 	public FPPolicy()
@@ -51,10 +50,9 @@ public class FPPolicy extends FCFSPolicy
 	{
 		super.register(thread, priority);
 
-		priorities.put(thread,
-			priority == 0 ?	Properties.scheduler_fcfs_timeslice :
-			thread.isVirtual() ? Properties.scheduler_virtual_timeslice :
-			priority);
+		priorities.put(thread, priority == 0 ? Properties.scheduler_fcfs_timeslice
+				: thread.isVirtual() ? Properties.scheduler_virtual_timeslice
+						: priority);
 	}
 
 	@Override

@@ -15,7 +15,7 @@ public class AirportSLTest extends ProbConverterTestBase
 
 	public AirportSLTest()
 	{
-		super(new File("src/test/resources/modules/complete/AirportNat.vdmsl".replace('/', File.separatorChar)),new TypeCheckerAssistantFactory());
+		super(new File("src/test/resources/modules/complete/AirportNat.vdmsl".replace('/', File.separatorChar)), new TypeCheckerAssistantFactory());
 	}
 
 	@Test
@@ -59,16 +59,15 @@ public class AirportSLTest extends ProbConverterTestBase
 		testMethod("NumberWaiting");
 	}
 
-	
 	@Override
 	protected String getPropertyId()
 	{
 		return "sl.airport";
 	}
-	
+
 	@Override
 	protected File getStorageLocation()
 	{
-		return new File(super.getStorageLocation(),this.getClass().getSimpleName());
+		return new File(super.getStorageLocation(), this.getClass().getSimpleName());
 	}
 }

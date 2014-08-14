@@ -1,0 +1,29 @@
+class A
+
+operations
+
+public quotePatternOp : <T1> ==> <T1>
+quotePatternOp (<T1>) ==
+let <T1> = <T1>
+in
+	return <T1>;
+
+functions
+
+public quotePatternFun : <T1> -> <T1>
+quotePatternFun (<T1>) ==
+let <T1> = <T1>
+in
+	<T1>;
+
+end A
+
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	return [new A().quotePatternOp(<T1>), A`quotePatternFun(<T1>)];
+
+end Entry

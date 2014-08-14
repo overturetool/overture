@@ -34,8 +34,7 @@ public class ACallObjectStatementAssistantTC
 		return types;
 	}
 
-	public void checkArgTypes(PType type, List<PType> ptypes,
-			List<PType> atypes)
+	public void checkArgTypes(PType type, List<PType> ptypes, List<PType> atypes)
 	{
 		if (ptypes.size() != atypes.size())
 		{

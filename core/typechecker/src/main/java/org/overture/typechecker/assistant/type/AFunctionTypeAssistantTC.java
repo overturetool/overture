@@ -19,8 +19,7 @@ public class AFunctionTypeAssistantTC
 	}
 
 	@SuppressWarnings("unchecked")
-	public AFunctionType getCurriedPreType(AFunctionType t,
-			Boolean isCurried)
+	public AFunctionType getCurriedPreType(AFunctionType t, Boolean isCurried)
 	{
 
 		if (isCurried && t.getResult() instanceof AFunctionType)

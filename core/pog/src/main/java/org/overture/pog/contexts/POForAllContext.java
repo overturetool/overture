@@ -60,7 +60,8 @@ public class POForAllContext extends POContext
 		this.bindings = exp.getBindings();
 	}
 
-	public POForAllContext(ASeqCompSeqExp exp, IPogAssistantFactory assistantFactory)
+	public POForAllContext(ASeqCompSeqExp exp,
+			IPogAssistantFactory assistantFactory)
 	{
 		this.bindings = assistantFactory.createASetBindAssistant().getMultipleBindList(exp.getSetBind());
 	}
@@ -80,7 +81,7 @@ public class POForAllContext extends POContext
 		this.bindings = af.createPBindAssistant().getMultipleBindList(exp.getBind());
 	}
 
-	public POForAllContext(ITypeCheckerAssistantFactory af,AIotaExp exp)
+	public POForAllContext(ITypeCheckerAssistantFactory af, AIotaExp exp)
 	{
 		this.bindings = af.createPBindAssistant().getMultipleBindList(exp.getBind());
 	}
@@ -98,14 +99,17 @@ public class POForAllContext extends POContext
 		}
 	}
 
-	public POForAllContext(ALetBeStExp exp, IPogAssistantFactory assistantFactory)
+	public POForAllContext(ALetBeStExp exp,
+			IPogAssistantFactory assistantFactory)
 	{
 		this.bindings = cloneBinds(assistantFactory.createPMultipleBindAssistant().getMultipleBindList(exp.getBind()));
 	}
 
-	private List<PMultipleBind> cloneBinds(List<PMultipleBind> multipleBindList) {
+	private List<PMultipleBind> cloneBinds(List<PMultipleBind> multipleBindList)
+	{
 		List<PMultipleBind> r = new LinkedList<PMultipleBind>();
-		for (PMultipleBind pmb : multipleBindList){
+		for (PMultipleBind pmb : multipleBindList)
+		{
 			r.add(pmb.clone());
 		}
 		return r;
@@ -116,8 +120,9 @@ public class POForAllContext extends POContext
 	{
 		return getSuperContext(stitch);
 	}
-	
-	protected AForAllExp getSuperContext(PExp stitch){
+
+	protected AForAllExp getSuperContext(PExp stitch)
+	{
 		AForAllExp forAllExp = new AForAllExp();
 		forAllExp.setBindList(cloneBinds(bindings));
 		forAllExp.setPredicate(stitch);

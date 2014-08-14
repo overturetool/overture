@@ -5,6 +5,7 @@ import static org.junit.Assert.fail;
 import java.lang.reflect.Type;
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.overture.ast.analysis.AnalysisException;
@@ -20,6 +21,7 @@ import com.google.gson.reflect.TypeToken;
  * 
  * @author ldc
  */
+@Ignore
 @RunWith(Parameterized.class)
 public class PogAllExamplesTest extends ParamExamplesTest<PogTestResult>
 {

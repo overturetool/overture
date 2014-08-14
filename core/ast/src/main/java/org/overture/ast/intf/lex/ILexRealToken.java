@@ -4,10 +4,9 @@ public interface ILexRealToken extends ILexToken
 {
 
 	public double getValue();
-	
+
 	public String toString();
-	
-	
+
 	public ILexRealToken clone();
-	
+
 }

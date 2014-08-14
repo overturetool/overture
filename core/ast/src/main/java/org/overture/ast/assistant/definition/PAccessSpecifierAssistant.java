@@ -17,7 +17,6 @@ public class PAccessSpecifierAssistant
 		this.af = af;
 	}
 
-
 	public boolean isStatic(AAccessSpecifierAccessSpecifier access)
 	{
 

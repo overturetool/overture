@@ -30,10 +30,8 @@ import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.config.Settings;
-import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
-
-
+import org.overture.interpreter.runtime.Interpreter;
 
 public class RecordValue extends Value
 {
@@ -41,16 +39,14 @@ public class RecordValue extends Value
 	public final ARecordInvariantType type;
 	public final FieldMap fieldmap;
 	public final FunctionValue invariant;
-	public final IInterpreterAssistantFactory assistantFactory;
 
 	// mk_ expressions
-	public RecordValue(ARecordInvariantType type,	ValueList values, Context ctxt)
-		throws AnalysisException
+	public RecordValue(ARecordInvariantType type, ValueList values, Context ctxt)
+			throws AnalysisException
 	{
 		this.type = type;
-		this.assistantFactory=ctxt.assistantFactory;
 		this.fieldmap = new FieldMap();
-		this.invariant = ctxt.assistantFactory.createSInvariantTypeAssistant().getInvariant(type,ctxt);
+		this.invariant = ctxt.assistantFactory.createSInvariantTypeAssistant().getInvariant(type, ctxt);
 
 		if (values.size() != type.getFields().size())
 		{
@@ -59,7 +55,7 @@ public class RecordValue extends Value
 
 		Iterator<AFieldField> fi = type.getFields().iterator();
 
-		for (Value v: values)
+		for (Value v : values)
 		{
 			AFieldField f = fi.next();
 			fieldmap.add(f.getTag(), v.convertTo(f.getType(), ctxt), !f.getEqualityAbstraction());
@@ -69,13 +65,12 @@ public class RecordValue extends Value
 	}
 
 	// mu_ expressions
-	public RecordValue(ARecordInvariantType type,	FieldMap mapvalues, Context ctxt)
-		throws AnalysisException
+	public RecordValue(ARecordInvariantType type, FieldMap mapvalues,
+			Context ctxt) throws AnalysisException
 	{
 		this.type = type;
-		this.assistantFactory=ctxt.assistantFactory;
 		this.fieldmap = new FieldMap();
-		this.invariant = ctxt.assistantFactory.createSInvariantTypeAssistant().getInvariant(type,ctxt);
+		this.invariant = ctxt.assistantFactory.createSInvariantTypeAssistant().getInvariant(type, ctxt);
 
 		if (mapvalues.size() != type.getFields().size())
 		{
@@ -101,25 +96,24 @@ public class RecordValue extends Value
 	}
 
 	// Only called by clone()
-	private RecordValue(ARecordInvariantType type, FieldMap mapvalues, FunctionValue invariant, IInterpreterAssistantFactory af)
+	private RecordValue(ARecordInvariantType type, FieldMap mapvalues,
+			FunctionValue invariant)
 	{
-		this.assistantFactory = af;
 		this.type = type;
 		this.invariant = invariant;
 		this.fieldmap = mapvalues;
 	}
 
-
-	public RecordValue(ARecordInvariantType type, NameValuePairList mapvalues, Context ctxt)
+	public RecordValue(ARecordInvariantType type, NameValuePairList mapvalues,
+			Context ctxt)
 	{
-		this.assistantFactory=ctxt.assistantFactory;
 		this.type = type;
 		this.invariant = null;
 		this.fieldmap = new FieldMap();
 
-		for (NameValuePair nvp: mapvalues)
+		for (NameValuePair nvp : mapvalues)
 		{
-			AFieldField f = ctxt.assistantFactory.createARecordInvariantTypeAssistant().findField(type,nvp.name.getName());
+			AFieldField f = ctxt.assistantFactory.createARecordInvariantTypeAssistant().findField(type, nvp.name.getName());
 			this.fieldmap.add(nvp.name.getName(), nvp.value, !f.getEqualityAbstraction());
 		}
 	}
@@ -142,14 +136,13 @@ public class RecordValue extends Value
 				{
 					abort(4079, "Type invariant violated by mk_ arguments", ctxt);
 				}
-			}
-			finally
+			} finally
 			{
 				ctxt.threadState.setAtomic(false);
 			}
 		}
 	}
-	
+
 	@Override
 	public RecordValue recordValue(Context ctxt)
 	{
@@ -176,17 +169,17 @@ public class RecordValue extends Value
 
 			listeners = list;
 		}
-		
+
 		FieldMap nm = new FieldMap();
 
-		for (FieldValue fv: fieldmap)
+		for (FieldValue fv : fieldmap)
 		{
 			Value uv = fv.value.getUpdatable(listeners);
 			nm.add(fv.name, uv, fv.comparable);
 		}
 
-		UpdatableValue uval = UpdatableValue.factory(new RecordValue(type, nm, invariant,assistantFactory), listeners);
-		
+		UpdatableValue uval = UpdatableValue.factory(new RecordValue(type, nm, invariant), listeners);
+
 		if (invl != null)
 		{
 			// Update the listener with the address of the updatable copy
@@ -201,13 +194,13 @@ public class RecordValue extends Value
 	{
 		FieldMap nm = new FieldMap();
 
-		for (FieldValue fv: fieldmap)
+		for (FieldValue fv : fieldmap)
 		{
 			Value uv = fv.value.getConstant();
 			nm.add(fv.name, uv, fv.comparable);
 		}
 
-		return new RecordValue(type, nm, invariant,assistantFactory);
+		return new RecordValue(type, nm, invariant);
 	}
 
 	@Override
@@ -215,9 +208,8 @@ public class RecordValue extends Value
 	{
 		if (other instanceof Value)
 		{
-			return compareTo((Value)other) == 0;
-		}
-		else
+			return compareTo((Value) other) == 0;
+		} else
 		{
 			return false;
 		}
@@ -230,11 +222,12 @@ public class RecordValue extends Value
 
 		if (val instanceof RecordValue)
 		{
-			RecordValue ot = (RecordValue)val;
+			RecordValue ot = (RecordValue) val;
 
-			if (assistantFactory.createPTypeAssistant().equals(ot.type,type))
+			if (Interpreter.getInstance().getAssistantFactory().createPTypeAssistant().equals(ot.type, type))
 			{
-				for (AFieldField f: type.getFields())
+
+				for (AFieldField f : type.getFields())
 				{
 					if (!f.getEqualityAbstraction())
 					{
@@ -272,14 +265,14 @@ public class RecordValue extends Value
 
 		if (fi.hasNext())
 		{
-    		String ftag = fi.next().getTag();
-    		sb.append(fieldmap.get(ftag));
+			String ftag = fi.next().getTag();
+			sb.append(fieldmap.get(ftag));
 
-    		while (fi.hasNext())
-    		{
-    			ftag = fi.next().getTag();
-    			sb.append(", " + fieldmap.get(ftag));
-    		}
+			while (fi.hasNext())
+			{
+				ftag = fi.next().getTag();
+				sb.append(", " + fieldmap.get(ftag));
+			}
 		}
 
 		sb.append(")");
@@ -299,13 +292,13 @@ public class RecordValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt) throws AnalysisException
+	public Value convertValueTo(PType to, Context ctxt)
+			throws AnalysisException
 	{
 		if (ctxt.assistantFactory.createPTypeAssistant().equals(to, type))
 		{
 			return this;
-		}
-		else
+		} else
 		{
 			return super.convertValueTo(to, ctxt);
 		}
@@ -314,6 +307,6 @@ public class RecordValue extends Value
 	@Override
 	public Object clone()
 	{
-		return new RecordValue(type, (FieldMap)fieldmap.clone(), invariant,assistantFactory);
+		return new RecordValue(type, (FieldMap) fieldmap.clone(), invariant);
 	}
 }

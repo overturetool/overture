@@ -23,7 +23,7 @@ public class PMultipleBindAssistantInterpreter extends PMultipleBindAssistantTC
 	public ValueList getBindValues(PMultipleBind mb, Context ctxt)
 			throws ValueException, AnalysisException
 	{
-			return mb.apply(af.getBindValuesCollector(), ctxt);
+		return mb.apply(af.getBindValuesCollector(), ctxt);
 	}
 
 	public ValueList getValues(PMultipleBind mb, ObjectContext ctxt)

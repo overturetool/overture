@@ -29,7 +29,7 @@ import java.util.Properties;
 public class XMLOpenTagNode extends XMLTagNode
 {
 	public final List<XMLNode> children;
-	public final String text;	// for <tag>text</tag> cases...
+	public final String text; // for <tag>text</tag> cases...
 
 	public XMLOpenTagNode(String tag, Properties attrs, List<XMLNode> children)
 	{
@@ -38,9 +38,8 @@ public class XMLOpenTagNode extends XMLTagNode
 
 		if (children.size() == 1 && children.get(0) instanceof XMLTextNode)
 		{
-			text = ((XMLTextNode)children.get(0)).text;
-		}
-		else
+			text = ((XMLTextNode) children.get(0)).text;
+		} else
 		{
 			text = null;
 		}
@@ -53,11 +52,11 @@ public class XMLOpenTagNode extends XMLTagNode
 
 	public XMLNode getChild(String sought)
 	{
-		for (XMLNode node: children)
+		for (XMLNode node : children)
 		{
 			if (node instanceof XMLTagNode)
 			{
-				XMLTagNode tn = (XMLTagNode)node;
+				XMLTagNode tn = (XMLTagNode) node;
 
 				if (tn.tag.equals(sought))
 				{
@@ -76,7 +75,7 @@ public class XMLOpenTagNode extends XMLTagNode
 		sb.append("<");
 		sb.append(tag);
 
-		for (Object name: attrs.keySet())
+		for (Object name : attrs.keySet())
 		{
 			sb.append(" ");
 			sb.append(name);
@@ -87,7 +86,7 @@ public class XMLOpenTagNode extends XMLTagNode
 
 		sb.append(">");
 
-		for (XMLNode node: children)
+		for (XMLNode node : children)
 		{
 			sb.append(node);
 		}

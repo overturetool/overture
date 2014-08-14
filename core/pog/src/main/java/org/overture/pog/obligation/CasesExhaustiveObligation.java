@@ -44,45 +44,44 @@ import org.overture.pog.pub.POType;
 public class CasesExhaustiveObligation extends ProofObligation
 {
 	/**
-	 * VDM bit:
-	 * 		cases x: 
-	 * 	 		a -> ....
-	 * 	  		default -> ...
-	 * yields PO:
-	 * 		x = a or (exists default : X & x = default)
+	 * VDM bit: cases x: a -> .... default -> ... yields PO: x = a or (exists default : X & x = default)
 	 */
 	private static final long serialVersionUID = -2266396606434510800L;
 
-	//gkanos: Added parameter for the use of assistant.
-	public CasesExhaustiveObligation(ACasesExp exp, IPOContextStack ctxt, IPogAssistantFactory assistantFactory) throws AnalysisException
+	// gkanos: Added parameter for the use of assistant.
+	public CasesExhaustiveObligation(ACasesExp exp, IPOContextStack ctxt,
+			IPogAssistantFactory assistantFactory) throws AnalysisException
 	{
-		super(exp, POType.CASES_EXHAUSTIVE, ctxt, exp.getLocation(),assistantFactory);
-		
-		PExp initialExp = alt2Exp(exp.getCases().getFirst(), exp, assistantFactory );
-		List<ACaseAlternative> initialCases= new LinkedList<ACaseAlternative>(exp.getCases());
+		super(exp, POType.CASES_EXHAUSTIVE, ctxt, exp.getLocation(), assistantFactory);
+
+		PExp initialExp = alt2Exp(exp.getCases().getFirst(), exp, assistantFactory);
+		List<ACaseAlternative> initialCases = new LinkedList<ACaseAlternative>(exp.getCases());
 		initialCases.remove(0);
-		
+
 		PExp pred = recOnExp(exp.clone(), initialCases, initialExp, assistantFactory);
-		
+
 		stitch = pred.clone();
 		valuetree.setPredicate(ctxt.getPredWithContext(pred));
 	}
-	
-	
-	private PExp recOnExp(ACasesExp exp, List<ACaseAlternative> cases, PExp r, IPogAssistantFactory assistantFactory) throws AnalysisException{
-		if (cases.isEmpty()){
+
+	private PExp recOnExp(ACasesExp exp, List<ACaseAlternative> cases, PExp r,
+			IPogAssistantFactory assistantFactory) throws AnalysisException
+	{
+		if (cases.isEmpty())
+		{
 			return r;
 		}
-		
+
 		AOrBooleanBinaryExp orExp = AstExpressionFactory.newAOrBooleanBinaryExp(r, alt2Exp(cases.get(0), exp.clone(), assistantFactory));
-		
+
 		List<ACaseAlternative> newCases = new LinkedList<ACaseAlternative>(cases);
 		newCases.remove(0);
-		
+
 		return recOnExp(exp, newCases, orExp, assistantFactory);
 	}
 
-	private PExp alt2Exp(ACaseAlternative alt, ACasesExp exp, IPogAssistantFactory assistantFactory) throws AnalysisException
+	private PExp alt2Exp(ACaseAlternative alt, ACasesExp exp,
+			IPogAssistantFactory assistantFactory) throws AnalysisException
 	{
 		if (assistantFactory.createPPatternAssistant().isSimple(alt.getPattern()))
 		{

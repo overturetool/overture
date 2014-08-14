@@ -28,8 +28,6 @@ import java.util.Vector;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.util.Utils;
 
-
-
 @SuppressWarnings("serial")
 public class NameValuePairList extends Vector<NameValuePair>
 {
@@ -58,7 +56,7 @@ public class NameValuePairList extends Vector<NameValuePair>
 	{
 		NameValuePairList nlist = new NameValuePairList();
 
-		for (NameValuePair nvp: this)
+		for (NameValuePair nvp : this)
 		{
 			nlist.add(nvp.name, nvp.value.getUpdatable(listeners));
 		}

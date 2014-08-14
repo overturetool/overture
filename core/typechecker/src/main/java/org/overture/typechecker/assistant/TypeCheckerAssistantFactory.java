@@ -167,8 +167,8 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 {
 
 	// instance variables of things to return
-	TypeComparator typeComp;
-	LexNameTokenAssistant lnt;
+	transient TypeComparator typeComp;
+	transient LexNameTokenAssistant lnt;
 
 	@Override
 	public AApplyObjectDesignatorAssistantTC createAApplyObjectDesignatorAssistant()
@@ -1102,7 +1102,8 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	@Override
 	public LexNameTokenAssistant getLexNameTokenAssistant()
 	{
-		if (lnt ==null){
+		if (lnt == null)
+		{
 			lnt = new LexNameTokenAssistant(this);
 		}
 		return lnt;

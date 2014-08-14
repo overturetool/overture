@@ -71,7 +71,7 @@ public class VDMPP extends VDMJ
 	}
 
 	/**
-	 * @see org.overture.vdmj.VDMJ#parse(java.util.List)
+	 * @see VDMJ#parse(java.util.List)
 	 */
 
 	@Override
@@ -126,7 +126,7 @@ public class VDMPP extends VDMJ
 					reader = new ClassReader(ltr);
 					classes.addAll(reader.readClasses());
 					long after = System.currentTimeMillis();
-					duration += (after - before);
+					duration += after - before;
 				}
 			} catch (InternalException e)
 			{
@@ -156,7 +156,7 @@ public class VDMPP extends VDMJ
 		if (n > 0)
 		{
 			info("Parsed " + plural(n, "class", "es") + " in "
-					+ (double) (duration) / 1000 + " secs. ");
+					+ (double) duration / 1000 + " secs. ");
 			info(perrs == 0 ? "No syntax errors" : "Found "
 					+ plural(perrs, "syntax error", "s"));
 			infoln(pwarn == 0 ? "" : " and " + (warnings ? "" : "suppressed ")
@@ -167,7 +167,7 @@ public class VDMPP extends VDMJ
 	}
 
 	/**
-	 * @see org.overture.vdmj.VDMJ#typeCheck()
+	 * @see VDMJ#typeCheck()
 	 */
 
 	@Override

@@ -41,6 +41,7 @@ import org.overture.codegen.cgast.statements.AElseIfStmCG;
 import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
+import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
@@ -569,6 +570,26 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		STypeCG expectedType = node.getType();
 
 		if (!(expectedType instanceof AUnionTypeCG))
+		{
+			correctTypes(node.getExp(), expectedType);
+		}
+	}
+	
+	@Override
+	public void caseAReturnStmCG(AReturnStmCG node) throws AnalysisException
+	{
+		if(node.getExp() == null)
+		{
+			return; //When the return type of the method is 'void'
+		}
+		
+		node.getExp().apply(this);
+		
+		AMethodDeclCG methodDecl = node.getAncestor(AMethodDeclCG.class);
+		
+		STypeCG expectedType = methodDecl.getMethodType().getResult();
+		
+		if(!(expectedType instanceof AUnionTypeCG))
 		{
 			correctTypes(node.getExp(), expectedType);
 		}

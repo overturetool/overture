@@ -29,8 +29,8 @@ TemperatureSensor (id, type, val) ==
   Value := val;
  );
 
-public PeriodicOp: () ==> ()
-PeriodicOp() ==
+public Step: () ==> ()
+Step() ==
   --cycles(1E3)
   Value := World`env.ReadTemp();
 
@@ -48,6 +48,6 @@ sync
 thread
 
 -- period of thread (period, jitter, delay, offset)
-periodic(1000E6,0,0,0) (PeriodicOp)
+periodic(1000E6,0,0,0) (Step)
 
 end TemperatureSensor

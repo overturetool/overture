@@ -16,17 +16,17 @@ public class A {
     }
 
     public void op() {
-        VDMSeq as_ = SeqUtil.reverse(as.clone());
+        VDMSeq as_ = SeqUtil.reverse(Utils.clone(as));
 
-        VDMSeq bs_ = SeqUtil.reverse(bs.clone());
+        VDMSeq bs_ = SeqUtil.reverse(Utils.clone(bs));
 
-        VDMSeq cs_ = SeqUtil.reverse(cs.clone());
+        VDMSeq cs_ = SeqUtil.reverse(Utils.clone(cs));
 
-        VDMSeq ds_ = SeqUtil.reverse(ds.clone());
+        VDMSeq ds_ = SeqUtil.reverse(Utils.clone(ds));
 
-        VDMSeq es_ = SeqUtil.reverse(es.clone());
+        VDMSeq es_ = SeqUtil.reverse(Utils.clone(es));
 
-        VDMSeq fs_ = SeqUtil.reverse(fs.clone());
+        VDMSeq fs_ = SeqUtil.reverse(Utils.clone(fs));
 
         //Skip;
     }

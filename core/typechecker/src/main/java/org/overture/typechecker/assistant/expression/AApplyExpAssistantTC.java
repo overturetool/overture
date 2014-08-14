@@ -99,8 +99,7 @@ public class AApplyExpAssistantTC
 		return ot.getResult();
 	}
 
-	public PType sequenceApply(AApplyExp node, boolean isSimple,
-			SSeqType seq)
+	public PType sequenceApply(AApplyExp node, boolean isSimple, SSeqType seq)
 	{
 		if (node.getArgs().size() != 1)
 		{
@@ -181,6 +180,11 @@ public class AApplyExpAssistantTC
 	/**
 	 * Create a measure application string from this apply, turning the root function name into the measure name passed,
 	 * and collapsing curried argument sets into one.
+	 * 
+	 * @param node
+	 * @param measure
+	 * @param close
+	 * @return
 	 */
 	public String getMeasureApply(AApplyExp node, ILexNameToken measure,
 			boolean close)

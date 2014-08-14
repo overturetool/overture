@@ -15,8 +15,8 @@ import org.overture.interpreter.tests.utils.TestSourceFinder;
 public class ClassesPpClassicTest extends CommonInterpreterTest
 {
 
-	public ClassesPpClassicTest(Dialect dialect, String suiteName, File testSuiteRoot,
-			File file)
+	public ClassesPpClassicTest(Dialect dialect, String suiteName,
+			File testSuiteRoot, File file)
 	{
 		super(dialect, file, suiteName, testSuiteRoot);
 	}
@@ -36,7 +36,7 @@ public class ClassesPpClassicTest extends CommonInterpreterTest
 	{
 		return "class-classic.pp";
 	}
-	
+
 	@Override
 	public void setUp() throws Exception
 	{

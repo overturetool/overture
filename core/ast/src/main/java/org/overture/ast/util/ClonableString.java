@@ -17,8 +17,8 @@ public class ClonableString implements ExternalNode
 	{
 		return value;
 	}
-	
-	public Object clone() 
+
+	public Object clone()
 	{
 		return new ClonableString(value);
 	}

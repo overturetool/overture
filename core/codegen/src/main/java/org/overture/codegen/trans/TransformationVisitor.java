@@ -9,6 +9,8 @@ import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
+import org.overture.codegen.cgast.expressions.ACaseAltExpExpCG;
+import org.overture.codegen.cgast.expressions.ACasesExpCG;
 import org.overture.codegen.cgast.expressions.ACompMapExpCG;
 import org.overture.codegen.cgast.expressions.ACompSeqExpCG;
 import org.overture.codegen.cgast.expressions.ACompSetExpCG;
@@ -24,10 +26,14 @@ import org.overture.codegen.cgast.expressions.ALetBeStExpCG;
 import org.overture.codegen.cgast.expressions.ALetDefExpCG;
 import org.overture.codegen.cgast.expressions.AMapletExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
+import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
+import org.overture.codegen.cgast.statements.ACaseAltStmStmCG;
+import org.overture.codegen.cgast.statements.ACasesStmCG;
 import org.overture.codegen.cgast.statements.ALetBeStStmCG;
+import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
@@ -54,11 +60,14 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	
 	private ILanguageIterator langIterator;
 	
-	public TransformationVisitor(IRInfo info, TempVarPrefixes varPrefixes, TransformationAssistantCG transformationAssistant, ILanguageIterator langIterator)
+	private String casesExpResultPrefix;
+	
+	public TransformationVisitor(IRInfo info, TempVarPrefixes varPrefixes, TransformationAssistantCG transformationAssistant, ILanguageIterator langIterator, String casesExpPrefix)
 	{
 		this.info = info;
 		this.transformationAssistant = transformationAssistant;
 		this.langIterator = langIterator;
+		this.casesExpResultPrefix = casesExpPrefix;
 	}
 	
 	@Override
@@ -391,5 +400,61 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		
 		//And make sure to have the enclosing statement in the transformed tree
 		block.getStatements().add(enclosingStm);
+	}
+	
+	private ALocalAssignmentStmCG assignToVar(AIdentifierVarExpCG var, SExpCG exp)
+	{
+		ALocalAssignmentStmCG assignment = new ALocalAssignmentStmCG();
+		assignment.setTarget(var.clone());
+		assignment.setExp(exp.clone());
+		
+		return assignment;
+	}
+	
+	@Override
+	public void caseACasesExpCG(ACasesExpCG node) throws AnalysisException
+	{
+		SStmCG enclosingStm = transformationAssistant.getEnclosingStm(node, "cases expression");
+		
+		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
+		String casesExpResultName = info.getTempVarNameGen().nextVarName(casesExpResultPrefix);
+		idPattern.setName(casesExpResultName);
+		
+		AVarLocalDeclCG resultVarDecl = new AVarLocalDeclCG();
+		resultVarDecl.setPattern(idPattern);
+		resultVarDecl.setType(node.getType().clone());
+		resultVarDecl.setExp(new AUndefinedExpCG());
+		
+		AIdentifierVarExpCG resultVar = new AIdentifierVarExpCG();
+		resultVar.setIsLambda(false);
+		resultVar.setOriginal(casesExpResultName);
+		resultVar.setType(node.getType().clone());
+
+		ACasesStmCG casesStm = new ACasesStmCG();
+		casesStm.setExp(node.getExp().clone());
+		
+		for(ACaseAltExpExpCG altExp : node.getCases())
+		{
+			ACaseAltStmStmCG altStm = new ACaseAltStmStmCG();
+			altStm.setPattern(altExp.getPattern().clone());
+			altStm.setResult(assignToVar(resultVar, altExp.getResult()));
+			altStm.setPatternType(altExp.getPatternType().clone());
+			
+			casesStm.getCases().add(altStm);
+		}
+		
+		casesStm.setOthers(assignToVar(resultVar, node.getOthers()));
+		
+		ABlockStmCG block = new ABlockStmCG();
+		
+		ABlockStmCG wrapperBlock = new ABlockStmCG();
+		wrapperBlock.getLocalDefs().add(resultVarDecl);
+		
+		block.getStatements().add(wrapperBlock);
+		block.getStatements().add(casesStm);
+		
+		transform(enclosingStm, block, resultVar, node);
+		
+		casesStm.apply(this);
 	}
 }

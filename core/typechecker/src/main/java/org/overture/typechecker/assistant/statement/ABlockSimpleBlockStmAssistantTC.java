@@ -17,7 +17,7 @@ public class ABlockSimpleBlockStmAssistantTC
 		this.af = af;
 	}
 
-	//TODO: Used in the TypeCheckerStmVisitor.
+	// TODO: Used in the TypeCheckerStmVisitor.
 	public void addOne(Set<PType> rtypes, PType add)
 	{
 		if (add instanceof AVoidReturnType)

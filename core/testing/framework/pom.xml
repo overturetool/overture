@@ -1,0 +1,151 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.overturetool.core</groupId>
+    <artifactId>testing</artifactId>
+    <version>2.1.1-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <groupId>org.overturetool.core.testing</groupId>
+  <artifactId>framework</artifactId>
+  <name>Overture Testing Framework</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.overturetool.core</groupId>
+      <artifactId>ast</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.overturetool.core</groupId>
+      <artifactId>parser</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.overturetool.core</groupId>
+      <artifactId>typechecker</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.4</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-collections4</artifactId>
+      <version>4.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.2.4</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>${project.basedir}/../../../documentation/examples/</directory>
+        <targetPath>${project.build.directory}/classes/examples/</targetPath>
+        <includes>
+          <include>**/*.vdmsl</include>
+          <include>**/*.vdmpp</include>
+          <include>**/*.vdmrt</include>
+          <include>**/README.txt</include>
+        </includes>
+        <excludes>
+          <exclude>target/**</exclude>
+        </excludes>
+      </resource>
+    </resources>
+
+    <plugins>
+      <plugin>
+        <!-- The purpose of this is to generate a couple of index
+             files for the vdm examples and libs that get packed into
+             this jarfile. -jwc/05Aug2014
+             -->
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.7</version>
+        <executions>
+          <execution>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+                <target>
+                  <fileset id="vdm-lib-set" dir="${project.build.directory}/classes/examples/libs" />
+                  <pathconvert pathsep="${line.separator}" property="vdm-libs" refid="vdm-lib-set">
+                    <map from="${project.build.directory}/classes" to="" />
+                  </pathconvert>
+                  <echo file="${project.build.directory}/classes/examples/vdm-libs.index">${vdm-libs}</echo>
+                  <fileset id="vdm-example-set" dir="${project.build.directory}/classes/examples/">
+                    <include name="**/*.vdmsl" />
+                    <include name="**/*.vdmpp" />
+                    <include name="**/*.vdmrt" />
+                    <include name="**/README.txt" />
+                    <exclude name="libs/**" />
+                  </fileset>
+                  <pathconvert pathsep="${line.separator}" property="vdm-examples" refid="vdm-example-set">
+                    <map from="${project.build.directory}/classes" to="" />
+                  </pathconvert>
+                  <echo file="${project.build.directory}/classes/examples/vdm-examples.index">${vdm-examples}</echo>
+                </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <testFailureIgnore>true</testFailureIgnore>
+          <redirectTestOutputToFile>true</redirectTestOutputToFile>
+          <includes>
+            <include>**/*Test.java</include>
+            <include>**/*Test?.java</include>
+            <include>**/*TestSuite.java</include>
+          </includes>
+        </configuration>
+      </plugin>
+
+      <!-- never deploy/release/publish this module -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+
+      <!-- <plugin> -->
+      <!--   <groupId>org.apache.maven.plugins</groupId> -->
+      <!--   <artifactId>maven-jar-plugin</artifactId> -->
+      <!--   <configuration> -->
+      <!--     <includes> -->
+      <!--       <include>**/*.class</include> -->
+      <!--       <include>examples/**</include> -->
+      <!--     </includes> -->
+      <!--   </configuration> -->
+      <!--   <executions> -->
+      <!--     <execution> -->
+      <!--       <goals> -->
+      <!--         <goal>test-jar</goal> -->
+      <!--       </goals> -->
+      <!--     </execution> -->
+      <!--   </executions> -->
+      <!-- </plugin> -->
+    </plugins>
+  </build>
+</project>

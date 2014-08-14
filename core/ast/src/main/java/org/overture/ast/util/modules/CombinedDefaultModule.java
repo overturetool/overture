@@ -29,7 +29,7 @@ public class CombinedDefaultModule extends AModuleModules
 
 	@SuppressWarnings("deprecation")
 	public CombinedDefaultModule(Set<AModuleModules> modules)
-	{ 
+	{
 		super(null, null, null, new Vector<PDefinition>(), new Vector<ClonableFile>(), true, false);
 		this.modules.addAll(modules);
 
@@ -70,6 +70,7 @@ public class CombinedDefaultModule extends AModuleModules
 
 	/**
 	 * This method returns all the modules encapsulated within this container
+	 * 
 	 * @return a set of contained modules
 	 */
 	public Set<AModuleModules> getModules()

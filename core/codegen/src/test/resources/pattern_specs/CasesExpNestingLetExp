@@ -1,0 +1,28 @@
+class Entry
+
+functions
+
+public f :  (nat) -> nat
+f (n) ==
+let dummy1 = 10,
+	  dummy2 = 20
+in
+	cases n :
+		1 -> 50,
+		2 -> let b = 5 in b,
+		a -> a,
+		others -> 3
+	end;
+
+operations
+	
+public static Run : () ==> ?
+Run () ==
+(
+	dcl result : seq of  nat := [];
+	for i = 1 to 4 do
+		result := result ^ [f(i)];
+	return result;
+);
+
+end Entry

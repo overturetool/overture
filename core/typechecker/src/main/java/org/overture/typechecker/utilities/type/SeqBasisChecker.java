@@ -1,16 +1,13 @@
 package org.overture.typechecker.utilities.type;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.factory.AstFactory;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.ast.types.SSeqType;
-import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 /**
  * Used to determine if a type is a seq type
@@ -53,28 +50,28 @@ public class SeqBasisChecker extends TypeUnwrapper<Boolean>
 	@Override
 	public Boolean caseAUnionType(AUnionType type) throws AnalysisException
 	{
-		//return af.createAUnionTypeAssistant().getSeq(type) != null;
-//		if (!type.getSeqDone())
-//		{
-//			type.setSeqDone(true); // Mark early to avoid recursion.
-//			type.setSeqType(PTypeAssistantTC.getSeq(AstFactory.newAUnknownType(type.getLocation())));
-//
-//			PTypeSet set = new PTypeSet();
-//
-//			for (PType t : type.getTypes())
-//			{
-//				if (PTypeAssistantTC.isSeq(t))
-//				{
-//					set.add(PTypeAssistantTC.getSeq(t).getSeqof());
-//				}
-//			}
-//
-//			type.setSeqType(set.isEmpty() ? null
-//					: AstFactory.newASeqSeqType(type.getLocation(), set.getType(type.getLocation())));
-//		}
-//
-//		return type.getSeqType() !=null;
-		return type.apply(af.getSeqTypeFinder()) !=null;
+		// return af.createAUnionTypeAssistant().getSeq(type) != null;
+		// if (!type.getSeqDone())
+		// {
+		// type.setSeqDone(true); // Mark early to avoid recursion.
+		// type.setSeqType(PTypeAssistantTC.getSeq(AstFactory.newAUnknownType(type.getLocation())));
+		//
+		// PTypeSet set = new PTypeSet();
+		//
+		// for (PType t : type.getTypes())
+		// {
+		// if (PTypeAssistantTC.isSeq(t))
+		// {
+		// set.add(PTypeAssistantTC.getSeq(t).getSeqof());
+		// }
+		// }
+		//
+		// type.setSeqType(set.isEmpty() ? null
+		// : AstFactory.newASeqSeqType(type.getLocation(), set.getType(type.getLocation())));
+		// }
+		//
+		// return type.getSeqType() !=null;
+		return type.apply(af.getSeqTypeFinder()) != null;
 	}
 
 	@Override

@@ -43,17 +43,17 @@ public class PogAssistantFactory extends TypeCheckerAssistantFactory implements
 	{
 		return new VariableSubVisitor();
 	}
-	
+
 	@Override
-	public ILocaleExtractVisitor getLocaleExtractVisitor(){
+	public ILocaleExtractVisitor getLocaleExtractVisitor()
+	{
 		return new VdmLocaleExtractor();
 	}
 
 	@Override
-	public IInvExpGetVisitor getInvExpGetVisitor() {
+	public IInvExpGetVisitor getInvExpGetVisitor()
+	{
 		return new VdmInvExpGetVisitor();
 	}
-	
-	
 
 }

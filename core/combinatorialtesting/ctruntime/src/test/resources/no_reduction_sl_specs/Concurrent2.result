@@ -1,0 +1,19 @@
+<traces>
+	<class name="DEFAULT">
+		<trace name="T1" testcount="6" filename="Concurrent2" line="11" column="1" subset="1.0" reduction="NONE" seed="999">
+			<test no="1">fun1(1); fun2(1)</test>
+			<result no="1" verdict="PASSED">1 ; 1</result>
+			<test no="2">fun2(1); fun1(1)</test>
+			<result no="2" verdict="PASSED">1 ; 1</result>
+			<test no="3">fun1(2); fun2(2)</test>
+			<result no="3" verdict="PASSED">2 ; 2</result>
+			<test no="4">fun2(2); fun1(2)</test>
+			<result no="4" verdict="PASSED">2 ; 2</result>
+			<test no="5">fun1(3); fun2(3)</test>
+			<result no="5" verdict="PASSED">3 ; 3</result>
+			<test no="6">fun2(3); fun1(3)</test>
+			<result no="6" verdict="PASSED">3 ; 3</result>
+			<status verdict="PASSED" testcount="6" skippedcount="0" faildcount="0" inconclusivecount="0"></status>
+		</trace>
+	</class>
+</traces>

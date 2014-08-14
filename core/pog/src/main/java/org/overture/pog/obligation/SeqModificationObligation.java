@@ -34,15 +34,16 @@ import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
 
-
 public class SeqModificationObligation extends ProofObligation
 {
 	private static final long serialVersionUID = 2541416807923302230L;
 
-	public SeqModificationObligation(APlusPlusBinaryExp arg, IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
+	public SeqModificationObligation(APlusPlusBinaryExp arg,
+			IPOContextStack ctxt, IPogAssistantFactory af)
+			throws AnalysisException
 	{
-		super(arg, POType.SEQ_MODIFICATION, ctxt, arg.getLocation(),af);
-		
+		super(arg, POType.SEQ_MODIFICATION, ctxt, arg.getLocation(), af);
+
 		/**
 		 * "seq ++ map" produces "dom map subset inds seq"
 		 */
@@ -54,7 +55,7 @@ public class SeqModificationObligation extends ProofObligation
 		indsExp.setExp(arg.getLeft().clone());
 		subsetExp.setLeft(domExp);
 		subsetExp.setRight(indsExp);
-		
+
 		stitch = subsetExp;
 		valuetree.setPredicate(ctxt.getPredWithContext(stitch));
 	}

@@ -32,6 +32,10 @@ seq_of_char2val(s) ==
   is not yet specified
   post let mk_(b,t) = RESULT in not b => t = nil;
 
+
+static public classname[@T] : @T -> [seq1 of char]
+    classname(s) == is not yet specified;
+
 end VDMUtil
 
 

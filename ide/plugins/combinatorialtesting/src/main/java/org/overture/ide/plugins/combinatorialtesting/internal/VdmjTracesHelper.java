@@ -187,6 +187,7 @@ public class VdmjTracesHelper
 		MessageConsole myConsole = findConsole("TracesConsole");
 		MessageConsoleStream out = myConsole.newMessageStream();
 		out.setEncoding(p.getDefaultCharset());
+		myConsole.activate();
 
 		for (TraceExecutionSetup traceExecutionSetup : texe)
 		{

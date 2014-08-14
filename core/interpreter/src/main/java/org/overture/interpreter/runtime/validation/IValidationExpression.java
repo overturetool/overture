@@ -23,8 +23,7 @@
 
 package org.overture.interpreter.runtime.validation;
 
-
-public interface IValidationExpression {
-	
+public interface IValidationExpression
+{
 
 }

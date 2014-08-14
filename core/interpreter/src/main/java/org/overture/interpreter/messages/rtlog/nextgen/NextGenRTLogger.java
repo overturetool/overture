@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.messages.rtlog.IRTLogger;
 import org.overture.interpreter.messages.rtlog.RTBusActivateMessage;
 import org.overture.interpreter.messages.rtlog.RTBusCompletedMessage;
@@ -49,7 +48,6 @@ public class NextGenRTLogger implements IRTLogger
 {
 
 	private boolean enabled = false;
-
 
 	public static NextGenRTLogger getInstanceFromFile(String filename)
 			throws IOException, ClassNotFoundException
@@ -340,7 +338,7 @@ public class NextGenRTLogger implements IRTLogger
 	public void setLogfile(File logfile)
 	{
 		this.logFile = logfile;
-		this.enabled = logfile!=null;
+		this.enabled = logfile != null;
 	}
 
 	// Writing to log
@@ -420,7 +418,7 @@ public class NextGenRTLogger implements IRTLogger
 			return operation.getSelf().type.getName().getName();
 		} else
 		{
-			//return SClassDefinitionAssistantInterpreter.getName(operation.classdef);
+			// return SClassDefinitionAssistantInterpreter.getName(operation.classdef);
 			if (operation.classdef.getName() != null)
 			{
 				return operation.classdef.getName().getName();

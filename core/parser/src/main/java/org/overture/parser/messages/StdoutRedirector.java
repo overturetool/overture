@@ -1,4 +1,5 @@
 package org.overture.parser.messages;
+
 ///*******************************************************************************
 // *
 // *	Copyright (c) 2009 Fujitsu Services Ltd.
@@ -60,4 +61,4 @@ package org.overture.parser.messages;
 //			super.print(line);		// Better than ignoring it??
 //		}
 //	}
-//}
+// }
