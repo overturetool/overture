@@ -460,5 +460,19 @@ public class VdmSymbolTable implements ISymbolTable
 	{
 		return "then";
 	}
+	
+	@Override
+	public String getIN()
+	{
+		return "in";
+	}
+	
+	@Override
+	public String getDEFINE()
+	{
+		return "def";
+	}
+	
+	
 
 }

@@ -1266,4 +1266,11 @@ public class ExpressionNppTest {
 		aux("let x = dom m1 inter dom m2 in e", 
 				"let x = ((dom m1) inter (dom m2)) in e");
 	}
+	
+	@Test
+	public void testCaseADefExp_01() throws AnalysisException
+	{
+		aux("def user = lib(copy) in if user = <OUT> then true else false",
+					"def user = lib(copy)\nin\nif (user = <OUT>)\nthen true\nelse false");
+	}
 }

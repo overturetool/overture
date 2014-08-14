@@ -152,5 +152,9 @@ public interface ISymbolTable
 	String getTHEN();
 	
 	String getELSE();
+	
+	String getIN();
+	
+	String getDEFINE();
 
 }

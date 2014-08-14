@@ -11,6 +11,7 @@ import org.overture.ast.expressions.ACardinalityUnaryExp;
 import org.overture.ast.expressions.ACasesExp;
 import org.overture.ast.expressions.ACharLiteralExp;
 import org.overture.ast.expressions.ACompBinaryExp;
+import org.overture.ast.expressions.ADefExp;
 import org.overture.ast.expressions.ADistConcatUnaryExp;
 import org.overture.ast.expressions.ADistIntersectUnaryExp;
 import org.overture.ast.expressions.ADistMergeUnaryExp;
@@ -1191,22 +1192,19 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		sb.append(space);
 		
 		while (node.getLocalDefs().size() != 0){
-			//System.out.print(node.getLocalDefs().getFirst().getClass().toString());
+			
 
 			if (node.getLocalDefs().size() > 1){
 				
-				def = node.getLocalDefs().poll().apply(THIS,question);//.apply(THIS, question);
-				//System.out.print(node.getLocalDefs().getFirst().getClass().toString());
+				def = node.getLocalDefs().poll().apply(THIS,question);
+				
 				sb.append(def);
 				sb.append(mytable.getCOMMA());
 				sb.append(space);
 			}
 			else
 			{
-				//System.out.print(node.getLocalDefs().getFirst().toString());
-				//TODO: this and other value definitions 
-				//will be changed to apply when the appropriate methods are created
-				def = node.getLocalDefs().poll().apply(THIS, question);//.toString();//.apply(THIS, question);
+				def = node.getLocalDefs().poll().apply(THIS, question);
 				
 				sb.append(def);
 				sb.append(space);
@@ -1217,8 +1215,45 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		sb.append(space);
 		
 		sb.append(exp);
-	//	System.out.print(sb.toString());
+	
 		return sb.toString();
+	}
+	
+	@Override
+	public String caseADefExp(ADefExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		String def;
+		String exp = node.getExpression().apply(THIS, question);
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(mytable.getDEFINE());
+		sb.append(space);
+		
+		//System.out.print(node.getLocalDefs().getFirst().getClass().toString());
+		
+		while(node.getLocalDefs().size() != 0){
+			if(node.getLocalDefs().size() >1)
+			{
+				def = node.getLocalDefs().poll().toString();//.apply(THIS, question);
+				sb.append(def);
+				sb.append(mytable.getSEP());
+			}
+			else
+			{
+				def = node.getLocalDefs().poll().toString();//.apply(THIS, question);
+				sb.append(def);
+			}
+		}
+		
+		sb.append(brl);
+		sb.append(mytable.getIN());
+		sb.append(brl);
+		sb.append(exp);
+		
+		return sb.toString();
+		
 	}
 //	@Override
 //	public String caseAFieldExp(AFieldExp node, IndentTracker question)
@@ -1231,13 +1266,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 //		
 //		return null;
 //	}
-	
-	@Override
-	public String caseAValueDefinition(AValueDefinition node,
-			IndentTracker question) throws AnalysisException
-	{
-		return node.toString();
-	}
 	
 	@Override
 	public String caseACharLiteralExp(ACharLiteralExp node,
@@ -1289,6 +1317,13 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 			IndentTracker question) throws AnalysisException
 	{
 		return Boolean.toString(node.getValue().getValue());
+	}
+	
+	@Override
+	public String caseAValueDefinition(AValueDefinition node,
+			IndentTracker question) throws AnalysisException
+	{
+		return node.toString();
 	}
 
 	@Override
