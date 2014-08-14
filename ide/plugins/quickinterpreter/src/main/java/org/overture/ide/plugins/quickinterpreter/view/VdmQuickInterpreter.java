@@ -23,7 +23,13 @@ import java.util.Vector;
 
 import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.text.Document;
+import org.eclipse.jface.text.TextAttribute;
+import org.eclipse.jface.text.rules.IToken;
+import org.eclipse.jface.text.rules.Token;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyleRange;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -38,6 +44,8 @@ import org.overture.ast.lex.Dialect;
 import org.overture.ast.util.modules.ModuleList;
 import org.overture.config.Release;
 import org.overture.config.Settings;
+import org.overture.ide.ui.editor.syntax.VdmColorProvider;
+import org.overture.ide.vdmsl.ui.editor.syntax.VdmSlCodeScanner;
 import org.overture.interpreter.runtime.Interpreter;
 import org.overture.interpreter.runtime.ModuleInterpreter;
 import org.overture.parser.config.Properties;
@@ -51,9 +59,11 @@ public class VdmQuickInterpreter extends ViewPart
 	private final int HISTORY_COUNT = 200;
 	private List<String> history = new Vector<String>(HISTORY_COUNT);
 	private int index = -1;
-	private Text textAreaResult = null;
+	private StyledText textAreaResult = null;
 	private Text textInput = null;
 	Interpreter interpreter;
+	
+	VdmSlCodeScanner scannerResult = new VdmSlCodeScanner(new VdmColorProvider());
 
 	public VdmQuickInterpreter()
 	{
@@ -77,6 +87,7 @@ public class VdmQuickInterpreter extends ViewPart
 			e.printStackTrace();
 		}
 	}
+	
 
 	@Override
 	public void createPartControl(Composite parent)
@@ -91,7 +102,7 @@ public class VdmQuickInterpreter extends ViewPart
 		fillLayout.spacing = 5;
 		parent.setLayout(layout);
 
-		textAreaResult = new Text(parent, SWT.MULTI | SWT.V_SCROLL
+		textAreaResult = new StyledText(parent, SWT.MULTI | SWT.V_SCROLL
 				| SWT.READ_ONLY);
 		textAreaResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		textInput = new Text(parent, SWT.BORDER | SWT.SINGLE);
@@ -175,7 +186,7 @@ public class VdmQuickInterpreter extends ViewPart
 
 		if (input.equals("help"))
 		{
-			textAreaResult.append("\n\nOverture Properties: "+"\n\tEVAL_TYPE_BINDS = "
+			appendResult("\n\nOverture Properties: "+"\n\tEVAL_TYPE_BINDS = "
 					+ Properties.numeric_type_bind_generation + "\n\tINT_MIN = "
 					+ Properties.minint + "\n\tINT_MAX = " + Properties.maxint
 					+ "\n\tRelease = " + Settings.release + "\n\tDialect = "
@@ -184,22 +195,50 @@ public class VdmQuickInterpreter extends ViewPart
 		}
 
 		
-		textAreaResult.append("\n" + input);
+		appendResult("\n" + input);
 
 		try
 		{
-			textAreaResult.append(" = "
+			appendResult(" = "
 					+ interpreter.execute(input.trim(), null));
 		} catch (ParserException e)
 		{
-			textAreaResult.append(" = " + e.toString());
+			appendResult(" = " + e.toString());
 			init();
 		} catch (Exception e)
 		{
-			textAreaResult.append(" --- " + e.getMessage());
+			appendResult(" --- " + e.getMessage());
 			init();
 		}
 
+	}
+	
+	private void appendResult(String text)
+	{
+		final String oldText = textAreaResult.getText();
+		String tmp = oldText+text;
+		textAreaResult.append(text);
+		textAreaResult.setSelection(textAreaResult.getText().length());
+		
+		scannerResult.setRange(new Document(tmp), 0, tmp.length());
+
+		IToken token = null;
+		do
+		{
+			token = scannerResult.nextToken();
+			TextAttribute attribute = null;
+			int start = scannerResult.getTokenOffset();
+			int length = scannerResult.getTokenLength();
+
+			if (token.getData() instanceof TextAttribute)
+			{
+				attribute = (TextAttribute) token.getData();
+				textAreaResult.setStyleRange(new StyleRange(start, length, attribute.getForeground(), attribute.getBackground()));
+			}
+
+		} while (token != Token.EOF);
+		
+		
 	}
 
 	@Override
