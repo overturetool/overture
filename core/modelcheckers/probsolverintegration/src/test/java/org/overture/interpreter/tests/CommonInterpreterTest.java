@@ -84,9 +84,9 @@ public abstract class CommonInterpreterTest extends StringBasedInterpreterTest
 					|| !tcResult.errors.isEmpty())
 			{
 				// Assert.fail("Model did not pass type check!."+ tcResult.errors);
-				Assume.assumeTrue("Specification does not type check: \n"
+				Assume.assumeTrue(/*"Specification does not type check: \n"
 						+ tcResult.parserResult.errors + "\n\n"
-						+ tcResult.errors, false);
+						+ tcResult.errors,*/ false);
 				return;
 				// fail("Model did not pass type check!."+ tcResult.errors);
 			}

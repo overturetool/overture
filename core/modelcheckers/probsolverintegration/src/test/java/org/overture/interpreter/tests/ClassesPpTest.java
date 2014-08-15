@@ -39,7 +39,7 @@ public class ClassesPpTest extends CommonInterpreterTest
 		super(dialect, file, suiteName, testSuiteRoot);
 	}
 
-	@Parameters(name = "{1}")
+	@Parameters()
 	public static Collection<Object[]> getData()
 	{
 		String name = "Interpreter Class PP TestSuite";

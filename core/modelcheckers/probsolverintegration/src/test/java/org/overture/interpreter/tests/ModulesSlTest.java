@@ -39,7 +39,7 @@ public class ModulesSlTest extends CommonInterpreterTest
 		super(dialect, file, suiteName, testSuiteRoot);
 	}
 
-	@Parameters(name = "{1}")
+	@Parameters()
 	public static Collection<Object[]> getData()
 	{
 		String root = "src/test/resources/modules/complete/";
