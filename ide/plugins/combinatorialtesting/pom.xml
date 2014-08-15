@@ -80,6 +80,9 @@
 <exclude>**/xml/XMLParser.java</exclude>
 <exclude>**/xml/XMLTagNode.java</exclude>
 <exclude>**/xml/XMLTextNode.java</exclude>
+<exclude>**/vdmj/server/ConnectionListener.java</exclude>
+<exclude>**/vdmj/server/ConnectionThread.java</exclude>
+
               </excludes>
         </configuration>
         </plugin>
