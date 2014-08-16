@@ -38,7 +38,7 @@ public class WorkbenchPreferencePageMain extends FieldEditorPreferencePage
 	{
 		addField(new BooleanFieldEditor(ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRINGS, "Generate character sequences as strings", getFieldEditorParent()));
 		addField(new BooleanFieldEditor(ICodeGenConstants.DISABLE_CLONING, "Disable cloning", getFieldEditorParent()));
-		
+
 	}
 
 	@Override

@@ -41,17 +41,19 @@ public class CodeGenConsole implements ILogger
 {
 	private final PrintWriter out;
 	private final PrintWriter err;
-	
+
 	private boolean hasConsole = false;
 
 	private static CodeGenConsole Instance;
 
 	private MessageConsole codeGenConsole;
-	
+
 	public static CodeGenConsole GetInstance()
 	{
 		if (Instance == null)
+		{
 			Instance = new CodeGenConsole();
+		}
 
 		return Instance;
 	}
@@ -107,11 +109,11 @@ public class CodeGenConsole implements ILogger
 	{
 		out.println(msg);
 	}
-	
+
 	@Override
 	public void printErrorln(String msg)
 	{
-		err.println(msg);	
+		err.println(msg);
 	}
 
 	@Override
@@ -119,11 +121,13 @@ public class CodeGenConsole implements ILogger
 	{
 		err.print(msg);
 	}
-	
+
 	public void clearConsole()
 	{
-		if(codeGenConsole != null)
+		if (codeGenConsole != null)
+		{
 			codeGenConsole.clearConsole();
+		}
 	}
 
 	public void show()
@@ -152,6 +156,6 @@ public class CodeGenConsole implements ILogger
 	@Override
 	public void setSilent(boolean arg0)
 	{
-		//TODO: For now simply do nothing..
+		// TODO: For now simply do nothing..
 	}
 }
