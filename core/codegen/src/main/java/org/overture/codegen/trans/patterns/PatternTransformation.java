@@ -3,6 +3,7 @@ package org.overture.codegen.trans.patterns;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.codegen.cgast.PCG;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.SStmCG;
@@ -44,8 +45,10 @@ import org.overture.codegen.cgast.patterns.ATuplePatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACaseAltStmStmCG;
 import org.overture.codegen.cgast.statements.ACasesStmCG;
+import org.overture.codegen.cgast.statements.AContinueStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
+import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ARaiseErrorStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
@@ -56,6 +59,7 @@ import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AUnknownTypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
+import org.overture.codegen.trans.DeclarationTag;
 import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.trans.assistants.TransformationAssistantCG;
 
@@ -80,13 +84,92 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 	}
 	
 	@Override
+	public void caseALocalPatternAssignmentStmCG(
+			ALocalPatternAssignmentStmCG node) throws AnalysisException
+	{
+		AVarLocalDeclCG nextElementDecl = node.getNextElementDecl();
+		SPatternCG pattern = nextElementDecl.getPattern();
+		
+		if(pattern instanceof AIdentifierPatternCG)
+		{
+			return;
+		}
+		
+		DeclarationTag tag = fetchTag(node);
+		
+		ABlockStmCG replacementBlock = consPatternHandlingInIterationBlock(nextElementDecl, tag, node.getExp());
+		transformationAssistant.replaceNodeWith(node, replacementBlock);
+	}
+
+	private ABlockStmCG consPatternHandlingInIterationBlock(AVarLocalDeclCG nextElementDecl, DeclarationTag tag, SExpCG assignedExp)
+	{
+		PatternInfo declInfo = extractPatternInfo(nextElementDecl);
+		ABlockStmCG declBlockTmp = new ABlockStmCG();
+		PatternBlockData data = new PatternBlockData(declInfo.getPattern(), declBlockTmp, MismatchHandling.LOOP_CONTINUE);
+		
+		AVarLocalDeclCG successVarDecl = tag.getSuccessVarDecl();
+		if(successVarDecl != null)
+		{
+			SPatternCG successVarDeclPattern = successVarDecl.getPattern();
+			if(successVarDeclPattern instanceof AIdentifierPatternCG)
+			{
+				AIdentifierPatternCG idPattern = (AIdentifierPatternCG)successVarDeclPattern;
+				data.setSuccessVarDecl(successVarDecl.clone());
+				AIdentifierVarExpCG successVar = consSuccessVar(idPattern.getName());
+				data.setSuccessVar(successVar);
+			}
+			else
+			{
+				Logger.getLog().printErrorln("Expected success variable declaration to use an identifier pattern. Got: " + successVarDeclPattern);
+			}
+		}
+		
+		List<PatternInfo> patternInfo = new LinkedList<PatternInfo>();
+		patternInfo.add(declInfo);
+		
+		ABlockStmCG replacementBlock = new ABlockStmCG();
+		replacementBlock.getStatements().add(consPatternCheck(false, declInfo.getPattern(), declInfo.getType(), data, declInfo.getActualValue()));
+		replacementBlock.getStatements().addAll(declBlockTmp.getStatements());
+		ABlockStmCG enclosingBlock = nextElementDecl.getAncestor(ABlockStmCG.class);
+		enclosingBlock.getLocalDefs().addAll(declBlockTmp.getLocalDefs());
+		
+		AVarLocalDeclCG nextDeclCopy = nextElementDecl.clone();
+		
+		if(tag == null || !tag.isDeclared())
+		{
+			replacementBlock.getLocalDefs().addFirst(nextDeclCopy);
+		}
+		else
+		{
+			SPatternCG nextDeclPattern = nextDeclCopy.getPattern();
+			if(nextDeclPattern instanceof AIdentifierPatternCG)
+			{
+				AIdentifierVarExpCG varExp = new AIdentifierVarExpCG();
+				varExp.setIsLambda(false);
+				varExp.setType(nextDeclCopy.getType());
+				varExp.setOriginal(((AIdentifierPatternCG)nextDeclPattern).getName());
+				
+				ALocalAssignmentStmCG assignment = new ALocalAssignmentStmCG();
+				assignment.setTarget(varExp);
+				assignment.setExp(assignedExp.clone());
+				replacementBlock.getStatements().addFirst(assignment);
+			}
+			else
+			{
+				Logger.getLog().printErrorln("Expected the declaration to have its pattern transformed into an identifier pattern. Got: " + nextDeclPattern);
+			}
+		}
+		
+		return replacementBlock;
+	}
+	
+	@Override
 	public void caseACasesStmCG(ACasesStmCG node) throws AnalysisException
 	{
 		LinkedList<ACaseAltStmStmCG> nodeCases = node.getCases();
 		List<PatternInfo> patternInfo = extractFromCases(nodeCases, node.getExp());
 		
-		boolean raiseErrorOnMismatch = false;
-		PatternBlockData patternData = new PatternBlockData(raiseErrorOnMismatch);
+		PatternBlockData patternData = new PatternBlockData(MismatchHandling.NONE);
 		
 		List<ABlockStmCG> blocks = consPatternHandlingBlockCases(patternInfo, patternData);
 
@@ -190,19 +273,60 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseABlockStmCG(ABlockStmCG node) throws AnalysisException
 	{
-		List<PatternInfo> patternInfo = extractFromLocalDefs(node.getLocalDefs());
-		
-		if (!patternInfo.isEmpty())
+		boolean taggedBlock = false;
+		for (int i = 0; i < node.getLocalDefs().size(); i++)
 		{
-			ABlockStmCG patternHandlingBlock = consPatternHandlingBlock(patternInfo);
-
-			if (!patternHandlingBlock.getStatements().isEmpty())
+			SLocalDeclCG dec = node.getLocalDefs().get(i);
+			
+			if (dec.getTag() != null)
 			{
-				node.getStatements().addFirst(patternHandlingBlock);
+				taggedBlock = true;
+				
+				DeclarationTag tag = fetchTag(dec);
+				
+				if(tag.isDeclared() || !(dec instanceof AVarLocalDeclCG))
+				{
+					continue;
+				}
+				
+				AVarLocalDeclCG nextElementDecl = (AVarLocalDeclCG) dec;
+				
+				SPatternCG pattern = nextElementDecl.getPattern();
+				
+				if(pattern instanceof AIdentifierPatternCG)
+				{
+					return;
+				}
+				
+				//TODO: Make it such that the successer var is passed on (multiple binds)
+				ABlockStmCG patternHandlingBlock = consPatternHandlingInIterationBlock(nextElementDecl, tag, nextElementDecl.getExp());
+				
+				List<SStmCG> stms = new LinkedList<SStmCG>();
+				stms.addAll(patternHandlingBlock.getStatements());
+				stms.addAll(node.getStatements());
+				
+				node.setStatements(stms);
+				
+				dec.apply(this);
 			}
 		}
-		
-		for(SStmCG stm : node.getStatements())
+
+		if (!taggedBlock)
+		{
+			List<PatternInfo> patternInfo = extractFromLocalDefs(node.getLocalDefs());
+
+			if (!patternInfo.isEmpty())
+			{
+				ABlockStmCG patternHandlingBlock = consPatternHandlingBlock(patternInfo);
+
+				if (!patternHandlingBlock.getStatements().isEmpty())
+				{
+					node.getStatements().addFirst(patternHandlingBlock);
+				}
+			}
+		}
+
+		for (SStmCG stm : node.getStatements())
 		{
 			stm.apply(this);
 		}
@@ -294,8 +418,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 	private ABlockStmCG consPatternCheck(SPatternCG pattern, STypeCG type, SExpCG actualValue, ABlockStmCG declBlock)
 	{
 		boolean declareVarPattern = false;
-		boolean raiseErrorOnMismatch = true;
-		PatternBlockData patternData = new PatternBlockData(pattern, declBlock, raiseErrorOnMismatch);
+		PatternBlockData patternData = new PatternBlockData(pattern, declBlock, MismatchHandling.RAISE_ERROR);
 		
 		return consPatternCheck(declareVarPattern, pattern, type, patternData, actualValue); 
 	}
@@ -410,6 +533,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 			consSuccessVarCheck(recordPattern, patternData);
 		}
 		
+		mismatchHandling(recordPattern, patternData);
 		initSuccessVar(patternData, info.getExpAssistant().consBoolLiteral(true), recordPatternBlock);
 		
 		List<STypeCG> types = new LinkedList<STypeCG>();
@@ -456,6 +580,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 			consSuccessVarCheck(tuplePattern, patternData);
 		}
 		
+		mismatchHandling(tuplePattern, patternData);
 		initSuccessVar(patternData, tupleCheck, tuplePatternBlock);
 		
 		LinkedList<SPatternCG> patterns = tuplePattern.getPatterns();
@@ -489,15 +614,20 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		AVarLocalDeclCG successVarDecl = transformationAssistant.consDecl(successVarName, new ABoolBasicTypeCG(), init);
 		patternData.setSuccessVarDecl(successVarDecl);
 		
-		AIdentifierVarExpCG successVar = new AIdentifierVarExpCG();
-		successVar.setIsLambda(false);
-		successVar.setOriginal(successVarName);
-		successVar.setType(new ABoolBasicTypeCG());
+		AIdentifierVarExpCG successVar = consSuccessVar(successVarName);
 		patternData.setSuccessVar(successVar);
-
+		
 		patternData.getDeclBlock().getLocalDefs().add(successVarDecl);
+	}
 
-		if (patternData.raiseErrorOnMismatch())
+	private void mismatchHandling(SPatternCG pattern, PatternBlockData patternData)
+	{
+		if(!patternData.IsRootPattern(pattern))
+		{
+			return;
+		}
+		
+		if (patternData.getMismatchHandling() == MismatchHandling.RAISE_ERROR)
 		{
 			APatternMatchRuntimeErrorExpCG matchFail = new APatternMatchRuntimeErrorExpCG();
 			matchFail.setType(new AErrorTypeCG());
@@ -505,12 +635,34 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 			ARaiseErrorStmCG noMatchStm = new ARaiseErrorStmCG();
 			noMatchStm.setError(matchFail);
 
-			AIfStmCG ifCheck = new AIfStmCG();
-			ifCheck.setIfExp(transformationAssistant.consBoolCheck(successVar.getOriginal(), true));
-			ifCheck.setThenStm(noMatchStm);
-
-			patternData.getDeclBlock().getStatements().add(ifCheck);
+			AIfStmCG consMismatchCheck = consMismatchCheck(patternData.getSuccessVar(), noMatchStm);
+			patternData.getDeclBlock().getStatements().add(consMismatchCheck);
 		}
+		else if(patternData.getMismatchHandling() == MismatchHandling.LOOP_CONTINUE)
+		{
+			AIfStmCG consMismatchCheck = consMismatchCheck(patternData.getSuccessVar(), new AContinueStmCG());
+			patternData.getDeclBlock().getStatements().add(consMismatchCheck);
+		}
+	}
+
+	private AIfStmCG consMismatchCheck(AIdentifierVarExpCG successVar,
+			SStmCG noMatchStm)
+	{
+		AIfStmCG ifCheck = new AIfStmCG();
+		ifCheck.setIfExp(transformationAssistant.consBoolCheck(successVar.getOriginal(), true));
+		ifCheck.setThenStm(noMatchStm);
+		
+		return ifCheck;
+	}
+
+	private AIdentifierVarExpCG consSuccessVar(String successVarName)
+	{
+		AIdentifierVarExpCG successVar = new AIdentifierVarExpCG();
+		successVar.setIsLambda(false);
+		successVar.setOriginal(successVarName);
+		successVar.setType(new ABoolBasicTypeCG());
+		
+		return successVar;
 	}
 	
 	private void initSuccessVar(PatternBlockData patternData, SExpCG initExp, ABlockStmCG patternBlock)
@@ -714,6 +866,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 			consSuccessVarCheck(pattern, patternData);
 		}
 		
+		mismatchHandling(pattern, patternData);
 		initSuccessVar(patternData, check, block);
 		
 		return block;
@@ -727,17 +880,21 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		{
 			if(decl instanceof AVarLocalDeclCG)
 			{
-				AVarLocalDeclCG varDecl = (AVarLocalDeclCG) decl;
-				
-				STypeCG type = varDecl.getType();
-				SPatternCG pattern = varDecl.getPattern();
-				SExpCG actualValue = varDecl.getExp();
-				
-				patternInfo.add(new PatternInfo(type, pattern, actualValue));
+				PatternInfo currentInfo = extractPatternInfo((AVarLocalDeclCG) decl);
+				patternInfo.add(currentInfo);
 			}
 		}
 		
 		return patternInfo;
+	}
+
+	private PatternInfo extractPatternInfo(AVarLocalDeclCG decl)
+	{
+		STypeCG type = decl.getType();
+		SPatternCG pattern = decl.getPattern();
+		SExpCG actualValue = decl.getExp();
+		
+		return new PatternInfo(type, pattern, actualValue);
 	}
 	
 	public List<PatternInfo> extractFromParams(List<AFormalParamLocalParamCG> params)
@@ -810,5 +967,23 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		fieldExp.setMemberName(fieldName);
 		
 		return fieldExp;
+	}
+	
+	private DeclarationTag fetchTag(
+			PCG node)
+	{
+		if (node != null)
+		{
+			Object tag = node.getTag();
+			if (tag instanceof DeclarationTag)
+			{
+				return (DeclarationTag) tag;
+			}
+		}
+
+		Logger.getLog().printErrorln("Could not fetch declaration tag from pattern assignment: "
+				+ node);
+
+		return null;
 	}
 }
