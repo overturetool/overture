@@ -48,5 +48,5 @@ public abstract class AbstractLanguageIterator implements ILanguageIterator
 	@Override
 	abstract public ALocalPatternAssignmentStmCG getNextElementAssigned(
 			AIdentifierVarExpCG setVar, List<SPatternCG> patterns,
-			SPatternCG pattern) throws AnalysisException;
+			SPatternCG pattern, AVarLocalDeclCG successVarDecl, AVarLocalDeclCG nextElementDecl) throws AnalysisException;
 }

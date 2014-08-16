@@ -26,7 +26,7 @@ public interface ILanguageIterator
 			throws AnalysisException;
 
 	public ALocalPatternAssignmentStmCG getNextElementAssigned(AIdentifierVarExpCG setVar,
-			List<SPatternCG> patterns, SPatternCG pattern)
+			List<SPatternCG> patterns, SPatternCG pattern, AVarLocalDeclCG successVarDecl, AVarLocalDeclCG nextElementDecl)
 			throws AnalysisException;
 
 }

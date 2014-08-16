@@ -12,13 +12,13 @@ import org.overture.codegen.cgast.declarations.SLocalDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.ALetBeStNoBindingRuntimeErrorExpCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
-import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ARaiseErrorStmCG;
 import org.overture.codegen.cgast.types.AErrorTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.AbstractIterationStrategy;
+import org.overture.codegen.trans.DeclarationTag;
 import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.trans.assistants.TransformationAssistantCG;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
@@ -28,7 +28,10 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 	private String successVarName;
 	private SExpCG suchThat;
 	private SSetTypeCG setType;
-
+	
+	int count = 0;
+	private List<AVarLocalDeclCG> decls = new LinkedList<AVarLocalDeclCG>();
+	
 	public LetBeStStrategy(TransformationAssistantCG transformationAssistant,
 			SExpCG suchThat, SSetTypeCG setType,
 			ILanguageIterator langIterator, ITempVarGen tempGen,
@@ -53,10 +56,13 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 
 		for (SPatternCG id : patterns)
 		{
-			outerBlockDecls.add(transformationAssistant.consIdDecl(setType, id));
+			AVarLocalDeclCG decl = transformationAssistant.consIdDecl(setType, id);
+			decls.add(decl);
+			outerBlockDecls.add(decl);
 		}
 
-		outerBlockDecls.add(transformationAssistant.consBoolVarDecl(successVarName, false));
+		successVarDecl = transformationAssistant.consBoolVarDecl(successVarName, false);
+		outerBlockDecls.add(successVarDecl);
 
 		return outerBlockDecls;
 	}
@@ -71,12 +77,20 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 
 		return transformationAssistant.consAndExp(left, right);
 	}
+	
+	@Override
+	public DeclarationTag consDeclarationTag()
+	{
+		return new DeclarationTag(true, successVarDecl);
+	}
 
 	@Override
 	public AVarLocalDeclCG getNextElementDeclared(AIdentifierVarExpCG setVar,
 			List<SPatternCG> patterns, SPatternCG pattern)
 			throws AnalysisException
 	{
+		AVarLocalDeclCG nextElementDecl = decls.get(count++);
+		tagNextElementDeclared(nextElementDecl);
 		return null;
 	}
 
@@ -85,7 +99,7 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 			List<SPatternCG> patterns, SPatternCG pattern)
 			throws AnalysisException
 	{
-		return langIterator.getNextElementAssigned(setVar, patterns, pattern);
+		return langIterator.getNextElementAssigned(setVar, patterns, pattern, successVarDecl, this.nextElementDeclared);
 	}
 
 	@Override

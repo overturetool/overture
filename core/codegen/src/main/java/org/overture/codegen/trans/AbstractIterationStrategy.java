@@ -24,6 +24,10 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 	protected ILanguageIterator langIterator;
 	protected ITempVarGen tempGen;
 	protected TempVarPrefixes varPrefixes;
+	
+	protected AVarLocalDeclCG successVarDecl = null;
+	
+	protected AVarLocalDeclCG nextElementDeclared = null;
 
 	public AbstractIterationStrategy(TransformationAssistantCG transformationAssistant,
 			ILanguageIterator langIterator, ITempVarGen tempGen,
@@ -65,12 +69,25 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 		return langIterator.getForLoopInc(setVar, patterns, pattern);
 	}
 
+	public void tagNextElementDeclared(AVarLocalDeclCG nextElementDecl)
+	{
+		nextElementDecl.setTag(consDeclarationTag());
+		this.nextElementDeclared = nextElementDecl;
+	}
+	
+	public DeclarationTag consDeclarationTag()
+	{
+		return new DeclarationTag(false, successVarDecl);
+	}
+	
 	@Override
 	public AVarLocalDeclCG getNextElementDeclared(AIdentifierVarExpCG setVar,
 			List<SPatternCG> patterns, SPatternCG pattern)
 			throws AnalysisException
 	{
-		return langIterator.getNextElementDeclared(setVar, patterns, pattern);
+		tagNextElementDeclared(langIterator.getNextElementDeclared(setVar, patterns, pattern));
+		
+		return nextElementDeclared;
 	}
 
 	@Override

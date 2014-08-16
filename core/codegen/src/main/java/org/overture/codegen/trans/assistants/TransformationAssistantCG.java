@@ -322,13 +322,19 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 
 	public ALocalPatternAssignmentStmCG consNextElementAssignment(String iteratorTypeName,
 			STypeCG elementType, SPatternCG id, String iteratorName,
-			String nextElementMethod) throws AnalysisException
+			String nextElementMethod, AVarLocalDeclCG nextElementDecl) throws AnalysisException
 	{
 		ACastUnaryExpCG cast = consNextElementCall(iteratorTypeName, iteratorName, elementType, nextElementMethod);
 
 		ALocalPatternAssignmentStmCG assignment = new ALocalPatternAssignmentStmCG();
 		assignment.setTarget(id.clone());
 		assignment.setExp(cast);
+		
+		//Associate the pattern assignment with its declaration and
+		//the corresponding success variable (both are graph fields)
+		assignment.setTag(nextElementDecl.getTag());
+		assignment.setNextElementDecl(nextElementDecl);
+		//assignment.setSuccessVarDecl(successVarDecl);
 		
 		return assignment;
 	}
@@ -384,7 +390,7 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 		return setVar;
 	}
 
-	public ABlockStmCG consIterationBlock(ABlockStmCG outerBlock,
+	private ABlockStmCG consIterationBlock(ABlockStmCG outerBlock,
 			List<SPatternCG> patterns, SExpCG set, ITempVarGen tempGen,
 			IIterationStrategy strategy) throws AnalysisException
 	{
