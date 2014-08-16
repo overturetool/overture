@@ -1,3 +1,24 @@
+/*
+ * #%~
+ * Combinatorial Testing
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.ide.plugins.combinatorialtesting.internal;
 
 import java.io.File;
@@ -32,6 +53,7 @@ public class TraceTestEngine
 			@Override
 			protected IStatus run(final IProgressMonitor monitor)
 			{
+				monitor.beginTask("Executing trace: "+texe.traceName, 100);
 				IPreferenceStore preferences = OvertureTracesPlugin.getDefault().getPreferenceStore();
 
 				if (!texe.coverageFolder.exists()
@@ -55,6 +77,7 @@ public class TraceTestEngine
 					}
 					conn = new ConnectionListener(port, new IClientMonitor()
 					{
+						int worked = 0;
 
 						public void initialize(String module)
 						{
@@ -73,6 +96,21 @@ public class TraceTestEngine
 						{
 							out.println(texe.project.getName() + ":"
 									+ traceName + " Worked " + progress + "%");
+
+							int tmp = progress-worked;
+							if (worked == 0)
+							{
+								worked = progress;
+							} else
+							{
+								worked = progress ;
+							}
+
+							if (tmp > 100)
+							{
+								tmp= 100;
+							}
+							monitor.worked(tmp);
 						}
 
 						public void completed()

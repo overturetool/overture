@@ -349,10 +349,10 @@ public class ModuleInterpreter extends Interpreter
 	public Context getInitialTraceContext(ANamedTraceDefinition tracedef,
 			boolean debug) throws ValueException
 	{
-		Context mainContext = new StateContext(assistantFactory, defaultModule.getName().getLocation(), "module scope", null, assistantFactory.createAModuleModulesAssistant().getStateContext(defaultModule));
+		Context mainContext = new StateContext(assistantFactory, defaultModule.getName().getLocation(), "module scope", initialContext, assistantFactory.createAModuleModulesAssistant().getStateContext(defaultModule));
 
 		mainContext.putAll(initialContext);
-		mainContext.setThreadState(null, CPUValue.vCPU);
+		mainContext.setThreadState(mainContext.threadState.dbgp, CPUValue.vCPU);
 
 		return mainContext;
 	}

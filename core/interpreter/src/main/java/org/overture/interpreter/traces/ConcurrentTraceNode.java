@@ -23,11 +23,18 @@
 
 package org.overture.interpreter.traces;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
-public class ConcurrentTraceNode extends TraceNode
+import org.overture.interpreter.traces.util.LazyTestSequence;
+import org.overture.interpreter.traces.util.Pair;
+
+public class ConcurrentTraceNode extends TraceNode implements
+		IIterableTraceNode
 {
+	private Map<Integer, Pair<Integer, Integer>> indics;
 	public List<TraceNode> nodes;
 
 	public ConcurrentTraceNode()
@@ -36,8 +43,14 @@ public class ConcurrentTraceNode extends TraceNode
 	}
 
 	@Override
-	public TestSequence getTests()
+	public CallSequence get(int index)
 	{
+		if (indics == null)
+		{
+			size();
+		}
+		Pair<Integer, Integer> v = indics.get(index);
+
 		List<TestSequence> nodetests = new Vector<TestSequence>();
 		int count = nodes.size();
 
@@ -46,13 +59,20 @@ public class ConcurrentTraceNode extends TraceNode
 			nodetests.add(node.getTests());
 		}
 
-		TestSequence tests = new TestSequence();
 		PermuteArray pa = new PermuteArray(count);
+
+		int r = 0;
 
 		while (pa.hasNext())
 		{
-			int[] sizes = new int[count];
 			int[] perm = pa.next();
+			r++;
+			if (r < v.first)
+			{
+				continue;
+			}
+			
+			int[] sizes = new int[count];
 
 			for (int i = 0; i < count; i++)
 			{
@@ -61,9 +81,15 @@ public class ConcurrentTraceNode extends TraceNode
 
 			Permutor p = new Permutor(sizes);
 
+			int j = 0;
 			while (p.hasNext())
 			{
 				int[] select = p.next();
+				j++;
+				if(j < v.second)
+				{
+					continue;
+				}
 				CallSequence seq = getVariables();
 
 				for (int i = 0; i < count; i++)
@@ -77,11 +103,66 @@ public class ConcurrentTraceNode extends TraceNode
 					}
 				}
 
-				tests.add(seq);
+				return seq;
 			}
 		}
 
-		return tests;
+		return null;
+	}
+
+	@Override
+	public TestSequence getTests()
+	{
+		return new LazyTestSequence(this);
+	}
+
+	@Override
+	public int size()
+	{
+		if (indics != null)
+		{
+			return indics.size();
+		}
+
+		indics = new HashMap<Integer, Pair<Integer, Integer>>();
+
+		int size = 0;
+
+		List<TestSequence> nodetests = new Vector<TestSequence>();
+		int count = nodes.size();
+
+		for (TraceNode node : nodes)
+		{
+			nodetests.add(node.getTests());
+		}
+
+		PermuteArray pa = new PermuteArray(count);
+
+		int r = 0;
+		while (pa.hasNext())
+		{
+			r++;
+			int[] sizes = new int[count];
+			int[] perm = pa.next();
+
+			for (int i = 0; i < count; i++)
+			{
+				sizes[i] = nodetests.get(perm[i]).size();
+			}
+
+			Permutor p = new Permutor(sizes);
+
+			int j = 0;
+			while (p.hasNext())
+			{
+				j++;
+				p.next();
+				indics.put(size, new Pair<Integer, Integer>(r, j));
+				size++;
+			}
+		}
+
+		return size;
 	}
 
 	@Override

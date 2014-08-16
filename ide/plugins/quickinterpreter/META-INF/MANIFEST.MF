@@ -19,3 +19,4 @@ Require-Bundle: org.eclipse.ui,
  org.overture.ide.parsers.vdmj
 Bundle-Activator: org.overture.ide.plugins.quickinterpreter.Activator
 Bundle-ClassPath: .
+Import-Package: org.overture.ide.vdmsl.ui.editor.syntax

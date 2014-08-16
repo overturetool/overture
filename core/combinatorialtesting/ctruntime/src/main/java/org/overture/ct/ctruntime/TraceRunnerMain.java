@@ -1,3 +1,24 @@
+/*
+ * #%~
+ * Combinatorial Testing Runtime
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.ct.ctruntime;
 
 import java.io.File;
@@ -5,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URI;
@@ -36,11 +58,13 @@ import org.overture.interpreter.traces.TraceReductionType;
 import org.overture.interpreter.util.ExitStatus;
 import org.overture.parser.config.Properties;
 import org.overture.parser.lex.LexTokenReader;
+import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.util.Base64;
 
 public class TraceRunnerMain implements IProgressMonitor
 {
+	public static boolean USE_SYSTEM_EXIT = true;
 	protected final String host;
 	protected final int port;
 	protected final String ideKey;
@@ -493,37 +517,49 @@ public class TraceRunnerMain implements IProgressMonitor
 					}
 
 					RTLogger.dump(true);
+
 					// runner.progressTerminating();
-					System.exit(0);
+					exit(0);
 				} catch (ContextException e)
 				{
 					System.err.println("Initialization: " + e);
 					e.ctxt.printStackTrace(Console.out, true);
 					RTLogger.dump(true);
-					System.exit(3);
+					exit(3);
 				} catch (ValueException e)
 				{
 					System.err.println("Initialization: " + e);
 					e.ctxt.printStackTrace(Console.out, true);
 					RTLogger.dump(true);
-					System.exit(3);
+					exit(3);
 				} catch (Exception e)
 
 				{
 					System.err.println("Initialization: " + e);
 					e.printStackTrace();
 					RTLogger.dump(true);
-					System.exit(3);
+					exit(3);
 				}
 			} else
 			{
-				System.exit(2);
+				final PrintWriter out = new PrintWriter(System.err);
+				TypeChecker.printErrors(out);
+				out.flush();
+				exit(2);
 			}
 		} else
 		{
-			System.exit(1);
+			exit(1);
 		}
 
+	}
+
+	private static void exit(int code)
+	{
+		if (USE_SYSTEM_EXIT)
+		{
+			System.exit(code);
+		}
 	}
 
 	private void startup() throws Exception
@@ -649,6 +685,16 @@ public class TraceRunnerMain implements IProgressMonitor
 		});
 		t.setDaemon(true);
 		t.start();
+		t.setUncaughtExceptionHandler(new UncaughtExceptionHandler()
+		{
+
+			@Override
+			public void uncaughtException(Thread t, Throwable e)
+			{
+				e.printStackTrace();
+
+			}
+		});
 
 		TraceXmlWrapper storage = new TraceXmlWrapper(new File(traceFolder, moduleName
 				+ "-" + traceName + ".xml"));
@@ -663,6 +709,15 @@ public class TraceRunnerMain implements IProgressMonitor
 			} catch (InterruptedException e)
 			{
 			}
+		}
+
+		try
+		{
+			System.out.println("Closing socket");
+			socket.close();
+		} catch (IOException e)
+		{
+
 		}
 
 	}

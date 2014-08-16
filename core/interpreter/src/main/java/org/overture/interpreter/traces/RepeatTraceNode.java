@@ -23,13 +23,20 @@
 
 package org.overture.interpreter.traces;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.LexLocation;
+import org.overture.interpreter.traces.util.LazyTestSequence;
+import org.overture.interpreter.traces.util.Pair;
 
-public class RepeatTraceNode extends TraceNode
+public class RepeatTraceNode extends TraceNode implements IIterableTraceNode
 {
-	public final TraceNode repeat;
 	public final int from;
+	private Map<Integer, Pair<Integer, Integer>> indics;
+	public final TraceNode repeat;
+
 	public final int to;
 
 	public RepeatTraceNode(TraceNode repeat, long from, long to)
@@ -39,28 +46,87 @@ public class RepeatTraceNode extends TraceNode
 		this.to = (int) to;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.overture.interpreter.traces.IIterableTraceNode#get(int)
+	 */
 	@Override
-	public String toString()
+	public CallSequence get(int index)
 	{
-		return repeat.toString()
-				+ (from == 1 && to == 1 ? "" : from == to ? "{" + from + "}"
-						: "{" + from + ", " + to + "}");
+		if (indics == null)
+		{
+			size();
+		}
+		Pair<Integer, Integer> v = indics.get(index);
+
+		int r = v.first;
+
+		if (r == 0)
+		{
+			CallSequence seq = getVariables();
+			seq.add(AstFactory.newASkipStm(new LexLocation()));
+			return seq;
+
+		} else
+		{
+
+			TestSequence rtests = repeat.getTests();
+			int count = rtests.size();
+			int[] c = new int[r];
+
+			for (int i = 0; i < r; i++)
+			{
+				c[i] = count;
+			}
+
+			Permutor p = new Permutor(c);
+			int[] select = null;
+			for (int i = 0; i < v.second; i++)
+			{
+				select = p.next();
+			}
+
+			CallSequence seq = getVariables();
+
+			for (int i = 0; i < r; i++)
+			{
+				seq.addAll(rtests.get(select[i]));
+			}
+			return seq;
+		}
+
 	}
 
 	@Override
 	public TestSequence getTests()
 	{
-		TestSequence tests = new TestSequence();
+		return new LazyTestSequence(this);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.overture.interpreter.traces.IIterableTraceNode#size()
+	 */
+	@Override
+	public int size()
+	{
+		if (indics != null)
+		{
+			return indics.size();
+		}
+
+		indics = new HashMap<Integer, Pair<Integer, Integer>>();
+
+		int size = 0;
 		TestSequence rtests = repeat.getTests();
 		int count = rtests.size();
-
 		for (int r = from; r <= to; r++)
 		{
 			if (r == 0)
 			{
-				CallSequence seq = getVariables();
-				seq.add(AstFactory.newASkipStm(new LexLocation()));
-				tests.add(seq);
+
+				indics.put(size, new Pair<Integer, Integer>(r, 0));
+				size++;
 				continue;
 			}
 
@@ -73,20 +139,24 @@ public class RepeatTraceNode extends TraceNode
 
 			Permutor p = new Permutor(c);
 
+			int j = 0;
 			while (p.hasNext())
 			{
-				CallSequence seq = getVariables();
-				int[] select = p.next();
-
-				for (int i = 0; i < r; i++)
-				{
-					seq.addAll(rtests.get(select[i]));
-				}
-
-				tests.add(seq);
+				j++;
+				p.next();
+				indics.put(size, new Pair<Integer, Integer>(r, j));
+				size++;
 			}
 		}
+		System.out.println(size);
+		return size;
+	}
 
-		return tests;
+	@Override
+	public String toString()
+	{
+		return repeat.toString()
+				+ (from == 1 && to == 1 ? "" : from == to ? "{" + from + "}"
+						: "{" + from + ", " + to + "}");
 	}
 }

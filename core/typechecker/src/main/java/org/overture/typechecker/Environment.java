@@ -108,7 +108,7 @@ abstract public class Environment
 					def.setNameScope(NameScope.GLOBAL);
 				}
 
-				if (def != null && def.getLocation() != n1.getLocation()
+				if (def != null && !def.getLocation().equals(n1.getLocation())
 						&& def.getNameScope().matches(scope))
 				{
 					// Reduce clutter for names in the same module/class
