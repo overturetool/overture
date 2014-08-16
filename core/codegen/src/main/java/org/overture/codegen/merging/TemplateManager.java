@@ -119,6 +119,7 @@ import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectStmCG;
 import org.overture.codegen.cgast.statements.ACallStmCG;
+import org.overture.codegen.cgast.statements.AContinueStmCG;
 import org.overture.codegen.cgast.statements.ADecrementStmCG;
 import org.overture.codegen.cgast.statements.AErrorStmCG;
 import org.overture.codegen.cgast.statements.AFieldObjectDesignatorCG;
@@ -311,6 +312,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(ARaiseErrorStmCG.class, templateStructure.STM_PATH + "RaiseError");
 		
 		nodeTemplateFileNames.put(AErrorStmCG.class, templateStructure.STM_PATH + "Error");
+		
+		nodeTemplateFileNames.put(AContinueStmCG.class, templateStructure.STM_PATH + "Continue");
 		
 		// Expressions
 		
