@@ -36,8 +36,8 @@ import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
+import org.overture.codegen.cgast.types.ATokenBasicTypeCG;
 import org.overture.codegen.cgast.types.SBasicTypeCG;
-import org.overture.codegen.cgast.types.SBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.ir.IRInfo;
@@ -197,18 +197,30 @@ public class TypeAssistantCG extends AssistantBase
 		return type instanceof SBasicTypeCG;
 	}
 
-	public SBasicTypeWrappersTypeCG getWrapperType(
+	public STypeCG getWrapperType(
 			SBasicTypeCG basicType)
 	{
 
 		if (basicType instanceof AIntNumericBasicTypeCG)
+		{
 			return new AIntBasicTypeWrappersTypeCG();
+		}
 		else if (basicType instanceof ARealNumericBasicTypeCG)
+		{
 			return new ARealBasicTypeWrappersTypeCG();
+		}
 		else if (basicType instanceof ACharBasicTypeCG)
+		{
 			return new ACharBasicTypeWrappersTypeCG();
+		}
 		else if (basicType instanceof ABoolBasicTypeCG)
+		{
 			return new ABoolBasicTypeWrappersTypeCG();
+		}
+		else if(basicType instanceof ATokenBasicTypeCG)
+		{
+			return basicType;
+		}
 		else
 		{
 			Logger.getLog().printErrorln("Unexpected basic type encountered in getWrapperType method: "
