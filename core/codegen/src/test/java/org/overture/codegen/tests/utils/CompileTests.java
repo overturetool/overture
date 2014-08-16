@@ -10,6 +10,7 @@ import java.net.URLClassLoader;
 import java.util.Arrays;
 import java.util.List;
 
+import org.overture.codegen.tests.BindTest;
 import org.overture.codegen.tests.ClassicSpecTest;
 import org.overture.codegen.tests.ComplexExpressionTest;
 import org.overture.codegen.tests.ConcurrencyTests;
@@ -54,7 +55,8 @@ public class CompileTests
 	public static final boolean RUN_CONFIGURED_CLONE_TESTS = false;
 	public static final boolean RUN_PATTERN_TESTS = false;
 	public static final boolean RUN_UNION_TESTS = false;
-	public static final boolean RUN_CONCURRENCY_TESTS = true;
+	public static final boolean RUN_CONCURRENCY_TESTS = false;
+	public static final boolean RUN_BIND_TESTS = true;
 	
 	private List<File> testInputFiles;
 	private List<File> resultFiles;
@@ -125,6 +127,11 @@ public class CompileTests
 			runConcurrencyTests();
 		}
 		
+		if(RUN_BIND_TESTS)
+		{
+			runBindTests();
+		}
+		
 		long endTimeMs = System.currentTimeMillis();
 		
 		long totalTimeMs = (endTimeMs - startTimeMs);
@@ -135,6 +142,20 @@ public class CompileTests
 		System.out.println("Time: " + String.format("%02d:%02d", minutes, seconds) + ".");
 	}
 	
+	private void runBindTests() throws IOException
+	{
+		System.out.println("Beginning bind tests..\n");
+
+		testInputFiles = TestUtils.getTestInputFiles(new File(BindTest.ROOT));
+		resultFiles = TestUtils.getFiles(new File(BindTest.ROOT), RESULT_FILE_EXTENSION);
+		
+		runTests(testInputFiles, resultFiles, new ExecutableSpecTestHandler(Release.VDM_10), false);
+		
+		System.out.println("\n********");
+		System.out.println("Finished with bind tests");
+		System.out.println("********\n");
+	}
+
 	private void runConcurrencyTests() throws IOException
 	{
 		System.out.println("Beginning concurrency tests..\n");
