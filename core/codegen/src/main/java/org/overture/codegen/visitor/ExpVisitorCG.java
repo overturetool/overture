@@ -786,15 +786,18 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseASubseqExp(ASubseqExp node, IRInfo question)
 			throws AnalysisException
 	{
+		PType type = node.getType();
 		PExp from = node.getFrom();
 		PExp to = node.getTo();
 		PExp seq = node.getSeq();
 		
+		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 		SExpCG fromCg = from.apply(question.getExpVisitor(), question);
 		SExpCG toCg = to.apply(question.getExpVisitor(), question);
 		SExpCG seqCg = seq.apply(question.getExpVisitor(), question);
 
 		ASubSeqExpCG subSeq = new ASubSeqExpCG();
+		subSeq.setType(typeCg);
 		subSeq.setFrom(fromCg);
 		subSeq.setTo(toCg);
 		subSeq.setSeq(seqCg);
