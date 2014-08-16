@@ -12,6 +12,7 @@ import org.overture.codegen.cgast.declarations.SLocalDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.ALetBeStNoBindingRuntimeErrorExpCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
+import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ARaiseErrorStmCG;
 import org.overture.codegen.cgast.types.AErrorTypeCG;
@@ -66,6 +67,24 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 
 		return outerBlockDecls;
 	}
+	
+	@Override
+	public List<SStmCG> getPreForLoopStms(AIdentifierVarExpCG setVar,
+			List<SPatternCG> patterns, SPatternCG pattern)
+	{
+		if(count > 0)
+		{
+			ALocalAssignmentStmCG successAssignment = new ALocalAssignmentStmCG();
+			successAssignment.setExp(transformationAssistant.getInfo().getExpAssistant().consBoolLiteral(false));
+			successAssignment.setTarget(transformationAssistant.consSuccessVar(successVarName));
+			
+			return packStm(successAssignment);
+		}
+		else
+		{
+			return null;
+		}
+	}
 
 	@Override
 	public SExpCG getForLoopCond(AIdentifierVarExpCG setVar,
@@ -110,7 +129,7 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 	}
 
 	@Override
-	public List<SStmCG> getOuterBlockStms(AIdentifierVarExpCG setVar,
+	public List<SStmCG> getPostOuterBlockStms(AIdentifierVarExpCG setVar,
 			List<SPatternCG> patterns)
 	{
 		ALetBeStNoBindingRuntimeErrorExpCG noBinding = new ALetBeStNoBindingRuntimeErrorExpCG();

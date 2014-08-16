@@ -16,6 +16,9 @@ public interface IIterationStrategy
 	public List<? extends SLocalDeclCG> getOuterBlockDecls(
 			AIdentifierVarExpCG setVar, List<SPatternCG> patterns)
 			throws AnalysisException;
+	
+	public List<SStmCG> getPreForLoopStms(AIdentifierVarExpCG setVar,
+			List<SPatternCG> patterns, SPatternCG pattern);
 
 	public AVarLocalDeclCG getForLoopInit(AIdentifierVarExpCG setVar,
 			List<SPatternCG> patterns, SPatternCG pattern);
@@ -38,7 +41,7 @@ public interface IIterationStrategy
 	public List<SStmCG> getForLoopStms(AIdentifierVarExpCG setVar,
 			List<SPatternCG> patterns, SPatternCG pattern);
 
-	public List<SStmCG> getOuterBlockStms(AIdentifierVarExpCG setVar,
+	public List<SStmCG> getPostOuterBlockStms(AIdentifierVarExpCG setVar,
 			List<SPatternCG> patterns);
 
 	public void setFirstBind(boolean firstBind);

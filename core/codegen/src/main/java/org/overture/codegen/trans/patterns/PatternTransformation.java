@@ -115,7 +115,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 			{
 				AIdentifierPatternCG idPattern = (AIdentifierPatternCG)successVarDeclPattern;
 				data.setSuccessVarDecl(successVarDecl.clone());
-				AIdentifierVarExpCG successVar = consSuccessVar(idPattern.getName());
+				AIdentifierVarExpCG successVar = transformationAssistant.consSuccessVar(idPattern.getName());
 				data.setSuccessVar(successVar);
 			}
 			else
@@ -614,7 +614,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		AVarLocalDeclCG successVarDecl = transformationAssistant.consDecl(successVarName, new ABoolBasicTypeCG(), init);
 		patternData.setSuccessVarDecl(successVarDecl);
 		
-		AIdentifierVarExpCG successVar = consSuccessVar(successVarName);
+		AIdentifierVarExpCG successVar = transformationAssistant.consSuccessVar(successVarName);
 		patternData.setSuccessVar(successVar);
 		
 		patternData.getDeclBlock().getLocalDefs().add(successVarDecl);
@@ -653,16 +653,6 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		ifCheck.setThenStm(noMatchStm);
 		
 		return ifCheck;
-	}
-
-	private AIdentifierVarExpCG consSuccessVar(String successVarName)
-	{
-		AIdentifierVarExpCG successVar = new AIdentifierVarExpCG();
-		successVar.setIsLambda(false);
-		successVar.setOriginal(successVarName);
-		successVar.setType(new ABoolBasicTypeCG());
-		
-		return successVar;
 	}
 	
 	private void initSuccessVar(PatternBlockData patternData, SExpCG initExp, ABlockStmCG patternBlock)

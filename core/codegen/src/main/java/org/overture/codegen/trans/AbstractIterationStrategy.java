@@ -46,6 +46,12 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 	{
 		return null;
 	}
+	
+	public List<SStmCG> getPreForLoopStms(AIdentifierVarExpCG setVar,
+			List<SPatternCG> patterns, SPatternCG pattern)
+	{
+		return null;
+	}
 
 	@Override
 	public AVarLocalDeclCG getForLoopInit(AIdentifierVarExpCG setVar,
@@ -106,7 +112,7 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 	}
 
 	@Override
-	public List<SStmCG> getOuterBlockStms(AIdentifierVarExpCG setVar,
+	public List<SStmCG> getPostOuterBlockStms(AIdentifierVarExpCG setVar,
 			List<SPatternCG> patterns)
 	{
 		return null;

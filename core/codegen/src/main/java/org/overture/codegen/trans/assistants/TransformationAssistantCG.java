@@ -135,6 +135,16 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 			throw new AnalysisException("Exptected sequence type. Got: " + typeCg);
 		}
 	}
+	
+	public AIdentifierVarExpCG consSuccessVar(String successVarName)
+	{
+		AIdentifierVarExpCG successVar = new AIdentifierVarExpCG();
+		successVar.setIsLambda(false);
+		successVar.setOriginal(successVarName);
+		successVar.setType(new ABoolBasicTypeCG());
+		
+		return successVar;
+	}
 
 	public AVarLocalDeclCG consBoolVarDecl(String boolVarName, boolean initValue)
 	{
@@ -415,6 +425,13 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 			for (int i = 0;;)
 			{
 				SPatternCG pattern = patterns.get(i);
+				
+				List<SStmCG> stms = strategy.getPreForLoopStms(setVar, patterns, pattern);
+				
+				if(stms != null)
+				{
+					nextBlock.getStatements().addAll(stms);
+				}
 
 				// Construct next for loop
 				AForLoopStmCG forLoop = new AForLoopStmCG();
@@ -458,7 +475,7 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 			}
 		}
 
-		List<SStmCG> extraOuterBlockStms = strategy.getOuterBlockStms(setVar, patterns);
+		List<SStmCG> extraOuterBlockStms = strategy.getPostOuterBlockStms(setVar, patterns);
 
 		if (extraOuterBlockStms != null)
 		{
