@@ -38,16 +38,17 @@ import org.overture.codegen.trans.iterator.ILanguageIterator;
 public class SetCompStrategy extends ComplexCompStrategy
 {
 	protected SExpCG first;
-	
+
 	public SetCompStrategy(TransformationAssistantCG transformationAssitant,
-			SExpCG first, SExpCG predicate, String var, STypeCG compType, ILanguageIterator langIterator, ITempVarGen tempGen,
+			SExpCG first, SExpCG predicate, String var, STypeCG compType,
+			ILanguageIterator langIterator, ITempVarGen tempGen,
 			TempVarPrefixes varPrefixes)
 	{
 		super(transformationAssitant, predicate, var, compType, langIterator, tempGen, varPrefixes);
-		
+
 		this.first = first;
 	}
-	
+
 	@Override
 	protected SExpCG getEmptyCollection()
 	{
@@ -55,7 +56,8 @@ public class SetCompStrategy extends ComplexCompStrategy
 	}
 
 	@Override
-	protected List<SStmCG> getConditionalAdd(AIdentifierVarExpCG setVar, List<SPatternCG> patterns, SPatternCG pattern)
+	protected List<SStmCG> getConditionalAdd(AIdentifierVarExpCG setVar,
+			List<SPatternCG> patterns, SPatternCG pattern)
 	{
 		AIdentifierVarExpCG setCompResult = new AIdentifierVarExpCG();
 		setCompResult.setType(compType.clone());
@@ -69,7 +71,7 @@ public class SetCompStrategy extends ComplexCompStrategy
 		setUnion.setType(compType.clone());
 		setUnion.setLeft(setCompResult.clone());
 		setUnion.setRight(setToUnion);
-		
+
 		return consConditionalAdd(setCompResult, setUnion);
 	}
 }

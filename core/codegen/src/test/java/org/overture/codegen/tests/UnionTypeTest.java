@@ -37,14 +37,16 @@ public class UnionTypeTest extends BaseTestSuite
 	public static final String ROOT = "src" + File.separatorChar + "test"
 			+ File.separatorChar + "resources" + File.separatorChar
 			+ "union_type_specs";
-	
-	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
+
+	public static Test suite() throws IllegalArgumentException,
+			SecurityException, InstantiationException, IllegalAccessException,
+			InvocationTargetException, NoSuchMethodException, IOException
 	{
 		LexLocation.absoluteToStringLocation = false;
 		Properties.recordTestResults = TestFlags.UNION_TYPE_TESTS_ON;
-		
+
 		String name = "Union type test case";
-		TestSuite test =  createTestCompleteFile(name, ROOT, SpecificationTestCase.class,"");
+		TestSuite test = createTestCompleteFile(name, ROOT, SpecificationTestCase.class, "");
 		return test;
 	}
 }

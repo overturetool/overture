@@ -37,7 +37,7 @@ public interface IIterationStrategy
 	public List<? extends SLocalDeclCG> getOuterBlockDecls(
 			AIdentifierVarExpCG setVar, List<SPatternCG> patterns)
 			throws AnalysisException;
-	
+
 	public List<SStmCG> getPreForLoopStms(AIdentifierVarExpCG setVar,
 			List<SPatternCG> patterns, SPatternCG pattern);
 
@@ -55,9 +55,9 @@ public interface IIterationStrategy
 			List<SPatternCG> patterns, SPatternCG pattern)
 			throws AnalysisException;
 
-	public ALocalPatternAssignmentStmCG getNextElementAssigned(AIdentifierVarExpCG setVar,
-			List<SPatternCG> patterns, SPatternCG pattern)
-			throws AnalysisException;
+	public ALocalPatternAssignmentStmCG getNextElementAssigned(
+			AIdentifierVarExpCG setVar, List<SPatternCG> patterns,
+			SPatternCG pattern) throws AnalysisException;
 
 	public List<SStmCG> getForLoopStms(AIdentifierVarExpCG setVar,
 			List<SPatternCG> patterns, SPatternCG pattern);

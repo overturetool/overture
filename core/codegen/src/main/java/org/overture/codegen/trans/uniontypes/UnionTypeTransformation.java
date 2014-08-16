@@ -84,35 +84,43 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 	private String objExpPrefix;
 	private String applyExpResulPrefix;
 	private String callStmObjPrefix;
-	
+
 	private ITempVarGen nameGen;
-	
-	public UnionTypeTransformation(BaseTransformationAssistant baseAssistant, IRInfo info, List<AClassDeclCG> classes, String applyExpResultPrefix, String objExpPrefix, String callStmObjPrefix, ITempVarGen nameGen)
+
+	public UnionTypeTransformation(BaseTransformationAssistant baseAssistant,
+			IRInfo info, List<AClassDeclCG> classes,
+			String applyExpResultPrefix, String objExpPrefix,
+			String callStmObjPrefix, ITempVarGen nameGen)
 	{
 		this.baseAssistant = baseAssistant;
 		this.info = info;
 		this.classes = classes;
 		this.nameGen = nameGen;
-		
+
 		this.applyExpResulPrefix = applyExpResultPrefix;
 		this.objExpPrefix = objExpPrefix;
 		this.callStmObjPrefix = callStmObjPrefix;
 	}
-	
+
 	private interface TypeFinder<T extends STypeCG>
 	{
-		public T findType(PType type) throws org.overture.ast.analysis.AnalysisException;
+		public T findType(PType type)
+				throws org.overture.ast.analysis.AnalysisException;
 	}
-	
+
 	public <T extends STypeCG> T getMapType(SExpCG exp, TypeFinder<T> typeFinder)
 	{
 		if (exp == null || exp.getType() == null)
+		{
 			return null;
+		}
 
 		SourceNode sourceNode = exp.getType().getSourceNode();
 
 		if (sourceNode == null)
+		{
 			return null;
+		}
 
 		org.overture.ast.node.INode vdmTypeNode = sourceNode.getVdmNode();
 
@@ -121,7 +129,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			try
 			{
 				PType vdmType = (PType) vdmTypeNode;
-				
+
 				return typeFinder.findType(vdmType);
 
 			} catch (org.overture.ast.analysis.AnalysisException e)
@@ -131,27 +139,29 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 
 		return null;
 	}
-	
-	private SExpCG correctTypes(SExpCG exp, STypeCG castedType) throws AnalysisException
+
+	private SExpCG correctTypes(SExpCG exp, STypeCG castedType)
+			throws AnalysisException
 	{
-		if(exp.getType() instanceof AUnionTypeCG && !(exp instanceof ACastUnaryExpCG))
+		if (exp.getType() instanceof AUnionTypeCG
+				&& !(exp instanceof ACastUnaryExpCG))
 		{
 			ACastUnaryExpCG casted = new ACastUnaryExpCG();
 			casted.setType(castedType.clone());
 			casted.setExp(exp.clone());
-			
+
 			baseAssistant.replaceNodeWith(exp, casted);
-			
+
 			return casted;
 		}
-		
+
 		return exp;
 	}
-	
+
 	private boolean correctArgTypes(List<SExpCG> args, List<STypeCG> paramTypes)
 			throws AnalysisException
 	{
-		if(info.getAssistantManager().getTypeAssistant().checkArgTypes(info, args, paramTypes))
+		if (info.getAssistantManager().getTypeAssistant().checkArgTypes(info, args, paramTypes))
 		{
 			for (int k = 0; k < paramTypes.size(); k++)
 			{
@@ -159,27 +169,27 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			}
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	private boolean handleUnaryExp(SUnaryExpCG exp) throws AnalysisException
 	{
 		STypeCG type = exp.getExp().getType();
-		
-		if(type instanceof AUnionTypeCG)
+
+		if (type instanceof AUnionTypeCG)
 		{
 			org.overture.ast.node.INode vdmNode = type.getSourceNode().getVdmNode();
-			
-			if(vdmNode instanceof PType)
+
+			if (vdmNode instanceof PType)
 			{
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	private AInstanceofExpCG consInstanceCheck(SExpCG copy, STypeCG type)
 	{
 		AInstanceofExpCG check = new AInstanceofExpCG();
@@ -188,30 +198,30 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		check.setExp(copy.clone());
 		return check;
 	}
-	
+
 	@Override
 	public void defaultInSNumericBinaryExpCG(SNumericBinaryExpCG node)
 			throws AnalysisException
 	{
 		STypeCG expectedType = node.getType();
-		
+
 		correctTypes(node.getLeft(), expectedType);
 		correctTypes(node.getRight(), expectedType);
 	}
-	
+
 	@Override
 	public void caseAFieldExpCG(AFieldExpCG node) throws AnalysisException
 	{
 		node.getObject().apply(this);
-		
+
 		INode parent = node.parent();
-		
+
 		if (parent instanceof AApplyExpCG)
 		{
-			//TODO: Deflatten structure
-			
+			// TODO: Deflatten structure
+
 			STypeCG objectType = node.getObject().getType();
-			
+
 			if (!(objectType instanceof AUnionTypeCG))
 			{
 				return;
@@ -233,7 +243,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			resultVar.setIsLambda(false);
 			resultVar.setOriginal(applyResultName);
 			resultVar.setType(resultDecl.getType().clone());
-			
+
 			ABlockStmCG replacementBlock = new ABlockStmCG();
 			SExpCG obj = null;
 			if (!(node.getObject() instanceof SVarExpBase))
@@ -309,100 +319,102 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseAApplyExpCG(AApplyExpCG node) throws AnalysisException
 	{
-		for(SExpCG arg : node.getArgs())
+		for (SExpCG arg : node.getArgs())
 		{
 			arg.apply(this);
 		}
 		SExpCG root = node.getRoot();
 		root.apply(this);
-		
-		if(root.getType() instanceof AUnionTypeCG)
+
+		if (root.getType() instanceof AUnionTypeCG)
 		{
-			SMapTypeCG mapType = getMapType(root, new TypeFinder<SMapTypeCG>(){
+			SMapTypeCG mapType = getMapType(root, new TypeFinder<SMapTypeCG>()
+			{
 
 				@Override
-				public SMapTypeCG findType(PType type) throws org.overture.ast.analysis.AnalysisException
+				public SMapTypeCG findType(PType type)
+						throws org.overture.ast.analysis.AnalysisException
 				{
 					SMapType mapType = info.getTcFactory().createPTypeAssistant().getMap(type);
 
-					return mapType != null ? (SMapTypeCG) mapType.apply(info.getTypeVisitor(), info) : null; 
-				}});
-			
-			if(mapType != null && node.getArgs().size() == 1)
+					return mapType != null ? (SMapTypeCG) mapType.apply(info.getTypeVisitor(), info)
+							: null;
+				}
+			});
+
+			if (mapType != null && node.getArgs().size() == 1)
 			{
 				correctTypes(root, mapType);
 				return;
 			}
-		}
-		else if(root.getType() instanceof AMethodTypeCG)
+		} else if (root.getType() instanceof AMethodTypeCG)
 		{
 			AMethodTypeCG methodType = (AMethodTypeCG) root.getType();
-			
+
 			LinkedList<STypeCG> paramTypes = methodType.getParams();
-			
+
 			LinkedList<SExpCG> args = node.getArgs();
-			
+
 			correctArgTypes(args, paramTypes);
 		}
 	}
 
 	@Override
-	public void inANotUnaryExpCG(ANotUnaryExpCG node)
-			throws AnalysisException
+	public void inANotUnaryExpCG(ANotUnaryExpCG node) throws AnalysisException
 	{
 		correctTypes(node.getExp(), new ABoolBasicTypeCG());
 	}
-	
+
 	@Override
 	public void inAEqualsBinaryExpCG(AEqualsBinaryExpCG node)
 			throws AnalysisException
 	{
 		STypeCG leftType = node.getLeft().getType();
 		STypeCG rightType = node.getRight().getType();
-		
+
 		SExpCG unionTypedExp = null;
 		SExpCG notUnionTypedExp = null;
-		
-		if(leftType instanceof AUnionTypeCG && !(rightType instanceof AUnionTypeCG))
+
+		if (leftType instanceof AUnionTypeCG
+				&& !(rightType instanceof AUnionTypeCG))
 		{
 			unionTypedExp = node.getLeft();
 			notUnionTypedExp = node.getRight();
-		}
-		else if(rightType instanceof AUnionTypeCG && !(leftType instanceof AUnionTypeCG))
+		} else if (rightType instanceof AUnionTypeCG
+				&& !(leftType instanceof AUnionTypeCG))
 		{
 			unionTypedExp = node.getRight();
 			notUnionTypedExp = node.getLeft();
-		}
-		else
+		} else
 		{
 			return;
 		}
-		
+
 		STypeCG expectedType = notUnionTypedExp.getType();
 		correctTypes(unionTypedExp, expectedType);
 	}
-	
+
 	@Override
 	public void inANewExpCG(ANewExpCG node) throws AnalysisException
 	{
 		LinkedList<SExpCG> args = node.getArgs();
-		
+
 		boolean hasUnionTypes = false;
-		
-		for(SExpCG arg : args)
+
+		for (SExpCG arg : args)
 		{
-			if(arg.getType() instanceof AUnionTypeCG)
+			if (arg.getType() instanceof AUnionTypeCG)
 			{
 				hasUnionTypes = true;
 				break;
 			}
 		}
-		
-		if(!hasUnionTypes)
+
+		if (!hasUnionTypes)
 		{
 			return;
 		}
-		
+
 		STypeCG type = node.getType();
 
 		if (type instanceof AClassTypeCG)
@@ -416,24 +428,23 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 						continue;
 					}
 
-					if(correctArgTypes(args, method.getMethodType().getParams()))
+					if (correctArgTypes(args, method.getMethodType().getParams()))
 					{
 						return;
 					}
 				}
 			}
-		}
-		else if(type instanceof ARecordTypeCG)
+		} else if (type instanceof ARecordTypeCG)
 		{
 			ARecordTypeCG recordType = (ARecordTypeCG) type;
 			String definingClassName = recordType.getName().getDefiningClass();
 			String recordName = recordType.getName().getName();
-			
+
 			AClassDeclCG classDecl = info.getAssistantManager().getDeclAssistant().findClass(classes, definingClassName);
 			ARecordDeclCG record = info.getAssistantManager().getDeclAssistant().findRecord(classDecl, recordName);
-			
+
 			List<STypeCG> fieldTypes = info.getAssistantManager().getTypeAssistant().getFieldTypes(record);
-			
+
 			if (correctArgTypes(args, fieldTypes))
 			{
 				return;
@@ -445,49 +456,50 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 	public void inAIfStmCG(AIfStmCG node) throws AnalysisException
 	{
 		ABoolBasicTypeCG expectedType = new ABoolBasicTypeCG();
-		
+
 		correctTypes(node.getIfExp(), expectedType);
-		
+
 		LinkedList<AElseIfStmCG> elseIfs = node.getElseIf();
-		
-		for(AElseIfStmCG currentElseIf : elseIfs)
+
+		for (AElseIfStmCG currentElseIf : elseIfs)
 		{
 			correctTypes(currentElseIf.getElseIf(), expectedType);
 		}
 	}
-	
+
 	@Override
 	public void caseACallStmCG(ACallStmCG node) throws AnalysisException
 	{
-		for(SExpCG arg : node.getArgs())
+		for (SExpCG arg : node.getArgs())
 		{
 			arg.apply(this);
 		}
-		
+
 		AClassTypeCG classType = node.getClassType();
-		String className = classType != null ? classType.getName() : node.getAncestor(AClassDeclCG.class).getName();
+		String className = classType != null ? classType.getName()
+				: node.getAncestor(AClassDeclCG.class).getName();
 		String fieldName = node.getName();
 		LinkedList<SExpCG> args = node.getArgs();
-		
+
 		TypeAssistantCG typeAssistant = info.getAssistantManager().getTypeAssistant();
 		AMethodTypeCG methodType = typeAssistant.getMethodType(info, classes, className, fieldName, args);
-		
-		if(methodType != null)
+
+		if (methodType != null)
 		{
 			correctArgTypes(args, methodType.getParams());
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public void inACallObjectStmCG(ACallObjectStmCG node)
 			throws AnalysisException
 	{
-		for(SExpCG arg : node.getArgs())
+		for (SExpCG arg : node.getArgs())
 		{
 			arg.apply(this);
 		}
-		
+
 		SObjectDesignatorCG designator = node.getDesignator();
 
 		ObjectDesignatorToExpCG converter = new ObjectDesignatorToExpCG(info, classes);
@@ -513,9 +525,9 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		call.setClassName(className);
 		call.setFieldName(fieldName);
 		call.setSourceNode(sourceNode);
-		
+
 		ABlockStmCG replacementBlock = new ABlockStmCG();
-		
+
 		if (!(designator instanceof AIdentifierObjectDesignatorCG))
 		{
 			String callStmObjName = nameGen.nextVarName(callStmObjPrefix);
@@ -532,9 +544,9 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			objVar.setIsLambda(false);
 			objVar.setOriginal(callStmObjName);
 			objVar.setType(objDecl.getType().clone());
-			
+
 			objExp = objVar;
-			
+
 			replacementBlock.getLocalDefs().add(objDecl);
 		}
 
@@ -548,14 +560,14 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			ACallObjectExpStmCG callCopy = call.clone();
 
 			AClassTypeCG currentType = (AClassTypeCG) possibleTypes.get(i);
-			
+
 			AMethodTypeCG methodType = typeAssistant.getMethodType(info, classes, currentType.getName(), fieldName, args);
-			
+
 			if (methodType != null)
 			{
 				correctArgTypes(callCopy.getArgs(), methodType.getParams());
 			}
-			
+
 			ACastUnaryExpCG castedVarExp = new ACastUnaryExpCG();
 			castedVarExp.setType(currentType.clone());
 			castedVarExp.setExp(objExp.clone());
@@ -583,7 +595,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		baseAssistant.replaceNodeWith(node, replacementBlock);
 		ifChecks.apply(this);
 	}
-	
+
 	@Override
 	public void inAVarLocalDeclCG(AVarLocalDeclCG node)
 			throws AnalysisException
@@ -595,71 +607,71 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			correctTypes(node.getExp(), expectedType);
 		}
 	}
-	
+
 	@Override
 	public void caseAReturnStmCG(AReturnStmCG node) throws AnalysisException
 	{
-		if(node.getExp() == null)
+		if (node.getExp() == null)
 		{
-			return; //When the return type of the method is 'void'
+			return; // When the return type of the method is 'void'
 		}
-		
+
 		node.getExp().apply(this);
-		
+
 		AMethodDeclCG methodDecl = node.getAncestor(AMethodDeclCG.class);
-		
+
 		STypeCG expectedType = methodDecl.getMethodType().getResult();
-		
-		if(!(expectedType instanceof AUnionTypeCG))
+
+		if (!(expectedType instanceof AUnionTypeCG))
 		{
 			correctTypes(node.getExp(), expectedType);
 		}
 	}
-	
+
 	@Override
 	public void inAElemsUnaryExpCG(AElemsUnaryExpCG node)
 			throws AnalysisException
 	{
-		if(handleUnaryExp(node))
+		if (handleUnaryExp(node))
 		{
 			SExpCG exp = node.getExp();
 			PType vdmType = (PType) exp.getType().getSourceNode().getVdmNode();
 			SSeqType seqType = info.getTcFactory().createPTypeAssistant().getSeq(vdmType);
-			
+
 			try
 			{
 				STypeCG typeCg = seqType.apply(info.getTypeVisitor(), info);
-				
-				if(typeCg instanceof SSeqTypeCG)
+
+				if (typeCg instanceof SSeqTypeCG)
 				{
 					correctTypes(exp, typeCg);
 				}
-				
+
 			} catch (org.overture.ast.analysis.AnalysisException e)
 			{
 			}
 		}
 	}
-	
+
 	@Override
 	public void inAMapDomainUnaryExpCG(AMapDomainUnaryExpCG node)
 			throws AnalysisException
 	{
-		if(handleUnaryExp(node))
+		if (handleUnaryExp(node))
 		{
 			SExpCG exp = node.getExp();
 			PType vdmType = (PType) exp.getType().getSourceNode().getVdmNode();
 			SMapType mapType = info.getTcFactory().createPTypeAssistant().getMap(vdmType);
-			
+
 			try
 			{
 				STypeCG typeCg = mapType.apply(info.getTypeVisitor(), info);
-				
-				if(typeCg instanceof SMapTypeCG)
+
+				if (typeCg instanceof SMapTypeCG)
 				{
 					correctTypes(exp, typeCg);
 				}
-				
+
 			} catch (org.overture.ast.analysis.AnalysisException e)
 			{
 			}

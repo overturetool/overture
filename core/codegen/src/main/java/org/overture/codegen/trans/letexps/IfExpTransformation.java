@@ -43,14 +43,14 @@ public class IfExpTransformation extends DepthFirstAnalysisAdaptor
 			throws AnalysisException
 	{
 		INode parent = node.parent();
-		
-		if(parent instanceof AReturnStmCG)
+
+		if (parent instanceof AReturnStmCG)
 		{
 			AIfStmCG ifStm = new AIfStmCG();
 			ifStm.setSourceNode(node.getSourceNode());
-			
+
 			ifStm.setIfExp(node.getCondition().clone());
-			
+
 			AReturnStmCG thenStm = new AReturnStmCG();
 			thenStm.setExp(node.getTrueValue().clone());
 			ifStm.setThenStm(thenStm);
@@ -58,7 +58,7 @@ public class IfExpTransformation extends DepthFirstAnalysisAdaptor
 			AReturnStmCG elseStm = new AReturnStmCG();
 			elseStm.setExp(node.getFalseValue().clone());
 			ifStm.setElseStm(elseStm);
-			
+
 			baseAssistant.replaceNodeWithRecursively(parent, ifStm, this);
 		}
 	}

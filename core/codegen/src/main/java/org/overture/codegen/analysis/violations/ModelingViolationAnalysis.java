@@ -48,21 +48,25 @@ public class ModelingViolationAnalysis extends ViolationAnalysis
 			AClassClassDefinition classDef = (AClassClassDefinition) node;
 
 			if (classDef.getSupernames().size() > 1)
+			{
 				addViolation(new Violation("Multiple inheritance not supported.", classDef.getLocation(), assistantManager.getLocationAssistant()));
+			}
 
-			//Currently this is allowed
-			//handleOverloadedMethods(classDef);
-			
+			// Currently this is allowed
+			// handleOverloadedMethods(classDef);
+
 		} else if (node instanceof AFuncInstatiationExp)
 		{
 			AFuncInstatiationExp exp = (AFuncInstatiationExp) node;
 
 			if (exp.getImpdef() != null)
+			{
 				addViolation(new Violation("Implicit functions cannot be instantiated since they are not supported.", exp.getLocation(), assistantManager.getLocationAssistant()));
+			}
 		}
 	}
 
-	//Currently the call to this is commented out
+	// Currently the call to this is commented out
 	@SuppressWarnings("unused")
 	private void handleOverloadedMethods(AClassClassDefinition classDef)
 	{
@@ -83,7 +87,7 @@ public class ModelingViolationAnalysis extends ViolationAnalysis
 	{
 		PExp leftExp = exp.getLeft();
 		PExp rightExp = exp.getRight();
-		
+
 		ExpAssistantCG expAssistant = assistantManager.getExpAssistant();
 
 		return !expAssistant.isIntegerType(leftExp)

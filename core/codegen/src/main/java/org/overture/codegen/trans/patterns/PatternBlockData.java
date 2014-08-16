@@ -34,18 +34,19 @@ public class PatternBlockData
 	private ABlockStmCG declBlock;
 	private MismatchHandling mismatchHandling;
 
-	public PatternBlockData(SPatternCG pattern, ABlockStmCG declBlock, MismatchHandling mismatchHandling)
+	public PatternBlockData(SPatternCG pattern, ABlockStmCG declBlock,
+			MismatchHandling mismatchHandling)
 	{
 		this.pattern = pattern;
 		this.declBlock = declBlock;
 		this.mismatchHandling = mismatchHandling;
 	}
-	
+
 	public PatternBlockData(MismatchHandling mismatchHandling)
 	{
 		this(null, null, mismatchHandling);
 	}
-	
+
 	public boolean IsRootPattern(SPatternCG pattern)
 	{
 		return this.pattern == pattern;
@@ -90,7 +91,7 @@ public class PatternBlockData
 	{
 		this.declBlock = declBlock;
 	}
-	
+
 	public MismatchHandling getMismatchHandling()
 	{
 		return mismatchHandling;

@@ -85,17 +85,17 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 		LinkedList<PType> types = node.getTypes();
 
 		PTypeAssistantTC typeAssistant = question.getTcFactory().createPTypeAssistant();
-		
+
 		if (question.getTypeAssistant().isUnionOfType(node, ASetType.class))
 		{
 			ASetType setType = typeAssistant.getSet(node);
 			return setType.apply(question.getTypeVisitor(), question);
-			
+
 		} else if (question.getTypeAssistant().isUnionOfType(node, SSeqType.class))
 		{
 			SSeqType seqType = typeAssistant.getSeq(node);
 			return seqType.apply(question.getTypeVisitor(), question);
-			
+
 		} else if (question.getTypeAssistant().isUnionOfType(node, SMapType.class))
 		{
 			SMapType mapType = typeAssistant.getMap(node);
@@ -114,21 +114,21 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 			return unionTypeCg;
 		}
 	}
-	
+
 	@Override
 	public STypeCG caseAUnknownType(AUnknownType node, IRInfo question)
 			throws AnalysisException
 	{
 		return new AUnknownTypeCG(); // '?' Indicates an unknown type
 	}
-	
+
 	@Override
 	public STypeCG caseATokenBasicType(ATokenBasicType node, IRInfo question)
 			throws AnalysisException
 	{
 		return new ATokenBasicTypeCG();
 	}
-	
+
 	@Override
 	public STypeCG caseASetType(ASetType node, IRInfo question)
 			throws AnalysisException
@@ -136,14 +136,14 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 		PType setOf = node.getSetof();
 		STypeCG typeCg = setOf.apply(question.getTypeVisitor(), question);
 		boolean empty = node.getEmpty();
-		
+
 		ASetSetTypeCG setType = new ASetSetTypeCG();
 		setType.setSetOf(typeCg);
 		setType.setEmpty(empty);
-		
+
 		return setType;
 	}
-	
+
 	@Override
 	public STypeCG caseAMapMapType(AMapMapType node, IRInfo question)
 			throws AnalysisException
@@ -151,45 +151,45 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 		PType from = node.getFrom();
 		PType to = node.getTo();
 		boolean empty = node.getEmpty();
-		
+
 		STypeCG fromCg = from.apply(question.getTypeVisitor(), question);
 		STypeCG toCg = to.apply(question.getTypeVisitor(), question);
-		
+
 		AMapMapTypeCG mapType = new AMapMapTypeCG();
 		mapType.setFrom(fromCg);
 		mapType.setTo(toCg);
 		mapType.setEmpty(empty);
-		
+
 		return mapType;
 	}
-	
+
 	@Override
 	public STypeCG caseAProductType(AProductType node, IRInfo question)
 			throws AnalysisException
-	{	
+	{
 		ATupleTypeCG tuple = new ATupleTypeCG();
-		
+
 		LinkedList<PType> types = node.getTypes();
-		
+
 		for (PType type : types)
 		{
 			STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 			tuple.getTypes().add(typeCg);
-			
+
 		}
-		
+
 		return tuple;
 	}
-	
+
 	@Override
 	public STypeCG caseAParameterType(AParameterType node, IRInfo question)
 			throws AnalysisException
 	{
 		String name = node.getName().getName();
-		
+
 		ATemplateTypeCG templateType = new ATemplateTypeCG();
 		templateType.setName(name);
-		
+
 		return templateType;
 	}
 
@@ -200,14 +200,19 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 		STypeCG type = node.getType().apply(question.getTypeVisitor(), question);
 
 		if (type instanceof AIntNumericBasicTypeCG)
+		{
 			return new AIntBasicTypeWrappersTypeCG();
-		else if (type instanceof ARealNumericBasicTypeCG)
+		} else if (type instanceof ARealNumericBasicTypeCG)
+		{
 			return new ARealBasicTypeWrappersTypeCG();
-		else if (type instanceof ABoolBasicTypeCG)
+		} else if (type instanceof ABoolBasicTypeCG)
+		{
 			return new ABoolBasicTypeWrappersTypeCG();
-		else if (type instanceof ACharBasicTypeCG)
+		} else if (type instanceof ACharBasicTypeCG)
+		{
 			return new ACharBasicTypeWrappersTypeCG();
-		
+		}
+
 		return type;
 	}
 
@@ -235,10 +240,10 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 			throws AnalysisException
 	{
 		String value = node.getValue().getValue();
-		
+
 		AQuoteTypeCG quoteTypeCg = new AQuoteTypeCG();
 		quoteTypeCg.setValue(value);
-		
+
 		return quoteTypeCg;
 	}
 
@@ -247,15 +252,15 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 			IRInfo question) throws AnalysisException
 	{
 		ILexNameToken name = node.getName();
-		
+
 		ARecordTypeCG recordType = new ARecordTypeCG();
-		
+
 		ATypeNameCG typeName = new ATypeNameCG();
 		typeName.setName(name.getName());
 		typeName.setDefiningClass(name.getModule());
 
 		recordType.setName(typeName);
-		
+
 		return recordType;
 	}
 
@@ -265,7 +270,7 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 	{
 		return question.getTypeAssistant().constructSeqType(node, question);
 	}
-	
+
 	@Override
 	public STypeCG caseASeq1SeqType(ASeq1SeqType node, IRInfo question)
 			throws AnalysisException
@@ -286,7 +291,7 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 	{
 		return question.getTypeAssistant().consMethodType(node, node.getParameters(), node.getResult(), question);
 	}
-	
+
 	@Override
 	public STypeCG caseAClassType(AClassType node, IRInfo question)
 			throws AnalysisException
@@ -333,7 +338,7 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 	{
 		return new ARealNumericBasicTypeCG();
 	}
-	
+
 	@Override
 	public STypeCG caseARationalNumericBasicType(
 			ARationalNumericBasicType node, IRInfo question)
@@ -350,8 +355,8 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 	}
 
 	@Override
-	public STypeCG caseABooleanBasicType(ABooleanBasicType node,
-			IRInfo question) throws AnalysisException
+	public STypeCG caseABooleanBasicType(ABooleanBasicType node, IRInfo question)
+			throws AnalysisException
 	{
 		return new ABoolBasicTypeCG();
 	}

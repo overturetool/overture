@@ -31,12 +31,12 @@ public class MergeContext
 	{
 		context = new VelocityContext();
 	}
-	
+
 	public void put(String name, Object value)
 	{
 		context.put(name, value);
 	}
-	
+
 	public VelocityContext getVelocityContext()
 	{
 		return context;

@@ -30,11 +30,11 @@ public class QuoteAnalysis extends AbstractAnalysis
 	@Override
 	public void defaultInINode(INode node) throws AnalysisException
 	{
-		if(node instanceof AQuoteLiteralExpCG)
+		if (node instanceof AQuoteLiteralExpCG)
 		{
 			setFound();
 			throw new AnalysisException();
 		}
 	}
-	
+
 }

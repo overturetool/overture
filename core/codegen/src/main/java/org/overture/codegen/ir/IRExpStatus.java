@@ -28,7 +28,7 @@ import org.overture.codegen.cgast.SExpCG;
 public class IRExpStatus extends IRStatus
 {
 	private SExpCG expCg;
-	
+
 	public IRExpStatus(SExpCG expCg, Set<NodeInfo> unsupportedNodes)
 	{
 		super(unsupportedNodes);

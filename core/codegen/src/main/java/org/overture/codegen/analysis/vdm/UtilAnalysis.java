@@ -34,25 +34,25 @@ public class UtilAnalysis extends AbstractAnalysis
 	@Override
 	public void defaultInINode(INode node) throws AnalysisException
 	{
-		if(node instanceof AClassTypeCG)
+		if (node instanceof AClassTypeCG)
 		{
 			AClassTypeCG classType = (AClassTypeCG) node;
-			
+
 			String className = classType.getName();
-			
-			for(int i = 0; i < IRConstants.UTIL_NAMES.length; i++)
-				if(className.equals(IRConstants.UTIL_NAMES[i]))
+
+			for (int i = 0; i < IRConstants.UTIL_NAMES.length; i++)
+			{
+				if (className.equals(IRConstants.UTIL_NAMES[i]))
 				{
 					setFound();
 					throw new AnalysisException();
 				}
-		}
-		else if(node instanceof ARecordDeclCG)
+			}
+		} else if (node instanceof ARecordDeclCG)
 		{
 			setFound();
 			throw new AnalysisException();
-		}
-		else if(node instanceof ATupleTypeCG || node instanceof ATupleExpCG)
+		} else if (node instanceof ATupleTypeCG || node instanceof ATupleExpCG)
 		{
 			setFound();
 			throw new AnalysisException();

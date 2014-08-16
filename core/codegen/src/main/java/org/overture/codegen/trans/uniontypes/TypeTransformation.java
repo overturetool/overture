@@ -41,14 +41,14 @@ public class TypeTransformation extends DepthFirstAnalysisAdaptor
 	{
 		this.baseAssistant = baseAssistant;
 	}
-	
+
 	public AIntNumericBasicTypeCG consIntType(PCG node)
 	{
 		SourceNode sourceNode = node.getSourceNode();
-		
+
 		AIntNumericBasicTypeCG intType = new AIntNumericBasicTypeCG();
 		intType.setSourceNode(sourceNode);
-		
+
 		return intType;
 	}
 
@@ -57,29 +57,29 @@ public class TypeTransformation extends DepthFirstAnalysisAdaptor
 	{
 		baseAssistant.replaceNodeWith(node, consIntType(node));
 	}
-	
+
 	@Override
 	public void caseAUnionTypeCG(AUnionTypeCG node) throws AnalysisException
 	{
 		LinkedList<STypeCG> types = node.getTypes();
 
-		for(STypeCG type : types)
+		for (STypeCG type : types)
 		{
 			type.apply(this);
 		}
-		
+
 		boolean unionOfInts = true;
-		
-		for(STypeCG type : types)
+
+		for (STypeCG type : types)
 		{
-			if(!(type instanceof AIntNumericBasicTypeCG))
+			if (!(type instanceof AIntNumericBasicTypeCG))
 			{
 				unionOfInts = false;
 				break;
 			}
 		}
-		
-		if(unionOfInts)
+
+		if (unionOfInts)
 		{
 			baseAssistant.replaceNodeWith(node, consIntType(node));
 		}

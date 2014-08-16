@@ -16,14 +16,16 @@ public class BindTest extends BaseTestSuite
 	public static final String ROOT = "src" + File.separatorChar + "test"
 			+ File.separatorChar + "resources" + File.separatorChar
 			+ "bind_specs";
-	
-	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
+
+	public static Test suite() throws IllegalArgumentException,
+			SecurityException, InstantiationException, IllegalAccessException,
+			InvocationTargetException, NoSuchMethodException, IOException
 	{
 		LexLocation.absoluteToStringLocation = false;
 		Properties.recordTestResults = TestFlags.BIND_TESTS_ON;
-		
+
 		String name = "Classic specifications test case";
-		TestSuite test =  createTestCompleteFile(name, ROOT, SpecificationTestCase.class,"");
+		TestSuite test = createTestCompleteFile(name, ROOT, SpecificationTestCase.class, "");
 		return test;
 	}
 }

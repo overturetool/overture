@@ -28,7 +28,8 @@ import org.overture.codegen.assistant.AssistantManager;
 
 public class TypenameComparison extends NamingComparison
 {
-	public TypenameComparison(String[] names, AssistantManager assistantManager, String correctionPrefix)
+	public TypenameComparison(String[] names,
+			AssistantManager assistantManager, String correctionPrefix)
 	{
 		super(names, assistantManager, correctionPrefix);
 	}

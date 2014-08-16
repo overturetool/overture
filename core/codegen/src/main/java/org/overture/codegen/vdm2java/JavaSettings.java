@@ -24,7 +24,7 @@ package org.overture.codegen.vdm2java;
 public class JavaSettings
 {
 	private boolean disableCloning;
-	
+
 	public JavaSettings()
 	{
 	}

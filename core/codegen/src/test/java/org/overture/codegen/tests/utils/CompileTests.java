@@ -63,10 +63,10 @@ public class CompileTests
 			+ "overture" + File.separatorChar + "codegen" + File.separatorChar
 			+ "runtime";
 
-	private static final List<String> FOLDER_NAMES_TO_AVOID = Arrays.asList(new String[]{"runtime"});
+	private static final List<String> FOLDER_NAMES_TO_AVOID = Arrays.asList(new String[] { "runtime" });
 
 	private static final String RESULT_FILE_EXTENSION = ".result";
-	
+
 	public static final boolean RUN_EXP_TESTS = false;
 	public static final boolean RUN_COMPLEX_EXP_TESTS = false;
 	public static final boolean RUN_EXECUTING_CLASSIC_SPEC_TESTS = false;
@@ -78,10 +78,10 @@ public class CompileTests
 	public static final boolean RUN_UNION_TESTS = false;
 	public static final boolean RUN_CONCURRENCY_TESTS = false;
 	public static final boolean RUN_BIND_TESTS = true;
-	
+
 	private List<File> testInputFiles;
 	private List<File> resultFiles;
-	
+
 	public static void main(String[] args) throws IOException
 	{
 		new CompileTests().runTests();
@@ -90,15 +90,15 @@ public class CompileTests
 	private void runTests() throws IOException
 	{
 		addPath(new File(TEMP_DIR));
-		
+
 		long startTimeMs = System.currentTimeMillis();
-		
+
 		File srcJavaLib = new File(SRC_JAVA_LIB);
 		File utils = new File(TARGET_JAVA_LIB);
-		
+
 		GeneralCodeGenUtils.copyDirectory(srcJavaLib, utils);
 
-		if(RUN_EXP_TESTS)
+		if (RUN_EXP_TESTS)
 		{
 			runExpTests();
 		}
@@ -113,65 +113,66 @@ public class CompileTests
 			runExecutingClassicSpecTests();
 		}
 
-		if(RUN_NON_EXECUTING_VDM10_SPEC_TESTS)
+		if (RUN_NON_EXECUTING_VDM10_SPEC_TESTS)
 		{
 			runNonExecutingVdm10Tests();
 		}
-		
-		if(RUN_FUNCTION_VALUE_TESTS)
+
+		if (RUN_FUNCTION_VALUE_TESTS)
 		{
 			runFunctionValueTests();
 		}
-		
-		if(RUN_CONFIGURED_STRING_GENERATION_TESTS)
+
+		if (RUN_CONFIGURED_STRING_GENERATION_TESTS)
 		{
 			runConfiguredStringTests();
 		}
-		
-		if(RUN_CONFIGURED_CLONE_TESTS)
+
+		if (RUN_CONFIGURED_CLONE_TESTS)
 		{
 			runConfiguredCloningTests();
 		}
-		
-		if(RUN_PATTERN_TESTS)
+
+		if (RUN_PATTERN_TESTS)
 		{
 			runPatternTests();
 		}
-		
-		if(RUN_UNION_TESTS)
+
+		if (RUN_UNION_TESTS)
 		{
 			runUnionTests();
 		}
-		
-		if(RUN_CONCURRENCY_TESTS)
+
+		if (RUN_CONCURRENCY_TESTS)
 		{
 			runConcurrencyTests();
 		}
-		
-		if(RUN_BIND_TESTS)
+
+		if (RUN_BIND_TESTS)
 		{
 			runBindTests();
 		}
-		
+
 		long endTimeMs = System.currentTimeMillis();
-		
-		long totalTimeMs = (endTimeMs - startTimeMs);
-		
+
+		long totalTimeMs = endTimeMs - startTimeMs;
+
 		long minutes = totalTimeMs / (60 * 1000);
-		long seconds = (totalTimeMs % (60 * 1000)) / 1000;
-		
-		System.out.println("Time: " + String.format("%02d:%02d", minutes, seconds) + ".");
+		long seconds = totalTimeMs % (60 * 1000) / 1000;
+
+		System.out.println("Time: "
+				+ String.format("%02d:%02d", minutes, seconds) + ".");
 	}
-	
+
 	private void runBindTests() throws IOException
 	{
 		System.out.println("Beginning bind tests..\n");
 
 		testInputFiles = TestUtils.getTestInputFiles(new File(BindTest.ROOT));
 		resultFiles = TestUtils.getFiles(new File(BindTest.ROOT), RESULT_FILE_EXTENSION);
-		
+
 		runTests(testInputFiles, resultFiles, new ExecutableSpecTestHandler(Release.VDM_10), false);
-		
+
 		System.out.println("\n********");
 		System.out.println("Finished with bind tests");
 		System.out.println("********\n");
@@ -183,9 +184,9 @@ public class CompileTests
 
 		testInputFiles = TestUtils.getTestInputFiles(new File(ConcurrencyTests.ROOT));
 		resultFiles = TestUtils.getFiles(new File(ConcurrencyTests.ROOT), RESULT_FILE_EXTENSION);
-		
+
 		runTests(testInputFiles, resultFiles, new ExecutableSpecTestHandler(Release.VDM_10), false);
-		
+
 		System.out.println("\n********");
 		System.out.println("Finished with concurrency tests");
 		System.out.println("********\n");
@@ -197,9 +198,9 @@ public class CompileTests
 
 		testInputFiles = TestUtils.getTestInputFiles(new File(UnionTypeTest.ROOT));
 		resultFiles = TestUtils.getFiles(new File(UnionTypeTest.ROOT), RESULT_FILE_EXTENSION);
-		
+
 		runTests(testInputFiles, resultFiles, new ExecutableSpecTestHandler(Release.VDM_10), false);
-		
+
 		System.out.println("\n********");
 		System.out.println("Finished with union type tests");
 		System.out.println("********\n");
@@ -212,9 +213,9 @@ public class CompileTests
 
 		testInputFiles = TestUtils.getTestInputFiles(new File(PatternTest.ROOT));
 		resultFiles = TestUtils.getFiles(new File(PatternTest.ROOT), RESULT_FILE_EXTENSION);
-		
+
 		runTests(testInputFiles, resultFiles, new ExecutableSpecTestHandler(Release.VDM_10), false);
-		
+
 		System.out.println("\n********");
 		System.out.println("Finished with pattern tests");
 		System.out.println("********\n");
@@ -226,9 +227,9 @@ public class CompileTests
 
 		testInputFiles = TestUtils.getTestInputFiles(new File(ConfiguredCloningTest.ROOT));
 		resultFiles = TestUtils.getFiles(new File(ConfiguredCloningTest.ROOT), RESULT_FILE_EXTENSION);
-		
+
 		runTests(testInputFiles, resultFiles, new ExecutableSpecTestHandler(Release.CLASSIC), false);
-		
+
 		System.out.println("\n********");
 		System.out.println("Finished with configured cloning tests");
 		System.out.println("********\n");
@@ -240,9 +241,9 @@ public class CompileTests
 
 		testInputFiles = TestUtils.getTestInputFiles(new File(ConfiguredStringGenerationTest.ROOT));
 		resultFiles = TestUtils.getFiles(new File(ConfiguredStringGenerationTest.ROOT), RESULT_FILE_EXTENSION);
-		
+
 		runTests(testInputFiles, resultFiles, new ExecutableSpecTestHandler(Release.VDM_10), false);
-		
+
 		System.out.println("\n********");
 		System.out.println("Finished with configured string tests");
 		System.out.println("********\n");
@@ -254,9 +255,9 @@ public class CompileTests
 
 		testInputFiles = TestUtils.getTestInputFiles(new File(FunctionValueTest.ROOT));
 		resultFiles = TestUtils.getFiles(new File(FunctionValueTest.ROOT), RESULT_FILE_EXTENSION);
-		
+
 		runTests(testInputFiles, resultFiles, new ExecutableSpecTestHandler(Release.VDM_10), false);
-		
+
 		System.out.println("\n********");
 		System.out.println("Finished with function value tests");
 		System.out.println("********\n");
@@ -265,12 +266,12 @@ public class CompileTests
 	private void runNonExecutingVdm10Tests() throws IOException
 	{
 		System.out.println("Beginning with specification tests..");
-		
+
 		testInputFiles = TestUtils.getTestInputFiles(new File(SpecificationTest.ROOT));
 		resultFiles = TestUtils.getFiles(new File(SpecificationTest.ROOT), RESULT_FILE_EXTENSION);
-		
+
 		runTests(testInputFiles, resultFiles, new NonExecutableSpecTestHandler(), false);
-		
+
 		System.out.println("\n********");
 		System.out.println("Finished with specification tests");
 		System.out.println("********\n");
@@ -282,9 +283,9 @@ public class CompileTests
 
 		testInputFiles = TestUtils.getTestInputFiles(new File(ClassicSpecTest.ROOT));
 		resultFiles = TestUtils.getFiles(new File(ClassicSpecTest.ROOT), RESULT_FILE_EXTENSION);
-		
+
 		runTests(testInputFiles, resultFiles, new ExecutableSpecTestHandler(Release.CLASSIC), false);
-		
+
 		System.out.println("\n********");
 		System.out.println("Finished with classic specification tests");
 		System.out.println("********\n");
@@ -296,9 +297,9 @@ public class CompileTests
 
 		testInputFiles = TestUtils.getTestInputFiles(new File(ComplexExpressionTest.ROOT));
 		resultFiles = TestUtils.getFiles(new File(ComplexExpressionTest.ROOT), RESULT_FILE_EXTENSION);
-		
+
 		runTests(testInputFiles, resultFiles, new ExecutableSpecTestHandler(Release.VDM_10), false);
-		
+
 		System.out.println("\n********");
 		System.out.println("Finished with complex expression tests");
 		System.out.println("********\n");
@@ -310,14 +311,14 @@ public class CompileTests
 
 		testInputFiles = TestUtils.getTestInputFiles(new File(ExpressionTest.ROOT));
 		resultFiles = TestUtils.getFiles(new File(ExpressionTest.ROOT), RESULT_FILE_EXTENSION);
-		
+
 		runTests(testInputFiles, resultFiles, new ExpressionTestHandler(Release.VDM_10), true);
-		
+
 		System.out.println("\n********");
 		System.out.println("Finished with expression tests");
 		System.out.println("********\n");
 	}
-	
+
 	private void addPath(File f)
 	{
 		try
@@ -333,47 +334,58 @@ public class CompileTests
 			e.printStackTrace();
 		}
 	}
-	
-	public void runTests(List<File> testInputFiles, List<File> resultFiles, TestHandler testHandler, boolean printInput) throws IOException
+
+	public void runTests(List<File> testInputFiles, List<File> resultFiles,
+			TestHandler testHandler, boolean printInput) throws IOException
 	{
-		if(testInputFiles.size() != resultFiles.size())
+		if (testInputFiles.size() != resultFiles.size())
+		{
 			throw new IllegalArgumentException("Number of test input files and number of result files differ");
-		
+		}
+
 		int testCount = testInputFiles.size();
-		
-		for(int i = 0; i < testCount; i++)
+
+		for (int i = 0; i < testCount; i++)
 		{
 			String resultFileName = resultFiles.get(i).getName();
 			String inputFileName = testInputFiles.get(i).getName();
-			
-			if(!resultFileName.equals(inputFileName + RESULT_FILE_EXTENSION))
-				throw new IllegalArgumentException("Test input file and result file do not match. " + "Test input file: " + inputFileName + ". Result file: " + resultFileName);
+
+			if (!resultFileName.equals(inputFileName + RESULT_FILE_EXTENSION))
+			{
+				throw new IllegalArgumentException("Test input file and result file do not match. "
+						+ "Test input file: "
+						+ inputFileName
+						+ ". Result file: " + resultFileName);
+			}
 		}
-				
+
 		File parent = new File(TEMP_DIR);
 		parent.mkdirs();
-		
-		for(int i = 0; i < testCount; i++)
+
+		for (int i = 0; i < testCount; i++)
 		{
 			File currentInputFile = testInputFiles.get(i);
-			
-			GeneralUtils.deleteFolderContents(parent, FOLDER_NAMES_TO_AVOID);
-			
-			//Calculating the Java result:
-			File file = resultFiles.get(i);
-			
-			testHandler.writeGeneratedCode(parent, file);
-			
-			boolean compileOk = JavaCommandLineCompiler.compile(parent, null);
-			System.out.println("Test:" + (1 + i)  + ". Name: " + file.getName() + " " + (compileOk ? "Compile OK" : "ERROR"));
 
-			if(!compileOk)
+			GeneralUtils.deleteFolderContents(parent, FOLDER_NAMES_TO_AVOID);
+
+			// Calculating the Java result:
+			File file = resultFiles.get(i);
+
+			testHandler.writeGeneratedCode(parent, file);
+
+			boolean compileOk = JavaCommandLineCompiler.compile(parent, null);
+			System.out.println("Test:" + (1 + i) + ". Name: " + file.getName()
+					+ " " + (compileOk ? "Compile OK" : "ERROR"));
+
+			if (!compileOk)
+			{
 				continue;
-			
+			}
+
 			if (testHandler instanceof ExecutableTestHandler)
 			{
 				ExecutableTestHandler executableTestHandler = (ExecutableTestHandler) testHandler;
-			
+
 				// Calculating the VDM Result:
 				Value vdmResult;
 

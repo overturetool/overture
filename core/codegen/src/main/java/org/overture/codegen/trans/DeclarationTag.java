@@ -7,7 +7,7 @@ public class DeclarationTag
 	private boolean declared;
 
 	private AVarLocalDeclCG successVarDecl;
-	
+
 	public DeclarationTag(boolean declared, AVarLocalDeclCG successVarDecl)
 	{
 		this.declared = declared;
@@ -18,7 +18,7 @@ public class DeclarationTag
 	{
 		return declared;
 	}
-	
+
 	public AVarLocalDeclCG getSuccessVarDecl()
 	{
 		return successVarDecl;

@@ -33,6 +33,6 @@ public abstract class ExecutableTestHandler extends TestHandler
 	{
 		Settings.release = release;
 	}
-	
+
 	public abstract Value interpretVdm(File intputFile) throws Exception;
 }

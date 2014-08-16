@@ -39,12 +39,12 @@ public class GeneratedData
 		this.quoteValues = quoteValues;
 		this.invalidNamesResult = invalidNamesResult;
 	}
-	
+
 	public List<GeneratedModule> getClasses()
 	{
 		return classes;
 	}
-	
+
 	public GeneratedModule getQuoteValues()
 	{
 		return quoteValues;

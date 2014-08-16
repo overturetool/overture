@@ -62,142 +62,160 @@ public class JavaValueSemantics
 {
 	private JavaFormat javaFormat;
 	private JavaSettings javaSettings;
-	
+
 	public JavaValueSemantics(JavaFormat javaFormat)
 	{
 		this.javaFormat = javaFormat;
 		this.javaSettings = new JavaSettings();
 	}
-	
+
 	public void setJavaSettings(JavaSettings javaSettings)
 	{
 		this.javaSettings = javaSettings;
 	}
-	
+
 	public boolean cloneMember(AFieldNumberExpCG exp)
 	{
-		if(javaSettings.getDisableCloning())
-			return false;
-		
-		//Generally tuples need to be cloned, for example, if they
-		//contain a record field (that must be cloned)
-		
-		if(exp.parent() instanceof AFieldNumberExpCG)
-			return false;
-		
-		STypeCG type = exp.getTuple().getType();
-		
-		if(type instanceof ATupleTypeCG)
+		if (javaSettings.getDisableCloning())
 		{
-			
+			return false;
+		}
+
+		// Generally tuples need to be cloned, for example, if they
+		// contain a record field (that must be cloned)
+
+		if (exp.parent() instanceof AFieldNumberExpCG)
+		{
+			return false;
+		}
+
+		STypeCG type = exp.getTuple().getType();
+
+		if (type instanceof ATupleTypeCG)
+		{
+
 			ATupleTypeCG tupleType = (ATupleTypeCG) type;
-			
+
 			long field = exp.getField();
 			STypeCG fieldType = tupleType.getTypes().get((int) (field - 1));
-			
-			if(usesStructuralEquivalence(fieldType))
+
+			if (usesStructuralEquivalence(fieldType))
+			{
 				return true;
+			}
 		}
-		
+
 		return false;
 	}
-	
+
 	public boolean cloneMember(AFieldExpCG exp)
 	{
-		if(javaSettings.getDisableCloning())
+		if (javaSettings.getDisableCloning())
+		{
 			return false;
-		
+		}
+
 		INode parent = exp.parent();
 		if (cloneNotNeeded(parent))
+		{
 			return false;
-		
+		}
+
 		STypeCG type = exp.getObject().getType();
-		
-		if(type instanceof ARecordTypeCG)
+
+		if (type instanceof ARecordTypeCG)
 		{
 			ARecordTypeCG recordType = (ARecordTypeCG) type;
-			
+
 			String memberName = exp.getMemberName();
-			
+
 			List<AClassDeclCG> classes = javaFormat.getClasses();
 			AssistantManager assistantManager = javaFormat.getIrInfo().getAssistantManager();
-			
+
 			AFieldDeclCG memberField = assistantManager.getDeclAssistant().getFieldDecl(classes, recordType, memberName);
-			
-			if (memberField != null && usesStructuralEquivalence(memberField.getType()))
+
+			if (memberField != null
+					&& usesStructuralEquivalence(memberField.getType()))
+			{
 				return true;
+			}
 		}
-		
+
 		return false;
 	}
-	
-	public boolean shouldClone(SExpCG exp) 
+
+	public boolean shouldClone(SExpCG exp)
 	{
-		if(javaSettings.getDisableCloning())
+		if (javaSettings.getDisableCloning())
+		{
 			return false;
-		
+		}
+
 		INode parent = exp.parent();
-		
+
 		if (cloneNotNeeded(parent))
 		{
 			return false;
 		}
-		
-		if(parent instanceof AIdentifierObjectDesignatorCG)
+
+		if (parent instanceof AIdentifierObjectDesignatorCG)
 		{
-			//Don't clone the variable associated with an identifier object designator
+			// Don't clone the variable associated with an identifier object designator
 			return false;
 		}
-		
-		if(parent instanceof AApplyObjectDesignatorCG)
+
+		if (parent instanceof AApplyObjectDesignatorCG)
 		{
-			//No need to clone the expression - we only use it for lookup
-			return usesStructuralEquivalence(exp.getType()) && javaFormat.findElementType((AApplyObjectDesignatorCG) parent) == null;
+			// No need to clone the expression - we only use it for lookup
+			return usesStructuralEquivalence(exp.getType())
+					&& javaFormat.findElementType((AApplyObjectDesignatorCG) parent) == null;
 		}
-		
-		if(parent instanceof ALocalAssignmentStmCG)
+
+		if (parent instanceof ALocalAssignmentStmCG)
 		{
 			ALocalAssignmentStmCG assignment = (ALocalAssignmentStmCG) parent;
-			if(assignment.getTarget() == exp)
+			if (assignment.getTarget() == exp)
 			{
 				return false;
 			}
 		}
-		
+
 		STypeCG type = exp.getType();
-		
-		if(usesStructuralEquivalence(type))
+
+		if (usesStructuralEquivalence(type))
 		{
-			if(parent instanceof ANewExpCG)
+			if (parent instanceof ANewExpCG)
 			{
 				ANewExpCG newExp = (ANewExpCG) parent;
 				STypeCG newExpType = newExp.getType();
-				
-				if(usesStructuralEquivalence(newExpType))
+
+				if (usesStructuralEquivalence(newExpType))
+				{
 					return false;
+				}
 			}
-			
+
 			return true;
 		}
-		
+
 		return false;
 	}
 
 	private boolean cloneNotNeeded(INode parent)
 	{
-		if(parent instanceof AApplyExpCG)
+		if (parent instanceof AApplyExpCG)
 		{
-			//Cloning is not needed if the expression is
-			//used to look up a value in a sequence or a map
+			// Cloning is not needed if the expression is
+			// used to look up a value in a sequence or a map
 			SExpCG root = ((AApplyExpCG) parent).getRoot();
-			
-			if(!(root.getType() instanceof AMethodTypeCG))
+
+			if (!(root.getType() instanceof AMethodTypeCG))
 			{
 				return true;
 			}
 		}
-		
-		return 	   parent instanceof AFieldExpCG
+
+		return parent instanceof AFieldExpCG
 				|| parent instanceof AFieldNumberExpCG
 				|| parent instanceof ATupleSizeExpCG
 				|| parent instanceof ATupleCompatibilityExpCG
@@ -209,7 +227,7 @@ public class JavaValueSemantics
 				|| cloneNotNeededCollectionOperator(parent)
 				|| cloneNotNeededUtilCall(parent);
 	}
-	
+
 	private boolean cloneNotNeededCollectionOperator(INode parent)
 	{
 		return cloneNotNeededSeqOperators(parent)
@@ -229,25 +247,30 @@ public class JavaValueSemantics
 				|| parent instanceof ASetSubsetBinaryExpCG
 				|| parent instanceof ASetProperSubsetBinaryExpCG;
 	}
-	
+
 	private boolean cloneNotNeededUtilCall(INode node)
 	{
-		if(!(node instanceof AApplyExpCG))
+		if (!(node instanceof AApplyExpCG))
+		{
 			return false;
-		
+		}
+
 		AApplyExpCG applyExp = (AApplyExpCG) node;
 		SExpCG root = applyExp.getRoot();
-		
-		if(!(root instanceof AExplicitVarExpCG))
+
+		if (!(root instanceof AExplicitVarExpCG))
+		{
 			return false;
-		
+		}
+
 		AExplicitVarExpCG explicitVar = (AExplicitVarExpCG) root;
-		
+
 		AClassTypeCG classType = explicitVar.getClassType();
-		
-		return classType != null && classType.getName().equals(JavaFormat.UTILS_FILE);
+
+		return classType != null
+				&& classType.getName().equals(JavaFormat.UTILS_FILE);
 	}
-	
+
 	private boolean usesStructuralEquivalence(STypeCG type)
 	{
 		return type instanceof ARecordTypeCG || type instanceof ATupleTypeCG

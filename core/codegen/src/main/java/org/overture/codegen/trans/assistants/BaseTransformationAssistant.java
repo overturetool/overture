@@ -41,9 +41,10 @@ public class BaseTransformationAssistant
 		}
 	}
 
-	public void replaceNodeWithRecursively(INode original, INode replacement, DepthFirstAnalysisAdaptor analysis) throws AnalysisException
+	public void replaceNodeWithRecursively(INode original, INode replacement,
+			DepthFirstAnalysisAdaptor analysis) throws AnalysisException
 	{
-		if(original != replacement)
+		if (original != replacement)
 		{
 			replaceNodeWith(original, replacement);
 			replacement.apply(analysis);
@@ -53,16 +54,17 @@ public class BaseTransformationAssistant
 	private void replace(INode original, INode replacement)
 	{
 		INode parent = original.parent();
-		
+
 		if (parent != null)
 		{
 			parent.replaceChild(original, replacement);
 		}
-		
+
 		original.parent(null);
 	}
-	
-	public SStmCG getEnclosingStm(INode node, String nodeStr) throws AnalysisException
+
+	public SStmCG getEnclosingStm(INode node, String nodeStr)
+			throws AnalysisException
 	{
 		SStmCG enclosingStm = node.getAncestor(SStmCG.class);
 
@@ -70,24 +72,24 @@ public class BaseTransformationAssistant
 		{
 			throw new AnalysisException(String.format("Could not find enclosing statement for %s", node));
 		}
-		
-		if(enclosingStm instanceof AElseIfStmCG)
+
+		if (enclosingStm instanceof AElseIfStmCG)
 		{
 			AElseIfStmCG elseIf = (AElseIfStmCG) enclosingStm;
 			AIfStmCG enclosingIf = elseIf.getAncestor(AIfStmCG.class);
 
 			LinkedList<AElseIfStmCG> elseIfList = new LinkedList<AElseIfStmCG>(enclosingIf.getElseIf());
-			for(int i = 0; i < elseIfList.size(); i++)
+			for (int i = 0; i < elseIfList.size(); i++)
 			{
 				AElseIfStmCG currentElseIf = elseIfList.get(i);
-				if(elseIf == currentElseIf)
+				if (elseIf == currentElseIf)
 				{
 					enclosingIf.getElseIf().remove(currentElseIf);
 					AIfStmCG elsePart = new AIfStmCG();
 					elsePart.setIfExp(currentElseIf.getElseIf());
 					elsePart.setThenStm(currentElseIf.getThenStm());
-					
-					for(int j = i + 1; j < elseIfList.size(); j++)
+
+					for (int j = i + 1; j < elseIfList.size(); j++)
 					{
 						enclosingIf.getElseIf().remove(elseIfList.get(j));
 						elsePart.getElseIf().add(elseIfList.get(j));
@@ -95,15 +97,15 @@ public class BaseTransformationAssistant
 
 					ABlockStmCG block = new ABlockStmCG();
 					block.getStatements().add(elsePart);
-					
+
 					elsePart.setElseStm(enclosingIf.getElseStm());
 					enclosingIf.setElseStm(block);
-					
+
 					return elsePart;
 				}
 			}
 		}
-		
+
 		return enclosingStm;
 	}
 }

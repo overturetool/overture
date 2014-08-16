@@ -32,14 +32,16 @@ public abstract class EntryBasedTestHandler extends ExecutableTestHandler
 {
 	protected static final String ENTRY_CLASS_NAME = "Entry";
 	protected static final String ENTRY_METHOD_CALL = "Run()";
-	protected static final String JAVA_ENTRY_CALL = ENTRY_CLASS_NAME + "." + ENTRY_METHOD_CALL;
-	protected static final String VDM_ENTRY_CALL = ENTRY_CLASS_NAME + "`" + ENTRY_METHOD_CALL;
+	protected static final String JAVA_ENTRY_CALL = ENTRY_CLASS_NAME + "."
+			+ ENTRY_METHOD_CALL;
+	protected static final String VDM_ENTRY_CALL = ENTRY_CLASS_NAME + "`"
+			+ ENTRY_METHOD_CALL;
 
 	public EntryBasedTestHandler(Release release)
 	{
 		super(release);
 	}
-	
+
 	@Override
 	public Value interpretVdm(File intputFile) throws Exception
 	{

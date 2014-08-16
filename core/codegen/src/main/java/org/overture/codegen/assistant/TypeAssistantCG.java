@@ -75,13 +75,13 @@ public class TypeAssistantCG extends AssistantBase
 	{
 		super(assistantManager);
 	}
-	
-	public AMethodTypeCG  getMethodType(IRInfo info, List<AClassDeclCG> classes,
+
+	public AMethodTypeCG getMethodType(IRInfo info, List<AClassDeclCG> classes,
 			String fieldModule, String fieldName, LinkedList<SExpCG> args)
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
 		AClassDeclCG classDecl = assistantManager.getDeclAssistant().findClass(classes, fieldModule);
-		
+
 		List<AMethodDeclCG> methods = assistantManager.getDeclAssistant().getAllMethods(classDecl, classes);
 
 		for (AMethodDeclCG method : methods)
@@ -96,25 +96,26 @@ public class TypeAssistantCG extends AssistantBase
 				}
 			}
 		}
-		
+
 		Logger.getLog().printError(String.format("Could not find method type for field %s in class %s", fieldName, fieldModule));
 
 		return null;
 	}
-	
-	public STypeCG getFieldType(AClassDeclCG classDecl, String fieldName, List<AClassDeclCG> classes)
+
+	public STypeCG getFieldType(AClassDeclCG classDecl, String fieldName,
+			List<AClassDeclCG> classes)
 	{
-		for(AFieldDeclCG field : assistantManager.getDeclAssistant().getAllFields(classDecl, classes))
+		for (AFieldDeclCG field : assistantManager.getDeclAssistant().getAllFields(classDecl, classes))
 		{
-			if(field.getName().equals(fieldName))
+			if (field.getName().equals(fieldName))
 			{
 				return field.getType().clone();
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	public List<STypeCG> getFieldTypes(ARecordDeclCG record)
 	{
 		List<STypeCG> fieldTypes = new LinkedList<STypeCG>();
@@ -123,24 +124,26 @@ public class TypeAssistantCG extends AssistantBase
 		{
 			fieldTypes.add(field.getType());
 		}
-		
+
 		return fieldTypes;
 	}
-	
-	public STypeCG getFieldType(List<AClassDeclCG> classes, String moduleName, String fieldName)
+
+	public STypeCG getFieldType(List<AClassDeclCG> classes, String moduleName,
+			String fieldName)
 	{
 		AClassDeclCG classDecl = assistantManager.getDeclAssistant().findClass(classes, moduleName);
 		return getFieldType(classDecl, fieldName, classes);
 	}
-	
-	public boolean checkArgTypes(IRInfo info, List<SExpCG> args, List<STypeCG> paramTypes)
+
+	public boolean checkArgTypes(IRInfo info, List<SExpCG> args,
+			List<STypeCG> paramTypes)
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		if(args.size() != paramTypes.size())
+		if (args.size() != paramTypes.size())
 		{
 			return false;
 		}
-		
+
 		for (int i = 0; i < paramTypes.size(); i++)
 		{
 			SourceNode paramSourceNode = paramTypes.get(i).getSourceNode();
@@ -154,18 +157,19 @@ public class TypeAssistantCG extends AssistantBase
 			org.overture.ast.node.INode paramTypeNode = paramSourceNode.getVdmNode();
 			org.overture.ast.node.INode argTypeNode = argTypeSourceNode.getVdmNode();
 
-			if (!(paramTypeNode instanceof PType) || !(argTypeNode instanceof PType))
+			if (!(paramTypeNode instanceof PType)
+					|| !(argTypeNode instanceof PType))
 			{
 				return false;
 			}
-			
+
 			TypeComparator typeComparator = info.getTcFactory().getTypeComparator();
 			if (!typeComparator.compatible((PType) paramTypeNode, (PType) argTypeNode))
 			{
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
 
@@ -174,23 +178,27 @@ public class TypeAssistantCG extends AssistantBase
 		PDefinition def = (PDefinition) nameToken.getAncestor(PDefinition.class);
 
 		if (def == null)
+		{
 			return null;
+		}
 
 		SClassDefinition enclosingClass = nameToken.getAncestor(SClassDefinition.class);
 
 		if (enclosingClass == null)
+		{
 			return null;
+		}
 
-		//FIXME factories cannot be instantiated inside code blocks
+		// FIXME factories cannot be instantiated inside code blocks
 		TypeCheckerAssistantFactory factory = new TypeCheckerAssistantFactory();
 		PDefinitionAssistantTC defAssistant = factory.createPDefinitionAssistant();
-		
+
 		enclosingClass.getName().getModule();
 		PDefinition typeDef = defAssistant.findType(def, nameToken, enclosingClass.getName().getModule());
-	
+
 		return typeDef;
 	}
-	
+
 	public STypeCG constructSeqType(SSeqTypeBase node, IRInfo question)
 			throws AnalysisException
 	{
@@ -198,51 +206,46 @@ public class TypeAssistantCG extends AssistantBase
 		boolean emptyCg = node.getEmpty();
 
 		// This is a special case since sequence of characters are strings
-		if (seqOfCg instanceof ACharBasicTypeCG && question.getSettings().getCharSeqAsString())
+		if (seqOfCg instanceof ACharBasicTypeCG
+				&& question.getSettings().getCharSeqAsString())
 		{
 			AStringTypeCG stringTypeCg = new AStringTypeCG();
 			stringTypeCg.setSourceNode(new SourceNode(node));
-			
+
 			return stringTypeCg;
 		}
-			
+
 		ASeqSeqTypeCG seqType = new ASeqSeqTypeCG();
 		seqType.setSeqOf(seqOfCg);
 		seqType.setEmpty(emptyCg);
 
 		return seqType;
 	}
-	
+
 	public boolean isBasicType(STypeCG type)
 	{
 		return type instanceof SBasicTypeCG;
 	}
 
-	public STypeCG getWrapperType(
-			SBasicTypeCG basicType)
+	public STypeCG getWrapperType(SBasicTypeCG basicType)
 	{
 
 		if (basicType instanceof AIntNumericBasicTypeCG)
 		{
 			return new AIntBasicTypeWrappersTypeCG();
-		}
-		else if (basicType instanceof ARealNumericBasicTypeCG)
+		} else if (basicType instanceof ARealNumericBasicTypeCG)
 		{
 			return new ARealBasicTypeWrappersTypeCG();
-		}
-		else if (basicType instanceof ACharBasicTypeCG)
+		} else if (basicType instanceof ACharBasicTypeCG)
 		{
 			return new ACharBasicTypeWrappersTypeCG();
-		}
-		else if (basicType instanceof ABoolBasicTypeCG)
+		} else if (basicType instanceof ABoolBasicTypeCG)
 		{
 			return new ABoolBasicTypeWrappersTypeCG();
-		}
-		else if(basicType instanceof ATokenBasicTypeCG)
+		} else if (basicType instanceof ATokenBasicTypeCG)
 		{
 			return basicType;
-		}
-		else
+		} else
 		{
 			Logger.getLog().printErrorln("Unexpected basic type encountered in getWrapperType method: "
 					+ basicType);
@@ -250,31 +253,33 @@ public class TypeAssistantCG extends AssistantBase
 		}
 
 	}
-	
-	public AMethodTypeCG consMethodType(PType node, List<PType> paramTypes, PType resultType, IRInfo question) throws AnalysisException
+
+	public AMethodTypeCG consMethodType(PType node, List<PType> paramTypes,
+			PType resultType, IRInfo question) throws AnalysisException
 	{
 		AMethodTypeCG methodType = new AMethodTypeCG();
-		
+
 		methodType.setEquivalent(node.clone());
-		
+
 		STypeCG resultCg = resultType.apply(question.getTypeVisitor(), question);
-		
+
 		methodType.setResult(resultCg);
-		
+
 		LinkedList<STypeCG> paramsCg = methodType.getParams();
-		for(PType paramType : paramTypes)
+		for (PType paramType : paramTypes)
 		{
 			paramsCg.add(paramType.apply(question.getTypeVisitor(), question));
 		}
-		
+
 		return methodType;
 	}
-	
-	public boolean isUnionOfType(AUnionType unionType, Class<? extends PType> type)
+
+	public boolean isUnionOfType(AUnionType unionType,
+			Class<? extends PType> type)
 	{
 		TypeCheckerAssistantFactory factory = new TypeCheckerAssistantFactory();
 		PTypeAssistantTC typeAssistant = factory.createPTypeAssistant();
-		
+
 		try
 		{
 			for (PType t : unionType.getTypes())
@@ -284,81 +289,79 @@ public class TypeAssistantCG extends AssistantBase
 					return false;
 				}
 			}
-		} catch (Error t)//Hack for stackoverflowError
+		} catch (Error t)// Hack for stackoverflowError
 		{
 			return false;
 		}
 
 		return true;
 	}
-	
-	public STypeCG findElementType(AApplyObjectDesignatorCG designator, List<AClassDeclCG> classes, IRInfo info)
+
+	public STypeCG findElementType(AApplyObjectDesignatorCG designator,
+			List<AClassDeclCG> classes, IRInfo info)
 	{
 		int appliesCount = 0;
-		
+
 		AApplyObjectDesignatorCG mostRecentApply = designator;
 		SObjectDesignatorCG object = designator.getObject();
 
-		while(object != null)
+		while (object != null)
 		{
-			if(object instanceof AIdentifierObjectDesignatorCG)
+			if (object instanceof AIdentifierObjectDesignatorCG)
 			{
 				AIdentifierObjectDesignatorCG id = (AIdentifierObjectDesignatorCG) object;
-			
+
 				STypeCG type = id.getExp().getType();
-				
+
 				return findElementType(appliesCount, type);
-			}
-			else if(object instanceof AApplyObjectDesignatorCG)
+			} else if (object instanceof AApplyObjectDesignatorCG)
 			{
 				mostRecentApply = (AApplyObjectDesignatorCG) object;
 				appliesCount++;
 				object = mostRecentApply.getObject();
-			}
-			else if(object instanceof AFieldObjectDesignatorCG)
+			} else if (object instanceof AFieldObjectDesignatorCG)
 			{
 				AFieldObjectDesignatorCG fieldObj = (AFieldObjectDesignatorCG) object;
 				object = fieldObj.getObject();
-				
+
 				return findElementType(classes, info, appliesCount, mostRecentApply, fieldObj);
-			}
-			else
+			} else
 			{
 				return null;
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	private STypeCG findElementType(int appliesCount, STypeCG type)
 	{
 		int methodTypesCount = 0;
-		
+
 		while (type instanceof AMethodTypeCG)
 		{
 			methodTypesCount++;
 			AMethodTypeCG methodType = (AMethodTypeCG) type;
 			type = methodType.getResult();
 		}
-		
-		while(type instanceof SSeqTypeCG || type instanceof SMapTypeCG)
+
+		while (type instanceof SSeqTypeCG || type instanceof SMapTypeCG)
 		{
-			if(type instanceof SSeqTypeCG)
+			if (type instanceof SSeqTypeCG)
 			{
 				type = ((SSeqTypeCG) type).getSeqOf();
 			}
 
-			if(type instanceof SMapTypeCG)
+			if (type instanceof SMapTypeCG)
 			{
 				type = ((SMapTypeCG) type).getTo();
 			}
-			
+
 			if (appliesCount == methodTypesCount)
 			{
-				return type;						
+				return type;
 			}
-			
+
 			methodTypesCount++;
 		}
 
@@ -372,14 +375,14 @@ public class TypeAssistantCG extends AssistantBase
 		try
 		{
 			STypeCG type = getFieldType(classes, fieldObj.getFieldModule(), fieldObj.getFieldName());
-			
-			if(type == null)
+
+			if (type == null)
 			{
 				type = getMethodType(info, classes, fieldObj.getFieldModule(), fieldObj.getFieldName(), mostRecentApply.getArgs());
 			}
-			
+
 			return findElementType(appliesCount, type);
-			
+
 		} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 		{
 			e.printStackTrace();
@@ -392,49 +395,48 @@ public class TypeAssistantCG extends AssistantBase
 		PTypeSet possibleTypes = new PTypeSet(question.getTcFactory());
 		PType patternType = question.getTcFactory().createPPatternAssistant().getPossibleType(pattern);
 		TypeComparator comp = question.getTcFactory().getTypeComparator();
-		
-		for(PType t : unionType.getTypes())
+
+		for (PType t : unionType.getTypes())
 		{
-			if(comp.compatible(patternType, t))
+			if (comp.compatible(patternType, t))
 			{
 				possibleTypes.add(t);
 			}
 		}
-		
-		if(possibleTypes.isEmpty())
+
+		if (possibleTypes.isEmpty())
 		{
-			Logger.getLog().printError("Could not find any possible types for pattern: " + pattern);
+			Logger.getLog().printError("Could not find any possible types for pattern: "
+					+ pattern);
 			return null;
-		}
-		else if(possibleTypes.size() == 1)
+		} else if (possibleTypes.size() == 1)
 		{
 			return possibleTypes.pollFirst();
-		}
-		else //More than one possible type
+		} else
+		// More than one possible type
 		{
 			unionType.getTypes().clear();
 			unionType.getTypes().addAll(possibleTypes);
-			
-			if(question.getTypeAssistant().isUnionOfType(unionType, AProductType.class))
+
+			if (question.getTypeAssistant().isUnionOfType(unionType, AProductType.class))
 			{
 				List<PType> fieldsTypes = new LinkedList<PType>();
 				int noOfFields = ((ATuplePattern) pattern).getPlist().size();
-				for(int i = 0; i < noOfFields; i++)
+				for (int i = 0; i < noOfFields; i++)
 				{
 					List<PType> currentFieldTypes = new LinkedList<PType>();
-					
-					for(PType currentPossibleType : possibleTypes)
+
+					for (PType currentPossibleType : possibleTypes)
 					{
 						AProductType currentProductType = (AProductType) currentPossibleType;
 						currentFieldTypes.add(currentProductType.getTypes().get(i).clone());
 					}
-					
+
 					fieldsTypes.add(AstFactory.newAUnionType(pattern.getLocation(), currentFieldTypes));
 				}
 
 				return AstFactory.newAProductType(pattern.getLocation(), fieldsTypes);
-			}
-			else
+			} else
 			{
 				return unionType;
 			}

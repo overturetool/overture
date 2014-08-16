@@ -50,10 +50,10 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 	private String successVarName;
 	private SExpCG suchThat;
 	private SSetTypeCG setType;
-	
+
 	int count = 0;
 	private List<AVarLocalDeclCG> decls = new LinkedList<AVarLocalDeclCG>();
-	
+
 	public LetBeStStrategy(TransformationAssistantCG transformationAssistant,
 			SExpCG suchThat, SSetTypeCG setType,
 			ILanguageIterator langIterator, ITempVarGen tempGen,
@@ -88,20 +88,19 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 
 		return outerBlockDecls;
 	}
-	
+
 	@Override
 	public List<SStmCG> getPreForLoopStms(AIdentifierVarExpCG setVar,
 			List<SPatternCG> patterns, SPatternCG pattern)
 	{
-		if(count > 0)
+		if (count > 0)
 		{
 			ALocalAssignmentStmCG successAssignment = new ALocalAssignmentStmCG();
 			successAssignment.setExp(transformationAssistant.getInfo().getExpAssistant().consBoolLiteral(false));
 			successAssignment.setTarget(transformationAssistant.consSuccessVar(successVarName));
-			
+
 			return packStm(successAssignment);
-		}
-		else
+		} else
 		{
 			return null;
 		}
@@ -117,7 +116,7 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 
 		return transformationAssistant.consAndExp(left, right);
 	}
-	
+
 	@Override
 	public DeclarationTag consDeclarationTag()
 	{
@@ -135,9 +134,9 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 	}
 
 	@Override
-	public ALocalPatternAssignmentStmCG getNextElementAssigned(AIdentifierVarExpCG setVar,
-			List<SPatternCG> patterns, SPatternCG pattern)
-			throws AnalysisException
+	public ALocalPatternAssignmentStmCG getNextElementAssigned(
+			AIdentifierVarExpCG setVar, List<SPatternCG> patterns,
+			SPatternCG pattern) throws AnalysisException
 	{
 		return langIterator.getNextElementAssigned(setVar, patterns, pattern, successVarDecl, this.nextElementDeclared);
 	}

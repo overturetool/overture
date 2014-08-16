@@ -153,17 +153,18 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 				}
 			}
 
-			throw new AnalysisException("Exptected sequence type. Got: " + typeCg);
+			throw new AnalysisException("Exptected sequence type. Got: "
+					+ typeCg);
 		}
 	}
-	
+
 	public AIdentifierVarExpCG consSuccessVar(String successVarName)
 	{
 		AIdentifierVarExpCG successVar = new AIdentifierVarExpCG();
 		successVar.setIsLambda(false);
 		successVar.setOriginal(successVarName);
 		successVar.setType(new ABoolBasicTypeCG());
-		
+
 		return successVar;
 	}
 
@@ -172,10 +173,10 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 		AVarLocalDeclCG boolVarDecl = new AVarLocalDeclCG();
 
 		boolVarDecl.setType(new ABoolBasicTypeCG());
-		
+
 		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
 		idPattern.setName(boolVarName);
-		
+
 		boolVarDecl.setPattern(idPattern);
 		boolVarDecl.setExp(info.getExpAssistant().consBoolLiteral(initValue));
 
@@ -245,10 +246,10 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 		AVarLocalDeclCG setBindDecl = new AVarLocalDeclCG();
 
 		setBindDecl.setType(getSetTypeCloned(set));
-		
+
 		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
 		idPattern.setName(setBindName);
-		
+
 		setBindDecl.setPattern(idPattern);
 		setBindDecl.setExp(set.clone());
 
@@ -272,23 +273,23 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 	{
 		return consDecl(varName, exp.getType().clone(), exp);
 	}
-	
+
 	public AVarLocalDeclCG consDecl(String varName, STypeCG type, SExpCG exp)
 	{
 		AVarLocalDeclCG resultDecl = new AVarLocalDeclCG();
 
 		resultDecl.setType(type);
-		
+
 		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
 		idPattern.setName(varName);
-		
+
 		resultDecl.setPattern(idPattern);
 		resultDecl.setExp(exp);
 
 		return resultDecl;
 	}
 
-	//FIXME: Remove and use proper IR statement
+	// FIXME: Remove and use proper IR statement
 	public AIdentifierStateDesignatorCG consIdentifier(String name)
 	{
 		AIdentifierStateDesignatorCG identifier = new AIdentifierStateDesignatorCG();
@@ -315,12 +316,12 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 		AFieldExpCG fieldExp = new AFieldExpCG();
 		fieldExp.setMemberName(memberName);
 		fieldExp.setObject(instance);
-		
+
 		AMethodTypeCG methodType = new AMethodTypeCG();
 		methodType.setResult(returnType.clone());
 
 		AApplyExpCG instanceCall = new AApplyExpCG();
-		
+
 		instanceCall.setType(returnType.clone());
 
 		if (arg != null)
@@ -328,9 +329,9 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 			methodType.getParams().add(arg.getType().clone());
 			instanceCall.getArgs().add(arg);
 		}
-		
+
 		fieldExp.setType(methodType.clone());
-		
+
 		instanceCall.setRoot(fieldExp);
 
 		return instanceCall;
@@ -344,29 +345,30 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 		AVarLocalDeclCG decl = new AVarLocalDeclCG();
 
 		decl.setType(elementType);
-		
+
 		decl.setPattern(id.clone());
 		decl.setExp(cast);
 
 		return decl;
 	}
 
-	public ALocalPatternAssignmentStmCG consNextElementAssignment(String iteratorTypeName,
-			STypeCG elementType, SPatternCG id, String iteratorName,
-			String nextElementMethod, AVarLocalDeclCG nextElementDecl) throws AnalysisException
+	public ALocalPatternAssignmentStmCG consNextElementAssignment(
+			String iteratorTypeName, STypeCG elementType, SPatternCG id,
+			String iteratorName, String nextElementMethod,
+			AVarLocalDeclCG nextElementDecl) throws AnalysisException
 	{
 		ACastUnaryExpCG cast = consNextElementCall(iteratorTypeName, iteratorName, elementType, nextElementMethod);
 
 		ALocalPatternAssignmentStmCG assignment = new ALocalPatternAssignmentStmCG();
 		assignment.setTarget(id.clone());
 		assignment.setExp(cast);
-		
-		//Associate the pattern assignment with its declaration and
-		//the corresponding success variable (both are graph fields)
+
+		// Associate the pattern assignment with its declaration and
+		// the corresponding success variable (both are graph fields)
 		assignment.setTag(nextElementDecl.getTag());
 		assignment.setNextElementDecl(nextElementDecl);
-		//assignment.setSuccessVarDecl(successVarDecl);
-		
+		// assignment.setSuccessVarDecl(successVarDecl);
+
 		return assignment;
 	}
 
@@ -395,8 +397,8 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 		return ifStm;
 	}
 
-	public ABlockStmCG consIterationBlock(List<SPatternCG> ids,
-			SExpCG set, ITempVarGen tempGen, IIterationStrategy strategy)
+	public ABlockStmCG consIterationBlock(List<SPatternCG> ids, SExpCG set,
+			ITempVarGen tempGen, IIterationStrategy strategy)
 			throws AnalysisException
 	{
 		ABlockStmCG outerBlock = new ABlockStmCG();
@@ -409,7 +411,9 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 	public AIdentifierVarExpCG consSetVar(String setName, SExpCG set)
 	{
 		if (set == null)
+		{
 			return null;
+		}
 
 		AIdentifierVarExpCG setVar = new AIdentifierVarExpCG();
 
@@ -446,10 +450,10 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 			for (int i = 0;;)
 			{
 				SPatternCG pattern = patterns.get(i);
-				
+
 				List<SStmCG> stms = strategy.getPreForLoopStms(setVar, patterns, pattern);
-				
-				if(stms != null)
+
+				if (stms != null)
 				{
 					nextBlock.getStatements().addAll(stms);
 				}
@@ -466,12 +470,16 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 				AVarLocalDeclCG nextElementDeclared = strategy.getNextElementDeclared(setVar, patterns, pattern);
 
 				if (nextElementDeclared != null)
+				{
 					stmCollector.getLocalDefs().add(nextElementDeclared);
+				}
 
 				ALocalPatternAssignmentStmCG assignment = strategy.getNextElementAssigned(setVar, patterns, pattern);
 
 				if (assignment != null)
+				{
 					stmCollector.getStatements().add(assignment);
+				}
 
 				forBody = stmCollector;
 

@@ -32,7 +32,8 @@ public class NameViolationAnalysis extends ViolationAnalysis
 {
 	private NamingComparison comparison;
 
-	public NameViolationAnalysis(AssistantManager assistantManager, NamingComparison comparison)
+	public NameViolationAnalysis(AssistantManager assistantManager,
+			NamingComparison comparison)
 	{
 		super(assistantManager);
 		this.comparison = comparison;
@@ -48,10 +49,12 @@ public class NameViolationAnalysis extends ViolationAnalysis
 			if (comparison.mustHandleNameToken(nameToken))
 			{
 				comparison.correctNameToken(nameToken);
-				
+
 				SClassDefinition enclosingClass = node.getAncestor(SClassDefinition.class);
-				
-				if (enclosingClass == null || (enclosingClass != null && !assistantManager.getDeclAssistant().classIsLibrary(enclosingClass)))
+
+				if (enclosingClass == null
+						|| enclosingClass != null
+						&& !assistantManager.getDeclAssistant().classIsLibrary(enclosingClass))
 				{
 					String name = nameToken.getName();
 					ILexLocation location = nameToken.getLocation();

@@ -45,12 +45,13 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 	protected ILanguageIterator langIterator;
 	protected ITempVarGen tempGen;
 	protected TempVarPrefixes varPrefixes;
-	
+
 	protected AVarLocalDeclCG successVarDecl = null;
-	
+
 	protected AVarLocalDeclCG nextElementDeclared = null;
 
-	public AbstractIterationStrategy(TransformationAssistantCG transformationAssistant,
+	public AbstractIterationStrategy(
+			TransformationAssistantCG transformationAssistant,
 			ILanguageIterator langIterator, ITempVarGen tempGen,
 			TempVarPrefixes varPrefixes)
 	{
@@ -67,7 +68,7 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 	{
 		return null;
 	}
-	
+
 	public List<SStmCG> getPreForLoopStms(AIdentifierVarExpCG setVar,
 			List<SPatternCG> patterns, SPatternCG pattern)
 	{
@@ -101,26 +102,26 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 		nextElementDecl.setTag(consDeclarationTag());
 		this.nextElementDeclared = nextElementDecl;
 	}
-	
+
 	public DeclarationTag consDeclarationTag()
 	{
 		return new DeclarationTag(false, successVarDecl);
 	}
-	
+
 	@Override
 	public AVarLocalDeclCG getNextElementDeclared(AIdentifierVarExpCG setVar,
 			List<SPatternCG> patterns, SPatternCG pattern)
 			throws AnalysisException
 	{
 		tagNextElementDeclared(langIterator.getNextElementDeclared(setVar, patterns, pattern));
-		
+
 		return nextElementDeclared;
 	}
 
 	@Override
-	public ALocalPatternAssignmentStmCG getNextElementAssigned(AIdentifierVarExpCG setVar,
-			List<SPatternCG> patterns, SPatternCG pattern)
-			throws AnalysisException
+	public ALocalPatternAssignmentStmCG getNextElementAssigned(
+			AIdentifierVarExpCG setVar, List<SPatternCG> patterns,
+			SPatternCG pattern) throws AnalysisException
 	{
 		return null;
 	}

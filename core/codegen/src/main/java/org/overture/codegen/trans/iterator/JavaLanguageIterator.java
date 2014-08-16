@@ -64,10 +64,10 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 		SExpCG getIteratorCall = transformationAssistant.consInstanceCall(setType, setName, iteratorType.clone(), GET_ITERATOR, null);
 
 		AVarLocalDeclCG iteratorDecl = new AVarLocalDeclCG();
-		
+
 		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
 		idPattern.setName(iteratorName);
-		
+
 		iteratorDecl.setPattern(idPattern);
 		iteratorDecl.setType(iteratorType);
 		iteratorDecl.setExp(getIteratorCall);
@@ -103,9 +103,10 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 	}
 
 	@Override
-	public ALocalPatternAssignmentStmCG getNextElementAssigned(AIdentifierVarExpCG setVar,
-			List<SPatternCG> patterns, SPatternCG pattern, AVarLocalDeclCG successVarDecl, AVarLocalDeclCG nextElementDecl)
-			throws AnalysisException
+	public ALocalPatternAssignmentStmCG getNextElementAssigned(
+			AIdentifierVarExpCG setVar, List<SPatternCG> patterns,
+			SPatternCG pattern, AVarLocalDeclCG successVarDecl,
+			AVarLocalDeclCG nextElementDecl) throws AnalysisException
 	{
 		STypeCG elementType = transformationAssistant.getSetTypeCloned(setVar).getSetOf();
 

@@ -95,101 +95,103 @@ import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.utils.AnalysisExceptionCG;
 
-
 public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 {
 	public StmVisitorCG()
 	{
 	}
-	
+
 	@Override
 	public SStmCG caseAErrorStm(AErrorStm node, IRInfo question)
 			throws AnalysisException
 	{
 		return new AErrorStmCG();
 	}
-	
+
 	@Override
 	public SStmCG caseAAtomicStm(AAtomicStm node, IRInfo question)
 			throws AnalysisException
 	{
 		LinkedList<AAssignmentStm> assignments = node.getAssignments();
-		
+
 		ABlockStmCG stmBlock = new ABlockStmCG();
 		LinkedList<SStmCG> stmsCg = stmBlock.getStatements();
-		
-		for(AAssignmentStm assignment : assignments)
+
+		for (AAssignmentStm assignment : assignments)
 		{
 			stmsCg.add(assignment.apply(question.getStmVisitor(), question));
 		}
-		
+
 		return stmBlock;
 	}
-		
+
 	@Override
 	public SStmCG caseALetBeStStm(ALetBeStStm node, IRInfo question)
 			throws AnalysisException
 	{
 		PMultipleBind multipleBind = node.getBind();
-		
-		if(!(multipleBind instanceof ASetMultipleBind))
+
+		if (!(multipleBind instanceof ASetMultipleBind))
 		{
-			question.addUnsupportedNode(node, "Generation of the let be st statement is only supported for a multiple set bind. Got: " + multipleBind);
+			question.addUnsupportedNode(node, "Generation of the let be st statement is only supported for a multiple set bind. Got: "
+					+ multipleBind);
 			return null;
 		}
-		
+
 		ASetMultipleBind multipleSetBind = (ASetMultipleBind) multipleBind;
 
 		SMultipleBindCG multipleBindCg = multipleSetBind.apply(question.getMultipleBindVisitor(), question);
-		
-		if(!(multipleBindCg instanceof ASetMultipleBindCG))
+
+		if (!(multipleBindCg instanceof ASetMultipleBindCG))
 		{
-			question.addUnsupportedNode(node, "Generation of a multiple set bind was expected to yield a ASetMultipleBindCG. Got: " + multipleBindCg);
+			question.addUnsupportedNode(node, "Generation of a multiple set bind was expected to yield a ASetMultipleBindCG. Got: "
+					+ multipleBindCg);
 			return null;
 		}
-		
+
 		ASetMultipleBindCG multipleSetBindCg = (ASetMultipleBindCG) multipleBindCg;
-		
+
 		PExp suchThat = node.getSuchThat();
 		PStm stm = node.getStatement();
-		
-		SExpCG suchThatCg = suchThat != null ? suchThat.apply(question.getExpVisitor(), question) : null;
+
+		SExpCG suchThatCg = suchThat != null ? suchThat.apply(question.getExpVisitor(), question)
+				: null;
 		SStmCG stmCg = stm.apply(question.getStmVisitor(), question);
-		
+
 		ALetBeStStmCG letBeSt = new ALetBeStStmCG();
-		
+
 		AHeaderLetBeStCG header = question.getExpAssistant().consHeader(multipleSetBindCg, suchThatCg);
-				
+
 		letBeSt.setHeader(header);
 		letBeSt.setStatement(stmCg);
-		
+
 		return letBeSt;
 	}
-	
+
 	@Override
 	public SStmCG caseAWhileStm(AWhileStm node, IRInfo question)
 			throws AnalysisException
 	{
 		PStm stm = node.getStatement();
 		PExp exp = node.getExp();
-		
+
 		SStmCG bodyCg = stm.apply(question.getStmVisitor(), question);
 		SExpCG expCg = exp.apply(question.getExpVisitor(), question);
-		
+
 		AWhileStmCG whileStm = new AWhileStmCG();
 		whileStm.setExp(expCg);
 		whileStm.setBody(bodyCg);
-		
+
 		return whileStm;
 	}
-	
+
 	@Override
 	public SStmCG caseANotYetSpecifiedStm(ANotYetSpecifiedStm node,
 			IRInfo question) throws AnalysisException
 	{
 		return new ANotImplementedStmCG();
 	}
-	
+
 	@Override
 	public SStmCG caseABlockSimpleBlockStm(ABlockSimpleBlockStm node,
 			IRInfo question) throws AnalysisException
@@ -197,61 +199,60 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 		ABlockStmCG blockStm = new ABlockStmCG();
 
 		LinkedList<AAssignmentDefinition> assignmentDefs = node.getAssignmentDefs();
-		
+
 		for (AAssignmentDefinition def : assignmentDefs)
 		{
-			//No protection against hidden definitions
+			// No protection against hidden definitions
 			// dcl s : real := 1
 			// dcl s : real := 2
 			PType type = def.getType();
 			String name = def.getName().getName();
 			PExp exp = def.getExpression();
-			
+
 			STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-			
+
 			AVarLocalDeclCG localDecl = new AVarLocalDeclCG();
 			localDecl.setType(typeCg);
-			
+
 			AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
 			idPattern.setName(name);
-			
+
 			localDecl.setPattern(idPattern);
-			
-			if(exp instanceof AUndefinedExp)
+
+			if (exp instanceof AUndefinedExp)
 			{
 				question.getDeclAssistant().setDefaultValue(localDecl, typeCg);
-			}
-			else
+			} else
 			{
 				SExpCG expCg = exp.apply(question.getExpVisitor(), question);
 				localDecl.setExp(expCg);
 			}
-			
+
 			blockStm.getLocalDefs().add(localDecl);
 		}
-		
+
 		LinkedList<PStm> stms = node.getStatements();
-		
+
 		for (PStm pStm : stms)
 		{
 			SStmCG stmCg = pStm.apply(question.getStmVisitor(), question);
-			
-			if(stmCg != null)
+
+			if (stmCg != null)
 			{
 				blockStm.getStatements().add(stmCg);
 			}
 		}
-		
+
 		return blockStm;
 	}
-	
+
 	@Override
 	public SStmCG caseAAssignmentStm(AAssignmentStm node, IRInfo question)
 			throws AnalysisException
 	{
 		PStateDesignator target = node.getTarget();
 		PExp exp = node.getExp();
-		
+
 		SStateDesignatorCG targetCg = target.apply(question.getStateDesignatorVisitor(), question);
 		SExpCG expCg = exp.apply(question.getExpVisitor(), question);
 
@@ -261,21 +262,21 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 
 		return assignment;
 	}
-	
+
 	@Override
 	public SStmCG caseALetStm(ALetStm node, IRInfo question)
 			throws AnalysisException
 	{
 		ALetDefStmCG localDefStm = new ALetDefStmCG();
-		
+
 		question.getDeclAssistant().setLocalDefs(node.getLocalDefs(), localDefStm.getLocalDefs(), question);
-		
+
 		SStmCG stm = node.getStatement().apply(question.getStmVisitor(), question);
 		localDefStm.setStm(stm);
-		
+
 		return localDefStm;
 	}
-		
+
 	@Override
 	public SStmCG caseAReturnStm(AReturnStm node, IRInfo question)
 			throws AnalysisException
@@ -283,34 +284,33 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 		PExp exp = node.getExpression();
 
 		AExplicitOperationDefinition operation = node.getAncestor(AExplicitOperationDefinition.class);
-		
-		if(operation != null && operation.getIsConstructor())
+
+		if (operation != null && operation.getIsConstructor())
 		{
-			if(exp instanceof ASelfExp)
+			if (exp instanceof ASelfExp)
 			{
-				//The expression of the return statement points to 'null' since the OO AST
-				//does not allow constructors to return references to explicitly
-				//created types. Simply 'returning' in a constructor means returning
-				//a reference for the object currently being created.
+				// The expression of the return statement points to 'null' since the OO AST
+				// does not allow constructors to return references to explicitly
+				// created types. Simply 'returning' in a constructor means returning
+				// a reference for the object currently being created.
 				return new AReturnStmCG();
-			}
-			else
+			} else
 			{
 				throw new AnalysisExceptionCG("Unexpected expression returned by constructor: Values expliclty returned by constructors must be 'self'.", operation.getLocation());
 			}
 		}
-		
+
 		AReturnStmCG returnStm = new AReturnStmCG();
-		
-		if(exp != null)
+
+		if (exp != null)
 		{
 			SExpCG expCg = exp.apply(question.getExpVisitor(), question);
 			returnStm.setExp(expCg);
 		}
-		
+
 		return returnStm;
 	}
-	
+
 	@Override
 	public SStmCG caseACallStm(ACallStm node, IRInfo question)
 			throws AnalysisException
@@ -319,26 +319,27 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 		LinkedList<PExp> args = node.getArgs();
 
 		ACallStmCG callStm = new ACallStmCG();
-		
+
 		for (int i = 0; i < args.size(); i++)
 		{
 			PExp arg = args.get(i);
 			SExpCG argCg = arg.apply(question.getExpVisitor(), question);
-			
-			if(argCg == null)
+
+			if (argCg == null)
 			{
-				question.addUnsupportedNode(node, "A Call statement is not supported for the argument: " + arg);
+				question.addUnsupportedNode(node, "A Call statement is not supported for the argument: "
+						+ arg);
 				return null;
 			}
-			
+
 			callStm.getArgs().add(argCg);
 		}
-		
-		while(rootdef instanceof AInheritedDefinition)
+
+		while (rootdef instanceof AInheritedDefinition)
 		{
 			rootdef = ((AInheritedDefinition) rootdef).getSuperdef();
 		}
-		
+
 		if (rootdef instanceof AExplicitOperationDefinition)
 		{
 			AExplicitOperationDefinition op = (AExplicitOperationDefinition) rootdef;
@@ -354,7 +355,7 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 				return callStm;
 			}
 		}
-		
+
 		PType type = node.getType();
 		ILexNameToken nameToken = node.getName();
 		String name = nameToken.getName();
@@ -377,58 +378,60 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 
 		return callStm;
 	}
-	
+
 	@Override
 	public SStmCG caseACallObjectStm(ACallObjectStm node, IRInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();
 		PObjectDesignator objectDesignator = node.getDesignator();
-		ILexNameToken field = node.getField();		
+		ILexNameToken field = node.getField();
 		LinkedList<PExp> args = node.getArgs();
-		
-		
+
 		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 		SObjectDesignatorCG objectDesignatorCg = objectDesignator.apply(question.getObjectDesignatorVisitor(), question);
-		
+
 		String classNameCg = null;
-		
-		if(node.getExplicit())
+
+		if (node.getExplicit())
+		{
 			classNameCg = field.getModule();
-			
+		}
+
 		String fieldNameCg = field.getName();
-		
+
 		ACallObjectStmCG callObject = new ACallObjectStmCG();
 		callObject.setType(typeCg);
 		callObject.setDesignator(objectDesignatorCg);
 		callObject.setClassName(classNameCg);
 		callObject.setFieldName(fieldNameCg);
-		
+
 		for (int i = 0; i < args.size(); i++)
 		{
 			PExp arg = args.get(i);
 			SExpCG argCg = arg.apply(question.getExpVisitor(), question);
-			
-			if(argCg == null)
+
+			if (argCg == null)
 			{
-				question.addUnsupportedNode(node, "A Call object statement is not supported for the argument: " + arg);
+				question.addUnsupportedNode(node, "A Call object statement is not supported for the argument: "
+						+ arg);
 				return null;
 			}
-			
+
 			callObject.getArgs().add(argCg);
 		}
-		
+
 		return callObject;
 	}
-		
+
 	@Override
 	public SStmCG caseAElseIfStm(AElseIfStm node, IRInfo question)
 			throws AnalysisException
 	{
-		//Don't visit it but create it directly if needed in the ifStm in order to avoid casting
+		// Don't visit it but create it directly if needed in the ifStm in order to avoid casting
 		return null;
 	}
-	
+
 	@Override
 	public SStmCG caseACasesStm(ACasesStm node, IRInfo question)
 			throws AnalysisException
@@ -438,88 +441,87 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 		LinkedList<ACaseAlternativeStm> cases = node.getCases();
 
 		SExpCG expCg = exp.apply(question.getExpVisitor(), question);
-		SStmCG othersCg = others != null ? others.apply(question.getStmVisitor(), question) : null;
-		
+		SStmCG othersCg = others != null ? others.apply(question.getStmVisitor(), question)
+				: null;
+
 		ACasesStmCG casesStmCg = new ACasesStmCG();
 		casesStmCg.setExp(expCg);
-		casesStmCg.setOthers(othersCg);;
-		
+		casesStmCg.setOthers(othersCg);
+		;
+
 		question.getStmAssistant().handleAlternativesCasesStm(question, exp, cases, casesStmCg.getCases());
-		
+
 		return casesStmCg;
 	}
-	
+
 	@Override
 	public SStmCG caseACaseAlternativeStm(ACaseAlternativeStm node,
 			IRInfo question) throws AnalysisException
 	{
 		PPattern pattern = node.getPattern();
 		PStm result = node.getResult();
-		
+
 		SPatternCG patternCg = pattern.apply(question.getPatternVisitor(), question);
 		SStmCG resultCg = result.apply(question.getStmVisitor(), question);
-		
+
 		ACaseAltStmStmCG caseCg = new ACaseAltStmStmCG();
 		caseCg.setPattern(patternCg);
 		caseCg.setResult(resultCg);
-		
+
 		return caseCg;
 	}
-	
+
 	@Override
 	public SStmCG caseAIfStm(AIfStm node, IRInfo question)
 			throws AnalysisException
 	{
 		SExpCG ifExp = node.getIfExp().apply(question.getExpVisitor(), question);
 		SStmCG thenStm = node.getThenStm().apply(question.getStmVisitor(), question);
-		
-		
+
 		AIfStmCG ifStm = new AIfStmCG();
-		
+
 		ifStm.setIfExp(ifExp);
 		ifStm.setThenStm(thenStm);
-		
-		LinkedList<AElseIfStm> elseIfs = node.getElseIf();	
-		
+
+		LinkedList<AElseIfStm> elseIfs = node.getElseIf();
+
 		for (AElseIfStm stm : elseIfs)
 		{
 			ifExp = stm.getElseIf().apply(question.getExpVisitor(), question);
 			thenStm = stm.getThenStm().apply(question.getStmVisitor(), question);
-			
+
 			AElseIfStmCG elseIfStm = new AElseIfStmCG();
 			elseIfStm.setElseIf(ifExp);
 			elseIfStm.setThenStm(thenStm);
-			
-			
+
 			ifStm.getElseIf().add(elseIfStm);
 		}
-		
-		if(node.getElseStm() != null)
+
+		if (node.getElseStm() != null)
 		{
 			SStmCG elseStm = node.getElseStm().apply(question.getStmVisitor(), question);
 			ifStm.setElseStm(elseStm);
 		}
-		
+
 		return ifStm;
-		
+
 	}
-	
-	
+
 	@Override
 	public SStmCG caseASkipStm(ASkipStm node, IRInfo question)
 			throws AnalysisException
 	{
 		return new ASkipStmCG();
 	}
-	
+
 	@Override
 	public SStmCG caseASubclassResponsibilityStm(
 			ASubclassResponsibilityStm node, IRInfo question)
 			throws AnalysisException
 	{
-		return null;//Indicates an abstract body
+		return null;// Indicates an abstract body
 	}
-	
+
 	@Override
 	public SStmCG caseAForIndexStm(AForIndexStm node, IRInfo question)
 			throws AnalysisException
@@ -529,48 +531,51 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 		PExp to = node.getTo();
 		PExp by = node.getBy();
 		PStm stm = node.getStatement();
-		
+
 		String varCg = var.getName();
 		SExpCG fromCg = from.apply(question.getExpVisitor(), question);
 		SExpCG toCg = to.apply(question.getExpVisitor(), question);
-		SExpCG byCg = by != null ? by.apply(question.getExpVisitor(), question) : null;
+		SExpCG byCg = by != null ? by.apply(question.getExpVisitor(), question)
+				: null;
 		SStmCG bodyCg = stm.apply(question.getStmVisitor(), question);
-		
+
 		AForIndexStmCG forStm = new AForIndexStmCG();
 		forStm.setVar(varCg);
 		forStm.setFrom(fromCg);
 		forStm.setTo(toCg);
 		forStm.setBy(byCg);
 		forStm.setBody(bodyCg);
-		
+
 		return forStm;
 	}
-	
+
 	@Override
 	public SStmCG caseAForAllStm(AForAllStm node, IRInfo question)
 			throws AnalysisException
 	{
 		PPattern pattern = node.getPattern();
-		
-		if(!(pattern instanceof AIdentifierPattern))
-			return null; //This is the only pattern supported by this loop construct
-		
+
+		if (!(pattern instanceof AIdentifierPattern))
+		{
+			return null; // This is the only pattern supported by this loop construct
+		}
+
 		AIdentifierPattern identifier = (AIdentifierPattern) pattern;
 		PExp set = node.getSet();
 		PStm body = node.getStatement();
-		
+
 		String var = identifier.getName().getName();
 		SExpCG setExpCg = set.apply(question.getExpVisitor(), question);
 		SStmCG bodyCg = body.apply(question.getStmVisitor(), question);
-		
+
 		AForAllStmCG forAll = new AForAllStmCG();
 		forAll.setVar(var);
 		forAll.setExp(setExpCg);
 		forAll.setBody(bodyCg);
-		
+
 		return forAll;
 	}
-	
+
 	@Override
 	public SStmCG caseAForPatternBindStm(AForPatternBindStm node,
 			IRInfo question) throws AnalysisException
@@ -578,10 +583,12 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 		ADefPatternBind patternBind = node.getPatternBind();
 
 		PPattern pattern = patternBind.getPattern();
-		
-		if(!(pattern instanceof AIdentifierPattern))
+
+		if (!(pattern instanceof AIdentifierPattern))
+		{
 			return null;
-		
+		}
+
 		AIdentifierPattern identifier = (AIdentifierPattern) pattern;
 		Boolean reverse = node.getReverse();
 		PExp exp = node.getExp();
@@ -590,24 +597,23 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 		String var = identifier.getName().getName();
 		SExpCG seqExpCg = exp.apply(question.getExpVisitor(), question);
 		SStmCG stmCg = stm.apply(question.getStmVisitor(), question);
-		
+
 		AForAllStmCG forAll = new AForAllStmCG();
 		forAll.setVar(var);
 		forAll.setBody(stmCg);
-		
-		if(reverse != null && reverse)
+
+		if (reverse != null && reverse)
 		{
 			AReverseUnaryExpCG reversedExp = new AReverseUnaryExpCG();
 			reversedExp.setType(seqExpCg.getType().clone());
 			reversedExp.setExp(seqExpCg);
 			forAll.setExp(reversedExp);
-		}
-		else
+		} else
 		{
 			forAll.setExp(seqExpCg);
 		}
-		
+
 		return forAll;
 	}
-	
+
 }
