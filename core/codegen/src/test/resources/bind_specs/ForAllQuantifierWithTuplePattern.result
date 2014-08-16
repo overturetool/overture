@@ -1,0 +1,65 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        return fun();
+    }
+
+    public static VDMSeq fun() {
+        VDMSet ts0 = SetUtil.set(Tuple.mk_(10L, Tuple.mk_(3L, 4L)),
+                Tuple.mk_(20L, Tuple.mk_(3L, 10L)),
+                Tuple.mk_(1L, Tuple.mk_(2L, 20L)),
+                Tuple.mk_(1L, Tuple.mk_(3L, 4L)));
+        VDMSet ts1 = SetUtil.set(Tuple.mk_(10L, Tuple.mk_(3L, 4L)),
+                Tuple.mk_(20L, Tuple.mk_(3L, 10L)),
+                Tuple.mk_(1L, Tuple.mk_(2L, 21L)),
+                Tuple.mk_(1L, Tuple.mk_(3L, 4L)));
+
+        return SeqUtil.seq(fa(Utils.clone(ts0)), fa(Utils.clone(ts1)));
+    }
+
+    public static Boolean fa(final VDMSet ts) {
+        Boolean forAllExpResult_1 = true;
+        VDMSet set_1 = Utils.clone(ts);
+
+        for (Iterator iterator_1 = set_1.iterator();
+                iterator_1.hasNext() && forAllExpResult_1;) {
+            Tuple tuplePattern_1 = ((Tuple) iterator_1.next());
+            Boolean success_1 = tuplePattern_1.compatible(Number.class,
+                    Tuple.class);
+            Number a = null;
+            Number b = null;
+            Number c = null;
+
+            if (success_1) {
+                a = ((Number) tuplePattern_1.get(0));
+
+                Tuple tuplePattern_2 = Utils.clone(((Tuple) tuplePattern_1.get(
+                            1)));
+                success_1 = tuplePattern_2.compatible(Number.class, Number.class);
+
+                if (success_1) {
+                    b = ((Number) tuplePattern_2.get(0));
+                    c = ((Number) tuplePattern_2.get(1));
+                }
+            }
+
+            if (!(success_1)) {
+                continue;
+            }
+
+            forAllExpResult_1 = (c.longValue() -
+                (2L * Math.round(Math.floor(c.longValue() / 2L)))) == 0L;
+        }
+
+        return forAllExpResult_1;
+    }
+}
+
+##########
