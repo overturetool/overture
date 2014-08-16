@@ -32,7 +32,12 @@ public class BaseTransformationAssistant
 	private void replace(INode original, INode replacement)
 	{
 		INode parent = original.parent();
-		parent.replaceChild(original, replacement);
+		
+		if (parent != null)
+		{
+			parent.replaceChild(original, replacement);
+		}
+		
 		original.parent(null);
 	}
 	
