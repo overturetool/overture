@@ -108,7 +108,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 			e.printStackTrace();
 		}
 
-		CodeGenConsole.GetInstance().show();
+		CodeGenConsole.GetInstance().activate();
 
 		deleteMarkers(project);
 

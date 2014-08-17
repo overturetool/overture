@@ -121,35 +121,20 @@ public class CodeGenConsole implements ILogger
 	{
 		err.print(msg);
 	}
+	
+	public void activate()
+	{
+		if(codeGenConsole != null)
+		{
+			codeGenConsole.activate();
+		}
+	}
 
 	public void clearConsole()
 	{
 		if (codeGenConsole != null)
 		{
 			codeGenConsole.clearConsole();
-		}
-	}
-
-	public void show()
-	{
-		if (hasConsole)
-		{
-			IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-			if (activeWorkbenchWindow != null)
-			{
-				IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
-				if (activePage != null)
-				{
-					try
-					{
-						activePage.showView(IConsoleConstants.ID_CONSOLE_VIEW, null, IWorkbenchPage.VIEW_ACTIVATE);
-					} catch (PartInitException e)
-					{
-						Activator.log("Failed showing active page view", e);
-						e.printStackTrace();
-					}
-				}
-			}
 		}
 	}
 
