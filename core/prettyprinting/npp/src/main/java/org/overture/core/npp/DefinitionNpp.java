@@ -3,6 +3,7 @@ package org.overture.core.npp;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AValueDefinition;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.node.INode;
 
 public class DefinitionNpp extends QuestionAnswerAdaptor<IndentTracker, String> implements
@@ -31,6 +32,13 @@ public class DefinitionNpp extends QuestionAnswerAdaptor<IndentTracker, String> 
 	@Override
 	public String caseAValueDefinition(AValueDefinition node,
 			IndentTracker question) throws AnalysisException
+	{
+		return node.toString();
+	}
+	
+	@Override
+	public String defaultPDefinition(PDefinition node, IndentTracker question)
+			throws AnalysisException
 	{
 		return node.toString();
 	}

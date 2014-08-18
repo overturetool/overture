@@ -1200,16 +1200,16 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 
 			if (node.getLocalDefs().size() > 1){
 				
-				def = node.getLocalDefs().poll().apply(THIS,question);
-				
+				//def = node.getLocalDefs().poll().apply(THIS,question);
+				def = rootNpp.defaultPDefinition(node.getLocalDefs().poll(), question);
 				sb.append(def);
 				sb.append(mytable.getCOMMA());
 				sb.append(space);
 			}
 			else
 			{
-				def = node.getLocalDefs().poll().apply(THIS, question);
-				
+				//def = node.getLocalDefs().poll().apply(THIS, question);
+				def = rootNpp.defaultPDefinition(node.getLocalDefs().poll(), question);
 				sb.append(def);
 				sb.append(space);
 			}
@@ -1240,14 +1240,17 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		while(node.getLocalDefs().size() != 0){
 			if(node.getLocalDefs().size() >1)
 			{
-				def = node.getLocalDefs().poll().apply(THIS, question);
+				//def = node.getLocalDefs().poll().apply(THIS, question);
+				def = rootNpp.defaultPDefinition(node.getLocalDefs().poll(), question);
 				sb.append(def);
 				sb.append(mytable.getSEP());
 				sb.append(space);
 			}
 			else
 			{
-				def = node.getLocalDefs().poll().apply(THIS, question);
+				//def = node.getLocalDefs().poll().apply(THIS, question);
+				def = rootNpp.defaultPDefinition(node.getLocalDefs().poll(), question);
+				//System.out.print(def+"\n");
 				sb.append(def);
 			}
 		}
@@ -1314,12 +1317,12 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		return Boolean.toString(node.getValue().getValue());
 	}
 	
-	@Override
-	public String defaultPDefinition(PDefinition node, IndentTracker question)
-			throws AnalysisException
-	{
-		return node.toString();
-	}
+//	@Override
+//	public String defaultPDefinition(PDefinition node, IndentTracker question)
+//			throws AnalysisException
+//	{
+//		return node.toString();
+//	}
 //	@Override
 //	public String caseAValueDefinition(AValueDefinition node,
 //			IndentTracker question) throws AnalysisException
