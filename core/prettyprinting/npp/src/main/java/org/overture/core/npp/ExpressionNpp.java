@@ -2,7 +2,6 @@ package org.overture.core.npp;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
-import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.AAbsoluteUnaryExp;
 import org.overture.ast.expressions.AAndBooleanBinaryExp;
@@ -26,7 +25,6 @@ import org.overture.ast.expressions.AEqualsBinaryExp;
 import org.overture.ast.expressions.AEquivalentBooleanBinaryExp;
 import org.overture.ast.expressions.AExists1Exp;
 import org.overture.ast.expressions.AExistsExp;
-import org.overture.ast.expressions.AFieldExp;
 import org.overture.ast.expressions.AFloorUnaryExp;
 import org.overture.ast.expressions.AForAllExp;
 import org.overture.ast.expressions.AGreaterEqualNumericBinaryExp;
@@ -42,7 +40,6 @@ import org.overture.ast.expressions.ALambdaExp;
 import org.overture.ast.expressions.ALenUnaryExp;
 import org.overture.ast.expressions.ALessEqualNumericBinaryExp;
 import org.overture.ast.expressions.ALessNumericBinaryExp;
-import org.overture.ast.expressions.ALetBeStExp;
 import org.overture.ast.expressions.ALetDefExp;
 import org.overture.ast.expressions.AMapCompMapExp;
 import org.overture.ast.expressions.AMapDomainUnaryExp;
@@ -55,7 +52,6 @@ import org.overture.ast.expressions.AModNumericBinaryExp;
 import org.overture.ast.expressions.AMuExp;
 import org.overture.ast.expressions.ANotEqualBinaryExp;
 import org.overture.ast.expressions.ANotInSetBinaryExp;
-import org.overture.ast.expressions.ANotUnaryExp;
 import org.overture.ast.expressions.AOrBooleanBinaryExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
 import org.overture.ast.expressions.APlusPlusBinaryExp;
@@ -88,7 +84,6 @@ import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.types.ACharBasicType;
-import org.overture.ast.types.AMapMapType;
 
 class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		implements IPrettyPrinter
@@ -1135,14 +1130,16 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		sb.append(space);
 		sb.append(test);
 		sb.append(brl);
+		sb.append(space);
 		sb.append(mytable.getTHEN());
 		sb.append(space);
 		sb.append(exp1);
 		sb.append(brl);
+		sb.append(space);
 		sb.append(mytable.getELSE());
 		sb.append(space);
 		sb.append(exp2);
-		
+		//System.out.print(sb.toString()+"\n");
 		return sb.toString();
 	}
 	
@@ -1258,6 +1255,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		sb.append(brl);
 		sb.append(mytable.getIN());
 		sb.append(brl);
+		sb.append(space);
 		sb.append(exp);
 		
 		return sb.toString();

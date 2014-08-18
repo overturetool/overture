@@ -1232,20 +1232,20 @@ public class ExpressionNppTest {
 	@Test
 	public void testCaseAIfExp_01()	throws AnalysisException
 	{
-		aux("if x > 1 then 1 else 2","if (x > 1)\nthen 1\nelse 2");
+		aux("if x > 1 then 1 else 2","if (x > 1)\n then 1\n else 2");
 	}
 	
 	@Test
 	public void testCaseAIfExp_02()	throws AnalysisException
 	{
-		aux("if x > 1 then x > y else x = 0","if (x > 1)\nthen (x > y)\nelse (x = 0)");
+		aux("if x > 1 then x > y else x = 0","if (x > 1)\n then (x > y)\n else (x = 0)");
 	}
 	
 	@Test
 	public void testCaseAIfExp_03() throws AnalysisException
 	{
 		aux("if x mod 2 = 0 then x = 2 else x = 1", 
-				"if ((x mod 2) = 0)\nthen (x = 2)\nelse (x = 1)");
+				"if ((x mod 2) = 0)\n then (x = 2)\n else (x = 1)");
 	}
 	
 	@Test
@@ -1271,20 +1271,20 @@ public class ExpressionNppTest {
 	public void testCaseADefExp_01() throws AnalysisException
 	{
 		aux("def user = lib(copy) in if user = <OUT> then true else false",
-					"def user = lib(copy)\nin\nif (user = <OUT>)\nthen true\nelse false");
+					"def user = lib(copy)\nin\n if (user = <OUT>)\n then true\n else false");
 	}
 	
 	@Test
 	public void testCaseADefExp_02() throws AnalysisException
 	{
 		aux("def user = lib(copy) in if user = <OUT> then true else undefined",
-					"def user = lib(copy)\nin\nif (user = <OUT>)\nthen true\nelse (undefined)");
+					"def user = lib(copy)\nin\n if (user = <OUT>)\n then true\n else (undefined)");
 	}
 	
 	@Test
 	public void testCaseADefExp_03() throws AnalysisException
 	{
 		aux("def user = lib(copy); user = lib(copy) in if user = <OUT> then true else undefined",
-					"def user = lib(copy); user = lib(copy)\nin\nif (user = <OUT>)\nthen true\nelse (undefined)");
+					"def user = lib(copy); user = lib(copy)\nin\n if (user = <OUT>)\n then true\n else (undefined)");
 	}
 }
