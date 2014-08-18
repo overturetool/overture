@@ -151,10 +151,13 @@ public interface ISymbolTable
 	
 	String getTHEN();
 	
+	String getELSEIF();
+	
 	String getELSE();
 	
 	String getIN();
 	
 	String getDEFINE();
+	
 
 }

@@ -473,6 +473,10 @@ public class VdmSymbolTable implements ISymbolTable
 		return "def";
 	}
 	
-	
+	@Override
+	public String getELSEIF()
+	{
+		return "elseif";
+	}
 
 }

@@ -1249,6 +1249,20 @@ public class ExpressionNppTest {
 	}
 	
 	@Test
+	public void testCaseAElseIf_01() throws AnalysisException
+	{
+		aux("if x mod 2 = 0 then 1 elseif x mod 2 <> 0 then 2 else 3",
+				"if ((x mod 2) = 0)\n then 1\n elseif ((x mod 2) <> 0)\n then 2\n else 3");
+	}
+	
+	@Test
+	public void testCaseAElseIf_02() throws AnalysisException
+	{
+		aux("if x = 1 then 1 elseif x = 2 then 2 elseif x = 3 then 3 else 4",
+				"if (x = 1)\n then 1\n elseif (x = 2)\n then 2\n elseif (x = 3)\n then 3\n else 4");
+	}
+	
+	@Test
 	public void testCaseAMuExp_01() throws AnalysisException
 	{
 		aux("mu(sc, drawn |-> sc.drawn + 1, points |-> sc.points + 1)","mu(sc, drawn |-> ((sc.drawn) + 1), points |-> ((sc.points) + 1))");
