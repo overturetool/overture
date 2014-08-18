@@ -38,6 +38,19 @@ public class Token implements Serializable
 	{
 		return value;
 	}
+	
+	@Override
+	public int hashCode()
+	{
+		if(value == null)
+		{
+			return 0;
+		}
+		else
+		{
+			return value.hashCode();
+		}
+	}
 
 	@Override
 	public boolean equals(Object obj)
