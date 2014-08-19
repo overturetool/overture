@@ -159,5 +159,9 @@ public interface ISymbolTable
 	
 	String getDEFINE();
 	
+	String getLET();
+	
+	String getBESUCH();
+	
 
 }

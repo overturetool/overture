@@ -1285,20 +1285,35 @@ public class ExpressionNppTest {
 	public void testCaseADefExp_01() throws AnalysisException
 	{
 		aux("def user = lib(copy) in if user = <OUT> then true else false",
-					"def user = lib(copy)\nin\n if (user = <OUT>)\n then true\n else false");
+					"(def user = lib(copy)\nin\n if (user = <OUT>)\n then true\n else false)");
 	}
 	
 	@Test
 	public void testCaseADefExp_02() throws AnalysisException
 	{
 		aux("def user = lib(copy) in if user = <OUT> then true else undefined",
-					"def user = lib(copy)\nin\n if (user = <OUT>)\n then true\n else (undefined)");
+					"(def user = lib(copy)\nin\n if (user = <OUT>)\n then true\n else (undefined))");
 	}
 	
 	@Test
 	public void testCaseADefExp_03() throws AnalysisException
 	{
 		aux("def user = lib(copy); user = lib(copy) in if user = <OUT> then true else undefined",
-					"def user = lib(copy); user = lib(copy)\nin\n if (user = <OUT>)\n then true\n else (undefined)");
+					"(def user = lib(copy); user = lib(copy)\nin\n if (user = <OUT>)\n then true\n else (undefined))");
 	}
+	
+	@Test
+	public void testCaseALetBeStExp_01() throws AnalysisException
+	{
+		aux("let i in set x be st l(i) = 5 in {1, 2, 3, 4, 6} ^ {5}",
+				"let i in set x be st (l(i) = 5)\nin\n {1, 2, 3, 4, 6} ^ {5}");
+	}
+	
+	@Test
+	public void testCaseALetBeStExp_02() throws AnalysisException
+	{
+		aux("let m in set elems l be st forall x in set elems l & m <= x in [m]",
+				"let m in set (elems l) be st forall x in set (elems l) & (m <= x)\nin\n [m]");
+	}
+	
 }

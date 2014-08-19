@@ -41,6 +41,7 @@ import org.overture.ast.expressions.ALambdaExp;
 import org.overture.ast.expressions.ALenUnaryExp;
 import org.overture.ast.expressions.ALessEqualNumericBinaryExp;
 import org.overture.ast.expressions.ALessNumericBinaryExp;
+import org.overture.ast.expressions.ALetBeStExp;
 import org.overture.ast.expressions.ALetDefExp;
 import org.overture.ast.expressions.AMapCompMapExp;
 import org.overture.ast.expressions.AMapDomainUnaryExp;
@@ -1223,7 +1224,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("let");
+		sb.append(mytable.getLET());
 		sb.append(space);
 		
 		while (node.getLocalDefs().size() != 0){
@@ -1246,11 +1247,43 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 			}
 		}
 		
-		sb.append("in");
+		sb.append(mytable.getIN());
 		sb.append(space);
 		
 		sb.append(exp);
 	
+		return sb.toString();
+	}
+	
+	@Override
+	public String caseALetBeStExp(ALetBeStExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		String exp1 = node.getSuchThat().apply(THIS, question);
+		String exp_value = node.getValue().apply(THIS, question);
+		String def;
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(mytable.getLET());
+		sb.append(space);
+		//while (node.getDef().getBindings().size() !=0){
+			//def = rootNpp.defaultPDefinition(node.getBind()., question);
+			def = node.getBind().apply(THIS, question);
+			sb.append(def);
+			sb.append(space);
+		//}
+		
+		sb.append(mytable.getBESUCH());
+		sb.append(space);
+		sb.append(exp1);
+		sb.append(brl);
+		
+		sb.append(mytable.getIN());
+		sb.append(brl);
+		sb.append(space);
+		sb.append(exp_value);
+		
 		return sb.toString();
 	}
 	
@@ -1292,11 +1325,9 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		sb.append(space);
 		sb.append(exp);
 		
-		return sb.toString();
+		return Utilities.wrap(sb.toString());
 		
 	}
-	
-	
 	
 	@Override
 	public String caseACharLiteralExp(ACharLiteralExp node,
