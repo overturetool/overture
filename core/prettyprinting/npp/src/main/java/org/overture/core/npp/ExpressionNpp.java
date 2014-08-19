@@ -8,6 +8,7 @@ import org.overture.ast.expressions.AAndBooleanBinaryExp;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ABooleanConstExp;
 import org.overture.ast.expressions.ACardinalityUnaryExp;
+import org.overture.ast.expressions.ACaseAlternative;
 import org.overture.ast.expressions.ACasesExp;
 import org.overture.ast.expressions.ACharLiteralExp;
 import org.overture.ast.expressions.ACompBinaryExp;
@@ -1086,7 +1087,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		
 		while(node.getCases().size() !=0){
 			
-			String caselist = node.getCases().poll().toString();
+			String caselist = node.getCases().poll().apply(THIS, question);
 			
 			sb.append(brtab);
 			sb.append(caselist);
@@ -1115,6 +1116,17 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		
 		
 		return sb.toString(); 
+	}
+	
+	@Override
+	public String caseACaseAlternative(ACaseAlternative node,
+			IndentTracker question) throws AnalysisException
+	{
+		String l = node.getPattern().toString();
+		String r = node.getResult().apply(THIS, question);
+		String op = mytable.getARROW();
+		
+		return Utilities.append(l, r, op);
 	}
 	
 	
@@ -1267,6 +1279,8 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		
 		sb.append(mytable.getLET());
 		sb.append(space);
+		
+		//System.out.print(node.getBind().toString() + " /"+ node.getClass() + "\n");
 		//while (node.getDef().getBindings().size() !=0){
 			//def = rootNpp.defaultPDefinition(node.getBind()., question);
 			def = node.getBind().apply(THIS, question);
@@ -1299,7 +1313,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		sb.append(mytable.getDEFINE());
 		sb.append(space);
 		
-		//System.out.print(node.getLocalDefs().getFirst().getClass().toString());
 		
 		while(node.getLocalDefs().size() != 0){
 			if(node.getLocalDefs().size() >1)

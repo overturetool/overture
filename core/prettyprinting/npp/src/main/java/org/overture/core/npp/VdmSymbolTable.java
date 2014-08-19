@@ -489,5 +489,11 @@ public class VdmSymbolTable implements ISymbolTable
 	{
 		return "be st";
 	}
+	
+	@Override
+	public String getARROW()
+	{
+		return "->";
+	}
 
 }

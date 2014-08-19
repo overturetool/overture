@@ -163,5 +163,7 @@ public interface ISymbolTable
 	
 	String getBESUCH();
 	
+	String getARROW();
+	
 
 }
