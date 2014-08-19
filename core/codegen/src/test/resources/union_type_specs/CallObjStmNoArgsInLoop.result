@@ -62,8 +62,10 @@ public class Entry {
                 ((A) x).op();
             } else if (x instanceof B) {
                 ((B) x).op();
-            } else {
+            } else if (x instanceof C) {
                 ((C) x).op();
+            } else {
+                throw new RuntimeException("Missing operation member: op");
             }
         }
 
