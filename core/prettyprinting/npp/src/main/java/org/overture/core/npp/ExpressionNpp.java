@@ -38,6 +38,8 @@ import org.overture.ast.expressions.AInSetBinaryExp;
 import org.overture.ast.expressions.AIndicesUnaryExp;
 import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.expressions.AIotaExp;
+import org.overture.ast.expressions.AIsExp;
+import org.overture.ast.expressions.AIsOfClassExp;
 import org.overture.ast.expressions.ALambdaExp;
 import org.overture.ast.expressions.ALenUnaryExp;
 import org.overture.ast.expressions.ALessEqualNumericBinaryExp;
@@ -101,6 +103,8 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	private static String rightcurly = "}";
 	private static String leftsq = "[";
 	private static String rightsq = "]";
+	private static String leftpar = "(";
+	private static String rightpar = ")";
 	private static String bar = "|";
 	private static String brtab = "\n\t";
 	private static String brl = "\n";
@@ -1340,6 +1344,36 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		
 		return Utilities.wrap(sb.toString());
 		
+	}
+
+	@Override
+	public String caseAIsExp(AIsExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		String exp = node.getTest().apply(THIS, question);
+		String type;
+		if (node.getBasicType() == null)
+		{
+			//type = rootNpp.defaultPDefinition(node.getTypedef(), question);
+			type = node.getTypeName().toString();
+			//System.out.println(node.getTypeName().toString());
+		}
+		else
+		{	
+			type = node.getBasicType().toString();
+		}
+		
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(mytable.getISTYPE());
+		sb.append(leftpar);
+		sb.append(exp);
+		sb.append(mytable.getCOMMA());
+		sb.append(type);
+		sb.append(rightpar);
+		//System.out.print(sb.toString()+"\n");
+		return sb.toString();
 	}
 	
 	@Override

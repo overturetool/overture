@@ -165,5 +165,7 @@ public interface ISymbolTable
 	
 	String getARROW();
 	
+	String getISTYPE();
+	
 
 }

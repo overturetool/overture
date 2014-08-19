@@ -495,5 +495,11 @@ public class VdmSymbolTable implements ISymbolTable
 	{
 		return "->";
 	}
+	
+	@Override
+	public String getISTYPE()
+	{
+		return "is_";
+	}
 
 }

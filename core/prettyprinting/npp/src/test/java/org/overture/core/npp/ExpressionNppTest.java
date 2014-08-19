@@ -1316,4 +1316,27 @@ public class ExpressionNppTest {
 				"let m in set (elems l) be st forall x in set (elems l) & (m <= x)\nin\n [m]");
 	}
 	
+	@Test
+	public void testCaseAIsExp_01() throws AnalysisException
+	{
+		aux("is_nat(0)","is_(0,nat)");
+	}
+	
+	@Test
+	public void testCaseAIsExp_02() throws AnalysisException
+	{
+		aux("is_(0,bool)", "is_(0,bool)");
+	}
+	@Test
+	public void testCaseAIsExp_03() throws AnalysisException
+	{
+		aux("is_(0,t)","is_(0,t)");
+	}
+	
+	@Test
+	public void testCaseAIsExp_04() throws AnalysisException
+	{
+		aux("is_(m, map nat to nat)", "is_(m,map (nat) to (nat))");
+	}
+	
 }
