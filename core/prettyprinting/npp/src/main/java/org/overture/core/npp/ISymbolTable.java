@@ -169,5 +169,11 @@ public interface ISymbolTable
 	
 	String getISBASECLASS();
 	
+	String getISCLASS();
+	
+	String getSAMECLASS();
+	
+	String getSAMEBASECLASS();
+	
 
 }

@@ -1350,4 +1350,36 @@ public class ExpressionNppTest {
 		aux("isofbaseclass(BinarySearchTree, b)","isofbaseclass(BinarySearchTree, b)");
 	}
 	
+	@Test
+	public void testCaseAIsofClassExp_01() throws AnalysisException
+	{
+		aux("isofclass(tree,t)","isofclass(tree, t)");
+	}
+	@Test
+	public void testCaseAIsofClassExp_02() throws AnalysisException
+	{
+		aux("isofclass(BinarySearchTree, b)","isofclass(BinarySearchTree, b)");
+	}
+	
+	@Test
+	public void testCaseSameClassExp_01() throws AnalysisException
+	{
+		aux("sameclass(tree,t)","sameclass(tree, t)");
+	}
+	@Test
+	public void testCaseSameClassExp_02() throws AnalysisException
+	{
+		aux("sameclass(BinarySearchTree, b)","sameclass(BinarySearchTree, b)");
+	}
+	
+	@Test
+	public void testCaseSamebaseClassExp_01() throws AnalysisException
+	{
+		aux("samebaseclass(tree,t)","samebaseclass(tree, t)");
+	}
+	@Test
+	public void testCaseSamebaseClassExp_02() throws AnalysisException
+	{
+		aux("samebaseclass(BinarySearchTree, b)","samebaseclass(BinarySearchTree, b)");
+	}
 }

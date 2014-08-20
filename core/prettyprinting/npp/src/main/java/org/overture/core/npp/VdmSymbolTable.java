@@ -507,4 +507,22 @@ public class VdmSymbolTable implements ISymbolTable
 	{
 		return "isofbaseclass";
 	}
+	
+	@Override
+	public String getISCLASS()
+	{
+		return "isofclass";
+	}
+	
+	@Override
+	public String getSAMECLASS()
+	{
+		return "sameclass";
+	}
+	
+	@Override
+	public String getSAMEBASECLASS()
+	{
+		return "samebaseclass";
+	}
 }

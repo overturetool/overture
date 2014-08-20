@@ -69,6 +69,8 @@ import org.overture.ast.expressions.ARangeResToBinaryExp;
 import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.ARecordModifier;
 import org.overture.ast.expressions.ARemNumericBinaryExp;
+import org.overture.ast.expressions.ASameBaseClassExp;
+import org.overture.ast.expressions.ASameClassExp;
 import org.overture.ast.expressions.ASeqCompSeqExp;
 import org.overture.ast.expressions.ASeqConcatBinaryExp;
 import org.overture.ast.expressions.ASeqEnumSeqExp;
@@ -1388,6 +1390,65 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		sb.append(op);
 		sb.append(leftpar);
 		sb.append(exp);
+		sb.append(rightpar);
+	
+		return sb.toString();
+	}
+	
+	@Override
+	public String caseAIsOfClassExp(AIsOfClassExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		String exp = node.getExp().apply(THIS, question);
+		String op = mytable.getISCLASS();
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(op);
+		sb.append(leftpar);
+		sb.append(exp);
+		sb.append(rightpar);
+		
+		return sb.toString();
+	}
+	
+	@Override
+	public String caseASameClassExp(ASameClassExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		String l = node.getLeft().apply(THIS, question);
+		String r = node.getRight().apply(THIS,question);
+		String op = mytable.getSAMECLASS();
+	
+		StringBuilder sb = new StringBuilder();
+	
+		sb.append(op);
+		sb.append(leftpar);
+		sb.append(l);
+		sb.append(mytable.getCOMMA());
+		sb.append(space);
+		sb.append(r);
+		sb.append(rightpar);
+	
+		return sb.toString();
+	}
+	
+	@Override
+	public String caseASameBaseClassExp(ASameBaseClassExp node,
+			IndentTracker question) throws AnalysisException
+	{
+		String l = node.getLeft().apply(THIS, question);
+		String r = node.getRight().apply(THIS,question);
+		String op = mytable.getSAMEBASECLASS();
+	
+		StringBuilder sb = new StringBuilder();
+	
+		sb.append(op);
+		sb.append(leftpar);
+		sb.append(l);
+		sb.append(mytable.getCOMMA());
+		sb.append(space);
+		sb.append(r);
 		sb.append(rightpar);
 	
 		return sb.toString();
