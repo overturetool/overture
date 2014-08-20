@@ -106,6 +106,7 @@ public class JavaCodeGen
 	public static final String CALL_STM_OBJ_NAME_PREFIX = "callStmObj_";
 	public static final String CASES_EXP_RESULT_NAME_PREFIX = "casesExpResult_";
 	public static final String MISSING_OP_MEMBER = "Missing operation member: ";
+	public static final String MISSING_MEMBER = "Missing member: ";
 	
 	public static final String INVALID_NAME_PREFIX = "cg_";
 	public static final String OBJ_INIT_CALL_NAME_PREFIX = "cg_init_";
@@ -233,7 +234,7 @@ public class JavaCodeGen
 		TransformationVisitor transVisitor = new TransformationVisitor(irInfo, varPrefixes, transformationAssistant, langIterator, CASES_EXP_RESULT_NAME_PREFIX);
 		PatternTransformation patternTransformation = new PatternTransformation(classes, varPrefixes, irInfo, transformationAssistant, new PatternMatchConfig());
 		TypeTransformation typeTransformation = new TypeTransformation(transformationAssistant);
-		UnionTypeTransformation unionTypeTransformation = new UnionTypeTransformation(transformationAssistant, irInfo, classes, APPLY_EXP_NAME_PREFIX, OBJ_EXP_NAME_PREFIX, CALL_STM_OBJ_NAME_PREFIX, MISSING_OP_MEMBER,irInfo.getTempVarNameGen());
+		UnionTypeTransformation unionTypeTransformation = new UnionTypeTransformation(transformationAssistant, irInfo, classes, APPLY_EXP_NAME_PREFIX, OBJ_EXP_NAME_PREFIX, CALL_STM_OBJ_NAME_PREFIX, MISSING_OP_MEMBER, MISSING_MEMBER,irInfo.getTempVarNameGen());
 
 		DepthFirstAnalysisAdaptor[] analyses = new DepthFirstAnalysisAdaptor[] {
 				funcTransformation, ifExpTransformation,
