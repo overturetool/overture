@@ -4,11 +4,9 @@ import java.util.*;
 
 
 public class A {
-    public A() {
-    }
+    public VDMMap xs = MapUtil.map(new Maplet(1L, 6L));
 
-    public static Number fun() {
-        return 2L;
+    public A() {
     }
 }
 
@@ -42,9 +40,9 @@ public class Entry {
             Number apply_1 = null;
 
             if (x instanceof A) {
-                apply_1 = ((A) x).fun();
+                apply_1 = ((Number) ((A) x).xs.get(1L));
             } else {
-                throw new RuntimeException("Missing member: fun");
+                throw new RuntimeException("Missing member: xs");
             }
 
             sum = sum.longValue() + apply_1.longValue();
@@ -52,11 +50,6 @@ public class Entry {
 
         return sum;
     }
-}
-
-##########
-public interface Func_1<T_1> {
-    public abstract T_1 eval();
 }
 
 ##########

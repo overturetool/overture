@@ -55,7 +55,7 @@ public class Entry {
             } else if (x instanceof B) {
                 apply_1 = ((B) x).f();
             } else {
-                throw new RuntimeException("Missing operation member: f");
+                throw new RuntimeException("Missing member: f");
             }
 
             if (apply_1.longValue() == Quotes.A.longValue()) {

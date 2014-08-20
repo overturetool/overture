@@ -51,7 +51,7 @@ public class Entry {
             } else if (x instanceof B) {
                 apply_1 = ((B) x).op();
             } else {
-                throw new RuntimeException("Missing operation member: op");
+                throw new RuntimeException("Missing member: op");
             }
 
             sum = sum.doubleValue() + apply_1.longValue();

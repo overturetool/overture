@@ -54,7 +54,7 @@ public class Entry {
             } else if (obj_1 instanceof B) {
                 apply_1 = ((B) obj_1).f();
             } else {
-                throw new RuntimeException("Missing operation member: f");
+                throw new RuntimeException("Missing member: f");
             }
 
             if (apply_1.equals(Tuple.mk_(1L, 2L))) {
