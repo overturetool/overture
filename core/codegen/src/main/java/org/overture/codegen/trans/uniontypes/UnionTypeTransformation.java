@@ -47,6 +47,7 @@ import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
 import org.overture.codegen.cgast.expressions.AMapDomainUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AMissingMemberRuntimeErrorExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
@@ -62,9 +63,11 @@ import org.overture.codegen.cgast.statements.AElseIfStmCG;
 import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
+import org.overture.codegen.cgast.statements.ARaiseErrorStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
+import org.overture.codegen.cgast.types.AErrorTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.AUnionTypeCG;
@@ -86,11 +89,13 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 	private String callStmObjPrefix;
 
 	private ITempVarGen nameGen;
+	
+	private String missingOpMember;
 
 	public UnionTypeTransformation(BaseTransformationAssistant baseAssistant,
 			IRInfo info, List<AClassDeclCG> classes,
 			String applyExpResultPrefix, String objExpPrefix,
-			String callStmObjPrefix, ITempVarGen nameGen)
+			String callStmObjPrefix, String missingOpMember, ITempVarGen nameGen)
 	{
 		this.baseAssistant = baseAssistant;
 		this.info = info;
@@ -99,6 +104,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 
 		this.applyExpResulPrefix = applyExpResultPrefix;
 		this.objExpPrefix = objExpPrefix;
+		this.missingOpMember = missingOpMember;
 		this.callStmObjPrefix = callStmObjPrefix;
 	}
 
@@ -567,6 +573,14 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			{
 				correctArgTypes(callCopy.getArgs(), methodType.getParams());
 			}
+			else
+			{
+				//It's possible (due to the way union types work) that the method type for the
+				//field in the object type does not exist. Let's say we are trying to invoke the
+				//operation 'op' for an object type that is either A or B but it might be the
+				//case that only 'A' has the operation 'op' defined.
+				continue;
+			}
 
 			ACastUnaryExpCG castedVarExp = new ACastUnaryExpCG();
 			castedVarExp.setType(currentType.clone());
@@ -578,18 +592,23 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			{
 				ifChecks.setIfExp(consInstanceCheck(objExp, currentType));
 				ifChecks.setThenStm(callCopy);
-			} else if (i < possibleTypes.size() - 1)
+			} else
 			{
 				AElseIfStmCG elseIf = new AElseIfStmCG();
 				elseIf.setElseIf(consInstanceCheck(objExp, currentType));
 				elseIf.setThenStm(callCopy);
 
 				ifChecks.getElseIf().add(elseIf);
-			} else
-			{
-				ifChecks.setElseStm(callCopy);
 			}
 		}
+		
+		AMissingMemberRuntimeErrorExpCG missingMember = new AMissingMemberRuntimeErrorExpCG();
+		missingMember.setType(new AErrorTypeCG());
+		missingMember.setMessage(missingOpMember + fieldName);
+
+		ARaiseErrorStmCG raise = new ARaiseErrorStmCG();
+		raise.setError(missingMember);
+		ifChecks.setElseStm(raise);
 
 		replacementBlock.getStatements().add(ifChecks);
 		baseAssistant.replaceNodeWith(node, replacementBlock);

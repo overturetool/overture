@@ -96,9 +96,17 @@ public class TypeAssistantCG extends AssistantBase
 				}
 			}
 		}
-
-		Logger.getLog().printError(String.format("Could not find method type for field %s in class %s", fieldName, fieldModule));
-
+		
+		// Union type transformations may ask for the method type of a field to find out
+		// that it does not exist. Consider for example the (legal) snippet below where
+		// class A has an operation 'op()' and B is a completely empty class definition
+		//
+		// let xs = [new A(), new B()]
+		// in
+		//	for x in xs do
+		// 		x.op();
+		
+		//If the field does not exist then the method type does not exist
 		return null;
 	}
 
