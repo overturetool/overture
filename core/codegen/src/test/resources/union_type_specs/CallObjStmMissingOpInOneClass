@@ -1,0 +1,31 @@
+class A
+
+instance variables
+
+operations
+
+public op : () ==> ()
+op () == skip;
+
+end A
+
+class B
+
+end B
+
+class Entry
+
+operations
+
+public static Run : () ==> nat
+Run () ==
+let xs : seq of (A | B) = [new A()]
+in
+(
+	for x in xs do
+		x.op();
+		
+	return 42;
+)
+
+end Entry
