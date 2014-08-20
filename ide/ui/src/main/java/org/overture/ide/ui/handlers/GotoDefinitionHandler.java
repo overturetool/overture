@@ -40,6 +40,7 @@ import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.PStm;
+import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.PType;
 import org.overture.ide.core.IVdmElement;
 import org.overture.ide.core.resources.IVdmProject;
@@ -101,7 +102,13 @@ public class GotoDefinitionHandler extends AbstractHandler
 						gotoType = ((PExp) node).getType();
 					} else if (node instanceof PType)
 					{
-						gotoLocation = ((PType) node).getLocation();// we have no where to goto begining of the type
+						if (node instanceof ANamedInvariantType)
+						{
+							gotoLocation = ((ANamedInvariantType) node).getName().getLocation();
+						} else
+						{
+							gotoLocation = ((PType) node).getLocation();// we have no where to goto begining of the type
+						}
 					} else if (node instanceof AModuleModules)
 					{
 						// //do something special
