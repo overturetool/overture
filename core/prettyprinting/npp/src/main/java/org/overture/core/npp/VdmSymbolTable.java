@@ -502,4 +502,9 @@ public class VdmSymbolTable implements ISymbolTable
 		return "is_";
 	}
 
+	@Override
+	public String getISBASECLASS()
+	{
+		return "isofbaseclass";
+	}
 }

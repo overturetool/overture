@@ -1339,4 +1339,15 @@ public class ExpressionNppTest {
 		aux("is_(m, map nat to nat)", "is_(m,map (nat) to (nat))");
 	}
 	
+	@Test
+	public void testCaseAIsofBaseClassExp_01() throws AnalysisException
+	{
+		aux("isofbaseclass(tree,t)","isofbaseclass(tree, t)");
+	}
+	@Test
+	public void testCaseAIsofBaseClassExp_02() throws AnalysisException
+	{
+		aux("isofbaseclass(BinarySearchTree, b)","isofbaseclass(BinarySearchTree, b)");
+	}
+	
 }

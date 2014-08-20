@@ -39,6 +39,7 @@ import org.overture.ast.expressions.AIndicesUnaryExp;
 import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.expressions.AIotaExp;
 import org.overture.ast.expressions.AIsExp;
+import org.overture.ast.expressions.AIsOfBaseClassExp;
 import org.overture.ast.expressions.AIsOfClassExp;
 import org.overture.ast.expressions.ALambdaExp;
 import org.overture.ast.expressions.ALenUnaryExp;
@@ -1354,12 +1355,11 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String type;
 		if (node.getBasicType() == null)
 		{
-			//type = rootNpp.defaultPDefinition(node.getTypedef(), question);
+			//System.out.print(node.getTypeName().getClass().toString());
 			type = node.getTypeName().toString();
-			//System.out.println(node.getTypeName().toString());
 		}
 		else
-		{	
+		{	//System.out.print(node.getBasicType().getClass() + "\n");
 			type = node.getBasicType().toString();
 		}
 		
@@ -1373,6 +1373,23 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		sb.append(type);
 		sb.append(rightpar);
 		//System.out.print(sb.toString()+"\n");
+		return sb.toString();
+	}
+	
+	@Override
+	public String caseAIsOfBaseClassExp(AIsOfBaseClassExp node,
+			IndentTracker question) throws AnalysisException
+	{
+		String exp = node.getExp().apply(THIS, question);
+		String op = mytable.getISBASECLASS();
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(op);
+		sb.append(leftpar);
+		sb.append(exp);
+		sb.append(rightpar);
+	
 		return sb.toString();
 	}
 	

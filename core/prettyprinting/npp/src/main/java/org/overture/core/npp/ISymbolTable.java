@@ -167,5 +167,7 @@ public interface ISymbolTable
 	
 	String getISTYPE();
 	
+	String getISBASECLASS();
+	
 
 }
