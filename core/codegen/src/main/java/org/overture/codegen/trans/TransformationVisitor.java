@@ -30,6 +30,7 @@ import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
+import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACaseAltExpExpCG;
 import org.overture.codegen.cgast.expressions.ACasesExpCG;
@@ -54,6 +55,7 @@ import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACaseAltStmStmCG;
 import org.overture.codegen.cgast.statements.ACasesStmCG;
+import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.ALetBeStStmCG;
 import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
@@ -84,14 +86,85 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 
 	private String casesExpResultPrefix;
 
+	private String andExpPrefix;
+
 	public TransformationVisitor(IRInfo info, TempVarPrefixes varPrefixes,
 			TransformationAssistantCG transformationAssistant,
-			ILanguageIterator langIterator, String casesExpPrefix)
+			ILanguageIterator langIterator, String casesExpPrefix, String andExpPrefix)
 	{
 		this.info = info;
 		this.transformationAssistant = transformationAssistant;
 		this.langIterator = langIterator;
 		this.casesExpResultPrefix = casesExpPrefix;
+		this.andExpPrefix = andExpPrefix;
+	}
+	
+	@Override
+	public void caseAAndBoolBinaryExpCG(AAndBoolBinaryExpCG node)
+			throws AnalysisException
+	{
+		// left && right 
+		//
+		// is replaced with a variable expression 'andResult' that is
+		// computed as:
+		//
+		// boolean andResult = false;
+		// if (left) 
+		// { 
+		//    if (right)
+		//    {
+		//       andResult = true;
+		//    }
+		// }
+		//
+		SStmCG enclosingStm = transformationAssistant.getEnclosingStm(node, "and expression");
+		
+		// First condition: The enclosing statement can be 'null' if we only try to code generate an expression rather than
+		// a complete specification.
+		//
+		// Second condition: FIXME: The semantics will be broken if the 'and' expression is evaluated repeatedly
+		// such as when it appears in the condition of a while expression. This case needs special treatment.
+		if(enclosingStm != null && !transformationAssistant.getInfo().getExpAssistant().isLoopCondition(node))
+		{
+			SExpCG left = node.getLeft().clone();
+			SExpCG right = node.getRight().clone();
+			
+			String andResult = info.getTempVarNameGen().nextVarName(andExpPrefix);
+			AVarLocalDeclCG andResultDecl = transformationAssistant.consBoolVarDecl(andResult, false);
+			
+			AIfStmCG leftCheck = new AIfStmCG();
+			leftCheck.setIfExp(left);
+			
+			AIfStmCG rightCheck = new AIfStmCG();
+			rightCheck.setIfExp(right);
+			
+			ALocalAssignmentStmCG assignAndVar = new ALocalAssignmentStmCG();
+			assignAndVar.setTarget(transformationAssistant.consBoolCheck(andResult, false));
+			assignAndVar.setExp(info.getAssistantManager().getExpAssistant().consBoolLiteral(true));
+			rightCheck.setThenStm(assignAndVar);
+			
+			leftCheck.setThenStm(rightCheck);
+			
+			ABlockStmCG declBlock = new ABlockStmCG();
+			declBlock.getLocalDefs().add(andResultDecl);
+			
+			ABlockStmCG replacementBlock = new ABlockStmCG();
+
+			transformationAssistant.replaceNodeWith(enclosingStm, replacementBlock);
+			transformationAssistant.replaceNodeWith(node, transformationAssistant.consBoolCheck(andResult, false));
+			
+			replacementBlock.getStatements().add(declBlock);
+			replacementBlock.getStatements().add(leftCheck);
+			replacementBlock.getStatements().add(enclosingStm);
+			
+			replacementBlock.apply(this);
+		}
+		else
+		{
+			node.getLeft().apply(this);
+			node.getRight().apply(this);
+			node.getType().apply(this);
+		}
 	}
 
 	@Override
