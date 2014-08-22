@@ -45,6 +45,7 @@ import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
+import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SMultipleBindCG;
 import org.overture.codegen.cgast.STypeCG;
@@ -64,6 +65,8 @@ import org.overture.codegen.cgast.expressions.SBinaryExpCG;
 import org.overture.codegen.cgast.expressions.SQuantifierExpCG;
 import org.overture.codegen.cgast.expressions.SUnaryExpCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
+import org.overture.codegen.cgast.statements.AForLoopStmCG;
+import org.overture.codegen.cgast.statements.AWhileStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
@@ -377,4 +380,19 @@ public class ExpAssistantCG extends AssistantBase
 			}
 		}
 	}
+	
+	public boolean isLoopCondition(SExpCG exp)
+	{
+		INode node = exp.parent();
+		
+		while(node instanceof SExpCG)
+		{
+			node = node.parent();
+		}
+		
+		return node instanceof AWhileStmCG || node instanceof AForLoopStmCG; 
+		//The ForLoopStmCG is only used in the transformation process. It corresponds 
+		//to the standard for loop in Java, e.g. for(int i = 0; i < 10; i++){...}
+	}
+	
 }
