@@ -1382,4 +1382,5 @@ public class ExpressionNppTest {
 	{
 		aux("samebaseclass(BinarySearchTree, b)","samebaseclass(BinarySearchTree, b)");
 	}
+	
 }

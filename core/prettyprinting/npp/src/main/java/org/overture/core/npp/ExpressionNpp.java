@@ -32,6 +32,7 @@ import org.overture.ast.expressions.AForAllExp;
 import org.overture.ast.expressions.AGreaterEqualNumericBinaryExp;
 import org.overture.ast.expressions.AGreaterNumericBinaryExp;
 import org.overture.ast.expressions.AHeadUnaryExp;
+import org.overture.ast.expressions.AHistoryExp;
 import org.overture.ast.expressions.AIfExp;
 import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.AInSetBinaryExp;
@@ -1453,6 +1454,14 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	
 		return sb.toString();
 	}
+	
+//	@Override
+//	public String caseAHistoryExp(AHistoryExp node, IndentTracker question)
+//			throws AnalysisException
+//	{
+//		System.out.print(node.getHop());
+//		return null;
+//	}
 	
 	@Override
 	public String caseACharLiteralExp(ACharLiteralExp node,
