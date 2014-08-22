@@ -736,22 +736,22 @@ public class JavaFormat
 
 	public boolean isSeqType(SExpCG exp)
 	{
-		return exp.getType() instanceof SSeqTypeCG;
+		return info.getAssistantManager().getTypeAssistant().isSeqType(exp);
 	}
 
 	public boolean isMapType(SExpCG exp)
 	{
-		return exp.getType() instanceof SMapTypeCG;
+		return info.getAssistantManager().getTypeAssistant().isMapType(exp);
 	}
 
 	public boolean isStringType(STypeCG type)
 	{
-		return type instanceof AStringTypeCG;
+		return info.getAssistantManager().getTypeAssistant().isStringType(type);
 	}
 
 	public boolean isStringType(SExpCG exp)
 	{
-		return exp.getType() instanceof AStringTypeCG;
+		return info.getAssistantManager().getTypeAssistant().isStringType(exp);
 	}
 
 	public boolean isCharType(STypeCG type)

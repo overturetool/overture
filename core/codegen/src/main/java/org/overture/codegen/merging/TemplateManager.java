@@ -94,6 +94,7 @@ import org.overture.codegen.cgast.expressions.AMapUnionBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AMapletExpCG;
 import org.overture.codegen.cgast.expressions.AMethodInstantiationExpCG;
 import org.overture.codegen.cgast.expressions.AMinusUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AMissingMemberRuntimeErrorExpCG;
 import org.overture.codegen.cgast.expressions.AMkBasicExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
@@ -472,6 +473,9 @@ public class TemplateManager
 		nodeTemplateFileNames.put(APatternMatchRuntimeErrorExpCG.class, templateStructure.RUNTIME_ERROR_EXP_PATH
 				+ "PatternMatch");
 
+		nodeTemplateFileNames.put(AMissingMemberRuntimeErrorExpCG.class, templateStructure.RUNTIME_ERROR_EXP_PATH
+				+ "MissingMember");
+		
 		// Unary expressions
 
 		nodeTemplateFileNames.put(APlusUnaryExpCG.class, templateStructure.UNARY_EXP_PATH

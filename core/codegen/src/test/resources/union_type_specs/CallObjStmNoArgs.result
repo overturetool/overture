@@ -62,8 +62,10 @@ public class Entry {
             return ((A) callStmObj_1).op();
         } else if (callStmObj_1 instanceof B) {
             return ((B) callStmObj_1).op();
-        } else {
+        } else if (callStmObj_1 instanceof C) {
             return ((C) callStmObj_1).op();
+        } else {
+            throw new RuntimeException("Missing operation member: op");
         }
     }
 }

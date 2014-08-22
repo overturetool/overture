@@ -45,16 +45,20 @@ public class Entry {
 
         if (x instanceof A) {
             apply_1 = ((A) x).op(1L);
-        } else {
+        } else if (x instanceof B) {
             apply_1 = ((B) x).op(1L);
+        } else {
+            throw new RuntimeException("Missing member: op");
         }
 
         Number apply_2 = null;
 
         if (x instanceof A) {
             apply_2 = ((A) x).op(apply_1);
-        } else {
+        } else if (x instanceof B) {
             apply_2 = ((B) x).op(apply_1);
+        } else {
+            throw new RuntimeException("Missing member: op");
         }
 
         Number q = apply_2;

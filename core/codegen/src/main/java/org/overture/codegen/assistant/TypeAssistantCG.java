@@ -43,6 +43,7 @@ import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
+import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AFieldObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
@@ -96,9 +97,17 @@ public class TypeAssistantCG extends AssistantBase
 				}
 			}
 		}
-
-		Logger.getLog().printError(String.format("Could not find method type for field %s in class %s", fieldName, fieldModule));
-
+		
+		// Union type transformations may ask for the method type of a field to find out
+		// that it does not exist. Consider for example the (legal) snippet below where
+		// class A has an operation 'op()' and B is a completely empty class definition
+		//
+		// let xs = [new A(), new B()]
+		// in
+		//	for x in xs do
+		// 		x.op();
+		
+		//If the field does not exist then the method type does not exist
 		return null;
 	}
 
@@ -441,5 +450,40 @@ public class TypeAssistantCG extends AssistantBase
 				return unionType;
 			}
 		}
+	}
+	
+	public boolean isStringType(STypeCG type)
+	{
+		return type instanceof AStringTypeCG;
+	}
+	
+	public boolean isStringType(SExpCG exp)
+	{
+		return exp.getType() instanceof AStringTypeCG;
+	}
+	
+	public boolean isMapType(SExpCG exp)
+	{
+		return exp.getType() instanceof SMapTypeCG;
+	}
+	
+	public boolean isSeqType(SExpCG exp)
+	{
+		return exp.getType() instanceof SSeqTypeCG;
+	}
+	
+	public boolean isMapApplication(AApplyExpCG applyExp)
+	{
+		return isMapType(applyExp.getRoot()) && applyExp.getArgs().size() == 1;
+	}
+	
+	public boolean isSeqApplication(AApplyExpCG applyExp)
+	{
+		return isSeqType(applyExp.getRoot()) && applyExp.getArgs().size() == 1;
+	}
+	
+	public boolean isCharRead(AApplyExpCG applyExp)
+	{
+		return isStringType(applyExp.getRoot()) && applyExp.getArgs().size() == 1;
 	}
 }

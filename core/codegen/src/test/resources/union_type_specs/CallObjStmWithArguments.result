@@ -76,11 +76,13 @@ public class Entry {
                     ((Boolean) ((i.longValue() == 1L) ? c1
                                                       : ((i.longValue() == 2L)
                     ? c2 : c3))));
-            } else {
+            } else if (callStmObj_1 instanceof C) {
                 ((C) callStmObj_1).op(((Number) a), ((Boolean) b),
                     ((Character) ((i.longValue() == 1L) ? c1
                                                         : ((i.longValue() == 2L)
                     ? c2 : c3))));
+            } else {
+                throw new RuntimeException("Missing operation member: op");
             }
         }
 

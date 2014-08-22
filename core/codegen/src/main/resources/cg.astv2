@@ -249,6 +249,9 @@ CG {-> package='org.overture.codegen.cgast'
 #RuntimeError {-> package='org.overture.codegen.cgast.expressions'}
     =   {LetBeStNoBinding}
     |	{patternMatch} [message]:java_String
+    |	{missingMember} [message]:java_String
+    	//Raised at runtime when an attemp is made 
+		//to access a non-existing member (e.g. operation)
     ;
 
 #Var {-> package='org.overture.codegen.cgast.expressions'

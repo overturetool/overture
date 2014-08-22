@@ -7,8 +7,8 @@ public class A {
     public A() {
     }
 
-    public Number op() {
-        return 1L;
+    public static Number fun() {
+        return 2L;
     }
 }
 
@@ -20,10 +20,6 @@ import java.util.*;
 
 public class B {
     public B() {
-    }
-
-    public Number op() {
-        return 11L;
     }
 }
 
@@ -38,27 +34,29 @@ public class Entry {
     }
 
     public static Number Run() {
-        VDMSeq xs = SeqUtil.seq(new A(), new B());
+        VDMSeq xs = SeqUtil.seq(new A(), new A());
         Number sum = 0L;
 
-        for (Iterator iterator_1 = SeqUtil.elems(Utils.clone(xs)).iterator();
-                iterator_1.hasNext();) {
+        for (Iterator iterator_1 = xs.iterator(); iterator_1.hasNext();) {
             Object x = (Object) iterator_1.next();
             Number apply_1 = null;
 
             if (x instanceof A) {
-                apply_1 = ((A) x).op();
-            } else if (x instanceof B) {
-                apply_1 = ((B) x).op();
+                apply_1 = ((A) x).fun();
             } else {
-                throw new RuntimeException("Missing member: op");
+                throw new RuntimeException("Missing member: fun");
             }
 
-            sum = sum.doubleValue() + apply_1.longValue();
+            sum = sum.longValue() + apply_1.longValue();
         }
 
         return sum;
     }
+}
+
+##########
+public interface Func_1<T_1> {
+    public abstract T_1 eval();
 }
 
 ##########

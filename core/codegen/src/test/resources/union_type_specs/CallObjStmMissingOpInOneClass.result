@@ -21,25 +21,6 @@ import java.util.*;
 public class B {
     public B() {
     }
-
-    public void op() {
-        //Skip;
-    }
-}
-
-##########
-import org.overture.codegen.runtime.*;
-
-import java.util.*;
-
-
-public class C {
-    public C() {
-    }
-
-    public void op() {
-        //Skip;
-    }
 }
 
 ##########
@@ -53,23 +34,19 @@ public class Entry {
     }
 
     public static Number Run() {
-        VDMSet xs = SetUtil.set(new A(), new B(), new C());
+        VDMSeq xs = SeqUtil.seq(new A());
 
         for (Iterator iterator_1 = xs.iterator(); iterator_1.hasNext();) {
             Object x = (Object) iterator_1.next();
 
             if (x instanceof A) {
                 ((A) x).op();
-            } else if (x instanceof B) {
-                ((B) x).op();
-            } else if (x instanceof C) {
-                ((C) x).op();
             } else {
                 throw new RuntimeException("Missing operation member: op");
             }
         }
 
-        return 1L;
+        return 42L;
     }
 }
 
