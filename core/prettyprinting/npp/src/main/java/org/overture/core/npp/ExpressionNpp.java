@@ -63,6 +63,7 @@ import org.overture.ast.expressions.AOrBooleanBinaryExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
 import org.overture.ast.expressions.APlusPlusBinaryExp;
 import org.overture.ast.expressions.APowerSetUnaryExp;
+import org.overture.ast.expressions.APreExp;
 import org.overture.ast.expressions.AProperSubsetBinaryExp;
 import org.overture.ast.expressions.AQuoteLiteralExp;
 import org.overture.ast.expressions.ARangeResByBinaryExp;
@@ -294,6 +295,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 			throws AnalysisException
 	{
 		String exp = node.getExpression().apply(THIS, question);
+		//System.out.print(exp + "\n");
 		String op = mytable.getLAMBDA();
 		String pred = mytable.getPRED();
 		String bind;
@@ -1279,7 +1281,9 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	public String caseALetBeStExp(ALetBeStExp node, IndentTracker question)
 			throws AnalysisException
 	{
+		//TODO:fix null pointer exception when no be st statement exist.
 		String exp1 = node.getSuchThat().apply(THIS, question);
+				
 		String exp_value = node.getValue().apply(THIS, question);
 		String def;
 		
@@ -1452,6 +1456,44 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		sb.append(r);
 		sb.append(rightpar);
 	
+		return sb.toString();
+	}
+	
+	@Override
+	public String caseAPreExp(APreExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		String op = mytable.getPRE();
+		
+		String func = node.getFunction().apply(THIS, question);
+		String arg;
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(op);
+		sb.append(leftpar);
+		sb.append(func);
+		
+		//System.out.print(node.getArgs().size());
+		
+		while (node.getArgs().size() != 0){
+			if(node.getArgs().size() > 1){
+				arg = node.getArgs().poll().apply(THIS, question);
+				sb.append(mytable.getCOMMA());
+				sb.append(space);
+				sb.append(arg);
+				sb.append(mytable.getCOMMA());
+				sb.append(space);
+			}
+			else
+			{
+				arg = node.getArgs().poll().apply(THIS, question);
+				sb.append(arg);
+			}
+		}
+		
+		sb.append(rightpar);
+		
 		return sb.toString();
 	}
 	

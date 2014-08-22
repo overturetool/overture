@@ -525,4 +525,10 @@ public class VdmSymbolTable implements ISymbolTable
 	{
 		return "samebaseclass";
 	}
+	
+	@Override
+	public String getPRE()
+	{
+		return "pre_";
+	}
 }

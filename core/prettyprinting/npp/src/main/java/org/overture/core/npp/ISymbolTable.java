@@ -175,5 +175,7 @@ public interface ISymbolTable
 	
 	String getSAMEBASECLASS();
 	
+	String getPRE();
+	
 
 }

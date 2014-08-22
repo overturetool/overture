@@ -1383,4 +1383,10 @@ public class ExpressionNppTest {
 		aux("samebaseclass(BinarySearchTree, b)","samebaseclass(BinarySearchTree, b)");
 	}
 	
+	@Test
+	public void testCasePreExp_01() throws AnalysisException
+	{
+		aux("pre_(let h in set {lambda mk_(x,y):nat * nat & x div y} be st h > 0 in {h, 1, 0})","pre_(let h in set {(lambda [mk_(x, y):(nat * nat)] & (x div y))} be st (h > 0)\nin\n {h, 1, 0})");
+	}
+	
 }
