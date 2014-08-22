@@ -76,7 +76,6 @@ import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.ir.SourceNode;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.BaseTransformationAssistant;
 
 public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
@@ -294,7 +293,8 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 				
 				if(!(currentType instanceof AClassTypeCG))
 				{
-					Logger.getLog().printErrorln("Expected the current object type to be a class type when performing the union type transformation of the field expression. Got: " + currentType);
+					// If we are accessing an element of (say) the sequence [new A(), new B(), nil] of type A | B | [?]
+					// then the current IR type will be the unknown type at some point. This case is simply skipped.
 					continue;
 				}
 				
