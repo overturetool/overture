@@ -31,8 +31,16 @@ public class Entry {
                 for (Iterator iterator_3 = set_1.iterator();
                         iterator_3.hasNext() && !(success_1);) {
                     z = ((Number) iterator_3.next());
-                    success_1 = (x.longValue() < y.longValue()) &&
-                        (y.longValue() < z.longValue());
+
+                    Boolean andResult = false;
+
+                    if (x.longValue() < y.longValue()) {
+                        if (y.longValue() < z.longValue()) {
+                            andResult = true;
+                        }
+                    }
+
+                    success_1 = andResult;
                 }
             }
         }
