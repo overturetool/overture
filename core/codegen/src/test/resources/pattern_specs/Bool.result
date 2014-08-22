@@ -53,7 +53,15 @@ public class Entry {
     }
 
     public static Object Run() {
-        return new A().boolPatternOp(false) && A.boolPatternFun(true);
+        Boolean andResult_1 = false;
+
+        if (new A().boolPatternOp(false)) {
+            if (A.boolPatternFun(true)) {
+                andResult_1 = true;
+            }
+        }
+
+        return andResult_1;
     }
 }
 

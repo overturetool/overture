@@ -128,6 +128,8 @@ public class Plant {
     }
 
     private static Boolean PlantInv(final VDMSet as, final VDMMap sch) {
+        Boolean andResult_1 = false;
+
         Boolean forAllExpResult_1 = true;
         VDMSet set_3 = MapUtil.dom(Utils.clone(sch));
 
@@ -137,35 +139,41 @@ public class Plant {
             forAllExpResult_1 = !(((VDMSet) sch.get(p)).isEmpty());
         }
 
-        Boolean forAllExpResult_2 = true;
-        VDMSet set_4 = Utils.clone(as);
+        if (forAllExpResult_1) {
+            Boolean forAllExpResult_2 = true;
+            VDMSet set_4 = Utils.clone(as);
 
-        for (Iterator iterator_4 = set_4.iterator();
-                iterator_4.hasNext() && forAllExpResult_2;) {
-            Alarm a = ((Alarm) iterator_4.next());
-            Boolean forAllExpResult_3 = true;
-            VDMSet set_5 = MapUtil.dom(Utils.clone(sch));
+            for (Iterator iterator_4 = set_4.iterator();
+                    iterator_4.hasNext() && forAllExpResult_2;) {
+                Alarm a = ((Alarm) iterator_4.next());
+                Boolean forAllExpResult_3 = true;
+                VDMSet set_5 = MapUtil.dom(Utils.clone(sch));
 
-            for (Iterator iterator_5 = set_5.iterator();
-                    iterator_5.hasNext() && forAllExpResult_3;) {
-                Token p = ((Token) iterator_5.next());
-                Boolean existsExpResult_1 = false;
-                VDMSet set_6 = Utils.clone(((VDMSet) sch.get(p)));
+                for (Iterator iterator_5 = set_5.iterator();
+                        iterator_5.hasNext() && forAllExpResult_3;) {
+                    Token p = ((Token) iterator_5.next());
+                    Boolean existsExpResult_1 = false;
+                    VDMSet set_6 = Utils.clone(((VDMSet) sch.get(p)));
 
-                for (Iterator iterator_6 = set_6.iterator();
-                        iterator_6.hasNext() && !(existsExpResult_1);) {
-                    Expert expert = ((Expert) iterator_6.next());
-                    existsExpResult_1 = expert.GetQuali()
-                                              .contains(a.GetReqQuali());
+                    for (Iterator iterator_6 = set_6.iterator();
+                            iterator_6.hasNext() && !(existsExpResult_1);) {
+                        Expert expert = ((Expert) iterator_6.next());
+                        existsExpResult_1 = expert.GetQuali()
+                                                  .contains(a.GetReqQuali());
+                    }
+
+                    forAllExpResult_3 = existsExpResult_1;
                 }
 
-                forAllExpResult_3 = existsExpResult_1;
+                forAllExpResult_2 = forAllExpResult_3;
             }
 
-            forAllExpResult_2 = forAllExpResult_3;
+            if (forAllExpResult_2) {
+                andResult_1 = true;
+            }
         }
 
-        return forAllExpResult_1 && forAllExpResult_2;
+        return andResult_1;
     }
 }
 

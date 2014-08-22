@@ -28,15 +28,15 @@ public class Entry {
                         iterator_3.hasNext() && !(success_1);) {
                     z = ((Number) iterator_3.next());
 
-                    Boolean andResult = false;
+                    Boolean andResult_1 = false;
 
                     if (x.longValue() < y.longValue()) {
                         if (y.longValue() < z.longValue()) {
-                            andResult = true;
+                            andResult_1 = true;
                         }
                     }
 
-                    success_1 = andResult;
+                    success_1 = andResult_1;
                 }
             }
         }

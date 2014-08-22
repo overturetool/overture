@@ -87,11 +87,17 @@ public class Account {
     public Boolean Withdrawal(final Number cardId, final Number amount,
         final VDMSeq date) {
         Transaction transaction = new Transaction(date, cardId, amount);
+        Boolean andResult_1 = false;
 
-        if (((balance.longValue() - amount.longValue()) >= 0L) &&
-                (DateTotal(date,
-                    SeqUtil.conc(transactions, SeqUtil.seq(transaction)))
-                         .longValue() <= dailyLimit.longValue())) {
+        if ((balance.longValue() - amount.longValue()) >= 0L) {
+            if (DateTotal(date,
+                        SeqUtil.conc(transactions, SeqUtil.seq(transaction)))
+                        .longValue() <= dailyLimit.longValue()) {
+                andResult_1 = true;
+            }
+        }
+
+        if (andResult_1) {
             balance = balance.longValue() - amount.longValue();
             transactions = SeqUtil.conc(transactions, SeqUtil.seq(transaction));
 
@@ -325,9 +331,24 @@ public class CentralResource {
     }
 
     public Boolean IsLegalCard(final Number accountId, final Number cardId) {
-        return !(illegalCards.contains(cardId)) &&
-        MapUtil.dom(accounts).contains(accountId) &&
-        ((Account) accounts.get(accountId)).GetCardIds().contains(cardId);
+        Boolean andResult_2 = false;
+
+        if (!(illegalCards.contains(cardId))) {
+            Boolean andResult_3 = false;
+
+            if (MapUtil.dom(accounts).contains(accountId)) {
+                if (((Account) accounts.get(accountId)).GetCardIds()
+                         .contains(cardId)) {
+                    andResult_3 = true;
+                }
+            }
+
+            if (andResult_3) {
+                andResult_2 = true;
+            }
+        }
+
+        return andResult_2;
     }
 
     public Boolean NumberOfTriesExceeded(final Number cardId) {
@@ -467,7 +488,15 @@ public class Till {
         Number cardId = curCard.GetCardId();
         Boolean codeOk = curCard.GetCode().longValue() == Encode(pin).longValue();
         Boolean cardLegal = IsLegalCard();
-        cardOk = codeOk && cardLegal;
+        Boolean andResult_4 = false;
+
+        if (codeOk) {
+            if (cardLegal) {
+                andResult_4 = true;
+            }
+        }
+
+        cardOk = andResult_4;
 
         if (!(cardLegal)) {
             retainedCards = SetUtil.union(retainedCards, SetUtil.set(curCard));
@@ -520,7 +549,15 @@ public class Till {
     }
 
     public Boolean CardValidated() {
-        return (curCard != null) && cardOk;
+        Boolean andResult_5 = false;
+
+        if (curCard != null) {
+            if (cardOk) {
+                andResult_5 = true;
+            }
+        }
+
+        return andResult_5;
     }
 
     public Boolean CardInside() {
