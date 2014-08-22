@@ -86,6 +86,7 @@ import org.overture.ast.expressions.AStarStarBinaryExp;
 import org.overture.ast.expressions.ASubsetBinaryExp;
 import org.overture.ast.expressions.ASubtractNumericBinaryExp;
 import org.overture.ast.expressions.ATailUnaryExp;
+import org.overture.ast.expressions.ATimeExp;
 import org.overture.ast.expressions.ATimesNumericBinaryExp;
 import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.AVariableExp;
@@ -1497,13 +1498,19 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		return sb.toString();
 	}
 	
-//	@Override
-//	public String caseAHistoryExp(AHistoryExp node, IndentTracker question)
-//			throws AnalysisException
-//	{
-//		System.out.print(node.getHop());
-//		return null;
-//	}
+	
+	
+	@Override
+	public String caseAHistoryExp(AHistoryExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		String exp = node.getHop().apply(THIS, question);
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(exp);
+		return sb.toString();
+		
+	}
 	
 	@Override
 	public String caseACharLiteralExp(ACharLiteralExp node,
@@ -1545,6 +1552,13 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	
 	@Override
 	public String caseACharBasicType(ACharBasicType node, IndentTracker question)
+			throws AnalysisException
+	{
+		return node.getDefinitions().toString();
+	}
+	
+	@Override
+	public String caseATimeExp(ATimeExp node, IndentTracker question)
 			throws AnalysisException
 	{
 		return node.toString();
