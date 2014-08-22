@@ -16,7 +16,6 @@
   <name>Overture Maven tool plugins</name>
 
   <modules>
-    <!--module>vdmt</module-->
     <module>overturetemplategen</module>
     <!--module>packworkspace</module-->
   </modules>
