@@ -50,6 +50,7 @@ import org.overture.codegen.cgast.expressions.ALetDefExpCG;
 import org.overture.codegen.cgast.expressions.AMapletExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
+import org.overture.codegen.cgast.expressions.SBoolBinaryExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
@@ -118,7 +119,6 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		// }
 		//
 		SStmCG enclosingStm = transformationAssistant.getEnclosingStm(node, "and expression");
-		
 		// First condition: The enclosing statement can be 'null' if we only try to code generate an expression rather than
 		// a complete specification.
 		//
@@ -126,38 +126,8 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		// such as when it appears in the condition of a while expression. This case needs special treatment.
 		if(enclosingStm != null && !transformationAssistant.getInfo().getExpAssistant().isLoopCondition(node))
 		{
-			SExpCG left = node.getLeft().clone();
-			SExpCG right = node.getRight().clone();
-			
-			String andResult = info.getTempVarNameGen().nextVarName(andExpPrefix);
-			AVarLocalDeclCG andResultDecl = transformationAssistant.consBoolVarDecl(andResult, false);
-			
-			AIfStmCG leftCheck = new AIfStmCG();
-			leftCheck.setIfExp(left);
-			
-			AIfStmCG rightCheck = new AIfStmCG();
-			rightCheck.setIfExp(right);
-			
-			ALocalAssignmentStmCG assignAndVar = new ALocalAssignmentStmCG();
-			assignAndVar.setTarget(transformationAssistant.consBoolCheck(andResult, false));
-			assignAndVar.setExp(info.getAssistantManager().getExpAssistant().consBoolLiteral(true));
-			rightCheck.setThenStm(assignAndVar);
-			
-			leftCheck.setThenStm(rightCheck);
-			
-			ABlockStmCG declBlock = new ABlockStmCG();
-			declBlock.getLocalDefs().add(andResultDecl);
-			
-			ABlockStmCG replacementBlock = new ABlockStmCG();
-
-			transformationAssistant.replaceNodeWith(enclosingStm, replacementBlock);
-			transformationAssistant.replaceNodeWith(node, transformationAssistant.consBoolCheck(andResult, false));
-			
-			replacementBlock.getStatements().add(declBlock);
-			replacementBlock.getStatements().add(leftCheck);
-			replacementBlock.getStatements().add(enclosingStm);
-			
-			replacementBlock.apply(this);
+			String resultName = info.getTempVarNameGen().nextVarName(andExpPrefix);
+			handleLogicExp(node, enclosingStm, consAndExpCheck(node, resultName), resultName);
 		}
 		else
 		{
@@ -165,6 +135,48 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 			node.getRight().apply(this);
 			node.getType().apply(this);
 		}
+	}
+
+	private void handleLogicExp(SBoolBinaryExpCG node, SStmCG enclosingStm, SStmCG checkBlock, String resultName)
+			throws AnalysisException
+	{
+		AVarLocalDeclCG andResultDecl = transformationAssistant.consBoolVarDecl(resultName, false);
+		
+		ABlockStmCG declBlock = new ABlockStmCG();
+		declBlock.getLocalDefs().add(andResultDecl);
+		
+		ABlockStmCG replacementBlock = new ABlockStmCG();
+
+		transformationAssistant.replaceNodeWith(enclosingStm, replacementBlock);
+		transformationAssistant.replaceNodeWith(node, transformationAssistant.consBoolCheck(resultName, false));
+		
+		replacementBlock.getStatements().add(declBlock);
+		replacementBlock.getStatements().add(checkBlock);
+		replacementBlock.getStatements().add(enclosingStm);
+		
+		replacementBlock.apply(this);
+	}
+
+	private AIfStmCG consAndExpCheck(AAndBoolBinaryExpCG node, String andResult)
+	{
+		SExpCG left = node.getLeft().clone();
+		SExpCG right = node.getRight().clone();
+		
+		AIfStmCG leftCheck = new AIfStmCG();
+		leftCheck.setIfExp(left);
+		
+		AIfStmCG rightCheck = new AIfStmCG();
+		rightCheck.setIfExp(right);
+		
+		ALocalAssignmentStmCG assignAndVar = new ALocalAssignmentStmCG();
+		assignAndVar.setTarget(transformationAssistant.consBoolCheck(andResult, false));
+		assignAndVar.setExp(info.getAssistantManager().getExpAssistant().consBoolLiteral(true));
+		
+		rightCheck.setThenStm(assignAndVar);
+		
+		leftCheck.setThenStm(rightCheck);
+		
+		return leftCheck;
 	}
 
 	@Override
