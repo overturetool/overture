@@ -49,6 +49,7 @@ import org.overture.codegen.cgast.expressions.ALetBeStExpCG;
 import org.overture.codegen.cgast.expressions.ALetDefExpCG;
 import org.overture.codegen.cgast.expressions.AMapletExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
+import org.overture.codegen.cgast.expressions.AOrBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
 import org.overture.codegen.cgast.expressions.SBoolBinaryExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
@@ -86,20 +87,54 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	private ILanguageIterator langIterator;
 
 	private String casesExpResultPrefix;
-
 	private String andExpPrefix;
+	private String orExpPrefix;
 
 	public TransformationVisitor(IRInfo info, TempVarPrefixes varPrefixes,
 			TransformationAssistantCG transformationAssistant,
-			ILanguageIterator langIterator, String casesExpPrefix, String andExpPrefix)
+			ILanguageIterator langIterator, String casesExpPrefix, String andExpPrefix, String orExpPrefix)
 	{
 		this.info = info;
 		this.transformationAssistant = transformationAssistant;
 		this.langIterator = langIterator;
 		this.casesExpResultPrefix = casesExpPrefix;
 		this.andExpPrefix = andExpPrefix;
+		this.orExpPrefix = orExpPrefix;
 	}
 	
+	@Override
+	public void caseAOrBoolBinaryExpCG(AOrBoolBinaryExpCG node)
+			throws AnalysisException
+	{
+		// left || right 
+		//
+		// is replaced with a variable expression 'orResult' that is
+		// computed as:
+		//
+		// boolean orResult = false;
+		// if (left) 
+		// {
+		//	  orResult = true;
+		// }
+		// else
+		// {
+		//    orResult = right;
+		// }
+		//
+		
+		SStmCG enclosingStm = transformationAssistant.getEnclosingStm(node, "or expression");
+		
+		if(transformBoolBinaryExp(node, enclosingStm))
+		{
+			String resultName = info.getTempVarNameGen().nextVarName(orExpPrefix);
+			handleLogicExp(node, enclosingStm, consOrExpCheck(node, resultName), resultName);
+		}
+		else
+		{
+			visitBoolBinary(node);
+		}
+	}
+
 	@Override
 	public void caseAAndBoolBinaryExpCG(AAndBoolBinaryExpCG node)
 			throws AnalysisException
@@ -117,66 +152,18 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		//       andResult = true;
 		//    }
 		// }
-		//
+		
 		SStmCG enclosingStm = transformationAssistant.getEnclosingStm(node, "and expression");
-		// First condition: The enclosing statement can be 'null' if we only try to code generate an expression rather than
-		// a complete specification.
-		//
-		// Second condition: FIXME: The semantics will be broken if the 'and' expression is evaluated repeatedly
-		// such as when it appears in the condition of a while expression. This case needs special treatment.
-		if(enclosingStm != null && !transformationAssistant.getInfo().getExpAssistant().isLoopCondition(node))
+
+		if(transformBoolBinaryExp(node, enclosingStm))
 		{
 			String resultName = info.getTempVarNameGen().nextVarName(andExpPrefix);
 			handleLogicExp(node, enclosingStm, consAndExpCheck(node, resultName), resultName);
 		}
 		else
 		{
-			node.getLeft().apply(this);
-			node.getRight().apply(this);
-			node.getType().apply(this);
+			visitBoolBinary(node);
 		}
-	}
-
-	private void handleLogicExp(SBoolBinaryExpCG node, SStmCG enclosingStm, SStmCG checkBlock, String resultName)
-			throws AnalysisException
-	{
-		AVarLocalDeclCG andResultDecl = transformationAssistant.consBoolVarDecl(resultName, false);
-		
-		ABlockStmCG declBlock = new ABlockStmCG();
-		declBlock.getLocalDefs().add(andResultDecl);
-		
-		ABlockStmCG replacementBlock = new ABlockStmCG();
-
-		transformationAssistant.replaceNodeWith(enclosingStm, replacementBlock);
-		transformationAssistant.replaceNodeWith(node, transformationAssistant.consBoolCheck(resultName, false));
-		
-		replacementBlock.getStatements().add(declBlock);
-		replacementBlock.getStatements().add(checkBlock);
-		replacementBlock.getStatements().add(enclosingStm);
-		
-		replacementBlock.apply(this);
-	}
-
-	private AIfStmCG consAndExpCheck(AAndBoolBinaryExpCG node, String andResult)
-	{
-		SExpCG left = node.getLeft().clone();
-		SExpCG right = node.getRight().clone();
-		
-		AIfStmCG leftCheck = new AIfStmCG();
-		leftCheck.setIfExp(left);
-		
-		AIfStmCG rightCheck = new AIfStmCG();
-		rightCheck.setIfExp(right);
-		
-		ALocalAssignmentStmCG assignAndVar = new ALocalAssignmentStmCG();
-		assignAndVar.setTarget(transformationAssistant.consBoolCheck(andResult, false));
-		assignAndVar.setExp(info.getAssistantManager().getExpAssistant().consBoolLiteral(true));
-		
-		rightCheck.setThenStm(assignAndVar);
-		
-		leftCheck.setThenStm(rightCheck);
-		
-		return leftCheck;
 	}
 
 	@Override
@@ -560,5 +547,88 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		transform(enclosingStm, block, resultVar, node);
 
 		casesStm.apply(this);
+	}
+
+	private AIfStmCG consAndExpCheck(AAndBoolBinaryExpCG node, String andResultVarName)
+	{
+		SExpCG left = node.getLeft().clone();
+		SExpCG right = node.getRight().clone();
+		
+		AIfStmCG leftCheck = new AIfStmCG();
+		leftCheck.setIfExp(left);
+		
+		AIfStmCG rightCheck = new AIfStmCG();
+		rightCheck.setIfExp(right);
+		
+		ALocalAssignmentStmCG assignAndVar = new ALocalAssignmentStmCG();
+		assignAndVar.setTarget(transformationAssistant.consBoolCheck(andResultVarName, false));
+		assignAndVar.setExp(info.getAssistantManager().getExpAssistant().consBoolLiteral(true));
+		
+		rightCheck.setThenStm(assignAndVar);
+		
+		leftCheck.setThenStm(rightCheck);
+		
+		return leftCheck;
+	}
+	
+	private SStmCG consOrExpCheck(AOrBoolBinaryExpCG node, String orResultVarName)
+	{
+		SExpCG left = node.getLeft().clone();
+		SExpCG right = node.getRight().clone();
+		
+		AIfStmCG leftCheck = new AIfStmCG();
+		leftCheck.setIfExp(left);
+		
+		ALocalAssignmentStmCG setOrResultVarTrue = new ALocalAssignmentStmCG();
+		setOrResultVarTrue.setTarget(transformationAssistant.consBoolCheck(orResultVarName, false));
+		setOrResultVarTrue.setExp(info.getAssistantManager().getExpAssistant().consBoolLiteral(true));
+		
+		leftCheck.setThenStm(setOrResultVarTrue);
+
+		ALocalAssignmentStmCG setOrResultVarToRightExp = new ALocalAssignmentStmCG();
+		setOrResultVarToRightExp.setTarget(transformationAssistant.consBoolCheck(orResultVarName, false));
+		setOrResultVarToRightExp.setExp(right);
+		
+		leftCheck.setElseStm(setOrResultVarToRightExp);
+		
+		return leftCheck;
+	}
+	
+	private boolean transformBoolBinaryExp(SBoolBinaryExpCG node, SStmCG enclosingStm)
+	{
+		// First condition: The enclosing statement can be 'null' if we only try to code generate an expression rather than
+		// a complete specification.
+		//
+		// Second condition: FIXME: The semantics will be broken if the 'or' or 'and' expression is evaluated repeatedly
+		// such as when it appears in the condition of a while expression. This case needs special treatment.
+		
+		return enclosingStm != null && !transformationAssistant.getInfo().getExpAssistant().isLoopCondition(node);
+	}
+
+	private void visitBoolBinary(SBoolBinaryExpCG node) throws AnalysisException
+	{
+		node.getLeft().apply(this);
+		node.getRight().apply(this);
+		node.getType().apply(this);
+	}
+
+	private void handleLogicExp(SBoolBinaryExpCG node, SStmCG enclosingStm, SStmCG checkBlock, String resultName)
+			throws AnalysisException
+	{
+		AVarLocalDeclCG andResultDecl = transformationAssistant.consBoolVarDecl(resultName, false);
+		
+		ABlockStmCG declBlock = new ABlockStmCG();
+		declBlock.getLocalDefs().add(andResultDecl);
+		
+		ABlockStmCG replacementBlock = new ABlockStmCG();
+
+		transformationAssistant.replaceNodeWith(enclosingStm, replacementBlock);
+		transformationAssistant.replaceNodeWith(node, transformationAssistant.consBoolCheck(resultName, false));
+		
+		replacementBlock.getStatements().add(declBlock);
+		replacementBlock.getStatements().add(checkBlock);
+		replacementBlock.getStatements().add(enclosingStm);
+		
+		replacementBlock.apply(this);
 	}
 }
