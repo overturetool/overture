@@ -122,7 +122,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		// }
 		//
 		
-		SStmCG enclosingStm = transformationAssistant.getEnclosingStm(node, "or expression");
+		SStmCG enclosingStm = transformationAssistant.findEnclosingStm(node);
 		
 		if(transformBoolBinaryExp(node, enclosingStm))
 		{
@@ -153,7 +153,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		//    }
 		// }
 		
-		SStmCG enclosingStm = transformationAssistant.getEnclosingStm(node, "and expression");
+		SStmCG enclosingStm = transformationAssistant.findEnclosingStm(node);
 
 		if(transformBoolBinaryExp(node, enclosingStm))
 		{
