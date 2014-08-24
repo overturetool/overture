@@ -1,0 +1,23 @@
+class Entry
+
+instance variables
+
+n : nat := 0;
+
+operations
+
+public inc : () ==> bool
+inc () ==
+(
+	n := n + 1;
+	return true;
+);
+
+public static Run : () ==> ?
+Run () ==
+let e = new Entry(),
+		b = (exists1 x in set {1,2,3} & e.inc() ) or (exists1 x in set {4,5,6} & e.inc()) or (forall x in set {1,2,3,4} & e.inc())
+in
+	return mk_(b,e.n);
+
+end Entry
