@@ -653,9 +653,6 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	{
 		// First condition: The enclosing statement can be 'null' if we only try to code generate an expression rather than
 		// a complete specification.
-		//
-		// Second condition: FIXME: The semantics will be broken if the 'or' or 'and' expression is evaluated repeatedly
-		// such as when it appears in the condition of a while expression. This case needs special treatment.
 		
 		return enclosingStm != null && !transformationAssistant.getInfo().getExpAssistant().isLoopCondition(node);
 	}
