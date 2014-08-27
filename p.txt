@@ -1,0 +1,808 @@
+updateRowStatus id: mk_token("h1arc1f")
+updateRowStatus dualId: mk_token("h1arc1b")
+updateRowStatus id: mk_token("h1arc3f")
+updateRowStatus dualId: mk_token("h1arc3b")
+updateRowStatus id: mk_token("h1arc5f")
+updateRowStatus dualId: mk_token("h1arc5b")
+updateRowStatus id: mk_token("h1arc7f")
+updateRowStatus dualId: mk_token("h1arc7b")
+updateRowStatus id: mk_token("h1arc8f")
+updateRowStatus dualId: mk_token("h1arc8b")
+updateRowStatus id: mk_token("h1arc9f")
+updateRowStatus dualId: mk_token("h1arc9b")
+updateRowStatus id: mk_token("r3arc1f")
+updateRowStatus dualId: mk_token("r3arc1b")
+ServicePos: Position{#217, inRow:=mk_token("h1arc3b"), c:=64, epsilon=1.0E-4, progress:=0.5086144028956749}**Moving vehicle mk_token("v1") to mk_token("g1arc1f") elapse: 0**
+updateRowStatus id: mk_token("g1arc1f")
+updateRowStatus dualId: mk_token("g1arc1b")
+Current route: 19 Remove: mk_token("g1arc1f") mk_token("g1arc1fc1ff")
+--- Counter: 0---
+Time: 0
+mk_token("v1")-><harvesting>-mk_token("g1arc1fc1ff"), progess: 0
+mk_token("v3")-><unloaded>-mk_token("g1arc1f"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("g1arc1fc1ff") elapse: 0**
+**Moving vehicle mk_token("v3") to mk_token("g1arc1f") elapse: 0**
+updateRowStatus id: mk_token("g1arc1f")
+updateRowStatus dualId: mk_token("g1arc1b")
+Current route: 14 Remove: mk_token("g1arc1f") mk_token("g1arc1fc2ff")
+--- Counter: 1---
+Time: 0
+mk_token("v1")-><harvesting>-mk_token("g1arc1fc1ff"), progess: 0
+mk_token("v3")-><unloaded>-mk_token("g1arc1fc2ff"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("g1arc1fc1ff") elapse: 2.2395625**
+**Moving vehicle mk_token("v3") to mk_token("g1arc1fc2ff") elapse: 2.2395625**
+updateRowStatus id: mk_token("g1arc1fc1ff")
+updateRowStatus dualId: mk_token("g1arc1fc1fb")
+Current route: 18 Remove: mk_token("g1arc1fc1ff") mk_token("h1arc9f")
+--- Counter: 2---
+Time: 2.2395625
+mk_token("v1")-><harvesting>-mk_token("h1arc9f"), progess: 0
+mk_token("v3")-><unloaded>-mk_token("g1arc1fc2ff"), progess: 0.9370815782867025
+**Moving vehicle mk_token("v1") to mk_token("h1arc9f") elapse: 0.15037083333333356**
+**Moving vehicle mk_token("v3") to mk_token("g1arc1fc2ff") elapse: 0.15037083333333356**
+updateRowStatus id: mk_token("g1arc1fc2ff")
+updateRowStatus dualId: mk_token("g1arc1fc2fb")
+Current route: 13 Remove: mk_token("g1arc1fc2ff") mk_token("h1arc7b")
+--- Counter: 3---
+Time: 2.3899333333333335
+mk_token("v1")-><harvesting>-mk_token("h1arc9f"), progess: 0.013874815283935003
+mk_token("v3")-><unloaded>-mk_token("h1arc7b"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("h1arc9f") elapse: 10.687310984848484**
+updateRowStatus id: mk_token("h1arc9f")
+updateRowStatus dualId: mk_token("h1arc9b")
+Current route: 17 Remove: mk_token("h1arc9f") mk_token("h1arc1bc1fb")
+--- Counter: 4---
+Time: 13.077244318181817
+mk_token("v1")-><harvesting>-mk_token("h1arc1bc1fb"), progess: 0
+mk_token("v3")-><unloaded>-mk_token("h1arc7b"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("h1arc1bc1fb") elapse: 0.9033437499999999**
+updateRowStatus id: mk_token("h1arc1bc1fb")
+updateRowStatus dualId: mk_token("h1arc1bc1ff")
+Current route: 16 Remove: mk_token("h1arc1bc1fb") mk_token("h1arc1f")
+--- Counter: 5---
+Time: 13.980588068181817
+mk_token("v1")-><harvesting>-mk_token("h1arc1f"), progess: 0
+mk_token("v3")-><unloaded>-mk_token("h1arc7b"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("h1arc1f") elapse: 19.041818181818183**
+updateRowStatus id: mk_token("h1arc1f")
+updateRowStatus dualId: mk_token("h1arc1b")
+Current route: 15 Remove: mk_token("h1arc1f") mk_token("h1arc3bc1fb")
+--- Counter: 6---
+Time: 33.02240625
+mk_token("v1")-><harvesting>-mk_token("h1arc3bc1fb"), progess: 0
+mk_token("v3")-><unloaded>-mk_token("h1arc7b"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("h1arc3bc1fb") elapse: 1.0905624999999999**
+updateRowStatus id: mk_token("h1arc3bc1fb")
+updateRowStatus dualId: mk_token("h1arc3bc1ff")
+Current route: 14 Remove: mk_token("h1arc3bc1fb") mk_token("h1arc3f")
+--- Counter: 7---
+Time: 34.11296875
+mk_token("v1")-><harvesting>-mk_token("h1arc3f"), progess: 0
+mk_token("v3")-><unloaded>-mk_token("h1arc7b"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("h1arc3f") elapse: 33.61090909090909**
+updateRowStatus id: mk_token("h1arc3f")
+updateRowStatus dualId: mk_token("h1arc3b")
+Current route: 13 Remove: mk_token("h1arc3f") mk_token("h1arc5bc1fb")
+--- Counter: 8---
+Time: 67.7238778409091
+mk_token("v1")-><harvesting>-mk_token("h1arc5bc1fb"), progess: 0
+mk_token("v3")-><unloaded>-mk_token("h1arc7b"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("h1arc5bc1fb") elapse: 0.6970624999999999**
+updateRowStatus id: mk_token("h1arc5bc1fb")
+updateRowStatus dualId: mk_token("h1arc5bc1ff")
+Current route: 12 Remove: mk_token("h1arc5bc1fb") mk_token("h1arc5f")
+--- Counter: 9---
+Time: 68.4209403409091
+mk_token("v1")-><harvesting>-mk_token("h1arc5f"), progess: 0
+mk_token("v3")-><unloaded>-mk_token("h1arc7b"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("h1arc5f") elapse: 18.790818181818178**
+updateRowStatus id: mk_token("h1arc5f")
+updateRowStatus dualId: mk_token("h1arc5b")
+Current route: 11 Remove: mk_token("h1arc5f") mk_token("h1arc7bc1fb")
+--- Counter: 10---
+Time: 87.21175852272728
+mk_token("v1")-><harvesting>-mk_token("h1arc7bc1fb"), progess: 0
+mk_token("v3")-><unloaded>-mk_token("h1arc7b"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("h1arc7bc1fb") elapse: 1.236**
+updateRowStatus id: mk_token("h1arc7bc1fb")
+updateRowStatus dualId: mk_token("h1arc7bc1ff")
+Current route: 10 Remove: mk_token("h1arc7bc1fb") mk_token("h1arc7f")
+--- Counter: 11---
+Time: 88.44775852272728
+mk_token("v1")-><harvesting>-mk_token("h1arc7f"), progess: 0
+mk_token("v3")-><unloaded>-mk_token("h1arc7b"), progess: 0
+Reroute dual row: mk_token("h1arc7f")
+**Moving vehicle mk_token("v1") to mk_token("h1arc7f") elapse: 0.003171872222221873**
+**Moving vehicle mk_token("v3") to mk_token("h1arc7f") elapse: 0.003171872222221873**
+updateRowStatus id: mk_token("h1arc7f")
+updateRowStatus dualId: mk_token("h1arc7b")
+Current route: 17 Remove: mk_token("h1arc7f") mk_token("g1arc1fc2fb")
+--- Counter: 12---
+Time: 88.45093039494951
+mk_token("v1")-><harvesting>-mk_token("h1arc7f"), progess: 1.2222222222220877E-4
+mk_token("v3")-><unloaded>-mk_token("g1arc1fc2fb"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("h1arc7f") elapse: 2.3899333333333335**
+**Moving vehicle mk_token("v3") to mk_token("g1arc1fc2fb") elapse: 2.3899333333333335**
+updateRowStatus id: mk_token("g1arc1fc2fb")
+updateRowStatus dualId: mk_token("g1arc1fc2ff")
+Current route: 16 Remove: mk_token("g1arc1fc2fb") mk_token("g1arc1b")
+--- Counter: 13---
+Time: 90.84086372828284
+mk_token("v1")-><harvesting>-mk_token("h1arc7f"), progess: 0.13407372066542467
+mk_token("v3")-><unloaded>-mk_token("g1arc1b"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("h1arc7f") elapse: 0**
+**Moving vehicle mk_token("v3") to mk_token("g1arc1b") elapse: 0**
+updateRowStatus id: mk_token("g1arc1b")
+updateRowStatus dualId: mk_token("g1arc1f")
+Current route: 15 Remove: mk_token("g1arc1b") mk_token("g1arc1f")
+--- Counter: 14---
+Time: 90.84086372828284
+mk_token("v1")-><harvesting>-mk_token("h1arc7f"), progess: 0.13407372066542467
+mk_token("v3")-><unloaded>-mk_token("g1arc1f"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("h1arc7f") elapse: 0**
+**Moving vehicle mk_token("v3") to mk_token("g1arc1f") elapse: 0**
+updateRowStatus id: mk_token("g1arc1f")
+updateRowStatus dualId: mk_token("g1arc1b")
+Current route: 14 Remove: mk_token("g1arc1f") mk_token("g1arc1fc2ff")
+--- Counter: 15---
+Time: 90.84086372828284
+mk_token("v1")-><harvesting>-mk_token("h1arc7f"), progess: 0.13407372066542467
+mk_token("v3")-><unloaded>-mk_token("g1arc1fc2ff"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("h1arc7f") elapse: 2.3899333333333335**
+**Moving vehicle mk_token("v3") to mk_token("g1arc1fc2ff") elapse: 2.3899333333333335**
+updateRowStatus id: mk_token("g1arc1fc2ff")
+updateRowStatus dualId: mk_token("g1arc1fc2fb")
+Current route: 13 Remove: mk_token("g1arc1fc2ff") mk_token("h1arc7b")
+--- Counter: 16---
+Time: 93.23079706161617
+mk_token("v1")-><harvesting>-mk_token("h1arc7f"), progess: 0.2680252191086271
+mk_token("v3")-><unloaded>-mk_token("h1arc7b"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("h1arc7f") elapse: 13.059733921180554**
+updateRowStatus id: mk_token("h1arc7f")
+updateRowStatus dualId: mk_token("h1arc7b")
+Current route: 9 Remove: mk_token("h1arc7f") mk_token("h1arc8bc1fb")
+--- Counter: 17---
+Time: 106.29053098279672
+mk_token("v1")-><harvesting>-mk_token("h1arc8bc1fb"), progess: 0
+mk_token("v3")-><unloaded>-mk_token("h1arc7b"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("h1arc8bc1fb") elapse: 0**
+**Moving vehicle mk_token("v3") to mk_token("h1arc7b") elapse: 0**
+updateRowStatus id: mk_token("h1arc8bc1fb")
+updateRowStatus dualId: mk_token("h1arc8bc1ff")
+Current route: 8 Remove: mk_token("h1arc8bc1fb") mk_token("h1arc8f")
+--- Counter: 18---
+Time: 106.29053098279672
+mk_token("v1")-><harvesting>-mk_token("h1arc8f"), progess: 0
+mk_token("v3")-><unloaded>-mk_token("h1arc7b"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("h1arc8f") elapse: 1.8348181818181817**
+**Moving vehicle mk_token("v3") to mk_token("h1arc7b") elapse: 1.8348181818181817**
+updateRowStatus id: mk_token("h1arc8f")
+updateRowStatus dualId: mk_token("h1arc8b")
+Current route: 7 Remove: mk_token("h1arc8f") mk_token("h1arc9bc1fb")
+--- Counter: 19---
+Time: 108.1253491646149
+mk_token("v1")-><harvesting>-mk_token("h1arc9bc1fb"), progess: 0
+mk_token("v3")-><unloaded>-mk_token("h1arc7b"), progess: 0.09641089201531071
+**Moving vehicle mk_token("v1") to mk_token("h1arc9bc1fb") elapse: 0**
+**Moving vehicle mk_token("v3") to mk_token("h1arc7b") elapse: 0**
+updateRowStatus id: mk_token("h1arc9bc1fb")
+updateRowStatus dualId: mk_token("h1arc9bc1ff")
+Current route: 6 Remove: mk_token("h1arc9bc1fb") mk_token("h1arc9f")
+--- Counter: 20---
+Time: 108.1253491646149
+mk_token("v1")-><harvesting>-mk_token("h1arc9f"), progess: 0
+mk_token("v3")-><unloaded>-mk_token("h1arc7b"), progess: 0.09641089201531071
+**Moving vehicle mk_token("v1") to mk_token("h1arc9f") elapse: 7.45090625**
+**Moving vehicle mk_token("v3") to mk_token("h1arc7b") elapse: 7.45090625**
+updateRowStatus id: mk_token("h1arc9f")
+updateRowStatus dualId: mk_token("h1arc9b")
+Current route: 5 Remove: mk_token("h1arc9f") mk_token("h1arc1bc1fb")
+--- Counter: 21---
+Time: 115.5762554146149
+mk_token("v1")-><harvesting>-mk_token("h1arc1bc1fb"), progess: 0
+mk_token("v3")-><unloaded>-mk_token("h1arc7b"), progess: 0.48792026607934935
+**Moving vehicle mk_token("v1") to mk_token("h1arc1bc1fb") elapse: 0.9033437499999999**
+**Moving vehicle mk_token("v3") to mk_token("h1arc7b") elapse: 0.9033437499999999**
+updateRowStatus id: mk_token("h1arc1bc1fb")
+updateRowStatus dualId: mk_token("h1arc1bc1ff")
+Current route: 4 Remove: mk_token("h1arc1bc1fb") mk_token("h1arc1f")
+--- Counter: 22---
+Time: 116.47959916461491
+mk_token("v1")-><harvesting>-mk_token("h1arc1f"), progess: 0
+mk_token("v3")-><unloaded>-mk_token("h1arc7b"), progess: 0.5353866459075965
+**Moving vehicle mk_token("v1") to mk_token("h1arc1f") elapse: 8.842165151515152**
+**Moving vehicle mk_token("v3") to mk_token("h1arc7b") elapse: 8.842165151515152**
+updateRowStatus id: mk_token("h1arc7b")
+updateRowStatus dualId: mk_token("h1arc7f")
+Current route: 12 Remove: mk_token("h1arc7b") mk_token("h1arc7bc1ff")
+--- Counter: 23---
+Time: 125.32176431613006
+mk_token("v1")-><harvesting>-mk_token("h1arc1f"), progess: 0.6754255820884294
+mk_token("v3")-><unloaded>-mk_token("h1arc7bc1ff"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("h1arc1f") elapse: 0.4414947859848479**
+**Moving vehicle mk_token("v3") to mk_token("h1arc7bc1ff") elapse: 0.4414947859848479**
+updateRowStatus id: mk_token("h1arc1f")
+updateRowStatus dualId: mk_token("h1arc1b")
+Current route: 3 Remove: mk_token("h1arc1f") mk_token("r3arc1bc2fb")
+--- Counter: 24---
+Time: 125.7632591021149
+mk_token("v1")-><harvesting>-mk_token("r3arc1bc2fb"), progess: 0
+mk_token("v3")-><unloaded>-mk_token("h1arc7bc1ff"), progess: 0.3348716519909344
+**Moving vehicle mk_token("v1") to mk_token("r3arc1bc2fb") elapse: 0.8769052140151521**
+**Moving vehicle mk_token("v3") to mk_token("h1arc7bc1ff") elapse: 0.8769052140151521**
+updateRowStatus id: mk_token("h1arc7bc1ff")
+updateRowStatus dualId: mk_token("h1arc7bc1fb")
+Current route: 11 Remove: mk_token("h1arc7bc1ff") mk_token("h1arc5b")
+--- Counter: 25---
+Time: 126.64016431613005
+mk_token("v1")-><harvesting>-mk_token("r3arc1bc2fb"), progess: 0.456714032136275
+mk_token("v3")-><unloaded>-mk_token("h1arc5b"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("r3arc1bc2fb") elapse: 1.0431260359848475**
+**Moving vehicle mk_token("v3") to mk_token("h1arc5b") elapse: 1.0431260359848475**
+updateRowStatus id: mk_token("r3arc1bc2fb")
+updateRowStatus dualId: mk_token("r3arc1bc2ff")
+Current route: 2 Remove: mk_token("r3arc1bc2fb") mk_token("r3arc1f")
+--- Counter: 26---
+Time: 127.6832903521149
+mk_token("v1")-><harvesting>-mk_token("r3arc1f"), progess: 0
+mk_token("v3")-><unloaded>-mk_token("h1arc5b"), progess: 0.07569891745858816
+**Moving vehicle mk_token("v1") to mk_token("r3arc1f") elapse: 12.736807297348484**
+**Moving vehicle mk_token("v3") to mk_token("h1arc5b") elapse: 12.736807297348484**
+updateRowStatus id: mk_token("h1arc5b")
+updateRowStatus dualId: mk_token("h1arc5f")
+Current route: 10 Remove: mk_token("h1arc5b") mk_token("h1arc5bc1ff")
+--- Counter: 27---
+Time: 140.42009764946337
+mk_token("v1")-><harvesting>-mk_token("r3arc1f"), progess: 0.38616385420226823
+mk_token("v3")-><unloaded>-mk_token("h1arc5bc1ff"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("r3arc1f") elapse: 0.7435333333333333**
+**Moving vehicle mk_token("v3") to mk_token("h1arc5bc1ff") elapse: 0.7435333333333333**
+updateRowStatus id: mk_token("h1arc5bc1ff")
+updateRowStatus dualId: mk_token("h1arc5bc1fb")
+Current route: 9 Remove: mk_token("h1arc5bc1ff") mk_token("h1arc3b")
+--- Counter: 28---
+Time: 141.16363098279672
+mk_token("v1")-><harvesting>-mk_token("r3arc1f"), progess: 0.40870684249004996
+mk_token("v3")-><unloaded>-mk_token("h1arc3b"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("r3arc1f") elapse: 0.8697463231686481**
+**Moving vehicle mk_token("v3") to mk_token("h1arc3b") elapse: 0.8697463231686481**
+Nop..Current route: 1 Remove: mk_token("r3arc1f") mk_token("r3arc1f")
+--- Counter: 29---
+Time: 142.03337730596536
+mk_token("v1")-><waiting>-mk_token("r3arc1f"), progess: 0.43507644866309586
+mk_token("v3")-><unloaded>-mk_token("h1arc3b"), progess: 0.0352866895151188
+**Moving vehicle mk_token("v3") to mk_token("h1arc3b") elapse: 11.666581479403947**
+Nop..Current route: 8 Remove: mk_token("h1arc3b") mk_token("h1arc3b")
+--- Counter: 30---
+Time: 153.69995878536932
+mk_token("v1")-><waiting>-mk_token("r3arc1f"), progess: 0.43507644866309586
+mk_token("v3")-><waiting>-mk_token("h1arc3b"), progess: 0.5086144028956749
+updateRowStatus id: mk_token("r2arc1f")
+updateRowStatus dualId: mk_token("r2arc1b")
+ServicePos: Position{#267, inRow:=mk_token("r3arc1b"), epsilon=1.0E-4, c:=152, progress:=0.433337152424349}**Moving vehicle mk_token("v1") to mk_token("r3arc1f") elapse: 12.111672197427405**
+**Moving vehicle mk_token("v3") to mk_token("h1arc3b") elapse: 12.111672197427405**
+updateRowStatus id: mk_token("h1arc3b")
+updateRowStatus dualId: mk_token("h1arc3f")
+Current route: 22 Remove: mk_token("h1arc3b") mk_token("h1arc3bc1ff")
+--- Counter: 31---
+Time: 165.81163098279671
+mk_token("v1")-><harvesting>-mk_token("r3arc1f"), progess: 0.8022869989527817
+mk_token("v3")-><loaded>-mk_token("h1arc3bc1ff"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("r3arc1f") elapse: 1.1632666666666667**
+**Moving vehicle mk_token("v3") to mk_token("h1arc3bc1ff") elapse: 1.1632666666666667**
+updateRowStatus id: mk_token("h1arc3bc1ff")
+updateRowStatus dualId: mk_token("h1arc3bc1fb")
+Current route: 21 Remove: mk_token("h1arc3bc1ff") mk_token("h1arc1b")
+--- Counter: 32---
+Time: 166.97489764946337
+mk_token("v1")-><harvesting>-mk_token("r3arc1f"), progess: 0.8375557699232383
+mk_token("v3")-><loaded>-mk_token("h1arc1b"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("r3arc1f") elapse: 5.35788327296455**
+**Moving vehicle mk_token("v3") to mk_token("h1arc1b") elapse: 5.35788327296455**
+updateRowStatus id: mk_token("r3arc1f")
+updateRowStatus dualId: mk_token("r3arc1b")
+Current route: 9 Remove: mk_token("r3arc1f") mk_token("r3arc1fc2ff")
+--- Counter: 33---
+Time: 172.33278092242793
+mk_token("v1")-><harvesting>-mk_token("r3arc1fc2ff"), progess: 0
+mk_token("v3")-><loaded>-mk_token("h1arc1b"), progess: 0.3836925861475615
+**Moving vehicle mk_token("v1") to mk_token("r3arc1fc2ff") elapse: 1.4337499999999999**
+**Moving vehicle mk_token("v3") to mk_token("h1arc1b") elapse: 1.4337499999999999**
+updateRowStatus id: mk_token("r3arc1fc2ff")
+updateRowStatus dualId: mk_token("r3arc1fc2fb")
+Current route: 8 Remove: mk_token("r3arc1fc2ff") mk_token("h1arc5b")
+--- Counter: 34---
+Time: 173.76653092242793
+mk_token("v1")-><harvesting>-mk_token("h1arc5b"), progess: 0.78451
+mk_token("v3")-><loaded>-mk_token("h1arc1b"), progess: 0.48636732118050335
+**Moving vehicle mk_token("v1") to mk_token("h1arc5b") elapse: 2.7838479693749987**
+**Moving vehicle mk_token("v3") to mk_token("h1arc1b") elapse: 2.7838479693749987**
+updateRowStatus id: mk_token("h1arc5b")
+updateRowStatus dualId: mk_token("h1arc5f")
+Current route: 7 Remove: mk_token("h1arc5b") mk_token("h1arc5bc1ff")
+--- Counter: 35---
+Time: 176.55037889180292
+mk_token("v1")-><harvesting>-mk_token("h1arc5bc1ff"), progess: 0
+mk_token("v3")-><loaded>-mk_token("h1arc1b"), progess: 0.6857262419320787
+**Moving vehicle mk_token("v1") to mk_token("h1arc5bc1ff") elapse: 0.6970624999999999**
+**Moving vehicle mk_token("v3") to mk_token("h1arc1b") elapse: 0.6970624999999999**
+updateRowStatus id: mk_token("h1arc5bc1ff")
+updateRowStatus dualId: mk_token("h1arc5bc1fb")
+Current route: 6 Remove: mk_token("h1arc5bc1ff") mk_token("h1arc3b")
+--- Counter: 36---
+Time: 177.2474413918029
+mk_token("v1")-><harvesting>-mk_token("h1arc3b"), progess: 0
+mk_token("v3")-><loaded>-mk_token("h1arc1b"), progess: 0.7356447824648773
+**Moving vehicle mk_token("v1") to mk_token("h1arc3b") elapse: 3.6914562576604535**
+**Moving vehicle mk_token("v3") to mk_token("h1arc1b") elapse: 3.6914562576604535**
+updateRowStatus id: mk_token("h1arc1b")
+updateRowStatus dualId: mk_token("h1arc1f")
+Current route: 20 Remove: mk_token("h1arc1b") mk_token("h1arc1bc1ff")
+--- Counter: 37---
+Time: 180.93889764946337
+mk_token("v1")-><harvesting>-mk_token("h1arc3b"), progess: 0.15975143384877002
+mk_token("v3")-><loaded>-mk_token("h1arc1bc1ff"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("h1arc3b") elapse: 0.9635666666666666**
+**Moving vehicle mk_token("v3") to mk_token("h1arc1bc1ff") elapse: 0.9635666666666666**
+updateRowStatus id: mk_token("h1arc1bc1ff")
+updateRowStatus dualId: mk_token("h1arc1bc1fb")
+Current route: 19 Remove: mk_token("h1arc1bc1ff") mk_token("h1arc9b")
+--- Counter: 38---
+Time: 181.90246431613005
+mk_token("v1")-><harvesting>-mk_token("h1arc3b"), progess: 0.201450737826555
+mk_token("v3")-><loaded>-mk_token("h1arc9b"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("h1arc3b") elapse: 7.947633333333333**
+**Moving vehicle mk_token("v3") to mk_token("h1arc9b") elapse: 7.947633333333333**
+updateRowStatus id: mk_token("h1arc9b")
+updateRowStatus dualId: mk_token("h1arc9f")
+Current route: 18 Remove: mk_token("h1arc9b") mk_token("g1arc1fc1fb")
+--- Counter: 39---
+Time: 189.85009764946338
+mk_token("v1")-><harvesting>-mk_token("h1arc3b"), progess: 0.5453924594897956
+mk_token("v3")-><loaded>-mk_token("g1arc1fc1fb"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("h1arc3b") elapse: 2.3888666666666665**
+**Moving vehicle mk_token("v3") to mk_token("g1arc1fc1fb") elapse: 2.3888666666666665**
+updateRowStatus id: mk_token("g1arc1fc1fb")
+updateRowStatus dualId: mk_token("g1arc1fc1ff")
+Current route: 17 Remove: mk_token("g1arc1fc1fb") mk_token("g1arc1b")
+--- Counter: 40---
+Time: 192.23896431613005
+mk_token("v1")-><harvesting>-mk_token("h1arc3b"), progess: 0.6487730357817644
+mk_token("v3")-><loaded>-mk_token("g1arc1b"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("h1arc3b") elapse: 0**
+**Moving vehicle mk_token("v3") to mk_token("g1arc1b") elapse: 0**
+Nop..Current route: 16 Remove: mk_token("g1arc1b") mk_token("g1arc1b")
+--- Counter: 41---
+Time: 192.23896431613005
+mk_token("v1")-><harvesting>-mk_token("h1arc3b"), progess: 0.6487730357817644
+mk_token("v3")-><waiting>-mk_token("g1arc1b"), progess: 1
+Current route: 15 Remove: mk_token("g1arc1b") mk_token("g1arc1f")
+**Moving vehicle mk_token("v1") to mk_token("h1arc3b") elapse: 0**
+**Moving vehicle mk_token("v3") to mk_token("g1arc1f") elapse: 0**
+updateRowStatus id: mk_token("g1arc1f")
+updateRowStatus dualId: mk_token("g1arc1b")
+Current route: 14 Remove: mk_token("g1arc1f") mk_token("g1arc1fc2ff")
+--- Counter: 42---
+Time: 192.23896431613005
+mk_token("v1")-><harvesting>-mk_token("h1arc3b"), progess: 0.6487730357817644
+mk_token("v3")-><unloaded>-mk_token("g1arc1fc2ff"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("h1arc3b") elapse: 2.3899333333333335**
+**Moving vehicle mk_token("v3") to mk_token("g1arc1fc2ff") elapse: 2.3899333333333335**
+updateRowStatus id: mk_token("g1arc1fc2ff")
+updateRowStatus dualId: mk_token("g1arc1fc2fb")
+Current route: 13 Remove: mk_token("g1arc1fc2ff") mk_token("h1arc7b")
+--- Counter: 43---
+Time: 194.6288976494634
+mk_token("v1")-><harvesting>-mk_token("h1arc3b"), progess: 0.7521997731325524
+mk_token("v3")-><unloaded>-mk_token("h1arc7b"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("h1arc3b") elapse: 5.726043742339546**
+**Moving vehicle mk_token("v3") to mk_token("h1arc7b") elapse: 5.726043742339546**
+updateRowStatus id: mk_token("h1arc3b")
+updateRowStatus dualId: mk_token("h1arc3f")
+Current route: 5 Remove: mk_token("h1arc3b") mk_token("h1arc3bc1ff")
+--- Counter: 44---
+Time: 200.35494139180295
+mk_token("v1")-><harvesting>-mk_token("h1arc3bc1ff"), progess: 0
+mk_token("v3")-><unloaded>-mk_token("h1arc7b"), progess: 0.30087612515949463
+**Moving vehicle mk_token("v1") to mk_token("h1arc3bc1ff") elapse: 1.0905624999999999**
+**Moving vehicle mk_token("v3") to mk_token("h1arc7b") elapse: 1.0905624999999999**
+updateRowStatus id: mk_token("h1arc3bc1ff")
+updateRowStatus dualId: mk_token("h1arc3bc1fb")
+Current route: 4 Remove: mk_token("h1arc3bc1ff") mk_token("h1arc1b")
+--- Counter: 45---
+Time: 201.44550389180296
+mk_token("v1")-><harvesting>-mk_token("h1arc1b"), progess: 0
+mk_token("v3")-><unloaded>-mk_token("h1arc7b"), progess: 0.358179952026557
+**Moving vehicle mk_token("v1") to mk_token("h1arc1b") elapse: 6.3459834375**
+**Moving vehicle mk_token("v3") to mk_token("h1arc7b") elapse: 6.3459834375**
+updateRowStatus id: mk_token("h1arc1b")
+updateRowStatus dualId: mk_token("h1arc1f")
+Current route: 3 Remove: mk_token("h1arc1b") mk_token("r2arc1bc1fb")
+--- Counter: 46---
+Time: 207.79148732930295
+mk_token("v1")-><harvesting>-mk_token("r2arc1bc1fb"), progess: 0
+mk_token("v3")-><unloaded>-mk_token("h1arc7b"), progess: 0.6916309337022937
+**Moving vehicle mk_token("v1") to mk_token("r2arc1bc1fb") elapse: 1.92225**
+**Moving vehicle mk_token("v3") to mk_token("h1arc7b") elapse: 1.92225**
+updateRowStatus id: mk_token("r2arc1bc1fb")
+updateRowStatus dualId: mk_token("r2arc1bc1ff")
+Current route: 2 Remove: mk_token("r2arc1bc1fb") mk_token("r2arc1f")
+--- Counter: 47---
+Time: 209.71373732930294
+mk_token("v1")-><harvesting>-mk_token("r2arc1f"), progess: 0
+mk_token("v3")-><unloaded>-mk_token("h1arc7b"), progess: 0.7926359482660722
+**Moving vehicle mk_token("v1") to mk_token("r2arc1f") elapse: 3.9463936534937845**
+**Moving vehicle mk_token("v3") to mk_token("h1arc7b") elapse: 3.9463936534937845**
+updateRowStatus id: mk_token("h1arc7b")
+updateRowStatus dualId: mk_token("h1arc7f")
+Current route: 12 Remove: mk_token("h1arc7b") mk_token("h1arc7bc1ff")
+--- Counter: 48---
+Time: 213.66013098279672
+mk_token("v1")-><harvesting>-mk_token("r2arc1f"), progess: 0.11374397238416828
+mk_token("v3")-><unloaded>-mk_token("h1arc7bc1ff"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("r2arc1f") elapse: 1.3184**
+**Moving vehicle mk_token("v3") to mk_token("h1arc7bc1ff") elapse: 1.3184**
+updateRowStatus id: mk_token("h1arc7bc1ff")
+updateRowStatus dualId: mk_token("h1arc7bc1fb")
+Current route: 11 Remove: mk_token("h1arc7bc1ff") mk_token("h1arc5b")
+--- Counter: 49---
+Time: 214.9785309827967
+mk_token("v1")-><harvesting>-mk_token("r2arc1f"), progess: 0.1517432361065104
+mk_token("v3")-><unloaded>-mk_token("h1arc5b"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("r2arc1f") elapse: 9.325845482**
+**Moving vehicle mk_token("v3") to mk_token("h1arc5b") elapse: 9.325845482**
+updateRowStatus id: mk_token("h1arc5b")
+updateRowStatus dualId: mk_token("h1arc5f")
+Current route: 10 Remove: mk_token("h1arc5b") mk_token("r3arc1fc1fb")
+--- Counter: 50---
+Time: 224.30437646479672
+mk_token("v1")-><harvesting>-mk_token("r2arc1f"), progess: 0.42053515199268343
+mk_token("v3")-><unloaded>-mk_token("r3arc1fc1fb"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("r2arc1f") elapse: 1.5751333333333333**
+**Moving vehicle mk_token("v3") to mk_token("r3arc1fc1fb") elapse: 1.5751333333333333**
+updateRowStatus id: mk_token("r3arc1fc1fb")
+updateRowStatus dualId: mk_token("r3arc1fc1ff")
+Current route: 9 Remove: mk_token("r3arc1fc1fb") mk_token("r3arc1b")
+--- Counter: 51---
+Time: 225.87950979813004
+mk_token("v1")-><harvesting>-mk_token("r2arc1f"), progess: 0.46593404984704107
+mk_token("v3")-><unloaded>-mk_token("r3arc1b"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("r2arc1f") elapse: 1.5650412679189838**
+**Moving vehicle mk_token("v3") to mk_token("r3arc1b") elapse: 1.5650412679189838**
+Nop..Current route: 1 Remove: mk_token("r2arc1f") mk_token("r2arc1f")
+--- Counter: 52---
+Time: 227.44455106604903
+mk_token("v1")-><waiting>-mk_token("r2arc1f"), progess: 0.5110420715976495
+mk_token("v3")-><unloaded>-mk_token("r3arc1b"), progess: 0.06470463771535881
+**Moving vehicle mk_token("v3") to mk_token("r3arc1b") elapse: 8.916286661773208**
+Nop..Current route: 8 Remove: mk_token("r3arc1b") mk_token("r3arc1b")
+--- Counter: 53---
+Time: 236.36083772782223
+mk_token("v1")-><waiting>-mk_token("r2arc1f"), progess: 0.5110420715976495
+mk_token("v3")-><waiting>-mk_token("r3arc1b"), progess: 0.433337152424349
+updateRowStatus id: mk_token("r1arc1f")
+updateRowStatus dualId: mk_token("r1arc1b")
+ServicePos: Position{#304, inRow:=mk_token("r2arc1b"), epsilon=1.0E-4, c:=248, progress:=0.4132247657166751}**Moving vehicle mk_token("v1") to mk_token("r2arc1f") elapse: 13.706138736974472**
+**Moving vehicle mk_token("v3") to mk_token("r3arc1b") elapse: 13.706138736974472**
+updateRowStatus id: mk_token("r3arc1b")
+updateRowStatus dualId: mk_token("r3arc1f")
+Current route: 22 Remove: mk_token("r3arc1b") mk_token("r3arc1bc2ff")
+--- Counter: 54---
+Time: 250.0669764647967
+mk_token("v1")-><harvesting>-mk_token("r2arc1f"), progess: 0.9060839257248505
+mk_token("v3")-><loaded>-mk_token("r3arc1bc2ff"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("r2arc1f") elapse: 2.048033333333333**
+**Moving vehicle mk_token("v3") to mk_token("r3arc1bc2ff") elapse: 2.048033333333333**
+updateRowStatus id: mk_token("r3arc1bc2ff")
+updateRowStatus dualId: mk_token("r3arc1bc2fb")
+Current route: 21 Remove: mk_token("r3arc1bc2ff") mk_token("h1arc1b")
+--- Counter: 55---
+Time: 252.11500979813005
+mk_token("v1")-><harvesting>-mk_token("r2arc1f"), progess: 0.965112868948061
+mk_token("v3")-><loaded>-mk_token("h1arc1b"), progess: 0.29085
+**Moving vehicle mk_token("v1") to mk_token("r2arc1f") elapse: 1.2104232838551798**
+**Moving vehicle mk_token("v3") to mk_token("h1arc1b") elapse: 1.2104232838551798**
+updateRowStatus id: mk_token("r2arc1f")
+updateRowStatus dualId: mk_token("r2arc1b")
+Current route: 9 Remove: mk_token("r2arc1f") mk_token("r2arc1fc2ff")
+--- Counter: 56---
+Time: 253.32543308198524
+mk_token("v1")-><harvesting>-mk_token("r2arc1fc2ff"), progess: 0
+mk_token("v3")-><loaded>-mk_token("h1arc1b"), progess: 0.37753170179426954
+**Moving vehicle mk_token("v1") to mk_token("r2arc1fc2ff") elapse: 1.4337499999999999**
+**Moving vehicle mk_token("v3") to mk_token("h1arc1b") elapse: 1.4337499999999999**
+updateRowStatus id: mk_token("r2arc1fc2ff")
+updateRowStatus dualId: mk_token("r2arc1fc2fb")
+Current route: 8 Remove: mk_token("r2arc1fc2ff") mk_token("h1arc5b")
+--- Counter: 57---
+Time: 254.75918308198524
+mk_token("v1")-><harvesting>-mk_token("h1arc5b"), progess: 0.46128
+mk_token("v3")-><loaded>-mk_token("h1arc1b"), progess: 0.48020643682721137
+**Moving vehicle mk_token("v1") to mk_token("h1arc5b") elapse: 2.7838479693749987**
+**Moving vehicle mk_token("v3") to mk_token("h1arc1b") elapse: 2.7838479693749987**
+updateRowStatus id: mk_token("h1arc5b")
+updateRowStatus dualId: mk_token("h1arc5f")
+Current route: 7 Remove: mk_token("h1arc5b") mk_token("r3arc1fc1fb")
+--- Counter: 58---
+Time: 257.54303105136023
+mk_token("v1")-><harvesting>-mk_token("r3arc1fc1fb"), progess: 0
+mk_token("v3")-><loaded>-mk_token("h1arc1b"), progess: 0.6795653575787868
+**Moving vehicle mk_token("v1") to mk_token("r3arc1fc1fb") elapse: 1.4766874999999997**
+**Moving vehicle mk_token("v3") to mk_token("h1arc1b") elapse: 1.4766874999999997**
+updateRowStatus id: mk_token("r3arc1fc1fb")
+updateRowStatus dualId: mk_token("r3arc1fc1ff")
+Current route: 6 Remove: mk_token("r3arc1fc1fb") mk_token("r3arc1b")
+--- Counter: 59---
+Time: 259.01971855136026
+mk_token("v1")-><harvesting>-mk_token("r3arc1b"), progess: 0
+mk_token("v3")-><loaded>-mk_token("h1arc1b"), progess: 0.7853149637088355
+**Moving vehicle mk_token("v1") to mk_token("r3arc1b") elapse: 2.997861846769822**
+**Moving vehicle mk_token("v3") to mk_token("h1arc1b") elapse: 2.997861846769822**
+updateRowStatus id: mk_token("h1arc1b")
+updateRowStatus dualId: mk_token("h1arc1f")
+Current route: 20 Remove: mk_token("h1arc1b") mk_token("h1arc1bc1ff")
+--- Counter: 60---
+Time: 262.01758039813006
+mk_token("v1")-><harvesting>-mk_token("r3arc1b"), progess: 0.13220563142431108
+mk_token("v3")-><loaded>-mk_token("h1arc1bc1ff"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("r3arc1b") elapse: 0.9635666666666666**
+**Moving vehicle mk_token("v3") to mk_token("h1arc1bc1ff") elapse: 0.9635666666666666**
+updateRowStatus id: mk_token("h1arc1bc1ff")
+updateRowStatus dualId: mk_token("h1arc1bc1fb")
+Current route: 19 Remove: mk_token("h1arc1bc1ff") mk_token("h1arc9b")
+--- Counter: 61---
+Time: 262.98114706479674
+mk_token("v1")-><harvesting>-mk_token("r3arc1b"), progess: 0.17469889699068336
+mk_token("v3")-><loaded>-mk_token("h1arc9b"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("r3arc1b") elapse: 7.947633333333333**
+**Moving vehicle mk_token("v3") to mk_token("h1arc9b") elapse: 7.947633333333333**
+updateRowStatus id: mk_token("h1arc9b")
+updateRowStatus dualId: mk_token("h1arc9f")
+Current route: 18 Remove: mk_token("h1arc9b") mk_token("g1arc1fc1fb")
+--- Counter: 62---
+Time: 270.9287803981301
+mk_token("v1")-><harvesting>-mk_token("r3arc1b"), progess: 0.525189325458687
+mk_token("v3")-><loaded>-mk_token("g1arc1fc1fb"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("r3arc1b") elapse: 2.3888666666666665**
+**Moving vehicle mk_token("v3") to mk_token("g1arc1fc1fb") elapse: 2.3888666666666665**
+updateRowStatus id: mk_token("g1arc1fc1fb")
+updateRowStatus dualId: mk_token("g1arc1fc1ff")
+Current route: 17 Remove: mk_token("g1arc1fc1fb") mk_token("g1arc1b")
+--- Counter: 63---
+Time: 273.31764706479674
+mk_token("v1")-><harvesting>-mk_token("r3arc1b"), progess: 0.6305382848830353
+mk_token("v3")-><loaded>-mk_token("g1arc1b"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("r3arc1b") elapse: 0**
+**Moving vehicle mk_token("v3") to mk_token("g1arc1b") elapse: 0**
+Nop..Current route: 16 Remove: mk_token("g1arc1b") mk_token("g1arc1b")
+--- Counter: 64---
+Time: 273.31764706479674
+mk_token("v1")-><harvesting>-mk_token("r3arc1b"), progess: 0.6305382848830353
+mk_token("v3")-><waiting>-mk_token("g1arc1b"), progess: 1
+Current route: 15 Remove: mk_token("g1arc1b") mk_token("g1arc1f")
+**Moving vehicle mk_token("v1") to mk_token("r3arc1b") elapse: 0**
+**Moving vehicle mk_token("v3") to mk_token("g1arc1f") elapse: 0**
+updateRowStatus id: mk_token("g1arc1f")
+updateRowStatus dualId: mk_token("g1arc1b")
+Current route: 14 Remove: mk_token("g1arc1f") mk_token("g1arc1fc2ff")
+--- Counter: 65---
+Time: 273.31764706479674
+mk_token("v1")-><harvesting>-mk_token("r3arc1b"), progess: 0.6305382848830353
+mk_token("v3")-><unloaded>-mk_token("g1arc1fc2ff"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("r3arc1b") elapse: 2.3899333333333335**
+**Moving vehicle mk_token("v3") to mk_token("g1arc1fc2ff") elapse: 2.3899333333333335**
+updateRowStatus id: mk_token("g1arc1fc2ff")
+updateRowStatus dualId: mk_token("g1arc1fc2fb")
+Current route: 13 Remove: mk_token("g1arc1fc2ff") mk_token("h1arc7b")
+--- Counter: 66---
+Time: 275.70758039813006
+mk_token("v1")-><harvesting>-mk_token("r3arc1b"), progess: 0.7359342842803357
+mk_token("v3")-><unloaded>-mk_token("h1arc7b"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("r3arc1b") elapse: 5.987888153230177**
+**Moving vehicle mk_token("v3") to mk_token("h1arc7b") elapse: 5.987888153230177**
+updateRowStatus id: mk_token("r3arc1b")
+updateRowStatus dualId: mk_token("r3arc1f")
+Current route: 5 Remove: mk_token("r3arc1b") mk_token("r3arc1bc2ff")
+--- Counter: 67---
+Time: 281.69546855136025
+mk_token("v1")-><harvesting>-mk_token("r3arc1bc2ff"), progess: 0
+mk_token("v3")-><unloaded>-mk_token("h1arc7b"), progess: 0.3146347926249399
+**Moving vehicle mk_token("v1") to mk_token("r3arc1bc2ff") elapse: 1.9200312499999999**
+**Moving vehicle mk_token("v3") to mk_token("h1arc7b") elapse: 1.9200312499999999**
+updateRowStatus id: mk_token("r3arc1bc2ff")
+updateRowStatus dualId: mk_token("r3arc1bc2fb")
+Current route: 4 Remove: mk_token("r3arc1bc2ff") mk_token("h1arc1b")
+--- Counter: 68---
+Time: 283.6154998013603
+mk_token("v1")-><harvesting>-mk_token("h1arc1b"), progess: 0.29085
+mk_token("v3")-><unloaded>-mk_token("h1arc7b"), progess: 0.4155232225217586
+**Moving vehicle mk_token("v1") to mk_token("h1arc1b") elapse: 6.345852525000001**
+**Moving vehicle mk_token("v3") to mk_token("h1arc7b") elapse: 6.345852525000001**
+updateRowStatus id: mk_token("h1arc1b")
+updateRowStatus dualId: mk_token("h1arc1f")
+Current route: 3 Remove: mk_token("h1arc1b") mk_token("r1arc1bc1fb")
+--- Counter: 69---
+Time: 289.96135232636027
+mk_token("v1")-><harvesting>-mk_token("r1arc1bc1fb"), progess: 0
+mk_token("v3")-><unloaded>-mk_token("h1arc7b"), progess: 0.748967325373737
+**Moving vehicle mk_token("v1") to mk_token("r1arc1bc1fb") elapse: 1.92225**
+**Moving vehicle mk_token("v3") to mk_token("h1arc7b") elapse: 1.92225**
+updateRowStatus id: mk_token("r1arc1bc1fb")
+updateRowStatus dualId: mk_token("r1arc1bc1ff")
+Current route: 2 Remove: mk_token("r1arc1bc1fb") mk_token("r1arc1f")
+--- Counter: 70---
+Time: 291.8836023263603
+mk_token("v1")-><harvesting>-mk_token("r1arc1f"), progess: 0
+mk_token("v3")-><unloaded>-mk_token("h1arc7b"), progess: 0.8499723399375155
+**Moving vehicle mk_token("v1") to mk_token("r1arc1f") elapse: 2.8552114051031565**
+**Moving vehicle mk_token("v3") to mk_token("h1arc7b") elapse: 2.8552114051031565**
+updateRowStatus id: mk_token("h1arc7b")
+updateRowStatus dualId: mk_token("h1arc7f")
+Current route: 12 Remove: mk_token("h1arc7b") mk_token("h1arc7bc1ff")
+--- Counter: 71---
+Time: 294.73881373146344
+mk_token("v1")-><harvesting>-mk_token("r1arc1f"), progess: 0.08170809555571237
+mk_token("v3")-><unloaded>-mk_token("h1arc7bc1ff"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("r1arc1f") elapse: 1.3184**
+**Moving vehicle mk_token("v3") to mk_token("h1arc7bc1ff") elapse: 1.3184**
+updateRowStatus id: mk_token("h1arc7bc1ff")
+updateRowStatus dualId: mk_token("h1arc7bc1fb")
+Current route: 11 Remove: mk_token("h1arc7bc1ff") mk_token("h1arc5b")
+--- Counter: 72---
+Time: 296.05721373146343
+mk_token("v1")-><harvesting>-mk_token("r1arc1f"), progess: 0.11943698420757008
+mk_token("v3")-><unloaded>-mk_token("h1arc5b"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("r1arc1f") elapse: 4.871757630666667**
+**Moving vehicle mk_token("v3") to mk_token("h1arc5b") elapse: 4.871757630666667**
+updateRowStatus id: mk_token("h1arc5b")
+updateRowStatus dualId: mk_token("h1arc5f")
+Current route: 10 Remove: mk_token("h1arc5b") mk_token("r2arc1fc1fb")
+--- Counter: 73---
+Time: 300.9289713621301
+mk_token("v1")-><harvesting>-mk_token("r1arc1f"), progess: 0.25885294384520724
+mk_token("v3")-><unloaded>-mk_token("r2arc1fc1fb"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("r1arc1f") elapse: 1.5751333333333333**
+**Moving vehicle mk_token("v3") to mk_token("r2arc1fc1fb") elapse: 1.5751333333333333**
+updateRowStatus id: mk_token("r2arc1fc1fb")
+updateRowStatus dualId: mk_token("r2arc1fc1ff")
+Current route: 9 Remove: mk_token("r2arc1fc1fb") mk_token("r2arc1b")
+--- Counter: 74---
+Time: 302.5041046954634
+mk_token("v1")-><harvesting>-mk_token("r1arc1f"), progess: 0.30392881622473
+mk_token("v3")-><unloaded>-mk_token("r2arc1b"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("r1arc1f") elapse: 8.778538038662205**
+**Moving vehicle mk_token("v3") to mk_token("r2arc1b") elapse: 8.778538038662205**
+Nop..Current route: 1 Remove: mk_token("r1arc1f") mk_token("r1arc1f")
+--- Counter: 75---
+Time: 311.2826427341256
+mk_token("v1")-><waiting>-mk_token("r1arc1f"), progess: 0.5551458096916473
+mk_token("v3")-><unloaded>-mk_token("r2arc1b"), progess: 0.34502356371469917
+**Moving vehicle mk_token("v3") to mk_token("r2arc1b") elapse: 1.7352636428968742**
+Nop..Current route: 8 Remove: mk_token("r2arc1b") mk_token("r2arc1b")
+--- Counter: 76---
+Time: 313.0179063770225
+mk_token("v1")-><waiting>-mk_token("r1arc1f"), progess: 0.5551458096916473
+mk_token("v3")-><waiting>-mk_token("r2arc1b"), progess: 0.4132247657166751
+**Moving vehicle mk_token("v1") to mk_token("r1arc1f") elapse: 14.92949831844092**
+**Moving vehicle mk_token("v3") to mk_token("r2arc1b") elapse: 14.92949831844092**
+updateRowStatus id: mk_token("r2arc1b")
+updateRowStatus dualId: mk_token("r2arc1f")
+Current route: 7 Remove: mk_token("r2arc1b") mk_token("r2arc1bc2ff")
+--- Counter: 77---
+Time: 327.94740469546343
+mk_token("v1")-><harvesting>-mk_token("r1arc1f"), progess: 0.9823859338455871
+mk_token("v3")-><loaded>-mk_token("r2arc1bc2ff"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("r1arc1f") elapse: 0.6155067283391735**
+**Moving vehicle mk_token("v3") to mk_token("r2arc1bc2ff") elapse: 0.6155067283391735**
+updateRowStatus id: mk_token("r1arc1f")
+updateRowStatus dualId: mk_token("r1arc1b")
+Current route: 7 Remove: mk_token("r1arc1f") mk_token("r1arc1fc1ff")
+--- Counter: 78---
+Time: 328.56291142380263
+mk_token("v1")-><harvesting>-mk_token("r1arc1fc1ff"), progess: 0
+mk_token("v3")-><loaded>-mk_token("r2arc1bc2ff"), progess: 0.3005355031684902
+**Moving vehicle mk_token("v1") to mk_token("r1arc1fc1ff") elapse: 1.4325266049941598**
+**Moving vehicle mk_token("v3") to mk_token("r2arc1bc2ff") elapse: 1.4325266049941598**
+updateRowStatus id: mk_token("r2arc1bc2ff")
+updateRowStatus dualId: mk_token("r2arc1bc2fb")
+Current route: 6 Remove: mk_token("r2arc1bc2ff") mk_token("h1arc1b")
+--- Counter: 79---
+Time: 329.9954380287968
+mk_token("v1")-><harvesting>-mk_token("r1arc1fc1ff"), progess: 0.5769192700522681
+mk_token("v3")-><loaded>-mk_token("h1arc1b"), progess: 0.5817
+**Moving vehicle mk_token("v1") to mk_token("r1arc1fc1ff") elapse: 1.05053589500584**
+**Moving vehicle mk_token("v3") to mk_token("h1arc1b") elapse: 1.05053589500584**
+updateRowStatus id: mk_token("r1arc1fc1ff")
+updateRowStatus dualId: mk_token("r1arc1fc1fb")
+Current route: 6 Remove: mk_token("r1arc1fc1ff") mk_token("h1arc5f")
+--- Counter: 80---
+Time: 331.04597392380265
+mk_token("v1")-><harvesting>-mk_token("h1arc5f"), progess: 0.96969
+mk_token("v3")-><loaded>-mk_token("h1arc1b"), progess: 0.656931731237886
+**Moving vehicle mk_token("v1") to mk_token("h1arc5f") elapse: 0.3915654181249993**
+**Moving vehicle mk_token("v3") to mk_token("h1arc1b") elapse: 0.3915654181249993**
+updateRowStatus id: mk_token("h1arc5f")
+updateRowStatus dualId: mk_token("h1arc5b")
+Current route: 5 Remove: mk_token("h1arc5f") mk_token("h1arc7bc1fb")
+--- Counter: 81---
+Time: 331.4375393419277
+mk_token("v1")-><harvesting>-mk_token("h1arc7bc1fb"), progess: 0
+mk_token("v3")-><loaded>-mk_token("h1arc1b"), progess: 0.6849727952686078
+**Moving vehicle mk_token("v1") to mk_token("h1arc7bc1fb") elapse: 1.236**
+**Moving vehicle mk_token("v3") to mk_token("h1arc1b") elapse: 1.236**
+updateRowStatus id: mk_token("h1arc7bc1fb")
+updateRowStatus dualId: mk_token("h1arc7bc1ff")
+Current route: 4 Remove: mk_token("h1arc7bc1fb") mk_token("h1arc7f")
+--- Counter: 82---
+Time: 332.67353934192766
+mk_token("v1")-><harvesting>-mk_token("h1arc7f"), progess: 0
+mk_token("v3")-><loaded>-mk_token("h1arc1b"), progess: 0.7734861152342336
+**Moving vehicle mk_token("v1") to mk_token("h1arc7f") elapse: 3.163039886869162**
+**Moving vehicle mk_token("v3") to mk_token("h1arc1b") elapse: 3.163039886869162**
+updateRowStatus id: mk_token("h1arc1b")
+updateRowStatus dualId: mk_token("h1arc1f")
+Current route: 5 Remove: mk_token("h1arc1b") mk_token("h1arc1bc1ff")
+--- Counter: 83---
+Time: 335.83657922879684
+mk_token("v1")-><harvesting>-mk_token("h1arc7f"), progess: 0.17728274114274115
+mk_token("v3")-><loaded>-mk_token("h1arc1bc1ff"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("h1arc7f") elapse: 0.9635666666666666**
+**Moving vehicle mk_token("v3") to mk_token("h1arc1bc1ff") elapse: 0.9635666666666666**
+updateRowStatus id: mk_token("h1arc1bc1ff")
+updateRowStatus dualId: mk_token("h1arc1bc1fb")
+Current route: 4 Remove: mk_token("h1arc1bc1ff") mk_token("h1arc9b")
+--- Counter: 84---
+Time: 336.8001458954635
+mk_token("v1")-><harvesting>-mk_token("h1arc7f"), progess: 0.23128893330288025
+mk_token("v3")-><loaded>-mk_token("h1arc9b"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("h1arc7f") elapse: 7.947633333333333**
+**Moving vehicle mk_token("v3") to mk_token("h1arc9b") elapse: 7.947633333333333**
+updateRowStatus id: mk_token("h1arc9b")
+updateRowStatus dualId: mk_token("h1arc9f")
+Current route: 3 Remove: mk_token("h1arc9b") mk_token("g1arc1fc1fb")
+--- Counter: 85---
+Time: 344.74777922879684
+mk_token("v1")-><harvesting>-mk_token("h1arc7f"), progess: 0.6767395989046309
+mk_token("v3")-><loaded>-mk_token("g1arc1fc1fb"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("h1arc7f") elapse: 2.3888666666666665**
+**Moving vehicle mk_token("v3") to mk_token("g1arc1fc1fb") elapse: 2.3888666666666665**
+updateRowStatus id: mk_token("g1arc1fc1fb")
+updateRowStatus dualId: mk_token("g1arc1fc1ff")
+Current route: 2 Remove: mk_token("g1arc1fc1fb") mk_token("g1arc1b")
+--- Counter: 86---
+Time: 347.1366458954635
+mk_token("v1")-><harvesting>-mk_token("h1arc7f"), progess: 0.8106313125846575
+mk_token("v3")-><loaded>-mk_token("g1arc1b"), progess: 0
+**Moving vehicle mk_token("v1") to mk_token("h1arc7f") elapse: 0**
+**Moving vehicle mk_token("v3") to mk_token("g1arc1b") elapse: 0**
+Nop..Current route: 1 Remove: mk_token("g1arc1b") mk_token("g1arc1b")
+--- Counter: 87---
+Time: 347.1366458954635
+mk_token("v1")-><harvesting>-mk_token("h1arc7f"), progess: 0.8106313125846575
+mk_token("v3")-><waiting>-mk_token("g1arc1b"), progess: 1
+Current route is empty!**Moving vehicle mk_token("v1") to mk_token("h1arc7f") elapse: 3.3786746964641687**
+**Moving vehicle mk_token("v3") to mk_token("g1arc1b") elapse: 3.3786746964641687**
+updateRowStatus id: mk_token("h1arc7f")
+updateRowStatus dualId: mk_token("h1arc7b")
+Current route: 3 Remove: mk_token("h1arc7f") mk_token("g1arc1fc2fb")
+--- Counter: 88---
+Time: 350.51532059192766
+mk_token("v1")-><harvesting>-mk_token("g1arc1fc2fb"), progess: 0
+mk_token("v3")-><unloaded>-mk_token("g1arc1b"), progess: 1
+**Moving vehicle mk_token("v1") to mk_token("g1arc1fc2fb") elapse: 2.2405625**
+**Moving vehicle mk_token("v3") to mk_token("g1arc1b") elapse: 2.2405625**
+updateRowStatus id: mk_token("g1arc1fc2fb")
+updateRowStatus dualId: mk_token("g1arc1fc2ff")
+Current route: 2 Remove: mk_token("g1arc1fc2fb") mk_token("g1arc1b")
+--- Counter: 89---
+Time: 352.75588309192767
+mk_token("v1")-><harvesting>-mk_token("g1arc1b"), progess: 0
+mk_token("v3")-><unloaded>-mk_token("g1arc1b"), progess: 1
+**Moving vehicle mk_token("v1") to mk_token("g1arc1b") elapse: 0**
+**Moving vehicle mk_token("v3") to mk_token("g1arc1b") elapse: 0**
+Nop..Current route: 1 Remove: mk_token("g1arc1b") mk_token("g1arc1b")
+--- Counter: 90---
+Time: 352.75588309192767
+mk_token("v1")-><waiting>-mk_token("g1arc1b"), progess: 1
+mk_token("v3")-><unloaded>-mk_token("g1arc1b"), progess: 1
+Current route is empty!
