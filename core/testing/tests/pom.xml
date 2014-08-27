@@ -11,7 +11,7 @@
   
   <groupId>org.overturetool.core.testing</groupId>
   <artifactId>tests</artifactId>
-  <name>Overture Testing Tests</name>
+  <name>Overture Demo Tests</name>
 
   <dependencies>
     <dependency>

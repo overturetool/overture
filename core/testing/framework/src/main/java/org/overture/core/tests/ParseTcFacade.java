@@ -37,8 +37,6 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.config.Release;
 import org.overture.config.Settings;
-import org.overture.core.tests.examples.ExampleAstData;
-import org.overture.core.tests.examples.ExampleSourceData;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
 import org.overture.parser.util.ParserUtil;
@@ -61,7 +59,8 @@ public abstract class ParseTcFacade
 		LexLocation.absoluteToStringLocation = false;
 	}
 	/**
-	 * Parse and type check a VDM model directly encoded in a String.
+	 * Parse and type check a VDM model directly encoded in a String. This method
+	 * will try to check the model in VDM classic and VDM 10.
 	 * 
 	 * @param content
 	 *            the String representing the VDM model
@@ -73,7 +72,7 @@ public abstract class ParseTcFacade
 	 * @throws LexException
 	 * @throws ParserException
 	 */
-	public static List<INode> typedAstFromContent(List<File> content,
+	public static List<INode> typedAstWithRetry(List<File> content,
 			String testName, Dialect dialect) throws ParserException,
 			LexException
 	{
@@ -81,23 +80,24 @@ public abstract class ParseTcFacade
 	}
 
 	/**
-	 * Parse and type check an Overture example.
+	 * Parse and type check a VDM model directly encoded in a String. This method
+	 * will check the model in whatever language release is currently set.
 	 * 
-	 * @param e
-	 *            The {@link ExampleSourceData} of the example to process
-	 * @return the {@link ExampleAstData} of the submitted example
-	 * @throws ParserException
+	 * @param content
+	 *            the String representing the VDM model
+	 * @param testName
+	 *            the name of the test calling this method (used for failure reporting)
+	 * @param dialect
+	 *            the VDM {@link Dialect} the source is written in
+	 * @return the AST of the mode, as a list of {@link INode}
 	 * @throws LexException
+	 * @throws ParserException
 	 */
-	public static ExampleAstData parseTcExample(ExampleSourceData e)
-			throws ParserException, LexException
+	public static List<INode> typedAstNoRetry(List<File> content,
+			String testName, Dialect dialect) throws ParserException,
+			LexException
 	{
-		List<INode> ast = new LinkedList<INode>();
-		Settings.release = e.getRelease();
-
-		ast = ParseTcFacade.typedAst(e.getSource(), e.getName(), e.getDialect(), false);
-
-		return new ExampleAstData(e.getName(), ast);
+		return typedAst(content, testName, dialect, true);
 	}
 
 	/**
