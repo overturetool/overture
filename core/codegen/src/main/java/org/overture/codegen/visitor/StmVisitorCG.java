@@ -4,7 +4,9 @@ import java.util.LinkedList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AAssignmentDefinition;
+import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.definitions.AThreadDefinition;
 import org.overture.ast.expressions.AElseIfExp;
 import org.overture.ast.expressions.AIfExp;
 import org.overture.ast.expressions.ASelfExp;
@@ -567,5 +569,14 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 		
 		//return null;
 	}
+	
+//	@Override
+//	public SStmCG caseAClassClassDefinition(AClassClassDefinition node,
+//			IRInfo question) throws AnalysisException
+//	{
+//		Boolean threaddcl = node.getDefinitions().contains("thread");
+//		
+//		return null;
+//	}
 	
 }

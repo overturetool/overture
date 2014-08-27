@@ -828,7 +828,7 @@ public class JavaFormat
 	{
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("Thread" + exp + "= new Thread();");
+		sb.append(exp + "t" + "= new "+ exp+"();");
 		
 		return sb.toString();
 	}
