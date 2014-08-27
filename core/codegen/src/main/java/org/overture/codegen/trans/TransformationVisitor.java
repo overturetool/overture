@@ -55,11 +55,13 @@ import org.overture.codegen.cgast.expressions.SBoolBinaryExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
+import org.overture.codegen.cgast.statements.ABreakStmCG;
 import org.overture.codegen.cgast.statements.ACaseAltStmStmCG;
 import org.overture.codegen.cgast.statements.ACasesStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.ALetBeStStmCG;
 import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
+import org.overture.codegen.cgast.statements.AWhileStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
@@ -89,10 +91,11 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	private String casesExpResultPrefix;
 	private String andExpPrefix;
 	private String orExpPrefix;
+	private String whileCondExpPrefix;
 
 	public TransformationVisitor(IRInfo info, TempVarPrefixes varPrefixes,
 			TransformationAssistantCG transformationAssistant,
-			ILanguageIterator langIterator, String casesExpPrefix, String andExpPrefix, String orExpPrefix)
+			ILanguageIterator langIterator, String casesExpPrefix, String andExpPrefix, String orExpPrefix, String whileCondExpPrefix)
 	{
 		this.info = info;
 		this.transformationAssistant = transformationAssistant;
@@ -100,6 +103,58 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		this.casesExpResultPrefix = casesExpPrefix;
 		this.andExpPrefix = andExpPrefix;
 		this.orExpPrefix = orExpPrefix;
+		this.whileCondExpPrefix = whileCondExpPrefix;
+	}
+	
+	@Override
+	public void caseAWhileStmCG(AWhileStmCG node) throws AnalysisException
+	{
+		// while(boolExp) { body; }
+		//
+		// boolExp is replaced with a variable expression 'whileCond' that is
+		// computed as set for each iteration in the while loop:
+		//
+		// boolean whileCond = true;
+		//
+		// while(whileCond)
+		// {
+		//   whileCond = boolExp;
+		//   if (!whileCond) { break; }
+		//   body;
+		// }
+		//
+		// This is needed for cases where the while condition is a complex
+		// expression that needs to be transformed. For example, when the
+		// while condition is a quantified expression
+		
+		SExpCG exp = node.getExp().clone();
+		SStmCG body = node.getBody().clone();
+		
+		String whileCondName = info.getTempVarNameGen().nextVarName(whileCondExpPrefix);
+		
+		SExpCG whileCondVar = transformationAssistant.consBoolCheck(whileCondName, false);
+		
+		AIfStmCG whileCondCheck = new AIfStmCG();
+		whileCondCheck.setIfExp(transformationAssistant.consBoolCheck(whileCondName, true));
+		whileCondCheck.setThenStm(new ABreakStmCG());
+		
+		ABlockStmCG newWhileBody = new ABlockStmCG();
+		newWhileBody.getStatements().add(transformationAssistant.consBoolVarAssignment(exp, whileCondName));
+		newWhileBody.getStatements().add(whileCondCheck);
+		newWhileBody.getStatements().add(body);
+		
+		AWhileStmCG newWhileStm = new AWhileStmCG();
+		newWhileStm.setExp(whileCondVar);
+		newWhileStm.setBody(newWhileBody);
+		
+		ABlockStmCG declBlock = new ABlockStmCG();
+		AVarLocalDeclCG whileCondVarDecl = transformationAssistant.consBoolVarDecl(whileCondName, true);
+		declBlock.getLocalDefs().add(whileCondVarDecl);
+		declBlock.getStatements().add(newWhileStm);
+		
+		transformationAssistant.replaceNodeWith(node, declBlock);
+
+		newWhileStm.getBody().apply(this);
 	}
 	
 	@Override

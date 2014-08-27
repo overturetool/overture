@@ -186,6 +186,7 @@ CG {-> package='org.overture.codegen.cgast'
            |	#altStm
            |	{error}
            |	{continue}
+           |	{break}
            ;
            
 #altStm {-> package='org.overture.codegen.cgast.statements'}

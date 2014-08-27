@@ -138,6 +138,7 @@ import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
+import org.overture.codegen.cgast.statements.ABreakStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectStmCG;
 import org.overture.codegen.cgast.statements.ACallStmCG;
@@ -377,6 +378,9 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AContinueStmCG.class, templateStructure.STM_PATH
 				+ "Continue");
 
+		nodeTemplateFileNames.put(ABreakStmCG.class, templateStructure.STM_PATH
+				+ "Break");
+		
 		// Expressions
 
 		nodeTemplateFileNames.put(AApplyExpCG.class, templateStructure.EXP_PATH
