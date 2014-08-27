@@ -70,6 +70,6 @@ public class Token implements Serializable
 	@Override
 	public String toString()
 	{
-		return "mk_token(" + value + ")";
+		return "mk_token(" + Utils.toString(value) + ")";
 	}
 }

@@ -74,7 +74,7 @@ public class Utils
 
 			for (int i = 1; i < fields.length; i++)
 			{
-				str.append(", " + fields[i]);
+				str.append(", " + Utils.toString(fields[i]));
 			}
 		}
 
@@ -85,5 +85,32 @@ public class Utils
 	public static <T extends ValueType> T clone(T t)
 	{
 		return (T) (t != null ? t.clone() : t);
+	}
+	
+	public static String toString(Object obj)
+	{
+		if(obj == null)
+		{
+			return "nil";
+		}
+		else if(obj instanceof Number)
+		{
+			Number n = (Number) obj;
+			
+			if(n.doubleValue() % 1 == 0)
+			{
+				return Long.toString(n.longValue());
+			}
+			else 
+			{
+				return Double.toString(n.doubleValue());
+			}
+		}
+		else if(obj instanceof String)
+		{
+			return "\"" + obj.toString() + "\"";
+		}
+		
+		return obj.toString();
 	}
 }
