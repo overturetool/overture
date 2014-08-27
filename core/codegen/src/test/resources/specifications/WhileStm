@@ -1,8 +1,0 @@
-class A
-
-operations
-
-public op : () ==> ()
-op () == while true do (skip;skip;skip);
-
-end A
