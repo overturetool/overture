@@ -21,14 +21,14 @@
  */
 package org.overture.codegen.runtime;
 
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
 
 @SuppressWarnings("rawtypes")
-public class VDMMap extends HashMap implements ValueType
+public class VDMMap extends LinkedHashMap implements ValueType
 {
 	private static final long serialVersionUID = -3288711341768577550L;
 
@@ -82,9 +82,9 @@ public class VDMMap extends HashMap implements ValueType
 			Object key = entry.getKey();
 			Object value = entry.getValue();
 
-			sb.append(key == this ? "(this Collection)" : key);
+			sb.append(key == this ? "(this Collection)" : Utils.toString(key));
 			sb.append(" |-> ");
-			sb.append(value == this ? "(this Collection)" : value);
+			sb.append(value == this ? "(this Collection)" : Utils.toString(value));
 			
 			if(!iterator.hasNext())
 				return sb.append('}').toString();
