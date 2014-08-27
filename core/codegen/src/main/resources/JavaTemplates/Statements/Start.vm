@@ -1,0 +1,3 @@
+#set ($start = ".start()")
+$JavaFormat.ThreadCreate(expCG)
+$node.getObj()$start

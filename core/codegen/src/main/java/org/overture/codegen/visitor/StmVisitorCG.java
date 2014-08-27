@@ -31,6 +31,7 @@ import org.overture.ast.statements.ALetStm;
 import org.overture.ast.statements.ANotYetSpecifiedStm;
 import org.overture.ast.statements.AReturnStm;
 import org.overture.ast.statements.ASkipStm;
+import org.overture.ast.statements.AStartStm;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.ast.statements.AWhileStm;
 import org.overture.ast.statements.PObjectDesignator;
@@ -60,6 +61,7 @@ import org.overture.codegen.cgast.statements.ALetDefStmCG;
 import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.ASkipStmCG;
+import org.overture.codegen.cgast.statements.AStartStmCG;
 import org.overture.codegen.cgast.statements.AWhileStmCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
@@ -544,6 +546,26 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 		}
 		
 		return forAll;
+	}
+	
+	@Override
+	public SStmCG caseAStartStm(AStartStm node, IRInfo question)
+			throws AnalysisException
+	{
+		PType type = node.getType();
+		PExp exp = node.getObj();
+		
+		STypeCG typeCG = type.apply(question.getTypeVisitor(), question);
+		SExpCG expCG = exp.apply(question.getExpVisitor(), question);
+		
+		AStartStmCG thread = new AStartStmCG();
+		
+		thread.setExp(expCG);
+		thread.setType(typeCG);
+		
+		return thread;
+		
+		//return null;
 	}
 	
 }

@@ -822,4 +822,14 @@ public class JavaFormat
 	{
 		return GeneralUtils.isEscapeSequence(c) ? StringEscapeUtils.escapeJavaScript(c + "") : c + "";
 	}
+	
+	//gkanos method === not know if correct yet.
+	public String ThreadCreate(SExpCG exp)
+	{
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("Thread" + exp + "= new Thread();");
+		
+		return sb.toString();
+	}
 }

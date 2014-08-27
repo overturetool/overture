@@ -167,6 +167,7 @@ CG {-> package='org.overture.codegen.cgast'
            |	{increment} [var]:CG.#exp
            |	{decrement} [var]:CG.#exp
            |	{raiseError} [error]:CG.#exp.#RuntimeError
+           |	{start}[exp]:CG.#exp [type]:CG.#type
            ;
            
 #letBeSt {-> package='org.overture.codegen.cgast.utils'}
