@@ -553,10 +553,13 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 	public SStmCG caseAForAllStm(AForAllStm node, IRInfo question)
 			throws AnalysisException
 	{
+		//Example: for all x in set {1,2,3} do skip;
 		PPattern pattern = node.getPattern();
 
+		//TODO: Missing case for generation of patterns
 		if (!(pattern instanceof AIdentifierPattern))
 		{
+			question.addUnsupportedNode(node, "Generation of the for all statement only supports identifier patterns. Got: " + pattern);
 			return null; // This is the only pattern supported by this loop construct
 		}
 
@@ -584,9 +587,11 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 
 		PPattern pattern = patternBind.getPattern();
 
+		//TODO: Missing case for generation of patterns
 		if (!(pattern instanceof AIdentifierPattern))
 		{
-			return null;
+			question.addUnsupportedNode(node, "Generation of the for pattern bind statement only supports identifier patterns. Got: " + pattern);
+			return null; // This is the only pattern supported by this loop construct
 		}
 
 		AIdentifierPattern identifier = (AIdentifierPattern) pattern;
