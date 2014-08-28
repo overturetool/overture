@@ -45,7 +45,7 @@
     </dependency>
     <dependency>
       <groupId>org.overturetool.core.testing</groupId>
-      <artifactId>framework</artifactId>
+      <artifactId>exsupport</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
@@ -83,7 +83,10 @@
 	    <include>**/*Test.java</include>
 	    <include>**/*Test?.java</include>
 	    <include>**/*TestSuite.java</include>
-	  </includes>
+    </includes>
+    <excludes>
+        <exclude>**/*ExamplesTest.java</exclude>
+    </excludes>
 	</configuration>
       </plugin>
 
