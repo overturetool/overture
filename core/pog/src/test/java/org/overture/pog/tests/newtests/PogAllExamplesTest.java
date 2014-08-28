@@ -21,7 +21,6 @@ import com.google.gson.reflect.TypeToken;
  * 
  * @author ldc
  */
-@Ignore
 @RunWith(Parameterized.class)
 public class PogAllExamplesTest extends ParamExamplesTest<PogTestResult>
 {
