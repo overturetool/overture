@@ -1,1 +1,1 @@
-{"exampleName":"LUHNSL","defNames":["HAInputs","HAInput","Change","TargetTemp","CurrentTemp","TargetHumid","CurrentHumid","HAOut","OutStep","AbsTime","EnvManipulation","HomeAutomation","HA","ChangeHA","AddOutput","TempChanged","HumidChanged","InterruptOutput","CounterOutput"]}
+{"exampleName":"LUHNSL","defNames":["Digit","luhn","luhns","luhnn","total","slen","strToSeq","natToSeq","id","First1000","AllOneDigitErrors","AllAdjacentTranspositions","AllTwinErrors","ZeroPadding","checkFail","checkOK"]}

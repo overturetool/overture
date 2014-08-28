@@ -1,1 +1,1 @@
-{"exampleName":"HASLSL","defNames":["ValvePos","SwitchPos","StartAttempt","StartState","StartingSystem","LightUpDetect","FOCDetect","ReturnState","LightupTimeOutDetect","GroundFailureDetected","StarterOn","StarterOff","OpenSOV","IgnOn","IgnOff","StartComplete","SequenceAbort","CoolFlush"]}
+{"exampleName":"HASLSL","defNames":["HAInputs","HAInput","Change","TargetTemp","CurrentTemp","TargetHumid","CurrentHumid","HAOut","OutStep","AbsTime","EnvManipulation","HomeAutomation","HA","ChangeHA","AddOutput","TempChanged","HumidChanged","InterruptOutput","CounterOutput"]}

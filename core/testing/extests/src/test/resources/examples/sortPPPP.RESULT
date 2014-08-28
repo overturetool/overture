@@ -1,1 +1,1 @@
-{"exampleName":"sortPPPP","defNames":["ADDR","CON","State","Safe","Alloc","Alloc2","Alloc20","Alloc21","Alloc3","AllocSafe","AllocSafe0","AllocSafe2","RunTest"]}
+{"exampleName":"sortPPPP","defNames":["Sort","DoSorting","InsertSorted","Len","Len","Sort","Permutations","RestSeq","IsOrdered","Len","Sort","ImplSorter","IsPermutation","IsOrdered","Sort","MergeSorter","Len","Merge","Len","Sort","srt","SetSort","GoSorting","SetAndSort","DiffSorting"]}

@@ -1,1 +1,1 @@
-{"exampleName":"webserverPP","defNames":["tree_isAVLTree","isBst","BinarySearchTree_inv","Insert","vals","Enqueue","Dequeue","isEmpty","tree","node","root","nodes","addRoot","rootval","gettree","leftBranch","rightBranch","isEmpty","breadth_first_search","depth_first_search","inorder","t1","t2","insertion_BST"]}
+{"exampleName":"webserverPP","defNames":["data","write","get_file","put_file","translate","execute_script","site_map","ExecuteCGI","RetrieveURL","UploadFile","ServerBusy","DeleteURL","per_RetrieveURL","per_ExecuteCGI","per_ServerBusy","per_DeleteURL"]}

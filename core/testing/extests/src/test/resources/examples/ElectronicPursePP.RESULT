@@ -1,1 +1,1 @@
-{"exampleName":"ElectronicPursePP","defNames":["theTable","turns","Philosopher","Think","Eat","forks","guests","done","Table","takeFork","releaseFork","IamDone","wait","LetsEat","per_takeFork","per_wait"]}
+{"exampleName":"ElectronicPursePP","defNames":["CardId","balance","cardNo","IncreaseBal","DecreaseBal","GetBalance","GetCardNo","Purse","Purses","inv_System","Log","Transaction","Transfer","System","TotalTransferred","TotalSum","Len"]}

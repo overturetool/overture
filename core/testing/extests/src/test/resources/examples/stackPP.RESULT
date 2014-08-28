@@ -1,1 +1,1 @@
-{"exampleName":"stackPP","defNames":["Sort","DoSorting","InsertSorted","Len","Len","Sort","Permutations","RestSeq","IsOrdered","Len","Sort","ImplSorter","IsPermutation","IsOrdered","Sort","MergeSorter","Len","Merge","Len","Sort","srt","SetSort","GoSorting","SetAndSort","DiffSorting"]}
+{"exampleName":"stackPP","defNames":["stack","Reset","Pop","Push","Top","stack","TracesStack"]}

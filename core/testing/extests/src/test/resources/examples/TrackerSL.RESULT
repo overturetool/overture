@@ -1,1 +1,1 @@
-{"exampleName":"TrackerSL","defNames":["Player","Pos","Game","hasWon","whoWon","isWon","isDraw","isUnfinished","movesSoFar","moveCountSoFar","moveCountLeft","movesForPlayer","Moves","PlayOrder","Sigma","move","play","test","ALL"]}
+{"exampleName":"TrackerSL","defNames":["SetUp","Tracker","ContainerInfo","PhaseInfo","Container","Phase","ContainerId","PhaseId","Material","Introduce","Permission","Remove","Move","Delete","Consistent","PhasesDistinguished","MaterialSafe"]}

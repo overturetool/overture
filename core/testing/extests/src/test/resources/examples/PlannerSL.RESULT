@@ -1,1 +1,1 @@
-{"exampleName":"PlannerSL","defNames":["Eid","Value","Esetnm","Rnm","Maptp","Tuple","Rinf","Rkey","checkinv","Ndb","ADDES","DELES","ADDENT","DELENT","ADDREL","DELREL","ADDTUP","DELTUP"]}
+{"exampleName":"PlannerSL","defNames":["Literal","State","Goal","Action","Planning_Problem","Action_id","Action_instances","Arc","Bounded_Poset","Goal_instance","Goal_instances","Partial_Plan","get_nodes","before","possibly_before","completion_of","initposet","add_node","make_before","newid","achieve","declobber","INIT","ACHIEVE_1","ACHIEVE_2"]}

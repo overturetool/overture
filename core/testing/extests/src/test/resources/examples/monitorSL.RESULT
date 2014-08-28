@@ -1,1 +1,1 @@
-{"exampleName":"monitorSL","defNames":["Metro","Accelerate","Break","Open","Close","Metro","Accelerate","Break","Open","Close","Metro","Time","Accelerate","Break","Open","CloseDepressed","CloseReleased","Time","Interval","LifeTime","System","NotMovingAndOpen","CloseAssistAfter3Secs","BellOnWhenCloseBut","OverlappingIntervals","SubInterval"]}
+{"exampleName":"monitorSL","defNames":["TempRead","Rising","OverLimit","OverLimit2","ContOverLimit","ContOverLimit2","Safe","RaiseAlarm","MixQuant"]}
