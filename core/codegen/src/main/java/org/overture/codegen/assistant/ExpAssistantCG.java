@@ -300,6 +300,11 @@ public class ExpAssistantCG extends AssistantBase
 
 	public boolean existsOutsideOpOrFunc(PExp exp)
 	{
+		// The transformation of the 'and' and 'or' logical expressions also assumes that the
+		// expressions exist within a statement. However, in case it does not, the transformation
+		// is not performed. In this way, the  'and' and 'or' expressions can
+		// still be used (say) in instance variable assignment.
+		
 		return exp.getAncestor(SOperationDefinition.class) == null
 				&& exp.getAncestor(SFunctionDefinition.class) == null;
 	}
