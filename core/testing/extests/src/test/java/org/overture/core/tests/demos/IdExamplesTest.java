@@ -34,7 +34,7 @@ public class IdExamplesTest extends ParamExamplesTest<ExampleIdTestResult>
 	@Override
 	public ExampleIdTestResult processModel(List<INode> model)
 	{
-		return new ExampleIdTestResult(model);
+		return new ExampleIdTestResult(model,testName);
 	}
 
 
