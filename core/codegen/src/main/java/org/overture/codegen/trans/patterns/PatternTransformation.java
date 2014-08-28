@@ -729,7 +729,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 			SPatternCG currentPattern = patterns.get(i);
 			STypeCG currentType = types.get(i);
 
-			if (currentPattern instanceof AIgnorePatternCG)
+			if (skipPattern(currentPattern))
 			{
 				continue;
 			} else
@@ -750,7 +750,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 
 						// The tuple/record pattern have more field patterns to be generated.
 						// Check the success variable and add a new nesting level
-						if (i < patterns.size() - 1)
+						if (morePatternsToGenerate(patterns,i))
 						{
 							AIfStmCG successVarCheck = new AIfStmCG();
 							successVarCheck.setIfExp(patternData.getSuccessVar().clone());
@@ -768,6 +768,28 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		}
 
 		return topBlock;
+	}
+
+	private boolean skipPattern(SPatternCG pattern)
+	{
+		return pattern instanceof AIgnorePatternCG;
+	}
+	
+	private boolean morePatternsToGenerate(List<SPatternCG> patterns, int currentPatternIndex)
+	{
+		int nextPatternIndex = currentPatternIndex + 1;
+
+		for (int i = nextPatternIndex; i < patterns.size(); i++)
+		{
+			SPatternCG nextPattern = patterns.get(i);
+			
+			if (!skipPattern(nextPattern))
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private ABlockStmCG consPatternBlock(PatternBlockData patternData,
