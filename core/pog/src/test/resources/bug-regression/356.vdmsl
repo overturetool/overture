@@ -1,0 +1,5 @@
+functions
+
+twopat: nat -> nat * nat -> nat 
+twopat (a)(b,c) == 1/0
+ 
