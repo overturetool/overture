@@ -223,15 +223,17 @@ abstract public class ExamplesUtility
 		String lastName = indices.get(0).split(File.separator)[EXAMPLE_DEPTH];
 		List<File> sources = new Vector<File>();
 		File readme = null;
+		String line = "";;
+		String name = "";
 		while (it.hasNext())
 		{
-			String line = it.next();
-			String name = line.split(File.separator)[EXAMPLE_DEPTH];
+			line = it.next();
+			name = line.split(File.separator)[EXAMPLE_DEPTH];
 			if (!name.equals(lastName))
 			{
 				assertNotNull("Could not find README file corresponding to example for "
 						+ line, readme);
-				packedExamples.add(new ExamplePacker(name, dialect, readme, sources));
+				packedExamples.add(new ExamplePacker(lastName, dialect, readme, sources));
 				lastName = name;
 				sources = new Vector<File>();
 				readme = null;
@@ -246,6 +248,11 @@ abstract public class ExamplesUtility
 			}
 
 		}
+	
+		assertNotNull("Could not find README file corresponding to example for "
+				+ line, readme);
+		packedExamples.add(new ExamplePacker(lastName, dialect, readme, sources));
+	
 
 		return packedExamples;
 	}
