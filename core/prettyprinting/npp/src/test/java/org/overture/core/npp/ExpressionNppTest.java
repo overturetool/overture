@@ -385,6 +385,11 @@ public class ExpressionNppTest {
 	}
 	
 	@Test
+	public void testCaseAEqualsBinaryExp_09() throws AnalysisException
+	{
+		aux("x = threadid","(x = threadid)");
+	}
+	@Test
 	public void testCaseAGreaterBinaryExp_01() throws AnalysisException
 	{
 		aux("1 > 0", "(1 > 0)");
@@ -1282,6 +1287,12 @@ public class ExpressionNppTest {
 	}
 	
 	@Test
+	public void testCaseALetDefExp_03() throws AnalysisException
+	{
+		aux("let x = threadid in e", "let x = threadid in e");
+	}
+	
+	@Test
 	public void testCaseADefExp_01() throws AnalysisException
 	{
 		aux("def user = lib(copy) in if user = <OUT> then true else false",
@@ -1419,6 +1430,18 @@ public class ExpressionNppTest {
 	public void testCaseAHistoryExp_02() throws AnalysisException
 	{
 		aux("fin(a) + waiting(b)", "(fin(a) + waiting(b))");
+	}
+	
+	@Test
+	public void testCaseAMkBasicExp_01() throws AnalysisException
+	{
+		aux("mk_(1,2,3)","mk_(1, 2, 3)");
+	}
+	
+	@Test
+	public void testCaseAThreadidExp_01() throws AnalysisException
+	{
+		aux("threadid", "threadid");
 	}
 	
 }

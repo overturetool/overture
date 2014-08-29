@@ -55,6 +55,7 @@ import org.overture.ast.expressions.AMapInverseUnaryExp;
 import org.overture.ast.expressions.AMapRangeUnaryExp;
 import org.overture.ast.expressions.AMapUnionBinaryExp;
 import org.overture.ast.expressions.AMapletExp;
+import org.overture.ast.expressions.AMkBasicExp;
 import org.overture.ast.expressions.AModNumericBinaryExp;
 import org.overture.ast.expressions.AMuExp;
 import org.overture.ast.expressions.ANotEqualBinaryExp;
@@ -86,8 +87,10 @@ import org.overture.ast.expressions.AStarStarBinaryExp;
 import org.overture.ast.expressions.ASubsetBinaryExp;
 import org.overture.ast.expressions.ASubtractNumericBinaryExp;
 import org.overture.ast.expressions.ATailUnaryExp;
+import org.overture.ast.expressions.AThreadIdExp;
 import org.overture.ast.expressions.ATimeExp;
 import org.overture.ast.expressions.ATimesNumericBinaryExp;
+import org.overture.ast.expressions.ATupleExp;
 import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.node.INode;
@@ -362,6 +365,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	{
 		String l = node.getLeft().apply(THIS, question);
 		String r = node.getRight().apply(THIS, question);
+
 		String op = mytable.getEQUALS();
 		
 		
@@ -1214,12 +1218,12 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		sb2.append(exp);
 		sb2.append(mytable.getCOMMA());
 		sb2.append(space);
-		//System.out.print(node.getModifiers().getFirst().getClass().toString());
+	
 		while (node.getModifiers().size() != 0){
 			if (node.getModifiers().size() > 1){
 				
 				mod = node.getModifiers().poll().apply(THIS, question);//.toString();
-				//mod = rootNpp.defaultPDefinition(node.getModifiers().poll(), question);
+				
 				sb2.append(mod);
 				sb2.append(mytable.getCOMMA());
 				sb2.append(space);
@@ -1286,20 +1290,15 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String exp_value = node.getValue().apply(THIS, question);
 		String def;
 		
-		//TODO:fix null pointer exception when no be st statement exist.
 		try{
 			String exp1 = node.getSuchThat().apply(THIS, question);
 			
 			sb.append(mytable.getLET());
 			sb.append(space);
 			
-			//System.out.print(node.getBind().toString() + " /"+ node.getClass() + "\n");
-			//while (node.getDef().getBindings().size() !=0){
-				//def = rootNpp.defaultPDefinition(node.getBind()., question);
-				def = node.getBind().apply(THIS, question);
-				sb.append(def);
-				sb.append(space);
-			//}
+			def = node.getBind().apply(THIS, question);
+			sb.append(def);
+			sb.append(space);
 			
 			sb.append(mytable.getBESUCH());
 			sb.append(space);
@@ -1311,27 +1310,8 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 			sb.append(space);
 			def = node.getBind().apply(THIS, question);
 			sb.append(def);
-			//sb.append(space);
 		}
-//		finally
-//		{
-//			if (e != null)
-//			{
-//				
-//			}
-//			//exp_value = node.getValue().apply(THIS, question);
-//			
-////			sb.append(mytable.getLET());
-////			sb.append(space);
-//			
-//			//System.out.print(node.getBind().toString() + " /"+ node.getClass() + "\n");
-//			//while (node.getDef().getBindings().size() !=0){
-//				//def = rootNpp.defaultPDefinition(node.getBind()., question);
-////				def = node.getBind().apply(THIS, question);
-////				sb.append(def);
-////				sb.append(space);
-//			//}
-//		}
+		
 		sb.append(brl);
 		
 		sb.append(mytable.getIN());
@@ -1368,7 +1348,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 			{
 				//def = node.getLocalDefs().poll().apply(THIS, question);
 				def = rootNpp.defaultPDefinition(node.getLocalDefs().poll(), question);
-				//System.out.print(def+"\n");
+				
 				sb.append(def);
 			}
 		}
@@ -1539,6 +1519,41 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		return sb.toString();
 		
 	}
+	
+	@Override
+	public String caseATupleExp(ATupleExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		String exp;
+		String op = mytable.getTUPLE();
+		StringBuilder sb = new StringBuilder();
+		
+		
+		sb.append(op);
+		sb.append(leftpar);
+		
+		while(node.getArgs().size() != 1){
+			exp = node.getArgs().poll().apply(THIS, question);
+			sb.append(exp);
+			sb.append(mytable.getCOMMA());
+			sb.append(space);
+		}
+		exp = node.getArgs().poll().apply(THIS, question);
+		sb.append(exp);
+		
+		sb.append(rightpar);
+		//System.out.print(sb);
+		
+		return sb.toString();
+	}
+	
+	@Override
+	public String caseAThreadIdExp(AThreadIdExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		return node.toString();
+	}
+	
 	
 	@Override
 	public String caseACharLiteralExp(ACharLiteralExp node,

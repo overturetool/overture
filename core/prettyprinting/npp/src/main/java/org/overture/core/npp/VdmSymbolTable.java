@@ -531,4 +531,10 @@ public class VdmSymbolTable implements ISymbolTable
 	{
 		return "pre_";
 	}
+	
+	@Override
+	public String getTUPLE()
+	{
+		return "mk_";
+	}
 }

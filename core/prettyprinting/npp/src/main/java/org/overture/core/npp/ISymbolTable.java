@@ -177,5 +177,7 @@ public interface ISymbolTable
 	
 	String getPRE();
 	
+	String getTUPLE();
+	
 
 }
