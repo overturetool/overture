@@ -1,0 +1,17 @@
+class Threadname
+
+thread
+ skip;
+ 
+end Threadname
+
+class Threaduser
+
+operations
+
+public static useThread() ==> ()
+useThread() == (
+	start(new Threadname())
+);
+
+end Threaduser
