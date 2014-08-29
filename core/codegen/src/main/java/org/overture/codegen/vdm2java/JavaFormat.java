@@ -795,7 +795,6 @@ public class JavaFormat
 		}
 
 		throw new AnalysisException("Expected set or seq type when trying to format element type");
-
 	}
 
 	public String nextVarName(String prefix)

@@ -62,6 +62,7 @@ import org.overture.codegen.cgast.types.ATokenBasicTypeCG;
 import org.overture.codegen.cgast.types.SBasicTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
+import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.logging.Logger;
@@ -485,5 +486,24 @@ public class TypeAssistantCG extends AssistantBase
 	public boolean isCharRead(AApplyExpCG applyExp)
 	{
 		return isStringType(applyExp.getRoot()) && applyExp.getArgs().size() == 1;
+	}
+
+	public STypeCG findElementType(STypeCG type)
+	{
+		if (type instanceof SSetTypeCG)
+		{
+			SSetTypeCG setType = (SSetTypeCG) type;
+
+			return setType.getSetOf();
+		} else if (type instanceof SSeqTypeCG)
+		{
+			SSeqTypeCG seqType = (SSeqTypeCG) type;
+
+			return seqType.getSeqOf();
+		}
+
+		Logger.getLog().printErrorln("Expected set or sequence type in findElementType. Got: " + type);
+		
+		return null;
 	}
 }

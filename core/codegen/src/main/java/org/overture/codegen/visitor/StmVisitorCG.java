@@ -555,24 +555,15 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 	{
 		//Example: for all x in set {1,2,3} do skip;
 		PPattern pattern = node.getPattern();
-
-		//TODO: Missing case for generation of patterns
-		if (!(pattern instanceof AIdentifierPattern))
-		{
-			question.addUnsupportedNode(node, "Generation of the for all statement only supports identifier patterns. Got: " + pattern);
-			return null; // This is the only pattern supported by this loop construct
-		}
-
-		AIdentifierPattern identifier = (AIdentifierPattern) pattern;
 		PExp set = node.getSet();
 		PStm body = node.getStatement();
 
-		String var = identifier.getName().getName();
+		SPatternCG patternCg = pattern.apply(question.getPatternVisitor(), question);
 		SExpCG setExpCg = set.apply(question.getExpVisitor(), question);
 		SStmCG bodyCg = body.apply(question.getStmVisitor(), question);
 
 		AForAllStmCG forAll = new AForAllStmCG();
-		forAll.setVar(var);
+		forAll.setPattern(patternCg);
 		forAll.setExp(setExpCg);
 		forAll.setBody(bodyCg);
 
@@ -604,7 +595,10 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 		SStmCG stmCg = stm.apply(question.getStmVisitor(), question);
 
 		AForAllStmCG forAll = new AForAllStmCG();
-		forAll.setVar(var);
+		
+		AIdentifierPatternCG patternCg = new AIdentifierPatternCG();
+		patternCg.setName(var);
+		forAll.setPattern(patternCg);
 		forAll.setBody(stmCg);
 
 		if (reverse != null && reverse)
