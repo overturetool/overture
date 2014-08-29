@@ -1282,28 +1282,56 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	public String caseALetBeStExp(ALetBeStExp node, IndentTracker question)
 			throws AnalysisException
 	{
-		//TODO:fix null pointer exception when no be st statement exist.
-		String exp1 = node.getSuchThat().apply(THIS, question);
-				
+		StringBuilder sb = new StringBuilder();
 		String exp_value = node.getValue().apply(THIS, question);
 		String def;
 		
-		StringBuilder sb = new StringBuilder();
-		
-		sb.append(mytable.getLET());
-		sb.append(space);
-		
-		//System.out.print(node.getBind().toString() + " /"+ node.getClass() + "\n");
-		//while (node.getDef().getBindings().size() !=0){
-			//def = rootNpp.defaultPDefinition(node.getBind()., question);
+		//TODO:fix null pointer exception when no be st statement exist.
+		try{
+			String exp1 = node.getSuchThat().apply(THIS, question);
+			
+			sb.append(mytable.getLET());
+			sb.append(space);
+			
+			//System.out.print(node.getBind().toString() + " /"+ node.getClass() + "\n");
+			//while (node.getDef().getBindings().size() !=0){
+				//def = rootNpp.defaultPDefinition(node.getBind()., question);
+				def = node.getBind().apply(THIS, question);
+				sb.append(def);
+				sb.append(space);
+			//}
+			
+			sb.append(mytable.getBESUCH());
+			sb.append(space);
+			sb.append(exp1);
+		}
+		catch(NullPointerException e)
+		{
+			sb.append(mytable.getLET());
+			sb.append(space);
 			def = node.getBind().apply(THIS, question);
 			sb.append(def);
-			sb.append(space);
-		//}
-		
-		sb.append(mytable.getBESUCH());
-		sb.append(space);
-		sb.append(exp1);
+			//sb.append(space);
+		}
+//		finally
+//		{
+//			if (e != null)
+//			{
+//				
+//			}
+//			//exp_value = node.getValue().apply(THIS, question);
+//			
+////			sb.append(mytable.getLET());
+////			sb.append(space);
+//			
+//			//System.out.print(node.getBind().toString() + " /"+ node.getClass() + "\n");
+//			//while (node.getDef().getBindings().size() !=0){
+//				//def = rootNpp.defaultPDefinition(node.getBind()., question);
+////				def = node.getBind().apply(THIS, question);
+////				sb.append(def);
+////				sb.append(space);
+//			//}
+//		}
 		sb.append(brl);
 		
 		sb.append(mytable.getIN());

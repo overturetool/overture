@@ -1317,6 +1317,13 @@ public class ExpressionNppTest {
 	}
 	
 	@Test
+	public void testCaseALetBeStExp_03() throws AnalysisException
+	{
+		aux("let m in set elems l in [m]",
+				"let m in set (elems l)\nin\n [m]");
+	}
+	
+	@Test
 	public void testCaseAIsExp_01() throws AnalysisException
 	{
 		aux("is_nat(0)","is_(0,nat)");
@@ -1386,7 +1393,14 @@ public class ExpressionNppTest {
 	@Test
 	public void testCasePreExp_01() throws AnalysisException
 	{
-		aux("pre_(let h in set {lambda mk_(x,y):nat * nat & x div y} be st h > 0 in {h, 1, 0})","pre_(let h in set {(lambda [mk_(x, y):(nat * nat)] & (x div y))} be st (h > 0)\nin\n {h, 1, 0})");
+		aux("pre_(let h in set {lambda mk_(x,y):nat * nat & x div y} be st h > 0 in {h, 1, 0})",
+				"pre_(let h in set {(lambda [mk_(x, y):(nat * nat)] & (x div y))} be st (h > 0)\nin\n {h, 1, 0})");
+	}
+	@Test
+	public void testCasePreExp_02() throws AnalysisException
+	{
+		aux("pre_(let h in set {lambda mk_(x,y):nat * nat & x div y} in {h, 1, 0})",
+				"pre_(let h in set {(lambda [mk_(x, y):(nat * nat)] & (x div y))}\nin\n {h, 1, 0})");
 	}
 	
 	@Test
