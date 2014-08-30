@@ -1,0 +1,31 @@
+class Entry
+
+types
+
+public R1 ::
+	a : int
+	b : int;
+
+public R2 ::
+	c : bool
+	d : char;
+
+public R = R1 | R2;
+
+functions
+
+public f : R -> nat
+f (r) ==
+cases r:
+	mk_R1(1,2) -> 10,
+	mk_R2(true,'c') -> 20,
+	others -> 30
+end;
+		
+operations
+	
+public static Run : () ==> ? 
+Run () ==
+	return [f(mk_R1(1,2)), f(mk_R2(true,'c')), f(mk_R2(false,'c'))];
+
+end Entry
