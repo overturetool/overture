@@ -44,6 +44,7 @@ import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AFieldNumberExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
+import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
@@ -78,6 +79,7 @@ import org.overture.codegen.cgast.types.AErrorTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
+import org.overture.codegen.cgast.types.AUnionTypeCG;
 import org.overture.codegen.cgast.types.AUnknownTypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
@@ -566,9 +568,10 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		} else if (pattern instanceof ARecordPatternCG)
 		{
 			ARecordPatternCG recordPattern = (ARecordPatternCG) pattern;
-			ARecordTypeCG recordType = (ARecordTypeCG) type;
-
-			return consRecordPatternCheck(declarePatternVar, recordPattern, recordType, patternData, actualValue);
+			ARecordTypeCG recordType = (ARecordTypeCG) recordPattern.getType();
+			boolean checkRecordPattern = checkRecordPattern(actualValue);
+			
+			return consRecordPatternCheck(declarePatternVar, recordPattern, recordType, patternData, actualValue, checkRecordPattern);
 		}
 
 		return null;
@@ -576,7 +579,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 
 	private ABlockStmCG consRecordPatternCheck(boolean declarePattern,
 			ARecordPatternCG recordPattern, ARecordTypeCG recordType,
-			PatternBlockData patternData, SExpCG actualValue)
+			PatternBlockData patternData, SExpCG actualValue, boolean checkRecordType)
 	{
 		AIdentifierPatternCG idPattern = getIdPattern(config.getName(recordPattern.getClass()));
 
@@ -608,8 +611,29 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 
 		recordPatternBlock.getStatements().add(fieldCheckBlock);
 
-		return recordPatternBlock;
+		if (checkRecordType)
+		{
+			AInstanceofExpCG instanceOfExp = new AInstanceofExpCG();
+			instanceOfExp.setType(new ABoolBasicTypeCG());
+			instanceOfExp.setExp(actualValue.clone());
+			instanceOfExp.setCheckedType(recordType.clone());
 
+			AIfStmCG ifStm = new AIfStmCG();
+			ifStm.setIfExp(instanceOfExp);
+			ifStm.setThenStm(recordPatternBlock);
+
+			ALocalAssignmentStmCG setFalse = new ALocalAssignmentStmCG();
+			setFalse.setTarget(patternData.getSuccessVar().clone());
+			setFalse.setExp(info.getExpAssistant().consBoolLiteral(false));
+			ifStm.setElseStm(setFalse);
+
+			ABlockStmCG wrappingBlock = new ABlockStmCG();
+			wrappingBlock.getStatements().add(ifStm);
+
+			return wrappingBlock;
+		}
+		
+		return recordPatternBlock;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -846,9 +870,10 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		} else if (currentPattern instanceof ARecordPatternCG)
 		{
 			ARecordPatternCG nextRecordPattern = (ARecordPatternCG) currentPattern;
-			ARecordTypeCG nextRecordType = (ARecordTypeCG) currentType;
-
-			patternBlock = consRecordPatternCheck(true, nextRecordPattern, nextRecordType, patternData, actualValue);
+			ARecordTypeCG nextRecordType = (ARecordTypeCG) nextRecordPattern.getType();
+			boolean checkRecordPattern = checkRecordPattern(actualValue);
+			
+			patternBlock = consRecordPatternCheck(true, nextRecordPattern, nextRecordType, patternData, actualValue, checkRecordPattern);
 		} else
 		{
 			patternBlock = consPatternCheck(true, currentPattern, currentType, patternData, actualValue);
@@ -1051,5 +1076,10 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 				+ node);
 
 		return null;
+	}
+	
+	private boolean checkRecordPattern(SExpCG actualValue)
+	{
+		return actualValue != null && actualValue.getType() instanceof AUnionTypeCG;
 	}
 }
