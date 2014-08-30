@@ -31,6 +31,9 @@ import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.ATuplePattern;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.types.ABracketType;
+import org.overture.ast.types.ANamedInvariantType;
+import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
@@ -505,5 +508,28 @@ public class TypeAssistantCG extends AssistantBase
 		Logger.getLog().printErrorln("Expected set or sequence type in findElementType. Got: " + type);
 		
 		return null;
+	}
+	
+	public PType resolve(PType type)
+	{
+		while (type instanceof ABracketType || type instanceof ANamedInvariantType || type instanceof AOptionalType)
+		{
+			if (type instanceof ABracketType)
+			{
+				type = ((ABracketType) type).getType();
+			}
+
+			if (type instanceof ANamedInvariantType)
+			{
+				type = ((ANamedInvariantType) type).getType();
+			}
+
+			if (type instanceof AOptionalType)
+			{
+				type = ((AOptionalType) type).getType();
+			}
+		}
+		
+		return type;
 	}
 }
