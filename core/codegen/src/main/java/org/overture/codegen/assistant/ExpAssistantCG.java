@@ -361,9 +361,11 @@ public class ExpAssistantCG extends AssistantBase
 			casesCg.add((ACaseAltExpExpCG) altCg);
 		}
 
-		if (exp.getType() instanceof AUnionType)
+		PType expType = question.getTypeAssistant().resolve(exp.getType());
+		
+		if (expType instanceof AUnionType)
 		{
-			AUnionType unionType = ((AUnionType) exp.getType()).clone();
+			AUnionType unionType = ((AUnionType) expType).clone();
 			question.getTcFactory().createAUnionTypeAssistant().expand(unionType);
 
 			for (int i = 0; i < cases.size(); i++)
@@ -377,11 +379,11 @@ public class ExpAssistantCG extends AssistantBase
 			}
 		} else
 		{
-			STypeCG expType = exp.getType().apply(question.getTypeVisitor(), question);
+			STypeCG expTypeCg = expType.apply(question.getTypeVisitor(), question);
 
 			for (ACaseAltExpExpCG altCg : casesCg)
 			{
-				altCg.setPatternType(expType.clone());
+				altCg.setPatternType(expTypeCg.clone());
 			}
 		}
 	}
