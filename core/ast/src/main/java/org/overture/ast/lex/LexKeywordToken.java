@@ -26,38 +26,39 @@ package org.overture.ast.lex;
 import org.overture.ast.intf.lex.ILexKeywordToken;
 import org.overture.ast.intf.lex.ILexLocation;
 
-
-public class LexKeywordToken extends LexToken implements ILexKeywordToken  {
+public class LexKeywordToken extends LexToken implements ILexKeywordToken
+{
 	private static final long serialVersionUID = 1L;
 
-	public LexKeywordToken(VDMToken type, ILexLocation location) {
+	public LexKeywordToken(VDMToken type, ILexLocation location)
+	{
 		super(location, type);
 	}
 
 	@Override
-	public ILexKeywordToken clone() {
+	public ILexKeywordToken clone()
+	{
 		return new LexKeywordToken(type, location);
 	}
-	
-//	@Override
-//	public void apply(IAnalysis analysis) {
-//		analysis.caselexk(this);
-//	}
-//
-//	@Override
-//	public <A> A apply(IAnswer<A> caller) {
-//		return caller.caseLexKeywordToken(this);
-//	}
-//
-//	@Override
-//	public <Q> void apply(IQuestion<Q> caller, Q question) {
-//		caller.caseLexKeywordToken(this, question);
-//	}
-//
-//	@Override
-//	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) {
-//		return caller.caseLexKeywordToken(this, question);
-//	}
-	
-	
+
+	// @Override
+	// public void apply(IAnalysis analysis) {
+	// analysis.caselexk(this);
+	// }
+	//
+	// @Override
+	// public <A> A apply(IAnswer<A> caller) {
+	// return caller.caseLexKeywordToken(this);
+	// }
+	//
+	// @Override
+	// public <Q> void apply(IQuestion<Q> caller, Q question) {
+	// caller.caseLexKeywordToken(this, question);
+	// }
+	//
+	// @Override
+	// public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) {
+	// return caller.caseLexKeywordToken(this, question);
+	// }
+
 }

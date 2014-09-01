@@ -26,7 +26,6 @@ package org.overture.interpreter.scheduler;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.interpreter.runtime.Context;
 
-
 public class BusThread extends SchedulablePoolThread
 {
 	private static final long serialVersionUID = 1L;
@@ -40,7 +39,7 @@ public class BusThread extends SchedulablePoolThread
 	@Override
 	protected void body()
 	{
-		BUSResource bus = (BUSResource)resource;
+		BUSResource bus = (BUSResource) resource;
 		bus.process(this);
 	}
 
@@ -52,9 +51,9 @@ public class BusThread extends SchedulablePoolThread
 			case TERMINATE:
 				throw new ThreadDeath();
 
-			case SUSPEND:	// Ignore
+			case SUSPEND: // Ignore
 				break;
-				
+
 			default:
 				break;
 		}

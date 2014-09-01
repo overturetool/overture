@@ -34,7 +34,6 @@ import org.overture.ast.types.SSeqType;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ValueException;
 
-
 public class SeqValue extends Value
 {
 	private static final long serialVersionUID = 1L;
@@ -55,7 +54,7 @@ public class SeqValue extends Value
 		this.values = new ValueList();
 		int len = s.length();
 
-		for (int i=0; i<len; i++)
+		for (int i = 0; i < len; i++)
 		{
 			this.values.add(new CharacterValue(s.charAt(i)));
 		}
@@ -79,20 +78,21 @@ public class SeqValue extends Value
 
 		if (s.charAt(0) == '"')
 		{
-			return s.substring(1, s.length()-1);
+			return s.substring(1, s.length() - 1);
 		}
 
 		return s;
 	}
 
 	@Override
-	public void formatTo(Formatter formatter, int flags, int width, int precision)
+	public void formatTo(Formatter formatter, int flags, int width,
+			int precision)
 	{
 		String s = values.toString();
 
 		if ((flags & FormattableFlags.ALTERNATE) == 0 && s.charAt(0) == '"')
 		{
-			s = s.substring(1, s.length()-1);
+			s = s.substring(1, s.length() - 1);
 		}
 
 		formatTo(s, formatter, flags, width, precision);
@@ -103,7 +103,7 @@ public class SeqValue extends Value
 	{
 		ValueList nseq = new ValueList();
 
-		for (Value k: values)
+		for (Value k : values)
 		{
 			Value v = k.getUpdatable(listeners);
 			nseq.add(v);
@@ -120,14 +120,14 @@ public class SeqValue extends Value
 
 	public Value get(Value arg, Context ctxt) throws ValueException
 	{
-		int i = (int)arg.nat1Value(ctxt);
+		int i = (int) arg.nat1Value(ctxt);
 
 		if (i < 1 || i > values.size())
 		{
 			abort(4083, "Sequence index out of range: " + arg, ctxt);
 		}
 
-		return values.get(i-1);		// NB 1st = 1. Throws IndexOutOfBounds
+		return values.get(i - 1); // NB 1st = 1. Throws IndexOutOfBounds
 	}
 
 	@Override
@@ -135,13 +135,13 @@ public class SeqValue extends Value
 	{
 		if (other instanceof Value)
 		{
-			Value val = ((Value)other).deref();
+			Value val = ((Value) other).deref();
 
-    		if (val instanceof SeqValue)
-    		{
-    			SeqValue ot = (SeqValue)val;
-    			return values.equals(ot.values);
-    		}
+			if (val instanceof SeqValue)
+			{
+				SeqValue ot = (SeqValue) val;
+				return values.equals(ot.values);
+			}
 		}
 
 		return false;
@@ -166,7 +166,8 @@ public class SeqValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt) throws AnalysisException
+	public Value convertValueTo(PType to, Context ctxt)
+			throws AnalysisException
 	{
 		// We can't use the isSeq method as it plucks out one sequence
 		// value from a union. We need to try all union members. So we
@@ -179,17 +180,16 @@ public class SeqValue extends Value
 				abort(4084, "Cannot convert empty sequence to seq1", ctxt);
 			}
 
-			SSeqType seqto = (SSeqType)to;
+			SSeqType seqto = (SSeqType) to;
 			ValueList nl = new ValueList();
 
-			for (Value v: values)
+			for (Value v : values)
 			{
 				nl.add(v.convertValueTo(seqto.getSeqof(), ctxt));
 			}
 
 			return new SeqValue(nl);
-		}
-		else
+		} else
 		{
 			return super.convertValueTo(to, ctxt);
 		}
@@ -198,6 +198,6 @@ public class SeqValue extends Value
 	@Override
 	public Object clone()
 	{
-		return new SeqValue((ValueList)values.clone());
+		return new SeqValue((ValueList) values.clone());
 	}
 }

@@ -1,0 +1,70 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class A {
+    public A() {
+    }
+
+    public Number op(final Number x) {
+        return 1L;
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class B {
+    public B() {
+    }
+
+    public Number op(final Number x) {
+        return 1L;
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Number Run() {
+        VDMMap xs = MapUtil.map(new Maplet(1L, new A()), new Maplet(2L, new B()));
+        Object x = ((Object) xs.get(1L));
+
+        Number apply_1 = null;
+
+        if (x instanceof A) {
+            apply_1 = ((A) x).op(1L);
+        } else if (x instanceof B) {
+            apply_1 = ((B) x).op(1L);
+        } else {
+            throw new RuntimeException("Missing member: op");
+        }
+
+        Number apply_2 = null;
+
+        if (x instanceof A) {
+            apply_2 = ((A) x).op(apply_1);
+        } else if (x instanceof B) {
+            apply_2 = ((B) x).op(apply_1);
+        } else {
+            throw new RuntimeException("Missing member: op");
+        }
+
+        Number q = apply_2;
+
+        return 1L;
+    }
+}
+
+##########

@@ -1,0 +1,50 @@
+class A
+
+functions
+
+public f : () -> (nat * nat)
+f () == mk_(1,2);
+
+end A
+
+class B
+
+functions
+
+public f : () -> (nat * nat)
+f () == mk_(1,1);
+
+end B
+
+class Entry
+
+functions
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let m = {1 |-> new A(), 2 |-> new B()}
+in
+	if 1 = 2 then
+	(
+		return false;
+	)
+	elseif 2 = 3 then
+	(
+		return false;
+	)
+	elseif m(1).f() = mk_(1,2) then
+	(
+		return true;
+	) 
+	elseif 4 = 5 then
+	(
+		return false;
+	)
+	else
+	(
+		return false;
+	)
+		
+end Entry

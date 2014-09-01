@@ -1,3 +1,24 @@
+/*
+ * #%~
+ * VDM Code Generator Runtime
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.codegen.runtime;
 
 
@@ -46,9 +67,9 @@ public class Tuple implements ValueType, Comparable
 		}
 	}
 
-	public int size()
+	public Long size()
 	{
-		return values.length;
+		return (long) values.length;
 	}
 
 	public Object get(int i)
@@ -56,6 +77,32 @@ public class Tuple implements ValueType, Comparable
 		return values[i];
 	}
 
+	public boolean compatible(Class... types)
+	{
+		if (this.values.length != types.length)
+		{
+			return false;
+		}
+
+		for (int i = 0; i < this.values.length; i++)
+		{
+			Object toValue = this.values[i];
+			Class type = types[i];
+
+			if (type == null)
+			{
+				return false;
+			}
+
+			if (toValue != null && !(type.isInstance(toValue)))
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+	
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -72,7 +119,7 @@ public class Tuple implements ValueType, Comparable
 		if (other.size() != size())
 			return false;
 
-		final int size = size();
+		final int size = values.length;
 		for (int i = 0; i < size; i++)
 		{
 			final Object thisNthValue = get(i);
@@ -115,7 +162,7 @@ public class Tuple implements ValueType, Comparable
 
 		for (int i = 1; i < values.length; i++)
 		{
-			str.append(", " + values[i]);
+			str.append(", " + Utils.toString(values[i]));
 		}
 
 		return "mk_(" + str + ")";

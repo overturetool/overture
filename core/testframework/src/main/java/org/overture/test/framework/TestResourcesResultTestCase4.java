@@ -1,8 +1,30 @@
+/*
+ * #%~
+ * Test Framework for Overture
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.test.framework;
 
 import java.io.File;
 
-public abstract class TestResourcesResultTestCase4<R> extends ResultTestCase4<R>
+public abstract class TestResourcesResultTestCase4<R> extends
+		ResultTestCase4<R>
 {
 	protected final File testSuiteRoot;
 	protected final String suiteName;
@@ -21,12 +43,12 @@ public abstract class TestResourcesResultTestCase4<R> extends ResultTestCase4<R>
 		suiteName = null;
 	}
 
-//	public TestResourcesResultTestCase4(File rootSource,String name, String content)
-//	{
-//		super(rootSource,name, content);
-//		testSuiteRoot = null;
-//		suiteName = null;
-//	}
+	// public TestResourcesResultTestCase4(File rootSource,String name, String content)
+	// {
+	// super(rootSource,name, content);
+	// testSuiteRoot = null;
+	// suiteName = null;
+	// }
 
 	public TestResourcesResultTestCase4(File file, String suiteName,
 			File testSuiteRoot)
@@ -70,7 +92,7 @@ public abstract class TestResourcesResultTestCase4<R> extends ResultTestCase4<R>
 		{
 			tmp = tmp.substring(tmp.indexOf('/') + 1);
 		}
-		return ( tmp).replace('/', File.separatorChar).replaceAll(" ", "");
+		return tmp.replace('/', File.separatorChar).replaceAll(" ", "");
 	}
 
 }

@@ -1,17 +1,65 @@
-class Threadname
+class ThreadClass
+
+ 
+
+instance variables
+
+ 
+
+public x : nat := 0;
+
+ 
 
 thread
- skip;
- 
-end Threadname
 
-class Threaduser
+       setX();
+
+      
 
 operations
 
-public static useThread() ==> ()
-useThread() == (
-	start(new Threadname())
+ 
+
+public setX : () ==> ()
+
+setX () ==
+
+       x := 2;
+
+ 
+
+end ThreadClass
+
+ 
+
+class Entry
+
+ 
+
+operations
+
+ 
+
+public static Run : () ==> ?
+
+Run () ==
+
+(
+
+       dcl t : ThreadClass := new ThreadClass();
+
+       start(t);
+
+      
+
+       while t.x <> 2 do skip;
+
+      
+
+       return t.x;
+
 );
 
-end Threaduser
+ 
+
+end Entry

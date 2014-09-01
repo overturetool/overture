@@ -1,3 +1,24 @@
+/*
+ * #%~
+ * The VDM Type Checker
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.typechecker.assistant;
 
 import java.util.Collection;
@@ -30,7 +51,9 @@ import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
 import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.Environment;
+import org.overture.typechecker.LexNameTokenAssistant;
 import org.overture.typechecker.TypeCheckInfo;
+import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.definition.ABusClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ACpuClassDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
@@ -84,7 +107,6 @@ import org.overture.typechecker.assistant.type.APatternListTypePairAssistantTC;
 import org.overture.typechecker.assistant.type.ARecordInvariantTypeAssistantTC;
 import org.overture.typechecker.assistant.type.AUnionTypeAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
-import org.overture.typechecker.assistant.type.SNumericBasicTypeAssistantTC;
 import org.overture.typechecker.utilities.CallableOperationChecker;
 import org.overture.typechecker.utilities.ComposeTypeCollector;
 import org.overture.typechecker.utilities.DefinitionCollector;
@@ -156,22 +178,18 @@ import org.overture.typechecker.visitor.QualificationVisitor;
 
 //TODO Add assistant Javadoc
 /**
- * An assistant factory for the Overture Typecher. The methods supplied here
- * only support pure VDM nodes. Override/extend as needed.
+ * An assistant factory for the Overture Typecher. The methods supplied here only support pure VDM nodes.
+ * Override/extend as needed.
+ * 
  * @author ldc
- *
  */
 public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		ITypeCheckerAssistantFactory
 {
-	static
-	{
-		// FIXME: remove this when conversion to factory obtained assistants are completed.
-		// init(new AstAssistantFactory());
-		init(new TypeCheckerAssistantFactory());
-	}
 
-	// Type
+	// instance variables of things to return
+	transient TypeComparator typeComp;
+	transient LexNameTokenAssistant lnt;
 
 	@Override
 	public AApplyObjectDesignatorAssistantTC createAApplyObjectDesignatorAssistant()
@@ -225,12 +243,6 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public PTypeAssistantTC createPTypeAssistant()
 	{
 		return new PTypeAssistantTC(this);
-	}
-
-	@Override
-	public SNumericBasicTypeAssistantTC createSNumericBasicTypeAssistant()
-	{
-		return new SNumericBasicTypeAssistantTC(this);
 	}
 
 	// definition
@@ -301,11 +313,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new AStateDefinitionAssistantTC(this);
 	}
 
-//	@Override
-//	public ASystemClassDefinitionAssistantTC createASystemClassDefinitionAssistant()
-//	{
-//		return new ASystemClassDefinitionAssistantTC(this);
-//	}
+	// @Override
+	// public ASystemClassDefinitionAssistantTC createASystemClassDefinitionAssistant()
+	// {
+	// return new ASystemClassDefinitionAssistantTC(this);
+	// }
 
 	@Override
 	public AThreadDefinitionAssistantTC createAThreadDefinitionAssistant()
@@ -445,17 +457,17 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	// return new ACharacterPatternAssistantTC(this);
 	// }
 
-//	@Override
-//	public AConcatenationPatternAssistantTC createAConcatenationPatternAssistant()
-//	{
-//		return new AConcatenationPatternAssistantTC(this);
-//	}
-//
-//	@Override
-//	public AExpressionPatternAssistantTC createAExpressionPatternAssistant()
-//	{
-//		return new AExpressionPatternAssistantTC(this);
-//	}
+	// @Override
+	// public AConcatenationPatternAssistantTC createAConcatenationPatternAssistant()
+	// {
+	// return new AConcatenationPatternAssistantTC(this);
+	// }
+	//
+	// @Override
+	// public AExpressionPatternAssistantTC createAExpressionPatternAssistant()
+	// {
+	// return new AExpressionPatternAssistantTC(this);
+	// }
 
 	@Override
 	public AMapletPatternMapletAssistantTC createAMapletPatternMapletAssistant()
@@ -463,17 +475,17 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new AMapletPatternMapletAssistantTC(this);
 	}
 
-//	@Override
-//	public AMapPatternAssistantTC createAMapPatternAssistant()
-//	{
-//		return new AMapPatternAssistantTC(this);
-//	}
+	// @Override
+	// public AMapPatternAssistantTC createAMapPatternAssistant()
+	// {
+	// return new AMapPatternAssistantTC(this);
+	// }
 
-//	@Override
-//	public AMapUnionPatternAssistantTC createAMapUnionPatternAssistant()
-//	{
-//		return new AMapUnionPatternAssistantTC(this);
-//	}
+	// @Override
+	// public AMapUnionPatternAssistantTC createAMapUnionPatternAssistant()
+	// {
+	// return new AMapUnionPatternAssistantTC(this);
+	// }
 
 	@Override
 	public APatternTypePairAssistant createAPatternTypePairAssistant()
@@ -481,17 +493,17 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new APatternTypePairAssistant(this);
 	}
 
-//	@Override
-//	public ARecordPatternAssistantTC createARecordPatternAssistant()
-//	{
-//		return new ARecordPatternAssistantTC(this);
-//	}
+	// @Override
+	// public ARecordPatternAssistantTC createARecordPatternAssistant()
+	// {
+	// return new ARecordPatternAssistantTC(this);
+	// }
 
-//	@Override
-//	public ASeqPatternAssistantTC createASeqPatternAssistant()
-//	{
-//		return new ASeqPatternAssistantTC(this);
-//	}
+	// @Override
+	// public ASeqPatternAssistantTC createASeqPatternAssistant()
+	// {
+	// return new ASeqPatternAssistantTC(this);
+	// }
 
 	@Override
 	public ASetBindAssistantTC createASetBindAssistant()
@@ -499,17 +511,17 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new ASetBindAssistantTC(this);
 	}
 
-//	@Override
-//	public ASetPatternAssistantTC createASetPatternAssistant()
-//	{
-//		return new ASetPatternAssistantTC(this);
-//	}
+	// @Override
+	// public ASetPatternAssistantTC createASetPatternAssistant()
+	// {
+	// return new ASetPatternAssistantTC(this);
+	// }
 
-//	@Override
-//	public ATuplePatternAssistantTC createATuplePatternAssistant()
-//	{
-//		return new ATuplePatternAssistantTC(this);
-//	}
+	// @Override
+	// public ATuplePatternAssistantTC createATuplePatternAssistant()
+	// {
+	// return new ATuplePatternAssistantTC(this);
+	// }
 
 	@Override
 	public ATypeBindAssistantTC createATypeBindAssistant()
@@ -517,11 +529,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new ATypeBindAssistantTC(this);
 	}
 
-//	@Override
-//	public AUnionPatternAssistantTC createAUnionPatternAssistant()
-//	{
-//		return new AUnionPatternAssistantTC(this);
-//	}
+	// @Override
+	// public AUnionPatternAssistantTC createAUnionPatternAssistant()
+	// {
+	// return new AUnionPatternAssistantTC(this);
+	// }
 
 	@Override
 	public PatternListTC createPatternList()
@@ -1095,5 +1107,26 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 	public IQuestionAnswer<TypeCheckInfo, List<QualifiedDefinition>> getQualificationVisitor()
 	{
 		return new QualificationVisitor();
+	}
+
+	@Override
+	public TypeComparator getTypeComparator()
+	{
+		if (typeComp == null)
+		{
+			typeComp = new TypeComparator(this);
+		}
+		return typeComp;
+
+	}
+
+	@Override
+	public LexNameTokenAssistant getLexNameTokenAssistant()
+	{
+		if (lnt == null)
+		{
+			lnt = new LexNameTokenAssistant(this);
+		}
+		return lnt;
 	}
 }

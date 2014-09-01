@@ -1,0 +1,15 @@
+class Entry
+
+functions
+
+public fun :  () -> set of nat
+fun () ==
+	{a + b | mk_(2,a), mk_(b,5) in set {mk_(1, 5), mk_(2,5), mk_(2,60)}};
+
+operations
+	
+public static Run : () ==> ?
+Run () ==
+	fun();
+
+end Entry

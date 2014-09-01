@@ -34,69 +34,77 @@ import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexStringToken;
 
-public class LexStringToken extends LexToken implements ILexStringToken {
+public class LexStringToken extends LexToken implements ILexStringToken
+{
 	private static final long serialVersionUID = 1L;
 	public final String value;
 
-	public LexStringToken(String value, ILexLocation location) {
+	public LexStringToken(String value, ILexLocation location)
+	{
 		super(location, VDMToken.STRING);
 		this.value = value;
 	}
 
-	
-	
 	@Override
 	public String getValue()
 	{
 		return value;
 	}
 
-
-
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		return "\"" + value + "\"";
 	}
 
 	@Override
-	public ILexStringToken clone() {
+	public ILexStringToken clone()
+	{
 		return new LexStringToken(value, location);
 	}
-	
+
 	@Override
-	public void apply(IAnalysis analysis) throws AnalysisException {
+	public void apply(IAnalysis analysis) throws AnalysisException
+	{
 		analysis.caseILexStringToken(this);
 	}
 
 	@Override
-	public <A> A apply(IAnswer<A> caller) throws AnalysisException {
-		return caller.caseILexStringToken(this); 
+	public <A> A apply(IAnswer<A> caller) throws AnalysisException
+	{
+		return caller.caseILexStringToken(this);
 	}
 
 	@Override
-	public <Q> void apply(IQuestion<Q> caller, Q question) throws AnalysisException {
+	public <Q> void apply(IQuestion<Q> caller, Q question)
+			throws AnalysisException
+	{
 		caller.caseILexStringToken(this, question);
 	}
 
 	@Override
-	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) throws AnalysisException {
+	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question)
+			throws AnalysisException
+	{
 		return caller.caseILexStringToken(this, question);
 	}
-	
+
 	/**
 	 * Creates a map of all field names and their value
-	 * @param includeInheritedFields if true all inherited fields are included
+	 * 
+	 * @param includeInheritedFields
+	 *            if true all inherited fields are included
 	 * @return a a map of names to values of all fields
 	 */
 	@Override
-	public Map<String,Object> getChildren(Boolean includeInheritedFields)
+	public Map<String, Object> getChildren(Boolean includeInheritedFields)
 	{
-		Map<String,Object> fields = new HashMap<String,Object>();
-		if(includeInheritedFields)
+		Map<String, Object> fields = new HashMap<String, Object>();
+		if (includeInheritedFields)
 		{
 			fields.putAll(super.getChildren(includeInheritedFields));
 		}
-		fields.put("value",this.value);
+		fields.put("value", this.value);
 		return fields;
 	}
 }

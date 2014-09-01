@@ -1,3 +1,24 @@
+/*
+ * #%~
+ * VDM Code Generator Runtime
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.codegen.runtime;
 
 public class Utils
@@ -26,7 +47,7 @@ public class Utils
 		return toInt(value) - 1;
 	}
 	
-	private static int toInt(Number value) {
+	public static int toInt(Number value) {
 		
 		long valueLong = value.longValue();
 		
@@ -53,10 +74,43 @@ public class Utils
 
 			for (int i = 1; i < fields.length; i++)
 			{
-				str.append(", " + fields[i]);
+				str.append(", " + Utils.toString(fields[i]));
 			}
 		}
 
 		return "mk_" + record.getClass().getSimpleName() + "(" + str + ")";
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T extends ValueType> T clone(T t)
+	{
+		return (T) (t != null ? t.clone() : t);
+	}
+	
+	public static String toString(Object obj)
+	{
+		if(obj == null)
+		{
+			return "nil";
+		}
+		else if(obj instanceof Number)
+		{
+			Number n = (Number) obj;
+			
+			if(n.doubleValue() % 1 == 0)
+			{
+				return Long.toString(n.longValue());
+			}
+			else 
+			{
+				return Double.toString(n.doubleValue());
+			}
+		}
+		else if(obj instanceof String)
+		{
+			return "\"" + obj.toString() + "\"";
+		}
+		
+		return obj.toString();
 	}
 }

@@ -50,7 +50,6 @@ import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.utility.POException;
 import org.overture.pog.utility.PogAssistantFactory;
-import org.overture.typechecker.TypeComparator;
 
 public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofObligationList>
 		extends QuestionAnswerAdaptor<IPOContextStack, IProofObligationList>
@@ -115,9 +114,10 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 		try
 		{
 			IProofObligationList obligations = new ProofObligationList();
-			if (!node.getInConstructor()
-					&& (node.getClassDefinition() != null && node.getClassDefinition().getInvariant() != null)
-					|| (node.getStateDefinition() != null && node.getStateDefinition().getInvExpression() != null))
+			if (!node.getInConstructor() && node.getClassDefinition() != null
+					&& node.getClassDefinition().getInvariant() != null
+					|| node.getStateDefinition() != null
+					&& node.getStateDefinition().getInvExpression() != null)
 			{
 				obligations.add(new StateInvariantObligation(node, question, aF));
 			}
@@ -125,7 +125,7 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 			obligations.addAll(node.getTarget().apply(rootVisitor, question));
 			obligations.addAll(node.getExp().apply(rootVisitor, question));
 
-			if (!TypeComparator.isSubType(question.checkType(node.getExp(), node.getExpType()), node.getTargetType(), aF))
+			if (!aF.getTypeComparator().isSubType(question.checkType(node.getExp(), node.getExpType()), node.getTargetType()))
 			{
 				TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(node.getExp(), node.getTargetType(), node.getExpType(), question, aF);
 				if (sto != null)
@@ -157,16 +157,18 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 			{
 				stmt.apply(mainVisitor, question); // collect the assignments
 				if (!stmt.getInConstructor()
-						&& (stmt.getClassDefinition() != null && stmt.getClassDefinition().getInvariant() != null)
-						|| (stmt.getStateDefinition() != null && stmt.getStateDefinition().getInvExpression() != null))
+						&& stmt.getClassDefinition() != null
+						&& stmt.getClassDefinition().getInvariant() != null
+						|| stmt.getStateDefinition() != null
+						&& stmt.getStateDefinition().getInvExpression() != null)
 				{
 					needsInv = true;
 				}
 			}
 			if (needsInv)
 			{
-				//FIXME State Inv For Atomic assignments
-				obligations.add(new StateInvariantObligation(node.getAssignments().get(0), question, aF));
+				// FIXME State Inv For Atomic assignments
+				obligations.add(new StateInvariantObligation(node, question, aF));
 			}
 
 			return obligations;
@@ -633,7 +635,8 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 		{
 			IProofObligationList obligations = new ProofObligationList();
 
-			for (PStm stmt : node.getStatements()) {
+			for (PStm stmt : node.getStatements())
+			{
 				obligations.addAll(stmt.apply(mainVisitor, question));
 			}
 

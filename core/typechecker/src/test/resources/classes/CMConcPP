@@ -81,6 +81,9 @@ showResult () ==
 public isFinished : () ==> ()
 isFinished () == skip;
 
+public getAperture: () ==> Angle * Angle
+getAperture () == return mk_(0,0);
+
 sync
 
 mutex (handleEvent);
@@ -341,7 +344,10 @@ releaseFlare (evid, pfltp, pt1, pt2) ==
   World`env.handleEvent(evid,pfltp,aperture,pt1,pt2);
 
 public isFinished: () ==> ()
-isFinished () == skip
+isFinished () == skip;
+
+public getAperture: () ==> Angle * Angle
+getAperture () == return mk_(0,0);
 
 sync
 
@@ -565,6 +571,9 @@ processSensor() ==
          then controllers(id).addThreat(evid,pmt,pa,pt);
    busy := len threats > 0);
  
+public getAperture: () ==> Angle * Angle
+getAperture () == return mk_(0,0);
+
 sync
 
 -- addThreat and getThreat modify the same instance variables

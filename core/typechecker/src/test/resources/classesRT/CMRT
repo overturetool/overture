@@ -140,6 +140,9 @@ GetAndPurgeOutlines() ==
     (outlines := [];
      return res);
 
+public getAperture: () ==> Angle * Angle
+getAperture () == mk_(0,0);
+
 sync
 
 mutex (handleEvent);
@@ -457,7 +460,10 @@ releaseFlare (evid, pfltp, pt1, pt2) ==
   World`env.handleEvent(evid,pfltp,aparature,pt1,pt2);
 
 public isFinished: () ==> ()
-isFinished () == skip
+isFinished () == skip;
+
+public getAperture: () ==> Angle * Angle
+getAperture () == return mk_(0,0);
 
 sync
 
@@ -664,7 +670,10 @@ getThreat () ==
 public isFinished: () ==> ()
 isFinished () ==
   for all id in set dom controllers do
-    controllers(id).isFinished()
+    controllers(id).isFinished();
+
+public getAperture: () ==> Angle * Angle
+getAperture () == return mk_(0,0);
 
 sync
 

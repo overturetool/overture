@@ -36,17 +36,18 @@ public class WhileLoopObligation extends ProofObligation
 {
 	private static final long serialVersionUID = -3771203462569628826L;
 
-	public WhileLoopObligation(AWhileStm stmt, IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
+	public WhileLoopObligation(AWhileStm stmt, IPOContextStack ctxt,
+			IPogAssistantFactory af) throws AnalysisException
 	{
 		super(stmt, POType.WHILE_LOOP, ctxt, stmt.getLocation(), af);
 		AWhileStm whileStmt = new AWhileStm();
 		whileStmt.setExp(stmt.getExp().clone());
 		whileStmt.setStatement(new ASkipStm());
-		
+
 		AVariableExp nyexp = getVarExp(new LexNameToken("", "NotYetImplemented", null));
 		valuetree.setPredicate(nyexp);
-		
+
 		// valuetree.setPredicate(whileStmt);
-//		valuetree.setContext(ctxt.getContextNodeList());
+		// valuetree.setContext(ctxt.getContextNodeList());
 	}
 }

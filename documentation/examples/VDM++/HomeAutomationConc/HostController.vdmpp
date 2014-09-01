@@ -203,7 +203,7 @@ public Finish: () ==> ()
 Finish() == 
   finished := true;
 
-Step: () ==> ()
+protected Step: () ==> ()
 Step() ==
  (UpdateValues();
   Algorithm();

@@ -25,7 +25,8 @@ package org.overture.pog.pub;
 
 public enum POStatus
 {
-	UNPROVED("Unproved"), SUBMITTED("Submitted"), PROVED("Proved"), DISPROVED("Disproved"), INTERNAL_ERROR("InternalError");
+	UNPROVED("Unproved"), SUBMITTED("Submitted"), PROVED("Proved"), DISPROVED(
+			"Disproved"), INTERNAL_ERROR("InternalError");
 
 	private String text;
 

@@ -2,14 +2,15 @@ class A
 
 operations 
 
-public double : nat ==> ()
+public double : nat ==> nat
 double (Character) == 
-	if true then
+	if 1 <> 2 then
 	(
-		return;
-	  double(3) 
+		return double(3) 
 	) 
-	else
-			double(3)
+	else 
+	(
+		return double(3)
+	)
 			
 end A

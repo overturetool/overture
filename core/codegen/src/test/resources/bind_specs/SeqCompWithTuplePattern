@@ -1,0 +1,15 @@
+class Entry
+
+functions
+
+public fun :  () -> seq of nat
+fun () ==
+	[ a | mk_(-, mk_(2, a)) in set {mk_(10, mk_(3,4)), mk_(20, mk_(3, 10)), mk_(1, mk_(2, 20)), mk_(1, mk_(3, 4))} & 1 = 1 ];
+	
+operations
+	
+public static Run : () ==> ?
+Run () ==
+	fun();
+
+end Entry

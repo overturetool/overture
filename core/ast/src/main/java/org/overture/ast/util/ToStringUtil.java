@@ -1,3 +1,24 @@
+/*
+ * #%~
+ * The Overture Abstract Syntax Tree
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.ast.util;
 
 import java.util.List;
@@ -53,7 +74,9 @@ public class ToStringUtil
 
 		String accessStr = d.getAccess().toString();
 		if (d.getNameScope() == NameScope.LOCAL)
+		{
 			accessStr = "";
+		}
 
 		return accessStr
 				+ d.getName().getName()
@@ -153,7 +176,7 @@ public class ToStringUtil
 				sb.append(d.getAccess());
 				sb.append(" ");
 			}
-			//sb.append(d.getClass().getName() + " " + getVariableNames(d) + ":" + d.getType());
+			// sb.append(d.getClass().getName() + " " + getVariableNames(d) + ":" + d.getType());
 			sb.append(d.toString());
 			sb.append("\n");
 		}
@@ -175,30 +198,35 @@ public class ToStringUtil
 
 	private static LexNameList getVariableNames(PDefinition d)
 	{
-		if (d instanceof SClassDefinition) {
+		if (d instanceof SClassDefinition)
+		{
 			if (d instanceof SClassDefinition)
 			{
 				return getVariableNames(((SClassDefinition) d).getDefinitions());
 			}
 			assert false : "Error in class getVariableNames";
-		} else if (d instanceof AEqualsDefinition) {
+		} else if (d instanceof AEqualsDefinition)
+		{
 			if (d instanceof AEqualsDefinition)
 			{
 				return ((AEqualsDefinition) d).getDefs() == null ? new LexNameList()
 						: getVariableNames(((AEqualsDefinition) d).getDefs());
 			}
 			assert false : "Error in equals getVariableNames";
-		} else if (d instanceof AExternalDefinition) {
+		} else if (d instanceof AExternalDefinition)
+		{
 			// return state.getVariableNames();
 			// TODO
 			return new LexNameList(new LexNameToken("Not implemented", "Not implemented", new LexLocation()));
-		} else if (d instanceof AImportedDefinition) {
+		} else if (d instanceof AImportedDefinition)
+		{
 			if (d instanceof AImportedDefinition)
 			{
 				return getVariableNames(((AImportedDefinition) d).getDef());
 			}
 			assert false : "Error in imported getVariableNames";
-		} else if (d instanceof AInheritedDefinition) {
+		} else if (d instanceof AInheritedDefinition)
+		{
 			if (d instanceof AInheritedDefinition)
 			{
 				LexNameList names = new LexNameList();
@@ -212,7 +240,8 @@ public class ToStringUtil
 				return names;
 			}
 			assert false : "Error in inherited getVariableNames";
-		} else if (d instanceof AMultiBindListDefinition) {
+		} else if (d instanceof AMultiBindListDefinition)
+		{
 			if (d instanceof AMultiBindListDefinition)
 			{
 				return ((AMultiBindListDefinition) d).getDefs() == null ? new LexNameList()
@@ -220,9 +249,11 @@ public class ToStringUtil
 			}
 		} else if (d instanceof AMutexSyncDefinition
 				|| d instanceof ANamedTraceDefinition
-				|| d instanceof APerSyncDefinition) {
+				|| d instanceof APerSyncDefinition)
+		{
 			return new LexNameList();
-		} else if (d instanceof ARenamedDefinition) {
+		} else if (d instanceof ARenamedDefinition)
+		{
 			if (d instanceof ARenamedDefinition)
 			{
 				LexNameList both = new LexNameList(d.getName());
@@ -230,11 +261,13 @@ public class ToStringUtil
 				return both;
 			}
 			assert false : "Error in renamed getVariableNames";
-		} else if (d instanceof AStateDefinition) {
+		} else if (d instanceof AStateDefinition)
+		{
 			// return statedefs.getVariableNames();
 			// TODO
 			return new LexNameList(new LexNameToken("Not implemented", "Not implemented", new LexLocation()));
-		} else if (d instanceof AThreadDefinition) {
+		} else if (d instanceof AThreadDefinition)
+		{
 			if (d instanceof AThreadDefinition)
 			{
 				if (((AThreadDefinition) d).getOperationDef() != null)// Differnt from VDMJ
@@ -246,18 +279,22 @@ public class ToStringUtil
 				}
 			}
 			assert false : "Error in thread getVariableNames";
-		} else if (d instanceof ATypeDefinition) {
+		} else if (d instanceof ATypeDefinition)
+		{
 			return new LexNameList(d.getName());
-		} else if (d instanceof AUntypedDefinition) {
+		} else if (d instanceof AUntypedDefinition)
+		{
 			assert false : "Can't get variables of untyped definition?";
-		} else if (d instanceof AValueDefinition) {
+		} else if (d instanceof AValueDefinition)
+		{
 			if (d instanceof AValueDefinition)
 			{
 				// return ((AValueDefinition) d).getPattern()
 				// TODO
 				return new LexNameList(new LexNameToken("Not implemented", "Not implemented", new LexLocation()));
 			}
-		} else {
+		} else
+		{
 			return new LexNameList(d.getName());
 		}
 		return null;

@@ -56,7 +56,6 @@ import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.definition.PDefinitionListAssistantInterpreter;
 
 /**
  * This class implements a way collect the old names from expressions
@@ -242,21 +241,21 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 		return list;
 	}
 
-//	public LexNameList defaultSMapExp(SMapExp expression)
-//			throws org.overture.ast.analysis.AnalysisException
-//	{
-//		if (expression instanceof AMapCompMapExp)
-//		{
-//			return  expression.apply(this);
-//		} else if (expression instanceof AMapEnumMapExp)
-//		{
-//			return AMapEnumMapExpAssistantTC.getOldNames((AMapEnumMapExp) expression);
-//		} else
-//		{
-//			assert false : "Should not happen";
-//			return new LexNameList();
-//		}
-//	}
+	// public LexNameList defaultSMapExp(SMapExp expression)
+	// throws org.overture.ast.analysis.AnalysisException
+	// {
+	// if (expression instanceof AMapCompMapExp)
+	// {
+	// return expression.apply(this);
+	// } else if (expression instanceof AMapEnumMapExp)
+	// {
+	// return AMapEnumMapExpAssistantTC.getOldNames((AMapEnumMapExp) expression);
+	// } else
+	// {
+	// assert false : "Should not happen";
+	// return new LexNameList();
+	// }
+	// }
 
 	public LexNameList caseAMapletExp(AMapletExp expression)
 			throws org.overture.ast.analysis.AnalysisException
@@ -325,26 +324,27 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 		return list;
 	}
 
-//	public LexNameList defaultSSeqExp(SSeqExp expression)
-//			throws org.overture.ast.analysis.AnalysisException
-//	{
-//		if (expression instanceof ASeqCompSeqExp)
-//		{
-//			return ASeqCompSeqExpAssistantTC.getOldNames((ASeqCompSeqExp) expression);
-//		} else if (expression instanceof ASeqEnumSeqExp)
-//		{
-//			return ASeqEnumSeqExpAssistantTC.getOldNames((ASeqEnumSeqExp) expression);
-//		} else
-//		{
-//			assert false : "Should not happen";
-//			return new LexNameList();
-//		}
-//	}
+	// public LexNameList defaultSSeqExp(SSeqExp expression)
+	// throws org.overture.ast.analysis.AnalysisException
+	// {
+	// if (expression instanceof ASeqCompSeqExp)
+	// {
+	// return ASeqCompSeqExpAssistantTC.getOldNames((ASeqCompSeqExp) expression);
+	// } else if (expression instanceof ASeqEnumSeqExp)
+	// {
+	// return ASeqEnumSeqExpAssistantTC.getOldNames((ASeqEnumSeqExp) expression);
+	// } else
+	// {
+	// assert false : "Should not happen";
+	// return new LexNameList();
+	// }
+	// }
 
 	public LexNameList defaultSSetExp(SSetExp expression)
 			throws org.overture.ast.analysis.AnalysisException
 	{
-		if (expression instanceof ASetCompSetExp||expression instanceof ASetEnumSetExp)
+		if (expression instanceof ASetCompSetExp
+				|| expression instanceof ASetEnumSetExp)
 		{
 			return expression.apply(this);
 		} else
@@ -373,20 +373,20 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 	{
 		if (expression instanceof AElementsUnaryExp)
 		{
-			return  expression.apply(this);
+			return expression.apply(this);
 		} else
 		{
 			return af.createPExpAssistant().getOldNames(expression.getExp());
 		}
 	}
-	
+
 	@Override
 	public LexNameList caseAElementsUnaryExp(AElementsUnaryExp expression)
 			throws AnalysisException
 	{
 		return af.createPExpAssistant().getOldNames(expression.getExp());
 	}
-	
+
 	@Override
 	public LexNameList caseAMapCompMapExp(AMapCompMapExp expression)
 			throws AnalysisException
@@ -405,7 +405,7 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 
 		return list;
 	}
-	
+
 	@Override
 	public LexNameList caseAMapEnumMapExp(AMapEnumMapExp expression)
 			throws AnalysisException
@@ -419,7 +419,7 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 
 		return list;
 	}
-	
+
 	@Override
 	public LexNameList caseASeqCompSeqExp(ASeqCompSeqExp expression)
 			throws AnalysisException
@@ -434,7 +434,7 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 
 		return list;
 	}
-	
+
 	@Override
 	public LexNameList caseASetCompSetExp(ASetCompSetExp expression)
 			throws AnalysisException
@@ -453,21 +453,21 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 
 		return list;
 	}
-	
+
 	@Override
 	public LexNameList caseASetEnumSetExp(ASetEnumSetExp expression)
 			throws AnalysisException
 	{
 		return af.createPExpAssistant().getOldNames(expression.getMembers());
 	}
-	
+
 	@Override
 	public LexNameList caseASeqEnumSeqExp(ASeqEnumSeqExp expression)
 			throws AnalysisException
 	{
 		return af.createPExpAssistant().getOldNames(expression.getMembers());
 	}
-	
+
 	/**
 	 * This is not an expression
 	 */
@@ -477,7 +477,7 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 	{
 		return af.createPExpAssistant().getOldNames(c.getResult());
 	}
-	
+
 	/**
 	 * This is not an expression
 	 */
@@ -487,47 +487,53 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 	{
 		return af.createPExpAssistant().getOldNames(rm.getValue());
 	}
-	
+
 	@Override
 	public LexNameList caseASetBind(ASetBind bind) throws AnalysisException
 	{
 		return af.createPExpAssistant().getOldNames(bind.getSet());
 	}
-	
+
 	@Override
 	public LexNameList caseASetMultipleBind(ASetMultipleBind mb)
 			throws AnalysisException
 	{
 		return af.createPExpAssistant().getOldNames(mb.getSet());
 	}
-	
+
 	@Override
 	public LexNameList defaultPBind(PBind bind) throws AnalysisException
 	{
-		if (bind instanceof ASetBind) {
+		if (bind instanceof ASetBind)
+		{
 			return bind.apply(this);
-		} else if (bind instanceof ATypeBind) {
+		} else if (bind instanceof ATypeBind)
+		{
 			return bind.apply(this);
-		} else {
+		} else
+		{
 			assert false : "Should not happen";
 			return null;
 		}
 	}
-	
+
 	@Override
 	public LexNameList defaultPMultipleBind(PMultipleBind mb)
 			throws AnalysisException
 	{
-		if (mb instanceof ASetMultipleBind) {
-			return  mb.apply(this);
-		} else if (mb instanceof ATypeMultipleBind) {
-			return  mb.apply(this);
-		} else {
+		if (mb instanceof ASetMultipleBind)
+		{
+			return mb.apply(this);
+		} else if (mb instanceof ATypeMultipleBind)
+		{
+			return mb.apply(this);
+		} else
+		{
 			assert false : "Should not happen";
 			return null;
 		}
 	}
-	
+
 	@Override
 	public LexNameList caseAEqualsDefinition(AEqualsDefinition def)
 			throws AnalysisException
@@ -541,21 +547,21 @@ public class OldNameCollector extends AnswerAdaptor<LexNameList>
 
 		return list;
 	}
-	
+
 	@Override
 	public LexNameList caseATypeMultipleBind(ATypeMultipleBind node)
 			throws AnalysisException
 	{
 		return new LexNameList();
 	}
-	
+
 	@Override
 	public LexNameList caseAValueDefinition(AValueDefinition def)
 			throws AnalysisException
 	{
 		return af.createPExpAssistant().getOldNames(def.getExpression());
 	}
-	
+
 	@Override
 	public LexNameList defaultPDefinition(PDefinition d)
 			throws AnalysisException

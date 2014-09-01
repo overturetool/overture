@@ -29,6 +29,7 @@ import org.overture.interpreter.assistant.expression.APostOpExpAssistantInterpre
 import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.assistant.module.AModuleModulesAssistantInterpreter;
 import org.overture.interpreter.assistant.module.ModuleListAssistantInterpreter;
+import org.overture.interpreter.assistant.pattern.AMapPatternMapletAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.AQuotePatternAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PMultipleBindAssistantInterpreter;
@@ -55,67 +56,69 @@ public interface IInterpreterAssistantFactory extends
 {
 	// definition
 
-	//AApplyExpressionTraceCoreDefinitionAssistantInterpreter createAApplyExpressionTraceCoreDefinitionAssistant();
+	// AApplyExpressionTraceCoreDefinitionAssistantInterpreter createAApplyExpressionTraceCoreDefinitionAssistant();
 
-	//AAssignmentDefinitionAssistantInterpreter createAAssignmentDefinitionAssistant();
+	// AAssignmentDefinitionAssistantInterpreter createAAssignmentDefinitionAssistant();
 
-	//ABracketedExpressionTraceCoreDefinitionAssitantInterpreter createABracketedExpressionTraceCoreDefinitionAssitant();
+	// ABracketedExpressionTraceCoreDefinitionAssitantInterpreter
+	// createABracketedExpressionTraceCoreDefinitionAssitant();
 
 	ABusClassDefinitionAssitantInterpreter createABusClassDefinitionAssitant();
 
 	AClassClassDefinitionAssistantInterpreter createAClassClassDefinitionAssistant();
 
-	//AConcurrentExpressionTraceCoreDefinitionAssistantInterpreter createAConcurrentExpressionTraceCoreDefinitionAssistant();
+	// AConcurrentExpressionTraceCoreDefinitionAssistantInterpreter
+	// createAConcurrentExpressionTraceCoreDefinitionAssistant();
 
 	ACpuClassDefinitionAssistantInterpreter createACpuClassDefinitionAssistant();
 
-	//AEqualsDefinitionAssistantInterpreter createAEqualsDefinitionAssistant();
+	// AEqualsDefinitionAssistantInterpreter createAEqualsDefinitionAssistant();
 
-	//AErrorCaseAssistantInterpreter createAErrorCaseAssistant();
+	// AErrorCaseAssistantInterpreter createAErrorCaseAssistant();
 
 	AExplicitFunctionDefinitionAssistantInterpreter createAExplicitFunctionDefinitionAssistant();
 
-	//AExplicitOperationDefinitionAssistantInterpreter createAExplicitOperationDefinitionAssistant();
+	// AExplicitOperationDefinitionAssistantInterpreter createAExplicitOperationDefinitionAssistant();
 
 	AImplicitFunctionDefinitionAssistantInterpreter createAImplicitFunctionDefinitionAssistant();
 
-	//AImplicitOperationDefinitionAssistantInterpreter createAImplicitOperationDefinitionAssistant();
+	// AImplicitOperationDefinitionAssistantInterpreter createAImplicitOperationDefinitionAssistant();
 
-	//AImportedDefinitionAssistantInterpreter createAImportedDefinitionAssistant();
+	// AImportedDefinitionAssistantInterpreter createAImportedDefinitionAssistant();
 
-	//AInheritedDefinitionAssistantInterpreter createAInheritedDefinitionAssistant();
+	// AInheritedDefinitionAssistantInterpreter createAInheritedDefinitionAssistant();
 
-	//AInstanceVariableDefinitionAssistantInterpreter createAInstanceVariableDefinitionAssistant();
+	// AInstanceVariableDefinitionAssistantInterpreter createAInstanceVariableDefinitionAssistant();
 
-	//ALetBeStBindingTraceDefinitionAssistantInterpreter createALetBeStBindingTraceDefinitionAssistant();
+	// ALetBeStBindingTraceDefinitionAssistantInterpreter createALetBeStBindingTraceDefinitionAssistant();
 
-	//ALetDefBindingTraceDefinitionAssistantInterpreter createALetDefBindingTraceDefinitionAssistant();
+	// ALetDefBindingTraceDefinitionAssistantInterpreter createALetDefBindingTraceDefinitionAssistant();
 
-	//ALocalDefinitionAssistantInterpreter createALocalDefinitionAssistant();
+	// ALocalDefinitionAssistantInterpreter createALocalDefinitionAssistant();
 
 	AMutexSyncDefinitionAssistantInterpreter createAMutexSyncDefinitionAssistant();
 
 	ANamedTraceDefinitionAssistantInterpreter createANamedTraceDefinitionAssistant();
 
-	//APerSyncDefinitionAssistantInterpreter createAPerSyncDefinitionAssistant();
+	// APerSyncDefinitionAssistantInterpreter createAPerSyncDefinitionAssistant();
 
-	//ARenamedDefinitionAssistantInterpreter createARenamedDefinitionAssistant();
+	// ARenamedDefinitionAssistantInterpreter createARenamedDefinitionAssistant();
 
-	//ARepeatTraceDefinitionAssistantInterpreter createARepeatTraceDefinitionAssistant();
+	// ARepeatTraceDefinitionAssistantInterpreter createARepeatTraceDefinitionAssistant();
 
 	AStateDefinitionAssistantInterpreter createAStateDefinitionAssistant();
 
 	ASystemClassDefinitionAssistantInterpreter createASystemClassDefinitionAssistant();
 
-	//AThreadDefinitionAssistantInterpreter createAThreadDefinitionAssistant();
+	// AThreadDefinitionAssistantInterpreter createAThreadDefinitionAssistant();
 
-	//ATraceDefinitionTermAssistantInterpreter createATraceDefinitionTermAssistant();
+	// ATraceDefinitionTermAssistantInterpreter createATraceDefinitionTermAssistant();
 
-	//ATypeDefinitionAssistantInterpreter createATypeDefinitionAssistant();
+	// ATypeDefinitionAssistantInterpreter createATypeDefinitionAssistant();
 
-	///AUntypedDefinitionAssistantInterpreter createAUntypedDefinitionAssistant();
+	// /AUntypedDefinitionAssistantInterpreter createAUntypedDefinitionAssistant();
 
-	//AValueDefinitionAssistantInterpreter createAValueDefinitionAssistant();
+	// AValueDefinitionAssistantInterpreter createAValueDefinitionAssistant();
 
 	PDefinitionAssistantInterpreter createPDefinitionAssistant();
 
@@ -127,95 +130,95 @@ public interface IInterpreterAssistantFactory extends
 
 	// expression
 
-	//AApplyExpAssistantInterpreter createAApplyExpAssistant();
+	// AApplyExpAssistantInterpreter createAApplyExpAssistant();
 
-	//ACaseAlternativeAssistantInterpreter createACaseAlternativeAssistant();
+	// ACaseAlternativeAssistantInterpreter createACaseAlternativeAssistant();
 
-	//ACasesExpAssistantInterpreter createACasesExpAssistant();
+	// ACasesExpAssistantInterpreter createACasesExpAssistant();
 
-	//ADefExpAssistantInterpreter createADefExpAssistant();
+	// ADefExpAssistantInterpreter createADefExpAssistant();
 
-	//AElseIfExpAssistantInterpreter createAElseIfExpAssistant();
+	// AElseIfExpAssistantInterpreter createAElseIfExpAssistant();
 
-	//AExists1ExpAssistantInterpreter createAExists1ExpAssistant();
+	// AExists1ExpAssistantInterpreter createAExists1ExpAssistant();
 
-	//AExistsExpAssistantInterpreter createAExistsExpAssistant();
+	// AExistsExpAssistantInterpreter createAExistsExpAssistant();
 
 	AFieldExpAssistantInterpreter createAFieldExpAssistant();
 
-	//AFieldNumberExpAssistantInterpreter createAFieldNumberExpAssistant();
+	// AFieldNumberExpAssistantInterpreter createAFieldNumberExpAssistant();
 
-	//AForAllExpAssistantInterpreter createAForAllExpAssistant();
+	// AForAllExpAssistantInterpreter createAForAllExpAssistant();
 
-	//AFuncInstatiationExpAssistantInterpreter createAFuncInstatiationExpAssistant();
+	// AFuncInstatiationExpAssistantInterpreter createAFuncInstatiationExpAssistant();
 
-	//AIfExpAssistantInterpreter createAIfExpAssistant();
+	// AIfExpAssistantInterpreter createAIfExpAssistant();
 
-	//AIotaExpAssistantInterpreter createAIotaExpAssistant();
+	// AIotaExpAssistantInterpreter createAIotaExpAssistant();
 
-	//AIsExpAssistantInterpreter createAIsExpAssistant();
+	// AIsExpAssistantInterpreter createAIsExpAssistant();
 
 	AIsOfBaseClassExpAssistantInterpreter createAIsOfBaseClassExpAssistant();
 
 	AIsOfClassExpAssistantInterpreter createAIsOfClassExpAssistant();
 
-	//ALambdaExpAssistantInterpreter createALambdaExpAssistant();
+	// ALambdaExpAssistantInterpreter createALambdaExpAssistant();
 
-	//ALetBeStExpAssistantInterpreter createALetBeStExpAssistant();
+	// ALetBeStExpAssistantInterpreter createALetBeStExpAssistant();
 
-	//ALetDefExpAssistantInterpreter createALetDefExpAssistant();
+	// ALetDefExpAssistantInterpreter createALetDefExpAssistant();
 
-//	AMapCompMapExpAssistantInterpreter createAMapCompMapExpAssistant();
-//
-//	AMapEnumMapExpAssistantInterpreter createAMapEnumMapExpAssistant();
-//
-//	AMapletExpAssistantInterpreter createAMapletExpAssistant();
-//
-//	AMkBasicExpAssistantInterpreter createAMkBasicExpAssistant();
-//
-//	AMkTypeExpAssistantInterpreter createAMkTypeExpAssistant();
-//
-//	AMuExpAssistantInterpreter createAMuExpAssistant();
+	// AMapCompMapExpAssistantInterpreter createAMapCompMapExpAssistant();
+	//
+	// AMapEnumMapExpAssistantInterpreter createAMapEnumMapExpAssistant();
+	//
+	// AMapletExpAssistantInterpreter createAMapletExpAssistant();
+	//
+	// AMkBasicExpAssistantInterpreter createAMkBasicExpAssistant();
+	//
+	// AMkTypeExpAssistantInterpreter createAMkTypeExpAssistant();
+	//
+	// AMuExpAssistantInterpreter createAMuExpAssistant();
 
-//	ANarrowExpAssistantInterpreter createANarrowExpAssistant();
-//
-//	ANewExpAssistantInterpreter createANewExpAssistant();
+	// ANarrowExpAssistantInterpreter createANarrowExpAssistant();
+	//
+	// ANewExpAssistantInterpreter createANewExpAssistant();
 
 	APostOpExpAssistantInterpreter createAPostOpExpAssistant();
 
-//	ARecordModifierAssistantInterpreter createARecordModifierAssistant();
-//
-//	ASameBaseClassExpAssistantInterpreter createASameBaseClassExpAssistant();
-//
-//	ASameClassExpAssistantInterpreter createASameClassExpAssistant();
+	// ARecordModifierAssistantInterpreter createARecordModifierAssistant();
+	//
+	// ASameBaseClassExpAssistantInterpreter createASameBaseClassExpAssistant();
+	//
+	// ASameClassExpAssistantInterpreter createASameClassExpAssistant();
 
-//	ASeqCompSeqExpAssistantInterpreter createASeqCompSeqExpAssistant();
+	// ASeqCompSeqExpAssistantInterpreter createASeqCompSeqExpAssistant();
 
-//	ASeqEnumSeqExpAssistantInterpreter createASeqEnumSeqExpAssistant();
-//
-//	ASetCompSetExpAssistantInterpreter createASetCompSetExpAssistant();
-//
-//	ASetEnumSetExpAssistantInterpreter createASetEnumSetExpAssistant();
-//
-//	ASetRangeSetExpAssistantInterpreter createASetRangeSetExpAssistant();
-//
-//	ASubseqExpAssistantInterpreter createASubseqExpAssistant();
-//
-//	ATupleExpAssistantInterpreter createATupleExpAssistant();
-//
-//	AVariableExpAssistantInterpreter createAVariableExpAssistant();
+	// ASeqEnumSeqExpAssistantInterpreter createASeqEnumSeqExpAssistant();
+	//
+	// ASetCompSetExpAssistantInterpreter createASetCompSetExpAssistant();
+	//
+	// ASetEnumSetExpAssistantInterpreter createASetEnumSetExpAssistant();
+	//
+	// ASetRangeSetExpAssistantInterpreter createASetRangeSetExpAssistant();
+	//
+	// ASubseqExpAssistantInterpreter createASubseqExpAssistant();
+	//
+	// ATupleExpAssistantInterpreter createATupleExpAssistant();
+	//
+	// AVariableExpAssistantInterpreter createAVariableExpAssistant();
 
 	PExpAssistantInterpreter createPExpAssistant();
 
-//	SBinaryExpAssistantInterpreter createSBinaryExpAssistant();
-//
-//	SMapExpAssistantInterpreter createSMapExpAssistant();
-//
-//	SSeqExpAssistantInterpreter createSSeqExpAssistant();
-//
-//	SSetExpAssistantInterpreter createSSetExpAssistant();
-//
-//	SUnaryExpAssistantInterpreter createSUnaryExpAssistant();
+	// SBinaryExpAssistantInterpreter createSBinaryExpAssistant();
+	//
+	// SMapExpAssistantInterpreter createSMapExpAssistant();
+	//
+	// SSeqExpAssistantInterpreter createSSeqExpAssistant();
+	//
+	// SSetExpAssistantInterpreter createSSetExpAssistant();
+	//
+	// SUnaryExpAssistantInterpreter createSUnaryExpAssistant();
 
 	// module
 
@@ -225,51 +228,52 @@ public interface IInterpreterAssistantFactory extends
 
 	// pattern
 
-//	ABooleanPatternAssistantInterpreter createABooleanPatternAssistant();
-//
-//	ACharacterPatternAssistantInterpreter createACharacterPatternAssistant();
-//
-//	AConcatenationPatternAssistantInterpreter createAConcatenationPatternAssistant();
-//
-//	AExpressionPatternAssistantInterpreter createAExpressionPatternAssistant();
-//
-//	AIdentifierPatternAssistantInterpreter createAIdentifierPatternAssistant();
-//
-//	AIgnorePatternAssistantInterpreter createAIgnorePatternAssistant();
-//
-//	AIntegerPatternAssistantInterpreter createAIntegerPatternAssistant();
-//
-//	AMapPatternAssistantInterpreter createAMapPatternAssistant();
-//
-//	AMapPatternMapletAssistantInterpreter createAMapPatternMapletAssistant();
-//
-//	AMapUnionPatternAssistantInterpreter createAMapUnionPatternAssistant();
+	// ABooleanPatternAssistantInterpreter createABooleanPatternAssistant();
+	//
+	// ACharacterPatternAssistantInterpreter createACharacterPatternAssistant();
+	//
+	// AConcatenationPatternAssistantInterpreter createAConcatenationPatternAssistant();
+	//
+	// AExpressionPatternAssistantInterpreter createAExpressionPatternAssistant();
+	//
+	// AIdentifierPatternAssistantInterpreter createAIdentifierPatternAssistant();
+	//
+	// AIgnorePatternAssistantInterpreter createAIgnorePatternAssistant();
+	//
+	// AIntegerPatternAssistantInterpreter createAIntegerPatternAssistant();
+	//
+	// AMapPatternAssistantInterpreter createAMapPatternAssistant();
+	//
+	AMapPatternMapletAssistantInterpreter createAMapPatternMapletAssistant();
 
-//	ANilPatternAssistantInterpreter createANilPatternAssistant();
+	//
+	// AMapUnionPatternAssistantInterpreter createAMapUnionPatternAssistant();
+
+	// ANilPatternAssistantInterpreter createANilPatternAssistant();
 
 	AQuotePatternAssistantInterpreter createAQuotePatternAssistant();
 
-	//ARealPatternAssistantInterpreter createARealPatternAssistant();
+	// ARealPatternAssistantInterpreter createARealPatternAssistant();
 
-	//ARecordPatternAssistantInterpreter createARecordPatternAssistant();
+	// ARecordPatternAssistantInterpreter createARecordPatternAssistant();
 
-	//ASeqPatternAssistantInterpreter createASeqPatternAssistant();
+	// ASeqPatternAssistantInterpreter createASeqPatternAssistant();
 
-	//ASetBindAssistantInterpreter createASetBindAssistant();
+	// ASetBindAssistantInterpreter createASetBindAssistant();
 
-	//ASetMultipleBindAssistantInterpreter createASetMultipleBindAssistant();
+	// ASetMultipleBindAssistantInterpreter createASetMultipleBindAssistant();
 
-	//ASetPatternAssistantInterpreter createASetPatternAssistant();
+	// ASetPatternAssistantInterpreter createASetPatternAssistant();
 
-	//AStringPatternAssistantInterpreter createAStringPatternAssistant();
+	// AStringPatternAssistantInterpreter createAStringPatternAssistant();
 
-	//ATuplePatternAssistantInterpreter createATuplePatternAssistant();
+	// ATuplePatternAssistantInterpreter createATuplePatternAssistant();
 
-	//ATypeBindAssistantInterpreter createATypeBindAssistant();
+	// ATypeBindAssistantInterpreter createATypeBindAssistant();
 
-	//ATypeMultipleBindAssistantInterpreter createATypeMultipleBindAssistant();
+	// ATypeMultipleBindAssistantInterpreter createATypeMultipleBindAssistant();
 
-	//AUnionPatternAssistantInterpreter createAUnionPatternAssistant();
+	// AUnionPatternAssistantInterpreter createAUnionPatternAssistant();
 
 	PBindAssistantInterpreter createPBindAssistant();
 
@@ -281,135 +285,135 @@ public interface IInterpreterAssistantFactory extends
 
 	// statement
 
-//	AAlwaysStmAssistantInterpreter createAAlwaysStmAssistant();
-//
-//	AAssignmentStmAssistantInterpreter createAAssignmentStmAssistant();
-//
-//	AAtomicStmAssistantInterpreter createAAtomicStmAssistant();
-//
-//	ACallObjectStatementAssistantInterpreter createACallObjectStatementAssistant();
-//
-//	ACallStmAssistantInterpreter createACallStmAssistant();
+	// AAlwaysStmAssistantInterpreter createAAlwaysStmAssistant();
+	//
+	// AAssignmentStmAssistantInterpreter createAAssignmentStmAssistant();
+	//
+	// AAtomicStmAssistantInterpreter createAAtomicStmAssistant();
+	//
+	// ACallObjectStatementAssistantInterpreter createACallObjectStatementAssistant();
+	//
+	// ACallStmAssistantInterpreter createACallStmAssistant();
 
 	ACaseAlternativeStmAssistantInterpreter createACaseAlternativeStmAssistant();
 
-//	ACasesStmAssistantInterpreter createACasesStmAssistant();
-//
-//	ACyclesStmAssistantInterpreter createACyclesStmAssistant();
-//
-//	ADurationStmAssistantInterpreter createADurationStmAssistant();
-//
-//	AElseIfStmAssistantInterpreter createAElseIfStmAssistant();
-//
-//	AExitStmAssistantInterpreter createAExitStmAssistant();
-//
-//	AForAllStmAssistantInterpreter createAForAllStmAssistant();
-//
-//	AForIndexStmAssistantInterpreter createAForIndexStmAssistant();
-//
-//	AForPatternBindStmAssitantInterpreter createAForPatternBindStmAssitant();
-//
-//	AIfStmAssistantInterpreter createAIfStmAssistant();
-//
-//	ALetBeStStmAssistantInterpreter createALetBeStStmAssistant();
-//
-//	AReturnStmAssistantInterpreter createAReturnStmAssistant();
+	// ACasesStmAssistantInterpreter createACasesStmAssistant();
+	//
+	// ACyclesStmAssistantInterpreter createACyclesStmAssistant();
+	//
+	// ADurationStmAssistantInterpreter createADurationStmAssistant();
+	//
+	// AElseIfStmAssistantInterpreter createAElseIfStmAssistant();
+	//
+	// AExitStmAssistantInterpreter createAExitStmAssistant();
+	//
+	// AForAllStmAssistantInterpreter createAForAllStmAssistant();
+	//
+	// AForIndexStmAssistantInterpreter createAForIndexStmAssistant();
+	//
+	// AForPatternBindStmAssitantInterpreter createAForPatternBindStmAssitant();
+	//
+	// AIfStmAssistantInterpreter createAIfStmAssistant();
+	//
+	// ALetBeStStmAssistantInterpreter createALetBeStStmAssistant();
+	//
+	// AReturnStmAssistantInterpreter createAReturnStmAssistant();
 
 	AStartStmAssistantInterpreter createAStartStmAssistant();
 
-	//ATixeStmAssistantInterpreter createATixeStmAssistant();
+	// ATixeStmAssistantInterpreter createATixeStmAssistant();
 
 	ATixeStmtAlternativeAssistantInterpreter createATixeStmtAlternativeAssistant();
 
-	//ATrapStmAssistantInterpreter createATrapStmAssistant();
+	// ATrapStmAssistantInterpreter createATrapStmAssistant();
 
-	//AWhileStmAssistantInterpreter createAWhileStmAssistant();
+	// AWhileStmAssistantInterpreter createAWhileStmAssistant();
 
 	PStmAssistantInterpreter createPStmAssistant();
 
-	//SLetDefStmAssistantInterpreter createSLetDefStmAssistant();
+	// SLetDefStmAssistantInterpreter createSLetDefStmAssistant();
 
 	SSimpleBlockStmAssistantInterpreter createSSimpleBlockStmAssistant();
 
 	// type
 
-//	ABooleanBasicTypeAssistantInterpreter createABooleanBasicTypeAssistant();
-//
-//	AInMapMapTypeAssistantInterpreter createAInMapMapTypeAssistant();
-//
-//	ANamedInvariantTypeAssistantInterpreter createANamedInvariantTypeAssistant();
-//
-//	AOptionalTypeAssistantInterpreter createAOptionalTypeAssistant();
-//
-//	AParameterTypeAssistantInterpreter createAParameterTypeAssistant();
-//
-//	AProductTypeAssistantInterpreter createAProductTypeAssistant();
-//
-//	AQuoteTypeAssistantInterpreter createAQuoteTypeAssistant();
-//
-//	ARecordInvariantTypeAssistantInterpreter createARecordInvariantTypeAssistant();
-//
-//	ASetTypeAssistantInterpreter createASetTypeAssistant();
-//
-//	AUnionTypeAssistantInterpreter createAUnionTypeAssistant();
+	// ABooleanBasicTypeAssistantInterpreter createABooleanBasicTypeAssistant();
+	//
+	// AInMapMapTypeAssistantInterpreter createAInMapMapTypeAssistant();
+	//
+	// ANamedInvariantTypeAssistantInterpreter createANamedInvariantTypeAssistant();
+	//
+	// AOptionalTypeAssistantInterpreter createAOptionalTypeAssistant();
+	//
+	// AParameterTypeAssistantInterpreter createAParameterTypeAssistant();
+	//
+	// AProductTypeAssistantInterpreter createAProductTypeAssistant();
+	//
+	// AQuoteTypeAssistantInterpreter createAQuoteTypeAssistant();
+	//
+	// ARecordInvariantTypeAssistantInterpreter createARecordInvariantTypeAssistant();
+	//
+	// ASetTypeAssistantInterpreter createASetTypeAssistant();
+	//
+	// AUnionTypeAssistantInterpreter createAUnionTypeAssistant();
 
 	PTypeAssistantInterpreter createPTypeAssistant();
 
 	PTypeListAssistant createPTypeListAssistant();
 
-	//SBasicTypeAssistantInterpreter createSBasicTypeAssistant();
+	// SBasicTypeAssistantInterpreter createSBasicTypeAssistant();
 
 	SInvariantTypeAssistantInterpreter createSInvariantTypeAssistant();
 
-	//SMapTypeAssistantInterpreter createSMapTypeAssistant();
+	// SMapTypeAssistantInterpreter createSMapTypeAssistant();
 
 	/* visitors */
 	IAnswer<LexNameList> getOldNameCollector();
-	
+
 	QuestionAnswerAdaptor<Context, ValueList> getBindValuesCollector();
-	
+
 	QuestionAnswerAdaptor<ObjectContext, ValueList> getValueCollector();
-	
+
 	IAnswer<List<AIdentifierPattern>> getIdentifierPatternFinder();
-	
+
 	IAnswer<Integer> getLengthFinder();
-	
+
 	IAnswer<Boolean> getConstrainedPatternChecker();
-	
+
 	QuestionAnswerAdaptor<AllNamedValuesLocator.Newquestion, List<NameValuePairList>> getAllNamedValuesLocator();
-	
+
 	IQuestionAnswer<Context, NameValuePairList> getNamedValueLister();
-	
+
 	IQuestionAnswer<Integer, PExp> getExpressionFinder();
-	
+
 	IQuestionAnswer<ObjectContext, ValueList> getValuesDefinitionLocator();
-	
+
 	IAnswer<Boolean> getTypeDefinitionChecker();
-	
+
 	IAnswer<Boolean> getDefinitionRunTimeChecker();
-	
+
 	IAnswer<Boolean> getDefintionValueChecker();
-	
+
 	IAnswer<Boolean> getInstanceVariableChecker();
-	
+
 	IQuestionAnswer<Integer, PStm> getDefinitionStatementFinder();
-	
+
 	IQuestionAnswer<Context, TraceNode> getTraceExpander();
-	
+
 	IQuestionAnswer<Integer, PExp> getStatementExpressionFinder();
-	
+
 	IQuestionAnswer<Integer, PStm> getStatementFinder();
-	
+
 	IQuestionAnswer<ObjectContext, ValueList> getExpressionValueCollector();
-	
+
 	IQuestionAnswer<Integer, PExp> getExpExpressionFinder();
-	
+
 	IAnswer<List<PExp>> getSubExpressionsLocator();
-	
+
 	IQuestionAnswer<Context, ValueList> getSingleBindValuesCollector();
-	
+
 	IQuestionAnswer<ObjectContext, ValueList> getBindValueCollector();
-	
+
 	IQuestionAnswer<Context, ValueList> getAllValuesCollector();
-	
+
 }

@@ -21,11 +21,16 @@ public class HourlyPaidEmployee extends Employee {
     private Number rate;
 
     public HourlyPaidEmployee(final Number pHours, final Number pRate) {
-        hours = pHours;
-        rate = pRate;
+        cg_init_HourlyPaidEmployee_1(pHours, pRate);
     }
 
     public HourlyPaidEmployee() {
+    }
+
+    public void cg_init_HourlyPaidEmployee_1(final Number pHours,
+        final Number pRate) {
+        hours = pHours;
+        rate = pRate;
     }
 
     public Number getSalary() {
@@ -53,10 +58,14 @@ public class FixedSalaryEmployee extends Employee {
     private Number fixedSalary;
 
     public FixedSalaryEmployee(final Number pFixedSalary) {
-        fixedSalary = pFixedSalary;
+        cg_init_FixedSalaryEmployee_1(pFixedSalary);
     }
 
     public FixedSalaryEmployee() {
+    }
+
+    public void cg_init_FixedSalaryEmployee_1(final Number pFixedSalary) {
+        fixedSalary = pFixedSalary;
     }
 
     public Number getSalary() {
@@ -74,19 +83,23 @@ public class Company {
     private VDMSeq employees;
 
     public Company() {
+        cg_init_Company_1();
+    }
+
+    public void cg_init_Company_1() {
         employees = SeqUtil.seq();
     }
 
     public void op1() {
         Number x = employees.size();
-        VDMSeq y = employees.clone();
+        VDMSeq y = Utils.clone(employees);
         Employee q = ((Employee) employees.get(0));
 
         //Skip;
     }
 
     public Number calculateSalary() {
-        return start_calc(0L, employees);
+        return start_calc(0L, Utils.clone(employees));
     }
 
     private Number start_calc(final Number sum, final VDMSeq emps) {
@@ -95,7 +108,7 @@ public class Company {
         } else {
             return start_calc(sum.doubleValue() +
                 ((Employee) emps.get(0)).getSalary().doubleValue(),
-                SeqUtil.tail(emps.clone()));
+                SeqUtil.tail(Utils.clone(emps)));
         }
     }
 
@@ -105,7 +118,7 @@ public class Company {
     }
 
     public Company addEmp(final Employee emp) {
-        employees = SeqUtil.conc(employees.clone(), SeqUtil.seq(emp));
+        employees = SeqUtil.conc(Utils.clone(employees), SeqUtil.seq(emp));
 
         return this;
     }

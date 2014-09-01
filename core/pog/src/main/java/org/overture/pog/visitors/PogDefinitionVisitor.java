@@ -9,8 +9,10 @@ import org.overture.pog.pub.IProofObligationList;
 public class PogDefinitionVisitor extends
 		PogParamDefinitionVisitor<POContextStack, ProofObligationList>
 {
-    
-    public PogDefinitionVisitor( QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> parentVisitor){
-	super(parentVisitor);
-    }
+
+	public PogDefinitionVisitor(
+			QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> parentVisitor)
+	{
+		super(parentVisitor);
+	}
 }

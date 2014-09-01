@@ -54,8 +54,7 @@ public class ExternalClassesPpTest extends AbstractExternalTest
 			"types-40.vpp", "types-41.vpp", "types-42.vpp", "types-44.vpp",
 			"types-45.vpp", "types-46.vpp", "values-01.vpp", "values-02.vpp",
 			"values-03.vpp", "values-05.vpp", "values-06.vpp", "values-13.vpp",
-			"values-14.vpp", "invoke-15.vpp"
-			}));
+			"values-14.vpp", "invoke-15.vpp" }));
 
 	public ExternalClassesPpTest(Dialect dialect, String suiteName,
 			File testSuiteRoot, File file, String storeLocationPart)

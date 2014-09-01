@@ -30,10 +30,9 @@ import java.util.Random;
 import org.overture.interpreter.values.TransactionValue;
 import org.overture.parser.config.Properties;
 
-
 public class FCFSPolicy extends SchedulingPolicy
 {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 	protected final List<ISchedulableThread> threads;
 	protected ISchedulableThread bestThread = null;
 	protected Random PRNG = null;
@@ -43,7 +42,7 @@ public class FCFSPolicy extends SchedulingPolicy
 	public FCFSPolicy()
 	{
 		threads = new LinkedList<ISchedulableThread>();
-		PRNG = new Random();	// NB deliberately non-deterministic!
+		PRNG = new Random(); // NB deliberately non-deterministic!
 	}
 
 	@Override
@@ -67,12 +66,11 @@ public class FCFSPolicy extends SchedulingPolicy
 			// one so that the new thread is scheduled before the current one is
 			// next scheduled.
 			int count = threads.size();
-			
+
 			if (count == 0)
 			{
 				threads.add(thread);
-			}
-			else
+			} else
 			{
 				threads.add(count - 1, thread);
 			}
@@ -85,7 +83,7 @@ public class FCFSPolicy extends SchedulingPolicy
 		synchronized (threads)
 		{
 			threads.remove(thread);
-			
+
 			if (durationThread == thread)
 			{
 				durationThread = null;
@@ -107,23 +105,23 @@ public class FCFSPolicy extends SchedulingPolicy
 
 		synchronized (threads)
 		{
-    		for (ISchedulableThread th: threads)
-    		{
-    			switch (th.getRunState())
-    			{
-    				case RUNNABLE:
-        				bestThread = th;
-        				threads.remove(th);
-        				threads.add(th);
-        				return true;
+			for (ISchedulableThread th : threads)
+			{
+				switch (th.getRunState())
+				{
+					case RUNNABLE:
+						bestThread = th;
+						threads.remove(th);
+						threads.add(th);
+						return true;
 
-    				case TIMESTEP:
-    				case WAITING:
-    				case LOCKING:
-    				default:
-    					break;
-    			}
-    		}
+					case TIMESTEP:
+					case WAITING:
+					case LOCKING:
+					default:
+						break;
+				}
+			}
 		}
 
 		return false;
@@ -132,7 +130,7 @@ public class FCFSPolicy extends SchedulingPolicy
 	@Override
 	public ISchedulableThread getThread()
 	{
-		synchronized (threads)		// As it was set under threads
+		synchronized (threads) // As it was set under threads
 		{
 			return bestThread;
 		}
@@ -146,8 +144,7 @@ public class FCFSPolicy extends SchedulingPolicy
 		if (bestThread.isVirtual())
 		{
 			slice = Properties.scheduler_virtual_timeslice;
-		}
-		else
+		} else
 		{
 			slice = Properties.scheduler_fcfs_timeslice;
 		}
@@ -169,28 +166,28 @@ public class FCFSPolicy extends SchedulingPolicy
 
 		synchronized (threads)
 		{
-    		for (ISchedulableThread th: threads)
-    		{
-    			switch (th.getRunState())
-    			{
-     				case ALARM:
-    					long delay = th.getAlarmWakeTime() - now;
+			for (ISchedulableThread th : threads)
+			{
+				switch (th.getRunState())
+				{
+					case ALARM:
+						long delay = th.getAlarmWakeTime() - now;
 
-    					if (delay < 0)
-    					{
-    						delay = 0;	// Time has past
-    					}
+						if (delay < 0)
+						{
+							delay = 0; // Time has past
+						}
 
-    					if (delay < minTime)
-    					{
-    						minTime = delay;
-    					}
-     					break;
+						if (delay < minTime)
+						{
+							minTime = delay;
+						}
+						break;
 
-        			default:
-        				break;
-    			}
-    		}
+					default:
+						break;
+				}
+			}
 		}
 
 		return minTime;
@@ -201,33 +198,33 @@ public class FCFSPolicy extends SchedulingPolicy
 	{
 		synchronized (threads)
 		{
-    		for (ISchedulableThread th: threads)
-    		{
-    			switch (th.getRunState())
-    			{
-    				case TIMESTEP:
-        				durationThread = th;
-        				th.setState(RunState.RUNNABLE);
+			for (ISchedulableThread th : threads)
+			{
+				switch (th.getRunState())
+				{
+					case TIMESTEP:
+						durationThread = th;
+						th.setState(RunState.RUNNABLE);
 
-        				if (Properties.rt_duration_transactions &&
-        					th.getDurationEnd() == SystemClock.getWallTime())
-        				{
-        					TransactionValue.commitOne(th.getId());
-        				}
-        				break;
+						if (Properties.rt_duration_transactions
+								&& th.getDurationEnd() == SystemClock.getWallTime())
+						{
+							TransactionValue.commitOne(th.getId());
+						}
+						break;
 
-    				case ALARM:
-    					if (th.getAlarmWakeTime() <= SystemClock.getWallTime())
-    					{
-    						th.clearAlarm();	// Time to wake up!
-    						th.setState(RunState.RUNNABLE);
-    					}
-    					break;
+					case ALARM:
+						if (th.getAlarmWakeTime() <= SystemClock.getWallTime())
+						{
+							th.clearAlarm(); // Time to wake up!
+							th.setState(RunState.RUNNABLE);
+						}
+						break;
 
-        			default:
-        					break;
-    			}
-    		}
+					default:
+						break;
+				}
+			}
 		}
 	}
 
@@ -236,13 +233,13 @@ public class FCFSPolicy extends SchedulingPolicy
 	{
 		synchronized (threads)
 		{
-    		for (ISchedulableThread th: threads)
-    		{
-    			if (th.isActive())
-    			{
-    				return true;
-    			}
-    		}
+			for (ISchedulableThread th : threads)
+			{
+				if (th.isActive())
+				{
+					return true;
+				}
+			}
 		}
 
 		return false;
@@ -260,7 +257,7 @@ public class FCFSPolicy extends SchedulingPolicy
 		StringBuilder sb = new StringBuilder();
 		String sep = "";
 
-		for (ISchedulableThread th: threads)
+		for (ISchedulableThread th : threads)
 		{
 			sb.append(sep);
 			sb.append(th);

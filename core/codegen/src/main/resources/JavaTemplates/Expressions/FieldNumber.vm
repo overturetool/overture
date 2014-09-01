@@ -3,11 +3,10 @@
 ##
 #set( $tuple = $JavaFormat.format($node.getTuple()) )
 #set( $method = ".get($index)" )
-##
-#set( $clone = "")
+#set( $field = "((${type}) ${tuple}${method})")
 ##
 #if ($ValueSemantics.cloneMember($node))
-	#set( $clone = ".clone()")
+	Utils.clone(${field})##
+#else
+	${field}##
 #end
-((${type}) ${tuple}${method})${clone}
-  

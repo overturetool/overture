@@ -47,7 +47,8 @@ public class ClassesRtClassicTest extends CommonInterpreterTest
 	@Override
 	protected File getEntryFile()
 	{
-		return new File(getStorageLocation(), file.getName().substring(0,file.getName().lastIndexOf('.')) + ".entry");
+		return new File(getStorageLocation(), file.getName().substring(0, file.getName().lastIndexOf('.'))
+				+ ".entry");
 	}
 
 }

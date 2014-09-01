@@ -61,7 +61,10 @@ getThreat () ==
 public isFinished: () ==> bool
 isFinished () ==
   return forall id in set dom controllers &
-            controllers(id).isFinished()
+            controllers(id).isFinished();
+
+public getAperture: () ==> Angle * Angle
+getAperture () == return mk_(0,0);
 
 end MissileDetector
 \end{vdm_al}

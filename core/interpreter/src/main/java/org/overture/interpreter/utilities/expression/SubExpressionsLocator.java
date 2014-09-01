@@ -16,20 +16,19 @@ import org.overture.ast.node.INode;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 
 /***************************************
- * 
  * This method collects and returns the subexpressions in a expression.
  * 
  * @author gkanos
- *
  ****************************************/
 public class SubExpressionsLocator extends AnswerAdaptor<List<PExp>>
 {
 	protected IInterpreterAssistantFactory af;
-	
+
 	public SubExpressionsLocator(IInterpreterAssistantFactory af)
 	{
 		this.af = af;
 	}
+
 	@Override
 	public List<PExp> caseAApplyExp(AApplyExp exp) throws AnalysisException
 	{
@@ -38,7 +37,7 @@ public class SubExpressionsLocator extends AnswerAdaptor<List<PExp>>
 		subs.add(exp);
 		return subs;
 	}
-	
+
 	@Override
 	public List<PExp> defaultSBinaryExp(SBinaryExp exp)
 			throws AnalysisException
@@ -48,14 +47,14 @@ public class SubExpressionsLocator extends AnswerAdaptor<List<PExp>>
 		subs.add(exp);
 		return subs;
 	}
-	
+
 	@Override
 	public List<PExp> caseACaseAlternative(ACaseAlternative exp)
 			throws AnalysisException
 	{
 		return exp.getResult().apply(THIS);
 	}
-	
+
 	@Override
 	public List<PExp> caseACasesExp(ACasesExp exp) throws AnalysisException
 	{
@@ -74,7 +73,7 @@ public class SubExpressionsLocator extends AnswerAdaptor<List<PExp>>
 		subs.add(exp);
 		return subs;
 	}
-	
+
 	@Override
 	public List<PExp> caseAElseIfExp(AElseIfExp exp) throws AnalysisException
 	{
@@ -83,7 +82,7 @@ public class SubExpressionsLocator extends AnswerAdaptor<List<PExp>>
 		subs.add(exp);
 		return subs;
 	}
-	
+
 	@Override
 	public List<PExp> caseAIfExp(AIfExp exp) throws AnalysisException
 	{
@@ -103,7 +102,7 @@ public class SubExpressionsLocator extends AnswerAdaptor<List<PExp>>
 		subs.add(exp);
 		return subs;
 	}
-	
+
 	@Override
 	public List<PExp> defaultPExp(PExp exp) throws AnalysisException
 	{
@@ -111,12 +110,14 @@ public class SubExpressionsLocator extends AnswerAdaptor<List<PExp>>
 		subs.add(exp);
 		return subs;
 	}
+
 	@Override
 	public List<PExp> createNewReturnValue(INode node) throws AnalysisException
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 	@Override
 	public List<PExp> createNewReturnValue(Object node)
 			throws AnalysisException

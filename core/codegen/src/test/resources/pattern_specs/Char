@@ -1,0 +1,29 @@
+class A
+
+operations
+
+public charPatternOp : (char) ==> char
+charPatternOp ('q') ==
+let 'a' = 'a'
+in
+	return 'b';
+
+functions
+
+public charPatternFun : (char) -> char
+charPatternFun ('q') ==
+let 'a' = 'a'
+in
+	'b';
+
+end A
+
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	return [new A().charPatternOp('q'), A`charPatternFun('q')];
+
+end Entry

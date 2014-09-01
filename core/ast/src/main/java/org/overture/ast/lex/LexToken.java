@@ -36,12 +36,11 @@ import org.overture.ast.intf.lex.ILexToken;
 import org.overture.ast.node.INode;
 import org.overture.ast.node.Node;
 
-
 /**
  * The parent class for all lexical token types.
  */
 
- public  class LexToken extends Node implements ILexToken, Serializable
+public class LexToken extends Node implements ILexToken, Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -50,28 +49,24 @@ import org.overture.ast.node.Node;
 	/** The basic type of the token. */
 	public final VDMToken type;
 
-	
-	
-	
-	
-
 	@Override
 	public VDMToken getType()
 	{
 		return type;
 	}
 
-
-
-	public ILexLocation getLocation(){
-	    return location;
+	public ILexLocation getLocation()
+	{
+		return location;
 	}
-	
+
 	/**
 	 * Create a token of the given type at the given location.
-	 *
-	 * @param location	The location of the token.
-	 * @param type		The basic type of the token.
+	 * 
+	 * @param location
+	 *            The location of the token.
+	 * @param type
+	 *            The basic type of the token.
 	 */
 
 	public LexToken(ILexLocation location, VDMToken type)
@@ -82,9 +77,10 @@ import org.overture.ast.node.Node;
 
 	/**
 	 * Test whether this token is a given basic type.
-	 *
-	 * @param ttype	The type to test.
-	 * @return	True if this is of that type.
+	 * 
+	 * @param ttype
+	 *            The type to test.
+	 * @return True if this is of that type.
 	 */
 
 	public boolean is(VDMToken ttype)
@@ -94,9 +90,10 @@ import org.overture.ast.node.Node;
 
 	/**
 	 * Test whether this token is not a given basic type.
-	 *
-	 * @param ttype	The type to test.
-	 * @return	True if this is not of that type.
+	 * 
+	 * @param ttype
+	 *            The type to test.
+	 * @return True if this is not of that type.
 	 */
 
 	public boolean isNot(VDMToken ttype)
@@ -110,62 +107,69 @@ import org.overture.ast.node.Node;
 		return type.toString();
 	}
 
-
-
 	@Override
 	public ILexToken clone()
 	{
-		return new LexToken(location,type);
+		return new LexToken(location, type);
 	}
 
 	@Override
-	public INode clone(Map<INode, INode> oldToNewMap) {
+	public INode clone(Map<INode, INode> oldToNewMap)
+	{
 		Node newNode = (Node) clone();
 		oldToNewMap.put(this, newNode);
 		return newNode;
 	}
 
 	@Override
-	public void apply(IAnalysis analysis) throws AnalysisException {
+	public void apply(IAnalysis analysis) throws AnalysisException
+	{
 		analysis.caseILexToken(this);
 	}
 
 	@Override
-	public <A> A apply(IAnswer<A> caller) throws AnalysisException {
+	public <A> A apply(IAnswer<A> caller) throws AnalysisException
+	{
 		return caller.caseILexToken(this);
 	}
 
 	@Override
-	public <Q> void apply(IQuestion<Q> caller, Q question) throws AnalysisException {
+	public <Q> void apply(IQuestion<Q> caller, Q question)
+			throws AnalysisException
+	{
 		caller.caseILexToken(this, question);
 	}
 
 	@Override
-	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) throws AnalysisException {
+	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question)
+			throws AnalysisException
+	{
 		return caller.caseILexToken(this, question);
 	}
 
-
 	@Override
-	public void removeChild(INode child) {
-				
+	public void removeChild(INode child)
+	{
+
 	}
-	
+
 	/**
 	 * Creates a map of all field names and their value
-	 * @param includeInheritedFields if true all inherited fields are included
+	 * 
+	 * @param includeInheritedFields
+	 *            if true all inherited fields are included
 	 * @return a a map of names to values of all fields
 	 */
 	@Override
-	public Map<String,Object> getChildren(Boolean includeInheritedFields)
+	public Map<String, Object> getChildren(Boolean includeInheritedFields)
 	{
-		Map<String,Object> fields = new HashMap<String,Object>();
-		if(includeInheritedFields)
+		Map<String, Object> fields = new HashMap<String, Object>();
+		if (includeInheritedFields)
 		{
 			fields.putAll(super.getChildren(includeInheritedFields));
 		}
-		fields.put("location",this.location);
-		fields.put("type",this.type);
+		fields.put("location", this.location);
+		fields.put("type", this.type);
 		return fields;
 	}
 

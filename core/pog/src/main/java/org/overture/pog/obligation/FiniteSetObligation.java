@@ -43,17 +43,25 @@ import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
 
-public class FiniteSetObligation extends ProofObligation {
+public class FiniteSetObligation extends ProofObligation
+{
 
 	private static final long serialVersionUID = 4471304924561635823L;
 
 	/**
-	 * { f(a) | a:A & p(a) } yields exists m:map nat to map A to :f & forall a:A
-	 * & p(a) => exists idx in set dom m & m(idx) = f(a)
-	 * @throws AnalysisException 
+	 * { f(a) | a:A & p(a) } yields exists m:map nat to map A to :f & forall a:A & p(a) => exists idx in set dom m &
+	 * m(idx) = f(a)
+	 * 
+	 * @param exp
+	 * @param settype
+	 * @param ctxt
+	 * @param af
+	 * @throws AnalysisException
 	 */
 	public FiniteSetObligation(ASetCompSetExp exp, ASetType settype,
-			IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException {
+			IPOContextStack ctxt, IPogAssistantFactory af)
+			throws AnalysisException
+	{
 		super(exp, POType.FINITE_SET, ctxt, exp.getLocation(), af);
 
 		ILexNameToken finmap = getUnique("finmap");
@@ -74,10 +82,10 @@ public class FiniteSetObligation extends ProofObligation {
 
 	/**
 	 * forall a:A & p(a) => exists idx in set dom m & m(idx) = f(a)
-	 * 
 	 */
 	private PExp getForallExp(ASetCompSetExp exp, ILexNameToken finmap,
-			ILexNameToken findex) {
+			ILexNameToken findex)
+	{
 		AForAllExp forallExp = new AForAllExp();
 		forallExp.setBindList(exp.clone().getBindings());
 		forallExp.setPredicate(getImpliesExpression(exp, finmap, findex));
@@ -88,14 +96,14 @@ public class FiniteSetObligation extends ProofObligation {
 	 * p(a,b) => exists idx in set dom m & m(idx) = f(a)
 	 */
 	private PExp getImpliesExpression(ASetCompSetExp exp, ILexNameToken finmap,
-			ILexNameToken findex) {
+			ILexNameToken findex)
+	{
 		if (exp.getPredicate() == null) // set comprehension has no predicate
 		{
 			return getImpliesExists(exp, finmap, findex);
-		} else {
-			AImpliesBooleanBinaryExp implies = AstExpressionFactory
-					.newAImpliesBooleanBinaryExp(exp.getPredicate().clone(),
-							getImpliesExists(exp.clone(), finmap, findex));
+		} else
+		{
+			AImpliesBooleanBinaryExp implies = AstExpressionFactory.newAImpliesBooleanBinaryExp(exp.getPredicate().clone(), getImpliesExists(exp.clone(), finmap, findex));
 			return implies;
 		}
 	}
@@ -104,7 +112,8 @@ public class FiniteSetObligation extends ProofObligation {
 	 * exists idx in set dom m & m(idx) =f(a)
 	 */
 	private PExp getImpliesExists(ASetCompSetExp exp, ILexNameToken finmap,
-			ILexNameToken findex) {
+			ILexNameToken findex)
+	{
 		AExistsExp exists = new AExistsExp();
 
 		AMapDomainUnaryExp domExp = new AMapDomainUnaryExp();
@@ -120,7 +129,8 @@ public class FiniteSetObligation extends ProofObligation {
 	 * m(idx) = f(a)
 	 */
 	private PExp getExistsPredicate(ASetCompSetExp exp, ILexNameToken finmap,
-			ILexNameToken findex) {
+			ILexNameToken findex)
+	{
 		AApplyExp apply = getApplyExp(getVarExp(finmap), getVarExp(findex));
 
 		return getEqualsExp(apply, exp.getFirst());

@@ -29,7 +29,6 @@ import java.io.PrintWriter;
 import org.overture.interpreter.debug.DBGPReader;
 import org.overture.interpreter.debug.DBGPRedirect;
 
-
 abstract public class Redirector extends PrintWriter
 {
 	protected DBGPRedirect type;
@@ -56,7 +55,7 @@ abstract public class Redirector extends PrintWriter
 	}
 
 	@Override
-	public PrintWriter printf(String format, Object ... args)
+	public PrintWriter printf(String format, Object... args)
 	{
 		print(String.format(format, args));
 		flush();

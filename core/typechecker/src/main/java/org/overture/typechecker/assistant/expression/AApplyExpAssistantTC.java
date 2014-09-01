@@ -1,3 +1,24 @@
+/*
+ * #%~
+ * The VDM Type Checker
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.typechecker.assistant.expression;
 
 import java.util.List;
@@ -16,7 +37,6 @@ import org.overture.ast.types.SSeqType;
 import org.overture.ast.util.Utils;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
-import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class AApplyExpAssistantTC
@@ -51,7 +71,7 @@ public class AApplyExpAssistantTC
 		{
 			PType pt = ptypes.get(i++);
 
-			if (!TypeComparator.compatible(pt, at))
+			if (!af.getTypeComparator().compatible(pt, at))
 			{
 				// TypeCheckerErrors.concern(isSimple, 3061, "Inappropriate type for argument " + i +
 				// ". (Expected: "+pt+" Actual: "+at+")",node.getLocation(),node);
@@ -87,7 +107,7 @@ public class AApplyExpAssistantTC
 		{
 			PType pt = ptypes.get(i++);
 
-			if (!TypeComparator.compatible(pt, at))
+			if (!af.getTypeComparator().compatible(pt, at))
 			{
 				// TypeCheckerErrors.concern(isSimple, 3064, "Inappropriate type for argument " + i
 				// +". (Expected: "+pt+" Actual: "+at+")",node.getLocation(),node);
@@ -100,8 +120,7 @@ public class AApplyExpAssistantTC
 		return ot.getResult();
 	}
 
-	public PType sequenceApply(AApplyExp node, boolean isSimple,
-			SSeqType seq)
+	public PType sequenceApply(AApplyExp node, boolean isSimple, SSeqType seq)
 	{
 		if (node.getArgs().size() != 1)
 		{
@@ -129,7 +148,7 @@ public class AApplyExpAssistantTC
 
 		PType argtype = node.getArgtypes().get(0);
 
-		if (!TypeComparator.compatible(map.getFrom(), argtype))
+		if (!af.getTypeComparator().compatible(map.getFrom(), argtype))
 		{
 			TypeCheckerErrors.concern(isSimple, 3058, "Map application argument is incompatible type", node.getLocation(), node);
 			TypeCheckerErrors.detail2(isSimple, "Map domain", map.getFrom(), "Argument", argtype);
@@ -182,6 +201,11 @@ public class AApplyExpAssistantTC
 	/**
 	 * Create a measure application string from this apply, turning the root function name into the measure name passed,
 	 * and collapsing curried argument sets into one.
+	 * 
+	 * @param node
+	 * @param measure
+	 * @param close
+	 * @return
 	 */
 	public String getMeasureApply(AApplyExp node, ILexNameToken measure,
 			boolean close)

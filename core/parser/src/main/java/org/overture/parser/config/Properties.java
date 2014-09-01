@@ -72,6 +72,14 @@ public class Properties extends ConfigBase
 	/** Enable extra RT log diagnostics for timesteps. */
 	public static boolean diags_timestep = false;
 
+	/** The minimum integer used for type bound type bindings **/
+	public static int minint = 0;
+	/** The maximum integer used for type bound type bindings **/
+	public static int maxint = 255;
+
+	/** Enable interpretation of numeric type binds **/
+	public static boolean numeric_type_bind_generation = false;
+
 	/**
 	 * When the class is initialized, we call the ConfigBase init method, which uses the properties file passed to
 	 * update the static fields above.

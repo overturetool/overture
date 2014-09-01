@@ -10,13 +10,13 @@ public class A {
     public void op() {
         long toVar_1 = 1L;
 
-        for (long i = 1L; i <= toVar_1; i++) {
+        for (Long i = 1L; i <= toVar_1; i++) {
             //Skip;
         }
 
         long toVar_2 = 1L;
 
-        for (long i = 4L; i <= toVar_2; i++) {
+        for (Long i = 4L; i <= toVar_2; i++) {
             //Skip;
         }
     }

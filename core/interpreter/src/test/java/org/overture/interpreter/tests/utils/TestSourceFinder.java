@@ -65,23 +65,17 @@ public class TestSourceFinder
 	/**
 	 * Utility method to create a test suite from files
 	 * 
+	 * @param dialect
 	 * @param name
 	 *            the suite name
 	 * @param testRootPath
 	 *            the root folder to start the file search
-	 * @param testCase
-	 *            The test case class instantiated. It must have a constructor taking a {@link File} or a {@link File},
-	 *            {@link String} and {@link File}
 	 * @param extensions
 	 *            an array of accepted extensions. If none are given all files are accepted. Empty sequence for the
 	 *            empty extension.
 	 * @return a new test suite
 	 * @throws IllegalArgumentException
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
 	 * @throws SecurityException
-	 * @throws NoSuchMethodException
 	 */
 	public static Collection<Object[]> createTestCompleteFile(Dialect dialect,
 			String name, String testRootPath, String... extensions)

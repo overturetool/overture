@@ -89,12 +89,17 @@ repository/
 #########################
 generated/
 
+
 # Documents copied into the help plugin #
 #########################################
 ide/help/html/OvertureIDEUserGuide.pdf
 ide/help/html/QuickOverviewofVDMOperators.pdf
 ide/help/html/VDM10_lang_man.pdf
 
+
+# VDM Libraries copied into the UI plugin #
+###########################################
+ide/ui/includes/lib/
 
 # Vim Swap Files #
 ##################

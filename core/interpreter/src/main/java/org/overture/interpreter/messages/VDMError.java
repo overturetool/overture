@@ -27,7 +27,6 @@ import org.overture.ast.lex.LexLocation;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.parser.messages.LocatedException;
 
-
 /**
  * A VDM error message.
  */
@@ -56,7 +55,7 @@ public class VDMError extends VDMMessage
 		sb.append("Error ");
 		sb.append(super.toString());
 
-		for (String d: details)
+		for (String d : details)
 		{
 			sb.append("\n");
 			sb.append(d);

@@ -18,31 +18,29 @@ import org.overture.ast.patterns.ATuplePattern;
 import org.overture.ast.patterns.AUnionPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.pattern.AMapPatternMapletAssistantInterpreter;
 
 /***************************************
- * 
  * This class implement a way to find identifier for patterns in a pattern type
  * 
  * @author gkanos
- *
  ****************************************/
-public class IdentifierPatternFinder extends AnswerAdaptor<List<AIdentifierPattern>>
+public class IdentifierPatternFinder extends
+		AnswerAdaptor<List<AIdentifierPattern>>
 {
 	protected IInterpreterAssistantFactory af;
-	
+
 	public IdentifierPatternFinder(IInterpreterAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public List<AIdentifierPattern> caseAConcatenationPattern(
 			AConcatenationPattern pattern) throws AnalysisException
 	{
-		
+
 		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
-	
+
 		list.addAll(pattern.getLeft().apply(THIS));
 		list.addAll(pattern.getRight().apply(THIS));
 		return list;
@@ -56,6 +54,7 @@ public class IdentifierPatternFinder extends AnswerAdaptor<List<AIdentifierPatte
 		list.add(pattern);
 		return list;
 	}
+
 	@Override
 	public List<AIdentifierPattern> caseAMapPattern(AMapPattern pattern)
 			throws AnalysisException
@@ -64,23 +63,23 @@ public class IdentifierPatternFinder extends AnswerAdaptor<List<AIdentifierPatte
 
 		for (AMapletPatternMaplet p : pattern.getMaplets())
 		{
-			list.addAll(AMapPatternMapletAssistantInterpreter.findIdentifiers(p));
+			list.addAll(af.createAMapPatternMapletAssistant().findIdentifiers(p));
 		}
 
 		return list;
 	}
-	
+
 	@Override
-	public List<AIdentifierPattern> caseAMapUnionPattern(AMapUnionPattern pattern)
-			throws AnalysisException
+	public List<AIdentifierPattern> caseAMapUnionPattern(
+			AMapUnionPattern pattern) throws AnalysisException
 	{
 		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
-		
+
 		list.addAll(pattern.getLeft().apply(THIS));
 		list.addAll(pattern.getRight().apply(THIS));
 		return list;
 	}
-	
+
 	@Override
 	public List<AIdentifierPattern> caseARecordPattern(ARecordPattern pattern)
 			throws AnalysisException
@@ -94,7 +93,7 @@ public class IdentifierPatternFinder extends AnswerAdaptor<List<AIdentifierPatte
 
 		return list;
 	}
-	
+
 	@Override
 	public List<AIdentifierPattern> caseASeqPattern(ASeqPattern pattern)
 			throws AnalysisException
@@ -108,7 +107,7 @@ public class IdentifierPatternFinder extends AnswerAdaptor<List<AIdentifierPatte
 
 		return list;
 	}
-	
+
 	@Override
 	public List<AIdentifierPattern> caseASetPattern(ASetPattern pattern)
 			throws AnalysisException
@@ -122,7 +121,7 @@ public class IdentifierPatternFinder extends AnswerAdaptor<List<AIdentifierPatte
 
 		return list;
 	}
-	
+
 	@Override
 	public List<AIdentifierPattern> caseATuplePattern(ATuplePattern pattern)
 			throws AnalysisException
@@ -136,18 +135,18 @@ public class IdentifierPatternFinder extends AnswerAdaptor<List<AIdentifierPatte
 
 		return list;
 	}
-	
+
 	@Override
 	public List<AIdentifierPattern> caseAUnionPattern(AUnionPattern pattern)
 			throws AnalysisException
 	{
 		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
-		
+
 		list.addAll(pattern.getLeft().apply(THIS));
 		list.addAll(pattern.getRight().apply(THIS));
 		return list;
 	}
-	
+
 	@Override
 	public List<AIdentifierPattern> defaultPPattern(PPattern node)
 			throws AnalysisException

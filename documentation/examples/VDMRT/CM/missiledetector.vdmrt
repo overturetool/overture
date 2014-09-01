@@ -61,7 +61,7 @@ isFinished () ==
   for all id in set dom controllers do
     controllers(id).isFinished();
 
-Step: () ==> ()
+protected Step: () ==> ()
 Step() ==
  (if threats <> []
   then (def mk_ (evid,pmt, pa, pt) = getThreat() in
@@ -71,6 +71,9 @@ Step() ==
               then controllers(id).addThreat(evid,pmt,pa,pt);
         busy := len threats > 0);
  );
+
+  public getAperture: () ==> Angle * Angle
+  getAperture () == is not yet specified;
 
 sync
 

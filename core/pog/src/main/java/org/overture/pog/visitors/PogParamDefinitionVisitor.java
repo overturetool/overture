@@ -59,7 +59,6 @@ import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.utility.POException;
 import org.overture.pog.utility.PogAssistantFactory;
 import org.overture.pog.utility.UniqueNameGenerator;
-import org.overture.typechecker.TypeComparator;
 
 public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IProofObligationList>
 		extends QuestionAnswerAdaptor<IPOContextStack, IProofObligationList>
@@ -76,7 +75,6 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 	 * @param parentVisitor
 	 * @param mainVisitor
 	 * @param assistantFactory
-	 * @param renameVisitor
 	 */
 	public PogParamDefinitionVisitor(
 			QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> parentVisitor,
@@ -144,13 +142,17 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 				alwaysMatches = true;
 				PatternAlwaysMatchesVisitor amVisitor = new PatternAlwaysMatchesVisitor();
 				for (List<PPattern> patterns : node.getParamPatternList())
+				{
 					for (PPattern p : patterns)
 					{
 						for (PDefinition def : p.getDefinitions())
+						{
 							pids.add(def.getName());
+						}
 
 						alwaysMatches = alwaysMatches && p.apply(amVisitor);
 					}
+				}
 			}
 
 			// check for duplicates
@@ -188,7 +190,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 
 			// do proof obligation for the return type
 			if (node.getIsUndefined()
-					|| !TypeComparator.isSubType(node.getActualResult(), node.getExpectedResult(), assistantFactory))
+					|| !assistantFactory.getTypeComparator().isSubType(node.getActualResult(), node.getExpectedResult()))
 			{
 				TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(node, node.getExpectedResult(), node.getActualResult(), question, assistantFactory);
 				if (sto != null)
@@ -281,7 +283,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 
 					for (PType u : ut.getTypes())
 					{
-						if (TypeComparator.compatible(u, patternType))
+						if (assistantFactory.getTypeComparator().compatible(u, patternType))
 						{
 							set.add(u);
 						}
@@ -291,7 +293,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 					{
 						PType compatible = set.getType(node.getLocation());
 
-						if (!TypeComparator.isSubType(question.checkType(node.getTest(), node.getExpType()), compatible, assistantFactory))
+						if (!assistantFactory.getTypeComparator().isSubType(question.checkType(node.getTest(), node.getExpType()), compatible))
 						{
 							list.add(new ValueBindingObligation(node, question, assistantFactory));
 							TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(node.getTest(), compatible, node.getExpType(), question, assistantFactory);
@@ -304,7 +306,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 				}
 			} else if (node.getTypebind() != null)
 			{
-				if (!TypeComparator.isSubType(question.checkType(node.getTest(), node.getExpType()), node.getDefType(), assistantFactory))
+				if (!assistantFactory.getTypeComparator().isSubType(question.checkType(node.getTest(), node.getExpType()), node.getDefType()))
 				{
 					TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(node.getTest(), node.getDefType(), node.getExpType(), question, assistantFactory);
 					if (sto != null)
@@ -348,7 +350,9 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 				for (PPattern p : pltp.getPatterns())
 				{
 					for (PDefinition def : assistantFactory.createPPatternAssistant().getDefinitions(p, typeIter.next(), NameScope.LOCAL))
+					{
 						pids.add(def.getName());
+					}
 					alwaysMatches = alwaysMatches && p.apply(amVisitor);
 				}
 
@@ -390,7 +394,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 				obligations.addAll(node.getBody().apply(rootVisitor, question));
 
 				if (node.getIsUndefined()
-						|| !TypeComparator.isSubType(node.getActualResult(), ((AFunctionType) node.getType()).getResult(), assistantFactory))
+						|| !assistantFactory.getTypeComparator().isSubType(node.getActualResult(), ((AFunctionType) node.getType()).getResult()))
 				{
 					TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(node, ((AFunctionType) node.getType()).getResult(), node.getActualResult(), question, assistantFactory);
 					if (sto != null)
@@ -443,7 +447,9 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 			for (PPattern p : node.getParameterPatterns())
 			{
 				for (PDefinition def : assistantFactory.createPPatternAssistant().getDefinitions(p, typeIter.next(), NameScope.LOCAL))
+				{
 					pids.add(def.getName());
+				}
 
 				alwaysMatches = alwaysMatches && p.apply(amVisitor);
 			}
@@ -467,7 +473,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 			}
 
 			if (!node.getIsConstructor()
-					&& !TypeComparator.isSubType(node.getActualResult(), ((AOperationType) node.getType()).getResult(), assistantFactory))
+					&& !assistantFactory.getTypeComparator().isSubType(node.getActualResult(), ((AOperationType) node.getType()).getResult()))
 			{
 				TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(node, node.getActualResult(), question, assistantFactory);
 				if (sto != null)
@@ -486,7 +492,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 				obligations.add(new OperationPostConditionObligation(node, question, assistantFactory));
 			}
 			question.clearStateContexts();
-
+			question.pop();
 			return obligations;
 		} catch (Exception e)
 		{
@@ -558,7 +564,9 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 				for (PPattern p : tp.getPatterns())
 				{
 					for (PDefinition def : assistantFactory.createPPatternAssistant().getDefinitions(p, typeIter.next(), NameScope.LOCAL))
+					{
 						pids.add(def.getName());
+					}
 
 					alwaysMatches = alwaysMatches && p.apply(amVisitor);
 				}
@@ -599,7 +607,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 				}
 
 				if (!node.getIsConstructor()
-						&& !TypeComparator.isSubType(node.getActualResult(), ((AOperationType) node.getType()).getResult(), assistantFactory))
+						&& !assistantFactory.getTypeComparator().isSubType(node.getActualResult(), ((AOperationType) node.getType()).getResult()))
 				{
 					TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(node, node.getActualResult(), question, assistantFactory);
 					if (sto != null)
@@ -614,7 +622,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 					// passed 1 more argument to give the assistantFactory to
 					// the constructor.
 					question.push(new POOperationDefinitionContext(node, false, node.getStateDefinition(), assistantFactory));
-					obligations.add(new SatisfiabilityObligation(node, node.getStateDefinition(), question,assistantFactory));
+					obligations.add(new SatisfiabilityObligation(node, node.getStateDefinition(), question, assistantFactory));
 					question.pop();
 				}
 			}
@@ -641,7 +649,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 
 			obligations.addAll(expression.apply(rootVisitor, question));
 
-			if (!TypeComparator.isSubType(question.checkType(expression, expType), type, assistantFactory))
+			if (!assistantFactory.getTypeComparator().isSubType(question.checkType(expression, expType), type))
 			{
 				TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(expression, type, expType, question, assistantFactory);
 				if (sto != null)
@@ -678,7 +686,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 
 			obligations.addAll(expression.apply(rootVisitor, question));
 
-			if (!TypeComparator.isSubType(question.checkType(expression, expType), type, assistantFactory))
+			if (!assistantFactory.getTypeComparator().isSubType(question.checkType(expression, expType), type))
 			{
 				TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(expression, type, expType, question, assistantFactory);
 				if (sto != null)
@@ -777,14 +785,16 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 
 				for (PType u : ut.getTypes())
 				{
-					if (TypeComparator.compatible(u, patternType))
+					if (assistantFactory.getTypeComparator().compatible(u, patternType))
+					{
 						set.add(u);
+					}
 				}
 
 				if (!set.isEmpty())
 				{
 					PType compatible = set.getType(node.getLocation());
-					if (!TypeComparator.isSubType(type, compatible, assistantFactory))
+					if (!assistantFactory.getTypeComparator().isSubType(type, compatible))
 					{
 						obligations.add(new ValueBindingObligation(node, question, assistantFactory));
 						TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(exp, compatible, type, question, assistantFactory);
@@ -796,7 +806,7 @@ public class PogParamDefinitionVisitor<Q extends IPOContextStack, A extends IPro
 				}
 			}
 
-			if (!TypeComparator.isSubType(question.checkType(exp, node.getExpType()), type, assistantFactory))
+			if (!assistantFactory.getTypeComparator().isSubType(question.checkType(exp, node.getExpType()), type))
 			{
 				TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(exp, type, node.getExpType(), question, assistantFactory);
 				if (sto != null)

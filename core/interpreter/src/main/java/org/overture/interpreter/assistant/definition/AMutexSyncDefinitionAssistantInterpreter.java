@@ -22,8 +22,7 @@ public class AMutexSyncDefinitionAssistantInterpreter
 		this.af = af;
 	}
 
-	public PExp getExpression(AMutexSyncDefinition sync,
-			ILexNameToken excluding)
+	public PExp getExpression(AMutexSyncDefinition sync, ILexNameToken excluding)
 	{
 		LexNameList list = null;
 

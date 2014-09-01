@@ -103,7 +103,6 @@ import org.overture.pog.pub.IProofObligation;
 import org.overture.pog.pub.IProofObligationList;
 import org.overture.util.Base64;
 
-
 public class DBGPReader
 {
 	protected final String host;
@@ -135,7 +134,7 @@ public class DBGPReader
 	protected boolean errorState = false;
 
 	protected static final int SOURCE_LINES = 5;
-	
+
 	protected static List<DBGPReader> connectecReaders = new Vector<DBGPReader>();
 
 	@SuppressWarnings("unchecked")
@@ -160,263 +159,221 @@ public class DBGPReader
 		String remoteName = null;
 		Class<RemoteControl> remoteClass = null;
 
-		Properties.init();		// Read properties file, if any
+		Properties.init(); // Read properties file, if any
 
 		for (Iterator<String> i = largs.iterator(); i.hasNext();)
 		{
 			String arg = i.next();
 
-    		if (arg.equals("-vdmsl"))
-    		{
-    			controller = new VDMSL();
-    		}
-    		else if (arg.equals("-vdmpp"))
-    		{
-    			controller = new VDMPP();
-    		}
-    		else if (arg.equals("-vdmrt"))
-    		{
-    			controller = new VDMRT();
-    		}
-    		else if (arg.equals("-h"))
-    		{
-    			if (i.hasNext())
-    			{
-    				host = i.next();
-    			}
-    			else
-    			{
-    				usage("-h option requires a hostname");
-    			}
-    		}
-    		else if (arg.equals("-p"))
-    		{
-    			try
-    			{
-    				port = Integer.parseInt(i.next());
-    			}
-    			catch (Exception e)
-    			{
-    				usage("-p option requires a port");
-    			}
-    		}
-    		else if (arg.equals("-k"))
-    		{
-    			if (i.hasNext())
-    			{
-    				ideKey = i.next();
-    			}
-    			else
-    			{
-    				usage("-k option requires a key");
-    			}
-    		}
-    		else if (arg.equals("-e"))
-    		{
-    			if (i.hasNext())
-    			{
-    				expression = i.next();
-    			}
-    			else
-    			{
-    				usage("-e option requires an expression");
-    			}
-    		}
-    		else if (arg.equals("-e64"))
-    		{
-    			if (i.hasNext())
-    			{
-    				expression = i.next();
-    				expBase64 = true;
-    			}
-    			else
-    			{
-    				usage("-e64 option requires an expression");
-    			}
-    		}
-    		else if (arg.equals("-c"))
-    		{
-    			if (i.hasNext())
-    			{
-    				if (controller == null)
-    				{
-    					usage("-c must come after <-vdmpp|-vdmsl|-vdmrt>");
-    				}
+			if (arg.equals("-vdmsl"))
+			{
+				controller = new VDMSL();
+			} else if (arg.equals("-vdmpp"))
+			{
+				controller = new VDMPP();
+			} else if (arg.equals("-vdmrt"))
+			{
+				controller = new VDMRT();
+			} else if (arg.equals("-h"))
+			{
+				if (i.hasNext())
+				{
+					host = i.next();
+				} else
+				{
+					usage("-h option requires a hostname");
+				}
+			} else if (arg.equals("-p"))
+			{
+				try
+				{
+					port = Integer.parseInt(i.next());
+				} catch (Exception e)
+				{
+					usage("-p option requires a port");
+				}
+			} else if (arg.equals("-k"))
+			{
+				if (i.hasNext())
+				{
+					ideKey = i.next();
+				} else
+				{
+					usage("-k option requires a key");
+				}
+			} else if (arg.equals("-e"))
+			{
+				if (i.hasNext())
+				{
+					expression = i.next();
+				} else
+				{
+					usage("-e option requires an expression");
+				}
+			} else if (arg.equals("-e64"))
+			{
+				if (i.hasNext())
+				{
+					expression = i.next();
+					expBase64 = true;
+				} else
+				{
+					usage("-e64 option requires an expression");
+				}
+			} else if (arg.equals("-c"))
+			{
+				if (i.hasNext())
+				{
+					if (controller == null)
+					{
+						usage("-c must come after <-vdmpp|-vdmsl|-vdmrt>");
+					}
 
-    				controller.setCharset(validateCharset(i.next()));
-    			}
-    			else
-    			{
-    				usage("-c option requires a charset name");
-    			}
-    		}
-    		else if (arg.equals("-r"))
-    		{
-    			if (i.hasNext())
-    			{
-    				Settings.release = Release.lookup(i.next());
+					controller.setCharset(validateCharset(i.next()));
+				} else
+				{
+					usage("-c option requires a charset name");
+				}
+			} else if (arg.equals("-r"))
+			{
+				if (i.hasNext())
+				{
+					Settings.release = Release.lookup(i.next());
 
-    				if (Settings.release == null)
-    				{
-    					usage("-r option must be " + Release.list());
-    				}
-    			}
-    			else
-    			{
-    				usage("-r option requires a VDM release");
-    			}
-    		}
-    		else if (arg.equals("-pre"))
-    		{
-    			Settings.prechecks = false;
-    		}
-    		else if (arg.equals("-post"))
-    		{
-    			Settings.postchecks = false;
-    		}
-    		else if (arg.equals("-inv"))
-    		{
-    			Settings.invchecks = false;
-    		}
-    		else if (arg.equals("-dtc"))
-    		{
-    			// NB. Turn off both when no DTC
-    			Settings.invchecks = false;
-    			Settings.dynamictypechecks = false;
-    		}
-    		else if (arg.equals("-measures"))
-    		{
-    			Settings.measureChecks = false;
-    		}
-    		else if (arg.equals("-log"))
-    		{
-    			if (i.hasNext())
-    			{
-        			try
-        			{
-        				logfile = new URI(i.next()).getPath();
-        			}
-        			catch (URISyntaxException e)
-        			{
-        				usage(e.getMessage() + ": " + arg);
-        			}
-        			catch (IllegalArgumentException e)
-        			{
-        				usage(e.getMessage() + ": " + arg);
-        			}
-    			}
-    			else
-    			{
-    				usage("-log option requires a filename");
-    			}
-    		}
-    		else if (arg.equals("-w"))
-    		{
-    			warnings = false;
-    		}
-    		else if (arg.equals("-q"))
-    		{
-    			quiet = true;
-    		}
-    		else if (arg.equals("-coverage"))
-    		{
-    			if (i.hasNext())
-    			{
-        			try
-        			{
-        				coverage = new File(new URI(i.next()));
+					if (Settings.release == null)
+					{
+						usage("-r option must be " + Release.list());
+					}
+				} else
+				{
+					usage("-r option requires a VDM release");
+				}
+			} else if (arg.equals("-pre"))
+			{
+				Settings.prechecks = false;
+			} else if (arg.equals("-post"))
+			{
+				Settings.postchecks = false;
+			} else if (arg.equals("-inv"))
+			{
+				Settings.invchecks = false;
+			} else if (arg.equals("-dtc"))
+			{
+				// NB. Turn off both when no DTC
+				Settings.invchecks = false;
+				Settings.dynamictypechecks = false;
+			} else if (arg.equals("-measures"))
+			{
+				Settings.measureChecks = false;
+			} else if (arg.equals("-log"))
+			{
+				if (i.hasNext())
+				{
+					try
+					{
+						logfile = new URI(i.next()).getPath();
+					} catch (URISyntaxException e)
+					{
+						usage(e.getMessage() + ": " + arg);
+					} catch (IllegalArgumentException e)
+					{
+						usage(e.getMessage() + ": " + arg);
+					}
+				} else
+				{
+					usage("-log option requires a filename");
+				}
+			} else if (arg.equals("-w"))
+			{
+				warnings = false;
+			} else if (arg.equals("-q"))
+			{
+				quiet = true;
+			} else if (arg.equals("-coverage"))
+			{
+				if (i.hasNext())
+				{
+					try
+					{
+						coverage = new File(new URI(i.next()));
 
-        				if (!coverage.isDirectory())
-        				{
-        					usage("Coverage location is not a directory");
-        				}
-        			}
-        			catch (URISyntaxException e)
-        			{
-        				usage(e.getMessage() + ": " + arg);
-        			}
-        			catch (IllegalArgumentException e)
-        			{
-        				usage(e.getMessage() + ": " + arg);
-        			}
-    			}
-    			else
-    			{
-    				usage("-coverage option requires a directory name");
-    			}
-    		}
-    		else if (arg.equals("-default64"))
-    		{
-    			if (i.hasNext())
-    			{
-       				defaultName = i.next();
-    			}
-    			else
-    			{
-    				usage("-default64 option requires a name");
-    			}
-    		}
-    		else if (arg.equals("-remote"))
-    		{
-    			if (i.hasNext())
-    			{
-       				remoteName = i.next();
-    			}
-    			else
-    			{
-    				usage("-remote option requires a Java classname");
-    			}
-    		}
-    		else if (arg.equals("-consoleName"))
-    		{
-    			if (i.hasNext())
-    			{
-    				LexTokenReader.consoleFileName = i.next();
-    			}
-    			else
-    			{
-    				usage("-consoleName option requires a console name");
-    			}
-    		}
-    		else if (arg.startsWith("-"))
-    		{
-    			usage("Unknown option " + arg);
-    		}
-    		else
-    		{
-    			try
-    			{
-    				File dir = new File(new URI(arg));
+						if (!coverage.isDirectory())
+						{
+							usage("Coverage location is not a directory");
+						}
+					} catch (URISyntaxException e)
+					{
+						usage(e.getMessage() + ": " + arg);
+					} catch (IllegalArgumentException e)
+					{
+						usage(e.getMessage() + ": " + arg);
+					}
+				} else
+				{
+					usage("-coverage option requires a directory name");
+				}
+			} else if (arg.equals("-default64"))
+			{
+				if (i.hasNext())
+				{
+					defaultName = i.next();
+				} else
+				{
+					usage("-default64 option requires a name");
+				}
+			} else if (arg.equals("-remote"))
+			{
+				if (i.hasNext())
+				{
+					remoteName = i.next();
+				} else
+				{
+					usage("-remote option requires a Java classname");
+				}
+			} else if (arg.equals("-consoleName"))
+			{
+				if (i.hasNext())
+				{
+					LexTokenReader.consoleFileName = i.next();
+				} else
+				{
+					usage("-consoleName option requires a console name");
+				}
+			} else if (arg.startsWith("-"))
+			{
+				usage("Unknown option " + arg);
+			} else
+			{
+				try
+				{
+					File dir = new File(new URI(arg));
 
-    				if (dir.isDirectory())
-    				{
-     					for (File file: dir.listFiles(Settings.dialect.getFilter()))
-    					{
-    						if (file.isFile())
-    						{
-    							files.add(file);
-    						}
-    					}
-    				}
-        			else
-        			{
-        				files.add(dir);
-        			}
-    			}
-    			catch (URISyntaxException e)
-    			{
-    				usage(e.getMessage() + ": " + arg);
-    			}
-    			catch (IllegalArgumentException e)
-    			{
-    				usage(e.getMessage() + ": " + arg);
-    			}
-    		}
+					if (dir.isDirectory())
+					{
+						for (File file : dir.listFiles(Settings.dialect.getFilter()))
+						{
+							if (file.isFile())
+							{
+								files.add(file);
+							}
+						}
+					} else
+					{
+						files.add(dir);
+					}
+				} catch (URISyntaxException e)
+				{
+					usage(e.getMessage() + ": " + arg);
+				} catch (IllegalArgumentException e)
+				{
+					usage(e.getMessage() + ": " + arg);
+				}
+			}
 		}
 
-		if (host == null || port == -1 || controller == null ||
-			ideKey == null || expression == null || Settings.dialect == null ||
-			files.isEmpty())
+		if (host == null || port == -1 || controller == null || ideKey == null
+				|| expression == null || Settings.dialect == null
+				|| files.isEmpty())
 		{
 			usage("Missing mandatory arguments");
 		}
@@ -432,8 +389,7 @@ public class DBGPReader
 			{
 				byte[] bytes = Base64.decode(expression);
 				expression = new String(bytes, VDMJ.filecharset);
-			}
-			catch (Exception e)
+			} catch (Exception e)
 			{
 				usage("Malformed -e64 base64 expression");
 			}
@@ -445,8 +401,7 @@ public class DBGPReader
 			{
 				byte[] bytes = Base64.decode(defaultName);
 				defaultName = new String(bytes, VDMJ.filecharset);
-			}
-			catch (Exception e)
+			} catch (Exception e)
 			{
 				usage("Malformed -default64 base64 name");
 			}
@@ -457,9 +412,8 @@ public class DBGPReader
 			try
 			{
 				Class<?> cls = ClassLoader.getSystemClassLoader().loadClass(remoteName);
-				remoteClass = (Class<RemoteControl>)cls;
-			}
-			catch (ClassNotFoundException e)
+				remoteClass = (Class<RemoteControl>) cls;
+			} catch (ClassNotFoundException e)
 			{
 				usage("Cannot locate " + remoteName + " on the CLASSPATH");
 			}
@@ -470,14 +424,14 @@ public class DBGPReader
 
 		if (controller.parse(files) == ExitStatus.EXIT_OK)
 		{
-    		if (controller.typeCheck() == ExitStatus.EXIT_OK)
-    		{
+			if (controller.typeCheck() == ExitStatus.EXIT_OK)
+			{
 				try
 				{
 					if (logfile != null)
 					{
-		    			RTLogger.setLogfile(RTTextLogger.class,new File(logfile));
-		    			RTLogger.setLogfile(NextGenRTLogger.class,new File(logfile));
+						RTLogger.setLogfile(RTTextLogger.class, new File(logfile));
+						RTLogger.setLogfile(NextGenRTLogger.class, new File(logfile));
 					}
 
 					Interpreter i = controller.getInterpreter();
@@ -487,8 +441,8 @@ public class DBGPReader
 						i.setDefaultName(defaultName);
 					}
 
-					RemoteControl remote =
-						(remoteClass == null) ? null : remoteClass.newInstance();
+					RemoteControl remote = remoteClass == null ? null
+							: remoteClass.newInstance();
 
 					new DBGPReader(host, port, ideKey, i, expression, null).startup(remote);
 
@@ -498,28 +452,24 @@ public class DBGPReader
 					}
 
 					RTLogger.dump(true);
-	    			System.exit(0);
-				}
-				catch (ContextException e)
+					System.exit(0);
+				} catch (ContextException e)
 				{
 					System.out.println("Initialization: " + e);
 					e.ctxt.printStackTrace(Console.out, true);
 					RTLogger.dump(true);
 					System.exit(3);
-				}
-				catch (Exception e)
+				} catch (Exception e)
 				{
 					System.out.println("Initialization: " + e);
 					RTLogger.dump(true);
 					System.exit(3);
 				}
-    		}
-    		else
-    		{
-    			System.exit(2);
-    		}
-		}
-		else
+			} else
+			{
+				System.exit(2);
+			}
+		} else
 		{
 			System.exit(1);
 		}
@@ -528,13 +478,12 @@ public class DBGPReader
 	protected static void usage(String string)
 	{
 		System.err.println(string);
-		System.err.println(
-			"Usage: -h <host> -p <port> -k <ide key> <-vdmpp|-vdmsl|-vdmrt>" +
-			" -e <expression> | -e64 <base64 expression>" +
-			" [-w] [-q] [-log <logfile URL>] [-c <charset>] [-r <release>]" +
-			" [-pre] [-post] [-inv] [-dtc] [-measures]"+
-			" [-coverage <dir URL>] [-default64 <base64 name>]" +
-			" [-remote <class>] [-consoleName <console>] [-baseDir <File>] {<filename URLs>}");
+		System.err.println("Usage: -h <host> -p <port> -k <ide key> <-vdmpp|-vdmsl|-vdmrt>"
+				+ " -e <expression> | -e64 <base64 expression>"
+				+ " [-w] [-q] [-log <logfile URL>] [-c <charset>] [-r <release>]"
+				+ " [-pre] [-post] [-inv] [-dtc] [-measures]"
+				+ " [-coverage <dir URL>] [-default64 <base64 name>]"
+				+ " [-remote <class>] [-consoleName <console>] [-baseDir <File>] {<filename URLs>}");
 
 		System.exit(1);
 	}
@@ -546,11 +495,12 @@ public class DBGPReader
 			System.err.println("Charset " + cs + " is not supported\n");
 			System.err.println("Available charsets:");
 			System.err.println("Default = " + Charset.defaultCharset());
-			Map<String,Charset> available = Charset.availableCharsets();
+			Map<String, Charset> available = Charset.availableCharsets();
 
-			for (Entry<String, Charset> name: available.entrySet())
+			for (Entry<String, Charset> name : available.entrySet())
 			{
-				System.err.println(name.getKey() + " " + name.getValue().aliases());
+				System.err.println(name.getKey() + " "
+						+ name.getValue().aliases());
 			}
 
 			System.err.println("");
@@ -560,9 +510,8 @@ public class DBGPReader
 		return cs;
 	}
 
-	public DBGPReader(
-		String host, int port, String ideKey,
-		Interpreter interpreter, String expression, CPUValue cpu)
+	public DBGPReader(String host, int port, String ideKey,
+			Interpreter interpreter, String expression, CPUValue cpu)
 	{
 		this.host = host;
 		this.port = port;
@@ -590,8 +539,7 @@ public class DBGPReader
 				socket = new Socket(server, port);
 				input = socket.getInputStream();
 				output = socket.getOutputStream();
-			}
-			else
+			} else
 			{
 				socket = null;
 				input = System.in;
@@ -602,13 +550,13 @@ public class DBGPReader
 			connected = true;
 			addThisReader();
 			init();
-			run();			// New threads wait for a "run -i"
+			run(); // New threads wait for a "run -i"
 		}
 	}
 
 	protected void startup(RemoteControl remote) throws IOException
 	{
-		remoteControl = remote;		// Main thread only
+		remoteControl = remote; // Main thread only
 		interpreter.init(this);
 		connect();
 	}
@@ -632,12 +580,10 @@ public class DBGPReader
 
 		String threadName = BasicSchedulableThread.getThreadName(Thread.currentThread());
 
-
 		if (threadName != null)
 		{
 			sb.append(threadName);
-		}
-		else
+		} else
 		{
 			sb.append(Thread.currentThread().getName());
 		}
@@ -660,14 +606,13 @@ public class DBGPReader
 
 		Set<File> files = interpreter.getSourceFiles();
 		sb.append(" fileuri=\"");
-		sb.append(files.iterator().next().toURI());		// Any old one...
+		sb.append(files.iterator().next().toURI()); // Any old one...
 		sb.append("\"");
 
 		sb.append("/>\n");
 
 		write(sb);
 	}
-
 
 	protected String readLine() throws IOException
 	{
@@ -679,21 +624,19 @@ public class DBGPReader
 			{
 				if (c != '\r')
 				{
-					line.append((char)c);		// Ignore CRs
+					line.append((char) c); // Ignore CRs
 				}
 				c = input.read();
 			}
 
-			return (line.length() == 0 && c == -1) ? null : line.toString();
-		}
-		catch(SocketException e)
+			return line.length() == 0 && c == -1 ? null : line.toString();
+		} catch (SocketException e)
 		{
-			//If DBGP is stopped there is no guarantee that the IDE will be available
+			// If DBGP is stopped there is no guarantee that the IDE will be available
 			if (stopped)
 			{
 				return null;
-			}
-			else
+			} else
 			{
 				throw e;
 			}
@@ -704,7 +647,7 @@ public class DBGPReader
 	{
 		if (output == null)
 		{
-			//TODO: Handle the error in VDMJ, terminate?
+			// TODO: Handle the error in VDMJ, terminate?
 			System.err.println("Socket to IDE not valid.");
 			return;
 		}
@@ -721,7 +664,8 @@ public class DBGPReader
 		output.flush();
 	}
 
-	protected void response(StringBuilder hdr, StringBuilder body) throws IOException
+	protected void response(StringBuilder hdr, StringBuilder body)
+			throws IOException
 	{
 		StringBuilder sb = new StringBuilder();
 
@@ -744,8 +688,7 @@ public class DBGPReader
 			sb.append(">");
 			sb.append(body);
 			sb.append("</response>\n");
-		}
-		else
+		} else
 		{
 			sb.append("/>\n");
 		}
@@ -766,12 +709,10 @@ public class DBGPReader
 			sb.append("</message></error>");
 
 			response(null, sb);
-		}
-		catch (SocketException e)
+		} catch (SocketException e)
 		{
 			// Do not report these since the socket connection is down.
-		}
-		catch (IOException e)
+		} catch (IOException e)
 		{
 			throw new InternalException(29, "DBGP: " + reason);
 		}
@@ -783,7 +724,7 @@ public class DBGPReader
 	}
 
 	protected void statusResponse(DBGPStatus s, DBGPReason reason)
-		throws IOException
+			throws IOException
 	{
 		StringBuilder sb = new StringBuilder();
 
@@ -811,7 +752,8 @@ public class DBGPReader
 
 		sb.append("<breakpoint id=\"" + bp.number + "\"");
 		sb.append(" type=\"line\"");
-		sb.append(" state=\"" + (bp.isEnabled() ? "enabled" : "disabled") + "\"");
+		sb.append(" state=\"" + (bp.isEnabled() ? "enabled" : "disabled")
+				+ "\"");
 		sb.append(" filename=\"" + bp.location.getFile().toURI() + "\"");
 		sb.append(" lineno=\"" + bp.location.getStartLine() + "\"");
 		sb.append(">");
@@ -834,18 +776,19 @@ public class DBGPReader
 		sb.append(" type=\"file\"");
 		sb.append(" filename=\"" + location.getFile().toURI() + "\"");
 		sb.append(" lineno=\"" + location.getStartLine() + "\"");
-		sb.append(" cmdbegin=\"" + location.getStartLine() + ":" + location.getStartPos() + "\"");
+		sb.append(" cmdbegin=\"" + location.getStartLine() + ":"
+				+ location.getStartPos() + "\"");
 		sb.append("/>");
 
 		return sb;
 	}
 
-	protected StringBuilder propertyResponse(NameValuePairMap vars, DBGPContextType context)
-		throws UnsupportedEncodingException
+	protected StringBuilder propertyResponse(NameValuePairMap vars,
+			DBGPContextType context) throws UnsupportedEncodingException
 	{
 		StringBuilder sb = new StringBuilder();
 
-		for (Entry<ILexNameToken, Value> e: vars.entrySet())
+		for (Entry<ILexNameToken, Value> e : vars.entrySet())
 		{
 			sb.append(propertyResponse(e.getKey(), e.getValue(), context));
 		}
@@ -853,35 +796,32 @@ public class DBGPReader
 		return sb;
 	}
 
-	protected StringBuilder propertyResponse(ILexNameToken name, Value value, DBGPContextType context)
-		throws UnsupportedEncodingException
+	protected StringBuilder propertyResponse(ILexNameToken name, Value value,
+			DBGPContextType context) throws UnsupportedEncodingException
 	{
-		return propertyResponse(
-			name.getName(), name.getExplicit(true).toString(),
-			name.getModule(), value.toString());
+		return propertyResponse(name.getName(), name.getExplicit(true).toString(), name.getModule(), value.toString());
 	}
 
-	protected StringBuilder propertyResponse(
-		String name, String fullname, String clazz, String value)
-		throws UnsupportedEncodingException
-    {
-    	StringBuilder sb = new StringBuilder();
+	protected StringBuilder propertyResponse(String name, String fullname,
+			String clazz, String value) throws UnsupportedEncodingException
+	{
+		StringBuilder sb = new StringBuilder();
 
-    	sb.append("<property");
-    	sb.append(" name=\"" + quote(name) + "\"");
-    	sb.append(" fullname=\"" + quote(fullname) + "\"");
-    	sb.append(" type=\"string\"");
-    	sb.append(" classname=\"" + clazz + "\"");
-    	sb.append(" constant=\"0\"");
-    	sb.append(" children=\"0\"");
-    	sb.append(" size=\"" + value.length() + "\"");
-    	sb.append(" encoding=\"base64\"");
-    	sb.append("><![CDATA[");
-    	sb.append(Base64.encode(value.getBytes("UTF-8")));
-    	sb.append("]]></property>");
+		sb.append("<property");
+		sb.append(" name=\"" + quote(name) + "\"");
+		sb.append(" fullname=\"" + quote(fullname) + "\"");
+		sb.append(" type=\"string\"");
+		sb.append(" classname=\"" + clazz + "\"");
+		sb.append(" constant=\"0\"");
+		sb.append(" children=\"0\"");
+		sb.append(" size=\"" + value.length() + "\"");
+		sb.append(" encoding=\"base64\"");
+		sb.append("><![CDATA[");
+		sb.append(Base64.encode(value.getBytes("UTF-8")));
+		sb.append("]]></property>");
 
-    	return sb;
-    }
+		return sb;
+	}
 
 	protected void cdataResponse(String msg) throws IOException
 	{
@@ -891,13 +831,8 @@ public class DBGPReader
 
 	protected static String quote(String in)
 	{
-		return in
-    		.replace("&", "&amp;")
-    		.replace("<", "&lt;")
-    		.replace(">", "&gt;")
-    		.replace("\"", "&quot;");
+		return in.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;");
 	}
-
 
 	protected void run() throws IOException
 	{
@@ -906,8 +841,7 @@ public class DBGPReader
 		do
 		{
 			line = readLine();
-		}
-		while (line != null && process(line));
+		} while (line != null && process(line));
 	}
 
 	public void stopped(Context ctxt, ILexLocation location)
@@ -919,7 +853,7 @@ public class DBGPReader
 	{
 		if (breaksSuspended)
 		{
-			return;		// We're inside an eval command, so don't stop
+			return; // We're inside an eval command, so don't stop
 		}
 
 		try
@@ -928,21 +862,19 @@ public class DBGPReader
 
 			breakContext = ctxt;
 			breakpoint = bp;
-			if(errorState)
+			if (errorState)
 			{
 				statusResponse(DBGPStatus.BREAK, DBGPReason.ERROR);
-			}
-			else
+			} else
 			{
 				statusResponse(DBGPStatus.BREAK, DBGPReason.OK);
 			}
-				run();
+			run();
 
-				breakContext = null;
-				breakpoint = null;
-			
-		}
-		catch (Exception e)
+			breakContext = null;
+			breakpoint = null;
+
+		} catch (Exception e)
 		{
 			errorResponse(DBGPErrorCode.INTERNAL_ERROR, e.getMessage());
 		}
@@ -950,16 +882,16 @@ public class DBGPReader
 
 	public void setErrorState()
 	{
-		errorState  = true;
+		errorState = true;
 	}
-	
+
 	public void invocationError(Throwable e)
 	{
-		String message =e.getMessage();
+		String message = e.getMessage();
 
 		if (e instanceof StackOverflowError)
 		{
-			message = "StackOverflowError:\n Try to increase Java Stack size by adding -Xss4M to the Virtual Machine running the debugger";//+getStackTrace(e));
+			message = "StackOverflowError:\n Try to increase Java Stack size by adding -Xss4M to the Virtual Machine running the debugger";// +getStackTrace(e));
 		}
 
 		errorResponse(DBGPErrorCode.INTERNAL_ERROR, message);
@@ -967,15 +899,14 @@ public class DBGPReader
 
 	public void tracing(String display)
 	{
-    	try
-    	{
-    		connect();
-    		cdataResponse(display);
-    	}
-    	catch (Exception e)
-    	{
-    		errorResponse(DBGPErrorCode.INTERNAL_ERROR, e.getMessage());
-    	}
+		try
+		{
+			connect();
+			cdataResponse(display);
+		} catch (Exception e)
+		{
+			errorResponse(DBGPErrorCode.INTERNAL_ERROR, e.getMessage());
+		}
 	}
 
 	public void complete(DBGPReason reason, ContextException ctxt)
@@ -985,33 +916,28 @@ public class DBGPReader
 			if (reason == DBGPReason.OK && !connected)
 			{
 				// We never connected and there's no problem so just complete...
-			}
-			else
+			} else
 			{
 				connect();
 
 				if (reason == DBGPReason.EXCEPTION && ctxt != null)
-    			{
-    				dyingThread(ctxt);
-    			}
-    			else
-    			{
-    				statusResponse(DBGPStatus.STOPPED, reason);
-    			}
+				{
+					dyingThread(ctxt);
+				} else
+				{
+					statusResponse(DBGPStatus.STOPPED, reason);
+				}
 			}
-		}
-		catch (IOException e)
+		} catch (IOException e)
 		{
 			try
 			{
 				errorResponse(DBGPErrorCode.INTERNAL_ERROR, e.getMessage());
-			}
-			catch (Throwable th)
+			} catch (Throwable th)
 			{
 				// Probably a shutdown race...
 			}
-		}
-		finally
+		} finally
 		{
 			try
 			{
@@ -1019,8 +945,7 @@ public class DBGPReader
 				{
 					socket.close();
 				}
-			}
-			catch (IOException e)
+			} catch (IOException e)
 			{
 				// ?
 			}
@@ -1036,125 +961,123 @@ public class DBGPReader
 			command = DBGPCommandType.UNKNOWN;
 			transaction = "?";
 
-    		String[] parts = line.split("\\s+");
-    		DBGPCommand c = parse(parts);
+			String[] parts = line.split("\\s+");
+			DBGPCommand c = parse(parts);
 
-    		switch (c.type)
-    		{
-    			case STATUS:
-    				processStatus(c);
-    				break;
+			switch (c.type)
+			{
+				case STATUS:
+					processStatus(c);
+					break;
 
-    			case FEATURE_GET:
-    				processFeatureGet(c);
-    				break;
+				case FEATURE_GET:
+					processFeatureGet(c);
+					break;
 
-    			case FEATURE_SET:
-    				processFeatureSet(c);
-    				break;
+				case FEATURE_SET:
+					processFeatureSet(c);
+					break;
 
-    			case RUN:
-    				carryOn = processRun(c);
-    				break;
+				case RUN:
+					carryOn = processRun(c);
+					break;
 
-    			case EVAL:
-    				carryOn = processEval(c);
-    				break;
+				case EVAL:
+					carryOn = processEval(c);
+					break;
 
-    			case EXPR:
-    				carryOn = processExpr(c);
-    				break;
+				case EXPR:
+					carryOn = processExpr(c);
+					break;
 
-    			case STEP_INTO:
-    				processStepInto(c);
-    				carryOn = false;
-    				break;
+				case STEP_INTO:
+					processStepInto(c);
+					carryOn = false;
+					break;
 
-    			case STEP_OVER:
-    				processStepOver(c);
-    				carryOn = false;
-    				break;
+				case STEP_OVER:
+					processStepOver(c);
+					carryOn = false;
+					break;
 
-    			case STEP_OUT:
-    				processStepOut(c);
-    				carryOn = false;
-    				break;
+				case STEP_OUT:
+					processStepOut(c);
+					carryOn = false;
+					break;
 
-    			case STOP:
-    				processStop(c);
-    				carryOn = false;
-    				break;
+				case STOP:
+					processStop(c);
+					carryOn = false;
+					break;
 
-    			case BREAKPOINT_GET:
-    				breakpointGet(c);
-    				break;
+				case BREAKPOINT_GET:
+					breakpointGet(c);
+					break;
 
-    			case BREAKPOINT_SET:
-    				breakpointSet(c);
-    				break;
+				case BREAKPOINT_SET:
+					breakpointSet(c);
+					break;
 
-    			case BREAKPOINT_UPDATE:
-    				breakpointUpdate(c);
-    				break;
+				case BREAKPOINT_UPDATE:
+					breakpointUpdate(c);
+					break;
 
-    			case BREAKPOINT_REMOVE:
-    				breakpointRemove(c);
-    				break;
+				case BREAKPOINT_REMOVE:
+					breakpointRemove(c);
+					break;
 
-    			case BREAKPOINT_LIST:
-    				breakpointList(c);
-    				break;
+				case BREAKPOINT_LIST:
+					breakpointList(c);
+					break;
 
-    			case STACK_DEPTH:
-    				stackDepth(c);
-    				break;
+				case STACK_DEPTH:
+					stackDepth(c);
+					break;
 
-    			case STACK_GET:
-    				stackGet(c);
-    				break;
+				case STACK_GET:
+					stackGet(c);
+					break;
 
-    			case CONTEXT_NAMES:
-    				contextNames(c);
-    				break;
+				case CONTEXT_NAMES:
+					contextNames(c);
+					break;
 
-    			case CONTEXT_GET:
-    				contextGet(c);
-    				break;
+				case CONTEXT_GET:
+					contextGet(c);
+					break;
 
-    			case PROPERTY_GET:
-    				propertyGet(c);
-    				break;
+				case PROPERTY_GET:
+					propertyGet(c);
+					break;
 
-    			case SOURCE:
-    				processSource(c);
-    				break;
+				case SOURCE:
+					processSource(c);
+					break;
 
-    			case STDOUT:
-       				processStdout(c);
-    				break;
+				case STDOUT:
+					processStdout(c);
+					break;
 
-       			case STDERR:
-       				processStderr(c);
-    				break;
+				case STDERR:
+					processStderr(c);
+					break;
 
-    			case DETACH:
-    				carryOn = false;
-    				break;
+				case DETACH:
+					carryOn = false;
+					break;
 
-    			case XCMD_OVERTURE_CMD:
-    				processOvertureCmd(c);
-    				break;
+				case XCMD_OVERTURE_CMD:
+					processOvertureCmd(c);
+					break;
 
-    			case PROPERTY_SET:
-    			default:
-    				errorResponse(DBGPErrorCode.NOT_AVAILABLE, c.type.value);
-    		}
-		}
-		catch (DBGPException e)
+				case PROPERTY_SET:
+				default:
+					errorResponse(DBGPErrorCode.NOT_AVAILABLE, c.type.value);
+			}
+		} catch (DBGPException e)
 		{
 			errorResponse(e.code, e.reason);
-		}
-		catch (Throwable e)
+		} catch (Throwable e)
 		{
 			errorResponse(DBGPErrorCode.INTERNAL_ERROR, e.getMessage());
 		}
@@ -1175,37 +1098,34 @@ public class DBGPReader
 		{
 			command = DBGPCommandType.lookup(parts[0]);
 
-			for (int i=1; i<parts.length; i++)
+			for (int i = 1; i < parts.length; i++)
 			{
 				if (doneOpts)
 				{
 					if (args != null)
 					{
 						throw new Exception("Expecting one base64 arg after '--'");
-					}
-					else
+					} else
 					{
 						args = parts[i];
 					}
-				}
-				else
+				} else
 				{
-	    			if (parts[i].equals("--"))
-	    			{
-	    				doneOpts = true;
-	    			}
-	     			else
-	    			{
-	    				DBGPOptionType opt = DBGPOptionType.lookup(parts[i++]);
+					if (parts[i].equals("--"))
+					{
+						doneOpts = true;
+					} else
+					{
+						DBGPOptionType opt = DBGPOptionType.lookup(parts[i++]);
 
-	    				if (opt == DBGPOptionType.TRANSACTION_ID)
-	    				{
-	    					gotXID = true;
-	    					transaction = parts[i];
-	    				}
+						if (opt == DBGPOptionType.TRANSACTION_ID)
+						{
+							gotXID = true;
+							transaction = parts[i];
+						}
 
 						options.add(new DBGPOption(opt, parts[i]));
-	     			}
+					}
 				}
 			}
 
@@ -1213,23 +1133,18 @@ public class DBGPReader
 			{
 				throw new Exception("No transaction_id");
 			}
-		}
-		catch (DBGPException e)
+		} catch (DBGPException e)
 		{
 			throw e;
-		}
-		catch (ArrayIndexOutOfBoundsException e)
+		} catch (ArrayIndexOutOfBoundsException e)
 		{
-			throw new DBGPException(
-				DBGPErrorCode.INVALID_OPTIONS, "Option arg missing");
-		}
-		catch (Exception e)
+			throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, "Option arg missing");
+		} catch (Exception e)
 		{
 			if (doneOpts)
 			{
 				throw new DBGPException(DBGPErrorCode.PARSE, e.getMessage());
-			}
-			else
+			} else
 			{
 				throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, e.getMessage());
 			}
@@ -1238,7 +1153,8 @@ public class DBGPReader
 		return new DBGPCommand(command, options, args);
 	}
 
-	protected void checkArgs(DBGPCommand c, int n, boolean data) throws DBGPException
+	protected void checkArgs(DBGPCommand c, int n, boolean data)
+			throws DBGPException
 	{
 		if (data && c.data == null)
 		{
@@ -1251,13 +1167,15 @@ public class DBGPReader
 		}
 	}
 
-	protected void processStatus(DBGPCommand c) throws DBGPException, IOException
+	protected void processStatus(DBGPCommand c) throws DBGPException,
+			IOException
 	{
 		checkArgs(c, 1, false);
 		statusResponse();
 	}
 
-	protected void processFeatureGet(DBGPCommand c) throws DBGPException, IOException
+	protected void processFeatureGet(DBGPCommand c) throws DBGPException,
+			IOException
 	{
 		checkArgs(c, 2, false);
 		DBGPOption option = c.getOption(DBGPOptionType.N);
@@ -1269,28 +1187,28 @@ public class DBGPReader
 
 		String feature = features.getProperty(option.value);
 		StringBuilder hdr = new StringBuilder();
-   		StringBuilder body = new StringBuilder();
+		StringBuilder body = new StringBuilder();
 
-   		if (feature == null)
+		if (feature == null)
 		{
 			// Unknown feature - unsupported in header; nothing in body
-    		hdr.append("feature_name=\"");
-    		hdr.append(option.value);
-    		hdr.append("\" supported=\"0\"");
-		}
-		else
+			hdr.append("feature_name=\"");
+			hdr.append(option.value);
+			hdr.append("\" supported=\"0\"");
+		} else
 		{
 			// Known feature - supported in header; body reflects actual support
-    		hdr.append("feature_name=\"");
-    		hdr.append(option.value);
-    		hdr.append("\" supported=\"1\"");
-    		body.append(feature);
+			hdr.append("feature_name=\"");
+			hdr.append(option.value);
+			hdr.append("\" supported=\"1\"");
+			body.append(feature);
 		}
 
 		response(hdr, body);
 	}
 
-	protected void processFeatureSet(DBGPCommand c) throws DBGPException, IOException
+	protected void processFeatureSet(DBGPCommand c) throws DBGPException,
+			IOException
 	{
 		checkArgs(c, 3, false);
 		DBGPOption option = c.getOption(DBGPOptionType.N);
@@ -1340,8 +1258,7 @@ public class DBGPReader
 			breakContext = null;
 			breakpoint = null;
 			statusResponse(DBGPStatus.STOPPED, DBGPReason.EXCEPTION);
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			errorResponse(DBGPErrorCode.INTERNAL_ERROR, e.getMessage());
 		}
@@ -1358,9 +1275,8 @@ public class DBGPReader
 				breakContext.threadState.setBreaks(null, null, null);
 				status = DBGPStatus.RUNNING;
 				statusReason = DBGPReason.OK;
-				return false;	// run means continue
-			}
-			else
+				return false; // run means continue
+			} else
 			{
 				throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 			}
@@ -1370,7 +1286,7 @@ public class DBGPReader
 		{
 			status = DBGPStatus.RUNNING;
 			statusReason = DBGPReason.OK;
-			return false;	// a run for a new thread, means continue
+			return false; // a run for a new thread, means continue
 		}
 
 		if (status != DBGPStatus.STARTING)
@@ -1378,7 +1294,7 @@ public class DBGPReader
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}
 
-		if (c.data != null)	// data is in "expression"
+		if (c.data != null) // data is in "expression"
 		{
 			throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, c.toString());
 		}
@@ -1389,11 +1305,11 @@ public class DBGPReader
 			{
 				status = DBGPStatus.RUNNING;
 				statusReason = DBGPReason.OK;
-				
+
 				final RemoteInterpreter remoteInterpreter = new RemoteInterpreter(interpreter, this);
 				Thread remoteThread = new Thread(new Runnable()
 				{
-					
+
 					public void run()
 					{
 						try
@@ -1411,42 +1327,38 @@ public class DBGPReader
 				remoteThread.setDaemon(true);
 				remoteThread.start();
 				remoteInterpreter.processRemoteCalls();
-//				remoteControl.run(new RemoteInterpreter(interpreter, this));
+				// remoteControl.run(new RemoteInterpreter(interpreter, this));
 				stdout("Remote control completed");
 				statusResponse(DBGPStatus.STOPPED, DBGPReason.OK);
-			}
-			catch (Exception e)
+			} catch (Exception e)
 			{
 				status = DBGPStatus.STOPPED;
 				statusReason = DBGPReason.ERROR;
 				errorResponse(DBGPErrorCode.INTERNAL_ERROR, e.getMessage());
 			}
 
-			return false;	// Do not continue after remote session
-		}
-		else
+			return false; // Do not continue after remote session
+		} else
 		{
-    		try
-    		{
-    			status = DBGPStatus.RUNNING;
-    			statusReason = DBGPReason.OK;
-    			theAnswer = interpreter.execute(expression, this);
-    			stdout(expression + " = " + theAnswer.toString());
-    			statusResponse(DBGPStatus.STOPPED, DBGPReason.OK);
+			try
+			{
+				status = DBGPStatus.RUNNING;
+				statusReason = DBGPReason.OK;
+				theAnswer = interpreter.execute(expression, this);
+				stdout(expression + " = " + theAnswer.toString());
+				statusResponse(DBGPStatus.STOPPED, DBGPReason.OK);
 
-    		}
-    		catch (ContextException e)
-    		{
-    			dyingThread(e);
-    		}
-    		catch (Exception e)
-    		{
-    			status = DBGPStatus.STOPPED;
-    			statusReason = DBGPReason.ERROR;
-    			errorResponse(DBGPErrorCode.EVALUATION_ERROR, e.getMessage());
-    		}
+			} catch (ContextException e)
+			{
+				dyingThread(e);
+			} catch (Exception e)
+			{
+				status = DBGPStatus.STOPPED;
+				statusReason = DBGPReason.ERROR;
+				errorResponse(DBGPErrorCode.EVALUATION_ERROR, e.getMessage());
+			}
 
-    		return true;
+			return true;
 		}
 	}
 
@@ -1454,8 +1366,8 @@ public class DBGPReader
 	{
 		checkArgs(c, 1, true);
 
-		if ((status != DBGPStatus.BREAK && status != DBGPStatus.STOPPING)
-			|| breakpoint == null)
+		if (status != DBGPStatus.BREAK && status != DBGPStatus.STOPPING
+				|| breakpoint == null)
 		{
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}
@@ -1464,19 +1376,16 @@ public class DBGPReader
 
 		try
 		{
-			String exp = c.data;	// Already base64 decoded by the parser
+			String exp = c.data; // Already base64 decoded by the parser
 			interpreter.setDefaultName(breakpoint.location.getModule());
 			theAnswer = interpreter.evaluate(exp, breakContext);
-			StringBuilder property = propertyResponse(
-				exp, exp, interpreter.getDefaultName(), theAnswer.toString());
+			StringBuilder property = propertyResponse(exp, exp, interpreter.getDefaultName(), theAnswer.toString());
 			StringBuilder hdr = new StringBuilder("success=\"1\"");
 			response(hdr, property);
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			errorResponse(DBGPErrorCode.EVALUATION_ERROR, e.getMessage());
-		}
-		finally
+		} finally
 		{
 			breaksSuspended = false;
 		}
@@ -1497,20 +1406,17 @@ public class DBGPReader
 		{
 			status = DBGPStatus.RUNNING;
 			statusReason = DBGPReason.OK;
-			String exp = c.data;	// Already base64 decoded by the parser
+			String exp = c.data; // Already base64 decoded by the parser
 			theAnswer = interpreter.execute(exp, this);
-			StringBuilder property = propertyResponse(
-				exp, exp, interpreter.getDefaultName(), theAnswer.toString());
+			StringBuilder property = propertyResponse(exp, exp, interpreter.getDefaultName(), theAnswer.toString());
 			StringBuilder hdr = new StringBuilder("success=\"1\"");
 			status = DBGPStatus.STOPPED;
 			statusReason = DBGPReason.OK;
 			response(hdr, property);
-		}
-		catch (ContextException e)
+		} catch (ContextException e)
 		{
 			dyingThread(e);
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			status = DBGPStatus.STOPPED;
 			statusReason = DBGPReason.ERROR;
@@ -1526,7 +1432,7 @@ public class DBGPReader
 
 		if (breakpoint != null)
 		{
-	   		breakContext.threadState.setBreaks(breakpoint.location, null, null);
+			breakContext.threadState.setBreaks(breakpoint.location, null, null);
 		}
 
 		status = DBGPStatus.RUNNING;
@@ -1539,8 +1445,7 @@ public class DBGPReader
 
 		if (breakpoint != null)
 		{
-			breakContext.threadState.setBreaks(
-				breakpoint.location, breakContext.getRoot(), null);
+			breakContext.threadState.setBreaks(breakpoint.location, breakContext.getRoot(), null);
 		}
 
 		status = DBGPStatus.RUNNING;
@@ -1553,8 +1458,7 @@ public class DBGPReader
 
 		if (breakpoint != null)
 		{
-			breakContext.threadState.setBreaks(
-				breakpoint.location, null, breakContext.getRoot().outer);
+			breakContext.threadState.setBreaks(breakpoint.location, null, breakContext.getRoot().outer);
 		}
 
 		status = DBGPStatus.RUNNING;
@@ -1565,40 +1469,41 @@ public class DBGPReader
 	{
 		checkArgs(c, 1, false);
 		statusResponse(DBGPStatus.STOPPED, DBGPReason.OK);
-		
-		if(isLastConnectedReader())
+
+		if (isLastConnectedReader())
 		{
 			handleExit();
-		}
-		else
-		{			
+		} else
+		{
 			removeThisReader();
 		}
 	}
-	
+
 	protected void handleExit()
 	{
-		try{
-			
-			if(socket != null)
-				socket.close();
-		}
-		catch(Exception e)
+		try
 		{
-			
+
+			if (socket != null)
+			{
+				socket.close();
+			}
+		} catch (Exception e)
+		{
+
 		}
-		
+
 		System.exit(0);
 	}
-		
+
 	private boolean isLastConnectedReader()
 	{
 		synchronized (connectecReaders)
-		{			
-			return connectecReaders.size()== 1;
+		{
+			return connectecReaders.size() == 1;
 		}
 	}
-	
+
 	private void addThisReader()
 	{
 		synchronized (connectecReaders)
@@ -1606,7 +1511,7 @@ public class DBGPReader
 			connectecReaders.add(this);
 		}
 	}
-	
+
 	private void removeThisReader()
 	{
 		synchronized (connectecReaders)
@@ -1614,9 +1519,9 @@ public class DBGPReader
 			connectecReaders.remove(this);
 		}
 	}
-	
 
-	protected void breakpointGet(DBGPCommand c) throws DBGPException, IOException
+	protected void breakpointGet(DBGPCommand c) throws DBGPException,
+			IOException
 	{
 		checkArgs(c, 2, false);
 
@@ -1637,8 +1542,8 @@ public class DBGPReader
 		response(null, breakpointResponse(bp));
 	}
 
-	protected void breakpointSet(DBGPCommand c)
-		throws DBGPException, IOException, URISyntaxException
+	protected void breakpointSet(DBGPCommand c) throws DBGPException,
+			IOException, URISyntaxException
 	{
 		DBGPOption option = c.getOption(DBGPOptionType.T);
 
@@ -1660,13 +1565,10 @@ public class DBGPReader
 		if (option != null)
 		{
 			filename = new File(new URI(option.value));
-		}
-		else
+		} else
 		{
 			throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, c.toString());
 		}
-
-		
 
 		option = c.getOption(DBGPOptionType.N);
 		int lineno = 0;
@@ -1681,37 +1583,32 @@ public class DBGPReader
 		if (c.data != null)
 		{
 			condition = c.data;
-		}
-		else
+		} else
 		{
 			DBGPOption cond = c.getOption(DBGPOptionType.O);
 			DBGPOption hits = c.getOption(DBGPOptionType.H);
 
 			if (cond != null || hits != null)
 			{
-				String cs = (cond == null) ? ">=" : cond.value;
-				String hs = (hits == null) ? "0"  : hits.value;
+				String cs = cond == null ? ">=" : cond.value;
+				String hs = hits == null ? "0" : hits.value;
 
 				if (hs.equals("0"))
 				{
-					condition = "= 0";		// impossible (disabled)
+					condition = "= 0"; // impossible (disabled)
+				} else if (cs.equals("=="))
+				{
+					condition = "= " + hs;
+				} else if (cs.equals(">="))
+				{
+					condition = ">= " + hs;
+				} else if (cs.equals("%"))
+				{
+					condition = "mod " + hs;
+				} else
+				{
+					throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, c.toString());
 				}
-				else if (cs.equals("=="))
-    			{
-    				condition = "= " + hs;
-    			}
-    			else if (cs.equals(">="))
-    			{
-    				condition = ">= " + hs;
-    			}
-    			else if (cs.equals("%"))
-    			{
-    				condition = "mod " + hs;
-    			}
-    			else
-    			{
-    				throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, c.toString());
-    			}
 			}
 		}
 
@@ -1724,78 +1621,71 @@ public class DBGPReader
 
 			if (exp == null)
 			{
-				throw new DBGPException(DBGPErrorCode.CANT_SET_BREAKPOINT, filename + ":" + lineno);
-			}
-			else
+				throw new DBGPException(DBGPErrorCode.CANT_SET_BREAKPOINT, filename
+						+ ":" + lineno);
+			} else
 			{
 				try
 				{
 					if (BreakpointManager.getBreakpoint(exp).number != 0)
 					{
 						// Multiple threads set BPs multiple times, so...
-						bp = BreakpointManager.getBreakpoint(exp);	// Re-use the existing one
-					}
-					else
+						bp = BreakpointManager.getBreakpoint(exp); // Re-use the existing one
+					} else
 					{
 						bp = interpreter.setBreakpoint(exp, condition);
 					}
-				}
-				catch (ParserException e)
+				} catch (ParserException e)
 				{
-					throw new DBGPException(DBGPErrorCode.CANT_SET_BREAKPOINT,
-						filename + ":" + lineno + ", " + e.getMessage());
-				}
-				catch (LexException e)
+					throw new DBGPException(DBGPErrorCode.CANT_SET_BREAKPOINT, filename
+							+ ":" + lineno + ", " + e.getMessage());
+				} catch (LexException e)
 				{
-					throw new DBGPException(DBGPErrorCode.CANT_SET_BREAKPOINT,
-						filename + ":" + lineno + ", " + e.getMessage());
+					throw new DBGPException(DBGPErrorCode.CANT_SET_BREAKPOINT, filename
+							+ ":" + lineno + ", " + e.getMessage());
 				}
 			}
-		}
-		else
+		} else
 		{
 			try
 			{
 				if (BreakpointManager.getBreakpoint(stmt).number != 0)
 				{
 					// Multiple threads set BPs multiple times, so...
-					bp = BreakpointManager.getBreakpoint(stmt);	// Re-use the existing one
-				}
-				else
+					bp = BreakpointManager.getBreakpoint(stmt); // Re-use the existing one
+				} else
 				{
 					bp = interpreter.setBreakpoint(stmt, condition);
 				}
-			}
-			catch (ParserException e)
+			} catch (ParserException e)
 			{
-				throw new DBGPException(DBGPErrorCode.CANT_SET_BREAKPOINT,
-					filename + ":" + lineno + ", " + e.getMessage());
-			}
-			catch (LexException e)
+				throw new DBGPException(DBGPErrorCode.CANT_SET_BREAKPOINT, filename
+						+ ":" + lineno + ", " + e.getMessage());
+			} catch (LexException e)
 			{
-				throw new DBGPException(DBGPErrorCode.CANT_SET_BREAKPOINT,
-					filename + ":" + lineno + ", " + e.getMessage());
+				throw new DBGPException(DBGPErrorCode.CANT_SET_BREAKPOINT, filename
+						+ ":" + lineno + ", " + e.getMessage());
 			}
 		}
 
-		
 		option = c.getOption(DBGPOptionType.S);
-		
-		
+
 		if (option != null)
 		{
-    		if (!option.value.equalsIgnoreCase("enabled"))
-    		{
-    			bp.setEnabled(false);
-    		}
+			if (!option.value.equalsIgnoreCase("enabled"))
+			{
+				bp.setEnabled(false);
+			}
 		}
-		
-		StringBuilder hdr = new StringBuilder(
-			"state=\""+ (bp.isEnabled() ? "enabled" : "disabled") + "\" id=\"" + bp.number + "\"");
+
+		StringBuilder hdr = new StringBuilder("state=\""
+				+ (bp.isEnabled() ? "enabled" : "disabled") + "\" id=\""
+				+ bp.number + "\"");
 		response(hdr, null);
 	}
 
-	protected void breakpointUpdate(DBGPCommand c) throws DBGPException, IOException
+	protected void breakpointUpdate(DBGPCommand c) throws DBGPException,
+			IOException
 	{
 		checkArgs(c, 4, false);
 
@@ -1807,37 +1697,38 @@ public class DBGPReader
 		}
 
 		Breakpoint bp = interpreter.breakpoints.get(Integer.parseInt(option.value));
-			
+
 		if (bp == null)
 		{
 			throw new DBGPException(DBGPErrorCode.INVALID_BREAKPOINT, c.toString());
 		}
 
 		option = c.getOption(DBGPOptionType.S);
-		
+
 		if (option == null)
 		{
 			throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, c.toString());
 		}
-		
-		if(option.value.equalsIgnoreCase("disabled"))
+
+		if (option.value.equalsIgnoreCase("disabled"))
 		{
 			bp.setEnabled(false);
 			response(null, null);
 			return;
 		}
-		
-		if(option.value.equalsIgnoreCase("enabled"))
+
+		if (option.value.equalsIgnoreCase("enabled"))
 		{
 			bp.setEnabled(true);
 			response(null, null);
 			return;
 		}
-		
+
 		throw new DBGPException(DBGPErrorCode.UNIMPLEMENTED, c.toString());
 	}
 
-	protected void breakpointRemove(DBGPCommand c) throws DBGPException, IOException
+	protected void breakpointRemove(DBGPCommand c) throws DBGPException,
+			IOException
 	{
 		checkArgs(c, 2, false);
 
@@ -1857,12 +1748,13 @@ public class DBGPReader
 		response(null, null);
 	}
 
-	protected void breakpointList(DBGPCommand c) throws IOException, DBGPException
+	protected void breakpointList(DBGPCommand c) throws IOException,
+			DBGPException
 	{
 		checkArgs(c, 1, false);
 		StringBuilder bps = new StringBuilder();
 
-		for (Integer key: interpreter.breakpoints.keySet())
+		for (Integer key : interpreter.breakpoints.keySet())
 		{
 			Breakpoint bp = interpreter.breakpoints.get(key);
 			bps.append(breakpointResponse(bp));
@@ -1890,8 +1782,8 @@ public class DBGPReader
 	{
 		checkArgs(c, 1, false);
 
-		if ((status != DBGPStatus.BREAK && status != DBGPStatus.STOPPING)
-			|| breakpoint == null)
+		if (status != DBGPStatus.BREAK && status != DBGPStatus.STOPPING
+				|| breakpoint == null)
 		{
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}
@@ -1901,7 +1793,7 @@ public class DBGPReader
 
 		if (option != null)
 		{
-			depth = Integer.parseInt(option.value);	// 0 to n-1
+			depth = Integer.parseInt(option.value); // 0 to n-1
 		}
 
 		// We omit the last frame, as this is unhelpful (globals),
@@ -1916,13 +1808,11 @@ public class DBGPReader
 		if (depth == 0)
 		{
 			response(null, stackResponse(breakpoint.location, 0));
-		}
-		else if (depth > 0)
+		} else if (depth > 0)
 		{
 			Context ctxt = breakContext.getFrame(depth);
 			response(null, stackResponse(ctxt.location, depth));
-		}
-		else
+		} else
 		{
 			// The location of a context is where it was called from, so
 			// to build the stack locations, we take the location of the
@@ -1932,13 +1822,13 @@ public class DBGPReader
 			StringBuilder sb = new StringBuilder();
 			int d = 0;
 
-			if (!breakpoint.location.equals(breakContext.location))		// BP is different
+			if (!breakpoint.location.equals(breakContext.location)) // BP is different
 			{
 				sb.append(stackResponse(breakpoint.location, d++));
 				actualDepth--;
 			}
 
-			for (int f=0; f < actualDepth; f++)
+			for (int f = 0; f < actualDepth; f++)
 			{
 				Context ctxt = breakContext.getFrame(f);
 				sb.append(stackResponse(ctxt.location, d++));
@@ -1948,7 +1838,8 @@ public class DBGPReader
 		}
 	}
 
-	protected void contextNames(DBGPCommand c) throws DBGPException, IOException
+	protected void contextNames(DBGPCommand c) throws DBGPException,
+			IOException
 	{
 		if (c.data != null)
 		{
@@ -1957,28 +1848,32 @@ public class DBGPReader
 
 		DBGPOption option = c.getOption(DBGPOptionType.D);
 
-		if (c.options.size() > ((option == null) ? 1 : 2))
+		if (c.options.size() > (option == null ? 1 : 2))
 		{
 			throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, c.toString());
 		}
 
 		StringBuilder names = new StringBuilder();
-//		String dialect = Settings.dialect == Dialect.VDM_SL ? "Module" : "Class";
+		// String dialect = Settings.dialect == Dialect.VDM_SL ? "Module" : "Class";
 
-//		names.append("<context name=\"Local\" id=\"0\"/>");
-//		names.append("<context name=\"" + dialect + "\" id=\"1\"/>");
-//		names.append("<context name=\"Global\" id=\"2\"/>");
+		// names.append("<context name=\"Local\" id=\"0\"/>");
+		// names.append("<context name=\"" + dialect + "\" id=\"1\"/>");
+		// names.append("<context name=\"Global\" id=\"2\"/>");
 
 		for (DBGPContextType type : DBGPContextType.values())
 		{
-			String name = type == DBGPContextType.CLASS && Settings.dialect == Dialect.VDM_SL?"Module":type.name();
-			names.append("<context name=\""+name+"\" id=\""+type.code+"\"/>");
+			String name = type == DBGPContextType.CLASS
+					&& Settings.dialect == Dialect.VDM_SL ? "Module"
+					: type.name();
+			names.append("<context name=\"" + name + "\" id=\"" + type.code
+					+ "\"/>");
 		}
 
 		response(null, names);
 	}
 
-	protected NameValuePairMap getContextValues(DBGPContextType context, int depth)
+	protected NameValuePairMap getContextValues(DBGPContextType context,
+			int depth)
 	{
 		NameValuePairMap vars = new NameValuePairMap();
 
@@ -1988,8 +1883,7 @@ public class DBGPReader
 				if (depth == 0)
 				{
 					vars.putAll(breakContext.getVisibleVariables());
-				}
-				else
+				} else
 				{
 					Context frame = breakContext.getFrame(depth - 1).outer;
 
@@ -2001,94 +1895,88 @@ public class DBGPReader
 
 				if (breakContext instanceof ObjectContext)
 				{
-					ObjectContext octxt = (ObjectContext)breakContext;
+					ObjectContext octxt = (ObjectContext) breakContext;
 					int line = breakpoint.location.getStartLine();
-					String opname = breakContext.guardOp == null ?
-						"" : breakContext.guardOp.name.getName();
+					String opname = breakContext.guardOp == null ? ""
+							: breakContext.guardOp.name.getName();
 
-					for (PDefinition d: octxt.self.type.getClassdef().getDefinitions())
+					for (PDefinition d : octxt.self.type.getClassdef().getDefinitions())
 					{
 						if (d instanceof APerSyncDefinition)
 						{
-							APerSyncDefinition pdef = (APerSyncDefinition)d;
+							APerSyncDefinition pdef = (APerSyncDefinition) d;
 
-							if (pdef.getOpname().getName().equals(opname) ||
-								pdef.getLocation().getStartLine() == line ||
-								octxt.assistantFactory.createPExpAssistant().findExpression(pdef.getGuard(),line) != null)
+							if (pdef.getOpname().getName().equals(opname)
+									|| pdef.getLocation().getStartLine() == line
+									|| octxt.assistantFactory.createPExpAssistant().findExpression(pdef.getGuard(), line) != null)
 							{
-	            				for (PExp sub: octxt.assistantFactory.createPExpAssistant().getSubExpressions(pdef.getGuard()))
-	            				{
-	            					if (sub instanceof AHistoryExp)
-	            					{
-	            						AHistoryExp hexp = (AHistoryExp)sub;
-	            						
+								for (PExp sub : octxt.assistantFactory.createPExpAssistant().getSubExpressions(pdef.getGuard()))
+								{
+									if (sub instanceof AHistoryExp)
+									{
+										AHistoryExp hexp = (AHistoryExp) sub;
+
 										try
 										{
-											Value v= hexp.apply(VdmRuntime.getExpressionEvaluator(),octxt);
-											LexNameToken name =
-	            							new LexNameToken(octxt.self.type.getName().getModule(),
-	            								hexp.toString(),hexp.getLocation());
-	            						vars.put(name, v);
+											Value v = hexp.apply(VdmRuntime.getExpressionEvaluator(), octxt);
+											LexNameToken name = new LexNameToken(octxt.self.type.getName().getModule(), hexp.toString(), hexp.getLocation());
+											vars.put(name, v);
 										} catch (Throwable e)
 										{
-											//Ignore
+											// Ignore
 										}
-	            						
-	            					}
-	            				}
+
+									}
+								}
 							}
-						}
-						else if (d instanceof AMutexSyncDefinition)
+						} else if (d instanceof AMutexSyncDefinition)
 						{
-							AMutexSyncDefinition mdef = (AMutexSyncDefinition)d;
+							AMutexSyncDefinition mdef = (AMutexSyncDefinition) d;
 
-            				for (ILexNameToken mop: mdef.getOperations())
-            				{
-            					if (mop.getName().equals(opname))
-            					{
-                    				for (ILexNameToken op: mdef.getOperations())
-                    				{
-                    					LexNameList ops = new LexNameList(op);//TODO: this needs to be checked when testing
-                    					PExp hexp = AstFactory.newAHistoryExp(mdef.getLocation(), new LexToken(new LexLocation(), VDMToken.ACTIVE) , ops);
-                						
+							for (ILexNameToken mop : mdef.getOperations())
+							{
+								if (mop.getName().equals(opname))
+								{
+									for (ILexNameToken op : mdef.getOperations())
+									{
+										LexNameList ops = new LexNameList(op);// TODO: this needs to be checked when
+																				// testing
+										PExp hexp = AstFactory.newAHistoryExp(mdef.getLocation(), new LexToken(new LexLocation(), VDMToken.ACTIVE), ops);
+
 										try
 										{
-											Value v = hexp.apply(VdmRuntime.getExpressionEvaluator(),octxt);
-											LexNameToken name =
-                							new LexNameToken(octxt.self.type.getName().getModule(),
-                								hexp.toString(), mdef.getLocation());
-                						vars.put(name, v);
+											Value v = hexp.apply(VdmRuntime.getExpressionEvaluator(), octxt);
+											LexNameToken name = new LexNameToken(octxt.self.type.getName().getModule(), hexp.toString(), mdef.getLocation());
+											vars.put(name, v);
 										} catch (Throwable e)
 										{
-											//Ignore
+											// Ignore
 										}
-                						
-                    				}
 
-                    				break;
-            					}
-            				}
+									}
+
+									break;
+								}
+							}
 						}
 					}
 				}
 				break;
 
-			case CLASS:		// Includes modules
+			case CLASS: // Includes modules
 				Context root = breakContext.getFrame(depth);
 
 				if (root instanceof ObjectContext)
 				{
-					ObjectContext octxt = (ObjectContext)root;
+					ObjectContext octxt = (ObjectContext) root;
 					vars.putAll(octxt.self.members);
-				}
-				else if (root instanceof ClassContext)
+				} else if (root instanceof ClassContext)
 				{
-					ClassContext cctxt = (ClassContext)root;
+					ClassContext cctxt = (ClassContext) root;
 					vars.putAll(cctxt.assistantFactory.createSClassDefinitionAssistant().getStatics(cctxt.classdef));
-				}
-				else if (root instanceof StateContext)
+				} else if (root instanceof StateContext)
 				{
-					StateContext sctxt = (StateContext)root;
+					StateContext sctxt = (StateContext) root;
 
 					if (sctxt.stateCtxt != null)
 					{
@@ -2190,12 +2078,10 @@ public class DBGPReader
 		try
 		{
 			token = ltr.nextToken();
-		}
-		catch (LexException e)
+		} catch (LexException e)
 		{
 			throw new DBGPException(DBGPErrorCode.CANT_GET_PROPERTY, option.value);
-		}
-		finally
+		} finally
 		{
 			ltr.close();
 		}
@@ -2206,19 +2092,19 @@ public class DBGPReader
 		}
 
 		NameValuePairMap vars = getContextValues(context, depth);
-		LexNameToken longname = (LexNameToken)token;
+		LexNameToken longname = (LexNameToken) token;
 		Value value = vars.get(longname);
 
 		if (value == null)
 		{
-			throw new DBGPException(
-				DBGPErrorCode.CANT_GET_PROPERTY, longname.toString());
+			throw new DBGPException(DBGPErrorCode.CANT_GET_PROPERTY, longname.toString());
 		}
 
 		response(null, propertyResponse(longname, value, context));
 	}
 
-	protected void processSource(DBGPCommand c) throws DBGPException, IOException
+	protected void processSource(DBGPCommand c) throws DBGPException,
+			IOException
 	{
 		if (c.data != null || c.options.size() > 4)
 		{
@@ -2253,8 +2139,7 @@ public class DBGPReader
 		try
 		{
 			file = new File(new URI(option.value));
-		}
-		catch (URISyntaxException e)
+		} catch (URISyntaxException e)
 		{
 			throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, c.toString());
 		}
@@ -2279,7 +2164,8 @@ public class DBGPReader
 		response(null, sb);
 	}
 
-	protected void processStdout(DBGPCommand c) throws DBGPException, IOException
+	protected void processStdout(DBGPCommand c) throws DBGPException,
+			IOException
 	{
 		checkArgs(c, 2, false);
 		DBGPOption option = c.getOption(DBGPOptionType.C);
@@ -2295,7 +2181,8 @@ public class DBGPReader
 		response(new StringBuilder("success=\"1\""), null);
 	}
 
-	protected void processStderr(DBGPCommand c) throws DBGPException, IOException
+	protected void processStderr(DBGPCommand c) throws DBGPException,
+			IOException
 	{
 		checkArgs(c, 2, false);
 		DBGPOption option = c.getOption(DBGPOptionType.C);
@@ -2327,8 +2214,8 @@ public class DBGPReader
 		write(sb);
 	}
 
-	protected void processOvertureCmd(DBGPCommand c)
-		throws DBGPException, IOException, URISyntaxException, AnalysisException
+	protected void processOvertureCmd(DBGPCommand c) throws DBGPException,
+			IOException, URISyntaxException, AnalysisException
 	{
 		checkArgs(c, 2, false);
 		DBGPOption option = c.getOption(DBGPOptionType.C);
@@ -2341,72 +2228,55 @@ public class DBGPReader
 		if (option.value.equals("init"))
 		{
 			processInit(c);
-		}
-		else if (option.value.equals("create"))
+		} else if (option.value.equals("create"))
 		{
 			processCreate(c);
-		}
-		else if (option.value.equals("currentline"))
+		} else if (option.value.equals("currentline"))
 		{
 			processCurrentLine(c);
-		}
-		else if (option.value.equals("source"))
+		} else if (option.value.equals("source"))
 		{
 			processCurrentSource(c);
-		}
-		else if (option.value.equals("coverage"))
+		} else if (option.value.equals("coverage"))
 		{
 			processCoverage(c);
-		}
-		else if (option.value.equals("runtrace"))
+		} else if (option.value.equals("runtrace"))
 		{
 			processRuntrace(c);
-		}
-		else if (option.value.startsWith("latex"))
+		} else if (option.value.startsWith("latex"))
 		{
 			processLatex(c);
-		}
-		else if (option.value.equals("word"))
+		} else if (option.value.equals("word"))
 		{
 			processWord(c);
-		}
-		else if (option.value.equals("pog"))
+		} else if (option.value.equals("pog"))
 		{
 			processPOG(c);
-		}
-		else if (option.value.equals("stack"))
+		} else if (option.value.equals("stack"))
 		{
 			processStack(c);
-		}
-		else if (option.value.equals("trace"))
+		} else if (option.value.equals("trace"))
 		{
 			processTrace(c);
-		}
-		else if (option.value.equals("list"))
+		} else if (option.value.equals("list"))
 		{
 			processList();
-		}
-		else if (option.value.equals("files"))
+		} else if (option.value.equals("files"))
 		{
 			processFiles();
-		}
-		else if (option.value.equals("classes"))
+		} else if (option.value.equals("classes"))
 		{
 			processClasses();
-		}
-		else if (option.value.equals("modules"))
+		} else if (option.value.equals("modules"))
 		{
 			processModules();
-		}
-		else if (option.value.equals("default"))
+		} else if (option.value.equals("default"))
 		{
 			processDefault(c);
-		}
-		else if (option.value.equals("log"))
+		} else if (option.value.equals("log"))
 		{
 			processLog(c);
-		}
-		else
+		} else
 		{
 			throw new DBGPException(DBGPErrorCode.INVALID_OPTIONS, c.toString());
 		}
@@ -2435,25 +2305,23 @@ public class DBGPReader
 			{
 				if (RTLogger.getLogSize() > 0)
 				{
-					out.append("Flushing " + RTLogger.getLogSize() + " RT events\n");
+					out.append("Flushing " + RTLogger.getLogSize()
+							+ " RT events\n");
 				}
 
-				RTLogger.setLogfile(RTTextLogger.class,null);
-				RTLogger.setLogfile(NextGenRTLogger.class,(File)null);
+				RTLogger.setLogfile(RTTextLogger.class, null);
+				RTLogger.setLogfile(NextGenRTLogger.class, (File) null);
 				out.append("RT events now logged to the console");
-			}
-			else if (c.data.equals("off"))
+			} else if (c.data.equals("off"))
 			{
 				RTLogger.enable(false);
 				out.append("RT event logging disabled");
-			}
-			else
+			} else
 			{
-				RTLogger.setLogfile(RTTextLogger.class,new File(c.data));
+				RTLogger.setLogfile(RTTextLogger.class, new File(c.data));
 				out.append("RT events now logged to " + c.data);
 			}
-		}
-		catch (FileNotFoundException e)
+		} catch (FileNotFoundException e)
 		{
 			out.append("Cannot create RT event log: " + e.getMessage());
 		}
@@ -2474,18 +2342,18 @@ public class DBGPReader
 			String var = c.data.substring(0, i);
 			String exp = c.data.substring(i + 1);
 
-			((ClassInterpreter)interpreter).create(var, exp);
-		}
-		catch (Exception e)
+			((ClassInterpreter) interpreter).create(var, exp);
+		} catch (Exception e)
 		{
 			throw new DBGPException(DBGPErrorCode.INTERNAL_ERROR, e.getMessage());
 		}
 	}
 
-	protected void processStack(DBGPCommand c) throws IOException, DBGPException
+	protected void processStack(DBGPCommand c) throws IOException,
+			DBGPException
 	{
-		if ((status != DBGPStatus.BREAK && status != DBGPStatus.STOPPING)
-			|| breakpoint == null)
+		if (status != DBGPStatus.BREAK && status != DBGPStatus.STOPPING
+				|| breakpoint == null)
 		{
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}
@@ -2506,48 +2374,48 @@ public class DBGPReader
 
 		try
 		{
-    		int i = c.data.indexOf(' ');
-    		int j = c.data.indexOf(' ', i+1);
-    		file = new File(new URI(c.data.substring(0, i)));
-    		line = Integer.parseInt(c.data.substring(i+1, j));
-    		trace = c.data.substring(j+1);
+			int i = c.data.indexOf(' ');
+			int j = c.data.indexOf(' ', i + 1);
+			file = new File(new URI(c.data.substring(0, i)));
+			line = Integer.parseInt(c.data.substring(i + 1, j));
+			trace = c.data.substring(j + 1);
 
-    		if (trace.length() == 0) trace = null;
+			if (trace.length() == 0)
+			{
+				trace = null;
+			}
 
-    		OutputStream out = new ByteArrayOutputStream();
-    		PrintWriter pw = new PrintWriter(out);
+			OutputStream out = new ByteArrayOutputStream();
+			PrintWriter pw = new PrintWriter(out);
 
-    		PStm stmt = interpreter.findStatement(file, line);
+			PStm stmt = interpreter.findStatement(file, line);
 
-    		if (stmt == null)
-    		{
-    			PExp exp = interpreter.findExpression(file, line);
+			if (stmt == null)
+			{
+				PExp exp = interpreter.findExpression(file, line);
 
-    			if (exp == null)
-    			{
-    				throw new DBGPException(DBGPErrorCode.CANT_SET_BREAKPOINT,
-    					"No breakable expressions or statements at " + file + ":" + line);
-    			}
-    			else
-    			{
-    				interpreter.clearBreakpoint(BreakpointManager.getBreakpoint(exp).number);
-    				Breakpoint bp = interpreter.setTracepoint(exp, trace);
-    				pw.println("Created " + bp);
-    				pw.println(interpreter.getSourceLine(bp.location));
-    			}
-    		}
-    		else
-    		{
-    			interpreter.clearBreakpoint(BreakpointManager.getBreakpoint(stmt).number);
-    			Breakpoint bp = interpreter.setTracepoint(stmt, trace);
-    			pw.println("Created " + bp);
-    			pw.println(interpreter.getSourceLine(bp.location));
-    		}
+				if (exp == null)
+				{
+					throw new DBGPException(DBGPErrorCode.CANT_SET_BREAKPOINT, "No breakable expressions or statements at "
+							+ file + ":" + line);
+				} else
+				{
+					interpreter.clearBreakpoint(BreakpointManager.getBreakpoint(exp).number);
+					Breakpoint bp = interpreter.setTracepoint(exp, trace);
+					pw.println("Created " + bp);
+					pw.println(interpreter.getSourceLine(bp.location));
+				}
+			} else
+			{
+				interpreter.clearBreakpoint(BreakpointManager.getBreakpoint(stmt).number);
+				Breakpoint bp = interpreter.setTracepoint(stmt, trace);
+				pw.println("Created " + bp);
+				pw.println(interpreter.getSourceLine(bp.location));
+			}
 
-    		pw.close();
-    		cdataResponse(out.toString());
-		}
-		catch (Exception e)
+			pw.close();
+			cdataResponse(out.toString());
+		} catch (Exception e)
 		{
 			throw new DBGPException(DBGPErrorCode.CANT_SET_BREAKPOINT, e.getMessage());
 		}
@@ -2559,7 +2427,7 @@ public class DBGPReader
 		OutputStream out = new ByteArrayOutputStream();
 		PrintWriter pw = new PrintWriter(out);
 
-		for (Entry<Integer, Breakpoint> entry: map.entrySet())
+		for (Entry<Integer, Breakpoint> entry : map.entrySet())
 		{
 			Breakpoint bp = entry.getValue();
 			pw.println(bp.toString());
@@ -2576,7 +2444,7 @@ public class DBGPReader
 		OutputStream out = new ByteArrayOutputStream();
 		PrintWriter pw = new PrintWriter(out);
 
-		for (File file: filenames)
+		for (File file : filenames)
 		{
 			pw.println(file.getPath());
 		}
@@ -2589,23 +2457,21 @@ public class DBGPReader
 	{
 		if (!(interpreter instanceof ClassInterpreter))
 		{
-			throw new DBGPException(
-				DBGPErrorCode.INTERNAL_ERROR, "Not available for VDM-SL");
+			throw new DBGPException(DBGPErrorCode.INTERNAL_ERROR, "Not available for VDM-SL");
 		}
 
-		ClassInterpreter cinterpreter = (ClassInterpreter)interpreter;
+		ClassInterpreter cinterpreter = (ClassInterpreter) interpreter;
 		String def = cinterpreter.getDefaultName();
 		ClassList classes = cinterpreter.getClasses();
 		OutputStream out = new ByteArrayOutputStream();
 		PrintWriter pw = new PrintWriter(out);
 
-		for (SClassDefinition cls: classes)
+		for (SClassDefinition cls : classes)
 		{
 			if (cls.getName().getName().equals(def))
 			{
 				pw.println(cls.getName().getName() + " (default)");
-			}
-			else
+			} else
 			{
 				pw.println(cls.getName().getName());
 			}
@@ -2619,23 +2485,21 @@ public class DBGPReader
 	{
 		if (!(interpreter instanceof ModuleInterpreter))
 		{
-			throw new DBGPException(
-				DBGPErrorCode.INTERNAL_ERROR, "Only available for VDM-SL");
+			throw new DBGPException(DBGPErrorCode.INTERNAL_ERROR, "Only available for VDM-SL");
 		}
 
-		ModuleInterpreter minterpreter = (ModuleInterpreter)interpreter;
+		ModuleInterpreter minterpreter = (ModuleInterpreter) interpreter;
 		String def = minterpreter.getDefaultName();
 		List<AModuleModules> modules = minterpreter.getModules();
 		OutputStream out = new ByteArrayOutputStream();
 		PrintWriter pw = new PrintWriter(out);
 
-		for (AModuleModules m: modules)
+		for (AModuleModules m : modules)
 		{
 			if (m.getName().getName().equals(def))
 			{
 				pw.println(m.getName().getName() + " (default)");
-			}
-			else
+			} else
 			{
 				pw.println(m.getName().getName());
 			}
@@ -2651,15 +2515,14 @@ public class DBGPReader
 		{
 			interpreter.setDefaultName(c.data);
 			cdataResponse("Default set to " + interpreter.getDefaultName());
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			throw new DBGPException(DBGPErrorCode.INTERNAL_ERROR, e.getMessage());
 		}
 	}
 
-	protected void processCoverage(DBGPCommand c)
-		throws DBGPException, IOException, URISyntaxException
+	protected void processCoverage(DBGPCommand c) throws DBGPException,
+			IOException, URISyntaxException
 	{
 		if (status == DBGPStatus.BREAK)
 		{
@@ -2672,8 +2535,7 @@ public class DBGPReader
 		if (source == null)
 		{
 			cdataResponse(file + ": file not found");
-		}
-		else
+		} else
 		{
 			OutputStream out = new ByteArrayOutputStream();
 			PrintWriter pw = new PrintWriter(out);
@@ -2703,74 +2565,74 @@ public class DBGPReader
 			pw.close();
 
 			cdataResponse(out.toString());
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			throw new DBGPException(DBGPErrorCode.INTERNAL_ERROR, e.getMessage());
 		}
 	}
 
-	protected void processLatex(DBGPCommand c)
-		throws DBGPException, IOException, URISyntaxException
-    {
-    	if (status == DBGPStatus.BREAK)
-    	{
-    		throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
-    	}
+	protected void processLatex(DBGPCommand c) throws DBGPException,
+			IOException, URISyntaxException
+	{
+		if (status == DBGPStatus.BREAK)
+		{
+			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
+		}
 
 		int i = c.data.indexOf(' ');
 		File dir = new File(new URI(c.data.substring(0, i)));
 		File file = new File(new URI(c.data.substring(i + 1)));
 
-    	SourceFile source = interpreter.getSourceFile(file);
-    	boolean headers = (c.getOption(DBGPOptionType.C).value.equals("latexdoc"));
+		SourceFile source = interpreter.getSourceFile(file);
+		boolean headers = c.getOption(DBGPOptionType.C).value.equals("latexdoc");
 
-    	if (source == null)
-    	{
-    		cdataResponse(file + ": file not found");
-    	}
-    	else
-    	{
-			File tex = new File(dir.getPath() + File.separator + file.getName() + ".tex");
+		if (source == null)
+		{
+			cdataResponse(file + ": file not found");
+		} else
+		{
+			File tex = new File(dir.getPath() + File.separator + file.getName()
+					+ ".tex");
 			PrintWriter pw = new PrintWriter(tex);
 			new LatexSourceFile(source).printCoverage(pw, headers);
 			pw.close();
 			cdataResponse("Latex coverage written to " + tex);
-    	}
-    }
+		}
+	}
 
-	private void processWord(DBGPCommand c)
-    	throws DBGPException, IOException, URISyntaxException
-    {
-    	if (status == DBGPStatus.BREAK)
-    	{
-    		throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
-    	}
-    
-    	int i = c.data.indexOf(' ');
-    	File dir = new File(new URI(c.data.substring(0, i)));
-    	File file = new File(new URI(c.data.substring(i + 1)));
-    
-    	SourceFile source = interpreter.getSourceFile(file);
-    
-    	if (source == null)
-    	{
-    		cdataResponse(file + ": file not found");
-    	}
-    	else
-    	{
-    		File html = new File(dir.getPath() + File.separator + file.getName() + ".doc");
-    		PrintWriter pw = new PrintWriter(html);
-    		source.printWordCoverage(pw);
-    		pw.close();
-    		cdataResponse("Word HTML coverage written to " + html);
-    	}
-    }
-
-	protected void processCurrentLine(DBGPCommand c) throws DBGPException, IOException
+	private void processWord(DBGPCommand c) throws DBGPException, IOException,
+			URISyntaxException
 	{
-		if ((status != DBGPStatus.BREAK && status != DBGPStatus.STOPPING)
-			|| breakpoint == null)
+		if (status == DBGPStatus.BREAK)
+		{
+			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
+		}
+
+		int i = c.data.indexOf(' ');
+		File dir = new File(new URI(c.data.substring(0, i)));
+		File file = new File(new URI(c.data.substring(i + 1)));
+
+		SourceFile source = interpreter.getSourceFile(file);
+
+		if (source == null)
+		{
+			cdataResponse(file + ": file not found");
+		} else
+		{
+			File html = new File(dir.getPath() + File.separator
+					+ file.getName() + ".doc");
+			PrintWriter pw = new PrintWriter(html);
+			source.printWordCoverage(pw);
+			pw.close();
+			cdataResponse("Word HTML coverage written to " + html);
+		}
+	}
+
+	protected void processCurrentLine(DBGPCommand c) throws DBGPException,
+			IOException
+	{
+		if (status != DBGPStatus.BREAK && status != DBGPStatus.STOPPING
+				|| breakpoint == null)
 		{
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}
@@ -2778,16 +2640,16 @@ public class DBGPReader
 		OutputStream out = new ByteArrayOutputStream();
 		PrintWriter pw = new PrintWriter(out);
 		pw.println(breakpoint.stoppedAtString());
-		pw.println(interpreter.getSourceLine(
-			breakpoint.location.getFile(), breakpoint.location.getStartLine(), ":  "));
+		pw.println(interpreter.getSourceLine(breakpoint.location.getFile(), breakpoint.location.getStartLine(), ":  "));
 		pw.close();
 		cdataResponse(out.toString());
 	}
 
-	protected void processCurrentSource(DBGPCommand c) throws DBGPException, IOException
+	protected void processCurrentSource(DBGPCommand c) throws DBGPException,
+			IOException
 	{
-		if ((status != DBGPStatus.BREAK && status != DBGPStatus.STOPPING)
-			|| breakpoint == null)
+		if (status != DBGPStatus.BREAK && status != DBGPStatus.STOPPING
+				|| breakpoint == null)
 		{
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
 		}
@@ -2796,22 +2658,26 @@ public class DBGPReader
 		int current = breakpoint.location.getStartLine();
 
 		int start = current - SOURCE_LINES;
-		if (start < 1) start = 1;
-		int end = start + SOURCE_LINES*2 + 1;
+		if (start < 1)
+		{
+			start = 1;
+		}
+		int end = start + SOURCE_LINES * 2 + 1;
 
 		StringBuilder sb = new StringBuilder();
 
 		for (int src = start; src < end; src++)
 		{
-			sb.append(interpreter.getSourceLine(
-				file, src, (src == current) ? ":>>" : ":  "));
+			sb.append(interpreter.getSourceLine(file, src, src == current ? ":>>"
+					: ":  "));
 			sb.append("\n");
 		}
 
 		cdataResponse(sb.toString());
 	}
 
-	protected void processPOG(DBGPCommand c) throws IOException, AnalysisException
+	protected void processPOG(DBGPCommand c) throws IOException,
+			AnalysisException
 	{
 		IProofObligationList all = interpreter.getProofObligations();
 		IProofObligationList list = null;
@@ -2819,26 +2685,24 @@ public class DBGPReader
 		if (c.data.equals("*"))
 		{
 			list = all;
-		}
-		else
+		} else
 		{
 			list = new ProofObligationList();
 			String name = c.data + "(";
 
-			for (IProofObligation po: all)
+			for (IProofObligation po : all)
 			{
 				if (po.getName().indexOf(name) >= 0)
 				{
 					list.add(po);
 				}
 			}
- 		}
+		}
 
 		if (list.isEmpty())
 		{
 			cdataResponse("No proof obligations generated");
-		}
-		else
+		} else
 		{
 			StringBuilder sb = new StringBuilder();
 			sb.append("Generated ");
@@ -2855,13 +2719,14 @@ public class DBGPReader
 	}
 
 	protected static void writeCoverage(Interpreter interpreter, File coverage)
-		throws IOException
+			throws IOException
 	{
-		for (File f: interpreter.getSourceFiles())
+		for (File f : interpreter.getSourceFiles())
 		{
 			SourceFile source = interpreter.getSourceFile(f);
 
-			File data = new File(coverage.getPath() + File.separator + f.getName() + ".cov");
+			File data = new File(coverage.getPath() + File.separator
+					+ f.getName() + ".cov");
 			PrintWriter pw = new PrintWriter(data);
 			source.writeCoverage(pw);
 			pw.close();

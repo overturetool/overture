@@ -2,23 +2,12 @@ package org.overture.interpreter.debug;
 
 public enum DBGPXCmdOvertureCommandType
 {
-	INIT("init"),
-	CREATE("create"),
-	CURRENT_LINE("currentline"),
-	SOURCE("source"),
-	COVERAGE("coverage"),
-	WRITE_COMPLETE_COVERAGE("write_complete_coverage"),
-	LATEX("latex"),
-	POG("pog"),
-	STACK("stack"),
-	TRACE("trace"),
-	LIST("list"),
-	FILES("files"),
-	CLASSES("classes"),
-	MODULES("modules"),
-	DEFAULT("default"),
-	LOG("log");
-	
+	INIT("init"), CREATE("create"), CURRENT_LINE("currentline"), SOURCE(
+			"source"), COVERAGE("coverage"), WRITE_COMPLETE_COVERAGE(
+			"write_complete_coverage"), LATEX("latex"), POG("pog"), STACK(
+			"stack"), TRACE("trace"), LIST("list"), FILES("files"), CLASSES(
+			"classes"), MODULES("modules"), DEFAULT("default"), LOG("log");
+
 	public String value;
 
 	DBGPXCmdOvertureCommandType(String value)
@@ -26,9 +15,10 @@ public enum DBGPXCmdOvertureCommandType
 		this.value = value;
 	}
 
-	public static DBGPXCmdOvertureCommandType lookup(String string) throws DBGPException
+	public static DBGPXCmdOvertureCommandType lookup(String string)
+			throws DBGPException
 	{
-		for (DBGPXCmdOvertureCommandType cmd: values())
+		for (DBGPXCmdOvertureCommandType cmd : values())
 		{
 			if (cmd.value.equals(string))
 			{

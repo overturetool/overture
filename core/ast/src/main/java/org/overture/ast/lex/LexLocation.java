@@ -93,6 +93,13 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 	/**
 	 * Create a location with the given fields.
 	 * 
+	 * @param file
+	 * @param module
+	 * @param startLine
+	 * @param startPos
+	 * @param endLine
+	 * @param endPos
+	 * @param startOffset
 	 * @param endOffset
 	 */
 
@@ -280,8 +287,10 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 
 	public boolean within(ILexLocation span)
 	{
-		return (startLine > span.getStartLine() || (startLine == span.getStartLine() && startPos >= span.getStartPos()))
-				&& (startLine <= span.getEndLine() || (startLine == span.getEndLine() && startPos < span.getEndPos()))
+		return (startLine > span.getStartLine() || startLine == span.getStartLine()
+				&& startPos >= span.getStartPos())
+				&& (startLine <= span.getEndLine() || startLine == span.getEndLine()
+						&& startPos < span.getEndPos())
 				&& file.equals(span.getFile());
 	}
 
@@ -293,7 +302,9 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 	public void hit()
 	{
 		if (executable)
+		{
 			hits++;
+		}
 	}
 
 	public static void clearLocations()
@@ -344,7 +355,7 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 				LexLocation l = it.previous();
 
 				if (!l.file.equals(file) || l.startLine < linecount
-						|| (l.startLine == linecount && l.startPos < charpos))
+						|| l.startLine == linecount && l.startPos < charpos)
 				{
 					break;
 				} else

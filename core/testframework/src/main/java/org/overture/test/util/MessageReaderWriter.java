@@ -1,12 +1,24 @@
-/*******************************************************************************
- * Copyright (c) 2009, 2011 Overture Team and others. Overture is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3
- * of the License, or (at your option) any later version. Overture is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details. You should have received a copy of the GNU General Public
- * License along with Overture. If not, see <http://www.gnu.org/licenses/>. The Overture Tool web-site:
- * http://overturetool.org/
- *******************************************************************************/
+/*
+ * #%~
+ * Test Framework for Overture
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.test.util;
 
 import java.io.BufferedReader;
@@ -28,7 +40,7 @@ public class MessageReaderWriter
 
 	enum MsgType
 	{
-		Warning, Error,Result
+		Warning, Error, Result
 	};
 
 	public static String WARNING_LABEL = "WARNING";
@@ -107,11 +119,11 @@ public class MessageReaderWriter
 				{
 					type = MsgType.Warning;
 					line = line.substring(WARNING_LABEL.length() + 1);
-				}else if (line.startsWith(RESULT_LABEL))
+				} else if (line.startsWith(RESULT_LABEL))
 				{
 					type = MsgType.Result;
 					line = line.substring(RESULT_LABEL.length() + 1);
-				}  else
+				} else
 				{
 					return false;
 				}
@@ -161,7 +173,8 @@ public class MessageReaderWriter
 		} catch (IOException e)
 		{
 			return false;
-		}finally{
+		} finally
+		{
 			try
 			{
 				in.close();
@@ -181,7 +194,7 @@ public class MessageReaderWriter
 
 			writeMessageSet(out, WARNING_LABEL, warnings);
 			writeMessageSet(out, ERROR_LABEL, errors);
-			writeResult(out,result);
+			writeResult(out, result);
 
 			out.flush();
 			out.close();
@@ -193,7 +206,8 @@ public class MessageReaderWriter
 		return true;
 	}
 
-	private void writeResult(BufferedWriter out, String result2) throws IOException
+	private void writeResult(BufferedWriter out, String result2)
+			throws IOException
 	{
 		StringBuffer sb = new StringBuffer();
 		sb.append(RESULT_LABEL);
@@ -208,7 +222,7 @@ public class MessageReaderWriter
 		sb.append(":");
 		sb.append(result2.replace(':', '\''));
 		out.write(sb.toString());
-		out.newLine();		
+		out.newLine();
 	}
 
 	public void writeMessageSet(BufferedWriter out, String label,

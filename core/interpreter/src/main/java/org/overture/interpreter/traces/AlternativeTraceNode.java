@@ -23,16 +23,90 @@
 
 package org.overture.interpreter.traces;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
-public class AlternativeTraceNode extends TraceNode
+import org.overture.interpreter.traces.util.LazyTestSequence;
+import org.overture.interpreter.traces.util.Pair;
+
+public class AlternativeTraceNode extends TraceNode implements
+		IIterableTraceNode
 {
 	public List<TraceNode> alternatives;
+
+	private Map<Integer, Pair<Integer, Integer>> indics;
 
 	public AlternativeTraceNode()
 	{
 		this.alternatives = new Vector<TraceNode>();
+	}
+
+	@Override
+	public CallSequence get(int index)
+	{
+		if (indics == null)
+		{
+			size();
+		}
+
+		Pair<Integer, Integer> v = indics.get(index);
+		
+		TraceNode tmp = alternatives.get(v.first);
+		
+		if(tmp instanceof IIterableTraceNode)
+		{
+			IIterableTraceNode in = (IIterableTraceNode) tmp;
+			return in.get(v.second);
+		}else
+		{
+			return tmp.getTests().get(v.second);
+		}
+	}
+
+	@Override
+	public TestSequence getTests()
+	{
+		return new LazyTestSequence(this);
+	}
+	
+	@Override
+	public int size()
+	{
+		int size = 0;
+		
+		if(indics!=null)
+		{
+			return indics.size();
+		}
+		
+		indics = new HashMap<Integer, Pair<Integer, Integer>>();
+		int k=0;
+		
+		for (TraceNode node : alternatives)
+		{
+			// Alternatives within an alternative are just like larger alts,
+			// so we add all the lower alts to the list...
+			
+			int s = 0;
+			if(node instanceof IIterableTraceNode)
+			{
+				s = ((IIterableTraceNode)node).size();
+			}else
+			{
+				s = node.getTests().size();
+			}
+			
+			for (int i = 0; i < s; i++)
+			{
+				indics.put(size+i, new Pair<Integer,Integer>(k,i));
+			}
+			
+			size+=s;
+			k++;
+		}
+		return size;
 	}
 
 	@Override
@@ -42,7 +116,7 @@ public class AlternativeTraceNode extends TraceNode
 		sb.append("(");
 		String sep = "";
 
-		for (TraceNode node: alternatives)
+		for (TraceNode node : alternatives)
 		{
 			sb.append(sep);
 			sb.append(node.toString());
@@ -51,26 +125,5 @@ public class AlternativeTraceNode extends TraceNode
 
 		sb.append(")");
 		return sb.toString();
-	}
-
-	@Override
-	public TestSequence getTests()
-	{
-		TestSequence tests = new TestSequence();
-
-		for (TraceNode node: alternatives)
-		{
-			// Alternatives within an alternative are just like larger alts,
-			// so we add all the lower alts to the list...
-
-    		for (CallSequence test: node.getTests())
-    		{
-    			CallSequence seq = getVariables();
-    			seq.addAll(test);
-    			tests.add(seq);
-    		}
-		}
-
-		return tests;
 	}
 }

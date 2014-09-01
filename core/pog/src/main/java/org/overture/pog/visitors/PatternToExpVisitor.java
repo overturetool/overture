@@ -51,7 +51,7 @@ import org.overture.pog.utility.UniqueNameGenerator;
 public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 {
 	private final UniqueNameGenerator unique;
-	
+
 	public PatternToExpVisitor(UniqueNameGenerator unique)
 	{
 		this.unique = unique;
@@ -59,40 +59,50 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 
 	public PExp defaultPPattern(PPattern node) throws AnalysisException
 	{
-		throw new RuntimeException("Cannot convert pattern to Expression: " + node);
+		throw new RuntimeException("Cannot convert pattern to Expression: "
+				+ node);
 	}
-	
+
 	/**
 	 * First, literal patterns convert to expressions easily:
+	 * 
+	 * @param node
+	 * @return
+	 * @throws AnalysisException
 	 */
 
-	public PExp caseABooleanPattern(ABooleanPattern node) throws AnalysisException
+	public PExp caseABooleanPattern(ABooleanPattern node)
+			throws AnalysisException
 	{
 		ABooleanConstExp b = new ABooleanConstExp();
 		b.setValue(node.getValue().clone());
 		return b;
 	}
 
-	public PExp caseACharacterPattern(ACharacterPattern node) throws AnalysisException
+	public PExp caseACharacterPattern(ACharacterPattern node)
+			throws AnalysisException
 	{
 		ACharLiteralExp ch = new ACharLiteralExp();
 		ch.setValue(node.getValue().clone());
 		return ch;
 	}
 
-	public PExp caseAStringPattern(AStringPattern node) throws AnalysisException
+	public PExp caseAStringPattern(AStringPattern node)
+			throws AnalysisException
 	{
 		AStringLiteralExp string = new AStringLiteralExp();
 		string.setValue(node.getValue().clone());
 		return string;
 	}
 
-	public PExp caseAExpressionPattern(AExpressionPattern node) throws AnalysisException
+	public PExp caseAExpressionPattern(AExpressionPattern node)
+			throws AnalysisException
 	{
 		return node.getExp();
 	}
 
-	public PExp caseAIdentifierPattern(AIdentifierPattern node) throws AnalysisException
+	public PExp caseAIdentifierPattern(AIdentifierPattern node)
+			throws AnalysisException
 	{
 		AVariableExp var = new AVariableExp();
 		var.setName(node.getName().clone());
@@ -100,7 +110,8 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 		return var;
 	}
 
-	public PExp caseAIgnorePattern(AIgnorePattern node) throws AnalysisException
+	public PExp caseAIgnorePattern(AIgnorePattern node)
+			throws AnalysisException
 	{
 		AVariableExp var = new AVariableExp();
 		var.setName(unique.getUnique("any"));
@@ -108,7 +119,8 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 		return var;
 	}
 
-	public PExp caseAIntegerPattern(AIntegerPattern node) throws AnalysisException
+	public PExp caseAIntegerPattern(AIntegerPattern node)
+			throws AnalysisException
 	{
 		AIntLiteralExp exp = new AIntLiteralExp();
 		exp.setValue(node.getValue().clone());
@@ -135,21 +147,25 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 	}
 
 	/**
-	 * Now, compound patterns involve recursive calls to expand their
-	 * pattern components to expressions.
+	 * Now, compound patterns involve recursive calls to expand their pattern components to expressions.
+	 * 
+	 * @param node
+	 * @return
+	 * @throws AnalysisException
 	 */
-	
-	public PExp caseARecordPattern(ARecordPattern node) throws AnalysisException
+
+	public PExp caseARecordPattern(ARecordPattern node)
+			throws AnalysisException
 	{
 		AMkTypeExp mkExp = new AMkTypeExp();
 		mkExp.setTypeName(node.getTypename().clone());
 		List<PExp> args = new Vector<PExp>();
-		
-		for (PPattern p: node.getPlist())
+
+		for (PPattern p : node.getPlist())
 		{
 			args.add(p.apply(this).clone());
 		}
-		
+
 		mkExp.setArgs(args);
 		return mkExp;
 	}
@@ -158,12 +174,12 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 	{
 		ATupleExp tuple = new ATupleExp();
 		List<PExp> values = new Vector<PExp>();
-		
-		for (PPattern p: node.getPlist())
+
+		for (PPattern p : node.getPlist())
 		{
 			values.add(p.apply(this).clone());
 		}
-		
+
 		tuple.setArgs(values);
 		return tuple;
 	}
@@ -172,17 +188,18 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 	{
 		ASeqEnumSeqExp seq = new ASeqEnumSeqExp();
 		List<PExp> values = new Vector<PExp>();
-		
-		for (PPattern p: node.getPlist())
+
+		for (PPattern p : node.getPlist())
 		{
 			values.add(p.apply(this).clone());
 		}
-		
+
 		seq.setMembers(values);
 		return seq;
 	}
 
-	public PExp caseAConcatenationPattern(AConcatenationPattern node) throws AnalysisException
+	public PExp caseAConcatenationPattern(AConcatenationPattern node)
+			throws AnalysisException
 	{
 		ASeqConcatBinaryExp conc = new ASeqConcatBinaryExp();
 		conc.setLeft(node.getLeft().apply(this).clone());
@@ -195,12 +212,12 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 	{
 		ASetEnumSetExp set = new ASetEnumSetExp();
 		List<PExp> values = new Vector<PExp>();
-		
-		for (PPattern p: node.getPlist())
+
+		for (PPattern p : node.getPlist())
 		{
 			values.add(p.apply(this).clone());
 		}
-		
+
 		set.setMembers(values);
 		return set;
 	}
@@ -218,17 +235,18 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 	{
 		AMapEnumMapExp map = new AMapEnumMapExp();
 		List<AMapletExp> values = new Vector<AMapletExp>();
-		
-		for (AMapletPatternMaplet p: node.getMaplets())
+
+		for (AMapletPatternMaplet p : node.getMaplets())
 		{
 			values.add((AMapletExp) p.apply(this).clone());
 		}
-		
+
 		map.setMembers(values);
 		return map;
 	}
-	
-	public PExp caseAMapletPatternMaplet(AMapletPatternMaplet node) throws AnalysisException
+
+	public PExp caseAMapletPatternMaplet(AMapletPatternMaplet node)
+			throws AnalysisException
 	{
 		AMapletExp maplet = new AMapletExp();
 		maplet.setLeft(node.getFrom().apply(this).clone());
@@ -236,7 +254,8 @@ public class PatternToExpVisitor extends AnswerAdaptor<PExp>
 		return maplet;
 	}
 
-	public PExp caseAMapUnionPattern(AMapUnionPattern node) throws AnalysisException
+	public PExp caseAMapUnionPattern(AMapUnionPattern node)
+			throws AnalysisException
 	{
 		AMapUnionBinaryExp union = new AMapUnionBinaryExp();
 		union.setLeft(node.getLeft().apply(this).clone());

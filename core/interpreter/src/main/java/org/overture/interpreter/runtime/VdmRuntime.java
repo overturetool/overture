@@ -20,140 +20,144 @@ import org.overture.interpreter.runtime.state.ASystemClassDefinitionRuntime;
 import org.overture.interpreter.runtime.state.SClassDefinitionRuntime;
 import org.overture.interpreter.runtime.state.StateDefinitionRuntimeState;
 import org.overture.interpreter.values.Value;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
  * The runtime class must be re-initialized before an execution.
+ * 
  * @author pvj
- *
  */
 public class VdmRuntime
 {
 	private static IQuestionAnswer<Context, Value> expressionRuntime;
 	private static IQuestionAnswer<Context, Value> statementRuntime;
-	
-	final private static Map<INode,IRuntimeState> runtimeState = new HashMap<INode, IRuntimeState>();
-	
+
+	final private static Map<INode, IRuntimeState> runtimeState = new HashMap<INode, IRuntimeState>();
+
 	static
 	{
 		initialize();
 	}
-	
+
 	public static void initialize()
 	{
-		expressionRuntime = new DelegateStatementEvaluator(); 
-		statementRuntime = expressionRuntime; 
+		expressionRuntime = new DelegateStatementEvaluator();
+		statementRuntime = expressionRuntime;
 		runtimeState.clear();
 	}
-	
-	public static void initialize(IQuestionAnswer<Context, Value> expressionRuntime)
+
+	public static void initialize(
+			IQuestionAnswer<Context, Value> expressionRuntime)
 	{
-		VdmRuntime.expressionRuntime = expressionRuntime; 
-		VdmRuntime.statementRuntime = expressionRuntime; 
+		VdmRuntime.expressionRuntime = expressionRuntime;
+		VdmRuntime.statementRuntime = expressionRuntime;
 		VdmRuntime.runtimeState.clear();
 	}
-	
+
 	public static IQuestionAnswer<Context, Value> getExpressionEvaluator()
 	{
-		if(expressionRuntime == null)
+		if (expressionRuntime == null)
 		{
 			initialize();
 		}
-		
+
 		return expressionRuntime;
 	}
-	
+
 	public static IQuestionAnswer<Context, Value> getStatementEvaluator()
 	{
-		if(statementRuntime == null)
+		if (statementRuntime == null)
 		{
 			initialize();
 		}
-		
+
 		return statementRuntime;
 	}
-	
+
 	public static void setNodeState(INode node, IRuntimeState state)
 	{
-		runtimeState.put(node,state);
+		runtimeState.put(node, state);
 	}
-	
-	
+
 	public static IRuntimeState getNodeState(INode node)
 	{
 		return runtimeState.get(node);
 	}
-	
+
 	public static StateDefinitionRuntimeState getNodeState(AStateDefinition node)
 	{
 		return (StateDefinitionRuntimeState) runtimeState.get(node);
 	}
-	
-	public static AModuleModulesRuntime getNodeState(AModuleModules node)
+
+	public static AModuleModulesRuntime getNodeState(AModuleModules node,
+			ITypeCheckerAssistantFactory af)
 	{
 		AModuleModulesRuntime state = (AModuleModulesRuntime) runtimeState.get(node);
 
-		if(state == null)
+		if (state == null)
 		{
-			state = new AModuleModulesRuntime(node);
+			state = new AModuleModulesRuntime(node, af);
 			runtimeState.put(node, state);
 		}
-		
+
 		return state;
 	}
-	
-	public static SClassDefinitionRuntime getNodeState(IInterpreterAssistantFactory assistantFactory,SClassDefinition node)
+
+	public static SClassDefinitionRuntime getNodeState(
+			IInterpreterAssistantFactory assistantFactory, SClassDefinition node)
 	{
 		SClassDefinitionRuntime state = (SClassDefinitionRuntime) runtimeState.get(node);
-		
-		if(state == null)
+
+		if (state == null)
 		{
-			state = new SClassDefinitionRuntime(assistantFactory,node);
-			runtimeState.put(node, state );
+			state = new SClassDefinitionRuntime(assistantFactory, node);
+			runtimeState.put(node, state);
 		}
-		
+
 		return state;
 	}
-	
-	
-	
-	public static ASystemClassDefinitionRuntime getNodeState(IInterpreterAssistantFactory assistantFactory,ASystemClassDefinition node)
+
+	public static ASystemClassDefinitionRuntime getNodeState(
+			IInterpreterAssistantFactory assistantFactory,
+			ASystemClassDefinition node)
 	{
 		ASystemClassDefinitionRuntime state = (ASystemClassDefinitionRuntime) runtimeState.get(node);
-		
-		if(state == null)
-		{	
-			state = new ASystemClassDefinitionRuntime(assistantFactory,node);
-			runtimeState.put(node, state );
+
+		if (state == null)
+		{
+			state = new ASystemClassDefinitionRuntime(assistantFactory, node);
+			runtimeState.put(node, state);
 		}
-		
+
 		return state;
 	}
-	
-	public static AImplicitFunctionDefinitionRuntimeState getNodeState(AImplicitFunctionDefinition node)
+
+	public static AImplicitFunctionDefinitionRuntimeState getNodeState(
+			AImplicitFunctionDefinition node)
 	{
 		AImplicitFunctionDefinitionRuntimeState state = (AImplicitFunctionDefinitionRuntimeState) runtimeState.get(node);
-		
-		if(state == null)
+
+		if (state == null)
 		{
 			state = new AImplicitFunctionDefinitionRuntimeState();
 			runtimeState.put(node, state);
 		}
-		
+
 		return state;
 	}
-	
-	public static AExplicitFunctionDefinitionRuntimeState getNodeState(AExplicitFunctionDefinition node)
+
+	public static AExplicitFunctionDefinitionRuntimeState getNodeState(
+			AExplicitFunctionDefinition node)
 	{
 		AExplicitFunctionDefinitionRuntimeState state = (AExplicitFunctionDefinitionRuntimeState) runtimeState.get(node);
-		
-		if(state == null)
+
+		if (state == null)
 		{
 			state = new AExplicitFunctionDefinitionRuntimeState();
 			runtimeState.put(node, state);
 		}
-		
+
 		return state;
 	}
-	
-	
+
 }

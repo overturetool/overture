@@ -28,8 +28,6 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.Properties;
 
-import org.overture.util.ConfigBase;
-
 public class ConfigBase
 {
 	private static Properties props = new Properties();
@@ -41,25 +39,24 @@ public class ConfigBase
 
 		try
 		{
-    		try
+			try
 			{
-    			fis = ConfigBase.class.getResourceAsStream("/" + resource);
-    			
-    			if (fis == null)
-    			{
-    				// properties file is not on the classpath
-    				return;
-    			}
-    			
-				props.load(fis);
-			}
-    		catch (Exception ex)
-    		{
-    			throw new Exception(propertyFile + ": " + ex.getMessage());
-    		}
+				fis = ConfigBase.class.getResourceAsStream("/" + resource);
 
-    		String name = "?";
-    		String value = "?";
+				if (fis == null)
+				{
+					// properties file is not on the classpath
+					return;
+				}
+
+				props.load(fis);
+			} catch (Exception ex)
+			{
+				throw new Exception(propertyFile + ": " + ex.getMessage());
+			}
+
+			String name = "?";
+			String value = "?";
 
 			try
 			{
@@ -74,38 +71,32 @@ public class ConfigBase
 						if (type == Integer.TYPE)
 						{
 							f.setInt(target, Integer.parseInt(value));
-						}
-						else if (type == Boolean.TYPE)
+						} else if (type == Boolean.TYPE)
 						{
 							f.setBoolean(target, Boolean.parseBoolean(value));
-						}
-						else if (type == String.class)
+						} else if (type == String.class)
 						{
 							f.set(target, value);
-						}
-						else
+						} else
 						{
-							throw new Exception("Cannot process " + name +
-								", Java type " + type + " unsupported");
+							throw new Exception("Cannot process " + name
+									+ ", Java type " + type + " unsupported");
 						}
 					}
 				}
-			}
-			catch (Exception ex)
+			} catch (Exception ex)
 			{
-				throw new Exception(propertyFile +
-					": (" +	name + " = " + value + ") " + ex.getMessage());
+				throw new Exception(propertyFile + ": (" + name + " = " + value
+						+ ") " + ex.getMessage());
 			}
-		}
-		finally
+		} finally
 		{
 			if (fis != null)
 			{
 				try
 				{
 					fis.close();
-				}
-				catch (IOException e)
+				} catch (IOException e)
 				{
 					// so?
 				}

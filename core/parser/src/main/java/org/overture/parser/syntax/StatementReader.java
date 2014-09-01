@@ -745,8 +745,8 @@ public class StatementReader extends SyntaxReader
 		return block;
 	}
 
-	private List<AAssignmentDefinition> readDclStatements() throws ParserException,
-			LexException
+	private List<AAssignmentDefinition> readDclStatements()
+			throws ParserException, LexException
 	{
 		List<AAssignmentDefinition> defs = new Vector<AAssignmentDefinition>();
 
@@ -979,8 +979,8 @@ public class StatementReader extends SyntaxReader
 		return AstFactory.newAStartStm(location, set);
 	}
 
-	private PStm readStopStatement(ILexLocation location)
-		throws LexException, ParserException
+	private PStm readStopStatement(ILexLocation location) throws LexException,
+			ParserException
 	{
 		checkFor(VDMToken.STOP, 2306, "Expecting 'stop'");
 		checkFor(VDMToken.BRA, 2307, "Expecting 'stop('");
@@ -990,7 +990,7 @@ public class StatementReader extends SyntaxReader
 	}
 
 	private PStm readStoplistStatement(ILexLocation location)
-		throws LexException, ParserException
+			throws LexException, ParserException
 	{
 		checkFor(VDMToken.STOPLIST, 2309, "Expecting 'stoplist'");
 		checkFor(VDMToken.BRA, 2310, "Expecting 'stoplist('");

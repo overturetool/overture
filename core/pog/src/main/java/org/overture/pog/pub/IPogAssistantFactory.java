@@ -13,20 +13,25 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
  */
 public interface IPogAssistantFactory extends ITypeCheckerAssistantFactory
 {
-		
-		/* (non-Javadoc)
-		 * @see org.overture.typechecker.assistant.ITypeCheckerAssistantFactory#createACaseAlternativeAssistant()
-		 */
-		ACaseAlternativeAssistantPOG createACaseAlternativeAssistant();
-		
-		/* (non-Javadoc)
-		 * @see org.overture.typechecker.assistant.ITypeCheckerAssistantFactory#createPDefinitionAssistant()
-		 */
-		PDefinitionAssistantPOG createPDefinitionAssistant();
-		
-		StateDesignatorNameGetter getStateDesignatorNameGetter();
-		IVariableSubVisitor getVarSubVisitor();
-		ILocaleExtractVisitor getLocaleExtractVisitor();
-		IInvExpGetVisitor getInvExpGetVisitor();
-		
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.overture.typechecker.assistant.ITypeCheckerAssistantFactory#createACaseAlternativeAssistant()
+	 */
+	ACaseAlternativeAssistantPOG createACaseAlternativeAssistant();
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.overture.typechecker.assistant.ITypeCheckerAssistantFactory#createPDefinitionAssistant()
+	 */
+	PDefinitionAssistantPOG createPDefinitionAssistant();
+
+	StateDesignatorNameGetter getStateDesignatorNameGetter();
+
+	IVariableSubVisitor getVarSubVisitor();
+
+	ILocaleExtractVisitor getLocaleExtractVisitor();
+
+	IInvExpGetVisitor getInvExpGetVisitor();
+
 }

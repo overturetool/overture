@@ -61,7 +61,8 @@ public class PatternReader extends SyntaxReader
 		PPattern pattern = readSimplePattern();
 
 		while (lastToken().is(VDMToken.UNION)
-				|| lastToken().is(VDMToken.CONCATENATE))
+				|| lastToken().is(VDMToken.CONCATENATE)
+				|| lastToken().is(VDMToken.MUNION))
 		{
 			LexToken token = lastToken();
 
@@ -76,13 +77,13 @@ public class PatternReader extends SyntaxReader
 					nextToken();
 					pattern = AstFactory.newAConcatenationPattern(pattern, token.location, readPattern());
 					break;
+
 				case MUNION:
-					if(Settings.release == Release.VDM_10)
+					if (Settings.release == Release.VDM_10)
 					{
 						nextToken();
 						pattern = AstFactory.newAMapUnionPattern(pattern, token.location, readPattern());
-					}
-					else
+					} else
 					{
 						throwMessage(2298, "Map patterns not available in VDM classic");
 					}
@@ -102,7 +103,7 @@ public class PatternReader extends SyntaxReader
 		switch (token.type)
 		{
 			case NUMBER:
-				pattern = AstFactory.newAIntegerPattern((LexIntegerToken)token);
+				pattern = AstFactory.newAIntegerPattern((LexIntegerToken) token);
 				break;
 
 			case REALNUMBER:
@@ -127,13 +128,13 @@ public class PatternReader extends SyntaxReader
 				break;
 
 			case NIL:
-				pattern = AstFactory.newANilPattern((LexKeywordToken)token);
+				pattern = AstFactory.newANilPattern((LexKeywordToken) token);
 				break;
 
 			case BRA:
 				nextToken();
 				ExpressionReader expr = getExpressionReader();
-				pattern = AstFactory.newAExpressionPattern(expr.readExpression() );
+				pattern = AstFactory.newAExpressionPattern(expr.readExpression());
 				checkFor(VDMToken.KET, 2180, "Mismatched brackets in pattern");
 				rdtok = false;
 				break;
@@ -142,40 +143,35 @@ public class PatternReader extends SyntaxReader
 				if (nextToken().is(VDMToken.SET_CLOSE))
 				{
 					pattern = AstFactory.newASetPattern(token.location, new Vector<PPattern>());
-				} 
-				else if(lastToken().is(VDMToken.MAPLET))
+				} else if (lastToken().is(VDMToken.MAPLET))
 				{
-					if(Settings.release == Release.VDM_10)
+					if (Settings.release == Release.VDM_10)
 					{
 						pattern = AstFactory.newAMapPattern(token.location, new Vector<AMapletPatternMaplet>());
 						nextToken();
 						checkFor(VDMToken.SET_CLOSE, 2299, "Expecting {|->} empty map pattern");
 						rdtok = false;
-					}
-					else
+					} else
 					{
 						throwMessage(2298, "Map patterns not available in VDM classic");
 					}
-				}
-				else
+				} else
 				{
 					reader.push();
-					readPattern(); //ignored
-					
-					if(lastToken().is(VDMToken.MAPLET))
+					readPattern(); // ignored
+
+					if (lastToken().is(VDMToken.MAPLET))
 					{
 						reader.pop();
-						
-						if(Settings.release == Release.VDM_10)
+
+						if (Settings.release == Release.VDM_10)
 						{
 							pattern = AstFactory.newAMapPattern(token.location, readMapletPatternList());
-						}
-						else
+						} else
 						{
 							throwMessage(2298, "Map patterns not available in VDM classic");
 						}
-					}
-					else
+					} else
 					{
 						reader.pop();
 						pattern = AstFactory.newASetPattern(token.location, readPatternList());
@@ -262,28 +258,33 @@ public class PatternReader extends SyntaxReader
 		}
 
 		if (rdtok)
+		{
 			nextToken();
+		}
 		return pattern;
 	}
 
-	private List<AMapletPatternMaplet> readMapletPatternList() throws LexException, ParserException 
+	private List<AMapletPatternMaplet> readMapletPatternList()
+			throws LexException, ParserException
 	{
 		List<AMapletPatternMaplet> list = new Vector<AMapletPatternMaplet>();
 		list.add(readMaplet());
-		
-		while(ignore(VDMToken.COMMA))
+
+		while (ignore(VDMToken.COMMA))
 		{
 			list.add(readMaplet());
 		}
-		
+
 		return list;
 	}
 
-	private AMapletPatternMaplet readMaplet() throws ParserException, LexException {
+	private AMapletPatternMaplet readMaplet() throws ParserException,
+			LexException
+	{
 		PPattern key = readPattern();
 		checkFor(VDMToken.MAPLET, 2297, "Expecting '|->' in map pattern");
 		PPattern value = readPattern();
-		
+
 		return AstFactory.newAMapletPatternMaplet(key, value);
 	}
 

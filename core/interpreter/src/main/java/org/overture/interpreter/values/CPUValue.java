@@ -36,29 +36,28 @@ import org.overture.interpreter.scheduler.FCFSPolicy;
 import org.overture.interpreter.scheduler.ResourceScheduler;
 import org.overture.interpreter.scheduler.SchedulingPolicy;
 
-
 public class CPUValue extends ObjectValue
 {
 	private static final long serialVersionUID = 1L;
 	public final CPUResource resource;
 	private final List<ObjectValue> deployed;
 	public static CPUValue vCPU;
-	
 
-	public CPUValue(AClassType aClassType, NameValuePairMap map, ValueList argvals)
+	public CPUValue(AClassType aClassType, NameValuePairMap map,
+			ValueList argvals)
 	{
 		super(aClassType, map, new Vector<ObjectValue>(), null, null);
 
-		QuoteValue parg = (QuoteValue)argvals.get(0);
+		QuoteValue parg = (QuoteValue) argvals.get(0);
 		SchedulingPolicy cpup = SchedulingPolicy.factory(parg.value.toUpperCase());
-		RealValue sarg = (RealValue)argvals.get(1);
+		RealValue sarg = (RealValue) argvals.get(1);
 
 		resource = new CPUResource(cpup, sarg.value);
 		deployed = new Vector<ObjectValue>();
-		
+
 	}
 
-	public CPUValue(AClassType classtype)	// for virtual CPUs
+	public CPUValue(AClassType classtype) // for virtual CPUs
 	{
 		super(classtype, new NameValuePairMap(), new Vector<ObjectValue>(), null, null);
 		resource = new CPUResource(new FCFSPolicy(), 0);
@@ -86,15 +85,15 @@ public class CPUValue extends ObjectValue
 
 		boolean found = false;
 
-		for (ObjectValue obj: deployed)
+		for (ObjectValue obj : deployed)
 		{
-			for (ILexNameToken m: obj.members.keySet())
+			for (ILexNameToken m : obj.members.keySet())
 			{
 				// Set priority for all overloads of opname
 
 				if (m.getExplicit(true).getFullName().equals(opname))
 				{
-					OperationValue op = (OperationValue)obj.members.get(m);
+					OperationValue op = (OperationValue) obj.members.get(m);
 					op.setPriority(priority);
 					found = true;
 				}
@@ -133,16 +132,16 @@ public class CPUValue extends ObjectValue
 		return resource.isVirtual();
 	}
 
-	public static void init(ResourceScheduler scheduler, IInterpreterAssistantFactory assistantFactory)
+	public static void init(ResourceScheduler scheduler,
+			IInterpreterAssistantFactory assistantFactory)
 	{
 		try
 		{
 			CPUResource.init();
-			SClassDefinition def =  AstFactoryTC.newACpuClassDefinition(assistantFactory);
-			vCPU = new CPUValue((AClassType)assistantFactory.createSClassDefinitionAssistant().getType(def));
+			SClassDefinition def = AstFactoryTC.newACpuClassDefinition(assistantFactory);
+			vCPU = new CPUValue((AClassType) assistantFactory.createSClassDefinitionAssistant().getType(def));
 			vCPU.setup(scheduler, "vCPU");
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			// Parse/lex of built-in ops. Can't happen.
 		}

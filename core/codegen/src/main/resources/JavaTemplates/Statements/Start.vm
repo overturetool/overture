@@ -1,3 +1,5 @@
-#set ($start = "t.start()")
-$JavaFormat.ThreadCreate(expCG)
-$start
+###set ($start = "t.start()")
+##$JavaFormat.ThreadCreate(expCG)
+##$start
+#set ($start = ".start()")
+${JavaFormat.format($node.getExp())}${start};

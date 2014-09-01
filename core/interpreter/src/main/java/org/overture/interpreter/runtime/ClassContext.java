@@ -29,35 +29,32 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.values.Value;
-
 
 @SuppressWarnings("serial")
 public class ClassContext extends RootContext
 {
 	public final SClassDefinition classdef;
 
-	public ClassContext(IInterpreterAssistantFactory af,ILexLocation location,
-		String title, Context freeVariables, Context outer,
-		SClassDefinition classdef)
+	public ClassContext(IInterpreterAssistantFactory af, ILexLocation location,
+			String title, Context freeVariables, Context outer,
+			SClassDefinition classdef)
 	{
-		super(af,location, title, freeVariables, outer);
+		super(af, location, title, freeVariables, outer);
 		this.classdef = classdef;
 	}
 
-	public ClassContext(IInterpreterAssistantFactory af,ILexLocation location,
-		String title, Context outer, SClassDefinition classdef)
+	public ClassContext(IInterpreterAssistantFactory af, ILexLocation location,
+			String title, Context outer, SClassDefinition classdef)
 	{
-		this(af,location, title, null, outer, classdef);
+		this(af, location, title, null, outer, classdef);
 	}
 
 	/**
-	 * Check for the name in the current context and classdef, and if
-	 * not present search the global context. Note that the context
-	 * chain is not followed.
-	 *
-	 * @see org.overture.vdmj.runtime.Context#check(org.overture.vdmj.lex.LexNameToken)
+	 * Check for the name in the current context and classdef, and if not present search the global context. Note that
+	 * the context chain is not followed.
+	 * 
+	 * @see Context#check(ILexNameToken)
 	 */
 
 	@Override
@@ -67,7 +64,7 @@ public class ClassContext extends RootContext
 		// context chain. It first checks any local context, then it
 		// checks the "class" context, then it goes down to the global level.
 
-		Value v = get(name);		// Local variables
+		Value v = get(name); // Local variables
 
 		if (v != null)
 		{
@@ -84,7 +81,7 @@ public class ClassContext extends RootContext
 			}
 		}
 
-		v = assistantFactory.createSClassDefinitionAssistant().getStatic(classdef,name);
+		v = assistantFactory.createSClassDefinitionAssistant().getStatic(classdef, name);
 
 		if (v != null)
 		{
@@ -104,21 +101,20 @@ public class ClassContext extends RootContext
 	@Override
 	public String toString()
 	{
-		return super.toString();	// Self there anyway ...+ self.toString();
+		return super.toString(); // Self there anyway ...+ self.toString();
 	}
 
 	@Override
 	public void printStackTrace(PrintWriter out, boolean variables)
 	{
-		if (outer == null)		// Don't expand initial context
+		if (outer == null) // Don't expand initial context
 		{
 			out.println("In class context of " + title);
-		}
-		else
+		} else
 		{
 			if (variables)
 			{
-    			out.print(this.format("\t", this));
+				out.print(this.format("\t", this));
 			}
 
 			out.println("In class context of " + title + " " + location);

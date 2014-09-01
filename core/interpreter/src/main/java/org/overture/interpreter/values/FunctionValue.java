@@ -53,7 +53,6 @@ import org.overture.ast.types.PType;
 import org.overture.ast.util.Utils;
 import org.overture.config.Settings;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.runtime.ClassContext;
@@ -209,13 +208,14 @@ public class FunctionValue extends Value
 		}
 	}
 
-	public FunctionValue(IInterpreterAssistantFactory af,AImplicitFunctionDefinition fdef,
-			PTypeList actualTypes, FunctionValue precondition,
-			FunctionValue postcondition, Context freeVariables)
+	public FunctionValue(IInterpreterAssistantFactory af,
+			AImplicitFunctionDefinition fdef, PTypeList actualTypes,
+			FunctionValue precondition, FunctionValue postcondition,
+			Context freeVariables)
 	{
 		this(fdef, precondition, postcondition, freeVariables);
 		this.typeValues = new NameValuePairList();
-		this.type =  af.createAImplicitFunctionDefinitionAssistant().getType(fdef, actualTypes);
+		this.type = af.createAImplicitFunctionDefinitionAssistant().getType(fdef, actualTypes);
 
 		Iterator<PType> ti = actualTypes.iterator();
 
@@ -226,13 +226,14 @@ public class FunctionValue extends Value
 		}
 	}
 
-	public FunctionValue(IInterpreterAssistantFactory af, AExplicitFunctionDefinition fdef,
-			PTypeList actualTypes, FunctionValue precondition,
-			FunctionValue postcondition, Context freeVariables)
+	public FunctionValue(IInterpreterAssistantFactory af,
+			AExplicitFunctionDefinition fdef, PTypeList actualTypes,
+			FunctionValue precondition, FunctionValue postcondition,
+			Context freeVariables)
 	{
 		this(fdef, precondition, postcondition, freeVariables);
 		this.typeValues = new NameValuePairList();
-		this.type = af.createAExplicitFunctionDefinitionAssistant().getType(fdef,actualTypes);
+		this.type = af.createAExplicitFunctionDefinitionAssistant().getType(fdef, actualTypes);
 
 		Iterator<PType> ti = actualTypes.iterator();
 
@@ -588,7 +589,7 @@ public class FunctionValue extends Value
 
 				argList.addAll(argValues);
 
-				FunctionValue rv = new FunctionValue(location, "curried", (AFunctionType) type.getResult(), paramPatternList.subList(1, paramPatternList.size()), body, newpre, newpost, evalContext, false, argList, measureName, measureValues,result);
+				FunctionValue rv = new FunctionValue(location, "curried", (AFunctionType) type.getResult(), paramPatternList.subList(1, paramPatternList.size()), body, newpre, newpost, evalContext, false, argList, measureName, measureValues, result);
 
 				rv.setSelf(self);
 				rv.typeValues = typeValues;
@@ -601,11 +602,11 @@ public class FunctionValue extends Value
 		}
 	}
 
-		public Value invokeSolver(Context ctxt, RootContext argContext,
-			NameValuePairMap args,  IConstraintSolver solver)
+	public Value invokeSolver(Context ctxt, RootContext argContext,
+			NameValuePairMap args, IConstraintSolver solver)
 			throws ValueException
 	{
-			Value rv=null;
+		Value rv = null;
 		try
 		{
 			Map<String, String> argExps = new HashMap<String, String>();
@@ -615,8 +616,7 @@ public class FunctionValue extends Value
 			}
 
 			Map<String, String> stateExps = new HashMap<String, String>();
-			
-			
+
 			Interpreter interpreter = Interpreter.getInstance();
 			List<PDefinition> allDefs = new Vector<PDefinition>();
 			if (interpreter instanceof ClassInterpreter)
@@ -632,9 +632,8 @@ public class FunctionValue extends Value
 					allDefs.addAll(c.getDefs());
 				}
 			}
-			
 
-			PExp res = solver.solve(allDefs, this.name, this.postcondition.body,result, stateExps, argExps, Console.out, Console.err);
+			PExp res = solver.solve(allDefs, this.name, this.postcondition.body, result, stateExps, argExps, Console.out, Console.err);
 
 			rv = res.apply(VdmRuntime.getExpressionEvaluator(), argContext);
 		} catch (Exception e)
@@ -705,31 +704,27 @@ public class FunctionValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt) throws AnalysisException
+	public Value convertValueTo(PType to, Context ctxt)
+			throws AnalysisException
 	{
 		PTypeAssistantInterpreter assistant = ctxt.assistantFactory.createPTypeAssistant();
-		
+
 		if (assistant.isFunction(to))
 		{
 			if (type.equals(to) || assistant.isUnknown(to))
 			{
 				return this;
-			}
-			else
+			} else
 			{
 				AFunctionType restrictedType = assistant.getFunction(to);
-				
+
 				// Create a new function with restricted dom/rng
-				FunctionValue restricted = new FunctionValue(location, name, restrictedType,
-						paramPatternList, body, precondition, postcondition,
-						freeVariables, checkInvariants, curriedArgs,
-						measureName, measureValues,result);
+				FunctionValue restricted = new FunctionValue(location, name, restrictedType, paramPatternList, body, precondition, postcondition, freeVariables, checkInvariants, curriedArgs, measureName, measureValues, result);
 
 				restricted.typeValues = typeValues;
 				return restricted;
 			}
-		}
-		else
+		} else
 		{
 			return super.convertValueTo(to, ctxt);
 		}
@@ -740,13 +735,13 @@ public class FunctionValue extends Value
 		// Remove first set of parameters, and set the free variables instead.
 		// And adjust the return type to be the result type (a function).
 
-		return new FunctionValue(location, name, (AFunctionType) type.getResult(), paramPatternList.subList(1, paramPatternList.size()), body, precondition, postcondition, newFreeVariables, false, null, null, null,result);
+		return new FunctionValue(location, name, (AFunctionType) type.getResult(), paramPatternList.subList(1, paramPatternList.size()), body, precondition, postcondition, newFreeVariables, false, null, null, null, result);
 	}
 
 	@Override
 	public Object clone()
 	{
-		FunctionValue copy = new FunctionValue(location, name, type, paramPatternList, body, precondition, postcondition, freeVariables, checkInvariants, curriedArgs, measureName, measureValues,result);
+		FunctionValue copy = new FunctionValue(location, name, type, paramPatternList, body, precondition, postcondition, freeVariables, checkInvariants, curriedArgs, measureName, measureValues, result);
 
 		copy.typeValues = typeValues;
 		return copy;

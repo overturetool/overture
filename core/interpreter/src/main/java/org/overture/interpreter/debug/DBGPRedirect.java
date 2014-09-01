@@ -36,7 +36,7 @@ public enum DBGPRedirect
 
 	public static DBGPRedirect lookup(String string) throws DBGPException
 	{
-		for (DBGPRedirect cmd: values())
+		for (DBGPRedirect cmd : values())
 		{
 			if (cmd.value.equals(string))
 			{

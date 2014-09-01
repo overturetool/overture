@@ -34,7 +34,6 @@ import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
 
-
 public class NonEmptySetObligation extends ProofObligation
 {
 	/**
@@ -42,18 +41,18 @@ public class NonEmptySetObligation extends ProofObligation
 	 */
 	private static final long serialVersionUID = 6816002531259689986L;
 
-	public NonEmptySetObligation(PExp exp, IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
+	public NonEmptySetObligation(PExp exp, IPOContextStack ctxt,
+			IPogAssistantFactory af) throws AnalysisException
 	{
-		super(exp, POType.NON_EMPTY_SET, ctxt, exp.getLocation(),af);
-		
+		super(exp, POType.NON_EMPTY_SET, ctxt, exp.getLocation(), af);
+
 		// exp <> {}
-		
-		
+
 		ASetEnumSetExp setExp = new ASetEnumSetExp();
 		setExp.setMembers(new LinkedList<PExp>()); // empty list
-		
+
 		ANotEqualBinaryExp notEqualsExp = AstExpressionFactory.newANotEqualBinaryExp(exp.clone(), setExp);
-		
+
 		stitch = notEqualsExp;
 		valuetree.setPredicate(ctxt.getPredWithContext(notEqualsExp));
 	}

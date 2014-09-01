@@ -40,4 +40,3 @@ public class DBGPOption
 		return type + " " + value;
 	}
 }
-

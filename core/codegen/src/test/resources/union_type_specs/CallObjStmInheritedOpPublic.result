@@ -1,0 +1,51 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class A {
+    public A() {
+    }
+
+    public Number op(final Character a, final Number b) {
+        return 1L;
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class B extends A {
+    public B() {
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        Object obj = new B();
+        Object a = 'a';
+        Number b = 2L;
+
+        if (obj instanceof A) {
+            return ((A) obj).op(((Character) a), b);
+        } else if (obj instanceof B) {
+            return ((B) obj).op(((Character) a), b);
+        } else {
+            throw new RuntimeException("Missing operation member: op");
+        }
+    }
+}
+
+##########

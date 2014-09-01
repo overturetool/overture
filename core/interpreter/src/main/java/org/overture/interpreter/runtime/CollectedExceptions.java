@@ -4,7 +4,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
-public class CollectedExceptions extends RuntimeException implements ICollectedRuntimeExceptions
+public class CollectedExceptions extends RuntimeException implements
+		ICollectedRuntimeExceptions
 {
 	public final List<Exception> exceptions;
 
@@ -23,7 +24,8 @@ public class CollectedExceptions extends RuntimeException implements ICollectedR
 	 */
 	private static final long serialVersionUID = 1L;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.overture.interpreter.runtime.ICollectedRuntimeExceptions#getCollectedExceptions()
 	 */
 	@Override

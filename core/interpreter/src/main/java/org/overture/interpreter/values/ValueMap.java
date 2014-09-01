@@ -32,7 +32,6 @@ import java.util.Vector;
 
 import org.overture.interpreter.traces.PermuteArray;
 
-
 /**
  * A map of value/values.
  */
@@ -68,7 +67,7 @@ public class ValueMap extends LinkedHashMap<Value, Value>
 		sb.append("{");
 		String prefix = "";
 
-		for (Value key: this.keySet())
+		for (Value key : this.keySet())
 		{
 			sb.append(prefix);
 			sb.append(key);
@@ -86,10 +85,10 @@ public class ValueMap extends LinkedHashMap<Value, Value>
 	{
 		ValueMap copy = new ValueMap();
 
-		for (Value k: this.keySet())
+		for (Value k : this.keySet())
 		{
-			Value kcopy = (Value)k.clone();
-			Value vcopy = (Value)get(k).clone();
+			Value kcopy = (Value) k.clone();
+			Value vcopy = (Value) get(k).clone();
 			copy.put(kcopy, vcopy);
 		}
 
@@ -107,9 +106,8 @@ public class ValueMap extends LinkedHashMap<Value, Value>
 
 		if (size == 0)
 		{
-			results.add(new ValueMap());	// Just {|->}
-		}
-		else
+			results.add(new ValueMap()); // Just {|->}
+		} else
 		{
 			PermuteArray p = new PermuteArray(size);
 
@@ -118,10 +116,10 @@ public class ValueMap extends LinkedHashMap<Value, Value>
 				ValueMap m = new ValueMap();
 				int[] perm = p.next();
 
-				for (int i=0; i<size; i++)
+				for (int i = 0; i < size; i++)
 				{
 					@SuppressWarnings("unchecked")
-					Entry<Value, Value> entry = (Entry<Value, Value>)entries[perm[i]];
+					Entry<Value, Value> entry = (Entry<Value, Value>) entries[perm[i]];
 					m.put(entry.getKey(), entry.getValue());
 				}
 
