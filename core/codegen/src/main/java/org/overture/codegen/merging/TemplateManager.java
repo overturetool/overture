@@ -38,6 +38,7 @@ import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
+import org.overture.codegen.cgast.declarations.AThreadDeclCG;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
 import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AAddrEqualsBinaryExpCG;
@@ -227,6 +228,9 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(ACounterLocalDeclCG.class, templateStructure.DECL_PATH
 				+ "Counter");
+		
+		nodeTemplateFileNames.put(AThreadDeclCG.class, templateStructure.DECL_PATH 
+				+ "Thread");
 
 		// Local declarations
 
@@ -382,7 +386,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(ABreakStmCG.class, templateStructure.STM_PATH
 				+ "Break");
 		
-		nodeTemplateFileNames.put(AStartStmCG.class, templateStructure.STM_PATH + "Start");
+		nodeTemplateFileNames.put(AStartStmCG.class, templateStructure.STM_PATH 
+				+ "Start");
 		
 		// Expressions
 

@@ -113,6 +113,7 @@ CG {-> package='org.overture.codegen.cgast'
     	[functions]:CG.#decl.func*
     	[superName]:java_String
     	[records]:CG.#decl.record*
+    	[thread]:CG.#decl.thread
     |	{interface}
     	[templateTypes]:CG.#type.template*
     	[package]:java_String
@@ -125,6 +126,10 @@ CG {-> package='org.overture.codegen.cgast'
     	[fields]:field*
     	[methods]:CG.#decl.method*
     |	{empty}
+    |	{thread}
+    	[def]:CG.#decl
+    	[stm]:CG.#stm
+    	[type]:CG.#type
 	;
 
 #Local  {-> package='org.overture.codegen.cgast.declarations'}
@@ -187,7 +192,9 @@ CG {-> package='org.overture.codegen.cgast'
            |	{error}
            |	{continue}
            |	{break}
-           |	{start}[exp]:CG.#exp [type]:CG.#type
+           |	{start}
+           		[exp]:CG.#exp 
+           		//[type]:CG.#type
            ;
            
 #altStm {-> package='org.overture.codegen.cgast.statements'}

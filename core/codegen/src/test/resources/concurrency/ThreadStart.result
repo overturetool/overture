@@ -1,4 +1,23 @@
-null
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class ThreadClass {
+    public Number x = 0L;
+
+    public ThreadClass() {
+    }
+
+    public void setX() {
+        x = 2L;
+    }
+
+    public void run() {
+        setX();
+    }
+}
+
 ##########
 import org.overture.codegen.runtime.*;
 

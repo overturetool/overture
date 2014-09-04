@@ -25,16 +25,9 @@ import java.util.LinkedList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AAssignmentDefinition;
-import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
-
-import org.overture.ast.definitions.AThreadDefinition;
-import org.overture.ast.expressions.AElseIfExp;
-import org.overture.ast.expressions.AIfExp;
-
 import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.PDefinition;
-
 import org.overture.ast.expressions.ASelfExp;
 import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.PExp;
@@ -634,21 +627,18 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 	public SStmCG caseAStartStm(AStartStm node, IRInfo question)
 			throws AnalysisException
 	{
-		PType type = node.getType();
+		
 		PExp exp = node.getObj();
 		
-		System.out.print(exp);
-		
-		STypeCG typeCG = type.apply(question.getTypeVisitor(), question);
 		SExpCG expCG = exp.apply(question.getExpVisitor(), question);
 		
 		AStartStmCG thread = new AStartStmCG();
 		
-		thread.setExp(expCG);
-		thread.setType(typeCG);
+		//System.out.print(expCG);
 		
+		thread.setExp(expCG);
+				
 		return thread;
 		
-		//return null;
 	}
 }

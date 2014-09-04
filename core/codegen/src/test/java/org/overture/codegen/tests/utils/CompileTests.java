@@ -76,7 +76,7 @@ public class CompileTests
 	public static final boolean RUN_CONFIGURED_CLONE_TESTS = false;
 	public static final boolean RUN_PATTERN_TESTS = false;
 	public static final boolean RUN_UNION_TESTS = false;
-	public static final boolean RUN_CONCURRENCY_TESTS = true;
+	public static final boolean RUN_CONCURRENCY_TESTS = false;
 	public static final boolean RUN_BIND_TESTS = false;
 
 	private List<File> testInputFiles;

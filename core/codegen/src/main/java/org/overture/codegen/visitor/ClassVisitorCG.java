@@ -37,6 +37,7 @@ import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AFuncDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
+import org.overture.codegen.cgast.declarations.AThreadDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
@@ -148,7 +149,11 @@ public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
 			{
 				;// Empty declarations are used to indicate constructs that can be ignored during the
 					// construction of the OO AST.
-			} else
+			} else if (decl instanceof AThreadDeclCG)
+			{
+				classCg.setThread((AThreadDeclCG) decl);
+			}
+			else
 			{
 				throw new AnalysisExceptionCG("Unexpected definition in class: "
 						+ name + ": " + def.getName().getName(), def.getLocation());

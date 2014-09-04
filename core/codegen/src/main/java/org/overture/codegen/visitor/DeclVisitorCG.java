@@ -31,12 +31,15 @@ import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ANamedTraceDefinition;
+import org.overture.ast.definitions.AThreadDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.traces.ATraceDefinitionTerm;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOperationType;
@@ -55,6 +58,7 @@ import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AFuncDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
+import org.overture.codegen.cgast.declarations.AThreadDeclCG;
 import org.overture.codegen.cgast.expressions.ALambdaExpCG;
 import org.overture.codegen.cgast.expressions.ANotImplementedExpCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
@@ -374,5 +378,37 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 		SExpCG expCg = exp.apply(question.getExpVisitor(), question);
 
 		return question.getDeclAssistant().constructField(access, name, isStatic, isFinal, typeCg, expCg);
+	}
+	
+	@Override
+	public SDeclCG caseAThreadDefinition(AThreadDefinition node, IRInfo question)
+			throws AnalysisException
+	{
+		PDefinition def = node.getOperationDef();
+		PStm stm = node.getOperationDef().getBody();
+		//PType type = node.getType();
+		//System.out.print(def + "\n");
+		SDeclCG defCG = def.apply(question.getDeclVisitor(), question);
+		SStmCG stmCG = stm.apply(question.getStmVisitor(), question);
+		//STypeCG typeCG = type.apply(question.getTypeVisitor(),question);
+		
+		//System.out.print(stm.apply(question.getStmVisitor(),question) + "\n");
+		//System.out.print(defCG);
+		
+		AThreadDeclCG threaddcl = new AThreadDeclCG();
+		
+		
+		//System.out.print(threaddcl);
+		
+		threaddcl.setDef(defCG);
+		threaddcl.setStm(stmCG);
+//		threaddcl.setType(typeCG);
+		
+		
+		System.out.print(threaddcl+"\n");
+		
+		//System.out.print(threaddcl.getStatement());
+		
+		return threaddcl;
 	}
 }

@@ -16,6 +16,10 @@ $quoteImport
 #if ($node.getStatic())
 	#set( $static = "static")
 #end
+#set( $threadMethod = "")
+#if (!$JavaFormat.isNull($node.getThread()))
+	#set( $threadMethod = $JavaFormat.format($node.getThread()))
+#end
 
 $abstract $node.getAccess() $static class $node.getName() $JavaFormat.formatSuperType($node)
 {
@@ -30,4 +34,6 @@ $abstract $node.getAccess() $static class $node.getName() $JavaFormat.formatSupe
 	#foreach( $innerClass in $node.getRecords() )
 	$JavaFormat.format($innerClass)
 	#end
+	##
+	${threadMethod}##
 }
