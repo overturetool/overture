@@ -27,6 +27,7 @@ import org.overture.ast.expressions.AEqualsBinaryExp;
 import org.overture.ast.expressions.AEquivalentBooleanBinaryExp;
 import org.overture.ast.expressions.AExists1Exp;
 import org.overture.ast.expressions.AExistsExp;
+import org.overture.ast.expressions.AFieldExp;
 import org.overture.ast.expressions.AFloorUnaryExp;
 import org.overture.ast.expressions.AForAllExp;
 import org.overture.ast.expressions.AGreaterEqualNumericBinaryExp;
@@ -93,11 +94,14 @@ import org.overture.ast.expressions.ATimesNumericBinaryExp;
 import org.overture.ast.expressions.ATupleExp;
 import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.AVariableExp;
+import org.overture.ast.expressions.PExp;
+import org.overture.ast.intf.lex.ILexIdentifierToken;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.types.ACharBasicType;
+import org.overture.ast.types.AFieldField;
 
 class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		implements IPrettyPrinter
@@ -1483,8 +1487,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		sb.append(leftpar);
 		sb.append(func);
 		
-		//System.out.print(node.getArgs().size());
-		
 		while (node.getArgs().size() != 0){
 			if(node.getArgs().size() > 1){
 				arg = node.getArgs().poll().apply(THIS, question);
@@ -1542,7 +1544,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		sb.append(exp);
 		
 		sb.append(rightpar);
-		//System.out.print(sb);
 		
 		return sb.toString();
 	}
@@ -1554,6 +1555,40 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		return node.toString();
 	}
 	
+	@Override
+	public String caseAFieldExp(AFieldExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		String exp = node.getObject().apply(THIS, question);
+		String field = node.getField().getClassName().toString();//.apply(THIS, question);
+		
+		String op = mytable.getPOINT();
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append(exp);
+		sb.append(op);
+		sb.append(field);
+		//System.out.print(node.getField().getClassName());
+		
+		return sb.toString();
+	}
+	
+//	@Override
+//	public String caseAFieldField(AFieldField node, IndentTracker question)
+//			throws AnalysisException
+//	{
+//		return node.getTag().toString();
+//	}
+	
+	
+//	@Override
+//	public String caseILexIdentifierToken(ILexIdentifierToken node,
+//			IndentTracker question) throws AnalysisException
+//	{
+//		String fieldname = node.getClassName().apply(THIS, question);
+//		
+//		return fieldname;
+//	}
 	
 	@Override
 	public String caseACharLiteralExp(ACharLiteralExp node,

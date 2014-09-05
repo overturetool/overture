@@ -1444,4 +1444,10 @@ public class ExpressionNppTest {
 		aux("threadid", "threadid");
 	}
 	
+	@Test
+	public void testCaseAFieldExp_01() throws AnalysisException
+	{
+		aux("s.field1","s.field1");
+	}
+	
 }
