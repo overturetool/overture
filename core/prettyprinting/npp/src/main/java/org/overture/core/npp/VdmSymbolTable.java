@@ -537,4 +537,10 @@ public class VdmSymbolTable implements ISymbolTable
 	{
 		return "mk_";
 	}
+	
+	@Override
+	public String getNARROW()
+	{
+		return "narrow_";
+	}
 }

@@ -1450,4 +1450,10 @@ public class ExpressionNppTest {
 		aux("s.field1","s.field1");
 	}
 	
+	@Test
+	public void testCaseAFuncinstanciation_01() throws AnalysisException
+	{
+		aux("narrow_(e,C1)", "narrow_(e,C1)");
+	}
+	
 }

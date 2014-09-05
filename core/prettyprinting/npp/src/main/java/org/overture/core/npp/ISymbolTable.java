@@ -179,5 +179,7 @@ public interface ISymbolTable
 	
 	String getTUPLE();
 	
+	String getNARROW();
+	
 
 }

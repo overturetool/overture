@@ -28,8 +28,10 @@ import org.overture.ast.expressions.AEquivalentBooleanBinaryExp;
 import org.overture.ast.expressions.AExists1Exp;
 import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.AFieldExp;
+import org.overture.ast.expressions.AFieldNumberExp;
 import org.overture.ast.expressions.AFloorUnaryExp;
 import org.overture.ast.expressions.AForAllExp;
+import org.overture.ast.expressions.AFuncInstatiationExp;
 import org.overture.ast.expressions.AGreaterEqualNumericBinaryExp;
 import org.overture.ast.expressions.AGreaterNumericBinaryExp;
 import org.overture.ast.expressions.AHeadUnaryExp;
@@ -59,6 +61,7 @@ import org.overture.ast.expressions.AMapletExp;
 import org.overture.ast.expressions.AMkBasicExp;
 import org.overture.ast.expressions.AModNumericBinaryExp;
 import org.overture.ast.expressions.AMuExp;
+import org.overture.ast.expressions.ANarrowExp;
 import org.overture.ast.expressions.ANotEqualBinaryExp;
 import org.overture.ast.expressions.ANotInSetBinaryExp;
 import org.overture.ast.expressions.AOrBooleanBinaryExp;
@@ -100,6 +103,7 @@ import org.overture.ast.node.INode;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.ATypeBind;
+import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.ACharBasicType;
 import org.overture.ast.types.AFieldField;
 
@@ -1570,8 +1574,50 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		sb.append(field);
 		//System.out.print(node.getField().getClassName());
 		
+		return sb.toString();//Utilities.append(exp, field, op);
+	}
+	
+	@Override
+	public String caseAFieldNumberExp(AFieldNumberExp node,
+			IndentTracker question) throws AnalysisException
+	{
+		String tuple = node.getTuple().apply(THIS, question);
+		String field = node.getField().toString();
+		
+		return tuple+"."+field;
+	}
+	
+	@Override
+	public String caseANarrowExp(ANarrowExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		String exp = node.getTest().apply(THIS, question);
+		
+		String type = node.getTypeName().toString();//.apply(THIS,question);
+		System.out.print(type);
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(mytable.getNARROW());
+		sb.append(leftpar);
+		sb.append(exp);
+		sb.append(mytable.getCOMMA());
+		sb.append(type);
+		sb.append(rightpar);
+		
 		return sb.toString();
 	}
+	
+//	@Override
+//	public String caseAFuncInstatiationExp(AFuncInstatiationExp node,
+//			IndentTracker question) throws AnalysisException
+//	{
+//		String exp = node.getFunction().apply(THIS, question);
+//		
+//		System.out.print(exp);
+//		
+//		return exp;
+//	}
 	
 //	@Override
 //	public String caseAFieldField(AFieldField node, IndentTracker question)
