@@ -106,6 +106,8 @@ import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.ACharBasicType;
 import org.overture.ast.types.AFieldField;
+import org.overture.ast.types.ANatNumericBasicType;
+import org.overture.ast.types.ANatOneNumericBasicType;
 
 class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		implements IPrettyPrinter
@@ -1594,7 +1596,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String exp = node.getTest().apply(THIS, question);
 		
 		String type = node.getTypeName().toString();//.apply(THIS,question);
-		System.out.print(type);
+		//System.out.print(type);
 		
 		StringBuilder sb = new StringBuilder();
 		
@@ -1607,6 +1609,8 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		
 		return sb.toString();
 	}
+	
+	
 	
 //	@Override
 //	public String caseAFuncInstatiationExp(AFuncInstatiationExp node,
@@ -1655,6 +1659,20 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 			throws AnalysisException
 	{
 		return Long.toString(node.getValue().getValue());
+	}
+	
+	@Override
+	public String caseANatOneNumericBasicType(ANatOneNumericBasicType node,
+			IndentTracker question) throws AnalysisException
+	{
+		return node.toString();
+	}
+	
+	@Override
+	public String caseANatNumericBasicType(ANatNumericBasicType node,
+			IndentTracker question) throws AnalysisException
+	{
+		return node.toString();
 	}
 	
 	@Override
