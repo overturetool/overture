@@ -5,6 +5,7 @@ import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.node.INode;
+import org.overture.ast.patterns.PBind;
 
 /**
  * The Class PrettyPrinter is the main visitor for the VDM pretty printer package. It handles dispatching of nodes and
@@ -27,7 +28,8 @@ public class NewPrettyPrinter extends
 	 */
 	ISymbolTable mytable;
 	ExpressionNpp expPrinter;
-	DefinitionNpp defPrinter; 
+	DefinitionNpp defPrinter;
+	BindingsNpp bindPrinter;
 
 	// PatternNpp
 	// BindNpp...
@@ -61,6 +63,7 @@ public class NewPrettyPrinter extends
 		mytable = nsTable;
 		expPrinter = new ExpressionNpp(this, nsTable);
 		defPrinter = new DefinitionNpp(this, nsTable);
+		bindPrinter = new BindingsNpp(this, nsTable);
 
 	}
 
@@ -86,6 +89,15 @@ public class NewPrettyPrinter extends
 			throws AnalysisException
 	{
 		return node.apply(defPrinter, question);
+	}
+	
+	
+	
+	@Override
+	public String defaultPBind(PBind node, IndentTracker question)
+			throws AnalysisException
+	{
+		return node.apply(bindPrinter,question);
 	}
 
 	

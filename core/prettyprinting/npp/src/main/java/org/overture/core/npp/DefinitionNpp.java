@@ -3,12 +3,8 @@ package org.overture.core.npp;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
-import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.expressions.ARecordModifier;
-import org.overture.ast.modules.AOperationExport;
 import org.overture.ast.node.INode;
-import org.overture.ast.types.AOperationType;
 
 public class DefinitionNpp extends QuestionAnswerAdaptor<IndentTracker, String> implements
 		IPrettyPrinter
@@ -48,8 +44,26 @@ public class DefinitionNpp extends QuestionAnswerAdaptor<IndentTracker, String> 
 		String body = node.getBody().toString();
 		String precond = rootNpp.defaultPExp(node.getPrecondition(), question);
 		String postcond = rootNpp.defaultPExp(node.getPostcondition(), question);
+		String args = node.getParamDefinitions().toString();
 		
-		return null;
+		String access = node.getAccess().toString();
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(access);
+		sb.append(space);
+		sb.append(name);
+		sb.append(mytable.getCOLON());
+		sb.append(args);
+		sb.append("\n");
+		sb.append("(");
+		sb.append(body);
+		sb.append(")");
+		sb.append(precond);
+		sb.append("\n");
+		sb.append(postcond);
+		
+		return sb.toString();
 	}
 
 	@Override
