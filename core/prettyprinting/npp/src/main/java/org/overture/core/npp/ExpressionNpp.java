@@ -635,20 +635,21 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		
 		return sb.toString();
 	}
+	
 //	@Override
-	public String caseASetBind(ASetBind node, IndentTracker question)
-			throws AnalysisException
-	{
-		StringBuilder sb = new StringBuilder();
-		
-		sb.append(node.getPattern().toString());
-		sb.append(space);
-		sb.append(mytable.getINSET());
-		sb.append(space);
-		sb.append(node.getSet().apply(THIS, question));
-		
-		return sb.toString();
-	}
+//	public String caseASetBind(ASetBind node, IndentTracker question)
+//			throws AnalysisException
+//	{
+//		StringBuilder sb = new StringBuilder();
+//		
+//		sb.append(node.getPattern().toString());
+//		sb.append(space);
+//		sb.append(mytable.getINSET());
+//		sb.append(space);
+//		sb.append(node.getSet().apply(THIS, question));
+//		
+//		return sb.toString();
+//	}
 	
 	@Override
 	public String caseAExistsExp(AExistsExp node, IndentTracker question)
@@ -694,7 +695,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	public String caseAExists1Exp(AExists1Exp node, IndentTracker question)
 			throws AnalysisException
 	{
-		String binding = node.getBind().apply(THIS, question);
+		String binding = rootNpp.defaultPBind(node.getBind(), question);//node.getBind().apply(THIS, question);
 		String pred = node.getPredicate().apply(THIS, question);
 		String op = mytable.getEXISTS1();
 		
@@ -758,7 +759,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	public String caseAIotaExp(AIotaExp node, IndentTracker question)
 			throws AnalysisException
 	{
-		String binding = node.getBind().apply(THIS, question);
+		String binding = rootNpp.defaultPBind(node.getBind(), question);//node.getBind().apply(THIS, question);
 		String pred = node.getPredicate().apply(THIS, question);
 		String op = mytable.getIOTA();
 		
@@ -790,7 +791,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 			throws AnalysisException
 	{
 		String exp = node.getFirst().apply(THIS, question);
-		String bind = node.getSetBind().apply(THIS, question);
+		String bind = rootNpp.defaultPBind(node.getSetBind(), question);//node.getSetBind().apply(THIS, question);
 		String pred = node.getPredicate().apply(THIS, question);
 		
 		StringBuilder sb = new StringBuilder();
