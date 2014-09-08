@@ -2,10 +2,13 @@ package org.overture.core.npp;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.ARecordModifier;
+import org.overture.ast.modules.AOperationExport;
 import org.overture.ast.node.INode;
+import org.overture.ast.types.AOperationType;
 
 public class DefinitionNpp extends QuestionAnswerAdaptor<IndentTracker, String> implements
 		IPrettyPrinter
@@ -29,19 +32,24 @@ public class DefinitionNpp extends QuestionAnswerAdaptor<IndentTracker, String> 
 		mytable = nst;
 	}
 	
-	
-//	@Override
-//	public String caseAValueDefinition(AValueDefinition node,
-//			IndentTracker question) throws AnalysisException
-//	{
-//		return node.toString();
-//	}
-	
 	@Override
 	public String defaultPDefinition(PDefinition node, IndentTracker question)
 			throws AnalysisException
 	{
 		return node.toString();
+	}
+	
+	@Override
+	public String caseAExplicitOperationDefinition(
+			AExplicitOperationDefinition node, IndentTracker question)
+			throws AnalysisException
+	{
+		String name = node.getName().toString();
+		String body = node.getBody().toString();
+		String precond = rootNpp.defaultPExp(node.getPrecondition(), question);
+		String postcond = rootNpp.defaultPExp(node.getPostcondition(), question);
+		
+		return null;
 	}
 
 	@Override

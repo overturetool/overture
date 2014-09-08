@@ -67,8 +67,10 @@ import org.overture.ast.expressions.ANotInSetBinaryExp;
 import org.overture.ast.expressions.AOrBooleanBinaryExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
 import org.overture.ast.expressions.APlusPlusBinaryExp;
+import org.overture.ast.expressions.APostOpExp;
 import org.overture.ast.expressions.APowerSetUnaryExp;
 import org.overture.ast.expressions.APreExp;
+import org.overture.ast.expressions.APreOpExp;
 import org.overture.ast.expressions.AProperSubsetBinaryExp;
 import org.overture.ast.expressions.AQuoteLiteralExp;
 import org.overture.ast.expressions.ARangeResByBinaryExp;
@@ -1610,7 +1612,37 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		return sb.toString();
 	}
 	
+	@Override
+	public String caseAPostOpExp(APostOpExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		String exp = node.getPostexpression().apply(THIS, question);
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(mytable.getPOSTOP());
+		sb.append(space);
+		sb.append(exp);
+		
+		return sb.toString();
+	}
 	
+	@Override
+	public String caseAPreOpExp(APreOpExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		String exp = node.getExpression().apply(THIS, question);
+		
+		System.out.print(exp);
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(mytable.getPREOP());
+		sb.append(space);
+		sb.append(exp);
+		
+		return sb.toString();
+	}
 	
 //	@Override
 //	public String caseAFuncInstatiationExp(AFuncInstatiationExp node,

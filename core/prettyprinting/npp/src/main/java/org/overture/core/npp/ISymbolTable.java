@@ -181,5 +181,9 @@ public interface ISymbolTable
 	
 	String getNARROW();
 	
+	String getPOSTOP();
+	
+	String getPREOP();
+	
 
 }

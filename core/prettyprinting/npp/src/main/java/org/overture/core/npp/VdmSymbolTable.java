@@ -543,4 +543,16 @@ public class VdmSymbolTable implements ISymbolTable
 	{
 		return "narrow_";
 	}
+	
+	@Override
+	public String getPOSTOP()
+	{
+		return "post";
+	}
+	
+	@Override
+	public String getPREOP()
+	{
+		return "pre";
+	}
 }

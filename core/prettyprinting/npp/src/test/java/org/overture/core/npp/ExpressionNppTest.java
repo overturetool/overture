@@ -1453,7 +1453,19 @@ public class ExpressionNppTest {
 	@Test
 	public void testCaseAFuncinstanciation_01() throws AnalysisException
 	{
-		aux("narrow_(e,C1)", "narrow_(e,C1)");
+		aux("narrow_(e,C1)","narrow_(e,C1)");
 	}
+	
+//	@Test
+//	public void testCaseAPostOpExp_01() throws AnalysisException
+//	{
+//		aux("post exists x in set y & x > 1", "post exist x in set y & (x > 1)");
+//	}
+	
+//	@Test
+//	public void testCaseAPreOpExp_01() throws AnalysisException
+//	{
+//		aux("pre_b = 2", "(pre_b = 2)");
+//	}
 	
 }
