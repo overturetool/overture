@@ -3,6 +3,7 @@ package org.overture.core.npp;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.node.INode;
+import org.overture.ast.patterns.ATypeBind;
 
 public class BindingsNpp extends QuestionAnswerAdaptor<IndentTracker, String> implements
 		IPrettyPrinter
@@ -24,6 +25,17 @@ public class BindingsNpp extends QuestionAnswerAdaptor<IndentTracker, String> im
 	{
 		rootNpp = root;
 		mytable = nst;
+	}
+	
+	@Override
+	public String caseATypeBind(ATypeBind node, IndentTracker question)
+			throws AnalysisException
+	{
+		String pattern = node.getPattern().toString();
+		String type = node.getType().toString();
+		String binding = mytable.getCOLON();
+		
+		return Utilities.append(pattern, type, binding);
 	}
 	
 	@Override

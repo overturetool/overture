@@ -316,14 +316,16 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		
 		while (node.getBindList().size() != 0){
 			if(node.getBindList().size() > 1){
-				bind = node.getBindList().poll().apply(THIS, question);
+				//bind = node.getBindList().poll().apply(THIS, question);
+				bind = rootNpp.defaultPBind(node.getBindList().poll(), question);
 				
 				sb.append(bind);
 				sb.append(mytable.getCOMMA());
 				sb.append(space);
 			}
 			else{
-				bind = node.getBindList().poll().apply(THIS, question);
+				//bind = node.getBindList().poll().apply(THIS, question);
+				bind = rootNpp.defaultPBind(node.getBindList().poll(), question);
 				sb.append(bind);
 				sb.append(space);
 			}
@@ -337,16 +339,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		return sb.toString();
 	}
 	
-	@Override
-	public String caseATypeBind(ATypeBind node, IndentTracker question)
-			throws AnalysisException
-	{
-		String pattern = node.getPattern().toString();
-		String type = node.getType().toString();
-		String binding = mytable.getCOLON();
-		
-		return Utilities.append(pattern, type, binding);
-	}
+	
 //	@Override
 //	public String caseANotUnaryExp(ANotUnaryExp node, IndentTracker question)
 //			throws AnalysisException
