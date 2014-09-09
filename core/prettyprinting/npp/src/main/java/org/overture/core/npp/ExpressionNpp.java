@@ -97,9 +97,7 @@ import org.overture.ast.expressions.ATupleExp;
 import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.node.INode;
-import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ASetMultipleBind;
-import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.types.ACharBasicType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
@@ -338,23 +336,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		
 		return sb.toString();
 	}
-	
-	
-//	@Override
-//	public String caseANotUnaryExp(ANotUnaryExp node, IndentTracker question)
-//			throws AnalysisException
-//	{
-//		String r = node.getExp().apply(THIS, question);
-//		String op = mytable.getMINUS();
-//		
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append(op);
-//		sb.append(r);
-//		return sb.toString();
-//		
-//		//return Utilities.wrap(Utilities.unaryappend(r, op));
-//	}
 	
 
 	@Override
@@ -636,26 +617,13 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		return sb.toString();
 	}
 	
-//	@Override
-//	public String caseASetBind(ASetBind node, IndentTracker question)
-//			throws AnalysisException
-//	{
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append(node.getPattern().toString());
-//		sb.append(space);
-//		sb.append(mytable.getINSET());
-//		sb.append(space);
-//		sb.append(node.getSet().apply(THIS, question));
-//		
-//		return sb.toString();
-//	}
-	
+
 	@Override
 	public String caseAExistsExp(AExistsExp node, IndentTracker question)
 			throws AnalysisException
 	{
 		String op = mytable.getEXISTS();
+		String binding;
 		
 		StringBuilder sb = new StringBuilder();
 		
@@ -664,15 +632,17 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		
 		while (node.getBindList().size() != 0){
 			if (node.getBindList().size() > 1){
-				String binding = node.getBindList().getFirst().apply(THIS, question);
+				binding = node.getBindList().getFirst().apply(THIS, question);
+				//binding = rootNpp.defaultPBind(node.getBindList().poll(), question);
 				sb.append(binding);
 				sb.append(mytable.getCOMMA());
 				sb.append(space);
 				node.getBindList().removeFirst();
 			}
 			else{
-				String binding = node.getBindList().getFirst().apply(THIS, question);
+				binding = node.getBindList().getFirst().apply(THIS, question);
 		
+				//binding = rootNpp.defaultPBind(node.getBindList().poll(), question);
 				sb.append(binding);
 		
 				node.getBindList().removeFirst();
@@ -1097,7 +1067,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		sb.append(mytable.getCOLON());
 		sb.append(space); 
 		
-		//System.out.print(node.getCases().getFirst().toString());
 		
 		while(node.getCases().size() !=0){
 			
@@ -1109,7 +1078,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 				sb.append(mytable.getCOMMA());
 			}
 			
-			//sb.append(space);
 		}
 		if (node.getOthers() != null)
 		{
@@ -1176,7 +1144,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		sb.append(mytable.getELSE());
 		sb.append(space);
 		sb.append(exp2);
-		//System.out.print(sb.toString()+"\n");
 		return sb.toString();
 	}
 	
@@ -1212,7 +1179,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		StringBuilder sb2 = new StringBuilder();
 		
 		sb1.append("mu");
-		//sb1.append(space);
 		
 		sb2.append(exp);
 		sb2.append(mytable.getCOMMA());
@@ -1221,7 +1187,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		while (node.getModifiers().size() != 0){
 			if (node.getModifiers().size() > 1){
 				
-				mod = node.getModifiers().poll().apply(THIS, question);//.toString();
+				mod = node.getModifiers().poll().apply(THIS, question);
 				
 				sb2.append(mod);
 				sb2.append(mytable.getCOMMA());
@@ -1229,7 +1195,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 			}
 			else
 			{
-				mod = node.getModifiers().poll().apply(THIS, question);//.toString();//.apply(THIS, question);
+				mod = node.getModifiers().poll().apply(THIS, question);
 				
 				sb2.append(mod);
 			}
@@ -1258,7 +1224,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 
 			if (node.getLocalDefs().size() > 1){
 				
-				//def = node.getLocalDefs().poll().apply(THIS,question);
 				def = rootNpp.defaultPDefinition(node.getLocalDefs().poll(), question);
 				sb.append(def);
 				sb.append(mytable.getCOMMA());
@@ -1266,7 +1231,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 			}
 			else
 			{
-				//def = node.getLocalDefs().poll().apply(THIS, question);
 				def = rootNpp.defaultPDefinition(node.getLocalDefs().poll(), question);
 				sb.append(def);
 				sb.append(space);
@@ -1337,7 +1301,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		while(node.getLocalDefs().size() != 0){
 			if(node.getLocalDefs().size() >1)
 			{
-				//def = node.getLocalDefs().poll().apply(THIS, question);
 				def = rootNpp.defaultPDefinition(node.getLocalDefs().poll(), question);
 				sb.append(def);
 				sb.append(mytable.getSEP());
@@ -1345,7 +1308,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 			}
 			else
 			{
-				//def = node.getLocalDefs().poll().apply(THIS, question);
+				
 				def = rootNpp.defaultPDefinition(node.getLocalDefs().poll(), question);
 				
 				sb.append(def);
@@ -1370,11 +1333,10 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		String type;
 		if (node.getBasicType() == null)
 		{
-			//System.out.print(node.getTypeName().getClass().toString());
 			type = node.getTypeName().toString();
 		}
 		else
-		{	//System.out.print(node.getBasicType().getClass() + "\n");
+		{	
 			type = node.getBasicType().toString();
 		}
 		
@@ -1387,7 +1349,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		sb.append(mytable.getCOMMA());
 		sb.append(type);
 		sb.append(rightpar);
-		//System.out.print(sb.toString()+"\n");
+
 		return sb.toString();
 	}
 	
@@ -1555,7 +1517,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 			throws AnalysisException
 	{
 		String exp = node.getObject().apply(THIS, question);
-		String field = node.getField().getClassName().toString();//.apply(THIS, question);
+		String field = node.getField().getClassName().toString();
 		
 		String op = mytable.getPOINT();
 		
@@ -1563,9 +1525,8 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		sb.append(exp);
 		sb.append(op);
 		sb.append(field);
-		//System.out.print(node.getField().getClassName());
 		
-		return sb.toString();//Utilities.append(exp, field, op);
+		return sb.toString();
 	}
 	
 	@Override
@@ -1584,8 +1545,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	{
 		String exp = node.getTest().apply(THIS, question);
 		
-		String type = node.getTypeName().toString();//.apply(THIS,question);
-		//System.out.print(type);
+		String type = node.getTypeName().toString();
 		
 		StringBuilder sb = new StringBuilder();
 		
@@ -1631,33 +1591,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		return sb.toString();
 	}
 	
-//	@Override
-//	public String caseAFuncInstatiationExp(AFuncInstatiationExp node,
-//			IndentTracker question) throws AnalysisException
-//	{
-//		String exp = node.getFunction().apply(THIS, question);
-//		
-//		System.out.print(exp);
-//		
-//		return exp;
-//	}
-	
-//	@Override
-//	public String caseAFieldField(AFieldField node, IndentTracker question)
-//			throws AnalysisException
-//	{
-//		return node.getTag().toString();
-//	}
-	
-	
-//	@Override
-//	public String caseILexIdentifierToken(ILexIdentifierToken node,
-//			IndentTracker question) throws AnalysisException
-//	{
-//		String fieldname = node.getClassName().apply(THIS, question);
-//		
-//		return fieldname;
-//	}
 	
 	@Override
 	public String caseACharLiteralExp(ACharLiteralExp node,
