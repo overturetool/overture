@@ -28,6 +28,7 @@ import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
+import org.overture.ast.definitions.APerSyncDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
@@ -62,6 +63,7 @@ import org.overture.ast.expressions.AFuncInstatiationExp;
 import org.overture.ast.expressions.AGreaterEqualNumericBinaryExp;
 import org.overture.ast.expressions.AGreaterNumericBinaryExp;
 import org.overture.ast.expressions.AHeadUnaryExp;
+import org.overture.ast.expressions.AHistoryExp;
 import org.overture.ast.expressions.AIfExp;
 import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.AInSetBinaryExp;
@@ -126,6 +128,7 @@ import org.overture.ast.expressions.AUnaryPlusUnaryExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SBinaryExp;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ASetMultipleBind;
@@ -1764,5 +1767,15 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		}
 
 		return lambdaExp;
+	}
+	
+	@Override
+	public SExpCG caseAHistoryExp(AHistoryExp node, IRInfo question)
+			throws AnalysisException
+	{
+		PType type = node.getType();
+		System.out.print(type);
+		
+		return null;
 	}
 }

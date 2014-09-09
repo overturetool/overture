@@ -31,6 +31,7 @@ import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ANamedTraceDefinition;
+import org.overture.ast.definitions.APerSyncDefinition;
 import org.overture.ast.definitions.AThreadDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
@@ -384,31 +385,31 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 	public SDeclCG caseAThreadDefinition(AThreadDefinition node, IRInfo question)
 			throws AnalysisException
 	{
-		PDefinition def = node.getOperationDef();
+
 		PStm stm = node.getOperationDef().getBody();
-		//PType type = node.getType();
-		//System.out.print(def + "\n");
-		SDeclCG defCG = def.apply(question.getDeclVisitor(), question);
-		SStmCG stmCG = stm.apply(question.getStmVisitor(), question);
-		//STypeCG typeCG = type.apply(question.getTypeVisitor(),question);
 		
-		//System.out.print(stm.apply(question.getStmVisitor(),question) + "\n");
-		//System.out.print(defCG);
+		SStmCG stmCG = stm.apply(question.getStmVisitor(), question);
+		
 		
 		AThreadDeclCG threaddcl = new AThreadDeclCG();
-		
-		
-		//System.out.print(threaddcl);
-		
-		threaddcl.setDef(defCG);
+	
 		threaddcl.setStm(stmCG);
-//		threaddcl.setType(typeCG);
-		
-		
-		System.out.print(threaddcl+"\n");
-		
-		//System.out.print(threaddcl.getStatement());
+
 		
 		return threaddcl;
+	}
+	
+	@Override
+	public SDeclCG caseAPerSyncDefinition(APerSyncDefinition node,
+			IRInfo question) throws AnalysisException
+	{
+		PExp exp = node.getGuard();
+		//PType type = node.getType();
+		ILexNameToken opname = node.getOpname();
+		//exp.apply(THIS, question);
+		
+		System.out.print(exp + " "+ opname+"\n");
+		
+		return null;
 	}
 }
