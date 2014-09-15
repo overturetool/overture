@@ -24,6 +24,7 @@ public setX : () ==> ()
 
 setX () ==
 
+<<<<<<< HEAD
        x := 2;
 
  
@@ -32,6 +33,8 @@ end ThreadClass
 
  
 
+=======
+>>>>>>> ed9024c... the sentinel class.
 class Entry
 
  
