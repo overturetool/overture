@@ -53,16 +53,17 @@ public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
 	public ClassVisitorCG()
 	{
 	}
-	
+
 	@Override
-	public AClassDeclCG caseAClassClassDefinition(AClassClassDefinition node, IRInfo question) throws AnalysisException
+	public AClassDeclCG caseAClassClassDefinition(AClassClassDefinition node,
+			IRInfo question) throws AnalysisException
 	{
 		String name = node.getName().getName();
 		String access = node.getAccess().getAccess().toString();
 		boolean isAbstract = node.getIsAbstract();
 		boolean isStatic = false;
 		LinkedList<ILexNameToken> superNames = node.getSupernames();
-		
+
 		AClassDeclCG classCg = new AClassDeclCG();
 		classCg.setPackage(null);
 		classCg.setName(name);
@@ -70,123 +71,121 @@ public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
 		classCg.setAbstract(isAbstract);
 		classCg.setStatic(isStatic);
 		classCg.setStatic(false);
-		
-		if(superNames.size() >= 1)
+
+		if (superNames.size() >= 1)
 		{
 			classCg.setSuperName(superNames.get(0).getName());
 		}
-		
+
 		LinkedList<PDefinition> defs = node.getDefinitions();
-		
+
 		LinkedList<AFieldDeclCG> fields = classCg.getFields();
 		LinkedList<AMethodDeclCG> methods = classCg.getMethods();
 		LinkedList<ARecordDeclCG> innerClasses = classCg.getRecords();
 		LinkedList<AFuncDeclCG> functions = classCg.getFunctions();
-		
+
 		for (PDefinition def : defs)
 		{
 			SDeclCG decl = def.apply(question.getDeclVisitor(), question);
-		
-			if(decl == null)
+
+			if (decl == null)
 			{
-				continue;//Unspported stuff returns null by default
+				continue;// Unspported stuff returns null by default
 			}
-			if(decl instanceof AFieldDeclCG)
+			if (decl instanceof AFieldDeclCG)
 			{
 				fields.add((AFieldDeclCG) decl);
-			}
-			else if(decl instanceof AMethodDeclCG)
+			} else if (decl instanceof AMethodDeclCG)
 			{
-				
+
 				AMethodDeclCG method = (AMethodDeclCG) decl;
-				
-				if(method.getIsConstructor())
+
+				if (method.getIsConstructor())
 				{
 					String initName = question.getObjectInitializerCall((AExplicitOperationDefinition) def);
-					
+
 					AMethodDeclCG objInitializer = method.clone();
 					objInitializer.setName(initName);
 					objInitializer.getMethodType().setResult(new AVoidTypeCG());
-					objInitializer.setIsConstructor(false); 
-					
+					objInitializer.setIsConstructor(false);
+
 					methods.add(objInitializer);
-					
+
 					ACallStmCG initCall = new ACallStmCG();
 					initCall.setType(objInitializer.getMethodType().getResult().clone());
 					initCall.setClassType(null);
 					initCall.setName(initName);
-					
-					for(AFormalParamLocalParamCG param : method.getFormalParams())
+
+					for (AFormalParamLocalParamCG param : method.getFormalParams())
 					{
 						SPatternCG pattern = param.getPattern();
-						
-						if(pattern instanceof AIdentifierPatternCG)
+
+						if (pattern instanceof AIdentifierPatternCG)
 						{
 							AIdentifierPatternCG idPattern = (AIdentifierPatternCG) pattern;
-							
+
 							AIdentifierVarExpCG var = new AIdentifierVarExpCG();
 							var.setType(param.getType().clone());
 							var.setOriginal(idPattern.getName());
 							var.setIsLambda(false);
 							var.setSourceNode(pattern.getSourceNode());
-							
-							initCall.getArgs().add(var);							
+
+							initCall.getArgs().add(var);
 						}
 					}
-					
+
 					method.setBody(initCall);
 				}
-				
+
 				methods.add(method);
-			}
-			else if(decl instanceof ARecordDeclCG)
+			} else if (decl instanceof ARecordDeclCG)
 			{
 				innerClasses.add((ARecordDeclCG) decl);
-			}
-			else if(decl instanceof AFuncDeclCG)
+			} else if (decl instanceof AFuncDeclCG)
 			{
 				functions.add((AFuncDeclCG) decl);
-			}
-			else if(decl instanceof AEmptyDeclCG)
-			;//Empty declarations are used to indicate constructs that can be ignored during the
-			 //construction of the OO AST. 
-			else
+			} else if (decl instanceof AEmptyDeclCG)
 			{
-				throw new AnalysisExceptionCG("Unexpected definition in class: " + name + ": " + def.getName().getName(), def.getLocation());
+				;// Empty declarations are used to indicate constructs that can be ignored during the
+					// construction of the OO AST.
+			} else
+			{
+				throw new AnalysisExceptionCG("Unexpected definition in class: "
+						+ name + ": " + def.getName().getName(), def.getLocation());
 			}
 		}
-		
+
 		boolean defaultConstructorExplicit = false;
-		for(AMethodDeclCG method : methods)
+		for (AMethodDeclCG method : methods)
 		{
-			if(method.getIsConstructor() && method.getFormalParams().isEmpty())
+			if (method.getIsConstructor() && method.getFormalParams().isEmpty())
 			{
 				defaultConstructorExplicit = true;
 				break;
 			}
 		}
-		
-		if(!defaultConstructorExplicit)
+
+		if (!defaultConstructorExplicit)
 		{
 			AMethodDeclCG constructor = new AMethodDeclCG();
 
 			AClassTypeCG classType = new AClassTypeCG();
 			classType.setName(name);
-			
+
 			AMethodTypeCG methodType = new AMethodTypeCG();
 			methodType.setResult(classType);
-			
+
 			constructor.setMethodType(methodType);
 			constructor.setAccess(IRConstants.PUBLIC);
 			constructor.setAbstract(false);
 			constructor.setIsConstructor(true);
 			constructor.setName(name);
 			constructor.setBody(new ABlockStmCG());
-			
+
 			methods.add(constructor);
 		}
-		
+
 		return classCg;
 	}
-	
+
 }

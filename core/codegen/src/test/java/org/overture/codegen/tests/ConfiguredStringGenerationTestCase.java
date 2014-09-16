@@ -30,19 +30,18 @@ public class ConfiguredStringGenerationTestCase extends SpecificationTestCase
 	public ConfiguredStringGenerationTestCase()
 	{
 	}
-	
+
 	public ConfiguredStringGenerationTestCase(File file)
 	{
 		super(file);
 	}
-	
-	
+
 	@Override
 	public IRSettings getIrSettings()
 	{
 		IRSettings settings = new IRSettings();
 		settings.setCharSeqAsString(true);
-		
+
 		return settings;
 	}
 }

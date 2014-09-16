@@ -64,53 +64,54 @@ public class DeclAssistantCG extends AssistantBase
 	{
 		super(assistantManager);
 	}
-	
+
 	public boolean classIsLibrary(SClassDefinition classDef)
 	{
 		String className = classDef.getName().getName();
-		
+
 		return isLibraryName(className);
 	}
-	
+
 	public boolean isLibraryName(String className)
 	{
-		for(int i = 0; i < IRConstants.CLASS_NAMES_USED_IN_VDM.length; i++)
+		for (int i = 0; i < IRConstants.CLASS_NAMES_USED_IN_VDM.length; i++)
 		{
-			if(IRConstants.CLASS_NAMES_USED_IN_VDM[i].equals(className))
+			if (IRConstants.CLASS_NAMES_USED_IN_VDM[i].equals(className))
 			{
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
-	public <T extends SDeclCG> List<T> getAllDecls(AClassDeclCG classDecl, List<AClassDeclCG> classes, DeclStrategy<T> strategy)
+
+	public <T extends SDeclCG> List<T> getAllDecls(AClassDeclCG classDecl,
+			List<AClassDeclCG> classes, DeclStrategy<T> strategy)
 	{
 		List<T> allDecls = new LinkedList<T>();
-		
+
 		allDecls.addAll(strategy.getDecls(classDecl));
-		
+
 		String superName = classDecl.getSuperName();
-		
-		while(superName != null)
+
+		while (superName != null)
 		{
 			AClassDeclCG superClassDecl = findClass(classes, superName);
-			
-			for(T superDecl : strategy.getDecls(superClassDecl))
+
+			for (T superDecl : strategy.getDecls(superClassDecl))
 			{
-				if(isInherited(strategy.getAccess(superDecl)))
+				if (isInherited(strategy.getAccess(superDecl)))
 				{
 					allDecls.add(superDecl);
 				}
 			}
-			
+
 			superName = superClassDecl.getSuperName();
 		}
-		
+
 		return allDecls;
 	}
-	
+
 	public List<AMethodDeclCG> getAllMethods(AClassDeclCG classDecl,
 			List<AClassDeclCG> classes)
 	{
@@ -131,7 +132,7 @@ public class DeclAssistantCG extends AssistantBase
 
 		return getAllDecls(classDecl, classes, methodDeclStrategy);
 	}
-	
+
 	public List<AFieldDeclCG> getAllFields(AClassDeclCG classDecl,
 			List<AClassDeclCG> classes)
 	{
@@ -142,20 +143,21 @@ public class DeclAssistantCG extends AssistantBase
 			{
 				return decl.getAccess();
 			}
-			
+
 			@Override
 			public List<AFieldDeclCG> getDecls(AClassDeclCG classDecl)
 			{
 				return classDecl.getFields();
 			}
 		};
-		
+
 		return getAllDecls(classDecl, classes, fieldDeclStrategy);
 	}
-	
+
 	public boolean isInherited(String access)
 	{
-		return access.equals(IRConstants.PROTECTED) || access.equals(IRConstants.PUBLIC);
+		return access.equals(IRConstants.PROTECTED)
+				|| access.equals(IRConstants.PUBLIC);
 	}
 
 	public void setLocalDefs(List<PDefinition> localDefs,
@@ -164,70 +166,73 @@ public class DeclAssistantCG extends AssistantBase
 	{
 		for (PDefinition def : localDefs)
 		{
-			if(def instanceof AValueDefinition)
+			if (def instanceof AValueDefinition)
 			{
 				localDecls.add(consLocalVarDecl((AValueDefinition) def, question));
-			}
-			else if (def instanceof AEqualsDefinition)
+			} else if (def instanceof AEqualsDefinition)
 			{
 				localDecls.add(consLocalVarDecl((AEqualsDefinition) def, question));
 			}
 		}
 	}
-	
+
 	public AClassDeclCG findClass(List<AClassDeclCG> classes, String moduleName)
 	{
-		for(AClassDeclCG classDecl : classes)
+		for (AClassDeclCG classDecl : classes)
 		{
-			if(classDecl.getName().equals(moduleName))
+			if (classDecl.getName().equals(moduleName))
 			{
 				return classDecl;
 			}
 		}
-		
+
 		return null;
 	}
-	
-	//This method assumes that the record is defined in definingClass and not a super class
-	public ARecordDeclCG findRecord(AClassDeclCG definingClass, String recordName)
+
+	// This method assumes that the record is defined in definingClass and not a super class
+	public ARecordDeclCG findRecord(AClassDeclCG definingClass,
+			String recordName)
 	{
-		for(ARecordDeclCG recordDecl : definingClass.getRecords())
+		for (ARecordDeclCG recordDecl : definingClass.getRecords())
 		{
-			if(recordDecl.getName().equals(recordName))
+			if (recordDecl.getName().equals(recordName))
 			{
 				return recordDecl;
 			}
 		}
-		
+
 		return null;
 	}
-	
-	public ARecordDeclCG findRecord(List<AClassDeclCG> classes, ARecordTypeCG recordType)
+
+	public ARecordDeclCG findRecord(List<AClassDeclCG> classes,
+			ARecordTypeCG recordType)
 	{
 		AClassDeclCG definingClass = findClass(classes, recordType.getName().getDefiningClass());
 		ARecordDeclCG record = findRecord(definingClass, recordType.getName().getName());
-		
+
 		return record;
 	}
-	
-	private AVarLocalDeclCG consLocalVarDecl(AValueDefinition valueDef, IRInfo question) throws AnalysisException
+
+	private AVarLocalDeclCG consLocalVarDecl(AValueDefinition valueDef,
+			IRInfo question) throws AnalysisException
 	{
 		STypeCG type = valueDef.getType().apply(question.getTypeVisitor(), question);
 		SPatternCG pattern = valueDef.getPattern().apply(question.getPatternVisitor(), question);
 		SExpCG exp = valueDef.getExpression().apply(question.getExpVisitor(), question);
-		
+
 		return consLocalVarDecl(valueDef, type, pattern, exp);
-	
+
 	}
 
-	private AVarLocalDeclCG consLocalVarDecl(AEqualsDefinition equalsDef, IRInfo question) throws AnalysisException
+	private AVarLocalDeclCG consLocalVarDecl(AEqualsDefinition equalsDef,
+			IRInfo question) throws AnalysisException
 	{
 		STypeCG type = equalsDef.getExpType().apply(question.getTypeVisitor(), question);
 		SPatternCG pattern = equalsDef.getPattern().apply(question.getPatternVisitor(), question);
 		SExpCG exp = equalsDef.getTest().apply(question.getExpVisitor(), question);
-		
+
 		return consLocalVarDecl(equalsDef, type, pattern, exp);
-	
+
 	}
 
 	private AVarLocalDeclCG consLocalVarDecl(INode node, STypeCG type,
@@ -238,13 +243,14 @@ public class DeclAssistantCG extends AssistantBase
 		localVarDecl.setType(type);
 		localVarDecl.setPattern(pattern);
 		localVarDecl.setExp(exp);
-		
+
 		return localVarDecl;
 	}
-	
-	public AFieldDeclCG constructField(String access, String name, boolean isStatic, boolean isFinal, STypeCG type, SExpCG exp)
+
+	public AFieldDeclCG constructField(String access, String name,
+			boolean isStatic, boolean isFinal, STypeCG type, SExpCG exp)
 	{
-		
+
 		AFieldDeclCG field = new AFieldDeclCG();
 		field.setAccess(access);
 		field.setName(name);
@@ -252,27 +258,31 @@ public class DeclAssistantCG extends AssistantBase
 		field.setFinal(isFinal);
 		field.setType(type);
 		field.setInitial(exp);
-		
+
 		return field;
 	}
-	
-	public Set<ILexNameToken> getOverloadedMethodNames(AClassClassDefinition classDef)
+
+	public Set<ILexNameToken> getOverloadedMethodNames(
+			AClassClassDefinition classDef)
 	{
 		List<LexNameTokenWrapper> methodNames = getMethodNames(classDef);
 		Set<LexNameTokenWrapper> duplicates = findDuplicates(methodNames);
 
 		Set<ILexNameToken> overloadedMethodNames = new HashSet<ILexNameToken>();
-		
+
 		for (LexNameTokenWrapper wrapper : methodNames)
 		{
-			if(duplicates.contains(wrapper))
+			if (duplicates.contains(wrapper))
+			{
 				overloadedMethodNames.add(wrapper.getName());
+			}
 		}
-		
-		return overloadedMethodNames; 
+
+		return overloadedMethodNames;
 	}
-	
-	private Set<LexNameTokenWrapper> findDuplicates(List<LexNameTokenWrapper> nameWrappers)
+
+	private Set<LexNameTokenWrapper> findDuplicates(
+			List<LexNameTokenWrapper> nameWrappers)
 	{
 		Set<LexNameTokenWrapper> duplicates = new HashSet<LexNameTokenWrapper>();
 		Set<LexNameTokenWrapper> temp = new HashSet<LexNameTokenWrapper>();
@@ -284,85 +294,96 @@ public class DeclAssistantCG extends AssistantBase
 				duplicates.add(wrapper);
 			}
 		}
-		
+
 		return duplicates;
 	}
-	
-	private List<LexNameTokenWrapper> getMethodNames(AClassClassDefinition classDef)
+
+	private List<LexNameTokenWrapper> getMethodNames(
+			AClassClassDefinition classDef)
 	{
 		List<LexNameTokenWrapper> methodNames = new LinkedList<LexNameTokenWrapper>();
 
 		List<PDefinition> allDefs = new LinkedList<PDefinition>();
-		
+
 		LinkedList<PDefinition> defs = classDef.getDefinitions();
 		LinkedList<PDefinition> inheritedDefs = classDef.getAllInheritedDefinitions();
-		
+
 		allDefs.addAll(defs);
 		allDefs.addAll(inheritedDefs);
-		
+
 		for (PDefinition def : allDefs)
 		{
-			if(def instanceof SOperationDefinition || def instanceof SFunctionDefinition)
+			if (def instanceof SOperationDefinition
+					|| def instanceof SFunctionDefinition)
+			{
 				methodNames.add(new LexNameTokenWrapper(def.getName()));
+			}
 		}
-		
+
 		return methodNames;
 	}
-	
-	public void setDefaultValue(AVarLocalDeclCG localDecl, STypeCG typeCg) throws AnalysisException
+
+	public void setDefaultValue(AVarLocalDeclCG localDecl, STypeCG typeCg)
+			throws AnalysisException
 	{
 		ExpAssistantCG expAssistant = assistantManager.getExpAssistant();
-		
-		if(typeCg instanceof AStringTypeCG)
+
+		if (typeCg instanceof AStringTypeCG)
 		{
 			localDecl.setExp(expAssistant.getDefaultStringlValue());
-		}
-		else if(typeCg instanceof ACharBasicTypeCG)
+		} else if (typeCg instanceof ACharBasicTypeCG)
 		{
 			localDecl.setExp(expAssistant.getDefaultCharlValue());
-		}
-		else if(typeCg instanceof AIntNumericBasicTypeCG)
+		} else if (typeCg instanceof AIntNumericBasicTypeCG)
 		{
 			localDecl.setExp(expAssistant.getDefaultIntValue());
-		}
-		else if(typeCg instanceof ARealNumericBasicTypeCG)
+		} else if (typeCg instanceof ARealNumericBasicTypeCG)
 		{
 			localDecl.setExp(expAssistant.getDefaultRealValue());
-		}
-		else if(typeCg instanceof ABoolBasicTypeCG)
+		} else if (typeCg instanceof ABoolBasicTypeCG)
 		{
 			localDecl.setExp(expAssistant.getDefaultBoolValue());
-		}
-		else
+		} else
 		{
 			localDecl.setExp(new ANullExpCG());
 		}
 	}
-	
-	public AFieldDeclCG getFieldDecl(List<AClassDeclCG> classes, ARecordTypeCG recordType, int number)
+
+	public AFieldDeclCG getFieldDecl(List<AClassDeclCG> classes,
+			ARecordTypeCG recordType, int number)
 	{
 		ARecordDeclCG record = findRecord(classes, recordType);
-		
+
 		return record.getFields().get(number);
 	}
 
-	public AFieldDeclCG getFieldDecl(List<AClassDeclCG> classes, ARecordTypeCG recordType, String memberName)
+	public AFieldDeclCG getFieldDecl(List<AClassDeclCG> classes,
+			ARecordTypeCG recordType, String memberName)
 	{
 		ATypeNameCG name = recordType.getName();
-		
-		if(name == null)
-			throw new IllegalArgumentException("Could not find type name for record type: " + recordType);
-			
+
+		if (name == null)
+		{
+			throw new IllegalArgumentException("Could not find type name for record type: "
+					+ recordType);
+		}
+
 		String definingClassName = name.getDefiningClass();
-		
-		if(definingClassName == null)
-			throw new IllegalArgumentException("Could not find defining class for record type: " + recordType);
-		
+
+		if (definingClassName == null)
+		{
+			throw new IllegalArgumentException("Could not find defining class for record type: "
+					+ recordType);
+		}
+
 		String recName = name.getName();
-		
-		if(recName == null)
-			throw new IllegalArgumentException("Could not find record name for record type: " + recordType);
-		
+
+		if (recName == null)
+		{
+			throw new IllegalArgumentException("Could not find record name for record type: "
+					+ recordType);
+		}
+
 		AClassDeclCG definingClass = null;
 		for (AClassDeclCG currentClass : classes)
 		{
@@ -372,40 +393,49 @@ public class DeclAssistantCG extends AssistantBase
 				break;
 			}
 		}
-		
-		if(definingClass == null)
-			throw new IllegalArgumentException("Could not find defining class with name: " + definingClassName);
-		
+
+		if (definingClass == null)
+		{
+			throw new IllegalArgumentException("Could not find defining class with name: "
+					+ definingClassName);
+		}
+
 		LinkedList<ARecordDeclCG> records = definingClass.getRecords();
-		
+
 		ARecordDeclCG recordDecl = null;
 		for (ARecordDeclCG currentRec : records)
 		{
-			if(currentRec.getName().equals(recName))
+			if (currentRec.getName().equals(recName))
 			{
 				recordDecl = currentRec;
 				break;
 			}
 		}
-		
-		if(recordDecl == null)
-			throw new IllegalArgumentException("Could not find record with name '" + recName + "' in class '" + definingClassName + "'");
-		
+
+		if (recordDecl == null)
+		{
+			throw new IllegalArgumentException("Could not find record with name '"
+					+ recName + "' in class '" + definingClassName + "'");
+		}
+
 		LinkedList<AFieldDeclCG> fields = recordDecl.getFields();
-		
-		
+
 		AFieldDeclCG field = null;
 		for (AFieldDeclCG currentField : fields)
 		{
-			if(currentField.getName().equals(memberName))
+			if (currentField.getName().equals(memberName))
 			{
 				field = currentField;
 			}
 		}
-		
-		if(field == null)
-			throw new IllegalArgumentException("Could not find field '" + memberName + "' in record '" + recName + "' in class '" + definingClassName + "'");
-		
+
+		if (field == null)
+		{
+			throw new IllegalArgumentException("Could not find field '"
+					+ memberName + "' in record '" + recName + "' in class '"
+					+ definingClassName + "'");
+		}
+
 		return field;
 	}
 }

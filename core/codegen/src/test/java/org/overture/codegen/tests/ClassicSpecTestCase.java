@@ -32,12 +32,12 @@ public class ClassicSpecTestCase extends SpecificationTestCase
 	{
 		super();
 	}
-	
+
 	public ClassicSpecTestCase(File file)
 	{
 		super(file);
 	}
-	
+
 	@Override
 	protected void setUp() throws Exception
 	{

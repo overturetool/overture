@@ -28,7 +28,7 @@ import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 
 public class IRAnalysis
-{	
+{
 	public static boolean usesQuoteLiterals(AClassDeclCG classDecl)
 	{
 		return hasDependency(classDecl, new QuoteAnalysis());
@@ -38,18 +38,19 @@ public class IRAnalysis
 	{
 		return hasDependency(classDecl, new UtilAnalysis());
 	}
-	
-	private static boolean hasDependency(AClassDeclCG classDecl, AbstractAnalysis analysis)
+
+	private static boolean hasDependency(AClassDeclCG classDecl,
+			AbstractAnalysis analysis)
 	{
 		try
 		{
 			classDecl.apply(analysis);
-		}catch(AnalysisException e)
+		} catch (AnalysisException e)
 		{
-			//If we find what we are looking for an exception will
-			//be thrown to terminate the visitor analysis
+			// If we find what we are looking for an exception will
+			// be thrown to terminate the visitor analysis
 		}
-		
+
 		return analysis.isFound();
 	}
 }

@@ -17,10 +17,12 @@ public class Entry {
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && !(success_1);) {
             x = ((Number) iterator_1.next());
+            success_1 = false;
 
             for (Iterator iterator_2 = set_1.iterator();
                     iterator_2.hasNext() && !(success_1);) {
                 y = ((Number) iterator_2.next());
+                success_1 = false;
 
                 for (Iterator iterator_3 = set_1.iterator();
                         iterator_3.hasNext() && !(success_1);) {

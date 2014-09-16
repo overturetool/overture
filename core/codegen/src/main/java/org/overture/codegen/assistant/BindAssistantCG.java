@@ -34,10 +34,10 @@ public class BindAssistantCG extends AssistantBase
 	public ASetMultipleBindCG convertToMultipleSetBind(ASetBindCG setBind)
 	{
 		ASetMultipleBindCG multipleSetBind = new ASetMultipleBindCG();
-		
+
 		multipleSetBind.getPatterns().add(setBind.getPattern());
 		multipleSetBind.setSet(setBind.getSet());
-		
+
 		return multipleSetBind;
 	}
 }

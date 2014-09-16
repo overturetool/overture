@@ -35,21 +35,22 @@ public class FunctionValueAssistant
 	{
 		this.functionValueInterfaces = new LinkedList<AInterfaceDeclCG>();
 	}
-	
+
 	public List<AInterfaceDeclCG> getFunctionValueInterfaces()
 	{
 		return functionValueInterfaces;
 	}
+
 	public void registerInterface(AInterfaceDeclCG functionValueInterface)
 	{
 		functionValueInterfaces.add(functionValueInterface);
 	}
-	
+
 	public AInterfaceDeclCG findInterface(AMethodTypeCG methodType)
 	{
-		for(AInterfaceDeclCG functionValueInterface : functionValueInterfaces)
+		for (AInterfaceDeclCG functionValueInterface : functionValueInterfaces)
 		{
-			if(1 + methodType.getParams().size() == functionValueInterface.getTemplateTypes().size())
+			if (1 + methodType.getParams().size() == functionValueInterface.getTemplateTypes().size())
 			{
 				return functionValueInterface;
 			}

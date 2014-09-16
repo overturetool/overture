@@ -24,12 +24,12 @@ package org.overture.codegen.trans.comp;
 import java.util.List;
 
 import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.SLocalDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.trans.assistants.TransformationAssistantCG;
@@ -47,16 +47,16 @@ public abstract class ComplexCompStrategy extends CompStrategy
 
 	@Override
 	public List<? extends SLocalDeclCG> getOuterBlockDecls(
-			AIdentifierVarExpCG setVar, List<AIdentifierPatternCG> ids)
+			AIdentifierVarExpCG setVar, List<SPatternCG> patterns)
 			throws AnalysisException
 	{
-		return firstBind ? super.getOuterBlockDecls(setVar, ids) : null;
+		return firstBind ? super.getOuterBlockDecls(setVar, patterns) : null;
 	}
 
 	@Override
 	public List<SStmCG> getForLoopStms(AIdentifierVarExpCG setVar,
-			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
+			List<SPatternCG> patterns, SPatternCG pattern)
 	{
-		return lastBind ? getConditionalAdd(setVar, ids, id) : null;
+		return lastBind ? getConditionalAdd(setVar, patterns, pattern) : null;
 	}
 }

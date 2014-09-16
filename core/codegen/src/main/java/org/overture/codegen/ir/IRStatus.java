@@ -31,12 +31,12 @@ public class IRStatus
 	{
 		this.unsupportedNodes = unsupportedNodes;
 	}
-	
+
 	public Set<NodeInfo> getUnsupportedNodes()
 	{
 		return unsupportedNodes;
 	}
-	
+
 	public boolean canBeGenerated()
 	{
 		return unsupportedNodes.size() == 0;

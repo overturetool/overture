@@ -37,14 +37,16 @@ public class FunctionValueTest extends BaseTestSuite
 	public static final String ROOT = "src" + File.separatorChar + "test"
 			+ File.separatorChar + "resources" + File.separatorChar
 			+ "function_value_specs";
-	
-	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
+
+	public static Test suite() throws IllegalArgumentException,
+			SecurityException, InstantiationException, IllegalAccessException,
+			InvocationTargetException, NoSuchMethodException, IOException
 	{
 		LexLocation.absoluteToStringLocation = false;
 		Properties.recordTestResults = TestFlags.FUNC_VALUE_TESTS_ON;
-		
+
 		String name = "Function value test case";
-		TestSuite test =  createTestCompleteFile(name, ROOT, SpecificationTestCase.class,"");
+		TestSuite test = createTestCompleteFile(name, ROOT, SpecificationTestCase.class, "");
 		return test;
 	}
 }

@@ -29,8 +29,9 @@ public class Violation implements Comparable<Violation>
 	private ILexLocation location;
 	private String description;
 	private LocationAssistantCG locationAssistant;
-	
-	public Violation(String description, ILexLocation location, LocationAssistantCG locationAssistant)
+
+	public Violation(String description, ILexLocation location,
+			LocationAssistantCG locationAssistant)
 	{
 		super();
 		this.description = description;
@@ -47,22 +48,28 @@ public class Violation implements Comparable<Violation>
 	{
 		return location;
 	}
-	
+
 	@Override
 	public String toString()
 	{
-		return "[Violation in module " + location.getModule() + ": '" + description + "'. Location: line " + location.getStartLine() + " at position: " + location.getStartPos() + " in " + location.getFile().getName() + "]";
+		return "[Violation in module " + location.getModule() + ": '"
+				+ description + "'. Location: line " + location.getStartLine()
+				+ " at position: " + location.getStartPos() + " in "
+				+ location.getFile().getName() + "]";
 	}
-	
+
 	@Override
 	public boolean equals(Object obj)
 	{
-		if(!(obj instanceof Violation))
+		if (!(obj instanceof Violation))
+		{
 			return false;
-		
+		}
+
 		Violation other = (Violation) obj;
-		
-		return this.description.equals(other.description) && this.location.equals(other.location);
+
+		return this.description.equals(other.description)
+				&& this.location.equals(other.location);
 	}
 
 	@Override

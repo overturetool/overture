@@ -31,7 +31,7 @@ public class ViolationAnalysis extends DepthFirstAnalysisAdaptor
 {
 	private List<Violation> violations;
 	protected AssistantManager assistantManager;
-	
+
 	public ViolationAnalysis(AssistantManager assistantManager)
 	{
 		this.violations = new LinkedList<Violation>();
@@ -42,12 +42,14 @@ public class ViolationAnalysis extends DepthFirstAnalysisAdaptor
 	{
 		return violations;
 	}
-	
+
 	public void addViolation(Violation violation)
 	{
-		if(violations.contains(violation))
+		if (violations.contains(violation))
+		{
 			return;
-		
+		}
+
 		violations.add(violation);
 	}
 }

@@ -139,7 +139,7 @@ public class ModuleReader extends SyntaxReader
 		File file = lastToken().location.getFile();
 		setCurrentModule("DEFAULT");
 		List<PDefinition> definitions = getDefinitionReader().readDefinitions();
-
+		checkFor(VDMToken.EOF, 2318, "Unexpected token after flat definitions");
 		return AstFactory.newAModuleModules(file, definitions);
 	}
 
@@ -313,10 +313,11 @@ public class ModuleReader extends SyntaxReader
 			case OPERATIONS:
 				nextToken();
 				return readExportedOperations();
+				
+			default:
+				throwMessage(2052, "Expecting 'all', 'types', 'values', 'functions' or 'operations'");
+				return null;
 		}
-
-		throwMessage(2052, "Expecting 'all', 'types', 'values', 'functions' or 'operations'");
-		return null;
 	}
 
 	private List<PExport> readExportedTypes() throws ParserException,
@@ -515,10 +516,11 @@ public class ModuleReader extends SyntaxReader
 			case OPERATIONS:
 				nextToken();
 				return readImportedOperations(from);
+				
+			default:
+				throwMessage(2054, "Expecting types, values, functions or operations");
+				return null;
 		}
-
-		throwMessage(2054, "Expecting types, values, functions or operations");
-		return null;
 	}
 
 	private List<PImport> readImportedTypes(LexIdentifierToken from)
@@ -712,9 +714,10 @@ public class ModuleReader extends SyntaxReader
 			case OPERATIONS:
 			case EOF:
 				return true;
+				
+			default:
+				return false;
 		}
-
-		return false;
 	}
 
 	private LexNameToken getDefName(LexIdentifierToken impmod, LexNameToken name)

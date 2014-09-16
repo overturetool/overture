@@ -29,8 +29,9 @@ public class IRClassDeclStatus extends IRStatus
 {
 	private String className;
 	private AClassDeclCG classCg;
-	
-	public IRClassDeclStatus(String className, AClassDeclCG classCg, Set<NodeInfo> unsupportedNodes)
+
+	public IRClassDeclStatus(String className, AClassDeclCG classCg,
+			Set<NodeInfo> unsupportedNodes)
 	{
 		super(unsupportedNodes);
 		this.className = className;
@@ -41,7 +42,7 @@ public class IRClassDeclStatus extends IRStatus
 	{
 		return className;
 	}
-	
+
 	public AClassDeclCG getClassCg()
 	{
 		return classCg;

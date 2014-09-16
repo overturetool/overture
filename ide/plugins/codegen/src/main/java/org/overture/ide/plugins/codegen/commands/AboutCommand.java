@@ -39,23 +39,25 @@ public class AboutCommand extends AbstractHandler
 	public Object execute(ExecutionEvent event) throws ExecutionException
 	{
 		InputStream fileStream = AboutCommand.class.getResourceAsStream("/textfiles/AboutMessage.txt");
-		
-		try {
-			
+
+		try
+		{
+
 			Shell shell = HandlerUtil.getActiveWorkbenchWindow(event).getShell();
 			String title = "VDM++ to Java Code Generator (Experimental)";
 			String about = GeneralUtils.readFromInputStream(fileStream).toString();
 
 			MessageDialog.openInformation(shell, title, about);
-		    
-		    return Status.OK_STATUS;
-		    
-		} catch (Exception ex) {
-			
+
+			return Status.OK_STATUS;
+
+		} catch (Exception ex)
+		{
+
 			Activator.log("Could VDM++ to Java Code Generator About Message", ex);
-			
+
 		}
-		
+
 		return Status.ERROR;
 	}
 }

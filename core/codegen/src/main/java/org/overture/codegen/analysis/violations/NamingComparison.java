@@ -34,16 +34,17 @@ public abstract class NamingComparison
 	protected List<String> names;
 	protected AssistantManager assistantManager;
 	protected String correctionPrefix;
-		
-	public NamingComparison(String[] names, AssistantManager assistantManager, String correctionPrefix)
+
+	public NamingComparison(String[] names, AssistantManager assistantManager,
+			String correctionPrefix)
 	{
 		this.names = Arrays.asList(names);
 		this.assistantManager = assistantManager;
 		this.correctionPrefix = correctionPrefix;
 	}
-	
+
 	public abstract boolean mustHandleNameToken(ILexNameToken nameToken);
-	
+
 	public void correctNameToken(ILexNameToken nameToken)
 	{
 		String module = nameToken.getModule();
@@ -51,11 +52,11 @@ public abstract class NamingComparison
 		ILexLocation location = nameToken.getLocation();
 		boolean old = nameToken.getOld();
 		boolean explicit = nameToken.getExplicit();
-		
+
 		LexNameToken replaceMent = new LexNameToken(module, correctedName, location, old, explicit);
 		nameToken.parent().replaceChild(nameToken, replaceMent);
 	}
-	
+
 	public List<String> getNames()
 	{
 		return this.names;

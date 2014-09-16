@@ -29,8 +29,9 @@ import org.overture.codegen.ir.NodeInfo;
 public class GeneratedModule extends Generated
 {
 	private String name;
-	
-	public GeneratedModule(String name, String content, Set<NodeInfo> unsupportedNodes, List<Exception> mergeErrors)
+
+	public GeneratedModule(String name, String content,
+			Set<NodeInfo> unsupportedNodes, List<Exception> mergeErrors)
 	{
 		super(content, unsupportedNodes, mergeErrors);
 		this.name = name;
@@ -41,7 +42,7 @@ public class GeneratedModule extends Generated
 		super(content);
 		this.name = name;
 	}
-	
+
 	public GeneratedModule(String name, Set<NodeInfo> unsupportedNodes)
 	{
 		super(unsupportedNodes);
@@ -53,7 +54,7 @@ public class GeneratedModule extends Generated
 		super(mergeErrors);
 		this.name = name;
 	}
-	
+
 	public String getName()
 	{
 		return name;

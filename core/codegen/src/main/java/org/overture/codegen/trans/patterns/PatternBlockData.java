@@ -32,20 +32,21 @@ public class PatternBlockData
 	private AVarLocalDeclCG successVarDecl;
 	private AIdentifierVarExpCG successVar;
 	private ABlockStmCG declBlock;
-	private boolean raiseErrorOnMismatch;
+	private MismatchHandling mismatchHandling;
 
-	public PatternBlockData(SPatternCG pattern, ABlockStmCG declBlock, boolean raiseErrorOnMismatch)
+	public PatternBlockData(SPatternCG pattern, ABlockStmCG declBlock,
+			MismatchHandling mismatchHandling)
 	{
 		this.pattern = pattern;
 		this.declBlock = declBlock;
-		this.raiseErrorOnMismatch = raiseErrorOnMismatch;
+		this.mismatchHandling = mismatchHandling;
 	}
-	
-	public PatternBlockData(boolean raiseErrorOnMismatch)
+
+	public PatternBlockData(MismatchHandling mismatchHandling)
 	{
-		this(null, null, raiseErrorOnMismatch);
+		this(null, null, mismatchHandling);
 	}
-	
+
 	public boolean IsRootPattern(SPatternCG pattern)
 	{
 		return this.pattern == pattern;
@@ -91,13 +92,8 @@ public class PatternBlockData
 		this.declBlock = declBlock;
 	}
 
-	public boolean raiseErrorOnMismatch()
+	public MismatchHandling getMismatchHandling()
 	{
-		return successVarDecl != null && raiseErrorOnMismatch;
-	}
-
-	public void raiseErrorOnMismatch(boolean raiseErrorOnMismatch)
-	{
-		this.raiseErrorOnMismatch = raiseErrorOnMismatch;
+		return mismatchHandling;
 	}
 }

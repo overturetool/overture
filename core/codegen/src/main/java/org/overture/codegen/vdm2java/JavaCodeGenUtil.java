@@ -56,33 +56,40 @@ public class JavaCodeGenUtil
 {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
-	public static GeneratedData generateJavaFromFiles(List<File> files, IRSettings irSettings, JavaSettings javaSettings) throws AnalysisException, UnsupportedModelingException
+	public static GeneratedData generateJavaFromFiles(List<File> files,
+			IRSettings irSettings, JavaSettings javaSettings)
+			throws AnalysisException, UnsupportedModelingException
 	{
 		List<SClassDefinition> mergedParseList = consMergedParseList(files);
-		
+
 		JavaCodeGen vdmCodGen = new JavaCodeGen();
-		
+
 		vdmCodGen.setSettings(irSettings);
 		vdmCodGen.setJavaSettings(javaSettings);
 
 		return generateJavaFromVdm(mergedParseList, vdmCodGen);
 	}
-	
-	public static List<SClassDefinition> consMergedParseList(List<File> files) throws AnalysisException
+
+	public static List<SClassDefinition> consMergedParseList(List<File> files)
+			throws AnalysisException
 	{
 		VDMPP vdmrt = new VDMPP();
 		vdmrt.setQuiet(true);
-		
+
 		ExitStatus status = vdmrt.parse(files);
-		
-		if(status != ExitStatus.EXIT_OK)
+
+		if (status != ExitStatus.EXIT_OK)
+		{
 			throw new AnalysisException("Could not parse files!");
-		
+		}
+
 		status = vdmrt.typeCheck();
 
-		if(status != ExitStatus.EXIT_OK)
+		if (status != ExitStatus.EXIT_OK)
+		{
 			throw new AnalysisException("Could not type check files!");
-		
+		}
+
 		ClassListInterpreter classes;
 		try
 		{
@@ -91,25 +98,30 @@ public class JavaCodeGenUtil
 		{
 			throw new AnalysisException("Could not get classes from class list interpreter!");
 		}
-		
+
 		List<SClassDefinition> mergedParseList = new LinkedList<SClassDefinition>();
-		
+
 		for (SClassDefinition vdmClass : classes)
+		{
 			mergedParseList.add(vdmClass);
+		}
 
 		return mergedParseList;
 	}
 
 	private static GeneratedData generateJavaFromVdm(
-			List<SClassDefinition> mergedParseLists, JavaCodeGen vdmCodGen) throws AnalysisException, UnsupportedModelingException
+			List<SClassDefinition> mergedParseLists, JavaCodeGen vdmCodGen)
+			throws AnalysisException, UnsupportedModelingException
 	{
 		return vdmCodGen.generateJavaFromVdm(mergedParseLists);
 	}
 
-	public static Generated generateJavaFromExp(String exp, IRSettings irSettings, JavaSettings javaSettings) throws AnalysisException
+	public static Generated generateJavaFromExp(String exp,
+			IRSettings irSettings, JavaSettings javaSettings)
+			throws AnalysisException
 	{
 		TypeCheckResult<PExp> typeCheckResult = GeneralCodeGenUtils.validateExp(exp);
-		
+
 		if (typeCheckResult.errors.size() > 0)
 		{
 			throw new AnalysisException("Unable to type check expression: "
@@ -119,7 +131,7 @@ public class JavaCodeGenUtil
 		JavaCodeGen vdmCodGen = new JavaCodeGen();
 		vdmCodGen.setSettings(irSettings);
 		vdmCodGen.setJavaSettings(javaSettings);
-		
+
 		try
 		{
 			return vdmCodGen.generateJavaFromVdmExp(typeCheckResult.result);
@@ -131,16 +143,17 @@ public class JavaCodeGenUtil
 		}
 
 	}
-	
+
 	public static List<Violation> asSortedList(Set<Violation> violations)
 	{
 		LinkedList<Violation> list = new LinkedList<Violation>(violations);
 		Collections.sort(list);
-		
+
 		return list;
 	}
-	
-	public static String constructNameViolationsString(InvalidNamesResult invalidNames)
+
+	public static String constructNameViolationsString(
+			InvalidNamesResult invalidNames)
 	{
 		StringBuffer buffer = new StringBuffer();
 
@@ -148,7 +161,8 @@ public class JavaCodeGenUtil
 		List<Violation> typenameViolations = asSortedList(invalidNames.getTypenameViolations());
 		List<Violation> tempVarViolations = asSortedList(invalidNames.getTempVarViolations());
 
-		String correctionMessage = String.format("Prefix '%s' has been added to the name" + LINE_SEPARATOR, invalidNames.getCorrectionPrefix());
+		String correctionMessage = String.format("Prefix '%s' has been added to the name"
+				+ LINE_SEPARATOR, invalidNames.getCorrectionPrefix());
 
 		for (Violation violation : reservedWordViolations)
 		{
@@ -170,27 +184,29 @@ public class JavaCodeGenUtil
 
 		return buffer.toString();
 	}
-	
-	public static String constructUnsupportedModelingString(UnsupportedModelingException e)
+
+	public static String constructUnsupportedModelingString(
+			UnsupportedModelingException e)
 	{
 		StringBuffer buffer = new StringBuffer();
-		
+
 		List<Violation> violations = asSortedList(e.getViolations());
-		
+
 		for (Violation violation : violations)
 		{
 			buffer.append(violation + LINE_SEPARATOR);
 		}
-		
+
 		return buffer.toString();
 	}
-	
-	public static void generateJavaSourceFiles(File outputFolder, List<GeneratedModule> classes)
+
+	public static void generateJavaSourceFiles(File outputFolder,
+			List<GeneratedModule> classes)
 	{
 		JavaCodeGen vdmCodGen = new JavaCodeGen();
 		vdmCodGen.generateJavaSourceFiles(outputFolder, classes);
 	}
-	
+
 	public static String formatJavaCode(String code)
 	{
 		File tempFile = null;
@@ -200,7 +216,7 @@ public class JavaCodeGenUtil
 			tempFile = new File("target" + File.separatorChar + "temp.java");
 			tempFile.getParentFile().mkdirs();
 			tempFile.createNewFile();
-			
+
 			PrintWriter xwriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(tempFile, false), "UTF-8"));
 			xwriter.write(code.toString());
 			xwriter.flush();
@@ -214,15 +230,19 @@ public class JavaCodeGenUtil
 			xwriter.close();
 
 			String result = null;
-			
+
 			if (jalopy.getState() == Jalopy.State.OK
 					|| jalopy.getState() == Jalopy.State.PARSED)
+			{
 				result = b.toString();
-			else if (jalopy.getState() == Jalopy.State.WARN)
+			} else if (jalopy.getState() == Jalopy.State.WARN)
+			{
 				result = code;// formatted with warnings
-			else if (jalopy.getState() == Jalopy.State.ERROR)
-				 result = code; // could not be formatted
-			
+			} else if (jalopy.getState() == Jalopy.State.ERROR)
+			{
+				result = code; // could not be formatted
+			}
+
 			return result.toString();
 
 		} catch (Exception e)
@@ -230,20 +250,21 @@ public class JavaCodeGenUtil
 			Logger.getLog().printErrorln("Could not format code: "
 					+ e.toString());
 			e.printStackTrace();
-		}
-		finally
+		} finally
 		{
 			tempFile.delete();
 		}
 
 		return null;// could not be formatted
 	}
-	
-	public static void saveJavaClass(File outputFolder, String javaFileName, String code)
+
+	public static void saveJavaClass(File outputFolder, String javaFileName,
+			String code)
 	{
 		try
 		{
-			File javaFile = new File(outputFolder, File.separator + javaFileName);
+			File javaFile = new File(outputFolder, File.separator
+					+ javaFileName);
 			javaFile.getParentFile().mkdirs();
 			javaFile.createNewFile();
 			PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(javaFile, false), "UTF-8"));
@@ -258,5 +279,5 @@ public class JavaCodeGenUtil
 			e.printStackTrace();
 		}
 	}
-	
+
 }

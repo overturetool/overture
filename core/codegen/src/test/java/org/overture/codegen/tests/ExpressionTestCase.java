@@ -30,7 +30,7 @@ import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 
 public class ExpressionTestCase extends CodeGenBaseTestCase
 {
-	
+
 	public ExpressionTestCase()
 	{
 		super();
@@ -55,7 +55,7 @@ public class ExpressionTestCase extends CodeGenBaseTestCase
 		}
 		String generatedJava = JavaCodeGenUtil.generateJavaFromExp(fileContent, getIrSettings(), getJavaSettings()).getContent().trim();
 		String trimmed = generatedJava.replaceAll("\\s+", " ");
-		
+
 		return trimmed;
-	}		
+	}
 }

@@ -43,7 +43,7 @@ public class FuncTransformation extends DepthFirstAnalysisAdaptor
 	public FuncTransformation()
 	{
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public void caseAFuncDeclCG(AFuncDeclCG node) throws AnalysisException
@@ -56,7 +56,7 @@ public class FuncTransformation extends DepthFirstAnalysisAdaptor
 		String name = node.getName();
 		SExpCG body = node.getBody();
 		SourceNode sourceNode = node.getSourceNode();
-		
+
 		AMethodDeclCG method = new AMethodDeclCG();
 		method.setSourceNode(sourceNode);
 		method.setAccess(access);
@@ -67,33 +67,33 @@ public class FuncTransformation extends DepthFirstAnalysisAdaptor
 		method.setName(name);
 		method.setStatic(true);
 		method.setIsConstructor(false);
-		
-		if(!(body instanceof ANotImplementedExpCG))
+
+		if (!(body instanceof ANotImplementedExpCG))
 		{
 			AReturnStmCG returnStm = new AReturnStmCG();
 			returnStm.setExp(body.clone());
 			method.setBody(returnStm);
-		}
-		else
+		} else
 		{
 			method.setBody(new ANotImplementedStmCG());
 		}
-		
+
 		AClassDeclCG enclosingClas = getEnclosingClass(node, "function declarations");
 		enclosingClas.getFunctions().remove(node);
 		enclosingClas.getMethods().add(method);
 	}
-	
-	private AClassDeclCG getEnclosingClass(AFuncDeclCG node, String nodeStr) throws AnalysisException
+
+	private AClassDeclCG getEnclosingClass(AFuncDeclCG node, String nodeStr)
+			throws AnalysisException
 	{
 		AClassDeclCG enclosingClass = node.getAncestor(AClassDeclCG.class);
 
-		//A Function must always have an enclosing class in a PP model
+		// A Function must always have an enclosing class in a PP model
 		if (enclosingClass == null)
 		{
 			throw new AnalysisException(String.format("Could not find enclosing class for function %s", node));
 		}
-		
+
 		return enclosingClass;
 	}
 }

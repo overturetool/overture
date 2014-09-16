@@ -54,20 +54,20 @@ public abstract class CodeGenBaseTestCase extends BaseTestCase
 	{
 		super(file);
 	}
-	
+
 	public IRSettings getIrSettings()
 	{
 		IRSettings irSettings = new IRSettings();
 		irSettings.setCharSeqAsString(false);
-		
+
 		return irSettings;
 	}
-	
+
 	public JavaSettings getJavaSettings()
 	{
 		JavaSettings javaSettings = new JavaSettings();
 		javaSettings.setDisableCloning(false);
-		
+
 		return javaSettings;
 	}
 
@@ -83,7 +83,9 @@ public abstract class CodeGenBaseTestCase extends BaseTestCase
 	public void test() throws ParserException, LexException, IOException
 	{
 		if (content == null)
+		{
 			return;
+		}
 
 		String filename = file.getAbsolutePath();
 
@@ -97,7 +99,7 @@ public abstract class CodeGenBaseTestCase extends BaseTestCase
 				String newResult = generateActualOutput();
 				storeResult(resultFile, newResult);
 
-			} catch (Exception e)//FileNotFoundException | AnalysisException
+			} catch (Exception e)// FileNotFoundException | AnalysisException
 			{
 				Assert.fail("The produced results could not be stored: "
 						+ e.getMessage());

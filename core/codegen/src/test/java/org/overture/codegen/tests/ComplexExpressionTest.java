@@ -37,14 +37,16 @@ public class ComplexExpressionTest extends BaseTestSuite
 	public static final String ROOT = "src" + File.separatorChar + "test"
 			+ File.separatorChar + "resources" + File.separatorChar
 			+ "complex_expressions";
-	
-	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
+
+	public static Test suite() throws IllegalArgumentException,
+			SecurityException, InstantiationException, IllegalAccessException,
+			InvocationTargetException, NoSuchMethodException, IOException
 	{
 		LexLocation.absoluteToStringLocation = false;
 		Properties.recordTestResults = TestFlags.COMPLEX_EXP_TESTS_ON;
-		
+
 		String name = "Complex expression test case";
-		TestSuite test =  createTestCompleteFile(name, ROOT, SpecificationTestCase.class,"");
+		TestSuite test = createTestCompleteFile(name, ROOT, SpecificationTestCase.class, "");
 		return test;
 	}
 }

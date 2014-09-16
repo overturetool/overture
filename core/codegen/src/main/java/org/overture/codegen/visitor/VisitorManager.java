@@ -32,7 +32,6 @@ import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 
-
 public class VisitorManager
 {
 	private CGVisitor<AClassDeclCG> classVisitor;
@@ -45,7 +44,7 @@ public class VisitorManager
 	private CGVisitor<SMultipleBindCG> multipleBindVisitor;
 	private CGVisitor<SBindCG> bindVisitor;
 	private CGVisitor<SPatternCG> patternVisitor;
-	
+
 	public VisitorManager()
 	{
 		this.classVisitor = new CGVisitor<AClassDeclCG>(new ClassVisitorCG());
@@ -56,55 +55,55 @@ public class VisitorManager
 		this.stateDesignatorVisitor = new CGVisitor<SStateDesignatorCG>(new StateDesignatorVisitorCG());
 		this.objectDesignatorVisitor = new CGVisitor<SObjectDesignatorCG>(new ObjectDesignatorVisitorCG());
 		this.multipleBindVisitor = new CGVisitor<SMultipleBindCG>(new MultipleBindVisitorCG());
-		this.bindVisitor =  new CGVisitor<SBindCG>(new BindVisitorCG());
+		this.bindVisitor = new CGVisitor<SBindCG>(new BindVisitorCG());
 		this.patternVisitor = new CGVisitor<SPatternCG>(new PatternVisitorCG());
 	}
-	
+
 	public CGVisitor<AClassDeclCG> getClassVisitor()
 	{
 		return classVisitor;
 	}
-	
+
 	public CGVisitor<SDeclCG> getDeclVisitor()
 	{
 		return declVisitor;
 	}
-	
+
 	public CGVisitor<SExpCG> getExpVisitor()
 	{
 		return expVisitor;
 	}
-	
+
 	public CGVisitor<STypeCG> getTypeVisitor()
 	{
 		return typeVisitor;
 	}
-	
+
 	public CGVisitor<SStmCG> getStmVisitor()
 	{
 		return stmVisitor;
 	}
-	
+
 	public CGVisitor<SStateDesignatorCG> getStateDesignatorVisitor()
 	{
 		return stateDesignatorVisitor;
 	}
-	
+
 	public CGVisitor<SObjectDesignatorCG> getObjectDesignatorVisitor()
 	{
 		return objectDesignatorVisitor;
 	}
-	
+
 	public CGVisitor<SMultipleBindCG> getMultipleBindVisitor()
 	{
 		return multipleBindVisitor;
 	}
-	
+
 	public CGVisitor<SBindCG> getBindVisitor()
 	{
 		return bindVisitor;
 	}
-	
+
 	public CGVisitor<SPatternCG> getPatternVisitor()
 	{
 		return patternVisitor;

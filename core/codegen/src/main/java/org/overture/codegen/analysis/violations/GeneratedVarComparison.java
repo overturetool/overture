@@ -38,27 +38,27 @@ public class GeneratedVarComparison extends NamingComparison
 	@Override
 	public boolean mustHandleNameToken(ILexNameToken nameToken)
 	{
-		if(assistantManager.getTypeAssistant().getTypeDef(nameToken) != null)
+		if (assistantManager.getTypeAssistant().getTypeDef(nameToken) != null)
 		{
 			return false;
 		}
-		
+
 		PDefinition def = nameToken.getAncestor(PDefinition.class);
-		
-		if(def instanceof SOperationDefinition ||
-		   def instanceof SFunctionDefinition)
+
+		if (def instanceof SOperationDefinition
+				|| def instanceof SFunctionDefinition)
 		{
 			return false;
 		}
-		
-		for(String name : this.getNames())
+
+		for (String name : this.getNames())
 		{
-			if(nameToken.getName().startsWith(name))
+			if (nameToken.getName().startsWith(name))
 			{
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 }

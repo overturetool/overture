@@ -25,13 +25,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
 import org.overture.codegen.cgast.declarations.SLocalDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
-import org.overture.codegen.cgast.statements.AAssignmentStmCG;
+import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.assistants.TransformationAssistantCG;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
@@ -46,7 +46,12 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 	protected ITempVarGen tempGen;
 	protected TempVarPrefixes varPrefixes;
 
-	public AbstractIterationStrategy(TransformationAssistantCG transformationAssistant,
+	protected AVarLocalDeclCG successVarDecl = null;
+
+	protected AVarLocalDeclCG nextElementDeclared = null;
+
+	public AbstractIterationStrategy(
+			TransformationAssistantCG transformationAssistant,
 			ILanguageIterator langIterator, ITempVarGen tempGen,
 			TempVarPrefixes varPrefixes)
 	{
@@ -58,60 +63,79 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 
 	@Override
 	public List<? extends SLocalDeclCG> getOuterBlockDecls(
-			AIdentifierVarExpCG setVar, List<AIdentifierPatternCG> ids)
+			AIdentifierVarExpCG setVar, List<SPatternCG> patterns)
 			throws AnalysisException
+	{
+		return null;
+	}
+
+	public List<SStmCG> getPreForLoopStms(AIdentifierVarExpCG setVar,
+			List<SPatternCG> patterns, SPatternCG pattern)
 	{
 		return null;
 	}
 
 	@Override
 	public AVarLocalDeclCG getForLoopInit(AIdentifierVarExpCG setVar,
-			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
+			List<SPatternCG> patterns, SPatternCG pattern)
 	{
-		return langIterator.getForLoopInit(setVar, ids, id);
+		return langIterator.getForLoopInit(setVar, patterns, pattern);
 	}
 
 	@Override
 	public SExpCG getForLoopCond(AIdentifierVarExpCG setVar,
-			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
+			List<SPatternCG> patterns, SPatternCG pattern)
 			throws AnalysisException
 	{
-		return langIterator.getForLoopCond(setVar, ids, id);
+		return langIterator.getForLoopCond(setVar, patterns, pattern);
 	}
 
 	@Override
 	public SExpCG getForLoopInc(AIdentifierVarExpCG setVar,
-			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
+			List<SPatternCG> patterns, SPatternCG pattern)
 	{
-		return langIterator.getForLoopInc(setVar, ids, id);
+		return langIterator.getForLoopInc(setVar, patterns, pattern);
+	}
+
+	public void tagNextElementDeclared(AVarLocalDeclCG nextElementDecl)
+	{
+		nextElementDecl.setTag(consDeclarationTag());
+		this.nextElementDeclared = nextElementDecl;
+	}
+
+	public DeclarationTag consDeclarationTag()
+	{
+		return new DeclarationTag(false, successVarDecl);
 	}
 
 	@Override
 	public AVarLocalDeclCG getNextElementDeclared(AIdentifierVarExpCG setVar,
-			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
+			List<SPatternCG> patterns, SPatternCG pattern)
 			throws AnalysisException
 	{
-		return langIterator.getNextElementDeclared(setVar, ids, id);
+		tagNextElementDeclared(langIterator.getNextElementDeclared(setVar, patterns, pattern));
+
+		return nextElementDeclared;
 	}
 
 	@Override
-	public AAssignmentStmCG getNextElementAssigned(AIdentifierVarExpCG setVar,
-			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
-			throws AnalysisException
+	public ALocalPatternAssignmentStmCG getNextElementAssigned(
+			AIdentifierVarExpCG setVar, List<SPatternCG> patterns,
+			SPatternCG pattern) throws AnalysisException
 	{
 		return null;
 	}
 
 	@Override
 	public List<SStmCG> getForLoopStms(AIdentifierVarExpCG setVar,
-			List<AIdentifierPatternCG> ids, AIdentifierPatternCG id)
+			List<SPatternCG> patterns, SPatternCG pattern)
 	{
 		return null;
 	}
 
 	@Override
-	public List<SStmCG> getOuterBlockStms(AIdentifierVarExpCG setVar,
-			List<AIdentifierPatternCG> ids)
+	public List<SStmCG> getPostOuterBlockStms(AIdentifierVarExpCG setVar,
+			List<SPatternCG> patterns)
 	{
 		return null;
 	}

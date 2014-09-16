@@ -63,14 +63,16 @@ public class JavaCommandLineCompiler
 			String arg = "";
 
 			if (JavaToolsUtils.isWindows())
-
-				pb = new ProcessBuilder(javac.getAbsolutePath(), (cpJar == null ? ""
-						: " -cp " + cpJar.getAbsolutePath()), arguments.trim());
-			else
+			{
+				pb = new ProcessBuilder(javac.getAbsolutePath(), cpJar == null ? ""
+						: " -cp " + cpJar.getAbsolutePath(), arguments.trim());
+			} else
+			{
 				arg = "javac"
 						+ (cpJar == null ? "" : " -cp "
 								+ cpJar.getAbsolutePath()) + " "
 						+ arguments.replace('\"', ' ').trim();
+			}
 
 			if (pb != null)
 			{
@@ -81,22 +83,22 @@ public class JavaCommandLineCompiler
 			{
 				p = Runtime.getRuntime().exec(arg, null, dir);
 				InputStream stderr = p.getErrorStream();
-	            InputStreamReader isr = new InputStreamReader(stderr);
+				InputStreamReader isr = new InputStreamReader(stderr);
 
-	            BufferedReader br = new BufferedReader(isr);
+				BufferedReader br = new BufferedReader(isr);
 
-	            String debugLine = null;
-	            while ( (debugLine = br.readLine()) != null)
-	            {
-	                line += debugLine + "\n";
-	            }
-	            
-	            int exitVal = p.waitFor();
-	            
-	            if(exitVal != 0)
-	            {
-	            	System.out.println(line);
-	            }
+				String debugLine = null;
+				while ((debugLine = br.readLine()) != null)
+				{
+					line += debugLine + "\n";
+				}
+
+				int exitVal = p.waitFor();
+
+				if (exitVal != 0)
+				{
+					System.out.println(line);
+				}
 			}
 			BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
 			String secondLastLine = "";
@@ -117,11 +119,15 @@ public class JavaCommandLineCompiler
 		} finally
 		{
 			if (p != null)
+			{
 				p.destroy();
+			}
 		}
 
 		if (!compileOk)
+		{
 			System.err.println(out.toString());
+		}
 
 		return compileOk;
 
@@ -161,14 +167,19 @@ public class JavaCommandLineCompiler
 		List<File> files = new Vector<File>();
 
 		if (file.isFile())
+		{
 			return files;
+		}
 
 		for (File f : file.listFiles())
 		{
 			if (f.isDirectory())
+			{
 				files.addAll(getJavaSourceFiles(f));
-			else if (f.getName().toLowerCase().endsWith(".java"))
+			} else if (f.getName().toLowerCase().endsWith(".java"))
+			{
 				files.add(f);
+			}
 		}
 		return files;
 	}

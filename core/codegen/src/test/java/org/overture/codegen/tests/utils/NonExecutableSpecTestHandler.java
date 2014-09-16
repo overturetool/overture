@@ -44,7 +44,7 @@ public class NonExecutableSpecTestHandler extends TestHandler
 		for (StringBuffer classCgStr : content)
 		{
 			File tempFile = consTempFile(TestUtils.getJavaModuleName(classCgStr), parent, classCgStr);
-			
+
 			writeToFile(classCgStr.toString(), tempFile);
 		}
 	}

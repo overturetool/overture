@@ -41,17 +41,19 @@ public class CodeGenConsole implements ILogger
 {
 	private final PrintWriter out;
 	private final PrintWriter err;
-	
+
 	private boolean hasConsole = false;
 
 	private static CodeGenConsole Instance;
 
 	private MessageConsole codeGenConsole;
-	
+
 	public static CodeGenConsole GetInstance()
 	{
 		if (Instance == null)
+		{
 			Instance = new CodeGenConsole();
+		}
 
 		return Instance;
 	}
@@ -107,11 +109,11 @@ public class CodeGenConsole implements ILogger
 	{
 		out.println(msg);
 	}
-	
+
 	@Override
 	public void printErrorln(String msg)
 	{
-		err.println(msg);	
+		err.println(msg);
 	}
 
 	@Override
@@ -120,38 +122,25 @@ public class CodeGenConsole implements ILogger
 		err.print(msg);
 	}
 	
-	public void clearConsole()
+	public void activate()
 	{
 		if(codeGenConsole != null)
-			codeGenConsole.clearConsole();
+		{
+			codeGenConsole.activate();
+		}
 	}
 
-	public void show()
+	public void clearConsole()
 	{
-		if (hasConsole)
+		if (codeGenConsole != null)
 		{
-			IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-			if (activeWorkbenchWindow != null)
-			{
-				IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
-				if (activePage != null)
-				{
-					try
-					{
-						activePage.showView(IConsoleConstants.ID_CONSOLE_VIEW, null, IWorkbenchPage.VIEW_ACTIVATE);
-					} catch (PartInitException e)
-					{
-						Activator.log("Failed showing active page view", e);
-						e.printStackTrace();
-					}
-				}
-			}
+			codeGenConsole.clearConsole();
 		}
 	}
 
 	@Override
 	public void setSilent(boolean arg0)
 	{
-		//TODO: For now simply do nothing..
+		// TODO: For now simply do nothing..
 	}
 }

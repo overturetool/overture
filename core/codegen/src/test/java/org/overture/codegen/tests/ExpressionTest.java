@@ -37,14 +37,16 @@ public class ExpressionTest extends BaseTestSuite
 	public static final String ROOT = "src" + File.separatorChar + "test"
 			+ File.separatorChar + "resources" + File.separatorChar
 			+ "expressions";
-	
-	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
+
+	public static Test suite() throws IllegalArgumentException,
+			SecurityException, InstantiationException, IllegalAccessException,
+			InvocationTargetException, NoSuchMethodException, IOException
 	{
 		LexLocation.absoluteToStringLocation = false;
 		Properties.recordTestResults = TestFlags.EXP_TESTS_ON;
-		
+
 		String name = "Expression test case";
-		TestSuite test =  createTestCompleteFile(name, ROOT, ExpressionTestCase.class,"");
+		TestSuite test = createTestCompleteFile(name, ROOT, ExpressionTestCase.class, "");
 		return test;
 	}
 }

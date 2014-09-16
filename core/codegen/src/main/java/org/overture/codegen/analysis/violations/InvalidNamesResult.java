@@ -29,19 +29,20 @@ public class InvalidNamesResult
 	private Set<Violation> reservedWordViolations;
 	private Set<Violation> typenameViolations;
 	private Set<Violation> tempVarViolations;
-	
+
 	private String correctionPrefix;
-	
+
 	public InvalidNamesResult(Set<Violation> reservedWordViolations,
-			Set<Violation> typenameViolations, Set<Violation> tempVarViolations, String correctionPrefix)
+			Set<Violation> typenameViolations,
+			Set<Violation> tempVarViolations, String correctionPrefix)
 	{
 		this.reservedWordViolations = reservedWordViolations;
 		this.typenameViolations = typenameViolations;
 		this.tempVarViolations = tempVarViolations;
-		
+
 		this.correctionPrefix = correctionPrefix;
 	}
-	
+
 	public InvalidNamesResult()
 	{
 		this.reservedWordViolations = new HashSet<Violation>();
@@ -63,10 +64,11 @@ public class InvalidNamesResult
 	{
 		return tempVarViolations;
 	}
-	
+
 	public boolean isEmpty()
 	{
-		return reservedWordViolations.isEmpty() && typenameViolations.isEmpty() && tempVarViolations.isEmpty();
+		return reservedWordViolations.isEmpty() && typenameViolations.isEmpty()
+				&& tempVarViolations.isEmpty();
 	}
 
 	public String getCorrectionPrefix()

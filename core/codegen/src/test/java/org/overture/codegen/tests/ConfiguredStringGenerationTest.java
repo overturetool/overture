@@ -37,14 +37,16 @@ public class ConfiguredStringGenerationTest extends BaseTestSuite
 	public static final String ROOT = "src" + File.separatorChar + "test"
 			+ File.separatorChar + "resources" + File.separatorChar
 			+ "string_specs";
-	
-	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
+
+	public static Test suite() throws IllegalArgumentException,
+			SecurityException, InstantiationException, IllegalAccessException,
+			InvocationTargetException, NoSuchMethodException, IOException
 	{
 		LexLocation.absoluteToStringLocation = false;
 		Properties.recordTestResults = TestFlags.STRING_CONFIG_TESTS_ON;
-		
+
 		String name = "Configured string generation test case";
-		TestSuite test =  createTestCompleteFile(name, ROOT, ConfiguredStringGenerationTestCase.class,"");
+		TestSuite test = createTestCompleteFile(name, ROOT, ConfiguredStringGenerationTestCase.class, "");
 		return test;
 	}
 }

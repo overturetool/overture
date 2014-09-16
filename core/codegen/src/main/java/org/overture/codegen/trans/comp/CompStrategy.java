@@ -24,6 +24,7 @@ package org.overture.codegen.trans.comp;
 import java.util.List;
 
 import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
@@ -46,25 +47,29 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 	protected SExpCG predicate;
 	protected AIdentifierPatternCG idPattern;
 	protected STypeCG compType;
-	
-	public CompStrategy(TransformationAssistantCG transformationAssistant, SExpCG predicate, String varName, STypeCG compType, ILanguageIterator langIterator, ITempVarGen tempGen,
+
+	public CompStrategy(TransformationAssistantCG transformationAssistant,
+			SExpCG predicate, String varName, STypeCG compType,
+			ILanguageIterator langIterator, ITempVarGen tempGen,
 			TempVarPrefixes varPrefixes)
 	{
 		super(transformationAssistant, langIterator, tempGen, varPrefixes);
-		
+
 		this.predicate = predicate;
-		
+
 		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
 		idPattern.setName(varName);
-		
+
 		this.idPattern = idPattern;
 		this.compType = compType;
 	}
-	
+
 	protected abstract SExpCG getEmptyCollection();
 
-	protected abstract List<SStmCG> getConditionalAdd(AIdentifierVarExpCG setVar, List<AIdentifierPatternCG> ids, AIdentifierPatternCG id);
-	
+	protected abstract List<SStmCG> getConditionalAdd(
+			AIdentifierVarExpCG setVar, List<SPatternCG> patterns,
+			SPatternCG pattern);
+
 	protected List<SStmCG> consConditionalAdd(AIdentifierVarExpCG compResult,
 			SBinaryExpCG collectionMerge)
 	{
@@ -75,32 +80,32 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 		AAssignmentStmCG updateCompResult = new AAssignmentStmCG();
 		updateCompResult.setTarget(result);
 		updateCompResult.setExp(collectionMerge);
-		
-		if(predicate != null)
+
+		if (predicate != null)
 		{
 			AIfStmCG condCollectionUnion = new AIfStmCG();
 			condCollectionUnion.setIfExp(predicate.clone());
 			condCollectionUnion.setThenStm(updateCompResult);
-			
+
 			return packStm(condCollectionUnion);
 		}
-		
+
 		return packStm(updateCompResult);
 	}
-	
+
 	@Override
 	public List<? extends SLocalDeclCG> getOuterBlockDecls(
-			AIdentifierVarExpCG setVar, List<AIdentifierPatternCG> ids)
+			AIdentifierVarExpCG setVar, List<SPatternCG> patterns)
 			throws AnalysisException
 	{
 		SExpCG emptyCollection = getEmptyCollection();
 		emptyCollection.setType(compType.clone());
-		
+
 		AVarLocalDeclCG compResultInit = new AVarLocalDeclCG();
 		compResultInit.setType(compType.clone());
 		compResultInit.setPattern(idPattern.clone());
 		compResultInit.setExp(emptyCollection);
-		
+
 		return packDecl(compResultInit);
 	}
 }

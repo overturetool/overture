@@ -36,7 +36,8 @@ class ExpressionTestHandler extends ExecutableTestHandler
 		super(release);
 	}
 
-	public void writeGeneratedCode(File parent, File resultFile) throws IOException
+	public void writeGeneratedCode(File parent, File resultFile)
+			throws IOException
 	{
 		String generatedExpression = readFromFile(resultFile);
 		injectArgIntoMainClassFile(parent, generatedExpression);
@@ -46,7 +47,7 @@ class ExpressionTestHandler extends ExecutableTestHandler
 	public Value interpretVdm(File intputFile) throws Exception
 	{
 		initVdmEnv();
-		
+
 		String input = GeneralUtils.readFromFile(intputFile);
 
 		return InterpreterUtil.interpret(input);

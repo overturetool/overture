@@ -37,14 +37,16 @@ public class ClassicSpecTest extends BaseTestSuite
 	public static final String ROOT = "src" + File.separatorChar + "test"
 			+ File.separatorChar + "resources" + File.separatorChar
 			+ "classic_specs";
-	
-	public static Test suite() throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException
+
+	public static Test suite() throws IllegalArgumentException,
+			SecurityException, InstantiationException, IllegalAccessException,
+			InvocationTargetException, NoSuchMethodException, IOException
 	{
 		LexLocation.absoluteToStringLocation = false;
 		Properties.recordTestResults = TestFlags.CLASSIC_SPEC_TESTS_ON;
-		
+
 		String name = "Classic specifications test case";
-		TestSuite test =  createTestCompleteFile(name, ROOT, ClassicSpecTestCase.class,"");
+		TestSuite test = createTestCompleteFile(name, ROOT, ClassicSpecTestCase.class, "");
 		return test;
 	}
 }

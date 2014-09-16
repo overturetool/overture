@@ -36,43 +36,44 @@ import org.overture.codegen.logging.Logger;
 public class IRGenerator
 {
 	private IRInfo codeGenInfo;
-	
+
 	public IRGenerator(ILogger log, String objectInitCallPrefix)
 	{
 		this.codeGenInfo = new IRInfo(objectInitCallPrefix);
 		Logger.setLog(log);
 	}
-			
-	public IRClassDeclStatus generateFrom(SClassDefinition classDef) throws AnalysisException
+
+	public IRClassDeclStatus generateFrom(SClassDefinition classDef)
+			throws AnalysisException
 	{
 		codeGenInfo.clearNodes();
-		
+
 		AClassDeclCG classCg = classDef.apply(codeGenInfo.getClassVisitor(), codeGenInfo);
 		Set<NodeInfo> unsupportedNodes = copyGetUnsupportedNodes();
-		
+
 		return new IRClassDeclStatus(classDef.getName().getName(), classCg, unsupportedNodes);
 	}
-	
+
 	public IRExpStatus generateFrom(PExp exp) throws AnalysisException
 	{
 		codeGenInfo.clearNodes();
-		
+
 		SExpCG expCg = exp.apply(codeGenInfo.getExpVisitor(), codeGenInfo);
 		Set<NodeInfo> unsupportedNodes = copyGetUnsupportedNodes();
-		
+
 		return new IRExpStatus(expCg, unsupportedNodes);
 	}
-	
+
 	private Set<NodeInfo> copyGetUnsupportedNodes()
 	{
 		return new HashSet<NodeInfo>(codeGenInfo.getUnsupportedNodes());
 	}
-	
+
 	public AInterfaceDeclCG getQuotes()
 	{
 		return codeGenInfo.getQuotes();
 	}
-	
+
 	public IRInfo getIRInfo()
 	{
 		return codeGenInfo;
