@@ -1333,6 +1333,12 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 		PPredicate before = new AMemberPredicate(getIdentifier(nameOld), exp(node.getType()));
 		PPredicate after = new AMemberPredicate(getIdentifier(name), exp(node.getType()));
 		PPredicate p = new AConjunctPredicate(before, after);
+		
+		if(USE_INITIAL_FIXED_STATE && node.getInitialized())
+		{
+			AEqualPredicate init = new AEqualPredicate(getIdentifier(nameOld), exp(node.getExpression()));
+			p = new AConjunctPredicate(p, init);
+		}
 
 		return p;
 	}
@@ -1380,17 +1386,28 @@ public class VdmToBConverter extends DepthFirstAnalysisAdaptorAnswer<Node>
 	{
 		PPredicate post = (PPredicate) defaultSOperationDefinition(node);
 
-		Set<ILexNameToken> constants = new HashSet<ILexNameToken>();
+		Set<ILexNameToken> constants = new HashSet<ILexNameToken>(StateNameCollector.collectStateNamesFromOwningDefinition(node));
+		
+		//remove all state names thats mentioned in a write frame condition
 		for (AExternalClause frameClause : node.getExternals())
 		{
-			if (frameClause.getMode().is(VDMToken.READ))
+			if (frameClause.getMode().is(VDMToken.WRITE))
 			{
-				constants.addAll(frameClause.getIdentifiers());
+				for (ILexNameToken rwIds : frameClause.getIdentifiers())
+				{
+					Set<ILexNameToken> remove = new HashSet<ILexNameToken>();
+					for (ILexNameToken id : constants)
+					{
+						if (id.getName().equals(rwIds.getName()))
+						{
+							remove.add(id);
+							break;
+						}
+					}
+					constants.removeAll(remove);
+				}
 			}
 		}
-
-		// TODO: add the rest of the constants as well. If a state component isn't mentioned in the frame condition it
-		// is implicit Read only
 
 		for (ILexNameToken id : constants)
 		{
