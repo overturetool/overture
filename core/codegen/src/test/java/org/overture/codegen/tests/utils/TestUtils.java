@@ -1,3 +1,24 @@
+/*
+ * #%~
+ * VDM Code Generator
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.codegen.tests.utils;
 
 import java.io.File;
@@ -9,84 +30,97 @@ import java.util.List;
 import java.util.Vector;
 
 public class TestUtils
-{	
+{
 	public static List<File> getFiles(File file, String extension)
 	{
 		List<File> files = new Vector<File>();
 		for (File f : file.listFiles())
 		{
 			if (f.isDirectory())
+			{
 				files.addAll(getFiles(f, extension));
-			else if(f.getName().toLowerCase().endsWith(extension))
+			} else if (f.getName().toLowerCase().endsWith(extension))
+			{
 				files.add(f);
+			}
 		}
-		
+
 		Collections.sort(files, new FileComparator());
-		
+
 		return files;
 	}
-	
+
 	public static List<File> getTestInputFiles(File file)
 	{
 		List<File> files = new Vector<File>();
 		for (File f : file.listFiles())
 		{
-			Collections.sort(files, new FileComparator());if (f.isDirectory())
+			Collections.sort(files, new FileComparator());
+			if (f.isDirectory())
+			{
 				files.addAll(getTestInputFiles(f));
-			else if(!f.getName().contains("."))
+			} else if (!f.getName().contains("."))
+			{
 				files.add(f);
+			}
 		}
-		
+
 		Collections.sort(files, new FileComparator());
-		
+
 		return files;
 	}
-	
+
 	public static String getJavaModuleName(StringBuffer moduleContent)
 	{
 		int moduleIdx = moduleContent.indexOf("class");
-		
-		if(moduleIdx == -1)
+
+		if (moduleIdx == -1)
+		{
 			moduleIdx = moduleContent.indexOf("interface");
-		
+		}
+
 		int startClassIdx = moduleContent.indexOf(" ", moduleIdx);
-		
-		
-		int endTemplateClassIdx = moduleContent.indexOf("<", 1+startClassIdx);
-		int endClassIdx = moduleContent.indexOf(" ", 1+startClassIdx);
-		
-		if(endTemplateClassIdx > 0 && endTemplateClassIdx < endClassIdx)
+
+		int endTemplateClassIdx = moduleContent.indexOf("<", 1 + startClassIdx);
+		int endClassIdx = moduleContent.indexOf(" ", 1 + startClassIdx);
+
+		if (endTemplateClassIdx > 0 && endTemplateClassIdx < endClassIdx)
+		{
 			endClassIdx = endTemplateClassIdx;
-		
-		String className = moduleContent.substring(1+startClassIdx, endClassIdx);
-		
+		}
+
+		String className = moduleContent.substring(1 + startClassIdx, endClassIdx);
+
 		return className;
 	}
-	
-	public static List<StringBuffer> readJavaModulesFromResultFile(File file) throws IOException
+
+	public static List<StringBuffer> readJavaModulesFromResultFile(File file)
+			throws IOException
 	{
 		final char DELIMITER_CHAR = '#';
-		
+
 		FileInputStream input = new FileInputStream(file);
 
 		List<StringBuffer> classes = new LinkedList<StringBuffer>();
-		
+
 		StringBuffer data = new StringBuffer();
 		int c = 0;
 		while ((c = input.read()) != -1)
 		{
-			if(c == DELIMITER_CHAR)
+			if (c == DELIMITER_CHAR)
 			{
-				while(input.read() == DELIMITER_CHAR);
-				
-				if(!data.toString().trim().startsWith("*Name Violations*"))
+				while (input.read() == DELIMITER_CHAR)
+				{
+					;
+				}
+
+				if (!data.toString().trim().startsWith("*Name Violations*"))
 				{
 					classes.add(data);
 				}
-				
+
 				data = new StringBuffer();
-			}
-			else
+			} else
 			{
 				data.append((char) c);
 			}
