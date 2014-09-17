@@ -83,7 +83,7 @@ public class ISymbolTableExtensibilityText {
 	@Test
 	public void testGetAttribute_NewAttrib() {
 		String actual = eTable.getEXTKEY();
-		String expected = "extattrib";
+		String expected = "extkey";
 
 		assertEquals(expected, actual);
 	}
