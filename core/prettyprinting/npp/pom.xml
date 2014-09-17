@@ -9,6 +9,8 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
+
+  <groupId>org.overturetool.core.prettyprinting</groupId>
     <artifactId>npp</artifactId>
     <name>New Pretty Printer </name>
 
