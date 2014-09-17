@@ -130,7 +130,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	ISymbolTable mytable;
 	IPrettyPrinter rootNpp;
 
-	private static String EXPRESSION_NOT_FOUND = "ERROR: Expression Node not found";
+	private static String EXPRESSION_NOT_FOUND = "ERROR: Expression Node not found: ";
 	private static String space = " ";
 	private static String leftcurly = "{";
 	private static String rightcurly = "}";
@@ -1705,14 +1705,14 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	public String createNewReturnValue(INode node, IndentTracker question)
 			throws AnalysisException
 	{
-		return EXPRESSION_NOT_FOUND;
+		return EXPRESSION_NOT_FOUND + node.getClass().getSimpleName();
 	}
 
 	@Override
 	public String createNewReturnValue(Object node, IndentTracker question)
 			throws AnalysisException
 	{
-		return EXPRESSION_NOT_FOUND;
+		return EXPRESSION_NOT_FOUND + node.getClass().getSimpleName();
 	}
 
 }

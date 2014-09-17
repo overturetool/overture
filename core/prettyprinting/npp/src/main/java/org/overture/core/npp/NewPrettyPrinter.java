@@ -42,7 +42,7 @@ public class NewPrettyPrinter extends
 		QuestionAnswerAdaptor<IndentTracker, String> implements IPrettyPrinter
 {
 
-	private static final String NODE_NOT_FOUND_ERROR = "ERROR: Node Not Found.";
+	private static final String NODE_NOT_FOUND_ERROR = "ERROR: Node Not Found: ";
 
 	/**
 	 * The attribute table for handling non abstract syntax such as separators.
@@ -127,14 +127,14 @@ public class NewPrettyPrinter extends
 	public String createNewReturnValue(INode node, IndentTracker question)
 			throws AnalysisException
 	{
-		return NODE_NOT_FOUND_ERROR;
+		return NODE_NOT_FOUND_ERROR + node.getClass().getSimpleName();
 	}
 
 	@Override
 	public String createNewReturnValue(Object node, IndentTracker question)
 			throws AnalysisException
 	{
-		return NODE_NOT_FOUND_ERROR;
+		return NODE_NOT_FOUND_ERROR + node.getClass().getSimpleName();
 	}
 
 }
