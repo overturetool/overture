@@ -37,11 +37,13 @@ import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.intf.lex.ILexQuoteToken;
+import org.overture.ast.intf.lex.ILexStringToken;
 import org.overture.ast.lex.LexBooleanToken;
 import org.overture.ast.lex.LexIdentifierToken;
 import org.overture.ast.lex.LexIntegerToken;
 import org.overture.ast.lex.LexLocation;
 import org.overture.ast.lex.LexQuoteToken;
+import org.overture.ast.lex.LexStringToken;
 import org.overture.ast.statements.AAssignmentStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AFieldField;
@@ -70,6 +72,7 @@ import de.be4.classicalb.core.parser.node.PExpression;
 import de.be4.classicalb.core.parser.node.PRecEntry;
 import de.be4.classicalb.core.parser.node.TIdentifierLiteral;
 import de.be4.classicalb.core.parser.node.TIntegerLiteral;
+import de.be4.classicalb.core.parser.node.TStringLiteral;
 
 public class BToVdmConverter extends DepthFirstAdapter
 {
@@ -478,9 +481,16 @@ public class BToVdmConverter extends DepthFirstAdapter
 		super.caseTIdentifierLiteral(node);
 	}
 
+	@Override
+	public void caseTStringLiteral(TStringLiteral node)
+	{
+		ILexStringToken value = new LexStringToken(node.getText(), loc);
+		result = AstFactory.newAStringLiteralExp(value);
+	}
+
 	public void defaultCase(Node node)
 	{
-		System.err.println("Hit unsupported node: "
+		System.err.println("B2VDM - Hit unsupported node: "
 				+ node.getClass().getSimpleName() + " - \"" + node + "\"");
 	}
 
