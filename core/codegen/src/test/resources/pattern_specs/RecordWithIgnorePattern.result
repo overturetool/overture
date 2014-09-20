@@ -28,6 +28,10 @@ public class A {
         return c;
     }
 
+    public String toString() {
+        return "A{" + "}";
+    }
+
     public static class Rec implements Record {
         public Number n;
         public Rec next;
@@ -74,6 +78,10 @@ public class Entry {
 
     public static Object Run() {
         return A.recPatternFun();
+    }
+
+    public String toString() {
+        return "Entry{" + "}";
     }
 }
 

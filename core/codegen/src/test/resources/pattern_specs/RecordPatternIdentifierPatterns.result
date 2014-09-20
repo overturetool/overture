@@ -73,6 +73,10 @@ public class A {
         return new Rec(n1, b2, c1, r2);
     }
 
+    public String toString() {
+        return "A{" + "}";
+    }
+
     public static class Rec implements Record {
         public Number n;
         public Boolean b;
@@ -125,6 +129,10 @@ public class Entry {
     public static VDMSeq Run() {
         return SeqUtil.seq(new A().recPatternOp(new A.Rec(77L, false, 'e', 4.4)),
             A.recPatternFun(new A.Rec(77L, false, 'e', 4.4)));
+    }
+
+    public String toString() {
+        return "Entry{" + "}";
     }
 }
 

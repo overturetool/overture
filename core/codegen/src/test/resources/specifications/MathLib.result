@@ -29,6 +29,10 @@ public class A {
         Number x16 = MATH.pi;
         MATH.srand(x);
     }
+
+    public String toString() {
+        return "A{" + "x = " + Utils.toString(x) + "}";
+    }
 }
 
 ##########

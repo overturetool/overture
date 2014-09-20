@@ -15,6 +15,10 @@ public class A {
         return Tuple.mk_(v1.equals(v1), v1.equals(v2), v1.equals(v3));
     }
 
+    public String toString() {
+        return "A{" + "}";
+    }
+
     public static class Vector2D implements Record {
         public Number x;
         public Number y;
@@ -61,6 +65,10 @@ public class Entry {
 
     public static Object Run() {
         return new A().op();
+    }
+
+    public String toString() {
+        return "Entry{" + "}";
     }
 }
 

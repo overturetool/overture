@@ -9,6 +9,11 @@ public class A {
 
     public A() {
     }
+
+    public String toString() {
+        return "A{" + "a = " + Utils.toString(a) + ", x = " +
+        Utils.toString(x) + "}";
+    }
 }
 
 ##########

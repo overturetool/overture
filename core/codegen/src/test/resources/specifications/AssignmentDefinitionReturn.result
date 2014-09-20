@@ -12,6 +12,10 @@ public class C {
 
         return retVal;
     }
+
+    public String toString() {
+        return "C{" + "}";
+    }
 }
 
 ##########

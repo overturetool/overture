@@ -16,6 +16,10 @@ public class Entry {
 
         return addOne.eval(2L);
     }
+
+    public String toString() {
+        return "Entry{" + "}";
+    }
 }
 
 ##########

@@ -34,6 +34,10 @@ public class Entry {
             sum(SetUtil.diff(Utils.clone(xs), SetUtil.set(x))).longValue();
         }
     }
+
+    public String toString() {
+        return "Entry{" + "}";
+    }
 }
 
 ##########

@@ -12,6 +12,10 @@ public class Entry {
     public static Object Run() {
         return false;
     }
+
+    public String toString() {
+        return "Entry{" + "s = " + Utils.toString(s) + "}";
+    }
 }
 
 ##########

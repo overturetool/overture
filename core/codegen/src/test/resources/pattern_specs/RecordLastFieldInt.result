@@ -23,6 +23,10 @@ public class A {
         return a;
     }
 
+    public String toString() {
+        return "A{" + "}";
+    }
+
     public static class Rec implements Record {
         public Number n1;
         public Number n2;
@@ -69,6 +73,10 @@ public class Entry {
 
     public static Object Run() {
         return A.recPatternFun();
+    }
+
+    public String toString() {
+        return "Entry{" + "}";
     }
 }
 

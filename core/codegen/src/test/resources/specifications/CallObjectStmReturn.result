@@ -17,6 +17,10 @@ public class A {
 
         return a.op1();
     }
+
+    public String toString() {
+        return "A{" + "}";
+    }
 }
 
 ##########

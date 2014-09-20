@@ -41,6 +41,10 @@ public class Entry {
         return op();
     }
 
+    public String toString() {
+        return "Entry{" + "}";
+    }
+
     public static class Vec implements Record {
         public Number x;
         public Number y;

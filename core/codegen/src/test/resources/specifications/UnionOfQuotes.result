@@ -24,6 +24,10 @@ public class A {
     public Number op3() {
         return Quotes.Red;
     }
+
+    public String toString() {
+        return "A{" + "}";
+    }
 }
 
 ##########

@@ -14,6 +14,10 @@ public class A {
     public static VDMMap op() {
         return MapUtil.map(new Maplet(Tuple.mk_(1L, true), Tuple.mk_(false, 2L)));
     }
+
+    public String toString() {
+        return "A{" + "a = " + Utils.toString(a) + "}";
+    }
 }
 
 ##########

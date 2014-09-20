@@ -47,6 +47,12 @@ public class A {
         return Utils.clone(a.r1);
     }
 
+    public String toString() {
+        return "A{" + "a = " + Utils.toString(a) + ", b = " +
+        Utils.toString(b) + ", c = " + Utils.toString(c) + ", d = " +
+        Utils.toString(d) + "}";
+    }
+
     public static class R1 implements Record {
         public Number x;
 

@@ -30,6 +30,10 @@ public class Entry {
 
         return a;
     }
+
+    public String toString() {
+        return "Entry{" + "}";
+    }
 }
 
 ##########

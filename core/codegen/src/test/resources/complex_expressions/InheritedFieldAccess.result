@@ -10,6 +10,10 @@ public class Entry {
     public static Object Run() {
         return new B().op();
     }
+
+    public String toString() {
+        return "Entry{" + "}";
+    }
 }
 
 ##########
@@ -22,6 +26,10 @@ public class A {
     protected Number x = 2L;
 
     public A() {
+    }
+
+    public String toString() {
+        return "A{" + "x := " + Utils.toString(x) + "}";
     }
 }
 
@@ -37,6 +45,10 @@ public class B extends A {
 
     public Number op() {
         return x;
+    }
+
+    public String toString() {
+        return "B{" + "}";
     }
 }
 

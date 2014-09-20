@@ -14,6 +14,10 @@ public class A {
             return cg_double(3L);
         }
     }
+
+    public String toString() {
+        return "A{" + "}";
+    }
 }
 
 ##########

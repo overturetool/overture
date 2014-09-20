@@ -10,6 +10,11 @@ public class A {
     public A() {
     }
 
+    public String toString() {
+        return "A{" + "a = " + Utils.toString(a) + ", b = " +
+        Utils.toString(b) + "}";
+    }
+
     public static class R implements Record {
         public Number x;
 

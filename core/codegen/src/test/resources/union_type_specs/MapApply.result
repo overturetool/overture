@@ -14,6 +14,11 @@ public class Entry {
     public static Object Run() {
         return b;
     }
+
+    public String toString() {
+        return "Entry{" + "x = " + Utils.toString(x) + ", b = " +
+        Utils.toString(b) + "}";
+    }
 }
 
 ##########

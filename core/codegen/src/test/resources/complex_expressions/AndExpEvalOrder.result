@@ -10,6 +10,10 @@ public class A {
     public static Number f() {
         return 1L;
     }
+
+    public String toString() {
+        return "A{" + "}";
+    }
 }
 
 ##########
@@ -51,6 +55,10 @@ public class Entry {
         }
 
         return setCompResult_1.size();
+    }
+
+    public String toString() {
+        return "Entry{" + "}";
     }
 }
 

@@ -31,6 +31,10 @@ public class Entry {
             casesString(SeqUtil.seq('b', 'b')),
             casesString(SeqUtil.seq('c', 'c')));
     }
+
+    public String toString() {
+        return "Entry{" + "}";
+    }
 }
 
 ##########

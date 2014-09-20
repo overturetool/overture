@@ -10,6 +10,10 @@ public class A {
     public Number op(final Character a, final Number b) {
         return 1L;
     }
+
+    public String toString() {
+        return "A{" + "}";
+    }
 }
 
 ##########
@@ -20,6 +24,10 @@ import java.util.*;
 
 public class B extends A {
     public B() {
+    }
+
+    public String toString() {
+        return "B{" + "}";
     }
 }
 
@@ -45,6 +53,10 @@ public class Entry {
         } else {
             throw new RuntimeException("Missing operation member: op");
         }
+    }
+
+    public String toString() {
+        return "Entry{" + "}";
     }
 }
 

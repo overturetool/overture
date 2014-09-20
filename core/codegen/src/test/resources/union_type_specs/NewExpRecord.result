@@ -46,6 +46,10 @@ public class Entry {
         return new Rec(((Number) x), ((Character) y));
     }
 
+    public String toString() {
+        return "Entry{" + "}";
+    }
+
     public static class Rec implements Record {
         public Number x;
         public Character y;

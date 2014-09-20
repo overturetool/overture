@@ -10,6 +10,10 @@ public class A {
     public static Tuple f() {
         return Tuple.mk_(1L, 2L);
     }
+
+    public String toString() {
+        return "A{" + "}";
+    }
 }
 
 ##########
@@ -24,6 +28,10 @@ public class B {
 
     public static Tuple f() {
         return Tuple.mk_(1L, 1L);
+    }
+
+    public String toString() {
+        return "B{" + "}";
     }
 }
 
@@ -65,6 +73,10 @@ public class Entry {
                 return false;
             }
         }
+    }
+
+    public String toString() {
+        return "Entry{" + "}";
     }
 }
 

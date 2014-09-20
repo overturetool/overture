@@ -27,6 +27,10 @@ public class Entry {
         //Skip;
         return 2L;
     }
+
+    public String toString() {
+        return "Entry{" + "s = " + Utils.toString(s) + "}";
+    }
 }
 
 ##########

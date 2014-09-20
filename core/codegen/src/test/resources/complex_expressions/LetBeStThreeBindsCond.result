@@ -47,6 +47,10 @@ public class Entry {
 
         return x.longValue() * y.longValue() * z.longValue();
     }
+
+    public String toString() {
+        return "Entry{" + "}";
+    }
 }
 
 ##########

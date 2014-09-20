@@ -10,6 +10,11 @@ public class A {
     public A() {
     }
 
+    public String toString() {
+        return "A{" + "x = " + Utils.toString(x) + ", y = " +
+        Utils.toString(y) + "}";
+    }
+
     public static class RecA implements Record {
         public B.RecB b;
 
@@ -49,6 +54,10 @@ import java.util.*;
 
 public class B {
     public B() {
+    }
+
+    public String toString() {
+        return "B{" + "}";
     }
 
     public static class RecB implements Record {

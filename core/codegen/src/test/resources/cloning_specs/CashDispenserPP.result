@@ -10,6 +10,10 @@ public class Entry {
     public static Object Run() {
         return new SimpleTest().Run();
     }
+
+    public String toString() {
+        return "Entry{" + "}";
+    }
 }
 
 ##########
@@ -51,6 +55,14 @@ public class SimpleTest {
         } else {
             return false;
         }
+    }
+
+    public String toString() {
+        return "SimpleTest{" + "c1 = " + Utils.toString(c1) + ", cards = " +
+        Utils.toString(cards) + ", resource = " + Utils.toString(resource) +
+        ", tills = " + Utils.toString(tills) + ", clock := " +
+        Utils.toString(clock) + ", letterbox := " + Utils.toString(letterbox) +
+        "}";
     }
 }
 
@@ -175,6 +187,13 @@ public class Account {
         }
     }
 
+    public String toString() {
+        return "Account{" + "cards := " + Utils.toString(cards) +
+        ", balance := " + Utils.toString(balance) + ", transactions := " +
+        Utils.toString(transactions) + ", dailyLimit = " +
+        Utils.toString(dailyLimit) + "}";
+    }
+
     public static class Transaction implements Record {
         public VDMSeq date;
         public Number cardId;
@@ -248,6 +267,12 @@ public class Card {
     public Number GetCardId() {
         return cardId;
     }
+
+    public String toString() {
+        return "Card{" + "code := " + Utils.toString(code) + ", cardId := " +
+        Utils.toString(cardId) + ", accountId := " + Utils.toString(accountId) +
+        "}";
+    }
 }
 
 ##########
@@ -276,6 +301,11 @@ public class Cardholder {
 
     public VDMSeq GetAddress() {
         return address;
+    }
+
+    public String toString() {
+        return "Cardholder{" + "name := " + Utils.toString(name) +
+        ", address := " + Utils.toString(address) + "}";
     }
 }
 
@@ -383,6 +413,15 @@ public class CentralResource {
     public void AddIllegalCard(final Number cId) {
         illegalCards = SetUtil.union(illegalCards, SetUtil.set(cId));
     }
+
+    public String toString() {
+        return "CentralResource{" + "accounts := " + Utils.toString(accounts) +
+        ", numberOfTries := " + Utils.toString(numberOfTries) +
+        ", illegalCards := " + Utils.toString(illegalCards) +
+        ", letterbox := " + Utils.toString(letterbox) + ", clock := " +
+        Utils.toString(clock) + ", maxNumberOfTries = " +
+        Utils.toString(maxNumberOfTries) + "}";
+    }
 }
 
 ##########
@@ -403,6 +442,10 @@ public class Clock {
 
     public VDMSeq GetDate() {
         return date;
+    }
+
+    public String toString() {
+        return "Clock{" + "date := " + Utils.toString(date) + "}";
     }
 }
 
@@ -432,6 +475,13 @@ public class Letter {
 
         return this;
     }
+
+    public String toString() {
+        return "Letter{" + "name := " + Utils.toString(name) + ", address := " +
+        Utils.toString(address) + ", date := " + Utils.toString(date) +
+        ", transactions := " + Utils.toString(transactions) + ", balance := " +
+        Utils.toString(balance) + "}";
+    }
 }
 
 ##########
@@ -452,6 +502,11 @@ public class Letterbox {
 
     public Letter GetLastStatement() {
         return ((Letter) statements.get(Utils.index(statements.size())));
+    }
+
+    public String toString() {
+        return "Letterbox{" + "statements := " + Utils.toString(statements) +
+        "}";
     }
 }
 
@@ -567,6 +622,13 @@ public class Till {
     private static Number Encode(final Number pin) {
         return pin;
     }
+
+    public String toString() {
+        return "Till{" + "curCard := " + Utils.toString(curCard) +
+        ", cardOk := " + Utils.toString(cardOk) + ", retainedCards := " +
+        Utils.toString(retainedCards) + ", resource := " +
+        Utils.toString(resource) + "}";
+    }
 }
 
 ##########
@@ -580,6 +642,10 @@ abstract public class Event {
     }
 
     public abstract Object execute(final System system);
+
+    public String toString() {
+        return "Event{" + "}";
+    }
 }
 
 ##########
@@ -609,6 +675,10 @@ public class GetBalance extends Event {
             return false;
         }
     }
+
+    public String toString() {
+        return "GetBalance{" + "tillid := " + Utils.toString(tillid) + "}";
+    }
 }
 
 ##########
@@ -633,6 +703,10 @@ public class IllegalCard extends Event {
         sys.GetResource().AddIllegalCard(mycard);
 
         return true;
+    }
+
+    public String toString() {
+        return "IllegalCard{" + "mycard := " + Utils.toString(mycard) + "}";
     }
 }
 
@@ -660,6 +734,11 @@ public class InsertCard extends Event {
         sys.GetTill(tillid).InsertCard(mycard);
 
         return true;
+    }
+
+    public String toString() {
+        return "InsertCard{" + "tillid := " + Utils.toString(tillid) +
+        ", mycard := " + Utils.toString(mycard) + "}";
     }
 }
 
@@ -692,6 +771,10 @@ public class ReturnCard extends Event {
 
         return true;
     }
+
+    public String toString() {
+        return "ReturnCard{" + "tillid := " + Utils.toString(tillid) + "}";
+    }
 }
 
 ##########
@@ -720,6 +803,10 @@ public class SendStatement extends Event {
         } else {
             return false;
         }
+    }
+
+    public String toString() {
+        return "SendStatement{" + "tillid := " + Utils.toString(tillid) + "}";
     }
 }
 
@@ -801,6 +888,17 @@ public class System {
         resource.AddAccount(ifid1, ifacc1);
         resource.AddLetterbox(clock, new Letterbox());
     }
+
+    public String toString() {
+        return "System{" + "c1 = " + Utils.toString(c1) + ", c2 = " +
+        Utils.toString(c2) + ", c3 = " + Utils.toString(c3) + ", c4 = " +
+        Utils.toString(c4) + ", c5 = " + Utils.toString(c5) + ", c6 = " +
+        Utils.toString(c6) + ", c7 = " + Utils.toString(c7) + ", cards = " +
+        Utils.toString(cards) + ", resource = " + Utils.toString(resource) +
+        ", tills = " + Utils.toString(tills) + ", clock := " +
+        Utils.toString(clock) + ", letterbox := " + Utils.toString(letterbox) +
+        "}";
+    }
 }
 
 ##########
@@ -825,6 +923,11 @@ public class Validate extends Event {
 
     public Object execute(final System sys) {
         return sys.GetTill(tillid).Validate(code);
+    }
+
+    public String toString() {
+        return "Validate{" + "tillid := " + Utils.toString(tillid) +
+        ", code := " + Utils.toString(code) + "}";
     }
 }
 
@@ -856,6 +959,11 @@ public class Withdrawal extends Event {
         } else {
             return false;
         }
+    }
+
+    public String toString() {
+        return "Withdrawal{" + "tillid := " + Utils.toString(tillid) +
+        ", amount := " + Utils.toString(amount) + "}";
     }
 }
 

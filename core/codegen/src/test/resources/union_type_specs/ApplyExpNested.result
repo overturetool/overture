@@ -10,6 +10,10 @@ public class A {
     public Number op(final Number x) {
         return 1L;
     }
+
+    public String toString() {
+        return "A{" + "}";
+    }
 }
 
 ##########
@@ -24,6 +28,10 @@ public class B {
 
     public Number op(final Number x) {
         return 1L;
+    }
+
+    public String toString() {
+        return "B{" + "}";
     }
 }
 
@@ -64,6 +72,10 @@ public class Entry {
         Number q = apply_2;
 
         return 1L;
+    }
+
+    public String toString() {
+        return "Entry{" + "}";
     }
 }
 

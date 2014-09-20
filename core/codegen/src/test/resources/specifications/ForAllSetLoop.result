@@ -47,6 +47,10 @@ public class A {
         return SetUtil.set(1L, 2L, 3L);
     }
 
+    public String toString() {
+        return "A{" + "}";
+    }
+
     private static class Rec implements Record {
         public Number x;
 

@@ -10,6 +10,11 @@ public class A {
     public A() {
     }
 
+    public String toString() {
+        return "A{" + "x = " + Utils.toString(x) + ", y = " +
+        Utils.toString(y) + "}";
+    }
+
     public static class R1 implements Record {
         public Number x;
 

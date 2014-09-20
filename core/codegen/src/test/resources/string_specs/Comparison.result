@@ -14,6 +14,10 @@ public class Entry {
         return SeqUtil.seq(a.equals(a), a.equals(b), b.equals("b"),
             !(a.equals(a)), !(a.equals(b)), !(b.equals("b")));
     }
+
+    public String toString() {
+        return "Entry{" + "}";
+    }
 }
 
 ##########

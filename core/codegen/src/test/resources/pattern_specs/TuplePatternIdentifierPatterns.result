@@ -88,6 +88,10 @@ public class A {
 
         return Tuple.mk_(n1, b2, c1, r2);
     }
+
+    public String toString() {
+        return "A{" + "}";
+    }
 }
 
 ##########
@@ -103,6 +107,10 @@ public class Entry {
     public static Object Run() {
         return SeqUtil.seq(new A().tuplePatternOp(Tuple.mk_(77L, false, 'e', 4.4)),
             A.tuplePatternFun(Tuple.mk_(77L, false, 'e', 4.4)));
+    }
+
+    public String toString() {
+        return "Entry{" + "}";
     }
 }
 

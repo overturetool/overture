@@ -34,6 +34,10 @@ public class A {
 
         return Tuple.mk_(n, false, c, 2L);
     }
+
+    public String toString() {
+        return "A{" + "}";
+    }
 }
 
 ##########
@@ -48,6 +52,10 @@ public class Entry {
 
     public static Object Run() {
         return A.tuplePatternFun();
+    }
+
+    public String toString() {
+        return "Entry{" + "}";
     }
 }
 

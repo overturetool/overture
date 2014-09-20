@@ -233,6 +233,11 @@ public class PhoneBook {
     public Boolean neq(final PhoneBook other) {
         return !(MapUtil.equals(phoneNumbers, other.phoneNumbers));
     }
+
+    public String toString() {
+        return "PhoneBook{" + "phoneNumbers := " +
+        Utils.toString(phoneNumbers) + "}";
+    }
 }
 
 ##########

@@ -14,6 +14,10 @@ public class A {
     public static Number f() {
         throw new UnsupportedOperationException();
     }
+
+    public String toString() {
+        return "A{" + "}";
+    }
 }
 
 ##########
