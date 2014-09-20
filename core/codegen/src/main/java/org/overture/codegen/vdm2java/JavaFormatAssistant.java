@@ -234,6 +234,22 @@ public class JavaFormatAssistant
 	{
 		LinkedList<AFieldDeclCG> fields = record.getFields();
 
+		AApplyExpCG call = consUtilCall(returnType, memberName);
+		LinkedList<SExpCG> args = call.getArgs();
+
+		for (AFieldDeclCG field : fields)
+		{
+			AIdentifierVarExpCG nextArg = new AIdentifierVarExpCG();
+			nextArg.setOriginal(field.getName());
+			nextArg.setType(field.getType().clone());
+			args.add(nextArg);
+		}
+
+		return call;
+	}
+
+	public static AApplyExpCG consUtilCall(STypeCG returnType, String memberName)
+	{
 		AExplicitVarExpCG member = new AExplicitVarExpCG();
 
 		AMethodTypeCG methodType = new AMethodTypeCG();
@@ -246,16 +262,7 @@ public class JavaFormatAssistant
 		AApplyExpCG call = new AApplyExpCG();
 		call.setType(returnType.clone());
 		call.setRoot(member);
-		LinkedList<SExpCG> args = call.getArgs();
-
-		for (AFieldDeclCG field : fields)
-		{
-			AIdentifierVarExpCG nextArg = new AIdentifierVarExpCG();
-			nextArg.setOriginal(field.getName());
-			nextArg.setType(field.getType().clone());
-			args.add(nextArg);
-		}
-
+		
 		return call;
 	}
 }
