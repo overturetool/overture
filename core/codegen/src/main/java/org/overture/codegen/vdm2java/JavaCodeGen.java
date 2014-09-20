@@ -239,12 +239,13 @@ public class JavaCodeGen
 		PatternTransformation patternTransformation = new PatternTransformation(classes, varPrefixes, irInfo, transformationAssistant, new PatternMatchConfig());
 		TypeTransformation typeTransformation = new TypeTransformation(transformationAssistant);
 		UnionTypeTransformation unionTypeTransformation = new UnionTypeTransformation(transformationAssistant, irInfo, classes, APPLY_EXP_NAME_PREFIX, OBJ_EXP_NAME_PREFIX, CALL_STM_OBJ_NAME_PREFIX, MISSING_OP_MEMBER, MISSING_MEMBER,irInfo.getTempVarNameGen());
-
+		JavaClassToStringTrans javaToStringTransformation = new JavaClassToStringTrans(irInfo);
+		
 		DepthFirstAnalysisAdaptor[] analyses = new DepthFirstAnalysisAdaptor[] {
 				funcTransformation, ifExpTransformation,
 				deflattenTransformation, funcValVisitor, transVisitor,
 				deflattenTransformation, patternTransformation,
-				typeTransformation, unionTypeTransformation };
+				typeTransformation, unionTypeTransformation, javaToStringTransformation};
 
 		for (DepthFirstAnalysisAdaptor transformation : analyses)
 		{
