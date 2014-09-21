@@ -1,0 +1,12 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let a : [nat*nat]= nil,
+		b = mk_(1,2)
+in
+	return a = b; 
+
+end Entry
