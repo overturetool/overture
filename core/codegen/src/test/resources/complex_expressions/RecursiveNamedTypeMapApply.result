@@ -1,0 +1,38 @@
+import org.overture.codegen.runtime.*;
+
+import quotes.*;
+
+import java.util.*;
+
+
+public class Entry {
+    private VDMMap m = MapUtil.map(new Maplet(new Token(1L),
+                MapUtil.map(new Maplet(new Token(1L), Quotes.A))));
+
+    public Entry() {
+    }
+
+    public Object app(final Token id, final Token index) {
+        return ((Object) ((VDMMap) ((Object) m.get(id))).get(index));
+    }
+
+    public static Object Run() {
+        Entry e = new Entry();
+
+        return ((Object) e.app(new Token(1L), new Token(1L)));
+    }
+
+    public String toString() {
+        return "Entry{" + "m := " + Utils.toString(m) + "}";
+    }
+}
+
+##########
+
+package quotes;
+
+public interface Quotes {
+    public static Number A = 1L;
+}
+
+##########
