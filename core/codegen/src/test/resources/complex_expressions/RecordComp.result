@@ -12,7 +12,8 @@ public class A {
         Vector2D v2 = new Vector2D(2L, 3L);
         Vector2D v3 = new Vector2D(1.5, 2.5);
 
-        return Tuple.mk_(v1.equals(v1), v1.equals(v2), v1.equals(v3));
+        return Tuple.mk_(Utils.equals(v1, v1), Utils.equals(v1, v2),
+            Utils.equals(v1, v3));
     }
 
     public String toString() {

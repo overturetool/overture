@@ -11,8 +11,9 @@ public class Entry {
         String a = "a";
         String b = "b";
 
-        return SeqUtil.seq(a.equals(a), a.equals(b), b.equals("b"),
-            !(a.equals(a)), !(a.equals(b)), !(b.equals("b")));
+        return SeqUtil.seq(Utils.equals(a, a), Utils.equals(a, b),
+            Utils.equals(b, "b"), !(Utils.equals(a, a)), !(Utils.equals(a, b)),
+            !(Utils.equals(b, "b")));
     }
 
     public String toString() {

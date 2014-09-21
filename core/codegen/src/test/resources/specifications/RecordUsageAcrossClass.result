@@ -29,7 +29,7 @@ public class A {
 
             RecA other = ((RecA) obj);
 
-            return b.equals(other.b);
+            return Utils.equals(b, other.b);
         }
 
         public int hashCode() {

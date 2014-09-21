@@ -78,7 +78,7 @@ public class A {
 
             return (n.longValue() == other.n.longValue()) && (b == other.b) &&
             (c == other.c) && (r.doubleValue() == other.r.doubleValue()) &&
-            (SeqUtil.equals(s, other.s)) && (next.equals(other.next));
+            (SeqUtil.equals(s, other.s)) && (Utils.equals(next, other.next));
         }
 
         public int hashCode() {
