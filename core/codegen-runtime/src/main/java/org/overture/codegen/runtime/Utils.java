@@ -119,4 +119,9 @@ public class Utils
 		
 		return obj.toString();
 	}
+	
+	public static boolean equals(Object left, Object right)
+	{
+		return left != null ? left.equals(right) : right == null; 
+	}
 }
