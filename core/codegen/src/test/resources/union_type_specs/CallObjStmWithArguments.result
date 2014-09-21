@@ -76,7 +76,7 @@ public class Entry {
         long toVar_1 = 3L;
 
         for (Long i = 1L; i <= toVar_1; i++) {
-            Object callStmObj_1 = ((Object) objs.get(Utils.index(i)));
+            Object callStmObj_1 = objs.get(Utils.index(i));
 
             if (callStmObj_1 instanceof A) {
                 ((A) callStmObj_1).op(((Number) a), ((Boolean) b),
