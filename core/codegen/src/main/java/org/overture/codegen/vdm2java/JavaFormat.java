@@ -543,8 +543,7 @@ public class JavaFormat
 	private String handleEquals(AEqualsBinaryExpCG valueType)
 			throws AnalysisException
 	{
-		return format(valueType.getLeft()) + ".equals("
-				+ format(valueType.getRight()) + ")";
+		return String.format("%s.equals(%s, %s)", UTILS_FILE, format(valueType.getLeft()), format(valueType.getRight()));
 	}
 
 	private String handleSetComparison(AEqualsBinaryExpCG node)
