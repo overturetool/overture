@@ -114,6 +114,7 @@ CG {-> package='org.overture.codegen.cgast'
     	[superName]:java_String
     	[records]:CG.#decl.record*
     	[thread]:CG.#decl.thread
+    	[innerClasses]:CG.#decl.class*
     |	{interface}
     	[templateTypes]:CG.#type.template*
     	[package]:java_String

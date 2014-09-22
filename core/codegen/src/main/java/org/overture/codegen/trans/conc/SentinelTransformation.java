@@ -8,7 +8,7 @@ import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 
 
-public class InnerClassDcl extends DepthFirstAnalysisAdaptor
+public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 {
 	@Override
 	public void caseAClassDeclCG(AClassDeclCG node) throws AnalysisException
@@ -16,7 +16,7 @@ public class InnerClassDcl extends DepthFirstAnalysisAdaptor
 		AClassDeclCG innerClass = new AClassDeclCG();
 		
 		String classname = node.getName();
-		LinkedList<AMethodDeclCG> innerClassMethods = node.getMethods();
+		LinkedList<AMethodDeclCG> innerClassMethods = (LinkedList<AMethodDeclCG>) node.getMethods().clone();
 		
 		innerClass.setName(classname+"_sentinel");
 		innerClass.setMethods(innerClassMethods);
@@ -29,5 +29,6 @@ public class InnerClassDcl extends DepthFirstAnalysisAdaptor
 			innerClass.setSuperName("Sentinel");
 		}
 		innerClass.setAccess("public");
+		
 	}
 }
