@@ -2,14 +2,20 @@ package org.overture.core.npp;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.Dialect;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.parser.util.ParserUtil;
+//import org.overture.typechecker.util;
 
 public class ExpressionNppTest {
 
@@ -29,6 +35,20 @@ public class ExpressionNppTest {
 			throws AnalysisException {
 		PExp expInput = ParserUtil.parseExpression(input).result;
 		String actual = NewPrettyPrinter.prettyPrint(expInput);
+		assertEquals(expected, actual);
+	}
+	
+	public void defaux(String input, String expected) throws AnalysisException
+	{
+		List<AModuleModules> defexpInput = ParserUtil.parseSl(input).result;
+		System.out.print(defexpInput);
+		int i = 0;
+//		if(defexpInput.contains("operations")){
+//			i = defexpInput.indexOf("operations");
+//		}
+			AModuleModules defInput = defexpInput.get(i);
+			String actual = NewPrettyPrinter.prettyPrint(defInput);
+			
 		assertEquals(expected, actual);
 	}
 
@@ -1456,11 +1476,12 @@ public class ExpressionNppTest {
 		aux("narrow_(e,C1)","narrow_(e,C1)");
 	}
 	
-//	@Test
-//	public void testCaseAPostOpExp_01() throws AnalysisException
-//	{
-//		aux("post exists x in set y & x > 1", "post exist x in set y & (x > 1)");
-//	}
+	//FIXME:This test is seeing Put() as variable.
+	@Test
+	public void testCaseAPostOpExp_01() throws AnalysisException
+	{
+		defaux("operations Put() pre a < 100 post assert(true)", "put(a: nat) pre (a < 100)\npost assert(true)");
+	}
 	
 //	@Test
 //	public void testCaseAPreOpExp_01() throws AnalysisException
