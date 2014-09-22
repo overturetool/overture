@@ -251,6 +251,10 @@ public class Bag {
 
         return Utils.clone(bags);
     }
+
+    public String toString() {
+        return "Bag{" + "numbers := " + Utils.toString(numbers) + "}";
+    }
 }
 
 ##########

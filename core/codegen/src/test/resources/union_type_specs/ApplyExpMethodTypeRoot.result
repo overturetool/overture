@@ -18,6 +18,10 @@ public class Entry {
 
         return e.op(((Number) x), ((Character) y));
     }
+
+    public String toString() {
+        return "Entry{" + "}";
+    }
 }
 
 ##########

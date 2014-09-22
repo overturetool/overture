@@ -18,6 +18,10 @@ public class A {
         return 5L;
     }
 
+    public String toString() {
+        return "A{" + "}";
+    }
+
     public static class Rec implements Record {
         public Rec() {
         }
@@ -52,6 +56,10 @@ public class Entry {
 
     public static Object Run() {
         return A.recPatternFun();
+    }
+
+    public String toString() {
+        return "Entry{" + "}";
     }
 }
 

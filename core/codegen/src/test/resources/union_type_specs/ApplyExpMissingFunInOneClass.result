@@ -10,6 +10,10 @@ public class A {
     public static Number fun() {
         return 2L;
     }
+
+    public String toString() {
+        return "A{" + "}";
+    }
 }
 
 ##########
@@ -20,6 +24,10 @@ import java.util.*;
 
 public class B {
     public B() {
+    }
+
+    public String toString() {
+        return "B{" + "}";
     }
 }
 
@@ -51,6 +59,10 @@ public class Entry {
         }
 
         return sum;
+    }
+
+    public String toString() {
+        return "Entry{" + "}";
     }
 }
 

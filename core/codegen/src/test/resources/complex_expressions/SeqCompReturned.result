@@ -26,6 +26,10 @@ public class Entry {
 
         return Utils.clone(seqCompResult_1);
     }
+
+    public String toString() {
+        return "Entry{" + "}";
+    }
 }
 
 ##########

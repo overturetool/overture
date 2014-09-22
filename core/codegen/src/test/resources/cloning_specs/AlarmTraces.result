@@ -22,6 +22,11 @@ public class Alarm {
     public Number GetReqQuali() {
         return reqQuali;
     }
+
+    public String toString() {
+        return "Alarm{" + "descr := " + Utils.toString(descr) +
+        ", reqQuali := " + Utils.toString(reqQuali) + "}";
+    }
 }
 
 ##########
@@ -46,6 +51,10 @@ public class Expert {
 
     public VDMSet GetQuali() {
         return quali;
+    }
+
+    public String toString() {
+        return "Expert{" + "quali := " + Utils.toString(quali) + "}";
     }
 }
 
@@ -172,6 +181,11 @@ public class Plant {
 
         return andResult_1;
     }
+
+    public String toString() {
+        return "Plant{" + "alarms := " + Utils.toString(alarms) +
+        ", schedule := " + Utils.toString(schedule) + "}";
+    }
 }
 
 ##########
@@ -217,6 +231,16 @@ public class Entry {
         Expert expert = entry.plant.ExpertToPage(entry.a1, p1);
 
         return Tuple.mk_(periods, expert);
+    }
+
+    public String toString() {
+        return "Entry{" + "a1 := " + Utils.toString(a1) + ", a2 := " +
+        Utils.toString(a2) + ", ex1 := " + Utils.toString(ex1) + ", ex2 := " +
+        Utils.toString(ex2) + ", ex3 := " + Utils.toString(ex3) + ", ex4 := " +
+        Utils.toString(ex4) + ", plant := " + Utils.toString(plant) +
+        ", exs := " + Utils.toString(exs) + ", p1 = " + Utils.toString(p1) +
+        ", p2 = " + Utils.toString(p2) + ", p3 = " + Utils.toString(p3) +
+        ", p4 = " + Utils.toString(p4) + ", ps = " + Utils.toString(ps) + "}";
     }
 }
 

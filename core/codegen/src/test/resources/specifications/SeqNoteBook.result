@@ -237,6 +237,10 @@ public class NoteBook {
     public Boolean neq(final NoteBook other) {
         return !(SeqUtil.equals(messages, other.messages));
     }
+
+    public String toString() {
+        return "NoteBook{" + "messages := " + Utils.toString(messages) + "}";
+    }
 }
 
 ##########

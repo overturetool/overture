@@ -74,6 +74,7 @@ import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.ATokenBasicTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AUnionTypeCG;
+import org.overture.codegen.cgast.types.AUnknownTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.SBasicTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
@@ -543,8 +544,7 @@ public class JavaFormat
 	private String handleEquals(AEqualsBinaryExpCG valueType)
 			throws AnalysisException
 	{
-		return format(valueType.getLeft()) + ".equals("
-				+ format(valueType.getRight()) + ")";
+		return String.format("%s.equals(%s, %s)", UTILS_FILE, format(valueType.getLeft()), format(valueType.getRight()));
 	}
 
 	private String handleSetComparison(AEqualsBinaryExpCG node)
@@ -795,7 +795,6 @@ public class JavaFormat
 		}
 
 		throw new AnalysisException("Expected set or seq type when trying to format element type");
-
 	}
 
 	public String nextVarName(String prefix)
@@ -847,6 +846,11 @@ public class JavaFormat
 		return escaped;
 	}
 
+	public static boolean castNotNeeded(STypeCG type)
+	{
+		return type instanceof AObjectTypeCG || type instanceof AUnknownTypeCG || type instanceof AUnionTypeCG;
+	}
+	
 	public String escapeChar(char c)
 	{
 		return GeneralUtils.isEscapeSequence(c) ? StringEscapeUtils.escapeJavaScript(c

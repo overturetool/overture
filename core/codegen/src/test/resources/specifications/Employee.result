@@ -8,6 +8,10 @@ abstract public class Employee {
     }
 
     public abstract Number getSalary();
+
+    public String toString() {
+        return "Employee{" + "}";
+    }
 }
 
 ##########
@@ -46,6 +50,11 @@ public class HourlyPaidEmployee extends Employee {
             rate = pRate;
         }
     }
+
+    public String toString() {
+        return "HourlyPaidEmployee{" + "hours := " + Utils.toString(hours) +
+        ", rate := " + Utils.toString(rate) + "}";
+    }
 }
 
 ##########
@@ -70,6 +79,11 @@ public class FixedSalaryEmployee extends Employee {
 
     public Number getSalary() {
         return fixedSalary;
+    }
+
+    public String toString() {
+        return "FixedSalaryEmployee{" + "fixedSalary := " +
+        Utils.toString(fixedSalary) + "}";
     }
 }
 
@@ -122,6 +136,10 @@ public class Company {
 
         return this;
     }
+
+    public String toString() {
+        return "Company{" + "employees := " + Utils.toString(employees) + "}";
+    }
 }
 
 ##########
@@ -143,6 +161,10 @@ public class World {
                                        .addEmp(emp4);
 
         return company.calculateSalary();
+    }
+
+    public String toString() {
+        return "World{" + "}";
     }
 }
 

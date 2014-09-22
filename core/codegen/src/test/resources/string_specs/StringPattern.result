@@ -8,14 +8,14 @@ public class A {
     }
 
     public String stringPatternOp(final String stringPattern_1) {
-        Boolean success_1 = stringPattern_1.equals("hej");
+        Boolean success_1 = Utils.equals(stringPattern_1, "hej");
 
         if (!(success_1)) {
             throw new RuntimeException("String pattern match failed");
         }
 
         String stringPattern_2 = "hej";
-        Boolean success_2 = stringPattern_2.equals("hej");
+        Boolean success_2 = Utils.equals(stringPattern_2, "hej");
 
         if (!(success_2)) {
             throw new RuntimeException("String pattern match failed");
@@ -25,20 +25,24 @@ public class A {
     }
 
     public static String stringPatternFun(final String stringPattern_3) {
-        Boolean success_3 = stringPattern_3.equals("hej");
+        Boolean success_3 = Utils.equals(stringPattern_3, "hej");
 
         if (!(success_3)) {
             throw new RuntimeException("String pattern match failed");
         }
 
         String stringPattern_4 = "hej";
-        Boolean success_4 = stringPattern_4.equals("hej");
+        Boolean success_4 = Utils.equals(stringPattern_4, "hej");
 
         if (!(success_4)) {
             throw new RuntimeException("String pattern match failed");
         }
 
         return "hej";
+    }
+
+    public String toString() {
+        return "A{" + "}";
     }
 }
 
@@ -55,6 +59,10 @@ public class Entry {
     public static Object Run() {
         return SeqUtil.seq(new A().stringPatternOp("hej"),
             A.stringPatternFun("hej"));
+    }
+
+    public String toString() {
+        return "Entry{" + "}";
     }
 }
 

@@ -10,6 +10,10 @@ public class C {
     public Number op() {
         return Q.pi;
     }
+
+    public String toString() {
+        return "C{" + "}";
+    }
 }
 
 ##########
@@ -22,6 +26,10 @@ public class Q {
     public static final Number pi = 3.14;
 
     public Q() {
+    }
+
+    public String toString() {
+        return "Q{" + "pi = " + Utils.toString(pi) + "}";
     }
 }
 

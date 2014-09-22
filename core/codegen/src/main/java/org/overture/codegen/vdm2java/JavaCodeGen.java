@@ -244,12 +244,15 @@ public class JavaCodeGen
 		//Conc
 		
 		SentinelTransformation Concurrencytransform = new SentinelTransformation(irInfo,classes);
+
+		JavaClassToStringTrans javaToStringTransformation = new JavaClassToStringTrans(irInfo);
+
 		
 		DepthFirstAnalysisAdaptor[] analyses = new DepthFirstAnalysisAdaptor[] {
 				funcTransformation, ifExpTransformation,
 				deflattenTransformation, funcValVisitor, transVisitor,
 				deflattenTransformation, patternTransformation,
-				typeTransformation, unionTypeTransformation, Concurrencytransform };
+				typeTransformation, unionTypeTransformation, javaToStringTransformation,Concurrencytransform};
 
 		for (DepthFirstAnalysisAdaptor transformation : analyses)
 		{

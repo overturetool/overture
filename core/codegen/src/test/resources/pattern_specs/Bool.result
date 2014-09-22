@@ -40,6 +40,10 @@ public class A {
 
         return false;
     }
+
+    public String toString() {
+        return "A{" + "}";
+    }
 }
 
 ##########
@@ -62,6 +66,10 @@ public class Entry {
         }
 
         return andResult_1;
+    }
+
+    public String toString() {
+        return "Entry{" + "}";
     }
 }
 

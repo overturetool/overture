@@ -10,6 +10,10 @@ public class A {
     public Number op() {
         return 1L;
     }
+
+    public String toString() {
+        return "A{" + "}";
+    }
 }
 
 ##########
@@ -24,6 +28,10 @@ public class B {
 
     public Number op() {
         return 11L;
+    }
+
+    public String toString() {
+        return "B{" + "}";
     }
 }
 
@@ -58,6 +66,10 @@ public class Entry {
         }
 
         return sum;
+    }
+
+    public String toString() {
+        return "Entry{" + "}";
     }
 }
 

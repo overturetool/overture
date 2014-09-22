@@ -10,6 +10,10 @@ public class A {
     public Number op(final Number x) {
         return 1L;
     }
+
+    public String toString() {
+        return "A{" + "}";
+    }
 }
 
 ##########
@@ -25,6 +29,10 @@ public class B {
     public Number op(final Number x) {
         return 1L;
     }
+
+    public String toString() {
+        return "B{" + "}";
+    }
 }
 
 ##########
@@ -39,7 +47,7 @@ public class Entry {
 
     public static Number Run() {
         VDMMap xs = MapUtil.map(new Maplet(1L, new A()), new Maplet(2L, new B()));
-        Object x = ((Object) xs.get(1L));
+        Object x = xs.get(1L);
 
         Number apply_1 = null;
 
@@ -64,6 +72,10 @@ public class Entry {
         Number q = apply_2;
 
         return 1L;
+    }
+
+    public String toString() {
+        return "Entry{" + "}";
     }
 }
 

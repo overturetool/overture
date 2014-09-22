@@ -1,0 +1,27 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Number Run() {
+        Number result = 0L;
+
+        for (Iterator iterator_1 = SeqUtil.seq(5L, 10L, 15L).iterator();
+                iterator_1.hasNext();) {
+            Number x = (Number) iterator_1.next();
+            result = result.longValue() + x.longValue();
+        }
+
+        return result;
+    }
+
+    public String toString() {
+        return "Entry{" + "}";
+    }
+}
+
+##########

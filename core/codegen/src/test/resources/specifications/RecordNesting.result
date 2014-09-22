@@ -10,6 +10,11 @@ public class A {
     public A() {
     }
 
+    public String toString() {
+        return "A{" + "x = " + Utils.toString(x) + ", y = " +
+        Utils.toString(y) + "}";
+    }
+
     public static class R1 implements Record {
         public Number x;
 
@@ -54,7 +59,7 @@ public class A {
 
             R2 other = ((R2) obj);
 
-            return r.equals(other.r);
+            return Utils.equals(r, other.r);
         }
 
         public int hashCode() {
@@ -87,7 +92,7 @@ public class A {
             R3 other = ((R3) obj);
 
             return (x.longValue() == other.x.longValue()) &&
-            (r.equals(other.r));
+            (Utils.equals(r, other.r));
         }
 
         public int hashCode() {

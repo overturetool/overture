@@ -30,6 +30,10 @@ public class Entry {
     public static Object Run() {
         return op();
     }
+
+    public String toString() {
+        return "Entry{" + "}";
+    }
 }
 
 ##########

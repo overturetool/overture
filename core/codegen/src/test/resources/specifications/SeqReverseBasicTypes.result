@@ -30,6 +30,13 @@ public class A {
 
         //Skip;
     }
+
+    public String toString() {
+        return "A{" + "as = " + Utils.toString(as) + ", bs = " +
+        Utils.toString(bs) + ", cs = " + Utils.toString(cs) + ", ds = " +
+        Utils.toString(ds) + ", es = " + Utils.toString(es) + ", fs = " +
+        Utils.toString(fs) + "}";
+    }
 }
 
 ##########

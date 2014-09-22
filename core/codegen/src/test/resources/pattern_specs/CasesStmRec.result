@@ -86,6 +86,10 @@ public class Entry {
         return Utils.clone(result);
     }
 
+    public String toString() {
+        return "Entry{" + "}";
+    }
+
     public static class Rec implements Record {
         public Number a;
         public Number b;

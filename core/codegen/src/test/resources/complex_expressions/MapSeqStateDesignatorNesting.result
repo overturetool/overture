@@ -14,6 +14,10 @@ public class Entry {
         return Utils.clone(a.x);
     }
 
+    public String toString() {
+        return "Entry{" + "}";
+    }
+
     public static class A implements Record {
         public VDMMap x;
 

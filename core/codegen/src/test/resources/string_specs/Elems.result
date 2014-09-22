@@ -17,6 +17,10 @@ public class Entry {
     public static String f() {
         return "cat";
     }
+
+    public String toString() {
+        return "Entry{" + "a = " + Utils.toString(a) + "}";
+    }
 }
 
 ##########

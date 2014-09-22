@@ -13,6 +13,10 @@ public class ThreadClass extends Thread {
         x = 2L;
     }
 
+    public String toString() {
+        return "ThreadClass{" + "x := " + Utils.toString(x) + "}";
+    }
+
     public void run() {
         setX();
     }
@@ -23,6 +27,10 @@ public class ThreadClass extends Thread {
 
         public void setX() {
             x = 2L;
+        }
+
+        public String toString() {
+            return "ThreadClass{" + "x := " + Utils.toString(x) + "}";
         }
     }
 }
@@ -56,6 +64,10 @@ public class Entry {
         return t.x;
     }
 
+    public String toString() {
+        return "Entry{" + "}";
+    }
+
     public class Entry_sentinel extends Sentinel {
         public Entry() {
         }
@@ -77,6 +89,10 @@ public class Entry {
             }
 
             return t.x;
+        }
+
+        public String toString() {
+            return "Entry{" + "}";
         }
     }
 }

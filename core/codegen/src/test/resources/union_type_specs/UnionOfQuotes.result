@@ -12,6 +12,10 @@ public class A {
     public static Number f() {
         return Quotes.T;
     }
+
+    public String toString() {
+        return "A{" + "}";
+    }
 }
 
 ##########
@@ -28,6 +32,10 @@ public class B {
 
     public static Number f() {
         return Quotes.T;
+    }
+
+    public String toString() {
+        return "B{" + "}";
     }
 }
 
@@ -64,6 +72,10 @@ public class Entry {
         }
 
         return 2L;
+    }
+
+    public String toString() {
+        return "Entry{" + "}";
     }
 }
 

@@ -50,7 +50,7 @@ public class VisitorManager
 		this.classVisitor = new CGVisitor<AClassDeclCG>(new ClassVisitorCG());
 		this.declVisitor = new CGVisitor<SDeclCG>(new DeclVisitorCG());
 		this.expVisitor = new CGVisitor<SExpCG>(new ExpVisitorCG());
-		this.typeVisitor = new CGVisitor<STypeCG>(new TypeVisitorCG());
+		this.typeVisitor = new CGVisitorRecursiveTypeHandler(new TypeVisitorCG());
 		this.stmVisitor = new CGVisitor<SStmCG>(new StmVisitorCG());
 		this.stateDesignatorVisitor = new CGVisitor<SStateDesignatorCG>(new StateDesignatorVisitorCG());
 		this.objectDesignatorVisitor = new CGVisitor<SObjectDesignatorCG>(new ObjectDesignatorVisitorCG());

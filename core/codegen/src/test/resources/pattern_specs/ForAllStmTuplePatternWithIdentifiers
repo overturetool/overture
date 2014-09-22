@@ -1,0 +1,17 @@
+class Entry
+
+operations
+	
+public static Run : () ==> nat 
+Run () ==
+(
+	dcl result : nat := 0;
+	
+	for all mk_(a,b) in set {mk_(1,2),mk_(2,3),mk_(3,4),mk_(4,5),mk_(5,6)} do
+		result := result + a * b;
+		
+	return result;
+)
+
+
+end Entry

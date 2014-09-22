@@ -15,6 +15,10 @@ public class Entry {
         return Thread.currentThread().getId();
     }
 
+    public String toString() {
+        return "Entry{" + "}";
+    }
+
     public class Entry_sentinel extends Sentinel {
         public Entry() {
         }
@@ -25,6 +29,10 @@ public class Entry {
 
         public static Number f() {
             return Thread.currentThread().getId();
+        }
+
+        public String toString() {
+            return "Entry{" + "}";
         }
     }
 }
