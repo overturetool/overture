@@ -34,11 +34,6 @@ $abstract $node.getAccess() $static class $node.getName() $JavaFormat.formatSupe
 	$JavaFormat.format($field)
 	#end
 	##
-	###set ( $n = 0 )
-	###foreach( $method in $node.getMethods() )
-	 ##public final int $method = $n;
-	 ###set ( $n = $n + 1)
-	###end 
 	
 	#foreach( $method in $node.getMethods() )
 	$JavaFormat.format($method)
