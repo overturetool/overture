@@ -32,6 +32,6 @@ public class TestFlags
 	public static final boolean CLONING_CONFIG_TESTS_ON = false;
 	public static final boolean PATTERN_TESTS_ON = false;
 	public static final boolean UNION_TYPE_TESTS_ON = false;
-	public static final boolean CONCURRENCY_TESTS_ON = true;
+	public static final boolean CONCURRENCY_TESTS_ON = false;
 	public static final boolean BIND_TESTS_ON = false;
 }
