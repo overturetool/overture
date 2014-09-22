@@ -30,5 +30,7 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 		}
 		innerClass.setAccess("public");
 		
+		node.getInnerClasses().add(innerClass);
+		
 	}
 }
