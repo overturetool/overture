@@ -1,10 +1,15 @@
 #set( $quoteImport = "")
+#if ( !$JavaFormat.isInnerClass($node) )
 #if ($IRAnalysis.usesQuoteLiterals($node))
 	#set( $quoteImport = "import quotes.*;")
 #end
 ##
+##
+
 import org.overture.codegen.runtime.*;
 import java.util.*;
+#end
+##
 $quoteImport
 ##
 #set( $abstract = "")
@@ -57,4 +62,8 @@ $abstract $node.getAccess() $static class $node.getName() $JavaFormat.formatSupe
 	#end
 	##
 	${threadMethod}##
+	##
+	#foreach( $class in $node.getInnerClasses() )
+	$JavaFormat.format($class)
+	#end##
 }

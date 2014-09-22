@@ -19,34 +19,38 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #~%
  */
-package org.overture.codegen.ir;
+package org.overture.codegen.tests;
 
-public class IRSettings
+import java.io.File;
+
+import org.overture.codegen.ir.IRSettings;
+import org.overture.codegen.vdm2java.JavaSettings;
+import org.overture.config.Release;
+import org.overture.config.Settings;
+
+public class ConcurrencyTestCase extends SpecificationTestCase
 {
-	private boolean charSeqAsString;
-	private boolean generateConc;
+	public ConcurrencyTestCase()
+	{
+	}
+
+	public ConcurrencyTestCase(File file)
+	{
+		super(file);
+	}
+
+	@Override
+	protected void setUp() throws Exception
+	{
+		Settings.release = Release.VDM_10;
+	}
 	
-	public IRSettings()
+	@Override
+	public IRSettings getIrSettings()
 	{
-	}
+		IRSettings irSettings = new IRSettings();
+		irSettings.setGenerateConc(true);
 
-	public boolean generateConc()
-	{
-		return generateConc;
-	}
-	
-	public void setGenerateConc(boolean generateConc)
-	{
-		this.generateConc = generateConc;
-	}
-
-	public boolean getCharSeqAsString()
-	{
-		return charSeqAsString;
-	}
-
-	public void setCharSeqAsString(boolean charSeqAsString)
-	{
-		this.charSeqAsString = charSeqAsString;
+		return irSettings;
 	}
 }

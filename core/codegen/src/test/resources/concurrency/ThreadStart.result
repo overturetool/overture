@@ -16,6 +16,15 @@ public class ThreadClass {
     public void run() {
         setX();
     }
+
+    public class ThreadClass_sentinel extends Sentinel {
+        public ThreadClass() {
+        }
+
+        public void setX() {
+            x = 2L;
+        }
+    }
 }
 
 ##########
@@ -45,6 +54,30 @@ public class Entry {
         }
 
         return t.x;
+    }
+
+    public class Entry_sentinel extends Sentinel {
+        public Entry() {
+        }
+
+        public static Object Run() {
+            ThreadClass t = new ThreadClass();
+            t.start();
+
+            Boolean whileCond1 = true;
+
+            while (whileCond1) {
+                whileCond1 = t.x.longValue() != 2L;
+
+                if (!(whileCond1)) {
+                    break;
+                }
+
+                //Skip;
+            }
+
+            return t.x;
+        }
     }
 }
 

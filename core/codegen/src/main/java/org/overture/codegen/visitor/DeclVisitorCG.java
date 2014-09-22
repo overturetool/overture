@@ -408,7 +408,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 		ILexNameToken opname = node.getOpname();
 		//exp.apply(THIS, question);
 		
-		System.out.print(exp + " "+ opname+"\n");
+		//System.out.print(exp + " "+ opname+"\n");
 		
 		return null;
 	}

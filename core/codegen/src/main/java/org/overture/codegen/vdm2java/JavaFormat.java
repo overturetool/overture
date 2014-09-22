@@ -854,16 +854,8 @@ public class JavaFormat
 				: c + "";
 	}
 	
-	//gkanos method === not know if correct yet.
-//	public String ThreadCreate(SExpCG exp)
-//	{
-//		StringBuilder sb = new StringBuilder();
-//		
-//		
-//		sb.append(exp + " t" + "= new "+ exp+"();");
-//		
-//		//sb.append(exp + " t" + "= new "+ exp+"();");
-//		 
-//		return sb.toString();
-//	}
+	public boolean isInnerClass(AClassDeclCG node)
+	{
+		return node.parent() != null && node.parent().getAncestor(AClassDeclCG.class) != null;
+	}
 }

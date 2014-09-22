@@ -14,6 +14,19 @@ public class Entry {
     public static Number f() {
         return Thread.currentThread().getId();
     }
+
+    public class Entry_sentinel extends Sentinel {
+        public Entry() {
+        }
+
+        public static Object Run() {
+            return f();
+        }
+
+        public static Number f() {
+            return Thread.currentThread().getId();
+        }
+    }
 }
 
 ##########
