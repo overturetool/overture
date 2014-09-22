@@ -20,13 +20,34 @@ $quoteImport
 #if (!$JavaFormat.isNull($node.getThread()))
 	#set( $threadMethod = $JavaFormat.format($node.getThread()))
 #end
+<<<<<<< HEAD
+=======
+##
+#set ( $baseclass = "" )
+#if (!$JavaFormat.isNull($node.getThread()))
+	#set ( $baseclass = "extends Thread" )
+#end
+###if ($JavaFormat.formatSuperType($node) == "" && $JavaFormat.isNull($node.getThread()) ) 
+	###set ( $baseclass = "extends Sentinel" )
+###end
+>>>>>>> e23f812... Trying to implement innerClass tranformation.
 
 $abstract $node.getAccess() $static class $node.getName() $JavaFormat.formatSuperType($node)
 {
 	#foreach( $field in $node.getFields() )
 	$JavaFormat.format($field)
 	#end
+<<<<<<< HEAD
 
+=======
+	
+	###set ( $n = 0 )
+	###foreach( $method in $node.getMethods() )
+	 ##public final int $method = $n;
+	 ###set ( $n = $n + 1)
+	###end 
+	
+>>>>>>> e23f812... Trying to implement innerClass tranformation.
 	#foreach( $method in $node.getMethods() )
 	$JavaFormat.format($method)
 	#end
