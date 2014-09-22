@@ -1,3 +1,24 @@
+/*
+ * #%~
+ * VDM Code Generator
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.codegen.visitor;
 
 import java.util.Iterator;
@@ -49,187 +70,191 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 			AClassInvariantDefinition node, IRInfo question)
 			throws AnalysisException
 	{
-		//Do not report the node as unsupported and generate nothing
+		// Do not report the node as unsupported and generate nothing
 		return null;
 	}
-	
+
 	@Override
 	public SDeclCG caseATraceDefinitionTerm(ATraceDefinitionTerm node,
 			IRInfo question) throws AnalysisException
 	{
-		//Do not report the node as unsupported and generate nothing
+		// Do not report the node as unsupported and generate nothing
 		return null;
 	}
-	
+
 	@Override
 	public SDeclCG caseANamedTraceDefinition(ANamedTraceDefinition node,
 			IRInfo question) throws AnalysisException
 	{
-		//Do not report the node as unsupported and generate nothing
+		// Do not report the node as unsupported and generate nothing
 		return null;
 	}
-	
+
 	@Override
 	public SDeclCG caseANamedInvariantType(ANamedInvariantType node,
 			IRInfo question) throws AnalysisException
 	{
 		PType type = node.getType();
-		
-		if(type instanceof AUnionType)
+
+		if (type instanceof AUnionType)
 		{
 			AUnionType unionType = (AUnionType) type;
-			
-			if(question.getTypeAssistant().isUnionOfType(unionType, AQuoteType.class))
-				//The VDM translation ignores named invariant types that are not
-				//union of quotes as they are represented as integers instead
+
+			if (question.getTypeAssistant().isUnionOfType(unionType, AQuoteType.class))
+			{
+				// The VDM translation ignores named invariant types that are not
+				// union of quotes as they are represented as integers instead
 				return new AEmptyDeclCG();
+			}
 		}
 
-		return null; //Currently the code generator only supports the union of quotes case
+		return null; // Currently the code generator only supports the union of quotes case
 	}
-	
+
 	@Override
 	public SDeclCG caseARecordInvariantType(ARecordInvariantType node,
 			IRInfo question) throws AnalysisException
 	{
 		ILexNameToken name = node.getName();
 		LinkedList<AFieldField> fields = node.getFields();
-		
+
 		ARecordDeclCG record = new ARecordDeclCG();
-		//Set this public for now but it must be corrected as the access is specified
-		//in the type definition instead:
-		//		types
+		// Set this public for now but it must be corrected as the access is specified
+		// in the type definition instead:
+		// types
 		//
-		//		public R ::
-		//		    x : nat
-		//		    y : nat;
+		// public R ::
+		// x : nat
+		// y : nat;
 		record.setAccess(IRConstants.PUBLIC);
 		record.setName(name.getName());
-		
+
 		LinkedList<AFieldDeclCG> recordFields = record.getFields();
 		for (AFieldField aFieldField : fields)
-		{		
+		{
 			SDeclCG res = aFieldField.apply(question.getDeclVisitor(), question);
-			
-			if(res instanceof AFieldDeclCG)
+
+			if (res instanceof AFieldDeclCG)
 			{
 				AFieldDeclCG fieldDecl = (AFieldDeclCG) res;
 				recordFields.add(fieldDecl);
+			} else
+			{
+				throw new AnalysisExceptionCG("Could not generate fields of record: "
+						+ name, node.getLocation());
 			}
-			else
-				throw new AnalysisExceptionCG("Could not generate fields of record: " + name, node.getLocation());
 		}
-		
+
 		return record;
 	}
-	
+
 	@Override
 	public SDeclCG caseAFieldField(AFieldField node, IRInfo question)
 			throws AnalysisException
 	{
-		//Record fields are public
+		// Record fields are public
 		String access = IRConstants.PUBLIC;
 		String name = node.getTag();
 		boolean isStatic = false;
 		boolean isFinal = false;
 		STypeCG type = node.getType().apply(question.getTypeVisitor(), question);
 		SExpCG exp = null;
-		
+
 		return question.getDeclAssistant().constructField(access, name, isStatic, isFinal, type, exp);
 	}
-	
+
 	@Override
-	public SDeclCG caseATypeDefinition(ATypeDefinition node,
-			IRInfo question) throws AnalysisException
+	public SDeclCG caseATypeDefinition(ATypeDefinition node, IRInfo question)
+			throws AnalysisException
 	{
 		String access = node.getAccess().getAccess().toString();
-		
+
 		SDeclCG dec = node.getType().apply(question.getDeclVisitor(), question);
-		
-		if(dec instanceof ARecordDeclCG)
+
+		if (dec instanceof ARecordDeclCG)
 		{
 			ARecordDeclCG record = (ARecordDeclCG) dec;
 			record.setAccess(access);
 		}
-		
+
 		return dec;
 	}
-		
+
 	@Override
 	public SDeclCG caseAExplicitFunctionDefinition(
 			AExplicitFunctionDefinition node, IRInfo question)
 			throws AnalysisException
 	{
-		if(node.getIsTypeInvariant())
+		if (node.getIsTypeInvariant())
 		{
 			question.addUnsupportedNode(node, "Explicit functions that are type invariants are not supported");
 			return null;
 		}
-		
+
 		String accessCg = node.getAccess().getAccess().toString();
 		String funcNameCg = node.getName().getName();
-		
+
 		STypeCG typeCg = node.getType().apply(question.getTypeVisitor(), question);
-		
-		if(!(typeCg instanceof AMethodTypeCG))
+
+		if (!(typeCg instanceof AMethodTypeCG))
 		{
-			question.addUnsupportedNode(node, "Expected method type for explicit function. Got: " + typeCg);
+			question.addUnsupportedNode(node, "Expected method type for explicit function. Got: "
+					+ typeCg);
 			return null;
 		}
-		
+
 		AMethodTypeCG methodTypeCg = (AMethodTypeCG) typeCg;
-		
+
 		AFuncDeclCG method = new AFuncDeclCG();
-		
+
 		method.setAccess(accessCg);
 		method.setMethodType(methodTypeCg);
-		method.setName(funcNameCg);		
-		
+		method.setName(funcNameCg);
+
 		Iterator<List<PPattern>> iterator = node.getParamPatternList().iterator();
 		List<PPattern> paramPatterns = iterator.next();
-		
+
 		LinkedList<AFormalParamLocalParamCG> formalParameters = method.getFormalParams();
-		
-		for(int i = 0; i < paramPatterns.size(); i++)
+
+		for (int i = 0; i < paramPatterns.size(); i++)
 		{
 			SPatternCG pattern = paramPatterns.get(i).apply(question.getPatternVisitor(), question);
-			
+
 			AFormalParamLocalParamCG param = new AFormalParamLocalParamCG();
 			param.setType(methodTypeCg.getParams().get(i).clone());
 			param.setPattern(pattern);
-			
+
 			formalParameters.add(param);
 		}
-		
-		if(node.getIsUndefined())
+
+		if (node.getIsUndefined())
 		{
 			method.setBody(new ANotImplementedExpCG());
-		}
-		else if(node.getIsCurried())
+		} else if (node.getIsCurried())
 		{
 			AMethodTypeCG nextLevel = (AMethodTypeCG) methodTypeCg;
 
 			ALambdaExpCG currentLambda = new ALambdaExpCG();
 			ALambdaExpCG topLambda = currentLambda;
-			
-			while(iterator.hasNext())
+
+			while (iterator.hasNext())
 			{
 				nextLevel = (AMethodTypeCG) nextLevel.getResult();
 				paramPatterns = iterator.next();
-				
+
 				for (int i = 0; i < paramPatterns.size(); i++)
 				{
 					PPattern param = paramPatterns.get(i);
-					
+
 					SPatternCG patternCg = param.apply(question.getPatternVisitor(), question);
-					
+
 					AFormalParamLocalParamCG paramCg = new AFormalParamLocalParamCG();
 					paramCg.setPattern(patternCg);
 					paramCg.setType(nextLevel.getParams().get(i).clone());
-					
+
 					currentLambda.getParams().add(paramCg);
 				}
-			
+
 				currentLambda.setType(nextLevel.clone());
 
 				if (iterator.hasNext())
@@ -238,36 +263,35 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 					currentLambda.setExp(nextLambda);
 					currentLambda = nextLambda;
 				}
-				
+
 			}
-			
+
 			SExpCG bodyExp = node.getBody().apply(question.getExpVisitor(), question);
 			currentLambda.setExp(bodyExp);
 			method.setBody(topLambda);
-		}
-		else
+		} else
 		{
 			SExpCG bodyCg = node.getBody().apply(question.getExpVisitor(), question);
 			method.setBody(bodyCg);
 		}
-		
+
 		boolean isAbstract = method.getBody() == null;
 		method.setAbstract(isAbstract);
-		
-		//If the function uses any type parameters they will be
-		//registered as part of the method declaration
+
+		// If the function uses any type parameters they will be
+		// registered as part of the method declaration
 		LinkedList<ILexNameToken> typeParams = node.getTypeParams();
-		for(int i = 0; i < typeParams.size(); i++)
+		for (int i = 0; i < typeParams.size(); i++)
 		{
 			ILexNameToken typeParam = typeParams.get(i);
 			ATemplateTypeCG templateType = new ATemplateTypeCG();
 			templateType.setName(typeParam.getName());
 			method.getTemplateTypes().add(templateType);
 		}
-		
+
 		return method;
 	}
-	
+
 	@Override
 	public SDeclCG caseAExplicitOperationDefinition(
 			AExplicitOperationDefinition node, IRInfo question)
@@ -276,21 +300,22 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 		String access = node.getAccess().getAccess().toString();
 		boolean isStatic = question.getTcFactory().createPDefinitionAssistant().isStatic(node);
 		String operationName = node.getName().getName();
-		STypeCG type = node.getType().apply(question.getTypeVisitor(), question);	
-		
-		if(!(type instanceof AMethodTypeCG))
+		STypeCG type = node.getType().apply(question.getTypeVisitor(), question);
+
+		if (!(type instanceof AMethodTypeCG))
 		{
-			question.addUnsupportedNode(node, "Expected method type for explicit operation. Got: " + type);
+			question.addUnsupportedNode(node, "Expected method type for explicit operation. Got: "
+					+ type);
 			return null;
 		}
-		
+
 		AMethodTypeCG methodType = (AMethodTypeCG) type;
 		SStmCG body = node.getBody().apply(question.getStmVisitor(), question);
 		boolean isConstructor = node.getIsConstructor();
 		boolean isAbstract = body == null;
-		
+
 		AMethodDeclCG method = new AMethodDeclCG();
-		
+
 		method.setAccess(access);
 		method.setStatic(isStatic);
 		method.setMethodType(methodType);
@@ -298,27 +323,27 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 		method.setBody(body);
 		method.setIsConstructor(isConstructor);
 		method.setAbstract(isAbstract);
-		
+
 		List<PType> ptypes = ((AOperationType) node.getType()).getParameters();
 		LinkedList<PPattern> paramPatterns = node.getParameterPatterns();
-		
+
 		LinkedList<AFormalParamLocalParamCG> formalParameters = method.getFormalParams();
-		
-		for(int i = 0; i < ptypes.size(); i++)
+
+		for (int i = 0; i < ptypes.size(); i++)
 		{
 			STypeCG paramType = ptypes.get(i).apply(question.getTypeVisitor(), question);
 			SPatternCG patternCg = paramPatterns.get(i).apply(question.getPatternVisitor(), question);
-			
+
 			AFormalParamLocalParamCG param = new AFormalParamLocalParamCG();
 			param.setType(paramType);
 			param.setPattern(patternCg);
-			
+
 			formalParameters.add(param);
 		}
-		
+
 		return method;
 	}
-	
+
 	@Override
 	public SDeclCG caseAInstanceVariableDefinition(
 			AInstanceVariableDefinition node, IRInfo question)
@@ -330,13 +355,13 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 		boolean isFinal = false;
 		STypeCG type = node.getType().apply(question.getTypeVisitor(), question);
 		SExpCG exp = node.getExpression().apply(question.getExpVisitor(), question);
-		
-		
+
 		return question.getDeclAssistant().constructField(access, name, isStatic, isFinal, type, exp);
 	}
-	
+
 	@Override
-	public SDeclCG caseAValueDefinition(AValueDefinition node, IRInfo question) throws AnalysisException
+	public SDeclCG caseAValueDefinition(AValueDefinition node, IRInfo question)
+			throws AnalysisException
 	{
 		String access = node.getAccess().getAccess().toString();
 		String name = node.getPattern().toString();
@@ -344,10 +369,10 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 		boolean isFinal = true;
 		PType type = node.getType();
 		PExp exp = node.getExpression();
-		
+
 		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 		SExpCG expCg = exp.apply(question.getExpVisitor(), question);
-		
+
 		return question.getDeclAssistant().constructField(access, name, isStatic, isFinal, typeCg, expCg);
 	}
 }

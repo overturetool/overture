@@ -1,3 +1,24 @@
+/*
+ * #%~
+ * VDM Code Generator
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.codegen.trans.letexps;
 
 import java.util.LinkedList;
@@ -22,7 +43,7 @@ public class FuncTransformation extends DepthFirstAnalysisAdaptor
 	public FuncTransformation()
 	{
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public void caseAFuncDeclCG(AFuncDeclCG node) throws AnalysisException
@@ -35,7 +56,7 @@ public class FuncTransformation extends DepthFirstAnalysisAdaptor
 		String name = node.getName();
 		SExpCG body = node.getBody();
 		SourceNode sourceNode = node.getSourceNode();
-		
+
 		AMethodDeclCG method = new AMethodDeclCG();
 		method.setSourceNode(sourceNode);
 		method.setAccess(access);
@@ -46,33 +67,33 @@ public class FuncTransformation extends DepthFirstAnalysisAdaptor
 		method.setName(name);
 		method.setStatic(true);
 		method.setIsConstructor(false);
-		
-		if(!(body instanceof ANotImplementedExpCG))
+
+		if (!(body instanceof ANotImplementedExpCG))
 		{
 			AReturnStmCG returnStm = new AReturnStmCG();
 			returnStm.setExp(body.clone());
 			method.setBody(returnStm);
-		}
-		else
+		} else
 		{
 			method.setBody(new ANotImplementedStmCG());
 		}
-		
+
 		AClassDeclCG enclosingClas = getEnclosingClass(node, "function declarations");
 		enclosingClas.getFunctions().remove(node);
 		enclosingClas.getMethods().add(method);
 	}
-	
-	private AClassDeclCG getEnclosingClass(AFuncDeclCG node, String nodeStr) throws AnalysisException
+
+	private AClassDeclCG getEnclosingClass(AFuncDeclCG node, String nodeStr)
+			throws AnalysisException
 	{
 		AClassDeclCG enclosingClass = node.getAncestor(AClassDeclCG.class);
 
-		//A Function must always have an enclosing class in a PP model
+		// A Function must always have an enclosing class in a PP model
 		if (enclosingClass == null)
 		{
 			throw new AnalysisException(String.format("Could not find enclosing class for function %s", node));
 		}
-		
+
 		return enclosingClass;
 	}
 }

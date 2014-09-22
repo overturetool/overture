@@ -1,37 +1,57 @@
-/*******************************************************************************
- * Copyright (c) 2009, 2011 Overture Team and others.
- *
- * Overture is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Overture is distributed in the hope that it will be useful,
+/*
+ * #%~
+ * org.overture.ide.plugins.quickinterpreter
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Overture.  If not, see <http://www.gnu.org/licenses/>.
- * 	
- * The Overture Tool web-site: http://overturetool.org/
- *******************************************************************************/
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.ide.plugins.quickinterpreter.view;
 
 import java.util.List;
 import java.util.Vector;
 
+import org.eclipse.jface.resource.FontRegistry;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.text.Document;
+import org.eclipse.jface.text.TextAttribute;
+import org.eclipse.jface.text.rules.IToken;
+import org.eclipse.jface.text.rules.Token;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyleRange;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.themes.ITheme;
+import org.eclipse.ui.themes.IThemeManager;
 import org.overture.ast.lex.Dialect;
-import org.overture.ast.util.definitions.ClassList;
+import org.overture.ast.util.modules.ModuleList;
+import org.overture.config.Release;
 import org.overture.config.Settings;
-import org.overture.interpreter.runtime.ClassInterpreter;
+import org.overture.ide.ui.editor.syntax.VdmColorProvider;
+import org.overture.ide.vdmsl.ui.editor.syntax.VdmSlCodeScanner;
+import org.overture.interpreter.runtime.Interpreter;
+import org.overture.interpreter.runtime.ModuleInterpreter;
+import org.overture.parser.config.Properties;
 import org.overture.parser.syntax.ParserException;
 
 public class VdmQuickInterpreter extends ViewPart
@@ -42,11 +62,14 @@ public class VdmQuickInterpreter extends ViewPart
 	private final int HISTORY_COUNT = 200;
 	private List<String> history = new Vector<String>(HISTORY_COUNT);
 	private int index = -1;
-	private Text textAreaResult = null;
+	private StyledText textAreaResult = null;
 	private Text textInput = null;
-	ClassInterpreter ci;
+	Interpreter interpreter;
+	
+	VdmSlCodeScanner scannerResult = new VdmSlCodeScanner(new VdmColorProvider());
 
-	public VdmQuickInterpreter() {
+	public VdmQuickInterpreter()
+	{
 
 		init();
 
@@ -56,25 +79,23 @@ public class VdmQuickInterpreter extends ViewPart
 	{
 		try
 		{
-			Settings.dialect = Dialect.VDM_PP;
-			ci = new ClassInterpreter(new ClassList());
-			ci.init(null);
+			Settings.dialect = Dialect.VDM_SL;
+			Settings.release = Release.VDM_10;
+			Properties.numeric_type_bind_generation = true;
+			interpreter = new ModuleInterpreter(new ModuleList());
+			interpreter.init(null);
 		} catch (Exception e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+	
 
 	@Override
 	public void createPartControl(Composite parent)
 	{
-		// parent.setLayout(new FormLayout ());
 		GridLayout layout = new GridLayout(1, false);
-		// RowLayout layout =new RowLayout ();
-		// layout.fill= true;
-		// layout.type = SWT.VERTICAL;
-		// layout.pack=false;
 
 		FillLayout fillLayout = new FillLayout();
 
@@ -82,101 +103,151 @@ public class VdmQuickInterpreter extends ViewPart
 		fillLayout.marginHeight = 0;
 
 		fillLayout.spacing = 5;
-		// top = new Composite(parent, SWT.EMBEDDED);
-		// top.setLayout(layout);
-		// top.pack();
 		parent.setLayout(layout);
 
-		textAreaResult = new Text(parent, SWT.MULTI | SWT.V_SCROLL
+		textAreaResult = new StyledText(parent, SWT.MULTI | SWT.V_SCROLL
 				| SWT.READ_ONLY);
-		textAreaResult.setLayoutData(new GridData(SWT.FILL,
-				SWT.FILL,
-				true,
-				true,
-				1,
-				1));
+		textAreaResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		textInput = new Text(parent, SWT.BORDER | SWT.SINGLE);
 		textInput.setLayoutData(new GridData(SWT.FILL, 10, false, false, 1, 1));
-		textInput.addKeyListener(new org.eclipse.swt.events.KeyAdapter() {
+		textInput.addKeyListener(new org.eclipse.swt.events.KeyAdapter()
+		{
 			public void keyPressed(org.eclipse.swt.events.KeyEvent e)
 			{
 				if (e.keyCode == ENTER_KEYCODE)
 				{
 					String input = textInput.getText();
+					execute(input);
 					textInput.setText("");
-					textAreaResult.append("\n" + input);
-					addEntry(input);
 				} else if (e.keyCode == UP_KEYCODE)
 				{
-					index--;
-					String input = getEntry();
-					if (input.length() > 0)
-						textInput.setText(input);
-					else
-						index = 0;
+					recallHistory(true);
+					e.doit = false;
 				} else if (e.keyCode == DOWN_KEYCODE)
 				{
-					index++;
-					String input = getEntry();
-					if (input.length() > 0)
-						textInput.setText(input);
-					else
-						index = history.size() - 1;
+					recallHistory(false);
+					e.doit = false;
 				}
 			}
 		});
 
+		IThemeManager themeManager = PlatformUI.getWorkbench().getThemeManager();
+		ITheme currentTheme = themeManager.getCurrentTheme();
+
+		FontRegistry fontRegistry = currentTheme.getFontRegistry();
+		Font font = fontRegistry.get(JFaceResources.TEXT_FONT);
+
+		textAreaResult.setFont(font);
+		textInput.setFont(font);
+
 	}
 
-	private void addEntry(String input)
+	private void recallHistory(boolean forward)
 	{
-		index++;
-		if (index >= HISTORY_COUNT)
-			index = 0;
-		if (history.size() > index)
-			history.add(index, input);
+		textInput.setText(history.get(index));
+		textInput.setSelection(textInput.getText().length());
+
+		if (forward)
+			index++;
 		else
-			history.add(input);
+			index--;
+
+		if (index > history.size() - 1)
+		{
+			index = history.size() - 1;
+		} else if (index < 0)
+		{
+			index = 0;
+		}
+	}
+
+	private void storeCommand(String cmd)
+	{
+		index = 0;
+		history.add(0, cmd);
+		if (history.size() > HISTORY_COUNT)
+		{
+			history = history.subList(0, HISTORY_COUNT);
+		}
+	}
+
+	private void execute(String input)
+	{
+		if (input.startsWith("p ") || input.startsWith("print "))
+		{
+			input = input.substring(input.indexOf(' '));
+		}
+
+		input = input.trim();
+
+		if (input.isEmpty())
+		{
+			return;
+		}
+		
+		storeCommand(input);
+
+		if (input.equals("help"))
+		{
+			appendResult("\n\nOverture Properties: "+"\n\tEVAL_TYPE_BINDS = "
+					+ Properties.numeric_type_bind_generation + "\n\tINT_MIN = "
+					+ Properties.minint + "\n\tINT_MAX = " + Properties.maxint
+					+ "\n\tRelease = " + Settings.release + "\n\tDialect = "
+					+ Settings.dialect+"\n");
+			return;
+		}
+
+		
+		appendResult("\n" + input);
 
 		try
 		{
-
-			// long before = System.currentTimeMillis();
-			Settings.dialect = Dialect.VDM_PP;
-			if (input.startsWith("p ") || input.startsWith("print "))
-				input = input.substring(input.indexOf(' '));
-			textAreaResult.append(" = " + ci.execute(input.trim(), null));
-			// long after = System.currentTimeMillis();
-			// textAreaResult.append("Executed in " +
-			// (double)(after-before)/1000 + " secs. ");
-
-		}catch(ParserException e)
+			appendResult(" = "
+					+ interpreter.execute(input.trim(), null));
+		} catch (ParserException e)
 		{
-			textAreaResult.append(" = "+ e.toString());
+			appendResult(" = " + e.toString());
 			init();
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
-			textAreaResult.append(" = Fatal error");
+			appendResult(" --- " + e.getMessage());
 			init();
-			// e.printStackTrace();
 		}
 
 	}
-
-	private String getEntry()
+	
+	private void appendResult(String text)
 	{
-		if (index < history.size() && index >= 0)
-			return history.get(index);
-		else
-			return "";
+		final String oldText = textAreaResult.getText();
+		String tmp = oldText+text;
+		textAreaResult.append(text);
+		textAreaResult.setSelection(textAreaResult.getText().length());
+		
+		scannerResult.setRange(new Document(tmp), 0, tmp.length());
+
+		IToken token = null;
+		do
+		{
+			token = scannerResult.nextToken();
+			TextAttribute attribute = null;
+			int start = scannerResult.getTokenOffset();
+			int length = scannerResult.getTokenLength();
+
+			if (token.getData() instanceof TextAttribute)
+			{
+				attribute = (TextAttribute) token.getData();
+				textAreaResult.setStyleRange(new StyleRange(start, length, attribute.getForeground(), attribute.getBackground()));
+			}
+
+		} while (token != Token.EOF);
+		
+		
 	}
 
 	@Override
 	public void setFocus()
 	{
-		// TODO Auto-generated method stub
 
 	}
 
-} // @jve:decl-index=0:visual-constraint="22,16,646,230"
+}

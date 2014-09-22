@@ -20,8 +20,6 @@
     <module>pog</module>
     <module>testframework</module>
     <module>combinatorialtesting</module>
-    <!-- vdmtools will move away; it's fine but not necessary for astv2 -jwc/4mar2013 -->
-    <!-- <module>vdmtools</module> -->
     <module>prettyprinting</module>
     <module>commandline</module>
     <module>codegen</module>

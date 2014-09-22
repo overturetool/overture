@@ -1,0 +1,570 @@
+--  Overture STANDARD LIBRARY: VDM-Unit
+--      --------------------------------------------
+-- 
+-- Standard library for the Overture Interpreter. When the interpreter
+-- evaluates the preliminary functions/operations in this file,
+-- corresponding internal functions is called instead of issuing a run
+-- time error. Signatures should not be changed, as well as name of
+-- module (VDM-SL) or class (VDM++). Pre/post conditions is 
+-- fully user customisable. 
+-- Dont care's may NOT be used in the parameter lists.
+--  
+--
+-- define VDM++ equivalents to the JUnit 3.8.2 classes
+--
+--===========================================================================
+-- Using VDMUnit
+--
+-- VDM Unit generally supports the same features as JUnit for Java
+--
+-- Approach:
+-- * Define one Test Case per class which should be tested
+-- ** Specify all test *operations* in the test case
+-- * Define a TestResult and TestSuite to execute the tests
+--
+-- Running the tests:
+-- Option 1.
+-- Use the automated reflection search to find Test classes.
+--  new TestRunner().run()
+--
+-- Option 2.
+-- Use the automated reflection search to find test operations.
+--  All operations must begin with "test".
+--  Usage:
+--      let tests : set of Test = {new TestCase1(), new TestCase2()},
+--          ts : TestSuite = new TestSuite(tests),
+--          result : TestResult = new TestResult()
+--      in
+--      (
+--          ts.run(result);
+--          IO`print(result.toString());
+--      );
+--
+-- Option 3.
+-- Use explicit definition to call tests.
+--  All test cases must *override* the operation 
+--      "protected runTest : () ==> ()"
+--  This means that only a single test can be performed in each test case
+--
+-- Usage:
+--      let ts : TestSuite = new TestSuite(),
+--          result = new TestResult() 
+--      in
+--      (
+--          ts.addTest(new TestCase1());
+--          ts.addTest(new TestCase2());
+--          ts.run(result);
+--          IO`println(result.toString());
+--      )
+--
+--===========================================================================
+
+
+
+-- forward definition of java.lang.Throwable
+-- do not code generate (but import from Java library)
+class Throwable
+end Throwable
+
+-- forward definition of java.lang.Error
+-- do not code generate (but import from Java library)
+class Error is subclass of Throwable
+
+instance variables
+  protected fMessage : seq of char := []
+  
+operations
+  public Error: () ==> Error
+  Error () == skip;
+  
+  public Error: seq of char ==> Error
+  Error (pmessage) == fMessage := pmessage;
+
+  public hasMessage: () ==> bool
+  hasMessage () == return len fMessage > 0;
+    
+  public getMessage: () ==> seq of char
+  getMessage () == return fMessage
+    pre len fMessage > 0;--hasMessage()
+
+
+  public static throw: seq of char ==> ()
+  throw (pmessage) == exit new Error(pmessage)
+end Error
+
+--
+-- forward definition of junit.framework.AssertionFailedError
+--
+
+class AssertionFailedError is subclass of Error
+
+operations
+  public AssertionFailedError: () ==> AssertionFailedError
+  AssertionFailedError () == skip;
+  
+  public AssertionFailedError: seq of char ==> AssertionFailedError
+  AssertionFailedError (pmessage) == fMessage := pmessage;
+   
+end AssertionFailedError
+
+--
+-- forward definition of junit.framework.Assert
+--
+
+class Assert
+
+operations
+  public static assertTrue: bool ==> ()
+  assertTrue (pbool) ==
+    if not pbool then exit new AssertionFailedError();
+  
+  public static assertTrue: seq of char * bool ==> ()
+  assertTrue (pmessage, pbool) ==
+    if not pbool then exit new AssertionFailedError(pmessage);
+    
+  public static assertFalse: bool ==> ()
+  assertFalse (pbool) ==
+    if pbool then exit new AssertionFailedError();
+  
+  public static assertFalse: seq of char * bool ==> ()
+  assertFalse (pmessage, pbool) ==
+    if pbool then exit new AssertionFailedError(pmessage);
+    
+  public static fail: () ==> ()
+  fail () == exit new AssertionFailedError();
+  
+  public static fail: seq of char ==> ()
+  fail (pmessage) == exit new AssertionFailedError(pmessage)
+    
+end Assert
+
+--
+-- forward definition of junit.framework.Test
+--
+
+class Test is subclass of Assert
+
+instance variables
+  private fName : seq of char := []
+  
+operations
+  -- instance variables access operations
+  public getName: () ==> seq of char
+  getName () == return fName;
+  
+  public setName: seq of char ==> ()
+  setName (name) == fName := name;
+  
+  public run: TestResult ==> ()
+  run (-) == is subclass responsibility;
+  
+  public runOnly: seq of char * TestResult ==> ()
+  runOnly (-,-) == is subclass responsibility
+    
+end Test
+
+--
+-- forward definition of junit.framework.TestCase
+--
+
+class TestCase is subclass of Test
+
+operations
+
+--  /**
+--   * A convenience method to run this test, collecting the results with a
+--   * default TestResult object.
+--   *
+--   * @see TestResult
+--   */
+    public run :() ==> TestResult
+    run() ==
+    (
+        let result : TestResult = createResult() in (
+        run(result);
+        return result);
+    );
+--  /**
+--   * Runs the test case and collects the results in TestResult.
+--   */
+    public run : TestResult ==> ()
+    run(result) ==
+    (
+        result.run(self);
+    );
+	
+	public runOnly: seq of char * TestResult ==> ()
+	runOnly (name,result) ==
+	if name = getName() then
+		result.run(self);
+		
+    protected createResult : () ==> TestResult
+    createResult() == return new TestResult();
+ 
+operations
+  -- constructor
+  public TestCase: seq of char ==> TestCase
+  TestCase (name) == setName(name);
+
+  public TestCase: () ==> TestCase
+  TestCase () == skip;
+    
+  -- template method pattern
+  public setUp: () ==> ()
+  setUp () == skip;
+  
+  --
+  -- This method might be overriden in a sub class or it will
+  --  use reflection to call the test method as specified in the name
+  --
+  protected runTest: () ==> ()
+  runTest () == reflectionRunTest(self,getName());
+
+  --
+  -- External Method
+  --
+  private static reflectionRunTest : TestCase * seq of char ==> ()
+  reflectionRunTest(obj,name) == is not yet specified;
+     
+  public runBare : () ==> ()
+  runBare() ==
+  (
+    dcl exception : [Throwable] := nil;
+    
+    setUp();
+    
+    trap exc :Throwable
+        with  
+            exception := exc
+        in
+        (
+            runTest();
+        );
+
+    trap exc :Throwable
+        with  
+            if exception = nil then
+                exception := exc
+        in
+        (
+            tearDown();
+        );
+        
+    if exception <> nil then exit exception;
+   );
+  
+  public tearDown: () ==> ()
+  tearDown () == skip;
+           
+end TestCase
+
+--
+-- forward definition of junit.framework.TestSuite
+--
+
+class TestSuite is subclass of Test
+
+instance variables
+  private fTests : seq of Test := []
+  
+operations
+  public TestSuite: seq of char ==> TestSuite
+  TestSuite (name) == setName(name);
+
+  public TestSuite: () ==> TestSuite
+  TestSuite () == setName("");
+
+  public TestSuite: set of Test * seq of char ==> TestSuite
+  TestSuite (tests,name) == 
+  (
+    setName(name);
+    for all test in set tests do
+    (
+       for all t in set elems createTests(test) do
+       (
+         addTest(t); 
+       );
+    );
+    
+  );
+
+  public TestSuite: set of Test ==> TestSuite
+  TestSuite (tests) == 
+  (
+    setName("");
+    for all test in set tests do
+    (
+       for all t in set elems createTests(test) do
+       (
+         addTest(t); 
+       );
+    );
+    
+  );
+
+  public TestSuite: Test ==> TestSuite
+  TestSuite (test) == 
+  (
+    setName("");
+    for all t in set elems createTests(test) do
+     (
+       addTest(t); 
+     );
+  );
+
+  public TestSuite: Test * seq of char ==> TestSuite
+  TestSuite (test,name) == 
+  (
+    setName(name);
+    for all t in set elems createTests(test) do
+     (
+       addTest(t); 
+     );
+  );
+  
+  public addTest: Test ==> ()
+  addTest (ptst) == fTests := fTests ^ [ptst];
+  
+  -- implementing the abstract run operation 
+  public run: TestResult ==> ()
+  run (ptr) ==for ptst in fTests do ptst.run(ptr);
+
+  public runOnly: seq of char * TestResult ==> ()
+  runOnly (name,ptr) ==
+  for ptst in fTests do
+  if ptst.getName() = name then
+	ptst.run(ptr);
+  
+  public run: Test * TestResult ==> ()
+  run (test, ptr) == test.run(ptr);
+      
+    public tests : () ==> seq of Test
+    tests()==return fTests;
+    
+    public testCount : () ==> int
+    testCount()== return len fTests;
+    
+    public testAt : int ==> Test
+    testAt(index) == return fTests(index)
+    pre index >0 and index < len fTests;
+
+
+  private getTestMethodNamed : Test ==> seq of seq of char
+  getTestMethodNamed(test)== is not yet specified;
+
+  public createTests : Test ==> seq of Test
+  createTests(test)== is not yet specified;
+
+
+end TestSuite
+
+--
+-- forward definition of junit.framework.TestListener
+--
+
+class TestListener
+
+operations
+  public initListener: () ==> ()
+  initListener () == is subclass responsibility;
+  
+  public exitListener: () ==> ()
+  exitListener () == is subclass responsibility;
+  
+  public addFailure: Test * AssertionFailedError ==> ()
+  addFailure (-, -) == is subclass responsibility; 
+
+  public addError: Test * Throwable ==> ()
+  addError (-, -) == is subclass responsibility;
+  
+  public startTest: Test ==> ()
+  startTest (-) == is subclass responsibility;
+  
+  public endTest: Test ==> ()
+  endTest (-) == is subclass responsibility;
+  
+end TestListener
+
+--
+-- forward definition of junit.framework.TestResult
+--
+
+class TestResult
+
+types
+  private InternalError :: tcname : seq of char
+                           except : Error
+                   
+instance variables
+  -- keep track of assertions failed
+  private fFailures : seq of AssertionFailedError := [];
+  
+  -- keep track of exceptions thrown
+  private fErrors : seq of InternalError := [];
+  
+  -- count the number of executed tests
+  private fRunTests : nat := 0;
+  
+  -- the list of interested listeners
+  private fListeners : set of TestListener := {}
+  
+operations
+  public addListener: TestListener ==> ()
+  addListener (ptl) == 
+    ( -- first add the listener to the set
+      fListeners := fListeners union {ptl};
+      -- execute the initializer for the listener
+      ptl.initListener() )
+    pre ptl not in set fListeners;
+  
+  public removeListener: TestListener ==> ()
+  removeListener (ptl) ==
+    ( -- execute the exit operation for the listener
+      ptl.exitListener();
+      -- remove the listener from the set
+      fListeners := fListeners \ {ptl} )
+    pre ptl in set fListeners;
+  
+  public addFailure: Test * AssertionFailedError ==> ()
+  addFailure (ptst, pafe) == 
+    ( -- first handle the failed assertion locally
+      if pafe.hasMessage()
+      then fFailures := fFailures ^ [pafe]
+      else let str = "Assertion failed in test "^ptst.getName() in
+             fFailures := fFailures ^ [new AssertionFailedError(str)];
+      -- now inform all listeners
+      for all listener in set fListeners do
+        listener.addFailure(ptst, pafe) );
+  
+  public addError: Test * Throwable ==> ()
+  addError (ptst, perr) ==
+    ( -- add the error to the list of exceptions caught so far
+      fErrors := fErrors ^ [mk_InternalError(ptst.getName(), perr)];
+      -- now inform all listeners
+      for all listener in set fListeners do
+        listener.addError(ptst, perr) );
+
+  public startTest: Test ==> ()
+  startTest (ptst) ==
+    ( -- first increase the local run test counter
+      fRunTests := fRunTests + 1;
+      -- now inform all listeners
+      for all listener in set fListeners do
+        listener.startTest(ptst) );
+  
+  public endTest: Test ==> ()
+  endTest (ptst) ==
+    for all listener in set fListeners do
+      listener.endTest(ptst);
+
+  public run : TestCase ==> ()
+  run(test)==
+  ( 
+    startTest(test);
+    runProtected(test);
+    endTest(test);
+
+  );
+  public runProtected : TestCase ==> () 
+  runProtected(test) ==
+  (
+    trap exc :Throwable
+        with
+          if isofclass(AssertionFailedError,exc)
+          then addFailure(test, exc)
+          else if isofbaseclass(Throwable, exc)
+               then addError(test, exc)
+               else error -- We hope this never happens
+        in (
+              test.runBare();
+            ); 
+  );
+  
+  public runCount: () ==> nat
+  runCount () == return fRunTests;
+    
+  public failureCount: () ==> nat
+  failureCount () == return len fFailures;
+  
+  public errorCount: () ==> nat
+  errorCount () == return len fErrors;
+  
+  public wasSuccessful: () ==> bool
+  wasSuccessful () == return failureCount() = 0 and errorCount() = 0;
+
+  public toString : () ==> seq of char
+  toString()==
+  (
+    dcl tmp: seq of char :=     
+        "----------------------------------------\n"^
+        "|    TEST RESULTS                      |\n"^
+        "|--------------------------------------|\n"^
+        "| Executed: "^ToStringInt(runCount())^"\n"^
+        "| Failures: "^ToStringInt(failureCount())^"\n"^
+        "| Errors:   "^ToStringInt(errorCount())^"\n";
+    
+    tmp := tmp^"|______________________________________|\n|";
+    for all i in set inds fFailures do
+        tmp := tmp^"\n| "^fFailures(i).getMessage();
+    
+    tmp := tmp^"\n|";
+
+    for all i in set inds fErrors do
+        tmp := tmp^"\n| Error in test "^fErrors(i).tcname^" "^fErrors(i).except.getMessage();
+ 
+    tmp := tmp^"\n|--------------------------------------|\n";
+
+    if wasSuccessful() 
+    then
+    (
+        tmp := tmp^"|              SUCCESS                 |";
+    )
+    else
+    (
+        tmp := tmp^"|              FAILURE                 |";
+    );
+        tmp := tmp^"\n|______________________________________|";
+        return tmp;
+  );
+functions
+-------------------------------------
+-- Convert a int to a String
+-------------------------------------
+public static ToStringInt : int | nat1 | nat -> seq of char
+ToStringInt(val) ==
+  let result : int = val mod 10,
+      rest : int = val div 10
+  in if rest > 0 then
+       ToStringInt(rest) ^ GetStringFromNum(result)
+     else GetStringFromNum(result)
+pre val >= 0;
+    
+-------------------------------------
+-- Convert a int < 10 to a String
+-------------------------------------
+public static GetStringFromNum : int  -> seq of char --| nat | real
+GetStringFromNum(val) == ["0123456789"(val+1)]
+pre val < 10;
+  
+end TestResult  
+
+
+
+class TestRunner
+
+operations
+public run : () ==> ()
+run() ==
+      let tests : set of Test = collectTests(new TestRunner()),
+          ts : TestSuite = new TestSuite(tests),
+          result : TestResult = new TestResult()
+      in
+      (
+          ts.run(result);
+          IO`print(result.toString());
+      );
+
+collectTests : TestRunner ==> set of Test
+collectTests(obj) == is not yet specified;
+
+end TestRunner

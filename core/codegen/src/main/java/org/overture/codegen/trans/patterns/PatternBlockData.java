@@ -1,3 +1,24 @@
+/*
+ * #%~
+ * VDM Code Generator
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.codegen.trans.patterns;
 
 import org.overture.codegen.cgast.SPatternCG;
@@ -11,20 +32,21 @@ public class PatternBlockData
 	private AVarLocalDeclCG successVarDecl;
 	private AIdentifierVarExpCG successVar;
 	private ABlockStmCG declBlock;
-	private boolean raiseErrorOnMismatch;
+	private MismatchHandling mismatchHandling;
 
-	public PatternBlockData(SPatternCG pattern, ABlockStmCG declBlock, boolean raiseErrorOnMismatch)
+	public PatternBlockData(SPatternCG pattern, ABlockStmCG declBlock,
+			MismatchHandling mismatchHandling)
 	{
 		this.pattern = pattern;
 		this.declBlock = declBlock;
-		this.raiseErrorOnMismatch = raiseErrorOnMismatch;
+		this.mismatchHandling = mismatchHandling;
 	}
-	
-	public PatternBlockData(boolean raiseErrorOnMismatch)
+
+	public PatternBlockData(MismatchHandling mismatchHandling)
 	{
-		this(null, null, raiseErrorOnMismatch);
+		this(null, null, mismatchHandling);
 	}
-	
+
 	public boolean IsRootPattern(SPatternCG pattern)
 	{
 		return this.pattern == pattern;
@@ -70,13 +92,8 @@ public class PatternBlockData
 		this.declBlock = declBlock;
 	}
 
-	public boolean raiseErrorOnMismatch()
+	public MismatchHandling getMismatchHandling()
 	{
-		return successVarDecl != null && raiseErrorOnMismatch;
-	}
-
-	public void raiseErrorOnMismatch(boolean raiseErrorOnMismatch)
-	{
-		this.raiseErrorOnMismatch = raiseErrorOnMismatch;
+		return mismatchHandling;
 	}
 }
