@@ -1,6 +1,7 @@
 package org.overture.codegen.trans.conc;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
@@ -12,10 +13,12 @@ import org.overture.codegen.ir.IRInfo;
 public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 {
 	private IRInfo info;
+	private List<AClassDeclCG> classes;
 	
-	public SentinelTransformation(IRInfo info)
+	public SentinelTransformation(IRInfo info, List<AClassDeclCG> classes)
 	{
 		this.info = info;
+		this.classes = classes;
 	}
 
 	@Override
@@ -26,7 +29,10 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 			return;
 		}
 		
-		//boolean isInnerClass = node.getAncestor(AClassDeclCG.class) != null;
+		if (node.getThread() != null)
+		{
+			makeThread(node);
+		}
 		
 		AClassDeclCG innerClass = new AClassDeclCG();
 		
@@ -48,4 +54,38 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 		node.getInnerClasses().add(innerClass);
 		
 	}
+	
+	private void makeThread(AClassDeclCG node)
+	{
+		AClassDeclCG threadClass = getThreadClass(node.getSuperName(), node);
+		threadClass.setSuperName("Thread");
+	}
+
+	private AClassDeclCG getThreadClass(String superName, AClassDeclCG classCg)
+	{
+		if(superName == null)
+		{
+			return classCg;
+		}
+		else
+		{
+			AClassDeclCG superClass = null;
+			
+			for(AClassDeclCG c : classes)
+			{
+				if(c.getName().equals(superName))
+				{
+					superClass = c;
+					break;
+				}
+			}
+			
+			return getThreadClass(superClass.getName(), superClass);
+		}
+	}
+	
+//	#set ( $baseclass = "" )
+//	#if (!$JavaFormat.isNull($node.getThread()))
+//		#set ( $baseclass = "extends Thread" )
+//	#end
 }

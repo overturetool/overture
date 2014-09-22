@@ -243,7 +243,7 @@ public class JavaCodeGen
 
 		//Conc
 		
-		SentinelTransformation Concurrencytransform = new SentinelTransformation(irInfo);
+		SentinelTransformation Concurrencytransform = new SentinelTransformation(irInfo,classes);
 		
 		DepthFirstAnalysisAdaptor[] analyses = new DepthFirstAnalysisAdaptor[] {
 				funcTransformation, ifExpTransformation,

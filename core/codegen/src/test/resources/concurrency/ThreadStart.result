@@ -3,7 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
-public class ThreadClass {
+public class ThreadClass extends Thread {
     public Number x = 0L;
 
     public ThreadClass() {
@@ -17,7 +17,7 @@ public class ThreadClass {
         setX();
     }
 
-    public class ThreadClass_sentinel extends Sentinel {
+    public class ThreadClass_sentinel extends Thread_Sentinel {
         public ThreadClass() {
         }
 

@@ -1,68 +1,30 @@
 class ThreadClass
 
- 
-
 instance variables
-
- 
 
 public x : nat := 0;
 
- 
-
 thread
-
        setX();
-
-      
-
 operations
-
- 
 
 public setX : () ==> ()
-
 setX () ==
-
-<<<<<<< HEAD
        x := 2;
 
- 
-
 end ThreadClass
-
  
-
-=======
->>>>>>> ed9024c... the sentinel class.
 class Entry
-
- 
 
 operations
 
- 
-
 public static Run : () ==> ?
-
 Run () ==
-
 (
-
        dcl t : ThreadClass := new ThreadClass();
-
        start(t);
-
-      
-
        while t.x <> 2 do skip;
-
-      
-
        return t.x;
 
 );
-
- 
-
 end Entry
