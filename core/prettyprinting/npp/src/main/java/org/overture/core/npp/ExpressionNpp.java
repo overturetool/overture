@@ -51,6 +51,7 @@ import org.overture.ast.expressions.AFieldExp;
 import org.overture.ast.expressions.AFieldNumberExp;
 import org.overture.ast.expressions.AFloorUnaryExp;
 import org.overture.ast.expressions.AForAllExp;
+import org.overture.ast.expressions.AFuncInstatiationExp;
 import org.overture.ast.expressions.AGreaterEqualNumericBinaryExp;
 import org.overture.ast.expressions.AGreaterNumericBinaryExp;
 import org.overture.ast.expressions.AHeadUnaryExp;
@@ -80,8 +81,10 @@ import org.overture.ast.expressions.AMapletExp;
 import org.overture.ast.expressions.AModNumericBinaryExp;
 import org.overture.ast.expressions.AMuExp;
 import org.overture.ast.expressions.ANarrowExp;
+import org.overture.ast.expressions.ANilExp;
 import org.overture.ast.expressions.ANotEqualBinaryExp;
 import org.overture.ast.expressions.ANotInSetBinaryExp;
+import org.overture.ast.expressions.ANotUnaryExp;
 import org.overture.ast.expressions.AOrBooleanBinaryExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
 import org.overture.ast.expressions.APlusPlusBinaryExp;
@@ -108,6 +111,7 @@ import org.overture.ast.expressions.ASetIntersectBinaryExp;
 import org.overture.ast.expressions.ASetRangeSetExp;
 import org.overture.ast.expressions.ASetUnionBinaryExp;
 import org.overture.ast.expressions.AStarStarBinaryExp;
+import org.overture.ast.expressions.AStringLiteralExp;
 import org.overture.ast.expressions.ASubsetBinaryExp;
 import org.overture.ast.expressions.ASubtractNumericBinaryExp;
 import org.overture.ast.expressions.ATailUnaryExp;
@@ -119,6 +123,8 @@ import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.ASetMultipleBind;
+import org.overture.ast.patterns.ATypeBind;
+import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.types.ACharBasicType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
@@ -1601,7 +1607,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	{
 		String exp = node.getExpression().apply(THIS, question);
 		
-		System.out.print(exp);
+		//System.out.print(exp);
 		
 		StringBuilder sb = new StringBuilder();
 		
@@ -1612,6 +1618,20 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		return sb.toString();
 	}
 	
+	@Override
+	public String caseAFuncInstatiationExp(AFuncInstatiationExp node,
+			IndentTracker question) throws AnalysisException
+	{ 
+		String func = node.getFunction().toString();//.apply(this, question);
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(func);
+		sb.append(node.getActualTypes());
+		//node.getActualTypes().
+		
+		//System.out.print(node.getExpdef() +" "+ func+" " + node.getActualTypes());
+		return sb.toString(); 
+	}
 	
 	@Override
 	public String caseACharLiteralExp(ACharLiteralExp node,
@@ -1663,6 +1683,77 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		
 		return var;
 		
+	}
+	
+	@Override
+	public String caseANotUnaryExp(ANotUnaryExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		String exp = node.getExp().apply(this, question);
+		String op = mytable.getNOT();
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(op);
+		sb.append(space);
+		sb.append(exp);
+		
+		return sb.toString();
+	}
+	
+	@Override
+	public String caseATypeMultipleBind(ATypeMultipleBind node,
+			IndentTracker question) throws AnalysisException
+	{
+		StringBuilder sb = new StringBuilder();
+		String type = node.getType().toString();
+		//while (node.getPlist().size() != 0){
+		sb.append(node.getPlist().poll().toString());
+		//}
+		sb.append(space);
+		sb.append(mytable.getCOLON());
+		sb.append(space);
+		sb.append(type);
+		
+		//sb.append(node.getSet().apply(THIS, question));
+		
+		return sb.toString();
+	}
+	
+	@Override
+	public String caseATypeBind(ATypeBind node, IndentTracker question)
+			throws AnalysisException
+	{
+		String pattern = node.getPattern().toString();
+		String type = node.getType().apply(this, question);
+		
+		System.out.print(node.getPattern().toString());
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(pattern);
+		sb.append(space);
+		sb.append(mytable.getCOLON());
+		sb.append(space);
+		sb.append(type);
+		
+		return sb.toString();
+	}
+	
+	
+	
+	@Override
+	public String caseANilExp(ANilExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		return node.toString();
+	}
+	
+	@Override
+	public String caseAStringLiteralExp(AStringLiteralExp node,
+			IndentTracker question) throws AnalysisException
+	{
+		return node.getValue().toString();
 	}
 	
 	@Override

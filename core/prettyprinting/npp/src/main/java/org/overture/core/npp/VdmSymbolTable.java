@@ -576,4 +576,10 @@ public class VdmSymbolTable implements ISymbolTable
 	{
 		return "pre";
 	}
+	
+	@Override
+	public String getNOT()
+	{
+		return "not";
+	}
 }

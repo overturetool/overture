@@ -773,6 +773,12 @@ public class ExpressionNppTest {
 	}
 	
 	@Test
+	public void testCaseAExistsExp_05() throws AnalysisException
+	{
+		aux("exists x : int, y : char & x = 1", "exists x : int, y : char & (x = 1)");
+	}
+	
+	@Test
 	public void testCaseAExists1Exp_01() throws AnalysisException
 	{
 		aux("exists1 x in set y & x = 1", "exists1 x in set y & (x = 1)");
@@ -1497,12 +1503,26 @@ public class ExpressionNppTest {
 		aux("narrow_(e,C1)","narrow_(e,C1)");
 	}
 	
-	//FIXME:This test is seeing Put() as variable.
 	@Test
-	public void testCaseAPostOpExp_01() throws AnalysisException
+	public void testCaseAFuncinstanciation_02() throws AnalysisException
 	{
-		defaux("operations Put() pre a < 100 post assert(true)", "put(a: nat) pre (a < 100)\npost assert(true)");
+		aux("f[int, int]","f[int, int]");
 	}
+	
+	@Test
+	public void testCaseANotUnaryExp_01() throws AnalysisException
+	{
+		aux("not x","not x");
+	}
+	
+	
+	
+//	//FIXME:This test is seeing Put() as variable.
+//	@Test
+//	public void testCaseAPostOpExp_01() throws AnalysisException
+//	{
+//		defaux("operations Put() pre a < 100 post assert(true)", "put(a: nat) pre (a < 100)\npost assert(true)");
+//	}
 	
 //	@Test
 //	public void testCaseAPreOpExp_01() throws AnalysisException
