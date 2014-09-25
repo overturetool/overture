@@ -26,28 +26,46 @@ import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.*;
 import org.overture.ast.node.INode;
+import org.overture.ast.patterns.AConcatenationPattern;
+import org.overture.ast.patterns.AExpressionPattern;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.AIntegerPattern;
+import org.overture.ast.patterns.AMapPattern;
+import org.overture.ast.patterns.AMapUnionPattern;
+import org.overture.ast.patterns.AMapletPatternMaplet;
 import org.overture.ast.patterns.ARecordPattern;
+import org.overture.ast.patterns.ASeqPattern;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ASetMultipleBind;
+import org.overture.ast.patterns.ASetPattern;
+import org.overture.ast.patterns.ATuplePattern;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
+import org.overture.ast.patterns.AUnionPattern;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.ABooleanBasicType;
+import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.ACharBasicType;
 import org.overture.ast.types.AClassType;
+import org.overture.ast.types.AFunctionType;
+import org.overture.ast.types.AInMapMapType;
 import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.ast.types.AMapMapType;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
+import org.overture.ast.types.AOptionalType;
+import org.overture.ast.types.AParameterType;
+import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.ARecordInvariantType;
+import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.ASeqSeqType;
 import org.overture.ast.types.ASetType;
+import org.overture.ast.types.AUnionType;
+import org.overture.ast.types.PType;
 
 class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		implements IPrettyPrinter
@@ -386,7 +404,26 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	public String caseASetEnumSetExp(ASetEnumSetExp node, IndentTracker question)
 			throws AnalysisException
 	{
-		return node.toString();
+		StringBuilder sb = new StringBuilder();
+		sb.append(leftcurly);
+		int n = 0;
+		for(PExp x:node.getMembers()){
+			n++;
+			if(node.getMembers().size() != n)
+			{
+				sb.append(x.apply(THIS, question));
+				sb.append(mytable.getCOMMA());
+				sb.append(space);
+			}
+			else
+			{
+				sb.append(x.apply(THIS, question));
+			}
+		}
+		sb.append(rightcurly);
+		
+		return sb.toString();
+		//return node.toString();
 	}
 
 	@Override
@@ -695,7 +732,25 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	public String caseASeqEnumSeqExp(ASeqEnumSeqExp node, IndentTracker question)
 			throws AnalysisException
 	{
-		return node.toString();
+		StringBuilder sb = new StringBuilder();
+		sb.append(leftsq);
+		int n = 0;
+		for(PExp x:node.getMembers()){
+			n++;
+			if(node.getMembers().size() != n)
+			{
+				sb.append(x.apply(THIS, question));
+				sb.append(mytable.getCOMMA());
+				sb.append(space);
+			}
+			else
+			{
+				sb.append(x.apply(THIS, question));
+			}
+		}
+		sb.append(rightsq);
+		
+		return sb.toString();
 	}
 
 	@Override
@@ -826,6 +881,13 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 
 		return Utilities.append(l, r, op);
 	}
+	
+	@Override
+	public String caseAMapletPatternMaplet(AMapletPatternMaplet node,
+			IndentTracker question) throws AnalysisException
+	{
+		return Utilities.append(node.getFrom().apply(THIS, question), node.getTo().apply(THIS, question), mytable.getMAPLET());
+	}
 
 	@Override
 	public String caseAMapEnumMapExp(AMapEnumMapExp node, IndentTracker question)
@@ -850,6 +912,38 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		sb.append(rightcurly);
 		return sb.toString();
 	}
+	
+	@Override
+	public String caseAMapPattern(AMapPattern node, IndentTracker question)
+			throws AnalysisException
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append(leftcurly);
+		int n = 0;
+		for (AMapletPatternMaplet x : node.getMaplets())
+		{
+			n++;
+			if (node.getMaplets().size() != n)
+			{
+				sb.append(x.apply(THIS, question));
+				sb.append(mytable.getCOMMA());
+				sb.append(space);
+			} else
+			{
+				sb.append(x.apply(THIS, question));
+			}
+		}
+		sb.append(rightcurly);
+		return sb.toString();
+	}
+	
+	@Override
+	public String caseAMapUnionPattern(AMapUnionPattern node,
+			IndentTracker question) throws AnalysisException
+	{
+		return Utilities.append(node.getLeft().apply(THIS, question), node.getRight().apply(THIS, question), mytable.getMUNION());
+	}
+	
 
 	@Override
 	public String caseAMapCompMapExp(AMapCompMapExp node, IndentTracker question)
@@ -1768,6 +1862,115 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 
 		return sb.toString();
 	}
+	
+	@Override
+	public String caseASubseqExp(ASubseqExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append(node.getSeq().apply(THIS, question));
+		sb.append(leftpar);
+		sb.append(node.getFrom().apply(THIS, question));
+		sb.append(mytable.getCOMMA());
+		sb.append(mytable.getRANGE());
+		sb.append(mytable.getCOMMA());
+		sb.append(node.getTo().apply(THIS, question));
+		sb.append(rightpar);
+		
+		return sb.toString();
+	}
+	
+	@Override
+	public String caseAParameterType(AParameterType node, IndentTracker question)
+			throws AnalysisException
+	{
+		return node.getName().toString();
+	}
+	
+	@Override
+	public String caseAInMapMapType(AInMapMapType node, IndentTracker question)
+			throws AnalysisException
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("inmap");
+		sb.append(space);
+		sb.append(node.getFrom().apply(THIS, question));
+		sb.append(space);
+		sb.append("to");
+		sb.append(space);
+		sb.append(node.getTo().apply(THIS, question));
+		
+		return sb.toString();
+	}
+	
+	@Override
+	public String caseAUnionType(AUnionType node, IndentTracker question)
+			throws AnalysisException
+	{
+		return node.toString();
+	}
+	
+	@Override
+	public String caseAUnaryMinusUnaryExp(AUnaryMinusUnaryExp node,
+			IndentTracker question) throws AnalysisException
+	{
+		String exp = node.getExp().apply(THIS,question);
+		String minus = mytable.getMINUS();
+		
+		return Utilities.unaryappend(exp, minus);
+		
+	}
+	
+	@Override
+	public String caseATuplePattern(ATuplePattern node, IndentTracker question)
+			throws AnalysisException
+	{
+		String exp = null;
+		String op = mytable.getTUPLE();
+		StringBuilder sb = new StringBuilder();
+
+		sb.append(op);
+		sb.append(leftpar);
+		int n = 0;
+
+		for(PPattern x:node.getPlist())
+		{	n++;
+			if(node.getPlist().size() != n){
+				exp = x.apply(THIS, question);
+				sb.append(exp);
+				sb.append(mytable.getCOMMA());
+				sb.append(space);
+			}
+			else
+			{
+				exp = x.apply(THIS, question);
+				sb.append(exp);
+			}
+		}
+
+		sb.append(rightpar);
+
+		return sb.toString();
+	}
+	
+	@Override
+	public String caseAExpressionPattern(AExpressionPattern node,
+			IndentTracker question) throws AnalysisException
+	{
+		String exp = node.getExp().apply(THIS, question);
+		return exp;
+	}
+	
+	@Override
+	public String caseAUnionPattern(AUnionPattern node, IndentTracker question)
+			throws AnalysisException
+	{
+		String left = node.getLeft().apply(THIS, question);
+		String right = node.getRight().apply(THIS, question);
+		String op = mytable.getUNION();
+		
+		return Utilities.append(left, right, op);
+	}
 
 	@Override
 	public String caseANilExp(ANilExp node, IndentTracker question)
@@ -1789,6 +1992,94 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	{
 		return "char";
 	}
+	
+	@Override
+	public String caseASeqPattern(ASeqPattern node, IndentTracker question)
+			throws AnalysisException
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append(leftcurly);
+		int n = 0;
+		for(PPattern x:node.getPlist()){
+			n++;
+			if(node.getPlist().size() != n)
+			{
+				sb.append(x.apply(THIS, question));
+				sb.append(mytable.getCOMMA());
+				sb.append(space);
+			}
+			else
+			{
+				sb.append(x.apply(THIS, question));
+			}
+		}
+		sb.append(rightcurly);
+		
+		return sb.toString();
+	}
+	@Override
+	public String caseAProductType(AProductType node, IndentTracker question)
+			throws AnalysisException
+	{
+		StringBuilder sb = new StringBuilder();
+		int n = 0;
+		for(PType x:node.getTypes())
+		{	n++;
+			if(node.getTypes().size() != n){
+				sb.append(x.apply(THIS,question));
+				sb.append(mytable.getTIMES());
+			}
+			else
+			{
+				sb.append(x.apply(THIS, question));
+			}
+		}
+		return Utilities.wrap(sb.toString());
+	}
+	
+	@Override
+	public String caseAFunctionType(AFunctionType node, IndentTracker question)
+			throws AnalysisException
+	{
+		return node.toString();
+	}
+	@Override
+	public String caseABracketType(ABracketType node, IndentTracker question)
+			throws AnalysisException
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append(leftpar);
+		sb.append(node.getType());
+		sb.append(rightpar);
+		
+		return sb.toString();
+	}
+	
+	@Override
+	public String caseASeq1SeqType(ASeq1SeqType node, IndentTracker question)
+			throws AnalysisException
+	{
+		return "seq1 of" + node.getSeqof().apply(THIS, question);
+	}
+	
+	@Override
+	public String caseAConcatenationPattern(AConcatenationPattern node,
+			IndentTracker question) throws AnalysisException
+	{
+		return Utilities.append(node.getLeft().apply(THIS, question), node.getRight().apply(THIS, question), mytable.getCONCATENATE());
+		
+	}
+	@Override
+	public String caseAOptionalType(AOptionalType node, IndentTracker question)
+			throws AnalysisException
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append(leftsq);
+		sb.append(node.getType().apply(THIS, question));
+		sb.append(rightsq);
+		
+		return sb.toString();
+ 	}
 
 	@Override
 	public String caseATimeExp(ATimeExp node, IndentTracker question)
@@ -1900,6 +2191,31 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 			}
 		}
 		sb.append(rightpar);
+		
+		return sb.toString();
+	}
+	
+	@Override
+	public String caseASetPattern(ASetPattern node, IndentTracker question)
+			throws AnalysisException
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append(leftcurly);
+		int n = 0;
+		for(PPattern x:node.getPlist()){
+			n++;
+			if(node.getPlist().size() != n)
+			{
+				sb.append(x.apply(THIS, question));
+				sb.append(mytable.getCOMMA());
+				sb.append(space);
+			}
+			else
+			{
+				sb.append(x.apply(THIS, question));
+			}
+		}
+		sb.append(rightcurly);
 		
 		return sb.toString();
 	}

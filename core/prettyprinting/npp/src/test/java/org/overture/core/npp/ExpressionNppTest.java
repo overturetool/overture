@@ -1453,13 +1453,13 @@ public class ExpressionNppTest {
 	public void testCasePreExp_01() throws AnalysisException
 	{
 		aux("pre_(let h in set {lambda mk_(x,y):nat * nat & x div y} be st h > 0 in {h, 1, 0})",
-				"pre_(let h in set {(lambda [mk_(x, y):(nat * nat)] & (x div y))} be st (h > 0)\nin\n {h, 1, 0})");
+				"pre_(let h in set {lambda mk_(x, y) : (nat*nat) & (x div y)} be st (h > 0)\nin\n {h, 1, 0})");
 	}
 	@Test
 	public void testCasePreExp_02() throws AnalysisException
 	{
 		aux("pre_(let h in set {lambda mk_(x,y):nat * nat & x div y} in {h, 1, 0})",
-				"pre_(let h in set {(lambda [mk_(x, y):(nat * nat)] & (x div y))}\nin\n {h, 1, 0})");
+				"pre_(let h in set {lambda mk_(x, y) : (nat*nat) & (x div y)}\nin\n {h, 1, 0})");
 	}
 	
 	@Test
@@ -1528,11 +1528,11 @@ public class ExpressionNppTest {
 		aux("mk_(1, 2, 3)", "mk_(1, 2, 3)");
 	}
 	
-//	@Test
-//	public void testCaseASetof_01() throws AnalysisException
-//	{
-//		aux("map int to int", "map int to int");
-//	}
+	@Test
+	public void testCaseASetof_01() throws AnalysisException
+	{
+		aux("[1,2,3,4,5](2,...,4)", "[1, 2, 3, 4, 5](2,...,4)");
+	}
 	
 	
 	
