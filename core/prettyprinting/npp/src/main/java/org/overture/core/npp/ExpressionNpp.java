@@ -35,6 +35,7 @@ import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.ACharBasicType;
+import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
 import org.overture.ast.types.ARealNumericBasicType;
@@ -1115,7 +1116,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	public String caseACaseAlternative(ACaseAlternative node,
 			IndentTracker question) throws AnalysisException
 	{
-		String l = node.getPattern().toString();
+		String l = node.getPattern().apply(THIS, question);
 		String r = node.getResult().apply(THIS, question);
 		String op = mytable.getARROW();
 
@@ -1680,8 +1681,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	{
 		String exp = node.getExpression().apply(THIS, question);
 
-		// System.out.print(exp);
-
 		StringBuilder sb = new StringBuilder();
 
 		sb.append(mytable.getPREOP());
@@ -1717,7 +1716,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	public String caseAQuoteLiteralExp(AQuoteLiteralExp node,
 			IndentTracker question) throws AnalysisException
 	{
-		return mytable.getOPENQUOTE() + node.getValue().getValue().toString()
+		return mytable.getOPENQUOTE() + node.getValue().getValue()//.toString()
 				+ mytable.getCLOSEQUOTE();
 	}
 
@@ -1732,14 +1731,14 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	public String caseANatOneNumericBasicType(ANatOneNumericBasicType node,
 			IndentTracker question) throws AnalysisException
 	{
-		return node.toString();
+		return "nat1";//node.toString();
 	}
 
 	@Override
 	public String caseANatNumericBasicType(ANatNumericBasicType node,
 			IndentTracker question) throws AnalysisException
 	{
-		return node.toString();
+		return "nat";//node.toString();
 	}
 
 	@Override
@@ -1780,7 +1779,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 			IndentTracker question) throws AnalysisException
 	{
 		StringBuilder sb = new StringBuilder();
-		String type = node.getType().toString();
+		String type = node.getType().apply(THIS, question);//.toString();
 
 		for (PPattern x : node.getPlist())
 		{
@@ -1830,7 +1829,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	public String caseACharBasicType(ACharBasicType node, IndentTracker question)
 			throws AnalysisException
 	{
-		return node.getDefinitions().toString();
+		return "char";
 	}
 
 	@Override
@@ -1894,6 +1893,13 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 			IndentTracker question) throws AnalysisException
 	{
 		return "real";
+	}
+	
+	@Override
+	public String caseAIntNumericBasicType(AIntNumericBasicType node,
+			IndentTracker question) throws AnalysisException
+	{
+		return "int";
 	}
 
 	@Override
