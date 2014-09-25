@@ -736,8 +736,10 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	{
 		String exp = node.getFirst().apply(THIS, question);
 		String bind = node.getSetBind().apply(THIS, question);
-		String pred = node.getPredicate().apply(THIS, question);
-
+		String pred = "";
+		if (node.getPredicate() != null){
+			pred = node.getPredicate().apply(THIS, question);
+		}
 		StringBuilder sb = new StringBuilder();
 
 		sb.append(leftsq);
