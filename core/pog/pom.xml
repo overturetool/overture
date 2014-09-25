@@ -45,7 +45,7 @@
     </dependency>
     <dependency>
       <groupId>org.overturetool.core.prettyprinting</groupId>
-      <artifactId>prettyprinter</artifactId>
+      <artifactId>npp</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
