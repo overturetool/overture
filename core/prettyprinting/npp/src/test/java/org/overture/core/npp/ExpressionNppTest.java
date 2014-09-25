@@ -778,6 +778,7 @@ public class ExpressionNppTest {
 		aux("exists x : int, y : char & x = 1", "exists x : int, y : char & (x = 1)");
 	}
 	
+	
 	@Test
 	public void testCaseAExists1Exp_01() throws AnalysisException
 	{
@@ -1317,7 +1318,7 @@ public class ExpressionNppTest {
 	@Test
 	public void testCaseAMuExp_01() throws AnalysisException
 	{
-		aux("mu(sc, drawn |-> sc.drawn + 1, points |-> sc.points + 1)","mu(sc, drawn |-> ((sc.drawn) + 1), points |-> ((sc.points) + 1))");
+		aux("mu(sc, drawn |-> sc.drawn + 1, points |-> sc.points + 1)","mu(sc, drawn |-> (sc.drawn + 1), points |-> (sc.points + 1))");
 	}
 	
 	@Test
@@ -1514,6 +1515,24 @@ public class ExpressionNppTest {
 	{
 		aux("not x","not x");
 	}
+	
+	@Test
+	public void testCaseARecordPattern_01() throws AnalysisException
+	{
+		aux("mk_ex(1, 2, 3)", "mk_ex(1, 2, 3)");
+	}
+	
+	@Test
+	public void testCaseARecordPattern_02() throws AnalysisException
+	{
+		aux("mk_(1, 2, 3)", "mk_(1, 2, 3)");
+	}
+	
+//	@Test
+//	public void testCaseASetof_01() throws AnalysisException
+//	{
+//		aux("map int to int", "map int to int");
+//	}
 	
 	
 	

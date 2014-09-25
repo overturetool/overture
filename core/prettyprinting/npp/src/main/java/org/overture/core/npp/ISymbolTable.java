@@ -209,5 +209,7 @@ public interface ISymbolTable
 	String getNOT();
 	
 	String getMU();
+	
+	String getMK();
 
 }

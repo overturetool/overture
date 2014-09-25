@@ -27,18 +27,27 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.*;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.AIdentifierPattern;
+import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.AIntegerPattern;
+import org.overture.ast.patterns.ARecordPattern;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.ACharBasicType;
+import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AIntNumericBasicType;
+import org.overture.ast.types.AMapMapType;
+import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
 import org.overture.ast.types.ARealNumericBasicType;
+import org.overture.ast.types.ARecordInvariantType;
+import org.overture.ast.types.ASeqSeqType;
+import org.overture.ast.types.ASetType;
 
 class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		implements IPrettyPrinter
@@ -508,9 +517,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		{
 			sb.append(x.apply(THIS, question));
 		}
-		// while(node.getBindings().size() != 0){
-		// sb.append(node.getBindings().poll().apply(THIS, question));
-		// }
+		
 		sb.append(space);
 		sb.append(mytable.getPRED());
 		sb.append(space);
@@ -551,9 +558,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		{
 			sb.append(x.apply(THIS, question));
 		}
-		// while (node.getPlist().size() != 0){
-		// sb.append(node.getPlist().poll().toString());
-		// }
+	
 		sb.append(space);
 		sb.append(mytable.getINSET());
 		sb.append(space);
@@ -590,24 +595,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 				node.getBindList().removeFirst();
 			}
 		}
-		// while (node.getBindList().size() != 0){
-		// if (node.getBindList().size() > 1){
-		// binding = node.getBindList().getFirst().apply(THIS, question);
-		// //binding = rootNpp.defaultPBind(node.getBindList().poll(), question);
-		// sb.append(binding);
-		// sb.append(mytable.getCOMMA());
-		// sb.append(space);
-		// node.getBindList().removeFirst();
-		// }
-		// else{
-		// binding = node.getBindList().getFirst().apply(THIS, question);
-		//
-		// //binding = rootNpp.defaultPBind(node.getBindList().poll(), question);
-		// sb.append(binding);
-		//
-		// node.getBindList().removeFirst();
-		// }
-		// }
 
 		sb.append(space);
 		sb.append(mytable.getPRED());
@@ -667,26 +654,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 				sb.append(space);
 			}
 		}
-		// while(node.getBindList().size() !=0){
-		// if(node.getBindList().size() >1){
-		// String binding = node.getBindList().getFirst().apply(THIS, question);
-		// sb.append(binding);
-		// sb.append(mytable.getCOMMA());
-		// sb.append(space);
-		//
-		// node.getBindList().removeFirst();
-		// }
-		// else{
-		// String binding = node.getBindList().getFirst().toString();
-		//
-		// sb.append(binding);
-		//
-		// sb.append(space);
-		//
-		// node.getBindList().removeFirst();
-		// }
-		//
-		// }
+		
 
 		sb.append(mytable.getPRED());
 
@@ -879,18 +847,6 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 				sb.append(x.apply(THIS, question));
 			}
 		}
-		// while(node.getMembers().size() != 0){
-		// if (node.getMembers().size() >1){
-		// sb.append(node.getMembers().poll().apply(THIS, question));
-		// sb.append(mytable.getCOMMA());
-		// sb.append(space);
-		// }
-		// else
-		// {
-		// sb.append(node.getMembers().poll().apply(THIS, question));
-		// }
-		//
-		// }
 		sb.append(rightcurly);
 		return sb.toString();
 	}
@@ -1838,7 +1794,7 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	public String caseATimeExp(ATimeExp node, IndentTracker question)
 			throws AnalysisException
 	{
-		return node.toString();
+		return "time";
 	}
 
 	@Override
@@ -1852,14 +1808,23 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 	public String caseARecordModifier(ARecordModifier node,
 			IndentTracker question) throws AnalysisException
 	{
-		return node.toString();
+		StringBuilder sb = new StringBuilder();
+		sb.append(node.getTag());
+		sb.append(space);
+		sb.append(mytable.getMAPLET());
+		sb.append(space);
+		sb.append(node.getValue().apply(THIS, question));
+	
+		return sb.toString();
 	}
+	
+	
 
 	@Override
 	public String caseAUndefinedExp(AUndefinedExp node, IndentTracker question)
 			throws AnalysisException
 	{
-		return node.toString();
+		return Utilities.wrap("undefined");
 	}
 
 	public String caseASetBind(ASetBind node, IndentTracker question)
@@ -1902,6 +1867,132 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 			IndentTracker question) throws AnalysisException
 	{
 		return "int";
+	}
+	
+	@Override
+	public String caseARecordInvariantType(ARecordInvariantType node,
+			IndentTracker question) throws AnalysisException
+	{
+		return node.toString();
+	}
+	
+	@Override
+	public String caseARecordPattern(ARecordPattern node, IndentTracker question)
+			throws AnalysisException
+	{
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(mytable.getMK());
+		sb.append(node.getTypename());
+		sb.append(leftpar);
+		int n = 0;
+		for (PPattern x : node.getPlist())
+		{
+			n++;
+			if(node.getDefinitions().size() != n){
+				sb.append(x.apply(THIS, question));
+				sb.append(mytable.getCOMMA());
+				sb.append(space);
+			}
+			else
+			{
+				sb.append(x.apply(THIS, question));
+			}
+		}
+		sb.append(rightpar);
+		
+		return sb.toString();
+	}
+	
+	@Override
+	public String caseAMkTypeExp(AMkTypeExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		int n = 0;
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(mytable.getMK());
+		if(node.getTypeName() != null){
+			sb.append(node.getTypeName());
+		}
+		sb.append(leftpar);
+		for(PExp x : node.getArgs())
+		{
+			
+			n++;
+			if(node.getArgs().size() != n){
+				sb.append(x.apply(THIS, question));
+				sb.append(mytable.getCOMMA());
+				sb.append(space);
+			}
+			else
+			{
+				sb.append(x.apply(THIS, question));
+			}
+			
+		}
+		sb.append(rightpar);
+		return sb.toString();
+	}
+	
+	@Override
+	public String caseASetType(ASetType node, IndentTracker question)
+			throws AnalysisException
+	{
+		return "set of" + node.getSetof().apply(THIS, question);
+	}
+	
+	@Override
+	public String caseASeqSeqType(ASeqSeqType node, IndentTracker question)
+			throws AnalysisException
+	{
+		return "seq of" + node.getSeqof().apply(THIS, question);
+	}
+	
+	
+	@Override
+	public String caseAClassType(AClassType node, IndentTracker question)
+			throws AnalysisException
+	{
+		return node.getName().toString();
+	}
+	
+	@Override
+	public String caseABooleanBasicType(ABooleanBasicType node,
+			IndentTracker question) throws AnalysisException
+	{
+		return "bool";
+	}
+	
+	@Override
+	public String caseAIgnorePattern(AIgnorePattern node, IndentTracker question)
+			throws AnalysisException
+	{
+		return node.toString();
+	}
+	
+	@Override
+	public String caseAMapMapType(AMapMapType node, IndentTracker question)
+			throws AnalysisException
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("map");
+		sb.append(space);
+		sb.append(node.getFrom().apply(THIS, question));
+		sb.append(space);
+		sb.append("to");
+		sb.append(space);
+		sb.append(node.getTo().apply(THIS, question));
+		
+		return sb.toString();
+	}
+	
+	@Override
+	public String caseANamedInvariantType(ANamedInvariantType node,
+			IndentTracker question) throws AnalysisException
+	{
+		return node.toString();
 	}
 
 	@Override

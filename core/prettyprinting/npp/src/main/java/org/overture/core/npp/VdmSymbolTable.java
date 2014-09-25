@@ -588,4 +588,10 @@ public class VdmSymbolTable implements ISymbolTable
 	{
 		return "mu";
 	}
+	
+	@Override
+	public String getMK()
+	{
+		return "mk_";
+	}
 }
