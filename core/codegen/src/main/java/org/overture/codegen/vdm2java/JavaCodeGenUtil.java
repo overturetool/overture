@@ -33,8 +33,11 @@ import java.util.List;
 import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.AClassClassDefinition;
+import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.lex.Dialect;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.analysis.violations.Violation;
@@ -45,6 +48,7 @@ import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.interpreter.VDMPP;
+import org.overture.interpreter.VDMRT;
 import org.overture.interpreter.util.ClassListInterpreter;
 import org.overture.interpreter.util.ExitStatus;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
@@ -57,10 +61,10 @@ public class JavaCodeGenUtil
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
 	public static GeneratedData generateJavaFromFiles(List<File> files,
-			IRSettings irSettings, JavaSettings javaSettings)
+			IRSettings irSettings, JavaSettings javaSettings, Dialect dialect)
 			throws AnalysisException, UnsupportedModelingException
 	{
-		List<SClassDefinition> mergedParseList = consMergedParseList(files);
+		List<SClassDefinition> mergedParseList = consMergedParseList(files, dialect);
 
 		JavaCodeGen vdmCodGen = new JavaCodeGen();
 
@@ -70,10 +74,10 @@ public class JavaCodeGenUtil
 		return generateJavaFromVdm(mergedParseList, vdmCodGen);
 	}
 
-	public static List<SClassDefinition> consMergedParseList(List<File> files)
+	public static List<SClassDefinition> consMergedParseList(List<File> files, Dialect dialect)
 			throws AnalysisException
 	{
-		VDMPP vdmrt = new VDMPP();
+		VDMPP vdmrt = (dialect == Dialect.VDM_RT ? new VDMRT() : new VDMPP());
 		vdmrt.setQuiet(true);
 
 		ExitStatus status = vdmrt.parse(files);
@@ -103,7 +107,10 @@ public class JavaCodeGenUtil
 
 		for (SClassDefinition vdmClass : classes)
 		{
-			mergedParseList.add(vdmClass);
+			if (vdmClass instanceof AClassClassDefinition
+					|| vdmClass instanceof ASystemClassDefinition) {
+				mergedParseList.add(vdmClass);
+			}
 		}
 
 		return mergedParseList;

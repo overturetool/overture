@@ -356,7 +356,12 @@ public class JavaCodeGen
 
 		for (IRClassDeclStatus status : statuses)
 		{
-			classDecls.add(status.getClassCg());
+			AClassDeclCG classCg = status.getClassCg();
+			
+			if (classCg != null)
+			{
+				classDecls.add(classCg);
+			}
 		}
 
 		return classDecls;

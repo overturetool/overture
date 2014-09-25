@@ -47,7 +47,7 @@ public class JavaCodeGenMain
 	public static void main(String[] args)
 	{
 		Settings.release = Release.VDM_10;
-		Settings.dialect = Dialect.VDM_PP;
+		Dialect dialect = Dialect.VDM_RT;
 
 		if (args.length <= 1)
 		{
@@ -70,7 +70,7 @@ public class JavaCodeGenMain
 				List<File> libFiles = GeneralUtils.getFiles(new File("src\\test\\resources\\lib"));
 				files.addAll(libFiles);
 
-				GeneratedData data = JavaCodeGenUtil.generateJavaFromFiles(files, irSettings, javaSettings);
+				GeneratedData data = JavaCodeGenUtil.generateJavaFromFiles(files, irSettings, javaSettings, dialect);
 				List<GeneratedModule> generatedClasses = data.getClasses();
 
 				for (GeneratedModule generatedClass : generatedClasses)
