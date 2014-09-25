@@ -34,6 +34,8 @@ import org.overture.ast.patterns.AIntegerPattern;
 import org.overture.ast.patterns.AMapPattern;
 import org.overture.ast.patterns.AMapUnionPattern;
 import org.overture.ast.patterns.AMapletPatternMaplet;
+import org.overture.ast.patterns.ANilPattern;
+import org.overture.ast.patterns.AQuotePattern;
 import org.overture.ast.patterns.ARecordPattern;
 import org.overture.ast.patterns.ASeqPattern;
 import org.overture.ast.patterns.ASetBind;
@@ -1215,6 +1217,29 @@ class ExpressionNpp extends QuestionAnswerAdaptor<IndentTracker, String>
 		sb.append(space);
 		sb.append(exp2);
 		return sb.toString();
+	}
+	
+	@Override
+	public String caseAMkBasicExp(AMkBasicExp node, IndentTracker question)
+			throws AnalysisException
+	{
+		return node.getArg().toString();
+		
+	}
+	
+	@Override
+	public String caseANilPattern(ANilPattern node, IndentTracker question)
+			throws AnalysisException
+	{
+		return "nil";
+	}
+	
+	@Override
+	public String caseAQuotePattern(AQuotePattern node, IndentTracker question)
+			throws AnalysisException
+	{
+		return mytable.getOPENQUOTE() + node.getValue().getValue()//.toString()
+				+ mytable.getCLOSEQUOTE();
 	}
 
 	@Override
