@@ -207,5 +207,7 @@ public interface ISymbolTable
 	String getPREOP();
 	
 	String getNOT();
+	
+	String getMU();
 
 }

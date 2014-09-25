@@ -582,4 +582,10 @@ public class VdmSymbolTable implements ISymbolTable
 	{
 		return "not";
 	}
+	
+	@Override
+	public String getMU()
+	{
+		return "mu";
+	}
 }
