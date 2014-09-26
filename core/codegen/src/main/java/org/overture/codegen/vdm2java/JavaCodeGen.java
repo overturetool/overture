@@ -176,7 +176,7 @@ public class JavaCodeGen
 
 			String formattedJavaCode = JavaCodeGenUtil.formatJavaCode(code);
 
-			return new GeneratedModule(quotesInterface.getName(), formattedJavaCode);
+			return new GeneratedModule(quotesInterface.getName(), quotesInterface, formattedJavaCode);
 
 		} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 		{
@@ -287,11 +287,11 @@ public class JavaCodeGen
 
 					if (mergeVisitor.hasMergeErrors())
 					{
-						generated.add(new GeneratedModule(className, mergeVisitor.getMergeErrors()));
+						generated.add(new GeneratedModule(className, classCg, mergeVisitor.getMergeErrors()));
 					} else
 					{
 						String formattedJavaCode = JavaCodeGenUtil.formatJavaCode(writer.toString());
-						generated.add(new GeneratedModule(className, formattedJavaCode));
+						generated.add(new GeneratedModule(className, classCg, formattedJavaCode));
 					}
 				}
 
@@ -314,7 +314,7 @@ public class JavaCodeGen
 			{
 				funcValueInterface.apply(mergeVisitor, writer);
 				String formattedJavaCode = JavaCodeGenUtil.formatJavaCode(writer.toString());
-				generated.add(new GeneratedModule(funcValueInterface.getName(), formattedJavaCode));
+				generated.add(new GeneratedModule(funcValueInterface.getName(), funcValueInterface, formattedJavaCode));
 
 			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 			{
