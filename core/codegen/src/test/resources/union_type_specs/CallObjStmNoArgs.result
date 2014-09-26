@@ -10,6 +10,10 @@ public class A {
     public Number op() {
         return 1L;
     }
+
+    public String toString() {
+        return "A{" + "}";
+    }
 }
 
 ##########
@@ -25,6 +29,10 @@ public class B {
     public Number op() {
         return 2L;
     }
+
+    public String toString() {
+        return "B{" + "}";
+    }
 }
 
 ##########
@@ -39,6 +47,10 @@ public class C {
 
     public Number op() {
         return 3L;
+    }
+
+    public String toString() {
+        return "C{" + "}";
     }
 }
 
@@ -67,6 +79,10 @@ public class Entry {
         } else {
             throw new RuntimeException("Missing operation member: op");
         }
+    }
+
+    public String toString() {
+        return "Entry{" + "w = " + Utils.toString(w) + "}";
     }
 }
 

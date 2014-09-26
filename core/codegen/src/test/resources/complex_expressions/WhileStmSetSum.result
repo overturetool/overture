@@ -40,6 +40,10 @@ public class Entry {
 
         return sum;
     }
+
+    public String toString() {
+        return "Entry{" + "}";
+    }
 }
 
 ##########

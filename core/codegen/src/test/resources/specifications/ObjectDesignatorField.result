@@ -30,6 +30,10 @@ public class A {
     public static Number f(final Number x) {
         return x;
     }
+
+    public String toString() {
+        return "A{" + "x := " + Utils.toString(x) + "}";
+    }
 }
 
 ##########

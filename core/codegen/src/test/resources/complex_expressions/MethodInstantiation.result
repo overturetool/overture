@@ -23,6 +23,10 @@ public class A {
         return f1().longValue() + f2().f1().longValue() +
         new A().f1().longValue() + g(1L, 'a').longValue();
     }
+
+    public String toString() {
+        return "A{" + "}";
+    }
 }
 
 ##########
@@ -37,6 +41,10 @@ public class Entry {
 
     public static Object Run() {
         return new A().go();
+    }
+
+    public String toString() {
+        return "Entry{" + "}";
     }
 }
 

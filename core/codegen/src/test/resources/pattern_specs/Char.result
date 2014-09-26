@@ -40,6 +40,10 @@ public class A {
 
         return 'b';
     }
+
+    public String toString() {
+        return "A{" + "}";
+    }
 }
 
 ##########
@@ -54,6 +58,10 @@ public class Entry {
 
     public static Object Run() {
         return SeqUtil.seq(new A().charPatternOp('q'), A.charPatternFun('q'));
+    }
+
+    public String toString() {
+        return "Entry{" + "}";
     }
 }
 

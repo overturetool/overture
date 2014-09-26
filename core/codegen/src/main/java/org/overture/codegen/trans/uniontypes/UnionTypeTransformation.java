@@ -116,7 +116,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 				throws org.overture.ast.analysis.AnalysisException;
 	}
 
-	public <T extends STypeCG> T getMapType(SExpCG exp, TypeFinder<T> typeFinder)
+	public <T extends STypeCG> T searchType(SExpCG exp, TypeFinder<T> typeFinder)
 	{
 		if (exp == null || exp.getType() == null)
 		{
@@ -361,30 +361,43 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		{
 			arg.apply(this);
 		}
+		
 		SExpCG root = node.getRoot();
 		root.apply(this);
 
-		if (root.getType() instanceof AUnionTypeCG)
-		{
-			SMapTypeCG mapType = getMapType(root, new TypeFinder<SMapTypeCG>()
-			{
-
+		if (root.getType() instanceof AUnionTypeCG) {
+			STypeCG colType = searchType(root, new TypeFinder<SMapTypeCG>() {
 				@Override
 				public SMapTypeCG findType(PType type)
-						throws org.overture.ast.analysis.AnalysisException
-				{
-					SMapType mapType = info.getTcFactory().createPTypeAssistant().getMap(type);
+						throws org.overture.ast.analysis.AnalysisException {
+					SMapType mapType = info.getTcFactory()
+							.createPTypeAssistant().getMap(type);
 
-					return mapType != null ? (SMapTypeCG) mapType.apply(info.getTypeVisitor(), info)
-							: null;
+					return mapType != null ? (SMapTypeCG) mapType.apply(
+							info.getTypeVisitor(), info) : null;
 				}
 			});
 
-			if (mapType != null && node.getArgs().size() == 1)
-			{
-				correctTypes(root, mapType);
+			if (colType == null) {
+				colType = searchType(root, new TypeFinder<SSeqTypeCG>() {
+					@Override
+					public SSeqTypeCG findType(PType type)
+							throws org.overture.ast.analysis.AnalysisException {
+
+						SSeqType seqType = info.getTcFactory()
+								.createPTypeAssistant().getSeq(type);
+
+						return seqType != null ? (SSeqTypeCG) seqType.apply(
+								info.getTypeVisitor(), info) : null;
+					}
+				});
+			}
+
+			if (colType != null && node.getArgs().size() == 1) {
+				correctTypes(root, colType);
 				return;
 			}
+
 		} else if (root.getType() instanceof AMethodTypeCG)
 		{
 			AMethodTypeCG methodType = (AMethodTypeCG) root.getType();

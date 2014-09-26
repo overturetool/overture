@@ -19,6 +19,10 @@ public class Entry {
 
         return SeqUtil.seq(forAllExpResult_1, true, false);
     }
+
+    public String toString() {
+        return "Entry{" + "}";
+    }
 }
 
 ##########

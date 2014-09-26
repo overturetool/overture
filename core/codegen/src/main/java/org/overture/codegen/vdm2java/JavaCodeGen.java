@@ -176,7 +176,7 @@ public class JavaCodeGen
 
 			String formattedJavaCode = JavaCodeGenUtil.formatJavaCode(code);
 
-			return new GeneratedModule(quotesInterface.getName(), formattedJavaCode);
+			return new GeneratedModule(quotesInterface.getName(), quotesInterface, formattedJavaCode);
 
 		} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 		{
@@ -239,12 +239,13 @@ public class JavaCodeGen
 		PatternTransformation patternTransformation = new PatternTransformation(classes, varPrefixes, irInfo, transformationAssistant, new PatternMatchConfig());
 		TypeTransformation typeTransformation = new TypeTransformation(transformationAssistant);
 		UnionTypeTransformation unionTypeTransformation = new UnionTypeTransformation(transformationAssistant, irInfo, classes, APPLY_EXP_NAME_PREFIX, OBJ_EXP_NAME_PREFIX, CALL_STM_OBJ_NAME_PREFIX, MISSING_OP_MEMBER, MISSING_MEMBER,irInfo.getTempVarNameGen());
-
+		JavaClassToStringTrans javaToStringTransformation = new JavaClassToStringTrans(irInfo);
+		
 		DepthFirstAnalysisAdaptor[] analyses = new DepthFirstAnalysisAdaptor[] {
 				funcTransformation, ifExpTransformation,
 				deflattenTransformation, funcValVisitor, transVisitor,
 				deflattenTransformation, patternTransformation,
-				typeTransformation, unionTypeTransformation };
+				typeTransformation, unionTypeTransformation, javaToStringTransformation};
 
 		for (DepthFirstAnalysisAdaptor transformation : analyses)
 		{
@@ -286,11 +287,11 @@ public class JavaCodeGen
 
 					if (mergeVisitor.hasMergeErrors())
 					{
-						generated.add(new GeneratedModule(className, mergeVisitor.getMergeErrors()));
+						generated.add(new GeneratedModule(className, classCg, mergeVisitor.getMergeErrors()));
 					} else
 					{
 						String formattedJavaCode = JavaCodeGenUtil.formatJavaCode(writer.toString());
-						generated.add(new GeneratedModule(className, formattedJavaCode));
+						generated.add(new GeneratedModule(className, classCg, formattedJavaCode));
 					}
 				}
 
@@ -313,7 +314,7 @@ public class JavaCodeGen
 			{
 				funcValueInterface.apply(mergeVisitor, writer);
 				String formattedJavaCode = JavaCodeGenUtil.formatJavaCode(writer.toString());
-				generated.add(new GeneratedModule(funcValueInterface.getName(), formattedJavaCode));
+				generated.add(new GeneratedModule(funcValueInterface.getName(), funcValueInterface, formattedJavaCode));
 
 			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 			{
@@ -355,7 +356,12 @@ public class JavaCodeGen
 
 		for (IRClassDeclStatus status : statuses)
 		{
-			classDecls.add(status.getClassCg());
+			AClassDeclCG classCg = status.getClassCg();
+			
+			if (classCg != null)
+			{
+				classDecls.add(classCg);
+			}
 		}
 
 		return classDecls;

@@ -26,6 +26,10 @@ public class A {
     public static Number f() {
         return 1L;
     }
+
+    public String toString() {
+        return "A{" + "}";
+    }
 }
 
 ##########
@@ -43,6 +47,10 @@ public class Entry {
 
         return a.op1(a).longValue() + a.op2(a).longValue() +
         a.op3(a).longValue();
+    }
+
+    public String toString() {
+        return "Entry{" + "}";
     }
 }
 

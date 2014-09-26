@@ -31,6 +31,9 @@ import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.ATuplePattern;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.types.ABracketType;
+import org.overture.ast.types.ANamedInvariantType;
+import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
@@ -62,6 +65,7 @@ import org.overture.codegen.cgast.types.ATokenBasicTypeCG;
 import org.overture.codegen.cgast.types.SBasicTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
+import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.logging.Logger;
@@ -485,5 +489,47 @@ public class TypeAssistantCG extends AssistantBase
 	public boolean isCharRead(AApplyExpCG applyExp)
 	{
 		return isStringType(applyExp.getRoot()) && applyExp.getArgs().size() == 1;
+	}
+
+	public STypeCG findElementType(STypeCG type)
+	{
+		if (type instanceof SSetTypeCG)
+		{
+			SSetTypeCG setType = (SSetTypeCG) type;
+
+			return setType.getSetOf();
+		} else if (type instanceof SSeqTypeCG)
+		{
+			SSeqTypeCG seqType = (SSeqTypeCG) type;
+
+			return seqType.getSeqOf();
+		}
+
+		Logger.getLog().printErrorln("Expected set or sequence type in findElementType. Got: " + type);
+		
+		return null;
+	}
+	
+	public PType resolve(PType type)
+	{
+		while (type instanceof ABracketType || type instanceof ANamedInvariantType || type instanceof AOptionalType)
+		{
+			if (type instanceof ABracketType)
+			{
+				type = ((ABracketType) type).getType();
+			}
+
+			if (type instanceof ANamedInvariantType)
+			{
+				type = ((ANamedInvariantType) type).getType();
+			}
+
+			if (type instanceof AOptionalType)
+			{
+				type = ((AOptionalType) type).getType();
+			}
+		}
+		
+		return type;
 	}
 }

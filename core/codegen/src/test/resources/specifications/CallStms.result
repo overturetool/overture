@@ -32,6 +32,10 @@ public class A {
     public static Number f(final Number x) {
         return x;
     }
+
+    public String toString() {
+        return "A{" + "}";
+    }
 }
 
 ##########
@@ -46,6 +50,10 @@ public class B {
 
     public static Number f(final Number x) {
         return x;
+    }
+
+    public String toString() {
+        return "B{" + "}";
     }
 }
 

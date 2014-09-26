@@ -1,0 +1,17 @@
+class Entry
+
+operations
+	
+public static Run : () ==> nat 
+Run () ==
+(
+	dcl result : nat := 0;
+	
+	for all x in set {5,10,15} do
+		result := result + x;
+		
+	return result;
+)
+
+
+end Entry

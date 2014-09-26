@@ -10,6 +10,10 @@ public class Entry {
     public static Object Run() {
         return "\n one \n \t two \t \r three \r \" \\ four";
     }
+
+    public String toString() {
+        return "Entry{" + "}";
+    }
 }
 
 ##########

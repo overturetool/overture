@@ -10,6 +10,10 @@ public class A {
     public VDMSeq s() {
         return SeqUtil.seq();
     }
+
+    public String toString() {
+        return "A{" + "}";
+    }
 }
 
 ##########
@@ -24,6 +28,10 @@ public class B {
 
     public VDMSeq s() {
         return SeqUtil.seq();
+    }
+
+    public String toString() {
+        return "B{" + "}";
     }
 }
 
@@ -60,6 +68,10 @@ public class Entry {
         }
 
         return counter;
+    }
+
+    public String toString() {
+        return "Entry{" + "}";
     }
 }
 

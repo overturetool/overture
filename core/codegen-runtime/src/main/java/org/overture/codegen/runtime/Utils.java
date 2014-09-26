@@ -53,7 +53,7 @@ public class Utils
 		
 	    if (valueLong < Integer.MIN_VALUE || valueLong > Integer.MAX_VALUE) {
 	        throw new IllegalArgumentException
-	            (valueLong + " Casting long will change its value.");
+	            (valueLong + " Casting the long to an int will change its value");
 	    }
 	    return (int) valueLong;
 	}
@@ -63,8 +63,15 @@ public class Utils
 		if(record == null)
 			throw new IllegalArgumentException("Record cannot be null in recordToString");
 		
+		StringBuilder str = formatFields(", %s", fields);
+
+		return "mk_" + record.getClass().getSimpleName() + "(" + str + ")";
+	}
+	
+	private static StringBuilder formatFields(String format, Object... fields)
+	{
 		if(fields == null)
-			throw new IllegalArgumentException("Fields cannot be null in recordToString");
+			throw new IllegalArgumentException("Fields cannot be null in formatFields");
 		
 		StringBuilder str = new StringBuilder();
 
@@ -74,11 +81,10 @@ public class Utils
 
 			for (int i = 1; i < fields.length; i++)
 			{
-				str.append(", " + Utils.toString(fields[i]));
+				str.append(String.format(format, Utils.toString(fields[i])));
 			}
 		}
-
-		return "mk_" + record.getClass().getSimpleName() + "(" + str + ")";
+		return str;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -112,5 +118,10 @@ public class Utils
 		}
 		
 		return obj.toString();
+	}
+	
+	public static boolean equals(Object left, Object right)
+	{
+		return left != null ? left.equals(right) : right == null; 
 	}
 }

@@ -6,13 +6,18 @@ import java.util.*;
 public class Entry {
     private static final VDMMap x = MapUtil.map(new Maplet(1L,
                 MapUtil.map(new Maplet(2L, 3L))));
-    private static final Number b = ((Number) ((VDMMap) ((Object) x.get(1L))).get(2L));
+    private static final Number b = ((Number) ((VDMMap) x.get(1L)).get(2L));
 
     public Entry() {
     }
 
     public static Object Run() {
         return b;
+    }
+
+    public String toString() {
+        return "Entry{" + "x = " + Utils.toString(x) + ", b = " +
+        Utils.toString(b) + "}";
     }
 }
 

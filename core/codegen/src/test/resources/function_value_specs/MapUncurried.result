@@ -26,6 +26,10 @@ public class Entry {
                 seq_map(SeqUtil.tail(Utils.clone(s)), f));
         }
     }
+
+    public String toString() {
+        return "Entry{" + "}";
+    }
 }
 
 ##########

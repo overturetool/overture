@@ -39,6 +39,7 @@ import org.overture.codegen.cgast.expressions.AFieldNumberExpCG;
 import org.overture.codegen.cgast.expressions.AHeadUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AInSetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AIndicesUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetProperSubsetBinaryExpCG;
@@ -224,6 +225,7 @@ public class JavaValueSemantics
 				|| parent instanceof AAddrEqualsBinaryExpCG
 				|| parent instanceof AAddrNotEqualsBinaryExpCG
 				|| parent instanceof AForAllStmCG
+				|| parent instanceof AInstanceofExpCG
 				|| cloneNotNeededCollectionOperator(parent)
 				|| cloneNotNeededUtilCall(parent);
 	}

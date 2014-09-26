@@ -40,6 +40,10 @@ public class A {
             //Skip;
         }
     }
+
+    public String toString() {
+        return "A{" + "}";
+    }
 }
 
 ##########

@@ -40,6 +40,10 @@ public class Entry {
 
         return SetUtil.union(Utils.clone(b), Utils.clone(e));
     }
+
+    public String toString() {
+        return "Entry{" + "}";
+    }
 }
 
 ##########

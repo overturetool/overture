@@ -10,6 +10,10 @@ public class Storage {
     public VDMMap getXs() {
         return MapUtil.map(new Maplet(1L, new X()));
     }
+
+    public String toString() {
+        return "Storage{" + "}";
+    }
 }
 
 ##########
@@ -24,6 +28,10 @@ public class X {
 
     public static Number fun() {
         return 42L;
+    }
+
+    public String toString() {
+        return "X{" + "}";
     }
 }
 
@@ -41,6 +49,10 @@ public class Entry {
         Storage s = new Storage();
 
         return ((X) s.getXs().get(1L)).fun();
+    }
+
+    public String toString() {
+        return "Entry{" + "}";
     }
 }
 

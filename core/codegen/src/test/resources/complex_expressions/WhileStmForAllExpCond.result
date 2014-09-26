@@ -33,6 +33,10 @@ public class Entry {
 
         return Utils.clone(s);
     }
+
+    public String toString() {
+        return "Entry{" + "}";
+    }
 }
 
 ##########

@@ -174,7 +174,7 @@ CG {-> package='org.overture.codegen.cgast'
            |	{call} [type]:CG.#type [classType]:CG.#type.class [name]:java_String [args]:CG.#exp*
            |	{notImplemented}
            |	{forIndex} [var]:java_String [from]:CG.#exp [to]:CG.#exp [by]:CG.#exp [body]:CG.#stm
-           |	{forAll} [var]:java_String [exp]:CG.#exp [body]:CG.#stm
+           |	{forAll} [pattern]:CG.#pattern [exp]:CG.#exp [body]:CG.#stm
            |	{while} [exp]:CG.#exp [body]:CG.#stm
            |	{letBeSt} [header]:CG.#letBeSt.header [statement]:CG.#stm
            |	{throw} [exp]:CG.#exp

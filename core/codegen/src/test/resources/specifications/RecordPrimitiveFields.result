@@ -7,6 +7,10 @@ public class A {
     public A() {
     }
 
+    public String toString() {
+        return "A{" + "}";
+    }
+
     public static class RecA implements Record {
         public Number i;
         public Character c;

@@ -32,8 +32,6 @@ import org.overture.ast.expressions.ASelfExp;
 import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.patterns.ADefPatternBind;
-import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
@@ -447,7 +445,6 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 		ACasesStmCG casesStmCg = new ACasesStmCG();
 		casesStmCg.setExp(expCg);
 		casesStmCg.setOthers(othersCg);
-		;
 
 		question.getStmAssistant().handleAlternativesCasesStm(question, exp, cases, casesStmCg.getCases());
 
@@ -555,24 +552,15 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 	{
 		//Example: for all x in set {1,2,3} do skip;
 		PPattern pattern = node.getPattern();
-
-		//TODO: Missing case for generation of patterns
-		if (!(pattern instanceof AIdentifierPattern))
-		{
-			question.addUnsupportedNode(node, "Generation of the for all statement only supports identifier patterns. Got: " + pattern);
-			return null; // This is the only pattern supported by this loop construct
-		}
-
-		AIdentifierPattern identifier = (AIdentifierPattern) pattern;
 		PExp set = node.getSet();
 		PStm body = node.getStatement();
 
-		String var = identifier.getName().getName();
+		SPatternCG patternCg = pattern.apply(question.getPatternVisitor(), question);
 		SExpCG setExpCg = set.apply(question.getExpVisitor(), question);
 		SStmCG bodyCg = body.apply(question.getStmVisitor(), question);
 
 		AForAllStmCG forAll = new AForAllStmCG();
-		forAll.setVar(var);
+		forAll.setPattern(patternCg);
 		forAll.setExp(setExpCg);
 		forAll.setBody(bodyCg);
 
@@ -583,28 +571,18 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 	public SStmCG caseAForPatternBindStm(AForPatternBindStm node,
 			IRInfo question) throws AnalysisException
 	{
-		ADefPatternBind patternBind = node.getPatternBind();
-
-		PPattern pattern = patternBind.getPattern();
-
-		//TODO: Missing case for generation of patterns
-		if (!(pattern instanceof AIdentifierPattern))
-		{
-			question.addUnsupportedNode(node, "Generation of the for pattern bind statement only supports identifier patterns. Got: " + pattern);
-			return null; // This is the only pattern supported by this loop construct
-		}
-
-		AIdentifierPattern identifier = (AIdentifierPattern) pattern;
-		Boolean reverse = node.getReverse();
+		//Example for mk_(a,b) in [mk_(1,2), mk_(3,4)] do skip;
+		PPattern pattern = node.getPatternBind().getPattern();
 		PExp exp = node.getExp();
 		PStm stm = node.getStatement();
+		Boolean reverse = node.getReverse();
 
-		String var = identifier.getName().getName();
+		SPatternCG patternCg = pattern.apply(question.getPatternVisitor(), question);
 		SExpCG seqExpCg = exp.apply(question.getExpVisitor(), question);
 		SStmCG stmCg = stm.apply(question.getStmVisitor(), question);
 
 		AForAllStmCG forAll = new AForAllStmCG();
-		forAll.setVar(var);
+		forAll.setPattern(patternCg);
 		forAll.setBody(stmCg);
 
 		if (reverse != null && reverse)
@@ -620,5 +598,4 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 
 		return forAll;
 	}
-
 }

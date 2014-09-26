@@ -42,6 +42,10 @@ public class A {
 
         return Quotes.T1;
     }
+
+    public String toString() {
+        return "A{" + "}";
+    }
 }
 
 ##########
@@ -59,6 +63,10 @@ public class Entry {
     public static Object Run() {
         return SeqUtil.seq(new A().quotePatternOp(Quotes.T1),
             A.quotePatternFun(Quotes.T1));
+    }
+
+    public String toString() {
+        return "Entry{" + "}";
     }
 }
 

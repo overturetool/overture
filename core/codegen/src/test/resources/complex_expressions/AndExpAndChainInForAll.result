@@ -54,6 +54,10 @@ public class Entry {
 
         return Tuple.mk_(b, e.n);
     }
+
+    public String toString() {
+        return "Entry{" + "n := " + Utils.toString(n) + "}";
+    }
 }
 
 ##########
