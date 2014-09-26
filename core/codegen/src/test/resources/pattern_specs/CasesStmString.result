@@ -9,12 +9,11 @@ public class Entry {
 
     public static VDMSeq casesString(final VDMSeq e) {
         VDMSeq stringPattern_1 = Utils.clone(e);
-        Boolean success_1 = SeqUtil.equals(stringPattern_1,
-                SeqUtil.seq('a', 'a'));
+        Boolean success_1 = Utils.equals(stringPattern_1, SeqUtil.seq('a', 'a'));
 
         if (!(success_1)) {
             VDMSeq stringPattern_2 = Utils.clone(e);
-            success_1 = SeqUtil.equals(stringPattern_2, SeqUtil.seq('b', 'b'));
+            success_1 = Utils.equals(stringPattern_2, SeqUtil.seq('b', 'b'));
 
             if (success_1) {
                 return SeqUtil.seq('s', 'e', 'c', 'o', 'n', 'd');
