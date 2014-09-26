@@ -111,8 +111,7 @@ public class JavaCodeGenUtil
 
 		for (SClassDefinition vdmClass : classes)
 		{
-			if (vdmClass instanceof AClassClassDefinition
-					|| vdmClass instanceof ASystemClassDefinition) {
+			if (vdmClass instanceof AClassClassDefinition) {
 				mergedParseList.add(vdmClass);
 			}
 		}
