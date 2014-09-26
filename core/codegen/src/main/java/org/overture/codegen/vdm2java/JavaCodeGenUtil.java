@@ -37,11 +37,15 @@ import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.analysis.violations.Violation;
+import org.overture.codegen.assistant.AssistantManager;
+import org.overture.codegen.assistant.LocationAssistantCG;
 import org.overture.codegen.ir.IRSettings;
+import org.overture.codegen.ir.NodeInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.Generated;
@@ -287,4 +291,41 @@ public class JavaCodeGenUtil
 		}
 	}
 
+	public static void printMergeErrors(List<Exception> mergeErrors)
+	{
+		for (Exception error : mergeErrors)
+		{
+			Logger.getLog().println(error.toString());
+		}
+	}
+
+	public static void printUnsupportedNodes(Set<NodeInfo> unsupportedNodes)
+	{
+		AssistantManager assistantManager = new AssistantManager();
+		LocationAssistantCG locationAssistant = assistantManager.getLocationAssistant();
+
+		List<NodeInfo> nodesSorted = assistantManager.getLocationAssistant().getNodesLocationSorted(unsupportedNodes);
+
+		Logger.getLog().println("Following constructs are not supported: ");
+
+		for (NodeInfo nodeInfo : nodesSorted)
+		{
+			Logger.getLog().print(nodeInfo.getNode().toString());
+
+			ILexLocation location = locationAssistant.findLocation(nodeInfo.getNode());
+
+			Logger.getLog().print(location != null ? " at [line, pos] = ["
+					+ location.getStartLine() + ", " + location.getStartPos()
+					+ "]" : "");
+
+			String reason = nodeInfo.getReason();
+
+			if (reason != null)
+			{
+				Logger.getLog().print(". Reason: " + reason);
+			}
+
+			Logger.getLog().println("");
+		}
+	}
 }
