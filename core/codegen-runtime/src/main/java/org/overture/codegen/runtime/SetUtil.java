@@ -190,12 +190,4 @@ public class SetUtil
 		
 		return result;
 	}
-	
-	public static boolean equals(VDMSet left, VDMSet right)
-	{
-		if(left == null || right == null)
-			throw new IllegalArgumentException("A set cannot be compared to null");
-		
-		return left.equals(right);
-	}
 }
