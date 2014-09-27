@@ -543,15 +543,15 @@ public class Till {
         Number cardId = curCard.GetCardId();
         Boolean codeOk = curCard.GetCode().longValue() == Encode(pin).longValue();
         Boolean cardLegal = IsLegalCard();
-        Boolean andResult_4 = false;
+        Boolean andResult_5 = false;
 
         if (codeOk) {
             if (cardLegal) {
-                andResult_4 = true;
+                andResult_5 = true;
             }
         }
 
-        cardOk = andResult_4;
+        cardOk = andResult_5;
 
         if (!(cardLegal)) {
             retainedCards = SetUtil.union(retainedCards, SetUtil.set(curCard));
@@ -604,15 +604,15 @@ public class Till {
     }
 
     public Boolean CardValidated() {
-        Boolean andResult_5 = false;
+        Boolean andResult_6 = false;
 
         if (curCard != null) {
             if (cardOk) {
-                andResult_5 = true;
+                andResult_6 = true;
             }
         }
 
-        return andResult_5;
+        return andResult_6;
     }
 
     public Boolean CardInside() {
