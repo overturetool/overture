@@ -61,7 +61,6 @@ import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.utils.AnalysisExceptionCG;
 
 public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 {
@@ -140,8 +139,9 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 				recordFields.add(fieldDecl);
 			} else
 			{
-				throw new AnalysisExceptionCG("Could not generate fields of record: "
-						+ name, node.getLocation());
+				question.addUnsupportedNode(node,
+						"Could not generate fields of record: " + name);
+				return null;
 			}
 		}
 

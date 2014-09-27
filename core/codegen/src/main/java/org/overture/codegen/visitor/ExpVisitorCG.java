@@ -240,7 +240,7 @@ import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
-import org.overture.codegen.utils.AnalysisExceptionCG;
+import org.overture.codegen.logging.Logger;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
@@ -318,12 +318,12 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 
 		if (!(classTypeCg instanceof AClassTypeCG))
 		{
-			throw new AnalysisExceptionCG("Unexpected class type encountered for "
+			Logger.getLog().printErrorln("Unexpected class type encountered for "
 					+ AIsOfClassExp.class.getName()
 					+ ". Expected class type: "
 					+ AClassTypeCG.class.getName()
 					+ ". Got: "
-					+ typeCg.getClass().getName(), node.getLocation());
+					+ typeCg.getClass().getName() + " at " +  node.getLocation());
 		}
 
 		SExpCG objRefCg = objRef.apply(question.getExpVisitor(), question);
@@ -421,8 +421,8 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 
 		if (!(type instanceof ASetType))
 		{
-			throw new AnalysisExceptionCG("Unexpected set type for set enumeration expression: "
-					+ type.getClass().getName(), node.getLocation());
+			Logger.getLog().printErrorln("Unexpected set type for set enumeration expression: "
+					+ type.getClass().getName() + " at "  + node.getLocation());
 		}
 
 		LinkedList<PExp> members = node.getMembers();
@@ -786,15 +786,17 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 
 		if (recType == null)
 		{
-			throw new AnalysisExceptionCG("Expected record type for mk_<type> expression.", node.getLocation());
+			question.addUnsupportedNode(node, "Expected record type for mk_<type> expression. Got null.");
+			return null;
 		}
 
 		STypeCG typeCg = recType.apply(question.getTypeVisitor(), question);
 
 		if (!(typeCg instanceof ARecordTypeCG))
 		{
-			throw new AnalysisExceptionCG("Expected record type but got: "
-					+ typeCg.getClass().getName() + " in 'mk_' expression", node.getLocation());
+			question.addUnsupportedNode(node, "Expected record type but got: "
+					+ typeCg.getClass().getName() + " in 'mk_' expression");
+			return null;
 		}
 
 		ARecordTypeCG recordTypeCg = (ARecordTypeCG) typeCg;
@@ -854,8 +856,9 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 
 		if (!(type instanceof SSeqType))
 		{
-			throw new AnalysisExceptionCG("Unexpected sequence type for reverse unary expression: "
-					+ type.getClass().getName(), node.getLocation());
+			question.addUnsupportedNode(node, "Unexpected sequence type for reverse unary expression: "
+					+ type.getClass().getName());
+			return null;
 		}
 
 		SSeqType seqType = (SSeqType) type;
@@ -940,8 +943,9 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			return question.getExpAssistant().handleBinaryExp(node, new AMapOverrideBinaryExpCG(), question);
 		}
 
-		throw new AnalysisExceptionCG("Expected sequence or map type for '++' binary expression but got: "
-				+ leftType, node.getLocation());
+		question.addUnsupportedNode(node, "Expected sequence or map type for '++' binary expression but got: "
+				+ leftType);
+		return null;
 	}
 
 	@Override
@@ -962,8 +966,9 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 
 			if (!(exp instanceof AMapletExpCG))
 			{
-				throw new AnalysisExceptionCG("Got expected map enumeration member: "
-						+ exp, member.getLocation());
+				question.addUnsupportedNode(node,
+						"Got expected map enumeration member: " + exp);
+				return null;
 			}
 
 			enumMap.getMembers().add((AMapletExpCG) exp);
@@ -1296,6 +1301,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			return varExp;
 		} else
 		{
+			question.addUnsupportedNode(node, "Reached unexpected case when generating a variable expression");
 			return null;
 		}
 	}

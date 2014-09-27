@@ -91,7 +91,6 @@ import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.utils.AnalysisExceptionCG;
 
 public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 {
@@ -294,7 +293,8 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 				return new AReturnStmCG();
 			} else
 			{
-				throw new AnalysisExceptionCG("Unexpected expression returned by constructor: Values expliclty returned by constructors must be 'self'.", operation.getLocation());
+				question.addUnsupportedNode(operation, "Unexpected expression returned by constructor: Values expliclty returned by constructors must be 'self'.");
+				return null;
 			}
 		}
 
