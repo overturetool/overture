@@ -93,7 +93,9 @@ import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.AOrBooleanBinaryExp;
 import org.overture.ast.expressions.APlusNumericBinaryExp;
 import org.overture.ast.expressions.APlusPlusBinaryExp;
+import org.overture.ast.expressions.APostOpExp;
 import org.overture.ast.expressions.APowerSetUnaryExp;
+import org.overture.ast.expressions.APreOpExp;
 import org.overture.ast.expressions.AProperSubsetBinaryExp;
 import org.overture.ast.expressions.AQuoteLiteralExp;
 import org.overture.ast.expressions.ARangeResByBinaryExp;
@@ -245,6 +247,24 @@ import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 {
+	@Override
+	public SExpCG caseAPreOpExp(APreOpExp node, IRInfo question)
+			throws AnalysisException
+	{
+		PExp exp = node.getExpression();
+		
+		return exp.apply(question.getExpVisitor(), question);
+	}
+	
+	@Override
+	public SExpCG caseAPostOpExp(APostOpExp node, IRInfo question)
+			throws AnalysisException
+	{
+		PExp exp = node.getPostexpression();
+		
+		return exp.apply(question.getExpVisitor(), question);
+	}
+	
 	@Override
 	public SExpCG caseANotYetSpecifiedExp(ANotYetSpecifiedExp node,
 			IRInfo question) throws AnalysisException

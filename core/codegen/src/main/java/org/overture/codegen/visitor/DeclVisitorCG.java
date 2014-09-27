@@ -288,6 +288,14 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 			templateType.setName(typeParam.getName());
 			method.getTemplateTypes().add(templateType);
 		}
+		
+		AExplicitFunctionDefinition preCond = node.getPredef();
+		SDeclCG preCondCg = preCond != null ? preCond.apply(question.getDeclVisitor(), question) : null;
+		method.setPreCond(preCondCg);
+		
+		AExplicitFunctionDefinition postCond = node.getPostdef();
+		SDeclCG postCondCg = postCond != null ? postCond.apply(question.getDeclVisitor(), question) : null;
+		method.setPostCond(postCondCg);
 
 		return method;
 	}
@@ -340,6 +348,14 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 
 			formalParameters.add(param);
 		}
+		
+		AExplicitFunctionDefinition preCond = node.getPredef();
+		SDeclCG preCondCg = preCond != null ? preCond.apply(question.getDeclVisitor(), question) : null;
+		method.setPreCond(preCondCg);
+		
+		AExplicitFunctionDefinition postCond = node.getPostdef();
+		SDeclCG postCondCg = postCond != null ? postCond.apply(question.getDeclVisitor(), question) : null;
+		method.setPostCond(postCondCg);
 
 		return method;
 	}

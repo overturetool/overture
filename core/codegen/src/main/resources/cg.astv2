@@ -77,6 +77,8 @@ CG {-> package='org.overture.codegen.cgast'
     
 #decl {-> package='org.overture.codegen.cgast.declarations'}
 	=	{method} //rename to operation
+		(preCond):CG.#decl
+		(postCond):CG.#decl
 		[access]:java_String
 		[static]:java_Boolean
 		[abstract]:java_Boolean
@@ -87,6 +89,8 @@ CG {-> package='org.overture.codegen.cgast'
 		[templateTypes]:CG.#type.template*
 		[body]:CG.#stm
 	|	{func}
+		(preCond):CG.#decl
+		(postCond):CG.#decl
 		[access]:java_String
 		[abstract]:java_Boolean
 		[methodType]:CG.#type.method
@@ -253,6 +257,7 @@ CG {-> package='org.overture.codegen.cgast'
     |	{missingMember} [message]:java_String
     	//Raised at runtime when an attemp is made 
 		//to access a non-existing member (e.g. operation)
+	|	{preCond} [message]:java_String
     ;
 
 #Var {-> package='org.overture.codegen.cgast.expressions'
