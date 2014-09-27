@@ -40,11 +40,15 @@ import org.overture.codegen.tests.ConfiguredStringGenerationTest;
 import org.overture.codegen.tests.ExpressionTest;
 import org.overture.codegen.tests.FunctionValueTest;
 import org.overture.codegen.tests.PatternTest;
+import org.overture.codegen.tests.PrePostTest;
 import org.overture.codegen.tests.SpecificationTest;
 import org.overture.codegen.tests.UnionTypeTest;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.config.Release;
+import org.overture.interpreter.VDMJ;
+import org.overture.interpreter.VDMPP;
+import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.values.Value;
 
 public class CompileTests
@@ -78,6 +82,7 @@ public class CompileTests
 	public static final boolean RUN_UNION_TESTS = true;
 	public static final boolean RUN_CONCURRENCY_TESTS = true;
 	public static final boolean RUN_BIND_TESTS = true;
+	public static final boolean PRE_POST_TESTS = true;
 
 	private List<File> testInputFiles;
 	private List<File> resultFiles;
@@ -152,6 +157,11 @@ public class CompileTests
 		{
 			runBindTests();
 		}
+		
+		if(PRE_POST_TESTS)
+		{
+			runPrePostTests();
+		}
 
 		long endTimeMs = System.currentTimeMillis();
 
@@ -162,6 +172,20 @@ public class CompileTests
 
 		System.out.println("Time: "
 				+ String.format("%02d:%02d", minutes, seconds) + ".");
+	}
+
+	private void runPrePostTests() throws IOException
+	{
+		System.out.println("Beginning pre/post-condition tests..\n");
+
+		testInputFiles = TestUtils.getTestInputFiles(new File(PrePostTest.ROOT));
+		resultFiles = TestUtils.getFiles(new File(PrePostTest.ROOT), RESULT_FILE_EXTENSION);
+
+		runTests(testInputFiles, resultFiles, new ExecutableSpecTestHandler(Release.VDM_10), false);
+
+		System.out.println("\n********");
+		System.out.println("Finished with pre/post-condition tests");
+		System.out.println("********\n");		
 	}
 
 	private void runBindTests() throws IOException
@@ -387,12 +411,17 @@ public class CompileTests
 				ExecutableTestHandler executableTestHandler = (ExecutableTestHandler) testHandler;
 
 				// Calculating the VDM Result:
-				Value vdmResult;
+				Object vdmResult;
 
 				try
 				{
 					vdmResult = executableTestHandler.interpretVdm(currentInputFile);
-				} catch (Exception e1)
+				} 
+				catch (ContextException ce1)
+				{
+					vdmResult = ce1;
+				}
+				catch (Exception e1)
 				{
 					e1.printStackTrace();
 					return;
@@ -417,9 +446,21 @@ public class CompileTests
 					ois.close();
 				}
 
-				// Comparison of VDM and Java results
-				ComparisonCG comp = new ComparisonCG(currentInputFile);
-				boolean equal = comp.compare(cgValue, vdmResult);
+				boolean equal = false;
+				
+				if(vdmResult instanceof ContextException)
+				{
+					String cgValueStr = cgValue.toString();
+					String vdmValueStr = ((ContextException) vdmResult).getMessage();
+					
+					equal = vdmValueStr.contains(cgValueStr);
+				}
+				else
+				{
+					// Comparison of VDM and Java results
+					ComparisonCG comp = new ComparisonCG(currentInputFile);
+					equal = comp.compare(cgValue, (Value) vdmResult);
+				}
 
 				if (printInput)
 				{
