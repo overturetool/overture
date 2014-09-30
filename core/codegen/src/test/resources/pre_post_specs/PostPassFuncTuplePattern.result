@@ -1,0 +1,56 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        return f(Tuple.mk_(2L, 3L));
+    }
+
+    public static Number f(final Tuple tuplePattern_1) {
+        Boolean success_1 = tuplePattern_1.compatible(Number.class, Number.class);
+        Number a = null;
+        Number b = null;
+
+        if (success_1) {
+            a = ((Number) tuplePattern_1.get(0));
+            b = ((Number) tuplePattern_1.get(1));
+        }
+
+        if (!(success_1)) {
+            throw new RuntimeException("Tuple pattern match failed");
+        }
+
+        Number funcResult_ = a.longValue() + b.longValue();
+
+        return Utils.postCheck(funcResult_,
+            post_f(Utils.clone(tuplePattern_1), funcResult_), "f");
+    }
+
+    public static Boolean post_f(final Tuple tuplePattern_2, final Number RESULT) {
+        Boolean success_2 = tuplePattern_2.compatible(Number.class, Number.class);
+        Number a = null;
+        Number b = null;
+
+        if (success_2) {
+            a = ((Number) tuplePattern_2.get(0));
+            b = ((Number) tuplePattern_2.get(1));
+        }
+
+        if (!(success_2)) {
+            throw new RuntimeException("Tuple pattern match failed");
+        }
+
+        return (a.longValue() + b.longValue() + RESULT.longValue()) == 10L;
+    }
+
+    public String toString() {
+        return "Entry{" + "}";
+    }
+}
+
+##########
