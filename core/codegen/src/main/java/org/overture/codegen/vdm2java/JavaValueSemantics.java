@@ -267,10 +267,10 @@ public class JavaValueSemantics
 
 		AExplicitVarExpCG explicitVar = (AExplicitVarExpCG) root;
 
-		AClassTypeCG classType = explicitVar.getClassType();
+		STypeCG classType = explicitVar.getClassType();
 
-		return classType != null
-				&& classType.getName().equals(JavaFormat.UTILS_FILE);
+		return classType instanceof AClassTypeCG
+				&& ((AClassTypeCG) classType).getName().equals(JavaFormat.UTILS_FILE);
 	}
 
 	private boolean usesStructuralEquivalence(STypeCG type)
