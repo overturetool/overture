@@ -13,7 +13,7 @@ public class Entry {
 
     public static Number f(final Number x) {
         if (!(pre_f(x))) {
-            throw new RuntimeException("Precondition failure: pre_f ");
+            throw new RuntimeException("Precondition failure: pre_f");
         }
 
         return x;
