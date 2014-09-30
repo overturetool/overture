@@ -12,6 +12,7 @@ import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
+import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
@@ -96,12 +97,16 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 	//	mtype.setEquivalent(new AVoidReturnType());
 	//	mtype.setResult();
 		
-//		AMethodDeclCG method_pp = new AMethodDeclCG();
-//		method_pp.setIsConstructor(true);
-//		method_pp.setAccess("public");
-//		method_pp.setName(innerClass.getName());
+		AMethodDeclCG method_pp = new AMethodDeclCG();
+		method_pp.setIsConstructor(true);
+		method_pp.setAccess("public");
+		method_pp.setName(innerClass.getName());
+		//Set up body
+		AReturnStmCG ret = new AReturnStmCG();
+		method_pp.setBody(ret);
+
 //		//method_pp.setMethodType(mtype);
-//		innerClass.getMethods().add(method_pp);
+		innerClass.getMethods().add(method_pp);
 		
 		if (node.getSuperName() != null){
 			innerClass.setSuperName(node.getSuperName()+"_Sentinel");
@@ -144,7 +149,6 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 			return getThreadClass(superClass.getName(), superClass);
 		}
 	}
-	
 //	#set ( $baseclass = "" )
 //	#if (!$JavaFormat.isNull($node.getThread()))
 //		#set ( $baseclass = "extends Thread" )
