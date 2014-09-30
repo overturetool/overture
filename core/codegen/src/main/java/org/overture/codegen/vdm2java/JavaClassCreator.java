@@ -30,6 +30,7 @@ public class JavaClassCreator
 		
 		AMethodDeclCG toStringMethod = new AMethodDeclCG();
 
+		toStringMethod.setIsConstructor(false);
 		toStringMethod.setAccess(JavaFormat.JAVA_PUBLIC);
 		toStringMethod.setName("toString");
 
