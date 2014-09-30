@@ -1,0 +1,25 @@
+import java.rmi.AlreadyBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.NotBoundException;
+
+public class $node.getCpuName() {
+
+	public static void main(String[] args) throws RemoteException, AlreadyBoundException, NotBoundException {
+		
+	#foreach( $remoteInstance in $node.getRemoteInst() )
+	$JavaFormat.format($remoteInstance)
+	#end
+	
+	
+	#foreach( $clientInstance in $node.getClientInst() )
+	$JavaFormat.format($clientInstance)
+	#end
+		##RemoteImpl impl = new RemoteImpl();
+		##Registry registry = 
+			##LocateRegistry.createRegistry(1099);
+		##registry.bind("TestRMI", impl);
+		##System.out.println("Server started..");
+	}
+}

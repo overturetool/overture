@@ -1,0 +1,11 @@
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+ 
+public interface $node.getName() extends Remote{
+ 
+	#foreach( $method in $node.getMethodSignatures() )
+	$JavaFormat.format($method)
+	#end
+	
+	public String toString();
+}

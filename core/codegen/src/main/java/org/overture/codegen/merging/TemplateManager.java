@@ -32,12 +32,17 @@ import org.apache.velocity.runtime.parser.ParseException;
 import org.apache.velocity.runtime.parser.node.SimpleNode;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.AClientInstanceDeclCG;
 import org.overture.codegen.cgast.declarations.ACounterLocalDeclCG;
+import org.overture.codegen.cgast.declarations.ACpuDeploymentDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
+import org.overture.codegen.cgast.declarations.ARemoteContractDeclCG;
+import org.overture.codegen.cgast.declarations.ARemoteContractImplDeclCG;
+import org.overture.codegen.cgast.declarations.ARemoteInstanceDeclCG;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
 import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AAddrEqualsBinaryExpCG;
@@ -226,7 +231,24 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(ACounterLocalDeclCG.class, templateStructure.DECL_PATH
 				+ "Counter");
+		
+		nodeTemplateFileNames.put(ARemoteContractDeclCG.class, templateStructure.DECL_PATH
+				+ "RemoteContract");
+		
+		
+		nodeTemplateFileNames.put(ARemoteContractImplDeclCG.class, templateStructure.DECL_PATH
+				+ "RemoteContractImpl");
+		
+		
+		nodeTemplateFileNames.put(ACpuDeploymentDeclCG.class, templateStructure.DECL_PATH
+				+ "CPUdeployment");
 
+		nodeTemplateFileNames.put(ARemoteInstanceDeclCG.class, templateStructure.DECL_PATH
+				+ "RemoteInstance");
+		
+		nodeTemplateFileNames.put(AClientInstanceDeclCG.class, templateStructure.DECL_PATH
+				+ "ClientInstance");
+		
 		// Local declarations
 
 		nodeTemplateFileNames.put(AFormalParamLocalParamCG.class, templateStructure.LOCAL_DECLS_PATH

@@ -77,6 +77,7 @@ CG {-> package='org.overture.codegen.cgast'
     
 #decl {-> package='org.overture.codegen.cgast.declarations'}
 	=	{method} //rename to operation
+		[isRemote]:java_Boolean
 		[access]:java_String
 		[static]:java_Boolean
 		[abstract]:java_Boolean
@@ -124,6 +125,24 @@ CG {-> package='org.overture.codegen.cgast'
     	[access]:java_String
     	[fields]:field*
     	[methods]:CG.#decl.method*
+	|	{remoteContract}
+		[name]:java_String
+		[methodSignatures]:CG.#decl.method*
+	|	{remoteContractImpl}
+		[name]:java_String
+		[methods]:CG.#decl.method*
+	|	{remoteInstance}
+		[name]:java_String
+		[nameString]:java_String
+		[className]:java_String
+	|	{clientInstance}
+		[name]:java_String
+		[nameString]:java_String
+		[className]:java_String
+	|	{cpuDeployment}
+		[cpuName]:java_String
+		[remoteInst]:CG.#decl.remoteInstance*
+		[clientInst]:CG.#decl.clientInstance*
     |	{empty}
 	;
 
