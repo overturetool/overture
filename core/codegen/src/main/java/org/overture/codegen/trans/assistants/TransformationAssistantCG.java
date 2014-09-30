@@ -21,6 +21,7 @@
  */
 package org.overture.codegen.trans.assistants;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.types.ASetType;
@@ -31,6 +32,8 @@ import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
+import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
+import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
 import org.overture.codegen.cgast.declarations.SLocalDeclCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
@@ -60,6 +63,7 @@ import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.ir.SourceNode;
+import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.IIterationStrategy;
 import org.overture.codegen.trans.TempVarPrefixes;
 
@@ -567,5 +571,60 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 	{
 		binding.setSet(null);
 		binding.getPatterns().clear();
+	}
+	
+	public AIdentifierVarExpCG consIdentifierVar(String name, STypeCG type)
+	{
+		AIdentifierVarExpCG var = new AIdentifierVarExpCG();
+		var.setIsLambda(false);
+		var.setType(type);
+		var.setOriginal(name);
+		
+		return var;
+	}
+	
+	public AApplyExpCG consConditionalCall(AMethodDeclCG node,
+			AMethodDeclCG predMethod)
+	{
+		AIdentifierVarExpCG condVar = new AIdentifierVarExpCG();
+		condVar.setType(predMethod.getMethodType().clone());
+		condVar.setOriginal(predMethod.getName());
+		condVar.setIsLambda(false);
+		
+		AApplyExpCG condCall = new AApplyExpCG();
+		condCall.setType(new ABoolBasicTypeCG());
+		condCall.setRoot(condVar);
+		
+		LinkedList<AFormalParamLocalParamCG> params = node.getFormalParams();
+		
+		for(AFormalParamLocalParamCG p : params)
+		{
+			SPatternCG paramPattern = p.getPattern();
+			
+			if(!(paramPattern instanceof AIdentifierPatternCG))
+			{
+				Logger.getLog().printErrorln("Expected parameter pattern to be an identifier pattern at this point. Got: " + paramPattern);
+				return null;
+			}
+			
+			AIdentifierPatternCG paramId = (AIdentifierPatternCG) paramPattern;
+			
+			AIdentifierVarExpCG paramArg = new AIdentifierVarExpCG();
+			paramArg.setIsLambda(false);
+			paramArg.setType(p.getType().clone());
+			paramArg.setOriginal(paramId.getName());
+			
+			condCall.getArgs().add(paramArg);
+		}
+		
+		return condCall;
+	}
+	
+	public AIdentifierPatternCG consIdPattern(String name)
+	{
+		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
+		idPattern.setName(name);
+		
+		return idPattern;
 	}
 }
