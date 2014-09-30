@@ -8,7 +8,7 @@ public class A {
     }
 
     public VDMSeq stringPatternOp(final VDMSeq stringPattern_1) {
-        Boolean success_1 = SeqUtil.equals(stringPattern_1,
+        Boolean success_1 = Utils.equals(stringPattern_1,
                 SeqUtil.seq('h', 'e', 'j'));
 
         if (!(success_1)) {
@@ -16,7 +16,7 @@ public class A {
         }
 
         VDMSeq stringPattern_2 = SeqUtil.seq('h', 'e', 'j');
-        Boolean success_2 = SeqUtil.equals(stringPattern_2,
+        Boolean success_2 = Utils.equals(stringPattern_2,
                 SeqUtil.seq('h', 'e', 'j'));
 
         if (!(success_2)) {
@@ -27,7 +27,7 @@ public class A {
     }
 
     public static VDMSeq stringPatternFun(final VDMSeq stringPattern_3) {
-        Boolean success_3 = SeqUtil.equals(stringPattern_3,
+        Boolean success_3 = Utils.equals(stringPattern_3,
                 SeqUtil.seq('h', 'e', 'j'));
 
         if (!(success_3)) {
@@ -35,7 +35,7 @@ public class A {
         }
 
         VDMSeq stringPattern_4 = SeqUtil.seq('h', 'e', 'j');
-        Boolean success_4 = SeqUtil.equals(stringPattern_4,
+        Boolean success_4 = Utils.equals(stringPattern_4,
                 SeqUtil.seq('h', 'e', 'j'));
 
         if (!(success_4)) {

@@ -46,7 +46,7 @@ import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.utils.AnalysisExceptionCG;
+import org.overture.codegen.logging.Logger;
 
 public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
 {
@@ -146,12 +146,12 @@ public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
 				functions.add((AFuncDeclCG) decl);
 			} else if (decl instanceof AEmptyDeclCG)
 			{
-				;// Empty declarations are used to indicate constructs that can be ignored during the
-					// construction of the OO AST.
+				// Empty declarations are used to indicate constructs that can be ignored during the
+				// construction of the OO AST.
 			} else
 			{
-				throw new AnalysisExceptionCG("Unexpected definition in class: "
-						+ name + ": " + def.getName().getName(), def.getLocation());
+				Logger.getLog().printErrorln("Unexpected definition in class: "
+						+ name + ": " + def.getName().getName() + " at " + def.getLocation());
 			}
 		}
 

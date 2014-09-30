@@ -1,4 +1,4 @@
-class A
+class Entry
 
 types
 
@@ -9,14 +9,6 @@ Rec ::
 	c : char
 	r : real
 
-operations
-
-public recPatternOp : Rec ==> Rec
-recPatternOp (mk_Rec(n1, b1, c1, r1)) ==
-let mk_Rec(n2, b2, c2, r2) = mk_Rec(5, true, 'g', 2.5)
-in
-	return mk_Rec(n1, b2, c1, r2);
-
 functions
 
 public recPatternFun : Rec -> Rec
@@ -25,14 +17,16 @@ let mk_Rec(n2, b2, c2, r2) = mk_Rec(5, true, 'g', 2.5)
 in
 	mk_Rec(n1, b2, c1, r2)
 
-end A
-
-class Entry
-
 operations
 
-public static Run : () ==> seq of A`Rec
+public recPatternOp : Rec ==> Rec
+recPatternOp (mk_Rec(n1, b1, c1, r1)) ==
+let mk_Rec(n2, b2, c2, r2) = mk_Rec(5, true, 'g', 2.5)
+in
+	return mk_Rec(n1, b2, c1, r2);
+	
+public static Run : () ==> seq of Rec
 Run () ==
-	return [new A().recPatternOp(mk_A`Rec(77, false, 'e', 4.4)), A`recPatternFun(mk_A`Rec(77, false, 'e', 4.4))];
+	return [new Entry().recPatternOp(mk_Rec(77, false, 'e', 4.4)), recPatternFun(mk_Rec(77, false, 'e', 4.4))];
 
 end Entry

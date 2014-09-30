@@ -227,11 +227,11 @@ public class PhoneBook {
     }
 
     public Boolean eq(final PhoneBook other) {
-        return MapUtil.equals(phoneNumbers, other.phoneNumbers);
+        return Utils.equals(phoneNumbers, other.phoneNumbers);
     }
 
     public Boolean neq(final PhoneBook other) {
-        return !(MapUtil.equals(phoneNumbers, other.phoneNumbers));
+        return !(Utils.equals(phoneNumbers, other.phoneNumbers));
     }
 
     public String toString() {

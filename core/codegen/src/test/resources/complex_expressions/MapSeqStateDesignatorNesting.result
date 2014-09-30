@@ -32,7 +32,7 @@ public class Entry {
 
             A other = ((A) obj);
 
-            return MapUtil.equals(x, other.x);
+            return Utils.equals(x, other.x);
         }
 
         public int hashCode() {
