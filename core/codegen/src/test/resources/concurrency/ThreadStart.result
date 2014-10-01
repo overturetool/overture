@@ -22,15 +22,17 @@ public class ThreadClass extends Thread {
     }
 
     public class ThreadClass_sentinel extends Thread_Sentinel {
-        public ThreadClass() {
+        public final int setX = 0L;
+        public final int ThreadClass = 1L;
+        public final int toString = 2L;
+        public final int function_sum = 3L;
+
+        public ThreadClass_sentinel() {
+            return;
         }
 
-        public void setX() {
-            x = 2L;
-        }
-
-        public String toString() {
-            return "ThreadClass{" + "x := " + Utils.toString(x) + "}";
+        public ThreadClass_sentinel(final EvaluatePP instance) {
+            init(instance, function_sum);
         }
     }
 }
@@ -69,30 +71,17 @@ public class Entry {
     }
 
     public class Entry_sentinel extends Sentinel {
-        public Entry() {
+        public final int Run = 0L;
+        public final int Entry = 1L;
+        public final int toString = 2L;
+        public final int function_sum = 3L;
+
+        public Entry_sentinel() {
+            return;
         }
 
-        public static Object Run() {
-            ThreadClass t = new ThreadClass();
-            t.start();
-
-            Boolean whileCond1 = true;
-
-            while (whileCond1) {
-                whileCond1 = t.x.longValue() != 2L;
-
-                if (!(whileCond1)) {
-                    break;
-                }
-
-                //Skip;
-            }
-
-            return t.x;
-        }
-
-        public String toString() {
-            return "Entry{" + "}";
+        public Entry_sentinel(final EvaluatePP instance) {
+            init(instance, function_sum);
         }
     }
 }

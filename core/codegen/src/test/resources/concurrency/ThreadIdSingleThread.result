@@ -20,19 +20,18 @@ public class Entry {
     }
 
     public class Entry_sentinel extends Sentinel {
-        public Entry() {
+        public final int Run = 0L;
+        public final int Entry = 1L;
+        public final int f = 2L;
+        public final int toString = 3L;
+        public final int function_sum = 4L;
+
+        public Entry_sentinel() {
+            return;
         }
 
-        public static Object Run() {
-            return f();
-        }
-
-        public static Number f() {
-            return Thread.currentThread().getId();
-        }
-
-        public String toString() {
-            return "Entry{" + "}";
+        public Entry_sentinel(final EvaluatePP instance) {
+            init(instance, function_sum);
         }
     }
 }
