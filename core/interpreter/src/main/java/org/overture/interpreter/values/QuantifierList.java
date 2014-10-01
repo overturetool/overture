@@ -29,8 +29,6 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
 
-
-
 @SuppressWarnings("serial")
 public class QuantifierList extends Vector<Quantifier>
 {
@@ -40,7 +38,8 @@ public class QuantifierList extends Vector<Quantifier>
 	private NameValuePairList result = null;
 	private boolean done = false;
 
-	public void init(Context ctxt, boolean allPossibilities) throws AnalysisException
+	public void init(Context ctxt, boolean allPossibilities)
+			throws AnalysisException
 	{
 		count = size();
 		size = new int[count];
@@ -48,7 +47,7 @@ public class QuantifierList extends Vector<Quantifier>
 		boolean someData = false;
 		boolean oneHasNoData = false;
 
-		for (int i=0; i<count; i++)
+		for (int i = 0; i < count; i++)
 		{
 			size[i] = get(i).size(ctxt, allPossibilities);
 			someData = someData || size[i] > 0;
@@ -61,7 +60,7 @@ public class QuantifierList extends Vector<Quantifier>
 
 	private void permute()
 	{
-		for (int i=0; i<count; i++)
+		for (int i = 0; i < count; i++)
 		{
 			if (++next[i] < size[i])
 			{
@@ -70,7 +69,7 @@ public class QuantifierList extends Vector<Quantifier>
 
 			next[i] = 0;
 
-			if (i == count-1)
+			if (i == count - 1)
 			{
 				done = true;
 			}
@@ -88,20 +87,19 @@ public class QuantifierList extends Vector<Quantifier>
 		{
 			try
 			{
-           		result = new NameValuePairList();
+				result = new NameValuePairList();
 
-        		for (int i=0; i<count; i++)
-        		{
-        			Quantifier q = get(i);
-        			result.addAll(q.get(next[i]));
-        		}
+				for (int i = 0; i < count; i++)
+				{
+					Quantifier q = get(i);
+					result.addAll(q.get(next[i]));
+				}
 
-        		permute();
-        		return true;
-			}
-			catch (PatternMatchException e)
+				permute();
+				return true;
+			} catch (PatternMatchException e)
 			{
-				permute();		// Bad matches are ignored
+				permute(); // Bad matches are ignored
 			}
 		}
 

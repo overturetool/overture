@@ -22,13 +22,15 @@ Tokens
   java_Double = 'java:java.lang.Double';
   java_Character = 'java:java.lang.Character';
   java_String = 'java:java.lang.String';
+  java_Object = 'java:java.lang.Object';
   
      
 Abstract Syntax Tree
 /* This section declares the AST by giving root nodes and their possible sub classe */
 
 CG {-> package='org.overture.codegen.cgast'
-	| [sourceNode]:SourceNode}
+	| [sourceNode]:SourceNode
+	| (tag):java_Object}
 	= #pattern
 	| #bind
 	| #multipleBind
@@ -58,12 +60,12 @@ CG {-> package='org.overture.codegen.cgast'
 	;
 
 #bind {-> package='org.overture.codegen.cgast.patterns'
-	|	[pattern]:CG.#pattern.identifier} ////In the Overture AST pList is of type multiple patterns. Here it is limited to identifiers
+	|	[pattern]:CG.#pattern}
     =   {set} [set]:CG.#exp //binds
     ;
 		
 #multipleBind {-> package='org.overture.codegen.cgast.patterns'
-	|	[patterns]:CG.#pattern.identifier*} //In the Overture AST pList is of type multiple patterns. Here it is limited to identifiers
+	|	[patterns]:CG.#pattern*}
     =   {set}  [set]:CG.#exp //binds
     ;
    
@@ -163,6 +165,7 @@ CG {-> package='org.overture.codegen.cgast'
            |	{abstractBody}
            |	{assignment} [target]:CG.#stateDesignator [exp]:CG.#exp
            |	{localAssignment} [target]:CG.#exp [exp]:CG.#exp
+           |	{localPatternAssignment} [target]:CG.#pattern [exp]:CG.#exp (nextElementDecl):CG.#decl.#Local.var
            |	{block}	[localDefs]:CG.#decl.#Local* [statements]:CG.#stm*
            |	{callObject} [type]:CG.#type [designator]:CG.#objectDesignator [className]:java_String [fieldName]:java_String 
            					 [args]:CG.#exp*
@@ -182,6 +185,7 @@ CG {-> package='org.overture.codegen.cgast'
            |	{cases} [exp]:CG.#exp [cases]:CG.#stm.#altStm.case* [others]:CG.#stm
            |	#altStm
            |	{error}
+           |	{continue}
            ;
            
 #altStm {-> package='org.overture.codegen.cgast.statements'}
@@ -235,6 +239,7 @@ CG {-> package='org.overture.codegen.cgast'
     |	{tupleCompatibility} [tuple]:CG.#exp [types]:CG.#type*
     |	{cases} [exp]:CG.#exp [cases]:CG.#exp.#altExp.case* [others]:CG.#exp
     |	#altExp
+    |	{subSeq} [seq]:CG.#exp [from]:CG.#exp [to]:CG.#exp
     ;
 
 #altExp {-> package='org.overture.codegen.cgast.expressions'}

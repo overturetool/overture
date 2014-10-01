@@ -23,16 +23,14 @@
 
 package org.overture.interpreter.values;
 
-
 import java.io.Serializable;
 
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.typechecker.util.HackLexNameToken;
 import org.overture.typechecker.util.LexNameTokenMap;
 
-
-
-public class NameValuePairMap extends LexNameTokenMap<Value> implements Serializable
+public class NameValuePairMap extends LexNameTokenMap<Value> implements
+		Serializable
 {
 	/**
 	 * 
@@ -43,7 +41,7 @@ public class NameValuePairMap extends LexNameTokenMap<Value> implements Serializ
 	{
 		put(nvp.name, nvp.value);
 	}
-	
+
 	public void putNew(NameValuePair nvp)
 	{
 		if (get(nvp.name) == null)
@@ -54,7 +52,7 @@ public class NameValuePairMap extends LexNameTokenMap<Value> implements Serializ
 
 	public void putAll(NameValuePairList list)
 	{
-		for (NameValuePair nvp: list)
+		for (NameValuePair nvp : list)
 		{
 			put(nvp);
 		}
@@ -62,7 +60,7 @@ public class NameValuePairMap extends LexNameTokenMap<Value> implements Serializ
 
 	public void putAllNew(NameValuePairList list)
 	{
-		for (NameValuePair nvp: list)
+		for (NameValuePair nvp : list)
 		{
 			putNew(nvp);
 		}
@@ -72,9 +70,9 @@ public class NameValuePairMap extends LexNameTokenMap<Value> implements Serializ
 	{
 		ValueList list = new ValueList();
 
-		for (Entry<ILexNameToken, Value> entry: this.entrySet())
+		for (Entry<ILexNameToken, Value> entry : this.entrySet())
 		{
-			if (entry.getKey().matches(sought))		// All overloaded names
+			if (entry.getKey().matches(sought)) // All overloaded names
 			{
 				list.add(entry.getValue());
 			}
@@ -87,7 +85,7 @@ public class NameValuePairMap extends LexNameTokenMap<Value> implements Serializ
 	{
 		NameValuePairList list = new NameValuePairList();
 
-		for (Entry<ILexNameToken, Value> entry: this.entrySet())
+		for (Entry<ILexNameToken, Value> entry : this.entrySet())
 		{
 			list.add(new NameValuePair(entry.getKey(), entry.getValue()));
 		}
@@ -100,14 +98,14 @@ public class NameValuePairMap extends LexNameTokenMap<Value> implements Serializ
 	{
 		NameValuePairMap copy = new NameValuePairMap();
 
-		for (Entry<ILexNameToken, Value> entry: this.entrySet())
+		for (Entry<ILexNameToken, Value> entry : this.entrySet())
 		{
-			copy.put(entry.getKey(), (Value)entry.getValue().clone());
+			copy.put(entry.getKey(), (Value) entry.getValue().clone());
 		}
 
 		return copy;
 	}
-	
+
 	@Override
 	public Value get(Object name)
 	{
@@ -115,18 +113,17 @@ public class NameValuePairMap extends LexNameTokenMap<Value> implements Serializ
 
 		if (rv == null)
 		{
-    		for (ILexNameToken var: keySet())
-    		{
-    			if (HackLexNameToken.isEqual(var, name))
-    			{
-    				rv = super.get(var);
-    				break;
-    			}
-    		}
+			for (ILexNameToken var : keySet())
+			{
+				if (HackLexNameToken.isEqual(var, name))
+				{
+					rv = super.get(var);
+					break;
+				}
+			}
 		}
 
 		return rv;
 	}
-	
-	
+
 }

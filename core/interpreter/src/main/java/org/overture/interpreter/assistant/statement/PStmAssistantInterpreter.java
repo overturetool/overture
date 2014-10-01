@@ -21,7 +21,7 @@ public class PStmAssistantInterpreter extends PStmAssistantTC
 	{
 		try
 		{
-			return stm.apply(af.getStatementExpressionFinder(),lineno);// FIXME: should we handle exceptions like this
+			return stm.apply(af.getStatementExpressionFinder(), lineno);// FIXME: should we handle exceptions like this
 		} catch (AnalysisException e)
 		{
 			return null; // Most have none
@@ -32,6 +32,8 @@ public class PStmAssistantInterpreter extends PStmAssistantTC
 	 * Find a statement starting on the given line. Single statements just compare their location to lineno, but block
 	 * statements and statements with sub-statements iterate over their branches.
 	 * 
+	 * @param stm
+	 *            the statement
 	 * @param lineno
 	 *            The line number to locate.
 	 * @return A statement starting on the line, or null.
@@ -40,7 +42,7 @@ public class PStmAssistantInterpreter extends PStmAssistantTC
 	{
 		try
 		{
-			return stm.apply(af.getStatementFinder(),lineno);// FIXME: should we handle exceptions like this
+			return stm.apply(af.getStatementFinder(), lineno);// FIXME: should we handle exceptions like this
 		} catch (AnalysisException e)
 		{
 			return null; // Most have none
@@ -48,5 +50,4 @@ public class PStmAssistantInterpreter extends PStmAssistantTC
 
 	}
 
-	
 }

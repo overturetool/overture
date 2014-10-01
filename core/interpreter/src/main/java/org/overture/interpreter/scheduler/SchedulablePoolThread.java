@@ -41,15 +41,15 @@ import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.values.ObjectValue;
 import org.overture.parser.config.Properties;
 
-
-public abstract class SchedulablePoolThread implements Serializable,Runnable, ISchedulableThread
+public abstract class SchedulablePoolThread implements Serializable, Runnable,
+		ISchedulableThread
 {
 	/**
-	 * VdmThreadPoolExecutor used to set the Thread instance which will run a
-	 * SchedulablePoolThread just before execution.
-	 * It also reports a reject error if the pool no longer can expand to handle the requested number of threads
+	 * VdmThreadPoolExecutor used to set the Thread instance which will run a SchedulablePoolThread just before
+	 * execution. It also reports a reject error if the pool no longer can expand to handle the requested number of
+	 * threads
+	 * 
 	 * @author kela
-	 *
 	 */
 	public static class VdmThreadPoolExecutor extends ThreadPoolExecutor
 	{
@@ -57,7 +57,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 				long keepAliveTime, TimeUnit unit,
 				BlockingQueue<Runnable> workQueue)
 		{
-			super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue,new VdmjRejectedExecutionHandler());
+			super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, new VdmjRejectedExecutionHandler());
 		}
 
 		@Override
@@ -72,7 +72,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 			}
 
 		}
-		
+
 		@Override
 		protected void afterExecute(Runnable r, Throwable t)
 		{
@@ -85,23 +85,25 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 
 		/**
 		 * Prints an error message if a execution is rejected
+		 * 
 		 * @author kela
-		 *
 		 */
-		private static class VdmjRejectedExecutionHandler implements RejectedExecutionHandler
+		private static class VdmjRejectedExecutionHandler implements
+				RejectedExecutionHandler
 		{
 			public void rejectedExecution(Runnable r,
 					ThreadPoolExecutor executor)
 			{
-				System.err.println("Thread pool rejected thread: "+ ((ISchedulableThread)r).getName()+" pool size "+executor.getActiveCount());
-				 throw new RejectedExecutionException();
+				System.err.println("Thread pool rejected thread: "
+						+ ((ISchedulableThread) r).getName() + " pool size "
+						+ executor.getActiveCount());
+				throw new RejectedExecutionException();
 			}
 
 		}
 	}
 
-
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	protected final Resource resource;
 	protected final ObjectValue object;
@@ -122,19 +124,17 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	protected boolean stopCalled;
 
 	/**
-	 * Thread pool used by SchedulablePoolThread. It is a none blocking queue
-	 * with an upper limit set to Integer.MAX_VALUE allowing it to freely expand.
-	 * The thread pool will most likely make the Java VM throw OutOfMemoryError before
-	 * Integer.MAX_VALUE is reached do the the native thread creation requiring 2 MB for each thread.
-	 * {@link http://java.sun.com/j2se/1.5.0/docs/api/java/util/concurrent/ThreadPoolExecutor.html}
+	 * Thread pool used by SchedulablePoolThread. It is a none blocking queue with an upper limit set to
+	 * Integer.MAX_VALUE allowing it to freely expand. The thread pool will most likely make the Java VM throw
+	 * OutOfMemoryError before Integer.MAX_VALUE is reached do the the native thread creation requiring 2 MB for each
+	 * thread. {@link "http://java.sun.com/j2se/1.5.0/docs/api/java/util/concurrent/ThreadPoolExecutor.html"}
 	 */
 	public final static VdmThreadPoolExecutor pool = new VdmThreadPoolExecutor(200, Integer.MAX_VALUE, 60L, TimeUnit.SECONDS, new SynchronousQueue<Runnable>());// LinkedBlockingQueue
 
-	public SchedulablePoolThread(
-		Resource resource, ObjectValue object, long priority,
-		boolean periodic, long swapInBy)
+	public SchedulablePoolThread(Resource resource, ObjectValue object,
+			long priority, boolean periodic, long swapInBy)
 	{
-		this.tid =BasicSchedulableThread.nextThreadID();
+		this.tid = BasicSchedulableThread.nextThreadID();
 		this.resource = resource;
 		this.object = object;
 		this.periodic = periodic;
@@ -167,7 +167,8 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		return this.executingThread;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.overture.vdmj.scheduler.ISchedulableThread#equals(java.lang.Object)
 	 */
 	@Override
@@ -175,14 +176,15 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	{
 		if (other instanceof ISchedulableThread)
 		{
-			ISchedulableThread to = (ISchedulableThread)other;
+			ISchedulableThread to = (ISchedulableThread) other;
 			return getId() == to.getId();
 		}
 
 		return false;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.overture.vdmj.scheduler.ISchedulableThread#hashCode()
 	 */
 	@Override
@@ -191,7 +193,8 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		return new Long(getId()).hashCode();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.overture.vdmj.scheduler.ISchedulableThread#toString()
 	 */
 	@Override
@@ -200,7 +203,8 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		return getName() + " (" + (stopCalled ? "STOPPING" : state) + ")";
 	}
 
-    /* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.overture.vdmj.scheduler.ISchedulableThread#start()
 	 */
 
@@ -217,12 +221,13 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 
 		if (resource instanceof CPUResource)
 		{
-			CPUResource cpu = (CPUResource)resource;
+			CPUResource cpu = (CPUResource) resource;
 			cpu.createThread(this);
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.overture.vdmj.scheduler.ISchedulableThread#run()
 	 */
 
@@ -232,20 +237,21 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		{
 			reschedule(null, null);
 			body();
-		}
-		finally
+		} finally
 		{
 			setState(RunState.COMPLETE);
 			resource.unregister(this);
 			BasicSchedulableThread.remove(this);
-			getThread().setName( "pool-"+ getThread().getId()+ "-thread-");
+			getThread().setName("pool-" + getThread().getId() + "-thread-");
 		}
 	}
 
 	abstract protected void body();
 
-	/* (non-Javadoc)
-	 * @see org.overture.vdmj.scheduler.ISchedulableThread#step(org.overture.vdmj.runtime.Context, org.overture.vdmj.lex.ILexLocation)
+	/*
+	 * (non-Javadoc)
+	 * @see org.overture.vdmj.scheduler.ISchedulableThread#step(org.overture.vdmj.runtime.Context,
+	 * org.overture.vdmj.lex.ILexLocation)
 	 */
 	public void step(Context ctxt, ILexLocation location)
 	{
@@ -255,8 +261,7 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 			{
 				duration(getObject().getCPU().getDuration(Properties.rt_cycle_default), ctxt, location);
 			}
-		}
-		else
+		} else
 		{
 			SystemClock.advance(Properties.rt_duration_default);
 		}
@@ -270,7 +275,8 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.overture.vdmj.scheduler.ISchedulableThread#getRunState()
 	 */
 	public synchronized RunState getRunState()
@@ -278,7 +284,8 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		return state;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.overture.vdmj.scheduler.ISchedulableThread#setState(org.overture.vdmj.scheduler.RunState)
 	 */
 	public synchronized void setState(RunState newstate)
@@ -293,8 +300,10 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		waitUntilState(RunState.RUNNABLE, RunState.RUNNING, ctxt, location);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.overture.vdmj.scheduler.ISchedulableThread#waiting(org.overture.vdmj.runtime.Context, org.overture.vdmj.lex.ILexLocation)
+	/*
+	 * (non-Javadoc)
+	 * @see org.overture.vdmj.scheduler.ISchedulableThread#waiting(org.overture.vdmj.runtime.Context,
+	 * org.overture.vdmj.lex.ILexLocation)
 	 */
 	public synchronized void waiting(Context ctxt, ILexLocation location)
 	{
@@ -302,8 +311,10 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		waitUntilState(RunState.WAITING, RunState.RUNNING, ctxt, location);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.overture.vdmj.scheduler.ISchedulableThread#locking(org.overture.vdmj.runtime.Context, org.overture.vdmj.lex.ILexLocation)
+	/*
+	 * (non-Javadoc)
+	 * @see org.overture.vdmj.scheduler.ISchedulableThread#locking(org.overture.vdmj.runtime.Context,
+	 * org.overture.vdmj.lex.ILexLocation)
 	 */
 	public synchronized void locking(Context ctxt, ILexLocation location)
 	{
@@ -311,7 +322,8 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		waitUntilState(RunState.LOCKING, RunState.RUNNING, ctxt, location);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.overture.vdmj.scheduler.ISchedulableThread#alarming(long, Context, ILexLocation)
 	 */
 	public synchronized void alarming(long expected)
@@ -321,7 +333,8 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		setState(RunState.ALARM);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.overture.vdmj.scheduler.ISchedulableThread#runslice(long)
 	 */
 	public synchronized void runslice(long slice)
@@ -331,38 +344,38 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		waitWhileState(RunState.RUNNING, RunState.RUNNING, null, null);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.overture.vdmj.scheduler.ISchedulableThread#duration(long, org.overture.vdmj.runtime.Context, org.overture.vdmj.lex.ILexLocation)
+	/*
+	 * (non-Javadoc)
+	 * @see org.overture.vdmj.scheduler.ISchedulableThread#duration(long, org.overture.vdmj.runtime.Context,
+	 * org.overture.vdmj.lex.ILexLocation)
 	 */
-	public synchronized void duration(
-		long pause, Context ctxt, ILexLocation location)
+	public synchronized void duration(long pause, Context ctxt,
+			ILexLocation location)
 	{
 		// Wait until pause has passed - called by thread
 
 		if (!inOuterTimeStep)
 		{
-    		setTimestep(pause);
-    		durationEnd = SystemClock.getWallTime() + pause;
+			setTimestep(pause);
+			durationEnd = SystemClock.getWallTime() + pause;
 
-    		do
-    		{
-        		if (Properties.diags_timestep)
-        		{
-        			RTLogger.log(new RTExtendedTextMessage(String.format("-- %s Waiting to move time by %d",
-        				this, timestep)));
-        		}
+			do
+			{
+				if (Properties.diags_timestep)
+				{
+					RTLogger.log(new RTExtendedTextMessage(String.format("-- %s Waiting to move time by %d", this, timestep)));
+				}
 
-        		waitUntilState(RunState.TIMESTEP, RunState.RUNNING, ctxt, location);
-    			setTimestep(durationEnd - SystemClock.getWallTime());
-    		}
-    		while (getTimestep() > 0);
+				waitUntilState(RunState.TIMESTEP, RunState.RUNNING, ctxt, location);
+				setTimestep(durationEnd - SystemClock.getWallTime());
+			} while (getTimestep() > 0);
 
-    		setTimestep(Long.MAX_VALUE);	// Finished
+			setTimestep(Long.MAX_VALUE); // Finished
 		}
 	}
 
-	private synchronized void waitWhileState(
-		RunState newstate, RunState whilestate, Context ctxt, ILexLocation location)
+	private synchronized void waitWhileState(RunState newstate,
+			RunState whilestate, Context ctxt, ILexLocation location)
 	{
 		setState(newstate);
 
@@ -372,8 +385,8 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		}
 	}
 
-	private synchronized void waitUntilState(
-		RunState newstate, RunState until, Context ctxt, ILexLocation location)
+	private synchronized void waitUntilState(RunState newstate, RunState until,
+			Context ctxt, ILexLocation location)
 	{
 		setState(newstate);
 
@@ -387,25 +400,24 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 	{
 		while (true)
 		{
-    		try
-    		{
-   				wait();
-   				
-   				if (stopCalled && state == RunState.RUNNING)
-   				{
-   					// stopThread made us RUNNABLE, now we're running, so die
-   					throw new ThreadDeath();
-   				}
-   				
- 				return;
-    		}
-    		catch (InterruptedException e)
-    		{
-    			if (signal != null)
-    			{
-    				handleSignal(signal, ctxt, location);
-    			}
-    		}
+			try
+			{
+				wait();
+
+				if (stopCalled && state == RunState.RUNNING)
+				{
+					// stopThread made us RUNNABLE, now we're running, so die
+					throw new ThreadDeath();
+				}
+
+				return;
+			} catch (InterruptedException e)
+			{
+				if (signal != null)
+				{
+					handleSignal(signal, ctxt, location);
+				}
+			}
 		}
 	}
 
@@ -414,7 +426,8 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		BasicSchedulableThread.handleSignal(sig, ctxt, location);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.overture.vdmj.scheduler.ISchedulableThread#suspendOthers()
 	 */
 	public void suspendOthers()
@@ -437,21 +450,20 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		if (!stopCalled)
 		{
 			stopCalled = true;
-			timestep = Long.MAX_VALUE;			// Don't take part in time step
-			
+			timestep = Long.MAX_VALUE; // Don't take part in time step
+
 			if (Thread.currentThread() != this.getThread())
 			{
-				setState(RunState.RUNNABLE);	// So that thread is rescheduled
+				setState(RunState.RUNNABLE); // So that thread is rescheduled
 			}
-			
+
 			return true;
-		}
-		else
+		} else
 		{
 			return false;
 		}
 	}
-	
+
 	public synchronized void setSignal(Signal sig)
 	{
 		signal = sig;
@@ -463,14 +475,14 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		if (getThread() != null)
 		{
 			getThread().interrupt();
-		}
-		else
+		} else
 		{
 			Thread.currentThread().interrupt();
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.overture.vdmj.scheduler.ISchedulableThread#getObject()
 	 */
 	public ObjectValue getObject()
@@ -478,7 +490,8 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		return object;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.overture.vdmj.scheduler.ISchedulableThread#setSwapInBy(long)
 	 */
 	public synchronized void setSwapInBy(long swapInBy)
@@ -486,7 +499,8 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		this.swapInBy = swapInBy;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.overture.vdmj.scheduler.ISchedulableThread#getSwapInBy()
 	 */
 	public synchronized long getSwapInBy()
@@ -494,7 +508,8 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		return swapInBy;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.overture.vdmj.scheduler.ISchedulableThread#isPeriodic()
 	 */
 	public boolean isPeriodic()
@@ -502,7 +517,8 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		return periodic;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.overture.vdmj.scheduler.ISchedulableThread#isActive()
 	 */
 	public boolean isActive()
@@ -510,7 +526,8 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		return state == RunState.TIMESTEP || state == RunState.WAITING;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.overture.vdmj.scheduler.ISchedulableThread#isVirtual()
 	 */
 	public boolean isVirtual()
@@ -518,7 +535,8 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		return virtual;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.overture.vdmj.scheduler.ISchedulableThread#setTimestep(long)
 	 */
 	public synchronized void setTimestep(long step)
@@ -526,7 +544,8 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		timestep = step;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.overture.vdmj.scheduler.ISchedulableThread#getTimestep()
 	 */
 	public synchronized long getTimestep()
@@ -534,7 +553,8 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		return timestep;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.overture.vdmj.scheduler.ISchedulableThread#getDurationEnd()
 	 */
 	public synchronized long getDurationEnd()
@@ -542,7 +562,8 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		return durationEnd;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.overture.vdmj.scheduler.ISchedulableThread#getAlarmWakeTime()
 	 */
 	public synchronized long getAlarmWakeTime()
@@ -550,7 +571,8 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		return alarmWakeTime;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.overture.vdmj.scheduler.ISchedulableThread#clearAlarm()
 	 */
 	public void clearAlarm()
@@ -558,7 +580,8 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		alarmWakeTime = Long.MAX_VALUE;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.overture.vdmj.scheduler.ISchedulableThread#inOuterTimestep(boolean)
 	 */
 	public synchronized void inOuterTimestep(boolean b)
@@ -566,7 +589,8 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		inOuterTimeStep = b;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.overture.vdmj.scheduler.ISchedulableThread#inOuterTimestep()
 	 */
 	public synchronized boolean inOuterTimestep()
@@ -574,16 +598,16 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		return inOuterTimeStep;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see org.overture.vdmj.scheduler.ISchedulableThread#getCPUResource()
 	 */
 	public CPUResource getCPUResource()
 	{
 		if (resource instanceof CPUResource)
 		{
-			return (CPUResource)resource;
-		}
-		else
+			return (CPUResource) resource;
+		} else
 		{
 			throw new InternalException(66, "Thread is not running on a CPU");
 		}
@@ -612,6 +636,5 @@ public abstract class SchedulablePoolThread implements Serializable,Runnable, IS
 		}
 		return false;
 	}
-
 
 }

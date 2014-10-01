@@ -61,5 +61,32 @@
         </configuration>
       </plugin>
     </plugins>
+
+
+ <pluginManagement>
+      <plugins>
+  <!-- Plugin for license headers-->
+         <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>license-maven-plugin</artifactId>
+          <version>1.7</version>
+           <configuration>
+              <excludes>
+                <exclude>**/ClassTypeChecker.java</exclude>
+<exclude>**/Environment.java</exclude>
+<exclude>**/FlatCheckedEnvironment.java</exclude>
+<exclude>**/FlatEnvironment.java</exclude>
+<exclude>**/ModuleEnvironment.java</exclude>
+<exclude>**/ModuleTypeChecker.java</exclude>
+<exclude>**/PrivateClassEnvironment.java</exclude>
+<exclude>**/PublicClassEnvironment.java</exclude>
+<exclude>**/TypeCheckException.java</exclude>
+<exclude>**/TypeChecker.java</exclude>
+<exclude>**/TypeComparator.java</exclude>
+              </excludes>
+        </configuration>
+        </plugin>
+ </plugins>
+    </pluginManagement>
   </build>
 </project>

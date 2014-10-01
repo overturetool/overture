@@ -26,6 +26,9 @@ busy : bool := true;
 
 operations
 
+ public getAperture: () ==> Angle * Angle
+  getAperture () == is not yet specified;
+
 public Environment: seq of char * [ThreadDef] ==> Environment
 Environment (fname, tDef) ==
  (def mk_ (-,input) = io.freadval[seq of inline](fname) in

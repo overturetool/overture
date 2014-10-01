@@ -114,9 +114,10 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 		try
 		{
 			IProofObligationList obligations = new ProofObligationList();
-			if (!node.getInConstructor()
-					&& (node.getClassDefinition() != null && node.getClassDefinition().getInvariant() != null)
-					|| (node.getStateDefinition() != null && node.getStateDefinition().getInvExpression() != null))
+			if (!node.getInConstructor() && node.getClassDefinition() != null
+					&& node.getClassDefinition().getInvariant() != null
+					|| node.getStateDefinition() != null
+					&& node.getStateDefinition().getInvExpression() != null)
 			{
 				obligations.add(new StateInvariantObligation(node, question, aF));
 			}
@@ -156,15 +157,17 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 			{
 				stmt.apply(mainVisitor, question); // collect the assignments
 				if (!stmt.getInConstructor()
-						&& (stmt.getClassDefinition() != null && stmt.getClassDefinition().getInvariant() != null)
-						|| (stmt.getStateDefinition() != null && stmt.getStateDefinition().getInvExpression() != null))
+						&& stmt.getClassDefinition() != null
+						&& stmt.getClassDefinition().getInvariant() != null
+						|| stmt.getStateDefinition() != null
+						&& stmt.getStateDefinition().getInvExpression() != null)
 				{
 					needsInv = true;
 				}
 			}
 			if (needsInv)
 			{
-				//FIXME State Inv For Atomic assignments
+				// FIXME State Inv For Atomic assignments
 				obligations.add(new StateInvariantObligation(node, question, aF));
 			}
 
@@ -632,7 +635,8 @@ public class PogParamStmVisitor<Q extends IPOContextStack, A extends IProofOblig
 		{
 			IProofObligationList obligations = new ProofObligationList();
 
-			for (PStm stmt : node.getStatements()) {
+			for (PStm stmt : node.getStatements())
+			{
 				obligations.addAll(stmt.apply(mainVisitor, question));
 			}
 

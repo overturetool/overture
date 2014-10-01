@@ -25,9 +25,7 @@ package org.overture.interpreter.debug;
 
 public enum DBGPContextType
 {
-	LOCAL("local", 0),
-	CLASS("class", 2),
-	GLOBAL("global", 1);
+	LOCAL("local", 0), CLASS("class", 2), GLOBAL("global", 1);
 
 	public String value;
 	public int code;
@@ -40,7 +38,7 @@ public enum DBGPContextType
 
 	public static DBGPContextType lookup(String string) throws DBGPException
 	{
-		for (DBGPContextType type: values())
+		for (DBGPContextType type : values())
 		{
 			if (type.value.equals(string))
 			{
@@ -53,7 +51,7 @@ public enum DBGPContextType
 
 	public static DBGPContextType lookup(int code) throws DBGPException
 	{
-		for (DBGPContextType type: values())
+		for (DBGPContextType type : values())
 		{
 			if (type.code == code)
 			{

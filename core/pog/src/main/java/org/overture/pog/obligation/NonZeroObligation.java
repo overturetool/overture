@@ -40,17 +40,16 @@ public class NonZeroObligation extends ProofObligation
 	 */
 	private static final long serialVersionUID = 5773921447005368923L;
 
-	public NonZeroObligation(
-		ILexLocation location, PExp exp, IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException
+	public NonZeroObligation(ILexLocation location, PExp exp,
+			IPOContextStack ctxt, IPogAssistantFactory af)
+			throws AnalysisException
 	{
 		super(exp, POType.NON_ZERO, ctxt, location, af);
-		
+
 		// exp <> 0
-		
-		AIntLiteralExp zeroExp = getIntLiteral(0);		
+
+		AIntLiteralExp zeroExp = getIntLiteral(0);
 		ANotEqualBinaryExp notEqualsExp = AstExpressionFactory.newANotEqualBinaryExp(exp.clone(), zeroExp);
-		
-		
 
 		stitch = notEqualsExp;
 		valuetree.setPredicate(ctxt.getPredWithContext(notEqualsExp));

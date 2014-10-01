@@ -40,7 +40,7 @@ public class FieldMap extends Vector<FieldValue>
 
 	public FieldMap(FieldMap from)
 	{
-		for (FieldValue fv: from)
+		for (FieldValue fv : from)
 		{
 			add(fv);
 		}
@@ -59,7 +59,7 @@ public class FieldMap extends Vector<FieldValue>
 
 	public boolean add(String k, Value v, boolean comp)
 	{
-		for (FieldValue fv: this)
+		for (FieldValue fv : this)
 		{
 			if (fv.name.equals(k))
 			{
@@ -74,7 +74,7 @@ public class FieldMap extends Vector<FieldValue>
 
 	public Value get(String key)
 	{
-		for (FieldValue fv: this)
+		for (FieldValue fv : this)
 		{
 			if (fv.name.equals(key))
 			{
@@ -114,7 +114,7 @@ public class FieldMap extends Vector<FieldValue>
 	{
 		int hash = 0;
 
-		for (FieldValue fv: this)
+		for (FieldValue fv : this)
 		{
 			if (fv.comparable)
 			{
@@ -130,9 +130,9 @@ public class FieldMap extends Vector<FieldValue>
 	{
 		FieldMap copy = new FieldMap();
 
-		for (FieldValue fv: this)
+		for (FieldValue fv : this)
 		{
-			copy.add(fv.name, (Value)fv.value.clone(), fv.comparable);
+			copy.add(fv.name, (Value) fv.value.clone(), fv.comparable);
 		}
 
 		return copy;

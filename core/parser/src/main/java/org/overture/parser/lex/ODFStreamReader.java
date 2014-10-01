@@ -45,7 +45,7 @@ public class ODFStreamReader extends XMLStreamReader
 
 		while (in.indexOf("<text:s text:c") > 0)
 		{
-			String pattern = "<text:s text:c=\"" + (n++) + "\"/>";
+			String pattern = "<text:s text:c=\"" + n++ + "\"/>";
 			replace = replace + " ";
 
 			if (in.indexOf(pattern) > 0)
@@ -54,11 +54,6 @@ public class ODFStreamReader extends XMLStreamReader
 			}
 		}
 
-		return in
-    		.replaceAll("<text:tab/>", "\t")
-    		.replaceAll("<text:line-break/>", "\n")
-			.replaceAll("<text:s/>", " ")
-    		.replaceAll("</text:p>", "\n")
-			.replaceAll("<text:p [^/>]+/>", "\n");
+		return in.replaceAll("<text:tab/>", "\t").replaceAll("<text:line-break/>", "\n").replaceAll("<text:s/>", " ").replaceAll("</text:p>", "\n").replaceAll("<text:p [^/>]+/>", "\n");
 	}
 }

@@ -1,3 +1,24 @@
+/*
+ * #%~
+ * Test Framework for Overture
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.test.util;
 
 import java.io.File;
@@ -75,7 +96,8 @@ public class XmlResultReaderWriter<R>
 		createWarningsAndErrors(doc, rootElement);
 
 		String oldLineSeparator = System.getProperty("line.separator");
-		if (Properties.forceUnixLineEndings) {
+		if (Properties.forceUnixLineEndings)
+		{
 			// Output using LF line endings (UNIX-style),
 			// but only for this file.
 			oldLineSeparator = System.getProperty("line.separator");
@@ -94,7 +116,8 @@ public class XmlResultReaderWriter<R>
 
 		transformer.transform(source, result);
 
-		if (Properties.forceUnixLineEndings) {
+		if (Properties.forceUnixLineEndings)
+		{
 			// Restore line endings
 			System.setProperty("line.separator", oldLineSeparator);
 		}
@@ -142,44 +165,52 @@ public class XmlResultReaderWriter<R>
 
 	}
 
-	public boolean loadFromXml(){
-		//File resultFile = new File(file.getAbsoluteFile()+ ".result");
+	public boolean loadFromXml()
+	{
+		// File resultFile = new File(file.getAbsoluteFile()+ ".result");
 		List<IMessage> warnings = new Vector<IMessage>();
 		List<IMessage> errors = new Vector<IMessage>();
 		R readResult = null;
-		
+
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db;
-		try {
+		try
+		{
 			db = dbf.newDocumentBuilder();
 
 			Document doc = db.parse(file);
 			doc.getDocumentElement().normalize();
 			NodeList nodeLst = doc.getElementsByTagName("message");
-			for (int i = 0; i < nodeLst.getLength(); i++) {
+			for (int i = 0; i < nodeLst.getLength(); i++)
+			{
 				Node node = nodeLst.item(i);
 				String nodeType = node.getAttributes().getNamedItem("messageType").getNodeValue();
-				if (nodeType.equals("error")) {
+				if (nodeType.equals("error"))
+				{
 					convertNodeToMessage(errors, node);
-				} else if(nodeType.equals("warning")){
+				} else if (nodeType.equals("warning"))
+				{
 					convertNodeToMessage(warnings, node);
-				} 
+				}
 			}
-			
-			for (int i = 0; i < doc.getDocumentElement().getChildNodes().getLength(); i++) {
+
+			for (int i = 0; i < doc.getDocumentElement().getChildNodes().getLength(); i++)
+			{
 				Node node = doc.getDocumentElement().getChildNodes().item(i);
-				if(node.getNodeName()!=null && node.getNodeName().equals("result"))
+				if (node.getNodeName() != null
+						&& node.getNodeName().equals("result"))
 				{
 					node.normalize();
-					readResult =resultStore.decodeResult(node);
+					readResult = resultStore.decodeResult(node);
 				}
-//				System.out.println(node);
+				// System.out.println(node);
 			}
-//			doc.getDocumentElement().getChildNodes().getElementsByTagName("result")
-			
+			// doc.getDocumentElement().getChildNodes().getElementsByTagName("result")
+
 			String type = doc.getDocumentElement().getAttributes().getNamedItem("type").getNodeValue();
-			setResult(type,new Result<R>(readResult, warnings, errors));
-		} catch (Exception e) {
+			setResult(type, new Result<R>(readResult, warnings, errors));
+		} catch (Exception e)
+		{
 			return false;
 		}
 		return true;

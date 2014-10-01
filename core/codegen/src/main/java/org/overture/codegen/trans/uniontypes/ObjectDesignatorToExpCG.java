@@ -1,3 +1,24 @@
+/*
+ * #%~
+ * VDM Code Generator
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.codegen.trans.uniontypes;
 
 import java.util.LinkedList;
@@ -30,13 +51,13 @@ public class ObjectDesignatorToExpCG extends AnswerAdaptor<SExpCG>
 {
 	private IRInfo info;
 	private List<AClassDeclCG> classes;
-	
+
 	public ObjectDesignatorToExpCG(IRInfo info, List<AClassDeclCG> classes)
 	{
 		this.info = info;
 		this.classes = classes;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public SExpCG caseAApplyObjectDesignatorCG(AApplyObjectDesignatorCG node)
@@ -45,37 +66,34 @@ public class ObjectDesignatorToExpCG extends AnswerAdaptor<SExpCG>
 		SObjectDesignatorCG object = node.getObject();
 		SourceNode sourceNode = node.getSourceNode();
 		LinkedList<SExpCG> args = node.getArgs();
-		
+
 		SExpCG root = object.apply(this);
 
 		STypeCG rootType = root.getType();
 		STypeCG applyType = null;
-		
-		if(rootType instanceof SSeqTypeCG)
+
+		if (rootType instanceof SSeqTypeCG)
 		{
 			applyType = ((SSeqTypeCG) rootType).getSeqOf();
-		}
-		else if(rootType instanceof SMapTypeCG)
+		} else if (rootType instanceof SMapTypeCG)
 		{
 			applyType = ((SMapTypeCG) rootType).getTo();
-		}
-		else if(rootType instanceof AMethodTypeCG)
+		} else if (rootType instanceof AMethodTypeCG)
 		{
 			applyType = ((AMethodTypeCG) rootType).getResult();
 		}
-		
+
 		applyType = applyType.clone();
 
-		
 		AApplyExpCG applyExp = new AApplyExpCG();
 		applyExp.setArgs((List<? extends SExpCG>) args.clone());
 		applyExp.setRoot(root);
 		applyExp.setType(applyType);
 		applyExp.setSourceNode(sourceNode);
-		
+
 		return applyExp;
 	}
-	
+
 	@Override
 	public SExpCG caseAFieldObjectDesignatorCG(AFieldObjectDesignatorCG node)
 			throws AnalysisException
@@ -84,32 +102,31 @@ public class ObjectDesignatorToExpCG extends AnswerAdaptor<SExpCG>
 		String fieldModule = node.getFieldModule();
 		SObjectDesignatorCG obj = node.getObject();
 		SourceNode sourceNode = node.getSourceNode();
-		
+
 		STypeCG fieldExpType = null;
-		
+
 		TypeAssistantCG typeAssistant = info.getAssistantManager().getTypeAssistant();
 
 		INode parent = node.parent();
-		
-		if(parent instanceof AApplyObjectDesignatorCG)
+
+		if (parent instanceof AApplyObjectDesignatorCG)
 		{
 			AApplyObjectDesignatorCG apply = (AApplyObjectDesignatorCG) parent;
 			LinkedList<SExpCG> args = apply.getArgs();
 			fieldExpType = typeAssistant.getMethodType(info, classes, fieldModule, fieldName, args);
-		}
-		else 
+		} else
 		{
 			fieldExpType = typeAssistant.getFieldType(classes, fieldModule, fieldName);
 		}
-		
+
 		SExpCG objExp = obj.apply(this);
-		
+
 		AFieldExpCG fieldExp = new AFieldExpCG();
 		fieldExp.setMemberName(fieldName);
 		fieldExp.setType(fieldExpType);
 		fieldExp.setObject(objExp);
 		fieldExp.setSourceNode(sourceNode);
-		
+
 		return fieldExp;
 	}
 
@@ -119,33 +136,33 @@ public class ObjectDesignatorToExpCG extends AnswerAdaptor<SExpCG>
 	{
 		return node.getExp().clone();
 	}
-	
+
 	@Override
 	public SExpCG caseANewObjectDesignatorCG(ANewObjectDesignatorCG node)
 			throws AnalysisException
 	{
 		return node.getExp().clone();
 	}
-	
+
 	@Override
 	public SExpCG caseASelfObjectDesignatorCG(ASelfObjectDesignatorCG node)
 			throws AnalysisException
 	{
 		AClassDeclCG enclosingClass = node.getAncestor(AClassDeclCG.class);
-		
+
 		String className = enclosingClass.getName();
 		SourceNode sourceNode = node.getSourceNode();
-		
+
 		AClassTypeCG classType = new AClassTypeCG();
 		classType.setName(className);
 
 		ASelfExpCG self = new ASelfExpCG();
 		self.setType(classType);
 		self.setSourceNode(sourceNode);
-		
+
 		return self;
 	}
-	
+
 	@Override
 	public SExpCG createNewReturnValue(INode node) throws AnalysisException
 	{

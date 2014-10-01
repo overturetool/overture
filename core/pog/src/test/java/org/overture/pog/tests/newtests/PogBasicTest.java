@@ -63,7 +63,7 @@ public class PogBasicTest extends ParamStandardTest<PogTestResult>
 	{
 		PogTestResult.compare(actual, expected);
 	}
-	
+
 	@Override
 	public Type getResultType()
 	{

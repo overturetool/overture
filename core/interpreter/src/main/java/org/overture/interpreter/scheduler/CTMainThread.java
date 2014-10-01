@@ -37,7 +37,6 @@ import org.overture.interpreter.traces.CallSequence;
 import org.overture.interpreter.traces.TraceVariableStatement;
 import org.overture.interpreter.traces.Verdict;
 
-
 /**
  * A class representing the main VDM thread.
  */
@@ -63,7 +62,7 @@ public class CTMainThread extends MainThread
 	@Override
 	public int hashCode()
 	{
-		return (int)getId();
+		return (int) getId();
 	}
 
 	@Override
@@ -71,22 +70,20 @@ public class CTMainThread extends MainThread
 	{
 		try
 		{
-			for (PStm statement: test)
+			for (PStm statement : test)
 			{
 				if (statement instanceof TraceVariableStatement)
 				{
 					// Just update the context...
-					TraceVariableStatement.eval((TraceVariableStatement)statement, ctxt);
-				}
-				else
+					TraceVariableStatement.eval((TraceVariableStatement) statement, ctxt);
+				} else
 				{
- 					result.add(statement.apply(VdmRuntime.getStatementEvaluator(),ctxt));
+					result.add(statement.apply(VdmRuntime.getStatementEvaluator(), ctxt));
 				}
 			}
 
 			result.add(Verdict.PASSED);
-		}
-		catch (ContextException e)
+		} catch (ContextException e)
 		{
 			result.add(e.getMessage().replaceAll(" \\(.+\\)", ""));
 
@@ -98,81 +95,78 @@ public class CTMainThread extends MainThread
 				if (Settings.usingDBGP)
 				{
 					ctxt.threadState.dbgp.stopped(e.ctxt, e.location);
-				}
-				else
+				} else
 				{
 					DebuggerReader.stopped(e.ctxt, e.location);
 				}
 
 				result.add(Verdict.FAILED);
-			}
-			else
+			} else
 			{
 				// These exceptions are inconclusive if they occur
 				// in a call directly from the test because it could
 				// be a test error, but if the test call has made
 				// further call(s), then they are real failures.
 
-    			switch (e.number)
-    			{
-    				case 4055:	// precondition fails for functions
-    					
-    					if (e.ctxt.outer != null && e.ctxt.outer.outer == ctxt)
-    					{
-    						result.add(Verdict.INCONCLUSIVE);
-    					}
-    					else
-    					{
-    						result.add(Verdict.FAILED);
-    					}
-    					break;
-    					
-    				case 4071:	// precondition fails for operations
+				switch (e.number)
+				{
+					case 4055: // precondition fails for functions
 
-    					if (e.ctxt.outer == ctxt)
-    					{
-    						result.add(Verdict.INCONCLUSIVE);
-    					}
-    					else
-    					{
-    						result.add(Verdict.FAILED);
-    					}
-    					break;
+						if (e.ctxt.outer != null && e.ctxt.outer.outer == ctxt)
+						{
+							result.add(Verdict.INCONCLUSIVE);
+						} else
+						{
+							result.add(Verdict.FAILED);
+						}
+						break;
 
-    				case 4075: case 4076: case 4077:	// invalid type conversions
-    				case 4060:							// type invariant failures
-    				case 4058: case 4059:
-    				case 4064: case 4065:
-    				case 4134:							// type conversion failures
+					case 4071: // precondition fails for operations
 
-    					if (e.ctxt == ctxt)
-    					{
-    						result.add(Verdict.INCONCLUSIVE);
-    					}
-    					else
-    					{
-    						result.add(Verdict.FAILED);
-    					}
-    					break;
+						if (e.ctxt.outer == ctxt)
+						{
+							result.add(Verdict.INCONCLUSIVE);
+						} else
+						{
+							result.add(Verdict.FAILED);
+						}
+						break;
 
-    				default:
-    					result.add(Verdict.FAILED);
-    			}
+					case 4075:
+					case 4076:
+					case 4077: // invalid type conversions
+					case 4060: // type invariant failures
+					case 4058:
+					case 4059:
+					case 4064:
+					case 4065:
+					case 4134: // type conversion failures
+
+						if (e.ctxt == ctxt)
+						{
+							result.add(Verdict.INCONCLUSIVE);
+						} else
+						{
+							result.add(Verdict.FAILED);
+						}
+						break;
+
+					default:
+						result.add(Verdict.FAILED);
+				}
 			}
-		}
-		catch (Throwable e)
+		} catch (Throwable e)
 		{
 			if (result.lastIndexOf(Verdict.FAILED) < 0)
 			{
 				if (!getExceptions().isEmpty())
 				{
 					result.addAll(getExceptions());
-				}
-				else
+				} else
 				{
 					result.add(e.getMessage());
 				}
-	
+
 				result.add(Verdict.FAILED);
 			}
 		}

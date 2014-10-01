@@ -39,7 +39,6 @@ import org.overture.interpreter.scheduler.MessageResponse;
 import org.overture.interpreter.scheduler.ResourceScheduler;
 import org.overture.interpreter.scheduler.SchedulingPolicy;
 
-
 public class BUSValue extends ObjectValue
 {
 	private static final long serialVersionUID = 1L;
@@ -49,22 +48,23 @@ public class BUSValue extends ObjectValue
 	public static BUSValue vBUS = null;
 	public final BUSResource resource;
 
-	public BUSValue(AClassType classtype, NameValuePairMap map, ValueList argvals)
+	public BUSValue(AClassType classtype, NameValuePairMap map,
+			ValueList argvals)
 	{
 		super(classtype, map, new Vector<ObjectValue>(), null, null);
 
-		QuoteValue parg = (QuoteValue)argvals.get(0);
+		QuoteValue parg = (QuoteValue) argvals.get(0);
 		SchedulingPolicy policy = SchedulingPolicy.factory(parg.value.toUpperCase());
 
-		RealValue sarg = (RealValue)argvals.get(1);
+		RealValue sarg = (RealValue) argvals.get(1);
 		double speed = sarg.value;
 
-		SetValue set = (SetValue)argvals.get(2);
+		SetValue set = (SetValue) argvals.get(2);
 		List<CPUResource> cpulist = new Vector<CPUResource>();
 
-		for (Value v: set.values)
+		for (Value v : set.values)
 		{
-			CPUValue cpuv = (CPUValue)v.deref();
+			CPUValue cpuv = (CPUValue) v.deref();
 			cpulist.add(cpuv.resource);
 		}
 
@@ -77,9 +77,9 @@ public class BUSValue extends ObjectValue
 		super(type, new NameValuePairMap(), new Vector<ObjectValue>(), null, null);
 		List<CPUResource> cpulist = new Vector<CPUResource>();
 
-		for (Value v: cpus)
+		for (Value v : cpus)
 		{
-			CPUValue cpuv = (CPUValue)v.deref();
+			CPUValue cpuv = (CPUValue) v.deref();
 			cpulist.add(cpuv.resource);
 		}
 
@@ -124,7 +124,7 @@ public class BUSValue extends ObjectValue
 
 	public static void start()
 	{
-		for (BUSValue bus: busses)
+		for (BUSValue bus : busses)
 		{
 			new BusThread(bus.resource, 0).start();
 		}
@@ -142,22 +142,22 @@ public class BUSValue extends ObjectValue
 
 	public static void createMap(Context ctxt, ValueSet allCPUs)
 	{
-		int max = allCPUs.size() + 1;		// vCPU missing
+		int max = allCPUs.size() + 1; // vCPU missing
 		cpumap = new BUSValue[max][max];
 
-		for (int i=0; i<max; i++)
+		for (int i = 0; i < max; i++)
 		{
 			cpumap[i][0] = vBUS;
 			cpumap[0][i] = vBUS;
 		}
 
-		for (Value fv: allCPUs)
+		for (Value fv : allCPUs)
 		{
-			CPUValue from = (CPUValue)fv;
+			CPUValue from = (CPUValue) fv;
 
-			for (Value tv: allCPUs)
+			for (Value tv : allCPUs)
 			{
-				CPUValue to = (CPUValue)tv;
+				CPUValue to = (CPUValue) tv;
 
 				if (from == to)
 				{
@@ -168,7 +168,7 @@ public class BUSValue extends ObjectValue
 
 				if (bus == null)
 				{
-					continue;	// May be OK - separated island CPUs
+					continue; // May be OK - separated island CPUs
 				}
 
 				int nf = from.getNumber();
@@ -177,14 +177,12 @@ public class BUSValue extends ObjectValue
 				if (cpumap[nf][nt] == null)
 				{
 					cpumap[nf][nt] = bus;
-				}
-				else if (cpumap[nf][nt] != bus)
+				} else if (cpumap[nf][nt] != bus)
 				{
-					throw new ContextException(4139,
-						"CPUs " + from.getName() + " and " + to.getName() +
-						" connected by " +
-						bus.getName() + " and " + cpumap[nf][nt].getName(),
-						ctxt.location, ctxt);
+					throw new ContextException(4139, "CPUs " + from.getName()
+							+ " and " + to.getName() + " connected by "
+							+ bus.getName() + " and "
+							+ cpumap[nf][nt].getName(), ctxt.location, ctxt);
 				}
 			}
 		}
@@ -194,8 +192,7 @@ public class BUSValue extends ObjectValue
 	{
 		for (BUSValue bus : busses)
 		{
-			if (bus != vBUS &&
-				bus.resource.links(from.resource, to.resource))
+			if (bus != vBUS && bus.resource.links(from.resource, to.resource))
 			{
 				return bus;
 			}

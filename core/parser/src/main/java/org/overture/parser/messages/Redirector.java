@@ -1,4 +1,5 @@
 package org.overture.parser.messages;
+
 ///*******************************************************************************
 // *
 // *	Copyright (c) 2009 Fujitsu Services Ltd.
@@ -62,4 +63,4 @@ package org.overture.parser.messages;
 //		flush();
 //		return this;
 //	}
-//}
+// }

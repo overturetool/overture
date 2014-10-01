@@ -34,20 +34,13 @@ public class PONameContext extends POContext
 	{
 		this.names = names;
 	}
-	
-	
-	
 
 	@Override
 	public PExp getContextNode(PExp stitch)
 	{
-		//empty context
+		// empty context
 		return stitch;
 	}
-
-
-
-
 
 	@Override
 	public String getContext()

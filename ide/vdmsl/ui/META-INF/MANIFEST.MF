@@ -17,5 +17,6 @@ Require-Bundle: org.overture.ide.core,
  org.eclipse.ui,
  org.eclipse.ui.ide,
  org.eclipse.debug.ui
-Export-Package: org.overture.ide.vdmsl.ui.editor.core
+Export-Package: org.overture.ide.vdmsl.ui.editor.core,
+ org.overture.ide.vdmsl.ui.editor.syntax
 Bundle-ClassPath: .

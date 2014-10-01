@@ -89,6 +89,7 @@ repository/
 #########################
 generated/
 
+
 # Documents copied into the help plugin #
 #########################################
 ide/help/html/OvertureIDEUserGuide.pdf

@@ -27,6 +27,7 @@ public class PExpAssistantInterpreter extends PExpAssistantTC
 	 * Return a list of all the updatable values read by the expression. This is used to add listeners to values that
 	 * affect permission guards, so that the guard may be efficiently re-evaluated when the values change.
 	 * 
+	 * @param exp
 	 * @param ctxt
 	 *            The context in which to search for values.
 	 * @return A list of values read by the expression.
@@ -35,7 +36,7 @@ public class PExpAssistantInterpreter extends PExpAssistantTC
 	{
 		try
 		{
-			return exp.apply(af.getExpressionValueCollector(),ctxt);// FIXME: should we handle exceptions like this
+			return exp.apply(af.getExpressionValueCollector(), ctxt);// FIXME: should we handle exceptions like this
 		} catch (AnalysisException e)
 		{
 			return null; // Most have none
@@ -46,6 +47,7 @@ public class PExpAssistantInterpreter extends PExpAssistantTC
 	 * Find an expression starting on the given line. Single expressions just compare their location to lineno, but
 	 * expressions with sub-expressions iterate over their branches.
 	 * 
+	 * @param exp
 	 * @param lineno
 	 *            The line number to locate.
 	 * @return An expression starting on the line, or null.
@@ -54,14 +56,12 @@ public class PExpAssistantInterpreter extends PExpAssistantTC
 	{
 		try
 		{
-			return exp.apply(af.getExpExpressionFinder(),lineno);// FIXME: should we handle exceptions like this
+			return exp.apply(af.getExpExpressionFinder(), lineno);// FIXME: should we handle exceptions like this
 		} catch (AnalysisException e)
 		{
 			return null; // Most have none
 		}
 	}
-
-	
 
 	public List<PExp> getSubExpressions(PExp exp)
 	{
@@ -72,7 +72,7 @@ public class PExpAssistantInterpreter extends PExpAssistantTC
 		{
 			List<PExp> subs = new Vector<PExp>();
 			subs.add(exp);
-			return subs; 
+			return subs;
 		}
 
 	}
@@ -95,7 +95,9 @@ public class PExpAssistantInterpreter extends PExpAssistantTC
 		{
 			PExp found = af.createPExpAssistant().findExpression(exp, lineno);
 			if (found != null)
+			{
 				return found;
+			}
 		}
 
 		return null;
@@ -112,7 +114,7 @@ public class PExpAssistantInterpreter extends PExpAssistantTC
 		}
 	}
 
-	public  LexNameList getOldNames(LinkedList<PExp> args)
+	public LexNameList getOldNames(LinkedList<PExp> args)
 	{
 		LexNameList list = new LexNameList();
 

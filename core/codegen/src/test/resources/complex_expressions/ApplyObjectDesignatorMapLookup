@@ -1,0 +1,29 @@
+class Storage
+
+operations
+
+public getXs : () ==> map nat to X
+getXs () == return {1 |-> new X()};
+
+end Storage
+
+class X
+
+functions
+
+public fun :  () -> nat
+fun () == 42;
+
+end X
+
+class Entry
+
+operations 
+
+public static Run : () ==> ?
+Run () ==
+let s = new Storage()
+in
+ s.getXs()(1).fun(); 
+
+end Entry

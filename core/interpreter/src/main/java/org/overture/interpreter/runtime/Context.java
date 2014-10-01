@@ -39,6 +39,7 @@ import org.overture.typechecker.util.LexNameTokenMap;
 
 /**
  * A class to hold runtime name/value context information.
+ * 
  * @author Nick, modified by Kenneth Lausdahl
  */
 
@@ -52,7 +53,7 @@ public class Context extends LexNameTokenMap<Value>
 	/** cache for transient serialization */
 	private static final CloneTrancientMemoryCache<ThreadState> serilizationCache = new CloneTrancientMemoryCache<ThreadState>();
 	/** The debug if of this context */
-	private final int id;
+	protected final int id;
 	/** The Assistant factory used by this context */
 	public final IInterpreterAssistantFactory assistantFactory;
 	/** The location of the context. */
@@ -317,7 +318,8 @@ public class Context extends LexNameTokenMap<Value>
 	@Override
 	public String toString()
 	{
-		return (DEBUG ? "#" + id + " " : "") + format("", this);
+		return (DEBUG ? "#" + id + " " : "") + format("", this)
+				+ "\n-------------------\n" + outer;
 	}
 
 	protected String format(String indent, Context what)

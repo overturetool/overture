@@ -39,7 +39,6 @@ import org.overture.interpreter.values.OperationValue;
 import org.overture.interpreter.values.TransactionValue;
 import org.overture.interpreter.values.ValueList;
 
-
 /**
  * A class representing a VDM thread running in an object.
  */
@@ -53,18 +52,16 @@ public class ObjectThread extends SchedulablePoolThread
 	public final boolean breakAtStart;
 
 	public ObjectThread(ILexLocation location, ObjectValue object, Context ctxt)
-		throws ValueException
+			throws ValueException
 	{
 		super(object.getCPU().resource, object, 0, false, 0);
 
 		setName("ObjectThread-" + getId());
 
-		this.title =
-			"Thread " + getId() +
-			", self #" + object.objectReference +
-			", class " + object.type.getName().getName();
+		this.title = "Thread " + getId() + ", self #" + object.objectReference
+				+ ", class " + object.type.getName().getName();
 
-		this.ctxt = new ObjectContext(ctxt.assistantFactory,location, title, ctxt.getGlobal(), object);
+		this.ctxt = new ObjectContext(ctxt.assistantFactory, location, title, ctxt.getGlobal(), object);
 		this.operation = object.getThreadOperation(ctxt);
 		this.breakAtStart = ctxt.threadState.isStepping();
 	}
@@ -72,7 +69,7 @@ public class ObjectThread extends SchedulablePoolThread
 	@Override
 	public int hashCode()
 	{
-		return (int)getId();
+		return (int) getId();
 	}
 
 	@Override
@@ -81,8 +78,7 @@ public class ObjectThread extends SchedulablePoolThread
 		if (Settings.usingDBGP)
 		{
 			runDBGP();
-		}
-		else
+		} else
 		{
 			runCmd();
 		}
@@ -100,26 +96,22 @@ public class ObjectThread extends SchedulablePoolThread
 				ctxt.threadState.setBreaks(new LexLocation(), null, null);
 			}
 
-			operation.eval(ctxt.location, new ValueList(), ctxt);//FIXME: use visitor here
-		}
-		catch (ValueException e)
+			operation.eval(ctxt.location, new ValueList(), ctxt);// FIXME: use visitor here
+		} catch (ValueException e)
 		{
 			suspendOthers();
 			ResourceScheduler.setException(e);
 			DebuggerReader.stopped(e.ctxt, operation.name.getLocation());
-		}
-		catch (ContextException e)
+		} catch (ContextException e)
 		{
 			suspendOthers();
 			ResourceScheduler.setException(e);
 			DebuggerReader.stopped(e.ctxt, e.location);
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			ResourceScheduler.setException(e);
 			BasicSchedulableThread.signalAll(Signal.SUSPEND);
-		}
-		finally
+		} finally
 		{
 			TransactionValue.commitAll();
 		}
@@ -141,31 +133,27 @@ public class ObjectThread extends SchedulablePoolThread
 				ctxt.threadState.setBreaks(new LexLocation(), null, null);
 			}
 
-			operation.eval(ctxt.location, new ValueList(), ctxt);//FIXME: use visitor here
+			operation.eval(ctxt.location, new ValueList(), ctxt);// FIXME: use visitor here
 
 			reader.complete(DBGPReason.OK, null);
-		}
-		catch (ContextException e)
+		} catch (ContextException e)
 		{
-			
-			ResourceScheduler.setException(e);	
+
+			ResourceScheduler.setException(e);
 			ctxt.threadState.dbgp.setErrorState();
-//			suspendOthers();
+			// suspendOthers();
 			setExceptionOthers();
 			reader.stopped(e.ctxt, e.location);
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			ResourceScheduler.setException(e);
 			ctxt.threadState.dbgp.setErrorState();
 			BasicSchedulableThread.signalAll(Signal.ERROR);
-		}
-		catch (ThreadDeath e)
+		} catch (ThreadDeath e)
 		{
 			reader.complete(DBGPReason.ABORTED, null);
 			throw e;
-		}
-		finally
+		} finally
 		{
 			TransactionValue.commitAll();
 		}

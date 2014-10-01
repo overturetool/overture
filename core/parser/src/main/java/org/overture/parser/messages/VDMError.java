@@ -41,10 +41,10 @@ public class VDMError extends VDMMessage
 		super(ne.number, ne.getMessage(), ne.location);
 	}
 
-//	public VDMError(ContextException ce)
-//	{
-//		super(ce.number, ce.getMessage(), ce.location);
-//	}
+	// public VDMError(ContextException ce)
+	// {
+	// super(ce.number, ce.getMessage(), ce.location);
+	// }
 
 	@Override
 	public String toString()
@@ -53,7 +53,7 @@ public class VDMError extends VDMMessage
 		sb.append("Error ");
 		sb.append(super.toString());
 
-		for (String d: details)
+		for (String d : details)
 		{
 			sb.append("\n");
 			sb.append(d);

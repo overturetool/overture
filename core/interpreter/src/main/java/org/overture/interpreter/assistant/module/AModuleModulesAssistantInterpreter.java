@@ -100,7 +100,7 @@ public class AModuleModulesAssistantInterpreter extends
 
 		return null;
 	}
-	
+
 	public PExp findExpression(CombinedDefaultModule m, File file, int lineno)
 	{
 		for (AModuleModules module : m.getModules())
@@ -141,6 +141,8 @@ public class AModuleModulesAssistantInterpreter extends
 	 * name/value pairs from the local definitions and the imported definitions. If state is defined by the module, this
 	 * is also initialized, creating the state Context.
 	 * 
+	 * @param m
+	 * @param initialContext
 	 * @return True if initialized OK.
 	 */
 	public Set<ContextException> initialize(AModuleModules m,
@@ -191,7 +193,8 @@ public class AModuleModulesAssistantInterpreter extends
 
 	}
 
-	public IProofObligationList getProofObligations(AModuleModules m) throws AnalysisException
+	public IProofObligationList getProofObligations(AModuleModules m)
+			throws AnalysisException
 	{
 		return ProofObligationGenerator.generateProofObligations(m);
 	}

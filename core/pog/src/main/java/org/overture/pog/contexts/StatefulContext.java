@@ -13,8 +13,7 @@ import org.overture.pog.utility.UniqueNameGenerator;
 public abstract class StatefulContext extends POContext
 {
 	boolean first = true;
-	
-	
+
 	public StatefulContext()
 	{
 
@@ -40,7 +39,5 @@ public abstract class StatefulContext extends POContext
 	{
 		return last_vars;
 	}
-	
-	
 
 }

@@ -1,0 +1,13 @@
+<traces>
+	<class name="DEFAULT">
+		<trace name="T1" testcount="3" filename="LetDef1" line="8" column="1" subset="1.0" reduction="NONE" seed="999">
+			<test no="1">fun(1)</test>
+			<result no="1" verdict="PASSED">1</result>
+			<test no="2">fun(2)</test>
+			<result no="2" verdict="PASSED">2</result>
+			<test no="3">fun(3)</test>
+			<result no="3" verdict="PASSED">3</result>
+			<status verdict="PASSED" testcount="3" skippedcount="0" faildcount="0" inconclusivecount="0"></status>
+		</trace>
+	</class>
+</traces>

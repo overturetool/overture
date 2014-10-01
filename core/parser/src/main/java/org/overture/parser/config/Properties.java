@@ -76,7 +76,7 @@ public class Properties extends ConfigBase
 	public static int minint = 0;
 	/** The maximum integer used for type bound type bindings **/
 	public static int maxint = 255;
-	
+
 	/** Enable interpretation of numeric type binds **/
 	public static boolean numeric_type_bind_generation = false;
 

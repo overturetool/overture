@@ -26,7 +26,6 @@ package org.overture.parser.messages;
 import java.util.List;
 
 import org.overture.ast.util.Utils;
-import org.overture.parser.messages.VDMError;
 
 @SuppressWarnings("serial")
 public class VDMErrorsException extends Exception

@@ -1,3 +1,24 @@
+/*
+ * #%~
+ * VDM Code Generator
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.codegen.trans.patterns;
 
 import java.util.HashMap;
@@ -18,16 +39,16 @@ import org.overture.codegen.cgast.patterns.ATuplePatternCG;
 public class PatternMatchConfig
 {
 	private Map<Class<? extends SPatternCG>, String> patternNamePrefixes;
-	
+
 	public PatternMatchConfig()
 	{
 		setupNameLookup();
 	}
-	
+
 	private void setupNameLookup()
 	{
 		this.patternNamePrefixes = new HashMap<Class<? extends SPatternCG>, String>();
-		
+
 		this.patternNamePrefixes.put(AIgnorePatternCG.class, getIgnorePatternPrefix());
 		this.patternNamePrefixes.put(ABoolPatternCG.class, getBoolPatternPrefix());
 		this.patternNamePrefixes.put(ACharPatternCG.class, getCharPatternPrefix());
@@ -39,110 +60,100 @@ public class PatternMatchConfig
 		this.patternNamePrefixes.put(ATuplePatternCG.class, getTuplePatternPrefix());
 		this.patternNamePrefixes.put(ARecordPatternCG.class, getRecordPatternPrefix());
 	}
-	
+
 	public String getName(Class<? extends SPatternCG> patternClass)
 	{
 		return patternNamePrefixes.get(patternClass);
 	}
-	
+
 	public String getIgnorePatternPrefix()
 	{
 		return "ignorePattern_";
 	}
-	
+
 	public String getBoolPatternPrefix()
 	{
 		return "boolPattern_";
 	}
-	
+
 	public String getCharPatternPrefix()
 	{
 		return "charPattern_";
 	}
-	
+
 	public String getIntPatternPrefix()
 	{
 		return "intPattern_";
 	}
-	
+
 	public String getNullPatternPrefix()
 	{
 		return "nullPattern_";
 	}
-	
+
 	public String getQuotePatternPrefix()
 	{
 		return "quotePattern_";
 	}
-	
+
 	public String getRealPatternPrefix()
 	{
 		return "realPattern_";
 	}
-	
+
 	public String getStringPatternPrefix()
 	{
 		return "stringPattern_";
 	}
-	
+
 	public String getTuplePatternPrefix()
 	{
 		return "tuplePattern_";
 	}
-	
+
 	public String getRecordPatternPrefix()
 	{
 		return "recordPattern_";
 	}
-	
+
 	public String getMatchFailedMessage(SPatternCG pattern)
 	{
 		return patternToString(pattern) + " pattern match failed";
 	}
-	
+
 	private String patternToString(SPatternCG pattern)
 	{
-		if(pattern instanceof AIgnorePatternCG)
+		if (pattern instanceof AIgnorePatternCG)
 		{
 			return "Ignore";
-		}
-		else if(pattern instanceof ABoolPatternCG)
+		} else if (pattern instanceof ABoolPatternCG)
 		{
 			return "Bool";
-		}
-		else if(pattern instanceof ACharPatternCG)
+		} else if (pattern instanceof ACharPatternCG)
 		{
 			return "Char";
-		}
-		else if(pattern instanceof AIntPatternCG)
+		} else if (pattern instanceof AIntPatternCG)
 		{
 			return "Integer";
-		}
-		else if(pattern instanceof ANullPatternCG)
+		} else if (pattern instanceof ANullPatternCG)
 		{
 			return "Nil";
-		}
-		else if(pattern instanceof AQuotePatternCG)
+		} else if (pattern instanceof AQuotePatternCG)
 		{
 			return "Quote";
-		}
-		else if(pattern instanceof ARealPatternCG)
+		} else if (pattern instanceof ARealPatternCG)
 		{
 			return "Real";
-		}
-		else if(pattern instanceof AStringPatternCG)
+		} else if (pattern instanceof AStringPatternCG)
 		{
 			return "String";
-		}
-		else if(pattern instanceof ATuplePatternCG)
+		} else if (pattern instanceof ATuplePatternCG)
 		{
 			return "Tuple";
-		}
-		else if(pattern instanceof ARecordPatternCG)
+		} else if (pattern instanceof ARecordPatternCG)
 		{
 			return "Record";
-		}
-		else
+		} else
 		{
 			return null;
 		}

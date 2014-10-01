@@ -3,7 +3,6 @@ package org.overture.interpreter.messages.rtlog;
 import org.overture.interpreter.scheduler.CPUResource;
 import org.overture.interpreter.values.ObjectValue;
 
-
 public class RTDeployObjectMessage extends RTArchitectureMessage
 {
 
@@ -19,16 +18,15 @@ public class RTDeployObjectMessage extends RTArchitectureMessage
 	@Override
 	String getInnerMessage()
 	{
-		return "DeployObj -> objref: " + object.objectReference +
-		" clnm: \"" + object.type + "\"" +
-		" cpunm: " + cpu.getNumber();
+		return "DeployObj -> objref: " + object.objectReference + " clnm: \""
+				+ object.type + "\"" + " cpunm: " + cpu.getNumber();
 	}
-	
+
 	public CPUResource getCpu()
 	{
 		return this.cpu;
 	}
-	
+
 	public Long getObjRef()
 	{
 		return Long.valueOf(this.object.objectReference);

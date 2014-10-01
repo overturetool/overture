@@ -22,17 +22,17 @@ public class PBindAssistantInterpreter extends PBindAssistantTC
 	public ValueList getBindValues(PBind bind, Context ctxt)
 			throws AnalysisException
 	{
-		
+
 		return bind.apply(af.getSingleBindValuesCollector(), ctxt);// FIXME: should we handle exceptions like this
-		
+
 	}
 
 	public ValueList getValues(PBind bind, ObjectContext ctxt)
-	{	
-		
+	{
+
 		try
 		{
-			return bind.apply(af.getBindValueCollector(),ctxt);// FIXME: should we handle exceptions like this
+			return bind.apply(af.getBindValueCollector(), ctxt);// FIXME: should we handle exceptions like this
 		} catch (AnalysisException e)
 		{
 			return new ValueList();

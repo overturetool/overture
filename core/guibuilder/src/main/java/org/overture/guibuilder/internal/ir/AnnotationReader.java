@@ -1,3 +1,24 @@
+/*
+ * #%~
+ * Overture GUI Builder
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 /*******************************************************************************
  * Copyright (c) 2009, 2013 Overture Team and others.
  *
@@ -95,7 +116,9 @@ public class AnnotationReader
 			{
 
 				if (strLine.contains("class "))
+				{
 					className = strLine.split(" ")[1];
+				}
 
 				// found a annotation
 				// FIXME: We don't take into account multiple annotations for a class or method
@@ -104,14 +127,19 @@ public class AnnotationReader
 					String[] result = strLine.split("=");
 					annotationName = result[0].substring(3).trim();
 					if (result.length > 1)
+					{
 						value = result[1];
+					}
 					foundAnnotation = true;
 				}
 
 				if (strLine.trim().equals("operations"))
+				{
 					currentSection = SECTION.OPERATIONS;
-				else if (strLine.trim().equals("function"))
+				} else if (strLine.trim().equals("function"))
+				{
 					currentSection = SECTION.FUNCTIONS;
+				}
 
 				// if we previously found a annotation, identify it with the proper element
 				if (foundAnnotation)
@@ -131,7 +159,8 @@ public class AnnotationReader
 								String split[] = strLine.split(" ");
 								for (int i = 0; i < split.length; ++i)
 								{
-									if ((split[i].equals("public") || split[i].equals("private")))
+									if (split[i].equals("public")
+											|| split[i].equals("private"))
 									{
 										opName = split[++i];
 										// removing extra chars
@@ -155,7 +184,9 @@ public class AnnotationReader
 								{
 									opName = split[2];
 									if (opName.contains(":"))
+									{
 										opName = opName.substring(0, opName.indexOf(":") - 1);
+									}
 									annotationTable.addOpAnnotation(className, opName, annotationName, value);
 									foundAnnotation = false;
 								}

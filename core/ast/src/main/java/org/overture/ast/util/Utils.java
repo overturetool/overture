@@ -42,7 +42,8 @@ public class Utils
 		return listToString("", list, separator, "");
 	}
 
-	public static <T> String listToString(String before, List<T> list, String separator, String after)
+	public static <T> String listToString(String before, List<T> list,
+			String separator, String after)
 	{
 		StringBuilder sb = new StringBuilder();
 		sb.append(before);
@@ -51,7 +52,7 @@ public class Utils
 		{
 			sb.append(list.get(0).toString());
 
-			for (int i=1; i<list.size(); i++)
+			for (int i = 1; i < list.size(); i++)
 			{
 				sb.append(separator);
 				sb.append(list.get(i).toString());
@@ -61,13 +62,14 @@ public class Utils
 		sb.append(after);
 		return sb.toString();
 	}
-	
-	public static <T> String listToString(String separator,List<T> list)
+
+	public static <T> String listToString(String separator, List<T> list)
 	{
-		return listToString("", separator, list,  "");
+		return listToString("", separator, list, "");
 	}
-	
-	public static <T> String listToString(String before,String separator,  List<T> list, String after)
+
+	public static <T> String listToString(String before, String separator,
+			List<T> list, String after)
 	{
 		StringBuilder sb = new StringBuilder();
 		sb.append(before);
@@ -77,7 +79,7 @@ public class Utils
 			sb.append(separator);
 			sb.append(list.get(0).toString());
 
-			for (int i=1; i<list.size(); i++)
+			for (int i = 1; i < list.size(); i++)
 			{
 				sb.append(separator);
 				sb.append(list.get(i).toString());
@@ -108,26 +110,27 @@ public class Utils
 		sb.append(")");
 		return sb.toString();
 	}
-	
-	public static String ifToString(PExp ifExp, PExp thenExp, List<AElseIfExp> elseList, PExp elseExp)
+
+	public static String ifToString(PExp ifExp, PExp thenExp,
+			List<AElseIfExp> elseList, PExp elseExp)
 	{
 		StringBuilder sb = new StringBuilder();
 		sb.append("(if " + ifExp + "\nthen " + thenExp);
-	
-		for (AElseIfExp s: elseList)
+
+		for (AElseIfExp s : elseList)
 		{
 			sb.append("\n");
 			sb.append(s.toString());
 		}
-	
+
 		if (elseExp != null)
 		{
 			sb.append("\nelse ");
 			sb.append(elseExp.toString());
 		}
-	
+
 		sb.append(")");
-	
+
 		return sb.toString();
 	}
 }

@@ -184,7 +184,7 @@ public class ExpressionReader extends SyntaxReader
 		if (token.is(VDMToken.NOT))
 		{
 			nextToken();
-			exp =  AstFactory.newANotUnaryExp(token.location, readNotExpression());
+			exp = AstFactory.newANotUnaryExp(token.location, readNotExpression());
 		} else
 		{
 			exp = readRelationalExpression();
@@ -671,19 +671,17 @@ public class ExpressionReader extends SyntaxReader
 							{
 								exp = readPreExpression(ve);
 								break;
+							} else if (name.startsWith("narrow_"))
+							{
+								if (Settings.release == Release.CLASSIC)
+								{
+									throwMessage(2303, "Narrow not available in VDM classic", ve.getName());
+								} else
+								{
+									exp = readNarrowExpression(ve);
+								}
+								break;
 							}
-    						else if (name.startsWith("narrow_"))
-    						{
-    							if (Settings.release == Release.CLASSIC)
-    							{
-    								throwMessage(2303, "Narrow not available in VDM classic", ve.getName());
-    							}
-    							else
-    							{
-    								exp = readNarrowExpression(ve);
-    							}
-    							break;
-    						}
 						}
 
 						// So we're a function/operation call, a list subsequence or
@@ -720,7 +718,7 @@ public class ExpressionReader extends SyntaxReader
 						}
 
 						checkFor(VDMToken.KET, 2122, "Expecting ')' after function args");
-						exp = AstFactory.newAApplyExp(exp,args);
+						exp = AstFactory.newAApplyExp(exp, args);
 					}
 					break;
 
@@ -738,7 +736,7 @@ public class ExpressionReader extends SyntaxReader
 					}
 
 					checkFor(VDMToken.SEQ_CLOSE, 2123, "Expecting ']' after function instantiation");
-					exp = AstFactory.newAFuncInstatiationExp(exp,types);
+					exp = AstFactory.newAFuncInstatiationExp(exp, types);
 					break;
 
 				case POINT:
@@ -819,11 +817,11 @@ public class ExpressionReader extends SyntaxReader
 		{
 			case NUMBER:
 				nextToken();
-				return AstFactory.newAIntLiteralExp((LexIntegerToken)token);
+				return AstFactory.newAIntLiteralExp((LexIntegerToken) token);
 
 			case REALNUMBER:
 				nextToken();
-				return AstFactory.newARealLiteralExp((LexRealToken)token);
+				return AstFactory.newARealLiteralExp((LexRealToken) token);
 
 			case NAME:
 				// Includes mk_ constructors
@@ -841,20 +839,20 @@ public class ExpressionReader extends SyntaxReader
 
 			case STRING:
 				nextToken();
-				return AstFactory.newAStringLiteralExp((LexStringToken)token);
+				return AstFactory.newAStringLiteralExp((LexStringToken) token);
 
 			case CHARACTER:
 				nextToken();
-				return AstFactory.newACharLiteralExp((LexCharacterToken)token);
+				return AstFactory.newACharLiteralExp((LexCharacterToken) token);
 
 			case QUOTE:
 				nextToken();
-				return AstFactory.newAQuoteLiteralExp((LexQuoteToken)token);
+				return AstFactory.newAQuoteLiteralExp((LexQuoteToken) token);
 
 			case TRUE:
 			case FALSE:
 				nextToken();
-				return AstFactory.newABooleanConstExp((LexBooleanToken)token);
+				return AstFactory.newABooleanConstExp((LexBooleanToken) token);
 
 			case UNDEFINED:
 				nextToken();
@@ -926,7 +924,7 @@ public class ExpressionReader extends SyntaxReader
 			case SELF:
 				nextToken();
 				return AstFactory.newASelfExp(token.location);
-				
+
 			case ISOFBASECLASS:
 				nextToken();
 				return readIsOfBaseExpression(token.location);
@@ -1016,17 +1014,17 @@ public class ExpressionReader extends SyntaxReader
 
 			if (type != null)
 			{
-				if(args.size() != 1)
+				if (args.size() != 1)
 				{
 					throwMessage(2300, "mk_<type> must have a single argument");
 				}
-				
+
 				PExp value = args.get(0);
 
 				switch (type)
 				{
 					case BOOL:
-						exp = AstFactory.newAMkBasicExp(AstFactory.newABooleanBasicType(ve.getLocation()),value);
+						exp = AstFactory.newAMkBasicExp(AstFactory.newABooleanBasicType(ve.getLocation()), value);
 						break;
 
 					case NAT:
@@ -1109,7 +1107,7 @@ public class ExpressionReader extends SyntaxReader
 				exp = AstFactory.newAIsExp(ve.getLocation(), nt.getName(), test);
 			} else
 			{
-				exp = AstFactory.newAIsExp(ve.getLocation(), type, test); 
+				exp = AstFactory.newAIsExp(ve.getLocation(), type, test);
 			}
 		} else
 		{
@@ -1125,31 +1123,31 @@ public class ExpressionReader extends SyntaxReader
 						break;
 
 					case NAT:
-						exp =  AstFactory.newAIsExp(ve.getLocation(), AstFactory.newANatNumericBasicType(ve.getLocation()), readExpression());
+						exp = AstFactory.newAIsExp(ve.getLocation(), AstFactory.newANatNumericBasicType(ve.getLocation()), readExpression());
 						break;
 
 					case NAT1:
-						exp =  AstFactory.newAIsExp(ve.getLocation(), AstFactory.newANatOneNumericBasicType(ve.getLocation()), readExpression());
+						exp = AstFactory.newAIsExp(ve.getLocation(), AstFactory.newANatOneNumericBasicType(ve.getLocation()), readExpression());
 						break;
 
 					case INT:
-						exp =  AstFactory.newAIsExp(ve.getLocation(), AstFactory.newAIntNumericBasicType(ve.getLocation()), readExpression());
+						exp = AstFactory.newAIsExp(ve.getLocation(), AstFactory.newAIntNumericBasicType(ve.getLocation()), readExpression());
 						break;
 
 					case RAT:
-						exp =  AstFactory.newAIsExp(ve.getLocation(), AstFactory.newARationalNumericBasicType(ve.getLocation()), readExpression());
+						exp = AstFactory.newAIsExp(ve.getLocation(), AstFactory.newARationalNumericBasicType(ve.getLocation()), readExpression());
 						break;
 
 					case REAL:
-						exp =  AstFactory.newAIsExp(ve.getLocation(), AstFactory.newARealNumericBasicType(ve.getLocation()), readExpression());
+						exp = AstFactory.newAIsExp(ve.getLocation(), AstFactory.newARealNumericBasicType(ve.getLocation()), readExpression());
 						break;
 
 					case CHAR:
-						exp =  AstFactory.newAIsExp(ve.getLocation(), AstFactory.newACharBasicType(ve.getLocation()), readExpression());
+						exp = AstFactory.newAIsExp(ve.getLocation(), AstFactory.newACharBasicType(ve.getLocation()), readExpression());
 						break;
 
 					case TOKEN:
-						exp =  AstFactory.newAIsExp(ve.getLocation(), AstFactory.newATokenBasicType(ve.getLocation()), readExpression());
+						exp = AstFactory.newAIsExp(ve.getLocation(), AstFactory.newATokenBasicType(ve.getLocation()), readExpression());
 						break;
 
 					default:
@@ -1164,31 +1162,30 @@ public class ExpressionReader extends SyntaxReader
 		checkFor(VDMToken.KET, 2133, "Expecting ')' after is_ expression");
 		return exp;
 	}
-	
-	private PExp readNarrowExpression(AVariableExp ve)
-			throws ParserException, LexException
+
+	private PExp readNarrowExpression(AVariableExp ve) throws ParserException,
+			LexException
+	{
+		ANarrowExp exp = null;
+
+		PExp test = readExpression();
+		checkFor(VDMToken.COMMA, 2301, "Expecting narrow_(expression, type)");
+		TypeReader tr = getTypeReader();
+		PType type = tr.readType();
+
+		if (type instanceof AUnresolvedType)
 		{
-			ANarrowExp exp = null;
-
-			PExp test = readExpression();
-			checkFor(VDMToken.COMMA, 2301, "Expecting narrow_(expression, type)");
-			TypeReader tr = getTypeReader();
-			PType type = tr.readType();
-
-			if (type instanceof AUnresolvedType)
-			{
-				AUnresolvedType nt = (AUnresolvedType)type;
-				exp = AstFactory.newANarrowExpression(ve.getLocation(), nt.getName(), test);
-			}
-			else
-			{
-				exp = AstFactory.newANarrowExpression(ve.getLocation(), type, test);
-			}
-
-			checkFor(VDMToken.KET, 2302, "Expecting ')' after narrow_ expression");
-				
-			return exp;
+			AUnresolvedType nt = (AUnresolvedType) type;
+			exp = AstFactory.newANarrowExpression(ve.getLocation(), nt.getName(), test);
+		} else
+		{
+			exp = AstFactory.newANarrowExpression(ve.getLocation(), type, test);
 		}
+
+		checkFor(VDMToken.KET, 2302, "Expecting ')' after narrow_ expression");
+
+		return exp;
+	}
 
 	private APreExp readPreExpression(AVariableExp ve) throws ParserException,
 			LexException
@@ -1269,7 +1266,7 @@ public class ExpressionReader extends SyntaxReader
 					PExp end = readExpression();
 					checkFor(VDMToken.SET_CLOSE, 2138, "Expecting '}' after set range");
 					reader.unpush();
-					return AstFactory.newASetRangeSetExp(start, first, end); 
+					return AstFactory.newASetRangeSetExp(start, first, end);
 				}
 
 				reader.pop(); // Not a set range then...
@@ -1284,7 +1281,7 @@ public class ExpressionReader extends SyntaxReader
 			}
 
 			checkFor(VDMToken.SET_CLOSE, 2139, "Expecting '}' after set enumeration");
-			result = AstFactory.newASetEnumSetExp(start,members);
+			result = AstFactory.newASetEnumSetExp(start, members);
 		}
 
 		return result;
@@ -1309,7 +1306,7 @@ public class ExpressionReader extends SyntaxReader
 			}
 
 			checkFor(VDMToken.SET_CLOSE, 2140, "Expecting '}' after map comprehension");
-			result = AstFactory.newAMapCompMapExp(start, first, bindings, exp); 
+			result = AstFactory.newAMapCompMapExp(start, first, bindings, exp);
 		} else
 		{
 			List<AMapletExp> members = new Vector<AMapletExp>();
@@ -1323,7 +1320,7 @@ public class ExpressionReader extends SyntaxReader
 				if (token.is(VDMToken.MAPLET))
 				{
 					nextToken();
-					AMapletExp maplet = AstFactory.newAMapletExp( member,token, readExpression());
+					AMapletExp maplet = AstFactory.newAMapletExp(member, token, readExpression());
 					members.add(maplet);
 				} else
 				{
@@ -1437,8 +1434,7 @@ public class ExpressionReader extends SyntaxReader
 				checkFor(VDMToken.ARROW, 2147, "Expecting '->' after others");
 				others = readExpression();
 				break;
-			}
-			else
+			} else
 			{
 				cases.addAll(readCaseAlternatives(exp));
 			}

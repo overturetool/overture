@@ -1,0 +1,15 @@
+<traces>
+	<class name="DEFAULT">
+		<trace name="T1" testcount="4" filename="AlternativeRepeat1" line="13" column="1" subset="1.0" reduction="NONE" seed="999">
+			<test no="1">op()</test>
+			<result no="1" verdict="PASSED">()</result>
+			<test no="2">op(); op()</test>
+			<result no="2" verdict="PASSED">() ; ()</result>
+			<test no="3">fun()</test>
+			<result no="3" verdict="PASSED">1</result>
+			<test no="4">fun(); fun()</test>
+			<result no="4" verdict="PASSED">1 ; 1</result>
+			<status verdict="PASSED" testcount="4" skippedcount="0" faildcount="0" inconclusivecount="0"></status>
+		</trace>
+	</class>
+</traces>

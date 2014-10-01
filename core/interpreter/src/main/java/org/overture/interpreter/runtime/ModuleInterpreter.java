@@ -60,7 +60,6 @@ import org.overture.pog.pub.IProofObligationList;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.ModuleEnvironment;
 
-
 /**
  * The VDM-SL module interpreter.
  */
@@ -72,26 +71,26 @@ public class ModuleInterpreter extends Interpreter
 	/** The module starting execution. */
 	public AModuleModules defaultModule;
 
-	
 	/**
 	 * Create an Interpreter from the list of modules passed.
-	 *
+	 * 
 	 * @param modules
 	 * @throws Exception
 	 */
 	public ModuleInterpreter(ModuleList modules) throws Exception
 	{
-		this(new InterpreterAssistantFactory(),modules);
+		this(new InterpreterAssistantFactory(), modules);
 	}
-	
+
 	/**
 	 * Create an Interpreter from the list of modules passed.
-	 * @param assistantFactory 
-	 *
+	 * 
+	 * @param assistantFactory
 	 * @param modules
 	 * @throws Exception
 	 */
-	public ModuleInterpreter(IInterpreterAssistantFactory assistantFactory,ModuleList modules) throws Exception
+	public ModuleInterpreter(IInterpreterAssistantFactory assistantFactory,
+			ModuleList modules) throws Exception
 	{
 		super(assistantFactory);
 		this.modules = new ModuleListInterpreter(modules);
@@ -99,30 +98,31 @@ public class ModuleInterpreter extends Interpreter
 		if (modules.isEmpty())
 		{
 			setDefaultName(null);
-		}
-		else
+		} else
 		{
 			setDefaultName(modules.get(0).getName().getName());
 		}
 	}
-	
+
 	@Override
 	public PStm findStatement(File file, int lineno)
 	{
-		return assistantFactory.createAModuleModulesAssistant().findStatement(modules,file, lineno);
+		return assistantFactory.createAModuleModulesAssistant().findStatement(modules, file, lineno);
 	}
 
 	@Override
 	public PExp findExpression(File file, int lineno)
 	{
-		return assistantFactory.createAModuleModulesAssistant().findExpression(modules,file, lineno);
+		return assistantFactory.createAModuleModulesAssistant().findExpression(modules, file, lineno);
 	}
 
 	/**
 	 * Set the default module to the name given.
-	 *
-	 * @param mname The name of the new default module.
-	 * @throws Exception The module name is not known.
+	 * 
+	 * @param mname
+	 *            The name of the new default module.
+	 * @throws Exception
+	 *             The module name is not known.
 	 */
 
 	@Override
@@ -131,10 +131,9 @@ public class ModuleInterpreter extends Interpreter
 		if (mname == null)
 		{
 			defaultModule = AstFactory.newAModuleModules();
-		}
-		else
+		} else
 		{
-			for (AModuleModules m: modules)
+			for (AModuleModules m : modules)
 			{
 				if (m.getName().getName().equals(mname))
 				{
@@ -185,7 +184,7 @@ public class ModuleInterpreter extends Interpreter
 	@Override
 	public Environment getGlobalEnvironment()
 	{
-		return new ModuleEnvironment(assistantFactory,defaultModule);
+		return new ModuleEnvironment(assistantFactory, defaultModule);
 	}
 
 	/**
@@ -204,8 +203,8 @@ public class ModuleInterpreter extends Interpreter
 		InitThread iniThread = new InitThread(Thread.currentThread());
 		BasicSchedulableThread.setInitialThread(iniThread);
 		scheduler.init();
-		CPUValue.init(scheduler,assistantFactory);
-		initialContext = assistantFactory.createModuleListAssistant().initialize(modules,dbgp);
+		CPUValue.init(scheduler, assistantFactory);
+		initialContext = assistantFactory.createModuleListAssistant().initialize(modules, dbgp);
 	}
 
 	@Override
@@ -225,12 +224,14 @@ public class ModuleInterpreter extends Interpreter
 	}
 
 	/**
-	 * Parse the line passed, type check it and evaluate it as an expression
-	 * in the initial module context (with default module's state).
-	 *
-	 * @param line A VDM expression.
+	 * Parse the line passed, type check it and evaluate it as an expression in the initial module context (with default
+	 * module's state).
+	 * 
+	 * @param line
+	 *            A VDM expression.
 	 * @return The value of the expression.
-	 * @throws Exception Parser, type checking or runtime errors.
+	 * @throws Exception
+	 *             Parser, type checking or runtime errors.
 	 */
 
 	@Override
@@ -240,8 +241,7 @@ public class ModuleInterpreter extends Interpreter
 		Environment env = getGlobalEnvironment();
 		typeCheck(expr, env);
 
-		Context mainContext = new StateContext(assistantFactory,defaultModule.getName().getLocation(),
-				"module scope",	null, assistantFactory.createAModuleModulesAssistant().getStateContext(defaultModule));
+		Context mainContext = new StateContext(assistantFactory, defaultModule.getName().getLocation(), "module scope", null, assistantFactory.createAModuleModulesAssistant().getStateContext(defaultModule));
 
 		mainContext.putAll(initialContext);
 		mainContext.setThreadState(dbgp, null);
@@ -256,30 +256,31 @@ public class ModuleInterpreter extends Interpreter
 		main.start();
 		scheduler.start(main);
 
-		return main.getResult();	// Can throw ContextException
+		return main.getResult(); // Can throw ContextException
 	}
 
 	/**
-	 * Parse the line passed, and evaluate it as an expression in the context
-	 * passed.
-	 *
-	 * @param line A VDM expression.
-	 * @param ctxt The context in which to evaluate the expression.
+	 * Parse the line passed, and evaluate it as an expression in the context passed.
+	 * 
+	 * @param line
+	 *            A VDM expression.
+	 * @param ctxt
+	 *            The context in which to evaluate the expression.
 	 * @return The value of the expression.
-	 * @throws Exception Parser or runtime errors.
+	 * @throws Exception
+	 *             Parser or runtime errors.
 	 */
 
 	@Override
 	public Value evaluate(String line, Context ctxt) throws Exception
 	{
 		PExp expr = parseExpression(line, getDefaultName());
-		Environment env = new ModuleEnvironment(assistantFactory,defaultModule);
+		Environment env = new ModuleEnvironment(assistantFactory, defaultModule);
 
 		try
 		{
 			typeCheck(expr, env);
-		}
-		catch (VDMErrorsException e)
+		} catch (VDMErrorsException e)
 		{
 			// We don't care... we just needed to type check it.
 		}
@@ -288,11 +289,11 @@ public class ModuleInterpreter extends Interpreter
 
 		try
 		{
-			return expr.apply(VdmRuntime.getExpressionEvaluator(),ctxt);
-		}catch (Exception e)
+			return expr.apply(VdmRuntime.getExpressionEvaluator(), ctxt);
+		} catch (Exception e)
 		{
 			throw e;
-		} 
+		}
 	}
 
 	@Override
@@ -308,35 +309,35 @@ public class ModuleInterpreter extends Interpreter
 		return modules.findTraceDefinition(name);
 	}
 
-//	/**
-//	 * Find a Statement in the given file that starts on the given line.
-//	 * If there are none, return null.
-//	 *
-//	 * @param file The file name to search.
-//	 * @param lineno The line number in the file.
-//	 * @return A Statement starting on the line, or null.
-//	 */
-//
-//	@Override
-//	public PStm findStatement(File file, int lineno)
-//	{
-//		return modules.findStatement(file, lineno);
-//	}
+	// /**
+	// * Find a Statement in the given file that starts on the given line.
+	// * If there are none, return null.
+	// *
+	// * @param file The file name to search.
+	// * @param lineno The line number in the file.
+	// * @return A Statement starting on the line, or null.
+	// */
+	//
+	// @Override
+	// public PStm findStatement(File file, int lineno)
+	// {
+	// return modules.findStatement(file, lineno);
+	// }
 
-//	/**
-//	 * Find an Expression in the given file that starts on the given line.
-//	 * If there are none, return null.
-//	 *
-//	 * @param file The file name to search.
-//	 * @param lineno The line number in the file.
-//	 * @return An Expression starting on the line, or null.
-//	 */
-//
-//	@Override
-//	public PExp findExpression(File file, int lineno)
-//	{
-//		return modules.findExpression(file, lineno);
-//	}
+	// /**
+	// * Find an Expression in the given file that starts on the given line.
+	// * If there are none, return null.
+	// *
+	// * @param file The file name to search.
+	// * @param lineno The line number in the file.
+	// * @return An Expression starting on the line, or null.
+	// */
+	//
+	// @Override
+	// public PExp findExpression(File file, int lineno)
+	// {
+	// return modules.findExpression(file, lineno);
+	// }
 
 	@Override
 	public IProofObligationList getProofObligations() throws AnalysisException
@@ -345,22 +346,20 @@ public class ModuleInterpreter extends Interpreter
 	}
 
 	@Override
-	public Context getInitialTraceContext(ANamedTraceDefinition tracedef, boolean debug) throws ValueException
+	public Context getInitialTraceContext(ANamedTraceDefinition tracedef,
+			boolean debug) throws ValueException
 	{
-		Context mainContext = new StateContext(assistantFactory,defaultModule.getName().getLocation(),
-				"module scope",	null, assistantFactory.createAModuleModulesAssistant().getStateContext(defaultModule));
+		Context mainContext = new StateContext(assistantFactory, defaultModule.getName().getLocation(), "module scope", initialContext, assistantFactory.createAModuleModulesAssistant().getStateContext(defaultModule));
 
 		mainContext.putAll(initialContext);
-		mainContext.setThreadState(null, CPUValue.vCPU);
+		mainContext.setThreadState(mainContext.threadState.dbgp, CPUValue.vCPU);
 
 		return mainContext;
 	}
 
-
-
 	@Override
-	public List<Object> runOneTrace(
-			ANamedTraceDefinition tracedef, CallSequence test, boolean debug)
+	public List<Object> runOneTrace(ANamedTraceDefinition tracedef,
+			CallSequence test, boolean debug)
 	{
 		List<Object> list = new Vector<Object>();
 		Context ctxt = null;
@@ -369,8 +368,7 @@ public class ModuleInterpreter extends Interpreter
 		{
 			ctxt = getInitialTraceContext(tracedef, debug);
 
-		}
-		catch (ValueException e)
+		} catch (ValueException e)
 		{
 			list.add(e.getMessage());
 			return list;
@@ -393,9 +391,9 @@ public class ModuleInterpreter extends Interpreter
 		{
 			for (PDefinition def : module.getDefs())
 			{
-				if(def instanceof ATypeDefinition)
+				if (def instanceof ATypeDefinition)
 				{
-					if(def.getName().equals(typename))
+					if (def.getName().equals(typename))
 					{
 						return def.getType();
 					}

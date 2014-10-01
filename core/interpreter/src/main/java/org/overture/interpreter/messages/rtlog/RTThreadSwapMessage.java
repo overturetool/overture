@@ -3,7 +3,6 @@ package org.overture.interpreter.messages.rtlog;
 import org.overture.interpreter.scheduler.CPUResource;
 import org.overture.interpreter.scheduler.ISchedulableThread;
 
-
 public class RTThreadSwapMessage extends RTThreadMessage
 {
 	public enum SwapType
@@ -33,33 +32,27 @@ public class RTThreadSwapMessage extends RTThreadMessage
 		switch (type)
 		{
 			case In:
-				return "ThreadSwapIn -> id: " + thread.getId() +
-				objRefString +
-				" cpunm: " + cpuNumber.getNumber() +
-				" overhead: " + overhead;
+				return "ThreadSwapIn -> id: " + thread.getId() + objRefString
+						+ " cpunm: " + cpuNumber.getNumber() + " overhead: "
+						+ overhead;
 			case DelayedIn:
-				return "DelayedThreadSwapIn -> id: " + thread.getId() +
-				objRefString +
-				" delay: " + delay +
-				" cpunm: " + cpuNumber.getNumber() +
-				" overhead: " + overhead;
+				return "DelayedThreadSwapIn -> id: " + thread.getId()
+						+ objRefString + " delay: " + delay + " cpunm: "
+						+ cpuNumber.getNumber() + " overhead: " + overhead;
 			case Out:
-				return "ThreadSwapOut -> id: " + thread.getId() +
-				objRefString +
-				" cpunm: " + cpuNumber.getNumber() +
-				" overhead: " + overhead;
+				return "ThreadSwapOut -> id: " + thread.getId() + objRefString
+						+ " cpunm: " + cpuNumber.getNumber() + " overhead: "
+						+ overhead;
 			default:
 				return null;
-		
+
 		}
-		
+
 	}
-	
+
 	public SwapType getType()
 	{
 		return this.type;
 	}
-
-	
 
 }

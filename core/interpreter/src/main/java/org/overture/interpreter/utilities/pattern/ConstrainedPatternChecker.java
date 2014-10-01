@@ -20,39 +20,40 @@ import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 public class ConstrainedPatternChecker extends AnswerAdaptor<Boolean>
 {
 	protected IInterpreterAssistantFactory af;
-	
+
 	public ConstrainedPatternChecker(IInterpreterAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public Boolean caseAConcatenationPattern(AConcatenationPattern pattern)
 			throws AnalysisException
 	{
 		return pattern.getLeft().apply(THIS) || pattern.getRight().apply(THIS);
 	}
-	
+
 	@Override
 	public Boolean caseAIdentifierPattern(AIdentifierPattern pattern)
 			throws AnalysisException
 	{
 		return pattern.getConstrained(); // The variable may be constrained to be the same as another occurrence
 	}
-	
+
 	@Override
 	public Boolean caseAIgnorePattern(AIgnorePattern pattern)
 			throws AnalysisException
 	{
 		return false;
 	}
-	
+
 	@Override
-	public Boolean caseAMapPattern(AMapPattern pattern) throws AnalysisException
+	public Boolean caseAMapPattern(AMapPattern pattern)
+			throws AnalysisException
 	{
 		for (AMapletPatternMaplet p : pattern.getMaplets())
 		{
-			if(p.apply(THIS))
+			if (p.apply(THIS))
 			{
 				return true;
 			}
@@ -60,29 +61,32 @@ public class ConstrainedPatternChecker extends AnswerAdaptor<Boolean>
 
 		return false;
 	}
-	
+
 	@Override
 	public Boolean caseAMapUnionPattern(AMapUnionPattern pattern)
 			throws AnalysisException
 	{
 		return pattern.getLeft().apply(THIS) || pattern.getRight().apply(THIS);
 	}
-	
+
 	@Override
 	public Boolean caseARecordPattern(ARecordPattern pattern)
 			throws AnalysisException
 	{
 		return af.createPPatternListAssistant().isConstrained(pattern.getPlist());
-		
+
 	}
+
 	@Override
-	public Boolean caseASeqPattern(ASeqPattern pattern) throws AnalysisException
+	public Boolean caseASeqPattern(ASeqPattern pattern)
+			throws AnalysisException
 	{
 		return af.createPPatternListAssistant().isConstrained(pattern.getPlist());
 	}
-	
+
 	@Override
-	public Boolean caseASetPattern(ASetPattern pattern) throws AnalysisException
+	public Boolean caseASetPattern(ASetPattern pattern)
+			throws AnalysisException
 	{
 		if (af.createPTypeAssistant().isUnion(af.createPPatternListAssistant().getPossibleType(pattern.getPlist(), pattern.getLocation())))
 		{
@@ -91,21 +95,21 @@ public class ConstrainedPatternChecker extends AnswerAdaptor<Boolean>
 
 		return af.createPPatternListAssistant().isConstrained(pattern.getPlist());
 	}
-	
+
 	@Override
 	public Boolean caseATuplePattern(ATuplePattern pattern)
 			throws AnalysisException
 	{
 		return af.createPPatternListAssistant().isConstrained(pattern.getPlist());
 	}
-	
+
 	@Override
 	public Boolean caseAUnionPattern(AUnionPattern pattern)
 			throws AnalysisException
 	{
 		return pattern.getLeft().apply(THIS) || pattern.getRight().apply(THIS);
 	}
-	
+
 	@Override
 	public Boolean defaultPPattern(PPattern node) throws AnalysisException
 	{

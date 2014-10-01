@@ -22,7 +22,6 @@ import org.overture.interpreter.util.ExitStatus;
 import org.overture.parser.messages.VDMErrorsException;
 import org.overture.parser.syntax.ParserException;
 
-
 public class DBGPExecProcesser
 {
 	public static class DBGPExecResult
@@ -38,11 +37,11 @@ public class DBGPExecProcesser
 	}
 
 	static boolean quitRequest = false;
-	
-	public static DBGPExecResult process(DBGPReader reader, Interpreter interpreter,
-			String command)
+
+	public static DBGPExecResult process(DBGPReader reader,
+			Interpreter interpreter, String command)
 	{
-		
+
 		Interpreter i = interpreter;
 		final DBGPReader d = reader;
 		List<File> fileList = new Vector<File>(i.getSourceFiles());
@@ -52,7 +51,7 @@ public class DBGPExecProcesser
 
 		if (i instanceof ClassInterpreter)
 		{
-			new ClassCommandReader((ClassInterpreter) i, "",true)
+			new ClassCommandReader((ClassInterpreter) i, "", true)
 			{
 				private PrintWriter stdout = new PrintWriter(result, true);
 				private BufferedReader stdin = new BufferedReader(input);
@@ -207,11 +206,11 @@ public class DBGPExecProcesser
 					return notAvailable(line);
 				}
 
-//				@Override
-//				protected boolean doThreads(String line)
-//				{
-//					return notAvailable(line);
-//				}
+				// @Override
+				// protected boolean doThreads(String line)
+				// {
+				// return notAvailable(line);
+				// }
 
 				@Override
 				public ExitStatus run(List<File> filenames)
@@ -254,7 +253,7 @@ public class DBGPExecProcesser
 			}.run(fileList);
 		} else
 		{
-			new ModuleCommandReader((ModuleInterpreter) i, "",true)
+			new ModuleCommandReader((ModuleInterpreter) i, "", true)
 			{
 				private PrintWriter stdout = new PrintWriter(result, true);
 				private BufferedReader stdin = new BufferedReader(input);

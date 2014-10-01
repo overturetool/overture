@@ -30,7 +30,6 @@ import org.overture.ast.types.SMapType;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ValueException;
 
-
 public class MapValue extends Value
 {
 	private static final long serialVersionUID = 1L;
@@ -57,7 +56,7 @@ public class MapValue extends Value
 	{
 		ValueMap nm = new ValueMap();
 
-		for (Value k: values.keySet())
+		for (Value k : values.keySet())
 		{
 			Value v = values.get(k).getUpdatable(listeners);
 			nm.put(k, v);
@@ -71,7 +70,7 @@ public class MapValue extends Value
 	{
 		ValueMap nm = new ValueMap();
 
-		for (Value k: values.keySet())
+		for (Value k : values.keySet())
 		{
 			Value v = values.get(k).getConstant();
 			nm.put(k, v);
@@ -97,13 +96,13 @@ public class MapValue extends Value
 	{
 		if (other instanceof Value)
 		{
-			Value val = ((Value)other).deref();
+			Value val = ((Value) other).deref();
 
-    		if (val instanceof MapValue)
-    		{
-    			MapValue ot = (MapValue)val;
-    			return values.equals(ot.values);
-    		}
+			if (val instanceof MapValue)
+			{
+				MapValue ot = (MapValue) val;
+				return values.equals(ot.values);
+			}
 		}
 
 		return false;
@@ -128,7 +127,8 @@ public class MapValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt) throws AnalysisException
+	public Value convertValueTo(PType to, Context ctxt)
+			throws AnalysisException
 	{
 		if (to instanceof SMapType)
 		{
@@ -140,7 +140,7 @@ public class MapValue extends Value
 			SMapType mapto = ctxt.assistantFactory.createPTypeAssistant().getMap(to);
 			ValueMap nm = new ValueMap();
 
-			for (Value k: values.keySet())
+			for (Value k : values.keySet())
 			{
 				Value v = values.get(k);
 				Value dom = k.convertValueTo(mapto.getFrom(), ctxt);
@@ -150,13 +150,13 @@ public class MapValue extends Value
 
 				if (old != null && !old.equals(rng))
 				{
-					abort(4063, "Duplicate map keys have different values: " + dom, ctxt);
+					abort(4063, "Duplicate map keys have different values: "
+							+ dom, ctxt);
 				}
 			}
 
 			return new MapValue(nm);
-		}
-		else
+		} else
 		{
 			return super.convertValueTo(to, ctxt);
 		}
@@ -165,6 +165,6 @@ public class MapValue extends Value
 	@Override
 	public Object clone()
 	{
-		return new MapValue((ValueMap)values.clone());
+		return new MapValue((ValueMap) values.clone());
 	}
 }

@@ -55,8 +55,6 @@ public class Delegate implements Serializable
 	private static final long serialVersionUID = 1L;
 	private final String name;
 	private List<PDefinition> definitions;
-	
-	
 
 	public Delegate(String name, List<PDefinition> definitions)
 	{
@@ -82,14 +80,13 @@ public class Delegate implements Serializable
 				delegateMethods = new HashMap<String, Method>();
 				delegateArgs = new HashMap<String, LexNameList>();
 				definitions = assistantFactory.createPDefinitionListAssistant().singleDefinitions(definitions);
-			}
-			catch (ClassNotFoundException e)
+			} catch (ClassNotFoundException e)
 			{
 				// Fine
 			}
 		}
 
-		return (delegateClass != null);
+		return delegateClass != null;
 	}
 
 	public Object newInstance()
@@ -97,24 +94,21 @@ public class Delegate implements Serializable
 		try
 		{
 			return delegateClass.newInstance();
-		}
-		catch (NullPointerException e)
+		} catch (NullPointerException e)
 		{
-			throw new InternalException(63,
-				"No delegate class found: " + name);
-		}
-		catch (InstantiationException e)
+			throw new InternalException(63, "No delegate class found: " + name);
+		} catch (InstantiationException e)
 		{
-			throw new InternalException(54,
-				"Cannot instantiate native object: " + e.getMessage());
-		}
-		catch (IllegalAccessException e)
+			throw new InternalException(54, "Cannot instantiate native object: "
+					+ e.getMessage());
+		} catch (IllegalAccessException e)
 		{
-			throw new InternalException(55,
-				"Cannot access native object: " + e.getMessage());
+			throw new InternalException(55, "Cannot access native object: "
+					+ e.getMessage());
 		}
 	}
-	//gkanos:added parameters to pass the context as argument.
+
+	// gkanos:added parameters to pass the context as argument.
 	private Method getDelegateMethod(String title, Context ctxt)
 	{
 		Method m = delegateMethods.get(title);
@@ -124,44 +118,42 @@ public class Delegate implements Serializable
 			List<PPattern> plist = null;
 			String mname = title.substring(0, title.indexOf('('));
 
-			//FIXME: this is to handle inheritance in the same way as VDMJ did. See CSV and IO, where the subclass declared methods is in the tail of the list
+			// FIXME: this is to handle inheritance in the same way as VDMJ did. See CSV and IO, where the subclass
+			// declared methods is in the tail of the list
 			List<PDefinition> defs = new Vector<PDefinition>(definitions);
 			Collections.reverse(defs);
-			
-			for (PDefinition d: defs)
+
+			for (PDefinition d : defs)
 			{
 				if (d.getName().getName().equals(mname))
 				{
-    	 			if (ctxt.assistantFactory.createPDefinitionAssistant().isOperation(d))
-    	 			{
-    	 				if (d instanceof AExplicitOperationDefinition)
-    	 				{
-    	 					AExplicitOperationDefinition e = (AExplicitOperationDefinition)d;
-    	 					plist = e.getParameterPatterns();
-    	 				}
-    	 				else if (d instanceof AImplicitOperationDefinition)
-    	 				{
-    	 					AImplicitOperationDefinition e = (AImplicitOperationDefinition)d;
-    	 					plist = ctxt.assistantFactory.createAImplicitOperationDefinitionAssistant().getParamPatternList(e);
-    	 				}
+					if (ctxt.assistantFactory.createPDefinitionAssistant().isOperation(d))
+					{
+						if (d instanceof AExplicitOperationDefinition)
+						{
+							AExplicitOperationDefinition e = (AExplicitOperationDefinition) d;
+							plist = e.getParameterPatterns();
+						} else if (d instanceof AImplicitOperationDefinition)
+						{
+							AImplicitOperationDefinition e = (AImplicitOperationDefinition) d;
+							plist = ctxt.assistantFactory.createAImplicitOperationDefinitionAssistant().getParamPatternList(e);
+						}
 
-    	 				break;
-    	 			}
-    	 			else if (ctxt.assistantFactory.createPDefinitionAssistant().isFunction(d))
-    	 			{
-    	 				if (d instanceof AExplicitFunctionDefinition)
-    	 				{
-    	 					AExplicitFunctionDefinition e = (AExplicitFunctionDefinition)d;
-    	 					plist = e.getParamPatternList().get(0);
-    	 				}
-    	 				else if (d instanceof AImplicitFunctionDefinition)
-    	 				{
-    	 					AImplicitFunctionDefinition e = (AImplicitFunctionDefinition)d;
-    	 					plist = ctxt.assistantFactory.createAImplicitFunctionDefinitionAssistant().getParamPatternList(e).get(0);
-    	 				}
+						break;
+					} else if (ctxt.assistantFactory.createPDefinitionAssistant().isFunction(d))
+					{
+						if (d instanceof AExplicitFunctionDefinition)
+						{
+							AExplicitFunctionDefinition e = (AExplicitFunctionDefinition) d;
+							plist = e.getParamPatternList().get(0);
+						} else if (d instanceof AImplicitFunctionDefinition)
+						{
+							AImplicitFunctionDefinition e = (AImplicitFunctionDefinition) d;
+							plist = ctxt.assistantFactory.createAImplicitFunctionDefinitionAssistant().getParamPatternList(e).get(0);
+						}
 
-    	 				break;
-    	 			}
+						break;
+					}
 				}
 			}
 
@@ -170,26 +162,25 @@ public class Delegate implements Serializable
 
 			if (plist != null)
 			{
-				for (PPattern p: plist)
+				for (PPattern p : plist)
 				{
 					if (p instanceof AIdentifierPattern)
 					{
-						AIdentifierPattern ip = (AIdentifierPattern)p;
+						AIdentifierPattern ip = (AIdentifierPattern) p;
 						anames.add(ip.getName());
 						ptypes.add(Value.class);
-					}
-					else
+					} else
 					{
-						throw new InternalException(56,
-							"Native method cannot use pattern arguments: " + title);
+						throw new InternalException(56, "Native method cannot use pattern arguments: "
+								+ title);
 					}
 				}
 
 				delegateArgs.put(title, anames);
-			}
-			else
+			} else
 			{
-				throw new InternalException(57, "Native member not found: " + title);
+				throw new InternalException(57, "Native member not found: "
+						+ title);
 			}
 
 			try
@@ -199,19 +190,17 @@ public class Delegate implements Serializable
 
 				if (!m.getReturnType().equals(Value.class))
 				{
-					throw new InternalException(58,
-						"Native method does not return Value: " + m);
+					throw new InternalException(58, "Native method does not return Value: "
+							+ m);
 				}
-			}
-			catch (SecurityException e)
+			} catch (SecurityException e)
 			{
-				throw new InternalException(60,
-					"Cannot access native method: " + e.getMessage());
-			}
-			catch (NoSuchMethodException e)
+				throw new InternalException(60, "Cannot access native method: "
+						+ e.getMessage());
+			} catch (NoSuchMethodException e)
 			{
-				throw new InternalException(61,
-					"Cannot find native method: " + e.getMessage());
+				throw new InternalException(61, "Cannot find native method: "
+						+ e.getMessage());
 			}
 
 			delegateMethods.put(title, m);
@@ -224,63 +213,57 @@ public class Delegate implements Serializable
 	{
 		Method m = getDelegateMethod(ctxt.title, ctxt);
 
-		if ((m.getModifiers() & Modifier.STATIC) == 0 &&
-			delegateObject == null)
+		if ((m.getModifiers() & Modifier.STATIC) == 0 && delegateObject == null)
 		{
-			throw new InternalException(64,
-				"Native method should be static: " + m.getName());
+			throw new InternalException(64, "Native method should be static: "
+					+ m.getName());
 		}
 
 		LexNameList anames = delegateArgs.get(ctxt.title);
 		Object[] avals = new Object[anames.size()];
 		int a = 0;
 
-		for (ILexNameToken arg: anames)
+		for (ILexNameToken arg : anames)
 		{
 			avals[a++] = ctxt.get(arg);
 		}
 
 		try
 		{
-			return (Value)m.invoke(delegateObject, avals);
-		}
-		catch (IllegalArgumentException e)
+			return (Value) m.invoke(delegateObject, avals);
+		} catch (IllegalArgumentException e)
 		{
-			throw new InternalException(62,
-				"Cannot invoke native method: " + e.getMessage());
-		}
-		catch (IllegalAccessException e)
+			throw new InternalException(62, "Cannot invoke native method: "
+					+ e.getMessage());
+		} catch (IllegalAccessException e)
 		{
-			throw new InternalException(62,
-				"Cannot invoke native method: " + e.getMessage());
-		}
-		catch (InvocationTargetException e)
+			throw new InternalException(62, "Cannot invoke native method: "
+					+ e.getMessage());
+		} catch (InvocationTargetException e)
 		{
-			if(e.getTargetException() instanceof ExitException)
+			if (e.getTargetException() instanceof ExitException)
 			{
-				throw (ExitException)e.getTargetException();
+				throw (ExitException) e.getTargetException();
 			}
-			if(e.getTargetException() instanceof ContextException)
+			if (e.getTargetException() instanceof ContextException)
 			{
-				throw (ContextException)e.getTargetException();
+				throw (ContextException) e.getTargetException();
 			}
-//			if(e.getTargetException() instanceof ValueException)
-//			{
-//				throw (ValueException)e.getTargetException();
-//			}
-			throw new InternalException(59,
-				"Failed in native method: " + e.getTargetException().getMessage());
+			// if(e.getTargetException() instanceof ValueException)
+			// {
+			// throw (ValueException)e.getTargetException();
+			// }
+			throw new InternalException(59, "Failed in native method: "
+					+ e.getTargetException().getMessage());
 		}
 	}
 
 	/**
-	 * The Method objects in the delegateMethods map cannot be serialized,
-	 * which means that deep copies fail. So here, we clear the map when
-	 * serialization occurs. The map is re-build later on demand.
+	 * The Method objects in the delegateMethods map cannot be serialized, which means that deep copies fail. So here,
+	 * we clear the map when serialization occurs. The map is re-build later on demand.
 	 */
 
-	private void writeObject(java.io.ObjectOutputStream out)
-		throws IOException
+	private void writeObject(java.io.ObjectOutputStream out) throws IOException
 	{
 		if (delegateMethods != null)
 		{

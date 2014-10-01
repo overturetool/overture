@@ -32,24 +32,22 @@ import org.overture.interpreter.scheduler.ISchedulableThread;
 import org.overture.interpreter.scheduler.InitThread;
 import org.overture.interpreter.values.CPUValue;
 
-
 /**
  * A class to hold some runtime information for each thread.
  */
 
 public class ThreadState implements Serializable
 {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 	public final long threadId;
 	public final DBGPReader dbgp;
 	public final CPUValue CPU;
 
-	private int atomic = 0;			// Don't reschedule if >0
+	private int atomic = 0; // Don't reschedule if >0
 
-	public ILexLocation stepline;	// Breakpoint stepping values
+	public ILexLocation stepline; // Breakpoint stepping values
 	public RootContext nextctxt;
 	public Context outctxt;
-
 
 	public ThreadState(DBGPReader dbgp, CPUValue cpu)
 	{
@@ -64,8 +62,8 @@ public class ThreadState implements Serializable
 		setBreaks(null, null, null);
 	}
 
-	public synchronized void setBreaks(
-		ILexLocation stepline, RootContext nextctxt, Context outctxt)
+	public synchronized void setBreaks(ILexLocation stepline,
+			RootContext nextctxt, Context outctxt)
 	{
 		this.stepline = stepline;
 		this.nextctxt = nextctxt;
@@ -85,7 +83,7 @@ public class ThreadState implements Serializable
 
 			ISchedulableThread s = BasicSchedulableThread.getThread(Thread.currentThread());
 
-			if (s !=null && !(s instanceof InitThread))
+			if (s != null && !(s instanceof InitThread))
 			{
 				s.step(ctxt, location);
 			}
@@ -97,8 +95,7 @@ public class ThreadState implements Serializable
 		if (atomic)
 		{
 			this.atomic++;
-		}
-		else
+		} else
 		{
 			this.atomic--;
 		}

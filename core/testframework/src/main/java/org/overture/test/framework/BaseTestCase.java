@@ -1,43 +1,48 @@
-/*******************************************************************************
- * Copyright (c) 2009, 2011 Overture Team and others.
- *
- * Overture is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Overture is distributed in the hope that it will be useful,
+/*
+ * #%~
+ * Test Framework for Overture
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Overture.  If not, see <http://www.gnu.org/licenses/>.
- * 	
- * The Overture Tool web-site: http://overturetool.org/
- *******************************************************************************/
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.test.framework;
 
 import java.io.File;
 
 import junit.framework.TestCase;
 
-public abstract class BaseTestCase extends
-		TestCase
+public abstract class BaseTestCase extends TestCase
 {
 	protected File file;
 	protected String name;
 	protected String content;
-	protected enum ContentModed {File, String, None};
+
+	protected enum ContentModed
+	{
+		File, String, None
+	};
+
 	protected final ContentModed mode;
-	
 
 	public BaseTestCase()
 	{
 		super("skip");
 		mode = ContentModed.None;
 	}
-	
 
 	public BaseTestCase(File file)
 	{
@@ -47,7 +52,7 @@ public abstract class BaseTestCase extends
 		mode = ContentModed.File;
 	}
 
-	public BaseTestCase(File rootSource,String name, String content)
+	public BaseTestCase(File rootSource, String name, String content)
 	{
 		super("test");
 		this.content = content;
@@ -68,22 +73,21 @@ public abstract class BaseTestCase extends
 			String name = file.getName();
 			if (name.contains("."))
 			{
-				newName= name.substring(0, name.indexOf("."));
+				newName = name.substring(0, name.indexOf("."));
 			}
-			if(newName==null)
+			if (newName == null)
 			{
-				newName= file.getName();	
+				newName = file.getName();
 			}
-			
-			return newName+" <"+file.getParentFile().getName()+">";
-			
+
+			return newName + " <" + file.getParentFile().getName() + ">";
+
 		}
 		return "Generic Base Test";
 	}
 
 	public abstract void test() throws Exception;
-	
-	
+
 	public static String pad(String text, int length)
 	{
 		if (text == null)
@@ -96,6 +100,8 @@ public abstract class BaseTestCase extends
 		}
 		return text;
 	}
-	
-	public void skip(){};
+
+	public void skip()
+	{
+	};
 }

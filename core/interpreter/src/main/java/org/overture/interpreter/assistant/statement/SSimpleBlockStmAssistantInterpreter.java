@@ -14,6 +14,4 @@ public class SSimpleBlockStmAssistantInterpreter // extends
 		this.af = af;
 	}
 
-
-
 }

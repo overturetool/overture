@@ -25,7 +25,6 @@ package org.overture.interpreter.runtime;
 
 import org.overture.ast.intf.lex.ILexLocation;
 
-
 @SuppressWarnings("serial")
 public class ContextException extends RuntimeException
 {
@@ -33,7 +32,8 @@ public class ContextException extends RuntimeException
 	public final Context ctxt;
 	public final int number;
 
-	public ContextException(int number, String msg, ILexLocation location, Context ctxt)
+	public ContextException(int number, String msg, ILexLocation location,
+			Context ctxt)
 	{
 		super("Error " + number + ": " + msg + " " + location);
 		this.location = location;

@@ -28,8 +28,6 @@ import org.overture.ast.messages.InternalException;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.PType;
 import org.overture.interpreter.runtime.Context;
-import org.overture.interpreter.runtime.ValueException;
-
 
 public class NaturalValue extends IntegerValue
 {
@@ -52,13 +50,13 @@ public class NaturalValue extends IntegerValue
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt) throws AnalysisException
+	public Value convertValueTo(PType to, Context ctxt)
+			throws AnalysisException
 	{
 		if (to instanceof ANatNumericBasicType)
 		{
 			return this;
-		}
-		else
+		} else
 		{
 			return super.convertValueTo(to, ctxt);
 		}
@@ -70,8 +68,7 @@ public class NaturalValue extends IntegerValue
 		try
 		{
 			return new NaturalValue(longVal);
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			throw new InternalException(5, "Illegal clone");
 		}

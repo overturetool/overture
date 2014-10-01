@@ -14,28 +14,32 @@ import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
 import org.overture.pog.utility.Substitution;
 
-public class OperationCallObligation extends ProofObligation {
+public class OperationCallObligation extends ProofObligation
+{
 
-	public OperationCallObligation(ACallStm stm,
-			SOperationDefinitionBase def,
-			IPOContextStack ctxt, IPogAssistantFactory af) throws AnalysisException {
+	public OperationCallObligation(ACallStm stm, SOperationDefinitionBase def,
+			IPOContextStack ctxt, IPogAssistantFactory af)
+			throws AnalysisException
+	{
 		super(stm, POType.OP_CALL, ctxt, stm.getLocation(), af);
-		
+
 		// cannot quote pre-cond so we spell it out with rewritten arguments
 		List<Substitution> subs = new LinkedList<Substitution>();
-		
-		for (int i = 0; i < stm.getArgs().size(); i++) {
+
+		for (int i = 0; i < stm.getArgs().size(); i++)
+		{
 			PPattern orig = def.getPredef().getParamPatternList().get(0).get(i);
 			ILexNameToken origName = af.createPPatternAssistant().getAllVariableNames(orig).get(0).clone();
 			PExp new_exp = stm.getArgs().get(0);
-			subs.add(new Substitution(origName,new_exp));
-			
+			subs.add(new Substitution(origName, new_exp));
+
 		}
 		PExp pre_exp = def.getPrecondition().clone();
-		
-		for (Substitution sub : subs){
-				pre_exp = pre_exp.apply(af.getVarSubVisitor(), sub);
-	
+
+		for (Substitution sub : subs)
+		{
+			pre_exp = pre_exp.apply(af.getVarSubVisitor(), sub);
+
 		}
 
 		stitch = pre_exp;
@@ -46,9 +50,5 @@ public class OperationCallObligation extends ProofObligation {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-
-
-
 
 }

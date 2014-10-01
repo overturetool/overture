@@ -1,3 +1,24 @@
+/*
+ * #%~
+ * Code Generator Plugin
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.ide.plugins.codegen;
 
 import org.eclipse.core.runtime.IStatus;
@@ -53,7 +74,7 @@ public class Activator extends AbstractUIPlugin
 	{
 		return plugin;
 	}
-	
+
 	public static void log(Exception exception)
 	{
 		getDefault().getLog().log(new Status(IStatus.ERROR, ICodeGenConstants.PLUGIN_ID, "Code Generator", exception));
@@ -64,14 +85,13 @@ public class Activator extends AbstractUIPlugin
 		getDefault().getLog().log(new Status(IStatus.ERROR, ICodeGenConstants.PLUGIN_ID, message, exception));
 	}
 
-	
-	/** 
-	 * Initializes a preference store with default preference values 
-	 * for this plug-in.
+	/**
+	 * Initializes a preference store with default preference values for this plug-in.
 	 */
 	@Override
-	protected void initializeDefaultPreferences(IPreferenceStore store) {
-		
+	protected void initializeDefaultPreferences(IPreferenceStore store)
+	{
+
 		store.setDefault(ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRINGS, ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRING_DEFAULT);
 		store.setDefault(ICodeGenConstants.DISABLE_CLONING, ICodeGenConstants.DISABLE_CLONING_DEFAULT);
 	}

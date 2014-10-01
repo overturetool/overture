@@ -12,6 +12,25 @@
 	<artifactId>guibuilder</artifactId>
 	<name>Overture GUI Builder</name>
 
+<build>
+ <pluginManagement>
+      <plugins>
+  <!-- Plugin for license headers-->
+         <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>license-maven-plugin</artifactId>
+          <version>1.7</version>
+           <configuration>
+              <excludes>
+                <exclude>**/generated/**/*.java</exclude>
+              </excludes>
+        </configuration>
+        </plugin>
+ </plugins>
+    </pluginManagement>
+</build>
+
+
 	<dependencies>
 		<dependency>
 			<groupId>org.overturetool.core</groupId>

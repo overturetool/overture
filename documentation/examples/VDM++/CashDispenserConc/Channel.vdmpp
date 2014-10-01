@@ -221,8 +221,10 @@ The only remaining part of the Channel class is its thread. This periodically
 calls CheckTime to update the time counter. 
 
 \begin{vdm_al}
-thread
-  periodic(1000)(CheckTime)
+-- FIXME: Example used RT constructs must be rewritten using threads
+--thread
+--  periodic(1000)(CheckTime)
+
 
 end Channel
 \end{vdm_al}

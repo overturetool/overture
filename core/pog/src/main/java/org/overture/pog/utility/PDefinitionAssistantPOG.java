@@ -12,7 +12,8 @@ import org.overture.pog.pub.IProofObligationList;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
-public class PDefinitionAssistantPOG extends PDefinitionAssistantTC {
+public class PDefinitionAssistantPOG extends PDefinitionAssistantTC
+{
 
 	public PDefinitionAssistantPOG(ITypeCheckerAssistantFactory af)
 	{
@@ -22,10 +23,12 @@ public class PDefinitionAssistantPOG extends PDefinitionAssistantTC {
 	public IProofObligationList getProofObligations(
 			LinkedList<? extends PDefinition> defs,
 			QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> pogVisitor,
-			IPOContextStack ctxt) throws AnalysisException {
+			IPOContextStack ctxt) throws AnalysisException
+	{
 		IProofObligationList obligations = new ProofObligationList();
 
-		for (PDefinition d : defs) {
+		for (PDefinition d : defs)
+		{
 			ctxt.push(new PONameContext(getVariableNames(d)));
 			obligations.addAll(d.apply(pogVisitor, ctxt));
 			ctxt.pop();

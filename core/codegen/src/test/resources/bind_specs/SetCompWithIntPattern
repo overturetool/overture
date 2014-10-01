@@ -1,0 +1,15 @@
+class Entry
+
+functions
+
+public fun :  () -> set of nat
+fun () ==
+	{3 | 3 in set {1,2,3,4,5,6,7,8}};
+
+operations
+	
+public static Run : () ==> ?
+Run () ==
+	fun();
+
+end Entry

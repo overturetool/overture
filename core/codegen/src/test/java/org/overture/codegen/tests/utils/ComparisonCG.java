@@ -1,5 +1,25 @@
+/*
+ * #%~
+ * VDM Code Generator
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.codegen.tests.utils;
-
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -44,151 +64,153 @@ public class ComparisonCG
 {
 	private File testInputFile;
 	private AInterfaceDeclCG quotes;
-	
+
 	public ComparisonCG(File testInputFile)
 	{
-		if(testInputFile == null)
+		if (testInputFile == null)
+		{
 			throw new IllegalArgumentException("Test file cannot be null");
-		
+		}
+
 		this.testInputFile = testInputFile;
 		this.quotes = null;
 	}
-	
+
 	public boolean compare(Object cgValue, Value vdmValue)
 	{
-		while(vdmValue instanceof UpdatableValue)
+		while (vdmValue instanceof UpdatableValue)
 		{
-			UpdatableValue upValue = (UpdatableValue)vdmValue;
+			UpdatableValue upValue = (UpdatableValue) vdmValue;
 			vdmValue = upValue.getConstant();
 		}
-		
-		while(vdmValue instanceof InvariantValue)
+
+		while (vdmValue instanceof InvariantValue)
 		{
 			vdmValue = vdmValue.deref();
 		}
-		
-		if(vdmValue instanceof BooleanValue)
+
+		if (vdmValue instanceof BooleanValue)
 		{
 			return handleBoolean(cgValue, vdmValue);
-		}
-		else if(vdmValue instanceof CharacterValue)
+		} else if (vdmValue instanceof CharacterValue)
 		{
 			return handleCharacter(cgValue, vdmValue);
-		}
-		else if(vdmValue instanceof MapValue)
+		} else if (vdmValue instanceof MapValue)
 		{
 			return handleMap(cgValue, vdmValue);
-		}
-		else if(vdmValue instanceof QuoteValue)
+		} else if (vdmValue instanceof QuoteValue)
 		{
 			return handleQuote(cgValue, vdmValue);
-		}
-		else if(vdmValue instanceof NumericValue)
+		} else if (vdmValue instanceof NumericValue)
 		{
 			return handleNumber(cgValue, vdmValue);
-		}
-		else if(vdmValue instanceof SeqValue)
+		} else if (vdmValue instanceof SeqValue)
 		{
-			if(cgValue instanceof String)
+			if (cgValue instanceof String)
+			{
 				return handleString(cgValue, vdmValue);
-			else
+			} else
+			{
 				return handleSeq(cgValue, vdmValue);
-		}
-		else if(vdmValue instanceof SetValue)
+			}
+		} else if (vdmValue instanceof SetValue)
 		{
 			return handleSet(cgValue, vdmValue);
-		}
-		else if(vdmValue instanceof TupleValue)
+		} else if (vdmValue instanceof TupleValue)
 		{
 			return handleTuple(cgValue, vdmValue);
-		}
-		else if(vdmValue instanceof TokenValue)
+		} else if (vdmValue instanceof TokenValue)
 		{
 			return handleToken(cgValue, vdmValue);
-		}
-		else if(vdmValue instanceof NilValue)
+		} else if (vdmValue instanceof NilValue)
 		{
 			return cgValue == null;
-		}
-		else if(vdmValue instanceof ObjectValue)
+		} else if (vdmValue instanceof ObjectValue)
 		{
 			return handleObject(cgValue, vdmValue);
-		}
-		else if(vdmValue instanceof RecordValue)
+		} else if (vdmValue instanceof RecordValue)
 		{
 			return handleRecord(cgValue, vdmValue);
 		}
-		
+
 		return false;
 	}
 
 	private boolean handleRecord(Object cgValue, Value vdmValue)
 	{
-		if(!(cgValue instanceof Record))
+		if (!(cgValue instanceof Record))
+		{
 			return false;
+		}
 
 		RecordValue vdmRecord = (RecordValue) vdmValue;
 		Record cgRecord = (Record) cgValue;
-		
-		if(!cgRecord.getClass().getName().endsWith(vdmRecord.type.getName().getName()))
+
+		if (!cgRecord.getClass().getName().endsWith(vdmRecord.type.getName().getName()))
+		{
 			return false;
-		
+		}
+
 		Field[] cgRecFields = cgRecord.getClass().getFields();
-		
+
 		FieldMap vdmRecFields = vdmRecord.fieldmap;
-		
-		for(int i = 0; i < vdmRecFields.size(); i++)
+
+		for (int i = 0; i < vdmRecFields.size(); i++)
 		{
 			FieldValue vdmField = vdmRecFields.get(i);
 			Field cgField = cgRecFields[i];
-			
+
 			try
 			{
-				if(!cgField.getName().equals(vdmField.name))
+				if (!cgField.getName().equals(vdmField.name))
+				{
 					return false;
-				
-				if(!(compare(cgField.get(cgRecord), vdmField.value)))
+				}
+
+				if (!compare(cgField.get(cgRecord), vdmField.value))
+				{
 					return false;
+				}
 			} catch (Exception e)
 			{
 				e.printStackTrace();
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
 
 	private boolean handleObject(Object cgValue, Value vdmValue)
 	{
 		ObjectValue vdmObject = (ObjectValue) vdmValue;
-		
+
 		Field[] fields = cgValue.getClass().getFields();
 		NameValuePairMap memberValues = vdmObject.getMemberValues();
 		Set<ILexNameToken> keySet = memberValues.keySet();
-		
-		for(Field field : fields)
+
+		for (Field field : fields)
 		{
 			boolean foundMatchingField = false;
-			
-			for(ILexNameToken tok : keySet)
+
+			for (ILexNameToken tok : keySet)
 			{
-				if(field.getName().equals(tok.getName()))
+				if (field.getName().equals(tok.getName()))
 				{
 					Value vdmFieldValue = memberValues.get(tok);
-					
-					if(vdmFieldValue != null)
+
+					if (vdmFieldValue != null)
 					{
 						try
 						{
 							Object cgFieldValue = field.get(cgValue);
-							
-							if(compare(cgFieldValue, vdmFieldValue))
+
+							if (compare(cgFieldValue, vdmFieldValue))
 							{
 								foundMatchingField = true;
 								break;
 							}
-							
+
 						} catch (Exception e)
 						{
 							e.printStackTrace();
@@ -197,22 +219,26 @@ public class ComparisonCG
 					}
 				}
 			}
-			
-			if(!foundMatchingField)
+
+			if (!foundMatchingField)
+			{
 				return false;
+			}
 		}
-		
+
 		return true;
 	}
 
 	private boolean handleQuote(Object cgValue, Value vdmValue)
 	{
-		if(!(cgValue instanceof Number))
+		if (!(cgValue instanceof Number))
+		{
 			return false;
+		}
 
-		QuoteValue vdmQuote = (QuoteValue) vdmValue; 
+		QuoteValue vdmQuote = (QuoteValue) vdmValue;
 		Number cgQuote = (Number) cgValue;
-		
+
 		try
 		{
 			if (quotes == null)
@@ -227,23 +253,23 @@ public class ComparisonCG
 
 				quotes = javaCg.getInfo().getQuotes();
 			}
-			
-			for(AFieldDeclCG quote: quotes.getFields())
+
+			for (AFieldDeclCG quote : quotes.getFields())
 			{
-				if(quote.getName().equals(vdmQuote.value))
+				if (quote.getName().equals(vdmQuote.value))
 				{
 					SExpCG exp = quote.getInitial();
-					
-					if(exp instanceof AIntLiteralExpCG)
+
+					if (exp instanceof AIntLiteralExpCG)
 					{
 						AIntLiteralExpCG intLit = (AIntLiteralExpCG) exp;
 						return cgQuote.equals(intLit.getValue());
 					}
 				}
 			}
-			
+
 			return false;
-			
+
 		} catch (Exception e)
 		{
 			e.printStackTrace();
@@ -254,12 +280,14 @@ public class ComparisonCG
 
 	private boolean handleToken(Object cgValue, Value vdmValue)
 	{
-		if(!(cgValue instanceof Token))
-			 return false;
-		
+		if (!(cgValue instanceof Token))
+		{
+			return false;
+		}
+
 		Token cgToken = (Token) cgValue;
 		TokenValue vdmToken = (TokenValue) vdmValue;
-		
+
 		try
 		{
 			Field f = vdmToken.getClass().getDeclaredField("value");
@@ -267,7 +295,7 @@ public class ComparisonCG
 			Value value = (Value) f.get(vdmToken);
 
 			return compare(cgToken.getValue(), value);
-			
+
 		} catch (Exception e)
 		{
 			e.printStackTrace();
@@ -277,168 +305,207 @@ public class ComparisonCG
 
 	private static boolean handleCharacter(Object cgValue, Value vdmValue)
 	{
-		if(!(cgValue instanceof Character))
+		if (!(cgValue instanceof Character))
+		{
 			return false;
-		
+		}
+
 		Character cgChar = (Character) cgValue;
 		CharacterValue vdmChar = (CharacterValue) vdmValue;
-		
+
 		return cgChar != null && cgChar == vdmChar.unicode;
 	}
 
 	private static boolean handleNumber(Object cgValue, Value vdmValue)
 	{
-		if(!(cgValue instanceof Number))
+		if (!(cgValue instanceof Number))
+		{
 			return false;
-		
+		}
+
 		Number number = (Number) cgValue;
 		NumericValue vdmNumeric = (NumericValue) vdmValue;
-		
+
 		return number.doubleValue() == vdmNumeric.value;
 	}
 
 	private boolean handleSeq(Object cgValue, Value vdmValue)
 	{
-		if(!(cgValue instanceof VDMSeq))
+		if (!(cgValue instanceof VDMSeq))
+		{
 			return false;
-		
+		}
+
 		VDMSeq cgSeq = (VDMSeq) cgValue;
 		SeqValue vdmSeq = (SeqValue) vdmValue;
-		
-		if(cgSeq.size() != vdmSeq.values.size())
+
+		if (cgSeq.size() != vdmSeq.values.size())
+		{
 			return false;
-		
-		for(int i = 0; i < cgSeq.size(); i++)
+		}
+
+		for (int i = 0; i < cgSeq.size(); i++)
 		{
 			Object cgElement = cgSeq.get(i);
 			Value vdmElement = vdmSeq.values.get(i);
-			
-			if(!compare(cgElement, vdmElement))
+
+			if (!compare(cgElement, vdmElement))
+			{
 				return false;
+			}
 		}
-		
+
 		return true;
 	}
 
 	private boolean handleSet(Object cgValue, Value vdmValue)
 	{
-		if(!(cgValue instanceof VDMSet))
+		if (!(cgValue instanceof VDMSet))
+		{
 			return false;
-		
+		}
+
 		VDMSet cgSet = (VDMSet) cgValue;
 		SetValue vdmSet = (SetValue) vdmValue;
-		
-		if(cgSet.size() != vdmSet.values.size())
+
+		if (cgSet.size() != vdmSet.values.size())
+		{
 			return false;
-		
+		}
+
 		@SuppressWarnings("unchecked")
 		List<Object> cgValuesList = new LinkedList<Object>(cgSet);
 		List<Value> vdmValuesList = new LinkedList<Value>(vdmSet.values);
-		
-		for(int i = 0; i < cgValuesList.size(); i++)
+
+		for (int i = 0; i < cgValuesList.size(); i++)
 		{
 			Object cgElement = cgValuesList.get(i);
-			
+
 			boolean match = false;
-			for(int k = 0; k < vdmValuesList.size(); k++)
+			for (int k = 0; k < vdmValuesList.size(); k++)
 			{
 				Value vdmElement = vdmValuesList.get(k);
-				
-				if(compare(cgElement, vdmElement))
+
+				if (compare(cgElement, vdmElement))
 				{
 					match = true;
 					break;
 				}
 			}
-			
-			if(!match)
+
+			if (!match)
+			{
 				return false;
+			}
 		}
-		
+
 		return true;
 	}
 
 	private boolean handleTuple(Object cgValue, Value vdmValue)
 	{
-		if(!(cgValue instanceof Tuple))
+		if (!(cgValue instanceof Tuple))
+		{
 			return false;
-		
+		}
+
 		Tuple javaTuple = (Tuple) cgValue;
 		TupleValue vdmTuple = (TupleValue) vdmValue;
-		
-		if(javaTuple.size() != vdmTuple.values.size())
+
+		if (javaTuple.size() != vdmTuple.values.size())
+		{
 			return false;
-		
-		for(int i = 0; i < javaTuple.size(); i++)
-			if(!compare(javaTuple.get(i), vdmTuple.values.get(i)))
-					return false;
-		
+		}
+
+		for (int i = 0; i < javaTuple.size(); i++)
+		{
+			if (!compare(javaTuple.get(i), vdmTuple.values.get(i)))
+			{
+				return false;
+			}
+		}
+
 		return true;
 	}
 
 	private boolean handleString(Object cgValue, Value vdmValue)
 	{
-		if(!(cgValue instanceof String))
+		if (!(cgValue instanceof String))
+		{
 			return false;
-		
+		}
+
 		String cgString = (String) cgValue;
 		SeqValue vdmSeq = (SeqValue) vdmValue;
-		
-		
-		if(cgString.length() != vdmSeq.values.size())
+
+		if (cgString.length() != vdmSeq.values.size())
+		{
 			return false;
-		
-		for(int i = 0; i < cgString.length(); i++)
-			if(!compare(cgString.charAt(i), vdmSeq.values.get(i)))
+		}
+
+		for (int i = 0; i < cgString.length(); i++)
+		{
+			if (!compare(cgString.charAt(i), vdmSeq.values.get(i)))
+			{
 				return false;
-		
+			}
+		}
+
 		return true;
 	}
 
 	private boolean handleMap(Object cgValue, Value vdmValue)
 	{
-		if(!(cgValue instanceof VDMMap))
+		if (!(cgValue instanceof VDMMap))
+		{
 			return false;
-		
+		}
+
 		VDMMap cgMap = (VDMMap) cgValue;
 		MapValue vdmMap = (MapValue) vdmValue;
-		
-		if(cgMap.size() != vdmMap.values.size())
+
+		if (cgMap.size() != vdmMap.values.size())
+		{
 			return false;
-		
-		for(Object cgKey : cgMap.keySet())
+		}
+
+		for (Object cgKey : cgMap.keySet())
 		{
 			boolean match = false;
-			for(Value vdmKey : vdmMap.values.keySet())
+			for (Value vdmKey : vdmMap.values.keySet())
 			{
-				if(compare(cgKey, vdmKey))
+				if (compare(cgKey, vdmKey))
 				{
 					Object cgVal = cgMap.get(cgKey);
 					Value vdmVal = vdmMap.values.get(vdmKey);
-					
-					if(compare(cgVal, vdmVal))
+
+					if (compare(cgVal, vdmVal))
 					{
 						match = true;
 						break;
 					}
 				}
 			}
-			
-			if(!match)
+
+			if (!match)
+			{
 				return false;
+			}
 		}
-		
+
 		return true;
 	}
 
 	private boolean handleBoolean(Object cgValue, Value vdmValue)
 	{
-		if(!(cgValue instanceof Boolean))
+		if (!(cgValue instanceof Boolean))
+		{
 			return false;
-		
+		}
+
 		Boolean cgBool = (Boolean) cgValue;
 		BooleanValue vdmBool = (BooleanValue) vdmValue;
-		
+
 		return cgBool != null && cgBool == vdmBool.value;
 	}
 }

@@ -1,3 +1,24 @@
+/*
+ * #%~
+ * Combinatorial Testing Runtime
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.ct.ctruntime;
 
 import java.io.File;
@@ -5,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URI;
@@ -36,11 +58,13 @@ import org.overture.interpreter.traces.TraceReductionType;
 import org.overture.interpreter.util.ExitStatus;
 import org.overture.parser.config.Properties;
 import org.overture.parser.lex.LexTokenReader;
+import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.util.Base64;
 
 public class TraceRunnerMain implements IProgressMonitor
 {
+	public static boolean USE_SYSTEM_EXIT = true;
 	protected final String host;
 	protected final int port;
 	protected final String ideKey;
@@ -59,14 +83,14 @@ public class TraceRunnerMain implements IProgressMonitor
 	protected boolean connected = false;
 
 	protected boolean completed = false;
-	
+
 	float subset = 1.0F;
 	TraceReductionType reductionType = TraceReductionType.NONE;
 	long seed = 999;
 
 	public TraceRunnerMain(String host, int port, String ideKey,
 			Interpreter interpreter, String moduleName, String traceName,
-			File traceFolder,float subset,
+			File traceFolder, float subset,
 			TraceReductionType traceReductionType, long seed)
 	{
 		this.host = host;
@@ -76,14 +100,15 @@ public class TraceRunnerMain implements IProgressMonitor
 		this.interpreter = interpreter;
 		this.traceName = traceName;
 		this.traceFolder = traceFolder;
-		
+
 		this.seed = seed;
 		this.reductionType = traceReductionType;
 		this.subset = subset;
 	}
 
 	/**
-	 * @param args the args
+	 * @param args
+	 *            the args
 	 */
 	public static void main(String[] args)
 	{
@@ -113,7 +138,7 @@ public class TraceRunnerMain implements IProgressMonitor
 		Properties.init(); // Read properties file, if any
 
 		Properties.parser_tabstop = 1;
-		
+
 		for (Iterator<String> i = largs.iterator(); i.hasNext();)
 		{
 			String arg = i.next();
@@ -190,14 +215,14 @@ public class TraceRunnerMain implements IProgressMonitor
 			} else if (arg.equals("-r"))
 			{
 				if (i.hasNext())
-				{  
+				{
 					Settings.release = Release.lookup(i.next());
 
 					if (Settings.release == null)
 					{
 						usage("-r option must be " + Release.list());
 					}
-				} else 
+				} else
 				{
 					usage("-r option requires a VDM release");
 				}
@@ -278,7 +303,7 @@ public class TraceRunnerMain implements IProgressMonitor
 				{
 					usage("-t option requires a Trace Name");
 				}
-			}else if (arg.equals("-t64"))
+			} else if (arg.equals("-t64"))
 			{
 				if (i.hasNext())
 				{
@@ -311,13 +336,13 @@ public class TraceRunnerMain implements IProgressMonitor
 				{
 					usage("-tracefolder option requires a directory name");
 				}
-			}else if (arg.equals("-traceReduction"))
+			} else if (arg.equals("-traceReduction"))
 			{
 				if (i.hasNext())
 				{
 					try
 					{
-						traceReductionPattern =i.next();
+						traceReductionPattern = i.next();
 					} catch (IllegalArgumentException e)
 					{
 						usage(e.getMessage() + ": " + arg);
@@ -326,8 +351,7 @@ public class TraceRunnerMain implements IProgressMonitor
 				{
 					usage("-traceReduction option requires a pattern");
 				}
-			}
-			else if (arg.equals("-consoleName"))
+			} else if (arg.equals("-consoleName"))
 			{
 				if (i.hasNext())
 				{
@@ -440,8 +464,8 @@ public class TraceRunnerMain implements IProgressMonitor
 				{
 					if (logfile != null)
 					{
-						RTLogger.setLogfile(RTTextLogger.class,new File(logfile));
-						RTLogger.setLogfile(NextGenRTLogger.class,new File(logfile));
+						RTLogger.setLogfile(RTTextLogger.class, new File(logfile));
+						RTLogger.setLogfile(NextGenRTLogger.class, new File(logfile));
 					}
 
 					Interpreter i = controller.getInterpreter();
@@ -455,33 +479,36 @@ public class TraceRunnerMain implements IProgressMonitor
 					// (remoteClass == null) ? null : remoteClass.newInstance();
 
 					// new ConnectionListener(port).start();
-					
-//					String[] parts = traceReductionPattern.split("\\s+");
-//					int testNo = 0;
+
+					// String[] parts = traceReductionPattern.split("\\s+");
+					// int testNo = 0;
 					float subset = 1.0F;
 					TraceReductionType reductionType = TraceReductionType.NONE;
 					long seed = 999;
-					//  {subset,reduction,seed}
-					
-					if (traceReductionPattern!=null && traceReductionPattern.startsWith("{")) {
-						try {
+					// {subset,reduction,seed}
+
+					if (traceReductionPattern != null
+							&& traceReductionPattern.startsWith("{"))
+					{
+						try
+						{
 							String settings = traceReductionPattern;
-							String[] tmp = settings.substring(1,
-									settings.length() - 1).split(",");
-							if (tmp.length == 3) {
+							String[] tmp = settings.substring(1, settings.length() - 1).split(",");
+							if (tmp.length == 3)
+							{
 								subset = Float.parseFloat(tmp[0]);
-								reductionType = TraceReductionType
-										.valueOf(tmp[1]);
+								reductionType = TraceReductionType.valueOf(tmp[1]);
 								seed = Long.parseLong(tmp[2]);
 							}
-						} catch (NumberFormatException e) {
-							usage(traceReductionPattern + " <name> [test number]");
-							return ;
+						} catch (NumberFormatException e)
+						{
+							usage(traceReductionPattern
+									+ " <name> [test number]");
+							return;
 						}
 					}
-					
 
-					TraceRunnerMain runner = new TraceRunnerMain(host, port, ideKey, i, moduleName, traceName, traceFolder,subset,reductionType,seed);
+					TraceRunnerMain runner = new TraceRunnerMain(host, port, ideKey, i, moduleName, traceName, traceFolder, subset, reductionType, seed);
 					runner.startup();
 
 					if (coverage != null)
@@ -490,37 +517,49 @@ public class TraceRunnerMain implements IProgressMonitor
 					}
 
 					RTLogger.dump(true);
-//					runner.progressTerminating();
-					System.exit(0);
+
+					// runner.progressTerminating();
+					exit(0);
 				} catch (ContextException e)
 				{
 					System.err.println("Initialization: " + e);
 					e.ctxt.printStackTrace(Console.out, true);
 					RTLogger.dump(true);
-					System.exit(3);
-				} catch(ValueException e)
+					exit(3);
+				} catch (ValueException e)
 				{
 					System.err.println("Initialization: " + e);
 					e.ctxt.printStackTrace(Console.out, true);
 					RTLogger.dump(true);
-					System.exit(3);					
-				}catch (Exception e)
-				
+					exit(3);
+				} catch (Exception e)
+
 				{
 					System.err.println("Initialization: " + e);
 					e.printStackTrace();
 					RTLogger.dump(true);
-					System.exit(3);
+					exit(3);
 				}
 			} else
 			{
-				System.exit(2);
+				final PrintWriter out = new PrintWriter(System.err);
+				TypeChecker.printErrors(out);
+				out.flush();
+				exit(2);
 			}
 		} else
 		{
-			System.exit(1);
+			exit(1);
 		}
 
+	}
+
+	private static void exit(int code)
+	{
+		if (USE_SYSTEM_EXIT)
+		{
+			System.exit(code);
+		}
 	}
 
 	private void startup() throws Exception
@@ -629,8 +668,8 @@ public class TraceRunnerMain implements IProgressMonitor
 						{
 							tmp += new String(new byte[] { (byte) b });
 						}
-						
-						if(tmp.equals("exit"))
+
+						if (tmp.equals("exit"))
 						{
 							completed = true;
 							return;
@@ -640,19 +679,28 @@ public class TraceRunnerMain implements IProgressMonitor
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					
 
 				}
 			}
 		});
 		t.setDaemon(true);
 		t.start();
+		t.setUncaughtExceptionHandler(new UncaughtExceptionHandler()
+		{
+
+			@Override
+			public void uncaughtException(Thread t, Throwable e)
+			{
+				e.printStackTrace();
+
+			}
+		});
 
 		TraceXmlWrapper storage = new TraceXmlWrapper(new File(traceFolder, moduleName
 				+ "-" + traceName + ".xml"));
 
-		new TraceInterpreter(this,subset,reductionType,seed, new TypeCheckerAssistantFactory()).run(moduleName, traceName, interpreter, storage);
- 
+		new TraceInterpreter(this, subset, reductionType, seed, new TypeCheckerAssistantFactory()).run(moduleName, traceName, interpreter, storage);
+
 		while (!completed)
 		{
 			try
@@ -663,13 +711,22 @@ public class TraceRunnerMain implements IProgressMonitor
 			}
 		}
 
+		try
+		{
+			System.out.println("Closing socket");
+			socket.close();
+		} catch (IOException e)
+		{
+
+		}
+
 	}
 
 	private void init() throws IOException
 	{
 		System.out.println("Connected");
 		StringBuilder sb = new StringBuilder();
-//		interpreter.init(null);
+		// interpreter.init(null);
 		sb.append("<init ");
 		sb.append("module=\"" + moduleName + "\" ");
 		sb.append("/>\n");
@@ -687,7 +744,7 @@ public class TraceRunnerMain implements IProgressMonitor
 	public void progress(Integer procentage) throws IOException
 	{
 		StringBuilder sb = new StringBuilder();
-//		interpreter.init(null);
+		// interpreter.init(null);
 		sb.append("<response ");
 		sb.append("status=\"progress\" ");
 		sb.append("progress=\"" + procentage + "\" ");
@@ -705,7 +762,7 @@ public class TraceRunnerMain implements IProgressMonitor
 	{
 		this.currentTraceName = traceName;
 		StringBuilder sb = new StringBuilder();
-//		interpreter.init(null);
+		// interpreter.init(null);
 		sb.append("<response ");
 		sb.append("status=\"tracestart\" ");
 		sb.append("tracename=\"" + traceName + "\" ");
@@ -726,8 +783,7 @@ public class TraceRunnerMain implements IProgressMonitor
 		write(sb);
 
 	}
-	
-	
+
 	public void progressTerminating() throws IOException
 	{
 		StringBuilder sb = new StringBuilder();
@@ -738,15 +794,16 @@ public class TraceRunnerMain implements IProgressMonitor
 		write(sb);
 
 	}
-	
-	public void progressError(String message) throws IOException {
-		
+
+	public void progressError(String message) throws IOException
+	{
+
 		StringBuilder sb = new StringBuilder();
-//		interpreter.init(null);
+		// interpreter.init(null);
 		sb.append("<response ");
 		sb.append("status=\"error\" ");
 		sb.append("message=\"" + message + "\" ");
-//		sb.append("progress=\"" + 100 + "\" ");
+		// sb.append("progress=\"" + 100 + "\" ");
 		sb.append("/>\n");
 
 		write(sb);

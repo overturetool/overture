@@ -1,3 +1,24 @@
+/*
+ * #%~
+ * The VDM Type Checker
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.typechecker.assistant.definition;
 
 import java.util.HashSet;
@@ -32,10 +53,10 @@ import org.overture.typechecker.utilities.DefinitionTypeResolver;
 import org.overture.typechecker.utilities.NameFinder;
 
 //TODO Add assistant Javadoc
-/** Top-Level assistant. Will probably remain present
- *	for conveniency's sake but the static access will be disallowed.
+/**
+ * Top-Level assistant. Will probably remain present for conveniency's sake but the static access will be disallowed.
+ * 
  * @author ldc
- *
  */
 public class PDefinitionAssistantTC extends PDefinitionAssistant
 {
@@ -80,11 +101,11 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 		return false;
 
 	}
-	
-	
+
 	public boolean isFunctionOrOperation(PDefinition possible)
 	{
-		return af.createPDefinitionAssistant().isFunction(possible) || af.createPDefinitionAssistant().isOperation(possible);
+		return af.createPDefinitionAssistant().isFunction(possible)
+				|| af.createPDefinitionAssistant().isOperation(possible);
 	}
 
 	public PDefinition findType(List<PDefinition> definitions,
@@ -135,8 +156,8 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	}
 
-	public PDefinition findNameBaseCase(PDefinition d,
-			ILexNameToken sought, NameScope scope)
+	public PDefinition findNameBaseCase(PDefinition d, ILexNameToken sought,
+			NameScope scope)
 	{
 		if (af.getLexNameTokenAssistant().isEqual(d.getName(), sought))
 		{
@@ -358,6 +379,10 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 
 	/**
 	 * Check a DefinitionList for incompatible duplicate pattern definitions.
+	 * 
+	 * @param d
+	 * @param defs
+	 * @return
 	 */
 	public List<PDefinition> checkDuplicatePatterns(PDefinition d,
 			List<PDefinition> defs)
@@ -389,31 +414,28 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant
 	{
 		while (d instanceof AInheritedDefinition)
 		{
-			AInheritedDefinition aid = (AInheritedDefinition)d;
+			AInheritedDefinition aid = (AInheritedDefinition) d;
 			d = aid.getSuperdef();
 		}
-		
+
 		if (d instanceof AExplicitOperationDefinition)
 		{
-			AExplicitOperationDefinition op = (AExplicitOperationDefinition)d;
+			AExplicitOperationDefinition op = (AExplicitOperationDefinition) d;
 			return op.getBody() instanceof ASubclassResponsibilityStm;
-		}
-		else if (d instanceof AImplicitOperationDefinition)
+		} else if (d instanceof AImplicitOperationDefinition)
 		{
-			AImplicitOperationDefinition op = (AImplicitOperationDefinition)d;
+			AImplicitOperationDefinition op = (AImplicitOperationDefinition) d;
 			return op.getBody() instanceof ASubclassResponsibilityStm;
-		}
-		else if (d instanceof AExplicitFunctionDefinition)
+		} else if (d instanceof AExplicitFunctionDefinition)
 		{
-			AExplicitFunctionDefinition fn = (AExplicitFunctionDefinition)d;
+			AExplicitFunctionDefinition fn = (AExplicitFunctionDefinition) d;
+			return fn.getBody() instanceof ASubclassResponsibilityExp;
+		} else if (d instanceof AImplicitFunctionDefinition)
+		{
+			AImplicitFunctionDefinition fn = (AImplicitFunctionDefinition) d;
 			return fn.getBody() instanceof ASubclassResponsibilityExp;
 		}
-		else if (d instanceof AImplicitFunctionDefinition)
-		{
-			AImplicitFunctionDefinition fn = (AImplicitFunctionDefinition)d;
-			return fn.getBody() instanceof ASubclassResponsibilityExp;
-		}
-		
+
 		return false;
 	}
 }

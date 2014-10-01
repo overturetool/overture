@@ -42,7 +42,6 @@ public class POLetDefContext extends POContext
 		return true;
 	}
 
-
 	@Override
 	public PExp getContextNode(PExp stitch)
 	{
@@ -54,7 +53,9 @@ public class POLetDefContext extends POContext
 			return letDefExp;
 
 		} else
+		{
 			return stitch;
+		}
 	}
 
 	@Override

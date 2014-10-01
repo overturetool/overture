@@ -1,12 +1,24 @@
-/*******************************************************************************
- * Copyright (c) 2009, 2011 Overture Team and others. Overture is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3
- * of the License, or (at your option) any later version. Overture is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details. You should have received a copy of the GNU General Public
- * License along with Overture. If not, see <http://www.gnu.org/licenses/>. The Overture Tool web-site:
- * http://overturetool.org/
- *******************************************************************************/
+/*
+ * #%~
+ * Test Framework for Overture
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.test.framework.results;
 
 public class Message implements IMessage
@@ -18,10 +30,11 @@ public class Message implements IMessage
 	private int col;
 
 	private String message;
-	
+
 	private String resource;
 
-	public Message(String resource, int number, int line, int col, String message)
+	public Message(String resource, int number, int line, int col,
+			String message)
 	{
 		this.resource = resource;
 		this.number = number;
@@ -76,9 +89,8 @@ public class Message implements IMessage
 		if (obj instanceof IMessage)
 		{
 			IMessage other = (IMessage) obj;
-			return // this.resource.equals(other.getResource()) && //removed the resource  
-					this.number == other.getNumber()
-					&& this.col == other.getCol()
+			return // this.resource.equals(other.getResource()) && //removed the resource
+			this.number == other.getNumber() && this.col == other.getCol()
 					&& this.line == other.getLine()
 					&& this.message.equals(other.getMessage());
 		}
@@ -88,7 +100,8 @@ public class Message implements IMessage
 	@Override
 	public String toString()
 	{
-		return number+" "+resource + " at " + line + ":" + col + " " + message;
+		return number + " " + resource + " at " + line + ":" + col + " "
+				+ message;
 	}
 
 	public void setResource(String resource)
@@ -100,7 +113,5 @@ public class Message implements IMessage
 	{
 		return resource;
 	}
-	
-	
 
 }

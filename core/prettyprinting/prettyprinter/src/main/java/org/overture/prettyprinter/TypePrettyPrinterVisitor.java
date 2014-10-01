@@ -1,3 +1,24 @@
+/*
+ * #%~
+ * The VDM Pretty Printer
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.prettyprinter;
 
 import java.util.List;
@@ -23,64 +44,68 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.SBasicType;
 import org.overture.ast.types.SInvariantType;
 import org.overture.ast.util.Utils;
+
 public class TypePrettyPrinterVisitor extends
 		QuestionAnswerAdaptor<PrettyPrinterEnv, String>
 {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -9082823353484822934L;
-	
 	@Override
 	public String defaultSBasicType(SBasicType node, PrettyPrinterEnv question)
 			throws AnalysisException
 	{
 		return node.toString();
 	}
-	
+
 	@Override
 	public String defaultINode(INode node, PrettyPrinterEnv question)
 			throws AnalysisException
 	{
 		return node.toString();
 	}
-	
+
 	@Override
 	public String caseASetType(ASetType node, PrettyPrinterEnv question)
 			throws AnalysisException
 	{
-		return "" + ""+(node.getEmpty() ? "{}" : "set of (" +node.getSetof().apply(this,question) + ")");
+		return ""
+				+ ""
+				+ (node.getEmpty() ? "{}" : "set of ("
+						+ node.getSetof().apply(this, question) + ")");
 	}
-	
+
 	@Override
 	public String caseASeqSeqType(ASeqSeqType node, PrettyPrinterEnv question)
 			throws AnalysisException
 	{
-		return "" + ""+(node.getEmpty() ? "[]" : "seq of (" + node.getSeqof().apply(this,question)+ ")" );
+		return ""
+				+ ""
+				+ (node.getEmpty() ? "[]" : "seq of ("
+						+ node.getSeqof().apply(this, question) + ")");
 	}
-	
+
 	@Override
 	public String caseASeq1SeqType(ASeq1SeqType node, PrettyPrinterEnv question)
 			throws AnalysisException
 	{
-		return "" + "seq1 of ("+node.getSeqof().apply(this,question)+")";
+		return "" + "seq1 of (" + node.getSeqof().apply(this, question) + ")";
 	}
-	
+
 	@Override
 	public String caseAMapMapType(AMapMapType node, PrettyPrinterEnv question)
 			throws AnalysisException
 	{
-		return "" + "map ("+node.getFrom().apply(this,question)+") to ("+node.getTo().apply(this,question)+")";
+		return "" + "map (" + node.getFrom().apply(this, question) + ") to ("
+				+ node.getTo().apply(this, question) + ")";
 	}
-	
+
 	@Override
 	public String caseAInMapMapType(AInMapMapType node,
 			PrettyPrinterEnv question) throws AnalysisException
 	{
-		return "" + "inmap ("+node.getFrom().apply(this,question)+") to ("+node.getTo().apply(this,question)+")";
+		return "" + "inmap (" + node.getFrom().apply(this, question) + ") to ("
+				+ node.getTo().apply(this, question) + ")";
 	}
-	
+
 	@Override
 	public String caseAProductType(AProductType node, PrettyPrinterEnv question)
 			throws AnalysisException
@@ -88,18 +113,18 @@ public class TypePrettyPrinterVisitor extends
 		List<String> types = new Vector<String>();
 		for (PType t : node.getTypes())
 		{
-			types.add(t.apply(this,question));
+			types.add(t.apply(this, question));
 		}
-		return "" + ""+Utils.listToString("(",types, " * ", ")");
+		return "" + "" + Utils.listToString("(", types, " * ", ")");
 	}
-	
+
 	@Override
 	public String caseAOptionalType(AOptionalType node,
 			PrettyPrinterEnv question) throws AnalysisException
 	{
-		return "" + "["+node.getType().apply(this,question)+"]";
+		return "" + "[" + node.getType().apply(this, question) + "]";
 	}
-	
+
 	@Override
 	public String caseAUnionType(AUnionType node, PrettyPrinterEnv question)
 			throws AnalysisException
@@ -107,9 +132,12 @@ public class TypePrettyPrinterVisitor extends
 		List<String> types = new Vector<String>();
 		for (PType t : node.getTypes())
 		{
-			types.add(t.apply(this,question));
+			types.add(t.apply(this, question));
 		}
-		return "" + ""+(types.size() == 1?types.iterator().next().toString() : Utils.setToString(types, " | "));
+		return ""
+				+ ""
+				+ (types.size() == 1 ? types.iterator().next().toString()
+						: Utils.setToString(types, " | "));
 	}
 
 	@Override
@@ -117,31 +145,33 @@ public class TypePrettyPrinterVisitor extends
 			PrettyPrinterEnv question) throws AnalysisException
 	{
 		ILexNameToken name = null;
-		if (node instanceof ANamedInvariantType) {
-			name = ((ANamedInvariantType)node).getName();
-		} else if (node instanceof ARecordInvariantType) {
-			name = ((ARecordInvariantType)node).getName();
-		}
-		if(name !=null)
+		if (node instanceof ANamedInvariantType)
 		{
-			if(name.getModule()!=null && !name.getModule().equals(question.getClassName()))
+			name = ((ANamedInvariantType) node).getName();
+		} else if (node instanceof ARecordInvariantType)
+		{
+			name = ((ARecordInvariantType) node).getName();
+		}
+		if (name != null)
+		{
+			if (name.getModule() != null
+					&& !name.getModule().equals(question.getClassName()))
 			{
-				return name.getModule()+"`"+name.getFullName();
+				return name.getModule() + "`" + name.getFullName();
 			}
 			return name.getFullName();
 		}
-		
+
 		return "unresolved";
 	}
-	
-	
+
 	@Override
 	public String caseAVoidReturnType(AVoidReturnType node,
 			PrettyPrinterEnv question) throws AnalysisException
 	{
 		return "()";
 	}
-	
+
 	@Override
 	public String caseAVoidType(AVoidType node, PrettyPrinterEnv question)
 			throws AnalysisException

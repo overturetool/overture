@@ -27,8 +27,6 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.PType;
 import org.overture.interpreter.runtime.Context;
-import org.overture.interpreter.runtime.ValueException;
-
 
 public class NilValue extends Value
 {
@@ -45,7 +43,7 @@ public class NilValue extends Value
 	{
 		if (other instanceof Value)
 		{
-			Value val = ((Value)other).deref();
+			Value val = ((Value) other).deref();
 			return val instanceof NilValue;
 		}
 
@@ -65,15 +63,15 @@ public class NilValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt) throws AnalysisException
+	public Value convertValueTo(PType to, Context ctxt)
+			throws AnalysisException
 	{
 		// Note, don't use isType, as this skips the OptionalType wrapper.
 
 		if (to instanceof AOptionalType)
 		{
 			return this;
-		}
-		else
+		} else
 		{
 			return super.convertValueTo(to, ctxt);
 		}

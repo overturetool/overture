@@ -1,21 +1,24 @@
-/*******************************************************************************
- * Copyright (c) 2009, 2013 Overture Team and others.
- *
- * Overture is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Overture is distributed in the hope that it will be useful,
+/*
+ * #%~
+ * Overture GUI Builder
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Overture.  If not, see <http://www.gnu.org/licenses/>.
- * 	
- * The Overture Tool web-site: http://overturetool.org/
- *******************************************************************************/
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.guibuilder;
 
 import java.awt.EventQueue;
@@ -36,14 +39,12 @@ import org.overture.interpreter.debug.RemoteControl;
 import org.overture.interpreter.debug.RemoteInterpreter;
 import org.overture.interpreter.runtime.ClassInterpreter;
 
-public class GuiBuilderRemote implements
-		RemoteControl
+public class GuiBuilderRemote implements RemoteControl
 {
-	
-	
-	
-	//"my.swixml.schema"
-public static final String GENERATED_PACKAGE = org.overture.guibuilder.generated.swixml.schema.Applet.class.getPackage().getName();
+
+	// "my.swixml.schema"
+	public static final String GENERATED_PACKAGE = org.overture.guibuilder.generated.swixml.schema.Applet.class.getPackage().getName();
+
 	static class PW extends VdmjVdmInterpreterWrapper
 	{
 
@@ -90,12 +91,12 @@ public static final String GENERATED_PACKAGE = org.overture.guibuilder.generated
 	@Override
 	public void run(final RemoteInterpreter interpreter) throws Exception
 	{
-//		Object d = new SwiXMLGenerator();
+		// Object d = new SwiXMLGenerator();
 		{
 			Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
-			 JAXBContext jaxbContext = JAXBContext.newInstance(GENERATED_PACKAGE);
-		       /* Marshaller marshaller =*/ jaxbContext.createMarshaller();
-		       /* ObjectFactory objFactory = */new ObjectFactory();
+			JAXBContext jaxbContext = JAXBContext.newInstance(GENERATED_PACKAGE);
+			/* Marshaller marshaller = */jaxbContext.createMarshaller();
+			/* ObjectFactory objFactory = */new ObjectFactory();
 		}
 		EventQueue.invokeLater(new Runnable()
 		{
@@ -104,11 +105,12 @@ public static final String GENERATED_PACKAGE = org.overture.guibuilder.generated
 			{
 				try
 				{
-					IVdmClassReader reader = new VdmjVdmClassReader(((ClassInterpreter)interpreter.getInterpreter()).getClasses());
+					IVdmClassReader reader = new VdmjVdmClassReader(((ClassInterpreter) interpreter.getInterpreter()).getClasses());
 					Vector<File> files = new Vector<File>();
 					for (File file : interpreter.getInterpreter().getSourceFiles())
 					{
-						if(file.getAbsolutePath().contains(File.separatorChar+"lib"+File.separatorChar))
+						if (file.getAbsolutePath().contains(File.separatorChar
+								+ "lib" + File.separatorChar))
 						{
 							continue;
 						}
@@ -119,7 +121,8 @@ public static final String GENERATED_PACKAGE = org.overture.guibuilder.generated
 					if (ToolSettings.GENERATE.booleanValue())
 					{
 						// if (ToolSettings.SAVE_XML.booleanValue())
-						ui.buildAndRender(reader, "Unknown", files.get(0).getParentFile().getAbsolutePath()+File.separatorChar);
+						ui.buildAndRender(reader, "Unknown", files.get(0).getParentFile().getAbsolutePath()
+								+ File.separatorChar);
 						// else
 						// ui.buildAndRender(reader, "Unknown");
 					}

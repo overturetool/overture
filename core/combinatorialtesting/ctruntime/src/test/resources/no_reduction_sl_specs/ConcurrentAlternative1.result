@@ -1,0 +1,23 @@
+<traces>
+	<class name="DEFAULT">
+		<trace name="T1" testcount="8" filename="ConcurrentAlternative1" line="20" column="1" subset="1.0" reduction="NONE" seed="999">
+			<test no="1">op1(); fun1()</test>
+			<result no="1" verdict="PASSED">() ; 1</result>
+			<test no="2">op2(); fun1()</test>
+			<result no="2" verdict="PASSED">() ; 1</result>
+			<test no="3">op1(); fun2()</test>
+			<result no="3" verdict="PASSED">() ; 2</result>
+			<test no="4">op2(); fun2()</test>
+			<result no="4" verdict="PASSED">() ; 2</result>
+			<test no="5">fun1(); op1()</test>
+			<result no="5" verdict="PASSED">1 ; ()</result>
+			<test no="6">fun2(); op1()</test>
+			<result no="6" verdict="PASSED">2 ; ()</result>
+			<test no="7">fun1(); op2()</test>
+			<result no="7" verdict="PASSED">1 ; ()</result>
+			<test no="8">fun2(); op2()</test>
+			<result no="8" verdict="PASSED">2 ; ()</result>
+			<status verdict="PASSED" testcount="8" skippedcount="0" faildcount="0" inconclusivecount="0"></status>
+		</trace>
+	</class>
+</traces>

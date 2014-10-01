@@ -40,7 +40,6 @@ import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.POType;
 
-
 public class FunctionPostCondition extends ProofObligation
 {
 
@@ -50,9 +49,10 @@ public class FunctionPostCondition extends ProofObligation
 	private static final long serialVersionUID = 1L;
 
 	public FunctionPostCondition(AExplicitFunctionDefinition func,
-			IPOContextStack ctxt, IPogAssistantFactory assistantFactory) throws AnalysisException
+			IPOContextStack ctxt, IPogAssistantFactory assistantFactory)
+			throws AnalysisException
 	{
-		super(func, POType.FUNC_POST_CONDITION, ctxt, func.getLocation(),assistantFactory);
+		super(func, POType.FUNC_POST_CONDITION, ctxt, func.getLocation(), assistantFactory);
 
 		List<PExp> params = new LinkedList<PExp>();
 		for (List<PPattern> pl : func.getParamPatternList())
@@ -86,19 +86,18 @@ public class FunctionPostCondition extends ProofObligation
 	}
 
 	public FunctionPostCondition(AImplicitFunctionDefinition func,
-			IPOContextStack ctxt, IPogAssistantFactory assistantFactory) throws AnalysisException
+			IPOContextStack ctxt, IPogAssistantFactory assistantFactory)
+			throws AnalysisException
 	{
-		super(func, POType.FUNC_POST_CONDITION, ctxt, func.getLocation(),assistantFactory);
+		super(func, POType.FUNC_POST_CONDITION, ctxt, func.getLocation(), assistantFactory);
 
 		List<PExp> params = new LinkedList<PExp>();
 
-		
 		for (List<PPattern> pl : assistantFactory.createAImplicitFunctionDefinitionAssistant().getParamPatternList(func))
 		{
 			params.addAll(assistantFactory.createPPatternListAssistant().getMatchingExpressionList(pl));
 		}
 
-		
 		PExp body = null;
 
 		// implicit body is apparently allowed
@@ -123,7 +122,7 @@ public class FunctionPostCondition extends ProofObligation
 			body = func.getBody().clone();
 		}
 
-//		valuetree.setContext(ctxt.getContextNodeList());
+		// valuetree.setContext(ctxt.getContextNodeList());
 		PExp pred = generatePredicate(func.getPredef(), func.getPostdef(), cloneListPExp(params), body);
 		stitch = pred;
 		valuetree.setPredicate(ctxt.getPredWithContext(pred));
@@ -133,7 +132,7 @@ public class FunctionPostCondition extends ProofObligation
 	private PExp generatePredicate(AExplicitFunctionDefinition predef,
 			AExplicitFunctionDefinition postdef, List<PExp> params, PExp body)
 	{
-		
+
 		if (predef != null)
 		{
 			// pre(params) =>
@@ -141,10 +140,9 @@ public class FunctionPostCondition extends ProofObligation
 			applyExp.setArgs(cloneListPExp(params));
 			AVariableExp varExp = getVarExp(predef.getName().clone());
 			applyExp.setRoot(varExp);
-			
+
 			return AstExpressionFactory.newAImpliesBooleanBinaryExp(applyExp, generateBody(postdef, params, body));
-			
-	
+
 		}
 		return generateBody(postdef, params, body);
 
@@ -153,7 +151,7 @@ public class FunctionPostCondition extends ProofObligation
 	private PExp generateBody(AExplicitFunctionDefinition postdef,
 			List<PExp> params, PExp body)
 	{
-		//post(params, body)
+		// post(params, body)
 		AApplyExp applyExp = new AApplyExp();
 		AVariableExp varExp = getVarExp(postdef.getName());
 		applyExp.setRoot(varExp);
@@ -162,8 +160,5 @@ public class FunctionPostCondition extends ProofObligation
 		applyExp.setArgs(args);
 		return applyExp;
 	}
-
-	
-	
 
 }

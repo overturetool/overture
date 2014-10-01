@@ -73,11 +73,12 @@ public class PPatternAssistantInterpreter extends PPatternAssistantTC
 	public List<NameValuePairList> getAllNamedValues(PPattern pattern,
 			Value expval, Context ctxt) throws AnalysisException
 	{
-		
+
 		return pattern.apply(af.getAllNamedValuesLocator(), new AllNamedValuesLocator.Newquestion(expval, ctxt));
 	}
 
 	/**
+	 * @param pattern
 	 * @return The "length" of the pattern (eg. sequence and set patterns).
 	 */
 
@@ -93,6 +94,7 @@ public class PPatternAssistantInterpreter extends PPatternAssistantTC
 	}
 
 	/**
+	 * @param pattern
 	 * @return True if the pattern has constraints, such that matching values should be permuted, where necessary, to
 	 *         find a match.
 	 */
@@ -105,6 +107,6 @@ public class PPatternAssistantInterpreter extends PPatternAssistantTC
 		{
 			return true;
 		}
-		
+
 	}
 }

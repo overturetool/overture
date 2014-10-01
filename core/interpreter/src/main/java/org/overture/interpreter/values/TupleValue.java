@@ -30,9 +30,6 @@ import org.overture.ast.types.AProductType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.Utils;
 import org.overture.interpreter.runtime.Context;
-import org.overture.interpreter.runtime.ValueException;
-
-
 
 public class TupleValue extends Value
 {
@@ -55,7 +52,7 @@ public class TupleValue extends Value
 	{
 		ValueList ntup = new ValueList();
 
-		for (Value k: values)
+		for (Value k : values)
 		{
 			Value v = k.getUpdatable(listeners);
 			ntup.add(v);
@@ -69,7 +66,7 @@ public class TupleValue extends Value
 	{
 		ValueList ntup = new ValueList();
 
-		for (Value k: values)
+		for (Value k : values)
 		{
 			Value v = k.getConstant();
 			ntup.add(v);
@@ -83,13 +80,13 @@ public class TupleValue extends Value
 	{
 		if (other instanceof Value)
 		{
-			Value val = ((Value)other).deref();
+			Value val = ((Value) other).deref();
 
-    		if (val instanceof TupleValue)
-    		{
-    			TupleValue ot = (TupleValue)val;
-    			return values.equals(ot.values);
-    		}
+			if (val instanceof TupleValue)
+			{
+				TupleValue ot = (TupleValue) val;
+				return values.equals(ot.values);
+			}
 		}
 
 		return false;
@@ -100,16 +97,15 @@ public class TupleValue extends Value
 	{
 		if (other instanceof TupleValue)
 		{
-			TupleValue ot = (TupleValue)other;
+			TupleValue ot = (TupleValue) other;
 			int diff = values.size() - ot.values.size();
 
 			if (diff != 0)
 			{
 				return diff;
-			}
-			else
+			} else
 			{
-				for (int i=0; i<values.size();i++)
+				for (int i = 0; i < values.size(); i++)
 				{
 					int c = values.get(i).compareTo(ot.values.get(i));
 
@@ -145,11 +141,12 @@ public class TupleValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt) throws AnalysisException
+	public Value convertValueTo(PType to, Context ctxt)
+			throws AnalysisException
 	{
 		if (to instanceof AProductType)
 		{
-			AProductType pto = (AProductType)to;
+			AProductType pto = (AProductType) to;
 
 			if (pto.getTypes().size() != values.size())
 			{
@@ -159,14 +156,13 @@ public class TupleValue extends Value
 			ValueList nl = new ValueList();
 			Iterator<Value> vi = values.iterator();
 
-			for (PType pt: pto.getTypes())
+			for (PType pt : pto.getTypes())
 			{
 				nl.add(vi.next().convertValueTo(pt, ctxt));
 			}
 
 			return new TupleValue(nl);
-		}
-		else
+		} else
 		{
 			return super.convertValueTo(to, ctxt);
 		}
@@ -175,6 +171,6 @@ public class TupleValue extends Value
 	@Override
 	public Object clone()
 	{
-		return new TupleValue((ValueList)values.clone());
+		return new TupleValue((ValueList) values.clone());
 	}
 }

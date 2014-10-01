@@ -10,7 +10,6 @@ import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
 import org.overture.interpreter.values.VoidValue;
 
-
 public class TestCase
 {
 	public static Value reflectionRunTest(Value obj, Value name)
@@ -26,20 +25,23 @@ public class TestCase
 				if (p.value instanceof OperationValue)
 				{
 					OperationValue opVal = (OperationValue) p.value;
-					Context mainContext = new StateContext(Interpreter.getInstance().getAssistantFactory(),p.name.getLocation(), "reflection scope");
+					Context mainContext = new StateContext(Interpreter.getInstance().getAssistantFactory(), p.name.getLocation(), "reflection scope");
 
 					mainContext.putAll(ClassInterpreter.getInstance().initialContext);
 					// mainContext.putAll(ClassInterpreter.getInstance().);
 					mainContext.setThreadState(ClassInterpreter.getInstance().initialContext.threadState.dbgp, ClassInterpreter.getInstance().initialContext.threadState.CPU);
-					try{
-					opVal.eval(p.name.getLocation(), new ValueList(), mainContext);
-					}catch(Exception e)
+					try
 					{
-						if(e instanceof ExitException)
+						opVal.eval(p.name.getLocation(), new ValueList(), mainContext);
+					} catch (Exception e)
+					{
+						if (e instanceof ExitException)
 						{
 							throw e;
 						}
-						return ClassInterpreter.getInstance().evaluate("Error`throw(\""+e.getMessage().replaceAll("\\\\", "\\\\\\\\").replaceAll("\"", "\\\\\"").replaceAll("\'", "\\\'")+"\")", mainContext);
+						return ClassInterpreter.getInstance().evaluate("Error`throw(\""
+								+ e.getMessage().replaceAll("\\\\", "\\\\\\\\").replaceAll("\"", "\\\\\"").replaceAll("\'", "\\\'")
+								+ "\")", mainContext);
 					}
 				}
 			}

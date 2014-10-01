@@ -153,7 +153,9 @@ public class OpPostConditionContext extends StatefulContext implements
 			{
 				defs = calledOp.getState().getStateDefs();
 			} else
+			{
 				return new LinkedList<AInstanceVariableDefinition>();
+			}
 		}
 		List<AInstanceVariableDefinition> r = new LinkedList<AInstanceVariableDefinition>();
 		for (PDefinition p : defs)

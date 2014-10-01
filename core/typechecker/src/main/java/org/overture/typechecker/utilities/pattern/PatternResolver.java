@@ -1,3 +1,24 @@
+/*
+ * #%~
+ * The VDM Type Checker
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.typechecker.utilities.pattern;
 
 import org.overture.ast.analysis.AnalysisException;
@@ -81,8 +102,8 @@ public class PatternResolver extends
 	public void caseAExpressionPattern(AExpressionPattern pattern,
 			NewQuestion question) throws AnalysisException
 	{
-		//af.createAExpressionPatternAssistant().typeResolve(pattern, question.rootVisitor, question.question);
-		//Have to ask how is it done.
+		// af.createAExpressionPatternAssistant().typeResolve(pattern, question.rootVisitor, question.question);
+		// Have to ask how is it done.
 		if (pattern.getResolved())
 		{
 			return;
@@ -96,8 +117,7 @@ public class PatternResolver extends
 			question.question.qualifiers = null;
 			question.question.scope = NameScope.NAMESANDSTATE;
 			pattern.getExp().apply(new TypeCheckVisitor(), question.question);
-		}
-		catch (TypeCheckException e)
+		} catch (TypeCheckException e)
 		{
 			af.createPPatternAssistant().unResolve(pattern);
 			throw e;
@@ -211,7 +231,7 @@ public class PatternResolver extends
 			pattern.getRight().apply(THIS, question);
 		} catch (TypeCheckException e)
 		{
-			//AUnionPatternAssistantTC.unResolve(pattern);
+			// AUnionPatternAssistantTC.unResolve(pattern);
 			af.createPPatternAssistant().unResolve(pattern);
 			throw e;
 		}
@@ -233,12 +253,12 @@ public class PatternResolver extends
 		{
 			for (AMapletPatternMaplet mp : pattern.getMaplets())
 			{
-				//af.createAMapletPatternMapletAssistant().typeResolve(mp, question.rootVisitor, question.question);
+				// af.createAMapletPatternMapletAssistant().typeResolve(mp, question.rootVisitor, question.question);
 				mp.apply(THIS, question);
 			}
 		} catch (TypeCheckException e)
 		{
-			//af.createAMapPatternAssistant().unResolve(pattern);
+			// af.createAMapPatternAssistant().unResolve(pattern);
 			pattern.apply(af.getPatternUnresolver());
 			throw e;
 		}
@@ -262,7 +282,7 @@ public class PatternResolver extends
 			pattern.getRight().apply(THIS, question);
 		} catch (TypeCheckException e)
 		{
-			//af.createAMapUnionPatternAssistant().unResolve(pattern);
+			// af.createAMapUnionPatternAssistant().unResolve(pattern);
 			pattern.apply(af.getPatternUnresolver());
 			throw e;
 		}

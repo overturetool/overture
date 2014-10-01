@@ -3,10 +3,10 @@ package org.overture.interpreter.messages.rtlog;
 import org.overture.interpreter.scheduler.CPUResource;
 import org.overture.interpreter.scheduler.ISchedulableThread;
 
-
 public class RTThreadCreateMessage extends RTThreadMessage
 {
-	public RTThreadCreateMessage(ISchedulableThread thread, CPUResource cpuNumber)
+	public RTThreadCreateMessage(ISchedulableThread thread,
+			CPUResource cpuNumber)
 	{
 		super(thread, cpuNumber);
 	}
