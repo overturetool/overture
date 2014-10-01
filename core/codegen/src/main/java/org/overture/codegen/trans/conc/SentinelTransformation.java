@@ -10,9 +10,14 @@ import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
+import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
+import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
+import org.overture.codegen.cgast.statements.ACallStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
+import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
@@ -65,7 +70,7 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 			AFieldDeclCG field = new AFieldDeclCG();
 			
 			field.setName(x.getName());
-			field.setAccess("public");
+			field.setAccess(JavaFormat.JAVA_PUBLIC);
 			field.setFinal(true);
 			field.setType(intBasicType);
 			
@@ -93,20 +98,67 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 		innerClass.getFields().add(info.getDeclAssistant().constructField("public", "function_sum", false, true, intBasicType, intValue));
 		
 		
-		//AMethodTypeCG mtype = new AMethodTypeCG();
-	//	mtype.setEquivalent(new AVoidReturnType());
-	//	mtype.setResult();
-		
 		AMethodDeclCG method_pp = new AMethodDeclCG();
+		//adding the first constructor to the innerclass
 		method_pp.setIsConstructor(true);
 		method_pp.setAccess("public");
 		method_pp.setName(innerClass.getName());
-		//Set up body
+		//Set up body for first constructor.
 		AReturnStmCG ret = new AReturnStmCG();
 		method_pp.setBody(ret);
-
-//		//method_pp.setMethodType(mtype);
 		innerClass.getMethods().add(method_pp);
+		
+		//adding the second constructor.
+		
+		AMethodDeclCG method_con = new AMethodDeclCG();
+		
+		//The parameter
+		AExternalTypeCG evalPpType = new AExternalTypeCG();
+		evalPpType.setName("EvaluatePP"); 
+		
+		method_con.setName(innerClass.getName());
+		method_con.setIsConstructor(true);
+		method_con.setAccess(JavaFormat.JAVA_PUBLIC);
+		
+		AFormalParamLocalParamCG formalParam = new AFormalParamLocalParamCG();
+		formalParam.setType(evalPpType);
+		
+		AIdentifierPatternCG identifier = new AIdentifierPatternCG();
+		identifier.setName("instance");
+		
+		formalParam.setPattern(identifier);
+		method_con.getFormalParams().add(formalParam);
+		
+		//Creating the body of the constructor.
+		
+		//The parameters named ‘instance’ and function_sum passed to the init call statement:
+
+		AIdentifierVarExpCG instanceParam = new AIdentifierVarExpCG();
+		instanceParam.setIsLambda(false);
+		instanceParam.setOriginal("instance");
+		instanceParam.setType(evalPpType.clone());
+		
+		AIdentifierVarExpCG function_sum = new AIdentifierVarExpCG();
+		function_sum.setIsLambda(false);
+		function_sum.setOriginal("function_sum");
+		function_sum.setType(new AIntNumericBasicTypeCG());
+		
+		//the init method
+		//AClassTypeCG classType = new AClassTypeCG();
+		//classType.setName(innerClass.getName());
+		
+		ACallStmCG initCall = new ACallStmCG();
+		initCall.setName("init");
+		initCall.setType(new AVoidTypeCG());
+		//initCall.setClassType(classType);
+		//Adding argumet #1
+		initCall.getArgs().add(instanceParam);
+		//Adding arg #2
+		initCall.getArgs().add(function_sum);
+		//Set the body
+		method_con.setBody(initCall);
+		innerClass.getMethods().add(method_con);
+		//method_pp.setFormalParams();
 		
 		if (node.getSuperName() != null){
 			innerClass.setSuperName(node.getSuperName()+"_Sentinel");

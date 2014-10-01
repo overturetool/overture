@@ -8,9 +8,11 @@ public class Sentinel
 	public volatile int[] active;
 	public volatile int[] waiting;
 	
-	public void init(int nrf )
+	EvaluatePP instance;
+	
+	public void init(int nrf, EvaluatePP inst )
 	{
-		//instance = inst;
+		instance = inst;
 		act = new int[nrf];
 		fin = new int[nrf];
 		req = new int[nrf];
@@ -21,14 +23,17 @@ public class Sentinel
 	public synchronized void entering(int fnr) throws InterruptedException {
 		requesting(fnr);
 		try{
-			waiting(fnr, +1);
-			this.wait();
+			if(! instance.evaluatePP(fnr).booleanValue())
+			{
+				waiting(fnr, +1);
+				while (! instance.evaluatePP(fnr).booleanValue())
+				{
+					this.wait();
+				}
 			waiting(fnr, -1);
-		}
-		finally{
-			activating(fnr);
-		}
-		
+			}
+		}catch(InterruptedException e){}
+		activating(fnr);
 	}
 	
 	public synchronized void leaving(int fn){
