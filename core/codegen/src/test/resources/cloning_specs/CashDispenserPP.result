@@ -12,7 +12,7 @@ public class Entry {
     }
 
     public String toString() {
-        return "Entry{" + "}";
+        return "Entry{}";
     }
 }
 
@@ -644,7 +644,7 @@ abstract public class Event {
     public abstract Object execute(final System system);
 
     public String toString() {
-        return "Event{" + "}";
+        return "Event{}";
     }
 }
 

@@ -12,7 +12,7 @@ public class Storage {
     }
 
     public String toString() {
-        return "Storage{" + "}";
+        return "Storage{}";
     }
 }
 
@@ -31,7 +31,7 @@ public class X {
     }
 
     public String toString() {
-        return "X{" + "}";
+        return "X{}";
     }
 }
 
@@ -52,7 +52,7 @@ public class Entry {
     }
 
     public String toString() {
-        return "Entry{" + "}";
+        return "Entry{}";
     }
 }
 

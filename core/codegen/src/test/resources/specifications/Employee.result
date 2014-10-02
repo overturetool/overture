@@ -10,7 +10,7 @@ abstract public class Employee {
     public abstract Number getSalary();
 
     public String toString() {
-        return "Employee{" + "}";
+        return "Employee{}";
     }
 }
 
@@ -164,7 +164,7 @@ public class World {
     }
 
     public String toString() {
-        return "World{" + "}";
+        return "World{}";
     }
 }
 

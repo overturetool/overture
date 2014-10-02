@@ -16,7 +16,7 @@ public class cg_Long {
     }
 
     public String toString() {
-        return "cg_Long{" + "}";
+        return "cg_Long{}";
     }
 }
 
