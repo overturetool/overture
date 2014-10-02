@@ -40,16 +40,13 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOperationType;
-import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.codegen.cgast.SDeclCG;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.declarations.AEmptyDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AFuncDeclCG;
@@ -94,21 +91,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 	public SDeclCG caseANamedInvariantType(ANamedInvariantType node,
 			IRInfo question) throws AnalysisException
 	{
-		PType type = node.getType();
-
-		if (type instanceof AUnionType)
-		{
-			AUnionType unionType = (AUnionType) type;
-
-			if (question.getTypeAssistant().isUnionOfType(unionType, AQuoteType.class))
-			{
-				// The VDM translation ignores named invariant types that are not
-				// union of quotes as they are represented as integers instead
-				return new AEmptyDeclCG();
-			}
-		}
-
-		return null; // Currently the code generator only supports the union of quotes case
+		return null;
 	}
 
 	@Override
@@ -167,11 +150,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 		
 		ATypeDeclCG typDecl = new ATypeDeclCG();
 		typDecl.setAccess(access);
-		
-		if (!(declCg instanceof AEmptyDeclCG))
-		{
-			typDecl.setDecl(declCg);
-		}
+		typDecl.setDecl(declCg);
 
 		return typDecl;
 	}

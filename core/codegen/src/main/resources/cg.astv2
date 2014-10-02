@@ -130,7 +130,6 @@ CG {-> package='org.overture.codegen.cgast'
     |	{type}
     	[access]:java_String
     	[decl]:CG.#decl
-    |	{empty}
 	;
 
 #Local  {-> package='org.overture.codegen.cgast.declarations'}

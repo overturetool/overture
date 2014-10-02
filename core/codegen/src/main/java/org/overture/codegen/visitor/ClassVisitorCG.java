@@ -32,7 +32,6 @@ import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.codegen.cgast.SDeclCG;
 import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
-import org.overture.codegen.cgast.declarations.AEmptyDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AFuncDeclCG;
@@ -145,10 +144,6 @@ public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
 			} else if (decl instanceof AFuncDeclCG)
 			{
 				functions.add((AFuncDeclCG) decl);
-			} else if (decl instanceof AEmptyDeclCG)
-			{
-				// Empty declarations are used to indicate constructs that can be ignored during the
-				// construction of the OO AST.
 			} else
 			{
 				Logger.getLog().printErrorln("Unexpected definition in class: "
