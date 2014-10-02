@@ -28,7 +28,7 @@ public class Entry {
         Number funcResult_ = a.longValue() + b.longValue();
 
         return Utils.postCheck(funcResult_,
-            post_f(Utils.clone(tuplePattern_1), funcResult_), "f");
+            post_f(tuplePattern_1, funcResult_), "f");
     }
 
     public static Boolean post_f(final Tuple tuplePattern_2, final Number RESULT) {
