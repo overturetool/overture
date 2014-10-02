@@ -55,6 +55,7 @@ import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AFuncDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
+import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.expressions.ALambdaExpCG;
 import org.overture.codegen.cgast.expressions.ANotImplementedExpCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
@@ -118,14 +119,6 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 		LinkedList<AFieldField> fields = node.getFields();
 
 		ARecordDeclCG record = new ARecordDeclCG();
-		// Set this public for now but it must be corrected as the access is specified
-		// in the type definition instead:
-		// types
-		//
-		// public R ::
-		// x : nat
-		// y : nat;
-		record.setAccess(IRConstants.PUBLIC);
 		record.setName(name.getName());
 
 		LinkedList<AFieldDeclCG> recordFields = record.getFields();
@@ -168,16 +161,19 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 			throws AnalysisException
 	{
 		String access = node.getAccess().getAccess().toString();
-
-		SDeclCG dec = node.getType().apply(question.getDeclVisitor(), question);
-
-		if (dec instanceof ARecordDeclCG)
+		PType type = node.getType();
+		
+		SDeclCG declCg = type.apply(question.getDeclVisitor(), question);
+		
+		ATypeDeclCG typDecl = new ATypeDeclCG();
+		typDecl.setAccess(access);
+		
+		if (!(declCg instanceof AEmptyDeclCG))
 		{
-			ARecordDeclCG record = (ARecordDeclCG) dec;
-			record.setAccess(access);
+			typDecl.setDecl(declCg);
 		}
 
-		return dec;
+		return typDecl;
 	}
 
 	@Override

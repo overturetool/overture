@@ -22,6 +22,7 @@
 package org.overture.codegen.visitor;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AClassClassDefinition;
@@ -36,7 +37,7 @@ import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AFuncDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
-import org.overture.codegen.cgast.declarations.ARecordDeclCG;
+import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
@@ -79,10 +80,10 @@ public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
 
 		LinkedList<PDefinition> defs = node.getDefinitions();
 
-		LinkedList<AFieldDeclCG> fields = classCg.getFields();
-		LinkedList<AMethodDeclCG> methods = classCg.getMethods();
-		LinkedList<ARecordDeclCG> innerClasses = classCg.getRecords();
-		LinkedList<AFuncDeclCG> functions = classCg.getFunctions();
+		List<AFieldDeclCG> fields = classCg.getFields();
+		List<AMethodDeclCG> methods = classCg.getMethods();
+		List<ATypeDeclCG> typeDecls = classCg.getTypeDecls();
+		List<AFuncDeclCG> functions = classCg.getFunctions();
 
 		for (PDefinition def : defs)
 		{
@@ -138,9 +139,9 @@ public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
 				}
 
 				methods.add(method);
-			} else if (decl instanceof ARecordDeclCG)
+			} else if (decl instanceof ATypeDeclCG)
 			{
-				innerClasses.add((ARecordDeclCG) decl);
+				typeDecls.add((ATypeDeclCG) decl);
 			} else if (decl instanceof AFuncDeclCG)
 			{
 				functions.add((AFuncDeclCG) decl);

@@ -116,7 +116,7 @@ CG {-> package='org.overture.codegen.cgast'
     	[methods]:CG.#decl.method*
     	[functions]:CG.#decl.func*
     	[superName]:java_String
-    	[records]:CG.#decl.record*
+    	[typeDecls]:CG.#decl.type*
     |	{interface}
     	[templateTypes]:CG.#type.template*
     	[package]:java_String
@@ -125,9 +125,11 @@ CG {-> package='org.overture.codegen.cgast'
     	[methodSignatures]:CG.#decl.method*
     |	{record}
     	[name]:java_String
-    	[access]:java_String
     	[fields]:field*
     	[methods]:CG.#decl.method*
+    |	{type}
+    	[access]:java_String
+    	[decl]:CG.#decl
     |	{empty}
 	;
 
