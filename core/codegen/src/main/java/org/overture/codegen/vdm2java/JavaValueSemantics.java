@@ -52,6 +52,7 @@ import org.overture.codegen.cgast.statements.AForAllStmCG;
 import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
+import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
@@ -302,8 +303,8 @@ public class JavaValueSemantics
 
 		STypeCG classType = explicitVar.getClassType();
 
-		return classType instanceof AClassTypeCG
-				&& ((AClassTypeCG) classType).getName().equals(JavaFormat.UTILS_FILE);
+		return classType instanceof AExternalTypeCG
+				&& ((AExternalTypeCG) classType).getName().equals(JavaFormat.UTILS_FILE);
 	}
 
 	private boolean usesStructuralEquivalence(STypeCG type)

@@ -47,6 +47,7 @@ import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
+import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
@@ -164,7 +165,7 @@ public class JavaFormatAssistant
 	{
 		ACallStmCG call = new ACallStmCG();
 
-		AClassTypeCG classType = new AClassTypeCG();
+		AExternalTypeCG classType = new AExternalTypeCG();
 		classType.setName(JavaFormat.UTILS_FILE);
 
 		AIdentifierVarExpCG root = new AIdentifierVarExpCG();
@@ -172,7 +173,7 @@ public class JavaFormatAssistant
 		root.setOriginal(field.getName());
 
 		AIdentifierVarExpCG argument = new AIdentifierVarExpCG();
-		// argument.setType(field.getType().clone());
+		argument.setType(field.getType().clone());
 		argument.setOriginal(field.getName());
 
 		call.setType(classType.clone());
@@ -255,7 +256,7 @@ public class JavaFormatAssistant
 		AMethodTypeCG methodType = new AMethodTypeCG();
 		methodType.setResult(returnType.clone());
 		member.setType(methodType);
-		AClassTypeCG classType = new AClassTypeCG();
+		AExternalTypeCG classType = new AExternalTypeCG();
 		classType.setName(JavaFormat.UTILS_FILE);
 		member.setClassType(classType);
 		member.setName(memberName);

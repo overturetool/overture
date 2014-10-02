@@ -175,7 +175,7 @@ CG {-> package='org.overture.codegen.cgast'
            					 [args]:CG.#exp*
            |	{callObjectExp} [type]:CG.#type [obj]:CG.#exp [className]:java_String [fieldName]:java_String 
            					 [args]:CG.#exp*
-           |	{call} [type]:CG.#type [classType]:CG.#type.class [name]:java_String [args]:CG.#exp*
+           |	{call} [type]:CG.#type [classType]:CG.#type [name]:java_String [args]:CG.#exp*
            |	{notImplemented}
            |	{forIndex} [var]:java_String [from]:CG.#exp [to]:CG.#exp [by]:CG.#exp [body]:CG.#stm
            |	{forAll} [pattern]:CG.#pattern [exp]:CG.#exp [body]:CG.#stm
