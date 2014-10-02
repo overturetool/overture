@@ -24,15 +24,17 @@ public class PostCheckTransformation extends DepthFirstAnalysisAdaptor
 	private IRInfo info;
 	private TransformationAssistantCG transformationAssistant;
 	private String funcResultNamePrefix;
+	private Object conditionalCallTag;
 
 	public PostCheckTransformation(IPostCheckCreator postCheckCreator,
 			IRInfo info, TransformationAssistantCG transformationAssistant,
-			String funcResultNamePrefix)
+			String funcResultNamePrefix, Object conditionalCallTag)
 	{
 		this.postCheckCreator = postCheckCreator;
 		this.info = info;
 		this.transformationAssistant = transformationAssistant;
 		this.funcResultNamePrefix = funcResultNamePrefix;
+		this.conditionalCallTag = conditionalCallTag;
 	}
 
 	@Override
@@ -111,6 +113,7 @@ public class PostCheckTransformation extends DepthFirstAnalysisAdaptor
 		}
 		
 		AApplyExpCG postCondCall = transformationAssistant.consConditionalCall(method, (AMethodDeclCG) method.getPostCond());
+		postCondCall.setTag(conditionalCallTag);
 
 		AVarLocalDeclCG resultDecl = transformationAssistant.consDecl(funcResultNamePrefix, method.getMethodType().getResult().clone(), node.getExp().clone());
 		AIdentifierVarExpCG resultVar = transformationAssistant.consIdentifierVar(funcResultNamePrefix, resultDecl.getType().clone());

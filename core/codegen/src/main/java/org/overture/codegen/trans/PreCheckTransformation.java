@@ -19,11 +19,13 @@ public class PreCheckTransformation extends DepthFirstAnalysisAdaptor {
 
 	private IRInfo info;
 	private TransformationAssistantCG transformationAssistant;
+	private Object conditionalCallTag;
 	
-	public PreCheckTransformation(IRInfo info, TransformationAssistantCG transformationAssistant)
+	public PreCheckTransformation(IRInfo info, TransformationAssistantCG transformationAssistant, Object conditionalCallTag)
 	{
 		this.info = info;
 		this.transformationAssistant = transformationAssistant;
+		this.conditionalCallTag = conditionalCallTag;
 	}
 	
 	@Override
@@ -55,6 +57,8 @@ public class PreCheckTransformation extends DepthFirstAnalysisAdaptor {
 		{
 			return;
 		}
+		
+		preCondCall.setTag(conditionalCallTag);
 		
 		SStmCG body = node.getBody();
 		

@@ -180,7 +180,12 @@ public class JavaValueSemantics
 				return false;
 			}
 		}
-
+		
+		if(isPrePostArgument(exp))
+		{
+			return false;
+		}
+		
 		STypeCG type = exp.getType();
 
 		if (usesStructuralEquivalence(type))
@@ -228,6 +233,34 @@ public class JavaValueSemantics
 				|| parent instanceof AInstanceofExpCG
 				|| cloneNotNeededCollectionOperator(parent)
 				|| cloneNotNeededUtilCall(parent);
+	}
+
+	private boolean isPrePostArgument(SExpCG exp)
+	{
+		INode parent = exp.parent();
+		
+		if(!(parent instanceof AApplyExpCG))
+		{
+			return false;
+		}
+		
+		AApplyExpCG applyExp = (AApplyExpCG) parent;
+		
+		Object tag = applyExp.getTag();
+		
+		if(!(tag instanceof JavaValueSemanticsTag))
+		{
+			return false;
+		}
+		
+		JavaValueSemanticsTag javaTag = (JavaValueSemanticsTag) tag;
+		
+		if(javaTag.mustClone())
+		{
+			return false;
+		}
+		
+		return applyExp.getArgs().contains(exp);
 	}
 
 	private boolean cloneNotNeededCollectionOperator(INode parent)
