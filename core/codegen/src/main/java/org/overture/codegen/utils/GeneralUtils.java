@@ -176,4 +176,9 @@ public class GeneralUtils
 
 		return result;
 	}
+	
+	public static String removeDuplicateWhiteSpaces(String str)
+	{
+		return str.replaceAll("\\s+", " ");
+	}
 }

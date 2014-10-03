@@ -27,8 +27,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.ir.IRSettings;
