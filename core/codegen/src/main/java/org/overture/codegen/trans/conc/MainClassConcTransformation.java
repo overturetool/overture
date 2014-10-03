@@ -11,6 +11,7 @@ import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallStmCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.ir.IRInfo;
@@ -45,22 +46,35 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 		
 		for(AMethodDeclCG x : node.getMethods())
 		{
-			if (x.getName() != "toString"){
-				ACallStmCG entering = new ACallStmCG();
-				ACallStmCG leaving = new ACallStmCG();
-			
-				entering.setName("entering");
-				AClassTypeCG sentinel = new AClassTypeCG();
-				sentinel.setName("Sentinel");
-				entering.setClassType(sentinel);
-			
-				leaving.setName("leaving");
-				leaving.setClassType(sentinel.clone());
+			if(x.getName() != node.getName()){
 			
 			
-				//	x.setBody(entering);
-				x.setBody(x.getBody());
-				//x.setBody(leaving);
+				if (x.getName() != "toString"){
+					ABlockStmCG bodyStm = new ABlockStmCG();
+					ACallStmCG entering = new ACallStmCG();
+					ACallStmCG leaving = new ACallStmCG();
+				
+					entering.setName("entering");
+					AClassTypeCG sentinel = new AClassTypeCG();
+					sentinel.setName("Sentinel");
+					entering.setClassType(sentinel);
+				
+					leaving.setName("leaving");
+					leaving.setClassType(sentinel.clone());
+					
+					bodyStm.getStatements().add(entering);
+					bodyStm.getStatements().add(x.getBody());
+					bodyStm.getStatements().add(leaving);
+	//			
+	//			
+	//				//	x.setBody(entering);
+					x.setBody(bodyStm);
+	//				//x.setBody(leaving);
+				}
+				else
+				{
+					continue;
+				}
 			}
 			else
 			{
