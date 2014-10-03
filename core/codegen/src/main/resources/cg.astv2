@@ -131,6 +131,10 @@ CG {-> package='org.overture.codegen.cgast'
     |	{type}
     	[access]:java_String
     	[decl]:CG.#decl
+    |	{catchClause}
+    	[type]:CG.#type
+    	[name]:java_String
+    	[stm]:CG.#stm
 	;
 
 #Local  {-> package='org.overture.codegen.cgast.declarations'}
@@ -193,6 +197,7 @@ CG {-> package='org.overture.codegen.cgast'
            |	{error}
            |	{continue}
            |	{break}
+           |	{try} [stm]:CG.#stm [catchClauses]:CG.#decl.catchClause* [finally]:CG.#stm
            ;
            
 #altStm {-> package='org.overture.codegen.cgast.statements'}

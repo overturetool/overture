@@ -31,6 +31,7 @@ import org.apache.velocity.runtime.RuntimeSingleton;
 import org.apache.velocity.runtime.parser.ParseException;
 import org.apache.velocity.runtime.parser.node.SimpleNode;
 import org.overture.codegen.cgast.INode;
+import org.overture.codegen.cgast.declarations.ACatchClauseDeclCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.ACounterLocalDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
@@ -167,6 +168,7 @@ import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.ASelfObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.ASkipStmCG;
 import org.overture.codegen.cgast.statements.AThrowStmCG;
+import org.overture.codegen.cgast.statements.ATryStmCG;
 import org.overture.codegen.cgast.statements.AWhileStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeWrappersTypeCG;
@@ -232,6 +234,9 @@ public class TemplateManager
 		nodeTemplateFileNames.put(ATypeDeclCG.class, templateStructure.DECL_PATH
 				+ "Type");
 
+		nodeTemplateFileNames.put(ACatchClauseDeclCG.class, templateStructure.DECL_PATH
+				+ "CatchClause");
+		
 		// Local declarations
 
 		nodeTemplateFileNames.put(AFormalParamLocalParamCG.class, templateStructure.LOCAL_DECLS_PATH
@@ -385,6 +390,9 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(ABreakStmCG.class, templateStructure.STM_PATH
 				+ "Break");
+
+		nodeTemplateFileNames.put(ATryStmCG.class, templateStructure.STM_PATH
+				+ "Try");
 		
 		// Expressions
 
