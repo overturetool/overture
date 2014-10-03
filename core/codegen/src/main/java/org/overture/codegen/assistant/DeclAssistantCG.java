@@ -286,6 +286,7 @@ public class DeclAssistantCG extends AssistantBase
 		AFieldDeclCG field = new AFieldDeclCG();
 		field.setAccess(access);
 		field.setName(name);
+		field.setVolatile(false);
 		field.setStatic(isStatic);
 		field.setFinal(isFinal);
 		field.setType(type);

@@ -101,6 +101,7 @@ CG {-> package='org.overture.codegen.cgast'
 	|	{field} 
     	[access]:java_String
     	[static]:java_Boolean
+    	[volatile]:java_Boolean
     	[final]:java_Boolean
     	[type]:CG.#type
     	[name]:java_String
