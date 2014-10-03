@@ -265,7 +265,7 @@ public abstract class ProbConverterTestBase extends
 				|| !typeCheckResult.parserResult.errors.isEmpty())
 		{
 			throw new AnalysisException("Unable to type check expression: "
-					+ file);
+					+ file + "\n"+typeCheckResult.parserResult.getErrorString());
 		}
 
 		return typeCheckResult.result;
