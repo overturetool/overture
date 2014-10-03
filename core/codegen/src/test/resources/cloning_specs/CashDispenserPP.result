@@ -12,7 +12,7 @@ public class Entry {
     }
 
     public String toString() {
-        return "Entry{" + "}";
+        return "Entry{}";
     }
 }
 
@@ -168,7 +168,7 @@ public class Account {
         for (Iterator iterator_3 = set_3.iterator(); iterator_3.hasNext();) {
             Number i = ((Number) iterator_3.next());
 
-            if (SeqUtil.equals(((Transaction) ts.get(Utils.index(i))).date, date)) {
+            if (Utils.equals(((Transaction) ts.get(Utils.index(i))).date, date)) {
                 seqCompResult_1 = SeqUtil.conc(seqCompResult_1,
                         SeqUtil.seq(
                             ((Transaction) ts.get(Utils.index(i))).amount));
@@ -213,7 +213,7 @@ public class Account {
 
             Transaction other = ((Transaction) obj);
 
-            return (SeqUtil.equals(date, other.date)) &&
+            return (Utils.equals(date, other.date)) &&
             (cardId.longValue() == other.cardId.longValue()) &&
             (amount.longValue() == other.amount.longValue());
         }
@@ -543,15 +543,15 @@ public class Till {
         Number cardId = curCard.GetCardId();
         Boolean codeOk = curCard.GetCode().longValue() == Encode(pin).longValue();
         Boolean cardLegal = IsLegalCard();
-        Boolean andResult_4 = false;
+        Boolean andResult_5 = false;
 
         if (codeOk) {
             if (cardLegal) {
-                andResult_4 = true;
+                andResult_5 = true;
             }
         }
 
-        cardOk = andResult_4;
+        cardOk = andResult_5;
 
         if (!(cardLegal)) {
             retainedCards = SetUtil.union(retainedCards, SetUtil.set(curCard));
@@ -604,15 +604,15 @@ public class Till {
     }
 
     public Boolean CardValidated() {
-        Boolean andResult_5 = false;
+        Boolean andResult_6 = false;
 
         if (curCard != null) {
             if (cardOk) {
-                andResult_5 = true;
+                andResult_6 = true;
             }
         }
 
-        return andResult_5;
+        return andResult_6;
     }
 
     public Boolean CardInside() {
@@ -644,7 +644,7 @@ abstract public class Event {
     public abstract Object execute(final System system);
 
     public String toString() {
-        return "Event{" + "}";
+        return "Event{}";
     }
 }
 

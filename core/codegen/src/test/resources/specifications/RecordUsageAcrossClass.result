@@ -57,7 +57,7 @@ public class B {
     }
 
     public String toString() {
-        return "B{" + "}";
+        return "B{}";
     }
 
     public static class RecB implements Record {

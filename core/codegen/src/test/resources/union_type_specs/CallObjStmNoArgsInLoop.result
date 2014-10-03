@@ -12,7 +12,7 @@ public class A {
     }
 
     public String toString() {
-        return "A{" + "}";
+        return "A{}";
     }
 }
 
@@ -31,7 +31,7 @@ public class B {
     }
 
     public String toString() {
-        return "B{" + "}";
+        return "B{}";
     }
 }
 
@@ -50,7 +50,7 @@ public class C {
     }
 
     public String toString() {
-        return "C{" + "}";
+        return "C{}";
     }
 }
 
@@ -85,7 +85,7 @@ public class Entry {
     }
 
     public String toString() {
-        return "Entry{" + "}";
+        return "Entry{}";
     }
 }
 

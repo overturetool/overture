@@ -29,7 +29,7 @@ public class A {
     }
 
     public String toString() {
-        return "A{" + "}";
+        return "A{}";
     }
 
     public static class Rec implements Record {
@@ -81,7 +81,7 @@ public class Entry {
     }
 
     public String toString() {
-        return "Entry{" + "}";
+        return "Entry{}";
     }
 }
 

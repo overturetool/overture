@@ -39,6 +39,7 @@ import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.AThreadDeclCG;
+import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
 import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AAddrEqualsBinaryExpCG;
@@ -108,6 +109,7 @@ import org.overture.codegen.cgast.expressions.APlusNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.APlusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.APowerNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.APowerSetUnaryExpCG;
+import org.overture.codegen.cgast.expressions.APreCondRuntimeErrorExpCG;
 import org.overture.codegen.cgast.expressions.AQuoteLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ARangeResByBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ARangeResToBinaryExpCG;
@@ -231,6 +233,9 @@ public class TemplateManager
 		
 		nodeTemplateFileNames.put(AThreadDeclCG.class, templateStructure.DECL_PATH 
 				+ "Thread");
+		
+		nodeTemplateFileNames.put(ATypeDeclCG.class, templateStructure.DECL_PATH
+				+ "Type");
 
 		// Local declarations
 
@@ -487,6 +492,9 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(AMissingMemberRuntimeErrorExpCG.class, templateStructure.RUNTIME_ERROR_EXP_PATH
 				+ "MissingMember");
+
+		nodeTemplateFileNames.put(APreCondRuntimeErrorExpCG.class, templateStructure.RUNTIME_ERROR_EXP_PATH
+				+ "PreCond");
 		
 		// Unary expressions
 

@@ -61,6 +61,10 @@ import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateStructure;
+import org.overture.codegen.trans.IPostCheckCreator;
+import org.overture.codegen.trans.PostCheckTransformation;
+import org.overture.codegen.trans.PreCheckTransformation;
+import org.overture.codegen.trans.PrePostTransformation;
 import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.trans.TransformationVisitor;
 import org.overture.codegen.trans.assistants.TransformationAssistantCG;
@@ -117,6 +121,9 @@ public class JavaCodeGen
 	public static final String INVALID_NAME_PREFIX = "cg_";
 	public static final String OBJ_INIT_CALL_NAME_PREFIX = "cg_init_";
 
+	public static final String FUNC_RESULT_NAME_PREFIX = "funcResult_";
+	public static final String POST_CHECK_METHOD_NAME = "postCheck";
+	
 	private static final String QUOTES = "quotes";
 
 	public JavaCodeGen()
@@ -178,7 +185,7 @@ public class JavaCodeGen
 
 			String formattedJavaCode = JavaCodeGenUtil.formatJavaCode(code);
 
-			return new GeneratedModule(quotesInterface.getName(), formattedJavaCode);
+			return new GeneratedModule(quotesInterface.getName(), quotesInterface, formattedJavaCode);
 
 		} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 		{
@@ -231,14 +238,18 @@ public class JavaCodeGen
 
 		TransformationAssistantCG transformationAssistant = new TransformationAssistantCG(irInfo, varPrefixes);
 		FunctionValueAssistant functionValueAssistant = new FunctionValueAssistant();
+		IPostCheckCreator postCheckCreator = new JavaPostCheckCreator(POST_CHECK_METHOD_NAME);
 
-		FuncTransformation funcTransformation = new FuncTransformation();
+		FuncTransformation funcTransformation = new FuncTransformation(transformationAssistant);
+		PrePostTransformation prePostTransformation = new PrePostTransformation(irInfo);
 		IfExpTransformation ifExpTransformation = new IfExpTransformation(transformationAssistant);
 		DeflattenTransformation deflattenTransformation = new DeflattenTransformation(transformationAssistant);
 		FunctionValueVisitor funcValVisitor = new FunctionValueVisitor(irInfo, transformationAssistant, functionValueAssistant, INTERFACE_NAME_PREFIX, TEMPLATE_TYPE_PREFIX, EVAL_METHOD_PREFIX, PARAM_NAME_PREFIX);
 		ILanguageIterator langIterator = new JavaLanguageIterator(transformationAssistant, irInfo.getTempVarNameGen(), varPrefixes);
 		TransformationVisitor transVisitor = new TransformationVisitor(irInfo, varPrefixes, transformationAssistant, langIterator, CASES_EXP_RESULT_NAME_PREFIX, AND_EXP_NAME_PREFIX, OR_EXP_NAME_PREFIX, WHILE_COND_NAME_PREFIX);
 		PatternTransformation patternTransformation = new PatternTransformation(classes, varPrefixes, irInfo, transformationAssistant, new PatternMatchConfig());
+		PreCheckTransformation preCheckTransformation = new PreCheckTransformation(irInfo, transformationAssistant, new JavaValueSemanticsTag(false));
+		PostCheckTransformation postCheckTransformation = new PostCheckTransformation(postCheckCreator, irInfo, transformationAssistant, FUNC_RESULT_NAME_PREFIX, new JavaValueSemanticsTag(false));
 		TypeTransformation typeTransformation = new TypeTransformation(transformationAssistant);
 		UnionTypeTransformation unionTypeTransformation = new UnionTypeTransformation(transformationAssistant, irInfo, classes, APPLY_EXP_NAME_PREFIX, OBJ_EXP_NAME_PREFIX, CALL_STM_OBJ_NAME_PREFIX, MISSING_OP_MEMBER, MISSING_MEMBER,irInfo.getTempVarNameGen());
 
@@ -251,11 +262,10 @@ public class JavaCodeGen
 
 		
 		DepthFirstAnalysisAdaptor[] analyses = new DepthFirstAnalysisAdaptor[] {
-				funcTransformation, ifExpTransformation,
+				funcTransformation, prePostTransformation, ifExpTransformation,
 				deflattenTransformation, funcValVisitor, transVisitor,
-				deflattenTransformation, patternTransformation,
-				typeTransformation, unionTypeTransformation, javaToStringTransformation,
-				Concurrencytransform,mainclassTransform};
+				deflattenTransformation, patternTransformation, preCheckTransformation, postCheckTransformation,
+				typeTransformation, unionTypeTransformation, javaToStringTransformation, Concurrencytransform, mainclassTransform};
 
 		for (DepthFirstAnalysisAdaptor transformation : analyses)
 		{
@@ -297,11 +307,11 @@ public class JavaCodeGen
 
 					if (mergeVisitor.hasMergeErrors())
 					{
-						generated.add(new GeneratedModule(className, mergeVisitor.getMergeErrors()));
+						generated.add(new GeneratedModule(className, classCg, mergeVisitor.getMergeErrors()));
 					} else
 					{
 						String formattedJavaCode = JavaCodeGenUtil.formatJavaCode(writer.toString());
-						generated.add(new GeneratedModule(className, formattedJavaCode));
+						generated.add(new GeneratedModule(className, classCg, formattedJavaCode));
 					}
 				}
 
@@ -324,7 +334,7 @@ public class JavaCodeGen
 			{
 				funcValueInterface.apply(mergeVisitor, writer);
 				String formattedJavaCode = JavaCodeGenUtil.formatJavaCode(writer.toString());
-				generated.add(new GeneratedModule(funcValueInterface.getName(), formattedJavaCode));
+				generated.add(new GeneratedModule(funcValueInterface.getName(), funcValueInterface, formattedJavaCode));
 
 			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 			{
@@ -348,13 +358,19 @@ public class JavaCodeGen
 			if (def instanceof SOperationDefinition)
 			{
 				SOperationDefinition op = (SOperationDefinition) def;
+				
 				op.setBody(new ANotYetSpecifiedStm());
+				op.setPrecondition(null);
+				op.setPostcondition(null);
 			}
 
 			if (def instanceof SFunctionDefinition)
 			{
 				SFunctionDefinition func = (SFunctionDefinition) def;
+				
 				func.setBody(new ANotYetSpecifiedExp());
+				func.setPrecondition(null);
+				func.setPostcondition(null);
 			}
 
 		}
@@ -366,7 +382,12 @@ public class JavaCodeGen
 
 		for (IRClassDeclStatus status : statuses)
 		{
-			classDecls.add(status.getClassCg());
+			AClassDeclCG classCg = status.getClassCg();
+			
+			if (classCg != null)
+			{
+				classDecls.add(classCg);
+			}
 		}
 
 		return classDecls;

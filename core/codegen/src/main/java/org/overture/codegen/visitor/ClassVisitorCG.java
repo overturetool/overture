@@ -22,6 +22,7 @@
 package org.overture.codegen.visitor;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AClassClassDefinition;
@@ -31,13 +32,13 @@ import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.codegen.cgast.SDeclCG;
 import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
-import org.overture.codegen.cgast.declarations.AEmptyDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AFuncDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.AThreadDeclCG;
+import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
@@ -47,7 +48,7 @@ import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.utils.AnalysisExceptionCG;
+import org.overture.codegen.logging.Logger;
 
 public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
 {
@@ -80,10 +81,10 @@ public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
 
 		LinkedList<PDefinition> defs = node.getDefinitions();
 
-		LinkedList<AFieldDeclCG> fields = classCg.getFields();
-		LinkedList<AMethodDeclCG> methods = classCg.getMethods();
-		LinkedList<ARecordDeclCG> innerClasses = classCg.getRecords();
-		LinkedList<AFuncDeclCG> functions = classCg.getFunctions();
+		List<AFieldDeclCG> fields = classCg.getFields();
+		List<AMethodDeclCG> methods = classCg.getMethods();
+		List<ATypeDeclCG> typeDecls = classCg.getTypeDecls();
+		List<AFuncDeclCG> functions = classCg.getFunctions();
 
 		for (PDefinition def : defs)
 		{
@@ -139,24 +140,20 @@ public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
 				}
 
 				methods.add(method);
-			} else if (decl instanceof ARecordDeclCG)
+			} else if (decl instanceof ATypeDeclCG)
 			{
-				innerClasses.add((ARecordDeclCG) decl);
+				typeDecls.add((ATypeDeclCG) decl);
 			} else if (decl instanceof AFuncDeclCG)
 			{
 				functions.add((AFuncDeclCG) decl);
-			} else if (decl instanceof AEmptyDeclCG)
-			{
-				;// Empty declarations are used to indicate constructs that can be ignored during the
-					// construction of the OO AST.
 			} else if (decl instanceof AThreadDeclCG)
 			{
 				classCg.setThread((AThreadDeclCG) decl);
 			}
 			else
 			{
-				throw new AnalysisExceptionCG("Unexpected definition in class: "
-						+ name + ": " + def.getName().getName(), def.getLocation());
+				Logger.getLog().printErrorln("Unexpected definition in class: "
+						+ name + ": " + def.getName().getName() + " at " + def.getLocation());
 			}
 		}
 

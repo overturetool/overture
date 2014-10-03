@@ -51,7 +51,7 @@ import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AForAllStmCG;
 import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
-import org.overture.codegen.cgast.types.AClassTypeCG;
+import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
@@ -180,7 +180,12 @@ public class JavaValueSemantics
 				return false;
 			}
 		}
-
+		
+		if(isPrePostArgument(exp))
+		{
+			return false;
+		}
+		
 		STypeCG type = exp.getType();
 
 		if (usesStructuralEquivalence(type))
@@ -230,6 +235,34 @@ public class JavaValueSemantics
 				|| cloneNotNeededUtilCall(parent);
 	}
 
+	private boolean isPrePostArgument(SExpCG exp)
+	{
+		INode parent = exp.parent();
+		
+		if(!(parent instanceof AApplyExpCG))
+		{
+			return false;
+		}
+		
+		AApplyExpCG applyExp = (AApplyExpCG) parent;
+		
+		Object tag = applyExp.getTag();
+		
+		if(!(tag instanceof JavaValueSemanticsTag))
+		{
+			return false;
+		}
+		
+		JavaValueSemanticsTag javaTag = (JavaValueSemanticsTag) tag;
+		
+		if(javaTag.mustClone())
+		{
+			return false;
+		}
+		
+		return applyExp.getArgs().contains(exp);
+	}
+
 	private boolean cloneNotNeededCollectionOperator(INode parent)
 	{
 		return cloneNotNeededSeqOperators(parent)
@@ -267,10 +300,10 @@ public class JavaValueSemantics
 
 		AExplicitVarExpCG explicitVar = (AExplicitVarExpCG) root;
 
-		AClassTypeCG classType = explicitVar.getClassType();
+		STypeCG classType = explicitVar.getClassType();
 
-		return classType != null
-				&& classType.getName().equals(JavaFormat.UTILS_FILE);
+		return classType instanceof AExternalTypeCG
+				&& ((AExternalTypeCG) classType).getName().equals(JavaFormat.UTILS_FILE);
 	}
 
 	private boolean usesStructuralEquivalence(STypeCG type)

@@ -48,7 +48,7 @@ public class A {
     }
 
     public String toString() {
-        return "A{" + "}";
+        return "A{}";
     }
 
     private static class Rec implements Record {

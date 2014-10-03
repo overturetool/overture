@@ -39,8 +39,8 @@ $abstract $node.getAccess() $static class $node.getName() $JavaFormat.formatSupe
 	$JavaFormat.format($method)
 	#end
 
-	#foreach( $innerClass in $node.getRecords() )
-	$JavaFormat.format($innerClass)
+	#foreach( $typeDecl in $node.getTypeDecls() )
+	$JavaFormat.format($typeDecl)
 	#end
 	##
 	${threadMethod}##

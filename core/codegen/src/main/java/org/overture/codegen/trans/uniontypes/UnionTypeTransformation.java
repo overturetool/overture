@@ -526,8 +526,8 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			arg.apply(this);
 		}
 
-		AClassTypeCG classType = node.getClassType();
-		String className = classType != null ? classType.getName()
+		STypeCG classType = node.getClassType();
+		String className = classType instanceof AClassTypeCG ? ((AClassTypeCG) classType).getName()
 				: node.getAncestor(AClassDeclCG.class).getName();
 		String fieldName = node.getName();
 		LinkedList<SExpCG> args = node.getArgs();
