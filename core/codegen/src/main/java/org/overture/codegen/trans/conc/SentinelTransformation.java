@@ -3,9 +3,6 @@ package org.overture.codegen.trans.conc;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.ast.types.AVoidReturnType;
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
@@ -17,14 +14,11 @@ import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ACallStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
-import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
-import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.vdm2java.JavaFormat;
-import org.overture.pog.contexts.AssignmentContext;
 
 
 public class SentinelTransformation extends DepthFirstAnalysisAdaptor
@@ -143,14 +137,11 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 		function_sum.setOriginal("function_sum");
 		function_sum.setType(new AIntNumericBasicTypeCG());
 		
-		//the init method
-		//AClassTypeCG classType = new AClassTypeCG();
-		//classType.setName(innerClass.getName());
-		
+		//the init method		
 		ACallStmCG initCall = new ACallStmCG();
 		initCall.setName("init");
 		initCall.setType(new AVoidTypeCG());
-		//initCall.setClassType(classType);
+		
 		//Adding argumet #1
 		initCall.getArgs().add(instanceParam);
 		//Adding arg #2

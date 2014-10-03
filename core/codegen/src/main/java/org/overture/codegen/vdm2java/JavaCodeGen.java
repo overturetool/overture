@@ -64,6 +64,7 @@ import org.overture.codegen.merging.TemplateStructure;
 import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.trans.TransformationVisitor;
 import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.conc.MainClassConcTransformation;
 import org.overture.codegen.trans.conc.SentinelTransformation;
 import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
 import org.overture.codegen.trans.funcvalues.FunctionValueVisitor;
@@ -244,6 +245,7 @@ public class JavaCodeGen
 		//Conc
 		
 		SentinelTransformation Concurrencytransform = new SentinelTransformation(irInfo,classes);
+		MainClassConcTransformation mainclassTransform = new MainClassConcTransformation(irInfo, classes);
 
 		JavaClassToStringTrans javaToStringTransformation = new JavaClassToStringTrans(irInfo);
 
@@ -252,7 +254,8 @@ public class JavaCodeGen
 				funcTransformation, ifExpTransformation,
 				deflattenTransformation, funcValVisitor, transVisitor,
 				deflattenTransformation, patternTransformation,
-				typeTransformation, unionTypeTransformation, javaToStringTransformation,Concurrencytransform};
+				typeTransformation, unionTypeTransformation, javaToStringTransformation,
+				Concurrencytransform,mainclassTransform};
 
 		for (DepthFirstAnalysisAdaptor transformation : analyses)
 		{
