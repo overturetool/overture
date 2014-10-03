@@ -177,8 +177,8 @@ public class GeneralUtils
 		return result;
 	}
 	
-	public static String removeDuplicateWhiteSpaces(String str)
+	public static String cleanupWhiteSpaces(String str)
 	{
-		return str.replaceAll("\\s+", " ");
+		return str.replaceAll("\\s+", " ").trim();
 	}
 }
