@@ -8,19 +8,19 @@ public class Entry {
     }
 
     public static Object Run() {
-        return Sentinel.entering();
+        Sentinel.entering();
 
         return f();
 
-        return Sentinel.leaving();
+        Sentinel.leaving();
     }
 
     public static Number f() {
-        return Sentinel.entering();
+        Sentinel.entering();
 
         return Thread.currentThread().getId();
 
-        return Sentinel.leaving();
+        Sentinel.leaving();
     }
 
     public String toString() {

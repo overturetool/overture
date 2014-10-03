@@ -10,11 +10,11 @@ public class ThreadClass extends Thread {
     }
 
     public void setX() {
-        return Sentinel.entering();
+        Sentinel.entering();
 
         x = 2L;
 
-        return Sentinel.leaving();
+        Sentinel.leaving();
     }
 
     public String toString() {
@@ -52,7 +52,7 @@ public class Entry {
     }
 
     public static Object Run() {
-        return Sentinel.entering();
+        Sentinel.entering();
 
         ThreadClass t = new ThreadClass();
         t.start();
@@ -71,7 +71,7 @@ public class Entry {
 
         return t.x;
 
-        return Sentinel.leaving();
+        Sentinel.leaving();
     }
 
     public String toString() {
