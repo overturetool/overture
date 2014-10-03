@@ -57,6 +57,8 @@ class ExamplePacker
 
 
 	// Readme entries
+	private static final String VDM_README_FILENAME = "README.txt";
+
 	private final String EXPECTED_RESULT = "EXPECTED_RESULT";
 	private final String LANGUAGE_VERSION = "LANGUAGE_VERSION";
 	private final String LIB = "LIB";
@@ -69,14 +71,16 @@ class ExamplePacker
 
 	private List<String> libs = new Vector<String>();
 
-	public ExamplePacker(String name, Dialect dialect, File readme,
-			List<File> sources)
+	public ExamplePacker(File root, Dialect dialect)
 	{
-		this.name = name + getName(dialect);
 		this.dialect = dialect;
-		this.sources = sources;
+		name = root.getName() + getName(dialect);
+
+		File readme = new File(root, VDM_README_FILENAME);
+
 		initialize(readme);
 	}
+
 
 	public Release getLanguageVersion()
 	{
@@ -141,7 +145,7 @@ class ExamplePacker
 		return checkable;
 	}
 
-	private String getName(Dialect dialect)
+	public static String getName(Dialect dialect)
 	{
 		switch (dialect)
 		{

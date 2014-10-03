@@ -74,73 +74,6 @@
     </resources>
 
     <plugins>
-      <plugin>
-        <!-- The purpose of this is to generate a couple of index
-             files for the vdm examples and libs that get packed into
-             this jarfile. -jwc/05Aug2014
-             -->
-        <artifactId>maven-antrun-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>process-resources</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-                <target>
-                    <fileset id="vdm-lib-sl-set" dir="${project.build.directory}/classes/examples/libs/SL" />
-                    <pathconvert pathsep="${line.separator}" property="vdm-libs-sl" refid="vdm-lib-sl-set">
-                        <map from="${project.build.directory}/classes" to="" />
-                    </pathconvert>
-                    <echo file="${project.build.directory}/classes/examples/vdm-libs-sl.index">${vdm-libs-sl}</echo>
-
-                    <fileset id="vdm-lib-pp-set" dir="${project.build.directory}/classes/examples/libs/PP" />
-                    <pathconvert pathsep="${line.separator}" property="vdm-libs-pp" refid="vdm-lib-pp-set">
-                        <map from="${project.build.directory}/classes" to="" />
-                    </pathconvert>
-                    <echo file="${project.build.directory}/classes/examples/vdm-libs-pp.index">${vdm-libs-pp}</echo>
-
-                    <fileset id="vdm-lib-rt-set" dir="${project.build.directory}/classes/examples/libs/RT" />
-                    <pathconvert pathsep="${line.separator}" property="vdm-libs-rt" refid="vdm-lib-rt-set">
-                        <map from="${project.build.directory}/classes" to="" />
-                    </pathconvert>
-                    <echo file="${project.build.directory}/classes/examples/vdm-libs-rt.index">${vdm-libs-rt}</echo>
-
-                  <fileset id="vdm-example-sl-set" dir="${project.build.directory}/classes/examples/VDMSL">
-                    <include name="**/*.vdmsl" />
-                    <include name="**/README.txt" />
-                    <exclude name="libs/**" />
-                  </fileset>
-                  <pathconvert pathsep="${line.separator}" property="vdm-examples-sl" refid="vdm-example-sl-set">
-                    <map from="${project.build.directory}/classes" to="" />
-                  </pathconvert>
-                  <echo file="${project.build.directory}/classes/examples/vdm-examples-sl.index">${vdm-examples-sl}</echo>
-
-                  <fileset id="vdm-example-pp-set" dir="${project.build.directory}/classes/examples/VDM++">
-                    <include name="**/*.vdmpp" />
-                    <include name="**/README.txt" />
-                    <exclude name="libs/**" />
-                  </fileset>
-                  <pathconvert pathsep="${line.separator}" property="vdm-examples-pp" refid="vdm-example-pp-set">
-                    <map from="${project.build.directory}/classes" to="" />
-                  </pathconvert>
-                  <echo file="${project.build.directory}/classes/examples/vdm-examples-pp.index">${vdm-examples-pp}</echo>
-
-                  <fileset id="vdm-example-rt-set" dir="${project.build.directory}/classes/examples/VDMRT">
-                    <include name="**/*.vdmrt" />
-                    <include name="**/README.txt" />
-                    <exclude name="libs/**" />
-                  </fileset>
-                  <pathconvert pathsep="${line.separator}" property="vdm-examples-rt" refid="vdm-example-rt-set">
-                    <map from="${project.build.directory}/classes" to="" />
-                  </pathconvert>
-                  <echo file="${project.build.directory}/classes/examples/vdm-examples-rt.index">${vdm-examples-rt}</echo>
-
-                </target>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -165,23 +98,6 @@
         </configuration>
       </plugin>
 
-      <!-- <plugin> -->
-      <!--   <groupId>org.apache.maven.plugins</groupId> -->
-      <!--   <artifactId>maven-jar-plugin</artifactId> -->
-      <!--   <configuration> -->
-      <!--     <includes> -->
-      <!--       <include>**/*.class</include> -->
-      <!--       <include>examples/**</include> -->
-      <!--     </includes> -->
-      <!--   </configuration> -->
-      <!--   <executions> -->
-      <!--     <execution> -->
-      <!--       <goals> -->
-      <!--         <goal>test-jar</goal> -->
-      <!--       </goals> -->
-      <!--     </execution> -->
-      <!--   </executions> -->
-      <!-- </plugin> -->
     </plugins>
     <pluginManagement>
     	<plugins>
