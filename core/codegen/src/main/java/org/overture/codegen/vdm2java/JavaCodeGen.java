@@ -157,6 +157,11 @@ public class JavaCodeGen
 		Velocity.setProperty("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.NullLogSystem");
 		Velocity.init();
 	}
+	
+	public JavaFormat getJavaFormat()
+	{
+		return javaFormat;
+	}
 
 	public IRInfo getInfo()
 	{
