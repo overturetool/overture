@@ -15,7 +15,7 @@ public class Entry {
     }
 
     public String toString() {
-        return "Entry{" + "}";
+        return "Entry{}";
     }
 
     public static class A implements Record {
@@ -32,7 +32,7 @@ public class Entry {
 
             A other = ((A) obj);
 
-            return MapUtil.equals(x, other.x);
+            return Utils.equals(x, other.x);
         }
 
         public int hashCode() {

@@ -124,4 +124,14 @@ public class Utils
 	{
 		return left != null ? left.equals(right) : right == null; 
 	}
+	
+	public static <T> T postCheck(T returnValue, boolean postResult, String name)
+	{
+		if(postResult)
+		{
+			return returnValue;
+		}
+		
+		throw new RuntimeException("Postcondition failure: post_" + name);
+	}
 }

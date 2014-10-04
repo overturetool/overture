@@ -44,6 +44,7 @@ import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
+import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
@@ -193,8 +194,17 @@ public class DeclAssistantCG extends AssistantBase
 	public ARecordDeclCG findRecord(AClassDeclCG definingClass,
 			String recordName)
 	{
-		for (ARecordDeclCG recordDecl : definingClass.getRecords())
+		for (ATypeDeclCG typeDecl : definingClass.getTypeDecls())
 		{
+			SDeclCG decl = typeDecl.getDecl();
+			
+			if(!(decl instanceof ARecordDeclCG))
+			{
+				continue;
+			}
+			
+			ARecordDeclCG recordDecl = (ARecordDeclCG) decl;
+			
 			if (recordDecl.getName().equals(recordName))
 			{
 				return recordDecl;
@@ -202,6 +212,28 @@ public class DeclAssistantCG extends AssistantBase
 		}
 
 		return null;
+	}
+	
+	// This method assumes that the record is defined in definingClass and not a super class
+	public List<ARecordDeclCG> getRecords(AClassDeclCG definingClass)
+	{
+		List<ARecordDeclCG> records = new LinkedList<ARecordDeclCG>();
+		
+		for (ATypeDeclCG typeDecl : definingClass.getTypeDecls())
+		{
+			SDeclCG decl = typeDecl.getDecl();
+			
+			if(!(decl instanceof ARecordDeclCG))
+			{
+				continue;
+			}
+			
+			ARecordDeclCG recordDecl = (ARecordDeclCG) decl;
+			
+			records.add(recordDecl);
+		}
+		
+		return records;
 	}
 
 	public ARecordDeclCG findRecord(List<AClassDeclCG> classes,
@@ -254,6 +286,7 @@ public class DeclAssistantCG extends AssistantBase
 		AFieldDeclCG field = new AFieldDeclCG();
 		field.setAccess(access);
 		field.setName(name);
+		field.setVolatile(false);
 		field.setStatic(isStatic);
 		field.setFinal(isFinal);
 		field.setType(type);
@@ -400,7 +433,7 @@ public class DeclAssistantCG extends AssistantBase
 					+ definingClassName);
 		}
 
-		LinkedList<ARecordDeclCG> records = definingClass.getRecords();
+		List<ARecordDeclCG> records = getRecords(definingClass);
 
 		ARecordDeclCG recordDecl = null;
 		for (ARecordDeclCG currentRec : records)
@@ -418,7 +451,7 @@ public class DeclAssistantCG extends AssistantBase
 					+ recName + "' in class '" + definingClassName + "'");
 		}
 
-		LinkedList<AFieldDeclCG> fields = recordDecl.getFields();
+		List<AFieldDeclCG> fields = recordDecl.getFields();
 
 		AFieldDeclCG field = null;
 		for (AFieldDeclCG currentField : fields)

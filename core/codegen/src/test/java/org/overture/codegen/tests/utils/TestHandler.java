@@ -47,10 +47,17 @@ public abstract class TestHandler
 			+ "       File file = new File(\"myData.bin\");"
 			+ "	      FileOutputStream fout = new FileOutputStream( file );"
 			+ "	      ObjectOutputStream oos = new ObjectOutputStream(fout);"
-			+ "       Object exp = exp();"
+			+ "       Object exp = null;"
+			+ "       try{"
+			+ "         exp = exp();"
+			+ "       } catch(Exception e){"
+			+ "         exp = e.getMessage();"
+			+ "       }"
 			+ "		  java.lang.System.out.println(exp);"
-			+ "	      oos.writeObject( exp );" + "	      oos.close();"
-			+ "     }catch(Exception ex){ " + "	      ex.printStackTrace(); "
+			+ "	      oos.writeObject( exp );" 
+			+ "	      oos.close();"
+			+ "     }catch(Exception ex){ " 
+			+ "	      ex.printStackTrace(); "
 			+ "     }" + "  }";
 
 	public static final String EXP_WRAPPER_CODE = "import java.io.File;"
@@ -62,7 +69,10 @@ public abstract class TestHandler
 			+ "  public static Object exp(){ return %s ; } "
 
 			+ "  public static void main(String[] args){ "
-			+ "      serialize(); " + "  } " + SERIALIZE_METHOD + "}";
+			+ "      serialize(); " 
+			+ "  } " 
+			+ SERIALIZE_METHOD 
+			+ "}";
 
 	public TestHandler()
 	{

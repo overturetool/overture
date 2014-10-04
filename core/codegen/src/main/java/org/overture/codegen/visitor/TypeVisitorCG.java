@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.types.ABooleanBasicType;
+import org.overture.ast.types.ABracketType;
 import org.overture.ast.types.ACharBasicType;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFunctionType;
@@ -113,6 +114,15 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 
 			return unionTypeCg;
 		}
+	}
+	
+	@Override
+	public STypeCG caseABracketType(ABracketType node, IRInfo question)
+			throws AnalysisException
+	{
+		PType type = node.getType();
+		
+		return type.apply(question.getTypeVisitor(), question);
 	}
 
 	@Override

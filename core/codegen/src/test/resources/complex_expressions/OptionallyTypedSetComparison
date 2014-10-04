@@ -1,0 +1,12 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let left : [set of nat] = nil,
+		right : [set of nat] = nil
+in
+	return [left = right, left = {1,2}, {1,2} = right];
+
+end Entry

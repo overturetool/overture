@@ -17,7 +17,7 @@ public class Entry {
                     SetUtil.set(x));
         }
 
-        if (SetUtil.equals(setCompResult_1, SetUtil.set(2L))) {
+        if (Utils.equals(setCompResult_1, SetUtil.set(2L))) {
             return 1L;
         } else {
             VDMSet setCompResult_2 = SetUtil.set();
@@ -29,7 +29,7 @@ public class Entry {
                         SetUtil.set(x));
             }
 
-            if (SetUtil.equals(setCompResult_2, SetUtil.set(2L))) {
+            if (Utils.equals(setCompResult_2, SetUtil.set(2L))) {
                 return 2L;
             } else {
                 return 3L;
@@ -38,7 +38,7 @@ public class Entry {
     }
 
     public String toString() {
-        return "Entry{" + "}";
+        return "Entry{}";
     }
 }
 

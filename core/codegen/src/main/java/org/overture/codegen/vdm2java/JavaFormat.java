@@ -478,15 +478,9 @@ public class JavaFormat
 				|| leftNodeType instanceof AObjectTypeCG)
 		{
 			return handleEquals(node);
-		} else if (leftNodeType instanceof SSeqTypeCG)
+		} else if (leftNodeType instanceof SSeqTypeCG || leftNodeType instanceof SSetTypeCG || leftNodeType instanceof SMapTypeCG)
 		{
-			return handleSeqComparison(node);
-		} else if (leftNodeType instanceof SSetTypeCG)
-		{
-			return handleSetComparison(node);
-		} else if (leftNodeType instanceof SMapTypeCG)
-		{
-			return handleMapComparison(node);
+			return handleCollectionComparison(node);
 		}
 
 		return format(node.getLeft()) + " == " + format(node.getRight());
@@ -547,26 +541,7 @@ public class JavaFormat
 		return String.format("%s.equals(%s, %s)", UTILS_FILE, format(valueType.getLeft()), format(valueType.getRight()));
 	}
 
-	private String handleSetComparison(AEqualsBinaryExpCG node)
-			throws AnalysisException
-	{
-		return handleCollectionComparison(node, SET_UTIL_FILE);
-	}
-
-	private String handleSeqComparison(SBinaryExpCG node)
-			throws AnalysisException
-	{
-		return handleCollectionComparison(node, SEQ_UTIL_FILE);
-	}
-
-	private String handleMapComparison(SBinaryExpCG node)
-			throws AnalysisException
-	{
-		return handleCollectionComparison(node, MAP_UTIL_FILE);
-	}
-
-	private String handleCollectionComparison(SBinaryExpCG node,
-			String className) throws AnalysisException
+	private String handleCollectionComparison(SBinaryExpCG node) throws AnalysisException
 	{
 		// In VDM the types of the equals are compatible when the AST passes the type check
 		SExpCG leftNode = node.getLeft();
@@ -582,9 +557,8 @@ public class JavaFormat
 			return format(node.getLeft()) + EMPTY;
 		}
 
-		return className + ".equals(" + format(node.getLeft()) + ", "
+		return UTILS_FILE + ".equals(" + format(node.getLeft()) + ", "
 				+ format(node.getRight()) + ")";
-
 	}
 
 	private boolean isEmptyCollection(STypeCG type)

@@ -12,7 +12,7 @@ public class A {
     }
 
     public String toString() {
-        return "A{" + "}";
+        return "A{}";
     }
 }
 
@@ -27,7 +27,7 @@ public class B extends A {
     }
 
     public String toString() {
-        return "B{" + "}";
+        return "B{}";
     }
 }
 
@@ -56,7 +56,7 @@ public class Entry {
     }
 
     public String toString() {
-        return "Entry{" + "}";
+        return "Entry{}";
     }
 }
 
