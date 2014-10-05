@@ -29,6 +29,7 @@ import org.overture.ast.patterns.AExpressionPattern;
 import org.overture.ast.patterns.AMapPattern;
 import org.overture.ast.patterns.AMapUnionPattern;
 import org.overture.ast.patterns.AMapletPatternMaplet;
+import org.overture.ast.patterns.AObjectPattern;
 import org.overture.ast.patterns.ARecordPattern;
 import org.overture.ast.patterns.ASeqPattern;
 import org.overture.ast.patterns.ASetPattern;
@@ -284,6 +285,30 @@ public class PatternResolver extends
 		{
 			// af.createAMapUnionPatternAssistant().unResolve(pattern);
 			pattern.apply(af.getPatternUnresolver());
+			throw e;
+		}
+	}
+
+	@Override
+	public void caseAObjectPattern(AObjectPattern pattern, NewQuestion question) throws AnalysisException
+	{
+		if (pattern.getResolved())
+		{
+			return;
+		}
+		else
+		{
+			pattern.setResolved(true);
+		}
+
+		try
+		{
+			af.createPPatternListAssistant().typeResolvePairs(pattern.getFields(), question.rootVisitor, question.question);
+			pattern.setType(af.createPTypeAssistant().typeResolve(pattern.getType(), null, question.rootVisitor, question.question));
+		}
+		catch (TypeCheckException e)
+		{
+			af.createPPatternAssistant().unResolve(pattern);
 			throw e;
 		}
 	}
