@@ -5,6 +5,7 @@ import java.util.*;
 
 public class ThreadClass extends Thread {
     public Number x = 0L;
+    public Sentinel sentinel;
 
     public ThreadClass() {
     }
@@ -48,6 +49,8 @@ import java.util.*;
 
 
 public class Entry {
+    public Sentinel sentinel;
+
     public Entry() {
     }
 
