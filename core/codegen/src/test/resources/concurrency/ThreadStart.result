@@ -11,7 +11,11 @@ public class ThreadClass extends Thread {
     }
 
     public void setX() {
+        Sentinel.entering();
+
         x = 2L;
+
+        Sentinel.leaving();
     }
 
     public String toString() {
@@ -51,6 +55,8 @@ public class Entry {
     }
 
     public static Object Run() {
+        Sentinel.entering();
+
         ThreadClass t = new ThreadClass();
         t.start();
 
@@ -67,6 +73,8 @@ public class Entry {
         }
 
         return t.x;
+
+        Sentinel.leaving();
     }
 
     public String toString() {
