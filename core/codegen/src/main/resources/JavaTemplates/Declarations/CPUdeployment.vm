@@ -9,15 +9,46 @@ public class $node.getCpuName() {
 
 	public static void main(String[] args) throws RemoteException, AlreadyBoundException, NotBoundException {
 	
-	$JavaFormat.format($node.getRMIreg())
-		
-	#foreach( $remoteInstance in $node.getRemoteInst() )
-	$JavaFormat.format($remoteInstance)
-	#end
-		
-	#foreach( $clientInstance in $node.getClientInst() )
-	$JavaFormat.format($clientInstance)
-	#end
+		boolean lock1= true;
+		boolean lock2= true;
+
+		while(lock1){
+			try{
+				System.out.println("Trying to connect to RMI registry...");
+				Thread.sleep(2000);
+
+				$JavaFormat.format($node.getRMIreg())
+
+				#foreach( $remoteInstance in $node.getRemoteInst() )
+				$JavaFormat.format($remoteInstance)
+				#end
+
+				System.out.println("Success to connect and bind..");
+				lock1 = false;
+
+				// try to look up
+				while(lock2){
+					try{
+						System.out.println("Trying to look up...");
+						Thread.sleep(2000);
+							#foreach( $clientInstance in $node.getClientInst() )
+							$JavaFormat.format($clientInstance)
+							#end
+
+						System.out.println("Synchronization successful...");
+						System.out.println("Program starting...");
+						lock2=false;
+					}
+					catch(Exception ex){
+						System.out.println("Error catch, tried to look up... " + ex);
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				System.out.println("Error catch, tried to bind... " + ex);
+			}
+		}
 
 	}
 }
