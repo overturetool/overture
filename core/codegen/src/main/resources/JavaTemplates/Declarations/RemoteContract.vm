@@ -1,5 +1,6 @@
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import org.overture.codegen.runtime.*;
  
 public interface $node.getName() extends Remote{
  
