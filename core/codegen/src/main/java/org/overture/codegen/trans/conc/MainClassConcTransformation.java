@@ -12,6 +12,7 @@ import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallStmCG;
+import org.overture.codegen.cgast.statements.ATryStmCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
@@ -49,10 +50,12 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 		sentinelfld.setAccess(JavaFormat.JAVA_PUBLIC);
 		
 		node.getFields().add(sentinelfld);
-//		for(AFieldDeclCG x : node.getFields())
-//		{
-//			//x.s
-//		}
+		for(AFieldDeclCG x : node.getFields())
+		{
+			if (!x.getName().equals("sentinel")){
+				x.setVolatile(true);
+			}
+		}
 		
 		for(AMethodDeclCG x : node.getMethods())
 		{
@@ -78,9 +81,13 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 					
 					bodyStm.getStatements().add(entering);
 					//this needs merging with try catch finally stm.
-					bodyStm.getStatements().add(x.getBody());
+					ATryStmCG trystm = new ATryStmCG();
+					trystm.setStm(x.getBody());
+					trystm.setFinally(leaving);
+					bodyStm.getStatements().add(trystm);
+					//bodyStm.getStatements().add(x.getBody());
 					
-					bodyStm.getStatements().add(leaving);
+					//bodyStm.getStatements().add(leaving);
 					
 					x.setBody(bodyStm);
 				}

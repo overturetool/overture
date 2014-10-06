@@ -12,17 +12,21 @@ public class Entry {
     public static Object Run() {
         Sentinel.entering();
 
-        return f();
-
-        Sentinel.leaving();
+        try {
+            return f();
+        } finally {
+            Sentinel.leaving();
+        }
     }
 
     public static Number f() {
         Sentinel.entering();
 
-        return Thread.currentThread().getId();
-
-        Sentinel.leaving();
+        try {
+            return Thread.currentThread().getId();
+        } finally {
+            Sentinel.leaving();
+        }
     }
 
     public String toString() {
