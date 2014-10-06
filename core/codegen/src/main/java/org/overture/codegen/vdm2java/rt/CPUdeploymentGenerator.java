@@ -47,7 +47,7 @@ public class CPUdeploymentGenerator {
 					AClientInstanceDeclCG clientObj = new AClientInstanceDeclCG();
 					
 					clientObj.setName(depObj.getName().getName().toString());
-					clientObj.setClassName(depObj.getType().toString());
+					clientObj.setClassName(depObj.getType().toString() + "_i");
 					
 					clientObj.setNameString("\""+depObj.getName().getName().toString()+"\"");
 					
