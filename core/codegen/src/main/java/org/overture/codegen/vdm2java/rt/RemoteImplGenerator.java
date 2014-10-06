@@ -29,8 +29,8 @@ public class RemoteImplGenerator {
 			for(AMethodDeclCG method : classCg.getMethods()){
 				
 				if(method.getName().equals("toString")){
-					method.setIsRemote(true);
-					publicMethods.add(method);
+//					method.setIsRemote(true);
+//					publicMethods.add(method);
 				}
 				else if(method.getAccess().equals("public") && !method.getIsConstructor()){
 					method.setIsRemote(true);

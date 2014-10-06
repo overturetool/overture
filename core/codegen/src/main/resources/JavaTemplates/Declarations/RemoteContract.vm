@@ -8,5 +8,5 @@ public interface $node.getName() extends Remote{
 	$JavaFormat.format($method)
 	#end
 	
-	public String toString();
+	##public String toString() throws RemoteException;
 }
