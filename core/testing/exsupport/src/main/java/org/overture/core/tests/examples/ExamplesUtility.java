@@ -180,7 +180,7 @@ abstract public class ExamplesUtility {
 							new RegexFileFilter(getFilterString(dialect)),
 							DirectoryFileFilter.DIRECTORY);
 					source.addAll(files);
-					
+
 					if (p.getLibs().size() > 0) {
 						for (String lib : p.getLibs()) {
 							source.add(new File(ExamplesUtility.class
@@ -193,7 +193,7 @@ abstract public class ExamplesUtility {
 					}
 					r.add(new ExampleSourceData(p.getName(), dialect, p
 							.getLanguageVersion(), source));
-					source.clear();
+					source = new LinkedList<File>();
 				}
 			}
 		}
@@ -201,13 +201,16 @@ abstract public class ExamplesUtility {
 		return r;
 	}
 
-	private static String getFilterString(Dialect dialect) {
+	private static String getFilterString(Dialect dialect) throws IOException {
 		switch (dialect) {
 		case VDM_SL:
-			return "";
+			return ".*\\.vdm(sl)?";
+		case VDM_PP:
+			return ".*\\.v(dm)?pp";
+		case VDM_RT:
+			return ".*\\.vdmrt";
 		default:
-			return null;
+			throw new IOException("Unrecognized dialect: " + dialect.toString());
 		}
 	}
-
 }

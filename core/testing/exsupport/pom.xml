@@ -57,21 +57,23 @@
   </dependencies>
 
   <build>
-    <resources>
-      <resource>
-        <directory>${project.basedir}/../../../documentation/examples/</directory>
-        <targetPath>${project.build.directory}/classes/examples/</targetPath>
-        <includes>
-          <include>**/*.vdmsl</include>
-          <include>**/*.vdmpp</include>
-          <include>**/*.vdmrt</include>
-          <include>**/README.txt</include>
-        </includes>
-        <excludes>
-          <exclude>target/**</exclude>
-        </excludes>
-      </resource>
-    </resources>
+    <!-- <copy this entry and point it to the correct relative path -->
+    <!-- to your project in order to use the example tests -->
+    <!--<resources>-->
+      <!--<resource>-->
+        <!--<directory>${project.basedir}/../../../documentation/examples/</directory>-->
+        <!--<targetPath>${project.build.directory}/classes/examples/</targetPath>-->
+        <!--<includes>-->
+          <!--<include>**/*.vdmsl</include>-->
+          <!--<include>**/*.vdmpp</include>-->
+          <!--<include>**/*.vdmrt</include>-->
+          <!--<include>**/README.txt</include>-->
+        <!--</includes>-->
+        <!--<excludes>-->
+          <!--<exclude>target/**</exclude>-->
+        <!--</excludes>-->
+      <!--</resource>-->
+    <!--</resources>-->
 
     <plugins>
 
