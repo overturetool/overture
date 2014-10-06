@@ -1,6 +1,9 @@
 package org.overture.codegen.vdm2java.rt;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.StringWriter;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +39,7 @@ import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 public class JavaCodeGenDistributionMain {
 
 	public static void main(String[] args) throws AnalysisException,
-			org.overture.codegen.cgast.analysis.AnalysisException {
+	org.overture.codegen.cgast.analysis.AnalysisException, IOException {
 
 		Settings.release = Release.VDM_10;
 		Dialect dialect = Dialect.VDM_RT;
@@ -64,10 +67,10 @@ public class JavaCodeGenDistributionMain {
 
 				if (generatedClass.hasMergeErrors()) {
 					Logger.getLog()
-							.println(
-									String.format(
-											"Class %s could not be merged. Following merge errors were found:",
-											generatedClass.getName()));
+					.println(
+							String.format(
+									"Class %s could not be merged. Following merge errors were found:",
+									generatedClass.getName()));
 
 					JavaCodeGenUtil.printMergeErrors(generatedClass
 							.getMergeErrors());
@@ -96,7 +99,7 @@ public class JavaCodeGenDistributionMain {
 			if (!invalidName.isEmpty()) {
 				Logger.getLog().println(
 						JavaCodeGenUtil
-								.constructNameViolationsString(invalidName));
+						.constructNameViolationsString(invalidName));
 			}
 
 			TypeCheckResult<List<SClassDefinition>> result = TypeCheckerUtil
@@ -112,7 +115,7 @@ public class JavaCodeGenDistributionMain {
 			// TODO: Do nicely
 			IRInfo info = new IRInfo("cg_init");
 			JavaFormat javaFormat = new JavaFormat(new TempVarPrefixes(), info);
-			
+
 			//**********************************************************************//
 			RemoteContractGenerator contractGenerator = new RemoteContractGenerator(
 					deployedClasses, info);
@@ -121,7 +124,7 @@ public class JavaCodeGenDistributionMain {
 
 			MergeVisitor printer = javaFormat.getMergeVisitor();
 
-			
+
 			System.out.println("**********************Remote contracts**********************");
 			for (ARemoteContractDeclCG conract : remoteContracts) {
 				StringWriter writer = new StringWriter();
@@ -132,10 +135,10 @@ public class JavaCodeGenDistributionMain {
 			}
 
 			List<AClassDeclCG> irClasses = Util.getClasses(data.getClasses());
-			
+
 			RemoteImplGenerator implsGen = new RemoteImplGenerator(irClasses);
 			List<ARemoteContractImplDeclCG> remoteImpls = implsGen.run();
-			
+
 			System.out.println("**********************Remote contracts implementation**********************");
 			for (ARemoteContractImplDeclCG impl : remoteImpls) {
 				StringWriter writer = new StringWriter();
@@ -144,42 +147,56 @@ public class JavaCodeGenDistributionMain {
 				System.out.println(JavaCodeGenUtil.formatJavaCode(writer
 						.toString()));
 			}
-			
+
 			System.out.println("**********************CPU deployment**********************");
-			
+
 			Map<String, Set<AVariableExp>> CpuToDeployedObject = mapping.getCpuToDeployedObject();
-			
-			
+
+
 			Map<String, Set<String>> cpuToConnectedCPUs = mapping.cpuToConnectedCPUs();
 			//CPUdeploymentGenerator cpuDep = new CPUdeploymentGenerator(CpuToDeployedObject);
-			
+
+			Map<String, Set<AClassClassDefinition>> cpuToDeployedClasses = mapping.cpuToDeployedClasses();
+
+			RemoteContractDistribution RemConDist = new RemoteContractDistribution(remoteContracts, cpuToDeployedClasses, cpuToConnectedCPUs, remoteImpls);
+
+			RemConDist.run();
+
+
+
 			//**********************************************************************//
 			CPUdeploymentGenerator cpuDepGenerator = new CPUdeploymentGenerator(
 					CpuToDeployedObject, cpuToConnectedCPUs , info);
 			Set<ACpuDeploymentDeclCG> cpuDeps = cpuDepGenerator
 					.run();
-			
-			
-			
-			
+
+
+
+
 			for (ACpuDeploymentDeclCG impl : cpuDeps) {
 				StringWriter writer = new StringWriter();
 				impl.apply(printer, writer);
 
 				System.out.println(JavaCodeGenUtil.formatJavaCode(writer
 						.toString()));
+
+				File file = new File("/Users/Miran/Documents/files/" + impl.getCpuName() + "/" + impl.getCpuName()  + ".java");
+				BufferedWriter output = new BufferedWriter(new FileWriter(file));
+				output.write(JavaCodeGenUtil.formatJavaCode(writer
+						.toString()));
+				output.close();
 			}
-			
-//			for(String key : CpuToDeployedObject.keySet()){
-//				Set<AVariableExp> deployedObj = CpuToDeployedObject.get(key);
-//				for(AVariableExp dep: deployedObj){
-//					AVariableExp cu = dep;
-//
-//				}
-//				
-//				//CPUdeploymentGenerator 
-//			}
-			
+
+			//			for(String key : CpuToDeployedObject.keySet()){
+			//				Set<AVariableExp> deployedObj = CpuToDeployedObject.get(key);
+			//				for(AVariableExp dep: deployedObj){
+			//					AVariableExp cu = dep;
+			//
+			//				}
+			//				
+			//				//CPUdeploymentGenerator 
+			//			}
+
 			//System.out.println();
 		} catch (UnsupportedModelingException e) {
 			Logger.getLog().println(
@@ -187,6 +204,6 @@ public class JavaCodeGenDistributionMain {
 			Logger.getLog().println(
 					JavaCodeGenUtil.constructUnsupportedModelingString(e));
 		}
-		
+
 	}
 }
