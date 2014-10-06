@@ -39,6 +39,7 @@ import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.cgast.declarations.ARMIregistryDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.ARemoteContractDeclCG;
 import org.overture.codegen.cgast.declarations.ARemoteContractImplDeclCG;
@@ -249,6 +250,9 @@ public class TemplateManager
 		
 		nodeTemplateFileNames.put(AClientInstanceDeclCG.class, templateStructure.DECL_PATH
 				+ "ClientInstance");
+		
+		nodeTemplateFileNames.put(ARMIregistryDeclCG.class, templateStructure.DECL_PATH
+				+ "RMIregistry");
 		
 		// Local declarations
 

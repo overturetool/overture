@@ -7,19 +7,16 @@ import java.rmi.NotBoundException;
 public class $node.getCpuName() {
 
 	public static void main(String[] args) throws RemoteException, AlreadyBoundException, NotBoundException {
+	
+	$JavaFormat.format($node.getRMIreg())
 		
 	#foreach( $remoteInstance in $node.getRemoteInst() )
 	$JavaFormat.format($remoteInstance)
 	#end
-	
-	
+		
 	#foreach( $clientInstance in $node.getClientInst() )
 	$JavaFormat.format($clientInstance)
 	#end
-		##RemoteImpl impl = new RemoteImpl();
-		##Registry registry = 
-			##LocateRegistry.createRegistry(1099);
-		##registry.bind("TestRMI", impl);
-		##System.out.println("Server started..");
+
 	}
 }

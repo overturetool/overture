@@ -143,10 +143,15 @@ CG {-> package='org.overture.codegen.cgast'
 		[name]:java_String
 		[nameString]:java_String
 		[className]:java_String
+	|	{RMIregistry}
+		[URL]:java_String
+		[portNumber]:java_Integer
+		[funcName]:java_String
 	|	{cpuDeployment}
 		[cpuName]:java_String
 		[remoteInst]:CG.#decl.remoteInstance*
 		[clientInst]:CG.#decl.clientInstance*
+		[RMIreg]:CG.#decl.RMIregistry
     |	{empty}
 	;
 

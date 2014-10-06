@@ -8,6 +8,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.codegen.cgast.declarations.AClientInstanceDeclCG;
 import org.overture.codegen.cgast.declarations.ACpuDeploymentDeclCG;
+import org.overture.codegen.cgast.declarations.ARMIregistryDeclCG;
 import org.overture.codegen.cgast.declarations.ARemoteInstanceDeclCG;
 import org.overture.codegen.ir.IRInfo;
 
@@ -36,6 +37,17 @@ public class CPUdeploymentGenerator {
 			
 			ACpuDeploymentDeclCG cpuDeployment = new ACpuDeploymentDeclCG();
 			cpuDeployment.setCpuName(cpuDep);
+			
+			ARMIregistryDeclCG rmiReg = new ARMIregistryDeclCG();
+			
+			String URL = "localhost";
+			int PortNumber = 1099;
+			
+			rmiReg.setFuncName("LocateRegistry.getRegistry");
+			rmiReg.setPortNumber(PortNumber);
+			rmiReg.setURL("\""+ URL +"\"");
+			
+			cpuDeployment.setRMIreg(rmiReg);
 			
 			Set<String> cpuSet = cpuToConnectedCPUs.get(cpuDep);
 			
