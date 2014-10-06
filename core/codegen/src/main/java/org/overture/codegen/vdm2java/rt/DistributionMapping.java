@@ -42,8 +42,8 @@ public class DistributionMapping {
 	{
 		Set<AClassClassDefinition> deployedClasses = new HashSet<AClassClassDefinition>();
 		
-		for(String key : nodeSys.getMap6().keySet()){
-			deployedClasses.addAll(nodeSys.getMap6().get(key));
+		for(String key : nodeSys.getcpuToDeployedClasses().keySet()){
+			deployedClasses.addAll(nodeSys.getcpuToDeployedClasses().get(key));
 		}
 		
 		return deployedClasses;
@@ -55,5 +55,9 @@ public class DistributionMapping {
 	
 	public Map<String, Set<String>> cpuToConnectedCPUs(){
 		return nodeSys.cpuToConnectedCPUs;
+	}
+	
+	public Map<String, Set<AClassClassDefinition>> cpuToDeployedClasses(){
+		return nodeSys.cpuToDeployedClasses;
 	}
 }
