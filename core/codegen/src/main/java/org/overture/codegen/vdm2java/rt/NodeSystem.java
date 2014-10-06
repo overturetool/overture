@@ -225,7 +225,7 @@ public class NodeSystem extends DepthFirstAnalysisAdaptor {
 
 
 
-	public Map<String, Set<AClassClassDefinition>> getMap6() {
+	public Map<String, Set<AClassClassDefinition>> getcpuToDeployedClasses() {
 		return cpuToDeployedClasses;
 	}
 
