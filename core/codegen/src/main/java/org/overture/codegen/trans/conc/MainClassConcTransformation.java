@@ -60,7 +60,7 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 		for(AMethodDeclCG x : node.getMethods())
 		{
 			if(x.getName() != node.getName()){
-				if (!x.getName().equals("toString")){//x.getName() != "toString"){
+				if (!x.getName().equals("toString") && !x.getName().equals("Run")){//x.getName() != "toString"){
 					ABlockStmCG bodyStm = new ABlockStmCG();
 					
 					ACallStmCG entering = new ACallStmCG();
@@ -80,7 +80,6 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 					leaving.setType(new AVoidTypeCG());
 					
 					bodyStm.getStatements().add(entering);
-					//this needs merging with try catch finally stm.
 					ATryStmCG trystm = new ATryStmCG();
 					trystm.setStm(x.getBody());
 					trystm.setFinally(leaving);

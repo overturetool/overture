@@ -57,28 +57,22 @@ public class Entry {
     }
 
     public static Object Run() {
-        Sentinel.entering();
+        ThreadClass t = new ThreadClass();
+        t.start();
 
-        try {
-            ThreadClass t = new ThreadClass();
-            t.start();
+        Boolean whileCond1 = true;
 
-            Boolean whileCond1 = true;
+        while (whileCond1) {
+            whileCond1 = t.x.longValue() != 2L;
 
-            while (whileCond1) {
-                whileCond1 = t.x.longValue() != 2L;
-
-                if (!(whileCond1)) {
-                    break;
-                }
-
-                //Skip;
+            if (!(whileCond1)) {
+                break;
             }
 
-            return t.x;
-        } finally {
-            Sentinel.leaving();
+            //Skip;
         }
+
+        return t.x;
     }
 
     public String toString() {
