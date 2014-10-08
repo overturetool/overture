@@ -18,6 +18,11 @@ public class A {
         return SeqUtil.seq(SeqUtil.seq('h', 'e', 'j'),
             SeqUtil.seq('k', 'a', 't'));
     }
+
+    public String toString() {
+        return "A{" + "x = " + Utils.toString(x) + ", y = " +
+        Utils.toString(y) + "}";
+    }
 }
 
 ##########

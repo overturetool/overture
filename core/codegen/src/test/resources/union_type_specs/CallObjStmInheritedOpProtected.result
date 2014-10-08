@@ -10,6 +10,10 @@ public class A {
     protected Number op(final Character a, final Number b) {
         return 1L;
     }
+
+    public String toString() {
+        return "A{}";
+    }
 }
 
 ##########
@@ -29,9 +33,15 @@ public class B extends A {
 
         if (obj instanceof A) {
             return ((A) obj).op(((Character) a), b);
-        } else {
+        } else if (obj instanceof B) {
             return ((B) obj).op(((Character) a), b);
+        } else {
+            throw new RuntimeException("Missing operation member: op");
         }
+    }
+
+    public String toString() {
+        return "B{}";
     }
 }
 
@@ -47,6 +57,10 @@ public class Entry {
 
     public static Object Run() {
         return new B().go();
+    }
+
+    public String toString() {
+        return "Entry{}";
     }
 }
 

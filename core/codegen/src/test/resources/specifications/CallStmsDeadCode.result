@@ -18,6 +18,10 @@ public class A {
 
         return op1();
     }
+
+    public String toString() {
+        return "A{}";
+    }
 }
 
 ##########

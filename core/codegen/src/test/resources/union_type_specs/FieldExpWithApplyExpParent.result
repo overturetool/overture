@@ -10,6 +10,10 @@ public class A {
     public Number op() {
         return 1L;
     }
+
+    public String toString() {
+        return "A{}";
+    }
 }
 
 ##########
@@ -24,6 +28,10 @@ public class B {
 
     public Number op() {
         return 11L;
+    }
+
+    public String toString() {
+        return "B{}";
     }
 }
 
@@ -48,14 +56,20 @@ public class Entry {
 
             if (x instanceof A) {
                 apply_1 = ((A) x).op();
-            } else {
+            } else if (x instanceof B) {
                 apply_1 = ((B) x).op();
+            } else {
+                throw new RuntimeException("Missing member: op");
             }
 
             sum = sum.doubleValue() + apply_1.longValue();
         }
 
         return sum;
+    }
+
+    public String toString() {
+        return "Entry{}";
     }
 }
 

@@ -32,6 +32,10 @@ public class Entry {
 
         return letBeStExp_1;
     }
+
+    public String toString() {
+        return "Entry{}";
+    }
 }
 
 ##########

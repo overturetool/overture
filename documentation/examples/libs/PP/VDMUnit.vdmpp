@@ -1,6 +1,7 @@
 --  Overture STANDARD LIBRARY: VDM-Unit
 --      --------------------------------------------
--- 
+-- Version 2.0.0 
+--
 -- Standard library for the Overture Interpreter. When the interpreter
 -- evaluates the preliminary functions/operations in this file,
 -- corresponding internal functions is called instead of issuing a run

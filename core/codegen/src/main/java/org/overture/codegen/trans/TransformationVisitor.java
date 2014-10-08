@@ -30,6 +30,7 @@ import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
+import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACaseAltExpExpCG;
 import org.overture.codegen.cgast.expressions.ACasesExpCG;
@@ -48,14 +49,19 @@ import org.overture.codegen.cgast.expressions.ALetBeStExpCG;
 import org.overture.codegen.cgast.expressions.ALetDefExpCG;
 import org.overture.codegen.cgast.expressions.AMapletExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
+import org.overture.codegen.cgast.expressions.AOrBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
+import org.overture.codegen.cgast.expressions.SBoolBinaryExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
+import org.overture.codegen.cgast.statements.ABreakStmCG;
 import org.overture.codegen.cgast.statements.ACaseAltStmStmCG;
 import org.overture.codegen.cgast.statements.ACasesStmCG;
+import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.ALetBeStStmCG;
 import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
+import org.overture.codegen.cgast.statements.AWhileStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
@@ -83,15 +89,136 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	private ILanguageIterator langIterator;
 
 	private String casesExpResultPrefix;
+	private String andExpPrefix;
+	private String orExpPrefix;
+	private String whileCondExpPrefix;
 
 	public TransformationVisitor(IRInfo info, TempVarPrefixes varPrefixes,
 			TransformationAssistantCG transformationAssistant,
-			ILanguageIterator langIterator, String casesExpPrefix)
+			ILanguageIterator langIterator, String casesExpPrefix, String andExpPrefix, String orExpPrefix, String whileCondExpPrefix)
 	{
 		this.info = info;
 		this.transformationAssistant = transformationAssistant;
 		this.langIterator = langIterator;
 		this.casesExpResultPrefix = casesExpPrefix;
+		this.andExpPrefix = andExpPrefix;
+		this.orExpPrefix = orExpPrefix;
+		this.whileCondExpPrefix = whileCondExpPrefix;
+	}
+	
+	@Override
+	public void caseAWhileStmCG(AWhileStmCG node) throws AnalysisException
+	{
+		// while(boolExp) { body; }
+		//
+		// boolExp is replaced with a variable expression 'whileCond' that is
+		// computed as set for each iteration in the while loop:
+		//
+		// boolean whileCond = true;
+		//
+		// while(whileCond)
+		// {
+		//   whileCond = boolExp;
+		//   if (!whileCond) { break; }
+		//   body;
+		// }
+		//
+		// This is needed for cases where the while condition is a complex
+		// expression that needs to be transformed. For example, when the
+		// while condition is a quantified expression
+		
+		SExpCG exp = node.getExp().clone();
+		SStmCG body = node.getBody().clone();
+		
+		String whileCondName = info.getTempVarNameGen().nextVarName(whileCondExpPrefix);
+		
+		SExpCG whileCondVar = transformationAssistant.consBoolCheck(whileCondName, false);
+		
+		AIfStmCG whileCondCheck = new AIfStmCG();
+		whileCondCheck.setIfExp(transformationAssistant.consBoolCheck(whileCondName, true));
+		whileCondCheck.setThenStm(new ABreakStmCG());
+		
+		ABlockStmCG newWhileBody = new ABlockStmCG();
+		newWhileBody.getStatements().add(transformationAssistant.consBoolVarAssignment(exp, whileCondName));
+		newWhileBody.getStatements().add(whileCondCheck);
+		newWhileBody.getStatements().add(body);
+		
+		AWhileStmCG newWhileStm = new AWhileStmCG();
+		newWhileStm.setExp(whileCondVar);
+		newWhileStm.setBody(newWhileBody);
+		
+		ABlockStmCG declBlock = new ABlockStmCG();
+		AVarLocalDeclCG whileCondVarDecl = transformationAssistant.consBoolVarDecl(whileCondName, true);
+		declBlock.getLocalDefs().add(whileCondVarDecl);
+		declBlock.getStatements().add(newWhileStm);
+		
+		transformationAssistant.replaceNodeWith(node, declBlock);
+
+		newWhileStm.getBody().apply(this);
+	}
+	
+	@Override
+	public void caseAOrBoolBinaryExpCG(AOrBoolBinaryExpCG node)
+			throws AnalysisException
+	{
+		// left || right 
+		//
+		// is replaced with a variable expression 'orResult' that is
+		// computed as:
+		//
+		// boolean orResult = false;
+		// if (left) 
+		// {
+		//	  orResult = true;
+		// }
+		// else
+		// {
+		//    orResult = right;
+		// }
+		//
+		
+		SStmCG enclosingStm = transformationAssistant.findEnclosingStm(node);
+		
+		if(transformBoolBinaryExp(node, enclosingStm))
+		{
+			String resultName = info.getTempVarNameGen().nextVarName(orExpPrefix);
+			handleLogicExp(node, enclosingStm, consOrExpCheck(node, resultName), resultName);
+		}
+		else
+		{
+			visitBoolBinary(node);
+		}
+	}
+
+	@Override
+	public void caseAAndBoolBinaryExpCG(AAndBoolBinaryExpCG node)
+			throws AnalysisException
+	{
+		// left && right 
+		//
+		// is replaced with a variable expression 'andResult' that is
+		// computed as:
+		//
+		// boolean andResult = false;
+		// if (left) 
+		// { 
+		//    if (right)
+		//    {
+		//       andResult = true;
+		//    }
+		// }
+		
+		SStmCG enclosingStm = transformationAssistant.findEnclosingStm(node);
+
+		if(transformBoolBinaryExp(node, enclosingStm))
+		{
+			String resultName = info.getTempVarNameGen().nextVarName(andExpPrefix);
+			handleLogicExp(node, enclosingStm, consAndExpCheck(node, resultName), resultName);
+		}
+		else
+		{
+			visitBoolBinary(node);
+		}
 	}
 
 	@Override
@@ -475,5 +602,85 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		transform(enclosingStm, block, resultVar, node);
 
 		casesStm.apply(this);
+	}
+
+	private AIfStmCG consAndExpCheck(AAndBoolBinaryExpCG node, String andResultVarName)
+	{
+		SExpCG left = node.getLeft().clone();
+		SExpCG right = node.getRight().clone();
+		
+		AIfStmCG leftCheck = new AIfStmCG();
+		leftCheck.setIfExp(left);
+		
+		AIfStmCG rightCheck = new AIfStmCG();
+		rightCheck.setIfExp(right);
+		
+		ALocalAssignmentStmCG assignAndVar = new ALocalAssignmentStmCG();
+		assignAndVar.setTarget(transformationAssistant.consBoolCheck(andResultVarName, false));
+		assignAndVar.setExp(info.getAssistantManager().getExpAssistant().consBoolLiteral(true));
+		
+		rightCheck.setThenStm(assignAndVar);
+		
+		leftCheck.setThenStm(rightCheck);
+		
+		return leftCheck;
+	}
+	
+	private SStmCG consOrExpCheck(AOrBoolBinaryExpCG node, String orResultVarName)
+	{
+		SExpCG left = node.getLeft().clone();
+		SExpCG right = node.getRight().clone();
+		
+		AIfStmCG leftCheck = new AIfStmCG();
+		leftCheck.setIfExp(left);
+		
+		ALocalAssignmentStmCG setOrResultVarTrue = new ALocalAssignmentStmCG();
+		setOrResultVarTrue.setTarget(transformationAssistant.consBoolCheck(orResultVarName, false));
+		setOrResultVarTrue.setExp(info.getAssistantManager().getExpAssistant().consBoolLiteral(true));
+		
+		leftCheck.setThenStm(setOrResultVarTrue);
+
+		ALocalAssignmentStmCG setOrResultVarToRightExp = new ALocalAssignmentStmCG();
+		setOrResultVarToRightExp.setTarget(transformationAssistant.consBoolCheck(orResultVarName, false));
+		setOrResultVarToRightExp.setExp(right);
+		
+		leftCheck.setElseStm(setOrResultVarToRightExp);
+		
+		return leftCheck;
+	}
+	
+	private boolean transformBoolBinaryExp(SBoolBinaryExpCG node, SStmCG enclosingStm)
+	{
+		// First condition: The enclosing statement can be 'null' if we only try to code generate an expression rather than
+		// a complete specification.
+		
+		return enclosingStm != null && !transformationAssistant.getInfo().getExpAssistant().isLoopCondition(node);
+	}
+
+	private void visitBoolBinary(SBoolBinaryExpCG node) throws AnalysisException
+	{
+		node.getLeft().apply(this);
+		node.getRight().apply(this);
+		node.getType().apply(this);
+	}
+
+	private void handleLogicExp(SBoolBinaryExpCG node, SStmCG enclosingStm, SStmCG checkBlock, String resultName)
+			throws AnalysisException
+	{
+		AVarLocalDeclCG andResultDecl = transformationAssistant.consBoolVarDecl(resultName, false);
+		
+		ABlockStmCG declBlock = new ABlockStmCG();
+		declBlock.getLocalDefs().add(andResultDecl);
+		
+		ABlockStmCG replacementBlock = new ABlockStmCG();
+
+		transformationAssistant.replaceNodeWith(enclosingStm, replacementBlock);
+		transformationAssistant.replaceNodeWith(node, transformationAssistant.consBoolCheck(resultName, false));
+		
+		replacementBlock.getStatements().add(declBlock);
+		replacementBlock.getStatements().add(checkBlock);
+		replacementBlock.getStatements().add(enclosingStm);
+		
+		replacementBlock.apply(this);
 	}
 }

@@ -7,6 +7,10 @@ public class A {
     public A() {
     }
 
+    public String toString() {
+        return "A{}";
+    }
+
     public static class Rec implements Record {
         public Rec() {
         }
@@ -43,6 +47,10 @@ public class Entry {
         VDMSeq recs = SeqUtil.seq(new A.Rec());
 
         return Utils.clone(((A.Rec) recs.get(Utils.index(1L))));
+    }
+
+    public String toString() {
+        return "Entry{}";
     }
 }
 

@@ -44,7 +44,7 @@ public class AboutCommand extends AbstractHandler
 		{
 
 			Shell shell = HandlerUtil.getActiveWorkbenchWindow(event).getShell();
-			String title = "VDM++ to Java Code Generator (Experimental)";
+			String title = "VDM++ to Java Code Generator";
 			String about = GeneralUtils.readFromInputStream(fileStream).toString();
 
 			MessageDialog.openInformation(shell, title, about);

@@ -40,28 +40,25 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOperationType;
-import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.codegen.cgast.SDeclCG;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.declarations.AEmptyDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AFuncDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
+import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.expressions.ALambdaExpCG;
 import org.overture.codegen.cgast.expressions.ANotImplementedExpCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.utils.AnalysisExceptionCG;
 
 public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 {
@@ -94,21 +91,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 	public SDeclCG caseANamedInvariantType(ANamedInvariantType node,
 			IRInfo question) throws AnalysisException
 	{
-		PType type = node.getType();
-
-		if (type instanceof AUnionType)
-		{
-			AUnionType unionType = (AUnionType) type;
-
-			if (question.getTypeAssistant().isUnionOfType(unionType, AQuoteType.class))
-			{
-				// The VDM translation ignores named invariant types that are not
-				// union of quotes as they are represented as integers instead
-				return new AEmptyDeclCG();
-			}
-		}
-
-		return null; // Currently the code generator only supports the union of quotes case
+		return null;
 	}
 
 	@Override
@@ -119,14 +102,6 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 		LinkedList<AFieldField> fields = node.getFields();
 
 		ARecordDeclCG record = new ARecordDeclCG();
-		// Set this public for now but it must be corrected as the access is specified
-		// in the type definition instead:
-		// types
-		//
-		// public R ::
-		// x : nat
-		// y : nat;
-		record.setAccess(IRConstants.PUBLIC);
 		record.setName(name.getName());
 
 		LinkedList<AFieldDeclCG> recordFields = record.getFields();
@@ -140,8 +115,9 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 				recordFields.add(fieldDecl);
 			} else
 			{
-				throw new AnalysisExceptionCG("Could not generate fields of record: "
-						+ name, node.getLocation());
+				question.addUnsupportedNode(node,
+						"Could not generate fields of record: " + name);
+				return null;
 			}
 		}
 
@@ -168,16 +144,15 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 			throws AnalysisException
 	{
 		String access = node.getAccess().getAccess().toString();
+		PType type = node.getType();
+		
+		SDeclCG declCg = type.apply(question.getDeclVisitor(), question);
+		
+		ATypeDeclCG typDecl = new ATypeDeclCG();
+		typDecl.setAccess(access);
+		typDecl.setDecl(declCg);
 
-		SDeclCG dec = node.getType().apply(question.getDeclVisitor(), question);
-
-		if (dec instanceof ARecordDeclCG)
-		{
-			ARecordDeclCG record = (ARecordDeclCG) dec;
-			record.setAccess(access);
-		}
-
-		return dec;
+		return typDecl;
 	}
 
 	@Override
@@ -288,6 +263,14 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 			templateType.setName(typeParam.getName());
 			method.getTemplateTypes().add(templateType);
 		}
+		
+		AExplicitFunctionDefinition preCond = node.getPredef();
+		SDeclCG preCondCg = preCond != null ? preCond.apply(question.getDeclVisitor(), question) : null;
+		method.setPreCond(preCondCg);
+		
+		AExplicitFunctionDefinition postCond = node.getPostdef();
+		SDeclCG postCondCg = postCond != null ? postCond.apply(question.getDeclVisitor(), question) : null;
+		method.setPostCond(postCondCg);
 
 		return method;
 	}
@@ -340,6 +323,14 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 
 			formalParameters.add(param);
 		}
+		
+		AExplicitFunctionDefinition preCond = node.getPredef();
+		SDeclCG preCondCg = preCond != null ? preCond.apply(question.getDeclVisitor(), question) : null;
+		method.setPreCond(preCondCg);
+		
+		AExplicitFunctionDefinition postCond = node.getPostdef();
+		SDeclCG postCondCg = postCond != null ? postCond.apply(question.getDeclVisitor(), question) : null;
+		method.setPostCond(postCondCg);
 
 		return method;
 	}

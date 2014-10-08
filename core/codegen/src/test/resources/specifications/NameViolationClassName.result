@@ -14,6 +14,10 @@ public class cg_Long {
             op(3L);
         }
     }
+
+    public String toString() {
+        return "cg_Long{}";
+    }
 }
 
 ##########

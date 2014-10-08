@@ -18,6 +18,10 @@ public class Entry {
             return a.longValue() - b.longValue();
         }
     }
+
+    public String toString() {
+        return "Entry{}";
+    }
 }
 
 ##########

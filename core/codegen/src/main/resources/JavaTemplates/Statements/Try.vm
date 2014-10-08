@@ -1,0 +1,20 @@
+#set( $stm = "")
+#if (!$JavaFormat.isNull($node.getStm()))
+	#set( $stm = $JavaFormat.format($node.getStm()))
+#end
+##
+#set( $finally = $JavaFormat.format($node.getFinally()))
+##
+try
+{
+	${stm}
+}
+#foreach( $clause in $node.getCatchClauses() )
+$JavaFormat.format($clause)
+#end
+#if (!$JavaFormat.isNull(${finally}))
+finally
+{
+	${finally}
+}
+#end

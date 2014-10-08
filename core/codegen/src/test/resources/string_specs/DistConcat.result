@@ -19,6 +19,10 @@ public class Entry {
     public static VDMSeq h() {
         return SeqUtil.seq("fourth, ", "fifth, ", "sixth");
     }
+
+    public String toString() {
+        return "Entry{}";
+    }
 }
 
 ##########

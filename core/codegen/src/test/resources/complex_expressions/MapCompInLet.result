@@ -28,6 +28,10 @@ public class Entry {
 
         return Utils.clone(x);
     }
+
+    public String toString() {
+        return "Entry{}";
+    }
 }
 
 ##########

@@ -32,6 +32,10 @@ public class Entry {
 
         return a;
     }
+
+    public String toString() {
+        return "Entry{" + "s = " + Utils.toString(s) + "}";
+    }
 }
 
 ##########

@@ -146,8 +146,8 @@ public class POOperationDefinitionContext extends POContext
 
 	}
 
-	private static final ILexNameToken OLD_STATE_ARG = new LexNameToken(null, "oldstate", null);
-	private static final ILexNameToken OLD_SELF_ARG = new LexNameToken(null, "oldself", null);
+	private static final ILexNameToken OLD_STATE_ARG = new LexNameToken("", "oldstate", null);
+	private static final ILexNameToken OLD_SELF_ARG = new LexNameToken("", "oldself", null);
 
 	private void addParameterBinds(LinkedList<PMultipleBind> r)
 	{

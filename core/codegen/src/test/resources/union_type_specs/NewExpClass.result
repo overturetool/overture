@@ -45,6 +45,10 @@ public class Entry {
 
         return new Entry(((Number) x), ((Character) y));
     }
+
+    public String toString() {
+        return "Entry{}";
+    }
 }
 
 ##########

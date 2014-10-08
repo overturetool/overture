@@ -77,6 +77,8 @@ CG {-> package='org.overture.codegen.cgast'
     
 #decl {-> package='org.overture.codegen.cgast.declarations'}
 	=	{method} //rename to operation
+		(preCond):CG.#decl
+		(postCond):CG.#decl
 		[access]:java_String
 		[static]:java_Boolean
 		[abstract]:java_Boolean
@@ -87,6 +89,8 @@ CG {-> package='org.overture.codegen.cgast'
 		[templateTypes]:CG.#type.template*
 		[body]:CG.#stm
 	|	{func}
+		(preCond):CG.#decl
+		(postCond):CG.#decl
 		[access]:java_String
 		[abstract]:java_Boolean
 		[methodType]:CG.#type.method
@@ -97,6 +101,7 @@ CG {-> package='org.overture.codegen.cgast'
 	|	{field} 
     	[access]:java_String
     	[static]:java_Boolean
+    	[volatile]:java_Boolean
     	[final]:java_Boolean
     	[type]:CG.#type
     	[name]:java_String
@@ -112,7 +117,7 @@ CG {-> package='org.overture.codegen.cgast'
     	[methods]:CG.#decl.method*
     	[functions]:CG.#decl.func*
     	[superName]:java_String
-    	[records]:CG.#decl.record*
+    	[typeDecls]:CG.#decl.type*
     |	{interface}
     	[templateTypes]:CG.#type.template*
     	[package]:java_String
@@ -121,10 +126,15 @@ CG {-> package='org.overture.codegen.cgast'
     	[methodSignatures]:CG.#decl.method*
     |	{record}
     	[name]:java_String
-    	[access]:java_String
     	[fields]:field*
     	[methods]:CG.#decl.method*
-    |	{empty}
+    |	{type}
+    	[access]:java_String
+    	[decl]:CG.#decl
+    |	{catchClause}
+    	[type]:CG.#type
+    	[name]:java_String
+    	[stm]:CG.#stm
 	;
 
 #Local  {-> package='org.overture.codegen.cgast.declarations'}
@@ -171,10 +181,10 @@ CG {-> package='org.overture.codegen.cgast'
            					 [args]:CG.#exp*
            |	{callObjectExp} [type]:CG.#type [obj]:CG.#exp [className]:java_String [fieldName]:java_String 
            					 [args]:CG.#exp*
-           |	{call} [type]:CG.#type [classType]:CG.#type.class [name]:java_String [args]:CG.#exp*
+           |	{call} [type]:CG.#type [classType]:CG.#type [name]:java_String [args]:CG.#exp*
            |	{notImplemented}
            |	{forIndex} [var]:java_String [from]:CG.#exp [to]:CG.#exp [by]:CG.#exp [body]:CG.#stm
-           |	{forAll} [var]:java_String [exp]:CG.#exp [body]:CG.#stm
+           |	{forAll} [pattern]:CG.#pattern [exp]:CG.#exp [body]:CG.#stm
            |	{while} [exp]:CG.#exp [body]:CG.#stm
            |	{letBeSt} [header]:CG.#letBeSt.header [statement]:CG.#stm
            |	{throw} [exp]:CG.#exp
@@ -186,6 +196,8 @@ CG {-> package='org.overture.codegen.cgast'
            |	#altStm
            |	{error}
            |	{continue}
+           |	{break}
+           |	{try} [stm]:CG.#stm [catchClauses]:CG.#decl.catchClause* [finally]:CG.#stm
            ;
            
 #altStm {-> package='org.overture.codegen.cgast.statements'}
@@ -249,12 +261,16 @@ CG {-> package='org.overture.codegen.cgast'
 #RuntimeError {-> package='org.overture.codegen.cgast.expressions'}
     =   {LetBeStNoBinding}
     |	{patternMatch} [message]:java_String
+    |	{missingMember} [message]:java_String
+    	//Raised at runtime when an attemp is made 
+		//to access a non-existing member (e.g. operation)
+	|	{preCond} [message]:java_String
     ;
 
 #Var {-> package='org.overture.codegen.cgast.expressions'
 	|	[isLambda]:java_Boolean}
     =   {identifier} [original]:java_String //Change original to name...
-	|	{explicit} [classType]:CG.#type.class [name]:java_String
+	|	{explicit} [classType]:CG.#type [name]:java_String
     ;
     
 #Literal {-> package='org.overture.codegen.cgast.expressions'}

@@ -54,7 +54,7 @@ public class ExpressionTestCase extends CodeGenBaseTestCase
 			return null;
 		}
 		String generatedJava = JavaCodeGenUtil.generateJavaFromExp(fileContent, getIrSettings(), getJavaSettings()).getContent().trim();
-		String trimmed = generatedJava.replaceAll("\\s+", " ");
+		String trimmed = GeneralUtils.cleanupWhiteSpaces(generatedJava);
 
 		return trimmed;
 	}

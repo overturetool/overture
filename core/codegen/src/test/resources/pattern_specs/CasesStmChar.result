@@ -28,6 +28,10 @@ public class Entry {
     public static Object Run() {
         return SeqUtil.seq(casesChar('u'), casesChar('a'), casesChar('b'));
     }
+
+    public String toString() {
+        return "Entry{}";
+    }
 }
 
 ##########

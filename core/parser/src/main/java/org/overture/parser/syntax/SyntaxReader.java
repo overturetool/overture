@@ -509,6 +509,22 @@ public abstract class SyntaxReader
 	{
 		throw new ParserException(number, message, token.getLocation(), reader.getTokensRead());
 	}
+	
+	/**
+	 * Raise a {@link ParserException} with a given token depth.
+	 * @param number The error number.
+	 * @param message The error message.
+	 * @param token The location of the error.
+	 * @param depth The depth of the exception (tokens read).
+	 *
+	 * @throws ParserException
+	 */ 
+
+	protected void throwMessage(int number, String message, int depth)
+			throws ParserException, LexException
+	{
+		throw new ParserException(number, message, lastToken().location, depth);
+	}
 
 	/**
 	 * Raise a syntax error and attempt to recover. The error is added to the errors list, and if this exceeds 100

@@ -14,6 +14,13 @@ public class A {
 
     public A() {
     }
+
+    public String toString() {
+        return "A{" + "x0 = " + Utils.toString(x0) + ", a = " +
+        Utils.toString(a) + ", x1 = " + Utils.toString(x1) + ", b = " +
+        Utils.toString(b) + ", c = " + Utils.toString(c) + ", d = " +
+        Utils.toString(d) + "}";
+    }
 }
 
 ##########

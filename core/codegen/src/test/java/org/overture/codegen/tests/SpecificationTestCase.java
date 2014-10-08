@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.lex.Dialect;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.utils.GeneratedData;
@@ -61,7 +62,7 @@ public class SpecificationTestCase extends CodeGenBaseTestCase
 
 		try
 		{
-			data = JavaCodeGenUtil.generateJavaFromFiles(files, getIrSettings(), getJavaSettings());
+			data = JavaCodeGenUtil.generateJavaFromFiles(files, getIrSettings(), getJavaSettings(), Dialect.VDM_PP);
 		} catch (UnsupportedModelingException e)
 		{
 			return JavaCodeGenUtil.constructUnsupportedModelingString(e);

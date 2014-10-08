@@ -15,6 +15,11 @@ public class A {
     public static VDMSet op() {
         return SetUtil.set(1L, 2L, 3L);
     }
+
+    public String toString() {
+        return "A{" + "a = " + Utils.toString(a) + ", b = " +
+        Utils.toString(b) + ", c = " + Utils.toString(c) + "}";
+    }
 }
 
 ##########

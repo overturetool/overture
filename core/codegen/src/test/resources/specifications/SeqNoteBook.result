@@ -211,11 +211,11 @@ public class NoteBook {
     }
 
     public Boolean isMessage(final Number index, final VDMSeq message) {
-        return SeqUtil.equals(message, getMessage(index));
+        return Utils.equals(message, getMessage(index));
     }
 
     public Boolean isNotMessage(final Number index, final VDMSeq message) {
-        return !(SeqUtil.equals(message, getMessage(index)));
+        return !(Utils.equals(message, getMessage(index)));
     }
 
     public VDMSet getMessgaesSet() {
@@ -231,11 +231,15 @@ public class NoteBook {
     }
 
     public Boolean eq(final NoteBook other) {
-        return SeqUtil.equals(messages, other.messages);
+        return Utils.equals(messages, other.messages);
     }
 
     public Boolean neq(final NoteBook other) {
-        return !(SeqUtil.equals(messages, other.messages));
+        return !(Utils.equals(messages, other.messages));
+    }
+
+    public String toString() {
+        return "NoteBook{" + "messages := " + Utils.toString(messages) + "}";
     }
 }
 

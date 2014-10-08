@@ -21,6 +21,7 @@
  */
 package org.overture.codegen.trans.assistants;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.types.ASetType;
@@ -31,6 +32,8 @@ import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
+import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
+import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
 import org.overture.codegen.cgast.declarations.SLocalDeclCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
@@ -45,12 +48,11 @@ import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
-import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AForLoopStmCG;
-import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.AIncrementStmCG;
+import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
@@ -61,6 +63,7 @@ import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.ir.SourceNode;
+import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.IIterationStrategy;
 import org.overture.codegen.trans.TempVarPrefixes;
 
@@ -228,12 +231,11 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 		}
 	}
 
-	public AAssignmentStmCG consBoolVarAssignment(SExpCG predicate,
+	public ALocalAssignmentStmCG consBoolVarAssignment(SExpCG predicate,
 			String boolVarName)
 	{
-		AAssignmentStmCG boolVarAssignment = new AAssignmentStmCG();
-
-		boolVarAssignment.setTarget(consIdentifier(boolVarName));
+		ALocalAssignmentStmCG boolVarAssignment = new ALocalAssignmentStmCG();
+		boolVarAssignment.setTarget(consBoolCheck(boolVarName, false));
 		boolVarAssignment.setExp(predicate != null ? predicate.clone()
 				: info.getExpAssistant().consBoolLiteral(true));
 
@@ -287,15 +289,6 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 		resultDecl.setExp(exp);
 
 		return resultDecl;
-	}
-
-	// FIXME: Remove and use proper IR statement
-	public AIdentifierStateDesignatorCG consIdentifier(String name)
-	{
-		AIdentifierStateDesignatorCG identifier = new AIdentifierStateDesignatorCG();
-		identifier.setName(name);
-
-		return identifier;
 	}
 
 	public AClassTypeCG consClassType(String classTypeName)
@@ -578,5 +571,60 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 	{
 		binding.setSet(null);
 		binding.getPatterns().clear();
+	}
+	
+	public AIdentifierVarExpCG consIdentifierVar(String name, STypeCG type)
+	{
+		AIdentifierVarExpCG var = new AIdentifierVarExpCG();
+		var.setIsLambda(false);
+		var.setType(type);
+		var.setOriginal(name);
+		
+		return var;
+	}
+	
+	public AApplyExpCG consConditionalCall(AMethodDeclCG node,
+			AMethodDeclCG predMethod)
+	{
+		AIdentifierVarExpCG condVar = new AIdentifierVarExpCG();
+		condVar.setType(predMethod.getMethodType().clone());
+		condVar.setOriginal(predMethod.getName());
+		condVar.setIsLambda(false);
+		
+		AApplyExpCG condCall = new AApplyExpCG();
+		condCall.setType(new ABoolBasicTypeCG());
+		condCall.setRoot(condVar);
+		
+		LinkedList<AFormalParamLocalParamCG> params = node.getFormalParams();
+		
+		for(AFormalParamLocalParamCG p : params)
+		{
+			SPatternCG paramPattern = p.getPattern();
+			
+			if(!(paramPattern instanceof AIdentifierPatternCG))
+			{
+				Logger.getLog().printErrorln("Expected parameter pattern to be an identifier pattern at this point. Got: " + paramPattern);
+				return null;
+			}
+			
+			AIdentifierPatternCG paramId = (AIdentifierPatternCG) paramPattern;
+			
+			AIdentifierVarExpCG paramArg = new AIdentifierVarExpCG();
+			paramArg.setIsLambda(false);
+			paramArg.setType(p.getType().clone());
+			paramArg.setOriginal(paramId.getName());
+			
+			condCall.getArgs().add(paramArg);
+		}
+		
+		return condCall;
+	}
+	
+	public AIdentifierPatternCG consIdPattern(String name)
+	{
+		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
+		idPattern.setName(name);
+		
+		return idPattern;
 	}
 }

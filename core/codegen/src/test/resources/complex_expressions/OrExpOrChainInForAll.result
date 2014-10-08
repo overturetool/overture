@@ -1,0 +1,55 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    private Number n = 0L;
+
+    public Entry() {
+    }
+
+    public Boolean inc() {
+        n = n.longValue() + 1L;
+
+        return true;
+    }
+
+    public static Object Run() {
+        Entry e = new Entry();
+        Boolean forAllExpResult_1 = true;
+        VDMSet set_1 = SetUtil.set(1L, 2L, 3L, 4L);
+
+        for (Iterator iterator_1 = set_1.iterator();
+                iterator_1.hasNext() && forAllExpResult_1;) {
+            Number x = ((Number) iterator_1.next());
+            Boolean orResult_1 = false;
+
+            if (false) {
+                orResult_1 = true;
+            } else {
+                Boolean orResult_2 = false;
+
+                if (e.inc()) {
+                    orResult_2 = true;
+                } else {
+                    orResult_2 = e.inc();
+                }
+
+                orResult_1 = orResult_2;
+            }
+
+            forAllExpResult_1 = orResult_1;
+        }
+
+        Boolean b = forAllExpResult_1;
+
+        return Tuple.mk_(b, e.n);
+    }
+
+    public String toString() {
+        return "Entry{" + "n := " + Utils.toString(n) + "}";
+    }
+}
+
+##########

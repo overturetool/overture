@@ -14,6 +14,10 @@ public class A {
     public static VDMSeq g() {
         return SeqUtil.seq('t', 'x', 't');
     }
+
+    public String toString() {
+        return "A{}";
+    }
 }
 
 ##########

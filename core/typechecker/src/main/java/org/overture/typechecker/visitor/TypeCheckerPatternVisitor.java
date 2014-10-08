@@ -23,13 +23,22 @@ package org.overture.typechecker.visitor;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
+import org.overture.ast.definitions.AExplicitFunctionDefinition;
+import org.overture.ast.definitions.AImplicitFunctionDefinition;
+import org.overture.ast.definitions.APerSyncDefinition;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.patterns.ANamePatternPair;
+import org.overture.ast.patterns.AObjectPattern;
 import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
+import org.overture.ast.typechecker.NameScope;
+import org.overture.ast.types.AClassType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
+import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class TypeCheckerPatternVisitor extends AbstractTypeCheckVisitor
 {
@@ -94,5 +103,50 @@ public class TypeCheckerPatternVisitor extends AbstractTypeCheckVisitor
 
 		node.setType(type);
 		return type;
+	}
+
+	@Override
+	public PType caseAObjectPattern(AObjectPattern pattern, TypeCheckInfo question) throws AnalysisException
+	{
+		PTypeAssistantTC typeAssistant = question.assistantFactory.createPTypeAssistant();
+		
+		if (!typeAssistant.isClass(pattern.getType()))
+		{
+			TypeCheckerErrors.report(3331, "obj_ expression is not an object type", pattern.getLocation(), pattern);
+			TypeCheckerErrors.detail("Type", pattern.getType());
+		}
+		else
+		{
+			// Check whether the field access is permitted from here.
+			AClassType cls = typeAssistant.getClassType(pattern.getType());
+	
+			for (ANamePatternPair npp: pattern.getFields())
+			{
+				PDefinition fdef = question.assistantFactory.createAClassTypeAssistant().findName(cls, npp.getName(), NameScope.STATE);
+	
+				if (fdef == null)
+				{
+					TypeCheckerErrors.report(3091, "Unknown member " + npp.getName() + " of class " + cls.getName().getName(), npp.getName().getLocation(), npp.getName());
+				}
+				else if (!question.assistantFactory.createSClassDefinitionAssistant().isAccessible(question.env, fdef, false))
+				{
+					TypeCheckerErrors.report(3092, "Inaccessible member " + npp.getName() + " of class " + cls.getName().getName(), npp.getName().getLocation(), npp.getName());
+				}
+			}
+	
+			PDefinition func = question.env.getEnclosingDefinition();
+	
+			boolean inFunction =
+				(func instanceof AExplicitFunctionDefinition ||
+				 func instanceof AImplicitFunctionDefinition ||
+				 func instanceof APerSyncDefinition);
+			
+			if (inFunction)
+			{
+				TypeCheckerErrors.report(3332, "Object pattern cannot be used from a function", pattern.getLocation(), pattern);
+			}
+		}
+		
+		return pattern.getType();
 	}
 }

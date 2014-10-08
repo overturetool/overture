@@ -24,6 +24,10 @@ public class Entry {
         return a.read();
     }
 
+    public String toString() {
+        return "Entry{" + "m := " + Utils.toString(m) + "}";
+    }
+
     private static class Rec implements Record {
         public Number field;
 
