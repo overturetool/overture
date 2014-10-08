@@ -40,6 +40,7 @@ public class RemoteContractGenerator {
 			
 			for(AExplicitOperationDefinition vdmOp : vdmOperations)
 			{
+				if(vdmOp.getIsConstructor()) continue;
 				AMethodDeclCG methodSignature = (AMethodDeclCG) vdmOp.apply(info.getDeclVisitor(), info);
 				methodSignature.setIsRemote(true);
 				methodSignature.setBody(null);
