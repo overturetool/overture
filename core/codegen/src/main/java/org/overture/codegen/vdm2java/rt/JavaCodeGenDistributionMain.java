@@ -160,7 +160,6 @@ public class JavaCodeGenDistributionMain {
 
 			Map<String, Set<AVariableExp>> CpuToDeployedObject = mapping.getCpuToDeployedObject();
 
-
 			Map<String, Set<String>> cpuToConnectedCPUs = mapping.cpuToConnectedCPUs();
 			//CPUdeploymentGenerator cpuDep = new CPUdeploymentGenerator(CpuToDeployedObject);
 
@@ -195,6 +194,23 @@ public class JavaCodeGenDistributionMain {
 				output.close();
 			}
 
+			for (ACpuDeploymentDeclCG impl : cpuDeps) {
+				StringWriter writer = new StringWriter();
+				systemClass.apply(printer, writer);
+
+				System.out.println(JavaCodeGenUtil.formatJavaCode(writer
+						.toString()));
+
+				File file = new File("/Users/Miran/Documents/files/" + impl.getCpuName() + "/" + systemClass.getName()  + ".java");
+				BufferedWriter output = new BufferedWriter(new FileWriter(file));
+				output.write(JavaCodeGenUtil.formatJavaCode(writer
+						.toString()));
+				output.close();
+			}
+			
+			
+			
+			
 			//			for(String key : CpuToDeployedObject.keySet()){
 			//				Set<AVariableExp> deployedObj = CpuToDeployedObject.get(key);
 			//				for(AVariableExp dep: deployedObj){
