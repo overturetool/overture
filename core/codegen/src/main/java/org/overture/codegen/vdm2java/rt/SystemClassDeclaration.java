@@ -3,6 +3,7 @@ package org.overture.codegen.vdm2java.rt;
 import java.io.StringWriter;
 import java.util.Set;
 
+import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
@@ -24,37 +25,15 @@ public class SystemClassDeclaration {
 		this.deployedObjects = deployedObjects;
 	}
 
-
-	//	public AClassDeclCG Run(){
-	//		AClassDeclCG systemClass = new AClassDeclCG();
-	//        
-	//        systemClass.setName("System");
-	//       
-	//        AFieldDeclCG deploydObj = new AFieldDeclCG();
-	//        deploydObj.setStatic(true);
-	//        deploydObj.setFinal(false);
-	//        deploydObj.setAccess("public");
-	//        deploydObj.setType((STypeCG) systemClass);
-	//        deploydObj.setName("s1");
-	//        deploydObj.setInitial(new ANullExpCG());
-	//       
-	//        systemClass.getFields().add(deploydObj);
-	//        
-	//        return systemClass;
-	//	}
-
 	public AClassDeclCG Run() throws AnalysisException{
 		AClassDeclCG systemClass = new AClassDeclCG();
 
-		systemClass.setName("System");
-        
 		systemClass.setAccess("public");
-		
+		ASystemClassDefinition sysClass = null;
 		for(AVariableExp obj : deployedObjects){
-			
 	        AClassTypeCG classType = new AClassTypeCG();
 	        classType.setName(obj.getType().toString());
-			
+			sysClass = obj.getAncestor(ASystemClassDefinition.class);
 			AFieldDeclCG deploydObj = new AFieldDeclCG();
 			deploydObj.setStatic(true);
 			deploydObj.setFinal(false);
@@ -66,6 +45,8 @@ public class SystemClassDeclaration {
 			systemClass.getFields().add(deploydObj);
 		}
 
+		systemClass.setName(sysClass.getName().toString());
+		
 		System.out.println("**********************System**********************");
 
 		IRInfo info2 = new IRInfo("cg_init");
