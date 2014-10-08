@@ -1,2 +1,2 @@
-$node.getClassName() $node.getName() = new $node.getClassName()();
+$node.getClassName() $node.getName() = $node.getVarExp();
 registry.bind( $node.getNameString() , $node.getName());

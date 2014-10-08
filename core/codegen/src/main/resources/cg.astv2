@@ -139,6 +139,7 @@ CG {-> package='org.overture.codegen.cgast'
 		[name]:java_String
 		[nameString]:java_String
 		[className]:java_String
+		[varExp]:java_String
 	|	{clientInstance}
 		[name]:java_String
 		[nameString]:java_String

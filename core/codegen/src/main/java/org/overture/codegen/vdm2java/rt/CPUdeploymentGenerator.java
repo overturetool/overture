@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.AInstanceVariableDefinition;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.codegen.cgast.declarations.AClientInstanceDeclCG;
 import org.overture.codegen.cgast.declarations.ACpuDeploymentDeclCG;
@@ -82,6 +84,8 @@ public class CPUdeploymentGenerator {
 				inst.setName(inst_var.getName().getName().toString());
 				inst.setClassName(inst_var.getType().toString());
 				
+				AInstanceVariableDefinition varExp = (AInstanceVariableDefinition) inst_var.getVardef();
+				inst.setVarExp(varExp.getExpression().toString());
 				inst.setNameString("\""+inst_var.getName().getName().toString()+"\"");
 				
 				cpuDeployment.getRemoteInst().add(inst);
