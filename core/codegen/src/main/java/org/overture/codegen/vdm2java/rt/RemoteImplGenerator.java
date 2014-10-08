@@ -32,7 +32,7 @@ public class RemoteImplGenerator {
 //					method.setIsRemote(true);
 //					publicMethods.add(method);
 				}
-				else if(method.getAccess().equals("public") && !method.getIsConstructor()){
+				else if(method.getAccess().equals("public")){ //&& !method.getIsConstructor()){
 					method.setIsRemote(true);
 					publicMethods.add(method);
 				}
