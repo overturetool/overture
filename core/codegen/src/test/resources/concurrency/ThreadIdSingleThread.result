@@ -10,7 +10,13 @@ public class Entry {
     }
 
     public static Object Run() {
-        return f();
+        Sentinel.entering();
+
+        try {
+            return f();
+        } finally {
+            Sentinel.leaving();
+        }
     }
 
     public static Number f() {

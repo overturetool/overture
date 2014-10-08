@@ -42,31 +42,31 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 			return;
 		}
 		
+		for(AFieldDeclCG fieldCG : node.getFields())
+		{
+			fieldCG.setVolatile(true);
+		}
+		
 		AExternalTypeCG sentType = new AExternalTypeCG();
 		sentType.setName("Sentinel");
 		AFieldDeclCG sentinelfld = new AFieldDeclCG();
 		sentinelfld.setName("sentinel");
 		sentinelfld.setType(sentType);
 		sentinelfld.setAccess(JavaFormat.JAVA_PUBLIC);
+		sentinelfld.setVolatile(false);
 		
 		node.getFields().add(sentinelfld);
-		for(AFieldDeclCG x : node.getFields())
-		{
-			if (!x.getName().equals("sentinel")){
-				x.setVolatile(true);
-			}
-		}
 		
-		for(AMethodDeclCG x : node.getMethods())
+		
+		for(AMethodDeclCG methodCG : node.getMethods())
 		{
-			if(x.getName() != node.getName()){
-				if (!x.getName().equals("toString") && !x.getName().equals("Run")){//x.getName() != "toString"){
+			if(!methodCG.getIsConstructor()){//(x.getName() != node.getName()){
+				if (!methodCG.getName().equals("toString") ){//&& !methodCG.getName().equals("Run")){//x.getName() != "toString"){
 					ABlockStmCG bodyStm = new ABlockStmCG();
 					
 					ACallStmCG entering = new ACallStmCG();
 					ACallStmCG leaving = new ACallStmCG();
 					
-				//	ACallObjectStmCG enteringstm = new ACallObjectStmCG();
 				
 					entering.setName("entering");
 					AClassTypeCG sentinel = new AClassTypeCG();
@@ -81,23 +81,12 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 					
 					bodyStm.getStatements().add(entering);
 					ATryStmCG trystm = new ATryStmCG();
-					trystm.setStm(x.getBody());
+					trystm.setStm(methodCG.getBody());
 					trystm.setFinally(leaving);
 					bodyStm.getStatements().add(trystm);
-					//bodyStm.getStatements().add(x.getBody());
-					
-					//bodyStm.getStatements().add(leaving);
-					
-					x.setBody(bodyStm);
+										
+					methodCG.setBody(bodyStm);
 				}
-				else
-				{
-					continue;
-				}
-			}
-			else
-			{
-				continue;
 			}
 		}
 	}
