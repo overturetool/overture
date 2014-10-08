@@ -48,7 +48,7 @@
 							<stripVersion>true</stripVersion>
 							<artifactItems>
 								<artifactItem>
-									<groupId>org.overturetool.core.prettyprinting</groupId>
+									<groupId>org.overturetool.core</groupId>
 									<artifactId>prettyprinter</artifactId>
 									<version>${project.version}</version>
 								</artifactItem>
