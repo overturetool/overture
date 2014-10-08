@@ -20,7 +20,7 @@
     <module>pog</module>
     <module>testframework</module>
     <module>combinatorialtesting</module>
-    <module>prettyprinting</module>
+    <module>prettyprinter</module>
     <module>commandline</module>
     <module>codegen</module>
 	<module>codegen-runtime</module>
