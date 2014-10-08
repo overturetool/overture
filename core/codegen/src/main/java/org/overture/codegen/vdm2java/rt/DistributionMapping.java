@@ -45,8 +45,17 @@ public class DistributionMapping {
 		for(String key : nodeSys.getcpuToDeployedClasses().keySet()){
 			deployedClasses.addAll(nodeSys.getcpuToDeployedClasses().get(key));
 		}
-		
 		return deployedClasses;
+	}
+	
+	public Set<AVariableExp> getDeployedObjects()
+	{
+		Set<AVariableExp> deployedObjects = new HashSet<AVariableExp>();
+		
+		for(String key : nodeSys.getCpuToDeployedObject().keySet()){
+			deployedObjects.addAll(nodeSys.getCpuToDeployedObject().get(key));
+		}
+		return deployedObjects;
 	}
 	
 	public Map<String, Set<AVariableExp>> getCpuToDeployedObject(){
