@@ -20,6 +20,7 @@ import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.ACpuDeploymentDeclCG;
 import org.overture.codegen.cgast.declarations.ARemoteContractDeclCG;
 import org.overture.codegen.cgast.declarations.ARemoteContractImplDeclCG;
+import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.logging.Logger;
@@ -111,6 +112,13 @@ public class JavaCodeGenDistributionMain {
 
 			Set<AClassClassDefinition> deployedClasses = mapping
 					.getDeployedClasses();
+
+
+			Set<AVariableExp> deployedObjects = mapping.getDeployedObjects();
+
+			SystemClassDeclaration systemClassDecl = new SystemClassDeclaration(deployedObjects);
+
+			AClassDeclCG systemClass = systemClassDecl.Run();
 
 			// TODO: Do nicely
 			IRInfo info = new IRInfo("cg_init");
