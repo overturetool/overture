@@ -1,3 +1,24 @@
+/*
+ * #%~
+ * Overture GUI Builder
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 /*******************************************************************************
  * Copyright (c) 2009, 2013 Overture Team and others.
  *
@@ -22,7 +43,6 @@ import java.io.File;
 import java.util.List;
 import java.util.Vector;
 
-import org.overture.ast.assistant.InvocationAssistantException;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
@@ -38,11 +58,6 @@ import org.overture.ast.util.definitions.ClassList;
 import org.overture.guibuilder.internal.ToolSettings;
 import org.overture.interpreter.util.ClassListInterpreter;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.definition.AExplicitOperationDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AImplicitOperationDefinitionAssistantTC;
-import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 
 /**
  * Vdm Class Reader that uses Vdmj to extract most of the information (the exception is annotation)
@@ -54,7 +69,6 @@ public class VdmjVdmClassReader implements IVdmClassReader
 
 	private Vector<IVdmDefinition> classList = null;
 	ClassListInterpreter classes;
-	public final ITypeCheckerAssistantFactory assistantFactory = new TypeCheckerAssistantFactory();
 
 	/**
 	 * Constructor
@@ -71,7 +85,7 @@ public class VdmjVdmClassReader implements IVdmClassReader
 	}
 
 	@Override
-	public void readFiles(Vector<File> files)
+	public void readFiles(Vector<File> files, ITypeCheckerAssistantFactory af)
 	{
 		// ClassList classes = new ClassList();
 		AnnotationTable annotationTable = new AnnotationTable();
@@ -91,14 +105,7 @@ public class VdmjVdmClassReader implements IVdmClassReader
 		// we extract the annotations (ideally this should be done by the same parser)
 		annotationReader.readFiles(files);
 		System.out.println(annotationTable.printTable());
-		try
-		{
-			readVdmjClassList(classes, annotationTable);
-		} catch (InvocationAssistantException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		readVdmjClassList(classes, annotationTable, af);
 
 	}
 
@@ -114,10 +121,10 @@ public class VdmjVdmClassReader implements IVdmClassReader
 	 * 
 	 * @param classes
 	 * @param annotationTable
-	 * @throws InvocationAssistantException 
+	 * @throws InvocationAssistantException
 	 */
 	private void readVdmjClassList(ClassList classes,
-			AnnotationTable annotationTable) throws InvocationAssistantException
+			AnnotationTable annotationTable, ITypeCheckerAssistantFactory af)
 	{
 		// the name of the classes, this is usefull later on
 		Vector<String> classNames = new Vector<String>();
@@ -128,7 +135,7 @@ public class VdmjVdmClassReader implements IVdmClassReader
 
 		for (SClassDefinition c : classes)
 		{
-			readVdmjClass(c, annotationTable, classNames);
+			readVdmjClass(c, annotationTable, classNames, af);
 		}
 
 	}
@@ -142,10 +149,11 @@ public class VdmjVdmClassReader implements IVdmClassReader
 	 * @param annotationTable
 	 *            annotation table associated with the specification
 	 * @param classNames
-	 * @throws InvocationAssistantException 
+	 * @throws InvocationAssistantException
 	 */
 	private void readVdmjClass(SClassDefinition c,
-			AnnotationTable annotationTable, Vector<String> classNames) throws InvocationAssistantException
+			AnnotationTable annotationTable, Vector<String> classNames,
+			ITypeCheckerAssistantFactory assistantFactory)
 	{
 		boolean hasConstructors = c.getHasContructors();
 		VdmClass vdmClass = new VdmClass(c.getName().getName(), hasConstructors);
@@ -165,7 +173,7 @@ public class VdmjVdmClassReader implements IVdmClassReader
 				// FIXME: Better way of doing this ?
 				if (def instanceof AExplicitOperationDefinition)
 				{
-					AExplicitOperationDefinition operation = ((AExplicitOperationDefinition) def);
+					AExplicitOperationDefinition operation = (AExplicitOperationDefinition) def;
 					// FIXME: In terms of type only 'class types' are treated
 					VdmType type = getType(((AOperationType) operation.getType()).getResult(), assistantFactory);
 					newDefinition = new VdmMethod(operation.getName().getName(), operation.getIsConstructor(), type);
@@ -177,38 +185,42 @@ public class VdmjVdmClassReader implements IVdmClassReader
 					{
 						for (int n = 0; n < li.size(); ++n)
 						{
-							LexNameList varName = PPatternAssistantTC.getVariableNames(li.get(n));
+							LexNameList varName = assistantFactory.createPPatternAssistant().getVariableNames(li.get(n));
 							// the type
 							String typeName = extractTypeName(operation.getType(), n);
 							boolean flag = false;
 							for (String cn : classNames)
 							{
 								if (typeName.equals(cn))
+								{
 									flag = true;
+								}
 							}
 							((VdmMethod) newDefinition).addParam(new VdmParam(varName.toString(), new VdmType(typeName, flag)));
 						}
 					}
 				} else if (def instanceof AImplicitOperationDefinition)
 				{
-					AImplicitOperationDefinition operation = ((AImplicitOperationDefinition) def);
+					AImplicitOperationDefinition operation = (AImplicitOperationDefinition) def;
 					VdmType type = null;
 					// FIXME: In terms of type only 'class types' are treated
-					type = getType(((AOperationType)operation.getType()).getResult(),assistantFactory);
+					type = getType(((AOperationType) operation.getType()).getResult(), assistantFactory);
 					newDefinition = new VdmMethod(operation.getName().getName(), operation.getIsConstructor(), type);
 
 					// fetching the arguments
 					int n = 0;
 					for (PPattern li : assistantFactory.createAImplicitOperationDefinitionAssistant().getParamPatternList(operation))
 					{
-						LexNameList varName = PPatternAssistantTC.getVariableNames(li);
+						LexNameList varName = assistantFactory.createPPatternAssistant().getVariableNames(li);
 						// the type
 						String typeName = extractTypeName(operation.getType(), n);
 						boolean flag = false;
 						for (String cn : classNames)
 						{
 							if (typeName.equals(cn))
+							{
 								flag = true;
+							}
 						}
 						((VdmMethod) newDefinition).addParam(new VdmParam(varName.toString(), new VdmType(typeName, flag)));
 						extractTypeName(operation.getType(), n);
@@ -217,10 +229,10 @@ public class VdmjVdmClassReader implements IVdmClassReader
 
 				} else if (def instanceof AExplicitFunctionDefinition)
 				{
-					AExplicitFunctionDefinition function = ((AExplicitFunctionDefinition) def);
+					AExplicitFunctionDefinition function = (AExplicitFunctionDefinition) def;
 					VdmType type = null;
 					// FIXME: In terms of type only 'class types' are treated
-					type = getType(((AFunctionType) function.getType()).getResult(),assistantFactory);
+					type = getType(((AFunctionType) function.getType()).getResult(), assistantFactory);
 					newDefinition = new VdmMethod(function.getName().getName(), false, type);
 					// fetching the arguments
 					for (List<PPattern> li : function.getParamPatternList())
@@ -234,7 +246,9 @@ public class VdmjVdmClassReader implements IVdmClassReader
 							for (String cn : classNames)
 							{
 								if (typeName.equals(cn))
+								{
 									flag = true;
+								}
 							}
 							((VdmMethod) newDefinition).addParam(new VdmParam(varName.toString(), new VdmType(typeName, flag)));
 							extractTypeName(function.getType(), n);
@@ -243,7 +257,7 @@ public class VdmjVdmClassReader implements IVdmClassReader
 
 				} else if (def instanceof AImplicitFunctionDefinition)
 				{
-					AImplicitFunctionDefinition function = ((AImplicitFunctionDefinition) def);
+					AImplicitFunctionDefinition function = (AImplicitFunctionDefinition) def;
 					VdmType type = null;
 					// FIXME: In terms of type only 'class types' are treated
 					type = getType(((AFunctionType) function.getType()).getResult(), assistantFactory);
@@ -253,14 +267,16 @@ public class VdmjVdmClassReader implements IVdmClassReader
 					{
 						for (int n = 0; n < li.size(); ++n)
 						{
-							LexNameList varName = PPatternAssistantTC.getVariableNames(li.get(n));
+							LexNameList varName = assistantFactory.createPPatternAssistant().getVariableNames(li.get(n));
 							// the type
 							String typeName = extractTypeName(function.getType(), n);
 							boolean flag = false;
 							for (String cn : classNames)
 							{
 								if (typeName.equals(cn))
+								{
 									flag = true;
+								}
 							}
 							((VdmMethod) newDefinition).addParam(new VdmParam(varName.toString(), new VdmType(typeName, flag)));
 							extractTypeName(function.getType(), n);
@@ -296,40 +312,43 @@ public class VdmjVdmClassReader implements IVdmClassReader
 		// FIXME we only have one annotation for classes, so we can get away with this, but
 		// a sanity check is needed...
 		if (!(ToolSettings.GENERATION_SETTINGS == ToolSettings.GENERATION_MODE.ANNOTATIONS && vdmClass.hasAnnotations()))
+		{
 			classList.add(vdmClass);
+		}
 
 	}
 
-//	public static boolean isClass(PType type)
-//	{
-//		// FIXME
-//		if (type instanceof ANamedInvariantType)
-//		{
-//			ANamedInvariantType in = (ANamedInvariantType) type;
-//			if (in.getOpaque())
-//			{
-//				return false;
-//			}
-//			return isClass(in.getType());
-//		} else if (type instanceof AOptionalType)
-//		{
-//			AOptionalType opt = (AOptionalType) type;
-//			return isClass(opt.getType());
-//		} else if (type instanceof AParameterType)
-//		{
-//			return true;
-//		} else if (type instanceof AUnionType)
-//		{
-//			AUnionType ut = (AUnionType) type;
-//			return AUnionTypeAssistantInterpreter.getClassType(ut) != null;
-//		} else if (type instanceof AUnknownType)
-//		{
-//			return true;
-//		}
-//		return false;
-//	}
+	// public static boolean isClass(PType type)
+	// {
+	// // FIXME
+	// if (type instanceof ANamedInvariantType)
+	// {
+	// ANamedInvariantType in = (ANamedInvariantType) type;
+	// if (in.getOpaque())
+	// {
+	// return false;
+	// }
+	// return isClass(in.getType());
+	// } else if (type instanceof AOptionalType)
+	// {
+	// AOptionalType opt = (AOptionalType) type;
+	// return isClass(opt.getType());
+	// } else if (type instanceof AParameterType)
+	// {
+	// return true;
+	// } else if (type instanceof AUnionType)
+	// {
+	// AUnionType ut = (AUnionType) type;
+	// return AUnionTypeAssistantInterpreter.getClassType(ut) != null;
+	// } else if (type instanceof AUnknownType)
+	// {
+	// return true;
+	// }
+	// return false;
+	// }
 
-	public static VdmType getType(PType type, ITypeCheckerAssistantFactory assistantFactory) //added parameter for the assistantFactory
+	public static VdmType getType(PType type,
+			ITypeCheckerAssistantFactory assistantFactory) // added parameter for the assistantFactory
 	{
 		if (assistantFactory.createPTypeAssistant().isClass(type))
 		{

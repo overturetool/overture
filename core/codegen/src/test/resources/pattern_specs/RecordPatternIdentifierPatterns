@@ -1,0 +1,32 @@
+class Entry
+
+types
+
+public 
+Rec ::
+	n : nat
+	b : bool
+	c : char
+	r : real
+
+functions
+
+public recPatternFun : Rec -> Rec
+recPatternFun (mk_Rec(n1, b1, c1, r1)) ==
+let mk_Rec(n2, b2, c2, r2) = mk_Rec(5, true, 'g', 2.5)
+in
+	mk_Rec(n1, b2, c1, r2)
+
+operations
+
+public recPatternOp : Rec ==> Rec
+recPatternOp (mk_Rec(n1, b1, c1, r1)) ==
+let mk_Rec(n2, b2, c2, r2) = mk_Rec(5, true, 'g', 2.5)
+in
+	return mk_Rec(n1, b2, c1, r2);
+	
+public static Run : () ==> seq of Rec
+Run () ==
+	return [new Entry().recPatternOp(mk_Rec(77, false, 'e', 4.4)), recPatternFun(mk_Rec(77, false, 'e', 4.4))];
+
+end Entry

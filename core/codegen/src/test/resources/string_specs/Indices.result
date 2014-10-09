@@ -9,12 +9,16 @@ public class Entry {
     public Entry() {
     }
 
+    public static Object Run() {
+        return SeqUtil.seq(SeqUtil.inds("a"), SeqUtil.inds(a), SeqUtil.inds(f()));
+    }
+
     public static String f() {
         return "cat";
     }
 
-    public static Object Run() {
-        return SeqUtil.seq(SeqUtil.inds("a"), SeqUtil.inds(a), SeqUtil.inds(f()));
+    public String toString() {
+        return "Entry{" + "a = " + Utils.toString(a) + "}";
     }
 }
 

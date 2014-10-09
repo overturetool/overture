@@ -539,7 +539,7 @@ calls CheckTime to update the time counter.
 
 \begin{vdm_al}
 thread
-  periodic(1000)(CheckTime)
+/* periodic(1000) */CheckTime()
 
 end Channel
 \end{vdm_al}
@@ -1276,7 +1276,7 @@ time unit for our Timer to correspond to 10 system time units.
 
 \begin{vdm_al}
 thread
-  periodic(1000)(IncTime)
+/*  periodic(1000) */IncTime()
 
 end Timer
 \end{vdm_al}

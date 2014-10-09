@@ -32,7 +32,6 @@ import org.overture.interpreter.debug.RemoteControl;
 import org.overture.interpreter.debug.RemoteInterpreter;
 import org.overture.interpreter.runtime.SourceFile;
 
-
 public class RemoteSession implements RemoteControl
 {
 	private final static String COVERAGE = "./generated/word/";
@@ -41,7 +40,8 @@ public class RemoteSession implements RemoteControl
 	{
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 		boolean carryOn = true;
-		System.out.println("Session started in " + new File(".").getAbsolutePath());
+		System.out.println("Session started in "
+				+ new File(".").getAbsolutePath());
 
 		while (carryOn)
 		{
@@ -52,18 +52,15 @@ public class RemoteSession implements RemoteControl
 
 				if (line == null)
 				{
-					return;	// EOF
-				}
-				else if (line.length() == 0)
+					return; // EOF
+				} else if (line.length() == 0)
 				{
 					// Fine...
-				}
-				else if (line.equals("quit"))
+				} else if (line.equals("quit"))
 				{
 					in.close();
 					carryOn = false;
-				}
-				else if (line.equals("?") || line.equals("help"))
+				} else if (line.equals("?") || line.equals("help"))
 				{
 					System.out.println("? or help    - show this message");
 					System.out.println("init         - reinitialize the specification");
@@ -75,15 +72,14 @@ public class RemoteSession implements RemoteControl
 					System.out.println("classes      - list the classes loaded");
 					System.out.println("<expression> - evaluate the expression");
 					System.out.println("quit         - leave the session");
-				}
-				else if (line.equals("init"))
+				} else if (line.equals("init"))
 				{
 					long before = System.currentTimeMillis();
 					interpreter.init();
-		   			long after = System.currentTimeMillis();
-		   			System.out.println("Initialized in " + (double)(after-before)/1000 + " secs.");
-				}
-				else if (line.startsWith("create "))
+					long after = System.currentTimeMillis();
+					System.out.println("Initialized in "
+							+ (double) (after - before) / 1000 + " secs.");
+				} else if (line.startsWith("create "))
 				{
 					Pattern p = Pattern.compile("^create (\\w+)\\s*?:=\\s*(.+)$");
 					Matcher m = p.matcher(line);
@@ -94,55 +90,49 @@ public class RemoteSession implements RemoteControl
 						String exp = m.group(2);
 
 						interpreter.create(var, exp);
-						System.out.println(var + " = " + interpreter.execute(var));
-					}
-					else
+						System.out.println(var + " = "
+								+ interpreter.execute(var));
+					} else
 					{
 						System.out.println("Usage: create <id> := <value>");
 					}
-				}
-				else if (line.equals("env"))
+				} else if (line.equals("env"))
 				{
 					System.out.print(interpreter.getEnvironment());
-				}
-				else if (line.equals("files"))
+				} else if (line.equals("files"))
 				{
-					for (File file: interpreter.getSourceFiles())
+					for (File file : interpreter.getSourceFiles())
 					{
 						System.out.println(file.getAbsolutePath());
 					}
-				}
-				else if (line.equals("coverage"))
+				} else if (line.equals("coverage"))
 				{
-					for (File file: interpreter.getSourceFiles())
+					for (File file : interpreter.getSourceFiles())
 					{
 						doCoverage(interpreter.getSourceFile(file));
 					}
-				}
-				else if (line.equals("modules"))
+				} else if (line.equals("modules"))
 				{
-					for (String name: interpreter.getModules())
+					for (String name : interpreter.getModules())
 					{
 						System.out.println(name);
 					}
-				}
-				else if (line.equals("classes"))
+				} else if (line.equals("classes"))
 				{
-					for (String name: interpreter.getClasses())
+					for (String name : interpreter.getClasses())
 					{
 						System.out.println(name);
 					}
-				}
-				else
+				} else
 				{
 					long before = System.currentTimeMillis();
 					String output = interpreter.execute(line);
-		   			long after = System.currentTimeMillis();
+					long after = System.currentTimeMillis();
 					System.out.println(line + " = " + output);
-		   			System.out.println("Executed in " + (double)(after-before)/1000 + " secs.");
+					System.out.println("Executed in "
+							+ (double) (after - before) / 1000 + " secs.");
 				}
-			}
-			catch (Exception e)
+			} catch (Exception e)
 			{
 				System.out.println(e.getMessage());
 			}
@@ -160,8 +150,7 @@ public class RemoteSession implements RemoteControl
 			source.printWordCoverage(pw);
 			pw.close();
 			System.out.println("Word HTML coverage written to " + html);
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			System.out.println("coverage: " + e.getMessage());
 		}

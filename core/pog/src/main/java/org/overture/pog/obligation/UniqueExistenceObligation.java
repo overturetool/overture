@@ -23,10 +23,12 @@
 
 package org.overture.pog.obligation;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.AExists1Exp;
 import org.overture.ast.expressions.AIotaExp;
 import org.overture.pog.pub.IPOContextStack;
-
+import org.overture.pog.pub.IPogAssistantFactory;
+import org.overture.pog.pub.POType;
 
 public class UniqueExistenceObligation extends ProofObligation
 {
@@ -35,17 +37,19 @@ public class UniqueExistenceObligation extends ProofObligation
 	 */
 	private static final long serialVersionUID = 6089416321651268903L;
 
-	public UniqueExistenceObligation(AIotaExp iota, IPOContextStack ctxt)
+	public UniqueExistenceObligation(AIotaExp iota, IPOContextStack ctxt,
+			IPogAssistantFactory af) throws AnalysisException
 	{
-		super(iota, POType.UNIQUE_EXISTENCE, ctxt, iota.getLocation());
+		super(iota, POType.UNIQUE_EXISTENCE, ctxt, iota.getLocation(), af);
 
-		//exists1 iotaBinds & iotaPredicate
-		
+		// exists1 iotaBinds & iotaPredicate
+
 		AExists1Exp exists1Exp = new AExists1Exp();
 		exists1Exp.setBind(iota.getBind().clone());
 		exists1Exp.setPredicate(iota.getPredicate().clone());
-		
-//		valuetree.setContext(ctxt.getContextNodeList());
+
+		// valuetree.setContext(ctxt.getContextNodeList());
+		stitch = exists1Exp;
 		valuetree.setPredicate(ctxt.getPredWithContext(exists1Exp));
 	}
 }

@@ -1,3 +1,24 @@
+/*
+ * #%~
+ * Code Generator Plugin
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.ide.plugins.codegen;
 
 import java.io.PrintWriter;
@@ -20,17 +41,19 @@ public class CodeGenConsole implements ILogger
 {
 	private final PrintWriter out;
 	private final PrintWriter err;
-	
+
 	private boolean hasConsole = false;
 
 	private static CodeGenConsole Instance;
 
 	private MessageConsole codeGenConsole;
-	
+
 	public static CodeGenConsole GetInstance()
 	{
 		if (Instance == null)
+		{
 			Instance = new CodeGenConsole();
+		}
 
 		return Instance;
 	}
@@ -86,11 +109,11 @@ public class CodeGenConsole implements ILogger
 	{
 		out.println(msg);
 	}
-	
+
 	@Override
 	public void printErrorln(String msg)
 	{
-		err.println(msg);	
+		err.println(msg);
 	}
 
 	@Override
@@ -99,38 +122,25 @@ public class CodeGenConsole implements ILogger
 		err.print(msg);
 	}
 	
-	public void clearConsole()
+	public void activate()
 	{
 		if(codeGenConsole != null)
-			codeGenConsole.clearConsole();
+		{
+			codeGenConsole.activate();
+		}
 	}
 
-	public void show()
+	public void clearConsole()
 	{
-		if (hasConsole)
+		if (codeGenConsole != null)
 		{
-			IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-			if (activeWorkbenchWindow != null)
-			{
-				IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
-				if (activePage != null)
-				{
-					try
-					{
-						activePage.showView(IConsoleConstants.ID_CONSOLE_VIEW, null, IWorkbenchPage.VIEW_ACTIVATE);
-					} catch (PartInitException e)
-					{
-						Activator.log("Failed showing active page view", e);
-						e.printStackTrace();
-					}
-				}
-			}
+			codeGenConsole.clearConsole();
 		}
 	}
 
 	@Override
 	public void setSilent(boolean arg0)
 	{
-		//TODO: For now simply do nothing..
+		// TODO: For now simply do nothing..
 	}
 }

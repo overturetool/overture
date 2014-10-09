@@ -1,3 +1,30 @@
-Reserved name violation: [Violation in module A: 'double'. Location: line 5 at position: 8 in NameViolationsJavakeyword]
-Reserved name violation: [Violation in module A: 'double'. Location: line 10 at position: 7 in NameViolationsJavakeyword]
-Reserved name violation: [Violation in module A: 'double'. Location: line 13 at position: 13 in NameViolationsJavakeyword]
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class A {
+    public A() {
+    }
+
+    public Number cg_double(final Number Character) {
+        if (1L != 2L) {
+            return cg_double(3L);
+        } else {
+            return cg_double(3L);
+        }
+    }
+
+    public String toString() {
+        return "A{}";
+    }
+}
+
+##########
+*Name Violations*
+
+Reserved name violation: [Violation in module A: 'double'. Location: line 5 at position: 8 in NameViolationsJavakeyword]. Prefix 'cg_' has been added to the name
+Reserved name violation: [Violation in module A: 'double'. Location: line 9 at position: 16 in NameViolationsJavakeyword]. Prefix 'cg_' has been added to the name
+Reserved name violation: [Violation in module A: 'double'. Location: line 13 at position: 16 in NameViolationsJavakeyword]. Prefix 'cg_' has been added to the name
+
+##########

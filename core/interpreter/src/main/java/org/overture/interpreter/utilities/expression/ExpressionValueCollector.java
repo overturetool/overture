@@ -48,7 +48,6 @@ import org.overture.ast.expressions.SUnaryExp;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.pattern.PMultipleBindAssistantInterpreter;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.runtime.ValueException;
@@ -58,86 +57,79 @@ import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
 
 /***************************************
- * 
  * This method collects and returns the values of an expression.
  * 
  * @author gkanos
- *
  ****************************************/
-public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContext, ValueList>
+public class ExpressionValueCollector extends
+		QuestionAnswerAdaptor<ObjectContext, ValueList>
 {
 	protected IInterpreterAssistantFactory af;
-	
+
 	public ExpressionValueCollector(IInterpreterAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public ValueList caseAApplyExp(AApplyExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		//return AApplyExpAssistantInterpreter.getValues(exp, ctxt);
 		ValueList list = af.createPExpAssistant().getValues(exp.getArgs(), ctxt);
-		list.addAll(exp.getRoot().apply(THIS, ctxt));//(PExpAssistantInterpreter.getValues(exp.getRoot(), ctxt));
+		list.addAll(exp.getRoot().apply(THIS, ctxt));
 		return list;
 	}
-	
+
 	@Override
 	public ValueList defaultSBinaryExp(SBinaryExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		//return SBinaryExpAssistantInterpreter.getValues(exp, ctxt);
-		ValueList list = exp.getLeft().apply(THIS, ctxt);//PExpAssistantInterpreter.getValues(exp.getLeft(), ctxt);
-		list.addAll(exp.getRight().apply(THIS, ctxt));//(PExpAssistantInterpreter.getValues(exp.getRight(), ctxt));
+		ValueList list = exp.getLeft().apply(THIS, ctxt);
+		list.addAll(exp.getRight().apply(THIS, ctxt));
 		return list;
 	}
-	
+
 	@Override
 	public ValueList caseACasesExp(ACasesExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		//return ACasesExpAssistantInterpreter.getValues(exp, ctxt);
-		ValueList list = exp.getExpression().apply(THIS, ctxt);//PExpAssistantInterpreter.getValues(exp.getExpression(), ctxt);
+		ValueList list = exp.getExpression().apply(THIS, ctxt);
 
 		for (ACaseAlternative c : exp.getCases())
 		{
-			list.addAll(c.apply(THIS, ctxt));//(ACaseAlternativeAssistantInterpreter.getValues(c, ctxt));
+			list.addAll(c.apply(THIS, ctxt));
 		}
 
 		if (exp.getOthers() != null)
 		{
-			list.addAll(exp.getOthers().apply(THIS, ctxt));//(PExpAssistantInterpreter.getValues(exp.getOthers(), ctxt));
+			list.addAll(exp.getOthers().apply(THIS, ctxt));
 		}
 
 		return list;
 	}
-	
+
 	@Override
 	public ValueList caseADefExp(ADefExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		//return ADefExpAssistantInterpreter.getValues(exp, ctxt);
 		ValueList list = af.createPDefinitionListAssistant().getValues(exp.getLocalDefs(), ctxt);
-		list.addAll(exp.getExpression().apply(THIS, ctxt));//(PExpAssistantInterpreter.getValues(exp.getExpression(), ctxt));
+		list.addAll(exp.getExpression().apply(THIS, ctxt));
 		return list;
 	}
-	
+
 	@Override
 	public ValueList caseAElseIfExp(AElseIfExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		//return AElseIfExpAssistantInterpreter.getValues(exp, ctxt);
-		ValueList list = exp.getElseIf().apply(THIS, ctxt);//PExpAssistantInterpreter.getValues(exp.getElseIf(), ctxt);
-		list.addAll(exp.getThen().apply(THIS, ctxt));//(PExpAssistantInterpreter.getValues(exp.getThen(), ctxt));
+		ValueList list = exp.getElseIf().apply(THIS, ctxt);
+		list.addAll(exp.getThen().apply(THIS, ctxt));
 		return list;
 	}
-	
+
 	@Override
 	public ValueList caseAExistsExp(AExistsExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		//return AExistsExpAssistantInterpreter.getValues(exp, ctxt);
 		ValueList list = new ValueList();
 
 		for (PMultipleBind mb : exp.getBindList())
@@ -145,26 +137,24 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 			list.addAll(ctxt.assistantFactory.createPMultipleBindAssistant().getValues(mb, ctxt));
 		}
 
-		list.addAll(exp.getPredicate().apply(THIS, ctxt));//(PExpAssistantInterpreter.getValues(exp.getPredicate(), ctxt));
+		list.addAll(exp.getPredicate().apply(THIS, ctxt));
 		return list;
 	}
-	
+
 	@Override
 	public ValueList caseAExists1Exp(AExists1Exp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		//return AExists1ExpAssistantInterpreter.getValues(exp, ctxt);
 		ValueList list = af.createPBindAssistant().getValues(exp.getBind(), ctxt);
-		list.addAll(exp.getPredicate().apply(THIS, ctxt));//(PExpAssistantInterpreter.getValues(exp.getPredicate(), ctxt));
+		list.addAll(exp.getPredicate().apply(THIS, ctxt));
 		return list;
 	}
-	
+
 	@Override
 	public ValueList caseAFieldExp(AFieldExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		//return AFieldExpAssistantInterpreter.getValues(exp, ctxt);
-		ValueList values = exp.getObject().apply(THIS, ctxt);//PExpAssistantInterpreter.getValues(exp.getObject(), ctxt);
+		ValueList values = exp.getObject().apply(THIS, ctxt);
 
 		try
 		{
@@ -180,8 +170,7 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 			}
 
 			return values;
-		}
-		catch (ContextException e)
+		} catch (ContextException e)
 		{
 			if (e.number == 4034)
 			{
@@ -190,36 +179,31 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 			{
 				throw e;
 			}
-		}
-		catch (ValueException e)
+		} catch (ValueException e)
 		{
 			VdmRuntimeError.abort(exp.getLocation(), e);
 			return null;
-		}
-		catch (AnalysisException e)
+		} catch (AnalysisException e)
 		{
 			e.printStackTrace();
 			return null;
-		}
-		finally
+		} finally
 		{
 			ctxt.threadState.setAtomic(false);
 		}
 	}
-	
+
 	@Override
-	public ValueList caseAFieldNumberExp(AFieldNumberExp exp,
-			ObjectContext ctxt) throws AnalysisException
+	public ValueList caseAFieldNumberExp(AFieldNumberExp exp, ObjectContext ctxt)
+			throws AnalysisException
 	{
-		//return AFieldNumberExpAssistantInterpreter.getValues(exp, ctxt);
-		return exp.getTuple().apply(THIS, ctxt);//PExpAssistantInterpreter.getValues(exp.getTuple(), ctxt);
+		return exp.getTuple().apply(THIS, ctxt);
 	}
-	
+
 	@Override
 	public ValueList caseAForAllExp(AForAllExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		//return AForAllExpAssistantInterpreter.getValues(exp, ctxt);
 		ValueList list = new ValueList();
 
 		for (PMultipleBind mb : exp.getBindList())
@@ -227,114 +211,110 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 			list.addAll(ctxt.assistantFactory.createPMultipleBindAssistant().getValues(mb, ctxt));
 		}
 
-		list.addAll(exp.getPredicate().apply(THIS, ctxt));//(PExpAssistantInterpreter.getValues(exp.getPredicate(), ctxt));
+		list.addAll(exp.getPredicate().apply(THIS, ctxt));
 		return list;
 	}
-	
+
 	@Override
 	public ValueList caseAFuncInstatiationExp(AFuncInstatiationExp exp,
 			ObjectContext ctxt) throws AnalysisException
 	{
-		//return AFuncInstatiationExpAssistantInterpreter.getValues(exp, ctxt);
-		return exp.getFunction().apply(THIS, ctxt);//PExpAssistantInterpreter.getValues(exp.getFunction(), ctxt);
+		return exp.getFunction().apply(THIS, ctxt);
 	}
-	
+
 	@Override
 	public ValueList caseAIfExp(AIfExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		//return AIfExpAssistantInterpreter.getValues(exp, ctxt);
-		ValueList list = exp.getTest().apply(THIS, ctxt);//PExpAssistantInterpreter.getValues(exp.getTest(), ctxt);
-		list.addAll(exp.getThen().apply(THIS, ctxt));//(PExpAssistantInterpreter.getValues(exp.getThen(), ctxt));
+		ValueList list = exp.getTest().apply(THIS, ctxt);
+		list.addAll(exp.getThen().apply(THIS, ctxt));
 
 		for (AElseIfExp elif : exp.getElseList())
 		{
-			list.addAll(elif.apply(THIS, ctxt));//(PExpAssistantInterpreter.getValues(elif, ctxt));
+			list.addAll(elif.apply(THIS, ctxt));
 		}
 
 		if (exp.getElse() != null)
 		{
-			list.addAll(exp.getElse().apply(THIS, ctxt));//(PExpAssistantInterpreter.getValues(exp.getElse(), ctxt));
+			list.addAll(exp.getElse().apply(THIS, ctxt));
 		}
 
 		return list;
 	}
-	
+
 	@Override
 	public ValueList caseAIotaExp(AIotaExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		//return AIotaExpAssistantInterpreter.getValues((AIotaExp) exp, ctxt);
 		ValueList list = af.createPBindAssistant().getValues(exp.getBind(), ctxt);
-		list.addAll(exp.getPredicate().apply(THIS, ctxt));//(PExpAssistantInterpreter.getValues(exp.getPredicate(), ctxt));
+		list.addAll(exp.getPredicate().apply(THIS, ctxt));
 		return list;
 	}
+
 	@Override
 	public ValueList caseAIsExp(AIsExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		//return AIsExpAssistantInterpreter.getValues(exp, ctxt);
-		return exp.getTest().apply(THIS, ctxt);//PExpAssistantInterpreter.getValues(exp.getTest(), ctxt);
-				
+		return exp.getTest().apply(THIS, ctxt);
+
 	}
-	
+
 	@Override
 	public ValueList caseAIsOfBaseClassExp(AIsOfBaseClassExp exp,
 			ObjectContext ctxt) throws AnalysisException
 	{
-		//return AIsOfBaseClassExpAssistantInterpreter.getValues(exp, ctxt);
-		return exp.getExp().apply(THIS, ctxt);//PExpAssistantInterpreter.getValues(exp.getExp(), ctxt);
+
+		return exp.getExp().apply(THIS, ctxt);
 	}
-	
+
 	@Override
-	public ValueList caseAIsOfClassExp(AIsOfClassExp exp,
-			ObjectContext ctxt) throws AnalysisException
+	public ValueList caseAIsOfClassExp(AIsOfClassExp exp, ObjectContext ctxt)
+			throws AnalysisException
 	{
-		//return AIsOfClassExpAssistantInterpreter.getValues(exp, ctxt);
-		return exp.getExp().apply(THIS, ctxt);//PExpAssistantInterpreter.getValues(exp.getExp(), ctxt);
+
+		return exp.getExp().apply(THIS, ctxt);
 	}
-	
+
 	@Override
 	public ValueList caseALambdaExp(ALambdaExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		//return ALambdaExpAssistantInterpreter.getValues(exp, ctxt);
-		return exp.getExpression().apply(THIS, ctxt);//PExpAssistantInterpreter.getValues(exp.getExpression(), ctxt);
+
+		return exp.getExpression().apply(THIS, ctxt);
 	}
-	
+
 	@Override
 	public ValueList caseALetBeStExp(ALetBeStExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		//return ALetBeStExpAssistantInterpreter.getValues(exp, ctxt);
+
 		ValueList list = ctxt.assistantFactory.createPMultipleBindAssistant().getValues(exp.getBind(), ctxt);
 
 		if (exp.getSuchThat() != null)
 		{
-			list.addAll(exp.getSuchThat().apply(THIS, ctxt));//(PExpAssistantInterpreter.getValues(exp.getSuchThat(), ctxt));
+			list.addAll(exp.getSuchThat().apply(THIS, ctxt));
 		}
 
-		list.addAll(exp.getValue().apply(THIS, ctxt));//(PExpAssistantInterpreter.getValues(exp.getValue(), ctxt));
+		list.addAll(exp.getValue().apply(THIS, ctxt));
 		return list;
 	}
-	
+
 	@Override
 	public ValueList caseALetDefExp(ALetDefExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		//return ALetDefExpAssistantInterpreter.getValues(exp, ctxt);
-		
+
 		ValueList list = af.createPDefinitionListAssistant().getValues(exp.getLocalDefs(), ctxt);
-		list.addAll(exp.getExpression().apply(THIS, ctxt));//(PExpAssistantInterpreter.getValues(exp.getExpression(), ctxt));
+		list.addAll(exp.getExpression().apply(THIS, ctxt));
 		return list;
 	}
-	
+
 	@Override
-	public ValueList caseAMapCompMapExp(AMapCompMapExp exp,
-			ObjectContext ctxt) throws AnalysisException
+	public ValueList caseAMapCompMapExp(AMapCompMapExp exp, ObjectContext ctxt)
+			throws AnalysisException
 	{
-		//return AMapCompMapExpAssistantInterpreter.getValues((AMapCompMapExp) exp, ctxt);
-		ValueList list = exp.getFirst().apply(THIS, ctxt);//PExpAssistantInterpreter.getValues(exp.getFirst(), ctxt);
+
+		ValueList list = exp.getFirst().apply(THIS, ctxt);
 
 		for (PMultipleBind mb : exp.getBindings())
 		{
@@ -343,149 +323,148 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 
 		if (exp.getPredicate() != null)
 		{
-			list.addAll(exp.getPredicate().apply(THIS, ctxt));//(PExpAssistantInterpreter.getValues(exp.getPredicate(), ctxt));
+			list.addAll(exp.getPredicate().apply(THIS, ctxt));
 		}
 
 		return list;
 	}
-	
+
 	@Override
-	public ValueList caseAMapEnumMapExp(AMapEnumMapExp exp,
-			ObjectContext ctxt) throws AnalysisException
+	public ValueList caseAMapEnumMapExp(AMapEnumMapExp exp, ObjectContext ctxt)
+			throws AnalysisException
 	{
-		//return AMapEnumMapExpAssistantInterpreter.getValues((AMapEnumMapExp) exp, ctxt);
+
 		ValueList list = new ValueList();
 
 		for (AMapletExp maplet : exp.getMembers())
 		{
-			list.addAll(maplet.apply(THIS, ctxt));//(AMapletExpAssistantInterpreter.getValues(maplet, ctxt));
+			list.addAll(maplet.apply(THIS, ctxt));
 		}
 
 		return list;
 	}
-	
+
 	@Override
 	public ValueList defaultSMapExp(SMapExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-			return new ValueList();
+		return new ValueList();
 	}
-	
+
 	@Override
 	public ValueList caseAMapletExp(AMapletExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		//return AMapletExpAssistantInterpreter.getValues(exp, ctxt);
-		ValueList list = exp.apply(THIS, ctxt);//PExpAssistantInterpreter.getValues(exp.getLeft(), ctxt);
-		list.addAll(exp.getRight().apply(THIS, ctxt));//(PExpAssistantInterpreter.getValues(exp.getRight(), ctxt));
+
+		ValueList list = exp.apply(THIS, ctxt);
+		list.addAll(exp.getRight().apply(THIS, ctxt));
 		return list;
 	}
-	
+
 	@Override
 	public ValueList caseAMkBasicExp(AMkBasicExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		//return AMkBasicExpAssistantInterpreter.getValues(exp, ctxt);
-		return  exp.getArg().apply(THIS, ctxt);//PExpAssistantInterpreter.getValues(exp.getArg(), ctxt);
+
+		return exp.getArg().apply(THIS, ctxt);
 	}
-	
+
 	@Override
 	public ValueList caseAMkTypeExp(AMkTypeExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		//return AMkTypeExpAssistantInterpreter.getValues(exp, ctxt);
+
 		return af.createPExpAssistant().getValues(exp.getArgs(), ctxt);
 	}
-	
+
 	@Override
 	public ValueList caseAMuExp(AMuExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		//return AMuExpAssistantInterpreter.getValues(exp, ctxt);
-		ValueList list = exp.getRecord().apply(THIS, ctxt);//PExpAssistantInterpreter.getValues(exp.getRecord(), ctxt);
+
+		ValueList list = exp.getRecord().apply(THIS, ctxt);
 
 		for (ARecordModifier rm : exp.getModifiers())
 		{
-			list.addAll(rm.getValue().apply(THIS, ctxt));//PExpAssistantInterpreter.getValues(rm.getValue(), ctxt);)//ARecordModifierAssistantInterpreter.getValues(rm, ctxt));
+			list.addAll(rm.getValue().apply(THIS, ctxt));
 		}
 
 		return list;
 	}
-	
+
 	@Override
 	public ValueList caseANarrowExp(ANarrowExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		//return ANarrowExpAssistantInterpreter.getValues(exp, ctxt);
-		//return PExpAssistantInterpreter.getValues(exp.getTest(), ctxt);
+
 		return exp.getTest().apply(THIS, ctxt);
 	}
-	
+
 	@Override
 	public ValueList caseANewExp(ANewExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		//return ANewExpAssistantInterpreter.getValues(exp, ctxt);
+
 		return af.createPExpAssistant().getValues(exp.getArgs(), ctxt);
 	}
-	
+
 	@Override
 	public ValueList caseASameBaseClassExp(ASameBaseClassExp exp,
 			ObjectContext ctxt) throws AnalysisException
 	{
-		//return ASameBaseClassExpAssistantInterpreter.getValues(exp, ctxt);
-		ValueList list = exp.getLeft().apply(THIS, ctxt); //PExpAssistantInterpreter.getValues(exp.getLeft(), ctxt);
-		list.addAll(exp.getRight().apply(THIS, ctxt));//(PExpAssistantInterpreter.getValues(exp.getRight(), ctxt));
+
+		ValueList list = exp.getLeft().apply(THIS, ctxt);
+		list.addAll(exp.getRight().apply(THIS, ctxt));
 		return list;
 	}
-	
+
 	@Override
-	public ValueList caseASameClassExp(ASameClassExp exp,
-			ObjectContext ctxt) throws AnalysisException
+	public ValueList caseASameClassExp(ASameClassExp exp, ObjectContext ctxt)
+			throws AnalysisException
 	{
-		//return ASameClassExpAssistantInterpreter.getValues(exp, ctxt);
-		ValueList list = exp.getLeft().apply(THIS, ctxt);//PExpAssistantInterpreter.getValues(exp.getLeft(), ctxt);
-		list.addAll(exp.getRight().apply(THIS, ctxt));//(PExpAssistantInterpreter.getValues(exp.getRight(), ctxt));
+
+		ValueList list = exp.getLeft().apply(THIS, ctxt);
+		list.addAll(exp.getRight().apply(THIS, ctxt));
 		return list;
 	}
-	
+
 	@Override
-	public ValueList caseASeqCompSeqExp(ASeqCompSeqExp exp,
-			ObjectContext ctxt) throws AnalysisException
+	public ValueList caseASeqCompSeqExp(ASeqCompSeqExp exp, ObjectContext ctxt)
+			throws AnalysisException
 	{
-		//return ASeqCompSeqExpAssistantInterpreter.getValues((ASeqCompSeqExp) exp, ctxt);
-		ValueList list = exp.getFirst().apply(THIS, ctxt);//PExpAssistantInterpreter.getValues(exp.getFirst(), ctxt);
-		list.addAll(af.createPBindAssistant().getBindValues(exp.getSetBind(), ctxt));//(ASetBindAssistantInterpreter.getValues(exp.getSetBind(), ctxt));
+
+		ValueList list = exp.getFirst().apply(THIS, ctxt);
+		list.addAll(af.createPBindAssistant().getBindValues(exp.getSetBind(), ctxt));
 
 		if (exp.getPredicate() != null)
 		{
-			list.addAll(exp.getPredicate().apply(THIS, ctxt));//(PExpAssistantInterpreter.getValues(exp.getPredicate(), ctxt));
+			list.addAll(exp.getPredicate().apply(THIS, ctxt));
 		}
 
 		return list;
 	}
-	
+
 	@Override
-	public ValueList caseASeqEnumSeqExp(ASeqEnumSeqExp exp,
-			ObjectContext ctxt) throws AnalysisException
+	public ValueList caseASeqEnumSeqExp(ASeqEnumSeqExp exp, ObjectContext ctxt)
+			throws AnalysisException
 	{
-		//return ASeqEnumSeqExpAssistantInterpreter.getValues((ASeqEnumSeqExp) exp, ctxt);
+
 		return af.createPExpAssistant().getValues(exp.getMembers(), ctxt);
 	}
-	
+
 	@Override
 	public ValueList defaultSSeqExp(SSeqExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-			return new ValueList();
+		return new ValueList();
 	}
-	
+
 	@Override
-	public ValueList caseASetCompSetExp(ASetCompSetExp exp,
-			ObjectContext ctxt) throws AnalysisException
+	public ValueList caseASetCompSetExp(ASetCompSetExp exp, ObjectContext ctxt)
+			throws AnalysisException
 	{
-		//return ASetCompSetExpAssistantInterpreter.getValues(exp, ctxt);
-		ValueList list = exp.getFirst().apply(THIS, ctxt);//PExpAssistantInterpreter.getValues(exp.getFirst(), ctxt);
+
+		ValueList list = exp.getFirst().apply(THIS, ctxt);
 
 		for (PMultipleBind mb : exp.getBindings())
 		{
@@ -494,60 +473,54 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 
 		if (exp.getPredicate() != null)
 		{
-			list.addAll(exp.getPredicate().apply(THIS, ctxt));//(PExpAssistantInterpreter.getValues(exp.getPredicate(), ctxt));
+			list.addAll(exp.getPredicate().apply(THIS, ctxt));
 		}
 
 		return list;
 	}
-	
+
 	@Override
-	public ValueList caseASetEnumSetExp(ASetEnumSetExp exp,
-			ObjectContext ctxt) throws AnalysisException
+	public ValueList caseASetEnumSetExp(ASetEnumSetExp exp, ObjectContext ctxt)
+			throws AnalysisException
 	{
-		//return ASetEnumSetExpAssistantInterpreter.getValues(exp, ctxt);
 		return af.createPExpAssistant().getValues(exp.getMembers(), ctxt);
 	}
-	
+
 	@Override
 	public ValueList defaultSSetExp(SSetExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		//return SSeqExpAssistantInterpreter.getValues(exp, ctxt);
-			return new ValueList();
+		return new ValueList();
 	}
-	
+
 	@Override
 	public ValueList caseASubseqExp(ASubseqExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		//return ASubseqExpAssistantInterpreter.getValues(exp, ctxt);
-		ValueList list = exp.getSeq().apply(THIS, ctxt);//PExpAssistantInterpreter.getValues(exp.getSeq(), ctxt);
-		list.addAll(exp.getFrom().apply(THIS, ctxt));//(PExpAssistantInterpreter.getValues(exp.getFrom(), ctxt));
-		list.addAll(exp.getTo().apply(THIS, ctxt));//(PExpAssistantInterpreter.getValues(exp.getTo(), ctxt));
+		ValueList list = exp.getSeq().apply(THIS, ctxt);
+		list.addAll(exp.getFrom().apply(THIS, ctxt));
+		list.addAll(exp.getTo().apply(THIS, ctxt));
 		return list;
 	}
-	
+
 	@Override
 	public ValueList caseATupleExp(ATupleExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		//return ATupleExpAssistantInterpreter.getValues(exp, ctxt);
 		return af.createPExpAssistant().getValues(exp.getArgs(), ctxt);
 	}
-	
+
 	@Override
 	public ValueList defaultSUnaryExp(SUnaryExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		//return SUnaryExpAssistantInterpreter.getValues(exp, ctxt);
-		return exp.getExp().apply(THIS, ctxt);//PExpAssistantInterpreter.getValues(exp.getExp(), ctxt);
+		return exp.getExp().apply(THIS, ctxt);
 	}
-	
+
 	@Override
 	public ValueList caseAVariableExp(AVariableExp exp, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		//return AVariableExpAssistantInterpreter.getVariable(exp, ctxt);
 		Value v = ctxt.check(exp.getName());
 
 		if (v == null || !(v instanceof UpdatableValue))
@@ -557,8 +530,8 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 		{
 			return new ValueList(v);
 		}
-	} 
-	
+	}
+
 	@Override
 	public ValueList defaultPExp(PExp exp, ObjectContext ctxt)
 			throws AnalysisException
@@ -581,6 +554,5 @@ public class ExpressionValueCollector extends QuestionAnswerAdaptor<ObjectContex
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 
 }

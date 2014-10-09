@@ -7,18 +7,6 @@ public class Entry {
     public Entry() {
     }
 
-    public static Func_1<Func_1<Boolean, Number>, VDMSeq> bool_nat_map(
-        final VDMSeq s) {
-        return new Func_1<Func_1<Boolean, Number>, VDMSeq>() {
-                public VDMSeq eval(final Func_1<Boolean, Number> f) {
-                    return s.isEmpty() ? SeqUtil.seq()
-                                       : SeqUtil.conc(SeqUtil.seq(f.eval(((Boolean) s.get(
-                                    0)))),
-                        bool_nat_map(SeqUtil.tail(s.clone())).eval(f));
-                }
-            };
-    }
-
     public static Object Run() {
         Func_1<Boolean, Number> f = new Func_1<Boolean, Number>() {
                 public Number eval(final Boolean b) {
@@ -28,7 +16,23 @@ public class Entry {
 
         VDMSeq xs = SeqUtil.seq(true, false, true, true, true);
 
-        return bool_nat_map(xs).eval(f);
+        return bool_nat_map(Utils.clone(xs)).eval(f);
+    }
+
+    public static Func_1<Func_1<Boolean, Number>, VDMSeq> bool_nat_map(
+        final VDMSeq s) {
+        return new Func_1<Func_1<Boolean, Number>, VDMSeq>() {
+                public VDMSeq eval(final Func_1<Boolean, Number> f) {
+                    return s.isEmpty() ? SeqUtil.seq()
+                                       : SeqUtil.conc(SeqUtil.seq(f.eval(((Boolean) s.get(
+                                    0)))),
+                        bool_nat_map(SeqUtil.tail(Utils.clone(s))).eval(f));
+                }
+            };
+    }
+
+    public String toString() {
+        return "Entry{}";
     }
 }
 

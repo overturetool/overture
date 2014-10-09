@@ -17,27 +17,25 @@ import org.overture.interpreter.values.ValueList;
 import org.overture.interpreter.values.ValueSet;
 
 /***************************************
-* 
-* This class implements a way to collect the values that are single binded.
-* 
-* @author gkanos
-*
-****************************************/
+ * This class implements a way to collect the values that are single binded.
+ * 
+ * @author gkanos
+ ****************************************/
 
-public class SingleBindValuesCollector extends QuestionAnswerAdaptor<Context, ValueList>
+public class SingleBindValuesCollector extends
+		QuestionAnswerAdaptor<Context, ValueList>
 {
 	protected IInterpreterAssistantFactory af;
-	
+
 	public SingleBindValuesCollector(IInterpreterAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public ValueList caseASetBind(ASetBind bind, Context ctxt)
 			throws AnalysisException
 	{
-		//return ASetBindAssistantInterpreter.getBindValues(bind, ctxt);
 		try
 		{
 			ValueList results = new ValueList();
@@ -69,12 +67,11 @@ public class SingleBindValuesCollector extends QuestionAnswerAdaptor<Context, Va
 			return null;
 		}
 	}
-	
+
 	@Override
 	public ValueList caseATypeBind(ATypeBind bind, Context ctxt)
 			throws AnalysisException
 	{
-		//return ATypeBindAssistantInterpreter.getBindValues(bind, ctxt);
 		return af.createPTypeAssistant().getAllValues(bind.getType(), ctxt);
 	}
 

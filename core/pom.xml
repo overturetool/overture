@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.overturetool</groupId>
     <artifactId>root</artifactId>
-    <version>2.1.0</version>
+    <version>2.1.2</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -20,8 +20,6 @@
     <module>pog</module>
     <module>testframework</module>
     <module>combinatorialtesting</module>
-    <!-- vdmtools will move away; it's fine but not necessary for astv2 -jwc/4mar2013 -->
-    <!-- <module>vdmtools</module> -->
     <module>prettyprinting</module>
     <module>commandline</module>
     <module>codegen</module>
@@ -29,6 +27,7 @@
 	<module>guibuilder</module>
 <!--	<module>constraintsolverconn</module> -->
 	<module>modelcheckers</module>
+	<module>testing</module>
   </modules>
 
   <build>

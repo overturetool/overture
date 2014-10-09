@@ -13,7 +13,6 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.util.modules.CombinedDefaultModule;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.definition.AStateDefinitionAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.runtime.StateContext;
@@ -101,7 +100,7 @@ public class AModuleModulesAssistantInterpreter extends
 
 		return null;
 	}
-	
+
 	public PExp findExpression(CombinedDefaultModule m, File file, int lineno)
 	{
 		for (AModuleModules module : m.getModules())
@@ -131,7 +130,7 @@ public class AModuleModulesAssistantInterpreter extends
 
 		if (sdef != null)
 		{
-			return AStateDefinitionAssistantInterpreter.getStateContext(sdef);
+			return af.createAStateDefinitionAssistant().getStateContext(sdef);
 		}
 
 		return null;
@@ -142,9 +141,11 @@ public class AModuleModulesAssistantInterpreter extends
 	 * name/value pairs from the local definitions and the imported definitions. If state is defined by the module, this
 	 * is also initialized, creating the state Context.
 	 * 
+	 * @param m
+	 * @param initialContext
 	 * @return True if initialized OK.
 	 */
-	public static Set<ContextException> initialize(AModuleModules m,
+	public Set<ContextException> initialize(AModuleModules m,
 			StateContext initialContext)
 	{
 
@@ -181,7 +182,7 @@ public class AModuleModulesAssistantInterpreter extends
 
 			if (sdef != null)
 			{
-				AStateDefinitionAssistantInterpreter.initState(sdef, initialContext);
+				af.createAStateDefinitionAssistant().initState(sdef, initialContext);
 			}
 		} catch (ContextException e)
 		{
@@ -192,7 +193,7 @@ public class AModuleModulesAssistantInterpreter extends
 
 	}
 
-	public static IProofObligationList getProofObligations(AModuleModules m)
+	public IProofObligationList getProofObligations(AModuleModules m)
 			throws AnalysisException
 	{
 		return ProofObligationGenerator.generateProofObligations(m);

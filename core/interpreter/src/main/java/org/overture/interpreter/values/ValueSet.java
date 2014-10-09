@@ -31,16 +31,13 @@ import java.util.Vector;
 import org.overture.ast.util.Utils;
 import org.overture.interpreter.traces.PermuteArray;
 
-
-
 /**
- * A set of values. Note that although this class implements a set (no duplicates)
- * it is not based on a java.util.Set<Value>, but rather a Vector<Value>. This is
- * so that the possible orderings of set values can be enumerated when
- * performing quantifiers like "a,b,c in set {{1,2,3}, {4,5,6}}".
+ * A set of values. Note that although this class implements a set (no duplicates) it is not based on a
+ * java.util.Set<Value>, but rather a Vector<Value>. This is so that the possible orderings of set values can be
+ * enumerated when performing quantifiers like "a,b,c in set {{1,2,3}, {4,5,6}}".
  */
 
-public class ValueSet extends Vector<Value>		// NB based on Vector
+public class ValueSet extends Vector<Value> // NB based on Vector
 {
 	/**
 	 * 
@@ -77,7 +74,7 @@ public class ValueSet extends Vector<Value>		// NB based on Vector
 	{
 		if (other instanceof ValueSet)
 		{
-			ValueSet os = (ValueSet)other;
+			ValueSet os = (ValueSet) other;
 			return os.size() == size() && os.containsAll(this);
 		}
 
@@ -89,7 +86,7 @@ public class ValueSet extends Vector<Value>		// NB based on Vector
 	{
 		int hash = 0;
 
-		for (Value v: this)
+		for (Value v : this)
 		{
 			hash += v.hashCode();
 		}
@@ -103,8 +100,7 @@ public class ValueSet extends Vector<Value>		// NB based on Vector
 		if (contains(v))
 		{
 			return true;
-		}
-		else
+		} else
 		{
 			isSorted = false;
 			return super.add(v);
@@ -114,13 +110,13 @@ public class ValueSet extends Vector<Value>		// NB based on Vector
 	public boolean addNoCheck(Value v)
 	{
 		isSorted = false;
-		return super.add(v);	// Used by power set function
+		return super.add(v); // Used by power set function
 	}
 
 	@Override
 	public boolean addAll(Collection<? extends Value> values)
 	{
-		for (Value v: values)
+		for (Value v : values)
 		{
 			add(v);
 		}
@@ -153,24 +149,23 @@ public class ValueSet extends Vector<Value>		// NB based on Vector
 
 		if (size == 0)
 		{
-			results.add(new ValueSet());	// Just {}
-		}
-		else
+			results.add(new ValueSet()); // Just {}
+		} else
 		{
-    		PermuteArray p = new PermuteArray(size);
+			PermuteArray p = new PermuteArray(size);
 
-    		while (p.hasNext())
-    		{
-    			ValueSet m = new ValueSet();
-    			int[] perm = p.next();
+			while (p.hasNext())
+			{
+				ValueSet m = new ValueSet();
+				int[] perm = p.next();
 
-    			for (int i=0; i<size; i++)
-    			{
-    				m.add(get(perm[i]));
-    			}
+				for (int i = 0; i < size; i++)
+				{
+					m.add(get(perm[i]));
+				}
 
-    			results.add(m);
-    		}
+				results.add(m);
+			}
 		}
 
 		return results;
@@ -178,13 +173,12 @@ public class ValueSet extends Vector<Value>		// NB based on Vector
 
 	public List<ValueSet> powerSet()
 	{
-		List<ValueSet> sets = new Vector<ValueSet>(2^size());
+		List<ValueSet> sets = new Vector<ValueSet>(2 ^ size());
 
 		if (isEmpty())
 		{
-			sets.add(new ValueSet());	// Just {}
-		}
-		else
+			sets.add(new ValueSet()); // Just {}
+		} else
 		{
 			powerGenerate(sets, new boolean[size()], 0);
 		}
@@ -194,19 +188,18 @@ public class ValueSet extends Vector<Value>		// NB based on Vector
 
 	private void powerGenerate(List<ValueSet> result, boolean[] flags, int n)
 	{
-		for (int i=0; i <= 1; ++i)
+		for (int i = 0; i <= 1; ++i)
 		{
-			flags[n] = (i == 1);
+			flags[n] = i == 1;
 
 			if (n < flags.length - 1)
 			{
-				powerGenerate(result, flags, n+1);
-			}
-			else
+				powerGenerate(result, flags, n + 1);
+			} else
 			{
 				ValueSet newset = new ValueSet(flags.length);
 
-				for (int f=0; f<flags.length; f++)
+				for (int f = 0; f < flags.length; f++)
 				{
 					if (flags[f])
 					{
@@ -224,9 +217,9 @@ public class ValueSet extends Vector<Value>		// NB based on Vector
 	{
 		ValueSet copy = new ValueSet();
 
-		for (Value v: this)
+		for (Value v : this)
 		{
-			Value vcopy = (Value)v.clone();
+			Value vcopy = (Value) v.clone();
 			copy.add(vcopy);
 		}
 

@@ -24,13 +24,15 @@
 package org.overture.interpreter;
 
 import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 import java.util.Map.Entry;
+import java.util.Vector;
 
 import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
@@ -44,8 +46,6 @@ import org.overture.interpreter.messages.rtlog.RTLogger;
 import org.overture.interpreter.runtime.Interpreter;
 import org.overture.interpreter.util.ExitStatus;
 import org.overture.parser.config.Properties;
-import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 
 /**
  * The main class of the VDMJ parser/checker/interpreter.
@@ -61,22 +61,24 @@ abstract public class VDMJ
 	protected static String outfile = null;
 	protected static String logfile = null;
 
-	
 	public static String filecharset = Charset.defaultCharset().name();
 
-	final protected IInterpreterAssistantFactory assistantFactory ;//= new TypeCheckerAssistantFactory();
-	
+	final protected IInterpreterAssistantFactory assistantFactory;// = new TypeCheckerAssistantFactory();
+
+	/**
+	 * VDM-only constructor. <b>NOT</b> for use by extensions.
+	 */
 	public VDMJ()
 	{
 		this.assistantFactory = new InterpreterAssistantFactory();
 	}
 
 	/**
-	 * The main method. This validates the arguments, then parses and type
-	 * checks the files provided (if any), and finally enters the interpreter
-	 * if required.
-	 *
-	 * @param args Arguments passed to the program.
+	 * The main method. This validates the arguments, then parses and type checks the files provided (if any), and
+	 * finally enters the interpreter if required.
+	 * 
+	 * @param args
+	 *            Arguments passed to the program.
 	 */
 
 	@SuppressWarnings("unchecked")
@@ -91,238 +93,219 @@ abstract public class VDMJ
 		Class<RemoteControl> remoteClass = null;
 		String defaultName = null;
 
-		Properties.init();		// Read properties file, if any
+		Properties.init(); // Read properties file, if any
 		Settings.usingCmdLine = true;
 
 		for (Iterator<String> i = largs.iterator(); i.hasNext();)
 		{
 			String arg = i.next();
 
-    		if (arg.equals("-vdmsl"))
-    		{
-    			controller = new VDMSL();
-    			dialect = Dialect.VDM_SL;
-    		}
-    		else if (arg.equals("-vdmpp"))
-    		{
-    			controller = new VDMPP();
-    			dialect = Dialect.VDM_PP;
-    		}
-    		else if (arg.equals("-vdmrt"))
-    		{
-    			controller = new VDMRT();
-    			dialect = Dialect.VDM_RT;
-    		}
-    		else if (arg.equals("-w"))
-    		{
-    			warnings = false;
-    		}
-    		else if (arg.equals("-i"))
-    		{
-    			interpret = true;
-    		}
-    		else if (arg.equals("-p"))
-    		{
-    			pog = true;
-    		}
-    		else if (arg.equals("-q"))
-    		{
-    			quiet = true;
-    		}
-    		else if (arg.equals("-e"))
-    		{
-    			Settings.usingCmdLine = false;
-    			interpret = true;
-    			pog = false;
+			if (arg.equals("-vdmsl"))
+			{
+				controller = new VDMSL();
+				dialect = Dialect.VDM_SL;
+			} else if (arg.equals("-vdmpp"))
+			{
+				controller = new VDMPP();
+				dialect = Dialect.VDM_PP;
+			} else if (arg.equals("-vdmrt"))
+			{
+				controller = new VDMRT();
+				dialect = Dialect.VDM_RT;
+			} else if (arg.equals("-w"))
+			{
+				warnings = false;
+			} else if (arg.equals("-i"))
+			{
+				interpret = true;
+			} else if (arg.equals("-p"))
+			{
+				pog = true;
+			} else if (arg.equals("-q"))
+			{
+				quiet = true;
+			} else if (arg.equals("-e"))
+			{
+				Settings.usingCmdLine = false;
+				interpret = true;
+				pog = false;
 
-    			if (i.hasNext())
-    			{
-    				script = i.next();
-    			}
-    			else
-    			{
-    				usage("-e option requires an expression");
-    			}
-    		}
-    		else if (arg.equals("-o"))
-    		{
-    			if (i.hasNext())
-    			{
-    				if (outfile != null)
-    				{
-    					usage("Only one -o option allowed");
-    				}
+				if (i.hasNext())
+				{
+					script = i.next();
+				} else
+				{
+					usage("-e option requires an expression");
+				}
+			} else if (arg.equals("-o"))
+			{
+				if (i.hasNext())
+				{
+					if (outfile != null)
+					{
+						usage("Only one -o option allowed");
+					}
 
-    				outfile = i.next();
-    			}
-    			else
-    			{
-    				usage("-o option requires a filename");
-    			}
-    		}
-    		else if (arg.equals("-c"))
-    		{
-    			if (i.hasNext())
-    			{
-    				filecharset = validateCharset(i.next());
-    			}
-    			else
-    			{
-    				usage("-c option requires a charset name");
-    			}
-    		}
-    		else if (arg.equals("-t"))
-    		{
-    			if (i.hasNext())
-    			{
-    				Console.setCharset(validateCharset(i.next()));
-    			}
-    			else
-    			{
-    				usage("-t option requires a charset name");
-    			}
-    		}
-    		else if (arg.equals("-r"))
-    		{
-    			if (i.hasNext())
-    			{    				
-    				Settings.release = Release.lookup(i.next());
+					outfile = i.next();
+				} else
+				{
+					usage("-o option requires a filename");
+				}
+			} else if (arg.equals("-c"))
+			{
+				if (i.hasNext())
+				{
+					filecharset = validateCharset(i.next());
+				} else
+				{
+					usage("-c option requires a charset name");
+				}
+			} else if (arg.equals("-t"))
+			{
+				if (i.hasNext())
+				{
+					Console.setCharset(validateCharset(i.next()));
+				} else
+				{
+					usage("-t option requires a charset name");
+				}
+			} else if (arg.equals("-r"))
+			{
+				if (i.hasNext())
+				{
+					Settings.release = Release.lookup(i.next());
 
-    				if (Settings.release == null)
-    				{
-    					usage("-r option must be " + Release.list());
-    				}
-    			}
-    			else
-    			{
-    				usage("-r option requires a VDM release");
-    			}
-    		}
-    		else if (arg.equals("-pre"))
-    		{
-    			Settings.prechecks = false;
-    		}
-    		else if (arg.equals("-post"))
-    		{
-    			Settings.postchecks = false;
-    		}
-    		else if (arg.equals("-inv"))
-    		{
-    			Settings.invchecks = false;
-    		}
-    		else if (arg.equals("-dtc"))
-    		{
-    			// NB. Turn off both when no DTC
-    			Settings.invchecks = false;
-    			Settings.dynamictypechecks = false;
-    		}
-    		else if (arg.equals("-measures"))
-    		{
-    			Settings.measureChecks = false;
-    		}
-    		else if (arg.equals("-log"))
-    		{
-    			if (i.hasNext())
-    			{
-    				logfile = i.next();
-    			}
-    			else
-    			{
-    				usage("-log option requires a filename");
-    			}
-    		}
-    		else if (arg.equals("-remote"))
-    		{
-    			if (i.hasNext())
-    			{
-    				interpret = true;
-       				remoteName = i.next();
-    			}
-    			else
-    			{
-    				usage("-remote option requires a Java classname");
-    			}
-    		}
-    		else if (arg.equals("-default"))
-    		{
-    			if (i.hasNext())
-    			{
-       				defaultName = i.next();
-    			}
-    			else
-    			{
-    				usage("-default option requires a name");
-    			}
-    		}
-    		else if (arg.equals("-path"))
-    		{
-    			if (i.hasNext())
-    			{
-       				File path = new File(i.next());
-       				
-       				if (path.isDirectory())
-       				{
-       					pathnames.add(path);
-       				}
-       				else
-       				{
-       					usage(path + " is not a directory");
-       				}
-    			}
-    			else
-    			{
-    				usage("-path option requires a directory");
-    			}
-    		}
-    		else if (arg.startsWith("-"))
-    		{
-    			usage("Unknown option " + arg);
-    		}
-    		else
-    		{
-    			// It's a file or a directory
-    			File file = new File(arg);
+					if (Settings.release == null)
+					{
+						usage("-r option must be " + Release.list());
+					}
+				} else
+				{
+					usage("-r option requires a VDM release");
+				}
+			} else if (arg.equals("-pre"))
+			{
+				Settings.prechecks = false;
+			} else if (arg.equals("-post"))
+			{
+				Settings.postchecks = false;
+			} else if (arg.equals("-inv"))
+			{
+				Settings.invchecks = false;
+			} else if (arg.equals("-dtc"))
+			{
+				// NB. Turn off both when no DTC
+				Settings.invchecks = false;
+				Settings.dynamictypechecks = false;
+			} else if (arg.equals("-measures"))
+			{
+				Settings.measureChecks = false;
+			} else if (arg.equals("-log"))
+			{
+				if (i.hasNext())
+				{
+					logfile = i.next();
+				} else
+				{
+					usage("-log option requires a filename");
+				}
+			} else if (arg.equals("-remote"))
+			{
+				if (i.hasNext())
+				{
+					interpret = true;
+					remoteName = i.next();
+				} else
+				{
+					usage("-remote option requires a Java classname");
+				}
+			} else if (arg.equals("-default"))
+			{
+				if (i.hasNext())
+				{
+					defaultName = i.next();
+				} else
+				{
+					usage("-default option requires a name");
+				}
+			} else if (arg.equals("-path"))
+			{
+				if (i.hasNext())
+				{
+					File path = new File(i.next());
+
+					if (path.isDirectory())
+					{
+						pathnames.add(path);
+					} else
+					{
+						usage(path + " is not a directory");
+					}
+				} else
+				{
+					usage("-path option requires a directory");
+				}
+			}else if (arg.equals("-baseDir"))
+			{
+				if (i.hasNext())
+				{
+					try
+					{
+						Settings.baseDir = new File(i.next());
+					} catch (IllegalArgumentException e)
+					{
+						usage(e.getMessage() + ": " + arg);
+					}
+				} else
+				{
+					usage("-baseDir option requires a folder name");
+				}
+			}  else if (arg.startsWith("-"))
+			{
+				usage("Unknown option " + arg);
+			} else
+			{
+				// It's a file or a directory
+				File file = new File(arg);
 
 				if (file.isDirectory())
 				{
- 					for (File subFile: file.listFiles(dialect.getFilter()))
+					for (File subFile : file.listFiles(dialect.getFilter()))
 					{
 						if (subFile.isFile())
 						{
 							filenames.add(subFile);
 						}
 					}
+				} else
+				{
+					if (file.exists())
+					{
+						filenames.add(file);
+					} else
+					{
+						boolean OK = false;
+
+						for (File path : pathnames)
+						{
+							File pfile = new File(path, arg);
+
+							if (pfile.exists())
+							{
+								filenames.add(pfile);
+								OK = true;
+								break;
+							}
+						}
+
+						if (!OK)
+						{
+							usage("Cannot find file " + file);
+						}
+
+					}
 				}
-    			else
-    			{
-    				if (file.exists())
-    				{
-    					filenames.add(file);
-    				}
-    				else
-    				{
-    					boolean OK = false;
-    					
-    					for (File path: pathnames)
-    					{
-    						File pfile = new File(path, arg);
-    						
-    						if (pfile.exists())
-    						{
-    							filenames.add(pfile);
-    							OK = true;
-    							break;
-    						}
-    					}
-    					
-    					if (!OK)
-    					{
-    						usage("Cannot find file " + file);
-    					}
-    					
-    				}
-    			}
-    		}
+			}
 		}
 
 		if (controller == null)
@@ -340,9 +323,8 @@ abstract public class VDMJ
 			try
 			{
 				Class<?> cls = ClassLoader.getSystemClassLoader().loadClass(remoteName);
-				remoteClass = (Class<RemoteControl>)cls;
-			}
-			catch (ClassNotFoundException e)
+				remoteClass = (Class<RemoteControl>) cls;
+			} catch (ClassNotFoundException e)
 			{
 				usage("Cannot locate " + remoteName + " on the CLASSPATH");
 			}
@@ -354,32 +336,29 @@ abstract public class VDMJ
 		{
 			usage("You didn't specify any files");
 			status = ExitStatus.EXIT_ERRORS;
-		}
-		else
+		} else
 		{
 			do
 			{
 				if (filenames.isEmpty())
 				{
 					status = controller.interpret(filenames, null);
-				}
-				else
+				} else
 				{
-            		status = controller.parse(filenames);
+					status = controller.parse(filenames);
 
-            		if (status == ExitStatus.EXIT_OK)
-            		{
-            			status = controller.typeCheck();
+					if (status == ExitStatus.EXIT_OK)
+					{
+						status = controller.typeCheck();
 
-            			if (status == ExitStatus.EXIT_OK && interpret)
-            			{
-            				if (remoteClass == null)
-            				{
+						if (status == ExitStatus.EXIT_OK && interpret)
+						{
+							if (remoteClass == null)
+							{
 								status = controller.interpret(filenames, defaultName);
-            				}
-        					else
-        					{
-        						try
+							} else
+							{
+								try
 								{
 									final RemoteControl remote = remoteClass.newInstance();
 									Interpreter i = controller.getInterpreter();
@@ -393,11 +372,11 @@ abstract public class VDMJ
 
 									try
 									{
-										//remote.run(new RemoteInterpreter(i, null));
+										// remote.run(new RemoteInterpreter(i, null));
 										final RemoteInterpreter remoteInterpreter = new RemoteInterpreter(i, null);
 										Thread remoteThread = new Thread(new Runnable()
 										{
-											
+
 											public void run()
 											{
 												try
@@ -406,7 +385,7 @@ abstract public class VDMJ
 												} catch (Exception e)
 												{
 													println(e.getMessage());
-//													status = ExitStatus.EXIT_ERRORS;
+													// status = ExitStatus.EXIT_ERRORS;
 												}
 											}
 										});
@@ -415,27 +394,23 @@ abstract public class VDMJ
 										remoteThread.start();
 										remoteInterpreter.processRemoteCalls();
 										status = ExitStatus.EXIT_OK;
-									}
-									catch (Exception e)
+									} catch (Exception e)
 									{
 										println(e.getMessage());
 										status = ExitStatus.EXIT_ERRORS;
 									}
-								}
-								catch (InstantiationException e)
+								} catch (InstantiationException e)
 								{
 									usage("Cannot instantiate " + remoteName);
-								}
-								catch (Exception e)
+								} catch (Exception e)
 								{
 									usage(e.getMessage());
 								}
-        					}
-            			}
-            		}
+							}
+						}
+					}
 				}
-			}
-			while (status == ExitStatus.RELOAD);
+			} while (status == ExitStatus.RELOAD);
 		}
 
 		if (interpret)
@@ -476,19 +451,19 @@ abstract public class VDMJ
 	}
 
 	/**
-	 * Parse the list of files passed. The value returned is the number of
-	 * syntax errors encountered.
-	 *
-	 * @param files The files to parse.
+	 * Parse the list of files passed. The value returned is the number of syntax errors encountered.
+	 * 
+	 * @param files
+	 *            The files to parse.
 	 * @return The number of syntax errors.
 	 */
 
 	public abstract ExitStatus parse(List<File> files);
 
 	/**
-	 * Type check the files previously parsed by {@link #parse(List)}. The
-	 * value returned is the number of type checking errors.
-	 *
+	 * Type check the files previously parsed by {@link #parse(List)}. The value returned is the number of type checking
+	 * errors.
+	 * 
 	 * @return The number of type check errors.
 	 */
 
@@ -496,6 +471,7 @@ abstract public class VDMJ
 
 	/**
 	 * Generate an interpreter from the classes parsed.
+	 * 
 	 * @return An initialized interpreter.
 	 * @throws Exception
 	 */
@@ -503,17 +479,19 @@ abstract public class VDMJ
 	public abstract Interpreter getInterpreter() throws Exception;
 
 	/**
-	 * Interpret the type checked specification. The number returned is the
-	 * number of runtime errors not caught by the interpreter (usually zero
-	 * or one).
-	 *
-	 * @param filenames The filenames currently loaded.
-	 * @param defaultName The default module or class (or null).
+	 * Interpret the type checked specification. The number returned is the number of runtime errors not caught by the
+	 * interpreter (usually zero or one).
+	 * 
+	 * @param filenames
+	 *            The filenames currently loaded.
+	 * @param defaultName
+	 *            The default module or class (or null).
 	 * @return The exit status of the interpreter.
 	 */
 
-	abstract protected ExitStatus interpret(List<File> filenames, String defaultName);
-	
+	abstract protected ExitStatus interpret(List<File> filenames,
+			String defaultName);
+
 	/**
 	 * Dump log files
 	 */
@@ -581,11 +559,12 @@ abstract public class VDMJ
 			println("Charset " + cs + " is not supported\n");
 			println("Available charsets:");
 			println("Default = " + Charset.defaultCharset());
-			Map<String,Charset> available = Charset.availableCharsets();
+			Map<String, Charset> available = Charset.availableCharsets();
 
-			for (Entry<String, Charset> entry: available.entrySet())
+			for (Entry<String, Charset> entry : available.entrySet())
 			{
-				println(entry.getKey() + " " + available.get(entry.getValue()).aliases());
+				println(entry.getKey() + " "
+						+ available.get(entry.getValue()).aliases());
 			}
 
 			println("");

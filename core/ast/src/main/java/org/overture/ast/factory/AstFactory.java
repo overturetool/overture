@@ -1,3 +1,24 @@
+/*
+ * #%~
+ * The Overture Abstract Syntax Tree
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.ast.factory;
 
 import java.io.File;
@@ -7,11 +28,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.assistant.AstAssistantFactory;
-import org.overture.ast.assistant.InvocationAssistantException;
-import org.overture.ast.assistant.definition.PAccessSpecifierAssistant;
-import org.overture.ast.assistant.definition.PDefinitionAssistant;
-import org.overture.ast.assistant.pattern.PPatternAssistant;
-import org.overture.ast.assistant.type.AUnionTypeAssistant;
+import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AClassInvariantDefinition;
@@ -29,6 +46,7 @@ import org.overture.ast.definitions.AMultiBindListDefinition;
 import org.overture.ast.definitions.AMutexSyncDefinition;
 import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.APerSyncDefinition;
+import org.overture.ast.definitions.APrivateAccess;
 import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
@@ -98,7 +116,9 @@ import org.overture.ast.patterns.AIntegerPattern;
 import org.overture.ast.patterns.AMapPattern;
 import org.overture.ast.patterns.AMapUnionPattern;
 import org.overture.ast.patterns.AMapletPatternMaplet;
+import org.overture.ast.patterns.ANamePatternPair;
 import org.overture.ast.patterns.ANilPattern;
+import org.overture.ast.patterns.AObjectPattern;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.APatternTypePair;
 import org.overture.ast.patterns.AQuotePattern;
@@ -207,9 +227,15 @@ import org.overture.ast.util.Utils;
 @SuppressWarnings("deprecation")
 public class AstFactory
 {
+	// Should we instanciatte an assistant factory here?
+	// Create a setter and a getter.
+	protected static IAstAssistantFactory af;
+
 	static
 	{
-		new AstAssistantFactory();// FIXME: remove when asssistant conversion is finished
+		// This static init is needed because the AstFactory is always used
+		// statically
+		af = new AstAssistantFactory();//
 	}
 
 	/*
@@ -244,7 +270,7 @@ public class AstFactory
 		result.setLocation(location);
 		result.setName(name);
 		result.setNameScope(scope);
-		result.setAccess(PAccessSpecifierAssistant.getDefault());
+		result.setAccess(getDefaultAccessSpecifier());
 		result.setUsed(false);
 	}
 
@@ -303,6 +329,15 @@ public class AstFactory
 	{
 		result.setOpaque(false);
 		result.setInNarrower(false);
+	}
+
+	/*
+	 * Get various pre-built access specifiers
+	 */
+
+	public static AAccessSpecifierAccessSpecifier getDefaultAccessSpecifier()
+	{
+		return AstFactory.newAAccessSpecifierAccessSpecifier(new APrivateAccess(), false, false);
 	}
 
 	/*
@@ -380,7 +415,8 @@ public class AstFactory
 	}
 
 	public static AClassClassDefinition newAClassClassDefinition(
-			ILexNameToken className, List<? extends ILexNameToken> superclasses,
+			ILexNameToken className,
+			List<? extends ILexNameToken> superclasses,
 			List<PDefinition> members)
 	{
 
@@ -391,11 +427,12 @@ public class AstFactory
 	}
 
 	protected static void initClassDefinition(SClassDefinition result,
-			ILexNameToken className, List<? extends ILexNameToken> superclasses,
+			ILexNameToken className,
+			List<? extends ILexNameToken> superclasses,
 			List<PDefinition> members)
 	{
 		initDefinition(result, Pass.DEFS, className.getLocation(), className, NameScope.CLASSNAME);
-		result.setAccess(PAccessSpecifierAssistant.getPublic());
+		result.setAccess(af.createPAccessSpecifierAssistant().getPublic());
 		result.setUsed(true);
 		result.setTypeChecked(false);
 		result.setGettingInvDefs(false);
@@ -420,12 +457,12 @@ public class AstFactory
 		}
 
 		// Classes are all effectively public types
-		PDefinitionAssistant.setClassDefinition(result.getDefinitions(), result);
+		af.createPDefinitionAssistant().setClassDefinition(result.getDefinitions(), result);
 
 		// others
 		result.setSettingHierarchy(ClassDefinitionSettings.UNSET);
 
-		//Reset parent set by member graph field
+		// Reset parent set by member graph field
 		result.parent(null);
 	}
 
@@ -475,13 +512,14 @@ public class AstFactory
 		ATypeDefinition result = new ATypeDefinition();
 		initDefinition(result, Pass.TYPES, name.getLocation(), name, NameScope.TYPENAME);
 
-		// Force all type defs (invs) to be static. There is no guarantee that this will say here but is should
+		// Force all type defs (invs) to be static. There is no guarantee that
+		// this will say here but is should
 		result.getAccess().setStatic(new TStatic());
 
 		result.setInvType(type);
 		result.setInvPattern(invPattern);
 		result.setInvExpression(invExpression);
-		
+
 		result.setType(type);
 
 		if (type != null)
@@ -490,10 +528,10 @@ public class AstFactory
 			{
 				type.setDefinitions(new LinkedList<PDefinition>());
 			}
-			
+
 			type.getDefinitions().add(result);
 		}
-		
+
 		return result;
 	}
 
@@ -598,7 +636,9 @@ public class AstFactory
 
 		for (int i = 0; i < node.getPatterns().size(); i++)
 		{
-			PType type = (PType) node.getType();// .clone();//Use clone since we don't want to make a switch for all
+			PType type = (PType) node.getType();// .clone();//Use clone since we
+												// don't want to make a switch
+												// for all
 												// types.
 			// type.parent(null);//new new type not in the tree yet.
 			list.add(type);
@@ -622,16 +662,9 @@ public class AstFactory
 
 		List<PDefinition> defs = new Vector<PDefinition>();
 
-		try
+		for (ILexNameToken var : af.createPPatternAssistant().getVariableNames(p))
 		{
-			for (ILexNameToken var : PPatternAssistant.getVariableNames(p))
-			{
-				defs.add(AstFactory.newAUntypedDefinition(result.getLocation(), var, scope));
-			}
-		} catch (InvocationAssistantException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			defs.add(AstFactory.newAUntypedDefinition(result.getLocation(), var, scope));
 		}
 
 		result.setDefs(defs);
@@ -750,8 +783,8 @@ public class AstFactory
 		{
 			ptypes.addAll(getTypeList(ptp));
 		}
-		AOperationType operationType = AstFactory.newAOperationType(result.getLocation(), ptypes, (result.getResult() == null ? AstFactory.newAVoidType(name.getLocation())
-				: result.getResult().getType()));
+		AOperationType operationType = AstFactory.newAOperationType(result.getLocation(), ptypes, result.getResult() == null ? AstFactory.newAVoidType(name.getLocation())
+				: result.getResult().getType());
 		result.setType(operationType);
 
 		return result;
@@ -800,7 +833,7 @@ public class AstFactory
 		AExternalClause result = new AExternalClause();
 		result.setMode(mode);
 		result.setIdentifiers(names);
-		result.setType((type == null) ? AstFactory.newAUnknownType(names.get(0).getLocation())
+		result.setType(type == null ? AstFactory.newAUnknownType(names.get(0).getLocation())
 				: type);
 
 		return result;
@@ -900,21 +933,22 @@ public class AstFactory
 		initDefinition(result, Pass.DEFS, statement.getLocation(), null, NameScope.GLOBAL);
 
 		result.setStatement(statement);
-		// used to be a static method on LexNameToken - removed when we went to interface
+		// used to be a static method on LexNameToken - removed when we went to
+		// interface
 		result.setOperationName(new LexNameToken(statement.getLocation().getModule(), "thread", statement.getLocation()));
-		result.setAccess(PAccessSpecifierAssistant.getProtected());
+		result.setAccess(af.createPAccessSpecifierAssistant().getProtected());
 
 		return result;
 	}
 
-	public static AThreadDefinition newPeriodicAThreadDefinition(ILexNameToken opname,
-			List<PExp> args)
+	public static AThreadDefinition newPeriodicAThreadDefinition(
+			ILexNameToken opname, List<PExp> args)
 	{
 		return newAThreadDefinition(AstFactory.newAPeriodicStm(opname, args));
 	}
 
-	public static AThreadDefinition newSporadicAThreadDefinition(ILexNameToken opname,
-			List<PExp> args)
+	public static AThreadDefinition newSporadicAThreadDefinition(
+			ILexNameToken opname, List<PExp> args)
 	{
 		return newAThreadDefinition(AstFactory.newASporadicStm(opname, args));
 	}
@@ -985,7 +1019,8 @@ public class AstFactory
 			namesClonable.add(new ClonableString(string));
 		}
 
-		// List<ATraceDefinitionTerm> tracesTerms = new Vector<ATraceDefinitionTerm>();
+		// List<ATraceDefinitionTerm> tracesTerms = new
+		// Vector<ATraceDefinitionTerm>();
 		// for (ATraceDefinitionTerm list : terms)
 		// {
 		// tracesTerms.add( new ATraceDefinitionTerm(list));
@@ -993,7 +1028,7 @@ public class AstFactory
 
 		result.setPathname(namesClonable);
 		result.setTerms(terms);
-		result.setAccess(PAccessSpecifierAssistant.getPublic());
+		result.setAccess(af.createPAccessSpecifierAssistant().getPublic());
 		result.setType(newAOperationType(location));
 
 		return result;
@@ -1561,7 +1596,8 @@ public class AstFactory
 		initExpression(result, location);
 		if (result.getLocation() != null)
 		{
-			result.getLocation().executable(false); // ie. ignore coverage for these
+			result.getLocation().executable(false); // ie. ignore coverage for
+													// these
 		}
 		return result;
 	}
@@ -1781,7 +1817,8 @@ public class AstFactory
 	public static AMapCompMapExp newAMapCompMapExp(ILexLocation start,
 			AMapletExp first, List<PMultipleBind> bindings, PExp predicate)
 	{
-		AMapCompMapExp result = new AMapCompMapExp();// start, first, bindings, predicate);
+		AMapCompMapExp result = new AMapCompMapExp();// start, first, bindings,
+														// predicate);
 		initExpression(result, start);
 
 		result.setFirst(first);
@@ -2098,10 +2135,10 @@ public class AstFactory
 		result.setImportdefs(new Vector<PDefinition>()); // and import nothing
 
 		result.setIsFlat(true);
-		
-		//Reset parent set by member graph field
+
+		// Reset parent set by member graph field
 		result.parent(null);
-		
+
 		return result;
 	}
 
@@ -2136,12 +2173,13 @@ public class AstFactory
 		result.setTypeChecked(false);
 		result.setIsDLModule(false); // TODO: this does not exist in VDMj
 
-		result.setExportdefs(new Vector<PDefinition>()); // By default, export nothing
+		result.setExportdefs(new Vector<PDefinition>()); // By default, export
+															// nothing
 		result.setImportdefs(new Vector<PDefinition>()); // and import nothing
 
-		//Reset parent set by member graph field
+		// Reset parent set by member graph field
 		result.parent(null);
-		
+
 		return result;
 	}
 
@@ -2375,6 +2413,26 @@ public class AstFactory
 		result.setTypename(typename);
 		result.setType(AstFactory.getAUnresolvedType(typename));
 		return result;
+	}
+
+	public static AObjectPattern newAObjectPattern(ILexNameToken classname,
+			List<ANamePatternPair> list)
+	{
+		AObjectPattern result = new AObjectPattern();
+		initPattern(result, classname.getLocation());
+		result.setFields(list);
+		result.setClassname(classname);
+		result.setType(AstFactory.getAUnresolvedType(classname));
+		return result;
+	}
+	
+	public static ANamePatternPair newANamePatternPair(ILexNameToken name, PPattern pattern)
+	{
+		ANamePatternPair pair = new ANamePatternPair();
+		pair.setName(name);
+		pair.setPattern(pattern);
+		pair.setResolved(false);
+		return pair;
 	}
 
 	private static AUnresolvedType getAUnresolvedType(ILexNameToken typename)
@@ -2850,7 +2908,7 @@ public class AstFactory
 		list.add(a);
 		list.add(b);
 		result.setTypes(list);
-		AUnionTypeAssistant.expand(result);
+		af.createAUnionTypeAssistant().expand(result);
 		return result;
 	}
 
@@ -3012,8 +3070,9 @@ public class AstFactory
 
 		result.setSuperdef(d);
 		result.setOldname(localname.getOldName());
+		result.setType(d.getType());
 
-		PDefinitionAssistant.setClassDefinition(result, d.getClassDefinition());
+		af.createPDefinitionAssistant().setClassDefinition(result, d.getClassDefinition());
 		result.setAccess(d.getAccess().clone());
 
 		return result;
@@ -3363,7 +3422,7 @@ public class AstFactory
 		initUnionType(result);
 
 		result.setTypes(types);
-		AUnionTypeAssistant.expand(result);
+		af.createAUnionTypeAssistant().expand(result);
 		return result;
 	}
 
@@ -3464,7 +3523,8 @@ public class AstFactory
 	// return result;
 	// }
 	//
-	// public static AIsExp newAIsExp(ILexLocation location, PType type, PExp test) {
+	// public static AIsExp newAIsExp(ILexLocation location, PType type, PExp
+	// test) {
 	// AIsExp result = new AIsExp();
 	// initExpression(result, location);
 	//

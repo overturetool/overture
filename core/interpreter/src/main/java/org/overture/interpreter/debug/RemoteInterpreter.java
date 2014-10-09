@@ -41,7 +41,6 @@ import org.overture.interpreter.scheduler.BasicSchedulableThread;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueFactory;
 
-
 public class RemoteInterpreter
 {
 	private final Interpreter interpreter;
@@ -59,7 +58,7 @@ public class RemoteInterpreter
 	{
 		return interpreter;
 	}
-	
+
 	public ValueFactory getValueFactory()
 	{
 		return new ValueFactory();
@@ -72,18 +71,17 @@ public class RemoteInterpreter
 
 	public String execute(String line) throws Exception
 	{
-		if(isFinished)
+		if (isFinished)
 		{
 			throw new Exception("RemoteInterpreter has finished.");
 		}
-		
-		executionQueueRequest.add(new Call(CallType.Execute,line));
+
+		executionQueueRequest.add(new Call(CallType.Execute, line));
 		Object result = executionQueueResult.take();
-		if(result instanceof Exception)
+		if (result instanceof Exception)
 		{
-			throw (Exception)result;
-		}
-		else
+			throw (Exception) result;
+		} else
 		{
 			return ((Value) result).toString();
 		}
@@ -91,18 +89,17 @@ public class RemoteInterpreter
 
 	public Value valueExecute(String line) throws Exception
 	{
-		if(isFinished)
+		if (isFinished)
 		{
 			throw new Exception("RemoteInterpreter has finished.");
 		}
-		
-		executionQueueRequest.add(new Call(CallType.Execute,line));
+
+		executionQueueRequest.add(new Call(CallType.Execute, line));
 		Object result = executionQueueResult.take();
-		if(result instanceof Exception)
+		if (result instanceof Exception)
 		{
-			throw (Exception)result;
-		}
-		else
+			throw (Exception) result;
+		} else
 		{
 			return (Value) result;
 		}
@@ -115,21 +112,20 @@ public class RemoteInterpreter
 
 	public void create(String var, String exp) throws Exception
 	{
-		if(isFinished)
+		if (isFinished)
 		{
 			throw new Exception("RemoteInterpreter has finished.");
 		}
-		
+
 		if (interpreter instanceof ClassInterpreter)
 		{
-			executionQueueRequest.add(new Call(CallType.Create,var,exp));
+			executionQueueRequest.add(new Call(CallType.Create, var, exp));
 			Object result = executionQueueResult.take();
-			if(result instanceof Exception)
+			if (result instanceof Exception)
 			{
-				throw (Exception)result;
+				throw (Exception) result;
 			}
-		}
-		else
+		} else
 		{
 			throw new Exception("Only available for VDM++ and VDM-RT");
 		}
@@ -157,10 +153,9 @@ public class RemoteInterpreter
 		if (interpreter instanceof ClassInterpreter)
 		{
 			throw new Exception("Only available for VDM-SL");
-		}
-		else
+		} else
 		{
-			for (AModuleModules m: ((ModuleInterpreter)interpreter).getModules())
+			for (AModuleModules m : ((ModuleInterpreter) interpreter).getModules())
 			{
 				names.add(m.getName().getName());
 			}
@@ -175,76 +170,78 @@ public class RemoteInterpreter
 
 		if (interpreter instanceof ClassInterpreter)
 		{
-			for (SClassDefinition def: ((ClassInterpreter)interpreter).getClasses())
+			for (SClassDefinition def : ((ClassInterpreter) interpreter).getClasses())
 			{
 				names.add(def.getName().getName());
 			}
-		}
-		else
+		} else
 		{
 			throw new Exception("Only available for VDM++ and VDM-RT");
 		}
 
 		return names;
 	}
-	
-	
-	
+
 	public void finish()
 	{
 		isFinished = true;
-		if(vdmExecuteThread != null)
+		if (vdmExecuteThread != null)
 		{
 			vdmExecuteThread.interrupt();
 		}
 	}
-	
+
 	ArrayBlockingQueue<Call> executionQueueRequest = new ArrayBlockingQueue<Call>(1);
 	ArrayBlockingQueue<Object> executionQueueResult = new ArrayBlockingQueue<Object>(1);
 	private boolean isFinished;
+
 	public static class Call
 	{
-		public enum CallType{Execute, Create};
+		public enum CallType
+		{
+			Execute, Create
+		};
+
 		public final CallType type;
 		public final String exp;
 		public final String var;
-		
+
 		public Call(CallType type, String var, String exp)
 		{
 			this.type = type;
 			this.var = var;
 			this.exp = exp;
 		}
-		
+
 		public Call(CallType type, String exp)
 		{
 			this.type = type;
 			this.var = null;
 			this.exp = exp;
 		}
+
 		@Override
 		public String toString()
 		{
-			return this.type+ " "+this.var+" "+ this.exp;
+			return this.type + " " + this.var + " " + this.exp;
 		}
 	}
-	
 
 	public void processRemoteCalls() throws Exception
 	{
-		if(running)
+		if (running)
 		{
 			return;
 		}
-		
-		if(BasicSchedulableThread.getThread(Thread.currentThread())== null)
+
+		if (BasicSchedulableThread.getThread(Thread.currentThread()) == null)
 		{
 			throw new Exception("Process Remote Calls can only be called from a valid VDM thread");
 		}
-		
+
 		running = true;
 		vdmExecuteThread = Thread.currentThread();
-		while(!isFinished)
+		while (!isFinished)
 		{
 			try
 			{
@@ -256,15 +253,15 @@ public class RemoteInterpreter
 						case Create:
 							if (interpreter instanceof ClassInterpreter)
 							{
-								ClassInterpreter ci = (ClassInterpreter)interpreter;
+								ClassInterpreter ci = (ClassInterpreter) interpreter;
 								ci.create(call.var, call.exp);
 								executionQueueResult.add(new Object());
 							}
 							break;
 						case Execute:
-								executionQueueResult.add(interpreter.execute(call.exp, dbgp));
+							executionQueueResult.add(interpreter.execute(call.exp, dbgp));
 							break;
-						
+
 					}
 				} catch (Exception e)
 				{
@@ -276,6 +273,5 @@ public class RemoteInterpreter
 			}
 		}
 	}
-	
-	
+
 }

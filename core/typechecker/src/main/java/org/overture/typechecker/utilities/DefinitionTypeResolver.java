@@ -1,3 +1,24 @@
+/*
+ * #%~
+ * The VDM Type Checker
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.typechecker.utilities;
 
 import java.util.List;
@@ -21,7 +42,6 @@ import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.ASubclassResponsibilityExp;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.PPattern;
-import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
@@ -48,8 +68,8 @@ public class DefinitionTypeResolver extends
 {
 	public static class NewQuestion
 	{
-		final IQuestionAnswer<TypeCheckInfo, PType> rootVisitor;
-		final TypeCheckInfo question;
+		public final IQuestionAnswer<TypeCheckInfo, PType> rootVisitor;
+		public final TypeCheckInfo question;
 
 		public NewQuestion(IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 				TypeCheckInfo question)
@@ -90,7 +110,7 @@ public class DefinitionTypeResolver extends
 		{
 			// node.setType(PTypeAssistantTC.typeResolve(question.question.assistantFactory.createPDefinitionAssistant().getType(node),
 			// null, question.rootVisitor, question));
-			node.setType(af.createPTypeAssistant().typeResolve(node.getType(), null, question.rootVisitor, question.question)); 
+			node.setType(af.createPTypeAssistant().typeResolve(node.getType(), null, question.rootVisitor, question.question));
 			// FIXME: my way to rewrite the above line.Test shows that it is ok <- George kanakis
 		}
 
@@ -98,11 +118,6 @@ public class DefinitionTypeResolver extends
 		{
 			AFunctionType fType = (AFunctionType) question.question.assistantFactory.createPDefinitionAssistant().getType(node);
 			node.getName().setTypeQualifier(fType.getParameters());
-
-			if (node.getBody() instanceof ASubclassResponsibilityExp)
-			{
-				node.getClassDefinition().setIsAbstract(true);
-			}
 		}
 
 		if (node.getBody() instanceof ASubclassResponsibilityExp
@@ -140,11 +155,6 @@ public class DefinitionTypeResolver extends
 		if (question.question.env.isVDMPP())
 		{
 			node.getName().setTypeQualifier(((AOperationType) node.getType()).getParameters());
-
-			if (node.getBody() instanceof ASubclassResponsibilityStm)
-			{
-				node.getClassDefinition().setIsAbstract(true);
-			}
 		}
 
 		if (node.getPrecondition() != null)
@@ -181,18 +191,14 @@ public class DefinitionTypeResolver extends
 		if (node.getResult() != null)
 		{
 			af.createAPatternTypePairAssistant().typeResolve(node.getResult(), question.rootVisitor, question.question);
-			//node.getResult().apply(af.getPatternResolver(), question); //FIXME: This does work. I cannot remove the method for the assistant
+			// node.getResult().apply(af.getPatternResolver(), question); //FIXME: This does work. I cannot remove the
+			// method for the assistant
 		}
 
 		if (question.question.env.isVDMPP())
 		{
 			AFunctionType fType = (AFunctionType) af.createPDefinitionAssistant().getType(node);
 			node.getName().setTypeQualifier(fType.getParameters());
-
-			if (node.getBody() instanceof ASubclassResponsibilityExp)
-			{
-				node.getClassDefinition().setIsAbstract(true);
-			}
 		}
 
 		if (node.getBody() instanceof ASubclassResponsibilityExp
@@ -227,17 +233,12 @@ public class DefinitionTypeResolver extends
 		if (node.getResult() != null)
 		{
 			af.createAPatternTypePairAssistant().typeResolve(node.getResult(), question.rootVisitor, question.question);
-			
+
 		}
 
 		if (question.question.env.isVDMPP())
 		{
 			node.getName().setTypeQualifier(((AOperationType) node.getType()).getParameters());
-
-			if (node.getBody() instanceof ASubclassResponsibilityStm)
-			{
-				node.getClassDefinition().setIsAbstract(true);
-			}
 		}
 
 		if (node.getPrecondition() != null)
@@ -257,7 +258,8 @@ public class DefinitionTypeResolver extends
 	}
 
 	@Override
-	public void caseAInstanceVariableDefinition(AInstanceVariableDefinition node, NewQuestion question)
+	public void caseAInstanceVariableDefinition(
+			AInstanceVariableDefinition node, NewQuestion question)
 			throws AnalysisException
 	{
 
@@ -310,7 +312,7 @@ public class DefinitionTypeResolver extends
 		if (node.getInvPattern() != null)
 		{
 			node.getInvdef().apply(this, question);
-			
+
 			ARecordInvariantType rtype = (ARecordInvariantType) node.getRecordType();
 			rtype.setInvDef(node.getInvdef());
 		}
@@ -347,15 +349,15 @@ public class DefinitionTypeResolver extends
 			}
 
 			node.setType(node.getInvType());
-			
+
 			if (!node.getComposeDefinitions().isEmpty())
 			{
-				for (PDefinition compose: node.getComposeDefinitions())
+				for (PDefinition compose : node.getComposeDefinitions())
 				{
 					compose.apply(this, question);
 				}
 			}
-			
+
 		} catch (TypeCheckException e)
 		{
 			af.createPTypeAssistant().unResolve(node.getInvType());
@@ -371,7 +373,7 @@ public class DefinitionTypeResolver extends
 		{
 			node.setType(af.createPTypeAssistant().typeResolve(node.getType(), null, question.rootVisitor, question.question));
 			af.createPPatternAssistant().typeResolve(node.getPattern(), question.rootVisitor, question.question);
-			//			af.createAValueDefinitionAssistant().updateDefs(node, question.question);
+			// af.createAValueDefinitionAssistant().updateDefs(node, question.question);
 			updateDefs(node, question.question);
 		}
 	}

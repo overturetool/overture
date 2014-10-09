@@ -7,6 +7,10 @@ public class Entry {
     public Entry() {
     }
 
+    public static Object Run() {
+        return g() + SeqUtil.distConcStrings(h());
+    }
+
     public static String g() {
         return SeqUtil.distConcStrings(SeqUtil.seq("first, ", "second, ",
                 "third, "));
@@ -16,8 +20,8 @@ public class Entry {
         return SeqUtil.seq("fourth, ", "fifth, ", "sixth");
     }
 
-    public static Object Run() {
-        return g() + SeqUtil.distConcStrings(h());
+    public String toString() {
+        return "Entry{}";
     }
 }
 

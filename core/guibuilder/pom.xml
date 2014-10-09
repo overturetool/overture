@@ -4,13 +4,32 @@
 	<parent>
 		<groupId>org.overturetool</groupId>
 		<artifactId>core</artifactId>
-		<version>2.1.0</version>
+		<version>2.1.2</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<groupId>org.overturetool.core</groupId>
 	<artifactId>guibuilder</artifactId>
 	<name>Overture GUI Builder</name>
+
+<build>
+ <pluginManagement>
+      <plugins>
+  <!-- Plugin for license headers-->
+         <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>license-maven-plugin</artifactId>
+          <version>1.7</version>
+           <configuration>
+              <excludes>
+                <exclude>**/generated/**/*.java</exclude>
+              </excludes>
+        </configuration>
+        </plugin>
+ </plugins>
+    </pluginManagement>
+</build>
+
 
 	<dependencies>
 		<dependency>

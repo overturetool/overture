@@ -1,0 +1,33 @@
+class Entry
+
+instance variables
+
+n : nat := 0;
+
+operations
+
+public op : () ==> bool
+op () == return (exists x in set {3,4} & inc(x)) or (exists y in set {4,5,6} & inc(y));
+
+public inc : (nat) ==> bool
+inc (p) == 
+(
+
+	n := n + 1;
+	
+	if p = 3 then 
+		return false;
+
+	if p = 4 then 
+		return false;
+	
+	return true;
+);
+
+public static Run : () ==> ?
+Run () ==
+	let a = new Entry()
+	in
+		return mk_(a.op(), a.n);
+
+end Entry

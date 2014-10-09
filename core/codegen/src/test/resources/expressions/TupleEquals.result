@@ -1,1 +1,1 @@
-Tuple.mk_(1L, true).equals(Tuple.mk_(2L, false))
+Utils.equals(Tuple.mk_(1L, true), Tuple.mk_(2L, false))

@@ -38,25 +38,24 @@ public class StderrRedirector extends Redirector
 	{
 		try
 		{
-    		switch (type)
-    		{
-    			case DISABLE:
-    				super.print(line);
-    				break;
+			switch (type)
+			{
+				case DISABLE:
+					super.print(line);
+					break;
 
-    			case COPY:
-    				super.print(line);
-    				dbgp.stderr(line);
-    				break;
+				case COPY:
+					super.print(line);
+					dbgp.stderr(line);
+					break;
 
-    			case REDIRECT:
-    				dbgp.stderr(line);
-    				break;
-    		}
-		}
-		catch (IOException e)
+				case REDIRECT:
+					dbgp.stderr(line);
+					break;
+			}
+		} catch (IOException e)
 		{
-			super.print(line);		// Better than ignoring it??
+			super.print(line); // Better than ignoring it??
 		}
 	}
 }

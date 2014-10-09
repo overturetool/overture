@@ -19,7 +19,6 @@ import org.overture.ast.expressions.AUnaryMinusUnaryExp;
 import org.overture.ast.expressions.AUnaryPlusUnaryExp;
 import org.overture.ast.expressions.AAbsoluteUnaryExp;
 import org.overture.ast.expressions.PExp;
-
 import org.overture.ast.expressions.APlusNumericBinaryExp;
 import org.overture.ast.expressions.ASubtractNumericBinaryExp;
 import org.overture.ast.expressions.ATimesNumericBinaryExp;
@@ -51,7 +50,6 @@ import org.overture.ast.expressions.AForAllExp;
 import org.overture.ast.expressions.AExistsExp;
 //import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ASetMultipleBind;
-
 import org.overture.ast.expressions.ASeqEnumSeqExp;
 import org.overture.ast.expressions.AHeadUnaryExp;
 import org.overture.ast.expressions.ATailUnaryExp;
@@ -76,10 +74,8 @@ import org.overture.ast.expressions.AMapInverseUnaryExp;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.statements.ANotYetSpecifiedStm;
-
 import org.overture.ast.expressions.AIfExp;
 import org.overture.ast.expressions.AElseIfExp;
-
 import org.overture.ast.expressions.ALambdaExp;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.statements.AReturnStm;
@@ -1119,6 +1115,22 @@ public class CscVisitor extends QuestionAnswerAdaptor<String, String>{
 		System.out.println("Got here..");
 		
 		return "by caseANotYetSpecifiedStm";
+	}
+
+	@Override
+	public String createNewReturnValue(INode node, String question)
+			throws AnalysisException
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String createNewReturnValue(Object node, String question)
+			throws AnalysisException
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

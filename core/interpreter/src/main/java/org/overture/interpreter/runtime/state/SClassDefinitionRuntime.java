@@ -9,7 +9,8 @@ import org.overture.interpreter.util.Delegate;
 import org.overture.interpreter.values.NameValuePairMap;
 import org.overture.interpreter.values.Value;
 
-public class SClassDefinitionRuntime implements IRuntimeState {
+public class SClassDefinitionRuntime implements IRuntimeState
+{
 
 	/** True if the class has a sync section with per or mutex defs. */
 	public boolean hasPermissions;
@@ -26,17 +27,18 @@ public class SClassDefinitionRuntime implements IRuntimeState {
 
 	/** A delegate Java object for any native methods. */
 	protected Delegate delegate = null;
-	
+
 	// I instanciate the assistantFactory to pass it as parameter to the needed method.
 	public final IInterpreterAssistantFactory assistantFactory;
 
-	public SClassDefinitionRuntime(IInterpreterAssistantFactory assistantFactory,SClassDefinition def)
+	public SClassDefinitionRuntime(
+			IInterpreterAssistantFactory assistantFactory, SClassDefinition def)
 	{
-		this.assistantFactory =assistantFactory;
+		this.assistantFactory = assistantFactory;
 		delegate = new Delegate(def.getName().getName(), assistantFactory.createPDefinitionAssistant().getDefinitions(def));
 		guardLock = new Lock();
 	}
-	
+
 	public boolean hasDelegate()
 	{
 		return delegate.hasDelegate(assistantFactory);
@@ -46,12 +48,12 @@ public class SClassDefinitionRuntime implements IRuntimeState {
 	{
 		return delegate.newInstance();
 	}
-	
+
 	public Value invokeDelegate(Object delegateObject, Context ctxt)
 	{
 		return delegate.invokeDelegate(delegateObject, ctxt);
 	}
-	
+
 	public Value invokeDelegate(Context ctxt)
 	{
 		return delegate.invokeDelegate(null, ctxt);

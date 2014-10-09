@@ -25,7 +25,6 @@ package org.overture.interpreter.runtime;
 
 import org.overture.parser.messages.NumberedException;
 
-
 @SuppressWarnings("serial")
 public class ValueException extends NumberedException
 {

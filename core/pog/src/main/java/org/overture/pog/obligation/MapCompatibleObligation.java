@@ -25,6 +25,7 @@ package org.overture.pog.obligation;
 
 import java.util.List;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.AForAllExp;
 import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.AMapDomainUnaryExp;
@@ -33,21 +34,22 @@ import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.IPogAssistantFactory;
+import org.overture.pog.pub.POType;
 
-public class MapCompatibleObligation extends ProofObligation {
+public class MapCompatibleObligation extends ProofObligation
+{
 	private static final long serialVersionUID = -7453383884893058267L;
 
-	public MapCompatibleObligation(PExp left, PExp right, IPOContextStack ctxt) {
-		super(left, POType.MAP_COMPATIBLE, ctxt, left.getLocation());
+	public MapCompatibleObligation(PExp left, PExp right, IPOContextStack ctxt,
+			IPogAssistantFactory af) throws AnalysisException
+	{
+		super(left, POType.MAP_COMPATIBLE, ctxt, left.getLocation(), af);
 
 		/**
-		 * This obligation occurs during a map union, and ensures that if there
-		 * are overlaps in the maps, then they map to the same thing.
-		 * 
-		 * So m1 munion m2 produces:
-		 * 
-		 * forall v1 in set dom m1, v2 in set dom m2 & (v1 = v2) => (m1(v1) =
-		 * m2(v2))
+		 * This obligation occurs during a map union, and ensures that if there are overlaps in the maps, then they map
+		 * to the same thing. So m1 munion m2 produces: forall v1 in set dom m1, v2 in set dom m2 & (v1 = v2) => (m1(v1)
+		 * = m2(v2))
 		 */
 
 		ILexNameToken ldom = getUnique("ldom");
@@ -60,18 +62,14 @@ public class MapCompatibleObligation extends ProofObligation {
 		List<PMultipleBind> bindings = getMultipleSetBindList(domLeft, ldom);
 		bindings.addAll(getMultipleSetBindList(domRight, rdom));
 
-		AImpliesBooleanBinaryExp implies = AstExpressionFactory
-				.newAImpliesBooleanBinaryExp(
-						getEqualsExp(getVarExp(ldom), getVarExp(rdom)),
-						getEqualsExp(getApplyExp(left, getVarExp(ldom)),
-								getApplyExp(right, getVarExp(rdom))));
+		AImpliesBooleanBinaryExp implies = AstExpressionFactory.newAImpliesBooleanBinaryExp(getEqualsExp(getVarExp(ldom), getVarExp(rdom)), getEqualsExp(getApplyExp(left, getVarExp(ldom)), getApplyExp(right, getVarExp(rdom))));
 
 		AForAllExp forallExp = new AForAllExp();
 
 		forallExp.setBindList(bindings);
 		forallExp.setPredicate(implies);
 
-		// valuetree.setContext(ctxt.getContextNodeList());
+		stitch = forallExp;
 		valuetree.setPredicate(ctxt.getPredWithContext(forallExp));
 	}
 }

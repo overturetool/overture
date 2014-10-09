@@ -1,3 +1,24 @@
+/*
+ * #%~
+ * The Overture Abstract Syntax Tree
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.ast.preview;
 
 import java.util.HashMap;
@@ -16,7 +37,6 @@ import org.overture.ast.node.NodeList;
 
 public class DotGraphVisitor extends QuestionAdaptor<DotGraphVisitor.DotPair>
 {
-
 
 	public static class DotPair
 	{
@@ -47,8 +67,8 @@ public class DotGraphVisitor extends QuestionAdaptor<DotGraphVisitor.DotPair>
 
 	private StringBuilder resultString;
 	public boolean showNullPointers = false;
-	Set<INode> visitedNodes= null;
-	
+	Set<INode> visitedNodes = null;
+
 	Set<String> filterClassNames = new HashSet<String>();
 
 	public DotGraphVisitor()
@@ -58,11 +78,11 @@ public class DotGraphVisitor extends QuestionAdaptor<DotGraphVisitor.DotPair>
 		visitedNodes = new HashSet<INode>();
 		resultString.append("\tnode [shape=record];\n");
 	}
-	
-	public DotGraphVisitor(Set<String> filterClassNames )
+
+	public DotGraphVisitor(Set<String> filterClassNames)
 	{
-	this();
-	this.filterClassNames = filterClassNames;
+		this();
+		this.filterClassNames = filterClassNames;
 	}
 
 	public String getResultString()
@@ -119,33 +139,32 @@ public class DotGraphVisitor extends QuestionAdaptor<DotGraphVisitor.DotPair>
 			colour = "lightblue";
 		}
 
-		String tmp = " [color=" + colour + ",style=filled,label=\"{" + dn.name
-				;
+		String tmp = " [color=" + colour + ",style=filled,label=\"{" + dn.name;
 
-		if(node!=null)
+		if (node != null)
 		{
-			tmp+= " |{";
-		boolean firstChild = true;
-		Map<String, Object> children = new HashMap<String, Object>();
-		String nt = node.toString();
-		if (nt.length() > 150)
-		{
-			nt = nt.substring(0, 150);
-		}
-		children.put("" + nt.replaceAll("[^a-zA-Z0-9 ]","") + "", null);
-		for (Entry<String, Object> s : children.entrySet())
-		{
-			String id = dn.id + s.getKey();
-			id = id.replaceAll("[^a-zA-Z0-9]","");
-			dn.childToId.put(id, s.getValue());
-			if (!firstChild)
+			tmp += " |{";
+			boolean firstChild = true;
+			Map<String, Object> children = new HashMap<String, Object>();
+			String nt = node.toString();
+			if (nt.length() > 150)
 			{
-				tmp += " | ";
+				nt = nt.substring(0, 150);
 			}
-			firstChild = false;
-			tmp += " <" + id + "> " + s.getKey();
-		}
-		tmp+="}";
+			children.put("" + nt.replaceAll("[^a-zA-Z0-9 ]", "") + "", null);
+			for (Entry<String, Object> s : children.entrySet())
+			{
+				String id = dn.id + s.getKey();
+				id = id.replaceAll("[^a-zA-Z0-9]", "");
+				dn.childToId.put(id, s.getValue());
+				if (!firstChild)
+				{
+					tmp += " | ";
+				}
+				firstChild = false;
+				tmp += " <" + id + "> " + s.getKey();
+			}
+			tmp += "}";
 		}
 
 		resultString.append("\t" + dn.id + tmp + "}\"];\n");
@@ -160,25 +179,29 @@ public class DotGraphVisitor extends QuestionAdaptor<DotGraphVisitor.DotPair>
 	}
 
 	@Override
-	public void defaultINode(INode node, DotPair question) throws AnalysisException
+	public void defaultINode(INode node, DotPair question)
+			throws AnalysisException
 	{
-		if(!(node instanceof LexNameToken )&&visitedNodes.contains(node)|| node == null)
+		if (!(node instanceof LexNameToken) && visitedNodes.contains(node)
+				|| node == null)
 		{
 			return;
 		}
-		
-		if(!(node instanceof LexNameToken))
+
+		if (!(node instanceof LexNameToken))
 		{
-		visitedNodes.add(node);
+			visitedNodes.add(node);
 		}
-		
+
 		DotPair parentNode = new DotPair(createDotNode(question, node), null);
 
 		for (Entry<String, Object> field : node.getChildren(true).entrySet())
 		{
 
 			Object fieldObject = field.getValue();
-			if (fieldObject == null && !showNullPointers || filterClassNames.contains(fieldObject.getClass().getSimpleName()))
+			if (fieldObject == null
+					&& !showNullPointers
+					|| filterClassNames.contains(fieldObject.getClass().getSimpleName()))
 			{
 				continue;// do not show on diagram
 			}

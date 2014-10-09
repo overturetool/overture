@@ -29,47 +29,49 @@ import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueListener;
 
+public class ValueObserver implements ValueListener
+{
 
-public class ValueObserver implements ValueListener {
-
-	
 	public String[] name;
 	public Value v;
 	private ValueValidationExpression expr;
-	
-	public ValueObserver(String[] name, Value v, ValueValidationExpression expr) {
+
+	public ValueObserver(String[] name, Value v, ValueValidationExpression expr)
+	{
 		this.name = name;
 		this.v = v;
 		this.expr = expr;
 	}
-	
-	public void changedValue(ILexLocation location, Value value, Context ctxt) {
-		//System.out.println("Value " + printValueName() + " has changed to " + value.toString());
+
+	public void changedValue(ILexLocation location, Value value, Context ctxt)
+	{
+		// System.out.println("Value " + printValueName() + " has changed to " + value.toString());
 		this.expr.valueChanged(this);
 	}
 
-//	private String printValueName()
-//	{
-//		if(name.length == 2)
-//		{
-//			return name[0] + "`" + name[1];
-//		}
-//		else
-//		{
-//			return name[0] + "`" + name[1] + "." + name[2];
-//		}
-//	}
+	// private String printValueName()
+	// {
+	// if(name.length == 2)
+	// {
+	// return name[0] + "`" + name[1];
+	// }
+	// else
+	// {
+	// return name[0] + "`" + name[1] + "." + name[2];
+	// }
+	// }
 
-	public double getValue() {
-		try {
+	public double getValue()
+	{
+		try
+		{
 			return v.realValue(null);
-		} catch (ValueException e) {
+		} catch (ValueException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return 0;
 	}
-	
-	
-	
+
 }

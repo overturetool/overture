@@ -1,3 +1,24 @@
+/*
+ * #%~
+ * The VDM Type Checker
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.typechecker.assistant.expression;
 
 import org.overture.ast.analysis.AnalysisException;
@@ -11,7 +32,6 @@ import org.overture.typechecker.FlatCheckedEnvironment;
 import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
-import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class ACaseAlternativeAssistantTC
@@ -39,7 +59,7 @@ public class ACaseAlternativeAssistantTC
 				AExpressionPattern ep = (AExpressionPattern) c.getPattern();
 				PType ptype = ep.getExp().apply(rootVisitor, new TypeCheckInfo(question.assistantFactory, question.env, question.scope));
 
-				if (!TypeComparator.compatible(ptype, expType))
+				if (!af.getTypeComparator().compatible(ptype, expType))
 				{
 					TypeCheckerErrors.report(3311, "Pattern cannot match", c.getPattern().getLocation(), c.getPattern());
 				}

@@ -1,6 +1,5 @@
 package org.overture.interpreter.messages.rtlog;
 
-
 public class RTDeclareCPUMessage extends RTArchitectureMessage
 {
 
@@ -8,8 +7,9 @@ public class RTDeclareCPUMessage extends RTArchitectureMessage
 	public boolean expl;
 	public String sysName;
 	public String cpuName;
-	
-	public RTDeclareCPUMessage(int cpuId, boolean expl, String sysName, String cpuName)
+
+	public RTDeclareCPUMessage(int cpuId, boolean expl, String sysName,
+			String cpuName)
 	{
 		this.cpuId = cpuId;
 		this.expl = expl;
@@ -19,16 +19,14 @@ public class RTDeclareCPUMessage extends RTArchitectureMessage
 
 	public RTDeclareCPUMessage(int cpuId, String cpuName)
 	{
-		this(cpuId,false,"",cpuName);
+		this(cpuId, false, "", cpuName);
 	}
 
 	@Override
 	String getInnerMessage()
 	{
-		return "CPUdecl -> id: " + cpuId +
-		" expl: " + expl +
-		" sys: \"" + sysName + "\"" +
-		" name: \"" + cpuName + "\"";
+		return "CPUdecl -> id: " + cpuId + " expl: " + expl + " sys: \""
+				+ sysName + "\"" + " name: \"" + cpuName + "\"";
 	}
 
 }

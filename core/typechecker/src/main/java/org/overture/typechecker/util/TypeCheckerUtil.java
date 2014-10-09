@@ -1,3 +1,24 @@
+/*
+ * #%~
+ * The VDM Type Checker
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.typechecker.util;
 
 import java.io.File;
@@ -12,6 +33,7 @@ import org.overture.ast.factory.AstFactoryTC;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
+import org.overture.ast.util.modules.ModuleList;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.messages.VDMError;
 import org.overture.parser.messages.VDMWarning;
@@ -54,16 +76,32 @@ public class TypeCheckerUtil
 			sb.append("\n\n\n");
 			sb.append("TypeCheck result:\n");
 			sb.append("\tErrors:");
+			sb.append(getErrorString());
+			sb.append("\tWarnings:");
+			sb.append(getWarningString());
+			return sb.toString();
+		}
+
+		public String getErrorString()
+		{
+			StringBuilder sb = new StringBuilder();
+
 			for (VDMError err : errors)
 			{
 				sb.append("\n\t" + err);
 			}
-			sb.append("\tWarnings:");
+
+			return sb.toString();
+		}
+
+		public String getWarningString()
+		{
+			StringBuilder sb = new StringBuilder();
+
 			for (VDMWarning err : warnings)
 			{
 				sb.append("\n\t" + err);
 			}
-
 			return sb.toString();
 		}
 	}
@@ -104,7 +142,19 @@ public class TypeCheckerUtil
 	public static TypeCheckResult<List<AModuleModules>> typeCheckSl(File file)
 	{
 		ParserResult<List<AModuleModules>> parserResult = ParserUtil.parseSl(file);
-		return typeCheck(parserResult, parserResult.result, new ModuleTypeChecker(parserResult.result));
+		
+		ModuleList modules = new ModuleList(parserResult.result);
+		
+		return typeCheck(parserResult, parserResult.result, new ModuleTypeChecker(modules));
+	}
+	
+	public static TypeCheckResult<List<AModuleModules>> typeCheckSl(List<File> file)
+	{
+		ParserResult<List<AModuleModules>> parserResult = ParserUtil.parseSl(file);
+		
+		ModuleList modules = new ModuleList(parserResult.result);
+		modules.combineDefaults();
+		return typeCheck(parserResult, parserResult.result, new ModuleTypeChecker(modules));
 	}
 
 	public static TypeCheckResult<List<AModuleModules>> typeCheckSl(
@@ -119,12 +169,30 @@ public class TypeCheckerUtil
 		ParserResult<List<SClassDefinition>> parserResult = ParserUtil.parseOo(file);
 		return typeCheck(parserResult, parserResult.result, new ClassTypeChecker(parserResult.result));
 	}
+	
+	public static TypeCheckResult<List<SClassDefinition>> typeCheckPp(List<File> file)
+	{
+		ParserResult<List<SClassDefinition>> parserResult = ParserUtil.parseOo(file);
+		return typeCheck(parserResult, parserResult.result, new ClassTypeChecker(parserResult.result));
+	}
 
 	public static TypeCheckResult<List<SClassDefinition>> typeCheckPp(
 			String content)
 	{
 		ParserResult<List<SClassDefinition>> parserResult = ParserUtil.parseOo(content);
 		return typeCheck(parserResult, parserResult.result, new ClassTypeChecker(parserResult.result));
+	}
+	
+	public static TypeCheckResult<List<SClassDefinition>> typeCheckRt(List<File> file)
+			throws ParserException, LexException
+	{
+		ITypeCheckerAssistantFactory af = new TypeCheckerAssistantFactory();
+		ParserResult<List<SClassDefinition>> parserResult = ParserUtil.parseOo(file);
+		List<SClassDefinition> classes = new Vector<SClassDefinition>();
+		classes.addAll(parserResult.result);
+		classes.add(AstFactoryTC.newACpuClassDefinition(af));
+		classes.add(AstFactoryTC.newABusClassDefinition(af));
+		return typeCheck(parserResult, classes, new ClassTypeChecker(classes, af));
 	}
 
 	public static TypeCheckResult<List<SClassDefinition>> typeCheckRt(File file)
@@ -136,7 +204,7 @@ public class TypeCheckerUtil
 		classes.addAll(parserResult.result);
 		classes.add(AstFactoryTC.newACpuClassDefinition(af));
 		classes.add(AstFactoryTC.newABusClassDefinition(af));
-		return typeCheck(parserResult, classes, new ClassTypeChecker(classes,af));
+		return typeCheck(parserResult, classes, new ClassTypeChecker(classes, af));
 	}
 
 	public static TypeCheckResult<PExp> typeCheckExpression(String content)
@@ -155,7 +223,7 @@ public class TypeCheckerUtil
 		classes.addAll(parserResult.result);
 		classes.add(AstFactoryTC.newACpuClassDefinition(af));
 		classes.add(AstFactoryTC.newABusClassDefinition(af));
-		return typeCheck(parserResult, classes, new ClassTypeChecker(classes,af));
+		return typeCheck(parserResult, classes, new ClassTypeChecker(classes, af));
 	}
 
 	public static <P> TypeCheckResult<P> typeCheck(

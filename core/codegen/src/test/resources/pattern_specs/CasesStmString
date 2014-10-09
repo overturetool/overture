@@ -1,0 +1,17 @@
+class Entry
+
+operations
+
+public static casesString : seq of char ==> seq of char
+casesString (e) ==
+	cases e:
+		"aa" -> return "first",
+		"bb" -> return "second",
+		others -> return "third"
+	end;
+	
+public static Run : () ==> ?
+Run () ==
+	return [casesString("aa"), casesString("bb"), casesString("cc")];
+
+end Entry

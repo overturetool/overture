@@ -12,7 +12,6 @@ import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.util.definitions.ClassList;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.debug.DBGPReader;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.runtime.ClassInterpreter;
@@ -138,14 +137,16 @@ public class ClassListInterpreter extends ClassList
 		return globalContext;
 	}
 
-	public ProofObligationList getProofObligations(IInterpreterAssistantFactory assistantFactory) throws AnalysisException
+	public ProofObligationList getProofObligations(
+			IInterpreterAssistantFactory assistantFactory)
+			throws AnalysisException
 	{
-		//TODO: Check this method, where it is used.
+		// TODO: Check this method, where it is used.
 		ProofObligationList obligations = new ProofObligationList();
 
 		for (SClassDefinition c : this)
 		{
-			
+
 			obligations.addAll(ProofObligationGenerator.generateProofObligations(c));
 		}
 		obligations.trivialCheck();
@@ -181,7 +182,7 @@ public class ClassListInterpreter extends ClassList
 
 		if (d != null)
 		{
-			PDefinition def = ClassInterpreter.getInstance().assistantFactory.createPDefinitionAssistant().findName(d, name, scope);
+			PDefinition def = ClassInterpreter.getInstance().getAssistantFactory().createPDefinitionAssistant().findName(d, name, scope);
 
 			if (def != null)
 			{

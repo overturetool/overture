@@ -34,13 +34,17 @@ pre
 Plusは加算を行う。 
 \begin{vdm_al}
 static public Plus[@T] : @T -> @T -> @T
-Plus(a)(b) == a + b;
+Plus(a)(b) == if is_real(a) and is_real(b)
+              then a + b
+              else undefined;
 \end{vdm_al}
 
 Productは積算を行う。
 \begin{vdm_al}
 static public Product[@T] : @T -> @T -> @T
-Product(a)(b) == a * b;
+Product(a)(b) == if is_real(a) and is_real(b)
+              then a * b
+              else undefined;
 \end{vdm_al}
 
 Appendは列の追加を行う。
@@ -56,15 +60,21 @@ Average(s) == if s = [] then nil else AverageAux[@T](0)(0)(s)
 post
 	if s = [] then
 		RESULT = nil
-	else
-		RESULT = Sum[@T](s) / len s;
+	else let sum = Sum[@T](s)
+	     in
+		RESULT = if is_real(sum) 
+		         then sum / len s
+		         else undefined;
 
 static AverageAux[@T] : @T -> @T -> seq of @T -> real
 AverageAux(total)(numOfElem)(s) ==
+  if is_(s,seq of real) and is_real(total) and is_real(numOfElem)
+  then
 	cases s :
 	[x] ^ xs	-> AverageAux[@T](total + x)(numOfElem + 1)(xs),
-	[]		-> total / numOfElem
-	end;
+	[]		-> total / numOfElem 
+	end
+	else undefined;
 \end{vdm_al}
 
 IsAscendingInTotalOrderは、関数fで与えられた全順序で、列sの要素が昇順であるか否かを返す。
@@ -85,14 +95,20 @@ IsAscendingは、演算子<で与えられた全順序で、列sの要素が昇�
 \begin{vdm_al}
 static public IsAscending [@T]: seq of @T -> bool
 IsAscending(s) ==
-	IsAscendingInTotalOrder[@T](lambda x : @T, y : @T & x < y)(s);
+	IsAscendingInTotalOrder[@T](lambda x : @T, y : @T & 
+	                              if is_real(x) and is_real(y) 
+	                              then x < y
+	                              else undefined)(s);
 \end{vdm_al}
 
 IsDescendingは、演算子<で与えられた全順序で、列sの要素が降順であるか否かを返す。
 \begin{vdm_al}
 static public IsDescending[@T]: seq of @T -> bool
 IsDescending(s) ==
-	IsDescendingInTotalOrder[@T](lambda x : @T, y : @T & x < y)(s);
+	IsDescendingInTotalOrder[@T](lambda x : @T, y : @T & 
+	                                  if is_real(x) and is_real(y) 
+	                                  then x < y
+	                                  else undefined)(s);
 \end{vdm_al}
 
 Sortは、関数fで与えられた順序で、列sの要素を昇順にクイックソートする。
@@ -111,7 +127,10 @@ Sort(f)(s) ==
 AscendingSortは、演算子<で与えられた順序で、列sの要素を昇順にソートする。
 \begin{vdm_al}
 static public AscendingSort[@T] : seq of @T -> seq of @T
-AscendingSort(s) == Sort[@T](lambda x : @T, y : @T & x < y)(s)
+AscendingSort(s) == Sort[@T](lambda x : @T, y : @T & 
+                                if is_real(x) and is_real(y) 
+	                              then x < y
+	                              else undefined)(s)
 post
 	IsAscending[@T](RESULT);
 \end{vdm_al}
@@ -120,7 +139,10 @@ DescendingSortは、演算子>で与えられた順序で、列sの要素を昇�
 演算子<から見れば降順。
 \begin{vdm_al}
 static public DescendingSort[@T] : seq of @T -> seq of @T
-DescendingSort(s) == Sort[@T](lambda x : @T, y : @T & x > y)(s)
+DescendingSort(s) == Sort[@T](lambda x : @T, y : @T & 
+                                  if is_real(x) and is_real(y) 
+	                                then x > y
+	                                else undefined)(s)
 post
 	IsDescending[@T](RESULT);
 \end{vdm_al}

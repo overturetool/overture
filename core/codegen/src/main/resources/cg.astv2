@@ -12,6 +12,7 @@ Tokens
  */
  
   vdmType = 'java:org.overture.ast.types.PType';
+  SourceNode = 'java:org.overture.codegen.ir.SourceNode';
 
   
   //Java
@@ -21,63 +22,90 @@ Tokens
   java_Double = 'java:java.lang.Double';
   java_Character = 'java:java.lang.Character';
   java_String = 'java:java.lang.String';
+  java_Object = 'java:java.lang.Object';
   
      
 Abstract Syntax Tree
-/* This section declares the AST by giving root nodes and their possible sub classes
- *
- * exp {-> package='org.overture.ast.expressions'}
- *      = {subclass1} [field_name]:field_type_must_either_be_root_or_token ...
- *      ;
- *
- */
+/* This section declares the AST by giving root nodes and their possible sub classe */
 
-/*
-    Expressions
-*/
-patternCG {-> package='org.overture.codegen.cgast.pattern'}
-	= {identifier} [name]:java_String 
+CG {-> package='org.overture.codegen.cgast'
+	| [sourceNode]:SourceNode
+	| (tag):java_Object}
+	= #pattern
+	| #bind
+	| #multipleBind
+	| #name
+	| #decl
+	| #stateDesignator
+	| #objectDesignator
+	| #localParam
+	| #stm
+	| #letBeSt
+	| #exp
+	| #type
 	;
 
-bindCG {-> package='org.overture.codegen.cgast.patterns'
-//	|	[location]:location 
-	|	[pattern]:patternCG.identifier} ////In the Overture AST pList is of type multiple patterns. Here it is limited to identifiers
-    =   {set} [set]:expCG //binds
-//    |   {type} (type):type //binds
+#pattern {-> package='org.overture.codegen.cgast.patterns'}
+	= {identifier} [name]:java_String
+	| {ignore}
+	| {bool} [value]:java_Boolean
+	| {char} [value]:java_Character
+	| {int}	[value]:java_Long
+	| {null}
+	| {quote} [value]:java_String
+	| {real} [value]:java_Double
+	| {string} [value]:java_String
+	| {tuple} [patterns]:CG.#pattern*
+	| {record} [typename]:java_String [patterns]:CG.#pattern* [type]:CG.#type
+	;
+
+#bind {-> package='org.overture.codegen.cgast.patterns'
+	|	[pattern]:CG.#pattern}
+    =   {set} [set]:CG.#exp //binds
     ;
 		
-multipleBindCG {-> package='org.overture.codegen.cgast.patterns'
-//	|	[location]:location 
-	|	[patterns]:patternCG.identifier*} //In the Overture AST pList is of type multiple patterns. Here it is limited to identifiers
-    =   {set}  [set]:expCG //binds
-//  |   {type} (type):type //binds
+#multipleBind {-> package='org.overture.codegen.cgast.patterns'
+	|	[patterns]:CG.#pattern*}
+    =   {set}  [set]:CG.#exp //binds
     ;
    
-nameCG {-> package='org.overture.codegen.cgast.name'}
+#name {-> package='org.overture.codegen.cgast.name'}
 	=	{type}
 		[name]:java_String
 		[definingClass]:java_String
 	;
     
-declCG {-> package='org.overture.codegen.cgast.declarations'}
-	=	{method}
+#decl {-> package='org.overture.codegen.cgast.declarations'}
+	=	{method} //rename to operation
+		(preCond):CG.#decl
+		(postCond):CG.#decl
 		[access]:java_String
 		[static]:java_Boolean
 		[abstract]:java_Boolean
-		[methodType]:typeCG.method
+		[methodType]:CG.#type.method
 		[name]:java_String
-		[formalParams]:localDeclCG.formalParam*
-		[isConstructor]:java_Boolean //Is it appropriate to call it method then?
-		[templateTypes]:typeCG.template*
-		//[throws]:type*
-		[body]:stmCG
+		[formalParams]:CG.#localParam.formalParam*
+		[isConstructor]:java_Boolean
+		[templateTypes]:CG.#type.template*
+		[body]:CG.#stm
+	|	{func}
+		(preCond):CG.#decl
+		(postCond):CG.#decl
+		[access]:java_String
+		[abstract]:java_Boolean
+		[methodType]:CG.#type.method
+		[name]:java_String
+		[formalParams]:CG.#localParam.formalParam*
+		[templateTypes]:CG.#type.template*
+		[body]:CG.#exp
 	|	{field} 
     	[access]:java_String
     	[static]:java_Boolean
+    	[volatile]:java_Boolean
     	[final]:java_Boolean
-    	[type]:typeCG
+    	[type]:CG.#type
     	[name]:java_String
-    	[initial]:expCG
+    	[initial]:CG.#exp
     |	#Local
    	|	{class}
    		[package]:java_String
@@ -86,145 +114,163 @@ declCG {-> package='org.overture.codegen.cgast.declarations'}
       	[static]:java_Boolean 
     	[name]:java_String
     	[fields]:field*
-    	[methods]:declCG.method*
+    	[methods]:CG.#decl.method*
+    	[functions]:CG.#decl.func*
     	[superName]:java_String
-    	[records]:declCG.record*
+    	[typeDecls]:CG.#decl.type*
     |	{interface}
-    	[templateTypes]:typeCG.template*
+    	[templateTypes]:CG.#type.template*
     	[package]:java_String
     	[name]:java_String
     	[fields]:field*
-    	[methodSignatures]:declCG.method*
+    	[methodSignatures]:CG.#decl.method*
     |	{record}
     	[name]:java_String
-    	[access]:java_String
     	[fields]:field*
-    	[methods]:declCG.method*
-    |	{empty}
-//    |	{typDecl} //Consider removing this
-//    	[name]:java_String
-//    	[type]:typeCG
-//   	|	{recField}
-//   		[name]:java_String
-//   		[type]:typeCG
-//    |	{record}
-//    	[name]:java_String
-//    	[fields]:declCG.recField* 
-    	
-//    |	{constructor}
-//    	[access]:java_String
-//		[name]:java_String
-//		[formals]:localDeclCG*
-		//[throws]:type*
-//		[body]:stmCG
+    	[methods]:CG.#decl.method*
+    |	{type}
+    	[access]:java_String
+    	[decl]:CG.#decl
+    |	{catchClause}
+    	[type]:CG.#type
+    	[name]:java_String
+    	[stm]:CG.#stm
 	;
 
 #Local  {-> package='org.overture.codegen.cgast.declarations'}
     =	{var}
-    	[type]:typeCG
-    	[name]:java_String
-    	[exp]:expCG
+    	[type]:CG.#type
+    	[pattern]:CG.#pattern
+    	[exp]:CG.#exp
     |	{counter}
     	[name]:java_String
-    	[init]:expCG
+    	[init]:CG.#exp
 	;
 	
-stateDesignatorCG {-> package='org.overture.codegen.cgast.statements'
-	| [type]:typeCG}
-	= {identifier} [name]:java_String
-	| {field} [object]:stateDesignatorCG [field]:java_String
-	| {mapSeq} [mapseq]:stateDesignatorCG [exp]:expCG// (mapType):type.#Map (seqType):type.#seq
+#stateDesignator {-> package='org.overture.codegen.cgast.statements'
+	| [type]:CG.#type}
+	= {identifier} [name]:java_String [explicit]:java_Boolean [className]:java_String
+	| {field} [object]:CG.#stateDesignator [field]:java_String
+	| {mapSeq} [mapseq]:CG.#stateDesignator [exp]:CG.#exp
 	;
-//    =   {field} [object]:stateDesignator [field]:LexIdentifierToken (objectfield):LexNameToken
-//   |   {identifier} [name]:LexNameToken
-//    |   {mapSeq} [mapseq]:stateDesignator [exp]:exp (mapType):type.#Map (seqType):type.#seq
 
-objectDesignatorCG {-> package='org.overture.codegen.cgast.statements'}
-//	|	[location]:location}
-	=   {apply} [object]:objectDesignatorCG [args]:expCG*
-    |   {field} [object]:objectDesignatorCG [fieldName]:java_String// [className]:java_String  (field):LexNameToken
-    |   {identifier} [exp]:expCG.#Var//[name]:java_String
-    |   {new} [exp]:expCG.new
-    |   {self}// [self]:java_String
+#objectDesignator {-> package='org.overture.codegen.cgast.statements'}
+	=   {apply} [object]:CG.#objectDesignator [args]:CG.#exp*
+    |   {field} [object]:CG.#objectDesignator [fieldModule]:java_String [fieldName]:java_String
+    |   {identifier} [exp]:CG.#exp //Normally a var (e.g. [exp]:CG.#exp.#Var) but a transformation may need to replace it with a cast expression
+    |   {new} [exp]:CG.#exp.new
+    |   {self}
     ;
     
-localDeclCG {-> package='org.overture.codegen.cgast.declarations'}
-           = {formalParam} [type]:typeCG [name]:java_String// [init]:exp
+#localParam {-> package='org.overture.codegen.cgast.declarations'}
+           = {formalParam} [type]:CG.#type [pattern]:CG.#pattern
            ;
 
-stmCG {-> package='org.overture.codegen.cgast.statements'}
-           =	{if} [ifExp]:expCG [thenStm]:stmCG [elseIf]:stmCG.elseIf* [elseStm]:stmCG
-           | 	{elseIf} [elseIf]:expCG [thenStm]:stmCG
+#stm {-> package='org.overture.codegen.cgast.statements'}
+           =	{if} [ifExp]:CG.#exp [thenStm]:CG.#stm [elseIf]:CG.#stm.elseIf* [elseStm]:CG.#stm
+           | 	{elseIf} [elseIf]:CG.#exp [thenStm]:CG.#stm
            | 	{skip}
-           |	{return} [exp]:expCG
-           |	{letDef} [localDefs]:declCG.#Local.var* [stm]:stmCG
+           |	{return} [exp]:CG.#exp
+           |	{letDef} [localDefs]:CG.#decl.#Local.var* [stm]:CG.#stm
            |	{abstractBody}
-           |	{assignment} [target]:stateDesignatorCG [exp]:expCG
-           |	{block}	[localDefs]:declCG.#Local* [statements]:stmCG*
-           |	{callObject} [type]:typeCG [designator]:objectDesignatorCG [className]:java_String [fieldName]:java_String 
-           					 [args]:expCG*// [explicit]:java_Boolean [field]:LexNameToken
-           |	{call} [type]:typeCG [classType]:typeCG.class [name]:java_String [args]:expCG*
+           |	{assignment} [target]:CG.#stateDesignator [exp]:CG.#exp
+           |	{localAssignment} [target]:CG.#exp [exp]:CG.#exp
+           |	{localPatternAssignment} [target]:CG.#pattern [exp]:CG.#exp (nextElementDecl):CG.#decl.#Local.var
+           |	{block}	[localDefs]:CG.#decl.#Local* [statements]:CG.#stm*
+           |	{callObject} [type]:CG.#type [designator]:CG.#objectDesignator [className]:java_String [fieldName]:java_String 
+           					 [args]:CG.#exp*
+           |	{callObjectExp} [type]:CG.#type [obj]:CG.#exp [className]:java_String [fieldName]:java_String 
+           					 [args]:CG.#exp*
+           |	{call} [type]:CG.#type [classType]:CG.#type [name]:java_String [args]:CG.#exp*
            |	{notImplemented}
-           |	{forIndex} [var]:java_String [from]:expCG [to]:expCG [by]:expCG [body]:stmCG
-           |	{forAll} [var]:java_String [exp]:expCG [body]:stmCG
-           |	{while} [exp]:expCG [body]:stmCG
-           |	{letBeSt} [header]:letBeStCG.header [statement]:stmCG
-           |	{throw} [exp]:expCG
-           |	{forLoop} [init]:declCG.#Local.var [cond]:expCG [inc]:expCG [body]:stmCG
-           |	{increment} [var]:expCG
-           |	{decrement} [var]:expCG
-           |	{raiseError} [error]:expCG.#RuntimeError
+           |	{forIndex} [var]:java_String [from]:CG.#exp [to]:CG.#exp [by]:CG.#exp [body]:CG.#stm
+           |	{forAll} [pattern]:CG.#pattern [exp]:CG.#exp [body]:CG.#stm
+           |	{while} [exp]:CG.#exp [body]:CG.#stm
+           |	{letBeSt} [header]:CG.#letBeSt.header [statement]:CG.#stm
+           |	{throw} [exp]:CG.#exp
+           |	{forLoop} [init]:CG.#decl.#Local.var [cond]:CG.#exp [inc]:CG.#exp [body]:CG.#stm
+           |	{increment} [var]:CG.#exp
+           |	{decrement} [var]:CG.#exp
+           |	{raiseError} [error]:CG.#exp.#RuntimeError
+           |	{cases} [exp]:CG.#exp [cases]:CG.#stm.#altStm.case* [others]:CG.#stm
+           |	#altStm
+           |	{error}
+           |	{continue}
+           |	{break}
+           |	{try} [stm]:CG.#stm [catchClauses]:CG.#decl.catchClause* [finally]:CG.#stm
            ;
            
-letBeStCG {-> package='org.overture.codegen.cgast.utils'}
-	= {header} [binding]:multipleBindCG.set [suchThat]:expCG //The Overture AST uses a multiplebind 
+#altStm {-> package='org.overture.codegen.cgast.statements'}
+    = {case} [pattern]:CG.#pattern [result]:CG.#stm [patternType]:CG.#type
+    ;
+           
+#letBeSt {-> package='org.overture.codegen.cgast.utils'}
+	= {header} [binding]:CG.#multipleBind.set [suchThat]:CG.#exp //The Overture AST uses a multiplebind 
 	;
 	
-expCG {-> package='org.overture.codegen.cgast.expressions'}
+#exp {-> package='org.overture.codegen.cgast.expressions'
+	| [type]:CG.#type}
     =	#Unary
     |	#Binary
-    |	{field} [object]:expCG [memberName]: java_String//[memberName]:LexNameToken [field]:LexIdentifierToken
-    |	{apply} [root]:expCG [args]:expCG*// (argtypes):type* (recursive):definition
-	|	{new} [name]:nameCG.type [args]:expCG*
+    |	{field} [object]:CG.#exp [memberName]: java_String
+    |	{apply} [root]:CG.#exp [args]:CG.#exp*
+	|	{new} [name]:CG.#name.type [args]:CG.#exp*
 	|	#Var
-	|	{instanceof} [classType]:typeCG.class [objRef]:expCG
+	|	{instanceof} [checkedType]:CG.#type [exp]:CG.#exp
     |	#Literal
     |	{self}
     |	{null}
-    |	{letDef} [localDefs]:declCG.#Local.var* [exp]:expCG
-    |	{methodInstantiation} [name]:java_String [actualTypes]:typeCG*
-    |	{tuple} [args]:expCG* [tupleType]:typeCG.tuple
-    |	{fieldNumber} [field]:java_Long [tuple]:expCG
-    |	{ternaryIf} [condition]:expCG [trueValue]:expCG [falseValue]:expCG
-    |   {maplet}  [left]:expCG [right]:expCG
-    |	{letBeSt} [header]:letBeStCG.header [value]:expCG
+    |	{letDef} [localDefs]:CG.#decl.#Local.var* [exp]:CG.#exp
+    |	{methodInstantiation} [func]:CG.#exp [actualTypes]:CG.#type*
+    |	{tuple} [args]:CG.#exp* [tupleType]:CG.#type.tuple
+    |	{fieldNumber} [field]:java_Long [tuple]:CG.#exp
+    |	{tupleSize} [tuple]:CG.#exp
+    |	{ternaryIf} [condition]:CG.#exp [trueValue]:CG.#exp [falseValue]:CG.#exp
+    |   {maplet}  [left]:CG.#exp [right]:CG.#exp
+    |	{letBeSt} [header]:CG.#letBeSt.header [value]:CG.#exp
     |	#Seq
     |	#Set
     |	#Map
-    |	{mkBasic} [arg]:expCG
+    |	{mkBasic} [arg]:CG.#exp
     |	#Quantifier
-    |	{preInc} [exp]:expCG
-    |	{preDec} [exp]:expCG
-    |	{postInc} [exp]:expCG
-    |	{postDec} [exp]:expCG
-    |	{deRef} [exp]:expCG //For pointer dereference
+    |	{preInc} [exp]:CG.#exp
+    |	{preDec} [exp]:CG.#exp
+    |	{postInc} [exp]:CG.#exp
+    |	{postDec} [exp]:CG.#exp
+    |	{deRef} [exp]:CG.#exp //For pointer dereference
     |	#RuntimeError
         //When generating code using the abstract syntax of this tree structure "external" 
     	//is used for refering to expressions of the target environment (e.g. that of Java) 
     	//that are not directly mapped to by the code generator.
     |	{external} [targetLangExp]:java_String
-    |	{lambda} [params]:localDeclCG.formalParam* [exp]:expCG
-    |	{anonymousClass} [methods]:declCG.method*
+    |	{lambda} [params]:CG.#localParam.formalParam* [exp]:CG.#exp
+    |	{anonymousClass} [methods]:CG.#decl.method*
+    |	{notImplemented}
+    |	{undefined}
+    |	{threadId}
+    |	{tupleCompatibility} [tuple]:CG.#exp [types]:CG.#type*
+    |	{cases} [exp]:CG.#exp [cases]:CG.#exp.#altExp.case* [others]:CG.#exp
+    |	#altExp
+    |	{subSeq} [seq]:CG.#exp [from]:CG.#exp [to]:CG.#exp
+    ;
+
+#altExp {-> package='org.overture.codegen.cgast.expressions'}
+    = {case} [pattern]:CG.#pattern [result]:CG.#exp [patternType]:CG.#type
     ;
 
 #RuntimeError {-> package='org.overture.codegen.cgast.expressions'}
     =   {LetBeStNoBinding}
+    |	{patternMatch} [message]:java_String
+    |	{missingMember} [message]:java_String
+    	//Raised at runtime when an attemp is made 
+		//to access a non-existing member (e.g. operation)
+	|	{preCond} [message]:java_String
     ;
 
 #Var {-> package='org.overture.codegen.cgast.expressions'
 	|	[isLambda]:java_Boolean}
     =   {identifier} [original]:java_String //Change original to name...
-	|	{explicit} [classType]:typeCG.class [name]:java_String
+	|	{explicit} [classType]:CG.#type [name]:java_String
     ;
     
 #Literal {-> package='org.overture.codegen.cgast.expressions'}
@@ -236,13 +282,17 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{string} [value]:java_String [isNull]:java_Boolean
 	;
 	
-#Quantifier {-> package='org.overture.codegen.cgast.expressions'}
+#Quantifier {-> package='org.overture.codegen.cgast.expressions'
+	| [bindList]:CG.#multipleBind.set*
+	| [predicate]:CG.#exp}
 	= {forAll}
 	| {exists}
 	| {exists1}
 	;
     
-#Binary {-> package='org.overture.codegen.cgast.expressions'}
+#Binary {-> package='org.overture.codegen.cgast.expressions'
+	| [left]:CG.#exp
+	| [right]:CG.#exp}
     =   #Numeric
     |	#Bool
     //Special tree construct NOT used when constructing the OO AST from 
@@ -290,7 +340,8 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     |	{xor}
 	;
  
-#Unary {-> package='org.overture.codegen.cgast.expressions'}
+#Unary {-> package='org.overture.codegen.cgast.expressions'
+	| [exp]:CG.#exp}
     =   {plus} 
     |   {minus}
     |	{cast}
@@ -315,43 +366,44 @@ expCG {-> package='org.overture.codegen.cgast.expressions'}
     ;
     
 #Seq {-> package='org.overture.codegen.cgast.expressions'}
-	= {enum} [members]:expCG*// (types):typeCG*
-	| {comp} [first]:expCG [id]:patternCG.identifier [set]:expCG [predicate]:expCG
-	//=   {seqComp} [first]:exp [setBind]:bind.set [predicate]:exp
-	//|   {seqEnum} [members]:exp* (types):type*
+	= {enum} [members]:CG.#exp*
+	| {comp} [first]:CG.#exp [setBind]:CG.#bind.set [set]:CG.#exp [predicate]:CG.#exp
 	;
 
 #Set {-> package='org.overture.codegen.cgast.expressions'}
-	= {enum} [members]:expCG*
-	| {comp} [first]:expCG [bindings]:multipleBindCG.set* [predicate]:expCG//In the Overture AST bindings are of type multipleBind* as it also allows type binds.
-	| {range} [first]:expCG [last]:expCG
+	= {enum} [members]:CG.#exp*
+	| {comp} [first]:CG.#exp [bindings]:CG.#multipleBind.set* [predicate]:CG.#exp//In the Overture AST bindings are of type multipleBind* as it also allows type binds.
+	| {range} [first]:CG.#exp [last]:CG.#exp
 	;
 
 #Map {-> package='org.overture.codegen.cgast.expressions'}
-	= {enum} [members]:expCG.maplet*
-	| {comp} [first]:expCG.maplet [bindings]:multipleBindCG.set* [predicate]:expCG
+	= {enum} [members]:CG.#exp.maplet*
+	| {comp} [first]:CG.#exp.maplet [bindings]:CG.#multipleBind.set* [predicate]:CG.#exp
 	;
 
-typeCG {-> package='org.overture.codegen.cgast.types'}
+#type {-> package='org.overture.codegen.cgast.types'}
     =   #basic
     |	{Object}
     |	{void}
-    |	{class} [types]:typeCG* [name]:java_String
+    |	{class} [types]:CG.#type* [name]:java_String
     	//When generating code using the abstract syntax of this tree structure "external" 
     	//is used for refering to types of the target environment (e.g. that of Java) 
     	//that are not directly mapped to by the code generator.
     |	{external} [name]:java_String [info]:externalType.info
-    |	{record} [name]:nameCG.type
+    |	{record} [name]:CG.#name.type
     |	{string}
     |	{template} [name]:java_String
-    |	{tuple} [types]:typeCG*
-    |   {method} [params]:typeCG* [result]:typeCG [equivalent]:vdmType
+    |	{tuple} [types]:CG.#type*
+    |   {method} [params]:CG.#type* [result]:CG.#type [equivalent]:vdmType
     |	#map
     |	#set
     |	#seq
     |	#basicTypeWrappers
     |	{error}
-    |	{interface} [types]:typeCG* [name]:java_String
+    |	{interface} [types]:CG.#type* [name]:java_String
+    |	{union} [types]:CG.#type*
+    |	{quote} [value]:java_String
+    |	{unknown}
     ;
     
 externalType {-> package='org.overture.codegen.cgast.utils'}
@@ -366,18 +418,22 @@ externalType {-> package='org.overture.codegen.cgast.utils'}
 	;
 
 #set {-> package='org.overture.codegen.cgast.types'
-	| [empty]:java_Boolean}
+	| [empty]:java_Boolean
+	| [setOf]:CG.#type}
     =   {set} 
     ;
   
     
 #seq {-> package='org.overture.codegen.cgast.types'
-	| [empty]:java_Boolean}
+	| [empty]:java_Boolean
+	| [seqOf]:CG.#type}
     =   {seq}
     ;
     
 #map {-> package='org.overture.codegen.cgast.types'
-	| [empty]:java_Boolean}
+	| [empty]:java_Boolean
+	| [from]:CG.#type
+	| [to]:CG.#type }
     =   {map}
     ;
     
@@ -398,29 +454,3 @@ Aspect Declaration
 
 //1) No check for clash wrt nameing of fields
 //2) Only graphs
-%expCG = (type):typeCG [vdmLocation]:java_String
-    ;
-
-%expCG->#Unary =  [exp]:expCG
-    ;
-    
-%expCG->#Binary = [left]:expCG [right]:expCG
-	;
-	
-%expCG->#Quantifier //The Overture AST uses a multiplebind
-	= [bindList]:multipleBindCG.set* [predicate]:expCG
-	;
-	
-//TODO: Consider moving seq, set and map up to typeCG	
-%typeCG->#seq
-    = [seqOf]:typeCG//(seqof):type [empty]:java_Boolean
-    ;
-
-%typeCG->#set
-    = [setOf]:typeCG
-    ;
-
-%typeCG->#map
-    = [from]:typeCG [to]:typeCG 
-    ;
-    

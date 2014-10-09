@@ -30,8 +30,9 @@ import org.overture.ast.statements.PStm;
 import org.overture.ast.types.PAccessSpecifier;
 import org.overture.ast.types.PField;
 import org.overture.ast.types.PType;
-import org.overture.pog.obligation.POCaseContext;
-import org.overture.pog.obligation.PONotCaseContext;
+import org.overture.pog.contexts.POCaseContext;
+import org.overture.pog.contexts.PONameContext;
+import org.overture.pog.contexts.PONotCaseContext;
 import org.overture.pog.obligation.ProofObligationList;
 import org.overture.pog.obligation.SeqApplyObligation;
 import org.overture.pog.pub.IPOContextStack;
@@ -41,11 +42,9 @@ import org.overture.pog.utility.POException;
 import org.overture.pog.utility.PogAssistantFactory;
 
 /**
- * This is the proof obligation visitor climbs through the AST and builds the
- * list of proof obligations the given program exhibits. References: [1]
- * http://wiki.overturetool.org/images/9/95/VDM10_lang_man.pdf for BNF
- * definitions. This work is based on previous work by Nick Battle in the VDMJ
- * package.
+ * This is the proof obligation visitor climbs through the AST and builds the list of proof obligations the given
+ * program exhibits. References: [1] http://wiki.overturetool.org/images/9/95/VDM10_lang_man.pdf for BNF definitions.
+ * This work is based on previous work by Nick Battle in the VDMJ package.
  * 
  * @author Overture team
  * @param <Q>
@@ -53,29 +52,25 @@ import org.overture.pog.utility.PogAssistantFactory;
  * @since 1.0
  */
 public class PogParamVisitor<Q extends IPOContextStack, A extends IProofObligationList>
-		extends QuestionAnswerAdaptor<IPOContextStack, IProofObligationList> {
+		extends QuestionAnswerAdaptor<IPOContextStack, IProofObligationList>
+{
 
-	/**
-     * 
-     */
-	private static final long serialVersionUID = 1671456307479822942L;
 	private PogExpVisitor pogExpVisitor = new PogExpVisitor(this);
 	private PogStmVisitor pogStmVisitor = new PogStmVisitor(this);
-	private PogDefinitionVisitor pogDefinitionVisitor = new PogDefinitionVisitor(
-			this);
+	private PogDefinitionVisitor pogDefinitionVisitor = new PogDefinitionVisitor(this);
 
-    final private IPogAssistantFactory assistantFactory;
-    
- 
+	final private IPogAssistantFactory assistantFactory;
+
 	public PogParamVisitor()
 	{
 		this.assistantFactory = new PogAssistantFactory();
 	}
-    
+
 	/**
-	 * <b>Warning!</b> This constructor is not for use with Overture extensions as it sets several customisable
-	 * fields to Overture defaults. Use  {@link #PogParamVisitor(IPogAssistantFactory)} instead
-	 * @param parentVisitor
+	 * <b>Warning!</b> This constructor is not for use with Overture extensions as it sets several customisable fields
+	 * to Overture defaults. Use {@link #PogParamVisitor(IPogAssistantFactory)} instead
+	 * 
+	 * @param assistantFactory
 	 */
 	public PogParamVisitor(IPogAssistantFactory assistantFactory)
 	{
@@ -85,163 +80,198 @@ public class PogParamVisitor<Q extends IPOContextStack, A extends IProofObligati
 	@Override
 	// See [1] pg. 167 for the definition
 	public IProofObligationList caseAModuleModules(AModuleModules node,
-			IPOContextStack question) throws AnalysisException {
-		return assistantFactory.createPDefinitionAssistant().getProofObligations(node.getDefs(),
-				pogDefinitionVisitor, question);
+			IPOContextStack question) throws AnalysisException
+	{
+		IProofObligationList ipol = new ProofObligationList();
+		for (PDefinition p : node.getDefs())
+		{
+			question.push(new PONameContext(assistantFactory.createPDefinitionAssistant().getVariableNames(p)));
+			ipol.addAll(p.apply(this, question));
+			question.pop();
+			question.clearStateContexts();
+		}
+
+		return ipol;
 
 	}
 
 	@Override
 	public IProofObligationList defaultPExp(PExp node, IPOContextStack question)
-			throws AnalysisException {
+			throws AnalysisException
+	{
 
 		return node.apply(pogExpVisitor, question);
 	}
 
 	@Override
 	public IProofObligationList defaultPModifier(PModifier node,
-			IPOContextStack question) {
+			IPOContextStack question)
+	{
 
 		return new ProofObligationList();
 	}
 
 	@Override
 	public IProofObligationList caseACaseAlternative(ACaseAlternative node,
-			IPOContextStack question) throws AnalysisException {
-		try {
+			IPOContextStack question) throws AnalysisException
+	{
+		try
+		{
 			IProofObligationList obligations = new ProofObligationList();
 
-			question.push(new POCaseContext(node.getPattern(), node.getType(),
-					node.getCexp(), assistantFactory));
-			obligations.addAll(node.getResult().apply(this.pogExpVisitor,
-					question));
+			question.push(new POCaseContext(node.getPattern(), node.getType(), node.getCexp(), assistantFactory));
+			obligations.addAll(node.getResult().apply(this.pogExpVisitor, question));
 			question.pop();
-			question.push(new PONotCaseContext(node.getPattern(), node
-					.getType(), node.getCexp(), assistantFactory));
+			question.push(new PONotCaseContext(node.getPattern(), node.getType(), node.getCexp(), assistantFactory));
 
 			return obligations;
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 			throw new POException(node, e.getMessage());
 		}
 	}
 
 	@Override
-	public IProofObligationList defaultPType(PType node, IPOContextStack question) {
+	public IProofObligationList defaultPType(PType node,
+			IPOContextStack question)
+	{
 
 		return new ProofObligationList();
 	}
 
 	@Override
 	public IProofObligationList defaultPField(PField node,
-			IPOContextStack question) {
+			IPOContextStack question)
+	{
 
 		return new ProofObligationList();
 	}
 
 	@Override
 	public IProofObligationList defaultPAccessSpecifier(PAccessSpecifier node,
-			IPOContextStack question) {
+			IPOContextStack question)
+	{
 
 		return new ProofObligationList();
 	}
 
 	@Override
 	public IProofObligationList defaultPPattern(PPattern node,
-			IPOContextStack question) {
+			IPOContextStack question)
+	{
 		return new ProofObligationList();
 	}
 
 	@Override
-	public IProofObligationList defaultPPair(PPair node, IPOContextStack question) {
+	public IProofObligationList defaultPPair(PPair node,
+			IPOContextStack question)
+	{
 
 		return new ProofObligationList();
 	}
 
 	@Override
-	public IProofObligationList defaultPBind(PBind node, IPOContextStack question) {
+	public IProofObligationList defaultPBind(PBind node,
+			IPOContextStack question)
+	{
 
 		return new ProofObligationList();
 	}
 
 	@Override
 	public IProofObligationList caseASetBind(ASetBind node,
-			IPOContextStack question) throws AnalysisException {
-		try {
+			IPOContextStack question) throws AnalysisException
+	{
+		try
+		{
 			return node.getSet().apply(this.pogExpVisitor, question);
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 			throw new POException(node, e.getMessage());
 		}
 	}
 
 	@Override
 	public IProofObligationList caseASetMultipleBind(ASetMultipleBind node,
-			IPOContextStack question) throws AnalysisException {
-		try {
+			IPOContextStack question) throws AnalysisException
+	{
+		try
+		{
 			return node.getSet().apply(this.pogExpVisitor, question);
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 			throw new POException(node, e.getMessage());
 		}
 	}
 
 	@Override
 	public IProofObligationList caseATypeMultipleBind(ATypeMultipleBind node,
-			IPOContextStack question) {
+			IPOContextStack question)
+	{
 
 		return new ProofObligationList();
 	}
 
 	@Override
 	public IProofObligationList defaultPPatternBind(PPatternBind node,
-			IPOContextStack question) {
+			IPOContextStack question)
+	{
 
 		return new ProofObligationList();
 	}
 
 	@Override
 	public IProofObligationList defaultPDefinition(PDefinition node,
-			IPOContextStack question) throws AnalysisException {
+			IPOContextStack question) throws AnalysisException
+	{
 
 		return node.apply(pogDefinitionVisitor, question);
 	}
 
 	@Override
 	public IProofObligationList defaultPModules(PModules node,
-			IPOContextStack question) {
+			IPOContextStack question)
+	{
 
 		return new ProofObligationList();
 	}
 
 	@Override
 	public IProofObligationList defaultPImports(PImports node,
-			IPOContextStack question) {
+			IPOContextStack question)
+	{
 
 		return new ProofObligationList();
 	}
 
 	@Override
 	public IProofObligationList defaultPExports(PExports node,
-			IPOContextStack question) {
+			IPOContextStack question)
+	{
 
 		return new ProofObligationList();
 	}
 
 	@Override
 	public IProofObligationList defaultPExport(PExport node,
-			IPOContextStack question) {
+			IPOContextStack question)
+	{
 
 		return new ProofObligationList();
 	}
 
 	@Override
 	public IProofObligationList defaultPStm(PStm node, IPOContextStack question)
-			throws AnalysisException {
+			throws AnalysisException
+	{
 
 		return node.apply(pogStmVisitor, question);
 	}
 
 	@Override
 	public IProofObligationList defaultPStateDesignator(PStateDesignator node,
-			IPOContextStack question) {
+			IPOContextStack question)
+	{
 
 		return new ProofObligationList();
 	}
@@ -249,26 +279,30 @@ public class PogParamVisitor<Q extends IPOContextStack, A extends IProofObligati
 	@Override
 	public IProofObligationList caseAMapSeqStateDesignator(
 			AMapSeqStateDesignator node, IPOContextStack question)
-			throws AnalysisException {
-		try {
+			throws AnalysisException
+	{
+		try
+		{
 			IProofObligationList list = new ProofObligationList();
 
-			if (node.getSeqType() != null) {
-				list.add(new SeqApplyObligation(node.getMapseq(),
-						node.getExp(), question));
+			if (node.getSeqType() != null)
+			{
+				list.add(new SeqApplyObligation(node.getMapseq(), node.getExp(), question, assistantFactory));
 			}
 
 			// Maps are OK, as you can create new map domain entries
 
 			return list;
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 			throw new POException(node, e.getMessage());
 		}
 	}
 
 	@Override
-	public IProofObligationList defaultPObjectDesignator(PObjectDesignator node,
-			IPOContextStack question) {
+	public IProofObligationList defaultPObjectDesignator(
+			PObjectDesignator node, IPOContextStack question)
+	{
 
 		return new ProofObligationList();
 	}
@@ -276,35 +310,44 @@ public class PogParamVisitor<Q extends IPOContextStack, A extends IProofObligati
 	@Override
 	public IProofObligationList caseATixeStmtAlternative(
 			ATixeStmtAlternative node, IPOContextStack question)
-			throws AnalysisException {
-		try {
+			throws AnalysisException
+	{
+		try
+		{
 			IProofObligationList list = new ProofObligationList();
 
-			if (node.getPatternBind().getPattern() != null) {
+			if (node.getPatternBind().getPattern() != null)
+			{
 				// Nothing to do
-			} else if (node.getPatternBind().getBind() instanceof ATypeBind) {
+			} else if (node.getPatternBind().getBind() instanceof ATypeBind)
+			{
 				// Nothing to do
-			} else if (node.getPatternBind().getBind() instanceof ASetBind) {
+			} else if (node.getPatternBind().getBind() instanceof ASetBind)
+			{
 				ASetBind bind = (ASetBind) node.getPatternBind().getBind();
 				list.addAll(bind.getSet().apply(this.pogExpVisitor, question));
 			}
 
 			list.addAll(node.getStatement().apply(this.pogStmVisitor, question));
 			return list;
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 			throw new POException(node, e.getMessage());
 		}
 	}
 
 	@Override
 	public IProofObligationList defaultPClause(PClause node,
-			IPOContextStack question) {
+			IPOContextStack question)
+	{
 
 		return new ProofObligationList();
 	}
 
 	@Override
-	public IProofObligationList defaultPCase(PCase node, IPOContextStack question) {
+	public IProofObligationList defaultPCase(PCase node,
+			IPOContextStack question)
+	{
 
 		return new ProofObligationList();
 	}

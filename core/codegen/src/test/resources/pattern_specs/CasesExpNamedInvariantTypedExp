@@ -1,0 +1,23 @@
+class Entry
+
+types
+
+public T = (nat * nat) | (bool * bool);
+
+functions
+
+public f : T -> nat
+f (t) ==
+cases t:
+	mk_(1,2) -> 1,
+	mk_(true,false) -> 2,
+	others -> 3
+end;
+		
+operations
+	
+public static Run : () ==> ? 
+Run () ==
+	return [f(mk_(1,2)), f(mk_(true,false)), f(mk_(5,5))];
+
+end Entry

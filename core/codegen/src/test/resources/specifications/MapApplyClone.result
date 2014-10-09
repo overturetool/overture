@@ -4,13 +4,19 @@ import java.util.*;
 
 
 public class A {
-    private static final Tuple a = ((Tuple) op().get(Tuple.mk_(1L, true))).clone();
+    private static final Tuple a = Utils.clone(((Tuple) op()
+                                                            .get(Tuple.mk_(1L,
+                    true))));
 
     public A() {
     }
 
     public static VDMMap op() {
         return MapUtil.map(new Maplet(Tuple.mk_(1L, true), Tuple.mk_(false, 2L)));
+    }
+
+    public String toString() {
+        return "A{" + "a = " + Utils.toString(a) + "}";
     }
 }
 

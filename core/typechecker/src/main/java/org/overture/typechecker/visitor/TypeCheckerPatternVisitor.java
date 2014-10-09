@@ -1,15 +1,44 @@
+/*
+ * #%~
+ * The VDM Type Checker
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.typechecker.visitor;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
+import org.overture.ast.definitions.AExplicitFunctionDefinition;
+import org.overture.ast.definitions.AImplicitFunctionDefinition;
+import org.overture.ast.definitions.APerSyncDefinition;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.patterns.ANamePatternPair;
+import org.overture.ast.patterns.AObjectPattern;
 import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
+import org.overture.ast.typechecker.NameScope;
+import org.overture.ast.types.AClassType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
-import org.overture.typechecker.TypeComparator;
+import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class TypeCheckerPatternVisitor extends AbstractTypeCheckVisitor
 {
@@ -43,7 +72,7 @@ public class TypeCheckerPatternVisitor extends AbstractTypeCheckVisitor
 				result = st.getSetof();
 				PType ptype = question.assistantFactory.createPMultipleBindAssistant().getPossibleType(node);
 
-				if (!TypeComparator.compatible(ptype, result))
+				if (!question.assistantFactory.getTypeComparator().compatible(ptype, result))
 				{
 					TypeCheckerErrors.report(3264, "At least one bind cannot match set", node.getSet().getLocation(), node.getSet());
 					TypeCheckerErrors.detail2("Binds", ptype, "Set of", st);
@@ -66,7 +95,7 @@ public class TypeCheckerPatternVisitor extends AbstractTypeCheckVisitor
 		PType type = question.assistantFactory.createPTypeAssistant().typeResolve(node.getType(), null, THIS, question);
 		PType ptype = question.assistantFactory.createPPatternListAssistant().getPossibleType(node.getPlist(), node.getLocation());
 
-		if (!TypeComparator.compatible(ptype, type))
+		if (!question.assistantFactory.getTypeComparator().compatible(ptype, type))
 		{
 			TypeCheckerErrors.report(3265, "At least one bind cannot match this type", type.getLocation(), type);
 			TypeCheckerErrors.detail2("Binds", ptype, "Type", type);
@@ -74,5 +103,50 @@ public class TypeCheckerPatternVisitor extends AbstractTypeCheckVisitor
 
 		node.setType(type);
 		return type;
+	}
+
+	@Override
+	public PType caseAObjectPattern(AObjectPattern pattern, TypeCheckInfo question) throws AnalysisException
+	{
+		PTypeAssistantTC typeAssistant = question.assistantFactory.createPTypeAssistant();
+		
+		if (!typeAssistant.isClass(pattern.getType()))
+		{
+			TypeCheckerErrors.report(3331, "obj_ expression is not an object type", pattern.getLocation(), pattern);
+			TypeCheckerErrors.detail("Type", pattern.getType());
+		}
+		else
+		{
+			// Check whether the field access is permitted from here.
+			AClassType cls = typeAssistant.getClassType(pattern.getType());
+	
+			for (ANamePatternPair npp: pattern.getFields())
+			{
+				PDefinition fdef = question.assistantFactory.createAClassTypeAssistant().findName(cls, npp.getName(), NameScope.STATE);
+	
+				if (fdef == null)
+				{
+					TypeCheckerErrors.report(3091, "Unknown member " + npp.getName() + " of class " + cls.getName().getName(), npp.getName().getLocation(), npp.getName());
+				}
+				else if (!question.assistantFactory.createSClassDefinitionAssistant().isAccessible(question.env, fdef, false))
+				{
+					TypeCheckerErrors.report(3092, "Inaccessible member " + npp.getName() + " of class " + cls.getName().getName(), npp.getName().getLocation(), npp.getName());
+				}
+			}
+	
+			PDefinition func = question.env.getEnclosingDefinition();
+	
+			boolean inFunction =
+				(func instanceof AExplicitFunctionDefinition ||
+				 func instanceof AImplicitFunctionDefinition ||
+				 func instanceof APerSyncDefinition);
+			
+			if (inFunction)
+			{
+				TypeCheckerErrors.report(3332, "Object pattern cannot be used from a function", pattern.getLocation(), pattern);
+			}
+		}
+		
+		return pattern.getType();
 	}
 }

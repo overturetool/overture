@@ -1,0 +1,30 @@
+class Entry
+
+types
+
+public Rec :: x : nat
+							y : char;
+
+operations
+
+public Entry : char ==> Entry
+Entry (c) == skip;
+
+public Entry : nat ==> Entry
+Entry (n) == skip;
+
+public Entry : bool * real ==> Entry
+Entry (b,r) == skip;
+
+public Entry : nat * char ==> Entry
+Entry (n,c) == skip;
+
+public static Run : () ==> ?
+Run () ==
+let x : nat | char = 1,
+		y : nat | char = 'a',
+		r = mk_Rec(x,y)
+in
+	return mk_(r.x, r.y);
+
+end Entry

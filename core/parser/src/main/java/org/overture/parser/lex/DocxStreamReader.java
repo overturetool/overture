@@ -40,8 +40,6 @@ public class DocxStreamReader extends XMLStreamReader
 	@Override
 	protected String despace(String in)
 	{
-		return in
-    		.replaceAll("<w:tab/>", "\t")
-			.replaceAll("</w:pPr>", "\n");
+		return in.replaceAll("<w:tab/>", "\t").replaceAll("</w:pPr>", "\n");
 	}
 }

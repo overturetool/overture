@@ -28,16 +28,14 @@ import java.util.List;
 import org.overture.ast.util.Utils;
 import org.overture.util.Base64;
 
-
 public class DBGPCommand
 {
 	public final DBGPCommandType type;
 	public final List<DBGPOption> options;
 	public final String data;
 
-	public DBGPCommand(
-		DBGPCommandType type, List<DBGPOption> options, String base64)
-		throws Exception
+	public DBGPCommand(DBGPCommandType type, List<DBGPOption> options,
+			String base64) throws Exception
 	{
 		this.type = type;
 		this.options = options;
@@ -45,8 +43,7 @@ public class DBGPCommand
 		if (base64 != null)
 		{
 			this.data = new String(Base64.decode(base64), "UTF-8");
-		}
-		else
+		} else
 		{
 			this.data = null;
 		}
@@ -55,14 +52,15 @@ public class DBGPCommand
 	@Override
 	public String toString()
 	{
-		return type +
-			(options.isEmpty() ? "" : " " + Utils.listToString(options, " ")) +
-			(data == null ? "" : " -- " + data);
+		return type
+				+ (options.isEmpty() ? "" : " "
+						+ Utils.listToString(options, " "))
+				+ (data == null ? "" : " -- " + data);
 	}
 
 	public DBGPOption getOption(DBGPOptionType sought)
 	{
-		for (DBGPOption opt: options)
+		for (DBGPOption opt : options)
 		{
 			if (opt.type == sought)
 			{

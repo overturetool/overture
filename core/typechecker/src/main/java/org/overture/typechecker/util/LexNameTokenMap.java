@@ -1,3 +1,24 @@
+/*
+ * #%~
+ * The VDM Type Checker
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.typechecker.util;
 
 import java.io.Serializable;
@@ -17,77 +38,6 @@ public class LexNameTokenMap<V> implements Map<ILexNameToken, V>, Serializable
 	 * 
 	 */
 	private static final long serialVersionUID = -1122692848887584905L;
-
-	static class LexNameTokenEntry<V> implements Map.Entry<ILexNameToken, V>
-	{
-
-		Map.Entry<LexNameTokenWrapper, V> wrapped;
-
-		public LexNameTokenEntry(Map.Entry<LexNameTokenWrapper, V> wrapped)
-		{
-			this.wrapped = wrapped;
-		}
-
-		public ILexNameToken getKey()
-		{
-			return wrapped.getKey().token;
-		}
-
-		public V getValue()
-		{
-			return wrapped.getValue();
-		}
-
-		public V setValue(V value)
-		{
-			return wrapped.setValue(value);
-		}
-
-		@Override
-		public String toString()
-		{
-			return getKey() + "=" + getValue();
-		}
-
-	}
-
-	static class LexNameTokenWrapper implements Serializable
-	{
-
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = -5420007432629328108L;
-		public ILexNameToken token;
-
-		public LexNameTokenWrapper(ILexNameToken token)
-		{
-			this.token = token;
-		}
-
-		@Override
-		public boolean equals(Object obj)
-		{
-			if (obj instanceof LexNameTokenWrapper)
-			{
-				return HelpLexNameToken.isEqual(this.token, ((LexNameTokenWrapper) obj).token);
-			}
-
-			return super.equals(obj);
-		}
-
-		@Override
-		public int hashCode()
-		{
-			return this.token.hashCode();
-		}
-
-		@Override
-		public String toString()
-		{
-			return token.toString();
-		}
-	}
 
 	private final HashMap<LexNameTokenWrapper, V> map = new HashMap<LexNameTokenWrapper, V>();
 

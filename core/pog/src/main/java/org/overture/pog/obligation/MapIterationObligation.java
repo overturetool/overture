@@ -23,6 +23,7 @@
 
 package org.overture.pog.obligation;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.expressions.AMapDomainUnaryExp;
 import org.overture.ast.expressions.AMapRangeUnaryExp;
@@ -30,29 +31,30 @@ import org.overture.ast.expressions.AOrBooleanBinaryExp;
 import org.overture.ast.expressions.AStarStarBinaryExp;
 import org.overture.ast.expressions.ASubsetBinaryExp;
 import org.overture.pog.pub.IPOContextStack;
-
+import org.overture.pog.pub.IPogAssistantFactory;
+import org.overture.pog.pub.POType;
 
 public class MapIterationObligation extends ProofObligation
 {
 	private static final long serialVersionUID = -9122478081832322687L;
 
-	public MapIterationObligation(AStarStarBinaryExp exp, IPOContextStack ctxt)
+	public MapIterationObligation(AStarStarBinaryExp exp, IPOContextStack ctxt,
+			IPogAssistantFactory af) throws AnalysisException
 	{
-		super(exp, POType.MAP_ITERATION, ctxt, exp.getLocation());
-		
+		super(exp, POType.MAP_ITERATION, ctxt, exp.getLocation(), af);
+
 		/**
-		 * The obligation for m ** e is:
-		 * 		e = 0 or e = 1 or rng m subset dom m  
+		 * The obligation for m ** e is: e = 0 or e = 1 or rng m subset dom m
 		 */
-		
+
 		AOrBooleanBinaryExp orExp = new AOrBooleanBinaryExp();
 		AIntLiteralExp zero = getIntLiteral(0);
 		AIntLiteralExp one = getIntLiteral(1);
-		
+
 		orExp.setLeft(getEqualsExp(exp.clone(), zero));
 		AOrBooleanBinaryExp orExp2 = new AOrBooleanBinaryExp();
 		orExp2.setLeft(getEqualsExp(exp.clone(), one));
-		
+
 		AMapRangeUnaryExp rng = new AMapRangeUnaryExp();
 		rng.setExp(exp.getLeft().clone());
 		AMapDomainUnaryExp dom = new AMapDomainUnaryExp();
@@ -60,11 +62,11 @@ public class MapIterationObligation extends ProofObligation
 		ASubsetBinaryExp subset = new ASubsetBinaryExp();
 		subset.setLeft(rng);
 		subset.setRight(dom);
-		
+
 		orExp2.setRight(subset);
 		orExp.setRight(orExp2);
-		
-//		valuetree.setContext(ctxt.getContextNodeList());
+
+		stitch = orExp;
 		valuetree.setPredicate(ctxt.getPredWithContext(orExp));
 	}
 }

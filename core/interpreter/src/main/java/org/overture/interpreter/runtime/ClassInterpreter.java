@@ -44,7 +44,8 @@ import org.overture.ast.types.PType;
 import org.overture.ast.util.Utils;
 import org.overture.ast.util.definitions.ClassList;
 import org.overture.config.Settings;
-import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
+import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
+import org.overture.interpreter.assistant.InterpreterAssistantFactory;
 import org.overture.interpreter.debug.DBGPReader;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.messages.rtlog.RTLogger;
@@ -79,7 +80,6 @@ import org.overture.typechecker.PrivateClassEnvironment;
 import org.overture.typechecker.PublicClassEnvironment;
 import org.overture.typechecker.assistant.definition.PDefinitionSet;
 
-
 /**
  * The VDM++ interpreter.
  */
@@ -93,6 +93,13 @@ public class ClassInterpreter extends Interpreter
 
 	public ClassInterpreter(ClassList classes) throws Exception
 	{
+		this(new InterpreterAssistantFactory(), classes);
+	}
+
+	public ClassInterpreter(IInterpreterAssistantFactory assistantFactory,
+			ClassList classes) throws Exception
+	{
+		super(assistantFactory);
 		this.classes = new ClassListInterpreter(classes);
 		this.createdValues = new NameValuePairMap();
 		this.createdDefinitions = assistantFactory.createPDefinitionSet();
@@ -100,8 +107,7 @@ public class ClassInterpreter extends Interpreter
 		if (classes.isEmpty())
 		{
 			setDefaultName(null);
-		}
-		else
+		} else
 		{
 			setDefaultName(classes.get(0).getName().getName());
 		}
@@ -114,19 +120,18 @@ public class ClassInterpreter extends Interpreter
 		{
 			defaultClass = AstFactory.newAClassClassDefinition();
 			classes.add(defaultClass);
-		}
-		else
+		} else
 		{
-    		for (SClassDefinition c: classes)
-    		{
-    			if (c.getName().getName().equals(cname))
-    			{
-    				defaultClass = c;
-    				return;
-    			}
-    		}
+			for (SClassDefinition c : classes)
+			{
+				if (c.getName().getName().equals(cname))
+				{
+					defaultClass = c;
+					return;
+				}
+			}
 
-    		throw new Exception("Class " + cname + " not loaded");
+			throw new Exception("Class " + cname + " not loaded");
 		}
 	}
 
@@ -156,15 +161,15 @@ public class ClassInterpreter extends Interpreter
 	@Override
 	public String getInitialContext()
 	{
-		return initialContext.toString() +
-			(createdValues.isEmpty() ? "" :
-				Utils.listToString("", createdValues.asList(), "\n", "\n"));
+		return initialContext.toString()
+				+ (createdValues.isEmpty() ? ""
+						: Utils.listToString("", createdValues.asList(), "\n", "\n"));
 	}
 
 	@Override
 	public Environment getGlobalEnvironment()
 	{
-		return new PublicClassEnvironment(assistantFactory,classes,null);
+		return new PublicClassEnvironment(assistantFactory, classes, null);
 	}
 
 	@Override
@@ -172,7 +177,7 @@ public class ClassInterpreter extends Interpreter
 	{
 		BasicSchedulableThread.terminateAll();
 		VdmRuntime.initialize();
-		
+
 		RuntimeValidator.init(this);
 		InitThread iniThread = new InitThread(Thread.currentThread());
 		BasicSchedulableThread.setInitialThread(iniThread);
@@ -184,15 +189,15 @@ public class ClassInterpreter extends Interpreter
 		ObjectValue.init();
 
 		logSwapIn();
-		initialContext = classes.initialize(assistantFactory,dbgp);
+		initialContext = classes.initialize(assistantFactory, dbgp);
 		classes.systemInit(scheduler, dbgp, initialContext);
 		logSwapOut();
 
 		createdValues = new NameValuePairMap();
 		createdDefinitions = assistantFactory.createPDefinitionSet();
 
-		scheduler.reset();	// Required before a run, as well as init above
-		BUSValue.start();	// Start any BUS threads first...
+		scheduler.reset(); // Required before a run, as well as init above
+		BUSValue.start(); // Start any BUS threads first...
 	}
 
 	@Override
@@ -202,14 +207,13 @@ public class ClassInterpreter extends Interpreter
 		scheduler.reset();
 
 		SystemClock.init();
-		initialContext = classes.initialize(assistantFactory,dbgp);
+		initialContext = classes.initialize(assistantFactory, dbgp);
 		createdValues = new NameValuePairMap();
 		createdDefinitions = assistantFactory.createPDefinitionSet();
 	}
 
 	@Override
-	protected PExp parseExpression(String line, String module)
-		throws Exception
+	protected PExp parseExpression(String line, String module) throws Exception
 	{
 		LexTokenReader ltr = new LexTokenReader(line, Settings.dialect, Console.charset);
 		ExpressionReader reader = new ExpressionReader(ltr);
@@ -219,8 +223,7 @@ public class ClassInterpreter extends Interpreter
 
 	private Value execute(PExp expr, DBGPReader dbgp) throws Exception
 	{
-		Context mainContext = new StateContext(assistantFactory,
-			defaultClass.getName().getLocation(), "global static scope");
+		Context mainContext = new StateContext(assistantFactory, defaultClass.getName().getLocation(), "global static scope");
 
 		mainContext.putAll(initialContext);
 		mainContext.putAll(createdValues);
@@ -235,24 +238,25 @@ public class ClassInterpreter extends Interpreter
 		MainThread main = new MainThread(expr, mainContext);
 		main.start();
 		scheduler.start(main);
-		
-		if (Settings.dialect == Dialect.VDM_RT && RTLogger.getLogSize() > 0) 
+
+		if (Settings.dialect == Dialect.VDM_RT && RTLogger.getLogSize() > 0)
 		{
 			RTLogger.dump(true);
 		}
-		
+
 		RuntimeValidator.stop();
 
-		return main.getResult();	// Can throw ContextException
+		return main.getResult(); // Can throw ContextException
 	}
 
 	/**
-	 * Parse the line passed, type check it and evaluate it as an expression
-	 * in the initial context.
-	 *
-	 * @param line A VDM expression.
+	 * Parse the line passed, type check it and evaluate it as an expression in the initial context.
+	 * 
+	 * @param line
+	 *            A VDM expression.
 	 * @return The value of the expression.
-	 * @throws Exception Parser, type checking or runtime errors.
+	 * @throws Exception
+	 *             Parser, type checking or runtime errors.
 	 */
 
 	@Override
@@ -260,35 +264,35 @@ public class ClassInterpreter extends Interpreter
 	{
 		PExp expr = parseExpression(line, getDefaultName());
 		Environment env = getGlobalEnvironment();
-		Environment created = new FlatCheckedEnvironment(assistantFactory,
-			createdDefinitions.asList(), env, NameScope.NAMESANDSTATE);
+		Environment created = new FlatCheckedEnvironment(assistantFactory, createdDefinitions.asList(), env, NameScope.NAMESANDSTATE);
 
 		typeCheck(expr, created);
 		return execute(expr, dbgp);
 	}
 
 	/**
-	 * Parse the line passed, and evaluate it as an expression in the context
-	 * passed.
-	 *
-	 * @param line A VDM expression.
-	 * @param ctxt The context in which to evaluate the expression.
+	 * Parse the line passed, and evaluate it as an expression in the context passed.
+	 * 
+	 * @param line
+	 *            A VDM expression.
+	 * @param ctxt
+	 *            The context in which to evaluate the expression.
 	 * @return The value of the expression.
-	 * @throws Exception Parser or runtime errors.
+	 * @throws Exception
+	 *             Parser or runtime errors.
 	 */
 
 	@Override
 	public Value evaluate(String line, Context ctxt) throws Exception
 	{
 		PExp expr = parseExpression(line, getDefaultName());
-		PublicClassEnvironment globals = new PublicClassEnvironment(assistantFactory,classes,null);
-		Environment env = new PrivateClassEnvironment(assistantFactory,defaultClass, globals);
+		PublicClassEnvironment globals = new PublicClassEnvironment(assistantFactory, classes, null);
+		Environment env = new PrivateClassEnvironment(assistantFactory, defaultClass, globals);
 
 		try
 		{
 			typeCheck(expr, env);
-		}
-		catch (VDMErrorsException e)
+		} catch (VDMErrorsException e)
 		{
 			// We don't care... we just needed to type check it.
 		}
@@ -296,8 +300,8 @@ public class ClassInterpreter extends Interpreter
 		ctxt.threadState.init();
 		try
 		{
-			return expr.apply(VdmRuntime.getExpressionEvaluator(),ctxt);
-		}catch(Exception e)
+			return expr.apply(VdmRuntime.getExpressionEvaluator(), ctxt);
+		} catch (Exception e)
 		{
 			throw e;
 		}
@@ -307,20 +311,20 @@ public class ClassInterpreter extends Interpreter
 	public SClassDefinition findClass(String classname)
 	{
 		LexNameToken name = new LexNameToken("CLASS", classname, null);
-		return (SClassDefinition)assistantFactory.createSClassDefinitionAssistant().findType(classes, name);
+		return (SClassDefinition) assistantFactory.createSClassDefinitionAssistant().findType(classes, name);
 	}
 
 	@Override
 	protected ANamedTraceDefinition findTraceDefinition(LexNameToken name)
 	{
-		PDefinition d = assistantFactory.createSClassDefinitionAssistant().findName(classes,name, NameScope.NAMESANDSTATE);
+		PDefinition d = assistantFactory.createSClassDefinitionAssistant().findName(classes, name, NameScope.NAMESANDSTATE);
 
 		if (d == null || !(d instanceof ANamedTraceDefinition))
 		{
 			return null;
 		}
 
-		return (ANamedTraceDefinition)d;
+		return (ANamedTraceDefinition) d;
 	}
 
 	@Override
@@ -329,15 +333,15 @@ public class ClassInterpreter extends Interpreter
 		// The name will not be type-qualified, so we can't use the usual
 		// findName methods
 
-		for (SClassDefinition c: classes)
+		for (SClassDefinition c : classes)
 		{
-			for (PDefinition d: c.getDefinitions())
+			for (PDefinition d : c.getDefinitions())
 			{
 				if (assistantFactory.createPDefinitionAssistant().isFunctionOrOperation(d))
 				{
-					NameValuePairList nvpl = assistantFactory.createPDefinitionAssistant().getNamedValues(d,initialContext);
+					NameValuePairList nvpl = assistantFactory.createPDefinitionAssistant().getNamedValues(d, initialContext);
 
-					for (NameValuePair n: nvpl)
+					for (NameValuePair n : nvpl)
 					{
 						if (n.name.matches(name))
 						{
@@ -347,13 +351,13 @@ public class ClassInterpreter extends Interpreter
 				}
 			}
 
-			for (PDefinition d: c.getAllInheritedDefinitions())
+			for (PDefinition d : c.getAllInheritedDefinitions())
 			{
 				if (assistantFactory.createPDefinitionAssistant().isFunctionOrOperation(d))
 				{
-					NameValuePairList nvpl = assistantFactory.createPDefinitionAssistant().getNamedValues(d,initialContext);
+					NameValuePairList nvpl = assistantFactory.createPDefinitionAssistant().getNamedValues(d, initialContext);
 
-					for (NameValuePair n: nvpl)
+					for (NameValuePair n : nvpl)
 					{
 						if (n.name.matches(name))
 						{
@@ -370,21 +374,20 @@ public class ClassInterpreter extends Interpreter
 	@Override
 	public PStm findStatement(File file, int lineno)
 	{
-		return assistantFactory.createSClassDefinitionAssistant().findStatement(classes,file, lineno);
+		return assistantFactory.createSClassDefinitionAssistant().findStatement(classes, file, lineno);
 	}
 
 	@Override
 	public PExp findExpression(File file, int lineno)
 	{
-		return assistantFactory.createSClassDefinitionAssistant().findExpression(classes,file, lineno);
+		return assistantFactory.createSClassDefinitionAssistant().findExpression(classes, file, lineno);
 	}
 
 	public void create(String var, String exp) throws Exception
 	{
 		PExp expr = parseExpression(exp, getDefaultName());
 		Environment env = getGlobalEnvironment();
-		Environment created = new FlatCheckedEnvironment(assistantFactory,
-			createdDefinitions.asList(), env, NameScope.NAMESANDSTATE);
+		Environment created = new FlatCheckedEnvironment(assistantFactory, createdDefinitions.asList(), env, NameScope.NAMESANDSTATE);
 
 		PType type = typeCheck(expr, created);
 		Value v = execute(exp, null);
@@ -410,33 +413,31 @@ public class ClassInterpreter extends Interpreter
 
 		RTLogger.log(new RTThreadCreateMessage(thread, CPUValue.vCPU.resource));
 
-		RTLogger.log(new RTThreadSwapMessage(SwapType.In,thread, CPUValue.vCPU.resource, 0, 0));
+		RTLogger.log(new RTThreadSwapMessage(SwapType.In, thread, CPUValue.vCPU.resource, 0, 0));
 	}
 
 	private void logSwapOut()
 	{
 		ISchedulableThread thread = BasicSchedulableThread.getThread(Thread.currentThread());
 
-		RTLogger.log(new RTThreadSwapMessage(SwapType.Out,thread,CPUValue.vCPU.resource,0,0));
+		RTLogger.log(new RTThreadSwapMessage(SwapType.Out, thread, CPUValue.vCPU.resource, 0, 0));
 
 		RTLogger.log(new RTThreadKillMessage(thread, CPUValue.vCPU.resource));
 	}
 
-
 	@Override
-	public Context getInitialTraceContext(ANamedTraceDefinition tracedef,boolean debug) throws AnalysisException
+	public Context getInitialTraceContext(ANamedTraceDefinition tracedef,
+			boolean debug) throws AnalysisException
 	{
 		ObjectValue object = null;
 
-		SClassDefinition classdef=tracedef.getClassDefinition();
+		SClassDefinition classdef = tracedef.getClassDefinition();
 
 		// Create a new test object
-		object = assistantFactory.createSClassDefinitionAssistant().newInstance(classdef,null, null, initialContext);
+		object = assistantFactory.createSClassDefinitionAssistant().newInstance(classdef, null, null, initialContext);
 
-
-		Context ctxt = new ObjectContext(assistantFactory,
-				classdef.getName().getLocation(), classdef.getName().getName() + "()",
-				initialContext, object);
+		Context ctxt = new ObjectContext(assistantFactory, classdef.getName().getLocation(), classdef.getName().getName()
+				+ "()", initialContext, object);
 
 		ctxt.put(classdef.getName().getSelfName(), object);
 
@@ -444,8 +445,8 @@ public class ClassInterpreter extends Interpreter
 	}
 
 	@Override
-	public List<Object> runOneTrace(
-			ANamedTraceDefinition tracedef, CallSequence test,boolean debug) throws AnalysisException
+	public List<Object> runOneTrace(ANamedTraceDefinition tracedef,
+			CallSequence test, boolean debug) throws AnalysisException
 	{
 		List<Object> list = new Vector<Object>();
 		Context ctxt = null;
@@ -453,8 +454,7 @@ public class ClassInterpreter extends Interpreter
 		try
 		{
 			ctxt = getInitialTraceContext(tracedef, debug);
-		}
-		catch (ValueException e)
+		} catch (ValueException e)
 		{
 			list.add(e.getMessage());
 			return list;
@@ -464,22 +464,21 @@ public class ClassInterpreter extends Interpreter
 
 		// scheduler.reset();
 		CTMainThread main = new CTMainThread(test, ctxt, debug);
-		main.start();		
+		main.start();
 		scheduler.start(main);
 
-		//Ensures all threads are terminated for next trace run
+		// Ensures all threads are terminated for next trace run
 		BasicSchedulableThread.signalAll(Signal.TERMINATE);
 
 		while (main.getRunState() != RunState.COMPLETE)
 		{
 			try
-            {
-                Thread.sleep(10);
-            }
-            catch (InterruptedException e)
-            {
-                break;
-            }
+			{
+				Thread.sleep(10);
+			} catch (InterruptedException e)
+			{
+				break;
+			}
 		}
 
 		return main.getList();
@@ -492,9 +491,9 @@ public class ClassInterpreter extends Interpreter
 		{
 			for (PDefinition def : cDef.getDefinitions())
 			{
-				if(def instanceof ATypeDefinition)
+				if (def instanceof ATypeDefinition)
 				{
-					if(def.getName().equals(typename))
+					if (def.getName().equals(typename))
 					{
 						return def.getType();
 					}

@@ -9,6 +9,10 @@ public class Entry {
     public Entry() {
     }
 
+    public static Object Run() {
+        return a + s() + f();
+    }
+
     public static String s() {
         return "def";
     }
@@ -19,8 +23,8 @@ public class Entry {
         new String(new char[] { s().charAt(Utils.index(1L)) });
     }
 
-    public static Object Run() {
-        return a + s() + f();
+    public String toString() {
+        return "Entry{" + "a = " + Utils.toString(a) + "}";
     }
 }
 

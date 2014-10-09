@@ -36,11 +36,11 @@ public class ASystemClassDefinitionAssistantInterpreter
 	public ASystemClassDefinitionAssistantInterpreter(
 			IInterpreterAssistantFactory af)
 	{
-		//super(af);
+		// super(af);
 		this.af = af;
 	}
 
-	public static void systemInit(ASystemClassDefinition systemClass,
+	public void systemInit(ASystemClassDefinition systemClass,
 			ResourceScheduler scheduler, DBGPReader dbgp,
 			RootContext initialContext)
 	{
@@ -94,14 +94,15 @@ public class ASystemClassDefinitionAssistantInterpreter
 					args.add(new QuoteValue("FCFS")); // Default policy
 					args.add(new RealValue(0)); // Default speed
 
-					cpu = (CPUValue) ACpuClassDefinitionAssistantInterpreter.newInstance(instance, null, args, initialContext);
+					cpu = (CPUValue) af.createACpuClassDefinitionAssistant().newInstance(instance, null, args, initialContext);
 					v.set(systemClass.getLocation(), cpu, initialContext);
 				} else
 				{
 					cpu = (CPUValue) v.deref();
 				}
 
-//				RTLogger.log(new RTDeclareCPUMessage(cpu.resource.getNumber(), !v.isUndefined(), systemClass.getName().getName(), d.getName().getName()));
+				// RTLogger.log(new RTDeclareCPUMessage(cpu.resource.getNumber(), !v.isUndefined(),
+				// systemClass.getName().getName(), d.getName().getName()));
 
 				// Set the name and scheduler for the CPU resource, and
 				// associate the resource with the scheduler.
@@ -113,7 +114,7 @@ public class ASystemClassDefinitionAssistantInterpreter
 			// We can create vBUS now that all the CPUs have been created
 			// This must be first, to ensure it's bus number 0.
 
-			BUSValue.vBUS = ABusClassDefinitionAssitantInterpreter.makeVirtualBUS(cpus);
+			BUSValue.vBUS = af.createABusClassDefinitionAssitant().makeVirtualBUS(cpus);
 			BUSValue.vBUS.setup(scheduler, "vBUS");
 
 			for (PDefinition d : systemClass.getDefinitions())

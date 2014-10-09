@@ -10,19 +10,23 @@ public class A {
     }
 
     public void op(final Number v) {
-        if (v.longValue() == Quotes.Red) {
+        if (v.longValue() == Quotes.Red.longValue()) {
             //Skip;
         }
     }
 
     public void op2(final Number v) {
-        if (v.longValue() == Quotes.A) {
+        if (v.longValue() == Quotes.A.longValue()) {
             //Skip;
         }
     }
 
     public Number op3() {
         return Quotes.Red;
+    }
+
+    public String toString() {
+        return "A{}";
     }
 }
 

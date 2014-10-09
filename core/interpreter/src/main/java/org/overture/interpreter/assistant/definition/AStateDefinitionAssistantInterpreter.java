@@ -22,13 +22,12 @@ public class AStateDefinitionAssistantInterpreter extends
 		this.af = af;
 	}
 
-	public static Context getStateContext(AStateDefinition state)
+	public Context getStateContext(AStateDefinition state)
 	{
 		return VdmRuntime.getNodeState(state).moduleState.getContext();
 	}
 
-	public static void initState(AStateDefinition sdef,
-			StateContext initialContext)
+	public void initState(AStateDefinition sdef, StateContext initialContext)
 	{
 		StateDefinitionRuntimeState state = new StateDefinitionRuntimeState();
 		VdmRuntime.setNodeState(sdef, state);
@@ -47,32 +46,5 @@ public class AStateDefinitionAssistantInterpreter extends
 		state.moduleState = new State(sdef);
 		state.moduleState.initialize(initialContext);
 	}
-
-//	public static PExp findExpression(AStateDefinition d, int lineno)
-//	{
-//		if (d.getInitExpression() != null)
-//		{
-//			PExp found = PExpAssistantInterpreter.findExpression(d.getInvExpression(), lineno);
-//			if (found != null)
-//			{
-//				return found;
-//			}
-//		}
-//
-//		if (d.getInitExpression() != null)
-//		{
-//			if (d.getInitExpression() instanceof AEqualsBinaryExp)
-//			{
-//				AEqualsBinaryExp ee = (AEqualsBinaryExp) d.getInitExpression();
-//				PExp found = PExpAssistantInterpreter.findExpression(ee.getRight(), lineno);
-//				if (found != null)
-//				{
-//					return found;
-//				}
-//			}
-//		}
-//
-//		return null;
-//	}
 
 }

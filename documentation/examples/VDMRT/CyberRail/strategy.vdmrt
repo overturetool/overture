@@ -8,19 +8,19 @@ types
 
 operations
 
-strategyInit : () ==> ()
+protected strategyInit : () ==> ()
 strategyInit() == 
 is subclass responsibility;
 
-strategyNotify : () ==> ()
+protected strategyNotify : () ==> ()
 strategyNotify() == 
 is subclass responsibility;
 
-strategyEnd : () ==> ()
+protected strategyEnd : () ==> ()
 strategyEnd() == 
 is subclass responsibility;
 
-handleEvents : () ==> ()
+protected handleEvents : () ==> ()
 handleEvents() == 
 is subclass responsibility;
 

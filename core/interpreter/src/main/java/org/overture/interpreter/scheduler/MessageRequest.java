@@ -30,7 +30,6 @@ import org.overture.interpreter.values.ObjectValue;
 import org.overture.interpreter.values.OperationValue;
 import org.overture.interpreter.values.ValueList;
 
-
 public class MessageRequest extends MessagePacket
 {
 	private static final long serialVersionUID = 1L;
@@ -39,10 +38,10 @@ public class MessageRequest extends MessagePacket
 	public final ValueList args;
 	public final Holder<MessageResponse> replyTo;
 
-	public MessageRequest(
-		DBGPReader dbgp, BUSValue bus, CPUValue from, CPUValue to,
-		ObjectValue target,	OperationValue operation,
-		ValueList args, Holder<MessageResponse> replyTo, boolean breakAtStart)
+	public MessageRequest(DBGPReader dbgp, BUSValue bus, CPUValue from,
+			CPUValue to, ObjectValue target, OperationValue operation,
+			ValueList args, Holder<MessageResponse> replyTo,
+			boolean breakAtStart)
 	{
 		super(bus, from, to, target, operation);
 

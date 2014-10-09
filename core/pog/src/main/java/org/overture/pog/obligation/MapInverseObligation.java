@@ -23,40 +23,43 @@
 
 package org.overture.pog.obligation;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.AIsExp;
 import org.overture.ast.expressions.AMapInverseUnaryExp;
 import org.overture.ast.types.AInMapMapType;
 import org.overture.pog.pub.IPOContextStack;
-
+import org.overture.pog.pub.IPogAssistantFactory;
+import org.overture.pog.pub.POType;
 
 public class MapInverseObligation extends ProofObligation
 {
 
 	private static final long serialVersionUID = -5763771885830801635L;
-	
 
-/**
- * is_(exp, inmap expFromType to expToType)
- * @param exp
- * @param ctxt
- */
-	public MapInverseObligation(AMapInverseUnaryExp exp, IPOContextStack ctxt)
+	/**
+	 * is_(exp, inmap expFromType to expToType)
+	 * 
+	 * @param exp
+	 * @param ctxt
+	 * @param af
+	 * @throws AnalysisException
+	 */
+	public MapInverseObligation(AMapInverseUnaryExp exp, IPOContextStack ctxt,
+			IPogAssistantFactory af) throws AnalysisException
 	{
-		super(exp, POType.MAP_INVERSE, ctxt, exp.getLocation());
-		
+		super(exp, POType.MAP_INVERSE, ctxt, exp.getLocation(), af);
+
 		AIsExp is_Exp = new AIsExp();
 		is_Exp.setTest(exp.getExp().clone());
-		
+
 		AInMapMapType inMap_type = new AInMapMapType();
 		inMap_type.setFrom(exp.getMapType().getFrom().clone());
 		inMap_type.setTo(exp.getMapType().getTo().clone());
 		is_Exp.setBasicType(inMap_type);
-		
-		
-//		valuetree.setContext(ctxt.getContextNodeList());
+
+		stitch = is_Exp;
 		valuetree.setPredicate(ctxt.getPredWithContext(is_Exp));
 
 	}
 
-	
 }

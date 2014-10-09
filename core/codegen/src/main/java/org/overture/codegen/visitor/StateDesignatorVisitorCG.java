@@ -1,3 +1,24 @@
+/*
+ * #%~
+ * VDM Code Generator
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.codegen.visitor;
 
 import org.overture.ast.analysis.AnalysisException;
@@ -7,50 +28,60 @@ import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.AMapSeqStateDesignator;
 import org.overture.ast.statements.PStateDesignator;
 import org.overture.ast.types.PType;
-import org.overture.codegen.cgast.expressions.PExpCG;
+import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.SStateDesignatorCG;
+import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.statements.AFieldStateDesignatorCG;
+import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
-import org.overture.codegen.cgast.statements.PStateDesignatorCG;
-import org.overture.codegen.cgast.types.PTypeCG;
 import org.overture.codegen.ir.IRInfo;
 
-public class StateDesignatorVisitorCG extends AbstractVisitorCG<IRInfo, PStateDesignatorCG>
+public class StateDesignatorVisitorCG extends
+		AbstractVisitorCG<IRInfo, SStateDesignatorCG>
 {
 	@Override
-	public PStateDesignatorCG caseAFieldStateDesignator(
+	public SStateDesignatorCG caseAFieldStateDesignator(
 			AFieldStateDesignator node, IRInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();
 		PStateDesignator stateDesignator = node.getObject();
 		String fieldName = node.getField().getName();
-		
-		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-		PStateDesignatorCG stateDesignatorCg = stateDesignator.apply(question.getStateDesignatorVisitor(), question);
-		
+
+		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		SStateDesignatorCG stateDesignatorCg = stateDesignator.apply(question.getStateDesignatorVisitor(), question);
+
 		AFieldStateDesignatorCG field = new AFieldStateDesignatorCG();
 		field.setType(typeCg);
 		field.setObject(stateDesignatorCg);
 		field.setField(fieldName);
-		
+
 		return field;
 	}
 
 	@Override
-	public PStateDesignatorCG caseAIdentifierStateDesignator(
+	public SStateDesignatorCG caseAIdentifierStateDesignator(
 			AIdentifierStateDesignator node, IRInfo question)
 			throws AnalysisException
 	{
 		PType type = node.getType();
 		String name = node.getName().getName();
-		
-		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-		
-		return question.getDesignatorAssistant().consMember(typeCg, name);
+		String className = node.getName().getModule();
+		boolean explicit = node.getName().getExplicit();
+
+		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+
+		AIdentifierStateDesignatorCG idStateDesignatorCg = new AIdentifierStateDesignatorCG();
+		idStateDesignatorCg.setType(typeCg);
+		idStateDesignatorCg.setName(name);
+		idStateDesignatorCg.setClassName(className);
+		idStateDesignatorCg.setExplicit(explicit);
+
+		return idStateDesignatorCg;
 	}
-	
+
 	@Override
-	public PStateDesignatorCG caseAMapSeqStateDesignator(
+	public SStateDesignatorCG caseAMapSeqStateDesignator(
 			AMapSeqStateDesignator node, IRInfo question)
 			throws AnalysisException
 	{
@@ -58,15 +89,15 @@ public class StateDesignatorVisitorCG extends AbstractVisitorCG<IRInfo, PStateDe
 		PStateDesignator mapSeq = node.getMapseq();
 		PExp exp = node.getExp();
 
-		PTypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-		PStateDesignatorCG mapSeqCg = mapSeq.apply(question.getStateDesignatorVisitor(), question);
-		PExpCG expCg = exp.apply(question.getExpVisitor(), question);
-		
+		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		SStateDesignatorCG mapSeqCg = mapSeq.apply(question.getStateDesignatorVisitor(), question);
+		SExpCG expCg = exp.apply(question.getExpVisitor(), question);
+
 		AMapSeqStateDesignatorCG mapSeqStateDesignator = new AMapSeqStateDesignatorCG();
 		mapSeqStateDesignator.setType(typeCg);
 		mapSeqStateDesignator.setMapseq(mapSeqCg);
 		mapSeqStateDesignator.setExp(expCg);
-		
+
 		return mapSeqStateDesignator;
 	}
 }

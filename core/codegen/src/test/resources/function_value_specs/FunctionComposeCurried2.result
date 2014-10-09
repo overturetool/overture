@@ -7,20 +7,6 @@ public class Entry {
     public Entry() {
     }
 
-    private static Func_1<Func_1<Boolean, Number>, Func_1<Number, Number>> func_compose(
-        final Func_1<Number, Boolean> f) {
-        return new Func_1<Func_1<Boolean, Number>, Func_1<Number, Number>>() {
-                public Func_1<Number, Number> eval(
-                    final Func_1<Boolean, Number> g) {
-                    return new Func_1<Number, Number>() {
-                            public Number eval(final Number x) {
-                                return g.eval(f.eval(x));
-                            }
-                        };
-                }
-            };
-    }
-
     public static Object Run() {
         Func_1<Number, Boolean> f = new Func_1<Number, Boolean>() {
                 public Boolean eval(final Number x) {
@@ -38,6 +24,24 @@ public class Entry {
 
         return SeqUtil.seq(h.eval(-2L), h.eval(-1L), h.eval(0L), h.eval(1L),
             h.eval(2L));
+    }
+
+    private static Func_1<Func_1<Boolean, Number>, Func_1<Number, Number>> func_compose(
+        final Func_1<Number, Boolean> f) {
+        return new Func_1<Func_1<Boolean, Number>, Func_1<Number, Number>>() {
+                public Func_1<Number, Number> eval(
+                    final Func_1<Boolean, Number> g) {
+                    return new Func_1<Number, Number>() {
+                            public Number eval(final Number x) {
+                                return g.eval(f.eval(x));
+                            }
+                        };
+                }
+            };
+    }
+
+    public String toString() {
+        return "Entry{}";
     }
 }
 

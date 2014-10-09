@@ -9,57 +9,53 @@ import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.node.INode;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
+
 /***************************************
- * 
- * This method checks if a definition is a value. 
+ * This method checks if a definition is a value.
  * 
  * @author gkanos
- *
  ****************************************/
 
 public class DefinitionValueChecker extends AnswerAdaptor<Boolean>
 {
 	protected IInterpreterAssistantFactory af;
-	
+
 	public DefinitionValueChecker(IInterpreterAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public Boolean caseAImportedDefinition(AImportedDefinition def)
 			throws AnalysisException
 	{
-		//return isValueDefinition(def.getDef());
+
 		return def.getDef().apply(THIS);
 	}
-	
+
 	@Override
 	public Boolean caseAInheritedDefinition(AInheritedDefinition def)
 			throws AnalysisException
 	{
-		// return isValueDefinition(((AInheritedDefinition) def).getSuperdef());
 		return def.getSuperdef().apply(THIS);
 	}
-	
+
 	@Override
 	public Boolean caseARenamedDefinition(ARenamedDefinition def)
 			throws AnalysisException
 	{
-		// return isValueDefinition(((ARenamedDefinition) def).getDef());
 		return def.getDef().apply(THIS);
 	}
-	
+
 	@Override
 	public Boolean caseAValueDefinition(AValueDefinition def)
 			throws AnalysisException
 	{
 		return true;
 	}
-	
+
 	@Override
-	public Boolean defaultPDefinition(PDefinition def)
-			throws AnalysisException
+	public Boolean defaultPDefinition(PDefinition def) throws AnalysisException
 	{
 		return false;
 	}

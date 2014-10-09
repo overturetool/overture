@@ -2,7 +2,6 @@ package org.overture.interpreter.messages.rtlog;
 
 import org.overture.interpreter.scheduler.MessagePacket;
 
-
 public class RTBusCompletedMessage extends RTBusMessage
 {
 

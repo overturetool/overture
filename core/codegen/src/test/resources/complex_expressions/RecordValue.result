@@ -12,13 +12,17 @@ public class A {
             new Node(2L, new Node(3L, new Node(4L, new Node(5L, null)))));
     }
 
+    public String toString() {
+        return "A{}";
+    }
+
     public static class Node implements Record {
         public Number e;
         public Node r;
 
         public Node(final Number _e, final Node _r) {
             e = _e;
-            r = (_r != null) ? _r.clone() : null;
+            r = (_r != null) ? Utils.clone(_r) : null;
         }
 
         public boolean equals(final Object obj) {
@@ -29,7 +33,7 @@ public class A {
             Node other = ((Node) obj);
 
             return (e.longValue() == other.e.longValue()) &&
-            (r.equals(other.r));
+            (Utils.equals(r, other.r));
         }
 
         public int hashCode() {
@@ -58,6 +62,10 @@ public class Entry {
 
     public static Object Run() {
         return new A().op();
+    }
+
+    public String toString() {
+        return "Entry{}";
     }
 }
 

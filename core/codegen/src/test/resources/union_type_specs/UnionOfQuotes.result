@@ -1,0 +1,96 @@
+import org.overture.codegen.runtime.*;
+
+import quotes.*;
+
+import java.util.*;
+
+
+public class A {
+    public A() {
+    }
+
+    public static Number f() {
+        return Quotes.T;
+    }
+
+    public String toString() {
+        return "A{}";
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import quotes.*;
+
+import java.util.*;
+
+
+public class B {
+    public B() {
+    }
+
+    public static Number f() {
+        return Quotes.T;
+    }
+
+    public String toString() {
+        return "B{}";
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import quotes.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        VDMSet xs = SetUtil.set(new A(), new B());
+
+        for (Iterator iterator_1 = xs.iterator(); iterator_1.hasNext();) {
+            Object x = (Object) iterator_1.next();
+            Number apply_1 = null;
+
+            if (x instanceof A) {
+                apply_1 = ((A) x).f();
+            } else if (x instanceof B) {
+                apply_1 = ((B) x).f();
+            } else {
+                throw new RuntimeException("Missing member: f");
+            }
+
+            if (apply_1.longValue() == Quotes.A.longValue()) {
+                return 1L;
+            }
+        }
+
+        return 2L;
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########
+public interface Func_1<T_1> {
+    public abstract T_1 eval();
+}
+
+##########
+
+package quotes;
+
+public interface Quotes {
+    public static Number A = 1L;
+    public static Number T = 2L;
+}
+
+##########

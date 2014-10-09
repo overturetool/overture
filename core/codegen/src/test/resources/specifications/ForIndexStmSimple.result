@@ -10,9 +10,13 @@ public class A {
     public void op() {
         long toVar_1 = 10L;
 
-        for (long i = 1L; i <= toVar_1; i++) {
+        for (Long i = 1L; i <= toVar_1; i++) {
             //Skip;
         }
+    }
+
+    public String toString() {
+        return "A{}";
     }
 }
 

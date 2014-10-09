@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.overturetool.ide</groupId>
     <artifactId>org.overture.ide.plugins</artifactId>
-    <version>2.1.0</version>
+    <version>2.1.2</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -67,6 +67,26 @@
 
     <pluginManagement>
       <plugins>
+
+         <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>license-maven-plugin</artifactId>
+          <version>1.7</version>
+           <configuration>
+              <excludes>
+                <exclude>**/xml/XMLDataNode.java</exclude>
+<exclude>**/xml/XMLNode.java</exclude>
+<exclude>**/xml/XMLOpenTagNode.java</exclude>
+<exclude>**/xml/XMLParser.java</exclude>
+<exclude>**/xml/XMLTagNode.java</exclude>
+<exclude>**/xml/XMLTextNode.java</exclude>
+<exclude>**/vdmj/server/ConnectionListener.java</exclude>
+<exclude>**/vdmj/server/ConnectionThread.java</exclude>
+
+              </excludes>
+        </configuration>
+        </plugin>
+
     	<plugin>
     	  <groupId>org.eclipse.m2e</groupId>
     	  <artifactId>lifecycle-mapping</artifactId>

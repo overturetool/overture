@@ -27,7 +27,6 @@ import java.io.Serializable;
 
 import org.overture.ast.intf.lex.ILexNameToken;
 
-
 /**
  * A class to hold a name and a runtime value pair.
  */

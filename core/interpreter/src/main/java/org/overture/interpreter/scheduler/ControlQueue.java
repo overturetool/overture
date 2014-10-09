@@ -30,10 +30,9 @@ import java.util.List;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.interpreter.runtime.Context;
 
-
 public class ControlQueue implements Serializable
 {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 	private ISchedulableThread joined = null;
 	private boolean stimmed = false;
 	private List<ISchedulableThread> waiters = new LinkedList<ISchedulableThread>();
@@ -67,8 +66,7 @@ public class ControlQueue implements Serializable
 		if (stimmed)
 		{
 			stimmed = false;
-		}
-		else
+		} else
 		{
 			joined.waiting(ctxt, location);
 		}
@@ -92,10 +90,10 @@ public class ControlQueue implements Serializable
 
 		synchronized (waiters)
 		{
-    		if (!waiters.isEmpty())
-    		{
-    			head = waiters.remove(0);
-    		}
+			if (!waiters.isEmpty())
+			{
+				head = waiters.remove(0);
+			}
 		}
 
 		if (head != null)

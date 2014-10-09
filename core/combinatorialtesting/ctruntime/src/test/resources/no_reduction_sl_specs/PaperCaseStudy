@@ -1,0 +1,13 @@
+operations
+
+op1 : nat * nat ==> ()
+op1 (a,b) == skip;
+
+op2 : nat ==> ()
+op2 (a) == skip;
+
+traces
+
+T1:
+let {x,y,-} in set {{1,2,3},{2,3,4}} in
+(op1(x, y) | op2(x + y)) | op1(1, 2)

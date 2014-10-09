@@ -1,0 +1,39 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static VDMSeq casesString(final VDMSeq e) {
+        VDMSeq stringPattern_1 = Utils.clone(e);
+        Boolean success_1 = Utils.equals(stringPattern_1, SeqUtil.seq('a', 'a'));
+
+        if (!(success_1)) {
+            VDMSeq stringPattern_2 = Utils.clone(e);
+            success_1 = Utils.equals(stringPattern_2, SeqUtil.seq('b', 'b'));
+
+            if (success_1) {
+                return SeqUtil.seq('s', 'e', 'c', 'o', 'n', 'd');
+            } else {
+                return SeqUtil.seq('t', 'h', 'i', 'r', 'd');
+            }
+        } else {
+            return SeqUtil.seq('f', 'i', 'r', 's', 't');
+        }
+    }
+
+    public static Object Run() {
+        return SeqUtil.seq(casesString(SeqUtil.seq('a', 'a')),
+            casesString(SeqUtil.seq('b', 'b')),
+            casesString(SeqUtil.seq('c', 'c')));
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########

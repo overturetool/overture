@@ -22,10 +22,13 @@ pre
 
 static SumAux[@T] : seq of @T -> @T -> @T
 SumAux(s)(sum) ==
+  if is_(s,seq of real) and is_real(sum)
+  then
 	if s = [] then
 		sum
 	else
-		SumAux[@T](tl s)(sum + hd s);
+		SumAux[@T](tl s)(sum + hd s)
+  else undefined;
 --measure length_measure;
 
 static length_measure[@T] : seq of @T +> nat
@@ -38,10 +41,13 @@ pre
  	
 static ProductAux[@T] : seq of @T -> @T -> @T
 ProductAux(s)(p) ==
+ if is_(s,seq of real) and is_real(p)
+ then
 	cases s :
 	[h] ^ tail	-> ProductAux[@T](tail)(p * h),
 	[]			-> p
-	end;
+	end
+ else undefined;
 --measure length_measure;
 
 static public GetAverage[@T]: seq of @T ->  [real]
@@ -49,10 +55,13 @@ GetAverage(s) == if s = [] then nil else GetAverageAux[@T](s)(0)(len s);
 
 static GetAverageAux[@T] : seq of @T -> @T -> @T -> real
 GetAverageAux(s)(sum)(numberOfElem) ==
+ if is_(s,seq of real) and is_real(sum) and is_real(numberOfElem)
+ then
 	cases s :
 	[h] ^ tail	-> GetAverageAux[@T](tail)(sum + h)(numberOfElem),
 	[]			-> sum / numberOfElem
-	end;
+	end
+else undefined;
 --measure length_measure;
 
 static public isAscendingTotalOrder [@T]:
@@ -67,11 +76,15 @@ isDescendingTotalOrder (decideOrderFunc)(s) ==
 
 static public isAscendingOrder [@T]: seq of @T -> bool
 isAscendingOrder(s) ==
-	isAscendingTotalOrder [@T](lambda x : @T, y : @T & x < y)(s);
+	isAscendingTotalOrder [@T](lambda x : @T, y : @T & if is_real(x) and is_real(y)
+                                                     then x < y
+                                                     else undefined)(s);
 
 static public isDescendingOrder[@T]: seq of @T -> bool
 isDescendingOrder(s) ==
-	isDescendingTotalOrder [@T](lambda x : @T, y : @T & x < y)(s);
+	isDescendingTotalOrder [@T](lambda x : @T, y : @T & if is_real(x) and is_real(y)
+                                                      then x < y
+                                                      else undefined)(s);
 
 static public sort[@T] : (@T * @T -> bool) -> seq of @T -> seq of @T
 sort(decideOrderFunc)(s) ==
@@ -84,10 +97,14 @@ sort(decideOrderFunc)(s) ==
 	end;
 
 static public ascendingOrderSort[@T] : seq of @T -> seq of @T
-ascendingOrderSort(s) == sort[@T](lambda x : @T, y : @T & x < y)(s);
+ascendingOrderSort(s) == sort[@T](lambda x : @T, y : @T & if is_real(x) and is_real(y)
+                                                          then x < y
+                                                          else undefined)(s);
 
 static public descendingOrderSort[@T] : seq of @T -> seq of @T
-descendingOrderSort(s) == sort[@T](lambda x : @T, y : @T & x > y)(s);
+descendingOrderSort(s) == sort[@T](lambda x : @T, y : @T & if is_real(x) and is_real(y)
+                                                           then x > y
+                                                           else undefined)(s);
 
 static public isOrdered[@T] : seq of (@T * @T -> bool) -> seq of @T -> seq of @T -> bool
 isOrdered(decideOrderFuncSeq)(s1)(s2) ==

@@ -28,6 +28,10 @@ public class Entry {
 
         return MapUtil.map(new Maplet(forAllExpResult_1, forAllExpResult_2));
     }
+
+    public String toString() {
+        return "Entry{}";
+    }
 }
 
 ##########

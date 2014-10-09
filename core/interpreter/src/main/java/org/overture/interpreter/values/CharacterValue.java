@@ -30,8 +30,6 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.types.ACharBasicType;
 import org.overture.ast.types.PType;
 import org.overture.interpreter.runtime.Context;
-import org.overture.interpreter.runtime.ValueException;
-
 
 public class CharacterValue extends Value
 {
@@ -54,13 +52,13 @@ public class CharacterValue extends Value
 	{
 		if (other instanceof Value)
 		{
-			Value val = ((Value)other).deref();
+			Value val = ((Value) other).deref();
 
-    		if (val instanceof CharacterValue)
-    		{
-    			CharacterValue ov = (CharacterValue)val;
-    			return ov.unicode == unicode;
-    		}
+			if (val instanceof CharacterValue)
+			{
+				CharacterValue ov = (CharacterValue) val;
+				return ov.unicode == unicode;
+			}
 		}
 
 		return false;
@@ -72,23 +70,22 @@ public class CharacterValue extends Value
 		if (Character.isISOControl(unicode))
 		{
 			return "'\\0" + Integer.toOctalString(unicode) + "'";
-		}
-		else
+		} else
 		{
 			return "'" + unicode + "'";
 		}
 	}
 
 	@Override
-	public void formatTo(Formatter formatter, int flags, int width, int precision)
+	public void formatTo(Formatter formatter, int flags, int width,
+			int precision)
 	{
 		String s = null;
 
 		if ((flags & FormattableFlags.ALTERNATE) > 0)
 		{
 			s = toString();
-		}
-		else
+		} else
 		{
 			s = "" + unicode;
 		}
@@ -109,13 +106,13 @@ public class CharacterValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt) throws AnalysisException
+	public Value convertValueTo(PType to, Context ctxt)
+			throws AnalysisException
 	{
-		if (ctxt.assistantFactory.createPTypeAssistant().isType(to,ACharBasicType.class))
+		if (ctxt.assistantFactory.createPTypeAssistant().isType(to, ACharBasicType.class))
 		{
 			return this;
-		}
-		else
+		} else
 		{
 			return super.convertValueTo(to, ctxt);
 		}

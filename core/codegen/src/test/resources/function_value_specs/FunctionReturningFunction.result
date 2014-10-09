@@ -7,12 +7,16 @@ public class Entry {
     public Entry() {
     }
 
+    public static Object Run() {
+        return f();
+    }
+
     public static Func_1<Number, Number> f() {
         return null;
     }
 
-    public static Object Run() {
-        return f();
+    public String toString() {
+        return "Entry{}";
     }
 }
 

@@ -36,24 +36,26 @@ import java.util.Stack;
 import org.overture.ast.messages.InternalException;
 
 /**
- * A class to allow arbitrary checkpoints and backtracking while
- * parsing a file.
+ * A class to allow arbitrary checkpoints and backtracking while parsing a file.
  */
 
 public class BacktrackInputReader extends Reader
 {
 	/**
 	 * The different types of reader that may be obtained from a <{@link BacktrackInputReader}
+	 * 
 	 * @author pvj
-	 *
 	 */
-	public enum ReaderType {Doc,Docx,Odf,Latex};
-	
+	public enum ReaderType
+	{
+		Doc, Docx, Odf, Latex
+	};
+
 	/**
 	 * Cached empty array for reader data
 	 */
-	private static final char[] EMPTY_DATA = new char[]{};
-	
+	private static final char[] EMPTY_DATA = new char[] {};
+
 	/** A stack of position markers for popping. */
 	private Stack<Integer> stack = new Stack<Integer>();
 
@@ -68,8 +70,10 @@ public class BacktrackInputReader extends Reader
 
 	/**
 	 * Create an object to read the file name passed with the given charset.
-	 *
-	 * @param file	The filename to open
+	 * 
+	 * @param file
+	 *            The filename to open
+	 * @param charset
 	 */
 
 	public BacktrackInputReader(File file, String charset)
@@ -77,13 +81,12 @@ public class BacktrackInputReader extends Reader
 		try
 		{
 			InputStreamReader isr = readerFactory(file, charset);
-			char[]buffer = new char[readerLength(file, isr)];
+			char[] buffer = new char[readerLength(file, isr)];
 			max = isr.read(buffer);
 			data = Arrays.copyOf(buffer, max);
 			pos = 0;
 			isr.close();
-		}
-		catch (IOException e)
+		} catch (IOException e)
 		{
 			throw new InternalException(0, e.getMessage());
 		}
@@ -91,8 +94,9 @@ public class BacktrackInputReader extends Reader
 
 	/**
 	 * Create an object to read the file name passed with the default charset.
-	 *
-	 * @param file	The filename to open
+	 * 
+	 * @param file
+	 *            The filename to open
 	 */
 
 	public BacktrackInputReader(File file)
@@ -101,60 +105,60 @@ public class BacktrackInputReader extends Reader
 	}
 
 	/**
-	 * Create an object to read the string passed. This is used in the
-	 * interpreter to parse expressions typed in.
-	 *
+	 * Create an object to read the string passed. This is used in the interpreter to parse expressions typed in.
+	 * 
 	 * @param expression
+	 * @param charset
 	 */
 
 	public BacktrackInputReader(String expression, String charset)
 	{
 		char[] buf = EMPTY_DATA;
-    	try
-        {
-	        ByteArrayInputStream is =
-	        	new ByteArrayInputStream(expression.getBytes(charset));
+		try
+		{
+			ByteArrayInputStream is = new ByteArrayInputStream(expression.getBytes(charset));
 
-	        InputStreamReader isr =
-	        	new LatexStreamReader(is, charset);
+			InputStreamReader isr = new LatexStreamReader(is, charset);
 
-    		buf = new char[expression.length() + 1];
-	        max = isr.read(buf);
-	        pos = 0;
+			buf = new char[expression.length() + 1];
+			max = isr.read(buf);
+			pos = 0;
 
-	        isr.close();
-	        is.close();
-        }
-        catch (IOException e)
-        {
-	        // This can never really happen...
-        }finally{
-        	data = buf;
-        }
+			isr.close();
+			is.close();
+		} catch (IOException e)
+		{
+			// This can never really happen...
+		} finally
+		{
+			data = buf;
+		}
 	}
-	
+
 	/**
-	 * Create an object to read the string passed. This is used in the
-	 * interpreter to parse expressions typed in.
-	 *
+	 * Create an object to read the string passed. This is used in the interpreter to parse expressions typed in.
+	 * 
 	 * @param expression
+	 * @param charset
+	 * @param file
+	 * @param streamReaderType
 	 */
-	public BacktrackInputReader(String expression, String charset, File file, ReaderType streamReaderType)
+	public BacktrackInputReader(String expression, String charset, File file,
+			ReaderType streamReaderType)
 	{
 		char[] buf = EMPTY_DATA;
-    	try
-        {
-    		if(expression.contains("\r\n"))
- 	        {
- 	        	expression = expression.replace("\r\n", " \n");
- 	        }
-    		
-	        ByteArrayInputStream is =
-	        	new ByteArrayInputStream(expression.getBytes(charset));
+		try
+		{
+			if (expression.contains("\r\n"))
+			{
+				expression = expression.replace("\r\n", " \n");
+			}
 
-	        InputStreamReader isr = null;
-	        
-	        switch (streamReaderType)
+			ByteArrayInputStream is = new ByteArrayInputStream(expression.getBytes(charset));
+
+			InputStreamReader isr = null;
+
+			switch (streamReaderType)
 			{
 				case Doc:
 					isr = new DocStreamReader(new FileInputStream(file), charset);
@@ -170,50 +174,52 @@ public class BacktrackInputReader extends Reader
 					isr = new LatexStreamReader(is, charset);
 					break;
 			}
-	        
-	        if(!expression.contains("\r\n"))
-	        {
-	        	expression = expression.replace("\n", " \n");
-	        }
-	        
-    		buf = new char[expression.length() + 1];
-	        max = isr.read(buf);
-	        pos = 0;
 
-	        isr.close();
-	        is.close();
-        }
-        catch (IOException e)
-        {
-        	e.printStackTrace();
-	        // This can never really happen...
-        }finally{
-        	data = buf;
-        }
+			if (!expression.contains("\r\n"))
+			{
+				expression = expression.replace("\n", " \n");
+			}
+
+			buf = new char[expression.length() + 1];
+			max = isr.read(buf);
+			pos = 0;
+
+			isr.close();
+			is.close();
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+			// This can never really happen...
+		} finally
+		{
+			data = buf;
+		}
 	}
 
 	/**
 	 * Create an InputStreamReader from a File, depending on the filename.
+	 * 
+	 * @param file
+	 * @param charset
+	 * @return
+	 * @throws IOException
 	 */
 
 	public static InputStreamReader readerFactory(File file, String charset)
-		throws IOException
+			throws IOException
 	{
 		String name = file.getName();
 
 		if (name.toLowerCase().endsWith(".doc"))
 		{
 			return new DocStreamReader(new FileInputStream(file), charset);
-		}
-		else if (name.toLowerCase().endsWith(".docx"))
+		} else if (name.toLowerCase().endsWith(".docx"))
 		{
 			return new DocxStreamReader(new FileInputStream(file));
-		}
-		else if (name.toLowerCase().endsWith(".odt"))
+		} else if (name.toLowerCase().endsWith(".odt"))
 		{
 			return new ODFStreamReader(new FileInputStream(file));
-		}
-		else
+		} else
 		{
 			return new LatexStreamReader(new FileInputStream(file), charset);
 		}
@@ -229,21 +235,20 @@ public class BacktrackInputReader extends Reader
 
 		if (name.endsWith(".docx"))
 		{
-			return ((DocxStreamReader)isr).length();
-		}
-		else if (name.endsWith(".odt"))
+			return ((DocxStreamReader) isr).length();
+		} else if (name.endsWith(".odt"))
 		{
-			return ((ODFStreamReader)isr).length();
-		}
-		else
+			return ((ODFStreamReader) isr).length();
+		} else
 		{
-			return (int)(file.length() + 1);
+			return (int) (file.length() + 1);
 		}
 	}
 
-
 	/**
 	 * Create an object to read the string passed with the default charset.
+	 * 
+	 * @param expression
 	 */
 
 	public BacktrackInputReader(String expression)
@@ -261,21 +266,19 @@ public class BacktrackInputReader extends Reader
 	}
 
 	/**
-	 * Pop the last location, but do not backtrack to it. This is used when
-	 * the parser reached a point where a potential ambiguity has been resolved,
-	 * and it knows that it will never need to backtrack.
+	 * Pop the last location, but do not backtrack to it. This is used when the parser reached a point where a potential
+	 * ambiguity has been resolved, and it knows that it will never need to backtrack.
 	 */
 
 	public void unpush()
 	{
-		stack.pop();	// don't set pos though
+		stack.pop(); // don't set pos though
 	}
 
 	/**
-	 * Pop the last location and reposition the stream at that position. The
-	 * state of the stream is such that the next read operation will return
-	 * the same character that would have been read immediately after the
-	 * push() operation that saved the position.
+	 * Pop the last location and reposition the stream at that position. The state of the stream is such that the next
+	 * read operation will return the same character that would have been read immediately after the push() operation
+	 * that saved the position.
 	 */
 
 	public void pop()
@@ -285,11 +288,13 @@ public class BacktrackInputReader extends Reader
 
 	/**
 	 * Read one character.
+	 * 
+	 * @return
 	 */
 
 	public char readCh()
 	{
-		return (data.length<=pos || pos == max) ? (char)-1 : data[pos++];
+		return data.length <= pos || pos == max ? (char) -1 : data[pos++];
 	}
 
 	/**
@@ -306,7 +311,7 @@ public class BacktrackInputReader extends Reader
 			cbuf[off + n++] = data[pos++];
 		}
 
-		return (n == 0) ? -1 : n;
+		return n == 0 ? -1 : n;
 	}
 
 	/**
@@ -316,9 +321,9 @@ public class BacktrackInputReader extends Reader
 	@Override
 	public void close()
 	{
-		return;		// Stream was closed at the start anyway.
+		return; // Stream was closed at the start anyway.
 	}
-	
+
 	public int getCurrentRawReadOffset()
 	{
 		return pos;

@@ -527,7 +527,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 						i.setDefaultName(defaultName);
 					}
 
-					RemoteControl remote = (remoteClass == null) ? null
+					RemoteControl remote = remoteClass == null ? null
 							: remoteClass.newInstance();
 
 					new DBGPReaderV2(host, port, ideKey, i, expression, null).startup(remote);
@@ -947,9 +947,9 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 	protected StringBuilder propertyResponse(ILexNameToken name, Value value,
 			DBGPContextType context) throws UnsupportedEncodingException
 	{
-		String nameString = (context == DBGPContextType.GLOBAL ? name.getModule()
+		String nameString = context == DBGPContextType.GLOBAL ? name.getModule()
 				+ "`" + name.getName()
-				: name.getOld() ? name.getName() + "~" : name.getName());
+				: name.getOld() ? name.getName() + "~" : name.getName();
 		return propertyResponse(nameString, name.getExplicit(true).toString(), name.getModule(), value);
 	}
 
@@ -997,10 +997,10 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		{
 			data = value.toString();
 		}
-		
-		if(value.deref() instanceof FunctionValue)
+
+		if (value.deref() instanceof FunctionValue)
 		{
-			data = formatFunctionValue((FunctionValue)value);
+			data = formatFunctionValue((FunctionValue) value);
 		}
 
 		if (currentDepth < depth && numChildren > 0)
@@ -1175,7 +1175,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		{
 			SeqValue sVal = (SeqValue) value;
 			for (Integer i = page * pageSize; i < sVal.values.size()
-					&& i < (page + 1 * pageSize); i++)
+					&& i < page + 1 * pageSize; i++)
 			{
 				Value element = sVal.values.get(i);
 				Integer vdmIndex = i + 1;
@@ -1186,8 +1186,8 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		} else if (value instanceof SetValue)
 		{
 			SetValue sVal = (SetValue) value;
-			for (Integer i = (page * pageSize); i < sVal.values.size()
-					&& i < ((page + 1) * pageSize) + 1; i++)
+			for (Integer i = page * pageSize; i < sVal.values.size()
+					&& i < (page + 1) * pageSize + 1; i++)
 			{
 				Value element = sVal.values.get(i);
 				Integer vdmIndex = i + 1;
@@ -1223,8 +1223,8 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		{
 			MapValue mVal = (MapValue) value;
 			Value[] keys = mVal.values.keySet().toArray(new Value[mVal.values.keySet().size()]);
-			for (Integer i = (page * pageSize); i < keys.length
-					&& i < ((page + 1) * pageSize) + 1; i++)
+			for (Integer i = page * pageSize; i < keys.length
+					&& i < (page + 1) * pageSize + 1; i++)
 			{
 				Value dom = keys[i];
 				Value rng = mVal.values.get(dom);
@@ -1240,8 +1240,8 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		} else if (value instanceof RecordValue)
 		{
 			RecordValue rVal = (RecordValue) value;
-			for (Integer i = (page * pageSize); i < rVal.fieldmap.size()
-					&& i < ((page + 1) * pageSize) + 1; i++)
+			for (Integer i = page * pageSize; i < rVal.fieldmap.size()
+					&& i < (page + 1) * pageSize + 1; i++)
 			{
 				FieldValue field = rVal.fieldmap.get(i);
 				Integer vdmIndex = i + 1;
@@ -1251,8 +1251,8 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 		} else if (value instanceof TupleValue)
 		{
 			TupleValue tVal = (TupleValue) value;
-			for (Integer i = (page * pageSize); i < tVal.values.size()
-					&& i < ((page + 1) * pageSize) + 1; i++)
+			for (Integer i = page * pageSize; i < tVal.values.size()
+					&& i < (page + 1) * pageSize + 1; i++)
 			{
 				Value v = tVal.values.get(i);
 				Integer vdmIndex = i + 1;
@@ -1475,7 +1475,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 	{
 		checkArgs(c, 1, true);
 
-		if ((status != DBGPStatus.BREAK && status != DBGPStatus.STOPPING)
+		if (status != DBGPStatus.BREAK && status != DBGPStatus.STOPPING
 				|| breakpoint == null)
 		{
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
@@ -2003,7 +2003,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 	protected void processStack(DBGPCommand c) throws IOException,
 			DBGPException
 	{
-		if ((status != DBGPStatus.BREAK && status != DBGPStatus.STOPPING)
+		if (status != DBGPStatus.BREAK && status != DBGPStatus.STOPPING
 				|| breakpoint == null)
 		{
 			throw new DBGPException(DBGPErrorCode.NOT_AVAILABLE, c.toString());
@@ -2057,7 +2057,7 @@ public class DBGPReaderV2 extends DBGPReader implements Serializable
 			pw.close();
 
 		}
-		
+
 		Properties.parser_tabstop = 1;// required to match locations with the editor representation
 	}
 

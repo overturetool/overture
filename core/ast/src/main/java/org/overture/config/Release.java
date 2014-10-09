@@ -24,10 +24,10 @@ package org.overture.config;
 
 public enum Release
 {
-	CLASSIC("classic"),		// VDM, before Overture changes
-	VDM_10("vdm10");		// VDM-10, with Overture changes
+	CLASSIC("classic"), // VDM, before Overture changes
+	VDM_10("vdm10"); // VDM-10, with Overture changes
 
-	public static final Release DEFAULT = CLASSIC;
+	public static final Release DEFAULT = VDM_10;
 
 	private String option;
 
@@ -35,16 +35,16 @@ public enum Release
 	{
 		this.option = option;
 	}
-	
+
 	@Override
-    public String toString()
+	public String toString()
 	{
 		return option;
 	}
 
 	public static Release lookup(String release)
 	{
-		for (Release r: values())
+		for (Release r : values())
 		{
 			if (r.option.equals(release))
 			{
@@ -61,7 +61,7 @@ public enum Release
 		String sep = "";
 		sb.append("<");
 
-		for (Release r: values())
+		for (Release r : values())
 		{
 			sb.append(sep);
 			sb.append(r.option);

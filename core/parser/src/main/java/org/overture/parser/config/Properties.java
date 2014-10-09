@@ -23,12 +23,15 @@
 
 package org.overture.parser.config;
 
+import java.io.File;
+import java.io.InputStream;
+import java.util.Map.Entry;
+
 import org.overture.util.ConfigBase;
 
 /**
- * The Config class is used to hold global configuration values. The
- * values are read from the vdmj.properties file, and defaults are defined
- * as public statics.
+ * The Config class is used to hold global configuration values. The values are read from the vdmj.properties file, and
+ * defaults are defined as public statics.
  */
 
 public class Properties extends ConfigBase
@@ -41,7 +44,7 @@ public class Properties extends ConfigBase
 
 	/** The default duration for RT statements. */
 	public static int rt_duration_default = 2;
-	
+
 	/** The default cycle for RT statements. */
 	public static int rt_cycle_default = 2;
 
@@ -62,16 +65,24 @@ public class Properties extends ConfigBase
 
 	/** Maximum period thread overlaps allowed per object */
 	public static int rt_max_periodic_overlaps = 20;
-	
+
 	/** Enable extra RT log diagnostics for guards etc. */
 	public static boolean diags_guards = false;
 
 	/** Enable extra RT log diagnostics for timesteps. */
 	public static boolean diags_timestep = false;
 
+	/** The minimum integer used for type bound type bindings **/
+	public static int minint = 0;
+	/** The maximum integer used for type bound type bindings **/
+	public static int maxint = 255;
+
+	/** Enable interpretation of numeric type binds **/
+	public static boolean numeric_type_bind_generation = false;
+
 	/**
-	 * When the class is initialized, we call the ConfigBase init method, which
-	 * uses the properties file passed to update the static fields above.
+	 * When the class is initialized, we call the ConfigBase init method, which uses the properties file passed to
+	 * update the static fields above.
 	 */
 
 	public static void init()
@@ -79,10 +90,44 @@ public class Properties extends ConfigBase
 		try
 		{
 			init("vdmj.properties", Properties.class);
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			System.err.println(e.getMessage());
+		}
+
+		InputStream fis = ConfigBase.class.getResourceAsStream("/"
+				+ "overture.properties");
+
+		if (fis != null)
+		{
+			try
+			{
+				java.util.Properties overtureProperties = new java.util.Properties();
+				overtureProperties.load(fis);
+
+				final String SYSTEM_KEY = "system.";
+				for (Entry<Object, Object> entry : overtureProperties.entrySet())
+				{
+					String key = entry.getKey().toString();
+					String value = entry.getValue().toString();
+
+					if (value.indexOf("/") != -1)
+					{
+						// assume that this is a file path and correct it
+						value = value.replace('/', File.separatorChar);
+					}
+
+					int index = key.indexOf(SYSTEM_KEY);
+					if (index == 0)
+					{
+						String newKey = key.substring(SYSTEM_KEY.length());
+						System.setProperty(newKey, value);
+					}
+				}
+			} catch (Exception e)
+			{
+				throw new RuntimeException(e);
+			}
 		}
 	}
 }

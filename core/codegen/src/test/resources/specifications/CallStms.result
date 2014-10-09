@@ -7,10 +7,6 @@ public class A {
     public A() {
     }
 
-    public static Number f(final Number x) {
-        return x;
-    }
-
     public void q1() {
         q2();
     }
@@ -32,6 +28,14 @@ public class A {
     public Number op2() {
         return B.f(1L);
     }
+
+    public static Number f(final Number x) {
+        return x;
+    }
+
+    public String toString() {
+        return "A{}";
+    }
 }
 
 ##########
@@ -46,6 +50,10 @@ public class B {
 
     public static Number f(final Number x) {
         return x;
+    }
+
+    public String toString() {
+        return "B{}";
     }
 }
 

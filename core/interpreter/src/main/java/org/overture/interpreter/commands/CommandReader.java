@@ -72,8 +72,6 @@ import org.overture.pog.obligation.ProofObligationList;
 import org.overture.pog.pub.IProofObligation;
 import org.overture.pog.pub.IProofObligationList;
 
-
-
 /**
  * A class to read and perform commands from standard input.
  */
@@ -94,14 +92,16 @@ abstract public class CommandReader
 
 	/** The IDE DBGPReader, if any */
 	private DBGPReader dbgp = null;
-	
+
 	private final boolean singlePass;
 
 	/**
 	 * Create a command reader with the given interpreter and prompt.
-	 *
-	 * @param interpreter The interpreter instance to use.
-	 * @param prompt The user prompt.
+	 * 
+	 * @param interpreter
+	 *            The interpreter instance to use.
+	 * @param prompt
+	 *            The user prompt.
 	 */
 
 	public CommandReader(Interpreter interpreter, String prompt)
@@ -110,16 +110,20 @@ abstract public class CommandReader
 		this.prompt = prompt;
 		this.singlePass = false;
 	}
-	
+
 	/**
 	 * Create a command reader with the given interpreter and prompt.
-	 *
-	 * @param interpreter The interpreter instance to use.
-	 * @param prompt The user prompt.
-	 * @param singlePass True if the reader should read more than one command
+	 * 
+	 * @param interpreter
+	 *            The interpreter instance to use.
+	 * @param prompt
+	 *            The user prompt.
+	 * @param singlePass
+	 *            True if the reader should read more than one command
 	 */
 
-	public CommandReader(Interpreter interpreter, String prompt, boolean singlePass)
+	public CommandReader(Interpreter interpreter, String prompt,
+			boolean singlePass)
 	{
 		this.interpreter = interpreter;
 		this.prompt = prompt;
@@ -127,17 +131,18 @@ abstract public class CommandReader
 	}
 
 	/**
-	 * Read and execute commands from standard input. The prompt passed
-	 * to the constructor is used to prompt the user, and the interpreter
-	 * passed is used to execute commands. Each command is directed through
-	 * the corresponding "do" method in this class, the defaults for which
-	 * print that the command is not available from the current context.
-	 * Subclasses of CommandReader implement the "do" methods that apply
-	 * to them. The only methods implemented at this level are the ones
-	 * which are globally applicable.
+	 * Read and execute commands from standard input. The prompt passed to the constructor is used to prompt the user,
+	 * and the interpreter passed is used to execute commands. Each command is directed through the corresponding "do"
+	 * method in this class, the defaults for which print that the command is not available from the current context.
+	 * Subclasses of CommandReader implement the "do" methods that apply to them. The only methods implemented at this
+	 * level are the ones which are globally applicable.
 	 * <p>
-	 * The "do" methods return a boolean which indicates whether the command
-	 * reader should loop and read/dispatch more commands, or exit.
+	 * The "do" methods return a boolean which indicates whether the command reader should loop and read/dispatch more
+	 * commands, or exit.
+	 * 
+	 * @param filenames
+	 *            the files
+	 * @return
 	 */
 
 	public ExitStatus run(List<File> filenames)
@@ -149,7 +154,7 @@ abstract public class CommandReader
 
 		while (carryOn)
 		{
-			for (File file: filenames)
+			for (File file : filenames)
 			{
 				if (file.lastModified() > timestamp)
 				{
@@ -184,8 +189,7 @@ abstract public class CommandReader
 				if (line.equals("quit") || line.equals("q"))
 				{
 					carryOn = doQuit(line);
-				}
-				else if (line.startsWith("reload"))
+				} else if (line.startsWith("reload"))
 				{
 					carryOn = doReLoad(line);
 
@@ -193,8 +197,7 @@ abstract public class CommandReader
 					{
 						return ExitStatus.RELOAD;
 					}
-				}
-				else if (line.startsWith("load"))
+				} else if (line.startsWith("load"))
 				{
 					carryOn = doLoad(line, filenames);
 
@@ -202,162 +205,124 @@ abstract public class CommandReader
 					{
 						return ExitStatus.RELOAD;
 					}
-				}
-				else if (line.startsWith("save"))
+				} else if (line.startsWith("save"))
 				{
 					carryOn = doSave(line);
-				}
-				else if (line.equals("files"))
+				} else if (line.equals("files"))
 				{
 					carryOn = doFiles();
-				}
-				else if (line.startsWith("set"))
+				} else if (line.startsWith("set"))
 				{
 					carryOn = doSet(line);
-				}
-				else if (line.equals("stop"))
+				} else if (line.equals("stop"))
 				{
 					carryOn = doStop(line);
-				}
-				else if (line.equals("help") || line.equals("?"))
+				} else if (line.equals("help") || line.equals("?"))
 				{
 					doHelp(line);
-				}
-				else if (line.startsWith("assert"))
+				} else if (line.startsWith("assert"))
 				{
 					carryOn = doAssert(line);
-				}
-				else if (line.equals("continue") || line.equals("c"))
+				} else if (line.equals("continue") || line.equals("c"))
 				{
 					carryOn = doContinue(line);
-				}
-				else if (line.equals("stack"))
+				} else if (line.equals("stack"))
 				{
 					carryOn = doStack(line);
-				}
-				else if (line.equals("up"))
+				} else if (line.equals("up"))
 				{
 					carryOn = doUp(line);
-				}
-				else if (line.equals("down"))
+				} else if (line.equals("down"))
 				{
 					carryOn = doDown(line);
-				}
-				else if (line.equals("step") || line.equals("s"))
+				} else if (line.equals("step") || line.equals("s"))
 				{
 					carryOn = doStep(line);
-				}
-				else if (line.equals("next") || line.equals("n"))
+				} else if (line.equals("next") || line.equals("n"))
 				{
 					carryOn = doNext(line);
-				}
-				else if (line.equals("out") || line.equals("o"))
+				} else if (line.equals("out") || line.equals("o"))
 				{
 					carryOn = doOut(line);
-				}
-				else if (line.startsWith("trace"))
+				} else if (line.startsWith("trace"))
 				{
 					carryOn = doTrace(line);
-				}
-				else if (line.startsWith("break"))
+				} else if (line.startsWith("break"))
 				{
 					carryOn = doBreak(line);
-				}
-				else if (line.equals("list"))
+				} else if (line.equals("list"))
 				{
 					carryOn = doList(line);
-				}
-				else if (line.equals("threads"))
+				} else if (line.equals("threads"))
 				{
 					carryOn = doThreads(line);
-				}
-				else if (line.equals("source"))
+				} else if (line.equals("source"))
 				{
 					carryOn = doSource(line);
-				}
-				else if (line.startsWith("coverage"))
+				} else if (line.startsWith("coverage"))
 				{
 					carryOn = doCoverage(line);
-				}
-				else if (line.startsWith("latexdoc"))
+				} else if (line.startsWith("latexdoc"))
 				{
 					carryOn = doLatex(line, true);
-				}
-				else if (line.startsWith("latex"))
+				} else if (line.startsWith("latex"))
 				{
 					carryOn = doLatex(line, false);
-				}
-				else if(line.startsWith("word"))
+				} else if (line.startsWith("word"))
 				{
 					carryOn = doWord(line);
-				}
-				else if (line.startsWith("remove"))
+				} else if (line.startsWith("remove"))
 				{
 					carryOn = doRemove(line);
-				}
-				else if (line.equals("init"))
+				} else if (line.equals("init"))
 				{
 					carryOn = doInit(line);
-				}
-				else if (line.equals("env"))
+				} else if (line.equals("env"))
 				{
 					carryOn = doEnv(line);
-				}
-				else if (line.equals("state"))
+				} else if (line.equals("state"))
 				{
 					carryOn = doState(line);
-				}
-				else if (line.startsWith("default"))
+				} else if (line.startsWith("default"))
 				{
 					carryOn = doDefault(line);
-				}
-				else if (line.equals("classes"))
+				} else if (line.equals("classes"))
 				{
 					carryOn = doClasses(line);
-				}
-				else if (line.startsWith("create"))
+				} else if (line.startsWith("create"))
 				{
 					carryOn = doCreate(line);
-				}
-				else if (line.equals("modules"))
+				} else if (line.equals("modules"))
 				{
 					carryOn = doModules(line);
-				}
-				else if (line.startsWith("pog"))
+				} else if (line.startsWith("pog"))
 				{
 					carryOn = doPog(line);
-				}
-				else if (line.startsWith("log"))
+				} else if (line.startsWith("log"))
 				{
 					carryOn = doLog(line);
-				}
-				else if (line.startsWith("print ") || line.startsWith("p "))
+				} else if (line.startsWith("print ") || line.startsWith("p "))
 				{
 					carryOn = doEvaluate(line);
-				}
-				else if (line.startsWith("runtrace "))
+				} else if (line.startsWith("runtrace "))
 				{
 					carryOn = doRuntrace(line, false);
-				}
-				else if (line.startsWith("debugtrace "))
+				} else if (line.startsWith("debugtrace "))
 				{
 					carryOn = doRuntrace(line, true);
-				}
-				else if (line.startsWith("filter"))
+				} else if (line.startsWith("filter"))
 				{
 					carryOn = doFilter(line);
-				}
-				else
+				} else
 				{
 					println("Bad command. Try 'help'");
 				}
-			}
-			catch (Exception e)
+			} catch (Exception e)
 			{
 				carryOn = doException(e);
 			}
-			
-			if(singlePass)
+
+			if (singlePass)
 			{
 				break;
 			}
@@ -393,34 +358,30 @@ abstract public class CommandReader
 
 		try
 		{
-   			long before = System.currentTimeMillis();
-   			println("= " + interpreter.execute(line, dbgp));
-   			long after = System.currentTimeMillis();
-			println("Executed in " + (double)(after-before)/1000 + " secs. ");
+			long before = System.currentTimeMillis();
+			println("= " + interpreter.execute(line, dbgp));
+			long after = System.currentTimeMillis();
+			println("Executed in " + (double) (after - before) / 1000
+					+ " secs. ");
 
 			if (RTLogger.getLogSize() > 0)
 			{
 				println("Dumped RT events");
 				RTLogger.dump(false);
 			}
-		}
-		catch (ParserException e)
+		} catch (ParserException e)
 		{
 			println("Syntax: " + e.getMessage());
-		}
-		catch (DebuggerException e)
+		} catch (DebuggerException e)
 		{
 			println("Debug: " + e.getMessage());
-		}
-		catch (RuntimeException e)
+		} catch (RuntimeException e)
 		{
 			println("Runtime: " + e);
-		}
-		catch (VDMErrorsException e)
+		} catch (VDMErrorsException e)
 		{
 			println(e.toString());
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			println("Error: " + e.getMessage());
 		}
@@ -435,8 +396,7 @@ abstract public class CommandReader
 		if (parts.length != 2)
 		{
 			println("Usage: filter %age | RANDOM | SHAPES_NOVARS | SHAPES_VARNAMES | SHAPES_VARVALUES");
-		}
-		else
+		} else
 		{
 			try
 			{
@@ -446,21 +406,20 @@ abstract public class CommandReader
 				{
 					println("Usage: filter %age (1-100)");
 				}
-			}
-			catch (NumberFormatException e)
+			} catch (NumberFormatException e)
 			{
 				try
 				{
 					reductionType = TraceReductionType.valueOf(parts[1].toUpperCase());
-				}
-				catch (Exception e1)
+				} catch (Exception e1)
 				{
 					println("Usage: filter %age | RANDOM | SHAPES_NOVARS | SHAPES_VARNAMES | SHAPES_VARVALUES");
 				}
 			}
 		}
 
-		println("Trace filter currently " + reduction*100 + "% " + reductionType);
+		println("Trace filter currently " + reduction * 100 + "% "
+				+ reductionType);
 		return true;
 	}
 
@@ -474,8 +433,7 @@ abstract public class CommandReader
 			try
 			{
 				testNo = Integer.parseInt(parts[2]);
-			}
-			catch (NumberFormatException e)
+			} catch (NumberFormatException e)
 			{
 				println(parts[0] + " <name> [test number]");
 				return true;
@@ -486,43 +444,38 @@ abstract public class CommandReader
 
 		try
 		{
-   			long before = System.currentTimeMillis();
-   			boolean passed = interpreter.runtrace(line, testNo, debug, reduction, reductionType, 0);
-   			long after = System.currentTimeMillis();
-			println("Executed in " + (double)(after-before)/1000 + " secs. ");
+			long before = System.currentTimeMillis();
+			boolean passed = interpreter.runtrace(line, testNo, debug, reduction, reductionType, 0);
+			long after = System.currentTimeMillis();
+			println("Executed in " + (double) (after - before) / 1000
+					+ " secs. ");
 
 			if (passed)
 			{
 				println("All tests passed");
-			}
-			else
+			} else
 			{
 				println("Some tests failed or indeterminate");
 			}
-			
+
 			if (RTLogger.getLogSize() > 0)
 			{
 				println("Dumped RT events");
 				RTLogger.dump(false);
 			}
-		}
-		catch (ParserException e)
+		} catch (ParserException e)
 		{
 			println("Syntax: " + e.getMessage());
-		}
-		catch (DebuggerException e)
+		} catch (DebuggerException e)
 		{
 			println("Debug: " + e.getMessage());
-		}
-		catch (RuntimeException e)
+		} catch (RuntimeException e)
 		{
 			println("Runtime: " + e);
-		}
-		catch (VDMErrorsException e)
+		} catch (VDMErrorsException e)
 		{
 			println(e.toString());
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			println("Error: " + e.getMessage());
 		}
@@ -560,7 +513,7 @@ abstract public class CommandReader
 	{
 		Set<File> filenames = interpreter.getSourceFiles();
 
-		for (File file: filenames)
+		for (File file : filenames)
 		{
 			println(file.getPath());
 		}
@@ -583,44 +536,37 @@ abstract public class CommandReader
 			isEnabled("Invariants", Settings.invchecks);
 			isEnabled("Dynamic type checks", Settings.dynamictypechecks);
 			isEnabled("Measure checks", Settings.measureChecks);
-		}
-		else
+		} else
 		{
 			String[] parts = line.split("\\s+");
 
-			if (parts.length == 3 &&
-				(parts[2].equalsIgnoreCase("on") || parts[2].equalsIgnoreCase("off")))
+			if (parts.length == 3
+					&& (parts[2].equalsIgnoreCase("on") || parts[2].equalsIgnoreCase("off")))
 			{
 				boolean setting = parts[2].equalsIgnoreCase("on");
 
-	    		if (parts[1].equals("pre"))
-	    		{
-	    			Settings.prechecks = setting;
-	    		}
-	    		else if (parts[1].equals("post"))
-	    		{
-	    			Settings.postchecks = setting;
-	    		}
-	    		else if (parts[1].equals("inv"))
-	    		{
-	    			Settings.invchecks = setting;
-	    		}
-	    		else if (parts[1].equals("dtc"))
-	    		{
-	    			// NB. Do both
-	    			Settings.invchecks = setting;
-	    			Settings.dynamictypechecks = setting;
-	    		}
-	    		else if (parts[1].equals("measures"))
-	    		{
-	    			Settings.measureChecks = setting;
-	    		}
-				else
+				if (parts[1].equals("pre"))
+				{
+					Settings.prechecks = setting;
+				} else if (parts[1].equals("post"))
+				{
+					Settings.postchecks = setting;
+				} else if (parts[1].equals("inv"))
+				{
+					Settings.invchecks = setting;
+				} else if (parts[1].equals("dtc"))
+				{
+					// NB. Do both
+					Settings.invchecks = setting;
+					Settings.dynamictypechecks = setting;
+				} else if (parts[1].equals("measures"))
+				{
+					Settings.measureChecks = setting;
+				} else
 				{
 					println("Usage: set [<pre|post|inv|dtc|measures> <on|off>]");
 				}
-			}
-			else
+			} else
 			{
 				println("Usage: set [<pre|post|inv|dtc|measures> <on|off>]");
 			}
@@ -637,40 +583,38 @@ abstract public class CommandReader
 		if (line.equals("pog"))
 		{
 			list = all;
-		}
-		else
+		} else
 		{
-    		Pattern p1 = Pattern.compile("^pog (\\w+)$");
-    		Matcher m = p1.matcher(line);
+			Pattern p1 = Pattern.compile("^pog (\\w+)$");
+			Matcher m = p1.matcher(line);
 
-    		if (m.matches())
-    		{
-    			list = new ProofObligationList();
-    			String name = m.group(1) + (Settings.dialect == Dialect.VDM_SL ? "" : "(");
+			if (m.matches())
+			{
+				list = new ProofObligationList();
+				String name = m.group(1)
+						+ (Settings.dialect == Dialect.VDM_SL ? "" : "(");
 
-    			for (IProofObligation po: all)
-    			{
-    				if (po.getName().indexOf(name) >= 0)
-    				{
-    					list.add(po);
-    				}
-    			}
-    		}
-    		else
-    		{
-    			println("Usage: pog [<fn/op name>]");
-    			return true;
-    		}
+				for (IProofObligation po : all)
+				{
+					if (po.getName().indexOf(name) >= 0)
+					{
+						list.add(po);
+					}
+				}
+			} else
+			{
+				println("Usage: pog [<fn/op name>]");
+				return true;
+			}
 		}
 
 		if (list.isEmpty())
 		{
 			println("No proof obligations generated");
-		}
-		else
+		} else
 		{
-			println("Generated " +
-				plural(list.size(), "proof obligation", "s") + ":\n");
+			println("Generated " + plural(list.size(), "proof obligation", "s")
+					+ ":\n");
 			print(list.toString());
 		}
 
@@ -735,8 +679,7 @@ abstract public class CommandReader
 		{
 			println("Cleared " + old);
 			println(interpreter.getSourceLine(old.location));
-		}
-		else
+		} else
 		{
 			println("Breakpoint [" + bpno + "] not set");
 		}
@@ -748,7 +691,7 @@ abstract public class CommandReader
 	{
 		Map<Integer, Breakpoint> map = interpreter.getBreakpoints();
 
-		for (Entry<Integer, Breakpoint> entry: map.entrySet())
+		for (Entry<Integer, Breakpoint> entry : map.entrySet())
 		{
 			Breakpoint bp = entry.getValue();
 			println(bp.toString());
@@ -771,7 +714,7 @@ abstract public class CommandReader
 
 			if (line.equals("coverage"))
 			{
-				for (File file: interpreter.getSourceFiles())
+				for (File file : interpreter.getSourceFiles())
 				{
 					doCoverage(file);
 				}
@@ -804,17 +747,15 @@ abstract public class CommandReader
 			{
 				File f = new File(parts[p]);
 
-    			if (loaded.contains(f))
-    			{
-    				doCoverage(f);
-    			}
-    			else
-    			{
-    				println(f + " is not loaded - try 'files'");
-    			}
+				if (loaded.contains(f))
+				{
+					doCoverage(f);
+				} else
+				{
+					println(f + " is not loaded - try 'files'");
+				}
 			}
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			println("Usage: coverage clear|write <dir>|merge <dir>|<filenames>");
 		}
@@ -831,13 +772,11 @@ abstract public class CommandReader
 			if (source == null)
 			{
 				println(file + ": file not found");
-			}
-			else
+			} else
 			{
 				source.printCoverage(getStdout());
 			}
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			println("coverage: " + e.getMessage());
 		}
@@ -853,7 +792,7 @@ abstract public class CommandReader
 
 			if (line.equals("word"))
 			{
-				for (File file: interpreter.getSourceFiles())
+				for (File file : interpreter.getSourceFiles())
 				{
 					doWord(file);
 				}
@@ -867,17 +806,15 @@ abstract public class CommandReader
 			{
 				File f = new File(parts[p]);
 
-    			if (loaded.contains(f))
-    			{
-    				doWord(f);
-    			}
-    			else
-    			{
-    				println(f + " is not loaded - try 'files'");
-    			}
+				if (loaded.contains(f))
+				{
+					doWord(f);
+				} else
+				{
+					println(f + " is not loaded - try 'files'");
+				}
 			}
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			println("Usage: word [<filenames>]");
 		}
@@ -894,8 +831,7 @@ abstract public class CommandReader
 			if (source == null)
 			{
 				println(file + ": file not found");
-			}
-			else
+			} else
 			{
 				File html = new File(source.filename.getPath() + ".doc");
 				PrintWriter pw = new PrintWriter(html, "UTF-8");
@@ -903,8 +839,7 @@ abstract public class CommandReader
 				pw.close();
 				println("Word HTML coverage written to " + html);
 			}
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			println("word: " + e.getMessage());
 		}
@@ -918,7 +853,7 @@ abstract public class CommandReader
 
 			if (line.equals("save"))
 			{
-				for (File file: interpreter.getSourceFiles())
+				for (File file : interpreter.getSourceFiles())
 				{
 					doSave(file);
 				}
@@ -932,17 +867,15 @@ abstract public class CommandReader
 			{
 				File f = new File(parts[p]);
 
-    			if (loaded.contains(f))
-    			{
-    				doSave(f);
-    			}
-    			else
-    			{
-    				println(f + " is not loaded - try 'files'");
-    			}
+				if (loaded.contains(f))
+				{
+					doSave(f);
+				} else
+				{
+					println(f + " is not loaded - try 'files'");
+				}
 			}
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			println("Usage: save [<filenames>]");
 		}
@@ -956,32 +889,28 @@ abstract public class CommandReader
 		{
 			String name = file.getName().toLowerCase();
 
-			if (name.endsWith(".doc") ||
-				name.endsWith(".docx") ||
-				name.endsWith(".odt"))
+			if (name.endsWith(".doc") || name.endsWith(".docx")
+					|| name.endsWith(".odt"))
 			{
-    			SourceFile source = interpreter.getSourceFile(file);
+				SourceFile source = interpreter.getSourceFile(file);
 
-    			if (source == null)
-    			{
-    				println(file + ": file not found");
-    			}
-    			else
-    			{
-    				File vdm = new File(source.filename.getPath() + "." +
-    					Settings.dialect.getArgstring().substring(1));
-    				PrintWriter spw = new PrintWriter(vdm, "UTF-8");
-    				source.printSource(spw);
-    				spw.close();
-    				println("Extracted source written to " + vdm);
-    			}
-			}
-			else
+				if (source == null)
+				{
+					println(file + ": file not found");
+				} else
+				{
+					File vdm = new File(source.filename.getPath() + "."
+							+ Settings.dialect.getArgstring().substring(1));
+					PrintWriter spw = new PrintWriter(vdm, "UTF-8");
+					source.printSource(spw);
+					spw.close();
+					println("Extracted source written to " + vdm);
+				}
+			} else
 			{
 				println("Not a Word or ODF file: " + file);
 			}
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			println("save: " + e.getMessage());
 		}
@@ -995,7 +924,7 @@ abstract public class CommandReader
 
 			if (line.equals("latex") || line.equals("latexdoc"))
 			{
-				for (File file: interpreter.getSourceFiles())
+				for (File file : interpreter.getSourceFiles())
 				{
 					doLatex(file, headers);
 				}
@@ -1009,17 +938,15 @@ abstract public class CommandReader
 			{
 				File f = new File(parts[p]);
 
-    			if (loaded.contains(f))
-    			{
-    				doLatex(f, headers);
-    			}
-    			else
-    			{
-    				println(f + " is not loaded - try 'files'");
-    			}
+				if (loaded.contains(f))
+				{
+					doLatex(f, headers);
+				} else
+				{
+					println(f + " is not loaded - try 'files'");
+				}
 			}
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			println("Usage: latex|latexdoc <filenames>");
 		}
@@ -1036,8 +963,7 @@ abstract public class CommandReader
 			if (source == null)
 			{
 				println(file + ": file not found");
-			}
-			else
+			} else
 			{
 				File tex = new File(source.filename.getPath() + ".tex");
 				PrintWriter pw = new PrintWriter(tex, "UTF-8");
@@ -1045,8 +971,7 @@ abstract public class CommandReader
 				pw.close();
 				println("Latex coverage written to " + tex);
 			}
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			println("latex: " + e.getMessage());
 		}
@@ -1064,8 +989,7 @@ abstract public class CommandReader
 			String g1 = m.group(1);
 			File file = g1 == null ? null : new File(g1);
 			setBreakpoint(file, Integer.parseInt(m.group(2)), m.group(3));
-		}
-		else
+		} else
 		{
 			Pattern p2 = Pattern.compile("^break ([\\w`$%']+) ?(.+)?$");
 			m = p2.matcher(line);
@@ -1073,11 +997,10 @@ abstract public class CommandReader
 			if (m.matches())
 			{
 				setBreakpoint(m.group(1), m.group(2));
-			}
-			else
+			} else
 			{
-	    		println("Usage: break [<file>:]<lineno> [<condition>]");
-	    		println("   or: break <function/operation> [<condition>]");
+				println("Usage: break [<file>:]<lineno> [<condition>]");
+				println("   or: break <function/operation> [<condition>]");
 			}
 		}
 
@@ -1094,8 +1017,7 @@ abstract public class CommandReader
 			String g1 = m.group(1);
 			File file = g1 == null ? null : new File(g1);
 			setTracepoint(file, Integer.parseInt(m.group(2)), m.group(3));
-		}
-		else
+		} else
 		{
 			Pattern p2 = Pattern.compile("^trace ([\\w`$%']+) ?(.+)?$");
 			m = p2.matcher(line);
@@ -1103,11 +1025,10 @@ abstract public class CommandReader
 			if (m.matches())
 			{
 				setTracepoint(m.group(1), m.group(2));
-			}
-			else
+			} else
 			{
-	    		println("Usage: trace [<file>:]<lineno> [<expression>]");
-	    		println("   or: trace <function/operation> [<expression>]");
+				println("Usage: trace [<file>:]<lineno> [<expression>]");
+				println("   or: trace <function/operation> [<expression>]");
 			}
 		}
 
@@ -1156,8 +1077,7 @@ abstract public class CommandReader
 		if (threads.isEmpty())
 		{
 			println("No threads running");
-		}
-		else
+		} else
 		{
 			println(threads);
 		}
@@ -1179,8 +1099,7 @@ abstract public class CommandReader
 				println("File '" + filename + "' not accessible");
 				return true;
 			}
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			println("Usage: assert <filename>");
 			return true;
@@ -1211,27 +1130,26 @@ abstract public class CommandReader
 
 		filenames.clear();
 
-		for (String s: line.split("\\s+"))
+		for (String s : line.split("\\s+"))
 		{
 			File dir = new File(s);
 
 			if (dir.isDirectory())
 			{
-				for (File file: dir.listFiles(Settings.dialect.getFilter()))
+				for (File file : dir.listFiles(Settings.dialect.getFilter()))
 				{
 					if (file.isFile())
 					{
 						filenames.add(file);
 					}
 				}
-			}
-			else
+			} else
 			{
 				filenames.add(dir);
 			}
 		}
 
-		filenames.remove(0);	// which is "load" :-)
+		filenames.remove(0); // which is "load" :-)
 		return false;
 	}
 
@@ -1241,16 +1159,12 @@ abstract public class CommandReader
 
 		try
 		{
-			input = new BufferedReader(
-				new InputStreamReader(
-					new FileInputStream(filename), VDMJ.filecharset));
-		}
-		catch (FileNotFoundException e)
+			input = new BufferedReader(new InputStreamReader(new FileInputStream(filename), VDMJ.filecharset));
+		} catch (FileNotFoundException e)
 		{
 			println("File '" + filename + "' not found");
 			return false;
-		}
-		catch (UnsupportedEncodingException e)
+		} catch (UnsupportedEncodingException e)
 		{
 			println("File encoding exception: " + e);
 			return false;
@@ -1269,7 +1183,7 @@ abstract public class CommandReader
 
 				if (assertion == null)
 				{
-					break;	 // EOF
+					break; // EOF
 				}
 
 				if (assertion.equals("") || assertion.startsWith("--"))
@@ -1277,41 +1191,37 @@ abstract public class CommandReader
 					continue;
 				}
 
-	   			Value result = interpreter.execute(assertion, dbgp);
+				Value result = interpreter.execute(assertion, dbgp);
 
-	   			if (!(result instanceof BooleanValue) || !result.boolValue(null))
-   				{
-   					println("FAILED: " + assertion);
-   					assertErrors++;
-   				}
-   				else
-   				{
-   					assertPasses++;
-   				}
-			}
-			catch (ParserException e)
+				if (!(result instanceof BooleanValue)
+						|| !result.boolValue(null))
+				{
+					println("FAILED: " + assertion);
+					assertErrors++;
+				} else
+				{
+					assertPasses++;
+				}
+			} catch (ParserException e)
 			{
 				println("FAILED: " + assertion);
 				println("Syntax: " + e);
 				assertErrors++;
 				break;
-			}
-			catch (ContextException e)
+			} catch (ContextException e)
 			{
 				println("FAILED: " + assertion);
 				println("Runtime: " + e.getMessage());
 				e.ctxt.printStackTrace(getStdout(), true);
 				assertErrors++;
 				break;
-			}
-			catch (RuntimeException e)
+			} catch (RuntimeException e)
 			{
 				println("FAILED: " + assertion);
 				println("Runtime: " + e.getMessage());
 				assertErrors++;
 				break;
-			}
-			catch (Exception e)
+			} catch (Exception e)
 			{
 				println("FAILED: " + assertion);
 				println("Exception: " + e);
@@ -1322,16 +1232,20 @@ abstract public class CommandReader
 
 		if (assertErrors == 0)
 		{
-			println("PASSED all " + assertPasses +
-				" assertions from " + filename);
-		}
-		else
+			println("PASSED all " + assertPasses + " assertions from "
+					+ filename);
+		} else
 		{
-			println("FAILED " + assertErrors +
-				" and passed " + assertPasses + " assertions from " + filename);
+			println("FAILED " + assertErrors + " and passed " + assertPasses
+					+ " assertions from " + filename);
 		}
 
-		try { input.close(); } catch (Exception e) {/* */}
+		try
+		{
+			input.close();
+		} catch (Exception e)
+		{/* */
+		}
 		return assertErrors == 0;
 	}
 
@@ -1363,9 +1277,8 @@ abstract public class CommandReader
 	}
 
 	/**
-	 * Callable by "do" methods which want to make the command unavailable.
-	 * The method just prints "Command not available in this context" and
-	 * returns true.
+	 * Callable by "do" methods which want to make the command unavailable. The method just prints
+	 * "Command not available in this context" and returns true.
 	 */
 
 	protected boolean notAvailable(String line)
@@ -1376,30 +1289,33 @@ abstract public class CommandReader
 
 	/**
 	 * Set a breakpoint at the given file and line with a condition.
-	 *
-	 * @param file The file name
-	 * @param line The line number
-	 * @param condition Any condition for the breakpoint, or null
-	 * @throws Exception Problems parsing condition.
+	 * 
+	 * @param file
+	 *            The file name
+	 * @param line
+	 *            The line number
+	 * @param condition
+	 *            Any condition for the breakpoint, or null
+	 * @throws Exception
+	 *             Problems parsing condition.
 	 */
 
 	private void setBreakpoint(File file, int line, String condition)
-		throws Exception
+			throws Exception
 	{
 		if (file == null)
 		{
 			file = interpreter.getDefaultFile();
 		}
-		
+
 		if (file == null || file.getPath().equals("?"))
 		{
 			Set<File> files = interpreter.getSourceFiles();
-			
+
 			if (files.size() > 1)
 			{
 				println("Assuming file " + file.getPath());
-			}
-			else if (files.isEmpty())
+			} else if (files.isEmpty())
 			{
 				println("No files defined");
 				return;
@@ -1416,17 +1332,16 @@ abstract public class CommandReader
 
 			if (exp == null)
 			{
-				println("No breakable expressions or statements at " + file + ":" + line);
-			}
-			else
+				println("No breakable expressions or statements at " + file
+						+ ":" + line);
+			} else
 			{
 				interpreter.clearBreakpoint(BreakpointManager.getBreakpoint(exp).number);
 				Breakpoint bp = interpreter.setBreakpoint(exp, condition);
 				println("Created " + bp);
 				println(interpreter.getSourceLine(bp.location));
 			}
-		}
-		else
+		} else
 		{
 			interpreter.clearBreakpoint(BreakpointManager.getBreakpoint(stmt).number);
 			Breakpoint bp = interpreter.setBreakpoint(stmt, condition);
@@ -1436,16 +1351,17 @@ abstract public class CommandReader
 	}
 
 	/**
-	 * Set a breakpoint at the given function or operation name with
-	 * a condition.
-	 *
-	 * @param name The function or operation name.
-	 * @param condition Any condition for the breakpoint, or null.
-	 * @throws Exception Problems parsing condition.
+	 * Set a breakpoint at the given function or operation name with a condition.
+	 * 
+	 * @param name
+	 *            The function or operation name.
+	 * @param condition
+	 *            Any condition for the breakpoint, or null.
+	 * @throws Exception
+	 *             Problems parsing condition.
 	 */
 
-	private void setBreakpoint(String name, String condition)
-		throws Exception
+	private void setBreakpoint(String name, String condition) throws Exception
 	{
 		LexTokenReader ltr = new LexTokenReader(name, Dialect.VDM_SL);
 		LexToken token = ltr.nextToken();
@@ -1455,56 +1371,55 @@ abstract public class CommandReader
 
 		if (token.is(VDMToken.IDENTIFIER))
 		{
-			LexIdentifierToken id = (LexIdentifierToken)token;
+			LexIdentifierToken id = (LexIdentifierToken) token;
 			LexNameToken lnt = new LexNameToken(interpreter.getDefaultName(), id);
 			v = interpreter.findGlobal(lnt);
-		}
-		else if (token.is(VDMToken.NAME))
+		} else if (token.is(VDMToken.NAME))
 		{
-			v = interpreter.findGlobal((LexNameToken)token);
+			v = interpreter.findGlobal((LexNameToken) token);
 		}
 
 		if (v instanceof FunctionValue)
 		{
-			FunctionValue fv = (FunctionValue)v;
+			FunctionValue fv = (FunctionValue) v;
 			PExp exp = fv.body;
 			interpreter.clearBreakpoint(BreakpointManager.getBreakpoint(exp).number);
 			Breakpoint bp = interpreter.setBreakpoint(exp, condition);
 			println("Created " + bp);
 			println(interpreter.getSourceLine(bp.location));
-		}
-		else if (v instanceof OperationValue)
+		} else if (v instanceof OperationValue)
 		{
-			OperationValue ov = (OperationValue)v;
+			OperationValue ov = (OperationValue) v;
 			PStm stmt = ov.body;
 			interpreter.clearBreakpoint(BreakpointManager.getBreakpoint(stmt).number);
 			Breakpoint bp = interpreter.setBreakpoint(stmt, condition);
 			println("Created " + bp);
 			println(interpreter.getSourceLine(bp.location));
-		}
-		else if (v == null)
+		} else if (v == null)
 		{
 			println(name + " is not visible or not found");
-		}
-		else
+		} else
 		{
 			println(name + " is not a function or operation");
 		}
 	}
 
 	/**
-	 * Set a tracepoint at the given file and line. Tracepoints without
-	 * a condition just print "Reached [n]", where [n] is the breakpoint
-	 * number.
-	 *
-	 * @param file The file name
-	 * @param line The line number
-	 * @param trace Any expression to evaluate at the tracepoint, or null
-	 * @throws Exception Problems parsing condition.
+	 * Set a tracepoint at the given file and line. Tracepoints without a condition just print "Reached [n]", where [n]
+	 * is the breakpoint number.
+	 * 
+	 * @param file
+	 *            The file name
+	 * @param line
+	 *            The line number
+	 * @param trace
+	 *            Any expression to evaluate at the tracepoint, or null
+	 * @throws Exception
+	 *             Problems parsing condition.
 	 */
 
 	private void setTracepoint(File file, int line, String trace)
-		throws Exception
+			throws Exception
 	{
 		if (file == null)
 		{
@@ -1514,12 +1429,11 @@ abstract public class CommandReader
 		if (file == null || file.getPath().equals("?"))
 		{
 			Set<File> files = interpreter.getSourceFiles();
-			
+
 			if (files.size() > 1)
 			{
 				println("Assuming file " + file.getPath());
-			}
-			else if (files.isEmpty())
+			} else if (files.isEmpty())
 			{
 				println("No files defined");
 				return;
@@ -1527,7 +1441,7 @@ abstract public class CommandReader
 
 			file = files.iterator().next();
 		}
-		
+
 		PStm stmt = interpreter.findStatement(file, line);
 
 		if (stmt == null)
@@ -1536,17 +1450,16 @@ abstract public class CommandReader
 
 			if (exp == null)
 			{
-				println("No breakable expressions or statements at " + file + ":" + line);
-			}
-			else
+				println("No breakable expressions or statements at " + file
+						+ ":" + line);
+			} else
 			{
 				interpreter.clearBreakpoint(BreakpointManager.getBreakpoint(exp).number);
 				Breakpoint bp = interpreter.setTracepoint(exp, trace);
 				println("Created " + bp);
 				println(interpreter.getSourceLine(bp.location));
 			}
-		}
-		else
+		} else
 		{
 			interpreter.clearBreakpoint(BreakpointManager.getBreakpoint(stmt).number);
 			Breakpoint bp = interpreter.setTracepoint(stmt, trace);
@@ -1556,17 +1469,18 @@ abstract public class CommandReader
 	}
 
 	/**
-	 * Set a tracepoint at the given function or operation name. Tracepoints
-	 * without a condition just print "Reached [n]", where [n] is the
-	 * breakpoint number.
-	 *
-	 * @param name The function or operation name.
-	 * @param trace Any trace for the tracepoint
-	 * @throws Exception Problems parsing condition.
+	 * Set a tracepoint at the given function or operation name. Tracepoints without a condition just print
+	 * "Reached [n]", where [n] is the breakpoint number.
+	 * 
+	 * @param name
+	 *            The function or operation name.
+	 * @param trace
+	 *            Any trace for the tracepoint
+	 * @throws Exception
+	 *             Problems parsing condition.
 	 */
 
-	private void setTracepoint(String name, String trace)
-		throws Exception
+	private void setTracepoint(String name, String trace) throws Exception
 	{
 		LexTokenReader ltr = new LexTokenReader(name, Dialect.VDM_SL);
 		LexToken token = ltr.nextToken();
@@ -1576,34 +1490,31 @@ abstract public class CommandReader
 
 		if (token.is(VDMToken.IDENTIFIER))
 		{
-			LexIdentifierToken id = (LexIdentifierToken)token;
+			LexIdentifierToken id = (LexIdentifierToken) token;
 			LexNameToken lnt = new LexNameToken(interpreter.getDefaultName(), id);
 			v = interpreter.findGlobal(lnt);
-		}
-		else if (token.is(VDMToken.NAME))
+		} else if (token.is(VDMToken.NAME))
 		{
-			v = interpreter.findGlobal((LexNameToken)token);
+			v = interpreter.findGlobal((LexNameToken) token);
 		}
 
 		if (v instanceof FunctionValue)
 		{
-			FunctionValue fv = (FunctionValue)v;
+			FunctionValue fv = (FunctionValue) v;
 			PExp exp = fv.body;
 			interpreter.clearBreakpoint(BreakpointManager.getBreakpoint(exp).number);
 			Breakpoint bp = interpreter.setTracepoint(exp, trace);
 			println("Created " + bp);
 			println(interpreter.getSourceLine(bp.location));
-		}
-		else if (v instanceof OperationValue)
+		} else if (v instanceof OperationValue)
 		{
-			OperationValue ov = (OperationValue)v;
+			OperationValue ov = (OperationValue) v;
 			PStm stmt = ov.body;
 			interpreter.clearBreakpoint(BreakpointManager.getBreakpoint(stmt).number);
 			Breakpoint bp = interpreter.setTracepoint(stmt, trace);
 			println("Created " + bp);
 			println(interpreter.getSourceLine(bp.location));
-		}
-		else
+		} else
 		{
 			println(name + " is not a function or operation");
 		}
@@ -1612,7 +1523,7 @@ abstract public class CommandReader
 	protected void print(String m)
 	{
 		getStdout().print(m);
-		getStdout().flush();	// As it's not a complete line
+		getStdout().flush(); // As it's not a complete line
 	}
 
 	protected void println(String m)
@@ -1625,29 +1536,29 @@ abstract public class CommandReader
 		return n + " " + (n != 1 ? s + pl : s);
 	}
 
-	private void writeCoverage(File dir)
-		throws IOException
-    {
-    	for (File f: interpreter.getSourceFiles())
-    	{
-    		SourceFile source = interpreter.getSourceFile(f);
+	private void writeCoverage(File dir) throws IOException
+	{
+		for (File f : interpreter.getSourceFiles())
+		{
+			SourceFile source = interpreter.getSourceFile(f);
 
-    		File cov = new File(dir.getPath() + File.separator + f.getName() + ".cov");
-    		PrintWriter pw = new PrintWriter(cov);
-    		source.writeCoverage(pw);
-    		pw.close();
-    		println("Written coverage for " + f);
-    	}
-    }
+			File cov = new File(dir.getPath() + File.separator + f.getName()
+					+ ".cov");
+			PrintWriter pw = new PrintWriter(cov);
+			source.writeCoverage(pw);
+			pw.close();
+			println("Written coverage for " + f);
+		}
+	}
 
-	private void mergeCoverage(File dir)
-		throws IOException
-    {
-    	for (File f: interpreter.getSourceFiles())
-    	{
-    		File cov = new File(dir.getPath() + File.separator + f.getName() + ".cov");
-    		LexLocation.mergeHits(f, cov);
-    		println("Merged coverage for " + f);
-    	}
-    }
+	private void mergeCoverage(File dir) throws IOException
+	{
+		for (File f : interpreter.getSourceFiles())
+		{
+			File cov = new File(dir.getPath() + File.separator + f.getName()
+					+ ".cov");
+			LexLocation.mergeHits(f, cov);
+			println("Merged coverage for " + f);
+		}
+	}
 }

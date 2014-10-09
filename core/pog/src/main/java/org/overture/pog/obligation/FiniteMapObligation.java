@@ -26,6 +26,7 @@ package org.overture.pog.obligation;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.AForAllExp;
@@ -43,44 +44,46 @@ import org.overture.ast.types.AMapMapType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.PType;
 import org.overture.pog.pub.IPOContextStack;
-
+import org.overture.pog.pub.IPogAssistantFactory;
+import org.overture.pog.pub.POType;
 
 public class FiniteMapObligation extends ProofObligation
 {
 	private static final long serialVersionUID = -2891663568497319141L;
 
-	public FiniteMapObligation(AMapCompMapExp exp, PType mapType, IPOContextStack ctxt)
+	public FiniteMapObligation(AMapCompMapExp exp, PType mapType,
+			IPOContextStack ctxt, IPogAssistantFactory af)
+			throws AnalysisException
 	{
-		super(exp, POType.FINITE_MAP, ctxt, exp.getLocation());
+		super(exp, POType.FINITE_MAP, ctxt, exp.getLocation(), af);
 
 		ILexNameToken finmap = getUnique("finmap");
 		ILexNameToken findex = getUnique("findex");
-		
-		//	eg. { a |-> b | a:A, b:B & p(a,b) }, gives...
+
+		// eg. { a |-> b | a:A, b:B & p(a,b) }, gives...
 		//
-		//	exists m:map nat to map A to B &
-		//		forall a:A, b:B &
-		//			p(a,b) => exists idx in set dom m &
-		//				m(idx) = { a |-> b }
-		
+		// exists m:map nat to map A to B &
+		// forall a:A, b:B &
+		// p(a,b) => exists idx in set dom m &
+		// m(idx) = { a |-> b }
+
 		AExistsExp existsExp = new AExistsExp();
 		AMapMapType natmaptype = new AMapMapType();
 		natmaptype.setFrom(new ANatNumericBasicType());
 		natmaptype.setTo(mapType.clone());
-		
+
 		existsExp.setBindList(getMultipleTypeBindList(natmaptype, finmap));
 		existsExp.setPredicate(getForallExp(exp.clone(), finmap, findex));
-		
+
+		stitch = existsExp.clone();
 		valuetree.setPredicate(ctxt.getPredWithContext(existsExp));
 	}
 
 	/**
-	 *	forall a:A, b:B &
-	 *		p(a,b) => exists idx in set dom m &
-	 *			m(idx) = { a |-> b }
-	 * 
+	 * forall a:A, b:B & p(a,b) => exists idx in set dom m & m(idx) = { a |-> b }
 	 */
-	private PExp getForallExp(AMapCompMapExp exp, ILexNameToken finmap, ILexNameToken findex)
+	private PExp getForallExp(AMapCompMapExp exp, ILexNameToken finmap,
+			ILexNameToken findex)
 	{
 		AForAllExp forallExp = new AForAllExp();
 		forallExp.setBindList(exp.clone().getBindings());
@@ -89,16 +92,15 @@ public class FiniteMapObligation extends ProofObligation
 	}
 
 	/**
-	 *	p(a,b) => exists idx in set dom m &
-	 *		m(idx) = { a |-> b }
+	 * p(a,b) => exists idx in set dom m & m(idx) = { a |-> b }
 	 */
-	private PExp getImpliesExpression(AMapCompMapExp exp, ILexNameToken finmap, ILexNameToken findex)
+	private PExp getImpliesExpression(AMapCompMapExp exp, ILexNameToken finmap,
+			ILexNameToken findex)
 	{
-		if (exp.getPredicate() == null)		// Map comprehension has no predicate
+		if (exp.getPredicate() == null) // Map comprehension has no predicate
 		{
 			return getImpliesExists(exp, finmap, findex);
-		}
-		else
+		} else
 		{
 			AImpliesBooleanBinaryExp implies = new AImpliesBooleanBinaryExp();
 			implies.setLeft(exp.getPredicate());
@@ -107,12 +109,12 @@ public class FiniteMapObligation extends ProofObligation
 			return implies;
 		}
 	}
-	
+
 	/**
-	 *	exists idx in set dom m &
-	 *		m(idx) = { a |-> b }
+	 * exists idx in set dom m & m(idx) = { a |-> b }
 	 */
-	private PExp getImpliesExists(AMapCompMapExp exp, ILexNameToken finmap, ILexNameToken findex)
+	private PExp getImpliesExists(AMapCompMapExp exp, ILexNameToken finmap,
+			ILexNameToken findex)
 	{
 		AExistsExp exists = new AExistsExp();
 		exists.setBindList(getSetBindList(finmap, findex));
@@ -123,7 +125,8 @@ public class FiniteMapObligation extends ProofObligation
 	/**
 	 * idx in set dom m
 	 */
-	private List<PMultipleBind> getSetBindList(ILexNameToken finmap, ILexNameToken findex)
+	private List<PMultipleBind> getSetBindList(ILexNameToken finmap,
+			ILexNameToken findex)
 	{
 		AMapDomainUnaryExp domExp = new AMapDomainUnaryExp();
 		domExp.setExp(getVarExp(finmap));
@@ -131,17 +134,18 @@ public class FiniteMapObligation extends ProofObligation
 	}
 
 	/**
-	 *	m(idx) = { a |-> b }
+	 * m(idx) = { a |-> b }
 	 */
-	private PExp getExistsPredicate(AMapCompMapExp exp, ILexNameToken finmap, ILexNameToken findex)
+	private PExp getExistsPredicate(AMapCompMapExp exp, ILexNameToken finmap,
+			ILexNameToken findex)
 	{
 		AApplyExp apply = getApplyExp(getVarExp(finmap), getVarExp(findex));
-		
+
 		AMapEnumMapExp setEnum = new AMapEnumMapExp();
 		List<AMapletExp> members = new Vector<AMapletExp>();
 		members.add(exp.getFirst().clone());
 		setEnum.setMembers(members);
-		
+
 		return getEqualsExp(apply, setEnum);
 	}
 }

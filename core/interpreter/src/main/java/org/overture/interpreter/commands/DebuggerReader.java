@@ -41,7 +41,6 @@ import org.overture.interpreter.scheduler.BasicSchedulableThread;
 import org.overture.interpreter.util.ExitStatus;
 import org.overture.parser.syntax.ParserException;
 
-
 /**
  * A class to read and perform breakpoint commands from standard input.
  */
@@ -58,39 +57,41 @@ public class DebuggerReader extends CommandReader
 	/** The number of stack levels moved down. */
 	private int frame = 0;
 
-	public DebuggerReader(
-		Interpreter interpreter, Breakpoint breakpoint, Context ctxt)
+	public DebuggerReader(Interpreter interpreter, Breakpoint breakpoint,
+			Context ctxt)
 	{
-		super(interpreter, "[" + BasicSchedulableThread.getThreadName(Thread.currentThread()) + "]> ");
+		super(interpreter, "["
+				+ BasicSchedulableThread.getThreadName(Thread.currentThread())
+				+ "]> ");
 		this.breakpoint = breakpoint;
 		this.ctxt = ctxt;
 	}
 
 	/**
-	 * This first prints out the current breakpoint source location before
-	 * calling the superclass' run method. The synchronization prevents more
-	 * than one debugging session on the console.
+	 * This first prints out the current breakpoint source location before calling the superclass' run method. The
+	 * synchronization prevents more than one debugging session on the console.
+	 * 
+	 * @return the exit status
 	 */
 
 	public ExitStatus run()
 	{
-		synchronized (DebuggerReader.class)		// Only one console!
+		synchronized (DebuggerReader.class) // Only one console!
 		{
-    		println("Stopped " + breakpoint);
-       		println(interpreter.getSourceLine(breakpoint.location));
+			println("Stopped " + breakpoint);
+			println(interpreter.getSourceLine(breakpoint.location));
 
-       		try
+			try
 			{
 				interpreter.setDefaultName(breakpoint.location.getModule());
-			}
-			catch (Exception e)
+			} catch (Exception e)
 			{
 				throw new InternalException(52, "Cannot set default name at breakpoint");
 			}
 
-       		ExitStatus status = super.run(new Vector<File>());
+			ExitStatus status = super.run(new Vector<File>());
 
-    		return status;
+			return status;
 		}
 	}
 
@@ -99,19 +100,17 @@ public class DebuggerReader extends CommandReader
 	{
 		if (e instanceof DebuggerException)
 		{
-			throw (DebuggerException)e;
-		}
-		else
+			throw (DebuggerException) e;
+		} else
 		{
 			return super.doException(e);
 		}
 	}
 
 	/**
-	 * Evaluate an expression in the breakpoint's context. This is similar
-	 * to the superclass method, except that the context is the one taken
-	 * from the breakpoint, and the execution is not timed.
-	 *
+	 * Evaluate an expression in the breakpoint's context. This is similar to the superclass method, except that the
+	 * context is the one taken from the breakpoint, and the execution is not timed.
+	 * 
 	 * @see org.overture.vdmj.commands.CommandReader#doEvaluate(java.lang.String)
 	 */
 
@@ -122,21 +121,17 @@ public class DebuggerReader extends CommandReader
 
 		try
 		{
-   			println(line + " = " + interpreter.evaluate(line, getFrame()));
-		}
-		catch (ParserException e)
+			println(line + " = " + interpreter.evaluate(line, getFrame()));
+		} catch (ParserException e)
 		{
 			println("Syntax: " + e);
-		}
-		catch (ContextException e)
+		} catch (ContextException e)
 		{
 			println("Runtime: " + e.getMessage());
-		}
-		catch (RuntimeException e)
+		} catch (RuntimeException e)
 		{
 			println("Runtime: " + e.getMessage());
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			println("Error: " + e.getMessage());
 		}
@@ -147,14 +142,14 @@ public class DebuggerReader extends CommandReader
 	@Override
 	protected boolean doStep(String line)
 	{
-   		ctxt.threadState.setBreaks(breakpoint.location, null, null);
-   		return false;
+		ctxt.threadState.setBreaks(breakpoint.location, null, null);
+		return false;
 	}
 
 	@Override
 	protected boolean doNext(String line)
 	{
-		ctxt.threadState.setBreaks(breakpoint.location,	ctxt.getRoot(), null);
+		ctxt.threadState.setBreaks(breakpoint.location, ctxt.getRoot(), null);
 		return false;
 	}
 
@@ -200,8 +195,7 @@ public class DebuggerReader extends CommandReader
 		if (frame == 0)
 		{
 			println("Already at first frame");
-		}
-		else
+		} else
 		{
 			frame--;
 			Context fp = getFrame();
@@ -219,8 +213,7 @@ public class DebuggerReader extends CommandReader
 		if (fp.outer == null)
 		{
 			println("Already at last frame");
-		}
-		else
+		} else
 		{
 			frame++;
 			fp = getFrame();
@@ -237,13 +230,16 @@ public class DebuggerReader extends CommandReader
 		int current = breakpoint.location.getStartLine();
 
 		int start = current - SOURCE_LINES;
-		if (start < 1) start = 1;
-		int end = start + SOURCE_LINES*2 + 1;
+		if (start < 1)
+		{
+			start = 1;
+		}
+		int end = start + SOURCE_LINES * 2 + 1;
 
 		for (int src = start; src < end; src++)
 		{
-			println(interpreter.getSourceLine(
-				file, src, (src == current) ? ":>>" : ":  "));
+			println(interpreter.getSourceLine(file, src, src == current ? ":>>"
+					: ":  "));
 		}
 
 		return true;
@@ -254,11 +250,10 @@ public class DebuggerReader extends CommandReader
 	{
 		if (interpreter instanceof ModuleInterpreter)
 		{
-			ModuleInterpreter minterpreter = (ModuleInterpreter)interpreter;
+			ModuleInterpreter minterpreter = (ModuleInterpreter) interpreter;
 			Context c = minterpreter.getStateContext();
 			print(c == null ? "(no state)\n" : c.toString());
-		}
-		else
+		} else
 		{
 			println("Not in a module context");
 		}
@@ -351,8 +346,7 @@ public class DebuggerReader extends CommandReader
 			{
 				Breakpoint bp = new Breakpoint(location);
 				new DebuggerReader(Interpreter.getInstance(), bp, ctxt).run();
-			}
-			catch (Exception e)
+			} catch (Exception e)
 			{
 				Console.out.println("Exception: " + e.getMessage());
 			}

@@ -15,20 +15,24 @@ public class Entry {
 
     public static VDMSeq Test() {
         VDMSeq seqCompResult_1 = SeqUtil.seq();
-        VDMSet set_1 = SeqUtil.elems(s.clone());
+        VDMSet set_1 = SeqUtil.elems(Utils.clone(s));
 
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
             Number x = ((Number) iterator_1.next());
 
             if (1L == 1L) {
-                seqCompResult_1 = SeqUtil.conc(seqCompResult_1.clone(),
+                seqCompResult_1 = SeqUtil.conc(Utils.clone(seqCompResult_1),
                         SeqUtil.seq(x));
             }
         }
 
-        VDMSeq a = seqCompResult_1.clone();
+        VDMSeq a = Utils.clone(seqCompResult_1);
 
-        return a.clone();
+        return Utils.clone(a);
+    }
+
+    public String toString() {
+        return "Entry{" + "s = " + Utils.toString(s) + "}";
     }
 }
 

@@ -7,3 +7,4 @@
 
 @javax.xml.bind.annotation.XmlSchema(namespace = "http://www.swixml.org/2007/Swixml")
 package org.overture.guibuilder.generated.swixml.schema;
+

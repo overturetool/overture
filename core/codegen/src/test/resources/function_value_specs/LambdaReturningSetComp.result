@@ -16,11 +16,11 @@ public class Entry {
                     for (Iterator iterator_1 = set_1.iterator();
                             iterator_1.hasNext();) {
                         Number z = ((Number) iterator_1.next());
-                        setCompResult_1 = SetUtil.union(setCompResult_1.clone(),
-                                SetUtil.set(z));
+                        setCompResult_1 = SetUtil.union(Utils.clone(
+                                    setCompResult_1), SetUtil.set(z));
                     }
 
-                    return setCompResult_1.clone();
+                    return Utils.clone(setCompResult_1);
                 }
             };
 
@@ -29,6 +29,10 @@ public class Entry {
 
     public static Object Run() {
         return op();
+    }
+
+    public String toString() {
+        return "Entry{}";
     }
 }
 

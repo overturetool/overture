@@ -38,7 +38,8 @@ public class Entry {
                             for (Iterator iterator_6 = set_3.iterator();
                                     iterator_6.hasNext();) {
                                 Number f = ((Number) iterator_6.next());
-                                mapCompResult_1 = MapUtil.munion(mapCompResult_1.clone(),
+                                mapCompResult_1 = MapUtil.munion(Utils.clone(
+                                            mapCompResult_1),
                                         MapUtil.map(
                                             new Maplet(a.longValue() +
                                                 b.longValue() + c.longValue() +
@@ -54,7 +55,11 @@ public class Entry {
             }
         }
 
-        return mapCompResult_1.clone();
+        return Utils.clone(mapCompResult_1);
+    }
+
+    public String toString() {
+        return "Entry{}";
     }
 }
 

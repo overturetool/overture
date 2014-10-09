@@ -1,0 +1,17 @@
+class Entry
+
+types
+
+public NatOrBool = nat | bool
+
+values
+
+x : NatOrBool = true;
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	return not x;
+
+end Entry

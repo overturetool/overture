@@ -39,14 +39,21 @@ public class SharedStateListner
 	public static interface IdentityChecker
 	{
 		/**
-		 * This method checks if a name needs a continuous time step before it is evaluated.
-		 * Example is: a := b where b must be updated before it is evaluated.
+		 * This method checks if a name needs a continuous time step before it is evaluated. Example is: a := b where b
+		 * must be updated before it is evaluated.
+		 * 
+		 * @param name
+		 * @return
 		 */
 		boolean requiresCheck(ILexNameToken name);
 
 		/**
-		 * This method checks if a change made in an assignment statement must be synchronized with the continuous time simulator.
-		 * Example is a := b, where a must be updated in the CT side as soon as the change is visible internally to VDM.
+		 * This method checks if a change made in an assignment statement must be synchronized with the continuous time
+		 * simulator. Example is a := b, where a must be updated in the CT side as soon as the change is visible
+		 * internally to VDM.
+		 * 
+		 * @param target
+		 * @return
 		 */
 		boolean reuiresCheck(PStateDesignator target);
 	}
@@ -106,7 +113,7 @@ public class SharedStateListner
 			autoIncrementTime = true;
 		}
 	}
-	
+
 	public static void setIdentityChecker(IdentityChecker checker)
 	{
 		SharedStateListner.checker = checker;

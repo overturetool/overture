@@ -23,28 +23,31 @@
 
 package org.overture.pog.obligation;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.statements.ASkipStm;
 import org.overture.ast.statements.AWhileStm;
 import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.IPogAssistantFactory;
+import org.overture.pog.pub.POType;
 
 public class WhileLoopObligation extends ProofObligation
 {
 	private static final long serialVersionUID = -3771203462569628826L;
 
-	public WhileLoopObligation(AWhileStm stmt, IPOContextStack ctxt)
+	public WhileLoopObligation(AWhileStm stmt, IPOContextStack ctxt,
+			IPogAssistantFactory af) throws AnalysisException
 	{
-		super(stmt, POType.WHILE_LOOP, ctxt, stmt.getLocation());
+		super(stmt, POType.WHILE_LOOP, ctxt, stmt.getLocation(), af);
 		AWhileStm whileStmt = new AWhileStm();
 		whileStmt.setExp(stmt.getExp().clone());
 		whileStmt.setStatement(new ASkipStm());
-		
+
 		AVariableExp nyexp = getVarExp(new LexNameToken("", "NotYetImplemented", null));
 		valuetree.setPredicate(nyexp);
-		
-		// TODO what do we do with loop invariants?
+
 		// valuetree.setPredicate(whileStmt);
-//		valuetree.setContext(ctxt.getContextNodeList());
+		// valuetree.setContext(ctxt.getContextNodeList());
 	}
 }

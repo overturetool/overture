@@ -1,0 +1,36 @@
+class Entry
+
+functions
+
+public f :  () -> nat
+f () ==
+let - = new Entry(),
+		- = new Entry()
+in
+	1;
+	
+public g :  () -> nat
+g () ==
+let - = 2
+in
+	2;
+
+public h :  nat -> nat
+h (-) == 
+let - = 2
+in
+  2;
+
+operations
+
+public op : nat ==> nat
+op (-) ==
+let - = 4
+in
+	return 4;
+
+public static Run : () ==> ?
+Run () ==
+	return f() + g() + h(1) + new Entry().op(1);
+
+end Entry

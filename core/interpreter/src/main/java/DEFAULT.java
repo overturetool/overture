@@ -28,20 +28,17 @@ import java.io.Serializable;
 import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.values.Value;
 
-
-
 /**
- * This class delegates native operations to the IO/Math/VDMUtil classes for
- * flat specifications.
+ * This class delegates native operations to the IO/Math/VDMUtil classes for flat specifications.
  */
 
 public class DEFAULT implements Serializable
 {
-    private static final long serialVersionUID = 1L;
-    
-    //
-    // IO...
-    //
+	private static final long serialVersionUID = 1L;
+
+	//
+	// IO...
+	//
 
 	public static Value writeval(Value tval)
 	{
@@ -53,10 +50,10 @@ public class DEFAULT implements Serializable
 		return IO.fwriteval(fval, tval, dval);
 	}
 
-//	public static Value freadval(Value fval)
-//	{
-//		return IO.freadval(fval);
-//	}
+	// public static Value freadval(Value fval)
+	// {
+	// return IO.freadval(fval);
+	// }
 
 	public static Value fecho(Value fval, Value tval, Value dval)
 	{
@@ -73,16 +70,15 @@ public class DEFAULT implements Serializable
 		return IO.print(v);
 	}
 
-	public static Value printf(Value fv, Value vs)
-		throws ValueException
+	public static Value printf(Value fv, Value vs) throws ValueException
 	{
 		return IO.printf(fv, vs);
 	}
-	
+
 	//
 	// MATH...
 	//
-	
+
 	public static Value sin(Value arg) throws ValueException, Exception
 	{
 		return MATH.sin(arg);
@@ -157,11 +153,11 @@ public class DEFAULT implements Serializable
 	{
 		return MATH.fac(arg);
 	}
-	
+
 	//
 	// VDMUtil...
 	//
-	
+
 	public static Value set2seq(Value arg) throws ValueException
 	{
 		return VDMUtil.set2seq(arg);

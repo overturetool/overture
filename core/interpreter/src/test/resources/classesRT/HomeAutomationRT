@@ -553,6 +553,10 @@ public IsFinished: () ==> ()
 IsFinished() ==
   skip;
 
+public Step: () ==> ()
+Step() ==
+  skip;
+
 sync
   mutex(PeriodicOp);	-- ADDED
   per IsFinished => finished;
@@ -769,6 +773,11 @@ PeriodicOp() ==
 public IsFinished: () ==> ()
 IsFinished() ==
   skip;
+  
+public Step: () ==> ()
+Step() ==
+  skip;
+
 
 sync
   mutex(PeriodicOp); -- ADDED
@@ -841,6 +850,10 @@ GetCorrection() ==
 
 public IsFinished: () ==> ()
 IsFinished() ==
+  skip;
+
+public Step: () ==> ()
+Step() ==
   skip;
 
 sync
@@ -916,6 +929,10 @@ public IsFinished: () ==> ()
 IsFinished() ==
   skip;
 
+public Step: () ==> ()
+Step() ==
+  skip;
+
 sync
   mutex(PeriodicOp); -- ADDED
   per IsFinished => finished;
@@ -984,3 +1001,4 @@ Run() ==
  );
 
 end World
+

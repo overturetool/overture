@@ -34,25 +34,26 @@ import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.intf.lex.ILexCharacterToken;
 import org.overture.ast.intf.lex.ILexLocation;
 
-public class LexCharacterToken extends LexToken implements ILexCharacterToken{
+public class LexCharacterToken extends LexToken implements ILexCharacterToken
+{
 	private static final long serialVersionUID = 1L;
 	public final char unicode;
 
-	public LexCharacterToken(char value, ILexLocation location) {
+	public LexCharacterToken(char value, ILexLocation location)
+	{
 		super(location, VDMToken.CHARACTER);
 		this.unicode = value;
 	}
 
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		return super.toString()
 				+ " value "
 				+ (Character.isISOControl(unicode) ? Integer.toString(unicode)
 						+ " decimal" : "[" + unicode + "]");
 	}
 
-	
-	
 	@Override
 	public char getValue()
 	{
@@ -60,45 +61,53 @@ public class LexCharacterToken extends LexToken implements ILexCharacterToken{
 	}
 
 	@Override
-	public ILexCharacterToken clone() {
+	public ILexCharacterToken clone()
+	{
 		return new LexCharacterToken(unicode, location);
-	}
-	
-	
-	@Override
-	public void apply(IAnalysis analysis) throws AnalysisException {
-		analysis.caseILexCharacterToken(this); 
 	}
 
 	@Override
-	public <A> A apply(IAnswer<A> caller) throws AnalysisException {
+	public void apply(IAnalysis analysis) throws AnalysisException
+	{
+		analysis.caseILexCharacterToken(this);
+	}
+
+	@Override
+	public <A> A apply(IAnswer<A> caller) throws AnalysisException
+	{
 		return caller.caseILexCharacterToken(this);
 	}
 
 	@Override
-	public <Q> void apply(IQuestion<Q> caller, Q question) throws AnalysisException {
+	public <Q> void apply(IQuestion<Q> caller, Q question)
+			throws AnalysisException
+	{
 		caller.caseILexCharacterToken(this, question);
 	}
 
 	@Override
-	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question) throws AnalysisException {
+	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question)
+			throws AnalysisException
+	{
 		return caller.caseILexCharacterToken(this, question);
 	}
-	
+
 	/**
 	 * Creates a map of all field names and their value
-	 * @param includeInheritedFields if true all inherited fields are included
+	 * 
+	 * @param includeInheritedFields
+	 *            if true all inherited fields are included
 	 * @return a a map of names to values of all fields
 	 */
 	@Override
-	public Map<String,Object> getChildren(Boolean includeInheritedFields)
+	public Map<String, Object> getChildren(Boolean includeInheritedFields)
 	{
-		Map<String,Object> fields = new HashMap<String,Object>();
-		if(includeInheritedFields)
+		Map<String, Object> fields = new HashMap<String, Object>();
+		if (includeInheritedFields)
 		{
 			fields.putAll(super.getChildren(includeInheritedFields));
 		}
-		fields.put("unicode",this.unicode);
+		fields.put("unicode", this.unicode);
 		return fields;
 	}
 }

@@ -19,14 +19,18 @@ public class Entry {
             Number x = ((Number) iterator_1.next());
 
             if (1L == 1L) {
-                seqCompResult_1 = SeqUtil.conc(seqCompResult_1.clone(),
+                seqCompResult_1 = SeqUtil.conc(Utils.clone(seqCompResult_1),
                         SeqUtil.seq(x.longValue() * 2L));
             }
         }
 
-        VDMSeq x = seqCompResult_1.clone();
+        VDMSeq x = Utils.clone(seqCompResult_1);
 
-        return x.clone();
+        return Utils.clone(x);
+    }
+
+    public String toString() {
+        return "Entry{}";
     }
 }
 

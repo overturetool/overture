@@ -54,7 +54,7 @@ import org.overture.interpreter.values.ValueSet;
 
 public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 {
-	
+
 	/*
 	 * Boolean
 	 */
@@ -98,7 +98,8 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 
 	@Override
 	public Value caseAEquivalentBooleanBinaryExp(
-			AEquivalentBooleanBinaryExp node, Context ctxt) throws AnalysisException
+			AEquivalentBooleanBinaryExp node, Context ctxt)
+			throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
 		node.getLocation().hit(); // Mark as covered
@@ -188,129 +189,125 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 	}
-	
+
 	/*
 	 * end boolean
 	 */
-	
+
 	@Override
 	public Value caseACompBinaryExp(ACompBinaryExp node, Context ctxt)
 			throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
-				node.getLocation().hit();		// Mark as covered
+		node.getLocation().hit(); // Mark as covered
 
-				Value lv = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(),ctxt).deref();
-				Value rv = node.getRight().apply(VdmRuntime.getExpressionEvaluator(),ctxt).deref();
+		Value lv = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt).deref();
+		Value rv = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt).deref();
 
-				if (lv instanceof MapValue)
+		if (lv instanceof MapValue)
+		{
+			ValueMap lm = null;
+			ValueMap rm = null;
+
+			try
+			{
+				lm = lv.mapValue(ctxt);
+				rm = rv.mapValue(ctxt);
+			} catch (ValueException e)
+			{
+				return VdmRuntimeError.abort(node.getLocation(), e);
+			}
+
+			ValueMap result = new ValueMap();
+
+			for (Value v : rm.keySet())
+			{
+				Value rng = lm.get(rm.get(v));
+
+				if (rng == null)
 				{
-					ValueMap lm = null;
-					ValueMap rm = null;
-
-					try
-					{
-						lm = lv.mapValue(ctxt);
-						rm = rv.mapValue(ctxt);
-					}
-					catch (ValueException e)
-					{
-						return VdmRuntimeError.abort(node.getLocation(),e);
-					}
-
-					ValueMap result = new ValueMap();
-
-					for (Value v: rm.keySet())
-					{
-						Value rng = lm.get(rm.get(v));
-						
-						if (rng == null)
-						{
-							VdmRuntimeError.abort(node.getLocation(), 4162, "The RHS range is not a subset of the LHS domain", ctxt);
-						}
-						
-						Value old = result.put(v, rng);
-
-						if (old != null && !old.equals(rng))
-						{
-							VdmRuntimeError.abort(node.getLocation(),4005, "Duplicate map keys have different values", ctxt);
-						}
-					}
-
-					return new MapValue(result);
+					VdmRuntimeError.abort(node.getLocation(), 4162, "The RHS range is not a subset of the LHS domain", ctxt);
 				}
 
-				try
-				{
-					FunctionValue f1 = lv.functionValue(ctxt);
-					FunctionValue f2 = rv.functionValue(ctxt);
+				Value old = result.put(v, rng);
 
-					return new CompFunctionValue(f1, f2);
-				}
-				catch (ValueException e)
+				if (old != null && !old.equals(rng))
 				{
-					return VdmRuntimeError.abort(node.getLocation(),e);
+					VdmRuntimeError.abort(node.getLocation(), 4005, "Duplicate map keys have different values", ctxt);
 				}
+			}
+
+			return new MapValue(result);
+		}
+
+		try
+		{
+			FunctionValue f1 = lv.functionValue(ctxt);
+			FunctionValue f2 = rv.functionValue(ctxt);
+
+			return new CompFunctionValue(f1, f2);
+		} catch (ValueException e)
+		{
+			return VdmRuntimeError.abort(node.getLocation(), e);
+		}
 	}
-	
+
 	@Override
 	public Value caseADomainResByBinaryExp(ADomainResByBinaryExp node,
 			Context ctxt) throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
-				node.getLocation().hit();		// Mark as covered
+		node.getLocation().hit(); // Mark as covered
 
-				try
+		try
+		{
+			ValueSet set = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt).setValue(ctxt);
+			ValueMap map = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt).mapValue(ctxt);
+			ValueMap modified = new ValueMap(map);
+
+			for (Value k : map.keySet())
+			{
+				if (set.contains(k))
 				{
-		    		ValueSet set = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(),ctxt).setValue(ctxt);
-		    		ValueMap map = node.getRight().apply(VdmRuntime.getExpressionEvaluator(),ctxt).mapValue(ctxt);
-		    		ValueMap modified = new ValueMap(map);
+					modified.remove(k);
+				}
+			}
 
-		    		for (Value k: map.keySet())
-		    		{
-		    			if (set.contains(k))
-		    			{
-		    				modified.remove(k);
-		    			}
-		    		}
-
-		    		return new MapValue(modified);
-		        }
-		        catch (ValueException e)
-		        {
-		        	return VdmRuntimeError.abort(node.getLocation(), e);
-		        }
+			return new MapValue(modified);
+		} catch (ValueException e)
+		{
+			return VdmRuntimeError.abort(node.getLocation(), e);
+		}
 	}
-	
+
 	@Override
 	public Value caseADomainResToBinaryExp(ADomainResToBinaryExp node,
 			Context ctxt) throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
-				node.getLocation().hit();		// Mark as covered
+		node.getLocation().hit(); // Mark as covered
 
-				try
+		try
+		{
+			ValueSet set = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt).setValue(ctxt);
+			ValueMap map = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt).mapValue(ctxt);
+			ValueMap modified = new ValueMap(map);
+
+			for (Value k : map.keySet())
+			{
+				if (!set.contains(k))
 				{
-		    		ValueSet set = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(),ctxt).setValue(ctxt);
-		    		ValueMap map = node.getRight().apply(VdmRuntime.getExpressionEvaluator(),ctxt).mapValue(ctxt);
-		    		ValueMap modified = new ValueMap(map);
+					modified.remove(k);
+				}
+			}
 
-		    		for (Value k: map.keySet())
-		    		{
-		    			if (!set.contains(k))
-		    			{
-		    				modified.remove(k);
-		    			}
-		    		}
-
-		    		return new MapValue(modified);
-		        }
-		        catch (ValueException e)
-		        {
-		        	return VdmRuntimeError.abort(node.getLocation(), e);
-		        }
+			return new MapValue(modified);
+		} catch (ValueException e)
+		{
+			return VdmRuntimeError.abort(node.getLocation(), e);
+		}
 	}
-	
+
 	@Override
 	public Value caseAEqualsBinaryExp(AEqualsBinaryExp node, Context ctxt)
 			throws AnalysisException
@@ -340,89 +337,87 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 			throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
-				node.getLocation().hit();		// Mark as covered
+		node.getLocation().hit(); // Mark as covered
 
-				Value elem = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(),ctxt);
-				Value set = node.getRight().apply(VdmRuntime.getExpressionEvaluator(),ctxt);
+		Value elem = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
+		Value set = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
 
-				try
-				{
-					return new BooleanValue(set.setValue(ctxt).contains(elem));
-		        }
-		        catch (ValueException e)
-		        {
-		        	return VdmRuntimeError.abort(node.getLocation(), e);
-		        }
+		try
+		{
+			return new BooleanValue(set.setValue(ctxt).contains(elem));
+		} catch (ValueException e)
+		{
+			return VdmRuntimeError.abort(node.getLocation(), e);
+		}
 	}
-	
+
 	@Override
-	public Value caseAMapUnionBinaryExp(AMapUnionBinaryExp node,
-			Context ctxt) throws AnalysisException
+	public Value caseAMapUnionBinaryExp(AMapUnionBinaryExp node, Context ctxt)
+			throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
-				node.getLocation().hit();		// Mark as covered
+		node.getLocation().hit(); // Mark as covered
 
-				ValueMap lm = null;
-				ValueMap rm = null;
+		ValueMap lm = null;
+		ValueMap rm = null;
 
-				try
-				{
-					lm = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(),ctxt).mapValue(ctxt);
-					rm = node.getRight().apply(VdmRuntime.getExpressionEvaluator(),ctxt).mapValue(ctxt);
-				}
-				catch (ValueException e)
-				{
-					return VdmRuntimeError.abort(node.getLocation(), e);
-				}
+		try
+		{
+			lm = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt).mapValue(ctxt);
+			rm = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt).mapValue(ctxt);
+		} catch (ValueException e)
+		{
+			return VdmRuntimeError.abort(node.getLocation(), e);
+		}
 
-				ValueMap result = new ValueMap();
-				result.putAll(lm);
-				
-				for (Value k: rm.keySet())
-				{
-					Value rng = rm.get(k);
-					Value old = result.put(k, rng);
+		ValueMap result = new ValueMap();
+		result.putAll(lm);
 
-					if (old != null && !old.equals(rng))
-					{
-						VdmRuntimeError.abort(node.getLocation(), 4021, "Duplicate map keys have different values: " + k, ctxt);
-					}
-				}
+		for (Value k : rm.keySet())
+		{
+			Value rng = rm.get(k);
+			Value old = result.put(k, rng);
 
-				return new MapValue(result);
+			if (old != null && !old.equals(rng))
+			{
+				VdmRuntimeError.abort(node.getLocation(), 4021, "Duplicate map keys have different values: "
+						+ k, ctxt);
+			}
+		}
+
+		return new MapValue(result);
 	}
-	
+
 	@Override
-	public Value caseANotEqualBinaryExp(ANotEqualBinaryExp node,
-			Context ctxt) throws AnalysisException
+	public Value caseANotEqualBinaryExp(ANotEqualBinaryExp node, Context ctxt)
+			throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
-				node.getLocation().hit();		// Mark as covered
+		node.getLocation().hit(); // Mark as covered
 
-				Value lv = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(),ctxt);
-				Value rv = node.getRight().apply(VdmRuntime.getExpressionEvaluator(),ctxt);
+		Value lv = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
+		Value rv = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
 
-				return new BooleanValue(!lv.equals(rv));
+		return new BooleanValue(!lv.equals(rv));
 	}
-	
+
 	@Override
-	public Value caseANotInSetBinaryExp(ANotInSetBinaryExp node,
-			Context ctxt) throws AnalysisException
+	public Value caseANotInSetBinaryExp(ANotInSetBinaryExp node, Context ctxt)
+			throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
-				node.getLocation().hit();		// Mark as covered
+		node.getLocation().hit(); // Mark as covered
 
-				Value elem = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(),ctxt);
-				Value set = node.getRight().apply(VdmRuntime.getExpressionEvaluator(),ctxt);
+		Value elem = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
+		Value set = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
 
-				try
-				{
-					return new BooleanValue(!set.setValue(ctxt).contains(elem));
-				}
-				catch (ValueException e)
-				{
-					return VdmRuntimeError.abort(node.getLocation(), e);
-				}
+		try
+		{
+			return new BooleanValue(!set.setValue(ctxt).contains(elem));
+		} catch (ValueException e)
+		{
+			return VdmRuntimeError.abort(node.getLocation(), e);
+		}
 	}
 
 	/*
@@ -469,7 +464,8 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 
 	@Override
 	public Value caseAGreaterEqualNumericBinaryExp(
-			AGreaterEqualNumericBinaryExp node, Context ctxt) throws AnalysisException
+			AGreaterEqualNumericBinaryExp node, Context ctxt)
+			throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
 		node.getLocation().hit(); // Mark as covered
@@ -507,7 +503,8 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 
 	@Override
 	public Value caseALessEqualNumericBinaryExp(
-			ALessEqualNumericBinaryExp node, Context ctxt) throws AnalysisException
+			ALessEqualNumericBinaryExp node, Context ctxt)
+			throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
 		node.getLocation().hit(); // Mark as covered
@@ -553,17 +550,13 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 		try
 		{
 			/*
-			 * Remainder x rem y and modulus x mod y are the same if the signs of x
-			 * and y are the same, otherwise they differ and rem takes the sign of x and
-			 * mod takes the sign of y. The formulas for remainder and modulus are:
-			 * x rem y = x - y * (x div y)
-			 * x mod y = x - y * floor(x/y)
-			 * Hence, -14 rem 3 equals -2 and -14 mod 3 equals 1. One can view these
-			 * results by walking the real axis, starting at -14 and making jumps of 3.
-			 * The remainder will be the last negative number one visits, because the first
-			 * argument corresponding to x is negative, while the modulus will be the first
-			 * positive number one visit, because the second argument corresponding to y
-			 * is positive.
+			 * Remainder x rem y and modulus x mod y are the same if the signs of x and y are the same, otherwise they
+			 * differ and rem takes the sign of x and mod takes the sign of y. The formulas for remainder and modulus
+			 * are: x rem y = x - y * (x div y) x mod y = x - y * floor(x/y) Hence, -14 rem 3 equals -2 and -14 mod 3
+			 * equals 1. One can view these results by walking the real axis, starting at -14 and making jumps of 3. The
+			 * remainder will be the last negative number one visits, because the first argument corresponding to x is
+			 * negative, while the modulus will be the first positive number one visit, because the second argument
+			 * corresponding to y is positive.
 			 */
 
 			double lv = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt).intValue(ctxt);
@@ -605,17 +598,13 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 		try
 		{
 			/*
-			 * Remainder x rem y and modulus x mod y are the same if the signs of x
-			 * and y are the same, otherwise they differ and rem takes the sign of x and
-			 * mod takes the sign of y. The formulas for remainder and modulus are:
-			 * x rem y = x - y * (x div y)
-			 * x mod y = x - y * floor(x/y)
-			 * Hence, -14 rem 3 equals -2 and -14 mod 3 equals 1. One can view these
-			 * results by walking the real axis, starting at -14 and making jumps of 3.
-			 * The remainder will be the last negative number one visits, because the first
-			 * argument corresponding to x is negative, while the modulus will be the first
-			 * positive number one visit, because the second argument corresponding to y
-			 * is positive.
+			 * Remainder x rem y and modulus x mod y are the same if the signs of x and y are the same, otherwise they
+			 * differ and rem takes the sign of x and mod takes the sign of y. The formulas for remainder and modulus
+			 * are: x rem y = x - y * (x div y) x mod y = x - y * floor(x/y) Hence, -14 rem 3 equals -2 and -14 mod 3
+			 * equals 1. One can view these results by walking the real axis, starting at -14 and making jumps of 3. The
+			 * remainder will be the last negative number one visits, because the first argument corresponding to x is
+			 * negative, while the modulus will be the first positive number one visit, because the second argument
+			 * corresponding to y is positive.
 			 */
 
 			double lv = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt).intValue(ctxt);
@@ -629,8 +618,8 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 	}
 
 	@Override
-	public Value caseASubtractNumericBinaryExp(
-			ASubtractNumericBinaryExp node, Context ctxt) throws AnalysisException
+	public Value caseASubtractNumericBinaryExp(ASubtractNumericBinaryExp node,
+			Context ctxt) throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
 		node.getLocation().hit(); // Mark as covered
@@ -665,322 +654,311 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 	}
-	
+
 	/*
 	 * end numeric
 	 */
-	
+
 	@Override
-	public Value caseAPlusPlusBinaryExp(APlusPlusBinaryExp node,
-			Context ctxt) throws AnalysisException
+	public Value caseAPlusPlusBinaryExp(APlusPlusBinaryExp node, Context ctxt)
+			throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
-				node.getLocation().hit();		// Mark as covered
+		node.getLocation().hit(); // Mark as covered
 
-				try
+		try
+		{
+			Value lv = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt).deref();
+			Value rv = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
+
+			if (lv instanceof MapValue)
+			{
+				ValueMap lm = new ValueMap(lv.mapValue(ctxt));
+				ValueMap rm = rv.mapValue(ctxt);
+
+				for (Value k : rm.keySet())
 				{
-		    		Value lv = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(),ctxt).deref();
-		    		Value rv = node.getRight().apply(VdmRuntime.getExpressionEvaluator(),ctxt);
-
-		    		if (lv instanceof MapValue)
-		    		{
-		    			ValueMap lm = new ValueMap(lv.mapValue(ctxt));
-		    			ValueMap rm = rv.mapValue(ctxt);
-
-		    			for (Value k: rm.keySet())
-		    			{
-							lm.put(k, rm.get(k));
-						}
-
-		    			return new MapValue(lm);
-		    		}
-		    		else
-		    		{
-		    			ValueList seq = lv.seqValue(ctxt);
-		    			ValueMap map = rv.mapValue(ctxt);
-		    			ValueList result = new ValueList(seq);
-
-		    			for (Value k: map.keySet())
-		    			{
-							int iv = (int)k.intValue(ctxt);
-
-							if (iv < 1 || iv > seq.size())
-							{
-								VdmRuntimeError.abort(node.getLocation(),4025, "Map key not within sequence index range: " + k, ctxt);
-							}
-
-							result.set(iv-1, map.get(k));
-		    			}
-
-		    			return new SeqValue(result);
-		    		}
+					lm.put(k, rm.get(k));
 				}
-				catch (ValueException e)
+
+				return new MapValue(lm);
+			} else
+			{
+				ValueList seq = lv.seqValue(ctxt);
+				ValueMap map = rv.mapValue(ctxt);
+				ValueList result = new ValueList(seq);
+
+				for (Value k : map.keySet())
 				{
-					return VdmRuntimeError.abort(node.getLocation(),e);
+					int iv = (int) k.intValue(ctxt);
+
+					if (iv < 1 || iv > seq.size())
+					{
+						VdmRuntimeError.abort(node.getLocation(), 4025, "Map key not within sequence index range: "
+								+ k, ctxt);
+					}
+
+					result.set(iv - 1, map.get(k));
 				}
+
+				return new SeqValue(result);
+			}
+		} catch (ValueException e)
+		{
+			return VdmRuntimeError.abort(node.getLocation(), e);
+		}
 	}
-	
+
 	@Override
 	public Value caseAProperSubsetBinaryExp(AProperSubsetBinaryExp node,
 			Context ctxt) throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
-				node.getLocation().hit();		// Mark as covered
+		node.getLocation().hit(); // Mark as covered
 
-				try
-				{
-		    		ValueSet set1 = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(),ctxt).setValue(ctxt);
-		    		ValueSet set2 = node.getRight().apply(VdmRuntime.getExpressionEvaluator(),ctxt).setValue(ctxt);
+		try
+		{
+			ValueSet set1 = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt).setValue(ctxt);
+			ValueSet set2 = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt).setValue(ctxt);
 
-		    		return new BooleanValue(set1.size() < set2.size() &&
-		    								set2.containsAll(set1));
-				}
-				catch (ValueException e)
-				{
-					return VdmRuntimeError.abort(node.getLocation(),e);
-				}
+			return new BooleanValue(set1.size() < set2.size()
+					&& set2.containsAll(set1));
+		} catch (ValueException e)
+		{
+			return VdmRuntimeError.abort(node.getLocation(), e);
+		}
 	}
+
 	@Override
 	public Value caseARangeResByBinaryExp(ARangeResByBinaryExp node,
 			Context ctxt) throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
-				node.getLocation().hit();		// Mark as covered
+		node.getLocation().hit(); // Mark as covered
 
-				ValueSet set = null;
-				ValueMap map = null;
+		ValueSet set = null;
+		ValueMap map = null;
 
-				try
-				{
-					set = node.getRight().apply(VdmRuntime.getExpressionEvaluator(),ctxt).setValue(ctxt);
-					map = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(),ctxt).mapValue(ctxt);
-				}
-				catch (ValueException e)
-				{
-					return VdmRuntimeError.abort(node.getLocation(),e);
-				}
+		try
+		{
+			set = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt).setValue(ctxt);
+			map = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt).mapValue(ctxt);
+		} catch (ValueException e)
+		{
+			return VdmRuntimeError.abort(node.getLocation(), e);
+		}
 
-				ValueMap modified = new ValueMap(map);
+		ValueMap modified = new ValueMap(map);
 
-				for (Value k: map.keySet())
-				{
-					if (set.contains(map.get(k)))
-					{
-						modified.remove(k);
-					}
-				}
+		for (Value k : map.keySet())
+		{
+			if (set.contains(map.get(k)))
+			{
+				modified.remove(k);
+			}
+		}
 
-				return new MapValue(modified);
+		return new MapValue(modified);
 	}
-	
+
 	@Override
 	public Value caseARangeResToBinaryExp(ARangeResToBinaryExp node,
 			Context ctxt) throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
-				node.getLocation().hit();		// Mark as covered
+		node.getLocation().hit(); // Mark as covered
 
-				ValueSet set = null;
-				ValueMap map = null;
+		ValueSet set = null;
+		ValueMap map = null;
 
-				try
-				{
-					set = node.getRight().apply(VdmRuntime.getExpressionEvaluator(),ctxt).setValue(ctxt);
-					map = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(),ctxt).mapValue(ctxt);
-				}
-				catch (ValueException e)
-				{
-					return VdmRuntimeError.abort(node.getLocation(),e);
-				}
+		try
+		{
+			set = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt).setValue(ctxt);
+			map = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt).mapValue(ctxt);
+		} catch (ValueException e)
+		{
+			return VdmRuntimeError.abort(node.getLocation(), e);
+		}
 
-				ValueMap modified = new ValueMap(map);
+		ValueMap modified = new ValueMap(map);
 
-				for (Value k: map.keySet())
-				{
-					if (!set.contains(map.get(k)))
-					{
-						modified.remove(k);
-					}
-				}
+		for (Value k : map.keySet())
+		{
+			if (!set.contains(map.get(k)))
+			{
+				modified.remove(k);
+			}
+		}
 
-				return new MapValue(modified);
+		return new MapValue(modified);
 	}
-	
+
 	@Override
-	public Value caseASeqConcatBinaryExp(ASeqConcatBinaryExp node,
-			Context ctxt) throws AnalysisException
+	public Value caseASeqConcatBinaryExp(ASeqConcatBinaryExp node, Context ctxt)
+			throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
-				node.getLocation().hit();		// Mark as covered
+		node.getLocation().hit(); // Mark as covered
 
-				try
-				{
-		    		Value lv = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(),ctxt);
-		    		Value rv = node.getRight().apply(VdmRuntime.getExpressionEvaluator(),ctxt);
+		try
+		{
+			Value lv = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
+			Value rv = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
 
-		    		ValueList result = new ValueList();
-		    		result.addAll(lv.seqValue(ctxt));
-		    		result.addAll(rv.seqValue(ctxt));
+			ValueList result = new ValueList();
+			result.addAll(lv.seqValue(ctxt));
+			result.addAll(rv.seqValue(ctxt));
 
-		    		return new SeqValue(result);
-				}
-				catch (ValueException e)
-				{
-					return VdmRuntimeError.abort(node.getLocation(),e);
-				}
+			return new SeqValue(result);
+		} catch (ValueException e)
+		{
+			return VdmRuntimeError.abort(node.getLocation(), e);
+		}
 	}
-	
+
 	@Override
 	public Value caseASetDifferenceBinaryExp(ASetDifferenceBinaryExp node,
 			Context ctxt) throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
-				node.getLocation().hit();		// Mark as covered
+		node.getLocation().hit(); // Mark as covered
 
-				ValueSet result = new ValueSet();
-				ValueSet togo = null;
+		ValueSet result = new ValueSet();
+		ValueSet togo = null;
 
-				try
-				{
-					togo = node.getRight().apply(VdmRuntime.getExpressionEvaluator(),ctxt).setValue(ctxt);
-					result.addAll(node.getLeft().apply(VdmRuntime.getExpressionEvaluator(),ctxt).setValue(ctxt));
-				}
-				catch (ValueException e)
-				{
-					return VdmRuntimeError.abort(node.getLocation(),e);
-				}
+		try
+		{
+			togo = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt).setValue(ctxt);
+			result.addAll(node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt).setValue(ctxt));
+		} catch (ValueException e)
+		{
+			return VdmRuntimeError.abort(node.getLocation(), e);
+		}
 
-				for (Value r: togo)
-				{
-					result.remove(r);
-				}
+		for (Value r : togo)
+		{
+			result.remove(r);
+		}
 
-				return new SetValue(result);
+		return new SetValue(result);
 	}
-	
+
 	@Override
 	public Value caseASetIntersectBinaryExp(ASetIntersectBinaryExp node,
 			Context ctxt) throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
-				node.getLocation().hit();		// Mark as covered
+		node.getLocation().hit(); // Mark as covered
 
-				try
-				{
-		    		ValueSet result = new ValueSet();
-		    		result.addAll(node.getLeft().apply(VdmRuntime.getExpressionEvaluator(),ctxt).setValue(ctxt));
-		    		result.retainAll(node.getRight().apply(VdmRuntime.getExpressionEvaluator(),ctxt).setValue(ctxt));
-		    		return new SetValue(result);
-				}
-				catch (ValueException e)
-				{
-					return VdmRuntimeError.abort(node.getLocation(),e);
-				}
+		try
+		{
+			ValueSet result = new ValueSet();
+			result.addAll(node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt).setValue(ctxt));
+			result.retainAll(node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt).setValue(ctxt));
+			return new SetValue(result);
+		} catch (ValueException e)
+		{
+			return VdmRuntimeError.abort(node.getLocation(), e);
+		}
 	}
-	
+
 	@Override
-	public Value caseASetUnionBinaryExp(ASetUnionBinaryExp node,
-			Context ctxt) throws AnalysisException
+	public Value caseASetUnionBinaryExp(ASetUnionBinaryExp node, Context ctxt)
+			throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
-				node.getLocation().hit();		// Mark as covered
+		node.getLocation().hit(); // Mark as covered
 
-				try
-				{
-		    		ValueSet result = new ValueSet();
-		    		result.addAll(node.getLeft().apply(VdmRuntime.getExpressionEvaluator(),ctxt).setValue(ctxt));
-		    		result.addAll(node.getRight().apply(VdmRuntime.getExpressionEvaluator(),ctxt).setValue(ctxt));
-		    		return new SetValue(result);
-				}
-				catch (ValueException e)
-				{
-					return VdmRuntimeError.abort(node.getLocation(),e);
-				}
+		try
+		{
+			ValueSet result = new ValueSet();
+			result.addAll(node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt).setValue(ctxt));
+			result.addAll(node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt).setValue(ctxt));
+			return new SetValue(result);
+		} catch (ValueException e)
+		{
+			return VdmRuntimeError.abort(node.getLocation(), e);
+		}
 	}
-	
+
 	@Override
-	public Value caseAStarStarBinaryExp(AStarStarBinaryExp node,
-			Context ctxt) throws AnalysisException
+	public Value caseAStarStarBinaryExp(AStarStarBinaryExp node, Context ctxt)
+			throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
-				node.getLocation().hit();		// Mark as covered
+		node.getLocation().hit(); // Mark as covered
 
-				try
+		try
+		{
+			Value lv = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt).deref();
+			Value rv = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
+
+			if (lv instanceof MapValue)
+			{
+				ValueMap map = lv.mapValue(ctxt);
+				long n = rv.intValue(ctxt);
+				ValueMap result = new ValueMap();
+
+				for (Value k : map.keySet())
 				{
-		    		Value lv = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(),ctxt).deref();
-		    		Value rv = node.getRight().apply(VdmRuntime.getExpressionEvaluator(),ctxt);
+					Value r = k;
 
-		    		if (lv instanceof MapValue)
-		    		{
-		    			ValueMap map = lv.mapValue(ctxt);
-		    			long n = rv.intValue(ctxt);
-		    			ValueMap result = new ValueMap();
+					for (int i = 0; i < n; i++)
+					{
+						r = map.get(r);
+					}
 
-		    			for (Value k: map.keySet())
-		    			{
-		    				Value r = k;
+					if (r == null)
+					{
+						VdmRuntimeError.abort(node.getLocation(), 4133, "Map range is not a subset of its domain: "
+								+ k, ctxt);
+					}
 
-		    				for (int i=0; i<n; i++)
-		    				{
-		    					r = map.get(r);
-		    				}
+					Value old = result.put(k, r);
 
-		    				if (r == null)
-		    				{
-								VdmRuntimeError.abort(node.getLocation(), 4133, "Map range is not a subset of its domain: " + k, ctxt);
-		    				}
-
-							Value old = result.put(k, r);
-
-							if (old != null && !old.equals(r))
-							{
-								VdmRuntimeError.abort(node.getLocation(), 4030, "Duplicate map keys have different values: " + k, ctxt);
-							}
-						}
-
-		    			return new MapValue(result);
-		    		}
-		    		else if (lv instanceof FunctionValue)
-		    		{
-		    			return new IterFunctionValue(
-		    				lv.functionValue(ctxt), rv.intValue(ctxt));
-		    		}
-		    		else if (lv instanceof NumericValue)
-		    		{
-		    			double ld = lv.realValue(ctxt);
-		    			double rd = rv.realValue(ctxt);
-
-		    			return NumericValue.valueOf(Math.pow(ld, rd), ctxt);
-		    		}
-
-		    		return VdmRuntimeError.abort(node.getLocation(), 4031,
-		    			"First arg of '**' must be a map, function or number", ctxt);
-		 		}
-				catch (ValueException e)
-				{
-					return VdmRuntimeError.abort(node.getLocation(), e);
+					if (old != null && !old.equals(r))
+					{
+						VdmRuntimeError.abort(node.getLocation(), 4030, "Duplicate map keys have different values: "
+								+ k, ctxt);
+					}
 				}
+
+				return new MapValue(result);
+			} else if (lv instanceof FunctionValue)
+			{
+				return new IterFunctionValue(lv.functionValue(ctxt), rv.intValue(ctxt));
+			} else if (lv instanceof NumericValue)
+			{
+				double ld = lv.realValue(ctxt);
+				double rd = rv.realValue(ctxt);
+
+				return NumericValue.valueOf(Math.pow(ld, rd), ctxt);
+			}
+
+			return VdmRuntimeError.abort(node.getLocation(), 4031, "First arg of '**' must be a map, function or number", ctxt);
+		} catch (ValueException e)
+		{
+			return VdmRuntimeError.abort(node.getLocation(), e);
+		}
 	}
-	
+
 	@Override
 	public Value caseASubsetBinaryExp(ASubsetBinaryExp node, Context ctxt)
 			throws AnalysisException
 	{
 		// breakpoint.check(location, ctxt);
-				node.getLocation().hit();		// Mark as covered
+		node.getLocation().hit(); // Mark as covered
 
-				try
-				{
-		    		ValueSet set1 = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(),ctxt).setValue(ctxt);
-		    		ValueSet set2 = node.getRight().apply(VdmRuntime.getExpressionEvaluator(),ctxt).setValue(ctxt);
+		try
+		{
+			ValueSet set1 = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt).setValue(ctxt);
+			ValueSet set2 = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt).setValue(ctxt);
 
-		    		return new BooleanValue(set2.containsAll(set1));
-				}
-				catch (ValueException e)
-				{
-					return VdmRuntimeError.abort(node.getLocation(), e);
-				}
+			return new BooleanValue(set2.containsAll(set1));
+		} catch (ValueException e)
+		{
+			return VdmRuntimeError.abort(node.getLocation(), e);
+		}
 	}
 
 	/*
@@ -990,18 +968,13 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 	static public long div(double lv, double rv)
 	{
 		/*
-		 * There is often confusion on how integer division, remainder and modulus
-		 * work on negative numbers. In fact, there are two valid answers to -14 div
-		 * 3: either (the intuitive) -4 as in the Toolbox, or -5 as in e.g. Standard
-		 * ML [Paulson91]. It is therefore appropriate to explain these operations in
-		 * some detail.
-		 * Integer division is defined using floor and real number division:
-		 * x/y < 0: x div y = -floor(abs(-x/y))
-		 * x/y >= 0: x div y = floor(abs(x/y))
-		 * Note that the order of floor and abs on the right-hand side makes a difference,
-		 * the above example would yield -5 if we changed the order. This is
-		 * because floor always yields a smaller (or equal) integer, e.g. floor (14/3) is
-		 * 4 while floor (-14/3) is -5.
+		 * There is often confusion on how integer division, remainder and modulus work on negative numbers. In fact,
+		 * there are two valid answers to -14 div 3: either (the intuitive) -4 as in the Toolbox, or -5 as in e.g.
+		 * Standard ML [Paulson91]. It is therefore appropriate to explain these operations in some detail. Integer
+		 * division is defined using floor and real number division: x/y < 0: x div y = -floor(abs(-x/y)) x/y >= 0: x
+		 * div y = floor(abs(x/y)) Note that the order of floor and abs on the right-hand side makes a difference, the
+		 * above example would yield -5 if we changed the order. This is because floor always yields a smaller (or
+		 * equal) integer, e.g. floor (14/3) is 4 while floor (-14/3) is -5.
 		 */
 
 		if (lv / rv < 0)

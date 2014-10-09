@@ -9,12 +9,16 @@ public class Entry {
     public Entry() {
     }
 
+    public static Object Run() {
+        return "a" + a + f();
+    }
+
     public static String f() {
         return "cat";
     }
 
-    public static Object Run() {
-        return "a" + a + f();
+    public String toString() {
+        return "Entry{" + "a = " + Utils.toString(a) + "}";
     }
 }
 

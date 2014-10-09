@@ -34,26 +34,26 @@ public class DelegateExpressionEvaluator extends ExpressionEvaluator
 {
 
 	@Override
-	public Value caseANotYetSpecifiedExp(ANotYetSpecifiedExp node,
-			Context ctxt) throws AnalysisException
+	public Value caseANotYetSpecifiedExp(ANotYetSpecifiedExp node, Context ctxt)
+			throws AnalysisException
 	{
 		ILexLocation location = node.getLocation();
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
-		if (location.getModule().equals("VDMUtil") ||
-			location.getModule().equals("DEFAULT"))
+		if (location.getModule().equals("VDMUtil")
+				|| location.getModule().equals("DEFAULT"))
 		{
-    		if (ctxt.title.equals("get_file_pos()"))
-    		{
-    			// This needs location information from the context, so we
-    			// can't just call down to a native method for this one.
+			if (ctxt.title.equals("get_file_pos()"))
+			{
+				// This needs location information from the context, so we
+				// can't just call down to a native method for this one.
 
-    			return get_file_pos(ctxt);
-    		}
+				return get_file_pos(ctxt);
+			}
 		}
 
-		if (location.getModule().equals("IO") ||
-			location.getModule().equals("DEFAULT"))
+		if (location.getModule().equals("IO")
+				|| location.getModule().equals("DEFAULT"))
 		{
 			if (ctxt.title.equals("freadval(filename)"))
 			{
@@ -64,69 +64,67 @@ public class DelegateExpressionEvaluator extends ExpressionEvaluator
 				{
 					LexNameToken arg = new LexNameToken("IO", "filename", location);
 					Value fval = ctxt.get(arg);
-					
+
 					// We can't link with the IO class directly because it's in the default
 					// package, so we reflect our way over to it.
-					
+
 					@SuppressWarnings("rawtypes")
 					Class io = Class.forName("IO");
 					@SuppressWarnings("unchecked")
-					Method m = io.getMethod("freadval", new Class[] {Value.class, Context.class});
-					return (Value)m.invoke(io.newInstance(), new Object[] {fval, ctxt});
-				}
-				catch (Exception e)
+					Method m = io.getMethod("freadval", new Class[] {
+							Value.class, Context.class });
+					return (Value) m.invoke(io.newInstance(), new Object[] {
+							fval, ctxt });
+				} catch (Exception e)
 				{
-					throw new InternalException(62, "Cannot invoke native method: " + e.getMessage());
+					throw new InternalException(62, "Cannot invoke native method: "
+							+ e.getMessage());
 				}
 			}
 		}
 
-		
 		if (Settings.dialect == Dialect.VDM_SL)
 		{
-			ModuleInterpreter i = (ModuleInterpreter)Interpreter.getInstance();
+			ModuleInterpreter i = (ModuleInterpreter) Interpreter.getInstance();
 			AModuleModules module = i.findModule(location.getModule());
 
 			if (module != null)
 			{
-				AModuleModulesRuntime	state =VdmRuntime.getNodeState(module);
+				AModuleModulesRuntime state = VdmRuntime.getNodeState(module, ctxt.assistantFactory);
 				if (state.hasDelegate())
 				{
 					return state.invokeDelegate(ctxt);
 				}
 			}
-		}
-		else
+		} else
 		{
-    		ObjectValue self = ctxt.getSelf();
+			ObjectValue self = ctxt.getSelf();
 
-    		if (self == null)
-    		{
-    			ClassInterpreter i = (ClassInterpreter)Interpreter.getInstance();
-    			SClassDefinition cls = i.findClass(location.getModule());
+			if (self == null)
+			{
+				ClassInterpreter i = (ClassInterpreter) Interpreter.getInstance();
+				SClassDefinition cls = i.findClass(location.getModule());
 
-    			if (cls != null)
-    			{
-    				SClassDefinitionRuntime state =VdmRuntime.getNodeState(ctxt.assistantFactory,cls);
-    				if (state.hasDelegate())
-    				{
-    					return state.invokeDelegate(ctxt);
-    				}
-    			}
-    		}
-    		else
-    		{
-    			if (self.hasDelegate(ctxt))
-    			{
-    				return self.invokeDelegate(ctxt);
-    			}
-    		}
+				if (cls != null)
+				{
+					SClassDefinitionRuntime state = VdmRuntime.getNodeState(ctxt.assistantFactory, cls);
+					if (state.hasDelegate())
+					{
+						return state.invokeDelegate(ctxt);
+					}
+				}
+			} else
+			{
+				if (self.hasDelegate(ctxt))
+				{
+					return self.invokeDelegate(ctxt);
+				}
+			}
 		}
 
-		return VdmRuntimeError.abort(node.getLocation(),4024, "'not yet specified' expression reached", ctxt);
+		return VdmRuntimeError.abort(node.getLocation(), 4024, "'not yet specified' expression reached", ctxt);
 	}
-	
-	
+
 	private Value get_file_pos(Context ctxt)
 	{
 		try
@@ -144,20 +142,17 @@ public class DelegateExpressionEvaluator extends ExpressionEvaluator
 
 			if (bra > 0)
 			{
-    			tuple.add(new SeqValue(root.title.substring(0, bra)));
-			}
-			else
+				tuple.add(new SeqValue(root.title.substring(0, bra)));
+			} else
 			{
 				tuple.add(new SeqValue(""));
 			}
 
 			return new TupleValue(tuple);
-		}
-		catch (ValueException e)
+		} catch (ValueException e)
 		{
 			throw new ContextException(e, ctxt.location);
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			throw new ContextException(4076, e.getMessage(), ctxt.location, ctxt);
 		}

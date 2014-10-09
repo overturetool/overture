@@ -11,52 +11,50 @@ import org.overture.ast.node.INode;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 
 /***************************************
- * 
- * This method checks if a definition can be executed at runtime. 
+ * This method checks if a definition can be executed at runtime.
  * 
  * @author gkanos
- *
  ****************************************/
 public class DefinitionRunTimeChecker extends AnswerAdaptor<Boolean>
 {
 	protected IInterpreterAssistantFactory af;
-	
+
 	public DefinitionRunTimeChecker(IInterpreterAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public Boolean caseAImportedDefinition(AImportedDefinition def)
 			throws AnalysisException
 	{
-		//return isRuntime(((AImportedDefinition) def).getDef());
+
 		return def.getDef().apply(THIS);
 	}
-	
+
 	@Override
 	public Boolean caseAInheritedDefinition(AInheritedDefinition def)
 			throws AnalysisException
 	{
-		//return isRuntime(((AInheritedDefinition) def).getSuperdef());
+
 		return def.getSuperdef().apply(THIS);
 	}
-	
+
 	@Override
 	public Boolean caseARenamedDefinition(ARenamedDefinition def)
 			throws AnalysisException
 	{
-		//return isRuntime(((ARenamedDefinition) def).getDef());
+
 		return def.getDef().apply(THIS);
 	}
-	
+
 	@Override
 	public Boolean caseATypeDefinition(ATypeDefinition node)
 			throws AnalysisException
 	{
 		return false;
 	}
-	
+
 	@Override
 	public Boolean defaultPDefinition(PDefinition node)
 			throws AnalysisException

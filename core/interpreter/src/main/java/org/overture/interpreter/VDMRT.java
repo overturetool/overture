@@ -29,7 +29,6 @@ import org.overture.ast.messages.InternalException;
 import org.overture.config.Settings;
 import org.overture.interpreter.util.ExitStatus;
 
-
 public class VDMRT extends VDMPP
 {
 	public VDMRT()
@@ -43,9 +42,8 @@ public class VDMRT extends VDMPP
 		try
 		{
 			classes.add(AstFactoryTC.newACpuClassDefinition(assistantFactory));
-  			classes.add(AstFactoryTC.newABusClassDefinition(assistantFactory));
-		}
-		catch (Exception e)
+			classes.add(AstFactoryTC.newABusClassDefinition(assistantFactory));
+		} catch (Exception e)
 		{
 			throw new InternalException(11, "CPU or BUS creation failure");
 		}

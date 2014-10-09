@@ -12,16 +12,14 @@ import org.overture.ast.node.INode;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 
 /***************************************
- * 
- * This method checks what is the type of Definition. 
+ * This method checks what is the type of Definition.
  * 
  * @author gkanos
- *
  ****************************************/
 public class TypeDefinitionChecker extends AnswerAdaptor<Boolean>
 {
 	protected IInterpreterAssistantFactory af;
-	
+
 	public TypeDefinitionChecker(IInterpreterAssistantFactory af)
 	{
 		this.af = af;
@@ -31,45 +29,37 @@ public class TypeDefinitionChecker extends AnswerAdaptor<Boolean>
 	public Boolean defaultSClassDefinition(SClassDefinition def)
 			throws AnalysisException
 	{
-		//return SClassDefinitionAssistantInterpreter.isTypeDefinition(def);
 		return true;
 	}
-	
+
 	@Override
 	public Boolean caseAImportedDefinition(AImportedDefinition def)
 			throws AnalysisException
 	{
-		//return AImportedDefinitionAssistantInterpreter.isTypeDefinition(def);
-		//return PDefinitionAssistantInterpreter.isTypeDefinition(def.getDef());
 		return def.getDef().apply(THIS);
 	}
-	
+
 	@Override
 	public Boolean caseAInheritedDefinition(AInheritedDefinition def)
 			throws AnalysisException
 	{
-		//return AInheritedDefinitionAssistantInterpreter.isTypeDefinition(def);
-		//return PDefinitionAssistantInterpreter.isTypeDefinition(def.getSuperdef());
 		return def.getSuperdef().apply(THIS);
 	}
-	
+
 	@Override
 	public Boolean caseARenamedDefinition(ARenamedDefinition def)
 			throws AnalysisException
 	{
-		//return ARenamedDefinitionAssistantInterpreter.isTypeDefinition(def);
-		//return PDefinitionAssistantInterpreter.isTypeDefinition(def.getDef());
 		return def.getDef().apply(THIS);
 	}
-	
+
 	@Override
 	public Boolean caseATypeDefinition(ATypeDefinition def)
 			throws AnalysisException
 	{
-		//return ATypeDefinitionAssistantInterpreter.isTypeDefinition((ATypeDefinition) def);
 		return true;
 	}
-	
+
 	@Override
 	public Boolean defaultPDefinition(PDefinition node)
 			throws AnalysisException

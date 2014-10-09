@@ -22,7 +22,8 @@ public class Entry {
                     Number z = ((Number) iterator_3.next());
 
                     if (1L == 1L) {
-                        setCompResult_1 = SetUtil.union(setCompResult_1.clone(),
+                        setCompResult_1 = SetUtil.union(Utils.clone(
+                                    setCompResult_1),
                                 SetUtil.set(x.longValue() + y.longValue() +
                                     z.longValue()));
                     }
@@ -30,7 +31,11 @@ public class Entry {
             }
         }
 
-        return setCompResult_1.clone();
+        return Utils.clone(setCompResult_1);
+    }
+
+    public String toString() {
+        return "Entry{}";
     }
 }
 

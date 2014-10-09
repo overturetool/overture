@@ -1,3 +1,24 @@
+/*
+ * #%~
+ * The VDM Type Checker
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.typechecker.utilities.pattern;
 
 import java.util.LinkedList;
@@ -30,7 +51,9 @@ import org.overture.ast.patterns.AExpressionPattern;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.AIntegerPattern;
+import org.overture.ast.patterns.ANamePatternPair;
 import org.overture.ast.patterns.ANilPattern;
+import org.overture.ast.patterns.AObjectPattern;
 import org.overture.ast.patterns.AQuotePattern;
 import org.overture.ast.patterns.ARealPattern;
 import org.overture.ast.patterns.ARecordPattern;
@@ -41,8 +64,6 @@ import org.overture.ast.patterns.ATuplePattern;
 import org.overture.ast.patterns.AUnionPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
 
 /**
  * Used to get Matching expressions out of a pattern.
@@ -191,6 +212,21 @@ public class MatchingExpressionFinder extends AnswerAdaptor<PExp>
 	{
 		LexToken op = new LexKeywordToken(VDMToken.UNION, pattern.getLocation());
 		return AstFactory.newASetUnionBinaryExp(af.createPPatternAssistant().getMatchingExpression(pattern.getLeft()), op, af.createPPatternAssistant().getMatchingExpression(pattern.getRight()));
+	}
+
+	@Override
+	public PExp caseAObjectPattern(AObjectPattern pattern)
+			throws AnalysisException
+	{
+		List<PExp> list = new LinkedList<PExp>();
+
+		for (ANamePatternPair npp : pattern.getFields())
+		{
+			list.add(af.createPPatternAssistant().getMatchingExpression(npp.getPattern()));
+		}
+
+		ILexNameToken tpName = pattern.getClassname();
+		return AstFactory.newANewExp(pattern.getLocation(), tpName, list);
 	}
 
 	@Override

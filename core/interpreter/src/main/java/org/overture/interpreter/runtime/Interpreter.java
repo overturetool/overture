@@ -50,8 +50,6 @@ import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
 import org.overture.config.Settings;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.InterpreterAssistantFactory;
-import org.overture.interpreter.assistant.definition.ANamedTraceDefinitionAssistantInterpreter;
 import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.debug.DBGPReader;
 import org.overture.interpreter.messages.Console;
@@ -72,15 +70,15 @@ import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.visitor.TypeCheckVisitor;
 
-
 /**
  * An abstract VDM interpreter.
  */
 
 abstract public class Interpreter
 {
-	final public IInterpreterAssistantFactory assistantFactory = new InterpreterAssistantFactory();
-	
+	/** the assistant factory used by this interpreter for e.g. FunctionValues */
+	protected final IInterpreterAssistantFactory assistantFactory;
+
 	/** The main thread scheduler */
 	public ResourceScheduler scheduler;
 
@@ -101,18 +99,23 @@ abstract public class Interpreter
 
 	/**
 	 * Create an Interpreter.
+	 * 
+	 * @param assistantFactory
+	 *            the assistant factory to be used by the interpreter
 	 */
 
-	public Interpreter()
+	public Interpreter(IInterpreterAssistantFactory assistantFactory)
 	{
 		scheduler = new ResourceScheduler();
 		breakpoints = new TreeMap<Integer, Breakpoint>();
 		sourceFiles = new HashMap<File, SourceFile>();
+		this.assistantFactory = assistantFactory;
 		instance = this;
 	}
-	
+
 	/**
 	 * Gets the current assistant factory
+	 * 
 	 * @return
 	 */
 	public IInterpreterAssistantFactory getAssistantFactory()
@@ -122,6 +125,8 @@ abstract public class Interpreter
 
 	/**
 	 * Get a string version of the environment.
+	 * 
+	 * @return
 	 */
 
 	public String getInitialContext()
@@ -131,6 +136,8 @@ abstract public class Interpreter
 
 	/**
 	 * Get the global environment.
+	 * 
+	 * @return
 	 */
 
 	abstract public Environment getGlobalEnvironment();
@@ -141,14 +148,13 @@ abstract public class Interpreter
 
 	public static Interpreter getInstance()
 	{
-		return instance;	// NB. last one created
+		return instance; // NB. last one created
 	}
 
 	/**
-	 * Get the name of the default module or class. Symbols in the default
-	 * module or class do not have to have their names qualified when being
-	 * referred to on the command line.
-	 *
+	 * Get the name of the default module or class. Symbols in the default module or class do not have to have their
+	 * names qualified when being referred to on the command line.
+	 * 
 	 * @return The default name.
 	 */
 
@@ -156,7 +162,7 @@ abstract public class Interpreter
 
 	/**
 	 * Get the filename that contains the default module or class.
-	 *
+	 * 
 	 * @return The default file name.
 	 */
 
@@ -164,51 +170,56 @@ abstract public class Interpreter
 
 	/**
 	 * Set the default module or class name.
-	 *
-	 * @param name The default name.
+	 * 
+	 * @param name
+	 *            The default name.
 	 * @throws Exception
 	 */
 
 	abstract public void setDefaultName(String name) throws Exception;
 
 	/**
-	 * Initialize the initial context. This means that all definition
-	 * initializers are re-run to put the global environment back into its
-	 * original state. This is run implicitly when the interpreter starts,
-	 * but it can also be invoked explicitly via the "init" command.
-	 *
-	 * @throws Exception
+	 * Initialize the initial context. This means that all definition initializers are re-run to put the global
+	 * environment back into its original state. This is run implicitly when the interpreter starts, but it can also be
+	 * invoked explicitly via the "init" command.
+	 * 
+	 * @param dbgp
 	 */
 
 	abstract public void init(DBGPReader dbgp);
 
 	/**
-	 * Initialize the context between trace sequences. This is less
-	 * thorough than the full init, since it does not reset the scheduler
-	 * for example.
+	 * Initialize the context between trace sequences. This is less thorough than the full init, since it does not reset
+	 * the scheduler for example.
+	 * 
+	 * @param dbgp
 	 */
 
 	abstract public void traceInit(DBGPReader dbgp);
 
 	/**
-	 * Parse the line passed, type check it and evaluate it as an expression
-	 * in the initial context.
-	 *
-	 * @param line A VDM expression.
-	 * @param dbgp The DBGPReader, if any
+	 * Parse the line passed, type check it and evaluate it as an expression in the initial context.
+	 * 
+	 * @param line
+	 *            A VDM expression.
+	 * @param dbgp
+	 *            The DBGPReader, if any
 	 * @return The value of the expression.
-	 * @throws Exception Parser, type checking or runtime errors.
+	 * @throws Exception
+	 *             Parser, type checking or runtime errors.
 	 */
 
-	abstract public Value execute(String line, DBGPReader dbgp) throws Exception;
+	abstract public Value execute(String line, DBGPReader dbgp)
+			throws Exception;
 
 	/**
-	 * Parse the content of the file passed, type check it and evaluate it as an
-	 * expression in the initial context.
-	 *
-	 * @param file A file containing a VDM expression.
+	 * Parse the content of the file passed, type check it and evaluate it as an expression in the initial context.
+	 * 
+	 * @param file
+	 *            A file containing a VDM expression.
 	 * @return The value of the expression.
-	 * @throws Exception Parser, type checking or runtime errors.
+	 * @throws Exception
+	 *             Parser, type checking or runtime errors.
 	 */
 
 	public Value execute(File file) throws Exception
@@ -228,18 +239,21 @@ abstract public class Interpreter
 
 		Value result = execute(sb.toString(), null);
 
-		BasicSchedulableThread.terminateAll();	// NB not a session (used for tests)
+		BasicSchedulableThread.terminateAll(); // NB not a session (used for tests)
 		return result;
 	}
 
 	/**
-	 * Parse the line passed, and evaluate it as an expression in the context
-	 * passed. Note that this does not type check the expression.
-	 *
-	 * @param line A VDM expression.
-	 * @param ctxt The context in which to evaluate the expression.
+	 * Parse the line passed, and evaluate it as an expression in the context passed. Note that this does not type check
+	 * the expression.
+	 * 
+	 * @param line
+	 *            A VDM expression.
+	 * @param ctxt
+	 *            The context in which to evaluate the expression.
 	 * @return The value of the expression.
-	 * @throws Exception Parser or runtime errors.
+	 * @throws Exception
+	 *             Parser or runtime errors.
 	 */
 
 	abstract public Value evaluate(String line, Context ctxt) throws Exception;
@@ -255,6 +269,9 @@ abstract public class Interpreter
 
 	/**
 	 * Get a line of a source file.
+	 * 
+	 * @param src
+	 * @return
 	 */
 
 	public String getSourceLine(ILexLocation src)
@@ -264,6 +281,10 @@ abstract public class Interpreter
 
 	/**
 	 * Get a line of a source file by its location.
+	 * 
+	 * @param file
+	 * @param line
+	 * @return
 	 */
 
 	public String getSourceLine(File file, int line)
@@ -273,6 +294,11 @@ abstract public class Interpreter
 
 	/**
 	 * Get a line of a source file by its location.
+	 * 
+	 * @param file
+	 * @param line
+	 * @param sep
+	 * @return
 	 */
 
 	public String getSourceLine(File file, int line, String sep)
@@ -285,8 +311,7 @@ abstract public class Interpreter
 			{
 				source = new SourceFile(file);
 				sourceFiles.put(file, source);
-			}
-			catch (IOException e)
+			} catch (IOException e)
 			{
 				return "Cannot open source file: " + file;
 			}
@@ -297,6 +322,9 @@ abstract public class Interpreter
 
 	/**
 	 * Get an entire source file object.
+	 * 
+	 * @param file
+	 * @return
 	 * @throws IOException
 	 */
 
@@ -315,24 +343,29 @@ abstract public class Interpreter
 
 	/**
 	 * Get a list of all source files.
+	 * 
+	 * @return
 	 */
 
 	abstract public Set<File> getSourceFiles();
 
-
 	/**
 	 * Get a list of proof obligations for the loaded specification.
-	 *
+	 * 
 	 * @return A list of POs.
+	 * @throws AnalysisException
 	 */
 
-	abstract public IProofObligationList getProofObligations() throws AnalysisException;
+	abstract public IProofObligationList getProofObligations()
+			throws AnalysisException;
 
 	/**
 	 * Find a statement by file name and line number.
-	 *
-	 * @param file The name of the class/module
-	 * @param lineno The line number
+	 * 
+	 * @param file
+	 *            The name of the class/module
+	 * @param lineno
+	 *            The line number
 	 * @return A Statement object if found, else null.
 	 */
 
@@ -340,9 +373,11 @@ abstract public class Interpreter
 
 	/**
 	 * Find an expression by file name and line number.
-	 *
-	 * @param file The name of the file
-	 * @param lineno The line number
+	 * 
+	 * @param file
+	 *            The name of the file
+	 * @param lineno
+	 *            The line number
 	 * @return An Expression object if found, else null.
 	 */
 
@@ -350,8 +385,9 @@ abstract public class Interpreter
 
 	/**
 	 * Find a global environment value by name.
-	 *
-	 * @param name The name of the variable
+	 * 
+	 * @param name
+	 *            The name of the variable
 	 * @return A Value object if found, else null.
 	 */
 
@@ -361,14 +397,16 @@ abstract public class Interpreter
 	}
 
 	/**
-	 * Set a statement tracepoint. A tracepoint does not stop execution, but
-	 * evaluates and displays an expression before continuing.
-	 *
-	 * @param stmt The statement to trace.
-	 * @param trace The expression to evaluate.
+	 * Set a statement tracepoint. A tracepoint does not stop execution, but evaluates and displays an expression before
+	 * continuing.
+	 * 
+	 * @param stmt
+	 *            The statement to trace.
+	 * @param trace
+	 *            The expression to evaluate.
 	 * @return The Breakpoint object created.
-	 *
-	 * @throws Exception Expression is not valid.
+	 * @throws Exception
+	 *             Expression is not valid.
 	 */
 
 	public Breakpoint setTracepoint(PStm stmt, String trace) throws Exception
@@ -379,19 +417,20 @@ abstract public class Interpreter
 	}
 
 	/**
-	 * Set an expression tracepoint. A tracepoint does not stop execution, but
-	 * evaluates an expression before continuing.
-	 *
-	 * @param exp The expression to trace.
-	 * @param trace The expression to evaluate.
+	 * Set an expression tracepoint. A tracepoint does not stop execution, but evaluates an expression before
+	 * continuing.
+	 * 
+	 * @param exp
+	 *            The expression to trace.
+	 * @param trace
+	 *            The expression to evaluate.
 	 * @return The Breakpoint object created.
-	 *
 	 * @throws LexException
 	 * @throws ParserException
 	 */
 
 	public Breakpoint setTracepoint(PExp exp, String trace)
-		throws ParserException, LexException
+			throws ParserException, LexException
 	{
 		BreakpointManager.setBreakpoint(exp, new Tracepoint(exp.getLocation(), ++nextbreakpoint, trace));
 		breakpoints.put(nextbreakpoint, BreakpointManager.getBreakpoint(exp));
@@ -399,19 +438,19 @@ abstract public class Interpreter
 	}
 
 	/**
-	 * Set a statement breakpoint. A breakpoint stops execution and allows
-	 * the user to query the environment.
-	 *
-	 * @param stmt The statement at which to stop.
-	 * @param condition The condition when to stop.
+	 * Set a statement breakpoint. A breakpoint stops execution and allows the user to query the environment.
+	 * 
+	 * @param stmt
+	 *            The statement at which to stop.
+	 * @param condition
+	 *            The condition when to stop.
 	 * @return The Breakpoint object created.
-	 *
 	 * @throws LexException
 	 * @throws ParserException
 	 */
 
 	public Breakpoint setBreakpoint(PStm stmt, String condition)
-		throws ParserException, LexException
+			throws ParserException, LexException
 	{
 		BreakpointManager.setBreakpoint(stmt, new Stoppoint(stmt.getLocation(), ++nextbreakpoint, condition));
 		breakpoints.put(nextbreakpoint, BreakpointManager.getBreakpoint(stmt));
@@ -419,19 +458,19 @@ abstract public class Interpreter
 	}
 
 	/**
-	 * Set an expression breakpoint. A breakpoint stops execution and allows
-	 * the user to query the environment.
-	 *
-	 * @param exp The expression at which to stop.
-	 * @param condition The condition when to stop.
+	 * Set an expression breakpoint. A breakpoint stops execution and allows the user to query the environment.
+	 * 
+	 * @param exp
+	 *            The expression at which to stop.
+	 * @param condition
+	 *            The condition when to stop.
 	 * @return The Breakpoint object created.
 	 * @throws LexException
 	 * @throws ParserException
-	 *
 	 */
 
 	public Breakpoint setBreakpoint(PExp exp, String condition)
-		throws ParserException, LexException
+			throws ParserException, LexException
 	{
 		BreakpointManager.setBreakpoint(exp, new Stoppoint(exp.getLocation(), ++nextbreakpoint, condition));
 		breakpoints.put(nextbreakpoint, BreakpointManager.getBreakpoint(exp));
@@ -440,8 +479,9 @@ abstract public class Interpreter
 
 	/**
 	 * Clear the breakpoint given by the number.
-	 *
-	 * @param bpno The breakpoint number to remove.
+	 * 
+	 * @param bpno
+	 *            The breakpoint number to remove.
 	 * @return The breakpoint object removed, or null.
 	 */
 
@@ -456,64 +496,60 @@ abstract public class Interpreter
 			if (stmt != null)
 			{
 				BreakpointManager.setBreakpoint(stmt, new Breakpoint(stmt.getLocation()));
-			}
-			else
+			} else
 			{
 				PExp exp = findExpression(old.location.getFile(), old.location.getStartLine());
-				assert (exp != null) : "Cannot locate old breakpoint?";
+				assert exp != null : "Cannot locate old breakpoint?";
 				BreakpointManager.setBreakpoint(exp, new Breakpoint(exp.getLocation()));
 			}
 		}
 
-		return old;		// null if not found
+		return old; // null if not found
 	}
 
 	public void clearBreakpointHits()
 	{
-		for (Entry<Integer, Breakpoint> e: breakpoints.entrySet())
+		for (Entry<Integer, Breakpoint> e : breakpoints.entrySet())
 		{
 			e.getValue().clearHits();
 		}
 	}
 
 	abstract protected PExp parseExpression(String line, String module)
-		throws Exception;
+			throws Exception;
 
-	public PType typeCheck(PExp expr, Environment env)
-		throws Exception
+	public PType typeCheck(PExp expr, Environment env) throws Exception
 	{
 		TypeChecker.clearErrors();
-		
+
 		try
 		{
-			PType type = expr.apply(new TypeCheckVisitor(), new TypeCheckInfo(assistantFactory,env, NameScope.NAMESANDSTATE));
-			
+			PType type = expr.apply(new TypeCheckVisitor(), new TypeCheckInfo(assistantFactory, env, NameScope.NAMESANDSTATE));
+
 			if (TypeChecker.getErrorCount() > 0)
 			{
 				throw new VDMErrorsException(TypeChecker.getErrors());
 			}
-			
+
 			return type;
 		} catch (Exception e)
 		{
 			throw e;
-		}catch(Throwable e)
+		} catch (Throwable e)
 		{
 			e.printStackTrace();
 		}
 
 		return null;
 
-		
 	}
 
-	public PType typeCheck(PStm stmt, Environment env)
-		throws Exception
+	public PType typeCheck(PStm stmt, Environment env) throws Exception
 	{
 		TypeChecker.clearErrors();
 		try
 		{
-			PType type = stmt.apply(new TypeCheckVisitor(), new TypeCheckInfo(assistantFactory,env, NameScope.NAMESANDSTATE));
+			PType type = stmt.apply(new TypeCheckVisitor(), new TypeCheckInfo(assistantFactory, env, NameScope.NAMESANDSTATE));
 
 			if (TypeChecker.getErrorCount() > 0)
 			{
@@ -521,10 +557,10 @@ abstract public class Interpreter
 			}
 
 			return type;
-		}catch(Exception e)
+		} catch (Exception e)
 		{
 			throw e;
-		}catch (Throwable e)
+		} catch (Throwable e)
 		{
 			e.printStackTrace();
 		}
@@ -539,18 +575,22 @@ abstract public class Interpreter
 	}
 
 	/**
-	 * @param classname Unused.
+	 * @param classname
+	 *            Unused.
+	 * @return the class found or null
 	 */
 	public SClassDefinition findClass(String classname)
 	{
 		assert false : "findClass cannot be called for modules";
 		return null;
 	}
-	
+
 	public abstract PType findType(String typename);
 
 	/**
-	 * @param module Unused.
+	 * @param module
+	 *            Unused.
+	 * @return the module found or null
 	 */
 	public AModuleModules findModule(String module)
 	{
@@ -565,18 +605,17 @@ abstract public class Interpreter
 		writer = pw;
 	}
 
-	abstract protected ANamedTraceDefinition findTraceDefinition(LexNameToken name);
+	abstract protected ANamedTraceDefinition findTraceDefinition(
+			LexNameToken name);
 
 	public void runtrace(String name, int testNo, boolean debug)
-		throws Exception
+			throws Exception
 	{
 		runtrace(name, testNo, debug, 1.0F, TraceReductionType.NONE, 1234);
 	}
 
-	public boolean runtrace(
-		String name, int testNo, boolean debug,
-		float subset, TraceReductionType type, long seed)
-		throws Exception
+	public boolean runtrace(String name, int testNo, boolean debug,
+			float subset, TraceReductionType type, long seed) throws Exception
 	{
 		LexTokenReader ltr = new LexTokenReader(name, Dialect.VDM_SL);
 		LexToken token = ltr.nextToken();
@@ -586,17 +625,17 @@ abstract public class Interpreter
 		switch (token.type)
 		{
 			case NAME:
-				lexname = (LexNameToken)token;
+				lexname = (LexNameToken) token;
 
-				if (Settings.dialect == Dialect.VDM_SL &&
-					!lexname.module.equals(getDefaultName()))
+				if (Settings.dialect == Dialect.VDM_SL
+						&& !lexname.module.equals(getDefaultName()))
 				{
 					setDefaultName(lexname.module);
 				}
 				break;
 
 			case IDENTIFIER:
-				lexname = new LexNameToken(getDefaultName(), (LexIdentifierToken)token);
+				lexname = new LexNameToken(getDefaultName(), (LexIdentifierToken) token);
 				break;
 
 			default:
@@ -616,7 +655,7 @@ abstract public class Interpreter
 
 		ctxt = getInitialTraceContext(tracedef, debug);
 
-		tests =ANamedTraceDefinitionAssistantInterpreter.getTests(tracedef,ctxt, subset, type, seed);
+		tests = ctxt.assistantFactory.createANamedTraceDefinitionAssistant().getTests(tracedef, ctxt, subset, type, seed);
 
 		boolean wasDBGP = Settings.usingDBGP;
 		boolean wasCMD = Settings.usingCmdLine;
@@ -634,15 +673,15 @@ abstract public class Interpreter
 
 		if (testNo > tests.size())
 		{
-			throw new Exception("Trace " + lexname +
-				" only has " + tests.size() + " tests");
+			throw new Exception("Trace " + lexname + " only has "
+					+ tests.size() + " tests");
 		}
 
 		int n = 1;
 		boolean failed = false;
 		writer.println("Generated " + tests.size() + " tests");
-		
-		for (CallSequence test: tests)
+
+		for (CallSequence test : tests)
 		{
 			if (testNo > 0 && n != testNo)
 			{
@@ -655,24 +694,23 @@ abstract public class Interpreter
 
 			if (test.getFilter() > 0)
 			{
-    			writer.println("Test " + n + " = " + clean);
-				writer.println(
-					"Test " + n + " FILTERED by test " + test.getFilter());
-			}
-			else
+				writer.println("Test " + n + " = " + clean);
+				writer.println("Test " + n + " FILTERED by test "
+						+ test.getFilter());
+			} else
 			{
 				// Initialize completely between every run...
-    			init(ctxt.threadState.dbgp);
-    			List<Object> result = runOneTrace(tracedef, test, debug);
-    			tests.filter(result, test, n);
+				init(ctxt.threadState.dbgp);
+				List<Object> result = runOneTrace(tracedef, test, debug);
+				tests.filter(result, test, n);
 
-    			writer.println("Test " + n + " = " + clean);
-    			writer.println("Result = " + result);    			
-    			
-    			if (result.lastIndexOf(Verdict.PASSED) == -1)
-    			{
-    				failed = true;	// Not passed => failed.
-    			}
+				writer.println("Test " + n + " = " + clean);
+				writer.println("Result = " + result);
+
+				if (result.lastIndexOf(Verdict.PASSED) == -1)
+				{
+					failed = true; // Not passed => failed.
+				}
 			}
 
 			n++;
@@ -681,13 +719,14 @@ abstract public class Interpreter
 		init(null);
 		Settings.usingCmdLine = wasCMD;
 		Settings.usingDBGP = wasDBGP;
-		
+
 		return !failed;
 	}
 
-	abstract public List<Object> runOneTrace(
-			ANamedTraceDefinition tracedef, CallSequence test, boolean debug) throws AnalysisException;
+	abstract public List<Object> runOneTrace(ANamedTraceDefinition tracedef,
+			CallSequence test, boolean debug) throws AnalysisException;
 
-
-	abstract public Context getInitialTraceContext(ANamedTraceDefinition tracedef, boolean debug) throws ValueException, AnalysisException;
+	abstract public Context getInitialTraceContext(
+			ANamedTraceDefinition tracedef, boolean debug)
+			throws ValueException, AnalysisException;
 }

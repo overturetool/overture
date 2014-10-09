@@ -1,0 +1,23 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        return f();
+    }
+
+    public static Number f() {
+        return Thread.currentThread().getId();
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########

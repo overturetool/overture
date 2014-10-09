@@ -27,10 +27,6 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.interpreter.runtime.Context;
-import org.overture.interpreter.runtime.ValueException;
-
-
-
 
 public class CompFunctionValue extends FunctionValue
 {
@@ -40,9 +36,8 @@ public class CompFunctionValue extends FunctionValue
 
 	public CompFunctionValue(FunctionValue f1, FunctionValue f2)
 	{
-		super(f1.location,
-			AstFactory.newAFunctionType(f1.location,
-				f1.type.getPartial() || f2.type.getPartial(), f2.type.getParameters(), f1.type.getResult()), "comp");
+		super(f1.location, AstFactory.newAFunctionType(f1.location, f1.type.getPartial()
+				|| f2.type.getPartial(), f2.type.getParameters(), f1.type.getResult()), "comp");
 		this.ff1 = f1;
 		this.ff2 = f2;
 	}
@@ -54,8 +49,8 @@ public class CompFunctionValue extends FunctionValue
 	}
 
 	@Override
-	public Value eval(
-		ILexLocation from, ValueList argValues, Context ctxt) throws AnalysisException
+	public Value eval(ILexLocation from, ValueList argValues, Context ctxt)
+			throws AnalysisException
 	{
 		ValueList f1arg = new ValueList();
 		f1arg.add(ff2.eval(from, argValues, ctxt));
@@ -67,13 +62,13 @@ public class CompFunctionValue extends FunctionValue
 	{
 		if (other instanceof Value)
 		{
-			Value val = ((Value)other).deref();
+			Value val = ((Value) other).deref();
 
-    		if (val instanceof CompFunctionValue)
-    		{
-    			CompFunctionValue ov = (CompFunctionValue)val;
-    			return ov.ff1.equals(ff1) && ov.ff2.equals(ff2);
-    		}
+			if (val instanceof CompFunctionValue)
+			{
+				CompFunctionValue ov = (CompFunctionValue) val;
+				return ov.ff1.equals(ff1) && ov.ff2.equals(ff2);
+			}
 		}
 
 		return false;

@@ -29,7 +29,6 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.interpreter.runtime.Context;
 
-
 public class ValueListenerList extends Vector<ValueListener>
 {
 	private static final long serialVersionUID = 1L;
@@ -39,9 +38,10 @@ public class ValueListenerList extends Vector<ValueListener>
 		add(listener);
 	}
 
-	public void changedValue(ILexLocation location, Value value, Context ctxt) throws AnalysisException
+	public void changedValue(ILexLocation location, Value value, Context ctxt)
+			throws AnalysisException
 	{
-		for (ValueListener vl: this)
+		for (ValueListener vl : this)
 		{
 			vl.changedValue(location, value, ctxt);
 		}

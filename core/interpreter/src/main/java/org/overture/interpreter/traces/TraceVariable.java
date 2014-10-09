@@ -28,7 +28,6 @@ import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.types.PType;
 import org.overture.interpreter.values.Value;
 
-
 public class TraceVariable
 {
 	public final ILexLocation location;
@@ -37,7 +36,8 @@ public class TraceVariable
 	public final PType type;
 	public final boolean clone;
 
-	public TraceVariable(ILexLocation location, ILexNameToken name, Value value, PType type, boolean clone)
+	public TraceVariable(ILexLocation location, ILexNameToken name,
+			Value value, PType type, boolean clone)
 	{
 		this.location = location;
 		this.name = name;

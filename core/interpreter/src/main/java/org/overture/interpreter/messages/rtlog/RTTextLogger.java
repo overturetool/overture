@@ -84,7 +84,7 @@ public class RTTextLogger implements IRTLogger
 		if (logfile != null)
 		{
 			PrintWriter writer = null;
-			
+
 			try
 			{
 				writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(logfile, true), "UTF-8"));
@@ -97,7 +97,7 @@ public class RTTextLogger implements IRTLogger
 				e.printStackTrace();
 				return;
 			}
-			
+
 			for (RTMessage event : events)
 			{
 				writer.println(event.getMessage());

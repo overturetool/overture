@@ -23,12 +23,15 @@
 
 package org.overture.pog.obligation;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.ast.expressions.ANotEqualBinaryExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstExpressionFactory;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.pog.pub.IPOContextStack;
+import org.overture.pog.pub.IPogAssistantFactory;
+import org.overture.pog.pub.POType;
 
 public class NonZeroObligation extends ProofObligation
 {
@@ -37,18 +40,18 @@ public class NonZeroObligation extends ProofObligation
 	 */
 	private static final long serialVersionUID = 5773921447005368923L;
 
-	public NonZeroObligation(
-		ILexLocation location, PExp exp, IPOContextStack ctxt)
+	public NonZeroObligation(ILexLocation location, PExp exp,
+			IPOContextStack ctxt, IPogAssistantFactory af)
+			throws AnalysisException
 	{
-		super(exp, POType.NON_ZERO, ctxt, location);
-		
+		super(exp, POType.NON_ZERO, ctxt, location, af);
+
 		// exp <> 0
-		
-		AIntLiteralExp zeroExp = getIntLiteral(0);		
+
+		AIntLiteralExp zeroExp = getIntLiteral(0);
 		ANotEqualBinaryExp notEqualsExp = AstExpressionFactory.newANotEqualBinaryExp(exp.clone(), zeroExp);
-		
-		
-//		valuetree.setContext(ctxt.getContextNodeList());
+
+		stitch = notEqualsExp;
 		valuetree.setPredicate(ctxt.getPredWithContext(notEqualsExp));
 	}
 }

@@ -1,12 +1,39 @@
+/*
+ * #%~
+ * VDM Code Generator
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.codegen.assistant;
 
+import java.util.List;
+
+import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.expressions.PExp;
+import org.overture.ast.statements.ACaseAlternativeStm;
+import org.overture.ast.types.AUnionType;
+import org.overture.ast.types.PType;
+import org.overture.codegen.cgast.SStmCG;
+import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
-import org.overture.codegen.cgast.expressions.ALetBeStExpCG;
-import org.overture.codegen.cgast.expressions.ALetDefExpCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
-import org.overture.codegen.cgast.statements.ALetBeStStmCG;
-import org.overture.codegen.cgast.statements.ALetDefStmCG;
-import org.overture.codegen.cgast.statements.AReturnStmCG;
+import org.overture.codegen.cgast.statements.ACaseAltStmStmCG;
+import org.overture.codegen.ir.IRInfo;
 
 public class StmAssistantCG extends AssistantBase
 {
@@ -15,38 +42,49 @@ public class StmAssistantCG extends AssistantBase
 		super(assistantManager);
 	}
 
-	public ALetDefStmCG convertToLetDefStm(ALetDefExpCG letDefExp)
-	{
-		AReturnStmCG returnStm = new AReturnStmCG();
-		returnStm.setExp(letDefExp.getExp());
-
-		
-		ALetDefStmCG letDefStm = new ALetDefStmCG();
-		
-		letDefStm.setLocalDefs(letDefExp.getLocalDefs());
-		letDefStm.setStm(returnStm);
-		
-		return letDefStm;
-	}
-	
-	public ALetBeStStmCG convertToLetBeStStm(ALetBeStExpCG letBeStExp)
-	{
-		AReturnStmCG returnStm = new AReturnStmCG();
-		returnStm.setExp(letBeStExp.getValue());
-		
-		ALetBeStStmCG letBeStStm = new ALetBeStStmCG();
-		letBeStStm.setHeader(letBeStExp.getHeader());
-		letBeStStm.setStatement(returnStm);
-		
-		return letBeStStm;
-	}
-	
 	public void injectDeclAsStm(ABlockStmCG block, AVarLocalDeclCG decl)
 	{
 		ABlockStmCG wrappingBlock = new ABlockStmCG();
-		
+
 		wrappingBlock.getLocalDefs().add(decl);
-		
+
 		block.getStatements().add(wrappingBlock);
+	}
+
+	public void handleAlternativesCasesStm(IRInfo question, PExp exp,
+			List<ACaseAlternativeStm> cases, List<ACaseAltStmStmCG> casesCg)
+			throws AnalysisException
+	{
+		for (ACaseAlternativeStm alt : cases)
+		{
+			SStmCG altCg = alt.apply(question.getStmVisitor(), question);
+			casesCg.add((ACaseAltStmStmCG) altCg);
+		}
+
+		PType expType = question.getTypeAssistant().resolve(exp.getType());
+		
+		if (expType instanceof AUnionType)
+		{
+			AUnionType unionType = ((AUnionType) expType).clone();
+			question.getTcFactory().createAUnionTypeAssistant().expand(unionType);
+
+			for (int i = 0; i < cases.size(); i++)
+			{
+				ACaseAlternativeStm vdmCase = cases.get(i);
+				ACaseAltStmStmCG cgCase = casesCg.get(i);
+
+				PType patternType = question.getAssistantManager().getTypeAssistant().getType(question, unionType, vdmCase.getPattern());
+				STypeCG patternTypeCg = patternType.apply(question.getTypeVisitor(), question);
+				cgCase.setPatternType(patternTypeCg);
+			}
+		} else
+		{
+			STypeCG expTypeCg = expType.apply(question.getTypeVisitor(), question);
+
+			for (ACaseAltStmStmCG altCg : casesCg)
+			{
+				altCg.setPatternType(expTypeCg.clone());
+			}
+		}
 	}
 }

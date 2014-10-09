@@ -22,7 +22,6 @@ import org.overture.ast.lex.Dialect;
 import org.overture.ast.node.INode;
 import org.overture.config.Settings;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.PatternMatchException;
 import org.overture.interpreter.runtime.ValueException;
@@ -36,27 +35,23 @@ import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueSet;
 
 /***************************************
- * 
- * 
- * 
  * @author gkanos
- *
  ****************************************/
-public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePairList>
+public class NamedValueLister extends
+		QuestionAnswerAdaptor<Context, NameValuePairList>
 {
 	protected IInterpreterAssistantFactory af;
-	
+
 	public NamedValueLister(IInterpreterAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public NameValuePairList caseAAssignmentDefinition(
 			AAssignmentDefinition def, Context initialContext)
 			throws AnalysisException
 	{
-		//return AAssignmentDefinitionAssistantInterpreter.getNamedValues(def, initialContext);
 		try
 		{
 			Value v = def.getExpression().apply(VdmRuntime.getExpressionEvaluator(), initialContext);
@@ -76,12 +71,11 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 			return null;
 		}
 	}
-	
+
 	@Override
 	public NameValuePairList caseAEqualsDefinition(AEqualsDefinition def,
 			Context initialContext) throws AnalysisException
 	{
-		//return AEqualsDefinitionAssistantInterpreter.getNamedValues(def, initialContext);
 		Value v;
 		try
 		{
@@ -147,13 +141,12 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 
 		return nvpl;
 	}
-	
+
 	@Override
 	public NameValuePairList caseAExplicitFunctionDefinition(
 			AExplicitFunctionDefinition def, Context initialContext)
 			throws AnalysisException
 	{
-		//return AExplicitFunctionDefinitionAssistantInterpreter.getNamedValues(def, initialContext);
 		NameValuePairList nvl = new NameValuePairList();
 		Context free = initialContext.getVisibleVariables();
 
@@ -188,13 +181,12 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 
 		return nvl;
 	}
-	
+
 	@Override
 	public NameValuePairList caseAExplicitOperationDefinition(
 			AExplicitOperationDefinition def, Context initialContext)
 			throws AnalysisException
 	{
-		//return AExplicitOperationDefinitionAssistantInterpreter.getNamedValues(def, initialContext);
 		NameValuePairList nvl = new NameValuePairList();
 
 		FunctionValue prefunc = def.getPredef() == null ? null
@@ -222,13 +214,12 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 
 		return nvl;
 	}
-	
+
 	@Override
 	public NameValuePairList caseAImplicitFunctionDefinition(
 			AImplicitFunctionDefinition def, Context initialContext)
 			throws AnalysisException
 	{
-		//return AImplicitFunctionDefinitionAssistantInterpreter.getNamedValues(def, initialContext);
 		NameValuePairList nvl = new NameValuePairList();
 		Context free = initialContext.getVisibleVariables();
 
@@ -267,13 +258,12 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 
 		return nvl;
 	}
-	
+
 	@Override
 	public NameValuePairList caseAImplicitOperationDefinition(
 			AImplicitOperationDefinition def, Context initialContext)
 			throws AnalysisException
 	{
-		//return AImplicitOperationDefinitionAssistantInterpreter.getNamedValues(def, initialContext);
 		NameValuePairList nvl = new NameValuePairList();
 
 		FunctionValue prefunc = def.getPredef() == null ? null
@@ -305,12 +295,11 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 
 		return nvl;
 	}
-	
+
 	@Override
 	public NameValuePairList caseAImportedDefinition(AImportedDefinition def,
 			Context initialContext) throws AnalysisException
 	{
-		//return AImportedDefinitionAssistantInterpreter.getNamedValues(def, initialContext);
 		NameValuePairList renamed = new NameValuePairList();
 
 		for (NameValuePair nv : af.createPDefinitionAssistant().getNamedValues(def.getDef(), initialContext))
@@ -323,13 +312,11 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 
 		return renamed;
 	}
-	
+
 	@Override
-	public NameValuePairList caseAInheritedDefinition(
-			AInheritedDefinition def, Context initialContext)
-			throws AnalysisException
+	public NameValuePairList caseAInheritedDefinition(AInheritedDefinition def,
+			Context initialContext) throws AnalysisException
 	{
-		//return AInheritedDefinitionAssistantInterpreter.getNamedValues(def, initialContext);
 		NameValuePairList renamed = new NameValuePairList();
 
 		if (def.getSuperdef() instanceof AUntypedDefinition)
@@ -347,13 +334,12 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 
 		return renamed;
 	}
-	
+
 	@Override
 	public NameValuePairList caseAInstanceVariableDefinition(
 			AInstanceVariableDefinition def, Context initialContext)
 			throws AnalysisException
 	{
-		//return AInstanceVariableDefinitionAssistantInterpreter.getNamedValues(def, initialContext);
 		try
 		{
 			Value v = def.getExpression().apply(VdmRuntime.getExpressionEvaluator(), initialContext);
@@ -375,21 +361,19 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 			return null;
 		}
 	}
-	
+
 	@Override
 	public NameValuePairList caseALocalDefinition(ALocalDefinition def,
 			Context initialContext) throws AnalysisException
 	{
-		//return ALocalDefinitionAssistantInterpreter.getNamedValues(def, initialContext);
 		NameValuePair nvp = new NameValuePair(def.getName(), initialContext.lookup(def.getName()));
 		return new NameValuePairList(nvp);
 	}
-	
+
 	@Override
 	public NameValuePairList caseARenamedDefinition(ARenamedDefinition def,
 			Context initialContext) throws AnalysisException
 	{
-		//return ARenamedDefinitionAssistantInterpreter.getNamedValues(def, initialContext);
 		NameValuePairList renamed = new NameValuePairList();
 
 		for (NameValuePair nv : af.createPDefinitionAssistant().getNamedValues(def.getDef(), initialContext))
@@ -411,16 +395,13 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 	public NameValuePairList caseAThreadDefinition(AThreadDefinition def,
 			Context initialContext) throws AnalysisException
 	{
-		//return AThreadDefinitionAssistantInterpreter.getNamedValues(def, initialContext);
-		//return PDefinitionAssistantInterpreter.getNamedValues(d.getOperationDef(), initialContext);
 		return def.getOperationDef().apply(THIS, initialContext);
 	}
-	
+
 	@Override
 	public NameValuePairList caseATypeDefinition(ATypeDefinition def,
 			Context initialContext) throws AnalysisException
 	{
-		//return ATypeDefinitionAssistantInterpreter.getNamedValues(def, initialContext);
 		NameValuePairList nvl = new NameValuePairList();
 
 		if (def.getInvdef() != null)
@@ -431,21 +412,19 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 
 		return nvl;
 	}
-	
+
 	@Override
 	public NameValuePairList caseAUntypedDefinition(AUntypedDefinition def,
 			Context initialContext) throws AnalysisException
 	{
-		//return AUntypedDefinitionAssistantInterpreter.getNamedValues(def, initialContext);
 		assert false : "Can't get name/values of untyped definition?";
 		return null;
 	}
-	
+
 	@Override
 	public NameValuePairList caseAValueDefinition(AValueDefinition def,
 			Context initialContext) throws AnalysisException
 	{
-		//return AValueDefinitionAssistantInterpreter.getNamedValues(def, initialContext);
 		Value v = null;
 
 		try
@@ -466,13 +445,13 @@ public class NamedValueLister extends QuestionAnswerAdaptor<Context, NameValuePa
 
 		return null;
 	}
-	
+
 	@Override
 	public NameValuePairList defaultPDefinition(PDefinition def,
 			Context initialContext) throws AnalysisException
 	{
 		return new NameValuePairList(); // Overridden
-	}	
+	}
 
 	@Override
 	public NameValuePairList createNewReturnValue(INode node, Context question)

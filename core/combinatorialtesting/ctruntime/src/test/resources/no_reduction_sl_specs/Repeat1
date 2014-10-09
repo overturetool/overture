@@ -1,0 +1,9 @@
+operations
+
+op : () ==> ()
+op () == skip;
+
+traces
+
+T1:
+(op() ){1,50};

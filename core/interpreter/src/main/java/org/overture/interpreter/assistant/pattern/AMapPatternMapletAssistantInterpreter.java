@@ -9,7 +9,6 @@ import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AMapletPatternMaplet;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
-import org.overture.interpreter.runtime.PatternMatchException;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.Value;
 
@@ -21,25 +20,12 @@ public class AMapPatternMapletAssistantInterpreter
 	@SuppressWarnings("static-access")
 	public AMapPatternMapletAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		//super(af);
+		// super(af);
 		this.af = af;
 	}
 
-//	public static boolean isConstrained(AMapletPatternMaplet p)
-//	{
-//		if (af.isConstrained(p.getFrom())
-//				|| PPatternAssistantInterpreter.isConstrained(p.getTo()))
-//		{
-//			return true;
-//		}
-//
-//		return af.createPTypeAssistant().isUnion(af.createPPatternAssistant().getPossibleType(p.getFrom()))
-//				|| af.createPTypeAssistant().isUnion(af.createPPatternAssistant().getPossibleType(p.getTo()));
-//	}
-
-	public static List<NameValuePairList> getAllNamedValues(
-			AMapletPatternMaplet p, Entry<Value, Value> maplet, Context ctxt)
-			throws AnalysisException
+	public List<NameValuePairList> getAllNamedValues(AMapletPatternMaplet p,
+			Entry<Value, Value> maplet, Context ctxt) throws AnalysisException
 	{
 		List<NameValuePairList> flist = af.createPPatternAssistant().getAllNamedValues(p.getFrom(), maplet.getKey(), ctxt);
 		List<NameValuePairList> tlist = af.createPPatternAssistant().getAllNamedValues(p.getTo(), maplet.getValue(), ctxt);
@@ -59,8 +45,7 @@ public class AMapPatternMapletAssistantInterpreter
 		return results;
 	}
 
-	public static List<AIdentifierPattern> findIdentifiers(
-			AMapletPatternMaplet p)
+	public List<AIdentifierPattern> findIdentifiers(AMapletPatternMaplet p)
 	{
 		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
 

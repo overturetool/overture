@@ -25,21 +25,30 @@ package org.overture.interpreter.scheduler;
 
 import java.io.Serializable;
 
-
 abstract public class SchedulingPolicy implements Serializable
 {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	abstract public boolean reschedule();
+
 	abstract public ISchedulableThread getThread();
+
 	abstract public long getTimeslice();
+
 	abstract public void register(ISchedulableThread thread, long priority);
+
 	abstract public void unregister(ISchedulableThread thread);
+
 	abstract public void reset();
+
 	abstract public void advance();
+
 	abstract public boolean hasActive();
+
 	abstract public boolean hasPriorities();
+
 	abstract public String getStatus();
+
 	abstract public long timeToNextAlarm();
 
 	public static SchedulingPolicy factory(String type)
@@ -49,6 +58,6 @@ abstract public class SchedulingPolicy implements Serializable
 			return new FPPolicy();
 		}
 
-		return new FCFSPolicy();		// Default for everything!
+		return new FCFSPolicy(); // Default for everything!
 	}
 }

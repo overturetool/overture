@@ -1,0 +1,17 @@
+class Entry
+
+functions
+
+public f :  () -> nat
+f () ==
+	let mk_(a,33) in set {mk_(1,11), mk_(2,22), mk_(3,33), mk_(4,44)}
+	in
+		a;
+		
+operations
+	
+public static Run : () ==> ?
+Run () ==
+	return f();
+
+end Entry

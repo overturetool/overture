@@ -1,0 +1,109 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class A {
+    public A() {
+    }
+
+    public void op(final Number a, final Boolean b, final Number c) {
+        Entry.c = Entry.c.longValue() + 1L;
+    }
+
+    public String toString() {
+        return "A{}";
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class B {
+    public B() {
+    }
+
+    public void op(final Number a, final Boolean b, final Boolean c) {
+        Entry.c = Entry.c.longValue() + 2L;
+    }
+
+    public String toString() {
+        return "B{}";
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class C {
+    public C() {
+    }
+
+    public void op(final Number a, final Boolean b, final Character c) {
+        Entry.c = Entry.c.longValue() + 3L;
+    }
+
+    public String toString() {
+        return "C{}";
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public static Number c = 0L;
+
+    public Entry() {
+    }
+
+    public static Number Run() {
+        Object a = 1L;
+        Object b = true;
+        Object c1 = 1L;
+        Object c2 = true;
+        Object c3 = 'a';
+        VDMSeq objs = SeqUtil.seq(new A(), new B(), new C());
+        long toVar_1 = 3L;
+
+        for (Long i = 1L; i <= toVar_1; i++) {
+            Object callStmObj_1 = objs.get(Utils.index(i));
+
+            if (callStmObj_1 instanceof A) {
+                ((A) callStmObj_1).op(((Number) a), ((Boolean) b),
+                    ((Number) ((i.longValue() == 1L) ? c1
+                                                     : ((i.longValue() == 2L)
+                    ? c2 : c3))));
+            } else if (callStmObj_1 instanceof B) {
+                ((B) callStmObj_1).op(((Number) a), ((Boolean) b),
+                    ((Boolean) ((i.longValue() == 1L) ? c1
+                                                      : ((i.longValue() == 2L)
+                    ? c2 : c3))));
+            } else if (callStmObj_1 instanceof C) {
+                ((C) callStmObj_1).op(((Number) a), ((Boolean) b),
+                    ((Character) ((i.longValue() == 1L) ? c1
+                                                        : ((i.longValue() == 2L)
+                    ? c2 : c3))));
+            } else {
+                throw new RuntimeException("Missing operation member: op");
+            }
+        }
+
+        return c;
+    }
+
+    public String toString() {
+        return "Entry{" + "c := " + Utils.toString(c) + "}";
+    }
+}
+
+##########

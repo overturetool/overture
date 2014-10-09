@@ -19,14 +19,18 @@ public class Entry {
             Number x = ((Number) iterator_1.next());
 
             if (1L == 1L) {
-                setCompResult_1 = SetUtil.union(setCompResult_1.clone(),
+                setCompResult_1 = SetUtil.union(Utils.clone(setCompResult_1),
                         SetUtil.set(x.longValue() * 2L));
             }
         }
 
-        VDMSet x = setCompResult_1.clone();
+        VDMSet x = Utils.clone(setCompResult_1);
 
-        return x.clone();
+        return Utils.clone(x);
+    }
+
+    public String toString() {
+        return "Entry{}";
     }
 }
 

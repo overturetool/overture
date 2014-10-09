@@ -1,10 +1,31 @@
+/*
+ * #%~
+ * VDM Code Generator
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.codegen.tests.utils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import org.overture.codegen.constants.IRConstants;
+import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.config.Release;
 
@@ -16,10 +37,11 @@ public class ExecutableSpecTestHandler extends EntryBasedTestHandler
 	}
 
 	@Override
-	public void writeGeneratedCode(File parent, File resultFile) throws IOException
+	public void writeGeneratedCode(File parent, File resultFile)
+			throws IOException
 	{
 		injectArgIntoMainClassFile(parent, JAVA_ENTRY_CALL);
-		
+
 		List<StringBuffer> content = TestUtils.readJavaModulesFromResultFile(resultFile);
 
 		if (content.isEmpty())
@@ -34,38 +56,40 @@ public class ExecutableSpecTestHandler extends EntryBasedTestHandler
 		{
 			String className = TestUtils.getJavaModuleName(classCgStr);
 			File tempFile = consTempFile(className, parent, classCgStr);
-			
+
 			injectSerializableInterface(classCgStr, className);
 
 			writeToFile(classCgStr.toString(), tempFile);
-		}		
+		}
 	}
 
-	private void injectSerializableInterface(StringBuffer classCgStr, String className)
+	private void injectSerializableInterface(StringBuffer classCgStr,
+			String className)
 	{
-		if(!className.equals(IRConstants.QUOTES_INTERFACE_NAME) && !className.startsWith(JavaCodeGen.INTERFACE_NAME_PREFIX))
+		if (!className.equals(IRConstants.QUOTES_INTERFACE_NAME)
+				&& !className.startsWith(JavaCodeGen.INTERFACE_NAME_PREFIX))
 		{
 			int classNameIdx = classCgStr.indexOf(className);
-			
+
 			int prv = classCgStr.indexOf("private");
 			int pub = classCgStr.indexOf("public");
 			int abstr = classCgStr.indexOf("abstract");
-			
+
 			int min = prv >= 0 && prv < pub ? prv : pub;
-			min = abstr >= 0  && abstr < min ? abstr : min;
-			
-			if(min < 0)
+			min = abstr >= 0 && abstr < min ? abstr : min;
+
+			if (min < 0)
 			{
 				min = classNameIdx;
 			}
-			
+
 			int firstLeftBraceIdx = classCgStr.indexOf("{", classNameIdx);
-			
+
 			String toReplace = classCgStr.substring(min, firstLeftBraceIdx);
-			
-			String replacement = "import java.io.*;\n\n" + 
-								 toReplace + " implements Serializable";
-			
+
+			String replacement = "import java.io.*;\n\n" + toReplace
+					+ " implements Serializable";
+
 			classCgStr.replace(min, firstLeftBraceIdx, replacement);
 		}
 	}

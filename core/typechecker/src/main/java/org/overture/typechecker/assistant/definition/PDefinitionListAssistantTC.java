@@ -1,3 +1,24 @@
+/*
+ * #%~
+ * The VDM Type Checker
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.typechecker.assistant.definition;
 
 import java.util.ArrayList;
@@ -8,7 +29,6 @@ import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
-import org.overture.ast.assistant.definition.PDefinitionAssistant;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -58,8 +78,7 @@ public class PDefinitionListAssistantTC
 		return null;
 	}
 
-	public AStateDefinition findStateDefinition(
-			List<PDefinition> definitions)
+	public AStateDefinition findStateDefinition(List<PDefinition> definitions)
 	{
 		for (PDefinition d : definitions)
 		{
@@ -99,8 +118,7 @@ public class PDefinitionListAssistantTC
 		return set;
 	}
 
-	public List<PDefinition> singleDefinitions(
-			List<PDefinition> definitions)
+	public List<PDefinition> singleDefinitions(List<PDefinition> definitions)
 	{
 		List<PDefinition> all = new ArrayList<PDefinition>();
 
@@ -196,7 +214,52 @@ public class PDefinitionListAssistantTC
 	public void setClassDefinition(List<PDefinition> defs,
 			SClassDefinition classDefinition)
 	{
-		PDefinitionAssistant.setClassDefinition(defs, classDefinition);
+		af.createPDefinitionAssistant().setClassDefinition(defs, classDefinition);
 
+	}
+
+	public boolean hasSubclassResponsibilities(List<PDefinition> definitions)
+	{
+		PDefinitionAssistantTC assistant = af.createPDefinitionAssistant();
+
+		for (PDefinition d : definitions)
+		{
+			if (assistant.isSubclassResponsibility(d))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public void removeDuplicates(List<PDefinition> definitions)
+	{
+		LinkedList<PDefinition> fixed = new LinkedList<PDefinition>();
+
+		for (PDefinition d : definitions)
+		{
+			boolean found = false;
+
+			for (PDefinition e : fixed)
+			{
+				if (e.getName() != null && e.getName().equals(d.getName()))
+				{
+					found = true;
+					break;
+				}
+			}
+
+			if (!found)
+			{
+				fixed.add(d);
+			}
+		}
+
+		if (fixed.size() < definitions.size())
+		{
+			definitions.clear();
+			definitions.addAll(fixed);
+		}
 	}
 }

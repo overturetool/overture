@@ -58,11 +58,9 @@ import org.overture.ast.statements.ATixeStm;
 import org.overture.ast.statements.ATixeStmtAlternative;
 import org.overture.ast.statements.ATrapStm;
 import org.overture.ast.statements.AWhileStm;
+import org.overture.ast.statements.PStm;
+import org.overture.ast.statements.SSimpleBlockStm;
 import org.overture.config.Settings;
-import org.overture.interpreter.assistant.statement.ACaseAlternativeStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.AStartStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ATixeStmtAlternativeAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.SSimpleBlockStmAssistantInterpreter;
 import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.messages.rtlog.RTExtendedTextMessage;
 import org.overture.interpreter.messages.rtlog.RTLogger;
@@ -236,7 +234,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		{
 			ctxt.threadState.setAtomic(true);
 			List<ValueListenerList> listenerLists = new Vector<ValueListenerList>(size);
-	
+
 			for (int i = 0; i < size; i++)
 			{
 				UpdatableValue target = (UpdatableValue) targets.get(i);
@@ -245,18 +243,17 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 				target.set(node.getLocation(), values.get(i), ctxt); // No invariant listeners
 				target.listeners = listenerLists.get(i);
 			}
-	
+
 			for (int i = 0; i < size; i++)
 			{
 				ValueListenerList listeners = listenerLists.get(i);
-	
+
 				if (listeners != null)
 				{
 					listeners.changedValue(node.getLocation(), values.get(i), ctxt);
 				}
 			}
-		}
-		finally
+		} finally
 		{
 			ctxt.threadState.setAtomic(false);
 		}
@@ -369,9 +366,11 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 
 		for (ACaseAlternativeStm c : node.getCases())
 		{
-			Value rv = ACaseAlternativeStmAssistantInterpreter.eval(c, val, ctxt);
+			Value rv = ctxt.assistantFactory.createACaseAlternativeStmAssistant().eval(c, val, ctxt);
 			if (rv != null)
+			{
 				return rv;
+			}
 		}
 
 		if (node.getOthers() != null)
@@ -418,22 +417,21 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		{
 			// Already in a timed step, so ignore nesting
 			return node.getStatement().apply(VdmRuntime.getStatementEvaluator(), ctxt);
-		}
-		else
+		} else
 		{
 			// We disable the swapping and time (RT) as cycles evaluation should be "free".
 			Long cycles;
-			
+
 			try
 			{
 				ctxt.threadState.setAtomic(true);
-				cycles = node.getCycles().apply(VdmRuntime.getStatementEvaluator(), ctxt).natValue(ctxt);;
-			}
-			finally
+				cycles = node.getCycles().apply(VdmRuntime.getStatementEvaluator(), ctxt).natValue(ctxt);
+				;
+			} finally
 			{
 				ctxt.threadState.setAtomic(false);
 			}
-			
+
 			me.inOuterTimestep(true);
 			Value rv = node.getStatement().apply(VdmRuntime.getStatementEvaluator(), ctxt);
 			me.inOuterTimestep(false);
@@ -455,18 +453,16 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		{
 			// Already in a timed step, so ignore nesting
 			return node.getStatement().apply(VdmRuntime.getStatementEvaluator(), ctxt);
-		}
-		else
+		} else
 		{
 			// We disable the swapping and time (RT) as duration evaluation should be "free".
 			long step;
-			
+
 			try
 			{
 				ctxt.threadState.setAtomic(true);
 				step = node.getDuration().apply(VdmRuntime.getStatementEvaluator(), ctxt).natValue(ctxt);
-			}
-			finally
+			} finally
 			{
 				ctxt.threadState.setAtomic(false);
 			}
@@ -566,7 +562,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		{
 			long fval = node.getFrom().apply(VdmRuntime.getStatementEvaluator(), ctxt).intValue(ctxt);
 			long tval = node.getTo().apply(VdmRuntime.getStatementEvaluator(), ctxt).intValue(ctxt);
-			long bval = (node.getBy() == null) ? 1
+			long bval = node.getBy() == null ? 1
 					: node.getBy().apply(VdmRuntime.getStatementEvaluator(), ctxt).intValue(ctxt);
 
 			if (bval == 0)
@@ -576,8 +572,8 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 						+ " will never terminate", ctxt);
 			}
 
-			for (long value = fval; (bval > 0 && value <= tval)
-					|| (bval < 0 && value >= tval); value += bval)
+			for (long value = fval; bval > 0 && value <= tval || bval < 0
+					&& value >= tval; value += bval)
 			{
 				Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "for index", ctxt);
 				evalContext.put(node.getVar(), new IntegerValue(value));
@@ -714,7 +710,9 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 				{
 					Value r = elseif.apply(VdmRuntime.getStatementEvaluator(), ctxt);
 					if (r != null)
+					{
 						return r;
+					}
 				}
 
 				if (node.getElseStm() != null)
@@ -857,7 +855,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			evalContext.putList(ctxt.assistantFactory.createPDefinitionAssistant().getNamedValues(d, evalContext));
 		}
 
-		return SSimpleBlockStmAssistantInterpreter.evalBlock(node, evalContext);
+		return this.evalBlock(node, evalContext);
 	}
 
 	@Override
@@ -866,7 +864,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-		return SSimpleBlockStmAssistantInterpreter.evalBlock(node, ctxt);
+		return this.evalBlock(node, ctxt);
 	}
 
 	@Override
@@ -904,14 +902,14 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 					ObjectValue target = v.objectValue(ctxt);
 					OperationValue op = target.getThreadOperation(ctxt);
 
-					AStartStmAssistantInterpreter.start(node, target, op, ctxt);
+					ctxt.assistantFactory.createAStartStmAssistant().start(node, target, op, ctxt);
 				}
 			} else
 			{
 				ObjectValue target = value.objectValue(ctxt);
 				OperationValue op = target.getThreadOperation(ctxt);
 
-				AStartStmAssistantInterpreter.start(node, target, op, ctxt);
+				ctxt.assistantFactory.createAStartStmAssistant().start(node, target, op, ctxt);
 			}
 
 			return new VoidValue();
@@ -920,7 +918,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 	}
-	
+
 	@Override
 	public Value caseAStopStm(AStopStm node, Context ctxt)
 			throws AnalysisException
@@ -935,13 +933,12 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			{
 				ValueSet set = value.setValue(ctxt);
 
-				for (Value v: set)
+				for (Value v : set)
 				{
 					ObjectValue target = v.objectValue(ctxt);
 					stop(target, node.getLocation(), ctxt);
 				}
-			}
-			else
+			} else
 			{
 				ObjectValue target = value.objectValue(ctxt);
 				stop(target, node.getLocation(), ctxt);
@@ -950,34 +947,33 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			// Cause a reschedule so that this thread is stopped, if necessary
 			ISchedulableThread th = BasicSchedulableThread.getThread(Thread.currentThread());
 			th.reschedule(ctxt, node.getLocation());
-			
+
 			return new VoidValue();
-		}
-		catch (ValueException e)
+		} catch (ValueException e)
 		{
 			return VdmRuntimeError.abort(node.getLocation(), e);
 		}
 	}
-	
-	private void stop(ObjectValue target, ILexLocation location, Context ctxt) throws ValueException
+
+	private void stop(ObjectValue target, ILexLocation location, Context ctxt)
+			throws ValueException
 	{
 		List<ISchedulableThread> threads = BasicSchedulableThread.findThreads(target);
 		int count = 0;
-		
+
 		if (target.getCPU() != ctxt.threadState.CPU)
 		{
-			throw new ContextException(4161,
-					"Cannot stop object " + target.objectReference +
-					" on CPU " + target.getCPU().getName() +
-					" from CPU " + ctxt.threadState.CPU,
-					location, ctxt);
+			throw new ContextException(4161, "Cannot stop object "
+					+ target.objectReference + " on CPU "
+					+ target.getCPU().getName() + " from CPU "
+					+ ctxt.threadState.CPU, location, ctxt);
 		}
-		
-		for (ISchedulableThread th: threads)
+
+		for (ISchedulableThread th : threads)
 		{
 			if (th instanceof ObjectThread || th instanceof PeriodicThread)
 			{
-				if (th.stopThread())	// This may stop current thread at next reschedule
+				if (th.stopThread()) // This may stop current thread at next reschedule
 				{
 					count++;
 				}
@@ -986,8 +982,9 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 
 		if (count == 0)
 		{
-			throw new ContextException(4160,
-				"Object #" + target.objectReference + " is not running a thread to stop", location, ctxt);
+			throw new ContextException(4160, "Object #"
+					+ target.objectReference
+					+ " is not running a thread to stop", location, ctxt);
 		}
 	}
 
@@ -1022,7 +1019,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 				{
 					for (ATixeStmtAlternative tsa : node.getTraps())
 					{
-						rv = ATixeStmtAlternativeAssistantInterpreter.eval(tsa, node.getLocation(), exval, ctxt);
+						rv = ctxt.assistantFactory.createATixeStmtAlternativeAssistant().eval(tsa, node.getLocation(), exval, ctxt);
 
 						if (rv != null) // Statement was executed
 						{
@@ -1156,15 +1153,19 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 				}
 
 				if (i == PERIODIC)
+				{
 					node.setPeriod(value);
-				else if (i == JITTER)
+				} else if (i == JITTER)
+				{
 					node.setJitter(value);
-				else if (i == DELAY)
+				} else if (i == DELAY)
+				{
 					node.setDelay(value);
-				else if (i == OFFSET)
+				} else if (i == OFFSET)
+				{
 					node.setOffset(value);
-			}
-			catch (ValueException e)
+				}
+			} catch (ValueException e)
 			{
 				VdmRuntimeError.abort(node.getLocation(), 4157, "Expecting +ive integer in periodic argument "
 						+ (i + 1) + ", was " + argval, ctxt);
@@ -1190,9 +1191,10 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 
 		return null; // Not actually used - see StartStatement
 	}
-	
+
 	@Override
-	public Value caseASporadicStm(ASporadicStm node, Context ctxt) throws AnalysisException
+	public Value caseASporadicStm(ASporadicStm node, Context ctxt)
+			throws AnalysisException
 	{
 		final int MINDELAY = 0;
 		final int MAXDELAY = 1;
@@ -1203,11 +1205,11 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		node.setOffset(0L);
 
 		int i = 0;
-		
-		for (PExp arg: node.getArgs())
+
+		for (PExp arg : node.getArgs())
 		{
 			Value argval = null;
-			
+
 			try
 			{
 				arg.getLocation().hit();
@@ -1216,29 +1218,31 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 
 				if (value < 0)
 				{
-					VdmRuntimeError.abort(node.getLocation(), 4157,
-						"Expecting +ive integer in sporadic argument " + (i+1) + ", was " + value, ctxt);
+					VdmRuntimeError.abort(node.getLocation(), 4157, "Expecting +ive integer in sporadic argument "
+							+ (i + 1) + ", was " + value, ctxt);
 				}
-				
+
 				if (i == MINDELAY)
+				{
 					node.setMinDelay(value);
-				else if (i == MAXDELAY)
+				} else if (i == MAXDELAY)
+				{
 					node.setMaxDelay(value);
-				else if (i == OFFSET)
+				} else if (i == OFFSET)
+				{
 					node.setOffset(value);
-			}
-			catch (ValueException e)
+				}
+			} catch (ValueException e)
 			{
-				VdmRuntimeError.abort(node.getLocation(), 4157,
-						"Expecting +ive integer in sporadic argument " + (i+1) + ", was " + argval, ctxt);
+				VdmRuntimeError.abort(node.getLocation(), 4157, "Expecting +ive integer in sporadic argument "
+						+ (i + 1) + ", was " + argval, ctxt);
 			}
 
 			i++;
 		}
 
-		return null;	// Not actually used - see StartStatement
+		return null; // Not actually used - see StartStatement
 	}
-
 
 	@Override
 	public Value caseAIdentifierStateDesignator(
@@ -1304,7 +1308,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 			if (val instanceof ObjectValue && node.getField() != null)
 			{
 				ObjectValue ov = val.objectValue(ctxt);
-				Value rv = ov.get(node.getField(), (node.getClassName() != null));
+				Value rv = ov.get(node.getField(), node.getClassName() != null);
 
 				if (rv == null)
 				{
@@ -1485,4 +1489,23 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	{
 		return ctxt.lookup(node.getSelf());
 	}
+
+	private Value evalBlock(SSimpleBlockStm node, Context ctxt)
+			throws AnalysisException
+	{
+		// Note, no breakpoint check - designed to be called by eval
+
+		for (PStm s : node.getStatements())
+		{
+			Value rv = s.apply(VdmRuntime.getStatementEvaluator(), ctxt);
+
+			if (!rv.isVoid())
+			{
+				return rv;
+			}
+		}
+
+		return new VoidValue();
+	}
+
 }

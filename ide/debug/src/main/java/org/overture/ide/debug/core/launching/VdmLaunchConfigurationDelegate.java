@@ -1,21 +1,24 @@
-/*******************************************************************************
- * Copyright (c) 2009, 2011 Overture Team and others.
- *
- * Overture is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Overture is distributed in the hope that it will be useful,
+/*
+ * #%~
+ * org.overture.ide.debug
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Overture.  If not, see <http://www.gnu.org/licenses/>.
- * 	
- * The Overture Tool web-site: http://overturetool.org/
- *******************************************************************************/
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.ide.debug.core.launching;
 
 import java.io.File;
@@ -28,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IProject;
@@ -55,15 +59,15 @@ import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.IDebugPreferenceConstants;
 import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.model.internal.VdmDebugTarget;
-import org.overture.ide.debug.utils.ClassPathCollector;
 import org.overture.ide.debug.utils.VdmProjectClassPathCollector;
 import org.overture.ide.ui.utility.VdmTypeCheckerUi;
 import org.overture.util.Base64;
 
 /**
  * @see http://www.eclipse.org/articles/Article-Debugger/how-to.html
- * @author ari
+ * @author ari and kel
  */
+@SuppressWarnings("javadoc")
 public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 
 {
@@ -146,6 +150,15 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 		}
 	}
 
+	/**
+	 * generate commandline argments for the debugger and create the debug target
+	 * @param launch
+	 * @param configuration
+	 * @param mode
+	 * @param monitor
+	 * @return
+	 * @throws CoreException
+	 */
 	private List<String> initializeLaunch(ILaunch launch,
 			ILaunchConfiguration configuration, String mode,
 			IProgressMonitor monitor) throws CoreException
@@ -262,12 +275,20 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 					+ getArgumentString(commandList));
 		}
 		commandList.add(0, "java");
+		commandList.add(1, IDebugConstants.DEBUG_ENGINE_CLASS);
 
-		File vdmjPropertiesFile = prepareCustomDebuggerProperties(vdmProject, configuration);
-		String classpath = VdmProjectClassPathCollector.toCpCliArgument(VdmProjectClassPathCollector.getClassPath(getProject(configuration), getDebugEngineBundleIds(), vdmjPropertiesFile));
-		commandList.addAll(1, Arrays.asList(new String[] { "-cp", classpath }));
-		commandList.add(3, IDebugConstants.DEBUG_ENGINE_CLASS);
+		if (configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_SHOW_VM_SETTINGS, false))
+		{
+			commandList.addAll(1, Arrays.asList(new String[] { "-XshowSettings:all" }));
+		}
+		
 		commandList.addAll(1, getVmArguments(configuration));
+
+		if (useRemoteDebug(configuration))
+		{
+			System.out.println("Full Debugger Arguments:\n"
+					+ getArgumentString(commandList));
+		}
 
 		VdmDebugTarget target = null;
 		// Debug mode
@@ -325,28 +346,62 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 		return ids.toArray(new String[] {});
 	}
 
-	private File prepareCustomDebuggerProperties(IVdmProject vdmProject,
+	private File prepareCustomDebuggerProperties(IVdmProject project,
 			ILaunchConfiguration configuration) throws CoreException
+	{
+		List<String> properties = new Vector<String>();
+
+		String propertyCfg = configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CUSTOM_DEBUGGER_PROPERTIES, "");
+
+		for (String p : propertyCfg.split(";"))
+		{
+			properties.add(p);
+		}
+		return writePropertyFile(project, "vdmj.properties", properties);
+	}
+
+	/**
+	 * Create the custom overture.properties file loaded by the debugger
+	 * @param project
+	 * @param configuration a configuration or null
+	 * @return
+	 * @throws CoreException
+	 */
+	public static File prepareCustomOvertureProperties(IVdmProject project,
+			ILaunchConfiguration configuration) throws CoreException
+	{
+		List<String> properties = new Vector<String>();
+
+		if (VdmDebugPlugin.getDefault().getPreferenceStore().getBoolean(IDebugPreferenceConstants.PREF_DBGP_ENABLE_EXPERIMENTAL_MODELCHECKER))
+		{
+			properties.add(getProbHomeProperty());
+		}
+
+		return writePropertyFile(project, "overture.properties", properties);
+	}
+
+	public static File writePropertyFile(IVdmProject project, String filename,
+			List<String> properties) throws CoreException
 	{
 		try
 		{
-			String properties = configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_CUSTOM_DEBUGGER_PROPERTIES, "");
 
-			File outputDir = vdmProject.getModelBuildPath().getOutput().getLocation().toFile();
+			File outputDir = project.getModelBuildPath().getOutput().getLocation().toFile();
 			if (outputDir.mkdirs())
 			{
 				// ignore
 			}
-			File vdmjProperties = new File(outputDir, "vdmj.properties");
+			File vdmjProperties = new File(outputDir, filename);
 
 			PrintWriter out = null;
 			try
 			{
 				FileWriter outFile = new FileWriter(vdmjProperties);
 				out = new PrintWriter(outFile);
-				for (String p : properties.split(";"))
+
+				for (String property : properties)
 				{
-					out.println(p);
+					out.println(property);
 				}
 
 				return vdmjProperties;
@@ -387,42 +442,38 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 			}
 		}
 
-		if (VdmDebugPlugin.getDefault().getPreferenceStore().getBoolean(IDebugPreferenceConstants.PREF_DBGP_ENABLE_EXPERIMENTAL_MODELCHECKER))
-		{
-			final Bundle bundle = Platform.getBundle(ORG_OVERTURE_IDE_PLUGINS_PROBRUNTIME);
-			if (bundle != null)
-			{
-				URL buildInfoUrl = FileLocator.find(bundle, new Path("build_info.txt"), null);
-
-				try
-				{
-					if (buildInfoUrl != null)
-					{
-						URL buildInfofileUrl = FileLocator.toFileURL(buildInfoUrl);
-						if (buildInfofileUrl != null)
-						{
-							File file = new File(buildInfofileUrl.getFile());
-
-							if (ClassPathCollector.isWindowsPlatform())
-							{
-								options.add("-Dprob.home=\""
-										+ file.getParentFile().getPath() + "\"");
-							} else
-							{
-								options.add("-Dprob.home="
-										+ file.getParentFile().getPath());
-							}
-						}
-
-					}
-				} catch (IOException e)
-				{
-				}
-			}
-
-		}
-
 		return options;
+	}
+
+	/**
+	 * Obtains the prob bundled executable and returns the prob.home property set to that location
+	 * @return the prob.home property if available or empty string
+	 */
+	public static String getProbHomeProperty()
+	{
+		final Bundle bundle = Platform.getBundle(ORG_OVERTURE_IDE_PLUGINS_PROBRUNTIME);
+		if (bundle != null)
+		{
+			URL buildInfoUrl = FileLocator.find(bundle, new Path("prob/build_info.txt"), null);
+
+			try
+			{
+				if (buildInfoUrl != null)
+				{
+					URL buildInfofileUrl = FileLocator.toFileURL(buildInfoUrl);
+					if (buildInfofileUrl != null)
+					{
+						File file = new File(buildInfofileUrl.getFile());
+
+						return "system."+"prob.home=" + file.getParentFile().getPath().replace('\\', '/');
+					}
+
+				}
+			} catch (IOException e)
+			{
+			}
+		}
+		return "";
 	}
 
 	/**
@@ -492,6 +543,13 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 	{
 		ProcessBuilder procBuilder = new ProcessBuilder(commandList);
 
+		File vdmjPropertiesFile = prepareCustomDebuggerProperties(project, configuration);
+		File overturePropertiesFile = prepareCustomOvertureProperties(project, configuration);
+		String classpath = VdmProjectClassPathCollector.toCpEnvString(VdmProjectClassPathCollector.getClassPath(getProject(configuration), getDebugEngineBundleIds(), vdmjPropertiesFile,overturePropertiesFile));
+
+		Map<String, String> env = procBuilder.environment();
+		env.put("CLASSPATH", classpath);
+
 		Process process = null;
 		try
 		{
@@ -502,6 +560,7 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 
 			} else
 			{
+				System.out.println("CLASSPATH = " + classpath);
 				process = Runtime.getRuntime().exec("java -version");
 			}
 		} catch (IOException e)
@@ -559,11 +618,9 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 	 *            underlying exception
 	 * @throws CoreException
 	 */
-	private void abort(String message, Throwable e) throws CoreException
+	private static void abort(String message, Throwable e) throws CoreException
 	{
-		// TODO: the plug-in code should be the example plug-in, not Perl debug
-		// model id
-		throw new CoreException((IStatus) new Status(IStatus.ERROR, IDebugConstants.ID_VDM_DEBUG_MODEL, 0, message, e));
+		throw new CoreException((IStatus) new Status(IStatus.ERROR, IDebugConstants.PLUGIN_ID, 0, message, e));
 	}
 
 	private List<String> getSpecFiles(IVdmProject project) throws CoreException

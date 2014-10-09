@@ -14,10 +14,6 @@ public class X {
     public X() {
     }
 
-    public static Number f() {
-        return 1L;
-    }
-
     public Number m1() {
         return ((X) xs.get(1L)).f();
     }
@@ -47,15 +43,24 @@ public class X {
     }
 
     public VDMMap map_xs(final Number pa, final Number pb) {
-        return xs.clone();
+        return Utils.clone(xs);
     }
 
     public VDMMap map_ys(final Number pa, final Number pb) {
-        return ys.clone();
+        return Utils.clone(ys);
     }
 
     public VDMMap map_zs(final Number pa, final Number pb) {
-        return zs.clone();
+        return Utils.clone(zs);
+    }
+
+    public static Number f() {
+        return 1L;
+    }
+
+    public String toString() {
+        return "X{" + "xs = " + Utils.toString(xs) + ", ys = " +
+        Utils.toString(ys) + ", zs = " + Utils.toString(zs) + "}";
     }
 }
 
@@ -75,6 +80,10 @@ public class Entry {
         return x.m1().longValue() + x.m2().longValue() + x.m3().longValue() +
         x.m4().longValue() + x.m5().longValue() + x.m6().longValue() +
         x.m7().longValue();
+    }
+
+    public String toString() {
+        return "Entry{}";
     }
 }
 

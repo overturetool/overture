@@ -1,0 +1,47 @@
+/*
+ * #%~
+ * VDM Code Generator
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
+package org.overture.codegen.trans.quantifier;
+
+import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.ir.ITempVarGen;
+import org.overture.codegen.trans.AbstractIterationStrategy;
+import org.overture.codegen.trans.TempVarPrefixes;
+import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.iterator.ILanguageIterator;
+
+public abstract class QuantifierBaseStrategy extends AbstractIterationStrategy
+{
+	protected SExpCG predicate;
+	protected String resultVarName;
+
+	public QuantifierBaseStrategy(
+			TransformationAssistantCG transformationAssistant,
+			SExpCG predicate, String resultVarName,
+			ILanguageIterator langIterator, ITempVarGen tempGen,
+			TempVarPrefixes varPrefixes)
+	{
+		super(transformationAssistant, langIterator, tempGen, varPrefixes);
+
+		this.predicate = predicate;
+		this.resultVarName = resultVarName;
+	}
+}

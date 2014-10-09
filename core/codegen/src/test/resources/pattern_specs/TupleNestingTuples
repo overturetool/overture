@@ -1,0 +1,21 @@
+class A
+
+functions
+
+public tuplePatternFun : () -> nat
+tuplePatternFun () ==
+let mk_(a, b, mk_(c, d, mk_(e, f))) = mk_(1, 2, mk_(3, 4, mk_(5, 6)))
+in
+	a + b + c + d + e + f;
+
+end A
+
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	return A`tuplePatternFun();
+
+end Entry

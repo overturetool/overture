@@ -25,12 +25,8 @@ package org.overture.interpreter.debug;
 
 public enum DBGPBreakpointType
 {
-	LINE("line"),
-	CALL("call"),
-	RETURN("return"),
-	EXCEPTION("exception"),
-	CONDITIONAL("conditional"),
-	WATCH("watch");
+	LINE("line"), CALL("call"), RETURN("return"), EXCEPTION("exception"), CONDITIONAL(
+			"conditional"), WATCH("watch");
 
 	public String value;
 
@@ -41,7 +37,7 @@ public enum DBGPBreakpointType
 
 	public static DBGPBreakpointType lookup(String string) throws DBGPException
 	{
-		for (DBGPBreakpointType cmd: values())
+		for (DBGPBreakpointType cmd : values())
 		{
 			if (cmd.value.equals(string))
 			{

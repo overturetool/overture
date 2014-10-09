@@ -56,10 +56,7 @@ import org.overture.ast.types.PType;
 import org.overture.ast.util.Utils;
 import org.overture.config.Settings;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
-import org.overture.interpreter.assistant.definition.AStateDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.messages.rtlog.RTExtendedTextMessage;
 import org.overture.interpreter.messages.rtlog.RTLogger;
@@ -283,7 +280,7 @@ public class OperationValue extends Value
 		if (state != null && stateName == null)
 		{
 			stateName = state.getName();
-			stateContext = AStateDefinitionAssistantInterpreter.getStateContext(state);
+			stateContext = ctxt.assistantFactory.createAStateDefinitionAssistant().getStateContext(state);
 		}
 
 		RootContext argContext = newContext(from, toTitle(), ctxt);
@@ -336,7 +333,7 @@ public class OperationValue extends Value
 			} catch (PatternMatchException e)
 			{
 				abort(e.number, e, ctxt);
-			} 
+			}
 		}
 
 		if (self != null)
@@ -542,7 +539,7 @@ public class OperationValue extends Value
 				}
 			}
 
-			PStm res = solver.solve(allDefs,name.getName(), this.impldef, stateExps, argExps, Console.out, Console.err);
+			PStm res = solver.solve(allDefs, name.getName(), this.impldef, stateExps, argExps, Console.out, Console.err);
 
 			rv = res.apply(VdmRuntime.getStatementEvaluator(), argContext);
 		} catch (Exception e)
@@ -576,12 +573,10 @@ public class OperationValue extends Value
 		if (classdef != null)
 		{
 			return VdmRuntime.getNodeState(assistantFactory, classdef).guardLock;
-		}
-		else if (self != null)
+		} else if (self != null)
 		{
 			return self.guardLock;
-		}
-		else
+		} else
 		{
 			return null;
 		}
@@ -666,7 +661,7 @@ public class OperationValue extends Value
 	private void notifySelf(IInterpreterAssistantFactory assistantFactory)
 	{
 		Lock lock = getGuardLock(assistantFactory);
-		
+
 		if (lock != null)
 		{
 			debug("Signal guard");
@@ -756,7 +751,8 @@ public class OperationValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt) throws AnalysisException
+	public Value convertValueTo(PType to, Context ctxt)
+			throws AnalysisException
 	{
 		if (ctxt.assistantFactory.createPTypeAssistant().isType(to, AOperationType.class))
 		{

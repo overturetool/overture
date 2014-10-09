@@ -1,3 +1,24 @@
+/*
+ * #%~
+ * The Overture Abstract Syntax Tree
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.ast.preview;
 
 import java.io.BufferedReader;
@@ -25,7 +46,7 @@ public class GraphViz
 
 		public GraphVizException(String string, Throwable e)
 		{
-			super(string,e);
+			super(string, e);
 		}
 	}
 
@@ -39,8 +60,7 @@ public class GraphViz
 	private StringBuilder graph = new StringBuilder();
 
 	/**
-	 * Constructor: creates a new GraphViz object that will contain
-	 * a graph.
+	 * Constructor: creates a new GraphViz object that will contain a graph.
 	 */
 	public GraphViz()
 	{
@@ -75,6 +95,8 @@ public class GraphViz
 
 	/**
 	 * Adds a string to the graph's source (without newline).
+	 * 
+	 * @param line
 	 */
 	public void add(String line)
 	{
@@ -83,6 +105,8 @@ public class GraphViz
 
 	/**
 	 * Adds a string to the graph's source (with newline).
+	 * 
+	 * @param line
 	 */
 	public void addln(String line)
 	{
@@ -103,8 +127,7 @@ public class GraphViz
 	 * @param dot_source
 	 *            Source of the graph to be drawn.
 	 * @param type
-	 *            Type of the output image to be produced, e.g.: gif, dot, fig,
-	 *            pdf, ps, svg, png.
+	 *            Type of the output image to be produced, e.g.: gif, dot, fig, pdf, ps, svg, png.
 	 * @return A byte array containing the image of the graph.
 	 * @throws GraphVizException
 	 */
@@ -177,14 +200,12 @@ public class GraphViz
 	}
 
 	/**
-	 * It will call the external dot program, and return the image in
-	 * binary format.
+	 * It will call the external dot program, and return the image in binary format.
 	 * 
 	 * @param dot
 	 *            Source of the graph (in dot language).
 	 * @param type
-	 *            Type of the output image to be produced, e.g.: gif, dot, fig,
-	 *            pdf, ps, svg, png.
+	 *            Type of the output image to be produced, e.g.: gif, dot, fig, pdf, ps, svg, png.
 	 * @return The image of the graph in .gif format.
 	 * @throws GraphVizException
 	 */
@@ -218,25 +239,24 @@ public class GraphViz
 			}
 		} catch (IOException ioe)
 		{
-			throw new GraphVizException("Error: in I/O processing of tempfile in dir. Or in calling external command",ioe);
+			throw new GraphVizException("Error: in I/O processing of tempfile in dir. Or in calling external command", ioe);
 		} catch (InterruptedException ie)
 		{
-			throw new GraphVizException("Error: the execution of the external program was interrupted",ie);
+			throw new GraphVizException("Error: the execution of the external program was interrupted", ie);
 		}
 		return img_stream;
 	}
 
 	/**
-	 * Writes the source of the graph in a file, and returns the written file
-	 * as a File object.
+	 * Writes the source of the graph in a file, and returns the written file as a File object.
 	 * 
 	 * @param str
 	 *            Source of the graph (in dot language).
-	 * @return The file (as a File object) that contains the source of the
-	 *         graph.
-	 * @throws GraphVizException 
+	 * @return The file (as a File object) that contains the source of the graph.
+	 * @throws GraphVizException
 	 */
-	private File writeDotSourceToFile(String str) throws java.io.IOException, GraphVizException
+	private File writeDotSourceToFile(String str) throws java.io.IOException,
+			GraphVizException
 	{
 		File temp;
 		try
@@ -278,9 +298,8 @@ public class GraphViz
 	 * Read a DOT graph from a text file.
 	 * 
 	 * @param input
-	 *            Input text file containing the DOT graph
-	 *            source.
-	 * @throws GraphVizException 
+	 *            Input text file containing the DOT graph source.
+	 * @throws GraphVizException
 	 */
 	public void readSource(String input) throws GraphVizException
 	{

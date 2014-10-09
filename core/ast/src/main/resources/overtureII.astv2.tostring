@@ -144,6 +144,7 @@ import org.overture.ast.util.ToStringUtil;
 %pattern->tuple = "mk_"  "(" + $Utils.listToString($[plist]$)$ + ")"
 %pattern->union = [left] " union " [right]
 %pattern->map = "" + $($[maplets]$.isEmpty() ? "{|->}" : Utils.listToString("{", $[maplets]$, ", ", "}"))$
+%pattern->object = "obj_" [classname]  "(" + $Utils.listToString($[fields]$)$ + ")"
 
   
 
@@ -272,4 +273,9 @@ import org.overture.ast.util.ToStringUtil;
 %objectDesignator->new = "new "+[expression]
 %objectDesignator->self = [self]
 
+
+//traces
+%traceDefinition->repeat = [core] "{"[from]","[to]"}"
+%traceCoreDefinition->applyExpression = [callStatement]
+%traceCoreDefinition->bracketedExpression = "("[terms]")"
 

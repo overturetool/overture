@@ -1,21 +1,24 @@
-/*******************************************************************************
- * Copyright (c) 2009, 2011 Overture Team and others.
- *
- * Overture is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Overture is distributed in the hope that it will be useful,
+/*
+ * #%~
+ * org.overture.ide.debug
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Overture.  If not, see <http://www.gnu.org/licenses/>.
- * 	
- * The Overture Tool web-site: http://overturetool.org/
- *******************************************************************************/
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.ide.debug.ui.launching;
 
 import org.eclipse.core.runtime.CoreException;
@@ -63,6 +66,7 @@ public class VdmDevelopLaunchConfigurationTab extends
 
 	private Button checkBoxRemoteDebug = null;
 	private Button checkBoxEnableLogging = null;
+	private Button checkBoxShowVmSettings = null;
 	private Button checkBoxExperimentalTimeInvariantCheck = null;
 	private WidgetListener fListener = new WidgetListener();
 
@@ -102,6 +106,11 @@ public class VdmDevelopLaunchConfigurationTab extends
 		checkBoxExperimentalTimeInvariantCheck.setText("Enable experimental time inv checks");
 		checkBoxExperimentalTimeInvariantCheck.setSelection(false);
 		checkBoxExperimentalTimeInvariantCheck.addSelectionListener(fListener);
+		
+		checkBoxShowVmSettings = new Button(group, SWT.CHECK);
+		checkBoxShowVmSettings.setText("Show VM Settings");
+		checkBoxShowVmSettings.setSelection(false);
+		checkBoxShowVmSettings.addSelectionListener(fListener);
 	}
 
 	public String getName()
@@ -116,6 +125,7 @@ public class VdmDevelopLaunchConfigurationTab extends
 			checkBoxRemoteDebug.setSelection(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_DEBUG, false));
 			checkBoxEnableLogging.setSelection(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_LOGGING, false));
 			checkBoxExperimentalTimeInvariantCheck.setSelection(configuration.getAttribute("vdm_launch_config_enable_realtime_time_inv_checks", false));
+			checkBoxShowVmSettings.setSelection(configuration.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_SHOW_VM_SETTINGS, false));
 
 		} catch (CoreException e)
 		{
@@ -132,6 +142,7 @@ public class VdmDevelopLaunchConfigurationTab extends
 		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_DEBUG, checkBoxRemoteDebug.getSelection());
 		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_LOGGING, checkBoxEnableLogging.getSelection());
 		configuration.setAttribute("vdm_launch_config_enable_realtime_time_inv_checks", checkBoxExperimentalTimeInvariantCheck.getSelection());
+		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_SHOW_VM_SETTINGS, checkBoxShowVmSettings.getSelection());
 	}
 
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration)
@@ -139,6 +150,7 @@ public class VdmDevelopLaunchConfigurationTab extends
 		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_REMOTE_DEBUG, false);
 		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_ENABLE_LOGGING, false);
 		configuration.setAttribute("vdm_launch_config_enable_realtime_time_inv_checks", false);
+		configuration.setAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_SHOW_VM_SETTINGS, false);
 	}
 
 }

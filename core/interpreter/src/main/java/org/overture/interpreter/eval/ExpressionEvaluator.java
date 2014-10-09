@@ -71,12 +71,6 @@ import org.overture.ast.types.AParameterType;
 import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.PType;
 import org.overture.config.Settings;
-import org.overture.interpreter.assistant.definition.AExplicitFunctionDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.AImplicitFunctionDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AFieldExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AIsOfBaseClassExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.AIsOfClassExpAssistantInterpreter;
-import org.overture.interpreter.assistant.expression.APostOpExpAssistantInterpreter;
 import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.runtime.ClassContext;
 import org.overture.interpreter.runtime.Context;
@@ -124,7 +118,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-		node.getLocation().setHits(node.getLocation().getHits()/1); // This is counted below when root is evaluated
+		node.getLocation().setHits(node.getLocation().getHits() / 1); // This is counted below when root is evaluated
 
 		try
 		{
@@ -192,7 +186,9 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		{
 			Value rv = eval(c, val, ctxt);
 			if (rv != null)
+			{
 				return rv;
+			}
 		}
 
 		if (node.getOthers() != null)
@@ -210,7 +206,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
-		Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "def expression", ctxt);
+		Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "def expression", ctxt);
 
 		for (PDefinition d : node.getLocalDefs())
 		{
@@ -232,7 +228,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	public Value eval(ACaseAlternative node, Value val, Context ctxt)
 			throws AnalysisException
 	{
-		Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "case alternative", ctxt);
+		Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "case alternative", ctxt);
 
 		try
 		{
@@ -282,7 +278,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		{
 			try
 			{
-				Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "exists1", ctxt);
+				Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "exists1", ctxt);
 				evalContext.putList(ctxt.assistantFactory.createPPatternAssistant().getNamedValues(node.getBind().getPattern(), val, ctxt));
 
 				if (node.getPredicate().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctxt))
@@ -331,7 +327,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			while (quantifiers.hasNext())
 			{
-				Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "exists", ctxt);
+				Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "exists", ctxt);
 				NameValuePairList nvpl = quantifiers.next();
 				boolean matches = true;
 
@@ -375,7 +371,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 		try
 		{
-			return AFieldExpAssistantInterpreter.evaluate(node, ctxt);
+			return ctxt.assistantFactory.createAFieldExpAssistant().evaluate(node, ctxt);
 		} catch (ValueException e)
 		{
 			return VdmRuntimeError.abort(node.getLocation(), e);
@@ -432,7 +428,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			while (quantifiers.hasNext())
 			{
-				Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "forall", ctxt);
+				Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "forall", ctxt);
 				NameValuePairList nvpl = quantifiers.next();
 				boolean matches = true;
 
@@ -515,10 +511,10 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			if (node.getExpdef() == null)
 			{
-				rv = AImplicitFunctionDefinitionAssistantInterpreter.getPolymorphicValue(ctxt.assistantFactory,node.getImpdef(), fixed);
+				rv = ctxt.assistantFactory.createAImplicitFunctionDefinitionAssistant().getPolymorphicValue(ctxt.assistantFactory, node.getImpdef(), fixed);
 			} else
 			{
-				rv = AExplicitFunctionDefinitionAssistantInterpreter.getPolymorphicValue(ctxt.assistantFactory,node.getExpdef(), fixed);
+				rv = ctxt.assistantFactory.createAExplicitFunctionDefinitionAssistant().getPolymorphicValue(ctxt.assistantFactory, node.getExpdef(), fixed);
 			}
 
 			rv.setSelf(fv.self);
@@ -542,24 +538,23 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			// own operation history counters...
 
 			ValueList operations = new ValueList();
-			
+
 			if (ctxt instanceof ObjectContext)
 			{
-				ObjectValue self = ((ObjectContext)ctxt).self;
-	
-				for (ILexNameToken opname: node.getOpnames())
+				ObjectValue self = ((ObjectContext) ctxt).self;
+
+				for (ILexNameToken opname : node.getOpnames())
 				{
 					operations.addAll(self.getOverloads(opname));
 				}
-			}
-			else if (ctxt instanceof ClassContext)
+			} else if (ctxt instanceof ClassContext)
 			{
-				ClassContext cctxt = (ClassContext)ctxt;
+				ClassContext cctxt = (ClassContext) ctxt;
 				Context statics = cctxt.assistantFactory.createSClassDefinitionAssistant().getStatics(cctxt.classdef);
-				
-				for (ILexNameToken opname: node.getOpnames())
+
+				for (ILexNameToken opname : node.getOpnames())
 				{
-					for (ILexNameToken sname: statics.keySet())
+					for (ILexNameToken sname : statics.keySet())
 					{
 						if (opname.matches(sname))
 						{
@@ -568,11 +563,11 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 					}
 				}
 			}
-			
+
 			if (operations.isEmpty())
 			{
-				VdmRuntimeError.abort(node.getLocation(), 4011,
-						"Illegal history operator: " + node.getHop().toString(), ctxt);
+				VdmRuntimeError.abort(node.getLocation(), 4011, "Illegal history operator: "
+						+ node.getHop().toString(), ctxt);
 			}
 
 			int result = 0;
@@ -651,15 +646,13 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 				v.convertValueTo(node.getBasicType(), ctxt);
 				return new BooleanValue(true);
 			}
-		}
-		catch (ContextException ex)
+		} catch (ContextException ex)
 		{
-			if (ex.number != 4060)	// Type invariant violation
+			if (ex.number != 4060) // Type invariant violation
 			{
-				throw ex;	// Otherwise return false
+				throw ex; // Otherwise return false
 			}
-		}
-		catch (ValueException ex)
+		} catch (ValueException ex)
 		{
 			// return false...
 		}
@@ -683,7 +676,9 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			{
 				Value r = elseif.apply(VdmRuntime.getExpressionEvaluator(), ctxt);
 				if (r != null)
+				{
 					return r;
+				}
 			}
 
 			return node.getElse().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
@@ -713,7 +708,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		{
 			try
 			{
-				Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "iota", ctxt);
+				Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "iota", ctxt);
 				evalContext.putList(ctxt.assistantFactory.createPPatternAssistant().getNamedValues(node.getBind().getPattern(), val, ctxt));
 
 				if (node.getPredicate().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctxt))
@@ -784,7 +779,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			while (quantifiers.hasNext())
 			{
-				Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "let be st expression", ctxt);
+				Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "let be st expression", ctxt);
 				NameValuePairList nvpl = quantifiers.next();
 				boolean matches = true;
 
@@ -825,7 +820,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	{
 		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
 
-		Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "let expression", ctxt);
+		Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "let expression", ctxt);
 
 		LexNameToken sname = new LexNameToken(node.getLocation().getModule(), "self", node.getLocation());
 		ObjectValue self = (ObjectValue) ctxt.check(sname);
@@ -882,7 +877,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			while (quantifiers.hasNext())
 			{
-				Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "map comprehension", ctxt);
+				Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "map comprehension", ctxt);
 				NameValuePairList nvpl = quantifiers.next();
 				boolean matches = true;
 
@@ -1166,12 +1161,13 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 				// If the opname was defined in a superclass of "self", we have
 				// to discover the subobject to populate its state variables.
-				
-				ObjectValue subself = APostOpExpAssistantInterpreter.findObject(node, node.getOpname().getModule(), self);
-				
-				if(self.superobjects.size() == 0)
+
+				ObjectValue subself = ctxt.assistantFactory.createAPostOpExpAssistant().findObject(node, node.getOpname().getModule(), self);
+
+				if (self.superobjects.size() == 0)
+				{
 					subself = self;
-					
+				}
 
 				if (subself == null)
 				{
@@ -1184,22 +1180,24 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 				if (subself != octxt.self)
 				{
-					ObjectContext selfctxt = new ObjectContext(ctxt.assistantFactory,ctxt.location, "postcondition's object", ctxt, subself);
+					ObjectContext selfctxt = new ObjectContext(ctxt.assistantFactory, ctxt.location, "postcondition's object", ctxt, subself);
 
 					selfctxt.putAll(ctxt); // To add "RESULT" and args.
 					ctxt = selfctxt;
 				}
 
-				APostOpExpAssistantInterpreter.populate(node, ctxt, subself.type.getName().getName(), oldvalues); // To add old "~"
-																									// values
+				ctxt.assistantFactory.createAPostOpExpAssistant().populate(node, ctxt, subself.type.getName().getName(), oldvalues); // To
+																																		// add
+																																		// old
+																																		// "~"
+				// values
+			} else if (ctxt instanceof ClassContext)
+			{
+				ILexNameToken selfname = node.getOpname().getSelfName();
+				ILexNameToken oldselfname = selfname.getOldName();
+				ValueMap oldvalues = ctxt.lookup(oldselfname).mapValue(ctxt);
+				ctxt.assistantFactory.createAPostOpExpAssistant().populate(node, ctxt, node.getOpname().getModule(), oldvalues);
 			}
-    		else if (ctxt instanceof ClassContext)
-    		{
-    			ILexNameToken selfname = node.getOpname().getSelfName();
-    			ILexNameToken oldselfname = selfname.getOldName();
-    			ValueMap oldvalues = ctxt.lookup(oldselfname).mapValue(ctxt);
-    			APostOpExpAssistantInterpreter.populate(node, ctxt, node.getOpname().getModule(), oldvalues);
-    		}
 
 			// If there are errs clauses, and there is a precondition defined, then
 			// we evaluate that as well as the postcondition.
@@ -1222,7 +1220,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 						node.setErrorLocation(err.getLeft().getLocation());// FIXME not good
 					}
 
-					result = result || (left && right);
+					result = result || left && right;
 				}
 			}
 
@@ -1331,7 +1329,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 				// Create an object context using the "self" passed in, rather
 				// than the self that we're being called from.
 
-				ObjectContext selfctxt = new ObjectContext(ctxt.assistantFactory,ctxt.location, "precondition's object", ctxt, self);
+				ObjectContext selfctxt = new ObjectContext(ctxt.assistantFactory, ctxt.location, "precondition's object", ctxt, self);
 
 				selfctxt.putAll(ctxt); // To add "RESULT" and args.
 				ctxt = selfctxt;
@@ -1437,7 +1435,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		{
 			try
 			{
-				Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "seq comprehension", ctxt);
+				Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "seq comprehension", ctxt);
 				NameValuePairList nvpl = ctxt.assistantFactory.createPPatternAssistant().getNamedValues(node.getSetBind().getPattern(), val, ctxt);
 				Value sortOn = nvpl.get(0).value;
 
@@ -1546,7 +1544,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			while (quantifiers.hasNext())
 			{
-				Context evalContext = new Context(ctxt.assistantFactory,node.getLocation(), "set comprehension", ctxt);
+				Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "set comprehension", ctxt);
 				NameValuePairList nvpl = quantifiers.next();
 				boolean matches = true;
 
@@ -1773,7 +1771,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			}
 
 			ObjectValue ov = v.objectValue(ctxt);
-			return new BooleanValue(AIsOfBaseClassExpAssistantInterpreter.search(node, ov));
+			return new BooleanValue(ctxt.assistantFactory.createAIsOfBaseClassExpAssistant().search(node, ov));
 		} catch (ValueException e)
 		{
 			return VdmRuntimeError.abort(node.getLocation(), e);
@@ -1797,7 +1795,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			}
 
 			ObjectValue ov = v.objectValue(ctxt);
-			return new BooleanValue(AIsOfClassExpAssistantInterpreter.isOfClass(ov, node.getClassName().getName()));
+			return new BooleanValue(ctxt.assistantFactory.createAIsOfClassExpAssistant().isOfClass(ov, node.getClassName().getName()));
 		} catch (ValueException e)
 		{
 			return VdmRuntimeError.abort(node.getLocation(), e);

@@ -16,8 +16,7 @@ This directory contains several subdirectories:
 * Documentation for VDM and Overture is in `documentation`
 * Auxiliary code that supports the build process are found in `tools`
 
-## Tests
-If running on a terminal with no gfx enabled then disable the UI test profile `ui-tests` profile. The maven argument for this is `-P ui-tests` and is used like: `mvn install -P !ui-tests` .
+
 
 
 

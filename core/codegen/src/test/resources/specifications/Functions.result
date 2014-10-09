@@ -19,10 +19,12 @@ public class Functions {
         if (1L == 1L) {
             if (2L == 2L) {
                 return 3L;
-            } else if (3L == 3L) {
-                return 4L;
             } else {
-                return 5L;
+                if (3L == 3L) {
+                    return 4L;
+                } else {
+                    return 5L;
+                }
             }
         } else {
             return 6L;
@@ -31,6 +33,10 @@ public class Functions {
 
     public static Number f3() {
         return 5L;
+    }
+
+    public String toString() {
+        return "Functions{}";
     }
 }
 

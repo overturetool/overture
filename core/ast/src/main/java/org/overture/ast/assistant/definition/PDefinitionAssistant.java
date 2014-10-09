@@ -1,3 +1,24 @@
+/*
+ * #%~
+ * The Overture Abstract Syntax Tree
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.ast.assistant.definition;
 
 import java.util.List;
@@ -19,35 +40,42 @@ public class PDefinitionAssistant
 		this.af = af;
 	}
 
-	public static void setClassDefinition(PDefinition pDefinition,
-			SClassDefinition def)
+	public void setClassDefinition(PDefinition pDefinition, SClassDefinition def)
 	{
-		if (pDefinition instanceof SClassDefinition) {
-			for (PDefinition d : def.getDefinitions()) {
+		if (pDefinition instanceof SClassDefinition)
+		{
+			for (PDefinition d : def.getDefinitions())
+			{
 				setClassDefinition(d, def);
 			}
-		} else if (pDefinition instanceof AExplicitFunctionDefinition) {
-			setClassDefinitionBaseCase(pDefinition, def);
-			AExplicitFunctionDefinition efd = ((AExplicitFunctionDefinition) pDefinition);
-			if (efd.getPredef() != null) {
+		} else if (pDefinition instanceof AExplicitFunctionDefinition)
+		{
+			af.createPDefinitionAssistant().setClassDefinitionBaseCase(pDefinition, def);
+			AExplicitFunctionDefinition efd = (AExplicitFunctionDefinition) pDefinition;
+			if (efd.getPredef() != null)
+			{
 				setClassDefinition(efd.getPredef(), def);
 			}
-			if (efd.getPostdef() != null) {
+			if (efd.getPostdef() != null)
+			{
 				setClassDefinition(efd.getPostdef(), def);
 			}
-		} else if (pDefinition instanceof AValueDefinition) {
-			setClassDefinitionBaseCase(pDefinition, def);
+		} else if (pDefinition instanceof AValueDefinition)
+		{
+			af.createPDefinitionAssistant().setClassDefinitionBaseCase(pDefinition, def);
 			AValueDefinition vd = (AValueDefinition) pDefinition;
-			for (PDefinition d : vd.getDefs()) {
+			for (PDefinition d : vd.getDefs())
+			{
 				setClassDefinition(d, def);
 			}
-		} else {
-			setClassDefinitionBaseCase(pDefinition, def);
+		} else
+		{
+			af.createPDefinitionAssistant().setClassDefinitionBaseCase(pDefinition, def);
 		}
 
 	}
 
-	public static String getName(PDefinition node)
+	public String getName(PDefinition node)
 	{
 		if (node.getName() != null)
 		{
@@ -57,18 +85,18 @@ public class PDefinitionAssistant
 		return null;
 	}
 
-	public static void setClassDefinitionBaseCase(PDefinition pDefinition,
+	public void setClassDefinitionBaseCase(PDefinition pDefinition,
 			SClassDefinition def)
 	{
 		pDefinition.setClassDefinition(def);
 	}
 
-	public static void setClassDefinition(List<PDefinition> defs,
+	public void setClassDefinition(List<PDefinition> defs,
 			SClassDefinition classDefinition)
 	{
 		for (PDefinition d : defs)
 		{
-			setClassDefinition(d, classDefinition);
+			af.createPDefinitionAssistant().setClassDefinition(d, classDefinition);
 		}
 
 	}

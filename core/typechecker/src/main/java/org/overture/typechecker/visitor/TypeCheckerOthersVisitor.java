@@ -1,3 +1,24 @@
+/*
+ * #%~
+ * The VDM Type Checker
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.typechecker.visitor;
 
 import java.util.LinkedList;
@@ -41,7 +62,6 @@ import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
-import org.overture.typechecker.TypeComparator;
 
 public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 {
@@ -85,7 +105,7 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 					question.assistantFactory.createPPatternAssistant().typeResolve(node.getBind().getPattern(), THIS, question);
 				}
 
-				if (!TypeComparator.compatible(typebind.getType(), type))
+				if (!question.assistantFactory.getTypeComparator().compatible(typebind.getType(), type))
 				{
 					TypeCheckerErrors.report(3198, "Type bind not compatible with expression", node.getBind().getLocation(), node.getBind());
 					TypeCheckerErrors.detail2("Bind", typebind.getType(), "Exp", type);
@@ -94,7 +114,7 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 			{
 				ASetBind setbind = (ASetBind) node.getBind();
 				ASetType settype = question.assistantFactory.createPTypeAssistant().getSet(setbind.getSet().apply(THIS, question));
-				if (!TypeComparator.compatible(type, settype.getSetof()))
+				if (!question.assistantFactory.getTypeComparator().compatible(type, settype.getSetof()))
 				{
 					TypeCheckerErrors.report(3199, "Set bind not compatible with expression", node.getBind().getLocation(), node.getBind());
 					TypeCheckerErrors.detail2("Bind", settype.getSetof(), "Exp", type);
@@ -124,7 +144,7 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 	{
 
 		PType type = node.getObject().apply(THIS, question);
-		PTypeSet result = new PTypeSet();
+		PTypeSet result = new PTypeSet(question.assistantFactory);
 		boolean unique = !question.assistantFactory.createPTypeAssistant().isUnion(type);
 		ILexIdentifierToken field = node.getField();
 
@@ -152,7 +172,7 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 
 			node.setObjectfield(new LexNameToken(cname, field.getName(), node.getObject().getLocation()));
 			PDefinition fdef = question.assistantFactory.createPDefinitionAssistant().findName(ctype.getClassdef(), node.getObjectfield(), NameScope.STATE);
-			//SClassDefinitionAssistantTC.findName(ctype.getClassdef(), node.getObjectfield(), NameScope.STATE);
+			// SClassDefinitionAssistantTC.findName(ctype.getClassdef(), node.getObjectfield(), NameScope.STATE);
 
 			if (fdef == null)
 			{
@@ -305,13 +325,13 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 	{
 		PType etype = node.getExp().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env, NameScope.NAMESANDSTATE));
 		PType rtype = node.getMapseq().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env));
-		PTypeSet result = new PTypeSet();
+		PTypeSet result = new PTypeSet(question.assistantFactory);
 
 		if (question.assistantFactory.createPTypeAssistant().isMap(rtype))
 		{
 			node.setMapType(question.assistantFactory.createPTypeAssistant().getMap(rtype));
 
-			if (!TypeComparator.compatible(node.getMapType().getFrom(), etype))
+			if (!question.assistantFactory.getTypeComparator().compatible(node.getMapType().getFrom(), etype))
 			{
 				TypeCheckerErrors.report(3242, "Map element assignment of wrong type", node.getLocation(), node);
 				TypeCheckerErrors.detail2("Expect", node.getMapType().getFrom(), "Actual", etype);
@@ -388,7 +408,7 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 
 		PType type = node.getObject().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env, null, argtypes));
 		boolean unique = !question.assistantFactory.createPTypeAssistant().isUnion(type);
-		PTypeSet result = new PTypeSet();
+		PTypeSet result = new PTypeSet(question.assistantFactory);
 
 		if (question.assistantFactory.createPTypeAssistant().isMap(type))
 		{
@@ -447,7 +467,7 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 	{
 
 		PType type = node.getObject().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env, null, question.qualifiers));
-		PTypeSet result = new PTypeSet();
+		PTypeSet result = new PTypeSet(question.assistantFactory);
 		boolean unique = !question.assistantFactory.createPTypeAssistant().isUnion(type);
 
 		if (question.assistantFactory.createPTypeAssistant().isClass(type))

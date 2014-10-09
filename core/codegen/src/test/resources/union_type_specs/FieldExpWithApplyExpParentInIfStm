@@ -1,0 +1,34 @@
+class A
+operations
+
+public s : () ==> seq of nat
+s () == return [];
+
+end A
+
+class B
+operations
+
+public s : () ==> seq of nat
+s () == return [];
+
+end B
+
+class Entry
+
+functions
+
+operations
+
+public static Run : () ==> nat
+Run () ==
+	let xs = [new A(), new B()]
+	in
+	(dcl counter : nat := 0;
+		for all x in set elems xs do
+			if len x.s() = 0 then
+				counter := counter + 1;
+				
+		return counter;
+	)
+end Entry

@@ -34,10 +34,9 @@ import org.overture.interpreter.messages.rtlog.RTDeclareBUSMessage;
 import org.overture.interpreter.messages.rtlog.RTLogger;
 import org.overture.interpreter.scheduler.SystemClock.TimeUnit;
 
-
 public class BUSResource extends Resource
 {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 	private static int nextBUS = 1;
 	private static BUSResource vBUS = null;
 
@@ -49,8 +48,8 @@ public class BUSResource extends Resource
 
 	private ISchedulableThread busThread = null;
 
-	public BUSResource(boolean isVirtual,
-		SchedulingPolicy policy, double speed, List<CPUResource> cpus)
+	public BUSResource(boolean isVirtual, SchedulingPolicy policy,
+			double speed, List<CPUResource> cpus)
 	{
 		super(policy);
 
@@ -90,7 +89,7 @@ public class BUSResource extends Resource
 
 		if (busNumber != 0)
 		{
-			RTLogger.log(new RTDeclareBUSMessage(busNumber,cpusToSet(),name));
+			RTLogger.log(new RTDeclareBUSMessage(busNumber, cpusToSet(), name));
 		}
 	}
 
@@ -106,8 +105,7 @@ public class BUSResource extends Resource
 			busThread = policy.getThread();
 			busThread.runslice(policy.getTimeslice());
 			return true;
-		}
-		else
+		} else
 		{
 			return false;
 		}
@@ -118,9 +116,8 @@ public class BUSResource extends Resource
 	{
 		if (busThread == null)
 		{
-			return Long.MAX_VALUE;		// We're not in timestep
-		}
-		else
+			return Long.MAX_VALUE; // We're not in timestep
+		} else
 		{
 			switch (busThread.getRunState())
 			{
@@ -128,7 +125,7 @@ public class BUSResource extends Resource
 					return busThread.getTimestep();
 
 				case RUNNING:
-					return -1;			// Can't timestep
+					return -1; // Can't timestep
 
 				default:
 					return Long.MAX_VALUE;
@@ -141,8 +138,7 @@ public class BUSResource extends Resource
 		if (from.equals(to))
 		{
 			return false;
-		}
-		else
+		} else
 		{
 			return cpus.contains(from) && cpus.contains(to);
 		}
@@ -166,46 +162,45 @@ public class BUSResource extends Resource
 
 	public void process(ISchedulableThread th)
 	{
-		cq.join(null, null);		// Never leaves
+		cq.join(null, null); // Never leaves
 
 		while (true)
 		{
-    		while (messages.isEmpty())
-    		{
-    			cq.block(null, null);
-    		}
+			while (messages.isEmpty())
+			{
+				cq.block(null, null);
+			}
 
-    		MessagePacket m = messages.remove(0);
+			MessagePacket m = messages.remove(0);
 
-    		RTLogger.log(new RTBusActivateMessage(m));
+			RTLogger.log(new RTBusActivateMessage(m));
 
-    		if (m instanceof MessageRequest)
-    		{
-    			MessageRequest mr = (MessageRequest)m;
+			if (m instanceof MessageRequest)
+			{
+				MessageRequest mr = (MessageRequest) m;
 
-    			if (!mr.bus.isVirtual())
-    			{
-    				long pause = getDataDuration(mr.getSize());
-    				th.duration(pause, null, null);
-    			}
+				if (!mr.bus.isVirtual())
+				{
+					long pause = getDataDuration(mr.getSize());
+					th.duration(pause, null, null);
+				}
 
-    			AsyncThread thread = new AsyncThread(mr);
-    			thread.start();
-    		}
-    		else
-    		{
-    			MessageResponse mr = (MessageResponse)m;
+				AsyncThread thread = new AsyncThread(mr);
+				thread.start();
+			} else
+			{
+				MessageResponse mr = (MessageResponse) m;
 
-    			if (!mr.bus.isVirtual())
-    			{
-    				long pause = getDataDuration(mr.getSize());
-    				th.duration(pause, null, null);
-    			}
+				if (!mr.bus.isVirtual())
+				{
+					long pause = getDataDuration(mr.getSize());
+					th.duration(pause, null, null);
+				}
 
-    			mr.replyTo.set(mr);
-    		}
+				mr.replyTo.set(mr);
+			}
 
-    		RTLogger.log(new RTBusCompletedMessage(m));
+			RTLogger.log(new RTBusCompletedMessage(m));
 		}
 	}
 
@@ -219,12 +214,12 @@ public class BUSResource extends Resource
 	{
 		if (speed == 0)
 		{
-			return 0;			// Infinitely fast virtual bus
-		}
-		else
+			return 0; // Infinitely fast virtual bus
+		} else
 		{
-			//TODO optimize by converting the speed into the correct units only once
-			return SystemClock.timeToInternal(TimeUnit.seconds,(new Double(bytes)/speed)); // bytes/s
+			// TODO optimize by converting the speed into the correct units only once
+			return SystemClock.timeToInternal(TimeUnit.seconds, new Double(bytes)
+					/ speed); // bytes/s
 		}
 	}
 
@@ -234,11 +229,11 @@ public class BUSResource extends Resource
 		sb.append("{");
 		String prefix = "";
 
-		for (CPUResource cpu: cpus)
+		for (CPUResource cpu : cpus)
 		{
 			sb.append(prefix);
 			sb.append(cpu.getNumber());
-			prefix=",";
+			prefix = ",";
 		}
 
 		sb.append("}");

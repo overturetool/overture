@@ -1,3 +1,24 @@
+/*
+ * #%~
+ * VDM Code Generator
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.codegen.visitor;
 
 import java.util.LinkedList;
@@ -13,106 +34,113 @@ import org.overture.ast.statements.AIdentifierObjectDesignator;
 import org.overture.ast.statements.ANewObjectDesignator;
 import org.overture.ast.statements.ASelfObjectDesignator;
 import org.overture.ast.statements.PObjectDesignator;
+import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.SObjectDesignatorCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
-import org.overture.codegen.cgast.expressions.PExpCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AFieldObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.ANewObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.ASelfObjectDesignatorCG;
-import org.overture.codegen.cgast.statements.PObjectDesignatorCG;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.utils.AnalysisExceptionCG;
 
-public class ObjectDesignatorVisitorCG extends AbstractVisitorCG<IRInfo, PObjectDesignatorCG>
+public class ObjectDesignatorVisitorCG extends
+		AbstractVisitorCG<IRInfo, SObjectDesignatorCG>
 {
 	@Override
-	public PObjectDesignatorCG caseAApplyObjectDesignator(
+	public SObjectDesignatorCG caseAApplyObjectDesignator(
 			AApplyObjectDesignator node, IRInfo question)
 			throws AnalysisException
 	{
 		PObjectDesignator obj = node.getObject();
-		PObjectDesignatorCG objCg = obj.apply(question.getObjectDesignatorVisitor(), question);
-		
+		SObjectDesignatorCG objCg = obj.apply(question.getObjectDesignatorVisitor(), question);
+
 		AApplyObjectDesignatorCG applyObjDesignator = new AApplyObjectDesignatorCG();
 		applyObjDesignator.setObject(objCg);
-		
-		LinkedList<PExpCG> newExpArgs = applyObjDesignator.getArgs();
+
+		LinkedList<SExpCG> newExpArgs = applyObjDesignator.getArgs();
 		for (PExp arg : node.getArgs())
 		{
-			PExpCG argCg = arg.apply(question.getExpVisitor(), question);
+			SExpCG argCg = arg.apply(question.getExpVisitor(), question);
 			newExpArgs.add(argCg);
 		}
 
 		return applyObjDesignator;
 	}
-	
+
 	@Override
-	public PObjectDesignatorCG caseAFieldObjectDesignator(
+	public SObjectDesignatorCG caseAFieldObjectDesignator(
 			AFieldObjectDesignator node, IRInfo question)
 			throws AnalysisException
 	{
 		ILexNameToken field = node.getField();
 		PObjectDesignator obj = node.getObject();
-		
+
 		String fieldCg = field.getName();
-		PObjectDesignatorCG objCg = obj.apply(question.getObjectDesignatorVisitor(), question);
-		
+		String fieldModuleCg = field.getModule();
+		SObjectDesignatorCG objCg = obj.apply(question.getObjectDesignatorVisitor(), question);
+
 		AFieldObjectDesignatorCG fieldObjDesignator = new AFieldObjectDesignatorCG();
 		fieldObjDesignator.setFieldName(fieldCg);
+		fieldObjDesignator.setFieldModule(fieldModuleCg);
 		fieldObjDesignator.setObject(objCg);
-		
+
 		return fieldObjDesignator;
 	}
-	
+
 	@Override
-	public PObjectDesignatorCG caseAIdentifierObjectDesignator(
+	public SObjectDesignatorCG caseAIdentifierObjectDesignator(
 			AIdentifierObjectDesignator node, IRInfo question)
 			throws AnalysisException
 	{
 		AVariableExp exp = node.getExpression();
 
-		PExpCG expCg = exp.apply(question.getExpVisitor(), question);
+		SExpCG expCg = exp.apply(question.getExpVisitor(), question);
 
 		AIdentifierObjectDesignatorCG idObjDesignator = new AIdentifierObjectDesignatorCG();
-		
-		if(!(expCg instanceof SVarExpCG))
+
+		if (!(expCg instanceof SVarExpCG))
 		{
-			question.addUnsupportedNode(node, "Expected variable expression for identifier object designator. Got: " + expCg);
+			question.addUnsupportedNode(node, "Expected variable expression for identifier object designator. Got: "
+					+ expCg);
 			return null;
 		}
-		
+
 		idObjDesignator.setExp((SVarExpCG) expCg);
 
 		return idObjDesignator;
 	}
-	
+
 	@Override
-	public PObjectDesignatorCG caseANewObjectDesignator(
+	public SObjectDesignatorCG caseANewObjectDesignator(
 			ANewObjectDesignator node, IRInfo question)
 			throws AnalysisException
 	{
 		ANewExp exp = node.getExpression();
 
-		PExpCG expCg = exp.apply(question.getExpVisitor(), question);
+		SExpCG expCg = exp.apply(question.getExpVisitor(), question);
 
 		ANewObjectDesignatorCG newObjDesignator = new ANewObjectDesignatorCG();
 
 		if (!(expCg instanceof ANewExpCG))
-			throw new AnalysisExceptionCG("Expected expression of new object designator to be a 'new expression' but got: "
-					+ expCg.getClass().getName(), node.getLocation());
+		{
+			question.addUnsupportedNode(node, "Expected expression of new object designator to be a 'new expression' but got: "
+					+ expCg.getClass().getName());
+			return null;
+		}
 
 		newObjDesignator.setExp((ANewExpCG) expCg);
+		
 		return newObjDesignator;
 	}
-	
+
 	@Override
-	public PObjectDesignatorCG caseASelfObjectDesignator(
+	public SObjectDesignatorCG caseASelfObjectDesignator(
 			ASelfObjectDesignator node, IRInfo question)
 			throws AnalysisException
 	{
 		return new ASelfObjectDesignatorCG();
 	}
-	
+
 }

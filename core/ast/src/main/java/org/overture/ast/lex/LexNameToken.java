@@ -1,3 +1,24 @@
+/*
+ * #%~
+ * The Overture Abstract Syntax Tree
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.ast.lex;
 
 import java.io.Serializable;
@@ -10,7 +31,6 @@ import org.overture.ast.analysis.intf.IAnalysis;
 import org.overture.ast.analysis.intf.IAnswer;
 import org.overture.ast.analysis.intf.IQuestion;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
-import org.overture.ast.assistant.type.PTypeAssistant;
 import org.overture.ast.intf.lex.ILexIdentifierToken;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
@@ -97,8 +117,8 @@ public class LexNameToken extends LexToken implements ILexNameToken,
 	public String getFullName()
 	{
 		// Flat specifications have blank module names
-		return (explicit ? (module.length() > 0 ? module + "`" : "") : "")
-				+ name + (old ? "~" : ""); // NB. No qualifier
+		return (explicit ? module.length() > 0 ? module + "`" : "" : "") + name
+				+ (old ? "~" : ""); // NB. No qualifier
 	}
 
 	public LexNameToken getNewName()
@@ -133,7 +153,7 @@ public class LexNameToken extends LexToken implements ILexNameToken,
 
 	public LexNameToken getModifiedName(String classname)
 	{
-		LexNameToken mod = new LexNameToken(classname, name, location,old,explicit);
+		LexNameToken mod = new LexNameToken(classname, name, location, old, explicit);
 		mod.setTypeQualifier(typeQualifier);
 		return mod;
 	}
@@ -179,8 +199,8 @@ public class LexNameToken extends LexToken implements ILexNameToken,
 	{
 		if (hashcode != 0)
 		{
-			if ((typeQualifier == null && types != null)
-					|| (typeQualifier != null && !typeQualifier.equals(types)))
+			if (typeQualifier == null && types != null || typeQualifier != null
+					&& !typeQualifier.equals(types))
 			{
 				throw new InternalException(2, "Cannot change type qualifier: "
 						+ this + " to " + types);
@@ -192,8 +212,9 @@ public class LexNameToken extends LexToken implements ILexNameToken,
 
 	/**
 	 * Basic equals method for LexNameTokens. This method does not handle type qualifiers in that case use
-	 * HelpLexNameToken
+	 * {@link HackLexNameToken}
 	 */
+	@SuppressWarnings("javadoc")
 	@Override
 	public boolean equals(Object other)
 	{
@@ -210,8 +231,8 @@ public class LexNameToken extends LexToken implements ILexNameToken,
 			// equal method but use the HelpLexNameToken class for that
 			// throw new InternalException(-1, "Use HelpLexNameToken.isEqual to compare");
 
-		} else if ((typeQualifier != null && lother.getTypeQualifier() == null)
-				|| (typeQualifier == null && lother.getTypeQualifier() != null))
+		} else if (typeQualifier != null && lother.getTypeQualifier() == null
+				|| typeQualifier == null && lother.getTypeQualifier() != null)
 		{
 			return false;
 		}
@@ -226,6 +247,7 @@ public class LexNameToken extends LexToken implements ILexNameToken,
 	}
 
 	@Override
+	// what does this overrides?
 	public int hashCode()
 	{
 		if (hashcode == 0)
@@ -234,8 +256,8 @@ public class LexNameToken extends LexToken implements ILexNameToken,
 					+ name.hashCode()
 					+ (old ? 1 : 0)
 					+ (typeQualifier == null ? 0
-							: PTypeAssistant.hashCode(typeQualifier));
-							
+							: typeQualifier.toString().hashCode());
+
 		}
 
 		return hashcode;

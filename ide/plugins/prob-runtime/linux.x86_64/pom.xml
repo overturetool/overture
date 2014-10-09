@@ -5,7 +5,7 @@
 	<parent>
 	 <groupId>org.overturetool.ide.plugins</groupId>
   <artifactId>org.overture.ide.plugins.probruntime</artifactId>
-		<version>2.1.0</version>
+		<version>2.1.2</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -63,6 +63,7 @@
 									</mapper>
 									<patternset>
 										<include name="**/probcli"/>
+										<include name="**/probcli.sh"/>
 										<include name="**/lib/**.so"/>
 										<include name="**/lib/**.jar"/>
 										<include name="**/send_user_interrupt"/>

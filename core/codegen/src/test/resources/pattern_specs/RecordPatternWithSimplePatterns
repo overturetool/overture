@@ -1,0 +1,33 @@
+class A
+
+types
+
+public 
+Rec ::
+	n : nat
+	b : bool
+	c : char
+	r : real
+	s : seq of char
+	next : [Rec]
+
+functions
+
+public recPatternFun : () -> seq of (nat | bool | char | real | seq of char | [Rec])
+recPatternFun () ==
+let mk_Rec(1,true, 'a', 1.5, "aaa", nil) = mk_Rec(1,true, 'a', 1.5, "aaa", nil)
+in
+	[2, false, 'b', 2.1, "bbb", nil];
+
+
+end A
+
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	return A`recPatternFun();
+
+end Entry

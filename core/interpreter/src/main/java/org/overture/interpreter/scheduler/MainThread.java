@@ -34,13 +34,11 @@ import org.overture.interpreter.runtime.CollectedContextException;
 import org.overture.interpreter.runtime.CollectedExceptions;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.ContextException;
-import org.overture.interpreter.runtime.ThreadState;
 import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.values.TransactionValue;
 import org.overture.interpreter.values.UndefinedValue;
 import org.overture.interpreter.values.Value;
 import org.overture.parser.lex.LexTokenReader;
-
 
 /**
  * A class representing the main VDM thread.
@@ -69,7 +67,7 @@ public class MainThread extends SchedulablePoolThread
 	@Override
 	public int hashCode()
 	{
-		return (int)getId();
+		return (int) getId();
 	}
 
 	@Override
@@ -78,8 +76,7 @@ public class MainThread extends SchedulablePoolThread
 		if (Settings.usingDBGP)
 		{
 			runDBGP();
-		}
-		else
+		} else
 		{
 			runCmd();
 		}
@@ -89,29 +86,26 @@ public class MainThread extends SchedulablePoolThread
 	{
 		try
 		{
-			result = expression.apply(VdmRuntime.getExpressionEvaluator(),ctxt);
-		}
-		catch (ContextException e)
+			result = expression.apply(VdmRuntime.getExpressionEvaluator(), ctxt);
+		} catch (ContextException e)
 		{
 			setException(e);
 			suspendOthers();
 			DebuggerReader.stopped(e.ctxt, e.location);
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			setException(e);
 			suspendOthers();
-		}catch (Throwable e)
+		} catch (Throwable e)
 		{
-			if(e instanceof ThreadDeath)
+			if (e instanceof ThreadDeath)
 			{
-				//ThreadDeath required re-throw by definition
-				throw (ThreadDeath)e;
+				// ThreadDeath required re-throw by definition
+				throw (ThreadDeath) e;
 			}
 			setException(new Exception("internal error", e));
 			suspendOthers();
-		}
-		finally
+		} finally
 		{
 			TransactionValue.commitAll();
 		}
@@ -121,42 +115,36 @@ public class MainThread extends SchedulablePoolThread
 	{
 		try
 		{
-			result = expression.apply(VdmRuntime.getExpressionEvaluator(),ctxt);
-		}
-		catch (ContextException e)
+			result = expression.apply(VdmRuntime.getExpressionEvaluator(), ctxt);
+		} catch (ContextException e)
 		{
-			//If the exception is raised from the console location the debugger is stopped.
+			// If the exception is raised from the console location the debugger is stopped.
 			if (e.location.getFile().getName().equals(LexTokenReader.consoleFileName))
 			{
-				ThreadState s = ctxt.threadState;
-				s.dbgp.invocationError(e);//TODO
+				setException(e);
 				BasicSchedulableThread.signalAll(Signal.TERMINATE);
-			}
-			else
+			} else
 			{
 				suspendOthers();
 				setException(e);
 				ctxt.threadState.dbgp.stopped(e.ctxt, e.location);
 			}
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			setException(e);
 			BasicSchedulableThread.signalAll(Signal.SUSPEND);
-		}
-		catch(StackOverflowError e)
+		} catch (StackOverflowError e)
 		{
-			ctxt.threadState.dbgp.invocationError(e);
+			setException(new Exception("internal error", e));
 			BasicSchedulableThread.signalAll(Signal.TERMINATE);
-		}catch(ThreadDeath e)
+		} catch (ThreadDeath e)
 		{
-		}catch (Throwable e)
-		
+		} catch (Throwable e)
+
 		{
 			setException(new Exception("internal error", e));
 			BasicSchedulableThread.signalAll(Signal.SUSPEND);
-		}
-		finally
+		} finally
 		{
 			TransactionValue.commitAll();
 		}
@@ -166,10 +154,10 @@ public class MainThread extends SchedulablePoolThread
 	{
 		if (!exception.isEmpty())
 		{
-			if(exception.firstElement() instanceof ContextException)
+			if (exception.firstElement() instanceof ContextException)
 			{
-				throw new CollectedContextException((ContextException) exception.firstElement(),exception);
-			}else
+				throw new CollectedContextException((ContextException) exception.firstElement(), exception);
+			} else
 			{
 				throw new CollectedExceptions(exception);
 			}
@@ -177,7 +165,7 @@ public class MainThread extends SchedulablePoolThread
 
 		return result;
 	}
-	
+
 	public List<Exception> getExceptions()
 	{
 		return exception;

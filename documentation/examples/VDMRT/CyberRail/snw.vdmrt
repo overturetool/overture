@@ -18,23 +18,23 @@ operations
 
 
 
-strategyInit : () ==> ()
+protected strategyInit : () ==> ()
 strategyInit() == 
 (
 	state := <halt>
 );
 
-strategyNotify : () ==> ()
+protected strategyNotify : () ==> ()
 strategyNotify() == is subclass responsibility;
 
 
-strategyEnd : () ==> ()
+protected strategyEnd : () ==> ()
 strategyEnd() == 
 (
 	state := <run>;
 );
 
-handleEvents : ActivePlanManager ==> ()
+protected handleEvents : ActivePlanManager ==> ()
 handleEvents(apm) == is subclass responsibility;
 
 

@@ -10,11 +10,16 @@ public class A {
     public A() {
     }
 
+    public String toString() {
+        return "A{" + "x = " + Utils.toString(x) + ", y = " +
+        Utils.toString(y) + "}";
+    }
+
     public static class RecA implements Record {
         public B.RecB b;
 
         public RecA(final B.RecB _b) {
-            b = (_b != null) ? _b.clone() : null;
+            b = (_b != null) ? Utils.clone(_b) : null;
         }
 
         public boolean equals(final Object obj) {
@@ -24,7 +29,7 @@ public class A {
 
             RecA other = ((RecA) obj);
 
-            return b.equals(other.b);
+            return Utils.equals(b, other.b);
         }
 
         public int hashCode() {
@@ -49,6 +54,10 @@ import java.util.*;
 
 public class B {
     public B() {
+    }
+
+    public String toString() {
+        return "B{}";
     }
 
     public static class RecB implements Record {

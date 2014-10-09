@@ -26,6 +26,7 @@ package org.overture.pog.obligation;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.AForAllExp;
 import org.overture.ast.expressions.AGreaterNumericBinaryExp;
@@ -37,48 +38,44 @@ import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.pog.pub.IPOContextStack;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
+import org.overture.pog.pub.IPogAssistantFactory;
+import org.overture.pog.pub.POType;
 
-public class FuncIterationObligation extends ProofObligation {
+public class FuncIterationObligation extends ProofObligation
+{
 	/**
-	 * VDM Bits: f: nat -> nat1 f(a) == a + 1 pre a < 10;
-	 * 
-	 * g: nat -> nat g(n) == (f ** n)(0);
-	 * 
-	 * Generate PO: (forall n:nat & n > 1 => forall arg:nat & pre_f(arg) =>
-	 * pre_f(f(arg)))
+	 * VDM Bits: f: nat -> nat1 f(a) == a + 1 pre a < 10; g: nat -> nat g(n) == (f ** n)(0); Generate PO: (forall n:nat
+	 * & n > 1 => forall arg:nat & pre_f(arg) => pre_f(f(arg)))
 	 */
 
 	private static final long serialVersionUID = -6041213040266345023L;
 
 	public FuncIterationObligation(AStarStarBinaryExp exp,
-			ILexNameToken preName, IPOContextStack ctxt) {
-		super(exp, POType.FUNC_ITERATION, ctxt, exp.getLocation());
+			ILexNameToken preName, IPOContextStack ctxt,
+			IPogAssistantFactory assistantFactory) throws AnalysisException
+	{
+		super(exp, POType.FUNC_ITERATION, ctxt, exp.getLocation(), assistantFactory);
 
 		// n > 1
-		AGreaterNumericBinaryExp gTExp = AstExpressionFactory
-				.newAGreaterNumericBinaryExp(exp.getRight().clone(),
-						getIntLiteral(1));
+		AGreaterNumericBinaryExp gTExp = AstExpressionFactory.newAGreaterNumericBinaryExp(exp.getRight().clone(), getIntLiteral(1));
 
 		// forall n :T & P(X)
 		AForAllExp forAllExp = new AForAllExp();
 		ILexNameToken arg = getUnique("arg");
-		List<PMultipleBind> bindList = getMultipleTypeBindList(
-				(PTypeAssistantTC.getNumeric(exp.getRight().getType().clone())),
-				arg);
+		List<PMultipleBind> bindList = getMultipleTypeBindList(assistantFactory.createPTypeAssistant().getNumeric(exp.getRight().getType().clone()), arg);
 		forAllExp.setBindList(bindList);
 		forAllExp.setPredicate(getPredicate(exp.clone(), preName.clone(), arg));
 
 		// n > 1 => forall n :T & P(X)
-		AImpliesBooleanBinaryExp impliesExp = AstExpressionFactory
-				.newAImpliesBooleanBinaryExp(gTExp, forAllExp);
+		AImpliesBooleanBinaryExp impliesExp = AstExpressionFactory.newAImpliesBooleanBinaryExp(gTExp, forAllExp);
 
-		// valuetree.setContext(ctxt.getContextNodeList());
+		stitch = impliesExp.clone();
 		valuetree.setPredicate(ctxt.getPredWithContext(impliesExp));
 	}
 
 	PExp getImplies(PExp preExp, PExp leftExp, ILexNameToken preName,
-			ILexNameToken arg) {
+			ILexNameToken arg)
+	{
 		// pre_f(a)
 		AApplyExp pre_exp = getApplyExp(preExp, getVarExp(arg));
 
@@ -89,20 +86,22 @@ public class FuncIterationObligation extends ProofObligation {
 		AApplyExp preleft_exp = getApplyExp(pre_exp, left_exp);
 
 		// pre_f(a) => pre_f(f(a))
-		AImpliesBooleanBinaryExp impliesExp = AstExpressionFactory
-				.newAImpliesBooleanBinaryExp(pre_exp, preleft_exp);
+		AImpliesBooleanBinaryExp impliesExp = AstExpressionFactory.newAImpliesBooleanBinaryExp(pre_exp, preleft_exp);
 
 		return impliesExp;
 
 	}
 
 	private PExp getPredicate(AStarStarBinaryExp exp, ILexNameToken preName,
-			ILexNameToken arg) {
-		if (preName != null) {
+			ILexNameToken arg)
+	{
+		if (preName != null)
+		{
 
 			return getImplies(getVarExp(preName), exp.getLeft(), preName, arg);
 
-		} else { // if no existing pre_f, build it
+		} else
+		{ // if no existing pre_f, build it
 			AApplyExp applyExp = new AApplyExp();
 
 			ILexNameToken prename = new LexNameToken("", "pre_", null);

@@ -1,3 +1,24 @@
+/*
+ * #%~
+ * The VDM Type Checker
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.typechecker.assistant.pattern;
 
 import java.util.ArrayList;
@@ -9,6 +30,7 @@ import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
+import org.overture.ast.patterns.ANamePatternPair;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.PTypeSet;
@@ -33,7 +55,17 @@ public class PPatternListAssistantTC
 		{
 			af.createPPatternAssistant().typeResolve(pattern, rootVisitor, question);
 		}
+	}
 
+	public void typeResolvePairs(List<ANamePatternPair> npplist,
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
+			TypeCheckInfo question) throws AnalysisException
+	{
+
+		for (ANamePatternPair npp : npplist)
+		{
+			af.createPPatternAssistant().typeResolve(npp.getPattern(), rootVisitor, question);
+		}
 	}
 
 	public void unResolve(List<PPattern> pp)
@@ -58,7 +90,7 @@ public class PPatternListAssistantTC
 				return af.createPPatternAssistant().getPossibleType(plist.get(0));
 
 			default:
-				PTypeSet list = new PTypeSet();
+				PTypeSet list = new PTypeSet(af);
 
 				for (PPattern p : plist)
 				{

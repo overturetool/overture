@@ -10,6 +10,7 @@ import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SOperationDefinitionBase;
 import org.overture.ast.expressions.*;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexIdentifierToken;
@@ -28,6 +29,14 @@ import org.overture.ast.types.ASeq1SeqType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
+import org.overture.pog.contexts.OpPostConditionContext;
+import org.overture.pog.contexts.PODefContext;
+import org.overture.pog.contexts.POForAllContext;
+import org.overture.pog.contexts.POForAllPredicateContext;
+import org.overture.pog.contexts.POImpliesContext;
+import org.overture.pog.contexts.POLetDefContext;
+import org.overture.pog.contexts.PONameContext;
+import org.overture.pog.contexts.PONotImpliesContext;
 import org.overture.pog.obligation.CasesExhaustiveObligation;
 import org.overture.pog.obligation.FiniteMapObligation;
 import org.overture.pog.obligation.FuncComposeObligation;
@@ -36,29 +45,21 @@ import org.overture.pog.obligation.LetBeExistsObligation;
 import org.overture.pog.obligation.MapApplyObligation;
 import org.overture.pog.obligation.MapCompatibleObligation;
 import org.overture.pog.obligation.MapComposeObligation;
+import org.overture.pog.obligation.MapInjectivityComp;
+import org.overture.pog.obligation.MapInjectivityEnum;
 import org.overture.pog.obligation.MapIterationObligation;
-import org.overture.pog.obligation.MapSeqOfCompatibleObligation;
-import org.overture.pog.obligation.MapSetOfCompatibleObligation;
 import org.overture.pog.obligation.NonEmptySeqObligation;
 import org.overture.pog.obligation.NonZeroObligation;
-import org.overture.pog.obligation.PODefContext;
-import org.overture.pog.obligation.POForAllContext;
-import org.overture.pog.obligation.POForAllPredicateContext;
-import org.overture.pog.obligation.POImpliesContext;
-import org.overture.pog.obligation.POLetDefContext;
-import org.overture.pog.obligation.PONameContext;
-import org.overture.pog.obligation.PONotImpliesContext;
 import org.overture.pog.obligation.ProofObligationList;
 import org.overture.pog.obligation.RecursiveObligation;
 import org.overture.pog.obligation.SeqApplyObligation;
-import org.overture.pog.obligation.SubTypeObligation;
 import org.overture.pog.obligation.TupleSelectObligation;
+import org.overture.pog.obligation.TypeCompatibilityObligation;
 import org.overture.pog.obligation.UniqueExistenceObligation;
 import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.utility.PogAssistantFactory;
-import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.expression.PExpAssistantTC;
 
 public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofObligationList>
@@ -68,7 +69,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 	final private QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> rootVisitor;
 	final private QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> mainVisitor;
 
-	final private IPogAssistantFactory assistantFactory;
+	final private IPogAssistantFactory aF;
 
 	// Added a mainVisitor hack to enable use from the compassVisitors -ldc
 
@@ -79,7 +80,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 	{
 		this.rootVisitor = parentVisitor;
 		this.mainVisitor = mainVisitor;
-		this.assistantFactory = assistantFactory;
+		this.aF = assistantFactory;
 	}
 
 	/**
@@ -94,7 +95,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 	{
 		this.rootVisitor = parentVisitor;
 		this.mainVisitor = this;
-		this.assistantFactory = new PogAssistantFactory();
+		this.aF = new PogAssistantFactory();
 	}
 
 	@Override
@@ -102,7 +103,6 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 	public IProofObligationList caseAApplyExp(AApplyExp node,
 			IPOContextStack question) throws AnalysisException
 	{
-
 		IProofObligationList obligations = new ProofObligationList();
 
 		PExp root = node.getRoot();
@@ -110,15 +110,15 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		// is it a map?
 
 		PType type = root.getType();
-		if (assistantFactory.createPTypeAssistant().isMap(type))
+		if (aF.createPTypeAssistant().isMap(type))
 		{
-			SMapType mapType = assistantFactory.createPTypeAssistant().getMap(type);
-			obligations.add(new MapApplyObligation(node.getRoot(), node.getArgs().get(0), question));
+			SMapType mapType = aF.createPTypeAssistant().getMap(type);
+			obligations.add(new MapApplyObligation(node.getRoot(), node.getArgs().get(0), question, aF));
 			PType aType = question.checkType(node.getArgs().get(0), node.getArgtypes().get(0));
 
-			if (!TypeComparator.isSubType(aType, mapType.getFrom(), assistantFactory))
+			if (!aF.getTypeComparator().isSubType(aType, mapType.getFrom()))
 			{
-				SubTypeObligation sto = SubTypeObligation.newInstance(node.getArgs().get(0), mapType.getFrom(), aType, question, assistantFactory);
+				TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(node.getArgs().get(0), mapType.getFrom(), aType, question, aF);
 				if (sto != null)
 				{
 					obligations.add(sto);
@@ -126,15 +126,15 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			}
 		}
 
-		if (!assistantFactory.createPTypeAssistant().isUnknown(type)
-				&& assistantFactory.createPTypeAssistant().isFunction(type))
+		if (!aF.createPTypeAssistant().isUnknown(type)
+				&& aF.createPTypeAssistant().isFunction(type))
 		{
-			AFunctionType funcType = assistantFactory.createPTypeAssistant().getFunction(type);
-			ILexNameToken prename = assistantFactory.createPExpAssistant().getPreName(root);
+			AFunctionType funcType = aF.createPTypeAssistant().getFunction(type);
+			ILexNameToken prename = aF.createPExpAssistant().getPreName(root);
 			if (prename == null
 					|| !prename.equals(PExpAssistantTC.NO_PRECONDITION))
 			{
-				obligations.add(new FunctionApplyObligation(node.getRoot(), node.getArgs(), prename, question));
+				obligations.add(new FunctionApplyObligation(node.getRoot(), node.getArgs(), prename, question, aF));
 			}
 
 			int i = 0;
@@ -145,9 +145,9 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 				argType = question.checkType(argList.get(i), argType);
 				PType pt = funcType.getParameters().get(i);
 
-				if (!TypeComparator.isSubType(argType, pt, assistantFactory))
+				if (!aF.getTypeComparator().isSubType(argType, pt))
 				{
-					SubTypeObligation sto = SubTypeObligation.newInstance(argList.get(i), pt, argType, question, assistantFactory);
+					TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(argList.get(i), pt, argType, question, aF);
 					if (sto != null)
 					{
 						obligations.add(sto);
@@ -164,23 +164,23 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 					AExplicitFunctionDefinition def = (AExplicitFunctionDefinition) recursive;
 					if (def.getMeasure() != null)
 					{
-						obligations.add(new RecursiveObligation(def, node, question));
+						obligations.add(new RecursiveObligation(def, node, question, aF));
 					}
 				} else if (recursive instanceof AImplicitFunctionDefinition)
 				{
 					AImplicitFunctionDefinition def = (AImplicitFunctionDefinition) recursive;
 					if (def.getMeasure() != null)
 					{
-						obligations.add(new RecursiveObligation(def, node, question));
+						obligations.add(new RecursiveObligation(def, node, question, aF));
 					}
 
 				}
 			}
 		}
 
-		if (assistantFactory.createPTypeAssistant().isSeq(type))
+		if (aF.createPTypeAssistant().isSeq(type))
 		{
-			obligations.add(new SeqApplyObligation(node.getRoot(), node.getArgs().get(0), question));
+			obligations.add(new SeqApplyObligation(node.getRoot(), node.getArgs().get(0), question, aF));
 		}
 
 		obligations.addAll(node.getRoot().apply(mainVisitor, question));
@@ -190,6 +190,12 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			obligations.addAll(arg.apply(mainVisitor, question));
 		}
 
+		// stick possible op post_condition in the context
+		SOperationDefinitionBase calledOp = node.apply(new GetOpCallVisitor());
+		if (calledOp != null)
+		{
+			new OpPostConditionContext(calledOp.getPostdef(), node, calledOp, aF, question);
+		}
 		return obligations;
 	}
 
@@ -214,8 +220,10 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			var.setName(new LexNameToken("", var.getName().getIdentifier().clone()));
 		}
 
-		if (!assistantFactory.createPTypeAssistant().isType(exp.getType(), ASeq1SeqType.class))
-			obligations.add(new NonEmptySeqObligation(fake, question));
+		if (!aF.createPTypeAssistant().isType(exp.getType(), ASeq1SeqType.class))
+		{
+			obligations.add(new NonEmptySeqObligation(fake, question, aF));
+		}
 
 		return obligations;
 	}
@@ -235,9 +243,11 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		{
 
 			if (alt.getPattern() instanceof AIgnorePattern)
+			{
 				hasIgnore = true;
+			}
 
-			obligations.addAll(assistantFactory.createACaseAlternativeAssistant().getProofObligations(alt, rootVisitor, question, node.getExpression().getType()));
+			obligations.addAll(aF.createACaseAlternativeAssistant().getProofObligations(alt, rootVisitor, question, node.getExpression().getType()));
 			/*
 			 * obligations.addAll(alt.apply(rootVisitor, question));
 			 */
@@ -250,10 +260,14 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		}
 
 		for (int i = 0; i < count; i++)
+		{
 			question.pop();
+		}
 
 		if (node.getOthers() == null && !hasIgnore)
-			obligations.add(new CasesExhaustiveObligation(node, question, assistantFactory));
+		{
+			obligations.add(new CasesExhaustiveObligation(node, question, aF));
+		}
 
 		return obligations;
 	}
@@ -264,7 +278,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 	{
 		IProofObligationList obligations = new ProofObligationList();
 
-		obligations.add(new MapSetOfCompatibleObligation(node, question));
+		obligations.add(new MapInjectivityComp(node, question, aF));
 
 		question.push(new POForAllPredicateContext(node));
 		obligations.addAll(node.getFirst().apply(mainVisitor, question));
@@ -276,11 +290,15 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		{
 			obligations.addAll(mb.apply(rootVisitor, question));
 			if (mb instanceof ATypeMultipleBind)
+			{
 				finiteTest = true;
+			}
 		}
 
 		if (finiteTest)
-			obligations.add(new FiniteMapObligation(node, node.getType(), question));
+		{
+			obligations.add(new FiniteMapObligation(node, node.getType(), question, aF));
+		}
 
 		PExp predicate = node.getPredicate();
 		if (predicate != null)
@@ -346,7 +364,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			IPOContextStack question) throws AnalysisException
 	{
 		IProofObligationList obligations = new ProofObligationList();
-		question.push(new POForAllContext(assistantFactory,node));
+		question.push(new POForAllContext(aF, node));
 		obligations.addAll(node.getPredicate().apply(mainVisitor, question));
 		question.pop();
 		return obligations;
@@ -386,9 +404,9 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 		PType puType = node.getTuple().getType();
 
-		if (assistantFactory.createPTypeAssistant().isUnion(puType))
+		if (aF.createPTypeAssistant().isUnion(puType))
 		{
-			AUnionType utype = (AUnionType) assistantFactory.createPTypeAssistant().getUnion(puType);
+			AUnionType utype = (AUnionType) aF.createPTypeAssistant().getUnion(puType);
 
 			for (PType t : utype.getTypes())
 			{
@@ -397,11 +415,12 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 					AProductType aprodType = (AProductType) t;
 					if (aprodType.getTypes().size() >= node.getField().getValue())
 					{
-						// tuple selection is fine. do nothing and check the next one
+						// tuple selection is fine. do nothing and check the
+						// next one
 						continue;
 					}
 				}
-				obligations.add(new TupleSelectObligation(node.getTuple(), t, question));
+				obligations.add(new TupleSelectObligation(node.getTuple(), t, question, aF));
 			}
 		}
 
@@ -468,7 +487,9 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		assert sizeBefore <= question.size();
 
 		for (int i = 0; i < node.getElseList().size(); i++)
+		{
 			question.pop();
+		}
 
 		question.pop();
 		return obligations;
@@ -487,9 +508,9 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			IPOContextStack question) throws AnalysisException
 	{
 		IProofObligationList obligations = node.getBind().apply(rootVisitor, question);
-		obligations.add(new UniqueExistenceObligation(node, question));
+		obligations.add(new UniqueExistenceObligation(node, question, aF));
 
-		question.push(new POForAllContext(assistantFactory,node));
+		question.push(new POForAllContext(aF, node));
 		obligations.addAll(node.getPredicate().apply(mainVisitor, question));
 		question.pop();
 		return obligations;
@@ -556,18 +577,18 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			IPOContextStack question) throws AnalysisException
 	{
 		IProofObligationList obligations = new ProofObligationList();
-		obligations.add(new LetBeExistsObligation(node, question));
+		obligations.add(new LetBeExistsObligation(node, question, aF));
 		obligations.addAll(node.getBind().apply(rootVisitor, question));
 
 		PExp suchThat = node.getSuchThat();
 		if (suchThat != null)
 		{
-			question.push(new POForAllContext(node, assistantFactory));
+			question.push(new POForAllContext(node, aF));
 			obligations.addAll(suchThat.apply(mainVisitor, question));
 			question.pop();
 		}
 
-		question.push(new POForAllPredicateContext(node, assistantFactory));
+		question.push(new POForAllPredicateContext(node, aF));
 		obligations.addAll(node.getValue().apply(mainVisitor, question));
 		question.pop();
 
@@ -583,7 +604,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 		for (PDefinition def : node.getLocalDefs())
 		{
-			question.push(new PONameContext(assistantFactory.createPDefinitionAssistant().getVariableNames(def)));
+			question.push(new PONameContext(aF.createPDefinitionAssistant().getVariableNames(def)));
 			obligations.addAll(def.apply(rootVisitor, question));
 			question.pop();
 		}
@@ -599,9 +620,8 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 	public IProofObligationList caseADefExp(ADefExp node,
 			IPOContextStack question) throws AnalysisException
 	{
-		IProofObligationList obligations = assistantFactory.createPDefinitionAssistant().getProofObligations(node.getLocalDefs(), rootVisitor, question);
+		IProofObligationList obligations = aF.createPDefinitionAssistant().getProofObligations(node.getLocalDefs(), rootVisitor, question);
 
-		// RWL Question, are we going
 		question.push(new PODefContext(node));
 		obligations.addAll(node.getExpression().apply(mainVisitor, question));
 		question.pop();
@@ -643,7 +663,9 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		@SuppressWarnings("unchecked")
 		Queue<PExp> args = (Queue<PExp>) node.getArgs().clone();
 		for (PExp arg : args)
+		{
 			obligations.addAll(arg.apply(mainVisitor, question));
+		}
 
 		@SuppressWarnings("unchecked")
 		Queue<PType> argTypes = (Queue<PType>) node.getArgTypes().clone();
@@ -654,9 +676,9 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			PType aType = argTypes.poll();
 			PExp aExp = args.poll();
 
-			if (!TypeComparator.isSubType(question.checkType(aExp, aType), f.getType(), assistantFactory))
+			if (!aF.getTypeComparator().isSubType(question.checkType(aExp, aType), f.getType()))
 			{
-				SubTypeObligation sto = SubTypeObligation.newInstance(aExp, f.getType(), aType, question, assistantFactory);
+				TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(aExp, f.getType(), aType, question, aF);
 				if (sto != null)
 				{
 					obligations.add(sto);
@@ -667,7 +689,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		PDefinition invDef = recordType.getInvDef();
 		if (invDef != null)
 		{
-			SubTypeObligation sto = SubTypeObligation.newInstance(node, recordType, recordType, question, assistantFactory);
+			TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(node, recordType, recordType, question, aF);
 			if (sto != null)
 			{
 				obligations.add(sto);
@@ -682,8 +704,12 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 		List<AFieldField> fields = ty.getFields();
 		for (AFieldField f : fields)
+		{
 			if (f.getTag().equals(id.getName()))
+			{
 				return f;
+			}
+		}
 
 		return null;
 	}
@@ -705,14 +731,16 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			AFieldField f = findField(recordType, mod.getTag());
 			PType mType = mTypes.get(i++);
 			if (f != null)
-				if (!TypeComparator.isSubType(mType, f.getType(), assistantFactory))
+			{
+				if (!aF.getTypeComparator().isSubType(mType, f.getType()))
 				{
-					SubTypeObligation sto = SubTypeObligation.newInstance(mod.getValue(), f.getType(), mType, question, assistantFactory);
+					TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(mod.getValue(), f.getType(), mType, question, aF);
 					if (sto != null)
 					{
 						obligations.add(sto);
 					}
 				}
+			}
 
 		}
 
@@ -725,13 +753,13 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 	{
 		IProofObligationList obligations = new ProofObligationList();
 
-		PType expected = (node.getTypedef() == null ? node.getBasicType()
-				: assistantFactory.createPDefinitionAssistant().getType(node.getTypedef()));
+		PType expected = node.getTypedef() == null ? node.getBasicType()
+				: aF.createPDefinitionAssistant().getType(node.getTypedef());
 		question.noteType(node.getTest(), expected);
 
-		if (!TypeComparator.isSubType(node.getTest().getType(), expected, assistantFactory))
+		if (!aF.getTypeComparator().isSubType(node.getTest().getType(), expected))
 		{
-			SubTypeObligation sto = SubTypeObligation.newInstance(node.getTest(), expected, node.getTest().getType(), question, assistantFactory);
+			TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(node.getTest(), expected, node.getTest().getType(), question, aF);
 			if (sto != null)
 			{
 				obligations.add(sto);
@@ -751,7 +779,9 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		IProofObligationList obligations = new ProofObligationList();
 
 		for (PExp exp : node.getArgs())
+		{
 			obligations.addAll(exp.apply(mainVisitor, question));
+		}
 
 		return obligations;
 	}
@@ -898,7 +928,9 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 	{
 		IProofObligationList obligations = new ProofObligationList();
 		for (PExp exp : node.getArgs())
+		{
 			obligations.addAll(exp.apply(mainVisitor, question));
+		}
 		return obligations;
 	}
 
@@ -940,16 +972,16 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			throws AnalysisException
 	{
 		IProofObligationList obligations = node.getExp().apply(mainVisitor, question);
-		obligations.add(new org.overture.pog.obligation.NonEmptySetObligation(node.getExp(), question));
+		obligations.add(new org.overture.pog.obligation.NonEmptySetObligation(node.getExp(), question, aF));
 		return obligations;
 	}
 
 	@Override
 	public IProofObligationList caseADistMergeUnaryExp(ADistMergeUnaryExp node,
-			IPOContextStack question)
+			IPOContextStack question) throws AnalysisException
 	{
 		IProofObligationList obligations = new ProofObligationList();
-		obligations.add(new MapSetOfCompatibleObligation(node.getExp(), question));
+		obligations.add(new MapInjectivityComp(node.getExp(), question, aF));
 		return obligations;
 	}
 
@@ -1006,7 +1038,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		IProofObligationList obligations = node.getExp().apply(mainVisitor, question);
 		if (!node.getMapType().getEmpty())
 		{
-			obligations.add(new org.overture.pog.obligation.MapInverseObligation(node, question));
+			obligations.add(new org.overture.pog.obligation.MapInverseObligation(node, question, aF));
 		}
 		return obligations;
 	}
@@ -1045,8 +1077,10 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 	{
 		IProofObligationList obligations = node.getExp().apply(mainVisitor, question);
 
-		if (!assistantFactory.createPTypeAssistant().isType(node.getExp().getType(), ASeq1SeqType.class))
-			obligations.add(new NonEmptySeqObligation(node.getExp(), question));
+		if (!aF.createPTypeAssistant().isType(node.getExp().getType(), ASeq1SeqType.class))
+		{
+			obligations.add(new NonEmptySeqObligation(node.getExp(), question, aF));
+		}
 
 		return obligations;
 	}
@@ -1070,6 +1104,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 	@Override
 	public IProofObligationList defaultSBooleanBinaryExp(
 			SBooleanBinaryExp node, IPOContextStack question)
+			throws AnalysisException
 	{
 		IProofObligationList obligations = new ProofObligationList();
 		PExp lExp = node.getLeft();
@@ -1079,7 +1114,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		PType rType = rExp.getType();
 		if (lType instanceof AUnionType)
 		{
-			SubTypeObligation sto = SubTypeObligation.newInstance(lExp, AstFactory.newABooleanBasicType(lExp.getLocation()), lType, question, assistantFactory);
+			TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(lExp, AstFactory.newABooleanBasicType(lExp.getLocation()), lType, question, aF);
 			if (sto != null)
 			{
 				obligations.add(sto);
@@ -1088,7 +1123,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 		if (rType instanceof AUnionType)
 		{
-			SubTypeObligation sto = SubTypeObligation.newInstance(rExp, AstFactory.newABooleanBasicType(rExp.getLocation()), rType, question, assistantFactory);
+			TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(rExp, AstFactory.newABooleanBasicType(rExp.getLocation()), rType, question, aF);
 			if (sto != null)
 			{
 				obligations.add(sto);
@@ -1099,7 +1134,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 	@Override
 	public IProofObligationList caseACompBinaryExp(ACompBinaryExp node,
-			IPOContextStack question)
+			IPOContextStack question) throws AnalysisException
 	{
 
 		IProofObligationList obligations = new ProofObligationList();
@@ -1107,18 +1142,23 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		PType lType = lExp.getType();
 		PExp rExp = node.getRight();
 
-		if (assistantFactory.createPTypeAssistant().isFunction(lType))
+		if (aF.createPTypeAssistant().isFunction(lType))
 		{
-			ILexNameToken pref1 = assistantFactory.createPExpAssistant().getPreName(lExp);
-			ILexNameToken pref2 = assistantFactory.createPExpAssistant().getPreName(rExp);
+			ILexNameToken pref1 = aF.createPExpAssistant().getPreName(lExp);
+			ILexNameToken pref2 = aF.createPExpAssistant().getPreName(rExp);
 
 			if (pref1 == null || !pref1.equals(PExpAssistantTC.NO_PRECONDITION))
-				obligations.add(new FuncComposeObligation(node, pref1, pref2, question, assistantFactory));//gkanos:add on more argument for the assistantFactory need it
+			{
+				obligations.add(new FuncComposeObligation(node, pref1, pref2, question, aF));// gkanos:add on more
+																								// argument for the
+																								// assistantFactory need
+																								// it
+			}
 		}
 
-		if (assistantFactory.createPTypeAssistant().isMap(lType))
+		if (aF.createPTypeAssistant().isMap(lType))
 		{
-			obligations.add(new MapComposeObligation(node, question));
+			obligations.add(new MapComposeObligation(node, question, aF));
 		}
 
 		return obligations;
@@ -1150,7 +1190,9 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 	{
 
 		if (node == null)
+		{
 			return new ProofObligationList();
+		}
 
 		PExp[] leftRight = getLeftRight(node);
 		PExp left = leftRight[LEFT];
@@ -1190,7 +1232,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			IPOContextStack question) throws AnalysisException
 	{
 		IProofObligationList obligations = handleBinaryExpression(node, question);
-		obligations.add(new MapCompatibleObligation(node.getLeft(), node.getRight(), question));
+		obligations.add(new MapCompatibleObligation(node.getLeft(), node.getRight(), question, aF));
 		return obligations;
 	}
 
@@ -1223,7 +1265,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		if (lType instanceof AUnionType)
 		{
 
-			SubTypeObligation sto = SubTypeObligation.newInstance(left, AstFactory.newARealNumericBasicType(right.getLocation()), lType, question, assistantFactory);
+			TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(left, AstFactory.newARealNumericBasicType(right.getLocation()), lType, question, aF);
 			if (sto != null)
 			{
 				obligations.add(sto);
@@ -1233,7 +1275,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 		if (rType instanceof AUnionType)
 		{
-			SubTypeObligation sto = SubTypeObligation.newInstance(right, AstFactory.newARealNumericBasicType(right.getLocation()), rType, question, assistantFactory);
+			TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(right, AstFactory.newARealNumericBasicType(right.getLocation()), rType, question, aF);
 			if (sto != null)
 			{
 				obligations.add(sto);
@@ -1253,9 +1295,9 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		IProofObligationList obligations = handleBinaryExpression(node, question);
 		PType lType = node.getLeft().getType();
 
-		if (assistantFactory.createPTypeAssistant().isSeq(lType))
+		if (aF.createPTypeAssistant().isSeq(lType))
 		{
-			obligations.add(new org.overture.pog.obligation.SeqModificationObligation(node, question));
+			obligations.add(new org.overture.pog.obligation.SeqModificationObligation(node, question, aF));
 		}
 
 		return obligations;
@@ -1319,26 +1361,26 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 	@Override
 	public IProofObligationList caseAStarStarBinaryExp(AStarStarBinaryExp node,
-			IPOContextStack question)
+			IPOContextStack question) throws AnalysisException
 	{
 		IProofObligationList obligations = new ProofObligationList();
 
 		PExp lExp = node.getLeft();
 		PType lType = lExp.getType();
 
-		if (assistantFactory.createPTypeAssistant().isFunction(lType))
+		if (aF.createPTypeAssistant().isFunction(lType))
 		{
-			ILexNameToken preName = assistantFactory.createPExpAssistant().getPreName(lExp);
+			ILexNameToken preName = aF.createPExpAssistant().getPreName(lExp);
 			if (preName == null
 					|| !preName.equals(PExpAssistantTC.NO_PRECONDITION))
 			{
-				obligations.add(new org.overture.pog.obligation.FuncIterationObligation(node, preName, question));
+				obligations.add(new org.overture.pog.obligation.FuncIterationObligation(node, preName, question, aF));
 			}
 		}
 
-		if (assistantFactory.createPTypeAssistant().isMap(lType))
+		if (aF.createPTypeAssistant().isMap(lType))
 		{
-			obligations.add(new MapIterationObligation(node, question));
+			obligations.add(new MapIterationObligation(node, question, aF));
 		}
 
 		return obligations;
@@ -1363,20 +1405,20 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		PExp rExp = node.getRight();
 		PType rType = rExp.getType();
 
-		if (assistantFactory.createPTypeAssistant().isUnion(lType))
+		if (aF.createPTypeAssistant().isUnion(lType))
 		{
-			SubTypeObligation sto = SubTypeObligation.newInstance(lExp, AstFactory.newABooleanBasicType(lExp.getLocation()), lType, question, assistantFactory);
+			TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(lExp, AstFactory.newABooleanBasicType(lExp.getLocation()), lType, question, aF);
 			if (sto != null)
 			{
 				obligations.add(sto);
 			}
 		}
 
-		if (assistantFactory.createPTypeAssistant().isUnion(rType))
+		if (aF.createPTypeAssistant().isUnion(rType))
 		{
 			question.push(new POImpliesContext(lExp));
 
-			SubTypeObligation sto = SubTypeObligation.newInstance(rExp, AstFactory.newABooleanBasicType(rExp.getLocation()), rType, question, assistantFactory);
+			TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(rExp, AstFactory.newABooleanBasicType(rExp.getLocation()), rType, question, aF);
 			if (sto != null)
 			{
 				obligations.add(sto);
@@ -1404,18 +1446,18 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		PExp rExp = leftRight[RIGHT];
 		PType rType = rExp.getType();
 
-		if (assistantFactory.createPTypeAssistant().isUnion(lType))
+		if (aF.createPTypeAssistant().isUnion(lType))
 		{
-			SubTypeObligation sto = SubTypeObligation.newInstance(lExp, AstFactory.newABooleanBasicType(lExp.getLocation()), lType, question, assistantFactory);
+			TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(lExp, AstFactory.newABooleanBasicType(lExp.getLocation()), lType, question, aF);
 			if (sto != null)
 			{
 				obligations.add(sto);
 			}
 		}
 
-		if (assistantFactory.createPTypeAssistant().isUnion(rType))
+		if (aF.createPTypeAssistant().isUnion(rType))
 		{
-			SubTypeObligation sto = SubTypeObligation.newInstance(rExp, AstFactory.newABooleanBasicType(rExp.getLocation()), rType, question, assistantFactory);
+			TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(rExp, AstFactory.newABooleanBasicType(rExp.getLocation()), rType, question, aF);
 			if (sto != null)
 			{
 				obligations.add(sto);
@@ -1449,14 +1491,14 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		PExp rExp = leftRight[RIGHT];
 		PType rType = rExp.getType();
 
-		if (assistantFactory.createPTypeAssistant().isUnion(lType))
+		if (aF.createPTypeAssistant().isUnion(lType))
 		{
-			obligations.add(SubTypeObligation.newInstance(lExp, AstFactory.newABooleanBasicType(lExp.getLocation()), lType, question, assistantFactory));
+			obligations.add(TypeCompatibilityObligation.newInstance(lExp, AstFactory.newABooleanBasicType(lExp.getLocation()), lType, question, aF));
 		}
 
-		if (assistantFactory.createPTypeAssistant().isUnion(rType))
+		if (aF.createPTypeAssistant().isUnion(rType))
 		{
-			obligations.add(SubTypeObligation.newInstance(rExp, AstFactory.newABooleanBasicType(rExp.getLocation()), rType, question, assistantFactory));
+			obligations.add(TypeCompatibilityObligation.newInstance(rExp, AstFactory.newABooleanBasicType(rExp.getLocation()), rType, question, aF));
 		}
 
 		obligations.addAll(lExp.apply(mainVisitor, question));
@@ -1483,7 +1525,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 		if (lType instanceof AUnionType)
 		{
-			SubTypeObligation sto = SubTypeObligation.newInstance(lExp, AstFactory.newABooleanBasicType(lExp.getLocation()), lType, question, assistantFactory);
+			TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(lExp, AstFactory.newABooleanBasicType(lExp.getLocation()), lType, question, aF);
 			if (sto != null)
 			{
 				obligations.add(sto);
@@ -1493,7 +1535,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		if (rType instanceof AUnionType)
 		{
 			question.push(new PONotImpliesContext(lExp));
-			SubTypeObligation sto = SubTypeObligation.newInstance(rExp, AstFactory.newABooleanBasicType(rExp.getLocation()), rType, question, assistantFactory);
+			TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(rExp, AstFactory.newABooleanBasicType(rExp.getLocation()), rType, question, aF);
 			if (sto != null)
 			{
 				obligations.add(sto);
@@ -1518,8 +1560,9 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 		obligations.addAll(defaultSNumericBinaryExp((SNumericBinaryExp) node, question));
 
-		if (!neverZero(rExp)){
-			obligations.add(new NonZeroObligation(node.getLocation(), rExp, question));
+		if (!neverZero(rExp))
+		{
+			obligations.add(new NonZeroObligation(node.getLocation(), rExp, question, aF));
 		}
 
 		return obligations;
@@ -1527,16 +1570,18 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 	private boolean neverZero(PExp exp)
 	{
-		if (exp instanceof AIntLiteralExp){
+		if (exp instanceof AIntLiteralExp)
+		{
 			AIntLiteralExp il_Exp = (AIntLiteralExp) exp;
-			if (il_Exp.getValue().getValue()!=0)
+			if (il_Exp.getValue().getValue() != 0)
 			{
 				return true;
 			}
 		}
-		if (exp instanceof ARealLiteralExp){
+		if (exp instanceof ARealLiteralExp)
+		{
 			ARealLiteralExp rl_Exp = (ARealLiteralExp) exp;
-			if (rl_Exp.getValue().getValue()!=0)
+			if (rl_Exp.getValue().getValue() != 0)
 			{
 				return true;
 			}
@@ -1573,20 +1618,22 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		PType rtype = right.getType();
 
 		if (left.getLocation().getStartLine() == 2792)
-			System.out.println("fd");
-
-		if (assistantFactory.createPTypeAssistant().isUnion(ltype))
 		{
-			SubTypeObligation sto = SubTypeObligation.newInstance(left, AstFactory.newARealNumericBasicType(left.getLocation()), ltype, question, assistantFactory);
+			System.out.println("fd");
+		}
+
+		if (aF.createPTypeAssistant().isUnion(ltype))
+		{
+			TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(left, AstFactory.newARealNumericBasicType(left.getLocation()), ltype, question, aF);
 			if (sto != null)
 			{
 				obligations.add(sto);
 			}
 		}
 
-		if (assistantFactory.createPTypeAssistant().isUnion(rtype))
+		if (aF.createPTypeAssistant().isUnion(rtype))
 		{
-			SubTypeObligation sto = SubTypeObligation.newInstance(right, AstFactory.newARealNumericBasicType(right.getLocation()), rtype, question, assistantFactory);
+			TypeCompatibilityObligation sto = TypeCompatibilityObligation.newInstance(right, AstFactory.newARealNumericBasicType(right.getLocation()), rtype, question, aF);
 			if (sto != null)
 			{
 				obligations.add(sto);
@@ -1686,7 +1733,9 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		}
 
 		if (members.size() > 1)
-			obligations.add(new MapSeqOfCompatibleObligation(node, question));
+		{
+			obligations.add(new MapInjectivityEnum(node, question, aF));
+		}
 
 		return obligations;
 	}
@@ -1698,7 +1747,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		IProofObligationList obligations = new ProofObligationList();
 
 		PExp first = node.getFirst();
-		question.push(new POForAllPredicateContext(node, assistantFactory));
+		question.push(new POForAllPredicateContext(node, aF));
 		obligations.addAll(first.apply(mainVisitor, question));
 		question.pop();
 
@@ -1707,7 +1756,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		PExp predicate = node.getPredicate();
 		if (predicate != null)
 		{
-			question.push(new POForAllContext(node,assistantFactory));
+			question.push(new POForAllContext(node, aF));
 			obligations.addAll(predicate.apply(mainVisitor, question));
 			question.pop();
 		}
@@ -1723,7 +1772,9 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		IProofObligationList obligations = new ProofObligationList();
 
 		for (PExp e : node.getMembers())
+		{
 			obligations.addAll(e.apply(mainVisitor, question));
+		}
 
 		return obligations;
 	}
@@ -1756,7 +1807,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 		if (finiteTest)
 		{
-			obligations.add(new org.overture.pog.obligation.FiniteSetObligation(node, node.getSetType(), question));
+			obligations.add(new org.overture.pog.obligation.FiniteSetObligation(node, node.getSetType(), question, aF));
 		}
 
 		if (predicate != null)
@@ -1776,7 +1827,9 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		IProofObligationList obligations = new ProofObligationList();
 
 		for (PExp e : node.getMembers())
+		{
 			obligations.addAll(e.apply(mainVisitor, question));
+		}
 
 		return obligations;
 
@@ -1800,14 +1853,12 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 		return new ProofObligationList();
 	}
 
-
 	@Override
 	public IProofObligationList createNewReturnValue(INode node,
 			IPOContextStack question)
 	{
 		return new ProofObligationList();
 	}
-
 
 	@Override
 	public IProofObligationList createNewReturnValue(Object node,

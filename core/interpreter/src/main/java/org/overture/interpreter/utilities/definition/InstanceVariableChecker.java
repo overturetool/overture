@@ -11,55 +11,49 @@ import org.overture.ast.node.INode;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 
 /***************************************
- * 
- * This method checks if a definition is an instance variable. 
+ * This method checks if a definition is an instance variable.
  * 
  * @author gkanos
- *
  ****************************************/
 public class InstanceVariableChecker extends AnswerAdaptor<Boolean>
 {
 	protected IInterpreterAssistantFactory af;
-	
+
 	public InstanceVariableChecker(IInterpreterAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public Boolean caseAImportedDefinition(AImportedDefinition def)
 			throws AnalysisException
 	{
-		//return isInstanceVariable(((AImportedDefinition) def).getDef());
 		return def.getDef().apply(THIS);
 	}
-	
+
 	@Override
 	public Boolean caseAInheritedDefinition(AInheritedDefinition def)
 			throws AnalysisException
 	{
-		//return isInstanceVariable((def).getSuperdef());
 		return def.getSuperdef().apply(THIS);
 	}
-	
+
 	@Override
 	public Boolean caseARenamedDefinition(ARenamedDefinition def)
 			throws AnalysisException
 	{
-		//return isInstanceVariable(((ARenamedDefinition) def).getDef());
 		return def.getDef().apply(THIS);
 	}
-	
+
 	@Override
 	public Boolean caseAInstanceVariableDefinition(
 			AInstanceVariableDefinition def) throws AnalysisException
 	{
 		return true;
 	}
-	
+
 	@Override
-	public Boolean defaultPDefinition(PDefinition def)
-			throws AnalysisException
+	public Boolean defaultPDefinition(PDefinition def) throws AnalysisException
 	{
 		return false;
 	}

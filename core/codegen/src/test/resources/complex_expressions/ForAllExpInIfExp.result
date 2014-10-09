@@ -17,7 +17,15 @@ public class Entry {
             forAllExpResult_1 = x.longValue() > 2L;
         }
 
-        return forAllExpResult_1 ? 42L : 49L;
+        if (forAllExpResult_1) {
+            return 42L;
+        } else {
+            return 49L;
+        }
+    }
+
+    public String toString() {
+        return "Entry{}";
     }
 }
 

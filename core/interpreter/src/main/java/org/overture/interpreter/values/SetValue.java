@@ -29,9 +29,6 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.PType;
 import org.overture.interpreter.runtime.Context;
-import org.overture.interpreter.runtime.ValueException;
-
-
 
 public class SetValue extends Value
 {
@@ -73,7 +70,7 @@ public class SetValue extends Value
 	{
 		ValueSet nset = new ValueSet();
 
-		for (Value k: values)
+		for (Value k : values)
 		{
 			Value v = k.getUpdatable(listeners);
 			nset.add(v);
@@ -87,7 +84,7 @@ public class SetValue extends Value
 	{
 		ValueSet nset = new ValueSet();
 
-		for (Value k: values)
+		for (Value k : values)
 		{
 			Value v = k.getConstant();
 			nset.add(v);
@@ -101,13 +98,13 @@ public class SetValue extends Value
 	{
 		if (other instanceof Value)
 		{
-			Value val = ((Value)other).deref();
+			Value val = ((Value) other).deref();
 
-    		if (val instanceof SetValue)
-    		{
-    			SetValue ot = (SetValue)val;
-    			return values.equals(ot.values);
-    		}
+			if (val instanceof SetValue)
+			{
+				SetValue ot = (SetValue) val;
+				return values.equals(ot.values);
+			}
 		}
 
 		return false;
@@ -130,9 +127,9 @@ public class SetValue extends Value
 		List<ValueSet> psets = values.permutedSets();
 		ValueList rs = new ValueList(psets.size());
 
-		for (ValueSet v: psets)
+		for (ValueSet v : psets)
 		{
-			rs.add(new SetValue(v, false));		// NB not re-sorted!
+			rs.add(new SetValue(v, false)); // NB not re-sorted!
 		}
 
 		return rs;
@@ -145,21 +142,21 @@ public class SetValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt) throws AnalysisException
+	public Value convertValueTo(PType to, Context ctxt)
+			throws AnalysisException
 	{
 		if (to instanceof ASetType)
 		{
-			ASetType setto = (ASetType)to;
+			ASetType setto = (ASetType) to;
 			ValueSet ns = new ValueSet();
 
-			for (Value v: values)
+			for (Value v : values)
 			{
 				ns.add(v.convertValueTo(setto.getSetof(), ctxt));
 			}
 
 			return new SetValue(ns);
-		}
-		else
+		} else
 		{
 			return super.convertValueTo(to, ctxt);
 		}
@@ -168,6 +165,6 @@ public class SetValue extends Value
 	@Override
 	public Object clone()
 	{
-		return new SetValue((ValueSet)values.clone());
+		return new SetValue((ValueSet) values.clone());
 	}
 }

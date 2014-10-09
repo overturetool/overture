@@ -13,61 +13,57 @@ import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.values.ValueList;
 
 /***************************************
- * 
- * This method locates a value for a definition node. 
+ * This method locates a value for a definition node.
  * 
  * @author gkanos
- *
  ****************************************/
-public class ValuesDefinitionLocator extends QuestionAnswerAdaptor<ObjectContext, ValueList>
+public class ValuesDefinitionLocator extends
+		QuestionAnswerAdaptor<ObjectContext, ValueList>
 {
 	protected IInterpreterAssistantFactory af;
-	
+
 	public ValuesDefinitionLocator(IInterpreterAssistantFactory af)
 	{
 		this.af = af;
 	}
-	
+
 	@Override
 	public ValueList caseAAssignmentDefinition(AAssignmentDefinition def,
 			ObjectContext ctxt) throws AnalysisException
 	{
-		//return AAssignmentDefinitionAssistantInterpreter.getValues(def, ctxt);
 		return af.createPExpAssistant().getValues(def.getExpression(), ctxt);
 	}
-	
+
 	@Override
 	public ValueList caseAEqualsDefinition(AEqualsDefinition def,
 			ObjectContext ctxt) throws AnalysisException
 	{
-		//return AEqualsDefinitionAssistantInterpreter.getValues(def, ctxt);
 		ValueList list = af.createPExpAssistant().getValues(def.getTest(), ctxt);
 
 		if (def.getSetbind() != null)
 		{
-			list.addAll(af.createPBindAssistant().getBindValues(def.getSetbind(), ctxt));//(ASetBindAssistantInterpreter.getValues(def.getSetbind(), ctxt));
+			list.addAll(af.createPBindAssistant().getBindValues(def.getSetbind(), ctxt));// (ASetBindAssistantInterpreter.getValues(def.getSetbind(),
+																							// ctxt));
 		}
 
 		return list;
 	}
-	
+
 	@Override
 	public ValueList caseAInstanceVariableDefinition(
 			AInstanceVariableDefinition def, ObjectContext ctxt)
 			throws AnalysisException
 	{
-		//return AInstanceVariableDefinitionAssistantInterpreter.getValues(def, ctxt);
 		return af.createPExpAssistant().getValues(def.getExpression(), ctxt);
 	}
-	
+
 	@Override
 	public ValueList caseAValueDefinition(AValueDefinition def,
 			ObjectContext ctxt) throws AnalysisException
 	{
-		//return AValueDefinitionAssistantInterpreter.getValues(def, ctxt);
 		return af.createPExpAssistant().getValues(def.getExpression(), ctxt);
 	}
-	
+
 	@Override
 	public ValueList defaultPDefinition(PDefinition def, ObjectContext ctxt)
 			throws AnalysisException

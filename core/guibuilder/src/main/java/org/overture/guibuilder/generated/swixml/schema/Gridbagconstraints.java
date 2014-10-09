@@ -5,11 +5,11 @@
 // Generated on: 2011.04.08 at 06:53:28 PM WEST 
 //
 
-
 package org.overture.guibuilder.generated.swixml.schema;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAnyElement;
@@ -18,11 +18,11 @@ import javax.xml.bind.annotation.XmlMixed;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for anonymous complex type.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType>
@@ -63,776 +63,684 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "content"
-})
+@XmlType(name = "", propOrder = { "content" })
 @XmlRootElement(name = "gridbagconstraints")
-public class Gridbagconstraints {
+public class Gridbagconstraints
+{
 
-    @XmlMixed
-    @XmlAnyElement(lax = true)
-    protected List<Object> content;
-    @XmlAttribute(name = "anchor")
-    protected String anchor;
-    @XmlAttribute(name = "fill")
-    protected String fill;
-    @XmlAttribute(name = "gridheight")
-    protected String gridheight;
-    @XmlAttribute(name = "gridwidth")
-    protected String gridwidth;
-    @XmlAttribute(name = "gridx")
-    protected String gridx;
-    @XmlAttribute(name = "gridy")
-    protected String gridy;
-    @XmlAttribute(name = "insets")
-    protected String insets;
-    @XmlAttribute(name = "ipadx")
-    protected String ipadx;
-    @XmlAttribute(name = "ipady")
-    protected String ipady;
-    @XmlAttribute(name = "weightx")
-    protected String weightx;
-    @XmlAttribute(name = "weighty")
-    protected String weighty;
-    @XmlAttribute(name = "constraints")
-    protected String constraints;
-    @XmlAttribute(name = "plaf")
-    protected String plaf;
-    @XmlAttribute(name = "bundle")
-    protected String bundle;
-    @XmlAttribute(name = "locale")
-    protected String locale;
-    @XmlAttribute(name = "id")
-    protected String id;
-    @XmlAttribute(name = "refid")
-    protected String refid;
-    @XmlAttribute(name = "use")
-    protected String use;
-    @XmlAttribute(name = "include")
-    protected String include;
-    @XmlAttribute(name = "initclass")
-    protected String initclass;
-    @XmlAttribute(name = "action")
-    protected String action;
-    @XmlAttribute(name = "macos_preferences")
-    protected String macosPreferences;
-    @XmlAttribute(name = "macos_about")
-    protected String macosAbout;
-    @XmlAttribute(name = "macos_quit")
-    protected String macosQuit;
-    @XmlAttribute(name = "macos_openapp")
-    protected String macosOpenapp;
-    @XmlAttribute(name = "macos_openfile")
-    protected String macosOpenfile;
-    @XmlAttribute(name = "macos_print")
-    protected String macosPrint;
-    @XmlAttribute(name = "macos_reopen")
-    protected String macosReopen;
+	@XmlMixed
+	@XmlAnyElement(lax = true)
+	protected List<Object> content;
+	@XmlAttribute(name = "anchor")
+	protected String anchor;
+	@XmlAttribute(name = "fill")
+	protected String fill;
+	@XmlAttribute(name = "gridheight")
+	protected String gridheight;
+	@XmlAttribute(name = "gridwidth")
+	protected String gridwidth;
+	@XmlAttribute(name = "gridx")
+	protected String gridx;
+	@XmlAttribute(name = "gridy")
+	protected String gridy;
+	@XmlAttribute(name = "insets")
+	protected String insets;
+	@XmlAttribute(name = "ipadx")
+	protected String ipadx;
+	@XmlAttribute(name = "ipady")
+	protected String ipady;
+	@XmlAttribute(name = "weightx")
+	protected String weightx;
+	@XmlAttribute(name = "weighty")
+	protected String weighty;
+	@XmlAttribute(name = "constraints")
+	protected String constraints;
+	@XmlAttribute(name = "plaf")
+	protected String plaf;
+	@XmlAttribute(name = "bundle")
+	protected String bundle;
+	@XmlAttribute(name = "locale")
+	protected String locale;
+	@XmlAttribute(name = "id")
+	protected String id;
+	@XmlAttribute(name = "refid")
+	protected String refid;
+	@XmlAttribute(name = "use")
+	protected String use;
+	@XmlAttribute(name = "include")
+	protected String include;
+	@XmlAttribute(name = "initclass")
+	protected String initclass;
+	@XmlAttribute(name = "action")
+	protected String action;
+	@XmlAttribute(name = "macos_preferences")
+	protected String macosPreferences;
+	@XmlAttribute(name = "macos_about")
+	protected String macosAbout;
+	@XmlAttribute(name = "macos_quit")
+	protected String macosQuit;
+	@XmlAttribute(name = "macos_openapp")
+	protected String macosOpenapp;
+	@XmlAttribute(name = "macos_openfile")
+	protected String macosOpenfile;
+	@XmlAttribute(name = "macos_print")
+	protected String macosPrint;
+	@XmlAttribute(name = "macos_reopen")
+	protected String macosReopen;
 
-    /**
-     * Gets the value of the content property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the content property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getContent().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link String }
-     * {@link Object }
-     * 
-     * 
-     */
-    public List<Object> getContent() {
-        if (content == null) {
-            content = new ArrayList<Object>();
-        }
-        return this.content;
-    }
+	/**
+	 * Gets the value of the content property.
+	 * <p>
+	 * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+	 * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+	 * the content property.
+	 * <p>
+	 * For example, to add a new item, do as follows:
+	 * 
+	 * <pre>
+	 * getContent().add(newItem);
+	 * </pre>
+	 * <p>
+	 * Objects of the following type(s) are allowed in the list {@link String } {@link Object }
+	 * @return 
+	 */
+	public List<Object> getContent()
+	{
+		if (content == null)
+		{
+			content = new ArrayList<Object>();
+		}
+		return this.content;
+	}
 
-    /**
-     * Gets the value of the anchor property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getAnchor() {
-        return anchor;
-    }
+	/**
+	 * Gets the value of the anchor property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getAnchor()
+	{
+		return anchor;
+	}
 
-    /**
-     * Sets the value of the anchor property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setAnchor(String value) {
-        this.anchor = value;
-    }
+	/**
+	 * Sets the value of the anchor property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setAnchor(String value)
+	{
+		this.anchor = value;
+	}
 
-    /**
-     * Gets the value of the fill property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getFill() {
-        return fill;
-    }
+	/**
+	 * Gets the value of the fill property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getFill()
+	{
+		return fill;
+	}
 
-    /**
-     * Sets the value of the fill property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setFill(String value) {
-        this.fill = value;
-    }
+	/**
+	 * Sets the value of the fill property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setFill(String value)
+	{
+		this.fill = value;
+	}
 
-    /**
-     * Gets the value of the gridheight property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getGridheight() {
-        return gridheight;
-    }
+	/**
+	 * Gets the value of the gridheight property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getGridheight()
+	{
+		return gridheight;
+	}
 
-    /**
-     * Sets the value of the gridheight property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setGridheight(String value) {
-        this.gridheight = value;
-    }
+	/**
+	 * Sets the value of the gridheight property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setGridheight(String value)
+	{
+		this.gridheight = value;
+	}
 
-    /**
-     * Gets the value of the gridwidth property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getGridwidth() {
-        return gridwidth;
-    }
+	/**
+	 * Gets the value of the gridwidth property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getGridwidth()
+	{
+		return gridwidth;
+	}
 
-    /**
-     * Sets the value of the gridwidth property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setGridwidth(String value) {
-        this.gridwidth = value;
-    }
+	/**
+	 * Sets the value of the gridwidth property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setGridwidth(String value)
+	{
+		this.gridwidth = value;
+	}
 
-    /**
-     * Gets the value of the gridx property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getGridx() {
-        return gridx;
-    }
+	/**
+	 * Gets the value of the gridx property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getGridx()
+	{
+		return gridx;
+	}
 
-    /**
-     * Sets the value of the gridx property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setGridx(String value) {
-        this.gridx = value;
-    }
+	/**
+	 * Sets the value of the gridx property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setGridx(String value)
+	{
+		this.gridx = value;
+	}
 
-    /**
-     * Gets the value of the gridy property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getGridy() {
-        return gridy;
-    }
+	/**
+	 * Gets the value of the gridy property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getGridy()
+	{
+		return gridy;
+	}
 
-    /**
-     * Sets the value of the gridy property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setGridy(String value) {
-        this.gridy = value;
-    }
+	/**
+	 * Sets the value of the gridy property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setGridy(String value)
+	{
+		this.gridy = value;
+	}
 
-    /**
-     * Gets the value of the insets property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getInsets() {
-        return insets;
-    }
+	/**
+	 * Gets the value of the insets property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getInsets()
+	{
+		return insets;
+	}
 
-    /**
-     * Sets the value of the insets property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setInsets(String value) {
-        this.insets = value;
-    }
+	/**
+	 * Sets the value of the insets property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setInsets(String value)
+	{
+		this.insets = value;
+	}
 
-    /**
-     * Gets the value of the ipadx property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getIpadx() {
-        return ipadx;
-    }
+	/**
+	 * Gets the value of the ipadx property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getIpadx()
+	{
+		return ipadx;
+	}
 
-    /**
-     * Sets the value of the ipadx property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setIpadx(String value) {
-        this.ipadx = value;
-    }
+	/**
+	 * Sets the value of the ipadx property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setIpadx(String value)
+	{
+		this.ipadx = value;
+	}
 
-    /**
-     * Gets the value of the ipady property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getIpady() {
-        return ipady;
-    }
+	/**
+	 * Gets the value of the ipady property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getIpady()
+	{
+		return ipady;
+	}
 
-    /**
-     * Sets the value of the ipady property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setIpady(String value) {
-        this.ipady = value;
-    }
+	/**
+	 * Sets the value of the ipady property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setIpady(String value)
+	{
+		this.ipady = value;
+	}
 
-    /**
-     * Gets the value of the weightx property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getWeightx() {
-        return weightx;
-    }
+	/**
+	 * Gets the value of the weightx property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getWeightx()
+	{
+		return weightx;
+	}
 
-    /**
-     * Sets the value of the weightx property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setWeightx(String value) {
-        this.weightx = value;
-    }
+	/**
+	 * Sets the value of the weightx property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setWeightx(String value)
+	{
+		this.weightx = value;
+	}
 
-    /**
-     * Gets the value of the weighty property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getWeighty() {
-        return weighty;
-    }
+	/**
+	 * Gets the value of the weighty property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getWeighty()
+	{
+		return weighty;
+	}
 
-    /**
-     * Sets the value of the weighty property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setWeighty(String value) {
-        this.weighty = value;
-    }
+	/**
+	 * Sets the value of the weighty property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setWeighty(String value)
+	{
+		this.weighty = value;
+	}
 
-    /**
-     * Gets the value of the constraints property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getConstraints() {
-        return constraints;
-    }
+	/**
+	 * Gets the value of the constraints property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getConstraints()
+	{
+		return constraints;
+	}
 
-    /**
-     * Sets the value of the constraints property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setConstraints(String value) {
-        this.constraints = value;
-    }
+	/**
+	 * Sets the value of the constraints property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setConstraints(String value)
+	{
+		this.constraints = value;
+	}
 
-    /**
-     * Gets the value of the plaf property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getPlaf() {
-        return plaf;
-    }
+	/**
+	 * Gets the value of the plaf property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getPlaf()
+	{
+		return plaf;
+	}
 
-    /**
-     * Sets the value of the plaf property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setPlaf(String value) {
-        this.plaf = value;
-    }
+	/**
+	 * Sets the value of the plaf property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setPlaf(String value)
+	{
+		this.plaf = value;
+	}
 
-    /**
-     * Gets the value of the bundle property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getBundle() {
-        return bundle;
-    }
+	/**
+	 * Gets the value of the bundle property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getBundle()
+	{
+		return bundle;
+	}
 
-    /**
-     * Sets the value of the bundle property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setBundle(String value) {
-        this.bundle = value;
-    }
+	/**
+	 * Sets the value of the bundle property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setBundle(String value)
+	{
+		this.bundle = value;
+	}
 
-    /**
-     * Gets the value of the locale property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getLocale() {
-        return locale;
-    }
+	/**
+	 * Gets the value of the locale property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getLocale()
+	{
+		return locale;
+	}
 
-    /**
-     * Sets the value of the locale property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setLocale(String value) {
-        this.locale = value;
-    }
+	/**
+	 * Sets the value of the locale property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setLocale(String value)
+	{
+		this.locale = value;
+	}
 
-    /**
-     * Gets the value of the id property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getId() {
-        return id;
-    }
+	/**
+	 * Gets the value of the id property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getId()
+	{
+		return id;
+	}
 
-    /**
-     * Sets the value of the id property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setId(String value) {
-        this.id = value;
-    }
+	/**
+	 * Sets the value of the id property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setId(String value)
+	{
+		this.id = value;
+	}
 
-    /**
-     * Gets the value of the refid property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getRefid() {
-        return refid;
-    }
+	/**
+	 * Gets the value of the refid property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getRefid()
+	{
+		return refid;
+	}
 
-    /**
-     * Sets the value of the refid property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setRefid(String value) {
-        this.refid = value;
-    }
+	/**
+	 * Sets the value of the refid property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setRefid(String value)
+	{
+		this.refid = value;
+	}
 
-    /**
-     * Gets the value of the use property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getUse() {
-        return use;
-    }
+	/**
+	 * Gets the value of the use property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getUse()
+	{
+		return use;
+	}
 
-    /**
-     * Sets the value of the use property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setUse(String value) {
-        this.use = value;
-    }
+	/**
+	 * Sets the value of the use property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setUse(String value)
+	{
+		this.use = value;
+	}
 
-    /**
-     * Gets the value of the include property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getInclude() {
-        return include;
-    }
+	/**
+	 * Gets the value of the include property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getInclude()
+	{
+		return include;
+	}
 
-    /**
-     * Sets the value of the include property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setInclude(String value) {
-        this.include = value;
-    }
+	/**
+	 * Sets the value of the include property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setInclude(String value)
+	{
+		this.include = value;
+	}
 
-    /**
-     * Gets the value of the initclass property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getInitclass() {
-        return initclass;
-    }
+	/**
+	 * Gets the value of the initclass property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getInitclass()
+	{
+		return initclass;
+	}
 
-    /**
-     * Sets the value of the initclass property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setInitclass(String value) {
-        this.initclass = value;
-    }
+	/**
+	 * Sets the value of the initclass property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setInitclass(String value)
+	{
+		this.initclass = value;
+	}
 
-    /**
-     * Gets the value of the action property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getAction() {
-        return action;
-    }
+	/**
+	 * Gets the value of the action property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getAction()
+	{
+		return action;
+	}
 
-    /**
-     * Sets the value of the action property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setAction(String value) {
-        this.action = value;
-    }
+	/**
+	 * Sets the value of the action property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setAction(String value)
+	{
+		this.action = value;
+	}
 
-    /**
-     * Gets the value of the macosPreferences property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getMacosPreferences() {
-        return macosPreferences;
-    }
+	/**
+	 * Gets the value of the macosPreferences property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getMacosPreferences()
+	{
+		return macosPreferences;
+	}
 
-    /**
-     * Sets the value of the macosPreferences property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setMacosPreferences(String value) {
-        this.macosPreferences = value;
-    }
+	/**
+	 * Sets the value of the macosPreferences property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setMacosPreferences(String value)
+	{
+		this.macosPreferences = value;
+	}
 
-    /**
-     * Gets the value of the macosAbout property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getMacosAbout() {
-        return macosAbout;
-    }
+	/**
+	 * Gets the value of the macosAbout property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getMacosAbout()
+	{
+		return macosAbout;
+	}
 
-    /**
-     * Sets the value of the macosAbout property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setMacosAbout(String value) {
-        this.macosAbout = value;
-    }
+	/**
+	 * Sets the value of the macosAbout property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setMacosAbout(String value)
+	{
+		this.macosAbout = value;
+	}
 
-    /**
-     * Gets the value of the macosQuit property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getMacosQuit() {
-        return macosQuit;
-    }
+	/**
+	 * Gets the value of the macosQuit property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getMacosQuit()
+	{
+		return macosQuit;
+	}
 
-    /**
-     * Sets the value of the macosQuit property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setMacosQuit(String value) {
-        this.macosQuit = value;
-    }
+	/**
+	 * Sets the value of the macosQuit property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setMacosQuit(String value)
+	{
+		this.macosQuit = value;
+	}
 
-    /**
-     * Gets the value of the macosOpenapp property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getMacosOpenapp() {
-        return macosOpenapp;
-    }
+	/**
+	 * Gets the value of the macosOpenapp property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getMacosOpenapp()
+	{
+		return macosOpenapp;
+	}
 
-    /**
-     * Sets the value of the macosOpenapp property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setMacosOpenapp(String value) {
-        this.macosOpenapp = value;
-    }
+	/**
+	 * Sets the value of the macosOpenapp property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setMacosOpenapp(String value)
+	{
+		this.macosOpenapp = value;
+	}
 
-    /**
-     * Gets the value of the macosOpenfile property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getMacosOpenfile() {
-        return macosOpenfile;
-    }
+	/**
+	 * Gets the value of the macosOpenfile property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getMacosOpenfile()
+	{
+		return macosOpenfile;
+	}
 
-    /**
-     * Sets the value of the macosOpenfile property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setMacosOpenfile(String value) {
-        this.macosOpenfile = value;
-    }
+	/**
+	 * Sets the value of the macosOpenfile property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setMacosOpenfile(String value)
+	{
+		this.macosOpenfile = value;
+	}
 
-    /**
-     * Gets the value of the macosPrint property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getMacosPrint() {
-        return macosPrint;
-    }
+	/**
+	 * Gets the value of the macosPrint property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getMacosPrint()
+	{
+		return macosPrint;
+	}
 
-    /**
-     * Sets the value of the macosPrint property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setMacosPrint(String value) {
-        this.macosPrint = value;
-    }
+	/**
+	 * Sets the value of the macosPrint property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setMacosPrint(String value)
+	{
+		this.macosPrint = value;
+	}
 
-    /**
-     * Gets the value of the macosReopen property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getMacosReopen() {
-        return macosReopen;
-    }
+	/**
+	 * Gets the value of the macosReopen property.
+	 * 
+	 * @return possible object is {@link String }
+	 */
+	public String getMacosReopen()
+	{
+		return macosReopen;
+	}
 
-    /**
-     * Sets the value of the macosReopen property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setMacosReopen(String value) {
-        this.macosReopen = value;
-    }
+	/**
+	 * Sets the value of the macosReopen property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 */
+	public void setMacosReopen(String value)
+	{
+		this.macosReopen = value;
+	}
 
 }

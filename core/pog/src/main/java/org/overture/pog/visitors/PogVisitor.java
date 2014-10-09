@@ -1,8 +1,7 @@
 package org.overture.pog.visitors;
 
-import org.overture.pog.obligation.POContextStack;
+import org.overture.pog.contexts.POContextStack;
 import org.overture.pog.obligation.ProofObligationList;
-
 
 /**
  * This is the proof obligation visitor climbs through the AST and builds the list of proof obligations the given
@@ -12,14 +11,8 @@ import org.overture.pog.obligation.ProofObligationList;
  * @author Overture team
  * @since 1.0
  */
-public class PogVisitor extends PogParamVisitor<POContextStack, ProofObligationList>
+public class PogVisitor extends
+		PogParamVisitor<POContextStack, ProofObligationList>
 {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -97073667572118569L;
-
-
-	
 }

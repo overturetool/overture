@@ -1,3 +1,24 @@
+/*
+ * #%~
+ * VDM Code Generator
+ * %%
+ * Copyright (C) 2008 - 2014 Overture
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #~%
+ */
 package org.overture.codegen.vdm2java;
 
 import java.io.BufferedWriter;
@@ -12,18 +33,25 @@ import java.util.List;
 import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
-import org.overture.codegen.analysis.violations.InvalidNamesException;
+import org.overture.ast.intf.lex.ILexLocation;
+import org.overture.ast.lex.Dialect;
+import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.analysis.violations.Violation;
+import org.overture.codegen.assistant.AssistantManager;
+import org.overture.codegen.assistant.LocationAssistantCG;
 import org.overture.codegen.ir.IRSettings;
+import org.overture.codegen.ir.NodeInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.interpreter.VDMPP;
+import org.overture.interpreter.VDMRT;
 import org.overture.interpreter.util.ClassListInterpreter;
 import org.overture.interpreter.util.ExitStatus;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
@@ -35,39 +63,40 @@ public class JavaCodeGenUtil
 {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
-	public static GeneratedData generateJavaFromFiles(List<File> files, IRSettings irSettings, JavaSettings javaSettings) throws AnalysisException, InvalidNamesException, UnsupportedModelingException
+	public static GeneratedData generateJavaFromFiles(List<File> files,
+			IRSettings irSettings, JavaSettings javaSettings, Dialect dialect)
+			throws AnalysisException, UnsupportedModelingException
 	{
-		List<SClassDefinition> mergedParseList = consMergedParseList(files);
-		
+		List<SClassDefinition> mergedParseList = consMergedParseList(files, dialect);
+
 		JavaCodeGen vdmCodGen = new JavaCodeGen();
-		
+
 		vdmCodGen.setSettings(irSettings);
 		vdmCodGen.setJavaSettings(javaSettings);
 
-		List<GeneratedModule> generatedModules = generateJavaFromVdm(mergedParseList, vdmCodGen);
-		
-		GeneratedModule quoteValues = vdmCodGen.generateJavaFromVdmQuotes();
-		
-		GeneratedData dataToReturn = new GeneratedData(generatedModules, quoteValues);
-		
-		return dataToReturn;
+		return generateJavaFromVdm(mergedParseList, vdmCodGen);
 	}
-	
-	public static List<SClassDefinition> consMergedParseList(List<File> files) throws AnalysisException
+
+	public static List<SClassDefinition> consMergedParseList(List<File> files, Dialect dialect)
+			throws AnalysisException
 	{
-		VDMPP vdmrt = new VDMPP();
+		VDMPP vdmrt = (dialect == Dialect.VDM_RT ? new VDMRT() : new VDMPP());
 		vdmrt.setQuiet(true);
-		
+
 		ExitStatus status = vdmrt.parse(files);
-		
-		if(status != ExitStatus.EXIT_OK)
+
+		if (status != ExitStatus.EXIT_OK)
+		{
 			throw new AnalysisException("Could not parse files!");
-		
+		}
+
 		status = vdmrt.typeCheck();
 
-		if(status != ExitStatus.EXIT_OK)
+		if (status != ExitStatus.EXIT_OK)
+		{
 			throw new AnalysisException("Could not type check files!");
-		
+		}
+
 		ClassListInterpreter classes;
 		try
 		{
@@ -76,25 +105,32 @@ public class JavaCodeGenUtil
 		{
 			throw new AnalysisException("Could not get classes from class list interpreter!");
 		}
-		
+
 		List<SClassDefinition> mergedParseList = new LinkedList<SClassDefinition>();
-		
+
 		for (SClassDefinition vdmClass : classes)
-			mergedParseList.add(vdmClass);
+		{
+			if (vdmClass instanceof AClassClassDefinition) {
+				mergedParseList.add(vdmClass);
+			}
+		}
 
 		return mergedParseList;
 	}
 
-	private static List<GeneratedModule> generateJavaFromVdm(
-			List<SClassDefinition> mergedParseLists, JavaCodeGen vdmCodGen) throws AnalysisException, InvalidNamesException, UnsupportedModelingException
+	private static GeneratedData generateJavaFromVdm(
+			List<SClassDefinition> mergedParseLists, JavaCodeGen vdmCodGen)
+			throws AnalysisException, UnsupportedModelingException
 	{
 		return vdmCodGen.generateJavaFromVdm(mergedParseLists);
 	}
 
-	public static Generated generateJavaFromExp(String exp, IRSettings irSettings, JavaSettings javaSettings) throws AnalysisException
+	public static Generated generateJavaFromExp(String exp,
+			IRSettings irSettings, JavaSettings javaSettings)
+			throws AnalysisException
 	{
 		TypeCheckResult<PExp> typeCheckResult = GeneralCodeGenUtils.validateExp(exp);
-		
+
 		if (typeCheckResult.errors.size() > 0)
 		{
 			throw new AnalysisException("Unable to type check expression: "
@@ -104,7 +140,7 @@ public class JavaCodeGenUtil
 		JavaCodeGen vdmCodGen = new JavaCodeGen();
 		vdmCodGen.setSettings(irSettings);
 		vdmCodGen.setJavaSettings(javaSettings);
-		
+
 		try
 		{
 			return vdmCodGen.generateJavaFromVdmExp(typeCheckResult.result);
@@ -116,62 +152,70 @@ public class JavaCodeGenUtil
 		}
 
 	}
-	
+
 	public static List<Violation> asSortedList(Set<Violation> violations)
 	{
 		LinkedList<Violation> list = new LinkedList<Violation>(violations);
 		Collections.sort(list);
-		
+
 		return list;
 	}
-	
-	public static String constructNameViolationsString(InvalidNamesException e)
+
+	public static String constructNameViolationsString(
+			InvalidNamesResult invalidNames)
 	{
 		StringBuffer buffer = new StringBuffer();
-		
-		List<Violation> reservedWordViolations = asSortedList(e.getReservedWordViolations());
-		List<Violation> typenameViolations = asSortedList(e.getTypenameViolations());
-		List<Violation> tempVarViolations = asSortedList(e.getTempVarViolations());
-		
+
+		List<Violation> reservedWordViolations = asSortedList(invalidNames.getReservedWordViolations());
+		List<Violation> typenameViolations = asSortedList(invalidNames.getTypenameViolations());
+		List<Violation> tempVarViolations = asSortedList(invalidNames.getTempVarViolations());
+
+		String correctionMessage = String.format("Prefix '%s' has been added to the name"
+				+ LINE_SEPARATOR, invalidNames.getCorrectionPrefix());
+
 		for (Violation violation : reservedWordViolations)
 		{
-			buffer.append("Reserved name violation: " + violation
-					+ LINE_SEPARATOR);
+			buffer.append("Reserved name violation: " + violation + ". "
+					+ correctionMessage);
 		}
 
 		for (Violation violation : typenameViolations)
 		{
-			buffer.append("Type name violation: " + violation + LINE_SEPARATOR);
+			buffer.append("Type name violation: " + violation + ". "
+					+ correctionMessage);
 		}
-		
-		for(Violation violation : tempVarViolations)
+
+		for (Violation violation : tempVarViolations)
 		{
-			buffer.append("Temporary variable violation: " + violation + LINE_SEPARATOR);
+			buffer.append("Temporary variable violation: " + violation + ". "
+					+ correctionMessage);
 		}
-		
+
 		return buffer.toString();
 	}
-	
-	public static String constructUnsupportedModelingString(UnsupportedModelingException e)
+
+	public static String constructUnsupportedModelingString(
+			UnsupportedModelingException e)
 	{
 		StringBuffer buffer = new StringBuffer();
-		
+
 		List<Violation> violations = asSortedList(e.getViolations());
-		
+
 		for (Violation violation : violations)
 		{
 			buffer.append(violation + LINE_SEPARATOR);
 		}
-		
+
 		return buffer.toString();
 	}
-	
-	public static void generateJavaSourceFiles(File outputFolder, List<GeneratedModule> classes)
+
+	public static void generateJavaSourceFiles(File outputFolder,
+			List<GeneratedModule> classes)
 	{
 		JavaCodeGen vdmCodGen = new JavaCodeGen();
 		vdmCodGen.generateJavaSourceFiles(outputFolder, classes);
 	}
-	
+
 	public static String formatJavaCode(String code)
 	{
 		File tempFile = null;
@@ -181,7 +225,7 @@ public class JavaCodeGenUtil
 			tempFile = new File("target" + File.separatorChar + "temp.java");
 			tempFile.getParentFile().mkdirs();
 			tempFile.createNewFile();
-			
+
 			PrintWriter xwriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(tempFile, false), "UTF-8"));
 			xwriter.write(code.toString());
 			xwriter.flush();
@@ -195,15 +239,19 @@ public class JavaCodeGenUtil
 			xwriter.close();
 
 			String result = null;
-			
+
 			if (jalopy.getState() == Jalopy.State.OK
 					|| jalopy.getState() == Jalopy.State.PARSED)
+			{
 				result = b.toString();
-			else if (jalopy.getState() == Jalopy.State.WARN)
+			} else if (jalopy.getState() == Jalopy.State.WARN)
+			{
 				result = code;// formatted with warnings
-			else if (jalopy.getState() == Jalopy.State.ERROR)
-				 result = code; // could not be formatted
-			
+			} else if (jalopy.getState() == Jalopy.State.ERROR)
+			{
+				result = code; // could not be formatted
+			}
+
 			return result.toString();
 
 		} catch (Exception e)
@@ -211,20 +259,21 @@ public class JavaCodeGenUtil
 			Logger.getLog().printErrorln("Could not format code: "
 					+ e.toString());
 			e.printStackTrace();
-		}
-		finally
+		} finally
 		{
 			tempFile.delete();
 		}
 
 		return null;// could not be formatted
 	}
-	
-	public static void saveJavaClass(File outputFolder, String javaFileName, String code)
+
+	public static void saveJavaClass(File outputFolder, String javaFileName,
+			String code)
 	{
 		try
 		{
-			File javaFile = new File(outputFolder, File.separator + javaFileName);
+			File javaFile = new File(outputFolder, File.separator
+					+ javaFileName);
 			javaFile.getParentFile().mkdirs();
 			javaFile.createNewFile();
 			PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(javaFile, false), "UTF-8"));
@@ -239,5 +288,42 @@ public class JavaCodeGenUtil
 			e.printStackTrace();
 		}
 	}
-	
+
+	public static void printMergeErrors(List<Exception> mergeErrors)
+	{
+		for (Exception error : mergeErrors)
+		{
+			Logger.getLog().println(error.toString());
+		}
+	}
+
+	public static void printUnsupportedNodes(Set<NodeInfo> unsupportedNodes)
+	{
+		AssistantManager assistantManager = new AssistantManager();
+		LocationAssistantCG locationAssistant = assistantManager.getLocationAssistant();
+
+		List<NodeInfo> nodesSorted = assistantManager.getLocationAssistant().getNodesLocationSorted(unsupportedNodes);
+
+		Logger.getLog().println("Following constructs are not supported: ");
+
+		for (NodeInfo nodeInfo : nodesSorted)
+		{
+			Logger.getLog().print(nodeInfo.getNode().toString());
+
+			ILexLocation location = locationAssistant.findLocation(nodeInfo.getNode());
+
+			Logger.getLog().print(location != null ? " at [line, pos] = ["
+					+ location.getStartLine() + ", " + location.getStartPos()
+					+ "]" : "");
+
+			String reason = nodeInfo.getReason();
+
+			if (reason != null)
+			{
+				Logger.getLog().print(". Reason: " + reason);
+			}
+
+			Logger.getLog().println("");
+		}
+	}
 }

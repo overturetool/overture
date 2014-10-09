@@ -23,12 +23,12 @@ public class Entry {
             Number x = ((Number) iterator_1.next());
 
             if (pick()) {
-                setCompResult_1 = SetUtil.union(setCompResult_1.clone(),
+                setCompResult_1 = SetUtil.union(Utils.clone(setCompResult_1),
                         SetUtil.set(x.longValue() * 2L));
             }
         }
 
-        return setCompResult_1.clone();
+        return Utils.clone(setCompResult_1);
     }
 
     public static Number Test() {
@@ -40,6 +40,10 @@ public class Entry {
         }
 
         return sum;
+    }
+
+    public String toString() {
+        return "Entry{}";
     }
 }
 

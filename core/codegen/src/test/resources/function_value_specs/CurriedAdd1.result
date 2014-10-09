@@ -7,6 +7,10 @@ public class Entry {
     public Entry() {
     }
 
+    public static Object Run() {
+        return f(2L).eval(3L);
+    }
+
     public static Func_1<Number, Number> f(final Number x) {
         return new Func_1<Number, Number>() {
                 public Number eval(final Number y) {
@@ -15,8 +19,8 @@ public class Entry {
             };
     }
 
-    public static Object Run() {
-        return f(2L).eval(3L);
+    public String toString() {
+        return "Entry{}";
     }
 }
 
