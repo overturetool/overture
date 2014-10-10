@@ -5,7 +5,6 @@ import org.overture.codegen.runtime.*;
 public class ${node.getName()} extends UnicastRemoteObject implements ${node.getName()}_i{
                                 
 	#foreach( $method in $node.getMethods() )
-	@Override
 	$JavaFormat.format($method)
 	#end
 }
