@@ -116,9 +116,9 @@ public class JavaCodeGenDistributionMain {
 
 			Set<AVariableExp> deployedObjects = mapping.getDeployedObjects();
 
-			SystemClassDeclaration systemClassDecl = new SystemClassDeclaration(deployedObjects);
+			//SystemClassDeclaration systemClassDecl = new SystemClassDeclaration(deployedObjects);
 
-			AClassDeclCG systemClass = systemClassDecl.Run();
+			//AClassDeclCG systemClass = systemClassDecl.Run();
 
 			// TODO: Do nicely
 			IRInfo info = new IRInfo("cg_init");
@@ -178,8 +178,8 @@ public class JavaCodeGenDistributionMain {
 					.run();
 
 
-
-
+			Map<String, AClassDeclCG> cpuToSystemDecl = cpuDepGenerator.getcpuToSystemDecl();
+			
 			for (ACpuDeploymentDeclCG impl : cpuDeps) {
 				StringWriter writer = new StringWriter();
 				impl.apply(printer, writer);
@@ -192,21 +192,37 @@ public class JavaCodeGenDistributionMain {
 				output.write(JavaCodeGenUtil.formatJavaCode(writer
 						.toString()));
 				output.close();
-			}
+					
+				// Create the unique system class for each CPU
+				AClassDeclCG systemClass = cpuToSystemDecl.get(impl.getCpuName());
+				
+				StringWriter writer2 = new StringWriter();
+				systemClass.apply(printer, writer2);
 
-			for (ACpuDeploymentDeclCG impl : cpuDeps) {
-				StringWriter writer = new StringWriter();
-				systemClass.apply(printer, writer);
-
-				System.out.println(JavaCodeGenUtil.formatJavaCode(writer
+				System.out.println(JavaCodeGenUtil.formatJavaCode(writer2
 						.toString()));
 
-				File file = new File("/Users/Miran/Documents/files/" + impl.getCpuName() + "/" + systemClass.getName()  + ".java");
-				BufferedWriter output = new BufferedWriter(new FileWriter(file));
-				output.write(JavaCodeGenUtil.formatJavaCode(writer
+				File file2 = new File("/Users/Miran/Documents/files/" + impl.getCpuName() + "/" + systemClass.getName()  + ".java");
+				BufferedWriter output2 = new BufferedWriter(new FileWriter(file2));
+				output2.write(JavaCodeGenUtil.formatJavaCode(writer2
 						.toString()));
-				output.close();
+				output2.close();
+				
 			}
+
+//			for (ACpuDeploymentDeclCG impl : cpuDeps) {
+//				StringWriter writer = new StringWriter();
+//				systemClass.apply(printer, writer);
+//
+//				System.out.println(JavaCodeGenUtil.formatJavaCode(writer
+//						.toString()));
+//
+//				File file = new File("/Users/Miran/Documents/files/" + impl.getCpuName() + "/" + systemClass.getName()  + ".java");
+//				BufferedWriter output = new BufferedWriter(new FileWriter(file));
+//				output.write(JavaCodeGenUtil.formatJavaCode(writer
+//						.toString()));
+//				output.close();
+//			}
 			
 			
 			
