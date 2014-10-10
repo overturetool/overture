@@ -7,6 +7,10 @@ public class A {
     public A() {
     }
 
+    public String toString() {
+        return "A{}";
+    }
+
     private static class Vector2D implements Record {
         public Number x;
         public Number y;

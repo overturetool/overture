@@ -227,6 +227,7 @@ public class IRInfo
 		for (int i = 0; i < quoteValuesList.size(); i++)
 		{
 			AFieldDeclCG fieldDecl = new AFieldDeclCG();
+			fieldDecl.setVolatile(false);
 			fieldDecl.setName(quoteValuesList.get(i));
 			fieldDecl.setAccess(IRConstants.PUBLIC);
 			fieldDecl.setFinal(false);

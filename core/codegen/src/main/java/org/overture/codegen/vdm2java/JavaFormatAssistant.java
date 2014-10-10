@@ -46,7 +46,7 @@ import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
-import org.overture.codegen.cgast.types.AClassTypeCG;
+import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
@@ -164,7 +164,7 @@ public class JavaFormatAssistant
 	{
 		ACallStmCG call = new ACallStmCG();
 
-		AClassTypeCG classType = new AClassTypeCG();
+		AExternalTypeCG classType = new AExternalTypeCG();
 		classType.setName(JavaFormat.UTILS_FILE);
 
 		AIdentifierVarExpCG root = new AIdentifierVarExpCG();
@@ -172,7 +172,7 @@ public class JavaFormatAssistant
 		root.setOriginal(field.getName());
 
 		AIdentifierVarExpCG argument = new AIdentifierVarExpCG();
-		// argument.setType(field.getType().clone());
+		argument.setType(field.getType().clone());
 		argument.setOriginal(field.getName());
 
 		call.setType(classType.clone());
@@ -234,18 +234,7 @@ public class JavaFormatAssistant
 	{
 		LinkedList<AFieldDeclCG> fields = record.getFields();
 
-		AExplicitVarExpCG member = new AExplicitVarExpCG();
-
-		AMethodTypeCG methodType = new AMethodTypeCG();
-		methodType.setResult(returnType.clone());
-		member.setType(methodType);
-		AClassTypeCG classType = new AClassTypeCG();
-		classType.setName(JavaFormat.UTILS_FILE);
-		member.setClassType(classType);
-		member.setName(memberName);
-		AApplyExpCG call = new AApplyExpCG();
-		call.setType(returnType.clone());
-		call.setRoot(member);
+		AApplyExpCG call = consUtilCall(returnType, memberName);
 		LinkedList<SExpCG> args = call.getArgs();
 
 		for (AFieldDeclCG field : fields)
@@ -256,6 +245,24 @@ public class JavaFormatAssistant
 			args.add(nextArg);
 		}
 
+		return call;
+	}
+
+	public static AApplyExpCG consUtilCall(STypeCG returnType, String memberName)
+	{
+		AExplicitVarExpCG member = new AExplicitVarExpCG();
+
+		AMethodTypeCG methodType = new AMethodTypeCG();
+		methodType.setResult(returnType.clone());
+		member.setType(methodType);
+		AExternalTypeCG classType = new AExternalTypeCG();
+		classType.setName(JavaFormat.UTILS_FILE);
+		member.setClassType(classType);
+		member.setName(memberName);
+		AApplyExpCG call = new AApplyExpCG();
+		call.setType(returnType.clone());
+		call.setRoot(member);
+		
 		return call;
 	}
 }

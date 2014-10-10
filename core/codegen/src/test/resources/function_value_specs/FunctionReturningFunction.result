@@ -14,6 +14,10 @@ public class Entry {
     public static Func_1<Number, Number> f() {
         return null;
     }
+
+    public String toString() {
+        return "Entry{}";
+    }
 }
 
 ##########

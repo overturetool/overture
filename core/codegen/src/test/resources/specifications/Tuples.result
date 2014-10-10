@@ -10,6 +10,10 @@ public class A {
     public static Tuple f2(final Tuple x) {
         return Tuple.mk_(1L, 2L);
     }
+
+    public String toString() {
+        return "A{}";
+    }
 }
 
 ##########

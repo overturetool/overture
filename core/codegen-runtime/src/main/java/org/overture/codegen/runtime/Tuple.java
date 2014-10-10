@@ -162,7 +162,7 @@ public class Tuple implements ValueType, Comparable
 
 		for (int i = 1; i < values.length; i++)
 		{
-			str.append(", " + values[i]);
+			str.append(", " + Utils.toString(values[i]));
 		}
 
 		return "mk_(" + str + ")";

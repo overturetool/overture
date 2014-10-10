@@ -51,6 +51,13 @@ public class Entry {
         ((Number) ((Tuple) op4().get(0)).get(1)).longValue() +
         ((Number) op5().get(0)).longValue();
     }
+
+    public String toString() {
+        return "Entry{" + "a = " + Utils.toString(a) + ", b = " +
+        Utils.toString(b) + ", c = " + Utils.toString(c) + ", d = " +
+        Utils.toString(d) + ", e = " + Utils.toString(e) + ", f = " +
+        Utils.toString(f) + "}";
+    }
 }
 
 ##########

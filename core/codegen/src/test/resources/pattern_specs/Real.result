@@ -40,6 +40,10 @@ public class A {
 
         return 2.1;
     }
+
+    public String toString() {
+        return "A{}";
+    }
 }
 
 ##########
@@ -54,6 +58,10 @@ public class Entry {
 
     public static Object Run() {
         return SeqUtil.seq(new A().realPatternOp(2.1), A.realPatternFun(2.1));
+    }
+
+    public String toString() {
+        return "Entry{}";
     }
 }
 

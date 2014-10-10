@@ -31,6 +31,7 @@ import org.apache.velocity.runtime.RuntimeSingleton;
 import org.apache.velocity.runtime.parser.ParseException;
 import org.apache.velocity.runtime.parser.node.SimpleNode;
 import org.overture.codegen.cgast.INode;
+import org.overture.codegen.cgast.declarations.ACatchClauseDeclCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.ACounterLocalDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
@@ -38,6 +39,7 @@ import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
+import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
 import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AAddrEqualsBinaryExpCG;
@@ -94,6 +96,7 @@ import org.overture.codegen.cgast.expressions.AMapUnionBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AMapletExpCG;
 import org.overture.codegen.cgast.expressions.AMethodInstantiationExpCG;
 import org.overture.codegen.cgast.expressions.AMinusUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AMissingMemberRuntimeErrorExpCG;
 import org.overture.codegen.cgast.expressions.AMkBasicExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
@@ -106,6 +109,7 @@ import org.overture.codegen.cgast.expressions.APlusNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.APlusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.APowerNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.APowerSetUnaryExpCG;
+import org.overture.codegen.cgast.expressions.APreCondRuntimeErrorExpCG;
 import org.overture.codegen.cgast.expressions.AQuoteLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ARangeResByBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ARangeResToBinaryExpCG;
@@ -137,6 +141,7 @@ import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
+import org.overture.codegen.cgast.statements.ABreakStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectStmCG;
 import org.overture.codegen.cgast.statements.ACallStmCG;
@@ -163,6 +168,7 @@ import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.ASelfObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.ASkipStmCG;
 import org.overture.codegen.cgast.statements.AThrowStmCG;
+import org.overture.codegen.cgast.statements.ATryStmCG;
 import org.overture.codegen.cgast.statements.AWhileStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeWrappersTypeCG;
@@ -224,7 +230,13 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(ACounterLocalDeclCG.class, templateStructure.DECL_PATH
 				+ "Counter");
+		
+		nodeTemplateFileNames.put(ATypeDeclCG.class, templateStructure.DECL_PATH
+				+ "Type");
 
+		nodeTemplateFileNames.put(ACatchClauseDeclCG.class, templateStructure.DECL_PATH
+				+ "CatchClause");
+		
 		// Local declarations
 
 		nodeTemplateFileNames.put(AFormalParamLocalParamCG.class, templateStructure.LOCAL_DECLS_PATH
@@ -376,6 +388,12 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AContinueStmCG.class, templateStructure.STM_PATH
 				+ "Continue");
 
+		nodeTemplateFileNames.put(ABreakStmCG.class, templateStructure.STM_PATH
+				+ "Break");
+
+		nodeTemplateFileNames.put(ATryStmCG.class, templateStructure.STM_PATH
+				+ "Try");
+		
 		// Expressions
 
 		nodeTemplateFileNames.put(AApplyExpCG.class, templateStructure.EXP_PATH
@@ -472,6 +490,12 @@ public class TemplateManager
 		nodeTemplateFileNames.put(APatternMatchRuntimeErrorExpCG.class, templateStructure.RUNTIME_ERROR_EXP_PATH
 				+ "PatternMatch");
 
+		nodeTemplateFileNames.put(AMissingMemberRuntimeErrorExpCG.class, templateStructure.RUNTIME_ERROR_EXP_PATH
+				+ "MissingMember");
+
+		nodeTemplateFileNames.put(APreCondRuntimeErrorExpCG.class, templateStructure.RUNTIME_ERROR_EXP_PATH
+				+ "PreCond");
+		
 		// Unary expressions
 
 		nodeTemplateFileNames.put(APlusUnaryExpCG.class, templateStructure.UNARY_EXP_PATH

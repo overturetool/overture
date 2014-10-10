@@ -49,6 +49,10 @@ public class A {
         return a.longValue() + b.longValue() + c.longValue();
     }
 
+    public String toString() {
+        return "A{}";
+    }
+
     public static class Rec implements Record {
         public Tuple t;
 
@@ -63,7 +67,7 @@ public class A {
 
             Rec other = ((Rec) obj);
 
-            return t.equals(other.t);
+            return Utils.equals(t, other.t);
         }
 
         public int hashCode() {
@@ -92,6 +96,10 @@ public class Entry {
 
     public static Object Run() {
         return A.recPatternFun();
+    }
+
+    public String toString() {
+        return "Entry{}";
     }
 }
 

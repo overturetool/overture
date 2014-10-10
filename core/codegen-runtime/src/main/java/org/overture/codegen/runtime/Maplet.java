@@ -89,6 +89,6 @@ public class Maplet
 	@Override
 	public String toString()
 	{
-		return "{" + left != null ? left.toString() : null + " |-> " + right != null ? right.toString() : null + "}";
+		return "{" + Utils.toString(left) + " |-> " + Utils.toString(right) + "}";
 	}
 }

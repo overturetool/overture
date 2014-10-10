@@ -1,19 +1,15 @@
-class A
+class Entry
 
 types
 
 public M :: ;
 
-end A
-
-class Entry
-
 operations 
 
 public static Run : () ==> ?
 Run () ==
-let m0 = mk_A`M(),
-	m1 = mk_A`M()
+let m0 = mk_M(),
+	m1 = mk_M()
 in
 	return mk_(m0 = m0, m0 = m1, m1 = m1, m0);
 

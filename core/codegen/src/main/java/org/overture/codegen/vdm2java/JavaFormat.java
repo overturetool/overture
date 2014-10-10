@@ -74,6 +74,7 @@ import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.ATokenBasicTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AUnionTypeCG;
+import org.overture.codegen.cgast.types.AUnknownTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.SBasicTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
@@ -477,15 +478,9 @@ public class JavaFormat
 				|| leftNodeType instanceof AObjectTypeCG)
 		{
 			return handleEquals(node);
-		} else if (leftNodeType instanceof SSeqTypeCG)
+		} else if (leftNodeType instanceof SSeqTypeCG || leftNodeType instanceof SSetTypeCG || leftNodeType instanceof SMapTypeCG)
 		{
-			return handleSeqComparison(node);
-		} else if (leftNodeType instanceof SSetTypeCG)
-		{
-			return handleSetComparison(node);
-		} else if (leftNodeType instanceof SMapTypeCG)
-		{
-			return handleMapComparison(node);
+			return handleCollectionComparison(node);
 		}
 
 		return format(node.getLeft()) + " == " + format(node.getRight());
@@ -543,30 +538,10 @@ public class JavaFormat
 	private String handleEquals(AEqualsBinaryExpCG valueType)
 			throws AnalysisException
 	{
-		return format(valueType.getLeft()) + ".equals("
-				+ format(valueType.getRight()) + ")";
+		return String.format("%s.equals(%s, %s)", UTILS_FILE, format(valueType.getLeft()), format(valueType.getRight()));
 	}
 
-	private String handleSetComparison(AEqualsBinaryExpCG node)
-			throws AnalysisException
-	{
-		return handleCollectionComparison(node, SET_UTIL_FILE);
-	}
-
-	private String handleSeqComparison(SBinaryExpCG node)
-			throws AnalysisException
-	{
-		return handleCollectionComparison(node, SEQ_UTIL_FILE);
-	}
-
-	private String handleMapComparison(SBinaryExpCG node)
-			throws AnalysisException
-	{
-		return handleCollectionComparison(node, MAP_UTIL_FILE);
-	}
-
-	private String handleCollectionComparison(SBinaryExpCG node,
-			String className) throws AnalysisException
+	private String handleCollectionComparison(SBinaryExpCG node) throws AnalysisException
 	{
 		// In VDM the types of the equals are compatible when the AST passes the type check
 		SExpCG leftNode = node.getLeft();
@@ -582,9 +557,8 @@ public class JavaFormat
 			return format(node.getLeft()) + EMPTY;
 		}
 
-		return className + ".equals(" + format(node.getLeft()) + ", "
+		return UTILS_FILE + ".equals(" + format(node.getLeft()) + ", "
 				+ format(node.getRight()) + ")";
-
 	}
 
 	private boolean isEmptyCollection(STypeCG type)
@@ -736,22 +710,22 @@ public class JavaFormat
 
 	public boolean isSeqType(SExpCG exp)
 	{
-		return exp.getType() instanceof SSeqTypeCG;
+		return info.getAssistantManager().getTypeAssistant().isSeqType(exp);
 	}
 
 	public boolean isMapType(SExpCG exp)
 	{
-		return exp.getType() instanceof SMapTypeCG;
+		return info.getAssistantManager().getTypeAssistant().isMapType(exp);
 	}
 
 	public boolean isStringType(STypeCG type)
 	{
-		return type instanceof AStringTypeCG;
+		return info.getAssistantManager().getTypeAssistant().isStringType(type);
 	}
 
 	public boolean isStringType(SExpCG exp)
 	{
-		return exp.getType() instanceof AStringTypeCG;
+		return info.getAssistantManager().getTypeAssistant().isStringType(exp);
 	}
 
 	public boolean isCharType(STypeCG type)
@@ -795,7 +769,6 @@ public class JavaFormat
 		}
 
 		throw new AnalysisException("Expected set or seq type when trying to format element type");
-
 	}
 
 	public String nextVarName(String prefix)
@@ -847,6 +820,11 @@ public class JavaFormat
 		return escaped;
 	}
 
+	public static boolean castNotNeeded(STypeCG type)
+	{
+		return type instanceof AObjectTypeCG || type instanceof AUnknownTypeCG || type instanceof AUnionTypeCG;
+	}
+	
 	public String escapeChar(char c)
 	{
 		return GeneralUtils.isEscapeSequence(c) ? StringEscapeUtils.escapeJavaScript(c

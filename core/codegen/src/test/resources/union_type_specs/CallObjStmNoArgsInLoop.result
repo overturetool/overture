@@ -10,6 +10,10 @@ public class A {
     public void op() {
         //Skip;
     }
+
+    public String toString() {
+        return "A{}";
+    }
 }
 
 ##########
@@ -25,6 +29,10 @@ public class B {
     public void op() {
         //Skip;
     }
+
+    public String toString() {
+        return "B{}";
+    }
 }
 
 ##########
@@ -39,6 +47,10 @@ public class C {
 
     public void op() {
         //Skip;
+    }
+
+    public String toString() {
+        return "C{}";
     }
 }
 
@@ -62,12 +74,18 @@ public class Entry {
                 ((A) x).op();
             } else if (x instanceof B) {
                 ((B) x).op();
-            } else {
+            } else if (x instanceof C) {
                 ((C) x).op();
+            } else {
+                throw new RuntimeException("Missing operation member: op");
             }
         }
 
         return 1L;
+    }
+
+    public String toString() {
+        return "Entry{}";
     }
 }
 

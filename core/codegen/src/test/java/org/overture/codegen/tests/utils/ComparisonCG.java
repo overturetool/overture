@@ -29,6 +29,7 @@ import java.util.Set;
 
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.lex.Dialect;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
@@ -246,7 +247,7 @@ public class ComparisonCG
 				List<File> files = new LinkedList<File>();
 				files.add(testInputFile);
 
-				List<SClassDefinition> mergedParseList = JavaCodeGenUtil.consMergedParseList(files);
+				List<SClassDefinition> mergedParseList = JavaCodeGenUtil.consMergedParseList(files, Dialect.VDM_PP);
 
 				JavaCodeGen javaCg = new JavaCodeGen();
 				javaCg.generateJavaFromVdm(mergedParseList);

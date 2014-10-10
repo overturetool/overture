@@ -10,6 +10,10 @@ public class A {
     public static Tuple f() {
         return Tuple.mk_(1L, 2L);
     }
+
+    public String toString() {
+        return "A{}";
+    }
 }
 
 ##########
@@ -24,6 +28,10 @@ public class B {
 
     public static Tuple f() {
         return Tuple.mk_(1L, 1L);
+    }
+
+    public String toString() {
+        return "B{}";
     }
 }
 
@@ -45,17 +53,19 @@ public class Entry {
         } else if (2L == 3L) {
             return false;
         } else {
-            Object obj_1 = ((Object) m.get(1L));
+            Object obj_1 = m.get(1L);
 
             Tuple apply_1 = null;
 
             if (obj_1 instanceof A) {
                 apply_1 = ((A) obj_1).f();
-            } else {
+            } else if (obj_1 instanceof B) {
                 apply_1 = ((B) obj_1).f();
+            } else {
+                throw new RuntimeException("Missing member: f");
             }
 
-            if (apply_1.equals(Tuple.mk_(1L, 2L))) {
+            if (Utils.equals(apply_1, Tuple.mk_(1L, 2L))) {
                 return true;
             } else if (4L == 5L) {
                 return false;
@@ -63,6 +73,10 @@ public class Entry {
                 return false;
             }
         }
+    }
+
+    public String toString() {
+        return "Entry{}";
     }
 }
 

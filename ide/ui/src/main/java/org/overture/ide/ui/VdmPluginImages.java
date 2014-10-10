@@ -71,6 +71,15 @@ public class VdmPluginImages
 			+ "methdef_obj.gif"; //$NON-NLS-1$
 
 	
+	public static final String IMG_FUNC_PUBLIC = NAME_PREFIX
+			+ "funcdef_pub.gif"; //$NON-NLS-1$
+	public static final String IMG_FUNC_PROTECTED = NAME_PREFIX
+			+ "funcdef_pro.gif"; //$NON-NLS-1$
+	public static final String IMG_FUNC_PRIVATE = NAME_PREFIX
+			+ "funcdef_pri.gif"; //$NON-NLS-1$
+	public static final String IMG_FUNC_DEFAULT = NAME_PREFIX
+			+ "funcdef_def.gif"; //$NON-NLS-1$
+
 	
 	//	
 	//	
@@ -243,6 +252,13 @@ public class VdmPluginImages
 	public static final ImageDescriptor DESC_METHOD_PRIVATE = createManagedFromKey(T_OBJ, IMG_METHOD_PRIVATE);
 	public static final ImageDescriptor DESC_METHOD_DEFAULT = createManagedFromKey(T_OBJ, IMG_METHOD_DEFAULT);
 
+	public static final ImageDescriptor DESC_FUNC_PUBLIC = createManagedFromKey(T_OBJ, IMG_FUNC_PUBLIC);
+	public static final ImageDescriptor DESC_FUNC_PROTECTED = createManagedFromKey(T_OBJ, IMG_FUNC_PROTECTED);
+	public static final ImageDescriptor DESC_FUNC_PRIVATE = createManagedFromKey(T_OBJ, IMG_FUNC_PRIVATE);
+	public static final ImageDescriptor DESC_FUNC_DEFAULT = createManagedFromKey(T_OBJ, IMG_FUNC_DEFAULT);
+
+
+	
 	//
 	public static final ImageDescriptor DESC_FIELD_PUBLIC = createManagedFromKey(T_OBJ, IMG_FIELD_PUBLIC);
 	public static final ImageDescriptor DESC_FIELD_PROTECTED = createManagedFromKey(T_OBJ, IMG_FIELD_PROTECTED);

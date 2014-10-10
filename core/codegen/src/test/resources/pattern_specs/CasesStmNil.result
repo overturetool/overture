@@ -21,6 +21,10 @@ public class Entry {
     public static Object Run() {
         return SeqUtil.seq(casesNil(new Entry()), casesNil(null));
     }
+
+    public String toString() {
+        return "Entry{}";
+    }
 }
 
 ##########

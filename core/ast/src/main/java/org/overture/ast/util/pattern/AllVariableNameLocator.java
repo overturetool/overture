@@ -28,6 +28,8 @@ import org.overture.ast.lex.LexNameList;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.AConcatenationPattern;
 import org.overture.ast.patterns.AIdentifierPattern;
+import org.overture.ast.patterns.ANamePatternPair;
+import org.overture.ast.patterns.AObjectPattern;
 import org.overture.ast.patterns.ARecordPattern;
 import org.overture.ast.patterns.ASeqPattern;
 import org.overture.ast.patterns.ASetPattern;
@@ -135,6 +137,20 @@ public class AllVariableNameLocator extends AnswerAdaptor<LexNameList>
 
 		list.addAll(af.createPPatternAssistant().getAllVariableNames(pattern.getLeft()));
 		list.addAll(af.createPPatternAssistant().getAllVariableNames(pattern.getRight()));
+
+		return list;
+	}
+
+	@Override
+	public LexNameList caseAObjectPattern(AObjectPattern pattern)
+			throws AnalysisException
+	{
+		LexNameList list = new LexNameList();
+
+		for (ANamePatternPair npp : pattern.getFields())
+		{
+			list.addAll(af.createPPatternAssistant().getAllVariableNames(npp.getPattern()));
+		}
 
 		return list;
 	}

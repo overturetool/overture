@@ -329,19 +329,19 @@ public class VdmElementImageProvider {
 
 		if (as.getAccess().toString().equals("private")) {
 			return new VdmElementImageDescriptor(VdmPluginImages
-					.getDescriptor(VdmPluginImages.IMG_METHOD_PRIVATE),
+					.getDescriptor(VdmPluginImages.IMG_FUNC_PRIVATE),
 					adornmentFlags, size);
 		} else if (as.getAccess().toString().equals("public")) {
 			return new VdmElementImageDescriptor(VdmPluginImages
-					.getDescriptor(VdmPluginImages.IMG_METHOD_PUBLIC),
+					.getDescriptor(VdmPluginImages.IMG_FUNC_PUBLIC),
 					adornmentFlags, size);
 		} else if (as.getAccess().toString().equals("protected")) {
 			return new VdmElementImageDescriptor(VdmPluginImages
-					.getDescriptor(VdmPluginImages.IMG_METHOD_PROTECTED),
+					.getDescriptor(VdmPluginImages.IMG_FUNC_PROTECTED),
 					adornmentFlags, size);
 		} else if (as.getAccess().toString().equals("default")) {
 			return new VdmElementImageDescriptor(VdmPluginImages
-					.getDescriptor(VdmPluginImages.IMG_METHOD_DEFAULT),
+					.getDescriptor(VdmPluginImages.IMG_FUNC_DEFAULT),
 					adornmentFlags, size);
 		}
 
@@ -362,19 +362,19 @@ public class VdmElementImageProvider {
 
 		if (as.getAccess().toString().equals("private")) {
 			return new VdmElementImageDescriptor(VdmPluginImages
-					.getDescriptor(VdmPluginImages.IMG_METHOD_PRIVATE),
+					.getDescriptor(VdmPluginImages.IMG_FUNC_PRIVATE),
 					adornmentFlags, size);
 		} else if (as.getAccess().toString().equals("public")) {
 			return new VdmElementImageDescriptor(VdmPluginImages
-					.getDescriptor(VdmPluginImages.IMG_METHOD_PUBLIC),
+					.getDescriptor(VdmPluginImages.IMG_FUNC_PUBLIC),
 					adornmentFlags, size);
 		} else if (as.getAccess().toString().equals("protected")) {
 			return new VdmElementImageDescriptor(VdmPluginImages
-					.getDescriptor(VdmPluginImages.IMG_METHOD_PROTECTED),
+					.getDescriptor(VdmPluginImages.IMG_FUNC_PROTECTED),
 					adornmentFlags, size);
 		} else if (as.getAccess().toString().equals("default")) {
 			return new VdmElementImageDescriptor(VdmPluginImages
-					.getDescriptor(VdmPluginImages.IMG_METHOD_DEFAULT),
+					.getDescriptor(VdmPluginImages.IMG_FUNC_DEFAULT),
 					adornmentFlags, size);
 		}
 

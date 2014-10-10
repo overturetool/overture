@@ -1,1 +1,1 @@
-!(new Token(SetUtil.set(Tuple.mk_(true, false))).equals(new Token(SetUtil.set(Tuple.mk_(true, false)))))
+!(Utils.equals(new Token(SetUtil.set(Tuple.mk_(true, false))), new Token(SetUtil.set(Tuple.mk_(true, false)))))

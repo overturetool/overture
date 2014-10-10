@@ -12,6 +12,10 @@ public class A {
     public static Number f() {
         return Quotes.T;
     }
+
+    public String toString() {
+        return "A{}";
+    }
 }
 
 ##########
@@ -28,6 +32,10 @@ public class B {
 
     public static Number f() {
         return Quotes.T;
+    }
+
+    public String toString() {
+        return "B{}";
     }
 }
 
@@ -52,8 +60,10 @@ public class Entry {
 
             if (x instanceof A) {
                 apply_1 = ((A) x).f();
-            } else {
+            } else if (x instanceof B) {
                 apply_1 = ((B) x).f();
+            } else {
+                throw new RuntimeException("Missing member: f");
             }
 
             if (apply_1.longValue() == Quotes.A.longValue()) {
@@ -62,6 +72,10 @@ public class Entry {
         }
 
         return 2L;
+    }
+
+    public String toString() {
+        return "Entry{}";
     }
 }
 

@@ -161,7 +161,7 @@ public class  VdmPpKeywords implements IVdmKeywords {
 
 		public String[] getUnderscorePrefixKeywords()
 		{
-			return new String[]{"is","mk", "narrow"};
+			return new String[]{"is","mk", "narrow", "obj"};
 		}
 
 		public String[] getUnderscorePrefixReservedWords()

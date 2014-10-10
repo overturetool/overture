@@ -47,6 +47,7 @@ import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
 import org.overture.codegen.cgast.expressions.AMapDomainUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AMissingMemberRuntimeErrorExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
@@ -62,9 +63,11 @@ import org.overture.codegen.cgast.statements.AElseIfStmCG;
 import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
+import org.overture.codegen.cgast.statements.ARaiseErrorStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
+import org.overture.codegen.cgast.types.AErrorTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.AUnionTypeCG;
@@ -86,19 +89,24 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 	private String callStmObjPrefix;
 
 	private ITempVarGen nameGen;
+	
+	private String missingOpMemberPrefix;
+	private String missingMemberPrefix;
 
 	public UnionTypeTransformation(BaseTransformationAssistant baseAssistant,
 			IRInfo info, List<AClassDeclCG> classes,
 			String applyExpResultPrefix, String objExpPrefix,
-			String callStmObjPrefix, ITempVarGen nameGen)
+			String callStmObjPrefix, String missingOpMemberPrefix, String missingMemberPrefix, ITempVarGen nameGen)
 	{
 		this.baseAssistant = baseAssistant;
 		this.info = info;
 		this.classes = classes;
+		this.missingMemberPrefix = missingMemberPrefix;
 		this.nameGen = nameGen;
 
 		this.applyExpResulPrefix = applyExpResultPrefix;
 		this.objExpPrefix = objExpPrefix;
+		this.missingOpMemberPrefix = missingOpMemberPrefix;
 		this.callStmObjPrefix = callStmObjPrefix;
 	}
 
@@ -108,7 +116,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 				throws org.overture.ast.analysis.AnalysisException;
 	}
 
-	public <T extends STypeCG> T getMapType(SExpCG exp, TypeFinder<T> typeFinder)
+	public <T extends STypeCG> T searchType(SExpCG exp, TypeFinder<T> typeFinder)
 	{
 		if (exp == null || exp.getType() == null)
 		{
@@ -278,6 +286,36 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 				AFieldExpCG fieldExp = (AFieldExpCG) apply.getRoot();
 
 				STypeCG currentType = possibleTypes.get(i);
+				
+				boolean memberExists = false;
+				
+				TypeAssistantCG typeAssistant = info.getAssistantManager().getTypeAssistant();
+				
+				if(!(currentType instanceof AClassTypeCG))
+				{
+					// If we are accessing an element of (say) the sequence [new A(), new B(), nil] of type A | B | [?]
+					// then the current IR type will be the unknown type at some point. This case is simply skipped.
+					continue;
+				}
+				
+				String className = ((AClassTypeCG) currentType).getName();
+				String memberName = fieldExp.getMemberName();
+				
+				if (typeAssistant.isMapApplication(apply)
+						|| typeAssistant.isSeqApplication(apply)
+						|| typeAssistant.isCharRead(apply))
+				{
+					memberExists = null != typeAssistant.getFieldType(classes, className, memberName);
+				} else
+				{
+					memberExists = null != typeAssistant.getMethodType(info, classes, className, memberName, apply.getArgs());
+				}
+				
+				if(!memberExists)
+				{
+					//If the member does not exist then the case should not be treated
+					continue;
+				}
 
 				ACastUnaryExpCG castedFieldExp = new ACastUnaryExpCG();
 				castedFieldExp.setType(currentType.clone());
@@ -293,18 +331,18 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 				{
 					ifChecks.setIfExp(consInstanceCheck(obj, currentType));
 					ifChecks.setThenStm(assignment);
-				} else if (i < possibleTypes.size() - 1)
+				} else
 				{
 					AElseIfStmCG elseIf = new AElseIfStmCG();
 					elseIf.setElseIf(consInstanceCheck(obj, currentType));
 					elseIf.setThenStm(assignment);
 
 					ifChecks.getElseIf().add(elseIf);
-				} else
-				{
-					ifChecks.setElseStm(assignment);
 				}
 			}
+			
+			ARaiseErrorStmCG raise = consRaiseStm(missingMemberPrefix, node.getMemberName());
+			ifChecks.setElseStm(raise);
 
 			baseAssistant.replaceNodeWith(parent, resultVar);
 			replacementBlock.getLocalDefs().add(resultDecl);
@@ -323,30 +361,43 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		{
 			arg.apply(this);
 		}
+		
 		SExpCG root = node.getRoot();
 		root.apply(this);
 
-		if (root.getType() instanceof AUnionTypeCG)
-		{
-			SMapTypeCG mapType = getMapType(root, new TypeFinder<SMapTypeCG>()
-			{
-
+		if (root.getType() instanceof AUnionTypeCG) {
+			STypeCG colType = searchType(root, new TypeFinder<SMapTypeCG>() {
 				@Override
 				public SMapTypeCG findType(PType type)
-						throws org.overture.ast.analysis.AnalysisException
-				{
-					SMapType mapType = info.getTcFactory().createPTypeAssistant().getMap(type);
+						throws org.overture.ast.analysis.AnalysisException {
+					SMapType mapType = info.getTcFactory()
+							.createPTypeAssistant().getMap(type);
 
-					return mapType != null ? (SMapTypeCG) mapType.apply(info.getTypeVisitor(), info)
-							: null;
+					return mapType != null ? (SMapTypeCG) mapType.apply(
+							info.getTypeVisitor(), info) : null;
 				}
 			});
 
-			if (mapType != null && node.getArgs().size() == 1)
-			{
-				correctTypes(root, mapType);
+			if (colType == null) {
+				colType = searchType(root, new TypeFinder<SSeqTypeCG>() {
+					@Override
+					public SSeqTypeCG findType(PType type)
+							throws org.overture.ast.analysis.AnalysisException {
+
+						SSeqType seqType = info.getTcFactory()
+								.createPTypeAssistant().getSeq(type);
+
+						return seqType != null ? (SSeqTypeCG) seqType.apply(
+								info.getTypeVisitor(), info) : null;
+					}
+				});
+			}
+
+			if (colType != null && node.getArgs().size() == 1) {
+				correctTypes(root, colType);
 				return;
 			}
+
 		} else if (root.getType() instanceof AMethodTypeCG)
 		{
 			AMethodTypeCG methodType = (AMethodTypeCG) root.getType();
@@ -475,8 +526,8 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			arg.apply(this);
 		}
 
-		AClassTypeCG classType = node.getClassType();
-		String className = classType != null ? classType.getName()
+		STypeCG classType = node.getClassType();
+		String className = classType instanceof AClassTypeCG ? ((AClassTypeCG) classType).getName()
 				: node.getAncestor(AClassDeclCG.class).getName();
 		String fieldName = node.getName();
 		LinkedList<SExpCG> args = node.getArgs();
@@ -567,6 +618,14 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			{
 				correctArgTypes(callCopy.getArgs(), methodType.getParams());
 			}
+			else
+			{
+				//It's possible (due to the way union types work) that the method type for the
+				//field in the object type does not exist. Let's say we are trying to invoke the
+				//operation 'op' for an object type that is either A or B but it might be the
+				//case that only 'A' has the operation 'op' defined.
+				continue;
+			}
 
 			ACastUnaryExpCG castedVarExp = new ACastUnaryExpCG();
 			castedVarExp.setType(currentType.clone());
@@ -578,22 +637,34 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			{
 				ifChecks.setIfExp(consInstanceCheck(objExp, currentType));
 				ifChecks.setThenStm(callCopy);
-			} else if (i < possibleTypes.size() - 1)
+			} else
 			{
 				AElseIfStmCG elseIf = new AElseIfStmCG();
 				elseIf.setElseIf(consInstanceCheck(objExp, currentType));
 				elseIf.setThenStm(callCopy);
 
 				ifChecks.getElseIf().add(elseIf);
-			} else
-			{
-				ifChecks.setElseStm(callCopy);
 			}
 		}
+		
+		ARaiseErrorStmCG raiseStm = consRaiseStm(missingOpMemberPrefix,fieldName);
+		ifChecks.setElseStm(raiseStm);
 
 		replacementBlock.getStatements().add(ifChecks);
 		baseAssistant.replaceNodeWith(node, replacementBlock);
 		ifChecks.apply(this);
+	}
+
+	private ARaiseErrorStmCG consRaiseStm(String prefix, String fieldName)
+	{
+		AMissingMemberRuntimeErrorExpCG missingMember = new AMissingMemberRuntimeErrorExpCG();
+		missingMember.setType(new AErrorTypeCG());
+		missingMember.setMessage(prefix + fieldName);
+
+		ARaiseErrorStmCG raise = new ARaiseErrorStmCG();
+		raise.setError(missingMember);
+		
+		return raise;
 	}
 
 	@Override

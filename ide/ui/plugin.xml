@@ -371,7 +371,7 @@
      </command>
       <command
            id="org.overture.ide.ui.editor.commandGoToDefinition"
-           name="Open Decleration">
+           name="Open Declaration">
     </command>
   </extension>
   <extension
@@ -475,7 +475,7 @@
         
            <command
                  commandId="org.overture.ide.ui.editor.commandGoToDefinition"
-                 label="Open Decleration"
+                 label="Open Declaration"
                  style="push">
               <visibleWhen
                     checkEnabled="false">

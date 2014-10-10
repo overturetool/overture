@@ -45,6 +45,7 @@ import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
+import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SMultipleBindCG;
 import org.overture.codegen.cgast.STypeCG;
@@ -64,6 +65,8 @@ import org.overture.codegen.cgast.expressions.SBinaryExpCG;
 import org.overture.codegen.cgast.expressions.SQuantifierExpCG;
 import org.overture.codegen.cgast.expressions.SUnaryExpCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
+import org.overture.codegen.cgast.statements.AForLoopStmCG;
+import org.overture.codegen.cgast.statements.AWhileStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
@@ -297,6 +300,11 @@ public class ExpAssistantCG extends AssistantBase
 
 	public boolean existsOutsideOpOrFunc(PExp exp)
 	{
+		// The transformation of the 'and' and 'or' logical expressions also assumes that the
+		// expressions exist within a statement. However, in case it does not, the transformation
+		// is not performed. In this way, the  'and' and 'or' expressions can
+		// still be used (say) in instance variable assignment.
+		
 		return exp.getAncestor(SOperationDefinition.class) == null
 				&& exp.getAncestor(SFunctionDefinition.class) == null;
 	}
@@ -353,9 +361,11 @@ public class ExpAssistantCG extends AssistantBase
 			casesCg.add((ACaseAltExpExpCG) altCg);
 		}
 
-		if (exp.getType() instanceof AUnionType)
+		PType expType = question.getTypeAssistant().resolve(exp.getType());
+		
+		if (expType instanceof AUnionType)
 		{
-			AUnionType unionType = ((AUnionType) exp.getType()).clone();
+			AUnionType unionType = ((AUnionType) expType).clone();
 			question.getTcFactory().createAUnionTypeAssistant().expand(unionType);
 
 			for (int i = 0; i < cases.size(); i++)
@@ -369,12 +379,27 @@ public class ExpAssistantCG extends AssistantBase
 			}
 		} else
 		{
-			STypeCG expType = exp.getType().apply(question.getTypeVisitor(), question);
+			STypeCG expTypeCg = expType.apply(question.getTypeVisitor(), question);
 
 			for (ACaseAltExpExpCG altCg : casesCg)
 			{
-				altCg.setPatternType(expType.clone());
+				altCg.setPatternType(expTypeCg.clone());
 			}
 		}
 	}
+	
+	public boolean isLoopCondition(SExpCG exp)
+	{
+		INode node = exp.parent();
+		
+		while(node instanceof SExpCG)
+		{
+			node = node.parent();
+		}
+		
+		return node instanceof AWhileStmCG || node instanceof AForLoopStmCG; 
+		//The ForLoopStmCG is only used in the transformation process. It corresponds 
+		//to the standard for loop in Java, e.g. for(int i = 0; i < 10; i++){...}
+	}
+	
 }

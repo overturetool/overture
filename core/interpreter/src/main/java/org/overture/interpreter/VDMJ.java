@@ -24,6 +24,8 @@
 package org.overture.interpreter;
 
 import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -243,7 +245,22 @@ abstract public class VDMJ
 				{
 					usage("-path option requires a directory");
 				}
-			} else if (arg.startsWith("-"))
+			}else if (arg.equals("-baseDir"))
+			{
+				if (i.hasNext())
+				{
+					try
+					{
+						Settings.baseDir = new File(i.next());
+					} catch (IllegalArgumentException e)
+					{
+						usage(e.getMessage() + ": " + arg);
+					}
+				} else
+				{
+					usage("-baseDir option requires a folder name");
+				}
+			}  else if (arg.startsWith("-"))
 			{
 				usage("Unknown option " + arg);
 			} else

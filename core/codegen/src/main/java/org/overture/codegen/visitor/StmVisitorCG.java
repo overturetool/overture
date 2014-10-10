@@ -32,8 +32,6 @@ import org.overture.ast.expressions.ASelfExp;
 import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.patterns.ADefPatternBind;
-import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
@@ -93,7 +91,6 @@ import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.utils.AnalysisExceptionCG;
 
 public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 {
@@ -296,7 +293,8 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 				return new AReturnStmCG();
 			} else
 			{
-				throw new AnalysisExceptionCG("Unexpected expression returned by constructor: Values expliclty returned by constructors must be 'self'.", operation.getLocation());
+				question.addUnsupportedNode(operation, "Unexpected expression returned by constructor: Values expliclty returned by constructors must be 'self'.");
+				return null;
 			}
 		}
 
@@ -447,7 +445,6 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 		ACasesStmCG casesStmCg = new ACasesStmCG();
 		casesStmCg.setExp(expCg);
 		casesStmCg.setOthers(othersCg);
-		;
 
 		question.getStmAssistant().handleAlternativesCasesStm(question, exp, cases, casesStmCg.getCases());
 
@@ -553,23 +550,17 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 	public SStmCG caseAForAllStm(AForAllStm node, IRInfo question)
 			throws AnalysisException
 	{
+		//Example: for all x in set {1,2,3} do skip;
 		PPattern pattern = node.getPattern();
-
-		if (!(pattern instanceof AIdentifierPattern))
-		{
-			return null; // This is the only pattern supported by this loop construct
-		}
-
-		AIdentifierPattern identifier = (AIdentifierPattern) pattern;
 		PExp set = node.getSet();
 		PStm body = node.getStatement();
 
-		String var = identifier.getName().getName();
+		SPatternCG patternCg = pattern.apply(question.getPatternVisitor(), question);
 		SExpCG setExpCg = set.apply(question.getExpVisitor(), question);
 		SStmCG bodyCg = body.apply(question.getStmVisitor(), question);
 
 		AForAllStmCG forAll = new AForAllStmCG();
-		forAll.setVar(var);
+		forAll.setPattern(patternCg);
 		forAll.setExp(setExpCg);
 		forAll.setBody(bodyCg);
 
@@ -580,26 +571,18 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 	public SStmCG caseAForPatternBindStm(AForPatternBindStm node,
 			IRInfo question) throws AnalysisException
 	{
-		ADefPatternBind patternBind = node.getPatternBind();
-
-		PPattern pattern = patternBind.getPattern();
-
-		if (!(pattern instanceof AIdentifierPattern))
-		{
-			return null;
-		}
-
-		AIdentifierPattern identifier = (AIdentifierPattern) pattern;
-		Boolean reverse = node.getReverse();
+		//Example for mk_(a,b) in [mk_(1,2), mk_(3,4)] do skip;
+		PPattern pattern = node.getPatternBind().getPattern();
 		PExp exp = node.getExp();
 		PStm stm = node.getStatement();
+		Boolean reverse = node.getReverse();
 
-		String var = identifier.getName().getName();
+		SPatternCG patternCg = pattern.apply(question.getPatternVisitor(), question);
 		SExpCG seqExpCg = exp.apply(question.getExpVisitor(), question);
 		SStmCG stmCg = stm.apply(question.getStmVisitor(), question);
 
 		AForAllStmCG forAll = new AForAllStmCG();
-		forAll.setVar(var);
+		forAll.setPattern(patternCg);
 		forAll.setBody(stmCg);
 
 		if (reverse != null && reverse)
@@ -615,5 +598,4 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 
 		return forAll;
 	}
-
 }

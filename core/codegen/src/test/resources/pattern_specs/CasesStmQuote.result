@@ -31,6 +31,10 @@ public class Entry {
         return SeqUtil.seq(casesQuote(Quotes.A), casesQuote(Quotes.B),
             casesQuote(Quotes.C));
     }
+
+    public String toString() {
+        return "Entry{}";
+    }
 }
 
 ##########

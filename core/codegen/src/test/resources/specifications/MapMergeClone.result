@@ -14,6 +14,11 @@ public class A {
     public static VDMMap m1() {
         return MapUtil.map(new Maplet(3L, 4L), new Maplet(5L, 6L));
     }
+
+    public String toString() {
+        return "A{" + "a = " + Utils.toString(a) + ", x = " +
+        Utils.toString(x) + "}";
+    }
 }
 
 ##########

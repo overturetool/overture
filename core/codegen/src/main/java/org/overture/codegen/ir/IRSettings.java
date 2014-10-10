@@ -24,6 +24,10 @@ package org.overture.codegen.ir;
 public class IRSettings
 {
 	private boolean charSeqAsString;
+	private boolean generatePreConds;
+	private boolean generatePreCondChecks;
+	private boolean generatePostConds;
+	private boolean generatePostCondChecks;
 
 	public IRSettings()
 	{
@@ -37,5 +41,45 @@ public class IRSettings
 	public void setCharSeqAsString(boolean charSeqAsString)
 	{
 		this.charSeqAsString = charSeqAsString;
+	}
+
+	public boolean generatePreConds()
+	{
+		return generatePreConds;
+	}
+
+	public void setGeneratePreConds(boolean generatePreConds)
+	{
+		this.generatePreConds = generatePreConds;
+	}
+
+	public boolean generatePreCondChecks()
+	{
+		return generatePreCondChecks;
+	}
+
+	public void setGeneratePreCondChecks(boolean generatePreCondChecks)
+	{
+		this.generatePreCondChecks = generatePreCondChecks;
+	}
+
+	public boolean generatePostConds()
+	{
+		return generatePostConds;
+	}
+
+	public void setGeneratePostConds(boolean generatePostConds)
+	{
+		this.generatePostConds = generatePostConds;
+	}
+
+	public boolean generatePostCondChecks()
+	{
+		return generatePostCondChecks;
+	}
+
+	public void setGeneratePostCondChecks(boolean generatePostCondChecks)
+	{
+		this.generatePostCondChecks = generatePostCondChecks;
 	}
 }

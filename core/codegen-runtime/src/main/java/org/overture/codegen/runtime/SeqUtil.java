@@ -219,14 +219,6 @@ public class SeqUtil
 		return indices;
 	}
 	
-	public static boolean equals(VDMSeq left, VDMSeq right)
-	{
-		if(left == null || right == null)
-			throw new IllegalArgumentException("A sequences cannot be compared to null");
-		
-		return left.equals(right);
-	}
-	
 	@SuppressWarnings("unchecked")
 	public static VDMSeq conc(VDMSeq left, VDMSeq right)
 	{

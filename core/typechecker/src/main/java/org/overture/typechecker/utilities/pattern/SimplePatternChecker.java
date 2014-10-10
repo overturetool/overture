@@ -21,6 +21,8 @@
  */
 package org.overture.typechecker.utilities.pattern;
 
+import java.util.LinkedList;
+
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.AnswerAdaptor;
 import org.overture.ast.node.INode;
@@ -30,6 +32,8 @@ import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.AMapPattern;
 import org.overture.ast.patterns.AMapUnionPattern;
 import org.overture.ast.patterns.AMapletPatternMaplet;
+import org.overture.ast.patterns.ANamePatternPair;
+import org.overture.ast.patterns.AObjectPattern;
 import org.overture.ast.patterns.ARecordPattern;
 import org.overture.ast.patterns.ASeqPattern;
 import org.overture.ast.patterns.ASetPattern;
@@ -130,6 +134,20 @@ public class SimplePatternChecker extends AnswerAdaptor<Boolean>
 
 		}
 		return true;
+	}
+
+	@Override
+	public Boolean caseAObjectPattern(AObjectPattern pattern)
+			throws AnalysisException
+	{
+		LinkedList<PPattern> list = new LinkedList<PPattern>();
+		
+		for (ANamePatternPair npp: pattern.getFields())
+		{
+			list.add(npp.getPattern());
+		}
+		
+		return af.createPPatternListAssistant().isSimple(list);
 	}
 
 	@Override
