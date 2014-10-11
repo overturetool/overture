@@ -252,6 +252,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			throws AnalysisException
 	{
 		TypeCheckInfo noConstraint = question.newConstraint(null);
+		noConstraint.qualifiers = null;
 
 		node.getLeft().apply(THIS, noConstraint);
 		node.getRight().apply(THIS, noConstraint);
