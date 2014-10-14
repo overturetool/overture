@@ -8,8 +8,11 @@ import java.util.Set;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.codegen.cgast.STypeCG;
+import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARemoteContractDeclCG;
+import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.ir.IRInfo;
 
 public class RemoteContractGenerator {
@@ -42,6 +45,24 @@ public class RemoteContractGenerator {
 			{
 				if(vdmOp.getIsConstructor()) continue;
 				AMethodDeclCG methodSignature = (AMethodDeclCG) vdmOp.apply(info.getDeclVisitor(), info);
+				//TODO : Make afunction which transforms the parameters
+				LinkedList<AFormalParamLocalParamCG> formalParams = (LinkedList<AFormalParamLocalParamCG>) methodSignature.getFormalParams().clone();
+				
+				LinkedList<AFormalParamLocalParamCG> formalParams2 = new LinkedList<AFormalParamLocalParamCG>();
+				
+				methodSignature.setFormalParams(null);
+				
+				for(AFormalParamLocalParamCG formPar : formalParams){
+					STypeCG ty = formPar.getType();
+					if(ty instanceof AClassTypeCG){
+						AClassTypeCG classTy = (AClassTypeCG) ty;
+						String className = classTy.getName().toString();
+						classTy.setName(className + "_i");
+						formPar.setType(classTy);
+					}
+					formalParams2.add(formPar);
+				}
+				methodSignature.setFormalParams(formalParams2);
 				methodSignature.setIsRemote(true);
 				methodSignature.setBody(null);
 				methodSignature.setAbstract(true);
