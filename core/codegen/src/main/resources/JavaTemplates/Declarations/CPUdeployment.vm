@@ -36,7 +36,6 @@ public class $node.getCpuName() {
 							#end
 
 						System.out.println("Synchronization successful...");
-						System.out.println("Program starting...");
 						lock2=false;
 					}
 					catch(Exception ex){
@@ -47,6 +46,10 @@ public class $node.getCpuName() {
 			catch (Exception ex)
 			{
 				System.out.println("Error catch, tried to bind... " + ex);
+			}
+			
+			if(!lock2){
+				System.out.println("Program starting...");
 			}
 		}
 
