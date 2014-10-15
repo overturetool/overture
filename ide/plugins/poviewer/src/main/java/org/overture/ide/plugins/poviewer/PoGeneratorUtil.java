@@ -121,6 +121,29 @@ public class PoGeneratorUtil
 		}
 
 	}
+	
+	public void generate(IVdmProject project)
+	{
+		try
+		{
+			if (project == null)
+			{
+				return;
+			}
+
+			IProject iproject = (IProject) project.getAdapter(IProject.class);
+			
+			libFolder = new File(iproject.getLocation().toFile(), "lib");
+
+			viewPos(project);
+
+		} catch (Exception e)
+		{
+			System.err.println(e.getMessage() + e.getStackTrace());
+			Activator.getDefault().getLog().log(new Status(IStatus.ERROR, IPoviewerConstants.PLUGIN_ID, "Error in po generation", e));
+		}
+
+	}
 
 	public boolean skipElement(File file)
 	{

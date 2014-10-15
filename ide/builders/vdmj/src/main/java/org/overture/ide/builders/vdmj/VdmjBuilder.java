@@ -68,7 +68,7 @@ public abstract class VdmjBuilder extends AbstractVdmBuilder
 		{
 
 			typeChecked = new Status(IStatus.OK, IBuilderVdmjConstants.PLUGIN_ID, 0, "Type Checked", null);
-
+			//FIXME fire build complete event
 		}
 		return typeChecked;
 
