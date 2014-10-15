@@ -141,6 +141,9 @@ CG {-> package='org.overture.codegen.cgast'
     	[type]:CG.#type
     	[name]:java_String
     	[stm]:CG.#stm
+    |	{persync}
+    	[opname]:java_String
+    	[pred]:CG.#exp
 	;
 
 #Local  {-> package='org.overture.codegen.cgast.declarations'}
@@ -260,6 +263,7 @@ CG {-> package='org.overture.codegen.cgast'
     |	{cases} [exp]:CG.#exp [cases]:CG.#exp.#altExp.case* [others]:CG.#exp
     |	#altExp
     |	{subSeq} [seq]:CG.#exp [from]:CG.#exp [to]:CG.#exp
+    |	{history}[histype]:java_String [opsname]:java_String
     ;
 
 #altExp {-> package='org.overture.codegen.cgast.expressions'}

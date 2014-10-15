@@ -90,4 +90,13 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 			}
 		}
 	}
+	
+//	@Override
+//	public void caseAHistoryExpCG(AHistoryExpCG node) throws AnalysisException
+//	{
+//		if(node.getHistype().equals("#act"))
+//		{
+//			
+//		}
+//	}
 }

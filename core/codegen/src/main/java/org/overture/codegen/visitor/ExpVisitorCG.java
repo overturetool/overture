@@ -131,6 +131,7 @@ import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SBinaryExp;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.intf.lex.ILexToken;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ASetMultipleBind;
@@ -184,6 +185,7 @@ import org.overture.codegen.cgast.expressions.AForAllQuantifierExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AHeadUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AHistoryExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AInSetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AIndicesUnaryExpCG;
@@ -1799,9 +1801,18 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseAHistoryExp(AHistoryExp node, IRInfo question)
 			throws AnalysisException
 	{
-		PType type = node.getType();
-		System.out.print(type);
+		ILexToken type = node.getHop();
+	
+		AHistoryExpCG history = new AHistoryExpCG();
 		
-		return null;
+		history.setHistype(type.toString());
+		
+		for(ILexNameToken operation : node.getOpnames()){
+			history.setOpsname(operation.getName());
+		}
+		
+		System.out.print(history.getHistype()+"\n" + history.getOpsname());
+		
+		return history;
 	}
 }

@@ -30,6 +30,7 @@ import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
+import org.overture.ast.definitions.AMutexSyncDefinition;
 import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.APerSyncDefinition;
 import org.overture.ast.definitions.AThreadDefinition;
@@ -55,6 +56,7 @@ import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AFuncDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.cgast.declarations.APersyncDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.AThreadDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
@@ -395,12 +397,28 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 			IRInfo question) throws AnalysisException
 	{
 		PExp exp = node.getGuard();
-		//PType type = node.getType();
-		ILexNameToken opname = node.getOpname();
-		//exp.apply(THIS, question);
 		
-		//System.out.print(exp + " "+ opname+"\n");
+		SExpCG expCG = exp.apply(question.getExpVisitor(), question);
 		
+//		ILexNameToken opname = node.getOpname();
+//		
+//		APersyncDeclCG predicate = new APersyncDeclCG();
+//		
+		System.out.print(expCG);
+//		
+//		predicate.setOpname(opname.getName());
+//		
+//		predicate.setPred(expCG);
+//		
 		return null;
+//		return predicate;
 	}
+	
+//	@Override
+//	public SDeclCG caseAMutexSyncDefinition(AMutexSyncDefinition node,
+//			IRInfo question) throws AnalysisException
+//	{
+//		//node.get
+//		return null;
+//	}
 }
