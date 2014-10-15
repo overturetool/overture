@@ -90,6 +90,10 @@ public class Entry {
         return casesExpResult_1;
     }
 
+    public String toString() {
+        return "Entry{}";
+    }
+
     public static class Rec implements Record {
         public Number a;
         public Number b;

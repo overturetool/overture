@@ -132,6 +132,11 @@ public class ObjectValue extends Value
 	{
 		return this;
 	}
+	
+	public PType getType()
+	{
+		return type;
+	}
 
 	public PTypeList getBaseTypes()
 	{

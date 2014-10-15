@@ -30,6 +30,10 @@ public class Entry {
 
         return Utils.clone(a);
     }
+
+    public String toString() {
+        return "Entry{" + "s = " + Utils.toString(s) + "}";
+    }
 }
 
 ##########

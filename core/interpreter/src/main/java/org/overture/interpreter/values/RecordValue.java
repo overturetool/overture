@@ -134,7 +134,7 @@ public class RecordValue extends Value
 
 				if (!inv)
 				{
-					abort(4079, "Type invariant violated by mk_ arguments", ctxt);
+					abort(4079, "Type invariant violated by mk_" + type.getName()+ " arguments", ctxt);
 				}
 			} finally
 			{

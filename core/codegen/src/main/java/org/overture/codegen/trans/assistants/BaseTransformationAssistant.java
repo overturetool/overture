@@ -63,14 +63,15 @@ public class BaseTransformationAssistant
 		original.parent(null);
 	}
 
-	public SStmCG getEnclosingStm(INode node, String nodeStr)
+	public SStmCG findEnclosingStm(INode node)
 			throws AnalysisException
+
 	{
 		SStmCG enclosingStm = node.getAncestor(SStmCG.class);
 
 		if (enclosingStm == null)
 		{
-			throw new AnalysisException(String.format("Could not find enclosing statement for %s", node));
+			return null;
 		}
 
 		if (enclosingStm instanceof AElseIfStmCG)
@@ -106,6 +107,19 @@ public class BaseTransformationAssistant
 			}
 		}
 
+		return enclosingStm;
+	}
+	
+	public SStmCG getEnclosingStm(INode node, String nodeStr)
+			throws AnalysisException
+	{
+		SStmCG enclosingStm = findEnclosingStm(node);
+
+		if (enclosingStm == null)
+		{
+			new AnalysisException(String.format("Could not find enclosing statement for %s", node));
+		}
+		
 		return enclosingStm;
 	}
 }

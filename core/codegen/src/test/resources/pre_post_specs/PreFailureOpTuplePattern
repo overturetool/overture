@@ -1,0 +1,17 @@
+class Entry
+
+operations
+
+public static op : (nat * nat) ==> nat
+op (mk_(a,b)) ==
+(
+	dcl c : nat := 3;
+	return a + b + c
+)
+pre a > b;
+
+public static Run : () ==> int
+Run () ==
+	return op(mk_(2,3));
+
+end Entry

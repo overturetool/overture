@@ -1,0 +1,15 @@
+class Entry
+
+functions
+
+public static f :  int -> int
+f (x) == x
+pre x > 0;
+
+operations
+
+public static Run : () ==> int
+Run () ==
+	return f(0);
+	
+end Entry

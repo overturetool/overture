@@ -1,0 +1,24 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        VDMSet left = null;
+        VDMSet right = null;
+
+        return SeqUtil.seq(Utils.equals(left, right),
+            Utils.equals(left, SetUtil.set(1L, 2L)),
+            Utils.equals(SetUtil.set(1L, 2L), right));
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########

@@ -28,7 +28,7 @@ public class A {
 
                     if (success_1) {
                         VDMSeq stringPattern_1 = Utils.clone(recordPattern_1.s);
-                        success_1 = SeqUtil.equals(stringPattern_1,
+                        success_1 = Utils.equals(stringPattern_1,
                                 SeqUtil.seq('a', 'a', 'a'));
 
                         if (success_1) {
@@ -45,6 +45,10 @@ public class A {
         }
 
         return SeqUtil.seq(2L, false, 'b', 2.1, SeqUtil.seq('b', 'b', 'b'), null);
+    }
+
+    public String toString() {
+        return "A{}";
     }
 
     public static class Rec implements Record {
@@ -74,7 +78,7 @@ public class A {
 
             return (n.longValue() == other.n.longValue()) && (b == other.b) &&
             (c == other.c) && (r.doubleValue() == other.r.doubleValue()) &&
-            (SeqUtil.equals(s, other.s)) && (next.equals(other.next));
+            (Utils.equals(s, other.s)) && (Utils.equals(next, other.next));
         }
 
         public int hashCode() {
@@ -103,6 +107,10 @@ public class Entry {
 
     public static Object Run() {
         return A.recPatternFun();
+    }
+
+    public String toString() {
+        return "Entry{}";
     }
 }
 

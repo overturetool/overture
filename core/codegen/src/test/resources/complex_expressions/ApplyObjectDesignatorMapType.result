@@ -57,6 +57,11 @@ public class X {
     public static Number f() {
         return 1L;
     }
+
+    public String toString() {
+        return "X{" + "xs = " + Utils.toString(xs) + ", ys = " +
+        Utils.toString(ys) + ", zs = " + Utils.toString(zs) + "}";
+    }
 }
 
 ##########
@@ -75,6 +80,10 @@ public class Entry {
         return x.m1().longValue() + x.m2().longValue() + x.m3().longValue() +
         x.m4().longValue() + x.m5().longValue() + x.m6().longValue() +
         x.m7().longValue();
+    }
+
+    public String toString() {
+        return "Entry{}";
     }
 }
 

@@ -1,0 +1,17 @@
+class Entry
+
+operations
+
+functions
+
+public f :  (nat * nat) -> nat
+f (mk_(a,b)) == a + b
+post a + b + RESULT = 10;
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+return f(mk_(2,3));
+
+end Entry

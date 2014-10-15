@@ -15,6 +15,10 @@ public class A {
 
         return a.longValue() + b.longValue();
     }
+
+    public String toString() {
+        return "A{}";
+    }
 }
 
 ##########
@@ -29,6 +33,10 @@ public class Entry {
 
     public static Object Run() {
         return new A().op();
+    }
+
+    public String toString() {
+        return "Entry{}";
     }
 }
 

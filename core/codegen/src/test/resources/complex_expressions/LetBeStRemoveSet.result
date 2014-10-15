@@ -22,6 +22,10 @@ public class Entry {
 
         return 4L;
     }
+
+    public String toString() {
+        return "Entry{" + "s = " + Utils.toString(s) + "}";
+    }
 }
 
 ##########

@@ -44,7 +44,6 @@ import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.ANewObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.ASelfObjectDesignatorCG;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.utils.AnalysisExceptionCG;
 
 public class ObjectDesignatorVisitorCG extends
 		AbstractVisitorCG<IRInfo, SObjectDesignatorCG>
@@ -126,11 +125,13 @@ public class ObjectDesignatorVisitorCG extends
 
 		if (!(expCg instanceof ANewExpCG))
 		{
-			throw new AnalysisExceptionCG("Expected expression of new object designator to be a 'new expression' but got: "
-					+ expCg.getClass().getName(), node.getLocation());
+			question.addUnsupportedNode(node, "Expected expression of new object designator to be a 'new expression' but got: "
+					+ expCg.getClass().getName());
+			return null;
 		}
 
 		newObjDesignator.setExp((ANewExpCG) expCg);
+		
 		return newObjDesignator;
 	}
 

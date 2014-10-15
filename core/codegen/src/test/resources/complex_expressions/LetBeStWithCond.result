@@ -25,6 +25,10 @@ public class Entry {
 
         return x;
     }
+
+    public String toString() {
+        return "Entry{}";
+    }
 }
 
 ##########

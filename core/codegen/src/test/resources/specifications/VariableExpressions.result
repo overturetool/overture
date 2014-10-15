@@ -33,6 +33,10 @@ public class A {
     public static Number h(final Number x, final Number y) {
         return x.longValue() + y.longValue();
     }
+
+    public String toString() {
+        return "A{" + "n := " + Utils.toString(n) + "}";
+    }
 }
 
 ##########

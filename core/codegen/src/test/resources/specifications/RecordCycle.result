@@ -7,6 +7,10 @@ public class A {
     public A() {
     }
 
+    public String toString() {
+        return "A{}";
+    }
+
     public static class RecA implements Record {
         public B.RecB b;
 
@@ -21,7 +25,7 @@ public class A {
 
             RecA other = ((RecA) obj);
 
-            return b.equals(other.b);
+            return Utils.equals(b, other.b);
         }
 
         public int hashCode() {
@@ -48,6 +52,10 @@ public class B {
     public B() {
     }
 
+    public String toString() {
+        return "B{}";
+    }
+
     public static class RecB implements Record {
         public A.RecA a;
 
@@ -62,7 +70,7 @@ public class B {
 
             RecB other = ((RecB) obj);
 
-            return a.equals(other.a);
+            return Utils.equals(a, other.a);
         }
 
         public int hashCode() {

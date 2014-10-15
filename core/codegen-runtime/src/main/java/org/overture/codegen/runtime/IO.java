@@ -31,7 +31,7 @@ public class IO {
 	
     public static <p> boolean writeval(p val) {
         
-    	String text = val.toString();
+    	String text = formatArg(val);
     	
     	System.out.print(text);
     	System.out.flush();
@@ -91,13 +91,13 @@ public class IO {
 
     public static void print(Object arg) {
     	
-		System.out.printf("%s", arg);
+		System.out.printf("%s", formatArg(arg));
 		System.out.flush();
     }
 
     public static void println(Object arg) {
     	
-    	System.out.printf("%s", arg);
+    	System.out.printf("%s", formatArg(arg));
     	System.out.printf("%s", "\n");
     	System.out.flush();
 
@@ -105,13 +105,49 @@ public class IO {
 
     public static void printf(String format, List<Object> args) {
         
-		System.out.printf(format, args.toArray());
+		System.out.printf(format, formatList(args));
 		System.out.flush();
     }
     
     public static void printf(VDMSeq seq, List<Object> args) {
 		
-    	System.out.printf(seq.toString(), args.toArray());
+    	System.out.printf(seq.toString(), formatList(args));
 		System.out.flush();
+    }
+    
+    private static Object[] formatList(List<Object> args)
+    {
+    	for(int i = 0; i < args.size(); i++)
+    	{
+    		Object arg = args.get(i);
+    		
+    		if(arg instanceof Number)
+    		{
+    			Number n = (Number) arg;
+    			
+    			if(n.doubleValue() % 1 == 0)
+    			{
+    				int intVal = n.intValue();
+    				args.set(i, intVal);
+    			}
+    		}
+    	}
+    	
+    	return args.toArray();
+    }
+    
+    private static String formatArg(Object arg)
+    {
+    	if(arg instanceof Number)
+    	{
+    		Number n = (Number) arg;
+    		
+    		if(n.doubleValue() % 1 == 0)
+    		{
+    			return Integer.toString(n.intValue());
+    		}
+    	}
+    	
+    	return arg.toString();
     }
 }

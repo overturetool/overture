@@ -218,11 +218,11 @@ public class Bag {
     }
 
     public Boolean eq(final Bag bag) {
-        return SetUtil.equals(numbers, bag.getNumbers());
+        return Utils.equals(numbers, bag.getNumbers());
     }
 
     public Boolean neq(final Bag bag) {
-        return !(SetUtil.equals(numbers, bag.getNumbers()));
+        return !(Utils.equals(numbers, bag.getNumbers()));
     }
 
     public Number size() {
@@ -250,6 +250,10 @@ public class Bag {
         }
 
         return Utils.clone(bags);
+    }
+
+    public String toString() {
+        return "Bag{" + "numbers := " + Utils.toString(numbers) + "}";
     }
 }
 

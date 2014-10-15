@@ -1,0 +1,29 @@
+class A
+
+instance variables
+
+public xs : map nat to nat := {1 |-> 6};
+
+end A
+
+class B
+
+end B
+
+class Entry
+
+operations
+
+public static Run : () ==> nat
+Run () ==
+let xs : seq of (A|B) = [new A(), new A()]
+in
+(
+	dcl sum : nat := 0;
+	for x in xs do
+		sum := sum + x.xs(1);
+		
+	return sum;
+)
+
+end Entry

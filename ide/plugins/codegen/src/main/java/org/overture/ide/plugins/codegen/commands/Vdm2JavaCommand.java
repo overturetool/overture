@@ -173,7 +173,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 				try
 				{
 					CodeGenConsole.GetInstance().clearConsole();
-					CodeGenConsole.GetInstance().println("Starting Java to VDM code generation...\n");
+					CodeGenConsole.GetInstance().println("Starting VDM++ to Java code generation...\n");
 
 					File outputFolder = PluginVdm2JavaUtil.getOutputFolder(vdmProject);
 

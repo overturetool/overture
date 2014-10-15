@@ -10,6 +10,10 @@ public class Entry {
     public static Number Run() {
         throw new RuntimeException("ERROR statement reached");
     }
+
+    public String toString() {
+        return "Entry{}";
+    }
 }
 
 ##########

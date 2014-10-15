@@ -27,6 +27,7 @@ import java.util.List;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
+import org.eclipse.jface.text.rules.MultiLineRule;
 import org.eclipse.jface.text.rules.RuleBasedScanner;
 import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.Token;
@@ -51,6 +52,7 @@ public abstract class VdmCodeScanner extends RuleBasedScanner
 		final IToken stringBold = new Token(new TextAttribute(provider.getColor(VdmColorProvider.DEFAULT), null, SWT.BOLD
 				| SWT.ITALIC));
 		IToken comment = new Token(new TextAttribute(provider.getColor(VdmColorProvider.SINGLE_LINE_COMMENT)));
+		IToken latex = new Token(new TextAttribute(provider.getColor(VdmColorProvider.LATEX)));
 		final IToken other = new Token(new TextAttribute(provider.getColor(VdmColorProvider.DEFAULT)));
 
 		List<IRule> rules = new ArrayList<IRule>();
@@ -59,8 +61,11 @@ public abstract class VdmCodeScanner extends RuleBasedScanner
 		rules.add(new WhitespaceRule(new VdmWhitespaceDetector()));
 
 		// TODO: this is a hack to get latex related stuff commented
-		rules.add(new SingleLineRule("\\begin{vdm_al", "}", comment));
-		rules.add(new SingleLineRule("\\end{vdm_al", "}", comment));
+		//rules.add(new SingleLineRule("\\begin{vdm_al", "}", comment));
+		//rules.add(new SingleLineRule("\\end{vdm_al", "}", comment));
+		rules.add(new MultiLineRule("\\end{vdm_al}","\\begin{vdm_al}", latex,(char) 0,true));
+		rules.add(new MultiLineRule("\\section{","\\begin{vdm_al}", latex,(char) 0,false));
+//		rules.add(new SingleLineRule("\\end{vdm_al", "}", comment,));
 
 		if (fgKeywords.supportsQuoteTypes())
 		{

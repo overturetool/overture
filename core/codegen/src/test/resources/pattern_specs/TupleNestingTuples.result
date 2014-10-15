@@ -49,6 +49,10 @@ public class A {
         return a.longValue() + b.longValue() + c.longValue() + d.longValue() +
         e.longValue() + f.longValue();
     }
+
+    public String toString() {
+        return "A{}";
+    }
 }
 
 ##########
@@ -63,6 +67,10 @@ public class Entry {
 
     public static Object Run() {
         return A.tuplePatternFun();
+    }
+
+    public String toString() {
+        return "Entry{}";
     }
 }
 

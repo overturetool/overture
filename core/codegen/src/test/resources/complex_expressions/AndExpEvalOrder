@@ -1,0 +1,18 @@
+class A
+
+functions
+
+public f : () -> nat
+f () == 1;
+
+end A
+
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	return card {x | x in set {new A(), nil, new A(), nil, nil, new A()} & x <> nil and x.f() = 1}
+
+end Entry

@@ -116,7 +116,9 @@ import org.overture.ast.patterns.AIntegerPattern;
 import org.overture.ast.patterns.AMapPattern;
 import org.overture.ast.patterns.AMapUnionPattern;
 import org.overture.ast.patterns.AMapletPatternMaplet;
+import org.overture.ast.patterns.ANamePatternPair;
 import org.overture.ast.patterns.ANilPattern;
+import org.overture.ast.patterns.AObjectPattern;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.APatternTypePair;
 import org.overture.ast.patterns.AQuotePattern;
@@ -2411,6 +2413,26 @@ public class AstFactory
 		result.setTypename(typename);
 		result.setType(AstFactory.getAUnresolvedType(typename));
 		return result;
+	}
+
+	public static AObjectPattern newAObjectPattern(ILexNameToken classname,
+			List<ANamePatternPair> list)
+	{
+		AObjectPattern result = new AObjectPattern();
+		initPattern(result, classname.getLocation());
+		result.setFields(list);
+		result.setClassname(classname);
+		result.setType(AstFactory.getAUnresolvedType(classname));
+		return result;
+	}
+	
+	public static ANamePatternPair newANamePatternPair(ILexNameToken name, PPattern pattern)
+	{
+		ANamePatternPair pair = new ANamePatternPair();
+		pair.setName(name);
+		pair.setPattern(pattern);
+		pair.setResolved(false);
+		return pair;
 	}
 
 	private static AUnresolvedType getAUnresolvedType(ILexNameToken typename)

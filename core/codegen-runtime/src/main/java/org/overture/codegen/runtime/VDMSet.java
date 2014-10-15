@@ -21,11 +21,11 @@
  */
 package org.overture.codegen.runtime;
 
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 
 @SuppressWarnings("rawtypes")
-public class VDMSet extends HashSet implements ValueType
+public class VDMSet extends LinkedHashSet implements ValueType
 {
 	private static final long serialVersionUID = 2984495719595419443L;
 
@@ -61,7 +61,7 @@ public class VDMSet extends HashSet implements ValueType
 		{
             Object element = iterator.next();
             
-            sb.append(element == this ? "(this Collection)" : element);
+            sb.append(element == this ? "(this Collection)" : Utils.toString(element));
             
             if (! iterator.hasNext())
             {

@@ -45,6 +45,13 @@ public class A {
 
         return Utils.clone(((Tuple) a.get(0)));
     }
+
+    public String toString() {
+        return "A{" + "a = " + Utils.toString(a) + ", b = " +
+        Utils.toString(b) + ", c = " + Utils.toString(c) + ", d = " +
+        Utils.toString(d) + ", e = " + Utils.toString(e) + ", f = " +
+        Utils.toString(f) + "}";
+    }
 }
 
 ##########

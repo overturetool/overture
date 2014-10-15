@@ -1,0 +1,19 @@
+class Entry
+
+types
+
+T = nat | seq of T;
+
+instance variables
+
+xs : T := [[10]];
+
+operations
+  
+public static Run : () ==> ?
+Run () ==
+let e = new Entry()
+in
+	return e.xs(1)(1);
+
+end Entry
