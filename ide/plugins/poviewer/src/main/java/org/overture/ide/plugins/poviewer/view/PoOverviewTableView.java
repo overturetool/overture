@@ -24,7 +24,6 @@ package org.overture.ide.plugins.poviewer.view;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -64,9 +63,9 @@ import org.overture.ide.core.ElementChangedEvent.DeltaType;
 import org.overture.ide.core.IElementChangedListener;
 import org.overture.ide.core.IVdmElement;
 import org.overture.ide.core.IVdmElementDelta;
+import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.resources.IVdmProject;
-import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.plugins.poviewer.Activator;
 import org.overture.ide.plugins.poviewer.IPoviewerConstants;
 import org.overture.ide.plugins.poviewer.PoGeneratorUtil;
@@ -181,11 +180,9 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener 
 		@Override
 		public void elementChanged(ElementChangedEvent event) {
 
-			if (event.getType() == DeltaType.POST_BUILD
-					|| event.getType() == DeltaType.POST_RECONCILE) {
+			if (event.getType() == DeltaType.POST_RECONCILE) {
 
-				if (event.getDelta().getKind() == IVdmElementDelta.F_TYPE_CHECKED
-						|| event.getDelta().getKind() == IVdmElementDelta.CHANGED) {
+				if (event.getDelta().getKind() == IVdmElementDelta.F_TYPE_CHECKED) {
 
 					final IVdmElement source = event.getDelta().getElement();
 
@@ -194,8 +191,8 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener 
 						@Override
 						public IStatus runInUIThread(IProgressMonitor monitor) {
 
-							if (source instanceof IVdmSourceUnit) {
-								IVdmSourceUnit castSource = (IVdmSourceUnit) source;
+							if (source instanceof IVdmModel) {
+								IVdmModel castSource = (IVdmModel) source;
 
 								IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 								PoGeneratorUtil util = new PoGeneratorUtil(
@@ -203,8 +200,7 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener 
 												.getActivePart().getSite());
 
 					
-								util.generate(castSource
-										.getProject());
+								util.generate(castSource);
 
 								System.out.println("built something");
 							}
