@@ -84,7 +84,7 @@ public class ExampleSourceData implements Serializable
 	@Override
 	public String toString()
 	{
-	return this.name +" "+ this.dialect + " "+this.dialect +" "+getFilesString();
+	return this.name +" "+ this.dialect  + getFilesString();
 	}
 
 	private String getFilesString()
