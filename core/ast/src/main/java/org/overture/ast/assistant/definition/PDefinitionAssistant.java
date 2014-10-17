@@ -23,13 +23,14 @@ package org.overture.ast.assistant.definition;
 
 import java.util.List;
 
+import org.overture.ast.assistant.IAssistant;
 import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 
-public class PDefinitionAssistant
+public class PDefinitionAssistant implements IAssistant
 {
 
 	protected static IAstAssistantFactory af;

@@ -24,11 +24,12 @@ package org.overture.ast.assistant.type;
 import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.assistant.IAssistant;
 import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SNumericBasicType;
 
-public class PTypeAssistant
+public class PTypeAssistant implements IAssistant
 {
 
 	protected static IAstAssistantFactory af;
