@@ -1836,7 +1836,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		
 		if(node.getOpnames().size() == 1)
 		{
-			System.out.println(history);
+			//System.out.println(history);
 			return history;
 			
 		}
@@ -1878,7 +1878,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			
 			last.setRight(lastHistoryExp);
 			
-			System.out.println("left: " + historyCounterSum.getLeft()+ "\nright:"+historyCounterSum.getRight());
+			//System.out.println("left: " + historyCounterSum.getLeft()+ "\nright:"+historyCounterSum.getRight());
 			
 			return historyCounterSum;
 		}

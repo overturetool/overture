@@ -5,19 +5,30 @@ package org.overture.codegen.trans.conc;
 
 import java.util.List;
 
+import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
+import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.APersyncDeclCG;
+import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
+import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AHistoryExpCG;
+import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
+import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
+import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallStmCG;
+import org.overture.codegen.cgast.statements.AElseIfStmCG;
+import org.overture.codegen.cgast.statements.AIfStmCG;
+import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.ATryStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
+import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.ir.IRInfo;
@@ -93,50 +104,92 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 				}
 			}
 		}
-	}
-	
-	@Override
-	public void caseAHistoryExpCG(AHistoryExpCG node) throws AnalysisException
-	{
-		if(node.getHistype().equals("#act"))
-		{
-			new Integer("Sentinel.act[(("+node.getClass()+")_sentinel)."+node.getOpsname()+"]");
-			//new Integer("5");
-		}
-		if(node.getHistype().equals("#fin"))
-		{
-			new Integer("Sentinel.fin[(("+node.getClass()+")_sentinel)."+node.getOpsname()+"]");
-		}
-		if(node.getHistype().equals("#req"))
-		{
-			new Integer("Sentinel.req[(("+node.getClass()+")_sentinel)."+node.getOpsname()+"]");
-		}
-		if(node.getHistype().equals("#active"))
-		{
-			new Integer("Sentinel.active[(("+node.getClass()+")_sentinel)."+node.getOpsname()+"]");
-		}
-		if(node.getHistype().equals("waiting"))
-		{
-			new Integer("Sentinel.waiting[(("+node.getClass()+")_sentinel)."+node.getOpsname()+"]");
-		}
-	}
-	
-	@Override
-	public void caseAPersyncDeclCG(APersyncDeclCG node)
-			throws AnalysisException
-	{
-		for (AClassDeclCG cls : this.classes)
-		{
-			if(node.getClass().equals(cls))
+		//declaration of the method.
+		
+		AIntNumericBasicTypeCG fnr = new AIntNumericBasicTypeCG();
+		AIdentifierPatternCG identifier = new AIdentifierPatternCG();
+		identifier.setName("fnr");
+		AFormalParamLocalParamCG fnrloc = new AFormalParamLocalParamCG();
+		fnrloc.setType(fnr);
+		fnrloc.setPattern(identifier);
+		AMethodTypeCG methType = new AMethodTypeCG();
+		methType.setResult(new ABoolBasicTypeCG());
+		
+		AMethodDeclCG evaluatePPmethod = new AMethodDeclCG();
+		evaluatePPmethod.setAccess(JavaFormat.JAVA_PUBLIC);
+		evaluatePPmethod.setName("evaluatePP");
+		evaluatePPmethod.setMethodType(methType);
+		
+		evaluatePPmethod.getFormalParams().add(fnrloc);
+		
+		//Body of the method.
+		if (node.getMethods().size() != 0){
+			AIfStmCG bodyif = new AIfStmCG();
+			for(int i=0; i < node.getMethods().size(); i++)
 			{
-				AMethodDeclCG evaluatemeth = new AMethodDeclCG();
-				evaluatemeth.setName("evaluatepp");
-				evaluatemeth.setAccess(JavaFormat.JAVA_PUBLIC);
-				AMethodTypeCG evtype = new AMethodTypeCG();
-				evaluatemeth.setMethodType(evtype);
-				
-				
+				if (i == 0){
+					if(!node.getMethods().get(i).equals("toString") && !node.getMethods().get(i).getIsConstructor().equals("true"))
+					{
+						AEqualsBinaryExpCG firstBranch = new AEqualsBinaryExpCG();
+						
+						AIdentifierVarExpCG testVar = new AIdentifierVarExpCG();
+						testVar.setOriginal("fnr");
+						
+						AIntLiteralExpCG methNum =  new AIntLiteralExpCG();
+						methNum.setValue((long) i);
+						
+						firstBranch.setLeft(testVar);
+						firstBranch.setRight(methNum);
+						
+						AReturnStmCG ret = new AReturnStmCG();
+						for (APersyncDeclCG per : node.getPerSyncs()){
+							if(per.getOpname().equals(node.getMethods().get(i).getName())){
+								ret.setExp(per.getPred());
+							}
+						}
+						bodyif.setIfExp(firstBranch);
+						bodyif.setThenStm(ret);
+					}
+				}
+				else
+				{
+					AReturnStmCG ret = new AReturnStmCG();
+					for (APersyncDeclCG per : node.getPerSyncs()){
+						if(per.getOpname().equals(node.getMethods().get(i).getName())){
+							ret.setExp(per.getPred());
+						}
+					}
+					
+					AElseIfStmCG newBranch = new AElseIfStmCG();
+																				
+					AEqualsBinaryExpCG Branches = new AEqualsBinaryExpCG();
+					
+					AIdentifierVarExpCG testVar = new AIdentifierVarExpCG();
+					testVar.setOriginal("fnr");
+					
+					AIntLiteralExpCG methNum =  new AIntLiteralExpCG();
+					methNum.setValue((long) i);
+					
+					Branches.setLeft(testVar);
+					Branches.setRight(methNum);
+					
+					newBranch.setElseIf(Branches);
+					newBranch.setThenStm(ret);
+					
+					bodyif.getElseIf().add(newBranch);
+				}
 			}
+			AReturnStmCG ret = new AReturnStmCG();
+			
+			ABoolLiteralExpCG defaultPer = new ABoolLiteralExpCG();
+			defaultPer.setValue(true);
+			
+			ret.setExp(defaultPer);
+			
+			bodyif.setElseStm(ret);
+			evaluatePPmethod.setBody(bodyif);
 		}
-	}
+		
+		node.getMethods().add(evaluatePPmethod);
+	}	
 }
