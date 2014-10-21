@@ -1,0 +1,1 @@
+Utils.is_char(SeqUtil.seq('a'))
