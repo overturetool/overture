@@ -1812,7 +1812,11 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 		
 		AHistoryExpCG history = new AHistoryExpCG();
-		history.setHistype(hop.toString());
+		//if(hop.toString().equals("#act"))
+		//{
+			//history.setHistype("act");
+		//}
+		history.setHistype(hop.toString().substring(1));
 		history.setType(typeCg);
 		
 		AClassTypeCG innerclassType = null;
@@ -1855,7 +1859,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 				AHistoryExpCG left = new AHistoryExpCG();
 				left.setType(typeCg.clone());
 				left.setSentinelType(innerclassType.clone());
-				left.setHistype(hop.toString());
+				left.setHistype(hop.toString().substring(1));
 				left.setOpsname(nextOpName);
 				
 				APlusNumericBinaryExpCG tmp = new APlusNumericBinaryExpCG();
@@ -1873,7 +1877,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			AHistoryExpCG lastHistoryExp = new AHistoryExpCG();
 			lastHistoryExp.setType(typeCg.clone());
 			lastHistoryExp.setSentinelType(innerclassType.clone());
-			lastHistoryExp.setHistype(hop.toString());
+			lastHistoryExp.setHistype(hop.toString().substring(1));
 			lastHistoryExp.setOpsname(lastOpName);
 			
 			last.setRight(lastHistoryExp);

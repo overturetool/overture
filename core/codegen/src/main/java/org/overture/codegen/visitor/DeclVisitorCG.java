@@ -399,42 +399,16 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 			IRInfo question) throws AnalysisException
 	{
 		PExp guard = node.getGuard();
-		
+		ILexNameToken opname = node.getOpname();
+
 		APersyncDeclCG predicate = new APersyncDeclCG();
 		
 		predicate.setPred(guard.apply(question.getExpVisitor(), question));
+		predicate.setOpname(opname.getName());
 		
-		//return predicate;
-		return null;
 		
+		return predicate;
 	}
-//	@Override
-//	public SDeclCG caseAPerSyncDefinition(APerSyncDefinition node,
-//			IRInfo question) throws AnalysisException
-//	{
-//		ILexNameToken guardname = node.getName();
-//				
-//		PExp exp = node.getGuard();
-//		
-//		SExpCG expCG = exp.apply(question.getExpVisitor(), question);
-//		
-//		//AEqualsBinaryExpCG expbinCG = new AEqualsBinaryExpCG();
-//		
-//		//expbinCG = (AEqualsBinaryExpCG) expCG;
-//		
-//		ILexNameToken opname = node.getOpname();
-//		
-//		APersyncDeclCG predicate = new APersyncDeclCG();
-//				
-//		predicate.setOpname(opname.getName());
-//		System.out.print(guardname+"\n");
-//		
-//		predicate.setPred(expCG);
-//		
-//		predicate.setGuardname(guardname.getName());
-//		/return null;
-//		return predicate;
-//	}
 	
 	@Override
 	public SDeclCG caseAMutexSyncDefinition(AMutexSyncDefinition node,

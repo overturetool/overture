@@ -480,7 +480,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(ASubSeqExpCG.class, templateStructure.EXP_PATH
 				+ "SubSeq");
 		
-		nodeTemplateFileNames.put(AHistoryExpCG.class, templateStructure.EXP_PATH + "HistoryCounter");
+		nodeTemplateFileNames.put(AHistoryExpCG.class, templateStructure.EXP_PATH 
+				+ "hisCounter");
 
 		// Quantifier expressions
 

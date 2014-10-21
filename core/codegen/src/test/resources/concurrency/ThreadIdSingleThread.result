@@ -35,13 +35,13 @@ public class Entry {
 
     public Boolean evaluatePP(final Number fnr) {
         if (fnr == 0L) {
-            return;
+            return true;
         } else if (fnr == 1L) {
-            return;
+            return true;
         } else if (fnr == 2L) {
-            return;
+            return true;
         } else if (fnr == 3L) {
-            return;
+            return true;
         } else {
             return true;
         }

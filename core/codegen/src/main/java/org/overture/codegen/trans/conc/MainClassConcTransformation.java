@@ -128,8 +128,7 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 			for(int i=0; i < node.getMethods().size(); i++)
 			{
 				if (i == 0){
-					if(!node.getMethods().get(i).equals("toString") && !node.getMethods().get(i).getIsConstructor().equals("true"))
-					{
+				
 						AEqualsBinaryExpCG firstBranch = new AEqualsBinaryExpCG();
 						
 						AIdentifierVarExpCG testVar = new AIdentifierVarExpCG();
@@ -142,6 +141,10 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 						firstBranch.setRight(methNum);
 						
 						AReturnStmCG ret = new AReturnStmCG();
+						ABoolLiteralExpCG boolret = new ABoolLiteralExpCG();
+						boolret.setValue(true);
+						ret.setExp(boolret);
+						
 						for (APersyncDeclCG per : node.getPerSyncs()){
 							if(per.getOpname().equals(node.getMethods().get(i).getName())){
 								ret.setExp(per.getPred());
@@ -150,15 +153,23 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 						bodyif.setIfExp(firstBranch);
 						bodyif.setThenStm(ret);
 					}
-				}
+				//}
 				else
 				{
 					AReturnStmCG ret = new AReturnStmCG();
-					System.out.println(node.getPerSyncs());
+					ABoolLiteralExpCG boolret = new ABoolLiteralExpCG();
+					boolret.setValue(true);
+					ret.setExp(boolret);
+					
 					for (APersyncDeclCG per : node.getPerSyncs()){
 						if(per.getOpname().equals(node.getMethods().get(i).getName())){
 							ret.setExp(per.getPred());
 						}
+//						else
+//						{
+//							
+//						}
+						
 					}
 					
 					AElseIfStmCG newBranch = new AElseIfStmCG();
