@@ -108,7 +108,9 @@ public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
 					objInitializer.setName(initName);
 					objInitializer.getMethodType().setResult(new AVoidTypeCG());
 					objInitializer.setIsConstructor(false);
-
+					objInitializer.setPreCond(null);
+					objInitializer.setPostCond(null);
+					
 					methods.add(objInitializer);
 
 					ACallStmCG initCall = new ACallStmCG();
