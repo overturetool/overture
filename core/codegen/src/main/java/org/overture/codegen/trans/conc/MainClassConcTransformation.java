@@ -10,11 +10,15 @@ import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.cgast.declarations.APersyncDeclCG;
+import org.overture.codegen.cgast.expressions.AHistoryExpCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallStmCG;
 import org.overture.codegen.cgast.statements.ATryStmCG;
+import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
+import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.vdm2java.JavaFormat;
@@ -91,12 +95,48 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 		}
 	}
 	
-//	@Override
-//	public void caseAHistoryExpCG(AHistoryExpCG node) throws AnalysisException
-//	{
-//		if(node.getHistype().equals("#act"))
-//		{
-//			
-//		}
-//	}
+	@Override
+	public void caseAHistoryExpCG(AHistoryExpCG node) throws AnalysisException
+	{
+		if(node.getHistype().equals("#act"))
+		{
+			new Integer("Sentinel.act[(("+node.getClass()+")_sentinel)."+node.getOpsname()+"]");
+			//new Integer("5");
+		}
+		if(node.getHistype().equals("#fin"))
+		{
+			new Integer("Sentinel.fin[(("+node.getClass()+")_sentinel)."+node.getOpsname()+"]");
+		}
+		if(node.getHistype().equals("#req"))
+		{
+			new Integer("Sentinel.req[(("+node.getClass()+")_sentinel)."+node.getOpsname()+"]");
+		}
+		if(node.getHistype().equals("#active"))
+		{
+			new Integer("Sentinel.active[(("+node.getClass()+")_sentinel)."+node.getOpsname()+"]");
+		}
+		if(node.getHistype().equals("waiting"))
+		{
+			new Integer("Sentinel.waiting[(("+node.getClass()+")_sentinel)."+node.getOpsname()+"]");
+		}
+	}
+	
+	@Override
+	public void caseAPersyncDeclCG(APersyncDeclCG node)
+			throws AnalysisException
+	{
+		for (AClassDeclCG cls : this.classes)
+		{
+			if(node.getClass().equals(cls))
+			{
+				AMethodDeclCG evaluatemeth = new AMethodDeclCG();
+				evaluatemeth.setName("evaluatepp");
+				evaluatemeth.setAccess(JavaFormat.JAVA_PUBLIC);
+				AMethodTypeCG evtype = new AMethodTypeCG();
+				evaluatemeth.setMethodType(evtype);
+				
+				
+			}
+		}
+	}
 }

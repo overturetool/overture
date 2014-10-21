@@ -120,6 +120,7 @@ CG {-> package='org.overture.codegen.cgast'
     	[thread]:CG.#decl.thread
     	[innerClasses]:CG.#decl.class*
     	[typeDecls]:CG.#decl.type*
+    	[perSyncs]:CG.#decl.persync*
     |	{interface}
     	[templateTypes]:CG.#type.template*
     	[package]:java_String
@@ -143,6 +144,7 @@ CG {-> package='org.overture.codegen.cgast'
     	[stm]:CG.#stm
     |	{persync}
     	[opname]:java_String
+    	[guardname]:java_String
     	[pred]:CG.#exp
 	;
 
@@ -263,7 +265,7 @@ CG {-> package='org.overture.codegen.cgast'
     |	{cases} [exp]:CG.#exp [cases]:CG.#exp.#altExp.case* [others]:CG.#exp
     |	#altExp
     |	{subSeq} [seq]:CG.#exp [from]:CG.#exp [to]:CG.#exp
-    |	{history}[histype]:java_String [opsname]:java_String
+    |	{history}[histype]:java_String [opsname]:java_String [sentinelType]:CG.#type.class
     ;
 
 #altExp {-> package='org.overture.codegen.cgast.expressions'}

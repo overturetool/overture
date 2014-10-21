@@ -60,6 +60,7 @@ import org.overture.codegen.cgast.declarations.APersyncDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.AThreadDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
+import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALambdaExpCG;
 import org.overture.codegen.cgast.expressions.ANotImplementedExpCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
@@ -392,33 +393,53 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 		return threaddcl;
 	}
 	
+	
 	@Override
 	public SDeclCG caseAPerSyncDefinition(APerSyncDefinition node,
 			IRInfo question) throws AnalysisException
 	{
-		PExp exp = node.getGuard();
+		PExp guard = node.getGuard();
 		
-		SExpCG expCG = exp.apply(question.getExpVisitor(), question);
+		APersyncDeclCG predicate = new APersyncDeclCG();
 		
+		predicate.setPred(guard.apply(question.getExpVisitor(), question));
+		
+		//return predicate;
+		return null;
+		
+	}
+//	@Override
+//	public SDeclCG caseAPerSyncDefinition(APerSyncDefinition node,
+//			IRInfo question) throws AnalysisException
+//	{
+//		ILexNameToken guardname = node.getName();
+//				
+//		PExp exp = node.getGuard();
+//		
+//		SExpCG expCG = exp.apply(question.getExpVisitor(), question);
+//		
+//		//AEqualsBinaryExpCG expbinCG = new AEqualsBinaryExpCG();
+//		
+//		//expbinCG = (AEqualsBinaryExpCG) expCG;
+//		
 //		ILexNameToken opname = node.getOpname();
 //		
 //		APersyncDeclCG predicate = new APersyncDeclCG();
-//		
-		System.out.print(expCG);
-//		
+//				
 //		predicate.setOpname(opname.getName());
+//		System.out.print(guardname+"\n");
 //		
 //		predicate.setPred(expCG);
 //		
-		return null;
+//		predicate.setGuardname(guardname.getName());
+//		/return null;
 //		return predicate;
-	}
-	
-//	@Override
-//	public SDeclCG caseAMutexSyncDefinition(AMutexSyncDefinition node,
-//			IRInfo question) throws AnalysisException
-//	{
-//		//node.get
-//		return null;
 //	}
+	
+	@Override
+	public SDeclCG caseAMutexSyncDefinition(AMutexSyncDefinition node,
+			IRInfo question) throws AnalysisException
+	{
+		return null;
+	}
 }

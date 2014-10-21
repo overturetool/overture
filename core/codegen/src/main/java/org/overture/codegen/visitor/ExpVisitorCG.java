@@ -22,9 +22,11 @@
 package org.overture.codegen.visitor;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AAssignmentDefinition;
+import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
@@ -152,6 +154,7 @@ import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SMultipleBindCG;
 import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.STypeCG;
+import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
@@ -1801,18 +1804,83 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseAHistoryExp(AHistoryExp node, IRInfo question)
 			throws AnalysisException
 	{
-		ILexToken type = node.getHop();
-	
+		PType type = node.getType();
+		ILexToken hop = node.getHop();
+		//className = node.getAncestor(classType)
+		AClassClassDefinition enclosingClass = node.getAncestor(AClassClassDefinition.class);	
+		
+		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		
 		AHistoryExpCG history = new AHistoryExpCG();
+		history.setHistype(hop.toString());
+		history.setType(typeCg);
 		
-		history.setHistype(type.toString());
+		AClassTypeCG innerclassType = null;
 		
-		for(ILexNameToken operation : node.getOpnames()){
-			history.setOpsname(operation.getName());
+		if(enclosingClass != null)
+		{
+			innerclassType = new AClassTypeCG();
+			innerclassType.setName(enclosingClass.getName() + "_sentinel");
+			history.setSentinelType(innerclassType);
+		}
+		else
+		{
+			String msg = "Enclosing class could not be found for history expression.";
+			Logger.getLog().printErrorln(msg);
+			question.addUnsupportedNode(node, msg);
+			
+			return null;
 		}
 		
-		System.out.print(history.getHistype()+"\n" + history.getOpsname());
+		history.setOpsname(node.getOpnames().getFirst().getName());
 		
-		return history;
+		if(node.getOpnames().size() == 1)
+		{
+			System.out.println(history);
+			return history;
+			
+		}
+		else
+		{
+			APlusNumericBinaryExpCG historyCounterSum = new APlusNumericBinaryExpCG();
+			historyCounterSum.setType(typeCg.clone());
+			historyCounterSum.setLeft(history);
+
+			APlusNumericBinaryExpCG last = historyCounterSum;
+			
+			for(int i = 1; i < node.getOpnames().size() - 1; i++){
+				
+				String nextOpName = node.getOpnames().get(i).toString();
+				
+				AHistoryExpCG left = new AHistoryExpCG();
+				left.setType(typeCg.clone());
+				left.setSentinelType(innerclassType.clone());
+				left.setHistype(hop.toString());
+				left.setOpsname(nextOpName);
+				
+				APlusNumericBinaryExpCG tmp = new APlusNumericBinaryExpCG();
+				tmp.setType(typeCg.clone());
+				tmp.setLeft(left);
+				
+				last.setRight(tmp);
+				
+				last = tmp;
+
+			}
+			
+			String lastOpName = node.getOpnames().getLast().toString();
+			
+			AHistoryExpCG lastHistoryExp = new AHistoryExpCG();
+			lastHistoryExp.setType(typeCg.clone());
+			lastHistoryExp.setSentinelType(innerclassType.clone());
+			lastHistoryExp.setHistype(hop.toString());
+			lastHistoryExp.setOpsname(lastOpName);
+			
+			last.setRight(lastHistoryExp);
+			
+			System.out.println("left: " + historyCounterSum.getLeft()+ "\nright:"+historyCounterSum.getRight());
+			
+			return historyCounterSum;
+		}
 	}
 }

@@ -36,6 +36,7 @@ import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AFuncDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.cgast.declarations.APersyncDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.AThreadDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
@@ -149,6 +150,10 @@ public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
 			} else if (decl instanceof AThreadDeclCG)
 			{
 				classCg.setThread((AThreadDeclCG) decl);
+			}
+			else if (decl instanceof APersyncDeclCG)
+			{
+				classCg.getPerSyncs().add((APersyncDeclCG) decl);
 			}
 			else
 			{

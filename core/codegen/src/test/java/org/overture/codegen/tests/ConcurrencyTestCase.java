@@ -24,7 +24,6 @@ package org.overture.codegen.tests;
 import java.io.File;
 
 import org.overture.codegen.ir.IRSettings;
-import org.overture.codegen.vdm2java.JavaSettings;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 
