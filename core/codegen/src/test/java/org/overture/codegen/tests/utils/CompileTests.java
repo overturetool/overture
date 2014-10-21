@@ -46,8 +46,6 @@ import org.overture.codegen.tests.UnionTypeTest;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.config.Release;
-import org.overture.interpreter.VDMJ;
-import org.overture.interpreter.VDMPP;
 import org.overture.interpreter.runtime.ContextException;
 import org.overture.interpreter.values.Value;
 
