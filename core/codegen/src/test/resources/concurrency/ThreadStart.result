@@ -24,6 +24,18 @@ public class ThreadClass extends Thread {
         return "ThreadClass{" + "x := " + Utils.toString(x) + "}";
     }
 
+    public Boolean evaluatePP(final Number fnr) {
+        if (fnr == 0L) {
+            return;
+        } else if (fnr == 1L) {
+            return;
+        } else if (fnr == 2L) {
+            return;
+        } else {
+            return true;
+        }
+    }
+
     public void run() {
         setX();
     }
@@ -83,6 +95,18 @@ public class Entry {
 
     public String toString() {
         return "Entry{}";
+    }
+
+    public Boolean evaluatePP(final Number fnr) {
+        if (fnr == 0L) {
+            return;
+        } else if (fnr == 1L) {
+            return;
+        } else if (fnr == 2L) {
+            return;
+        } else {
+            return true;
+        }
     }
 
     public class Entry_sentinel extends Sentinel {

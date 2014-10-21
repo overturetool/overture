@@ -154,6 +154,7 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 				else
 				{
 					AReturnStmCG ret = new AReturnStmCG();
+					System.out.println(node.getPerSyncs());
 					for (APersyncDeclCG per : node.getPerSyncs()){
 						if(per.getOpname().equals(node.getMethods().get(i).getName())){
 							ret.setExp(per.getPred());

@@ -33,6 +33,20 @@ public class Entry {
         return "Entry{}";
     }
 
+    public Boolean evaluatePP(final Number fnr) {
+        if (fnr == 0L) {
+            return;
+        } else if (fnr == 1L) {
+            return;
+        } else if (fnr == 2L) {
+            return;
+        } else if (fnr == 3L) {
+            return;
+        } else {
+            return true;
+        }
+    }
+
     public class Entry_sentinel extends Sentinel {
         public final int Run = 0L;
         public final int Entry = 1L;
