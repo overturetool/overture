@@ -14,7 +14,17 @@ public class ThreadClass extends Thread {
         Sentinel.entering();
 
         try {
-            x = 2L;
+            x = 3L;
+        } finally {
+            Sentinel.leaving();
+        }
+    }
+
+    public void subX() {
+        Sentinel.entering();
+
+        try {
+            x = x.longValue() - 1L;
         } finally {
             Sentinel.leaving();
         }
@@ -26,10 +36,15 @@ public class ThreadClass extends Thread {
 
     public Boolean evaluatePP(final Number fnr) {
         if (fnr == 0L) {
-            return true;
+            return (Sentinel.act[((ThreadClass_sentinel) sentinel).setX].longValue() == 0L) &&
+            (x.longValue() == 0L);
         } else if (fnr == 1L) {
-            return true;
+            return (Sentinel.act[((ThreadClass_sentinel) sentinel).setX].longValue() +
+            Sentinel.act[((ThreadClass_sentinel) sentinel).subX].longValue() +
+            Sentinel.act[((ThreadClass_sentinel) sentinel).setX].longValue()) > 10L;
         } else if (fnr == 2L) {
+            return true;
+        } else if (fnr == 3L) {
             return true;
         } else {
             return true;
@@ -38,13 +53,15 @@ public class ThreadClass extends Thread {
 
     public void run() {
         setX();
+        subX();
     }
 
     public class ThreadClass_sentinel extends Thread_Sentinel {
         public final int setX = 0L;
-        public final int ThreadClass = 1L;
-        public final int toString = 2L;
-        public final int function_sum = 3L;
+        public final int subX = 1L;
+        public final int ThreadClass = 2L;
+        public final int toString = 3L;
+        public final int function_sum = 4L;
 
         public ThreadClass_sentinel() {
             return;
