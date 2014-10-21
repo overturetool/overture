@@ -217,6 +217,7 @@ CG {-> package='org.overture.codegen.cgast'
 	|	{new} [name]:CG.#name.type [args]:CG.#exp*
 	|	#Var
 	|	{instanceof} [checkedType]:CG.#type [exp]:CG.#exp
+	|	#Is
     |	#Literal
     |	{self}
     |	{null}
@@ -253,6 +254,20 @@ CG {-> package='org.overture.codegen.cgast'
     |	#altExp
     |	{subSeq} [seq]:CG.#exp [from]:CG.#exp [to]:CG.#exp
     ;
+
+#Is {-> package='org.overture.codegen.cgast.expressions'
+	| [exp]:CG.#exp}
+    =	{bool}
+    |	{nat}
+    |	{nat1}
+    |	{int}
+    |	{rat}
+    |	{real}
+    |	{char}
+    |	{token}
+    |	{tuple} [checkedType]:CG.#type
+    |	{general} [checkedType]:CG.#type
+    ;   
 
 #altExp {-> package='org.overture.codegen.cgast.expressions'}
     = {case} [pattern]:CG.#pattern [result]:CG.#exp [patternType]:CG.#type

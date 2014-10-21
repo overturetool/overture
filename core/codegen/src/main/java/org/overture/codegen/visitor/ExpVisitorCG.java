@@ -67,6 +67,7 @@ import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.AInSetBinaryExp;
 import org.overture.ast.expressions.AIndicesUnaryExp;
 import org.overture.ast.expressions.AIntLiteralExp;
+import org.overture.ast.expressions.AIsExp;
 import org.overture.ast.expressions.AIsOfClassExp;
 import org.overture.ast.expressions.ALambdaExp;
 import org.overture.ast.expressions.ALenUnaryExp;
@@ -135,7 +136,14 @@ import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.types.ABooleanBasicType;
+import org.overture.ast.types.ACharBasicType;
 import org.overture.ast.types.AClassType;
+import org.overture.ast.types.AIntNumericBasicType;
+import org.overture.ast.types.ANatNumericBasicType;
+import org.overture.ast.types.ANatOneNumericBasicType;
+import org.overture.ast.types.AProductType;
+import org.overture.ast.types.ARationalNumericBasicType;
 import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASetType;
@@ -152,9 +160,11 @@ import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
+import org.overture.codegen.cgast.expressions.ABoolIsExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACaseAltExpExpCG;
 import org.overture.codegen.cgast.expressions.ACasesExpCG;
+import org.overture.codegen.cgast.expressions.ACharIsExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACompMapExpCG;
 import org.overture.codegen.cgast.expressions.ACompSeqExpCG;
@@ -178,6 +188,7 @@ import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AFieldNumberExpCG;
 import org.overture.codegen.cgast.expressions.AFloorUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AForAllQuantifierExpCG;
+import org.overture.codegen.cgast.expressions.AGeneralIsExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AHeadUnaryExpCG;
@@ -185,6 +196,7 @@ import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AInSetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AIndicesUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
+import org.overture.codegen.cgast.expressions.AIntIsExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ALambdaExpCG;
 import org.overture.codegen.cgast.expressions.ALessEqualNumericBinaryExpCG;
@@ -199,6 +211,8 @@ import org.overture.codegen.cgast.expressions.AMapletExpCG;
 import org.overture.codegen.cgast.expressions.AMethodInstantiationExpCG;
 import org.overture.codegen.cgast.expressions.AMinusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AMkBasicExpCG;
+import org.overture.codegen.cgast.expressions.ANat1IsExpCG;
+import org.overture.codegen.cgast.expressions.ANatIsExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ANotImplementedExpCG;
@@ -213,6 +227,8 @@ import org.overture.codegen.cgast.expressions.AQuoteLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ARangeResByBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ARangeResToBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ARangeSetExpCG;
+import org.overture.codegen.cgast.expressions.ARatIsExpCG;
+import org.overture.codegen.cgast.expressions.ARealIsExpCG;
 import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AReverseUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ASelfExpCG;
@@ -231,8 +247,11 @@ import org.overture.codegen.cgast.expressions.ATailUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
 import org.overture.codegen.cgast.expressions.AThreadIdExpCG;
 import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ATokenIsExpCG;
 import org.overture.codegen.cgast.expressions.ATupleExpCG;
+import org.overture.codegen.cgast.expressions.ATupleIsExpCG;
 import org.overture.codegen.cgast.expressions.AXorBoolBinaryExpCG;
+import org.overture.codegen.cgast.expressions.SIsExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.patterns.ASetBindCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
@@ -323,6 +342,122 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		mkBasicExp.setArg(argCg);
 
 		return mkBasicExp;
+	}
+	
+	@Override
+	public SExpCG caseAIsExp(AIsExp node, IRInfo question)
+			throws AnalysisException
+	{
+		String reason = "The 'is' expression is currently only supported for basic basic types, records, tuples and classes";
+		
+		PType type = node.getType();
+		PType checkedType = node.getBasicType();
+		PExp exp = node.getTest();
+
+		if(checkedType != null && question.getTcFactory().createPTypeAssistant().isUnion(checkedType))
+		{
+			question.addUnsupportedNode(node, reason);
+			return null;
+		}
+		
+		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		SExpCG expCg = exp.apply(question.getExpVisitor(), question);
+		
+		if (checkedType == null)
+		{
+			checkedType = question.getTcFactory().createPDefinitionAssistant().getType(node.getTypedef());
+			
+			if(question.getTcFactory().createPTypeAssistant().isUnion(checkedType))
+			{
+				question.addUnsupportedNode(node, reason);
+				return null;
+			}
+
+			if(question.getTcFactory().createPTypeAssistant().isProduct(checkedType))
+			{
+				AProductType productType = question.getTcFactory().createPTypeAssistant().getProduct(checkedType);
+				STypeCG checkedTypeCg = productType.apply(question.getTypeVisitor(), question);
+				
+				ATupleIsExpCG tupleIsExp = new ATupleIsExpCG();
+				tupleIsExp.setType(typeCg);
+				tupleIsExp.setExp(expCg);
+				tupleIsExp.setCheckedType(checkedTypeCg);
+				
+				return tupleIsExp;
+			}
+			else
+			{
+				if(question.getTcFactory().createPTypeAssistant().isRecord(checkedType))
+				{
+					checkedType = question.getTcFactory().createPTypeAssistant().getRecord(checkedType);
+				}
+				else if(question.getTcFactory().createPTypeAssistant().isClass(checkedType))
+				{
+					checkedType = question.getTcFactory().createPTypeAssistant().getClassType(checkedType);
+				}
+				else
+				{
+					checkedType = null;
+				}
+				
+				if (checkedType != null)
+				{
+					STypeCG checkedTypeCg = checkedType.apply(question.getTypeVisitor(), question);
+
+					AGeneralIsExpCG generalIsExp = new AGeneralIsExpCG();
+					generalIsExp = new AGeneralIsExpCG();
+					generalIsExp.setType(typeCg);
+					generalIsExp.setExp(expCg);
+					generalIsExp.setCheckedType(checkedTypeCg);
+
+					return generalIsExp;
+				} else
+				{
+					question.addUnsupportedNode(node, reason);
+					return null;
+				}
+			}
+		} else
+		{
+			SIsExpCG basicIsExp = null;
+
+			if (checkedType instanceof ABooleanBasicType)
+			{
+				basicIsExp = new ABoolIsExpCG();
+			} else if (checkedType instanceof ANatNumericBasicType)
+			{
+				basicIsExp = new ANatIsExpCG();
+			} else if (checkedType instanceof ANatOneNumericBasicType)
+			{
+				basicIsExp = new ANat1IsExpCG();
+			} else if (checkedType instanceof AIntNumericBasicType)
+			{
+				basicIsExp = new AIntIsExpCG();
+			} else if (checkedType instanceof ARationalNumericBasicType)
+			{
+				basicIsExp = new ARatIsExpCG();
+			} else if (checkedType instanceof ARealNumericBasicType)
+			{
+				basicIsExp = new ARealIsExpCG();
+			} else if (checkedType instanceof ACharBasicType)
+			{
+				basicIsExp = new ACharIsExpCG();
+			} else if (checkedType instanceof ATokenBasicType)
+			{
+				basicIsExp = new ATokenIsExpCG();
+			}
+			else
+			{
+				//Could be a collection of any type
+				question.addUnsupportedNode(node, reason);
+				return null;
+			}
+
+			basicIsExp.setType(typeCg);
+			basicIsExp.setExp(expCg);
+
+			return basicIsExp;
+		}
 	}
 
 	@Override
