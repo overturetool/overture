@@ -42,7 +42,7 @@ public class JavaCodeGenMain
 	public static void main(String[] args)
 	{
 		Settings.release = Release.VDM_10;
-		Dialect dialect = Dialect.VDM_RT;
+		Dialect dialect = Dialect.VDM_PP;
 
 		if (args.length <= 1)
 		{
