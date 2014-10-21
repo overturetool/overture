@@ -92,6 +92,7 @@ import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class JavaFormat
 {
+	private static final String CLASS_EXTENSION = ".class";
 	public static final String UTILS_FILE = "Utils";
 	public static final String SEQ_UTIL_FILE = "SeqUtil";
 	public static final String SET_UTIL_FILE = "SetUtil";
@@ -453,9 +454,30 @@ public class JavaFormat
 		}
 
 		String result = writer.toString();
+		
 		return result;
 	}
 
+	public String formatTypeArg(STypeCG type) throws AnalysisException
+	{
+		if(type == null)
+		{
+			return null;
+		}
+		else
+		{
+			List<STypeCG> types = new LinkedList<STypeCG>();
+			types.add(type);
+			
+			return formattedTypes(types, CLASS_EXTENSION);
+		}
+	}
+	
+	public String formatTypeArgs(ATupleTypeCG tupleType) throws AnalysisException
+	{
+		return formatTypeArgs(tupleType.getTypes());
+	}
+	
 	public String formatTypeArgs(List<STypeCG> types) throws AnalysisException
 	{
 		if (types.isEmpty())
@@ -463,7 +485,7 @@ public class JavaFormat
 			return "";
 		}
 
-		return formattedTypes(types, ".class");
+		return formattedTypes(types, CLASS_EXTENSION);
 	}
 
 	public String formatEqualsBinaryExp(AEqualsBinaryExpCG node)
@@ -509,7 +531,7 @@ public class JavaFormat
 	{
 		return type instanceof ARecordTypeCG || type instanceof ATupleTypeCG;
 	}
-
+	
 	private ANotUnaryExpCG transNotEquals(ANotEqualsBinaryExpCG notEqual)
 	{
 		ANotUnaryExpCG notUnary = new ANotUnaryExpCG();
