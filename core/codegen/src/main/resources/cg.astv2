@@ -146,6 +146,8 @@ CG {-> package='org.overture.codegen.cgast'
     	[opname]:java_String
     	[guardname]:java_String
     	[pred]:CG.#exp
+    |	{mutexSync}
+    	[opnames]:java_String
 	;
 
 #Local  {-> package='org.overture.codegen.cgast.declarations'}

@@ -7,26 +7,26 @@ public class Entry {
     public Sentinel sentinel;
 
     public Entry() {
-        sentinel = new Entry_sentinel();
+        sentinel = new Entry_sentinel(this);
     }
 
     public static Object Run() {
-        Sentinel.entering();
+        Sentinel.entering(((Entry_sentinel) sentinel).Run);
 
         try {
             return f();
         } finally {
-            Sentinel.leaving();
+            Sentinel.leaving(((Entry_sentinel) sentinel).Run);
         }
     }
 
     public static Number f() {
-        Sentinel.entering();
+        Sentinel.entering(((Entry_sentinel) sentinel).f);
 
         try {
             return Thread.currentThread().getId();
         } finally {
-            Sentinel.leaving();
+            Sentinel.leaving(((Entry_sentinel) sentinel).f);
         }
     }
 

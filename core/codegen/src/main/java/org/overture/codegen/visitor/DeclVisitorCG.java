@@ -414,6 +414,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 	public SDeclCG caseAMutexSyncDefinition(AMutexSyncDefinition node,
 			IRInfo question) throws AnalysisException
 	{
+		LinkedList<ILexNameToken> operations = node.getOperations();
 		return null;
 	}
 }

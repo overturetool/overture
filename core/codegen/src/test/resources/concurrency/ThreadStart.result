@@ -8,26 +8,26 @@ public class ThreadClass extends Thread {
     public Sentinel sentinel;
 
     public ThreadClass() {
-        sentinel = new ThreadClass_sentinel();
+        sentinel = new ThreadClass_sentinel(this);
     }
 
     public void setX() {
-        Sentinel.entering();
+        Sentinel.entering(((ThreadClass_sentinel) sentinel).setX);
 
         try {
             x = 3L;
         } finally {
-            Sentinel.leaving();
+            Sentinel.leaving(((ThreadClass_sentinel) sentinel).setX);
         }
     }
 
     public void subX() {
-        Sentinel.entering();
+        Sentinel.entering(((ThreadClass_sentinel) sentinel).subX);
 
         try {
             x = x.longValue() - 1L;
         } finally {
-            Sentinel.leaving();
+            Sentinel.leaving(((ThreadClass_sentinel) sentinel).subX);
         }
     }
 
@@ -84,11 +84,11 @@ public class Entry {
     public Sentinel sentinel;
 
     public Entry() {
-        sentinel = new Entry_sentinel();
+        sentinel = new Entry_sentinel(this);
     }
 
     public static Object Run() {
-        Sentinel.entering();
+        Sentinel.entering(((Entry_sentinel) sentinel).Run);
 
         try {
             ThreadClass t = new ThreadClass();
@@ -108,7 +108,7 @@ public class Entry {
 
             return t.x;
         } finally {
-            Sentinel.leaving();
+            Sentinel.leaving(((Entry_sentinel) sentinel).Run);
         }
     }
 
