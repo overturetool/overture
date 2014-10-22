@@ -15,6 +15,7 @@ import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.APersyncDeclCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
+import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AHistoryExpCG;
@@ -99,12 +100,28 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 					
 					entering.setClassType(sentinel);
 					entering.setType(new AVoidTypeCG());
+					
+					AFieldExpCG field = new AFieldExpCG();
+					field.setMemberName(methodCG.getName());
+					
+					ACastUnaryExpCG cast = new ACastUnaryExpCG();
+					AIdentifierVarExpCG varSentinel = new AIdentifierVarExpCG();
+					varSentinel.setOriginal("sentinel");
+					
+					AExternalTypeCG etype = new AExternalTypeCG();
+					etype.setName(node.getName()+"_sentinel");
+					
+					cast.setExp(varSentinel);
+					cast.setType(etype);
+					field.setObject(cast);
+					
 									
-					//entering.setArgs(value);
+					entering.getArgs().add(field);
 					
 					leaving.setName("leaving");
 					leaving.setClassType(sentinel.clone());
 					leaving.setType(new AVoidTypeCG());
+					leaving.getArgs().add(field.clone());
 					
 					bodyStm.getStatements().add(entering);
 					ATryStmCG trystm = new ATryStmCG();
