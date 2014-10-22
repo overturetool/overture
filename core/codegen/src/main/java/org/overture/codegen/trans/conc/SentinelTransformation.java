@@ -152,7 +152,13 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 		//method_pp.setFormalParams();
 		
 		if (node.getSuperName() != null){
-			innerClass.setSuperName(node.getSuperName()+"_Sentinel");
+			if(!node.getSuperName().equals("Thread")){
+				innerClass.setSuperName(node.getSuperName()+"_Sentinel");
+			}
+			else
+			{
+				innerClass.setSuperName("Sentinel");
+			}
 		}
 		else{
 		
@@ -192,8 +198,4 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 			return getThreadClass(superClass.getName(), superClass);
 		}
 	}
-//	#set ( $baseclass = "" )
-//	#if (!$JavaFormat.isNull($node.getThread()))
-//		#set ( $baseclass = "extends Thread" )
-//	#end
 }

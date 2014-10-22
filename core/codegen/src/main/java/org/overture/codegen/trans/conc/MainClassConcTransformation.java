@@ -5,6 +5,7 @@ package org.overture.codegen.trans.conc;
 
 import java.util.List;
 
+import org.overture.ast.expressions.AFieldExp;
 import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
@@ -15,14 +16,23 @@ import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.APersyncDeclCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AHistoryExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
+import org.overture.codegen.cgast.expressions.ANewExpCG;
+import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
+import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallStmCG;
 import org.overture.codegen.cgast.statements.AElseIfStmCG;
+import org.overture.codegen.cgast.statements.AFieldObjectDesignatorCG;
+import org.overture.codegen.cgast.statements.AFieldStateDesignatorCG;
+import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
+import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
+import org.overture.codegen.cgast.statements.ANewObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.ATryStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
@@ -89,6 +99,8 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 					
 					entering.setClassType(sentinel);
 					entering.setType(new AVoidTypeCG());
+									
+					//entering.setArgs(value);
 					
 					leaving.setName("leaving");
 					leaving.setClassType(sentinel.clone());
@@ -102,6 +114,35 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 										
 					methodCG.setBody(bodyStm);
 				}
+			}
+			else
+			{
+					ABlockStmCG bodyConst = new ABlockStmCG();
+					
+					ALocalAssignmentStmCG stm = new ALocalAssignmentStmCG();
+					
+					AIdentifierVarExpCG field = new AIdentifierVarExpCG();
+					
+					field.setOriginal("sentinel");
+					
+					//System.out.println(field.getOriginal());
+					
+					ANewExpCG newexp = new ANewExpCG();
+					
+					ATypeNameCG classtype = new ATypeNameCG();
+					classtype.setName(node.getName()+"_sentinel");
+					newexp.setName(classtype);
+					
+					stm.setExp(newexp);
+					stm.setTarget(field);
+					
+					bodyConst.getStatements().add(methodCG.getBody());
+					bodyConst.getStatements().add(stm);
+					
+					methodCG.setBody(bodyConst);
+					
+					
+				//}
 			}
 		}
 		//declaration of the method.
@@ -164,14 +205,8 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 					for (APersyncDeclCG per : node.getPerSyncs()){
 						if(per.getOpname().equals(node.getMethods().get(i).getName())){
 							ret.setExp(per.getPred());
-						}
-//						else
-//						{
-//							
-//						}
-						
-					}
-					
+						}						
+					}					
 					AElseIfStmCG newBranch = new AElseIfStmCG();
 																				
 					AEqualsBinaryExpCG Branches = new AEqualsBinaryExpCG();
