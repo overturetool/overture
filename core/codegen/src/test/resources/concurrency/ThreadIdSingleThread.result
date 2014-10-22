@@ -7,6 +7,7 @@ public class Entry {
     public Sentinel sentinel;
 
     public Entry() {
+        sentinel = new Entry_sentinel();
     }
 
     public static Object Run() {

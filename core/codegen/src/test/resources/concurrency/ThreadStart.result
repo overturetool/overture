@@ -8,6 +8,7 @@ public class ThreadClass extends Thread {
     public Sentinel sentinel;
 
     public ThreadClass() {
+        sentinel = new ThreadClass_sentinel();
     }
 
     public void setX() {
@@ -56,7 +57,7 @@ public class ThreadClass extends Thread {
         subX();
     }
 
-    public class ThreadClass_sentinel extends Thread_Sentinel {
+    public class ThreadClass_sentinel extends Sentinel {
         public final int setX = 0L;
         public final int subX = 1L;
         public final int ThreadClass = 2L;
@@ -83,6 +84,7 @@ public class Entry {
     public Sentinel sentinel;
 
     public Entry() {
+        sentinel = new Entry_sentinel();
     }
 
     public static Object Run() {
