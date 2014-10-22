@@ -26,7 +26,7 @@ public class Sentinel
 			if(! instance.evaluatePP(fnr).booleanValue())
 			{
 				waiting(fnr, +1);
-				while (! instance.evaluatePP(fnr).booleanValue())
+				while (!instance.evaluatePP(fnr).booleanValue())
 				{
 					this.wait();
 				}

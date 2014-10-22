@@ -22,6 +22,7 @@ import org.overture.codegen.cgast.expressions.AHistoryExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
+import org.overture.codegen.cgast.expressions.ASelfExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
@@ -148,7 +149,9 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 					
 					ATypeNameCG classtype = new ATypeNameCG();
 					classtype.setName(node.getName()+"_sentinel");
+					
 					newexp.setName(classtype);
+					newexp.getArgs().add(new ASelfExpCG());
 					
 					stm.setExp(newexp);
 					stm.setTarget(field);
