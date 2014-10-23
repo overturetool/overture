@@ -241,7 +241,6 @@ import org.overture.codegen.cgast.expressions.AXorBoolBinaryExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.patterns.ASetBindCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
-import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
@@ -405,19 +404,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 				return question.getExpAssistant().consIsExpBasicType(node, question, reason, checkedType, typeCg, expCg);
 			} else if(checkedType instanceof AQuoteType)
 			{
-				AQuoteType quoteType = (AQuoteType) checkedType;
-				STypeCG quoteTypeCg = quoteType.apply(question.getTypeVisitor(), question);
-				
-				AQuoteLiteralExpCG lit = new AQuoteLiteralExpCG();
-				lit.setType(quoteTypeCg);
-				lit.setValue(quoteType.getValue().getValue());
-
-				AEqualsBinaryExpCG equals = new AEqualsBinaryExpCG();
-				equals.setType(new ABoolBasicTypeCG());
-				equals.setLeft(expCg);
-				equals.setRight(lit);
-				
-				return equals;
+				return question.getExpAssistant().consIsExpQuoteType(question, checkedType, expCg);
 			}
 			else
 			{

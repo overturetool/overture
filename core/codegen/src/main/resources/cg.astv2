@@ -427,6 +427,9 @@ externalType {-> package='org.overture.codegen.cgast.utils'}
 
 #basicTypeWrappers {-> package='org.overture.codegen.cgast.types'}
 	= {Int}
+	| {Nat1}
+	| {Nat}
+	| {Rat}
 	| {Real}
 	| {Char}
 	| {Bool}
@@ -437,7 +440,6 @@ externalType {-> package='org.overture.codegen.cgast.utils'}
 	| [setOf]:CG.#type}
     =   {set} 
     ;
-  
     
 #seq {-> package='org.overture.codegen.cgast.types'
 	| [empty]:java_Boolean
@@ -461,6 +463,9 @@ externalType {-> package='org.overture.codegen.cgast.utils'}
 
 #numeric {-> package='org.overture.codegen.cgast.types'}
     =   {int}
+    |	{nat1}
+    |	{nat}
+    |	{rat}
     |   {real} 
     ;
      

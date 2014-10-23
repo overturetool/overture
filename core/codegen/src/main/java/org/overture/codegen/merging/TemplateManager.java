@@ -86,7 +86,13 @@ import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AInterfaceTypeCG;
 import org.overture.codegen.cgast.types.AMapMapTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
+import org.overture.codegen.cgast.types.ANat1BasicTypeWrappersTypeCG;
+import org.overture.codegen.cgast.types.ANat1NumericBasicTypeCG;
+import org.overture.codegen.cgast.types.ANatBasicTypeWrappersTypeCG;
+import org.overture.codegen.cgast.types.ANatNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
+import org.overture.codegen.cgast.types.ARatBasicTypeWrappersTypeCG;
+import org.overture.codegen.cgast.types.ARatNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
@@ -189,6 +195,15 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AIntBasicTypeWrappersTypeCG.class, templateStructure.BASIC_TYPE_WRAPPERS_PATH
 				+ "Integer");
 
+		nodeTemplateFileNames.put(ANat1BasicTypeWrappersTypeCG.class, templateStructure.BASIC_TYPE_WRAPPERS_PATH
+				+ "Nat1");
+		
+		nodeTemplateFileNames.put(ANatBasicTypeWrappersTypeCG.class, templateStructure.BASIC_TYPE_WRAPPERS_PATH
+				+ "Nat");		
+
+		nodeTemplateFileNames.put(ARatBasicTypeWrappersTypeCG.class, templateStructure.BASIC_TYPE_WRAPPERS_PATH
+				+ "Rat");
+		
 		nodeTemplateFileNames.put(ARealBasicTypeWrappersTypeCG.class, templateStructure.BASIC_TYPE_WRAPPERS_PATH
 				+ "Real");
 
@@ -224,6 +239,15 @@ public class TemplateManager
 		
 		nodeTemplateFileNames.put(AIntNumericBasicTypeCG.class, templateStructure.BASIC_TYPE_PATH
 				+ "Integer");
+
+		nodeTemplateFileNames.put(ANat1NumericBasicTypeCG.class, templateStructure.BASIC_TYPE_PATH
+				+ "Nat1");
+
+		nodeTemplateFileNames.put(ANatNumericBasicTypeCG.class, templateStructure.BASIC_TYPE_PATH
+				+ "Nat");
+
+		nodeTemplateFileNames.put(ARatNumericBasicTypeCG.class, templateStructure.BASIC_TYPE_PATH
+				+ "Rat");
 		
 		nodeTemplateFileNames.put(ARealNumericBasicTypeCG.class, templateStructure.BASIC_TYPE_PATH
 				+ "Real");

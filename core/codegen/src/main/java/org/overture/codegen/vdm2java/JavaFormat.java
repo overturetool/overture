@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.overture.ast.types.PType;
+import org.overture.codegen.assistant.TypeAssistantCG;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SStateDesignatorCG;
@@ -66,7 +67,13 @@ import org.overture.codegen.cgast.types.AIntBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AInterfaceTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
+import org.overture.codegen.cgast.types.ANat1BasicTypeWrappersTypeCG;
+import org.overture.codegen.cgast.types.ANat1NumericBasicTypeCG;
+import org.overture.codegen.cgast.types.ANatBasicTypeWrappersTypeCG;
+import org.overture.codegen.cgast.types.ANatNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
+import org.overture.codegen.cgast.types.ARatBasicTypeWrappersTypeCG;
+import org.overture.codegen.cgast.types.ARatNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
@@ -243,8 +250,7 @@ public class JavaFormat
 				|| type instanceof ARealBasicTypeWrappersTypeCG)
 		{
 			return DOUBLE_VALUE;
-		} else if (type instanceof AIntNumericBasicTypeCG
-				|| type instanceof AIntBasicTypeWrappersTypeCG)
+		} else if (info.getAssistantManager().getTypeAssistant().isNumericType(type))
 		{
 			return LONG_VALUE;
 		} else
@@ -709,8 +715,9 @@ public class JavaFormat
 			return "";
 		}
 
-		if (potentialBasicType instanceof AIntNumericBasicTypeCG
-				|| potentialBasicType instanceof ARealNumericBasicTypeCG)
+		TypeAssistantCG typeAssistant = info.getAssistantManager().getTypeAssistant();
+		
+		if (potentialBasicType instanceof STypeCG && typeAssistant.isNumericType((STypeCG) potentialBasicType))
 		{
 			return "Number";
 		} else if (potentialBasicType instanceof ABoolBasicTypeCG)

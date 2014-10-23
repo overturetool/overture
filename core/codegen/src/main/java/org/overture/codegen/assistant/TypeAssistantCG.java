@@ -57,6 +57,12 @@ import org.overture.codegen.cgast.types.ACharBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.AIntBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
+import org.overture.codegen.cgast.types.ANat1BasicTypeWrappersTypeCG;
+import org.overture.codegen.cgast.types.ANat1NumericBasicTypeCG;
+import org.overture.codegen.cgast.types.ANatBasicTypeWrappersTypeCG;
+import org.overture.codegen.cgast.types.ANatNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.ARatBasicTypeWrappersTypeCG;
+import org.overture.codegen.cgast.types.ARatNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
@@ -246,6 +252,12 @@ public class TypeAssistantCG extends AssistantBase
 		if (basicType instanceof AIntNumericBasicTypeCG)
 		{
 			return new AIntBasicTypeWrappersTypeCG();
+		} else if(basicType instanceof ANat1NumericBasicTypeCG)
+		{
+			return new ANat1BasicTypeWrappersTypeCG();
+		} else if(basicType instanceof ANatNumericBasicTypeCG)
+		{
+			return new ANatBasicTypeWrappersTypeCG();
 		} else if (basicType instanceof ARealNumericBasicTypeCG)
 		{
 			return new ARealBasicTypeWrappersTypeCG();
@@ -260,8 +272,6 @@ public class TypeAssistantCG extends AssistantBase
 			return basicType;
 		} else
 		{
-			Logger.getLog().printErrorln("Unexpected basic type encountered in getWrapperType method: "
-					+ basicType);
 			return null;
 		}
 
@@ -531,5 +541,17 @@ public class TypeAssistantCG extends AssistantBase
 		}
 		
 		return type;
+	}
+	
+	public boolean isNumericType(STypeCG type)
+	{
+		return type instanceof AIntNumericBasicTypeCG
+				|| type instanceof AIntBasicTypeWrappersTypeCG
+				|| type instanceof ANat1NumericBasicTypeCG
+				|| type instanceof ANat1BasicTypeWrappersTypeCG
+				|| type instanceof ANatNumericBasicTypeCG
+				|| type instanceof ANatBasicTypeWrappersTypeCG
+				|| type instanceof ARatNumericBasicTypeCG
+				|| type instanceof ARatBasicTypeWrappersTypeCG;
 	}
 }

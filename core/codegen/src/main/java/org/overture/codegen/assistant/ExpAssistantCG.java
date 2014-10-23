@@ -46,6 +46,7 @@ import org.overture.ast.types.ACharBasicType;
 import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
+import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ARationalNumericBasicType;
 import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.ATokenBasicType;
@@ -61,6 +62,7 @@ import org.overture.codegen.cgast.expressions.ACaseAltExpExpCG;
 import org.overture.codegen.cgast.expressions.ACharIsExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
+import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AGeneralIsExpCG;
 import org.overture.codegen.cgast.expressions.AIntIsExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
@@ -262,7 +264,17 @@ public class ExpAssistantCG extends AssistantBase
 	{
 		return consIntLiteral(0L);
 	}
+	
+	public AIntLiteralExpCG getDefaultNat1Value()
+	{
+		return consIntLiteral(1L);
+	}
 
+	public AIntLiteralExpCG getDefaultNatValue()
+	{
+		return consIntLiteral(0L);
+	}
+	
 	public ARealLiteralExpCG getDefaultRealValue()
 	{
 		return consRealLiteral(0.0);
@@ -418,6 +430,23 @@ public class ExpAssistantCG extends AssistantBase
 		//to the standard for loop in Java, e.g. for(int i = 0; i < 10; i++){...}
 	}
 	
+	public SExpCG consIsExpQuoteType(IRInfo question, PType checkedType, SExpCG expCg)
+			throws AnalysisException
+	{
+		AQuoteType quoteType = (AQuoteType) checkedType;
+		STypeCG quoteTypeCg = quoteType.apply(question.getTypeVisitor(), question);
+		
+		AQuoteLiteralExpCG lit = new AQuoteLiteralExpCG();
+		lit.setType(quoteTypeCg);
+		lit.setValue(quoteType.getValue().getValue());
+
+		AEqualsBinaryExpCG equals = new AEqualsBinaryExpCG();
+		equals.setType(new ABoolBasicTypeCG());
+		equals.setLeft(expCg);
+		equals.setRight(lit);
+		
+		return equals;
+	}
 
 	public SExpCG consGeneralIsExp(STypeCG typeCg, SExpCG expCg, STypeCG checkedTypeCg)
 	{

@@ -51,6 +51,8 @@ import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.ANat1NumericBasicTypeCG;
+import org.overture.codegen.cgast.types.ANatNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
@@ -370,7 +372,14 @@ public class DeclAssistantCG extends AssistantBase
 		} else if (typeCg instanceof AIntNumericBasicTypeCG)
 		{
 			localDecl.setExp(expAssistant.getDefaultIntValue());
-		} else if (typeCg instanceof ARealNumericBasicTypeCG)
+		} else if(typeCg instanceof ANat1NumericBasicTypeCG)
+		{
+			localDecl.setExp(expAssistant.getDefaultNat1Value());
+		} else if(typeCg instanceof ANatNumericBasicTypeCG)
+		{
+			localDecl.setExp(expAssistant.getDefaultNatValue());
+		}
+		else if (typeCg instanceof ARealNumericBasicTypeCG)
 		{
 			localDecl.setExp(expAssistant.getDefaultRealValue());
 		} else if (typeCg instanceof ABoolBasicTypeCG)
