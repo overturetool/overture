@@ -24,6 +24,8 @@
 <message column="3" line="86" message="Definition 'Op14' not used" messageType="warning" number="5000" resource="opdef.vdm"/>
 <message column="3" line="93" message="Definition 'Op15' not used" messageType="warning" number="5000" resource="opdef.vdm"/>
 <message column="3" line="102" message="Definition 'Op16' not used" messageType="warning" number="5000" resource="opdef.vdm"/>
+<message column="8" line="38" message="State variable 'OpDefTest`a~' cannot be accessed from this context" messageType="error" number="3302" resource="opdef.vdm"/>
+<message column="18" line="50" message="State variable 'OpDefTest`b~' cannot be accessed from this context" messageType="error" number="3302" resource="opdef.vdm"/>
 <message column="9" line="55" message="Left and right of '&lt;&gt;' different types" messageType="error" number="3136" resource="opdef.vdm"/>
 <message column="15" line="56" message="Left hand of + is not numeric" messageType="error" number="3139" resource="opdef.vdm"/>
 <message column="3" line="62" message="Postcondition returns unexpected type" messageType="error" number="3018" resource="opdef.vdm"/>

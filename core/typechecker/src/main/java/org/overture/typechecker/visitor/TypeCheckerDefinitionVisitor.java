@@ -926,6 +926,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		question.assistantFactory.createPDefinitionListAssistant().typeCheck(defs, THIS, question);
 
 		FlatCheckedEnvironment local = new FlatCheckedEnvironment(question.assistantFactory, defs, question.env, question.scope);
+		local.setLimitStateScope(limitStateScope);
 		local.setStatic(question.assistantFactory.createPAccessSpecifierAssistant().isStatic(node.getAccess()));
 		local.setEnclosingDefinition(node);
 
@@ -992,9 +993,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			}
 
 			PType expectedResult = ((AOperationType) node.getType()).getResult();
-			local.setLimitStateScope(limitStateScope);
 			node.setActualResult(node.getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, NameScope.NAMESANDSTATE, null, null, expectedResult)));
-			local.setLimitStateScope(false);
 
 			boolean compatible = question.assistantFactory.getTypeComparator().compatible(expectedResult, node.getActualResult());
 
