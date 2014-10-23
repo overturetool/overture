@@ -20,10 +20,8 @@
 <message column="3" line="75" message="Definition 'Op11' not used" messageType="warning" number="5000" resource="extexplopdef.vdm"/>
 <message column="3" line="80" message="Definition 'Op12' not used" messageType="warning" number="5000" resource="extexplopdef.vdm"/>
 <message column="3" line="85" message="Definition 'Op13' not used" messageType="warning" number="5000" resource="extexplopdef.vdm"/>
-<message column="8" line="42" message="State variable 'OpDefTest`a~' cannot be accessed from this context" messageType="error" number="3302" resource="extexplopdef.vdm"/>
 <message column="13" line="42" message="Name 'OpDefTest`s' is not in scope" messageType="error" number="3182" resource="extexplopdef.vdm"/>
 <message column="3" line="44" message="Operation returns unexpected type" messageType="error" number="3035" resource="extexplopdef.vdm"/>
-<message column="18" line="56" message="State variable 'OpDefTest`b~' cannot be accessed from this context" messageType="error" number="3302" resource="extexplopdef.vdm"/>
 <message column="9" line="62" message="Left and right of '&lt;&gt;' different types" messageType="error" number="3136" resource="extexplopdef.vdm"/>
 <message column="15" line="63" message="Left hand of + is not numeric" messageType="error" number="3139" resource="extexplopdef.vdm"/>
 <message column="3" line="70" message="Postcondition returns unexpected type" messageType="error" number="3018" resource="extexplopdef.vdm"/>
