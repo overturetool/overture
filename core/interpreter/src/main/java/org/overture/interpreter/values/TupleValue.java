@@ -24,6 +24,7 @@
 package org.overture.interpreter.values;
 
 import java.util.Iterator;
+import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.types.AProductType;
@@ -141,7 +142,7 @@ public class TupleValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt)
+	protected Value convertValueTo(PType to, Context ctxt, Set<PType> done)
 			throws AnalysisException
 	{
 		if (to instanceof AProductType)
@@ -164,7 +165,7 @@ public class TupleValue extends Value
 			return new TupleValue(nl);
 		} else
 		{
-			return super.convertValueTo(to, ctxt);
+			return super.convertValueTo(to, ctxt, done);
 		}
 	}
 

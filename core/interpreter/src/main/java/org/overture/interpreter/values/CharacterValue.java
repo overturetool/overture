@@ -25,6 +25,7 @@ package org.overture.interpreter.values;
 
 import java.util.FormattableFlags;
 import java.util.Formatter;
+import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.types.ACharBasicType;
@@ -106,7 +107,7 @@ public class CharacterValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt)
+	protected Value convertValueTo(PType to, Context ctxt, Set<PType> done)
 			throws AnalysisException
 	{
 		if (ctxt.assistantFactory.createPTypeAssistant().isType(to, ACharBasicType.class))
@@ -114,7 +115,7 @@ public class CharacterValue extends Value
 			return this;
 		} else
 		{
-			return super.convertValueTo(to, ctxt);
+			return super.convertValueTo(to, ctxt, done);
 		}
 	}
 

@@ -25,6 +25,7 @@ package org.overture.interpreter.values;
 
 import java.util.FormattableFlags;
 import java.util.Formatter;
+import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.lex.LexStringToken;
@@ -166,7 +167,7 @@ public class SeqValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt)
+	protected Value convertValueTo(PType to, Context ctxt, Set<PType> done)
 			throws AnalysisException
 	{
 		// We can't use the isSeq method as it plucks out one sequence
@@ -191,7 +192,7 @@ public class SeqValue extends Value
 			return new SeqValue(nl);
 		} else
 		{
-			return super.convertValueTo(to, ctxt);
+			return super.convertValueTo(to, ctxt, done);
 		}
 	}
 

@@ -23,6 +23,8 @@
 
 package org.overture.interpreter.values;
 
+import java.util.Set;
+
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.types.AInMapMapType;
 import org.overture.ast.types.PType;
@@ -127,7 +129,7 @@ public class MapValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt)
+	protected Value convertValueTo(PType to, Context ctxt, Set<PType> done)
 			throws AnalysisException
 	{
 		if (to instanceof SMapType)
@@ -158,7 +160,7 @@ public class MapValue extends Value
 			return new MapValue(nm);
 		} else
 		{
-			return super.convertValueTo(to, ctxt);
+			return super.convertValueTo(to, ctxt, done);
 		}
 	}
 
