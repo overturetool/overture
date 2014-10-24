@@ -264,7 +264,7 @@ public class JavaCodeGen
 				funcTransformation, prePostTransformation, ifExpTransformation,
 				deflattenTransformation, funcValVisitor, transVisitor,
 				deflattenTransformation, patternTransformation, preCheckTransformation, postCheckTransformation,
-				isExpTransformation, typeTransformation, unionTypeTransformation, javaToStringTransformation};
+				deflattenTransformation, isExpTransformation, typeTransformation, unionTypeTransformation, javaToStringTransformation};
 
 		for (DepthFirstAnalysisAdaptor transformation : analyses)
 		{

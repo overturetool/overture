@@ -21,10 +21,8 @@
  */
 package org.overture.codegen.assistant;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.PDefinition;

@@ -35,8 +35,6 @@ public class IsExpTransformation extends DepthFirstAnalysisAdaptor
 	public void caseAGeneralIsExpCG(AGeneralIsExpCG node)
 			throws AnalysisException
 	{
-		//TODO: Assumes deflattened structure?
-		
 		STypeCG checkedType = node.getCheckedType();
 		
 		if(!(checkedType instanceof AUnionTypeCG))

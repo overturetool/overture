@@ -330,6 +330,9 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseAIsExp(AIsExp node, IRInfo question)
 			throws AnalysisException
 	{
+		//TODO: Optional types and collection types are not yet supported.
+		//Also check the IsExpTransformation
+		
 		PType checkedType = node.getBasicType();
 		
 		if(checkedType == null)
