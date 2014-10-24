@@ -63,6 +63,7 @@ import org.overture.codegen.cgast.types.AMapMapTypeCG;
 import org.overture.codegen.cgast.types.ANat1NumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ANatNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AQuoteTypeCG;
+import org.overture.codegen.cgast.types.ARatNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.ASetSetTypeCG;
@@ -225,16 +226,6 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 	{
 		PType type = node.getType();
 
-		if (type instanceof AUnionType)
-		{
-			AUnionType unionType = (AUnionType) type;
-
-			if (question.getTypeAssistant().isUnionOfType(unionType, AQuoteType.class))
-			{
-				return new AIntNumericBasicTypeCG();
-			}
-		}
-
 		return type.apply(question.getTypeVisitor(), question);
 	}
 
@@ -347,7 +338,7 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 			ARationalNumericBasicType node, IRInfo question)
 			throws AnalysisException
 	{
-		return new ARealNumericBasicTypeCG();
+		return new ARatNumericBasicTypeCG();
 	}
 
 	@Override
