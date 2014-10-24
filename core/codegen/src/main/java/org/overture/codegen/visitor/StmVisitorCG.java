@@ -29,6 +29,7 @@ import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.ASelfExp;
 import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.PExp;
@@ -369,14 +370,21 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 		
 		
-		if(node.getRootdef() instanceof AInheritedDefinition && !isStatic)
+		if(!isStatic)
 		{
-			ASuperCallStmCG superCall = new ASuperCallStmCG();
-			superCall.setName(name);
-			superCall.setType(typeCg);
-			superCall.setArgs(argsCg);
-			
-			return superCall;
+			ILexNameToken rootDefClassName = node.getRootdef().getClassDefinition().getName();
+			ILexNameToken enclosingClassName = node.getAncestor(SClassDefinition.class).getName();
+
+			if (!rootDefClassName.equals(enclosingClassName))
+			{
+
+				ASuperCallStmCG superCall = new ASuperCallStmCG();
+				superCall.setName(name);
+				superCall.setType(typeCg);
+				superCall.setArgs(argsCg);
+
+				return superCall;
+			}
 		}
 		else if (nameToken != null && nameToken.getExplicit() && isStatic)
 		{
