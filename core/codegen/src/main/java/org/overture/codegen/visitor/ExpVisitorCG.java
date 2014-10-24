@@ -228,6 +228,7 @@ import org.overture.codegen.cgast.expressions.ASizeUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ASubSeqExpCG;
 import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ASuperVarExpCG;
 import org.overture.codegen.cgast.expressions.ATailUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
 import org.overture.codegen.cgast.expressions.AThreadIdExpCG;
@@ -1336,7 +1337,17 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 
 		boolean isInheritedDef = varDef instanceof AInheritedDefinition;
 
-		if (owningClass == null
+		if(isExplOp && !isDefInOwningClass && !question.getTcFactory().createPDefinitionAssistant().isStatic(varDef))
+		{
+			ASuperVarExpCG superVarExp = new ASuperVarExpCG();
+
+			superVarExp.setType(typeCg);
+			superVarExp.setName(name);
+			superVarExp.setIsLambda(isLambda);
+
+			return superVarExp;
+		}
+		else if (owningClass == null
 				|| nodeParentClass == null
 				|| isDefInOwningClass
 				|| isInheritedDef

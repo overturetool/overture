@@ -286,6 +286,7 @@ CG {-> package='org.overture.codegen.cgast'
 	|	[isLambda]:java_Boolean}
     =   {identifier} [original]:java_String //Change original to name...
 	|	{explicit} [classType]:CG.#type [name]:java_String
+	|	{super} [name]:java_String
     ;
     
 #Literal {-> package='org.overture.codegen.cgast.expressions'}

@@ -342,6 +342,9 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AExplicitVarExpCG.class, templateStructure.EXP_PATH
 				+ "ExplicitVariable");
 
+		nodeTemplateFileNames.put(ASuperVarExpCG.class, templateStructure.EXP_PATH
+				+ "SuperVariable");
+		
 		nodeTemplateFileNames.put(AInstanceofExpCG.class, templateStructure.EXP_PATH
 				+ "InstanceOf");
 
