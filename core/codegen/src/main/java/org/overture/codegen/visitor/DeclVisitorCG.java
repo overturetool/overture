@@ -427,6 +427,6 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 			mutexdef.getOpnames().add(token);
 		}
 		
-		return null;
+		return mutexdef;
 	}
 }
