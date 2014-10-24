@@ -1,5 +1,7 @@
 package org.overture.codegen.trans;
 
+import java.util.List;
+
 import org.overture.codegen.assistant.ExpAssistantCG;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SStmCG;
@@ -43,64 +45,76 @@ public class IsExpTransformation extends DepthFirstAnalysisAdaptor
 			return;
 		}
 		
+		AUnionTypeCG unionType = (AUnionTypeCG) checkedType;
+		List<STypeCG> types = unionType.getTypes();
+		types = info.getTypeAssistant().clearObjectTypes(types);
+
 		SExpCG exp = node.getExp();
 		STypeCG expType = node.getExp().getType();
 		
-		ABlockStmCG replacementBlock = new ABlockStmCG();
-		
-		SExpCG expVar = null;
-		
-		if(!(exp instanceof SVarExpBase))
-		{
-			String varName = info.getTempVarNameGen().nextVarName(isExpSubjectNamePrefix);
-			AVarLocalDeclCG expDecl = transformationAssistant.consDecl(varName, expType.clone(), exp.clone());
-			replacementBlock.getLocalDefs().add(expDecl);
-			expVar = transformationAssistant.consIdentifierVar(varName, expType.clone());
-		}
-		else
-		{
-			expVar = exp;
-		}
-		
 		ExpAssistantCG expAssistant = info.getExpAssistant();
 		
-		AUnionTypeCG unionType = (AUnionTypeCG) checkedType;
-		
-		AOrBoolBinaryExpCG topOrExp = new AOrBoolBinaryExpCG();
-		topOrExp.setType(new ABoolBasicTypeCG());
-		
-		STypeCG firstType = unionType.getTypes().getFirst();
-		
-		SExpCG nextIsExp = expAssistant.consIsExp(expVar, firstType);
-		topOrExp.setLeft(nextIsExp);
-		
-		AOrBoolBinaryExpCG nextOrExp = topOrExp;
-		
-		for(int i = 1; i < unionType.getTypes().size() - 1; i++)
+		if(types.size() == 1)
 		{
-			STypeCG currentType = unionType.getTypes().get(i);
+			SExpCG isExp = expAssistant.consIsExp(exp, types.get(0));
+			transformationAssistant.replaceNodeWith(node, isExp);
 			
-			nextIsExp = expAssistant.consIsExp(expVar, currentType);
+			isExp.apply(this);
+			
+		} else
+		{
 
-			AOrBoolBinaryExpCG tmp = new AOrBoolBinaryExpCG();
-			tmp.setType(new ABoolBasicTypeCG());
-			tmp.setLeft(nextIsExp);
-			nextOrExp.setRight(tmp);
-			nextOrExp = tmp;
+			ABlockStmCG replacementBlock = new ABlockStmCG();
+
+			SExpCG expVar = null;
+
+			if (!(exp instanceof SVarExpBase))
+			{
+				String varName = info.getTempVarNameGen().nextVarName(isExpSubjectNamePrefix);
+				AVarLocalDeclCG expDecl = transformationAssistant.consDecl(varName, expType.clone(), exp.clone());
+				replacementBlock.getLocalDefs().add(expDecl);
+				expVar = transformationAssistant.consIdentifierVar(varName, expType.clone());
+			} else
+			{
+				expVar = exp;
+			}
+
+			AOrBoolBinaryExpCG topOrExp = new AOrBoolBinaryExpCG();
+			topOrExp.setType(new ABoolBasicTypeCG());
+
+			STypeCG firstType = types.get(0);
+
+			SExpCG nextIsExp = expAssistant.consIsExp(expVar, firstType);
+			topOrExp.setLeft(nextIsExp);
+
+			AOrBoolBinaryExpCG nextOrExp = topOrExp;
+
+			for (int i = 1; i < types.size() - 1; i++)
+			{
+				STypeCG currentType = types.get(i);
+
+				nextIsExp = expAssistant.consIsExp(expVar, currentType);
+
+				AOrBoolBinaryExpCG tmp = new AOrBoolBinaryExpCG();
+				tmp.setType(new ABoolBasicTypeCG());
+				tmp.setLeft(nextIsExp);
+				nextOrExp.setRight(tmp);
+				nextOrExp = tmp;
+			}
+
+			STypeCG lastType = types.get(types.size()-1);
+
+			nextIsExp = expAssistant.consIsExp(expVar, lastType);
+
+			nextOrExp.setRight(nextIsExp);
+
+			SStmCG enclosingStm = transformationAssistant.getEnclosingStm(node, "general is-expression");
+			transformationAssistant.replaceNodeWith(enclosingStm, replacementBlock);
+			transformationAssistant.replaceNodeWith(node, topOrExp);
+
+			replacementBlock.getStatements().add(enclosingStm);
+
+			topOrExp.apply(this);
 		}
-
-		STypeCG lastType = unionType.getTypes().getLast();
-		
-		nextIsExp = expAssistant.consIsExp(expVar, lastType);
-		
-		nextOrExp.setRight(nextIsExp);
-				
-		SStmCG enclosingStm = transformationAssistant.getEnclosingStm(node, "general is-expression");
-		transformationAssistant.replaceNodeWith(enclosingStm, replacementBlock);
-		transformationAssistant.replaceNodeWith(node, topOrExp);
-		
-		replacementBlock.getStatements().add(enclosingStm);
-		
-		topOrExp.apply(this);
 	}
 }

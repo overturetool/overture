@@ -21,8 +21,10 @@
  */
 package org.overture.codegen.assistant;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.PDefinition;
@@ -61,6 +63,7 @@ import org.overture.codegen.cgast.types.ANat1BasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ANat1NumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ANatBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ANatNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.AObjectTypeCG;
 import org.overture.codegen.cgast.types.ARatBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ARatNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
@@ -464,6 +467,25 @@ public class TypeAssistantCG extends AssistantBase
 				return unionType;
 			}
 		}
+	}
+	
+	public List<STypeCG> clearObjectTypes(List<STypeCG> types)
+	{
+		types = new LinkedList<STypeCG>(types);
+		
+		List<AObjectTypeCG> objectTypes = new LinkedList<AObjectTypeCG>();
+		
+		for(STypeCG type : types)
+		{
+			if(type instanceof AObjectTypeCG)
+			{
+				objectTypes.add((AObjectTypeCG) type);
+			}
+		}
+		
+		types.removeAll(objectTypes);
+		
+		return types;
 	}
 	
 	public boolean isStringType(STypeCG type)
