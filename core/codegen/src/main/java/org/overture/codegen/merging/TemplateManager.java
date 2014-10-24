@@ -49,7 +49,6 @@ import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ABreakStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectStmCG;
-import org.overture.codegen.cgast.statements.ACallStmCG;
 import org.overture.codegen.cgast.statements.AContinueStmCG;
 import org.overture.codegen.cgast.statements.ADecrementStmCG;
 import org.overture.codegen.cgast.statements.AErrorStmCG;
@@ -68,10 +67,12 @@ import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
 import org.overture.codegen.cgast.statements.ANewObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
+import org.overture.codegen.cgast.statements.APlainCallStmCG;
 import org.overture.codegen.cgast.statements.ARaiseErrorStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.ASelfObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.ASkipStmCG;
+import org.overture.codegen.cgast.statements.ASuperCallStmCG;
 import org.overture.codegen.cgast.statements.AThrowStmCG;
 import org.overture.codegen.cgast.statements.ATryStmCG;
 import org.overture.codegen.cgast.statements.AWhileStmCG;
@@ -283,9 +284,12 @@ public class TemplateManager
 		nodeTemplateFileNames.put(ACallObjectExpStmCG.class, templateStructure.STM_PATH
 				+ "CallObjectExp");
 
-		nodeTemplateFileNames.put(ACallStmCG.class, templateStructure.STM_PATH
+		nodeTemplateFileNames.put(APlainCallStmCG.class, templateStructure.STM_PATH
 				+ "Call");
 
+		nodeTemplateFileNames.put(ASuperCallStmCG.class, templateStructure.STM_PATH
+				+ "SuperCall");
+		
 		nodeTemplateFileNames.put(ANotImplementedStmCG.class, templateStructure.STM_PATH
 				+ "NotImplemented");
 

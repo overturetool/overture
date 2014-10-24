@@ -40,7 +40,7 @@ import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
-import org.overture.codegen.cgast.statements.ACallStmCG;
+import org.overture.codegen.cgast.statements.APlainCallStmCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
@@ -113,7 +113,7 @@ public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
 					
 					methods.add(objInitializer);
 
-					ACallStmCG initCall = new ACallStmCG();
+					APlainCallStmCG initCall = new APlainCallStmCG();
 					initCall.setType(objInitializer.getMethodType().getResult().clone());
 					initCall.setClassType(null);
 					initCall.setName(initName);

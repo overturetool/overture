@@ -22,6 +22,7 @@
 package org.overture.codegen.visitor;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AAssignmentDefinition;
@@ -73,7 +74,6 @@ import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectStmCG;
-import org.overture.codegen.cgast.statements.ACallStmCG;
 import org.overture.codegen.cgast.statements.ACaseAltStmStmCG;
 import org.overture.codegen.cgast.statements.ACasesStmCG;
 import org.overture.codegen.cgast.statements.AElseIfStmCG;
@@ -84,8 +84,10 @@ import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.ALetBeStStmCG;
 import org.overture.codegen.cgast.statements.ALetDefStmCG;
 import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
+import org.overture.codegen.cgast.statements.APlainCallStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.ASkipStmCG;
+import org.overture.codegen.cgast.statements.ASuperCallStmCG;
 import org.overture.codegen.cgast.statements.AWhileStmCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
@@ -316,8 +318,8 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 		PDefinition rootdef = node.getRootdef();
 		LinkedList<PExp> args = node.getArgs();
 
-		ACallStmCG callStm = new ACallStmCG();
-
+		List<SExpCG> argsCg = new LinkedList<SExpCG>();
+		
 		for (int i = 0; i < args.size(); i++)
 		{
 			PExp arg = args.get(i);
@@ -330,7 +332,7 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 				return null;
 			}
 
-			callStm.getArgs().add(argCg);
+			argsCg.add(argCg);
 		}
 
 		while (rootdef instanceof AInheritedDefinition)
@@ -344,12 +346,15 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 
 			if (op.getIsConstructor())
 			{
+				APlainCallStmCG callStm = new APlainCallStmCG();
+				
 				String initName = question.getObjectInitializerCall(op);
 
 				callStm.setType(new AVoidTypeCG());
 				callStm.setClassType(null);
 				callStm.setName(initName);
-
+				callStm.setArgs(argsCg);
+				
 				return callStm;
 			}
 		}
@@ -361,19 +366,32 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 
 		AClassTypeCG classType = null;
 
-		if (nameToken != null && nameToken.getExplicit() && isStatic)
+		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		
+		
+		if(node.getRootdef() instanceof AInheritedDefinition && !isStatic)
+		{
+			ASuperCallStmCG superCall = new ASuperCallStmCG();
+			superCall.setName(name);
+			superCall.setType(typeCg);
+			superCall.setArgs(argsCg);
+			
+			return superCall;
+		}
+		else if (nameToken != null && nameToken.getExplicit() && isStatic)
 		{
 			String className = nameToken.getModule();
 			classType = new AClassTypeCG();
 			classType.setName(className);
 		}
 
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-
+		APlainCallStmCG callStm = new APlainCallStmCG();
+		
 		callStm.setClassType(classType);
 		callStm.setName(name);
 		callStm.setType(typeCg);
-
+		callStm.setArgs(argsCg);
+		
 		return callStm;
 	}
 
