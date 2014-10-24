@@ -123,6 +123,7 @@ CG {-> package='org.overture.codegen.cgast'
     	[innerClasses]:CG.#decl.class*
     	[typeDecls]:CG.#decl.type*
     	[perSyncs]:CG.#decl.persync*
+    	[mutexSyncs]:CG.#decl.mutexSync*
     |	{interface}
     	[templateTypes]:CG.#type.template*
     	[package]:java_String

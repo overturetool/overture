@@ -69,6 +69,7 @@ import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.trans.TransformationVisitor;
 import org.overture.codegen.trans.assistants.TransformationAssistantCG;
 import org.overture.codegen.trans.conc.MainClassConcTransformation;
+import org.overture.codegen.trans.conc.MutexDeclTransformation;
 import org.overture.codegen.trans.conc.SentinelTransformation;
 import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
 import org.overture.codegen.trans.funcvalues.FunctionValueVisitor;
@@ -262,6 +263,7 @@ public class JavaCodeGen
 		
 		SentinelTransformation Concurrencytransform = new SentinelTransformation(irInfo,classes);
 		MainClassConcTransformation mainclassTransform = new MainClassConcTransformation(irInfo, classes);
+		MutexDeclTransformation mutexTransform = new MutexDeclTransformation(irInfo, classes);
 
 		JavaClassToStringTrans javaToStringTransformation = new JavaClassToStringTrans(irInfo);
 
