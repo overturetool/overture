@@ -30,7 +30,7 @@ public class B extends A {
         Object a = 1L;
         Object b = true;
 
-        return op(((Number) a), ((Boolean) b));
+        return super.op(((Number) a), ((Boolean) b));
     }
 
     public String toString() {
