@@ -33,6 +33,7 @@ package quotes;
 
 public interface Quotes {
     public static Number A = 1L;
+    public static Number B = 2L;
 }
 
 ##########
