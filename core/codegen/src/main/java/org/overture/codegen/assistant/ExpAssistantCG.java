@@ -429,6 +429,9 @@ public class ExpAssistantCG extends AssistantBase
 	
 	public SExpCG consIsExp(SExpCG exp, STypeCG checkedType)
 	{
+		exp = exp.clone();
+		checkedType = checkedType.clone();
+		
 		if (checkedType instanceof AUnionTypeCG)
 		{
 			return consGeneralIsExp(exp, checkedType);

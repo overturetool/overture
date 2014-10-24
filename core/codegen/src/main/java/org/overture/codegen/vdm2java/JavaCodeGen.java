@@ -62,6 +62,7 @@ import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateStructure;
 import org.overture.codegen.trans.IPostCheckCreator;
+import org.overture.codegen.trans.IsExpTransformation;
 import org.overture.codegen.trans.PostCheckTransformation;
 import org.overture.codegen.trans.PreCheckTransformation;
 import org.overture.codegen.trans.PrePostTransformation;
@@ -112,6 +113,7 @@ public class JavaCodeGen
 	public static final String AND_EXP_NAME_PREFIX = "andResult_";
 	public static final String OR_EXP_NAME_PREFIX = "orResult_";
 	public static final String WHILE_COND_NAME_PREFIX = "whileCond";
+	public static final String IS_EXP_SUBJECT_NAME_PREFIX = "isExpSubject_";
 	
 	public static final String MISSING_OP_MEMBER = "Missing operation member: ";
 	public static final String MISSING_MEMBER = "Missing member: ";
@@ -253,6 +255,7 @@ public class JavaCodeGen
 		PatternTransformation patternTransformation = new PatternTransformation(classes, varPrefixes, irInfo, transformationAssistant, new PatternMatchConfig());
 		PreCheckTransformation preCheckTransformation = new PreCheckTransformation(irInfo, transformationAssistant, new JavaValueSemanticsTag(false));
 		PostCheckTransformation postCheckTransformation = new PostCheckTransformation(postCheckCreator, irInfo, transformationAssistant, FUNC_RESULT_NAME_PREFIX, new JavaValueSemanticsTag(false));
+		IsExpTransformation isExpTransformation = new IsExpTransformation(irInfo, transformationAssistant, IS_EXP_SUBJECT_NAME_PREFIX);
 		TypeTransformation typeTransformation = new TypeTransformation(transformationAssistant);
 		UnionTypeTransformation unionTypeTransformation = new UnionTypeTransformation(transformationAssistant, irInfo, classes, APPLY_EXP_NAME_PREFIX, OBJ_EXP_NAME_PREFIX, CALL_STM_OBJ_NAME_PREFIX, MISSING_OP_MEMBER, MISSING_MEMBER,irInfo.getTempVarNameGen());
 		JavaClassToStringTrans javaToStringTransformation = new JavaClassToStringTrans(irInfo);
@@ -261,7 +264,7 @@ public class JavaCodeGen
 				funcTransformation, prePostTransformation, ifExpTransformation,
 				deflattenTransformation, funcValVisitor, transVisitor,
 				deflattenTransformation, patternTransformation, preCheckTransformation, postCheckTransformation,
-				typeTransformation, unionTypeTransformation, javaToStringTransformation};
+				isExpTransformation, typeTransformation, unionTypeTransformation, javaToStringTransformation};
 
 		for (DepthFirstAnalysisAdaptor transformation : analyses)
 		{
@@ -359,8 +362,7 @@ public class JavaCodeGen
 				op.setPrecondition(null);
 				op.setPostcondition(null);
 			}
-
-			if (def instanceof SFunctionDefinition)
+			else if (def instanceof SFunctionDefinition)
 			{
 				SFunctionDefinition func = (SFunctionDefinition) def;
 				
