@@ -545,13 +545,24 @@ public class TypeAssistantCG extends AssistantBase
 	
 	public boolean isNumericType(STypeCG type)
 	{
+		return isInt(type) || isRealOrRat(type);
+	}
+
+	public boolean isRealOrRat(STypeCG type)
+	{
+		return type instanceof ARatNumericBasicTypeCG
+				|| type instanceof ARatBasicTypeWrappersTypeCG
+				|| type instanceof ARealNumericBasicTypeCG
+				|| type instanceof ARealBasicTypeWrappersTypeCG;
+	}
+
+	public boolean isInt(STypeCG type)
+	{
 		return type instanceof AIntNumericBasicTypeCG
 				|| type instanceof AIntBasicTypeWrappersTypeCG
 				|| type instanceof ANat1NumericBasicTypeCG
 				|| type instanceof ANat1BasicTypeWrappersTypeCG
 				|| type instanceof ANatNumericBasicTypeCG
-				|| type instanceof ANatBasicTypeWrappersTypeCG
-				|| type instanceof ARatNumericBasicTypeCG
-				|| type instanceof ARatBasicTypeWrappersTypeCG;
+				|| type instanceof ANatBasicTypeWrappersTypeCG;
 	}
 }
