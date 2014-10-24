@@ -238,6 +238,8 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 		AQuoteTypeCG quoteTypeCg = new AQuoteTypeCG();
 		quoteTypeCg.setValue(value);
 
+		question.registerQuoteValue(value);
+		
 		return quoteTypeCg;
 	}
 
