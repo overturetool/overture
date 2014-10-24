@@ -25,6 +25,7 @@ package org.overture.interpreter.values;
 
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Set;
 import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
@@ -87,10 +88,11 @@ public class TransactionValue extends UpdatableValue
 	}
 
 	@Override
-	public synchronized Value convertValueTo(PType to, Context ctxt)
+	protected
+	synchronized Value convertValueTo(PType to, Context ctxt, Set<PType> done)
 			throws AnalysisException
 	{
-		return select().convertValueTo(to, ctxt).getUpdatable(listeners);
+		return select().convertValueTo(to, ctxt, done).getUpdatable(listeners);
 	}
 
 	@Override
