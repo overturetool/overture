@@ -4,30 +4,30 @@ import java.util.*;
 
 
 public class ThreadClass extends Thread {
+    public static volatile Sentinel sentinel;
     public volatile Number x = 0L;
-    public Sentinel sentinel;
 
     public ThreadClass() {
-        sentinel = new ThreadClass_sentinel(this);
+        sentinel = new ThreadClass_sentinel();
     }
 
     public void setX() {
-        Sentinel.entering(((ThreadClass_sentinel) sentinel).setX);
+        sentinel.entering(((ThreadClass_sentinel) sentinel).setX);
 
         try {
             x = 3L;
         } finally {
-            Sentinel.leaving(((ThreadClass_sentinel) sentinel).setX);
+            sentinel.leaving(((ThreadClass_sentinel) sentinel).setX);
         }
     }
 
     public void subX() {
-        Sentinel.entering(((ThreadClass_sentinel) sentinel).subX);
+        sentinel.entering(((ThreadClass_sentinel) sentinel).subX);
 
         try {
             x = x.longValue() - 1L;
         } finally {
-            Sentinel.leaving(((ThreadClass_sentinel) sentinel).subX);
+            sentinel.leaving(((ThreadClass_sentinel) sentinel).subX);
         }
     }
 
@@ -37,12 +37,12 @@ public class ThreadClass extends Thread {
 
     public Boolean evaluatePP(final Number fnr) {
         if (fnr == 0L) {
-            return (Sentinel.act[((ThreadClass_sentinel) sentinel).setX].longValue() == 0L) &&
+            return (sentinel.act[((ThreadClass_sentinel) sentinel).setX].longValue() == 0L) &&
             (x.longValue() == 0L);
         } else if (fnr == 1L) {
-            return (Sentinel.act[((ThreadClass_sentinel) sentinel).setX].longValue() +
-            Sentinel.act[((ThreadClass_sentinel) sentinel).subX].longValue() +
-            Sentinel.act[((ThreadClass_sentinel) sentinel).setX].longValue()) > 10L;
+            return (sentinel.act[((ThreadClass_sentinel) sentinel).setX].longValue() +
+            sentinel.act[((ThreadClass_sentinel) sentinel).subX].longValue() +
+            sentinel.act[((ThreadClass_sentinel) sentinel).setX].longValue()) > 10L;
         } else if (fnr == 2L) {
             return true;
         } else if (fnr == 3L) {
@@ -58,11 +58,11 @@ public class ThreadClass extends Thread {
     }
 
     public class ThreadClass_sentinel extends Sentinel {
-        public final int setX = 0L;
-        public final int subX = 1L;
-        public final int ThreadClass = 2L;
-        public final int toString = 3L;
-        public final int function_sum = 4L;
+        public final long setX = 0L;
+        public final long subX = 1L;
+        public final long ThreadClass = 2L;
+        public final long toString = 3L;
+        public final long function_sum = 4L;
 
         public ThreadClass_sentinel() {
             return;
@@ -81,14 +81,14 @@ import java.util.*;
 
 
 public class Entry {
-    public Sentinel sentinel;
+    public static volatile Sentinel sentinel;
 
     public Entry() {
-        sentinel = new Entry_sentinel(this);
+        sentinel = new Entry_sentinel();
     }
 
     public static Object Run() {
-        Sentinel.entering(((Entry_sentinel) sentinel).Run);
+        sentinel.entering(((Entry_sentinel) sentinel).Run);
 
         try {
             ThreadClass t = new ThreadClass();
@@ -108,7 +108,7 @@ public class Entry {
 
             return t.x;
         } finally {
-            Sentinel.leaving(((Entry_sentinel) sentinel).Run);
+            sentinel.leaving(((Entry_sentinel) sentinel).Run);
         }
     }
 
@@ -129,10 +129,10 @@ public class Entry {
     }
 
     public class Entry_sentinel extends Sentinel {
-        public final int Run = 0L;
-        public final int Entry = 1L;
-        public final int toString = 2L;
-        public final int function_sum = 3L;
+        public final long Run = 0L;
+        public final long Entry = 1L;
+        public final long toString = 2L;
+        public final long function_sum = 3L;
 
         public Entry_sentinel() {
             return;

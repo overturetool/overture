@@ -73,6 +73,8 @@ CG {-> package='org.overture.codegen.cgast'
 	=	{type}
 		[name]:java_String
 		[definingClass]:java_String
+	|	{token}
+		[name]:java_String
 	;
     
 #decl {-> package='org.overture.codegen.cgast.declarations'}
@@ -147,7 +149,7 @@ CG {-> package='org.overture.codegen.cgast'
     	[guardname]:java_String
     	[pred]:CG.#exp
     |	{mutexSync}
-    	[opnames]:java_String
+    	[opnames]:CG.#name*
 	;
 
 #Local  {-> package='org.overture.codegen.cgast.declarations'}

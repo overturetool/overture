@@ -80,7 +80,8 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 		sentinelfld.setName("sentinel");
 		sentinelfld.setType(sentType);
 		sentinelfld.setAccess(JavaFormat.JAVA_PUBLIC);
-		sentinelfld.setVolatile(false);
+		sentinelfld.setVolatile(true);
+		sentinelfld.setStatic(true);
 		
 		node.getFields().add(sentinelfld);
 		
@@ -97,7 +98,7 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 				
 					entering.setName("entering");
 					AClassTypeCG sentinel = new AClassTypeCG();
-					sentinel.setName("Sentinel");
+					sentinel.setName("sentinel");
 					
 					entering.setClassType(sentinel);
 					entering.setType(new AVoidTypeCG());
@@ -151,7 +152,7 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 					classtype.setName(node.getName()+"_sentinel");
 					
 					newexp.setName(classtype);
-					newexp.getArgs().add(new ASelfExpCG());
+					//newexp.getArgs().add(new ASelfExpCG());
 					
 					stm.setExp(newexp);
 					stm.setTarget(field);

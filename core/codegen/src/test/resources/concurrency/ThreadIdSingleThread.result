@@ -4,29 +4,29 @@ import java.util.*;
 
 
 public class Entry {
-    public Sentinel sentinel;
+    public static volatile Sentinel sentinel;
 
     public Entry() {
-        sentinel = new Entry_sentinel(this);
+        sentinel = new Entry_sentinel();
     }
 
     public static Object Run() {
-        Sentinel.entering(((Entry_sentinel) sentinel).Run);
+        sentinel.entering(((Entry_sentinel) sentinel).Run);
 
         try {
             return f();
         } finally {
-            Sentinel.leaving(((Entry_sentinel) sentinel).Run);
+            sentinel.leaving(((Entry_sentinel) sentinel).Run);
         }
     }
 
     public static Number f() {
-        Sentinel.entering(((Entry_sentinel) sentinel).f);
+        sentinel.entering(((Entry_sentinel) sentinel).f);
 
         try {
             return Thread.currentThread().getId();
         } finally {
-            Sentinel.leaving(((Entry_sentinel) sentinel).f);
+            sentinel.leaving(((Entry_sentinel) sentinel).f);
         }
     }
 
@@ -49,11 +49,11 @@ public class Entry {
     }
 
     public class Entry_sentinel extends Sentinel {
-        public final int Run = 0L;
-        public final int Entry = 1L;
-        public final int f = 2L;
-        public final int toString = 3L;
-        public final int function_sum = 4L;
+        public final long Run = 0L;
+        public final long Entry = 1L;
+        public final long f = 2L;
+        public final long toString = 3L;
+        public final long function_sum = 4L;
 
         public Entry_sentinel() {
             return;

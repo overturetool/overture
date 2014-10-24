@@ -59,7 +59,8 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 			//Set up of the int type of the fields.
 			String intTypeName = JavaFormat.JAVA_INT;
 			AExternalTypeCG intBasicType = new AExternalTypeCG();
-			intBasicType.setName(intTypeName);
+			//intBasicType.setName(intTypeName);
+			intBasicType.setName("long");
 			//
 			AFieldDeclCG field = new AFieldDeclCG();
 			
@@ -67,7 +68,7 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 			field.setAccess(JavaFormat.JAVA_PUBLIC);
 			field.setFinal(true);
 			field.setType(intBasicType);
-			
+			//field.setType();
 			//setting up initial values
 			AIntLiteralExpCG intValue = new AIntLiteralExpCG();
 			intValue.setType(new AIntNumericBasicTypeCG());
@@ -82,7 +83,8 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 		//setting up initial values
 		String intTypeName = JavaFormat.JAVA_INT;
 		AExternalTypeCG intBasicType = new AExternalTypeCG();
-		intBasicType.setName(intTypeName);
+		//intBasicType.setName(intTypeName);
+		intBasicType.setName("long");
 		
 		
 		AIntLiteralExpCG intValue = new AIntLiteralExpCG();

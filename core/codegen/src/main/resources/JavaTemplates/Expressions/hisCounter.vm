@@ -2,5 +2,5 @@
 #set( $innerclass = $JavaFormat.format($node.getSentinelType()) )
 #set( $opname = $node.getOpsname() )
 ##
-Sentinel.${countertype}[((${innerclass})sentinel).${opname}]
+sentinel.${countertype}[((${innerclass})sentinel).${opname}]
 ##hello

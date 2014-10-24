@@ -56,6 +56,7 @@ import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AFuncDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.cgast.declarations.AMutexSyncDeclCG;
 import org.overture.codegen.cgast.declarations.APersyncDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.AThreadDeclCG;
@@ -63,8 +64,10 @@ import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALambdaExpCG;
 import org.overture.codegen.cgast.expressions.ANotImplementedExpCG;
+import org.overture.codegen.cgast.name.ATokenNameCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
+import org.overture.codegen.cgast.types.ATokenBasicTypeCG;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRInfo;
 
@@ -384,7 +387,6 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 		
 		SStmCG stmCG = stm.apply(question.getStmVisitor(), question);
 		
-		
 		AThreadDeclCG threaddcl = new AThreadDeclCG();
 	
 		threaddcl.setStm(stmCG);
@@ -415,6 +417,16 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 			IRInfo question) throws AnalysisException
 	{
 		LinkedList<ILexNameToken> operations = node.getOperations();
+		
+		AMutexSyncDeclCG mutexdef = new AMutexSyncDeclCG();
+		
+		for(ILexNameToken opname : operations)
+		{
+			ATokenNameCG token = new ATokenNameCG();
+			token.setName(opname.getName());
+			mutexdef.getOpnames().add(token);
+		}
+		
 		return null;
 	}
 }
