@@ -137,14 +137,11 @@ import org.overture.ast.patterns.PBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AClassType;
-import org.overture.ast.types.AProductType;
-import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ASetType;
 import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.PType;
-import org.overture.ast.types.SBasicType;
 import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
 import org.overture.codegen.cgast.SBindCG;
@@ -236,7 +233,6 @@ import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
 import org.overture.codegen.cgast.expressions.AThreadIdExpCG;
 import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATupleExpCG;
-import org.overture.codegen.cgast.expressions.ATupleIsExpCG;
 import org.overture.codegen.cgast.expressions.AXorBoolBinaryExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.patterns.ASetBindCG;
@@ -334,84 +330,37 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseAIsExp(AIsExp node, IRInfo question)
 			throws AnalysisException
 	{
-		String reason = "The 'is' expression is currently only supported for basic basic types, records, tuples and classes";
-		
-		PType type = node.getType();
 		PType checkedType = node.getBasicType();
-		PExp exp = node.getTest();
-
-		if(checkedType != null && question.getTcFactory().createPTypeAssistant().isUnion(checkedType))
+		
+		if(checkedType == null)
 		{
-			question.addUnsupportedNode(node, reason);
+			checkedType = question.getTcFactory().createPDefinitionAssistant().getType(node.getTypedef());
+		}
+		
+		PExp exp = node.getTest();
+		SExpCG expCg = exp.apply(question.getExpVisitor(), question);
+		
+		if(expCg == null)
+		{
 			return null;
 		}
 		
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-		SExpCG expCg = exp.apply(question.getExpVisitor(), question);
+		STypeCG checkedTypeCg = checkedType.apply(question.getTypeVisitor(), question);
 		
-		if (checkedType == null)
+		if(checkedTypeCg == null)
 		{
-			checkedType = question.getTcFactory().createPDefinitionAssistant().getType(node.getTypedef());
-			
-			if(question.getTcFactory().createPTypeAssistant().isUnion(checkedType))
-			{
-				question.addUnsupportedNode(node, reason);
-				return null;
-			}
-
-			if(question.getTcFactory().createPTypeAssistant().isProduct(checkedType))
-			{
-				AProductType productType = question.getTcFactory().createPTypeAssistant().getProduct(checkedType);
-				STypeCG checkedTypeCg = productType.apply(question.getTypeVisitor(), question);
-				
-				ATupleIsExpCG tupleIsExp = new ATupleIsExpCG();
-				tupleIsExp.setType(typeCg);
-				tupleIsExp.setExp(expCg);
-				tupleIsExp.setCheckedType(checkedTypeCg);
-				
-				return tupleIsExp;
-			}
-			else
-			{
-				if(question.getTcFactory().createPTypeAssistant().isRecord(checkedType))
-				{
-					checkedType = question.getTcFactory().createPTypeAssistant().getRecord(checkedType);
-				}
-				else if(question.getTcFactory().createPTypeAssistant().isClass(checkedType))
-				{
-					checkedType = question.getTcFactory().createPTypeAssistant().getClassType(checkedType);
-				}
-				else
-				{
-					checkedType = null;
-				}
-				
-				if (checkedType != null)
-				{
-					STypeCG checkedTypeCg = checkedType.apply(question.getTypeVisitor(), question);
-
-					return question.getExpAssistant().consGeneralIsExp(typeCg, expCg, checkedTypeCg);
-				} else
-				{
-					question.addUnsupportedNode(node, reason);
-					return null;
-				}
-			}
-		} else
-		{
-			if (checkedType instanceof SBasicType)
-			{
-				return question.getExpAssistant().consIsExpBasicType(node, question, reason, checkedType, typeCg, expCg);
-			} else if(checkedType instanceof AQuoteType)
-			{
-				return question.getExpAssistant().consIsExpQuoteType(question, checkedType, expCg);
-			}
-			else
-			{
-				question.addUnsupportedNode(node, reason);
-				return null;
-			}
+			return null;
 		}
+
+		SExpCG isExp = question.getExpAssistant().consIsExp(expCg, checkedTypeCg);
+		
+		if (isExp == null)
+		{
+			question.addUnsupportedNode(node, "The 'is' expression is not supported for type: " + checkedType.getClass().getName());
+			return null;
+		}
+		
+		return isExp;
 	}
 
 	@Override
@@ -1274,6 +1223,12 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		for (PExp member : members)
 		{
 			SExpCG memberCg = member.apply(question.getExpVisitor(), question);
+			
+			if(memberCg == null)
+			{
+				return null;
+			}
+			
 			enumSeq.getMembers().add(memberCg);
 		}
 
