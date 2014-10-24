@@ -58,13 +58,15 @@ import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectStmCG;
-import org.overture.codegen.cgast.statements.ACallStmCG;
 import org.overture.codegen.cgast.statements.AElseIfStmCG;
 import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
+import org.overture.codegen.cgast.statements.APlainCallStmCG;
 import org.overture.codegen.cgast.statements.ARaiseErrorStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
+import org.overture.codegen.cgast.statements.ASuperCallStmCG;
+import org.overture.codegen.cgast.statements.SCallStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AErrorTypeCG;
@@ -519,16 +521,30 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void caseACallStmCG(ACallStmCG node) throws AnalysisException
+	public void caseAPlainCallStmCG(APlainCallStmCG node) throws AnalysisException
+	{
+		STypeCG classType = node.getClassType();
+		
+		String className = classType instanceof AClassTypeCG ? ((AClassTypeCG) classType).getName()
+				: node.getAncestor(AClassDeclCG.class).getName();
+		
+		handleCallStm(node, className);
+	}
+	
+	@Override
+	public void caseASuperCallStmCG(ASuperCallStmCG node)
+			throws AnalysisException
+	{
+		handleCallStm(node, info.getStmAssistant().getSuperClassName(node));
+	}
+
+	private void handleCallStm(SCallStmCG node, String className) throws AnalysisException
 	{
 		for (SExpCG arg : node.getArgs())
 		{
 			arg.apply(this);
 		}
 
-		STypeCG classType = node.getClassType();
-		String className = classType instanceof AClassTypeCG ? ((AClassTypeCG) classType).getName()
-				: node.getAncestor(AClassDeclCG.class).getName();
 		String fieldName = node.getName();
 		LinkedList<SExpCG> args = node.getArgs();
 
@@ -540,7 +556,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			correctArgTypes(args, methodType.getParams());
 		}
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public void inACallObjectStmCG(ACallObjectStmCG node)
