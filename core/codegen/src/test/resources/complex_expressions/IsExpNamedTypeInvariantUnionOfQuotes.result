@@ -1,0 +1,49 @@
+import org.overture.codegen.runtime.*;
+
+import quotes.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        Number isExpSubject_1 = Quotes.Q;
+        Number isExpSubject_2 = Quotes.A;
+        Number isExpSubject_3 = Quotes.A;
+        Number isExpSubject_4 = Quotes.D;
+
+        return SeqUtil.seq((isExpSubject_1.longValue() == Quotes.A.longValue()) ||
+            (isExpSubject_1.longValue() == Quotes.B.longValue()) ||
+            (isExpSubject_1.longValue() == Quotes.C.longValue()) ||
+            (isExpSubject_1.longValue() == Quotes.D.longValue()),
+            (isExpSubject_2.longValue() == Quotes.A.longValue()) ||
+            (isExpSubject_2.longValue() == Quotes.B.longValue()) ||
+            (isExpSubject_2.longValue() == Quotes.C.longValue()) ||
+            (isExpSubject_2.longValue() == Quotes.D.longValue()),
+            (isExpSubject_3.longValue() == Quotes.C.longValue()) ||
+            (isExpSubject_3.longValue() == Quotes.D.longValue()),
+            (isExpSubject_4.longValue() == Quotes.C.longValue()) ||
+            (isExpSubject_4.longValue() == Quotes.D.longValue()));
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########
+
+package quotes;
+
+public interface Quotes {
+    public static Number A = 1L;
+    public static Number B = 2L;
+    public static Number C = 3L;
+    public static Number D = 4L;
+    public static Number Q = 5L;
+}
+
+##########
