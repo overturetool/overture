@@ -63,19 +63,9 @@ import org.overture.codegen.cgast.statements.AForLoopStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
-import org.overture.codegen.cgast.types.AIntBasicTypeWrappersTypeCG;
-import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AInterfaceTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
-import org.overture.codegen.cgast.types.ANat1BasicTypeWrappersTypeCG;
-import org.overture.codegen.cgast.types.ANat1NumericBasicTypeCG;
-import org.overture.codegen.cgast.types.ANatBasicTypeWrappersTypeCG;
-import org.overture.codegen.cgast.types.ANatNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
-import org.overture.codegen.cgast.types.ARatBasicTypeWrappersTypeCG;
-import org.overture.codegen.cgast.types.ARatNumericBasicTypeCG;
-import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
-import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.ATokenBasicTypeCG;
@@ -246,13 +236,12 @@ public class JavaFormat
 		final String DOUBLE_VALUE = ".doubleValue()";
 		final String LONG_VALUE = ".longValue()";
 
-		if (type instanceof ARealNumericBasicTypeCG
-				|| type instanceof ARealBasicTypeWrappersTypeCG)
+		if (info.getAssistantManager().getTypeAssistant().isInt(type))
+		{
+			return LONG_VALUE; 
+		} else if (info.getAssistantManager().getTypeAssistant().isRealOrRat(type))
 		{
 			return DOUBLE_VALUE;
-		} else if (info.getAssistantManager().getTypeAssistant().isNumericType(type))
-		{
-			return LONG_VALUE;
 		} else
 		{
 			PTypeAssistantTC typeAssistant = info.getTcFactory().createPTypeAssistant();
