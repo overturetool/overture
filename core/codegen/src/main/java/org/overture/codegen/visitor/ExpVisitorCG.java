@@ -154,6 +154,7 @@ import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
+import org.overture.codegen.cgast.expressions.ACardUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ACaseAltExpExpCG;
 import org.overture.codegen.cgast.expressions.ACasesExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
@@ -188,6 +189,7 @@ import org.overture.codegen.cgast.expressions.AIndicesUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ALambdaExpCG;
+import org.overture.codegen.cgast.expressions.ALenUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALetBeStExpCG;
@@ -224,7 +226,6 @@ import org.overture.codegen.cgast.expressions.ASetIntersectBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetProperSubsetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetSubsetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetUnionBinaryExpCG;
-import org.overture.codegen.cgast.expressions.ASizeUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ASubSeqExpCG;
 import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
@@ -402,7 +403,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseACardinalityUnaryExp(ACardinalityUnaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().handleUnaryExp(node, new ASizeUnaryExpCG(), question);
+		return question.getExpAssistant().handleUnaryExp(node, new ACardUnaryExpCG(), question);
 	}
 
 	@Override
@@ -1672,7 +1673,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseALenUnaryExp(ALenUnaryExp node, IRInfo question)
 			throws AnalysisException
 	{
-		return question.getExpAssistant().handleUnaryExp(node, new ASizeUnaryExpCG(), question);
+		return question.getExpAssistant().handleUnaryExp(node, new ALenUnaryExpCG(), question);
 	}
 
 	@Override
