@@ -40,12 +40,14 @@ import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
+import org.overture.codegen.cgast.expressions.ACardUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AElemsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
+import org.overture.codegen.cgast.expressions.ALenUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AMapDomainUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AMissingMemberRuntimeErrorExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
@@ -206,6 +208,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		check.setType(new ABoolBasicTypeCG());
 		check.setCheckedType(type.clone());
 		check.setExp(copy.clone());
+		
 		return check;
 	}
 
@@ -218,7 +221,39 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		correctTypes(node.getLeft(), expectedType);
 		correctTypes(node.getRight(), expectedType);
 	}
-
+	
+	@Override
+	public void caseACardUnaryExpCG(ACardUnaryExpCG node)
+			throws AnalysisException
+	{
+		STypeCG type = node.getExp().getType();
+		
+		if(type instanceof AUnionTypeCG)
+		{
+			STypeCG expectedType = info.getTypeAssistant().getSetType((AUnionTypeCG) type);
+			correctTypes(node.getExp(), expectedType);
+		}
+		
+		node.getExp().apply(this);
+		node.getType().apply(this);
+	}
+	
+	@Override
+	public void caseALenUnaryExpCG(ALenUnaryExpCG node)
+			throws AnalysisException
+	{
+		STypeCG type = node.getExp().getType();
+		
+		if(type instanceof AUnionTypeCG)
+		{
+			STypeCG expectedType = info.getTypeAssistant().getSeqType((AUnionTypeCG) type);
+			correctTypes(node.getExp(), expectedType);
+		}
+		
+		node.getExp().apply(this);
+		node.getType().apply(this);
+	}
+	
 	@Override
 	public void caseAFieldExpCG(AFieldExpCG node) throws AnalysisException
 	{

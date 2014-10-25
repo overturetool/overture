@@ -67,8 +67,10 @@ import org.overture.codegen.cgast.types.ARatNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
+import org.overture.codegen.cgast.types.ASetSetTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.ATokenBasicTypeCG;
+import org.overture.codegen.cgast.types.AUnionTypeCG;
 import org.overture.codegen.cgast.types.SBasicTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
@@ -561,6 +563,76 @@ public class TypeAssistantCG extends AssistantBase
 		}
 		
 		return type;
+	}
+	
+	public SSeqTypeCG getSeqType(AUnionTypeCG unionType)
+	{
+		AUnionTypeCG seqOf = new AUnionTypeCG();
+		seqOf.setTypes(findElementTypes(unionType, new CollectionTypeStrategy()
+		{
+			@Override
+			public boolean isCollectionType(STypeCG type)
+			{
+				return type instanceof SSeqTypeCG;
+			}
+			
+			@Override
+			public STypeCG getElementType(STypeCG type)
+			{
+				return ((SSeqTypeCG) type).getSeqOf();
+			}
+		}));
+		
+		ASeqSeqTypeCG seqType = new ASeqSeqTypeCG();
+		seqType.setEmpty(false);
+		seqType.setSeqOf(seqOf);
+		
+		return seqType;
+	}
+	
+	public SSetTypeCG getSetType(AUnionTypeCG unionType)
+	{
+		AUnionTypeCG setOf = new AUnionTypeCG();
+		setOf.setTypes(findElementTypes(unionType, new CollectionTypeStrategy()
+		{
+			@Override
+			public boolean isCollectionType(STypeCG type)
+			{
+				return type instanceof SSetTypeCG;
+			}
+			
+			@Override
+			public STypeCG getElementType(STypeCG type)
+			{
+				return ((SSetTypeCG) type).getSetOf();
+			}
+		}));
+		
+		ASetSetTypeCG setType = new ASetSetTypeCG();
+		setType.setEmpty(false);
+		setType.setSetOf(setOf);
+		
+		return setType;
+	}
+	
+	public List<STypeCG> findElementTypes(AUnionTypeCG unionType, CollectionTypeStrategy strategy)
+	{
+		List<STypeCG> elementTypes = new LinkedList<STypeCG>();
+		
+		for (int i = 0; i < unionType.getTypes().size(); i++)
+		{
+			STypeCG type = unionType.getTypes().get(i);
+
+			if (type instanceof AUnionTypeCG)
+			{
+				elementTypes.addAll(findElementTypes((AUnionTypeCG) type, strategy));
+			} else if (strategy.isCollectionType(type))
+			{
+				elementTypes.add(strategy.getElementType(type));
+			}
+		}
+		
+		return elementTypes;
 	}
 	
 	public boolean isNumericType(STypeCG type)
