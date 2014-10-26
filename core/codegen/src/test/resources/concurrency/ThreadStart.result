@@ -38,11 +38,15 @@ public class ThreadClass extends Thread {
     public Boolean evaluatePP(final Number fnr) {
         if (fnr == 0L) {
             return (sentinel.act[((ThreadClass_sentinel) sentinel).setX].longValue() == 0L) &&
-            (x.longValue() == 0L);
+            (x.longValue() == 0L) &&
+            ((sentinel.active[((ThreadClass_sentinel) sentinel).setX].longValue() +
+            sentinel.active[((ThreadClass_sentinel) sentinel).subX].longValue()) == 0L);
         } else if (fnr == 1L) {
-            return (sentinel.act[((ThreadClass_sentinel) sentinel).setX].longValue() +
+            return ((sentinel.act[((ThreadClass_sentinel) sentinel).setX].longValue() +
             sentinel.act[((ThreadClass_sentinel) sentinel).subX].longValue() +
-            sentinel.act[((ThreadClass_sentinel) sentinel).setX].longValue()) > 10L;
+            sentinel.act[((ThreadClass_sentinel) sentinel).setX].longValue()) > 10L) &&
+            ((sentinel.active[((ThreadClass_sentinel) sentinel).setX].longValue() +
+            sentinel.active[((ThreadClass_sentinel) sentinel).subX].longValue()) == 0L);
         } else if (fnr == 2L) {
             return true;
         } else if (fnr == 3L) {
