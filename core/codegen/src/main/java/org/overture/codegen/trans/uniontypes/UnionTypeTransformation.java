@@ -53,6 +53,7 @@ import org.overture.codegen.cgast.expressions.AMissingMemberRuntimeErrorExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
+import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
 import org.overture.codegen.cgast.expressions.SNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.SUnaryExpCG;
 import org.overture.codegen.cgast.expressions.SVarExpBase;
@@ -78,7 +79,6 @@ import org.overture.codegen.cgast.types.AUnionTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.trans.assistants.BaseTransformationAssistant;
 
@@ -92,21 +92,18 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 	private String applyExpResulPrefix;
 	private String callStmObjPrefix;
 
-	private ITempVarGen nameGen;
-	
 	private String missingOpMemberPrefix;
 	private String missingMemberPrefix;
-
+	
 	public UnionTypeTransformation(BaseTransformationAssistant baseAssistant,
 			IRInfo info, List<AClassDeclCG> classes,
 			String applyExpResultPrefix, String objExpPrefix,
-			String callStmObjPrefix, String missingOpMemberPrefix, String missingMemberPrefix, ITempVarGen nameGen)
+			String callStmObjPrefix, String missingOpMemberPrefix, String missingMemberPrefix)
 	{
 		this.baseAssistant = baseAssistant;
 		this.info = info;
 		this.classes = classes;
 		this.missingMemberPrefix = missingMemberPrefix;
-		this.nameGen = nameGen;
 
 		this.applyExpResulPrefix = applyExpResultPrefix;
 		this.objExpPrefix = objExpPrefix;
@@ -169,7 +166,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 
 		return exp;
 	}
-
+	
 	private boolean correctArgTypes(List<SExpCG> args, List<STypeCG> paramTypes)
 			throws AnalysisException
 	{
@@ -255,6 +252,36 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 	}
 	
 	@Override
+	public void caseASeqConcatBinaryExpCG(ASeqConcatBinaryExpCG node)
+			throws AnalysisException
+	{
+		node.getLeft().apply(this);
+		node.getRight().apply(this);
+		node.getType().apply(this);
+		
+		if(!info.getTypeAssistant().usesUnionType(node))
+		{
+			return;
+		}
+		
+		STypeCG leftType = node.getLeft().getType();
+
+		if (leftType instanceof AUnionTypeCG)
+		{
+			STypeCG expectedType = info.getTypeAssistant().getSeqType((AUnionTypeCG) leftType);
+			correctTypes(node.getLeft(), expectedType);
+		}
+
+		STypeCG rightType = node.getRight().getType();
+
+		if (rightType instanceof AUnionTypeCG)
+		{
+			STypeCG expectedType = info.getTypeAssistant().getSeqType((AUnionTypeCG) rightType);
+			correctTypes(node.getRight(), expectedType);
+		}
+	}
+	
+	@Override
 	public void caseAFieldExpCG(AFieldExpCG node) throws AnalysisException
 	{
 		node.getObject().apply(this);
@@ -274,7 +301,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 
 			SStmCG enclosingStatement = baseAssistant.getEnclosingStm(node, "field expression");
 
-			String applyResultName = nameGen.nextVarName(applyExpResulPrefix);
+			String applyResultName = info.getTempVarNameGen().nextVarName(applyExpResulPrefix);
 			AVarLocalDeclCG resultDecl = new AVarLocalDeclCG();
 			resultDecl.setSourceNode(node.getSourceNode());
 			resultDecl.setExp(new ANullExpCG());
@@ -293,7 +320,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			SExpCG obj = null;
 			if (!(node.getObject() instanceof SVarExpBase))
 			{
-				String objName = nameGen.nextVarName(objExpPrefix);
+				String objName = info.getTempVarNameGen().nextVarName(objExpPrefix);
 				AVarLocalDeclCG objectDecl = new AVarLocalDeclCG();
 				objectDecl.setExp(node.getObject().clone());
 				objectDecl.setType(node.getObject().getType().clone());
@@ -632,7 +659,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 
 		if (!(designator instanceof AIdentifierObjectDesignatorCG))
 		{
-			String callStmObjName = nameGen.nextVarName(callStmObjPrefix);
+			String callStmObjName = info.getTempVarNameGen().nextVarName(callStmObjPrefix);
 			AVarLocalDeclCG objDecl = new AVarLocalDeclCG();
 			objDecl.setSourceNode(node.getSourceNode());
 			objDecl.setExp(objExp.clone());

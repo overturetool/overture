@@ -50,7 +50,7 @@ public class JavaCodeGenMain
 		}
 
 		IRSettings irSettings = new IRSettings();
-		irSettings.setCharSeqAsString(false);
+		irSettings.setCharSeqAsString(true);
 		irSettings.setGeneratePreConds(true);
 		irSettings.setGeneratePreCondChecks(true);
 		irSettings.setGeneratePostConds(true);
