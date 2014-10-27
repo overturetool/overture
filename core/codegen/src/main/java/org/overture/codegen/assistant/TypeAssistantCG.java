@@ -47,6 +47,7 @@ import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
+import org.overture.codegen.cgast.expressions.SBinaryExpCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AFieldObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
@@ -613,6 +614,11 @@ public class TypeAssistantCG extends AssistantBase
 		setType.setSetOf(setOf);
 		
 		return setType;
+	}
+	
+	public boolean usesUnionType(SBinaryExpCG node)
+	{
+		return node.getLeft().getType() instanceof AUnionTypeCG || node.getRight().getType() instanceof AUnionTypeCG;
 	}
 	
 	public List<STypeCG> findElementTypes(AUnionTypeCG unionType, CollectionTypeStrategy strategy)
