@@ -113,10 +113,15 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		ABlockStmCG replacementBlock = new ABlockStmCG();
 		
 		transformationAssistant.replaceNodeWith(node, replacementBlock);
-
-		for(AVarLocalDeclCG dec : node.getLocalDefs())
+		
+		ABlockStmCG current = replacementBlock;
+		
+		for (AVarLocalDeclCG local : node.getLocalDefs())
 		{
-			replacementBlock.getLocalDefs().add(dec.clone());
+			ABlockStmCG tmp = new ABlockStmCG();
+			tmp.getLocalDefs().add(local.clone());
+			current.getStatements().add(tmp);
+			current = tmp;
 		}
 		
 		replacementBlock.getStatements().add(node.getStm().clone());
