@@ -43,6 +43,7 @@ public class SimpleTest {
                     'e', 'r', ' ', 'G', 'o', 'r', 'm', ' ', 'L', 'a', 'r', 's',
                     'e', 'n'),
                 SeqUtil.seq('G', 'r', 'a', 'n', 'v', 'e', 'j', ' ', '2', '4'));
+
         Account pglacc1 = new Account().Create(MapUtil.map(
                     new Maplet(1L, peter)), 5000L);
         Number pglid1 = 1L;
@@ -865,6 +866,7 @@ public class System {
         Cardholder CSK = new Cardholder().Create(SeqUtil.seq('C', 'S', 'K'),
                 SeqUtil.seq('F', 'o', 'r', 's', 'k', 'e', 'r', 'p', 'a', 'r',
                     'k', 'e', 'n', ' ', '1', '0', 'A'));
+
         Account pglacc1 = new Account().Create(MapUtil.map(
                     new Maplet(1L, peter)), 5000L);
         Account saacc1 = new Account().Create(MapUtil.map(new Maplet(2L, sten)),
