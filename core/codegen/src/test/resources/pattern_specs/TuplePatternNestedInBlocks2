@@ -1,0 +1,17 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+(
+	skip;
+	let 
+		mk_(a,b) = mk_(1,2),
+		r = a+b
+	in
+		skip;
+	return 2;
+);
+
+end Entry
