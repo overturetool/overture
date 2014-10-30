@@ -9,14 +9,11 @@ import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
-import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AExternalExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
-import org.overture.codegen.cgast.statements.ACallStmCG;
-import org.overture.codegen.cgast.statements.AReturnStmCG;
+import org.overture.codegen.cgast.statements.APlainCallStmCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
@@ -51,6 +48,7 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 		AClassDeclCG innerClass = new AClassDeclCG();
 		
 		String classname = node.getName();
+		@SuppressWarnings("unchecked")
 		LinkedList<AMethodDeclCG> innerClassMethods = (LinkedList<AMethodDeclCG>) node.getMethods().clone();
 		
 		innerClass.setName(classname+"_sentinel");
@@ -142,7 +140,7 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 		function_sum.setType(new AIntNumericBasicTypeCG());
 		
 		//the init method		
-		ACallStmCG initCall = new ACallStmCG();
+		APlainCallStmCG initCall = new APlainCallStmCG();
 		initCall.setName("init");
 		initCall.setType(new AVoidTypeCG());
 		

@@ -252,6 +252,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			throws AnalysisException
 	{
 		TypeCheckInfo noConstraint = question.newConstraint(null);
+		noConstraint.qualifiers = null;
 
 		node.getLeft().apply(THIS, noConstraint);
 		node.getRight().apply(THIS, noConstraint);
@@ -1527,8 +1528,11 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		for (ILexNameToken opname : node.getOpnames())
 		{
 			int found = 0;
+			
+			List<PDefinition> allDefs = (List<PDefinition>) classdef.getDefinitions().clone();
+			allDefs.addAll(classdef.getAllInheritedDefinitions());
 
-			for (PDefinition def : classdef.getDefinitions())
+			for (PDefinition def : allDefs)
 			{
 				if (def.getName() != null && def.getName().matches(opname))
 				{

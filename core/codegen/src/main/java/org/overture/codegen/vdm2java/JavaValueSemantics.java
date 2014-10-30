@@ -32,6 +32,7 @@ import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.expressions.AAddrEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AAddrNotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
+import org.overture.codegen.cgast.expressions.ACardUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AExplicitVarExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
@@ -40,11 +41,11 @@ import org.overture.codegen.cgast.expressions.AHeadUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AInSetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AIndicesUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
+import org.overture.codegen.cgast.expressions.ALenUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetProperSubsetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetSubsetBinaryExpCG;
-import org.overture.codegen.cgast.expressions.ASizeUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ATupleCompatibilityExpCG;
 import org.overture.codegen.cgast.expressions.ATupleSizeExpCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
@@ -271,14 +272,15 @@ public class JavaValueSemantics
 
 	private boolean cloneNotNeededSeqOperators(INode parent)
 	{
-		return parent instanceof ASizeUnaryExpCG
+		return parent instanceof ALenUnaryExpCG
 				|| parent instanceof AIndicesUnaryExpCG
 				|| parent instanceof AHeadUnaryExpCG;
 	}
 
 	private boolean cloneNotNeededSetOperators(INode parent)
 	{
-		return parent instanceof AInSetBinaryExpCG
+		return 	parent instanceof ACardUnaryExpCG
+				|| parent instanceof AInSetBinaryExpCG
 				|| parent instanceof ASetSubsetBinaryExpCG
 				|| parent instanceof ASetProperSubsetBinaryExpCG;
 	}

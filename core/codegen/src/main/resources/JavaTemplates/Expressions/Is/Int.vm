@@ -1,0 +1,2 @@
+#set( $exp = $JavaFormat.format($node.getExp()) )
+Utils.is_int(${exp})

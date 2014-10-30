@@ -42,7 +42,7 @@ public class JavaCodeGenMain
 	public static void main(String[] args)
 	{
 		Settings.release = Release.VDM_10;
-		Dialect dialect = Dialect.VDM_RT;
+		Dialect dialect = Dialect.VDM_PP;
 
 		if (args.length <= 1)
 		{
@@ -50,12 +50,12 @@ public class JavaCodeGenMain
 		}
 
 		IRSettings irSettings = new IRSettings();
-		irSettings.setCharSeqAsString(false);
+		irSettings.setCharSeqAsString(true);
 		irSettings.setGeneratePreConds(true);
 		irSettings.setGeneratePreCondChecks(true);
 		irSettings.setGeneratePostConds(true);
 		irSettings.setGeneratePostCondChecks(true);
-		//irSettings.setGenerateConc(true);
+		irSettings.setGenerateConc(true);
 		
 		JavaSettings javaSettings = new JavaSettings();
 		javaSettings.setDisableCloning(false);

@@ -30,6 +30,7 @@ import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
+import org.overture.ast.patterns.ANamePatternPair;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.PTypeSet;
@@ -54,7 +55,17 @@ public class PPatternListAssistantTC
 		{
 			af.createPPatternAssistant().typeResolve(pattern, rootVisitor, question);
 		}
+	}
 
+	public void typeResolvePairs(List<ANamePatternPair> npplist,
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
+			TypeCheckInfo question) throws AnalysisException
+	{
+
+		for (ANamePatternPair npp : npplist)
+		{
+			af.createPPatternAssistant().typeResolve(npp.getPattern(), rootVisitor, question);
+		}
 	}
 
 	public void unResolve(List<PPattern> pp)

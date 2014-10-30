@@ -1,0 +1,16 @@
+class Entry
+
+types
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let a = is_(true, nat | bool),
+    b = is_(nil, nat | bool),
+    c = is_(true, nat | (nat | bool)),
+    d = is_('a', ((nat))|(bool))
+  in 
+   return [a,b,c,d];
+
+end Entry

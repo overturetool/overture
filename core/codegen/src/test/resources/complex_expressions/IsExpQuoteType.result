@@ -1,0 +1,34 @@
+import org.overture.codegen.runtime.*;
+
+import quotes.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        Number x = Quotes.A;
+        Number y = Quotes.B;
+
+        return SeqUtil.seq(x.longValue() == Quotes.A.longValue(),
+            y.longValue() == Quotes.A.longValue());
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########
+
+package quotes;
+
+public interface Quotes {
+    public static Number A = 1L;
+    public static Number B = 2L;
+}
+
+##########

@@ -60,6 +60,7 @@ import org.overture.codegen.cgast.statements.ACaseAltStmStmCG;
 import org.overture.codegen.cgast.statements.ACasesStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.ALetBeStStmCG;
+import org.overture.codegen.cgast.statements.ALetDefStmCG;
 import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
 import org.overture.codegen.cgast.statements.AWhileStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
@@ -104,6 +105,26 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		this.andExpPrefix = andExpPrefix;
 		this.orExpPrefix = orExpPrefix;
 		this.whileCondExpPrefix = whileCondExpPrefix;
+	}
+	
+	@Override
+	public void caseALetDefStmCG(ALetDefStmCG node) throws AnalysisException
+	{
+		ABlockStmCG replacementBlock = new ABlockStmCG();
+		
+		transformationAssistant.replaceNodeWith(node, replacementBlock);
+		
+		ABlockStmCG current = replacementBlock;
+		
+		for (AVarLocalDeclCG local : node.getLocalDefs())
+		{
+			ABlockStmCG tmp = new ABlockStmCG();
+			tmp.getLocalDefs().add(local.clone());
+			current.getStatements().add(tmp);
+			current = tmp;
+		}
+		
+		replacementBlock.getStatements().add(node.getStm().clone());
 	}
 	
 	@Override

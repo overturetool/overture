@@ -2,7 +2,6 @@ package org.overture.codegen.trans.conc;
 
 import java.util.List;
 
-import org.overture.ast.expressions.AIntLiteralExp;
 import org.overture.codegen.cgast.SNameCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
@@ -22,12 +21,12 @@ import org.overture.codegen.ir.IRInfo;
 public class MutexDeclTransformation extends DepthFirstAnalysisAdaptor
 {
 	private IRInfo info;
-	private List<AClassDeclCG> classes;
+	//private List<AClassDeclCG> classes;
 	
 	public MutexDeclTransformation(IRInfo info, List<AClassDeclCG> classes)
 	{
 		this.info = info;
-		this.classes = classes;
+		//this.classes = classes;
 	}
 	
 	@Override

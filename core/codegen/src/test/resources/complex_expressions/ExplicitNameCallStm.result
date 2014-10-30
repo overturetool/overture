@@ -27,7 +27,7 @@ public class B extends A {
     }
 
     public Number opB() {
-        return opA();
+        return super.opA();
     }
 
     public String toString() {

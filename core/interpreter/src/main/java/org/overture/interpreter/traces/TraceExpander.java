@@ -122,14 +122,18 @@ public class TraceExpander extends QuestionAnswerAdaptor<Context, TraceNode>
 		} else
 		{
 			ACallObjectStm stmt = (ACallObjectStm) core.getCallStatement();
+			ACallObjectStm newCallStatement;
 
 			if (stmt.getClassname() != null)
 			{
-				newStatement = AstFactory.newACallObjectStm(stmt.getDesignator().clone(), stmt.getClassname().clone(), newargs);
+				newCallStatement = AstFactory.newACallObjectStm(stmt.getDesignator().clone(), stmt.getClassname().clone(), newargs);
 			} else
 			{
-				newStatement = AstFactory.newACallObjectStm(stmt.getDesignator().clone(), (LexIdentifierToken) stmt.getFieldname().clone(), newargs);
+				newCallStatement = AstFactory.newACallObjectStm(stmt.getDesignator().clone(), (LexIdentifierToken) stmt.getFieldname().clone(), newargs);
 			}
+			
+			newCallStatement.setField(stmt.getField());
+			newStatement = newCallStatement;
 		}
 
 		return new StatementTraceNode(newStatement);

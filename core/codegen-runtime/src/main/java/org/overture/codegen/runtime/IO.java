@@ -39,12 +39,12 @@ public class IO {
     	return true;
     }
 
-    public static <p> boolean fwriteval(String filename, p val, int fdir) {
+    public static <p> boolean fwriteval(String filename, p val, Number fdir) {
 
     	throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
     }
     
-    public static <p> boolean fwriteval(VDMSeq filename, p val, int fdir) {
+    public static <p> boolean fwriteval(VDMSeq filename, p val, Number fdir) {
 
     	throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
     }
@@ -77,11 +77,11 @@ public class IO {
     	throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
     }
 
-    public boolean fecho(String filename, String text, Integer fdir) {
+    public boolean fecho(String filename, String text, Number fdir) {
     	throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
     }
     
-    public boolean fecho(VDMSeq filename, VDMSeq text, Integer fdir) {
+    public boolean fecho(VDMSeq filename, VDMSeq text, Number fdir) {
     	throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
     }
 

@@ -1,0 +1,53 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let a = VDMUtil`val2seq_of_char[set of nat]({}),
+    b = VDMUtil`val2seq_of_char[seq of nat]([2,3]),
+    c = VDMUtil`val2seq_of_char[nat * bool](mk_(1,true))
+in 
+	return a ^ " " ^ b ^  " " ^ c;
+	
+end Entry
+
+class VDMUtil
+
+-- 	Overture STANDARD LIBRARY: MiscUtils
+--      --------------------------------------------
+-- 
+-- Standard library for the Overture Interpreter. When the interpreter
+-- evaluates the preliminary functions/operations in this file,
+-- corresponding internal functions is called instead of issuing a run
+-- time error. Signatures should not be changed, as well as name of
+-- module (VDM-SL) or class (VDM++). Pre/post conditions is 
+-- fully user customisable. 
+-- Dont care's may NOT be used in the parameter lists.
+
+functions
+-- Converts a set argument into a sequence in non-deterministic order.
+static public set2seq[@T] : set of @T +> seq of @T
+set2seq(x) == is not yet specified;
+
+-- Returns a context information tuple which represents
+-- (fine_name * line_num * column_num * class_name * fnop_name) of corresponding source text
+static public get_file_pos : () +> [ seq of char * nat * nat * seq of char * seq of char ]
+get_file_pos() == is not yet specified;
+
+-- Converts a VDM value into a seq of char.
+static public val2seq_of_char[@T] : @T +> seq of char
+val2seq_of_char(x) == is not yet specified;
+
+-- converts VDM value in ASCII format into a VDM value
+-- RESULT.#1 = false implies a conversion failure
+static public seq_of_char2val[@p]:seq1 of char -> bool * [@p]
+seq_of_char2val(s) ==
+  is not yet specified
+  post let mk_(b,t) = RESULT in not b => t = nil;
+
+
+static public classname[@T] : @T -> [seq1 of char]
+    classname(s) == is not yet specified;
+
+end VDMUtil

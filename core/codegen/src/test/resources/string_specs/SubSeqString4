@@ -1,0 +1,9 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	return "abcde"(3,...,2);
+	
+end Entry

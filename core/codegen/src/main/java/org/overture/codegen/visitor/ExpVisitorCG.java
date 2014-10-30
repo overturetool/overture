@@ -22,7 +22,6 @@
 package org.overture.codegen.visitor;
 
 import java.util.LinkedList;
-import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AAssignmentDefinition;
@@ -30,7 +29,6 @@ import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
-import org.overture.ast.definitions.APerSyncDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
@@ -71,6 +69,7 @@ import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.AInSetBinaryExp;
 import org.overture.ast.expressions.AIndicesUnaryExp;
 import org.overture.ast.expressions.AIntLiteralExp;
+import org.overture.ast.expressions.AIsExp;
 import org.overture.ast.expressions.AIsOfClassExp;
 import org.overture.ast.expressions.ALambdaExp;
 import org.overture.ast.expressions.ALenUnaryExp;
@@ -132,7 +131,6 @@ import org.overture.ast.expressions.AUnaryPlusUnaryExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SBinaryExp;
-import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.intf.lex.ILexToken;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.ASetBind;
@@ -154,12 +152,12 @@ import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SMultipleBindCG;
 import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
+import org.overture.codegen.cgast.expressions.ACardUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ACaseAltExpExpCG;
 import org.overture.codegen.cgast.expressions.ACasesExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
@@ -195,6 +193,7 @@ import org.overture.codegen.cgast.expressions.AIndicesUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ALambdaExpCG;
+import org.overture.codegen.cgast.expressions.ALenUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALetBeStExpCG;
@@ -231,10 +230,10 @@ import org.overture.codegen.cgast.expressions.ASetIntersectBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetProperSubsetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetSubsetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetUnionBinaryExpCG;
-import org.overture.codegen.cgast.expressions.ASizeUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ASubSeqExpCG;
 import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ASuperVarExpCG;
 import org.overture.codegen.cgast.expressions.ATailUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
 import org.overture.codegen.cgast.expressions.AThreadIdExpCG;
@@ -332,6 +331,46 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 
 		return mkBasicExp;
 	}
+	
+	@Override
+	public SExpCG caseAIsExp(AIsExp node, IRInfo question)
+			throws AnalysisException
+	{
+		//TODO: Optional types and collection types are not yet supported.
+		//Also check the IsExpTransformation
+		
+		PType checkedType = node.getBasicType();
+		
+		if(checkedType == null)
+		{
+			checkedType = question.getTcFactory().createPDefinitionAssistant().getType(node.getTypedef());
+		}
+		
+		PExp exp = node.getTest();
+		SExpCG expCg = exp.apply(question.getExpVisitor(), question);
+		
+		if(expCg == null)
+		{
+			return null;
+		}
+		
+		STypeCG checkedTypeCg = checkedType.apply(question.getTypeVisitor(), question);
+		
+		if(checkedTypeCg == null)
+		{
+			return null;
+		}
+
+		SExpCG isExp = question.getExpAssistant().consIsExp(expCg, checkedTypeCg);
+		
+		if (isExp == null)
+		{
+			question.addUnsupportedNode(node, "The 'is' expression is not supported for type: " + checkedType.getClass().getName());
+			return null;
+		}
+		
+		return isExp;
+	}
 
 	@Override
 	public SExpCG caseAIsOfClassExp(AIsOfClassExp node, IRInfo question)
@@ -368,7 +407,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseACardinalityUnaryExp(ACardinalityUnaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().handleUnaryExp(node, new ASizeUnaryExpCG(), question);
+		return question.getExpAssistant().handleUnaryExp(node, new ACardUnaryExpCG(), question);
 	}
 
 	@Override
@@ -1193,6 +1232,12 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		for (PExp member : members)
 		{
 			SExpCG memberCg = member.apply(question.getExpVisitor(), question);
+			
+			if(memberCg == null)
+			{
+				return null;
+			}
+			
 			enumSeq.getMembers().add(memberCg);
 		}
 
@@ -1297,7 +1342,17 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 
 		boolean isInheritedDef = varDef instanceof AInheritedDefinition;
 
-		if (owningClass == null
+		if(isExplOp && !isDefInOwningClass && !question.getTcFactory().createPDefinitionAssistant().isStatic(varDef))
+		{
+			ASuperVarExpCG superVarExp = new ASuperVarExpCG();
+
+			superVarExp.setType(typeCg);
+			superVarExp.setName(name);
+			superVarExp.setIsLambda(isLambda);
+
+			return superVarExp;
+		}
+		else if (owningClass == null
 				|| nodeParentClass == null
 				|| isDefInOwningClass
 				|| isInheritedDef
@@ -1622,7 +1677,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseALenUnaryExp(ALenUnaryExp node, IRInfo question)
 			throws AnalysisException
 	{
-		return question.getExpAssistant().handleUnaryExp(node, new ASizeUnaryExpCG(), question);
+		return question.getExpAssistant().handleUnaryExp(node, new ALenUnaryExpCG(), question);
 	}
 
 	@Override

@@ -30,6 +30,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
@@ -131,6 +132,11 @@ public class ObjectValue extends Value
 	public ObjectValue objectValue(Context ctxt)
 	{
 		return this;
+	}
+	
+	public PType getType()
+	{
+		return type;
 	}
 
 	public PTypeList getBaseTypes()
@@ -352,7 +358,7 @@ public class ObjectValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt)
+	protected Value convertValueTo(PType to, Context ctxt, Set<PType> done)
 			throws AnalysisException
 	{
 		Value conv = convertToHierarchy(to);
@@ -363,7 +369,7 @@ public class ObjectValue extends Value
 		}
 
 		// This will fail...
-		return super.convertValueTo(to, ctxt);
+		return super.convertValueTo(to, ctxt, done);
 	}
 
 	private Value convertToHierarchy(PType to)

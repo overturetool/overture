@@ -36,7 +36,10 @@ package quotes;
 
 public interface Quotes {
     public static Number A = 1L;
-    public static Number Red = 2L;
+    public static Number B = 2L;
+    public static Number Blue = 3L;
+    public static Number Green = 4L;
+    public static Number Red = 5L;
 }
 
 ##########

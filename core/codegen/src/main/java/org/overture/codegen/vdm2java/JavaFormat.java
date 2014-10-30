@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.overture.ast.types.PType;
+import org.overture.codegen.assistant.TypeAssistantCG;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SStateDesignatorCG;
@@ -63,13 +64,9 @@ import org.overture.codegen.cgast.statements.AForLoopStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
-import org.overture.codegen.cgast.types.AIntBasicTypeWrappersTypeCG;
-import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AInterfaceTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
-import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
-import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.ATokenBasicTypeCG;
@@ -93,6 +90,7 @@ import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class JavaFormat
 {
+	private static final String CLASS_EXTENSION = ".class";
 	public static final String UTILS_FILE = "Utils";
 	public static final String SEQ_UTIL_FILE = "SeqUtil";
 	public static final String SET_UTIL_FILE = "SetUtil";
@@ -239,14 +237,12 @@ public class JavaFormat
 		final String DOUBLE_VALUE = ".doubleValue()";
 		final String LONG_VALUE = ".longValue()";
 
-		if (type instanceof ARealNumericBasicTypeCG
-				|| type instanceof ARealBasicTypeWrappersTypeCG)
+		if (info.getAssistantManager().getTypeAssistant().isInt(type))
+		{
+			return LONG_VALUE; 
+		} else if (info.getAssistantManager().getTypeAssistant().isRealOrRat(type))
 		{
 			return DOUBLE_VALUE;
-		} else if (type instanceof AIntNumericBasicTypeCG
-				|| type instanceof AIntBasicTypeWrappersTypeCG)
-		{
-			return LONG_VALUE;
 		} else
 		{
 			PTypeAssistantTC typeAssistant = info.getTcFactory().createPTypeAssistant();
@@ -454,9 +450,30 @@ public class JavaFormat
 		}
 
 		String result = writer.toString();
+		
 		return result;
 	}
 
+	public String formatTypeArg(STypeCG type) throws AnalysisException
+	{
+		if(type == null)
+		{
+			return null;
+		}
+		else
+		{
+			List<STypeCG> types = new LinkedList<STypeCG>();
+			types.add(type);
+			
+			return formattedTypes(types, CLASS_EXTENSION);
+		}
+	}
+	
+	public String formatTypeArgs(ATupleTypeCG tupleType) throws AnalysisException
+	{
+		return formatTypeArgs(tupleType.getTypes());
+	}
+	
 	public String formatTypeArgs(List<STypeCG> types) throws AnalysisException
 	{
 		if (types.isEmpty())
@@ -464,7 +481,7 @@ public class JavaFormat
 			return "";
 		}
 
-		return formattedTypes(types, ".class");
+		return formattedTypes(types, CLASS_EXTENSION);
 	}
 
 	public String formatEqualsBinaryExp(AEqualsBinaryExpCG node)
@@ -510,7 +527,7 @@ public class JavaFormat
 	{
 		return type instanceof ARecordTypeCG || type instanceof ATupleTypeCG;
 	}
-
+	
 	private ANotUnaryExpCG transNotEquals(ANotEqualsBinaryExpCG notEqual)
 	{
 		ANotUnaryExpCG notUnary = new ANotUnaryExpCG();
@@ -615,6 +632,27 @@ public class JavaFormat
 		return classDecl.getSuperName() == null ? "" : "extends "
 				+ classDecl.getSuperName();
 	}
+	
+	public String formatInterfaces(AClassDeclCG classDecl)
+	{
+		LinkedList<AInterfaceDeclCG> interfaces = classDecl.getInterfaces();
+		
+		if(interfaces == null || interfaces.isEmpty())
+		{
+			return "";
+		}
+		
+		String implementsClause = "implements";
+		
+		implementsClause += " " + interfaces.get(0).getName();
+		
+		for(int i = 1; i < interfaces.size(); i++)
+		{
+			implementsClause += ", " + interfaces.get(i).getName();
+		}
+		
+		return implementsClause;
+	}
 
 	public String formatMaplets(AEnumMapExpCG mapEnum) throws AnalysisException
 	{
@@ -688,8 +726,9 @@ public class JavaFormat
 			return "";
 		}
 
-		if (potentialBasicType instanceof AIntNumericBasicTypeCG
-				|| potentialBasicType instanceof ARealNumericBasicTypeCG)
+		TypeAssistantCG typeAssistant = info.getAssistantManager().getTypeAssistant();
+		
+		if (potentialBasicType instanceof STypeCG && typeAssistant.isNumericType((STypeCG) potentialBasicType))
 		{
 			return "Number";
 		} else if (potentialBasicType instanceof ABoolBasicTypeCG)

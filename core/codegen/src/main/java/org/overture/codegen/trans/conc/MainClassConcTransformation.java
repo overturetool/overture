@@ -22,10 +22,10 @@ import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
-import org.overture.codegen.cgast.statements.ACallStmCG;
 import org.overture.codegen.cgast.statements.AElseIfStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
+import org.overture.codegen.cgast.statements.APlainCallStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.ATryStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
@@ -44,12 +44,12 @@ import org.overture.codegen.vdm2java.JavaFormat;
 public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 {
 	private IRInfo info;
-	private List<AClassDeclCG> classes;
+	//private List<AClassDeclCG> classes;
 
 	public MainClassConcTransformation(IRInfo info, List<AClassDeclCG> classes)
 	{
 		this.info = info;
-		this.classes = classes;
+		//this.classes = classes;
 	}
 	
 	@Override
@@ -84,8 +84,8 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 				if (!methodCG.getName().equals("toString") && !methodCG.getStatic() ){//&& !methodCG.getName().equals("Run")){//x.getName() != "toString"){
 					ABlockStmCG bodyStm = new ABlockStmCG();
 					
-					ACallStmCG entering = new ACallStmCG();
-					ACallStmCG leaving = new ACallStmCG();
+					APlainCallStmCG entering = new APlainCallStmCG();
+					APlainCallStmCG leaving = new APlainCallStmCG();
 					
 				
 					entering.setName("entering");

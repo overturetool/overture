@@ -38,13 +38,12 @@ import org.overture.codegen.cgast.declarations.AFuncDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.AMutexSyncDeclCG;
 import org.overture.codegen.cgast.declarations.APersyncDeclCG;
-import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.AThreadDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
-import org.overture.codegen.cgast.statements.ACallStmCG;
+import org.overture.codegen.cgast.statements.APlainCallStmCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
@@ -112,10 +111,12 @@ public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
 					objInitializer.setName(initName);
 					objInitializer.getMethodType().setResult(new AVoidTypeCG());
 					objInitializer.setIsConstructor(false);
-
+					objInitializer.setPreCond(null);
+					objInitializer.setPostCond(null);
+					
 					methods.add(objInitializer);
 
-					ACallStmCG initCall = new ACallStmCG();
+					APlainCallStmCG initCall = new APlainCallStmCG();
 					initCall.setType(objInitializer.getMethodType().getResult().clone());
 					initCall.setClassType(null);
 					initCall.setName(initName);

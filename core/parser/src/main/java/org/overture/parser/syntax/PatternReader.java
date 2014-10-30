@@ -39,6 +39,7 @@ import org.overture.ast.lex.LexStringToken;
 import org.overture.ast.lex.LexToken;
 import org.overture.ast.lex.VDMToken;
 import org.overture.ast.patterns.AMapletPatternMaplet;
+import org.overture.ast.patterns.ANamePatternPair;
 import org.overture.ast.patterns.PPattern;
 import org.overture.config.Release;
 import org.overture.config.Settings;
@@ -243,7 +244,29 @@ public class PatternReader extends SyntaxReader
 					}
 
 					rdtok = false;
-				} else
+				}
+				else if (id.name.startsWith("obj_"))	// Object pattern
+				{
+					if (Settings.release == Release.CLASSIC)
+					{
+						throwMessage(2323, "Object patterns not available in VDM classic", Integer.MAX_VALUE);
+					}
+					else if (id.name.equals("obj_"))
+					{
+						throwMessage(2319, "Expecting class name after obj_ in object pattern");
+					}
+					else
+					{
+						nextToken();
+						String classname = id.name.substring(4);
+						LexNameToken name = new LexNameToken("CLASS", classname, id.location);
+						checkFor(VDMToken.BRA, 2320, "Expecting '(' after obj_ pattern");
+						pattern = AstFactory.newAObjectPattern(name, readNamePatternList(classname));
+						checkFor(VDMToken.KET, 2322, "Expecting ')' after obj_ pattern");
+						rdtok = false;
+					}
+				}
+				else
 				{
 					pattern = AstFactory.newAIdentifierPattern(idToName(id));
 				}
@@ -297,6 +320,33 @@ public class PatternReader extends SyntaxReader
 		while (ignore(VDMToken.COMMA))
 		{
 			list.add(readPattern());
+		}
+
+		return list;
+	}
+
+	private ANamePatternPair readNamePatternPair(String classname) throws LexException, ParserException
+	{
+		LexNameToken fieldname = lastNameToken().getModifiedName(classname);
+		nextToken();
+		checkFor(VDMToken.MAPLET, 2321, "Expecting '|->' in object pattern");
+		PPattern pattern = readPattern();
+
+		return AstFactory.newANamePatternPair(fieldname, pattern);
+	}
+
+	private List<ANamePatternPair> readNamePatternList(String classname) throws LexException, ParserException
+	{
+		List<ANamePatternPair> list = new Vector<ANamePatternPair>();
+		
+		if (lastToken().is(VDMToken.IDENTIFIER))	// Can be empty
+		{
+			list.add(readNamePatternPair(classname));
+	
+			while (ignore(VDMToken.COMMA))
+			{
+				list.add(readNamePatternPair(classname));
+			}
 		}
 
 		return list;

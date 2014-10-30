@@ -49,19 +49,30 @@ import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SMultipleBindCG;
 import org.overture.codegen.cgast.STypeCG;
+import org.overture.codegen.cgast.expressions.ABoolIsExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACaseAltExpExpCG;
+import org.overture.codegen.cgast.expressions.ACharIsExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
+import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AGeneralIsExpCG;
+import org.overture.codegen.cgast.expressions.AIntIsExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ALetDefExpCG;
+import org.overture.codegen.cgast.expressions.ANat1IsExpCG;
+import org.overture.codegen.cgast.expressions.ANatIsExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
-import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.AQuoteLiteralExpCG;
+import org.overture.codegen.cgast.expressions.ARatIsExpCG;
+import org.overture.codegen.cgast.expressions.ARealIsExpCG;
 import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
+import org.overture.codegen.cgast.expressions.ATokenIsExpCG;
+import org.overture.codegen.cgast.expressions.ATupleIsExpCG;
 import org.overture.codegen.cgast.expressions.SBinaryExpCG;
+import org.overture.codegen.cgast.expressions.SIsExpCG;
 import org.overture.codegen.cgast.expressions.SQuantifierExpCG;
 import org.overture.codegen.cgast.expressions.SUnaryExpCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
@@ -69,10 +80,19 @@ import org.overture.codegen.cgast.statements.AForLoopStmCG;
 import org.overture.codegen.cgast.statements.AWhileStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
+import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.ANat1NumericBasicTypeCG;
+import org.overture.codegen.cgast.types.ANatNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AQuoteTypeCG;
+import org.overture.codegen.cgast.types.ARatNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
+import org.overture.codegen.cgast.types.ATokenBasicTypeCG;
+import org.overture.codegen.cgast.types.ATupleTypeCG;
+import org.overture.codegen.cgast.types.AUnionTypeCG;
+import org.overture.codegen.cgast.types.SBasicTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
 import org.overture.codegen.ir.IRInfo;
 
@@ -246,7 +266,17 @@ public class ExpAssistantCG extends AssistantBase
 	{
 		return consIntLiteral(0L);
 	}
+	
+	public AIntLiteralExpCG getDefaultNat1Value()
+	{
+		return consIntLiteral(1L);
+	}
 
+	public AIntLiteralExpCG getDefaultNatValue()
+	{
+		return consIntLiteral(0L);
+	}
+	
 	public ARealLiteralExpCG getDefaultRealValue()
 	{
 		return consRealLiteral(0.0);
@@ -265,11 +295,6 @@ public class ExpAssistantCG extends AssistantBase
 	public AStringLiteralExpCG getDefaultStringlValue()
 	{
 		return consStringLiteral("", true);
-	}
-
-	public ANullExpCG getDefaultClassValue()
-	{
-		return new ANullExpCG();
 	}
 
 	public boolean isAssigned(PExp exp)
@@ -402,4 +427,105 @@ public class ExpAssistantCG extends AssistantBase
 		//to the standard for loop in Java, e.g. for(int i = 0; i < 10; i++){...}
 	}
 	
+	public SExpCG consIsExp(SExpCG exp, STypeCG checkedType)
+	{
+		exp = exp.clone();
+		checkedType = checkedType.clone();
+		
+		if (checkedType instanceof AUnionTypeCG)
+		{
+			return consGeneralIsExp(exp, checkedType);
+		} else if (checkedType instanceof SBasicTypeCG)
+		{
+			return consIsExpBasicType(exp, checkedType);
+		} else if (checkedType instanceof AQuoteTypeCG)
+		{
+			return consIsExpQuoteType(exp, (AQuoteTypeCG) checkedType);
+		} else if (checkedType instanceof ATupleTypeCG)
+		{
+			return consTupleIsExp(exp, checkedType);
+		} else if (checkedType instanceof ARecordTypeCG
+				|| checkedType instanceof AClassTypeCG)
+		{
+			return consGeneralIsExp(exp, checkedType);
+		} else
+		{
+			return null;
+		}
+	}
+
+	public SExpCG consIsExpQuoteType(SExpCG exp, AQuoteTypeCG quoteType)
+	{
+		AQuoteLiteralExpCG lit = new AQuoteLiteralExpCG();
+		lit.setType(quoteType);
+		lit.setValue(quoteType.getValue());
+
+		AEqualsBinaryExpCG equals = new AEqualsBinaryExpCG();
+		equals.setType(new ABoolBasicTypeCG());
+		equals.setLeft(exp);
+		equals.setRight(lit);
+
+		return equals;
+	}
+	
+	public SExpCG consGeneralIsExp(SExpCG expCg, STypeCG checkedTypeCg)
+	{
+		AGeneralIsExpCG generalIsExp = new AGeneralIsExpCG();
+		generalIsExp = new AGeneralIsExpCG();
+		generalIsExp.setType(new ABoolBasicTypeCG());
+		generalIsExp.setExp(expCg);
+		generalIsExp.setCheckedType(checkedTypeCg);
+
+		return generalIsExp;
+	}
+	
+	public ATupleIsExpCG consTupleIsExp(SExpCG exp, STypeCG checkedType)
+	{
+		ATupleIsExpCG tupleIsExp = new ATupleIsExpCG();
+		tupleIsExp.setType(new ABoolBasicTypeCG());
+		tupleIsExp.setExp(exp);
+		tupleIsExp.setCheckedType(checkedType);
+		
+		return tupleIsExp;
+	}
+	
+	public SExpCG consIsExpBasicType(SExpCG expCg, STypeCG checkedType)
+	{
+		SIsExpCG basicIsExp = null;
+
+		if (checkedType instanceof ABoolBasicTypeCG)
+		{
+			basicIsExp = new ABoolIsExpCG();
+		} else if (checkedType instanceof ANatNumericBasicTypeCG)
+		{
+			basicIsExp = new ANatIsExpCG();
+		} else if (checkedType instanceof ANat1NumericBasicTypeCG)
+		{
+			basicIsExp = new ANat1IsExpCG();
+		} else if (checkedType instanceof AIntNumericBasicTypeCG)
+		{
+			basicIsExp = new AIntIsExpCG();
+		} else if (checkedType instanceof ARatNumericBasicTypeCG)
+		{
+			basicIsExp = new ARatIsExpCG();
+		} else if (checkedType instanceof ARealNumericBasicTypeCG)
+		{
+			basicIsExp = new ARealIsExpCG();
+		} else if (checkedType instanceof ACharBasicTypeCG)
+		{
+			basicIsExp = new ACharIsExpCG();
+		} else if (checkedType instanceof ATokenBasicTypeCG)
+		{
+			basicIsExp = new ATokenIsExpCG();
+		}
+		else
+		{
+			return null;
+		}
+
+		basicIsExp.setType(new ABoolBasicTypeCG());
+		basicIsExp.setExp(expCg);
+
+		return basicIsExp;
+	}
 }

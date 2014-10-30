@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
@@ -751,7 +752,7 @@ public class OperationValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt)
+	protected Value convertValueTo(PType to, Context ctxt, Set<PType> done)
 			throws AnalysisException
 	{
 		if (ctxt.assistantFactory.createPTypeAssistant().isType(to, AOperationType.class))
@@ -759,7 +760,7 @@ public class OperationValue extends Value
 			return this;
 		} else
 		{
-			return super.convertValueTo(to, ctxt);
+			return super.convertValueTo(to, ctxt, done);
 		}
 	}
 

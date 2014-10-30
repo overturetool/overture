@@ -115,6 +115,7 @@ public class NoteBook {
 
         for (Long i = 1L; i <= toVar_1; i++) {
             VDMSeq reversed = nb1.getReverseMessages();
+
             IO.println(Utils.clone(((VDMSeq) reversed.get(Utils.index(i)))));
         }
 
@@ -241,6 +242,15 @@ public class NoteBook {
     public String toString() {
         return "NoteBook{" + "messages := " + Utils.toString(messages) + "}";
     }
+}
+
+##########
+
+package quotes;
+
+public interface Quotes {
+    public static Number append = 1L;
+    public static Number start = 2L;
 }
 
 ##########
