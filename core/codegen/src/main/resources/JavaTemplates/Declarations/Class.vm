@@ -17,7 +17,7 @@ $quoteImport
 	#set( $static = "static")
 #end
 
-$abstract $node.getAccess() $static class $node.getName() $JavaFormat.formatSuperType($node)
+$abstract $node.getAccess() $static class $node.getName() $JavaFormat.formatSuperType($node) $JavaFormat.formatInterfaces($node)
 {
 	#foreach( $field in $node.getFields() )
 	$JavaFormat.format($field)

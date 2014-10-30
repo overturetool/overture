@@ -117,6 +117,7 @@ CG {-> package='org.overture.codegen.cgast'
     	[methods]:CG.#decl.method*
     	[functions]:CG.#decl.func*
     	[superName]:java_String
+    	[interfaces]:CG.#decl.interface*
     	[typeDecls]:CG.#decl.type*
     |	{interface}
     	[templateTypes]:CG.#type.template*

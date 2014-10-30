@@ -631,6 +631,27 @@ public class JavaFormat
 		return classDecl.getSuperName() == null ? "" : "extends "
 				+ classDecl.getSuperName();
 	}
+	
+	public String formatInterfaces(AClassDeclCG classDecl)
+	{
+		LinkedList<AInterfaceDeclCG> interfaces = classDecl.getInterfaces();
+		
+		if(interfaces == null || interfaces.isEmpty())
+		{
+			return "";
+		}
+		
+		String implementsClause = "implements";
+		
+		implementsClause += " " + interfaces.get(0).getName();
+		
+		for(int i = 1; i < interfaces.size(); i++)
+		{
+			implementsClause += ", " + interfaces.get(i).getName();
+		}
+		
+		return implementsClause;
+	}
 
 	public String formatMaplets(AEnumMapExpCG mapEnum) throws AnalysisException
 	{
