@@ -28,7 +28,7 @@ public class RemoteImplGenerator {
 			ARemoteContractImplDeclCG contractImpl = new ARemoteContractImplDeclCG();
 			LinkedList<AMethodDeclCG> a = classCg.getMethods();
 			contractImpl.setName(classCg.getName());
-
+			contractImpl.setFields(classCg.getFields());
 			for(AMethodDeclCG method : classCg.getMethods()){
 
 				if(method.getName().equals("toString")){
@@ -54,7 +54,7 @@ public class RemoteImplGenerator {
 						formalParams2.add(formPar);
 					}
 					method.setFormalParams(formalParams2);
-
+					method.setStatic(false);
 					method.setIsRemote(true);
 					publicMethods.add(method);
 				}

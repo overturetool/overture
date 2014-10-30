@@ -2,7 +2,12 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import org.overture.codegen.runtime.*;
  
-public class ${node.getName()} extends UnicastRemoteObject implements ${node.getName()}_i{
+public class ${node.getName()} extends UnicastRemoteObject implements ${node.getName()}_i
+{
+       
+    #foreach( $field in $node.getFields() )
+	$JavaFormat.format($field)
+	#end
                                 
 	#foreach( $method in $node.getMethods() )
 	$JavaFormat.format($method)
