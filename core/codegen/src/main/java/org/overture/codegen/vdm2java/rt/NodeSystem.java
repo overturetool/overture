@@ -39,7 +39,7 @@ public class NodeSystem extends DepthFirstAnalysisAdaptor {
 
 	Map<String, Set<AClassClassDefinition>> cpuToDeployedClasses = new HashMap<String, Set<AClassClassDefinition>>();
 
-	
+	public int DeployedObjCounter = 0;
 	
 	public void printArch() {
 
@@ -111,7 +111,9 @@ public class NodeSystem extends DepthFirstAnalysisAdaptor {
 						AVariableExp var_exp = (AVariableExp) exp;
 
 						String key_obj = id.getName().toString();
-
+						
+						DeployedObjCounter = DeployedObjCounter + 1;
+						
 						if (cpuToDeployedObjects.containsKey(key_obj))
 							cpuToDeployedObjects.get(key_obj).add(var_exp);
 						else {

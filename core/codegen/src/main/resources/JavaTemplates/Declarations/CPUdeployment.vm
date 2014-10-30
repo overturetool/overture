@@ -26,6 +26,12 @@ public class $node.getCpuName() {
 				System.out.println("Success to connect and bind..");
 				lock1 = false;
 
+
+				int DeployedObjCounter = $node.getDeployedObjCounter();
+				while(registry.list().length<DeployedObjCounter) {
+				System.out.println("Waiting for RMI registry full list");
+				Thread.sleep(2000);
+				}
 				// try to look up
 				while(lock2){
 					try{

@@ -69,4 +69,8 @@ public class DistributionMapping {
 	public Map<String, Set<AClassClassDefinition>> cpuToDeployedClasses(){
 		return nodeSys.cpuToDeployedClasses;
 	}
+	
+	public int getDeployedObjCounter(){
+		return nodeSys.DeployedObjCounter;
+	}
 }

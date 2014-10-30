@@ -110,6 +110,8 @@ public class JavaCodeGenDistributionMain {
 			DistributionMapping mapping = new DistributionMapping(result.result);
 			mapping.run();
 
+			int DeployedObjCounter = mapping.getDeployedObjCounter();
+			
 			Set<AClassClassDefinition> deployedClasses = mapping
 					.getDeployedClasses();
 
@@ -124,9 +126,11 @@ public class JavaCodeGenDistributionMain {
 			IRInfo info = new IRInfo("cg_init");
 			JavaFormat javaFormat = new JavaFormat(new TempVarPrefixes(), info);
 
+			List<AClassDeclCG> irClasses = Util.getClasses(data.getClasses());
+			
 			//**********************************************************************//
 			RemoteContractGenerator contractGenerator = new RemoteContractGenerator(
-					deployedClasses, info);
+					irClasses);
 			Set<ARemoteContractDeclCG> remoteContracts = contractGenerator
 					.run();
 
@@ -142,7 +146,6 @@ public class JavaCodeGenDistributionMain {
 						.toString()));
 			}
 
-			List<AClassDeclCG> irClasses = Util.getClasses(data.getClasses());
 
 			RemoteImplGenerator implsGen = new RemoteImplGenerator(irClasses);
 			List<ARemoteContractImplDeclCG> remoteImpls = implsGen.run();
@@ -173,7 +176,7 @@ public class JavaCodeGenDistributionMain {
 
 			//**********************************************************************//
 			CPUdeploymentGenerator cpuDepGenerator = new CPUdeploymentGenerator(
-					CpuToDeployedObject, cpuToConnectedCPUs , info);
+					CpuToDeployedObject, cpuToConnectedCPUs , info, DeployedObjCounter);
 			Set<ACpuDeploymentDeclCG> cpuDeps = cpuDepGenerator
 					.run();
 

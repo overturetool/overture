@@ -27,13 +27,15 @@ public class CPUdeploymentGenerator {
 	private IRInfo info;
 	private Map<String, Set<String>> cpuToConnectedCPUs;
 	Map<String, AClassDeclCG> cpuToSystemDecl = new HashMap<String, AClassDeclCG>();
+	private int DeployedObjCounter;
 
 	public CPUdeploymentGenerator(
-			Map<String, Set<AVariableExp>> cpuToDeployedObject, Map<String, Set<String>> cpuToConnectedCPUs,IRInfo info) {
+			Map<String, Set<AVariableExp>> cpuToDeployedObject, Map<String, Set<String>> cpuToConnectedCPUs,IRInfo info, int DeployedObjCounter) {
 		super();
 		this.cpuToDeployedObject = cpuToDeployedObject;
 		this.info = info;
 		this.cpuToConnectedCPUs = cpuToConnectedCPUs;
+		this.DeployedObjCounter = DeployedObjCounter;
 	}
 
 	public Set<ACpuDeploymentDeclCG> run() throws AnalysisException {
@@ -43,9 +45,13 @@ public class CPUdeploymentGenerator {
 
 		for(String cpuDep : cpuToDeployedObject.keySet()){
 
+			
+			
 			ACpuDeploymentDeclCG cpuDeployment = new ACpuDeploymentDeclCG();
 			cpuDeployment.setCpuName(cpuDep);
-
+			// Set the number of deployed objects
+			cpuDeployment.setDeployedObjCounter(DeployedObjCounter);
+			
 			ARMIregistryDeclCG rmiReg = new ARMIregistryDeclCG();
 
 			String URL = "localhost";
