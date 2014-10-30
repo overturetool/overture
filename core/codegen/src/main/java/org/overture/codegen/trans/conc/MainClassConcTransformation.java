@@ -72,15 +72,16 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 		sentinelfld.setType(sentType);
 		sentinelfld.setAccess(JavaFormat.JAVA_PUBLIC);
 		sentinelfld.setVolatile(true);
-		sentinelfld.setStatic(true);
+		sentinelfld.setStatic(false);
 		
 		node.getFields().add(sentinelfld);
 		
 		
 		for(AMethodDeclCG methodCG : node.getMethods())
 		{
+			if(methodCG.getStatic() != null){
 			if(!methodCG.getIsConstructor()){//(x.getName() != node.getName()){
-				if (!methodCG.getName().equals("toString") ){//&& !methodCG.getName().equals("Run")){//x.getName() != "toString"){
+				if (!methodCG.getName().equals("toString") && !methodCG.getStatic() ){//&& !methodCG.getName().equals("Run")){//x.getName() != "toString"){
 					ABlockStmCG bodyStm = new ABlockStmCG();
 					
 					ACallStmCG entering = new ACallStmCG();
@@ -157,6 +158,7 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 				//}
 			}
 		}
+		}
 		//declaration of the method.
 		
 		AIntNumericBasicTypeCG fnr = new AIntNumericBasicTypeCG();
@@ -180,12 +182,16 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 			AIfStmCG bodyif = new AIfStmCG();
 			for(int i=0; i < node.getMethods().size(); i++)
 			{
+				
+				AIdentifierVarExpCG testVar = new AIdentifierVarExpCG();
+				testVar.setOriginal("fnr");
+				testVar.setType(new AIntNumericBasicTypeCG());
+				
 				if (i == 0){
 				
 						AEqualsBinaryExpCG firstBranch = new AEqualsBinaryExpCG();
 						
-						AIdentifierVarExpCG testVar = new AIdentifierVarExpCG();
-						testVar.setOriginal("fnr");
+	
 						
 						AIntLiteralExpCG methNum =  new AIntLiteralExpCG();
 						methNum.setValue((long) i);
@@ -222,9 +228,6 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 					AElseIfStmCG newBranch = new AElseIfStmCG();
 																				
 					AEqualsBinaryExpCG Branches = new AEqualsBinaryExpCG();
-					
-					AIdentifierVarExpCG testVar = new AIdentifierVarExpCG();
-					testVar.setOriginal("fnr");
 					
 					AIntLiteralExpCG methNum =  new AIntLiteralExpCG();
 					methNum.setValue((long) i);

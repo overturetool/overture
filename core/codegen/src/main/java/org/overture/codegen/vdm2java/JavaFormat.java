@@ -43,6 +43,7 @@ import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AEnumMapExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AHeadUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AHistoryExpCG;
 import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AMapletExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
@@ -230,11 +231,11 @@ public class JavaFormat
 
 	private String findNumberDereferenceCall(STypeCG type)
 	{
-		if (type == null)
+		if (type == null || type.parent() instanceof AHistoryExpCG)
 		{
 			return "";
 		}
-
+		
 		final String DOUBLE_VALUE = ".doubleValue()";
 		final String LONG_VALUE = ".longValue()";
 

@@ -2,25 +2,25 @@ package org.overture.codegen.runtime;
 
 public class Sentinel
 {
-	public  volatile int[] act;
-	public  volatile int[] fin;
-	public  volatile int[] req;
-	public  volatile int[] active;
-	public  volatile int[] waiting;
+	public  volatile long[] act;
+	public  volatile long[] fin;
+	public  volatile long[] req;
+	public  volatile long[] active;
+	public  volatile long[] waiting;
 	
 	EvaluatePP instance;
 	
 	public void init(EvaluatePP inst, long nrf )
 	{
 		instance = inst;
-		act = new int[(int)nrf];
-		fin = new int[(int)nrf];
-		req = new int[(int)nrf];
-		active = new int[(int)nrf];
-		waiting = new int[(int)nrf];
+		act = new long[(int)nrf];
+		fin = new long[(int)nrf];
+		req = new long[(int)nrf];
+		active = new long[(int)nrf];
+		waiting = new long[(int)nrf];
 	}
 	
-	public synchronized void entering(long fnr2) throws InterruptedException {
+	public synchronized void entering(long fnr2) {
 		int fnr = (int) fnr2;
 		requesting(fnr);
 		try{

@@ -4,30 +4,17 @@ import java.util.*;
 
 
 public class Entry {
-    public static volatile Sentinel sentinel;
+    public volatile Sentinel sentinel;
 
     public Entry() {
-        sentinel = new Entry_sentinel();
     }
 
     public static Object Run() {
-        sentinel.entering(((Entry_sentinel) sentinel).Run);
-
-        try {
-            return f();
-        } finally {
-            sentinel.leaving(((Entry_sentinel) sentinel).Run);
-        }
+        return f();
     }
 
     public static Number f() {
-        sentinel.entering(((Entry_sentinel) sentinel).f);
-
-        try {
-            return Thread.currentThread().getId();
-        } finally {
-            sentinel.leaving(((Entry_sentinel) sentinel).f);
-        }
+        return Thread.currentThread().getId();
     }
 
     public String toString() {
@@ -35,13 +22,13 @@ public class Entry {
     }
 
     public Boolean evaluatePP(final Number fnr) {
-        if (fnr == 0L) {
+        if (fnr.longValue() == 0L) {
             return true;
-        } else if (fnr == 1L) {
+        } else if (fnr.longValue() == 1L) {
             return true;
-        } else if (fnr == 2L) {
+        } else if (fnr.longValue() == 2L) {
             return true;
-        } else if (fnr == 3L) {
+        } else if (fnr.longValue() == 3L) {
             return true;
         } else {
             return true;
@@ -49,14 +36,13 @@ public class Entry {
     }
 
     public class Entry_sentinel extends Sentinel {
-        public final long Run = 0L;
-        public final long Entry = 1L;
-        public final long f = 2L;
-        public final long toString = 3L;
-        public final long function_sum = 4L;
+        public final int Run = 0;
+        public final int Entry = 1;
+        public final int f = 2;
+        public final int toString = 3;
+        public final int function_sum = 4;
 
         public Entry_sentinel() {
-            return;
         }
 
         public Entry_sentinel(final EvaluatePP instance) {

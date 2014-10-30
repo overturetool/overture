@@ -4,11 +4,10 @@ import java.util.*;
 
 
 public class ThreadClass extends Thread {
-    public static volatile Sentinel sentinel;
     public volatile Number x = 0L;
+    public volatile Sentinel sentinel;
 
     public ThreadClass() {
-        sentinel = new ThreadClass_sentinel();
     }
 
     public void setX() {
@@ -36,20 +35,20 @@ public class ThreadClass extends Thread {
     }
 
     public Boolean evaluatePP(final Number fnr) {
-        if (fnr == 0L) {
-            return (sentinel.act[((ThreadClass_sentinel) sentinel).setX].longValue() == 0L) &&
+        if (fnr.longValue() == 0L) {
+            return (sentinel.act[((ThreadClass_sentinel) sentinel).setX] == 0L) &&
             (x.longValue() == 0L) &&
-            ((sentinel.active[((ThreadClass_sentinel) sentinel).setX].longValue() +
-            sentinel.active[((ThreadClass_sentinel) sentinel).subX].longValue()) == 0L);
-        } else if (fnr == 1L) {
-            return ((sentinel.act[((ThreadClass_sentinel) sentinel).setX].longValue() +
-            sentinel.act[((ThreadClass_sentinel) sentinel).subX].longValue() +
-            sentinel.act[((ThreadClass_sentinel) sentinel).setX].longValue()) > 10L) &&
-            ((sentinel.active[((ThreadClass_sentinel) sentinel).setX].longValue() +
-            sentinel.active[((ThreadClass_sentinel) sentinel).subX].longValue()) == 0L);
-        } else if (fnr == 2L) {
+            ((sentinel.active[((ThreadClass_sentinel) sentinel).setX] +
+            sentinel.active[((ThreadClass_sentinel) sentinel).subX]) == 0L);
+        } else if (fnr.longValue() == 1L) {
+            return ((sentinel.act[((ThreadClass_sentinel) sentinel).setX] +
+            sentinel.act[((ThreadClass_sentinel) sentinel).subX] +
+            sentinel.act[((ThreadClass_sentinel) sentinel).setX]) > 10L) &&
+            ((sentinel.active[((ThreadClass_sentinel) sentinel).setX] +
+            sentinel.active[((ThreadClass_sentinel) sentinel).subX]) == 0L);
+        } else if (fnr.longValue() == 2L) {
             return true;
-        } else if (fnr == 3L) {
+        } else if (fnr.longValue() == 3L) {
             return true;
         } else {
             return true;
@@ -62,14 +61,13 @@ public class ThreadClass extends Thread {
     }
 
     public class ThreadClass_sentinel extends Sentinel {
-        public final long setX = 0L;
-        public final long subX = 1L;
-        public final long ThreadClass = 2L;
-        public final long toString = 3L;
-        public final long function_sum = 4L;
+        public final int setX = 0;
+        public final int subX = 1;
+        public final int ThreadClass = 2;
+        public final int toString = 3;
+        public final int function_sum = 4;
 
         public ThreadClass_sentinel() {
-            return;
         }
 
         public ThreadClass_sentinel(final EvaluatePP instance) {
@@ -85,35 +83,28 @@ import java.util.*;
 
 
 public class Entry {
-    public static volatile Sentinel sentinel;
+    public volatile Sentinel sentinel;
 
     public Entry() {
-        sentinel = new Entry_sentinel();
     }
 
     public static Object Run() {
-        sentinel.entering(((Entry_sentinel) sentinel).Run);
+        ThreadClass t = new ThreadClass();
+        t.start();
 
-        try {
-            ThreadClass t = new ThreadClass();
-            t.start();
+        Boolean whileCond1 = true;
 
-            Boolean whileCond1 = true;
+        while (whileCond1) {
+            whileCond1 = t.x.longValue() != 2L;
 
-            while (whileCond1) {
-                whileCond1 = t.x.longValue() != 2L;
-
-                if (!(whileCond1)) {
-                    break;
-                }
-
-                //Skip;
+            if (!(whileCond1)) {
+                break;
             }
 
-            return t.x;
-        } finally {
-            sentinel.leaving(((Entry_sentinel) sentinel).Run);
+            //Skip;
         }
+
+        return t.x;
     }
 
     public String toString() {
@@ -121,11 +112,11 @@ public class Entry {
     }
 
     public Boolean evaluatePP(final Number fnr) {
-        if (fnr == 0L) {
+        if (fnr.longValue() == 0L) {
             return true;
-        } else if (fnr == 1L) {
+        } else if (fnr.longValue() == 1L) {
             return true;
-        } else if (fnr == 2L) {
+        } else if (fnr.longValue() == 2L) {
             return true;
         } else {
             return true;
@@ -133,13 +124,12 @@ public class Entry {
     }
 
     public class Entry_sentinel extends Sentinel {
-        public final long Run = 0L;
-        public final long Entry = 1L;
-        public final long toString = 2L;
-        public final long function_sum = 3L;
+        public final int Run = 0;
+        public final int Entry = 1;
+        public final int toString = 2;
+        public final int function_sum = 3;
 
         public Entry_sentinel() {
-            return;
         }
 
         public Entry_sentinel(final EvaluatePP instance) {

@@ -9,9 +9,12 @@ import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AExternalExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
+import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
@@ -60,7 +63,7 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 			String intTypeName = JavaFormat.JAVA_INT;
 			AExternalTypeCG intBasicType = new AExternalTypeCG();
 			//intBasicType.setName(intTypeName);
-			intBasicType.setName("long");
+			intBasicType.setName(intTypeName);
 			//
 			AFieldDeclCG field = new AFieldDeclCG();
 			
@@ -70,9 +73,9 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 			field.setType(intBasicType);
 			//field.setType();
 			//setting up initial values
-			AIntLiteralExpCG intValue = new AIntLiteralExpCG();
+			AExternalExpCG intValue = new AExternalExpCG();
 			intValue.setType(new AIntNumericBasicTypeCG());
-			intValue.setValue((long) n);
+			intValue.setTargetLangExp("" + n);
 			
 			field.setInitial(intValue);
 			//increase the number that initialize the variables.
@@ -84,12 +87,12 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 		String intTypeName = JavaFormat.JAVA_INT;
 		AExternalTypeCG intBasicType = new AExternalTypeCG();
 		//intBasicType.setName(intTypeName);
-		intBasicType.setName("long");
+		intBasicType.setName(intTypeName);
 		
-		
-		AIntLiteralExpCG intValue = new AIntLiteralExpCG();
+		AExternalExpCG intValue = new AExternalExpCG();
 		intValue.setType(new AIntNumericBasicTypeCG());
-		intValue.setValue((long) innerClassMethods.size());
+		intValue.setTargetLangExp("" + innerClassMethods.size());
+		
 		
 		innerClass.getFields().add(info.getDeclAssistant().constructField("public", "function_sum", false, true, intBasicType, intValue));
 		
@@ -100,8 +103,7 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 		method_pp.setAccess("public");
 		method_pp.setName(innerClass.getName());
 		//Set up body for first constructor.
-		AReturnStmCG ret = new AReturnStmCG();
-		method_pp.setBody(ret);
+		method_pp.setBody(new ABlockStmCG());
 		innerClass.getMethods().add(method_pp);
 		
 		//adding the second constructor.
