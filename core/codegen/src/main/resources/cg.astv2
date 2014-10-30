@@ -135,6 +135,7 @@ CG {-> package='org.overture.codegen.cgast'
 	|	{remoteContractImpl}
 		[name]:java_String
 		[methods]:CG.#decl.method*
+		[fields]:field*
 	|	{remoteInstance}
 		[name]:java_String
 		[nameString]:java_String
@@ -153,6 +154,7 @@ CG {-> package='org.overture.codegen.cgast'
 		[remoteInst]:CG.#decl.remoteInstance*
 		[clientInst]:CG.#decl.clientInstance*
 		[RMIreg]:CG.#decl.RMIregistry
+		[DeployedObjCounter]: java_Integer
     |	{empty}
 	;
 
