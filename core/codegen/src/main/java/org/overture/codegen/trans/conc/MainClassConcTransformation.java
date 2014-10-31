@@ -10,6 +10,7 @@ import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
+import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.APersyncDeclCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
@@ -19,6 +20,7 @@ import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
+import org.overture.codegen.cgast.expressions.ASelfExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
@@ -65,6 +67,12 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 			fieldCG.setVolatile(true);
 		}
 		
+		AInterfaceDeclCG interf = new AInterfaceDeclCG();
+		interf.setName("EvaluatePP");
+		
+		node.getInterfaces().add(interf);
+		
+		
 		AExternalTypeCG sentType = new AExternalTypeCG();
 		sentType.setName("Sentinel");
 		AFieldDeclCG sentinelfld = new AFieldDeclCG();
@@ -80,84 +88,86 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 		for(AMethodDeclCG methodCG : node.getMethods())
 		{
 			if(methodCG.getStatic() != null){
-			if(!methodCG.getIsConstructor()){//(x.getName() != node.getName()){
-				if (!methodCG.getName().equals("toString") && !methodCG.getStatic() ){//&& !methodCG.getName().equals("Run")){//x.getName() != "toString"){
-					ABlockStmCG bodyStm = new ABlockStmCG();
-					
-					APlainCallStmCG entering = new APlainCallStmCG();
-					APlainCallStmCG leaving = new APlainCallStmCG();
-					
-				
-					entering.setName("entering");
-					AClassTypeCG sentinel = new AClassTypeCG();
-					sentinel.setName("sentinel");
-					
-					entering.setClassType(sentinel);
-					entering.setType(new AVoidTypeCG());
-					
-					AFieldExpCG field = new AFieldExpCG();
-					field.setMemberName(methodCG.getName());
-					
-					ACastUnaryExpCG cast = new ACastUnaryExpCG();
-					AIdentifierVarExpCG varSentinel = new AIdentifierVarExpCG();
-					varSentinel.setOriginal("sentinel");
-					
-					AExternalTypeCG etype = new AExternalTypeCG();
-					etype.setName(node.getName()+"_sentinel");
-					
-					cast.setExp(varSentinel);
-					cast.setType(etype);
-					field.setObject(cast);
-					
-									
-					entering.getArgs().add(field);
-					
-					leaving.setName("leaving");
-					leaving.setClassType(sentinel.clone());
-					leaving.setType(new AVoidTypeCG());
-					leaving.getArgs().add(field.clone());
-					
-					bodyStm.getStatements().add(entering);
-					ATryStmCG trystm = new ATryStmCG();
-					trystm.setStm(methodCG.getBody());
-					trystm.setFinally(leaving);
-					bodyStm.getStatements().add(trystm);
-										
-					methodCG.setBody(bodyStm);
+				if(!methodCG.getIsConstructor()){//(x.getName() != node.getName()){
+					if (!methodCG.getName().equals("toString") && !methodCG.getStatic() ){//&& !methodCG.getName().equals("Run")){//x.getName() != "toString"){
+						ABlockStmCG bodyStm = new ABlockStmCG();
+
+						APlainCallStmCG entering = new APlainCallStmCG();
+						APlainCallStmCG leaving = new APlainCallStmCG();
+
+
+						entering.setName("entering");
+						AClassTypeCG sentinel = new AClassTypeCG();
+						sentinel.setName("sentinel");
+
+						entering.setClassType(sentinel);
+						entering.setType(new AVoidTypeCG());
+
+						AFieldExpCG field = new AFieldExpCG();
+						field.setMemberName(methodCG.getName());
+
+						ACastUnaryExpCG cast = new ACastUnaryExpCG();
+						AIdentifierVarExpCG varSentinel = new AIdentifierVarExpCG();
+						varSentinel.setOriginal("sentinel");
+
+						AExternalTypeCG etype = new AExternalTypeCG();
+						etype.setName(node.getName()+"_sentinel");
+
+						cast.setExp(varSentinel);
+						cast.setType(etype);
+						field.setObject(cast);
+
+
+						entering.getArgs().add(field);
+
+						leaving.setName("leaving");
+						leaving.setClassType(sentinel.clone());
+						leaving.setType(new AVoidTypeCG());
+						leaving.getArgs().add(field.clone());
+
+						bodyStm.getStatements().add(entering);
+						ATryStmCG trystm = new ATryStmCG();
+						trystm.setStm(methodCG.getBody());
+						trystm.setFinally(leaving);
+						bodyStm.getStatements().add(trystm);
+
+						methodCG.setBody(bodyStm);
+					}
 				}
+				//else
+				
 			}
-			else
+			if(methodCG.getIsConstructor())
 			{
-					ABlockStmCG bodyConst = new ABlockStmCG();
-					
-					ALocalAssignmentStmCG stm = new ALocalAssignmentStmCG();
-					
-					AIdentifierVarExpCG field = new AIdentifierVarExpCG();
-					
-					field.setOriginal("sentinel");
-					
-					//System.out.println(field.getOriginal());
-					
-					ANewExpCG newexp = new ANewExpCG();
-					
-					ATypeNameCG classtype = new ATypeNameCG();
-					classtype.setName(node.getName()+"_sentinel");
-					
-					newexp.setName(classtype);
-					//newexp.getArgs().add(new ASelfExpCG());
-					
-					stm.setExp(newexp);
-					stm.setTarget(field);
-					
-					bodyConst.getStatements().add(methodCG.getBody());
-					bodyConst.getStatements().add(stm);
-					
-					methodCG.setBody(bodyConst);
-					
-					
+				ABlockStmCG bodyConst = new ABlockStmCG();
+
+				ALocalAssignmentStmCG stm = new ALocalAssignmentStmCG();
+
+				AIdentifierVarExpCG field = new AIdentifierVarExpCG();
+
+				field.setOriginal("sentinel");
+
+				//System.out.println(field.getOriginal());
+
+				ANewExpCG newexp = new ANewExpCG();
+
+				ATypeNameCG classtype = new ATypeNameCG();
+				classtype.setName(node.getName()+"_sentinel");
+
+				newexp.setName(classtype);
+				newexp.getArgs().add(new ASelfExpCG());
+
+				stm.setExp(newexp);
+				stm.setTarget(field);
+
+				bodyConst.getStatements().add(methodCG.getBody());
+				bodyConst.getStatements().add(stm);
+
+				methodCG.setBody(bodyConst);
+
+
 				//}
 			}
-		}
 		}
 		//declaration of the method.
 		
