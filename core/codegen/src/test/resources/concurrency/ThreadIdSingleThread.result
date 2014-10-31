@@ -3,10 +3,11 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
-public class Entry {
+public class Entry implements EvaluatePP {
     public volatile Sentinel sentinel;
 
     public Entry() {
+        sentinel = new Entry_sentinel(this);
     }
 
     public static Object Run() {
