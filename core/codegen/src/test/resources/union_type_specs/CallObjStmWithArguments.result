@@ -81,7 +81,15 @@ public class Entry {
             if (i.longValue() == 1L) {
                 ternaryIfExp_1 = c1;
             } else {
-                ternaryIfExp_1 = (i.longValue() == 2L) ? c2 : c3;
+                Object ternaryIfExp_2 = null;
+
+                if (i.longValue() == 2L) {
+                    ternaryIfExp_2 = c2;
+                } else {
+                    ternaryIfExp_2 = c3;
+                }
+
+                ternaryIfExp_1 = ternaryIfExp_2;
             }
 
             Object callStmObj_1 = objs.get(Utils.index(i));
