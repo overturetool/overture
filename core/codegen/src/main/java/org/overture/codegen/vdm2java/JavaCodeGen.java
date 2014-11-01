@@ -111,6 +111,7 @@ public class JavaCodeGen
 	public static final String PARAM_NAME_PREFIX = "param_";
 	public static final String APPLY_EXP_NAME_PREFIX = "apply_";
 	public static final String OBJ_EXP_NAME_PREFIX = "obj_";
+	public static final String TERNARY_IF_EXP_NAME_PREFIX = "ternaryIfExp_";
 	public static final String CALL_STM_OBJ_NAME_PREFIX = "callStmObj_";
 	public static final String CASES_EXP_RESULT_NAME_PREFIX = "casesExpResult_";
 	public static final String AND_EXP_NAME_PREFIX = "andResult_";
@@ -254,7 +255,7 @@ public class JavaCodeGen
 		DeflattenTransformation deflattenTransformation = new DeflattenTransformation(transformationAssistant);
 		FunctionValueVisitor funcValVisitor = new FunctionValueVisitor(irInfo, transformationAssistant, functionValueAssistant, INTERFACE_NAME_PREFIX, TEMPLATE_TYPE_PREFIX, EVAL_METHOD_PREFIX, PARAM_NAME_PREFIX);
 		ILanguageIterator langIterator = new JavaLanguageIterator(transformationAssistant, irInfo.getTempVarNameGen(), varPrefixes);
-		TransformationVisitor transVisitor = new TransformationVisitor(irInfo, varPrefixes, transformationAssistant, langIterator, CASES_EXP_RESULT_NAME_PREFIX, AND_EXP_NAME_PREFIX, OR_EXP_NAME_PREFIX, WHILE_COND_NAME_PREFIX);
+		TransformationVisitor transVisitor = new TransformationVisitor(irInfo, varPrefixes, transformationAssistant, langIterator, TERNARY_IF_EXP_NAME_PREFIX, CASES_EXP_RESULT_NAME_PREFIX, AND_EXP_NAME_PREFIX, OR_EXP_NAME_PREFIX, WHILE_COND_NAME_PREFIX);
 		PatternTransformation patternTransformation = new PatternTransformation(classes, varPrefixes, irInfo, transformationAssistant, new PatternMatchConfig());
 		PreCheckTransformation preCheckTransformation = new PreCheckTransformation(irInfo, transformationAssistant, new JavaValueSemanticsTag(false));
 		PostCheckTransformation postCheckTransformation = new PostCheckTransformation(postCheckCreator, irInfo, transformationAssistant, FUNC_RESULT_NAME_PREFIX, new JavaValueSemanticsTag(false));
@@ -509,13 +510,13 @@ public class JavaCodeGen
 			return false;
 		}
 
-		for (SClassDefinition superDef : classDef.getSuperDefs())
-		{
-			if (declAssistant.classIsLibrary(superDef))
-			{
-				return false;
-			}
-		}
+//		for (SClassDefinition superDef : classDef.getSuperDefs())
+//		{
+//			if (declAssistant.classIsLibrary(superDef))
+//			{
+//				return false;
+//			}
+//		}
 
 		return true;
 	}

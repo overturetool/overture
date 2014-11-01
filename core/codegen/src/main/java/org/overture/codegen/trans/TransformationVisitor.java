@@ -50,6 +50,7 @@ import org.overture.codegen.cgast.expressions.ALetDefExpCG;
 import org.overture.codegen.cgast.expressions.AMapletExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.AOrBoolBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
 import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
 import org.overture.codegen.cgast.expressions.SBoolBinaryExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
@@ -89,6 +90,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 
 	private ILanguageIterator langIterator;
 
+	private String ternaryIfExpPrefix;
 	private String casesExpResultPrefix;
 	private String andExpPrefix;
 	private String orExpPrefix;
@@ -96,15 +98,72 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 
 	public TransformationVisitor(IRInfo info, TempVarPrefixes varPrefixes,
 			TransformationAssistantCG transformationAssistant,
-			ILanguageIterator langIterator, String casesExpPrefix, String andExpPrefix, String orExpPrefix, String whileCondExpPrefix)
+			ILanguageIterator langIterator, String ternaryIfExpPrefix, String casesExpPrefix, String andExpPrefix, String orExpPrefix, String whileCondExpPrefix)
 	{
 		this.info = info;
 		this.transformationAssistant = transformationAssistant;
 		this.langIterator = langIterator;
+		
+		this.ternaryIfExpPrefix = ternaryIfExpPrefix;
 		this.casesExpResultPrefix = casesExpPrefix;
 		this.andExpPrefix = andExpPrefix;
 		this.orExpPrefix = orExpPrefix;
 		this.whileCondExpPrefix = whileCondExpPrefix;
+	}
+	
+	@Override
+	public void caseATernaryIfExpCG(ATernaryIfExpCG node)
+			throws AnalysisException
+	{
+		SStmCG enclosingStm = transformationAssistant.findEnclosingStm(node);
+		
+		if(enclosingStm == null)
+		{
+			// TODO:
+			// Cases such as
+			// values
+			// public x = 1 + if 2 = 3 then 4 else 5 + 6;
+			// Will not be treated
+			return;
+		}
+		
+		String resultVarName = info.getTempVarNameGen().nextVarName(ternaryIfExpPrefix);
+		
+		AVarLocalDeclCG resultDecl = transformationAssistant.consDecl(resultVarName, node.getType().clone(), new ANullExpCG());
+		AIdentifierVarExpCG resultVar = transformationAssistant.consIdentifierVar(resultVarName, resultDecl.getType().clone());
+		
+		SExpCG condition = node.getCondition();
+		SExpCG trueValue = node.getTrueValue();
+		SExpCG falseValue = node.getFalseValue();
+		
+		ALocalAssignmentStmCG trueBranch = new ALocalAssignmentStmCG();
+		trueBranch.setTarget(resultVar.clone());
+		trueBranch.setExp(trueValue.clone());
+		
+		ALocalAssignmentStmCG falseBranch = new ALocalAssignmentStmCG();
+		falseBranch.setTarget(resultVar.clone());
+		falseBranch.setExp(falseValue);
+
+		AIfStmCG ifStm = new AIfStmCG();
+		ifStm.setIfExp(condition.clone());
+		ifStm.setThenStm(trueBranch);
+		ifStm.setElseStm(falseBranch);
+		
+		ABlockStmCG replacementBlock = new ABlockStmCG();
+
+		transformationAssistant.replaceNodeWith(node, resultVar);
+		transformationAssistant.replaceNodeWith(enclosingStm, replacementBlock);
+		
+		ABlockStmCG declBlock = new ABlockStmCG();
+		declBlock.getLocalDefs().add(resultDecl);
+		
+		replacementBlock.getStatements().add(declBlock);
+		replacementBlock.getStatements().add(ifStm);
+		replacementBlock.getStatements().add(enclosingStm);
+		
+		ifStm.getIfExp().apply(this);
+		trueBranch.getExp().apply(this);
+		falseBranch.getExp().apply(this);
 	}
 	
 	@Override
