@@ -23,10 +23,18 @@ public class Entry {
         final VDMSeq s) {
         return new Func_1<Func_1<Number, Character>, VDMSeq>() {
                 public VDMSeq eval(final Func_1<Number, Character> f) {
-                    return s.isEmpty() ? SeqUtil.seq()
-                                       : SeqUtil.conc(SeqUtil.seq(f.eval(((Number) s.get(
-                                    0)))),
-                        nat_char_map(SeqUtil.tail(Utils.clone(s))).eval(f));
+                    VDMSeq ternaryIfExp_1 = null;
+
+                    if (s.isEmpty()) {
+                        ternaryIfExp_1 = SeqUtil.seq();
+                    } else {
+                        ternaryIfExp_1 = SeqUtil.conc(SeqUtil.seq(f.eval(((Number) s.get(
+                                            0)))),
+                                nat_char_map(SeqUtil.tail(Utils.clone(s)))
+                                    .eval(f));
+                    }
+
+                    return Utils.clone(ternaryIfExp_1);
                 }
             };
     }

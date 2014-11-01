@@ -118,19 +118,32 @@ public class Plant {
     }
 
     public void AddExpertToSchedule(final Token p, final Expert ex) {
-        schedule.put(p,
-            MapUtil.dom(schedule).contains(p)
-            ? SetUtil.union(((VDMSet) schedule.get(p)), SetUtil.set(ex))
-            : SetUtil.set(ex));
+        VDMSet ternaryIfExp_1 = null;
+
+        if (MapUtil.dom(schedule).contains(p)) {
+            ternaryIfExp_1 = SetUtil.union(((VDMSet) schedule.get(p)),
+                    SetUtil.set(ex));
+        } else {
+            ternaryIfExp_1 = SetUtil.set(ex);
+        }
+
+        schedule.put(p, ternaryIfExp_1);
     }
 
     public void RemoveExpertFromSchedule(final Token p, final Expert ex) {
         VDMSet exs = ((VDMSet) schedule.get(p));
 
-        schedule = (exs.size() == 1L)
-            ? MapUtil.domResBy(SetUtil.set(p), schedule)
-            : MapUtil.override(schedule,
-                MapUtil.map(new Maplet(p, SetUtil.diff(exs, SetUtil.set(ex)))));
+        VDMMap ternaryIfExp_2 = null;
+
+        if (exs.size() == 1L) {
+            ternaryIfExp_2 = MapUtil.domResBy(SetUtil.set(p), schedule);
+        } else {
+            ternaryIfExp_2 = MapUtil.override(schedule,
+                    MapUtil.map(
+                        new Maplet(p, SetUtil.diff(exs, SetUtil.set(ex)))));
+        }
+
+        schedule = ternaryIfExp_2;
     }
 
     private static Boolean PlantInv(final VDMSet as, final VDMMap sch) {

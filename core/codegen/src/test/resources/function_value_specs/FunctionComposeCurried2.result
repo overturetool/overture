@@ -16,7 +16,15 @@ public class Entry {
 
         Func_1<Boolean, Number> g = new Func_1<Boolean, Number>() {
                 public Number eval(final Boolean b) {
-                    return (!(b)) ? 1L : 0L;
+                    Number ternaryIfExp_1 = null;
+
+                    if (!(b)) {
+                        ternaryIfExp_1 = 1L;
+                    } else {
+                        ternaryIfExp_1 = 0L;
+                    }
+
+                    return ternaryIfExp_1;
                 }
             };
 
