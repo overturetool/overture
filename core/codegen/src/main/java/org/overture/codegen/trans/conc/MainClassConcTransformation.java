@@ -3,6 +3,7 @@
  */
 package org.overture.codegen.trans.conc;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.codegen.cgast.analysis.AnalysisException;
@@ -147,8 +148,6 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 
 				field.setOriginal("sentinel");
 
-				//System.out.println(field.getOriginal());
-
 				ANewExpCG newexp = new ANewExpCG();
 
 				ATypeNameCG classtype = new ATypeNameCG();
@@ -189,8 +188,51 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 		
 		//Body of the method.
 		if (node.getMethods().size() != 0){
+			
+			//fixing the overloaded operation problem
+			@SuppressWarnings("unchecked")
+			LinkedList<AMethodDeclCG> classMethods = (LinkedList<AMethodDeclCG>) node.getMethods().clone();
+			
+			LinkedList<String> removed  = new LinkedList<String>();
+			
+			for(AMethodDeclCG method : node.getMethods())
+			{
+				Boolean exists = false;
+				LinkedList<AMethodDeclCG> classMethods2 = (LinkedList<AMethodDeclCG>) node.getMethods().clone();
+				classMethods2.remove(method);
+				for (AMethodDeclCG checkedMethod : classMethods2)
+				{
+					if(method.getName().equals(checkedMethod.getName()))
+					{
+						//System.out.println(method + " = " + checkedMethod);
+						if(removed.size() == 0)
+						{
+							classMethods.remove(method);
+							removed.add(method.getName());
+						}
+						else
+						{
+							for(int j=0; j < removed.size(); j++)
+							{
+								if(method.getName().equals(removed.get(j)))
+								{
+									exists = true;
+								}
+								
+							}
+							
+							if(!exists)
+							{
+								classMethods.remove(method);
+								removed.add(method.getName());
+							}
+						}
+					}
+				}
+			}
+			
 			AIfStmCG bodyif = new AIfStmCG();
-			for(int i=0; i < node.getMethods().size(); i++)
+			for(int i=0; i < classMethods.size(); i++)
 			{
 				
 				AIdentifierVarExpCG testVar = new AIdentifierVarExpCG();
@@ -202,7 +244,6 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 						AEqualsBinaryExpCG firstBranch = new AEqualsBinaryExpCG();
 						
 	
-						
 						AIntLiteralExpCG methNum =  new AIntLiteralExpCG();
 						methNum.setValue((long) i);
 						
@@ -215,7 +256,7 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 						ret.setExp(boolret);
 						
 						for (APersyncDeclCG per : node.getPerSyncs()){
-							if(per.getOpname().equals(node.getMethods().get(i).getName())){
+							if(per.getOpname().equals(classMethods.get(i).getName())){
 								ret.setExp(per.getPred());
 							}
 						}
@@ -231,9 +272,9 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 					ret.setExp(boolret);
 					
 					for (APersyncDeclCG per : node.getPerSyncs()){
-						if(per.getOpname().equals(node.getMethods().get(i).getName())){
-							ret.setExp(per.getPred());
-						}						
+						if(per.getOpname().equals(classMethods.get(i).getName())){						
+								ret.setExp(per.getPred());
+						}
 					}					
 					AElseIfStmCG newBranch = new AElseIfStmCG();
 																				
@@ -246,7 +287,7 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 					Branches.setRight(methNum);
 					
 					newBranch.setElseIf(Branches);
-					newBranch.setThenStm(ret);
+					newBranch.setThenStm(ret.clone());
 					
 					bodyif.getElseIf().add(newBranch);
 				}

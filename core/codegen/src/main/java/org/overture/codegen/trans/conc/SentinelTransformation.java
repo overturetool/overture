@@ -49,36 +49,52 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 		
 		String classname = node.getName();
 		@SuppressWarnings("unchecked")
-		LinkedList<AMethodDeclCG> innerClassMethods = (LinkedList<AMethodDeclCG>) node.getMethods().clone();
-		
+		LinkedList<AMethodDeclCG> innerClassMethods = (LinkedList<AMethodDeclCG>) node.getMethods().clone();	
+
 		innerClass.setName(classname+"_sentinel");
 		
-		int n = 0;			
-		for(AMethodDeclCG x : innerClassMethods){
-			
+		int n = 0;
+		Boolean existing = false;
+		for(AMethodDeclCG method : innerClassMethods){
+						
+			for(AFieldDeclCG field : innerClass.getFields())
+			{
+				
+				if(field.getName().equals(method.getName()))
+				{
+					existing = true;
+				}
+			}
 			//
-			//Set up of the int type of the fields.
-			String intTypeName = JavaFormat.JAVA_INT;
-			AExternalTypeCG intBasicType = new AExternalTypeCG();
-			//intBasicType.setName(intTypeName);
-			intBasicType.setName(intTypeName);
-			//
-			AFieldDeclCG field = new AFieldDeclCG();
-			
-			field.setName(x.getName());
-			field.setAccess(JavaFormat.JAVA_PUBLIC);
-			field.setFinal(true);
-			field.setType(intBasicType);
-			//field.setType();
-			//setting up initial values
-			AExternalExpCG intValue = new AExternalExpCG();
-			intValue.setType(new AIntNumericBasicTypeCG());
-			intValue.setTargetLangExp("" + n);
-			
-			field.setInitial(intValue);
-			//increase the number that initialize the variables.
-			n++;
-			innerClass.getFields().add(field);
+			if(existing)
+			{
+				existing = false;
+			}
+			else{
+				//Set up of the int type of the fields.
+				String intTypeName = JavaFormat.JAVA_INT;
+				AExternalTypeCG intBasicType = new AExternalTypeCG();
+				//intBasicType.setName(intTypeName);
+				intBasicType.setName(intTypeName);
+				//
+				AFieldDeclCG field = new AFieldDeclCG();
+
+				field.setName(method.getName());
+				field.setAccess(JavaFormat.JAVA_PUBLIC);
+				field.setFinal(true);
+				field.setType(intBasicType);
+				field.setStatic(true);
+				//field.setType();
+				//setting up initial values
+				AExternalExpCG intValue = new AExternalExpCG();
+				intValue.setType(new AIntNumericBasicTypeCG());
+				intValue.setTargetLangExp("" + n);
+
+				field.setInitial(intValue);
+				//increase the number that initialize the variables.
+				n++;
+				innerClass.getFields().add(field);
+			}
 		}
 		
 		//setting up initial values
@@ -89,7 +105,7 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 		
 		AExternalExpCG intValue = new AExternalExpCG();
 		intValue.setType(new AIntNumericBasicTypeCG());
-		intValue.setTargetLangExp("" + innerClassMethods.size());
+		intValue.setTargetLangExp("" + n);//innerClassMethods.size());
 		
 		
 		innerClass.getFields().add(info.getDeclAssistant().constructField("public", "function_sum", false, true, intBasicType, intValue));
