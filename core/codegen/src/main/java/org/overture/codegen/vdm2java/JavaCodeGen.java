@@ -128,8 +128,11 @@ public class JavaCodeGen
 	public static final String FUNC_RESULT_NAME_PREFIX = "funcResult_";
 	public static final String POST_CHECK_METHOD_NAME = "postCheck";
 	
-	private static final String QUOTES = "quotes";
-
+	public static final String QUOTES = "quotes";
+	
+	public static final String QUOTE_START = "start";
+	public static final String QUOTE_APPEND = "append";
+	
 	public JavaCodeGen()
 	{
 		init(null);
@@ -149,7 +152,11 @@ public class JavaCodeGen
 	{
 		initVelocity();
 		this.generator = new IRGenerator(log, OBJ_INIT_CALL_NAME_PREFIX);
+
 		this.irInfo = generator.getIRInfo();
+		this.irInfo.registerQuoteValue(QUOTE_START);
+		this.irInfo.registerQuoteValue(QUOTE_APPEND);
+		
 		this.javaFormat = new JavaFormat(varPrefixes, irInfo);
 	}
 
