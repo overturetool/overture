@@ -21,6 +21,15 @@ public class cg_Long {
 }
 
 ##########
+
+package quotes;
+
+public interface Quotes {
+    public static Number start = 1L;
+    public static Number append = 2L;
+}
+
+##########
 *Name Violations*
 
 Type name violation: [Violation in module Long: 'Long'. Location: line 1 at position: 7 in NameViolationClassName]. Prefix 'cg_' has been added to the name

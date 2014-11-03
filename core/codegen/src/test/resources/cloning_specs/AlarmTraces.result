@@ -262,10 +262,12 @@ public class Entry {
 package quotes;
 
 public interface Quotes {
-    public static Number Bio = 1L;
-    public static Number Chem = 2L;
-    public static Number Elec = 3L;
-    public static Number Mech = 4L;
+    public static Number start = 1L;
+    public static Number append = 2L;
+    public static Number Bio = 3L;
+    public static Number Chem = 4L;
+    public static Number Elec = 5L;
+    public static Number Mech = 6L;
 }
 
 ##########

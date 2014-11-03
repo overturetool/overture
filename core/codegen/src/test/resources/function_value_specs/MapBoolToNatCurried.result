@@ -58,3 +58,12 @@ public interface Func_1<T_1, T_2> {
 }
 
 ##########
+
+package quotes;
+
+public interface Quotes {
+    public static Number start = 1L;
+    public static Number append = 2L;
+}
+
+##########

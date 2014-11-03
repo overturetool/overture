@@ -169,3 +169,12 @@ public class World {
 }
 
 ##########
+
+package quotes;
+
+public interface Quotes {
+    public static Number start = 1L;
+    public static Number append = 2L;
+}
+
+##########
