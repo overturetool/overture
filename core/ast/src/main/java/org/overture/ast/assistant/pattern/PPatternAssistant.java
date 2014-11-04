@@ -25,13 +25,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.assistant.IAssistant;
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.patterns.PPattern;
 
-public class PPatternAssistant implements IAssistant
+public class PPatternAssistant implements IAstAssistant
 {
 
 	protected static IAstAssistantFactory af;

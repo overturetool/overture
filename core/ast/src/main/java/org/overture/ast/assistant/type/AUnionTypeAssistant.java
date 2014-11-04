@@ -24,7 +24,7 @@ package org.overture.ast.assistant.type;
 import java.util.List;
 import java.util.Vector;
 
-import org.overture.ast.assistant.IAssistant;
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.factory.AstFactory;
@@ -33,7 +33,7 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.util.PTypeSet;
 
-public class AUnionTypeAssistant implements IAssistant
+public class AUnionTypeAssistant implements IAstAssistant
 {
 	protected static IAstAssistantFactory af;
 

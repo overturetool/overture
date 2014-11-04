@@ -21,7 +21,7 @@
  */
 package org.overture.ast.assistant.type;
 
-import org.overture.ast.assistant.IAssistant;
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.ast.types.ANatNumericBasicType;
@@ -30,7 +30,7 @@ import org.overture.ast.types.ARationalNumericBasicType;
 import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.SNumericBasicType;
 
-public class SNumericBasicTypeAssistant implements IAssistant
+public class SNumericBasicTypeAssistant implements IAstAssistant
 {
 
 	protected static IAstAssistantFactory af;
