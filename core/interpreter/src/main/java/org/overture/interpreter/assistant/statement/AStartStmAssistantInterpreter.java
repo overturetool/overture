@@ -1,11 +1,10 @@
 package org.overture.interpreter.assistant.statement;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.expressions.PExp;
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.statements.APeriodicStm;
 import org.overture.ast.statements.ASporadicStm;
 import org.overture.ast.statements.AStartStm;
-import org.overture.ast.statements.AStopStm;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.ClassInterpreter;
 import org.overture.interpreter.runtime.Context;
@@ -17,7 +16,7 @@ import org.overture.interpreter.scheduler.PeriodicThread;
 import org.overture.interpreter.values.ObjectValue;
 import org.overture.interpreter.values.OperationValue;
 
-public class AStartStmAssistantInterpreter
+public class AStartStmAssistantInterpreter implements IAstAssistant
 {
 	protected static IInterpreterAssistantFactory af;
 
@@ -27,6 +26,7 @@ public class AStartStmAssistantInterpreter
 		this.af = af;
 	}
 
+	//FIXME: only used once. inline it.
 	public void start(AStartStm node, ObjectValue target, OperationValue op,
 			Context ctxt) throws AnalysisException
 	{
@@ -87,8 +87,4 @@ public class AStartStmAssistantInterpreter
 		}
 	}
 
-	public PExp findExpression(AStopStm stm, int lineno)
-	{
-		return af.createPExpAssistant().findExpression(stm.getObj(), lineno);
-	}
 }
