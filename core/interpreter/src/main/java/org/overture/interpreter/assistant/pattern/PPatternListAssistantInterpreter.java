@@ -2,11 +2,12 @@ package org.overture.interpreter.assistant.pattern;
 
 import java.util.LinkedList;
 
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.patterns.PPattern;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
 
-public class PPatternListAssistantInterpreter extends PPatternListAssistantTC
+public class PPatternListAssistantInterpreter extends PPatternListAssistantTC implements IAstAssistant
 {
 	protected static IInterpreterAssistantFactory af;
 
@@ -17,6 +18,7 @@ public class PPatternListAssistantInterpreter extends PPatternListAssistantTC
 		this.af = af;
 	}
 
+	//FIXME: only used in 1 class. move it there.
 	public boolean isConstrained(LinkedList<PPattern> plist)
 	{
 		for (PPattern p : plist)
