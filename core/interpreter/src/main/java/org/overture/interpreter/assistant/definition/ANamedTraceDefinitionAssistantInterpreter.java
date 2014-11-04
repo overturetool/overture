@@ -1,5 +1,6 @@
 package org.overture.interpreter.assistant.definition;
 
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.traces.ATraceDefinitionTerm;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
@@ -9,7 +10,7 @@ import org.overture.interpreter.traces.SequenceTraceNode;
 import org.overture.interpreter.traces.TestSequence;
 import org.overture.interpreter.traces.TraceReductionType;
 
-public class ANamedTraceDefinitionAssistantInterpreter
+public class ANamedTraceDefinitionAssistantInterpreter implements IAstAssistant
 {
 	protected static IInterpreterAssistantFactory af;
 
