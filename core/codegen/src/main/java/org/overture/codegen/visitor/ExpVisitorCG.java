@@ -250,7 +250,6 @@ import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.logging.Logger;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 {
@@ -1335,11 +1334,16 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 
 		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 
-		PTypeAssistantTC typeAssistant = question.getTcFactory().createPTypeAssistant();
-
-		boolean isLambda = typeAssistant.isFunction(type)
-				&& !(varDef instanceof SFunctionDefinition);
-
+		PDefinition unfolded = varDef;
+		
+		while(unfolded instanceof AInheritedDefinition)
+		{
+			unfolded = ((AInheritedDefinition) unfolded).getSuperdef();
+		}
+		
+		boolean isLambda = question.getTcFactory().createPTypeAssistant().isFunction(type)
+				&& !(unfolded instanceof SFunctionDefinition);
+		
 		boolean isInheritedDef = varDef instanceof AInheritedDefinition;
 
 		if(isExplOp && !isDefInOwningClass && !question.getTcFactory().createPDefinitionAssistant().isStatic(varDef))
