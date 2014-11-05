@@ -62,10 +62,10 @@ public class ThreadClass extends Thread implements EvaluatePP {
     }
 
     public class ThreadClass_sentinel extends Sentinel {
-        public final int setX = 0;
-        public final int subX = 1;
-        public final int ThreadClass = 2;
-        public final int toString = 3;
+        public static final int setX = 0;
+        public static final int subX = 1;
+        public static final int ThreadClass = 2;
+        public static final int toString = 3;
         public final int function_sum = 4;
 
         public ThreadClass_sentinel() {
@@ -126,9 +126,9 @@ public class Entry implements EvaluatePP {
     }
 
     public class Entry_sentinel extends Sentinel {
-        public final int Run = 0;
-        public final int Entry = 1;
-        public final int toString = 2;
+        public static final int Run = 0;
+        public static final int Entry = 1;
+        public static final int toString = 2;
         public final int function_sum = 3;
 
         public Entry_sentinel() {

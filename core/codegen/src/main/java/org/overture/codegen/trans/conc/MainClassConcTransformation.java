@@ -191,21 +191,21 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 			
 			//fixing the overloaded operation problem
 			@SuppressWarnings("unchecked")
-			LinkedList<AMethodDeclCG> classMethods = (LinkedList<AMethodDeclCG>) node.getMethods().clone();
+			LinkedList<AMethodDeclCG> classuniqueMethods = (LinkedList<AMethodDeclCG>) node.getMethods().clone();
 		
-			classMethods.clear();
+			classuniqueMethods.clear();
 			for(AMethodDeclCG method : node.getMethods())
 			{
 				
-				if(!classMethods.contains(method))
+				if(!classuniqueMethods.contains(method))
 				{
-					classMethods.add(method);
+					classuniqueMethods.add(method);
 				}
 
 			}
 			
 			AIfStmCG bodyif = new AIfStmCG();
-			for(int i=0; i < classMethods.size(); i++)
+			for(int i=0; i < classuniqueMethods.size(); i++)
 			{
 				
 				AIdentifierVarExpCG testVar = new AIdentifierVarExpCG();
@@ -215,13 +215,9 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 				if (i == 0){
 				
 						AEqualsBinaryExpCG firstBranch = new AEqualsBinaryExpCG();
-						AIntLiteralExpCG methNum =  new AIntLiteralExpCG();
 						
-//						for(AFieldDeclCG field : node.getInnerClasses().getFirst().getFields()){
-//							if(field.getName().equals(classMethods.get(i))){
+						AIntLiteralExpCG methNum =  new AIntLiteralExpCG();
 						methNum.setValue((long) i);
-//							}
-//						}
 						
 						firstBranch.setLeft(testVar);
 						firstBranch.setRight(methNum);
@@ -232,7 +228,7 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 						ret.setExp(boolret);
 						
 						for (APersyncDeclCG per : node.getPerSyncs()){
-							if(per.getOpname().equals(classMethods.get(i).getName())){
+							if(per.getOpname().equals(classuniqueMethods.get(i).getName())){
 								ret.setExp(per.getPred());
 							}
 						}
@@ -248,7 +244,7 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 					ret.setExp(boolret);
 					
 					for (APersyncDeclCG per : node.getPerSyncs()){
-						if(per.getOpname().equals(classMethods.get(i).getName())){						
+						if(per.getOpname().equals(classuniqueMethods.get(i).getName())){						
 								ret.setExp(per.getPred());
 						}
 					}					
