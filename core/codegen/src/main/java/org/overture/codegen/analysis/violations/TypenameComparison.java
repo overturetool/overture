@@ -24,14 +24,16 @@ package org.overture.codegen.analysis.violations;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.codegen.assistant.AssistantManager;
+import org.overture.codegen.assistant.TypeAssistantCG;
+import org.overture.codegen.ir.IRInfo;
+import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
 public class TypenameComparison extends NamingComparison
 {
 	public TypenameComparison(String[] names,
-			AssistantManager assistantManager, String correctionPrefix)
+			IRInfo irInfo, String correctionPrefix)
 	{
-		super(names, assistantManager, correctionPrefix);
+		super(names, irInfo, correctionPrefix);
 	}
 
 	@Override
@@ -39,7 +41,10 @@ public class TypenameComparison extends NamingComparison
 	{
 		if (this.getNames().contains(nameToken.getName()))
 		{
-			PDefinition def = assistantManager.getTypeAssistant().getTypeDef(nameToken);
+			PDefinitionAssistantTC defAssistant = irInfo.getTcFactory().createPDefinitionAssistant();
+			TypeAssistantCG typeAssistantCg = irInfo.getAssistantManager().getTypeAssistant();
+			
+			PDefinition def = typeAssistantCg.getTypeDef(nameToken, defAssistant);
 
 			if (def instanceof ATypeDefinition)
 			{

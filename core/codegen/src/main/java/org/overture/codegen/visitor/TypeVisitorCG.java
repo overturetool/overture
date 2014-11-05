@@ -87,19 +87,22 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 
 		PTypeAssistantTC typeAssistant = question.getTcFactory().createPTypeAssistant();
 
-		if (question.getTypeAssistant().isUnionOfType(node, ASetType.class))
+		if (question.getTypeAssistant().isUnionOfType(node, ASetType.class, typeAssistant))
 		{
 			ASetType setType = typeAssistant.getSet(node);
+			
 			return setType.apply(question.getTypeVisitor(), question);
 
-		} else if (question.getTypeAssistant().isUnionOfType(node, SSeqType.class))
+		} else if (question.getTypeAssistant().isUnionOfType(node, SSeqType.class, typeAssistant))
 		{
 			SSeqType seqType = typeAssistant.getSeq(node);
+			
 			return seqType.apply(question.getTypeVisitor(), question);
 
-		} else if (question.getTypeAssistant().isUnionOfType(node, SMapType.class))
+		} else if (question.getTypeAssistant().isUnionOfType(node, SMapType.class, typeAssistant))
 		{
 			SMapType mapType = typeAssistant.getMap(node);
+			
 			return mapType.apply(question.getTypeVisitor(), question);
 		} else
 		{

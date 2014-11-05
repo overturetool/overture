@@ -22,14 +22,14 @@
 package org.overture.codegen.analysis.violations;
 
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.codegen.assistant.AssistantManager;
+import org.overture.codegen.ir.IRInfo;
 
 public class ReservedWordsComparison extends NamingComparison
 {
 	public ReservedWordsComparison(String[] names,
-			AssistantManager assistantManager, String correctionPrefix)
+			IRInfo irInfo, String correctionPrefix)
 	{
-		super(names, assistantManager, correctionPrefix);
+		super(names, irInfo, correctionPrefix);
 	}
 
 	@Override
