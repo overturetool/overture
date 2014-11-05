@@ -669,7 +669,10 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 			casesStm.getCases().add(altStm);
 		}
 
-		casesStm.setOthers(assignToVar(resultVar, node.getOthers()));
+		if (node.getOthers() != null)
+		{
+			casesStm.setOthers(assignToVar(resultVar, node.getOthers()));
+		}
 
 		ABlockStmCG block = new ABlockStmCG();
 
