@@ -192,43 +192,16 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 			//fixing the overloaded operation problem
 			@SuppressWarnings("unchecked")
 			LinkedList<AMethodDeclCG> classMethods = (LinkedList<AMethodDeclCG>) node.getMethods().clone();
-			
-			LinkedList<String> removed  = new LinkedList<String>();
-			
+		
+			classMethods.clear();
 			for(AMethodDeclCG method : node.getMethods())
 			{
-				Boolean exists = false;
-				LinkedList<AMethodDeclCG> classMethods2 = (LinkedList<AMethodDeclCG>) node.getMethods().clone();
-				classMethods2.remove(method);
-				for (AMethodDeclCG checkedMethod : classMethods2)
+				
+				if(!classMethods.contains(method))
 				{
-					if(method.getName().equals(checkedMethod.getName()))
-					{
-						//System.out.println(method + " = " + checkedMethod);
-						if(removed.size() == 0)
-						{
-							classMethods.remove(method);
-							removed.add(method.getName());
-						}
-						else
-						{
-							for(int j=0; j < removed.size(); j++)
-							{
-								if(method.getName().equals(removed.get(j)))
-								{
-									exists = true;
-								}
-								
-							}
-							
-							if(!exists)
-							{
-								classMethods.remove(method);
-								removed.add(method.getName());
-							}
-						}
-					}
+					classMethods.add(method);
 				}
+
 			}
 			
 			AIfStmCG bodyif = new AIfStmCG();
@@ -242,10 +215,13 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 				if (i == 0){
 				
 						AEqualsBinaryExpCG firstBranch = new AEqualsBinaryExpCG();
-						
-	
 						AIntLiteralExpCG methNum =  new AIntLiteralExpCG();
+						
+//						for(AFieldDeclCG field : node.getInnerClasses().getFirst().getFields()){
+//							if(field.getName().equals(classMethods.get(i))){
 						methNum.setValue((long) i);
+//							}
+//						}
 						
 						firstBranch.setLeft(testVar);
 						firstBranch.setRight(methNum);
