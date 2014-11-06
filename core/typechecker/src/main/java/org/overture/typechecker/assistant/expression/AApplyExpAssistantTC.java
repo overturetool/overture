@@ -40,6 +40,7 @@ import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
+//FIXME only used in 1 class. move it
 public class AApplyExpAssistantTC implements IAstAssistant
 {
 	protected ITypeCheckerAssistantFactory af;

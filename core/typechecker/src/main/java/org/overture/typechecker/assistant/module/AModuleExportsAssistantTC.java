@@ -26,12 +26,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.modules.AModuleExports;
 import org.overture.ast.modules.PExport;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class AModuleExportsAssistantTC
+//FIXME only used in 1 class. move it
+public class AModuleExportsAssistantTC implements IAstAssistant
 {
 	protected ITypeCheckerAssistantFactory af;
 
