@@ -25,6 +25,7 @@ import java.util.LinkedList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AAssignmentDefinition;
+import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
@@ -62,6 +63,7 @@ import org.overture.ast.expressions.AFuncInstatiationExp;
 import org.overture.ast.expressions.AGreaterEqualNumericBinaryExp;
 import org.overture.ast.expressions.AGreaterNumericBinaryExp;
 import org.overture.ast.expressions.AHeadUnaryExp;
+import org.overture.ast.expressions.AHistoryExp;
 import org.overture.ast.expressions.AIfExp;
 import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
 import org.overture.ast.expressions.AInSetBinaryExp;
@@ -129,6 +131,7 @@ import org.overture.ast.expressions.AUnaryPlusUnaryExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SBinaryExp;
+import org.overture.ast.intf.lex.ILexToken;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ASetMultipleBind;
@@ -183,6 +186,7 @@ import org.overture.codegen.cgast.expressions.AForAllQuantifierExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AHeadUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AHistoryExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AInSetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AIndicesUnaryExpCG;
@@ -246,7 +250,6 @@ import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.logging.Logger;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 {
@@ -1331,11 +1334,16 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 
 		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 
-		PTypeAssistantTC typeAssistant = question.getTcFactory().createPTypeAssistant();
-
-		boolean isLambda = typeAssistant.isFunction(type)
-				&& !(varDef instanceof SFunctionDefinition);
-
+		PDefinition unfolded = varDef;
+		
+		while(unfolded instanceof AInheritedDefinition)
+		{
+			unfolded = ((AInheritedDefinition) unfolded).getSuperdef();
+		}
+		
+		boolean isLambda = question.getTcFactory().createPTypeAssistant().isFunction(type)
+				&& !(unfolded instanceof SFunctionDefinition);
+		
 		boolean isInheritedDef = varDef instanceof AInheritedDefinition;
 
 		if(isExplOp && !isDefInOwningClass && !question.getTcFactory().createPDefinitionAssistant().isStatic(varDef))
@@ -1849,5 +1857,93 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		}
 
 		return lambdaExp;
+	}
+	
+	@Override
+	public SExpCG caseAHistoryExp(AHistoryExp node, IRInfo question)
+			throws AnalysisException
+	{
+		PType type = node.getType();
+		ILexToken hop = node.getHop();
+		//className = node.getAncestor(classType)
+		AClassClassDefinition enclosingClass = node.getAncestor(AClassClassDefinition.class);	
+		
+		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		
+		AHistoryExpCG history = new AHistoryExpCG();
+		//if(hop.toString().equals("#act"))
+		//{
+			//history.setHistype("act");
+		//}
+		history.setHistype(hop.toString().substring(1));
+		history.setType(typeCg);
+		
+		AClassTypeCG innerclassType = null;
+		
+		if(enclosingClass != null)
+		{
+			innerclassType = new AClassTypeCG();
+			innerclassType.setName(enclosingClass.getName() + "_sentinel");
+			history.setSentinelType(innerclassType);
+		}
+		else
+		{
+			String msg = "Enclosing class could not be found for history expression.";
+			Logger.getLog().printErrorln(msg);
+			question.addUnsupportedNode(node, msg);
+			
+			return null;
+		}
+		
+		history.setOpsname(node.getOpnames().getFirst().getName());
+		
+		if(node.getOpnames().size() == 1)
+		{
+			//System.out.println(history);
+			return history;
+			
+		}
+		else
+		{
+			APlusNumericBinaryExpCG historyCounterSum = new APlusNumericBinaryExpCG();
+			historyCounterSum.setType(typeCg.clone());
+			historyCounterSum.setLeft(history);
+
+			APlusNumericBinaryExpCG last = historyCounterSum;
+			
+			for(int i = 1; i < node.getOpnames().size() - 1; i++){
+				
+				String nextOpName = node.getOpnames().get(i).toString();
+				
+				AHistoryExpCG left = new AHistoryExpCG();
+				left.setType(typeCg.clone());
+				left.setSentinelType(innerclassType.clone());
+				left.setHistype(hop.toString().substring(1));
+				left.setOpsname(nextOpName);
+				
+				APlusNumericBinaryExpCG tmp = new APlusNumericBinaryExpCG();
+				tmp.setType(typeCg.clone());
+				tmp.setLeft(left);
+				
+				last.setRight(tmp);
+				
+				last = tmp;
+
+			}
+			
+			String lastOpName = node.getOpnames().getLast().toString();
+			
+			AHistoryExpCG lastHistoryExp = new AHistoryExpCG();
+			lastHistoryExp.setType(typeCg.clone());
+			lastHistoryExp.setSentinelType(innerclassType.clone());
+			lastHistoryExp.setHistype(hop.toString().substring(1));
+			lastHistoryExp.setOpsname(lastOpName);
+			
+			last.setRight(lastHistoryExp);
+			
+			//System.out.println("left: " + historyCounterSum.getLeft()+ "\nright:"+historyCounterSum.getRight());
+			
+			return historyCounterSum;
+		}
 	}
 }

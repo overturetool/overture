@@ -73,6 +73,8 @@ CG {-> package='org.overture.codegen.cgast'
 	=	{type}
 		[name]:java_String
 		[definingClass]:java_String
+	|	{token}
+		[name]:java_String
 	;
     
 #decl {-> package='org.overture.codegen.cgast.declarations'}
@@ -117,7 +119,12 @@ CG {-> package='org.overture.codegen.cgast'
     	[methods]:CG.#decl.method*
     	[functions]:CG.#decl.func*
     	[superName]:java_String
+    	[thread]:CG.#decl.thread
+    	[innerClasses]:CG.#decl.class*
+    	[interfaces]:CG.#decl.interface*
     	[typeDecls]:CG.#decl.type*
+    	[perSyncs]:CG.#decl.persync*
+    	[mutexSyncs]:CG.#decl.mutexSync*
     |	{interface}
     	[templateTypes]:CG.#type.template*
     	[package]:java_String
@@ -128,6 +135,10 @@ CG {-> package='org.overture.codegen.cgast'
     	[name]:java_String
     	[fields]:field*
     	[methods]:CG.#decl.method*
+    |	{thread}
+    	[def]:CG.#decl
+    	[stm]:CG.#stm
+    	[type]:CG.#type
     |	{type}
     	[access]:java_String
     	[decl]:CG.#decl
@@ -135,6 +146,12 @@ CG {-> package='org.overture.codegen.cgast'
     	[type]:CG.#type
     	[name]:java_String
     	[stm]:CG.#stm
+    |	{persync}
+    	[opname]:java_String
+    	[guardname]:java_String
+    	[pred]:CG.#exp
+    |	{mutexSync}
+    	[opnames]:CG.#name*
 	;
 
 #Local  {-> package='org.overture.codegen.cgast.declarations'}
@@ -197,6 +214,8 @@ CG {-> package='org.overture.codegen.cgast'
            |	{error}
            |	{continue}
            |	{break}
+           |	{start}
+           		[exp]:CG.#exp 
            |	{try} [stm]:CG.#stm [catchClauses]:CG.#decl.catchClause* [finally]:CG.#stm
            ;
 
@@ -262,6 +281,7 @@ CG {-> package='org.overture.codegen.cgast'
     |	{cases} [exp]:CG.#exp [cases]:CG.#exp.#altExp.case* [others]:CG.#exp
     |	#altExp
     |	{subSeq} [seq]:CG.#exp [from]:CG.#exp [to]:CG.#exp
+    |	{history}[histype]:java_String [opsname]:java_String [sentinelType]:CG.#type.class
     ;
 
 #Is {-> package='org.overture.codegen.cgast.expressions'

@@ -80,7 +80,6 @@ import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.logging.Logger;
 import org.overture.typechecker.TypeComparator;
-import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
@@ -92,7 +91,7 @@ public class TypeAssistantCG extends AssistantBase
 	}
 
 	public AMethodTypeCG getMethodType(IRInfo info, List<AClassDeclCG> classes,
-			String fieldModule, String fieldName, LinkedList<SExpCG> args)
+			String fieldModule, String fieldName, List<SExpCG> args)
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
 		AClassDeclCG classDecl = assistantManager.getDeclAssistant().findClass(classes, fieldModule);
@@ -196,7 +195,7 @@ public class TypeAssistantCG extends AssistantBase
 		return true;
 	}
 
-	public PDefinition getTypeDef(ILexNameToken nameToken)
+	public PDefinition getTypeDef(ILexNameToken nameToken, PDefinitionAssistantTC defAssistant)
 	{
 		PDefinition def = (PDefinition) nameToken.getAncestor(PDefinition.class);
 
@@ -211,10 +210,6 @@ public class TypeAssistantCG extends AssistantBase
 		{
 			return null;
 		}
-
-		// FIXME factories cannot be instantiated inside code blocks
-		TypeCheckerAssistantFactory factory = new TypeCheckerAssistantFactory();
-		PDefinitionAssistantTC defAssistant = factory.createPDefinitionAssistant();
 
 		enclosingClass.getName().getModule();
 		PDefinition typeDef = defAssistant.findType(def, nameToken, enclosingClass.getName().getModule());
@@ -302,11 +297,8 @@ public class TypeAssistantCG extends AssistantBase
 	}
 
 	public boolean isUnionOfType(AUnionType unionType,
-			Class<? extends PType> type)
+			Class<? extends PType> type, PTypeAssistantTC typeAssistant)
 	{
-		TypeCheckerAssistantFactory factory = new TypeCheckerAssistantFactory();
-		PTypeAssistantTC typeAssistant = factory.createPTypeAssistant();
-
 		try
 		{
 			for (PType t : unionType.getTypes())
@@ -445,7 +437,9 @@ public class TypeAssistantCG extends AssistantBase
 			unionType.getTypes().clear();
 			unionType.getTypes().addAll(possibleTypes);
 
-			if (question.getTypeAssistant().isUnionOfType(unionType, AProductType.class))
+			PTypeAssistantTC typeAssistant = question.getTcFactory().createPTypeAssistant();
+			
+			if (question.getTypeAssistant().isUnionOfType(unionType, AProductType.class, typeAssistant))
 			{
 				List<PType> fieldsTypes = new LinkedList<PType>();
 				int noOfFields = ((ATuplePattern) pattern).getPlist().size();
@@ -639,6 +633,19 @@ public class TypeAssistantCG extends AssistantBase
 		}
 		
 		return elementTypes;
+	}
+	
+	public boolean containsType(List<STypeCG> types, STypeCG searchedType)
+	{
+		for(STypeCG currentType : types)
+		{
+			if(currentType.getClass() == searchedType.getClass())
+			{
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	public boolean isNumericType(STypeCG type)

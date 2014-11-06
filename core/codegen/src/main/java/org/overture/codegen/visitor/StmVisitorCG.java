@@ -55,6 +55,7 @@ import org.overture.ast.statements.ALetStm;
 import org.overture.ast.statements.ANotYetSpecifiedStm;
 import org.overture.ast.statements.AReturnStm;
 import org.overture.ast.statements.ASkipStm;
+import org.overture.ast.statements.AStartStm;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.ast.statements.AWhileStm;
 import org.overture.ast.statements.PObjectDesignator;
@@ -88,6 +89,7 @@ import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
 import org.overture.codegen.cgast.statements.APlainCallStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.ASkipStmCG;
+import org.overture.codegen.cgast.statements.AStartStmCG;
 import org.overture.codegen.cgast.statements.ASuperCallStmCG;
 import org.overture.codegen.cgast.statements.AWhileStmCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
@@ -623,5 +625,24 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 		}
 
 		return forAll;
+	}
+	
+	@Override
+	public SStmCG caseAStartStm(AStartStm node, IRInfo question)
+			throws AnalysisException
+	{
+		
+		PExp exp = node.getObj();
+		
+		SExpCG expCG = exp.apply(question.getExpVisitor(), question);
+		
+		AStartStmCG thread = new AStartStmCG();
+		
+		//System.out.print(expCG);
+		
+		thread.setExp(expCG);
+				
+		return thread;
+		
 	}
 }

@@ -27,8 +27,10 @@ public class Entry {
 package quotes;
 
 public interface Quotes {
-    public static Number A = 1L;
-    public static Number B = 2L;
+    public static Number start = 1L;
+    public static Number append = 2L;
+    public static Number A = 3L;
+    public static Number B = 4L;
 }
 
 ##########

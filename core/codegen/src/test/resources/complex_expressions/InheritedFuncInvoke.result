@@ -1,0 +1,49 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class A {
+    public A() {
+    }
+
+    public static Number f() {
+        return 2L;
+    }
+
+    public String toString() {
+        return "A{}";
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry extends A {
+    public Entry() {
+    }
+
+    public static Number Run() {
+        Number a = f();
+
+        return a;
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########
+
+package quotes;
+
+public interface Quotes {
+    public static Number start = 1L;
+    public static Number append = 2L;
+}
+
+##########

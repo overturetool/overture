@@ -69,6 +69,9 @@ import org.overture.codegen.trans.PrePostTransformation;
 import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.trans.TransformationVisitor;
 import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.conc.MainClassConcTransformation;
+import org.overture.codegen.trans.conc.MutexDeclTransformation;
+import org.overture.codegen.trans.conc.SentinelTransformation;
 import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
 import org.overture.codegen.trans.funcvalues.FunctionValueVisitor;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
@@ -108,6 +111,7 @@ public class JavaCodeGen
 	public static final String PARAM_NAME_PREFIX = "param_";
 	public static final String APPLY_EXP_NAME_PREFIX = "apply_";
 	public static final String OBJ_EXP_NAME_PREFIX = "obj_";
+	public static final String TERNARY_IF_EXP_NAME_PREFIX = "ternaryIfExp_";
 	public static final String CALL_STM_OBJ_NAME_PREFIX = "callStmObj_";
 	public static final String CASES_EXP_RESULT_NAME_PREFIX = "casesExpResult_";
 	public static final String AND_EXP_NAME_PREFIX = "andResult_";
@@ -124,8 +128,11 @@ public class JavaCodeGen
 	public static final String FUNC_RESULT_NAME_PREFIX = "funcResult_";
 	public static final String POST_CHECK_METHOD_NAME = "postCheck";
 	
-	private static final String QUOTES = "quotes";
-
+	public static final String QUOTES = "quotes";
+	
+	public static final String QUOTE_START = "start";
+	public static final String QUOTE_APPEND = "append";
+	
 	public JavaCodeGen()
 	{
 		init(null);
@@ -145,7 +152,11 @@ public class JavaCodeGen
 	{
 		initVelocity();
 		this.generator = new IRGenerator(log, OBJ_INIT_CALL_NAME_PREFIX);
+
 		this.irInfo = generator.getIRInfo();
+		this.irInfo.registerQuoteValue(QUOTE_START);
+		this.irInfo.registerQuoteValue(QUOTE_APPEND);
+		
 		this.javaFormat = new JavaFormat(varPrefixes, irInfo);
 	}
 
@@ -251,20 +262,28 @@ public class JavaCodeGen
 		DeflattenTransformation deflattenTransformation = new DeflattenTransformation(transformationAssistant);
 		FunctionValueVisitor funcValVisitor = new FunctionValueVisitor(irInfo, transformationAssistant, functionValueAssistant, INTERFACE_NAME_PREFIX, TEMPLATE_TYPE_PREFIX, EVAL_METHOD_PREFIX, PARAM_NAME_PREFIX);
 		ILanguageIterator langIterator = new JavaLanguageIterator(transformationAssistant, irInfo.getTempVarNameGen(), varPrefixes);
-		TransformationVisitor transVisitor = new TransformationVisitor(irInfo, varPrefixes, transformationAssistant, langIterator, CASES_EXP_RESULT_NAME_PREFIX, AND_EXP_NAME_PREFIX, OR_EXP_NAME_PREFIX, WHILE_COND_NAME_PREFIX);
+		TransformationVisitor transVisitor = new TransformationVisitor(irInfo, varPrefixes, transformationAssistant, langIterator, TERNARY_IF_EXP_NAME_PREFIX, CASES_EXP_RESULT_NAME_PREFIX, AND_EXP_NAME_PREFIX, OR_EXP_NAME_PREFIX, WHILE_COND_NAME_PREFIX);
 		PatternTransformation patternTransformation = new PatternTransformation(classes, varPrefixes, irInfo, transformationAssistant, new PatternMatchConfig());
 		PreCheckTransformation preCheckTransformation = new PreCheckTransformation(irInfo, transformationAssistant, new JavaValueSemanticsTag(false));
 		PostCheckTransformation postCheckTransformation = new PostCheckTransformation(postCheckCreator, irInfo, transformationAssistant, FUNC_RESULT_NAME_PREFIX, new JavaValueSemanticsTag(false));
 		IsExpTransformation isExpTransformation = new IsExpTransformation(irInfo, transformationAssistant, IS_EXP_SUBJECT_NAME_PREFIX);
 		TypeTransformation typeTransformation = new TypeTransformation(transformationAssistant);
+
+		//Conc
+		SentinelTransformation Concurrencytransform = new SentinelTransformation(irInfo,classes);
+		MainClassConcTransformation mainclassTransform = new MainClassConcTransformation(irInfo, classes);
+		MutexDeclTransformation mutexTransform = new MutexDeclTransformation(irInfo, classes);
+
 		UnionTypeTransformation unionTypeTransformation = new UnionTypeTransformation(transformationAssistant, irInfo, classes, APPLY_EXP_NAME_PREFIX, OBJ_EXP_NAME_PREFIX, CALL_STM_OBJ_NAME_PREFIX, MISSING_OP_MEMBER, MISSING_MEMBER);
 		JavaClassToStringTrans javaToStringTransformation = new JavaClassToStringTrans(irInfo);
+
 		
 		DepthFirstAnalysisAdaptor[] analyses = new DepthFirstAnalysisAdaptor[] {
 				funcTransformation, prePostTransformation, ifExpTransformation,
 				deflattenTransformation, funcValVisitor, transVisitor,
 				deflattenTransformation, patternTransformation, preCheckTransformation, postCheckTransformation,
-				deflattenTransformation, isExpTransformation, typeTransformation, unionTypeTransformation, javaToStringTransformation};
+				deflattenTransformation, isExpTransformation, typeTransformation, unionTypeTransformation, javaToStringTransformation,
+				Concurrencytransform,mutexTransform, mainclassTransform};
 
 		for (DepthFirstAnalysisAdaptor transformation : analyses)
 		{
@@ -285,6 +304,8 @@ public class JavaCodeGen
 			}
 		}
 
+		List<String> skipping = new LinkedList<String>();
+		
 		MergeVisitor mergeVisitor = javaFormat.getMergeVisitor();
 		FunctionValueAssistant functionValue = funcValVisitor.getFunctionValueAssistant();
 		javaFormat.setFunctionValueAssistant(functionValue);
@@ -312,6 +333,10 @@ public class JavaCodeGen
 						String formattedJavaCode = JavaCodeGenUtil.formatJavaCode(writer.toString());
 						generated.add(new GeneratedModule(className, classCg, formattedJavaCode));
 					}
+				}
+				else
+				{
+					skipping.add(vdmClass.getName().getName());
 				}
 
 			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
@@ -347,7 +372,7 @@ public class JavaCodeGen
 		javaFormat.clearFunctionValueAssistant();
 		javaFormat.clearClasses();
 
-		return new GeneratedData(generated, generateJavaFromVdmQuotes(), invalidNamesResult);
+		return new GeneratedData(generated, generateJavaFromVdmQuotes(), invalidNamesResult, skipping);
 	}
 
 	private void simplifyLibraryClass(SClassDefinition classDef)
@@ -459,12 +484,12 @@ public class JavaCodeGen
 		AssistantManager assistantManager = generator.getIRInfo().getAssistantManager();
 		VdmAstAnalysis analysis = new VdmAstAnalysis(assistantManager);
 
-		Set<Violation> reservedWordViolations = analysis.usesIllegalNames(mergedParseLists, new ReservedWordsComparison(IJavaCodeGenConstants.RESERVED_WORDS, assistantManager, INVALID_NAME_PREFIX));
-		Set<Violation> typenameViolations = analysis.usesIllegalNames(mergedParseLists, new TypenameComparison(RESERVED_TYPE_NAMES, assistantManager, INVALID_NAME_PREFIX));
+		Set<Violation> reservedWordViolations = analysis.usesIllegalNames(mergedParseLists, new ReservedWordsComparison(IJavaCodeGenConstants.RESERVED_WORDS, irInfo, INVALID_NAME_PREFIX));
+		Set<Violation> typenameViolations = analysis.usesIllegalNames(mergedParseLists, new TypenameComparison(RESERVED_TYPE_NAMES, irInfo, INVALID_NAME_PREFIX));
 
 		String[] generatedTempVarNames = GeneralUtils.concat(IRConstants.GENERATED_TEMP_NAMES, varPrefixes.GENERATED_TEMP_NAMES);
 
-		Set<Violation> tempVarViolations = analysis.usesIllegalNames(mergedParseLists, new GeneratedVarComparison(generatedTempVarNames, assistantManager, INVALID_NAME_PREFIX));
+		Set<Violation> tempVarViolations = analysis.usesIllegalNames(mergedParseLists, new GeneratedVarComparison(generatedTempVarNames, irInfo, INVALID_NAME_PREFIX));
 
 		if (!reservedWordViolations.isEmpty() || !typenameViolations.isEmpty()
 				|| !tempVarViolations.isEmpty())
@@ -498,13 +523,13 @@ public class JavaCodeGen
 			return false;
 		}
 
-		for (SClassDefinition superDef : classDef.getSuperDefs())
-		{
-			if (declAssistant.classIsLibrary(superDef))
-			{
-				return false;
-			}
-		}
+//		for (SClassDefinition superDef : classDef.getSuperDefs())
+//		{
+//			if (declAssistant.classIsLibrary(superDef))
+//			{
+//				return false;
+//			}
+//		}
 
 		return true;
 	}

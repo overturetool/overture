@@ -185,6 +185,8 @@ public class Vdm2JavaCommand extends AbstractHandler
 					List<SClassDefinition> mergedParseLists = PluginVdm2JavaUtil.mergeParseLists(sources);
 					GeneratedData generatedData = vdm2java.generateJavaFromVdm(mergedParseLists);
 					vdm2java.generateJavaSourceFiles(outputFolder, generatedData.getClasses());
+					
+					outputSkippedClasses(generatedData.getSkippedClasses());
 					outputUserspecifiedModules(outputFolder, generatedData.getClasses());
 
 					// Quotes generation
@@ -196,6 +198,8 @@ public class Vdm2JavaCommand extends AbstractHandler
 					{
 						handleInvalidNames(invalidNames);
 					}
+					
+					CodeGenConsole.GetInstance().println(String.format("...finished Java code generation (generated %s class).", generatedData.getClasses().size()));
 
 					project.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
 
@@ -235,6 +239,22 @@ public class Vdm2JavaCommand extends AbstractHandler
 			Activator.log("Could not delete markers for project: "
 					+ project.toString(), ex);
 			ex.printStackTrace();
+		}
+	}
+	
+
+	protected void outputSkippedClasses(List<String> skippedClasses)
+	{
+		if (!skippedClasses.isEmpty())
+		{
+			CodeGenConsole.GetInstance().print("Skipping classes with library names: ");
+
+			for (String skippedClass : skippedClasses)
+			{
+				CodeGenConsole.GetInstance().print(skippedClass + " ");
+			}
+
+			CodeGenConsole.GetInstance().println("\n");
 		}
 	}
 

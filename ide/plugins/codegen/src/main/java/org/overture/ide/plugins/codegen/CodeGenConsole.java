@@ -25,13 +25,8 @@ import java.io.PrintWriter;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IConsole;
-import org.eclipse.ui.console.IConsoleConstants;
 import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
@@ -41,8 +36,6 @@ public class CodeGenConsole implements ILogger
 {
 	private final PrintWriter out;
 	private final PrintWriter err;
-
-	private boolean hasConsole = false;
 
 	private static CodeGenConsole Instance;
 
@@ -68,7 +61,6 @@ public class CodeGenConsole implements ILogger
 
 			errConsole.setColor(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
 			err = new PrintWriter(errConsole, true);
-			hasConsole = true;
 		} else
 		{
 			out = new PrintWriter(System.out, true);
@@ -141,6 +133,6 @@ public class CodeGenConsole implements ILogger
 	@Override
 	public void setSilent(boolean arg0)
 	{
-		// TODO: For now simply do nothing..
+		// Do nothing..
 	}
 }

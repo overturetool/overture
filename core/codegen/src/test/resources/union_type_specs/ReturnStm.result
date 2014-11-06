@@ -26,7 +26,15 @@ public class Entry {
             throw new RuntimeException("Let Be St found no applicable bindings");
         }
 
-        Object letBeStExp_1 = (1L == 1L) ? 2.5 : ((Number) e.get(0));
+        Object ternaryIfExp_1 = null;
+
+        if (1L == 1L) {
+            ternaryIfExp_1 = 2.5;
+        } else {
+            ternaryIfExp_1 = ((Number) e.get(0));
+        }
+
+        Object letBeStExp_1 = ternaryIfExp_1;
 
         return ((Number) letBeStExp_1);
     }
@@ -34,6 +42,15 @@ public class Entry {
     public String toString() {
         return "Entry{}";
     }
+}
+
+##########
+
+package quotes;
+
+public interface Quotes {
+    public static Number start = 1L;
+    public static Number append = 2L;
 }
 
 ##########

@@ -974,9 +974,11 @@ public class Withdrawal extends Event {
 package quotes;
 
 public interface Quotes {
-    public static Number PinNotOk = 1L;
-    public static Number PinOk = 2L;
-    public static Number Retained = 3L;
+    public static Number start = 1L;
+    public static Number append = 2L;
+    public static Number PinNotOk = 3L;
+    public static Number PinOk = 4L;
+    public static Number Retained = 5L;
 }
 
 ##########
