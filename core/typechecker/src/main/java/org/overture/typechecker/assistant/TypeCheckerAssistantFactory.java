@@ -79,7 +79,6 @@ import org.overture.typechecker.assistant.module.AFromModuleImportsAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleExportsAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleImportsAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleModulesAssistantTC;
-import org.overture.typechecker.assistant.module.AValueValueImportAssistantTC;
 import org.overture.typechecker.assistant.module.PExportAssistantTC;
 import org.overture.typechecker.assistant.module.PImportAssistantTC;
 import org.overture.typechecker.assistant.pattern.AMapletPatternMapletAssistantTC;
@@ -425,11 +424,7 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new AModuleModulesAssistantTC(this);
 	}
 
-	@Override
-	public AValueValueImportAssistantTC createAValueValueImportAssistant()
-	{
-		return new AValueValueImportAssistantTC(this);
-	}
+
 
 	@Override
 	public PExportAssistantTC createPExportAssistant()
