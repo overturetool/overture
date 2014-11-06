@@ -304,6 +304,8 @@ public class JavaCodeGen
 			}
 		}
 
+		List<String> skipping = new LinkedList<String>();
+		
 		MergeVisitor mergeVisitor = javaFormat.getMergeVisitor();
 		FunctionValueAssistant functionValue = funcValVisitor.getFunctionValueAssistant();
 		javaFormat.setFunctionValueAssistant(functionValue);
@@ -331,6 +333,10 @@ public class JavaCodeGen
 						String formattedJavaCode = JavaCodeGenUtil.formatJavaCode(writer.toString());
 						generated.add(new GeneratedModule(className, classCg, formattedJavaCode));
 					}
+				}
+				else
+				{
+					skipping.add(vdmClass.getName().getName());
 				}
 
 			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
@@ -366,7 +372,7 @@ public class JavaCodeGen
 		javaFormat.clearFunctionValueAssistant();
 		javaFormat.clearClasses();
 
-		return new GeneratedData(generated, generateJavaFromVdmQuotes(), invalidNamesResult);
+		return new GeneratedData(generated, generateJavaFromVdmQuotes(), invalidNamesResult, skipping);
 	}
 
 	private void simplifyLibraryClass(SClassDefinition classDef)
