@@ -1,0 +1,41 @@
+class B
+
+instance variables
+
+public x : nat := 2;
+
+end B
+
+class A
+
+instance variables
+
+public x : nat := 1;
+
+operations
+		    
+public static StaticOp : nat ==> nat
+StaticOp (a) == return a;
+
+end A
+
+class Entry
+
+instance variables
+
+static hr : seq of (A|B) := [new A(), new B(), new B()]
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+(
+  dcl sum : nat := 0;
+  
+  for i = 1 to len hr do
+	  sum := sum + A`StaticOp((hr((i)).x));
+	
+	return sum;
+);
+
+end Entry
