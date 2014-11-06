@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.PPattern;
@@ -14,7 +15,7 @@ import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.Value;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
 
-public class PPatternAssistantInterpreter extends PPatternAssistantTC
+public class PPatternAssistantInterpreter extends PPatternAssistantTC implements IAstAssistant
 {
 	protected static IInterpreterAssistantFactory af;
 

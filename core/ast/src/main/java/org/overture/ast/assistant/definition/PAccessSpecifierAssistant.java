@@ -21,13 +21,14 @@
  */
 package org.overture.ast.assistant.definition;
 
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.assistant.IAstAssistantFactory;
 import org.overture.ast.definitions.AProtectedAccess;
 import org.overture.ast.definitions.APublicAccess;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 
-public class PAccessSpecifierAssistant
+public class PAccessSpecifierAssistant implements IAstAssistant
 {
 
 	protected static IAstAssistantFactory af;

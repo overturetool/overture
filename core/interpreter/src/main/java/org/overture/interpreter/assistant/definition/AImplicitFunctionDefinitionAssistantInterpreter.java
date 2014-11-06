@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.types.PType;
@@ -13,7 +14,7 @@ import org.overture.interpreter.values.FunctionValue;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
 
 public class AImplicitFunctionDefinitionAssistantInterpreter extends
-		AImplicitFunctionDefinitionAssistantTC
+		AImplicitFunctionDefinitionAssistantTC implements IAstAssistant
 {
 
 	protected static IInterpreterAssistantFactory af;
@@ -26,6 +27,7 @@ public class AImplicitFunctionDefinitionAssistantInterpreter extends
 		this.af = af;
 	}
 
+	//FIXME: only used one. Mainline it.
 	public FunctionValue getPolymorphicValue(IInterpreterAssistantFactory af,
 			AImplicitFunctionDefinition impdef, PTypeList actualTypes)
 	{

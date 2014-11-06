@@ -1,5 +1,6 @@
 package org.overture.interpreter.assistant.definition;
 
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.definitions.AMutexSyncDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
@@ -11,7 +12,7 @@ import org.overture.ast.lex.LexToken;
 import org.overture.ast.lex.VDMToken;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 
-public class AMutexSyncDefinitionAssistantInterpreter
+public class AMutexSyncDefinitionAssistantInterpreter implements IAstAssistant
 {
 	protected static IInterpreterAssistantFactory af;
 
@@ -22,6 +23,7 @@ public class AMutexSyncDefinitionAssistantInterpreter
 		this.af = af;
 	}
 
+	//FIXME: only used once. Inline it.
 	public PExp getExpression(AMutexSyncDefinition sync, ILexNameToken excluding)
 	{
 		LexNameList list = null;

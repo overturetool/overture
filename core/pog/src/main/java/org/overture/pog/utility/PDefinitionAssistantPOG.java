@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.pog.contexts.PONameContext;
 import org.overture.pog.obligation.ProofObligationList;
@@ -12,7 +13,7 @@ import org.overture.pog.pub.IProofObligationList;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
-public class PDefinitionAssistantPOG extends PDefinitionAssistantTC
+public class PDefinitionAssistantPOG extends PDefinitionAssistantTC implements IAstAssistant
 {
 
 	public PDefinitionAssistantPOG(ITypeCheckerAssistantFactory af)

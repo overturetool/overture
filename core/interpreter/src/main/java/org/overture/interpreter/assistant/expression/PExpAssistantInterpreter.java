@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.LexNameList;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
@@ -12,7 +13,7 @@ import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.values.ValueList;
 import org.overture.typechecker.assistant.expression.PExpAssistantTC;
 
-public class PExpAssistantInterpreter extends PExpAssistantTC
+public class PExpAssistantInterpreter extends PExpAssistantTC implements IAstAssistant
 {
 	protected static IInterpreterAssistantFactory af;
 
