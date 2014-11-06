@@ -91,7 +91,7 @@ public class TypeAssistantCG extends AssistantBase
 	}
 
 	public AMethodTypeCG getMethodType(IRInfo info, List<AClassDeclCG> classes,
-			String fieldModule, String fieldName, LinkedList<SExpCG> args)
+			String fieldModule, String fieldName, List<SExpCG> args)
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
 		AClassDeclCG classDecl = assistantManager.getDeclAssistant().findClass(classes, fieldModule);
@@ -633,6 +633,19 @@ public class TypeAssistantCG extends AssistantBase
 		}
 		
 		return elementTypes;
+	}
+	
+	public boolean containsType(List<STypeCG> types, STypeCG searchedType)
+	{
+		for(STypeCG currentType : types)
+		{
+			if(currentType.getClass() == searchedType.getClass())
+			{
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	public boolean isNumericType(STypeCG type)
