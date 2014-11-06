@@ -198,6 +198,8 @@ public class Vdm2JavaCommand extends AbstractHandler
 					{
 						handleInvalidNames(invalidNames);
 					}
+					
+					CodeGenConsole.GetInstance().println(String.format("...finished Java code generation (generated %s class).", generatedData.getClasses().size()));
 
 					project.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
 
