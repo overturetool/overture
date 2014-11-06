@@ -1,6 +1,7 @@
 package org.overture.interpreter.assistant.type;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.types.PType;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
@@ -8,7 +9,7 @@ import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.values.ValueList;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
-public class PTypeAssistantInterpreter extends PTypeAssistantTC
+public class PTypeAssistantInterpreter extends PTypeAssistantTC implements IAstAssistant
 {
 	protected static IInterpreterAssistantFactory af;
 
