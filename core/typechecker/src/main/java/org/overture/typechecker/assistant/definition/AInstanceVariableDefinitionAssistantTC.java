@@ -21,11 +21,12 @@
  */
 package org.overture.typechecker.assistant.definition;
 
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class AInstanceVariableDefinitionAssistantTC
+public class AInstanceVariableDefinitionAssistantTC implements IAstAssistant
 {
 	protected ITypeCheckerAssistantFactory af;
 
@@ -35,6 +36,7 @@ public class AInstanceVariableDefinitionAssistantTC
 		this.af = af;
 	}
 
+	//FIXME only used in 1 place. move it
 	public void initializedCheck(AInstanceVariableDefinition ivd)
 	{
 		if (!ivd.getInitialized()

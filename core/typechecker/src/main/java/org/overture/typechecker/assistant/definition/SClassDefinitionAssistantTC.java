@@ -29,6 +29,7 @@ import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.definitions.ABusClassDefinition;
 import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.ACpuClassDefinition;
@@ -58,7 +59,7 @@ import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class SClassDefinitionAssistantTC
+public class SClassDefinitionAssistantTC implements IAstAssistant
 {
 	protected static ITypeCheckerAssistantFactory af;
 

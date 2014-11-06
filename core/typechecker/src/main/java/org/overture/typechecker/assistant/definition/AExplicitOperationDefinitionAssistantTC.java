@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AStateDefinition;
@@ -42,7 +43,7 @@ import org.overture.ast.types.PType;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class AExplicitOperationDefinitionAssistantTC
+public class AExplicitOperationDefinitionAssistantTC implements IAstAssistant
 {
 	protected ITypeCheckerAssistantFactory af;
 

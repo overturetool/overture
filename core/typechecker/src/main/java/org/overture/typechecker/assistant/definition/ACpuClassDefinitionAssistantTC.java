@@ -23,6 +23,7 @@ package org.overture.typechecker.assistant.definition;
 
 import java.util.List;
 
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.lex.Dialect;
 import org.overture.parser.lex.LexException;
@@ -31,7 +32,7 @@ import org.overture.parser.syntax.DefinitionReader;
 import org.overture.parser.syntax.ParserException;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class ACpuClassDefinitionAssistantTC
+public class ACpuClassDefinitionAssistantTC implements IAstAssistant
 {
 
 	public static final long CPU_MAX_FREQUENCY = 1000000000; // 1GHz
@@ -52,6 +53,7 @@ public class ACpuClassDefinitionAssistantTC
 			+ "public setPriority: ? * nat ==> () "
 			+ "	setPriority(opname, priority) == is not yet specified;";
 
+	//FIXME: used in 1 place only. move
 	public List<PDefinition> operationDefs() throws ParserException,
 			LexException
 	{
