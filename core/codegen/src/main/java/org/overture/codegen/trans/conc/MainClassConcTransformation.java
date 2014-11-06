@@ -88,7 +88,8 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 		
 		for(AMethodDeclCG methodCG : node.getMethods())
 		{
-			if(methodCG.getStatic() != null){
+			
+			if(methodCG.getStatic() != null && !methodCG.getName().contains("cg_init_")){
 				if(!methodCG.getIsConstructor()){//(x.getName() != node.getName()){
 					if (!methodCG.getName().equals("toString") && !methodCG.getStatic() ){//&& !methodCG.getName().equals("Run")){//x.getName() != "toString"){
 						ABlockStmCG bodyStm = new ABlockStmCG();
