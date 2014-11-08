@@ -188,10 +188,21 @@ public class Vdm2JavaCommand extends AbstractHandler
 					List<IVdmSourceUnit> sources = model.getSourceUnits();
 					List<SClassDefinition> mergedParseLists = PluginVdm2JavaUtil.mergeParseLists(sources);
 					GeneratedData generatedData = vdm2java.generateJavaFromVdm(mergedParseLists);
-					vdm2java.generateJavaSourceFiles(outputFolder, generatedData.getClasses());
 					
 					outputUserSpecifiedSkippedClasses(classesToSkip);
 					outputSkippedClasses(generatedData.getSkippedClasses());
+					
+					try
+					{
+						vdm2java.generateJavaSourceFiles(outputFolder, generatedData.getClasses());
+					} catch (Exception e)
+					{
+						CodeGenConsole.GetInstance().printErrorln("Problems saving the code generated Java source files to disk.\n"
+								+ "Try to run Overture with administrator privileges.\n");
+						
+						return Status.CANCEL_STATUS;
+					}
+					
 					outputUserspecifiedModules(outputFolder, generatedData.getClasses());
 
 					// Quotes generation
