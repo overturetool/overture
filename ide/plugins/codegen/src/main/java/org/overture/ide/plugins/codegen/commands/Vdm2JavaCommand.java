@@ -36,10 +36,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.osgi.service.prefs.Preferences;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
@@ -156,16 +157,19 @@ public class Vdm2JavaCommand extends AbstractHandler
 				// Begin code generation
 				final JavaCodeGen vdm2java = new JavaCodeGen();
 
-				IPreferenceStore preferences = Activator.getDefault().getPreferenceStore();
-				boolean generateCharSeqsAsStrings = preferences.getBoolean(ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRINGS);
+				Preferences preferences = InstanceScope.INSTANCE.getNode(ICodeGenConstants.PLUGIN_ID);
+				
+				boolean generateCharSeqsAsStrings = preferences.getBoolean(ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRINGS, ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRING_DEFAULT);
 
 				IRSettings irSettings = new IRSettings();
 				irSettings.setCharSeqAsString(generateCharSeqsAsStrings);
 
-				boolean disableCloning = preferences.getBoolean(ICodeGenConstants.DISABLE_CLONING);
+				boolean disableCloning = preferences.getBoolean(ICodeGenConstants.DISABLE_CLONING, ICodeGenConstants.DISABLE_CLONING_DEFAULT);
 
 				JavaSettings javaSettings = new JavaSettings();
 				javaSettings.setDisableCloning(disableCloning);
+				List<String> classesToSkip = PluginVdm2JavaUtil.getClassesToSkip();
+				javaSettings.setClassesToSkip(classesToSkip);
 
 				vdm2java.setSettings(irSettings);
 				vdm2java.setJavaSettings(javaSettings);
@@ -186,6 +190,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 					GeneratedData generatedData = vdm2java.generateJavaFromVdm(mergedParseLists);
 					vdm2java.generateJavaSourceFiles(outputFolder, generatedData.getClasses());
 					
+					outputUserSpecifiedSkippedClasses(classesToSkip);
 					outputSkippedClasses(generatedData.getSkippedClasses());
 					outputUserspecifiedModules(outputFolder, generatedData.getClasses());
 
@@ -242,12 +247,31 @@ public class Vdm2JavaCommand extends AbstractHandler
 		}
 	}
 	
+	private void outputUserSpecifiedSkippedClasses(
+			List<String> userspecifiedSkippedClasses)
+	{
+		if (!userspecifiedSkippedClasses.isEmpty())
+		{
+			CodeGenConsole.GetInstance().print("User specified filtered classes: ");
 
-	protected void outputSkippedClasses(List<String> skippedClasses)
+			for (String skippedClass : userspecifiedSkippedClasses)
+			{
+				CodeGenConsole.GetInstance().print(skippedClass + " ");
+			}
+
+			CodeGenConsole.GetInstance().println("\n");
+		}
+		else
+		{
+			CodeGenConsole.GetInstance().println("No user specified classes to skip.\n");
+		}
+	}
+
+	private void outputSkippedClasses(List<String> skippedClasses)
 	{
 		if (!skippedClasses.isEmpty())
 		{
-			CodeGenConsole.GetInstance().print("Skipping classes with library names: ");
+			CodeGenConsole.GetInstance().print("Skipping classes (user specified and library named): ");
 
 			for (String skippedClass : skippedClasses)
 			{
