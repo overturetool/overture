@@ -13,7 +13,8 @@ public getValue : () ==> nat
 getValue () == return counter;
 
 sync
-  per inc => #act(inc) = counter;
+  per inc => #waiting(inc) < 3;
+  mutex(inc);
 
 end SharedCounter
 

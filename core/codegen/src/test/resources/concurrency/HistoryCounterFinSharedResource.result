@@ -38,7 +38,7 @@ public class SharedCounter implements EvaluatePP {
 
     public Boolean evaluatePP(final Number fnr) {
         if (fnr.longValue() == 0L) {
-            return sentinel.act[((SharedCounter_sentinel) sentinel).inc] == counter.longValue();
+            return sentinel.fin[((SharedCounter_sentinel) sentinel).inc] == counter.longValue();
         } else if (fnr.longValue() == 1L) {
             return true;
         } else if (fnr.longValue() == 2L) {

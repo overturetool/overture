@@ -21,6 +21,16 @@ public class SharedCounter implements EvaluatePP {
         }
     }
 
+    public void decr() {
+        sentinel.entering(((SharedCounter_sentinel) sentinel).decr);
+
+        try {
+            counter = counter.longValue() - 1L;
+        } finally {
+            sentinel.leaving(((SharedCounter_sentinel) sentinel).decr);
+        }
+    }
+
     public Number getValue() {
         sentinel.entering(((SharedCounter_sentinel) sentinel).getValue);
 
@@ -38,12 +48,16 @@ public class SharedCounter implements EvaluatePP {
 
     public Boolean evaluatePP(final Number fnr) {
         if (fnr.longValue() == 0L) {
-            return sentinel.act[((SharedCounter_sentinel) sentinel).inc] == counter.longValue();
+            return (sentinel.active[((SharedCounter_sentinel) sentinel).inc] +
+            sentinel.active[((SharedCounter_sentinel) sentinel).decr]) == 0L;
         } else if (fnr.longValue() == 1L) {
-            return true;
+            return (sentinel.active[((SharedCounter_sentinel) sentinel).inc] +
+            sentinel.active[((SharedCounter_sentinel) sentinel).decr]) == 0L;
         } else if (fnr.longValue() == 2L) {
             return true;
         } else if (fnr.longValue() == 3L) {
+            return true;
+        } else if (fnr.longValue() == 4L) {
             return true;
         } else {
             return true;
@@ -52,10 +66,11 @@ public class SharedCounter implements EvaluatePP {
 
     public class SharedCounter_sentinel extends Sentinel {
         public static final int inc = 0;
-        public static final int getValue = 1;
-        public static final int SharedCounter = 2;
-        public static final int toString = 3;
-        public final int function_sum = 4;
+        public static final int decr = 1;
+        public static final int getValue = 2;
+        public static final int SharedCounter = 3;
+        public static final int toString = 4;
+        public final int function_sum = 5;
 
         public SharedCounter_sentinel() {
         }
@@ -110,10 +125,24 @@ public class Incrementer extends Thread implements EvaluatePP {
             for (Long i = 1L; i <= toVar_1; i++) {
                 sharedCounter.inc();
             }
+        } finally {
+            sentinel.leaving(((Incrementer_sentinel) sentinel).incCounter);
+        }
+    }
+
+    public void decrCounter() {
+        sentinel.entering(((Incrementer_sentinel) sentinel).decrCounter);
+
+        try {
+            long toVar_2 = 100L;
+
+            for (Long i = 1L; i <= toVar_2; i++) {
+                sharedCounter.decr();
+            }
 
             isFinished = true;
         } finally {
-            sentinel.leaving(((Incrementer_sentinel) sentinel).incCounter);
+            sentinel.leaving(((Incrementer_sentinel) sentinel).decrCounter);
         }
     }
 
@@ -134,6 +163,8 @@ public class Incrementer extends Thread implements EvaluatePP {
             return true;
         } else if (fnr.longValue() == 4L) {
             return true;
+        } else if (fnr.longValue() == 5L) {
+            return true;
         } else {
             return true;
         }
@@ -141,6 +172,7 @@ public class Incrementer extends Thread implements EvaluatePP {
 
     public void run() {
         incCounter();
+        decrCounter();
     }
 
     public class Incrementer_sentinel extends Sentinel {
@@ -148,8 +180,9 @@ public class Incrementer extends Thread implements EvaluatePP {
         public static final int Incrementer = 1;
         public static final int joined = 2;
         public static final int incCounter = 3;
-        public static final int toString = 4;
-        public final int function_sum = 5;
+        public static final int decrCounter = 4;
+        public static final int toString = 5;
+        public final int function_sum = 6;
 
         public Incrementer_sentinel() {
         }

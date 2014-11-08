@@ -13,7 +13,7 @@ public getValue : () ==> nat
 getValue () == return counter;
 
 sync
-  per inc => #act(inc) = counter;
+  per inc => #req(inc) - 1 = counter;
 
 end SharedCounter
 

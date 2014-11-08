@@ -38,7 +38,8 @@ public class SharedCounter implements EvaluatePP {
 
     public Boolean evaluatePP(final Number fnr) {
         if (fnr.longValue() == 0L) {
-            return sentinel.act[((SharedCounter_sentinel) sentinel).inc] == counter.longValue();
+            return (sentinel.waiting[((SharedCounter_sentinel) sentinel).inc] +
+            counter.longValue()) == 3L;
         } else if (fnr.longValue() == 1L) {
             return true;
         } else if (fnr.longValue() == 2L) {
@@ -105,12 +106,7 @@ public class Incrementer extends Thread implements EvaluatePP {
         sentinel.entering(((Incrementer_sentinel) sentinel).incCounter);
 
         try {
-            long toVar_1 = 100L;
-
-            for (Long i = 1L; i <= toVar_1; i++) {
-                sharedCounter.inc();
-            }
-
+            sharedCounter.inc();
             isFinished = true;
         } finally {
             sentinel.leaving(((Incrementer_sentinel) sentinel).incCounter);
