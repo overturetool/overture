@@ -149,6 +149,11 @@ public class JavaFormat
 	{
 		valueSemantics.setJavaSettings(javaSettings);
 	}
+	
+	public JavaSettings getJavaSettings()
+	{
+		return valueSemantics.getJavaSettings();
+	}
 
 	public void init()
 	{
