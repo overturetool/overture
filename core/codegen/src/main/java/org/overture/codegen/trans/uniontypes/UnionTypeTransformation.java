@@ -81,7 +81,6 @@ import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.BaseTransformationAssistant;
 
 public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
@@ -294,6 +293,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 
 		if (!(fieldObjType instanceof AUnionTypeCG))
 		{
+			node.getObject().apply(this);
 			return;
 		}
 
