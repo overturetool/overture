@@ -76,6 +76,7 @@ import org.overture.codegen.cgast.types.AErrorTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.AUnionTypeCG;
+import org.overture.codegen.cgast.types.AUnknownTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.ir.IRInfo;
@@ -344,10 +345,16 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 
 		AIfStmCG ifChecks = new AIfStmCG();
 
+		int handledTypes = 0;
 		for (int i = 0; i < possibleTypes.size(); i++)
 		{
 			AFieldExpCG fieldExp = (AFieldExpCG) node.clone();
 			STypeCG currentType = possibleTypes.get(i);
+			
+			if(currentType instanceof AUnknownTypeCG)
+			{
+				continue;
+			}
 			
 			if(parent instanceof SExpCG)
 			{
@@ -369,7 +376,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 					continue;
 				}
 			}
-
+			
 			ACastUnaryExpCG castedFieldExp = new ACastUnaryExpCG();
 			castedFieldExp.setType(currentType.clone());
 			castedFieldExp.setExp(obj.clone());
@@ -380,7 +387,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			assignment.setTarget(resultVar.clone());
 			assignment.setExp(getAssignmentExp(node, fieldExp));
 
-			if (i == 0)
+			if (handledTypes == 0)
 			{
 				ifChecks.setIfExp(consInstanceCheck(obj, currentType));
 				ifChecks.setThenStm(assignment);
@@ -392,6 +399,13 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 
 				ifChecks.getElseIf().add(elseIf);
 			}
+			
+			handledTypes++;
+		}
+		
+		if(handledTypes == 0)
+		{
+			return;
 		}
 		
 		ARaiseErrorStmCG raise = consRaiseStm(missingMemberPrefix, node.getMemberName());
@@ -681,6 +695,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		LinkedList<STypeCG> possibleTypes = ((AUnionTypeCG) objType).getTypes();
 		AIfStmCG ifChecks = new AIfStmCG();
 
+		int handledTypes = 0;
 		for (int i = 0; i < possibleTypes.size(); i++)
 		{
 			ACallObjectExpStmCG callCopy = call.clone();
@@ -708,7 +723,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 
 			callCopy.setObj(castedVarExp);
 
-			if (i == 0)
+			if (handledTypes == 0)
 			{
 				ifChecks.setIfExp(consInstanceCheck(objExp, currentType));
 				ifChecks.setThenStm(callCopy);
@@ -720,6 +735,13 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 
 				ifChecks.getElseIf().add(elseIf);
 			}
+			
+			handledTypes++;
+		}
+		
+		if(handledTypes == 0)
+		{
+			return;
 		}
 		
 		ARaiseErrorStmCG raiseStm = consRaiseStm(missingOpMemberPrefix,fieldName);
@@ -877,14 +899,14 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		{
 			if(!(currentType instanceof AClassTypeCG))
 			{
-				Logger.getLog().printErrorln("Expected current object type to be a class type. Got: " + currentType);
+				//Can be the unknown type
 				continue;
 			}
 			
 			AClassTypeCG classType = (AClassTypeCG) currentType;
 			STypeCG fieldType = typeAssistant.getFieldType(classes, classType.getName(), node.getMemberName());
 			
-			if(typeAssistant.containsType(fieldTypes, fieldType))
+			if(!typeAssistant.containsType(fieldTypes, fieldType))
 			{
 				fieldTypes.add(fieldType);
 			}
