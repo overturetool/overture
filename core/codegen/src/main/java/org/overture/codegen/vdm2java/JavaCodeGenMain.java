@@ -50,11 +50,11 @@ public class JavaCodeGenMain
 		}
 
 		IRSettings irSettings = new IRSettings();
-		irSettings.setCharSeqAsString(true);
-		irSettings.setGeneratePreConds(true);
-		irSettings.setGeneratePreCondChecks(true);
-		irSettings.setGeneratePostConds(true);
-		irSettings.setGeneratePostCondChecks(true);
+		irSettings.setCharSeqAsString(false);
+		irSettings.setGeneratePreConds(false);
+		irSettings.setGeneratePreCondChecks(false);
+		irSettings.setGeneratePostConds(false);
+		irSettings.setGeneratePostCondChecks(false);
 		
 		JavaSettings javaSettings = new JavaSettings();
 		javaSettings.setDisableCloning(false);

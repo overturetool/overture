@@ -142,6 +142,11 @@ public class JavaCodeGen
 	{
 		this.javaFormat.setJavaSettings(javaSettings);
 	}
+	
+	public JavaSettings getJavaSettings()
+	{
+		return this.javaFormat.getJavaSettings();
+	}
 
 	public JavaCodeGen(ILogger log)
 	{
@@ -336,7 +341,10 @@ public class JavaCodeGen
 				}
 				else
 				{
-					skipping.add(vdmClass.getName().getName());
+					if (!skipping.contains(vdmClass.getName().getName()))
+					{
+						skipping.add(vdmClass.getName().getName());
+					}
 				}
 
 			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
@@ -519,6 +527,13 @@ public class JavaCodeGen
 			DeclAssistantCG declAssistant)
 	{
 		if (declAssistant.classIsLibrary(classDef))
+		{
+			return false;
+		}
+		
+		String name = classDef.getName().getName();
+		
+		if(getJavaSettings().getClassesToSkip().contains(name))
 		{
 			return false;
 		}

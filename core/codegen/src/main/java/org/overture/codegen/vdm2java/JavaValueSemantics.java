@@ -75,6 +75,11 @@ public class JavaValueSemantics
 	{
 		this.javaSettings = javaSettings;
 	}
+	
+	public JavaSettings getJavaSettings()
+	{
+		return javaSettings;
+	}
 
 	public boolean cloneMember(AFieldNumberExpCG exp)
 	{

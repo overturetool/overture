@@ -46,7 +46,7 @@ public class Entry {
     public static Object Run() {
         Object obj_1 = hr.get(Utils.index(hr.size()));
 
-        Object apply_1 = null;
+        Number apply_1 = null;
 
         if (obj_1 instanceof A) {
             apply_1 = ((A) obj_1).x;
@@ -56,7 +56,7 @@ public class Entry {
             throw new RuntimeException("Missing member: x");
         }
 
-        return ((Object) apply_1);
+        return apply_1;
     }
 
     public String toString() {
