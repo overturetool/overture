@@ -868,12 +868,13 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 	{
 		if(parent instanceof SExpCG)
 		{
-			return ((SExpCG) parent).getType().clone();
+			if (!(parent instanceof AApplyExpCG && ((AApplyExpCG) parent).getRoot() != node))
+			{
+				return ((SExpCG) parent).getType().clone();
+			}
 		}
-		else
-		{
-			return fieldType(node, fieldObjType, typeAssistant);
-		}
+
+		return fieldType(node, fieldObjType, typeAssistant);
 	}
 
 	private boolean memberExists(INode parent, TypeAssistantCG typeAssistant,
