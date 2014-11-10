@@ -11,7 +11,7 @@ public class Entry implements EvaluatePP {
     }
 
     public static Object Run() {
-        return f();
+        return Utils.is_nat(f());
     }
 
     public static Number f() {

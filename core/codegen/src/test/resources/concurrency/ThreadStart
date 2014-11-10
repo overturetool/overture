@@ -6,24 +6,25 @@ public x : nat := 0;
 
 thread
 (
-       setX();
-       subX();
+	x := 2;
+       --setX();
+       --subX();
 )       
 sync
 	
-	per setX => #act(setX) = 0 and x = 0;
-	per subX => #act(setX,subX, setX) > 10; -- and x < 1;
-	mutex(setX,subX);
+	--per setX => #act(setX) = 0 and x = 0;
+	--per subX => #act(setX,subX, setX) > 10; -- and x < 1;
+	--mutex(setX,subX);
 	
-operations
+--operations
 
-public setX : () ==> ()
-setX () ==
-       x := 3; 
+--public setX : () ==> ()
+--setX () ==
+ --     x := 2; 
 
-public subX:() ==> ()
-subX() == 
-			x := x - 1;
+--public subX:() ==> ()
+--subX() == 
+--			x := x - 1;
 			
 end ThreadClass
 
