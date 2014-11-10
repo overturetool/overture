@@ -39,8 +39,105 @@ import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
+import org.overture.codegen.cgast.declarations.AThreadDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
+import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AAddrEqualsBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AAddrNotEqualsBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AAnonymousClassExpCG;
+import org.overture.codegen.cgast.expressions.AApplyExpCG;
+import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
+import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
+import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
+import org.overture.codegen.cgast.expressions.ACompMapExpCG;
+import org.overture.codegen.cgast.expressions.ACompSeqExpCG;
+import org.overture.codegen.cgast.expressions.ACompSetExpCG;
+import org.overture.codegen.cgast.expressions.ADistConcatUnaryExpCG;
+import org.overture.codegen.cgast.expressions.ADistIntersectUnaryExpCG;
+import org.overture.codegen.cgast.expressions.ADistMergeUnaryExpCG;
+import org.overture.codegen.cgast.expressions.ADistUnionUnaryExpCG;
+import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ADomainResByBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ADomainResToBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AElemsUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AEnumMapExpCG;
+import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
+import org.overture.codegen.cgast.expressions.AEnumSetExpCG;
+import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AExists1QuantifierExpCG;
+import org.overture.codegen.cgast.expressions.AExistsQuantifierExpCG;
+import org.overture.codegen.cgast.expressions.AExplicitVarExpCG;
+import org.overture.codegen.cgast.expressions.AExternalExpCG;
+import org.overture.codegen.cgast.expressions.AFieldExpCG;
+import org.overture.codegen.cgast.expressions.AFieldNumberExpCG;
+import org.overture.codegen.cgast.expressions.AFloorUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AForAllQuantifierExpCG;
+import org.overture.codegen.cgast.expressions.AGreaterEqualNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AGreaterNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AHeadUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AHistoryExpCG;
+import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
+import org.overture.codegen.cgast.expressions.AInSetBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AIndicesUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
+import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
+import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
+import org.overture.codegen.cgast.expressions.ALambdaExpCG;
+import org.overture.codegen.cgast.expressions.ALessEqualNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ALetBeStExpCG;
+import org.overture.codegen.cgast.expressions.ALetBeStNoBindingRuntimeErrorExpCG;
+import org.overture.codegen.cgast.expressions.ALetDefExpCG;
+import org.overture.codegen.cgast.expressions.AMapDomainUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AMapInverseUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AMapOverrideBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AMapRangeUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AMapUnionBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AMapletExpCG;
+import org.overture.codegen.cgast.expressions.AMethodInstantiationExpCG;
+import org.overture.codegen.cgast.expressions.AMinusUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AMissingMemberRuntimeErrorExpCG;
+import org.overture.codegen.cgast.expressions.AMkBasicExpCG;
+import org.overture.codegen.cgast.expressions.ANewExpCG;
+import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ANotImplementedExpCG;
+import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
+import org.overture.codegen.cgast.expressions.ANullExpCG;
+import org.overture.codegen.cgast.expressions.AOrBoolBinaryExpCG;
+import org.overture.codegen.cgast.expressions.APatternMatchRuntimeErrorExpCG;
+import org.overture.codegen.cgast.expressions.APlusNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.APlusUnaryExpCG;
+import org.overture.codegen.cgast.expressions.APowerNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.APowerSetUnaryExpCG;
+import org.overture.codegen.cgast.expressions.APreCondRuntimeErrorExpCG;
+import org.overture.codegen.cgast.expressions.AQuoteLiteralExpCG;
+import org.overture.codegen.cgast.expressions.ARangeResByBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ARangeResToBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ARangeSetExpCG;
+import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
+import org.overture.codegen.cgast.expressions.AReverseUnaryExpCG;
+import org.overture.codegen.cgast.expressions.ASelfExpCG;
+import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ASeqModificationBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ASetDifferenceBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ASetIntersectBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ASetProperSubsetBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ASetSubsetBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ASetUnionBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
+import org.overture.codegen.cgast.expressions.ASubSeqExpCG;
+import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ATailUnaryExpCG;
+import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
+import org.overture.codegen.cgast.expressions.AThreadIdExpCG;
+import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ATupleCompatibilityExpCG;
+import org.overture.codegen.cgast.expressions.ATupleExpCG;
+import org.overture.codegen.cgast.expressions.ATupleSizeExpCG;
+import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
+import org.overture.codegen.cgast.expressions.AXorBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.*;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
@@ -72,6 +169,7 @@ import org.overture.codegen.cgast.statements.ARaiseErrorStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.ASelfObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.ASkipStmCG;
+import org.overture.codegen.cgast.statements.AStartStmCG;
 import org.overture.codegen.cgast.statements.ASuperCallStmCG;
 import org.overture.codegen.cgast.statements.AThrowStmCG;
 import org.overture.codegen.cgast.statements.ATryStmCG;
@@ -142,6 +240,9 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(ACounterLocalDeclCG.class, templateStructure.DECL_PATH
 				+ "Counter");
+		
+		nodeTemplateFileNames.put(AThreadDeclCG.class, templateStructure.DECL_PATH 
+				+ "Thread");
 		
 		nodeTemplateFileNames.put(ATypeDeclCG.class, templateStructure.DECL_PATH
 				+ "Type");
@@ -329,6 +430,9 @@ public class TemplateManager
 		nodeTemplateFileNames.put(ATryStmCG.class, templateStructure.STM_PATH
 				+ "Try");
 		
+		nodeTemplateFileNames.put(AStartStmCG.class, templateStructure.STM_PATH 
+				+ "Start");
+		
 		// Expressions
 
 		nodeTemplateFileNames.put(AApplyExpCG.class, templateStructure.EXP_PATH
@@ -408,6 +512,9 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(ASubSeqExpCG.class, templateStructure.EXP_PATH
 				+ "SubSeq");
+		
+		nodeTemplateFileNames.put(AHistoryExpCG.class, templateStructure.EXP_PATH 
+				+ "hisCounter");
 
 		// Is expressions
 		

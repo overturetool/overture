@@ -1,0 +1,43 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        return f(5L);
+    }
+
+    public static Number f(final Number x) {
+        Number casesExpResult_1 = null;
+
+        Number intPattern_1 = x;
+        Boolean success_1 = intPattern_1.longValue() == 5L;
+
+        if (success_1) {
+            casesExpResult_1 = 5L;
+        } else {
+            throw new RuntimeException("Integer pattern match failed");
+        }
+
+        return casesExpResult_1;
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########
+
+package quotes;
+
+public interface Quotes {
+    public static Number start = 1L;
+    public static Number append = 2L;
+}
+
+##########

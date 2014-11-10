@@ -1,6 +1,7 @@
 package org.overture.interpreter.assistant.expression;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.expressions.AFieldExp;
 import org.overture.ast.types.PType;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
@@ -12,7 +13,7 @@ import org.overture.interpreter.values.ObjectValue;
 import org.overture.interpreter.values.RecordValue;
 import org.overture.interpreter.values.Value;
 
-public class AFieldExpAssistantInterpreter // extends AFieldExpAssistantTC
+public class AFieldExpAssistantInterpreter implements IAstAssistant
 {
 	protected static IInterpreterAssistantFactory af;
 

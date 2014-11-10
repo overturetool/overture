@@ -31,7 +31,6 @@ import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.assistant.module.AModuleModulesAssistantInterpreter;
 import org.overture.interpreter.assistant.module.ModuleListAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.AMapPatternMapletAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AQuotePatternAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PMultipleBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
@@ -40,7 +39,6 @@ import org.overture.interpreter.assistant.statement.ACaseAlternativeStmAssistant
 import org.overture.interpreter.assistant.statement.AStartStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.ATixeStmtAlternativeAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.PStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.SSimpleBlockStmAssistantInterpreter;
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.interpreter.assistant.type.PTypeListAssistant;
 import org.overture.interpreter.assistant.type.SInvariantTypeAssistantInterpreter;
@@ -561,11 +559,6 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	// return new ANilPatternAssistantInterpreter(this);
 	// }
 
-	public AQuotePatternAssistantInterpreter createAQuotePatternAssistant()
-	{
-		return new AQuotePatternAssistantInterpreter(this);
-	}
-
 	// public ARealPatternAssistantInterpreter createARealPatternAssistant()
 	// {
 	// return new ARealPatternAssistantInterpreter(this);
@@ -763,11 +756,6 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	// {
 	// return new SLetDefStmAssistantInterpreter(this);
 	// }
-
-	public SSimpleBlockStmAssistantInterpreter createSSimpleBlockStmAssistant()
-	{
-		return new SSimpleBlockStmAssistantInterpreter(this);
-	}
 
 	// type
 

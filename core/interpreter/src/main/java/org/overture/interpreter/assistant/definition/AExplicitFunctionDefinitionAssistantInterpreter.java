@@ -3,6 +3,7 @@ package org.overture.interpreter.assistant.definition;
 import java.util.HashMap;
 import java.util.List;
 
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.types.PType;
@@ -13,7 +14,7 @@ import org.overture.interpreter.values.FunctionValue;
 import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
 
 public class AExplicitFunctionDefinitionAssistantInterpreter extends
-		AExplicitFunctionDefinitionAssistantTC
+		AExplicitFunctionDefinitionAssistantTC implements IAstAssistant
 {
 
 	protected static IInterpreterAssistantFactory af;

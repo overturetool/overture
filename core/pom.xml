@@ -40,12 +40,4 @@
     </plugins>
   </build>
 
-  <profiles>
-    <profile>
-      <id>vdmj</id>
-      <modules>
-        <module>vdmj_compatibility_tests</module>
-      </modules>
-    </profile>
-  </profiles>
 </project>

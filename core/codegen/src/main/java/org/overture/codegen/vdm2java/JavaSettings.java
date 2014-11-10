@@ -21,12 +21,30 @@
  */
 package org.overture.codegen.vdm2java;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class JavaSettings
 {
 	private boolean disableCloning;
-
+	private List<String> classesToSkip;
+	
 	public JavaSettings()
 	{
+		this.classesToSkip = new LinkedList<String>();
+	}
+	
+	public List<String> getClassesToSkip()
+	{
+		return classesToSkip;
+	}
+
+	public void setClassesToSkip(List<String> classesToSkip)
+	{
+		if (classesToSkip != null)
+		{
+			this.classesToSkip = classesToSkip;
+		}
 	}
 
 	public boolean getDisableCloning()

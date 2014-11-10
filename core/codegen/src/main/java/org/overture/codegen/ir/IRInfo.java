@@ -21,8 +21,6 @@
  */
 package org.overture.codegen.ir;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -30,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.node.INode;
@@ -55,7 +52,7 @@ import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
-import org.overture.codegen.utils.AnalysisExceptionCG;
+import org.overture.codegen.logging.Logger;
 import org.overture.codegen.visitor.CGVisitor;
 import org.overture.codegen.visitor.VisitorManager;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
@@ -72,7 +69,7 @@ public class IRInfo
 	private TypeCheckerAssistantFactory tcFactory;
 
 	// Quotes:
-	private Set<String> quoteVaues;
+	private List<String> quoteVaues;
 
 	// Unsupported VDM nodes
 	private Set<NodeInfo> unsupportedNodes;
@@ -96,7 +93,7 @@ public class IRInfo
 		this.visitorManager = new VisitorManager();
 		this.assistantManager = new AssistantManager();
 		this.tcFactory = new TypeCheckerAssistantFactory();
-		this.quoteVaues = new HashSet<String>();
+		this.quoteVaues = new LinkedList<String>();
 		this.unsupportedNodes = new HashSet<NodeInfo>();
 		this.tempVarNameGen = new TempVarNameGen();
 
@@ -191,14 +188,18 @@ public class IRInfo
 		return assistantManager.getBindAssistant();
 	}
 
-	public void registerQuoteValue(String value) throws AnalysisException
+	public void registerQuoteValue(String value)
 	{
 		if (value == null || value.isEmpty())
 		{
-			throw new AnalysisExceptionCG("Tried to register invalid qoute value");
+			Logger.getLog().printErrorln("Tried to register invalid qoute value");
+		} else
+		{
+			if (!quoteVaues.contains(value))
+			{
+				quoteVaues.add(value);
+			}
 		}
-
-		quoteVaues.add(value);
 	}
 
 	public TypeCheckerAssistantFactory getTcFactory()
@@ -208,10 +209,7 @@ public class IRInfo
 
 	private List<String> getQuoteValues()
 	{
-		List<String> quoteValuesSorted = new ArrayList<String>(quoteVaues);
-		Collections.sort(quoteValuesSorted);
-
-		return quoteValuesSorted;
+		return quoteVaues;
 	}
 
 	public AInterfaceDeclCG getQuotes()

@@ -35,9 +35,11 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.osgi.service.prefs.Preferences;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
@@ -45,6 +47,7 @@ import org.overture.ast.node.INode;
 import org.overture.codegen.analysis.violations.Violation;
 import org.overture.codegen.assistant.LocationAssistantCG;
 import org.overture.codegen.ir.NodeInfo;
+import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
@@ -236,5 +239,14 @@ public class PluginVdm2JavaUtil
 		File resultingFolder = new File(parent, folder);
 		resultingFolder.mkdirs();
 		return resultingFolder;
+	}
+	
+	public static List<String> getClassesToSkip()
+	{
+		Preferences preferences = InstanceScope.INSTANCE.getNode(ICodeGenConstants.PLUGIN_ID);
+		
+		String userInput = preferences.get(ICodeGenConstants.CLASSES_TO_SKIP, ICodeGenConstants.CLASSES_TO_SKIP_DEFAULT);
+		
+		return GeneralCodeGenUtils.getClassesToSkip(userInput);
 	}
 }

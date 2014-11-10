@@ -1,5 +1,6 @@
 package org.overture.interpreter.assistant.definition;
 
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
@@ -11,7 +12,7 @@ import org.overture.interpreter.values.State;
 import org.overture.typechecker.assistant.definition.AStateDefinitionAssistantTC;
 
 public class AStateDefinitionAssistantInterpreter extends
-		AStateDefinitionAssistantTC
+		AStateDefinitionAssistantTC implements IAstAssistant
 {
 	protected static IInterpreterAssistantFactory af;
 

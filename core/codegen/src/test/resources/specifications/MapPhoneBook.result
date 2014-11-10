@@ -245,8 +245,8 @@ public class PhoneBook {
 package quotes;
 
 public interface Quotes {
-    public static Number append = 1L;
-    public static Number start = 2L;
+    public static Number start = 1L;
+    public static Number append = 2L;
 }
 
 ##########

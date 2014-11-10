@@ -44,6 +44,7 @@ import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AEnumMapExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AHeadUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AHistoryExpCG;
 import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AMapletExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
@@ -148,6 +149,11 @@ public class JavaFormat
 	{
 		valueSemantics.setJavaSettings(javaSettings);
 	}
+	
+	public JavaSettings getJavaSettings()
+	{
+		return valueSemantics.getJavaSettings();
+	}
 
 	public void init()
 	{
@@ -228,11 +234,11 @@ public class JavaFormat
 
 	private String findNumberDereferenceCall(STypeCG type)
 	{
-		if (type == null)
+		if (type == null || type.parent() instanceof AHistoryExpCG)
 		{
 			return "";
 		}
-
+		
 		final String DOUBLE_VALUE = ".doubleValue()";
 		final String LONG_VALUE = ".longValue()";
 
@@ -631,6 +637,27 @@ public class JavaFormat
 		return classDecl.getSuperName() == null ? "" : "extends "
 				+ classDecl.getSuperName();
 	}
+	
+	public String formatInterfaces(AClassDeclCG classDecl)
+	{
+		LinkedList<AInterfaceDeclCG> interfaces = classDecl.getInterfaces();
+		
+		if(interfaces == null || interfaces.isEmpty())
+		{
+			return "";
+		}
+		
+		String implementsClause = "implements";
+		
+		implementsClause += " " + interfaces.get(0).getName();
+		
+		for(int i = 1; i < interfaces.size(); i++)
+		{
+			implementsClause += ", " + interfaces.get(i).getName();
+		}
+		
+		return implementsClause;
+	}
 
 	public String formatMaplets(AEnumMapExpCG mapEnum) throws AnalysisException
 	{
@@ -848,5 +875,10 @@ public class JavaFormat
 		return GeneralUtils.isEscapeSequence(c) ? StringEscapeUtils.escapeJavaScript(c
 				+ "")
 				: c + "";
+	}
+	
+	public boolean isInnerClass(AClassDeclCG node)
+	{
+		return node.parent() != null && node.parent().getAncestor(AClassDeclCG.class) != null;
 	}
 }

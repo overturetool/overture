@@ -69,18 +69,18 @@ public class CompileTests
 
 	private static final String RESULT_FILE_EXTENSION = ".result";
 
-	public static final boolean RUN_EXP_TESTS = true;
-	public static final boolean RUN_COMPLEX_EXP_TESTS = true;
-	public static final boolean RUN_EXECUTING_CLASSIC_SPEC_TESTS = true;
-	public static final boolean RUN_NON_EXECUTING_VDM10_SPEC_TESTS = true;
-	public static final boolean RUN_FUNCTION_VALUE_TESTS = true;
-	public static final boolean RUN_CONFIGURED_STRING_GENERATION_TESTS = true;
-	public static final boolean RUN_CONFIGURED_CLONE_TESTS = true;
-	public static final boolean RUN_PATTERN_TESTS = true;
-	public static final boolean RUN_UNION_TESTS = true;
+	public static final boolean RUN_EXP_TESTS = false;
+	public static final boolean RUN_COMPLEX_EXP_TESTS = false;
+	public static final boolean RUN_EXECUTING_CLASSIC_SPEC_TESTS = false;
+	public static final boolean RUN_NON_EXECUTING_VDM10_SPEC_TESTS = false;
+	public static final boolean RUN_FUNCTION_VALUE_TESTS = false;
+	public static final boolean RUN_CONFIGURED_STRING_GENERATION_TESTS = false;
+	public static final boolean RUN_CONFIGURED_CLONE_TESTS = false;
+	public static final boolean RUN_PATTERN_TESTS = false;
+	public static final boolean RUN_UNION_TESTS = false;
 	public static final boolean RUN_CONCURRENCY_TESTS = true;
-	public static final boolean RUN_BIND_TESTS = true;
-	public static final boolean PRE_POST_TESTS = true;
+	public static final boolean RUN_BIND_TESTS = false;
+	public static final boolean PRE_POST_TESTS = false;
 
 	private List<File> testInputFiles;
 	private List<File> resultFiles;

@@ -66,8 +66,9 @@ public class ExecutableSpecTestHandler extends EntryBasedTestHandler
 	private void injectSerializableInterface(StringBuffer classCgStr,
 			String className)
 	{
+		//TODO: Improve way that the EvaluatePP interface is handled
 		if (!className.equals(IRConstants.QUOTES_INTERFACE_NAME)
-				&& !className.startsWith(JavaCodeGen.INTERFACE_NAME_PREFIX))
+				&& !className.startsWith(JavaCodeGen.INTERFACE_NAME_PREFIX) && !classCgStr.toString().contains(" implements EvaluatePP"))
 		{
 			int classNameIdx = classCgStr.indexOf(className);
 
