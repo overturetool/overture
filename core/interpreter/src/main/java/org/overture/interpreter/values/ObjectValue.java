@@ -289,7 +289,7 @@ public class ObjectValue extends Value
 
 			if (val instanceof ObjectValue)
 			{
-				return val == this; // Direct object comparison?
+    			return ((ObjectValue) val).objectReference == this.objectReference;
 			}
 		}
 

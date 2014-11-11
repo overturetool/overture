@@ -3308,10 +3308,11 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 				|| t instanceof ANatOneNumericBasicType)
 		{
 			t = AstFactory.newAIntNumericBasicType(node.getLocation());
+			question.assistantFactory.createPTypeAssistant().checkConstraint(question.constraint, t, node.getLocation());
 		}
 
 		node.setType(t);
-		return question.assistantFactory.createPTypeAssistant().checkConstraint(question.constraint, node.getType(), node.getLocation());
+		return t;
 	}
 
 	@Override

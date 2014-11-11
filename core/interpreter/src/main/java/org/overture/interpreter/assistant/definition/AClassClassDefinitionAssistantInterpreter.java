@@ -3,6 +3,7 @@ package org.overture.interpreter.assistant.definition;
 import java.util.HashMap;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
@@ -12,7 +13,7 @@ import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.values.ObjectValue;
 import org.overture.interpreter.values.ValueList;
 
-public class AClassClassDefinitionAssistantInterpreter
+public class AClassClassDefinitionAssistantInterpreter implements IAstAssistant
 {
 	protected static IInterpreterAssistantFactory af;
 
@@ -23,6 +24,7 @@ public class AClassClassDefinitionAssistantInterpreter
 		this.af = af;
 	}
 
+	//FIXME Assistant only used in 1 place. Inline it.
 	public ObjectValue newInstance(AClassClassDefinition node,
 			PDefinition ctorDefinition, ValueList argvals, Context ctxt)
 			throws AnalysisException
