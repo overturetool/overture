@@ -1,0 +1,32 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        String a = VDMUtil.val2seq_of_char(SetUtil.set());
+        String b = VDMUtil.val2seq_of_char(SeqUtil.seq(2L, 3L));
+        String c = VDMUtil.val2seq_of_char(Tuple.mk_(1L, true));
+
+        return a + " " + b + " " + c;
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########
+
+package quotes;
+
+public interface Quotes {
+    public static Number start = 1L;
+    public static Number append = 2L;
+}
+
+##########

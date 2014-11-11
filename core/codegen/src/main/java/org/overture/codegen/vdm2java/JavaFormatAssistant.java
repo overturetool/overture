@@ -44,7 +44,7 @@ import org.overture.codegen.cgast.expressions.ASelfExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
-import org.overture.codegen.cgast.statements.ACallStmCG;
+import org.overture.codegen.cgast.statements.APlainCallStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
@@ -160,9 +160,9 @@ public class JavaFormatAssistant
 		return fieldComparison;
 	}
 
-	public static ACallStmCG consCallStm(AFieldDeclCG field)
+	public static APlainCallStmCG consCallStm(AFieldDeclCG field)
 	{
-		ACallStmCG call = new ACallStmCG();
+		APlainCallStmCG call = new APlainCallStmCG();
 
 		AExternalTypeCG classType = new AExternalTypeCG();
 		classType.setName(JavaFormat.UTILS_FILE);

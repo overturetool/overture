@@ -27,6 +27,8 @@ import java.io.Serializable;
 import java.util.Formattable;
 import java.util.FormattableFlags;
 import java.util.Formatter;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.intf.lex.ILexLocation;
@@ -186,6 +188,12 @@ abstract public class Value implements Comparable<Value>, Serializable,
 	}
 
 	public Value convertValueTo(PType to, Context ctxt)
+		throws AnalysisException
+	{
+		return convertValueTo(to, ctxt, new HashSet<PType>());
+	}
+	
+	protected Value convertValueTo(PType to, Context ctxt, Set<PType> done)
 			throws AnalysisException
 	{
 		if (to instanceof AUnionType)
@@ -194,12 +202,21 @@ abstract public class Value implements Comparable<Value>, Serializable,
 
 			for (PType ut : uto.getTypes())
 			{
-				try
+				if (!done.contains(ut))
 				{
-					return convertValueTo(ut, ctxt);
-				} catch (ValueException e)
-				{
-					// Union type not applicable
+    				try
+    				{
+    					if (ut instanceof ANamedInvariantType)	// These can "recurse"
+    					{
+    						done.add(ut);
+    					}
+
+    					return convertValueTo(ut, ctxt, done);
+    				}
+    				catch (ValueException e)
+    				{
+    					// Union type not applicable
+    				}
 				}
 			}
 		} else if (to instanceof AParameterType)
@@ -218,22 +235,22 @@ abstract public class Value implements Comparable<Value>, Serializable,
 			} else if (v instanceof ParameterValue)
 			{
 				ParameterValue pv = (ParameterValue) v;
-				return convertValueTo(pv.type, ctxt);
+				return convertValueTo(pv.type, ctxt, done);
 			}
 
 			abort(4086, "Value of type parameter is not a type", ctxt);
 		} else if (to instanceof AOptionalType)
 		{
 			AOptionalType ot = (AOptionalType) to;
-			return convertValueTo(ot.getType(), ctxt);
+			return convertValueTo(ot.getType(), ctxt, done);
 		} else if (to instanceof ABracketType)
 		{
 			ABracketType bt = (ABracketType) to;
-			return convertValueTo(bt.getType(), ctxt);
+			return convertValueTo(bt.getType(), ctxt, done);
 		} else if (to instanceof ANamedInvariantType)
 		{
 			ANamedInvariantType ntype = (ANamedInvariantType) to;
-			Value converted = convertValueTo(ntype.getType(), ctxt);
+			Value converted = convertValueTo(ntype.getType(), ctxt, done);
 			return new InvariantValue(ntype, converted, ctxt);
 		} else if (to instanceof AUnknownType)
 		{

@@ -1,0 +1,18 @@
+class Entry
+
+instance variables
+
+public x : int := 4;
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let
+  m = if 1 = 1 then [[new Entry()]] else [[]],
+  s = m(1), 															
+  v = s(len s).x
+in 
+  return v;
+  
+end Entry

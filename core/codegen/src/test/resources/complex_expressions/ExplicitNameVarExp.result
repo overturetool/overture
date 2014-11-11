@@ -27,7 +27,7 @@ public class B extends A {
     }
 
     public Number opB() {
-        return opA();
+        return super.opA();
     }
 
     public String toString() {
@@ -52,6 +52,15 @@ public class Entry {
     public String toString() {
         return "Entry{}";
     }
+}
+
+##########
+
+package quotes;
+
+public interface Quotes {
+    public static Number start = 1L;
+    public static Number append = 2L;
 }
 
 ##########

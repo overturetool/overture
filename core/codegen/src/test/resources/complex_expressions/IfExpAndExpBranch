@@ -1,0 +1,30 @@
+class Entry
+
+instance variables
+
+static xs : seq of nat := [];
+
+operations
+
+public static id : nat ==> nat
+id (x) ==
+(
+  xs := xs ^ [x];
+  return x;
+);
+
+public static op : () ==> bool
+op () ==
+ return id(1) < id(2) and 
+			if id(3) < id(4) then
+			  id(5) < id(6) and true
+		  else
+		    false;
+		    
+public static Run : () ==> ?
+Run () ==
+let - = op()
+in
+	return xs;
+
+end Entry

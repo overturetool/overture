@@ -1,0 +1,16 @@
+class Entry
+
+functions
+
+public f :  nat -> nat
+f (x) ==
+cases x:
+	5 -> 5
+end;
+
+operations
+
+public static Run : () ==> ?
+Run () == f(5);
+
+end Entry

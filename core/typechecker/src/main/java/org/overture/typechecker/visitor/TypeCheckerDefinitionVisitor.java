@@ -53,6 +53,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.traces.AApplyExpressionTraceCoreDefinition;
 import org.overture.ast.definitions.traces.ABracketedExpressionTraceCoreDefinition;
+import org.overture.ast.definitions.traces.AConcurrentExpressionTraceCoreDefinition;
 import org.overture.ast.definitions.traces.ALetBeStBindingTraceDefinition;
 import org.overture.ast.definitions.traces.ALetDefBindingTraceDefinition;
 import org.overture.ast.definitions.traces.ARepeatTraceDefinition;
@@ -1574,6 +1575,19 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			TypeCheckerErrors.report(3277, "Trace repeat illegal values", node.getLocation(), node);
 		}
 
+		return null;
+	}
+	
+	@Override
+	public PType caseAConcurrentExpressionTraceCoreDefinition(
+			AConcurrentExpressionTraceCoreDefinition node,
+			TypeCheckInfo question) throws AnalysisException
+	{
+		for (PTraceDefinition d : node.getDefs())
+		{
+			d.apply(THIS, question);
+		}
+		
 		return null;
 	}
 
