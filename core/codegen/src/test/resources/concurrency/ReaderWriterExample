@@ -1,0 +1,132 @@
+class Buffer
+
+instance variables
+
+public data : [nat] := nil
+
+operations
+
+public Write: nat ==> ()
+Write(newData) ==
+  (
+   data := newData;
+  );
+
+public Read: () ==> nat
+Read() ==
+  let oldData : nat = data
+  in
+    (
+     --data := nil;     
+     return oldData;
+    );
+
+public IsFinished: () ==> ()
+IsFinished() == skip;
+
+sync
+
+per Write => #fin(Read) = #fin(Write);
+per Read => (#fin(Read) + 1) = #fin(Write);
+
+per IsFinished => #fin(Read) >= 3;
+
+
+end Buffer
+
+class Reader
+
+instance variables
+
+public b : Buffer;
+public isfinished : bool := false;
+
+operations
+
+public Reader: Buffer ==> Reader
+Reader(buf) ==
+    b := buf;
+
+public ended : () ==> ()
+ended () == skip;
+
+thread
+  (
+    for i = 1 to 3 do
+     let x = b.Read() in skip;
+--  	(if (x = 3)
+--  	then  
+--  	isfinished := true;
+    
+  )
+--sync
+	--per ended => isfinished;
+end Reader
+
+class Writer
+
+instance variables
+
+public b : Buffer;
+public isfinished : bool := false;
+index : nat := 0;
+
+operations
+
+public Writer: Buffer ==> Writer
+Writer(buf) == 
+    b := buf;
+
+public Write: () ==> nat
+Write() == 
+ ( 
+   index := index + 1;
+   return index;
+ );
+ 
+public ended : () ==> ()
+ended () == skip;
+
+thread
+ ( 
+  for i = 1 to 3 do
+   let x = Write() in
+      b.Write(x);
+    
+ -- isfinished := true;
+
+  
+  
+ )
+
+--sync
+	--per ended => isfinished;
+
+end Writer
+
+class Entry
+
+instance variables
+
+--B : Buffer := new Buffer();
+
+operations
+
+public static Run: () ==> [nat]
+Run() ==
+(
+	let B = new Buffer(),
+			wrt = new Writer(B),
+			read = new Reader(B)
+	in
+	(
+		start(wrt);
+		start(read);
+	--	wrt.ended();
+	--	read.ended();
+		B.IsFinished();
+		return B.data;
+	)
+)
+
+end Entry
