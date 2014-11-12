@@ -353,22 +353,28 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			
 			if(currentType instanceof AUnknownTypeCG)
 			{
+				// If we are accessing an element of (say) the sequence [new A(), new B(), nil] of type A | B | [?]
+				// then the current IR type will be the unknown type at some point. This case is simply skipped.
 				continue;
 			}
 			
 			if(parent instanceof SExpCG)
 			{
-				if(!(currentType instanceof AClassTypeCG))
-				{
-					// If we are accessing an element of (say) the sequence [new A(), new B(), nil] of type A | B | [?]
-					// then the current IR type will be the unknown type at some point. This case is simply skipped.
-					continue;
-				}
-				
-				String className = ((AClassTypeCG) currentType).getName();
+				boolean memberExists = false;
 				String memberName = fieldExp.getMemberName();
 				
-				boolean memberExists = memberExists(parent, typeAssistant, className, memberName);
+				if(currentType instanceof AClassTypeCG)
+				{
+					String className = ((AClassTypeCG) currentType).getName();
+					
+					memberExists = memberExists(parent, typeAssistant, className, memberName);
+				}
+				else if(currentType instanceof ARecordTypeCG)
+				{
+					ARecordTypeCG recordType = (ARecordTypeCG) currentType;
+					
+					memberExists = info.getDeclAssistant().getFieldDecl(classes, recordType, memberName) != null;
+				}
 				
 				if(!memberExists)
 				{
@@ -868,7 +874,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 	{
 		if(parent instanceof SExpCG)
 		{
-			if (!(parent instanceof AApplyExpCG && ((AApplyExpCG) parent).getRoot() != node))
+			if (parent instanceof AApplyExpCG && ((AApplyExpCG) parent).getRoot() == node)
 			{
 				return ((SExpCG) parent).getType().clone();
 			}
