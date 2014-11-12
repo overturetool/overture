@@ -21,6 +21,7 @@
  */
 package org.overture.typechecker.assistant.type;
 
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.intf.lex.ILexIdentifierToken;
 import org.overture.ast.intf.lex.ILexNameToken;
@@ -30,7 +31,7 @@ import org.overture.ast.types.AClassType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class AClassTypeAssistantTC
+public class AClassTypeAssistantTC implements IAstAssistant
 {
 
 	protected ITypeCheckerAssistantFactory af;

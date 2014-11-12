@@ -25,13 +25,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class APatternListTypePairAssistantTC
+public class APatternListTypePairAssistantTC implements IAstAssistant
 {
 	protected ITypeCheckerAssistantFactory af;
 
@@ -40,7 +41,7 @@ public class APatternListTypePairAssistantTC
 		this.af = af;
 	}
 
-	// TODO: Used in the TypeCheckerDefinitionVisitor.
+	// FIXME: only used in 1 class. move it
 	public Collection<? extends PDefinition> getDefinitions(
 			APatternListTypePair pltp, NameScope scope)
 	{

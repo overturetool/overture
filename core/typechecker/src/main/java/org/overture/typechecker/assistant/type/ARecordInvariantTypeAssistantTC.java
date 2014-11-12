@@ -21,11 +21,12 @@
  */
 package org.overture.typechecker.assistant.type;
 
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class ARecordInvariantTypeAssistantTC
+public class ARecordInvariantTypeAssistantTC implements IAstAssistant
 {
 	protected ITypeCheckerAssistantFactory af;
 
