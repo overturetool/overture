@@ -9,7 +9,7 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.statements.PStm;
-import org.overture.interpreter.assistant.definition.ABusClassDefinitionAssitantInterpreter;
+import org.overture.interpreter.assistant.definition.ABusClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AClassClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ACpuClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AExplicitFunctionDefinitionAssistantInterpreter;
@@ -61,7 +61,7 @@ public interface IInterpreterAssistantFactory extends
 	// ABracketedExpressionTraceCoreDefinitionAssitantInterpreter
 	// createABracketedExpressionTraceCoreDefinitionAssitant();
 
-	ABusClassDefinitionAssitantInterpreter createABusClassDefinitionAssitant();
+	ABusClassDefinitionAssistantInterpreter createABusClassDefinitionAssitant();
 
 	AClassClassDefinitionAssistantInterpreter createAClassClassDefinitionAssistant();
 

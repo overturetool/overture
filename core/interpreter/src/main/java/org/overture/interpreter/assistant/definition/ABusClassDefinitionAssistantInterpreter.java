@@ -18,12 +18,12 @@ import org.overture.parser.syntax.ParserException;
 
 
 //FIXME: only used in 1 class. Move it over.
-public class ABusClassDefinitionAssitantInterpreter implements IAstAssistant
+public class ABusClassDefinitionAssistantInterpreter implements IAstAssistant
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
-	public ABusClassDefinitionAssitantInterpreter(
+	public ABusClassDefinitionAssistantInterpreter(
 			IInterpreterAssistantFactory af)
 	{
 		this.af = af;
