@@ -24,7 +24,7 @@ public class Entry {
             VDMSeq ss = ((VDMSeq) iterator_1.next());
             Object obj_1 = ss.get(Utils.index(1L));
 
-            Object apply_1 = null;
+            Boolean apply_1 = null;
 
             if (obj_1 instanceof Tuple) {
                 apply_1 = ((Boolean) ((Tuple) obj_1).get(1));
