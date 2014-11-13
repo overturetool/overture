@@ -369,7 +369,8 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			obj = subject.clone();
 		}
 
-		LinkedList<STypeCG> possibleTypes = ((AUnionTypeCG) fieldObjType).getTypes();
+		List<STypeCG> possibleTypes = ((AUnionTypeCG) fieldObjType).getTypes();
+		possibleTypes = typeAssistant.clearDuplicates(possibleTypes);
 
 		AIfStmCG ifChecks = new AIfStmCG();
 
