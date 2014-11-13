@@ -24,7 +24,7 @@ public class Entry {
             VDMSeq ss = ((VDMSeq) iterator_1.next());
             Object obj_1 = ss.get(Utils.index(1L));
 
-            Object apply_1 = null;
+            Number apply_1 = null;
 
             if (obj_1 instanceof Rec) {
                 apply_1 = ((Rec) obj_1).x;
