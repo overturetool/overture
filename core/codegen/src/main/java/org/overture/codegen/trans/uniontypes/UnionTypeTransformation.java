@@ -83,6 +83,7 @@ import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
+import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.BaseTransformationAssistant;
 
 public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
@@ -961,14 +962,29 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		
 		for(STypeCG currentType : types)
 		{
-			if(!(currentType instanceof AClassTypeCG))
+			String memberName = node.getMemberName();
+			STypeCG fieldType = null;
+			
+			if(currentType instanceof AClassTypeCG)
 			{
+				AClassTypeCG classType = (AClassTypeCG) currentType;
+				fieldType = typeAssistant.getFieldType(classes, classType.getName(), memberName);
+			}
+			else if(currentType instanceof ARecordTypeCG)
+			{
+				ARecordTypeCG recordType = (ARecordTypeCG) currentType;
+				fieldType = info.getTypeAssistant().getFieldType(classes, recordType, memberName);
+			}
+			else{
 				//Can be the unknown type
 				continue;
 			}
-			
-			AClassTypeCG classType = (AClassTypeCG) currentType;
-			STypeCG fieldType = typeAssistant.getFieldType(classes, classType.getName(), node.getMemberName());
+
+			if(fieldType == null)
+			{
+				Logger.getLog().printErrorln(String.format("Could not find field type with member name %s for type %s", memberName, currentType));
+				continue;
+			}
 			
 			if(!typeAssistant.containsType(fieldTypes, fieldType))
 			{
