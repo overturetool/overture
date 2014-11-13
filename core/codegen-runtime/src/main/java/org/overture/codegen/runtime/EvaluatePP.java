@@ -1,6 +1,8 @@
 package org.overture.codegen.runtime;
 
-public interface EvaluatePP
+import java.io.Serializable;
+
+public interface EvaluatePP extends Serializable
 {
-	public Boolean evaluatePP(Number fnr);
+	public Boolean evaluatePP(final Number fnr);
 }
