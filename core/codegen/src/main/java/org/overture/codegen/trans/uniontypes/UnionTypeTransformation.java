@@ -297,7 +297,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			return;
 		}
 		
-		handleFieldExp(node, "field number " + node.getField(), tuple, tupleType, tupleType.clone());
+		handleFieldExp(node, "field number " + node.getField(), tuple, tupleType, node.getType().clone());
 	}
 	
 	@Override
