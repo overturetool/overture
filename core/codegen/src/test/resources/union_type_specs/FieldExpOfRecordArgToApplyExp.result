@@ -1,0 +1,71 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        Object r = new Rec(8L);
+        Number apply_1 = null;
+
+        if (r instanceof Rec) {
+            apply_1 = ((Rec) r).x;
+        } else {
+            throw new RuntimeException("Missing member: x");
+        }
+
+        return id(apply_1);
+    }
+
+    private static Number id(final Number x) {
+        return x;
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+
+    private static class Rec implements Record {
+        public Number x;
+
+        public Rec(final Number _x) {
+            x = _x;
+        }
+
+        public boolean equals(final Object obj) {
+            if (!(obj instanceof Rec)) {
+                return false;
+            }
+
+            Rec other = ((Rec) obj);
+
+            return x.longValue() == other.x.longValue();
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(x);
+        }
+
+        public Rec clone() {
+            return new Rec(x);
+        }
+
+        public String toString() {
+            return Utils.recordToString(this, x);
+        }
+    }
+}
+
+##########
+
+package quotes;
+
+public interface Quotes {
+    public static Number start = 1L;
+    public static Number append = 2L;
+}
+
+##########
