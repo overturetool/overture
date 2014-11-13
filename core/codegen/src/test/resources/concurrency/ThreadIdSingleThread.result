@@ -11,7 +11,7 @@ public class Entry implements EvaluatePP {
     }
 
     public static Object Run() {
-        return f();
+        return Utils.is_nat(f());
     }
 
     public static Number f() {
@@ -37,10 +37,10 @@ public class Entry implements EvaluatePP {
     }
 
     public class Entry_sentinel extends Sentinel {
-        public final int Run = 0;
-        public final int Entry = 1;
-        public final int f = 2;
-        public final int toString = 3;
+        public static final int Run = 0;
+        public static final int Entry = 1;
+        public static final int f = 2;
+        public static final int toString = 3;
         public final int function_sum = 4;
 
         public Entry_sentinel() {

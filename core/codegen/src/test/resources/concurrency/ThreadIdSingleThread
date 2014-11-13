@@ -9,6 +9,6 @@ operations
 
 public static Run : () ==> ?
 Run () ==
-	return f();
+	return is_nat(f());
 
 end Entry

@@ -11,45 +11,14 @@ public class ThreadClass extends Thread implements EvaluatePP {
         sentinel = new ThreadClass_sentinel(this);
     }
 
-    public void setX() {
-        sentinel.entering(((ThreadClass_sentinel) sentinel).setX);
-
-        try {
-            x = 3L;
-        } finally {
-            sentinel.leaving(((ThreadClass_sentinel) sentinel).setX);
-        }
-    }
-
-    public void subX() {
-        sentinel.entering(((ThreadClass_sentinel) sentinel).subX);
-
-        try {
-            x = x.longValue() - 1L;
-        } finally {
-            sentinel.leaving(((ThreadClass_sentinel) sentinel).subX);
-        }
-    }
-
     public String toString() {
         return "ThreadClass{" + "x := " + Utils.toString(x) + "}";
     }
 
     public Boolean evaluatePP(final Number fnr) {
         if (fnr.longValue() == 0L) {
-            return (sentinel.act[((ThreadClass_sentinel) sentinel).setX] == 0L) &&
-            (x.longValue() == 0L) &&
-            ((sentinel.active[((ThreadClass_sentinel) sentinel).setX] +
-            sentinel.active[((ThreadClass_sentinel) sentinel).subX]) == 0L);
-        } else if (fnr.longValue() == 1L) {
-            return ((sentinel.act[((ThreadClass_sentinel) sentinel).setX] +
-            sentinel.act[((ThreadClass_sentinel) sentinel).subX] +
-            sentinel.act[((ThreadClass_sentinel) sentinel).setX]) > 10L) &&
-            ((sentinel.active[((ThreadClass_sentinel) sentinel).setX] +
-            sentinel.active[((ThreadClass_sentinel) sentinel).subX]) == 0L);
-        } else if (fnr.longValue() == 2L) {
             return true;
-        } else if (fnr.longValue() == 3L) {
+        } else if (fnr.longValue() == 1L) {
             return true;
         } else {
             return true;
@@ -57,16 +26,13 @@ public class ThreadClass extends Thread implements EvaluatePP {
     }
 
     public void run() {
-        setX();
-        subX();
+        x = 2L;
     }
 
     public class ThreadClass_sentinel extends Sentinel {
-        public final int setX = 0;
-        public final int subX = 1;
-        public final int ThreadClass = 2;
-        public final int toString = 3;
-        public final int function_sum = 4;
+        public static final int ThreadClass = 0;
+        public static final int toString = 1;
+        public final int function_sum = 2;
 
         public ThreadClass_sentinel() {
         }
@@ -126,9 +92,9 @@ public class Entry implements EvaluatePP {
     }
 
     public class Entry_sentinel extends Sentinel {
-        public final int Run = 0;
-        public final int Entry = 1;
-        public final int toString = 2;
+        public static final int Run = 0;
+        public static final int Entry = 1;
+        public static final int toString = 2;
         public final int function_sum = 3;
 
         public Entry_sentinel() {
