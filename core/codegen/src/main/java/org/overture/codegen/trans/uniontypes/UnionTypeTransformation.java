@@ -45,6 +45,7 @@ import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AElemsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
+import org.overture.codegen.cgast.expressions.AFieldNumberExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
 import org.overture.codegen.cgast.expressions.ALenUnaryExpCG;
@@ -75,6 +76,7 @@ import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AErrorTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
+import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AUnionTypeCG;
 import org.overture.codegen.cgast.types.AUnknownTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
@@ -283,29 +285,53 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 	}
 	
 	@Override
+	public void caseAFieldNumberExpCG(AFieldNumberExpCG node)
+			throws AnalysisException
+	{
+		SExpCG tuple = node.getTuple();
+		STypeCG tupleType = tuple.getType();
+		
+		if(!(tupleType instanceof AUnionTypeCG))
+		{
+			tuple.apply(this);
+			return;
+		}
+		
+		handleFieldExp(node, "field number " + node.getField(), tuple, tupleType, tupleType.clone());
+	}
+	
+	@Override
 	public void caseAFieldExpCG(AFieldExpCG node) throws AnalysisException
+	{
+		SExpCG object = node.getObject();
+		STypeCG objectType = object.getType();
+		
+		if(!(objectType instanceof AUnionTypeCG))
+		{
+			object.apply(this);
+			return;
+		}
+		
+		STypeCG resultType = getResultType(node, node.parent(), objectType, info.getTypeAssistant());
+		
+		handleFieldExp(node, node.getMemberName(), object, objectType, resultType);
+	}
+
+	private void handleFieldExp(SExpCG node, String memberName, SExpCG subject, STypeCG fieldObjType, STypeCG resultType) throws AnalysisException
 	{
 		INode parent = node.parent();
 
 		// TODO: Deflatten structure
 
-		STypeCG fieldObjType = node.getObject().getType();
-
-		if (!(fieldObjType instanceof AUnionTypeCG))
-		{
-			node.getObject().apply(this);
-			return;
-		}
-
 		TypeAssistantCG typeAssistant = info.getAssistantManager().getTypeAssistant();
-		
+
 		SStmCG enclosingStatement = baseAssistant.getEnclosingStm(node, "field expression");
 
 		String applyResultName = info.getTempVarNameGen().nextVarName(applyExpResulPrefix);
 		AVarLocalDeclCG resultDecl = new AVarLocalDeclCG();
 		resultDecl.setSourceNode(node.getSourceNode());
 		resultDecl.setExp(new ANullExpCG());
-		resultDecl.setType(getResultType(node, parent, fieldObjType, typeAssistant));
+		resultDecl.setType(resultType);
 		
 		AIdentifierPatternCG id = new AIdentifierPatternCG();
 		id.setName(applyResultName);
@@ -319,12 +345,13 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 
 		ABlockStmCG replacementBlock = new ABlockStmCG();
 		SExpCG obj = null;
-		if (!(node.getObject() instanceof SVarExpBase))
+		
+		if (!(subject instanceof SVarExpBase))
 		{
 			String objName = info.getTempVarNameGen().nextVarName(objExpPrefix);
 			AVarLocalDeclCG objectDecl = new AVarLocalDeclCG();
-			objectDecl.setExp(node.getObject().clone());
-			objectDecl.setType(node.getObject().getType().clone());
+			objectDecl.setExp(subject.clone());
+			objectDecl.setType(subject.getType().clone());
 			AIdentifierPatternCG objectVarId = new AIdentifierPatternCG();
 			objectVarId.setName(objName);
 			objectDecl.setPattern(objectVarId);
@@ -338,7 +365,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			obj = objectVar;
 		} else
 		{
-			obj = node.getObject().clone();
+			obj = subject.clone();
 		}
 
 		LinkedList<STypeCG> possibleTypes = ((AUnionTypeCG) fieldObjType).getTypes();
@@ -348,7 +375,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		int handledTypes = 0;
 		for (int i = 0; i < possibleTypes.size(); i++)
 		{
-			AFieldExpCG fieldExp = (AFieldExpCG) node.clone();
+			SExpCG fieldExp = (SExpCG) node.clone();
 			STypeCG currentType = possibleTypes.get(i);
 			
 			if(currentType instanceof AUnknownTypeCG)
@@ -361,20 +388,8 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			if(parent instanceof SExpCG)
 			{
 				boolean memberExists = false;
-				String memberName = fieldExp.getMemberName();
 				
-				if(currentType instanceof AClassTypeCG)
-				{
-					String className = ((AClassTypeCG) currentType).getName();
-					
-					memberExists = memberExists(parent, typeAssistant, className, memberName);
-				}
-				else if(currentType instanceof ARecordTypeCG)
-				{
-					ARecordTypeCG recordType = (ARecordTypeCG) currentType;
-					
-					memberExists = info.getDeclAssistant().getFieldDecl(classes, recordType, memberName) != null;
-				}
+				memberExists = memberExists(memberName, parent, typeAssistant, fieldExp, currentType);
 				
 				if(!memberExists)
 				{
@@ -387,7 +402,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			castedFieldExp.setType(currentType.clone());
 			castedFieldExp.setExp(obj.clone());
 
-			fieldExp.setObject(castedFieldExp);
+			setSubject(fieldExp, castedFieldExp);
 
 			ALocalAssignmentStmCG assignment = new ALocalAssignmentStmCG();
 			assignment.setTarget(resultVar.clone());
@@ -414,7 +429,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			return;
 		}
 		
-		ARaiseErrorStmCG raise = consRaiseStm(missingMemberPrefix, node.getMemberName());
+		ARaiseErrorStmCG raise = consRaiseStm(missingMemberPrefix, memberName);
 		ifChecks.setElseStm(raise);
 
 		if(parent instanceof AApplyExpCG && ((AApplyExpCG) parent).getRoot() == node)
@@ -433,6 +448,61 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		replacementBlock.getStatements().add(enclosingStatement);
 		
 		ifChecks.apply(this);
+	}
+
+	private void setSubject(SExpCG fieldExp, ACastUnaryExpCG castedFieldExp)
+	{
+		if(fieldExp instanceof AFieldExpCG)
+		{
+			((AFieldExpCG) fieldExp).setObject(castedFieldExp);
+		}
+		else if(fieldExp instanceof AFieldNumberExpCG)
+		{
+			((AFieldNumberExpCG) fieldExp).setTuple(castedFieldExp);
+		}
+	}
+
+	private boolean memberExists(String memberName, INode parent,
+			TypeAssistantCG typeAssistant, SExpCG fieldExp,
+			STypeCG currentType) throws AnalysisException
+	{
+		if (fieldExp instanceof AFieldExpCG)
+		{
+			if (currentType instanceof AClassTypeCG)
+			{
+				String className = ((AClassTypeCG) currentType).getName();
+
+				return memberExists(parent, typeAssistant, className, memberName);
+			} else if (currentType instanceof ARecordTypeCG)
+			{
+				ARecordTypeCG recordType = (ARecordTypeCG) currentType;
+
+				return info.getDeclAssistant().getFieldDecl(classes, recordType, memberName) != null;
+			}
+		}
+		else if(fieldExp instanceof AFieldNumberExpCG && currentType instanceof ATupleTypeCG)
+		{
+			return true;
+			
+			// Could possibly be strengthened
+			// AFieldNumberExpCG fieldNumberExp = (AFieldNumberExpCG) fieldExp;
+			// return  fieldNumberExp.getField() <= ((ATupleTypeCG) currentType).getTypes().size();
+		}
+		
+		return false;
+	}
+	
+	private boolean memberExists(INode parent, TypeAssistantCG typeAssistant,
+			String className, String memberName) throws AnalysisException
+	{
+		if(typeAssistant.getFieldType(classes, className, memberName) != null)
+		{
+			return true;
+		}
+		
+		List<SExpCG> args = ((AApplyExpCG) parent).getArgs();
+		
+		return typeAssistant.getMethodType(info, classes, className, memberName, args) != null;
 	}
 
 	@Override
@@ -852,7 +922,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		}
 	}
 	
-	private SExpCG getAssignmentExp(INode node, AFieldExpCG fieldExp)
+	private SExpCG getAssignmentExp(INode node, SExpCG fieldExp)
 	{
 		INode parent = node.parent();
 		
@@ -881,19 +951,6 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		}
 
 		return fieldType(node, fieldObjType, typeAssistant);
-	}
-
-	private boolean memberExists(INode parent, TypeAssistantCG typeAssistant,
-			String className, String memberName) throws AnalysisException
-	{
-		if(typeAssistant.getFieldType(classes, className, memberName) != null)
-		{
-			return true;
-		}
-		
-		List<SExpCG> args = ((AApplyExpCG) parent).getArgs();
-		
-		return typeAssistant.getMethodType(info, classes, className, memberName, args) != null;
 	}
 
 	private STypeCG fieldType(AFieldExpCG node, STypeCG objectType,
