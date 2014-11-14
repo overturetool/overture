@@ -69,13 +69,15 @@ public class ACaseAlternativeAssistantTC
 			{
 				af.createPPatternAssistant().typeResolve(c.getPattern(), rootVisitor, new TypeCheckInfo(question.assistantFactory, question.env));
 				c.getDefs().addAll(af.createPPatternAssistant().getDefinitions(c.getPattern(), expType, NameScope.LOCAL));
-			} catch (TypeCheckException e)
+			}
+			catch (TypeCheckException e)
 			{
 				c.getDefs().clear();
 				throw e;
 			}
 		}
 
+		af.createPPatternAssistant().typeCheck(c.getPattern(), question, rootVisitor);
 		af.createPDefinitionListAssistant().typeCheck(c.getDefs(), rootVisitor, new TypeCheckInfo(question.assistantFactory, question.env, question.scope));
 
 		if (!af.createPPatternAssistant().matches(c.getPattern(), expType))

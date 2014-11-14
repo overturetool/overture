@@ -1,0 +1,15 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+(
+	dcl a : nat := 1;
+	skip;
+	let mk_(b,c) = mk_(2,3)
+	in
+		return a+b+c;
+)
+
+end Entry

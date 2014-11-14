@@ -1,6 +1,7 @@
 package org.overture.interpreter.assistant.statement;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
@@ -14,7 +15,7 @@ import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueSet;
 
-public class ATixeStmtAlternativeAssistantInterpreter
+public class ATixeStmtAlternativeAssistantInterpreter implements IAstAssistant
 {
 	protected static IInterpreterAssistantFactory af;
 
@@ -25,6 +26,7 @@ public class ATixeStmtAlternativeAssistantInterpreter
 		this.af = af;
 	}
 
+	//FIXME only used once. inline it
 	public Value eval(ATixeStmtAlternative node, ILexLocation location,
 			Value exval, Context ctxt) throws AnalysisException
 	{

@@ -56,7 +56,15 @@ public class Entry {
                 }
 
                 if (success_1) {
-                    casesExpResult_1 = b ? 11L : 33L;
+                    Number ternaryIfExp_1 = null;
+
+                    if (((Boolean) b)) {
+                        ternaryIfExp_1 = 11L;
+                    } else {
+                        ternaryIfExp_1 = 33L;
+                    }
+
+                    casesExpResult_1 = ternaryIfExp_1;
                 } else {
                     casesExpResult_1 = 3L;
                 }
@@ -74,6 +82,15 @@ public class Entry {
     public String toString() {
         return "Entry{}";
     }
+}
+
+##########
+
+package quotes;
+
+public interface Quotes {
+    public static Number start = 1L;
+    public static Number append = 2L;
 }
 
 ##########

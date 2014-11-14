@@ -23,6 +23,8 @@
 
 package org.overture.interpreter.values;
 
+import java.util.Set;
+
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.types.AOptionalType;
 import org.overture.ast.types.PType;
@@ -63,7 +65,7 @@ public class NilValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt)
+	protected Value convertValueTo(PType to, Context ctxt, Set<PType> done)
 			throws AnalysisException
 	{
 		// Note, don't use isType, as this skips the OptionalType wrapper.
@@ -73,7 +75,7 @@ public class NilValue extends Value
 			return this;
 		} else
 		{
-			return super.convertValueTo(to, ctxt);
+			return super.convertValueTo(to, ctxt, done);
 		}
 	}
 

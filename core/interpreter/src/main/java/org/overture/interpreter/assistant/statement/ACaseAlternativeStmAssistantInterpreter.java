@@ -1,6 +1,7 @@
 package org.overture.interpreter.assistant.statement;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.statements.ACaseAlternativeStm;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
@@ -8,8 +9,7 @@ import org.overture.interpreter.runtime.PatternMatchException;
 import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.values.Value;
 
-public class ACaseAlternativeStmAssistantInterpreter // extends
-// ACaseAlternativeStmAssistantTC
+public class ACaseAlternativeStmAssistantInterpreter implements IAstAssistant
 {
 	protected static IInterpreterAssistantFactory af;
 
@@ -21,6 +21,7 @@ public class ACaseAlternativeStmAssistantInterpreter // extends
 		this.af = af;
 	}
 
+	//FIXME: only used once. inline it.
 	public Value eval(ACaseAlternativeStm node, Value val, Context ctxt)
 			throws AnalysisException
 	{

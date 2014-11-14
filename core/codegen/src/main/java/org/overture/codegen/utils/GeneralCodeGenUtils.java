@@ -30,6 +30,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
@@ -166,5 +167,32 @@ public class GeneralCodeGenUtils
 			in.close();
 			out.close();
 		}
+	}
+
+	public static List<String> getClassesToSkip(String userInput)
+	{
+		if(userInput == null)
+		{
+			return new LinkedList<String>();
+		}
+		
+		String[] split = userInput.split(";");
+
+		List<String> classesToSkip = new LinkedList<String>();
+		
+		for(String element : split)
+		{
+			element = element.trim();
+			
+			if(element != null && !element.isEmpty())
+			{
+				if(!classesToSkip.contains(element))
+				{
+					classesToSkip.add(element);
+				}
+			}
+		}
+		
+		return classesToSkip;
 	}
 }

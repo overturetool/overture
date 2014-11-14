@@ -1,0 +1,1 @@
+Utils.is_rat((1.0 * 1L) / 4L)

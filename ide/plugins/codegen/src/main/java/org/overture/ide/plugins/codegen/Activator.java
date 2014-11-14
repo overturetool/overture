@@ -23,9 +23,12 @@ package org.overture.ide.plugins.codegen;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+import org.osgi.service.prefs.BackingStoreException;
+import org.osgi.service.prefs.Preferences;
 
 public class Activator extends AbstractUIPlugin
 {
@@ -91,8 +94,24 @@ public class Activator extends AbstractUIPlugin
 	@Override
 	protected void initializeDefaultPreferences(IPreferenceStore store)
 	{
-
 		store.setDefault(ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRINGS, ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRING_DEFAULT);
 		store.setDefault(ICodeGenConstants.DISABLE_CLONING, ICodeGenConstants.DISABLE_CLONING_DEFAULT);
+	}
+	
+	public static void savePluginSettings(boolean disableCloning,
+			boolean generateAsStrings, String userSpecifiedClassesToSkip)
+	{
+		Preferences prefs = InstanceScope.INSTANCE.getNode(ICodeGenConstants.PLUGIN_ID);
+		prefs.put(ICodeGenConstants.DISABLE_CLONING, new Boolean(disableCloning).toString());
+		prefs.put(ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRINGS, new Boolean(generateAsStrings).toString());
+		prefs.put(ICodeGenConstants.CLASSES_TO_SKIP, userSpecifiedClassesToSkip);
+
+		try
+		{
+			prefs.flush();
+		} catch (BackingStoreException e)
+		{
+			e.printStackTrace();
+		}
 	}
 }

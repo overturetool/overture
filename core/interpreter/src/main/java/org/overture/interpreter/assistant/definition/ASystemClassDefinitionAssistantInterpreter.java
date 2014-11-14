@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.definitions.ABusClassDefinition;
 import org.overture.ast.definitions.ACpuClassDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
@@ -28,7 +29,7 @@ import org.overture.interpreter.values.UpdatableValue;
 import org.overture.interpreter.values.ValueList;
 import org.overture.interpreter.values.ValueSet;
 
-public class ASystemClassDefinitionAssistantInterpreter
+public class ASystemClassDefinitionAssistantInterpreter implements IAstAssistant
 {
 	protected static IInterpreterAssistantFactory af;
 
@@ -40,6 +41,7 @@ public class ASystemClassDefinitionAssistantInterpreter
 		this.af = af;
 	}
 
+	//FIXME: Only used once. Remove it
 	public void systemInit(ASystemClassDefinition systemClass,
 			ResourceScheduler scheduler, DBGPReader dbgp,
 			RootContext initialContext)

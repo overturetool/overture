@@ -35,8 +35,13 @@ public class A {
 package quotes;
 
 public interface Quotes {
-    public static Number A = 1L;
-    public static Number Red = 2L;
+    public static Number start = 1L;
+    public static Number append = 2L;
+    public static Number Blue = 3L;
+    public static Number Green = 4L;
+    public static Number Red = 5L;
+    public static Number A = 6L;
+    public static Number B = 7L;
 }
 
 ##########

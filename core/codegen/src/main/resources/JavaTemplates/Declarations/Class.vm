@@ -1,10 +1,13 @@
 #set( $quoteImport = "")
-#if ($IRAnalysis.usesQuoteLiterals($node))
-	#set( $quoteImport = "import quotes.*;")
+#if ( !$JavaFormat.isInnerClass($node) )
+	#if ($IRAnalysis.usesQuoteLiterals($node))
+		#set( $quoteImport = "import quotes.*;")
+	#end
+	##
+#**#import org.overture.codegen.runtime.*;
+#**#import java.util.*;
 #end
 ##
-import org.overture.codegen.runtime.*;
-import java.util.*;
 $quoteImport
 ##
 #set( $abstract = "")
@@ -16,13 +19,22 @@ $quoteImport
 #if ($node.getStatic())
 	#set( $static = "static")
 #end
+#set( $threadMethod = "")
+#if (!$JavaFormat.isNull($node.getThread()))
+	#set( $threadMethod = $JavaFormat.format($node.getThread()))
+#end
+##
 
-$abstract $node.getAccess() $static class $node.getName() $JavaFormat.formatSuperType($node)
+$abstract $node.getAccess() $static class $node.getName() $JavaFormat.formatSuperType($node) $JavaFormat.formatInterfaces($node)
 {
+	#foreach( $class in $node.getInnerClasses() )
+	$JavaFormat.format($class)
+	#end##
 	#foreach( $field in $node.getFields() )
 	$JavaFormat.format($field)
 	#end
-
+	##
+	
 	#foreach( $method in $node.getMethods() )
 	$JavaFormat.format($method)
 	#end
@@ -30,4 +42,6 @@ $abstract $node.getAccess() $static class $node.getName() $JavaFormat.formatSupe
 	#foreach( $typeDecl in $node.getTypeDecls() )
 	$JavaFormat.format($typeDecl)
 	#end
+	##
+	${threadMethod}##
 }

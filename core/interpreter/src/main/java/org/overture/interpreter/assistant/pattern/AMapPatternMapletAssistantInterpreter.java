@@ -5,6 +5,7 @@ import java.util.Map.Entry;
 import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AMapletPatternMaplet;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
@@ -12,7 +13,7 @@ import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.Value;
 
-public class AMapPatternMapletAssistantInterpreter
+public class AMapPatternMapletAssistantInterpreter implements IAstAssistant
 
 {
 	protected static IInterpreterAssistantFactory af;

@@ -23,6 +23,8 @@
 
 package org.overture.interpreter.values;
 
+import java.util.Set;
+
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
@@ -109,10 +111,11 @@ public class UpdatableValue extends ReferenceValue
 	}
 
 	@Override
-	public synchronized Value convertValueTo(PType to, Context ctxt)
+	protected
+	synchronized Value convertValueTo(PType to, Context ctxt, Set<PType> done)
 			throws AnalysisException
 	{
-		return value.convertValueTo(to, ctxt).getUpdatable(listeners);
+		return value.convertValueTo(to, ctxt, done).getUpdatable(listeners);
 	}
 
 	@Override

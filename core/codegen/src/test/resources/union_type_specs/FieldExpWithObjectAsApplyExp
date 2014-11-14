@@ -1,0 +1,21 @@
+class Entry
+
+instance variables
+
+public x : int := 10;
+
+operations
+
+public static S : Entry ==> Entry
+S (p) == return p;
+
+public static Run : () ==> ?
+Run () ==
+let
+	  ss = if 1 = 1 then [[new Entry()]] else [[]],
+	  s = ss(1),
+  	y = Entry`S(s(len s)).x
+in 
+ return y;
+ 
+end Entry

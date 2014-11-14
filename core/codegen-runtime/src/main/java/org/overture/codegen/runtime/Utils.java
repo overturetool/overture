@@ -134,4 +134,87 @@ public class Utils
 		
 		throw new RuntimeException("Postcondition failure: post_" + name);
 	}
+	
+	public static boolean is_bool(Object value)
+	{
+		return value instanceof Boolean;
+	}
+	
+	public static boolean is_nat(Object value)
+	{
+		return isIntWithinRange(value, 0);
+	}	
+	
+	public static boolean is_nat1(Object value)
+	{
+		return isIntWithinRange(value, 1);
+	}
+
+	public static boolean is_int(Object value)
+	{
+		Double doubleValue = getDoubleValue(value);
+		
+		return is_int(doubleValue);
+	}
+
+	public static boolean is_rat(Object value)
+	{
+		return value instanceof Number;
+	}
+	
+	public static boolean is_real(Object value)
+	{
+		return value instanceof Number;
+	}
+	
+	public static boolean is_char(Object value)
+	{
+		return value instanceof Character;
+	}
+	
+	public static boolean is_token(Object value)
+	{
+		return value instanceof Token;
+	}
+
+	@SuppressWarnings("rawtypes")
+	public static boolean is_Tuple(Object exp, Class... types)
+	{
+		return exp instanceof Tuple && ((Tuple) exp).compatible(types);
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public static boolean is_(Object exp, Class type)
+	{
+		return exp != null && exp.getClass() == type;
+	}
+
+	private static boolean is_int(Double doubleValue)
+	{
+		return doubleValue != null && (doubleValue == Math.floor(doubleValue)) && !Double.isInfinite(doubleValue);
+	}
+	
+	private static boolean isIntWithinRange(Object value, int lowerLimit)
+	{
+		Double doubleValue = getDoubleValue(value);
+		
+		if(!is_int(doubleValue))
+		{
+			return false;
+		}
+		
+		return doubleValue >= lowerLimit;
+	}
+	
+	private static Double getDoubleValue(Object value)
+	{
+		if(!(value instanceof Number))
+		{
+			return null;
+		}
+		
+		Double doubleValue = ((Number) value).doubleValue();
+		
+		return doubleValue;
+	}
 }

@@ -21,6 +21,15 @@ public class A {
 }
 
 ##########
+
+package quotes;
+
+public interface Quotes {
+    public static Number start = 1L;
+    public static Number append = 2L;
+}
+
+##########
 *Name Violations*
 
 Reserved name violation: [Violation in module A: 'double'. Location: line 5 at position: 8 in NameViolationsJavakeyword]. Prefix 'cg_' has been added to the name

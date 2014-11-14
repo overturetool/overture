@@ -47,6 +47,7 @@ import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
+import org.overture.codegen.cgast.expressions.SBinaryExpCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AFieldObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
@@ -57,11 +58,20 @@ import org.overture.codegen.cgast.types.ACharBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.AIntBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
+import org.overture.codegen.cgast.types.ANat1BasicTypeWrappersTypeCG;
+import org.overture.codegen.cgast.types.ANat1NumericBasicTypeCG;
+import org.overture.codegen.cgast.types.ANatBasicTypeWrappersTypeCG;
+import org.overture.codegen.cgast.types.ANatNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.AObjectTypeCG;
+import org.overture.codegen.cgast.types.ARatBasicTypeWrappersTypeCG;
+import org.overture.codegen.cgast.types.ARatNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
+import org.overture.codegen.cgast.types.ASetSetTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.ATokenBasicTypeCG;
+import org.overture.codegen.cgast.types.AUnionTypeCG;
 import org.overture.codegen.cgast.types.SBasicTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
@@ -70,7 +80,6 @@ import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.logging.Logger;
 import org.overture.typechecker.TypeComparator;
-import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
@@ -82,7 +91,7 @@ public class TypeAssistantCG extends AssistantBase
 	}
 
 	public AMethodTypeCG getMethodType(IRInfo info, List<AClassDeclCG> classes,
-			String fieldModule, String fieldName, LinkedList<SExpCG> args)
+			String fieldModule, String fieldName, List<SExpCG> args)
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
 		AClassDeclCG classDecl = assistantManager.getDeclAssistant().findClass(classes, fieldModule);
@@ -186,7 +195,7 @@ public class TypeAssistantCG extends AssistantBase
 		return true;
 	}
 
-	public PDefinition getTypeDef(ILexNameToken nameToken)
+	public PDefinition getTypeDef(ILexNameToken nameToken, PDefinitionAssistantTC defAssistant)
 	{
 		PDefinition def = (PDefinition) nameToken.getAncestor(PDefinition.class);
 
@@ -201,10 +210,6 @@ public class TypeAssistantCG extends AssistantBase
 		{
 			return null;
 		}
-
-		// FIXME factories cannot be instantiated inside code blocks
-		TypeCheckerAssistantFactory factory = new TypeCheckerAssistantFactory();
-		PDefinitionAssistantTC defAssistant = factory.createPDefinitionAssistant();
 
 		enclosingClass.getName().getModule();
 		PDefinition typeDef = defAssistant.findType(def, nameToken, enclosingClass.getName().getModule());
@@ -246,6 +251,12 @@ public class TypeAssistantCG extends AssistantBase
 		if (basicType instanceof AIntNumericBasicTypeCG)
 		{
 			return new AIntBasicTypeWrappersTypeCG();
+		} else if(basicType instanceof ANat1NumericBasicTypeCG)
+		{
+			return new ANat1BasicTypeWrappersTypeCG();
+		} else if(basicType instanceof ANatNumericBasicTypeCG)
+		{
+			return new ANatBasicTypeWrappersTypeCG();
 		} else if (basicType instanceof ARealNumericBasicTypeCG)
 		{
 			return new ARealBasicTypeWrappersTypeCG();
@@ -260,8 +271,6 @@ public class TypeAssistantCG extends AssistantBase
 			return basicType;
 		} else
 		{
-			Logger.getLog().printErrorln("Unexpected basic type encountered in getWrapperType method: "
-					+ basicType);
 			return null;
 		}
 
@@ -288,11 +297,8 @@ public class TypeAssistantCG extends AssistantBase
 	}
 
 	public boolean isUnionOfType(AUnionType unionType,
-			Class<? extends PType> type)
+			Class<? extends PType> type, PTypeAssistantTC typeAssistant)
 	{
-		TypeCheckerAssistantFactory factory = new TypeCheckerAssistantFactory();
-		PTypeAssistantTC typeAssistant = factory.createPTypeAssistant();
-
 		try
 		{
 			for (PType t : unionType.getTypes())
@@ -431,7 +437,9 @@ public class TypeAssistantCG extends AssistantBase
 			unionType.getTypes().clear();
 			unionType.getTypes().addAll(possibleTypes);
 
-			if (question.getTypeAssistant().isUnionOfType(unionType, AProductType.class))
+			PTypeAssistantTC typeAssistant = question.getTcFactory().createPTypeAssistant();
+			
+			if (question.getTypeAssistant().isUnionOfType(unionType, AProductType.class, typeAssistant))
 			{
 				List<PType> fieldsTypes = new LinkedList<PType>();
 				int noOfFields = ((ATuplePattern) pattern).getPlist().size();
@@ -454,6 +462,25 @@ public class TypeAssistantCG extends AssistantBase
 				return unionType;
 			}
 		}
+	}
+	
+	public List<STypeCG> clearObjectTypes(List<STypeCG> types)
+	{
+		types = new LinkedList<STypeCG>(types);
+		
+		List<AObjectTypeCG> objectTypes = new LinkedList<AObjectTypeCG>();
+		
+		for(STypeCG type : types)
+		{
+			if(type instanceof AObjectTypeCG)
+			{
+				objectTypes.add((AObjectTypeCG) type);
+			}
+		}
+		
+		types.removeAll(objectTypes);
+		
+		return types;
 	}
 	
 	public boolean isStringType(STypeCG type)
@@ -531,5 +558,116 @@ public class TypeAssistantCG extends AssistantBase
 		}
 		
 		return type;
+	}
+	
+	public SSeqTypeCG getSeqType(AUnionTypeCG unionType)
+	{
+		AUnionTypeCG seqOf = new AUnionTypeCG();
+		seqOf.setTypes(findElementTypes(unionType, new CollectionTypeStrategy()
+		{
+			@Override
+			public boolean isCollectionType(STypeCG type)
+			{
+				return type instanceof SSeqTypeCG;
+			}
+			
+			@Override
+			public STypeCG getElementType(STypeCG type)
+			{
+				return ((SSeqTypeCG) type).getSeqOf();
+			}
+		}));
+		
+		ASeqSeqTypeCG seqType = new ASeqSeqTypeCG();
+		seqType.setEmpty(false);
+		seqType.setSeqOf(seqOf);
+		
+		return seqType;
+	}
+	
+	public SSetTypeCG getSetType(AUnionTypeCG unionType)
+	{
+		AUnionTypeCG setOf = new AUnionTypeCG();
+		setOf.setTypes(findElementTypes(unionType, new CollectionTypeStrategy()
+		{
+			@Override
+			public boolean isCollectionType(STypeCG type)
+			{
+				return type instanceof SSetTypeCG;
+			}
+			
+			@Override
+			public STypeCG getElementType(STypeCG type)
+			{
+				return ((SSetTypeCG) type).getSetOf();
+			}
+		}));
+		
+		ASetSetTypeCG setType = new ASetSetTypeCG();
+		setType.setEmpty(false);
+		setType.setSetOf(setOf);
+		
+		return setType;
+	}
+	
+	public boolean usesUnionType(SBinaryExpCG node)
+	{
+		return node.getLeft().getType() instanceof AUnionTypeCG || node.getRight().getType() instanceof AUnionTypeCG;
+	}
+	
+	public List<STypeCG> findElementTypes(AUnionTypeCG unionType, CollectionTypeStrategy strategy)
+	{
+		List<STypeCG> elementTypes = new LinkedList<STypeCG>();
+		
+		for (int i = 0; i < unionType.getTypes().size(); i++)
+		{
+			STypeCG type = unionType.getTypes().get(i);
+
+			if (type instanceof AUnionTypeCG)
+			{
+				elementTypes.addAll(findElementTypes((AUnionTypeCG) type, strategy));
+			} else if (strategy.isCollectionType(type))
+			{
+				elementTypes.add(strategy.getElementType(type));
+			}
+		}
+		
+		return elementTypes;
+	}
+	
+	public boolean containsType(List<STypeCG> types, STypeCG searchedType)
+	{
+		for(STypeCG currentType : types)
+		{
+			if(currentType.getClass() == searchedType.getClass())
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public boolean isNumericType(STypeCG type)
+	{
+		return isInt(type) || isRealOrRat(type);
+	}
+
+	public boolean isRealOrRat(STypeCG type)
+	{
+		return type instanceof ARatNumericBasicTypeCG
+				|| type instanceof ARatBasicTypeWrappersTypeCG
+				|| type instanceof ARealNumericBasicTypeCG
+				|| type instanceof ARealBasicTypeWrappersTypeCG;
+	}
+
+	public boolean isInt(STypeCG type)
+	{
+		return type instanceof AIntNumericBasicTypeCG
+				|| type instanceof AIntBasicTypeWrappersTypeCG
+				|| type instanceof ANat1NumericBasicTypeCG
+				|| type instanceof ANat1BasicTypeWrappersTypeCG
+				|| type instanceof ANatNumericBasicTypeCG
+				|| type instanceof ANatBasicTypeWrappersTypeCG;
 	}
 }

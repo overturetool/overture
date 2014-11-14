@@ -1,5 +1,6 @@
 package org.overture.interpreter.assistant.expression;
 
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.expressions.APostOpExp;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
@@ -11,7 +12,7 @@ import org.overture.interpreter.values.OperationValue;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueMap;
 
-public class APostOpExpAssistantInterpreter // extends APostOpExpAssistantTC
+public class APostOpExpAssistantInterpreter implements IAstAssistant
 {
 	protected static IInterpreterAssistantFactory af;
 
