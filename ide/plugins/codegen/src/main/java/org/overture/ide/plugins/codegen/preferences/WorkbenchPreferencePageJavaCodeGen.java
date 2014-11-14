@@ -44,6 +44,7 @@ public class WorkbenchPreferencePageJavaCodeGen extends PreferencePage implement
 {
 	private Button disableCloningCheckBox;
 	private Button generateAsStrCheckBox;
+	private Button generateConcMechanismsCheckBox;
 	private Text classesToSkipField;
 
 	@Override
@@ -63,6 +64,9 @@ public class WorkbenchPreferencePageJavaCodeGen extends PreferencePage implement
 
 		generateAsStrCheckBox = new Button(composite, SWT.CHECK);
 		generateAsStrCheckBox.setText("Generate character sequences as strings");
+		
+		generateConcMechanismsCheckBox = new Button(composite, SWT.CHECK);
+		generateConcMechanismsCheckBox.setText("Generate concurrency mechanisms");
 
 		GridData gridData = new GridData();
 		gridData.horizontalAlignment = GridData.FILL;
@@ -105,10 +109,13 @@ public class WorkbenchPreferencePageJavaCodeGen extends PreferencePage implement
 		boolean generateAsStrings = generateAsStrCheckBox.getSelection();
 		store.setDefault(ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRINGS, generateAsStrings);
 		
+		boolean generateConcMechanisms = generateConcMechanismsCheckBox.getSelection();
+		store.setDefault(ICodeGenConstants.GENERATE_CONCURRENCY_MECHANISMS, generateConcMechanisms);
+		
 		String userSpecifiedClassesToSkip = classesToSkipField.getText();
 		store.setDefault(ICodeGenConstants.CLASSES_TO_SKIP, userSpecifiedClassesToSkip);
 
-		Activator.savePluginSettings(disableCloning, generateAsStrings, userSpecifiedClassesToSkip);;
+		Activator.savePluginSettings(disableCloning, generateAsStrings, generateConcMechanisms, userSpecifiedClassesToSkip);;
 		
 		refreshControls();
 	}
@@ -126,6 +133,11 @@ public class WorkbenchPreferencePageJavaCodeGen extends PreferencePage implement
 		if(generateAsStrCheckBox != null)
 		{
 			generateAsStrCheckBox.setSelection(ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRING_DEFAULT);
+		}
+		
+		if(generateConcMechanismsCheckBox != null)
+		{
+			generateConcMechanismsCheckBox.setSelection(ICodeGenConstants.GENERATE_CONCURRENCY_MECHANISMS_DEFAULT);
 		}
 		
 		if(classesToSkipField != null)
@@ -152,6 +164,11 @@ public class WorkbenchPreferencePageJavaCodeGen extends PreferencePage implement
 		if (generateAsStrCheckBox != null)
 		{
 			generateAsStrCheckBox.setSelection(preferences.getBoolean(ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRINGS, ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRING_DEFAULT));
+		}
+		
+		if(generateConcMechanismsCheckBox != null)
+		{
+			generateConcMechanismsCheckBox.setSelection(preferences.getBoolean(ICodeGenConstants.GENERATE_CONCURRENCY_MECHANISMS, ICodeGenConstants.GENERATE_CONCURRENCY_MECHANISMS_DEFAULT));
 		}
 		
 		if (classesToSkipField != null)
