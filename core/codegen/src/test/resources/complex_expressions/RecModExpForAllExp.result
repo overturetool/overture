@@ -1,0 +1,83 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Rec Run() {
+        Rec r1 = new Rec(5L, true);
+        Number x = 1L;
+        Rec recModifierExp_1 = Utils.clone(r1);
+
+        recModifierExp_1.x = 6L;
+
+        Long exists1Counter_1 = 0L;
+        VDMSet set_1 = SetUtil.set(1L, 2L, 3L);
+
+        for (Iterator iterator_1 = set_1.iterator();
+                iterator_1.hasNext() && (exists1Counter_1.longValue() < 2L);) {
+            Number p = ((Number) iterator_1.next());
+
+            if (p.longValue() == 2L) {
+                exists1Counter_1++;
+            }
+        }
+
+        recModifierExp_1.b = exists1Counter_1.longValue() == 1L;
+
+        Rec r2 = Utils.clone(recModifierExp_1);
+        Number y = 2L;
+
+        return Utils.clone(r2);
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+
+    public static class Rec implements Record {
+        public Number x;
+        public Boolean b;
+
+        public Rec(final Number _x, final Boolean _b) {
+            x = _x;
+            b = _b;
+        }
+
+        public boolean equals(final Object obj) {
+            if (!(obj instanceof Rec)) {
+                return false;
+            }
+
+            Rec other = ((Rec) obj);
+
+            return (x.longValue() == other.x.longValue()) && (b == other.b);
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(x, b);
+        }
+
+        public Rec clone() {
+            return new Rec(x, b);
+        }
+
+        public String toString() {
+            return Utils.recordToString(this, x, b);
+        }
+    }
+}
+
+##########
+
+package quotes;
+
+public interface Quotes {
+    public static Number start = 1L;
+    public static Number append = 2L;
+}
+
+##########

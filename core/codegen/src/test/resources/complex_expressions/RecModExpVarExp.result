@@ -1,0 +1,71 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Rec Run() {
+        Rec r1 = new Rec(5L, true);
+        Number x0 = 10L;
+        Boolean b0 = true;
+        Rec recModifierExp_1 = Utils.clone(r1);
+
+        recModifierExp_1.x = x0;
+        recModifierExp_1.b = b0;
+
+        Rec r2 = Utils.clone(recModifierExp_1);
+        Number y = 2L;
+
+        return Utils.clone(r2);
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+
+    public static class Rec implements Record {
+        public Number x;
+        public Boolean b;
+
+        public Rec(final Number _x, final Boolean _b) {
+            x = _x;
+            b = _b;
+        }
+
+        public boolean equals(final Object obj) {
+            if (!(obj instanceof Rec)) {
+                return false;
+            }
+
+            Rec other = ((Rec) obj);
+
+            return (x.longValue() == other.x.longValue()) && (b == other.b);
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(x, b);
+        }
+
+        public Rec clone() {
+            return new Rec(x, b);
+        }
+
+        public String toString() {
+            return Utils.recordToString(this, x, b);
+        }
+    }
+}
+
+##########
+
+package quotes;
+
+public interface Quotes {
+    public static Number start = 1L;
+    public static Number append = 2L;
+}
+
+##########
