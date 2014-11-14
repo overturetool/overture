@@ -41,6 +41,7 @@ import org.overture.codegen.assistant.TypeAssistantCG;
 import org.overture.codegen.cgast.SBindCG;
 import org.overture.codegen.cgast.SDeclCG;
 import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.SModifierCG;
 import org.overture.codegen.cgast.SMultipleBindCG;
 import org.overture.codegen.cgast.SObjectDesignatorCG;
 import org.overture.codegen.cgast.SPatternCG;
@@ -156,6 +157,11 @@ public class IRInfo
 	public CGVisitor<SPatternCG> getPatternVisitor()
 	{
 		return visitorManager.getPatternVisitor();
+	}
+
+	public CGVisitor<SModifierCG> getModifierVisitor()
+	{
+		return visitorManager.getModifierVisitor();
 	}
 
 	public ExpAssistantCG getExpAssistant()

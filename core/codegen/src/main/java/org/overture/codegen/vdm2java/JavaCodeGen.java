@@ -118,6 +118,7 @@ public class JavaCodeGen
 	public static final String OR_EXP_NAME_PREFIX = "orResult_";
 	public static final String WHILE_COND_NAME_PREFIX = "whileCond";
 	public static final String IS_EXP_SUBJECT_NAME_PREFIX = "isExpSubject_";
+	public static final String REC_MODIFIER_NAME_PREFIX = "recModifierExp_";
 	
 	public static final String MISSING_OP_MEMBER = "Missing operation member: ";
 	public static final String MISSING_MEMBER = "Missing member: ";
@@ -132,7 +133,7 @@ public class JavaCodeGen
 	
 	public static final String QUOTE_START = "start";
 	public static final String QUOTE_APPEND = "append";
-	
+
 	public JavaCodeGen()
 	{
 		init(null);
@@ -267,7 +268,7 @@ public class JavaCodeGen
 		DeflattenTransformation deflattenTransformation = new DeflattenTransformation(transformationAssistant);
 		FunctionValueVisitor funcValVisitor = new FunctionValueVisitor(irInfo, transformationAssistant, functionValueAssistant, INTERFACE_NAME_PREFIX, TEMPLATE_TYPE_PREFIX, EVAL_METHOD_PREFIX, PARAM_NAME_PREFIX);
 		ILanguageIterator langIterator = new JavaLanguageIterator(transformationAssistant, irInfo.getTempVarNameGen(), varPrefixes);
-		TransformationVisitor transVisitor = new TransformationVisitor(irInfo, varPrefixes, transformationAssistant, langIterator, TERNARY_IF_EXP_NAME_PREFIX, CASES_EXP_RESULT_NAME_PREFIX, AND_EXP_NAME_PREFIX, OR_EXP_NAME_PREFIX, WHILE_COND_NAME_PREFIX);
+		TransformationVisitor transVisitor = new TransformationVisitor(irInfo, classes, varPrefixes, transformationAssistant, langIterator, TERNARY_IF_EXP_NAME_PREFIX, CASES_EXP_RESULT_NAME_PREFIX, AND_EXP_NAME_PREFIX, OR_EXP_NAME_PREFIX, WHILE_COND_NAME_PREFIX, REC_MODIFIER_NAME_PREFIX);
 		PatternTransformation patternTransformation = new PatternTransformation(classes, varPrefixes, irInfo, transformationAssistant, new PatternMatchConfig());
 		PreCheckTransformation preCheckTransformation = new PreCheckTransformation(irInfo, transformationAssistant, new JavaValueSemanticsTag(false));
 		PostCheckTransformation postCheckTransformation = new PostCheckTransformation(postCheckCreator, irInfo, transformationAssistant, FUNC_RESULT_NAME_PREFIX, new JavaValueSemanticsTag(false));
