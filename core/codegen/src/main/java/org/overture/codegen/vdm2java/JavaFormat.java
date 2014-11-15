@@ -107,12 +107,10 @@ public class JavaFormat
 	private MergeVisitor mergeVisitor;
 	private JavaValueSemantics valueSemantics;
 
-	private JavaRecordCreator recordCreator;
-
 	public JavaFormat(TempVarPrefixes varPrefixes, IRInfo info)
 	{
 		this.valueSemantics = new JavaValueSemantics(this);
-		this.recordCreator = new JavaRecordCreator(this);
+		JavaObjectCreator recordCreator = new JavaRecordCreator(this);
 		TemplateCallable[] templateCallables = TemplateCallableManager.constructTemplateCallables(this, IRAnalysis.class, varPrefixes, valueSemantics, recordCreator);
 		this.mergeVisitor = new MergeVisitor(JavaCodeGen.JAVA_TEMPLATE_STRUCTURE, templateCallables);
 		this.functionValueAssistant = null;
