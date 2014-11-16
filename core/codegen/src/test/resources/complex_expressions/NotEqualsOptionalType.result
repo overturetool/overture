@@ -1,0 +1,37 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        Number x = 1.1;
+        Boolean andResult_1 = false;
+
+        if (!(Utils.equals(x.doubleValue(), null))) {
+            if (!(Utils.equals(null, x.doubleValue()))) {
+                andResult_1 = true;
+            }
+        }
+
+        return andResult_1;
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########
+
+package quotes;
+
+public interface Quotes {
+    public static Number start = 1L;
+    public static Number append = 2L;
+}
+
+##########
