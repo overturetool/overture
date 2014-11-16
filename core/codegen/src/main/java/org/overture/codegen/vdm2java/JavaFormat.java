@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.overture.ast.expressions.AUnaryMinusUnaryExp;
 import org.overture.ast.types.PType;
 import org.overture.codegen.assistant.TypeAssistantCG;
 import org.overture.codegen.cgast.INode;
@@ -48,9 +49,11 @@ import org.overture.codegen.cgast.expressions.AHeadUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AHistoryExpCG;
 import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AMapletExpCG;
+import org.overture.codegen.cgast.expressions.AMinusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
+import org.overture.codegen.cgast.expressions.APlusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AQuoteLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.SBinaryExpCG;
@@ -321,7 +324,9 @@ public class JavaFormat
 		if (parent instanceof SNumericBinaryExpCG
 				|| parent instanceof AEqualsBinaryExpCG
 				|| parent instanceof ANotEqualsBinaryExpCG
-				|| parent instanceof AAbsUnaryExpCG)
+				|| parent instanceof AAbsUnaryExpCG
+				|| parent instanceof AMinusUnaryExpCG
+				|| parent instanceof APlusUnaryExpCG)
 		{
 			SExpCG exp = (SExpCG) node;
 			STypeCG type = exp.getType();
