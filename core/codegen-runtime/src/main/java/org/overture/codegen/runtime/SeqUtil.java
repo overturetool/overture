@@ -98,15 +98,15 @@ public class SeqUtil
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static VDMSeq subSeq(VDMSeq seq, long fromIndex, long toIndex)
+	public static VDMSeq subSeq(VDMSeq seq, Number fromIndex, Number toIndex)
 	{
-		if(fromIndex > toIndex || toIndex < 1)
+		if(fromIndex.longValue() > toIndex.longValue() || toIndex.longValue() < 1)
 		{
 			return seq();
 		}
 		
-		fromIndex = Utils.index(Math.max(1, fromIndex));
-		toIndex = Math.min(seq.size(), toIndex);
+		fromIndex = Utils.index(Math.max(1, fromIndex.longValue()));
+		toIndex = Math.min(seq.size(), toIndex.longValue());
 		
 		VDMSeq subSeq = seq();
 		subSeq.addAll(seq.subList(Utils.toInt(fromIndex), Utils.toInt(toIndex)));
@@ -114,15 +114,15 @@ public class SeqUtil
 		return subSeq;
 	}
 	
-	public static String subSeq(String seq, long fromIndex, long toIndex)
+	public static String subSeq(String seq, Number fromIndex, Number toIndex)
 	{
-		if(fromIndex > toIndex || toIndex < 1)
+		if(fromIndex.longValue() > toIndex.longValue() || toIndex.longValue() < 1)
 		{
 			return "";
 		}
 		
-		fromIndex = Utils.index(Math.max(1, fromIndex));
-		toIndex = Math.min(seq.length(), toIndex);
+		fromIndex = Utils.index(Math.max(1, fromIndex.longValue()));
+		toIndex = Math.min(seq.length(), toIndex.longValue());
 		
 		return seq.substring(Utils.toInt(fromIndex), Utils.toInt(toIndex));
 	}
