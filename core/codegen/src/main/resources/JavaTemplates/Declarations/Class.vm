@@ -1,14 +1,14 @@
-#set( $quoteImport = "")
-#if ( !$JavaFormat.isInnerClass($node) )
-	#if ($IRAnalysis.usesQuoteLiterals($node))
-		#set( $quoteImport = "import quotes.*;")
-	#end
-	##
+#set( $package = "")
+#if (!$JavaFormat.isNull($node.getPackage()))
+	#set( $package = "package ${node.getPackage()};")
+#end
+##
+$package
+##
+#if ( !$JavaFormat.isInnerClass($node) && !$JavaFormat.isQuote($node))
 #**#import org.overture.codegen.runtime.*;
 #**#import java.util.*;
 #end
-##
-$quoteImport
 ##
 #set( $abstract = "")
 #if ($node.getAbstract())

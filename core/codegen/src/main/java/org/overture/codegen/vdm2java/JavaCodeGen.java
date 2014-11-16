@@ -187,27 +187,42 @@ public class JavaCodeGen
 		return generator.getIRInfo();
 	}
 
-	public GeneratedModule generateJavaFromVdmQuotes()
+	public List<GeneratedModule> generateJavaFromVdmQuotes()
 	{
 		try
 		{
-			StringWriter writer = new StringWriter();
+			List<String> quoteValues = generator.getQuoteValues();
 
-			AInterfaceDeclCG quotesInterface = generator.getQuotes();
-			quotesInterface.setPackage(QUOTES);
-
-			if (quotesInterface.getFields().isEmpty())
+			if (quoteValues.isEmpty())
 			{
 				return null; // Nothing to generate
 			}
 
 			javaFormat.init();
-			quotesInterface.apply(javaFormat.getMergeVisitor(), writer);
-			String code = writer.toString();
+			
+			JavaQuoteValueCreator quoteValueCreator = new JavaQuoteValueCreator(irInfo);
+			
+			List<AClassDeclCG> quoteDecls = new LinkedList<AClassDeclCG>();
+			
+			for(String qv : quoteValues)
+			{
+				quoteDecls.add(quoteValueCreator.consQuoteValue(qv));
+			}
 
-			String formattedJavaCode = JavaCodeGenUtil.formatJavaCode(code);
+			List<GeneratedModule> modules = new LinkedList<GeneratedModule>();
+			
+			for (AClassDeclCG q : quoteDecls)
+			{
+				StringWriter writer = new StringWriter();
+				q.apply(javaFormat.getMergeVisitor(), writer);
+				String code = writer.toString();
+				String formattedJavaCode = JavaCodeGenUtil.formatJavaCode(code);
+				
+				modules.add(new GeneratedModule(q.getName(), q, formattedJavaCode));
+			}
 
-			return new GeneratedModule(quotesInterface.getName(), quotesInterface, formattedJavaCode);
+
+			return modules;
 
 		} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 		{
@@ -273,7 +288,7 @@ public class JavaCodeGen
 		PreCheckTransformation preCheckTransformation = new PreCheckTransformation(irInfo, transformationAssistant, new JavaValueSemanticsTag(false));
 		PostCheckTransformation postCheckTransformation = new PostCheckTransformation(postCheckCreator, irInfo, transformationAssistant, FUNC_RESULT_NAME_PREFIX, new JavaValueSemanticsTag(false));
 		IsExpTransformation isExpTransformation = new IsExpTransformation(irInfo, transformationAssistant, IS_EXP_SUBJECT_NAME_PREFIX);
-		TypeTransformation typeTransformation = new TypeTransformation(transformationAssistant);
+		//TypeTransformation typeTransformation = new TypeTransformation(transformationAssistant);
 
 		//Conc
 		SentinelTransformation Concurrencytransform = new SentinelTransformation(irInfo,classes);
@@ -288,7 +303,7 @@ public class JavaCodeGen
 				funcTransformation, prePostTransformation, ifExpTransformation,
 				deflattenTransformation, funcValVisitor, transVisitor,
 				deflattenTransformation, patternTransformation, preCheckTransformation, postCheckTransformation,
-				deflattenTransformation, isExpTransformation, typeTransformation, unionTypeTransformation, javaToStringTransformation,
+				deflattenTransformation, isExpTransformation, /*typeTransformation,*/ unionTypeTransformation, javaToStringTransformation,
 				Concurrencytransform,mutexTransform, mainclassTransform};
 
 		for (DepthFirstAnalysisAdaptor transformation : analyses)

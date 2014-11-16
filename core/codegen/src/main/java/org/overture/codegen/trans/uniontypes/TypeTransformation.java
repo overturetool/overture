@@ -33,6 +33,7 @@ import org.overture.codegen.cgast.types.AUnionTypeCG;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.trans.assistants.BaseTransformationAssistant;
 
+//Invalidated
 public class TypeTransformation extends DepthFirstAnalysisAdaptor
 {
 	private BaseTransformationAssistant baseAssistant;

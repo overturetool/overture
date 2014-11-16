@@ -579,6 +579,12 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		SExpCG unionTypedExp = null;
 		SExpCG notUnionTypedExp = null;
 
+		//TODO: Is this the right way to do it?
+		if(leftType instanceof AUnionTypeCG || rightType instanceof AUnionTypeCG)
+		{
+			return;
+		}
+		
 		if (leftType instanceof AUnionTypeCG
 				&& !(rightType instanceof AUnionTypeCG))
 		{

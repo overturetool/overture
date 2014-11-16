@@ -77,8 +77,8 @@ public class CompileTests
 	public static final boolean RUN_CONFIGURED_STRING_GENERATION_TESTS = false;
 	public static final boolean RUN_CONFIGURED_CLONE_TESTS = false;
 	public static final boolean RUN_PATTERN_TESTS = false;
-	public static final boolean RUN_UNION_TESTS = false;
-	public static final boolean RUN_CONCURRENCY_TESTS = true;
+	public static final boolean RUN_UNION_TESTS = true;
+	public static final boolean RUN_CONCURRENCY_TESTS = false;
 	public static final boolean RUN_BIND_TESTS = false;
 	public static final boolean PRE_POST_TESTS = false;
 
@@ -387,7 +387,12 @@ public class CompileTests
 		for (int i = 0; i < testCount; i++)
 		{
 			File currentInputFile = testInputFiles.get(i);
-
+			
+			if(i < 30)//!currentInputFile.getName().contains("NewExpClass"))
+			{
+				continue;
+			}
+			
 			GeneralUtils.deleteFolderContents(parent, FOLDER_NAMES_TO_AVOID);
 
 			// Calculating the Java result:
