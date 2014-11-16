@@ -47,17 +47,17 @@ public class SharedCounter implements EvaluatePP {
     }
 
     public Boolean evaluatePP(final Number fnr) {
-        if (fnr.longValue() == 0L) {
-            return (sentinel.active[((SharedCounter_sentinel) sentinel).inc] +
-            sentinel.active[((SharedCounter_sentinel) sentinel).decr]) == 0L;
-        } else if (fnr.longValue() == 1L) {
-            return (sentinel.active[((SharedCounter_sentinel) sentinel).inc] +
-            sentinel.active[((SharedCounter_sentinel) sentinel).decr]) == 0L;
-        } else if (fnr.longValue() == 2L) {
+        if (Utils.equals(fnr.longValue(), 0L)) {
+            return Utils.equals(sentinel.active[((SharedCounter_sentinel) sentinel).inc] +
+                sentinel.active[((SharedCounter_sentinel) sentinel).decr], 0L);
+        } else if (Utils.equals(fnr.longValue(), 1L)) {
+            return Utils.equals(sentinel.active[((SharedCounter_sentinel) sentinel).inc] +
+                sentinel.active[((SharedCounter_sentinel) sentinel).decr], 0L);
+        } else if (Utils.equals(fnr.longValue(), 2L)) {
             return true;
-        } else if (fnr.longValue() == 3L) {
+        } else if (Utils.equals(fnr.longValue(), 3L)) {
             return true;
-        } else if (fnr.longValue() == 4L) {
+        } else if (Utils.equals(fnr.longValue(), 4L)) {
             return true;
         } else {
             return true;
@@ -153,17 +153,17 @@ public class Incrementer extends Thread implements EvaluatePP {
     }
 
     public Boolean evaluatePP(final Number fnr) {
-        if (fnr.longValue() == 0L) {
+        if (Utils.equals(fnr.longValue(), 0L)) {
             return true;
-        } else if (fnr.longValue() == 1L) {
+        } else if (Utils.equals(fnr.longValue(), 1L)) {
             return true;
-        } else if (fnr.longValue() == 2L) {
+        } else if (Utils.equals(fnr.longValue(), 2L)) {
             return isFinished;
-        } else if (fnr.longValue() == 3L) {
+        } else if (Utils.equals(fnr.longValue(), 3L)) {
             return true;
-        } else if (fnr.longValue() == 4L) {
+        } else if (Utils.equals(fnr.longValue(), 4L)) {
             return true;
-        } else if (fnr.longValue() == 5L) {
+        } else if (Utils.equals(fnr.longValue(), 5L)) {
             return true;
         } else {
             return true;
@@ -226,11 +226,11 @@ public class Entry implements EvaluatePP {
     }
 
     public Boolean evaluatePP(final Number fnr) {
-        if (fnr.longValue() == 0L) {
+        if (Utils.equals(fnr.longValue(), 0L)) {
             return true;
-        } else if (fnr.longValue() == 1L) {
+        } else if (Utils.equals(fnr.longValue(), 1L)) {
             return true;
-        } else if (fnr.longValue() == 2L) {
+        } else if (Utils.equals(fnr.longValue(), 2L)) {
             return true;
         } else {
             return true;

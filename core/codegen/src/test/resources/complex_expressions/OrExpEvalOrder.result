@@ -49,8 +49,8 @@ public class Entry {
             A x = ((A) iterator_1.next());
             Boolean orResult_1 = false;
 
-            if ((x.n.longValue() -
-                    (2L * Math.round(Math.floor(x.n.longValue() / 2L)))) == 0L) {
+            if (Utils.equals((x.n.longValue() -
+                        (2L * Math.round(Math.floor(x.n.longValue() / 2L)))), 0L)) {
                 orResult_1 = true;
             } else {
                 orResult_1 = x.test();

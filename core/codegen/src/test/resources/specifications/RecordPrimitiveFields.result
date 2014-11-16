@@ -36,11 +36,12 @@ public class A {
 
             RecA other = ((RecA) obj);
 
-            return (i.longValue() == other.i.longValue()) && (c == other.c) &&
-            (r.doubleValue() == other.r.doubleValue()) &&
-            (q.doubleValue() == other.q.doubleValue()) &&
-            (n.longValue() == other.n.longValue()) &&
-            (n1.longValue() == other.n1.longValue());
+            return (Utils.equals(i.longValue(), other.i.longValue())) &&
+            (Utils.equals(c, other.c)) &&
+            (Utils.equals(r.doubleValue(), other.r.doubleValue())) &&
+            (Utils.equals(q.doubleValue(), other.q.doubleValue())) &&
+            (Utils.equals(n.longValue(), other.n.longValue())) &&
+            (Utils.equals(n1.longValue(), other.n1.longValue()));
         }
 
         public int hashCode() {

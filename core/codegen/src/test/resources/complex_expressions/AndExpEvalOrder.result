@@ -34,7 +34,7 @@ public class Entry {
             Object x = ((Object) iterator_1.next());
             Boolean andResult_1 = false;
 
-            if (x != null) {
+            if (!(Utils.equals(x, null))) {
                 Number apply_1 = null;
 
                 if (x instanceof A) {
@@ -43,7 +43,7 @@ public class Entry {
                     throw new RuntimeException("Missing member: f");
                 }
 
-                if (apply_1.longValue() == 1L) {
+                if (Utils.equals(apply_1.longValue(), 1L)) {
                     andResult_1 = true;
                 }
             }

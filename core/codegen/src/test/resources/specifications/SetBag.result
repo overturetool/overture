@@ -172,7 +172,7 @@ public class Bag {
     public void printBag() {
         IO.print(SeqUtil.seq('{'));
 
-        if (numbers.size() == 0L) {
+        if (Utils.equals(numbers.size(), 0L)) {
             IO.print(SeqUtil.seq(' '));
         } else {
             for (Iterator iterator_2 = numbers.iterator();

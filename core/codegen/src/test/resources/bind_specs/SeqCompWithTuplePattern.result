@@ -31,7 +31,7 @@ public class Entry {
 
                 if (success_1) {
                     Number intPattern_1 = ((Number) tuplePattern_2.get(0));
-                    success_1 = intPattern_1.longValue() == 2L;
+                    success_1 = Utils.equals(intPattern_1.longValue(), 2L);
 
                     if (success_1) {
                         a = ((Number) tuplePattern_2.get(1));
@@ -43,7 +43,7 @@ public class Entry {
                 continue;
             }
 
-            if (1L == 1L) {
+            if (Utils.equals(1L, 1L)) {
                 seqCompResult_1 = SeqUtil.conc(Utils.clone(seqCompResult_1),
                         SeqUtil.seq(a));
             }

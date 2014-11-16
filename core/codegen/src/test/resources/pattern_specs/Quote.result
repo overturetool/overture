@@ -10,14 +10,16 @@ public class A {
     }
 
     public Number quotePatternOp(final Number quotePattern_1) {
-        Boolean success_1 = quotePattern_1.longValue() == Quotes.T1.longValue();
+        Boolean success_1 = Utils.equals(quotePattern_1.longValue(),
+                Quotes.T1.longValue());
 
         if (!(success_1)) {
             throw new RuntimeException("Quote pattern match failed");
         }
 
         Number quotePattern_2 = Quotes.T1;
-        Boolean success_2 = quotePattern_2.longValue() == Quotes.T1.longValue();
+        Boolean success_2 = Utils.equals(quotePattern_2.longValue(),
+                Quotes.T1.longValue());
 
         if (!(success_2)) {
             throw new RuntimeException("Quote pattern match failed");
@@ -27,14 +29,16 @@ public class A {
     }
 
     public static Number quotePatternFun(final Number quotePattern_3) {
-        Boolean success_3 = quotePattern_3.longValue() == Quotes.T1.longValue();
+        Boolean success_3 = Utils.equals(quotePattern_3.longValue(),
+                Quotes.T1.longValue());
 
         if (!(success_3)) {
             throw new RuntimeException("Quote pattern match failed");
         }
 
         Number quotePattern_4 = Quotes.T1;
-        Boolean success_4 = quotePattern_4.longValue() == Quotes.T1.longValue();
+        Boolean success_4 = Utils.equals(quotePattern_4.longValue(),
+                Quotes.T1.longValue());
 
         if (!(success_4)) {
             throw new RuntimeException("Quote pattern match failed");

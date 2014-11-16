@@ -10,7 +10,7 @@ public class Entry {
     public static VDMMap Run() {
         VDMSet ternaryIfExp_1 = null;
 
-        if (1L == 1L) {
+        if (Utils.equals(1L, 1L)) {
             ternaryIfExp_1 = SetUtil.set(SeqUtil.seq(new Rec(2L)));
         } else {
             ternaryIfExp_1 = SetUtil.set(SeqUtil.seq());
@@ -57,7 +57,7 @@ public class Entry {
 
             Rec other = ((Rec) obj);
 
-            return x.longValue() == other.x.longValue();
+            return Utils.equals(x.longValue(), other.x.longValue());
         }
 
         public int hashCode() {

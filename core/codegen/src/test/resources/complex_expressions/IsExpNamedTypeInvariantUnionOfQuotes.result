@@ -15,18 +15,19 @@ public class Entry {
         Number isExpSubject_3 = Quotes.A;
         Number isExpSubject_4 = Quotes.D;
 
-        return SeqUtil.seq((isExpSubject_1.longValue() == Quotes.A.longValue()) ||
-            (isExpSubject_1.longValue() == Quotes.B.longValue()) ||
-            (isExpSubject_1.longValue() == Quotes.C.longValue()) ||
-            (isExpSubject_1.longValue() == Quotes.D.longValue()),
-            (isExpSubject_2.longValue() == Quotes.A.longValue()) ||
-            (isExpSubject_2.longValue() == Quotes.B.longValue()) ||
-            (isExpSubject_2.longValue() == Quotes.C.longValue()) ||
-            (isExpSubject_2.longValue() == Quotes.D.longValue()),
-            (isExpSubject_3.longValue() == Quotes.C.longValue()) ||
-            (isExpSubject_3.longValue() == Quotes.D.longValue()),
-            (isExpSubject_4.longValue() == Quotes.C.longValue()) ||
-            (isExpSubject_4.longValue() == Quotes.D.longValue()));
+        return SeqUtil.seq((Utils.equals(isExpSubject_1.longValue(),
+                Quotes.A.longValue())) ||
+            (Utils.equals(isExpSubject_1.longValue(), Quotes.B.longValue())) ||
+            (Utils.equals(isExpSubject_1.longValue(), Quotes.C.longValue())) ||
+            (Utils.equals(isExpSubject_1.longValue(), Quotes.D.longValue())),
+            (Utils.equals(isExpSubject_2.longValue(), Quotes.A.longValue())) ||
+            (Utils.equals(isExpSubject_2.longValue(), Quotes.B.longValue())) ||
+            (Utils.equals(isExpSubject_2.longValue(), Quotes.C.longValue())) ||
+            (Utils.equals(isExpSubject_2.longValue(), Quotes.D.longValue())),
+            (Utils.equals(isExpSubject_3.longValue(), Quotes.C.longValue())) ||
+            (Utils.equals(isExpSubject_3.longValue(), Quotes.D.longValue())),
+            (Utils.equals(isExpSubject_4.longValue(), Quotes.C.longValue())) ||
+            (Utils.equals(isExpSubject_4.longValue(), Quotes.D.longValue())));
     }
 
     public String toString() {

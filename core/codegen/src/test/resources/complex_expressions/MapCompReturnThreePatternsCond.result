@@ -21,7 +21,7 @@ public class Entry {
                         iterator_3.hasNext();) {
                     Number z = ((Number) iterator_3.next());
 
-                    if (1L == 1L) {
+                    if (Utils.equals(1L, 1L)) {
                         mapCompResult_1 = MapUtil.munion(Utils.clone(
                                     mapCompResult_1),
                                 MapUtil.map(

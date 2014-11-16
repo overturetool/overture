@@ -9,15 +9,15 @@ public class Entry {
 
     public static Number casesReal(final Number n) {
         Number realPattern_1 = n;
-        Boolean success_1 = realPattern_1.doubleValue() == 1.1;
+        Boolean success_1 = Utils.equals(realPattern_1.doubleValue(), 1.1);
 
         if (!(success_1)) {
             Number realPattern_2 = n;
-            success_1 = realPattern_2.doubleValue() == 2.1;
+            success_1 = Utils.equals(realPattern_2.doubleValue(), 2.1);
 
             if (!(success_1)) {
                 Number realPattern_3 = n;
-                success_1 = realPattern_3.doubleValue() == 3.1;
+                success_1 = Utils.equals(realPattern_3.doubleValue(), 3.1);
 
                 if (success_1) {
                     return n.doubleValue() + 3.1;

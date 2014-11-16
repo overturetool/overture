@@ -16,9 +16,9 @@ public class ThreadClass extends Thread implements EvaluatePP {
     }
 
     public Boolean evaluatePP(final Number fnr) {
-        if (fnr.longValue() == 0L) {
+        if (Utils.equals(fnr.longValue(), 0L)) {
             return true;
-        } else if (fnr.longValue() == 1L) {
+        } else if (Utils.equals(fnr.longValue(), 1L)) {
             return true;
         } else {
             return true;
@@ -63,7 +63,7 @@ public class Entry implements EvaluatePP {
         Boolean whileCond1 = true;
 
         while (whileCond1) {
-            whileCond1 = t.x.longValue() != 2L;
+            whileCond1 = !(Utils.equals(t.x.longValue(), 2L));
 
             if (!(whileCond1)) {
                 break;
@@ -80,11 +80,11 @@ public class Entry implements EvaluatePP {
     }
 
     public Boolean evaluatePP(final Number fnr) {
-        if (fnr.longValue() == 0L) {
+        if (Utils.equals(fnr.longValue(), 0L)) {
             return true;
-        } else if (fnr.longValue() == 1L) {
+        } else if (Utils.equals(fnr.longValue(), 1L)) {
             return true;
-        } else if (fnr.longValue() == 2L) {
+        } else if (Utils.equals(fnr.longValue(), 2L)) {
             return true;
         } else {
             return true;

@@ -9,7 +9,7 @@ public class Entry {
 
     public static Boolean casesNil(final Entry e) {
         Entry nullPattern_1 = e;
-        Boolean success_1 = nullPattern_1 == null;
+        Boolean success_1 = Utils.equals(nullPattern_1, null);
 
         if (success_1) {
             return true;

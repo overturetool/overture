@@ -32,7 +32,7 @@ public class A {
 
             Node other = ((Node) obj);
 
-            return (e.longValue() == other.e.longValue()) &&
+            return (Utils.equals(e.longValue(), other.e.longValue())) &&
             (Utils.equals(r, other.r));
         }
 

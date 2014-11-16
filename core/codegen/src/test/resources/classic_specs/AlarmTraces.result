@@ -136,7 +136,7 @@ public class Plant {
 
         VDMMap ternaryIfExp_2 = null;
 
-        if (exs.size() == 1L) {
+        if (Utils.equals(exs.size(), 1L)) {
             ternaryIfExp_2 = MapUtil.domResBy(SetUtil.set(p),
                     Utils.clone(schedule));
         } else {

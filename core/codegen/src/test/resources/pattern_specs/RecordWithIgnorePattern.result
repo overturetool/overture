@@ -19,7 +19,7 @@ public class A {
         c = recordPattern_3.n;
 
         Rec nullPattern_1 = Utils.clone(recordPattern_3.next);
-        success_1 = nullPattern_1 == null;
+        success_1 = Utils.equals(nullPattern_1, null);
 
         if (!(success_1)) {
             throw new RuntimeException("Record pattern match failed");
@@ -48,7 +48,7 @@ public class A {
 
             Rec other = ((Rec) obj);
 
-            return (n.longValue() == other.n.longValue()) &&
+            return (Utils.equals(n.longValue(), other.n.longValue())) &&
             (Utils.equals(next, other.next));
         }
 

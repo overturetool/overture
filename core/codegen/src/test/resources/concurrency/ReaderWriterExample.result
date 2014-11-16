@@ -48,15 +48,17 @@ public class Buffer implements EvaluatePP {
     }
 
     public Boolean evaluatePP(final Number fnr) {
-        if (fnr.longValue() == 0L) {
-            return sentinel.fin[((Buffer_sentinel) sentinel).Read] == sentinel.fin[((Buffer_sentinel) sentinel).Write];
-        } else if (fnr.longValue() == 1L) {
-            return (sentinel.fin[((Buffer_sentinel) sentinel).Read] + 1L) == sentinel.fin[((Buffer_sentinel) sentinel).Write];
-        } else if (fnr.longValue() == 2L) {
+        if (Utils.equals(fnr.longValue(), 0L)) {
+            return Utils.equals(sentinel.fin[((Buffer_sentinel) sentinel).Read],
+                sentinel.fin[((Buffer_sentinel) sentinel).Write]);
+        } else if (Utils.equals(fnr.longValue(), 1L)) {
+            return Utils.equals(sentinel.fin[((Buffer_sentinel) sentinel).Read] +
+                1L, sentinel.fin[((Buffer_sentinel) sentinel).Write]);
+        } else if (Utils.equals(fnr.longValue(), 2L)) {
             return sentinel.fin[((Buffer_sentinel) sentinel).Read] >= 3L;
-        } else if (fnr.longValue() == 3L) {
+        } else if (Utils.equals(fnr.longValue(), 3L)) {
             return true;
-        } else if (fnr.longValue() == 4L) {
+        } else if (Utils.equals(fnr.longValue(), 4L)) {
             return true;
         } else {
             return true;
@@ -121,13 +123,13 @@ public class Reader extends Thread implements EvaluatePP {
     }
 
     public Boolean evaluatePP(final Number fnr) {
-        if (fnr.longValue() == 0L) {
+        if (Utils.equals(fnr.longValue(), 0L)) {
             return true;
-        } else if (fnr.longValue() == 1L) {
+        } else if (Utils.equals(fnr.longValue(), 1L)) {
             return true;
-        } else if (fnr.longValue() == 2L) {
+        } else if (Utils.equals(fnr.longValue(), 2L)) {
             return true;
-        } else if (fnr.longValue() == 3L) {
+        } else if (Utils.equals(fnr.longValue(), 3L)) {
             return true;
         } else {
             return true;
@@ -215,15 +217,15 @@ public class Writer extends Thread implements EvaluatePP {
     }
 
     public Boolean evaluatePP(final Number fnr) {
-        if (fnr.longValue() == 0L) {
+        if (Utils.equals(fnr.longValue(), 0L)) {
             return true;
-        } else if (fnr.longValue() == 1L) {
+        } else if (Utils.equals(fnr.longValue(), 1L)) {
             return true;
-        } else if (fnr.longValue() == 2L) {
+        } else if (Utils.equals(fnr.longValue(), 2L)) {
             return true;
-        } else if (fnr.longValue() == 3L) {
+        } else if (Utils.equals(fnr.longValue(), 3L)) {
             return true;
-        } else if (fnr.longValue() == 4L) {
+        } else if (Utils.equals(fnr.longValue(), 4L)) {
             return true;
         } else {
             return true;
@@ -285,11 +287,11 @@ public class Entry implements EvaluatePP {
     }
 
     public Boolean evaluatePP(final Number fnr) {
-        if (fnr.longValue() == 0L) {
+        if (Utils.equals(fnr.longValue(), 0L)) {
             return true;
-        } else if (fnr.longValue() == 1L) {
+        } else if (Utils.equals(fnr.longValue(), 1L)) {
             return true;
-        } else if (fnr.longValue() == 2L) {
+        } else if (Utils.equals(fnr.longValue(), 2L)) {
             return true;
         } else {
             return true;

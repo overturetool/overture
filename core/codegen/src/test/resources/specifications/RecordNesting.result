@@ -29,7 +29,7 @@ public class A {
 
             R1 other = ((R1) obj);
 
-            return x.longValue() == other.x.longValue();
+            return Utils.equals(x.longValue(), other.x.longValue());
         }
 
         public int hashCode() {
@@ -91,7 +91,7 @@ public class A {
 
             R3 other = ((R3) obj);
 
-            return (x.longValue() == other.x.longValue()) &&
+            return (Utils.equals(x.longValue(), other.x.longValue())) &&
             (Utils.equals(r, other.r));
         }
 

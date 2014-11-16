@@ -10,7 +10,7 @@ public class Entry {
     }
 
     public static Object Run() {
-        return Quotes.C.longValue() == Quotes.C.longValue();
+        return Utils.equals(Quotes.C.longValue(), Quotes.C.longValue());
     }
 
     public String toString() {

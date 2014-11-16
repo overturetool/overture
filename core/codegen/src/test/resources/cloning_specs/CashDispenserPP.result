@@ -51,7 +51,8 @@ public class SimpleTest {
         resource.AddLetterbox(clock, new Letterbox());
         ((Till) tills.get(1L)).InsertCard(c1);
 
-        if (((Till) tills.get(1L)).Validate(123456L).longValue() == Quotes.PinOk.longValue()) {
+        if (Utils.equals(((Till) tills.get(1L)).Validate(123456L).longValue(),
+                    Quotes.PinOk.longValue())) {
             return ((Till) tills.get(1L)).MakeWithdrawal(800L);
         } else {
             return false;
@@ -215,8 +216,8 @@ public class Account {
             Transaction other = ((Transaction) obj);
 
             return (Utils.equals(date, other.date)) &&
-            (cardId.longValue() == other.cardId.longValue()) &&
-            (amount.longValue() == other.amount.longValue());
+            (Utils.equals(cardId.longValue(), other.cardId.longValue())) &&
+            (Utils.equals(amount.longValue(), other.amount.longValue()));
         }
 
         public int hashCode() {
@@ -542,7 +543,8 @@ public class Till {
 
     public Number Validate(final Number pin) {
         Number cardId = curCard.GetCardId();
-        Boolean codeOk = curCard.GetCode().longValue() == Encode(pin).longValue();
+        Boolean codeOk = Utils.equals(curCard.GetCode().longValue(),
+                Encode(pin).longValue());
         Boolean cardLegal = IsLegalCard();
         Boolean andResult_5 = false;
 
@@ -607,7 +609,7 @@ public class Till {
     public Boolean CardValidated() {
         Boolean andResult_6 = false;
 
-        if (curCard != null) {
+        if (!(Utils.equals(curCard, null))) {
             if (cardOk) {
                 andResult_6 = true;
             }
@@ -617,7 +619,7 @@ public class Till {
     }
 
     public Boolean CardInside() {
-        return curCard != null;
+        return !(Utils.equals(curCard, null));
     }
 
     private static Number Encode(final Number pin) {

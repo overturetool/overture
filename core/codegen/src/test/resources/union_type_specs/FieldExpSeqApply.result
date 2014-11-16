@@ -48,7 +48,7 @@ public class Entry {
         long toVar_1 = 3L;
 
         for (Long i = 1L; i <= toVar_1; i++) {
-            if (i.longValue() != 3L) {
+            if (!(Utils.equals(i.longValue(), 3L))) {
                 Object obj_1 = hr.get(Utils.index(i));
 
                 Number apply_1 = null;

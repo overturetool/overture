@@ -9,39 +9,43 @@ public class Entry {
 
     public static Number casesInt(final Number n) {
         Number intPattern_1 = n;
-        Boolean success_1 = intPattern_1.longValue() == 1L;
+        Boolean success_1 = Utils.equals(intPattern_1.longValue(), 1L);
 
         if (!(success_1)) {
             Number intPattern_2 = n;
-            success_1 = intPattern_2.longValue() == 2L;
+            success_1 = Utils.equals(intPattern_2.longValue(), 2L);
 
             if (!(success_1)) {
                 Number intPattern_3 = n;
-                success_1 = intPattern_3.longValue() == 3L;
+                success_1 = Utils.equals(intPattern_3.longValue(), 3L);
 
                 if (!(success_1)) {
                     Number intPattern_4 = n;
-                    success_1 = intPattern_4.longValue() == 4L;
+                    success_1 = Utils.equals(intPattern_4.longValue(), 4L);
 
                     if (!(success_1)) {
                         Number intPattern_5 = n;
-                        success_1 = intPattern_5.longValue() == 5L;
+                        success_1 = Utils.equals(intPattern_5.longValue(), 5L);
 
                         if (!(success_1)) {
                             Number intPattern_6 = n;
-                            success_1 = intPattern_6.longValue() == 6L;
+                            success_1 = Utils.equals(intPattern_6.longValue(),
+                                    6L);
 
                             if (!(success_1)) {
                                 Number intPattern_7 = n;
-                                success_1 = intPattern_7.longValue() == 7L;
+                                success_1 = Utils.equals(intPattern_7.longValue(),
+                                        7L);
 
                                 if (!(success_1)) {
                                     Number intPattern_8 = n;
-                                    success_1 = intPattern_8.longValue() == 8L;
+                                    success_1 = Utils.equals(intPattern_8.longValue(),
+                                            8L);
 
                                     if (!(success_1)) {
                                         Number intPattern_9 = n;
-                                        success_1 = intPattern_9.longValue() == 9L;
+                                        success_1 = Utils.equals(intPattern_9.longValue(),
+                                                9L);
 
                                         if (success_1) {
                                             return 3L;

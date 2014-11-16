@@ -47,7 +47,7 @@ public class Entry {
 
             Rec1 other = ((Rec1) obj);
 
-            return (a.longValue() == other.a.longValue()) &&
+            return (Utils.equals(a.longValue(), other.a.longValue())) &&
             (Utils.equals(b, other.b));
         }
 
@@ -80,7 +80,7 @@ public class Entry {
 
             Rec2 other = ((Rec2) obj);
 
-            return (c.longValue() == other.c.longValue()) &&
+            return (Utils.equals(c.longValue(), other.c.longValue())) &&
             (Utils.equals(d, other.d));
         }
 

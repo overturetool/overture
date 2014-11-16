@@ -62,7 +62,7 @@ public class Entry {
                 throw new RuntimeException("Missing member: s");
             }
 
-            if (apply_1.size() == 0L) {
+            if (Utils.equals(apply_1.size(), 0L)) {
                 counter = counter.longValue() + 1L;
             }
         }

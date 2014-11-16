@@ -13,8 +13,8 @@ public class Entry {
         Number x = Quotes.A;
         Number y = Quotes.B;
 
-        return SeqUtil.seq(x.longValue() == Quotes.A.longValue(),
-            y.longValue() == Quotes.A.longValue());
+        return SeqUtil.seq(Utils.equals(x.longValue(), Quotes.A.longValue()),
+            Utils.equals(y.longValue(), Quotes.A.longValue()));
     }
 
     public String toString() {

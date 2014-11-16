@@ -18,13 +18,13 @@ public class A {
             n = ((Number) tuplePattern_1.get(0));
 
             Boolean boolPattern_1 = ((Boolean) tuplePattern_1.get(1));
-            success_1 = boolPattern_1 == true;
+            success_1 = Utils.equals(boolPattern_1, true);
 
             if (success_1) {
                 c = ((Character) tuplePattern_1.get(2));
 
                 Number intPattern_1 = ((Number) tuplePattern_1.get(3));
-                success_1 = intPattern_1.longValue() == 1L;
+                success_1 = Utils.equals(intPattern_1.longValue(), 1L);
             }
         }
 

@@ -12,7 +12,7 @@ public class Entry {
     public static Object Run() {
         Number a = Quotes.A;
 
-        return a.longValue() == Quotes.A.longValue();
+        return Utils.equals(a.longValue(), Quotes.A.longValue());
     }
 
     public String toString() {

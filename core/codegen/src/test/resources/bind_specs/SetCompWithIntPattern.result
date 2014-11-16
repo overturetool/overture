@@ -17,7 +17,7 @@ public class Entry {
 
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
             Number intPattern_1 = ((Number) iterator_1.next());
-            Boolean success_1 = intPattern_1.longValue() == 3L;
+            Boolean success_1 = Utils.equals(intPattern_1.longValue(), 3L);
 
             if (!(success_1)) {
                 continue;

@@ -45,7 +45,8 @@ public class Entry {
             throw new RuntimeException("Tuple pattern match failed");
         }
 
-        return (a.longValue() + b.longValue() + RESULT.longValue()) == 10L;
+        return Utils.equals(a.longValue() + b.longValue() + RESULT.longValue(),
+            10L);
     }
 
     public String toString() {

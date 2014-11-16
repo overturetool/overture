@@ -10,13 +10,13 @@ public class A {
     }
 
     public void op(final Number v) {
-        if (v.longValue() == Quotes.Red.longValue()) {
+        if (Utils.equals(v.longValue(), Quotes.Red.longValue())) {
             //Skip;
         }
     }
 
     public void op2(final Number v) {
-        if (v.longValue() == Quotes.A.longValue()) {
+        if (Utils.equals(v.longValue(), Quotes.A.longValue())) {
             //Skip;
         }
     }

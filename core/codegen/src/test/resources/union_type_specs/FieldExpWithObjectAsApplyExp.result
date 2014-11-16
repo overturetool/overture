@@ -16,7 +16,7 @@ public class Entry {
     public static Object Run() {
         VDMSeq ternaryIfExp_1 = null;
 
-        if (1L == 1L) {
+        if (Utils.equals(1L, 1L)) {
             ternaryIfExp_1 = SeqUtil.seq(SeqUtil.seq(new Entry()));
         } else {
             ternaryIfExp_1 = SeqUtil.seq(SeqUtil.seq());

@@ -41,7 +41,7 @@ public class Entry {
 
             NatList other = ((NatList) obj);
 
-            return (e.longValue() == other.e.longValue()) &&
+            return (Utils.equals(e.longValue(), other.e.longValue())) &&
             (Utils.equals(t, other.t));
         }
 

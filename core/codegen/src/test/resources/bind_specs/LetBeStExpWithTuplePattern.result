@@ -27,7 +27,7 @@ public class Entry {
                 a = ((Number) tuplePattern_1.get(0));
 
                 Number intPattern_1 = ((Number) tuplePattern_1.get(1));
-                success_1 = intPattern_1.longValue() == 33L;
+                success_1 = Utils.equals(intPattern_1.longValue(), 33L);
             }
 
             if (!(success_1)) {
