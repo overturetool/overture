@@ -26,7 +26,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.overture.ast.expressions.AUnaryMinusUnaryExp;
 import org.overture.ast.types.PType;
 import org.overture.codegen.assistant.TypeAssistantCG;
 import org.overture.codegen.cgast.INode;
@@ -72,8 +71,6 @@ import org.overture.codegen.cgast.types.AInterfaceTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
-import org.overture.codegen.cgast.types.AStringTypeCG;
-import org.overture.codegen.cgast.types.ATokenBasicTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AUnionTypeCG;
 import org.overture.codegen.cgast.types.AUnknownTypeCG;
@@ -499,45 +496,23 @@ public class JavaFormat
 	{
 		STypeCG leftNodeType = node.getLeft().getType();
 
-		if (isTupleOrRecord(leftNodeType)
-				|| leftNodeType instanceof AStringTypeCG
-				|| leftNodeType instanceof ATokenBasicTypeCG
-				|| leftNodeType instanceof AUnionTypeCG
-				|| leftNodeType instanceof AObjectTypeCG)
-		{
-			return handleEquals(node);
-		} else if (leftNodeType instanceof SSeqTypeCG || leftNodeType instanceof SSetTypeCG || leftNodeType instanceof SMapTypeCG)
+		if (leftNodeType instanceof SSeqTypeCG || leftNodeType instanceof SSetTypeCG || leftNodeType instanceof SMapTypeCG)
 		{
 			return handleCollectionComparison(node);
 		}
-
-		return format(node.getLeft()) + " == " + format(node.getRight());
+		else
+		{
+			return handleEquals(node);
+		}
 	}
 
 	public String formatNotEqualsBinaryExp(ANotEqualsBinaryExpCG node)
 			throws AnalysisException
 	{
-		STypeCG leftNodeType = node.getLeft().getType();
-
-		if (isTupleOrRecord(leftNodeType)
-				|| leftNodeType instanceof AStringTypeCG
-				|| leftNodeType instanceof ATokenBasicTypeCG
-				|| leftNodeType instanceof SSeqTypeCG
-				|| leftNodeType instanceof SSetTypeCG
-				|| leftNodeType instanceof SMapTypeCG)
-		{
-			ANotUnaryExpCG transformed = transNotEquals(node);
-			return formatNotUnary(transformed.getExp());
-		}
-
-		return format(node.getLeft()) + " != " + format(node.getRight());
+		ANotUnaryExpCG transformed = transNotEquals(node);
+		return formatNotUnary(transformed.getExp());
 	}
 
-	private static boolean isTupleOrRecord(STypeCG type)
-	{
-		return type instanceof ARecordTypeCG || type instanceof ATupleTypeCG;
-	}
-	
 	private ANotUnaryExpCG transNotEquals(ANotEqualsBinaryExpCG notEqual)
 	{
 		ANotUnaryExpCG notUnary = new ANotUnaryExpCG();
