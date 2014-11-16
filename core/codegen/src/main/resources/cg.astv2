@@ -415,6 +415,8 @@ CG {-> package='org.overture.codegen.cgast'
     |	{mapRange} 
     |	{distMerge}
     |	{mapInverse}
+    |	{seqToString}
+    |	{stringToSeq}
     ;
     
 #Seq {-> package='org.overture.codegen.cgast.expressions'}

@@ -66,6 +66,7 @@ import org.overture.codegen.trans.IsExpTransformation;
 import org.overture.codegen.trans.PostCheckTransformation;
 import org.overture.codegen.trans.PreCheckTransformation;
 import org.overture.codegen.trans.PrePostTransformation;
+import org.overture.codegen.trans.SeqConversionTransformation;
 import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.trans.TransformationVisitor;
 import org.overture.codegen.trans.assistants.TransformationAssistantCG;
@@ -274,7 +275,8 @@ public class JavaCodeGen
 		PostCheckTransformation postCheckTransformation = new PostCheckTransformation(postCheckCreator, irInfo, transformationAssistant, FUNC_RESULT_NAME_PREFIX, new JavaValueSemanticsTag(false));
 		IsExpTransformation isExpTransformation = new IsExpTransformation(irInfo, transformationAssistant, IS_EXP_SUBJECT_NAME_PREFIX);
 		TypeTransformation typeTransformation = new TypeTransformation(transformationAssistant);
-
+		SeqConversionTransformation seqConversionTransformation = new SeqConversionTransformation(transformationAssistant);
+		
 		//Conc
 		SentinelTransformation Concurrencytransform = new SentinelTransformation(irInfo,classes);
 		MainClassConcTransformation mainclassTransform = new MainClassConcTransformation(irInfo, classes);
@@ -289,7 +291,7 @@ public class JavaCodeGen
 				deflattenTransformation, funcValVisitor, transVisitor,
 				deflattenTransformation, patternTransformation, preCheckTransformation, postCheckTransformation,
 				deflattenTransformation, isExpTransformation, typeTransformation, unionTypeTransformation, javaToStringTransformation,
-				Concurrencytransform,mutexTransform, mainclassTransform};
+				Concurrencytransform,mutexTransform, mainclassTransform, seqConversionTransformation};
 
 		for (DepthFirstAnalysisAdaptor transformation : analyses)
 		{

@@ -639,6 +639,12 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(AMapInverseUnaryExpCG.class, templateStructure.UNARY_EXP_PATH
 				+ "MapInverse");
+		
+		nodeTemplateFileNames.put(ASeqToStringUnaryExpCG.class, templateStructure.UNARY_EXP_PATH
+				+ "SeqToString");
+		
+		nodeTemplateFileNames.put(AStringToSeqUnaryExpCG.class, templateStructure.UNARY_EXP_PATH
+				+ "StringToSeq");
 
 		// Binary expressions
 
