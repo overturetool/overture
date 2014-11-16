@@ -122,6 +122,30 @@ public class Utils
 	
 	public static boolean equals(Object left, Object right)
 	{
+		if(left instanceof Long && right instanceof Long)
+		{
+			Long leftLong = (Long) left;
+			Long rightLong = (Long) right;
+			
+			return Long.compare(leftLong.longValue(), rightLong.longValue()) == 0;
+		}
+		
+		if(left instanceof Integer && right instanceof Integer)
+		{
+			Integer leftInt = (Integer) left;
+			Integer rightInt = (Integer) right;
+			
+			return Integer.compare(leftInt.intValue(), rightInt.intValue()) == 0;
+		}
+		
+		if(left instanceof Number && right instanceof Number)
+		{
+			Number leftNumber = (Number) left;
+			Number rightNumber = (Number) right;
+			
+			return Double.compare(leftNumber.doubleValue(), rightNumber.doubleValue()) == 0;
+		}
+		
 		return left != null ? left.equals(right) : right == null; 
 	}
 	
