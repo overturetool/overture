@@ -256,11 +256,24 @@ public class SeqUtil
 		
 		for(Object seq : sequences)
 		{
-			if(!(seq instanceof VDMSeq))
+			if (seq instanceof String)
+			{
+				char[] charArray = ((String) seq).toCharArray();
+				
+				for(Character c : charArray)
+				{
+					result.add(c);
+				}
+				
+			} else if (seq instanceof VDMSeq)
+			{
+				VDMSeq vdmSeq = (VDMSeq) seq;
+				result.addAll(vdmSeq);
+			} else
+			{
 				throw new IllegalArgumentException("Distributed concatenation only supports sequences");
-			
-			VDMSeq vdmSeq = (VDMSeq) seq;
-			result.addAll(vdmSeq);
+
+			}
 		}
 		
 		return result;
@@ -282,5 +295,29 @@ public class SeqUtil
 		}
 		
 		return result;
-	}	
+	}
+	
+	public static String toStr(VDMSeq seq)
+	{
+		if (seq.isEmpty())
+		{
+			return "";
+		} else
+		{
+			return seq.toString();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static VDMSeq toSeq(String str)
+	{
+		VDMSeq result = seq();
+		
+		for(Character c : str.toCharArray())
+		{
+			result.add(c);
+		}
+		
+		return result;
+	}
 }
