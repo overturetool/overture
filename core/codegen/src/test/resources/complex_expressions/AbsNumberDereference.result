@@ -1,0 +1,30 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        Number x0 = -1.1;
+
+        return Math.abs(x0.doubleValue());
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########
+
+package quotes;
+
+public interface Quotes {
+    public static Number start = 1L;
+    public static Number append = 2L;
+}
+
+##########
