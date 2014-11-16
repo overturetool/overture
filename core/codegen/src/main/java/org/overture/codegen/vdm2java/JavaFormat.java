@@ -38,6 +38,7 @@ import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
+import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
@@ -319,7 +320,8 @@ public class JavaFormat
 
 		if (parent instanceof SNumericBinaryExpCG
 				|| parent instanceof AEqualsBinaryExpCG
-				|| parent instanceof ANotEqualsBinaryExpCG)
+				|| parent instanceof ANotEqualsBinaryExpCG
+				|| parent instanceof AAbsUnaryExpCG)
 		{
 			SExpCG exp = (SExpCG) node;
 			STypeCG type = exp.getType();
