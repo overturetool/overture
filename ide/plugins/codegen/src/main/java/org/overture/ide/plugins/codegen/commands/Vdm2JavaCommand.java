@@ -47,7 +47,6 @@ import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.analysis.violations.Violation;
 import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.assistant.LocationAssistantCG;
-import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.ir.NodeInfo;
 import org.overture.codegen.utils.AnalysisExceptionCG;
@@ -343,18 +342,19 @@ public class Vdm2JavaCommand extends AbstractHandler
 	}
 
 	private void outputQuotes(IVdmProject vdmProject, File outputFolder,
-			JavaCodeGen vdm2java, GeneratedModule quotes) throws CoreException
+			JavaCodeGen vdm2java, List<GeneratedModule> quotes) throws CoreException
 	{
-		if (quotes != null)
+		if (quotes != null && !quotes.isEmpty())
 		{
 			File quotesFolder = PluginVdm2JavaUtil.getQuotesFolder(vdmProject);
-			vdm2java.generateJavaSourceFile(quotesFolder, quotes);
+			
+			for(GeneratedModule q : quotes)
+			{
+				vdm2java.generateJavaSourceFile(quotesFolder, q);
+			}
 
-			CodeGenConsole.GetInstance().println("Quotes interface generated.");
-			File quotesFile = new File(outputFolder, IRConstants.QUOTES_INTERFACE_NAME
-					+ IJavaCodeGenConstants.JAVA_FILE_EXTENSION);
-			CodeGenConsole.GetInstance().println("Java source file: "
-					+ quotesFile.getAbsolutePath());
+			CodeGenConsole.GetInstance().println("Quotes generated to folder: "
+					+ quotesFolder.getAbsolutePath());
 			CodeGenConsole.GetInstance().println("");
 		}
 	}

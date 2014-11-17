@@ -82,7 +82,6 @@ import org.overture.codegen.trans.letexps.FuncTransformation;
 import org.overture.codegen.trans.letexps.IfExpTransformation;
 import org.overture.codegen.trans.patterns.PatternMatchConfig;
 import org.overture.codegen.trans.patterns.PatternTransformation;
-import org.overture.codegen.trans.uniontypes.TypeTransformation;
 import org.overture.codegen.trans.uniontypes.UnionTypeTransformation;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
