@@ -86,11 +86,11 @@ public class IO {
 	}
 	
     public boolean echo(String text) {
-    	return fecho("", text, null);
+    	return fecho("[]", text, null);
     }
     
     public boolean echo(VDMSeq text) {
-    	return fecho("", SeqUtil.toStr(text), null);
+    	return fecho("[]", SeqUtil.toStr(text), null);
     }
 
     public boolean fecho(String filename, String text, Number fdir) {
