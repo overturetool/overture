@@ -173,11 +173,11 @@ public class PhoneBook {
     public void addTwoEntries(final Tuple first, final Tuple second) {
         phoneNumbers = MapUtil.merge(SetUtil.set(Utils.clone(phoneNumbers),
                     MapUtil.map(
-                        new Maplet(Utils.clone(((VDMSeq) first.get(0))),
-                            Utils.clone(((VDMSeq) first.get(1))))),
+                        new Maplet(SeqUtil.toSeq(first.get(0)),
+                            SeqUtil.toSeq(first.get(1)))),
                     MapUtil.map(
-                        new Maplet(Utils.clone(((VDMSeq) second.get(0))),
-                            Utils.clone(((VDMSeq) second.get(1)))))));
+                        new Maplet(SeqUtil.toSeq(second.get(0)),
+                            SeqUtil.toSeq(second.get(1))))));
     }
 
     public VDMSet getNames() {
