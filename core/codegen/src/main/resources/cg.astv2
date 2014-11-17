@@ -216,7 +216,8 @@ CG {-> package='org.overture.codegen.cgast'
            |	{continue}
            |	{break}
            |	{start}
-           		[exp]:CG.#exp 
+           		[exp]:CG.#exp
+           		[type]:CG.#type 
            |	{try} [stm]:CG.#stm [catchClauses]:CG.#decl.catchClause* [finally]:CG.#stm
            ;
 

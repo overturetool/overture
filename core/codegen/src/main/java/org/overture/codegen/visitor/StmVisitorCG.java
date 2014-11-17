@@ -633,13 +633,14 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 	{
 		
 		PExp exp = node.getObj();
+		PType type = node.getType();
 		
 		SExpCG expCG = exp.apply(question.getExpVisitor(), question);
+		STypeCG typeCG = type.apply(question.getTypeVisitor(), question);
 		
 		AStartStmCG thread = new AStartStmCG();
-		
-		//System.out.print(expCG);
-		
+		//System.out.println(expCG.getType());
+		thread.setType(typeCG);
 		thread.setExp(expCG);
 				
 		return thread;

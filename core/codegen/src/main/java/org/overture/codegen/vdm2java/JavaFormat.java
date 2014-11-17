@@ -37,6 +37,7 @@ import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
+import org.overture.codegen.cgast.declarations.AThreadDeclCG;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
 import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
@@ -65,8 +66,10 @@ import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.AForLoopStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
+import org.overture.codegen.cgast.statements.AStartStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
+import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AInterfaceTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
@@ -860,5 +863,27 @@ public class JavaFormat
 	public boolean isInnerClass(AClassDeclCG node)
 	{
 		return node.parent() != null && node.parent().getAncestor(AClassDeclCG.class) != null;
+	}
+	
+	public String hasClassType(AStartStmCG node)
+	{
+		String str ="";
+		try
+		{
+			str = format(node.getExp());
+		} catch (AnalysisException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if(node.getExp().getType() instanceof AClassTypeCG)
+		{
+			return str;
+		}
+		else
+		{
+			return "((Thread)"+ str+")";
+		}
 	}
 }
