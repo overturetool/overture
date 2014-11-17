@@ -8,6 +8,7 @@ import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AFieldNumberExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASeqToStringUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AStringToSeqUnaryExpCG;
@@ -42,6 +43,22 @@ public class SeqConversionTransformation extends DepthFirstAnalysisAdaptor
 		}
 
 		handleExp(initial, nodeType);
+	}
+	
+	@Override
+	public void inAFieldNumberExpCG(AFieldNumberExpCG node)
+			throws AnalysisException
+	{
+		node.getTuple().apply(this);
+		
+		if(node.getType() instanceof AStringTypeCG)
+		{
+			correctExpToString(node);
+		}
+		else if(node.getType() instanceof SSeqTypeCG)
+		{
+			correctExpToSeq(node, node.getType());
+		}
 	}
 
 	@Override
