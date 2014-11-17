@@ -5,31 +5,25 @@ import static org.junit.Assert.fail;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.junit.Assert;
 import org.overture.ast.node.INode;
 import org.overture.config.Settings;
 import org.overture.core.tests.ParamStandardTest;
-import org.overture.interpreter.tests.utils.ExecutionToResultTranslator;
+import org.overture.interpreter.runtime.ContextException;
+import org.overture.interpreter.runtime.ICollectedRuntimeExceptions;
+import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.util.InterpreterUtil;
 import org.overture.interpreter.values.Value;
-import org.overture.test.framework.results.IMessage;
-import org.overture.test.framework.results.Message;
-import org.overture.test.framework.results.Result;
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.overture.parser.messages.LocatedException;
 
 import com.google.gson.reflect.TypeToken;
 
@@ -66,14 +60,49 @@ public abstract class ParamInterpreterTest extends
 		try {
 			Value val = InterpreterUtil.interpret(ast, entry, Settings.dialect);
 
-			Result<String> auxResult = new Result<String>(val.toString(),
-					new Vector<IMessage>(), new Vector<IMessage>());
-			System.out.println(file.getName() + " -> " + val);
-			return StringInterpreterResult.convert(auxResult);
+			StringInterpreterResult result = new StringInterpreterResult(
+					val.toString(), new Vector<Message>(),
+					new Vector<Message>());
+
+			return result;
 		} catch (Exception e) {
-			Result<String> auxResult = ExecutionToResultTranslator.wrap(e);
-			return StringInterpreterResult.convert(auxResult);
+			return wrap(e);
 		}
+	}
+
+	private StringInterpreterResult wrap(Exception e) {
+
+		Vector<Message> errors = new Vector<Message>();
+		String message = e.getMessage();
+		if (e instanceof ICollectedRuntimeExceptions) {
+			List<String> messages = new Vector<String>();
+			List<Exception> collectedExceptions = new ArrayList<Exception>(
+					((ICollectedRuntimeExceptions) e).getCollectedExceptions());
+			for (Exception err : collectedExceptions) {
+				if (err instanceof ContextException) {
+					ContextException ce = (ContextException) err;
+					errors.add(new Message(ce.location.getFile().getName(),
+							ce.number, ce.location.getStartLine(), ce.location
+									.getStartPos(), ce.getMessage()));
+				} else if (err instanceof ValueException) {
+					ValueException ve = (ValueException) err;
+					errors.add(new Message("?", ve.number, 0, 0, ve
+							.getMessage()));
+				} else if (err instanceof LocatedException) {
+					LocatedException le = (LocatedException) err;
+					errors.add(new Message(le.location.getFile().getName(),
+							le.number, le.location.getStartLine(), le.location
+									.getStartPos(), le.getMessage()));
+				} else {
+					messages.add(err.getMessage());
+					err.printStackTrace();
+				}
+			}
+			Collections.sort(messages);
+			message = messages.toString();
+		}
+		return new StringInterpreterResult(message, new Vector<Message>(),
+				errors);
 	}
 
 	private List<String> getEntries() throws IOException {
@@ -131,83 +160,6 @@ public abstract class ParamInterpreterTest extends
 
 	protected File getEntryFile() {
 		return new File(modelPath + ".entry");
-	}
-
-	@Override
-	public StringInterpreterResult deSerializeResult(String resultPath)
-			throws FileNotFoundException, IOException {
-		// try to deserialize JSON file under new framework
-		// try .result and .RESULT paths since the 2 frameworks use different
-		// naming schemes
-		File resultFile = new File(resultPath);
-		StringInterpreterResult r = null;
-		if (resultFile.exists()) {
-			r = super.deSerializeResult(resultPath);
-			if (r != null) {
-				return r;
-			}
-		}
-
-		resultFile = new File(modelPath + ".result");
-
-		if (!resultFile.exists()) {
-			throw new FileNotFoundException(resultFile.getPath());
-		}
-
-		// try XML deserialization inherited form the old one
-		// File resultFile = new File(file.getAbsoluteFile()+ ".result");
-		List<IMessage> warnings = new Vector<IMessage>();
-		List<IMessage> errors = new Vector<IMessage>();
-		String readResult = null;
-
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder db;
-
-		try {
-			db = dbf.newDocumentBuilder();
-
-			Document doc = db.parse(resultFile);
-			doc.getDocumentElement().normalize();
-			NodeList nodeLst = doc.getElementsByTagName("message");
-			for (int i = 0; i < nodeLst.getLength(); i++) {
-				Node node = nodeLst.item(i);
-				String nodeType = node.getAttributes()
-						.getNamedItem("messageType").getNodeValue();
-				if (nodeType.equals("error")) {
-					convertNodeToMessage(errors, node);
-				} else if (nodeType.equals("warning")) {
-					convertNodeToMessage(warnings, node);
-				}
-			}
-
-			for (int i = 0; i < doc.getDocumentElement().getChildNodes()
-					.getLength(); i++) {
-				Node node = doc.getDocumentElement().getChildNodes().item(i);
-				if (node.getNodeName() != null
-						&& node.getNodeName().equals("result")) {
-					node.normalize();
-
-					readResult = StringInterpreterResult.decodeResult(node);
-				}
-				// System.out.println(node);
-			}
-			return StringInterpreterResult.convert(new Result<String>(
-					readResult, warnings, errors));
-		} catch (Exception e) {
-			return null;
-		}
-	}
-
-	private void convertNodeToMessage(List<IMessage> set, Node node) {
-
-		NamedNodeMap nnm = node.getAttributes();
-		String resource = nnm.getNamedItem("resource").getNodeValue();
-		IMessage m = new Message(resource, Integer.parseInt(nnm.getNamedItem(
-				"number").getNodeValue()), Integer.parseInt(nnm.getNamedItem(
-				"line").getNodeValue()), Integer.parseInt(nnm.getNamedItem(
-				"column").getNodeValue()), nnm.getNamedItem("message")
-				.getNodeValue());
-		set.add(m);
 	}
 
 	@Override
