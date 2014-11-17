@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.interpreter.tests.InterpreterStringSlTestCase">
-<result>
-<output object="{2, 3, 4, 5, 6}" resource="BOMSL" value="{2, 3, 4, 5, 6}"/>
-</result>
-</testResult>

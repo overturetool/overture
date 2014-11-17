@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.interpreter.tests.InterpreterStringSlTestCase">
-<result>
-<output object="{mk_token(&quot;Magazine 1&quot;) |-&gt; [mk_(&lt;FlareOneA&gt;, 0), mk_(&lt;FlareTwoB&gt;, 100), mk_(&lt;FlareOneC&gt;, 300), mk_(&lt;DoNothingC&gt;, 700), mk_(&lt;FlareTwoC&gt;, 800), mk_(&lt;FlareOneC&gt;, 1200)], mk_token(&quot;Magazine 3&quot;) |-&gt; [mk_(&lt;FlareOneA&gt;, 200), mk_(&lt;FlareTwoA&gt;, 1100), mk_(&lt;DoNothingA&gt;, 1600), mk_(&lt;FlareOneA&gt;, 1700)]}" resource="CMSL" value="{mk_token(&quot;Magazine 1&quot;) |-&gt; [mk_(&lt;FlareOneA&gt;, 0), mk_(&lt;FlareTwoB&gt;, 100), mk_(&lt;FlareOneC&gt;, 300), mk_(&lt;DoNothingC&gt;, 700), mk_(&lt;FlareTwoC&gt;, 800), mk_(&lt;FlareOneC&gt;, 1200)], mk_token(&quot;Magazine 3&quot;) |-&gt; [mk_(&lt;FlareOneA&gt;, 200), mk_(&lt;FlareTwoA&gt;, 1100), mk_(&lt;DoNothingA&gt;, 1600), mk_(&lt;FlareOneA&gt;, 1700)]}"/>
-</result>
-</testResult>
