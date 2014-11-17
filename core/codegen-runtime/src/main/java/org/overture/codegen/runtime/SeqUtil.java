@@ -297,27 +297,51 @@ public class SeqUtil
 		return result;
 	}
 	
-	public static String toStr(VDMSeq seq)
+	public static String toStr(Object seq)
 	{
-		if (seq.isEmpty())
+		if(seq instanceof VDMSeq)
 		{
-			return "";
-		} else
+			VDMSeq vdmSeq = (VDMSeq) seq;
+			if (vdmSeq.isEmpty())
+			{
+				return "";
+			} else
+			{
+				return seq.toString();
+			}
+		}
+		else if(seq instanceof String)
 		{
-			return seq.toString();
+			return (String) seq;
+		}
+		else
+		{
+			throw new RuntimeException("String conversion is only supported for VDMSeq");
 		}
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static VDMSeq toSeq(String str)
+	public static VDMSeq toSeq(Object str)
 	{
 		VDMSeq result = seq();
-		
-		for(Character c : str.toCharArray())
+
+		if (str instanceof String)
 		{
-			result.add(c);
+			String string = (String) str;
+			for (Character c : string.toCharArray())
+			{
+				result.add(c);
+			}
+
+			return result;
 		}
-		
-		return result;
+		else if(str instanceof VDMSeq)
+		{
+			return ((VDMSeq) str).clone();
+		}
+		else
+		{
+			throw new RuntimeException("VDMSeq conversion is only supported for strings");
+		}
 	}
 }
