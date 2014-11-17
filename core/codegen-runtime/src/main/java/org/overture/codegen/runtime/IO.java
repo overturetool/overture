@@ -86,11 +86,11 @@ public class IO {
 	}
 	
     public boolean echo(String text) {
-    	throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
+    	return fecho("", text, null);
     }
     
     public boolean echo(VDMSeq text) {
-    	throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
+    	return fecho("", SeqUtil.toStr(text), null);
     }
 
     public boolean fecho(String filename, String text, Number fdir) {
