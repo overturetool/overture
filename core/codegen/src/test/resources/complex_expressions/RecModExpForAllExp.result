@@ -21,12 +21,12 @@ public class Entry {
                 iterator_1.hasNext() && (exists1Counter_1.longValue() < 2L);) {
             Number p = ((Number) iterator_1.next());
 
-            if (Utils.equals(p.longValue(), 2L)) {
+            if (Utils.equals(p, 2L)) {
                 exists1Counter_1++;
             }
         }
 
-        recModifierExp_1.b = Utils.equals(exists1Counter_1.longValue(), 1L);
+        recModifierExp_1.b = Utils.equals(exists1Counter_1, 1L);
 
         Rec r2 = Utils.clone(recModifierExp_1);
         Number y = 2L;
@@ -54,8 +54,7 @@ public class Entry {
 
             Rec other = ((Rec) obj);
 
-            return (Utils.equals(x.longValue(), other.x.longValue())) &&
-            (Utils.equals(b, other.b));
+            return (Utils.equals(x, other.x)) && (Utils.equals(b, other.b));
         }
 
         public int hashCode() {

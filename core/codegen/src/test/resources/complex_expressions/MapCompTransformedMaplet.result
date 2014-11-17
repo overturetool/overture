@@ -14,7 +14,7 @@ public class Entry {
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && forAllExpResult_1;) {
             Number x = ((Number) iterator_1.next());
-            forAllExpResult_1 = !(Utils.equals(x.longValue(), 10L));
+            forAllExpResult_1 = !(Utils.equals(x, 10L));
         }
 
         Boolean forAllExpResult_2 = true;
@@ -23,7 +23,7 @@ public class Entry {
         for (Iterator iterator_2 = set_2.iterator();
                 iterator_2.hasNext() && forAllExpResult_2;) {
             Number y = ((Number) iterator_2.next());
-            forAllExpResult_2 = Utils.equals(y.longValue(), 2L);
+            forAllExpResult_2 = Utils.equals(y, 2L);
         }
 
         return MapUtil.map(new Maplet(forAllExpResult_1, forAllExpResult_2));

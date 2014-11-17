@@ -12,7 +12,7 @@ public class A {
                 SeqUtil.seq('a', 'a', 'a'), null);
         Boolean success_1 = true;
         Number intPattern_1 = recordPattern_1.n;
-        success_1 = Utils.equals(intPattern_1.longValue(), 1L);
+        success_1 = Utils.equals(intPattern_1, 1L);
 
         if (success_1) {
             Boolean boolPattern_1 = recordPattern_1.b;
@@ -24,7 +24,7 @@ public class A {
 
                 if (success_1) {
                     Number realPattern_1 = recordPattern_1.r;
-                    success_1 = Utils.equals(realPattern_1.doubleValue(), 1.5);
+                    success_1 = Utils.equals(realPattern_1, 1.5);
 
                     if (success_1) {
                         VDMSeq stringPattern_1 = Utils.clone(recordPattern_1.s);
@@ -76,9 +76,8 @@ public class A {
 
             Rec other = ((Rec) obj);
 
-            return (Utils.equals(n.longValue(), other.n.longValue())) &&
-            (Utils.equals(b, other.b)) && (Utils.equals(c, other.c)) &&
-            (Utils.equals(r.doubleValue(), other.r.doubleValue())) &&
+            return (Utils.equals(n, other.n)) && (Utils.equals(b, other.b)) &&
+            (Utils.equals(c, other.c)) && (Utils.equals(r, other.r)) &&
             (Utils.equals(s, other.s)) && (Utils.equals(next, other.next));
         }
 

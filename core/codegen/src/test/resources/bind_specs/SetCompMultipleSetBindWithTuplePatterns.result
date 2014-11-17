@@ -24,7 +24,7 @@ public class Entry {
 
             if (success_1) {
                 Number intPattern_1 = ((Number) tuplePattern_1.get(0));
-                success_1 = Utils.equals(intPattern_1.longValue(), 2L);
+                success_1 = Utils.equals(intPattern_1, 2L);
 
                 if (success_1) {
                     a = ((Number) tuplePattern_1.get(1));
@@ -45,7 +45,7 @@ public class Entry {
                     b = ((Number) tuplePattern_2.get(0));
 
                     Number intPattern_2 = ((Number) tuplePattern_2.get(1));
-                    success_2 = Utils.equals(intPattern_2.longValue(), 5L);
+                    success_2 = Utils.equals(intPattern_2, 5L);
                 }
 
                 if (!(success_2)) {

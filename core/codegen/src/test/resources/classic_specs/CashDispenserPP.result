@@ -219,8 +219,8 @@ public class Account {
             Transaction other = ((Transaction) obj);
 
             return (Utils.equals(date, other.date)) &&
-            (Utils.equals(cardId.longValue(), other.cardId.longValue())) &&
-            (Utils.equals(amount.longValue(), other.amount.longValue()));
+            (Utils.equals(cardId, other.cardId)) &&
+            (Utils.equals(amount, other.amount));
         }
 
         public int hashCode() {
@@ -545,8 +545,7 @@ public class Till {
 
     public Object Validate(final Number pin) {
         Number cardId = curCard.GetCardId();
-        Boolean codeOk = Utils.equals(curCard.GetCode().longValue(),
-                Encode(pin).longValue());
+        Boolean codeOk = Utils.equals(curCard.GetCode(), Encode(pin));
         Boolean cardLegal = IsLegalCard();
         Boolean andResult_5 = false;
 

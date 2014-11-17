@@ -48,7 +48,7 @@ public class A {
 
             Rec other = ((Rec) obj);
 
-            return (Utils.equals(n.longValue(), other.n.longValue())) &&
+            return (Utils.equals(n, other.n)) &&
             (Utils.equals(next, other.next));
         }
 

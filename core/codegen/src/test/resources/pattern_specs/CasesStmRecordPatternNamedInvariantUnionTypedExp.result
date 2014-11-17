@@ -13,11 +13,11 @@ public class Entry {
         if (r instanceof R1) {
             R1 recordPattern_1 = ((R1) r);
             Number intPattern_1 = recordPattern_1.a;
-            success_1 = Utils.equals(intPattern_1.longValue(), 1L);
+            success_1 = Utils.equals(intPattern_1, 1L);
 
             if (success_1) {
                 Number intPattern_2 = recordPattern_1.b;
-                success_1 = Utils.equals(intPattern_2.longValue(), 2L);
+                success_1 = Utils.equals(intPattern_2, 2L);
             }
         } else {
             success_1 = false;
@@ -74,8 +74,7 @@ public class Entry {
 
             R1 other = ((R1) obj);
 
-            return (Utils.equals(a.longValue(), other.a.longValue())) &&
-            (Utils.equals(b.longValue(), other.b.longValue()));
+            return (Utils.equals(a, other.a)) && (Utils.equals(b, other.b));
         }
 
         public int hashCode() {

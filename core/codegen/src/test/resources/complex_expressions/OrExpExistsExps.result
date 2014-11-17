@@ -42,11 +42,11 @@ public class Entry {
     public Boolean inc(final Number p) {
         n = n.longValue() + 1L;
 
-        if (Utils.equals(p.longValue(), 3L)) {
+        if (Utils.equals(p, 3L)) {
             return false;
         }
 
-        if (Utils.equals(p.longValue(), 4L)) {
+        if (Utils.equals(p, 4L)) {
             return false;
         }
 

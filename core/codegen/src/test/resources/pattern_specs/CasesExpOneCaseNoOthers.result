@@ -15,7 +15,7 @@ public class Entry {
         Number casesExpResult_1 = null;
 
         Number intPattern_1 = x;
-        Boolean success_1 = Utils.equals(intPattern_1.longValue(), 5L);
+        Boolean success_1 = Utils.equals(intPattern_1, 5L);
 
         if (success_1) {
             casesExpResult_1 = 5L;

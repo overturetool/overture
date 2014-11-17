@@ -24,7 +24,7 @@ public class A {
                 c = ((Character) tuplePattern_1.get(2));
 
                 Number intPattern_1 = ((Number) tuplePattern_1.get(3));
-                success_1 = Utils.equals(intPattern_1.longValue(), 1L);
+                success_1 = Utils.equals(intPattern_1, 1L);
             }
         }
 

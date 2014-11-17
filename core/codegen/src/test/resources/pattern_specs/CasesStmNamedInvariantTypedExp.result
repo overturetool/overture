@@ -13,11 +13,11 @@ public class Entry {
 
         if (success_1) {
             Number intPattern_1 = ((Number) tuplePattern_1.get(0));
-            success_1 = Utils.equals(intPattern_1.longValue(), 1L);
+            success_1 = Utils.equals(intPattern_1, 1L);
 
             if (success_1) {
                 Number intPattern_2 = ((Number) tuplePattern_1.get(1));
-                success_1 = Utils.equals(intPattern_2.longValue(), 2L);
+                success_1 = Utils.equals(intPattern_2, 2L);
             }
         }
 

@@ -74,7 +74,7 @@ public class B {
 
             RecB other = ((RecB) obj);
 
-            return Utils.equals(b.longValue(), other.b.longValue());
+            return Utils.equals(b, other.b);
         }
 
         public int hashCode() {

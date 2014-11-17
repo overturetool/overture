@@ -26,7 +26,7 @@ public class Entry {
             }
         }
 
-        Boolean a = Utils.equals(exists1Counter_1.longValue(), 1L);
+        Boolean a = Utils.equals(exists1Counter_1, 1L);
 
         return a;
     }

@@ -20,7 +20,7 @@ public class Entry {
             }
         }
 
-        if (Utils.equals(exists1Counter_1.longValue(), 1L)) {
+        if (Utils.equals(exists1Counter_1, 1L)) {
             return 42L;
         } else {
             return 49L;

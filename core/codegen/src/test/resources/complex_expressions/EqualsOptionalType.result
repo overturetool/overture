@@ -11,10 +11,10 @@ public class Entry {
         Number x = 1.1;
         Boolean orResult_1 = false;
 
-        if (Utils.equals(x.doubleValue(), null)) {
+        if (Utils.equals(x, null)) {
             orResult_1 = true;
         } else {
-            orResult_1 = Utils.equals(null, x.doubleValue());
+            orResult_1 = Utils.equals(null, x);
         }
 
         return orResult_1;

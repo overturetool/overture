@@ -28,7 +28,7 @@ public class Entry {
             }
         }
 
-        return Utils.equals(exists1Counter_1.longValue(), 1L);
+        return Utils.equals(exists1Counter_1, 1L);
     }
 
     public String toString() {

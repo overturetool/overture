@@ -67,8 +67,7 @@ public class Entry {
 
             Rec other = ((Rec) obj);
 
-            return (Utils.equals(x.longValue(), other.x.longValue())) &&
-            (Utils.equals(y, other.y));
+            return (Utils.equals(x, other.x)) && (Utils.equals(y, other.y));
         }
 
         public int hashCode() {

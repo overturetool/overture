@@ -27,8 +27,7 @@ public class A {
 
             Vector2D other = ((Vector2D) obj);
 
-            return (Utils.equals(x.longValue(), other.x.longValue())) &&
-            (Utils.equals(y.longValue(), other.y.longValue()));
+            return (Utils.equals(x, other.x)) && (Utils.equals(y, other.y));
         }
 
         public int hashCode() {
@@ -58,7 +57,7 @@ public class A {
 
             Real other = ((Real) obj);
 
-            return Utils.equals(r.doubleValue(), other.r.doubleValue());
+            return Utils.equals(r, other.r);
         }
 
         public int hashCode() {

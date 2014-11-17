@@ -40,7 +40,7 @@ public class Entry {
     }
 
     public Boolean inc(final Number p) {
-        if (Utils.equals(p.longValue(), 3L)) {
+        if (Utils.equals(p, 3L)) {
             return false;
         }
 

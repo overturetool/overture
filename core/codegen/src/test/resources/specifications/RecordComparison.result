@@ -29,7 +29,7 @@ public class A {
 
             R other = ((R) obj);
 
-            return Utils.equals(x.longValue(), other.x.longValue());
+            return Utils.equals(x, other.x);
         }
 
         public int hashCode() {

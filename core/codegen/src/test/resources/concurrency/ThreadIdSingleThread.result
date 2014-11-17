@@ -23,13 +23,13 @@ public class Entry implements EvaluatePP {
     }
 
     public Boolean evaluatePP(final Number fnr) {
-        if (Utils.equals(fnr.longValue(), 0L)) {
+        if (Utils.equals(fnr, 0L)) {
             return true;
-        } else if (Utils.equals(fnr.longValue(), 1L)) {
+        } else if (Utils.equals(fnr, 1L)) {
             return true;
-        } else if (Utils.equals(fnr.longValue(), 2L)) {
+        } else if (Utils.equals(fnr, 2L)) {
             return true;
-        } else if (Utils.equals(fnr.longValue(), 3L)) {
+        } else if (Utils.equals(fnr, 3L)) {
             return true;
         } else {
             return true;

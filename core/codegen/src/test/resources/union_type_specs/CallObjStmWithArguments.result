@@ -78,12 +78,12 @@ public class Entry {
         for (Long i = 1L; i <= toVar_1; i++) {
             Object ternaryIfExp_1 = null;
 
-            if (Utils.equals(i.longValue(), 1L)) {
+            if (Utils.equals(i, 1L)) {
                 ternaryIfExp_1 = c1;
             } else {
                 Object ternaryIfExp_2 = null;
 
-                if (Utils.equals(i.longValue(), 2L)) {
+                if (Utils.equals(i, 2L)) {
                     ternaryIfExp_2 = c2;
                 } else {
                     ternaryIfExp_2 = c3;

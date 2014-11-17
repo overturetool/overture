@@ -104,9 +104,8 @@ public class Entry {
 
             Rec other = ((Rec) obj);
 
-            return (Utils.equals(n.longValue(), other.n.longValue())) &&
-            (Utils.equals(b, other.b)) && (Utils.equals(c, other.c)) &&
-            (Utils.equals(r.doubleValue(), other.r.doubleValue()));
+            return (Utils.equals(n, other.n)) && (Utils.equals(b, other.b)) &&
+            (Utils.equals(c, other.c)) && (Utils.equals(r, other.r));
         }
 
         public int hashCode() {

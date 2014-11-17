@@ -36,8 +36,7 @@ public class A {
 
             Vector2D other = ((Vector2D) obj);
 
-            return (Utils.equals(x.doubleValue(), other.x.doubleValue())) &&
-            (Utils.equals(y.doubleValue(), other.y.doubleValue()));
+            return (Utils.equals(x, other.x)) && (Utils.equals(y, other.y));
         }
 
         public int hashCode() {

@@ -42,7 +42,7 @@ public class Entry {
 
             Rec other = ((Rec) obj);
 
-            return Utils.equals(x.longValue(), other.x.longValue());
+            return Utils.equals(x, other.x);
         }
 
         public int hashCode() {

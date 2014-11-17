@@ -11,8 +11,8 @@ public class Entry {
         Number x = 1.1;
         Boolean andResult_1 = false;
 
-        if (!(Utils.equals(x.doubleValue(), null))) {
-            if (!(Utils.equals(null, x.doubleValue()))) {
+        if (!(Utils.equals(x, null))) {
+            if (!(Utils.equals(null, x))) {
                 andResult_1 = true;
             }
         }

@@ -22,7 +22,7 @@ public class Entry {
                 a = ((Number) tuplePattern_1.get(0));
 
                 Number intPattern_1 = ((Number) tuplePattern_1.get(1));
-                success_1 = Utils.equals(intPattern_1.longValue(), 2L);
+                success_1 = Utils.equals(intPattern_1, 2L);
             }
 
             if (!(success_1)) {
