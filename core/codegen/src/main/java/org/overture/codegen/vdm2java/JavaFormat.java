@@ -323,8 +323,6 @@ public class JavaFormat
 		INode parent = node.parent();
 
 		if (parent instanceof SNumericBinaryExpCG
-				|| parent instanceof AEqualsBinaryExpCG
-				|| parent instanceof ANotEqualsBinaryExpCG
 				|| parent instanceof AAbsUnaryExpCG
 				|| parent instanceof AMinusUnaryExpCG
 				|| parent instanceof APlusUnaryExpCG)
