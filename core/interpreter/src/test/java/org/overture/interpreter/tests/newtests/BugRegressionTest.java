@@ -13,6 +13,7 @@ import org.overture.core.tests.PathsProvider;
 @RunWith(Parameterized.class)
 public class BugRegressionTest extends ParamInterpreterTest {
 
+	private static final String TEST_UPDATE_PROPERTY = "tests.update.interpreter.br";
 	private final static String BUG_REGRESSION_ROOT = "src/test/resources/regression";
 	
 	public BugRegressionTest(String nameParameter, String inputParameter,
@@ -31,5 +32,11 @@ public class BugRegressionTest extends ParamInterpreterTest {
 	{
 		Settings.release = Release.DEFAULT;
 	}
+	
+	@Override
+	protected String getUpdatePropertyString() {
+		return TEST_UPDATE_PROPERTY;
+	}
+	
 
 }

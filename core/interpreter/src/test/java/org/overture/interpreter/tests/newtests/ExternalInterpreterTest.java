@@ -4,10 +4,12 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Vector;
 
+import org.junit.Ignore;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.core.tests.ParamExternalsTest;
 import org.overture.core.tests.PathsProvider;
 
+@Ignore
 public class ExternalInterpreterTest extends ParamExternalsTest<StringInterpreterResult>{
 
 	
