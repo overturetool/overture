@@ -49,10 +49,6 @@ import org.overture.codegen.cgast.SStateDesignatorCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
-import org.overture.codegen.cgast.declarations.AFieldDeclCG;
-import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
-import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
-import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.visitor.CGVisitor;
 import org.overture.codegen.visitor.VisitorManager;
@@ -213,41 +209,9 @@ public class IRInfo
 		return tcFactory;
 	}
 
-	private List<String> getQuoteValues()
+	public List<String> getQuoteValues()
 	{
 		return quoteVaues;
-	}
-
-	public AInterfaceDeclCG getQuotes()
-	{
-		AInterfaceDeclCG quotes = new AInterfaceDeclCG();
-
-		quotes.setName(IRConstants.QUOTES_INTERFACE_NAME);
-
-		LinkedList<AFieldDeclCG> fields = quotes.getFields();
-
-		List<String> quoteValuesList = getQuoteValues();
-
-		for (int i = 0; i < quoteValuesList.size(); i++)
-		{
-			AFieldDeclCG fieldDecl = new AFieldDeclCG();
-			fieldDecl.setVolatile(false);
-			fieldDecl.setName(quoteValuesList.get(i));
-			fieldDecl.setAccess(IRConstants.PUBLIC);
-			fieldDecl.setFinal(false);
-			fieldDecl.setStatic(true);
-			fieldDecl.setType(new AIntNumericBasicTypeCG());
-
-			AIntLiteralExpCG initial = new AIntLiteralExpCG();
-			initial.setType(new AIntNumericBasicTypeCG());
-			initial.setValue(1L + i);
-
-			fieldDecl.setInitial(initial);
-
-			fields.add(fieldDecl);
-		}
-
-		return quotes;
 	}
 
 	public void clearNodes()

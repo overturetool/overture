@@ -70,6 +70,7 @@ import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AInterfaceTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
+import org.overture.codegen.cgast.types.AQuoteTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AUnionTypeCG;
@@ -98,6 +99,8 @@ public class JavaFormat
 	public static final String MAP_UTIL_FILE = "MapUtil";
 
 	public static final String JAVA_PUBLIC = "public";
+	public static final String JAVA_PRIVATE = "private";
+	
 	public static final String JAVA_INT = "int";
 
 	private List<AClassDeclCG> classes;
@@ -860,5 +863,10 @@ public class JavaFormat
 	public boolean isInnerClass(AClassDeclCG node)
 	{
 		return node.parent() != null && node.parent().getAncestor(AClassDeclCG.class) != null;
+	}
+	
+	public static boolean isQuote(AClassDeclCG classCg)
+	{
+		return classCg != null && "quotes".equals(classCg.getPackage());
 	}
 }

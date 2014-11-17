@@ -28,12 +28,12 @@ import org.overture.codegen.analysis.violations.InvalidNamesResult;
 public class GeneratedData
 {
 	private List<GeneratedModule> classes;
-	private GeneratedModule quoteValues;
+	private List<GeneratedModule> quoteValues;
 	private InvalidNamesResult invalidNamesResult;
 	private List<String> skippedClasses;
 
 	public GeneratedData(List<GeneratedModule> classes,
-			GeneratedModule quoteValues, InvalidNamesResult invalidNamesResult, List<String> skippedClasses)
+			List<GeneratedModule> quoteValues, InvalidNamesResult invalidNamesResult, List<String> skippedClasses)
 	{
 		super();
 		this.classes = classes;
@@ -47,7 +47,7 @@ public class GeneratedData
 		return classes;
 	}
 
-	public GeneratedModule getQuoteValues()
+	public List<GeneratedModule> getQuoteValues()
 	{
 		return quoteValues;
 	}
