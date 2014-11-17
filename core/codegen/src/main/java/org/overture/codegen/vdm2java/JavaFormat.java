@@ -65,12 +65,13 @@ import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.AForLoopStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
+import org.overture.codegen.cgast.statements.AStartStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
+import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AInterfaceTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
-import org.overture.codegen.cgast.types.AQuoteTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AUnionTypeCG;
@@ -868,5 +869,18 @@ public class JavaFormat
 	public static boolean isQuote(AClassDeclCG classCg)
 	{
 		return classCg != null && "quotes".equals(classCg.getPackage());
+	}
+
+	public String formatStartStmExp(AStartStmCG node) throws AnalysisException
+	{
+		String str = format(node.getExp());
+
+		if (node.getExp().getType() instanceof AClassTypeCG)
+		{
+			return str;
+		} else
+		{
+			return "((Thread)" + str + ")";
+		}
 	}
 }
