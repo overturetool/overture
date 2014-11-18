@@ -62,7 +62,7 @@ public class Entry {
 
         VDMMap s = Utils.clone(ternaryIfExp_2);
 
-        return Utils.clone(s);
+        return MapUtil.dom(Utils.clone(s)).size();
     }
 
     public String toString() {

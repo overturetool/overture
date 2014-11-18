@@ -11,8 +11,8 @@ public class Entry {
         M m0 = new M();
         M m1 = new M();
 
-        return Tuple.mk_(Utils.equals(m0, m0), Utils.equals(m0, m1),
-            Utils.equals(m1, m1), Utils.clone(m0));
+        return SeqUtil.seq(Utils.equals(m0, m0), Utils.equals(m0, m1),
+            Utils.equals(m1, m1), Utils.equals(m1, m0));
     }
 
     public String toString() {
