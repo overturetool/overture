@@ -67,7 +67,7 @@ public class Utils
 
 		if (fields.length > 0)
 		{
-			str.append(fields[0]);
+			str.append(Utils.toString(fields[0]));
 
 			for (int i = 1; i < fields.length; i++)
 			{
