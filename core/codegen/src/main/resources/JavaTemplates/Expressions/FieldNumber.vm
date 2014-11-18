@@ -3,10 +3,17 @@
 ##
 #set( $tuple = $JavaFormat.format($node.getTuple()) )
 #set( $method = ".get($index)" )
-#set( $field = "((${type}) ${tuple}${method})")
 ##
-#if ($ValueSemantics.cloneMember($node))
-	Utils.clone(${field})##
-#else
+#set( $field = "")
+#if ($JavaFormat.isSeqConversion($node))
+	#set( $field = "${tuple}${method}")##
 	${field}##
+#else
+	#set( $field = "((${type}) ${tuple}${method})")##
+	#if ($ValueSemantics.cloneMember($node))
+		Utils.clone(${field})##
+	#else
+		${field}##
+	#end
 #end
+##

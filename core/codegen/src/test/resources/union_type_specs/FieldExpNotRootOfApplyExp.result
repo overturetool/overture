@@ -16,7 +16,7 @@ public class Entry {
     public static Object Run() {
         VDMSet ternaryIfExp_1 = null;
 
-        if (1L == 1L) {
+        if (Utils.equals(1L, 1L)) {
             ternaryIfExp_1 = SetUtil.set(SeqUtil.seq(new Entry()));
         } else {
             ternaryIfExp_1 = SetUtil.set(SeqUtil.seq());
@@ -25,7 +25,7 @@ public class Entry {
         VDMSet ss = Utils.clone(ternaryIfExp_1);
         VDMMap ternaryIfExp_2 = null;
 
-        if (1L == 1L) {
+        if (Utils.equals(1L, 1L)) {
             VDMMap mapCompResult_1 = MapUtil.map();
             VDMSet set_1 = Utils.clone(ss);
 
@@ -83,7 +83,7 @@ public class Entry {
 
             Rec other = ((Rec) obj);
 
-            return x.longValue() == other.x.longValue();
+            return Utils.equals(x, other.x);
         }
 
         public int hashCode() {
@@ -95,7 +95,7 @@ public class Entry {
         }
 
         public String toString() {
-            return Utils.recordToString(this, x);
+            return "mk_Entry`Rec" + Utils.formatFields(x);
         }
     }
 }
@@ -104,9 +104,80 @@ public class Entry {
 
 package quotes;
 
-public interface Quotes {
-    public static Number start = 1L;
-    public static Number append = 2L;
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class start {
+    private static int hc = 0;
+    private static start instance = null;
+
+    public start() {
+        if (Utils.equals(hc, 0)) {
+            hc = super.hashCode();
+        }
+    }
+
+    public static start getInstance() {
+        if (Utils.equals(instance, null)) {
+            instance = new start();
+        }
+
+        return instance;
+    }
+
+    public int hashCode() {
+        return hc;
+    }
+
+    public boolean equals(final Object obj) {
+        return obj instanceof start;
+    }
+
+    public String toString() {
+        return "<start>";
+    }
+}
+
+##########
+
+package quotes;
+
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class append {
+    private static int hc = 0;
+    private static append instance = null;
+
+    public append() {
+        if (Utils.equals(hc, 0)) {
+            hc = super.hashCode();
+        }
+    }
+
+    public static append getInstance() {
+        if (Utils.equals(instance, null)) {
+            instance = new append();
+        }
+
+        return instance;
+    }
+
+    public int hashCode() {
+        return hc;
+    }
+
+    public boolean equals(final Object obj) {
+        return obj instanceof append;
+    }
+
+    public String toString() {
+        return "<append>";
+    }
 }
 
 ##########

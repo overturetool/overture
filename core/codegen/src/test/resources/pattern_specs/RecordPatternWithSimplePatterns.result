@@ -12,19 +12,19 @@ public class A {
                 SeqUtil.seq('a', 'a', 'a'), null);
         Boolean success_1 = true;
         Number intPattern_1 = recordPattern_1.n;
-        success_1 = intPattern_1.longValue() == 1L;
+        success_1 = Utils.equals(intPattern_1, 1L);
 
         if (success_1) {
             Boolean boolPattern_1 = recordPattern_1.b;
-            success_1 = boolPattern_1 == true;
+            success_1 = Utils.equals(boolPattern_1, true);
 
             if (success_1) {
                 Character charPattern_1 = recordPattern_1.c;
-                success_1 = charPattern_1 == 'a';
+                success_1 = Utils.equals(charPattern_1, 'a');
 
                 if (success_1) {
                     Number realPattern_1 = recordPattern_1.r;
-                    success_1 = realPattern_1.doubleValue() == 1.5;
+                    success_1 = Utils.equals(realPattern_1, 1.5);
 
                     if (success_1) {
                         VDMSeq stringPattern_1 = Utils.clone(recordPattern_1.s);
@@ -33,7 +33,7 @@ public class A {
 
                         if (success_1) {
                             Rec nullPattern_1 = Utils.clone(recordPattern_1.next);
-                            success_1 = nullPattern_1 == null;
+                            success_1 = Utils.equals(nullPattern_1, null);
                         }
                     }
                 }
@@ -76,8 +76,8 @@ public class A {
 
             Rec other = ((Rec) obj);
 
-            return (n.longValue() == other.n.longValue()) && (b == other.b) &&
-            (c == other.c) && (r.doubleValue() == other.r.doubleValue()) &&
+            return (Utils.equals(n, other.n)) && (Utils.equals(b, other.b)) &&
+            (Utils.equals(c, other.c)) && (Utils.equals(r, other.r)) &&
             (Utils.equals(s, other.s)) && (Utils.equals(next, other.next));
         }
 
@@ -90,7 +90,7 @@ public class A {
         }
 
         public String toString() {
-            return Utils.recordToString(this, n, b, c, r, s, next);
+            return "mk_A`Rec" + Utils.formatFields(n, b, c, r, s, next);
         }
     }
 }
@@ -118,9 +118,80 @@ public class Entry {
 
 package quotes;
 
-public interface Quotes {
-    public static Number start = 1L;
-    public static Number append = 2L;
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class start {
+    private static int hc = 0;
+    private static start instance = null;
+
+    public start() {
+        if (Utils.equals(hc, 0)) {
+            hc = super.hashCode();
+        }
+    }
+
+    public static start getInstance() {
+        if (Utils.equals(instance, null)) {
+            instance = new start();
+        }
+
+        return instance;
+    }
+
+    public int hashCode() {
+        return hc;
+    }
+
+    public boolean equals(final Object obj) {
+        return obj instanceof start;
+    }
+
+    public String toString() {
+        return "<start>";
+    }
+}
+
+##########
+
+package quotes;
+
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class append {
+    private static int hc = 0;
+    private static append instance = null;
+
+    public append() {
+        if (Utils.equals(hc, 0)) {
+            hc = super.hashCode();
+        }
+    }
+
+    public static append getInstance() {
+        if (Utils.equals(instance, null)) {
+            instance = new append();
+        }
+
+        return instance;
+    }
+
+    public int hashCode() {
+        return hc;
+    }
+
+    public boolean equals(final Object obj) {
+        return obj instanceof append;
+    }
+
+    public String toString() {
+        return "<append>";
+    }
 }
 
 ##########

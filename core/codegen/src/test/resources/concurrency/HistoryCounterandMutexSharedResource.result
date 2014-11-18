@@ -37,14 +37,15 @@ public class SharedCounter implements EvaluatePP {
     }
 
     public Boolean evaluatePP(final Number fnr) {
-        if (fnr.longValue() == 0L) {
+        if (Utils.equals(fnr, 0L)) {
             return (sentinel.waiting[((SharedCounter_sentinel) sentinel).inc] < 3L) &&
-            (sentinel.active[((SharedCounter_sentinel) sentinel).inc] == 0L);
-        } else if (fnr.longValue() == 1L) {
+            (Utils.equals(sentinel.active[((SharedCounter_sentinel) sentinel).inc],
+                0L));
+        } else if (Utils.equals(fnr, 1L)) {
             return true;
-        } else if (fnr.longValue() == 2L) {
+        } else if (Utils.equals(fnr, 2L)) {
             return true;
-        } else if (fnr.longValue() == 3L) {
+        } else if (Utils.equals(fnr, 3L)) {
             return true;
         } else {
             return true;
@@ -125,15 +126,15 @@ public class Incrementer extends Thread implements EvaluatePP {
     }
 
     public Boolean evaluatePP(final Number fnr) {
-        if (fnr.longValue() == 0L) {
+        if (Utils.equals(fnr, 0L)) {
             return true;
-        } else if (fnr.longValue() == 1L) {
+        } else if (Utils.equals(fnr, 1L)) {
             return true;
-        } else if (fnr.longValue() == 2L) {
+        } else if (Utils.equals(fnr, 2L)) {
             return isFinished;
-        } else if (fnr.longValue() == 3L) {
+        } else if (Utils.equals(fnr, 3L)) {
             return true;
-        } else if (fnr.longValue() == 4L) {
+        } else if (Utils.equals(fnr, 4L)) {
             return true;
         } else {
             return true;
@@ -194,11 +195,11 @@ public class Entry implements EvaluatePP {
     }
 
     public Boolean evaluatePP(final Number fnr) {
-        if (fnr.longValue() == 0L) {
+        if (Utils.equals(fnr, 0L)) {
             return true;
-        } else if (fnr.longValue() == 1L) {
+        } else if (Utils.equals(fnr, 1L)) {
             return true;
-        } else if (fnr.longValue() == 2L) {
+        } else if (Utils.equals(fnr, 2L)) {
             return true;
         } else {
             return true;
@@ -224,9 +225,80 @@ public class Entry implements EvaluatePP {
 
 package quotes;
 
-public interface Quotes {
-    public static Number start = 1L;
-    public static Number append = 2L;
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class start {
+    private static int hc = 0;
+    private static start instance = null;
+
+    public start() {
+        if (Utils.equals(hc, 0)) {
+            hc = super.hashCode();
+        }
+    }
+
+    public static start getInstance() {
+        if (Utils.equals(instance, null)) {
+            instance = new start();
+        }
+
+        return instance;
+    }
+
+    public int hashCode() {
+        return hc;
+    }
+
+    public boolean equals(final Object obj) {
+        return obj instanceof start;
+    }
+
+    public String toString() {
+        return "<start>";
+    }
+}
+
+##########
+
+package quotes;
+
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class append {
+    private static int hc = 0;
+    private static append instance = null;
+
+    public append() {
+        if (Utils.equals(hc, 0)) {
+            hc = super.hashCode();
+        }
+    }
+
+    public static append getInstance() {
+        if (Utils.equals(instance, null)) {
+            instance = new append();
+        }
+
+        return instance;
+    }
+
+    public int hashCode() {
+        return hc;
+    }
+
+    public boolean equals(final Object obj) {
+        return obj instanceof append;
+    }
+
+    public String toString() {
+        return "<append>";
+    }
 }
 
 ##########

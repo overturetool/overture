@@ -98,15 +98,15 @@ public class SeqUtil
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static VDMSeq subSeq(VDMSeq seq, long fromIndex, long toIndex)
+	public static VDMSeq subSeq(VDMSeq seq, Number fromIndex, Number toIndex)
 	{
-		if(fromIndex > toIndex || toIndex < 1)
+		if(fromIndex.longValue() > toIndex.longValue() || toIndex.longValue() < 1)
 		{
 			return seq();
 		}
 		
-		fromIndex = Utils.index(Math.max(1, fromIndex));
-		toIndex = Math.min(seq.size(), toIndex);
+		fromIndex = Utils.index(Math.max(1, fromIndex.longValue()));
+		toIndex = Math.min(seq.size(), toIndex.longValue());
 		
 		VDMSeq subSeq = seq();
 		subSeq.addAll(seq.subList(Utils.toInt(fromIndex), Utils.toInt(toIndex)));
@@ -114,15 +114,15 @@ public class SeqUtil
 		return subSeq;
 	}
 	
-	public static String subSeq(String seq, long fromIndex, long toIndex)
+	public static String subSeq(String seq, Number fromIndex, Number toIndex)
 	{
-		if(fromIndex > toIndex || toIndex < 1)
+		if(fromIndex.longValue() > toIndex.longValue() || toIndex.longValue() < 1)
 		{
 			return "";
 		}
 		
-		fromIndex = Utils.index(Math.max(1, fromIndex));
-		toIndex = Math.min(seq.length(), toIndex);
+		fromIndex = Utils.index(Math.max(1, fromIndex.longValue()));
+		toIndex = Math.min(seq.length(), toIndex.longValue());
 		
 		return seq.substring(Utils.toInt(fromIndex), Utils.toInt(toIndex));
 	}
@@ -256,11 +256,24 @@ public class SeqUtil
 		
 		for(Object seq : sequences)
 		{
-			if(!(seq instanceof VDMSeq))
+			if (seq instanceof String)
+			{
+				char[] charArray = ((String) seq).toCharArray();
+				
+				for(Character c : charArray)
+				{
+					result.add(c);
+				}
+				
+			} else if (seq instanceof VDMSeq)
+			{
+				VDMSeq vdmSeq = (VDMSeq) seq;
+				result.addAll(vdmSeq);
+			} else
+			{
 				throw new IllegalArgumentException("Distributed concatenation only supports sequences");
-			
-			VDMSeq vdmSeq = (VDMSeq) seq;
-			result.addAll(vdmSeq);
+
+			}
 		}
 		
 		return result;
@@ -282,5 +295,53 @@ public class SeqUtil
 		}
 		
 		return result;
-	}	
+	}
+	
+	public static String toStr(Object seq)
+	{
+		if(seq instanceof VDMSeq)
+		{
+			VDMSeq vdmSeq = (VDMSeq) seq;
+			if (vdmSeq.isEmpty())
+			{
+				return "";
+			} else
+			{
+				return seq.toString();
+			}
+		}
+		else if(seq instanceof String)
+		{
+			return (String) seq;
+		}
+		else
+		{
+			throw new RuntimeException("String conversion is only supported for VDMSeq");
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static VDMSeq toSeq(Object str)
+	{
+		VDMSeq result = seq();
+
+		if (str instanceof String)
+		{
+			String string = (String) str;
+			for (Character c : string.toCharArray())
+			{
+				result.add(c);
+			}
+
+			return result;
+		}
+		else if(str instanceof VDMSeq)
+		{
+			return ((VDMSeq) str).clone();
+		}
+		else
+		{
+			throw new RuntimeException("VDMSeq conversion is only supported for strings");
+		}
+	}
 }

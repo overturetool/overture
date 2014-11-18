@@ -40,7 +40,6 @@ import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
-import org.overture.codegen.cgast.expressions.ASelfExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
@@ -212,21 +211,6 @@ public class JavaFormatAssistant
 		fieldComparison.setRight(formalParamField);
 
 		return fieldComparison;
-	}
-
-	public static AApplyExpCG consRecToStringCall(ARecordDeclCG record,
-			STypeCG returnType, String memberName) throws AnalysisException
-	{
-		AApplyExpCG call = consUtilCallUsingRecFields(record, returnType, memberName);
-
-		ARecordTypeCG recordType = new ARecordTypeCG();
-		recordType.setName(consTypeName(record));
-		ASelfExpCG selfExp = new ASelfExpCG();
-		selfExp.setType(recordType);
-
-		call.getArgs().add(0, selfExp);
-
-		return call;
 	}
 
 	public static AApplyExpCG consUtilCallUsingRecFields(ARecordDeclCG record,

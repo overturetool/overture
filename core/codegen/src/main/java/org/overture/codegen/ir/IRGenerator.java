@@ -22,6 +22,7 @@
 package org.overture.codegen.ir;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
@@ -29,7 +30,6 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
-import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.logging.Logger;
 
@@ -69,9 +69,9 @@ public class IRGenerator
 		return new HashSet<NodeInfo>(codeGenInfo.getUnsupportedNodes());
 	}
 
-	public AInterfaceDeclCG getQuotes()
+	public List<String> getQuoteValues()
 	{
-		return codeGenInfo.getQuotes();
+		return codeGenInfo.getQuoteValues();
 	}
 
 	public IRInfo getIRInfo()

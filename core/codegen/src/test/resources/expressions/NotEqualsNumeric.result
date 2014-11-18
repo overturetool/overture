@@ -1,1 +1,1 @@
-1L != 2L
+!(Utils.equals(1L, 2L))

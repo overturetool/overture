@@ -65,7 +65,9 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 		
 		for(AFieldDeclCG fieldCG : node.getFields())
 		{
-			fieldCG.setVolatile(true);
+			if(!fieldCG.getFinal()){
+				fieldCG.setVolatile(true);
+			}
 		}
 		
 		AInterfaceDeclCG interf = new AInterfaceDeclCG();

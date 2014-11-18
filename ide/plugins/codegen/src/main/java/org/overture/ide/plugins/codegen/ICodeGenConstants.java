@@ -32,6 +32,9 @@ public interface ICodeGenConstants
 
 	public static final String DISABLE_CLONING = PLUGIN_ID + ".disable_cloning";
 	public static final boolean DISABLE_CLONING_DEFAULT = false;
+	
+	public static final String GENERATE_CONCURRENCY_MECHANISMS = PLUGIN_ID + ".concurrency_mechanisms";
+	public static final boolean GENERATE_CONCURRENCY_MECHANISMS_DEFAULT = false;
 
 	public static final String CLASSES_TO_SKIP = PLUGIN_ID + ".classes_to_skip";
 	public static final String CLASSES_TO_SKIP_DEFAULT = "";
