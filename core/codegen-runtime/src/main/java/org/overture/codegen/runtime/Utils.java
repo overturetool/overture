@@ -57,18 +57,8 @@ public class Utils
 	    }
 	    return (int) valueLong;
 	}
-		
-	public static String recordToString(Record record, Object... fields)
-	{
-		if(record == null)
-			throw new IllegalArgumentException("Record cannot be null in recordToString");
-		
-		StringBuilder str = formatFields(", %s", fields);
-
-		return "mk_" + record.getClass().getSimpleName() + "(" + str + ")";
-	}
 	
-	private static StringBuilder formatFields(String format, Object... fields)
+	public static String formatFields(Object... fields)
 	{
 		if(fields == null)
 			throw new IllegalArgumentException("Fields cannot be null in formatFields");
@@ -81,10 +71,10 @@ public class Utils
 
 			for (int i = 1; i < fields.length; i++)
 			{
-				str.append(String.format(format, Utils.toString(fields[i])));
+				str.append(", " + Utils.toString(fields[i]));
 			}
 		}
-		return str;
+		return "(" + str.toString() + ")";
 	}
 	
 	@SuppressWarnings("unchecked")

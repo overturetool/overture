@@ -37,6 +37,7 @@ import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
+import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
@@ -49,6 +50,7 @@ import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
+import org.overture.codegen.logging.Logger;
 
 public class JavaRecordCreator extends JavaObjectCreator
 {
@@ -263,17 +265,38 @@ public class JavaRecordCreator extends JavaObjectCreator
 
 		AReturnStmCG returnStm = new AReturnStmCG();
 
+		AClassDeclCG enclosingClass = record.getAncestor(AClassDeclCG.class);
+		String className = "";
+		
+		if(enclosingClass != null)
+		{
+			className = enclosingClass.getName();
+		}
+		else
+		{
+			Logger.getLog().printErrorln("Could not find enclosing class for record: " + record.getName());
+		}
+		
+		String recToStrPrefix = String.format("mk_%s%s", className + "`" , record.getName());
+		
+		AStringLiteralExpCG emptyRecStr = new AStringLiteralExpCG();
+		emptyRecStr.setIsNull(false);
+		STypeCG strType = toStringMethod.getMethodType().getResult();
+		emptyRecStr.setType(strType.clone());
+		
 		if (record.getFields().isEmpty())
 		{
-			AStringLiteralExpCG emptyRecStr = new AStringLiteralExpCG();
-			emptyRecStr.setIsNull(false);
-			emptyRecStr.setType(toStringMethod.getMethodType().getResult().clone());
-			emptyRecStr.setValue(String.format("mk_%s()", record.getName()));
+			emptyRecStr.setValue(recToStrPrefix + "()");
 
 			returnStm.setExp(emptyRecStr);
 		} else
 		{
-			returnStm.setExp(JavaFormatAssistant.consRecToStringCall(record, toStringMethod.getMethodType().getResult(), "recordToString"));
+			ASeqConcatBinaryExpCG stringBuffer = new ASeqConcatBinaryExpCG();
+			stringBuffer.setType(strType.clone());
+			stringBuffer.setLeft(javaFormat.getIrInfo().getExpAssistant().consStringLiteral(recToStrPrefix, false));
+			stringBuffer.setRight(JavaFormatAssistant.consUtilCallUsingRecFields(record, strType, "formatFields"));
+			
+			returnStm.setExp(stringBuffer);
 		}
 
 		toStringMethod.setBody(returnStm);
