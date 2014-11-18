@@ -76,7 +76,7 @@ public class VDMSeq extends ArrayList implements ValueType
 				sb.append(Utils.toString(element));
 			}
 			
-			return sb.toString();
+			return "\"" + sb.toString() + "\"";
 
 		} else
 		{

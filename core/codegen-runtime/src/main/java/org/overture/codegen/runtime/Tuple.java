@@ -176,7 +176,7 @@ public class Tuple implements ValueType, Comparable
 	{
 		StringBuilder str = new StringBuilder();
 
-		str.append(values[0]);
+		str.append(Utils.toString(values[0]));
 
 		for (int i = 1; i < values.length; i++)
 		{
