@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.modules.AFromModuleImports;
 import org.overture.ast.modules.AModuleModules;
@@ -34,7 +35,8 @@ import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.visitor.TypeCheckVisitor;
 
-public class AFromModuleImportsAssistantTC
+//FIXME only used in 1 class. move it
+public class AFromModuleImportsAssistantTC implements IAstAssistant
 {
 	protected ITypeCheckerAssistantFactory af;
 

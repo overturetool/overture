@@ -21,10 +21,11 @@
  */
 package org.overture.typechecker;
 
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class LexNameTokenAssistant
+public class LexNameTokenAssistant implements IAstAssistant
 {
 	public ITypeCheckerAssistantFactory af;
 

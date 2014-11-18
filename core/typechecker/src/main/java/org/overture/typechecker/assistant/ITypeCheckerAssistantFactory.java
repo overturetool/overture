@@ -79,7 +79,6 @@ import org.overture.typechecker.assistant.module.AFromModuleImportsAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleExportsAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleImportsAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleModulesAssistantTC;
-import org.overture.typechecker.assistant.module.AValueValueImportAssistantTC;
 import org.overture.typechecker.assistant.module.PExportAssistantTC;
 import org.overture.typechecker.assistant.module.PImportAssistantTC;
 import org.overture.typechecker.assistant.pattern.AMapletPatternMapletAssistantTC;
@@ -184,8 +183,6 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	AModuleModulesAssistantTC createAModuleModulesAssistant();
 
-	AValueValueImportAssistantTC createAValueValueImportAssistant();
-
 	PExportAssistantTC createPExportAssistant();
 
 	PImportAssistantTC createPImportAssistant();
@@ -196,7 +193,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	// ACharacterPatternAssistantTC createACharacterPatternAssistant();
 
 	// AConcatenationPatternAssistantTC createAConcatenationPatternAssistant();
-
+	
 	// AExpressionPatternAssistantTC createAExpressionPatternAssistant();
 
 	AMapletPatternMapletAssistantTC createAMapletPatternMapletAssistant();

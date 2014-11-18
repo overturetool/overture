@@ -23,6 +23,7 @@ package org.overture.typechecker.assistant.expression;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.expressions.ACaseAlternative;
 import org.overture.ast.patterns.AExpressionPattern;
 import org.overture.ast.typechecker.NameScope;
@@ -34,7 +35,7 @@ import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class ACaseAlternativeAssistantTC
+public class ACaseAlternativeAssistantTC implements IAstAssistant
 {
 	protected ITypeCheckerAssistantFactory af;
 
@@ -43,6 +44,7 @@ public class ACaseAlternativeAssistantTC
 		this.af = af;
 	}
 
+	//FIXME only used once. move it
 	public PType typeCheck(ACaseAlternative c,
 			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question, PType expType) throws AnalysisException

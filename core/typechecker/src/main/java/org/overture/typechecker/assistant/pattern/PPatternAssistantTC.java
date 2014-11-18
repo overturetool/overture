@@ -26,6 +26,7 @@ import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.assistant.pattern.PPatternAssistant;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
@@ -39,7 +40,7 @@ import org.overture.typechecker.utilities.pattern.AllDefinitionLocator;
 import org.overture.typechecker.utilities.pattern.PatternResolver;
 import org.overture.typechecker.visitor.TypeCheckerPatternVisitor;
 
-public class PPatternAssistantTC extends PPatternAssistant
+public class PPatternAssistantTC extends PPatternAssistant implements IAstAssistant
 {
 	protected ITypeCheckerAssistantFactory af;
 

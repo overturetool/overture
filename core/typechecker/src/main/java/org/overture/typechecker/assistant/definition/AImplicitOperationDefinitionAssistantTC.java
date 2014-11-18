@@ -27,6 +27,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AStateDefinition;
@@ -39,7 +40,7 @@ import org.overture.ast.types.AOperationType;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class AImplicitOperationDefinitionAssistantTC
+public class AImplicitOperationDefinitionAssistantTC implements IAstAssistant
 {
 	protected ITypeCheckerAssistantFactory af;
 

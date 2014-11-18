@@ -25,13 +25,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class ASetBindAssistantTC
+public class ASetBindAssistantTC implements IAstAssistant
 {
 	protected ITypeCheckerAssistantFactory af;
 
@@ -40,6 +41,7 @@ public class ASetBindAssistantTC
 		this.af = af;
 	}
 
+	//FIXME only used once. move it
 	public List<PMultipleBind> getMultipleBindList(ASetBind bind)
 	{
 

@@ -24,12 +24,13 @@ package org.overture.typechecker.assistant.module;
 import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.modules.PImport;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class PImportAssistantTC
+public class PImportAssistantTC implements IAstAssistant
 {
 	protected ITypeCheckerAssistantFactory af;
 
@@ -38,6 +39,7 @@ public class PImportAssistantTC
 		this.af = af;
 	}
 
+	//FIXME only used once. move it
 	public List<PDefinition> getDefinitions(PImport imp, AModuleModules from)
 	{
 		try

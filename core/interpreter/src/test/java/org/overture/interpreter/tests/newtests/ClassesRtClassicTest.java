@@ -14,7 +14,7 @@ import org.overture.core.tests.PathsProvider;
 @RunWith(Parameterized.class)
 public class ClassesRtClassicTest extends ParamInterpreterTest
 {
-
+	private static final String TEST_UPDATE_PROPERTY = "tests.update.interpreter.rtclassic";
 	private final static String CLASSES_RT_CLASSIC_ROOT = "src/test/resources/classesRTClassic";
 
 	public ClassesRtClassicTest(String nameParameter, String inputParameter,
@@ -41,5 +41,10 @@ public class ClassesRtClassicTest extends ParamInterpreterTest
 		// the rt tests have an extension for some reason...
 		String fileName = modelPath.split("\\.")[0];
 		return new File(fileName + ".entry");
+	}
+	
+	@Override
+	protected String getUpdatePropertyString() {
+		return TEST_UPDATE_PROPERTY;
 	}
 }

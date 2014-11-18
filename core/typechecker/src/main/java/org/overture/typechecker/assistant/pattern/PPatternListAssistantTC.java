@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
@@ -37,7 +38,7 @@ import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class PPatternListAssistantTC
+public class PPatternListAssistantTC implements IAstAssistant
 {
 	protected ITypeCheckerAssistantFactory af;
 

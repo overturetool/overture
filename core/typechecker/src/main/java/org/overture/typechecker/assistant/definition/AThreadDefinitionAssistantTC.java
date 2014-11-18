@@ -23,6 +23,7 @@ package org.overture.typechecker.assistant.definition;
 
 import java.util.Vector;
 
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AThreadDefinition;
 import org.overture.ast.factory.AstFactory;
@@ -30,7 +31,7 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AOperationType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class AThreadDefinitionAssistantTC
+public class AThreadDefinitionAssistantTC implements IAstAssistant
 {
 	protected ITypeCheckerAssistantFactory af;
 
@@ -39,6 +40,7 @@ public class AThreadDefinitionAssistantTC
 		this.af = af;
 	}
 
+	//FIXME: only used once. move it
 	public AExplicitOperationDefinition getThreadDefinition(AThreadDefinition d)
 	{
 

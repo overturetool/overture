@@ -23,14 +23,12 @@ package org.overture.typechecker.assistant.pattern;
 
 import java.util.List;
 
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.patterns.ADefPatternBind;
-import org.overture.ast.types.PType;
-import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
-import org.overture.typechecker.visitor.TypeCheckVisitor;
 
-public class PPatternBindAssistantTC
+public class PPatternBindAssistantTC implements IAstAssistant
 {
 	protected ITypeCheckerAssistantFactory af;
 
@@ -39,12 +37,7 @@ public class PPatternBindAssistantTC
 		this.af = af;
 	}
 
-	public void typeCheck(ADefPatternBind node, PType type,
-			TypeCheckVisitor rootVisitor, TypeCheckInfo question)
-	{
-		question.assistantFactory.getTypeComparator().checkComposeTypes(node.getType(), question.env, false);
-	}
-
+//FIXME only used in 1 class. move it.
 	public List<PDefinition> getDefinitions(ADefPatternBind patternBind)
 	{
 		assert patternBind.getDefs() != null : "PatternBind must be type checked before getDefinitions";

@@ -25,11 +25,13 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.modules.PExport;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class PExportAssistantTC
+//FIXME only used in 1 class. move it
+public class PExportAssistantTC implements IAstAssistant
 {
 	protected ITypeCheckerAssistantFactory af;
 
