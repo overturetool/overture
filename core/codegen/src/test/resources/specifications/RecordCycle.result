@@ -37,7 +37,7 @@ public class A {
         }
 
         public String toString() {
-            return Utils.recordToString(this, b);
+            return "mk_A`RecA" + Utils.formatFields(b);
         }
     }
 }
@@ -82,7 +82,7 @@ public class B {
         }
 
         public String toString() {
-            return Utils.recordToString(this, a);
+            return "mk_B`RecB" + Utils.formatFields(a);
         }
     }
 }

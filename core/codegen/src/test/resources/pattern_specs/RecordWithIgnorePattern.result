@@ -61,7 +61,7 @@ public class A {
         }
 
         public String toString() {
-            return Utils.recordToString(this, n, next);
+            return "mk_A`Rec" + Utils.formatFields(n, next);
         }
     }
 }

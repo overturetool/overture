@@ -73,7 +73,7 @@ public class Entry {
         }
 
         public String toString() {
-            return Utils.recordToString(this, x, y);
+            return "mk_Entry`Vec" + Utils.formatFields(x, y);
         }
     }
 }

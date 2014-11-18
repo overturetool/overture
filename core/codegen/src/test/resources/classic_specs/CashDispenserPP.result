@@ -232,7 +232,8 @@ public class Account {
         }
 
         public String toString() {
-            return Utils.recordToString(this, date, cardId, amount);
+            return "mk_Account`Transaction" +
+            Utils.formatFields(date, cardId, amount);
         }
     }
 }

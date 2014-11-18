@@ -41,7 +41,7 @@ public class A {
         }
 
         public String toString() {
-            return Utils.recordToString(this, x);
+            return "mk_A`R1" + Utils.formatFields(x);
         }
     }
 
@@ -71,7 +71,7 @@ public class A {
         }
 
         public String toString() {
-            return Utils.recordToString(this, r);
+            return "mk_A`R2" + Utils.formatFields(r);
         }
     }
 
@@ -103,7 +103,7 @@ public class A {
         }
 
         public String toString() {
-            return Utils.recordToString(this, x, r);
+            return "mk_A`R3" + Utils.formatFields(x, r);
         }
     }
 }

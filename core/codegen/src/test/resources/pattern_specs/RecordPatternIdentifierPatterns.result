@@ -117,7 +117,7 @@ public class Entry {
         }
 
         public String toString() {
-            return Utils.recordToString(this, n, b, c, r);
+            return "mk_Entry`Rec" + Utils.formatFields(n, b, c, r);
         }
     }
 }

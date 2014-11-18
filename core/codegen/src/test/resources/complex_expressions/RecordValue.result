@@ -44,7 +44,7 @@ public class A {
         }
 
         public String toString() {
-            return Utils.recordToString(this, e, r);
+            return "mk_A`Node" + Utils.formatFields(e, r);
         }
     }
 }

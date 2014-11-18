@@ -50,7 +50,7 @@ public class Entry {
         }
 
         public String toString() {
-            return Utils.recordToString(this, x, b);
+            return "mk_Entry`Rec" + Utils.formatFields(x, b);
         }
     }
 }

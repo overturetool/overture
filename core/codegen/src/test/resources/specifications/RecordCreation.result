@@ -45,7 +45,7 @@ public class Records {
         }
 
         public String toString() {
-            return Utils.recordToString(this, x, y);
+            return "mk_Records`Vector2D" + Utils.formatFields(x, y);
         }
     }
 }

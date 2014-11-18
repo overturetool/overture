@@ -39,7 +39,7 @@ public class A {
         }
 
         public String toString() {
-            return Utils.recordToString(this, x, y);
+            return "mk_A`Vector2D" + Utils.formatFields(x, y);
         }
     }
 
@@ -69,7 +69,7 @@ public class A {
         }
 
         public String toString() {
-            return Utils.recordToString(this, r);
+            return "mk_A`Real" + Utils.formatFields(r);
         }
     }
 }

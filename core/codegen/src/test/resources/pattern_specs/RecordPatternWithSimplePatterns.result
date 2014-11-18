@@ -90,7 +90,7 @@ public class A {
         }
 
         public String toString() {
-            return Utils.recordToString(this, n, b, c, r, s, next);
+            return "mk_A`Rec" + Utils.formatFields(n, b, c, r, s, next);
         }
     }
 }

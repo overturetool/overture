@@ -90,7 +90,7 @@ public class Entry {
         }
 
         public String toString() {
-            return Utils.recordToString(this, a, b);
+            return "mk_Entry`R1" + Utils.formatFields(a, b);
         }
     }
 
@@ -122,7 +122,7 @@ public class Entry {
         }
 
         public String toString() {
-            return Utils.recordToString(this, c, d);
+            return "mk_Entry`R2" + Utils.formatFields(c, d);
         }
     }
 }

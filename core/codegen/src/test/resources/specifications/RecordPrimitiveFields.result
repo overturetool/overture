@@ -50,7 +50,7 @@ public class A {
         }
 
         public String toString() {
-            return Utils.recordToString(this, i, c, r, q, n, n1);
+            return "mk_A`RecA" + Utils.formatFields(i, c, r, q, n, n1);
         }
     }
 }
