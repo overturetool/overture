@@ -1,0 +1,23 @@
+class Entry
+
+operations
+
+public static op1 : seq of char ==> bool
+op1 (x) ==
+if x = [] then
+  return false
+else
+  return true;
+  
+public static op2 : seq of char ==> bool
+op2 (x) ==
+if [] <> x then
+  return false
+else
+  return true;
+
+public static Run : () ==> ?
+Run () ==
+  return [op1(""), op2("")];
+
+end Entry

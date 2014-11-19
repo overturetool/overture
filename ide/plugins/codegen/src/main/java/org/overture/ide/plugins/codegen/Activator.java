@@ -96,14 +96,17 @@ public class Activator extends AbstractUIPlugin
 	{
 		store.setDefault(ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRINGS, ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRING_DEFAULT);
 		store.setDefault(ICodeGenConstants.DISABLE_CLONING, ICodeGenConstants.DISABLE_CLONING_DEFAULT);
+		store.setDefault(ICodeGenConstants.GENERATE_CONCURRENCY_MECHANISMS, ICodeGenConstants.GENERATE_CONCURRENCY_MECHANISMS_DEFAULT);
+		store.setDefault(ICodeGenConstants.CLASSES_TO_SKIP, ICodeGenConstants.CLASSES_TO_SKIP_DEFAULT);
 	}
 	
 	public static void savePluginSettings(boolean disableCloning,
-			boolean generateAsStrings, String userSpecifiedClassesToSkip)
+			boolean generateAsStrings, boolean generateConc, String userSpecifiedClassesToSkip)
 	{
 		Preferences prefs = InstanceScope.INSTANCE.getNode(ICodeGenConstants.PLUGIN_ID);
 		prefs.put(ICodeGenConstants.DISABLE_CLONING, new Boolean(disableCloning).toString());
 		prefs.put(ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRINGS, new Boolean(generateAsStrings).toString());
+		prefs.put(ICodeGenConstants.GENERATE_CONCURRENCY_MECHANISMS, new Boolean(generateConc).toString());
 		prefs.put(ICodeGenConstants.CLASSES_TO_SKIP, userSpecifiedClassesToSkip);
 
 		try

@@ -20,11 +20,11 @@ public class Entry {
         if (r instanceof R1) {
             R1 recordPattern_1 = ((R1) r);
             Number intPattern_1 = recordPattern_1.a;
-            success_1 = intPattern_1.longValue() == 1L;
+            success_1 = Utils.equals(intPattern_1, 1L);
 
             if (success_1) {
                 Number intPattern_2 = recordPattern_1.b;
-                success_1 = intPattern_2.longValue() == 2L;
+                success_1 = Utils.equals(intPattern_2, 2L);
             }
         } else {
             success_1 = false;
@@ -36,11 +36,11 @@ public class Entry {
                 success_1 = true;
 
                 Boolean boolPattern_1 = recordPattern_2.c;
-                success_1 = boolPattern_1 == true;
+                success_1 = Utils.equals(boolPattern_1, true);
 
                 if (success_1) {
                     Character charPattern_1 = recordPattern_2.d;
-                    success_1 = charPattern_1 == 'c';
+                    success_1 = Utils.equals(charPattern_1, 'c');
                 }
             } else {
                 success_1 = false;
@@ -78,8 +78,7 @@ public class Entry {
 
             R1 other = ((R1) obj);
 
-            return (a.longValue() == other.a.longValue()) &&
-            (b.longValue() == other.b.longValue());
+            return (Utils.equals(a, other.a)) && (Utils.equals(b, other.b));
         }
 
         public int hashCode() {
@@ -91,7 +90,7 @@ public class Entry {
         }
 
         public String toString() {
-            return Utils.recordToString(this, a, b);
+            return "mk_Entry`R1" + Utils.formatFields(a, b);
         }
     }
 
@@ -111,7 +110,7 @@ public class Entry {
 
             R2 other = ((R2) obj);
 
-            return (c == other.c) && (d == other.d);
+            return (Utils.equals(c, other.c)) && (Utils.equals(d, other.d));
         }
 
         public int hashCode() {
@@ -123,7 +122,7 @@ public class Entry {
         }
 
         public String toString() {
-            return Utils.recordToString(this, c, d);
+            return "mk_Entry`R2" + Utils.formatFields(c, d);
         }
     }
 }
@@ -132,9 +131,80 @@ public class Entry {
 
 package quotes;
 
-public interface Quotes {
-    public static Number start = 1L;
-    public static Number append = 2L;
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class start {
+    private static int hc = 0;
+    private static start instance = null;
+
+    public start() {
+        if (Utils.equals(hc, 0)) {
+            hc = super.hashCode();
+        }
+    }
+
+    public static start getInstance() {
+        if (Utils.equals(instance, null)) {
+            instance = new start();
+        }
+
+        return instance;
+    }
+
+    public int hashCode() {
+        return hc;
+    }
+
+    public boolean equals(final Object obj) {
+        return obj instanceof start;
+    }
+
+    public String toString() {
+        return "<start>";
+    }
+}
+
+##########
+
+package quotes;
+
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class append {
+    private static int hc = 0;
+    private static append instance = null;
+
+    public append() {
+        if (Utils.equals(hc, 0)) {
+            hc = super.hashCode();
+        }
+    }
+
+    public static append getInstance() {
+        if (Utils.equals(instance, null)) {
+            instance = new append();
+        }
+
+        return instance;
+    }
+
+    public int hashCode() {
+        return hc;
+    }
+
+    public boolean equals(final Object obj) {
+        return obj instanceof append;
+    }
+
+    public String toString() {
+        return "<append>";
+    }
 }
 
 ##########

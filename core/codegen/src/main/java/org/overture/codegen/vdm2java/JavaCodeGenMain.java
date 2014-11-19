@@ -94,12 +94,15 @@ public class JavaCodeGenMain
 					Logger.getLog().println("\n");
 				}
 
-				GeneratedModule quotes = data.getQuoteValues();
+				List<GeneratedModule> quotes = data.getQuoteValues();
 
-				if (quotes != null)
+				if (quotes != null && !quotes.isEmpty())
 				{
-					Logger.getLog().println("**********");
-					Logger.getLog().println(quotes.getContent());
+					for(GeneratedModule q : quotes)
+					{
+						Logger.getLog().println("**********");
+						Logger.getLog().println(q.getContent());
+					}
 				}
 
 				InvalidNamesResult invalidName = data.getInvalidNamesResult();

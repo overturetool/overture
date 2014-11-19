@@ -151,7 +151,10 @@ public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
 				functions.add((AFuncDeclCG) decl);
 			} else if (decl instanceof AThreadDeclCG)
 			{
-				classCg.setThread((AThreadDeclCG) decl);
+				if (question.getSettings().generateConc())
+				{
+					classCg.setThread((AThreadDeclCG) decl);
+				}
 			}
 			else if (decl instanceof APersyncDeclCG)
 			{

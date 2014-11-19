@@ -1,2 +1,2 @@
 #set ($start = ".start()")
-${JavaFormat.format($node.getExp())}${start};
+${JavaFormat.formatStartStmExp($node)}${start};

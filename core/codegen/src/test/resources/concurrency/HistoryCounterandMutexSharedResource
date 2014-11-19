@@ -1,0 +1,76 @@
+class SharedCounter
+
+instance variables
+
+public counter : nat := 0;
+
+operations
+
+public inc : () ==> ()
+inc () == counter := counter + 1;
+
+public getValue : () ==> nat
+getValue () == return counter;
+
+sync
+  per inc => #waiting(inc) < 3;
+  mutex(inc);
+
+end SharedCounter
+
+class Incrementer
+
+instance variables
+
+private sharedCounter : SharedCounter;
+
+private isFinished : bool := false;
+
+operations
+
+public Incrementer : SharedCounter ==> Incrementer
+Incrementer (s) == sharedCounter := s;
+
+public joined : () ==> ()
+joined () == skip;
+
+public incCounter : () ==> ()
+incCounter () ==
+(
+  for i = 1 to 100 do
+    sharedCounter.inc();
+  isFinished := true; 
+)
+
+thread
+       incCounter();
+
+sync
+	per joined => isFinished;
+			
+end Incrementer
+
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let s = new SharedCounter(),
+    i1 = new Incrementer(s),
+    i2 = new Incrementer(s),
+    i3 = new Incrementer(s)
+in 
+(
+  start(i1);
+  start(i2);
+  start(i3);
+
+  i1.joined();
+  i2.joined();
+  i3.joined();
+  
+  return s.getValue(); 
+);
+
+end Entry

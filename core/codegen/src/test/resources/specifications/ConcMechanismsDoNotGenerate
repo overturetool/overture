@@ -1,0 +1,16 @@
+class Entry
+ 
+operations
+ 
+public op : () ==> ()
+op () == skip;
+ 
+thread
+op();
+ 
+sync
+ 
+per op => #active(op) = 0;
+mutex(op);
+
+end Entry

@@ -76,12 +76,15 @@ public class SpecificationTestCase extends CodeGenBaseTestCase
 			generatedCode.append(MODULE_DELIMITER);
 		}
 
-		GeneratedModule quoteData = data.getQuoteValues();
+		List<GeneratedModule> quoteData = data.getQuoteValues();
 
-		if (quoteData != null)
+		if (quoteData != null && !quoteData.isEmpty())
 		{
-			generatedCode.append(LINE_SEPARATOR + quoteData.getContent());
-			generatedCode.append(MODULE_DELIMITER);
+			for (GeneratedModule q : quoteData)
+			{
+				generatedCode.append(LINE_SEPARATOR + q.getContent());
+				generatedCode.append(MODULE_DELIMITER);
+			}
 		}
 
 		InvalidNamesResult invalidNames = data.getInvalidNamesResult();

@@ -37,6 +37,7 @@ import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
+import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
@@ -47,13 +48,11 @@ import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
-import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
-import org.overture.codegen.cgast.types.AObjectTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
-import org.overture.codegen.cgast.types.AStringTypeCG;
+import org.overture.codegen.logging.Logger;
 
-public class JavaRecordCreator
+public class JavaRecordCreator extends JavaObjectCreator
 {
 	private JavaFormat javaFormat;
 
@@ -61,24 +60,22 @@ public class JavaRecordCreator
 	{
 		this.javaFormat = javaFormat;
 	}
-
+	
 	public String formatRecordConstructor(ARecordDeclCG record)
 			throws AnalysisException
 	{
-		LinkedList<AFieldDeclCG> fields = record.getFields();
-
-		AMethodDeclCG constructor = new AMethodDeclCG();
 		// Since Java does not have records but the OO AST does a record is generated as a Java class.
 		// To make sure that the record can be instantiated we must explicitly add a constructor.
-		constructor.setAccess(JavaFormat.JAVA_PUBLIC);
-		constructor.setIsConstructor(true);
-		constructor.setName(record.getName());
-		LinkedList<AFormalParamLocalParamCG> formalParams = constructor.getFormalParams();
+		
+		AMethodDeclCG constructor = consDefaultCtorSignature(record.getName());
 
 		ABlockStmCG body = new ABlockStmCG();
-		LinkedList<SStmCG> bodyStms = body.getStatements();
 		constructor.setBody(body);
 
+		LinkedList<AFormalParamLocalParamCG> formalParams = constructor.getFormalParams();
+		LinkedList<SStmCG> bodyStms = body.getStatements();
+		LinkedList<AFieldDeclCG> fields = record.getFields();
+		
 		for (AFieldDeclCG field : fields)
 		{
 			String name = field.getName();
@@ -132,10 +129,6 @@ public class JavaRecordCreator
 	public String generateCloneMethod(ARecordDeclCG record)
 			throws AnalysisException
 	{
-		AMethodDeclCG method = new AMethodDeclCG();
-
-		method.setAccess(JavaFormat.JAVA_PUBLIC);
-		method.setName("clone");
 
 		AClassDeclCG defClass = record.getAncestor(AClassDeclCG.class);
 		ATypeNameCG typeName = new ATypeNameCG();
@@ -148,7 +141,7 @@ public class JavaRecordCreator
 		AMethodTypeCG methodType = new AMethodTypeCG();
 		methodType.setResult(returnType);
 
-		method.setMethodType(methodType);
+		AMethodDeclCG method = consCloneSignature(methodType);
 
 		ANewExpCG newExp = new ANewExpCG();
 		newExp.setType(returnType.clone());
@@ -178,39 +171,15 @@ public class JavaRecordCreator
 	public String generateEqualsMethod(ARecordDeclCG record)
 			throws AnalysisException
 	{
+		String paramName = "obj";
+		
 		// Construct equals method to be used for comparing records using
 		// "structural" equivalence
-		AMethodDeclCG equalsMethod = new AMethodDeclCG();
-
-		AMethodTypeCG methodType = new AMethodTypeCG();
-		methodType.getParams().add(new AObjectTypeCG());
-
-		AExternalTypeCG returnType = new AExternalTypeCG();
-		returnType.setInfo(null);
-		returnType.setName("boolean");
-
-		methodType.setResult(returnType);
-
-		equalsMethod.setAccess(JavaFormat.JAVA_PUBLIC);
-		equalsMethod.setName("equals");
-		equalsMethod.setMethodType(methodType);
-
-		// Add the formal parameter "Object obj" to the method
-		AFormalParamLocalParamCG formalParam = new AFormalParamLocalParamCG();
-
-		String paramName = "obj";
-
-		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
-		idPattern.setName(paramName);
-
-		formalParam.setPattern(idPattern);
-		AObjectTypeCG paramType = new AObjectTypeCG();
-		formalParam.setType(paramType);
-		equalsMethod.getFormalParams().add(formalParam);
+		AMethodDeclCG equalsMethod = consEqualMethodSignature(paramName);
 
 		ABlockStmCG equalsMethodBody = new ABlockStmCG();
 		LinkedList<SStmCG> equalsStms = equalsMethodBody.getStatements();
-
+		
 		AReturnStmCG returnTypeComp = new AReturnStmCG();
 		if (record.getFields().isEmpty())
 		{
@@ -267,33 +236,19 @@ public class JavaRecordCreator
 	public String generateHashcodeMethod(ARecordDeclCG record)
 			throws AnalysisException
 	{
-		String hashCode = "hashCode";
-
-		AMethodDeclCG hashcodeMethod = new AMethodDeclCG();
-
-		hashcodeMethod.setAccess(JavaFormat.JAVA_PUBLIC);
-		hashcodeMethod.setName(hashCode);
-
-		String intTypeName = JavaFormat.JAVA_INT;
-		AExternalTypeCG intBasicType = new AExternalTypeCG();
-		intBasicType.setName(intTypeName);
-
-		AMethodTypeCG methodType = new AMethodTypeCG();
-		methodType.setResult(intBasicType);
-
-		hashcodeMethod.setMethodType(methodType);
+		AMethodDeclCG hashcodeMethod = consHashcodeMethodSignature();
 
 		AReturnStmCG returnStm = new AReturnStmCG();
 
 		if (record.getFields().isEmpty())
 		{
 			AExternalExpCG zero = new AExternalExpCG();
-			zero.setType(intBasicType.clone());
+			zero.setType(hashcodeMethod.getMethodType().getResult().clone());
 			zero.setTargetLangExp("0");
 			returnStm.setExp(zero);
 		} else
 		{
-			returnStm.setExp(JavaFormatAssistant.consUtilCallUsingRecFields(record, intBasicType, hashCode));
+			returnStm.setExp(JavaFormatAssistant.consUtilCallUsingRecFields(record, hashcodeMethod.getMethodType().getResult(), hashcodeMethod.getName()));
 		}
 
 		hashcodeMethod.setBody(returnStm);
@@ -306,31 +261,42 @@ public class JavaRecordCreator
 	public String generateToStringMethod(ARecordDeclCG record)
 			throws AnalysisException
 	{
-		AMethodDeclCG toStringMethod = new AMethodDeclCG();
-
-		toStringMethod.setAccess(JavaFormat.JAVA_PUBLIC);
-		toStringMethod.setName("toString");
-
-		AStringTypeCG returnType = new AStringTypeCG();
-
-		AMethodTypeCG methodType = new AMethodTypeCG();
-		methodType.setResult(returnType);
-
-		toStringMethod.setMethodType(methodType);
+		AMethodDeclCG toStringMethod = consToStringSignature();
 
 		AReturnStmCG returnStm = new AReturnStmCG();
 
+		AClassDeclCG enclosingClass = record.getAncestor(AClassDeclCG.class);
+		String className = "";
+		
+		if(enclosingClass != null)
+		{
+			className = enclosingClass.getName();
+		}
+		else
+		{
+			Logger.getLog().printErrorln("Could not find enclosing class for record: " + record.getName());
+		}
+		
+		String recToStrPrefix = String.format("mk_%s%s", className + "`" , record.getName());
+		
+		AStringLiteralExpCG emptyRecStr = new AStringLiteralExpCG();
+		emptyRecStr.setIsNull(false);
+		STypeCG strType = toStringMethod.getMethodType().getResult();
+		emptyRecStr.setType(strType.clone());
+		
 		if (record.getFields().isEmpty())
 		{
-			AStringLiteralExpCG emptyRecStr = new AStringLiteralExpCG();
-			emptyRecStr.setIsNull(false);
-			emptyRecStr.setType(returnType.clone());
-			emptyRecStr.setValue(String.format("mk_%s()", record.getName()));
+			emptyRecStr.setValue(recToStrPrefix + "()");
 
 			returnStm.setExp(emptyRecStr);
 		} else
 		{
-			returnStm.setExp(JavaFormatAssistant.consRecToStringCall(record, returnType, "recordToString"));
+			ASeqConcatBinaryExpCG stringBuffer = new ASeqConcatBinaryExpCG();
+			stringBuffer.setType(strType.clone());
+			stringBuffer.setLeft(javaFormat.getIrInfo().getExpAssistant().consStringLiteral(recToStrPrefix, false));
+			stringBuffer.setRight(JavaFormatAssistant.consUtilCallUsingRecFields(record, strType, "formatFields"));
+			
+			returnStm.setExp(stringBuffer);
 		}
 
 		toStringMethod.setBody(returnStm);

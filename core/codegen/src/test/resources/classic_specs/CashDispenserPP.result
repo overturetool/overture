@@ -19,8 +19,6 @@ public class Entry {
 ##########
 import org.overture.codegen.runtime.*;
 
-import quotes.*;
-
 import java.util.*;
 
 
@@ -51,7 +49,8 @@ public class SimpleTest {
         resource.AddLetterbox(clock, new Letterbox());
         ((Till) tills.get(1L)).InsertCard(c1);
 
-        if (((Till) tills.get(1L)).Validate(123456L).longValue() == Quotes.PinOk.longValue()) {
+        if (Utils.equals(((Till) tills.get(1L)).Validate(123456L),
+                    quotes.PinOk.getInstance())) {
             return ((Till) tills.get(1L)).MakeWithdrawal(800L);
         } else {
             return false;
@@ -220,8 +219,8 @@ public class Account {
             Transaction other = ((Transaction) obj);
 
             return (Utils.equals(date, other.date)) &&
-            (cardId.longValue() == other.cardId.longValue()) &&
-            (amount.longValue() == other.amount.longValue());
+            (Utils.equals(cardId, other.cardId)) &&
+            (Utils.equals(amount, other.amount));
         }
 
         public int hashCode() {
@@ -233,7 +232,8 @@ public class Account {
         }
 
         public String toString() {
-            return Utils.recordToString(this, date, cardId, amount);
+            return "mk_Account`Transaction" +
+            Utils.formatFields(date, cardId, amount);
         }
     }
 }
@@ -520,8 +520,6 @@ public class Letterbox {
 ##########
 import org.overture.codegen.runtime.*;
 
-import quotes.*;
-
 import java.util.*;
 
 
@@ -546,9 +544,9 @@ public class Till {
         curCard = c;
     }
 
-    public Number Validate(final Number pin) {
+    public Object Validate(final Number pin) {
         Number cardId = curCard.GetCardId();
-        Boolean codeOk = curCard.GetCode().longValue() == Encode(pin).longValue();
+        Boolean codeOk = Utils.equals(curCard.GetCode(), Encode(pin));
         Boolean cardLegal = IsLegalCard();
         Boolean andResult_5 = false;
 
@@ -565,7 +563,7 @@ public class Till {
                     SetUtil.set(curCard));
             curCard = null;
 
-            return Quotes.Retained;
+            return quotes.Retained.getInstance();
         } else if (codeOk) {
             resource.ResetNumberOfTries(cardId);
         } else {
@@ -577,14 +575,14 @@ public class Till {
                 cardOk = false;
                 curCard = null;
 
-                return Quotes.Retained;
+                return quotes.Retained.getInstance();
             }
         }
 
         if (cardOk) {
-            return Quotes.PinOk;
+            return quotes.PinOk.getInstance();
         } else {
-            return Quotes.PinNotOk;
+            return quotes.PinNotOk.getInstance();
         }
     }
 
@@ -614,7 +612,7 @@ public class Till {
     public Boolean CardValidated() {
         Boolean andResult_6 = false;
 
-        if (curCard != null) {
+        if (!(Utils.equals(curCard, null))) {
             if (cardOk) {
                 andResult_6 = true;
             }
@@ -624,7 +622,7 @@ public class Till {
     }
 
     public Boolean CardInside() {
-        return curCard != null;
+        return !(Utils.equals(curCard, null));
     }
 
     private static Number Encode(final Number pin) {
@@ -980,12 +978,200 @@ public class Withdrawal extends Event {
 
 package quotes;
 
-public interface Quotes {
-    public static Number start = 1L;
-    public static Number append = 2L;
-    public static Number PinNotOk = 3L;
-    public static Number PinOk = 4L;
-    public static Number Retained = 5L;
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class start {
+    private static int hc = 0;
+    private static start instance = null;
+
+    public start() {
+        if (Utils.equals(hc, 0)) {
+            hc = super.hashCode();
+        }
+    }
+
+    public static start getInstance() {
+        if (Utils.equals(instance, null)) {
+            instance = new start();
+        }
+
+        return instance;
+    }
+
+    public int hashCode() {
+        return hc;
+    }
+
+    public boolean equals(final Object obj) {
+        return obj instanceof start;
+    }
+
+    public String toString() {
+        return "<start>";
+    }
+}
+
+##########
+
+package quotes;
+
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class append {
+    private static int hc = 0;
+    private static append instance = null;
+
+    public append() {
+        if (Utils.equals(hc, 0)) {
+            hc = super.hashCode();
+        }
+    }
+
+    public static append getInstance() {
+        if (Utils.equals(instance, null)) {
+            instance = new append();
+        }
+
+        return instance;
+    }
+
+    public int hashCode() {
+        return hc;
+    }
+
+    public boolean equals(final Object obj) {
+        return obj instanceof append;
+    }
+
+    public String toString() {
+        return "<append>";
+    }
+}
+
+##########
+
+package quotes;
+
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class PinNotOk {
+    private static int hc = 0;
+    private static PinNotOk instance = null;
+
+    public PinNotOk() {
+        if (Utils.equals(hc, 0)) {
+            hc = super.hashCode();
+        }
+    }
+
+    public static PinNotOk getInstance() {
+        if (Utils.equals(instance, null)) {
+            instance = new PinNotOk();
+        }
+
+        return instance;
+    }
+
+    public int hashCode() {
+        return hc;
+    }
+
+    public boolean equals(final Object obj) {
+        return obj instanceof PinNotOk;
+    }
+
+    public String toString() {
+        return "<PinNotOk>";
+    }
+}
+
+##########
+
+package quotes;
+
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class PinOk {
+    private static int hc = 0;
+    private static PinOk instance = null;
+
+    public PinOk() {
+        if (Utils.equals(hc, 0)) {
+            hc = super.hashCode();
+        }
+    }
+
+    public static PinOk getInstance() {
+        if (Utils.equals(instance, null)) {
+            instance = new PinOk();
+        }
+
+        return instance;
+    }
+
+    public int hashCode() {
+        return hc;
+    }
+
+    public boolean equals(final Object obj) {
+        return obj instanceof PinOk;
+    }
+
+    public String toString() {
+        return "<PinOk>";
+    }
+}
+
+##########
+
+package quotes;
+
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Retained {
+    private static int hc = 0;
+    private static Retained instance = null;
+
+    public Retained() {
+        if (Utils.equals(hc, 0)) {
+            hc = super.hashCode();
+        }
+    }
+
+    public static Retained getInstance() {
+        if (Utils.equals(instance, null)) {
+            instance = new Retained();
+        }
+
+        return instance;
+    }
+
+    public int hashCode() {
+        return hc;
+    }
+
+    public boolean equals(final Object obj) {
+        return obj instanceof Retained;
+    }
+
+    public String toString() {
+        return "<Retained>";
+    }
 }
 
 ##########

@@ -24,6 +24,7 @@ package org.overture.codegen.visitor;
 import org.overture.codegen.cgast.SBindCG;
 import org.overture.codegen.cgast.SDeclCG;
 import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.SModifierCG;
 import org.overture.codegen.cgast.SMultipleBindCG;
 import org.overture.codegen.cgast.SObjectDesignatorCG;
 import org.overture.codegen.cgast.SPatternCG;
@@ -44,6 +45,7 @@ public class VisitorManager
 	private CGVisitor<SMultipleBindCG> multipleBindVisitor;
 	private CGVisitor<SBindCG> bindVisitor;
 	private CGVisitor<SPatternCG> patternVisitor;
+	private CGVisitor<SModifierCG> modifierVisitor;
 
 	public VisitorManager()
 	{
@@ -57,6 +59,7 @@ public class VisitorManager
 		this.multipleBindVisitor = new CGVisitor<SMultipleBindCG>(new MultipleBindVisitorCG());
 		this.bindVisitor = new CGVisitor<SBindCG>(new BindVisitorCG());
 		this.patternVisitor = new CGVisitor<SPatternCG>(new PatternVisitorCG());
+		this.modifierVisitor = new CGVisitor<SModifierCG>(new ModifierVisitorCG());
 	}
 
 	public CGVisitor<AClassDeclCG> getClassVisitor()
@@ -107,5 +110,10 @@ public class VisitorManager
 	public CGVisitor<SPatternCG> getPatternVisitor()
 	{
 		return patternVisitor;
+	}
+	
+	public CGVisitor<SModifierCG> getModifierVisitor()
+	{
+		return modifierVisitor;
 	}
 }

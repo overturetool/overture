@@ -1,0 +1,21 @@
+class Entry
+
+types
+
+public Rec ::
+  a : int
+  b : bool;
+
+operations
+
+public static fst : Rec ==> int
+fst (r) == if r.b then return 1111 else return r.a;
+
+public static Run : () ==> ?
+Run () ==
+(
+  dcl r1 : Rec := mk_Rec(5, true);
+  return fst(mu(r1, a |-> 11, b |-> false)); 
+);
+
+end Entry

@@ -55,6 +55,7 @@ import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeWrappersTypeCG;
+import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AIntBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
@@ -67,10 +68,12 @@ import org.overture.codegen.cgast.types.ARatBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ARatNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
 import org.overture.codegen.cgast.types.ASetSetTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.ATokenBasicTypeCG;
+import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AUnionTypeCG;
 import org.overture.codegen.cgast.types.SBasicTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
@@ -136,6 +139,13 @@ public class TypeAssistantCG extends AssistantBase
 		}
 
 		return null;
+	}
+	
+	public STypeCG getFieldType(List<AClassDeclCG> classes, ARecordTypeCG recordType, String memberName)
+	{
+		AFieldDeclCG field = assistantManager.getDeclAssistant().getFieldDecl(classes, recordType, memberName);
+		
+		return field.getType().clone();
 	}
 
 	public List<STypeCG> getFieldTypes(ARecordDeclCG record)
@@ -483,6 +493,21 @@ public class TypeAssistantCG extends AssistantBase
 		return types;
 	}
 	
+	public List<STypeCG> clearDuplicates(List<STypeCG> types)
+	{
+		List<STypeCG> filtered = new LinkedList<STypeCG>();
+
+		for(STypeCG type : types)
+		{
+			if(!containsType(filtered, type))
+			{
+				filtered.add(type);
+			}
+		}
+		
+		return filtered;
+	}
+	
 	public boolean isStringType(STypeCG type)
 	{
 		return type instanceof AStringTypeCG;
@@ -637,14 +662,70 @@ public class TypeAssistantCG extends AssistantBase
 	
 	public boolean containsType(List<STypeCG> types, STypeCG searchedType)
 	{
-		for(STypeCG currentType : types)
+		for (STypeCG currentType : types)
 		{
-			if(currentType.getClass() == searchedType.getClass())
+			if (typesEqual(currentType, searchedType))
 			{
 				return true;
 			}
 		}
-		
+
+		return false;
+	}
+	
+	private boolean typesEqual(STypeCG left, STypeCG right)
+	{
+		if (left instanceof AClassTypeCG
+				&& right instanceof AClassTypeCG)
+		{
+			AClassTypeCG currentClassType = (AClassTypeCG) left;
+			AClassTypeCG searchedClassType = (AClassTypeCG) right;
+
+			return currentClassType.getName().equals(searchedClassType.getName());
+		}
+
+		if (left instanceof ARecordTypeCG
+				&& right instanceof ARecordTypeCG)
+		{
+			ARecordTypeCG recordType = (ARecordTypeCG) left;
+			ARecordTypeCG searchedRecordType = (ARecordTypeCG) right;
+
+			return recordType.getName().equals(searchedRecordType.getName());
+		}
+
+		if (left instanceof ATupleTypeCG
+				&& right instanceof ATupleTypeCG)
+		{
+			ATupleTypeCG currentTupleType = (ATupleTypeCG) left;
+			ATupleTypeCG searchedTupleType = (ATupleTypeCG) right;
+			
+			if(currentTupleType.getTypes().size() != searchedTupleType.getTypes().size())
+			{
+				return false;
+			}
+			
+			LinkedList<STypeCG> leftTypes = currentTupleType.getTypes();
+			LinkedList<STypeCG> rightTypes = searchedTupleType.getTypes();
+			
+			for(int i = 0; i < leftTypes.size(); i++)
+			{
+				STypeCG currentLeftFieldType = leftTypes.get(i);
+				STypeCG currentRightFieldType = rightTypes.get(i);
+				
+				if(!typesEqual(currentLeftFieldType, currentRightFieldType))
+				{
+					return false;
+				}
+			}
+			
+			return true;
+		}
+
+		if (left.getClass() == right.getClass())
+		{
+			return true;
+		}
+
 		return false;
 	}
 	

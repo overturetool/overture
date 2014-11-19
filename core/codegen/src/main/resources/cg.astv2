@@ -43,6 +43,7 @@ CG {-> package='org.overture.codegen.cgast'
 	| #letBeSt
 	| #exp
 	| #type
+	| #modifier
 	;
 
 #pattern {-> package='org.overture.codegen.cgast.patterns'}
@@ -214,8 +215,7 @@ CG {-> package='org.overture.codegen.cgast'
            |	{error}
            |	{continue}
            |	{break}
-           |	{start}
-           		[exp]:CG.#exp 
+           |	{start} [exp]:CG.#exp [type]:CG.#type 
            |	{try} [stm]:CG.#stm [catchClauses]:CG.#decl.catchClause* [finally]:CG.#stm
            ;
 
@@ -261,6 +261,7 @@ CG {-> package='org.overture.codegen.cgast'
     |	#Set
     |	#Map
     |	{mkBasic} [arg]:CG.#exp
+    |	{recordMod} [rec]:CG.#exp [recType]:CG.#type.record [modifiers]:CG.#modifier.record*
     |	#Quantifier
     |	{preInc} [exp]:CG.#exp
     |	{preDec} [exp]:CG.#exp
@@ -282,6 +283,10 @@ CG {-> package='org.overture.codegen.cgast'
     |	#altExp
     |	{subSeq} [seq]:CG.#exp [from]:CG.#exp [to]:CG.#exp
     |	{history}[histype]:java_String [opsname]:java_String [sentinelType]:CG.#type.class
+    ;
+
+#modifier {-> package='org.overture.codegen.cgast.expressions'}
+    = {record} [name]:java_String [value]:CG.#exp
     ;
 
 #Is {-> package='org.overture.codegen.cgast.expressions'
@@ -409,6 +414,8 @@ CG {-> package='org.overture.codegen.cgast'
     |	{mapRange} 
     |	{distMerge}
     |	{mapInverse}
+    |	{seqToString}
+    |	{stringToSeq}
     ;
     
 #Seq {-> package='org.overture.codegen.cgast.expressions'}

@@ -631,18 +631,16 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 	public SStmCG caseAStartStm(AStartStm node, IRInfo question)
 			throws AnalysisException
 	{
-		
+		PType type = node.getType();
 		PExp exp = node.getObj();
 		
+		STypeCG typeCG = type.apply(question.getTypeVisitor(), question);
 		SExpCG expCG = exp.apply(question.getExpVisitor(), question);
 		
 		AStartStmCG thread = new AStartStmCG();
-		
-		//System.out.print(expCG);
-		
+		thread.setType(typeCG);
 		thread.setExp(expCG);
 				
 		return thread;
-		
 	}
 }

@@ -55,7 +55,19 @@ public class ExecutableSpecTestHandler extends EntryBasedTestHandler
 		for (StringBuffer classCgStr : content)
 		{
 			String className = TestUtils.getJavaModuleName(classCgStr);
-			File tempFile = consTempFile(className, parent, classCgStr);
+			
+			
+			File out = null;
+			if(classCgStr.toString().contains("package quotes;"))
+			{
+				out = new File(parent, "quotes");
+			}
+			else
+			{
+				out = parent;
+			}
+				
+			File tempFile = consTempFile(className, out, classCgStr);
 
 			injectSerializableInterface(classCgStr, className);
 

@@ -47,7 +47,6 @@ import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.analysis.violations.Violation;
 import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.assistant.LocationAssistantCG;
-import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.ir.NodeInfo;
 import org.overture.codegen.utils.AnalysisExceptionCG;
@@ -160,9 +159,11 @@ public class Vdm2JavaCommand extends AbstractHandler
 				Preferences preferences = InstanceScope.INSTANCE.getNode(ICodeGenConstants.PLUGIN_ID);
 				
 				boolean generateCharSeqsAsStrings = preferences.getBoolean(ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRINGS, ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRING_DEFAULT);
-
+				boolean generateConcMechanisms = preferences.getBoolean(ICodeGenConstants.GENERATE_CONCURRENCY_MECHANISMS, ICodeGenConstants.GENERATE_CONCURRENCY_MECHANISMS_DEFAULT);
+				
 				IRSettings irSettings = new IRSettings();
 				irSettings.setCharSeqAsString(generateCharSeqsAsStrings);
+				irSettings.setGenerateConc(generateConcMechanisms);
 
 				boolean disableCloning = preferences.getBoolean(ICodeGenConstants.DISABLE_CLONING, ICodeGenConstants.DISABLE_CLONING_DEFAULT);
 
@@ -341,18 +342,19 @@ public class Vdm2JavaCommand extends AbstractHandler
 	}
 
 	private void outputQuotes(IVdmProject vdmProject, File outputFolder,
-			JavaCodeGen vdm2java, GeneratedModule quotes) throws CoreException
+			JavaCodeGen vdm2java, List<GeneratedModule> quotes) throws CoreException
 	{
-		if (quotes != null)
+		if (quotes != null && !quotes.isEmpty())
 		{
 			File quotesFolder = PluginVdm2JavaUtil.getQuotesFolder(vdmProject);
-			vdm2java.generateJavaSourceFile(quotesFolder, quotes);
+			
+			for(GeneratedModule q : quotes)
+			{
+				vdm2java.generateJavaSourceFile(quotesFolder, q);
+			}
 
-			CodeGenConsole.GetInstance().println("Quotes interface generated.");
-			File quotesFile = new File(outputFolder, IRConstants.QUOTES_INTERFACE_NAME
-					+ IJavaCodeGenConstants.JAVA_FILE_EXTENSION);
-			CodeGenConsole.GetInstance().println("Java source file: "
-					+ quotesFile.getAbsolutePath());
+			CodeGenConsole.GetInstance().println("Quotes generated to folder: "
+					+ quotesFolder.getAbsolutePath());
 			CodeGenConsole.GetInstance().println("");
 		}
 	}

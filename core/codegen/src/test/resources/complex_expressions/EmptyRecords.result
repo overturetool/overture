@@ -11,8 +11,8 @@ public class Entry {
         M m0 = new M();
         M m1 = new M();
 
-        return Tuple.mk_(Utils.equals(m0, m0), Utils.equals(m0, m1),
-            Utils.equals(m1, m1), Utils.clone(m0));
+        return SeqUtil.seq(Utils.equals(m0, m0), Utils.equals(m0, m1),
+            Utils.equals(m1, m1), Utils.equals(m1, m0));
     }
 
     public String toString() {
@@ -36,7 +36,7 @@ public class Entry {
         }
 
         public String toString() {
-            return "mk_M()";
+            return "mk_Entry`M()";
         }
     }
 }
@@ -45,9 +45,80 @@ public class Entry {
 
 package quotes;
 
-public interface Quotes {
-    public static Number start = 1L;
-    public static Number append = 2L;
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class start {
+    private static int hc = 0;
+    private static start instance = null;
+
+    public start() {
+        if (Utils.equals(hc, 0)) {
+            hc = super.hashCode();
+        }
+    }
+
+    public static start getInstance() {
+        if (Utils.equals(instance, null)) {
+            instance = new start();
+        }
+
+        return instance;
+    }
+
+    public int hashCode() {
+        return hc;
+    }
+
+    public boolean equals(final Object obj) {
+        return obj instanceof start;
+    }
+
+    public String toString() {
+        return "<start>";
+    }
+}
+
+##########
+
+package quotes;
+
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class append {
+    private static int hc = 0;
+    private static append instance = null;
+
+    public append() {
+        if (Utils.equals(hc, 0)) {
+            hc = super.hashCode();
+        }
+    }
+
+    public static append getInstance() {
+        if (Utils.equals(instance, null)) {
+            instance = new append();
+        }
+
+        return instance;
+    }
+
+    public int hashCode() {
+        return hc;
+    }
+
+    public boolean equals(final Object obj) {
+        return obj instanceof append;
+    }
+
+    public String toString() {
+        return "<append>";
+    }
 }
 
 ##########
