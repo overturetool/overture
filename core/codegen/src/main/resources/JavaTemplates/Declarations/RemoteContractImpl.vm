@@ -1,10 +1,14 @@
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import org.overture.codegen.runtime.*;
+
+#set($UniCast = $node.getSuperName())
+#if ($node.getIsUniCast())
+	#set($UniCast = "UnicastRemoteObject")
+#end
  
-public class ${node.getName()} extends UnicastRemoteObject implements ${node.getName()}_i
+public class ${node.getName()} extends $UniCast implements ${node.getName()}_i
 {
-       
     #foreach( $field in $node.getFields() )
 	$JavaFormat.format($field)
 	#end

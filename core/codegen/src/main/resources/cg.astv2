@@ -136,6 +136,8 @@ CG {-> package='org.overture.codegen.cgast'
 		[name]:java_String
 		[methods]:CG.#decl.method*
 		[fields]:field*
+		[superName]:java_String
+		[isUniCast]:java_Boolean
 	|	{remoteInstance}
 		[name]:java_String
 		[nameString]:java_String

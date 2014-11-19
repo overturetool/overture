@@ -29,6 +29,10 @@ public class RemoteImplGenerator {
 			LinkedList<AMethodDeclCG> a = classCg.getMethods();
 			contractImpl.setName(classCg.getName());
 			contractImpl.setFields(classCg.getFields());
+			contractImpl.setSuperName(classCg.getSuperName());
+			
+			if(classCg.getSuperName()==null) contractImpl.setIsUniCast(true);
+			else contractImpl.setIsUniCast(false);
 			for(AMethodDeclCG method : classCg.getMethods()){
 
 				if(method.getName().equals("toString")){
