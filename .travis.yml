@@ -10,16 +10,16 @@ branches:
     - docs
 before_install:
   - mvn -version
-  - if [ $TRAVIS_BRANCH == "development" ] ; then { sudo apt-get update -qq; sudo apt-get install -qq nsis nsis-common nsis-pluginapi; } ; fi
+    #  - if [ $TRAVIS_BRANCH == "development" ] ; then { sudo apt-get update -qq; sudo apt-get install -qq nsis nsis-common nsis-pluginapi; } ; fi
 install:
   - echo "-*- Precompile Core -*-"
   - mvn -B install -Dmaven.test.skip=true -Dmaven.javadoc.skip=true
-  - echo "-*- Precompile IDE -*-"
-  - mvn -B install -f ide/pom.xml -Dmaven.test.skip=true -Dmaven.javadoc.skip=true -Dgit-commit-id.skip=true
+    #  - echo "-*- Precompile IDE -*-"
+    #- mvn -B install -f ide/pom.xml -Dmaven.test.skip=true -Dmaven.javadoc.skip=true -Dgit-commit-id.skip=true
 script: 
   - echo travis_fold:start:compile_core
   - mvn -B install
   - echo travis_fold:end:compile_core
-  - echo travis_fold:start:compile_ide
-  - mvn -B install -f ide/pom.xml -Dgit-commit-id.skip=true -Pall-platforms -P!ui-tests
-  - echo travis_fold:end:compile_ide
+    #- echo travis_fold:start:compile_ide
+    #- mvn -B install -f ide/pom.xml -Dgit-commit-id.skip=true -Pall-platforms -P!ui-tests
+    #- echo travis_fold:end:compile_ide
