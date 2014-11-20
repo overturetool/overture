@@ -25,6 +25,7 @@ import java.util.LinkedList;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.statements.AApplyObjectDesignator;
@@ -39,7 +40,8 @@ import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class AApplyObjectDesignatorAssistantTC
+//FIXME: all methods used in same class. move them.
+public class AApplyObjectDesignatorAssistantTC implements IAstAssistant
 {
 
 	protected ITypeCheckerAssistantFactory af;

@@ -2,7 +2,7 @@
 <feature
       id="org.overture.ide.plugins.features.codegen"
       label="Code Generator"
-      version="2.1.2">
+      version="2.1.4">
 
    <description>
       %description

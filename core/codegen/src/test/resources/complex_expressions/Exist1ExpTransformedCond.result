@@ -20,7 +20,7 @@ public class Entry {
             for (Iterator iterator_2 = set_2.iterator();
                     iterator_2.hasNext() && forAllExpResult_1;) {
                 Number y = ((Number) iterator_2.next());
-                forAllExpResult_1 = 1L == 1L;
+                forAllExpResult_1 = Utils.equals(1L, 1L);
             }
 
             if (forAllExpResult_1) {
@@ -28,11 +28,91 @@ public class Entry {
             }
         }
 
-        return exists1Counter_1.longValue() == 1L;
+        return Utils.equals(exists1Counter_1, 1L);
     }
 
     public String toString() {
         return "Entry{}";
+    }
+}
+
+##########
+
+package quotes;
+
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class start {
+    private static int hc = 0;
+    private static start instance = null;
+
+    public start() {
+        if (Utils.equals(hc, 0)) {
+            hc = super.hashCode();
+        }
+    }
+
+    public static start getInstance() {
+        if (Utils.equals(instance, null)) {
+            instance = new start();
+        }
+
+        return instance;
+    }
+
+    public int hashCode() {
+        return hc;
+    }
+
+    public boolean equals(final Object obj) {
+        return obj instanceof start;
+    }
+
+    public String toString() {
+        return "<start>";
+    }
+}
+
+##########
+
+package quotes;
+
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class append {
+    private static int hc = 0;
+    private static append instance = null;
+
+    public append() {
+        if (Utils.equals(hc, 0)) {
+            hc = super.hashCode();
+        }
+    }
+
+    public static append getInstance() {
+        if (Utils.equals(instance, null)) {
+            instance = new append();
+        }
+
+        return instance;
+    }
+
+    public int hashCode() {
+        return hc;
+    }
+
+    public boolean equals(final Object obj) {
+        return obj instanceof append;
+    }
+
+    public String toString() {
+        return "<append>";
     }
 }
 

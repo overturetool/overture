@@ -22,12 +22,13 @@
 package org.overture.typechecker.assistant.expression;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class PExpAssistantTC
+public class PExpAssistantTC implements IAstAssistant
 {
 	protected ITypeCheckerAssistantFactory af;
 	// A LexNameToken to indicate that a function has no precondition name, rather than
@@ -39,6 +40,7 @@ public class PExpAssistantTC
 		this.af = af;
 	}
 
+	//FIXME only used in 1 class. move it
 	public ILexNameToken getPreName(PExp expression)
 	{
 		try

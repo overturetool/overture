@@ -1,0 +1,12 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let x = <A>,
+    y = <B>
+in
+  return [is_(x, <A>), is_(y, <A>)];
+
+end Entry

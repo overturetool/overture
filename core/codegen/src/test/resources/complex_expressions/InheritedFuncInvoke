@@ -1,0 +1,20 @@
+class A
+
+functions
+
+public f :  () -> nat
+f () == 2;
+
+end A
+
+class Entry is subclass of A
+
+operations
+
+public static Run : () ==> nat
+Run () ==
+let a = f()
+in
+  return a;
+
+end Entry

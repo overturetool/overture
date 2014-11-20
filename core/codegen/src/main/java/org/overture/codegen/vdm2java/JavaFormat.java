@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.overture.ast.types.PType;
+import org.overture.codegen.assistant.TypeAssistantCG;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SStateDesignatorCG;
@@ -37,19 +38,26 @@ import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
+import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AEnumMapExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AFieldNumberExpCG;
 import org.overture.codegen.cgast.expressions.AHeadUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AHistoryExpCG;
 import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AMapletExpCG;
+import org.overture.codegen.cgast.expressions.AMinusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
+import org.overture.codegen.cgast.expressions.APlusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AQuoteLiteralExpCG;
+import org.overture.codegen.cgast.expressions.ASeqToStringUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
+import org.overture.codegen.cgast.expressions.AStringToSeqUnaryExpCG;
 import org.overture.codegen.cgast.expressions.SBinaryExpCG;
 import org.overture.codegen.cgast.expressions.SLiteralExpCG;
 import org.overture.codegen.cgast.expressions.SNumericBinaryExpCG;
@@ -60,18 +68,14 @@ import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.AForLoopStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
+import org.overture.codegen.cgast.statements.AStartStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
-import org.overture.codegen.cgast.types.AIntBasicTypeWrappersTypeCG;
-import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AInterfaceTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
-import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
-import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
-import org.overture.codegen.cgast.types.AStringTypeCG;
-import org.overture.codegen.cgast.types.ATokenBasicTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AUnionTypeCG;
 import org.overture.codegen.cgast.types.AUnknownTypeCG;
@@ -92,12 +96,15 @@ import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class JavaFormat
 {
+	private static final String CLASS_EXTENSION = ".class";
 	public static final String UTILS_FILE = "Utils";
 	public static final String SEQ_UTIL_FILE = "SeqUtil";
 	public static final String SET_UTIL_FILE = "SetUtil";
 	public static final String MAP_UTIL_FILE = "MapUtil";
 
 	public static final String JAVA_PUBLIC = "public";
+	public static final String JAVA_PRIVATE = "private";
+	
 	public static final String JAVA_INT = "int";
 
 	private List<AClassDeclCG> classes;
@@ -108,12 +115,10 @@ public class JavaFormat
 	private MergeVisitor mergeVisitor;
 	private JavaValueSemantics valueSemantics;
 
-	private JavaRecordCreator recordCreator;
-
 	public JavaFormat(TempVarPrefixes varPrefixes, IRInfo info)
 	{
 		this.valueSemantics = new JavaValueSemantics(this);
-		this.recordCreator = new JavaRecordCreator(this);
+		JavaObjectCreator recordCreator = new JavaRecordCreator(this);
 		TemplateCallable[] templateCallables = TemplateCallableManager.constructTemplateCallables(this, IRAnalysis.class, varPrefixes, valueSemantics, recordCreator);
 		this.mergeVisitor = new MergeVisitor(JavaCodeGen.JAVA_TEMPLATE_STRUCTURE, templateCallables);
 		this.functionValueAssistant = null;
@@ -149,6 +154,11 @@ public class JavaFormat
 	public void setJavaSettings(JavaSettings javaSettings)
 	{
 		valueSemantics.setJavaSettings(javaSettings);
+	}
+	
+	public JavaSettings getJavaSettings()
+	{
+		return valueSemantics.getJavaSettings();
 	}
 
 	public void init()
@@ -230,22 +240,20 @@ public class JavaFormat
 
 	private String findNumberDereferenceCall(STypeCG type)
 	{
-		if (type == null)
+		if (type == null || type.parent() instanceof AHistoryExpCG)
 		{
 			return "";
 		}
-
+		
 		final String DOUBLE_VALUE = ".doubleValue()";
 		final String LONG_VALUE = ".longValue()";
 
-		if (type instanceof ARealNumericBasicTypeCG
-				|| type instanceof ARealBasicTypeWrappersTypeCG)
+		if (info.getAssistantManager().getTypeAssistant().isInt(type))
+		{
+			return LONG_VALUE; 
+		} else if (info.getAssistantManager().getTypeAssistant().isRealOrRat(type))
 		{
 			return DOUBLE_VALUE;
-		} else if (type instanceof AIntNumericBasicTypeCG
-				|| type instanceof AIntBasicTypeWrappersTypeCG)
-		{
-			return LONG_VALUE;
 		} else
 		{
 			PTypeAssistantTC typeAssistant = info.getTcFactory().createPTypeAssistant();
@@ -318,8 +326,9 @@ public class JavaFormat
 		INode parent = node.parent();
 
 		if (parent instanceof SNumericBinaryExpCG
-				|| parent instanceof AEqualsBinaryExpCG
-				|| parent instanceof ANotEqualsBinaryExpCG)
+				|| parent instanceof AAbsUnaryExpCG
+				|| parent instanceof AMinusUnaryExpCG
+				|| parent instanceof APlusUnaryExpCG)
 		{
 			SExpCG exp = (SExpCG) node;
 			STypeCG type = exp.getType();
@@ -453,9 +462,30 @@ public class JavaFormat
 		}
 
 		String result = writer.toString();
+		
 		return result;
 	}
 
+	public String formatTypeArg(STypeCG type) throws AnalysisException
+	{
+		if(type == null)
+		{
+			return null;
+		}
+		else
+		{
+			List<STypeCG> types = new LinkedList<STypeCG>();
+			types.add(type);
+			
+			return formattedTypes(types, CLASS_EXTENSION);
+		}
+	}
+	
+	public String formatTypeArgs(ATupleTypeCG tupleType) throws AnalysisException
+	{
+		return formatTypeArgs(tupleType.getTypes());
+	}
+	
 	public String formatTypeArgs(List<STypeCG> types) throws AnalysisException
 	{
 		if (types.isEmpty())
@@ -463,7 +493,7 @@ public class JavaFormat
 			return "";
 		}
 
-		return formattedTypes(types, ".class");
+		return formattedTypes(types, CLASS_EXTENSION);
 	}
 
 	public String formatEqualsBinaryExp(AEqualsBinaryExpCG node)
@@ -471,43 +501,21 @@ public class JavaFormat
 	{
 		STypeCG leftNodeType = node.getLeft().getType();
 
-		if (isTupleOrRecord(leftNodeType)
-				|| leftNodeType instanceof AStringTypeCG
-				|| leftNodeType instanceof ATokenBasicTypeCG
-				|| leftNodeType instanceof AUnionTypeCG
-				|| leftNodeType instanceof AObjectTypeCG)
-		{
-			return handleEquals(node);
-		} else if (leftNodeType instanceof SSeqTypeCG || leftNodeType instanceof SSetTypeCG || leftNodeType instanceof SMapTypeCG)
+		if (leftNodeType instanceof SSeqTypeCG || leftNodeType instanceof SSetTypeCG || leftNodeType instanceof SMapTypeCG)
 		{
 			return handleCollectionComparison(node);
 		}
-
-		return format(node.getLeft()) + " == " + format(node.getRight());
+		else
+		{
+			return handleEquals(node);
+		}
 	}
 
 	public String formatNotEqualsBinaryExp(ANotEqualsBinaryExpCG node)
 			throws AnalysisException
 	{
-		STypeCG leftNodeType = node.getLeft().getType();
-
-		if (isTupleOrRecord(leftNodeType)
-				|| leftNodeType instanceof AStringTypeCG
-				|| leftNodeType instanceof ATokenBasicTypeCG
-				|| leftNodeType instanceof SSeqTypeCG
-				|| leftNodeType instanceof SSetTypeCG
-				|| leftNodeType instanceof SMapTypeCG)
-		{
-			ANotUnaryExpCG transformed = transNotEquals(node);
-			return formatNotUnary(transformed.getExp());
-		}
-
-		return format(node.getLeft()) + " != " + format(node.getRight());
-	}
-
-	private static boolean isTupleOrRecord(STypeCG type)
-	{
-		return type instanceof ARecordTypeCG || type instanceof ATupleTypeCG;
+		ANotUnaryExpCG transformed = transNotEquals(node);
+		return formatNotUnary(transformed.getExp());
 	}
 
 	private ANotUnaryExpCG transNotEquals(ANotEqualsBinaryExpCG notEqual)
@@ -614,6 +622,27 @@ public class JavaFormat
 		return classDecl.getSuperName() == null ? "" : "extends "
 				+ classDecl.getSuperName();
 	}
+	
+	public String formatInterfaces(AClassDeclCG classDecl)
+	{
+		LinkedList<AInterfaceDeclCG> interfaces = classDecl.getInterfaces();
+		
+		if(interfaces == null || interfaces.isEmpty())
+		{
+			return "";
+		}
+		
+		String implementsClause = "implements";
+		
+		implementsClause += " " + interfaces.get(0).getName();
+		
+		for(int i = 1; i < interfaces.size(); i++)
+		{
+			implementsClause += ", " + interfaces.get(i).getName();
+		}
+		
+		return implementsClause;
+	}
 
 	public String formatMaplets(AEnumMapExpCG mapEnum) throws AnalysisException
 	{
@@ -687,8 +716,9 @@ public class JavaFormat
 			return "";
 		}
 
-		if (potentialBasicType instanceof AIntNumericBasicTypeCG
-				|| potentialBasicType instanceof ARealNumericBasicTypeCG)
+		TypeAssistantCG typeAssistant = info.getAssistantManager().getTypeAssistant();
+		
+		if (potentialBasicType instanceof STypeCG && typeAssistant.isNumericType((STypeCG) potentialBasicType))
 		{
 			return "Number";
 		} else if (potentialBasicType instanceof ABoolBasicTypeCG)
@@ -830,5 +860,34 @@ public class JavaFormat
 		return GeneralUtils.isEscapeSequence(c) ? StringEscapeUtils.escapeJavaScript(c
 				+ "")
 				: c + "";
+	}
+	
+	public boolean isInnerClass(AClassDeclCG node)
+	{
+		return node.parent() != null && node.parent().getAncestor(AClassDeclCG.class) != null;
+	}
+	
+	public static boolean isQuote(AClassDeclCG classCg)
+	{
+		return classCg != null && "quotes".equals(classCg.getPackage());
+	}
+
+	public String formatStartStmExp(AStartStmCG node) throws AnalysisException
+	{
+		String str = format(node.getExp());
+
+		if (node.getExp().getType() instanceof AClassTypeCG)
+		{
+			return str;
+		} else
+		{
+			return "((Thread)" + str + ")";
+		}
+	}
+	
+	public static boolean isSeqConversion(AFieldNumberExpCG node)
+	{
+		INode parent = node.parent();
+		return parent instanceof ASeqToStringUnaryExpCG || parent instanceof AStringToSeqUnaryExpCG;
 	}
 }

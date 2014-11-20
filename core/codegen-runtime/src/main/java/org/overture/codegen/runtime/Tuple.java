@@ -94,6 +94,24 @@ public class Tuple implements ValueType, Comparable
 				return false;
 			}
 
+			if(toValue instanceof VDMSeq && type == String.class)
+			{
+				for(Object c : ((VDMSeq) toValue))
+				{
+					if(!(c instanceof Character))
+					{
+						return false;
+					}
+				}
+				
+				return true;
+			}
+			
+			if(toValue instanceof String && type == VDMSeq.class)
+			{
+				return true;
+			}
+			
 			if (toValue != null && !(type.isInstance(toValue)))
 			{
 				return false;
@@ -158,7 +176,7 @@ public class Tuple implements ValueType, Comparable
 	{
 		StringBuilder str = new StringBuilder();
 
-		str.append(values[0]);
+		str.append(Utils.toString(values[0]));
 
 		for (int i = 1; i < values.length; i++)
 		{

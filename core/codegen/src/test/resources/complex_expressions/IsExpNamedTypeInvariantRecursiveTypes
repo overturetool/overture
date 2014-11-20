@@ -1,0 +1,16 @@
+class Entry
+
+types
+
+public T1 = T2;
+
+public T2 = <C> | T1;
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	return is_(<C>, T1);
+
+end Entry
+

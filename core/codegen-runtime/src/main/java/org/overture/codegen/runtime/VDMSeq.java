@@ -45,7 +45,7 @@ public class VDMSeq extends ArrayList implements ValueType
 	}
 	
 	@Override
-	public synchronized String toString()
+	public String toString()
 	{
 		Iterator iterator = this.iterator();
 		

@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.ABusClassDefinition;
 import org.overture.ast.definitions.AClassClassDefinition;
@@ -57,7 +58,7 @@ import org.overture.pog.obligation.ProofObligationList;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
 
 public class SClassDefinitionAssistantInterpreter extends
-		SClassDefinitionAssistantTC
+		SClassDefinitionAssistantTC implements IAstAssistant
 {
 	protected static IInterpreterAssistantFactory af;
 

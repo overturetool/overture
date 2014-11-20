@@ -21,6 +21,7 @@
  */
 package org.overture.typechecker.assistant.definition;
 
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.assistant.definition.PAccessSpecifierAssistant;
 import org.overture.ast.definitions.APrivateAccess;
 import org.overture.ast.definitions.AProtectedAccess;
@@ -32,7 +33,7 @@ import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.PAccessSpecifier;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class PAccessSpecifierAssistantTC extends PAccessSpecifierAssistant
+public class PAccessSpecifierAssistantTC extends PAccessSpecifierAssistant implements IAstAssistant
 {
 	protected ITypeCheckerAssistantFactory af;
 

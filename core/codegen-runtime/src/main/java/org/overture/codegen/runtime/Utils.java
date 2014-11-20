@@ -57,18 +57,8 @@ public class Utils
 	    }
 	    return (int) valueLong;
 	}
-		
-	public static String recordToString(Record record, Object... fields)
-	{
-		if(record == null)
-			throw new IllegalArgumentException("Record cannot be null in recordToString");
-		
-		StringBuilder str = formatFields(", %s", fields);
-
-		return "mk_" + record.getClass().getSimpleName() + "(" + str + ")";
-	}
 	
-	private static StringBuilder formatFields(String format, Object... fields)
+	public static String formatFields(Object... fields)
 	{
 		if(fields == null)
 			throw new IllegalArgumentException("Fields cannot be null in formatFields");
@@ -77,14 +67,14 @@ public class Utils
 
 		if (fields.length > 0)
 		{
-			str.append(fields[0]);
+			str.append(Utils.toString(fields[0]));
 
 			for (int i = 1; i < fields.length; i++)
 			{
-				str.append(String.format(format, Utils.toString(fields[i])));
+				str.append(", " + Utils.toString(fields[i]));
 			}
 		}
-		return str;
+		return "(" + str.toString() + ")";
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -122,6 +112,30 @@ public class Utils
 	
 	public static boolean equals(Object left, Object right)
 	{
+		if(left instanceof Long && right instanceof Long)
+		{
+			Long leftLong = (Long) left;
+			Long rightLong = (Long) right;
+			
+			return Long.compare(leftLong.longValue(), rightLong.longValue()) == 0;
+		}
+		
+		if(left instanceof Integer && right instanceof Integer)
+		{
+			Integer leftInt = (Integer) left;
+			Integer rightInt = (Integer) right;
+			
+			return Integer.compare(leftInt.intValue(), rightInt.intValue()) == 0;
+		}
+		
+		if(left instanceof Number && right instanceof Number)
+		{
+			Number leftNumber = (Number) left;
+			Number rightNumber = (Number) right;
+			
+			return Double.compare(leftNumber.doubleValue(), rightNumber.doubleValue()) == 0;
+		}
+		
 		return left != null ? left.equals(right) : right == null; 
 	}
 	
@@ -133,5 +147,88 @@ public class Utils
 		}
 		
 		throw new RuntimeException("Postcondition failure: post_" + name);
+	}
+	
+	public static boolean is_bool(Object value)
+	{
+		return value instanceof Boolean;
+	}
+	
+	public static boolean is_nat(Object value)
+	{
+		return isIntWithinRange(value, 0);
+	}	
+	
+	public static boolean is_nat1(Object value)
+	{
+		return isIntWithinRange(value, 1);
+	}
+
+	public static boolean is_int(Object value)
+	{
+		Double doubleValue = getDoubleValue(value);
+		
+		return is_int(doubleValue);
+	}
+
+	public static boolean is_rat(Object value)
+	{
+		return value instanceof Number;
+	}
+	
+	public static boolean is_real(Object value)
+	{
+		return value instanceof Number;
+	}
+	
+	public static boolean is_char(Object value)
+	{
+		return value instanceof Character;
+	}
+	
+	public static boolean is_token(Object value)
+	{
+		return value instanceof Token;
+	}
+
+	@SuppressWarnings("rawtypes")
+	public static boolean is_Tuple(Object exp, Class... types)
+	{
+		return exp instanceof Tuple && ((Tuple) exp).compatible(types);
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public static boolean is_(Object exp, Class type)
+	{
+		return exp != null && exp.getClass() == type;
+	}
+
+	private static boolean is_int(Double doubleValue)
+	{
+		return doubleValue != null && (doubleValue == Math.floor(doubleValue)) && !Double.isInfinite(doubleValue);
+	}
+	
+	private static boolean isIntWithinRange(Object value, int lowerLimit)
+	{
+		Double doubleValue = getDoubleValue(value);
+		
+		if(!is_int(doubleValue))
+		{
+			return false;
+		}
+		
+		return doubleValue >= lowerLimit;
+	}
+	
+	private static Double getDoubleValue(Object value)
+	{
+		if(!(value instanceof Number))
+		{
+			return null;
+		}
+		
+		Double doubleValue = ((Number) value).doubleValue();
+		
+		return doubleValue;
 	}
 }

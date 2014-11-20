@@ -28,6 +28,7 @@ import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.assistant.definition.PDefinitionAssistant;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
@@ -58,7 +59,7 @@ import org.overture.typechecker.utilities.NameFinder;
  * 
  * @author ldc
  */
-public class PDefinitionAssistantTC extends PDefinitionAssistant
+public class PDefinitionAssistantTC extends PDefinitionAssistant implements IAstAssistant
 {
 	protected ITypeCheckerAssistantFactory af;
 

@@ -23,6 +23,7 @@ package org.overture.typechecker.assistant.definition;
 
 import java.util.List;
 
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.lex.Dialect;
 import org.overture.parser.lex.LexException;
@@ -31,7 +32,7 @@ import org.overture.parser.syntax.DefinitionReader;
 import org.overture.parser.syntax.ParserException;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class ABusClassDefinitionAssistantTC
+public class ABusClassDefinitionAssistantTC implements IAstAssistant
 {
 	protected ITypeCheckerAssistantFactory af;
 
@@ -44,6 +45,7 @@ public class ABusClassDefinitionAssistantTC
 			+ "public BUS:(<FCFS>|<CSMACD>) * real * set of CPU ==> BUS "
 			+ "	BUS(policy, speed, cpus) == is not yet specified;";
 
+	//FIXME: used in 1 place only. move it
 	public List<PDefinition> operationDefs() throws ParserException,
 			LexException
 	{

@@ -20,11 +20,11 @@ public class Entry {
 
         if (success_1) {
             Number intPattern_1 = ((Number) tuplePattern_1.get(0));
-            success_1 = intPattern_1.longValue() == 1L;
+            success_1 = Utils.equals(intPattern_1, 1L);
 
             if (success_1) {
                 Number intPattern_2 = ((Number) tuplePattern_1.get(1));
-                success_1 = intPattern_2.longValue() == 1L;
+                success_1 = Utils.equals(intPattern_2, 1L);
             }
         }
 
@@ -37,7 +37,7 @@ public class Entry {
                 a = ((Number) tuplePattern_2.get(0));
 
                 Number intPattern_3 = ((Number) tuplePattern_2.get(1));
-                success_1 = intPattern_3.longValue() == 2L;
+                success_1 = Utils.equals(intPattern_3, 2L);
             }
 
             if (!(success_1)) {
@@ -48,7 +48,7 @@ public class Entry {
 
                 if (success_1) {
                     Boolean boolPattern_1 = ((Boolean) tuplePattern_3.get(0));
-                    success_1 = boolPattern_1 == true;
+                    success_1 = Utils.equals(boolPattern_1, true);
 
                     if (success_1) {
                         b = ((Boolean) tuplePattern_3.get(1));
@@ -56,7 +56,15 @@ public class Entry {
                 }
 
                 if (success_1) {
-                    casesExpResult_1 = b ? 11L : 33L;
+                    Number ternaryIfExp_1 = null;
+
+                    if (((Boolean) b)) {
+                        ternaryIfExp_1 = 11L;
+                    } else {
+                        ternaryIfExp_1 = 33L;
+                    }
+
+                    casesExpResult_1 = ternaryIfExp_1;
                 } else {
                     casesExpResult_1 = 3L;
                 }
@@ -73,6 +81,86 @@ public class Entry {
 
     public String toString() {
         return "Entry{}";
+    }
+}
+
+##########
+
+package quotes;
+
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class start {
+    private static int hc = 0;
+    private static start instance = null;
+
+    public start() {
+        if (Utils.equals(hc, 0)) {
+            hc = super.hashCode();
+        }
+    }
+
+    public static start getInstance() {
+        if (Utils.equals(instance, null)) {
+            instance = new start();
+        }
+
+        return instance;
+    }
+
+    public int hashCode() {
+        return hc;
+    }
+
+    public boolean equals(final Object obj) {
+        return obj instanceof start;
+    }
+
+    public String toString() {
+        return "<start>";
+    }
+}
+
+##########
+
+package quotes;
+
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class append {
+    private static int hc = 0;
+    private static append instance = null;
+
+    public append() {
+        if (Utils.equals(hc, 0)) {
+            hc = super.hashCode();
+        }
+    }
+
+    public static append getInstance() {
+        if (Utils.equals(instance, null)) {
+            instance = new append();
+        }
+
+        return instance;
+    }
+
+    public int hashCode() {
+        return hc;
+    }
+
+    public boolean equals(final Object obj) {
+        return obj instanceof append;
+    }
+
+    public String toString() {
+        return "<append>";
     }
 }
 

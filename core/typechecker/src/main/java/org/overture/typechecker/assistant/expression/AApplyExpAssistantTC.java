@@ -23,6 +23,7 @@ package org.overture.typechecker.assistant.expression;
 
 import java.util.List;
 
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.AFuncInstatiationExp;
@@ -39,7 +40,8 @@ import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class AApplyExpAssistantTC
+//FIXME only used in 1 class. move it
+public class AApplyExpAssistantTC implements IAstAssistant
 {
 	protected ITypeCheckerAssistantFactory af;
 
@@ -191,11 +193,6 @@ public class AApplyExpAssistantTC
 		{
 			return null;
 		}
-	}
-
-	public String getMeasureApply(AApplyExp node, ILexNameToken measure)
-	{
-		return af.createAApplyExpAssistant().getMeasureApply(node, measure, true);
 	}
 
 	/**

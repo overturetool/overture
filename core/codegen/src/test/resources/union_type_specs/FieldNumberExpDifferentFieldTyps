@@ -1,0 +1,19 @@
+class Entry
+
+types
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let s =  [mk_(5,true), mk_(true, 2, 3), mk_('a', 'b', true)]
+in
+(
+  dcl ss : seq of (bool | nat | char) := [];
+  
+  for i = 1 to 3 do
+    ss := ss ^ [s(i).#2];
+  return ss;
+);
+ 
+end Entry

@@ -21,6 +21,7 @@
  */
 package org.overture.typechecker.assistant.statement;
 
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.types.AVoidReturnType;
 import org.overture.ast.types.AVoidType;
@@ -28,7 +29,7 @@ import org.overture.ast.types.PType;
 import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class ANonDeterministicSimpleBlockStmAssistantTC
+public class ANonDeterministicSimpleBlockStmAssistantTC implements IAstAssistant
 {
 	protected ITypeCheckerAssistantFactory af;
 
@@ -38,6 +39,7 @@ public class ANonDeterministicSimpleBlockStmAssistantTC
 		this.af = af;
 	}
 
+	//FIXME: only used once. move it
 	public boolean addOne(PTypeSet rtypes, PType add)
 	{
 		if (add instanceof AVoidReturnType)

@@ -181,6 +181,10 @@ public class ExpressionValueCollector extends
 			}
 		} catch (ValueException e)
 		{
+			if (e.number == 4097 || e.number == 4105)
+			{
+				return values;	// Cannot get record/object value of ... 
+			}
 			VdmRuntimeError.abort(exp.getLocation(), e);
 			return null;
 		} catch (AnalysisException e)

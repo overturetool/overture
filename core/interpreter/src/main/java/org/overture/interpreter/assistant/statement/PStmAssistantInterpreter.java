@@ -1,12 +1,13 @@
 package org.overture.interpreter.assistant.statement;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.statements.PStm;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.typechecker.assistant.statement.PStmAssistantTC;
 
-public class PStmAssistantInterpreter extends PStmAssistantTC
+public class PStmAssistantInterpreter extends PStmAssistantTC implements IAstAssistant
 {
 	protected static IInterpreterAssistantFactory af;
 

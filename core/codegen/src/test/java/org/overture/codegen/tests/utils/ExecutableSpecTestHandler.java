@@ -55,7 +55,19 @@ public class ExecutableSpecTestHandler extends EntryBasedTestHandler
 		for (StringBuffer classCgStr : content)
 		{
 			String className = TestUtils.getJavaModuleName(classCgStr);
-			File tempFile = consTempFile(className, parent, classCgStr);
+			
+			
+			File out = null;
+			if(classCgStr.toString().contains("package quotes;"))
+			{
+				out = new File(parent, "quotes");
+			}
+			else
+			{
+				out = parent;
+			}
+				
+			File tempFile = consTempFile(className, out, classCgStr);
 
 			injectSerializableInterface(classCgStr, className);
 
@@ -66,8 +78,9 @@ public class ExecutableSpecTestHandler extends EntryBasedTestHandler
 	private void injectSerializableInterface(StringBuffer classCgStr,
 			String className)
 	{
+		//TODO: Improve way that the EvaluatePP interface is handled
 		if (!className.equals(IRConstants.QUOTES_INTERFACE_NAME)
-				&& !className.startsWith(JavaCodeGen.INTERFACE_NAME_PREFIX))
+				&& !className.startsWith(JavaCodeGen.INTERFACE_NAME_PREFIX) && !classCgStr.toString().contains(" implements EvaluatePP"))
 		{
 			int classNameIdx = classCgStr.indexOf(className);
 

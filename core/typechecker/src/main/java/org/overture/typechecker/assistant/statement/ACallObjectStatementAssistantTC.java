@@ -26,13 +26,15 @@ import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class ACallObjectStatementAssistantTC
+//FIXME: all methods used in same class. move them
+public class ACallObjectStatementAssistantTC implements IAstAssistant
 {
 	protected ITypeCheckerAssistantFactory af;
 

@@ -391,7 +391,7 @@ public class AllDefinitionLocator
 			
 			if (d instanceof AInstanceVariableDefinition)
 			{
-				defs.addAll(af.createPPatternAssistant().getDefinitions(npp.getPattern(), d.getType(), NameScope.STATE));
+				defs.addAll(af.createPPatternAssistant().getDefinitions(npp.getPattern(), d.getType(), NameScope.LOCAL));
 			}
 			else
 			{

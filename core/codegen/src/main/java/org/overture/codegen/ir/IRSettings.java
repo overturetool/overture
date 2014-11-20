@@ -24,6 +24,7 @@ package org.overture.codegen.ir;
 public class IRSettings
 {
 	private boolean charSeqAsString;
+	private boolean generateConc;
 	private boolean generatePreConds;
 	private boolean generatePreCondChecks;
 	private boolean generatePostConds;
@@ -31,6 +32,16 @@ public class IRSettings
 
 	public IRSettings()
 	{
+	}
+
+	public boolean generateConc()
+	{
+		return generateConc;
+	}
+	
+	public void setGenerateConc(boolean generateConc)
+	{
+		this.generateConc = generateConc;
 	}
 
 	public boolean getCharSeqAsString()

@@ -131,7 +131,9 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseACasesStmCG(ACasesStmCG node) throws AnalysisException
 	{
-		LinkedList<ACaseAltStmStmCG> nodeCases = node.getCases();
+		List<ACaseAltStmStmCG> nodeCases = node.getCases();
+		SPatternCG firstOriginal = nodeCases.get(0).getPattern().clone();
+		
 		List<PatternInfo> patternInfo = extractFromCases(nodeCases, node.getExp());
 
 		PatternBlockData patternData = new PatternBlockData(MismatchHandling.NONE);
@@ -149,12 +151,13 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		replacementBlock.getStatements().add(enclosingIf);
 
 		ifStm.setIfExp(notSuccess);
-		ifStm.setElseStm(nodeCases.get(0).getResult().clone());
 
 		AIfStmCG nextCase = ifStm;
 
 		if (nodeCases.size() > 1)
 		{
+			ifStm.setElseStm(nodeCases.get(0).getResult().clone());
+			
 			nextCase = new AIfStmCG();
 
 			enclosingIf = new ABlockStmCG();
@@ -177,6 +180,16 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 				nextCase.setThenStm(enclosingIf);
 				nextCase = tmp;
 			}
+		}
+		else
+		{
+			APatternMatchRuntimeErrorExpCG matchFail = new APatternMatchRuntimeErrorExpCG();
+			matchFail.setType(new AErrorTypeCG());
+			matchFail.setMessage(config.getMatchFailedMessage(firstOriginal));
+			ARaiseErrorStmCG noMatchStm = new ARaiseErrorStmCG();
+			noMatchStm.setError(matchFail);
+			
+			ifStm.setElseStm(noMatchStm);
 		}
 
 		enclosingIf.getStatements().addFirst(blocks.get(blocks.size() - 1));

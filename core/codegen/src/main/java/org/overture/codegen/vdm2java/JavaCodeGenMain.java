@@ -42,7 +42,7 @@ public class JavaCodeGenMain
 	public static void main(String[] args)
 	{
 		Settings.release = Release.VDM_10;
-		Dialect dialect = Dialect.VDM_RT;
+		Dialect dialect = Dialect.VDM_PP;
 
 		if (args.length <= 1)
 		{
@@ -51,10 +51,10 @@ public class JavaCodeGenMain
 
 		IRSettings irSettings = new IRSettings();
 		irSettings.setCharSeqAsString(false);
-		irSettings.setGeneratePreConds(true);
-		irSettings.setGeneratePreCondChecks(true);
-		irSettings.setGeneratePostConds(true);
-		irSettings.setGeneratePostCondChecks(true);
+		irSettings.setGeneratePreConds(false);
+		irSettings.setGeneratePreCondChecks(false);
+		irSettings.setGeneratePostConds(false);
+		irSettings.setGeneratePostCondChecks(false);
 		
 		JavaSettings javaSettings = new JavaSettings();
 		javaSettings.setDisableCloning(false);
@@ -94,12 +94,15 @@ public class JavaCodeGenMain
 					Logger.getLog().println("\n");
 				}
 
-				GeneratedModule quotes = data.getQuoteValues();
+				List<GeneratedModule> quotes = data.getQuoteValues();
 
-				if (quotes != null)
+				if (quotes != null && !quotes.isEmpty())
 				{
-					Logger.getLog().println("**********");
-					Logger.getLog().println(quotes.getContent());
+					for(GeneratedModule q : quotes)
+					{
+						Logger.getLog().println("**********");
+						Logger.getLog().println(q.getContent());
+					}
 				}
 
 				InvalidNamesResult invalidName = data.getInvalidNamesResult();

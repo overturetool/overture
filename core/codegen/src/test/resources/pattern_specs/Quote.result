@@ -1,7 +1,5 @@
 import org.overture.codegen.runtime.*;
 
-import quotes.*;
-
 import java.util.*;
 
 
@@ -9,38 +7,38 @@ public class A {
     public A() {
     }
 
-    public Number quotePatternOp(final Number quotePattern_1) {
-        Boolean success_1 = quotePattern_1.longValue() == Quotes.T1.longValue();
+    public quotes.T1 quotePatternOp(final quotes.T1 quotePattern_1) {
+        Boolean success_1 = Utils.equals(quotePattern_1, quotes.T1.getInstance());
 
         if (!(success_1)) {
             throw new RuntimeException("Quote pattern match failed");
         }
 
-        Number quotePattern_2 = Quotes.T1;
-        Boolean success_2 = quotePattern_2.longValue() == Quotes.T1.longValue();
+        quotes.T1 quotePattern_2 = quotes.T1.getInstance();
+        Boolean success_2 = Utils.equals(quotePattern_2, quotes.T1.getInstance());
 
         if (!(success_2)) {
             throw new RuntimeException("Quote pattern match failed");
         }
 
-        return Quotes.T1;
+        return quotes.T1.getInstance();
     }
 
-    public static Number quotePatternFun(final Number quotePattern_3) {
-        Boolean success_3 = quotePattern_3.longValue() == Quotes.T1.longValue();
+    public static quotes.T1 quotePatternFun(final quotes.T1 quotePattern_3) {
+        Boolean success_3 = Utils.equals(quotePattern_3, quotes.T1.getInstance());
 
         if (!(success_3)) {
             throw new RuntimeException("Quote pattern match failed");
         }
 
-        Number quotePattern_4 = Quotes.T1;
-        Boolean success_4 = quotePattern_4.longValue() == Quotes.T1.longValue();
+        quotes.T1 quotePattern_4 = quotes.T1.getInstance();
+        Boolean success_4 = Utils.equals(quotePattern_4, quotes.T1.getInstance());
 
         if (!(success_4)) {
             throw new RuntimeException("Quote pattern match failed");
         }
 
-        return Quotes.T1;
+        return quotes.T1.getInstance();
     }
 
     public String toString() {
@@ -51,8 +49,6 @@ public class A {
 ##########
 import org.overture.codegen.runtime.*;
 
-import quotes.*;
-
 import java.util.*;
 
 
@@ -61,8 +57,8 @@ public class Entry {
     }
 
     public static Object Run() {
-        return SeqUtil.seq(new A().quotePatternOp(Quotes.T1),
-            A.quotePatternFun(Quotes.T1));
+        return SeqUtil.seq(new A().quotePatternOp(quotes.T1.getInstance()),
+            A.quotePatternFun(quotes.T1.getInstance()));
     }
 
     public String toString() {
@@ -74,8 +70,120 @@ public class Entry {
 
 package quotes;
 
-public interface Quotes {
-    public static Number T1 = 1L;
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class start {
+    private static int hc = 0;
+    private static start instance = null;
+
+    public start() {
+        if (Utils.equals(hc, 0)) {
+            hc = super.hashCode();
+        }
+    }
+
+    public static start getInstance() {
+        if (Utils.equals(instance, null)) {
+            instance = new start();
+        }
+
+        return instance;
+    }
+
+    public int hashCode() {
+        return hc;
+    }
+
+    public boolean equals(final Object obj) {
+        return obj instanceof start;
+    }
+
+    public String toString() {
+        return "<start>";
+    }
+}
+
+##########
+
+package quotes;
+
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class append {
+    private static int hc = 0;
+    private static append instance = null;
+
+    public append() {
+        if (Utils.equals(hc, 0)) {
+            hc = super.hashCode();
+        }
+    }
+
+    public static append getInstance() {
+        if (Utils.equals(instance, null)) {
+            instance = new append();
+        }
+
+        return instance;
+    }
+
+    public int hashCode() {
+        return hc;
+    }
+
+    public boolean equals(final Object obj) {
+        return obj instanceof append;
+    }
+
+    public String toString() {
+        return "<append>";
+    }
+}
+
+##########
+
+package quotes;
+
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class T1 {
+    private static int hc = 0;
+    private static T1 instance = null;
+
+    public T1() {
+        if (Utils.equals(hc, 0)) {
+            hc = super.hashCode();
+        }
+    }
+
+    public static T1 getInstance() {
+        if (Utils.equals(instance, null)) {
+            instance = new T1();
+        }
+
+        return instance;
+    }
+
+    public int hashCode() {
+        return hc;
+    }
+
+    public boolean equals(final Object obj) {
+        return obj instanceof T1;
+    }
+
+    public String toString() {
+        return "<T1>";
+    }
 }
 
 ##########

@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.interpreter.tests.InterpreterStringSlTestCase">
-<result>
-<output object="{{&quot;Denmark&quot;}, {&quot;Germany&quot;}, {&quot;Poland&quot;, &quot;Sweden&quot;}}" resource="CountryColouringSL" value="{{&quot;Denmark&quot;}, {&quot;Germany&quot;}, {&quot;Poland&quot;, &quot;Sweden&quot;}}"/>
-</result>
-</testResult>

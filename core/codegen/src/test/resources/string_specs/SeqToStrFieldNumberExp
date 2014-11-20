@@ -1,0 +1,21 @@
+class Entry
+
+functions
+
+static GetLine: seq of char -> (seq of char) * (seq of char)
+GetLine(text) ==
+  if text = []
+  then mk_([], [])
+  elseif hd text = '\n'
+  then mk_([], tl text)
+  else let mk_(line, rest) = GetLine(tl text)
+       in
+         mk_([hd text] ^ line, rest)
+         
+operations         
+         
+public static Run : () ==> (seq of char) * (seq of char)
+Run () ==
+  return GetLine("hej\nmed");
+
+end Entry

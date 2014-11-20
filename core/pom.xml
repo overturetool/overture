@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.overturetool</groupId>
     <artifactId>root</artifactId>
-    <version>2.1.2</version>
+    <version>2.1.4</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -40,12 +40,4 @@
     </plugins>
   </build>
 
-  <profiles>
-    <profile>
-      <id>vdmj</id>
-      <modules>
-        <module>vdmj_compatibility_tests</module>
-      </modules>
-    </profile>
-  </profiles>
 </project>
