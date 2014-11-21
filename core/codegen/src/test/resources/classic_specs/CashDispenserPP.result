@@ -45,6 +45,7 @@ public class SimpleTest {
         Account pglacc1 = new Account().Create(MapUtil.map(
                     new Maplet(1L, peter)), 5000L);
         Number pglid1 = 1L;
+
         resource.AddAccount(pglid1, pglacc1);
         resource.AddLetterbox(clock, new Letterbox());
         ((Till) tills.get(1L)).InsertCard(c1);
@@ -99,6 +100,7 @@ public class Account {
     public Boolean Withdrawal(final Number cardId, final Number amount,
         final VDMSeq date) {
         Transaction transaction = new Transaction(date, cardId, amount);
+
         Boolean andResult_1 = false;
 
         if ((balance.longValue() - amount.longValue()) >= 0L) {
@@ -123,6 +125,7 @@ public class Account {
     public Letter MakeStatement(final Number cardId, final VDMSeq date) {
         VDMSeq nm = ((Cardholder) cards.get(cardId)).GetName();
         VDMSeq addr = ((Cardholder) cards.get(cardId)).GetAddress();
+
         Letter letter = new Letter();
 
         return letter.Create(Utils.clone(nm), Utils.clone(addr),
@@ -143,6 +146,7 @@ public class Account {
     }
 
     private static Boolean TransactionsInvariant(final VDMSeq ts) {
+        Boolean forAllExpResult_1 = true;
         VDMSet setCompResult_1 = SetUtil.set();
         VDMSet set_2 = SeqUtil.inds(ts);
 
@@ -153,7 +157,6 @@ public class Account {
                             ((Transaction) ts.get(Utils.index(i))).date)));
         }
 
-        Boolean forAllExpResult_1 = true;
         VDMSet set_1 = Utils.clone(setCompResult_1);
 
         for (Iterator iterator_1 = set_1.iterator();
@@ -548,6 +551,7 @@ public class Till {
         Number cardId = curCard.GetCardId();
         Boolean codeOk = Utils.equals(curCard.GetCode(), Encode(pin));
         Boolean cardLegal = IsLegalCard();
+
         Boolean andResult_5 = false;
 
         if (codeOk) {
@@ -888,6 +892,7 @@ public class System {
         Number ksid1 = 3L;
         Number pmid1 = 4L;
         Number ifid1 = 5L;
+
         resource.AddAccount(pglid1, pglacc1);
         resource.AddAccount(said1, saacc1);
         resource.AddAccount(ksid1, ksacc1);

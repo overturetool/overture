@@ -17,6 +17,7 @@ public class Entry {
         }
 
         VDMSet hr = Utils.clone(ternaryIfExp_1);
+
         VDMMap mapCompResult_1 = MapUtil.map();
         VDMSet set_1 = Utils.clone(hr);
 

@@ -12,6 +12,7 @@ public class NoteBook {
     public void Test() {
         NoteBook nb1 = new NoteBook();
         NoteBook nb2 = new NoteBook();
+
         IO.println(SeqUtil.seq('N', 'o', 't', 'e', 'b', 'o', 'o', 'k', 's',
                 ' ', 'n', 'b', '1', ' ', 'a', 'n', 'd', ' ', 'n', 'b', '2',
                 ' ', 'h', 'a', 's', ' ', 'b', 'e', 'e', 'n', ' ', 'c', 'r',
@@ -162,6 +163,7 @@ public class NoteBook {
 
         for (Long i = 1L; i <= toVar_2; i++) {
             VDMSeq msg = getMessage(i);
+
             IO.println(Utils.clone(msg));
         }
     }

@@ -27,6 +27,7 @@ public class A {
         Number x14 = MATH.log(x);
         Number x15 = MATH.fac(x);
         Number x16 = MATH.pi;
+
         MATH.srand(x);
     }
 
