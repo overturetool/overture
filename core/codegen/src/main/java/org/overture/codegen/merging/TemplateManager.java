@@ -33,7 +33,6 @@ import org.apache.velocity.runtime.parser.node.SimpleNode;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.declarations.ACatchClauseDeclCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
-import org.overture.codegen.cgast.declarations.ACounterLocalDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
@@ -41,7 +40,7 @@ import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.AThreadDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
-import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
+import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.*;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
@@ -140,11 +139,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AMethodDeclCG.class, templateStructure.DECL_PATH
 				+ "Method");
 
-		nodeTemplateFileNames.put(AVarLocalDeclCG.class, templateStructure.DECL_PATH
+		nodeTemplateFileNames.put(AVarDeclCG.class, templateStructure.DECL_PATH
 				+ "LocalVar");
-
-		nodeTemplateFileNames.put(ACounterLocalDeclCG.class, templateStructure.DECL_PATH
-				+ "Counter");
 		
 		nodeTemplateFileNames.put(AThreadDeclCG.class, templateStructure.DECL_PATH 
 				+ "Thread");

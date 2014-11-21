@@ -29,7 +29,7 @@ import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.SLocalDeclCG;
+import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AAnonymousClassExpCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AElseIfStmCG;
@@ -73,7 +73,7 @@ public class BaseTransformationAssistant
 	{
 		if (node.getAncestor(AAnonymousClassExpCG.class) == null)
 		{
-			SLocalDeclCG localDecl = node.getAncestor(SLocalDeclCG.class);
+			AVarDeclCG localDecl = node.getAncestor(AVarDeclCG.class);
 			
 			if (localDecl != null && node instanceof SExpCG
 					&& localDecl.parent() instanceof ABlockStmCG)
@@ -85,12 +85,12 @@ public class BaseTransformationAssistant
 					return block;
 				}
 
-				List<SLocalDeclCG> defsToLift = new LinkedList<SLocalDeclCG>();
+				List<AVarDeclCG> defsToLift = new LinkedList<AVarDeclCG>();
 
 				int i = 0;
 				for (; i < block.getLocalDefs().size(); i++)
 				{
-					SLocalDeclCG currentDef = block.getLocalDefs().get(i);
+					AVarDeclCG currentDef = block.getLocalDefs().get(i);
 
 					if (currentDef == localDecl)
 					{

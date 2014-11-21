@@ -29,7 +29,7 @@ import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
-import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
+import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AAddrNotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
@@ -78,7 +78,7 @@ public class JavaFormatAssistant
 	{
 		// Construct a local var in a statement: RecordType varName = ((RecordType) formalParamName);
 
-		AVarLocalDeclCG localVar = new AVarLocalDeclCG();
+		AVarDeclCG localVar = new AVarDeclCG();
 
 		ARecordTypeCG recordType = new ARecordTypeCG();
 		recordType.setName(consTypeName(record));

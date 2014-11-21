@@ -109,7 +109,6 @@ CG {-> package='org.overture.codegen.cgast'
     	[type]:CG.#type
     	[name]:java_String
     	[initial]:CG.#exp
-    |	#Local
    	|	{class}
    		[package]:java_String
       	[access]:java_String
@@ -153,16 +152,10 @@ CG {-> package='org.overture.codegen.cgast'
     	[pred]:CG.#exp
     |	{mutexSync}
     	[opnames]:CG.#name*
-	;
-
-#Local  {-> package='org.overture.codegen.cgast.declarations'}
-    =	{var}
+    |	{var}
     	[type]:CG.#type
     	[pattern]:CG.#pattern
     	[exp]:CG.#exp
-    |	{counter}
-    	[name]:java_String
-    	[init]:CG.#exp
 	;
 	
 #stateDesignator {-> package='org.overture.codegen.cgast.statements'
@@ -189,12 +182,12 @@ CG {-> package='org.overture.codegen.cgast'
            | 	{elseIf} [elseIf]:CG.#exp [thenStm]:CG.#stm
            | 	{skip}
            |	{return} [exp]:CG.#exp
-           |	{letDef} [localDefs]:CG.#decl.#Local.var* [stm]:CG.#stm
+           |	{letDef} [localDefs]:CG.#decl.var* [stm]:CG.#stm
            |	{abstractBody}
            |	{assignment} [target]:CG.#stateDesignator [exp]:CG.#exp
            |	{localAssignment} [target]:CG.#exp [exp]:CG.#exp
-           |	{localPatternAssignment} [target]:CG.#pattern [exp]:CG.#exp (nextElementDecl):CG.#decl.#Local.var
-           |	{block}	[localDefs]:CG.#decl.#Local* [statements]:CG.#stm*
+           |	{localPatternAssignment} [target]:CG.#pattern [exp]:CG.#exp (nextElementDecl):CG.#decl.var
+           |	{block}	[localDefs]:CG.#decl.var* [statements]:CG.#stm*
            |	{callObject} [type]:CG.#type [designator]:CG.#objectDesignator [className]:java_String [fieldName]:java_String 
            					 [args]:CG.#exp*
            |	{callObjectExp} [type]:CG.#type [obj]:CG.#exp [className]:java_String [fieldName]:java_String 
@@ -206,7 +199,7 @@ CG {-> package='org.overture.codegen.cgast'
            |	{while} [exp]:CG.#exp [body]:CG.#stm
            |	{letBeSt} [header]:CG.#letBeSt.header [statement]:CG.#stm
            |	{throw} [exp]:CG.#exp
-           |	{forLoop} [init]:CG.#decl.#Local.var [cond]:CG.#exp [inc]:CG.#exp [body]:CG.#stm
+           |	{forLoop} [init]:CG.#decl.var [cond]:CG.#exp [inc]:CG.#exp [body]:CG.#stm
            |	{increment} [var]:CG.#exp
            |	{decrement} [var]:CG.#exp
            |	{raiseError} [error]:CG.#exp.#RuntimeError
@@ -249,7 +242,7 @@ CG {-> package='org.overture.codegen.cgast'
     |	#Literal
     |	{self}
     |	{null}
-    |	{letDef} [localDefs]:CG.#decl.#Local.var* [exp]:CG.#exp
+    |	{letDef} [localDefs]:CG.#decl.var* [exp]:CG.#exp
     |	{methodInstantiation} [func]:CG.#exp [actualTypes]:CG.#type*
     |	{tuple} [args]:CG.#exp* [tupleType]:CG.#type.tuple
     |	{fieldNumber} [field]:java_Long [tuple]:CG.#exp

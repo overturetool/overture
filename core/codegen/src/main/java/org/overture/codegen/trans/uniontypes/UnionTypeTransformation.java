@@ -38,7 +38,7 @@ import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
-import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
+import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ACardUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
@@ -329,7 +329,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		SStmCG enclosingStatement = baseAssistant.getEnclosingStm(node, "field expression");
 
 		String applyResultName = info.getTempVarNameGen().nextVarName(applyExpResulPrefix);
-		AVarLocalDeclCG resultDecl = new AVarLocalDeclCG();
+		AVarDeclCG resultDecl = new AVarDeclCG();
 		resultDecl.setSourceNode(node.getSourceNode());
 		resultDecl.setExp(new ANullExpCG());
 		resultDecl.setType(resultType);
@@ -350,7 +350,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		if (!(subject instanceof SVarExpBase))
 		{
 			String objName = info.getTempVarNameGen().nextVarName(objExpPrefix);
-			AVarLocalDeclCG objectDecl = new AVarLocalDeclCG();
+			AVarDeclCG objectDecl = new AVarDeclCG();
 			objectDecl.setExp(subject.clone());
 			objectDecl.setType(subject.getType().clone());
 			AIdentifierPatternCG objectVarId = new AIdentifierPatternCG();
@@ -755,7 +755,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		if (!(designator instanceof AIdentifierObjectDesignatorCG))
 		{
 			String callStmObjName = info.getTempVarNameGen().nextVarName(callStmObjPrefix);
-			AVarLocalDeclCG objDecl = new AVarLocalDeclCG();
+			AVarDeclCG objDecl = new AVarDeclCG();
 			objDecl.setSourceNode(node.getSourceNode());
 			objDecl.setExp(objExp.clone());
 			objDecl.setType(objType.clone());
@@ -849,7 +849,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void inAVarLocalDeclCG(AVarLocalDeclCG node)
+	public void inAVarDeclCG(AVarDeclCG node)
 			throws AnalysisException
 	{
 		STypeCG expectedType = node.getType();

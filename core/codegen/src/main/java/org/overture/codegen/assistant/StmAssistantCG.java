@@ -31,7 +31,7 @@ import org.overture.ast.types.PType;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
-import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
+import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACaseAltStmStmCG;
 import org.overture.codegen.cgast.statements.ASuperCallStmCG;
@@ -44,7 +44,7 @@ public class StmAssistantCG extends AssistantBase
 		super(assistantManager);
 	}
 
-	public void injectDeclAsStm(ABlockStmCG block, AVarLocalDeclCG decl)
+	public void injectDeclAsStm(ABlockStmCG block, AVarDeclCG decl)
 	{
 		ABlockStmCG wrappingBlock = new ABlockStmCG();
 

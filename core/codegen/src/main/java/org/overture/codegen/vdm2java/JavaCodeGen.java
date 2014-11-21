@@ -51,6 +51,8 @@ import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
+import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
+import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.ir.IRClassDeclStatus;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRExpStatus;
@@ -81,6 +83,7 @@ import org.overture.codegen.trans.letexps.FuncTransformation;
 import org.overture.codegen.trans.letexps.IfExpTransformation;
 import org.overture.codegen.trans.patterns.PatternMatchConfig;
 import org.overture.codegen.trans.patterns.PatternTransformation;
+import org.overture.codegen.trans.quantifier.Exists1CounterData;
 import org.overture.codegen.trans.uniontypes.UnionTypeTransformation;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
@@ -281,7 +284,7 @@ public class JavaCodeGen
 		IfExpTransformation ifExpTransformation = new IfExpTransformation(transformationAssistant);
 		FunctionValueTransformation funcValueTransformation = new FunctionValueTransformation(irInfo, transformationAssistant, functionValueAssistant, INTERFACE_NAME_PREFIX, TEMPLATE_TYPE_PREFIX, EVAL_METHOD_PREFIX, PARAM_NAME_PREFIX);
 		ILanguageIterator langIterator = new JavaLanguageIterator(transformationAssistant, irInfo.getTempVarNameGen(), varPrefixes);
-		TransformationVisitor transVisitor = new TransformationVisitor(irInfo, classes, varPrefixes, transformationAssistant, langIterator, TERNARY_IF_EXP_NAME_PREFIX, CASES_EXP_RESULT_NAME_PREFIX, AND_EXP_NAME_PREFIX, OR_EXP_NAME_PREFIX, WHILE_COND_NAME_PREFIX, REC_MODIFIER_NAME_PREFIX);
+		TransformationVisitor transVisitor = new TransformationVisitor(irInfo, classes, varPrefixes, transformationAssistant, consExists1CounterData(), langIterator, TERNARY_IF_EXP_NAME_PREFIX, CASES_EXP_RESULT_NAME_PREFIX, AND_EXP_NAME_PREFIX, OR_EXP_NAME_PREFIX, WHILE_COND_NAME_PREFIX, REC_MODIFIER_NAME_PREFIX);
 		PatternTransformation patternTransformation = new PatternTransformation(classes, varPrefixes, irInfo, transformationAssistant, new PatternMatchConfig());
 		PreCheckTransformation preCheckTransformation = new PreCheckTransformation(irInfo, transformationAssistant, new JavaValueSemanticsTag(false));
 		PostCheckTransformation postCheckTransformation = new PostCheckTransformation(postCheckCreator, irInfo, transformationAssistant, FUNC_RESULT_NAME_PREFIX, new JavaValueSemanticsTag(false));
@@ -406,6 +409,16 @@ public class JavaCodeGen
 		javaFormat.clearClasses();
 
 		return new GeneratedData(generated, generateJavaFromVdmQuotes(), invalidNamesResult, skipping);
+	}
+
+	private Exists1CounterData consExists1CounterData()
+	{
+		AExternalTypeCG type = new AExternalTypeCG();
+		type.setName("Long");
+
+		AIntLiteralExpCG initExp = irInfo.getExpAssistant().consIntLiteral(0);
+		
+		return new Exists1CounterData(type, initExp);
 	}
 
 	private void simplifyLibraryClass(SClassDefinition classDef)

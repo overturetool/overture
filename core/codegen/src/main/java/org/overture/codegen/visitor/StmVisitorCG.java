@@ -69,7 +69,7 @@ import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.SStateDesignatorCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
+import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AReverseUnaryExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
@@ -213,7 +213,7 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 
 			STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 
-			AVarLocalDeclCG localDecl = new AVarLocalDeclCG();
+			AVarDeclCG localDecl = new AVarDeclCG();
 			localDecl.setType(typeCg);
 
 			AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
