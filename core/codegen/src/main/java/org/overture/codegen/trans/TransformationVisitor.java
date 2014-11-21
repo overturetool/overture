@@ -198,6 +198,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		}
 		
 		replacementBlock.getStatements().add(node.getStm().clone());
+		replacementBlock.apply(this);
 	}
 	
 	@Override
