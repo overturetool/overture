@@ -74,10 +74,9 @@ import org.overture.codegen.trans.conc.MainClassConcTransformation;
 import org.overture.codegen.trans.conc.MutexDeclTransformation;
 import org.overture.codegen.trans.conc.SentinelTransformation;
 import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
-import org.overture.codegen.trans.funcvalues.FunctionValueVisitor;
+import org.overture.codegen.trans.funcvalues.FunctionValueTransformation;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 import org.overture.codegen.trans.iterator.JavaLanguageIterator;
-import org.overture.codegen.trans.letexps.DeflattenTransformation;
 import org.overture.codegen.trans.letexps.FuncTransformation;
 import org.overture.codegen.trans.letexps.IfExpTransformation;
 import org.overture.codegen.trans.patterns.PatternMatchConfig;
@@ -280,32 +279,41 @@ public class JavaCodeGen
 		FuncTransformation funcTransformation = new FuncTransformation(transformationAssistant);
 		PrePostTransformation prePostTransformation = new PrePostTransformation(irInfo);
 		IfExpTransformation ifExpTransformation = new IfExpTransformation(transformationAssistant);
-		DeflattenTransformation deflattenTransformation = new DeflattenTransformation(transformationAssistant);
-		FunctionValueVisitor funcValVisitor = new FunctionValueVisitor(irInfo, transformationAssistant, functionValueAssistant, INTERFACE_NAME_PREFIX, TEMPLATE_TYPE_PREFIX, EVAL_METHOD_PREFIX, PARAM_NAME_PREFIX);
+		FunctionValueTransformation funcValueTransformation = new FunctionValueTransformation(irInfo, transformationAssistant, functionValueAssistant, INTERFACE_NAME_PREFIX, TEMPLATE_TYPE_PREFIX, EVAL_METHOD_PREFIX, PARAM_NAME_PREFIX);
 		ILanguageIterator langIterator = new JavaLanguageIterator(transformationAssistant, irInfo.getTempVarNameGen(), varPrefixes);
 		TransformationVisitor transVisitor = new TransformationVisitor(irInfo, classes, varPrefixes, transformationAssistant, langIterator, TERNARY_IF_EXP_NAME_PREFIX, CASES_EXP_RESULT_NAME_PREFIX, AND_EXP_NAME_PREFIX, OR_EXP_NAME_PREFIX, WHILE_COND_NAME_PREFIX, REC_MODIFIER_NAME_PREFIX);
 		PatternTransformation patternTransformation = new PatternTransformation(classes, varPrefixes, irInfo, transformationAssistant, new PatternMatchConfig());
 		PreCheckTransformation preCheckTransformation = new PreCheckTransformation(irInfo, transformationAssistant, new JavaValueSemanticsTag(false));
 		PostCheckTransformation postCheckTransformation = new PostCheckTransformation(postCheckCreator, irInfo, transformationAssistant, FUNC_RESULT_NAME_PREFIX, new JavaValueSemanticsTag(false));
 		IsExpTransformation isExpTransformation = new IsExpTransformation(irInfo, transformationAssistant, IS_EXP_SUBJECT_NAME_PREFIX);
-		//TypeTransformation typeTransformation = new TypeTransformation(transformationAssistant);
 		SeqConversionTransformation seqConversionTransformation = new SeqConversionTransformation(transformationAssistant);
 		
-		//Conc
-		SentinelTransformation Concurrencytransform = new SentinelTransformation(irInfo,classes);
+		// Concurrency related transformations
+		SentinelTransformation concurrencytransform = new SentinelTransformation(irInfo,classes);
 		MainClassConcTransformation mainclassTransform = new MainClassConcTransformation(irInfo, classes);
 		MutexDeclTransformation mutexTransform = new MutexDeclTransformation(irInfo, classes);
 
 		UnionTypeTransformation unionTypeTransformation = new UnionTypeTransformation(transformationAssistant, irInfo, classes, APPLY_EXP_NAME_PREFIX, OBJ_EXP_NAME_PREFIX, CALL_STM_OBJ_NAME_PREFIX, MISSING_OP_MEMBER, MISSING_MEMBER);
 		JavaClassToStringTrans javaToStringTransformation = new JavaClassToStringTrans(irInfo);
-
 		
-		DepthFirstAnalysisAdaptor[] analyses = new DepthFirstAnalysisAdaptor[] {
-				funcTransformation, prePostTransformation, ifExpTransformation,
-				deflattenTransformation, funcValVisitor, transVisitor,
-				deflattenTransformation, patternTransformation, preCheckTransformation, postCheckTransformation,
-				deflattenTransformation, isExpTransformation, /*typeTransformation,*/ unionTypeTransformation, javaToStringTransformation,
-				Concurrencytransform,mutexTransform, mainclassTransform, seqConversionTransformation};
+		DepthFirstAnalysisAdaptor[] analyses = new DepthFirstAnalysisAdaptor[] 
+		{		
+				funcTransformation,
+				prePostTransformation,
+				ifExpTransformation,
+				funcValueTransformation,
+				transVisitor,
+				patternTransformation,
+				preCheckTransformation,
+				postCheckTransformation,
+				isExpTransformation,
+				unionTypeTransformation,
+				javaToStringTransformation,
+				concurrencytransform,
+				mutexTransform,
+				mainclassTransform,
+				seqConversionTransformation
+		};
 
 		for (DepthFirstAnalysisAdaptor transformation : analyses)
 		{
@@ -329,7 +337,7 @@ public class JavaCodeGen
 		List<String> skipping = new LinkedList<String>();
 		
 		MergeVisitor mergeVisitor = javaFormat.getMergeVisitor();
-		FunctionValueAssistant functionValue = funcValVisitor.getFunctionValueAssistant();
+		FunctionValueAssistant functionValue = funcValueTransformation.getFunctionValueAssistant();
 		javaFormat.setFunctionValueAssistant(functionValue);
 
 		for (IRClassDeclStatus status : canBeGenerated)
