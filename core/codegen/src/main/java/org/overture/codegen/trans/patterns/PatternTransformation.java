@@ -24,6 +24,7 @@ package org.overture.codegen.trans.patterns;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.PCG;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SPatternCG;
@@ -293,11 +294,42 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 
 			if (!patternInfo.isEmpty())
 			{
-				ABlockStmCG patternHandlingBlock = consPatternHandlingBlock(patternInfo);
-
-				if (!patternHandlingBlock.getStatements().isEmpty())
+				List<DeclBlockPair> declBlockPairs = consPatternHandlingBlocksSeparate(node.getLocalDefs(), patternInfo);
+				
+				for(int i = 0; i < declBlockPairs.size(); i++)
 				{
-					node.getStatements().addFirst(patternHandlingBlock);
+					DeclBlockPair currentDeclBlockPair = declBlockPairs.get(i);
+					if(currentDeclBlockPair.getNextDecl() != null)
+					{
+						// The pattern handling block must be put before the
+						// enclosing statement of the next declaration
+						SStmCG stm = transformationAssistant.getEnclosingStm(currentDeclBlockPair.getNextDecl(), "block statement pattern handling");
+						ABlockStmCG block = new ABlockStmCG();
+						
+						transformationAssistant.replaceNodeWith(stm, block);
+						block.getStatements().add(currentDeclBlockPair.getBlock());
+						block.getStatements().add(stm);
+					}
+					else
+					{
+						// If there is no next declaration the current declaration
+						// must be the last declaration of the block statement
+						INode parent = currentDeclBlockPair.getDecl().parent();
+						
+						if(parent instanceof ABlockStmCG)
+						{
+							ABlockStmCG enc = (ABlockStmCG) parent;
+							enc.getStatements().addFirst(currentDeclBlockPair.getBlock());
+
+						}
+						else
+						{
+							Logger.getLog().printErrorln("Expected parent of current declaration "
+									+ "to be a block statement but got: "
+									+ parent
+									+ ". Pattern handling block could not be added.");
+						}
+					}
 				}
 			}
 		}
@@ -469,16 +501,8 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		for (PatternInfo info : patternInfo)
 		{
 			SPatternCG currentPattern = info.getPattern();
-
-			if (currentPattern instanceof AIdentifierPatternCG)
-			{
-				continue;
-			} else if (currentPattern instanceof AIgnorePatternCG)
-			{
-				AIdentifierPatternCG idPattern = getIdPattern(config.getIgnorePatternPrefix());
-				transformationAssistant.replaceNodeWith(currentPattern, idPattern);
-
-			} else
+			
+			if(!basicCaseHandled(currentPattern))
 			{
 				ABlockStmCG currentDeclBlock = new ABlockStmCG();
 
@@ -490,7 +514,48 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 
 		return topBlock;
 	}
+	
+	private List<DeclBlockPair> consPatternHandlingBlocksSeparate(List<AVarDeclCG> decls, List<PatternInfo> patternInfo)
+	{
+		List<DeclBlockPair> blocks = new LinkedList<DeclBlockPair>();
+		
+		for (int i = 0; i < patternInfo.size(); i++)
+		{
+			PatternInfo info = patternInfo.get(i);
 
+			if(!basicCaseHandled(info.getPattern()))
+			{
+				ABlockStmCG currentDeclBlock = new ABlockStmCG();
+
+				ABlockStmCG patternHandlingBlock = consPatternCheck(info.getPattern(), info.getType(), info.getActualValue(), currentDeclBlock);
+				currentDeclBlock.getStatements().addFirst(patternHandlingBlock);
+				
+				AVarDeclCG nextDecl = i < decls.size() - 1 ? decls.get(1 + i) : null;
+				DeclBlockPair declBlockPair = new DeclBlockPair(decls.get(i), nextDecl, currentDeclBlock);
+				
+				blocks.add(declBlockPair);
+			}
+		}
+
+		return blocks;
+	}
+	
+	private boolean basicCaseHandled(SPatternCG currentPattern)
+	{
+		if (currentPattern instanceof AIdentifierPatternCG)
+		{
+			return true;
+		} else if (currentPattern instanceof AIgnorePatternCG)
+		{
+			AIdentifierPatternCG idPattern = getIdPattern(config.getIgnorePatternPrefix());
+			transformationAssistant.replaceNodeWith(currentPattern, idPattern);
+
+			return true;
+		}
+		
+		return false;
+	}
+	
 	private ABlockStmCG consPatternCheck(SPatternCG pattern, STypeCG type,
 			SExpCG actualValue, ABlockStmCG declBlock)
 	{
@@ -980,11 +1045,8 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 
 		for (AVarDeclCG decl : localDefs)
 		{
-			if (decl instanceof AVarDeclCG)
-			{
-				PatternInfo currentInfo = extractPatternInfo((AVarDeclCG) decl);
-				patternInfo.add(currentInfo);
-			}
+			PatternInfo currentInfo = extractPatternInfo(decl);
+			patternInfo.add(currentInfo);
 		}
 
 		return patternInfo;
