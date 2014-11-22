@@ -71,20 +71,22 @@ public class CompileTests
 
 	public static final boolean RUN_EXP_TESTS = true;
 	public static final boolean RUN_COMPLEX_EXP_TESTS = true;
-	public static final boolean RUN_EXECUTING_CLASSIC_SPEC_TESTS = true;
 	public static final boolean RUN_NON_EXECUTING_VDM10_SPEC_TESTS = true;
 	public static final boolean RUN_FUNCTION_VALUE_TESTS = true;
 	public static final boolean RUN_CONFIGURED_STRING_GENERATION_TESTS = true;
-	public static final boolean RUN_CONFIGURED_CLONE_TESTS = true;
 	public static final boolean RUN_PATTERN_TESTS = true;
 	public static final boolean RUN_UNION_TESTS = true;
 	public static final boolean RUN_CONCURRENCY_TESTS = true;
 	public static final boolean RUN_BIND_TESTS = true;
 	public static final boolean PRE_POST_TESTS = true;
+	public static final boolean RUN_EXECUTING_CLASSIC_SPEC_TESTS = true;
+	public static final boolean RUN_CONFIGURED_CLONE_TESTS = true;
 
 	private List<File> testInputFiles;
 	private List<File> resultFiles;
 
+	private static int testNumber = 1;
+	
 	public static void main(String[] args) throws IOException
 	{
 		new CompileTests().runTests();
@@ -101,6 +103,8 @@ public class CompileTests
 
 		GeneralCodeGenUtils.copyDirectory(srcJavaLib, utils);
 
+		testNumber = 1;
+		
 		if (RUN_EXP_TESTS)
 		{
 			runExpTests();
@@ -110,17 +114,12 @@ public class CompileTests
 		{
 			runComplexExpTests();
 		}
-
-		if (RUN_EXECUTING_CLASSIC_SPEC_TESTS)
-		{
-			runExecutingClassicSpecTests();
-		}
-
+		
 		if (RUN_NON_EXECUTING_VDM10_SPEC_TESTS)
 		{
 			runNonExecutingVdm10Tests();
 		}
-
+		
 		if (RUN_FUNCTION_VALUE_TESTS)
 		{
 			runFunctionValueTests();
@@ -129,11 +128,6 @@ public class CompileTests
 		if (RUN_CONFIGURED_STRING_GENERATION_TESTS)
 		{
 			runConfiguredStringTests();
-		}
-
-		if (RUN_CONFIGURED_CLONE_TESTS)
-		{
-			runConfiguredCloningTests();
 		}
 
 		if (RUN_PATTERN_TESTS)
@@ -160,7 +154,17 @@ public class CompileTests
 		{
 			runPrePostTests();
 		}
-
+		
+		if (RUN_EXECUTING_CLASSIC_SPEC_TESTS)
+		{
+			runExecutingClassicSpecTests();
+		}
+		
+		if (RUN_CONFIGURED_CLONE_TESTS)
+		{
+			runConfiguredCloningTests();
+		}
+		
 		long endTimeMs = System.currentTimeMillis();
 
 		long totalTimeMs = endTimeMs - startTimeMs;
@@ -365,7 +369,7 @@ public class CompileTests
 			throw new IllegalArgumentException("Number of test input files and number of result files differ");
 		}
 
-		int testCount = testInputFiles.size();
+		final int testCount = testInputFiles.size();
 
 		for (int i = 0; i < testCount; i++)
 		{
@@ -387,7 +391,7 @@ public class CompileTests
 		for (int i = 0; i < testCount; i++)
 		{
 			File currentInputFile = testInputFiles.get(i);
-
+			
 			GeneralUtils.deleteFolderContents(parent, FOLDER_NAMES_TO_AVOID);
 
 			// Calculating the Java result:
@@ -396,7 +400,7 @@ public class CompileTests
 			testHandler.writeGeneratedCode(parent, file);
 
 			boolean compileOk = JavaCommandLineCompiler.compile(parent, null);
-			System.out.println("Test:" + (1 + i) + ". Name: " + file.getName()
+			System.out.println("Test:" + testNumber + " (" + (1 + i) + "). Name: " + file.getName()
 					+ " " + (compileOk ? "Compile OK" : "ERROR"));
 
 			if (!compileOk)
@@ -482,6 +486,7 @@ public class CompileTests
 				{
 					System.err.println("ERROR: VDM value and Java value are different");
 				}
+				testNumber++;
 			}
 		}
 	}
