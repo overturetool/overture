@@ -43,7 +43,6 @@ import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ACardUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AElemsUnaryExpCG;
-import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AFieldNumberExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
@@ -322,8 +321,6 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 	{
 		INode parent = node.parent();
 
-		// TODO: Deflatten structure
-
 		TypeAssistantCG typeAssistant = info.getAssistantManager().getTypeAssistant();
 
 		SStmCG enclosingStatement = baseAssistant.getEnclosingStm(node, "field expression");
@@ -567,41 +564,6 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 	public void inANotUnaryExpCG(ANotUnaryExpCG node) throws AnalysisException
 	{
 		correctTypes(node.getExp(), new ABoolBasicTypeCG());
-	}
-
-	@Override
-	public void inAEqualsBinaryExpCG(AEqualsBinaryExpCG node)
-			throws AnalysisException
-	{
-		STypeCG leftType = node.getLeft().getType();
-		STypeCG rightType = node.getRight().getType();
-
-		SExpCG unionTypedExp = null;
-		SExpCG notUnionTypedExp = null;
-
-		//TODO: Is this the right way to do it?
-		if(leftType instanceof AUnionTypeCG || rightType instanceof AUnionTypeCG)
-		{
-			return;
-		}
-		
-		if (leftType instanceof AUnionTypeCG
-				&& !(rightType instanceof AUnionTypeCG))
-		{
-			unionTypedExp = node.getLeft();
-			notUnionTypedExp = node.getRight();
-		} else if (rightType instanceof AUnionTypeCG
-				&& !(leftType instanceof AUnionTypeCG))
-		{
-			unionTypedExp = node.getRight();
-			notUnionTypedExp = node.getLeft();
-		} else
-		{
-			return;
-		}
-
-		STypeCG expectedType = notUnionTypedExp.getType();
-		correctTypes(unionTypedExp, expectedType);
 	}
 
 	@Override
