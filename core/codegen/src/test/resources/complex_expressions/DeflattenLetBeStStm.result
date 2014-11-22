@@ -20,7 +20,6 @@ public class Entry {
 
         VDMSet b = Utils.clone(setCompResult_1);
         Number c = 2L;
-
         Number d = 10L;
         VDMSet setCompResult_2 = SetUtil.set();
         VDMSet set_2 = SetUtil.set(4L, 5L, 6L);

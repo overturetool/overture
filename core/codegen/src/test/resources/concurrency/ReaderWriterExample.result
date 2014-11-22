@@ -237,7 +237,6 @@ public class Writer extends Thread implements EvaluatePP {
 
         for (Long i = 1L; i <= toVar_2; i++) {
             Number x = Write();
-
             b.Write(x);
         }
     }
@@ -276,7 +275,6 @@ public class Entry implements EvaluatePP {
         Buffer B = new Buffer();
         Writer wrt = new Writer(B);
         Reader read = new Reader(B);
-
         wrt.start();
         read.start();
         B.IsFinished();

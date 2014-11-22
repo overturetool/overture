@@ -88,7 +88,6 @@ public class C extends B {
 
     public void cg_init_C_1(final Boolean t) {
         Number z = 1L;
-
         cg_init_A_1(z, t, 'b');
     }
 

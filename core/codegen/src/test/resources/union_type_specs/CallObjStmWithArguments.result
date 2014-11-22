@@ -73,7 +73,6 @@ public class Entry {
         Object c2 = true;
         Object c3 = 'a';
         VDMSeq objs = SeqUtil.seq(new A(), new B(), new C());
-
         long toVar_1 = 3L;
 
         for (Long i = 1L; i <= toVar_1; i++) {

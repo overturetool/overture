@@ -9,7 +9,6 @@ public class A {
 
     public void op() {
         A a = new A();
-
         a.op();
     }
 

@@ -41,11 +41,9 @@ public class SimpleTest {
                     'e', 'r', ' ', 'G', 'o', 'r', 'm', ' ', 'L', 'a', 'r', 's',
                     'e', 'n'),
                 SeqUtil.seq('G', 'r', 'a', 'n', 'v', 'e', 'j', ' ', '2', '4'));
-
         Account pglacc1 = new Account().Create(MapUtil.map(
                     new Maplet(1L, peter)), 5000L);
         Number pglid1 = 1L;
-
         resource.AddAccount(pglid1, pglacc1);
         resource.AddLetterbox(clock, new Letterbox());
         ((Till) tills.get(1L)).InsertCard(c1);
@@ -100,7 +98,6 @@ public class Account {
     public Boolean Withdrawal(final Number cardId, final Number amount,
         final VDMSeq date) {
         Transaction transaction = new Transaction(date, cardId, amount);
-
         Boolean andResult_1 = false;
 
         if ((balance.longValue() - amount.longValue()) >= 0L) {
@@ -124,7 +121,6 @@ public class Account {
     public Letter MakeStatement(final Number cardId, final VDMSeq date) {
         VDMSeq nm = ((Cardholder) cards.get(cardId)).GetName();
         VDMSeq addr = ((Cardholder) cards.get(cardId)).GetAddress();
-
         Letter letter = new Letter();
 
         return letter.Create(nm, addr, date, transactions, balance);
@@ -545,7 +541,6 @@ public class Till {
         Number cardId = curCard.GetCardId();
         Boolean codeOk = Utils.equals(curCard.GetCode(), Encode(pin));
         Boolean cardLegal = IsLegalCard();
-
         Boolean andResult_5 = false;
 
         if (codeOk) {
@@ -868,7 +863,6 @@ public class System {
         Cardholder CSK = new Cardholder().Create(SeqUtil.seq('C', 'S', 'K'),
                 SeqUtil.seq('F', 'o', 'r', 's', 'k', 'e', 'r', 'p', 'a', 'r',
                     'k', 'e', 'n', ' ', '1', '0', 'A'));
-
         Account pglacc1 = new Account().Create(MapUtil.map(
                     new Maplet(1L, peter)), 5000L);
         Account saacc1 = new Account().Create(MapUtil.map(new Maplet(2L, sten)),
@@ -885,7 +879,6 @@ public class System {
         Number ksid1 = 3L;
         Number pmid1 = 4L;
         Number ifid1 = 5L;
-
         resource.AddAccount(pglid1, pglacc1);
         resource.AddAccount(said1, saacc1);
         resource.AddAccount(ksid1, ksacc1);
