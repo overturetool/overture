@@ -84,7 +84,6 @@ import org.overture.codegen.cgast.statements.AForAllStmCG;
 import org.overture.codegen.cgast.statements.AForIndexStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.ALetBeStStmCG;
-import org.overture.codegen.cgast.statements.ALetDefStmCG;
 import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
 import org.overture.codegen.cgast.statements.APlainCallStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
@@ -269,14 +268,14 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 	public SStmCG caseALetStm(ALetStm node, IRInfo question)
 			throws AnalysisException
 	{
-		ALetDefStmCG localDefStm = new ALetDefStmCG();
-
-		question.getDeclAssistant().setLocalDefs(node.getLocalDefs(), localDefStm.getLocalDefs(), question);
+		ABlockStmCG block = new ABlockStmCG();
+		
+		question.getDeclAssistant().setLocalDefs(node.getLocalDefs(), block.getLocalDefs(), question);
 
 		SStmCG stm = node.getStatement().apply(question.getStmVisitor(), question);
-		localDefStm.setStm(stm);
+		block.getStatements().add(stm);
 
-		return localDefStm;
+		return block;
 	}
 
 	@Override

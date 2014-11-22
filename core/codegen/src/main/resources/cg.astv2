@@ -182,7 +182,6 @@ CG {-> package='org.overture.codegen.cgast'
            | 	{elseIf} [elseIf]:CG.#exp [thenStm]:CG.#stm
            | 	{skip}
            |	{return} [exp]:CG.#exp
-           |	{letDef} [localDefs]:CG.#decl.var* [stm]:CG.#stm
            |	{abstractBody}
            |	{assignment} [target]:CG.#stateDesignator [exp]:CG.#exp
            |	{localAssignment} [target]:CG.#exp [exp]:CG.#exp

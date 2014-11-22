@@ -25,7 +25,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
@@ -75,8 +74,7 @@ public class BaseTransformationAssistant
 		{
 			AVarDeclCG localDecl = node.getAncestor(AVarDeclCG.class);
 			
-			if (localDecl != null && node instanceof SExpCG
-					&& localDecl.parent() instanceof ABlockStmCG)
+			if (localDecl != null && localDecl.parent() instanceof ABlockStmCG)
 			{
 				ABlockStmCG block = (ABlockStmCG) localDecl.parent();
 
