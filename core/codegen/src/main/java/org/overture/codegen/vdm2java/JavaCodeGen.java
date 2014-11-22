@@ -105,6 +105,8 @@ public class JavaCodeGen
 
 	private IRGenerator generator;
 	private IRInfo irInfo;
+	private TransformationAssistantCG transformationAssistant;
+	
 	private JavaFormat javaFormat;
 
 	public static final String INTERFACE_NAME_PREFIX = "Func_";
@@ -159,11 +161,14 @@ public class JavaCodeGen
 	private void init(ILogger log)
 	{
 		initVelocity();
+		
 		this.generator = new IRGenerator(log, OBJ_INIT_CALL_NAME_PREFIX);
 
 		this.irInfo = generator.getIRInfo();
 		this.irInfo.registerQuoteValue(QUOTE_START);
 		this.irInfo.registerQuoteValue(QUOTE_APPEND);
+		
+		this.transformationAssistant = new TransformationAssistantCG(irInfo, varPrefixes);
 		
 		this.javaFormat = new JavaFormat(varPrefixes, irInfo);
 	}
@@ -202,7 +207,7 @@ public class JavaCodeGen
 
 			javaFormat.init();
 			
-			JavaQuoteValueCreator quoteValueCreator = new JavaQuoteValueCreator(irInfo);
+			JavaQuoteValueCreator quoteValueCreator = new JavaQuoteValueCreator(irInfo, transformationAssistant);
 			
 			List<AClassDeclCG> quoteDecls = new LinkedList<AClassDeclCG>();
 			
@@ -274,8 +279,7 @@ public class JavaCodeGen
 				generated.add(new GeneratedModule(status.getClassName(), status.getUnsupportedNodes()));
 			}
 		}
-
-		TransformationAssistantCG transformationAssistant = new TransformationAssistantCG(irInfo, varPrefixes);
+		
 		FunctionValueAssistant functionValueAssistant = new FunctionValueAssistant();
 		IPostCheckCreator postCheckCreator = new JavaPostCheckCreator(POST_CHECK_METHOD_NAME);
 
