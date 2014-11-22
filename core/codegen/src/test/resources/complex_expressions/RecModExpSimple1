@@ -8,12 +8,12 @@ public Rec ::
 
 operations
 
-public static Run : () ==> Rec
+public static Run : () ==> ?
 Run () ==
 (
   dcl r : Rec := mk_Rec(5,true);
   r := mu(r, x |-> 6, b |-> false);
-  return r; 
+  return mk_(r.x, r.b); 
 );
 
 end Entry
