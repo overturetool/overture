@@ -12,9 +12,8 @@ public class Entry implements EvaluatePP {
 
     public static Object Run() {
         String test1Output = new POP3Test().Test1();
-        String test2Output = new POP3Test().Test2();
 
-        return "Test 1:\n" + test1Output + "\n" + "Test 2:\n" + test2Output;
+        return "Test 1:\n" + test1Output;
     }
 
     public String toString() {
@@ -61,6 +60,16 @@ public class Log implements EvaluatePP {
 
     public Log() {
         sentinel = new Log_sentinel(this);
+    }
+
+    public void clear() {
+        sentinel.entering(((Log_sentinel) sentinel).clear);
+
+        try {
+            messages = SeqUtil.seq();
+        } finally {
+            sentinel.leaving(((Log_sentinel) sentinel).clear);
+        }
     }
 
     public static Log getInstance() {
@@ -115,18 +124,21 @@ public class Log implements EvaluatePP {
             return true;
         } else if (Utils.equals(fnr, 4L)) {
             return true;
+        } else if (Utils.equals(fnr, 5L)) {
+            return true;
         } else {
             return true;
         }
     }
 
     public class Log_sentinel extends Sentinel {
-        public static final int getInstance = 0;
-        public static final int log = 1;
-        public static final int output = 2;
-        public static final int Log = 3;
-        public static final int toString = 4;
-        public final int function_sum = 5;
+        public static final int clear = 0;
+        public static final int getInstance = 1;
+        public static final int log = 2;
+        public static final int output = 3;
+        public static final int Log = 4;
+        public static final int toString = 5;
+        public final int function_sum = 6;
 
         public Log_sentinel() {
         }
@@ -399,7 +411,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
-public class POP3ClientHandler extends Thread implements EvaluatePP {
+public class POP3ClientHandler extends VDMThread implements EvaluatePP {
     private static final String unknownMessageMsg = "No such message";
     private static final String negativeStatusMsg = "Wrong state for this command";
     private static final String alreadyDeletedMsg = "Message already deleted";
@@ -1439,7 +1451,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
-public class POP3Server extends Thread implements EvaluatePP {
+public class POP3Server extends VDMThread implements EvaluatePP {
     private volatile MessageChannelBuffer connChannel;
     private volatile VDMMap maildrop;
     private volatile VDMMap passwords;
@@ -2318,7 +2330,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
-public class POP3TestSender extends Thread implements EvaluatePP {
+public class POP3TestSender extends VDMThread implements EvaluatePP {
     private volatile String id;
     private volatile VDMSeq cmds;
     private volatile MessageChannel mc;
@@ -2415,7 +2427,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
-public class POP3TestListener extends Thread implements EvaluatePP {
+public class POP3TestListener extends VDMThread implements EvaluatePP {
     private volatile String id;
     private volatile MessageChannel mc;
     private volatile Boolean finished;

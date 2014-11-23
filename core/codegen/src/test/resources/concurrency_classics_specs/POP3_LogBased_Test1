@@ -4,10 +4,9 @@ operations
 
 public static Run : () ==> ?
 Run () ==
-let test1Output = new POP3Test().Test1(),
-    test2Output = new POP3Test().Test2()
+let test1Output = new POP3Test().Test1()
 in
-  return "Test 1:\n" ^ test1Output ^ "\n" ^ "Test 2:\n" ^ test2Output;
+  return "Test 1:\n" ^ test1Output;
 
 end Entry
 
@@ -20,6 +19,9 @@ messages : seq of seq of char := [];
 static Instance : [Log] := nil;
 
 operations
+
+public clear : () ==> ()
+clear () == messages := [];
 
 public static getInstance : () ==> Log
 getInstance () ==
