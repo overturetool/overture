@@ -498,8 +498,8 @@ public class CompileTests
 					System.out.println("CG Test: " + currentInputFile.getName());
 				}
 
-				System.out.println("VDM ~>  " + vdmResult);
-				System.out.print("Java ~> " + javaResult);
+				System.out.println("VDM ~>  " + toShortString(vdmResult));
+				System.out.print("Java ~> " + toShortString(javaResult));
 
 				if (equal)
 				{
@@ -508,8 +508,22 @@ public class CompileTests
 				{
 					System.err.println("ERROR: VDM value and Java value are different");
 				}
-				testNumber++;
 			}
+			testNumber++;
+		}
+	}
+
+	private String toShortString(Object result)
+	{
+		final int MAX = 200;
+		String str = result.toString();
+
+		if (str.length() > MAX)
+		{
+			return str.substring(0, MAX) + "...\n";
+		} else
+		{
+			return str;
 		}
 	}
 }
