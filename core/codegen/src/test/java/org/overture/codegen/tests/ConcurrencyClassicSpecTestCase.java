@@ -21,19 +21,36 @@
  */
 package org.overture.codegen.tests;
 
-public class TestFlags
+import java.io.File;
+
+import org.overture.codegen.ir.IRSettings;
+import org.overture.config.Release;
+import org.overture.config.Settings;
+
+public class ConcurrencyClassicSpecTestCase extends SpecificationTestCase
 {
-	public static final boolean SPEC_TESTS_ON = false;
-	public static final boolean CLASSIC_SPEC_TESTS_ON = false;
-	public static final boolean COMPLEX_EXP_TESTS_ON = false;
-	public static final boolean EXP_TESTS_ON = false;
-	public static final boolean FUNC_VALUE_TESTS_ON = false;
-	public static final boolean STRING_CONFIG_TESTS_ON = false;
-	public static final boolean CLONING_CONFIG_TESTS_ON = false;
-	public static final boolean PATTERN_TESTS_ON = false;
-	public static final boolean UNION_TYPE_TESTS_ON = false;
-	public static final boolean CONCURRENCY_TESTS_ON = false;
-	public static final boolean CONCURRENCY_CLASSIC_TESTS_ON = false;
-	public static final boolean BIND_TESTS_ON = false;
-	public static final boolean PRE_POST_TESTS_ON = false;
+	public ConcurrencyClassicSpecTestCase()
+	{
+	}
+
+	public ConcurrencyClassicSpecTestCase(File file)
+	{
+		super(file);
+	}
+
+	@Override
+	protected void setUp() throws Exception
+	{
+		Settings.release = Release.CLASSIC;
+	}
+	
+	@Override
+	public IRSettings getIrSettings()
+	{
+		IRSettings irSettings = new IRSettings();
+		irSettings.setGenerateConc(true);
+		irSettings.setCharSeqAsString(true);
+		
+		return irSettings;
+	}
 }

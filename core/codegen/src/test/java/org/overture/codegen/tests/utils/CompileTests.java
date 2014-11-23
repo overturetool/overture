@@ -34,6 +34,7 @@ import java.util.List;
 import org.overture.codegen.tests.BindTest;
 import org.overture.codegen.tests.ClassicSpecTest;
 import org.overture.codegen.tests.ComplexExpressionTest;
+import org.overture.codegen.tests.ConcurrencyClassicSpecTests;
 import org.overture.codegen.tests.ConcurrencyTests;
 import org.overture.codegen.tests.ConfiguredCloningTest;
 import org.overture.codegen.tests.ConfiguredStringGenerationTest;
@@ -77,6 +78,7 @@ public class CompileTests
 	public static final boolean RUN_PATTERN_TESTS = true;
 	public static final boolean RUN_UNION_TESTS = true;
 	public static final boolean RUN_CONCURRENCY_TESTS = true;
+	public static final boolean RUN_CONCURRENCY_CLASSIC_TESTS = true;
 	public static final boolean RUN_BIND_TESTS = true;
 	public static final boolean PRE_POST_TESTS = true;
 	public static final boolean RUN_EXECUTING_CLASSIC_SPEC_TESTS = true;
@@ -144,6 +146,11 @@ public class CompileTests
 		{
 			runConcurrencyTests();
 		}
+		
+		if (RUN_CONCURRENCY_CLASSIC_TESTS)
+		{
+			runConcurrencyClassicTests();
+		}
 
 		if (RUN_BIND_TESTS)
 		{
@@ -204,6 +211,21 @@ public class CompileTests
 		System.out.println("********\n");
 	}
 
+	private void runConcurrencyClassicTests() throws IOException
+	{
+		System.out.println("Beginning concurrency classic tests..\n");
+
+		testInputFiles = TestUtils.getTestInputFiles(new File(ConcurrencyClassicSpecTests.ROOT));
+		resultFiles = TestUtils.getFiles(new File(ConcurrencyClassicSpecTests.ROOT), RESULT_FILE_EXTENSION);
+
+		runTests(testInputFiles, resultFiles, new ExecutableSpecTestHandler(Release.CLASSIC), false);
+
+		System.out.println("\n********");
+		System.out.println("Finished with concurrency tests");
+		System.out.println("********\n");
+
+	}
+	
 	private void runConcurrencyTests() throws IOException
 	{
 		System.out.println("Beginning concurrency tests..\n");
@@ -417,7 +439,9 @@ public class CompileTests
 
 				try
 				{
+					System.out.println("Nu:");
 					vdmResult = executableTestHandler.interpretVdm(currentInputFile);
+					System.out.println("VDM resultatet: " + vdmResult);
 				} 
 				catch (ContextException ce1)
 				{
@@ -429,8 +453,10 @@ public class CompileTests
 					return;
 				}
 
+				System.out.println("Run1");
 				String javaResult = JavaExecution.run(parent, TestHandler.MAIN_CLASS);
-
+				System.out.println("DoneJava");
+				
 				File dataFile = new File(CG_VALUE_BINARY_FILE);
 				FileInputStream fin = new FileInputStream(dataFile);
 				ObjectInputStream ois = new ObjectInputStream(fin);
@@ -438,7 +464,9 @@ public class CompileTests
 				Object cgValue = null;
 				try
 				{
+					System.out.println("ReadingObj");
 					cgValue = (Object) ois.readObject();
+					System.out.println("ReadingObjDone");
 				} catch (ClassNotFoundException e)
 				{
 					e.printStackTrace();
