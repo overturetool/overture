@@ -75,7 +75,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
-public class Incrementer extends Thread implements EvaluatePP {
+public class Incrementer extends VDMThread implements EvaluatePP {
     private volatile SharedCounter sharedCounter;
     private volatile Boolean isFinished = false;
     public volatile Sentinel sentinel;

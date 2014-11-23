@@ -439,9 +439,7 @@ public class CompileTests
 
 				try
 				{
-					System.out.println("Nu:");
 					vdmResult = executableTestHandler.interpretVdm(currentInputFile);
-					System.out.println("VDM resultatet: " + vdmResult);
 				} 
 				catch (ContextException ce1)
 				{
@@ -453,9 +451,7 @@ public class CompileTests
 					return;
 				}
 
-				System.out.println("Run1");
 				String javaResult = JavaExecution.run(parent, TestHandler.MAIN_CLASS);
-				System.out.println("DoneJava");
 				
 				File dataFile = new File(CG_VALUE_BINARY_FILE);
 				FileInputStream fin = new FileInputStream(dataFile);
@@ -464,9 +460,7 @@ public class CompileTests
 				Object cgValue = null;
 				try
 				{
-					System.out.println("ReadingObj");
 					cgValue = (Object) ois.readObject();
-					System.out.println("ReadingObjDone");
 				} catch (ClassNotFoundException e)
 				{
 					e.printStackTrace();
