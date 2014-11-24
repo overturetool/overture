@@ -451,6 +451,8 @@ public class LexLocation implements Serializable, ExternalNode, ILexLocation
 
 	public static List<Integer> getHitList(File file)
 	{
+		//FIXME skip lex location in other files
+		// idea: if !lextLocation.getFile().equals(file) then continue; 
 		List<Integer> hits = new Vector<Integer>();
 
 		synchronized (allLocations)

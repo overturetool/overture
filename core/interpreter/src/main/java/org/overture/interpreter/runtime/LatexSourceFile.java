@@ -23,6 +23,7 @@ public class LatexSourceFile extends SourceFile
 	private static final String CURLY_BRACKET_VDM_SL = "{vdmsl}";
 	private static final String CURLY_BRACKET_VDM_PP = "{vdmpp}";
 	private static final String CURLY_BRACKET_VDM_RT = "{vdmrt}";
+	private static final String BREAKLINES_OPTION = "[breaklines=true]";
 	private static final String BEGIN = "\\begin";
 	private static final String END = "\\end";
 	public List<String> rawLines = new Vector<String>();
@@ -74,7 +75,13 @@ public class LatexSourceFile extends SourceFile
 	public void print(PrintWriter out, boolean headers, boolean modelOnly,
 			boolean includeCoverageTable, boolean markCoverage)
 	{
-		Map<Integer, List<LexLocation>> hits = LexLocation.getMissLocations(filename);
+		
+		Map<Integer, List<LexLocation>> hits = null;
+		
+		if(includeCoverageTable || markCoverage)
+		{
+			hits = LexLocation.getMissLocations(filename);
+		}
 
 		if (headers)
 		{
@@ -92,7 +99,7 @@ public class LatexSourceFile extends SourceFile
 
 		if (!hasVdm_al)
 		{
-			out.println(BEGIN + getListingEnvironment());
+			out.println(BEGIN + getListingEnvironment()+BREAKLINES_OPTION);
 		}
 
 		boolean endDocFound = false;
@@ -133,7 +140,7 @@ public class LatexSourceFile extends SourceFile
 
 			String spaced = detab(line, Properties.parser_tabstop);
 			spaced = spaced.replace(BEGIN + CURLY_BRACKET_VDM_AL, BEGIN
-					+ getListingEnvironment()).replace(END
+					+ getListingEnvironment()+BREAKLINES_OPTION).replace(END
 					+ CURLY_BRACKET_VDM_AL, END + getListingEnvironment());
 
 			if (markCoverage)
