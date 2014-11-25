@@ -92,6 +92,13 @@ public class JavaExecution
 					e.printStackTrace();
 					return null;
 				}
+				finally
+				{
+					if(p != null)
+					{
+						p.destroy();
+					}
+				}
 			} else
 			{
 				String arg = "java" + " -cp " + cpArgs + " " + mainClassName;

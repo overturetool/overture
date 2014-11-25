@@ -92,6 +92,9 @@ public class CompileTests
 	public static void main(String[] args) throws IOException
 	{
 		new CompileTests().runTests();
+		
+		//Force shutdown (interpreter threads might be hanging)
+		System.exit(0);
 	}
 
 	private void runTests() throws IOException
