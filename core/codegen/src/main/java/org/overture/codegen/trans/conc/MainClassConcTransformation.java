@@ -37,6 +37,7 @@ import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
+import org.overture.codegen.ir.IRGeneratedTag;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.vdm2java.JavaFormat;
 
@@ -90,57 +91,52 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 		
 		for(AMethodDeclCG methodCG : node.getMethods())
 		{
-			
-			if(methodCG.getStatic() != null && !methodCG.getName().contains("cg_init_")){
-				if(!methodCG.getIsConstructor() && !methodCG.getName().equals("Run")){//(x.getName() != node.getName()){
-					if (!methodCG.getName().equals("toString") && !methodCG.getStatic() ){//&& !methodCG.getName().equals("Run")){//x.getName() != "toString"){
-						ABlockStmCG bodyStm = new ABlockStmCG();
+			if(methodCG.getStatic() != null && !methodCG.getStatic() && !isIRGenerated(methodCG)){
+				if(!methodCG.getIsConstructor()){
+					
+					ABlockStmCG bodyStm = new ABlockStmCG();
 
-						APlainCallStmCG entering = new APlainCallStmCG();
-						APlainCallStmCG leaving = new APlainCallStmCG();
+					APlainCallStmCG entering = new APlainCallStmCG();
+					APlainCallStmCG leaving = new APlainCallStmCG();
 
+					entering.setName("entering");
+					AClassTypeCG sentinel = new AClassTypeCG();
+					sentinel.setName("sentinel");
 
-						entering.setName("entering");
-						AClassTypeCG sentinel = new AClassTypeCG();
-						sentinel.setName("sentinel");
+					entering.setClassType(sentinel);
+					entering.setType(new AVoidTypeCG());
 
-						entering.setClassType(sentinel);
-						entering.setType(new AVoidTypeCG());
+					AFieldExpCG field = new AFieldExpCG();
+					field.setMemberName(methodCG.getName());
 
-						AFieldExpCG field = new AFieldExpCG();
-						field.setMemberName(methodCG.getName());
+					ACastUnaryExpCG cast = new ACastUnaryExpCG();
+					AIdentifierVarExpCG varSentinel = new AIdentifierVarExpCG();
+					varSentinel.setOriginal("sentinel");
 
-						ACastUnaryExpCG cast = new ACastUnaryExpCG();
-						AIdentifierVarExpCG varSentinel = new AIdentifierVarExpCG();
-						varSentinel.setOriginal("sentinel");
+					AExternalTypeCG etype = new AExternalTypeCG();
+					etype.setName(node.getName() + "_sentinel");
 
-						AExternalTypeCG etype = new AExternalTypeCG();
-						etype.setName(node.getName()+"_sentinel");
+					cast.setExp(varSentinel);
+					cast.setType(etype);
+					field.setObject(cast);
 
-						cast.setExp(varSentinel);
-						cast.setType(etype);
-						field.setObject(cast);
+					entering.getArgs().add(field);
 
+					leaving.setName("leaving");
+					leaving.setClassType(sentinel.clone());
+					leaving.setType(new AVoidTypeCG());
+					leaving.getArgs().add(field.clone());
 
-						entering.getArgs().add(field);
+					bodyStm.getStatements().add(entering);
+					ATryStmCG trystm = new ATryStmCG();
+					trystm.setStm(methodCG.getBody());
+					trystm.setFinally(leaving);
+					bodyStm.getStatements().add(trystm);
 
-						leaving.setName("leaving");
-						leaving.setClassType(sentinel.clone());
-						leaving.setType(new AVoidTypeCG());
-						leaving.getArgs().add(field.clone());
-
-						bodyStm.getStatements().add(entering);
-						ATryStmCG trystm = new ATryStmCG();
-						trystm.setStm(methodCG.getBody());
-						trystm.setFinally(leaving);
-						bodyStm.getStatements().add(trystm);
-
-						methodCG.setBody(bodyStm);
-					}
+					methodCG.setBody(bodyStm);
 				}
-				//else
-				
 			}
+			
 			if(methodCG.getIsConstructor())
 			{
 				ABlockStmCG bodyConst = new ABlockStmCG();
@@ -166,9 +162,6 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 				bodyConst.getStatements().add(stm);
 
 				methodCG.setBody(bodyConst);
-
-
-				//}
 			}
 		}
 		//declaration of the method.
@@ -279,5 +272,10 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 		}
 		
 		node.getMethods().add(evaluatePPmethod);
+	}
+
+	private boolean isIRGenerated(AMethodDeclCG method)
+	{
+		return method.getTag() instanceof IRGeneratedTag;
 	}
 }
