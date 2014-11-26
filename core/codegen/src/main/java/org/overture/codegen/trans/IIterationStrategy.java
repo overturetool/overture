@@ -27,21 +27,20 @@ import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
-import org.overture.codegen.cgast.declarations.SLocalDeclCG;
+import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
 
 public interface IIterationStrategy
 {
-	public List<? extends SLocalDeclCG> getOuterBlockDecls(
+	public List<AVarDeclCG> getOuterBlockDecls(
 			AIdentifierVarExpCG setVar, List<SPatternCG> patterns)
 			throws AnalysisException;
 
 	public List<SStmCG> getPreForLoopStms(AIdentifierVarExpCG setVar,
 			List<SPatternCG> patterns, SPatternCG pattern);
 
-	public AVarLocalDeclCG getForLoopInit(AIdentifierVarExpCG setVar,
+	public AVarDeclCG getForLoopInit(AIdentifierVarExpCG setVar,
 			List<SPatternCG> patterns, SPatternCG pattern);
 
 	public SExpCG getForLoopCond(AIdentifierVarExpCG setVar,
@@ -51,7 +50,7 @@ public interface IIterationStrategy
 	public SExpCG getForLoopInc(AIdentifierVarExpCG setVar,
 			List<SPatternCG> patterns, SPatternCG pattern);
 
-	public AVarLocalDeclCG getNextElementDeclared(AIdentifierVarExpCG setVar,
+	public AVarDeclCG getNextElementDeclared(AIdentifierVarExpCG setVar,
 			List<SPatternCG> patterns, SPatternCG pattern)
 			throws AnalysisException;
 

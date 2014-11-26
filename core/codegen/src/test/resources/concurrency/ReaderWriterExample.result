@@ -88,7 +88,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
-public class Reader extends Thread implements EvaluatePP {
+public class Reader extends VDMThread implements EvaluatePP {
     public volatile Buffer b;
     public volatile Boolean isfinished = false;
     public volatile Sentinel sentinel;
@@ -168,7 +168,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
-public class Writer extends Thread implements EvaluatePP {
+public class Writer extends VDMThread implements EvaluatePP {
     public volatile Buffer b;
     public volatile Boolean isfinished = false;
     private volatile Number index = 0L;

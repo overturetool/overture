@@ -37,7 +37,7 @@ import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
-import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
+import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
@@ -811,7 +811,7 @@ public class JavaFormat
 		return info.getAssistantManager().getTypeAssistant().findElementType(designator, classes, info);
 	}
 
-	public boolean isLoopVar(AVarLocalDeclCG localVar)
+	public boolean isLoopVar(AVarDeclCG localVar)
 	{
 		return localVar.parent() instanceof AForLoopStmCG;
 	}

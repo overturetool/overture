@@ -47,7 +47,7 @@ import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.trans.assistants.TransformationAssistantCG;
 
-public class FunctionValueVisitor extends DepthFirstAnalysisAdaptor
+public class FunctionValueTransformation extends DepthFirstAnalysisAdaptor
 {
 	private IRInfo info;
 
@@ -60,7 +60,7 @@ public class FunctionValueVisitor extends DepthFirstAnalysisAdaptor
 	private String evalMethodName;
 	private String paramNamePrefix;
 
-	public FunctionValueVisitor(IRInfo info,
+	public FunctionValueTransformation(IRInfo info,
 			TransformationAssistantCG transformationAssistant,
 			FunctionValueAssistant functionValueAssistant,
 			String interfaceNamePrefix, String templateTypePrefix,
@@ -169,7 +169,6 @@ public class FunctionValueVisitor extends DepthFirstAnalysisAdaptor
 
 		AAnonymousClassExpCG classExp = new AAnonymousClassExpCG();
 		classExp.setType(classType);
-		;
 		classExp.getMethods().add(lambdaDecl);
 
 		transformationAssistant.replaceNodeWithRecursively(node, classExp, this);

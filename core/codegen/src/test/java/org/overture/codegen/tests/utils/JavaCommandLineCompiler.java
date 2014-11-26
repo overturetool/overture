@@ -79,6 +79,7 @@ public class JavaCommandLineCompiler
 				pb.directory(dir);
 				pb.redirectErrorStream(true);
 				p = pb.start();
+				p.waitFor();
 			} else
 			{
 				p = Runtime.getRuntime().exec(arg, null, dir);

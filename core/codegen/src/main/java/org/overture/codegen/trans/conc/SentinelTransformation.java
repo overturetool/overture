@@ -170,7 +170,7 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 		//method_pp.setFormalParams();
 		
 		if (node.getSuperName() != null){
-			if(!node.getSuperName().equals("Thread")){
+			if(!node.getSuperName().equals("VDMThread")){
 				innerClass.setSuperName(node.getSuperName()+"_Sentinel");
 			}
 			else
@@ -191,7 +191,7 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 	private void makeThread(AClassDeclCG node)
 	{
 		AClassDeclCG threadClass = getThreadClass(node.getSuperName(), node);
-		threadClass.setSuperName("Thread");
+		threadClass.setSuperName("VDMThread");
 	}
 
 	private AClassDeclCG getThreadClass(String superName, AClassDeclCG classCg)

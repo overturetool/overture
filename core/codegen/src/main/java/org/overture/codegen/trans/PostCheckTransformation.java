@@ -7,7 +7,7 @@ import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
-import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
+import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
@@ -115,7 +115,7 @@ public class PostCheckTransformation extends DepthFirstAnalysisAdaptor
 		AApplyExpCG postCondCall = transformationAssistant.consConditionalCall(method, (AMethodDeclCG) method.getPostCond());
 		postCondCall.setTag(conditionalCallTag);
 
-		AVarLocalDeclCG resultDecl = transformationAssistant.consDecl(funcResultNamePrefix, method.getMethodType().getResult().clone(), node.getExp().clone());
+		AVarDeclCG resultDecl = transformationAssistant.consDecl(funcResultNamePrefix, method.getMethodType().getResult().clone(), node.getExp().clone());
 		AIdentifierVarExpCG resultVar = transformationAssistant.consIdentifierVar(funcResultNamePrefix, resultDecl.getType().clone());
 
 		postCondCall.getArgs().add(resultVar.clone());

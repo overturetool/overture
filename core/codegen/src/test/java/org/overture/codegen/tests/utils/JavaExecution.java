@@ -50,14 +50,54 @@ public class JavaExecution
 				pb = new ProcessBuilder(java.getAbsolutePath(), "-cp", cpArgs, mainClassName.trim());
 				pb.directory(cp);
 				pb.redirectErrorStream(true);
+				
+				final StringBuffer sb = new StringBuffer();
+				
 				try
 				{
 					p = pb.start();
+					final InputStream is = p.getInputStream();
+					// the background thread watches the output from the process
+					Thread t = new Thread(new Runnable() {
+					    public void run() {
+					        try {
+					            BufferedReader reader =
+					                new BufferedReader(new InputStreamReader(is));
+					            String line;
+					            while ((line = reader.readLine()) != null) {
+					            	sb.append(line + "\n");
+					            }
+					        } catch (IOException e) {
+					            e.printStackTrace();
+					        } finally {
+								try
+								{
+									is.close();
+								} catch (IOException e)
+								{
+									e.printStackTrace();
+								}
+					        }
+					    }
+					});
+					
+					t.start();
 					p.waitFor();
+					t.join();
+					
+					return sb.toString();
+					
 				} catch (InterruptedException e)
 				{
 					e.printStackTrace();
 					return null;
+				}
+				finally
+				{
+					if(p != null)
+					{
+						p.destroy();
+					}
 				}
 			} else
 			{

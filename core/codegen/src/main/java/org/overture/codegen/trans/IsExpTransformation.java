@@ -8,7 +8,7 @@ import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
+import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AGeneralIsExpCG;
 import org.overture.codegen.cgast.expressions.AOrBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.SVarExpBase;
@@ -69,7 +69,7 @@ public class IsExpTransformation extends DepthFirstAnalysisAdaptor
 			if (!(exp instanceof SVarExpBase))
 			{
 				String varName = info.getTempVarNameGen().nextVarName(isExpSubjectNamePrefix);
-				AVarLocalDeclCG expDecl = transformationAssistant.consDecl(varName, expType.clone(), exp.clone());
+				AVarDeclCG expDecl = transformationAssistant.consDecl(varName, expType.clone(), exp.clone());
 				replacementBlock.getLocalDefs().add(expDecl);
 				expVar = transformationAssistant.consIdentifierVar(varName, expType.clone());
 			} else
