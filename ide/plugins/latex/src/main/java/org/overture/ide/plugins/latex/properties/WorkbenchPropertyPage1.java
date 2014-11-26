@@ -152,11 +152,11 @@ public class WorkbenchPropertyPage1 extends PropertyPage implements
 
 			buttonInsertCoverageTables = new Button(mainDocumentGroup, SWT.CHECK);
 			buttonInsertCoverageTables.setText("Insert coverage tables");
-			buttonInsertCoverageTables.setSelection(opt.getAttribute(ILatexConstants.LATEX_INCLUDE_COVERAGETABLE, true));
+			buttonInsertCoverageTables.setSelection(opt.getAttribute(ILatexConstants.LATEX_INCLUDE_COVERAGETABLE, ILatexConstants.LATEX_INCLUDE_COVERAGETABLE_DEFAULT));
 
 			buttonMarkCoverage = new Button(mainDocumentGroup, SWT.CHECK);
 			buttonMarkCoverage.setText("Mark coverage");
-			buttonMarkCoverage.setSelection(opt.getAttribute(ILatexConstants.LATEX_MARK_COVERAGE, true));
+			buttonMarkCoverage.setSelection(opt.getAttribute(ILatexConstants.LATEX_MARK_COVERAGE, ILatexConstants.LATEX_MARK_COVERAGE_DEFAULT));
 
 			buttonModelOnly = new Button(mainDocumentGroup, SWT.CHECK);
 			buttonModelOnly.setText("Model only");

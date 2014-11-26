@@ -63,7 +63,7 @@ public class LatexUtils extends LatexUtilsBase
 	public void makeLatex(final IVdmProject selectedProject,
 			final Dialect dialect)
 	{
-		final Job expandJob = new Job("Builder coverage tex files.")
+		final Job expandJob = new Job("Generating tex files.")
 		{
 
 			@Override
@@ -114,6 +114,8 @@ public class LatexUtils extends LatexUtilsBase
 					{
 
 						boolean modelOnly = modelOnly(vdmProject);
+						boolean includeCoverageTable = insertCoverageTable(vdmProject);
+						boolean markCoverage = markCoverage(vdmProject);
 						LexLocation.resetLocations();
 						if (selectedProject.getDialect() == Dialect.VDM_PP
 								|| selectedProject.getDialect() == Dialect.VDM_RT)
@@ -125,7 +127,7 @@ public class LatexUtils extends LatexUtilsBase
 
 							for (SClassDefinition classDefinition : classes)
 							{
-								createCoverage(latexBuilder, outputFolderForGeneratedModelFiles, outputFiles, classDefinition.getLocation().getFile(), modelOnly);
+								createCoverage(latexBuilder, outputFolderForGeneratedModelFiles, outputFiles, classDefinition.getLocation().getFile(), modelOnly,markCoverage,includeCoverageTable);
 
 							}
 						} else if (selectedProject.getDialect() == Dialect.VDM_SL)
@@ -138,7 +140,7 @@ public class LatexUtils extends LatexUtilsBase
 							{
 								for (File moduleFile : classDefinition.getFiles())
 								{
-									createCoverage(latexBuilder, outputFolderForGeneratedModelFiles, outputFiles, moduleFile, modelOnly);
+									createCoverage(latexBuilder, outputFolderForGeneratedModelFiles, outputFiles, moduleFile, modelOnly,markCoverage,includeCoverageTable);
 								}
 							}
 						}
@@ -238,7 +240,7 @@ public class LatexUtils extends LatexUtilsBase
 
 			private void createCoverage(PdfBuilder latexBuilder,
 					File outputFolderForGeneratedModelFiles,
-					List<File> outputFiles, File moduleFile, boolean modelOnly)
+					List<File> outputFiles, File moduleFile, boolean modelOnly,boolean markCoverage, boolean includeCoverageTable)
 					throws IOException, FileNotFoundException, CoreException
 			{
 				if (isStandardLibarary(moduleFile))
@@ -258,20 +260,22 @@ public class LatexUtils extends LatexUtilsBase
 					texFile.delete();
 				}
 
-				for (int i = 0; i < outputFiles.size(); i++)
+				if (markCoverage || includeCoverageTable)
 				{
-					File file = outputFiles.get(i);
-					// System.out.println("Compare with file: "
-					// + file.getName());
-					if (file.getName().toLowerCase().endsWith(".covtbl")
-							&& moduleFile.getName().equals(getFileName(file)))
+					for (int i = 0; i < outputFiles.size(); i++)
 					{
-						// System.out.println("Match");
-						LexLocation.mergeHits(moduleFile, file);
-						outputFiles.remove(i);
+						File file = outputFiles.get(i);
+						// System.out.println("Compare with file: "
+						// + file.getName());
+						if (file.getName().toLowerCase().endsWith(".covtbl")
+								&& moduleFile.getName().equals(getFileName(file)))
+						{
+							// System.out.println("Match");
+							LexLocation.mergeHits(moduleFile, file);
+							outputFiles.remove(i);
 
+						}
 					}
-
 				}
 
 				IFile selectedModelFile = selectedProject.findIFile(moduleFile);
