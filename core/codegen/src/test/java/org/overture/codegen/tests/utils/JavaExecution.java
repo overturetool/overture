@@ -45,47 +45,15 @@ public class JavaExecution
 
 		try
 		{
-			if (JavaToolsUtils.isWindows())
-			{
-				pb = new ProcessBuilder(java.getAbsolutePath(), "-cp", cpArgs, mainClassName.trim());
+				String javaArg = JavaToolsUtils.isWindows() ? java.getAbsolutePath() : "java";
+				pb = new ProcessBuilder(javaArg, "-cp", cpArgs, mainClassName.trim());
 				pb.directory(cp);
 				pb.redirectErrorStream(true);
-				
-				final StringBuffer sb = new StringBuffer();
 				
 				try
 				{
 					p = pb.start();
-					final InputStream is = p.getInputStream();
-					// the background thread watches the output from the process
-					Thread t = new Thread(new Runnable() {
-					    public void run() {
-					        try {
-					            BufferedReader reader =
-					                new BufferedReader(new InputStreamReader(is));
-					            String line;
-					            while ((line = reader.readLine()) != null) {
-					            	sb.append(line + "\n");
-					            }
-					        } catch (IOException e) {
-					            e.printStackTrace();
-					        } finally {
-								try
-								{
-									is.close();
-								} catch (IOException e)
-								{
-									e.printStackTrace();
-								}
-					        }
-					    }
-					});
-					
-					t.start();
-					p.waitFor();
-					t.join();
-					
-					return sb.toString();
+					return getProcessOutput(p);
 					
 				} catch (InterruptedException e)
 				{
@@ -99,56 +67,49 @@ public class JavaExecution
 						p.destroy();
 					}
 				}
-			} else
-			{
-				String arg = "java" + " -cp " + cpArgs + " " + mainClassName;
-
-				p = Runtime.getRuntime().exec(arg.replace('\"', ' '), null, cp);
-				InputStream stderr = p.getErrorStream();
-
-				InputStreamReader isr = new InputStreamReader(stderr);
-
-				BufferedReader br = new BufferedReader(isr);
-				String debugLine = null;
-				String line = "";
-				while ((debugLine = br.readLine()) != null)
-				{
-					line += debugLine + "\n";
-				}
-				int exitVal = -1;
-				try
-				{
-					exitVal = p.waitFor();
-
-					if (exitVal != 0)
-					{
-						System.out.println(line);
-					}
-
-				} catch (InterruptedException e)
-				{
-					e.printStackTrace();
-				}
-			}
-
-			StringBuilder out = new StringBuilder();
-			String line;
-			BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
-
-			while ((line = input.readLine()) != null)
-			{
-				out.append(line + "\n");
-			}
-
-			input.close();
-
-			return out.toString();
-
 		} catch (IOException e)
 		{
 			e.printStackTrace();
 			return null;
 		}
+		
+	}
+
+	private static String getProcessOutput(Process p)
+			throws InterruptedException
+	{
+		final StringBuffer sb = new StringBuffer();
+		final InputStream is = p.getInputStream();
+		is.mark(0);
+		// the background thread watches the output from the process
+		Thread t = new Thread(new Runnable() {
+		    public void run() {
+		        try {
+		            BufferedReader reader =
+		                new BufferedReader(new InputStreamReader(is));
+		            String line;
+		            while ((line = reader.readLine()) != null) {
+		            	sb.append(line + "\n");
+		            }
+		        } catch (IOException e) {
+		            e.printStackTrace();
+		        } finally {
+					try
+					{
+						is.close();
+					} catch (IOException e)
+					{
+						e.printStackTrace();
+					}
+		        }
+		    }
+		});
+		
+		t.start();
+		p.waitFor();
+		t.join();
+		
+		return sb.toString();
 	}
 
 	private static String consCpArg(File file)
