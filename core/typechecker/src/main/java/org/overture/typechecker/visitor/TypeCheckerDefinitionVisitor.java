@@ -1257,7 +1257,9 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		int perfound = 0;
 		Boolean isStatic = null;
 
-		for (PDefinition def : classdef.getDefinitions())
+		List<PDefinition> definitions = question.assistantFactory.createPDefinitionAssistant().getDefinitions(classdef);
+		
+		for (PDefinition def : definitions)
 		{
 			if (def.getName() != null
 					&& def.getName().matches(node.getOpname()))
