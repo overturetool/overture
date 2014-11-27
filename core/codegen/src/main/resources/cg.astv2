@@ -157,6 +157,9 @@ CG {-> package='org.overture.codegen.cgast'
 		[clientInst]:CG.#decl.clientInstance*
 		[RMIreg]:CG.#decl.RMIregistry
 		[DeployedObjCounter]: java_Integer
+	|	{RMI_Server}
+		[name]:java_String
+		[portNumber]:java_Integer
     |	{empty}
 	;
 

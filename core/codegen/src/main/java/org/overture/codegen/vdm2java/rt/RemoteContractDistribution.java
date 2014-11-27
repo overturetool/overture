@@ -12,6 +12,8 @@ import java.util.Set;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.codegen.cgast.analysis.AnalysisException;
+import org.overture.codegen.cgast.declarations.ARMIServerDeclCG;
+import org.overture.codegen.cgast.declarations.ARMIregistryDeclCG;
 import org.overture.codegen.cgast.declarations.ARemoteContractDeclCG;
 import org.overture.codegen.cgast.declarations.ARemoteContractImplDeclCG;
 import org.overture.codegen.ir.IRInfo;
@@ -42,6 +44,40 @@ public class RemoteContractDistribution {
 		JavaFormat javaFormat = new JavaFormat(new TempVarPrefixes(), info);
 		MergeVisitor printer = javaFormat.getMergeVisitor();
 
+		//Create the RMI server
+		
+		ARMIServerDeclCG rmiServer = new ARMIServerDeclCG();
+
+		int PortNumber = 1099;
+		String RMI_ServerName = "RMI_Server";
+		
+		rmiServer.setPortNumber(PortNumber);
+		rmiServer.setName(RMI_ServerName);
+		
+		StringWriter writer_s = new StringWriter();
+		rmiServer.apply(printer, writer_s);
+
+		File theDir_s = new File("/Users/Miran/Documents/files/" + RMI_ServerName);
+
+		theDir_s.mkdir();
+		
+		File file_s = new File("/Users/Miran/Documents/files/" + RMI_ServerName + "/" + RMI_ServerName + ".java");
+		BufferedWriter output_s = new BufferedWriter(new FileWriter(file_s));
+		output_s.write(JavaCodeGenUtil.formatJavaCode(writer_s
+				.toString()));
+		output_s.close();
+		
+		for (ARemoteContractDeclCG contract : remoteContracts) {
+				StringWriter writer_i = new StringWriter();
+				contract.apply(printer, writer_i);
+
+				File file_i = new File("/Users/Miran/Documents/files/" + RMI_ServerName + "/" + contract.getName() + ".java");
+				BufferedWriter output_i = new BufferedWriter(new FileWriter(file_i));
+				output_i.write(JavaCodeGenUtil.formatJavaCode(writer_i
+						.toString()));
+				output_i.close();
+		}
+		
 		//System.out.println("**********************Remote contracts**********************");
 
 		// Create a directory for every cpu
@@ -51,8 +87,8 @@ public class RemoteContractDistribution {
 
 			theDir.mkdir();
 		}
-
-
+		
+		
 		for(String cpu : cpuToDeployedClasses.keySet()){
 
 
