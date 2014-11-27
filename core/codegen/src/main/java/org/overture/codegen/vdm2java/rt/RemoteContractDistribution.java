@@ -21,9 +21,7 @@ import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaFormat;
 
 public class RemoteContractDistribution {
-
-
-
+	
 	private Map<String, Set<String>> cpuToConnectedCPUs;
 	private Set<ARemoteContractDeclCG> remoteContracts;
 	private Map<String, Set<AClassClassDefinition>> cpuToDeployedClasses;

@@ -131,7 +131,8 @@ public class JavaCodeGenDistributionMain {
 			//******Transform the ir_classes*********/////
 			
 			//FIXME: Look the name up the right place
-			String systemClassName = "Dist";
+//			String systemClassName = "Dist";
+			String systemClassName = mapping.getSystemName();
 			RemoteTypeTransformation remoteTypeTrans = new RemoteTypeTransformation(systemClassName, info);
 			for ( AClassDeclCG irClass : irClasses) {
 				irClass.apply(remoteTypeTrans);

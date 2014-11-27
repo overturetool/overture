@@ -73,4 +73,8 @@ public class DistributionMapping {
 	public int getDeployedObjCounter(){
 		return nodeSys.DeployedObjCounter;
 	}
+	
+	public String getSystemName(){
+		return nodeSys.getSystemName();
+	}
 }

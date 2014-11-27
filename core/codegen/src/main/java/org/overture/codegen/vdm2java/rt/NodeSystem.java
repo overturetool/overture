@@ -19,6 +19,7 @@ import org.overture.ast.definitions.ABusClassDefinition;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.APublicAccess;
+import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.ANewExp;
@@ -33,6 +34,8 @@ import org.overture.ast.types.PType;
 
 // 
 public class NodeSystem extends DepthFirstAnalysisAdaptor {
+	
+	String SystemName = new String();
 	
 	// Maps are initialized to store information from the AST VDM that is needed for this project
 	
@@ -83,6 +86,10 @@ public class NodeSystem extends DepthFirstAnalysisAdaptor {
 
 	}
 
+	public String getSystemName() {
+		return SystemName;
+	}
+	
 	// TODO: Maybe remove these methods, not needed??
 	public void CPUdeployFuncion() {
 
@@ -127,6 +134,10 @@ public class NodeSystem extends DepthFirstAnalysisAdaptor {
 						String key_obj = id.getName().toString();
 						
 						DeployedObjCounter = DeployedObjCounter + 1;
+						
+						ASystemClassDefinition systemDef = var_exp.getAncestor(ASystemClassDefinition.class);
+						
+						SystemName = systemDef.getName().toString();
 						
 						if (cpuToDeployedObjects.containsKey(key_obj))
 							cpuToDeployedObjects.get(key_obj).add(var_exp);
