@@ -50,23 +50,23 @@ public class RemoteContractGenerator {
 
 					if(methodSignature.getIsConstructor()) continue;
 					
-					LinkedList<AFormalParamLocalParamCG> formalParams = (LinkedList<AFormalParamLocalParamCG>) methodSignature.getFormalParams().clone();
-
-					LinkedList<AFormalParamLocalParamCG> formalParams2 = new LinkedList<AFormalParamLocalParamCG>();
-
-					methodSignature.setFormalParams(null);
-
-					for(AFormalParamLocalParamCG formPar : formalParams){
-						STypeCG ty = formPar.getType().clone();
-						if(ty instanceof AClassTypeCG){
-							AClassTypeCG classTy = (AClassTypeCG) ty;
-							String className = classTy.getName().toString();
-							classTy.setName(className + "_i");
-							formPar.setType(classTy);
-						}
-						formalParams2.add(formPar);
-					}
-					methodSignature.setFormalParams(formalParams2);
+//					LinkedList<AFormalParamLocalParamCG> formalParams = (LinkedList<AFormalParamLocalParamCG>) methodSignature.getFormalParams().clone();
+//
+//					LinkedList<AFormalParamLocalParamCG> formalParams2 = new LinkedList<AFormalParamLocalParamCG>();
+//
+//					methodSignature.setFormalParams(null);
+//
+//					for(AFormalParamLocalParamCG formPar : formalParams){
+//						STypeCG ty = formPar.getType().clone();
+//						if(ty instanceof AClassTypeCG){
+//							AClassTypeCG classTy = (AClassTypeCG) ty;
+//							String className = classTy.getName().toString();
+//							classTy.setName(className + "_i");
+//							formPar.setType(classTy);
+//						}
+//						formalParams2.add(formPar);
+//					}
+//					methodSignature.setFormalParams(formalParams2);
 					methodSignature.setIsRemote(true);
 					methodSignature.setAbstract(false);
 					methodSignature.setBody(null);

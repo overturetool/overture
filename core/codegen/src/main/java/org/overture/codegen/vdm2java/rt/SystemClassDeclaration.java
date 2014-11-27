@@ -46,6 +46,7 @@ public class SystemClassDeclaration {
 		}
 
 		systemClass.setName(sysClass.getName().toString());
+		systemClass.setTag("System");
 		
 		System.out.println("**********************System**********************");
 

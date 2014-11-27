@@ -128,6 +128,15 @@ public class JavaCodeGenDistributionMain {
 
 			List<AClassDeclCG> irClasses = Util.getClasses(data.getClasses());
 			
+			//******Transform the ir_classes*********/////
+			
+			//FIXME: Look the name up the right place
+			String systemClassName = "Dist";
+			RemoteTypeTransformation remoteTypeTrans = new RemoteTypeTransformation(systemClassName, info);
+			for ( AClassDeclCG irClass : irClasses) {
+				irClass.apply(remoteTypeTrans);
+			}
+			
 			//**********************************************************************//
 			RemoteContractGenerator contractGenerator = new RemoteContractGenerator(
 					irClasses);

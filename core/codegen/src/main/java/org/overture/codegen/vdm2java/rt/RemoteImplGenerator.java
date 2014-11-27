@@ -41,23 +41,23 @@ public class RemoteImplGenerator {
 				}
 				else if(method.getAccess().equals("public")){ //&& !method.getIsConstructor()){
 					//TODO : Make afunction which transforms the parameters
-					LinkedList<AFormalParamLocalParamCG> formalParams = (LinkedList<AFormalParamLocalParamCG>) method.getFormalParams().clone();
-
-					LinkedList<AFormalParamLocalParamCG> formalParams2 = new LinkedList<AFormalParamLocalParamCG>();
-
-					method.setFormalParams(null);
-
-					for(AFormalParamLocalParamCG formPar : formalParams){
-						STypeCG ty = formPar.getType();
-						if(ty instanceof AClassTypeCG){
-							AClassTypeCG classTy = (AClassTypeCG) ty;
-							String className = classTy.getName().toString();
-							classTy.setName(className + "_i");
-							formPar.setType(classTy);
-						}
-						formalParams2.add(formPar);
-					}
-					method.setFormalParams(formalParams2);
+//					LinkedList<AFormalParamLocalParamCG> formalParams = (LinkedList<AFormalParamLocalParamCG>) method.getFormalParams().clone();
+//
+//					LinkedList<AFormalParamLocalParamCG> formalParams2 = new LinkedList<AFormalParamLocalParamCG>();
+//
+//					method.setFormalParams(null);
+//
+//					for(AFormalParamLocalParamCG formPar : formalParams){
+//						STypeCG ty = formPar.getType();
+//						if(ty instanceof AClassTypeCG){
+//							AClassTypeCG classTy = (AClassTypeCG) ty;
+//							String className = classTy.getName().toString();
+//							classTy.setName(className + "_i");
+//							formPar.setType(classTy);
+//						}
+//						formalParams2.add(formPar);
+//					}
+//					method.setFormalParams(formalParams2);
 					method.setStatic(false);
 					method.setIsRemote(true);
 					publicMethods.add(method);

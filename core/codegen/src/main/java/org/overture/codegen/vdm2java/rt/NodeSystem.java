@@ -1,3 +1,10 @@
+/*************************************************
+ * 
+ * This is a visitor that is used to analyze the
+ * system definition, get the distributed 
+ * architecture from the VDM-RT model 
+ *************************************************/
+
 package org.overture.codegen.vdm2java.rt;
 
 import java.util.HashMap;
@@ -24,25 +31,30 @@ import org.overture.ast.statements.PObjectDesignator;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.PType;
 
-//A class that returnes the number of nodes in an AST
+// 
 public class NodeSystem extends DepthFirstAnalysisAdaptor {
-	// map nat to (set of nat)
+	
+	// Maps are initialized to store information from the AST VDM that is needed for this project
+	
+	// This map is the Distribution Map
 	Map<String, Set<AVariableExp>> cpuToDeployedObjects = new HashMap<String, Set<AVariableExp>>();
-
-	Map<String, LinkedList<PExp>> cpuToConnectedCPUsList = new HashMap<String, LinkedList<PExp>>();
-
+	
+	// This map is the Connection Map
 	Map<String, Set<String>> cpuToConnectedCPUs = new HashMap<String, Set<String>>();
-
+	Map<String, LinkedList<PExp>> cpuToConnectedCPUsList = new HashMap<String, LinkedList<PExp>>();
+		
+	// Map to identify the public operations and functions for each deployed class
+	Map<AClassClassDefinition, Set<AExplicitOperationDefinition>> deployedClassesToPubOp2 = new HashMap<AClassClassDefinition, Set<AExplicitOperationDefinition>>();
 	Map<String, Set<AExplicitOperationDefinition>> deployedObjectsToPubOp = new HashMap<String, Set<AExplicitOperationDefinition>>();
 
-	Map<AClassClassDefinition, Set<AExplicitOperationDefinition>> deployedClassesToPubOp2 = new HashMap<AClassClassDefinition, Set<AExplicitOperationDefinition>>();
-
+	// Map to identify class deployed for each CPU
 	Map<String, Set<AClassClassDefinition>> cpuToDeployedClasses = new HashMap<String, Set<AClassClassDefinition>>();
-
+	
+	// Tracks the number of total objects deployed in the distributed system
 	public int DeployedObjCounter = 0;
 	
+	// Method to print the architecture of the VDM-RT model analysed
 	public void printArch() {
-
 		for (String key : cpuToDeployedObjects.keySet()) {
 			System.out.println("The CPU " + key + " deploys objects "
 					+ cpuToDeployedObjects.get(key) + " and is connected to : "
@@ -53,7 +65,8 @@ public class NodeSystem extends DepthFirstAnalysisAdaptor {
 			System.out.println("The class: " + key.getName()
 					+ " has the following public operations " + deployedClassesToPubOp2.get(key));
 		}
-
+		// TODO: Maybe delete this
+		
 		// for(String key : map6.keySet()){
 		// for(AClassClassDefinition key2 : map6.get(key)){
 		// System.out.println("The CPU " + key + " deploys the class: " +
@@ -70,6 +83,7 @@ public class NodeSystem extends DepthFirstAnalysisAdaptor {
 
 	}
 
+	// TODO: Maybe remove these methods, not needed??
 	public void CPUdeployFuncion() {
 
 	}
