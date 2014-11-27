@@ -62,7 +62,7 @@ public class RemoteContractDistribution {
 
 
 				for (ARemoteContractDeclCG contract : remoteContracts) {
-					if(contract.getName().equals(clas.getName().toString() + "_i")){
+					//if(contract.getName().equals(clas.getName().toString() + "_i")){
 						StringWriter writer = new StringWriter();
 						contract.apply(printer, writer);
 
@@ -72,18 +72,18 @@ public class RemoteContractDistribution {
 								.toString()));
 						output.close();
 						
-						for(String conectedCpu : cpuToConnectedCPUs.get(cpu)){
-							File file2 = new File("/Users/Miran/Documents/files/" + conectedCpu + "/" + contract.getName() + ".java");
-							BufferedWriter output2 = new BufferedWriter(new FileWriter(file2));
-							output2.write(JavaCodeGenUtil.formatJavaCode(writer
-									.toString()));
-							output2.close();
-						}
-					}
+//						for(String conectedCpu : cpuToConnectedCPUs.get(cpu)){
+//							File file2 = new File("/Users/Miran/Documents/files/" + conectedCpu + "/" + contract.getName() + ".java");
+//							BufferedWriter output2 = new BufferedWriter(new FileWriter(file2));
+//							output2.write(JavaCodeGenUtil.formatJavaCode(writer
+//									.toString()));
+//							output2.close();
+//						}
+					//}
 				}
 
 				for (ARemoteContractImplDeclCG impl : remoteImpls) {
-					if(impl.getName().equals(clas.getName().toString())){
+					//if(impl.getName().equals(clas.getName().toString())){
 						StringWriter writer = new StringWriter();
 						impl.apply(printer, writer);
 
@@ -92,7 +92,7 @@ public class RemoteContractDistribution {
 						output.write(JavaCodeGenUtil.formatJavaCode(writer
 								.toString()));
 						output.close();
-					}
+					//}
 				}
 			}
 		}
