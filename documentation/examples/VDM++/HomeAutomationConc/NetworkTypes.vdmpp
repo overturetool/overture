@@ -1,8 +1,0 @@
-class NetworkTypes
-
-types   
-
-public nodeType   = <TEMPSENSOR> | <HUMIDSENSOR> | <WINDOW> | <THERMOSTAT> | <HOSTCONTROL> | <NONE>;
-public correction = <INC> | <DEC> | <OPEN> | <CLOSE> | <NONE>;
-
-end NetworkTypes
