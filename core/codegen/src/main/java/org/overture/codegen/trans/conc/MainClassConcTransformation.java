@@ -48,14 +48,15 @@ import org.overture.codegen.vdm2java.JavaFormat;
 public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 {
 	private IRInfo info;
-	//private List<AClassDeclCG> classes;
+	private List<AClassDeclCG> classes;
 
 	public MainClassConcTransformation(IRInfo info, List<AClassDeclCG> classes)
 	{
 		this.info = info;
-		//this.classes = classes;
+		this.classes = classes;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void caseAClassDeclCG(AClassDeclCG node) throws AnalysisException
 	{
@@ -188,11 +189,23 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 			//fixing the overloaded operation problem
 			@SuppressWarnings("unchecked")
 			LinkedList<AMethodDeclCG> classuniqueMethods = (LinkedList<AMethodDeclCG>) node.getMethods().clone();
-		
+			//LinkedList<APersyncDeclCG> inheritedmethodper = new LinkedList<APersyncDeclCG>();
 			classuniqueMethods.clear();
-			for(AMethodDeclCG method : node.getMethods())
+			
+			
+			//List<AMethodDeclCG> allmethods = info.getDeclAssistant().getAllMethods(node, classes);
+			LinkedList<AMethodDeclCG>  allMethods;
+			if (node.getSuperName() != "VDMThread"){
+				allMethods = (LinkedList<AMethodDeclCG>) info.getDeclAssistant().getAllMethods(node, classes);
+			}	
+			else
 			{
 				
+				allMethods = (LinkedList<AMethodDeclCG>) node.getMethods().clone();
+			}
+			//for(AMethodDeclCG method : node.getMethods())
+			for(AMethodDeclCG method : allMethods )
+			{
 				if(!classuniqueMethods.contains(method))
 				{
 					classuniqueMethods.add(method);
@@ -227,6 +240,10 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 							if(per.getOpname().equals(classuniqueMethods.get(i).getName())){
 								ret.setExp(per.getPred());
 							}
+//							else
+//							{
+//								inheritedmethodper.add(per);
+//							}
 						}
 						bodyif.setIfExp(firstBranch);
 						bodyif.setThenStm(ret);
@@ -243,6 +260,13 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 						if(per.getOpname().equals(classuniqueMethods.get(i).getName())){						
 								ret.setExp(per.getPred());
 						}
+//						else
+//						{
+//							if(!inheritedmethodper.contains(per))
+//							{
+//								inheritedmethodper.add(per);
+//							}
+//						}
 					}					
 					AElseIfStmCG newBranch = new AElseIfStmCG();
 																				
@@ -260,14 +284,20 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 					bodyif.getElseIf().add(newBranch);
 				}
 			}
-			AReturnStmCG ret = new AReturnStmCG();
+//			if(inheritedmethodper.size() != 0)
+//			{
+//				bodyif.setElseStm(isInheritedmethod(node,inheritedmethodper));
+//			}
+//			else{
+				AReturnStmCG ret = new AReturnStmCG();
+
+				ABoolLiteralExpCG defaultPer = new ABoolLiteralExpCG();
+				defaultPer.setValue(true);
+
+				ret.setExp(defaultPer);
+				bodyif.setElseStm(ret.clone());
+//			}
 			
-			ABoolLiteralExpCG defaultPer = new ABoolLiteralExpCG();
-			defaultPer.setValue(true);
-			
-			ret.setExp(defaultPer);
-			
-			bodyif.setElseStm(ret);
 			evaluatePPmethod.setBody(bodyif);
 		}
 		
@@ -278,4 +308,59 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 	{
 		return method.getTag() instanceof IRGeneratedTag;
 	}
+	
+//	private AIfStmCG isInheritedmethod(AClassDeclCG node, LinkedList<APersyncDeclCG> permpreds)
+//	{	
+//		AIdentifierVarExpCG testVar = new AIdentifierVarExpCG();
+//		testVar.setOriginal("fnr");
+//		testVar.setType(new AIntNumericBasicTypeCG());
+//		AIfStmCG inheritedbranch = new AIfStmCG();
+//		//AClassDeclCG parentclass = 
+//		for(APersyncDeclCG per : permpreds){
+//			
+//			for(AClassDeclCG c:classes)
+//			{
+//				if(node.getSuperName().equals(c.getName()))
+//				{
+//					for(AMethodDeclCG supermethods : c.getMethods())
+//					{
+//						if(per.getOpname().equals(supermethods.getName()))
+//						{
+//														
+//							AEqualsBinaryExpCG branch = new AEqualsBinaryExpCG();
+//							branch.setLeft(testVar);
+//							
+//							AFieldExpCG sentinelfield = new AFieldExpCG();
+//							sentinelfield.setMemberName(supermethods.getName());
+//							
+//							AIdentifierVarExpCG varSentinel = new AIdentifierVarExpCG();
+//							varSentinel.setOriginal(c.getName() + "_sentinel");
+//							
+//							sentinelfield.setObject(varSentinel);
+//							
+//							branch.setRight(sentinelfield);
+//							
+//							inheritedbranch.setIfExp(branch);
+//							AReturnStmCG inheritret = new AReturnStmCG();
+//							inheritret.setExp(per.getPred());
+//							inheritedbranch.setThenStm(inheritret);
+//							AReturnStmCG defaultret = new AReturnStmCG();
+//							ABoolLiteralExpCG defret = new ABoolLiteralExpCG();
+//							defret.setValue(true);
+//							defaultret.setExp(defret);
+//							inheritedbranch.setElseStm(defaultret);
+//						}
+//					}
+//				}
+//				else
+//				{
+//					if(c.getSuperName() != null){
+//					 return isInheritedmethod(c, permpreds);
+//					}
+//				}
+//
+//			}
+//		}
+//		return inheritedbranch;
+//	}
 }

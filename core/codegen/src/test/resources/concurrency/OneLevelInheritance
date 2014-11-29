@@ -1,0 +1,20 @@
+class A
+instance variables
+ public predA : nat := 0
+operations
+ public opA : () ==> ()
+ opA () == skip;
+
+sync
+ per opA => predA = 0;
+end A
+
+class B is subclass of A
+instance variables
+ public predB : nat := 1;
+operations
+ public  opB : () ==> ()
+ opB () == skip;
+sync
+ per opA => predB = 1; 
+end B

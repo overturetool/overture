@@ -18,6 +18,7 @@ import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.ir.IRInfo;
+import org.overture.codegen.runtime.VDMThread;
 import org.overture.codegen.vdm2java.JavaFormat;
 
 
@@ -32,6 +33,7 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 		this.classes = classes;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void caseAClassDeclCG(AClassDeclCG node) throws AnalysisException
 	{
@@ -48,8 +50,17 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 		AClassDeclCG innerClass = new AClassDeclCG();
 		
 		String classname = node.getName();
-		@SuppressWarnings("unchecked")
-		LinkedList<AMethodDeclCG> innerClassMethods = (LinkedList<AMethodDeclCG>) node.getMethods().clone();	
+		LinkedList<AMethodDeclCG>  allMethods;
+		if (node.getSuperName() != "VDMThread"){
+			allMethods = (LinkedList<AMethodDeclCG>) info.getDeclAssistant().getAllMethods(node, classes);
+		}	
+		else
+		{
+			
+			allMethods = (LinkedList<AMethodDeclCG>) node.getMethods().clone();
+		}
+		
+		LinkedList<AMethodDeclCG> innerClassMethods = allMethods;//(LinkedList<AMethodDeclCG>) node.getMethods().clone();	
 
 		innerClass.setName(classname+"_sentinel");
 		
