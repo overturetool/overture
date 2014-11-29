@@ -206,6 +206,10 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 
 	private AClassDeclCG getThreadClass(String superName, AClassDeclCG classCg)
 	{
+//		if(classCg.getSuperName() == "VDMThread")
+//		{
+//		    return classCg;
+//		}
 		if(superName == null)
 		{
 			return classCg;
