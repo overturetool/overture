@@ -3,7 +3,7 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
-public class A implements EvaluatePP {
+public class A extends VDMThread implements EvaluatePP {
     public volatile Number predA = 0L;
     public volatile Sentinel sentinel;
 
@@ -98,6 +98,11 @@ public class B extends A implements EvaluatePP {
         }
     }
 
+    public void run() {
+        opB();
+        super.opA();
+    }
+
     public class B_sentinel extends A_sentinel {
         public static final int opB = 0;
         public static final int B = 1;
@@ -131,6 +136,7 @@ public class Entry implements EvaluatePP {
     public static Object Run() {
         A i1 = new A();
         B i2 = new B();
+        i2.start();
 
         return i1.predA;
     }

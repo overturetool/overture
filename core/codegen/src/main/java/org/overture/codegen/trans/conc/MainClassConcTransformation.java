@@ -192,18 +192,16 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 			//LinkedList<APersyncDeclCG> inheritedmethodper = new LinkedList<APersyncDeclCG>();
 			classuniqueMethods.clear();
 			
-			
-			//List<AMethodDeclCG> allmethods = info.getDeclAssistant().getAllMethods(node, classes);
 			LinkedList<AMethodDeclCG>  allMethods;
-			if (node.getSuperName() != "VDMThread"){
+			
+			if (node.getSuperName() != null){
 				allMethods = (LinkedList<AMethodDeclCG>) info.getDeclAssistant().getAllMethods(node, classes);
-			}	
+			}
 			else
 			{
-				
 				allMethods = (LinkedList<AMethodDeclCG>) node.getMethods().clone();
 			}
-			//for(AMethodDeclCG method : node.getMethods())
+				
 			for(AMethodDeclCG method : allMethods )
 			{
 				if(!classuniqueMethods.contains(method))
@@ -302,6 +300,11 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 		}
 		
 		node.getMethods().add(evaluatePPmethod);
+		
+		if (node.getThread() != null)
+		{
+			makeThread(node);
+		}
 	}
 
 	private boolean isIRGenerated(AMethodDeclCG method)
@@ -309,58 +312,32 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 		return method.getTag() instanceof IRGeneratedTag;
 	}
 	
-//	private AIfStmCG isInheritedmethod(AClassDeclCG node, LinkedList<APersyncDeclCG> permpreds)
-//	{	
-//		AIdentifierVarExpCG testVar = new AIdentifierVarExpCG();
-//		testVar.setOriginal("fnr");
-//		testVar.setType(new AIntNumericBasicTypeCG());
-//		AIfStmCG inheritedbranch = new AIfStmCG();
-//		//AClassDeclCG parentclass = 
-//		for(APersyncDeclCG per : permpreds){
-//			
-//			for(AClassDeclCG c:classes)
-//			{
-//				if(node.getSuperName().equals(c.getName()))
-//				{
-//					for(AMethodDeclCG supermethods : c.getMethods())
-//					{
-//						if(per.getOpname().equals(supermethods.getName()))
-//						{
-//														
-//							AEqualsBinaryExpCG branch = new AEqualsBinaryExpCG();
-//							branch.setLeft(testVar);
-//							
-//							AFieldExpCG sentinelfield = new AFieldExpCG();
-//							sentinelfield.setMemberName(supermethods.getName());
-//							
-//							AIdentifierVarExpCG varSentinel = new AIdentifierVarExpCG();
-//							varSentinel.setOriginal(c.getName() + "_sentinel");
-//							
-//							sentinelfield.setObject(varSentinel);
-//							
-//							branch.setRight(sentinelfield);
-//							
-//							inheritedbranch.setIfExp(branch);
-//							AReturnStmCG inheritret = new AReturnStmCG();
-//							inheritret.setExp(per.getPred());
-//							inheritedbranch.setThenStm(inheritret);
-//							AReturnStmCG defaultret = new AReturnStmCG();
-//							ABoolLiteralExpCG defret = new ABoolLiteralExpCG();
-//							defret.setValue(true);
-//							defaultret.setExp(defret);
-//							inheritedbranch.setElseStm(defaultret);
-//						}
-//					}
-//				}
-//				else
-//				{
-//					if(c.getSuperName() != null){
-//					 return isInheritedmethod(c, permpreds);
-//					}
-//				}
-//
-//			}
-//		}
-//		return inheritedbranch;
-//	}
+	private void makeThread(AClassDeclCG node)
+	{
+		AClassDeclCG threadClass = getThreadClass(node.getSuperName(), node);
+		threadClass.setSuperName("VDMThread");
+	}
+
+	private AClassDeclCG getThreadClass(String superName, AClassDeclCG classCg)
+	{
+		if(superName == null || superName.equals("VDMThread"))
+		{
+			return classCg;
+		}
+		else
+		{
+			AClassDeclCG superClass = null;
+
+			for(AClassDeclCG c : classes)
+			{
+				if(c.getName().equals(superName))
+				{
+					superClass = c;
+					break;
+				}
+			}
+
+			return getThreadClass(superClass.getSuperName(), superClass);
+		}
+	}
 }

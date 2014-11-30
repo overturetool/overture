@@ -4,7 +4,7 @@ instance variables
 operations
  public opA : () ==> ()
  opA () == skip;
- 
+
 sync
  per opA => predA = 0;
 end A
@@ -15,7 +15,11 @@ instance variables
 operations
  public  opB : () ==> ()
  opB () == predA := 1;
-
+thread
+(
+ opB();
+ opA();
+)
 sync
  per opA => predB = 1; 
 end B
@@ -29,8 +33,7 @@ let i1 = new A(),
     i2 = new B()
 in 
 (
-  --start(i1);
-  --start(i2);
+  start(i2);
   
   return i1.predA;
 );

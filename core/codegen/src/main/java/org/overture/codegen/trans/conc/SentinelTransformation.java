@@ -41,23 +41,20 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 			return;
 		}
 
-		if (node.getThread() != null)
-		{
-			makeThread(node);
-		}
 
 		AClassDeclCG innerClass = new AClassDeclCG();
 
 		String classname = node.getName();
 		LinkedList<AMethodDeclCG> allMethods;
-		if (node.getSuperName() != "VDMThread"){
-			allMethods = (LinkedList<AMethodDeclCG>) info.getDeclAssistant().getAllMethods(node, classes);
+
+		if (node.getSuperName() != null){
+				allMethods = (LinkedList<AMethodDeclCG>) info.getDeclAssistant().getAllMethods(node, classes);
 		}
 		else
 		{
-
 			allMethods = (LinkedList<AMethodDeclCG>) node.getMethods().clone();
 		}
+		
 
 		LinkedList<AMethodDeclCG> innerClassMethods = allMethods;//(LinkedList<AMethodDeclCG>) node.getMethods().clone();
 
@@ -196,38 +193,5 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 
 		node.getInnerClasses().add(innerClass);
 
-	}
-
-	private void makeThread(AClassDeclCG node)
-	{
-		AClassDeclCG threadClass = getThreadClass(node.getSuperName(), node);
-		threadClass.setSuperName("VDMThread");
-	}
-
-	private AClassDeclCG getThreadClass(String superName, AClassDeclCG classCg)
-	{
-//		if(classCg.getSuperName() == "VDMThread")
-//		{
-//		    return classCg;
-//		}
-		if(superName == null)
-		{
-			return classCg;
-		}
-		else
-		{
-			AClassDeclCG superClass = null;
-
-			for(AClassDeclCG c : classes)
-			{
-				if(c.getName().equals(superName))
-				{
-					superClass = c;
-					break;
-				}
-			}
-
-			return getThreadClass(superClass.getName(), superClass);
-		}
 	}
 }
