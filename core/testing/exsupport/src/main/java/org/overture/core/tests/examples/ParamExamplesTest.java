@@ -24,9 +24,7 @@ package org.overture.core.tests.examples;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Collection;
 import java.util.List;
-import java.util.Vector;
 
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
@@ -42,59 +40,55 @@ import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
 
 /**
- * Test on the Overture examples. The behavior of class is very similar to that of {@link ParamStandardTest}. The only
- * difference is that the test inputs are not user-configurable. They are provided directly by this class and consist of
- * the standard Overture examples.<br>
+ * Test on the Overture examples. The behavior of class is very similar to that
+ * of {@link ParamStandardTest}. The only difference is that the test inputs are
+ * not user-configurable. They are provided directly by this class and consist
+ * of the standard Overture examples.<br>
  * <br>
- * It is recommended that all plug-ins implement a version of this test to ensure that they work on the provided
- * examples.
+ * It is recommended that all analysis modules implement a version of this test
+ * to ensure that they work on the provided examples.
  * 
  * @author ldc
  * @param <R>
  */
 @RunWith(JUnitParamsRunner.class)
-public abstract class ParamExamplesTest<R> extends AbsResultTest<R>
-{
+public abstract class ParamExamplesTest<R> extends AbsResultTest<R> {
 	List<INode> model;
 
 	private final static String RESULTS_EXAMPLES = "src/test/resources/examples/";
 
-
 	/**
-	 * Provide test data. Provides a list of of arrays to initialize the test constructor. Each array initializes a test
-	 * for a single Overture example. The arrays consist of a test name (derived from the example name), the AST for
-	 * that example and a path to the result file. By convention, results are stored under the
-	 * <code>src/test/resources/examples</code> folder of each module using this test.
+	 * Provide test data. Provides an array of {@link ExampleSourceData}, each
+	 * holding data (including sources) of an Overture example.
 	 * 
-	 * @return a collection of model ASTs and result paths in the form of {modelname ,modelast, resultpath} arrays
+	 * Each entry initializes a test for a single Overture example. Test results
+	 * are derived from the names of the examples and ,by convention, are stored
+	 * under the <code>src/test/resources/examples</code> folder of each module
+	 * using this test.
+	 * 
+	 * @return a collection of {@link ExampleSourceData}
 	 * @throws ParserException
 	 * @throws LexException
 	 * @throws IOException
-	 * @throws URISyntaxException 
+	 * @throws URISyntaxException
 	 */
-	public Collection<Object[]> testData() throws ParserException,
-			LexException, IOException, URISyntaxException
-	{
-		Collection<ExampleAstData> examples = ExamplesUtility.getExamplesAsts(getRelativeExamplesPath());
-		Collection<Object[]> r = new Vector<Object[]>();
-
-		for (ExampleAstData e : examples)
-		{
-			r.add(new Object[] {
-					e.getExampleName(),
-					e.getModel(),
-					RESULTS_EXAMPLES + e.getExampleName()
-							+ PathsProvider.RESULT_EXTENSION });
-		}
-
-		return r;
+	public Object[] testData() throws ParserException, LexException,
+			IOException, URISyntaxException {
+		return ExamplesUtility.getExamplesAsts(getRelativeExamplesPath())
+				.toArray();
 	}
 
 	/**
-	 * Execute this test. Takes the model AST and applies whatever analysis is implemented in
-	 * {@link #processModel(List)}. Afterwards, results are compared with {@link #compareResults(Object, Object)}. <br>
+	 * Execute this test. Takes the model sources, parses, type checks them then
+	 * takes the AST and applies whatever analysis is implemented in
+	 * {@link #processModel(List)}. Afterwards, results are compared with
+	 * {@link #compareResults(Object, Object)}. <br>
 	 * <br>
-	 * If the test is running in update mode, testUpdate(Object) is executed instead of the comparison.
+	 * If the test is running in update mode, testUpdate(Object) is executed
+	 * instead of the comparison.
+	 * 
+	 * @param exSource
+	 *            holding the example data. Provided by {@link #testData()}
 	 * 
 	 * @throws FileNotFoundException
 	 * @throws IOException
@@ -103,27 +97,26 @@ public abstract class ParamExamplesTest<R> extends AbsResultTest<R>
 	 */
 	@Test
 	@Parameters(method = "testData")
-	public void testCase(String name, List<INode> model, String result) throws FileNotFoundException, IOException,
-			ParserException, LexException
-	{
-		
-		this.testName = name;
-		this.model = model;
-		this.resultPath = result;
+	public void testCase(ExampleSourceData exSource)
+			throws FileNotFoundException, IOException, ParserException,
+			LexException {
+
+		ExampleAstData exData = ExamplesUtility.parseTcExample(exSource);
+
+		this.testName = exData.getExampleName();
+		this.model = exData.getModel();
+		this.resultPath = RESULTS_EXAMPLES + exData.getExampleName()
+				+ PathsProvider.RESULT_EXTENSION;
 		this.updateResult = updateCheck();
 
 		R actual = processModel(model);
-		if (updateResult)
-		{
+		if (updateResult) {
 			testUpdate(actual);
-		} else
-		{
+		} else {
 			R expected = null;
-			try
-			{
+			try {
 				expected = deSerializeResult(resultPath);
-			} catch (FileNotFoundException e)
-			{
+			} catch (FileNotFoundException e) {
 				Assert.fail("Test " + testName
 						+ " failed. No result file found. Use \"-D"
 						+ getUpdatePropertyString() + "." + testName
@@ -133,29 +126,32 @@ public abstract class ParamExamplesTest<R> extends AbsResultTest<R>
 			this.compareResults(actual, expected);
 		}
 	}
-	
-	
 
 	/**
-	 * Analyse a model. This method is called during test execution to produce the actual result. It must, of course, be
-	 * overridden to perform whatever analysis the functionality under test performs.<br>
+	 * Analyse a model. This method is called during test execution to produce
+	 * the actual result. It must, of course, be overridden to perform whatever
+	 * analysis the functionality under test performs.<br>
 	 * <br>
-	 * The output of this method must be of type <code>R</code>, the result type this test runs on. You will will likely
-	 * need to have a conversion method between the output of your analysis and <code>R</code>.
+	 * The output of this method must be of type <code>R</code>, the result type
+	 * this test runs on. You will will likely need to have a conversion method
+	 * between the output of your analysis and <code>R</code>.
 	 * 
 	 * @param model
 	 *            the model to process
 	 * @return the output of the analysis
 	 */
 	public abstract R processModel(List<INode> model);
-	
+
 	/**
 	 * Get the path to the examples. Not all modules that use the test framework
-	 * are at the same nesting level from <code>core</code> so you must provide 
-	 * the path via this method. <br><br>
-	 * For reference the examples are in <code>[repository root]/externals/examples/target/code>
+	 * are at the same nesting level from <code>core</code> so you must provide
+	 * the path via this method. <br>
+	 * <br>
+	 * For reference the examples are in
+	 * <code>[repository root]/externals/examples/target/code>
 	 * 
-	 * @return the path to the Overture examples, relative to the current project.
+	 * @return the path to the Overture examples, relative to the current
+	 *         project.
 	 */
 	protected abstract String getRelativeExamplesPath();
 
