@@ -121,8 +121,9 @@ public class CPUdeploymentGenerator {
 
 				cpuDeployment.getRemoteInst().add(inst);
 
+				cpuDeployment.setCpuNameString("\"" + cpuDep + "\"");
 				// For the local variables inside system class
-				
+				//TODO : get number of CPUS + generate SynchToken for each CPU folder
 				AClassTypeCG classType = new AClassTypeCG();
 				classType.setName(inst_var.getType().toString());
 				sysClass = inst_var.getAncestor(ASystemClassDefinition.class);

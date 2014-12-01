@@ -153,13 +153,17 @@ CG {-> package='org.overture.codegen.cgast'
 		[funcName]:java_String
 	|	{cpuDeployment}
 		[cpuName]:java_String
+		[cpuNameString]:java_String
 		[remoteInst]:CG.#decl.remoteInstance*
 		[clientInst]:CG.#decl.clientInstance*
 		[RMIreg]:CG.#decl.RMIregistry
 		[DeployedObjCounter]: java_Integer
+		[NumberofCPUs]: java_Integer
 	|	{RMI_Server}
 		[name]:java_String
 		[portNumber]:java_Integer
+	|	{SynchToken}
+	|	{SynchToken_interface}
     |	{empty}
 	;
 

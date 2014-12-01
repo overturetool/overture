@@ -45,6 +45,8 @@ import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.ARemoteContractDeclCG;
 import org.overture.codegen.cgast.declarations.ARemoteContractImplDeclCG;
 import org.overture.codegen.cgast.declarations.ARemoteInstanceDeclCG;
+import org.overture.codegen.cgast.declarations.ASynchTokenDeclCG;
+import org.overture.codegen.cgast.declarations.ASynchTokenInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
 import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AAddrEqualsBinaryExpCG;
@@ -256,6 +258,12 @@ public class TemplateManager
 				+ "RMIregistry");
 		
 		nodeTemplateFileNames.put(ARMIServerDeclCG.class, templateStructure.DECL_PATH + "RMI_Server");
+		
+		nodeTemplateFileNames.put(ASynchTokenDeclCG.class, templateStructure.DECL_PATH
+				+ "SynchToken");
+		
+		nodeTemplateFileNames.put(ASynchTokenInterfaceDeclCG.class, templateStructure.DECL_PATH
+				+ "SynchToken_interface");
 		
 		// Local declarations
 

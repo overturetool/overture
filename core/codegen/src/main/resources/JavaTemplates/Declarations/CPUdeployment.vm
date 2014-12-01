@@ -26,7 +26,6 @@ public class $node.getCpuName() {
 				System.out.println("Success to connect and bind..");
 				lock1 = false;
 
-
 				int DeployedObjCounter = $node.getDeployedObjCounter();
 				while(registry.list().length<DeployedObjCounter) {
 				System.out.println("Waiting for RMI registry full list");
@@ -42,6 +41,17 @@ public class $node.getCpuName() {
 							#end
 
 						System.out.println("Synchronization successful...");
+						
+						SynchToken synchToken = new SynchToken();
+						registry.bind($node.getCpuNameString(),synchToken);
+						
+						int NumberOfCPUs = 4;
+						
+						while(registry.list().length<DeployedObjCounter+NumberOfCPUs) {
+							System.out.println("Waiting for all remote references");
+							Thread.sleep(2000);
+							}
+						
 						lock2=false;
 					}
 					catch(Exception ex){
