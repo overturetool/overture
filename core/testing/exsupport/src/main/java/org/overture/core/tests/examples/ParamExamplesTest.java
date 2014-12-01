@@ -28,11 +28,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.node.INode;
 import org.overture.core.tests.AbsResultTest;
 import org.overture.core.tests.ParamStandardTest;
@@ -51,32 +52,13 @@ import org.overture.parser.syntax.ParserException;
  * @author ldc
  * @param <R>
  */
-@RunWith(Parameterized.class)
+@RunWith(JUnitParamsRunner.class)
 public abstract class ParamExamplesTest<R> extends AbsResultTest<R>
 {
 	List<INode> model;
 
 	private final static String RESULTS_EXAMPLES = "src/test/resources/examples/";
 
-	/**
-	 * The constructor for the class. The parameters for the constructor are provided by {@link #testData()}. Due to
-	 * this, subclasses of this test must have the exact same constructor parameters. If you change the constructor
-	 * parameters, you must implement your own test data provider.
-	 * 
-	 * @param name
-	 *            the name of the test. Normally derived from the example used as input
-	 * @param model
-	 *            the typed AST representing the example model under test
-	 * @param result
-	 *            the result file path. By convention it's stored under <code>src/test/resources/examples</code>
-	 */
-	public ParamExamplesTest(String name, List<INode> model, String result)
-	{
-		this.testName = name;
-		this.model = model;
-		this.resultPath = result;
-		this.updateResult = updateCheck();
-	}
 
 	/**
 	 * Provide test data. Provides a list of of arrays to initialize the test constructor. Each array initializes a test
@@ -90,11 +72,10 @@ public abstract class ParamExamplesTest<R> extends AbsResultTest<R>
 	 * @throws IOException
 	 * @throws URISyntaxException 
 	 */
-	@Parameters(name = "{index} : {0}")
-	public static Collection<Object[]> testData() throws ParserException,
+	public Collection<Object[]> testData() throws ParserException,
 			LexException, IOException, URISyntaxException
 	{
-		Collection<ExampleAstData> examples = ExamplesUtility.getExamplesAsts();
+		Collection<ExampleAstData> examples = ExamplesUtility.getExamplesAsts(getRelativeExamplesPath());
 		Collection<Object[]> r = new Vector<Object[]>();
 
 		for (ExampleAstData e : examples)
@@ -121,9 +102,15 @@ public abstract class ParamExamplesTest<R> extends AbsResultTest<R>
 	 * @throws LexException
 	 */
 	@Test
-	public void testCase() throws FileNotFoundException, IOException,
+	@Parameters(method = "testData")
+	public void testCase(String name, List<INode> model, String result) throws FileNotFoundException, IOException,
 			ParserException, LexException
 	{
+		
+		this.testName = name;
+		this.model = model;
+		this.resultPath = result;
+		this.updateResult = updateCheck();
 
 		R actual = processModel(model);
 		if (updateResult)
@@ -146,6 +133,8 @@ public abstract class ParamExamplesTest<R> extends AbsResultTest<R>
 			this.compareResults(actual, expected);
 		}
 	}
+	
+	
 
 	/**
 	 * Analyse a model. This method is called during test execution to produce the actual result. It must, of course, be
@@ -159,5 +148,15 @@ public abstract class ParamExamplesTest<R> extends AbsResultTest<R>
 	 * @return the output of the analysis
 	 */
 	public abstract R processModel(List<INode> model);
+	
+	/**
+	 * Get the path to the examples. Not all modules that use the test framework
+	 * are at the same nesting level from <code>core</code> so you must provide 
+	 * the path via this method. <br><br>
+	 * For reference the examples are in <code>[repository root]/externals/examples/target/code>
+	 * 
+	 * @return the path to the Overture examples, relative to the current project.
+	 */
+	protected abstract String getRelativeExamplesPath();
 
 }

@@ -51,14 +51,14 @@ import org.overture.parser.syntax.ParserException;
  */
 abstract public class ExamplesUtility {
 
-	private static final String SL_EXAMPLES_ROOT = "/examples/VDMSL";
-	private static final String PP_EXAMPLES_ROOT = "/examples/VDM++";
-	private static final String RT_EXAMPLES_ROOT = "/examples/VDMRT";
-	private static final String LIBS_ROOT = "/examples/libs/";
+	private static final String SL_EXAMPLES_ROOT = "examples/VDMSL";
+	private static final String PP_EXAMPLES_ROOT = "examples/VDM++";
+	private static final String RT_EXAMPLES_ROOT = "examples/VDMRT";
+	private static final String LIBS_ROOT = "examples/libs/";
 
-	private static final String SL_LIBS_ROOT = "/examples/libs/SL/";
-	private static final String PP_LIBS_ROOT = "/examples/libs/PP/";
-	private static final String RT_LIBS_ROOT = "/examples/libs/RT/";
+	private static final String SL_LIBS_ROOT = "examples/libs/SL/";
+	private static final String PP_LIBS_ROOT = "examples/libs/PP/";
+	private static final String RT_LIBS_ROOT = "examples/libs/RT/";
 
 	/**
 	 * Get the ASTs for the Overture examples. This method only provides the
@@ -71,12 +71,12 @@ abstract public class ExamplesUtility {
 	 * @throws IOException
 	 * @throws URISyntaxException
 	 */
-	static public Collection<ExampleAstData> getExamplesAsts()
+	static public Collection<ExampleAstData> getExamplesAsts(String examplesRoot)
 			throws ParserException, LexException, IOException,
 			URISyntaxException {
 		Collection<ExampleAstData> r = new Vector<ExampleAstData>();
 
-		Collection<ExampleSourceData> examples = getExamplesSources();
+		Collection<ExampleSourceData> examples = getExamplesSources(examplesRoot);
 
 		for (ExampleSourceData e : examples) {
 			r.add(parseTcExample(e));
@@ -115,13 +115,13 @@ abstract public class ExamplesUtility {
 	 * @throws IOException
 	 * @throws URISyntaxException
 	 */
-	public static Collection<ExampleSourceData> getExamplesSources()
+	public static Collection<ExampleSourceData> getExamplesSources(String examplesRoot)
 			throws IOException, URISyntaxException {
 		List<ExampleSourceData> r = new LinkedList<ExampleSourceData>();
 
-		r.addAll(getExamples_(SL_EXAMPLES_ROOT, Dialect.VDM_SL));
-		r.addAll(getExamples_(PP_EXAMPLES_ROOT, Dialect.VDM_PP));
-		r.addAll(getExamples_(RT_EXAMPLES_ROOT, Dialect.VDM_RT));
+		r.addAll(getExamples_(examplesRoot,SL_EXAMPLES_ROOT, Dialect.VDM_SL));
+		r.addAll(getExamples_(examplesRoot,PP_EXAMPLES_ROOT, Dialect.VDM_PP));
+		r.addAll(getExamples_(examplesRoot,RT_EXAMPLES_ROOT, Dialect.VDM_RT));
 
 		return r;
 	}
@@ -133,13 +133,13 @@ abstract public class ExamplesUtility {
 	 * @throws IOException
 	 * @throws URISyntaxException
 	 */
-	public static Collection<ExampleSourceData> getLibSources()
+	public static Collection<ExampleSourceData> getLibSources(String libsRoot)
 			throws IOException, URISyntaxException {
 		List<ExampleSourceData> r = new LinkedList<ExampleSourceData>();
 
-		r.addAll(getLibs_(SL_LIBS_ROOT, Dialect.VDM_SL));
-		r.addAll(getLibs_(PP_LIBS_ROOT, Dialect.VDM_PP));
-		r.addAll(getLibs_(RT_LIBS_ROOT, Dialect.VDM_RT));
+		r.addAll(getLibs_(libsRoot+SL_LIBS_ROOT, Dialect.VDM_SL));
+		r.addAll(getLibs_(libsRoot+PP_LIBS_ROOT, Dialect.VDM_PP));
+		r.addAll(getLibs_(libsRoot+RT_LIBS_ROOT, Dialect.VDM_RT));
 
 		return r;
 	}
@@ -147,8 +147,7 @@ abstract public class ExamplesUtility {
 	private static Collection<ExampleSourceData> getLibs_(String libsroot,
 			Dialect dialect) throws IOException, URISyntaxException {
 
-		URL url = ExamplesUtility.class.getResource(libsroot);
-		File dir = new File(url.getPath());
+		File dir = new File(libsroot);
 		List<ExampleSourceData> r = new LinkedList<ExampleSourceData>();
 
 		List<File> libs = new LinkedList<File>();
@@ -161,13 +160,12 @@ abstract public class ExamplesUtility {
 		return r;
 	}
 
-	private static Collection<ExampleSourceData> getExamples_(
+	private static Collection<ExampleSourceData> getExamples_(String externalsRoot,
 			String examplesRoot, Dialect dialect) throws IOException,
 			URISyntaxException {
 		List<ExampleSourceData> r = new LinkedList<ExampleSourceData>();
 
-		URL url = ExamplesUtility.class.getResource(examplesRoot);
-		File dir = new File(url.getPath());
+		File dir = new File(externalsRoot+examplesRoot);
 
 		List<File> source = new LinkedList<File>();
 		// grab examples groups
@@ -183,8 +181,7 @@ abstract public class ExamplesUtility {
 
 					if (p.getLibs().size() > 0) {
 						for (String lib : p.getLibs()) {
-							source.add(new File(ExamplesUtility.class
-									.getResource(LIBS_ROOT).getPath()
+							source.add(new File(externalsRoot+LIBS_ROOT
 									+ ExamplePacker.getName(dialect)
 									+ "/"
 									+ lib));

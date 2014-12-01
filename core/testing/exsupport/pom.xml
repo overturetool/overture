@@ -1,187 +1,193 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>org.overturetool.core</groupId>
-    <artifactId>testing</artifactId>
-    <version>2.1.5-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
-  </parent>
+	<parent>
+		<groupId>org.overturetool.core</groupId>
+		<artifactId>testing</artifactId>
+		<version>2.1.5-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
 
-  <groupId>org.overturetool.core.testing</groupId>
-  <artifactId>exsupport</artifactId>
-  <name>Overture Example Testing Support</name>
+	<groupId>org.overturetool.core.testing</groupId>
+	<artifactId>exsupport</artifactId>
+	<name>Overture Example Testing Support</name>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.overturetool.core.testing</groupId>
-      <artifactId>framework</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.overturetool.core</groupId>
-      <artifactId>ast</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.overturetool.core</groupId>
-      <artifactId>parser</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.overturetool.core</groupId>
-      <artifactId>typechecker</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.overturetool</groupId>
-      <artifactId>examples</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.11</version>
-    </dependency>
-    <dependency>
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
-      <version>2.4</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-collections4</artifactId>
-      <version>4.0</version>
-    </dependency>
-    <dependency>
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
-      <version>2.2.4</version>
-    </dependency>
-  </dependencies>
+	<dependencies>
+		<dependency>
+			<groupId>org.overturetool.core.testing</groupId>
+			<artifactId>framework</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overturetool.core</groupId>
+			<artifactId>ast</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overturetool.core</groupId>
+			<artifactId>parser</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overturetool.core</groupId>
+			<artifactId>typechecker</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overturetool</groupId>
+			<artifactId>examples</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+		</dependency>
+		<dependency>
+			<groupId>pl.pragmatists</groupId>
+			<artifactId>JUnitParams</artifactId>
+			<version>1.0.3</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-collections4</artifactId>
+			<version>4.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.2.4</version>
+		</dependency>
+	</dependencies>
 
-  <build>
-    <!-- <copy this entry and point it to the correct relative path -->
-    <!-- to your project in order to use the example tests -->
-    <!--<resources>-->
-    <!--<resource>-->
-    <!--<directory>${project.basedir}/../../../documentation/examples/</directory>-->
-    <!--<targetPath>${project.build.directory}/classes/examples/</targetPath>-->
-    <!--<includes>-->
-    <!--<include>**/*.vdmsl</include>-->
-    <!--<include>**/*.vdmpp</include>-->
-    <!--<include>**/*.vdmrt</include>-->
-    <!--<include>**/README.txt</include>-->
-    <!--</includes>-->
-    <!--<excludes>-->
-    <!--<exclude>target/**</exclude>-->
-    <!--</excludes>-->
-    <!--</resource>-->
-    <!--</resources>-->
+	<build>
+		<!-- <copy this entry and point it to the correct relative path -->
+		<!-- to your project in order to use the example tests -->
+		<!--<resources> -->
+		<!--<resource> -->
+		<!--<directory>${project.basedir}/../../../documentation/examples/</directory> -->
+		<!--<targetPath>${project.build.directory}/classes/examples/</targetPath> -->
+		<!--<includes> -->
+		<!--<include>**/*.vdmsl</include> -->
+		<!--<include>**/*.vdmpp</include> -->
+		<!--<include>**/*.vdmrt</include> -->
+		<!--<include>**/README.txt</include> -->
+		<!--</includes> -->
+		<!--<excludes> -->
+		<!--<exclude>target/**</exclude> -->
+		<!--</excludes> -->
+		<!--</resource> -->
+		<!--</resources> -->
 
-    <plugins>
-      <!-- <plugin> -->
-      <!--   <groupId>org.apache.maven.plugins</groupId> -->
-      <!--   <artifactId>maven-dependency-plugin</artifactId> -->
-      <!--   <executions> -->
-      <!--     <execution> -->
-      <!--       <id>unpack</id> -->
-      <!--       <phase>process-resources</phase> -->
-      <!--       <goals> -->
-      <!--         <goal>unpack</goal> -->
-      <!--       </goals> -->
-      <!--       <configuration> -->
-      <!--         <artifactItems> -->
-      <!--           <artifactItem> -->
-      <!--             <groupId>org.overturetool</groupId> -->
-      <!--             <artifactId>examples</artifactId> -->
-      <!--             <version>${project.version}</version> -->
-      <!--             <type>jar</type> -->
-      <!--             <overWrite>false</overWrite> -->
-      <!--             <outputDirectory>${project.build.directory}/test-classes/</outputDirectory> -->
-      <!--           </artifactItem> -->
-      <!--         </artifactItems> -->
-      <!--         <excludes>META-INF/**</excludes> -->
-      <!--         <overWriteReleases>false</overWriteReleases> -->
-      <!--         <overWriteSnapshots>true</overWriteSnapshots> -->
-      <!--       </configuration> -->
-      <!--     </execution> -->
-      <!--   </executions> -->
-      <!-- </plugin> -->
+		<plugins>
+			<!-- <plugin> -->
+			<!-- <groupId>org.apache.maven.plugins</groupId> -->
+			<!-- <artifactId>maven-dependency-plugin</artifactId> -->
+			<!-- <executions> -->
+			<!-- <execution> -->
+			<!-- <id>unpack</id> -->
+			<!-- <phase>process-resources</phase> -->
+			<!-- <goals> -->
+			<!-- <goal>unpack</goal> -->
+			<!-- </goals> -->
+			<!-- <configuration> -->
+			<!-- <artifactItems> -->
+			<!-- <artifactItem> -->
+			<!-- <groupId>org.overturetool</groupId> -->
+			<!-- <artifactId>examples</artifactId> -->
+			<!-- <version>${project.version}</version> -->
+			<!-- <type>jar</type> -->
+			<!-- <overWrite>false</overWrite> -->
+			<!-- <outputDirectory>${project.build.directory}/test-classes/</outputDirectory> -->
+			<!-- </artifactItem> -->
+			<!-- </artifactItems> -->
+			<!-- <excludes>META-INF/**</excludes> -->
+			<!-- <overWriteReleases>false</overWriteReleases> -->
+			<!-- <overWriteSnapshots>true</overWriteSnapshots> -->
+			<!-- </configuration> -->
+			<!-- </execution> -->
+			<!-- </executions> -->
+			<!-- </plugin> -->
 
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <testFailureIgnore>true</testFailureIgnore>
-          <redirectTestOutputToFile>true</redirectTestOutputToFile>
-          <includes>
-            <include>**/*Test.java</include>
-            <include>**/*Test?.java</include>
-            <include>**/*TestSuite.java</include>
-          </includes>
-        </configuration>
-      </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<testFailureIgnore>true</testFailureIgnore>
+					<redirectTestOutputToFile>true</redirectTestOutputToFile>
+					<includes>
+						<include>**/*Test.java</include>
+						<include>**/*Test?.java</include>
+						<include>**/*TestSuite.java</include>
+					</includes>
+				</configuration>
+			</plugin>
 
-      <!-- <plugin> -->
-      <!--   <groupId>org.apache.maven.plugins</groupId> -->
-      <!--   <artifactId>maven-jar-plugin</artifactId> -->
-      <!--   <configuration> -->
-      <!--     <includes> -->
-      <!--       <include>**/*.class</include> -->
-      <!--       <include>examples/**</include> -->
-      <!--     </includes> -->
-      <!--   </configuration> -->
-      <!--   <executions> -->
-      <!--     <execution> -->
-      <!--       <goals> -->
-      <!--         <goal>test-jar</goal> -->
-      <!--       </goals> -->
-      <!--     </execution> -->
-      <!--   </executions> -->
-      <!-- </plugin> -->
+			<!-- <plugin> -->
+			<!-- <groupId>org.apache.maven.plugins</groupId> -->
+			<!-- <artifactId>maven-jar-plugin</artifactId> -->
+			<!-- <configuration> -->
+			<!-- <includes> -->
+			<!-- <include>**/*.class</include> -->
+			<!-- <include>examples/**</include> -->
+			<!-- </includes> -->
+			<!-- </configuration> -->
+			<!-- <executions> -->
+			<!-- <execution> -->
+			<!-- <goals> -->
+			<!-- <goal>test-jar</goal> -->
+			<!-- </goals> -->
+			<!-- </execution> -->
+			<!-- </executions> -->
+			<!-- </plugin> -->
 
-      <!-- never deploy/release/publish this module -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-deploy-plugin</artifactId>
-        <configuration>
-          <skip>true</skip>
-        </configuration>
-      </plugin>
+			<!-- never deploy/release/publish this module -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
 
-    </plugins>
-    <!-- <pluginManagement> -->
-    <!--   <plugins> -->
-    <!-- 	<\!-\-This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-\-> -->
-    <!-- 	<plugin> -->
-    <!-- 	  <groupId>org.eclipse.m2e</groupId> -->
-    <!-- 	  <artifactId>lifecycle-mapping</artifactId> -->
-    <!-- 	  <version>1.0.0</version> -->
-    <!-- 	  <configuration> -->
-    <!-- 	    <lifecycleMappingMetadata> -->
-    <!-- 	      <pluginExecutions> -->
-    <!-- 		<pluginExecution> -->
-    <!-- 		  <pluginExecutionFilter> -->
-    <!-- 		    <groupId>org.apache.maven.plugins</groupId> -->
-    <!-- 		    <artifactId> -->
-    <!-- 		      maven-antrun-plugin -->
-    <!-- 		    </artifactId> -->
-    <!-- 		    <versionRange>[1.7,)</versionRange> -->
-    <!-- 		    <goals> -->
-    <!-- 		      <goal>run</goal> -->
-    <!-- 		    </goals> -->
-    <!-- 		  </pluginExecutionFilter> -->
-    <!-- 		  <action> -->
-    <!-- 		    <ignore></ignore> -->
-    <!-- 		  </action> -->
-    <!-- 		</pluginExecution> -->
-    <!-- 	      </pluginExecutions> -->
-    <!-- 	    </lifecycleMappingMetadata> -->
-    <!-- 	  </configuration> -->
-    <!-- 	</plugin> -->
-    <!--   </plugins> -->
-    <!-- </pluginManagement> -->
-  </build>
+		</plugins>
+		<!-- <pluginManagement> -->
+		<!-- <plugins> -->
+		<!-- <\!-\-This plugin's configuration is used to store Eclipse m2e settings 
+			only. It has no influence on the Maven build itself.-\-> -->
+		<!-- <plugin> -->
+		<!-- <groupId>org.eclipse.m2e</groupId> -->
+		<!-- <artifactId>lifecycle-mapping</artifactId> -->
+		<!-- <version>1.0.0</version> -->
+		<!-- <configuration> -->
+		<!-- <lifecycleMappingMetadata> -->
+		<!-- <pluginExecutions> -->
+		<!-- <pluginExecution> -->
+		<!-- <pluginExecutionFilter> -->
+		<!-- <groupId>org.apache.maven.plugins</groupId> -->
+		<!-- <artifactId> -->
+		<!-- maven-antrun-plugin -->
+		<!-- </artifactId> -->
+		<!-- <versionRange>[1.7,)</versionRange> -->
+		<!-- <goals> -->
+		<!-- <goal>run</goal> -->
+		<!-- </goals> -->
+		<!-- </pluginExecutionFilter> -->
+		<!-- <action> -->
+		<!-- <ignore></ignore> -->
+		<!-- </action> -->
+		<!-- </pluginExecution> -->
+		<!-- </pluginExecutions> -->
+		<!-- </lifecycleMappingMetadata> -->
+		<!-- </configuration> -->
+		<!-- </plugin> -->
+		<!-- </plugins> -->
+		<!-- </pluginManagement> -->
+	</build>
 </project>

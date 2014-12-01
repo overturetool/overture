@@ -30,6 +30,8 @@ public class ParseTcAllExamplesTest
 {
 	ExampleSourceData testData;
 
+	private static String EXAMPLES_ROOT = "../../../externals/examples/target/classes/";
+	
 	public ParseTcAllExamplesTest(String _, ExampleSourceData testData)
 	{
 		this.testData = testData;
@@ -40,7 +42,7 @@ public class ParseTcAllExamplesTest
 	{
 		Collection<Object[]> r = new Vector<Object[]>();
 
-		Collection<ExampleSourceData> examples = ExamplesUtility.getExamplesSources();
+		Collection<ExampleSourceData> examples = ExamplesUtility.getExamplesSources(EXAMPLES_ROOT);
 
 		for (ExampleSourceData e : examples)
 		{

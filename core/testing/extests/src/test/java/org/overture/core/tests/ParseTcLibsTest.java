@@ -22,6 +22,8 @@ public class ParseTcLibsTest
 {
 	ExampleSourceData testData;
 
+	private static String LIBS_ROOT = "../../../documentation/";
+	
 	public ParseTcLibsTest(String _, ExampleSourceData testData)
 	{
 		this.testData = testData;
@@ -32,7 +34,7 @@ public class ParseTcLibsTest
 	{
 		Collection<Object[]> r = new Vector<Object[]>();
 
-		Collection<ExampleSourceData> examples = ExamplesUtility.getLibSources();
+		Collection<ExampleSourceData> examples = ExamplesUtility.getLibSources(LIBS_ROOT);
 
 		for (ExampleSourceData e : examples)
 		{
