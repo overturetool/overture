@@ -37,6 +37,8 @@ import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
+import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
+import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
@@ -883,6 +885,11 @@ public class JavaFormat
 		{
 			return "((Thread)" + str + ")";
 		}
+	}
+	
+	public static boolean isNamedTypeDecl(ATypeDeclCG node)
+	{
+		return node.getDecl() instanceof ANamedTypeDeclCG;
 	}
 	
 	public static boolean isSeqConversion(AFieldNumberExpCG node)
