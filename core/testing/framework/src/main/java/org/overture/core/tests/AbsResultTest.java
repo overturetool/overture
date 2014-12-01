@@ -37,7 +37,7 @@ import com.google.gson.reflect.TypeToken;
 
 /**
  * Top level class for new tests framework. Provides common result handling code to all other test classes. This class
- * should <b>not</b> be subclassed. Use one of its existing subclasses instead.
+ * should <b>not</b> be subclassed directly. Use one of its existing subclasses instead.
  * 
  * @see ParamExamplesTest
  * @see ParamExternalsTest
@@ -47,7 +47,7 @@ import com.google.gson.reflect.TypeToken;
  * @param <R>
  *            the (user-provided) type of results this test operates on
  */
-abstract class AbsResultTest<R>
+public abstract class AbsResultTest<R>
 {
 	protected boolean updateResult;
 	protected String resultPath;
