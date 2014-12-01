@@ -12,6 +12,10 @@
   <packaging>pom</packaging>
   <name>Overture Language Board Resources (Examples and Documentaton)</name>
 
+  <properties>
+    <force-download>false</force-download>
+  </properties>
+  
   <build>
     <plugins>
       <plugin>
@@ -29,11 +33,20 @@
               <url>https://github.com/overturetool/language/archive/master.zip</url>
               <unpack>true</unpack>
               <outputDirectory>${project.build.directory}</outputDirectory>
-              <skipCache>false</skipCache> <!-- true ==> force download -->
+              <skipCache>${force-download}</skipCache> <!-- true ==> force download -->
             </configuration>
           </execution>
         </executions>
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>force-download-externals</id>
+      <properties>
+        <force-download>true</force-download>
+      </properties>
+    </profile>
+  </profiles>
 </project>
