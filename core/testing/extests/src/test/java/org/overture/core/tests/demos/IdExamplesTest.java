@@ -23,9 +23,7 @@ import com.google.gson.reflect.TypeToken;
 @RunWith(JUnitParamsRunner.class)
 public class IdExamplesTest extends ParamExamplesTest<ExampleIdTestResult> {
 
-	public IdExamplesTest() {
 
-	}
 
 	private static final String UPDATE_PROPERTY = "tests.update.example.ExamplesID";
 
@@ -62,6 +60,9 @@ public class IdExamplesTest extends ParamExamplesTest<ExampleIdTestResult> {
 
 	private static String EXAMPLES_ROOT = "../../../externals/examples/target/classes/";
 
+	/**
+	 * Path to the examples. Needs to be customized on a per-module basis.
+	 */
 	@Override
 	protected String getRelativeExamplesPath() {
 		return EXAMPLES_ROOT;

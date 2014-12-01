@@ -17,6 +17,12 @@ import org.overture.core.tests.examples.ExamplesUtility;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
 
+/**
+ * Basic test for all the libs. Simply ensures that they all parse and type-check correctly. <br>
+ * 
+ * @author ldc
+ */
+
 @RunWith(Parameterized.class)
 public class ParseTcLibsTest
 {

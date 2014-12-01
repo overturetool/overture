@@ -19,8 +19,7 @@ import org.overture.parser.syntax.ParserException;
 
 /**
  * Basic test for all the examples. Simply ensures that they all parse and type-check correctly. <br>
- * <b>Note:</b> Currently, models with intentional errors are not tested. This test needs to be improved to also check
- * these examples against the expected errors.
+ * <b>Note:</b> Currently, models with intentional errors are not tested.
  * 
  * @author ldc
  */
