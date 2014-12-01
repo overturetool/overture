@@ -16,13 +16,17 @@
   <name>org.overture.ide.help</name>
 
   <properties>
-    <example-packager.version>2.0.2</example-packager.version>
+    <example-packager.version>2.1.1</example-packager.version>
+    <repo.root>${project.basedir}/../..</repo.root>
+    <examples.root>${repo.root}/externals/language-board/target/language-master/examples</examples.root>
+    <documentation.root>${repo.root}/externals/language-board/target/language-master/documentation</documentation.root>
+    <libs.root>${repo.root}/documentation/examples/</libs.root>
   </properties>
   
   <build>
     <resources>
       <resource>
-        <directory>${project.basedir}/../../documentation/QuickOverviewVDMPPOperators</directory>
+        <directory>${documentation.root}/QuickOverviewVDMPPOperators</directory>
         <targetPath>${project.basedir}/html</targetPath>
         <filtering>false</filtering>
         <includes>
@@ -30,7 +34,7 @@
         </includes>
       </resource>
       <resource>
-        <directory>${project.basedir}/../../documentation/UserGuideOvertureIDE</directory>
+        <directory>${documentation.root}/UserGuideOvertureIDE</directory>
         <targetPath>${project.basedir}/html</targetPath>
         <filtering>false</filtering>
         <includes>
@@ -38,7 +42,7 @@
         </includes>
       </resource>
       <resource>
-        <directory>${project.basedir}/../../documentation/VDM10LangMan</directory>
+        <directory>${documentation.root}/VDM10LangMan</directory>
         <targetPath>${project.basedir}/html</targetPath>
         <filtering>false</filtering>
         <includes>
@@ -56,13 +60,13 @@
           <outputDirectory>${project.basedir}/html</outputDirectory>
           <outputPrefix>Example_package_</outputPrefix>
           <slExamples>
-            <param>${project.basedir}/../../documentation/examples/VDMSL</param>
+            <param>${examples.root}/VDMSL</param>
           </slExamples>
           <ppExamples>
-            <param>${project.basedir}/../../documentation/examples/VDM++</param>
+            <param>${examples.root}/VDM++</param>
           </ppExamples>
           <rtExamples>
-            <param>${project.basedir}/../../documentation/examples/VDMRT</param>
+            <param>${examples.root}/VDMRT</param>
           </rtExamples>
         </configuration>
         <executions>
