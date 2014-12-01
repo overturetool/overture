@@ -27,21 +27,22 @@
   </dependencies>
 
   <build>
-    <resources>
-      <resource>
-        <directory>${project.basedir}/../../../documentation/examples/</directory>
-        <targetPath>${project.build.directory}/classes/examples/</targetPath>
-        <includes>
-          <include>**/*.vdmsl</include>
-          <include>**/*.vdmpp</include>
-          <include>**/*.vdmrt</include>
-          <include>**/README.txt</include>
-        </includes>
-        <excludes>
-          <exclude>target/**</exclude>
-        </excludes>
-      </resource>
-    </resources>
+    <!-- <resources> -->
+    <!--   <resource> -->
+    <!--     <directory>${project.basedir}/../../../documentation/examples/</directory> -->
+    <!--     <targetPath>${project.build.directory}/classes/examples/</targetPath> -->
+    <!--     <includes> -->
+    <!--       <include>**/*.vdmsl</include> -->
+    <!--       <include>**/*.vdmpp</include> -->
+    <!--       <include>**/*.vdmrt</include> -->
+    <!--       <include>**/README.txt</include> -->
+    <!--     </includes> -->
+    <!--     <excludes> -->
+    <!--       <exclude>target/**</exclude> -->
+    <!--     </excludes> -->
+    <!--   </resource> -->
+    <!-- </resources> -->
+
     <plugins>
       <!-- never deploy/release/publish this module -->
       <plugin>

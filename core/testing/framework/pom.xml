@@ -29,11 +29,6 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.overturetool</groupId>
-      <artifactId>examples</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.11</version>
@@ -57,50 +52,6 @@
 
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>unpack</id>
-            <phase>process-resources</phase>
-            <goals>
-              <goal>unpack</goal>
-            </goals>
-            <configuration>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>org.overturetool</groupId>
-                  <artifactId>examples</artifactId>
-                  <version>${project.version}</version>
-                  <type>jar</type>
-                  <overWrite>false</overWrite>
-                  <outputDirectory>${project.build.directory}/classes/examples</outputDirectory>
-                </artifactItem>
-              </artifactItems>
-              <excludes>META-INF/**</excludes>
-              <outputDirectory>${project.build.directory}/wars</outputDirectory>
-              <overWriteReleases>false</overWriteReleases>
-              <overWriteSnapshots>true</overWriteSnapshots>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <testFailureIgnore>true</testFailureIgnore>
-          <redirectTestOutputToFile>true</redirectTestOutputToFile>
-          <includes>
-            <include>**/*Test.java</include>
-            <include>**/*Test?.java</include>
-            <include>**/*TestSuite.java</include>
-          </includes>
-        </configuration>
-      </plugin>
-
       <!-- never deploy/release/publish this module -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -109,58 +60,6 @@
           <skip>true</skip>
         </configuration>
       </plugin>
-
-      <!-- <plugin> -->
-      <!--   <groupId>org.apache.maven.plugins</groupId> -->
-      <!--   <artifactId>maven-jar-plugin</artifactId> -->
-      <!--   <configuration> -->
-      <!--     <includes> -->
-      <!--       <include>**/*.class</include> -->
-      <!--       <include>examples/**</include> -->
-      <!--     </includes> -->
-      <!--   </configuration> -->
-      <!--   <executions> -->
-      <!--     <execution> -->
-      <!--       <goals> -->
-      <!--         <goal>test-jar</goal> -->
-      <!--       </goals> -->
-      <!--     </execution> -->
-      <!--   </executions> -->
-      <!-- </plugin> -->
     </plugins>
-
-    <pluginManagement>
-      <plugins>
-    	<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-    	<plugin>
-    	  <groupId>org.eclipse.m2e</groupId>
-    	  <artifactId>lifecycle-mapping</artifactId>
-    	  <version>1.0.0</version>
-    	  <configuration>
-    	    <lifecycleMappingMetadata>
-    	      <pluginExecutions>
-    		<pluginExecution>
-    		  <pluginExecutionFilter>
-    		    <groupId>
-    		      org.apache.maven.plugins
-    		    </groupId>
-    		    <artifactId>
-    		      maven-antrun-plugin
-    		    </artifactId>
-    		    <versionRange>[1.7,)</versionRange>
-    		    <goals>
-    		      <goal>run</goal>
-    		    </goals>
-    		  </pluginExecutionFilter>
-    		  <action>
-    		    <ignore />
-    		  </action>
-    		</pluginExecution>
-    	      </pluginExecutions>
-    	    </lifecycleMappingMetadata>
-    	  </configuration>
-    	</plugin>
-      </plugins>
-    </pluginManagement>
   </build>
 </project>
