@@ -5,13 +5,13 @@
   <parent>
     <groupId>org.overturetool.core</groupId>
     <artifactId>testing</artifactId>
-    <version>2.1.1-SNAPSHOT</version>
+    <version>2.1.5-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   
   <groupId>org.overturetool.core.testing</groupId>
   <artifactId>tests</artifactId>
-  <name>Overture Testing Tests</name>
+  <name>Overture Demo Tests</name>
 
   <dependencies>
     <dependency>

@@ -10,7 +10,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.node.INode;
-import org.overture.core.tests.ParamExamplesTest;
+import org.overture.core.tests.examples.ParamExamplesTest;
 import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.pub.ProofObligationGenerator;
 
@@ -21,7 +21,6 @@ import com.google.gson.reflect.TypeToken;
  * 
  * @author ldc
  */
-@Ignore
 @RunWith(Parameterized.class)
 public class PogAllExamplesTest extends ParamExamplesTest<PogTestResult>
 {
