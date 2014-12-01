@@ -88,26 +88,6 @@
 
     <plugins>
       <plugin>
-        <groupId>com.googlecode.maven-download-plugin</groupId>
-        <artifactId>download-maven-plugin</artifactId>
-        <version>1.2.1</version>
-        <executions>
-          <execution>
-            <id>get-example-zips</id>
-            <phase>generate-resources</phase>
-            <goals>
-              <goal>wget</goal>
-            </goals>
-            <configuration>
-              <url>https://github.com/overturetool/language/archive/master.zip</url>
-              <unpack>true</unpack>
-              <outputDirectory>${project.build.directory}/example-zips</outputDirectory>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
         <!-- The purpose of this is to generate a couple of index
              files for the vdm examples and libs that get packed into
              this jarfile. -jwc/05Aug2014
