@@ -38,6 +38,15 @@
           </execution>
         </executions>
       </plugin>
+
+      <!-- never deploy/release/publish this module -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
