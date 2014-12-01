@@ -10,7 +10,7 @@
 
   <artifactId>language-board</artifactId>
   <packaging>pom</packaging>
-  <name>Overture Language Board Resources (Examples and Documentaton)</name>
+  <name>Overture Language Board Resources (External)</name>
 
   <properties>
     <force-download>false</force-download>
