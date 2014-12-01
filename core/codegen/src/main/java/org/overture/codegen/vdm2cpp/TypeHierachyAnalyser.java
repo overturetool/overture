@@ -18,33 +18,36 @@ public class TypeHierachyAnalyser extends DepthFirstAnalysisAdaptor {
 	
 	@Override
 	public void inAClassDeclCG(AClassDeclCG node) throws AnalysisException {
-		
 			class_list.add(node);
 		
 	}
 	
-	private LinkedList<String> superType(AClassDeclCG node,LinkedList<String> cur)
+	private LinkedList<AClassDeclCG> superType(AClassDeclCG node,LinkedList<AClassDeclCG> cur)
 	{
 		
 		String sname = node.getSuperName();
 		for(AClassDeclCG cls : class_list)
 		{
-			if(cls.getName() == sname)
+			//System.out.println("comparing" + cls.getName() + " with: " + sname);
+			if(cls.getName().equals(sname))
 			{
-				cur.addAll(superType(cls, cur));
+				//System.out.println("found super" + cls);
+				cur.add(cls);
+				superType(cls, cur);
 			}
 		}
-		
+		//System.out.println("returning" + cur);
 		return cur;
 		
 	}
 
 	
-	public LinkedList<String> getSuperType(AClassDeclCG type)
+	public LinkedList<AClassDeclCG> getSuperType(AClassDeclCG type)
 	{
-		LinkedList<String> types = new LinkedList<String>();
+		//System.out.print(class_list);
+		LinkedList<AClassDeclCG> types = new LinkedList<AClassDeclCG>();
 		
-		types.addAll(superType(type,types));
+		superType(type,types);
 		
 		return types;
 	}

@@ -87,74 +87,53 @@ import org.apache.commons.lang.StringEscapeUtils
 import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG
 import org.overture.codegen.cgast.types.AUnionTypeCG
 import java.util.LinkedList
+import java.util.Set
+import org.overture.codegen.cgast.types.ANat1NumericBasicTypeCG
 
 class vdm2cppGen extends MergeVisitor//QuestionAdaptor<StringWriter>
 {
 	
 	
 	private String class_name;
-	private LinkedList<AClassDeclCG> super_classes;
+	//private LinkedList<AClassDeclCG> super_classes;
+	private TypeHierachyAnalyser type_info = null;
+	private LinkedList<AMethodDeclCG> virtual_candidates;
 	
 	boolean ignore_ctx
 	
 	
-	new(TemplateStructure templateStructure, TemplateCallable[] templateCallables) {
+	new(TemplateStructure templateStructure, TemplateCallable[] templateCallables, TypeHierachyAnalyser tag) {
 		super(templateStructure, templateCallables)
+		type_info = tag;
+		virtual_candidates = new LinkedList<AMethodDeclCG>()
 	}
 	
-	override defaultINode(INode node, StringWriter question)
-			throws AnalysisException
+	def getArgumentMutation(List<AFieldDeclCG> list)
 	{
-		question.append("Not generating for" + node.getClass.toString())
-	}
-	
-	override caseASeqSeqTypeCG(ASeqSeqTypeCG node, StringWriter question) throws AnalysisException {
-		question.append('''vdm::sequence<«node.seqOf.expand»>''')
-	}
-	
-	override caseAClassDeclCG(AClassDeclCG node, StringWriter question) throws AnalysisException 
-	{
-		
-		class_name = node.name
-		//super_classes = 
-		question.append(
-		'''
-		#ifndef «node.name.toUpperCase»_HPP
-		#define «node.name.toUpperCase»_HPP
-		«node.generateIncludes»
-		«IF node.abstract»abstract «ENDIF»class «node.name» «IF node.superName != null» : public «node.superName»«ENDIF»
+		var gen_list = new ArrayList<List<AFieldDeclCG>>();
+		var  i = 1;
+		for(f : list)
 		{
-			
-		public: // public records
-			«generateRecords(node,"public")»
-		private: // private records
-			«generateRecords(node,"private")»
-			
-		public: // public variables
-			«generateVariables(node,"public")»
-			
-		private: // private variables
-			«generateVariables(node,"private")»
-			
-		public:
-			«generateConstructor(node)»
-			
-			«generateDestructor(node)»
-			
-			«generateMethods(node,"public")»
-			
-			«generateQuotes(node)»
-		private:
+			var listx = list.subList(0,i);
+			gen_list.add(listx )
+			i = i +1;
+		}
 		
-			«generateMethods(node,"private")»
-			
-			«generateInitalMethod(node)»
-			
-		};
-		#endif /*«node.name.toUpperCase»_HPP*/
-		'''
-		)
+		return gen_list	
 	}
+	
+	def String getGetStaticCall(STypeCG cg)
+	{
+		if(cg instanceof AClassTypeCG)
+		{
+			 return (cg as AClassTypeCG).name
+		}
+		else
+		{
+			return "udef"
+		}
+	}
+	
 	def generateMethodPrototype(AClassDeclCG cg, String ac)
 	{
 		var q = new StringWriter();
@@ -169,6 +148,7 @@ class vdm2cppGen extends MergeVisitor//QuestionAdaptor<StringWriter>
 		}
 		return q.toString;
 	}
+	
 	def generateIncludes(AClassDeclCG cg) 
 	{
 		var dep_man = new DependencyManager(cg.name);
@@ -181,39 +161,12 @@ class vdm2cppGen extends MergeVisitor//QuestionAdaptor<StringWriter>
 		«FOR d : dep_man.dependenciesTargetLanguage»
 		#include <«d.include»>
 		«ENDFOR»
+		
+		«FOR p : type_info.getSuperType(cg)»
+		#include "«p.name».hpp"
+		«ENDFOR»
 		'''
 	}
-	
-	def expand(INode node)
-	{
-		var str = new StringWriter()
-		node.apply(this,str)
-		return str.toString()
-		
-	}
-	
-	override caseAFieldDeclCG(AFieldDeclCG node, StringWriter question) throws AnalysisException
-	{
-		if(node.type == null)
-		{
-			System.out.println("Empty type");
-			return
-		}
-		question.append(
-		'''
-		«node.type.expand» «node.name»;
-		''')
-		
-		
-	}
-	
-	override caseARecordTypeCG(ARecordTypeCG node, StringWriter question) throws AnalysisException {
-		question.append('''«node.name.expand»''')
-	}
-	
-	def generateQuotes(AClassDeclCG cg)'''
-	
-	'''
 	
 	def generateInitalMethod(AClassDeclCG cg)
 	'''
@@ -252,12 +205,6 @@ class vdm2cppGen extends MergeVisitor//QuestionAdaptor<StringWriter>
 		var typedep = new TypeDependency();
 		var q = new StringWriter();
 		
-		//for (rec : cg. .records.filter[access == ac])
-		//{
-		//	rec.apply(typedep);
-		//}
-		
-		
 		var recs = typedep.orderedRecords;
 		for( rec : recs)
 		{
@@ -288,34 +235,111 @@ class vdm2cppGen extends MergeVisitor//QuestionAdaptor<StringWriter>
 		return q
 	}
 	
+	def expand(INode node)
+	{
+		var str = new StringWriter()
+		node.apply(this,str)
+		return str.toString()
+	}
+	
+	override defaultINode(INode node, StringWriter question)
+			throws AnalysisException
+	{
+		question.append("/*Not generating for" + node.getClass.toString() + "*/")
+	}
+	
+	override caseASeqSeqTypeCG(ASeqSeqTypeCG node, StringWriter question) throws AnalysisException {
+		question.append('''vdm::sequence<«node.seqOf.expand»>''')
+	}
+	
+	override caseAClassDeclCG(AClassDeclCG node, StringWriter question) throws AnalysisException 
+	{
+		class_name = node.name
+		// find all methods which are also in super classes
+		// if they are present in either they must be declared virtual such that the correct method is
+		// invoked if the method is called on parent class. 
+		if(type_info != null)
+		{
+			//System.out.println("Getting super for " + node.name)
+			var supers = type_info.getSuperType(node)
+			for( s: supers)
+			{
+				var virtual_methods = s.methods.filter[access == "public" && isConstructor == false]
+				virtual_methods = virtual_methods.filter[node.methods.contains(it)]
+				virtual_candidates.addAll(virtual_methods)
+				System.out.println("Class " + node.name + " Added the following methods to virtual list")
+				System.out.println(virtual_methods)
+			}
+		}
+		// the template
+		question.append(
+		'''
+		#ifndef «node.name.toUpperCase»_HPP
+		#define «node.name.toUpperCase»_HPP
+		«node.generateIncludes»
+		class «node.name» «IF node.superName != null» : public «node.superName»«ENDIF»
+		{
+			
+		public: // public records
+			«generateRecords(node,"public")»
+		protected: 
+			«generateRecords(node,"protected")»
+		private: // private records
+			«generateRecords(node,"private")»
+			
+		public: // public variables
+			«generateVariables(node,"public")»
+		protected: 
+			«generateVariables(node,"protected")»
+		private: // private variables
+			«generateVariables(node,"private")»
+			
+		public:
+			«generateConstructor(node)»
+			
+			«generateDestructor(node)»
+			
+			«generateMethods(node,"public")»
+			
+		protected:
+		    «generateMethods(node,"protected")»
+		    
+		private:
+		
+			«generateMethods(node,"private")»
+			
+			«generateInitalMethod(node)»
+			
+		};
+		#endif /*«node.name.toUpperCase»_HPP*/
+		'''
+		)
+	}
+	
+	
+	
+	override caseAFieldDeclCG(AFieldDeclCG node, StringWriter question) throws AnalysisException
+	{
+		question.append(
+		'''
+		«node.type.expand» «node.name»;
+		''')
+	}
+	
+	override caseARecordTypeCG(ARecordTypeCG node, StringWriter question) throws AnalysisException {
+		question.append('''«node.name.expand»''')
+	}
+	
 	override caseASetSetTypeCG(ASetSetTypeCG node, StringWriter question) throws AnalysisException 
 	{
-		if(ignore_ctx)
-		{
-			question.append('''vdm::set<«node.setOf.expand»>''')
-		}
-		else
-		{
 			question.append(''' vdm::set<«node.setOf.expand»> ''')
-		}
-		
 	}
 
 	override caseAMapMapTypeCG(AMapMapTypeCG node, StringWriter question) throws AnalysisException {
-		if(ignore_ctx)
-		{
-		//question.append('''vdm::set<«»>''')	
-		}
-		else
-		{
 		question.append(
 		'''vdm::set<«node.from.expand», «node.to.expand»>'''
-			
-		)	
-		}
-		
+		)			
 	}
-	
 	
 	override caseATypeNameCG(ATypeNameCG node, StringWriter question) throws AnalysisException {
 		if(node.definingClass != this.class_name)
@@ -338,15 +362,9 @@ class vdm2cppGen extends MergeVisitor//QuestionAdaptor<StringWriter>
 	
 	override caseAUnionTypeCG(AUnionTypeCG node, StringWriter question)
 	{
-		//var superType = node.types.first.superType;
 		question.append('''«node.types.first.expand»''');
 	}
-	
-	def superType(STypeCG cls)
-	{
 		
-	}
-	
 	override caseACharBasicTypeCG(ACharBasicTypeCG node, StringWriter question) throws AnalysisException
 	{
 		question.append('''char''')
@@ -368,17 +386,21 @@ class vdm2cppGen extends MergeVisitor//QuestionAdaptor<StringWriter>
 		question.append('''std::string''')
 	}
 	
+	override caseANat1NumericBasicTypeCG(ANat1NumericBasicTypeCG node, StringWriter question)
+	{
+		question.append('''double''');
+	}
+	
 	override caseAMethodDeclCG(AMethodDeclCG node, StringWriter question) throws AnalysisException 
 	{
-		
 		question.append(
 		'''
-		«node.methodType.expand» «node.name»(«FOR p:node.formalParams SEPARATOR ','» «p.expand»«ENDFOR»)
+		«IF virtual_candidates.contains(node)»virtual «ENDIF»«node.methodType.expand» «node.name»(«FOR p:node.formalParams SEPARATOR ','» «p.expand»«ENDFOR»)
 		{
 			«node.body?.expand»
 		};
 		'''
-		) 		
+		)
 	}
 	
 	override caseAPostIncExpCG(APostIncExpCG node, StringWriter question) throws AnalysisException {
@@ -392,8 +414,6 @@ class vdm2cppGen extends MergeVisitor//QuestionAdaptor<StringWriter>
 	override caseAIdentifierVarExpCG(AIdentifierVarExpCG node, StringWriter question) throws AnalysisException {
 		question.append('''«node.original»''')
 	}
-	
-	
 	
 	override caseAMethodTypeCG(AMethodTypeCG node, StringWriter question) throws AnalysisException {
 		question.append('''«node.result.expand»''')
@@ -415,11 +435,7 @@ class vdm2cppGen extends MergeVisitor//QuestionAdaptor<StringWriter>
 	}
 	
 	override caseAClassTypeCG(AClassTypeCG node, StringWriter question) throws AnalysisException {
-
-			//question.append('''«IF node.name != "iterator"»std::shared_ptr<«node.name»>«ELSE»std::«node.name»«ENDIF»''')
-			
 			question.append('''std::shared_ptr<«node.name»>''')
-			
 	}
 	
 	override caseARecordDeclCG(ARecordDeclCG node, StringWriter question) throws AnalysisException {
@@ -451,23 +467,7 @@ class vdm2cppGen extends MergeVisitor//QuestionAdaptor<StringWriter>
 		)
 	}
 	
-	def getArgumentMutation(List<AFieldDeclCG> list)
-	{
-		var gen_list = new ArrayList<List<AFieldDeclCG>>();
-		var  i = 1;
-		for(f : list)
-		{
-			var listx = list.subList(0,i);
-			gen_list.add(listx )
-			i = i +1;
-		}
-		
-		return gen_list	
-	}
- 
-//	override caseAFormalParamLocalDeclCG(AFormalParamLocalDeclCG node, StringWriter question) throws AnalysisException {
-//		question.append('''«node.type.expand» «node.name»''')
-//	}
+	
 	
 	override caseABlockStmCG(ABlockStmCG node, StringWriter question) throws AnalysisException {
 		
@@ -528,9 +528,7 @@ class vdm2cppGen extends MergeVisitor//QuestionAdaptor<StringWriter>
 		}
 		else
 		{
-		question.append(
-		'''new «node.name.expand»(«FOR a : node.args SEPARATOR ','»«a.expand»«ENDFOR») '''
-		)
+			question.append('''new «node.name.expand»(«FOR a : node.args SEPARATOR ','»«a.expand»«ENDFOR») ''')
 		}
 	}
 	
@@ -539,6 +537,8 @@ class vdm2cppGen extends MergeVisitor//QuestionAdaptor<StringWriter>
 			'''new «node.type.expand» {«FOR v: node.members SEPARATOR ','»«v.expand»«ENDFOR»}//ee'''
 		)
 	}
+	
+	
 	
 	override caseASkipStmCG(ASkipStmCG node, StringWriter question) throws AnalysisException {
 		question.append("//skip")
@@ -572,17 +572,7 @@ class vdm2cppGen extends MergeVisitor//QuestionAdaptor<StringWriter>
 		''');
 	}
 	
-	def String getGetStaticCall(STypeCG cg)
-	{
-		if(cg instanceof AClassTypeCG)
-		{
-			 return (cg as AClassTypeCG).name
-		}
-		else
-		{
-			return "udef"
-		}
-	}
+
 	
 	override caseALenUnaryExpCG(ALenUnaryExpCG node, StringWriter question)
 	{
@@ -632,11 +622,7 @@ class vdm2cppGen extends MergeVisitor//QuestionAdaptor<StringWriter>
 	}
 	
 	override caseAFieldExpCG(AFieldExpCG node, StringWriter question) throws AnalysisException {
-		if(node.object.type instanceof AClassTypeCG //||
-			//node.object.type instanceof ASetSetTypeCG ||
-			//node.object.type instanceof ASeqSeqTypeCG || 
-			//node.object.type instanceof AMapMapTypeCG
-		)
+		if(node.object.type instanceof AClassTypeCG)
 		{
 			question.append('''«node.object»->«node.memberName»/*ed*/''');
 		}
@@ -726,19 +712,6 @@ class vdm2cppGen extends MergeVisitor//QuestionAdaptor<StringWriter>
 	override caseAExplicitVarExpCG(AExplicitVarExpCG node, StringWriter question) throws AnalysisException {
 		question.append('''«IF node.classType != null»«node.classType.getStaticCall»::«ENDIF»«node.name»/*«node.classType»*/''')
 	}
-	def classTypeIsLocal(AClassTypeCG type)
-	{
-		//if(type == )
-	}
-//	override caseALetDefStmCG(ALetDefStmCG node, StringWriter question) throws AnalysisException {
-//		question.append(
-//		'''
-//		«FOR vb: node.localDefs»
-//		«vb.expand»
-//		«ENDFOR»
-//		«node.stm.expand»
-//		''')
-//	}
 	
 	override caseAForIndexStmCG(AForIndexStmCG node, StringWriter question) throws AnalysisException {
 		question.append('''
@@ -750,12 +723,10 @@ class vdm2cppGen extends MergeVisitor//QuestionAdaptor<StringWriter>
 	}
 	
 	override caseACompSeqExpCG(ACompSeqExpCG node, StringWriter question) throws AnalysisException {
-		//question.append('''«IF node.^var != null»«node.^var»«ELSE»«ENDIF»''')
 		question.append('''HELP ME caseACompSeqExpCG''')
 	}
 	
 	override caseACompMapExpCG(ACompMapExpCG node, StringWriter question) throws AnalysisException {
-		//question.append('''«node.^var»''')
 		question.append('''HELP ME caseACompMapExpCG''')
 	}
 	
@@ -766,7 +737,7 @@ class vdm2cppGen extends MergeVisitor//QuestionAdaptor<StringWriter>
 	
 	override caseANatNumericBasicTypeCG(ANatNumericBasicTypeCG node, StringWriter question)
 	{
-		question.append(''' double ''')
+		question.append('''double''')
 	}
 	
 	override caseARealLiteralExpCG(ARealLiteralExpCG node, StringWriter question) throws AnalysisException {
@@ -789,17 +760,10 @@ class vdm2cppGen extends MergeVisitor//QuestionAdaptor<StringWriter>
 		question.append('''(«node.left.expand») - («node.right.expand»)''')
 	}
 	
-//	override caseACallStmCG(ACallStmCG node, StringWriter question) throws AnalysisException {
-//		question.append('''«node.name»(«FOR arg: node.args SEPARATOR ','»«arg.expand»«ENDFOR»)/*asd*/''')
-//	}
-//	
-//	override caseASizeUnaryExpCG(ASizeUnaryExpCG node, StringWriter question) throws AnalysisException {
-//		question.append('''«node.exp.expand»->size()''')
-//	}
-	
 	override caseAHeadUnaryExpCG(AHeadUnaryExpCG node, StringWriter question) throws AnalysisException {
 		question.append('''«node.exp.expand»->front()''')
 	}
+	
 	
 	override caseATailUnaryExpCG(ATailUnaryExpCG node, StringWriter question) throws AnalysisException {
 		question.append('''«node.exp.expand»->pop_front()''')

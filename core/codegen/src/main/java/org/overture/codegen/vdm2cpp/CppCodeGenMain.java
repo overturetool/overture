@@ -85,7 +85,7 @@ public class CppCodeGenMain
 
 				for (GeneratedModule generatedClass : generatedClasses)
 				{
-					Logger.getLog().println("**********");
+					//Logger.getLog().println("**********");
 
 					if (generatedClass.hasMergeErrors())
 					{
@@ -99,7 +99,7 @@ public class CppCodeGenMain
 						CppCodeGenUtil.printUnsupportedNodes(generatedClass.getUnsupportedNodes());
 					} else
 					{
-						Logger.getLog().println(generatedClass.getContent());
+						//Logger.getLog().println(generatedClass.getContent());
 						CppCodeGenUtil.saveCppClass(new File("src-gen/"), generatedClass.getName()+".hpp", generatedClass.getContent());
 					}
 
@@ -112,7 +112,7 @@ public class CppCodeGenMain
 				{
 					for(GeneratedModule q : quotes)
 					{
-						Logger.getLog().println("**********");
+						//Logger.getLog().println("**********");
 						Logger.getLog().println(q.getContent());
 					}
 				}

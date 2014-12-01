@@ -24,6 +24,7 @@ package org.overture.codegen.vdm2cpp;
 import java.io.File;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -324,17 +325,28 @@ public class CppCodeGen
 		}
 
 		List<String> skipping = new LinkedList<String>();
+		TypeHierachyAnalyser tan = new TypeHierachyAnalyser();
 		
-		MergeVisitor mergeVisitor = new vdm2cppGen(new TemplateStructure("."),TemplateCallableManager.constructTemplateCallables());
+		for (IRClassDeclStatus status : canBeGenerated) {
+			AClassDeclCG cls = status.getClassCg();
+			try {
+				cls.apply(tan);
+			} catch (org.overture.codegen.cgast.analysis.AnalysisException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		MergeVisitor mergeVisitor = new vdm2cppGen(new TemplateStructure("."),TemplateCallableManager.constructTemplateCallables(),tan);
 		//FunctionValueAssistant functionValue = funcValueTransformation.getFunctionValueAssistant();
 		//javaFormat.setFunctionValueAssistant(functionValue);
-
+		
 		for (IRClassDeclStatus status : canBeGenerated)
 		{
 			StringWriter writer = new StringWriter();
 			AClassDeclCG classCg = status.getClassCg();
 			String className = status.getClassName();
-
+			
 			
 
 			try
@@ -463,7 +475,7 @@ public class CppCodeGen
 			if (expStatus.canBeGenerated())
 			{
 				//javaFormat.init();
-				MergeVisitor mergeVisitor = new vdm2cppGen(null,null);//javaFormat.getMergeVisitor();
+				MergeVisitor mergeVisitor = new vdm2cppGen(null,null,null);//javaFormat.getMergeVisitor();
 				expCg.apply(mergeVisitor, writer);
 
 				if (mergeVisitor.hasMergeErrors())
