@@ -18,7 +18,7 @@
 		<launchConfigurationType
         delegate="org.overture.guibuilder.launching.GuiBuilderLaunchConfigurationDelegate"
         id="org.overture.ide.guibuilder.launchConfigurationType"
-        modes="debug,run"
+        modes="run"
         name="VDM PP GUI"
         public="true"
         sourceLocatorId="org.overture.ide.debug.sourceLocator"
@@ -33,11 +33,6 @@
 			description="GUI-PP Launch Tab" 
 			id="org.overture.ide.guibuilder.launchConfigurationTabGroup"
 			type="org.overture.ide.guibuilder.launchConfigurationType">
-			<launchMode 
-                  mode="debug"
-                  perspective="org.eclipse.debug.ui.DebugPerspective"
-                  description="%localVdmPpApplicationTabGroupDescription.debug">
-            </launchMode>
             <launchMode
                   mode="run"
                   perspective="org.eclipse.debug.ui.DebugPerspective"
@@ -55,8 +50,5 @@
 		</launchConfigurationTypeImage>
 	</extension>
 	
-	
-
-  
 
 </plugin>
