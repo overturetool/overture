@@ -34,8 +34,7 @@ import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
-import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
-import org.overture.codegen.cgast.declarations.SLocalDeclCG;
+import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
@@ -171,9 +170,9 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 		return successVar;
 	}
 
-	public AVarLocalDeclCG consBoolVarDecl(String boolVarName, boolean initValue)
+	public AVarDeclCG consBoolVarDecl(String boolVarName, boolean initValue)
 	{
-		AVarLocalDeclCG boolVarDecl = new AVarLocalDeclCG();
+		AVarDeclCG boolVarDecl = new AVarDeclCG();
 
 		boolVarDecl.setType(new ABoolBasicTypeCG());
 
@@ -242,10 +241,10 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 		return boolVarAssignment;
 	}
 
-	public AVarLocalDeclCG consSetBindDecl(String setBindName, SExpCG set)
+	public AVarDeclCG consSetBindDecl(String setBindName, SExpCG set)
 			throws AnalysisException
 	{
-		AVarLocalDeclCG setBindDecl = new AVarLocalDeclCG();
+		AVarDeclCG setBindDecl = new AVarDeclCG();
 
 		setBindDecl.setType(getSetTypeCloned(set));
 
@@ -258,10 +257,10 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 		return setBindDecl;
 	}
 
-	public AVarLocalDeclCG consIdDecl(STypeCG setType, SPatternCG pattern)
+	public AVarDeclCG consIdDecl(STypeCG setType, SPatternCG pattern)
 			throws AnalysisException
 	{
-		AVarLocalDeclCG idDecl = new AVarLocalDeclCG();
+		AVarDeclCG idDecl = new AVarDeclCG();
 
 		idDecl.setType(getSetTypeCloned(setType).getSetOf());
 
@@ -271,14 +270,14 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 		return idDecl;
 	}
 
-	public AVarLocalDeclCG consDecl(String varName, SExpCG exp)
+	public AVarDeclCG consDecl(String varName, SExpCG exp)
 	{
 		return consDecl(varName, exp.getType().clone(), exp);
 	}
 
-	public AVarLocalDeclCG consDecl(String varName, STypeCG type, SExpCG exp)
+	public AVarDeclCG consDecl(String varName, STypeCG type, SExpCG exp)
 	{
-		AVarLocalDeclCG resultDecl = new AVarLocalDeclCG();
+		AVarDeclCG resultDecl = new AVarDeclCG();
 
 		resultDecl.setType(type);
 
@@ -330,12 +329,12 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 		return instanceCall;
 	}
 
-	public AVarLocalDeclCG consNextElementDeclared(String iteratorTypeName,
+	public AVarDeclCG consNextElementDeclared(String iteratorTypeName,
 			STypeCG elementType, SPatternCG id, String iteratorName,
 			String nextElementMethod) throws AnalysisException
 	{
 		ACastUnaryExpCG cast = consNextElementCall(iteratorTypeName, iteratorName, elementType, nextElementMethod);
-		AVarLocalDeclCG decl = new AVarLocalDeclCG();
+		AVarDeclCG decl = new AVarDeclCG();
 
 		decl.setType(elementType);
 
@@ -348,7 +347,7 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 	public ALocalPatternAssignmentStmCG consNextElementAssignment(
 			String iteratorTypeName, STypeCG elementType, SPatternCG id,
 			String iteratorName, String nextElementMethod,
-			AVarLocalDeclCG nextElementDecl) throws AnalysisException
+			AVarDeclCG nextElementDecl) throws AnalysisException
 	{
 		ACastUnaryExpCG cast = consNextElementCall(iteratorTypeName, iteratorName, elementType, nextElementMethod);
 
@@ -427,7 +426,7 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 		AIdentifierVarExpCG setVar = consSetVar(setName, set);
 
 		ABlockStmCG forBody = null;
-		List<? extends SLocalDeclCG> extraDecls = strategy.getOuterBlockDecls(setVar, patterns);
+		List<AVarDeclCG> extraDecls = strategy.getOuterBlockDecls(setVar, patterns);
 
 		if (extraDecls != null)
 		{
@@ -460,7 +459,7 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 
 				ABlockStmCG stmCollector = new ABlockStmCG();
 
-				AVarLocalDeclCG nextElementDeclared = strategy.getNextElementDeclared(setVar, patterns, pattern);
+				AVarDeclCG nextElementDeclared = strategy.getNextElementDeclared(setVar, patterns, pattern);
 
 				if (nextElementDeclared != null)
 				{

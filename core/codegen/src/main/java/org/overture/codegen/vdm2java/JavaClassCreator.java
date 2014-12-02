@@ -13,6 +13,7 @@ import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
+import org.overture.codegen.ir.IRGeneratedTag;
 import org.overture.codegen.ir.IRInfo;
 
 public class JavaClassCreator
@@ -29,11 +30,13 @@ public class JavaClassCreator
 		//Example: A{#32, x := 4, c = "STD"} (ID is omitted)
 		
 		AMethodDeclCG toStringMethod = new AMethodDeclCG();
-
+		toStringMethod.setTag(new IRGeneratedTag(getClass().getName()));
+		
 		toStringMethod.setIsConstructor(false);
 		toStringMethod.setAccess(JavaFormat.JAVA_PUBLIC);
+		toStringMethod.setStatic(false);
 		toStringMethod.setName("toString");
-
+		
 		AStringTypeCG returnType = new AStringTypeCG();
 
 		AMethodTypeCG methodType = new AMethodTypeCG();

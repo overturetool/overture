@@ -25,23 +25,24 @@ import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.trans.assistants.TransformationAssistantCG;
 
 public class JavaQuoteValueCreator extends JavaObjectCreator
 {
+	private static final String GET_INSTANCE_METHOD = "getInstance";
+	private static final String HASH_CODE_METHOD = "hashCode";
+
 	private static final String INSTANCE_FIELD = "instance";
+	private static final String HASHCODE_FIELD = "hc";
+	private static final String EQUALS_METHOD_PARAM = "obj";
+	
 	private IRInfo info;
 	private TransformationAssistantCG transformationAssistant;
 	
-	private static final String HASHCODE_FIELD = "hc";
-	
-	public JavaQuoteValueCreator(IRInfo info)
+	public JavaQuoteValueCreator(IRInfo info, TransformationAssistantCG transformationAssistant)
 	{
 		this.info = info;
-		
-		//FIXME: can't do this
-		this.transformationAssistant = new TransformationAssistantCG(info, new TempVarPrefixes());
+		this.transformationAssistant = transformationAssistant;
 	}
 	
 	public AClassDeclCG consQuoteValue(String name)
@@ -52,7 +53,7 @@ public class JavaQuoteValueCreator extends JavaObjectCreator
 		decl.setName(name);
 		decl.setStatic(false);
 		
-		decl.setPackage("quotes"); //FIXME: look it up
+		decl.setPackage(JavaCodeGen.QUOTES);
 		
 		decl.getFields().add(consHashcodeField());
 		decl.getFields().add(consInstanceField(name));
@@ -123,7 +124,7 @@ public class JavaQuoteValueCreator extends JavaObjectCreator
 		
 		ASuperVarExpCG superVar = new ASuperVarExpCG();
 		superVar.setIsLambda(false);
-		superVar.setName("hashCode"); //TODO: make constant
+		superVar.setName(HASH_CODE_METHOD);
 		superVar.setType(hashCodeMethodType);
 		
 		AApplyExpCG superCall = new AApplyExpCG();
@@ -196,7 +197,7 @@ public class JavaQuoteValueCreator extends JavaObjectCreator
 		getInstanceMethod.setAbstract(false);
 		getInstanceMethod.setAccess(JavaFormat.JAVA_PUBLIC);
 		getInstanceMethod.setIsConstructor(false);
-		getInstanceMethod.setName("getInstance"); //TODO: Put somewhere appropriate
+		getInstanceMethod.setName(GET_INSTANCE_METHOD);
 		getInstanceMethod.setStatic(true);
 		
 		getInstanceMethod.setMethodType(methodType);
@@ -223,9 +224,7 @@ public class JavaQuoteValueCreator extends JavaObjectCreator
 	}
 	private AMethodDeclCG consEqualsMethod(String name)
 	{
-		//TODO: do not do like this
-		String param = "obj";
-		AIdentifierVarExpCG paramVar = transformationAssistant.consIdentifierVar(param, new AObjectTypeCG());
+		AIdentifierVarExpCG paramVar = transformationAssistant.consIdentifierVar(EQUALS_METHOD_PARAM, new AObjectTypeCG());
 		
 		AClassTypeCG quoteClass = new AClassTypeCG();
 		quoteClass.setName(name);
@@ -238,7 +237,7 @@ public class JavaQuoteValueCreator extends JavaObjectCreator
 		AReturnStmCG checkReturned = new AReturnStmCG();
 		checkReturned.setExp(instanceCheck);
 
-		AMethodDeclCG equalsMethod = consEqualMethodSignature(param);
+		AMethodDeclCG equalsMethod = consEqualMethodSignature(EQUALS_METHOD_PARAM);
 		
 		ABlockStmCG body = new ABlockStmCG();
 		body.getStatements().add(checkReturned);

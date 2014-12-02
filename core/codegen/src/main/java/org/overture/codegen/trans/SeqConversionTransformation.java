@@ -6,7 +6,7 @@ import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
-import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
+import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AFieldNumberExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
@@ -62,7 +62,7 @@ public class SeqConversionTransformation extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
-	public void inAVarLocalDeclCG(AVarLocalDeclCG node)
+	public void inAVarDeclCG(AVarDeclCG node)
 			throws AnalysisException
 	{
 		STypeCG nodeType = node.getType();

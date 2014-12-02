@@ -1,1 +1,0 @@
-["operation call obligation:(forall text:seq of (char) \u0026 ((\"\" \u003d \"\") \u003c\u003d\u003e (\"\" \u003d nil)))","non-zero obligation:(forall a:real \u0026 ((a \u003c\u003e 0) \u003d\u003e (a \u003c\u003e 0)))"]

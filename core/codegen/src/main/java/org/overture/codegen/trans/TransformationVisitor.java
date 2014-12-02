@@ -31,7 +31,7 @@ import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
-import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
+import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACaseAltExpExpCG;
@@ -68,7 +68,6 @@ import org.overture.codegen.cgast.statements.AFieldStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.ALetBeStStmCG;
-import org.overture.codegen.cgast.statements.ALetDefStmCG;
 import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
 import org.overture.codegen.cgast.statements.AWhileStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
@@ -86,6 +85,7 @@ import org.overture.codegen.trans.comp.SeqCompStrategy;
 import org.overture.codegen.trans.comp.SetCompStrategy;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 import org.overture.codegen.trans.let.LetBeStStrategy;
+import org.overture.codegen.trans.quantifier.Exists1CounterData;
 import org.overture.codegen.trans.quantifier.Exists1QuantifierStrategy;
 import org.overture.codegen.trans.quantifier.OrdinaryQuantifier;
 import org.overture.codegen.trans.quantifier.OrdinaryQuantifierStrategy;
@@ -99,6 +99,8 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	
 	private TransformationAssistantCG transformationAssistant;
 
+	private Exists1CounterData counterData;
+	
 	private ILanguageIterator langIterator;
 
 	private String ternaryIfExpPrefix;
@@ -109,12 +111,13 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	private String recModifierExpPrefix;
 
 	public TransformationVisitor(IRInfo info, List<AClassDeclCG> classes, TempVarPrefixes varPrefixes,
-			TransformationAssistantCG transformationAssistant,
+			TransformationAssistantCG transformationAssistant, Exists1CounterData counterData,
 			ILanguageIterator langIterator, String ternaryIfExpPrefix, String casesExpPrefix, String andExpPrefix, String orExpPrefix, String whileCondExpPrefix, String recModifierExpPrefix)
 	{
 		this.info = info;
 		this.classes = classes;
 		this.transformationAssistant = transformationAssistant;
+		this.counterData = counterData;
 		this.langIterator = langIterator;
 		
 		this.ternaryIfExpPrefix = ternaryIfExpPrefix;
@@ -143,7 +146,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		
 		String resultVarName = info.getTempVarNameGen().nextVarName(ternaryIfExpPrefix);
 		
-		AVarLocalDeclCG resultDecl = transformationAssistant.consDecl(resultVarName, node.getType().clone(), new ANullExpCG());
+		AVarDeclCG resultDecl = transformationAssistant.consDecl(resultVarName, node.getType().clone(), new ANullExpCG());
 		AIdentifierVarExpCG resultVar = transformationAssistant.consIdentifierVar(resultVarName, resultDecl.getType().clone());
 		
 		SExpCG condition = node.getCondition();
@@ -178,26 +181,6 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		ifStm.getIfExp().apply(this);
 		trueBranch.getExp().apply(this);
 		falseBranch.getExp().apply(this);
-	}
-	
-	@Override
-	public void caseALetDefStmCG(ALetDefStmCG node) throws AnalysisException
-	{
-		ABlockStmCG replacementBlock = new ABlockStmCG();
-		
-		transformationAssistant.replaceNodeWith(node, replacementBlock);
-		
-		ABlockStmCG current = replacementBlock;
-		
-		for (AVarLocalDeclCG local : node.getLocalDefs())
-		{
-			ABlockStmCG tmp = new ABlockStmCG();
-			tmp.getLocalDefs().add(local.clone());
-			current.getStatements().add(tmp);
-			current = tmp;
-		}
-		
-		replacementBlock.getStatements().add(node.getStm().clone());
 	}
 	
 	@Override
@@ -242,7 +225,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		newWhileStm.setBody(newWhileBody);
 		
 		ABlockStmCG declBlock = new ABlockStmCG();
-		AVarLocalDeclCG whileCondVarDecl = transformationAssistant.consBoolVarDecl(whileCondName, true);
+		AVarDeclCG whileCondVarDecl = transformationAssistant.consBoolVarDecl(whileCondName, true);
 		declBlock.getLocalDefs().add(whileCondVarDecl);
 		declBlock.getStatements().add(newWhileStm);
 		
@@ -373,7 +356,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 			String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_LET_BE_ST_EXP_NAME_PREFIX);
 			SExpCG value = node.getValue();
 
-			AVarLocalDeclCG resultDecl = transformationAssistant.consDecl(var, value);
+			AVarDeclCG resultDecl = transformationAssistant.consDecl(var, value);
 			info.getStmAssistant().injectDeclAsStm(outerBlock, resultDecl);
 
 			AIdentifierVarExpCG varExpResult = new AIdentifierVarExpCG();
@@ -405,7 +388,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		
 		String recModifierName = info.getTempVarNameGen().nextVarName(recModifierExpPrefix);
 		
-		AVarLocalDeclCG recDecl = transformationAssistant.consDecl(recModifierName, node.getType().clone(), node.getRec().clone());
+		AVarDeclCG recDecl = transformationAssistant.consDecl(recModifierName, node.getType().clone(), node.getRec().clone());
 		ABlockStmCG declStm = new ABlockStmCG();
 		declStm.getLocalDefs().add(recDecl);
 		
@@ -626,7 +609,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_EXISTS1_EXP_NAME_PREFIX);
 		TempVarPrefixes varPrefixes = transformationAssistant.getVarPrefixes();
 
-		Exists1QuantifierStrategy strategy = new Exists1QuantifierStrategy(transformationAssistant, predicate, var, langIterator, tempVarNameGen, varPrefixes);
+		Exists1QuantifierStrategy strategy = new Exists1QuantifierStrategy(transformationAssistant, predicate, var, langIterator, tempVarNameGen, varPrefixes, counterData);
 
 		ABlockStmCG block = transformationAssistant.consComplexCompIterationBlock(node.getBindList(), tempVarNameGen, strategy);
 
@@ -660,7 +643,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		ABlockStmCG topBlock = new ABlockStmCG();
 		ABlockStmCG current = topBlock;
 
-		for (AVarLocalDeclCG local : node.getLocalDefs())
+		for (AVarDeclCG local : node.getLocalDefs())
 		{
 			ABlockStmCG tmp = new ABlockStmCG();
 			tmp.getLocalDefs().add(local.clone());
@@ -717,7 +700,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		String casesExpResultName = info.getTempVarNameGen().nextVarName(casesExpResultPrefix);
 		idPattern.setName(casesExpResultName);
 
-		AVarLocalDeclCG resultVarDecl = new AVarLocalDeclCG();
+		AVarDeclCG resultVarDecl = new AVarDeclCG();
 		resultVarDecl.setPattern(idPattern);
 		resultVarDecl.setType(node.getType().clone());
 		resultVarDecl.setExp(new AUndefinedExpCG());
@@ -821,7 +804,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	private void handleLogicExp(SBoolBinaryExpCG node, SStmCG enclosingStm, SStmCG checkBlock, String resultName)
 			throws AnalysisException
 	{
-		AVarLocalDeclCG andResultDecl = transformationAssistant.consBoolVarDecl(resultName, false);
+		AVarDeclCG andResultDecl = transformationAssistant.consBoolVarDecl(resultName, false);
 		
 		ABlockStmCG declBlock = new ABlockStmCG();
 		declBlock.getLocalDefs().add(andResultDecl);

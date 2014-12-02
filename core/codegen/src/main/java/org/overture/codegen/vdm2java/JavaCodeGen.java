@@ -51,6 +51,8 @@ import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
+import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
+import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.ir.IRClassDeclStatus;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRExpStatus;
@@ -74,14 +76,14 @@ import org.overture.codegen.trans.conc.MainClassConcTransformation;
 import org.overture.codegen.trans.conc.MutexDeclTransformation;
 import org.overture.codegen.trans.conc.SentinelTransformation;
 import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
-import org.overture.codegen.trans.funcvalues.FunctionValueVisitor;
+import org.overture.codegen.trans.funcvalues.FunctionValueTransformation;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 import org.overture.codegen.trans.iterator.JavaLanguageIterator;
-import org.overture.codegen.trans.letexps.DeflattenTransformation;
 import org.overture.codegen.trans.letexps.FuncTransformation;
 import org.overture.codegen.trans.letexps.IfExpTransformation;
 import org.overture.codegen.trans.patterns.PatternMatchConfig;
 import org.overture.codegen.trans.patterns.PatternTransformation;
+import org.overture.codegen.trans.quantifier.Exists1CounterData;
 import org.overture.codegen.trans.uniontypes.UnionTypeTransformation;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
@@ -103,6 +105,8 @@ public class JavaCodeGen
 
 	private IRGenerator generator;
 	private IRInfo irInfo;
+	private TransformationAssistantCG transformationAssistant;
+	
 	private JavaFormat javaFormat;
 
 	public static final String INTERFACE_NAME_PREFIX = "Func_";
@@ -157,11 +161,14 @@ public class JavaCodeGen
 	private void init(ILogger log)
 	{
 		initVelocity();
+		
 		this.generator = new IRGenerator(log, OBJ_INIT_CALL_NAME_PREFIX);
 
 		this.irInfo = generator.getIRInfo();
 		this.irInfo.registerQuoteValue(QUOTE_START);
 		this.irInfo.registerQuoteValue(QUOTE_APPEND);
+		
+		this.transformationAssistant = new TransformationAssistantCG(irInfo, varPrefixes);
 		
 		this.javaFormat = new JavaFormat(varPrefixes, irInfo);
 	}
@@ -200,7 +207,7 @@ public class JavaCodeGen
 
 			javaFormat.init();
 			
-			JavaQuoteValueCreator quoteValueCreator = new JavaQuoteValueCreator(irInfo);
+			JavaQuoteValueCreator quoteValueCreator = new JavaQuoteValueCreator(irInfo, transformationAssistant);
 			
 			List<AClassDeclCG> quoteDecls = new LinkedList<AClassDeclCG>();
 			
@@ -272,40 +279,48 @@ public class JavaCodeGen
 				generated.add(new GeneratedModule(status.getClassName(), status.getUnsupportedNodes()));
 			}
 		}
-
-		TransformationAssistantCG transformationAssistant = new TransformationAssistantCG(irInfo, varPrefixes);
+		
 		FunctionValueAssistant functionValueAssistant = new FunctionValueAssistant();
 		IPostCheckCreator postCheckCreator = new JavaPostCheckCreator(POST_CHECK_METHOD_NAME);
 
 		FuncTransformation funcTransformation = new FuncTransformation(transformationAssistant);
 		PrePostTransformation prePostTransformation = new PrePostTransformation(irInfo);
 		IfExpTransformation ifExpTransformation = new IfExpTransformation(transformationAssistant);
-		DeflattenTransformation deflattenTransformation = new DeflattenTransformation(transformationAssistant);
-		FunctionValueVisitor funcValVisitor = new FunctionValueVisitor(irInfo, transformationAssistant, functionValueAssistant, INTERFACE_NAME_PREFIX, TEMPLATE_TYPE_PREFIX, EVAL_METHOD_PREFIX, PARAM_NAME_PREFIX);
+		FunctionValueTransformation funcValueTransformation = new FunctionValueTransformation(irInfo, transformationAssistant, functionValueAssistant, INTERFACE_NAME_PREFIX, TEMPLATE_TYPE_PREFIX, EVAL_METHOD_PREFIX, PARAM_NAME_PREFIX);
 		ILanguageIterator langIterator = new JavaLanguageIterator(transformationAssistant, irInfo.getTempVarNameGen(), varPrefixes);
-		TransformationVisitor transVisitor = new TransformationVisitor(irInfo, classes, varPrefixes, transformationAssistant, langIterator, TERNARY_IF_EXP_NAME_PREFIX, CASES_EXP_RESULT_NAME_PREFIX, AND_EXP_NAME_PREFIX, OR_EXP_NAME_PREFIX, WHILE_COND_NAME_PREFIX, REC_MODIFIER_NAME_PREFIX);
+		TransformationVisitor transVisitor = new TransformationVisitor(irInfo, classes, varPrefixes, transformationAssistant, consExists1CounterData(), langIterator, TERNARY_IF_EXP_NAME_PREFIX, CASES_EXP_RESULT_NAME_PREFIX, AND_EXP_NAME_PREFIX, OR_EXP_NAME_PREFIX, WHILE_COND_NAME_PREFIX, REC_MODIFIER_NAME_PREFIX);
 		PatternTransformation patternTransformation = new PatternTransformation(classes, varPrefixes, irInfo, transformationAssistant, new PatternMatchConfig());
 		PreCheckTransformation preCheckTransformation = new PreCheckTransformation(irInfo, transformationAssistant, new JavaValueSemanticsTag(false));
 		PostCheckTransformation postCheckTransformation = new PostCheckTransformation(postCheckCreator, irInfo, transformationAssistant, FUNC_RESULT_NAME_PREFIX, new JavaValueSemanticsTag(false));
 		IsExpTransformation isExpTransformation = new IsExpTransformation(irInfo, transformationAssistant, IS_EXP_SUBJECT_NAME_PREFIX);
-		//TypeTransformation typeTransformation = new TypeTransformation(transformationAssistant);
 		SeqConversionTransformation seqConversionTransformation = new SeqConversionTransformation(transformationAssistant);
 		
-		//Conc
-		SentinelTransformation Concurrencytransform = new SentinelTransformation(irInfo,classes);
+		// Concurrency related transformations
+		SentinelTransformation concurrencytransform = new SentinelTransformation(irInfo,classes);
 		MainClassConcTransformation mainclassTransform = new MainClassConcTransformation(irInfo, classes);
 		MutexDeclTransformation mutexTransform = new MutexDeclTransformation(irInfo, classes);
 
 		UnionTypeTransformation unionTypeTransformation = new UnionTypeTransformation(transformationAssistant, irInfo, classes, APPLY_EXP_NAME_PREFIX, OBJ_EXP_NAME_PREFIX, CALL_STM_OBJ_NAME_PREFIX, MISSING_OP_MEMBER, MISSING_MEMBER);
 		JavaClassToStringTrans javaToStringTransformation = new JavaClassToStringTrans(irInfo);
-
 		
-		DepthFirstAnalysisAdaptor[] analyses = new DepthFirstAnalysisAdaptor[] {
-				funcTransformation, prePostTransformation, ifExpTransformation,
-				deflattenTransformation, funcValVisitor, transVisitor,
-				deflattenTransformation, patternTransformation, preCheckTransformation, postCheckTransformation,
-				deflattenTransformation, isExpTransformation, /*typeTransformation,*/ unionTypeTransformation, javaToStringTransformation,
-				Concurrencytransform,mutexTransform, mainclassTransform, seqConversionTransformation};
+		DepthFirstAnalysisAdaptor[] analyses = new DepthFirstAnalysisAdaptor[] 
+		{		
+				funcTransformation,
+				prePostTransformation,
+				ifExpTransformation,
+				funcValueTransformation,
+				transVisitor,
+				patternTransformation,
+				preCheckTransformation,
+				postCheckTransformation,
+				isExpTransformation,
+				unionTypeTransformation,
+				javaToStringTransformation,
+				concurrencytransform,
+				mutexTransform,
+				mainclassTransform,
+				seqConversionTransformation
+		};
 
 		for (DepthFirstAnalysisAdaptor transformation : analyses)
 		{
@@ -329,7 +344,7 @@ public class JavaCodeGen
 		List<String> skipping = new LinkedList<String>();
 		
 		MergeVisitor mergeVisitor = javaFormat.getMergeVisitor();
-		FunctionValueAssistant functionValue = funcValVisitor.getFunctionValueAssistant();
+		FunctionValueAssistant functionValue = funcValueTransformation.getFunctionValueAssistant();
 		javaFormat.setFunctionValueAssistant(functionValue);
 
 		for (IRClassDeclStatus status : canBeGenerated)
@@ -398,6 +413,16 @@ public class JavaCodeGen
 		javaFormat.clearClasses();
 
 		return new GeneratedData(generated, generateJavaFromVdmQuotes(), invalidNamesResult, skipping);
+	}
+
+	private Exists1CounterData consExists1CounterData()
+	{
+		AExternalTypeCG type = new AExternalTypeCG();
+		type.setName("Long");
+
+		AIntLiteralExpCG initExp = irInfo.getExpAssistant().consIntLiteral(0);
+		
+		return new Exists1CounterData(type, initExp);
 	}
 
 	private void simplifyLibraryClass(SClassDefinition classDef)

@@ -1,0 +1,1 @@
+["non-zero obligation:(forall a:nat, b:nat, c:nat \u0026 (0 \u003c\u003e 0))","type compatibility obligation:(forall a:nat, b:nat, c:nat \u0026 is_((1 / 0), nat))"]

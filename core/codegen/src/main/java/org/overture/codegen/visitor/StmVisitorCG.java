@@ -69,7 +69,7 @@ import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.SStateDesignatorCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
+import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AReverseUnaryExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
@@ -84,7 +84,6 @@ import org.overture.codegen.cgast.statements.AForAllStmCG;
 import org.overture.codegen.cgast.statements.AForIndexStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.ALetBeStStmCG;
-import org.overture.codegen.cgast.statements.ALetDefStmCG;
 import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
 import org.overture.codegen.cgast.statements.APlainCallStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
@@ -213,7 +212,7 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 
 			STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 
-			AVarLocalDeclCG localDecl = new AVarLocalDeclCG();
+			AVarDeclCG localDecl = new AVarDeclCG();
 			localDecl.setType(typeCg);
 
 			AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
@@ -269,14 +268,14 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 	public SStmCG caseALetStm(ALetStm node, IRInfo question)
 			throws AnalysisException
 	{
-		ALetDefStmCG localDefStm = new ALetDefStmCG();
-
-		question.getDeclAssistant().setLocalDefs(node.getLocalDefs(), localDefStm.getLocalDefs(), question);
+		ABlockStmCG block = new ABlockStmCG();
+		
+		question.getDeclAssistant().setLocalDefs(node.getLocalDefs(), block.getLocalDefs(), question);
 
 		SStmCG stm = node.getStatement().apply(question.getStmVisitor(), question);
-		localDefStm.setStm(stm);
+		block.getStatements().add(stm);
 
-		return localDefStm;
+		return block;
 	}
 
 	@Override

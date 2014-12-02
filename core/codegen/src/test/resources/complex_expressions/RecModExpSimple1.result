@@ -7,7 +7,7 @@ public class Entry {
     public Entry() {
     }
 
-    public static Rec Run() {
+    public static Object Run() {
         Rec r = new Rec(5L, true);
         Rec recModifierExp_1 = Utils.clone(r);
 
@@ -15,7 +15,7 @@ public class Entry {
         recModifierExp_1.b = false;
         r = Utils.clone(recModifierExp_1);
 
-        return Utils.clone(r);
+        return Tuple.mk_(r.x, r.b);
     }
 
     public String toString() {

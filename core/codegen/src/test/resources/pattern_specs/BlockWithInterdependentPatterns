@@ -1,0 +1,25 @@
+class Entry
+
+types
+
+Rec ::
+  f1 : int
+  f2 : int;
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+(
+	let
+	  a = 1,
+		mk_(b,c) = mk_(a,2),
+		d = 11,
+		mk_Rec(e,f) = mk_Rec(a + b + c, d),
+		g = 21,
+		mk_(h, i) = mk_(9, 10)
+	in
+		return a + b + c + d + e + f + g + h + i;
+);
+
+end Entry

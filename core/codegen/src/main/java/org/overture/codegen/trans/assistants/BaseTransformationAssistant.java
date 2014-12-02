@@ -22,11 +22,14 @@
 package org.overture.codegen.trans.assistants;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.cgast.declarations.AVarDeclCG;
+import org.overture.codegen.cgast.expressions.AAnonymousClassExpCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AElseIfStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
@@ -67,6 +70,52 @@ public class BaseTransformationAssistant
 			throws AnalysisException
 
 	{
+		if (node.getAncestor(AAnonymousClassExpCG.class) == null)
+		{
+			AVarDeclCG localDecl = node.getAncestor(AVarDeclCG.class);
+			
+			if (localDecl != null && localDecl.parent() instanceof ABlockStmCG)
+			{
+				ABlockStmCG block = (ABlockStmCG) localDecl.parent();
+
+				if (block.getLocalDefs().size() <= 1)
+				{
+					return block;
+				}
+
+				List<AVarDeclCG> defsToLift = new LinkedList<AVarDeclCG>();
+
+				int i = 0;
+				for (; i < block.getLocalDefs().size(); i++)
+				{
+					AVarDeclCG currentDef = block.getLocalDefs().get(i);
+
+					if (currentDef == localDecl)
+					{
+						defsToLift.add(currentDef);
+						i++;
+						for (; i < block.getLocalDefs().size(); i++)
+						{
+							currentDef = block.getLocalDefs().get(i);
+							defsToLift.add(currentDef);
+						}
+					}
+				}
+
+				block.getLocalDefs().removeAll(defsToLift);
+				LinkedList<SStmCG> statementsToLift = block.getStatements();
+
+				ABlockStmCG liftedBlock = new ABlockStmCG();
+				liftedBlock.setLocalDefs(defsToLift);
+				liftedBlock.setStatements(statementsToLift);
+
+				block.getStatements().clear();
+				block.getStatements().add(liftedBlock);
+
+				return liftedBlock;
+			}
+		}
+		
 		SStmCG enclosingStm = node.getAncestor(SStmCG.class);
 
 		if (enclosingStm == null)
