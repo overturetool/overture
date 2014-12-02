@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -8,7 +8,10 @@
     <version>2.1.5-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
-  
+
+  <!-- Want to use jar packaging so that tests fire off. -->
+  <packaging>jar</packaging>
+
   <groupId>org.overturetool.core.testing</groupId>
   <artifactId>extests</artifactId>
   <name>Overture Example Tests</name>
@@ -17,7 +20,7 @@
     <dependency>
       <groupId>org.overturetool.core.testing</groupId>
       <artifactId>exsupport</artifactId>
-      <version>${project.version}</version>      
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -27,46 +30,47 @@
   </dependencies>
 
   <build>
-    <!-- <resources> -->
-    <!--   <resource> -->
-    <!--     <directory>${project.basedir}/../../../documentation/examples/</directory> -->
-    <!--     <targetPath>${project.build.directory}/classes/examples/</targetPath> -->
-    <!--     <includes> -->
-    <!--       <include>**/*.vdmsl</include> -->
-    <!--       <include>**/*.vdmpp</include> -->
-    <!--       <include>**/*.vdmrt</include> -->
-    <!--       <include>**/README.txt</include> -->
-    <!--     </includes> -->
-    <!--     <excludes> -->
-    <!--       <exclude>target/**</exclude> -->
-    <!--     </excludes> -->
-    <!--   </resource> -->
-    <!-- </resources> -->
-
     <plugins>
-      <!-- never deploy/release/publish this module -->
       <plugin>
-	<groupId>org.apache.maven.plugins</groupId>
-	<artifactId>maven-deploy-plugin</artifactId>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <testFailureIgnore>true</testFailureIgnore>
+          <redirectTestOutputToFile>true</redirectTestOutputToFile>
+          <includes>
+            <include>**/*Test.java</include>
+            <include>**/*Test?.java</include>
+            <include>**/*TestSuite.java</include>
+          </includes>
+        </configuration>
+      </plugin>
+
+      <!-- don't try to build a jar -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <skipIfEmpty>true</skipIfEmpty>
+        </configuration>
+      </plugin>
+
+      <!-- don't try to install anything to the repo -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-install-plugin</artifactId>
         <configuration>
           <skip>true</skip>
         </configuration>
       </plugin>
 
+      <!-- never deploy/release/publish this module -->
       <plugin>
-	<groupId>org.apache.maven.plugins</groupId>
-	<artifactId>maven-surefire-plugin</artifactId>
-	<configuration>
-	  <testFailureIgnore>true</testFailureIgnore>
-	  <redirectTestOutputToFile>true</redirectTestOutputToFile>
-	  <includes>
-	    <include>**/*Test.java</include>
-	    <include>**/*Test?.java</include>
-	    <include>**/*TestSuite.java</include>
-	  </includes>
-	</configuration>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
       </plugin>
     </plugins>
   </build>
 </project>
-
