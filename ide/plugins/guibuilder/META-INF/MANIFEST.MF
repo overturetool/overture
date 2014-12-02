@@ -22,9 +22,12 @@ Import-Package:
  org.eclipse.swt,
  org.eclipse.swt.layout,
  org.eclipse.swt.widgets,
+ org.overture.ide.core.resources,
  org.overture.ide.debug.core,
  org.overture.ide.debug.core.launching,
  org.overture.ide.debug.ui.launching,
  org.overture.ide.vdmpp.debug.ui.launching,
+ org.overture.ide.vdmrt.debug.ui.launching,
+ org.overture.ide.vdmsl.debug.ui.launching,
  org.overture.parser.messages
 Export-Package: org.overture.guibuilder
