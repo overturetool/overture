@@ -152,19 +152,19 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 	protected final static String STATIC_CALL_SEPERATOR = "`";
 	protected final static String CALL_SEPERATOR = ".";
 
-	private Text fProjectText;
+	protected Text fProjectText;
 	private Button fOperationButton;
 	private Text fModuleNameText;
 	private Text fOperationText;
 	private Text fRemoteControlClassText;
 	private Button fRemoteControlnButton;
-	private Button checkBoxGenerateLatexCoverage = null;
+	protected Button checkBoxGenerateLatexCoverage = null;
 
 	private Button radioLaunchModeConsole = null;
 	private Button radioLaunchModeEntryPoint = null;
 	private Button radioLaunchModeRemoteControl = null;
-	private String defaultModule = "";
-	private String expression = "";
+	protected String defaultModule = "";
+	protected String expression = "";
 	private boolean staticOperation = false;
 	private WidgetListener fListener = new WidgetListener();
 
@@ -939,7 +939,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 	/**
 	 * Gets the last selected project in the platform if selection is tree selection
 	 */
-	private String autoFillBaseSettings()
+	protected String autoFillBaseSettings()
 	{
 		ISelection selection = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService().getSelection();// .getWorkbench().getActiveWorkbenchWindow().getSelectionService().getSelection();
 		if (selection instanceof TreeSelection)
