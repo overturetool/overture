@@ -7,12 +7,17 @@ instructions.configure=\
   copy(source:${documentation.root}/tutorials/VDMSLOvertureTutorial/VDMSLGuideToOverture.pdf,target:${installFolder}/documentation/VDMSLGuideToOverture.pdf,overwrite:true);\
   copy(source:${documentation.root}/VDMRTProcess/VDMRTProcess.pdf,target:${installFolder}/documentation/VDMRTProcess.pdf,overwrite:true);\
   copy(source:${repo.root}/documentation/releasenotes/,target:${installFolder}/releasenotes,overwrite:true);\
+  copy(source:${repo.root}/core/commandline/target/overture,target:${installFolder}/commandline/overture,overwrite:true);\
+  chmod(targetDir:${installFolder},targetFile:commandline/overture,permissions:755);\
+  copy(source:${repo.root}/core/commandline/target/overture.bat,target:${installFolder}/commandline/overture.bat,overwrite:true);\
+  copy(source:${repo.root}/core/commandline/target/Overture-${project.version}.jar,target:${installFolder}/commandline/Overture-${project.version}.jar,overwrite:true);\
   remove(path:${installFolder}/epl-v10.html);\
   remove(path:${installFolder}/notice.html);\
   remove(path:${installFolder}/readme);\
   addRepository(type:0,name:Overture,enabled:true,location:http${#58}//overture.sourceforge.net/updates/release/);\
   addRepository(type:1,name:Overture,enabled:true,location:http${#58}//overture.sourceforge.net/updates/release/);
 instructions.configure.import=\
+  org.eclipse.equinox.p2.touchpoint.natives.chmod,\
   org.eclipse.equinox.p2.touchpoint.natives.copy,\
   org.eclipse.equinox.p2.touchpoint.natives.remove
 
