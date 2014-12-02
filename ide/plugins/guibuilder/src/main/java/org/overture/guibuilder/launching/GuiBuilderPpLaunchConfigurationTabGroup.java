@@ -9,7 +9,7 @@ import org.overture.ide.debug.ui.launching.AbstractVdmMainLaunchConfigurationTab
  * @author ldc
  *
  */
-public class GuiBuilderPPLaunchConfigurationTabGroup extends
+public class GuiBuilderPpLaunchConfigurationTabGroup extends
 		AbstractVdmLaunchConfigurationTabGroup {
 
 	@Override
