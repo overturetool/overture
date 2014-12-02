@@ -14,7 +14,16 @@
 
 <build>
  <pluginManagement>
-      <plugins>
+     <plugins>
+    <!-- Assembly to build the jar for command line -->
+    <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.5.2</version>
+        <configuration>
+                <descriptor>src/assembly/deps.xml</descriptor>
+        </configuration>
+    </plugin>
+
   <!-- Plugin for license headers-->
          <plugin>
           <groupId>org.codehaus.mojo</groupId>
