@@ -12,8 +12,10 @@ Require-Bundle: org.overture.ide.debug,
  org.overture.ide.vdmpp.core,
  org.overture.ide.builders.vdmj,
  org.overture.ide.core
-Export-Package: org.overture.ide.vdmpp.debug,org.overture.ide.vdmpp.de
- bug.ui.launchconfigurations,org.overture.ide.vdmpp.debug.utils
+Export-Package: org.overture.ide.vdmpp.debug,
+ org.overture.ide.vdmpp.debug.ui.launchconfigurations,
+ org.overture.ide.vdmpp.debug.ui.launching,
+ org.overture.ide.vdmpp.debug.utils
 Bundle-Activator: org.overture.ide.vdmpp.debug.Activator
 Bundle-ClassPath: .
 

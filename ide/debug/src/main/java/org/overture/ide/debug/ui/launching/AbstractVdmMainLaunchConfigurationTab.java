@@ -377,7 +377,7 @@ public abstract class AbstractVdmMainLaunchConfigurationTab extends
 		return "Class";
 	}
 
-	private void createProjectSelection(Composite parent)
+	protected void createProjectSelection(Composite parent)
 	{
 		Group group = new Group(parent, parent.getStyle());
 		group.setText("Project");
