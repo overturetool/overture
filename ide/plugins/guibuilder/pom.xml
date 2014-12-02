@@ -13,7 +13,7 @@
 
   <groupId>org.overturetool.ide.plugins</groupId>
   <artifactId>org.overture.ide.plugins.guibuilder</artifactId>
-  <name>org.overture.ide.plugins.guibuilder</name>
+  <name>GUI Builder Plugin</name>
 
   <build>
     <plugins>
