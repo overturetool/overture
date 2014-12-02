@@ -24,11 +24,9 @@ package org.overture.core.tests.examples;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
@@ -51,18 +49,21 @@ import org.overture.parser.syntax.ParserException;
  */
 abstract public class ExamplesUtility {
 
-	private static final String SL_EXAMPLES_ROOT = "/examples/VDMSL";
-	private static final String PP_EXAMPLES_ROOT = "/examples/VDM++";
-	private static final String RT_EXAMPLES_ROOT = "/examples/VDMRT";
-	private static final String LIBS_ROOT = "/examples/libs/";
+	private static final String SL_EXAMPLES_ROOT = "examples/VDMSL";
+	private static final String PP_EXAMPLES_ROOT = "examples/VDM++";
+	private static final String RT_EXAMPLES_ROOT = "examples/VDMRT";
+	private static final String LIBS_ROOT = "examples/libs/";
 
-	private static final String SL_LIBS_ROOT = "/examples/libs/SL/";
-	private static final String PP_LIBS_ROOT = "/examples/libs/PP/";
-	private static final String RT_LIBS_ROOT = "/examples/libs/RT/";
+	private static final String SL_LIBS_ROOT = "examples/libs/SL/";
+	private static final String PP_LIBS_ROOT = "examples/libs/PP/";
+	private static final String RT_LIBS_ROOT = "examples/libs/RT/";
 
 	/**
 	 * Get the ASTs for the Overture examples. This method only provides the
 	 * trees for examples that are supposed to successfully parse and TC.
+	 * 
+	 * @param examplesRoot
+	 *            the path to the root folder of the examples
 	 * 
 	 * @return a collection of {@link ExampleAstData}, each representing one
 	 *         example.
@@ -71,18 +72,13 @@ abstract public class ExamplesUtility {
 	 * @throws IOException
 	 * @throws URISyntaxException
 	 */
-	static public Collection<ExampleAstData> getExamplesAsts()
-			throws ParserException, LexException, IOException,
-			URISyntaxException {
-		Collection<ExampleAstData> r = new Vector<ExampleAstData>();
+	static public Collection<ExampleSourceData> getExamplesAsts(
+			String examplesRoot) throws ParserException, LexException,
+			IOException, URISyntaxException {
 
-		Collection<ExampleSourceData> examples = getExamplesSources();
+		Collection<ExampleSourceData> examples = getExamplesSources(examplesRoot);
 
-		for (ExampleSourceData e : examples) {
-			r.add(parseTcExample(e));
-		}
-
-		return r;
+		return examples;
 	}
 
 	/**
@@ -110,18 +106,21 @@ abstract public class ExamplesUtility {
 	 * examples that are expected to parse and TC are returned. In other words,
 	 * examples tagged as having intentional errors are not returned.
 	 * 
+	 * @param examplesRoot
+	 *            the path to the root folder of the examples
+	 * 
 	 * @return a list of {@link ExampleSourceData} containing the example
 	 *         sources
 	 * @throws IOException
 	 * @throws URISyntaxException
 	 */
-	public static Collection<ExampleSourceData> getExamplesSources()
-			throws IOException, URISyntaxException {
+	public static Collection<ExampleSourceData> getExamplesSources(
+			String examplesRoot) throws IOException, URISyntaxException {
 		List<ExampleSourceData> r = new LinkedList<ExampleSourceData>();
 
-		r.addAll(getExamples_(SL_EXAMPLES_ROOT, Dialect.VDM_SL));
-		r.addAll(getExamples_(PP_EXAMPLES_ROOT, Dialect.VDM_PP));
-		r.addAll(getExamples_(RT_EXAMPLES_ROOT, Dialect.VDM_RT));
+		r.addAll(getExamples_(examplesRoot, SL_EXAMPLES_ROOT, Dialect.VDM_SL));
+		r.addAll(getExamples_(examplesRoot, PP_EXAMPLES_ROOT, Dialect.VDM_PP));
+		r.addAll(getExamples_(examplesRoot, RT_EXAMPLES_ROOT, Dialect.VDM_RT));
 
 		return r;
 	}
@@ -129,17 +128,20 @@ abstract public class ExamplesUtility {
 	/**
 	 * Get raw sources for the Overture VDM libraries.
 	 * 
+	 * @param libsRoot
+	 *            the path to the root folder of the examples
+	 * 
 	 * @return a list of {@link ExampleSourceData} containing the libss sources
 	 * @throws IOException
 	 * @throws URISyntaxException
 	 */
-	public static Collection<ExampleSourceData> getLibSources()
+	public static Collection<ExampleSourceData> getLibSources(String libsRoot)
 			throws IOException, URISyntaxException {
 		List<ExampleSourceData> r = new LinkedList<ExampleSourceData>();
 
-		r.addAll(getLibs_(SL_LIBS_ROOT, Dialect.VDM_SL));
-		r.addAll(getLibs_(PP_LIBS_ROOT, Dialect.VDM_PP));
-		r.addAll(getLibs_(RT_LIBS_ROOT, Dialect.VDM_RT));
+		r.addAll(getLibs_(libsRoot + SL_LIBS_ROOT, Dialect.VDM_SL));
+		r.addAll(getLibs_(libsRoot + PP_LIBS_ROOT, Dialect.VDM_PP));
+		r.addAll(getLibs_(libsRoot + RT_LIBS_ROOT, Dialect.VDM_RT));
 
 		return r;
 	}
@@ -147,8 +149,7 @@ abstract public class ExamplesUtility {
 	private static Collection<ExampleSourceData> getLibs_(String libsroot,
 			Dialect dialect) throws IOException, URISyntaxException {
 
-		URL url = ExamplesUtility.class.getResource(libsroot);
-		File dir = new File(url.getPath());
+		File dir = new File(libsroot);
 		List<ExampleSourceData> r = new LinkedList<ExampleSourceData>();
 
 		List<File> libs = new LinkedList<File>();
@@ -162,12 +163,11 @@ abstract public class ExamplesUtility {
 	}
 
 	private static Collection<ExampleSourceData> getExamples_(
-			String examplesRoot, Dialect dialect) throws IOException,
-			URISyntaxException {
+			String externalsRoot, String examplesRoot, Dialect dialect)
+			throws IOException, URISyntaxException {
 		List<ExampleSourceData> r = new LinkedList<ExampleSourceData>();
 
-		URL url = ExamplesUtility.class.getResource(examplesRoot);
-		File dir = new File(url.getPath());
+		File dir = new File(externalsRoot + examplesRoot);
 
 		List<File> source = new LinkedList<File>();
 		// grab examples groups
@@ -183,10 +183,8 @@ abstract public class ExamplesUtility {
 
 					if (p.getLibs().size() > 0) {
 						for (String lib : p.getLibs()) {
-							source.add(new File(ExamplesUtility.class
-									.getResource(LIBS_ROOT).getPath()
-									+ ExamplePacker.getName(dialect)
-									+ "/"
+							source.add(new File(externalsRoot + LIBS_ROOT
+									+ ExamplePacker.getName(dialect) + "/"
 									+ lib));
 
 						}

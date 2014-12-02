@@ -1,8 +1,0 @@
-class Test3
-
-operations
-
-public Test : () ==> ()
-Test () == new World("tests/scenarioBrokenHeart.arg",<DOO>).Run()
-;
-end Test3

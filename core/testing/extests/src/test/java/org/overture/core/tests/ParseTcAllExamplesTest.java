@@ -19,8 +19,7 @@ import org.overture.parser.syntax.ParserException;
 
 /**
  * Basic test for all the examples. Simply ensures that they all parse and type-check correctly. <br>
- * <b>Note:</b> Currently, models with intentional errors are not tested. This test needs to be improved to also check
- * these examples against the expected errors.
+ * <b>Note:</b> Currently, models with intentional errors are not tested.
  * 
  * @author ldc
  */
@@ -30,6 +29,8 @@ public class ParseTcAllExamplesTest
 {
 	ExampleSourceData testData;
 
+	private static String EXAMPLES_ROOT = "../../../externals/examples/target/classes/";
+	
 	public ParseTcAllExamplesTest(String _, ExampleSourceData testData)
 	{
 		this.testData = testData;
@@ -40,7 +41,7 @@ public class ParseTcAllExamplesTest
 	{
 		Collection<Object[]> r = new Vector<Object[]>();
 
-		Collection<ExampleSourceData> examples = ExamplesUtility.getExamplesSources();
+		Collection<ExampleSourceData> examples = ExamplesUtility.getExamplesSources(EXAMPLES_ROOT);
 
 		for (ExampleSourceData e : examples)
 		{
