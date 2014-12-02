@@ -2,22 +2,13 @@
 <?eclipse version="3.4"?>
 <plugin>
 
-	<!--
-		Specify content type and related editor id to be used by the source
-		viewer in debug when a breakpoint is reached
-	-->
-	<extension point="org.overture.ide.debug.sourceviewerEditor">
-		<SourceViewerEditor 
-			ContentTypeId="org.overture.ide.vdmpp.content-type"
-			EditorId="org.overture.ide.vdmpp.ui.VdmPpEditor">
-		</SourceViewerEditor>
-	</extension>
+	<!-- GUI PP Launch Config -->
 
 	<!-- Declare launch configuration type -->
 	<extension point="org.eclipse.debug.core.launchConfigurationTypes">
 		<launchConfigurationType
         delegate="org.overture.guibuilder.launching.GuiBuilderLaunchConfigurationDelegate"
-        id="org.overture.ide.guibuilder.launchConfigurationType"
+        id="org.overture.ide.guibuilderpp.launchConfigurationType"
         modes="run"
         name="VDM PP GUI"
         public="true"
@@ -29,10 +20,10 @@
 	<!-- Add the launch config group to the launch dialog -->
 	<extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
 		<launchConfigurationTabGroup
-			class="org.overture.guibuilder.launching.GuiBuilderLaunchConfigurationTabGroup"
+			class="org.overture.guibuilder.launching.GuiBuilderPpLaunchConfigurationTabGroup"
 			description="GUI-PP Launch Tab" 
 			id="org.overture.ide.guibuilder.launchConfigurationTabGroup"
-			type="org.overture.ide.guibuilder.launchConfigurationType">
+			type="org.overture.ide.guibuilderpp.launchConfigurationType">
             <launchMode
                   mode="run"
                   perspective="org.eclipse.debug.ui.DebugPerspective"
@@ -44,8 +35,45 @@
 	<!-- Add launch config icon	-->
 	<extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
 		<launchConfigurationTypeImage
-			configTypeID="org.overture.ide.guibuilder.launchConfigurationType"
+			configTypeID="org.overture.ide.guibuilderpp.launchConfigurationType"
 			icon="icons/cview16/guipp.png" 
+			id="org.overture.ide.debug.ui.launchConfigurationTypeImage">
+		</launchConfigurationTypeImage>
+	</extension>
+
+
+	<!-- GUI RT Launch Config -->
+
+	<extension point="org.eclipse.debug.core.launchConfigurationTypes">
+		<launchConfigurationType
+        delegate="org.overture.guibuilder.launching.GuiBuilderLaunchConfigurationDelegate"
+        id="org.overture.ide.guibuilderrt.launchConfigurationType"
+        modes="run"
+        name="VDM RT GUI"
+        public="true"
+        sourceLocatorId="org.overture.ide.debug.sourceLocator"
+        sourcePathComputerId="org.overture.ide.debug.sourcePathComputer">
+		</launchConfigurationType>
+	</extension>
+
+	<extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+		<launchConfigurationTabGroup
+			class="org.overture.guibuilder.launching.GuiBuilderRtLaunchConfigurationTabGroup"
+			description="GUI-PP Launch Tab" 
+			id="org.overture.ide.guibuilder.launchConfigurationTabGroup"
+			type="org.overture.ide.guibuilderrt.launchConfigurationType">
+            <launchMode
+                  mode="run"
+                  perspective="org.eclipse.debug.ui.DebugPerspective"
+                  description="%localVdmPpApplicationTabGroupDescription.run">
+            </launchMode>
+		</launchConfigurationTabGroup>
+	</extension>
+
+	<extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+		<launchConfigurationTypeImage
+			configTypeID="org.overture.ide.guibuilderrt.launchConfigurationType"
+			icon="icons/cview16/guirt.png" 
 			id="org.overture.ide.debug.ui.launchConfigurationTypeImage">
 		</launchConfigurationTypeImage>
 	</extension>
