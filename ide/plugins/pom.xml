@@ -29,6 +29,7 @@
     <module>rttraceviewer</module>
 	<module>codegen</module>
 	<module>prob-runtime</module>
+	<module>guibuilder</module>
     <!-- features last -->
     <module>features</module>
   </modules>
