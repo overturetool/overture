@@ -12,23 +12,19 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: .,
  jars/jdom.jar,
  jars/jopt-simple.jar,
- jars/swixml.jar
+ jars/swixml.jar,
+ jars/guibuilder.jar
 Import-Package: 
- org.overture.ast.assistant.pattern,
- org.overture.ast.definitions,
- org.overture.ast.intf.lex,
- org.overture.ast.lex,
- org.overture.ast.patterns,
- org.overture.ast.types,
- org.overture.ast.util.definitions,
- org.overture.config,
- org.overture.ide.vdmsl.ui.editor.syntax,
- org.overture.interpreter,
- org.overture.interpreter.debug,
- org.overture.interpreter.runtime,
- org.overture.interpreter.util,
- org.overture.interpreter.values,
- org.overture.typechecker,
- org.overture.typechecker.assistant,
- org.overture.typechecker.assistant.definition,
- org.overture.typechecker.assistant.type
+ org.eclipse.core.resources,
+ org.eclipse.core.runtime,
+ org.eclipse.debug.core,
+ org.eclipse.debug.ui,
+ org.eclipse.swt,
+ org.eclipse.swt.layout,
+ org.eclipse.swt.widgets,
+ org.overture.ide.debug.core,
+ org.overture.ide.debug.core.launching,
+ org.overture.ide.debug.ui.launching,
+ org.overture.ide.vdmpp.debug.ui.launching,
+ org.overture.parser.messages
+Export-Package: org.overture.guibuilder
