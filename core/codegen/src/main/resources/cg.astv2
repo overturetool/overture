@@ -156,6 +156,9 @@ CG {-> package='org.overture.codegen.cgast'
     	[type]:CG.#type
     	[pattern]:CG.#pattern
     	[exp]:CG.#exp
+    |	{namedType}
+    	[name]:java_String
+    	[type]:CG.#type
 	;
 	
 #stateDesignator {-> package='org.overture.codegen.cgast.statements'

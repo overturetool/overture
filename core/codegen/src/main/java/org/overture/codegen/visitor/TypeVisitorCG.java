@@ -75,6 +75,7 @@ import org.overture.codegen.cgast.types.AUnknownTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.SBasicTypeCG;
 import org.overture.codegen.ir.IRInfo;
+import org.overture.codegen.ir.IRNamedTypeInvariantTag;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
@@ -228,8 +229,12 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 			IRInfo question) throws AnalysisException
 	{
 		PType type = node.getType();
-
-		return type.apply(question.getTypeVisitor(), question);
+		String name = node.getName().getName();
+		
+		STypeCG underlyingType  = type.apply(question.getTypeVisitor(), question);
+		underlyingType.setTag(new IRNamedTypeInvariantTag(name));
+		
+		return underlyingType;
 	}
 
 	@Override
