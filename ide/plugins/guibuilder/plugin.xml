@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+	<!--
+		Specify content type and related editor id to be used by the source
+		viewer in debug when a breakpoint is reached
+	-->
+	<extension point="org.overture.ide.debug.sourceviewerEditor">
+		<SourceViewerEditor 
+			ContentTypeId="org.overture.ide.vdmpp.content-type"
+			EditorId="org.overture.ide.vdmpp.ui.VdmPpEditor">
+		</SourceViewerEditor>
+	</extension>
+
+	<!-- Declare launch configuration type -->
+	<extension point="org.eclipse.debug.core.launchConfigurationTypes">
+		<launchConfigurationType
+        delegate="org.overture.guibuilder.launching.GuiBuilderLaunchConfigurationDelegate"
+        id="org.overture.ide.guibuilder.launchConfigurationType"
+        modes="debug,run"
+        name="VDM PP GUI"
+        public="true"
+        sourceLocatorId="org.overture.ide.debug.sourceLocator"
+        sourcePathComputerId="org.overture.ide.debug.sourcePathComputer">
+		</launchConfigurationType>
+	</extension>
+
+	<!-- Add the launch config group to the launch dialog -->
+	<extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+		<launchConfigurationTabGroup
+			class="org.overture.guibuilder.launching.GuiBuilderLaunchConfigurationTabGroup"
+			description="GUI-PP Launch Tab" 
+			id="org.overture.ide.guibuilder.launchConfigurationTabGroup"
+			type="org.overture.ide.guibuilder.launchConfigurationType">
+			<launchMode 
+                  mode="debug"
+                  perspective="org.eclipse.debug.ui.DebugPerspective"
+                  description="%localVdmPpApplicationTabGroupDescription.debug">
+            </launchMode>
+            <launchMode
+                  mode="run"
+                  perspective="org.eclipse.debug.ui.DebugPerspective"
+                  description="%localVdmPpApplicationTabGroupDescription.run">
+            </launchMode>
+		</launchConfigurationTabGroup>
+	</extension>
+
+	<!-- Add launch config icon	-->
+	<extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+		<launchConfigurationTypeImage
+			configTypeID="org.overture.ide.guibuilder.launchConfigurationType"
+			icon="icons/cview16/guipp.png" 
+			id="org.overture.ide.debug.ui.launchConfigurationTypeImage">
+		</launchConfigurationTypeImage>
+	</extension>
+	
+	
+
+  
+
+</plugin>

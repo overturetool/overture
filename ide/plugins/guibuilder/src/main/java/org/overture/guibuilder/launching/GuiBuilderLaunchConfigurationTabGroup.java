@@ -14,7 +14,7 @@ public class GuiBuilderLaunchConfigurationTabGroup extends
 
 	@Override
 	protected AbstractVdmMainLaunchConfigurationTab getMainTab() {
-		return new GuiBuilderMainLaunchConfigurationTab();
+		return new PpBuilderMainLaunchConfigurationTab();
 	}
 
 }
