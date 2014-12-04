@@ -187,9 +187,7 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 		if (node.getMethods().size() != 0){
 			
 			//fixing the overloaded operation problem
-			@SuppressWarnings("unchecked")
 			LinkedList<AMethodDeclCG> classuniqueMethods = (LinkedList<AMethodDeclCG>) node.getMethods().clone();
-			//LinkedList<APersyncDeclCG> inheritedmethodper = new LinkedList<APersyncDeclCG>();
 			classuniqueMethods.clear();
 			
 			LinkedList<AMethodDeclCG>  allMethods;
