@@ -236,15 +236,12 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 							if(per.getOpname().equals(classuniqueMethods.get(i).getName())){
 								ret.setExp(per.getPred());
 							}
-//							else
-//							{
-//								inheritedmethodper.add(per);
-//							}
+
 						}
 						bodyif.setIfExp(firstBranch);
 						bodyif.setThenStm(ret);
 					}
-				//}
+
 				else
 				{
 					AReturnStmCG ret = new AReturnStmCG();
@@ -256,13 +253,6 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 						if(per.getOpname().equals(classuniqueMethods.get(i).getName())){						
 								ret.setExp(per.getPred());
 						}
-//						else
-//						{
-//							if(!inheritedmethodper.contains(per))
-//							{
-//								inheritedmethodper.add(per);
-//							}
-//						}
 					}					
 					AElseIfStmCG newBranch = new AElseIfStmCG();
 																				
@@ -280,11 +270,6 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 					bodyif.getElseIf().add(newBranch);
 				}
 			}
-//			if(inheritedmethodper.size() != 0)
-//			{
-//				bodyif.setElseStm(isInheritedmethod(node,inheritedmethodper));
-//			}
-//			else{
 				AReturnStmCG ret = new AReturnStmCG();
 
 				ABoolLiteralExpCG defaultPer = new ABoolLiteralExpCG();
@@ -292,8 +277,7 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 
 				ret.setExp(defaultPer);
 				bodyif.setElseStm(ret.clone());
-//			}
-			
+
 			evaluatePPmethod.setBody(bodyif);
 		}
 		
