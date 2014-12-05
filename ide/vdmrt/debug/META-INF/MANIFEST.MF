@@ -12,6 +12,7 @@ Require-Bundle: org.overture.ide.vdmrt.core,
  org.overture.ide.core,
  org.overture.ide.debug,
  org.overture.ide.vdmpp.debug
-Export-Package: org.overture.ide.vdmrt.debug
+Export-Package: org.overture.ide.vdmrt.debug,
+ org.overture.ide.vdmrt.debug.ui.launching
 Bundle-Activator: org.overture.ide.vdmrt.debug.Activator
 Bundle-ClassPath: .
