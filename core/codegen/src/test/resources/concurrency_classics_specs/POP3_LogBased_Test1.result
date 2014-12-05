@@ -1873,7 +1873,8 @@ public class POP3Server extends VDMThread implements EvaluatePP {
         } else if (Utils.equals(fnr, 2L)) {
             return true;
         } else if (Utils.equals(fnr, 3L)) {
-            return Utils.equals(sentinel.active[((POP3Server_sentinel) sentinel).ReleaseLock] +
+            return Utils.equals(sentinel.active[((POP3Server_sentinel) sentinel).AcquireLock] +
+                sentinel.active[((POP3Server_sentinel) sentinel).ReleaseLock] +
                 sentinel.active[((POP3Server_sentinel) sentinel).IsLocked], 0L);
         } else if (Utils.equals(fnr, 4L)) {
             return (Utils.equals(sentinel.active[((POP3Server_sentinel) sentinel).SetUserMessages],
@@ -1892,12 +1893,14 @@ public class POP3Server extends VDMThread implements EvaluatePP {
         } else if (Utils.equals(fnr, 8L)) {
             return (Utils.equals(sentinel.active[((POP3Server_sentinel) sentinel).AcquireLock],
                 0L)) &&
-            (Utils.equals(sentinel.active[((POP3Server_sentinel) sentinel).ReleaseLock] +
+            (Utils.equals(sentinel.active[((POP3Server_sentinel) sentinel).AcquireLock] +
+                sentinel.active[((POP3Server_sentinel) sentinel).ReleaseLock] +
                 sentinel.active[((POP3Server_sentinel) sentinel).IsLocked], 0L));
         } else if (Utils.equals(fnr, 9L)) {
             return (Utils.equals(sentinel.active[((POP3Server_sentinel) sentinel).ReleaseLock],
                 0L)) &&
-            (Utils.equals(sentinel.active[((POP3Server_sentinel) sentinel).ReleaseLock] +
+            (Utils.equals(sentinel.active[((POP3Server_sentinel) sentinel).AcquireLock] +
+                sentinel.active[((POP3Server_sentinel) sentinel).ReleaseLock] +
                 sentinel.active[((POP3Server_sentinel) sentinel).IsLocked], 0L));
         } else if (Utils.equals(fnr, 10L)) {
             return true;

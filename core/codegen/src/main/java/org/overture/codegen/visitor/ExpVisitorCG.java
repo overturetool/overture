@@ -1820,16 +1820,13 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	{
 		PType type = node.getType();
 		ILexToken hop = node.getHop();
-		//className = node.getAncestor(classType)
+		
 		AClassClassDefinition enclosingClass = node.getAncestor(AClassClassDefinition.class);	
 		
 		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 		
 		AHistoryExpCG history = new AHistoryExpCG();
-		//if(hop.toString().equals("#act"))
-		//{
-			//history.setHistype("act");
-		//}
+		
 		history.setHistype(hop.toString().substring(1));
 		history.setType(typeCg);
 		
@@ -1854,7 +1851,6 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		
 		if(node.getOpnames().size() == 1)
 		{
-			//System.out.println(history);
 			return history;
 			
 		}
@@ -1895,8 +1891,6 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			lastHistoryExp.setOpsname(lastOpName);
 			
 			last.setRight(lastHistoryExp);
-			
-			//System.out.println("left: " + historyCounterSum.getLeft()+ "\nright:"+historyCounterSum.getRight());
 			
 			return historyCounterSum;
 		}
