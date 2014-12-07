@@ -73,8 +73,6 @@ public class FunctionValueTransformation extends DepthFirstAnalysisAdaptor
 		this.templateTypePrefix = templateTypePrefix;
 		this.evalMethodName = evalMethodName;
 		this.paramNamePrefix = paramNamePrefix;
-
-		this.functionValueAssistant = new FunctionValueAssistant();
 	}
 
 	public FunctionValueAssistant getFunctionValueAssistant()
