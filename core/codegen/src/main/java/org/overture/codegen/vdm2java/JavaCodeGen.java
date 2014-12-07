@@ -92,23 +92,6 @@ import org.overture.codegen.utils.GeneratedModule;
 
 public class JavaCodeGen
 {
-	public static final String JAVA_TEMPLATES_ROOT_FOLDER = "JavaTemplates";
-
-	public static final TemplateStructure JAVA_TEMPLATE_STRUCTURE = new TemplateStructure(JAVA_TEMPLATES_ROOT_FOLDER);
-
-	public static final String[] RESERVED_TYPE_NAMES = {
-			// Classes used from the Java standard library
-			"Utils", "Record", "Long", "Double", "Character", "String", "List",
-			"Set" };
-
-	public final static TempVarPrefixes varPrefixes = new TempVarPrefixes();
-
-	private IRGenerator generator;
-	private IRInfo irInfo;
-	private TransformationAssistantCG transformationAssistant;
-	
-	private JavaFormat javaFormat;
-
 	public static final String INTERFACE_NAME_PREFIX = "Func_";
 	public static final String TEMPLATE_TYPE_PREFIX = "T_";
 	public static final String EVAL_METHOD_PREFIX = "eval";
@@ -138,9 +121,54 @@ public class JavaCodeGen
 	public static final String QUOTE_START = "start";
 	public static final String QUOTE_APPEND = "append";
 
+	public static final String JAVA_TEMPLATES_ROOT_FOLDER = "JavaTemplates";
+
+	public static final String[] JAVA_RESERVED_TYPE_NAMES = {
+			// Classes used from the Java standard library
+			"Utils", "Record", "Long", "Double", "Character", "String", "List",
+			"Set" };
+	
+	private IRGenerator generator;
+	private IRInfo irInfo;
+	private TransformationAssistantCG transformationAssistant;
+	private TempVarPrefixes varPrefixes;
+	
+	private JavaFormat javaFormat;
+	private TemplateStructure javaTemplateStructure;
+	
 	public JavaCodeGen()
 	{
 		init(null);
+	}
+	
+	public void setIRGenerator(IRGenerator generator)
+	{
+		this.generator = generator;
+	}
+	
+	public IRGenerator getIRGenerator()
+	{
+		return generator;
+	}
+	
+	public void setTempVarPrefixes(TempVarPrefixes varPrefixes)
+	{
+		this.varPrefixes = varPrefixes;
+	}
+	
+	public TempVarPrefixes getTempVarPrefixes()
+	{
+		return varPrefixes;
+	}
+	
+	public void setJavaTemplateStructure(TemplateStructure javaTemplateStructure)
+	{
+		this.javaTemplateStructure = javaTemplateStructure;
+	}
+	
+	public TemplateStructure getJavaTemplateStructure()
+	{
+		return javaTemplateStructure;
 	}
 
 	public void setJavaSettings(JavaSettings javaSettings)
@@ -162,6 +190,9 @@ public class JavaCodeGen
 	{
 		initVelocity();
 		
+		this.javaTemplateStructure = new TemplateStructure(JAVA_TEMPLATES_ROOT_FOLDER);
+		this.varPrefixes = new TempVarPrefixes();
+		
 		this.generator = new IRGenerator(log, OBJ_INIT_CALL_NAME_PREFIX);
 
 		this.irInfo = generator.getIRInfo();
@@ -170,7 +201,7 @@ public class JavaCodeGen
 		
 		this.transformationAssistant = new TransformationAssistantCG(irInfo, varPrefixes);
 		
-		this.javaFormat = new JavaFormat(varPrefixes, irInfo);
+		this.javaFormat = new JavaFormat(varPrefixes, javaTemplateStructure, irInfo);
 	}
 
 	public void setSettings(IRSettings settings)
@@ -535,7 +566,7 @@ public class JavaCodeGen
 		VdmAstAnalysis analysis = new VdmAstAnalysis(assistantManager);
 
 		Set<Violation> reservedWordViolations = analysis.usesIllegalNames(mergedParseLists, new ReservedWordsComparison(IJavaCodeGenConstants.RESERVED_WORDS, irInfo, INVALID_NAME_PREFIX));
-		Set<Violation> typenameViolations = analysis.usesIllegalNames(mergedParseLists, new TypenameComparison(RESERVED_TYPE_NAMES, irInfo, INVALID_NAME_PREFIX));
+		Set<Violation> typenameViolations = analysis.usesIllegalNames(mergedParseLists, new TypenameComparison(JAVA_RESERVED_TYPE_NAMES, irInfo, INVALID_NAME_PREFIX));
 
 		String[] generatedTempVarNames = GeneralUtils.concat(IRConstants.GENERATED_TEMP_NAMES, varPrefixes.GENERATED_TEMP_NAMES);
 
