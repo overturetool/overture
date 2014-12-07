@@ -51,8 +51,6 @@ import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
-import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
-import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRClassDeclStatus;
 import org.overture.codegen.ir.IRConstants;
@@ -61,27 +59,8 @@ import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateStructure;
-import org.overture.codegen.trans.IPostCheckCreator;
-import org.overture.codegen.trans.IsExpTransformation;
-import org.overture.codegen.trans.PostCheckTransformation;
-import org.overture.codegen.trans.PreCheckTransformation;
-import org.overture.codegen.trans.PrePostTransformation;
-import org.overture.codegen.trans.SeqConversionTransformation;
-import org.overture.codegen.trans.TransformationVisitor;
 import org.overture.codegen.trans.assistants.TransformationAssistantCG;
-import org.overture.codegen.trans.conc.MainClassConcTransformation;
-import org.overture.codegen.trans.conc.MutexDeclTransformation;
-import org.overture.codegen.trans.conc.SentinelTransformation;
 import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
-import org.overture.codegen.trans.funcvalues.FunctionValueTransformation;
-import org.overture.codegen.trans.iterator.ILanguageIterator;
-import org.overture.codegen.trans.iterator.JavaLanguageIterator;
-import org.overture.codegen.trans.letexps.FuncTransformation;
-import org.overture.codegen.trans.letexps.IfExpTransformation;
-import org.overture.codegen.trans.patterns.PatternMatchConfig;
-import org.overture.codegen.trans.patterns.PatternTransformation;
-import org.overture.codegen.trans.quantifier.Exists1CounterData;
-import org.overture.codegen.trans.uniontypes.UnionTypeTransformation;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedData;
@@ -95,8 +74,6 @@ public class JavaCodeGen extends CodeGenBase
 			// Classes used from the Java standard library
 			"Utils", "Record", "Long", "Double", "Character", "String", "List",
 			"Set" };
-	
-	private TransformationAssistantCG transformationAssistant;
 	
 	private JavaFormat javaFormat;
 	private TemplateStructure javaTemplateStructure;
@@ -245,46 +222,8 @@ public class JavaCodeGen extends CodeGenBase
 		}
 		
 		FunctionValueAssistant functionValueAssistant = new FunctionValueAssistant();
-		IPostCheckCreator postCheckCreator = new JavaPostCheckCreator(POST_CHECK_METHOD_NAME);
 
-		FuncTransformation funcTransformation = new FuncTransformation(transformationAssistant);
-		PrePostTransformation prePostTransformation = new PrePostTransformation(generator.getIRInfo());
-		IfExpTransformation ifExpTransformation = new IfExpTransformation(transformationAssistant);
-		FunctionValueTransformation funcValueTransformation = new FunctionValueTransformation(generator.getIRInfo(), transformationAssistant, functionValueAssistant, INTERFACE_NAME_PREFIX, TEMPLATE_TYPE_PREFIX, EVAL_METHOD_PREFIX, PARAM_NAME_PREFIX);
-		ILanguageIterator langIterator = new JavaLanguageIterator(transformationAssistant, generator.getIRInfo().getTempVarNameGen(), varPrefixes);
-		TransformationVisitor transVisitor = new TransformationVisitor(generator.getIRInfo(), classes, varPrefixes, transformationAssistant, consExists1CounterData(), langIterator, TERNARY_IF_EXP_NAME_PREFIX, CASES_EXP_RESULT_NAME_PREFIX, AND_EXP_NAME_PREFIX, OR_EXP_NAME_PREFIX, WHILE_COND_NAME_PREFIX, REC_MODIFIER_NAME_PREFIX);
-		PatternTransformation patternTransformation = new PatternTransformation(classes, varPrefixes, generator.getIRInfo(), transformationAssistant, new PatternMatchConfig());
-		PreCheckTransformation preCheckTransformation = new PreCheckTransformation(generator.getIRInfo(), transformationAssistant, new JavaValueSemanticsTag(false));
-		PostCheckTransformation postCheckTransformation = new PostCheckTransformation(postCheckCreator, generator.getIRInfo(), transformationAssistant, FUNC_RESULT_NAME_PREFIX, new JavaValueSemanticsTag(false));
-		IsExpTransformation isExpTransformation = new IsExpTransformation(generator.getIRInfo(), transformationAssistant, IS_EXP_SUBJECT_NAME_PREFIX);
-		SeqConversionTransformation seqConversionTransformation = new SeqConversionTransformation(transformationAssistant);
-		
-		// Concurrency related transformations
-		SentinelTransformation concurrencytransform = new SentinelTransformation(generator.getIRInfo(),classes);
-		MainClassConcTransformation mainclassTransform = new MainClassConcTransformation(generator.getIRInfo(), classes);
-		MutexDeclTransformation mutexTransform = new MutexDeclTransformation(generator.getIRInfo(), classes);
-
-		UnionTypeTransformation unionTypeTransformation = new UnionTypeTransformation(transformationAssistant, generator.getIRInfo(), classes, APPLY_EXP_NAME_PREFIX, OBJ_EXP_NAME_PREFIX, CALL_STM_OBJ_NAME_PREFIX, MISSING_OP_MEMBER, MISSING_MEMBER);
-		JavaClassToStringTrans javaToStringTransformation = new JavaClassToStringTrans(generator.getIRInfo());
-		
-		DepthFirstAnalysisAdaptor[] analyses = new DepthFirstAnalysisAdaptor[] 
-		{		
-				funcTransformation,
-				prePostTransformation,
-				ifExpTransformation,
-				funcValueTransformation,
-				transVisitor,
-				patternTransformation,
-				preCheckTransformation,
-				postCheckTransformation,
-				isExpTransformation,
-				unionTypeTransformation,
-				javaToStringTransformation,
-				concurrencytransform,
-				mutexTransform,
-				mainclassTransform,
-				seqConversionTransformation
-		};
+		DepthFirstAnalysisAdaptor[] analyses = new JavaTransSeries(this).consAnalyses(classes, functionValueAssistant);
 
 		for (DepthFirstAnalysisAdaptor transformation : analyses)
 		{
@@ -308,8 +247,7 @@ public class JavaCodeGen extends CodeGenBase
 		List<String> skipping = new LinkedList<String>();
 		
 		MergeVisitor mergeVisitor = javaFormat.getMergeVisitor();
-		FunctionValueAssistant functionValue = funcValueTransformation.getFunctionValueAssistant();
-		javaFormat.setFunctionValueAssistant(functionValue);
+		javaFormat.setFunctionValueAssistant(functionValueAssistant);
 
 		for (IRClassDeclStatus status : canBeGenerated)
 		{
@@ -352,7 +290,7 @@ public class JavaCodeGen extends CodeGenBase
 			}
 		}
 
-		List<AInterfaceDeclCG> funcValueInterfaces = functionValue.getFunctionValueInterfaces();
+		List<AInterfaceDeclCG> funcValueInterfaces = functionValueAssistant.getFunctionValueInterfaces();
 
 		for (AInterfaceDeclCG funcValueInterface : funcValueInterfaces)
 		{
@@ -377,16 +315,6 @@ public class JavaCodeGen extends CodeGenBase
 		javaFormat.clearClasses();
 
 		return new GeneratedData(generated, generateJavaFromVdmQuotes(), invalidNamesResult, skipping);
-	}
-
-	private Exists1CounterData consExists1CounterData()
-	{
-		AExternalTypeCG type = new AExternalTypeCG();
-		type.setName("Long");
-
-		AIntLiteralExpCG initExp = generator.getIRInfo().getExpAssistant().consIntLiteral(0);
-		
-		return new Exists1CounterData(type, initExp);
 	}
 
 	private void simplifyLibraryClass(SClassDefinition classDef)
@@ -433,7 +361,6 @@ public class JavaCodeGen extends CodeGenBase
 	public Generated generateJavaFromVdmExp(PExp exp) throws AnalysisException
 	{
 		// There is no name validation here.
-
 		IRExpStatus expStatus = generator.generateFrom(exp);
 
 		StringWriter writer = new StringWriter();
