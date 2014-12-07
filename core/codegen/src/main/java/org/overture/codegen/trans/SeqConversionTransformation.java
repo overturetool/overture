@@ -17,14 +17,14 @@ import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
-import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class SeqConversionTransformation extends DepthFirstAnalysisAdaptor
 {
-	private TransformationAssistantCG transformationAssistant;
+	private TransAssistantCG transformationAssistant;
 
 	public SeqConversionTransformation(
-			TransformationAssistantCG transformationAssistant)
+			TransAssistantCG transformationAssistant)
 	{
 		this.transformationAssistant = transformationAssistant;
 	}

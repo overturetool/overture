@@ -2,7 +2,7 @@ package org.overture.codegen.ir;
 
 import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.trans.TempVarPrefixes;
-import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 
 public class CodeGenBase
@@ -32,7 +32,7 @@ public class CodeGenBase
 	public static final String QUOTE_APPEND = "append";
 
 	protected IRGenerator generator;
-	protected TransformationAssistantCG transformationAssistant;
+	protected TransAssistantCG transAssistant;
 	protected TempVarPrefixes varPrefixes;
 
 	public CodeGenBase(ILogger log)
@@ -67,14 +67,14 @@ public class CodeGenBase
 		return generator.getIRInfo();
 	}
 	
-	public void setTransformationAssistant(TransformationAssistantCG transAssistant)
+	public void setTransAssistant(TransAssistantCG transAssistant)
 	{
-		this.transformationAssistant = transAssistant;
+		this.transAssistant = transAssistant;
 	}
 	
-	public TransformationAssistantCG getTransformationAssistant()
+	public TransAssistantCG getTransformationAssistant()
 	{
-		return transformationAssistant;
+		return transAssistant;
 	}
 	
 	public void setTempVarPrefixes(TempVarPrefixes varPrefixes)

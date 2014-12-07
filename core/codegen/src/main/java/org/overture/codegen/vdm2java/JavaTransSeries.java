@@ -14,7 +14,7 @@ import org.overture.codegen.trans.PreCheckTransformation;
 import org.overture.codegen.trans.PrePostTransformation;
 import org.overture.codegen.trans.SeqConversionTransformation;
 import org.overture.codegen.trans.TransformationVisitor;
-import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.conc.MainClassConcTransformation;
 import org.overture.codegen.trans.conc.MutexDeclTransformation;
 import org.overture.codegen.trans.conc.SentinelTransformation;
@@ -45,7 +45,7 @@ public class JavaTransSeries
 	{
 		IPostCheckCreator postCheckCreator = new JavaPostCheckCreator(POST_CHECK_METHOD_NAME);
 
-		TransformationAssistantCG transAssistant = codeGen.getTransformationAssistant();
+		TransAssistantCG transAssistant = codeGen.getTransformationAssistant();
 
 		FuncTransformation funcTransformation = new FuncTransformation(transAssistant);
 		IRInfo irInfo = codeGen.getIRGenerator().getIRInfo();

@@ -41,7 +41,7 @@ import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.AbstractIterationStrategy;
 import org.overture.codegen.trans.DeclarationTag;
 import org.overture.codegen.trans.TempVarPrefixes;
-import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 
 public class LetBeStStrategy extends AbstractIterationStrategy
@@ -53,7 +53,7 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 	int count = 0;
 	private List<AVarDeclCG> decls = new LinkedList<AVarDeclCG>();
 
-	public LetBeStStrategy(TransformationAssistantCG transformationAssistant,
+	public LetBeStStrategy(TransAssistantCG transformationAssistant,
 			SExpCG suchThat, SSetTypeCG setType,
 			ILanguageIterator langIterator, ITempVarGen tempGen,
 			TempVarPrefixes varPrefixes)

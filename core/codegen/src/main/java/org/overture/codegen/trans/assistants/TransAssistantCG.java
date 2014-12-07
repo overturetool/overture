@@ -66,12 +66,12 @@ import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.IIterationStrategy;
 import org.overture.codegen.trans.TempVarPrefixes;
 
-public class TransformationAssistantCG extends BaseTransformationAssistant
+public class TransAssistantCG extends BaseTransformationAssistant
 {
 	protected IRInfo info;
 	protected TempVarPrefixes varPrefixes;
 
-	public TransformationAssistantCG(IRInfo info, TempVarPrefixes varPrefixes)
+	public TransAssistantCG(IRInfo info, TempVarPrefixes varPrefixes)
 	{
 		this.info = info;
 		this.varPrefixes = varPrefixes;

@@ -31,16 +31,16 @@ import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.TempVarPrefixes;
-import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public abstract class AbstractLanguageIterator implements ILanguageIterator
 {
-	protected TransformationAssistantCG transformationAssistant;
+	protected TransAssistantCG transformationAssistant;
 	protected ITempVarGen tempGen;
 	protected TempVarPrefixes varPrefixes;
 
 	public AbstractLanguageIterator(
-			TransformationAssistantCG transformationAssistant,
+			TransAssistantCG transformationAssistant,
 			ITempVarGen tempGen, TempVarPrefixes varPrefixes)
 	{
 		this.transformationAssistant = transformationAssistant;

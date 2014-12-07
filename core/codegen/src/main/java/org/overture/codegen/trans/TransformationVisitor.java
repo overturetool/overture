@@ -78,7 +78,7 @@ import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.comp.ComplexCompStrategy;
 import org.overture.codegen.trans.comp.MapCompStrategy;
 import org.overture.codegen.trans.comp.SeqCompStrategy;
@@ -97,7 +97,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	//TODO: consider putting in ir info
 	private List<AClassDeclCG> classes;
 	
-	private TransformationAssistantCG transformationAssistant;
+	private TransAssistantCG transformationAssistant;
 
 	private Exists1CounterData counterData;
 	
@@ -111,7 +111,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	private String recModifierExpPrefix;
 
 	public TransformationVisitor(IRInfo info, List<AClassDeclCG> classes, TempVarPrefixes varPrefixes,
-			TransformationAssistantCG transformationAssistant, Exists1CounterData counterData,
+			TransAssistantCG transformationAssistant, Exists1CounterData counterData,
 			ILanguageIterator langIterator, String ternaryIfExpPrefix, String casesExpPrefix, String andExpPrefix, String orExpPrefix, String whileCondExpPrefix, String recModifierExpPrefix)
 	{
 		this.info = info;

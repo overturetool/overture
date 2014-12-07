@@ -59,7 +59,7 @@ import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateStructure;
-import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
@@ -119,7 +119,7 @@ public class JavaCodeGen extends CodeGenBase
 		this.generator.getIRInfo().registerQuoteValue(QUOTE_START);
 		this.generator.getIRInfo().registerQuoteValue(QUOTE_APPEND);
 		
-		this.transformationAssistant = new TransformationAssistantCG(generator.getIRInfo(), varPrefixes);
+		this.transAssistant = new TransAssistantCG(generator.getIRInfo(), varPrefixes);
 		
 		this.javaFormat = new JavaFormat(varPrefixes, javaTemplateStructure, generator.getIRInfo());
 	}
@@ -148,7 +148,7 @@ public class JavaCodeGen extends CodeGenBase
 
 			javaFormat.init();
 			
-			JavaQuoteValueCreator quoteValueCreator = new JavaQuoteValueCreator(generator.getIRInfo(), transformationAssistant);
+			JavaQuoteValueCreator quoteValueCreator = new JavaQuoteValueCreator(generator.getIRInfo(), transAssistant);
 			
 			List<AClassDeclCG> quoteDecls = new LinkedList<AClassDeclCG>();
 			

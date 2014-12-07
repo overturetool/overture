@@ -45,13 +45,13 @@ import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class FunctionValueTransformation extends DepthFirstAnalysisAdaptor
 {
 	private IRInfo info;
 
-	private TransformationAssistantCG transformationAssistant;
+	private TransAssistantCG transformationAssistant;
 
 	private FunctionValueAssistant functionValueAssistant;
 
@@ -61,7 +61,7 @@ public class FunctionValueTransformation extends DepthFirstAnalysisAdaptor
 	private String paramNamePrefix;
 
 	public FunctionValueTransformation(IRInfo info,
-			TransformationAssistantCG transformationAssistant,
+			TransAssistantCG transformationAssistant,
 			FunctionValueAssistant functionValueAssistant,
 			String interfaceNamePrefix, String templateTypePrefix,
 			String evalMethodName, String paramNamePrefix)
