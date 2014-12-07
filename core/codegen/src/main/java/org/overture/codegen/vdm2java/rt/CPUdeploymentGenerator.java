@@ -42,7 +42,9 @@ public class CPUdeploymentGenerator {
 
 		Set<ACpuDeploymentDeclCG> cpuDeployments = new HashSet<ACpuDeploymentDeclCG>();
 
-
+		// Number of CPU
+		int numberofCPUs = cpuToDeployedObject.keySet().size();
+		
 		for(String cpuDep : cpuToDeployedObject.keySet()){
 
 			
@@ -51,6 +53,8 @@ public class CPUdeploymentGenerator {
 			cpuDeployment.setCpuName(cpuDep);
 			// Set the number of deployed objects
 			cpuDeployment.setDeployedObjCounter(DeployedObjCounter);
+			// Set number of total CPUs
+			cpuDeployment.setNumberofCPUs(numberofCPUs);
 			
 			ARMIregistryDeclCG rmiReg = new ARMIregistryDeclCG();
 
