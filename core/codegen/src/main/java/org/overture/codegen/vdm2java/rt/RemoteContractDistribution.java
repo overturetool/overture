@@ -16,6 +16,8 @@ import org.overture.codegen.cgast.declarations.ARMIServerDeclCG;
 import org.overture.codegen.cgast.declarations.ARMIregistryDeclCG;
 import org.overture.codegen.cgast.declarations.ARemoteContractDeclCG;
 import org.overture.codegen.cgast.declarations.ARemoteContractImplDeclCG;
+import org.overture.codegen.cgast.declarations.ASynchTokenDeclCG;
+import org.overture.codegen.cgast.declarations.ASynchTokenInterfaceDeclCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.trans.TempVarPrefixes;
@@ -39,7 +41,6 @@ public class RemoteContractDistribution {
 
 	public void run() throws AnalysisException, IOException {
 
-		// TODO: Do nicely
 		IRInfo info = new IRInfo("cg_init");
 		JavaFormat javaFormat = new JavaFormat(new TempVarPrefixes(), info);
 		MergeVisitor printer = javaFormat.getMergeVisitor();
@@ -93,8 +94,31 @@ public class RemoteContractDistribution {
 
 
 			for(AClassClassDefinition clas : cpuToDeployedClasses.get(cpu)){
+				
+				// Generate a SynchToken and its interface for each CPU
+				ASynchTokenDeclCG synchToken = new ASynchTokenDeclCG();
 
+				StringWriter writer_synch = new StringWriter();
+				synchToken.apply(printer, writer_synch);
 
+				File file_synch = new File("/Users/Miran/Documents/files/" + cpu + "/" + "SynchToken.java");
+				BufferedWriter output_synch = new BufferedWriter(new FileWriter(file_synch));
+				output_synch.write(JavaCodeGenUtil.formatJavaCode(writer_synch
+						.toString()));
+				output_synch.close();
+				
+				
+				ASynchTokenInterfaceDeclCG synchToken_interface = new ASynchTokenInterfaceDeclCG();
+
+				StringWriter writer_synch_i = new StringWriter();
+				synchToken_interface.apply(printer, writer_synch_i);
+
+				File file_synch_i = new File("/Users/Miran/Documents/files/" + cpu + "/" + "SynchToken_interface.java");
+				BufferedWriter output_synch_i = new BufferedWriter(new FileWriter(file_synch_i));
+				output_synch_i.write(JavaCodeGenUtil.formatJavaCode(writer_synch_i
+						.toString()));
+				output_synch_i.close();
+				
 				for (ARemoteContractDeclCG contract : remoteContracts) {
 					//if(contract.getName().equals(clas.getName().toString() + "_i")){
 						StringWriter writer = new StringWriter();

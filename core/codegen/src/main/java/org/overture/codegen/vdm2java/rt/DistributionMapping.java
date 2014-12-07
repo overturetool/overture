@@ -22,6 +22,11 @@ public class DistributionMapping {
 
 	public void run() {
 
+		if(allClasses == null)
+		{
+			return;
+		}
+		
 		for (SClassDefinition classDef : allClasses) {
 			try {
 				

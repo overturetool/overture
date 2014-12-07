@@ -263,7 +263,7 @@ public class TemplateManager
 				+ "SynchToken");
 		
 		nodeTemplateFileNames.put(ASynchTokenInterfaceDeclCG.class, templateStructure.DECL_PATH
-				+ "SynchToken_interface");
+				+ "SynchTokenInterface");
 		
 		// Local declarations
 

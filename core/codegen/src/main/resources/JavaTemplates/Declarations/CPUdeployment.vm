@@ -45,7 +45,7 @@ public class $node.getCpuName() {
 						SynchToken synchToken = new SynchToken();
 						registry.bind($node.getCpuNameString(),synchToken);
 						
-						int NumberOfCPUs = 4;
+						int NumberOfCPUs = $node.getNumberofCPUs();
 						
 						while(registry.list().length<DeployedObjCounter+NumberOfCPUs) {
 							System.out.println("Waiting for all remote references");
