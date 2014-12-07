@@ -1,0 +1,24 @@
+class A
+
+end A
+
+system SimpleSys
+
+instance variables
+  cpu1 : CPU := new CPU(<FCFS>, 1E6);
+  cpu2 : CPU := new CPU(<FCFS>, 1E6);
+
+  bus1 : BUS := new BUS(<FCFS>, 1E3, {cpu1, cpu2});
+  
+  public static a1 	: A := new A();
+  public static a2 	: A := new A();
+  
+operations
+public SimpleSys: () ==> SimpleSys
+SimpleSys() ==
+ (
+  cpu1.deploy(a1);
+  cpu2.deploy(a2);
+ );
+  
+end SimpleSys

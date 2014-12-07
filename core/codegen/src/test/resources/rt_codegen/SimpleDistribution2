@@ -1,0 +1,31 @@
+class A
+
+end A
+
+system MySys
+
+instance variables
+  cpu1 : CPU := new CPU(<FCFS>, 1E6);
+  cpu2 : CPU := new CPU(<FCFS>, 1E6);
+
+  bus1 : BUS := new BUS(<FCFS>, 1E3, {cpu1, cpu2});
+  
+  public static x1 	: A := new A();
+  public static x2 	: A := new A();
+  
+  public static y1 	: A := new A();
+  public static y2 	: A := new A();
+
+  
+operations
+public MySys: () ==> MySys
+MySys() ==
+ (
+  cpu1.deploy(x1);
+  cpu1.deploy(x2);
+  
+  cpu2.deploy(y1);
+  cpu2.deploy(y2);
+ );
+  
+end MySys
