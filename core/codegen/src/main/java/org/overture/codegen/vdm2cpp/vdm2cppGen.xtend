@@ -31,7 +31,6 @@ class vdm2cppGen extends MergeVisitor
 	
 	public String class_name;
 	private TypeHierachyAnalyser type_info = null;
-	private LinkedList<AMethodDeclCG> virtual_candidates;
 	private CppTypeVisitor type_visitor;
 	private CppExpVisitor exp_visitor;
 	private CppStmVisitor stm_visitor;
@@ -40,7 +39,6 @@ class vdm2cppGen extends MergeVisitor
 	new(TemplateStructure templateStructure, TemplateCallable[] templateCallables, TypeHierachyAnalyser tag) {
 		super(templateStructure, templateCallables)
 		type_info = tag;
-		virtual_candidates = new LinkedList<AMethodDeclCG>()
 		type_visitor = new CppTypeVisitor(this,templateStructure,templateCallables)
 		exp_visitor = new CppExpVisitor(this,templateStructure,templateCallables)
 		stm_visitor = new CppStmVisitor(this,templateStructure,templateCallables)
