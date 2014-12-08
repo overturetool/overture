@@ -76,11 +76,11 @@ class CppTypeVisitor extends MergeVisitor{
 	}
 	
 	override caseAUnknownTypeCG(AUnknownTypeCG node, StringWriter question) throws AnalysisException {
-		question.append('''boost::any()''');
+		question.append('''boost::any''');
 	}
 	
 	override caseASeqSeqTypeCG(ASeqSeqTypeCG node, StringWriter question) throws AnalysisException {
-		question.append('''vdm::sequence<«node.seqOf.expand»>''')
+		question.append('''vdm::sequence''')
 	}
 	
 	override caseARecordTypeCG(ARecordTypeCG node, StringWriter question) throws AnalysisException {
@@ -89,12 +89,12 @@ class CppTypeVisitor extends MergeVisitor{
 	
 	override caseASetSetTypeCG(ASetSetTypeCG node, StringWriter question) throws AnalysisException 
 	{
-			question.append(''' vdm::set<«node.setOf.expand»> ''')
+			question.append(''' vdm::set''')
 	}
 
 	override caseAMapMapTypeCG(AMapMapTypeCG node, StringWriter question) throws AnalysisException {
 		question.append(
-		'''vdm::set<«node.from.expand», «node.to.expand»>'''
+		'''vdm::map<«node.from.expand», «node.to.expand»>'''
 		)			
 	}
 	
@@ -117,7 +117,7 @@ class CppTypeVisitor extends MergeVisitor{
 	}
 	
 	override caseARealBasicTypeWrappersTypeCG(ARealBasicTypeWrappersTypeCG node, StringWriter question) throws AnalysisException {
-		question.append('''Real''')
+		question.append('''double''')
 	}
 	
 	override caseAIntNumericBasicTypeCG(AIntNumericBasicTypeCG node, StringWriter question) throws AnalysisException {

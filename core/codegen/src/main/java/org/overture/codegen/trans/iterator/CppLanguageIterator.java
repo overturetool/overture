@@ -7,29 +7,31 @@ import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
+import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
+import org.overture.codegen.cgast.expressions.ADeRefExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
+import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
+import org.overture.codegen.cgast.expressions.APostIncExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
+import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
+import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.trans.assistants.TransformationAssistantCG;
 
-public class CppLanguageIterator extends AbstractLanguageIterator {
+public class CppLanguageIterator extends JavaLanguageIterator{
 
-	private static final String GET_ITERATOR = "iterator";
-	private static final String NEXT_ELEMENT_ITERATOR = "next";
-	private static final String HAS_NEXT_ELEMENT_ITERATOR = "hasNext";
-	private static final String ITERATOR_TYPE = "iterator";
-
+	
 	protected String iteratorName;
 	
 	public CppLanguageIterator(
 			TransformationAssistantCG transformationAssistant,
-			ITempVarGen tempGen, TempVarPrefixes varPrefixes) {
+			ITempVarGen tempGen, TempVarPrefixes varPrefixes)
+	{
 		super(transformationAssistant, tempGen, varPrefixes);
-		// TODO Auto-generated constructor stub
-
 	}
 
 	@Override
@@ -37,29 +39,42 @@ public class CppLanguageIterator extends AbstractLanguageIterator {
 			List<SPatternCG> patterns, SPatternCG pattern) {
 		// TODO Auto-generated method stub
 		iteratorName = tempGen.nextVarName(varPrefixes.getIteratorNamePrefix());
-		String setName = setVar.getOriginal();
-		AClassTypeCG iteratorType = transformationAssistant.consClassType(ITERATOR_TYPE);
-		STypeCG setType = setVar.getType().clone();
-		SExpCG getIteratorCall = transformationAssistant.consInstanceCall(setType, setName, iteratorType.clone(), GET_ITERATOR, null);
-
-		AVarDeclCG iteratorDecl = new AVarDeclCG();
-
+		AVarDeclCG iterator = new AVarDeclCG();
+		
 		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
 		idPattern.setName(iteratorName);
-
-		iteratorDecl.setPattern(idPattern);
-		iteratorDecl.setType(iteratorType);
-		iteratorDecl.setExp(getIteratorCall);
 		
-		return iteratorDecl;
+		iterator.setPattern(idPattern);
+		
+		iterator.setType(setVar.getType().clone());
+		//iterator.setExp(transformationAssistant.consInstanceCall(setVar.getType().clone(),
+		// setVar.getOriginal(), iteratorType.clone(), config.iteratorMethod(),
+		// null));
+		iterator.setExp(transformationAssistant.consInstanceCall(setVar.getType().clone(),
+				setVar.getOriginal(), setVar.getType().clone(), "begin", null));
+		return iterator;
 	}
 
 	@Override
 	public SExpCG getForLoopCond(AIdentifierVarExpCG setVar,
 			List<SPatternCG> patterns, SPatternCG pattern)
 			throws AnalysisException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		ANotEqualsBinaryExpCG i_end_comp;
+
+		i_end_comp = new ANotEqualsBinaryExpCG();
+
+		// AVariableExpCG instance = new AVariableExpCG();
+		AIdentifierVarExpCG instance = new AIdentifierVarExpCG();
+		instance.setOriginal(iteratorName);
+		instance.setType(transformationAssistant.consClassType("iterator"));
+
+		i_end_comp.setLeft(instance);
+
+		i_end_comp.setRight(transformationAssistant.consInstanceCall( setVar.getType().clone(),
+				setVar.getOriginal(), new ABoolBasicTypeCG(), "end", null));
+
+		return i_end_comp;
 	}
 
 	@Override
@@ -74,10 +89,36 @@ public class CppLanguageIterator extends AbstractLanguageIterator {
 			List<SPatternCG> patterns, SPatternCG pattern)
 			throws AnalysisException {
 		// TODO Auto-generated method stub
-		return null;
+		AVarDeclCG cast = new AVarDeclCG();
+		ADeRefExpCG deref_and_inc = new ADeRefExpCG();
+
+		deref_and_inc.setType(setVar.getType().clone());
+
+		AIdentifierVarExpCG var = new AIdentifierVarExpCG();
+		var.setOriginal(iteratorName);
+		var.setType(transformationAssistant.consClassType("iterator"));
+
+		APostIncExpCG inc_exp = new APostIncExpCG();
+		inc_exp.setType(transformationAssistant.consClassType("iterator"));
+		inc_exp.setExp(var);
+
+		deref_and_inc.setExp(inc_exp);
+		
+		ACastUnaryExpCG cast_to_value = new ACastUnaryExpCG();
+		
+		cast_to_value.setExp(deref_and_inc);
+		STypeCG elementType = transformationAssistant.getSetTypeCloned(setVar).getSetOf();
+		cast_to_value.setType(elementType);
+		
+		cast.setPattern(pattern);
+		cast.setType(transformationAssistant.getSetTypeCloned(setVar).getSetOf());
+
+		cast.setExp(cast_to_value);
+
+		return cast;
 	}
 
-	@Override
+//	@Override
 	public ALocalPatternAssignmentStmCG getNextElementAssigned(
 			AIdentifierVarExpCG setVar, List<SPatternCG> patterns,
 			SPatternCG pattern, AVarDeclCG successVarDecl,
@@ -85,5 +126,7 @@ public class CppLanguageIterator extends AbstractLanguageIterator {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
 
 }

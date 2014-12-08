@@ -24,6 +24,7 @@ import org.overture.codegen.cgast.statements.AReturnStmCG
 import org.overture.codegen.cgast.statements.ABlockStmCG
 import org.overture.codegen.cgast.statements.AAssignmentStmCG
 import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG
+import org.overture.codegen.cgast.statements.ARaiseErrorStmCG
 
 class CppStmVisitor extends MergeVisitor{
 	
@@ -76,7 +77,8 @@ class CppStmVisitor extends MergeVisitor{
 	}
 	
 	override caseASkipStmCG(ASkipStmCG node, StringWriter question) throws AnalysisException {
-		question.append("//skip")
+		question.append('''//skip
+		''')
 	}
 	
 	override caseAPlainCallStmCG(APlainCallStmCG node, StringWriter question)
@@ -103,7 +105,8 @@ class CppStmVisitor extends MergeVisitor{
 	
 	override caseAWhileStmCG(AWhileStmCG node, StringWriter question)
 	{
-		question.append('''while(«node.exp.expand»)
+		question.append('''
+		while(«node.exp.expand»)
 		{
 			«node?.body.expand»
 		}
@@ -183,6 +186,10 @@ class CppStmVisitor extends MergeVisitor{
 	override caseAAssignmentStmCG(AAssignmentStmCG node, StringWriter question) throws AnalysisException {
 		question.append('''«node.target.expand» = «node.exp.expand»; 
 		''')
+	}
+	
+	override caseARaiseErrorStmCG(ARaiseErrorStmCG node, StringWriter question) throws AnalysisException {
+		question.append('''throw Exception("«node.error.expand»");''')
 	}
 	
 }

@@ -74,6 +74,7 @@ import org.overture.codegen.trans.conc.MutexDeclTransformation;
 import org.overture.codegen.trans.conc.SentinelTransformation;
 import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
 import org.overture.codegen.trans.funcvalues.FunctionValueTransformation;
+import org.overture.codegen.trans.iterator.CppLanguageIterator;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 import org.overture.codegen.trans.iterator.JavaLanguageIterator;
 import org.overture.codegen.trans.letexps.FuncTransformation;
@@ -271,7 +272,7 @@ public class CppCodeGen
 		IfExpTransformation ifExpTransformation = new IfExpTransformation(transformationAssistant);
 		FunctionValueTransformation funcValueTransformation = new FunctionValueTransformation(irInfo, transformationAssistant, functionValueAssistant, INTERFACE_NAME_PREFIX, TEMPLATE_TYPE_PREFIX, EVAL_METHOD_PREFIX, PARAM_NAME_PREFIX);
 		
-		ILanguageIterator langIterator = new JavaLanguageIterator(transformationAssistant, irInfo.getTempVarNameGen(), varPrefixes);
+		ILanguageIterator langIterator = new CppLanguageIterator(transformationAssistant, irInfo.getTempVarNameGen(), varPrefixes);
 		
 		
 		TransformationVisitor transVisitor = new TransformationVisitor(irInfo, classes, varPrefixes, transformationAssistant, consExists1CounterData(), langIterator, TERNARY_IF_EXP_NAME_PREFIX, CASES_EXP_RESULT_NAME_PREFIX, AND_EXP_NAME_PREFIX, OR_EXP_NAME_PREFIX, WHILE_COND_NAME_PREFIX, REC_MODIFIER_NAME_PREFIX);
