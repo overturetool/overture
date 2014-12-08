@@ -13,15 +13,15 @@ import org.overture.codegen.cgast.statements.ARaiseErrorStmCG;
 import org.overture.codegen.cgast.types.AErrorTypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class PreCheckTransformation extends DepthFirstAnalysisAdaptor {
 
 	private IRInfo info;
-	private TransformationAssistantCG transformationAssistant;
+	private TransAssistantCG transformationAssistant;
 	private Object conditionalCallTag;
 	
-	public PreCheckTransformation(IRInfo info, TransformationAssistantCG transformationAssistant, Object conditionalCallTag)
+	public PreCheckTransformation(IRInfo info, TransAssistantCG transformationAssistant, Object conditionalCallTag)
 	{
 		this.info = info;
 		this.transformationAssistant = transformationAssistant;

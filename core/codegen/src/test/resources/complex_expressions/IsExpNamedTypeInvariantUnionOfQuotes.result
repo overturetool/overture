@@ -121,46 +121,6 @@ import org.overture.codegen.runtime.*;
 import java.util.*;
 
 
-public class Q {
-    private static int hc = 0;
-    private static Q instance = null;
-
-    public Q() {
-        if (Utils.equals(hc, 0)) {
-            hc = super.hashCode();
-        }
-    }
-
-    public static Q getInstance() {
-        if (Utils.equals(instance, null)) {
-            instance = new Q();
-        }
-
-        return instance;
-    }
-
-    public int hashCode() {
-        return hc;
-    }
-
-    public boolean equals(final Object obj) {
-        return obj instanceof Q;
-    }
-
-    public String toString() {
-        return "<Q>";
-    }
-}
-
-##########
-
-package quotes;
-
-import org.overture.codegen.runtime.*;
-
-import java.util.*;
-
-
 public class A {
     private static int hc = 0;
     private static A instance = null;
@@ -309,6 +269,46 @@ public class D {
 
     public String toString() {
         return "<D>";
+    }
+}
+
+##########
+
+package quotes;
+
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Q {
+    private static int hc = 0;
+    private static Q instance = null;
+
+    public Q() {
+        if (Utils.equals(hc, 0)) {
+            hc = super.hashCode();
+        }
+    }
+
+    public static Q getInstance() {
+        if (Utils.equals(instance, null)) {
+            instance = new Q();
+        }
+
+        return instance;
+    }
+
+    public int hashCode() {
+        return hc;
+    }
+
+    public boolean equals(final Object obj) {
+        return obj instanceof Q;
+    }
+
+    public String toString() {
+        return "<Q>";
     }
 }
 

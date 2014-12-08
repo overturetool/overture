@@ -85,13 +85,13 @@ import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.DeclarationTag;
 import org.overture.codegen.trans.TempVarPrefixes;
-import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class PatternTransformation extends DepthFirstAnalysisAdaptor
 {
 	private List<AClassDeclCG> classes;
 	private IRInfo info;
-	private TransformationAssistantCG transformationAssistant;
+	private TransAssistantCG transformationAssistant;
 
 	private PatternMatchConfig config;
 
@@ -99,7 +99,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 
 	public PatternTransformation(List<AClassDeclCG> classes,
 			TempVarPrefixes varPrefixes, IRInfo info,
-			TransformationAssistantCG transformationAssistant,
+			TransAssistantCG transformationAssistant,
 			PatternMatchConfig config)
 	{
 		this.classes = classes;

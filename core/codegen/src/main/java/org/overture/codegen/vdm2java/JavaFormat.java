@@ -37,6 +37,8 @@ import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
+import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
+import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
@@ -89,6 +91,7 @@ import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateCallable;
+import org.overture.codegen.merging.TemplateStructure;
 import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
 import org.overture.codegen.utils.GeneralUtils;
@@ -115,12 +118,12 @@ public class JavaFormat
 	private MergeVisitor mergeVisitor;
 	private JavaValueSemantics valueSemantics;
 
-	public JavaFormat(TempVarPrefixes varPrefixes, IRInfo info)
+	public JavaFormat(TempVarPrefixes varPrefixes, TemplateStructure templateStructure, IRInfo info)
 	{
 		this.valueSemantics = new JavaValueSemantics(this);
 		JavaObjectCreator recordCreator = new JavaRecordCreator(this);
 		TemplateCallable[] templateCallables = TemplateCallableManager.constructTemplateCallables(this, IRAnalysis.class, varPrefixes, valueSemantics, recordCreator);
-		this.mergeVisitor = new MergeVisitor(JavaCodeGen.JAVA_TEMPLATE_STRUCTURE, templateCallables);
+		this.mergeVisitor = new MergeVisitor(templateStructure, templateCallables);
 		this.functionValueAssistant = null;
 		this.info = info;
 	}
@@ -883,6 +886,11 @@ public class JavaFormat
 		{
 			return "((Thread)" + str + ")";
 		}
+	}
+	
+	public static boolean isNamedTypeDecl(ATypeDeclCG node)
+	{
+		return node.getDecl() instanceof ANamedTypeDeclCG;
 	}
 	
 	public static boolean isSeqConversion(AFieldNumberExpCG node)

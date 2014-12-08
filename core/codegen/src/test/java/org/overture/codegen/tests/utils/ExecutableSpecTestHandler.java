@@ -25,8 +25,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRConstants;
-import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.config.Release;
 
 public class ExecutableSpecTestHandler extends EntryBasedTestHandler
@@ -80,7 +80,7 @@ public class ExecutableSpecTestHandler extends EntryBasedTestHandler
 	{
 		//TODO: Improve way that the EvaluatePP interface is handled
 		if (!className.equals(IRConstants.QUOTES_INTERFACE_NAME)
-				&& !className.startsWith(JavaCodeGen.INTERFACE_NAME_PREFIX) && !classCgStr.toString().contains(" implements EvaluatePP"))
+				&& !className.startsWith(CodeGenBase.INTERFACE_NAME_PREFIX) && !classCgStr.toString().contains(" implements EvaluatePP"))
 		{
 			int classNameIdx = classCgStr.indexOf(className);
 

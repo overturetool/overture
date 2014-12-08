@@ -18,7 +18,7 @@ install:
     #- mvn -B install -f ide/pom.xml -Dmaven.test.skip=true -Dmaven.javadoc.skip=true -Dgit-commit-id.skip=true
 script: 
   - echo travis_fold:start:compile_core
-  - mvn -B install
+  - mvn -B install -Dmaven.javadoc.skip=true
   - echo travis_fold:end:compile_core
     #- echo travis_fold:start:compile_ide
     #- mvn -B install -f ide/pom.xml -Dgit-commit-id.skip=true -Pall-platforms -P!ui-tests

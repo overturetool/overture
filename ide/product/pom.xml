@@ -15,6 +15,11 @@
   <artifactId>org.overture.ide.product</artifactId>
   <name>Overture IDE Standalone Product</name>
 
+  <properties>
+    <repo.root>${project.basedir}/../..</repo.root>
+    <documentation.root>${repo.root}/externals/language-board/target/language-master/documentation</documentation.root>
+  </properties>
+
   <build>
     <resources>
       <resource>

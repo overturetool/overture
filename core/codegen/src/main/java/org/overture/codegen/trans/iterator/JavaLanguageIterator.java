@@ -35,7 +35,7 @@ import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.TempVarPrefixes;
-import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class JavaLanguageIterator extends AbstractLanguageIterator
 {
@@ -45,7 +45,7 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 	private static final String ITERATOR_TYPE = "Iterator";
 
 	public JavaLanguageIterator(
-			TransformationAssistantCG transformationAssistant,
+			TransAssistantCG transformationAssistant,
 			ITempVarGen tempGen, TempVarPrefixes varPrefixes)
 	{
 		super(transformationAssistant, tempGen, varPrefixes);

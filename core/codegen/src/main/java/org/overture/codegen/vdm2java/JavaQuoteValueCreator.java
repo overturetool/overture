@@ -24,8 +24,9 @@ import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
+import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class JavaQuoteValueCreator extends JavaObjectCreator
 {
@@ -37,9 +38,9 @@ public class JavaQuoteValueCreator extends JavaObjectCreator
 	private static final String EQUALS_METHOD_PARAM = "obj";
 	
 	private IRInfo info;
-	private TransformationAssistantCG transformationAssistant;
+	private TransAssistantCG transformationAssistant;
 	
-	public JavaQuoteValueCreator(IRInfo info, TransformationAssistantCG transformationAssistant)
+	public JavaQuoteValueCreator(IRInfo info, TransAssistantCG transformationAssistant)
 	{
 		this.info = info;
 		this.transformationAssistant = transformationAssistant;
@@ -53,7 +54,7 @@ public class JavaQuoteValueCreator extends JavaObjectCreator
 		decl.setName(name);
 		decl.setStatic(false);
 		
-		decl.setPackage(JavaCodeGen.QUOTES);
+		decl.setPackage(CodeGenBase.QUOTES);
 		
 		decl.getFields().add(consHashcodeField());
 		decl.getFields().add(consInstanceField(name));

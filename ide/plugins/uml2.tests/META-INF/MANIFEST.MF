@@ -8,6 +8,6 @@ Bundle-Name: org.overture.ide.plugins.uml2.tests
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.overture.ide.plugins.uml2.tests;singleton:=true
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Fragment-Host: org.overture.ide.plugins.uml2;bundle-version="2.0.9"
+Fragment-Host: org.overture.ide.plugins.uml2
 Import-Package: org.junit
-Require-Bundle: org.junit;bundle-version="4.11.0"
+Require-Bundle: org.junit

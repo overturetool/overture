@@ -32,13 +32,13 @@ import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.TempVarPrefixes;
-import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 
 public abstract class ComplexCompStrategy extends CompStrategy
 {
 	public ComplexCompStrategy(
-			TransformationAssistantCG transformationAssitant, SExpCG predicate,
+			TransAssistantCG transformationAssitant, SExpCG predicate,
 			String var, STypeCG compType, ILanguageIterator langIterator,
 			ITempVarGen tempGen, TempVarPrefixes varPrefixes)
 	{

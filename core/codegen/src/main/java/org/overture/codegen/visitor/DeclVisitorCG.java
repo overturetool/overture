@@ -56,6 +56,7 @@ import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AFuncDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.AMutexSyncDeclCG;
+import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
 import org.overture.codegen.cgast.declarations.APersyncDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.AThreadDeclCG;
@@ -99,7 +100,16 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 	public SDeclCG caseANamedInvariantType(ANamedInvariantType node,
 			IRInfo question) throws AnalysisException
 	{
-		return null;
+		String name = node.getName().getName();
+		PType type = node.getType();
+		
+		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		
+		ANamedTypeDeclCG namedTypeDecl = new ANamedTypeDeclCG();
+		namedTypeDecl.setName(name);
+		namedTypeDecl.setType(typeCg);
+		
+		return namedTypeDecl;
 	}
 
 	@Override

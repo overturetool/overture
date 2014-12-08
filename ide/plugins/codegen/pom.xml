@@ -15,34 +15,6 @@
   <artifactId>org.overture.ide.plugins.codegen</artifactId>
   <name>Code Generator Plugin</name>
   
-  <dependencies>
-    <dependency>
-      <groupId>org.apache.velocity</groupId>
-      <artifactId>velocity</artifactId>
-      <version>1.7</version>
-    </dependency>
-    <dependency>
-      <groupId>commons-collections</groupId>
-      <artifactId>commons-collections</artifactId>
-      <version>3.2.1</version>
-    </dependency>
-    <dependency>
-      <groupId>commons-lang</groupId>
-      <artifactId>commons-lang</artifactId>
-      <version>2.4</version>
-    </dependency>
-    <dependency>
-      <groupId>jalopy</groupId>
-      <artifactId>jalopy</artifactId>
-      <version>1.5rc3</version>
-    </dependency>
-    <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>1.2.8</version>
-    </dependency>
-  </dependencies>
-
   <build>
     <plugins>
       <plugin>

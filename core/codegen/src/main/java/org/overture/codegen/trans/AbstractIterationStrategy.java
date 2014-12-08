@@ -32,7 +32,7 @@ import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
 import org.overture.codegen.ir.ITempVarGen;
-import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 
 public abstract class AbstractIterationStrategy implements IIterationStrategy
@@ -40,7 +40,7 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 	protected boolean firstBind;
 	protected boolean lastBind;
 
-	protected TransformationAssistantCG transformationAssistant;
+	protected TransAssistantCG transformationAssistant;
 	protected ILanguageIterator langIterator;
 	protected ITempVarGen tempGen;
 	protected TempVarPrefixes varPrefixes;
@@ -50,7 +50,7 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 	protected AVarDeclCG nextElementDeclared = null;
 
 	public AbstractIterationStrategy(
-			TransformationAssistantCG transformationAssistant,
+			TransAssistantCG transformationAssistant,
 			ILanguageIterator langIterator, ITempVarGen tempGen,
 			TempVarPrefixes varPrefixes)
 	{

@@ -1,8 +1,0 @@
---
--- Created automatically by VDMJ ASTgen. DO NOT EDIT.
--- Wed Mar 17 13:43:16 CET 2010
---
-
-class GiraffeLiteralExpressionImpl is subclass of GiraffeExpressionImpl
-    -- empty
-end GiraffeLiteralExpressionImpl

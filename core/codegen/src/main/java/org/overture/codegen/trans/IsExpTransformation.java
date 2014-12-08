@@ -16,16 +16,16 @@ import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AUnionTypeCG;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 
 public class IsExpTransformation extends DepthFirstAnalysisAdaptor
 {
 	private IRInfo info;
-	private TransformationAssistantCG transformationAssistant;
+	private TransAssistantCG transformationAssistant;
 	private String isExpSubjectNamePrefix;
 	
-	public IsExpTransformation(IRInfo info, TransformationAssistantCG transformationAssistant, String isExpSubjectNamePrefix)
+	public IsExpTransformation(IRInfo info, TransAssistantCG transformationAssistant, String isExpSubjectNamePrefix)
 	{
 		this.info = info;
 		this.transformationAssistant = transformationAssistant;
