@@ -120,7 +120,7 @@ class CppExpVisitor extends MergeVisitor {
 		question.append('''«node.original»''')
 	}
 	
-		override caseAEqualsBinaryExpCG(AEqualsBinaryExpCG node, StringWriter question) throws AnalysisException {
+	override caseAEqualsBinaryExpCG(AEqualsBinaryExpCG node, StringWriter question) throws AnalysisException {
 		question.append('''«node.left» == «node.right»''')
 	}
 	

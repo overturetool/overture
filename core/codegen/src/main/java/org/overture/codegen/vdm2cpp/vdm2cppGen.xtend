@@ -213,28 +213,7 @@ class vdm2cppGen extends MergeVisitor
 	{
 		class_name = node.name
 		
-		System.out.println("decls")
-		for( e : node.typeDecls)
-		{
-			System.out.println(e)
-		}
 		
-		// find all methods which are also in super classes
-		// if they are present in either they must be declared virtual such that the correct method is
-		// invoked if the method is called on parent class. 
-//		if(type_info != null)
-//		{
-//			//System.out.println("Getting super for " + node.name)
-//			var supers = type_info.getSuperType(node)
-//			for( s: supers)
-//			{
-//				var virtual_methods = s.methods.filter[access == "public" && isConstructor == false]
-//				virtual_methods = virtual_methods.filter[node.methods.contains(it)]
-//				virtual_candidates.addAll(virtual_methods)
-//				System.out.println("Class " + node.name + " Added the following methods to virtual list")
-//				System.out.println(virtual_methods)
-//			}
-//		}
 		// the template
 		question.append(
 		'''
