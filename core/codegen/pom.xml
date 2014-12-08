@@ -62,6 +62,11 @@
       <artifactId>jalopy</artifactId>
       <version>1.5rc3</version>
     </dependency>
+    <dependency>
+      <groupId>org.eclipse.xtend</groupId>
+      <artifactId>org.eclipse.xtend.lib</artifactId>
+      <version>2.7.3</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -152,6 +157,23 @@
 	    </lifecycleMappingMetadata>
 	  </configuration>
 	</plugin>
+	    <plugin>
+    <groupId>org.eclipse.xtend</groupId>
+    <artifactId>xtend-maven-plugin</artifactId>
+    <version>2.7.3</version>
+    <executions>
+    <execution>
+    <goals>
+    <goal>compile</goal>
+    <goal>testCompile</goal>
+    </goals>
+    <configuration>
+    <outputDirectory>${project.build.directory}/xtend-gen/main</outputDirectory>
+    <testOutputDirectory>${project.build.directory}/xtend-gen/test</testOutputDirectory>
+    </configuration>
+    </execution>
+    </executions>
+    </plugin>
       </plugins>
     </pluginManagement>
 
