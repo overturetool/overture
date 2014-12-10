@@ -1,4 +1,4 @@
-package org.overture.codegen.vdm2cpp
+package org.overture.codegen.vdm2cpp.ExpressionVisitors
 
 import java.io.StringWriter
 import org.apache.commons.lang.StringEscapeUtils
@@ -54,15 +54,15 @@ import org.overture.codegen.merging.MergeVisitor
 import org.overture.codegen.merging.TemplateCallable
 import org.overture.codegen.merging.TemplateStructure
 import org.overture.codegen.cgast.types.ASeqSeqTypeCG
-import org.overture.ast.types.ASeqSeqType
 import org.overture.codegen.cgast.types.AMapMapTypeCG
 import org.overture.codegen.cgast.types.ASetSetTypeCG
+import org.overture.codegen.cgast.expressions.SSeqExpCG
 
 class CppExpVisitor extends MergeVisitor {
 	
-	vdm2cppGen root_generator;
+	org.overture.codegen.vdm2cpp.vdm2cppGen root_generator;
 	
-	new(vdm2cppGen root,TemplateStructure templateStructure, TemplateCallable[] templateCallables) {
+	new(org.overture.codegen.vdm2cpp.vdm2cppGen root,TemplateStructure templateStructure, TemplateCallable[] templateCallables) {
 		super(templateStructure, templateCallables)
 		
 		root_generator = root
@@ -121,12 +121,13 @@ class CppExpVisitor extends MergeVisitor {
 	}
 	
 	override caseAEqualsBinaryExpCG(AEqualsBinaryExpCG node, StringWriter question) throws AnalysisException {
-		question.append('''«node.left» == «node.right»''')
+		question.append('''(«node.left») == («node.right»)''')
 	}
 	
 	override caseAIntLiteralExpCG(AIntLiteralExpCG node, StringWriter question) throws AnalysisException {
 		question.append('''«node.value»''')
 	}
+	
 	
 	override caseANewExpCG(ANewExpCG node, StringWriter question) throws AnalysisException 
 	{
@@ -150,7 +151,7 @@ class CppExpVisitor extends MergeVisitor {
 		)
 	}
 	
-		override caseANotUnaryExpCG(ANotUnaryExpCG node, StringWriter question) throws AnalysisException {
+	override caseANotUnaryExpCG(ANotUnaryExpCG node, StringWriter question) throws AnalysisException {
 		question.append('''!(«node.exp.expand»)''')
 	}
 	
@@ -188,20 +189,20 @@ class CppExpVisitor extends MergeVisitor {
 	}
 	
 	override caseAExplicitVarExpCG(AExplicitVarExpCG node, StringWriter question) throws AnalysisException {
-		question.append('''«IF node.classType != null»«node.classType.getStaticCall»::«ENDIF»«node.name»''')
+		question.append('''«IF node.classType != null»«node.classType.getGetStaticCall»::«ENDIF»«node.name»''')
 	}
 	
 	override caseATimesNumericBinaryExpCG(ATimesNumericBinaryExpCG node, StringWriter question) throws AnalysisException {
-		question.append('''«node.left.expand» * «node.right.expand»''');
+		question.append('''(«node.left.expand») * («node.right.expand»)''');
 	}
 	
 	override caseAAndBoolBinaryExpCG(AAndBoolBinaryExpCG node, StringWriter question) throws AnalysisException {
-		question.append('''«node.left.expand» && «node.right.expand»''')
+		question.append('''(«node.left.expand») && («node.right.expand»)''')
 	}
 	
 	override caseALessNumericBinaryExpCG(ALessNumericBinaryExpCG node, StringWriter question)
 	{
-		question.append('''(«node.left.expand» < «node.right.expand»)''')
+		question.append('''(«node.left.expand») < («node.right.expand»)''')
 	}
 	
 	override caseACastUnaryExpCG(ACastUnaryExpCG node, StringWriter question) throws AnalysisException {
@@ -219,20 +220,20 @@ class CppExpVisitor extends MergeVisitor {
 	}
 	
 	override caseAGreaterEqualNumericBinaryExpCG(AGreaterEqualNumericBinaryExpCG node, StringWriter question) throws AnalysisException {
-		question.append('''«node.left.expand» >= «node.right.expand»''')
+		question.append('''(«node.left.expand») >= («node.right.expand»)''')
 	}
 	
 	override caseALessEqualNumericBinaryExpCG(ALessEqualNumericBinaryExpCG node, StringWriter question)
 	{
-		question.append('''( «node.left.expand» <= «node.right.expand» )''')
+		question.append('''(«node.left.expand») <= («node.right.expand»)''')
 	}
 	
 	override caseAGreaterNumericBinaryExpCG(AGreaterNumericBinaryExpCG node, StringWriter question) throws AnalysisException {
-		question.append('''«node.left.expand» > «node.right.expand»''')
+		question.append('''(«node.left.expand») > («node.right.expand»)''')
 	}
 	
 	override caseAPlusNumericBinaryExpCG(APlusNumericBinaryExpCG node, StringWriter question) throws AnalysisException {
-		question.append('''«node.left.expand» + «node.right.expand»''')
+		question.append('''(«node.left.expand») + («node.right.expand»)''')
 	}
 	
 	override caseANotEqualsBinaryExpCG(ANotEqualsBinaryExpCG node, StringWriter question) throws AnalysisException {
@@ -283,7 +284,7 @@ class CppExpVisitor extends MergeVisitor {
 			if(node.args.head instanceof AIntLiteralExpCG)
 			{
 				var v = node.args.head as AIntLiteralExpCG
-				 
+				
 				question.append('''boost::any_cast<«node.type.expand»>(«node.root.expand».at(«FOR n : node.args SEPARATOR ','»«v.value-1»«ENDFOR»))''')	
 			}
 			else

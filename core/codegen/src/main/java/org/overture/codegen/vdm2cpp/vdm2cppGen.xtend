@@ -24,6 +24,7 @@ import org.overture.codegen.cgast.types.AClassTypeCG
 import org.overture.codegen.merging.MergeVisitor
 import org.overture.codegen.merging.TemplateCallable
 import org.overture.codegen.merging.TemplateStructure
+import org.overture.codegen.vdm2cpp.ExpressionVisitors.CppExpVisitor
 
 class vdm2cppGen extends MergeVisitor
 {

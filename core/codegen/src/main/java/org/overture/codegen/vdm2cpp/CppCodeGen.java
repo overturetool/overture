@@ -341,7 +341,7 @@ public class CppCodeGen
 			}
 		}
 		
-		MergeVisitor mergeVisitor = new vdm2cppGen(new TemplateStructure("."),TemplateCallableManager.constructTemplateCallables(),tan);
+		 CGNew mergeVisitor = new CGNew();
 		//FunctionValueAssistant functionValue = funcValueTransformation.getFunctionValueAssistant();
 		//javaFormat.setFunctionValueAssistant(functionValue);
 		
@@ -358,16 +358,16 @@ public class CppCodeGen
 				SClassDefinition vdmClass = (SClassDefinition) status.getClassCg().getSourceNode().getVdmNode();
 				if (shouldBeGenerated(vdmClass, irInfo.getAssistantManager().getDeclAssistant()))
 				{
-					classCg.apply(mergeVisitor, writer);
+					System.out.println(classCg.apply(mergeVisitor));
 
-					if (mergeVisitor.hasMergeErrors())
-					{
-						generated.add(new GeneratedModule(className, classCg, mergeVisitor.getMergeErrors()));
-					} else
-					{
-						String formattedJavaCode = writer.toString();
-						generated.add(new GeneratedModule(className, classCg, formattedJavaCode));
-					}
+//					if (mergeVisitor.hasMergeErrors())
+//					{
+//						generated.add(new GeneratedModule(className, classCg, mergeVisitor.getMergeErrors()));
+//					} else
+//					{
+//						String formattedJavaCode = writer.toString();
+//						generated.add(new GeneratedModule(className, classCg, formattedJavaCode));
+//					}
 				}
 				else
 				{
