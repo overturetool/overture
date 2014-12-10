@@ -26,6 +26,7 @@ import org.overture.codegen.trans.patterns.PatternMatchConfig;
 import org.overture.codegen.trans.patterns.PatternTransformation;
 import org.overture.codegen.trans.quantifier.Exists1CounterData;
 import org.overture.codegen.trans.uniontypes.UnionTypeTransformation;
+import org.overture.codegen.vdm2cpp.arduino.ArduinoConstTransformation;
 
 import static org.overture.codegen.ir.CodeGenBase.*;
 
@@ -70,6 +71,8 @@ public class CppTransSeries
 		UnionTypeTransformation unionTypeTransformation = new UnionTypeTransformation(transAssistant, irInfo, classes, APPLY_EXP_NAME_PREFIX, OBJ_EXP_NAME_PREFIX, CALL_STM_OBJ_NAME_PREFIX, MISSING_OP_MEMBER, MISSING_MEMBER);
 		//JavaClassToStringTrans javaToStringTransformation = new JavaClassToStringTrans(irInfo);
 		
+		ArduinoConstTransformation arduinoTrans = new ArduinoConstTransformation(transAssistant);
+		
 		DepthFirstAnalysisAdaptor[] analyses = new DepthFirstAnalysisAdaptor[] 
 		{		
 				funcTransformation,
@@ -86,7 +89,8 @@ public class CppTransSeries
 				concurrencytransform,
 				mutexTransform,
 				mainclassTransform,
-				seqConversionTransformation
+				seqConversionTransformation,
+				arduinoTrans
 		};
 		return analyses;
 	}
