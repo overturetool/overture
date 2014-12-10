@@ -44,6 +44,12 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.overturetool.core.testing</groupId>
+      <artifactId>exsupport</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.overturetool.core.prettyprinting</groupId>
       <artifactId>prettyprinter</artifactId>
       <version>${project.version}</version>
@@ -66,20 +72,39 @@
   </dependencies>
 
   <build>
+      <resources>
+          <resource>
+              <directory>${project.basedir}/../../documentation/examples/</directory>
+              <targetPath>${project.build.directory}/classes/examples/</targetPath>
+              <includes>
+                  <include>**/*.vdmsl</include>
+                  <include>**/*.vdmpp</include>
+                  <include>**/*.vdmrt</include>
+                  <include>**/README.txt</include>
+              </includes>
+              <excludes>
+                  <exclude>target/**</exclude>
+              </excludes>
+          </resource>
+      </resources>
+
     <plugins>
-      <plugin>
-	<groupId>org.apache.maven.plugins</groupId>
-	<artifactId>maven-surefire-plugin</artifactId>
-	<configuration>
-	  <testFailureIgnore>true</testFailureIgnore>
-	  <redirectTestOutputToFile>true</redirectTestOutputToFile>
-	  <includes>
-	    <include>**/*Test.java</include>
-	    <include>**/*Test?.java</include>
-	    <include>**/*TestSuite.java</include>
-	  </includes>
-	</configuration>
-      </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+                <testFailureIgnore>true</testFailureIgnore>
+                <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                <includes>
+                    <include>**/*Test.java</include>
+                    <include>**/*Test?.java</include>
+                    <include>**/*TestSuite.java</include>
+                </includes>
+                <excludes>
+                    <exclude>**/*ExamplesTest.java</exclude>
+                </excludes>
+            </configuration>
+        </plugin>
 
       <plugin>
 	<groupId>org.overturetool.astcreator</groupId>

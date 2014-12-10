@@ -32,7 +32,7 @@ import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.TempVarPrefixes;
-import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 
 public class Exists1QuantifierStrategy extends QuantifierBaseStrategy
@@ -40,7 +40,7 @@ public class Exists1QuantifierStrategy extends QuantifierBaseStrategy
 	protected Exists1CounterData counterData;
 	
 	public Exists1QuantifierStrategy(
-			TransformationAssistantCG transformationAssistant,
+			TransAssistantCG transformationAssistant,
 			SExpCG predicate, String resultVarName,
 			ILanguageIterator langIterator, ITempVarGen tempGen,
 			TempVarPrefixes varPrefixes, Exists1CounterData counterData)

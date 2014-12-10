@@ -15,15 +15,17 @@
 
   <modules>
     <module>framework</module>
-    <!--module>tests</module-->
+    <module>tests</module>
+    <module>exsupport</module>
+    <module>extests</module>
   </modules>
 
   <build>
     <plugins>
       <!-- never deploy/release/publish this module -->
       <plugin>
-	<groupId>org.apache.maven.plugins</groupId>
-	<artifactId>maven-deploy-plugin</artifactId>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
         <configuration>
           <skip>true</skip>
         </configuration>

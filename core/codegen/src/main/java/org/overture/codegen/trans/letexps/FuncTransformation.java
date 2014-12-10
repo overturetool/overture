@@ -39,13 +39,13 @@ import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.ir.SourceNode;
-import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class FuncTransformation extends DepthFirstAnalysisAdaptor
 {
-	private TransformationAssistantCG transformationAssistant;
+	private TransAssistantCG transformationAssistant;
 	
-	public FuncTransformation(TransformationAssistantCG transformationAssistant)
+	public FuncTransformation(TransAssistantCG transformationAssistant)
 	{
 		this.transformationAssistant = transformationAssistant;
 	}

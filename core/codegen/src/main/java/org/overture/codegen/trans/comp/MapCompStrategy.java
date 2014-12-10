@@ -33,14 +33,14 @@ import org.overture.codegen.cgast.expressions.AMapUnionBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AMapletExpCG;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.TempVarPrefixes;
-import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 
 public class MapCompStrategy extends ComplexCompStrategy
 {
 	protected AMapletExpCG first;
 
-	public MapCompStrategy(TransformationAssistantCG transformationAssitant,
+	public MapCompStrategy(TransAssistantCG transformationAssitant,
 			AMapletExpCG first, SExpCG predicate, String var, STypeCG compType,
 			ILanguageIterator langIterator, ITempVarGen tempGen,
 			TempVarPrefixes varPrefixes)

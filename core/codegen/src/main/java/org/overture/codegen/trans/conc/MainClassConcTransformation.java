@@ -48,14 +48,15 @@ import org.overture.codegen.vdm2java.JavaFormat;
 public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 {
 	private IRInfo info;
-	//private List<AClassDeclCG> classes;
+	private List<AClassDeclCG> classes;
 
 	public MainClassConcTransformation(IRInfo info, List<AClassDeclCG> classes)
 	{
 		this.info = info;
-		//this.classes = classes;
+		this.classes = classes;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void caseAClassDeclCG(AClassDeclCG node) throws AnalysisException
 	{
@@ -186,13 +187,21 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 		if (node.getMethods().size() != 0){
 			
 			//fixing the overloaded operation problem
-			@SuppressWarnings("unchecked")
 			LinkedList<AMethodDeclCG> classuniqueMethods = (LinkedList<AMethodDeclCG>) node.getMethods().clone();
-		
 			classuniqueMethods.clear();
-			for(AMethodDeclCG method : node.getMethods())
+			
+			LinkedList<AMethodDeclCG>  allMethods;
+			
+			if (node.getSuperName() != null){
+				allMethods = (LinkedList<AMethodDeclCG>) info.getDeclAssistant().getAllMethods(node, classes);
+			}
+			else
 			{
+				allMethods = (LinkedList<AMethodDeclCG>) node.getMethods().clone();
+			}
 				
+			for(AMethodDeclCG method : allMethods )
+			{
 				if(!classuniqueMethods.contains(method))
 				{
 					classuniqueMethods.add(method);
@@ -227,11 +236,12 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 							if(per.getOpname().equals(classuniqueMethods.get(i).getName())){
 								ret.setExp(per.getPred());
 							}
+
 						}
 						bodyif.setIfExp(firstBranch);
 						bodyif.setThenStm(ret);
 					}
-				//}
+
 				else
 				{
 					AReturnStmCG ret = new AReturnStmCG();
@@ -260,22 +270,56 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 					bodyif.getElseIf().add(newBranch);
 				}
 			}
-			AReturnStmCG ret = new AReturnStmCG();
-			
-			ABoolLiteralExpCG defaultPer = new ABoolLiteralExpCG();
-			defaultPer.setValue(true);
-			
-			ret.setExp(defaultPer);
-			
-			bodyif.setElseStm(ret);
+				AReturnStmCG ret = new AReturnStmCG();
+
+				ABoolLiteralExpCG defaultPer = new ABoolLiteralExpCG();
+				defaultPer.setValue(true);
+
+				ret.setExp(defaultPer);
+				bodyif.setElseStm(ret.clone());
+
 			evaluatePPmethod.setBody(bodyif);
 		}
 		
 		node.getMethods().add(evaluatePPmethod);
+		
+		if (node.getThread() != null)
+		{
+			makeThread(node);
+		}
 	}
 
 	private boolean isIRGenerated(AMethodDeclCG method)
 	{
 		return method.getTag() instanceof IRGeneratedTag;
+	}
+	
+	private void makeThread(AClassDeclCG node)
+	{
+		AClassDeclCG threadClass = getThreadClass(node.getSuperName(), node);
+		threadClass.setSuperName("VDMThread");
+	}
+
+	private AClassDeclCG getThreadClass(String superName, AClassDeclCG classCg)
+	{
+		if(superName == null || superName.equals("VDMThread"))
+		{
+			return classCg;
+		}
+		else
+		{
+			AClassDeclCG superClass = null;
+
+			for(AClassDeclCG c : classes)
+			{
+				if(c.getName().equals(superName))
+				{
+					superClass = c;
+					break;
+				}
+			}
+
+			return getThreadClass(superClass.getSuperName(), superClass);
+		}
 	}
 }
