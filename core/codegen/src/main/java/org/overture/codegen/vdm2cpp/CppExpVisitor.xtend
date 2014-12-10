@@ -56,6 +56,7 @@ import org.overture.codegen.cgast.types.SSeqTypeCG
 import org.overture.codegen.merging.MergeVisitor
 import org.overture.codegen.merging.TemplateCallable
 import org.overture.codegen.merging.TemplateStructure
+import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG
 
 class CppExpVisitor extends MergeVisitor {
 	
@@ -105,6 +106,10 @@ class CppExpVisitor extends MergeVisitor {
 	
 	override caseARealLiteralExpCG(ARealLiteralExpCG node, StringWriter question) throws AnalysisException {
 		question.append('''«node.value.toString»''')
+	}
+
+	override caseAIsolationUnaryExpCG(AIsolationUnaryExpCG node, StringWriter question) throws AnalysisException {
+		question.append('''(«node.exp.expand»)''')
 	}
 	
 	override caseAPostIncExpCG(APostIncExpCG node, StringWriter question) throws AnalysisException {
