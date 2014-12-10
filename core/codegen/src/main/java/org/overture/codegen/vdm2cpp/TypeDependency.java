@@ -50,6 +50,7 @@ public class TypeDependency extends DepthFirstAnalysisAdaptor {
 				Object ob = m.get(n);
 				if(ob instanceof NodeList<?>)
 				{
+					@SuppressWarnings("unchecked")
 					NodeList<INode> nl = ( (NodeList<INode>) m.get(n) );
 					for(INode nn : nl)
 					{

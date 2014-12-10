@@ -24,12 +24,10 @@ package org.overture.codegen.vdm2cpp;
 import java.io.File;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.velocity.app.Velocity;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
@@ -39,143 +37,54 @@ import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.ANotYetSpecifiedStm;
-import org.overture.codegen.analysis.violations.GeneratedVarComparison;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
-import org.overture.codegen.analysis.violations.TypenameComparison;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.analysis.violations.VdmAstAnalysis;
 import org.overture.codegen.analysis.violations.Violation;
-import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.assistant.DeclAssistantCG;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
-import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
-import org.overture.codegen.cgast.types.AExternalTypeCG;
+import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRClassDeclStatus;
-import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRExpStatus;
-import org.overture.codegen.ir.IRGenerator;
-import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
-import org.overture.codegen.merging.TemplateCallable;
 import org.overture.codegen.merging.TemplateStructure;
-import org.overture.codegen.trans.IsExpTransformation;
-import org.overture.codegen.trans.PrePostTransformation;
-import org.overture.codegen.trans.SeqConversionTransformation;
-import org.overture.codegen.trans.TempVarPrefixes;
-import org.overture.codegen.trans.TransformationVisitor;
-import org.overture.codegen.trans.assistants.TransformationAssistantCG;
-import org.overture.codegen.trans.conc.MainClassConcTransformation;
-import org.overture.codegen.trans.conc.MutexDeclTransformation;
-import org.overture.codegen.trans.conc.SentinelTransformation;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
-import org.overture.codegen.trans.funcvalues.FunctionValueTransformation;
-import org.overture.codegen.trans.iterator.CppLanguageIterator;
-import org.overture.codegen.trans.iterator.ILanguageIterator;
-import org.overture.codegen.trans.iterator.JavaLanguageIterator;
-import org.overture.codegen.trans.letexps.FuncTransformation;
-import org.overture.codegen.trans.letexps.IfExpTransformation;
-import org.overture.codegen.trans.patterns.PatternMatchConfig;
-import org.overture.codegen.trans.patterns.PatternTransformation;
-import org.overture.codegen.trans.quantifier.Exists1CounterData;
-import org.overture.codegen.trans.uniontypes.UnionTypeTransformation;
-import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.codegen.vdm2java.TemplateCallableManager;
 
-public class CppCodeGen
+public class CppCodeGen extends CodeGenBase
 {
-	
-	public static final String[] RESERVED_TYPE_NAMES = {
-			// Classes used from the Java standard library
-			"Utils", "Record", "Long", "Double", "Character", "String", "List",
-			"Set" };
-
-	public final static TempVarPrefixes varPrefixes = new TempVarPrefixes();
-
-	private IRGenerator generator;
-	private IRInfo irInfo;
-	private TransformationAssistantCG transformationAssistant;
-	
-	
-
-	public static final String INTERFACE_NAME_PREFIX = "Func_";
-	public static final String TEMPLATE_TYPE_PREFIX = "T_";
-	public static final String EVAL_METHOD_PREFIX = "eval";
-	public static final String PARAM_NAME_PREFIX = "param_";
-	public static final String APPLY_EXP_NAME_PREFIX = "apply_";
-	public static final String OBJ_EXP_NAME_PREFIX = "obj_";
-	public static final String TERNARY_IF_EXP_NAME_PREFIX = "ternaryIfExp_";
-	public static final String CALL_STM_OBJ_NAME_PREFIX = "callStmObj_";
-	public static final String CASES_EXP_RESULT_NAME_PREFIX = "casesExpResult_";
-	public static final String AND_EXP_NAME_PREFIX = "andResult_";
-	public static final String OR_EXP_NAME_PREFIX = "orResult_";
-	public static final String WHILE_COND_NAME_PREFIX = "whileCond";
-	public static final String IS_EXP_SUBJECT_NAME_PREFIX = "isExpSubject_";
-	public static final String REC_MODIFIER_NAME_PREFIX = "recModifierExp_";
-	
-	public static final String MISSING_OP_MEMBER = "Missing operation member: ";
-	public static final String MISSING_MEMBER = "Missing member: ";
-	
-	public static final String INVALID_NAME_PREFIX = "cg_";
-	public static final String OBJ_INIT_CALL_NAME_PREFIX = "cg_init_";
-
-	public static final String FUNC_RESULT_NAME_PREFIX = "funcResult_";
-	public static final String POST_CHECK_METHOD_NAME = "postCheck";
-	
-	public static final String QUOTES = "quotes";
-	
-	public static final String QUOTE_START = "start";
-	public static final String QUOTE_APPEND = "append";
+//	public static final String[] RESERVED_TYPE_NAMES = {
+//			// Classes used from the Java standard library
+//			"Utils", "Record", "Long", "Double", "Character", "String", "List",
+//			"Set" };
 
 	public CppCodeGen()
 	{
-		init(null);
+		super(null);
+		init();
 	}
-
 
 
 	public CppCodeGen(ILogger log)
 	{
-		init(log);
+		super(log);
+		init();
 	}
 
-	private void init(ILogger log)
+	private void init()
 	{
-		initVelocity();
+		this.generator.getIRInfo().registerQuoteValue(QUOTE_START);
+		this.generator.getIRInfo().registerQuoteValue(QUOTE_APPEND);
 		
-		this.generator = new IRGenerator(log, OBJ_INIT_CALL_NAME_PREFIX);
-
-		this.irInfo = generator.getIRInfo();
-		this.irInfo.registerQuoteValue(QUOTE_START);
-		this.irInfo.registerQuoteValue(QUOTE_APPEND);
-		
-		this.transformationAssistant = new TransformationAssistantCG(irInfo, varPrefixes);
-		
-		//this.javaFormat = new JavaFormat(varPrefixes, irInfo);
-	}
-
-	public void setSettings(IRSettings settings)
-	{
-		irInfo.setSettings(settings);
-	}
-
-	private void initVelocity()
-	{
-		Velocity.setProperty("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.NullLogSystem");
-		Velocity.init();
-	}
-	
-	
-	public IRInfo getInfo()
-	{
-		return generator.getIRInfo();
+		this.transAssistant = new TransAssistantCG(generator.getIRInfo(), varPrefixes);
 	}
 
 	public List<GeneratedModule> generateJavaFromVdmQuotes()
@@ -231,7 +140,7 @@ public class CppCodeGen
 	{
 		for (SClassDefinition classDef : mergedParseLists)
 		{
-			if (irInfo.getAssistantManager().getDeclAssistant().classIsLibrary(classDef))
+			if (generator.getIRInfo().getAssistantManager().getDeclAssistant().classIsLibrary(classDef))
 			{
 				simplifyLibraryClass(classDef);
 			}
@@ -265,49 +174,7 @@ public class CppCodeGen
 		}
 		
 		FunctionValueAssistant functionValueAssistant = new FunctionValueAssistant();
-		//IPostCheckCreator postCheckCreator = new JavaPostCheckCreator(POST_CHECK_METHOD_NAME);
-
-		FuncTransformation funcTransformation = new FuncTransformation(transformationAssistant);
-		PrePostTransformation prePostTransformation = new PrePostTransformation(irInfo);
-		IfExpTransformation ifExpTransformation = new IfExpTransformation(transformationAssistant);
-		FunctionValueTransformation funcValueTransformation = new FunctionValueTransformation(irInfo, transformationAssistant, functionValueAssistant, INTERFACE_NAME_PREFIX, TEMPLATE_TYPE_PREFIX, EVAL_METHOD_PREFIX, PARAM_NAME_PREFIX);
-		
-		ILanguageIterator langIterator = new CppLanguageIterator(transformationAssistant, irInfo.getTempVarNameGen(), varPrefixes);
-		
-		
-		TransformationVisitor transVisitor = new TransformationVisitor(irInfo, classes, varPrefixes, transformationAssistant, consExists1CounterData(), langIterator, TERNARY_IF_EXP_NAME_PREFIX, CASES_EXP_RESULT_NAME_PREFIX, AND_EXP_NAME_PREFIX, OR_EXP_NAME_PREFIX, WHILE_COND_NAME_PREFIX, REC_MODIFIER_NAME_PREFIX);
-		PatternTransformation patternTransformation = new PatternTransformation(classes, varPrefixes, irInfo, transformationAssistant, new PatternMatchConfig());
-		//PreCheckTransformation preCheckTransformation = new PreCheckTransformation(irInfo, transformationAssistant, new JavaValueSemanticsTag(false));
-		//PostCheckTransformation postCheckTransformation = new PostCheckTransformation(postCheckCreator, irInfo, transformationAssistant, FUNC_RESULT_NAME_PREFIX, new JavaValueSemanticsTag(false));
-		IsExpTransformation isExpTransformation = new IsExpTransformation(irInfo, transformationAssistant, IS_EXP_SUBJECT_NAME_PREFIX);
-		SeqConversionTransformation seqConversionTransformation = new SeqConversionTransformation(transformationAssistant);
-		
-		// Concurrency related transformations
-		SentinelTransformation concurrencytransform = new SentinelTransformation(irInfo,classes);
-		MainClassConcTransformation mainclassTransform = new MainClassConcTransformation(irInfo, classes);
-		MutexDeclTransformation mutexTransform = new MutexDeclTransformation(irInfo, classes);
-
-		UnionTypeTransformation unionTypeTransformation = new UnionTypeTransformation(transformationAssistant, irInfo, classes, APPLY_EXP_NAME_PREFIX, OBJ_EXP_NAME_PREFIX, CALL_STM_OBJ_NAME_PREFIX, MISSING_OP_MEMBER, MISSING_MEMBER);
-		//JavaClassToStringTrans javaToStringTransformation = new JavaClassToStringTrans(irInfo);
-		
-		DepthFirstAnalysisAdaptor[] analyses = new DepthFirstAnalysisAdaptor[] 
-		{		
-				funcTransformation,
-				prePostTransformation,
-				ifExpTransformation,
-				funcValueTransformation,
-				transVisitor,
-				patternTransformation,
-				//preCheckTransformation,
-				//postCheckTransformation,
-				isExpTransformation,
-				unionTypeTransformation,
-				//javaToStringTransformation,
-				concurrencytransform,
-				mutexTransform,
-				mainclassTransform,
-				seqConversionTransformation
-		};
+		DepthFirstAnalysisAdaptor[] analyses = new CppTransSeries(this).consAnalyses(classes, functionValueAssistant);
 
 		for (DepthFirstAnalysisAdaptor transformation : analyses)
 		{
@@ -356,7 +223,7 @@ public class CppCodeGen
 			try
 			{
 				SClassDefinition vdmClass = (SClassDefinition) status.getClassCg().getSourceNode().getVdmNode();
-				if (shouldBeGenerated(vdmClass, irInfo.getAssistantManager().getDeclAssistant()))
+				if (shouldBeGenerated(vdmClass, generator.getIRInfo().getAssistantManager().getDeclAssistant()))
 				{
 					classCg.apply(mergeVisitor, writer);
 
@@ -411,16 +278,6 @@ public class CppCodeGen
 		//javaFormat.clearClasses();
 
 		return new GeneratedData(generated, generateJavaFromVdmQuotes(), invalidNamesResult, skipping);
-	}
-
-	private Exists1CounterData consExists1CounterData()
-	{
-		AExternalTypeCG type = new AExternalTypeCG();
-		type.setName("Long");
-
-		AIntLiteralExpCG initExp = irInfo.getExpAssistant().consIntLiteral(0);
-		
-		return new Exists1CounterData(type, initExp);
 	}
 
 	private void simplifyLibraryClass(SClassDefinition classDef)
@@ -529,15 +386,15 @@ public class CppCodeGen
 	private InvalidNamesResult validateVdmModelNames(
 			List<SClassDefinition> mergedParseLists) throws AnalysisException
 	{
-		AssistantManager assistantManager = generator.getIRInfo().getAssistantManager();
-		VdmAstAnalysis analysis = new VdmAstAnalysis(assistantManager);
+		//AssistantManager assistantManager = generator.getIRInfo().getAssistantManager();
+		//VdmAstAnalysis analysis = new VdmAstAnalysis(assistantManager);
 
 		//Set<Violation> reservedWordViolations = analysis.usesIllegalNames(mergedParseLists, new ReservedWordsComparison(IJavaCodeGenConstants.RESERVED_WORDS, irInfo, INVALID_NAME_PREFIX));
-		Set<Violation> typenameViolations = analysis.usesIllegalNames(mergedParseLists, new TypenameComparison(RESERVED_TYPE_NAMES, irInfo, INVALID_NAME_PREFIX));
+		//Set<Violation> typenameViolations = analysis.usesIllegalNames(mergedParseLists, new TypenameComparison(RESERVED_TYPE_NAMES, generator.getIRInfo(), INVALID_NAME_PREFIX));
 
-		String[] generatedTempVarNames = GeneralUtils.concat(IRConstants.GENERATED_TEMP_NAMES, varPrefixes.GENERATED_TEMP_NAMES);
+		//String[] generatedTempVarNames = GeneralUtils.concat(IRConstants.GENERATED_TEMP_NAMES, varPrefixes.GENERATED_TEMP_NAMES);
 
-		Set<Violation> tempVarViolations = analysis.usesIllegalNames(mergedParseLists, new GeneratedVarComparison(generatedTempVarNames, irInfo, INVALID_NAME_PREFIX));
+		//Set<Violation> tempVarViolations = analysis.usesIllegalNames(mergedParseLists, new GeneratedVarComparison(generatedTempVarNames, generator.getIRInfo(), INVALID_NAME_PREFIX));
 
 //		if (!reservedWordViolations.isEmpty() || !typenameViolations.isEmpty()
 //				|| !tempVarViolations.isEmpty())

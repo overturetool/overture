@@ -2,7 +2,6 @@ package org.overture.codegen.vdm2cpp
 
 import java.io.StringWriter
 import java.util.ArrayList
-import java.util.LinkedList
 import java.util.List
 import org.overture.codegen.cgast.INode
 import org.overture.codegen.cgast.SExpCG

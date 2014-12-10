@@ -1,29 +1,19 @@
 package org.overture.codegen.vdm2cpp;
 
 import java.io.File;
-import java.io.StringWriter;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
-import org.overture.codegen.assistant.AssistantManager;
-import org.overture.codegen.assistant.LocationAssistantCG;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.ir.IRSettings;
-import org.overture.codegen.ir.NodeInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
-import org.overture.codegen.vdm2java.JavaCodeGenUtil;
-import org.overture.codegen.vdm2java.JavaSettings;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 

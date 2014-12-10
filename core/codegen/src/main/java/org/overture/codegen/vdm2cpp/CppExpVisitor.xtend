@@ -48,15 +48,14 @@ import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG
 import org.overture.codegen.cgast.expressions.ATupleCompatibilityExpCG
 import org.overture.codegen.cgast.expressions.AUndefinedExpCG
 import org.overture.codegen.cgast.types.AClassTypeCG
+import org.overture.codegen.cgast.types.AMapMapTypeCG
 import org.overture.codegen.cgast.types.ARecordTypeCG
+import org.overture.codegen.cgast.types.ASeqSeqTypeCG
+import org.overture.codegen.cgast.types.ASetSetTypeCG
 import org.overture.codegen.cgast.types.SSeqTypeCG
 import org.overture.codegen.merging.MergeVisitor
 import org.overture.codegen.merging.TemplateCallable
 import org.overture.codegen.merging.TemplateStructure
-import org.overture.codegen.cgast.types.ASeqSeqTypeCG
-import org.overture.ast.types.ASeqSeqType
-import org.overture.codegen.cgast.types.AMapMapTypeCG
-import org.overture.codegen.cgast.types.ASetSetTypeCG
 
 class CppExpVisitor extends MergeVisitor {
 	

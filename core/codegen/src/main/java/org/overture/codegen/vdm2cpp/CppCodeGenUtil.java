@@ -56,9 +56,6 @@ import org.overture.interpreter.util.ClassListInterpreter;
 import org.overture.interpreter.util.ExitStatus;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
-import de.hunsicker.io.FileFormat;
-import de.hunsicker.jalopy.Jalopy;
-
 public class CppCodeGenUtil
 {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
