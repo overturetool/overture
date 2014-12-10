@@ -183,7 +183,7 @@ class CppExpVisitor extends MergeVisitor {
 	}
 	
 	override caseAElemsUnaryExpCG(AElemsUnaryExpCG node, StringWriter question) throws AnalysisException {
-		question.append('''«node.exp.expand»''')
+		question.append('''/*TODO*/«node.exp.expand»''')
 	}
 	
 	override caseAExplicitVarExpCG(AExplicitVarExpCG node, StringWriter question) throws AnalysisException {
