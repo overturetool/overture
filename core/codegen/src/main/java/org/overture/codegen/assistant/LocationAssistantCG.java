@@ -30,6 +30,9 @@ import java.util.Set;
 
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.node.INode;
+import org.overture.codegen.cgast.PCG;
+import org.overture.codegen.ir.IrNodeInfo;
+import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.ir.VdmNodeInfo;
 
 public class LocationAssistantCG extends AssistantBase
@@ -82,8 +85,72 @@ public class LocationAssistantCG extends AssistantBase
 			return firstLine - secondLine;
 		}
 	}
-
-	public List<VdmNodeInfo> getNodesLocationSorted(Set<VdmNodeInfo> nodes)
+	
+	public INode getVdmNode(IrNodeInfo info)
+	{
+		if(info == null)
+		{
+			return null;
+		}
+		
+		if(info.getNode() == null || !(info.getNode() instanceof PCG))
+		{
+			return null;
+		}
+		
+		SourceNode sourceNode = ((PCG) info.getNode()).getSourceNode();
+		
+		if(sourceNode == null)
+		{
+			return null;
+		}
+		
+		return sourceNode.getVdmNode();
+	}
+	
+	public ILexLocation findLocation(IrNodeInfo info)
+	{
+		INode vdmNode = getVdmNode(info);
+		
+		if(vdmNode == null)
+		{
+			return null;
+		}
+		
+		return findLocation(vdmNode);
+	}
+	
+	public List<IrNodeInfo> getIrNodeInfoLocationSorted(Set<IrNodeInfo> nodes)
+	{
+		List<IrNodeInfo> list = new LinkedList<IrNodeInfo>(nodes);
+		
+		Collections.sort(list, new Comparator<IrNodeInfo>(){
+			
+			@Override
+			public int compare(IrNodeInfo first, IrNodeInfo second)
+			{
+				INode vdmNode = getVdmNode(first);
+				ILexLocation firstLoc = vdmNode == null ? null : findLocation(vdmNode);
+				
+				if(firstLoc == null)
+				{
+					return -1;
+				}
+				
+				vdmNode = getVdmNode(second);
+				ILexLocation secondLoc = vdmNode == null ? null : findLocation(vdmNode);
+				
+				if(secondLoc == null)
+				{
+					return 1;
+				}
+				
+				return compareLocations(firstLoc, secondLoc);
+			}});
+		
+		return list;
+	}
+	public List<VdmNodeInfo> getVdmNodeInfoLocationSorted(Set<VdmNodeInfo> nodes)
 	{
 		List<VdmNodeInfo> list = new LinkedList<VdmNodeInfo>(nodes);
 

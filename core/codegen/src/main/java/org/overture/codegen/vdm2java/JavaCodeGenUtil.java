@@ -38,6 +38,7 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
+import org.overture.ast.node.INode;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.analysis.violations.Violation;
@@ -303,7 +304,7 @@ public class JavaCodeGenUtil
 		AssistantManager assistantManager = new AssistantManager();
 		LocationAssistantCG locationAssistant = assistantManager.getLocationAssistant();
 
-		List<VdmNodeInfo> nodesSorted = assistantManager.getLocationAssistant().getNodesLocationSorted(unsupportedNodes);
+		List<VdmNodeInfo> nodesSorted = locationAssistant.getVdmNodeInfoLocationSorted(unsupportedNodes);
 
 		Logger.getLog().println("Following IR constructs are not supported: ");
 
@@ -330,11 +331,23 @@ public class JavaCodeGenUtil
 	
 	public static void printUnsupportedNodes(Set<IrNodeInfo> unsupportedNodes)
 	{
+		AssistantManager assistantManager = new AssistantManager();
+		LocationAssistantCG locationAssistant = assistantManager.getLocationAssistant();
+		
+		List<IrNodeInfo> nodesSorted = locationAssistant.getIrNodeInfoLocationSorted(unsupportedNodes);
+		
 		Logger.getLog().println("Following IR constructs are not supported by the backend/target languages:");
 
-		for (IrNodeInfo nodeInfo : unsupportedNodes)
+		for (IrNodeInfo nodeInfo : nodesSorted)
 		{
-			Logger.getLog().print(nodeInfo.getNode().getClass().getSimpleName());
+			INode vdmNode = locationAssistant.getVdmNode(nodeInfo);
+			Logger.getLog().print(vdmNode != null ? vdmNode.toString() : nodeInfo.getNode().getClass().getSimpleName());
+
+			ILexLocation location = locationAssistant.findLocation(nodeInfo);
+
+			Logger.getLog().print(location != null ? " at [line, pos] = ["
+					+ location.getStartLine() + ", " + location.getStartPos()
+					+ "]" : "");
 
 			String reason = nodeInfo.getReason();
 

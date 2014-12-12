@@ -319,7 +319,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 				{
 					LocationAssistantCG locationAssistant = assistantManager.getLocationAssistant();
 
-					List<VdmNodeInfo> unsupportedInIr = locationAssistant.getNodesLocationSorted(generatedModule.getUnsupportedInIr());
+					List<VdmNodeInfo> unsupportedInIr = locationAssistant.getVdmNodeInfoLocationSorted(generatedModule.getUnsupportedInIr());
 					CodeGenConsole.GetInstance().println("Following constructs are not supported in the IR:");
 
 					for (VdmNodeInfo  nodeInfo : unsupportedInIr)
