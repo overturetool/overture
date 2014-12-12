@@ -46,7 +46,7 @@ import org.overture.ast.lex.Dialect;
 import org.overture.ast.node.INode;
 import org.overture.codegen.analysis.violations.Violation;
 import org.overture.codegen.assistant.LocationAssistantCG;
-import org.overture.codegen.ir.NodeInfo;
+import org.overture.codegen.ir.VdmNodeInfo;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.ide.core.resources.IVdmProject;
@@ -178,7 +178,7 @@ public class PluginVdm2JavaUtil
 		return subString.replaceAll("\\s+", " ");
 	}
 
-	public static String formatNodeString(NodeInfo nodeInfo,
+	public static String formatNodeString(VdmNodeInfo nodeInfo,
 			LocationAssistantCG locationAssistant)
 	{
 		INode node = nodeInfo.getNode();
@@ -201,7 +201,7 @@ public class PluginVdm2JavaUtil
 		return messageSb.toString();
 	}
 
-	public static void addMarkers(NodeInfo nodeInfo,
+	public static void addMarkers(VdmNodeInfo nodeInfo,
 			LocationAssistantCG locationAssistant)
 	{
 		if (nodeInfo == null)
