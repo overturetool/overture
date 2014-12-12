@@ -217,7 +217,7 @@ public class JavaCodeGen extends CodeGenBase
 				canBeGenerated.add(status);
 			} else
 			{
-				generated.add(new GeneratedModule(status.getClassName(), status.getUnsupportedNodes()));
+				generated.add(new GeneratedModule(status.getClassName(), status.getUnsupportedIrNodes()));
 			}
 		}
 		
@@ -387,7 +387,7 @@ public class JavaCodeGen extends CodeGenBase
 			} else
 			{
 
-				return new Generated(expStatus.getUnsupportedNodes());
+				return new Generated(expStatus.getUnsupportedIrNodes());
 			}
 
 		} catch (org.overture.codegen.cgast.analysis.AnalysisException e)

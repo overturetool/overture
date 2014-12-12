@@ -85,7 +85,7 @@ public class JavaCodeGenMain
 					{
 						Logger.getLog().println("Could not generate class: "
 								+ generatedClass.getName() + "\n");
-						JavaCodeGenUtil.printUnsupportedNodes(generatedClass.getUnsupportedNodes());
+						JavaCodeGenUtil.printUnsupportedNodes(generatedClass.getUnsupportedIrNodes());
 					} else
 					{
 						Logger.getLog().println(generatedClass.getContent());
@@ -136,7 +136,7 @@ public class JavaCodeGenMain
 				{
 					Logger.getLog().println("Could not generate VDM expression: "
 							+ args[1]);
-					JavaCodeGenUtil.printUnsupportedNodes(generated.getUnsupportedNodes());
+					JavaCodeGenUtil.printUnsupportedNodes(generated.getUnsupportedIrNodes());
 				} else
 				{
 					Logger.getLog().println(generated.getContent().trim());

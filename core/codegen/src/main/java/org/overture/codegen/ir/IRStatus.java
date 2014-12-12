@@ -25,20 +25,20 @@ import java.util.Set;
 
 public class IRStatus
 {
-	protected Set<NodeInfo> unsupportedNodes;
+	protected Set<NodeInfo> unsupportedIrNodes;
 
-	public IRStatus(Set<NodeInfo> unsupportedNodes)
+	public IRStatus(Set<NodeInfo> unsupportedIrNodes)
 	{
-		this.unsupportedNodes = unsupportedNodes;
+		this.unsupportedIrNodes = unsupportedIrNodes;
 	}
 
-	public Set<NodeInfo> getUnsupportedNodes()
+	public Set<NodeInfo> getUnsupportedIrNodes()
 	{
-		return unsupportedNodes;
+		return unsupportedIrNodes;
 	}
 
 	public boolean canBeGenerated()
 	{
-		return unsupportedNodes.size() == 0;
+		return unsupportedIrNodes.size() == 0;
 	}
 }

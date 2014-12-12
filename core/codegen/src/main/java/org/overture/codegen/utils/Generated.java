@@ -31,14 +31,14 @@ import org.overture.codegen.ir.NodeInfo;
 public class Generated
 {
 	protected String content;
-	protected Set<NodeInfo> unsupportedNodes;
+	protected Set<NodeInfo> unsupportedIrNodes;
 	protected List<Exception> mergeErrors;
 
-	public Generated(String content, Set<NodeInfo> unsupportedNodes,
+	public Generated(String content, Set<NodeInfo> unsupportedIrNodes,
 			List<Exception> mergeErrors)
 	{
 		this.content = content;
-		this.unsupportedNodes = unsupportedNodes;
+		this.unsupportedIrNodes = unsupportedIrNodes;
 		this.mergeErrors = mergeErrors;
 	}
 
@@ -62,9 +62,9 @@ public class Generated
 		return content;
 	}
 
-	public Set<NodeInfo> getUnsupportedNodes()
+	public Set<NodeInfo> getUnsupportedIrNodes()
 	{
-		return unsupportedNodes;
+		return unsupportedIrNodes;
 	}
 
 	public List<Exception> getMergeErrors()
@@ -74,7 +74,7 @@ public class Generated
 
 	public boolean canBeGenerated()
 	{
-		return unsupportedNodes.isEmpty();
+		return unsupportedIrNodes.isEmpty();
 	}
 
 	public boolean hasMergeErrors()
