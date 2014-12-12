@@ -36,7 +36,7 @@ public class Entry implements EvaluatePP {
         }
     }
 
-    public class Entry_sentinel extends Sentinel {
+    public static class Entry_sentinel extends Sentinel {
         public static final int Run = 0;
         public static final int Entry = 1;
         public static final int f = 2;

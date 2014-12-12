@@ -29,7 +29,7 @@ public class ThreadClass extends VDMThread implements EvaluatePP {
         x = 2L;
     }
 
-    public class ThreadClass_sentinel extends Sentinel {
+    public static class ThreadClass_sentinel extends Sentinel {
         public static final int ThreadClass = 0;
         public static final int toString = 1;
         public final int function_sum = 2;
@@ -91,7 +91,7 @@ public class Entry implements EvaluatePP {
         }
     }
 
-    public class Entry_sentinel extends Sentinel {
+    public static class Entry_sentinel extends Sentinel {
         public static final int Run = 0;
         public static final int Entry = 1;
         public static final int toString = 2;
