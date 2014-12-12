@@ -49,7 +49,7 @@ public class IRGenerator
 		codeGenInfo.clearNodes();
 
 		AClassDeclCG classCg = classDef.apply(codeGenInfo.getClassVisitor(), codeGenInfo);
-		Set<NodeInfo> unsupportedNodes = copyGetUnsupportedNodes();
+		Set<VdmNodeInfo> unsupportedNodes = copyGetUnsupportedNodes();
 
 		return new IRClassDeclStatus(classDef.getName().getName(), classCg, unsupportedNodes);
 	}
@@ -59,14 +59,14 @@ public class IRGenerator
 		codeGenInfo.clearNodes();
 
 		SExpCG expCg = exp.apply(codeGenInfo.getExpVisitor(), codeGenInfo);
-		Set<NodeInfo> unsupportedNodes = copyGetUnsupportedNodes();
+		Set<VdmNodeInfo> unsupportedNodes = copyGetUnsupportedNodes();
 
 		return new IRExpStatus(expCg, unsupportedNodes);
 	}
 
-	private Set<NodeInfo> copyGetUnsupportedNodes()
+	private Set<VdmNodeInfo> copyGetUnsupportedNodes()
 	{
-		return new HashSet<NodeInfo>(codeGenInfo.getUnsupportedNodes());
+		return new HashSet<VdmNodeInfo>(codeGenInfo.getUnsupportedNodes());
 	}
 
 	public List<String> getQuoteValues()

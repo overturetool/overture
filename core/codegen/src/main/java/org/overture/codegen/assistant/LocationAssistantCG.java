@@ -30,7 +30,7 @@ import java.util.Set;
 
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.node.INode;
-import org.overture.codegen.ir.NodeInfo;
+import org.overture.codegen.ir.VdmNodeInfo;
 
 public class LocationAssistantCG extends AssistantBase
 {
@@ -83,14 +83,14 @@ public class LocationAssistantCG extends AssistantBase
 		}
 	}
 
-	public List<NodeInfo> getNodesLocationSorted(Set<NodeInfo> nodes)
+	public List<VdmNodeInfo> getNodesLocationSorted(Set<VdmNodeInfo> nodes)
 	{
-		List<NodeInfo> list = new LinkedList<NodeInfo>(nodes);
+		List<VdmNodeInfo> list = new LinkedList<VdmNodeInfo>(nodes);
 
-		Collections.sort(list, new Comparator<NodeInfo>()
+		Collections.sort(list, new Comparator<VdmNodeInfo>()
 		{
 			@Override
-			public int compare(NodeInfo first, NodeInfo second)
+			public int compare(VdmNodeInfo first, VdmNodeInfo second)
 			{
 				ILexLocation firstLoc = findLocation(first.getNode());
 
