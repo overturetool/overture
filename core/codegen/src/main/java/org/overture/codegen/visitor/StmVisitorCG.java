@@ -652,7 +652,7 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 	{
 		PType type = node.getType();
 		PExp exp = node.getObj();
-		
+				
 		STypeCG typeCG = type.apply(question.getTypeVisitor(), question);
 		SExpCG expCG = exp.apply(question.getExpVisitor(), question);
 		

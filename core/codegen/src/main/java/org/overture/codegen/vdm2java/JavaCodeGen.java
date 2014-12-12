@@ -484,14 +484,6 @@ public class JavaCodeGen extends CodeGenBase
 			return false;
 		}
 
-//		for (SClassDefinition superDef : classDef.getSuperDefs())
-//		{
-//			if (declAssistant.classIsLibrary(superDef))
-//			{
-//				return false;
-//			}
-//		}
-
 		return true;
 	}
 }
