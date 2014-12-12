@@ -53,6 +53,7 @@ import org.overture.ast.statements.AIfStm;
 import org.overture.ast.statements.ALetBeStStm;
 import org.overture.ast.statements.ALetStm;
 import org.overture.ast.statements.ANotYetSpecifiedStm;
+import org.overture.ast.statements.APeriodicStm;
 import org.overture.ast.statements.AReturnStm;
 import org.overture.ast.statements.ASkipStm;
 import org.overture.ast.statements.AStartStm;
@@ -85,6 +86,7 @@ import org.overture.codegen.cgast.statements.AForIndexStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.ALetBeStStmCG;
 import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
+import org.overture.codegen.cgast.statements.APeriodicStmCG;
 import org.overture.codegen.cgast.statements.APlainCallStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.ASkipStmCG;
@@ -107,6 +109,24 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 			throws AnalysisException
 	{
 		return new AErrorStmCG();
+	}
+	
+	@Override
+	public SStmCG caseAPeriodicStm(APeriodicStm node, IRInfo question)
+			throws AnalysisException
+	{
+		String opName = node.getOpname().getName();
+		
+		APeriodicStmCG periodicStmCg = new APeriodicStmCG();
+		periodicStmCg.setOpname(opName);
+		
+		for(PExp exp : node.getArgs())
+		{
+			SExpCG expCg = exp.apply(question.getExpVisitor(), question);
+			periodicStmCg.getArgs().add(expCg);
+		}
+		
+		return periodicStmCg;
 	}
 
 	@Override

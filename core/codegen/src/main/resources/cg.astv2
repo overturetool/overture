@@ -212,6 +212,8 @@ CG {-> package='org.overture.codegen.cgast'
            |	{break}
            |	{start} [exp]:CG.#exp [type]:CG.#type 
            |	{try} [stm]:CG.#stm [catchClauses]:CG.#decl.catchClause* [finally]:CG.#stm
+           |	{periodic} [opname]:java_String [args]:CG.#exp*
+         //|	Sporadic
            ;
 
 #call {-> package='org.overture.codegen.cgast.statements'
@@ -278,6 +280,7 @@ CG {-> package='org.overture.codegen.cgast'
     |	#altExp
     |	{subSeq} [seq]:CG.#exp [from]:CG.#exp [to]:CG.#exp
     |	{history}[histype]:java_String [opsname]:java_String [sentinelType]:CG.#type.class
+    |	{time}
     ;
 
 #modifier {-> package='org.overture.codegen.cgast.expressions'}
