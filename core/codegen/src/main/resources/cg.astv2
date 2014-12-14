@@ -210,7 +210,8 @@ CG {-> package='org.overture.codegen.cgast'
            |	{error}
            |	{continue}
            |	{break}
-           |	{start} [exp]:CG.#exp [type]:CG.#type 
+           |	{start} [exp]:CG.#exp [type]:CG.#type
+           |	{startlist} [exp]:CG.#exp [type]:CG.#type
            |	{try} [stm]:CG.#stm [catchClauses]:CG.#decl.catchClause* [finally]:CG.#stm
            |	{periodic} [opname]:java_String [args]:CG.#exp*
          //|	Sporadic

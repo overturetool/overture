@@ -62,6 +62,7 @@ import org.overture.ast.statements.AWhileStm;
 import org.overture.ast.statements.PObjectDesignator;
 import org.overture.ast.statements.PStateDesignator;
 import org.overture.ast.statements.PStm;
+import org.overture.ast.types.ASetType;
 import org.overture.ast.types.PType;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SMultipleBindCG;
@@ -91,6 +92,7 @@ import org.overture.codegen.cgast.statements.APlainCallStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.ASkipStmCG;
 import org.overture.codegen.cgast.statements.AStartStmCG;
+import org.overture.codegen.cgast.statements.AStartlistStmCG;
 import org.overture.codegen.cgast.statements.ASuperCallStmCG;
 import org.overture.codegen.cgast.statements.AWhileStmCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
@@ -652,14 +654,35 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 	{
 		PType type = node.getType();
 		PExp exp = node.getObj();
+        if(exp.getType() instanceof ASetType)
+
+        {
+               STypeCG typeCG = type.apply(question.getTypeVisitor(), question);
+               SExpCG expCG = exp.apply(question.getExpVisitor(), question);
+               AStartlistStmCG s = new AStartlistStmCG();
+               s.setType(typeCG);
+               s.setExp(expCG);
+
+               return s;
+
+        }
+        else
+        {
+               STypeCG typeCG = type.apply(question.getTypeVisitor(), question);
+               SExpCG expCG = exp.apply(question.getExpVisitor(), question);           
+               AStartStmCG thread = new AStartStmCG();
+               thread.setType(typeCG);
+               thread.setExp(expCG);
+               return thread;
+
+        }
+//		STypeCG typeCG = type.apply(question.getTypeVisitor(), question);
+//		SExpCG expCG = exp.apply(question.getExpVisitor(), question);
+//		
+//		AStartStmCG thread = new AStartStmCG();
+//		thread.setType(typeCG);
+//		thread.setExp(expCG);
 				
-		STypeCG typeCG = type.apply(question.getTypeVisitor(), question);
-		SExpCG expCG = exp.apply(question.getExpVisitor(), question);
-		
-		AStartStmCG thread = new AStartStmCG();
-		thread.setType(typeCG);
-		thread.setExp(expCG);
-				
-		return thread;
+	//	return thread;
 	}
 }

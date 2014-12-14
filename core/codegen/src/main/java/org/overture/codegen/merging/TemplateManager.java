@@ -72,6 +72,7 @@ import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.ASelfObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.ASkipStmCG;
 import org.overture.codegen.cgast.statements.AStartStmCG;
+import org.overture.codegen.cgast.statements.AStartlistStmCG;
 import org.overture.codegen.cgast.statements.ASuperCallStmCG;
 import org.overture.codegen.cgast.statements.AThrowStmCG;
 import org.overture.codegen.cgast.statements.ATryStmCG;
@@ -333,6 +334,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AStartStmCG.class, templateStructure.STM_PATH 
 				+ "Start");
 		
+		nodeTemplateFileNames.put(AStartlistStmCG.class, templateStructure.STM_PATH 
+				+ "Startlist");
 		// Expressions
 
 		nodeTemplateFileNames.put(AApplyExpCG.class, templateStructure.EXP_PATH
