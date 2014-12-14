@@ -654,35 +654,28 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 	{
 		PType type = node.getType();
 		PExp exp = node.getObj();
-        if(exp.getType() instanceof ASetType)
 
-        {
-               STypeCG typeCG = type.apply(question.getTypeVisitor(), question);
-               SExpCG expCG = exp.apply(question.getExpVisitor(), question);
-               AStartlistStmCG s = new AStartlistStmCG();
-               s.setType(typeCG);
-               s.setExp(expCG);
+		if (exp.getType() instanceof ASetType)
 
-               return s;
+		{
+			STypeCG typeCG = type.apply(question.getTypeVisitor(), question);
+			SExpCG expCG = exp.apply(question.getExpVisitor(), question);
 
-        }
-        else
-        {
-               STypeCG typeCG = type.apply(question.getTypeVisitor(), question);
-               SExpCG expCG = exp.apply(question.getExpVisitor(), question);           
-               AStartStmCG thread = new AStartStmCG();
-               thread.setType(typeCG);
-               thread.setExp(expCG);
-               return thread;
+			AStartlistStmCG s = new AStartlistStmCG();
+			s.setType(typeCG);
+			s.setExp(expCG);
 
-        }
-//		STypeCG typeCG = type.apply(question.getTypeVisitor(), question);
-//		SExpCG expCG = exp.apply(question.getExpVisitor(), question);
-//		
-//		AStartStmCG thread = new AStartStmCG();
-//		thread.setType(typeCG);
-//		thread.setExp(expCG);
-				
-	//	return thread;
+			return s;
+		} else
+		{
+			STypeCG typeCG = type.apply(question.getTypeVisitor(), question);
+			SExpCG expCG = exp.apply(question.getExpVisitor(), question);
+
+			AStartStmCG thread = new AStartStmCG();
+			thread.setType(typeCG);
+			thread.setExp(expCG);
+
+			return thread;
+		}
 	}
 }
