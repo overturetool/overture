@@ -64,8 +64,13 @@ public class InstanceVarPPEvalTransformation extends DepthFirstAnalysisAdaptor
 		}
 		else
 		{
-			Logger.getLog().printErrorln("Could not find enclosing method for assignment statement in the InstanceVarPPEvalTransformation");
-			return;
+			// Can in fact be okay since the IR construction of the thread definition skips the
+			// explicit operation definition implicitly associated with the thread definition.
+			//
+			// Example:
+			// thread
+			// (x := 2;)
+			//
 		}
 		
 		

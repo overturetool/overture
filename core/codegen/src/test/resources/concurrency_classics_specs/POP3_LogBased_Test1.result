@@ -1231,7 +1231,10 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
         Object cmd = null;
         id = Thread.currentThread().getId();
 
+        sentinel.stateChanged();
+
         cmd = msgChannel.ServerListen();
+        sentinel.stateChanged();
 
         Boolean whileCond1 = true;
 
@@ -1244,6 +1247,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
 
             msgChannel.ServerSend(ReceiveCommand(((Object) cmd)));
             cmd = msgChannel.ServerListen();
+            sentinel.stateChanged();
         }
 
         msgChannel.ServerSend(ReceiveCommand(((Object) cmd)));
@@ -1996,6 +2000,7 @@ public class POP3Server extends VDMThread implements EvaluatePP {
             CreateClientHandler(msgChannel);
 
             serverStarted = true;
+            sentinel.stateChanged();
         }
     }
 
@@ -2544,10 +2549,12 @@ public class POP3TestListener extends VDMThread implements EvaluatePP {
 
             LogServer(((Object) response));
             response = mc.ClientListen();
+            sentinel.stateChanged();
         }
 
         LogServer(((Object) response));
         finished = true;
+        sentinel.stateChanged();
     }
 
     public static class POP3TestListener_sentinel extends Sentinel {

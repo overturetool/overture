@@ -27,6 +27,7 @@ public class ThreadClass extends VDMThread implements EvaluatePP {
 
     public void run() {
         x = 2L;
+        sentinel.stateChanged();
     }
 
     public static class ThreadClass_sentinel extends Sentinel {
