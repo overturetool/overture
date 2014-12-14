@@ -69,7 +69,7 @@ public class IRInfo
 	private List<String> quoteVaues;
 
 	// Unsupported VDM nodes
-	private Set<NodeInfo> unsupportedNodes;
+	private Set<VdmNodeInfo> unsupportedNodes;
 
 	// For generating variable names
 	private ITempVarGen tempVarNameGen;
@@ -91,7 +91,7 @@ public class IRInfo
 		this.assistantManager = new AssistantManager();
 		this.tcFactory = new TypeCheckerAssistantFactory();
 		this.quoteVaues = new LinkedList<String>();
-		this.unsupportedNodes = new HashSet<NodeInfo>();
+		this.unsupportedNodes = new HashSet<VdmNodeInfo>();
 		this.tempVarNameGen = new TempVarNameGen();
 
 		this.settings = new IRSettings();
@@ -221,17 +221,17 @@ public class IRInfo
 
 	public void addUnsupportedNode(INode node)
 	{
-		NodeInfo info = new NodeInfo(node);
+		VdmNodeInfo info = new VdmNodeInfo(node);
 		unsupportedNodes.add(info);
 	}
 
 	public void addUnsupportedNode(INode node, String reason)
 	{
-		NodeInfo info = new NodeInfo(node, reason);
+		VdmNodeInfo info = new VdmNodeInfo(node, reason);
 		unsupportedNodes.add(info);
 	}
 
-	public Set<NodeInfo> getUnsupportedNodes()
+	public Set<VdmNodeInfo> getUnsupportedNodes()
 	{
 		return unsupportedNodes;
 	}

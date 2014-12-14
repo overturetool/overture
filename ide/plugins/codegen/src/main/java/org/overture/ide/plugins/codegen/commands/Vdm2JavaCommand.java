@@ -48,7 +48,8 @@ import org.overture.codegen.analysis.violations.Violation;
 import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.assistant.LocationAssistantCG;
 import org.overture.codegen.ir.IRSettings;
-import org.overture.codegen.ir.NodeInfo;
+import org.overture.codegen.ir.IrNodeInfo;
+import org.overture.codegen.ir.VdmNodeInfo;
 import org.overture.codegen.utils.AnalysisExceptionCG;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.GeneratedData;
@@ -311,21 +312,36 @@ public class Vdm2JavaCommand extends AbstractHandler
 				}
 			} else if (!generatedModule.canBeGenerated())
 			{
-				LocationAssistantCG locationAssistant = assistantManager.getLocationAssistant();
-
-				List<NodeInfo> unsupportedNodes = locationAssistant.getNodesLocationSorted(generatedModule.getUnsupportedNodes());
 				CodeGenConsole.GetInstance().println("Could not code generate class: "
 						+ generatedModule.getName() + ".");
-				CodeGenConsole.GetInstance().println("Following constructs are not supported:");
-
-				for (NodeInfo nodeInfo : unsupportedNodes)
+				
+				if(generatedModule.hasUnsupportedIrNodes())
 				{
-					String message = PluginVdm2JavaUtil.formatNodeString(nodeInfo, locationAssistant);
-					CodeGenConsole.GetInstance().println(message);
+					LocationAssistantCG locationAssistant = assistantManager.getLocationAssistant();
 
-					PluginVdm2JavaUtil.addMarkers(nodeInfo, locationAssistant);
+					List<VdmNodeInfo> unsupportedInIr = locationAssistant.getVdmNodeInfoLocationSorted(generatedModule.getUnsupportedInIr());
+					CodeGenConsole.GetInstance().println("Following constructs are not supported in the IR:");
 
+					for (VdmNodeInfo  nodeInfo : unsupportedInIr)
+					{
+						String message = PluginVdm2JavaUtil.formatNodeString(nodeInfo, locationAssistant);
+						CodeGenConsole.GetInstance().println(message);
+
+						PluginVdm2JavaUtil.addMarkers(nodeInfo, locationAssistant);
+					}
 				}
+				
+				if(generatedModule.hasUnsupportedTargLangNodes())
+				{
+					Set<IrNodeInfo> unsupportedInTargLang = generatedModule.getUnsupportedInTargLang();
+					CodeGenConsole.GetInstance().println("Following constructs are not supported by the backend/target language:");
+
+					for (IrNodeInfo  nodeInfo : unsupportedInTargLang)
+					{
+						CodeGenConsole.GetInstance().println(nodeInfo.toString());
+					}
+				}
+				
 			} else
 			{
 				File javaFile = new File(outputFolder, generatedModule.getName()

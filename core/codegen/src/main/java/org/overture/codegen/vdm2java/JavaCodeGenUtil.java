@@ -38,13 +38,15 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
+import org.overture.ast.node.INode;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.analysis.violations.Violation;
 import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.assistant.LocationAssistantCG;
 import org.overture.codegen.ir.IRSettings;
-import org.overture.codegen.ir.NodeInfo;
+import org.overture.codegen.ir.IrNodeInfo;
+import org.overture.codegen.ir.VdmNodeInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.Generated;
@@ -297,20 +299,51 @@ public class JavaCodeGenUtil
 		}
 	}
 
-	public static void printUnsupportedNodes(Set<NodeInfo> unsupportedNodes)
+	public static void printUnsupportedIrNodes(Set<VdmNodeInfo> unsupportedNodes)
 	{
 		AssistantManager assistantManager = new AssistantManager();
 		LocationAssistantCG locationAssistant = assistantManager.getLocationAssistant();
 
-		List<NodeInfo> nodesSorted = assistantManager.getLocationAssistant().getNodesLocationSorted(unsupportedNodes);
+		List<VdmNodeInfo> nodesSorted = locationAssistant.getVdmNodeInfoLocationSorted(unsupportedNodes);
 
-		Logger.getLog().println("Following constructs are not supported: ");
+		Logger.getLog().println("Following IR constructs are not supported: ");
 
-		for (NodeInfo nodeInfo : nodesSorted)
+		for (VdmNodeInfo vdmNodeInfo : nodesSorted)
 		{
-			Logger.getLog().print(nodeInfo.getNode().toString());
+			Logger.getLog().print(vdmNodeInfo.getNode().toString());
 
-			ILexLocation location = locationAssistant.findLocation(nodeInfo.getNode());
+			ILexLocation location = locationAssistant.findLocation(vdmNodeInfo.getNode());
+
+			Logger.getLog().print(location != null ? " at [line, pos] = ["
+					+ location.getStartLine() + ", " + location.getStartPos()
+					+ "]" : "");
+
+			String reason = vdmNodeInfo.getReason();
+
+			if (reason != null)
+			{
+				Logger.getLog().print(". Reason: " + reason);
+			}
+
+			Logger.getLog().println("");
+		}
+	}
+	
+	public static void printUnsupportedNodes(Set<IrNodeInfo> unsupportedNodes)
+	{
+		AssistantManager assistantManager = new AssistantManager();
+		LocationAssistantCG locationAssistant = assistantManager.getLocationAssistant();
+		
+		List<IrNodeInfo> nodesSorted = locationAssistant.getIrNodeInfoLocationSorted(unsupportedNodes);
+		
+		Logger.getLog().println("Following IR constructs are not supported by the backend/target languages:");
+
+		for (IrNodeInfo nodeInfo : nodesSorted)
+		{
+			INode vdmNode = locationAssistant.getVdmNode(nodeInfo);
+			Logger.getLog().print(vdmNode != null ? vdmNode.toString() : nodeInfo.getNode().getClass().getSimpleName());
+
+			ILexLocation location = locationAssistant.findLocation(nodeInfo);
 
 			Logger.getLog().print(location != null ? " at [line, pos] = ["
 					+ location.getStartLine() + ", " + location.getStartPos()

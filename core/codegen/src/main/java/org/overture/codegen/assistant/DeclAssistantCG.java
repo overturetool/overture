@@ -100,6 +100,13 @@ public class DeclAssistantCG extends AssistantBase
 		while (superName != null)
 		{
 			AClassDeclCG superClassDecl = findClass(classes, superName);
+			
+			if(superClassDecl == null)
+			{
+				//This would be the case if the super class
+				// declaration is the VDMThread from the runtime
+				break;
+			}
 
 			for (T superDecl : strategy.getDecls(superClassDecl))
 			{

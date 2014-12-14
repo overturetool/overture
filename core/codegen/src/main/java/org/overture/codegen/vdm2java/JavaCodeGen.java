@@ -24,6 +24,7 @@ package org.overture.codegen.vdm2java;
 import java.io.File;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -55,6 +56,8 @@ import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRClassDeclStatus;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRExpStatus;
+import org.overture.codegen.ir.IrNodeInfo;
+import org.overture.codegen.ir.VdmNodeInfo;
 import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
@@ -217,7 +220,7 @@ public class JavaCodeGen extends CodeGenBase
 				canBeGenerated.add(status);
 			} else
 			{
-				generated.add(new GeneratedModule(status.getClassName(), status.getUnsupportedNodes()));
+				generated.add(new GeneratedModule(status.getClassName(), status.getUnsupportedInIr(), new HashSet<IrNodeInfo>()));
 			}
 		}
 		
@@ -267,7 +270,12 @@ public class JavaCodeGen extends CodeGenBase
 					if (mergeVisitor.hasMergeErrors())
 					{
 						generated.add(new GeneratedModule(className, classCg, mergeVisitor.getMergeErrors()));
-					} else
+					}
+					else if(mergeVisitor.hasUnsupportedTargLangNodes())
+					{
+						generated.add(new GeneratedModule(className, new HashSet<VdmNodeInfo>(), mergeVisitor.getUnsupportedInTargLang()));
+					}
+					else
 					{
 						String formattedJavaCode = JavaCodeGenUtil.formatJavaCode(writer.toString());
 						generated.add(new GeneratedModule(className, classCg, formattedJavaCode));
@@ -374,11 +382,16 @@ public class JavaCodeGen extends CodeGenBase
 				javaFormat.init();
 				MergeVisitor mergeVisitor = javaFormat.getMergeVisitor();
 				expCg.apply(mergeVisitor, writer);
-
+				
 				if (mergeVisitor.hasMergeErrors())
 				{
 					return new Generated(mergeVisitor.getMergeErrors());
-				} else
+				}
+				else if(mergeVisitor.hasUnsupportedTargLangNodes())
+				{
+					return new Generated(new HashSet<VdmNodeInfo>(), mergeVisitor.getUnsupportedInTargLang());
+				}
+				else
 				{
 					String code = writer.toString();
 
@@ -387,7 +400,7 @@ public class JavaCodeGen extends CodeGenBase
 			} else
 			{
 
-				return new Generated(expStatus.getUnsupportedNodes());
+				return new Generated(expStatus.getUnsupportedInIr(), new HashSet<IrNodeInfo>());
 			}
 
 		} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
@@ -470,7 +483,7 @@ public class JavaCodeGen extends CodeGenBase
 		{
 			return false;
 		}
-
+		
 //		for (SClassDefinition superDef : classDef.getSuperDefs())
 //		{
 //			if (declAssistant.classIsLibrary(superDef))

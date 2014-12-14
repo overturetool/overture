@@ -42,7 +42,7 @@ public class JavaCodeGenMain
 	public static void main(String[] args)
 	{
 		Settings.release = Release.VDM_10;
-		Dialect dialect = Dialect.VDM_PP;
+		Dialect dialect = Dialect.VDM_RT;
 
 		if (args.length <= 1)
 		{
@@ -85,7 +85,17 @@ public class JavaCodeGenMain
 					{
 						Logger.getLog().println("Could not generate class: "
 								+ generatedClass.getName() + "\n");
-						JavaCodeGenUtil.printUnsupportedNodes(generatedClass.getUnsupportedNodes());
+						
+						if(generatedClass.hasUnsupportedIrNodes())
+						{
+							JavaCodeGenUtil.printUnsupportedIrNodes(generatedClass.getUnsupportedInIr());
+						}
+						
+						if(generatedClass.hasUnsupportedTargLangNodes())
+						{
+							JavaCodeGenUtil.printUnsupportedNodes(generatedClass.getUnsupportedInTargLang());
+						}
+						
 					} else
 					{
 						Logger.getLog().println(generatedClass.getContent());
@@ -96,12 +106,13 @@ public class JavaCodeGenMain
 
 				List<GeneratedModule> quotes = data.getQuoteValues();
 
+				Logger.getLog().println("Generated following quotes:");
+				
 				if (quotes != null && !quotes.isEmpty())
 				{
 					for(GeneratedModule q : quotes)
 					{
-						Logger.getLog().println("**********");
-						Logger.getLog().println(q.getContent());
+						Logger.getLog().println(q.getName());
 					}
 				}
 
@@ -136,7 +147,17 @@ public class JavaCodeGenMain
 				{
 					Logger.getLog().println("Could not generate VDM expression: "
 							+ args[1]);
-					JavaCodeGenUtil.printUnsupportedNodes(generated.getUnsupportedNodes());
+					
+					if(generated.hasUnsupportedIrNodes())
+					{
+						JavaCodeGenUtil.printUnsupportedIrNodes(generated.getUnsupportedInIr());
+					}
+					
+					if(generated.hasUnsupportedTargLangNodes())
+					{
+						JavaCodeGenUtil.printUnsupportedNodes(generated.getUnsupportedInTargLang());
+					}
+					
 				} else
 				{
 					Logger.getLog().println(generated.getContent().trim());
