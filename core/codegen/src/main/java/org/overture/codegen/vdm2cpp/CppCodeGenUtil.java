@@ -44,7 +44,7 @@ import org.overture.codegen.analysis.violations.Violation;
 import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.assistant.LocationAssistantCG;
 import org.overture.codegen.ir.IRSettings;
-import org.overture.codegen.ir.NodeInfo;
+import org.overture.codegen.ir.VdmNodeInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.Generated;
@@ -294,16 +294,16 @@ public class CppCodeGenUtil
 		}
 	}
 
-	public static void printUnsupportedNodes(Set<NodeInfo> unsupportedNodes)
+	public static void printUnsupportedNodes(Set<VdmNodeInfo> unsupportedNodes)
 	{
 		AssistantManager assistantManager = new AssistantManager();
 		LocationAssistantCG locationAssistant = assistantManager.getLocationAssistant();
 
-		List<NodeInfo> nodesSorted = assistantManager.getLocationAssistant().getNodesLocationSorted(unsupportedNodes);
+		List<VdmNodeInfo> nodesSorted = assistantManager.getLocationAssistant().getVdmNodeInfoLocationSorted(unsupportedNodes);
 
 		Logger.getLog().println("Following constructs are not supported: ");
 
-		for (NodeInfo nodeInfo : nodesSorted)
+		for (VdmNodeInfo nodeInfo : nodesSorted)
 		{
 			Logger.getLog().print(nodeInfo.getNode().toString());
 
