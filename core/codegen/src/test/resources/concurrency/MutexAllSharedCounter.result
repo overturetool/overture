@@ -16,6 +16,7 @@ public class SharedCounter implements EvaluatePP {
 
         try {
             counter = counter.longValue() + 2L;
+            sentinel.stateChanged();
         } finally {
             sentinel.leaving(((SharedCounter_sentinel) sentinel).inc);
         }
@@ -26,6 +27,7 @@ public class SharedCounter implements EvaluatePP {
 
         try {
             counter = counter.longValue() - 1L;
+            sentinel.stateChanged();
         } finally {
             sentinel.leaving(((SharedCounter_sentinel) sentinel).decr);
         }
@@ -71,7 +73,7 @@ public class SharedCounter implements EvaluatePP {
         }
     }
 
-    public class SharedCounter_sentinel extends Sentinel {
+    public static class SharedCounter_sentinel extends Sentinel {
         public static final int inc = 0;
         public static final int decr = 1;
         public static final int getValue = 2;
@@ -100,9 +102,9 @@ public class CountSwitcher extends VDMThread implements EvaluatePP {
     public volatile Sentinel sentinel;
 
     public CountSwitcher(final SharedCounter s) {
-        cg_init_CountSwitcher_1(s);
-
         sentinel = new CountSwitcher_sentinel(this);
+
+        cg_init_CountSwitcher_1(s);
     }
 
     public CountSwitcher() {
@@ -135,6 +137,7 @@ public class CountSwitcher extends VDMThread implements EvaluatePP {
             }
 
             isFinished = true;
+            sentinel.stateChanged();
         } finally {
             sentinel.leaving(((CountSwitcher_sentinel) sentinel).incCounter);
         }
@@ -166,7 +169,7 @@ public class CountSwitcher extends VDMThread implements EvaluatePP {
         incCounter();
     }
 
-    public class CountSwitcher_sentinel extends Sentinel {
+    public static class CountSwitcher_sentinel extends Sentinel {
         public static final int cg_init_CountSwitcher_1 = 0;
         public static final int CountSwitcher = 1;
         public static final int joined = 2;
@@ -227,7 +230,7 @@ public class Entry implements EvaluatePP {
         }
     }
 
-    public class Entry_sentinel extends Sentinel {
+    public static class Entry_sentinel extends Sentinel {
         public static final int Run = 0;
         public static final int Entry = 1;
         public static final int toString = 2;

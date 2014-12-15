@@ -15,6 +15,7 @@ import org.overture.codegen.trans.PrePostTransformation;
 import org.overture.codegen.trans.SeqConversionTransformation;
 import org.overture.codegen.trans.TransformationVisitor;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.trans.conc.InstanceVarPPEvalTransformation;
 import org.overture.codegen.trans.conc.MainClassConcTransformation;
 import org.overture.codegen.trans.conc.MutexDeclTransformation;
 import org.overture.codegen.trans.conc.SentinelTransformation;
@@ -65,6 +66,7 @@ public class JavaTransSeries
 		SentinelTransformation concurrencytransform = new SentinelTransformation(irInfo, classes);
 		MainClassConcTransformation mainclassTransform = new MainClassConcTransformation(irInfo, classes);
 		MutexDeclTransformation mutexTransform = new MutexDeclTransformation(irInfo, classes);
+		InstanceVarPPEvalTransformation instanceVarPPEval = new InstanceVarPPEvalTransformation(irInfo, transAssistant, classes);
 
 		UnionTypeTransformation unionTypeTransformation = new UnionTypeTransformation(transAssistant, irInfo, classes, APPLY_EXP_NAME_PREFIX, OBJ_EXP_NAME_PREFIX, CALL_STM_OBJ_NAME_PREFIX, MISSING_OP_MEMBER, MISSING_MEMBER);
 		JavaClassToStringTrans javaToStringTransformation = new JavaClassToStringTrans(irInfo);
@@ -75,7 +77,7 @@ public class JavaTransSeries
 				preCheckTransformation, postCheckTransformation,
 				isExpTransformation, unionTypeTransformation,
 				javaToStringTransformation, concurrencytransform,
-				mutexTransform, mainclassTransform, seqConversionTransformation };
+				mutexTransform, mainclassTransform, seqConversionTransformation, instanceVarPPEval };
 
 		return analyses;
 	}

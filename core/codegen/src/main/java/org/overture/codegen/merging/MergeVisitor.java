@@ -22,14 +22,17 @@
 package org.overture.codegen.merging;
 
 import java.io.StringWriter;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.Stack;
 
 import org.apache.velocity.Template;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.QuestionAdaptor;
+import org.overture.codegen.ir.IrNodeInfo;
 
 public class MergeVisitor extends QuestionAdaptor<StringWriter>
 {
@@ -37,6 +40,7 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter>
 
 	private TemplateManager templates;
 	private TemplateCallable[] templateCallables;
+	private Set<IrNodeInfo> unsupportedInTargLang;
 
 	// Since generating code is done by merging templates recursively a stack is used to manage the node contexts used
 	// by the template engine.
@@ -52,6 +56,7 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter>
 		this.nodeContexts = new Stack<MergeContext>();
 		this.templateCallables = templateCallables;
 		this.mergeErrors = new LinkedList<Exception>();
+		this.unsupportedInTargLang = new HashSet<IrNodeInfo>();
 	}
 
 	public List<Exception> getMergeErrors()
@@ -68,6 +73,16 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter>
 	{
 		// Don't clear it if others are using the list
 		mergeErrors = new LinkedList<Exception>();
+	}
+	
+	public Set<IrNodeInfo> getUnsupportedInTargLang()
+	{
+		return unsupportedInTargLang;
+	}
+	
+	public boolean hasUnsupportedTargLangNodes()
+	{
+		return unsupportedInTargLang != null && !unsupportedInTargLang.isEmpty();
 	}
 
 	private void initCodeGenContext(INode node,
@@ -94,9 +109,7 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter>
 
 		if (template == null)
 		{
-			String msg = "Template could not be found for node: "
-					+ node.getClass().getName();
-			mergeErrors.add(new AnalysisException(msg));
+			unsupportedInTargLang.add(new IrNodeInfo(node, "Template could not be found."));
 		} else
 		{
 			try

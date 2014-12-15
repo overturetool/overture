@@ -24,6 +24,7 @@ package org.overture.codegen.vdm2cpp;
 import java.io.File;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -48,6 +49,7 @@ import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRClassDeclStatus;
 import org.overture.codegen.ir.IRExpStatus;
+import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
@@ -169,7 +171,7 @@ public class CppCodeGen extends CodeGenBase
 				canBeGenerated.add(status);
 			} else
 			{
-				generated.add(new GeneratedModule(status.getClassName(), status.getUnsupportedNodes()));
+				generated.add(new GeneratedModule(status.getClassName(), status.getUnsupportedInIr(), new HashSet<IrNodeInfo>()));
 			}
 		}
 		
@@ -230,7 +232,16 @@ public class CppCodeGen extends CodeGenBase
 					if (mergeVisitor.hasMergeErrors())
 					{
 						generated.add(new GeneratedModule(className, classCg, mergeVisitor.getMergeErrors()));
-					} else
+					}
+					//
+					// TODO: In the Java code generator the mergeVisitor keeps track of nodes that
+					// unsupported by the backend. These can be transferred to the generated module
+					//
+					//else if(mergeVisitor.hasUnsupportedTargLangNodes())
+					//{
+					//	generated.add(new GeneratedModule(className, new HashSet<VdmNodeInfo>(), mergeVisitor.getUnsupportedInTargLang()));
+					//}
+					else
 					{
 						String formattedJavaCode = writer.toString();
 						generated.add(new GeneratedModule(className, classCg, formattedJavaCode));
@@ -342,7 +353,16 @@ public class CppCodeGen extends CodeGenBase
 				if (mergeVisitor.hasMergeErrors())
 				{
 					return new Generated(mergeVisitor.getMergeErrors());
-				} else
+				}
+				//
+				// TODO: In the Java code generator the mergeVisitor keeps track of nodes that
+				// unsupported by the backend. These can be transferred to the generated module
+				//
+				//else if(mergeVisitor.hasUnsupportedTargLangNodes())
+				//{
+				//	generated.add(new GeneratedModule(className, new HashSet<VdmNodeInfo>(), mergeVisitor.getUnsupportedInTargLang()));
+				//}
+				else
 				{
 					String code = writer.toString();
 
@@ -351,7 +371,7 @@ public class CppCodeGen extends CodeGenBase
 			} else
 			{
 
-				return new Generated(expStatus.getUnsupportedNodes());
+				return new Generated(expStatus.getUnsupportedInIr(), new HashSet<IrNodeInfo>());
 			}
 
 		} catch (org.overture.codegen.cgast.analysis.AnalysisException e)

@@ -159,8 +159,8 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 				stm.setExp(newexp);
 				stm.setTarget(field);
 
-				bodyConst.getStatements().add(methodCG.getBody());
 				bodyConst.getStatements().add(stm);
+				bodyConst.getStatements().add(methodCG.getBody());
 
 				methodCG.setBody(bodyConst);
 			}

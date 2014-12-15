@@ -16,6 +16,7 @@ public class Buffer implements EvaluatePP {
 
         try {
             data = newData;
+            sentinel.stateChanged();
         } finally {
             sentinel.leaving(((Buffer_sentinel) sentinel).Write);
         }
@@ -65,7 +66,7 @@ public class Buffer implements EvaluatePP {
         }
     }
 
-    public class Buffer_sentinel extends Sentinel {
+    public static class Buffer_sentinel extends Sentinel {
         public static final int Write = 0;
         public static final int Read = 1;
         public static final int IsFinished = 2;
@@ -94,9 +95,9 @@ public class Reader extends VDMThread implements EvaluatePP {
     public volatile Sentinel sentinel;
 
     public Reader(final Buffer buf) {
-        cg_init_Reader_1(buf);
-
         sentinel = new Reader_sentinel(this);
+
+        cg_init_Reader_1(buf);
     }
 
     public Reader() {
@@ -146,7 +147,7 @@ public class Reader extends VDMThread implements EvaluatePP {
         }
     }
 
-    public class Reader_sentinel extends Sentinel {
+    public static class Reader_sentinel extends Sentinel {
         public static final int cg_init_Reader_1 = 0;
         public static final int Reader = 1;
         public static final int ended = 2;
@@ -175,9 +176,9 @@ public class Writer extends VDMThread implements EvaluatePP {
     public volatile Sentinel sentinel;
 
     public Writer(final Buffer buf) {
-        cg_init_Writer_1(buf);
-
         sentinel = new Writer_sentinel(this);
+
+        cg_init_Writer_1(buf);
     }
 
     public Writer() {
@@ -193,6 +194,7 @@ public class Writer extends VDMThread implements EvaluatePP {
 
         try {
             index = index.longValue() + 1L;
+            sentinel.stateChanged();
 
             return index;
         } finally {
@@ -241,7 +243,7 @@ public class Writer extends VDMThread implements EvaluatePP {
         }
     }
 
-    public class Writer_sentinel extends Sentinel {
+    public static class Writer_sentinel extends Sentinel {
         public static final int cg_init_Writer_1 = 0;
         public static final int Writer = 1;
         public static final int Write = 2;
@@ -298,7 +300,7 @@ public class Entry implements EvaluatePP {
         }
     }
 
-    public class Entry_sentinel extends Sentinel {
+    public static class Entry_sentinel extends Sentinel {
         public static final int Run = 0;
         public static final int Entry = 1;
         public static final int toString = 2;

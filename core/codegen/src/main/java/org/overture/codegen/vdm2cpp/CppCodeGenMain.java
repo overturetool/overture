@@ -86,7 +86,7 @@ public class CppCodeGenMain
 					{
 						Logger.getLog().println("Could not generate class: "
 								+ generatedClass.getName() + "\n");
-						CppCodeGenUtil.printUnsupportedNodes(generatedClass.getUnsupportedNodes());
+						CppCodeGenUtil.printUnsupportedNodes(generatedClass.getUnsupportedInIr());
 					} else
 					{
 						//Logger.getLog().println(generatedClass.getContent());
@@ -138,7 +138,7 @@ public class CppCodeGenMain
 				{
 					Logger.getLog().println("Could not generate VDM expression: "
 							+ args[1]);
-					CppCodeGenUtil.printUnsupportedNodes(generated.getUnsupportedNodes());
+					CppCodeGenUtil.printUnsupportedNodes(generated.getUnsupportedInIr());
 				} else
 				{
 					Logger.getLog().println(generated.getContent().trim());

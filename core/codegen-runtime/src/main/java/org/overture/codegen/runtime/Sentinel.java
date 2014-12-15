@@ -13,7 +13,7 @@ public class Sentinel
 	public volatile long[] active; //holds the #active history counter.
 	public volatile long[] waiting; //holds the #waiting history counter.
 	
-	EvaluatePP instance; // hold the instance of the class that the evaluatePP() is going to be used.
+	public EvaluatePP instance; // hold the instance of the class that the evaluatePP() is going to be used.
 	
 	//the initialization of the instance of Sentinel class.
 	//Takes as parameters the instance of the class implementing the EvaluatePP 
