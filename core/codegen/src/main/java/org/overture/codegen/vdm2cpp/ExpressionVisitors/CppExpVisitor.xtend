@@ -1,3 +1,4 @@
+
 package org.overture.codegen.vdm2cpp.ExpressionVisitors
 
 import java.io.StringWriter
@@ -48,21 +49,20 @@ import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG
 import org.overture.codegen.cgast.expressions.ATupleCompatibilityExpCG
 import org.overture.codegen.cgast.expressions.AUndefinedExpCG
 import org.overture.codegen.cgast.types.AClassTypeCG
+import org.overture.codegen.cgast.types.AMapMapTypeCG
 import org.overture.codegen.cgast.types.ARecordTypeCG
+import org.overture.codegen.cgast.types.ASeqSeqTypeCG
+import org.overture.codegen.cgast.types.ASetSetTypeCG
 import org.overture.codegen.cgast.types.SSeqTypeCG
 import org.overture.codegen.merging.MergeVisitor
 import org.overture.codegen.merging.TemplateCallable
 import org.overture.codegen.merging.TemplateStructure
-import org.overture.codegen.cgast.types.ASeqSeqTypeCG
-import org.overture.codegen.cgast.types.AMapMapTypeCG
-import org.overture.codegen.cgast.types.ASetSetTypeCG
-import org.overture.codegen.cgast.expressions.SSeqExpCG
 
 class CppExpVisitor extends MergeVisitor {
 	
-	org.overture.codegen.vdm2cpp.vdm2cppGen root_generator;
+	vdm2cppGen root_generator;
 	
-	new(org.overture.codegen.vdm2cpp.vdm2cppGen root,TemplateStructure templateStructure, TemplateCallable[] templateCallables) {
+	new(vdm2cppGen root,TemplateStructure templateStructure, TemplateCallable[] templateCallables) {
 		super(templateStructure, templateCallables)
 		
 		root_generator = root

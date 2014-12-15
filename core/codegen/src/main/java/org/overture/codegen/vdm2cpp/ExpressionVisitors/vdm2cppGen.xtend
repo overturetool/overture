@@ -1,8 +1,7 @@
-package org.overture.codegen.vdm2cpp
+package org.overture.codegen.vdm2cpp.ExpressionVisitors
 
 import java.io.StringWriter
 import java.util.ArrayList
-import java.util.LinkedList
 import java.util.List
 import org.overture.codegen.cgast.INode
 import org.overture.codegen.cgast.SExpCG
@@ -25,6 +24,11 @@ import org.overture.codegen.merging.MergeVisitor
 import org.overture.codegen.merging.TemplateCallable
 import org.overture.codegen.merging.TemplateStructure
 import org.overture.codegen.vdm2cpp.ExpressionVisitors.CppExpVisitor
+import org.overture.codegen.vdm2cpp.visitors.CppTypeVisitor
+import org.overture.codegen.vdm2cpp.TypeHierachyAnalyser
+import org.overture.codegen.vdm2cpp.DependencyManager
+import org.overture.codegen.vdm2cpp.DependencyAnalyser
+import org.overture.codegen.vdm2cpp.TypeDependency
 
 class vdm2cppGen extends MergeVisitor
 {
@@ -40,7 +44,7 @@ class vdm2cppGen extends MergeVisitor
 	new(TemplateStructure templateStructure, TemplateCallable[] templateCallables, TypeHierachyAnalyser tag) {
 		super(templateStructure, templateCallables)
 		type_info = tag;
-		type_visitor = new CppTypeVisitor(this,templateStructure,templateCallables)
+		//type_visitor = new CppTypeVisitor(this)
 		exp_visitor = new CppExpVisitor(this,templateStructure,templateCallables)
 		stm_visitor = new CppStmVisitor(this,templateStructure,templateCallables)
 	}
@@ -189,7 +193,7 @@ class vdm2cppGen extends MergeVisitor
 	}
 	
 	override defaultSTypeCG(STypeCG node, StringWriter question) throws AnalysisException {
-		node.apply(type_visitor,question);
+		//node.apply(type_visitor,question);
 	}
 	
 	override defaultSExpCG(SExpCG node, StringWriter question) throws AnalysisException {

@@ -1,24 +1,115 @@
 package org.overture.codegen.vdm2cpp
 
+import org.overture.codegen.cgast.INode
+import org.overture.codegen.cgast.SDeclCG
+import org.overture.codegen.cgast.SExpCG
+import org.overture.codegen.cgast.SStmCG
+import org.overture.codegen.cgast.STypeCG
+import org.overture.codegen.cgast.analysis.AnalysisException
 import org.overture.codegen.cgast.declarations.AClassDeclCG
-import org.overture.codegen.cgast.declarations.AFuncDeclCG
-import org.overture.codegen.cgast.declarations.AMethodDeclCG
-import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG
+import org.overture.codegen.cgast.patterns.AIdentifierPatternCG
+import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG
+import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG
+import org.overture.codegen.vdm2cpp.visitors.CppDeclarationsVisitor
+import org.overture.codegen.vdm2cpp.visitors.CppExpressionVisitor
+import org.overture.codegen.vdm2cpp.visitors.CppStatementVisitor
+import org.overture.codegen.vdm2cpp.visitors.CppTypeVisitor
+import org.overture.codegen.cgast.name.ATypeNameCG
 
-class CGNew extends XtendBaseDepthFirstCG {
+class CGNew extends XtendAnswerStringVisitor {
 	
 	CppExpressionVisitor exps;
-	new() {
+	CppStatementVisitor stms;
+	CppTypeVisitor typs;
+	CppDeclarationsVisitor decls;
+	
+	TypeHierachyAnalyser type_info;
+
+	new()
+	{
+		type_info = null;
 		exps = new CppExpressionVisitor(this);
+		stms = new CppStatementVisitor(this);
+		typs = new CppTypeVisitor(this);
+		decls = new CppDeclarationsVisitor(this);
 	}
 	
+	new(TypeHierachyAnalyser tan) {
+		type_info = tan;
+		exps = new CppExpressionVisitor(this);
+		stms = new CppStatementVisitor(this);
+		typs = new CppTypeVisitor(this);
+		decls = new CppDeclarationsVisitor(this);
+		
+	}
+	
+	def expand(INode node)
+	{
+		return node.apply(this);
+	}
+	
+	override defaultINode(INode node) throws AnalysisException {
+		return '''/*case not handled «node.class»*/'''
+	}
+	
+	override defaultSTypeCG(STypeCG node) throws AnalysisException {
+		return node.apply(typs);
+	}
+	
+	override defaultSExpCG(SExpCG node) throws AnalysisException {
+		return node.apply(exps);
+	}
+	
+	override defaultSStmCG(SStmCG node) throws AnalysisException {
+		return node.apply(stms);
+	}
+	
+	override defaultSDeclCG(SDeclCG node) throws AnalysisException {
+		return node.apply(decls);
+	}
+
+	
+	override caseATypeNameCG(ATypeNameCG node)
+	{
+		if(node.definingClass != node.getAncestor(AClassDeclCG).name)
+		{
+			if(node.definingClass != null)
+			{
+				return '''«node.definingClass»::«node.name»'''
+			}
+			else
+			{
+				return '''«node.name»'''
+			}
+		}
+		else
+		{
+			return '''«node.name»'''	
+		}
+		
+	}
+	
+	override caseAIdentifierPatternCG(AIdentifierPatternCG node)
+	'''«node.name»'''
+	
+	override caseAIdentifierStateDesignatorCG(AIdentifierStateDesignatorCG node)
+	'''«node.name»'''
+	
+	override caseAIdentifierObjectDesignatorCG(AIdentifierObjectDesignatorCG node)
+	'''«node.exp.expand»'''
+	
 	override caseAClassDeclCG(AClassDeclCG node)'''
+	#ifndef VDMCPP«node.name.toUpperCase»_HPP
+	#define VDMCPP«node.name.toUpperCase»_HPP
+	«node.generateIncludes»
 	class «node.name» «IF node.superName != null» : public «node.superName»«ENDIF»
 	{
 	public:
 		«FOR method : node.methods.filter[access == "public"]»
 		«method.expand»
 		«ENDFOR»
+		
+		virtual ~«node.name»(){};
 		
 		«FOR inst : node.fields.filter[access == "public"]»
 		«inst.type.expand» «inst.name»;
@@ -39,20 +130,27 @@ class CGNew extends XtendBaseDepthFirstCG {
 		«FOR inst : node.fields.filter[access == "private"]»
 		«inst.type.expand» «inst.name»;
 		«ENDFOR»
+	};
+	#endif /*VDMCPP«node.name.toUpperCase»_HPP*/
+	'''
+	
+	def generateIncludes(AClassDeclCG cg) 
+	{
+		var dep_man = new DependencyManager(cg.name);
+		cg.apply(new DependencyAnalyser(),dep_man);
+		
+		return '''
+		«FOR d : dep_man.dependeciesVDM»
+		#include "«d».hpp"
+		«ENDFOR»
+		«FOR d : dep_man.dependenciesTargetLanguage»
+		#include <«d.include»>
+		«ENDFOR»
+		«FOR p : type_info.getSuperType(cg)»
+		#include "«p.name».hpp"
+		«ENDFOR»
+		'''
 	}
-	'''
-	
-	override caseAMethodDeclCG(AMethodDeclCG node)'''	
-	«IF node.static != null && node?.static == true»static«ENDIF»«node.methodType.expand» «node.name»(«FOR p : node.formalParams SEPARATOR ','» «p.type.expand» «p.pattern.expand» «ENDFOR» );
-	'''
-	
-	override caseAFuncDeclCG(AFuncDeclCG node)'''
-	static «node.name»(«FOR p : node.formalParams SEPARATOR ','»«p.type.expand»«p.pattern.expand»«ENDFOR»);
-	'''
-	
-	override caseANamedTypeDeclCG(ANamedTypeDeclCG node)'''
-	typedef «node.type.expand» «node.name»
-	'''
 	
 	
 	

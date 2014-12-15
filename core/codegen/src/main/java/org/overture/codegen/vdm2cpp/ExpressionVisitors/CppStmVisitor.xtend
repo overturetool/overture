@@ -1,30 +1,30 @@
-package org.overture.codegen.vdm2cpp
+package org.overture.codegen.vdm2cpp.ExpressionVisitors
 
-import org.overture.codegen.merging.MergeVisitor
-import org.overture.codegen.merging.TemplateStructure
-import org.overture.codegen.merging.TemplateCallable
-import org.overture.codegen.cgast.INode
 import java.io.StringWriter
-import org.overture.codegen.cgast.analysis.AnalysisException
+import org.overture.ast.types.AVoidType
+import org.overture.codegen.cgast.INode
 import org.overture.codegen.cgast.SStmCGBase
-import org.overture.codegen.cgast.declarations.AClassDeclCG
-import org.overture.codegen.cgast.statements.ASkipStmCG
-import org.overture.codegen.cgast.statements.APlainCallStmCG
 import org.overture.codegen.cgast.STypeCG
-import org.overture.codegen.cgast.types.AClassTypeCG
+import org.overture.codegen.cgast.analysis.AnalysisException
+import org.overture.codegen.cgast.declarations.AClassDeclCG
+import org.overture.codegen.cgast.statements.AAssignmentStmCG
+import org.overture.codegen.cgast.statements.ABlockStmCG
+import org.overture.codegen.cgast.statements.ABreakStmCG
 import org.overture.codegen.cgast.statements.ACallObjectStmCG
 import org.overture.codegen.cgast.statements.AForAllStmCG
-import org.overture.codegen.cgast.statements.AWhileStmCG
-import org.overture.codegen.cgast.statements.ABreakStmCG
-import org.overture.codegen.cgast.statements.AForLoopStmCG
-import org.overture.ast.types.AVoidType
 import org.overture.codegen.cgast.statements.AForIndexStmCG
+import org.overture.codegen.cgast.statements.AForLoopStmCG
 import org.overture.codegen.cgast.statements.AIfStmCG
-import org.overture.codegen.cgast.statements.AReturnStmCG
-import org.overture.codegen.cgast.statements.ABlockStmCG
-import org.overture.codegen.cgast.statements.AAssignmentStmCG
 import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG
+import org.overture.codegen.cgast.statements.APlainCallStmCG
 import org.overture.codegen.cgast.statements.ARaiseErrorStmCG
+import org.overture.codegen.cgast.statements.AReturnStmCG
+import org.overture.codegen.cgast.statements.ASkipStmCG
+import org.overture.codegen.cgast.statements.AWhileStmCG
+import org.overture.codegen.cgast.types.AClassTypeCG
+import org.overture.codegen.merging.MergeVisitor
+import org.overture.codegen.merging.TemplateCallable
+import org.overture.codegen.merging.TemplateStructure
 
 class CppStmVisitor extends MergeVisitor{
 	

@@ -341,10 +341,11 @@ public class CppCodeGen
 			}
 		}
 		
-		 CGNew mergeVisitor = new CGNew();
+		 CGNew mergeVisitor = new CGNew(tan);
 		//FunctionValueAssistant functionValue = funcValueTransformation.getFunctionValueAssistant();
 		//javaFormat.setFunctionValueAssistant(functionValue);
 		
+		 
 		for (IRClassDeclStatus status : canBeGenerated)
 		{
 			StringWriter writer = new StringWriter();
@@ -358,16 +359,8 @@ public class CppCodeGen
 				SClassDefinition vdmClass = (SClassDefinition) status.getClassCg().getSourceNode().getVdmNode();
 				if (shouldBeGenerated(vdmClass, irInfo.getAssistantManager().getDeclAssistant()))
 				{
-					System.out.println(classCg.apply(mergeVisitor));
-
-//					if (mergeVisitor.hasMergeErrors())
-//					{
-//						generated.add(new GeneratedModule(className, classCg, mergeVisitor.getMergeErrors()));
-//					} else
-//					{
-//						String formattedJavaCode = writer.toString();
-//						generated.add(new GeneratedModule(className, classCg, formattedJavaCode));
-//					}
+					String code = classCg.apply(mergeVisitor);
+					generated.add(new GeneratedModule(className,classCg,code));
 				}
 				else
 				{
@@ -470,8 +463,6 @@ public class CppCodeGen
 
 		IRExpStatus expStatus = generator.generateFrom(exp);
 
-		StringWriter writer = new StringWriter();
-
 		try
 		{
 			SExpCG expCg = expStatus.getExpCg();
@@ -479,18 +470,10 @@ public class CppCodeGen
 			if (expStatus.canBeGenerated())
 			{
 				//javaFormat.init();
-				MergeVisitor mergeVisitor = new vdm2cppGen(null,null,null);//javaFormat.getMergeVisitor();
-				expCg.apply(mergeVisitor, writer);
+				CGNew mergeVisitor = new CGNew();//vdm2cppGen(null,null,null);//javaFormat.getMergeVisitor();
+				return new Generated(expCg.apply(mergeVisitor));
 
-				if (mergeVisitor.hasMergeErrors())
-				{
-					return new Generated(mergeVisitor.getMergeErrors());
-				} else
-				{
-					String code = writer.toString();
-
-					return new Generated(code);
-				}
+				
 			} else
 			{
 
