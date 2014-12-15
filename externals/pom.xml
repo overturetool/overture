@@ -13,7 +13,7 @@
   <name>Overture External Resources</name>
 
   <modules>
-    <module>language-board</module>
+    <module>documentation</module>
     <module>examples</module>
   </modules>
 </project>

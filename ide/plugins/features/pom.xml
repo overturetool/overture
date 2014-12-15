@@ -27,6 +27,7 @@
 	<module>probruntime</module>
     <module>rttraceviewer</module>
 	<module>codegen</module>
+	<module>guibuilder</module>
   </modules>
 
 </project>

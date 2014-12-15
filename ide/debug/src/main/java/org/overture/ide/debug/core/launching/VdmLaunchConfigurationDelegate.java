@@ -335,7 +335,7 @@ public class VdmLaunchConfigurationDelegate extends LaunchConfigurationDelegate
 		return commandList;
 	}
 
-	private String[] getDebugEngineBundleIds()
+	protected String[] getDebugEngineBundleIds()
 	{
 		List<String> ids = new ArrayList<String>(Arrays.asList(IDebugConstants.DEBUG_ENGINE_BUNDLE_IDS));
 
