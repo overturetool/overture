@@ -82,7 +82,8 @@ CG {-> package='org.overture.codegen.cgast'
 	=	{method} //rename to operation
 		(preCond):CG.#decl
 		(postCond):CG.#decl
-		[access]:java_String
+		[access]:java_String //Consider introducing access node covering both "access" and "async"
+		[async]:java_Boolean
 		[static]:java_Boolean
 		[abstract]:java_Boolean
 		[methodType]:CG.#type.method
@@ -95,6 +96,7 @@ CG {-> package='org.overture.codegen.cgast'
 		(preCond):CG.#decl
 		(postCond):CG.#decl
 		[access]:java_String
+		[async]:java_Boolean
 		[abstract]:java_Boolean
 		[methodType]:CG.#type.method
 		[name]:java_String

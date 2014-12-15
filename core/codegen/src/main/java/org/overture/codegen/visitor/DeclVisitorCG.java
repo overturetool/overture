@@ -300,6 +300,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 	{
 		String access = node.getAccess().getAccess().toString();
 		boolean isStatic = question.getTcFactory().createPDefinitionAssistant().isStatic(node);
+		boolean isAsync = question.getTcFactory().createPAccessSpecifierAssistant().isAsync(node.getAccess());
 		String operationName = node.getName().getName();
 		STypeCG type = node.getType().apply(question.getTypeVisitor(), question);
 
@@ -319,6 +320,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 
 		method.setAccess(access);
 		method.setStatic(isStatic);
+		method.setAsync(isAsync);
 		method.setMethodType(methodType);
 		method.setName(operationName);
 		method.setBody(body);

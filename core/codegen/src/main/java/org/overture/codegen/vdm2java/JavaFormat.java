@@ -37,6 +37,7 @@ import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
+import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
@@ -89,6 +90,7 @@ import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.ir.IRAnalysis;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
+import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateCallable;
 import org.overture.codegen.merging.TemplateStructure;
@@ -705,12 +707,32 @@ public class JavaFormat
 		StringWriter generatedBody = new StringWriter();
 
 		generatedBody.append("{" + NEWLINE + NEWLINE);
-		generatedBody.append(format(body));
+		generatedBody.append(handleOpBody(body));
 		generatedBody.append(NEWLINE + "}");
 
 		return generatedBody.toString();
 	}
 
+	private String handleOpBody(SStmCG body) throws AnalysisException
+	{
+		AMethodDeclCG method = body.getAncestor(AMethodDeclCG.class);
+		
+		if(method == null)
+		{
+			Logger.getLog().printErrorln("Could not find enclosing method when formatting operation body. Got: " + body);
+		}
+		else if(method.getAsync() != null && method.getAsync())
+		{
+			return "new VDMThread(){ "
+			+ "\tpublic void run() {"
+			+ "\t " + format(body)
+			+ "\t} "
+			+ "}.start();";
+		}
+		
+		return format(body);
+	}
+	
 	public String formatTemplateParam(INode potentialBasicType)
 			throws AnalysisException
 	{
