@@ -79,6 +79,18 @@ public class RemoteContractDistribution {
 				output_i.close();
 		}
 		
+		// Add SyncToken interface to the RMI server directory
+		ASynchTokenInterfaceDeclCG synchToken_interface_RMI = new ASynchTokenInterfaceDeclCG();
+
+		StringWriter writer_synch_i_RMI = new StringWriter();
+		synchToken_interface_RMI.apply(printer, writer_synch_i_RMI);
+
+		File file_synch_i_RMI = new File("/Users/Miran/Documents/files/" + RMI_ServerName + "/" + "SynchToken_interface.java");
+		BufferedWriter output_synch_i_RMI = new BufferedWriter(new FileWriter(file_synch_i_RMI));
+		output_synch_i_RMI.write(JavaCodeGenUtil.formatJavaCode(writer_synch_i_RMI
+				.toString()));
+		output_synch_i_RMI.close();
+		
 		//System.out.println("**********************Remote contracts**********************");
 
 		// Create a directory for every cpu
