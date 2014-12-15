@@ -75,6 +75,10 @@ public class DistributionMappingTest {
 		
 		checkNamesExist(deploymentMap, "cpu1", new String[]{"a1"});
 		checkNamesExist(deploymentMap, "cpu2", new String[]{"a2"});
+		
+		Map<String, Set<String>> connectionMap = distMapping.cpuToConnectedCPUs();
+		checkConnectionMap(connectionMap, "cpu1", new String[]{"cpu2"});
+		
 	}
 	
 	@Test
@@ -95,6 +99,30 @@ public class DistributionMappingTest {
 
 	}
 
+	@Test
+	public void testFourConnectedCPUsWithOneDeployedObjectEach() throws Exception {
+		
+		List<SClassDefinition> classes = readClasses("ComplexDistribution1");
+		
+		DistributionMapping distMapping = new DistributionMapping(classes);
+		distMapping.run();
+		
+		makeBasicAssertions(distMapping, "DistSys", 4);
+		
+		Map<String, Set<AVariableExp>> deploymentMap = distMapping.getCpuToDeployedObject();
+		
+		checkNamesExist(deploymentMap, "cpu1", new String[]{"a1"});
+		checkNamesExist(deploymentMap, "cpu2", new String[]{"a2"});
+		checkNamesExist(deploymentMap, "cpu3", new String[]{"a3"});
+		checkNamesExist(deploymentMap, "cpu4", new String[]{"a4"});
+		
+//		Map<String, Set<String>> connectionMap = distMapping.cpuToConnectedCPUs();
+//		checkConnectionMap(connectionMap, "cpu1", new String[]{"a1"});
+
+	}
+	
+	
+	// Method used for testing
 	private void makeBasicAssertions(DistributionMapping distMapping, String superName, int deployedObjectCount) {
 		Assert.assertTrue("Expected system class name to be SimpleSys", distMapping.getSystemName().equals(superName));
 		Assert.assertTrue("Expected two deployed objects", distMapping.getDeployedObjects().size() == deployedObjectCount);
@@ -107,7 +135,6 @@ public class DistributionMappingTest {
 		TypeCheckResult<List<SClassDefinition>> tcResult = TypeCheckerUtil.typeCheckRt(modelFile);
 		
 		Assert.assertTrue("Expected no type errors in SimpleDistribution1 model", tcResult.errors.isEmpty());
-		
 		
 		List<SClassDefinition> classes = tcResult.result;
 		return classes;
@@ -126,9 +153,24 @@ public class DistributionMappingTest {
 		}
 	}
 	
+	private void checkConnectionMap(Map<String, Set<String>> connectionMap, String cpuName, String[] allowedNames)
+	{
+		List<String> allowedNamesList = Arrays.asList(allowedNames);
+		Set<String> cpu1Objects = connectionMap.get(cpuName);
 
-	private int fac(int n) {
-
-		return n == 0 ? 1 : fac(n-1)*n;
+		
+		for(String varExp : cpu1Objects)
+		{
+			String name = varExp;
+			String errorMsg = String.format("Expected a connected CPU on %s to have a named contained in %s but got %s", cpuName, allowedNamesList, name);
+			Assert.assertTrue(errorMsg + name, allowedNamesList.contains(name));
+		}
 	}
+
+	
+	
+//	private int fac(int n) {
+//
+//		return n == 0 ? 1 : fac(n-1)*n;
+//	}
 }
