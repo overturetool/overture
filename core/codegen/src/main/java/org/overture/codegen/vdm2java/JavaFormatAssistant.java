@@ -29,7 +29,7 @@ import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
-import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
+import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AAddrNotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
@@ -40,13 +40,12 @@ import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
-import org.overture.codegen.cgast.expressions.ASelfExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
-import org.overture.codegen.cgast.statements.ACallStmCG;
+import org.overture.codegen.cgast.statements.APlainCallStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
-import org.overture.codegen.cgast.types.AClassTypeCG;
+import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
@@ -79,7 +78,7 @@ public class JavaFormatAssistant
 	{
 		// Construct a local var in a statement: RecordType varName = ((RecordType) formalParamName);
 
-		AVarLocalDeclCG localVar = new AVarLocalDeclCG();
+		AVarDeclCG localVar = new AVarDeclCG();
 
 		ARecordTypeCG recordType = new ARecordTypeCG();
 		recordType.setName(consTypeName(record));
@@ -160,11 +159,11 @@ public class JavaFormatAssistant
 		return fieldComparison;
 	}
 
-	public static ACallStmCG consCallStm(AFieldDeclCG field)
+	public static APlainCallStmCG consCallStm(AFieldDeclCG field)
 	{
-		ACallStmCG call = new ACallStmCG();
+		APlainCallStmCG call = new APlainCallStmCG();
 
-		AClassTypeCG classType = new AClassTypeCG();
+		AExternalTypeCG classType = new AExternalTypeCG();
 		classType.setName(JavaFormat.UTILS_FILE);
 
 		AIdentifierVarExpCG root = new AIdentifierVarExpCG();
@@ -172,7 +171,7 @@ public class JavaFormatAssistant
 		root.setOriginal(field.getName());
 
 		AIdentifierVarExpCG argument = new AIdentifierVarExpCG();
-		// argument.setType(field.getType().clone());
+		argument.setType(field.getType().clone());
 		argument.setOriginal(field.getName());
 
 		call.setType(classType.clone());
@@ -214,21 +213,6 @@ public class JavaFormatAssistant
 		return fieldComparison;
 	}
 
-	public static AApplyExpCG consRecToStringCall(ARecordDeclCG record,
-			STypeCG returnType, String memberName) throws AnalysisException
-	{
-		AApplyExpCG call = consUtilCallUsingRecFields(record, returnType, memberName);
-
-		ARecordTypeCG recordType = new ARecordTypeCG();
-		recordType.setName(consTypeName(record));
-		ASelfExpCG selfExp = new ASelfExpCG();
-		selfExp.setType(recordType);
-
-		call.getArgs().add(0, selfExp);
-
-		return call;
-	}
-
 	public static AApplyExpCG consUtilCallUsingRecFields(ARecordDeclCG record,
 			STypeCG returnType, String memberName)
 	{
@@ -255,7 +239,7 @@ public class JavaFormatAssistant
 		AMethodTypeCG methodType = new AMethodTypeCG();
 		methodType.setResult(returnType.clone());
 		member.setType(methodType);
-		AClassTypeCG classType = new AClassTypeCG();
+		AExternalTypeCG classType = new AExternalTypeCG();
 		classType.setName(JavaFormat.UTILS_FILE);
 		member.setClassType(classType);
 		member.setName(memberName);

@@ -23,6 +23,8 @@
 
 package org.overture.interpreter.values;
 
+import java.util.Set;
+
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.PType;
@@ -89,7 +91,7 @@ public class InvariantValue extends ReferenceValue
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt)
+	protected Value convertValueTo(PType to, Context ctxt, Set<PType> done)
 			throws AnalysisException
 	{
 		if (to.equals(type))
@@ -97,7 +99,7 @@ public class InvariantValue extends ReferenceValue
 			return this;
 		} else
 		{
-			return value.convertValueTo(to, ctxt);
+			return value.convertValueTo(to, ctxt, done);
 		}
 	}
 

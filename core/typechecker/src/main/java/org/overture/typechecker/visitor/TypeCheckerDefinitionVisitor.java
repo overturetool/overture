@@ -53,6 +53,7 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.traces.AApplyExpressionTraceCoreDefinition;
 import org.overture.ast.definitions.traces.ABracketedExpressionTraceCoreDefinition;
+import org.overture.ast.definitions.traces.AConcurrentExpressionTraceCoreDefinition;
 import org.overture.ast.definitions.traces.ALetBeStBindingTraceDefinition;
 import org.overture.ast.definitions.traces.ALetDefBindingTraceDefinition;
 import org.overture.ast.definitions.traces.ARepeatTraceDefinition;
@@ -1186,7 +1187,9 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		{
 			int found = 0;
 
-			for (PDefinition def : classdef.getDefinitions())
+			List<PDefinition> definitions = question.assistantFactory.createPDefinitionAssistant().getDefinitions(classdef);
+
+			for (PDefinition def : definitions)
 			{
 				if (def.getName() != null && def.getName().matches(opname))
 				{
@@ -1256,7 +1259,9 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		int perfound = 0;
 		Boolean isStatic = null;
 
-		for (PDefinition def : classdef.getDefinitions())
+		List<PDefinition> definitions = question.assistantFactory.createPDefinitionAssistant().getDefinitions(classdef);
+		
+		for (PDefinition def : definitions)
 		{
 			if (def.getName() != null
 					&& def.getName().matches(node.getOpname()))
@@ -1574,6 +1579,19 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			TypeCheckerErrors.report(3277, "Trace repeat illegal values", node.getLocation(), node);
 		}
 
+		return null;
+	}
+	
+	@Override
+	public PType caseAConcurrentExpressionTraceCoreDefinition(
+			AConcurrentExpressionTraceCoreDefinition node,
+			TypeCheckInfo question) throws AnalysisException
+	{
+		for (PTraceDefinition d : node.getDefs())
+		{
+			d.apply(THIS, question);
+		}
+		
 		return null;
 	}
 

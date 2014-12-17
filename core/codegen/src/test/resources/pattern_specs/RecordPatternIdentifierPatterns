@@ -25,8 +25,11 @@ let mk_Rec(n2, b2, c2, r2) = mk_Rec(5, true, 'g', 2.5)
 in
 	return mk_Rec(n1, b2, c1, r2);
 	
-public static Run : () ==> seq of Rec
+public static Run : () ==> ?
 Run () ==
-	return [new Entry().recPatternOp(mk_Rec(77, false, 'e', 4.4)), recPatternFun(mk_Rec(77, false, 'e', 4.4))];
+let a = new Entry().recPatternOp(mk_Rec(77, false, 'e', 4.4)),
+    b = recPatternFun(mk_Rec(77, false, 'e', 4.4))
+in 
+	return [a.n, a.b, a.c, a.r, b.n, b.b, b.c, b.r];
 
 end Entry

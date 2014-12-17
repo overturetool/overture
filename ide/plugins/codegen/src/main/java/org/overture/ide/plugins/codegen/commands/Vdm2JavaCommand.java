@@ -36,19 +36,20 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.osgi.service.prefs.Preferences;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.analysis.violations.Violation;
 import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.assistant.LocationAssistantCG;
-import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRSettings;
-import org.overture.codegen.ir.NodeInfo;
+import org.overture.codegen.ir.IrNodeInfo;
+import org.overture.codegen.ir.VdmNodeInfo;
 import org.overture.codegen.utils.AnalysisExceptionCG;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.GeneratedData;
@@ -156,16 +157,21 @@ public class Vdm2JavaCommand extends AbstractHandler
 				// Begin code generation
 				final JavaCodeGen vdm2java = new JavaCodeGen();
 
-				IPreferenceStore preferences = Activator.getDefault().getPreferenceStore();
-				boolean generateCharSeqsAsStrings = preferences.getBoolean(ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRINGS);
-
+				Preferences preferences = InstanceScope.INSTANCE.getNode(ICodeGenConstants.PLUGIN_ID);
+				
+				boolean generateCharSeqsAsStrings = preferences.getBoolean(ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRINGS, ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRING_DEFAULT);
+				boolean generateConcMechanisms = preferences.getBoolean(ICodeGenConstants.GENERATE_CONCURRENCY_MECHANISMS, ICodeGenConstants.GENERATE_CONCURRENCY_MECHANISMS_DEFAULT);
+				
 				IRSettings irSettings = new IRSettings();
 				irSettings.setCharSeqAsString(generateCharSeqsAsStrings);
+				irSettings.setGenerateConc(generateConcMechanisms);
 
-				boolean disableCloning = preferences.getBoolean(ICodeGenConstants.DISABLE_CLONING);
+				boolean disableCloning = preferences.getBoolean(ICodeGenConstants.DISABLE_CLONING, ICodeGenConstants.DISABLE_CLONING_DEFAULT);
 
 				JavaSettings javaSettings = new JavaSettings();
 				javaSettings.setDisableCloning(disableCloning);
+				List<String> classesToSkip = PluginVdm2JavaUtil.getClassesToSkip();
+				javaSettings.setClassesToSkip(classesToSkip);
 
 				vdm2java.setSettings(irSettings);
 				vdm2java.setJavaSettings(javaSettings);
@@ -184,7 +190,21 @@ public class Vdm2JavaCommand extends AbstractHandler
 					List<IVdmSourceUnit> sources = model.getSourceUnits();
 					List<SClassDefinition> mergedParseLists = PluginVdm2JavaUtil.mergeParseLists(sources);
 					GeneratedData generatedData = vdm2java.generateJavaFromVdm(mergedParseLists);
-					vdm2java.generateJavaSourceFiles(outputFolder, generatedData.getClasses());
+					
+					outputUserSpecifiedSkippedClasses(classesToSkip);
+					outputSkippedClasses(generatedData.getSkippedClasses());
+					
+					try
+					{
+						vdm2java.generateJavaSourceFiles(outputFolder, generatedData.getClasses());
+					} catch (Exception e)
+					{
+						CodeGenConsole.GetInstance().printErrorln("Problems saving the code generated Java source files to disk.\n"
+								+ "Try to run Overture with administrator privileges.\n");
+						
+						return Status.CANCEL_STATUS;
+					}
+					
 					outputUserspecifiedModules(outputFolder, generatedData.getClasses());
 
 					// Quotes generation
@@ -196,6 +216,8 @@ public class Vdm2JavaCommand extends AbstractHandler
 					{
 						handleInvalidNames(invalidNames);
 					}
+					
+					CodeGenConsole.GetInstance().println(String.format("...finished Java code generation (generated %s class).", generatedData.getClasses().size()));
 
 					project.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
 
@@ -237,6 +259,41 @@ public class Vdm2JavaCommand extends AbstractHandler
 			ex.printStackTrace();
 		}
 	}
+	
+	private void outputUserSpecifiedSkippedClasses(
+			List<String> userspecifiedSkippedClasses)
+	{
+		if (!userspecifiedSkippedClasses.isEmpty())
+		{
+			CodeGenConsole.GetInstance().print("User specified filtered classes: ");
+
+			for (String skippedClass : userspecifiedSkippedClasses)
+			{
+				CodeGenConsole.GetInstance().print(skippedClass + " ");
+			}
+
+			CodeGenConsole.GetInstance().println("\n");
+		}
+		else
+		{
+			CodeGenConsole.GetInstance().println("No user specified classes to skip.\n");
+		}
+	}
+
+	private void outputSkippedClasses(List<String> skippedClasses)
+	{
+		if (!skippedClasses.isEmpty())
+		{
+			CodeGenConsole.GetInstance().print("Skipping classes (user specified and library named): ");
+
+			for (String skippedClass : skippedClasses)
+			{
+				CodeGenConsole.GetInstance().print(skippedClass + " ");
+			}
+
+			CodeGenConsole.GetInstance().println("\n");
+		}
+	}
 
 	private void outputUserspecifiedModules(File outputFolder,
 			List<GeneratedModule> userspecifiedClasses)
@@ -255,21 +312,36 @@ public class Vdm2JavaCommand extends AbstractHandler
 				}
 			} else if (!generatedModule.canBeGenerated())
 			{
-				LocationAssistantCG locationAssistant = assistantManager.getLocationAssistant();
-
-				List<NodeInfo> unsupportedNodes = locationAssistant.getNodesLocationSorted(generatedModule.getUnsupportedNodes());
 				CodeGenConsole.GetInstance().println("Could not code generate class: "
 						+ generatedModule.getName() + ".");
-				CodeGenConsole.GetInstance().println("Following constructs are not supported:");
-
-				for (NodeInfo nodeInfo : unsupportedNodes)
+				
+				if(generatedModule.hasUnsupportedIrNodes())
 				{
-					String message = PluginVdm2JavaUtil.formatNodeString(nodeInfo, locationAssistant);
-					CodeGenConsole.GetInstance().println(message);
+					LocationAssistantCG locationAssistant = assistantManager.getLocationAssistant();
 
-					PluginVdm2JavaUtil.addMarkers(nodeInfo, locationAssistant);
+					List<VdmNodeInfo> unsupportedInIr = locationAssistant.getVdmNodeInfoLocationSorted(generatedModule.getUnsupportedInIr());
+					CodeGenConsole.GetInstance().println("Following constructs are not supported in the IR:");
 
+					for (VdmNodeInfo  nodeInfo : unsupportedInIr)
+					{
+						String message = PluginVdm2JavaUtil.formatNodeString(nodeInfo, locationAssistant);
+						CodeGenConsole.GetInstance().println(message);
+
+						PluginVdm2JavaUtil.addMarkers(nodeInfo, locationAssistant);
+					}
 				}
+				
+				if(generatedModule.hasUnsupportedTargLangNodes())
+				{
+					Set<IrNodeInfo> unsupportedInTargLang = generatedModule.getUnsupportedInTargLang();
+					CodeGenConsole.GetInstance().println("Following constructs are not supported by the backend/target language:");
+
+					for (IrNodeInfo  nodeInfo : unsupportedInTargLang)
+					{
+						CodeGenConsole.GetInstance().println(nodeInfo.toString());
+					}
+				}
+				
 			} else
 			{
 				File javaFile = new File(outputFolder, generatedModule.getName()
@@ -286,18 +358,19 @@ public class Vdm2JavaCommand extends AbstractHandler
 	}
 
 	private void outputQuotes(IVdmProject vdmProject, File outputFolder,
-			JavaCodeGen vdm2java, GeneratedModule quotes) throws CoreException
+			JavaCodeGen vdm2java, List<GeneratedModule> quotes) throws CoreException
 	{
-		if (quotes != null)
+		if (quotes != null && !quotes.isEmpty())
 		{
 			File quotesFolder = PluginVdm2JavaUtil.getQuotesFolder(vdmProject);
-			vdm2java.generateJavaSourceFile(quotesFolder, quotes);
+			
+			for(GeneratedModule q : quotes)
+			{
+				vdm2java.generateJavaSourceFile(quotesFolder, q);
+			}
 
-			CodeGenConsole.GetInstance().println("Quotes interface generated.");
-			File quotesFile = new File(outputFolder, IRConstants.QUOTES_INTERFACE_NAME
-					+ IJavaCodeGenConstants.JAVA_FILE_EXTENSION);
-			CodeGenConsole.GetInstance().println("Java source file: "
-					+ quotesFile.getAbsolutePath());
+			CodeGenConsole.GetInstance().println("Quotes generated to folder: "
+					+ quotesFolder.getAbsolutePath());
 			CodeGenConsole.GetInstance().println("");
 		}
 	}

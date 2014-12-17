@@ -10,17 +10,17 @@ import java.util.Map;
 import java.util.Set;
 
 import org.overture.ast.definitions.AClassClassDefinition;
-import org.overture.ast.expressions.AVariableExp;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.ARMIServerDeclCG;
-import org.overture.codegen.cgast.declarations.ARMIregistryDeclCG;
 import org.overture.codegen.cgast.declarations.ARemoteContractDeclCG;
 import org.overture.codegen.cgast.declarations.ARemoteContractImplDeclCG;
 import org.overture.codegen.cgast.declarations.ASynchTokenDeclCG;
 import org.overture.codegen.cgast.declarations.ASynchTokenInterfaceDeclCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.merging.MergeVisitor;
+import org.overture.codegen.merging.TemplateStructure;
 import org.overture.codegen.trans.TempVarPrefixes;
+import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaFormat;
 
@@ -51,7 +51,7 @@ public class RemoteContractDistribution {
 	public void run() throws AnalysisException, IOException {
 
 		IRInfo info = new IRInfo("cg_init");
-		JavaFormat javaFormat = new JavaFormat(new TempVarPrefixes(), info);
+		JavaFormat javaFormat = new JavaFormat(new TempVarPrefixes(), new TemplateStructure(JavaCodeGen.JAVA_TEMPLATES_ROOT_FOLDER), info);
 		MergeVisitor printer = javaFormat.getMergeVisitor();
 
 		//Create the RMI server

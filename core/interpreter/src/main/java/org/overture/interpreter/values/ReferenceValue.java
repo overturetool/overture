@@ -23,6 +23,8 @@
 
 package org.overture.interpreter.values;
 
+import java.util.Set;
+
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.types.PType;
 import org.overture.interpreter.runtime.Context;
@@ -45,10 +47,10 @@ abstract public class ReferenceValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt)
+	protected Value convertValueTo(PType to, Context ctxt, Set<PType> done)
 			throws AnalysisException
 	{
-		return value.convertValueTo(to, ctxt);
+		return value.convertValueTo(to, ctxt, done);
 	}
 
 	@Override

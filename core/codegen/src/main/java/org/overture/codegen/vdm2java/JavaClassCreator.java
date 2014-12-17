@@ -13,6 +13,7 @@ import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
+import org.overture.codegen.ir.IRGeneratedTag;
 import org.overture.codegen.ir.IRInfo;
 
 public class JavaClassCreator
@@ -29,10 +30,13 @@ public class JavaClassCreator
 		//Example: A{#32, x := 4, c = "STD"} (ID is omitted)
 		
 		AMethodDeclCG toStringMethod = new AMethodDeclCG();
-
+		toStringMethod.setTag(new IRGeneratedTag(getClass().getName()));
+		
+		toStringMethod.setIsConstructor(false);
 		toStringMethod.setAccess(JavaFormat.JAVA_PUBLIC);
+		toStringMethod.setStatic(false);
 		toStringMethod.setName("toString");
-
+		
 		AStringTypeCG returnType = new AStringTypeCG();
 
 		AMethodTypeCG methodType = new AMethodTypeCG();
@@ -40,31 +44,40 @@ public class JavaClassCreator
 
 		toStringMethod.setMethodType(methodType);
 		
-		// "A{#"
-		AStringLiteralExpCG strStart = info.getExpAssistant().consStringLiteral(classDecl.getName() + "{", false);
-		
-		ASeqConcatBinaryExpCG stringBuffer = new ASeqConcatBinaryExpCG();
-		stringBuffer.setType(returnType.clone());
-		stringBuffer.setLeft(strStart);
-		
-		ASeqConcatBinaryExpCG previous = stringBuffer;
-
 		LinkedList<AFieldDeclCG> fields = classDecl.getFields();
-			
-		// Append instance variables and values
-		for (int i = 0; i < fields.size(); i++)
+
+		AReturnStmCG body = new AReturnStmCG();
+		
+		if (fields.isEmpty())
 		{
-			AFieldDeclCG field = fields.get(i);
-			ASeqConcatBinaryExpCG next = consNext(returnType, previous, field, i > 0);
-			previous = next;
+			body.setExp(info.getExpAssistant().consStringLiteral(classDecl.getName() + "{}", false));
+			
+		} else
+		{
+			ASeqConcatBinaryExpCG stringBuffer = new ASeqConcatBinaryExpCG();
+			// "A{#"
+			AStringLiteralExpCG strStart = info.getExpAssistant().consStringLiteral(classDecl.getName()
+					+ "{", false);
+
+			stringBuffer.setType(returnType.clone());
+			stringBuffer.setLeft(strStart);
+
+			ASeqConcatBinaryExpCG previous = stringBuffer;
+
+			// Append instance variables and values
+			for (int i = 0; i < fields.size(); i++)
+			{
+				AFieldDeclCG field = fields.get(i);
+				ASeqConcatBinaryExpCG next = consNext(returnType, previous, field, i > 0);
+				previous = next;
+			}
+
+			// "}"
+			AStringLiteralExpCG strEnd = info.getExpAssistant().consStringLiteral("}", false);
+			previous.setRight(strEnd);
+			body.setExp(stringBuffer);
 		}
 		
-		// "}"
-		AStringLiteralExpCG strEnd = info.getExpAssistant().consStringLiteral("}", false);
-		previous.setRight(strEnd);
-		
-		AReturnStmCG body = new AReturnStmCG();
-		body.setExp(stringBuffer);
 		toStringMethod.setBody(body);
 		
 		return toStringMethod;

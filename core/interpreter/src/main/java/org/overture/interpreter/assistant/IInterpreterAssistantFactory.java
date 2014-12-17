@@ -9,7 +9,7 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.LexNameList;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.statements.PStm;
-import org.overture.interpreter.assistant.definition.ABusClassDefinitionAssitantInterpreter;
+import org.overture.interpreter.assistant.definition.ABusClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AClassClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ACpuClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AExplicitFunctionDefinitionAssistantInterpreter;
@@ -30,7 +30,6 @@ import org.overture.interpreter.assistant.expression.PExpAssistantInterpreter;
 import org.overture.interpreter.assistant.module.AModuleModulesAssistantInterpreter;
 import org.overture.interpreter.assistant.module.ModuleListAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.AMapPatternMapletAssistantInterpreter;
-import org.overture.interpreter.assistant.pattern.AQuotePatternAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PMultipleBindAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
@@ -39,7 +38,6 @@ import org.overture.interpreter.assistant.statement.ACaseAlternativeStmAssistant
 import org.overture.interpreter.assistant.statement.AStartStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.ATixeStmtAlternativeAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.PStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.SSimpleBlockStmAssistantInterpreter;
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.interpreter.assistant.type.PTypeListAssistant;
 import org.overture.interpreter.assistant.type.SInvariantTypeAssistantInterpreter;
@@ -63,7 +61,7 @@ public interface IInterpreterAssistantFactory extends
 	// ABracketedExpressionTraceCoreDefinitionAssitantInterpreter
 	// createABracketedExpressionTraceCoreDefinitionAssitant();
 
-	ABusClassDefinitionAssitantInterpreter createABusClassDefinitionAssitant();
+	ABusClassDefinitionAssistantInterpreter createABusClassDefinitionAssitant();
 
 	AClassClassDefinitionAssistantInterpreter createAClassClassDefinitionAssistant();
 
@@ -251,8 +249,6 @@ public interface IInterpreterAssistantFactory extends
 
 	// ANilPatternAssistantInterpreter createANilPatternAssistant();
 
-	AQuotePatternAssistantInterpreter createAQuotePatternAssistant();
-
 	// ARealPatternAssistantInterpreter createARealPatternAssistant();
 
 	// ARecordPatternAssistantInterpreter createARecordPatternAssistant();
@@ -332,8 +328,6 @@ public interface IInterpreterAssistantFactory extends
 	PStmAssistantInterpreter createPStmAssistant();
 
 	// SLetDefStmAssistantInterpreter createSLetDefStmAssistant();
-
-	SSimpleBlockStmAssistantInterpreter createSSimpleBlockStmAssistant();
 
 	// type
 

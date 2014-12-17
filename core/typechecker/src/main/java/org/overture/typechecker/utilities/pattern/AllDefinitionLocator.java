@@ -28,7 +28,9 @@ import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
+import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.ABooleanPattern;
@@ -41,7 +43,9 @@ import org.overture.ast.patterns.AIntegerPattern;
 import org.overture.ast.patterns.AMapPattern;
 import org.overture.ast.patterns.AMapUnionPattern;
 import org.overture.ast.patterns.AMapletPatternMaplet;
+import org.overture.ast.patterns.ANamePatternPair;
 import org.overture.ast.patterns.ANilPattern;
+import org.overture.ast.patterns.AObjectPattern;
 import org.overture.ast.patterns.AQuotePattern;
 import org.overture.ast.patterns.ARealPattern;
 import org.overture.ast.patterns.ARecordPattern;
@@ -52,6 +56,7 @@ import org.overture.ast.patterns.ATuplePattern;
 import org.overture.ast.patterns.AUnionPattern;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.typechecker.NameScope;
+import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AProductType;
 import org.overture.ast.types.ARecordInvariantType;
@@ -60,6 +65,8 @@ import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
+import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
+import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 /**
  * Get a complete list of all definitions, including duplicates. This method should only be used only by PP
@@ -348,6 +355,47 @@ public class AllDefinitionLocator
 					defs.addAll(af.createAMapletPatternMapletAssistant().getDefinitions(p, map, question.scope));
 					// defs.addAll(p.apply(THIS, question));
 				}
+			}
+		}
+
+		return defs;
+	}
+
+	@Override
+	public List<PDefinition> caseAObjectPattern(AObjectPattern pattern,
+			NewQuestion question) throws AnalysisException
+	{
+		List<PDefinition> defs = new Vector<PDefinition>();
+		PTypeAssistantTC typeAssistant = af.createPTypeAssistant();
+		AClassType pattype = typeAssistant.getClassType(pattern.getType());
+		AClassType exptype = typeAssistant.getClassType(question.ptype);
+
+		if (exptype == null || !af.getTypeComparator().isSubType(pattype, exptype))
+		{
+			TypeCheckerErrors.report(3333, "Matching expression is not a compatible object type", pattern.getLocation(), question.ptype);
+			TypeCheckerErrors.detail2("Pattern type", pattype, "Expression type", exptype);
+			return defs;
+		}
+
+		SClassDefinition classdef = pattype.getClassdef();
+		PDefinitionAssistantTC definitionAssistant = af.createPDefinitionAssistant();
+
+		for (ANamePatternPair npp: pattern.getFields())
+		{
+			PDefinition d = definitionAssistant.findName(classdef, npp.getName(), NameScope.STATE);	// NB. state lookup
+			
+			if (d != null)
+			{
+				d = definitionAssistant.deref(d);
+			}
+			
+			if (d instanceof AInstanceVariableDefinition)
+			{
+				defs.addAll(af.createPPatternAssistant().getDefinitions(npp.getPattern(), d.getType(), NameScope.LOCAL));
+			}
+			else
+			{
+				TypeCheckerErrors.report(3334, npp.getName().getName() + " is not a matchable field of class " + pattype, npp.getName().getLocation(), npp.getName());
 			}
 		}
 

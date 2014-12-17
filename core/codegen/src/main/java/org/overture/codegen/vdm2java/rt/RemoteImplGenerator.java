@@ -3,12 +3,9 @@ package org.overture.codegen.vdm2java.rt;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
-import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARemoteContractImplDeclCG;
-import org.overture.codegen.cgast.types.AClassTypeCG;
 
 /*
  * This sets up the remote contract implementation

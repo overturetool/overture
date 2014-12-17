@@ -1,0 +1,118 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Number x = 10L;
+
+    public Entry() {
+    }
+
+    public static Entry S(final Entry p) {
+        return p;
+    }
+
+    public static Object Run() {
+        VDMSeq ternaryIfExp_1 = null;
+
+        if (Utils.equals(1L, 1L)) {
+            ternaryIfExp_1 = SeqUtil.seq(SeqUtil.seq(new Entry()));
+        } else {
+            ternaryIfExp_1 = SeqUtil.seq(SeqUtil.seq());
+        }
+
+        VDMSeq ss = Utils.clone(ternaryIfExp_1);
+        VDMSeq s = Utils.clone(((VDMSeq) ss.get(Utils.index(1L))));
+
+        Number y = S(((Entry) s.get(Utils.index(s.size())))).x;
+
+        return y;
+    }
+
+    public String toString() {
+        return "Entry{" + "x := " + Utils.toString(x) + "}";
+    }
+}
+
+##########
+
+package quotes;
+
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class start {
+    private static int hc = 0;
+    private static start instance = null;
+
+    public start() {
+        if (Utils.equals(hc, 0)) {
+            hc = super.hashCode();
+        }
+    }
+
+    public static start getInstance() {
+        if (Utils.equals(instance, null)) {
+            instance = new start();
+        }
+
+        return instance;
+    }
+
+    public int hashCode() {
+        return hc;
+    }
+
+    public boolean equals(final Object obj) {
+        return obj instanceof start;
+    }
+
+    public String toString() {
+        return "<start>";
+    }
+}
+
+##########
+
+package quotes;
+
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class append {
+    private static int hc = 0;
+    private static append instance = null;
+
+    public append() {
+        if (Utils.equals(hc, 0)) {
+            hc = super.hashCode();
+        }
+    }
+
+    public static append getInstance() {
+        if (Utils.equals(instance, null)) {
+            instance = new append();
+        }
+
+        return instance;
+    }
+
+    public int hashCode() {
+        return hc;
+    }
+
+    public boolean equals(final Object obj) {
+        return obj instanceof append;
+    }
+
+    public String toString() {
+        return "<append>";
+    }
+}
+
+##########

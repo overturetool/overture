@@ -8,7 +8,7 @@ public class A {
     }
 
     public String toString() {
-        return "A{" + "}";
+        return "A{}";
     }
 
     public static class RecA implements Record {
@@ -36,11 +36,9 @@ public class A {
 
             RecA other = ((RecA) obj);
 
-            return (i.longValue() == other.i.longValue()) && (c == other.c) &&
-            (r.doubleValue() == other.r.doubleValue()) &&
-            (q.doubleValue() == other.q.doubleValue()) &&
-            (n.longValue() == other.n.longValue()) &&
-            (n1.longValue() == other.n1.longValue());
+            return (Utils.equals(i, other.i)) && (Utils.equals(c, other.c)) &&
+            (Utils.equals(r, other.r)) && (Utils.equals(q, other.q)) &&
+            (Utils.equals(n, other.n)) && (Utils.equals(n1, other.n1));
         }
 
         public int hashCode() {
@@ -52,8 +50,88 @@ public class A {
         }
 
         public String toString() {
-            return Utils.recordToString(this, i, c, r, q, n, n1);
+            return "mk_A`RecA" + Utils.formatFields(i, c, r, q, n, n1);
         }
+    }
+}
+
+##########
+
+package quotes;
+
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class start {
+    private static int hc = 0;
+    private static start instance = null;
+
+    public start() {
+        if (Utils.equals(hc, 0)) {
+            hc = super.hashCode();
+        }
+    }
+
+    public static start getInstance() {
+        if (Utils.equals(instance, null)) {
+            instance = new start();
+        }
+
+        return instance;
+    }
+
+    public int hashCode() {
+        return hc;
+    }
+
+    public boolean equals(final Object obj) {
+        return obj instanceof start;
+    }
+
+    public String toString() {
+        return "<start>";
+    }
+}
+
+##########
+
+package quotes;
+
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class append {
+    private static int hc = 0;
+    private static append instance = null;
+
+    public append() {
+        if (Utils.equals(hc, 0)) {
+            hc = super.hashCode();
+        }
+    }
+
+    public static append getInstance() {
+        if (Utils.equals(instance, null)) {
+            instance = new append();
+        }
+
+        return instance;
+    }
+
+    public int hashCode() {
+        return hc;
+    }
+
+    public boolean equals(final Object obj) {
+        return obj instanceof append;
+    }
+
+    public String toString() {
+        return "<append>";
     }
 }
 

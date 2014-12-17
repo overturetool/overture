@@ -23,13 +23,14 @@ package org.overture.typechecker.assistant.statement;
 
 import java.util.Set;
 
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.types.AVoidReturnType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class ABlockSimpleBlockStmAssistantTC
+public class ABlockSimpleBlockStmAssistantTC implements IAstAssistant
 {
 	protected ITypeCheckerAssistantFactory af;
 
@@ -38,7 +39,7 @@ public class ABlockSimpleBlockStmAssistantTC
 		this.af = af;
 	}
 
-	// TODO: Used in the TypeCheckerStmVisitor.
+	//FIXME: Only used once. Move it.
 	public void addOne(Set<PType> rtypes, PType add)
 	{
 		if (add instanceof AVoidReturnType)

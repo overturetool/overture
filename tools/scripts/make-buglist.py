@@ -8,9 +8,22 @@ if len(sys.argv) < 2:
 
   Makes a Markdown formatted list of closed bugs for the release notes.
 
-  To get the github-issues-dump.json, Use something like
-    curl -u "<userid>:<github-token>" https://api.github.com/repos/overturetool/overture/issues?milestone=14&state=closed > issues.json
-  where the milestone number corresponds to the github milestone for the release.
+  To get the github-issues-dump.json, do something like:
+
+   * Close the relevant milestone in github, and make sure all the issues in that milestone are closed (transfer all open ones out to the next version milestone)
+
+   * Get the github-internal milestone number
+     $ curl "https://api.github.com/repos/overturetool/overture/milestones?state=closed" | jq -r '.[] | "\(.number) --- \(.title)"'
+     or
+     $ curl "https://api.github.com/repos/overturetool/overture/milestones?state=closed" | jq '.[] | select(.title == "$MILESTONE_TITLE") | .number'
+
+   * Get the issues for the milestone
+     $ curl "https://api.github.com/repos/overturetool/overture/issues?state=closed&milestone=$MILESTONE_NUMBER" > issues.json
+
+   * And output the markdown-formatted list directly
+     $ jq -r '.[] | "* [#\(.number) \(.title)](\(.html_url))"' issues.json
+
+
 """
     exit(1)
 

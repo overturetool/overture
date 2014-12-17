@@ -8,14 +8,14 @@ public class A {
     }
 
     public Boolean boolPatternOp(final Boolean boolPattern_1) {
-        Boolean success_1 = boolPattern_1 == false;
+        Boolean success_1 = Utils.equals(boolPattern_1, false);
 
         if (!(success_1)) {
             throw new RuntimeException("Bool pattern match failed");
         }
 
         Boolean boolPattern_2 = true;
-        Boolean success_2 = boolPattern_2 == true;
+        Boolean success_2 = Utils.equals(boolPattern_2, true);
 
         if (!(success_2)) {
             throw new RuntimeException("Bool pattern match failed");
@@ -25,14 +25,14 @@ public class A {
     }
 
     public static Boolean boolPatternFun(final Boolean boolPattern_3) {
-        Boolean success_3 = boolPattern_3 == true;
+        Boolean success_3 = Utils.equals(boolPattern_3, true);
 
         if (!(success_3)) {
             throw new RuntimeException("Bool pattern match failed");
         }
 
         Boolean boolPattern_4 = true;
-        Boolean success_4 = boolPattern_4 == true;
+        Boolean success_4 = Utils.equals(boolPattern_4, true);
 
         if (!(success_4)) {
             throw new RuntimeException("Bool pattern match failed");
@@ -42,7 +42,7 @@ public class A {
     }
 
     public String toString() {
-        return "A{" + "}";
+        return "A{}";
     }
 }
 
@@ -69,7 +69,87 @@ public class Entry {
     }
 
     public String toString() {
-        return "Entry{" + "}";
+        return "Entry{}";
+    }
+}
+
+##########
+
+package quotes;
+
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class start {
+    private static int hc = 0;
+    private static start instance = null;
+
+    public start() {
+        if (Utils.equals(hc, 0)) {
+            hc = super.hashCode();
+        }
+    }
+
+    public static start getInstance() {
+        if (Utils.equals(instance, null)) {
+            instance = new start();
+        }
+
+        return instance;
+    }
+
+    public int hashCode() {
+        return hc;
+    }
+
+    public boolean equals(final Object obj) {
+        return obj instanceof start;
+    }
+
+    public String toString() {
+        return "<start>";
+    }
+}
+
+##########
+
+package quotes;
+
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class append {
+    private static int hc = 0;
+    private static append instance = null;
+
+    public append() {
+        if (Utils.equals(hc, 0)) {
+            hc = super.hashCode();
+        }
+    }
+
+    public static append getInstance() {
+        if (Utils.equals(instance, null)) {
+            instance = new append();
+        }
+
+        return instance;
+    }
+
+    public int hashCode() {
+        return hc;
+    }
+
+    public boolean equals(final Object obj) {
+        return obj instanceof append;
+    }
+
+    public String toString() {
+        return "<append>";
     }
 }
 

@@ -13,7 +13,8 @@ import org.overture.core.tests.PathsProvider;
 @RunWith(Parameterized.class)
 public class ClassesPpClassicTest extends ParamInterpreterTest
 {
-
+	
+	private static final String TEST_UPDATE_PROPERTY = "tests.update.interpreter.ppclassic";
 	private final static String CLASSES_CLASSIC_ROOT = "src/test/resources/classesClassic";
 
 	public ClassesPpClassicTest(String nameParameter, String inputParameter,
@@ -32,6 +33,11 @@ public class ClassesPpClassicTest extends ParamInterpreterTest
 	public void setUp() throws Exception
 	{
 		Settings.release = Release.CLASSIC;
+	}
+	
+	@Override
+	protected String getUpdatePropertyString() {
+		return TEST_UPDATE_PROPERTY;
 	}
 
 }

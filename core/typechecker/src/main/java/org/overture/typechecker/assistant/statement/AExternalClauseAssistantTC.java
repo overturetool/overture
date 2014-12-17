@@ -22,12 +22,13 @@
 package org.overture.typechecker.assistant.statement;
 
 import org.overture.ast.analysis.intf.IQuestionAnswer;
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.statements.AExternalClause;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class AExternalClauseAssistantTC
+public class AExternalClauseAssistantTC implements IAstAssistant
 {
 	protected ITypeCheckerAssistantFactory af;
 
@@ -36,6 +37,7 @@ public class AExternalClauseAssistantTC
 		this.af = af;
 	}
 
+	//FIXME: only used once. move it
 	public void typeResolve(AExternalClause clause,
 			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question)

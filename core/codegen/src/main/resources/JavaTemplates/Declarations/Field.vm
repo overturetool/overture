@@ -8,4 +8,9 @@
 	#set( $static = "static")
 #end
 ##
-$node.getAccess() $static $final $JavaFormat.format($node.getType()) $node.getName() $JavaFormat.formatInitialExp($node.getInitial());
+#set( $volatile = "")
+#if ($node.getVolatile())
+	#set( $volatile = "volatile")
+#end
+##
+$node.getAccess() $static $volatile $final $JavaFormat.format($node.getType()) $node.getName() $JavaFormat.formatInitialExp($node.getInitial());

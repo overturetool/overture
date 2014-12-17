@@ -24,6 +24,7 @@ package org.overture.typechecker.assistant.type;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.SClassDefinition;
@@ -35,7 +36,7 @@ import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class AOperationTypeAssistantTC
+public class AOperationTypeAssistantTC implements IAstAssistant
 {
 	protected ITypeCheckerAssistantFactory af;
 

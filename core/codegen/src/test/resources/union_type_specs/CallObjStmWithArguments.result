@@ -12,7 +12,7 @@ public class A {
     }
 
     public String toString() {
-        return "A{" + "}";
+        return "A{}";
     }
 }
 
@@ -31,7 +31,7 @@ public class B {
     }
 
     public String toString() {
-        return "B{" + "}";
+        return "B{}";
     }
 }
 
@@ -50,7 +50,7 @@ public class C {
     }
 
     public String toString() {
-        return "C{" + "}";
+        return "C{}";
     }
 }
 
@@ -76,23 +76,33 @@ public class Entry {
         long toVar_1 = 3L;
 
         for (Long i = 1L; i <= toVar_1; i++) {
+            Object ternaryIfExp_1 = null;
+
+            if (Utils.equals(i, 1L)) {
+                ternaryIfExp_1 = c1;
+            } else {
+                Object ternaryIfExp_2 = null;
+
+                if (Utils.equals(i, 2L)) {
+                    ternaryIfExp_2 = c2;
+                } else {
+                    ternaryIfExp_2 = c3;
+                }
+
+                ternaryIfExp_1 = ternaryIfExp_2;
+            }
+
             Object callStmObj_1 = objs.get(Utils.index(i));
 
             if (callStmObj_1 instanceof A) {
                 ((A) callStmObj_1).op(((Number) a), ((Boolean) b),
-                    ((Number) ((i.longValue() == 1L) ? c1
-                                                     : ((i.longValue() == 2L)
-                    ? c2 : c3))));
+                    ((Number) ternaryIfExp_1));
             } else if (callStmObj_1 instanceof B) {
                 ((B) callStmObj_1).op(((Number) a), ((Boolean) b),
-                    ((Boolean) ((i.longValue() == 1L) ? c1
-                                                      : ((i.longValue() == 2L)
-                    ? c2 : c3))));
+                    ((Boolean) ternaryIfExp_1));
             } else if (callStmObj_1 instanceof C) {
                 ((C) callStmObj_1).op(((Number) a), ((Boolean) b),
-                    ((Character) ((i.longValue() == 1L) ? c1
-                                                        : ((i.longValue() == 2L)
-                    ? c2 : c3))));
+                    ((Character) ternaryIfExp_1));
             } else {
                 throw new RuntimeException("Missing operation member: op");
             }
@@ -103,6 +113,86 @@ public class Entry {
 
     public String toString() {
         return "Entry{" + "c := " + Utils.toString(c) + "}";
+    }
+}
+
+##########
+
+package quotes;
+
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class start {
+    private static int hc = 0;
+    private static start instance = null;
+
+    public start() {
+        if (Utils.equals(hc, 0)) {
+            hc = super.hashCode();
+        }
+    }
+
+    public static start getInstance() {
+        if (Utils.equals(instance, null)) {
+            instance = new start();
+        }
+
+        return instance;
+    }
+
+    public int hashCode() {
+        return hc;
+    }
+
+    public boolean equals(final Object obj) {
+        return obj instanceof start;
+    }
+
+    public String toString() {
+        return "<start>";
+    }
+}
+
+##########
+
+package quotes;
+
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class append {
+    private static int hc = 0;
+    private static append instance = null;
+
+    public append() {
+        if (Utils.equals(hc, 0)) {
+            hc = super.hashCode();
+        }
+    }
+
+    public static append getInstance() {
+        if (Utils.equals(instance, null)) {
+            instance = new append();
+        }
+
+        return instance;
+    }
+
+    public int hashCode() {
+        return hc;
+    }
+
+    public boolean equals(final Object obj) {
+        return obj instanceof append;
+    }
+
+    public String toString() {
+        return "<append>";
     }
 }
 

@@ -110,7 +110,7 @@ public class VdmTools
 //		String projectFileName = projectFileName + ".prj";
 		List<String> commandArgs = new ArrayList<String>();
 		
-		String vdmToolsPath = getVdmToolsPath(shell, vdmProject);
+		File vdmToolsPath = getVdmToolsPath(shell, vdmProject);
 
 		if (vdmToolsPath != null)
 		{
@@ -119,13 +119,13 @@ public class VdmTools
 				switch (vdmProject.getDialect())
 				{
 					case VDM_PP:
-						commandArgs.add(toPlatformPath(vdmToolsPath + "/vppgde.app/Contents/MacOS/vppgde"));
+						commandArgs.add(vdmToolsPath + "/vppgde.app/Contents/MacOS/vppgde");
 						break;
 					case VDM_RT:
-						commandArgs.add(toPlatformPath(vdmToolsPath+ "/vicegde.app/Contents/MacOS/vicegde"));;
+						commandArgs.add(vdmToolsPath+ "/vicegde.app/Contents/MacOS/vicegde");;
 						break;
 					case VDM_SL:
-						commandArgs.add(toPlatformPath(vdmToolsPath + "/vdmgde.app/Contents/MacOS/vdmgde"));;
+						commandArgs.add(vdmToolsPath + "/vdmgde.app/Contents/MacOS/vdmgde");;
 						break;
 					case CML:
 						break;
@@ -134,13 +134,13 @@ public class VdmTools
 			}
 			else if(isWindowsPlatform())
 			{
-				commandArgs.add(toPlatformPath(vdmToolsPath));
-				commandArgs.add(toPlatformPath(projectFileName+".prj"));
+				commandArgs.add(vdmToolsPath.getCanonicalPath());
+				commandArgs.add(projectFileName+".prj");
 			}
 			else
 			{
 				//Linux platform
-				commandArgs.add(toPlatformPath(vdmToolsPath));
+				commandArgs.add(vdmToolsPath.getCanonicalPath());
 				commandArgs.add(projectFileName+".prj");
 			}
 			ProcessBuilder pb = new ProcessBuilder(commandArgs);
@@ -151,7 +151,7 @@ public class VdmTools
 
 	private String getFilePath(File location, File file)
 	{
-		return file.getAbsolutePath();// "./../"+file.getAbsolutePath().substring(location.getAbsolutePath().length()+1);
+		return file.getAbsolutePath();
 	}
 
 	public static boolean isMacPlatform()
@@ -164,18 +164,7 @@ public class VdmTools
 		return System.getProperty("os.name").toLowerCase().contains("win");
 	}
 
-	protected static String toPlatformPath(String path)
-	{
-		if (isWindowsPlatform())
-		{
-			return "\"" + path + "\"";
-		} else
-		{
-			return path.replace(" ", "\\ ");
-		}
-	}
-
-	private static String getVdmToolsPath(Shell shell, IVdmProject project)
+	private static File getVdmToolsPath(Shell shell, IVdmProject project)
 	{
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		String path = null;
@@ -196,15 +185,11 @@ public class VdmTools
 		}
 
 		boolean valid = path.length() > 0;
-		// if(!valid)
-		// {
-		// store.setDefault(ICskConstants.VPPGDE_PATH,ICskConstants.DEFAULT_VPPGDE_PATH);
-		// path = store.getString(ICskConstants.VPPGDE_PATH);
-		// }
 
+		File pathfile = new File(path);
 		if (valid)
 		{
-			valid = new File(path).exists();
+			valid = pathfile.exists();
 		}
 		if (!valid)
 		{
@@ -212,7 +197,7 @@ public class VdmTools
 			path = null;
 		}
 		// Assert.isTrue(valid, "VDM Tools path is not valid");
-		return path;
+		return pathfile;
 	}
 
 	

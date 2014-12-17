@@ -1,0 +1,9 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	return ""(-1,...,-1);
+	
+end Entry

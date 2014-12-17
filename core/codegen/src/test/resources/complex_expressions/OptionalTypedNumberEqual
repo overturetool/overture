@@ -1,0 +1,11 @@
+class Entry
+
+operations
+
+public static Run : () ==> bool
+Run () ==
+let x : [real] = nil
+in
+  return x = nil;
+
+end Entry

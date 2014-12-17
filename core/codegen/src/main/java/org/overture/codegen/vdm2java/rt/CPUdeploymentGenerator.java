@@ -8,7 +8,6 @@ import java.util.Set;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
-import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AClientInstanceDeclCG;

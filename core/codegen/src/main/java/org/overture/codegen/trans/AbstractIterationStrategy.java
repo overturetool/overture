@@ -28,12 +28,11 @@ import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
-import org.overture.codegen.cgast.declarations.SLocalDeclCG;
+import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
 import org.overture.codegen.ir.ITempVarGen;
-import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 
 public abstract class AbstractIterationStrategy implements IIterationStrategy
@@ -41,17 +40,17 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 	protected boolean firstBind;
 	protected boolean lastBind;
 
-	protected TransformationAssistantCG transformationAssistant;
+	protected TransAssistantCG transformationAssistant;
 	protected ILanguageIterator langIterator;
 	protected ITempVarGen tempGen;
 	protected TempVarPrefixes varPrefixes;
 
-	protected AVarLocalDeclCG successVarDecl = null;
+	protected AVarDeclCG successVarDecl = null;
 
-	protected AVarLocalDeclCG nextElementDeclared = null;
+	protected AVarDeclCG nextElementDeclared = null;
 
 	public AbstractIterationStrategy(
-			TransformationAssistantCG transformationAssistant,
+			TransAssistantCG transformationAssistant,
 			ILanguageIterator langIterator, ITempVarGen tempGen,
 			TempVarPrefixes varPrefixes)
 	{
@@ -62,7 +61,7 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 	}
 
 	@Override
-	public List<? extends SLocalDeclCG> getOuterBlockDecls(
+	public List<AVarDeclCG> getOuterBlockDecls(
 			AIdentifierVarExpCG setVar, List<SPatternCG> patterns)
 			throws AnalysisException
 	{
@@ -76,7 +75,7 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 	}
 
 	@Override
-	public AVarLocalDeclCG getForLoopInit(AIdentifierVarExpCG setVar,
+	public AVarDeclCG getForLoopInit(AIdentifierVarExpCG setVar,
 			List<SPatternCG> patterns, SPatternCG pattern)
 	{
 		return langIterator.getForLoopInit(setVar, patterns, pattern);
@@ -97,7 +96,7 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 		return langIterator.getForLoopInc(setVar, patterns, pattern);
 	}
 
-	public void tagNextElementDeclared(AVarLocalDeclCG nextElementDecl)
+	public void tagNextElementDeclared(AVarDeclCG nextElementDecl)
 	{
 		nextElementDecl.setTag(consDeclarationTag());
 		this.nextElementDeclared = nextElementDecl;
@@ -109,7 +108,7 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 	}
 
 	@Override
-	public AVarLocalDeclCG getNextElementDeclared(AIdentifierVarExpCG setVar,
+	public AVarDeclCG getNextElementDeclared(AIdentifierVarExpCG setVar,
 			List<SPatternCG> patterns, SPatternCG pattern)
 			throws AnalysisException
 	{
@@ -161,9 +160,9 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 		return stms;
 	}
 
-	protected List<SLocalDeclCG> packDecl(SLocalDeclCG decl)
+	protected List<AVarDeclCG> packDecl(AVarDeclCG decl)
 	{
-		List<SLocalDeclCG> decls = new LinkedList<SLocalDeclCG>();
+		List<AVarDeclCG> decls = new LinkedList<AVarDeclCG>();
 
 		decls.add(decl);
 

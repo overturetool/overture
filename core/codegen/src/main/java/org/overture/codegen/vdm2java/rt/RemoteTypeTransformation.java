@@ -5,7 +5,6 @@ import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 
 // Here the DepthFirstAnalysisAdaptor for the codegen tree (IR) is applied
 /*

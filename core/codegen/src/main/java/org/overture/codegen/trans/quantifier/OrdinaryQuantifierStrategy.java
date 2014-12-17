@@ -27,11 +27,11 @@ import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.SLocalDeclCG;
+import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.TempVarPrefixes;
-import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 
 public class OrdinaryQuantifierStrategy extends QuantifierBaseStrategy
@@ -39,7 +39,7 @@ public class OrdinaryQuantifierStrategy extends QuantifierBaseStrategy
 	protected OrdinaryQuantifier quantifier;
 
 	public OrdinaryQuantifierStrategy(
-			TransformationAssistantCG transformationAssistant,
+			TransAssistantCG transformationAssistant,
 			SExpCG predicate, String resultVarName,
 			OrdinaryQuantifier quantifier, ILanguageIterator langIterator,
 			ITempVarGen tempGen, TempVarPrefixes varPrefixes)
@@ -49,7 +49,7 @@ public class OrdinaryQuantifierStrategy extends QuantifierBaseStrategy
 	}
 
 	@Override
-	public List<? extends SLocalDeclCG> getOuterBlockDecls(
+	public List<AVarDeclCG> getOuterBlockDecls(
 			AIdentifierVarExpCG setVar, List<SPatternCG> patterns)
 			throws AnalysisException
 	{

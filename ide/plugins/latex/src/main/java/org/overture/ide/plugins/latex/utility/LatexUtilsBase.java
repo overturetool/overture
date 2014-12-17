@@ -54,12 +54,12 @@ public class LatexUtilsBase
 	public boolean insertCoverageTable(IVdmProject project)
 			throws CoreException
 	{
-		return project.getOptions().getGroup(LatexPlugin.PLUGIN_ID, true).getAttribute(ILatexConstants.LATEX_INCLUDE_COVERAGETABLE, true);
+		return project.getOptions().getGroup(LatexPlugin.PLUGIN_ID, true).getAttribute(ILatexConstants.LATEX_INCLUDE_COVERAGETABLE, ILatexConstants.LATEX_INCLUDE_COVERAGETABLE_DEFAULT);
 	}
 
 	public boolean markCoverage(IVdmProject project) throws CoreException
 	{
-		return project.getOptions().getGroup(LatexPlugin.PLUGIN_ID, true).getAttribute(ILatexConstants.LATEX_MARK_COVERAGE, true);
+		return project.getOptions().getGroup(LatexPlugin.PLUGIN_ID, true).getAttribute(ILatexConstants.LATEX_MARK_COVERAGE, ILatexConstants.LATEX_MARK_COVERAGE_DEFAULT);
 	}
 
 	public boolean modelOnly(IVdmProject project) throws CoreException

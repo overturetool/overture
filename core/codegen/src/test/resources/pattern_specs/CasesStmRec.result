@@ -11,15 +11,15 @@ public class Entry {
         Rec recordPattern_1 = Utils.clone(t);
         Boolean success_1 = true;
         Number intPattern_1 = recordPattern_1.a;
-        success_1 = intPattern_1.longValue() == 2L;
+        success_1 = Utils.equals(intPattern_1, 2L);
 
         if (success_1) {
             Number intPattern_2 = recordPattern_1.b;
-            success_1 = intPattern_2.longValue() == 2L;
+            success_1 = Utils.equals(intPattern_2, 2L);
 
             if (success_1) {
                 Number intPattern_3 = recordPattern_1.c;
-                success_1 = intPattern_3.longValue() == 2L;
+                success_1 = Utils.equals(intPattern_3, 2L);
             }
         }
 
@@ -30,7 +30,7 @@ public class Entry {
             a = recordPattern_2.a;
 
             Number intPattern_4 = recordPattern_2.c;
-            success_1 = intPattern_4.longValue() == 1L;
+            success_1 = Utils.equals(intPattern_4, 1L);
 
             if (!(success_1)) {
                 Rec recordPattern_3 = Utils.clone(t);
@@ -39,7 +39,7 @@ public class Entry {
                 success_1 = true;
 
                 Number intPattern_5 = recordPattern_3.a;
-                success_1 = intPattern_5.longValue() == 1L;
+                success_1 = Utils.equals(intPattern_5, 1L);
 
                 if (success_1) {
                     b = recordPattern_3.b;
@@ -87,7 +87,7 @@ public class Entry {
     }
 
     public String toString() {
-        return "Entry{" + "}";
+        return "Entry{}";
     }
 
     public static class Rec implements Record {
@@ -108,9 +108,8 @@ public class Entry {
 
             Rec other = ((Rec) obj);
 
-            return (a.longValue() == other.a.longValue()) &&
-            (b.longValue() == other.b.longValue()) &&
-            (c.longValue() == other.c.longValue());
+            return (Utils.equals(a, other.a)) && (Utils.equals(b, other.b)) &&
+            (Utils.equals(c, other.c));
         }
 
         public int hashCode() {
@@ -122,8 +121,88 @@ public class Entry {
         }
 
         public String toString() {
-            return Utils.recordToString(this, a, b, c);
+            return "mk_Entry`Rec" + Utils.formatFields(a, b, c);
         }
+    }
+}
+
+##########
+
+package quotes;
+
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class start {
+    private static int hc = 0;
+    private static start instance = null;
+
+    public start() {
+        if (Utils.equals(hc, 0)) {
+            hc = super.hashCode();
+        }
+    }
+
+    public static start getInstance() {
+        if (Utils.equals(instance, null)) {
+            instance = new start();
+        }
+
+        return instance;
+    }
+
+    public int hashCode() {
+        return hc;
+    }
+
+    public boolean equals(final Object obj) {
+        return obj instanceof start;
+    }
+
+    public String toString() {
+        return "<start>";
+    }
+}
+
+##########
+
+package quotes;
+
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class append {
+    private static int hc = 0;
+    private static append instance = null;
+
+    public append() {
+        if (Utils.equals(hc, 0)) {
+            hc = super.hashCode();
+        }
+    }
+
+    public static append getInstance() {
+        if (Utils.equals(instance, null)) {
+            instance = new append();
+        }
+
+        return instance;
+    }
+
+    public int hashCode() {
+        return hc;
+    }
+
+    public boolean equals(final Object obj) {
+        return obj instanceof append;
+    }
+
+    public String toString() {
+        return "<append>";
     }
 }
 

@@ -31,6 +31,7 @@ import java.io.Serializable;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.lex.Dialect;
 import org.overture.config.Settings;
+import org.overture.interpreter.VDMJ;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.runtime.Interpreter;
@@ -99,7 +100,7 @@ public class IO implements Serializable
 		{
 			File file = getFile(fval);
 
-			LexTokenReader ltr = new LexTokenReader(file, Dialect.VDM_PP);
+			LexTokenReader ltr = new LexTokenReader(file, Dialect.VDM_PP, VDMJ.filecharset);
 			ExpressionReader reader = new ExpressionReader(ltr);
 			reader.setCurrentModule("IO");
 			PExp exp = reader.readExpression();

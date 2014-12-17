@@ -20,15 +20,16 @@ import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.ACpuDeploymentDeclCG;
 import org.overture.codegen.cgast.declarations.ARemoteContractDeclCG;
 import org.overture.codegen.cgast.declarations.ARemoteContractImplDeclCG;
-import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
+import org.overture.codegen.merging.TemplateStructure;
 import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
+import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaFormat;
 import org.overture.codegen.vdm2java.JavaSettings;
@@ -89,8 +90,8 @@ public class JavaCodeGenDistributionMain {
 					Logger.getLog().println(
 							"Could not generate class: "
 									+ generatedClass.getName() + "\n");
-					JavaCodeGenUtil.printUnsupportedNodes(generatedClass
-							.getUnsupportedNodes());
+					JavaCodeGenUtil.printUnsupportedIrNodes(generatedClass
+							.getUnsupportedInIr());
 				} else {
 					Logger.getLog().println(generatedClass.getContent());
 				}
@@ -98,11 +99,17 @@ public class JavaCodeGenDistributionMain {
 				Logger.getLog().println("\n");
 			}
 
-			GeneratedModule quotes = data.getQuoteValues();
+			List<GeneratedModule> quotes = data.getQuoteValues();
 
-			if (quotes != null) {
+			if (quotes != null && !quotes.isEmpty()) {
+				
 				Logger.getLog().println("**********");
-				Logger.getLog().println(quotes.getContent());
+				Logger.getLog().println("Generated quotes: ");
+				
+				for(GeneratedModule q : quotes)
+				{
+					Logger.getLog().println(q.getName());
+				}
 			}
 
 			InvalidNamesResult invalidName = data.getInvalidNamesResult();
@@ -132,7 +139,7 @@ public class JavaCodeGenDistributionMain {
 			Set<AVariableExp> deployedObjects = mapping.getDeployedObjects();
 
 			IRInfo info = new IRInfo("cg_init");
-			JavaFormat javaFormat = new JavaFormat(new TempVarPrefixes(), info);
+			JavaFormat javaFormat = new JavaFormat(new TempVarPrefixes(),new TemplateStructure(JavaCodeGen.JAVA_TEMPLATES_ROOT_FOLDER), info);
 
 			List<AClassDeclCG> irClasses = Util.getClasses(data.getClasses());
 			

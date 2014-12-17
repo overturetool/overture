@@ -23,9 +23,14 @@
 
 package org.overture.interpreter.values;
 
+import java.util.Set;
+
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
+import org.overture.ast.types.AFunctionType;
+import org.overture.ast.types.PType;
+import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.interpreter.runtime.Context;
 
 public class CompFunctionValue extends FunctionValue
@@ -56,6 +61,39 @@ public class CompFunctionValue extends FunctionValue
 		f1arg.add(ff2.eval(from, argValues, ctxt));
 		return ff1.eval(from, f1arg, ctxt);
 	}
+	
+	@Override
+	protected Value convertValueTo(PType to, Context ctxt, Set<PType> done)
+			throws AnalysisException
+	{
+		PTypeAssistantInterpreter assistant = ctxt.assistantFactory.createPTypeAssistant();
+
+		if (assistant.isFunction(to))
+		{
+			if (type.equals(to) || assistant.isUnknown(to))
+			{
+				return this;
+			}
+			else
+			{
+				AFunctionType restrictedType = assistant.getFunction(to);
+
+				if (!type.equals(restrictedType))
+				{
+					return abort(4164, "Compose function cannot be restricted to " + restrictedType, ctxt);
+				}
+				else
+				{
+					return this;
+				}
+			}
+		}
+		else
+		{
+			return super.convertValueTo(to, ctxt, done);
+		}
+	}
+
 
 	@Override
 	public boolean equals(Object other)

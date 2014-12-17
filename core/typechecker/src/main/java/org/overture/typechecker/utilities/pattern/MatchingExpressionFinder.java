@@ -51,7 +51,9 @@ import org.overture.ast.patterns.AExpressionPattern;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.AIntegerPattern;
+import org.overture.ast.patterns.ANamePatternPair;
 import org.overture.ast.patterns.ANilPattern;
+import org.overture.ast.patterns.AObjectPattern;
 import org.overture.ast.patterns.AQuotePattern;
 import org.overture.ast.patterns.ARealPattern;
 import org.overture.ast.patterns.ARecordPattern;
@@ -210,6 +212,21 @@ public class MatchingExpressionFinder extends AnswerAdaptor<PExp>
 	{
 		LexToken op = new LexKeywordToken(VDMToken.UNION, pattern.getLocation());
 		return AstFactory.newASetUnionBinaryExp(af.createPPatternAssistant().getMatchingExpression(pattern.getLeft()), op, af.createPPatternAssistant().getMatchingExpression(pattern.getRight()));
+	}
+
+	@Override
+	public PExp caseAObjectPattern(AObjectPattern pattern)
+			throws AnalysisException
+	{
+		List<PExp> list = new LinkedList<PExp>();
+
+		for (ANamePatternPair npp : pattern.getFields())
+		{
+			list.add(af.createPPatternAssistant().getMatchingExpression(npp.getPattern()));
+		}
+
+		ILexNameToken tpName = pattern.getClassname();
+		return AstFactory.newANewExp(pattern.getLocation(), tpName, list);
 	}
 
 	@Override

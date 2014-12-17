@@ -24,6 +24,7 @@ package org.overture.codegen.tests.utils;
 import java.io.File;
 import java.io.IOException;
 
+import org.overture.ast.lex.Dialect;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.config.Release;
 import org.overture.interpreter.util.InterpreterUtil;
@@ -31,9 +32,9 @@ import org.overture.interpreter.values.Value;
 
 class ExpressionTestHandler extends ExecutableTestHandler
 {
-	public ExpressionTestHandler(Release release)
+	public ExpressionTestHandler(Release release, Dialect dialect)
 	{
-		super(release);
+		super(release, dialect);
 	}
 
 	public void writeGeneratedCode(File parent, File resultFile)

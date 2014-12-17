@@ -24,6 +24,7 @@ package org.overture.typechecker.assistant.definition;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AStateDefinition;
@@ -35,7 +36,8 @@ import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AFunctionType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class AStateDefinitionAssistantTC
+//FIXME: only used in 1 class. move it.
+public class AStateDefinitionAssistantTC implements IAstAssistant
 {
 	protected ITypeCheckerAssistantFactory af;
 

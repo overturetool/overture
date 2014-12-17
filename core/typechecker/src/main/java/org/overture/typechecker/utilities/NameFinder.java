@@ -233,7 +233,7 @@ public class NameFinder extends
 	public PDefinition caseAExternalDefinition(AExternalDefinition node,
 			Newquestion question) throws AnalysisException
 	{
-		if (question.sought.getOld())
+		if (question.sought.getOld() && question.scope == NameScope.NAMESANDANYSTATE)
 		{
 			return question.sought.equals(node.getOldname()) ? node : null;
 		}

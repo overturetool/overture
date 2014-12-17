@@ -26,6 +26,7 @@ import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.assistant.pattern.PPatternAssistant;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
@@ -37,8 +38,9 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.PDefinitionSet;
 import org.overture.typechecker.utilities.pattern.AllDefinitionLocator;
 import org.overture.typechecker.utilities.pattern.PatternResolver;
+import org.overture.typechecker.visitor.TypeCheckerPatternVisitor;
 
-public class PPatternAssistantTC extends PPatternAssistant
+public class PPatternAssistantTC extends PPatternAssistant implements IAstAssistant
 {
 	protected ITypeCheckerAssistantFactory af;
 
@@ -89,9 +91,21 @@ public class PPatternAssistantTC extends PPatternAssistant
 		try
 		{
 			pattern.apply(af.getPatternResolver(), new PatternResolver.NewQuestion(rootVisitor, question));
-		} catch (AnalysisException e)
+		}
+		catch (AnalysisException e)
 		{
 
+		}
+	}
+	
+	public void typeCheck(PPattern pattern, TypeCheckInfo question, IQuestionAnswer<TypeCheckInfo, PType> typeCheckVisitor)
+	{
+		try
+		{
+			pattern.apply(new TypeCheckerPatternVisitor(typeCheckVisitor), new TypeCheckInfo(question.assistantFactory, question.env, question.scope));
+		}
+		catch (AnalysisException e)
+		{
 		}
 	}
 

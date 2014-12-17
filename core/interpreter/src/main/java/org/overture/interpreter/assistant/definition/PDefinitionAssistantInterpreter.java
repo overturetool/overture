@@ -3,6 +3,7 @@ package org.overture.interpreter.assistant.definition;
 import java.util.LinkedList;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.statements.PStm;
@@ -17,7 +18,7 @@ import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.pub.ProofObligationGenerator;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
-public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC
+public class PDefinitionAssistantInterpreter extends PDefinitionAssistantTC implements IAstAssistant
 {
 	protected static IInterpreterAssistantFactory af;
 

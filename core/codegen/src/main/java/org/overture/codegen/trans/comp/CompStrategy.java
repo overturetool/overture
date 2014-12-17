@@ -28,8 +28,7 @@ import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
-import org.overture.codegen.cgast.declarations.SLocalDeclCG;
+import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.SBinaryExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
@@ -39,7 +38,7 @@ import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.AbstractIterationStrategy;
 import org.overture.codegen.trans.TempVarPrefixes;
-import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 
 public abstract class CompStrategy extends AbstractIterationStrategy
@@ -48,7 +47,7 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 	protected AIdentifierPatternCG idPattern;
 	protected STypeCG compType;
 
-	public CompStrategy(TransformationAssistantCG transformationAssistant,
+	public CompStrategy(TransAssistantCG transformationAssistant,
 			SExpCG predicate, String varName, STypeCG compType,
 			ILanguageIterator langIterator, ITempVarGen tempGen,
 			TempVarPrefixes varPrefixes)
@@ -94,14 +93,14 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 	}
 
 	@Override
-	public List<? extends SLocalDeclCG> getOuterBlockDecls(
+	public List<AVarDeclCG> getOuterBlockDecls(
 			AIdentifierVarExpCG setVar, List<SPatternCG> patterns)
 			throws AnalysisException
 	{
 		SExpCG emptyCollection = getEmptyCollection();
 		emptyCollection.setType(compType.clone());
 
-		AVarLocalDeclCG compResultInit = new AVarLocalDeclCG();
+		AVarDeclCG compResultInit = new AVarDeclCG();
 		compResultInit.setType(compType.clone());
 		compResultInit.setPattern(idPattern.clone());
 		compResultInit.setExp(emptyCollection);

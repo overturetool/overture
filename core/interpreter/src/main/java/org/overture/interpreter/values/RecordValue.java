@@ -24,6 +24,7 @@
 package org.overture.interpreter.values;
 
 import java.util.Iterator;
+import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.types.AFieldField;
@@ -134,7 +135,7 @@ public class RecordValue extends Value
 
 				if (!inv)
 				{
-					abort(4079, "Type invariant violated by mk_ arguments", ctxt);
+					abort(4079, "Type invariant violated by mk_" + type.getName()+ " arguments", ctxt);
 				}
 			} finally
 			{
@@ -292,7 +293,7 @@ public class RecordValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt)
+	protected Value convertValueTo(PType to, Context ctxt, Set<PType> done)
 			throws AnalysisException
 	{
 		if (ctxt.assistantFactory.createPTypeAssistant().equals(to, type))
@@ -300,7 +301,7 @@ public class RecordValue extends Value
 			return this;
 		} else
 		{
-			return super.convertValueTo(to, ctxt);
+			return super.convertValueTo(to, ctxt, done);
 		}
 	}
 

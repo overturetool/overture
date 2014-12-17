@@ -44,12 +44,15 @@ import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
-import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
+import org.overture.codegen.cgast.declarations.ATypeDeclCG;
+import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.ANat1NumericBasicTypeCG;
+import org.overture.codegen.cgast.types.ANatNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
@@ -97,6 +100,13 @@ public class DeclAssistantCG extends AssistantBase
 		while (superName != null)
 		{
 			AClassDeclCG superClassDecl = findClass(classes, superName);
+			
+			if(superClassDecl == null)
+			{
+				//This would be the case if the super class
+				// declaration is the VDMThread from the runtime
+				break;
+			}
 
 			for (T superDecl : strategy.getDecls(superClassDecl))
 			{
@@ -161,7 +171,7 @@ public class DeclAssistantCG extends AssistantBase
 	}
 
 	public void setLocalDefs(List<PDefinition> localDefs,
-			List<AVarLocalDeclCG> localDecls, IRInfo question)
+			List<AVarDeclCG> localDecls, IRInfo question)
 			throws AnalysisException
 	{
 		for (PDefinition def : localDefs)
@@ -193,8 +203,17 @@ public class DeclAssistantCG extends AssistantBase
 	public ARecordDeclCG findRecord(AClassDeclCG definingClass,
 			String recordName)
 	{
-		for (ARecordDeclCG recordDecl : definingClass.getRecords())
+		for (ATypeDeclCG typeDecl : definingClass.getTypeDecls())
 		{
+			SDeclCG decl = typeDecl.getDecl();
+			
+			if(!(decl instanceof ARecordDeclCG))
+			{
+				continue;
+			}
+			
+			ARecordDeclCG recordDecl = (ARecordDeclCG) decl;
+			
 			if (recordDecl.getName().equals(recordName))
 			{
 				return recordDecl;
@@ -202,6 +221,28 @@ public class DeclAssistantCG extends AssistantBase
 		}
 
 		return null;
+	}
+	
+	// This method assumes that the record is defined in definingClass and not a super class
+	public List<ARecordDeclCG> getRecords(AClassDeclCG definingClass)
+	{
+		List<ARecordDeclCG> records = new LinkedList<ARecordDeclCG>();
+		
+		for (ATypeDeclCG typeDecl : definingClass.getTypeDecls())
+		{
+			SDeclCG decl = typeDecl.getDecl();
+			
+			if(!(decl instanceof ARecordDeclCG))
+			{
+				continue;
+			}
+			
+			ARecordDeclCG recordDecl = (ARecordDeclCG) decl;
+			
+			records.add(recordDecl);
+		}
+		
+		return records;
 	}
 
 	public ARecordDeclCG findRecord(List<AClassDeclCG> classes,
@@ -213,7 +254,7 @@ public class DeclAssistantCG extends AssistantBase
 		return record;
 	}
 
-	private AVarLocalDeclCG consLocalVarDecl(AValueDefinition valueDef,
+	private AVarDeclCG consLocalVarDecl(AValueDefinition valueDef,
 			IRInfo question) throws AnalysisException
 	{
 		STypeCG type = valueDef.getType().apply(question.getTypeVisitor(), question);
@@ -224,7 +265,7 @@ public class DeclAssistantCG extends AssistantBase
 
 	}
 
-	private AVarLocalDeclCG consLocalVarDecl(AEqualsDefinition equalsDef,
+	private AVarDeclCG consLocalVarDecl(AEqualsDefinition equalsDef,
 			IRInfo question) throws AnalysisException
 	{
 		STypeCG type = equalsDef.getExpType().apply(question.getTypeVisitor(), question);
@@ -235,10 +276,10 @@ public class DeclAssistantCG extends AssistantBase
 
 	}
 
-	private AVarLocalDeclCG consLocalVarDecl(INode node, STypeCG type,
+	private AVarDeclCG consLocalVarDecl(INode node, STypeCG type,
 			SPatternCG pattern, SExpCG exp)
 	{
-		AVarLocalDeclCG localVarDecl = new AVarLocalDeclCG();
+		AVarDeclCG localVarDecl = new AVarDeclCG();
 		localVarDecl.setSourceNode(new SourceNode(node));
 		localVarDecl.setType(type);
 		localVarDecl.setPattern(pattern);
@@ -254,6 +295,7 @@ public class DeclAssistantCG extends AssistantBase
 		AFieldDeclCG field = new AFieldDeclCG();
 		field.setAccess(access);
 		field.setName(name);
+		field.setVolatile(false);
 		field.setStatic(isStatic);
 		field.setFinal(isFinal);
 		field.setType(type);
@@ -323,7 +365,7 @@ public class DeclAssistantCG extends AssistantBase
 		return methodNames;
 	}
 
-	public void setDefaultValue(AVarLocalDeclCG localDecl, STypeCG typeCg)
+	public void setDefaultValue(AVarDeclCG localDecl, STypeCG typeCg)
 			throws AnalysisException
 	{
 		ExpAssistantCG expAssistant = assistantManager.getExpAssistant();
@@ -337,7 +379,14 @@ public class DeclAssistantCG extends AssistantBase
 		} else if (typeCg instanceof AIntNumericBasicTypeCG)
 		{
 			localDecl.setExp(expAssistant.getDefaultIntValue());
-		} else if (typeCg instanceof ARealNumericBasicTypeCG)
+		} else if(typeCg instanceof ANat1NumericBasicTypeCG)
+		{
+			localDecl.setExp(expAssistant.getDefaultNat1Value());
+		} else if(typeCg instanceof ANatNumericBasicTypeCG)
+		{
+			localDecl.setExp(expAssistant.getDefaultNatValue());
+		}
+		else if (typeCg instanceof ARealNumericBasicTypeCG)
 		{
 			localDecl.setExp(expAssistant.getDefaultRealValue());
 		} else if (typeCg instanceof ABoolBasicTypeCG)
@@ -400,7 +449,7 @@ public class DeclAssistantCG extends AssistantBase
 					+ definingClassName);
 		}
 
-		LinkedList<ARecordDeclCG> records = definingClass.getRecords();
+		List<ARecordDeclCG> records = getRecords(definingClass);
 
 		ARecordDeclCG recordDecl = null;
 		for (ARecordDeclCG currentRec : records)
@@ -418,7 +467,7 @@ public class DeclAssistantCG extends AssistantBase
 					+ recName + "' in class '" + definingClassName + "'");
 		}
 
-		LinkedList<AFieldDeclCG> fields = recordDecl.getFields();
+		List<AFieldDeclCG> fields = recordDecl.getFields();
 
 		AFieldDeclCG field = null;
 		for (AFieldDeclCG currentField : fields)

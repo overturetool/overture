@@ -22,10 +22,18 @@
 package org.overture.codegen.runtime;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.List;
 
 
 public class IO {
+	
+	//private static final Number START = 1;
+	private static final Number APPEND = 2;
+	
+	private static File BaseDIr = new File(".").getParentFile();
 	
 	private static final String NOT_SUPPORTED_MSG = "Operation is currently not supported";
 	
@@ -39,12 +47,12 @@ public class IO {
     	return true;
     }
 
-    public static <p> boolean fwriteval(String filename, p val, int fdir) {
+    public static <p> boolean fwriteval(String filename, p val, Number fdir) {
 
     	throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
     }
     
-    public static <p> boolean fwriteval(VDMSeq filename, p val, int fdir) {
+    public static <p> boolean fwriteval(VDMSeq filename, p val, Number fdir) {
 
     	throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
     }
@@ -59,9 +67,17 @@ public class IO {
     	throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
     }
 
-	protected static File getFile(String fval)
+	private static File getFile(String fileStr)
 	{
-		throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
+		String path = fileStr.replace('/', File.separatorChar);
+		File file = new File(path);
+
+		if (!file.isAbsolute())
+		{
+			file = new File(BaseDIr, path);
+		}
+		
+		return file;
 	}
     
 	protected static File getFile(VDMSeq fval)
@@ -70,19 +86,40 @@ public class IO {
 	}
 	
     public boolean echo(String text) {
-    	throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
+    	return fecho("[]", text, null);
     }
     
     public boolean echo(VDMSeq text) {
-    	throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
+    	return fecho("[]", SeqUtil.toStr(text), null);
     }
 
-    public boolean fecho(String filename, String text, Integer fdir) {
-    	throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
+    public boolean fecho(String filename, String text, Number fdir) {
+    	
+		if (filename.equals("[]"))
+		{
+			System.out.print(text);
+			System.out.flush();
+		} else
+		{
+			try
+			{
+				File file = getFile(filename);
+				FileOutputStream fos = new FileOutputStream(file, fdir == APPEND);
+
+				fos.write(text.getBytes(Charset.defaultCharset().name()));
+				fos.close();
+			} catch (IOException e)
+			{
+				return false;
+			}
+		}
+
+		return true;
     }
     
-    public boolean fecho(VDMSeq filename, VDMSeq text, Integer fdir) {
-    	throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
+    public boolean fecho(VDMSeq filename, VDMSeq text, Number fdir) {
+    	
+    	return fecho(filename.toString(), text.toString(), fdir);
     }
 
     public String ferror() {

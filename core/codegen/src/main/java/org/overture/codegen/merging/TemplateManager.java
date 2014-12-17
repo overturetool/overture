@@ -31,9 +31,9 @@ import org.apache.velocity.runtime.RuntimeSingleton;
 import org.apache.velocity.runtime.parser.ParseException;
 import org.apache.velocity.runtime.parser.node.SimpleNode;
 import org.overture.codegen.cgast.INode;
+import org.overture.codegen.cgast.declarations.ACatchClauseDeclCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AClientInstanceDeclCG;
-import org.overture.codegen.cgast.declarations.ACounterLocalDeclCG;
 import org.overture.codegen.cgast.declarations.ACpuDeploymentDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
@@ -47,7 +47,6 @@ import org.overture.codegen.cgast.declarations.ARemoteContractImplDeclCG;
 import org.overture.codegen.cgast.declarations.ARemoteInstanceDeclCG;
 import org.overture.codegen.cgast.declarations.ASynchTokenDeclCG;
 import org.overture.codegen.cgast.declarations.ASynchTokenInterfaceDeclCG;
-import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
 import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AAddrEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AAddrNotEqualsBinaryExpCG;
@@ -131,7 +130,6 @@ import org.overture.codegen.cgast.expressions.ASetIntersectBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetProperSubsetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetSubsetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetUnionBinaryExpCG;
-import org.overture.codegen.cgast.expressions.ASizeUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ASubSeqExpCG;
 import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
@@ -144,6 +142,10 @@ import org.overture.codegen.cgast.expressions.ATupleExpCG;
 import org.overture.codegen.cgast.expressions.ATupleSizeExpCG;
 import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
 import org.overture.codegen.cgast.expressions.AXorBoolBinaryExpCG;
+import org.overture.codegen.cgast.declarations.AThreadDeclCG;
+import org.overture.codegen.cgast.declarations.ATypeDeclCG;
+import org.overture.codegen.cgast.declarations.AVarDeclCG;
+import org.overture.codegen.cgast.expressions.*;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
@@ -151,7 +153,6 @@ import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ABreakStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectStmCG;
-import org.overture.codegen.cgast.statements.ACallStmCG;
 import org.overture.codegen.cgast.statements.AContinueStmCG;
 import org.overture.codegen.cgast.statements.ADecrementStmCG;
 import org.overture.codegen.cgast.statements.AErrorStmCG;
@@ -164,17 +165,21 @@ import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.AIncrementStmCG;
-import org.overture.codegen.cgast.statements.ALetDefStmCG;
 import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
 import org.overture.codegen.cgast.statements.ANewObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
+import org.overture.codegen.cgast.statements.APlainCallStmCG;
 import org.overture.codegen.cgast.statements.ARaiseErrorStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.ASelfObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.ASkipStmCG;
+import org.overture.codegen.cgast.statements.AStartStmCG;
+import org.overture.codegen.cgast.statements.AStartlistStmCG;
+import org.overture.codegen.cgast.statements.ASuperCallStmCG;
 import org.overture.codegen.cgast.statements.AThrowStmCG;
+import org.overture.codegen.cgast.statements.ATryStmCG;
 import org.overture.codegen.cgast.statements.AWhileStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeWrappersTypeCG;
@@ -187,7 +192,14 @@ import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AInterfaceTypeCG;
 import org.overture.codegen.cgast.types.AMapMapTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
+import org.overture.codegen.cgast.types.ANat1BasicTypeWrappersTypeCG;
+import org.overture.codegen.cgast.types.ANat1NumericBasicTypeCG;
+import org.overture.codegen.cgast.types.ANatBasicTypeWrappersTypeCG;
+import org.overture.codegen.cgast.types.ANatNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
+import org.overture.codegen.cgast.types.AQuoteTypeCG;
+import org.overture.codegen.cgast.types.ARatBasicTypeWrappersTypeCG;
+import org.overture.codegen.cgast.types.ARatNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
@@ -231,12 +243,15 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AMethodDeclCG.class, templateStructure.DECL_PATH
 				+ "Method");
 
-		nodeTemplateFileNames.put(AVarLocalDeclCG.class, templateStructure.DECL_PATH
+		nodeTemplateFileNames.put(AVarDeclCG.class, templateStructure.DECL_PATH
 				+ "LocalVar");
-
-		nodeTemplateFileNames.put(ACounterLocalDeclCG.class, templateStructure.DECL_PATH
-				+ "Counter");
 		
+		nodeTemplateFileNames.put(AThreadDeclCG.class, templateStructure.DECL_PATH 
+				+ "Thread");
+		
+		nodeTemplateFileNames.put(ATypeDeclCG.class, templateStructure.DECL_PATH
+				+ "Type");
+
 		nodeTemplateFileNames.put(ARemoteContractDeclCG.class, templateStructure.DECL_PATH
 				+ "RemoteContract");
 		
@@ -264,6 +279,9 @@ public class TemplateManager
 		
 		nodeTemplateFileNames.put(ASynchTokenInterfaceDeclCG.class, templateStructure.DECL_PATH
 				+ "SynchTokenInterface");
+		
+		nodeTemplateFileNames.put(ACatchClauseDeclCG.class, templateStructure.DECL_PATH
+				+ "CatchClause");
 		
 		// Local declarations
 
@@ -306,12 +324,24 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(AUnknownTypeCG.class, templateStructure.TYPE_PATH
 				+ "Unknown");
+		
+		nodeTemplateFileNames.put(AQuoteTypeCG.class, templateStructure.TYPE_PATH
+				+ "Quote");
 
 		// Basic type wrappers
 
 		nodeTemplateFileNames.put(AIntBasicTypeWrappersTypeCG.class, templateStructure.BASIC_TYPE_WRAPPERS_PATH
 				+ "Integer");
 
+		nodeTemplateFileNames.put(ANat1BasicTypeWrappersTypeCG.class, templateStructure.BASIC_TYPE_WRAPPERS_PATH
+				+ "Nat1");
+		
+		nodeTemplateFileNames.put(ANatBasicTypeWrappersTypeCG.class, templateStructure.BASIC_TYPE_WRAPPERS_PATH
+				+ "Nat");		
+
+		nodeTemplateFileNames.put(ARatBasicTypeWrappersTypeCG.class, templateStructure.BASIC_TYPE_WRAPPERS_PATH
+				+ "Rat");
+		
 		nodeTemplateFileNames.put(ARealBasicTypeWrappersTypeCG.class, templateStructure.BASIC_TYPE_WRAPPERS_PATH
 				+ "Real");
 
@@ -344,8 +374,19 @@ public class TemplateManager
 				+ "Token");
 
 		// Basic numeric types
+		
 		nodeTemplateFileNames.put(AIntNumericBasicTypeCG.class, templateStructure.BASIC_TYPE_PATH
 				+ "Integer");
+
+		nodeTemplateFileNames.put(ANat1NumericBasicTypeCG.class, templateStructure.BASIC_TYPE_PATH
+				+ "Nat1");
+
+		nodeTemplateFileNames.put(ANatNumericBasicTypeCG.class, templateStructure.BASIC_TYPE_PATH
+				+ "Nat");
+
+		nodeTemplateFileNames.put(ARatNumericBasicTypeCG.class, templateStructure.BASIC_TYPE_PATH
+				+ "Rat");
+		
 		nodeTemplateFileNames.put(ARealNumericBasicTypeCG.class, templateStructure.BASIC_TYPE_PATH
 				+ "Real");
 
@@ -358,9 +399,6 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(ASkipStmCG.class, templateStructure.STM_PATH
 				+ "Skip");
-
-		nodeTemplateFileNames.put(ALetDefStmCG.class, templateStructure.STM_PATH
-				+ "LetDef");
 
 		nodeTemplateFileNames.put(ALocalAssignmentStmCG.class, templateStructure.STM_PATH
 				+ "LocalAssignment");
@@ -380,9 +418,12 @@ public class TemplateManager
 		nodeTemplateFileNames.put(ACallObjectExpStmCG.class, templateStructure.STM_PATH
 				+ "CallObjectExp");
 
-		nodeTemplateFileNames.put(ACallStmCG.class, templateStructure.STM_PATH
+		nodeTemplateFileNames.put(APlainCallStmCG.class, templateStructure.STM_PATH
 				+ "Call");
 
+		nodeTemplateFileNames.put(ASuperCallStmCG.class, templateStructure.STM_PATH
+				+ "SuperCall");
+		
 		nodeTemplateFileNames.put(ANotImplementedStmCG.class, templateStructure.STM_PATH
 				+ "NotImplemented");
 
@@ -418,7 +459,15 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(ABreakStmCG.class, templateStructure.STM_PATH
 				+ "Break");
+
+		nodeTemplateFileNames.put(ATryStmCG.class, templateStructure.STM_PATH
+				+ "Try");
 		
+		nodeTemplateFileNames.put(AStartStmCG.class, templateStructure.STM_PATH 
+				+ "Start");
+		
+		nodeTemplateFileNames.put(AStartlistStmCG.class, templateStructure.STM_PATH 
+				+ "Startlist");
 		// Expressions
 
 		nodeTemplateFileNames.put(AApplyExpCG.class, templateStructure.EXP_PATH
@@ -436,6 +485,9 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AExplicitVarExpCG.class, templateStructure.EXP_PATH
 				+ "ExplicitVariable");
 
+		nodeTemplateFileNames.put(ASuperVarExpCG.class, templateStructure.EXP_PATH
+				+ "SuperVariable");
+		
 		nodeTemplateFileNames.put(AInstanceofExpCG.class, templateStructure.EXP_PATH
 				+ "InstanceOf");
 
@@ -495,7 +547,42 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(ASubSeqExpCG.class, templateStructure.EXP_PATH
 				+ "SubSeq");
+		
+		nodeTemplateFileNames.put(AHistoryExpCG.class, templateStructure.EXP_PATH 
+				+ "hisCounter");
 
+		// Is expressions
+		
+		nodeTemplateFileNames.put(ABoolIsExpCG.class, templateStructure.IS_EXP_PATH
+				+ "Bool");
+
+		nodeTemplateFileNames.put(ANatIsExpCG.class, templateStructure.IS_EXP_PATH
+				+ "Nat");
+
+		nodeTemplateFileNames.put(ANat1IsExpCG.class, templateStructure.IS_EXP_PATH
+				+ "Nat1");
+		
+		nodeTemplateFileNames.put(AIntIsExpCG.class, templateStructure.IS_EXP_PATH
+				+ "Int");
+		
+		nodeTemplateFileNames.put(ARatIsExpCG.class, templateStructure.IS_EXP_PATH
+				+ "Rat");
+		
+		nodeTemplateFileNames.put(ARealIsExpCG.class, templateStructure.IS_EXP_PATH
+				+ "Real");
+		
+		nodeTemplateFileNames.put(ACharIsExpCG.class, templateStructure.IS_EXP_PATH
+				+ "Char");
+		
+		nodeTemplateFileNames.put(ATokenIsExpCG.class, templateStructure.IS_EXP_PATH
+				+ "Token");
+		
+		nodeTemplateFileNames.put(ATupleIsExpCG.class, templateStructure.IS_EXP_PATH
+				+ "Tuple");
+		
+		nodeTemplateFileNames.put(AGeneralIsExpCG.class, templateStructure.IS_EXP_PATH
+				+ "General");
+		
 		// Quantifier expressions
 
 		nodeTemplateFileNames.put(AForAllQuantifierExpCG.class, templateStructure.QUANTIFIER_EXP_PATH
@@ -534,9 +621,12 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AIsolationUnaryExpCG.class, templateStructure.UNARY_EXP_PATH
 				+ "Isolation");
 
-		nodeTemplateFileNames.put(ASizeUnaryExpCG.class, templateStructure.UNARY_EXP_PATH
-				+ "Size");
+		nodeTemplateFileNames.put(ALenUnaryExpCG.class, templateStructure.UNARY_EXP_PATH
+				+ "Len_Card");
 
+		nodeTemplateFileNames.put(ACardUnaryExpCG.class, templateStructure.UNARY_EXP_PATH
+				+ "Len_Card");
+		
 		nodeTemplateFileNames.put(AElemsUnaryExpCG.class, templateStructure.UNARY_EXP_PATH
 				+ "Elems");
 
@@ -584,6 +674,12 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(AMapInverseUnaryExpCG.class, templateStructure.UNARY_EXP_PATH
 				+ "MapInverse");
+		
+		nodeTemplateFileNames.put(ASeqToStringUnaryExpCG.class, templateStructure.UNARY_EXP_PATH
+				+ "SeqToString");
+		
+		nodeTemplateFileNames.put(AStringToSeqUnaryExpCG.class, templateStructure.UNARY_EXP_PATH
+				+ "StringToSeq");
 
 		// Binary expressions
 

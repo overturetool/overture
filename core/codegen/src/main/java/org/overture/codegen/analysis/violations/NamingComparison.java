@@ -27,19 +27,19 @@ import java.util.List;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
-import org.overture.codegen.assistant.AssistantManager;
+import org.overture.codegen.ir.IRInfo;
 
 public abstract class NamingComparison
 {
 	protected List<String> names;
-	protected AssistantManager assistantManager;
+	protected IRInfo irInfo;
 	protected String correctionPrefix;
 
-	public NamingComparison(String[] names, AssistantManager assistantManager,
+	public NamingComparison(String[] names, IRInfo irInfo,
 			String correctionPrefix)
 	{
 		this.names = Arrays.asList(names);
-		this.assistantManager = assistantManager;
+		this.irInfo = irInfo;
 		this.correctionPrefix = correctionPrefix;
 	}
 

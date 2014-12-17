@@ -271,7 +271,17 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 					node.setType(AstFactory.newAUnknownType(name.getLocation()));
 					return node.getType();
 				}
+			} else if (def instanceof AExternalDefinition)
+			{
+				AExternalDefinition d = (AExternalDefinition) def;
+
+				if (d.getReadOnly())
+				{
+					TypeCheckerErrors.report(3248, "Cannot assign to 'ext rd' state "
+							+ name, name.getLocation(), name);
+				}
 			}
+			// else just state access in (say) an explicit operation
 
 			node.setType(question.assistantFactory.createPDefinitionAssistant().getType(def));
 			return node.getType();

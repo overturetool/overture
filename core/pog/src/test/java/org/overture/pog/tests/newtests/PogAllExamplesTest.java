@@ -5,12 +5,12 @@ import static org.junit.Assert.fail;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import org.junit.Ignore;
+import junitparams.JUnitParamsRunner;
+
 import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.node.INode;
-import org.overture.core.tests.ParamExamplesTest;
+import org.overture.core.tests.examples.ParamExamplesTest;
 import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.pub.ProofObligationGenerator;
 
@@ -21,15 +21,11 @@ import com.google.gson.reflect.TypeToken;
  * 
  * @author ldc
  */
-@Ignore
-@RunWith(Parameterized.class)
+@RunWith(JUnitParamsRunner.class)
 public class PogAllExamplesTest extends ParamExamplesTest<PogTestResult>
 {
 
-	public PogAllExamplesTest(String name, List<INode> model, String result)
-	{
-		super(name, model, result);
-	}
+
 
 	@Override
 	public PogTestResult processModel(List<INode> model)
@@ -69,6 +65,13 @@ public class PogAllExamplesTest extends ParamExamplesTest<PogTestResult>
 		{
 		}.getType();
 		return resultType;
+	}
+
+	private static String EXAMPLES_ROOT = "../../externals/examples/target/classes/";
+	
+	@Override
+	protected String getRelativeExamplesPath() {
+		return EXAMPLES_ROOT;
 	}
 
 }

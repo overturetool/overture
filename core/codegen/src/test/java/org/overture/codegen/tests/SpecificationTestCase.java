@@ -26,12 +26,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.lex.Dialect;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
+import org.overture.config.Settings;
 
 public class SpecificationTestCase extends CodeGenBaseTestCase
 {
@@ -62,7 +62,7 @@ public class SpecificationTestCase extends CodeGenBaseTestCase
 
 		try
 		{
-			data = JavaCodeGenUtil.generateJavaFromFiles(files, getIrSettings(), getJavaSettings(), Dialect.VDM_PP);
+			data = JavaCodeGenUtil.generateJavaFromFiles(files, getIrSettings(), getJavaSettings(), Settings.dialect);
 		} catch (UnsupportedModelingException e)
 		{
 			return JavaCodeGenUtil.constructUnsupportedModelingString(e);
@@ -76,12 +76,15 @@ public class SpecificationTestCase extends CodeGenBaseTestCase
 			generatedCode.append(MODULE_DELIMITER);
 		}
 
-		GeneratedModule quoteData = data.getQuoteValues();
+		List<GeneratedModule> quoteData = data.getQuoteValues();
 
-		if (quoteData != null)
+		if (quoteData != null && !quoteData.isEmpty())
 		{
-			generatedCode.append(LINE_SEPARATOR + quoteData.getContent());
-			generatedCode.append(MODULE_DELIMITER);
+			for (GeneratedModule q : quoteData)
+			{
+				generatedCode.append(LINE_SEPARATOR + q.getContent());
+				generatedCode.append(MODULE_DELIMITER);
+			}
 		}
 
 		InvalidNamesResult invalidNames = data.getInvalidNamesResult();

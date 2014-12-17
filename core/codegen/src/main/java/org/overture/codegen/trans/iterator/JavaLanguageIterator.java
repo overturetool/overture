@@ -27,7 +27,7 @@ import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
+import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
@@ -35,7 +35,7 @@ import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.TempVarPrefixes;
-import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class JavaLanguageIterator extends AbstractLanguageIterator
 {
@@ -45,7 +45,7 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 	private static final String ITERATOR_TYPE = "Iterator";
 
 	public JavaLanguageIterator(
-			TransformationAssistantCG transformationAssistant,
+			TransAssistantCG transformationAssistant,
 			ITempVarGen tempGen, TempVarPrefixes varPrefixes)
 	{
 		super(transformationAssistant, tempGen, varPrefixes);
@@ -54,7 +54,7 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 	protected String iteratorName;
 
 	@Override
-	public AVarLocalDeclCG getForLoopInit(AIdentifierVarExpCG setVar,
+	public AVarDeclCG getForLoopInit(AIdentifierVarExpCG setVar,
 			List<SPatternCG> patterns, SPatternCG pattern)
 	{
 		iteratorName = tempGen.nextVarName(varPrefixes.getIteratorNamePrefix());
@@ -63,7 +63,7 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 		STypeCG setType = setVar.getType().clone();
 		SExpCG getIteratorCall = transformationAssistant.consInstanceCall(setType, setName, iteratorType.clone(), GET_ITERATOR, null);
 
-		AVarLocalDeclCG iteratorDecl = new AVarLocalDeclCG();
+		AVarDeclCG iteratorDecl = new AVarDeclCG();
 
 		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
 		idPattern.setName(iteratorName);
@@ -93,7 +93,7 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 	}
 
 	@Override
-	public AVarLocalDeclCG getNextElementDeclared(AIdentifierVarExpCG setVar,
+	public AVarDeclCG getNextElementDeclared(AIdentifierVarExpCG setVar,
 			List<SPatternCG> patterns, SPatternCG pattern)
 			throws AnalysisException
 	{
@@ -105,8 +105,8 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 	@Override
 	public ALocalPatternAssignmentStmCG getNextElementAssigned(
 			AIdentifierVarExpCG setVar, List<SPatternCG> patterns,
-			SPatternCG pattern, AVarLocalDeclCG successVarDecl,
-			AVarLocalDeclCG nextElementDecl) throws AnalysisException
+			SPatternCG pattern, AVarDeclCG successVarDecl,
+			AVarDeclCG nextElementDecl) throws AnalysisException
 	{
 		STypeCG elementType = transformationAssistant.getSetTypeCloned(setVar).getSetOf();
 

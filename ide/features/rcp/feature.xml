@@ -2,7 +2,7 @@
 <feature
       id="org.overture.ide.features.rcp"
       label="Overture RCP"
-      version="2.1.1.qualifier">
+      version="2.1.5.qualifier">
 
    <description>
       %description
@@ -54,6 +54,10 @@
 
    <includes
          id="org.overture.ide.plugins.features.codegen"
+         version="0.0.0"/>
+
+   <includes
+         id="org.overture.ide.plugins.features.guibuilder"
          version="0.0.0"/>
 
    <includes

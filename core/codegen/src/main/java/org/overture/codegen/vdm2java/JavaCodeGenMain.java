@@ -51,10 +51,10 @@ public class JavaCodeGenMain
 
 		IRSettings irSettings = new IRSettings();
 		irSettings.setCharSeqAsString(false);
-		irSettings.setGeneratePreConds(true);
-		irSettings.setGeneratePreCondChecks(true);
-		irSettings.setGeneratePostConds(true);
-		irSettings.setGeneratePostCondChecks(true);
+		irSettings.setGeneratePreConds(false);
+		irSettings.setGeneratePreCondChecks(false);
+		irSettings.setGeneratePostConds(false);
+		irSettings.setGeneratePostCondChecks(false);
 		
 		JavaSettings javaSettings = new JavaSettings();
 		javaSettings.setDisableCloning(false);
@@ -85,7 +85,17 @@ public class JavaCodeGenMain
 					{
 						Logger.getLog().println("Could not generate class: "
 								+ generatedClass.getName() + "\n");
-						JavaCodeGenUtil.printUnsupportedNodes(generatedClass.getUnsupportedNodes());
+						
+						if(generatedClass.hasUnsupportedIrNodes())
+						{
+							JavaCodeGenUtil.printUnsupportedIrNodes(generatedClass.getUnsupportedInIr());
+						}
+						
+						if(generatedClass.hasUnsupportedTargLangNodes())
+						{
+							JavaCodeGenUtil.printUnsupportedNodes(generatedClass.getUnsupportedInTargLang());
+						}
+						
 					} else
 					{
 						Logger.getLog().println(generatedClass.getContent());
@@ -94,12 +104,16 @@ public class JavaCodeGenMain
 					Logger.getLog().println("\n");
 				}
 
-				GeneratedModule quotes = data.getQuoteValues();
+				List<GeneratedModule> quotes = data.getQuoteValues();
 
-				if (quotes != null)
+				Logger.getLog().println("Generated following quotes:");
+				
+				if (quotes != null && !quotes.isEmpty())
 				{
-					Logger.getLog().println("**********");
-					Logger.getLog().println(quotes.getContent());
+					for(GeneratedModule q : quotes)
+					{
+						Logger.getLog().println(q.getName());
+					}
 				}
 
 				InvalidNamesResult invalidName = data.getInvalidNamesResult();
@@ -133,7 +147,17 @@ public class JavaCodeGenMain
 				{
 					Logger.getLog().println("Could not generate VDM expression: "
 							+ args[1]);
-					JavaCodeGenUtil.printUnsupportedNodes(generated.getUnsupportedNodes());
+					
+					if(generated.hasUnsupportedIrNodes())
+					{
+						JavaCodeGenUtil.printUnsupportedIrNodes(generated.getUnsupportedInIr());
+					}
+					
+					if(generated.hasUnsupportedTargLangNodes())
+					{
+						JavaCodeGenUtil.printUnsupportedNodes(generated.getUnsupportedInTargLang());
+					}
+					
 				} else
 				{
 					Logger.getLog().println(generated.getContent().trim());

@@ -22,6 +22,7 @@
 package org.overture.codegen.ir;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
@@ -29,7 +30,6 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
-import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.logging.Logger;
 
@@ -49,7 +49,7 @@ public class IRGenerator
 		codeGenInfo.clearNodes();
 
 		AClassDeclCG classCg = classDef.apply(codeGenInfo.getClassVisitor(), codeGenInfo);
-		Set<NodeInfo> unsupportedNodes = copyGetUnsupportedNodes();
+		Set<VdmNodeInfo> unsupportedNodes = copyGetUnsupportedNodes();
 
 		return new IRClassDeclStatus(classDef.getName().getName(), classCg, unsupportedNodes);
 	}
@@ -59,19 +59,19 @@ public class IRGenerator
 		codeGenInfo.clearNodes();
 
 		SExpCG expCg = exp.apply(codeGenInfo.getExpVisitor(), codeGenInfo);
-		Set<NodeInfo> unsupportedNodes = copyGetUnsupportedNodes();
+		Set<VdmNodeInfo> unsupportedNodes = copyGetUnsupportedNodes();
 
 		return new IRExpStatus(expCg, unsupportedNodes);
 	}
 
-	private Set<NodeInfo> copyGetUnsupportedNodes()
+	private Set<VdmNodeInfo> copyGetUnsupportedNodes()
 	{
-		return new HashSet<NodeInfo>(codeGenInfo.getUnsupportedNodes());
+		return new HashSet<VdmNodeInfo>(codeGenInfo.getUnsupportedNodes());
 	}
 
-	public AInterfaceDeclCG getQuotes()
+	public List<String> getQuoteValues()
 	{
-		return codeGenInfo.getQuotes();
+		return codeGenInfo.getQuoteValues();
 	}
 
 	public IRInfo getIRInfo()

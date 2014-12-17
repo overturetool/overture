@@ -30,33 +30,40 @@ import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
+import org.overture.ast.definitions.AMutexSyncDefinition;
 import org.overture.ast.definitions.ANamedTraceDefinition;
+import org.overture.ast.definitions.APerSyncDefinition;
+import org.overture.ast.definitions.AThreadDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.traces.ATraceDefinitionTerm;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOperationType;
-import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ARecordInvariantType;
-import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.codegen.cgast.SDeclCG;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
-import org.overture.codegen.cgast.declarations.AEmptyDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AFuncDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.cgast.declarations.AMutexSyncDeclCG;
+import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
+import org.overture.codegen.cgast.declarations.APersyncDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
+import org.overture.codegen.cgast.declarations.AThreadDeclCG;
+import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.expressions.ALambdaExpCG;
 import org.overture.codegen.cgast.expressions.ANotImplementedExpCG;
+import org.overture.codegen.cgast.name.ATokenNameCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.ir.IRConstants;
@@ -93,21 +100,16 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 	public SDeclCG caseANamedInvariantType(ANamedInvariantType node,
 			IRInfo question) throws AnalysisException
 	{
+		String name = node.getName().getName();
 		PType type = node.getType();
-
-		if (type instanceof AUnionType)
-		{
-			AUnionType unionType = (AUnionType) type;
-
-			if (question.getTypeAssistant().isUnionOfType(unionType, AQuoteType.class))
-			{
-				// The VDM translation ignores named invariant types that are not
-				// union of quotes as they are represented as integers instead
-				return new AEmptyDeclCG();
-			}
-		}
-
-		return null; // Currently the code generator only supports the union of quotes case
+		
+		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		
+		ANamedTypeDeclCG namedTypeDecl = new ANamedTypeDeclCG();
+		namedTypeDecl.setName(name);
+		namedTypeDecl.setType(typeCg);
+		
+		return namedTypeDecl;
 	}
 
 	@Override
@@ -118,14 +120,6 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 		LinkedList<AFieldField> fields = node.getFields();
 
 		ARecordDeclCG record = new ARecordDeclCG();
-		// Set this public for now but it must be corrected as the access is specified
-		// in the type definition instead:
-		// types
-		//
-		// public R ::
-		// x : nat
-		// y : nat;
-		record.setAccess(IRConstants.PUBLIC);
 		record.setName(name.getName());
 
 		LinkedList<AFieldDeclCG> recordFields = record.getFields();
@@ -168,16 +162,15 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 			throws AnalysisException
 	{
 		String access = node.getAccess().getAccess().toString();
+		PType type = node.getType();
+		
+		SDeclCG declCg = type.apply(question.getDeclVisitor(), question);
+		
+		ATypeDeclCG typDecl = new ATypeDeclCG();
+		typDecl.setAccess(access);
+		typDecl.setDecl(declCg);
 
-		SDeclCG dec = node.getType().apply(question.getDeclVisitor(), question);
-
-		if (dec instanceof ARecordDeclCG)
-		{
-			ARecordDeclCG record = (ARecordDeclCG) dec;
-			record.setAccess(access);
-		}
-
-		return dec;
+		return typDecl;
 	}
 
 	@Override
@@ -307,6 +300,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 	{
 		String access = node.getAccess().getAccess().toString();
 		boolean isStatic = question.getTcFactory().createPDefinitionAssistant().isStatic(node);
+		boolean isAsync = question.getTcFactory().createPAccessSpecifierAssistant().isAsync(node.getAccess());
 		String operationName = node.getName().getName();
 		STypeCG type = node.getType().apply(question.getTypeVisitor(), question);
 
@@ -326,6 +320,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 
 		method.setAccess(access);
 		method.setStatic(isStatic);
+		method.setAsync(isAsync);
 		method.setMethodType(methodType);
 		method.setName(operationName);
 		method.setBody(body);
@@ -390,5 +385,57 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 		SExpCG expCg = exp.apply(question.getExpVisitor(), question);
 
 		return question.getDeclAssistant().constructField(access, name, isStatic, isFinal, typeCg, expCg);
+	}
+	
+	@Override
+	public SDeclCG caseAThreadDefinition(AThreadDefinition node, IRInfo question)
+			throws AnalysisException
+	{
+
+		PStm stm = node.getOperationDef().getBody();
+		
+		SStmCG stmCG = stm.apply(question.getStmVisitor(), question);
+		
+		AThreadDeclCG threaddcl = new AThreadDeclCG();
+	
+		threaddcl.setStm(stmCG);
+
+		
+		return threaddcl;
+	}
+	
+	
+	@Override
+	public SDeclCG caseAPerSyncDefinition(APerSyncDefinition node,
+			IRInfo question) throws AnalysisException
+	{
+		PExp guard = node.getGuard();
+		ILexNameToken opname = node.getOpname();
+
+		APersyncDeclCG predicate = new APersyncDeclCG();
+		
+		predicate.setPred(guard.apply(question.getExpVisitor(), question));
+		predicate.setOpname(opname.getName());
+		
+		
+		return predicate;
+	}
+	
+	@Override
+	public SDeclCG caseAMutexSyncDefinition(AMutexSyncDefinition node,
+			IRInfo question) throws AnalysisException
+	{
+		LinkedList<ILexNameToken> operations = node.getOperations();
+		
+		AMutexSyncDeclCG mutexdef = new AMutexSyncDeclCG();
+		
+		for(ILexNameToken opname : operations)
+		{
+			ATokenNameCG token = new ATokenNameCG();
+			token.setName(opname.getName());
+			mutexdef.getOpnames().add(token);
+		}
+		
+		return mutexdef;
 	}
 }

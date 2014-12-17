@@ -422,7 +422,7 @@ public class TraceInterpreter
 				((TraceVariableStatement) statement).typeCheck(env, NameScope.NAMESANDSTATE);
 			} else
 			{
-				interpreter.typeCheck(statement, env);
+				interpreter.typeCheck(statement.clone(), env);
 			}
 
 		}

@@ -29,7 +29,7 @@ import java.io.PrintStream;
 import java.util.List;
 import java.util.Vector;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 public class JavaCommandLineCompiler
 {
@@ -79,6 +79,7 @@ public class JavaCommandLineCompiler
 				pb.directory(dir);
 				pb.redirectErrorStream(true);
 				p = pb.start();
+				p.waitFor();
 			} else
 			{
 				p = Runtime.getRuntime().exec(arg, null, dir);

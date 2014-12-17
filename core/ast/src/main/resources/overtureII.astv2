@@ -315,16 +315,18 @@ pattern {-> package='org.overture.ast.patterns'
     |   {union} [left]:pattern [right]:pattern   
     |   {map} [maplets]:maplet.mapletPattern*
     |   {mapUnion} [left]:pattern [right]:pattern
+    |	{object} [classname]:LexNameToken [fields]:pair.namePattern* (type):type
     ;
     
 maplet {-> package='org.overture.ast.patterns'}
     =   {mapletPattern} [from]:pattern [to]:pattern [resolved]:java_Boolean
-    ;    
+    ;
     
 pair {-> package='org.overture.ast.patterns'
 	| [resolved]:java_Boolean}
     = {patternType} [pattern]:pattern (type):type
     | {patternListType} [patterns]:pattern* (type):type
+    | {namePattern} [name]:LexNameToken [pattern]:pattern
     ; 
     
 bind {-> package='org.overture.ast.patterns'

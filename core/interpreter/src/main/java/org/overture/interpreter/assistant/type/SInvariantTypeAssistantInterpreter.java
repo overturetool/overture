@@ -1,5 +1,6 @@
 package org.overture.interpreter.assistant.type;
 
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.types.SInvariantType;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
@@ -9,7 +10,7 @@ import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.values.FunctionValue;
 import org.overture.interpreter.values.Value;
 
-public class SInvariantTypeAssistantInterpreter
+public class SInvariantTypeAssistantInterpreter implements IAstAssistant
 {
 	protected static IInterpreterAssistantFactory af;
 

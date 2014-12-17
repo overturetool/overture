@@ -11,6 +11,8 @@ import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.AMapPattern;
 import org.overture.ast.patterns.AMapUnionPattern;
 import org.overture.ast.patterns.AMapletPatternMaplet;
+import org.overture.ast.patterns.ANamePatternPair;
+import org.overture.ast.patterns.AObjectPattern;
 import org.overture.ast.patterns.ARecordPattern;
 import org.overture.ast.patterns.ASeqPattern;
 import org.overture.ast.patterns.ASetPattern;
@@ -144,6 +146,20 @@ public class IdentifierPatternFinder extends
 
 		list.addAll(pattern.getLeft().apply(THIS));
 		list.addAll(pattern.getRight().apply(THIS));
+		return list;
+	}
+
+	@Override
+	public List<AIdentifierPattern> caseAObjectPattern(AObjectPattern pattern)
+			throws AnalysisException
+	{
+		List<AIdentifierPattern> list = new Vector<AIdentifierPattern>();
+
+		for (ANamePatternPair npp : pattern.getFields())
+		{
+			list.addAll(npp.getPattern().apply(THIS));
+		}
+
 		return list;
 	}
 

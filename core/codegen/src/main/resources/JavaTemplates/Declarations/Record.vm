@@ -1,4 +1,4 @@
-$node.getAccess() static class $node.getName() implements Record
+static class $node.getName() implements Record
 {
 	#foreach( $field in $node.getFields() )
 	$JavaFormat.format($field)

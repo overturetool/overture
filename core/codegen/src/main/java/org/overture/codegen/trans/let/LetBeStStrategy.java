@@ -28,8 +28,7 @@ import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
-import org.overture.codegen.cgast.declarations.SLocalDeclCG;
+import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.ALetBeStNoBindingRuntimeErrorExpCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
@@ -42,7 +41,7 @@ import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.AbstractIterationStrategy;
 import org.overture.codegen.trans.DeclarationTag;
 import org.overture.codegen.trans.TempVarPrefixes;
-import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 
 public class LetBeStStrategy extends AbstractIterationStrategy
@@ -52,9 +51,9 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 	private SSetTypeCG setType;
 
 	int count = 0;
-	private List<AVarLocalDeclCG> decls = new LinkedList<AVarLocalDeclCG>();
+	private List<AVarDeclCG> decls = new LinkedList<AVarDeclCG>();
 
-	public LetBeStStrategy(TransformationAssistantCG transformationAssistant,
+	public LetBeStStrategy(TransAssistantCG transformationAssistant,
 			SExpCG suchThat, SSetTypeCG setType,
 			ILanguageIterator langIterator, ITempVarGen tempGen,
 			TempVarPrefixes varPrefixes)
@@ -70,15 +69,15 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 	}
 
 	@Override
-	public List<? extends SLocalDeclCG> getOuterBlockDecls(
+	public List<AVarDeclCG> getOuterBlockDecls(
 			AIdentifierVarExpCG setVar, List<SPatternCG> patterns)
 			throws AnalysisException
 	{
-		List<AVarLocalDeclCG> outerBlockDecls = new LinkedList<AVarLocalDeclCG>();
+		List<AVarDeclCG> outerBlockDecls = new LinkedList<AVarDeclCG>();
 
 		for (SPatternCG id : patterns)
 		{
-			AVarLocalDeclCG decl = transformationAssistant.consIdDecl(setType, id);
+			AVarDeclCG decl = transformationAssistant.consIdDecl(setType, id);
 			decls.add(decl);
 			outerBlockDecls.add(decl);
 		}
@@ -124,11 +123,11 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 	}
 
 	@Override
-	public AVarLocalDeclCG getNextElementDeclared(AIdentifierVarExpCG setVar,
+	public AVarDeclCG getNextElementDeclared(AIdentifierVarExpCG setVar,
 			List<SPatternCG> patterns, SPatternCG pattern)
 			throws AnalysisException
 	{
-		AVarLocalDeclCG nextElementDecl = decls.get(count++);
+		AVarDeclCG nextElementDecl = decls.get(count++);
 		tagNextElementDeclared(nextElementDecl);
 		return null;
 	}

@@ -1,0 +1,166 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    private static final VDMSeq x = SeqUtil.toSeq("x" +
+            SeqUtil.toStr(SeqUtil.seq()));
+
+    public Entry() {
+    }
+
+    public static String op1() {
+        if (Utils.equals(1L, 1L)) {
+            return SeqUtil.toStr(SeqUtil.seq()) + "ab";
+        } else {
+            return "b";
+        }
+    }
+
+    public static String op2() {
+        if (Utils.equals(1L, 1L)) {
+            return SeqUtil.toStr(SeqUtil.conc(SeqUtil.seq(), SeqUtil.seq()));
+        } else {
+            return "b";
+        }
+    }
+
+    public static String op3() {
+        if (Utils.equals(1L, 1L)) {
+            return SeqUtil.toStr(SeqUtil.distConc(SeqUtil.seq(SeqUtil.seq(),
+                        SeqUtil.seq())));
+        } else {
+            return "b";
+        }
+    }
+
+    public static String op4() {
+        VDMSeq a = SeqUtil.toSeq(SeqUtil.toStr(SeqUtil.seq()) + "a");
+
+        return SeqUtil.toStr(Utils.clone(a));
+    }
+
+    public static String op5() {
+        if (Utils.equals(1L, 1L)) {
+            return SeqUtil.toStr(SeqUtil.distConc(SeqUtil.seq(SeqUtil.seq(),
+                        SeqUtil.seq(), "a")));
+        } else {
+            return "b";
+        }
+    }
+
+    public static VDMSeq op6() {
+        return SeqUtil.toSeq(SeqUtil.toStr(SeqUtil.seq()) + "a");
+    }
+
+    public static String op7() {
+        if (Utils.equals(1L, 1L)) {
+            return SeqUtil.toStr(SeqUtil.seq()) + "xy" +
+            SeqUtil.toStr(SeqUtil.seq()) + SeqUtil.toStr(SeqUtil.seq()) + "mm" +
+            SeqUtil.toStr(SeqUtil.distConc(SeqUtil.seq(SeqUtil.seq(),
+                        SeqUtil.seq())));
+        } else {
+            return "b";
+        }
+    }
+
+    public static String Run() {
+        return SeqUtil.toStr(Utils.clone(x)) + f() + op1() + op2() + op3() +
+        op5() + SeqUtil.toStr(op6()) + op7();
+    }
+
+    public static String f() {
+        if (Utils.equals(1L, 1L)) {
+            return SeqUtil.toStr(SeqUtil.seq());
+        } else {
+            return "a";
+        }
+    }
+
+    public String toString() {
+        return "Entry{" + "x = " + Utils.toString(x) + "}";
+    }
+}
+
+##########
+
+package quotes;
+
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class start {
+    private static int hc = 0;
+    private static start instance = null;
+
+    public start() {
+        if (Utils.equals(hc, 0)) {
+            hc = super.hashCode();
+        }
+    }
+
+    public static start getInstance() {
+        if (Utils.equals(instance, null)) {
+            instance = new start();
+        }
+
+        return instance;
+    }
+
+    public int hashCode() {
+        return hc;
+    }
+
+    public boolean equals(final Object obj) {
+        return obj instanceof start;
+    }
+
+    public String toString() {
+        return "<start>";
+    }
+}
+
+##########
+
+package quotes;
+
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class append {
+    private static int hc = 0;
+    private static append instance = null;
+
+    public append() {
+        if (Utils.equals(hc, 0)) {
+            hc = super.hashCode();
+        }
+    }
+
+    public static append getInstance() {
+        if (Utils.equals(instance, null)) {
+            instance = new append();
+        }
+
+        return instance;
+    }
+
+    public int hashCode() {
+        return hc;
+    }
+
+    public boolean equals(final Object obj) {
+        return obj instanceof append;
+    }
+
+    public String toString() {
+        return "<append>";
+    }
+}
+
+##########

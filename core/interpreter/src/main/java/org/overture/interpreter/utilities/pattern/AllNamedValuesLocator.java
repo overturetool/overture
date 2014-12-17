@@ -19,7 +19,9 @@ import org.overture.ast.patterns.AIntegerPattern;
 import org.overture.ast.patterns.AMapPattern;
 import org.overture.ast.patterns.AMapUnionPattern;
 import org.overture.ast.patterns.AMapletPatternMaplet;
+import org.overture.ast.patterns.ANamePatternPair;
 import org.overture.ast.patterns.ANilPattern;
+import org.overture.ast.patterns.AObjectPattern;
 import org.overture.ast.patterns.AQuotePattern;
 import org.overture.ast.patterns.ARealPattern;
 import org.overture.ast.patterns.ARecordPattern;
@@ -44,6 +46,7 @@ import org.overture.interpreter.values.NameValuePair;
 import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.NameValuePairMap;
 import org.overture.interpreter.values.NilValue;
+import org.overture.interpreter.values.ObjectValue;
 import org.overture.interpreter.values.RecordValue;
 import org.overture.interpreter.values.SeqValue;
 import org.overture.interpreter.values.SetValue;
@@ -1283,6 +1286,97 @@ public class AllNamedValuesLocator
 		if (finalResults.isEmpty())
 		{
 			VdmRuntimeError.patternFail(4127, "Cannot match set pattern", pattern.getLocation());
+		}
+
+		return finalResults;
+	}
+
+	@Override
+	public List<NameValuePairList> caseAObjectPattern(AObjectPattern pattern,
+			Newquestion question) throws AnalysisException
+	{
+		ObjectValue objval = null;
+
+		try
+		{
+			objval = question.expval.objectValue(question.ctxt);
+		}
+		catch (ValueException e)
+		{
+			VdmRuntimeError.patternFail(e, pattern.getLocation());
+		}
+
+		if (!question.ctxt.assistantFactory.getTypeComparator().isSubType(objval.getType(), pattern.getType()))
+		{
+			VdmRuntimeError.patternFail(4114, "Object type does not match pattern", pattern.getLocation());
+		}
+
+		List<List<NameValuePairList>> nvplists = new Vector<List<NameValuePairList>>();
+		int psize = pattern.getFields().size();
+		int[] counts = new int[psize];
+		int i = 0;
+
+		for (ANamePatternPair npp : pattern.getFields())
+		{
+			Value fval = objval.get(npp.getName(), false);
+			
+			if (fval == null)	// Field does not exist in this object
+			{
+				VdmRuntimeError.patternFail(4114, "Object type does not match pattern", pattern.getLocation());
+			}
+			
+			List<NameValuePairList> pnvps = af.createPPatternAssistant().getAllNamedValues(npp.getPattern(), fval, question.ctxt);
+			nvplists.add(pnvps);
+			counts[i++] = pnvps.size();
+		}
+
+		Permutor permutor = new Permutor(counts);
+		List<NameValuePairList> finalResults = new Vector<NameValuePairList>();
+
+		if (pattern.getFields().isEmpty())
+		{
+			finalResults.add(new NameValuePairList());
+			return finalResults;
+		}
+
+		while (permutor.hasNext())
+		{
+			try
+			{
+				NameValuePairMap results = new NameValuePairMap();
+				int[] selection = permutor.next();
+
+				for (int p = 0; p < psize; p++)
+				{
+					for (NameValuePair nvp : nvplists.get(p).get(selection[p]))
+					{
+						Value v = results.get(nvp.name);
+
+						if (v == null)
+						{
+							results.put(nvp);
+						}
+						else
+						{
+							if (!v.equals(nvp.value))
+							{
+								VdmRuntimeError.patternFail(4116, "Values do not match record pattern", pattern.getLocation());
+							}
+						}
+					}
+				}
+
+				finalResults.add(results.asList()); // Consistent set of nvps
+			}
+			catch (PatternMatchException pme)
+			{
+				// try next perm
+			}
+		}
+
+		if (finalResults.isEmpty())
+		{
+			VdmRuntimeError.patternFail(4116, "Values do not match record pattern", pattern.getLocation());
 		}
 
 		return finalResults;

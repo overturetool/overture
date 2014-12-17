@@ -5,7 +5,6 @@ import java.util.Set;
 
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.expressions.AVariableExp;
-import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
@@ -13,7 +12,9 @@ import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.merging.MergeVisitor;
+import org.overture.codegen.merging.TemplateStructure;
 import org.overture.codegen.trans.TempVarPrefixes;
+import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaFormat;
 
@@ -51,7 +52,7 @@ public class SystemClassDeclaration {
 		System.out.println("**********************System**********************");
 
 		IRInfo info2 = new IRInfo("cg_init");
-		JavaFormat javaFormat2 = new JavaFormat(new TempVarPrefixes(), info2);
+		JavaFormat javaFormat2 = new JavaFormat(new TempVarPrefixes(), new TemplateStructure(JavaCodeGen.JAVA_TEMPLATES_ROOT_FOLDER), info2);
 		
 		MergeVisitor printer2 = javaFormat2.getMergeVisitor();
 		StringWriter writer2 = new StringWriter();

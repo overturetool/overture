@@ -25,20 +25,23 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.codegen.assistant.AssistantManager;
+import org.overture.codegen.ir.IRInfo;
+import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 
 public class GeneratedVarComparison extends NamingComparison
 {
 	public GeneratedVarComparison(String[] names,
-			AssistantManager assistantManager, String correctionPrefix)
+			IRInfo info, String correctionPrefix)
 	{
-		super(names, assistantManager, correctionPrefix);
+		super(names, info, correctionPrefix);
 	}
 
 	@Override
 	public boolean mustHandleNameToken(ILexNameToken nameToken)
 	{
-		if (assistantManager.getTypeAssistant().getTypeDef(nameToken) != null)
+		PDefinitionAssistantTC defAssistant = irInfo.getTcFactory().createPDefinitionAssistant();
+		
+		if (irInfo.getAssistantManager().getTypeAssistant().getTypeDef(nameToken, defAssistant) != null)
 		{
 			return false;
 		}

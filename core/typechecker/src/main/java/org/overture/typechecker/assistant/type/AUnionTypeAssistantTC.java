@@ -21,12 +21,13 @@
  */
 package org.overture.typechecker.assistant.type;
 
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.assistant.type.AUnionTypeAssistant;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class AUnionTypeAssistantTC extends AUnionTypeAssistant
+public class AUnionTypeAssistantTC extends AUnionTypeAssistant implements IAstAssistant
 {
 	protected ITypeCheckerAssistantFactory af;
 
@@ -36,6 +37,7 @@ public class AUnionTypeAssistantTC extends AUnionTypeAssistant
 		this.af = af;
 	}
 
+	//FIXME: only used once. move it
 	public boolean isUnknown(AUnionType type)
 	{
 		for (PType t : type.getTypes())

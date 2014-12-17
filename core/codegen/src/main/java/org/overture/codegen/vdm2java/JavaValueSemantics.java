@@ -32,6 +32,7 @@ import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.expressions.AAddrEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AAddrNotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
+import org.overture.codegen.cgast.expressions.ACardUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AExplicitVarExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
@@ -40,18 +41,18 @@ import org.overture.codegen.cgast.expressions.AHeadUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AInSetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AIndicesUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
+import org.overture.codegen.cgast.expressions.ALenUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetProperSubsetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetSubsetBinaryExpCG;
-import org.overture.codegen.cgast.expressions.ASizeUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ATupleCompatibilityExpCG;
 import org.overture.codegen.cgast.expressions.ATupleSizeExpCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AForAllStmCG;
 import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
-import org.overture.codegen.cgast.types.AClassTypeCG;
+import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
@@ -73,6 +74,11 @@ public class JavaValueSemantics
 	public void setJavaSettings(JavaSettings javaSettings)
 	{
 		this.javaSettings = javaSettings;
+	}
+	
+	public JavaSettings getJavaSettings()
+	{
+		return javaSettings;
 	}
 
 	public boolean cloneMember(AFieldNumberExpCG exp)
@@ -180,7 +186,12 @@ public class JavaValueSemantics
 				return false;
 			}
 		}
-
+		
+		if(isPrePostArgument(exp))
+		{
+			return false;
+		}
+		
 		STypeCG type = exp.getType();
 
 		if (usesStructuralEquivalence(type))
@@ -230,6 +241,34 @@ public class JavaValueSemantics
 				|| cloneNotNeededUtilCall(parent);
 	}
 
+	private boolean isPrePostArgument(SExpCG exp)
+	{
+		INode parent = exp.parent();
+		
+		if(!(parent instanceof AApplyExpCG))
+		{
+			return false;
+		}
+		
+		AApplyExpCG applyExp = (AApplyExpCG) parent;
+		
+		Object tag = applyExp.getTag();
+		
+		if(!(tag instanceof JavaValueSemanticsTag))
+		{
+			return false;
+		}
+		
+		JavaValueSemanticsTag javaTag = (JavaValueSemanticsTag) tag;
+		
+		if(javaTag.mustClone())
+		{
+			return false;
+		}
+		
+		return applyExp.getArgs().contains(exp);
+	}
+
 	private boolean cloneNotNeededCollectionOperator(INode parent)
 	{
 		return cloneNotNeededSeqOperators(parent)
@@ -238,14 +277,15 @@ public class JavaValueSemantics
 
 	private boolean cloneNotNeededSeqOperators(INode parent)
 	{
-		return parent instanceof ASizeUnaryExpCG
+		return parent instanceof ALenUnaryExpCG
 				|| parent instanceof AIndicesUnaryExpCG
 				|| parent instanceof AHeadUnaryExpCG;
 	}
 
 	private boolean cloneNotNeededSetOperators(INode parent)
 	{
-		return parent instanceof AInSetBinaryExpCG
+		return 	parent instanceof ACardUnaryExpCG
+				|| parent instanceof AInSetBinaryExpCG
 				|| parent instanceof ASetSubsetBinaryExpCG
 				|| parent instanceof ASetProperSubsetBinaryExpCG;
 	}
@@ -267,10 +307,10 @@ public class JavaValueSemantics
 
 		AExplicitVarExpCG explicitVar = (AExplicitVarExpCG) root;
 
-		AClassTypeCG classType = explicitVar.getClassType();
+		STypeCG classType = explicitVar.getClassType();
 
-		return classType != null
-				&& classType.getName().equals(JavaFormat.UTILS_FILE);
+		return classType instanceof AExternalTypeCG
+				&& ((AExternalTypeCG) classType).getName().equals(JavaFormat.UTILS_FILE);
 	}
 
 	private boolean usesStructuralEquivalence(STypeCG type)

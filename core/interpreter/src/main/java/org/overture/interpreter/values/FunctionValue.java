@@ -704,7 +704,7 @@ public class FunctionValue extends Value
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt)
+	protected Value convertValueTo(PType to, Context ctxt, Set<PType> done)
 			throws AnalysisException
 	{
 		PTypeAssistantInterpreter assistant = ctxt.assistantFactory.createPTypeAssistant();
@@ -726,7 +726,7 @@ public class FunctionValue extends Value
 			}
 		} else
 		{
-			return super.convertValueTo(to, ctxt);
+			return super.convertValueTo(to, ctxt, done);
 		}
 	}
 

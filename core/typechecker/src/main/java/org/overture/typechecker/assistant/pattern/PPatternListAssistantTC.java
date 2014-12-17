@@ -27,16 +27,18 @@ import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
+import org.overture.ast.patterns.ANamePatternPair;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class PPatternListAssistantTC
+public class PPatternListAssistantTC implements IAstAssistant
 {
 	protected ITypeCheckerAssistantFactory af;
 
@@ -54,7 +56,17 @@ public class PPatternListAssistantTC
 		{
 			af.createPPatternAssistant().typeResolve(pattern, rootVisitor, question);
 		}
+	}
 
+	public void typeResolvePairs(List<ANamePatternPair> npplist,
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
+			TypeCheckInfo question) throws AnalysisException
+	{
+
+		for (ANamePatternPair npp : npplist)
+		{
+			af.createPPatternAssistant().typeResolve(npp.getPattern(), rootVisitor, question);
+		}
 	}
 
 	public void unResolve(List<PPattern> pp)
