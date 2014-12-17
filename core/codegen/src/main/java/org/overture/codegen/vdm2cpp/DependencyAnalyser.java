@@ -5,8 +5,10 @@ import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptorQuestion;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
+import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.expressions.AExplicitVarExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
+import org.overture.codegen.cgast.statements.APlainCallStmCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AMapMapTypeCG;
 import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
@@ -19,6 +21,7 @@ public class DependencyAnalyser extends DepthFirstAnalysisAdaptorQuestion<Depend
 	public void inAClassTypeCG(AClassTypeCG node, DependencyManager question)
 			throws AnalysisException {
 		question.addTargetLanguageType("shared_ptr", "std", "memory");
+		question.addClassType(node.getName(), node.getName());
 	}
 	@Override
 	public void inATypeNameCG(ATypeNameCG node, DependencyManager question)
@@ -34,6 +37,20 @@ public class DependencyAnalyser extends DepthFirstAnalysisAdaptorQuestion<Depend
 			// if there is no defining class then it is the class itself
 			question.addClassType(node.getName(), node.getName());
 			question.addTargetLanguageType("shared_ptr","std", "memory");
+		}
+	}
+	
+
+	@Override
+	public void inAPlainCallStmCG(APlainCallStmCG node,
+			DependencyManager question) throws AnalysisException {
+		// TODO Auto-generated method stub
+		if(node.getClassType() instanceof AClassTypeCG)
+		{
+			AClassTypeCG cls = (AClassTypeCG)node.getClassType();
+			
+			String name = cls.getName();
+			question.addClassType(name,name);
 		}
 	}
 	

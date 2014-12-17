@@ -52,14 +52,11 @@ import org.overture.codegen.ir.IRExpStatus;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.merging.MergeVisitor;
-import org.overture.codegen.merging.TemplateStructure;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
-import org.overture.codegen.vdm2java.TemplateCallableManager;
 
 public class CppCodeGen extends CodeGenBase
 {
@@ -210,10 +207,11 @@ public class CppCodeGen extends CodeGenBase
 			}
 		}
 		
-		MergeVisitor mergeVisitor = new vdm2cppGen(new TemplateStructure("."),TemplateCallableManager.constructTemplateCallables(),tan);
+		 CGNew mergeVisitor = new CGNew(tan);
 		//FunctionValueAssistant functionValue = funcValueTransformation.getFunctionValueAssistant();
 		//javaFormat.setFunctionValueAssistant(functionValue);
 		
+		 
 		for (IRClassDeclStatus status : canBeGenerated)
 		{
 			StringWriter writer = new StringWriter();
@@ -227,12 +225,12 @@ public class CppCodeGen extends CodeGenBase
 				SClassDefinition vdmClass = (SClassDefinition) status.getClassCg().getSourceNode().getVdmNode();
 				if (shouldBeGenerated(vdmClass, generator.getIRInfo().getAssistantManager().getDeclAssistant()))
 				{
-					classCg.apply(mergeVisitor, writer);
-
-					if (mergeVisitor.hasMergeErrors())
-					{
-						generated.add(new GeneratedModule(className, classCg, mergeVisitor.getMergeErrors()));
-					}
+//					classCg.apply(mergeVisitor, writer);
+//
+//					if (mergeVisitor.hasMergeErrors())
+//					{
+//						generated.add(new GeneratedModule(className, classCg, mergeVisitor.getMergeErrors()));
+//					}
 					//
 					// TODO: In the Java code generator the mergeVisitor keeps track of nodes that
 					// unsupported by the backend. These can be transferred to the generated module
@@ -241,11 +239,15 @@ public class CppCodeGen extends CodeGenBase
 					//{
 					//	generated.add(new GeneratedModule(className, new HashSet<VdmNodeInfo>(), mergeVisitor.getUnsupportedInTargLang()));
 					//}
-					else
-					{
-						String formattedJavaCode = writer.toString();
-						generated.add(new GeneratedModule(className, classCg, formattedJavaCode));
-					}
+//					else
+//					{
+//						String formattedJavaCode = writer.toString();
+//						generated.add(new GeneratedModule(className, classCg, formattedJavaCode));
+//					}
+
+					String code = classCg.apply(mergeVisitor);
+					generated.add(new GeneratedModule(className,classCg,code));
+
 				}
 				else
 				{
@@ -338,8 +340,6 @@ public class CppCodeGen extends CodeGenBase
 
 		IRExpStatus expStatus = generator.generateFrom(exp);
 
-		StringWriter writer = new StringWriter();
-
 		try
 		{
 			SExpCG expCg = expStatus.getExpCg();
@@ -347,13 +347,14 @@ public class CppCodeGen extends CodeGenBase
 			if (expStatus.canBeGenerated())
 			{
 				//javaFormat.init();
-				MergeVisitor mergeVisitor = new vdm2cppGen(null,null,null);//javaFormat.getMergeVisitor();
-				expCg.apply(mergeVisitor, writer);
+				CGNew mergeVisitor = new CGNew();//vdm2cppGen(null,null,null);//javaFormat.getMergeVisitor();
+				return new Generated(expCg.apply(mergeVisitor));
 
-				if (mergeVisitor.hasMergeErrors())
-				{
-					return new Generated(mergeVisitor.getMergeErrors());
-				}
+
+				//if (mergeVisitor.hasMergeErrors())
+				//{
+				//	return new Generated(mergeVisitor.getMergeErrors());
+				//}
 				//
 				// TODO: In the Java code generator the mergeVisitor keeps track of nodes that
 				// unsupported by the backend. These can be transferred to the generated module
@@ -362,12 +363,12 @@ public class CppCodeGen extends CodeGenBase
 				//{
 				//	generated.add(new GeneratedModule(className, new HashSet<VdmNodeInfo>(), mergeVisitor.getUnsupportedInTargLang()));
 				//}
-				else
-				{
-					String code = writer.toString();
+				//else
+				//{
+				//	String code = writer.toString();
 
-					return new Generated(code);
-				}
+				//	return new Generated(code);
+				//}
 			} else
 			{
 
