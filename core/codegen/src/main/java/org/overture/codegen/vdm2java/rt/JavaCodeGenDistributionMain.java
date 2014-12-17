@@ -55,6 +55,7 @@ public class JavaCodeGenDistributionMain {
 
 		IRSettings irSettings = new IRSettings();
 		irSettings.setCharSeqAsString(false);
+		irSettings.setGenerateConc(true);
 
 		JavaSettings javaSettings = new JavaSettings();
 		javaSettings.setDisableCloning(false);
