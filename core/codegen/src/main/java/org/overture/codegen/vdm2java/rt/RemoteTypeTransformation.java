@@ -44,6 +44,10 @@ public class RemoteTypeTransformation extends DepthFirstAnalysisAdaptor{
 			return;
 		}
 		
+		if(node.getName().equals("sentinel")) {
+			return;
+		}
+		
 		node.setName(node.getName() + "_i");
 	}
 	

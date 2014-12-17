@@ -8,6 +8,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARemoteContractDeclCG;
+import org.overture.codegen.ir.IRGeneratedTag;
 
 /*
  * This set up the remote contracts for the generated Java code
@@ -46,9 +47,9 @@ public class RemoteContractGenerator {
 				// Skip the auto generated toString() method
 				if(methodSignature.getName().equals("toString")){
 				}
-				else if(methodSignature.getAccess().equals("public")){ // if public add to remote contract
+				else if(methodSignature.getAccess().equals("public") && !isIRGenerated(methodSignature)){ // if public add to remote contract
 
-					if(methodSignature.getIsConstructor()) continue;
+					if(methodSignature.getIsConstructor() != null && methodSignature.getIsConstructor()) continue;
 					methodSignature.setIsRemote(true);
 					methodSignature.setAbstract(false);
 					methodSignature.setBody(null);
@@ -59,5 +60,10 @@ public class RemoteContractGenerator {
 			remoteContracts.add(remoteContract);
 		}
 		return remoteContracts;
+	}
+	
+	private boolean isIRGenerated(AMethodDeclCG method)
+	{
+		return method.getTag() instanceof IRGeneratedTag;
 	}
 }

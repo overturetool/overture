@@ -180,6 +180,7 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 		evaluatePPmethod.setAccess(JavaFormat.JAVA_PUBLIC);
 		evaluatePPmethod.setName("evaluatePP");
 		evaluatePPmethod.setMethodType(methType);
+		evaluatePPmethod.setTag(new IRGeneratedTag(null));
 		
 		evaluatePPmethod.getFormalParams().add(fnrloc);
 		
