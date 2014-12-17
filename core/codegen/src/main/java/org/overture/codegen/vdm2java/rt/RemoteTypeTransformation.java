@@ -8,6 +8,10 @@ import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 
 // Here the DepthFirstAnalysisAdaptor for the codegen tree (IR) is applied
+/*
+ * This is the transformation of the ClassTypeCG node in order to
+ * transform it name to its corresponding interface name
+ */
 public class RemoteTypeTransformation extends DepthFirstAnalysisAdaptor{
 
 	private String systemClassName;
@@ -20,20 +24,22 @@ public class RemoteTypeTransformation extends DepthFirstAnalysisAdaptor{
 
 	@Override
 	public void caseAClassTypeCG(AClassTypeCG node) throws AnalysisException {
-		// TODO Auto-generated method stub
-		//super.caseAClassTypeCG(node);	
+
 		//Change the name to the interface name
 		
+		// Do not transform if the name is the system class
 		if(node.getName().equals(systemClassName))
 		{
 			return;
 		}
 		
+		// Do not transform if the name is attached to a new expression
 		if(node.parent() instanceof ANewExpCG)
 		{
 			return;
 		}
 		
+		// Do not transform if it is a library name
 		if(info.getDeclAssistant().isLibraryName(node.getName()))
 		{
 			return;

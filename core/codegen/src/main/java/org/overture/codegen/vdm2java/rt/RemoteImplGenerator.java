@@ -10,6 +10,14 @@ import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARemoteContractImplDeclCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 
+/*
+ * This sets up the remote contract implementation
+ * with the relevant parameters and methods described in
+ * the main report.
+ * 
+ * Sets up the ARemoteContractImplDeclCG node
+ */
+
 public class RemoteImplGenerator {
 
 	private List<AClassDeclCG> irClasses;
@@ -48,14 +56,6 @@ public class RemoteImplGenerator {
 					method.setIsRemote(false);
 					publicMethods.add(method);
 				}
-				//									if(method.getAccess().equals("public") && method.getIsConstructor() != null && !method.getIsConstructor()){
-				//				if(method.getName().equals(classCg.getName())){
-				//					continue;
-				//				}
-				//				else if(method.getAccess().equals("public")){
-				//					method.setIsRemote(true);
-				//					publicMethods.add(method);
-				//				}	
 			}
 
 			contractImpl.setMethods(publicMethods);

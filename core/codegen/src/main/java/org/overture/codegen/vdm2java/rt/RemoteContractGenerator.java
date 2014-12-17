@@ -16,6 +16,15 @@ import org.overture.codegen.cgast.declarations.ARemoteContractDeclCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.ir.IRInfo;
 
+/*
+ * This set up the remote contracts for the generated Java code
+ * according to the description in the main report
+ * Here only signatures of methods are set up, because it is a
+ * remote contract
+ * 
+ * Sets up the ARemoteContractDeclCG node
+ */
+
 public class RemoteContractGenerator {
 
 	private List<AClassDeclCG> irClasses;
@@ -35,15 +44,16 @@ public class RemoteContractGenerator {
 
 			ARemoteContractDeclCG remoteContract = new ARemoteContractDeclCG();
 
-			remoteContract.setName(currentName + "_i");
+			remoteContract.setName(currentName + "_i"); // transform name
 
 			for(AMethodDeclCG method : classCg.getMethods()){
 
 				AMethodDeclCG methodSignature = method.clone();
 
+				// Skip the auto generated toString() method
 				if(methodSignature.getName().equals("toString")){
 				}
-				else if(methodSignature.getAccess().equals("public")){
+				else if(methodSignature.getAccess().equals("public")){ // if public add to remote contract
 
 					if(methodSignature.getIsConstructor()) continue;
 					methodSignature.setIsRemote(true);

@@ -11,6 +11,13 @@ import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.AVariableExp;
 
+/*
+ * This applies the visitor developed inside "NodeSystem.java"
+ * in order to extract relevant information about the
+ * connection map, distribution map, number of CPUs and number
+ * of deployed objects
+ */
+
 public class DistributionMapping {
 
 	private List<SClassDefinition> allClasses;

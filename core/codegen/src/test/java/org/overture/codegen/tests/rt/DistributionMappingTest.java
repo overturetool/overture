@@ -23,6 +23,15 @@ import org.overture.parser.syntax.ParserException;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
+/*
+ * This is a test of the VDM AST visitor which extracts the connection map,
+ * distribution map, number of CPUs and number of deployed objects
+ * The VDM AST is the backbone in order to generate the correct 
+ * remote contracts, implementation, local system class and the
+ * look up of correct remote and local objects. For this reason, it needs to
+ * be tested.
+ */
+
 public class DistributionMappingTest {
 
 	public static final String ROOT = "src" + File.separatorChar + "test"
@@ -36,6 +45,7 @@ public class DistributionMappingTest {
 		Settings.release = Release.VDM_10;
 	}
 	
+	// Test for no distribution, boundary condition
 	@Test
 	public void testNoDistribution() {
 
@@ -50,6 +60,7 @@ public class DistributionMappingTest {
 		Assert.assertTrue("Expected no deployed classes to be found", distMapping.getDeployedClasses().isEmpty());
 	}
 	
+	// Test for null arguments, boundary condition
 	@Test
 	public void testNullArgForDistributionMapping() throws Exception {
 		
@@ -68,16 +79,19 @@ public class DistributionMappingTest {
 		DistributionMapping distMapping = new DistributionMapping(classes);
 		distMapping.run();
 		
-		makeBasicAssertions(distMapping, "SimpleSys", 2);
+		// Check correct system name, number of deployed objects, and number of CPUs 
+		makeBasicAssertions(distMapping, "SimpleSys", 2, 2);
 		
 		Map<String, Set<AVariableExp>> deploymentMap = distMapping.getCpuToDeployedObject();
 		
-		
+		// Test deployment map
 		checkNamesExist(deploymentMap, "cpu1", new String[]{"a1"});
 		checkNamesExist(deploymentMap, "cpu2", new String[]{"a2"});
 		
+		// Test connection map
 		Map<String, Set<String>> connectionMap = distMapping.cpuToConnectedCPUs();
 		checkConnectionMap(connectionMap, "cpu1", new String[]{"cpu2"});
+		checkConnectionMap(connectionMap, "cpu2", new String[]{"cpu1"});
 		
 	}
 	
@@ -89,14 +103,19 @@ public class DistributionMappingTest {
 		DistributionMapping distMapping = new DistributionMapping(classes);
 		distMapping.run();
 		
-		makeBasicAssertions(distMapping, "MySys", 4);
+		// Test correct system name, number of deployed objects, and number of CPUs 
+		makeBasicAssertions(distMapping, "MySys", 4 , 2);
 		
 		Map<String, Set<AVariableExp>> deploymentMap = distMapping.getCpuToDeployedObject();
 		
-		
+		// Test deployment map
 		checkNamesExist(deploymentMap, "cpu1", new String[]{"x1", "x2"});
 		checkNamesExist(deploymentMap, "cpu2", new String[]{"y1", "y2"});
 
+		// Test connection map
+		Map<String, Set<String>> connectionMap = distMapping.cpuToConnectedCPUs();
+		checkConnectionMap(connectionMap, "cpu1", new String[]{"cpu2"});
+		checkConnectionMap(connectionMap, "cpu2", new String[]{"cpu1"});
 	}
 
 	@Test
@@ -107,27 +126,36 @@ public class DistributionMappingTest {
 		DistributionMapping distMapping = new DistributionMapping(classes);
 		distMapping.run();
 		
-		makeBasicAssertions(distMapping, "DistSys", 4);
+		// Test correct system name, number of deployed objects, and number of CPUs 
+		makeBasicAssertions(distMapping, "DistSys", 4, 4);
 		
 		Map<String, Set<AVariableExp>> deploymentMap = distMapping.getCpuToDeployedObject();
 		
+		// Test deployment map
 		checkNamesExist(deploymentMap, "cpu1", new String[]{"a1"});
 		checkNamesExist(deploymentMap, "cpu2", new String[]{"a2"});
 		checkNamesExist(deploymentMap, "cpu3", new String[]{"a3"});
 		checkNamesExist(deploymentMap, "cpu4", new String[]{"a4"});
 		
-//		Map<String, Set<String>> connectionMap = distMapping.cpuToConnectedCPUs();
-//		checkConnectionMap(connectionMap, "cpu1", new String[]{"a1"});
-
+		// Test connection map
+		Map<String, Set<String>> connectionMap = distMapping.cpuToConnectedCPUs();
+		checkConnectionMap(connectionMap, "cpu1", new String[]{"cpu2", "cpu3", "cpu4"});
+		checkConnectionMap(connectionMap, "cpu2", new String[]{"cpu1", "cpu3"});
+		checkConnectionMap(connectionMap, "cpu3", new String[]{"cpu1", "cpu2"});
+		checkConnectionMap(connectionMap, "cpu2", new String[]{"cpu1", "cpu3"});
 	}
 	
 	
-	// Method used for testing
-	private void makeBasicAssertions(DistributionMapping distMapping, String superName, int deployedObjectCount) {
+	// Methods used for testing
+	// Method to test correct system name, number of deployed objects and number of CPUs in the system
+	private void makeBasicAssertions(DistributionMapping distMapping, String superName, int deployedObjectCount, int CPUnum) {
 		Assert.assertTrue("Expected system class name to be SimpleSys", distMapping.getSystemName().equals(superName));
-		Assert.assertTrue("Expected two deployed objects", distMapping.getDeployedObjects().size() == deployedObjectCount);
+		Assert.assertTrue("Expected: ", distMapping.getDeployedObjects().size() == deployedObjectCount);
+		Assert.assertTrue("Expected: ", distMapping.cpuToConnectedCPUs().size() == CPUnum);
+
 	}
 
+	// Type check a file
 	private List<SClassDefinition> readClasses(String fileName) throws ParserException,
 			LexException {
 		File modelFile = new File(ROOT, fileName);
@@ -140,6 +168,7 @@ public class DistributionMappingTest {
 		return classes;
 	}
 	
+	// Method for testing the deployment map
 	private void checkNamesExist(Map<String, Set<AVariableExp>> deploymentMap, String cpuName, String[] allowedNames)
 	{
 		List<String> allowedNamesList = Arrays.asList(allowedNames);
@@ -153,6 +182,7 @@ public class DistributionMappingTest {
 		}
 	}
 	
+	// Method for testing the connection map
 	private void checkConnectionMap(Map<String, Set<String>> connectionMap, String cpuName, String[] allowedNames)
 	{
 		List<String> allowedNamesList = Arrays.asList(allowedNames);
@@ -166,11 +196,4 @@ public class DistributionMappingTest {
 			Assert.assertTrue(errorMsg + name, allowedNamesList.contains(name));
 		}
 	}
-
-	
-	
-//	private int fac(int n) {
-//
-//		return n == 0 ? 1 : fac(n-1)*n;
-//	}
 }

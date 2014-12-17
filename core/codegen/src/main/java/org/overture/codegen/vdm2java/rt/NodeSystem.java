@@ -32,7 +32,12 @@ import org.overture.ast.statements.PObjectDesignator;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.PType;
 
-// 
+/*
+ * This is the visitor of applied in order to analyse
+ * the VDM AST, which extracts the connection map, distribution map, 
+ * number of CPUs and number of deployed objects
+ */
+
 public class NodeSystem extends DepthFirstAnalysisAdaptor {
 	
 	String SystemName = new String();
@@ -56,7 +61,7 @@ public class NodeSystem extends DepthFirstAnalysisAdaptor {
 	// Tracks the number of total objects deployed in the distributed system
 	public int DeployedObjCounter = 0;
 	
-	// Method to print the architecture of the VDM-RT model analysed
+	// Method to print the architecture of the VDM-RT model analyzed
 	public void printArch() {
 		for (String key : cpuToDeployedObjects.keySet()) {
 			System.out.println("The CPU " + key + " deploys objects "
@@ -68,21 +73,6 @@ public class NodeSystem extends DepthFirstAnalysisAdaptor {
 			System.out.println("The class: " + key.getName()
 					+ " has the following public operations " + deployedClassesToPubOp2.get(key));
 		}
-		// TODO: Maybe delete this
-		
-		// for(String key : map6.keySet()){
-		// for(AClassClassDefinition key2 : map6.get(key)){
-		// System.out.println("The CPU " + key + " deploys the class: " +
-		// key2.getType() + " with the following operaions: ");
-		//
-		// // TODO:Husk der skal laves du rigtige tjek...
-		// for(AExplicitOperationDefinition key3 : map5.get(key2)){
-		// System.out.println(key3.getName());
-		// }
-		// }
-		// //System.out.println("The CPU: " + key + " deploys the class(es): " +
-		// map6.get(key));
-		// }
 
 	}
 
@@ -90,23 +80,8 @@ public class NodeSystem extends DepthFirstAnalysisAdaptor {
 		return SystemName;
 	}
 	
-	// TODO: Maybe remove these methods, not needed??
-	public void CPUdeployFuncion() {
-
-	}
-
-	public void printInstancePublicOp() {
-		// for(String key : map3.keySet()){
-		// Set<AExplicitOperationDefinition> yu = map3.get(key);
-		// System.out.println("The instance " + key +
-		// " has the following public functions: ");
-		//
-		// for(AExplicitOperationDefinition funcTogen : map3.get(key)){
-		// System.out.println(funcTogen.getName().toString());
-		// }
-		// }
-	}
-
+	// This analyses the System definition, an extracts
+	// the need information about the architecture
 	@Override
 	public void caseACallObjectStm(ACallObjectStm node)
 			throws AnalysisException {
@@ -212,19 +187,14 @@ public class NodeSystem extends DepthFirstAnalysisAdaptor {
 		}
 	}
 
+	// This analyses the BUS structur in order to get the
+	// connection map
 	@Override
 	public void caseANewExp(ANewExp node) throws AnalysisException {
-		// TODO Auto-generated method stub
-		// System.out.println("A CPU def and node is: " + node.getClassdef());
+
 
 		// Identify when a new BUS is created.
 		if (node.getClassdef() instanceof ABusClassDefinition) {
-			// System.out.println("It is a BUS: " + node.getType());
-			// System.out.println("  The protocols is : " +
-			// node.getArgs().get(0));
-			// System.out.println("  The speed is : " + node.getArgs().get(1));
-			// System.out.println("  Connecting the following CPUs : " +
-			// node.getArgs().get(2));
 			node.getArgs().get(2).apply(this);
 		}
 	}

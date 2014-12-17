@@ -37,11 +37,18 @@ import org.overture.config.Settings;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 
+/* This is the entry method of the code generator for VDM-RT code generator
+ * It takes a list of VDM-RT files, and generates Java code
+ * according to the description in the report for each CPU
+ */
+
 public class JavaCodeGenDistributionMain {
 
 	public static void main(String[] args) throws AnalysisException,
 	org.overture.codegen.cgast.analysis.AnalysisException, IOException {
 
+		// Configuration parameters related to the VDM++-to-Java
+		// code generator
 		Settings.release = Release.VDM_10;
 		Dialect dialect = Dialect.VDM_RT;
 
@@ -51,12 +58,15 @@ public class JavaCodeGenDistributionMain {
 		JavaSettings javaSettings = new JavaSettings();
 		javaSettings.setDisableCloning(false);
 
+		// Here the input VDM-RT files are read
 		List<File> files = Util.getFilesFromPaths(args);
 
 		List<File> libFiles = GeneralUtils.getFiles(new File(
 				"src\\test\\resources\\lib"));
 		files.addAll(libFiles);
 
+		// This parts generates the sequential part of the VDM-RT model
+		// using the existing VDM++ code generator
 		GeneratedData data;
 		try {
 			data = JavaCodeGenUtil.generateJavaFromFiles(files, irSettings,
@@ -107,6 +117,10 @@ public class JavaCodeGenDistributionMain {
 					.typeCheckRt(files);
 
 			//**********************************************************************//
+			
+			// Now the architecture of the VDM-RT model is analysed
+			// in order to extract the Connection map, Distribution map,
+			// number of deployed objects and number of CPUs
 			DistributionMapping mapping = new DistributionMapping(result.result);
 			mapping.run();
 
@@ -115,14 +129,8 @@ public class JavaCodeGenDistributionMain {
 			Set<AClassClassDefinition> deployedClasses = mapping
 					.getDeployedClasses();
 
-
 			Set<AVariableExp> deployedObjects = mapping.getDeployedObjects();
 
-			//SystemClassDeclaration systemClassDecl = new SystemClassDeclaration(deployedObjects);
-
-			//AClassDeclCG systemClass = systemClassDecl.Run();
-
-			// TODO: Do nicely
 			IRInfo info = new IRInfo("cg_init");
 			JavaFormat javaFormat = new JavaFormat(new TempVarPrefixes(), info);
 
@@ -130,8 +138,6 @@ public class JavaCodeGenDistributionMain {
 			
 			//******Transform the ir_classes*********/////
 			
-			//FIXME: Look the name up the right place
-//			String systemClassName = "Dist";
 			String systemClassName = mapping.getSystemName();
 			RemoteTypeTransformation remoteTypeTrans = new RemoteTypeTransformation(systemClassName, info);
 			for ( AClassDeclCG irClass : irClasses) {
@@ -139,6 +145,7 @@ public class JavaCodeGenDistributionMain {
 			}
 			
 			//**********************************************************************//
+			// Generate the remote contracts
 			RemoteContractGenerator contractGenerator = new RemoteContractGenerator(
 					irClasses);
 			Set<ARemoteContractDeclCG> remoteContracts = contractGenerator
@@ -156,7 +163,7 @@ public class JavaCodeGenDistributionMain {
 						.toString()));
 			}
 
-
+			// Generate the remote contract implementations
 			RemoteImplGenerator implsGen = new RemoteImplGenerator(irClasses);
 			List<ARemoteContractImplDeclCG> remoteImpls = implsGen.run();
 
@@ -178,6 +185,7 @@ public class JavaCodeGenDistributionMain {
 
 			Map<String, Set<AClassClassDefinition>> cpuToDeployedClasses = mapping.cpuToDeployedClasses();
 
+			// Distributed the generate remote contracts and their implementation
 			RemoteContractDistribution RemConDist = new RemoteContractDistribution(remoteContracts, cpuToDeployedClasses, cpuToConnectedCPUs, remoteImpls);
 
 			RemConDist.run();
@@ -192,7 +200,8 @@ public class JavaCodeGenDistributionMain {
 
 
 			Map<String, AClassDeclCG> cpuToSystemDecl = cpuDepGenerator.getcpuToSystemDecl();
-			
+			// Distribute the CPU deployment for each CPU
+			// Here just a fix output path is chosen in order to test the generate Java code
 			for (ACpuDeploymentDeclCG impl : cpuDeps) {
 				StringWriter writer = new StringWriter();
 				impl.apply(printer, writer);
@@ -200,6 +209,7 @@ public class JavaCodeGenDistributionMain {
 				System.out.println(JavaCodeGenUtil.formatJavaCode(writer
 						.toString()));
 
+				// The CPU entry method
 				File file = new File("/Users/Miran/Documents/files/" + impl.getCpuName() + "/" + impl.getCpuName()  + ".java");
 				BufferedWriter output = new BufferedWriter(new FileWriter(file));
 				output.write(JavaCodeGenUtil.formatJavaCode(writer
@@ -215,6 +225,7 @@ public class JavaCodeGenDistributionMain {
 				System.out.println(JavaCodeGenUtil.formatJavaCode(writer2
 						.toString()));
 
+				// The unique system class for each CPU
 				File file2 = new File("/Users/Miran/Documents/files/" + impl.getCpuName() + "/" + systemClass.getName()  + ".java");
 				BufferedWriter output2 = new BufferedWriter(new FileWriter(file2));
 				output2.write(JavaCodeGenUtil.formatJavaCode(writer2
@@ -222,35 +233,6 @@ public class JavaCodeGenDistributionMain {
 				output2.close();
 				
 			}
-
-//			for (ACpuDeploymentDeclCG impl : cpuDeps) {
-//				StringWriter writer = new StringWriter();
-//				systemClass.apply(printer, writer);
-//
-//				System.out.println(JavaCodeGenUtil.formatJavaCode(writer
-//						.toString()));
-//
-//				File file = new File("/Users/Miran/Documents/files/" + impl.getCpuName() + "/" + systemClass.getName()  + ".java");
-//				BufferedWriter output = new BufferedWriter(new FileWriter(file));
-//				output.write(JavaCodeGenUtil.formatJavaCode(writer
-//						.toString()));
-//				output.close();
-//			}
-			
-			
-			
-			
-			//			for(String key : CpuToDeployedObject.keySet()){
-			//				Set<AVariableExp> deployedObj = CpuToDeployedObject.get(key);
-			//				for(AVariableExp dep: deployedObj){
-			//					AVariableExp cu = dep;
-			//
-			//				}
-			//				
-			//				//CPUdeploymentGenerator 
-			//			}
-
-			//System.out.println();
 		} catch (UnsupportedModelingException e) {
 			Logger.getLog().println(
 					"Could not generate model: " + e.getMessage());

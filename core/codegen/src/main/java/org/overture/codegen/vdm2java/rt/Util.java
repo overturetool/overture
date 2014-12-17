@@ -11,8 +11,14 @@ import org.overture.codegen.cgast.SDeclCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.utils.GeneratedModule;
 
+/*
+ * This is a utility class in order to 
+ * encapsulate reusable methods
+ */
+
 public class Util {
 
+	// Get files from their whole path names
 	public static List<File> getFilesFromPaths(String[] args) {
 		List<File> files = new LinkedList<File>();
 
@@ -24,7 +30,7 @@ public class Util {
 		return files;
 	}
 	
-	
+	// Get classes
 	public static List<AClassDeclCG> getClasses(
 			List<GeneratedModule> generatedModules) {
 		List<AClassDeclCG> irClasses = new LinkedList<AClassDeclCG>();
@@ -39,6 +45,7 @@ public class Util {
 		return irClasses;
 	}
 	
+	// Get public operations
 	public static List<AExplicitOperationDefinition> getPublicOperations(List<PDefinition> defs)
 	{
 		List<AExplicitOperationDefinition> publicOperations = new LinkedList<AExplicitOperationDefinition>();

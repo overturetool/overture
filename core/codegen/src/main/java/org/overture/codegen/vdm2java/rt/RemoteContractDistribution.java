@@ -24,6 +24,15 @@ import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaFormat;
 
+/*
+ * In this the ARMIServerDeclCG node is set up
+ * in order to code generate the global registration service.
+ * In addition, the generate remote contracts and remote contract 
+ * implementation are printed to files inside the relevant CPUs
+ * in order to test the code. For this reason, the path is currently 
+ * fix to a local path.
+ */
+
 public class RemoteContractDistribution {
 	
 	private Map<String, Set<String>> cpuToConnectedCPUs;
@@ -68,6 +77,7 @@ public class RemoteContractDistribution {
 				.toString()));
 		output_s.close();
 		
+		// Print remote contracts to the RMI server
 		for (ARemoteContractDeclCG contract : remoteContracts) {
 				StringWriter writer_i = new StringWriter();
 				contract.apply(printer, writer_i);
@@ -93,7 +103,8 @@ public class RemoteContractDistribution {
 		
 		//System.out.println("**********************Remote contracts**********************");
 
-		// Create a directory for every cpu
+		// Create a directory for every CPU, and place relevant remote contracts and
+		// remote contract implementations inside
 
 		for(String cpu : cpuToDeployedClasses.keySet()){
 			File theDir = new File("/Users/Miran/Documents/files/" + cpu);
@@ -131,8 +142,7 @@ public class RemoteContractDistribution {
 						.toString()));
 				output_synch_i.close();
 				
-				for (ARemoteContractDeclCG contract : remoteContracts) {
-					//if(contract.getName().equals(clas.getName().toString() + "_i")){
+				for (ARemoteContractDeclCG contract : remoteContracts) { // print remote contract to files
 						StringWriter writer = new StringWriter();
 						contract.apply(printer, writer);
 
@@ -141,19 +151,10 @@ public class RemoteContractDistribution {
 						output.write(JavaCodeGenUtil.formatJavaCode(writer
 								.toString()));
 						output.close();
-						
-//						for(String conectedCpu : cpuToConnectedCPUs.get(cpu)){
-//							File file2 = new File("/Users/Miran/Documents/files/" + conectedCpu + "/" + contract.getName() + ".java");
-//							BufferedWriter output2 = new BufferedWriter(new FileWriter(file2));
-//							output2.write(JavaCodeGenUtil.formatJavaCode(writer
-//									.toString()));
-//							output2.close();
-//						}
-					//}
 				}
 
-				for (ARemoteContractImplDeclCG impl : remoteImpls) {
-					//if(impl.getName().equals(clas.getName().toString())){
+				for (ARemoteContractImplDeclCG impl : remoteImpls) { // print remote contract implementation to files
+					
 						StringWriter writer = new StringWriter();
 						impl.apply(printer, writer);
 
@@ -162,14 +163,9 @@ public class RemoteContractDistribution {
 						output.write(JavaCodeGenUtil.formatJavaCode(writer
 								.toString()));
 						output.close();
-					//}
 				}
 			}
 		}
-		//        File file = new File("/Users/Miran/Documents/files/cpu/example.java");
-		//        BufferedWriter output = new BufferedWriter(new FileWriter(file));
-		//        output.write("Hell");
-		//        output.close();
 
 	}
 

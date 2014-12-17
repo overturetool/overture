@@ -20,6 +20,15 @@ import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.ir.IRInfo;
 
+/*
+ * This sets up the relevant entry method for each CPU
+ * In addition, its sets up parameters relevant for the 
+ * initialisation for each CPU, with the number of deployed objects
+ * and number of CPUs in the system.
+ * 
+ * Sets up the node called ACpuDeploymentDeclCG
+ */
+
 public class CPUdeploymentGenerator {
 
 
