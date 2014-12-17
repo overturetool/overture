@@ -39,6 +39,7 @@ import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
+import org.overture.codegen.cgast.declarations.ARemoteContractImplDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
@@ -889,6 +890,11 @@ public class JavaFormat
 	
 	public boolean isInnerClass(AClassDeclCG node)
 	{
+		return node.parent() != null && (node.parent().getAncestor(AClassDeclCG.class) != null ||node.parent().getAncestor(ARemoteContractImplDeclCG.class) != null);
+	}
+	
+	public boolean isInnerClass(ARemoteContractImplDeclCG node)
+	{
 		return node.parent() != null && node.parent().getAncestor(AClassDeclCG.class) != null;
 	}
 	
@@ -896,6 +902,10 @@ public class JavaFormat
 	{
 		return classCg != null && "quotes".equals(classCg.getPackage());
 	}
+	
+//	public static boolean isQuote(ARemoteContractImplDeclCG classCg){
+//		return classCg != null && "quotes".equals(classCg.getPackage());
+//	}
 
 	public String formatStartStmExp(AStartStmCG node) throws AnalysisException
 	{
