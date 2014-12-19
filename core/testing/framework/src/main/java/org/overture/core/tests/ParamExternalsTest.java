@@ -66,7 +66,7 @@ public abstract class ParamExternalsTest<R> extends ParamFineGrainTest<R>
 	 * external inputs. <br>
 	 * <br>
 	 * This method collects <b>all</b> sources in the provided path. If you with to do some kind of preliminary
-	 * filtering, you must override it.
+	 * filtering, you must call it from within your own provider.
 	 * 
 	 * @return a collection of test input and result paths in the form of {filename ,filepath, resultpath} arrays
 	 */
