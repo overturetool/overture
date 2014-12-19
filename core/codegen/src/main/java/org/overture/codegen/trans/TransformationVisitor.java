@@ -701,6 +701,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		idPattern.setName(casesExpResultName);
 
 		AVarDeclCG resultVarDecl = new AVarDeclCG();
+		resultVarDecl.setFinal(false);
 		resultVarDecl.setPattern(idPattern);
 		resultVarDecl.setType(node.getType().clone());
 		resultVarDecl.setExp(new AUndefinedExpCG());

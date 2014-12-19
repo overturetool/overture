@@ -101,6 +101,7 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 		emptyCollection.setType(compType.clone());
 
 		AVarDeclCG compResultInit = new AVarDeclCG();
+		compResultInit.setFinal(false);
 		compResultInit.setType(compType.clone());
 		compResultInit.setPattern(idPattern.clone());
 		compResultInit.setExp(emptyCollection);

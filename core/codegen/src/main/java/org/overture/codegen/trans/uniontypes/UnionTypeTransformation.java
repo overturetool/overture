@@ -327,6 +327,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 
 		String applyResultName = info.getTempVarNameGen().nextVarName(applyExpResulPrefix);
 		AVarDeclCG resultDecl = new AVarDeclCG();
+		resultDecl.setFinal(false);
 		resultDecl.setSourceNode(node.getSourceNode());
 		resultDecl.setExp(new ANullExpCG());
 		resultDecl.setType(resultType);
@@ -348,6 +349,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		{
 			String objName = info.getTempVarNameGen().nextVarName(objExpPrefix);
 			AVarDeclCG objectDecl = new AVarDeclCG();
+			objectDecl.setFinal(false);
 			objectDecl.setExp(subject.clone());
 			objectDecl.setType(subject.getType().clone());
 			AIdentifierPatternCG objectVarId = new AIdentifierPatternCG();
@@ -718,6 +720,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		{
 			String callStmObjName = info.getTempVarNameGen().nextVarName(callStmObjPrefix);
 			AVarDeclCG objDecl = new AVarDeclCG();
+			objDecl.setFinal(false);
 			objDecl.setSourceNode(node.getSourceNode());
 			objDecl.setExp(objExp.clone());
 			objDecl.setType(objType.clone());

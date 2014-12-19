@@ -79,6 +79,7 @@ public class JavaFormatAssistant
 		// Construct a local var in a statement: RecordType varName = ((RecordType) formalParamName);
 
 		AVarDeclCG localVar = new AVarDeclCG();
+		localVar.setFinal(false);
 
 		ARecordTypeCG recordType = new ARecordTypeCG();
 		recordType.setName(consTypeName(record));

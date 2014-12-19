@@ -57,6 +57,7 @@ public class Exists1QuantifierStrategy extends QuantifierBaseStrategy
 	{
 		AVarDeclCG counter = new AVarDeclCG();
 
+		counter.setFinal(false);
 		counter.setType(counterData.getType().clone());
 		
 		AIdentifierPatternCG name = new AIdentifierPatternCG();

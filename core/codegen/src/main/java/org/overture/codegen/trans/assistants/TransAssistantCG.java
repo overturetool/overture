@@ -174,6 +174,7 @@ public class TransAssistantCG extends BaseTransformationAssistant
 	{
 		AVarDeclCG boolVarDecl = new AVarDeclCG();
 
+		boolVarDecl.setFinal(false);
 		boolVarDecl.setType(new ABoolBasicTypeCG());
 
 		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
@@ -246,6 +247,7 @@ public class TransAssistantCG extends BaseTransformationAssistant
 	{
 		AVarDeclCG setBindDecl = new AVarDeclCG();
 
+		setBindDecl.setFinal(false);
 		setBindDecl.setType(getSetTypeCloned(set));
 
 		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
@@ -262,6 +264,7 @@ public class TransAssistantCG extends BaseTransformationAssistant
 	{
 		AVarDeclCG idDecl = new AVarDeclCG();
 
+		idDecl.setFinal(false);
 		idDecl.setType(getSetTypeCloned(setType).getSetOf());
 
 		idDecl.setPattern(pattern.clone());
@@ -279,6 +282,7 @@ public class TransAssistantCG extends BaseTransformationAssistant
 	{
 		AVarDeclCG resultDecl = new AVarDeclCG();
 
+		resultDecl.setFinal(false);
 		resultDecl.setType(type);
 
 		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
@@ -334,10 +338,11 @@ public class TransAssistantCG extends BaseTransformationAssistant
 			String nextElementMethod) throws AnalysisException
 	{
 		ACastUnaryExpCG cast = consNextElementCall(iteratorTypeName, iteratorName, elementType, nextElementMethod);
+
 		AVarDeclCG decl = new AVarDeclCG();
 
+		decl.setFinal(false);
 		decl.setType(elementType);
-
 		decl.setPattern(id.clone());
 		decl.setExp(cast);
 

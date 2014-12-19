@@ -155,6 +155,7 @@ CG {-> package='org.overture.codegen.cgast'
     |	{mutexSync}
     	[opnames]:CG.#name*
     |	{var}
+    	[final]:java_Boolean
     	[type]:CG.#type
     	[pattern]:CG.#pattern
     	[exp]:CG.#exp

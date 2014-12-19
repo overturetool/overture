@@ -850,6 +850,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 			SPatternCG idPattern)
 	{
 		AVarDeclCG patternDecl = new AVarDeclCG();
+		patternDecl.setFinal(false);
 		patternDecl.setType(type);
 		patternDecl.setExp(valueToMatch);
 		patternDecl.setPattern(idPattern);
@@ -1011,6 +1012,8 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		if (declarePatternVar)
 		{
 			AVarDeclCG patternDecl = new AVarDeclCG();
+			
+			patternDecl.setFinal(false);
 			patternDecl.setPattern(idPattern.clone());
 			patternDecl.setType(actualValue.getType().clone());
 			patternDecl.setExp(actualValue.clone());

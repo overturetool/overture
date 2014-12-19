@@ -280,6 +280,8 @@ public class DeclAssistantCG extends AssistantBase
 			SPatternCG pattern, SExpCG exp)
 	{
 		AVarDeclCG localVarDecl = new AVarDeclCG();
+		
+		localVarDecl.setFinal(false);
 		localVarDecl.setSourceNode(new SourceNode(node));
 		localVarDecl.setType(type);
 		localVarDecl.setPattern(pattern);
