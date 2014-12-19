@@ -2,14 +2,11 @@ package org.overture.core.tests.demos;
 
 import java.io.File;
 import java.lang.reflect.Type;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.factory.AstFactoryTC;
 import org.overture.ast.lex.Dialect;
@@ -32,58 +29,25 @@ import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 import com.google.gson.reflect.TypeToken;
 
 /**
- * A very simple alternate version of {@link IdStandardTest} to work with external tests. We cannot directly reuse the
- * {@link IdStandardTest} since we must inherit {@link ParamExternalsTest}. But since we factor most of the important
- * code out to {@link IdTestResult}, this class is actually very small.<br>
+ * A simple test to demo the use of external test inputs. This class reuses {@link IdTestResult} but rather than
+ * printing the entire test model, it just prints a success/failure message regarding the type checking
+ * of the test source.
  * <br>
  * Also note that since this test works with external inputs, the data provider is already set up in
  * {@link ParamExternalsTest}. To launch these tests simply use the property
- * <code>-DexternalTestsPath=/path/to/files/</code> .<br>
+ * <code>-DexternalTestsPath=/path/to/files/</code>. This test is intended to run on the tc external tests only.<br>
  * <br>
- * Due to some quirks with Parameterized JUnit tests, if the property is not set, the test will still launch, only with
- * 0 cases. It's fine in Maven but in Eclipse you will get a single test run that does nothing. We're working on a way
- * to fix this.
+ * <b>Note:</b> Due to some quirks with Parameterized JUnit tests, if the property is not set, the test will still launch, only with
+ * 0 cases. It's fine in Maven but in Eclipse you will get a single test run that does nothing.
  * 
  * @author ldc
  */
 @RunWith(Parameterized.class)
-public class IdExternalsTest extends ParamExternalsTest<IdTestResult>
+public class ExternalsDemoTest extends ParamExternalsTest<IdTestResult>
 {
 
 	// the update property for this test
-	private static final String UPDATE_PROPERTY = "tests.update.example.ExternalID";
-
-	/**
-	 * method to collect tests and filter known unsupported tests
-	 * 
-	 * @return
-	 */
-	@Parameters(name = "{index} : {0}")
-	public static Collection<Object[]> testData()
-	{
-		Collection<Object[]> tests = ParamExternalsTest.testData();
-
-		// FIXME: add comparison check instead we should record which errors we expect instead of ignoring them
-		final Collection<String> notSupportedTests = Arrays.asList(new String[] {
-				"reperr-30.vpp", "fighter-01.vpp", "fighter-02.vpp",
-				"fighter-03.vpp", "fighter-04.vpp", "fighter-05.vpp",
-				"fighter-06.vpp", "fighter-07.vpp", "fighter-08.vpp",
-				"state-11.vdm", "setintersect-02.vdm", "setintersect-03.vdm",
-				"setintersect-05.vdm" });
-
-		Collection<Object[]> remove = new Vector<Object[]>();
-
-		for (Object[] test : tests)
-		{
-			if (notSupportedTests.contains((test[0] + "")))
-			{
-				remove.add(test);
-			}
-		}
-
-		tests.removeAll(remove);
-		return tests;
-	}
+	private static final String UPDATE_PROPERTY = "tests.update.example.ExternalSkip";
 
 	/**
 	 * As usual in the new tests, the constructor only needs to pass the parameters up to super.
@@ -92,7 +56,7 @@ public class IdExternalsTest extends ParamExternalsTest<IdTestResult>
 	 * @param testParameter
 	 * @param resultParameter
 	 */
-	public IdExternalsTest(String nameParameter, String testParameter,
+	public ExternalsDemoTest(String nameParameter, String testParameter,
 			String resultParameter)
 	{
 		super(nameParameter, testParameter, resultParameter);
@@ -117,6 +81,10 @@ public class IdExternalsTest extends ParamExternalsTest<IdTestResult>
 		return UPDATE_PROPERTY;
 	}
 
+	/**
+	 * Return the {@link Type} or reulst for this test. This is needed to help out with reflection
+	 * in the deserialization of results.
+	 */
 	@Override
 	public Type getResultType()
 	{
@@ -181,7 +149,7 @@ public class IdExternalsTest extends ParamExternalsTest<IdTestResult>
 			TypeCheckResult<List<SClassDefinition>> tr = TypeCheckerUtil.typeCheck(pr, pr.result, new ClassTypeChecker(pr.result));
 			if (tr.errors.isEmpty())
 			{
-				r.add(testName + "parses and type checks");
+				r.add(testName + " parses and type checks");
 			} else
 			{
 				for (VDMError e : tr.errors)
