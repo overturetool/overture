@@ -954,7 +954,16 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 
 			if(fieldType == null)
 			{
-				Logger.getLog().printErrorln(String.format("Could not find field type with member name %s for type %s", memberName, currentType));
+				// The field type may not be found if the member does not exist
+				// For example:
+				// 
+				// types
+				// R1 :: x : int;
+				// R2 :: y : int;
+				// ...
+				//let inlines : seq of Inline = [mk_R1(4), mk_R2(5)]
+				//in 
+				//		  return inlines(1).x + inlines(2).y;
 				continue;
 			}
 			

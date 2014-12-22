@@ -479,14 +479,7 @@ public class DeclAssistantCG extends AssistantBase
 				field = currentField;
 			}
 		}
-
-		if (field == null)
-		{
-			throw new IllegalArgumentException("Could not find field '"
-					+ memberName + "' in record '" + recName + "' in class '"
-					+ definingClassName + "'");
-		}
-
+		
 		return field;
 	}
 }
