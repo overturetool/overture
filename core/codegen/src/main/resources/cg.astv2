@@ -320,6 +320,7 @@ CG {-> package='org.overture.codegen.cgast'
 
 #Var {-> package='org.overture.codegen.cgast.expressions'
 	|	[isLambda]:java_Boolean
+	|	[isLocal]:java_Boolean
 	|	[name]:java_String}
     =   {identifier}
 	|	{explicit} [classType]:CG.#type
