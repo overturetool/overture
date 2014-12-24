@@ -92,7 +92,7 @@ public class JavaFormatAssistant
 		ACastUnaryExpCG cast = new ACastUnaryExpCG();
 		cast.setType(recordType.clone());
 		AIdentifierVarExpCG varExp = new AIdentifierVarExpCG();
-		varExp.setOriginal(formalParamName);
+		varExp.setName(formalParamName);
 		varExp.setType(new AObjectTypeCG());
 		cast.setExp(varExp);
 		localVar.setExp(cast);
@@ -132,7 +132,7 @@ public class JavaFormatAssistant
 		recordType.setName(typeName);
 
 		AIdentifierVarExpCG objRef = new AIdentifierVarExpCG();
-		objRef.setOriginal(formalParamName);
+		objRef.setName(formalParamName);
 		objRef.setType(new AObjectTypeCG());
 
 		AInstanceofExpCG instanceOfExp = new AInstanceofExpCG();
@@ -152,7 +152,7 @@ public class JavaFormatAssistant
 
 		AIdentifierVarExpCG instanceField = new AIdentifierVarExpCG();
 		instanceField.setType(param.getType().clone());
-		instanceField.setOriginal(param.getOriginal());
+		instanceField.setName(param.getName());
 
 		fieldComparison.setLeft(instanceField);
 		fieldComparison.setRight(new ANullExpCG());
@@ -169,11 +169,11 @@ public class JavaFormatAssistant
 
 		AIdentifierVarExpCG root = new AIdentifierVarExpCG();
 		root.setType(classType);
-		root.setOriginal(field.getName());
+		root.setName(field.getName());
 
 		AIdentifierVarExpCG argument = new AIdentifierVarExpCG();
 		argument.setType(field.getType().clone());
-		argument.setOriginal(field.getName());
+		argument.setName(field.getName());
 
 		call.setType(classType.clone());
 		call.setName("hashcode");
@@ -194,7 +194,7 @@ public class JavaFormatAssistant
 
 		AIdentifierVarExpCG instanceField = new AIdentifierVarExpCG();
 		instanceField.setType(field.getType().clone());
-		instanceField.setOriginal(field.getName());
+		instanceField.setName(field.getName());
 
 		AFieldExpCG formalParamField = new AFieldExpCG();
 		formalParamField.setType(field.getType().clone());
@@ -203,7 +203,7 @@ public class JavaFormatAssistant
 		ARecordTypeCG recordType = new ARecordTypeCG();
 		recordType.setName(consTypeName(record));
 		formalParam.setType(recordType);
-		formalParam.setOriginal(formalParamName);
+		formalParam.setName(formalParamName);
 
 		formalParamField.setObject(formalParam);
 		formalParamField.setMemberName(field.getName());
@@ -225,7 +225,7 @@ public class JavaFormatAssistant
 		for (AFieldDeclCG field : fields)
 		{
 			AIdentifierVarExpCG nextArg = new AIdentifierVarExpCG();
-			nextArg.setOriginal(field.getName());
+			nextArg.setName(field.getName());
 			nextArg.setType(field.getType().clone());
 			args.add(nextArg);
 		}

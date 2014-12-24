@@ -133,7 +133,7 @@ public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
 
 							AIdentifierVarExpCG var = new AIdentifierVarExpCG();
 							var.setType(param.getType().clone());
-							var.setOriginal(idPattern.getName());
+							var.setName(idPattern.getName());
 							var.setIsLambda(false);
 							var.setSourceNode(pattern.getSourceNode());
 

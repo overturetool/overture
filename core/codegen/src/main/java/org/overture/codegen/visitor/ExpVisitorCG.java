@@ -1330,7 +1330,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			AIdentifierVarExpCG varExp = new AIdentifierVarExpCG();
 
 			varExp.setType(typeCg);
-			varExp.setOriginal(name);
+			varExp.setName(name);
 			varExp.setIsLambda(isLambda);
 
 			return varExp;

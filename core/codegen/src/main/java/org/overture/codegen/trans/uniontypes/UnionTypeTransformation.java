@@ -82,7 +82,6 @@ import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.BaseTransformationAssistant;
 
 public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
@@ -339,7 +338,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		AIdentifierVarExpCG resultVar = new AIdentifierVarExpCG();
 		resultVar.setSourceNode(node.getSourceNode());
 		resultVar.setIsLambda(false);
-		resultVar.setOriginal(applyResultName);
+		resultVar.setName(applyResultName);
 		resultVar.setType(resultDecl.getType().clone());
 
 		ABlockStmCG replacementBlock = new ABlockStmCG();
@@ -360,7 +359,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 
 			AIdentifierVarExpCG objectVar = new AIdentifierVarExpCG();
 			objectVar.setIsLambda(false);
-			objectVar.setOriginal(objName);
+			objectVar.setName(objName);
 			objectVar.setType(objectDecl.getType().clone());
 			obj = objectVar;
 		} else
@@ -731,7 +730,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			AIdentifierVarExpCG objVar = new AIdentifierVarExpCG();
 			objVar.setSourceNode(node.getSourceNode());
 			objVar.setIsLambda(false);
-			objVar.setOriginal(callStmObjName);
+			objVar.setName(callStmObjName);
 			objVar.setType(objDecl.getType().clone());
 
 			objExp = objVar;

@@ -3,7 +3,6 @@ package org.overture.codegen.trans.conc;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.ast.expressions.ANewExp;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
@@ -12,8 +11,6 @@ import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.expressions.AExternalExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.expressions.ANewExpCG;
-import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.APlainCallStmCG;
@@ -183,12 +180,12 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 
 		AIdentifierVarExpCG instanceParam = new AIdentifierVarExpCG();
 		instanceParam.setIsLambda(false);
-		instanceParam.setOriginal("instance");
+		instanceParam.setName("instance");
 		instanceParam.setType(evalPpType.clone());
 
 		AIdentifierVarExpCG function_sum = new AIdentifierVarExpCG();
 		function_sum.setIsLambda(false);
-		function_sum.setOriginal("function_sum");
+		function_sum.setName("function_sum");
 		function_sum.setType(new AIntNumericBasicTypeCG());
 
 		//the init method
