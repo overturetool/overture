@@ -180,11 +180,13 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 
 		AIdentifierVarExpCG instanceParam = new AIdentifierVarExpCG();
 		instanceParam.setIsLambda(false);
+		instanceParam.setIsLocal(true);
 		instanceParam.setName("instance");
 		instanceParam.setType(evalPpType.clone());
 
 		AIdentifierVarExpCG function_sum = new AIdentifierVarExpCG();
 		function_sum.setIsLambda(false);
+		function_sum.setIsLocal(false);
 		function_sum.setName("function_sum");
 		function_sum.setType(new AIntNumericBasicTypeCG());
 

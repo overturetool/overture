@@ -338,6 +338,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		AIdentifierVarExpCG resultVar = new AIdentifierVarExpCG();
 		resultVar.setSourceNode(node.getSourceNode());
 		resultVar.setIsLambda(false);
+		resultVar.setIsLocal(true);
 		resultVar.setName(applyResultName);
 		resultVar.setType(resultDecl.getType().clone());
 
@@ -359,6 +360,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 
 			AIdentifierVarExpCG objectVar = new AIdentifierVarExpCG();
 			objectVar.setIsLambda(false);
+			objectVar.setIsLocal(true);
 			objectVar.setName(objName);
 			objectVar.setType(objectDecl.getType().clone());
 			obj = objectVar;
@@ -730,6 +732,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			AIdentifierVarExpCG objVar = new AIdentifierVarExpCG();
 			objVar.setSourceNode(node.getSourceNode());
 			objVar.setIsLambda(false);
+			objVar.setIsLocal(true);
 			objVar.setName(callStmObjName);
 			objVar.setType(objDecl.getType().clone());
 

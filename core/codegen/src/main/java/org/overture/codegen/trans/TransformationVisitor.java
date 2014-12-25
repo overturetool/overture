@@ -361,6 +361,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 
 			AIdentifierVarExpCG varExpResult = new AIdentifierVarExpCG();
 			varExpResult.setType(value.getType().clone());
+			varExpResult.setIsLocal(true);
 			varExpResult.setName(var);
 			letBeStResult = varExpResult;
 		}
@@ -560,6 +561,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		} else
 		{
 			AIdentifierVarExpCG forAllResult = new AIdentifierVarExpCG();
+			forAllResult.setIsLocal(true);
 			forAllResult.setType(new ABoolBasicTypeCG());
 			forAllResult.setName(var);
 
@@ -590,6 +592,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		} else
 		{
 			AIdentifierVarExpCG existsResult = new AIdentifierVarExpCG();
+			existsResult.setIsLocal(true);
 			existsResult.setType(new ABoolBasicTypeCG());
 			existsResult.setName(var);
 
@@ -621,6 +624,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		{
 			AIdentifierVarExpCG counter = new AIdentifierVarExpCG();
 			counter.setType(new AIntNumericBasicTypeCG());
+			counter.setIsLocal(true);
 			counter.setName(var);
 
 			AEqualsBinaryExpCG exists1Result = new AEqualsBinaryExpCG();
@@ -664,6 +668,8 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		AIdentifierVarExpCG compResult = new AIdentifierVarExpCG();
 		compResult.setType(type.clone());
 		compResult.setName(var);
+		compResult.setIsLambda(false);
+		compResult.setIsLocal(true);
 
 		transform(enclosingStm, block, compResult, comp);
 	}
@@ -707,6 +713,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		resultVarDecl.setExp(new AUndefinedExpCG());
 
 		AIdentifierVarExpCG resultVar = new AIdentifierVarExpCG();
+		resultVar.setIsLocal(true);
 		resultVar.setIsLambda(false);
 		resultVar.setName(casesExpResultName);
 		resultVar.setType(node.getType().clone());

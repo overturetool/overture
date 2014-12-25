@@ -112,6 +112,7 @@ public class JavaClassCreator
 		AIdentifierVarExpCG fieldVar = new AIdentifierVarExpCG();
 		fieldVar.setType(field.getType().clone());
 		fieldVar.setIsLambda(false);
+		fieldVar.setIsLocal(false);
 		fieldVar.setName(field.getName());
 		
 		toStringCall.getArgs().add(fieldVar);

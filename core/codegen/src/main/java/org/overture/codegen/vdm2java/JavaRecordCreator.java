@@ -101,6 +101,7 @@ public class JavaRecordCreator extends JavaObjectCreator
 			AIdentifierVarExpCG varExp = new AIdentifierVarExpCG();
 			varExp.setType(field.getType().clone());
 			varExp.setName(paramName);
+			varExp.setIsLocal(true);
 
 			assignment.setTarget(id);
 
@@ -156,6 +157,8 @@ public class JavaRecordCreator extends JavaObjectCreator
 			AIdentifierVarExpCG varExp = new AIdentifierVarExpCG();
 			varExp.setName(name);
 			varExp.setType(field.getType().clone());
+			varExp.setIsLocal(false);
+			
 			args.add(varExp);
 		}
 
