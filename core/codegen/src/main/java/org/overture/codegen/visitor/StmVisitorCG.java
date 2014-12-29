@@ -235,6 +235,7 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 			STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 
 			AVarDeclCG localDecl = new AVarDeclCG();
+			localDecl.setFinal(false);
 			localDecl.setType(typeCg);
 
 			AIdentifierPatternCG idPattern = new AIdentifierPatternCG();

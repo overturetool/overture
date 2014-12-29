@@ -1314,6 +1314,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			ASuperVarExpCG superVarExp = new ASuperVarExpCG();
 
 			superVarExp.setType(typeCg);
+			superVarExp.setIsLocal(isLocalDef);
 			superVarExp.setName(name);
 			superVarExp.setIsLambda(isLambda);
 
@@ -1330,7 +1331,8 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			AIdentifierVarExpCG varExp = new AIdentifierVarExpCG();
 
 			varExp.setType(typeCg);
-			varExp.setOriginal(name);
+			varExp.setIsLocal(isLocalDef);
+			varExp.setName(name);
 			varExp.setIsLambda(isLambda);
 
 			return varExp;
@@ -1344,6 +1346,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			classType.setName(className);
 
 			varExp.setType(typeCg);
+			varExp.setIsLocal(isLocalDef);
 			varExp.setClassType(classType);
 			varExp.setName(name);
 			varExp.setIsLambda(isLambda);

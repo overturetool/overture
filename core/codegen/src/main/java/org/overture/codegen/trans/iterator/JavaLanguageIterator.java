@@ -58,12 +58,13 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 			List<SPatternCG> patterns, SPatternCG pattern)
 	{
 		iteratorName = tempGen.nextVarName(varPrefixes.getIteratorNamePrefix());
-		String setName = setVar.getOriginal();
+		String setName = setVar.getName();
 		AClassTypeCG iteratorType = transformationAssistant.consClassType(ITERATOR_TYPE);
 		STypeCG setType = setVar.getType().clone();
 		SExpCG getIteratorCall = transformationAssistant.consInstanceCall(setType, setName, iteratorType.clone(), GET_ITERATOR, null);
 
 		AVarDeclCG iteratorDecl = new AVarDeclCG();
+		iteratorDecl.setFinal(false);
 
 		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
 		idPattern.setName(iteratorName);

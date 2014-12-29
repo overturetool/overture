@@ -196,6 +196,7 @@ CG {-> package='org.overture.codegen.cgast'
     |	{mutexSync}
     	[opnames]:CG.#name*
     |	{var}
+    	[final]:java_Boolean
     	[type]:CG.#type
     	[pattern]:CG.#pattern
     	[exp]:CG.#exp
@@ -359,10 +360,12 @@ CG {-> package='org.overture.codegen.cgast'
     ;
 
 #Var {-> package='org.overture.codegen.cgast.expressions'
-	|	[isLambda]:java_Boolean}
-    =   {identifier} [original]:java_String //Change original to name...
-	|	{explicit} [classType]:CG.#type [name]:java_String
-	|	{super} [name]:java_String
+	|	[isLambda]:java_Boolean
+	|	[isLocal]:java_Boolean
+	|	[name]:java_String}
+    =   {identifier}
+	|	{explicit} [classType]:CG.#type
+	|	{super}
     ;
     
 #Literal {-> package='org.overture.codegen.cgast.expressions'}

@@ -79,6 +79,7 @@ public class JavaFormatAssistant
 		// Construct a local var in a statement: RecordType varName = ((RecordType) formalParamName);
 
 		AVarDeclCG localVar = new AVarDeclCG();
+		localVar.setFinal(false);
 
 		ARecordTypeCG recordType = new ARecordTypeCG();
 		recordType.setName(consTypeName(record));
@@ -90,9 +91,12 @@ public class JavaFormatAssistant
 
 		ACastUnaryExpCG cast = new ACastUnaryExpCG();
 		cast.setType(recordType.clone());
+		
 		AIdentifierVarExpCG varExp = new AIdentifierVarExpCG();
-		varExp.setOriginal(formalParamName);
 		varExp.setType(new AObjectTypeCG());
+		varExp.setName(formalParamName);
+		varExp.setIsLocal(true);
+		
 		cast.setExp(varExp);
 		localVar.setExp(cast);
 
@@ -131,9 +135,10 @@ public class JavaFormatAssistant
 		recordType.setName(typeName);
 
 		AIdentifierVarExpCG objRef = new AIdentifierVarExpCG();
-		objRef.setOriginal(formalParamName);
 		objRef.setType(new AObjectTypeCG());
-
+		objRef.setIsLocal(true);
+		objRef.setName(formalParamName);
+		
 		AInstanceofExpCG instanceOfExp = new AInstanceofExpCG();
 		instanceOfExp.setType(new ABoolBasicTypeCG());
 		instanceOfExp.setExp(objRef);
@@ -151,7 +156,8 @@ public class JavaFormatAssistant
 
 		AIdentifierVarExpCG instanceField = new AIdentifierVarExpCG();
 		instanceField.setType(param.getType().clone());
-		instanceField.setOriginal(param.getOriginal());
+		instanceField.setIsLocal(false);
+		instanceField.setName(param.getName());
 
 		fieldComparison.setLeft(instanceField);
 		fieldComparison.setRight(new ANullExpCG());
@@ -166,13 +172,10 @@ public class JavaFormatAssistant
 		AExternalTypeCG classType = new AExternalTypeCG();
 		classType.setName(JavaFormat.UTILS_FILE);
 
-		AIdentifierVarExpCG root = new AIdentifierVarExpCG();
-		root.setType(classType);
-		root.setOriginal(field.getName());
-
 		AIdentifierVarExpCG argument = new AIdentifierVarExpCG();
 		argument.setType(field.getType().clone());
-		argument.setOriginal(field.getName());
+		argument.setIsLocal(false);
+		argument.setName(field.getName());
 
 		call.setType(classType.clone());
 		call.setName("hashcode");
@@ -193,7 +196,8 @@ public class JavaFormatAssistant
 
 		AIdentifierVarExpCG instanceField = new AIdentifierVarExpCG();
 		instanceField.setType(field.getType().clone());
-		instanceField.setOriginal(field.getName());
+		instanceField.setIsLocal(false);
+		instanceField.setName(field.getName());
 
 		AFieldExpCG formalParamField = new AFieldExpCG();
 		formalParamField.setType(field.getType().clone());
@@ -202,7 +206,8 @@ public class JavaFormatAssistant
 		ARecordTypeCG recordType = new ARecordTypeCG();
 		recordType.setName(consTypeName(record));
 		formalParam.setType(recordType);
-		formalParam.setOriginal(formalParamName);
+		formalParam.setIsLocal(true);
+		formalParam.setName(formalParamName);
 
 		formalParamField.setObject(formalParam);
 		formalParamField.setMemberName(field.getName());
@@ -224,8 +229,9 @@ public class JavaFormatAssistant
 		for (AFieldDeclCG field : fields)
 		{
 			AIdentifierVarExpCG nextArg = new AIdentifierVarExpCG();
-			nextArg.setOriginal(field.getName());
+			nextArg.setName(field.getName());
 			nextArg.setType(field.getType().clone());
+			nextArg.setIsLocal(false);
 			args.add(nextArg);
 		}
 
@@ -239,6 +245,8 @@ public class JavaFormatAssistant
 		AMethodTypeCG methodType = new AMethodTypeCG();
 		methodType.setResult(returnType.clone());
 		member.setType(methodType);
+		member.setIsLambda(false);
+		member.setIsLocal(false);
 		AExternalTypeCG classType = new AExternalTypeCG();
 		classType.setName(JavaFormat.UTILS_FILE);
 		member.setClassType(classType);

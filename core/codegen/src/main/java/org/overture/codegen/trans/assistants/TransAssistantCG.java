@@ -164,7 +164,8 @@ public class TransAssistantCG extends BaseTransformationAssistant
 	{
 		AIdentifierVarExpCG successVar = new AIdentifierVarExpCG();
 		successVar.setIsLambda(false);
-		successVar.setOriginal(successVarName);
+		successVar.setIsLocal(true);
+		successVar.setName(successVarName);
 		successVar.setType(new ABoolBasicTypeCG());
 
 		return successVar;
@@ -174,6 +175,7 @@ public class TransAssistantCG extends BaseTransformationAssistant
 	{
 		AVarDeclCG boolVarDecl = new AVarDeclCG();
 
+		boolVarDecl.setFinal(false);
 		boolVarDecl.setType(new ABoolBasicTypeCG());
 
 		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
@@ -199,7 +201,8 @@ public class TransAssistantCG extends BaseTransformationAssistant
 	{
 		AIdentifierVarExpCG left = new AIdentifierVarExpCG();
 		left.setType(new AIntNumericBasicTypeCG());
-		left.setOriginal(varName);
+		left.setIsLocal(true);
+		left.setName(varName);
 
 		AIntLiteralExpCG right = info.getExpAssistant().consIntLiteral(value);
 
@@ -215,7 +218,8 @@ public class TransAssistantCG extends BaseTransformationAssistant
 	{
 		AIdentifierVarExpCG boolVarExp = new AIdentifierVarExpCG();
 		boolVarExp.setType(new ABoolBasicTypeCG());
-		boolVarExp.setOriginal(boolVarName);
+		boolVarExp.setIsLocal(true);
+		boolVarExp.setName(boolVarName);
 
 		if (negate)
 		{
@@ -246,6 +250,7 @@ public class TransAssistantCG extends BaseTransformationAssistant
 	{
 		AVarDeclCG setBindDecl = new AVarDeclCG();
 
+		setBindDecl.setFinal(false);
 		setBindDecl.setType(getSetTypeCloned(set));
 
 		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
@@ -262,6 +267,7 @@ public class TransAssistantCG extends BaseTransformationAssistant
 	{
 		AVarDeclCG idDecl = new AVarDeclCG();
 
+		idDecl.setFinal(false);
 		idDecl.setType(getSetTypeCloned(setType).getSetOf());
 
 		idDecl.setPattern(pattern.clone());
@@ -279,6 +285,7 @@ public class TransAssistantCG extends BaseTransformationAssistant
 	{
 		AVarDeclCG resultDecl = new AVarDeclCG();
 
+		resultDecl.setFinal(false);
 		resultDecl.setType(type);
 
 		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
@@ -302,8 +309,9 @@ public class TransAssistantCG extends BaseTransformationAssistant
 			STypeCG returnType, String memberName, SExpCG arg)
 	{
 		AIdentifierVarExpCG instance = new AIdentifierVarExpCG();
-		instance.setOriginal(instanceName);
 		instance.setType(instanceType.clone());
+		instance.setName(instanceName);
+		instance.setIsLocal(true);
 
 		AFieldExpCG fieldExp = new AFieldExpCG();
 		fieldExp.setMemberName(memberName);
@@ -334,10 +342,11 @@ public class TransAssistantCG extends BaseTransformationAssistant
 			String nextElementMethod) throws AnalysisException
 	{
 		ACastUnaryExpCG cast = consNextElementCall(iteratorTypeName, iteratorName, elementType, nextElementMethod);
+
 		AVarDeclCG decl = new AVarDeclCG();
 
+		decl.setFinal(false);
 		decl.setType(elementType);
-
 		decl.setPattern(id.clone());
 		decl.setExp(cast);
 
@@ -377,7 +386,9 @@ public class TransAssistantCG extends BaseTransformationAssistant
 	{
 		AIdentifierVarExpCG col = new AIdentifierVarExpCG();
 		col.setType(new AIntNumericBasicTypeCG());
-		col.setOriginal(counterName);
+		col.setIsLambda(false);
+		col.setIsLocal(true);
+		col.setName(counterName);
 
 		AIncrementStmCG inc = new AIncrementStmCG();
 		inc.setVar(col);
@@ -411,9 +422,10 @@ public class TransAssistantCG extends BaseTransformationAssistant
 
 		STypeCG setType = set.getType().clone();
 
-		setVar.setOriginal(setName);
 		setVar.setType(setType);
-
+		setVar.setName(setName);
+		setVar.setIsLocal(true);
+		
 		return setVar;
 	}
 
@@ -576,8 +588,9 @@ public class TransAssistantCG extends BaseTransformationAssistant
 	{
 		AIdentifierVarExpCG var = new AIdentifierVarExpCG();
 		var.setIsLambda(false);
+		var.setIsLocal(true);
 		var.setType(type);
-		var.setOriginal(name);
+		var.setName(name);
 		
 		return var;
 	}
@@ -587,8 +600,9 @@ public class TransAssistantCG extends BaseTransformationAssistant
 	{
 		AIdentifierVarExpCG condVar = new AIdentifierVarExpCG();
 		condVar.setType(predMethod.getMethodType().clone());
-		condVar.setOriginal(predMethod.getName());
+		condVar.setName(predMethod.getName());
 		condVar.setIsLambda(false);
+		condVar.setIsLocal(true);
 		
 		AApplyExpCG condCall = new AApplyExpCG();
 		condCall.setType(new ABoolBasicTypeCG());
@@ -609,9 +623,10 @@ public class TransAssistantCG extends BaseTransformationAssistant
 			AIdentifierPatternCG paramId = (AIdentifierPatternCG) paramPattern;
 			
 			AIdentifierVarExpCG paramArg = new AIdentifierVarExpCG();
-			paramArg.setIsLambda(false);
 			paramArg.setType(p.getType().clone());
-			paramArg.setOriginal(paramId.getName());
+			paramArg.setIsLocal(true);
+			paramArg.setIsLambda(false);
+			paramArg.setName(paramId.getName());
 			
 			condCall.getArgs().add(paramArg);
 		}
