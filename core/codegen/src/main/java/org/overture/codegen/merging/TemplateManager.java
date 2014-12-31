@@ -394,6 +394,9 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(AExternalExpCG.class, templateStructure.EXP_PATH
 				+ "External");
+		
+		nodeTemplateFileNames.put(ATypeArgExpCG.class, templateStructure.EXP_PATH
+				+ "TypeArg");
 
 		nodeTemplateFileNames.put(ALambdaExpCG.class, templateStructure.EXP_PATH
 				+ "Lambda");
