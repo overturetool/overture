@@ -47,6 +47,9 @@ import org.overture.codegen.cgast.SObjectDesignatorCG;
 import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.SStateDesignatorCG;
 import org.overture.codegen.cgast.SStmCG;
+import org.overture.codegen.cgast.STermCG;
+import org.overture.codegen.cgast.STraceCoreDeclCG;
+import org.overture.codegen.cgast.STraceDeclCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.logging.Logger;
@@ -158,6 +161,21 @@ public class IRInfo
 	public CGVisitor<SModifierCG> getModifierVisitor()
 	{
 		return visitorManager.getModifierVisitor();
+	}
+
+	public CGVisitor<STermCG> getTermVisitor()
+	{
+		return visitorManager.getTermVisitor();
+	}
+
+	public CGVisitor<STraceDeclCG> getTraceDeclVisitor()
+	{
+		return visitorManager.getTraceDeclVisitor();
+	}
+
+	public CGVisitor<STraceCoreDeclCG> getTraceCoreDeclVisitor()
+	{
+		return visitorManager.getTraceCoreDeclVisitor();
 	}
 
 	public ExpAssistantCG getExpAssistant()
