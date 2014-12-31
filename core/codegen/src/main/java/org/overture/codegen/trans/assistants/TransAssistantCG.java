@@ -43,11 +43,14 @@ import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
+import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
+import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.statements.AForLoopStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.AIncrementStmCG;
@@ -57,6 +60,7 @@ import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
+import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.ir.IRInfo;
@@ -299,10 +303,10 @@ public class TransAssistantCG extends BaseTransformationAssistant
 
 	public AClassTypeCG consClassType(String classTypeName)
 	{
-		AClassTypeCG iteratorType = new AClassTypeCG();
-		iteratorType.setName(classTypeName);
+		AClassTypeCG classType = new AClassTypeCG();
+		classType.setName(classTypeName);
 
-		return iteratorType;
+		return classType;
 	}
 
 	public SExpCG consInstanceCall(STypeCG instanceType, String instanceName,
@@ -335,6 +339,27 @@ public class TransAssistantCG extends BaseTransformationAssistant
 		instanceCall.setRoot(fieldExp);
 
 		return instanceCall;
+	}
+	
+	public ACallObjectExpStmCG consInstanceCallStm(STypeCG instanceType,
+			String instanceName, String memberName, SExpCG arg)
+	{
+		AIdentifierVarExpCG instance = new AIdentifierVarExpCG();
+		instance.setName(instanceName);
+		instance.setType(instanceType.clone());
+
+		ACallObjectExpStmCG call = new ACallObjectExpStmCG();
+		call.setType(new AVoidTypeCG());
+		call.setClassName(null);
+		call.setFieldName(memberName);
+		call.setObj(instance);
+		
+		if(arg != null)
+		{
+			call.getArgs().add(arg);
+		}
+
+		return call;
 	}
 
 	public AVarDeclCG consNextElementDeclared(String iteratorTypeName,
@@ -371,6 +396,29 @@ public class TransAssistantCG extends BaseTransformationAssistant
 		// assignment.setSuccessVarDecl(successVarDecl);
 
 		return assignment;
+	}
+	
+	public ANewExpCG consDefaultConsCall(String className)
+	{
+		return consDefaultConsCall(consClassType(className));
+	}
+	
+	public ANewExpCG consDefaultConsCall(AClassTypeCG classType)
+	{
+		ANewExpCG initAltNode = new ANewExpCG();
+		initAltNode.setType(classType.clone());
+		initAltNode.setName(consTypeNameForClass(classType.getName()));
+		
+		return initAltNode;
+	}
+	
+	public ATypeNameCG consTypeNameForClass(String classTypeName)
+	{
+		ATypeNameCG typeName = new ATypeNameCG();
+		typeName.setDefiningClass(null);
+		typeName.setName(classTypeName);
+		
+		return typeName;
 	}
 
 	public ACastUnaryExpCG consNextElementCall(String iteratorType,
