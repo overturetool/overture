@@ -30,8 +30,14 @@ import org.overture.codegen.cgast.SObjectDesignatorCG;
 import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.SStateDesignatorCG;
 import org.overture.codegen.cgast.SStmCG;
+import org.overture.codegen.cgast.STermCG;
+import org.overture.codegen.cgast.STraceCoreDeclCG;
+import org.overture.codegen.cgast.STraceDeclCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.traces.TermVisitorCG;
+import org.overture.codegen.traces.TraceCoreDeclVisitorCG;
+import org.overture.codegen.traces.TraceDeclVisitorCG;
 
 public class VisitorManager
 {
@@ -46,6 +52,9 @@ public class VisitorManager
 	private CGVisitor<SBindCG> bindVisitor;
 	private CGVisitor<SPatternCG> patternVisitor;
 	private CGVisitor<SModifierCG> modifierVisitor;
+	private CGVisitor<STermCG> termVisitor;
+	private CGVisitor<STraceDeclCG> traceDeclVisitor;
+	private CGVisitor<STraceCoreDeclCG> traceCoreDeclVisitor;
 
 	public VisitorManager()
 	{
@@ -60,6 +69,9 @@ public class VisitorManager
 		this.bindVisitor = new CGVisitor<SBindCG>(new BindVisitorCG());
 		this.patternVisitor = new CGVisitor<SPatternCG>(new PatternVisitorCG());
 		this.modifierVisitor = new CGVisitor<SModifierCG>(new ModifierVisitorCG());
+		this.termVisitor = new CGVisitor<STermCG>(new TermVisitorCG());
+		this.traceDeclVisitor = new CGVisitor<STraceDeclCG>(new TraceDeclVisitorCG());
+		this.traceCoreDeclVisitor = new CGVisitor<STraceCoreDeclCG>(new TraceCoreDeclVisitorCG());
 	}
 
 	public CGVisitor<AClassDeclCG> getClassVisitor()
@@ -115,5 +127,20 @@ public class VisitorManager
 	public CGVisitor<SModifierCG> getModifierVisitor()
 	{
 		return modifierVisitor;
+	}
+
+	public CGVisitor<STermCG> getTermVisitor()
+	{
+		return termVisitor;
+	}
+
+	public CGVisitor<STraceDeclCG> getTraceDeclVisitor()
+	{
+		return traceDeclVisitor;
+	}
+
+	public CGVisitor<STraceCoreDeclCG> getTraceCoreDeclVisitor()
+	{
+		return traceCoreDeclVisitor;
 	}
 }
