@@ -44,6 +44,9 @@ CG {-> package='org.overture.codegen.cgast'
 	| #exp
 	| #type
 	| #modifier
+	| #term
+	| #traceDecl
+	| #traceCoreDecl
 	;
 
 #pattern {-> package='org.overture.codegen.cgast.patterns'}
@@ -120,6 +123,7 @@ CG {-> package='org.overture.codegen.cgast'
     	[fields]:field*
     	[methods]:CG.#decl.method*
     	[functions]:CG.#decl.func*
+    	[traces]:CG.#decl.namedTrace*
     	[superName]:java_String
     	[thread]:CG.#decl.thread
     	[innerClasses]:CG.#decl.class*
@@ -162,10 +166,11 @@ CG {-> package='org.overture.codegen.cgast'
     |	{namedType}
     	[name]:java_String
     	[type]:CG.#type
+    |	{namedTrace} [pathname]:CG.#name.token* [terms]:CG.#term.traceDecl*
 	;
 	
 #stateDesignator {-> package='org.overture.codegen.cgast.statements'
-	| [type]:CG.#type}
+	| [type]:CG.#type }
 	= {identifier} [name]:java_String [explicit]:java_Boolean [className]:java_String
 	| {field} [object]:CG.#stateDesignator [field]:java_String
 	| {mapSeq} [mapseq]:CG.#stateDesignator [exp]:CG.#exp
@@ -274,6 +279,7 @@ CG {-> package='org.overture.codegen.cgast'
     	//is used for refering to expressions of the target environment (e.g. that of Java) 
     	//that are not directly mapped to by the code generator.
     |	{external} [targetLangExp]:java_String
+    |	{typeArg} [type]:CG.#type
     |	{lambda} [params]:CG.#localParam.formalParam* [exp]:CG.#exp
     |	{anonymousClass} [methods]:CG.#decl.method*
     |	{notImplemented}
@@ -509,6 +515,28 @@ externalType {-> package='org.overture.codegen.cgast.utils'}
     |	{nat}
     |	{rat}
     |   {real} 
+    ;
+
+#term {-> package='org.overture.codegen.cgast.traces'}
+    =   {traceDecl} [traceDecls]:CG.#traceDecl*
+    ;
+    
+#traceDecl {-> package='org.overture.codegen.cgast.traces'}
+    =   {instance} //Not there...
+    |   {letBeStBinding}
+    	[bind]:CG.#multipleBind.set //[bind]:CG.#multipleBind (Only set binds are supported)
+    	[stExp]:CG.#exp
+    	[body]:CG.#traceDecl
+    |   {letDefBinding}
+    	[localDecls]:CG.#decl*
+    	[body]:CG.traceDecl
+    |   {repeat} [core]:CG.#traceCoreDecl [from]:java_Long [to]:java_Long
+    ;
+    
+#traceCoreDecl {-> package='org.overture.codegen.cgast.traces'}
+    =   {applyExp} [callStm]:CG.#stm
+    |   {bracketedExp} [terms]:CG.#term.traceDecl*
+    |   {concurrentExp} [decls]:CG.#traceDecl*
     ;
      
 Aspect Declaration
