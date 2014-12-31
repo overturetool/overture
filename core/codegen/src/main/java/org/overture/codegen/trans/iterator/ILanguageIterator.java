@@ -50,5 +50,7 @@ public interface ILanguageIterator
 			AIdentifierVarExpCG setVar, List<SPatternCG> patterns,
 			SPatternCG pattern, AVarDeclCG successVarDecl,
 			AVarDeclCG nextElementDecl) throws AnalysisException;
+	
+	public SExpCG consNextElementCall(AIdentifierVarExpCG setVar) throws AnalysisException;
 
 }

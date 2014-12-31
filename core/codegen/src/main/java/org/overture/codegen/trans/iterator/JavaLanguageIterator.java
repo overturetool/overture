@@ -113,4 +113,12 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 
 		return transformationAssistant.consNextElementAssignment(ITERATOR_TYPE, elementType, pattern, iteratorName, NEXT_ELEMENT_ITERATOR, nextElementDecl);
 	}
+	
+	@Override
+	public SExpCG consNextElementCall(AIdentifierVarExpCG setVar) throws AnalysisException
+	{
+		STypeCG elementType = transformationAssistant.getSetTypeCloned(setVar).getSetOf();
+		
+		return transformationAssistant.consNextElementCall(ITERATOR_TYPE, iteratorName, elementType, NEXT_ELEMENT_ITERATOR);
+	}
 }
