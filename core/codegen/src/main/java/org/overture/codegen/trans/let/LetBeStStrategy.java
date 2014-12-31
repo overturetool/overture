@@ -46,12 +46,12 @@ import org.overture.codegen.trans.iterator.ILanguageIterator;
 
 public class LetBeStStrategy extends AbstractIterationStrategy
 {
-	private String successVarName;
-	private SExpCG suchThat;
-	private SSetTypeCG setType;
+	protected String successVarName;
+	protected SExpCG suchThat;
+	protected SSetTypeCG setType;
 
-	int count = 0;
-	private List<AVarDeclCG> decls = new LinkedList<AVarDeclCG>();
+	protected int count = 0;
+	protected List<AVarDeclCG> decls = new LinkedList<AVarDeclCG>();
 
 	public LetBeStStrategy(TransAssistantCG transformationAssistant,
 			SExpCG suchThat, SSetTypeCG setType,
