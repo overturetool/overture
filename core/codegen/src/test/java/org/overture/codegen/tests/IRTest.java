@@ -10,10 +10,12 @@ import org.overture.codegen.cgast.declarations.ACatchClauseDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
+import org.overture.codegen.cgast.expressions.ATypeArgExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.ATryStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
+import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.merging.MergeVisitor;
@@ -47,6 +49,20 @@ public class IRTest
 		compare(expected, fieldDecl);
 	}
 
+	@Test
+	public void testTypeArg()
+	{
+		AClassTypeCG classA = new AClassTypeCG();
+		classA.setName("A");
+		
+		ATypeArgExpCG typeArg = new ATypeArgExpCG();
+		typeArg.setType(classA);
+		
+		String expected = "A.class";
+		
+		compare(expected, typeArg);
+	}
+	
 	@Test
 	public void testCatchClause()
 	{
