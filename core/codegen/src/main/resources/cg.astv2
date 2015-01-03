@@ -227,6 +227,7 @@ CG {-> package='org.overture.codegen.cgast'
 
 #call {-> package='org.overture.codegen.cgast.statements'
 	| 	[type]:CG.#type
+	|	[isStatic]:java_Boolean
 	|	[name]:java_String
 	|	[args]:CG.#exp*}
     =  	{plain} [classType]:CG.#type

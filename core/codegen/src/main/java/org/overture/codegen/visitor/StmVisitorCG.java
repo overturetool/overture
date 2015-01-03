@@ -359,6 +359,8 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 
 			argsCg.add(argCg);
 		}
+		
+		boolean isStatic = question.getTcFactory().createPDefinitionAssistant().isStatic(rootdef);
 
 		while (rootdef instanceof AInheritedDefinition)
 		{
@@ -371,10 +373,9 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 
 			if (op.getIsConstructor())
 			{
-				APlainCallStmCG callStm = new APlainCallStmCG();
-				
 				String initName = question.getObjectInitializerCall(op);
 
+				APlainCallStmCG callStm = new APlainCallStmCG();
 				callStm.setType(new AVoidTypeCG());
 				callStm.setClassType(null);
 				callStm.setName(initName);
@@ -387,7 +388,6 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 		PType type = node.getType();
 		ILexNameToken nameToken = node.getName();
 		String name = nameToken.getName();
-		boolean isStatic = question.getTcFactory().createPDefinitionAssistant().isStatic(rootdef);
 
 		AClassTypeCG classType = null;
 
@@ -403,8 +403,9 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 			{
 
 				ASuperCallStmCG superCall = new ASuperCallStmCG();
-				superCall.setName(name);
+				superCall.setIsStatic(isStatic);
 				superCall.setType(typeCg);
+				superCall.setName(name);
 				superCall.setArgs(argsCg);
 
 				return superCall;
@@ -419,9 +420,10 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 
 		APlainCallStmCG callStm = new APlainCallStmCG();
 		
-		callStm.setClassType(classType);
-		callStm.setName(name);
 		callStm.setType(typeCg);
+		callStm.setIsStatic(isStatic);
+		callStm.setName(name);
+		callStm.setClassType(classType);
 		callStm.setArgs(argsCg);
 		
 		return callStm;
