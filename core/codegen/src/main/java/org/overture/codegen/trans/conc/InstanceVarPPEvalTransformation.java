@@ -86,7 +86,6 @@ public class InstanceVarPPEvalTransformation extends DepthFirstAnalysisAdaptor
 		sentinel.setExp(sentinelVar);
 		
 		ACallObjectStmCG callSentinel = new ACallObjectStmCG();
-		callSentinel.setClassName(null);
 		callSentinel.setDesignator(sentinel);
 		callSentinel.setFieldName("stateChanged");
 		callSentinel.setType(new AVoidTypeCG());

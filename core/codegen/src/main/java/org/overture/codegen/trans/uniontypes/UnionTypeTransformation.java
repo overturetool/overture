@@ -703,7 +703,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 
 		STypeCG type = node.getType();
 		LinkedList<SExpCG> args = node.getArgs();
-		String className = node.getClassName();
+		//String className = node.getClassName();
 		String fieldName = node.getFieldName();
 		SourceNode sourceNode = node.getSourceNode();
 
@@ -711,7 +711,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		call.setObj(objExp);
 		call.setType(type.clone());
 		call.setArgs((List<? extends SExpCG>) args.clone());
-		call.setClassName(className);
+		//call.setClassName(className);
 		call.setFieldName(fieldName);
 		call.setSourceNode(sourceNode);
 

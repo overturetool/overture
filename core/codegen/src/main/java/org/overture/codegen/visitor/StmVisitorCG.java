@@ -99,6 +99,7 @@ import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
 import org.overture.codegen.ir.IRInfo;
+import org.overture.codegen.logging.Logger;
 
 public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 {
@@ -441,11 +442,26 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 		SObjectDesignatorCG objectDesignatorCg = objectDesignator.apply(question.getObjectDesignatorVisitor(), question);
 
-		String classNameCg = null;
-
 		if (node.getExplicit())
 		{
-			classNameCg = field.getModule();
+			SClassDefinition enclosingClass = node.getAncestor(SClassDefinition.class);
+			
+			if(enclosingClass != null)
+			{
+				if(!field.getModule().equals(enclosingClass.getName().getName()))
+				{
+					// A quoted method call is only supported if the explicit
+					// module name is equal to that of the enclosing class. Say A
+					// is a sub class of S and 'a' is an instance of A then a.A`op();
+					//  is allowed (although it is the same as a.op()). However,
+					// a.S`op(); is not allowed.
+					question.addUnsupportedNode(node);
+				}
+			}
+			else
+			{
+				Logger.getLog().printErrorln("Could not find enclosing the statement of call a call object statement.");
+			}
 		}
 
 		String fieldNameCg = field.getName();
@@ -453,7 +469,6 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 		ACallObjectStmCG callObject = new ACallObjectStmCG();
 		callObject.setType(typeCg);
 		callObject.setDesignator(objectDesignatorCg);
-		callObject.setClassName(classNameCg);
 		callObject.setFieldName(fieldNameCg);
 
 		for (int i = 0; i < args.size(); i++)

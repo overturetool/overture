@@ -350,7 +350,6 @@ public class TransAssistantCG extends BaseTransformationAssistant
 
 		ACallObjectExpStmCG call = new ACallObjectExpStmCG();
 		call.setType(new AVoidTypeCG());
-		call.setClassName(null);
 		call.setFieldName(memberName);
 		call.setObj(instance);
 		
