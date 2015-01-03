@@ -306,7 +306,7 @@ public class JavaCodeGenUtil
 
 		List<VdmNodeInfo> nodesSorted = locationAssistant.getVdmNodeInfoLocationSorted(unsupportedNodes);
 
-		Logger.getLog().println("Following IR constructs are not supported: ");
+		Logger.getLog().println("Following VDM constructs are not supported by the IR: ");
 
 		for (VdmNodeInfo vdmNodeInfo : nodesSorted)
 		{
