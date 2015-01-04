@@ -53,7 +53,7 @@ public class OrdinaryQuantifierStrategy extends QuantifierBaseStrategy
 			AIdentifierVarExpCG setVar, List<SPatternCG> patterns)
 			throws AnalysisException
 	{
-		return firstBind ? packDecl(transformationAssistant.consBoolVarDecl(resultVarName, quantifier == OrdinaryQuantifier.FORALL))
+		return firstBind ? packDecl(transAssistant.consBoolVarDecl(resultVarName, quantifier == OrdinaryQuantifier.FORALL))
 				: null;
 	}
 
@@ -63,16 +63,16 @@ public class OrdinaryQuantifierStrategy extends QuantifierBaseStrategy
 			throws AnalysisException
 	{
 		SExpCG left = langIterator.getForLoopCond(setVar, patterns, pattern);
-		SExpCG right = transformationAssistant.consBoolCheck(resultVarName, quantifier == OrdinaryQuantifier.EXISTS);
+		SExpCG right = transAssistant.consBoolCheck(resultVarName, quantifier == OrdinaryQuantifier.EXISTS);
 
-		return transformationAssistant.consAndExp(left, right);
+		return transAssistant.consAndExp(left, right);
 	}
 
 	@Override
 	public List<SStmCG> getForLoopStms(AIdentifierVarExpCG setVar,
 			List<SPatternCG> patterns, SPatternCG pattern)
 	{
-		return lastBind ? packStm(transformationAssistant.consBoolVarAssignment(predicate, resultVarName))
+		return lastBind ? packStm(transAssistant.consBoolVarAssignment(predicate, resultVarName))
 				: null;
 	}
 }

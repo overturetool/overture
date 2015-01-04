@@ -77,12 +77,12 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 
 		for (SPatternCG id : patterns)
 		{
-			AVarDeclCG decl = transformationAssistant.consIdDecl(setType, id);
+			AVarDeclCG decl = transAssistant.consIdDecl(setType, id);
 			decls.add(decl);
 			outerBlockDecls.add(decl);
 		}
 
-		successVarDecl = transformationAssistant.consBoolVarDecl(successVarName, false);
+		successVarDecl = transAssistant.consBoolVarDecl(successVarName, false);
 		outerBlockDecls.add(successVarDecl);
 
 		return outerBlockDecls;
@@ -95,8 +95,8 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 		if (count > 0)
 		{
 			ALocalAssignmentStmCG successAssignment = new ALocalAssignmentStmCG();
-			successAssignment.setExp(transformationAssistant.getInfo().getExpAssistant().consBoolLiteral(false));
-			successAssignment.setTarget(transformationAssistant.consSuccessVar(successVarName));
+			successAssignment.setExp(transAssistant.getInfo().getExpAssistant().consBoolLiteral(false));
+			successAssignment.setTarget(transAssistant.consSuccessVar(successVarName));
 
 			return packStm(successAssignment);
 		} else
@@ -111,9 +111,9 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 			throws AnalysisException
 	{
 		SExpCG left = langIterator.getForLoopCond(setVar, patterns, pattern);
-		SExpCG right = transformationAssistant.consBoolCheck(successVarName, true);
+		SExpCG right = transAssistant.consBoolCheck(successVarName, true);
 
-		return transformationAssistant.consAndExp(left, right);
+		return transAssistant.consAndExp(left, right);
 	}
 
 	@Override
@@ -144,7 +144,7 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 	public List<SStmCG> getForLoopStms(AIdentifierVarExpCG setVar,
 			List<SPatternCG> patterns, SPatternCG pattern)
 	{
-		return packStm(transformationAssistant.consBoolVarAssignment(suchThat, successVarName));
+		return packStm(transAssistant.consBoolVarAssignment(suchThat, successVarName));
 	}
 
 	@Override
@@ -158,7 +158,7 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 		raise.setError(noBinding);
 
 		AIfStmCG ifStm = new AIfStmCG();
-		ifStm.setIfExp(transformationAssistant.consBoolCheck(successVarName, true));
+		ifStm.setIfExp(transAssistant.consBoolCheck(successVarName, true));
 		ifStm.setThenStm(raise);
 
 		return packStm(ifStm);
