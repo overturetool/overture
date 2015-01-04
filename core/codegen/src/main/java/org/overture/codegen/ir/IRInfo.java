@@ -73,6 +73,9 @@ public class IRInfo
 
 	// Unsupported VDM nodes
 	private Set<VdmNodeInfo> unsupportedNodes;
+	
+	// Transformation warnings
+	private Set<IrNodeInfo> transformationWarnings;
 
 	// For generating variable names
 	private ITempVarGen tempVarNameGen;
@@ -95,6 +98,7 @@ public class IRInfo
 		this.tcFactory = new TypeCheckerAssistantFactory();
 		this.quoteVaues = new LinkedList<String>();
 		this.unsupportedNodes = new HashSet<VdmNodeInfo>();
+		this.transformationWarnings = new HashSet<IrNodeInfo>();
 		this.tempVarNameGen = new TempVarNameGen();
 
 		this.settings = new IRSettings();
@@ -236,7 +240,7 @@ public class IRInfo
 	{
 		unsupportedNodes.clear();
 	}
-
+	
 	public void addUnsupportedNode(INode node)
 	{
 		VdmNodeInfo info = new VdmNodeInfo(node);
@@ -252,6 +256,22 @@ public class IRInfo
 	public Set<VdmNodeInfo> getUnsupportedNodes()
 	{
 		return unsupportedNodes;
+	}
+	
+	public void clearTransformationWarnings()
+	{
+		transformationWarnings.clear();
+	}
+	
+	public void addTransformationWarning(org.overture.codegen.cgast.INode node, String warning)
+	{
+		IrNodeInfo info = new IrNodeInfo(node, warning);
+		transformationWarnings.add(info);
+	}
+	
+	public Set<IrNodeInfo> getTransformationWarnings()
+	{
+		return transformationWarnings;
 	}
 
 	public ITempVarGen getTempVarNameGen()
