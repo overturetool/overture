@@ -226,7 +226,8 @@ public class JavaCodeGen extends CodeGenBase
 		
 		FunctionValueAssistant functionValueAssistant = new FunctionValueAssistant();
 
-		DepthFirstAnalysisAdaptor[] analyses = new JavaTransSeries(this).consAnalyses(classes, functionValueAssistant);
+		JavaTransSeries javaTransSeries = new JavaTransSeries(this);
+		DepthFirstAnalysisAdaptor[] analyses = javaTransSeries.consAnalyses(classes, functionValueAssistant);
 
 		for (DepthFirstAnalysisAdaptor transformation : analyses)
 		{
@@ -234,8 +235,7 @@ public class JavaCodeGen extends CodeGenBase
 			{
 				try
 				{
-					AClassDeclCG classCg = status.getClassCg();
-					classCg.apply(transformation);
+					generator.applyTransformation(status, transformation);
 
 				} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 				{
@@ -246,7 +246,7 @@ public class JavaCodeGen extends CodeGenBase
 				}
 			}
 		}
-
+		
 		List<String> skipping = new LinkedList<String>();
 		
 		MergeVisitor mergeVisitor = javaFormat.getMergeVisitor();
@@ -278,7 +278,9 @@ public class JavaCodeGen extends CodeGenBase
 					else
 					{
 						String formattedJavaCode = JavaCodeGenUtil.formatJavaCode(writer.toString());
-						generated.add(new GeneratedModule(className, classCg, formattedJavaCode));
+						GeneratedModule generatedModule = new GeneratedModule(className, classCg, formattedJavaCode);
+						generatedModule.setTransformationWarnings(status.getTransformationWarnings());
+						generated.add(generatedModule);
 					}
 				}
 				else
