@@ -350,6 +350,18 @@ public class Vdm2JavaCommand extends AbstractHandler
 						+ generatedModule.getName());
 				CodeGenConsole.GetInstance().println("Java source file: "
 						+ javaFile.getAbsolutePath());
+				
+				Set<IrNodeInfo> warnings = generatedModule.getTransformationWarnings();
+				
+				if(!warnings.isEmpty())
+				{
+					CodeGenConsole.GetInstance().println("The following transformation warnings were found for class " + generatedModule.getName() + ":");
+
+					for (IrNodeInfo  nodeInfo : warnings)
+					{
+						CodeGenConsole.GetInstance().println(nodeInfo.getReason());
+					}
+				}
 
 			}
 
