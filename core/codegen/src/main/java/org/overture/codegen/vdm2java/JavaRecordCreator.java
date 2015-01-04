@@ -52,7 +52,7 @@ import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.logging.Logger;
 
-public class JavaRecordCreator extends JavaObjectCreator
+public class JavaRecordCreator extends JavaClassCreatorBase
 {
 	private JavaFormat javaFormat;
 
@@ -110,7 +110,7 @@ public class JavaRecordCreator extends JavaObjectCreator
 				// Example: b = (_b != null) ? _b.clone() : null;
 				ATernaryIfExpCG checkedAssignment = new ATernaryIfExpCG();
 				checkedAssignment.setType(new ABoolBasicTypeCG());
-				checkedAssignment.setCondition(JavaFormatAssistant.consParamNotNullComp(varExp));
+				checkedAssignment.setCondition(javaFormat.getJavaFormatAssistant().consParamNotNullComp(varExp));
 				checkedAssignment.setTrueValue(varExp);
 				checkedAssignment.setFalseValue(new ANullExpCG());
 				assignment.setExp(checkedAssignment);
@@ -188,7 +188,7 @@ public class JavaRecordCreator extends JavaObjectCreator
 		{
 			// If the record has no fields equality is simply:
 			// return obj instanceof RecordType
-			returnTypeComp.setExp(JavaFormatAssistant.consInstanceOf(record, paramName));
+			returnTypeComp.setExp(javaFormat.getJavaFormatAssistant().consInstanceOf(record, paramName));
 			equalsStms.add(returnTypeComp);
 
 		} else
@@ -200,7 +200,7 @@ public class JavaRecordCreator extends JavaObjectCreator
 			AIfStmCG ifStm = new AIfStmCG();
 			ANotUnaryExpCG negated = new ANotUnaryExpCG();
 			negated.setType(new ABoolBasicTypeCG());
-			negated.setExp(JavaFormatAssistant.consInstanceOf(record, paramName));
+			negated.setExp(javaFormat.getJavaFormatAssistant().consInstanceOf(record, paramName));
 			ifStm.setIfExp(negated);
 
 			returnTypeComp.setExp(javaFormat.getIrInfo().getAssistantManager().getExpAssistant().consBoolLiteral(false));
@@ -209,16 +209,16 @@ public class JavaRecordCreator extends JavaObjectCreator
 			// If the inital check is passed we can safely cast the formal parameter
 			// To the record type: RecordType other = ((RecordType) obj);
 			String localVarName = "other";
-			ABlockStmCG formalParamCasted = JavaFormatAssistant.consVarFromCastedExp(record, paramName, localVarName);
+			ABlockStmCG formalParamCasted = javaFormat.getJavaFormatAssistant().consVarFromCastedExp(record, paramName, localVarName);
 
 			// Next compare the fields of the instance with the fields of the formal parameter "obj":
 			// return (field1 == obj.field1) && (field2 == other.field2)...
 			LinkedList<AFieldDeclCG> fields = record.getFields();
-			SExpCG previousComparisons = JavaFormatAssistant.consFieldComparison(record, fields.get(0), localVarName);
+			SExpCG previousComparisons = javaFormat.getJavaFormatAssistant().consFieldComparison(record, fields.get(0), localVarName);
 
 			for (int i = 1; i < fields.size(); i++)
 			{
-				previousComparisons = JavaFormatAssistant.extendAndExp(record, fields.get(i), previousComparisons, localVarName);
+				previousComparisons = javaFormat.getJavaFormatAssistant().extendAndExp(record, fields.get(i), previousComparisons, localVarName);
 			}
 
 			AReturnStmCG fieldsComparison = new AReturnStmCG();
@@ -251,7 +251,7 @@ public class JavaRecordCreator extends JavaObjectCreator
 			returnStm.setExp(zero);
 		} else
 		{
-			returnStm.setExp(JavaFormatAssistant.consUtilCallUsingRecFields(record, hashcodeMethod.getMethodType().getResult(), hashcodeMethod.getName()));
+			returnStm.setExp(javaFormat.getJavaFormatAssistant().consUtilCallUsingRecFields(record, hashcodeMethod.getMethodType().getResult(), hashcodeMethod.getName()));
 		}
 
 		hashcodeMethod.setBody(returnStm);
@@ -297,7 +297,7 @@ public class JavaRecordCreator extends JavaObjectCreator
 			ASeqConcatBinaryExpCG stringBuffer = new ASeqConcatBinaryExpCG();
 			stringBuffer.setType(strType.clone());
 			stringBuffer.setLeft(javaFormat.getIrInfo().getExpAssistant().consStringLiteral(recToStrPrefix, false));
-			stringBuffer.setRight(JavaFormatAssistant.consUtilCallUsingRecFields(record, strType, "formatFields"));
+			stringBuffer.setRight(javaFormat.getJavaFormatAssistant().consUtilCallUsingRecFields(record, strType, "formatFields"));
 			
 			returnStm.setExp(stringBuffer);
 		}

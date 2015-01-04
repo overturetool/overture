@@ -35,7 +35,6 @@ import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
-import org.overture.codegen.cgast.expressions.AExplicitVarExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
@@ -46,13 +45,11 @@ import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.APlainCallStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
-import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 
-public class JavaFormatAssistant
+public class JavaFormatAssistant extends JavaClassCreatorBase
 {
-
 	public static ATypeNameCG consTypeName(ARecordDeclCG record)
 			throws AnalysisException
 	{
@@ -73,7 +70,7 @@ public class JavaFormatAssistant
 		return typeName;
 	}
 
-	public static ABlockStmCG consVarFromCastedExp(ARecordDeclCG record,
+	public ABlockStmCG consVarFromCastedExp(ARecordDeclCG record,
 			String formalParamName, String varName) throws AnalysisException
 	{
 		// Construct a local var in a statement: RecordType varName = ((RecordType) formalParamName);
@@ -106,7 +103,7 @@ public class JavaFormatAssistant
 		return stm;
 	}
 
-	public static AAndBoolBinaryExpCG extendAndExp(ARecordDeclCG record,
+	public AAndBoolBinaryExpCG extendAndExp(ARecordDeclCG record,
 			AFieldDeclCG field, SExpCG previous, String paramName)
 			throws AnalysisException
 	{
@@ -120,7 +117,7 @@ public class JavaFormatAssistant
 		return nextAnd;
 	}
 
-	public static AInstanceofExpCG consInstanceOf(ARecordDeclCG record,
+	public AInstanceofExpCG consInstanceOf(ARecordDeclCG record,
 			String formalParamName)
 	{
 		// Example: objRef instanceof classType
@@ -147,7 +144,7 @@ public class JavaFormatAssistant
 		return instanceOfExp;
 	}
 
-	public static AAddrNotEqualsBinaryExpCG consParamNotNullComp(
+	public AAddrNotEqualsBinaryExpCG consParamNotNullComp(
 			AIdentifierVarExpCG param)
 	{
 		AAddrNotEqualsBinaryExpCG fieldComparison = new AAddrNotEqualsBinaryExpCG();
@@ -165,7 +162,7 @@ public class JavaFormatAssistant
 		return fieldComparison;
 	}
 
-	public static APlainCallStmCG consCallStm(AFieldDeclCG field)
+	public APlainCallStmCG consCallStm(AFieldDeclCG field)
 	{
 		APlainCallStmCG call = new APlainCallStmCG();
 
@@ -185,7 +182,7 @@ public class JavaFormatAssistant
 		return call;
 	}
 
-	public static AEqualsBinaryExpCG consFieldComparison(ARecordDeclCG record,
+	public AEqualsBinaryExpCG consFieldComparison(ARecordDeclCG record,
 			AFieldDeclCG field, String formalParamName)
 			throws AnalysisException
 	{
@@ -218,7 +215,7 @@ public class JavaFormatAssistant
 		return fieldComparison;
 	}
 
-	public static AApplyExpCG consUtilCallUsingRecFields(ARecordDeclCG record,
+	public AApplyExpCG consUtilCallUsingRecFields(ARecordDeclCG record,
 			STypeCG returnType, String memberName)
 	{
 		LinkedList<AFieldDeclCG> fields = record.getFields();
@@ -235,26 +232,6 @@ public class JavaFormatAssistant
 			args.add(nextArg);
 		}
 
-		return call;
-	}
-
-	public static AApplyExpCG consUtilCall(STypeCG returnType, String memberName)
-	{
-		AExplicitVarExpCG member = new AExplicitVarExpCG();
-
-		AMethodTypeCG methodType = new AMethodTypeCG();
-		methodType.setResult(returnType.clone());
-		member.setType(methodType);
-		member.setIsLambda(false);
-		member.setIsLocal(false);
-		AExternalTypeCG classType = new AExternalTypeCG();
-		classType.setName(JavaFormat.UTILS_FILE);
-		member.setClassType(classType);
-		member.setName(memberName);
-		AApplyExpCG call = new AApplyExpCG();
-		call.setType(returnType.clone());
-		call.setRoot(member);
-		
 		return call;
 	}
 }

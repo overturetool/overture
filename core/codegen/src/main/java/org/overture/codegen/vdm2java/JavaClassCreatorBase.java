@@ -1,21 +1,25 @@
 package org.overture.codegen.vdm2java;
 
+import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
+import org.overture.codegen.cgast.expressions.AApplyExpCG;
+import org.overture.codegen.cgast.expressions.AExplicitVarExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
+import org.overture.codegen.ir.IRGeneratedTag;
 
-public class JavaObjectCreator
+abstract public class JavaClassCreatorBase
 {
-	public JavaObjectCreator()
+	public JavaClassCreatorBase()
 	{
 		super();
 	}
-
-	protected AMethodDeclCG consDefaultCtorSignature(String className)
+	
+	public AMethodDeclCG consDefaultCtorSignature(String className)
 	{
 		AMethodDeclCG constructor = new AMethodDeclCG();
 		constructor.setAccess(JavaFormat.JAVA_PUBLIC);
@@ -25,7 +29,7 @@ public class JavaObjectCreator
 		return constructor;
 	}
 
-	protected AMethodDeclCG consCloneSignature(AMethodTypeCG methodType)
+	public AMethodDeclCG consCloneSignature(AMethodTypeCG methodType)
 	{
 		AMethodDeclCG method = new AMethodDeclCG();
 		method.setAccess(JavaFormat.JAVA_PUBLIC);
@@ -35,7 +39,7 @@ public class JavaObjectCreator
 		return method;
 	}
 
-	protected AMethodDeclCG consEqualMethodSignature(String paramName)
+	public AMethodDeclCG consEqualMethodSignature(String paramName)
 	{
 		AMethodDeclCG equalsMethod = new AMethodDeclCG();
 		
@@ -66,7 +70,7 @@ public class JavaObjectCreator
 		return equalsMethod;
 	}
 
-	protected AMethodDeclCG consHashcodeMethodSignature()
+	public AMethodDeclCG consHashcodeMethodSignature()
 	{
 		String hashCode = "hashCode";
 	
@@ -86,11 +90,14 @@ public class JavaObjectCreator
 		return hashcodeMethod;
 	}
 
-	protected AMethodDeclCG consToStringSignature()
+	public AMethodDeclCG consToStringSignature()
 	{
 		AMethodDeclCG toStringMethod = new AMethodDeclCG();
+		toStringMethod.setTag(new IRGeneratedTag(getClass().getName()));
 	
+		toStringMethod.setIsConstructor(false);
 		toStringMethod.setAccess(JavaFormat.JAVA_PUBLIC);
+		toStringMethod.setStatic(false);
 		toStringMethod.setName("toString");
 	
 		AStringTypeCG returnType = new AStringTypeCG();
@@ -101,5 +108,29 @@ public class JavaObjectCreator
 		toStringMethod.setMethodType(methodType);
 		return toStringMethod;
 	}
+	
+	public AApplyExpCG consUtilCall(STypeCG returnType, String memberName)
+	{
+		AExplicitVarExpCG member = new AExplicitVarExpCG();
 
+		AMethodTypeCG methodType = new AMethodTypeCG();
+		methodType.setResult(returnType.clone());
+		member.setType(methodType);
+		member.setIsLambda(false);
+		member.setIsLocal(false);
+		AExternalTypeCG classType = new AExternalTypeCG();
+		classType.setName(JavaFormat.UTILS_FILE);
+		member.setClassType(classType);
+		member.setName(memberName);
+		AApplyExpCG call = new AApplyExpCG();
+		call.setType(returnType.clone());
+		call.setRoot(member);
+		
+		return call;
+	}
+	
+	public AApplyExpCG consUtilsToStringCall()
+	{
+		return consUtilCall(new AStringTypeCG(), "toString");
+	}
 }

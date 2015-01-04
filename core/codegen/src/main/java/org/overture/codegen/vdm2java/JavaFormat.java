@@ -119,15 +119,22 @@ public class JavaFormat
 	private FunctionValueAssistant functionValueAssistant;
 	private MergeVisitor mergeVisitor;
 	private JavaValueSemantics valueSemantics;
+	private JavaFormatAssistant javaFormatAssistant;
 
 	public JavaFormat(TempVarPrefixes varPrefixes, TemplateStructure templateStructure, IRInfo info)
 	{
 		this.valueSemantics = new JavaValueSemantics(this);
-		JavaObjectCreator recordCreator = new JavaRecordCreator(this);
+		JavaClassCreatorBase recordCreator = new JavaRecordCreator(this);
 		TemplateCallable[] templateCallables = TemplateCallableManager.constructTemplateCallables(this, IRAnalysis.class, varPrefixes, valueSemantics, recordCreator);
 		this.mergeVisitor = new MergeVisitor(templateStructure, templateCallables);
 		this.functionValueAssistant = null;
 		this.info = info;
+		this.javaFormatAssistant = new JavaFormatAssistant();
+	}
+	
+	public JavaFormatAssistant getJavaFormatAssistant()
+	{
+		return javaFormatAssistant;
 	}
 
 	public String getJavaNumber()
