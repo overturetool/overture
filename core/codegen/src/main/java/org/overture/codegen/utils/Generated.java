@@ -34,6 +34,7 @@ public class Generated
 	protected String content;
 	protected Set<VdmNodeInfo> unsupportedInIr;
 	protected Set<IrNodeInfo> unsupportedInTargLang;
+	protected Set<IrNodeInfo> transformationWarnings;
 	protected List<Exception> mergeErrors;
 
 	public Generated(String content, Set<VdmNodeInfo> unsupportedInIr,
@@ -43,6 +44,7 @@ public class Generated
 		this.content = content;
 		this.unsupportedInIr = unsupportedInIr;
 		this.unsupportedInTargLang = unsupportedInTargLang;
+		this.transformationWarnings = new HashSet<IrNodeInfo>();
 		this.mergeErrors = mergeErrors;
 	}
 
@@ -94,6 +96,16 @@ public class Generated
 	public boolean hasUnsupportedTargLangNodes()
 	{
 		return !unsupportedInTargLang.isEmpty();
+	}
+
+	public Set<IrNodeInfo> getTransformationWarnings()
+	{
+		return transformationWarnings;
+	}
+
+	public void setTransformationWarnings(Set<IrNodeInfo> transformationWarnings)
+	{
+		this.transformationWarnings = transformationWarnings;
 	}
 
 	public boolean hasMergeErrors()
