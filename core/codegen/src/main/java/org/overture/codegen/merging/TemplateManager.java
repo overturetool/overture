@@ -365,9 +365,6 @@ public class TemplateManager
 		nodeTemplateFileNames.put(ANullExpCG.class, templateStructure.EXP_PATH
 				+ "Null");
 
-		nodeTemplateFileNames.put(ALetDefExpCG.class, templateStructure.EXP_PATH
-				+ "LetDef");
-
 		nodeTemplateFileNames.put(AMethodInstantiationExpCG.class, templateStructure.EXP_PATH
 				+ "MethodInstantiation");
 
