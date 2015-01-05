@@ -7,6 +7,8 @@ import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.ir.IRInfo;
+import org.overture.codegen.traces.JavaCallStmToStringBuilder;
+import org.overture.codegen.traces.TracesTransformation;
 import org.overture.codegen.trans.IPostCheckCreator;
 import org.overture.codegen.trans.IsExpTransformation;
 import org.overture.codegen.trans.PostCheckTransformation;
@@ -35,7 +37,7 @@ import static org.overture.codegen.ir.CodeGenBase.*;
 public class JavaTransSeries
 {
 	private JavaCodeGen codeGen;
-
+	
 	public JavaTransSeries(JavaCodeGen codeGen)
 	{
 		this.codeGen = codeGen;
@@ -61,7 +63,8 @@ public class JavaTransSeries
 		PostCheckTransformation postCheckTransformation = new PostCheckTransformation(postCheckCreator, irInfo, transAssistant, FUNC_RESULT_NAME_PREFIX, new JavaValueSemanticsTag(false));
 		IsExpTransformation isExpTransformation = new IsExpTransformation(irInfo, transAssistant, IS_EXP_SUBJECT_NAME_PREFIX);
 		SeqConversionTransformation seqConversionTransformation = new SeqConversionTransformation(transAssistant);
-
+		TracesTransformation tracesTransformation = new TracesTransformation(irInfo, classes, transAssistant, codeGen.getTempVarPrefixes(), codeGen.getTracePrefixes(), langIterator, new JavaCallStmToStringBuilder());
+		
 		// Concurrency related transformations
 		SentinelTransformation concurrencytransform = new SentinelTransformation(irInfo, classes);
 		MainClassConcTransformation mainclassTransform = new MainClassConcTransformation(irInfo, classes);
@@ -76,7 +79,7 @@ public class JavaTransSeries
 				funcValueTransformation, transVisitor, patternTransformation,
 				preCheckTransformation, postCheckTransformation,
 				isExpTransformation, unionTypeTransformation,
-				javaToStringTransformation, concurrencytransform,
+				javaToStringTransformation, concurrencytransform, tracesTransformation,
 				mutexTransform, mainclassTransform, seqConversionTransformation, instanceVarPPEval };
 
 		return analyses;
