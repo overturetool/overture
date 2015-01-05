@@ -4,14 +4,14 @@ public class TraceNames
 {
 	// Related to TraceNode
 	
-	public String voidValueEnclosingClassName()
+	public String traceNodeNodeClassName()
 	{
-		return "Utils";
+		return "TraceNode";
 	}
 	
-	public String voidValueFieldName()
+	public String executeTestsMethodName()
 	{
-		return "VOID_VALUE";
+		return "executeTests";
 	}
 	
 	// Related to the AlternativeTraceNode
@@ -124,5 +124,17 @@ public class TraceNames
 	public String addMethodName()
 	{
 		return "add";
+	}
+	
+	// Utility stuff
+	
+	public String voidValueEnclosingClassName()
+	{
+		return "Utils";
+	}
+	
+	public String voidValueFieldName()
+	{
+		return "VOID_VALUE";
 	}
 }
