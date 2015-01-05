@@ -221,6 +221,7 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 			IRInfo question) throws AnalysisException
 	{
 		ABlockStmCG blockStm = new ABlockStmCG();
+		blockStm.setScoped(question.getStmAssistant().isScoped(node));
 
 		LinkedList<AAssignmentDefinition> assignmentDefs = node.getAssignmentDefs();
 
@@ -293,6 +294,7 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 			throws AnalysisException
 	{
 		ABlockStmCG block = new ABlockStmCG();
+		block.setScoped(question.getStmAssistant().isScoped(node));
 		
 		question.getDeclAssistant().setLocalDefs(node.getLocalDefs(), block.getLocalDefs(), question);
 

@@ -24,16 +24,30 @@ package org.overture.codegen.assistant;
 import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.statements.ABlockSimpleBlockStm;
 import org.overture.ast.statements.ACaseAlternativeStm;
+import org.overture.ast.statements.AElseIfStm;
+import org.overture.ast.statements.AForAllStm;
+import org.overture.ast.statements.AForIndexStm;
+import org.overture.ast.statements.AIfStm;
+import org.overture.ast.statements.ALetStm;
+import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACaseAltStmStmCG;
+import org.overture.codegen.cgast.statements.AElseIfStmCG;
+import org.overture.codegen.cgast.statements.AForAllStmCG;
+import org.overture.codegen.cgast.statements.AForIndexStmCG;
+import org.overture.codegen.cgast.statements.AForLoopStmCG;
+import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.ASuperCallStmCG;
 import org.overture.codegen.ir.IRInfo;
 
@@ -95,5 +109,34 @@ public class StmAssistantCG extends AssistantBase
 		AClassDeclCG enclosingClass = stm.getAncestor(AClassDeclCG.class);
 		
 		return enclosingClass.getName();
+	}
+	
+	public boolean isScoped(ABlockSimpleBlockStm block)
+	{
+		return appearsInRightContext(block);
+	}
+	
+	public boolean isScoped(ALetStm let)
+	{
+		return appearsInRightContext(let);
+	}
+
+	private boolean appearsInRightContext(PStm block)
+	{
+		return !(block.parent() instanceof SOperationDefinition) && 
+				!(block.parent() instanceof AElseIfStm) && 
+				!(block.parent() instanceof AIfStm) &&
+				!(block.parent() instanceof AForAllStm) &&
+				!(block.parent() instanceof AForIndexStm);
+	}
+	
+	public boolean isScoped(ABlockStmCG block)
+	{
+		return !(block.parent() instanceof AMethodDeclCG) &&
+				!(block.parent() instanceof AElseIfStmCG) &&
+				!(block.parent() instanceof AIfStmCG) &&
+				!(block.parent() instanceof AForAllStmCG) &&
+				!(block.parent() instanceof AForIndexStmCG) &&
+				!(block.parent() instanceof AForLoopStmCG);
 	}
 }

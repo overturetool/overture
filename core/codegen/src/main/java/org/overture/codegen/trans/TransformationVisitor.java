@@ -327,6 +327,8 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 
 		// Replace the let be st statement with the transformation
 		transformationAssistant.replaceNodeWithRecursively(node, outerBlock, this);
+		
+		outerBlock.setScoped(info.getStmAssistant().isScoped(outerBlock));
 	}
 
 	@Override
@@ -384,6 +386,8 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		// And make sure to have the enclosing statement in the transformed tree
 		outerBlock.getStatements().add(enclosingStm);
 		outerBlock.apply(this);
+		
+		outerBlock.setScoped(info.getStmAssistant().isScoped(outerBlock));
 	}
 	
 	@Override
@@ -665,6 +669,8 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 
 		exp.apply(this);
 		topBlock.apply(this);
+		
+		topBlock.setScoped(info.getStmAssistant().isScoped(topBlock));
 	}
 
 	private void replaceCompWithTransformation(SStmCG enclosingStm,
