@@ -51,6 +51,11 @@ public class TracesTransformation extends DepthFirstAnalysisAdaptor
 	public void caseANamedTraceDeclCG(ANamedTraceDeclCG node)
 			throws AnalysisException
 	{
+		if(!irInfo.getSettings().generateTraces())
+		{
+			return;
+		}
+		
 		if (!traceIsSupported(node))
 		{
 			irInfo.addTransformationWarning(node, "The super call statement is not supported "
