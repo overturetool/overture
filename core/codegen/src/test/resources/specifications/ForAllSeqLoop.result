@@ -12,8 +12,6 @@ public class A {
 
         for (Iterator iterator_1 = x.iterator(); iterator_1.hasNext();) {
             Rec e = (Rec) iterator_1.next();
-
-            //Skip;
         }
     }
 

@@ -304,13 +304,15 @@ public class MessageChannel implements EvaluatePP {
                 Log.getInstance().log("***> ClientListen");
             }
 
-            Object r = Listen();
+            {
+                Object r = Listen();
 
-            if (debug) {
-                Log.getInstance().log("***> fin ClientListen");
+                if (debug) {
+                    Log.getInstance().log("***> fin ClientListen");
+                }
+
+                return r;
             }
-
-            return r;
         } finally {
             sentinel.leaving(((MessageChannel_sentinel) sentinel).ClientListen);
         }
@@ -342,13 +344,15 @@ public class MessageChannel implements EvaluatePP {
                 Log.getInstance().log("***> ServerListen");
             }
 
-            Object c = Listen();
+            {
+                Object c = Listen();
 
-            if (debug) {
-                Log.getInstance().log("***> fin ServerListen");
+                if (debug) {
+                    Log.getInstance().log("***> fin ServerListen");
+                }
+
+                return c;
             }
-
-            return c;
         } finally {
             sentinel.leaving(((MessageChannel_sentinel) sentinel).ServerListen);
         }
@@ -616,22 +620,27 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
                         quotes.Transaction.getInstance());
 
                 if (success_4) {
-                    Boolean b = parent.RemoveDeletedMessages(user);
-                    ss = quotes.Update.getInstance();
-                    sentinel.stateChanged();
+                    {
+                        Boolean b = parent.RemoveDeletedMessages(user);
 
-                    parent.ReleaseLock(id);
+                        {
+                            ss = quotes.Update.getInstance();
+                            sentinel.stateChanged();
 
-                    Object ternaryIfExp_1 = null;
+                            parent.ReleaseLock(id);
 
-                    if (b) {
-                        ternaryIfExp_1 = new POP3Types.OkResponse(quitMsg);
-                    } else {
-                        ternaryIfExp_1 = new POP3Types.ErrResponse(deleteFailMsg);
+                            Object ternaryIfExp_1 = null;
+
+                            if (b) {
+                                ternaryIfExp_1 = new POP3Types.OkResponse(quitMsg);
+                            } else {
+                                ternaryIfExp_1 = new POP3Types.ErrResponse(deleteFailMsg);
+                            }
+
+                            response = ternaryIfExp_1;
+                            sentinel.stateChanged();
+                        }
                     }
-
-                    response = ternaryIfExp_1;
-                    sentinel.stateChanged();
                 } else {
                     throw new RuntimeException("ERROR statement reached");
                 }
@@ -1998,8 +2007,10 @@ public class POP3Server extends VDMThread implements EvaluatePP {
                 break;
             }
 
-            MessageChannel msgChannel = connChannel.Get();
-            CreateClientHandler(msgChannel);
+            {
+                MessageChannel msgChannel = connChannel.Get();
+                CreateClientHandler(msgChannel);
+            }
 
             serverStarted = true;
             sentinel.stateChanged();
@@ -2173,18 +2184,24 @@ public class POP3Test implements EvaluatePP {
             MessageChannelBuffer ch = new MessageChannelBuffer();
             POP3Server server = new POP3Server(MakeMailDrop(), ch,
                     MakePasswordMap());
-            MessageChannel mc = new MessageChannel();
-            server.start();
-            ch.Put(mc);
 
-            VDMSeq run = TestRun1();
-            POP3TestSender send = new POP3TestSender("c", Utils.clone(run), mc);
-            POP3TestListener listen = new POP3TestListener("l", mc);
-            send.start();
-            listen.start();
-            listen.IsFinished();
+            {
+                MessageChannel mc = new MessageChannel();
+                server.start();
+                ch.Put(mc);
 
-            return Log.getInstance().output();
+                {
+                    VDMSeq run = TestRun1();
+                    POP3TestSender send = new POP3TestSender("c",
+                            Utils.clone(run), mc);
+                    POP3TestListener listen = new POP3TestListener("l", mc);
+                    send.start();
+                    listen.start();
+                    listen.IsFinished();
+                }
+
+                return Log.getInstance().output();
+            }
         } finally {
             sentinel.leaving(((POP3Test_sentinel) sentinel).Test1);
         }
@@ -2197,27 +2214,32 @@ public class POP3Test implements EvaluatePP {
             MessageChannelBuffer ch = new MessageChannelBuffer();
             POP3Server server = new POP3Server(MakeMailDrop(), ch,
                     MakePasswordMap());
-            MessageChannel mc1 = new MessageChannel();
-            MessageChannel mc2 = new MessageChannel();
-            server.start();
-            ch.Put(mc1);
-            ch.Put(mc2);
 
-            VDMSeq run = TestRun1();
-            POP3TestSender send1 = new POP3TestSender("c1", Utils.clone(run),
-                    mc1);
-            POP3TestSender send2 = new POP3TestSender("c2", Utils.clone(run),
-                    mc2);
-            POP3TestListener listen1 = new POP3TestListener("l1", mc1);
-            POP3TestListener listen2 = new POP3TestListener("l2", mc2);
-            send1.start();
-            send2.start();
-            listen1.start();
-            listen2.start();
-            listen1.IsFinished();
-            listen2.IsFinished();
+            {
+                MessageChannel mc1 = new MessageChannel();
+                MessageChannel mc2 = new MessageChannel();
+                server.start();
+                ch.Put(mc1);
+                ch.Put(mc2);
 
-            return Log.getInstance().output();
+                {
+                    VDMSeq run = TestRun1();
+                    POP3TestSender send1 = new POP3TestSender("c1",
+                            Utils.clone(run), mc1);
+                    POP3TestSender send2 = new POP3TestSender("c2",
+                            Utils.clone(run), mc2);
+                    POP3TestListener listen1 = new POP3TestListener("l1", mc1);
+                    POP3TestListener listen2 = new POP3TestListener("l2", mc2);
+                    send1.start();
+                    send2.start();
+                    listen1.start();
+                    listen2.start();
+                    listen1.IsFinished();
+                    listen2.IsFinished();
+                }
+
+                return Log.getInstance().output();
+            }
         } finally {
             sentinel.leaving(((POP3Test_sentinel) sentinel).Test2);
         }

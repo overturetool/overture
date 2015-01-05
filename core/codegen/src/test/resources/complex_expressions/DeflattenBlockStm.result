@@ -20,20 +20,23 @@ public class Entry {
 
         VDMSet b = Utils.clone(setCompResult_1);
         Number c = 2L;
-        Number d = 10L;
-        VDMSet setCompResult_2 = SetUtil.set();
-        VDMSet set_2 = SetUtil.set(4L, 5L, 6L);
 
-        for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext();) {
-            Number x = ((Number) iterator_2.next());
-            setCompResult_2 = SetUtil.union(Utils.clone(setCompResult_2),
-                    SetUtil.set(x.longValue() + d.longValue()));
+        {
+            Number d = 10L;
+            VDMSet setCompResult_2 = SetUtil.set();
+            VDMSet set_2 = SetUtil.set(4L, 5L, 6L);
+
+            for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext();) {
+                Number x = ((Number) iterator_2.next());
+                setCompResult_2 = SetUtil.union(Utils.clone(setCompResult_2),
+                        SetUtil.set(x.longValue() + d.longValue()));
+            }
+
+            VDMSet e = Utils.clone(setCompResult_2);
+            Number f = 20L;
+
+            return SetUtil.union(Utils.clone(b), Utils.clone(e));
         }
-
-        VDMSet e = Utils.clone(setCompResult_2);
-        Number f = 20L;
-
-        return SetUtil.union(Utils.clone(b), Utils.clone(e));
     }
 
     public String toString() {

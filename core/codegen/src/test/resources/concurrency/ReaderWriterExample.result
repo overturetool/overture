@@ -274,14 +274,16 @@ public class Entry implements EvaluatePP {
     }
 
     public static Number Run() {
-        Buffer B = new Buffer();
-        Writer wrt = new Writer(B);
-        Reader read = new Reader(B);
-        wrt.start();
-        read.start();
-        B.IsFinished();
+        {
+            Buffer B = new Buffer();
+            Writer wrt = new Writer(B);
+            Reader read = new Reader(B);
+            wrt.start();
+            read.start();
+            B.IsFinished();
 
-        return B.data;
+            return B.data;
+        }
     }
 
     public String toString() {

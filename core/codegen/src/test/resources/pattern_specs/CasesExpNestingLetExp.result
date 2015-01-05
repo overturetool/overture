@@ -42,9 +42,11 @@ public class Entry {
                     casesExpResult_1 = 3L;
                 }
             } else {
-                Number b = 5L;
+                {
+                    Number b = 5L;
 
-                casesExpResult_1 = b;
+                    casesExpResult_1 = b;
+                }
             }
         } else {
             casesExpResult_1 = 50L;

@@ -25,10 +25,13 @@ public class Entry {
                     success_1 = true;
 
                     if (success_1) {
-                        Number x = 1L;
-                        Number y = 2L;
+                        {
+                            Number x = 1L;
+                            Number y = 2L;
 
-                        return a.longValue() + x.longValue() + y.longValue();
+                            return a.longValue() + x.longValue() +
+                            y.longValue();
+                        }
                     } else {
                         return 999L;
                     }

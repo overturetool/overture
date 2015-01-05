@@ -27,9 +27,11 @@ public class Entry {
             throw new RuntimeException("Let Be St found no applicable bindings");
         }
 
-        Number b = 2L;
+        {
+            Number b = 2L;
 
-        letBeStExp_1 = 3L;
+            letBeStExp_1 = 3L;
+        }
 
         return letBeStExp_1;
     }
