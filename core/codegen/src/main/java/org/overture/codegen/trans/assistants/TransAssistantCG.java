@@ -60,6 +60,7 @@ import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
+import org.overture.codegen.cgast.types.AUnknownTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
@@ -283,6 +284,14 @@ public class TransAssistantCG extends BaseTransformationAssistant
 	public AVarDeclCG consDecl(String varName, SExpCG exp)
 	{
 		return consDecl(varName, exp.getType().clone(), exp);
+	}
+	
+	public ANullExpCG consNullExp()
+	{
+		ANullExpCG nullExp = new ANullExpCG();
+		nullExp.setType(new AUnknownTypeCG());
+		
+		return nullExp;
 	}
 
 	public AVarDeclCG consDecl(String varName, STypeCG type, SExpCG exp)

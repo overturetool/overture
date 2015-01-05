@@ -356,8 +356,13 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 			String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_LET_BE_ST_EXP_NAME_PREFIX);
 			SExpCG value = node.getValue();
 
-			AVarDeclCG resultDecl = transformationAssistant.consDecl(var, value);
-			info.getStmAssistant().injectDeclAsStm(outerBlock, resultDecl);
+			AVarDeclCG resultDecl = transformationAssistant.consDecl(var, value.getType().clone(), transformationAssistant.consNullExp());
+			outerBlock.getLocalDefs().add(resultDecl);
+			
+			ALocalAssignmentStmCG setLetBeStResult = new ALocalAssignmentStmCG();
+			setLetBeStResult.setTarget(transformationAssistant.consIdentifierVar(var, value.getType().clone()));
+			setLetBeStResult.setExp(value);
+			outerBlock.getStatements().add(setLetBeStResult);
 
 			AIdentifierVarExpCG varExpResult = new AIdentifierVarExpCG();
 			varExpResult.setType(value.getType().clone());
