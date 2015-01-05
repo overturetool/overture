@@ -8,6 +8,7 @@ public class Entry {
     }
 
     public static Number Run() {
+        Number letBeStExp_1 = null;
         Number x = null;
         Number y = null;
         Number z = null;
@@ -45,7 +46,7 @@ public class Entry {
             throw new RuntimeException("Let Be St found no applicable bindings");
         }
 
-        Number letBeStExp_1 = x.longValue() * y.longValue() * z.longValue();
+        letBeStExp_1 = x.longValue() * y.longValue() * z.longValue();
 
         return letBeStExp_1;
     }

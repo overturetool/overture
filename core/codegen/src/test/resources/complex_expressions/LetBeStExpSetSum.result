@@ -15,6 +15,7 @@ public class Entry {
         if (xs.isEmpty()) {
             return 0L;
         } else {
+            Number letBeStExp_1 = null;
             Number x = null;
             Boolean success_1 = false;
             VDMSet set_1 = Utils.clone(xs);
@@ -30,7 +31,7 @@ public class Entry {
                     "Let Be St found no applicable bindings");
             }
 
-            Number letBeStExp_1 = x.longValue() +
+            letBeStExp_1 = x.longValue() +
                 sum(SetUtil.diff(Utils.clone(xs), SetUtil.set(x))).longValue();
 
             return letBeStExp_1;

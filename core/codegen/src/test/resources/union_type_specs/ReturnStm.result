@@ -12,6 +12,7 @@ public class Entry {
     }
 
     private static Number f(final VDMSet tups) {
+        Object letBeStExp_1 = null;
         Tuple e = null;
         Boolean success_1 = false;
         VDMSet set_1 = Utils.clone(tups);
@@ -34,7 +35,7 @@ public class Entry {
             ternaryIfExp_1 = ((Number) e.get(0));
         }
 
-        Object letBeStExp_1 = ternaryIfExp_1;
+        letBeStExp_1 = ternaryIfExp_1;
 
         return ((Number) letBeStExp_1);
     }

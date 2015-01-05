@@ -902,6 +902,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
         if (s.isEmpty()) {
             return SeqUtil.seq();
         } else {
+            VDMSeq letBeStExp_1 = null;
             tp v = null;
             Boolean success_1 = false;
             VDMSet set_2 = Utils.clone(s);
@@ -917,7 +918,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
                     "Let Be St found no applicable bindings");
             }
 
-            VDMSeq letBeStExp_1 = SeqUtil.conc(SeqUtil.seq(v),
+            letBeStExp_1 = SeqUtil.conc(SeqUtil.seq(v),
                     set2seq(SetUtil.diff(Utils.clone(s), SetUtil.set(v))));
 
             return Utils.clone(letBeStExp_1);
@@ -1015,6 +1016,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
         if (s.isEmpty()) {
             return 0L;
         } else {
+            Number letBeStExp_2 = null;
             Number e = null;
             Boolean success_2 = false;
             VDMSet set_4 = Utils.clone(s);
@@ -1030,8 +1032,8 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
                     "Let Be St found no applicable bindings");
             }
 
-            Number letBeStExp_2 = sum(SetUtil.diff(Utils.clone(s),
-                        SetUtil.set(e))).longValue() + e.longValue();
+            letBeStExp_2 = sum(SetUtil.diff(Utils.clone(s), SetUtil.set(e)))
+                               .longValue() + e.longValue();
 
             return letBeStExp_2;
         }
