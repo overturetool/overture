@@ -57,6 +57,7 @@ public class JavaCodeGenMain
 		irSettings.setGeneratePreCondChecks(false);
 		irSettings.setGeneratePostConds(false);
 		irSettings.setGeneratePostCondChecks(false);
+		irSettings.setGenerateTraces(true);
 		
 		JavaSettings javaSettings = new JavaSettings();
 		javaSettings.setDisableCloning(false);
