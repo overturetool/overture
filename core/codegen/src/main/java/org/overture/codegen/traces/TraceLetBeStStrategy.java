@@ -99,11 +99,14 @@ public class TraceLetBeStStrategy extends LetBeStStrategy
 	{
 		ABlockStmCG block = new ABlockStmCG();
 
-		AIfStmCG ifStm = new AIfStmCG();
-		ifStm.setIfExp(transAssistant.getInfo().getExpAssistant().negate(suchThat.clone()));
-		ifStm.setThenStm(new AContinueStmCG());
-
-		block.getStatements().add(ifStm);
+		if (suchThat != null)
+		{
+			AIfStmCG ifStm = new AIfStmCG();
+			ifStm.setIfExp(transAssistant.getInfo().getExpAssistant().negate(suchThat.clone()));
+			ifStm.setThenStm(new AContinueStmCG());
+			block.getStatements().add(ifStm);
+		}
+		
 		block.getStatements().add(nodeData.getStms());
 
 		STypeCG instanceType = altTests.getType().clone();
