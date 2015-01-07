@@ -3,10 +3,10 @@ import java.rmi.server.UnicastRemoteObject;
 import org.overture.codegen.runtime.*;
 import java.util.*;
 
-##set( $threadMethod = "")
-##if (!$JavaFormat.isNull($node.getThread()))
-	##set( $threadMethod = $JavaFormat.format($node.getThread()))
-##end
+#set( $threadMethod = "")
+#if (!$JavaFormat.isNull($node.getThread()))
+	#set( $threadMethod = $JavaFormat.format($node.getThread()))
+#end
 
 #set($UniCast = $node.getSuperName())
 #if ($node.getIsUniCast())
@@ -28,5 +28,5 @@ public class ${node.getName()} extends $UniCast implements EvaluatePP, ${node.ge
 	$JavaFormat.format($method)
 	#end
 
-	##${threadMethod}##
+	${threadMethod}##
 }

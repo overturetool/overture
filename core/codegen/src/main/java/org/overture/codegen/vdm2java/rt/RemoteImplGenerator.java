@@ -38,6 +38,7 @@ public class RemoteImplGenerator {
 			contractImpl.setSuperName(classCg.getSuperName());
 			contractImpl.setInnerClasses(classCg.getInnerClasses());
 			contractImpl.setInterfaces(classCg.getInterfaces());
+			contractImpl.setThread(classCg.getThread());
 			if(classCg.getSuperName()==null) contractImpl.setIsUniCast(true);
 			else contractImpl.setIsUniCast(false);
 			for(AMethodDeclCG method : classCg.getMethods()){
