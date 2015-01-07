@@ -152,6 +152,7 @@ CG {-> package='org.overture.codegen.cgast'
     	[typeDecls]:CG.#decl.type*
     	[perSyncs]:CG.#decl.persync*
     	[mutexSyncs]:CG.#decl.mutexSync*
+    	[thread]:CG.#decl.thread
 	|	{remoteInstance}
 		[name]:java_String
 		[nameString]:java_String
