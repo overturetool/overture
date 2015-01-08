@@ -79,7 +79,6 @@ import org.overture.config.Settings;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.FlatCheckedEnvironment;
 import org.overture.typechecker.TypeCheckInfo;
-import org.overture.typechecker.TypeChecker;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
@@ -1569,38 +1568,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAIfExp(AIfExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		question.qualifiers = null;
-
-		if (!question.assistantFactory.createPTypeAssistant().isType(node.getTest().apply(THIS, question.newConstraint(null)), ABooleanBasicType.class))
-		{
-			TypeChecker.report(3108, "If expression is not a boolean", node.getLocation());
-		}
-
-		List<QualifiedDefinition> qualified = node.getTest().apply(question.assistantFactory.getQualificationVisitor(), question);
-
-		for (QualifiedDefinition qdef : qualified)
-		{
-			qdef.qualifyType();
-		}
-
-		PTypeSet rtypes = new PTypeSet(question.assistantFactory);
-		question.qualifiers = null;
-		rtypes.add(node.getThen().apply(THIS, question));
-
-		for (QualifiedDefinition qdef : qualified)
-		{
-			qdef.resetType();
-		}
-
-		for (AElseIfExp eie : node.getElseList())
-		{
-			question.qualifiers = null;
-			rtypes.add(eie.apply(THIS, question));
-		}
-		question.qualifiers = null;
-		rtypes.add(node.getElse().apply(THIS, question));
-
-		node.setType(rtypes.getType(node.getLocation()));
+		node.setType(typeCheckIf(node.getLocation(), node.getTest(), node.getThen(), node.getElseList(), node.getElse(), question));//rtypes.getType(node.getLocation()));
 		return node.getType();
 	}
 

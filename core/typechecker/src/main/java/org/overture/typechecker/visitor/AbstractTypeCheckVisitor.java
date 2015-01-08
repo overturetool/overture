@@ -21,12 +21,21 @@
  */
 package org.overture.typechecker.visitor;
 
+import java.util.List;
+
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
+import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.node.INode;
+import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.PType;
+import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.TypeCheckInfo;
+import org.overture.typechecker.TypeCheckerErrors;
+import org.overture.typechecker.utilities.type.QualifiedDefinition;
 
 public class AbstractTypeCheckVisitor extends
 		QuestionAnswerAdaptor<TypeCheckInfo, PType>
@@ -60,6 +69,60 @@ public class AbstractTypeCheckVisitor extends
 			throws AnalysisException
 	{
 		return THIS.defaultINode(node, question);
+	}
+
+	protected PType typeCheckIf(ILexLocation ifLocation, PExp testExp,
+			INode thenNode, List<? extends INode> elseIfNodeList,
+			INode elseNode, TypeCheckInfo question) throws AnalysisException
+	{
+		boolean isExpression = testExp.parent() instanceof PExp;
+
+		question.qualifiers = null;
+
+		PType test = testExp.apply(THIS, question.newConstraint(null));
+
+		if (!question.assistantFactory.createPTypeAssistant().isType(test, ABooleanBasicType.class))
+		{
+			TypeCheckerErrors.report((isExpression ? 3108 : 3224), "If expression is not boolean", testExp.getLocation(), testExp);
+		}
+
+		List<QualifiedDefinition> qualified = testExp.apply(question.assistantFactory.getQualificationVisitor(), question);
+
+		for (QualifiedDefinition qdef : qualified)
+		{
+			qdef.qualifyType();
+		}
+
+		PTypeSet rtypes = new PTypeSet(question.assistantFactory);
+		question.qualifiers = null;
+		rtypes.add(thenNode.apply(THIS, question));
+
+		for (QualifiedDefinition qdef : qualified)
+		{
+			qdef.resetType();
+		}
+
+		if (elseIfNodeList != null)
+		{
+			for (INode stmt : elseIfNodeList)
+			{
+				question.qualifiers = null;
+				rtypes.add(stmt.apply(THIS, question));
+			}
+		}
+
+		if (elseNode != null)
+		{
+			question.qualifiers = null;
+			rtypes.add(elseNode.apply(THIS, question));
+		} else
+		{
+			// If the else case is empty then it is a statement and its type is void
+			rtypes.add(AstFactory.newAVoidType(ifLocation));
+		}
+
+		return rtypes.getType(ifLocation);
+
 	}
 
 }

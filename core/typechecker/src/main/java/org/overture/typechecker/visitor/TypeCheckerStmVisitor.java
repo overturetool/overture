@@ -799,45 +799,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	public PType caseAIfStm(AIfStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		PType test = node.getIfExp().apply(THIS, question);
-
-		if (!question.assistantFactory.createPTypeAssistant().isType(test, ABooleanBasicType.class))
-		{
-			TypeCheckerErrors.report(3224, "If expression is not boolean", node.getIfExp().getLocation(), node.getIfExp());
-		}
-
-		List<QualifiedDefinition> qualified = node.getIfExp().apply(question.assistantFactory.getQualificationVisitor(), question);
-
-		for (QualifiedDefinition qdef : qualified)
-		{
-			qdef.qualifyType();
-		}
-
-		PTypeSet rtypes = new PTypeSet(question.assistantFactory);
-		rtypes.add(node.getThenStm().apply(THIS, question));
-
-		for (QualifiedDefinition qdef : qualified)
-		{
-			qdef.resetType();
-		}
-
-		if (node.getElseIf() != null)
-		{
-			for (AElseIfStm stmt : node.getElseIf())
-			{
-				rtypes.add(stmt.apply(THIS, question));
-			}
-		}
-
-		if (node.getElseStm() != null)
-		{
-			rtypes.add(node.getElseStm().apply(THIS, question));
-		} else
-		{
-			rtypes.add(AstFactory.newAVoidType(node.getLocation()));
-		}
-
-		node.setType(rtypes.getType(node.getLocation()));
+		node.setType(typeCheckIf(node.getLocation(), node.getIfExp(), node.getThenStm(), node.getElseIf(), node.getElseStm(), question));//rtypes.getType(node.getLocation()));
 		return node.getType();
 	}
 
