@@ -67,11 +67,11 @@ public class RemoteContractDistribution {
 		StringWriter writer_s = new StringWriter();
 		rmiServer.apply(printer, writer_s);
 
-		File theDir_s = new File("/Users/Miran/Documents/files/" + RMI_ServerName);
+		File theDir_s = new File("/home/gkanos/Documents/vdmrtcodegen/" + RMI_ServerName);
 
 		theDir_s.mkdir();
 		
-		File file_s = new File("/Users/Miran/Documents/files/" + RMI_ServerName + "/" + RMI_ServerName + ".java");
+		File file_s = new File("/home/gkanos/Documents/vdmrtcodegen/" + RMI_ServerName + "/" + RMI_ServerName + ".java");
 		BufferedWriter output_s = new BufferedWriter(new FileWriter(file_s));
 		output_s.write(JavaCodeGenUtil.formatJavaCode(writer_s
 				.toString()));
@@ -82,7 +82,7 @@ public class RemoteContractDistribution {
 				StringWriter writer_i = new StringWriter();
 				contract.apply(printer, writer_i);
 
-				File file_i = new File("/Users/Miran/Documents/files/" + RMI_ServerName + "/" + contract.getName() + ".java");
+				File file_i = new File("/home/gkanos/Documents/vdmrtcodegen/" + RMI_ServerName + "/" + contract.getName() + ".java");
 				BufferedWriter output_i = new BufferedWriter(new FileWriter(file_i));
 				output_i.write(JavaCodeGenUtil.formatJavaCode(writer_i
 						.toString()));
@@ -95,7 +95,7 @@ public class RemoteContractDistribution {
 		StringWriter writer_synch_i_RMI = new StringWriter();
 		synchToken_interface_RMI.apply(printer, writer_synch_i_RMI);
 
-		File file_synch_i_RMI = new File("/Users/Miran/Documents/files/" + RMI_ServerName + "/" + "SynchToken_interface.java");
+		File file_synch_i_RMI = new File("/home/gkanos/Documents/vdmrtcodegen/" + RMI_ServerName + "/" + "SynchToken_interface.java");
 		BufferedWriter output_synch_i_RMI = new BufferedWriter(new FileWriter(file_synch_i_RMI));
 		output_synch_i_RMI.write(JavaCodeGenUtil.formatJavaCode(writer_synch_i_RMI
 				.toString()));
@@ -107,7 +107,7 @@ public class RemoteContractDistribution {
 		// remote contract implementations inside
 
 		for(String cpu : cpuToDeployedClasses.keySet()){
-			File theDir = new File("/Users/Miran/Documents/files/" + cpu);
+			File theDir = new File("/home/gkanos/Documents/vdmrtcodegen/" + cpu);
 
 			theDir.mkdir();
 		}
@@ -124,7 +124,7 @@ public class RemoteContractDistribution {
 				StringWriter writer_synch = new StringWriter();
 				synchToken.apply(printer, writer_synch);
 
-				File file_synch = new File("/Users/Miran/Documents/files/" + cpu + "/" + "SynchToken.java");
+				File file_synch = new File("/home/gkanos/Documents/vdmrtcodegen/" + cpu + "/" + "SynchToken.java");
 				BufferedWriter output_synch = new BufferedWriter(new FileWriter(file_synch));
 				output_synch.write(JavaCodeGenUtil.formatJavaCode(writer_synch
 						.toString()));
@@ -136,7 +136,7 @@ public class RemoteContractDistribution {
 				StringWriter writer_synch_i = new StringWriter();
 				synchToken_interface.apply(printer, writer_synch_i);
 
-				File file_synch_i = new File("/Users/Miran/Documents/files/" + cpu + "/" + "SynchToken_interface.java");
+				File file_synch_i = new File("/home/gkanos/Documents/vdmrtcodegen/" + cpu + "/" + "SynchToken_interface.java");
 				BufferedWriter output_synch_i = new BufferedWriter(new FileWriter(file_synch_i));
 				output_synch_i.write(JavaCodeGenUtil.formatJavaCode(writer_synch_i
 						.toString()));
@@ -146,7 +146,7 @@ public class RemoteContractDistribution {
 						StringWriter writer = new StringWriter();
 						contract.apply(printer, writer);
 
-						File file = new File("/Users/Miran/Documents/files/" + cpu + "/" + contract.getName() + ".java");
+						File file = new File("/home/gkanos/Documents/vdmrtcodegen/" + cpu + "/" + contract.getName() + ".java");
 						BufferedWriter output = new BufferedWriter(new FileWriter(file));
 						output.write(JavaCodeGenUtil.formatJavaCode(writer
 								.toString()));
@@ -158,7 +158,7 @@ public class RemoteContractDistribution {
 						StringWriter writer = new StringWriter();
 						impl.apply(printer, writer);
 
-						File file = new File("/Users/Miran/Documents/files/" + cpu + "/" + impl.getName() + ".java");
+						File file = new File("/home/gkanos/Documents/vdmrtcodegen/" + cpu + "/" + impl.getName() + ".java");
 						BufferedWriter output = new BufferedWriter(new FileWriter(file));
 						output.write(JavaCodeGenUtil.formatJavaCode(writer
 								.toString()));

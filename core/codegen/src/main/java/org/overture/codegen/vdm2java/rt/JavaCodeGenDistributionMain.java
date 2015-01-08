@@ -218,7 +218,7 @@ public class JavaCodeGenDistributionMain {
 						.toString()));
 
 				// The CPU entry method
-				File file = new File("/Users/Miran/Documents/files/" + impl.getCpuName() + "/" + impl.getCpuName()  + ".java");
+				File file = new File("/home/gkanos/Documents/vdmrtcodegen/" + impl.getCpuName() + "/" + impl.getCpuName()  + ".java");
 				BufferedWriter output = new BufferedWriter(new FileWriter(file));
 				output.write(JavaCodeGenUtil.formatJavaCode(writer
 						.toString()));
@@ -234,7 +234,7 @@ public class JavaCodeGenDistributionMain {
 						.toString()));
 
 				// The unique system class for each CPU
-				File file2 = new File("/Users/Miran/Documents/files/" + impl.getCpuName() + "/" + systemClass.getName()  + ".java");
+				File file2 = new File("/home/gkanos/Documents/vdmrtcodegen/" + impl.getCpuName() + "/" + systemClass.getName()  + ".java");
 				BufferedWriter output2 = new BufferedWriter(new FileWriter(file2));
 				output2.write(JavaCodeGenUtil.formatJavaCode(writer2
 						.toString()));
