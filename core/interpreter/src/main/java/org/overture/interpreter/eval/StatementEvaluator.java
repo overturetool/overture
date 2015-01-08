@@ -697,35 +697,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	@Override
 	public Value caseAIfStm(AIfStm node, Context ctxt) throws AnalysisException
 	{
-		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-
-		try
-		{
-			if (node.getIfExp().apply(VdmRuntime.getStatementEvaluator(), ctxt).boolValue(ctxt))
-			{
-				return node.getThenStm().apply(VdmRuntime.getStatementEvaluator(), ctxt);
-			} else
-			{
-				for (AElseIfStm elseif : node.getElseIf())
-				{
-					Value r = elseif.apply(VdmRuntime.getStatementEvaluator(), ctxt);
-					if (r != null)
-					{
-						return r;
-					}
-				}
-
-				if (node.getElseStm() != null)
-				{
-					return node.getElseStm().apply(VdmRuntime.getStatementEvaluator(), ctxt);
-				}
-
-				return new VoidValue();
-			}
-		} catch (ValueException e)
-		{
-			return VdmRuntimeError.abort(node.getLocation(), e);
-		}
+		return evalIf(node, node.getLocation(), node.getIfExp(), node.getThenStm(), node.getElseIf(), node.getElseStm(), ctxt);
 	}
 
 	@Override
