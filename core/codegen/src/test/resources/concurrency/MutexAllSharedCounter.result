@@ -166,7 +166,10 @@ public class CountSwitcher extends VDMThread implements EvaluatePP {
     }
 
     public void run() {
-        incCounter();
+        try {
+            incCounter();
+        } catch (Exception e) {
+        }
     }
 
     public static class CountSwitcher_sentinel extends Sentinel {

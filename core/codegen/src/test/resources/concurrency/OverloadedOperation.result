@@ -154,7 +154,10 @@ public class Incrementer1 extends VDMThread implements EvaluatePP {
     }
 
     public void run() {
-        incCounter();
+        try {
+            incCounter();
+        } catch (Exception e) {
+        }
     }
 
     public static class Incrementer1_sentinel extends Sentinel {
@@ -249,7 +252,10 @@ public class Incrementer2 extends VDMThread implements EvaluatePP {
     }
 
     public void run() {
-        incCounter();
+        try {
+            incCounter();
+        } catch (Exception e) {
+        }
     }
 
     public static class Incrementer2_sentinel extends Sentinel {

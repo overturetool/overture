@@ -138,12 +138,15 @@ public class Reader extends VDMThread implements EvaluatePP {
     }
 
     public void run() {
-        long toVar_1 = 3L;
+        try {
+            long toVar_1 = 3L;
 
-        for (Long i = 1L; i <= toVar_1; i++) {
-            Number x = b.Read();
+            for (Long i = 1L; i <= toVar_1; i++) {
+                Number x = b.Read();
 
-            //Skip;
+                //Skip;
+            }
+        } catch (Exception e) {
         }
     }
 
@@ -235,11 +238,14 @@ public class Writer extends VDMThread implements EvaluatePP {
     }
 
     public void run() {
-        long toVar_2 = 3L;
+        try {
+            long toVar_2 = 3L;
 
-        for (Long i = 1L; i <= toVar_2; i++) {
-            Number x = Write();
-            b.Write(x);
+            for (Long i = 1L; i <= toVar_2; i++) {
+                Number x = Write();
+                b.Write(x);
+            }
+        } catch (Exception e) {
         }
     }
 

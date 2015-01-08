@@ -100,8 +100,11 @@ public class B extends A implements EvaluatePP {
     }
 
     public void run() {
-        opB();
-        super.opA();
+        try {
+            opB();
+            super.opA();
+        } catch (Exception e) {
+        }
     }
 
     public static class B_sentinel extends A_sentinel {
