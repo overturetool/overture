@@ -1,2 +1,4 @@
 $node.getName() = $node.getVarExp();
-registry.bind( $node.getNameString() , $node.getName());
+$node.getInterfaceclassName() stub = ($node.getInterfaceclassName()) UnicastRemoteObject.exportObject($node.getName(), 0);
+registry.bind( $node.getNameString() , stub);
+##registry.bind( $node.getNameString() , $node.getName());
