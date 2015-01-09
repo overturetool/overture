@@ -479,16 +479,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	public Value caseAElseIfStm(AElseIfStm node, Context ctxt)
 			throws AnalysisException
 	{
-		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-
-		try
-		{
-			return node.getElseIf().apply(VdmRuntime.getStatementEvaluator(), ctxt).boolValue(ctxt) ? node.getThenStm().apply(VdmRuntime.getStatementEvaluator(), ctxt)
-					: null;
-		} catch (ValueException e)
-		{
-			return VdmRuntimeError.abort(node.getLocation(), e);
-		}
+		return evalElseIf(node, node.getLocation(), node.getElseIf(), node.getThenStm(), ctxt);
 	}
 
 	@Override

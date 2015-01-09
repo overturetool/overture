@@ -250,16 +250,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	public Value caseAElseIfExp(AElseIfExp node, Context ctxt)
 			throws AnalysisException
 	{
-		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-
-		try
-		{
-			return node.getElseIf().apply(VdmRuntime.getExpressionEvaluator(), ctxt).boolValue(ctxt) ? node.getThen().apply(VdmRuntime.getExpressionEvaluator(), ctxt)
-					: null;
-		} catch (ValueException e)
-		{
-			return VdmRuntimeError.abort(node.getLocation(), e);
-		}
+		return evalElseIf(node, node.getLocation(), node.getElseIf(), node.getThen(), ctxt);
 	}
 
 	@Override
@@ -669,10 +660,10 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	{
 		return evalIf(node, node.getLocation(), node.getTest(), node.getThen(), node.getElseList(), node.getElse(), ctxt);
 	}
-	
-	
+
 	/**
 	 * Utility method to evaluate both if expressions and statements
+	 * 
 	 * @param node
 	 * @param ifLocation
 	 * @param testExp
@@ -685,7 +676,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	 */
 	protected Value evalIf(INode node, ILexLocation ifLocation, PExp testExp,
 			INode thenNode, List<? extends INode> elseIfNodeList,
-			INode elseNode,Context ctxt) throws AnalysisException
+			INode elseNode, Context ctxt) throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(ifLocation, ctxt);
 
@@ -715,6 +706,32 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 		} catch (ValueException e)
 		{
 			return VdmRuntimeError.abort(ifLocation, e);
+		}
+	}
+
+	/**
+	 * Utility method to evaluate elseif nodes
+	 * 
+	 * @param node
+	 * @param location
+	 * @param test
+	 * @param then
+	 * @param ctxt
+	 * @return
+	 * @throws AnalysisException
+	 */
+	protected Value evalElseIf(INode node, ILexLocation location, PExp test,
+			INode then, Context ctxt) throws AnalysisException
+	{
+		BreakpointManager.getBreakpoint(node).check(location, ctxt);
+
+		try
+		{
+			return test.apply(VdmRuntime.getExpressionEvaluator(), ctxt).boolValue(ctxt) ? then.apply(THIS, ctxt)
+					: null;
+		} catch (ValueException e)
+		{
+			return VdmRuntimeError.abort(location, e);
 		}
 	}
 
