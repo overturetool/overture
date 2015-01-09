@@ -124,5 +124,41 @@ public class AbstractTypeCheckVisitor extends
 		return rtypes.getType(ifLocation);
 
 	}
+	
+	/**
+	 * Type checks a AElseIf node
+	 * @param elseIfNode
+	 * @param elseIfLocation
+	 * @param test
+	 * @param thenNode
+	 * @param question
+	 * @return
+	 * @throws AnalysisException
+	 */
+	PType typeCheckAElseIf(INode elseIfNode, ILexLocation elseIfLocation,INode test, INode thenNode, TypeCheckInfo question)
+			throws AnalysisException
+	{
+		if (!question.assistantFactory.createPTypeAssistant().isType(test.apply(THIS, question.newConstraint(null)), ABooleanBasicType.class))
+		{
+			boolean isExpression = elseIfNode.parent() instanceof PExp;
+			TypeCheckerErrors.report((isExpression ? 3086 : 3218), "Expression is not boolean", elseIfLocation, elseIfNode);
+		}
+
+		List<QualifiedDefinition> qualified = test.apply(question.assistantFactory.getQualificationVisitor(), question);
+
+		for (QualifiedDefinition qdef : qualified)
+		{
+			qdef.qualifyType();
+		}
+
+		PType type = thenNode.apply(THIS, question);
+
+		for (QualifiedDefinition qdef : qualified)
+		{
+			qdef.resetType();
+		}
+
+		return type;
+	}
 
 }

@@ -688,25 +688,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	public PType caseAElseIfStm(AElseIfStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		if (!question.assistantFactory.createPTypeAssistant().isType(node.getElseIf().apply(THIS, question), ABooleanBasicType.class))
-		{
-			TypeCheckerErrors.report(3218, "Expression is not boolean", node.getLocation(), node);
-		}
-
-		List<QualifiedDefinition> qualified = node.getElseIf().apply(question.assistantFactory.getQualificationVisitor(), question);
-
-		for (QualifiedDefinition qdef : qualified)
-		{
-			qdef.qualifyType();
-		}
-
-		node.setType(node.getThenStm().apply(THIS, question));
-
-		for (QualifiedDefinition qdef : qualified)
-		{
-			qdef.resetType();
-		}
-
+		node.setType(typeCheckAElseIf(node, node.getLocation(), node.getElseIf(), node.getThenStm(), question));
 		return node.getType();
 	}
 
