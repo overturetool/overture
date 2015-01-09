@@ -160,5 +160,10 @@ public class AbstractTypeCheckVisitor extends
 
 		return type;
 	}
+	
+	PType typeCheckANotYetSpecifiedExp(INode node, ILexLocation location)
+	{
+		return AstFactory.newAUnknownType(location);// Because we terminate anyway
+	}
 
 }

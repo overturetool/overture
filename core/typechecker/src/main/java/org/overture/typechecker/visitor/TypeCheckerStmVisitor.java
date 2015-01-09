@@ -853,11 +853,8 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	public PType caseANotYetSpecifiedStm(ANotYetSpecifiedStm node,
 			TypeCheckInfo question)
 	{
-		node.setType(AstFactory.newAUnknownType(node.getLocation())); // Because
-																		// we
-																		// terminate
-																		// anyway
-		return node.getType();
+		node.setType(typeCheckANotYetSpecifiedExp(node,node.getLocation()));
+		return node.getType(); 
 	}
 
 	@Override

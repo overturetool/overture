@@ -1165,8 +1165,14 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	public Value caseANotYetSpecifiedExp(ANotYetSpecifiedExp node, Context ctxt)
 			throws AnalysisException
 	{
-		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-		return VdmRuntimeError.abort(node.getLocation(), 4024, "'not yet specified' expression reached", ctxt);
+		return evalANotYetSpecified(node,node.getLocation(),4024,"expression", ctxt);
+	}
+
+	protected Value evalANotYetSpecified(INode node,ILexLocation location,int abortNumber,String type, Context ctxt) throws AnalysisException
+	{
+		BreakpointManager.getBreakpoint(node).check(location, ctxt);
+		
+		return VdmRuntimeError.abort(location, abortNumber, "'not yet specified' "+type+" reached", ctxt);
 	}
 
 	@Override

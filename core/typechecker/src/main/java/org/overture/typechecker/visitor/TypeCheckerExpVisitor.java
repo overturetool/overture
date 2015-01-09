@@ -2223,8 +2223,8 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseANotYetSpecifiedExp(ANotYetSpecifiedExp node,
 			TypeCheckInfo question)
 	{
-		node.setType(AstFactory.newAUnknownType(node.getLocation()));
-		return node.getType(); // Because we terminate anyway
+		node.setType(typeCheckANotYetSpecifiedExp(node,node.getLocation()));
+		return node.getType(); 
 	}
 
 	@Override

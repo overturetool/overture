@@ -786,8 +786,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	public Value caseANotYetSpecifiedStm(ANotYetSpecifiedStm node, Context ctxt)
 			throws AnalysisException
 	{
-		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-		return VdmRuntimeError.abort(node.getLocation(), 4041, "'is not yet specified' statement reached", ctxt);
+		return evalANotYetSpecified(node,node.getLocation(),4041,"statement", ctxt); 
 	}
 
 	@Override
