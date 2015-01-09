@@ -251,7 +251,7 @@ class CppExpressionVisitor extends XtendAnswerStringVisitor {
 	
 	
 	override caseAAbsUnaryExpCG(AAbsUnaryExpCG node)
-	'''fabs(«node.exp.expand»)'''
+	'''vdm::fabs(«node.exp.expand»)'''
 	
 	override caseAEnumSetExpCG(AEnumSetExpCG node)
 	'''«node.type.expand»::from_list( {«FOR member : node.members SEPARATOR ','» «member.expand»«ENDFOR»})'''
@@ -279,7 +279,7 @@ class CppExpressionVisitor extends XtendAnswerStringVisitor {
 	}
 	
 	override caseAUndefinedExpCG(AUndefinedExpCG node)
-	'''0/*fixme: undefined_expression*/'''
+	'''vdm::Void()/*fixme: undefined_expression*/'''
 	
 	override caseAFieldNumberExpCG(AFieldNumberExpCG node)
 	'''(«node.type.expand»)«node.tuple.expand».get(«node.field-1»)'''
@@ -291,7 +291,7 @@ class CppExpressionVisitor extends XtendAnswerStringVisitor {
 	'''«node.func.expand»'''
 	
 	override caseAStringToSeqUnaryExpCG(AStringToSeqUnaryExpCG node)
-	'''string_util::to_seq(«node.exp.expand»)'''
+	'''vdm::string_util::to_seq(«node.exp.expand»)'''
 	
 	
 	

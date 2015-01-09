@@ -57,7 +57,7 @@ class CppStatementVisitor extends XtendAnswerStringVisitor {
 	override caseABlockStmCG(ABlockStmCG node)'''
 	«FOR v : node.localDefs»
 	«v.expand»
-	«ENDFOR»
+	«ENDFOR»	
 	«FOR stm : node.statements»
 	«stm.expand»
 	«ENDFOR»

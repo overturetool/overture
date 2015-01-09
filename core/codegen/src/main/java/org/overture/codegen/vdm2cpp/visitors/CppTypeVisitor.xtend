@@ -61,7 +61,7 @@ class CppTypeVisitor extends XtendAnswerStringVisitor{
 	'''std::tuple<«FOR type: node.types SEPARATOR ","»«type.expand» «ENDFOR»>'''
 	
 	override caseANatNumericBasicTypeCG(ANatNumericBasicTypeCG node )
-	'''int'''
+	'''vdm::Int'''
 	
 	override caseAUnknownTypeCG(AUnknownTypeCG node )
 	'''boost::any'''
@@ -72,7 +72,7 @@ class CppTypeVisitor extends XtendAnswerStringVisitor{
 	override caseARecordTypeCG(ARecordTypeCG node )
 	'''«node.name.expand»'''
 	
-	override caseASetSetTypeCG(ASetSetTypeCG node ) 
+	override caseASetSetTypeCG(ASetSetTypeCG node )
 	''' vdm::set'''
 
 	override caseAMapMapTypeCG(AMapMapTypeCG node )		
@@ -86,23 +86,23 @@ class CppTypeVisitor extends XtendAnswerStringVisitor{
 	'''«node.types.first.expand»'''
 		
 	override caseACharBasicTypeCG(ACharBasicTypeCG node )
-	'''char'''
+	'''vdm::Char'''
 	
 	override caseARealNumericBasicTypeCG(ARealNumericBasicTypeCG node )
-	'''double'''
+	'''vdm::Real'''
 	
 	override caseARealBasicTypeWrappersTypeCG(ARealBasicTypeWrappersTypeCG node )
-	'''double'''
+	'''vdm::Real'''
 	
 	override caseAIntNumericBasicTypeCG(AIntNumericBasicTypeCG node )
-	'''int'''
+	'''vdm::Int'''
 	
 	override caseABoolBasicTypeCG(ABoolBasicTypeCG node )
-	'''bool'''
+	'''vdm::Bool'''
 	
 	override caseAStringTypeCG(AStringTypeCG node )
-	'''std::string'''
+	'''vdm::String'''
 	
 	override caseANat1NumericBasicTypeCG(ANat1NumericBasicTypeCG node )
-	'''double'''
+	'''vdm::Int'''
 }

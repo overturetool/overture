@@ -105,7 +105,7 @@ class CppExpVisitor extends MergeVisitor {
 	}
 	
 	override caseARealLiteralExpCG(ARealLiteralExpCG node, StringWriter question) throws AnalysisException {
-		question.append('''«node.value.toString»''')
+		question.append('''Real(«node.value.toString»)''')
 	}
 	
 	override caseAPostIncExpCG(APostIncExpCG node, StringWriter question) throws AnalysisException {
@@ -125,7 +125,7 @@ class CppExpVisitor extends MergeVisitor {
 	}
 	
 	override caseAIntLiteralExpCG(AIntLiteralExpCG node, StringWriter question) throws AnalysisException {
-		question.append('''«node.value»''')
+		question.append('''Int(«node.value»)''')
 	}
 	
 	

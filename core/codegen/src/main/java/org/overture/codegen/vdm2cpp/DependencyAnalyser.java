@@ -21,6 +21,7 @@ public class DependencyAnalyser extends DepthFirstAnalysisAdaptorQuestion<Depend
 	public void inAClassTypeCG(AClassTypeCG node, DependencyManager question)
 			throws AnalysisException {
 		question.addTargetLanguageType("shared_ptr", "std", "memory");
+		question.addTargetLanguageType("vdm", "vdm", "vdm.hpp");
 		question.addClassType(node.getName(), node.getName());
 	}
 	@Override
