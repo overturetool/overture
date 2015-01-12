@@ -6,12 +6,10 @@ import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AClassInvariantDefinition;
-import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
-import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.PMultipleBind;
@@ -754,32 +752,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	public Value caseALetStm(ALetStm node, Context ctxt)
 			throws AnalysisException
 	{
-		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-		Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "let statement", ctxt);
-
-		LexNameToken sname = new LexNameToken(node.getLocation().getModule(), "self", node.getLocation());
-		ObjectValue self = (ObjectValue) ctxt.check(sname);
-
-		for (PDefinition d : node.getLocalDefs())
-		{
-			NameValuePairList values = ctxt.assistantFactory.createPDefinitionAssistant().getNamedValues(d, evalContext);
-
-			if (self != null && d instanceof AExplicitFunctionDefinition)
-			{
-				for (NameValuePair nvp : values)
-				{
-					if (nvp.value instanceof FunctionValue)
-					{
-						FunctionValue fv = (FunctionValue) nvp.value;
-						fv.setSelf(self);
-					}
-				}
-			}
-
-			evalContext.putList(values);
-		}
-
-		return node.getStatement().apply(VdmRuntime.getStatementEvaluator(), evalContext);
+		return evalLet(node, node.getLocation(), node.getLocalDefs(), node.getStatement(), "statement", ctxt);
 	}
 
 	@Override

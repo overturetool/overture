@@ -2,6 +2,7 @@ package org.overture.interpreter.eval;
 
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
@@ -865,14 +866,22 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	public Value caseALetDefExp(ALetDefExp node, Context ctxt)
 			throws AnalysisException
 	{
-		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
+		return evalLet(node, node.getLocation(), node.getLocalDefs(), node.getExpression(), "expression", ctxt);
+	}
+	
+	
+	public Value evalLet(INode node, ILexLocation nodeLocation, LinkedList<PDefinition> localDefs,
+			INode body, String type,  Context ctxt)
+			throws AnalysisException
+	{
+		BreakpointManager.getBreakpoint(node).check(nodeLocation, ctxt);
 
-		Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "let expression", ctxt);
+		Context evalContext = new Context(ctxt.assistantFactory, nodeLocation, "let "+type, ctxt);
 
-		LexNameToken sname = new LexNameToken(node.getLocation().getModule(), "self", node.getLocation());
+		LexNameToken sname = new LexNameToken(nodeLocation.getModule(), "self", nodeLocation);
 		ObjectValue self = (ObjectValue) ctxt.check(sname);
 
-		for (PDefinition d : node.getLocalDefs())
+		for (PDefinition d : localDefs)
 		{
 			NameValuePairList values = ctxt.assistantFactory.createPDefinitionAssistant().getNamedValues(d, evalContext);
 
@@ -891,9 +900,9 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			evalContext.putList(values);
 		}
 
-		return node.getExpression().apply(VdmRuntime.getExpressionEvaluator(), evalContext);
+		return body.apply(VdmRuntime.getExpressionEvaluator(), evalContext);
 	}
-
+	
 	/*
 	 * Map
 	 */
