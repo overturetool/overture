@@ -8,12 +8,13 @@ import java.util.*;
 	#set( $threadMethod = $JavaFormat.format($node.getThread()))
 #end
 
-#set($UniCast = $node.getSuperName())
-#if ($node.getIsUniCast())
-	#set($UniCast = "UnicastRemoteObject")
-#end
+##set($UniCast = $node.getSuperName())
+##if ($node.getIsUniCast())
+##set($UniCast = "UnicastRemoteObject")
+##end
+
 ## $JavaFormat.formatInterfaces($node)
-public class ${node.getName()} extends $UniCast implements EvaluatePP, ${node.getName()}_i
+public class ${node.getName()} $JavaFormat.formatSuperType($node) implements EvaluatePP, ${node.getName()}_i
 {
 
 	#foreach( $class in $node.getInnerClasses() )
