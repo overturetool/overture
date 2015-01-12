@@ -2,6 +2,8 @@ package org.overture.codegen.vdm2java.rt;
 
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.cgast.declarations.AVarDeclCG;
+import org.overture.codegen.cgast.expressions.AHistoryExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.ir.IRInfo;
@@ -47,6 +49,13 @@ public class RemoteTypeTransformation extends DepthFirstAnalysisAdaptor{
 		if(node.getName().equals("sentinel")) {
 			return;
 		}
+		
+		if(node.getAncestor(AHistoryExpCG.class) != null)
+		{
+			return;
+		}
+		
+		//if(node.getAncestor(AVarDeclCG.class).getExp() instanceof ANewExpCG)s
 		
 		node.setName(node.getName() + "_i");
 	}

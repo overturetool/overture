@@ -629,6 +629,12 @@ public class JavaFormat
 				+ classDecl.getSuperName();
 	}
 	
+	public String formatSuperType(ARemoteContractImplDeclCG classDecl)
+	{
+		return classDecl.getSuperName() == null ? "" : "extends "
+				+ classDecl.getSuperName();
+	}
+	
 	public String formatInterfaces(AClassDeclCG classDecl)
 	{
 		LinkedList<AInterfaceDeclCG> interfaces = classDecl.getInterfaces();

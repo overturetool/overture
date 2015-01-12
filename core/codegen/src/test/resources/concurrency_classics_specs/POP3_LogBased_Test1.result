@@ -1228,29 +1228,32 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
     }
 
     public void run() {
-        Object cmd = null;
-        id = Thread.currentThread().getId();
+        try {
+            Object cmd = null;
+            id = Thread.currentThread().getId();
 
-        sentinel.stateChanged();
+            sentinel.stateChanged();
 
-        cmd = msgChannel.ServerListen();
-        sentinel.stateChanged();
+            cmd = msgChannel.ServerListen();
+            sentinel.stateChanged();
 
-        Boolean whileCond1 = true;
+            Boolean whileCond1 = true;
 
-        while (whileCond1) {
-            whileCond1 = !(Utils.equals(cmd, new POP3Types.QUIT()));
+            while (whileCond1) {
+                whileCond1 = !(Utils.equals(cmd, new POP3Types.QUIT()));
 
-            if (!(whileCond1)) {
-                break;
+                if (!(whileCond1)) {
+                    break;
+                }
+
+                msgChannel.ServerSend(ReceiveCommand(((Object) cmd)));
+                cmd = msgChannel.ServerListen();
+                sentinel.stateChanged();
             }
 
             msgChannel.ServerSend(ReceiveCommand(((Object) cmd)));
-            cmd = msgChannel.ServerListen();
-            sentinel.stateChanged();
+        } catch (Exception e) {
         }
-
-        msgChannel.ServerSend(ReceiveCommand(((Object) cmd)));
     }
 
     public static class POP3ClientHandler_sentinel extends Sentinel {
@@ -1987,20 +1990,23 @@ public class POP3Server extends VDMThread implements EvaluatePP {
     }
 
     public void run() {
-        Boolean whileCond2 = true;
+        try {
+            Boolean whileCond2 = true;
 
-        while (whileCond2) {
-            whileCond2 = true;
+            while (whileCond2) {
+                whileCond2 = true;
 
-            if (!(whileCond2)) {
-                break;
+                if (!(whileCond2)) {
+                    break;
+                }
+
+                MessageChannel msgChannel = connChannel.Get();
+                CreateClientHandler(msgChannel);
+
+                serverStarted = true;
+                sentinel.stateChanged();
             }
-
-            MessageChannel msgChannel = connChannel.Get();
-            CreateClientHandler(msgChannel);
-
-            serverStarted = true;
-            sentinel.stateChanged();
+        } catch (Exception e) {
         }
     }
 
@@ -2441,9 +2447,12 @@ public class POP3TestSender extends VDMThread implements EvaluatePP {
     }
 
     public void run() {
-        for (Iterator iterator_14 = cmds.iterator(); iterator_14.hasNext();) {
-            Object cmd = (Object) iterator_14.next();
-            SendCmd(mc, ((Object) cmd));
+        try {
+            for (Iterator iterator_14 = cmds.iterator(); iterator_14.hasNext();) {
+                Object cmd = (Object) iterator_14.next();
+                SendCmd(mc, ((Object) cmd));
+            }
+        } catch (Exception e) {
         }
     }
 
@@ -2536,25 +2545,28 @@ public class POP3TestListener extends VDMThread implements EvaluatePP {
     }
 
     public void run() {
-        Object response = mc.ClientListen();
-        Boolean whileCond3 = true;
+        try {
+            Object response = mc.ClientListen();
+            Boolean whileCond3 = true;
 
-        while (whileCond3) {
-            whileCond3 = !(Utils.equals(response,
-                    new POP3Types.OkResponse("Quitting POP3 Server")));
+            while (whileCond3) {
+                whileCond3 = !(Utils.equals(response,
+                        new POP3Types.OkResponse("Quitting POP3 Server")));
 
-            if (!(whileCond3)) {
-                break;
+                if (!(whileCond3)) {
+                    break;
+                }
+
+                LogServer(((Object) response));
+                response = mc.ClientListen();
+                sentinel.stateChanged();
             }
 
             LogServer(((Object) response));
-            response = mc.ClientListen();
+            finished = true;
             sentinel.stateChanged();
+        } catch (Exception e) {
         }
-
-        LogServer(((Object) response));
-        finished = true;
-        sentinel.stateChanged();
     }
 
     public static class POP3TestListener_sentinel extends Sentinel {
