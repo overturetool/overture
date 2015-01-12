@@ -25,6 +25,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.SystemUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -200,8 +201,16 @@ public class Vdm2JavaCommand extends AbstractHandler
 						vdm2java.generateJavaSourceFiles(outputFolder, generatedData.getClasses());
 					} catch (Exception e)
 					{
-						CodeGenConsole.GetInstance().printErrorln("Problems saving the code generated Java source files to disk.\n"
-								+ "Try to run Overture with administrator privileges.\n");
+						CodeGenConsole.GetInstance().printErrorln("Problems saving the code generated Java source files to disk.");
+						CodeGenConsole.GetInstance().printErrorln("Try to run Overture with write permissions.\n");
+						
+						if(SystemUtils.IS_OS_WINDOWS)
+						{
+							CodeGenConsole.GetInstance().println("Operating System: Windows.");
+							CodeGenConsole.GetInstance().println("If you installed Overture in a location such as \"C:\\Program Files\\Overture\"");
+							CodeGenConsole.GetInstance().println("you may need to give Overture permissions to write to the file system. You can try");
+							CodeGenConsole.GetInstance().println("run Overture as administrator and see if this solves the problem.");
+						}
 						
 						return Status.CANCEL_STATUS;
 					}
