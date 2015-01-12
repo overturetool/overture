@@ -1,0 +1,14 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+(
+  dcl x : nat := 1;
+  dcl x : nat := x + 1;
+  dcl x : nat := x + 1;
+  return x;
+);
+
+end Entry
