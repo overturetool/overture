@@ -24,12 +24,14 @@ package org.overture.typechecker.visitor;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
+import java.util.Map.Entry;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
+import org.overture.ast.definitions.AMultiBindListDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.ABooleanConstExp;
@@ -753,21 +755,10 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	public PType caseALetBeStStm(ALetBeStStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-
-		node.setDef(AstFactory.newAMultiBindListDefinition(node.getLocation(), question.assistantFactory.createPMultipleBindAssistant().getMultipleBindList(node.getBind())));
-		node.getDef().apply(THIS, question);
-		Environment local = new FlatCheckedEnvironment(question.assistantFactory, node.getDef(), question.env, question.scope);
-
-		if (node.getSuchThat() != null
-				&& !question.assistantFactory.createPTypeAssistant().isType(node.getSuchThat().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope)), ABooleanBasicType.class))
-		{
-			TypeCheckerErrors.report(3225, "Such that clause is not boolean", node.getLocation(), node);
-		}
-
-		PType r = node.getStatement().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
-		local.unusedCheck();
-		node.setType(r);
-		return r;
+		Entry<PType, AMultiBindListDefinition> res = typecheckLetBeSt(node, node.getLocation(), node.getBind(), node.getSuchThat(), node.getStatement(), question);
+		node.setDef(res.getValue());
+		node.setType(res.getKey());
+		return node.getType();
 	}
 
 	@Override
