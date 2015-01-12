@@ -12,8 +12,6 @@ import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
-import org.overture.ast.patterns.PMultipleBind;
-import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.AAlwaysStm;
 import org.overture.ast.statements.AApplyObjectDesignator;
 import org.overture.ast.statements.AAssignmentStm;
@@ -78,12 +76,8 @@ import org.overture.interpreter.values.BooleanValue;
 import org.overture.interpreter.values.FunctionValue;
 import org.overture.interpreter.values.IntegerValue;
 import org.overture.interpreter.values.MapValue;
-import org.overture.interpreter.values.NameValuePair;
-import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.ObjectValue;
 import org.overture.interpreter.values.OperationValue;
-import org.overture.interpreter.values.Quantifier;
-import org.overture.interpreter.values.QuantifierList;
 import org.overture.interpreter.values.RecordValue;
 import org.overture.interpreter.values.SeqValue;
 import org.overture.interpreter.values.SetValue;
@@ -693,59 +687,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	public Value caseALetBeStStm(ALetBeStStm node, Context ctxt)
 			throws AnalysisException
 	{
-		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-		try
-		{
-			QuantifierList quantifiers = new QuantifierList();
-
-			for (PMultipleBind mb : node.getDef().getBindings())
-			{
-				ValueList bvals = ctxt.assistantFactory.createPMultipleBindAssistant().getBindValues(mb, ctxt);
-
-				for (PPattern p : mb.getPlist())
-				{
-					Quantifier q = new Quantifier(p, bvals);
-					quantifiers.add(q);
-				}
-			}
-
-			quantifiers.init(ctxt, true);
-
-			while (quantifiers.hasNext())
-			{
-				Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "let be st statement", ctxt);
-				NameValuePairList nvpl = quantifiers.next();
-				boolean matches = true;
-
-				for (NameValuePair nvp : nvpl)
-				{
-					Value v = evalContext.get(nvp.name);
-
-					if (v == null)
-					{
-						evalContext.put(nvp.name, nvp.value);
-					} else
-					{
-						if (!v.equals(nvp.value))
-						{
-							matches = false;
-							break; // This quantifier set does not match
-						}
-					}
-				}
-
-				if (matches
-						&& (node.getSuchThat() == null || node.getSuchThat().apply(VdmRuntime.getStatementEvaluator(), evalContext).boolValue(ctxt)))
-				{
-					return node.getStatement().apply(VdmRuntime.getStatementEvaluator(), evalContext);
-				}
-			}
-		} catch (ValueException e)
-		{
-			VdmRuntimeError.abort(node.getLocation(), e);
-		}
-
-		return VdmRuntimeError.abort(node.getLocation(), 4040, "Let be st found no applicable bindings", ctxt);
+		return evalLetBeSt(node, node.getLocation(), node.getDef(), node.getSuchThat(), node.getStatement(), 4040, "statement", ctxt);
 	}
 
 	@Override

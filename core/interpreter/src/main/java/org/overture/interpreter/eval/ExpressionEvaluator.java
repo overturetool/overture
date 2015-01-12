@@ -8,6 +8,7 @@ import java.util.List;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
+import org.overture.ast.definitions.AMultiBindListDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ACaseAlternative;
@@ -806,13 +807,20 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	public Value caseALetBeStExp(ALetBeStExp node, Context ctxt)
 			throws AnalysisException
 	{
-		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
+		return evalLetBeSt(node, node.getLocation(), node.getDef(), node.getSuchThat(), node.getValue(), 4015, "expression", ctxt);
+	}
+
+	public Value evalLetBeSt(INode node, ILexLocation nodeLocation,
+			AMultiBindListDefinition binding, PExp suchThat, INode body,
+			int errorCode, String type, Context ctxt) throws AnalysisException
+	{
+		BreakpointManager.getBreakpoint(node).check(nodeLocation, ctxt);
 
 		try
 		{
 			QuantifierList quantifiers = new QuantifierList();
 
-			for (PMultipleBind mb : node.getDef().getBindings())
+			for (PMultipleBind mb : binding.getBindings())
 			{
 				ValueList bvals = ctxt.assistantFactory.createPMultipleBindAssistant().getBindValues(mb, ctxt);
 
@@ -827,7 +835,8 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			while (quantifiers.hasNext())
 			{
-				Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "let be st expression", ctxt);
+				Context evalContext = new Context(ctxt.assistantFactory, nodeLocation, "let be st "
+						+ type, ctxt);
 				NameValuePairList nvpl = quantifiers.next();
 				boolean matches = true;
 
@@ -849,17 +858,17 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 				}
 
 				if (matches
-						&& (node.getSuchThat() == null || node.getSuchThat().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctxt)))
+						&& (suchThat == null || suchThat.apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctxt)))
 				{
-					return node.getValue().apply(VdmRuntime.getExpressionEvaluator(), evalContext);
+					return body.apply(VdmRuntime.getExpressionEvaluator(), evalContext);
 				}
 			}
 		} catch (ValueException e)
 		{
-			VdmRuntimeError.abort(node.getLocation(), e);
+			VdmRuntimeError.abort(nodeLocation, e);
 		}
 
-		return VdmRuntimeError.abort(node.getLocation(), 4015, "Let be st found no applicable bindings", ctxt);
+		return VdmRuntimeError.abort(nodeLocation, errorCode, "Let be st found no applicable bindings", ctxt);
 	}
 
 	@Override
@@ -868,15 +877,15 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	{
 		return evalLet(node, node.getLocation(), node.getLocalDefs(), node.getExpression(), "expression", ctxt);
 	}
-	
-	
-	public Value evalLet(INode node, ILexLocation nodeLocation, LinkedList<PDefinition> localDefs,
-			INode body, String type,  Context ctxt)
-			throws AnalysisException
+
+	public Value evalLet(INode node, ILexLocation nodeLocation,
+			LinkedList<PDefinition> localDefs, INode body, String type,
+			Context ctxt) throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(nodeLocation, ctxt);
 
-		Context evalContext = new Context(ctxt.assistantFactory, nodeLocation, "let "+type, ctxt);
+		Context evalContext = new Context(ctxt.assistantFactory, nodeLocation, "let "
+				+ type, ctxt);
 
 		LexNameToken sname = new LexNameToken(nodeLocation.getModule(), "self", nodeLocation);
 		ObjectValue self = (ObjectValue) ctxt.check(sname);
@@ -902,7 +911,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 		return body.apply(VdmRuntime.getExpressionEvaluator(), evalContext);
 	}
-	
+
 	/*
 	 * Map
 	 */
@@ -1174,14 +1183,17 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	public Value caseANotYetSpecifiedExp(ANotYetSpecifiedExp node, Context ctxt)
 			throws AnalysisException
 	{
-		return evalANotYetSpecified(node,node.getLocation(),4024,"expression", ctxt);
+		return evalANotYetSpecified(node, node.getLocation(), 4024, "expression", ctxt);
 	}
 
-	protected Value evalANotYetSpecified(INode node,ILexLocation location,int abortNumber,String type, Context ctxt) throws AnalysisException
+	protected Value evalANotYetSpecified(INode node, ILexLocation location,
+			int abortNumber, String type, Context ctxt)
+			throws AnalysisException
 	{
 		BreakpointManager.getBreakpoint(node).check(location, ctxt);
-		
-		return VdmRuntimeError.abort(location, abortNumber, "'not yet specified' "+type+" reached", ctxt);
+
+		return VdmRuntimeError.abort(location, abortNumber, "'not yet specified' "
+				+ type + " reached", ctxt);
 	}
 
 	@Override
