@@ -121,12 +121,7 @@ public class JavaCodeGen extends CodeGenBase
 		initVelocity();
 
 		this.javaTemplateStructure = new TemplateStructure(JAVA_TEMPLATES_ROOT_FOLDER);
-		
-		this.generator.getIRInfo().registerQuoteValue(QUOTE_START);
-		this.generator.getIRInfo().registerQuoteValue(QUOTE_APPEND);
-		
 		this.transAssistant = new TransAssistantCG(generator.getIRInfo(), varPrefixes);
-		
 		this.javaFormat = new JavaFormat(varPrefixes, javaTemplateStructure, generator.getIRInfo());
 	}
 
