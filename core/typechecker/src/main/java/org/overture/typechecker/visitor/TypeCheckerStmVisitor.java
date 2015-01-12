@@ -27,7 +27,6 @@ import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
-import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
@@ -629,43 +628,8 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	public PType caseALetStm(ALetStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-
-		// Each local definition is in scope for later local definitions...
-
-		Environment local = question.env;
-
-		for (PDefinition d : node.getLocalDefs())
-		{
-			if (d instanceof AExplicitFunctionDefinition)
-			{
-				// Functions' names are in scope in their bodies, whereas
-				// simple variable declarations aren't
-
-				local = new FlatCheckedEnvironment(question.assistantFactory, d, local, question.scope); // cumulative
-				question.assistantFactory.createPDefinitionAssistant().implicitDefinitions(d, local);
-				question.assistantFactory.createPDefinitionAssistant().typeResolve(d, THIS, new TypeCheckInfo(question.assistantFactory, local));
-
-				if (question.env.isVDMPP())
-				{
-					SClassDefinition cdef = question.env.findClassDefinition();
-					d.setClassDefinition(cdef);
-					d.setAccess(question.assistantFactory.createPAccessSpecifierAssistant().getStatic(d, true));
-				}
-
-				d.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
-			} else
-			{
-				question.assistantFactory.createPDefinitionAssistant().implicitDefinitions(d, local);
-				question.assistantFactory.createPDefinitionAssistant().typeResolve(d, THIS, question);
-				d.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
-				local = new FlatCheckedEnvironment(question.assistantFactory, d, local, question.scope); // cumulative
-			}
-		}
-
-		PType r = node.getStatement().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
-		local.unusedCheck(question.env);
-		node.setType(r);
-		return r;
+		node.setType(typeCheckLet(node, node.getLocalDefs(),node.getStatement(),question));
+		return node.getType();
 	}
 
 	@Override
