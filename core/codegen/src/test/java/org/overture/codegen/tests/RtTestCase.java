@@ -42,6 +42,8 @@ public class RtTestCase extends SpecificationTestCase
 	@Override
 	protected void setUp() throws Exception
 	{
+		super.setUp();
+		
 		Settings.release = Release.VDM_10;
 		Settings.dialect = Dialect.VDM_RT;
 	}

@@ -41,7 +41,7 @@ public class SpecificationTestCase extends CodeGenBaseTestCase
 			+ "##########" + LINE_SEPARATOR;
 	private static final String NAME_VIOLATION_INDICATOR = "*Name Violations*";
 	private static final String QUOTE_INDICATOR = "*Quotes*";
-
+	
 	public SpecificationTestCase()
 	{
 		super();
@@ -51,7 +51,7 @@ public class SpecificationTestCase extends CodeGenBaseTestCase
 	{
 		super(file);
 	}
-
+	
 	@Override
 	protected String generateActualOutput() throws AnalysisException
 	{
@@ -64,7 +64,7 @@ public class SpecificationTestCase extends CodeGenBaseTestCase
 
 		try
 		{
-			data = JavaCodeGenUtil.generateJavaFromFiles(files, getIrSettings(), getJavaSettings(), Settings.dialect);
+			data = JavaCodeGenUtil.generateJavaFromFiles(files, vdmCodGen, Settings.dialect);
 		} catch (UnsupportedModelingException e)
 		{
 			return JavaCodeGenUtil.constructUnsupportedModelingString(e);
