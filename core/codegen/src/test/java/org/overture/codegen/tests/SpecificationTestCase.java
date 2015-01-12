@@ -36,9 +36,11 @@ import org.overture.config.Settings;
 public class SpecificationTestCase extends CodeGenBaseTestCase
 {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+	private static final String QUOTE_SEPARATOR = ",";
 	private static final String MODULE_DELIMITER = LINE_SEPARATOR
 			+ "##########" + LINE_SEPARATOR;
 	private static final String NAME_VIOLATION_INDICATOR = "*Name Violations*";
+	private static final String QUOTE_INDICATOR = "*Quotes*";
 
 	public SpecificationTestCase()
 	{
@@ -80,11 +82,20 @@ public class SpecificationTestCase extends CodeGenBaseTestCase
 
 		if (quoteData != null && !quoteData.isEmpty())
 		{
-			for (GeneratedModule q : quoteData)
+			generatedCode.append(QUOTE_INDICATOR + LINE_SEPARATOR);
+			for (int i = 0; i < quoteData.size(); i++)
 			{
-				generatedCode.append(LINE_SEPARATOR + q.getContent());
-				generatedCode.append(MODULE_DELIMITER);
+				GeneratedModule q = quoteData.get(i);
+
+				generatedCode.append(q.getName());
+
+				if (i + 1 < quoteData.size())
+				{
+					generatedCode.append(QUOTE_SEPARATOR);
+				}
+
 			}
+			generatedCode.append(MODULE_DELIMITER);
 		}
 
 		InvalidNamesResult invalidNames = data.getInvalidNamesResult();
