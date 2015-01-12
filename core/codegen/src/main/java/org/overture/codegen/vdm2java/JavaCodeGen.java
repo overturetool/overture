@@ -124,6 +124,12 @@ public class JavaCodeGen extends CodeGenBase
 		this.transAssistant = new TransAssistantCG(generator.getIRInfo(), varPrefixes);
 		this.javaFormat = new JavaFormat(varPrefixes, javaTemplateStructure, generator.getIRInfo());
 	}
+	
+	public void clear()
+	{
+		javaFormat.init();
+		generator.clear();
+	}
 
 	private void initVelocity()
 	{

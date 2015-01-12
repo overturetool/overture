@@ -34,6 +34,12 @@ public class TempVarNameGen implements ITempVarGen
 		super();
 		this.counters = new HashMap<String, Integer>();
 	}
+	
+	@Override
+	public void clear()
+	{
+		counters.clear();
+	}
 
 	@Override
 	public String nextVarName(String prefix)
