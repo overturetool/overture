@@ -39,6 +39,7 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.node.INode;
+import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.analysis.violations.Violation;
@@ -209,6 +210,18 @@ public class JavaCodeGenUtil
 		}
 
 		return buffer.toString();
+	}
+	
+	public static String constructVarRenamingString(List<Renaming> renamings)
+	{
+		StringBuilder sb = new StringBuilder();
+		
+		for(Renaming r : renamings)
+		{
+			sb.append(r).append('\n');
+		}
+		
+		return sb.toString();
 	}
 
 	public static void generateJavaSourceFiles(File outputFolder,
