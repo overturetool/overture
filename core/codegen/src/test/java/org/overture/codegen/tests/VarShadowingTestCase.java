@@ -9,7 +9,7 @@ import org.junit.Assert;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.node.INode;
-import org.overture.codegen.analysis.vdm.Renamer;
+import org.overture.codegen.analysis.vdm.VarShadowingRenamer;
 import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralUtils;
@@ -69,7 +69,7 @@ public class VarShadowingTestCase extends BaseTestCase
 			Assert.assertTrue(getName() + " has type errors", originalSpecTcResult.errors.isEmpty());
 			Value orgSpecResult = evalSpec(originalSpecTcResult.result);
 			
-			List<Renaming> renamings = new Renamer().computeRenamings(originalSpecTcResult.result, af);
+			List<Renaming> renamings = new VarShadowingRenamer().computeRenamings(originalSpecTcResult.result, af);
 
 			StringBuffer sb = GeneralUtils.readFromInputStream(new FileInputStream(file));
 			
