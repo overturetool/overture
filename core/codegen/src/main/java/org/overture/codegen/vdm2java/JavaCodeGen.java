@@ -39,6 +39,9 @@ import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.ANotYetSpecifiedStm;
+import org.overture.codegen.analysis.vdm.VarShadowingRenamer;
+import org.overture.codegen.analysis.vdm.Renaming;
+import org.overture.codegen.analysis.vdm.VarShadowingRenameCollector;
 import org.overture.codegen.analysis.violations.GeneratedVarComparison;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.ReservedWordsComparison;
@@ -189,6 +192,9 @@ public class JavaCodeGen extends CodeGenBase
 			List<SClassDefinition> mergedParseLists) throws AnalysisException,
 			UnsupportedModelingException
 	{
+		// To document any renaming of variables shadowing other variables
+		List<Renaming> allRenamings = performRenaming(mergedParseLists);
+		
 		for (SClassDefinition classDef : mergedParseLists)
 		{
 			if (generator.getIRInfo().getAssistantManager().getDeclAssistant().classIsLibrary(classDef))
@@ -324,7 +330,29 @@ public class JavaCodeGen extends CodeGenBase
 		javaFormat.clearFunctionValueAssistant();
 		javaFormat.clearClasses();
 
-		return new GeneratedData(generated, generateJavaFromVdmQuotes(), invalidNamesResult, skipping);
+		return new GeneratedData(generated, generateJavaFromVdmQuotes(), invalidNamesResult, skipping, allRenamings);
+	}
+
+	private List<Renaming> performRenaming(List<SClassDefinition> mergedParseLists)
+			throws AnalysisException
+	{
+		List<Renaming> allRenamings = new LinkedList<Renaming>();
+		
+		VarShadowingRenameCollector renamingsCollector = new VarShadowingRenameCollector(generator.getIRInfo().getTcFactory());
+		VarShadowingRenamer renamer = new VarShadowingRenamer();
+		
+		for (SClassDefinition classDef : mergedParseLists)
+		{
+			List<Renaming> classRenamings = renamer.computeRenamings(classDef, renamingsCollector);
+			
+			if(!classRenamings.isEmpty())
+			{
+				renamer.rename(classDef, classRenamings);
+				allRenamings.addAll(classRenamings);
+			}
+		}
+		
+		return allRenamings;
 	}
 
 	private void simplifyLibraryClass(SClassDefinition classDef)
