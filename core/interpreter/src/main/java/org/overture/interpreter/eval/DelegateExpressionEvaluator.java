@@ -10,6 +10,7 @@ import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.messages.InternalException;
 import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.node.INode;
 import org.overture.config.Settings;
 import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.runtime.ClassInterpreter;
@@ -33,12 +34,11 @@ import org.overture.interpreter.values.ValueList;
 public class DelegateExpressionEvaluator extends ExpressionEvaluator
 {
 
-	@Override
-	public Value caseANotYetSpecifiedExp(ANotYetSpecifiedExp node, Context ctxt)
-			throws AnalysisException
+	protected Value evalDelegatedANotYetSpecified(INode node,
+			ILexLocation location, int abortNumber, String type,
+			boolean failOnUnhandled, Context ctxt) throws AnalysisException
 	{
-		ILexLocation location = node.getLocation();
-		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
+		BreakpointManager.getBreakpoint(node).check(location, ctxt);
 
 		if (location.getModule().equals("VDMUtil")
 				|| location.getModule().equals("DEFAULT"))
@@ -122,7 +122,20 @@ public class DelegateExpressionEvaluator extends ExpressionEvaluator
 			}
 		}
 
-		return VdmRuntimeError.abort(node.getLocation(), 4024, "'not yet specified' expression reached", ctxt);
+		if (failOnUnhandled)
+		{
+			return VdmRuntimeError.abort(location, abortNumber, "'not yet specified' "
+					+ type + " reached", ctxt);
+		}
+		return null;
+
+	}
+
+	@Override
+	public Value caseANotYetSpecifiedExp(ANotYetSpecifiedExp node, Context ctxt)
+			throws AnalysisException
+	{
+		return evalDelegatedANotYetSpecified(node, node.getLocation(), 4024, "expression", true, ctxt);
 	}
 
 	private Value get_file_pos(Context ctxt)

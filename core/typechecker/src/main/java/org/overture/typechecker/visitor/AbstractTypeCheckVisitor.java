@@ -21,12 +21,27 @@
  */
 package org.overture.typechecker.visitor;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
+import org.overture.ast.definitions.AExplicitFunctionDefinition;
+import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstFactory;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.node.INode;
+import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.PType;
+import org.overture.ast.util.PTypeSet;
+import org.overture.typechecker.Environment;
+import org.overture.typechecker.FlatCheckedEnvironment;
 import org.overture.typechecker.TypeCheckInfo;
+import org.overture.typechecker.TypeCheckerErrors;
+import org.overture.typechecker.utilities.type.QualifiedDefinition;
 
 public class AbstractTypeCheckVisitor extends
 		QuestionAnswerAdaptor<TypeCheckInfo, PType>
@@ -60,6 +75,144 @@ public class AbstractTypeCheckVisitor extends
 			throws AnalysisException
 	{
 		return THIS.defaultINode(node, question);
+	}
+
+	protected PType typeCheckIf(ILexLocation ifLocation, PExp testExp,
+			INode thenNode, List<? extends INode> elseIfNodeList,
+			INode elseNode, TypeCheckInfo question) throws AnalysisException
+	{
+		boolean isExpression = testExp.parent() instanceof PExp;
+
+		question.qualifiers = null;
+
+		PType test = testExp.apply(THIS, question.newConstraint(null));
+
+		if (!question.assistantFactory.createPTypeAssistant().isType(test, ABooleanBasicType.class))
+		{
+			TypeCheckerErrors.report((isExpression ? 3108 : 3224), "If expression is not boolean", testExp.getLocation(), testExp);
+		}
+
+		List<QualifiedDefinition> qualified = testExp.apply(question.assistantFactory.getQualificationVisitor(), question);
+
+		for (QualifiedDefinition qdef : qualified)
+		{
+			qdef.qualifyType();
+		}
+
+		PTypeSet rtypes = new PTypeSet(question.assistantFactory);
+		question.qualifiers = null;
+		rtypes.add(thenNode.apply(THIS, question));
+
+		for (QualifiedDefinition qdef : qualified)
+		{
+			qdef.resetType();
+		}
+
+		if (elseIfNodeList != null)
+		{
+			for (INode stmt : elseIfNodeList)
+			{
+				question.qualifiers = null;
+				rtypes.add(stmt.apply(THIS, question));
+			}
+		}
+
+		if (elseNode != null)
+		{
+			question.qualifiers = null;
+			rtypes.add(elseNode.apply(THIS, question));
+		} else
+		{
+			// If the else case is empty then it is a statement and its type is void
+			rtypes.add(AstFactory.newAVoidType(ifLocation));
+		}
+
+		return rtypes.getType(ifLocation);
+
+	}
+
+	/**
+	 * Type checks a AElseIf node
+	 * 
+	 * @param elseIfNode
+	 * @param elseIfLocation
+	 * @param test
+	 * @param thenNode
+	 * @param question
+	 * @return
+	 * @throws AnalysisException
+	 */
+	PType typeCheckAElseIf(INode elseIfNode, ILexLocation elseIfLocation,
+			INode test, INode thenNode, TypeCheckInfo question)
+			throws AnalysisException
+	{
+		if (!question.assistantFactory.createPTypeAssistant().isType(test.apply(THIS, question.newConstraint(null)), ABooleanBasicType.class))
+		{
+			boolean isExpression = elseIfNode.parent() instanceof PExp;
+			TypeCheckerErrors.report((isExpression ? 3086 : 3218), "Expression is not boolean", elseIfLocation, elseIfNode);
+		}
+
+		List<QualifiedDefinition> qualified = test.apply(question.assistantFactory.getQualificationVisitor(), question);
+
+		for (QualifiedDefinition qdef : qualified)
+		{
+			qdef.qualifyType();
+		}
+
+		PType type = thenNode.apply(THIS, question);
+
+		for (QualifiedDefinition qdef : qualified)
+		{
+			qdef.resetType();
+		}
+
+		return type;
+	}
+
+	PType typeCheckANotYetSpecifiedExp(INode node, ILexLocation location)
+	{
+		return AstFactory.newAUnknownType(location);// Because we terminate anyway
+	}
+
+	protected PType typeCheckLet(INode node, LinkedList<PDefinition> localDefs,
+			INode body, TypeCheckInfo question) throws AnalysisException
+	{
+		// Each local definition is in scope for later local definitions...
+		Environment local = question.env;
+
+		for (PDefinition d : localDefs)
+		{
+			if (d instanceof AExplicitFunctionDefinition)
+			{
+				// Functions' names are in scope in their bodies, whereas
+				// simple variable declarations aren't
+
+				local = new FlatCheckedEnvironment(question.assistantFactory, d, local, question.scope); // cumulative
+				question.assistantFactory.createPDefinitionAssistant().implicitDefinitions(d, local);
+
+				question.assistantFactory.createPDefinitionAssistant().typeResolve(d, THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers));
+
+				if (question.env.isVDMPP())
+				{
+					SClassDefinition cdef = question.env.findClassDefinition();
+					// question.assistantFactory.createPDefinitionAssistant().setClassDefinition(d, cdef);
+					d.setClassDefinition(cdef);
+					d.setAccess(question.assistantFactory.createPAccessSpecifierAssistant().getStatic(d, true));
+				}
+
+				d.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers));
+			} else
+			{
+				question.assistantFactory.createPDefinitionAssistant().implicitDefinitions(d, local);
+				question.assistantFactory.createPDefinitionAssistant().typeResolve(d, THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers));
+				d.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
+				local = new FlatCheckedEnvironment(question.assistantFactory, d, local, question.scope); // cumulative
+			}
+		}
+
+		PType r = body.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, null, question.constraint, null));
+		local.unusedCheck(question.env);
+		return r;
 	}
 
 }
