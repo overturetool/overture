@@ -23,17 +23,20 @@ package org.overture.typechecker.visitor;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.QuestionAnswerAdaptor;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
+import org.overture.ast.definitions.AMultiBindListDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.node.INode;
+import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.PType;
 import org.overture.ast.util.PTypeSet;
@@ -174,6 +177,16 @@ public class AbstractTypeCheckVisitor extends
 		return AstFactory.newAUnknownType(location);// Because we terminate anyway
 	}
 
+	/**
+	 * Type checks a let node
+	 * 
+	 * @param node
+	 * @param localDefs
+	 * @param body
+	 * @param question
+	 * @return
+	 * @throws AnalysisException
+	 */
 	protected PType typeCheckLet(INode node, LinkedList<PDefinition> localDefs,
 			INode body, TypeCheckInfo question) throws AnalysisException
 	{
@@ -215,4 +228,61 @@ public class AbstractTypeCheckVisitor extends
 		return r;
 	}
 
+	/**
+	 * Type check method for let be such that
+	 * @param node
+	 * @param nodeLocation
+	 * @param bind
+	 * @param suchThat
+	 * @param body
+	 * @param question
+	 * @return a pair of the type and definition
+	 * @throws AnalysisException
+	 */
+	protected Map.Entry<PType, AMultiBindListDefinition> typecheckLetBeSt(
+			INode node, ILexLocation nodeLocation, PMultipleBind bind,
+			PExp suchThat, INode body, TypeCheckInfo question)
+			throws AnalysisException
+	{
+		final PDefinition def = AstFactory.newAMultiBindListDefinition(nodeLocation, question.assistantFactory.createPMultipleBindAssistant().getMultipleBindList((PMultipleBind) bind));
+
+		def.apply(THIS, question.newConstraint(null));
+		Environment local = new FlatCheckedEnvironment(question.assistantFactory, def, question.env, question.scope);
+
+		TypeCheckInfo newInfo = new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers, question.constraint, null);
+
+		if (suchThat != null
+				&& !question.assistantFactory.createPTypeAssistant().isType(suchThat.apply(THIS, newInfo.newConstraint(null)), ABooleanBasicType.class))
+		{
+			boolean isExpression = node instanceof PExp;
+			TypeCheckerErrors.report((isExpression ? 3117 : 3225), "Such that clause is not boolean", nodeLocation, node);
+		}
+
+		newInfo.qualifiers = null;
+		final PType r = body.apply(THIS, newInfo);
+		local.unusedCheck();
+
+		return new Map.Entry<PType, AMultiBindListDefinition>()
+		{
+
+			@Override
+			public AMultiBindListDefinition setValue(
+					AMultiBindListDefinition value)
+			{
+				return null;
+			}
+
+			@Override
+			public AMultiBindListDefinition getValue()
+			{
+				return (AMultiBindListDefinition) def;
+			}
+
+			@Override
+			public PType getKey()
+			{
+				return r;
+			}
+		};
+	}
 }

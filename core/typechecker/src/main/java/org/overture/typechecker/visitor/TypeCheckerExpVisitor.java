@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
@@ -1509,7 +1510,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		for (ILexNameToken opname : node.getOpnames())
 		{
 			int found = 0;
-			
+
 			List<PDefinition> allDefs = (List<PDefinition>) classdef.getDefinitions().clone();
 			allDefs.addAll(classdef.getAllInheritedDefinitions());
 
@@ -1550,7 +1551,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAIfExp(AIfExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		node.setType(typeCheckIf(node.getLocation(), node.getTest(), node.getThen(), node.getElseList(), node.getElse(), question));//rtypes.getType(node.getLocation()));
+		node.setType(typeCheckIf(node.getLocation(), node.getTest(), node.getThen(), node.getElseList(), node.getElse(), question));// rtypes.getType(node.getLocation()));
 		return node.getType();
 	}
 
@@ -1744,38 +1745,19 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseALetBeStExp(ALetBeStExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		PDefinition def = AstFactory.newAMultiBindListDefinition(node.getLocation(), question.assistantFactory.createPMultipleBindAssistant().getMultipleBindList((PMultipleBind) node.getBind()));
-
-		def.apply(THIS, question.newConstraint(null));
-		node.setDef((AMultiBindListDefinition) def);
-		Environment local = new FlatCheckedEnvironment(question.assistantFactory, def, question.env, question.scope);
-
-		TypeCheckInfo newInfo = new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers, question.constraint, null);
-
-		PExp suchThat = node.getSuchThat();
-
-		if (suchThat != null
-				&& !question.assistantFactory.createPTypeAssistant().isType(suchThat.apply(THIS, newInfo.newConstraint(null)), ABooleanBasicType.class))
-		{
-			TypeCheckerErrors.report(3117, "Such that clause is not boolean", node.getLocation(), node);
-		}
-
-		newInfo.qualifiers = null;
-		PType r = node.getValue().apply(THIS, newInfo);
-		local.unusedCheck();
-		node.setType(r);
-		return r;
+		Entry<PType, AMultiBindListDefinition> res = typecheckLetBeSt(node, node.getLocation(), node.getBind(), node.getSuchThat(), node.getValue(), question);
+		node.setDef(res.getValue());
+		node.setType(res.getKey());
+		return node.getType();
 	}
 
 	@Override
 	public PType caseALetDefExp(ALetDefExp node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		node.setType(typeCheckLet(node, node.getLocalDefs(),node.getExpression(),question));
+		node.setType(typeCheckLet(node, node.getLocalDefs(), node.getExpression(), question));
 		return node.getType();
 	}
-	
-
 
 	@Override
 	public PType caseADefExp(ADefExp node, TypeCheckInfo question)
@@ -2191,8 +2173,8 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseANotYetSpecifiedExp(ANotYetSpecifiedExp node,
 			TypeCheckInfo question)
 	{
-		node.setType(typeCheckANotYetSpecifiedExp(node,node.getLocation()));
-		return node.getType(); 
+		node.setType(typeCheckANotYetSpecifiedExp(node, node.getLocation()));
+		return node.getType();
 	}
 
 	@Override
