@@ -42,6 +42,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.osgi.service.prefs.Preferences;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.analysis.violations.Violation;
@@ -210,6 +211,9 @@ public class Vdm2JavaCommand extends AbstractHandler
 					// Quotes generation
 					outputQuotes(vdmProject, outputFolder, vdm2java, generatedData.getQuoteValues());
 
+					// Renaming of variables shadowing other variables
+					outputRenamings(generatedData.getAllRenamings());
+					
 					InvalidNamesResult invalidNames = generatedData.getInvalidNamesResult();
 
 					if (invalidNames != null && !invalidNames.isEmpty())
@@ -292,6 +296,15 @@ public class Vdm2JavaCommand extends AbstractHandler
 			}
 
 			CodeGenConsole.GetInstance().println("\n");
+		}
+	}
+	
+	private void outputRenamings(List<Renaming> allRenamings)
+	{
+		if(!allRenamings.isEmpty())
+		{
+			CodeGenConsole.GetInstance().println("Hidden variables found! Following variable renamings were done: ");
+			CodeGenConsole.GetInstance().println(JavaCodeGenUtil.constructVarRenamingString(allRenamings));;
 		}
 	}
 
