@@ -1,7 +1,6 @@
 package org.overture.codegen.tests;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -9,8 +8,8 @@ import org.junit.Assert;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.node.INode;
-import org.overture.codegen.analysis.vdm.VarShadowingRenamer;
 import org.overture.codegen.analysis.vdm.Renaming;
+import org.overture.codegen.analysis.vdm.VarShadowingRenamer;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.config.Release;
@@ -71,7 +70,7 @@ public class VarShadowingTestCase extends BaseTestCase
 			
 			List<Renaming> renamings = new VarShadowingRenamer().computeRenamings(originalSpecTcResult.result, af);
 
-			StringBuffer sb = GeneralUtils.readFromInputStream(new FileInputStream(file));
+			StringBuilder sb = GeneralUtils.readLines(file, "\n");
 			
 			// Perform the renaming in a string buffer
 			rename(renamings, sb);
@@ -102,13 +101,13 @@ public class VarShadowingTestCase extends BaseTestCase
 		}	
 	}
 
-	private void rename(List<Renaming> renamings, StringBuffer sb)
+	private void rename(List<Renaming> renamings, StringBuilder sb)
 	{
 		for (Renaming r : renamings)
 		{
-			int startOffset = r.getLoc().getStartOffset()
-					+ r.getLoc().getStartLine() - 2;
+			int startOffset = r.getLoc().getStartOffset() - 1;
 			int endOffset = startOffset + r.getNewName().length() - 2;
+
 			sb.replace(startOffset, endOffset, r.getNewName());
 		}
 	}
