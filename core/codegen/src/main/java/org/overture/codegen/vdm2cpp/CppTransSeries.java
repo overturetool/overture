@@ -19,6 +19,7 @@ import org.overture.codegen.trans.conc.SentinelTransformation;
 import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
 import org.overture.codegen.trans.funcvalues.FunctionValueTransformation;
 import org.overture.codegen.trans.iterator.CppLanguageIterator;
+import org.overture.codegen.trans.iterator.CppVdmLibLanguageIterator;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 import org.overture.codegen.trans.letexps.FuncTransformation;
 import org.overture.codegen.trans.letexps.IfExpTransformation;
@@ -26,6 +27,7 @@ import org.overture.codegen.trans.patterns.PatternMatchConfig;
 import org.overture.codegen.trans.patterns.PatternTransformation;
 import org.overture.codegen.trans.quantifier.Exists1CounterData;
 import org.overture.codegen.trans.uniontypes.UnionTypeTransformation;
+import org.overture.codegen.vdm2cpp.visitors.MathRenamer;
 
 import static org.overture.codegen.ir.CodeGenBase.*;
 
@@ -52,7 +54,7 @@ public class CppTransSeries
 		IfExpTransformation ifExpTransformation = new IfExpTransformation(transAssistant);
 		FunctionValueTransformation funcValueTransformation = new FunctionValueTransformation(irInfo, transAssistant, functionValueAssistant, INTERFACE_NAME_PREFIX, TEMPLATE_TYPE_PREFIX, EVAL_METHOD_PREFIX, PARAM_NAME_PREFIX);
 		
-		ILanguageIterator langIterator = new CppLanguageIterator(transAssistant, irInfo.getTempVarNameGen(), varPrefixes);
+		ILanguageIterator langIterator = new CppVdmLibLanguageIterator(transAssistant, irInfo.getTempVarNameGen(), varPrefixes);
 		
 		
 		TransformationVisitor transVisitor = new TransformationVisitor(irInfo, classes, varPrefixes, transAssistant, consExists1CounterData(), langIterator, TERNARY_IF_EXP_NAME_PREFIX, CASES_EXP_RESULT_NAME_PREFIX, AND_EXP_NAME_PREFIX, OR_EXP_NAME_PREFIX, WHILE_COND_NAME_PREFIX, REC_MODIFIER_NAME_PREFIX);
@@ -86,7 +88,8 @@ public class CppTransSeries
 				concurrencytransform,
 				mutexTransform,
 				mainclassTransform,
-				seqConversionTransformation
+				seqConversionTransformation,
+				new MathRenamer(),
 		};
 		return analyses;
 	}

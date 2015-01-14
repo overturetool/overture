@@ -58,51 +58,51 @@ class CppTypeVisitor extends XtendAnswerStringVisitor{
 	'''«node.result.expand»'''
 	
 	override caseATupleTypeCG(ATupleTypeCG node )
-	'''std::tuple<«FOR type: node.types SEPARATOR ","»«type.expand» «ENDFOR»>'''
+	'''Tuple'''
 	
 	override caseANatNumericBasicTypeCG(ANatNumericBasicTypeCG node )
-	'''vdm::Int'''
+	'''Int'''
 	
 	override caseAUnknownTypeCG(AUnknownTypeCG node )
-	'''boost::any'''
+	'''Generic'''
 	
 	override caseASeqSeqTypeCG(ASeqSeqTypeCG node )
-	'''vdm::sequence'''
+	'''Sequence'''
 	
 	override caseARecordTypeCG(ARecordTypeCG node )
 	'''«node.name.expand»'''
 	
 	override caseASetSetTypeCG(ASetSetTypeCG node )
-	''' vdm::set'''
+	'''Set'''
 
 	override caseAMapMapTypeCG(AMapMapTypeCG node )		
-	'''vdm::map<«node.from.expand», «node.to.expand»>'''
+	'''Map<«node.from.expand», «node.to.expand»>'''
 
 	
 	override caseAClassTypeCG(AClassTypeCG node )
-	'''std::shared_ptr<«node.name»>'''
+	'''ObjectRef'''
 	
 	override caseAUnionTypeCG(AUnionTypeCG node )
 	'''«node.types.first.expand»'''
 		
 	override caseACharBasicTypeCG(ACharBasicTypeCG node )
-	'''vdm::Char'''
+	'''Char'''
 	
 	override caseARealNumericBasicTypeCG(ARealNumericBasicTypeCG node )
-	'''vdm::Real'''
+	'''Real'''
 	
 	override caseARealBasicTypeWrappersTypeCG(ARealBasicTypeWrappersTypeCG node )
-	'''vdm::Real'''
+	'''Real'''
 	
 	override caseAIntNumericBasicTypeCG(AIntNumericBasicTypeCG node )
-	'''vdm::Int'''
+	'''Int'''
 	
 	override caseABoolBasicTypeCG(ABoolBasicTypeCG node )
-	'''vdm::Bool'''
+	'''Bool'''
 	
 	override caseAStringTypeCG(AStringTypeCG node )
-	'''vdm::String'''
+	'''String'''
 	
 	override caseANat1NumericBasicTypeCG(ANat1NumericBasicTypeCG node )
-	'''vdm::Int'''
+	'''Int'''
 }

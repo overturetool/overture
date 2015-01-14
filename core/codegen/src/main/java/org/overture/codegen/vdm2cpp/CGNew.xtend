@@ -102,8 +102,56 @@ class CGNew extends XtendAnswerStringVisitor {
 	#ifndef VDMCPP«node.name.toUpperCase»_HPP
 	#define VDMCPP«node.name.toUpperCase»_HPP
 	«node.generateIncludes»
-	class «node.name» «IF node.superName != null» : public «node.superName»«ENDIF»
+	
+	class type_ref_«node.name» : public virtual ObjectRef {
+	public:
+	
+		type_ref_«node.name» () : ObjectRef() {}
+	
+	
+		type_ref_«node.name» (const Common &c) : ObjectRef(c) {}
+	
+	
+		type_ref_«node.name» (vdmBase * p) : ObjectRef(p) {}
+	
+	
+		const wchar_t * GetTypeName () const   {
+	
+	    	return L"type_ref_«node.name»";
+	  }
+	
+	};
+	
+	
+	class «node.name» «IF node.superName != null» : public «node.superName»«ELSE» : public virtual CGBase «ENDIF»
 	{
+	public:
+		/*register derived / base*/
+		void vdm_init_«node.name» () 
+		{
+			«IF node.superName != null»
+			RegisterAsDerived(vdm_GetId());
+			«ELSE»
+			RegisterAsBase(vdm_GetId());
+  			«ENDIF»
+		}
+		
+		/*vdm lib methods*/
+		«node.name» * Get_«node.name» ()
+		{
+			return this;
+		}
+
+		ObjectRef Self ()
+		{
+			return ObjectRef(Get_«node.name»());
+		}
+
+		int vdm_GetId ()
+		{
+			return VDM_«node.name»;
+		}
+		
 	public:
 		«FOR method : node.methods.filter[access == "public"]»
 		«method.expand»

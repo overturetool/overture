@@ -208,6 +208,7 @@ public class CppCodeGen extends CodeGenBase
 		}
 		
 		 CGNew mergeVisitor = new CGNew(tan);
+		 CGGenHelper helper = new CGGenHelper();
 		//FunctionValueAssistant functionValue = funcValueTransformation.getFunctionValueAssistant();
 		//javaFormat.setFunctionValueAssistant(functionValue);
 		
@@ -244,8 +245,9 @@ public class CppCodeGen extends CodeGenBase
 //						String formattedJavaCode = writer.toString();
 //						generated.add(new GeneratedModule(className, classCg, formattedJavaCode));
 //					}
-
+					
 					String code = classCg.apply(mergeVisitor);
+					helper.addClass(classCg);
 					generated.add(new GeneratedModule(className,classCg,code));
 
 				}
@@ -265,6 +267,7 @@ public class CppCodeGen extends CodeGenBase
 				e.printStackTrace();
 			}
 		}
+		generated.add(new GeneratedModule("CGBase",null,(String) helper.GenerateHelper()));
 
 //		List<AInterfaceDeclCG> funcValueInterfaces = functionValue.getFunctionValueInterfaces();
 //

@@ -20,8 +20,11 @@ public class DependencyAnalyser extends DepthFirstAnalysisAdaptorQuestion<Depend
 	@Override
 	public void inAClassTypeCG(AClassTypeCG node, DependencyManager question)
 			throws AnalysisException {
-		question.addTargetLanguageType("shared_ptr", "std", "memory");
-		question.addTargetLanguageType("vdm", "vdm", "vdm.hpp");
+		//question.addTargetLanguageType("shared_ptr", "std", "memory");
+		question.addTargetLanguageType("metaiv", "", "metaiv.h");
+		question.addTargetLanguageType("cg", "", "cg.h");
+		question.addTargetLanguageType("cg_aux", "", "cg_aux.h");
+		question.addTargetLanguageType("CGBase", "", "CGBase.hpp");
 		question.addClassType(node.getName(), node.getName());
 	}
 	@Override
@@ -37,7 +40,7 @@ public class DependencyAnalyser extends DepthFirstAnalysisAdaptorQuestion<Depend
 		{
 			// if there is no defining class then it is the class itself
 			question.addClassType(node.getName(), node.getName());
-			question.addTargetLanguageType("shared_ptr","std", "memory");
+			//question.addTargetLanguageType("shared_ptr","std", "memory");
 		}
 	}
 	
@@ -60,31 +63,31 @@ public class DependencyAnalyser extends DepthFirstAnalysisAdaptorQuestion<Depend
 	public void inARecordDeclCG(ARecordDeclCG node, DependencyManager question)
 			throws AnalysisException {
 		// if a record is being declared it will declare a Ptr type;
-		question.addTargetLanguageType("shared_ptr", "std", "memory");
+		//question.addTargetLanguageType("shared_ptr", "std", "memory");
 	}
 	
 	@Override
 	public void inAClassDeclCG(AClassDeclCG node, DependencyManager question)
 			throws AnalysisException {
-		question.addTargetLanguageType("shared_ptr", "std", "memory");
+		//question.addTargetLanguageType("shared_ptr", "std", "memory");
 	}
 	
 	@Override
 	public void inASeqSeqTypeCG(ASeqSeqTypeCG node, DependencyManager question)
 			throws AnalysisException {
-		question.addTargetLanguageType("sequence", "vdm_collections", "vdm_collections/sequence.hpp");
+		//question.addTargetLanguageType("sequence", "vdm_collections", "vdm_collections/sequence.hpp");
 	}
 	
 	@Override
 	public void inASetSetTypeCG(ASetSetTypeCG node, DependencyManager question)
 			throws AnalysisException {
-		question.addTargetLanguageType("set", "vdm_collections", "vdm_collections/set.hpp");
+		//question.addTargetLanguageType("set", "vdm_collections", "vdm_collections/set.hpp");
 	}
 	
 	@Override
 	public void inAMapMapTypeCG(AMapMapTypeCG node, DependencyManager question)
 			throws AnalysisException {
-		question.addTargetLanguageType("map", "vdm_collections", "vdm_collections/map.hpp");
+		//question.addTargetLanguageType("map", "vdm_collections", "vdm_collections/map.hpp");
 	}
 	
 	@Override

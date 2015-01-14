@@ -108,7 +108,7 @@ class CppStatementVisitor extends XtendAnswerStringVisitor {
 	'''
 	
 	override caseACallObjectStmCG(ACallObjectStmCG node)
-	'''«node.designator.expand»->«node.fieldName»(«FOR a: node.args SEPARATOR ','» «a.expand»«ENDFOR»);'''
+	'''ObjGet_«node.designator»(«node.designator.expand»)->«node.fieldName»(«FOR a: node.args SEPARATOR ','» «a.expand»«ENDFOR»);'''
 	
 	override caseAAssignmentStmCG(AAssignmentStmCG node)
 	'''«node.target.expand» = «node.exp.expand»;'''

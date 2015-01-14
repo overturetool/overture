@@ -74,7 +74,7 @@ class CppDeclarationsVisitor extends XtendAnswerStringVisitor {
 		//TODO: HACK declarations in for loops is without semicolon and auto type;
 		if(node.parent instanceof AForLoopStmCG)
 		{
-			'''auto «node.pattern.expand» = «node.exp.expand»'''
+			'''«node.type.expand» «node.pattern.expand» = «node.exp.expand»'''
 		}
 		else
 		{

@@ -48,6 +48,8 @@ import org.overture.codegen.cgast.expressions.ATupleCompatibilityExpCG
 import org.overture.codegen.cgast.expressions.AUndefinedExpCG
 import org.overture.codegen.cgast.types.AClassTypeCG
 import org.overture.codegen.cgast.types.AMapMapTypeCG
+import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG
+import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG
 import org.overture.codegen.cgast.types.ARecordTypeCG
 import org.overture.codegen.cgast.types.ASeqSeqTypeCG
 import org.overture.codegen.cgast.types.ASetSetTypeCG
@@ -60,6 +62,23 @@ class CppExpressionVisitor extends XtendAnswerStringVisitor {
 	
 	new(XtendAnswerStringVisitor root_visitor){
 		root = root_visitor;
+	}
+	
+	def caseToType(STypeCG type)
+	{
+		if(type instanceof AClassTypeCG)
+		{
+			return '''ObjGet_«type.name»'''
+		}
+		else if(type instanceof ARealBasicTypeWrappersTypeCG || type instanceof ARealNumericBasicTypeCG)
+		{
+			return '''static_cast<«type.expand»>'''
+		}
+		else
+		{
+			return '''static_cast<«type.expand»>'''
+		}
+		
 	}
 	
 	def expand(INode node)
@@ -120,7 +139,7 @@ class CppExpressionVisitor extends XtendAnswerStringVisitor {
 	}
 	
 	override caseARealLiteralExpCG(ARealLiteralExpCG node)
-	'''«node.value.toString»'''
+	'''Real(«node.value.toString»)'''
 	
 	override caseAPostIncExpCG(APostIncExpCG node)
 	'''«node.exp.expand»++'''
@@ -132,10 +151,10 @@ class CppExpressionVisitor extends XtendAnswerStringVisitor {
 	'''«node.original»'''
 	
 	override caseAEqualsBinaryExpCG(AEqualsBinaryExpCG node)
-	'''(«node.left») == («node.right»)'''
+	'''(«node.left.expand») == («node.right.expand»)'''
 	
 	override caseAIntLiteralExpCG(AIntLiteralExpCG node)
-	'''«node.value»'''
+	'''Int(«node.value»)'''
 	
 	
 	override caseANewExpCG(ANewExpCG node) throws AnalysisException 
@@ -150,12 +169,22 @@ class CppExpressionVisitor extends XtendAnswerStringVisitor {
 		}
 		else
 		{
-			return '''/*ed*/«node.type.expand»(new «node.name.expand»(«FOR a : node.args SEPARATOR ','»«a.expand»«ENDFOR»)) '''
+			return '''/*ed*/type_ref_«node.name.expand»(new «node.name.expand»(«FOR a : node.args SEPARATOR ','»«a.expand»«ENDFOR»)) '''
 		}
 	}
 	
 	override caseAEnumSeqExpCG(AEnumSeqExpCG node)
-	'''/*eb*/«node.type.expand» {«FOR v: node.members SEPARATOR ','»«v.expand»«ENDFOR»}'''
+	{
+		if(node.members.length > 0)
+		{
+			'''/*eb«node.type.expand»*/ mk_sequence(«FOR v: node.members SEPARATOR ','»«v.expand»«ENDFOR»)'''		
+		}
+		else
+		{
+			'''/*eb«node.type.expand»*/ Sequence()'''
+		}
+	}
+	
 	
 	
 	override caseANotUnaryExpCG(ANotUnaryExpCG node)
@@ -169,22 +198,22 @@ class CppExpressionVisitor extends XtendAnswerStringVisitor {
 	
 	
 	override caseAHeadUnaryExpCG(AHeadUnaryExpCG node)
-	'''boost::any_cast<«node.type.expand»>(vdm::seq_utils::hd(«node.exp.expand»))'''
+	'''ObjGet_«node.type.expand»((«node.exp.expand»).Hd())'''
 	
 	override caseATailUnaryExpCG(ATailUnaryExpCG node)
-	'''vdm::seq_utils::tl(«node.exp.expand»)'''
+	'''«node.exp.expand».Tl()'''
 	
 	override caseANullExpCG(ANullExpCG node)
-	'''NULL'''
+	'''Nil()'''
 	
 	override caseASeqConcatBinaryExpCG(ASeqConcatBinaryExpCG node)
-	'''vdm::seq_utils::concat(«node.left.expand», «node.right.expand»)'''
+	'''«node.left.expand».Conc(«node.right.expand»)'''
 	
 	override caseASetUnionBinaryExpCG(ASetUnionBinaryExpCG node)
-	'''vdm::set_utils::union(«node.left.expand», «node.right.expand»)'''
+	'''/*vdm::set_utils::union*/(«node.left.expand»).Union(«node.right.expand»)'''
 	
 	override caseAElemsUnaryExpCG(AElemsUnaryExpCG node)
-	'''vdm::seq_utils::to_set<«node.type.getElemType»>(«node.exp.expand»)/*tes*/'''
+	'''(«node.exp.expand»).Elems()/*tes*/'''
 	
 	
 	
@@ -206,11 +235,11 @@ class CppExpressionVisitor extends XtendAnswerStringVisitor {
 			node.exp.type instanceof ASetSetTypeCG
 		)
 		{
-			return '''boost::any_cast<«node.type.expand»>( «node.exp.expand»)'''
+			return '''«node.type.caseToType»( «node.exp.expand»)'''
 		}
 		else
 		{
-			return '''(«node.type.expand») «node.exp.expand»'''
+			return '''«node.type.caseToType»(«node.exp.expand»)'''
 		}
 	}
 	
@@ -232,7 +261,8 @@ class CppExpressionVisitor extends XtendAnswerStringVisitor {
 	override caseAFieldExpCG(AFieldExpCG node) throws AnalysisException {
 		if(node.object.type instanceof AClassTypeCG)
 		{
-			return '''«node.object.expand»->«node.memberName»'''
+			val class_name = (node.object.type as AClassTypeCG).name
+			return '''ObjGet_«class_name»(«node.object.expand»)->«node.memberName»'''
 		}
 		else
 		{
@@ -251,13 +281,13 @@ class CppExpressionVisitor extends XtendAnswerStringVisitor {
 	
 	
 	override caseAAbsUnaryExpCG(AAbsUnaryExpCG node)
-	'''vdm::fabs(«node.exp.expand»)'''
+	'''CGUTIL::RAbs(«node.exp.expand»)'''
 	
 	override caseAEnumSetExpCG(AEnumSetExpCG node)
 	'''«node.type.expand»::from_list( {«FOR member : node.members SEPARATOR ','» «member.expand»«ENDFOR»})'''
 	
 	override caseABoolLiteralExpCG(ABoolLiteralExpCG node)
-	'''«node.value»'''
+	'''Bool(«node.value»)'''
 	
 	override caseAApplyExpCG(AApplyExpCG node) throws AnalysisException {
 		if(node.root.type instanceof SSeqTypeCG && node.args.length == 1)
@@ -265,11 +295,11 @@ class CppExpressionVisitor extends XtendAnswerStringVisitor {
 			if(node.args.head instanceof AIntLiteralExpCG)
 			{
 				var v = node.args.head as AIntLiteralExpCG
-				return '''boost::any_cast<«node.type.expand»>(«node.root.expand».at(«FOR n : node.args SEPARATOR ','»«v.value-1»«ENDFOR»))'''	
+				return '''«node.type.caseToType»(«node.root.expand»[«FOR n : node.args SEPARATOR ','»«v.value»«ENDFOR»])'''	
 			}
 			else
 			{
-				return '''«node.root.expand».at(«FOR n : node.args SEPARATOR ','»(«n.expand»)-1«ENDFOR»)'''
+				return '''«node.root.expand»[«FOR n : node.args SEPARATOR ','»(«n.expand»)«ENDFOR»]'''
 			}
 		}
 		else
@@ -282,7 +312,7 @@ class CppExpressionVisitor extends XtendAnswerStringVisitor {
 	'''vdm::Void()/*fixme: undefined_expression*/'''
 	
 	override caseAFieldNumberExpCG(AFieldNumberExpCG node)
-	'''(«node.type.expand»)«node.tuple.expand».get(«node.field-1»)'''
+	'''(«node.type.expand»)«node.tuple.expand».get(«node.field»)'''
 	
 	override caseATupleCompatibilityExpCG(ATupleCompatibilityExpCG node)
 	'''«node.tuple».compatability(«FOR t : node.types SEPARATOR ","»«t.expand»«ENDFOR»)'''
