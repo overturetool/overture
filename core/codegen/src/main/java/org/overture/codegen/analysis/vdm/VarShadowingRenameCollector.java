@@ -91,6 +91,12 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		visitClassDefs(node.getDefinitions());
 	}
 
+	// For operations and functions it works as a single pattern
+	// Thus f(1,mk_(2,2),5) will fail
+	// public f :  nat * (nat * nat) * nat -> nat
+	// f (b,mk_(b,b), a) == b;
+
+	
 	@Override
 	public void caseAExplicitOperationDefinition(
 			AExplicitOperationDefinition node) throws AnalysisException
@@ -102,11 +108,11 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		
 		DefinitionInfo defInfo = new DefinitionInfo(node.getParamDefinitions(), af);
 		
-		openScope(defInfo, node);
+		addLocalDefs(defInfo);
 
 		node.getBody().apply(this);
 
-		endScope(defInfo);
+		removeLocalDefs(defInfo);
 	}
 
 	@Override
@@ -120,11 +126,11 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 
 		DefinitionInfo defInfo = new DefinitionInfo(getParamDefs(node), af);
 		
-		openScope(defInfo, node);
+		addLocalDefs(defInfo);
 
 		node.getBody().apply(this);
 
-		endScope(defInfo);
+		removeLocalDefs(defInfo);
 	}
 
 	@Override
@@ -481,6 +487,24 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		}
 
 		return enclosingDef == def;
+	}
+	
+	private void addLocalDefs(DefinitionInfo defInfo)
+	{
+		List<PDefinition> allLocalDefs = defInfo.getAllLocalDefs();
+		
+		for(PDefinition localDef : allLocalDefs)
+		{
+			if(!contains(localDef))
+			{
+				localDefsInScope.add(localDef);
+			}
+		}
+	}
+	
+	private void removeLocalDefs(DefinitionInfo defInfo)
+	{
+		localDefsInScope.removeAll(defInfo.getAllLocalDefs());
 	}
 
 	public void openScope(DefinitionInfo defInfo, INode defScope)
