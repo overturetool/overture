@@ -99,12 +99,14 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-
-		openScope(node.getParamDefinitions(), node);
+		
+		DefinitionInfo defInfo = new DefinitionInfo(node.getParamDefinitions(), af);
+		
+		openScope(defInfo, node);
 
 		node.getBody().apply(this);
 
-		endScope(node.getParamDefinitions());
+		endScope(defInfo);
 	}
 
 	@Override
@@ -116,11 +118,13 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 			return;
 		}
 
-		openScope(getParamDefs(node), node);
+		DefinitionInfo defInfo = new DefinitionInfo(getParamDefs(node), af);
+		
+		openScope(defInfo, node);
 
 		node.getBody().apply(this);
 
-		endScope(getParamDefs(node));
+		endScope(defInfo);
 	}
 
 	@Override
@@ -132,12 +136,15 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 			return;
 		}
 
-		openScope(node.getAssignmentDefs(), node);
+		DefinitionInfo defInfo = new DefinitionInfo(node.getAssignmentDefs(), af);
+		
+		visitDefs(defInfo.getNodeDefs());
 
-		visitDefs(node.getAssignmentDefs());
+		openScope(defInfo, node);
+
 		visitStms(node.getStatements());
 
-		endScope(node.getAssignmentDefs());
+		endScope(defInfo);
 	}
 
 	@Override
@@ -147,13 +154,17 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
+		
+		
+		DefinitionInfo defInfo = new DefinitionInfo(node.getLocalDefs(), af);
+		
+		visitDefs(defInfo.getNodeDefs());
 
-		openScope(node.getLocalDefs(), node);
+		openScope(defInfo, node);
 
-		visitDefs(node.getLocalDefs());
 		node.getExpression().apply(this);
 
-		endScope(node.getLocalDefs());
+		endScope(defInfo);
 	}
 
 	@Override
@@ -163,13 +174,16 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
+		
+		DefinitionInfo defInfo = new DefinitionInfo(node.getLocalDefs(), af);
+		
+		visitDefs(defInfo.getNodeDefs());
 
-		openScope(node.getLocalDefs(), node);
+		openScope(defInfo, node);
 
-		visitDefs(node.getLocalDefs());
 		node.getStatement().apply(this);
 
-		endScope(node.getLocalDefs());
+		endScope(defInfo);
 	}
 
 	@Override
@@ -179,10 +193,12 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-
-		openScope(node.getDef().getDefs(), node);
-
+		
 		node.getDef().apply(this);
+		
+		DefinitionInfo defInfo = new DefinitionInfo(node.getDef().getDefs(), af);
+		
+		openScope(defInfo, node);
 
 		if (node.getSuchThat() != null)
 		{
@@ -191,7 +207,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 
 		node.getValue().apply(this);
 
-		endScope(node.getDef().getDefs());
+		endScope(defInfo);
 	}
 
 	/*
@@ -257,9 +273,11 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 			return;
 		}
 
-		openScope(node.getDef().getDefs(), node);
-
 		node.getDef().apply(this);
+		
+		DefinitionInfo defInfo = new DefinitionInfo(node.getDef().getDefs(), af);
+		
+		openScope(defInfo, node);
 
 		if (node.getSuchThat() != null)
 		{
@@ -268,7 +286,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 
 		node.getStatement().apply(this);
 
-		endScope(node.getDef().getDefs());
+		endScope(defInfo);
 	}
 	
 	@Override
@@ -280,9 +298,11 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 			return;
 		}
 
-		openScope(node.getDef().getDefs(), node);
-
 		node.getDef().apply(this);
+		
+		DefinitionInfo defInfo = new DefinitionInfo(node.getDef().getDefs(), af);
+		
+		openScope(defInfo, node);
 
 		if (node.getStexp() != null)
 		{
@@ -291,7 +311,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 
 		node.getBody().apply(this);
 
-		endScope(node.getDef().getDefs());
+		endScope(defInfo);
 	}
 
 	@Override
@@ -302,11 +322,13 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 			return;
 		}
 
-		openScope(node.getParamDefinitions(), node);
+		DefinitionInfo defInfo = new DefinitionInfo(node.getParamDefinitions(), af);
+		
+		openScope(defInfo, node);
 
 		node.getExpression().apply(this);
 
-		endScope(node.getParamDefinitions());
+		endScope(defInfo);
 	}
 
 	@Override
@@ -317,8 +339,10 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 	
 	private void handleMultipleBindConstruct(INode node, LinkedList<PMultipleBind> bindings, PExp first, PExp pred) throws AnalysisException
 	{
-		List<PDefinition> defs = getMultipleBindDefs(bindings);
-		openScope(defs, node);
+		
+		DefinitionInfo defInfo = new DefinitionInfo(getMultipleBindDefs(bindings), af);
+		
+		openScope(defInfo, node);
 		
 		if (first != null)
 		{
@@ -330,7 +354,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 			pred.apply(this);
 		}
 		
-		endScope(defs);
+		endScope(defInfo);
 	}
 	
 	private List<PDefinition> getMultipleBindDefs(List<PMultipleBind> bindings)
@@ -459,50 +483,37 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		return enclosingDef == def;
 	}
 
-	public void openScope(List<? extends PDefinition> defs, INode defScope)
+	public void openScope(DefinitionInfo defInfo, INode defScope)
 			throws AnalysisException
 	{
+		List<? extends PDefinition> defs = defInfo.getNodeDefs();
+		
 		for (int i = 0; i < defs.size(); i++)
 		{
 
 			PDefinition d = defs.get(i);
 			if (contains(d))
 			{
-				findRenamings(d, defScope, defs.subList(0, i));
+				findRenamings(d, defScope, defs.subList(0, i), defInfo);
 			} else
 			{
-				defsInScope.add(d);
+				defsInScope.addAll(defInfo.getLocalDefs(d));
 			}
 
 		}
 	}
 
-	public void endScope(List<? extends PDefinition> defs)
+	public void endScope(DefinitionInfo defInfo)
 	{
-		this.defsInScope.removeAll(collectDefs(defs));
-	}
-
-	private List<PDefinition> collectDefs(List<? extends PDefinition> defs)
-	{
-		List<PDefinition> collectedDefs = new LinkedList<PDefinition>();
-		for (PDefinition d : defs)
-		{
-			collectedDefs.addAll(collectDefs(d));
-		}
-		return collectedDefs;
-	}
-	
-	private List<PDefinition> collectDefs(PDefinition d)
-	{
-		return af.createPDefinitionAssistant().getDefinitions(d);
+		this.defsInScope.removeAll(defInfo.getAllLocalDefs());
 	}
 
 	private void findRenamings(PDefinition defToRename, INode defScope,
-			List<? extends PDefinition> defsOutsideScope)
+			List<? extends PDefinition> defsOutsideScope, DefinitionInfo defInfo)
 			throws AnalysisException
 	{
-		List<PDefinition> localDefsOusideScope = collectDefs(defsOutsideScope);
-		List<PDefinition> defsToRename = collectDefs(defToRename);
+		List<PDefinition> localDefsOusideScope = defInfo.getLocalDefs(defsOutsideScope);
+		List<? extends PDefinition> defsToRename = defInfo.getLocalDefs(defToRename);
 		
 		for(PDefinition currentDef : defsToRename)
 		{
@@ -581,6 +592,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 	{
 		ILexNameToken nameToCheck = getName(defToCheck);
 
+		// Can be null if we try to find the name for the ignore pattern
 		if (nameToCheck != null)
 		{
 			for (PDefinition d : defsInScope)
@@ -604,8 +616,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 
 		if (varNames.isEmpty())
 		{
-			Logger.getLog().printErrorln("Could not find name for definition : "
-					+ def + " in VarShadowingRenamer");
+			// Can be empty if we try to find the name for the ignore pattern
 			return null;
 		} else
 		{
