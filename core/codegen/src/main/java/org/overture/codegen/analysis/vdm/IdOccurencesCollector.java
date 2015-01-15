@@ -1,6 +1,7 @@
 package org.overture.codegen.analysis.vdm;
 
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
@@ -50,11 +51,14 @@ public class IdOccurencesCollector extends DepthFirstAnalysisAdaptor
 		}
 
 		INode parent = node.parent();
+		
+		Set<INode> visited = new HashSet<INode>();
 
-		while (parent != null && !(parent instanceof SClassDefinition)
+		while (parent != null && !visited.contains(parent)
 				&& parent != def)
 		{
 			parent = parent.parent();
+			visited.add(parent);
 		}
 
 		return parent == def;
