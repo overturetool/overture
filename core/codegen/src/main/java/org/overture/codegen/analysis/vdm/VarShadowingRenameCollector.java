@@ -35,11 +35,13 @@ import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
+import org.overture.ast.statements.AForAllStm;
 import org.overture.ast.statements.AForIndexStm;
 import org.overture.ast.statements.ALetBeStStm;
 import org.overture.ast.statements.ALetStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.typechecker.NameScope;
+import org.overture.ast.types.PType;
 import org.overture.codegen.ir.TempVarNameGen;
 import org.overture.codegen.logging.Logger;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
@@ -337,6 +339,35 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 
 		endScope(defInfo);
 	}
+	
+	@Override
+	public void caseAForAllStm(AForAllStm node) throws AnalysisException
+	{
+		if (!proceed(node))
+		{
+			return;
+		}
+
+		if(node.getSet() != null)
+		{
+			node.getSet().apply(this);
+		}
+
+		PType possibleType = af.createPPatternAssistant().getPossibleType(node.getPattern());
+		List<PDefinition> defs = af.createPPatternAssistant().getDefinitions(node.getPattern(), possibleType, NameScope.LOCAL);
+		
+		for(PDefinition d : defs)
+		{
+			openLoop(d.getName(), node.getPattern(), node.getStatement());
+		}
+
+		node.getStatement().apply(this);
+		
+		for(PDefinition d : defs)
+		{
+			localDefsInScope.remove(d.getName());
+		}
+	}
 
 	@Override
 	public void caseAForIndexStm(AForIndexStm node) throws AnalysisException
@@ -361,27 +392,45 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 			node.getBy().apply(this);
 		}
 
-		if(!contains(node.getVar()))
+		ILexNameToken var = node.getVar();
+
+		openLoop(var, null, node.getStatement());
+		
+		node.getStatement().apply(this);
+		
+		localDefsInScope.remove(var);
+	}
+
+	private void openLoop(ILexNameToken var, INode varParent, PStm body)
+			throws AnalysisException
+	{
+		if(!contains(var))
 		{
-			localDefsInScope.add(node.getVar());			
+			localDefsInScope.add(var);			
 		}
 		else
 		{
-			String newName = computeNewName(node.getVar().getName());
+			String newName = computeNewName(var.getName());
 			
-			registerRenaming(node.getVar(), newName);
+			registerRenaming(var, newName);
 			
-			Set<AVariableExp> occurences = collectVarOccurences(node.getVar().getLocation(), node.getStatement());
+			if(varParent != null)
+			{
+				Set<AIdentifierPattern> idOccurences = collectIdOccurences(var, varParent);
+				
+				for(AIdentifierPattern id : idOccurences)
+				{
+					registerRenaming(id.getName(), newName);
+				}
+			}
+			
+			Set<AVariableExp> varOccurences = collectVarOccurences(var.getLocation(), body);
 
-			for (AVariableExp varExp : occurences)
+			for (AVariableExp varExp : varOccurences)
 			{
 				registerRenaming(varExp.getName(), newName);
 			}
 		}
-		
-		node.getStatement().apply(this);
-		
-		localDefsInScope.remove(node.getVar());
 	}
 	
 	@Override
@@ -551,7 +600,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 	
 	private void removeLocalDefs(DefinitionInfo defInfo)
 	{
-		localDefsInScope.removeAll(defInfo.getAllLocalDefs());
+		localDefsInScope.removeAll(defInfo.getAllLocalDefNames());
 	}
 
 	public void openScope(DefinitionInfo defInfo, INode defScope)
@@ -580,7 +629,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 
 	public void endScope(DefinitionInfo defInfo)
 	{
-		this.localDefsInScope.removeAll(defInfo.getAllLocalDefs());
+		this.localDefsInScope.removeAll(defInfo.getAllLocalDefNames());
 	}
 
 	private void findRenamings(PDefinition localDefToRename, PDefinition parentDef, INode defScope,
@@ -657,11 +706,11 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		return collectVarOccurences(defLoc, defScope, null);
 	}
 	
-	private Set<AIdentifierPattern> collectIdOccurences(ILexNameToken name, PDefinition def) throws AnalysisException
+	private Set<AIdentifierPattern> collectIdOccurences(ILexNameToken name, INode parent) throws AnalysisException
 	{
-		IdOccurencesCollector collector = new IdOccurencesCollector(name, def);
+		IdOccurencesCollector collector = new IdOccurencesCollector(name, parent);
 		
-		def.apply(collector);
+		parent.apply(collector);
 		
 		return collector.getIdOccurences();
 	}
