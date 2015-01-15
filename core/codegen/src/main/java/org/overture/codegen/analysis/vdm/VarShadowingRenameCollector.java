@@ -35,6 +35,7 @@ import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
+import org.overture.ast.statements.AForIndexStm;
 import org.overture.ast.statements.ALetBeStStm;
 import org.overture.ast.statements.ALetStm;
 import org.overture.ast.statements.PStm;
@@ -47,7 +48,7 @@ import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinition
 public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 {
 	private PDefinition enclosingDef = null;
-	private Stack<PDefinition> localDefsInScope;
+	private Stack<ILexNameToken> localDefsInScope;
 	private List<Renaming> renamings;
 	private int enclosingCounter;
 	private List<String> namesToAvoid;
@@ -59,7 +60,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 	public VarShadowingRenameCollector(ITypeCheckerAssistantFactory af)
 	{
 		this.enclosingDef = null;
-		this.localDefsInScope = new Stack<PDefinition>();
+		this.localDefsInScope = new Stack<ILexNameToken>();
 		this.renamings = new LinkedList<Renaming>();
 		this.enclosingCounter = 0;
 		this.namesToAvoid = new LinkedList<String>();
@@ -338,6 +339,52 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 	}
 
 	@Override
+	public void caseAForIndexStm(AForIndexStm node) throws AnalysisException
+	{
+		if (!proceed(node))
+		{
+			return;
+		}
+
+		if(node.getFrom() != null)
+		{
+			node.getFrom().apply(this);
+		}
+		
+		if(node.getTo() != null)
+		{
+			node.getTo().apply(this);
+		}
+		
+		if(node.getBy() != null)
+		{
+			node.getBy().apply(this);
+		}
+
+		if(!contains(node.getVar()))
+		{
+			localDefsInScope.add(node.getVar());			
+		}
+		else
+		{
+			String newName = computeNewName(node.getVar().getName());
+			
+			registerRenaming(node.getVar(), newName);
+			
+			Set<AVariableExp> occurences = collectVarOccurences(node.getVar().getLocation(), node.getStatement());
+
+			for (AVariableExp varExp : occurences)
+			{
+				registerRenaming(varExp.getName(), newName);
+			}
+		}
+		
+		node.getStatement().apply(this);
+		
+		localDefsInScope.remove(node.getVar());
+	}
+	
+	@Override
 	public void caseILexNameToken(ILexNameToken node) throws AnalysisException
 	{
 		// No need to visit names
@@ -497,7 +544,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			if(!contains(localDef))
 			{
-				localDefsInScope.add(localDef);
+				localDefsInScope.add(localDef.getName());
 			}
 		}
 	}
@@ -525,7 +572,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 					findRenamings(localDef, parentDef, defScope, nodeDefs.subList(0, i), defInfo);
 				} else
 				{
-					localDefsInScope.add(localDef);
+					localDefsInScope.add(localDef.getName());
 				}
 			}
 		}
@@ -556,7 +603,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 			renamings.add(new Renaming(localDefName.getLocation(), localDefName.getName(), newName));
 		}
 
-		Set<AVariableExp> occurences = collectVarOccurences(localDefToRename, defScope, localDefsOusideScope);
+		Set<AVariableExp> occurences = collectVarOccurences(localDefToRename.getLocation(), defScope, localDefsOusideScope);
 
 		for (AVariableExp varExp : occurences)
 		{
@@ -592,15 +639,22 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		return false;
 	}
 
-	private Set<AVariableExp> collectVarOccurences(PDefinition def,
+	private Set<AVariableExp> collectVarOccurences(ILexLocation defLoc,
 			INode defScope, List<? extends PDefinition> defsOutsideScope)
 			throws AnalysisException
 	{
-		VarOccurencesCollector collector = new VarOccurencesCollector(def, defsOutsideScope);
+		VarOccurencesCollector collector = new VarOccurencesCollector(defLoc, defsOutsideScope);
 
 		defScope.apply(collector);
 
 		return collector.getVars();
+	}
+	
+	private Set<AVariableExp> collectVarOccurences(ILexLocation defLoc,
+			INode defScope)
+			throws AnalysisException
+	{
+		return collectVarOccurences(defLoc, defScope, null);
 	}
 	
 	private Set<AIdentifierPattern> collectIdOccurences(ILexNameToken name, PDefinition def) throws AnalysisException
@@ -616,15 +670,18 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 	{
 		ILexNameToken nameToCheck = getName(defToCheck);
 
+		return contains(nameToCheck);
+	}
+
+	private boolean contains(ILexNameToken nameToCheck)
+	{
 		// Can be null if we try to find the name for the ignore pattern
 		if (nameToCheck != null)
 		{
-			for (PDefinition d : localDefsInScope)
+			for (ILexNameToken name : localDefsInScope)
 			{
-				ILexNameToken currentDefName = getName(d);
-
-				if (currentDefName != null
-						&& nameToCheck.getName().equals(currentDefName.getName()))
+				if (name != null
+						&& nameToCheck.getName().equals(name.getName()))
 				{
 					return true;
 				}
