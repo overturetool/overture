@@ -47,7 +47,7 @@ import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinition
 public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 {
 	private PDefinition enclosingDef = null;
-	private Stack<PDefinition> defsInScope;
+	private Stack<PDefinition> localDefsInScope;
 	private List<Renaming> renamings;
 	private int enclosingCounter;
 	private List<String> namesToAvoid;
@@ -59,7 +59,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 	public VarShadowingRenameCollector(ITypeCheckerAssistantFactory af)
 	{
 		this.enclosingDef = null;
-		this.defsInScope = new Stack<PDefinition>();
+		this.localDefsInScope = new Stack<PDefinition>();
 		this.renamings = new LinkedList<Renaming>();
 		this.enclosingCounter = 0;
 		this.namesToAvoid = new LinkedList<String>();
@@ -486,64 +486,64 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 	public void openScope(DefinitionInfo defInfo, INode defScope)
 			throws AnalysisException
 	{
-		List<? extends PDefinition> defs = defInfo.getNodeDefs();
+		List<? extends PDefinition> nodeDefs = defInfo.getNodeDefs();
 		
-		for (int i = 0; i < defs.size(); i++)
+		for (int i = 0; i < nodeDefs.size(); i++)
 		{
-
-			PDefinition d = defs.get(i);
-			if (contains(d))
+			PDefinition parentDef = nodeDefs.get(i);
+			
+			List<? extends PDefinition> localDefs = defInfo.getLocalDefs(parentDef);
+			
+			for(PDefinition localDef : localDefs)
 			{
-				findRenamings(d, defScope, defs.subList(0, i), defInfo);
-			} else
-			{
-				defsInScope.addAll(defInfo.getLocalDefs(d));
+				if (contains(localDef))
+				{
+					findRenamings(localDef, parentDef, defScope, nodeDefs.subList(0, i), defInfo);
+				} else
+				{
+					localDefsInScope.add(localDef);
+				}
 			}
-
 		}
 	}
 
 	public void endScope(DefinitionInfo defInfo)
 	{
-		this.defsInScope.removeAll(defInfo.getAllLocalDefs());
+		this.localDefsInScope.removeAll(defInfo.getAllLocalDefs());
 	}
 
-	private void findRenamings(PDefinition defToRename, INode defScope,
+	private void findRenamings(PDefinition localDefToRename, PDefinition parentDef, INode defScope,
 			List<? extends PDefinition> defsOutsideScope, DefinitionInfo defInfo)
 			throws AnalysisException
 	{
 		List<PDefinition> localDefsOusideScope = defInfo.getLocalDefs(defsOutsideScope);
-		List<? extends PDefinition> defsToRename = defInfo.getLocalDefs(defToRename);
-		
-		for(PDefinition currentDef : defsToRename)
+
+		ILexNameToken localDefName = getName(localDefToRename);
+
+		if (localDefName == null)
 		{
-			ILexNameToken currentDefName = getName(currentDef);
+			return;
+		}
 
-			if (currentDefName == null)
-			{
-				return;
-			}
-			
-			String newName = computeNewName(currentDefName.getName());
+		String newName = computeNewName(localDefName.getName());
 
-			if (!contains(currentDefName.getLocation()))
-			{
-				renamings.add(new Renaming(currentDefName.getLocation(), currentDefName.getName(), newName));
-			}
+		if (!contains(localDefName.getLocation()))
+		{
+			renamings.add(new Renaming(localDefName.getLocation(), localDefName.getName(), newName));
+		}
 
-			Set<AVariableExp> occurences = collectVarOccurences(currentDef, defScope, localDefsOusideScope);
-			
-			for (AVariableExp varExp : occurences)
-			{
-				registerRenaming(varExp.getName(), newName);
-			}
-			
-			Set<AIdentifierPattern> patternsOcc = collectIdOccurences(currentDefName, defToRename);
-			
-			for(AIdentifierPattern p : patternsOcc)
-			{
-				registerRenaming(p.getName(), newName);
-			}
+		Set<AVariableExp> occurences = collectVarOccurences(localDefToRename, defScope, localDefsOusideScope);
+
+		for (AVariableExp varExp : occurences)
+		{
+			registerRenaming(varExp.getName(), newName);
+		}
+
+		Set<AIdentifierPattern> patternsOcc = collectIdOccurences(localDefName, parentDef);
+
+		for (AIdentifierPattern p : patternsOcc)
+		{
+			registerRenaming(p.getName(), newName);
 		}
 	}
 
@@ -595,7 +595,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		// Can be null if we try to find the name for the ignore pattern
 		if (nameToCheck != null)
 		{
-			for (PDefinition d : defsInScope)
+			for (PDefinition d : localDefsInScope)
 			{
 				ILexNameToken currentDefName = getName(d);
 
