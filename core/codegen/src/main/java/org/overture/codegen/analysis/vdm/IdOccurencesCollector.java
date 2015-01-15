@@ -1,13 +1,10 @@
 package org.overture.codegen.analysis.vdm;
 
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.AIdentifierPattern;
@@ -15,13 +12,13 @@ import org.overture.ast.patterns.AIdentifierPattern;
 public class IdOccurencesCollector extends DepthFirstAnalysisAdaptor
 {
 	private ILexNameToken name;
-	private PDefinition def;
+	private INode topNode;
 	private Set<AIdentifierPattern> idOccurences;
 
-	public IdOccurencesCollector(ILexNameToken name, PDefinition def)
+	public IdOccurencesCollector(ILexNameToken name, INode topNode)
 	{
 		this.name = name;
-		this.def = def;
+		this.topNode = topNode;
 		this.idOccurences = new HashSet<AIdentifierPattern>();
 	}
 
@@ -45,7 +42,7 @@ public class IdOccurencesCollector extends DepthFirstAnalysisAdaptor
 
 	private boolean proceed(INode node)
 	{
-		if (node == def)
+		if (node == topNode)
 		{
 			return true;
 		}
@@ -55,12 +52,12 @@ public class IdOccurencesCollector extends DepthFirstAnalysisAdaptor
 		Set<INode> visited = new HashSet<INode>();
 
 		while (parent != null && !visited.contains(parent)
-				&& parent != def)
+				&& this.topNode != parent)
 		{
 			parent = parent.parent();
 			visited.add(parent);
 		}
 
-		return parent == def;
+		return this.topNode == parent;
 	}
 }
