@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class DefinitionInfo
@@ -34,6 +35,20 @@ public class DefinitionInfo
 	public List<PDefinition> getAllLocalDefs()
 	{
 		return getLocalDefs(nodeDefs);
+	}
+	
+	public List<ILexNameToken> getAllLocalDefNames()
+	{
+		List<PDefinition> allLocalDefs = getAllLocalDefs();
+		
+		List<ILexNameToken> names = new LinkedList<ILexNameToken>();
+		
+		for(PDefinition def : allLocalDefs)
+		{
+			names.add(def.getName());
+		}
+		
+		return names;
 	}
 	
 	public List<PDefinition> getLocalDefs(List<? extends PDefinition> defs)
