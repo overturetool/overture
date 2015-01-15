@@ -5,8 +5,8 @@ import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.PDefinition;
+import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.AIdentifierPattern;
@@ -51,7 +51,7 @@ public class IdOccurencesCollector extends DepthFirstAnalysisAdaptor
 
 		INode parent = node.parent();
 
-		while (parent != null && !(parent instanceof AClassClassDefinition)
+		while (parent != null && !(parent instanceof SClassDefinition)
 				&& parent != def)
 		{
 			parent = parent.parent();
