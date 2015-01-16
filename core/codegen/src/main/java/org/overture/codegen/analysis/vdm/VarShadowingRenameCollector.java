@@ -55,6 +55,26 @@ import org.overture.codegen.logging.Logger;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
 
+/**
+ * 
+ * This analysis is used to compute new names for variables that shadow
+ * other variables. A renaming is suggested if a definition hides another variable
+ * or causes a duplicate definition. In addition to renaming the definition itself,
+ * occurrences of the definition must also be renamed. Occurrences include both
+ * variable expressions (e.g. return a) as well as identifier
+ * patterns (in mk_(a,a) the first 'a' is a definition whereas the second 'a'
+ * is an identifier pattern occurrence of the first 'a')
+ * 
+ * When computed, the renamings can be applied in order to get rid of warnings
+ * related to hidden variables and duplicate definitions.
+ * 
+ * The current version of this analysis only considers renamings in operations
+ * and functions. This is sufficient if the VDM AST is code generated to Java
+ * since Java allows hiding of class fields.
+ * 
+ * @author pvj
+ *
+ */
 public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 {
 	private PDefinition enclosingDef = null;
