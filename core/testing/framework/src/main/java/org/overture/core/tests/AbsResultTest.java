@@ -122,6 +122,14 @@ public abstract class AbsResultTest<R>
 	{
 		Gson gson = new Gson();
 		String json = gson.toJson(actual);
+		
+		// Make sure file can be created
+		File f = new File(resultPath);
+		if (!f.exists())
+		{
+			f.getParentFile().mkdirs();
+		}
+		
 		IOUtils.write(json, new FileOutputStream(resultPath));
 	}
 

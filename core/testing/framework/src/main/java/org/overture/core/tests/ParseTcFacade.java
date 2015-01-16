@@ -250,7 +250,6 @@ public abstract class ParseTcFacade {
 
 	// These 3 methods have so much duplicated code because we cannot
 	// return the TC results since their types are all different.
-	// FIXME unify parsing and TCing of VDM dialects
 	private static List<INode> parseTcRtContent(List<File> content,
 			String testName, boolean retry) throws ParserException,
 			LexException {

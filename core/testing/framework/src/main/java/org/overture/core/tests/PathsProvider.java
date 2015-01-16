@@ -87,7 +87,6 @@ public class PathsProvider
 	 */
 	public static Collection<Object[]> computeExternalPaths(String root)
 	{
-		// FIXME add some kind of control for the top level folder of the externals
 		Collection<Object[]> r = externalFiles(new File(root));
 
 		return r;
@@ -109,7 +108,7 @@ public class PathsProvider
 			paths.add(new Object[] {
 					file.getName(),
 					file.getPath(),
-					(RESULTS_EXTERNAL // FIXME figure out where to store results for external tests
+					(RESULTS_EXTERNAL
 							+ file.getPath().substring(dir.getPath().length(),file.getPath().length())
 							+ RESULT_EXTENSION).replace('\\', '/').replace('/', File.separatorChar) });
 
