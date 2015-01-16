@@ -45,7 +45,7 @@ public class ExternalModulesSlTest extends AbstractExternalTest
 	@Parameters(name = "{1}")
 	public static Collection<Object[]> getData()
 	{
-		return getData("Interpreter_SL_Modules_TestSuite_External", "sltest/cgip", Dialect.VDM_SL, "vdm");
+		return getData("Interpreter_SL_Modules_TestSuite_External", "cgip/sltest", Dialect.VDM_SL, "vdm");
 	}
 
 	@Override

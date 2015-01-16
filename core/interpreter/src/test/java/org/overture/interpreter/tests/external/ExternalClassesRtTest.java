@@ -33,7 +33,7 @@ public class ExternalClassesRtTest extends AbstractExternalTest
 	@Parameters(name = "{1}")
 	public static Collection<Object[]> getData()
 	{
-		return getData("Interpreter_RT_Classes_TestSuite_External", "rttest/cgip", Dialect.VDM_RT, "vpp");
+		return getData("Interpreter_RT_Classes_TestSuite_External", "cgip/rttest", Dialect.VDM_RT, "vpp");
 	}
 
 	@Override
