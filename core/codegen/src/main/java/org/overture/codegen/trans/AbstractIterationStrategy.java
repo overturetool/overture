@@ -71,7 +71,7 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 	public List<SStmCG> getPreForLoopStms(AIdentifierVarExpCG setVar,
 			List<SPatternCG> patterns, SPatternCG pattern)
 	{
-		return null;
+		return langIterator.getPreForLoopStms(setVar, patterns, pattern);
 	}
 
 	@Override

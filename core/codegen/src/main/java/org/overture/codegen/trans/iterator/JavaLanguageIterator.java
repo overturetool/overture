@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SPatternCG;
+import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
@@ -53,6 +54,14 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 
 	protected String iteratorName;
 
+	@Override
+	public List<SStmCG> getPreForLoopStms(AIdentifierVarExpCG setVar,
+			List<SPatternCG> patterns, SPatternCG pattern)
+	{
+		//Generate nothing
+		return null;
+	}
+	
 	@Override
 	public AVarDeclCG getForLoopInit(AIdentifierVarExpCG setVar,
 			List<SPatternCG> patterns, SPatternCG pattern)
