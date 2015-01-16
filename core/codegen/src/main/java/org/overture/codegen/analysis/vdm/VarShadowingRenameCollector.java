@@ -35,6 +35,8 @@ import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
+import org.overture.ast.statements.ACaseAlternativeStm;
+import org.overture.ast.statements.ACasesStm;
 import org.overture.ast.statements.AForAllStm;
 import org.overture.ast.statements.AForIndexStm;
 import org.overture.ast.statements.AForPatternBindStm;
@@ -393,6 +395,52 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 			removeLocalDefFromScope(def);
 		}
 	}
+	
+	@Override
+	public void caseACasesStm(ACasesStm node) throws AnalysisException
+	{
+		if (!proceed(node))
+		{
+			return;
+		}
+		
+		if(node.getExp() != null)
+		{
+			node.getExp().apply(this);
+		}
+		
+		// The cases will be responsible for opening of the scope
+		for(ACaseAlternativeStm c : node.getCases())
+		{
+			c.apply(this);
+		}
+		
+		node.getOthers().apply(this);
+	}
+	
+	@Override
+	public void caseACaseAlternativeStm(ACaseAlternativeStm node)
+			throws AnalysisException
+	{
+		if (!proceed(node))
+		{
+			return;
+		}
+		
+		// Do not visit the conditional exp (cexp)
+		
+		LinkedList<PDefinition> localDefs = node.getDefs();
+		
+		openScope(node.getPattern(), localDefs, node.getResult());
+		
+		node.getResult().apply(this);
+		
+		//End scope
+		for(PDefinition def : localDefs)
+		{
+			removeLocalDefFromScope(def);
+		}
+	}
 
 	@Override
 	public void caseAForIndexStm(AForIndexStm node) throws AnalysisException
@@ -691,7 +739,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 
 		if (!contains(localDefName.getLocation()))
 		{
-			renamings.add(new Renaming(localDefName.getLocation(), localDefName.getName(), newName));
+			registerRenaming(localDefName, newName);
 		}
 
 		Set<AVariableExp> occurences = collectVarOccurences(localDefToRename.getLocation(), defScope, localDefsOusideScope);
@@ -713,6 +761,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 	{
 		if (!contains(name.getLocation()))
 		{
+			System.out.println("Hello: " + name.getLocation());
 			renamings.add(new Renaming(name.getLocation(), name.getName(), newName));
 		}
 	}
