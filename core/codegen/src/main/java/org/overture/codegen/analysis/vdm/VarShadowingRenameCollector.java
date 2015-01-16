@@ -44,6 +44,8 @@ import org.overture.ast.statements.AForIndexStm;
 import org.overture.ast.statements.AForPatternBindStm;
 import org.overture.ast.statements.ALetBeStStm;
 import org.overture.ast.statements.ALetStm;
+import org.overture.ast.statements.ATixeStm;
+import org.overture.ast.statements.ATixeStmtAlternative;
 import org.overture.ast.statements.ATrapStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.typechecker.NameScope;
@@ -347,6 +349,36 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 	}
 	
 	@Override
+	public void caseATixeStm(ATixeStm node) throws AnalysisException
+	{
+		if(node.getBody() != null)
+		{
+			node.getBody().apply(this);
+		}
+		
+		// The trap alternatives will be responsible for opening/ending the scope
+		for(ATixeStmtAlternative trap : node.getTraps())
+		{
+			trap.apply(this);
+		}
+	}
+	
+	@Override
+	public void caseATixeStmtAlternative(ATixeStmtAlternative node)
+			throws AnalysisException
+	{
+		openScope(node.getPatternBind(), node.getPatternBind().getDefs(), node.getStatement());
+		
+		node.getStatement().apply(this);
+		
+		//End scope
+		for(PDefinition def : node.getPatternBind().getDefs())
+		{
+			removeLocalDefFromScope(def);
+		}
+	}
+	
+	@Override
 	public void caseATrapStm(ATrapStm node) throws AnalysisException
 	{
 		if (!proceed(node))
@@ -516,7 +548,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 			cond.apply(this);
 		}
 		
-		// The cases will be responsible for opening of the scope
+		// The cases will be responsible for opening/ending the scope
 		for(INode c : cases)
 		{
 			c.apply(this);
