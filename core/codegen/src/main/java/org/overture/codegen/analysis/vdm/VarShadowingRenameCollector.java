@@ -44,6 +44,7 @@ import org.overture.ast.statements.AForIndexStm;
 import org.overture.ast.statements.AForPatternBindStm;
 import org.overture.ast.statements.ALetBeStStm;
 import org.overture.ast.statements.ALetStm;
+import org.overture.ast.statements.ATrapStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
@@ -343,6 +344,32 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		node.getExpression().apply(this);
 
 		endScope(defInfo);
+	}
+	
+	@Override
+	public void caseATrapStm(ATrapStm node) throws AnalysisException
+	{
+		if (!proceed(node))
+		{
+			return;
+		}
+
+		if (node.getBody() != null)
+		{
+			node.getBody().apply(this);
+		}
+		
+		openScope(node.getPatternBind().getPattern(), node.getPatternBind().getDefs(), node.getWith());
+		
+		if(node.getWith() != null)
+		{
+			node.getWith().apply(this);
+		}
+
+		for(PDefinition def : node.getPatternBind().getDefs())
+		{
+			removeLocalDefFromScope(def);
+		}
 	}
 	
 	@Override
