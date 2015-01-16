@@ -1,0 +1,112 @@
+class SharedCounter
+
+instance variables
+
+public counter : nat := 0;
+
+operations
+
+public inc : () ==> ()
+inc () == counter := counter + 1;
+
+public inc : nat ==> ()
+inc (x) == (counter := counter + x);
+
+public getValue : () ==> nat
+getValue () == return counter;
+
+sync
+  per inc => #act(inc) = counter;
+
+end SharedCounter
+
+class Incrementer1
+
+instance variables
+
+private sharedCounter : SharedCounter;
+
+private isFinished : bool := false;
+
+operations
+
+public Incrementer1 : SharedCounter ==> Incrementer1
+Incrementer1 (s) == sharedCounter := s;
+
+public joined : () ==> ()
+joined () == skip;
+
+public incCounter : () ==> ()
+incCounter () ==
+(
+  for i = 1 to 100 do
+    sharedCounter.inc();
+  isFinished := true; 
+)
+
+thread
+       incCounter();
+
+sync
+	per joined => isFinished;
+			
+end Incrementer1
+
+class Incrementer2
+
+instance variables
+
+private sharedCounter : SharedCounter;
+
+private isFinished : bool := false;
+
+operations
+
+public Incrementer2 : SharedCounter ==> Incrementer2
+Incrementer2 (s) == sharedCounter := s;
+
+public joined : () ==> ()
+joined () == skip;
+
+public incCounter : () ==> ()
+incCounter () ==
+(
+  for i = 1 to 100 do
+    sharedCounter.inc(1);
+  isFinished := true; 
+)
+
+thread
+       incCounter();
+
+sync
+	per joined => isFinished;
+			
+end Incrementer2
+
+
+
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let s = new SharedCounter(),
+    i1 = new Incrementer1(s),
+    i2 = new Incrementer2(s),
+    i3 = new Incrementer1(s)
+in 
+(
+  start(i1);
+  start(i2);
+  start(i3);
+
+  i1.joined();
+  i2.joined();
+  i3.joined();
+  
+  return s.getValue(); 
+);
+
+end Entry

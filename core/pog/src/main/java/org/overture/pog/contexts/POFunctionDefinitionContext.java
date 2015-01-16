@@ -23,6 +23,7 @@
 
 package org.overture.pog.contexts;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -43,75 +44,100 @@ import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.PType;
 import org.overture.pog.pub.IPogAssistantFactory;
 
-public class POFunctionDefinitionContext extends POContext
-{
+public class POFunctionDefinitionContext extends POContext {
 	public final ILexNameToken name;
 	public final AFunctionType deftype;
 	public final List<List<PPattern>> paramPatternList;
+	public final List<PType> argtypes;
 	public final boolean addPrecond;
 	public final PExp precondition;
 
 	public POFunctionDefinitionContext(AExplicitFunctionDefinition definition,
-			boolean precond)
-	{
+			boolean precond) {
 		this.name = definition.getName();
 		this.deftype = (AFunctionType) definition.getType();
 		this.paramPatternList = definition.getParamPatternList();
 		this.addPrecond = precond;
 		this.precondition = definition.getPrecondition();
+		this.argtypes = calculateTypes(deftype,definition.getIsCurried());
+	}
+
+	private List<PType> calculateTypes(AFunctionType ftype, boolean curried) {
+		List<PType> r = new LinkedList<PType>();
+
+		for (PType t : ftype.getParameters()) {
+			r.add(t.clone());
+		}
+		if (curried) {
+			r.addAll(handleCurries(ftype.getResult()));
+		}
+		return r;
+	}
+
+	private Collection<? extends PType> handleCurries(PType result) {
+		List<PType> r = new LinkedList<PType>();
+
+		if (result instanceof AFunctionType) {
+			AFunctionType ft = (AFunctionType) result;
+			for (PType p : ft.getParameters()) {
+				r.add(p.clone());
+			}
+			r.addAll(handleCurries(ft.getResult()));
+		}
+
+		return r;
 	}
 
 	public POFunctionDefinitionContext(AImplicitFunctionDefinition definition,
-			boolean precond, IPogAssistantFactory assistantFactory)
-	{
+			boolean precond, IPogAssistantFactory assistantFactory) {
 		this.name = definition.getName();
 		this.deftype = (AFunctionType) definition.getType();
 		this.addPrecond = precond;
-		this.paramPatternList = assistantFactory.createAImplicitFunctionDefinitionAssistant().getParamPatternList(definition);
+		this.paramPatternList = assistantFactory
+				.createAImplicitFunctionDefinitionAssistant()
+				.getParamPatternList(definition);
 		this.precondition = definition.getPrecondition();
+		this.argtypes = calculateTypes(deftype, false);
 	}
 
 	@Override
-	public PExp getContextNode(PExp stitch)
-	{
+	public PExp getContextNode(PExp stitch) {
 		AForAllExp forAllExp = new AForAllExp();
 		forAllExp.setBindList(makeBinds());
 
-		if (deftype.getParameters().isEmpty())
-		{
+		if (deftype.getParameters().isEmpty()) {
 			return stitch;
 		}
 
-		if (addPrecond && precondition != null)
-		{
+		if (addPrecond && precondition != null) {
 
-			AImpliesBooleanBinaryExp implies = AstExpressionFactory.newAImpliesBooleanBinaryExp(precondition.clone(), stitch);
+			AImpliesBooleanBinaryExp implies = AstExpressionFactory
+					.newAImpliesBooleanBinaryExp(precondition.clone(), stitch);
 
 			forAllExp.setPredicate(implies);
-		} else
-		{
+		} else {
 			forAllExp.setPredicate(stitch);
 		}
 
 		return forAllExp;
 	}
 
-	private List<PMultipleBind> makeBinds()
-	{
+
+
+	private List<PMultipleBind> makeBinds() {
 		List<PMultipleBind> result = new LinkedList<PMultipleBind>();
-		AFunctionType ftype = deftype;
 
-		for (List<PPattern> params : paramPatternList)
-		{
-			Iterator<PType> types = ftype.getParameters().iterator();
+		Iterator<PType> types = argtypes.iterator();
 
-			for (PPattern param : params)
-			{
+		for (List<PPattern> params : paramPatternList) {
+
+			for (PPattern param : params) {
 				ATypeMultipleBind typeBind = new ATypeMultipleBind();
 				List<PPattern> one = new Vector<PPattern>();
 				one.add(param.clone());
 				typeBind.setPlist(one);
-				typeBind.setType(types.next().clone());
+				PType type = types.next();
+				typeBind.setType(type.clone());
 				result.add(typeBind);
 			}
 		}
@@ -120,24 +146,19 @@ public class POFunctionDefinitionContext extends POContext
 	}
 
 	@Override
-	public String getContext()
-	{
+	public String getContext() {
 		StringBuilder sb = new StringBuilder();
 
-		if (!deftype.getParameters().isEmpty())
-		{
+		if (!deftype.getParameters().isEmpty()) {
 			sb.append("forall ");
 			String sep = "";
 			AFunctionType ftype = deftype;
 
-			for (List<PPattern> pl : paramPatternList)
-			{
+			for (List<PPattern> pl : paramPatternList) {
 				Iterator<PType> types = ftype.getParameters().iterator();
 
-				for (PPattern p : pl)
-				{
-					if (!(p instanceof AIgnorePattern))
-					{
+				for (PPattern p : pl) {
+					if (!(p instanceof AIgnorePattern)) {
 						sb.append(sep);
 						sb.append(p.toString());
 						sb.append(":");
@@ -146,19 +167,16 @@ public class POFunctionDefinitionContext extends POContext
 					}
 				}
 
-				if (ftype.getResult() instanceof AFunctionType)
-				{
+				if (ftype.getResult() instanceof AFunctionType) {
 					ftype = (AFunctionType) ftype.getResult();
-				} else
-				{
+				} else {
 					break;
 				}
 			}
 
 			sb.append(" &");
 
-			if (addPrecond && precondition != null)
-			{
+			if (addPrecond && precondition != null) {
 				sb.append(" ");
 				sb.append(precondition);
 				sb.append(" =>");

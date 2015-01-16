@@ -22,14 +22,14 @@
 package org.overture.codegen.trans.patterns;
 
 import org.overture.codegen.cgast.SPatternCG;
-import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
+import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 
 public class PatternBlockData
 {
 	private SPatternCG pattern;
-	private AVarLocalDeclCG successVarDecl;
+	private AVarDeclCG successVarDecl;
 	private AIdentifierVarExpCG successVar;
 	private ABlockStmCG declBlock;
 	private MismatchHandling mismatchHandling;
@@ -62,12 +62,12 @@ public class PatternBlockData
 		this.pattern = pattern;
 	}
 
-	public AVarLocalDeclCG getSuccessVarDecl()
+	public AVarDeclCG getSuccessVarDecl()
 	{
 		return successVarDecl;
 	}
 
-	public void setSuccessVarDecl(AVarLocalDeclCG successVarDecl)
+	public void setSuccessVarDecl(AVarDeclCG successVarDecl)
 	{
 		this.successVarDecl = successVarDecl;
 	}

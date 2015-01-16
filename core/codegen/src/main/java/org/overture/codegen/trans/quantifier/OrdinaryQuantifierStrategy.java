@@ -27,11 +27,11 @@ import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.SLocalDeclCG;
+import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.TempVarPrefixes;
-import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 
 public class OrdinaryQuantifierStrategy extends QuantifierBaseStrategy
@@ -39,7 +39,7 @@ public class OrdinaryQuantifierStrategy extends QuantifierBaseStrategy
 	protected OrdinaryQuantifier quantifier;
 
 	public OrdinaryQuantifierStrategy(
-			TransformationAssistantCG transformationAssistant,
+			TransAssistantCG transformationAssistant,
 			SExpCG predicate, String resultVarName,
 			OrdinaryQuantifier quantifier, ILanguageIterator langIterator,
 			ITempVarGen tempGen, TempVarPrefixes varPrefixes)
@@ -49,11 +49,11 @@ public class OrdinaryQuantifierStrategy extends QuantifierBaseStrategy
 	}
 
 	@Override
-	public List<? extends SLocalDeclCG> getOuterBlockDecls(
+	public List<AVarDeclCG> getOuterBlockDecls(
 			AIdentifierVarExpCG setVar, List<SPatternCG> patterns)
 			throws AnalysisException
 	{
-		return firstBind ? packDecl(transformationAssistant.consBoolVarDecl(resultVarName, quantifier == OrdinaryQuantifier.FORALL))
+		return firstBind ? packDecl(transAssistant.consBoolVarDecl(resultVarName, quantifier == OrdinaryQuantifier.FORALL))
 				: null;
 	}
 
@@ -63,16 +63,16 @@ public class OrdinaryQuantifierStrategy extends QuantifierBaseStrategy
 			throws AnalysisException
 	{
 		SExpCG left = langIterator.getForLoopCond(setVar, patterns, pattern);
-		SExpCG right = transformationAssistant.consBoolCheck(resultVarName, quantifier == OrdinaryQuantifier.EXISTS);
+		SExpCG right = transAssistant.consBoolCheck(resultVarName, quantifier == OrdinaryQuantifier.EXISTS);
 
-		return transformationAssistant.consAndExp(left, right);
+		return transAssistant.consAndExp(left, right);
 	}
 
 	@Override
 	public List<SStmCG> getForLoopStms(AIdentifierVarExpCG setVar,
 			List<SPatternCG> patterns, SPatternCG pattern)
 	{
-		return lastBind ? packStm(transformationAssistant.consBoolVarAssignment(predicate, resultVarName))
+		return lastBind ? packStm(transAssistant.consBoolVarAssignment(predicate, resultVarName))
 				: null;
 	}
 }

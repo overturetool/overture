@@ -29,13 +29,12 @@ import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
-import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
+import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AAddrNotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
-import org.overture.codegen.cgast.expressions.AExplicitVarExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
@@ -46,13 +45,11 @@ import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.APlainCallStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
-import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 
-public class JavaFormatAssistant
+public class JavaFormatAssistant extends JavaClassCreatorBase
 {
-
 	public static ATypeNameCG consTypeName(ARecordDeclCG record)
 			throws AnalysisException
 	{
@@ -73,12 +70,13 @@ public class JavaFormatAssistant
 		return typeName;
 	}
 
-	public static ABlockStmCG consVarFromCastedExp(ARecordDeclCG record,
+	public ABlockStmCG consVarFromCastedExp(ARecordDeclCG record,
 			String formalParamName, String varName) throws AnalysisException
 	{
 		// Construct a local var in a statement: RecordType varName = ((RecordType) formalParamName);
 
-		AVarLocalDeclCG localVar = new AVarLocalDeclCG();
+		AVarDeclCG localVar = new AVarDeclCG();
+		localVar.setFinal(false);
 
 		ARecordTypeCG recordType = new ARecordTypeCG();
 		recordType.setName(consTypeName(record));
@@ -90,9 +88,12 @@ public class JavaFormatAssistant
 
 		ACastUnaryExpCG cast = new ACastUnaryExpCG();
 		cast.setType(recordType.clone());
+		
 		AIdentifierVarExpCG varExp = new AIdentifierVarExpCG();
-		varExp.setOriginal(formalParamName);
 		varExp.setType(new AObjectTypeCG());
+		varExp.setName(formalParamName);
+		varExp.setIsLocal(true);
+		
 		cast.setExp(varExp);
 		localVar.setExp(cast);
 
@@ -102,7 +103,7 @@ public class JavaFormatAssistant
 		return stm;
 	}
 
-	public static AAndBoolBinaryExpCG extendAndExp(ARecordDeclCG record,
+	public AAndBoolBinaryExpCG extendAndExp(ARecordDeclCG record,
 			AFieldDeclCG field, SExpCG previous, String paramName)
 			throws AnalysisException
 	{
@@ -116,7 +117,7 @@ public class JavaFormatAssistant
 		return nextAnd;
 	}
 
-	public static AInstanceofExpCG consInstanceOf(ARecordDeclCG record,
+	public AInstanceofExpCG consInstanceOf(ARecordDeclCG record,
 			String formalParamName)
 	{
 		// Example: objRef instanceof classType
@@ -131,9 +132,10 @@ public class JavaFormatAssistant
 		recordType.setName(typeName);
 
 		AIdentifierVarExpCG objRef = new AIdentifierVarExpCG();
-		objRef.setOriginal(formalParamName);
 		objRef.setType(new AObjectTypeCG());
-
+		objRef.setIsLocal(true);
+		objRef.setName(formalParamName);
+		
 		AInstanceofExpCG instanceOfExp = new AInstanceofExpCG();
 		instanceOfExp.setType(new ABoolBasicTypeCG());
 		instanceOfExp.setExp(objRef);
@@ -142,7 +144,7 @@ public class JavaFormatAssistant
 		return instanceOfExp;
 	}
 
-	public static AAddrNotEqualsBinaryExpCG consParamNotNullComp(
+	public AAddrNotEqualsBinaryExpCG consParamNotNullComp(
 			AIdentifierVarExpCG param)
 	{
 		AAddrNotEqualsBinaryExpCG fieldComparison = new AAddrNotEqualsBinaryExpCG();
@@ -151,7 +153,8 @@ public class JavaFormatAssistant
 
 		AIdentifierVarExpCG instanceField = new AIdentifierVarExpCG();
 		instanceField.setType(param.getType().clone());
-		instanceField.setOriginal(param.getOriginal());
+		instanceField.setIsLocal(false);
+		instanceField.setName(param.getName());
 
 		fieldComparison.setLeft(instanceField);
 		fieldComparison.setRight(new ANullExpCG());
@@ -159,20 +162,17 @@ public class JavaFormatAssistant
 		return fieldComparison;
 	}
 
-	public static APlainCallStmCG consCallStm(AFieldDeclCG field)
+	public APlainCallStmCG consCallStm(AFieldDeclCG field)
 	{
 		APlainCallStmCG call = new APlainCallStmCG();
 
 		AExternalTypeCG classType = new AExternalTypeCG();
 		classType.setName(JavaFormat.UTILS_FILE);
 
-		AIdentifierVarExpCG root = new AIdentifierVarExpCG();
-		root.setType(classType);
-		root.setOriginal(field.getName());
-
 		AIdentifierVarExpCG argument = new AIdentifierVarExpCG();
 		argument.setType(field.getType().clone());
-		argument.setOriginal(field.getName());
+		argument.setIsLocal(false);
+		argument.setName(field.getName());
 
 		call.setType(classType.clone());
 		call.setName("hashcode");
@@ -182,7 +182,7 @@ public class JavaFormatAssistant
 		return call;
 	}
 
-	public static AEqualsBinaryExpCG consFieldComparison(ARecordDeclCG record,
+	public AEqualsBinaryExpCG consFieldComparison(ARecordDeclCG record,
 			AFieldDeclCG field, String formalParamName)
 			throws AnalysisException
 	{
@@ -193,7 +193,8 @@ public class JavaFormatAssistant
 
 		AIdentifierVarExpCG instanceField = new AIdentifierVarExpCG();
 		instanceField.setType(field.getType().clone());
-		instanceField.setOriginal(field.getName());
+		instanceField.setIsLocal(false);
+		instanceField.setName(field.getName());
 
 		AFieldExpCG formalParamField = new AFieldExpCG();
 		formalParamField.setType(field.getType().clone());
@@ -202,7 +203,8 @@ public class JavaFormatAssistant
 		ARecordTypeCG recordType = new ARecordTypeCG();
 		recordType.setName(consTypeName(record));
 		formalParam.setType(recordType);
-		formalParam.setOriginal(formalParamName);
+		formalParam.setIsLocal(true);
+		formalParam.setName(formalParamName);
 
 		formalParamField.setObject(formalParam);
 		formalParamField.setMemberName(field.getName());
@@ -213,7 +215,7 @@ public class JavaFormatAssistant
 		return fieldComparison;
 	}
 
-	public static AApplyExpCG consUtilCallUsingRecFields(ARecordDeclCG record,
+	public AApplyExpCG consUtilCallUsingRecFields(ARecordDeclCG record,
 			STypeCG returnType, String memberName)
 	{
 		LinkedList<AFieldDeclCG> fields = record.getFields();
@@ -224,29 +226,12 @@ public class JavaFormatAssistant
 		for (AFieldDeclCG field : fields)
 		{
 			AIdentifierVarExpCG nextArg = new AIdentifierVarExpCG();
-			nextArg.setOriginal(field.getName());
+			nextArg.setName(field.getName());
 			nextArg.setType(field.getType().clone());
+			nextArg.setIsLocal(false);
 			args.add(nextArg);
 		}
 
-		return call;
-	}
-
-	public static AApplyExpCG consUtilCall(STypeCG returnType, String memberName)
-	{
-		AExplicitVarExpCG member = new AExplicitVarExpCG();
-
-		AMethodTypeCG methodType = new AMethodTypeCG();
-		methodType.setResult(returnType.clone());
-		member.setType(methodType);
-		AExternalTypeCG classType = new AExternalTypeCG();
-		classType.setName(JavaFormat.UTILS_FILE);
-		member.setClassType(classType);
-		member.setName(memberName);
-		AApplyExpCG call = new AApplyExpCG();
-		call.setType(returnType.clone());
-		call.setRoot(member);
-		
 		return call;
 	}
 }

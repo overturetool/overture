@@ -37,6 +37,7 @@ import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AFuncDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.AMutexSyncDeclCG;
+import org.overture.codegen.cgast.declarations.ANamedTraceDeclCG;
 import org.overture.codegen.cgast.declarations.APersyncDeclCG;
 import org.overture.codegen.cgast.declarations.AThreadDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
@@ -48,6 +49,7 @@ import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.ir.IRConstants;
+import org.overture.codegen.ir.IRGeneratedTag;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
 
@@ -108,6 +110,7 @@ public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
 					String initName = question.getObjectInitializerCall((AExplicitOperationDefinition) def);
 
 					AMethodDeclCG objInitializer = method.clone();
+					objInitializer.setTag(new IRGeneratedTag(getClass().getName()));
 					objInitializer.setName(initName);
 					objInitializer.getMethodType().setResult(new AVoidTypeCG());
 					objInitializer.setIsConstructor(false);
@@ -130,8 +133,9 @@ public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
 							AIdentifierPatternCG idPattern = (AIdentifierPatternCG) pattern;
 
 							AIdentifierVarExpCG var = new AIdentifierVarExpCG();
+							var.setIsLocal(true);
 							var.setType(param.getType().clone());
-							var.setOriginal(idPattern.getName());
+							var.setName(idPattern.getName());
 							var.setIsLambda(false);
 							var.setSourceNode(pattern.getSourceNode());
 
@@ -163,6 +167,10 @@ public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
 			else if (decl instanceof AMutexSyncDeclCG)
 			{
 				classCg.getMutexSyncs().add((AMutexSyncDeclCG) decl);
+			}
+			else if(decl instanceof ANamedTraceDeclCG)
+			{
+				classCg.getTraces().add((ANamedTraceDeclCG) decl);
 			}
 			else
 			{

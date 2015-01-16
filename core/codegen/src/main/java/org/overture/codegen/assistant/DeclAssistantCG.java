@@ -45,7 +45,7 @@ import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
-import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
+import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
@@ -100,6 +100,13 @@ public class DeclAssistantCG extends AssistantBase
 		while (superName != null)
 		{
 			AClassDeclCG superClassDecl = findClass(classes, superName);
+			
+			if(superClassDecl == null)
+			{
+				//This would be the case if the super class
+				// declaration is the VDMThread from the runtime
+				break;
+			}
 
 			for (T superDecl : strategy.getDecls(superClassDecl))
 			{
@@ -164,7 +171,7 @@ public class DeclAssistantCG extends AssistantBase
 	}
 
 	public void setLocalDefs(List<PDefinition> localDefs,
-			List<AVarLocalDeclCG> localDecls, IRInfo question)
+			List<AVarDeclCG> localDecls, IRInfo question)
 			throws AnalysisException
 	{
 		for (PDefinition def : localDefs)
@@ -247,7 +254,7 @@ public class DeclAssistantCG extends AssistantBase
 		return record;
 	}
 
-	private AVarLocalDeclCG consLocalVarDecl(AValueDefinition valueDef,
+	private AVarDeclCG consLocalVarDecl(AValueDefinition valueDef,
 			IRInfo question) throws AnalysisException
 	{
 		STypeCG type = valueDef.getType().apply(question.getTypeVisitor(), question);
@@ -258,7 +265,7 @@ public class DeclAssistantCG extends AssistantBase
 
 	}
 
-	private AVarLocalDeclCG consLocalVarDecl(AEqualsDefinition equalsDef,
+	private AVarDeclCG consLocalVarDecl(AEqualsDefinition equalsDef,
 			IRInfo question) throws AnalysisException
 	{
 		STypeCG type = equalsDef.getExpType().apply(question.getTypeVisitor(), question);
@@ -269,10 +276,12 @@ public class DeclAssistantCG extends AssistantBase
 
 	}
 
-	private AVarLocalDeclCG consLocalVarDecl(INode node, STypeCG type,
+	private AVarDeclCG consLocalVarDecl(INode node, STypeCG type,
 			SPatternCG pattern, SExpCG exp)
 	{
-		AVarLocalDeclCG localVarDecl = new AVarLocalDeclCG();
+		AVarDeclCG localVarDecl = new AVarDeclCG();
+		
+		localVarDecl.setFinal(false);
 		localVarDecl.setSourceNode(new SourceNode(node));
 		localVarDecl.setType(type);
 		localVarDecl.setPattern(pattern);
@@ -358,7 +367,7 @@ public class DeclAssistantCG extends AssistantBase
 		return methodNames;
 	}
 
-	public void setDefaultValue(AVarLocalDeclCG localDecl, STypeCG typeCg)
+	public void setDefaultValue(AVarDeclCG localDecl, STypeCG typeCg)
 			throws AnalysisException
 	{
 		ExpAssistantCG expAssistant = assistantManager.getExpAssistant();
@@ -470,14 +479,7 @@ public class DeclAssistantCG extends AssistantBase
 				field = currentField;
 			}
 		}
-
-		if (field == null)
-		{
-			throw new IllegalArgumentException("Could not find field '"
-					+ memberName + "' in record '" + recName + "' in class '"
-					+ definingClassName + "'");
-		}
-
+		
 		return field;
 	}
 }

@@ -42,7 +42,9 @@ $abstract $node.getAccess() $static class $node.getName() $JavaFormat.formatSupe
 	#end
 
 	#foreach( $typeDecl in $node.getTypeDecls() )
-	$JavaFormat.format($typeDecl)
+		#if (!$JavaFormat.isNamedTypeDecl($typeDecl))
+		$JavaFormat.format($typeDecl)
+		#end
 	#end
 	##
 	${threadMethod}##

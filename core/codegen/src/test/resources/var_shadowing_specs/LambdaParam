@@ -1,0 +1,17 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+  return f((lambda x : nat & x * x), 123);
+
+functions
+
+public f : (nat -> nat) * nat -> nat
+f (f,x) ==
+let f = (lambda x : nat & let x = 5 in f(x))
+in
+  f(10);
+
+end Entry

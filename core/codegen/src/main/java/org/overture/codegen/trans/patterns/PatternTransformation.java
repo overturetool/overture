@@ -24,6 +24,7 @@ package org.overture.codegen.trans.patterns;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.PCG;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SPatternCG;
@@ -36,8 +37,7 @@ import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
-import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
-import org.overture.codegen.cgast.declarations.SLocalDeclCG;
+import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
@@ -85,13 +85,13 @@ import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.DeclarationTag;
 import org.overture.codegen.trans.TempVarPrefixes;
-import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class PatternTransformation extends DepthFirstAnalysisAdaptor
 {
 	private List<AClassDeclCG> classes;
 	private IRInfo info;
-	private TransformationAssistantCG transformationAssistant;
+	private TransAssistantCG transformationAssistant;
 
 	private PatternMatchConfig config;
 
@@ -99,7 +99,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 
 	public PatternTransformation(List<AClassDeclCG> classes,
 			TempVarPrefixes varPrefixes, IRInfo info,
-			TransformationAssistantCG transformationAssistant,
+			TransAssistantCG transformationAssistant,
 			PatternMatchConfig config)
 	{
 		this.classes = classes;
@@ -114,7 +114,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 	public void caseALocalPatternAssignmentStmCG(
 			ALocalPatternAssignmentStmCG node) throws AnalysisException
 	{
-		AVarLocalDeclCG nextElementDecl = node.getNextElementDecl();
+		AVarDeclCG nextElementDecl = node.getNextElementDecl();
 		SPatternCG pattern = nextElementDecl.getPattern();
 
 		if (pattern instanceof AIdentifierPatternCG)
@@ -253,7 +253,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		boolean taggedBlock = false;
 		for (int i = 0; i < node.getLocalDefs().size(); i++)
 		{
-			SLocalDeclCG dec = node.getLocalDefs().get(i);
+			AVarDeclCG dec = node.getLocalDefs().get(i);
 
 			if (dec.getTag() != null)
 			{
@@ -261,12 +261,12 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 
 				DeclarationTag tag = fetchTag(dec);
 
-				if (tag.isDeclared() || !(dec instanceof AVarLocalDeclCG))
+				if (tag.isDeclared() || !(dec instanceof AVarDeclCG))
 				{
 					continue;
 				}
 
-				AVarLocalDeclCG nextElementDecl = (AVarLocalDeclCG) dec;
+				AVarDeclCG nextElementDecl = (AVarDeclCG) dec;
 
 				SPatternCG pattern = nextElementDecl.getPattern();
 
@@ -294,11 +294,42 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 
 			if (!patternInfo.isEmpty())
 			{
-				ABlockStmCG patternHandlingBlock = consPatternHandlingBlock(patternInfo);
-
-				if (!patternHandlingBlock.getStatements().isEmpty())
+				List<DeclBlockPair> declBlockPairs = consPatternHandlingBlocksSeparate(node.getLocalDefs(), patternInfo);
+				
+				for(int i = 0; i < declBlockPairs.size(); i++)
 				{
-					node.getStatements().addFirst(patternHandlingBlock);
+					DeclBlockPair currentDeclBlockPair = declBlockPairs.get(i);
+					if(currentDeclBlockPair.getNextDecl() != null)
+					{
+						// The pattern handling block must be put before the
+						// enclosing statement of the next declaration
+						SStmCG stm = transformationAssistant.getEnclosingStm(currentDeclBlockPair.getNextDecl(), "block statement pattern handling");
+						ABlockStmCG block = new ABlockStmCG();
+						
+						transformationAssistant.replaceNodeWith(stm, block);
+						block.getStatements().add(currentDeclBlockPair.getBlock());
+						block.getStatements().add(stm);
+					}
+					else
+					{
+						// If there is no next declaration the current declaration
+						// must be the last declaration of the block statement
+						INode parent = currentDeclBlockPair.getDecl().parent();
+						
+						if(parent instanceof ABlockStmCG)
+						{
+							ABlockStmCG enc = (ABlockStmCG) parent;
+							enc.getStatements().addFirst(currentDeclBlockPair.getBlock());
+
+						}
+						else
+						{
+							Logger.getLog().printErrorln("Expected parent of current declaration "
+									+ "to be a block statement but got: "
+									+ parent
+									+ ". Pattern handling block could not be added.");
+						}
+					}
 				}
 			}
 		}
@@ -348,14 +379,14 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 	}
 
 	private ABlockStmCG consPatternHandlingInIterationBlock(
-			AVarLocalDeclCG nextElementDecl, DeclarationTag tag,
+			AVarDeclCG nextElementDecl, DeclarationTag tag,
 			SExpCG assignedExp)
 	{
 		PatternInfo declInfo = extractPatternInfo(nextElementDecl);
 		ABlockStmCG declBlockTmp = new ABlockStmCG();
 		PatternBlockData data = new PatternBlockData(declInfo.getPattern(), declBlockTmp, MismatchHandling.LOOP_CONTINUE);
 
-		AVarLocalDeclCG successVarDecl = tag.getSuccessVarDecl();
+		AVarDeclCG successVarDecl = tag.getSuccessVarDecl();
 		if (successVarDecl != null)
 		{
 			SPatternCG successVarDeclPattern = successVarDecl.getPattern();
@@ -381,7 +412,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		ABlockStmCG enclosingBlock = nextElementDecl.getAncestor(ABlockStmCG.class);
 		enclosingBlock.getLocalDefs().addAll(declBlockTmp.getLocalDefs());
 
-		AVarLocalDeclCG nextDeclCopy = nextElementDecl.clone();
+		AVarDeclCG nextDeclCopy = nextElementDecl.clone();
 
 		if (tag == null || !tag.isDeclared())
 		{
@@ -392,9 +423,10 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 			if (nextDeclPattern instanceof AIdentifierPatternCG)
 			{
 				AIdentifierVarExpCG varExp = new AIdentifierVarExpCG();
-				varExp.setIsLambda(false);
 				varExp.setType(nextDeclCopy.getType());
-				varExp.setOriginal(((AIdentifierPatternCG) nextDeclPattern).getName());
+				varExp.setIsLocal(true);
+				varExp.setIsLambda(false);
+				varExp.setName(((AIdentifierPatternCG) nextDeclPattern).getName());
 
 				ALocalAssignmentStmCG assignment = new ALocalAssignmentStmCG();
 				assignment.setTarget(varExp);
@@ -455,7 +487,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 			SPatternCG currentPattern)
 	{
 		AIdentifierPatternCG idPattern = (AIdentifierPatternCG) currentPattern;
-		AVarLocalDeclCG idPatternDecl = consVarDecl(currentInfo.getType().clone(), currentInfo.getActualValue().clone(), idPattern.clone());
+		AVarDeclCG idPatternDecl = consVarDecl(currentInfo.getType().clone(), currentInfo.getActualValue().clone(), idPattern.clone());
 
 		ABlockStmCG wrappingStatement = new ABlockStmCG();
 		wrappingStatement.getLocalDefs().add(idPatternDecl);
@@ -470,16 +502,8 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		for (PatternInfo info : patternInfo)
 		{
 			SPatternCG currentPattern = info.getPattern();
-
-			if (currentPattern instanceof AIdentifierPatternCG)
-			{
-				continue;
-			} else if (currentPattern instanceof AIgnorePatternCG)
-			{
-				AIdentifierPatternCG idPattern = getIdPattern(config.getIgnorePatternPrefix());
-				transformationAssistant.replaceNodeWith(currentPattern, idPattern);
-
-			} else
+			
+			if(!basicCaseHandled(currentPattern))
 			{
 				ABlockStmCG currentDeclBlock = new ABlockStmCG();
 
@@ -491,7 +515,48 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 
 		return topBlock;
 	}
+	
+	private List<DeclBlockPair> consPatternHandlingBlocksSeparate(List<AVarDeclCG> decls, List<PatternInfo> patternInfo)
+	{
+		List<DeclBlockPair> blocks = new LinkedList<DeclBlockPair>();
+		
+		for (int i = 0; i < patternInfo.size(); i++)
+		{
+			PatternInfo info = patternInfo.get(i);
 
+			if(!basicCaseHandled(info.getPattern()))
+			{
+				ABlockStmCG currentDeclBlock = new ABlockStmCG();
+
+				ABlockStmCG patternHandlingBlock = consPatternCheck(info.getPattern(), info.getType(), info.getActualValue(), currentDeclBlock);
+				currentDeclBlock.getStatements().addFirst(patternHandlingBlock);
+				
+				AVarDeclCG nextDecl = i < decls.size() - 1 ? decls.get(1 + i) : null;
+				DeclBlockPair declBlockPair = new DeclBlockPair(decls.get(i), nextDecl, currentDeclBlock);
+				
+				blocks.add(declBlockPair);
+			}
+		}
+
+		return blocks;
+	}
+	
+	private boolean basicCaseHandled(SPatternCG currentPattern)
+	{
+		if (currentPattern instanceof AIdentifierPatternCG)
+		{
+			return true;
+		} else if (currentPattern instanceof AIgnorePatternCG)
+		{
+			AIdentifierPatternCG idPattern = getIdPattern(config.getIgnorePatternPrefix());
+			transformationAssistant.replaceNodeWith(currentPattern, idPattern);
+
+			return true;
+		}
+		
+		return false;
+	}
+	
 	private ABlockStmCG consPatternCheck(SPatternCG pattern, STypeCG type,
 			SExpCG actualValue, ABlockStmCG declBlock)
 	{
@@ -617,8 +682,9 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 
 		AIdentifierVarExpCG recordPatternVar = new AIdentifierVarExpCG();
 		recordPatternVar.setType(recordType.clone());
-		recordPatternVar.setOriginal(idPattern.getName());
+		recordPatternVar.setName(idPattern.getName());
 		recordPatternVar.setIsLambda(false);
+		recordPatternVar.setIsLocal(true);
 
 		ABlockStmCG fieldCheckBlock = consFieldCheckBlock(patternData, recordPatternVar, recordPattern.getPatterns(), types);
 
@@ -660,8 +726,9 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 
 		AIdentifierVarExpCG tuplePatternVar = new AIdentifierVarExpCG();
 		tuplePatternVar.setType(tupleType.clone());
-		tuplePatternVar.setOriginal(idPattern.getName());
+		tuplePatternVar.setName(idPattern.getName());
 		tuplePatternVar.setIsLambda(false);
+		tuplePatternVar.setIsLocal(true);
 
 		ATupleCompatibilityExpCG tupleCheck = new ATupleCompatibilityExpCG();
 		tupleCheck.setType(new ABoolBasicTypeCG());
@@ -705,7 +772,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 			init.setType(new AUnknownTypeCG());
 		}
 
-		AVarLocalDeclCG successVarDecl = transformationAssistant.consDecl(successVarName, new ABoolBasicTypeCG(), init);
+		AVarDeclCG successVarDecl = transformationAssistant.consDecl(successVarName, new ABoolBasicTypeCG(), init);
 		patternData.setSuccessVarDecl(successVarDecl);
 
 		AIdentifierVarExpCG successVar = transformationAssistant.consSuccessVar(successVarName);
@@ -743,7 +810,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 			SStmCG noMatchStm)
 	{
 		AIfStmCG ifCheck = new AIfStmCG();
-		ifCheck.setIfExp(transformationAssistant.consBoolCheck(successVar.getOriginal(), true));
+		ifCheck.setIfExp(transformationAssistant.consBoolCheck(successVar.getName(), true));
 		ifCheck.setThenStm(noMatchStm);
 
 		return ifCheck;
@@ -772,7 +839,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 
 		if (declare)
 		{
-			AVarLocalDeclCG patternDecl = consVarDecl(type.clone(), actualValue.clone(), idPattern.clone());
+			AVarDeclCG patternDecl = consVarDecl(type.clone(), actualValue.clone(), idPattern.clone());
 			patternBlock.getLocalDefs().add(patternDecl);
 		} else
 		{
@@ -782,10 +849,11 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		return patternBlock;
 	}
 
-	private AVarLocalDeclCG consVarDecl(STypeCG type, SExpCG valueToMatch,
+	private AVarDeclCG consVarDecl(STypeCG type, SExpCG valueToMatch,
 			SPatternCG idPattern)
 	{
-		AVarLocalDeclCG patternDecl = new AVarLocalDeclCG();
+		AVarDeclCG patternDecl = new AVarDeclCG();
+		patternDecl.setFinal(false);
 		patternDecl.setType(type);
 		patternDecl.setExp(valueToMatch);
 		patternDecl.setPattern(idPattern);
@@ -915,13 +983,14 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 	{
 		AIdentifierPatternCG currentId = (AIdentifierPatternCG) currentPattern;
 
-		AVarLocalDeclCG idVarDecl = consVarDecl(currentType.clone(), new AUndefinedExpCG(), currentPattern.clone());
+		AVarDeclCG idVarDecl = consVarDecl(currentType.clone(), new AUndefinedExpCG(), currentPattern.clone());
 
 		declBlock.getLocalDefs().add(idVarDecl);
 
 		AIdentifierVarExpCG var = new AIdentifierVarExpCG();
 		var.setType(currentType.clone());
-		var.setOriginal(currentId.getName());
+		var.setName(currentId.getName());
+		var.setIsLocal(true);
 		var.setIsLambda(false);
 
 		ALocalAssignmentStmCG localAssignment = new ALocalAssignmentStmCG();
@@ -946,7 +1015,9 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 
 		if (declarePatternVar)
 		{
-			AVarLocalDeclCG patternDecl = new AVarLocalDeclCG();
+			AVarDeclCG patternDecl = new AVarDeclCG();
+			
+			patternDecl.setFinal(false);
 			patternDecl.setPattern(idPattern.clone());
 			patternDecl.setType(actualValue.getType().clone());
 			patternDecl.setExp(actualValue.clone());
@@ -956,8 +1027,9 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 
 		AIdentifierVarExpCG var = new AIdentifierVarExpCG();
 		var.setType(valueToMatch.getType().clone());
-		var.setOriginal(idPattern.getName());
+		var.setName(idPattern.getName());
 		var.setIsLambda(false);
+		var.setIsLocal(true);
 
 		AEqualsBinaryExpCG check = new AEqualsBinaryExpCG();
 		check.setType(new ABoolBasicTypeCG());
@@ -975,23 +1047,20 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		return block;
 	}
 
-	public List<PatternInfo> extractFromLocalDefs(List<SLocalDeclCG> localDefs)
+	public List<PatternInfo> extractFromLocalDefs(List<AVarDeclCG> localDefs)
 	{
 		List<PatternInfo> patternInfo = new LinkedList<PatternInfo>();
 
-		for (SLocalDeclCG decl : localDefs)
+		for (AVarDeclCG decl : localDefs)
 		{
-			if (decl instanceof AVarLocalDeclCG)
-			{
-				PatternInfo currentInfo = extractPatternInfo((AVarLocalDeclCG) decl);
-				patternInfo.add(currentInfo);
-			}
+			PatternInfo currentInfo = extractPatternInfo(decl);
+			patternInfo.add(currentInfo);
 		}
 
 		return patternInfo;
 	}
 
-	private PatternInfo extractPatternInfo(AVarLocalDeclCG decl)
+	private PatternInfo extractPatternInfo(AVarDeclCG decl)
 	{
 		STypeCG type = decl.getType();
 		SPatternCG pattern = decl.getPattern();

@@ -1,0 +1,42 @@
+class Entry
+
+values
+
+AsyncCalls = 10;
+
+instance variables
+
+x : nat := 0;
+
+operations
+
+async 
+public inc: () ==> ()
+inc () ==
+  x := x + 1;
+
+public join : () ==> ()
+join () == skip;
+
+public fire : () ==> nat
+fire () ==
+( 
+  for i = 1 to AsyncCalls do
+    inc();
+    
+  join();
+  return x;
+);
+
+public static Run : () ==> ?
+Run () ==
+let e = new Entry()
+in
+  e.fire();
+  
+sync
+
+mutex(inc);
+per join => #fin(inc) = AsyncCalls;
+
+end Entry

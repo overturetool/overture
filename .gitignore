@@ -66,6 +66,8 @@ Icon[^-0-9a-zA-Z]
 ############################
 target/
 
+# eclipse noise #
+#################
 .metadata/
 .classpath
 .settings/

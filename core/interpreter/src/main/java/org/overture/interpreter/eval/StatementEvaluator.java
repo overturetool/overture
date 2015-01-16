@@ -6,16 +6,12 @@ import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AClassInvariantDefinition;
-import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
-import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
-import org.overture.ast.patterns.PMultipleBind;
-import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.AAlwaysStm;
 import org.overture.ast.statements.AApplyObjectDesignator;
 import org.overture.ast.statements.AAssignmentStm;
@@ -80,12 +76,8 @@ import org.overture.interpreter.values.BooleanValue;
 import org.overture.interpreter.values.FunctionValue;
 import org.overture.interpreter.values.IntegerValue;
 import org.overture.interpreter.values.MapValue;
-import org.overture.interpreter.values.NameValuePair;
-import org.overture.interpreter.values.NameValuePairList;
 import org.overture.interpreter.values.ObjectValue;
 import org.overture.interpreter.values.OperationValue;
-import org.overture.interpreter.values.Quantifier;
-import org.overture.interpreter.values.QuantifierList;
 import org.overture.interpreter.values.RecordValue;
 import org.overture.interpreter.values.SeqValue;
 import org.overture.interpreter.values.SetValue;
@@ -479,16 +471,7 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	public Value caseAElseIfStm(AElseIfStm node, Context ctxt)
 			throws AnalysisException
 	{
-		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-
-		try
-		{
-			return node.getElseIf().apply(VdmRuntime.getStatementEvaluator(), ctxt).boolValue(ctxt) ? node.getThenStm().apply(VdmRuntime.getStatementEvaluator(), ctxt)
-					: null;
-		} catch (ValueException e)
-		{
-			return VdmRuntimeError.abort(node.getLocation(), e);
-		}
+		return evalElseIf(node, node.getLocation(), node.getElseIf(), node.getThenStm(), ctxt);
 	}
 
 	@Override
@@ -697,134 +680,28 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 	@Override
 	public Value caseAIfStm(AIfStm node, Context ctxt) throws AnalysisException
 	{
-		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-
-		try
-		{
-			if (node.getIfExp().apply(VdmRuntime.getStatementEvaluator(), ctxt).boolValue(ctxt))
-			{
-				return node.getThenStm().apply(VdmRuntime.getStatementEvaluator(), ctxt);
-			} else
-			{
-				for (AElseIfStm elseif : node.getElseIf())
-				{
-					Value r = elseif.apply(VdmRuntime.getStatementEvaluator(), ctxt);
-					if (r != null)
-					{
-						return r;
-					}
-				}
-
-				if (node.getElseStm() != null)
-				{
-					return node.getElseStm().apply(VdmRuntime.getStatementEvaluator(), ctxt);
-				}
-
-				return new VoidValue();
-			}
-		} catch (ValueException e)
-		{
-			return VdmRuntimeError.abort(node.getLocation(), e);
-		}
+		return evalIf(node, node.getLocation(), node.getIfExp(), node.getThenStm(), node.getElseIf(), node.getElseStm(), ctxt);
 	}
 
 	@Override
 	public Value caseALetBeStStm(ALetBeStStm node, Context ctxt)
 			throws AnalysisException
 	{
-		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-		try
-		{
-			QuantifierList quantifiers = new QuantifierList();
-
-			for (PMultipleBind mb : node.getDef().getBindings())
-			{
-				ValueList bvals = ctxt.assistantFactory.createPMultipleBindAssistant().getBindValues(mb, ctxt);
-
-				for (PPattern p : mb.getPlist())
-				{
-					Quantifier q = new Quantifier(p, bvals);
-					quantifiers.add(q);
-				}
-			}
-
-			quantifiers.init(ctxt, true);
-
-			while (quantifiers.hasNext())
-			{
-				Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "let be st statement", ctxt);
-				NameValuePairList nvpl = quantifiers.next();
-				boolean matches = true;
-
-				for (NameValuePair nvp : nvpl)
-				{
-					Value v = evalContext.get(nvp.name);
-
-					if (v == null)
-					{
-						evalContext.put(nvp.name, nvp.value);
-					} else
-					{
-						if (!v.equals(nvp.value))
-						{
-							matches = false;
-							break; // This quantifier set does not match
-						}
-					}
-				}
-
-				if (matches
-						&& (node.getSuchThat() == null || node.getSuchThat().apply(VdmRuntime.getStatementEvaluator(), evalContext).boolValue(ctxt)))
-				{
-					return node.getStatement().apply(VdmRuntime.getStatementEvaluator(), evalContext);
-				}
-			}
-		} catch (ValueException e)
-		{
-			VdmRuntimeError.abort(node.getLocation(), e);
-		}
-
-		return VdmRuntimeError.abort(node.getLocation(), 4040, "Let be st found no applicable bindings", ctxt);
+		return evalLetBeSt(node, node.getLocation(), node.getDef(), node.getSuchThat(), node.getStatement(), 4040, "statement", ctxt);
 	}
 
 	@Override
 	public Value caseALetStm(ALetStm node, Context ctxt)
 			throws AnalysisException
 	{
-		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-		Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "let statement", ctxt);
-
-		LexNameToken sname = new LexNameToken(node.getLocation().getModule(), "self", node.getLocation());
-		ObjectValue self = (ObjectValue) ctxt.check(sname);
-
-		for (PDefinition d : node.getLocalDefs())
-		{
-			NameValuePairList values = ctxt.assistantFactory.createPDefinitionAssistant().getNamedValues(d, evalContext);
-
-			if (self != null && d instanceof AExplicitFunctionDefinition)
-			{
-				for (NameValuePair nvp : values)
-				{
-					if (nvp.value instanceof FunctionValue)
-					{
-						FunctionValue fv = (FunctionValue) nvp.value;
-						fv.setSelf(self);
-					}
-				}
-			}
-
-			evalContext.putList(values);
-		}
-
-		return node.getStatement().apply(VdmRuntime.getStatementEvaluator(), evalContext);
+		return evalLet(node, node.getLocation(), node.getLocalDefs(), node.getStatement(), "statement", ctxt);
 	}
 
 	@Override
 	public Value caseANotYetSpecifiedStm(ANotYetSpecifiedStm node, Context ctxt)
 			throws AnalysisException
 	{
-		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-		return VdmRuntimeError.abort(node.getLocation(), 4041, "'is not yet specified' statement reached", ctxt);
+		return evalANotYetSpecified(node,node.getLocation(),4041,"statement", ctxt); 
 	}
 
 	@Override

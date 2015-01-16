@@ -21,24 +21,37 @@
  */
 package org.overture.codegen.ir;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class IRStatus
 {
-	protected Set<NodeInfo> unsupportedNodes;
+	protected Set<VdmNodeInfo> unsupportedInIr;
+	protected Set<IrNodeInfo> transformationWarnings;
 
-	public IRStatus(Set<NodeInfo> unsupportedNodes)
+	public IRStatus(Set<VdmNodeInfo> unsupportedInIr)
 	{
-		this.unsupportedNodes = unsupportedNodes;
+		this.unsupportedInIr = unsupportedInIr;
+		this.transformationWarnings = new HashSet<IrNodeInfo>();
 	}
 
-	public Set<NodeInfo> getUnsupportedNodes()
+	public Set<VdmNodeInfo> getUnsupportedInIr()
 	{
-		return unsupportedNodes;
+		return unsupportedInIr;
+	}
+	
+	public void addTransformationWarnings(Set<IrNodeInfo> transformationWarnings)
+	{
+		this.transformationWarnings.addAll(transformationWarnings);
 	}
 
 	public boolean canBeGenerated()
 	{
-		return unsupportedNodes.size() == 0;
+		return unsupportedInIr.size() == 0;
+	}
+
+	public Set<IrNodeInfo> getTransformationWarnings()
+	{
+		return transformationWarnings;
 	}
 }

@@ -8,7 +8,7 @@ import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
-import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
+import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AGeneralIsExpCG;
 import org.overture.codegen.cgast.expressions.AOrBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.SVarExpBase;
@@ -16,16 +16,16 @@ import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AUnionTypeCG;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 
 public class IsExpTransformation extends DepthFirstAnalysisAdaptor
 {
 	private IRInfo info;
-	private TransformationAssistantCG transformationAssistant;
+	private TransAssistantCG transformationAssistant;
 	private String isExpSubjectNamePrefix;
 	
-	public IsExpTransformation(IRInfo info, TransformationAssistantCG transformationAssistant, String isExpSubjectNamePrefix)
+	public IsExpTransformation(IRInfo info, TransAssistantCG transformationAssistant, String isExpSubjectNamePrefix)
 	{
 		this.info = info;
 		this.transformationAssistant = transformationAssistant;
@@ -69,7 +69,7 @@ public class IsExpTransformation extends DepthFirstAnalysisAdaptor
 			if (!(exp instanceof SVarExpBase))
 			{
 				String varName = info.getTempVarNameGen().nextVarName(isExpSubjectNamePrefix);
-				AVarLocalDeclCG expDecl = transformationAssistant.consDecl(varName, expType.clone(), exp.clone());
+				AVarDeclCG expDecl = transformationAssistant.consDecl(varName, expType.clone(), exp.clone());
 				replacementBlock.getLocalDefs().add(expDecl);
 				expVar = transformationAssistant.consIdentifierVar(varName, expType.clone());
 			} else

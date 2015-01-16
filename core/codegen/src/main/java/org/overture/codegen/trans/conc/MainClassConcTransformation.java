@@ -37,6 +37,7 @@ import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
+import org.overture.codegen.ir.IRGeneratedTag;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.vdm2java.JavaFormat;
 
@@ -47,14 +48,15 @@ import org.overture.codegen.vdm2java.JavaFormat;
 public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 {
 	private IRInfo info;
-	//private List<AClassDeclCG> classes;
+	private List<AClassDeclCG> classes;
 
 	public MainClassConcTransformation(IRInfo info, List<AClassDeclCG> classes)
 	{
 		this.info = info;
-		//this.classes = classes;
+		this.classes = classes;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void caseAClassDeclCG(AClassDeclCG node) throws AnalysisException
 	{
@@ -90,57 +92,54 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 		
 		for(AMethodDeclCG methodCG : node.getMethods())
 		{
-			
-			if(methodCG.getStatic() != null && !methodCG.getName().contains("cg_init_")){
-				if(!methodCG.getIsConstructor() && !methodCG.getName().equals("Run")){//(x.getName() != node.getName()){
-					if (!methodCG.getName().equals("toString") && !methodCG.getStatic() ){//&& !methodCG.getName().equals("Run")){//x.getName() != "toString"){
-						ABlockStmCG bodyStm = new ABlockStmCG();
+			if(methodCG.getStatic() != null && !methodCG.getStatic() && !isIRGenerated(methodCG)){
+				if(!methodCG.getIsConstructor()){
+					
+					ABlockStmCG bodyStm = new ABlockStmCG();
 
-						APlainCallStmCG entering = new APlainCallStmCG();
-						APlainCallStmCG leaving = new APlainCallStmCG();
+					APlainCallStmCG entering = new APlainCallStmCG();
+					APlainCallStmCG leaving = new APlainCallStmCG();
 
+					entering.setName("entering");
+					AClassTypeCG sentinel = new AClassTypeCG();
+					sentinel.setName("sentinel");
 
-						entering.setName("entering");
-						AClassTypeCG sentinel = new AClassTypeCG();
-						sentinel.setName("sentinel");
+					entering.setClassType(sentinel);
+					entering.setType(new AVoidTypeCG());
 
-						entering.setClassType(sentinel);
-						entering.setType(new AVoidTypeCG());
+					AFieldExpCG field = new AFieldExpCG();
+					field.setMemberName(methodCG.getName());
 
-						AFieldExpCG field = new AFieldExpCG();
-						field.setMemberName(methodCG.getName());
+					ACastUnaryExpCG cast = new ACastUnaryExpCG();
+					AIdentifierVarExpCG varSentinel = new AIdentifierVarExpCG();
+					varSentinel.setIsLocal(true);
+					varSentinel.setIsLambda(false);
+					varSentinel.setName("sentinel");
 
-						ACastUnaryExpCG cast = new ACastUnaryExpCG();
-						AIdentifierVarExpCG varSentinel = new AIdentifierVarExpCG();
-						varSentinel.setOriginal("sentinel");
+					AExternalTypeCG etype = new AExternalTypeCG();
+					etype.setName(node.getName() + "_sentinel");
 
-						AExternalTypeCG etype = new AExternalTypeCG();
-						etype.setName(node.getName()+"_sentinel");
+					cast.setExp(varSentinel);
+					cast.setType(etype);
+					field.setObject(cast);
 
-						cast.setExp(varSentinel);
-						cast.setType(etype);
-						field.setObject(cast);
+					entering.getArgs().add(field);
 
+					leaving.setName("leaving");
+					leaving.setClassType(sentinel.clone());
+					leaving.setType(new AVoidTypeCG());
+					leaving.getArgs().add(field.clone());
 
-						entering.getArgs().add(field);
+					bodyStm.getStatements().add(entering);
+					ATryStmCG trystm = new ATryStmCG();
+					trystm.setStm(methodCG.getBody());
+					trystm.setFinally(leaving);
+					bodyStm.getStatements().add(trystm);
 
-						leaving.setName("leaving");
-						leaving.setClassType(sentinel.clone());
-						leaving.setType(new AVoidTypeCG());
-						leaving.getArgs().add(field.clone());
-
-						bodyStm.getStatements().add(entering);
-						ATryStmCG trystm = new ATryStmCG();
-						trystm.setStm(methodCG.getBody());
-						trystm.setFinally(leaving);
-						bodyStm.getStatements().add(trystm);
-
-						methodCG.setBody(bodyStm);
-					}
+					methodCG.setBody(bodyStm);
 				}
-				//else
-				
 			}
+			
 			if(methodCG.getIsConstructor())
 			{
 				ABlockStmCG bodyConst = new ABlockStmCG();
@@ -149,7 +148,8 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 
 				AIdentifierVarExpCG field = new AIdentifierVarExpCG();
 
-				field.setOriginal("sentinel");
+				field.setName("sentinel");
+				field.setIsLocal(false);
 
 				ANewExpCG newexp = new ANewExpCG();
 
@@ -162,13 +162,10 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 				stm.setExp(newexp);
 				stm.setTarget(field);
 
-				bodyConst.getStatements().add(methodCG.getBody());
 				bodyConst.getStatements().add(stm);
+				bodyConst.getStatements().add(methodCG.getBody());
 
 				methodCG.setBody(bodyConst);
-
-
-				//}
 			}
 		}
 		//declaration of the method.
@@ -193,13 +190,21 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 		if (node.getMethods().size() != 0){
 			
 			//fixing the overloaded operation problem
-			@SuppressWarnings("unchecked")
 			LinkedList<AMethodDeclCG> classuniqueMethods = (LinkedList<AMethodDeclCG>) node.getMethods().clone();
-		
 			classuniqueMethods.clear();
-			for(AMethodDeclCG method : node.getMethods())
+			
+			LinkedList<AMethodDeclCG>  allMethods;
+			
+			if (node.getSuperName() != null){
+				allMethods = (LinkedList<AMethodDeclCG>) info.getDeclAssistant().getAllMethods(node, classes);
+			}
+			else
 			{
+				allMethods = (LinkedList<AMethodDeclCG>) node.getMethods().clone();
+			}
 				
+			for(AMethodDeclCG method : allMethods )
+			{
 				if(!classuniqueMethods.contains(method))
 				{
 					classuniqueMethods.add(method);
@@ -212,8 +217,9 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 			{
 				
 				AIdentifierVarExpCG testVar = new AIdentifierVarExpCG();
-				testVar.setOriginal("fnr");
 				testVar.setType(new AIntNumericBasicTypeCG());
+				testVar.setName("fnr");
+				testVar.setIsLocal(true);
 				
 				if (i == 0){
 				
@@ -234,11 +240,12 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 							if(per.getOpname().equals(classuniqueMethods.get(i).getName())){
 								ret.setExp(per.getPred());
 							}
+
 						}
 						bodyif.setIfExp(firstBranch);
 						bodyif.setThenStm(ret);
 					}
-				//}
+
 				else
 				{
 					AReturnStmCG ret = new AReturnStmCG();
@@ -267,17 +274,56 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 					bodyif.getElseIf().add(newBranch);
 				}
 			}
-			AReturnStmCG ret = new AReturnStmCG();
-			
-			ABoolLiteralExpCG defaultPer = new ABoolLiteralExpCG();
-			defaultPer.setValue(true);
-			
-			ret.setExp(defaultPer);
-			
-			bodyif.setElseStm(ret);
+				AReturnStmCG ret = new AReturnStmCG();
+
+				ABoolLiteralExpCG defaultPer = new ABoolLiteralExpCG();
+				defaultPer.setValue(true);
+
+				ret.setExp(defaultPer);
+				bodyif.setElseStm(ret.clone());
+
 			evaluatePPmethod.setBody(bodyif);
 		}
 		
 		node.getMethods().add(evaluatePPmethod);
+		
+		if (node.getThread() != null)
+		{
+			makeThread(node);
+		}
+	}
+
+	private boolean isIRGenerated(AMethodDeclCG method)
+	{
+		return method.getTag() instanceof IRGeneratedTag;
+	}
+	
+	private void makeThread(AClassDeclCG node)
+	{
+		AClassDeclCG threadClass = getThreadClass(node.getSuperName(), node);
+		threadClass.setSuperName("VDMThread");
+	}
+
+	private AClassDeclCG getThreadClass(String superName, AClassDeclCG classCg)
+	{
+		if(superName == null || superName.equals("VDMThread"))
+		{
+			return classCg;
+		}
+		else
+		{
+			AClassDeclCG superClass = null;
+
+			for(AClassDeclCG c : classes)
+			{
+				if(c.getName().equals(superName))
+				{
+					superClass = c;
+					break;
+				}
+			}
+
+			return getThreadClass(superClass.getSuperName(), superClass);
+		}
 	}
 }

@@ -41,6 +41,7 @@ public class ClassicSpecTestCase extends SpecificationTestCase
 	@Override
 	protected void setUp() throws Exception
 	{
+		super.setUp();
 		Settings.release = Release.CLASSIC;
 	}
 }

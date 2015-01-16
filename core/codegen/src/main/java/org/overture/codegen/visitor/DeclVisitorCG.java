@@ -46,16 +46,20 @@ import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOperationType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.PType;
+import org.overture.ast.util.ClonableString;
 import org.overture.codegen.cgast.SDeclCG;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.SStmCG;
+import org.overture.codegen.cgast.STermCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AFuncDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.AMutexSyncDeclCG;
+import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
+import org.overture.codegen.cgast.declarations.ANamedTraceDeclCG;
 import org.overture.codegen.cgast.declarations.APersyncDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.AThreadDeclCG;
@@ -63,10 +67,12 @@ import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.expressions.ALambdaExpCG;
 import org.overture.codegen.cgast.expressions.ANotImplementedExpCG;
 import org.overture.codegen.cgast.name.ATokenNameCG;
+import org.overture.codegen.cgast.traces.ATraceDeclTermCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRInfo;
+import org.overture.codegen.logging.Logger;
 
 public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 {
@@ -91,15 +97,47 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 	public SDeclCG caseANamedTraceDefinition(ANamedTraceDefinition node,
 			IRInfo question) throws AnalysisException
 	{
-		// Do not report the node as unsupported and generate nothing
-		return null;
+		ANamedTraceDeclCG namedTraceDecl = new ANamedTraceDeclCG();
+
+		for(ClonableString cloStr : node.getPathname())
+		{
+			ATokenNameCG name = new ATokenNameCG();
+			name.setName(cloStr.value);
+			
+			namedTraceDecl.getPathname().add(name);
+		}
+		
+		for(ATraceDefinitionTerm term : node.getTerms())
+		{
+			STermCG termCg = term.apply(question.getTermVisitor(), question);
+			
+			if(termCg instanceof ATraceDeclTermCG)
+			{
+				namedTraceDecl.getTerms().add((ATraceDeclTermCG) termCg);
+			}
+			else
+			{
+				Logger.getLog().printErrorln("Expected term to be of type ATraceDeclTermCG. Got: " + termCg);
+			}
+		}
+		
+		return namedTraceDecl;
 	}
 
 	@Override
 	public SDeclCG caseANamedInvariantType(ANamedInvariantType node,
 			IRInfo question) throws AnalysisException
 	{
-		return null;
+		String name = node.getName().getName();
+		PType type = node.getType();
+		
+		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		
+		ANamedTypeDeclCG namedTypeDecl = new ANamedTypeDeclCG();
+		namedTypeDecl.setName(name);
+		namedTypeDecl.setType(typeCg);
+		
+		return namedTypeDecl;
 	}
 
 	@Override
@@ -290,6 +328,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 	{
 		String access = node.getAccess().getAccess().toString();
 		boolean isStatic = question.getTcFactory().createPDefinitionAssistant().isStatic(node);
+		boolean isAsync = question.getTcFactory().createPAccessSpecifierAssistant().isAsync(node.getAccess());
 		String operationName = node.getName().getName();
 		STypeCG type = node.getType().apply(question.getTypeVisitor(), question);
 
@@ -309,6 +348,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 
 		method.setAccess(access);
 		method.setStatic(isStatic);
+		method.setAsync(isAsync);
 		method.setMethodType(methodType);
 		method.setName(operationName);
 		method.setBody(body);

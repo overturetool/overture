@@ -25,6 +25,7 @@ import java.io.File;
 
 import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
+import org.overture.config.Settings;
 import org.overture.interpreter.util.InterpreterUtil;
 import org.overture.interpreter.values.Value;
 
@@ -37,14 +38,14 @@ public abstract class EntryBasedTestHandler extends ExecutableTestHandler
 	protected static final String VDM_ENTRY_CALL = ENTRY_CLASS_NAME + "`"
 			+ ENTRY_METHOD_CALL;
 
-	public EntryBasedTestHandler(Release release)
+	public EntryBasedTestHandler(Release release, Dialect dialect)
 	{
-		super(release);
+		super(release, dialect);
 	}
 
 	@Override
 	public Value interpretVdm(File intputFile) throws Exception
 	{
-		return InterpreterUtil.interpret(Dialect.VDM_PP, VDM_ENTRY_CALL, intputFile);
+		return InterpreterUtil.interpret(Settings.dialect, VDM_ENTRY_CALL, intputFile);
 	}
 }

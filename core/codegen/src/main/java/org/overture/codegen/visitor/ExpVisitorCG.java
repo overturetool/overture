@@ -144,6 +144,7 @@ import org.overture.codegen.cgast.expressions.ASuperVarExpCG;
 import org.overture.codegen.cgast.expressions.ATailUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
 import org.overture.codegen.cgast.expressions.AThreadIdExpCG;
+import org.overture.codegen.cgast.expressions.ATimeExpCG;
 import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATupleExpCG;
 import org.overture.codegen.cgast.expressions.AXorBoolBinaryExpCG;
@@ -184,7 +185,14 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	{
 		return new ANotImplementedExpCG();
 	}
-
+	
+	@Override
+	public SExpCG caseATimeExp(ATimeExp node, IRInfo question)
+			throws AnalysisException
+	{
+		return new ATimeExpCG();
+	}
+	
 	@Override
 	public SExpCG caseAThreadIdExp(AThreadIdExp node, IRInfo question)
 			throws AnalysisException
@@ -1306,6 +1314,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			ASuperVarExpCG superVarExp = new ASuperVarExpCG();
 
 			superVarExp.setType(typeCg);
+			superVarExp.setIsLocal(isLocalDef);
 			superVarExp.setName(name);
 			superVarExp.setIsLambda(isLambda);
 
@@ -1322,7 +1331,8 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			AIdentifierVarExpCG varExp = new AIdentifierVarExpCG();
 
 			varExp.setType(typeCg);
-			varExp.setOriginal(name);
+			varExp.setIsLocal(isLocalDef);
+			varExp.setName(name);
 			varExp.setIsLambda(isLambda);
 
 			return varExp;
@@ -1336,6 +1346,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			classType.setName(className);
 
 			varExp.setType(typeCg);
+			varExp.setIsLocal(isLocalDef);
 			varExp.setClassType(classType);
 			varExp.setName(name);
 			varExp.setIsLambda(isLambda);
@@ -1820,16 +1831,13 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	{
 		PType type = node.getType();
 		ILexToken hop = node.getHop();
-		//className = node.getAncestor(classType)
+		
 		AClassClassDefinition enclosingClass = node.getAncestor(AClassClassDefinition.class);	
 		
 		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 		
 		AHistoryExpCG history = new AHistoryExpCG();
-		//if(hop.toString().equals("#act"))
-		//{
-			//history.setHistype("act");
-		//}
+		
 		history.setHistype(hop.toString().substring(1));
 		history.setType(typeCg);
 		
@@ -1854,7 +1862,6 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		
 		if(node.getOpnames().size() == 1)
 		{
-			//System.out.println(history);
 			return history;
 			
 		}
@@ -1895,8 +1902,6 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			lastHistoryExp.setOpsname(lastOpName);
 			
 			last.setRight(lastHistoryExp);
-			
-			//System.out.println("left: " + historyCounterSum.getLeft()+ "\nright:"+historyCounterSum.getRight());
 			
 			return historyCounterSum;
 		}

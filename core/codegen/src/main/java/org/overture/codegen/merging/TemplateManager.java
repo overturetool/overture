@@ -33,7 +33,6 @@ import org.apache.velocity.runtime.parser.node.SimpleNode;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.declarations.ACatchClauseDeclCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
-import org.overture.codegen.cgast.declarations.ACounterLocalDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
@@ -41,7 +40,7 @@ import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.AThreadDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
-import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
+import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.*;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
@@ -62,7 +61,6 @@ import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.AIncrementStmCG;
-import org.overture.codegen.cgast.statements.ALetDefStmCG;
 import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
@@ -74,6 +72,7 @@ import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.ASelfObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.ASkipStmCG;
 import org.overture.codegen.cgast.statements.AStartStmCG;
+import org.overture.codegen.cgast.statements.AStartlistStmCG;
 import org.overture.codegen.cgast.statements.ASuperCallStmCG;
 import org.overture.codegen.cgast.statements.AThrowStmCG;
 import org.overture.codegen.cgast.statements.ATryStmCG;
@@ -140,11 +139,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AMethodDeclCG.class, templateStructure.DECL_PATH
 				+ "Method");
 
-		nodeTemplateFileNames.put(AVarLocalDeclCG.class, templateStructure.DECL_PATH
+		nodeTemplateFileNames.put(AVarDeclCG.class, templateStructure.DECL_PATH
 				+ "LocalVar");
-
-		nodeTemplateFileNames.put(ACounterLocalDeclCG.class, templateStructure.DECL_PATH
-				+ "Counter");
 		
 		nodeTemplateFileNames.put(AThreadDeclCG.class, templateStructure.DECL_PATH 
 				+ "Thread");
@@ -272,9 +268,6 @@ public class TemplateManager
 		nodeTemplateFileNames.put(ASkipStmCG.class, templateStructure.STM_PATH
 				+ "Skip");
 
-		nodeTemplateFileNames.put(ALetDefStmCG.class, templateStructure.STM_PATH
-				+ "LetDef");
-
 		nodeTemplateFileNames.put(ALocalAssignmentStmCG.class, templateStructure.STM_PATH
 				+ "LocalAssignment");
 
@@ -341,6 +334,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AStartStmCG.class, templateStructure.STM_PATH 
 				+ "Start");
 		
+		nodeTemplateFileNames.put(AStartlistStmCG.class, templateStructure.STM_PATH 
+				+ "Startlist");
 		// Expressions
 
 		nodeTemplateFileNames.put(AApplyExpCG.class, templateStructure.EXP_PATH
@@ -370,9 +365,6 @@ public class TemplateManager
 		nodeTemplateFileNames.put(ANullExpCG.class, templateStructure.EXP_PATH
 				+ "Null");
 
-		nodeTemplateFileNames.put(ALetDefExpCG.class, templateStructure.EXP_PATH
-				+ "LetDef");
-
 		nodeTemplateFileNames.put(AMethodInstantiationExpCG.class, templateStructure.EXP_PATH
 				+ "MethodInstantiation");
 
@@ -399,6 +391,9 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(AExternalExpCG.class, templateStructure.EXP_PATH
 				+ "External");
+		
+		nodeTemplateFileNames.put(ATypeArgExpCG.class, templateStructure.EXP_PATH
+				+ "TypeArg");
 
 		nodeTemplateFileNames.put(ALambdaExpCG.class, templateStructure.EXP_PATH
 				+ "Lambda");

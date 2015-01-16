@@ -40,7 +40,7 @@ public class PathsProvider
 {
 
 	/** The Constant RESULT_EXTENSION. */
-	public final static String RESULT_EXTENSION = ".RESULT";
+	public final static String RESULT_EXTENSION = ".result";
 
 	/** Path to the results folder for external test inputs */
 	private final static String RESULTS_EXTERNAL = "src/test/resources/external";
