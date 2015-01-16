@@ -1,0 +1,21 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+(dcl sum : nat := 0;
+  let x = 999 in
+  (
+    sum := sum + x;
+  );
+              
+  let x = 999 in
+  (
+    sum := sum + x;
+  );
+  
+  return sum;
+)
+
+end Entry

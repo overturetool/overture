@@ -28,7 +28,7 @@ import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
-public class JavaQuoteValueCreator extends JavaObjectCreator
+public class JavaQuoteValueCreator extends JavaClassCreatorBase
 {
 	private static final String GET_INSTANCE_METHOD = "getInstance";
 	private static final String HASH_CODE_METHOD = "hashCode";
@@ -124,9 +124,10 @@ public class JavaQuoteValueCreator extends JavaObjectCreator
 		hashCodeMethodType.setResult(consFieldType());
 		
 		ASuperVarExpCG superVar = new ASuperVarExpCG();
-		superVar.setIsLambda(false);
 		superVar.setName(HASH_CODE_METHOD);
 		superVar.setType(hashCodeMethodType);
+		superVar.setIsLambda(false);
+		superVar.setIsLocal(false);
 		
 		AApplyExpCG superCall = new AApplyExpCG();
 		superCall.setType(consFieldType());

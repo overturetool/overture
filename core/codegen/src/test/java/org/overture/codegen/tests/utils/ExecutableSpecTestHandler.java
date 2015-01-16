@@ -25,15 +25,16 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import org.overture.ast.lex.Dialect;
 import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.config.Release;
 
 public class ExecutableSpecTestHandler extends EntryBasedTestHandler
 {
-	public ExecutableSpecTestHandler(Release release)
+	public ExecutableSpecTestHandler(Release release, Dialect dialect)
 	{
-		super(release);
+		super(release, dialect);
 	}
 
 	@Override

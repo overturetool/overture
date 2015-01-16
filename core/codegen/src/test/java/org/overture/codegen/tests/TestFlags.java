@@ -36,4 +36,5 @@ public class TestFlags
 	public static final boolean CONCURRENCY_CLASSIC_TESTS_ON = false;
 	public static final boolean BIND_TESTS_ON = false;
 	public static final boolean PRE_POST_TESTS_ON = false;
+	public static final boolean RT_TESTS_ON = false;
 }

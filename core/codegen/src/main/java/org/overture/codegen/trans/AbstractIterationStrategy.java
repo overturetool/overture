@@ -40,7 +40,7 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 	protected boolean firstBind;
 	protected boolean lastBind;
 
-	protected TransAssistantCG transformationAssistant;
+	protected TransAssistantCG transAssistant;
 	protected ILanguageIterator langIterator;
 	protected ITempVarGen tempGen;
 	protected TempVarPrefixes varPrefixes;
@@ -54,7 +54,7 @@ public abstract class AbstractIterationStrategy implements IIterationStrategy
 			ILanguageIterator langIterator, ITempVarGen tempGen,
 			TempVarPrefixes varPrefixes)
 	{
-		this.transformationAssistant = transformationAssistant;
+		this.transAssistant = transformationAssistant;
 		this.langIterator = langIterator;
 		this.tempGen = tempGen;
 		this.varPrefixes = varPrefixes;

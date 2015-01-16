@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.node.INode;
 import org.overture.ast.statements.PStm;
 import org.overture.interpreter.ast.expressions.BreakpointExpression;
 import org.overture.interpreter.runtime.Breakpoint;
@@ -18,6 +19,18 @@ public class BreakpointManager
 
 	static final Map<PExp, Breakpoint> expressionMap = new HashMap<PExp, Breakpoint>();
 	static final Map<PStm, Breakpoint> statementMap = new HashMap<PStm, Breakpoint>();
+	
+	public static Breakpoint getBreakpoint(INode node) throws AnalysisException
+	{
+		if(node instanceof PExp)
+		{
+			return getBreakpoint((PExp)node);
+		}else if(node instanceof PStm)
+		{
+			return getBreakpoint((PStm)node);
+		}
+		throw new AnalysisException("Unsupported breakpoint node");
+	}
 
 	public static Breakpoint getBreakpoint(PExp exp)
 	{

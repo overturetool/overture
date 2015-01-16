@@ -166,12 +166,14 @@ public class ObjectDesignatorToExpCG extends AnswerAdaptor<SExpCG>
 	@Override
 	public SExpCG createNewReturnValue(INode node) throws AnalysisException
 	{
+		assert false : "This should never happen";
 		return null;
 	}
 
 	@Override
 	public SExpCG createNewReturnValue(Object node) throws AnalysisException
 	{
+		assert false : "This should never happen";
 		return null;
 	}
 }

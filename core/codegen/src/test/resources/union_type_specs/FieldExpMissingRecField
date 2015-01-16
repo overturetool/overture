@@ -1,0 +1,18 @@
+class Entry
+
+types
+
+R1 :: x : int;
+R2 :: y : int;
+
+Inline  = R1 | R2;
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let inlines : seq of Inline = [mk_R1(4), mk_R2(5)]
+in 
+  return inlines(1).x + inlines(2).y;
+
+end Entry

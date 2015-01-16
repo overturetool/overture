@@ -280,6 +280,8 @@ public class DeclAssistantCG extends AssistantBase
 			SPatternCG pattern, SExpCG exp)
 	{
 		AVarDeclCG localVarDecl = new AVarDeclCG();
+		
+		localVarDecl.setFinal(false);
 		localVarDecl.setSourceNode(new SourceNode(node));
 		localVarDecl.setType(type);
 		localVarDecl.setPattern(pattern);
@@ -477,14 +479,7 @@ public class DeclAssistantCG extends AssistantBase
 				field = currentField;
 			}
 		}
-
-		if (field == null)
-		{
-			throw new IllegalArgumentException("Could not find field '"
-					+ memberName + "' in record '" + recName + "' in class '"
-					+ definingClassName + "'");
-		}
-
+		
 		return field;
 	}
 }

@@ -1,4 +1,0 @@
-#foreach( $varDecl in $node.getLocalDefs() )
-$JavaFormat.format($varDecl)
-#end
-$JavaFormat.format($node.getExp())

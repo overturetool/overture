@@ -1,0 +1,13 @@
+class Entry
+
+operations
+
+public static Run :  () ==> ?
+Run () ==
+def i = 1
+in
+  for i = i to i do
+    let i = i
+    in
+      return i;
+end Entry

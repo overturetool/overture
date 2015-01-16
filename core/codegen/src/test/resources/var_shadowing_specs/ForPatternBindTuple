@@ -1,0 +1,14 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let mk_(x,x) = mk_(2,2)
+in 
+  for mk_(x,x) in [mk_(x,x)] do
+    let x = x
+    in
+      return x;
+
+end Entry

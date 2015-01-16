@@ -77,15 +77,15 @@ public class InstanceVarPPEvalTransformation extends DepthFirstAnalysisAdaptor
 		STypeCG fieldType = getSentinelFieldType(node);
 		
 		AIdentifierVarExpCG sentinelVar = new AIdentifierVarExpCG();
+		sentinelVar.setIsLocal(true);
 		sentinelVar.setIsLambda(false);
-		sentinelVar.setOriginal(SENTINEL_FIELD_NAME);
+		sentinelVar.setName(SENTINEL_FIELD_NAME);
 		sentinelVar.setType(fieldType);
 		
 		AIdentifierObjectDesignatorCG sentinel = new AIdentifierObjectDesignatorCG();
 		sentinel.setExp(sentinelVar);
 		
 		ACallObjectStmCG callSentinel = new ACallObjectStmCG();
-		callSentinel.setClassName(null);
 		callSentinel.setDesignator(sentinel);
 		callSentinel.setFieldName("stateChanged");
 		callSentinel.setType(new AVoidTypeCG());

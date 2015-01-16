@@ -47,6 +47,9 @@ import org.overture.codegen.cgast.SObjectDesignatorCG;
 import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.SStateDesignatorCG;
 import org.overture.codegen.cgast.SStmCG;
+import org.overture.codegen.cgast.STermCG;
+import org.overture.codegen.cgast.STraceCoreDeclCG;
+import org.overture.codegen.cgast.STraceDeclCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.logging.Logger;
@@ -70,6 +73,9 @@ public class IRInfo
 
 	// Unsupported VDM nodes
 	private Set<VdmNodeInfo> unsupportedNodes;
+	
+	// Transformation warnings
+	private Set<IrNodeInfo> transformationWarnings;
 
 	// For generating variable names
 	private ITempVarGen tempVarNameGen;
@@ -82,7 +88,7 @@ public class IRInfo
 
 	// Object initialization call prefix
 	private String objectInitCallPrefix;
-
+	
 	public IRInfo(String objectInitCallPrefix)
 	{
 		super();
@@ -92,6 +98,7 @@ public class IRInfo
 		this.tcFactory = new TypeCheckerAssistantFactory();
 		this.quoteVaues = new LinkedList<String>();
 		this.unsupportedNodes = new HashSet<VdmNodeInfo>();
+		this.transformationWarnings = new HashSet<IrNodeInfo>();
 		this.tempVarNameGen = new TempVarNameGen();
 
 		this.settings = new IRSettings();
@@ -160,6 +167,21 @@ public class IRInfo
 		return visitorManager.getModifierVisitor();
 	}
 
+	public CGVisitor<STermCG> getTermVisitor()
+	{
+		return visitorManager.getTermVisitor();
+	}
+
+	public CGVisitor<STraceDeclCG> getTraceDeclVisitor()
+	{
+		return visitorManager.getTraceDeclVisitor();
+	}
+
+	public CGVisitor<STraceCoreDeclCG> getTraceCoreDeclVisitor()
+	{
+		return visitorManager.getTraceCoreDeclVisitor();
+	}
+
 	public ExpAssistantCG getExpAssistant()
 	{
 		return assistantManager.getExpAssistant();
@@ -218,7 +240,7 @@ public class IRInfo
 	{
 		unsupportedNodes.clear();
 	}
-
+	
 	public void addUnsupportedNode(INode node)
 	{
 		VdmNodeInfo info = new VdmNodeInfo(node);
@@ -235,10 +257,34 @@ public class IRInfo
 	{
 		return unsupportedNodes;
 	}
+	
+	public void clearTransformationWarnings()
+	{
+		transformationWarnings.clear();
+	}
+	
+	public void addTransformationWarning(org.overture.codegen.cgast.INode node, String warning)
+	{
+		IrNodeInfo info = new IrNodeInfo(node, warning);
+		transformationWarnings.add(info);
+	}
+	
+	public Set<IrNodeInfo> getTransformationWarnings()
+	{
+		return transformationWarnings;
+	}
 
 	public ITempVarGen getTempVarNameGen()
 	{
 		return tempVarNameGen;
+	}
+	
+	public void clear()
+	{
+		quoteVaues.clear();
+		unsupportedNodes.clear();
+		transformationWarnings.clear();
+		tempVarNameGen.clear();
 	}
 
 	public IRSettings getSettings()

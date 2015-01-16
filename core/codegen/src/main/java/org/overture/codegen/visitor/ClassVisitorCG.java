@@ -37,6 +37,7 @@ import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AFuncDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.AMutexSyncDeclCG;
+import org.overture.codegen.cgast.declarations.ANamedTraceDeclCG;
 import org.overture.codegen.cgast.declarations.APersyncDeclCG;
 import org.overture.codegen.cgast.declarations.AThreadDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
@@ -132,8 +133,9 @@ public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
 							AIdentifierPatternCG idPattern = (AIdentifierPatternCG) pattern;
 
 							AIdentifierVarExpCG var = new AIdentifierVarExpCG();
+							var.setIsLocal(true);
 							var.setType(param.getType().clone());
-							var.setOriginal(idPattern.getName());
+							var.setName(idPattern.getName());
 							var.setIsLambda(false);
 							var.setSourceNode(pattern.getSourceNode());
 
@@ -165,6 +167,10 @@ public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
 			else if (decl instanceof AMutexSyncDeclCG)
 			{
 				classCg.getMutexSyncs().add((AMutexSyncDeclCG) decl);
+			}
+			else if(decl instanceof ANamedTraceDeclCG)
+			{
+				classCg.getTraces().add((ANamedTraceDeclCG) decl);
 			}
 			else
 			{

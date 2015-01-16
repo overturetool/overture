@@ -62,6 +62,7 @@ import org.overture.ast.statements.AWhileStm;
 import org.overture.ast.statements.PObjectDesignator;
 import org.overture.ast.statements.PStateDesignator;
 import org.overture.ast.statements.PStm;
+import org.overture.ast.types.ASetType;
 import org.overture.ast.types.PType;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SMultipleBindCG;
@@ -91,12 +92,14 @@ import org.overture.codegen.cgast.statements.APlainCallStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.ASkipStmCG;
 import org.overture.codegen.cgast.statements.AStartStmCG;
+import org.overture.codegen.cgast.statements.AStartlistStmCG;
 import org.overture.codegen.cgast.statements.ASuperCallStmCG;
 import org.overture.codegen.cgast.statements.AWhileStmCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
 import org.overture.codegen.ir.IRInfo;
+import org.overture.codegen.logging.Logger;
 
 public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 {
@@ -218,6 +221,7 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 			IRInfo question) throws AnalysisException
 	{
 		ABlockStmCG blockStm = new ABlockStmCG();
+		blockStm.setScoped(question.getStmAssistant().isScoped(node));
 
 		LinkedList<AAssignmentDefinition> assignmentDefs = node.getAssignmentDefs();
 
@@ -233,6 +237,7 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 			STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 
 			AVarDeclCG localDecl = new AVarDeclCG();
+			localDecl.setFinal(false);
 			localDecl.setType(typeCg);
 
 			AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
@@ -289,6 +294,7 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 			throws AnalysisException
 	{
 		ABlockStmCG block = new ABlockStmCG();
+		block.setScoped(question.getStmAssistant().isScoped(node));
 		
 		question.getDeclAssistant().setLocalDefs(node.getLocalDefs(), block.getLocalDefs(), question);
 
@@ -356,6 +362,8 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 
 			argsCg.add(argCg);
 		}
+		
+		boolean isStatic = question.getTcFactory().createPDefinitionAssistant().isStatic(rootdef);
 
 		while (rootdef instanceof AInheritedDefinition)
 		{
@@ -368,10 +376,9 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 
 			if (op.getIsConstructor())
 			{
-				APlainCallStmCG callStm = new APlainCallStmCG();
-				
 				String initName = question.getObjectInitializerCall(op);
 
+				APlainCallStmCG callStm = new APlainCallStmCG();
 				callStm.setType(new AVoidTypeCG());
 				callStm.setClassType(null);
 				callStm.setName(initName);
@@ -384,7 +391,6 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 		PType type = node.getType();
 		ILexNameToken nameToken = node.getName();
 		String name = nameToken.getName();
-		boolean isStatic = question.getTcFactory().createPDefinitionAssistant().isStatic(rootdef);
 
 		AClassTypeCG classType = null;
 
@@ -400,8 +406,9 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 			{
 
 				ASuperCallStmCG superCall = new ASuperCallStmCG();
-				superCall.setName(name);
+				superCall.setIsStatic(isStatic);
 				superCall.setType(typeCg);
+				superCall.setName(name);
 				superCall.setArgs(argsCg);
 
 				return superCall;
@@ -416,9 +423,10 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 
 		APlainCallStmCG callStm = new APlainCallStmCG();
 		
-		callStm.setClassType(classType);
-		callStm.setName(name);
 		callStm.setType(typeCg);
+		callStm.setIsStatic(isStatic);
+		callStm.setName(name);
+		callStm.setClassType(classType);
 		callStm.setArgs(argsCg);
 		
 		return callStm;
@@ -436,11 +444,26 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 		SObjectDesignatorCG objectDesignatorCg = objectDesignator.apply(question.getObjectDesignatorVisitor(), question);
 
-		String classNameCg = null;
-
 		if (node.getExplicit())
 		{
-			classNameCg = field.getModule();
+			SClassDefinition enclosingClass = node.getAncestor(SClassDefinition.class);
+			
+			if(enclosingClass != null)
+			{
+				if(!field.getModule().equals(enclosingClass.getName().getName()))
+				{
+					// A quoted method call is only supported if the explicit
+					// module name is equal to that of the enclosing class. Say A
+					// is a sub class of S and 'a' is an instance of A then a.A`op();
+					//  is allowed (although it is the same as a.op()). However,
+					// a.S`op(); is not allowed.
+					question.addUnsupportedNode(node, "A quoted object call statement is only supported if the explicit module name is equal to that of the enclosing class");
+				}
+			}
+			else
+			{
+				Logger.getLog().printErrorln("Could not find enclosing the statement of call a call object statement.");
+			}
 		}
 
 		String fieldNameCg = field.getName();
@@ -448,7 +471,6 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 		ACallObjectStmCG callObject = new ACallObjectStmCG();
 		callObject.setType(typeCg);
 		callObject.setDesignator(objectDesignatorCg);
-		callObject.setClassName(classNameCg);
 		callObject.setFieldName(fieldNameCg);
 
 		for (int i = 0; i < args.size(); i++)
@@ -652,14 +674,28 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 	{
 		PType type = node.getType();
 		PExp exp = node.getObj();
-				
-		STypeCG typeCG = type.apply(question.getTypeVisitor(), question);
-		SExpCG expCG = exp.apply(question.getExpVisitor(), question);
-		
-		AStartStmCG thread = new AStartStmCG();
-		thread.setType(typeCG);
-		thread.setExp(expCG);
-				
-		return thread;
+
+		if (exp.getType() instanceof ASetType)
+
+		{
+			STypeCG typeCG = type.apply(question.getTypeVisitor(), question);
+			SExpCG expCG = exp.apply(question.getExpVisitor(), question);
+
+			AStartlistStmCG s = new AStartlistStmCG();
+			s.setType(typeCG);
+			s.setExp(expCG);
+
+			return s;
+		} else
+		{
+			STypeCG typeCG = type.apply(question.getTypeVisitor(), question);
+			SExpCG expCG = exp.apply(question.getExpVisitor(), question);
+
+			AStartStmCG thread = new AStartStmCG();
+			thread.setType(typeCG);
+			thread.setExp(expCG);
+
+			return thread;
+		}
 	}
 }

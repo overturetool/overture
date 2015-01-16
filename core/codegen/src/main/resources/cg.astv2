@@ -44,6 +44,9 @@ CG {-> package='org.overture.codegen.cgast'
 	| #exp
 	| #type
 	| #modifier
+	| #term
+	| #traceDecl
+	| #traceCoreDecl
 	;
 
 #pattern {-> package='org.overture.codegen.cgast.patterns'}
@@ -82,7 +85,8 @@ CG {-> package='org.overture.codegen.cgast'
 	=	{method} //rename to operation
 		(preCond):CG.#decl
 		(postCond):CG.#decl
-		[access]:java_String
+		[access]:java_String //Consider introducing access node covering both "access" and "async"
+		[async]:java_Boolean
 		[static]:java_Boolean
 		[abstract]:java_Boolean
 		[methodType]:CG.#type.method
@@ -95,6 +99,7 @@ CG {-> package='org.overture.codegen.cgast'
 		(preCond):CG.#decl
 		(postCond):CG.#decl
 		[access]:java_String
+		[async]:java_Boolean
 		[abstract]:java_Boolean
 		[methodType]:CG.#type.method
 		[name]:java_String
@@ -118,6 +123,7 @@ CG {-> package='org.overture.codegen.cgast'
     	[fields]:field*
     	[methods]:CG.#decl.method*
     	[functions]:CG.#decl.func*
+    	[traces]:CG.#decl.namedTrace*
     	[superName]:java_String
     	[thread]:CG.#decl.thread
     	[innerClasses]:CG.#decl.class*
@@ -153,16 +159,18 @@ CG {-> package='org.overture.codegen.cgast'
     |	{mutexSync}
     	[opnames]:CG.#name*
     |	{var}
+    	[final]:java_Boolean
     	[type]:CG.#type
     	[pattern]:CG.#pattern
     	[exp]:CG.#exp
     |	{namedType}
     	[name]:java_String
     	[type]:CG.#type
+    |	{namedTrace} [pathname]:CG.#name.token* [terms]:CG.#term.traceDecl*
 	;
 	
 #stateDesignator {-> package='org.overture.codegen.cgast.statements'
-	| [type]:CG.#type}
+	| [type]:CG.#type }
 	= {identifier} [name]:java_String [explicit]:java_Boolean [className]:java_String
 	| {field} [object]:CG.#stateDesignator [field]:java_String
 	| {mapSeq} [mapseq]:CG.#stateDesignator [exp]:CG.#exp
@@ -189,10 +197,10 @@ CG {-> package='org.overture.codegen.cgast'
            |	{assignment} [target]:CG.#stateDesignator [exp]:CG.#exp
            |	{localAssignment} [target]:CG.#exp [exp]:CG.#exp
            |	{localPatternAssignment} [target]:CG.#pattern [exp]:CG.#exp (nextElementDecl):CG.#decl.var
-           |	{block}	[localDefs]:CG.#decl.var* [statements]:CG.#stm*
-           |	{callObject} [type]:CG.#type [designator]:CG.#objectDesignator [className]:java_String [fieldName]:java_String 
+           |	{block}	[scoped]:java_Boolean [localDefs]:CG.#decl.var* [statements]:CG.#stm*
+           |	{callObject} [type]:CG.#type [designator]:CG.#objectDesignator /*[className]:java_String*/ [fieldName]:java_String 
            					 [args]:CG.#exp*
-           |	{callObjectExp} [type]:CG.#type [obj]:CG.#exp [className]:java_String [fieldName]:java_String 
+           |	{callObjectExp} [type]:CG.#type [obj]:CG.#exp /*[className]:java_String*/ [fieldName]:java_String 
            					 [args]:CG.#exp*
            |	#call
            |	{notImplemented}
@@ -210,7 +218,8 @@ CG {-> package='org.overture.codegen.cgast'
            |	{error}
            |	{continue}
            |	{break}
-           |	{start} [exp]:CG.#exp [type]:CG.#type 
+           |	{start} [exp]:CG.#exp [type]:CG.#type
+           |	{startlist} [exp]:CG.#exp [type]:CG.#type
            |	{try} [stm]:CG.#stm [catchClauses]:CG.#decl.catchClause* [finally]:CG.#stm
            |	{periodic} [opname]:java_String [args]:CG.#exp*
          //|	Sporadic
@@ -218,6 +227,7 @@ CG {-> package='org.overture.codegen.cgast'
 
 #call {-> package='org.overture.codegen.cgast.statements'
 	| 	[type]:CG.#type
+	|	[isStatic]:java_Boolean
 	|	[name]:java_String
 	|	[args]:CG.#exp*}
     =  	{plain} [classType]:CG.#type
@@ -270,6 +280,7 @@ CG {-> package='org.overture.codegen.cgast'
     	//is used for refering to expressions of the target environment (e.g. that of Java) 
     	//that are not directly mapped to by the code generator.
     |	{external} [targetLangExp]:java_String
+    |	{typeArg} [type]:CG.#type
     |	{lambda} [params]:CG.#localParam.formalParam* [exp]:CG.#exp
     |	{anonymousClass} [methods]:CG.#decl.method*
     |	{notImplemented}
@@ -315,10 +326,12 @@ CG {-> package='org.overture.codegen.cgast'
     ;
 
 #Var {-> package='org.overture.codegen.cgast.expressions'
-	|	[isLambda]:java_Boolean}
-    =   {identifier} [original]:java_String //Change original to name...
-	|	{explicit} [classType]:CG.#type [name]:java_String
-	|	{super} [name]:java_String
+	|	[isLambda]:java_Boolean
+	|	[isLocal]:java_Boolean
+	|	[name]:java_String}
+    =   {identifier}
+	|	{explicit} [classType]:CG.#type
+	|	{super}
     ;
     
 #Literal {-> package='org.overture.codegen.cgast.expressions'}
@@ -503,6 +516,28 @@ externalType {-> package='org.overture.codegen.cgast.utils'}
     |	{nat}
     |	{rat}
     |   {real} 
+    ;
+
+#term {-> package='org.overture.codegen.cgast.traces'}
+    =   {traceDecl} [traceDecls]:CG.#traceDecl*
+    ;
+    
+#traceDecl {-> package='org.overture.codegen.cgast.traces'}
+    =   {instance} //Not there...
+    |   {letBeStBinding}
+    	[bind]:CG.#multipleBind.set //[bind]:CG.#multipleBind (Only set binds are supported)
+    	[stExp]:CG.#exp
+    	[body]:CG.#traceDecl
+    |   {letDefBinding}
+    	[localDecls]:CG.#decl*
+    	[body]:CG.traceDecl
+    |   {repeat} [core]:CG.#traceCoreDecl [from]:java_Long [to]:java_Long
+    ;
+    
+#traceCoreDecl {-> package='org.overture.codegen.cgast.traces'}
+    =   {applyExp} [callStm]:CG.#stm
+    |   {bracketedExp} [terms]:CG.#term.traceDecl*
+    |   {concurrentExp} [decls]:CG.#traceDecl*
     ;
      
 Aspect Declaration

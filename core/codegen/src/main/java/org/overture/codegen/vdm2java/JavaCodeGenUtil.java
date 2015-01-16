@@ -39,6 +39,7 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.node.INode;
+import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.analysis.violations.Violation;
@@ -69,12 +70,19 @@ public class JavaCodeGenUtil
 			IRSettings irSettings, JavaSettings javaSettings, Dialect dialect)
 			throws AnalysisException, UnsupportedModelingException
 	{
-		List<SClassDefinition> mergedParseList = consMergedParseList(files, dialect);
-
 		JavaCodeGen vdmCodGen = new JavaCodeGen();
 
 		vdmCodGen.setSettings(irSettings);
 		vdmCodGen.setJavaSettings(javaSettings);
+
+		return generateJavaFromFiles(files, vdmCodGen, dialect);
+	}
+	
+	public static GeneratedData generateJavaFromFiles(List<File> files,
+			JavaCodeGen vdmCodGen, Dialect dialect)
+			throws AnalysisException, UnsupportedModelingException
+	{
+		List<SClassDefinition> mergedParseList = consMergedParseList(files, dialect);
 
 		return generateJavaFromVdm(mergedParseList, vdmCodGen);
 	}
@@ -131,6 +139,18 @@ public class JavaCodeGenUtil
 			IRSettings irSettings, JavaSettings javaSettings)
 			throws AnalysisException
 	{
+		JavaCodeGen vdmCodeGen = new JavaCodeGen();
+		vdmCodeGen.setSettings(irSettings);
+		vdmCodeGen.setJavaSettings(javaSettings);
+
+		return generateJavaFromExp(exp, vdmCodeGen);
+	}
+
+	public static Generated generateJavaFromExp(String exp,
+			JavaCodeGen vdmCodeGen)
+			throws AnalysisException
+
+	{
 		TypeCheckResult<PExp> typeCheckResult = GeneralCodeGenUtils.validateExp(exp);
 
 		if (typeCheckResult.errors.size() > 0)
@@ -139,22 +159,17 @@ public class JavaCodeGenUtil
 					+ exp);
 		}
 
-		JavaCodeGen vdmCodGen = new JavaCodeGen();
-		vdmCodGen.setSettings(irSettings);
-		vdmCodGen.setJavaSettings(javaSettings);
-
 		try
 		{
-			return vdmCodGen.generateJavaFromVdmExp(typeCheckResult.result);
+			return vdmCodeGen.generateJavaFromVdmExp(typeCheckResult.result);
 
 		} catch (AnalysisException e)
 		{
 			throw new AnalysisException("Unable to generate code from expression: "
 					+ exp + ". Exception message: " + e.getMessage());
 		}
-
 	}
-
+	
 	public static List<Violation> asSortedList(Set<Violation> violations)
 	{
 		LinkedList<Violation> list = new LinkedList<Violation>(violations);
@@ -209,6 +224,18 @@ public class JavaCodeGenUtil
 		}
 
 		return buffer.toString();
+	}
+	
+	public static String constructVarRenamingString(List<Renaming> renamings)
+	{
+		StringBuilder sb = new StringBuilder();
+		
+		for(Renaming r : renamings)
+		{
+			sb.append(r).append('\n');
+		}
+		
+		return sb.toString();
 	}
 
 	public static void generateJavaSourceFiles(File outputFolder,
@@ -306,7 +333,7 @@ public class JavaCodeGenUtil
 
 		List<VdmNodeInfo> nodesSorted = locationAssistant.getVdmNodeInfoLocationSorted(unsupportedNodes);
 
-		Logger.getLog().println("Following IR constructs are not supported: ");
+		Logger.getLog().println("Following VDM constructs are not supported by the IR: ");
 
 		for (VdmNodeInfo vdmNodeInfo : nodesSorted)
 		{

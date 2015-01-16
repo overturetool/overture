@@ -89,6 +89,7 @@ import org.overture.ast.types.AUnknownType;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.Environment;
+import org.overture.typechecker.ExcludedDefinitions;
 import org.overture.typechecker.FlatCheckedEnvironment;
 import org.overture.typechecker.FlatEnvironment;
 import org.overture.typechecker.PrivateClassEnvironment;
@@ -116,7 +117,9 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		question.assistantFactory.getTypeComparator().checkComposeTypes(node.getType(), question.env, false);
 
+		ExcludedDefinitions.setExcluded(node);
 		node.setExpType(node.getExpression().apply(THIS, question));
+		ExcludedDefinitions.clearExcluded();
 		node.setType(question.assistantFactory.createPTypeAssistant().typeResolve(question.assistantFactory.createPDefinitionAssistant().getType(node), null, THIS, question));
 
 		if (node.getExpType() instanceof AVoidType)
@@ -157,7 +160,9 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		// TODO: This should be a call to the assignment definition typecheck
 		// but instance is not an subclass of
 		// assignment in our tree
+		ExcludedDefinitions.setExcluded(node);
 		node.setExpType(node.getExpression().apply(THIS, new TypeCheckInfo(question.assistantFactory, cenv, NameScope.NAMESANDSTATE, question.qualifiers)));
+		ExcludedDefinitions.clearExcluded();
 		node.setType(question.assistantFactory.createPTypeAssistant().typeResolve(question.assistantFactory.createPDefinitionAssistant().getType(node), null, THIS, question));
 
 		if (node.getExpType() instanceof AVoidType)
@@ -1480,7 +1485,9 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		question = question.newConstraint(node.getType());
 
 		question.qualifiers = null;
+		ExcludedDefinitions.setExcluded(node.getDefs());
 		PType expType = node.getExpression().apply(THIS, question);
+		ExcludedDefinitions.clearExcluded();
 		node.setExpType(expType);
 		PType type = node.getType(); // PDefinitionAssistant.getType(node);
 		if (expType instanceof AVoidType)

@@ -1,0 +1,14 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let mk_(x,x) = mk_(2,2)
+in 
+  for all mk_(x,x) in set {mk_(1,1)} do
+    let x = x
+    in
+      return x;
+
+end Entry

@@ -74,7 +74,7 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 	{
 		AIdentifierStateDesignatorCG result = new AIdentifierStateDesignatorCG();
 		result.setType(compResult.getType().clone());
-		result.setName(compResult.getOriginal());
+		result.setName(compResult.getName());
 
 		AAssignmentStmCG updateCompResult = new AAssignmentStmCG();
 		updateCompResult.setTarget(result);
@@ -101,6 +101,7 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 		emptyCollection.setType(compType.clone());
 
 		AVarDeclCG compResultInit = new AVarDeclCG();
+		compResultInit.setFinal(false);
 		compResultInit.setType(compType.clone());
 		compResultInit.setPattern(idPattern.clone());
 		compResultInit.setExp(emptyCollection);

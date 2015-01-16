@@ -112,7 +112,9 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 
 					ACastUnaryExpCG cast = new ACastUnaryExpCG();
 					AIdentifierVarExpCG varSentinel = new AIdentifierVarExpCG();
-					varSentinel.setOriginal("sentinel");
+					varSentinel.setIsLocal(true);
+					varSentinel.setIsLambda(false);
+					varSentinel.setName("sentinel");
 
 					AExternalTypeCG etype = new AExternalTypeCG();
 					etype.setName(node.getName() + "_sentinel");
@@ -146,7 +148,8 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 
 				AIdentifierVarExpCG field = new AIdentifierVarExpCG();
 
-				field.setOriginal("sentinel");
+				field.setName("sentinel");
+				field.setIsLocal(false);
 
 				ANewExpCG newexp = new ANewExpCG();
 
@@ -214,8 +217,9 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 			{
 				
 				AIdentifierVarExpCG testVar = new AIdentifierVarExpCG();
-				testVar.setOriginal("fnr");
 				testVar.setType(new AIntNumericBasicTypeCG());
+				testVar.setName("fnr");
+				testVar.setIsLocal(true);
 				
 				if (i == 0){
 				
