@@ -1,0 +1,9 @@
+class Entry
+
+operations
+
+public static Run :  () ==> ?
+Run () ==
+	return forall a,a,a : bool, b,b,b : bool & a or b;
+
+end Entry

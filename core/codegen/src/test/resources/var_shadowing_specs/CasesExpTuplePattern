@@ -1,0 +1,16 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+return
+let mk_(x,mk_(x,x)) = mk_(2,mk_(2,2)),
+    n = mk_(x,mk_(x,x))
+in 
+	cases n:
+		mk_(x,mk_(x,x)) -> x,
+		others -> x
+	end;
+
+end Entry
