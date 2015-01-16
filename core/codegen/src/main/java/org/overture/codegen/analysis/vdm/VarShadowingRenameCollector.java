@@ -37,6 +37,7 @@ import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
 import org.overture.ast.statements.AForAllStm;
 import org.overture.ast.statements.AForIndexStm;
+import org.overture.ast.statements.AForPatternBindStm;
 import org.overture.ast.statements.ALetBeStStm;
 import org.overture.ast.statements.ALetStm;
 import org.overture.ast.statements.PStm;
@@ -341,6 +342,30 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 	}
 	
 	@Override
+	public void caseAForPatternBindStm(AForPatternBindStm node)
+			throws AnalysisException
+	{
+		if (!proceed(node))
+		{
+			return;
+		}
+		
+		if(node.getExp() != null)
+		{
+			node.getExp().apply(this);
+		}
+		
+		openScope(node.getPatternBind().getPattern(), node.getPatternBind().getDefs(), node.getStatement());
+		
+		node.getStatement().apply(this);
+		
+		for(PDefinition def : node.getPatternBind().getDefs())
+		{
+			removeLocalDefFromScope(def);
+		}
+	}
+	
+	@Override
 	public void caseAForAllStm(AForAllStm node) throws AnalysisException
 	{
 		if (!proceed(node))
@@ -363,9 +388,9 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 
 		node.getStatement().apply(this);
 		
-		for(PDefinition d : defs)
+		for(PDefinition def : defs)
 		{
-			localDefsInScope.remove(d.getName());
+			removeLocalDefFromScope(def);
 		}
 	}
 
@@ -618,11 +643,26 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 			{
 				if (contains(localDef))
 				{
-					findRenamings(localDef, parentDef, defScope, nodeDefs.subList(0, i), defInfo);
+					List<PDefinition> localDefsOusideScope = defInfo.getLocalDefs(nodeDefs.subList(0, i));
+					findRenamings(localDef, parentDef, defScope, localDefsOusideScope);
 				} else
 				{
 					localDefsInScope.add(localDef.getName());
 				}
+			}
+		}
+	}
+	
+	public void openScope(INode parentNode, List<PDefinition> localDefs, INode defScope) throws AnalysisException
+	{
+		for(PDefinition localDef : localDefs)
+		{
+			if (contains(localDef))
+			{
+				findRenamings(localDef, parentNode, defScope, new LinkedList<PDefinition>());
+			} else
+			{
+				localDefsInScope.add(localDef.getName());
 			}
 		}
 	}
@@ -631,13 +671,15 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 	{
 		this.localDefsInScope.removeAll(defInfo.getAllLocalDefNames());
 	}
+	
+	public void removeLocalDefFromScope(PDefinition localDef)
+	{
+		localDefsInScope.remove(localDef.getName());
+	}
 
-	private void findRenamings(PDefinition localDefToRename, PDefinition parentDef, INode defScope,
-			List<? extends PDefinition> defsOutsideScope, DefinitionInfo defInfo)
+	private void findRenamings(PDefinition localDefToRename, INode parentNode, INode defScope, List<PDefinition> localDefsOusideScope)
 			throws AnalysisException
 	{
-		List<PDefinition> localDefsOusideScope = defInfo.getLocalDefs(defsOutsideScope);
-
 		ILexNameToken localDefName = getName(localDefToRename);
 
 		if (localDefName == null)
@@ -659,7 +701,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 			registerRenaming(varExp.getName(), newName);
 		}
 
-		Set<AIdentifierPattern> patternsOcc = collectIdOccurences(localDefName, parentDef);
+		Set<AIdentifierPattern> patternsOcc = collectIdOccurences(localDefName, parentNode);
 
 		for (AIdentifierPattern p : patternsOcc)
 		{
