@@ -325,7 +325,7 @@ public class TypeCompatibilityObligation extends ProofObligation {
 			}
 		}
 
-		if (etype != null && rec) {
+		if (exp.getType() != null && etype != null && rec) {
 			if (assistantFactory.getTypeComparator().isSubType(exp.getType(), etype)) {
 				return null; // Means a sub-comparison is OK without PO checks
 			}
