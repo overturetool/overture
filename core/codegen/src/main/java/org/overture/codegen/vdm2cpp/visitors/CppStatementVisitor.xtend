@@ -18,6 +18,9 @@ import org.overture.codegen.cgast.statements.AForIndexStmCG
 import org.overture.codegen.vdm2cpp.XtendAnswerStringVisitor
 import org.overture.codegen.cgast.STypeCG
 import org.overture.codegen.cgast.types.AClassTypeCG
+import org.overture.codegen.cgast.statements.ACallObjectExpStmCG
+import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG
+import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG
 
 class CppStatementVisitor extends XtendAnswerStringVisitor {
 	
@@ -41,6 +44,22 @@ class CppStatementVisitor extends XtendAnswerStringVisitor {
 		{
 			return "udef"
 		}
+	}
+	def caseToType(STypeCG type)
+	{
+		if(type instanceof AClassTypeCG)
+		{
+			return '''/*t*/ObjGet_«type.name»/*t*/'''
+		}
+		else if(type instanceof ARealBasicTypeWrappersTypeCG || type instanceof ARealNumericBasicTypeCG)
+		{
+			return '''static_cast<«type.expand»>'''
+		}
+		else
+		{
+			return '''static_cast<«type.expand»>'''
+		}
+		
 	}
 	
 	
@@ -107,8 +126,11 @@ class CppStatementVisitor extends XtendAnswerStringVisitor {
 	«ENDIF»
 	'''
 	
+	override caseACallObjectExpStmCG(ACallObjectExpStmCG node)
+	'''«node.obj.type.caseToType»(«node.obj.expand»)->«node.fieldName»(«FOR a: node.args SEPARATOR ','» «a.expand»«ENDFOR»);'''
+	
 	override caseACallObjectStmCG(ACallObjectStmCG node)
-	'''ObjGet_«node.designator»(«node.designator.expand»)->«node.fieldName»(«FOR a: node.args SEPARATOR ','» «a.expand»«ENDFOR»);'''
+	'''«node.designator»(«node.designator.expand»)->«node.fieldName»(«FOR a: node.args SEPARATOR ','» «a.expand»«ENDFOR»);'''
 	
 	override caseAAssignmentStmCG(AAssignmentStmCG node)
 	'''«node.target.expand» = «node.exp.expand»;'''

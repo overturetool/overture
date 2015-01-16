@@ -68,7 +68,7 @@ class CppExpressionVisitor extends XtendAnswerStringVisitor {
 	{
 		if(type instanceof AClassTypeCG)
 		{
-			return '''ObjGet_«type.name»'''
+			return '''/*t*/ObjGet_«type.name»/*t*/'''
 		}
 		else if(type instanceof ARealBasicTypeWrappersTypeCG || type instanceof ARealNumericBasicTypeCG)
 		{
@@ -262,7 +262,7 @@ class CppExpressionVisitor extends XtendAnswerStringVisitor {
 		if(node.object.type instanceof AClassTypeCG)
 		{
 			val class_name = (node.object.type as AClassTypeCG).name
-			return '''ObjGet_«class_name»(«node.object.expand»)->«node.memberName»'''
+			return '''/*r*/ObjGet_«class_name»(«node.object.expand»)->«node.memberName»/*r*/'''
 		}
 		else
 		{

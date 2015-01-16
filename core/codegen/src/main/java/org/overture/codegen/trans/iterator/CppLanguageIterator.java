@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SPatternCG;
+import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
@@ -30,6 +31,16 @@ public class CppLanguageIterator extends JavaLanguageIterator{
 	{
 		super(transformationAssistant, tempGen, varPrefixes);
 	}
+	
+//	@Override
+//	public List<SStmCG> getPreForLoopStms(...)
+//	{
+//		List<SStmCG> stms = new LinkedList<SStmCG>();
+//		
+//		super.getPreForLoopStms()
+//		
+//		stms.add(super.getPreForLoopStms())
+//	}
 
 	@Override
 	public AVarDeclCG getForLoopInit(AIdentifierVarExpCG setVar,

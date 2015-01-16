@@ -96,7 +96,7 @@ class CGNew extends XtendAnswerStringVisitor {
 	'''«node.name»'''
 	
 	override caseAIdentifierObjectDesignatorCG(AIdentifierObjectDesignatorCG node)
-	'''«node.exp.expand»'''
+	'''/*d*/«node.exp.expand»/*d*/'''
 	
 	override caseAClassDeclCG(AClassDeclCG node)'''
 	#ifndef VDMCPP«node.name.toUpperCase»_HPP
