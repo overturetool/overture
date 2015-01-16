@@ -18,6 +18,8 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.definitions.traces.ALetBeStBindingTraceDefinition;
+import org.overture.ast.expressions.ACaseAlternative;
+import org.overture.ast.expressions.ACasesExp;
 import org.overture.ast.expressions.AExistsExp;
 import org.overture.ast.expressions.AForAllExp;
 import org.overture.ast.expressions.ALambdaExp;
@@ -404,20 +406,20 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 			return;
 		}
 		
-		if(node.getExp() != null)
-		{
-			node.getExp().apply(this);
-		}
-		
-		// The cases will be responsible for opening of the scope
-		for(ACaseAlternativeStm c : node.getCases())
-		{
-			c.apply(this);
-		}
-		
-		node.getOthers().apply(this);
+		handleCaseNode(node.getExp(), node.getCases(), node.getOthers());
 	}
 	
+	@Override
+	public void caseACasesExp(ACasesExp node) throws AnalysisException
+	{
+		if (!proceed(node))
+		{
+			return;
+		}
+		
+		handleCaseNode(node.getExpression(), node.getCases(), node.getOthers());
+	}
+
 	@Override
 	public void caseACaseAlternativeStm(ACaseAlternativeStm node)
 			throws AnalysisException
@@ -427,21 +429,21 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 			return;
 		}
 		
-		// Do not visit the conditional exp (cexp)
-		
-		LinkedList<PDefinition> localDefs = node.getDefs();
-		
-		openScope(node.getPattern(), localDefs, node.getResult());
-		
-		node.getResult().apply(this);
-		
-		//End scope
-		for(PDefinition def : localDefs)
-		{
-			removeLocalDefFromScope(def);
-		}
+		handleCase(node.getDefs(), node.getPattern(), node.getResult());
 	}
-
+	
+	@Override
+	public void caseACaseAlternative(ACaseAlternative node)
+			throws AnalysisException
+	{
+		if (!proceed(node))
+		{
+			return;
+		}
+		
+		handleCase(node.getDefs(), node.getPattern(), node.getResult());
+	}
+	
 	@Override
 	public void caseAForIndexStm(AForIndexStm node) throws AnalysisException
 	{
@@ -472,6 +474,25 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		node.getStatement().apply(this);
 		
 		localDefsInScope.remove(var);
+	}
+	
+	private void handleCaseNode(PExp cond, List<? extends INode> cases, INode others) throws AnalysisException
+	{
+		if(cond != null)
+		{
+			cond.apply(this);
+		}
+		
+		// The cases will be responsible for opening of the scope
+		for(INode c : cases)
+		{
+			c.apply(this);
+		}
+		
+		if (others != null)
+		{
+			others.apply(this);
+		}
 	}
 
 	private void openLoop(ILexNameToken var, INode varParent, PStm body)
@@ -510,6 +531,20 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 	public void caseILexNameToken(ILexNameToken node) throws AnalysisException
 	{
 		// No need to visit names
+	}
+	
+	private void handleCase(LinkedList<PDefinition> localDefs, PPattern pattern, INode result) throws AnalysisException
+	{
+		// Do not visit the conditional exp (cexp)
+		openScope(pattern, localDefs, result);
+		
+		result.apply(this);
+		
+		//End scope
+		for(PDefinition def : localDefs)
+		{
+			removeLocalDefFromScope(def);
+		}
 	}
 	
 	private void handleMultipleBindConstruct(INode node, LinkedList<PMultipleBind> bindings, PExp first, PExp pred) throws AnalysisException
