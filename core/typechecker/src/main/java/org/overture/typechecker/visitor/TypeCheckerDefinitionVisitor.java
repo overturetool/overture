@@ -126,7 +126,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 
 		if (!question.assistantFactory.getTypeComparator().compatible(node.getType(), node.getExpType()))
 		{
-			TypeCheckerErrors.report(3000, "Expression does not match declared type", node.getLocation(), node);
+			TypeCheckerErrors.report(3000, "Expression does not match declared type", node.getExpression().getLocation(), node);
 			TypeCheckerErrors.detail2("Declared", node.getType(), "Expression", node.getExpType());
 		}
 
