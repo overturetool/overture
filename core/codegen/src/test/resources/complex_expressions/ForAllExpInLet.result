@@ -18,8 +18,8 @@ public class Entry {
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && forAllExpResult_1;) {
             Number x = ((Number) iterator_1.next());
-            forAllExpResult_1 = (x.longValue() -
-                (2L * Math.round(Math.floor(x.longValue() / 2L)))) == 0L;
+            forAllExpResult_1 = Utils.equals((x.longValue() -
+                    (2L * Math.round(Math.floor(x.longValue() / 2L)))), 0L);
         }
 
         Boolean x = forAllExpResult_1;

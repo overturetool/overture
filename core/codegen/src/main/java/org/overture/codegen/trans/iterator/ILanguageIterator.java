@@ -26,13 +26,13 @@ import java.util.List;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
+import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
 
 public interface ILanguageIterator
 {
-	public AVarLocalDeclCG getForLoopInit(AIdentifierVarExpCG setVar,
+	public AVarDeclCG getForLoopInit(AIdentifierVarExpCG setVar,
 			List<SPatternCG> patterns, SPatternCG pattern);
 
 	public SExpCG getForLoopCond(AIdentifierVarExpCG setVar,
@@ -42,13 +42,15 @@ public interface ILanguageIterator
 	public SExpCG getForLoopInc(AIdentifierVarExpCG setVar,
 			List<SPatternCG> patterns, SPatternCG pattern);
 
-	public AVarLocalDeclCG getNextElementDeclared(AIdentifierVarExpCG setVar,
+	public AVarDeclCG getNextElementDeclared(AIdentifierVarExpCG setVar,
 			List<SPatternCG> patterns, SPatternCG pattern)
 			throws AnalysisException;
 
 	public ALocalPatternAssignmentStmCG getNextElementAssigned(
 			AIdentifierVarExpCG setVar, List<SPatternCG> patterns,
-			SPatternCG pattern, AVarLocalDeclCG successVarDecl,
-			AVarLocalDeclCG nextElementDecl) throws AnalysisException;
+			SPatternCG pattern, AVarDeclCG successVarDecl,
+			AVarDeclCG nextElementDecl) throws AnalysisException;
+	
+	public SExpCG consNextElementCall(AIdentifierVarExpCG setVar) throws AnalysisException;
 
 }

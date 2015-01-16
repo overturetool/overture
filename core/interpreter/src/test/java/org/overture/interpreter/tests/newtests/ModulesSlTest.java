@@ -13,7 +13,7 @@ import org.overture.core.tests.PathsProvider;
 @RunWith(Parameterized.class)
 public class ModulesSlTest extends ParamInterpreterTest
 {
-
+	private static final String TEST_UPDATE_PROPERTY = "tests.update.interpreter.sl";
 	private final static String MODULES_ROOT = "src/test/resources/modules";
 
 	public ModulesSlTest(String nameParameter, String inputParameter,
@@ -32,6 +32,11 @@ public class ModulesSlTest extends ParamInterpreterTest
 	public void setUp() throws Exception
 	{
 		Settings.release = Release.VDM_10;
+	}
+	
+	@Override
+	protected String getUpdatePropertyString() {
+		return TEST_UPDATE_PROPERTY;
 	}
 
 }

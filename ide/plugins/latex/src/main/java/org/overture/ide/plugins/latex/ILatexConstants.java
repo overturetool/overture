@@ -35,5 +35,7 @@ public interface ILatexConstants
 	
 	public static final String PDF_BUILDER = "PDF_BUILDER".toLowerCase();
 	public static final String DEFAULT_PDF_BUILDER = "pdflatex";
+	public static final boolean LATEX_MARK_COVERAGE_DEFAULT = false;
+	public static final boolean LATEX_INCLUDE_COVERAGETABLE_DEFAULT = false;
 
 }

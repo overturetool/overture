@@ -31,7 +31,7 @@ public class IRClassDeclStatus extends IRStatus
 	private AClassDeclCG classCg;
 
 	public IRClassDeclStatus(String className, AClassDeclCG classCg,
-			Set<NodeInfo> unsupportedNodes)
+			Set<VdmNodeInfo> unsupportedNodes)
 	{
 		super(unsupportedNodes);
 		this.className = className;

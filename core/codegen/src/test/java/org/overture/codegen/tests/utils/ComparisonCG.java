@@ -27,21 +27,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.lex.Dialect;
-import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.declarations.AFieldDeclCG;
-import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
-import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.runtime.Record;
 import org.overture.codegen.runtime.Token;
 import org.overture.codegen.runtime.Tuple;
 import org.overture.codegen.runtime.VDMMap;
 import org.overture.codegen.runtime.VDMSeq;
 import org.overture.codegen.runtime.VDMSet;
-import org.overture.codegen.vdm2java.JavaCodeGen;
-import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.interpreter.values.BooleanValue;
 import org.overture.interpreter.values.CharacterValue;
 import org.overture.interpreter.values.FieldMap;
@@ -63,18 +55,12 @@ import org.overture.interpreter.values.Value;
 
 public class ComparisonCG
 {
-	private File testInputFile;
-	private AInterfaceDeclCG quotes;
-
 	public ComparisonCG(File testInputFile)
 	{
 		if (testInputFile == null)
 		{
 			throw new IllegalArgumentException("Test file cannot be null");
 		}
-
-		this.testInputFile = testInputFile;
-		this.quotes = null;
 	}
 
 	public boolean compare(Object cgValue, Value vdmValue)
@@ -232,51 +218,12 @@ public class ComparisonCG
 
 	private boolean handleQuote(Object cgValue, Value vdmValue)
 	{
-		if (!(cgValue instanceof Number))
+		if(cgValue == null)
 		{
 			return false;
 		}
-
-		QuoteValue vdmQuote = (QuoteValue) vdmValue;
-		Number cgQuote = (Number) cgValue;
-
-		try
-		{
-			if (quotes == null)
-			{
-				List<File> files = new LinkedList<File>();
-				files.add(testInputFile);
-
-				List<SClassDefinition> mergedParseList = JavaCodeGenUtil.consMergedParseList(files, Dialect.VDM_PP);
-
-				JavaCodeGen javaCg = new JavaCodeGen();
-				javaCg.generateJavaFromVdm(mergedParseList);
-
-				quotes = javaCg.getInfo().getQuotes();
-			}
-
-			for (AFieldDeclCG quote : quotes.getFields())
-			{
-				if (quote.getName().equals(vdmQuote.value))
-				{
-					SExpCG exp = quote.getInitial();
-
-					if (exp instanceof AIntLiteralExpCG)
-					{
-						AIntLiteralExpCG intLit = (AIntLiteralExpCG) exp;
-						return cgQuote.equals(intLit.getValue());
-					}
-				}
-			}
-
-			return false;
-
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-
-		return false;
+		
+		return cgValue.toString().equals(vdmValue.toString());
 	}
 
 	private boolean handleToken(Object cgValue, Value vdmValue)

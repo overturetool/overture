@@ -8,7 +8,7 @@ public class cg_Long {
     }
 
     public void op(final Number Character) {
-        if (1L != 2L) {
+        if (!(Utils.equals(1L, 2L))) {
             op(3L);
         } else {
             op(3L);

@@ -26,21 +26,21 @@ import java.util.List;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
+import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.TempVarPrefixes;
-import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public abstract class AbstractLanguageIterator implements ILanguageIterator
 {
-	protected TransformationAssistantCG transformationAssistant;
+	protected TransAssistantCG transformationAssistant;
 	protected ITempVarGen tempGen;
 	protected TempVarPrefixes varPrefixes;
 
 	public AbstractLanguageIterator(
-			TransformationAssistantCG transformationAssistant,
+			TransAssistantCG transformationAssistant,
 			ITempVarGen tempGen, TempVarPrefixes varPrefixes)
 	{
 		this.transformationAssistant = transformationAssistant;
@@ -49,7 +49,7 @@ public abstract class AbstractLanguageIterator implements ILanguageIterator
 	}
 
 	@Override
-	abstract public AVarLocalDeclCG getForLoopInit(AIdentifierVarExpCG setVar,
+	abstract public AVarDeclCG getForLoopInit(AIdentifierVarExpCG setVar,
 			List<SPatternCG> patterns, SPatternCG pattern);
 
 	@Override
@@ -62,13 +62,13 @@ public abstract class AbstractLanguageIterator implements ILanguageIterator
 			List<SPatternCG> patterns, SPatternCG pattern);
 
 	@Override
-	abstract public AVarLocalDeclCG getNextElementDeclared(
+	abstract public AVarDeclCG getNextElementDeclared(
 			AIdentifierVarExpCG setVar, List<SPatternCG> patterns,
 			SPatternCG pattern) throws AnalysisException;
 
 	@Override
 	abstract public ALocalPatternAssignmentStmCG getNextElementAssigned(
 			AIdentifierVarExpCG setVar, List<SPatternCG> patterns,
-			SPatternCG pattern, AVarLocalDeclCG successVarDecl,
-			AVarLocalDeclCG nextElementDecl) throws AnalysisException;
+			SPatternCG pattern, AVarDeclCG successVarDecl,
+			AVarDeclCG nextElementDecl) throws AnalysisException;
 }

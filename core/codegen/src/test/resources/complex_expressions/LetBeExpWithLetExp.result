@@ -12,6 +12,7 @@ public class Entry {
     }
 
     public static Number f() {
+        Number letBeStExp_1 = null;
         Number a = null;
         Boolean success_1 = false;
         VDMSet set_1 = SetUtil.set(1L);
@@ -26,9 +27,11 @@ public class Entry {
             throw new RuntimeException("Let Be St found no applicable bindings");
         }
 
-        Number b = 2L;
+        {
+            Number b = 2L;
 
-        Number letBeStExp_1 = 3L;
+            letBeStExp_1 = 3L;
+        }
 
         return letBeStExp_1;
     }

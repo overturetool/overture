@@ -1,7 +1,5 @@
 import org.overture.codegen.runtime.*;
 
-import quotes.*;
-
 import java.util.*;
 
 
@@ -9,27 +7,28 @@ public class Entry {
     public Entry() {
     }
 
-    public static Number casesQuote(final Number e) {
-        Number quotePattern_1 = e;
-        Boolean success_1 = quotePattern_1.longValue() == Quotes.A.longValue();
+    public static Object casesQuote(final Object e) {
+        Object quotePattern_1 = e;
+        Boolean success_1 = Utils.equals(quotePattern_1, quotes.A.getInstance());
 
         if (!(success_1)) {
-            Number quotePattern_2 = e;
-            success_1 = quotePattern_2.longValue() == Quotes.B.longValue();
+            Object quotePattern_2 = e;
+            success_1 = Utils.equals(quotePattern_2, quotes.B.getInstance());
 
             if (success_1) {
-                return Quotes.B;
+                return quotes.B.getInstance();
             } else {
-                return Quotes.C;
+                return quotes.C.getInstance();
             }
         } else {
-            return Quotes.A;
+            return quotes.A.getInstance();
         }
     }
 
     public static Object Run() {
-        return SeqUtil.seq(casesQuote(Quotes.A), casesQuote(Quotes.B),
-            casesQuote(Quotes.C));
+        return SeqUtil.seq(casesQuote(quotes.A.getInstance()),
+            casesQuote(quotes.B.getInstance()),
+            casesQuote(quotes.C.getInstance()));
     }
 
     public String toString() {
@@ -38,13 +37,6 @@ public class Entry {
 }
 
 ##########
-
-package quotes;
-
-public interface Quotes {
-    public static Number A = 1L;
-    public static Number B = 2L;
-    public static Number C = 3L;
-}
-
+*Quotes*
+A,B,C
 ##########

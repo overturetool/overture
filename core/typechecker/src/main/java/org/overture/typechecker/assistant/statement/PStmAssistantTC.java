@@ -22,11 +22,12 @@
 package org.overture.typechecker.assistant.statement;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.util.PTypeSet;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class PStmAssistantTC
+public class PStmAssistantTC implements IAstAssistant
 {
 	protected ITypeCheckerAssistantFactory af;
 
@@ -35,6 +36,7 @@ public class PStmAssistantTC
 		this.af = af;
 	}
 
+	//FIXME: only used in 1 class. move it
 	public PTypeSet exitCheck(PStm statement)
 	{
 		try

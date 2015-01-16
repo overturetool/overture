@@ -1,6 +1,1 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.interpreter.tests.InterpreterStringPpTestCase">
-<result>
-<output object="2432902008176640000" resource="concfactorialPP" value="2432902008176640000"/>
-</result>
-</testResult>
+{"result":"2432902008176640000","warnings":[],"errors":[]}

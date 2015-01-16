@@ -22,7 +22,7 @@ public class Entry {
             for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext();) {
                 Number y = ((Number) iterator_2.next());
 
-                if (1L == 1L) {
+                if (Utils.equals(1L, 1L)) {
                     setCompResult_1 = SetUtil.union(Utils.clone(setCompResult_1),
                             SetUtil.set(x.longValue() * y.longValue()));
                 }

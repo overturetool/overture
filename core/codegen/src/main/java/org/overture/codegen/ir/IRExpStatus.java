@@ -29,7 +29,7 @@ public class IRExpStatus extends IRStatus
 {
 	private SExpCG expCg;
 
-	public IRExpStatus(SExpCG expCg, Set<NodeInfo> unsupportedNodes)
+	public IRExpStatus(SExpCG expCg, Set<VdmNodeInfo> unsupportedNodes)
 	{
 		super(unsupportedNodes);
 		this.expCg = expCg;

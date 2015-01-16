@@ -37,7 +37,7 @@ public class A {
                     c = ((Number) tuplePattern_3.get(0));
 
                     Rec nullPattern_1 = Utils.clone(((Rec) tuplePattern_3.get(1)));
-                    success_1 = nullPattern_1 == null;
+                    success_1 = Utils.equals(nullPattern_1, null);
                 }
             }
         }
@@ -79,7 +79,7 @@ public class A {
         }
 
         public String toString() {
-            return Utils.recordToString(this, t);
+            return "mk_A`Rec" + Utils.formatFields(t);
         }
     }
 }

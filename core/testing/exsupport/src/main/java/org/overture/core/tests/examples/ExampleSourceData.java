@@ -24,7 +24,6 @@ package org.overture.core.tests.examples;
 import java.io.File;
 import java.io.Serializable;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 import org.overture.ast.lex.Dialect;
@@ -84,22 +83,7 @@ public class ExampleSourceData implements Serializable
 	@Override
 	public String toString()
 	{
-	return this.name +" "+ this.dialect  + getFilesString();
-	}
-
-	private String getFilesString()
-	{
-		StringBuffer sb = new StringBuffer();
-		for (Iterator<File> itr = source.iterator(); itr.hasNext();)
-		{
-			sb.append(itr.next().getName());
-			if(itr.hasNext())
-			{
-				sb.append(", ");
-			}
-			
-		}
-		return sb.toString();
+	return this.dialect + " > " + this.name;
 	}
 
 }

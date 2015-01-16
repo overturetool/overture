@@ -9,24 +9,26 @@ public class Entry {
 
     public static Number casesInt(final Number n) {
         Number intPattern_1 = n;
-        Boolean success_1 = intPattern_1.longValue() == 1L;
+        Boolean success_1 = Utils.equals(intPattern_1, 1L);
 
         if (!(success_1)) {
             Number intPattern_2 = n;
-            success_1 = intPattern_2.longValue() == 2L;
+            success_1 = Utils.equals(intPattern_2, 2L);
 
             if (!(success_1)) {
                 Number intPattern_3 = n;
-                success_1 = intPattern_3.longValue() == 3L;
+                success_1 = Utils.equals(intPattern_3, 3L);
 
                 if (!(success_1)) {
                     success_1 = true;
 
                     if (success_1) {
-                        Number x = 1L;
-                        Number y = 2L;
+                        {
+                            Number x = 1L;
+                            Number y = 2L;
 
-                        return x.longValue() + y.longValue();
+                            return x.longValue() + y.longValue();
+                        }
                     } else {
                         return 999L;
                     }

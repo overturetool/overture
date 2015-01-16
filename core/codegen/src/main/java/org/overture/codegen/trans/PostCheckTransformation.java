@@ -7,7 +7,7 @@ import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
-import org.overture.codegen.cgast.declarations.AVarLocalDeclCG;
+import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
@@ -16,18 +16,18 @@ import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class PostCheckTransformation extends DepthFirstAnalysisAdaptor
 {
 	private IPostCheckCreator postCheckCreator;
 	private IRInfo info;
-	private TransformationAssistantCG transformationAssistant;
+	private TransAssistantCG transformationAssistant;
 	private String funcResultNamePrefix;
 	private Object conditionalCallTag;
 
 	public PostCheckTransformation(IPostCheckCreator postCheckCreator,
-			IRInfo info, TransformationAssistantCG transformationAssistant,
+			IRInfo info, TransAssistantCG transformationAssistant,
 			String funcResultNamePrefix, Object conditionalCallTag)
 	{
 		this.postCheckCreator = postCheckCreator;
@@ -115,7 +115,7 @@ public class PostCheckTransformation extends DepthFirstAnalysisAdaptor
 		AApplyExpCG postCondCall = transformationAssistant.consConditionalCall(method, (AMethodDeclCG) method.getPostCond());
 		postCondCall.setTag(conditionalCallTag);
 
-		AVarLocalDeclCG resultDecl = transformationAssistant.consDecl(funcResultNamePrefix, method.getMethodType().getResult().clone(), node.getExp().clone());
+		AVarDeclCG resultDecl = transformationAssistant.consDecl(funcResultNamePrefix, method.getMethodType().getResult().clone(), node.getExp().clone());
 		AIdentifierVarExpCG resultVar = transformationAssistant.consIdentifierVar(funcResultNamePrefix, resultDecl.getType().clone());
 
 		postCondCall.getArgs().add(resultVar.clone());

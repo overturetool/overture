@@ -17,11 +17,19 @@ import org.overture.core.tests.examples.ExamplesUtility;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.syntax.ParserException;
 
+/**
+ * Basic test for all the libs. Simply ensures that they all parse and type-check correctly. <br>
+ * 
+ * @author ldc
+ */
+
 @RunWith(Parameterized.class)
 public class ParseTcLibsTest
 {
 	ExampleSourceData testData;
 
+	private static String LIBS_ROOT = "../../../documentation/";
+	
 	public ParseTcLibsTest(String _, ExampleSourceData testData)
 	{
 		this.testData = testData;
@@ -32,7 +40,7 @@ public class ParseTcLibsTest
 	{
 		Collection<Object[]> r = new Vector<Object[]>();
 
-		Collection<ExampleSourceData> examples = ExamplesUtility.getLibSources();
+		Collection<ExampleSourceData> examples = ExamplesUtility.getLibSources(LIBS_ROOT);
 
 		for (ExampleSourceData e : examples)
 		{

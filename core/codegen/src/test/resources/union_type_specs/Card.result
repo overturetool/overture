@@ -1,0 +1,21 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        Object a = SetUtil.set(1L, 2L);
+
+        return ((VDMSet) a).size();
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########

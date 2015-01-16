@@ -2,10 +2,13 @@ package org.overture.interpreter.eval;
 
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
+import org.overture.ast.definitions.AMultiBindListDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.AApplyExp;
 import org.overture.ast.expressions.ACaseAlternative;
@@ -58,9 +61,11 @@ import org.overture.ast.expressions.ATupleExp;
 import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.node.INode;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.patterns.PPattern;
@@ -108,6 +113,7 @@ import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.ValueList;
 import org.overture.interpreter.values.ValueMap;
 import org.overture.interpreter.values.ValueSet;
+import org.overture.interpreter.values.VoidValue;
 import org.overture.typechecker.assistant.pattern.PatternListTC;
 
 public class ExpressionEvaluator extends BinaryExpressionEvaluator
@@ -246,16 +252,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	public Value caseAElseIfExp(AElseIfExp node, Context ctxt)
 			throws AnalysisException
 	{
-		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-
-		try
-		{
-			return node.getElseIf().apply(VdmRuntime.getExpressionEvaluator(), ctxt).boolValue(ctxt) ? node.getThen().apply(VdmRuntime.getExpressionEvaluator(), ctxt)
-					: null;
-		} catch (ValueException e)
-		{
-			return VdmRuntimeError.abort(node.getLocation(), e);
-		}
+		return evalElseIf(node, node.getLocation(), node.getElseIf(), node.getThen(), ctxt);
 	}
 
 	@Override
@@ -663,28 +660,80 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	@Override
 	public Value caseAIfExp(AIfExp node, Context ctxt) throws AnalysisException
 	{
-		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
+		return evalIf(node, node.getLocation(), node.getTest(), node.getThen(), node.getElseList(), node.getElse(), ctxt);
+	}
+
+	/**
+	 * Utility method to evaluate both if expressions and statements
+	 * 
+	 * @param node
+	 * @param ifLocation
+	 * @param testExp
+	 * @param thenNode
+	 * @param elseIfNodeList
+	 * @param elseNode
+	 * @param ctxt
+	 * @return
+	 * @throws AnalysisException
+	 */
+	protected Value evalIf(INode node, ILexLocation ifLocation, PExp testExp,
+			INode thenNode, List<? extends INode> elseIfNodeList,
+			INode elseNode, Context ctxt) throws AnalysisException
+	{
+		BreakpointManager.getBreakpoint(node).check(ifLocation, ctxt);
 
 		try
 		{
-			if (node.getTest().apply(VdmRuntime.getExpressionEvaluator(), ctxt).boolValue(ctxt))
+			if (testExp.apply(VdmRuntime.getStatementEvaluator(), ctxt).boolValue(ctxt))
 			{
-				return node.getThen().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
-			}
-
-			for (AElseIfExp elseif : node.getElseList())
+				return thenNode.apply(VdmRuntime.getStatementEvaluator(), ctxt);
+			} else
 			{
-				Value r = elseif.apply(VdmRuntime.getExpressionEvaluator(), ctxt);
-				if (r != null)
+				for (INode elseif : elseIfNodeList)
 				{
-					return r;
+					Value r = elseif.apply(VdmRuntime.getStatementEvaluator(), ctxt);
+					if (r != null)
+					{
+						return r;
+					}
 				}
-			}
 
-			return node.getElse().apply(VdmRuntime.getExpressionEvaluator(), ctxt);
+				if (elseNode != null)
+				{
+					return elseNode.apply(VdmRuntime.getStatementEvaluator(), ctxt);
+				}
+
+				return new VoidValue();
+			}
 		} catch (ValueException e)
 		{
-			return VdmRuntimeError.abort(node.getLocation(), e);
+			return VdmRuntimeError.abort(ifLocation, e);
+		}
+	}
+
+	/**
+	 * Utility method to evaluate elseif nodes
+	 * 
+	 * @param node
+	 * @param location
+	 * @param test
+	 * @param then
+	 * @param ctxt
+	 * @return
+	 * @throws AnalysisException
+	 */
+	protected Value evalElseIf(INode node, ILexLocation location, PExp test,
+			INode then, Context ctxt) throws AnalysisException
+	{
+		BreakpointManager.getBreakpoint(node).check(location, ctxt);
+
+		try
+		{
+			return test.apply(VdmRuntime.getExpressionEvaluator(), ctxt).boolValue(ctxt) ? then.apply(THIS, ctxt)
+					: null;
+		} catch (ValueException e)
+		{
+			return VdmRuntimeError.abort(location, e);
 		}
 	}
 
@@ -758,13 +807,20 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	public Value caseALetBeStExp(ALetBeStExp node, Context ctxt)
 			throws AnalysisException
 	{
-		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
+		return evalLetBeSt(node, node.getLocation(), node.getDef(), node.getSuchThat(), node.getValue(), 4015, "expression", ctxt);
+	}
+
+	public Value evalLetBeSt(INode node, ILexLocation nodeLocation,
+			AMultiBindListDefinition binding, PExp suchThat, INode body,
+			int errorCode, String type, Context ctxt) throws AnalysisException
+	{
+		BreakpointManager.getBreakpoint(node).check(nodeLocation, ctxt);
 
 		try
 		{
 			QuantifierList quantifiers = new QuantifierList();
 
-			for (PMultipleBind mb : node.getDef().getBindings())
+			for (PMultipleBind mb : binding.getBindings())
 			{
 				ValueList bvals = ctxt.assistantFactory.createPMultipleBindAssistant().getBindValues(mb, ctxt);
 
@@ -779,7 +835,8 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 
 			while (quantifiers.hasNext())
 			{
-				Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "let be st expression", ctxt);
+				Context evalContext = new Context(ctxt.assistantFactory, nodeLocation, "let be st "
+						+ type, ctxt);
 				NameValuePairList nvpl = quantifiers.next();
 				boolean matches = true;
 
@@ -801,31 +858,39 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 				}
 
 				if (matches
-						&& (node.getSuchThat() == null || node.getSuchThat().apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctxt)))
+						&& (suchThat == null || suchThat.apply(VdmRuntime.getExpressionEvaluator(), evalContext).boolValue(ctxt)))
 				{
-					return node.getValue().apply(VdmRuntime.getExpressionEvaluator(), evalContext);
+					return body.apply(VdmRuntime.getExpressionEvaluator(), evalContext);
 				}
 			}
 		} catch (ValueException e)
 		{
-			VdmRuntimeError.abort(node.getLocation(), e);
+			VdmRuntimeError.abort(nodeLocation, e);
 		}
 
-		return VdmRuntimeError.abort(node.getLocation(), 4015, "Let be st found no applicable bindings", ctxt);
+		return VdmRuntimeError.abort(nodeLocation, errorCode, "Let be st found no applicable bindings", ctxt);
 	}
 
 	@Override
 	public Value caseALetDefExp(ALetDefExp node, Context ctxt)
 			throws AnalysisException
 	{
-		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
+		return evalLet(node, node.getLocation(), node.getLocalDefs(), node.getExpression(), "expression", ctxt);
+	}
 
-		Context evalContext = new Context(ctxt.assistantFactory, node.getLocation(), "let expression", ctxt);
+	public Value evalLet(INode node, ILexLocation nodeLocation,
+			LinkedList<PDefinition> localDefs, INode body, String type,
+			Context ctxt) throws AnalysisException
+	{
+		BreakpointManager.getBreakpoint(node).check(nodeLocation, ctxt);
 
-		LexNameToken sname = new LexNameToken(node.getLocation().getModule(), "self", node.getLocation());
+		Context evalContext = new Context(ctxt.assistantFactory, nodeLocation, "let "
+				+ type, ctxt);
+
+		LexNameToken sname = new LexNameToken(nodeLocation.getModule(), "self", nodeLocation);
 		ObjectValue self = (ObjectValue) ctxt.check(sname);
 
-		for (PDefinition d : node.getLocalDefs())
+		for (PDefinition d : localDefs)
 		{
 			NameValuePairList values = ctxt.assistantFactory.createPDefinitionAssistant().getNamedValues(d, evalContext);
 
@@ -844,7 +909,7 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 			evalContext.putList(values);
 		}
 
-		return node.getExpression().apply(VdmRuntime.getExpressionEvaluator(), evalContext);
+		return body.apply(VdmRuntime.getExpressionEvaluator(), evalContext);
 	}
 
 	/*
@@ -1118,8 +1183,17 @@ public class ExpressionEvaluator extends BinaryExpressionEvaluator
 	public Value caseANotYetSpecifiedExp(ANotYetSpecifiedExp node, Context ctxt)
 			throws AnalysisException
 	{
-		BreakpointManager.getBreakpoint(node).check(node.getLocation(), ctxt);
-		return VdmRuntimeError.abort(node.getLocation(), 4024, "'not yet specified' expression reached", ctxt);
+		return evalANotYetSpecified(node, node.getLocation(), 4024, "expression", ctxt);
+	}
+
+	protected Value evalANotYetSpecified(INode node, ILexLocation location,
+			int abortNumber, String type, Context ctxt)
+			throws AnalysisException
+	{
+		BreakpointManager.getBreakpoint(node).check(location, ctxt);
+
+		return VdmRuntimeError.abort(location, abortNumber, "'not yet specified' "
+				+ type + " reached", ctxt);
 	}
 
 	@Override

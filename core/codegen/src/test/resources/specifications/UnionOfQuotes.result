@@ -1,7 +1,5 @@
 import org.overture.codegen.runtime.*;
 
-import quotes.*;
-
 import java.util.*;
 
 
@@ -9,20 +7,20 @@ public class A {
     public A() {
     }
 
-    public void op(final Number v) {
-        if (v.longValue() == Quotes.Red.longValue()) {
+    public void op(final Object v) {
+        if (Utils.equals(v, quotes.Red.getInstance())) {
             //Skip;
         }
     }
 
-    public void op2(final Number v) {
-        if (v.longValue() == Quotes.A.longValue()) {
+    public void op2(final Object v) {
+        if (Utils.equals(v, quotes.A.getInstance())) {
             //Skip;
         }
     }
 
-    public Number op3() {
-        return Quotes.Red;
+    public Object op3() {
+        return quotes.Red.getInstance();
     }
 
     public String toString() {
@@ -31,12 +29,6 @@ public class A {
 }
 
 ##########
-
-package quotes;
-
-public interface Quotes {
-    public static Number A = 1L;
-    public static Number Red = 2L;
-}
-
+*Quotes*
+Blue,Green,Red,A,B
 ##########

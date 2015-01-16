@@ -1,0 +1,11 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let a : nat | seq of bool | seq of nat = [1,2,3]
+in
+	return a ^ a;
+	
+end Entry

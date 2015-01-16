@@ -1,6 +1,1 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.interpreter.tests.InterpreterStringSlTestCase">
-<result>
-<output object="{mk_token(&quot;Monday day&quot;), mk_token(&quot;Tuesday day&quot;)}" resource="AlarmSL" value="{mk_token(&quot;Monday day&quot;), mk_token(&quot;Tuesday day&quot;)}"/>
-</result>
-</testResult>
+{"result":"{mk_token(\"Monday day\"), mk_token(\"Tuesday day\")}","warnings":[],"errors":[]}

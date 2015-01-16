@@ -24,6 +24,7 @@ package org.overture.typechecker.assistant.definition;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
@@ -36,7 +37,7 @@ import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class ATypeDefinitionAssistantTC
+public class ATypeDefinitionAssistantTC implements IAstAssistant
 {
 	protected ITypeCheckerAssistantFactory af;
 
@@ -45,6 +46,7 @@ public class ATypeDefinitionAssistantTC
 		this.af = af;
 	}
 
+	//FIXME: only used once. move it
 	public AExplicitFunctionDefinition getInvDefinition(ATypeDefinition d)
 	{
 

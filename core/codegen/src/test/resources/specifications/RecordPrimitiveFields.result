@@ -36,11 +36,9 @@ public class A {
 
             RecA other = ((RecA) obj);
 
-            return (i.longValue() == other.i.longValue()) && (c == other.c) &&
-            (r.doubleValue() == other.r.doubleValue()) &&
-            (q.doubleValue() == other.q.doubleValue()) &&
-            (n.longValue() == other.n.longValue()) &&
-            (n1.longValue() == other.n1.longValue());
+            return (Utils.equals(i, other.i)) && (Utils.equals(c, other.c)) &&
+            (Utils.equals(r, other.r)) && (Utils.equals(q, other.q)) &&
+            (Utils.equals(n, other.n)) && (Utils.equals(n1, other.n1));
         }
 
         public int hashCode() {
@@ -52,7 +50,7 @@ public class A {
         }
 
         public String toString() {
-            return Utils.recordToString(this, i, c, r, q, n, n1);
+            return "mk_A`RecA" + Utils.formatFields(i, c, r, q, n, n1);
         }
     }
 }

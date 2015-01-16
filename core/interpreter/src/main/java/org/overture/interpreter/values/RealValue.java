@@ -23,6 +23,8 @@
 
 package org.overture.interpreter.values;
 
+import java.util.Set;
+
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.types.ARealNumericBasicType;
 import org.overture.ast.types.PType;
@@ -133,7 +135,7 @@ public class RealValue extends NumericValue
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt)
+	protected Value convertValueTo(PType to, Context ctxt, Set<PType> done)
 			throws AnalysisException
 	{
 		if (to instanceof ARealNumericBasicType)
@@ -141,7 +143,7 @@ public class RealValue extends NumericValue
 			return this;
 		} else
 		{
-			return super.convertValueTo(to, ctxt);
+			return super.convertValueTo(to, ctxt, done);
 		}
 	}
 

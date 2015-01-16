@@ -1,0 +1,19 @@
+class Entry
+
+types
+
+public Rec ::
+  x : int
+  b : bool;
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+(
+  dcl r : Rec := mk_Rec(5,true);
+  r := mu(r, x |-> 6, b |-> false);
+  return mk_(r.x, r.b); 
+);
+
+end Entry

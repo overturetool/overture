@@ -1,0 +1,19 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public void op() {
+        //Skip;
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########

@@ -142,6 +142,7 @@ public abstract class TestHandler
 
 		if (!tempFile.exists())
 		{
+			tempFile.getParentFile().mkdirs();
 			tempFile.createNewFile();
 		}
 		return tempFile;

@@ -25,11 +25,11 @@ public class Entry {
         Number casesExpResult_1 = null;
 
         Number intPattern_1 = n;
-        Boolean success_1 = intPattern_1.longValue() == 1L;
+        Boolean success_1 = Utils.equals(intPattern_1, 1L);
 
         if (!(success_1)) {
             Number intPattern_2 = n;
-            success_1 = intPattern_2.longValue() == 2L;
+            success_1 = Utils.equals(intPattern_2, 2L);
 
             if (!(success_1)) {
                 Number a = n;
@@ -42,9 +42,11 @@ public class Entry {
                     casesExpResult_1 = 3L;
                 }
             } else {
-                Number b = 5L;
+                {
+                    Number b = 5L;
 
-                casesExpResult_1 = b;
+                    casesExpResult_1 = b;
+                }
             }
         } else {
             casesExpResult_1 = 50L;

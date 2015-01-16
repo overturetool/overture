@@ -12,6 +12,7 @@ public class Entry {
     }
 
     private static Number f(final VDMSet tups) {
+        Object letBeStExp_1 = null;
         Tuple e = null;
         Boolean success_1 = false;
         VDMSet set_1 = Utils.clone(tups);
@@ -26,7 +27,15 @@ public class Entry {
             throw new RuntimeException("Let Be St found no applicable bindings");
         }
 
-        Object letBeStExp_1 = (1L == 1L) ? 2.5 : ((Number) e.get(0));
+        Object ternaryIfExp_1 = null;
+
+        if (Utils.equals(1L, 1L)) {
+            ternaryIfExp_1 = 2.5;
+        } else {
+            ternaryIfExp_1 = ((Number) e.get(0));
+        }
+
+        letBeStExp_1 = ternaryIfExp_1;
 
         return ((Number) letBeStExp_1);
     }

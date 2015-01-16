@@ -25,15 +25,16 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import org.overture.ast.lex.Dialect;
+import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRConstants;
-import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.config.Release;
 
 public class ExecutableSpecTestHandler extends EntryBasedTestHandler
 {
-	public ExecutableSpecTestHandler(Release release)
+	public ExecutableSpecTestHandler(Release release, Dialect dialect)
 	{
-		super(release);
+		super(release, dialect);
 	}
 
 	@Override
@@ -55,7 +56,19 @@ public class ExecutableSpecTestHandler extends EntryBasedTestHandler
 		for (StringBuffer classCgStr : content)
 		{
 			String className = TestUtils.getJavaModuleName(classCgStr);
-			File tempFile = consTempFile(className, parent, classCgStr);
+			
+			
+			File out = null;
+			if(classCgStr.toString().contains("package quotes;"))
+			{
+				out = new File(parent, "quotes");
+			}
+			else
+			{
+				out = parent;
+			}
+				
+			File tempFile = consTempFile(className, out, classCgStr);
 
 			injectSerializableInterface(classCgStr, className);
 
@@ -66,8 +79,9 @@ public class ExecutableSpecTestHandler extends EntryBasedTestHandler
 	private void injectSerializableInterface(StringBuffer classCgStr,
 			String className)
 	{
+		//TODO: Improve way that the EvaluatePP interface is handled
 		if (!className.equals(IRConstants.QUOTES_INTERFACE_NAME)
-				&& !className.startsWith(JavaCodeGen.INTERFACE_NAME_PREFIX))
+				&& !className.startsWith(CodeGenBase.INTERFACE_NAME_PREFIX) && !classCgStr.toString().contains(" implements EvaluatePP"))
 		{
 			int classNameIdx = classCgStr.indexOf(className);
 

@@ -27,34 +27,45 @@ import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
-import org.overture.codegen.cgast.declarations.ACounterLocalDeclCG;
-import org.overture.codegen.cgast.declarations.SLocalDeclCG;
+import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
+import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.TempVarPrefixes;
-import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 
 public class Exists1QuantifierStrategy extends QuantifierBaseStrategy
 {
+	protected Exists1CounterData counterData;
+	
 	public Exists1QuantifierStrategy(
-			TransformationAssistantCG transformationAssistant,
+			TransAssistantCG transformationAssistant,
 			SExpCG predicate, String resultVarName,
 			ILanguageIterator langIterator, ITempVarGen tempGen,
-			TempVarPrefixes varPrefixes)
+			TempVarPrefixes varPrefixes, Exists1CounterData counterData)
 	{
 		super(transformationAssistant, predicate, resultVarName, langIterator, tempGen, varPrefixes);
+		
+		this.counterData = counterData;
 	}
 
 	@Override
-	public List<? extends SLocalDeclCG> getOuterBlockDecls(
+	public List<AVarDeclCG> getOuterBlockDecls(
 			AIdentifierVarExpCG setVar, List<SPatternCG> patterns)
 			throws AnalysisException
 	{
-		ACounterLocalDeclCG counter = new ACounterLocalDeclCG();
-		counter.setName(resultVarName);
-		counter.setInit(transformationAssistant.getInfo().getExpAssistant().consIntLiteral(0));
+		AVarDeclCG counter = new AVarDeclCG();
 
+		counter.setFinal(false);
+		counter.setType(counterData.getType().clone());
+		
+		AIdentifierPatternCG name = new AIdentifierPatternCG();
+		name.setName(resultVarName);
+		counter.setPattern(name);
+		
+		counter.setExp(counterData.getExp().clone());
+		
 		return firstBind ? packDecl(counter) : null;
 	}
 
@@ -64,16 +75,16 @@ public class Exists1QuantifierStrategy extends QuantifierBaseStrategy
 			throws AnalysisException
 	{
 		SExpCG left = langIterator.getForLoopCond(setVar, patterns, pattern);
-		SExpCG right = transformationAssistant.consLessThanCheck(resultVarName, 2);
+		SExpCG right = transAssistant.consLessThanCheck(resultVarName, 2);
 
-		return transformationAssistant.consAndExp(left, right);
+		return transAssistant.consAndExp(left, right);
 	}
 
 	@Override
 	public List<SStmCG> getForLoopStms(AIdentifierVarExpCG setVar,
 			List<SPatternCG> patterns, SPatternCG pattern)
 	{
-		return lastBind ? packStm(transformationAssistant.consConditionalIncrement(resultVarName, predicate))
+		return lastBind ? packStm(transAssistant.consConditionalIncrement(resultVarName, predicate))
 				: null;
 	}
 }

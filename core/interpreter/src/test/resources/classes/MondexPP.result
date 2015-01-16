@@ -1,6 +1,1 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.interpreter.tests.InterpreterStringPpTestCase">
-<result>
-<output object="mk_AbWorld({mk_token(1), mk_token(2)}, {mk_token(1) |-&gt; mk_AbPurse(70, 0), mk_token(2) |-&gt; mk_AbPurse(40, 0)})" resource="MondexPP" value="mk_AbWorld({mk_token(1), mk_token(2)}, {mk_token(1) |-&gt; mk_AbPurse(70, 0), mk_token(2) |-&gt; mk_AbPurse(40, 0)})"/>
-</result>
-</testResult>
+{"result":"mk_AbWorld({mk_token(1), mk_token(2)}, {mk_token(1) |-\u003e mk_AbPurse(70, 0), mk_token(2) |-\u003e mk_AbPurse(40, 0)})","warnings":[],"errors":[]}

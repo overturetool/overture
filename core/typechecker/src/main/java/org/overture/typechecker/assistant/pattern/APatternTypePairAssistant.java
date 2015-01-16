@@ -24,6 +24,7 @@ package org.overture.typechecker.assistant.pattern;
 import java.util.List;
 
 import org.overture.ast.analysis.intf.IQuestionAnswer;
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.patterns.APatternTypePair;
 import org.overture.ast.typechecker.NameScope;
@@ -31,7 +32,7 @@ import org.overture.ast.types.PType;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class APatternTypePairAssistant
+public class APatternTypePairAssistant implements IAstAssistant
 {
 	protected ITypeCheckerAssistantFactory af;
 
@@ -40,7 +41,6 @@ public class APatternTypePairAssistant
 		this.af = af;
 	}
 
-	// FIXME:Used in the TypeCheckerDefinitionVisitor.
 	public List<PDefinition> getDefinitions(APatternTypePair result)
 	{
 

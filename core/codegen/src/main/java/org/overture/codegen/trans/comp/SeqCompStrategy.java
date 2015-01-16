@@ -32,14 +32,14 @@ import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.TempVarPrefixes;
-import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 
 public class SeqCompStrategy extends CompStrategy
 {
 	protected SExpCG first;
 
-	public SeqCompStrategy(TransformationAssistantCG transformationAssitant,
+	public SeqCompStrategy(TransAssistantCG transformationAssitant,
 			SExpCG first, SExpCG predicate, String var, STypeCG compType,
 			ILanguageIterator langIterator, ITempVarGen tempGen,
 			TempVarPrefixes varPrefixes)
@@ -61,7 +61,9 @@ public class SeqCompStrategy extends CompStrategy
 	{
 		AIdentifierVarExpCG seqCompResult = new AIdentifierVarExpCG();
 		seqCompResult.setType(compType.clone());
-		seqCompResult.setOriginal(idPattern.getName());
+		seqCompResult.setName(idPattern.getName());
+		seqCompResult.setIsLambda(false);
+		seqCompResult.setIsLocal(true);
 
 		AEnumSeqExpCG seqToConcat = new AEnumSeqExpCG();
 		seqToConcat.setType(compType.clone());

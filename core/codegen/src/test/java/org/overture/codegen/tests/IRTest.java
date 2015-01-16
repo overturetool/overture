@@ -8,10 +8,16 @@ import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.ACatchClauseDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
+import org.overture.codegen.cgast.declarations.AVarDeclCG;
+import org.overture.codegen.cgast.expressions.ANullExpCG;
+import org.overture.codegen.cgast.expressions.ATypeArgExpCG;
+import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.ATryStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
+import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
+import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.vdm2java.JavaCodeGen;
@@ -43,6 +49,20 @@ public class IRTest
 		compare(expected, fieldDecl);
 	}
 
+	@Test
+	public void testTypeArg()
+	{
+		AClassTypeCG classA = new AClassTypeCG();
+		classA.setName("A");
+		
+		ATypeArgExpCG typeArg = new ATypeArgExpCG();
+		typeArg.setType(classA);
+		
+		String expected = "A.class";
+		
+		compare(expected, typeArg);
+	}
+	
 	@Test
 	public void testCatchClause()
 	{
@@ -79,6 +99,24 @@ public class IRTest
 		String expected = "try { return 5L; } catch(Exception e1) { return 42L; } catch(Exception e1) { return 42L; }";
 		
 		compare(expected, tryStm);
+	}
+	
+	@Test
+	public void testFinalVarDecl()
+	{
+		AIdentifierPatternCG id = new AIdentifierPatternCG();
+		id.setName("x");
+		
+		AVarDeclCG varDecl = new AVarDeclCG();
+		varDecl.setFinal(true);
+		varDecl.setType(new ARealNumericBasicTypeCG());
+		varDecl.setExp(new ANullExpCG());
+		varDecl.setPattern(id);
+		
+		String expected = "final Number x = null;";
+		
+		compare(expected, varDecl);
+		
 	}
 
 	private void compare(String expected, INode node)

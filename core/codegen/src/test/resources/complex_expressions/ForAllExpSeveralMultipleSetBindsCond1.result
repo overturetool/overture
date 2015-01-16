@@ -36,7 +36,7 @@ public class Entry {
                             for (Iterator iterator_6 = set_3.iterator();
                                     iterator_6.hasNext() && forAllExpResult_1;) {
                                 Number f = ((Number) iterator_6.next());
-                                forAllExpResult_1 = 1L == 1L;
+                                forAllExpResult_1 = Utils.equals(1L, 1L);
                             }
                         }
                     }

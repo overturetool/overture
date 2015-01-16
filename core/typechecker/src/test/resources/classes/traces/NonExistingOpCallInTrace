@@ -1,0 +1,15 @@
+class A
+
+operations
+
+  getn: nat ==> nat
+  getn(n) ==
+  (
+      return 1;
+  );
+
+traces
+    T2: 
+        || (getn(1), getn(true)); 
+
+end A

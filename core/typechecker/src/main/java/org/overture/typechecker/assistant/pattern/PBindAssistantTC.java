@@ -24,11 +24,12 @@ package org.overture.typechecker.assistant.pattern;
 import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.patterns.PBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class PBindAssistantTC
+public class PBindAssistantTC implements IAstAssistant
 {
 	protected ITypeCheckerAssistantFactory af;
 

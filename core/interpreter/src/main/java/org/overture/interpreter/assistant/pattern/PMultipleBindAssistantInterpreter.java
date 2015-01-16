@@ -1,6 +1,7 @@
 package org.overture.interpreter.assistant.pattern;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.Context;
@@ -9,7 +10,7 @@ import org.overture.interpreter.runtime.ValueException;
 import org.overture.interpreter.values.ValueList;
 import org.overture.typechecker.assistant.pattern.PMultipleBindAssistantTC;
 
-public class PMultipleBindAssistantInterpreter extends PMultipleBindAssistantTC
+public class PMultipleBindAssistantInterpreter extends PMultipleBindAssistantTC implements IAstAssistant
 {
 	protected static IInterpreterAssistantFactory af;
 

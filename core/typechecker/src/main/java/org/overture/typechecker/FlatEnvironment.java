@@ -80,7 +80,7 @@ public class FlatEnvironment extends Environment
 	{
 		PDefinition def = af.createPDefinitionListAssistant().findName(definitions, name, scope);
 
-		if (def != null)
+		if (def != null && !ExcludedDefinitions.isExcluded(def))
 		{
 			return def;
 		}

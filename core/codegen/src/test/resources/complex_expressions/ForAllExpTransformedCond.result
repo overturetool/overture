@@ -20,7 +20,7 @@ public class Entry {
             for (Iterator iterator_2 = set_2.iterator();
                     iterator_2.hasNext() && forAllExpResult_2;) {
                 Number y = ((Number) iterator_2.next());
-                forAllExpResult_2 = 1L == 1L;
+                forAllExpResult_2 = Utils.equals(1L, 1L);
             }
 
             forAllExpResult_1 = forAllExpResult_2;

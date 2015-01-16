@@ -22,9 +22,11 @@
 package org.overture.codegen.visitor;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AAssignmentDefinition;
+import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
@@ -32,102 +34,8 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
-import org.overture.ast.expressions.AAbsoluteUnaryExp;
-import org.overture.ast.expressions.AAndBooleanBinaryExp;
-import org.overture.ast.expressions.AApplyExp;
-import org.overture.ast.expressions.ABooleanConstExp;
-import org.overture.ast.expressions.ACardinalityUnaryExp;
-import org.overture.ast.expressions.ACaseAlternative;
-import org.overture.ast.expressions.ACasesExp;
-import org.overture.ast.expressions.ACharLiteralExp;
-import org.overture.ast.expressions.ADistConcatUnaryExp;
-import org.overture.ast.expressions.ADistIntersectUnaryExp;
-import org.overture.ast.expressions.ADistMergeUnaryExp;
-import org.overture.ast.expressions.ADistUnionUnaryExp;
-import org.overture.ast.expressions.ADivNumericBinaryExp;
-import org.overture.ast.expressions.ADivideNumericBinaryExp;
-import org.overture.ast.expressions.ADomainResByBinaryExp;
-import org.overture.ast.expressions.ADomainResToBinaryExp;
-import org.overture.ast.expressions.AElementsUnaryExp;
-import org.overture.ast.expressions.AElseIfExp;
-import org.overture.ast.expressions.AEqualsBinaryExp;
-import org.overture.ast.expressions.AEquivalentBooleanBinaryExp;
-import org.overture.ast.expressions.AExists1Exp;
-import org.overture.ast.expressions.AExistsExp;
-import org.overture.ast.expressions.AFieldExp;
-import org.overture.ast.expressions.AFieldNumberExp;
-import org.overture.ast.expressions.AFloorUnaryExp;
-import org.overture.ast.expressions.AForAllExp;
-import org.overture.ast.expressions.AFuncInstatiationExp;
-import org.overture.ast.expressions.AGreaterEqualNumericBinaryExp;
-import org.overture.ast.expressions.AGreaterNumericBinaryExp;
-import org.overture.ast.expressions.AHeadUnaryExp;
-import org.overture.ast.expressions.AIfExp;
-import org.overture.ast.expressions.AImpliesBooleanBinaryExp;
-import org.overture.ast.expressions.AInSetBinaryExp;
-import org.overture.ast.expressions.AIndicesUnaryExp;
-import org.overture.ast.expressions.AIntLiteralExp;
-import org.overture.ast.expressions.AIsOfClassExp;
-import org.overture.ast.expressions.ALambdaExp;
-import org.overture.ast.expressions.ALenUnaryExp;
-import org.overture.ast.expressions.ALessEqualNumericBinaryExp;
-import org.overture.ast.expressions.ALessNumericBinaryExp;
-import org.overture.ast.expressions.ALetBeStExp;
-import org.overture.ast.expressions.ALetDefExp;
-import org.overture.ast.expressions.AMapCompMapExp;
-import org.overture.ast.expressions.AMapDomainUnaryExp;
-import org.overture.ast.expressions.AMapEnumMapExp;
-import org.overture.ast.expressions.AMapInverseUnaryExp;
-import org.overture.ast.expressions.AMapRangeUnaryExp;
-import org.overture.ast.expressions.AMapUnionBinaryExp;
-import org.overture.ast.expressions.AMapletExp;
-import org.overture.ast.expressions.AMkBasicExp;
-import org.overture.ast.expressions.AMkTypeExp;
-import org.overture.ast.expressions.AModNumericBinaryExp;
-import org.overture.ast.expressions.ANewExp;
-import org.overture.ast.expressions.ANilExp;
-import org.overture.ast.expressions.ANotEqualBinaryExp;
-import org.overture.ast.expressions.ANotInSetBinaryExp;
-import org.overture.ast.expressions.ANotUnaryExp;
-import org.overture.ast.expressions.ANotYetSpecifiedExp;
-import org.overture.ast.expressions.AOrBooleanBinaryExp;
-import org.overture.ast.expressions.APlusNumericBinaryExp;
-import org.overture.ast.expressions.APlusPlusBinaryExp;
-import org.overture.ast.expressions.APostOpExp;
-import org.overture.ast.expressions.APowerSetUnaryExp;
-import org.overture.ast.expressions.APreOpExp;
-import org.overture.ast.expressions.AProperSubsetBinaryExp;
-import org.overture.ast.expressions.AQuoteLiteralExp;
-import org.overture.ast.expressions.ARangeResByBinaryExp;
-import org.overture.ast.expressions.ARangeResToBinaryExp;
-import org.overture.ast.expressions.ARealLiteralExp;
-import org.overture.ast.expressions.ARemNumericBinaryExp;
-import org.overture.ast.expressions.AReverseUnaryExp;
-import org.overture.ast.expressions.ASelfExp;
-import org.overture.ast.expressions.ASeqCompSeqExp;
-import org.overture.ast.expressions.ASeqConcatBinaryExp;
-import org.overture.ast.expressions.ASeqEnumSeqExp;
-import org.overture.ast.expressions.ASetCompSetExp;
-import org.overture.ast.expressions.ASetDifferenceBinaryExp;
-import org.overture.ast.expressions.ASetEnumSetExp;
-import org.overture.ast.expressions.ASetIntersectBinaryExp;
-import org.overture.ast.expressions.ASetRangeSetExp;
-import org.overture.ast.expressions.ASetUnionBinaryExp;
-import org.overture.ast.expressions.AStarStarBinaryExp;
-import org.overture.ast.expressions.AStringLiteralExp;
-import org.overture.ast.expressions.ASubclassResponsibilityExp;
-import org.overture.ast.expressions.ASubseqExp;
-import org.overture.ast.expressions.ASubsetBinaryExp;
-import org.overture.ast.expressions.ASubtractNumericBinaryExp;
-import org.overture.ast.expressions.ATailUnaryExp;
-import org.overture.ast.expressions.AThreadIdExp;
-import org.overture.ast.expressions.ATimesNumericBinaryExp;
-import org.overture.ast.expressions.ATupleExp;
-import org.overture.ast.expressions.AUnaryMinusUnaryExp;
-import org.overture.ast.expressions.AUnaryPlusUnaryExp;
-import org.overture.ast.expressions.AVariableExp;
-import org.overture.ast.expressions.PExp;
-import org.overture.ast.expressions.SBinaryExp;
+import org.overture.ast.expressions.*;
+import org.overture.ast.intf.lex.ILexToken;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ASetMultipleBind;
@@ -145,6 +53,7 @@ import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SSeqType;
 import org.overture.codegen.cgast.SBindCG;
 import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.SModifierCG;
 import org.overture.codegen.cgast.SMultipleBindCG;
 import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.STypeCG;
@@ -153,6 +62,7 @@ import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
+import org.overture.codegen.cgast.expressions.ACardUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ACaseAltExpExpCG;
 import org.overture.codegen.cgast.expressions.ACasesExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
@@ -181,12 +91,14 @@ import org.overture.codegen.cgast.expressions.AForAllQuantifierExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AHeadUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AHistoryExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AInSetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AIndicesUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ALambdaExpCG;
+import org.overture.codegen.cgast.expressions.ALenUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessEqualNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ALetBeStExpCG;
@@ -214,6 +126,8 @@ import org.overture.codegen.cgast.expressions.ARangeResByBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ARangeResToBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ARangeSetExpCG;
 import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
+import org.overture.codegen.cgast.expressions.ARecordModExpCG;
+import org.overture.codegen.cgast.expressions.ARecordModifierCG;
 import org.overture.codegen.cgast.expressions.AReverseUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ASelfExpCG;
 import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
@@ -223,13 +137,14 @@ import org.overture.codegen.cgast.expressions.ASetIntersectBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetProperSubsetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetSubsetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetUnionBinaryExpCG;
-import org.overture.codegen.cgast.expressions.ASizeUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ASubSeqExpCG;
 import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ASuperVarExpCG;
 import org.overture.codegen.cgast.expressions.ATailUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
 import org.overture.codegen.cgast.expressions.AThreadIdExpCG;
+import org.overture.codegen.cgast.expressions.ATimeExpCG;
 import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATupleExpCG;
 import org.overture.codegen.cgast.expressions.AXorBoolBinaryExpCG;
@@ -243,7 +158,6 @@ import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.logging.Logger;
-import org.overture.typechecker.assistant.type.PTypeAssistantTC;
 
 public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 {
@@ -271,7 +185,14 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	{
 		return new ANotImplementedExpCG();
 	}
-
+	
+	@Override
+	public SExpCG caseATimeExp(ATimeExp node, IRInfo question)
+			throws AnalysisException
+	{
+		return new ATimeExpCG();
+	}
+	
 	@Override
 	public SExpCG caseAThreadIdExp(AThreadIdExp node, IRInfo question)
 			throws AnalysisException
@@ -324,6 +245,46 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 
 		return mkBasicExp;
 	}
+	
+	@Override
+	public SExpCG caseAIsExp(AIsExp node, IRInfo question)
+			throws AnalysisException
+	{
+		//TODO: Optional types and collection types are not yet supported.
+		//Also check the IsExpTransformation
+		
+		PType checkedType = node.getBasicType();
+		
+		if(checkedType == null)
+		{
+			checkedType = question.getTcFactory().createPDefinitionAssistant().getType(node.getTypedef());
+		}
+		
+		PExp exp = node.getTest();
+		SExpCG expCg = exp.apply(question.getExpVisitor(), question);
+		
+		if(expCg == null)
+		{
+			return null;
+		}
+		
+		STypeCG checkedTypeCg = checkedType.apply(question.getTypeVisitor(), question);
+		
+		if(checkedTypeCg == null)
+		{
+			return null;
+		}
+
+		SExpCG isExp = question.getExpAssistant().consIsExp(expCg, checkedTypeCg);
+		
+		if (isExp == null)
+		{
+			question.addUnsupportedNode(node, "The 'is' expression is not supported for type: " + checkedType.getClass().getName());
+			return null;
+		}
+		
+		return isExp;
+	}
 
 	@Override
 	public SExpCG caseAIsOfClassExp(AIsOfClassExp node, IRInfo question)
@@ -360,7 +321,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseACardinalityUnaryExp(ACardinalityUnaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return question.getExpAssistant().handleUnaryExp(node, new ASizeUnaryExpCG(), question);
+		return question.getExpAssistant().handleUnaryExp(node, new ACardUnaryExpCG(), question);
 	}
 
 	@Override
@@ -797,6 +758,52 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	{
 		return question.getExpAssistant().consLetDefExp(node, node.getLocalDefs(), node.getExpression(), node.getType(), question, "Generation of a let expression is not supported in assignments");
 	}
+	
+	@Override
+	public SExpCG caseAMuExp(AMuExp node, IRInfo question)
+			throws AnalysisException
+	{
+		PType type = node.getType();
+		ARecordInvariantType recType = node.getRecordType();
+		PExp rec = node.getRecord();
+		List<ARecordModifier> modifiers = node.getModifiers();
+		
+		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		STypeCG recTypeCg = recType.apply(question.getTypeVisitor(), question);
+		
+		if(!(recTypeCg instanceof ARecordTypeCG))
+		{
+			question.addUnsupportedNode(node, "Expected a record type. Got: " + recTypeCg);
+			return null;
+		}
+		
+		SExpCG recCg = rec.apply(question.getExpVisitor(), question);
+		
+		List<ARecordModifierCG> modifiersCg = new LinkedList<ARecordModifierCG>();
+		
+		for(ARecordModifier m : modifiers)
+		{
+			SModifierCG modifier = m.apply(question.getModifierVisitor(), question);
+			
+			if(modifier instanceof ARecordModifierCG)
+			{
+				modifiersCg.add((ARecordModifierCG) modifier);
+			} else
+			{
+				question.addUnsupportedNode(node, "Expected modifier to be a record modifier for the 'mu' expression. Got: " + modifier);
+				return null;
+			}
+			
+		}
+		
+		ARecordModExpCG recModExp = new ARecordModExpCG();
+		recModExp.setType(typeCg);
+		recModExp.setRecType((ARecordTypeCG) recTypeCg);
+		recModExp.setRec(recCg);
+		recModExp.setModifiers(modifiersCg);
+		
+		return recModExp;
+	}
 
 	@Override
 	public SExpCG caseAMkTypeExp(AMkTypeExp node, IRInfo question)
@@ -836,6 +843,8 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 
 		return newExp;
 	}
+	
+	
 
 	@Override
 	public SExpCG caseASelfExp(ASelfExp node, IRInfo question)
@@ -1185,6 +1194,12 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		for (PExp member : members)
 		{
 			SExpCG memberCg = member.apply(question.getExpVisitor(), question);
+			
+			if(memberCg == null)
+			{
+				return null;
+			}
+			
 			enumSeq.getMembers().add(memberCg);
 		}
 
@@ -1282,14 +1297,30 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 
 		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 
-		PTypeAssistantTC typeAssistant = question.getTcFactory().createPTypeAssistant();
-
-		boolean isLambda = typeAssistant.isFunction(type)
-				&& !(varDef instanceof SFunctionDefinition);
-
+		PDefinition unfolded = varDef;
+		
+		while(unfolded instanceof AInheritedDefinition)
+		{
+			unfolded = ((AInheritedDefinition) unfolded).getSuperdef();
+		}
+		
+		boolean isLambda = question.getTcFactory().createPTypeAssistant().isFunction(type)
+				&& !(unfolded instanceof SFunctionDefinition);
+		
 		boolean isInheritedDef = varDef instanceof AInheritedDefinition;
 
-		if (owningClass == null
+		if(isExplOp && !isDefInOwningClass && !question.getTcFactory().createPDefinitionAssistant().isStatic(varDef))
+		{
+			ASuperVarExpCG superVarExp = new ASuperVarExpCG();
+
+			superVarExp.setType(typeCg);
+			superVarExp.setIsLocal(isLocalDef);
+			superVarExp.setName(name);
+			superVarExp.setIsLambda(isLambda);
+
+			return superVarExp;
+		}
+		else if (owningClass == null
 				|| nodeParentClass == null
 				|| isDefInOwningClass
 				|| isInheritedDef
@@ -1300,7 +1331,8 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			AIdentifierVarExpCG varExp = new AIdentifierVarExpCG();
 
 			varExp.setType(typeCg);
-			varExp.setOriginal(name);
+			varExp.setIsLocal(isLocalDef);
+			varExp.setName(name);
 			varExp.setIsLambda(isLambda);
 
 			return varExp;
@@ -1314,6 +1346,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			classType.setName(className);
 
 			varExp.setType(typeCg);
+			varExp.setIsLocal(isLocalDef);
 			varExp.setClassType(classType);
 			varExp.setName(name);
 			varExp.setIsLambda(isLambda);
@@ -1614,7 +1647,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseALenUnaryExp(ALenUnaryExp node, IRInfo question)
 			throws AnalysisException
 	{
-		return question.getExpAssistant().handleUnaryExp(node, new ASizeUnaryExpCG(), question);
+		return question.getExpAssistant().handleUnaryExp(node, new ALenUnaryExpCG(), question);
 	}
 
 	@Override
@@ -1790,5 +1823,87 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		}
 
 		return lambdaExp;
+	}
+	
+	@Override
+	public SExpCG caseAHistoryExp(AHistoryExp node, IRInfo question)
+			throws AnalysisException
+	{
+		PType type = node.getType();
+		ILexToken hop = node.getHop();
+		
+		AClassClassDefinition enclosingClass = node.getAncestor(AClassClassDefinition.class);	
+		
+		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		
+		AHistoryExpCG history = new AHistoryExpCG();
+		
+		history.setHistype(hop.toString().substring(1));
+		history.setType(typeCg);
+		
+		AClassTypeCG innerclassType = null;
+		
+		if(enclosingClass != null)
+		{
+			innerclassType = new AClassTypeCG();
+			innerclassType.setName(enclosingClass.getName() + "_sentinel");
+			history.setSentinelType(innerclassType);
+		}
+		else
+		{
+			String msg = "Enclosing class could not be found for history expression.";
+			Logger.getLog().printErrorln(msg);
+			question.addUnsupportedNode(node, msg);
+			
+			return null;
+		}
+		
+		history.setOpsname(node.getOpnames().getFirst().getName());
+		
+		if(node.getOpnames().size() == 1)
+		{
+			return history;
+			
+		}
+		else
+		{
+			APlusNumericBinaryExpCG historyCounterSum = new APlusNumericBinaryExpCG();
+			historyCounterSum.setType(typeCg.clone());
+			historyCounterSum.setLeft(history);
+
+			APlusNumericBinaryExpCG last = historyCounterSum;
+			
+			for(int i = 1; i < node.getOpnames().size() - 1; i++){
+				
+				String nextOpName = node.getOpnames().get(i).toString();
+				
+				AHistoryExpCG left = new AHistoryExpCG();
+				left.setType(typeCg.clone());
+				left.setSentinelType(innerclassType.clone());
+				left.setHistype(hop.toString().substring(1));
+				left.setOpsname(nextOpName);
+				
+				APlusNumericBinaryExpCG tmp = new APlusNumericBinaryExpCG();
+				tmp.setType(typeCg.clone());
+				tmp.setLeft(left);
+				
+				last.setRight(tmp);
+				
+				last = tmp;
+
+			}
+			
+			String lastOpName = node.getOpnames().getLast().toString();
+			
+			AHistoryExpCG lastHistoryExp = new AHistoryExpCG();
+			lastHistoryExp.setType(typeCg.clone());
+			lastHistoryExp.setSentinelType(innerclassType.clone());
+			lastHistoryExp.setHistype(hop.toString().substring(1));
+			lastHistoryExp.setOpsname(lastOpName);
+			
+			last.setRight(lastHistoryExp);
+			
+			return historyCounterSum;
+		}
 	}
 }

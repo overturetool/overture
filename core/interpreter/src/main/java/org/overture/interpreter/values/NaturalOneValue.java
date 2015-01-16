@@ -23,6 +23,8 @@
 
 package org.overture.interpreter.values;
 
+import java.util.Set;
+
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.messages.InternalException;
 import org.overture.ast.types.ANatOneNumericBasicType;
@@ -50,7 +52,7 @@ public class NaturalOneValue extends NaturalValue
 	}
 
 	@Override
-	public Value convertValueTo(PType to, Context ctxt)
+	protected Value convertValueTo(PType to, Context ctxt, Set<PType> done)
 			throws AnalysisException
 	{
 		if (to instanceof ANatOneNumericBasicType)
@@ -58,7 +60,7 @@ public class NaturalOneValue extends NaturalValue
 			return this;
 		} else
 		{
-			return super.convertValueTo(to, ctxt);
+			return super.convertValueTo(to, ctxt, done);
 		}
 	}
 

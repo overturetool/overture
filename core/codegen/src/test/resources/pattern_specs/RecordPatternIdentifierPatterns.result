@@ -40,10 +40,11 @@ public class Entry {
         return new Rec(n1, b2, c1, r2);
     }
 
-    public static VDMSeq Run() {
-        return SeqUtil.seq(new Entry().recPatternOp(
-                new Rec(77L, false, 'e', 4.4)),
-            recPatternFun(new Rec(77L, false, 'e', 4.4)));
+    public static Object Run() {
+        Rec a = new Entry().recPatternOp(new Rec(77L, false, 'e', 4.4));
+        Rec b = recPatternFun(new Rec(77L, false, 'e', 4.4));
+
+        return SeqUtil.seq(a.n, a.b, a.c, a.r, b.n, b.b, b.c, b.r);
     }
 
     public static Rec recPatternFun(final Rec recordPattern_3) {
@@ -104,8 +105,8 @@ public class Entry {
 
             Rec other = ((Rec) obj);
 
-            return (n.longValue() == other.n.longValue()) && (b == other.b) &&
-            (c == other.c) && (r.doubleValue() == other.r.doubleValue());
+            return (Utils.equals(n, other.n)) && (Utils.equals(b, other.b)) &&
+            (Utils.equals(c, other.c)) && (Utils.equals(r, other.r));
         }
 
         public int hashCode() {
@@ -117,7 +118,7 @@ public class Entry {
         }
 
         public String toString() {
-            return Utils.recordToString(this, n, b, c, r);
+            return "mk_Entry`Rec" + Utils.formatFields(n, b, c, r);
         }
     }
 }

@@ -38,7 +38,7 @@ public class PTraceDefinitionAssistantTC
 	{
 		this.af = af;
 	}
-
+//FIXME only used once. move it
 	public void typeCheck(List<PTraceDefinition> term,
 			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
 			TypeCheckInfo question) throws AnalysisException

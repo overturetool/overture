@@ -1,7 +1,5 @@
 import org.overture.codegen.runtime.*;
 
-import quotes.*;
-
 import java.util.*;
 
 
@@ -10,9 +8,9 @@ public class Entry {
     }
 
     public static Object Run() {
-        Number a = Quotes.A;
+        quotes.A a = quotes.A.getInstance();
 
-        return a.longValue() == Quotes.A.longValue();
+        return Utils.equals(a, quotes.A.getInstance());
     }
 
     public String toString() {
@@ -21,11 +19,6 @@ public class Entry {
 }
 
 ##########
-
-package quotes;
-
-public interface Quotes {
-    public static Number A = 1L;
-}
-
+*Quotes*
+A
 ##########

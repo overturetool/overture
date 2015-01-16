@@ -12,6 +12,7 @@ public class Entry {
     }
 
     public static Number f() {
+        Number letBeStExp_1 = null;
         Tuple tuplePattern_1 = null;
         Boolean success_1 = false;
         VDMSet set_1 = SetUtil.set(Tuple.mk_(1L, 11L), Tuple.mk_(2L, 22L),
@@ -27,7 +28,7 @@ public class Entry {
                 a = ((Number) tuplePattern_1.get(0));
 
                 Number intPattern_1 = ((Number) tuplePattern_1.get(1));
-                success_1 = intPattern_1.longValue() == 33L;
+                success_1 = Utils.equals(intPattern_1, 33L);
             }
 
             if (!(success_1)) {
@@ -41,7 +42,7 @@ public class Entry {
             throw new RuntimeException("Let Be St found no applicable bindings");
         }
 
-        Number letBeStExp_1 = a;
+        letBeStExp_1 = a;
 
         return letBeStExp_1;
     }

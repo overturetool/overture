@@ -20,7 +20,7 @@ public class Entry {
             for (Iterator iterator_2 = set_2.iterator();
                     iterator_2.hasNext() && forAllExpResult_1;) {
                 Number y = ((Number) iterator_2.next());
-                forAllExpResult_1 = 1L == 1L;
+                forAllExpResult_1 = Utils.equals(1L, 1L);
             }
 
             if (forAllExpResult_1) {
@@ -28,7 +28,7 @@ public class Entry {
             }
         }
 
-        return exists1Counter_1.longValue() == 1L;
+        return Utils.equals(exists1Counter_1, 1L);
     }
 
     public String toString() {

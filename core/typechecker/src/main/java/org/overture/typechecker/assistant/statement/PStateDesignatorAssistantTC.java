@@ -21,6 +21,7 @@
  */
 package org.overture.typechecker.assistant.statement;
 
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.PStateDesignator;
@@ -28,7 +29,7 @@ import org.overture.ast.typechecker.NameScope;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class PStateDesignatorAssistantTC
+public class PStateDesignatorAssistantTC implements IAstAssistant
 {
 	protected ITypeCheckerAssistantFactory af;
 
@@ -37,6 +38,7 @@ public class PStateDesignatorAssistantTC
 		this.af = af;
 	}
 
+	//FIXME: only used once. move it
 	public PDefinition targetDefinition(PStateDesignator pStateDesignator,
 			TypeCheckInfo question)
 	{

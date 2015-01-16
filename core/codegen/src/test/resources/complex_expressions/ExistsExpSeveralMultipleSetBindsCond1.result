@@ -37,7 +37,7 @@ public class Entry {
                                     iterator_6.hasNext() &&
                                     !(existsExpResult_1);) {
                                 Number f = ((Number) iterator_6.next());
-                                existsExpResult_1 = 1L == 1L;
+                                existsExpResult_1 = Utils.equals(1L, 1L);
                             }
                         }
                     }

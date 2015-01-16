@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.overturetool</groupId>
     <artifactId>ide</artifactId>
-    <version>2.1.3-SNAPSHOT</version>
+    <version>2.1.5-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -29,17 +29,18 @@
     <module>rttraceviewer</module>
 	<module>codegen</module>
 	<module>prob-runtime</module>
+	<module>guibuilder</module>
     <!-- features last -->
     <module>features</module>
   </modules>
   
   <profiles>
     <profile>
-	<!-- This profile enabled UI tests. Must not be enabled if running on terminal server with no UI -->
+      <!-- This profile enabled UI tests. Must not be enabled if running on terminal server with no UI -->
       <id>ui-tests</id>
-	  <activation>
-		<activeByDefault>true</activeByDefault>
-		</activation>
+      <activation>
+	<activeByDefault>false</activeByDefault>
+      </activation>
       <modules>
         <module>uml2.tests</module>
       </modules>

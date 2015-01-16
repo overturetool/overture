@@ -1,6 +1,1 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.interpreter.tests.InterpreterStringPpTestCase">
-<result>
-<output object="true" resource="memoryproofPP" value="true"/>
-</result>
-</testResult>
+{"result":"true","warnings":[],"errors":[]}

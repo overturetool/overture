@@ -1,0 +1,16 @@
+class Entry
+
+functions
+
+public f : real -> real
+f (x) == x;
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let x = 1.1
+in
+  return f(-x);
+
+end Entry

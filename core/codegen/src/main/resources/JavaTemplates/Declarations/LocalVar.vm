@@ -1,3 +1,8 @@
+#set( $final = "")
+#if ( $node.getFinal() )
+	#set( $final = "final")
+#end
+##
 #set( $end = ";")
 #if ( $JavaFormat.isLoopVar($node) )
 	#set( $end = "")
@@ -5,4 +10,4 @@
 ##
 #set( $pattern = $JavaFormat.format($node.getPattern()) )
 ##
-$JavaFormat.format($node.getType()) $pattern = $JavaFormat.format($node.getExp())${end}
+${final} $JavaFormat.format($node.getType()) $pattern = $JavaFormat.format($node.getExp())${end}

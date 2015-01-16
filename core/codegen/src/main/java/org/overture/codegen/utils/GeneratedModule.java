@@ -25,7 +25,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.overture.codegen.cgast.SDeclCG;
-import org.overture.codegen.ir.NodeInfo;
+import org.overture.codegen.ir.IrNodeInfo;
+import org.overture.codegen.ir.VdmNodeInfo;
 
 public class GeneratedModule extends Generated
 {
@@ -39,9 +40,9 @@ public class GeneratedModule extends Generated
 		this.irDecl = irDecl;
 	}
 
-	public GeneratedModule(String name, Set<NodeInfo> unsupportedNodes)
+	public GeneratedModule(String name, Set<VdmNodeInfo> unsupportedIrNodes, Set<IrNodeInfo> unsupportedInTargLang)
 	{
-		super(unsupportedNodes);
+		super(unsupportedIrNodes, unsupportedInTargLang);
 		this.name = name;
 	}
 

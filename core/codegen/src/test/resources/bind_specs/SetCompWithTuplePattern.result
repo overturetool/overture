@@ -26,7 +26,7 @@ public class Entry {
 
             if (success_1) {
                 Number intPattern_1 = ((Number) tuplePattern_1.get(0));
-                success_1 = intPattern_1.longValue() == 1L;
+                success_1 = Utils.equals(intPattern_1, 1L);
 
                 if (success_1) {
                     Tuple tuplePattern_2 = Utils.clone(((Tuple) tuplePattern_1.get(
@@ -36,7 +36,7 @@ public class Entry {
 
                     if (success_1) {
                         Number intPattern_2 = ((Number) tuplePattern_2.get(0));
-                        success_1 = intPattern_2.longValue() == 2L;
+                        success_1 = Utils.equals(intPattern_2, 2L);
 
                         if (success_1) {
                             a = ((Number) tuplePattern_2.get(1));
@@ -49,7 +49,7 @@ public class Entry {
                 continue;
             }
 
-            if (1L == 1L) {
+            if (Utils.equals(1L, 1L)) {
                 setCompResult_1 = SetUtil.union(Utils.clone(setCompResult_1),
                         SetUtil.set(a));
             }

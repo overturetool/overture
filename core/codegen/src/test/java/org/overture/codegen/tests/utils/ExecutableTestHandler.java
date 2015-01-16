@@ -23,15 +23,17 @@ package org.overture.codegen.tests.utils;
 
 import java.io.File;
 
+import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.interpreter.values.Value;
 
 public abstract class ExecutableTestHandler extends TestHandler
 {
-	public ExecutableTestHandler(Release release)
+	public ExecutableTestHandler(Release release, Dialect dialect)
 	{
 		Settings.release = release;
+		Settings.dialect = dialect;
 	}
 
 	public abstract Value interpretVdm(File intputFile) throws Exception;

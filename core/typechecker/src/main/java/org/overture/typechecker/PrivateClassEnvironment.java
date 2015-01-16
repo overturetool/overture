@@ -68,7 +68,7 @@ public class PrivateClassEnvironment extends Environment
 	{
 		PDefinition def = af.createPDefinitionAssistant().findName(classdef, sought, scope);
 
-		if (def != null)
+		if (def != null && !ExcludedDefinitions.isExcluded(def))
 		{
 			return def;
 		}

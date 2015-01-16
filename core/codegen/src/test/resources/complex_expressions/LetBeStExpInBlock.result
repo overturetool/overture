@@ -8,6 +8,7 @@ public class Entry {
     }
 
     public static Number Run() {
+        Number letBeStExp_1 = null;
         Number x = null;
         Boolean success_1 = false;
         VDMSet set_1 = SetUtil.set(9L);
@@ -15,14 +16,14 @@ public class Entry {
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && !(success_1);) {
             x = ((Number) iterator_1.next());
-            success_1 = x.longValue() == 9L;
+            success_1 = Utils.equals(x, 9L);
         }
 
         if (!(success_1)) {
             throw new RuntimeException("Let Be St found no applicable bindings");
         }
 
-        Number letBeStExp_1 = x;
+        letBeStExp_1 = x;
 
         Number a = letBeStExp_1;
 

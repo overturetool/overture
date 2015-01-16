@@ -12,6 +12,7 @@ public class Entry {
     }
 
     public static Number fun() {
+        Number letBeStExp_1 = null;
         Tuple tuplePattern_1 = null;
         Tuple tuplePattern_2 = null;
         Boolean success_1 = false;
@@ -30,7 +31,7 @@ public class Entry {
                 a = ((Number) tuplePattern_1.get(0));
 
                 Number intPattern_1 = ((Number) tuplePattern_1.get(1));
-                success_1 = intPattern_1.longValue() == 1L;
+                success_1 = Utils.equals(intPattern_1, 1L);
             }
 
             if (!(success_1)) {
@@ -46,7 +47,7 @@ public class Entry {
 
                 if (success_1) {
                     Number intPattern_2 = ((Number) tuplePattern_2.get(0));
-                    success_1 = intPattern_2.longValue() == 2L;
+                    success_1 = Utils.equals(intPattern_2, 2L);
 
                     if (success_1) {
                         b = ((Number) tuplePattern_2.get(1));
@@ -65,7 +66,7 @@ public class Entry {
             throw new RuntimeException("Let Be St found no applicable bindings");
         }
 
-        Number letBeStExp_1 = a.longValue() + b.longValue();
+        letBeStExp_1 = a.longValue() + b.longValue();
 
         return letBeStExp_1;
     }

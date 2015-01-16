@@ -26,12 +26,17 @@ public interface ICodeGenConstants
 	public static final String PLUGIN_ID = "org.overture.ide.plugins.codegen";
 	public static final String CONSOLE_NAME = "Code Generator Console";
 
-	public static final String GENERATE_CHAR_SEQUENCES_AS_STRINGS = "org.overture.ide.plugins.codegen"
+	public static final String GENERATE_CHAR_SEQUENCES_AS_STRINGS = PLUGIN_ID
 			+ ".char_sequences_as_strings";
 	public static final boolean GENERATE_CHAR_SEQUENCES_AS_STRING_DEFAULT = true;
 
-	public static final String DISABLE_CLONING = "org.overture.ide.plugins.codegen"
-			+ ".disable_cloning";
+	public static final String DISABLE_CLONING = PLUGIN_ID + ".disable_cloning";
 	public static final boolean DISABLE_CLONING_DEFAULT = false;
+	
+	public static final String GENERATE_CONCURRENCY_MECHANISMS = PLUGIN_ID + ".concurrency_mechanisms";
+	public static final boolean GENERATE_CONCURRENCY_MECHANISMS_DEFAULT = false;
+
+	public static final String CLASSES_TO_SKIP = PLUGIN_ID + ".classes_to_skip";
+	public static final String CLASSES_TO_SKIP_DEFAULT = "";
 
 }

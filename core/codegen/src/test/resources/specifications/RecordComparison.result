@@ -29,7 +29,7 @@ public class A {
 
             R other = ((R) obj);
 
-            return x.longValue() == other.x.longValue();
+            return Utils.equals(x, other.x);
         }
 
         public int hashCode() {
@@ -41,7 +41,7 @@ public class A {
         }
 
         public String toString() {
-            return Utils.recordToString(this, x);
+            return "mk_A`R" + Utils.formatFields(x);
         }
     }
 }

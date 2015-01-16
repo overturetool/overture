@@ -1,0 +1,31 @@
+class A
+
+operations
+
+public op :  () ==> nat
+op () == return 1;
+
+end A
+
+class B is subclass of A
+
+operations
+
+public op :  () ==> nat
+op () == A`op()
+
+end B
+
+class Entry
+
+types
+
+operations
+
+public static Run : () ==> nat
+Run () ==
+let b = new B()
+in
+	b.op();
+
+end Entry

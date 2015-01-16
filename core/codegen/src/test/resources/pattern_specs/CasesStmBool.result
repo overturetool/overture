@@ -9,11 +9,11 @@ public class Entry {
 
     public static Boolean casesBool(final Boolean b) {
         Boolean boolPattern_1 = b;
-        Boolean success_1 = boolPattern_1 == true;
+        Boolean success_1 = Utils.equals(boolPattern_1, true);
 
         if (!(success_1)) {
             Boolean boolPattern_2 = b;
-            success_1 = boolPattern_2 == false;
+            success_1 = Utils.equals(boolPattern_2, false);
 
             if (success_1) {
                 return true;

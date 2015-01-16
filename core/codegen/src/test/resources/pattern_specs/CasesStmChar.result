@@ -9,11 +9,11 @@ public class Entry {
 
     public static Character casesChar(final Character c) {
         Character charPattern_1 = c;
-        Boolean success_1 = charPattern_1 == 'a';
+        Boolean success_1 = Utils.equals(charPattern_1, 'a');
 
         if (!(success_1)) {
             Character charPattern_2 = c;
-            success_1 = charPattern_2 == 'b';
+            success_1 = Utils.equals(charPattern_2, 'b');
 
             if (success_1) {
                 return 'y';

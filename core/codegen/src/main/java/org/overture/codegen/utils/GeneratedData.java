@@ -23,21 +23,26 @@ package org.overture.codegen.utils;
 
 import java.util.List;
 
+import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 
 public class GeneratedData
 {
 	private List<GeneratedModule> classes;
-	private GeneratedModule quoteValues;
+	private List<GeneratedModule> quoteValues;
 	private InvalidNamesResult invalidNamesResult;
+	private List<String> skippedClasses;
+	private List<Renaming> allRenamings;
 
 	public GeneratedData(List<GeneratedModule> classes,
-			GeneratedModule quoteValues, InvalidNamesResult invalidNamesResult)
+			List<GeneratedModule> quoteValues, InvalidNamesResult invalidNamesResult, List<String> skippedClasses, List<Renaming> allRenamings)
 	{
 		super();
 		this.classes = classes;
 		this.quoteValues = quoteValues;
 		this.invalidNamesResult = invalidNamesResult;
+		this.skippedClasses = skippedClasses;
+		this.allRenamings = allRenamings;
 	}
 
 	public List<GeneratedModule> getClasses()
@@ -45,7 +50,7 @@ public class GeneratedData
 		return classes;
 	}
 
-	public GeneratedModule getQuoteValues()
+	public List<GeneratedModule> getQuoteValues()
 	{
 		return quoteValues;
 	}
@@ -53,5 +58,15 @@ public class GeneratedData
 	public InvalidNamesResult getInvalidNamesResult()
 	{
 		return invalidNamesResult;
+	}
+	
+	public List<String> getSkippedClasses()
+	{
+		return skippedClasses;
+	}
+	
+	public List<Renaming> getAllRenamings()
+	{
+		return allRenamings;
 	}
 }

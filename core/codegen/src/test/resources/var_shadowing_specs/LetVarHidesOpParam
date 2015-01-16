@@ -1,0 +1,12 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () == op(1);
+ 
+public static op : nat ==> nat
+op (a) == 
+let a = 1 in return a + a;
+
+end Entry

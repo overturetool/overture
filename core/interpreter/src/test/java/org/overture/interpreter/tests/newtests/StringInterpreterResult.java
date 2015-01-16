@@ -3,10 +3,9 @@ package org.overture.interpreter.tests.newtests;
 import static org.junit.Assert.fail;
 
 import java.util.List;
+import java.util.Vector;
 
 import org.junit.Assert;
-import org.overture.test.framework.results.IMessage;
-import org.overture.test.framework.results.Result;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -15,16 +14,12 @@ public class StringInterpreterResult
 {
 
 	String result;
-	public final List<IMessage> warnings;
-	public final List<IMessage> errors;
+	public final List<Message> warnings;
+	public final List<Message> errors;
 
-	public static StringInterpreterResult convert(Result<String> r)
-	{
-		return new StringInterpreterResult(r.getStringResult(), r.warnings, r.errors);
-	}
 
-	public StringInterpreterResult(String result, List<IMessage> warnings,
-			List<IMessage> errors)
+	public StringInterpreterResult(String result, Vector<Message> warnings,
+			Vector<Message> errors)
 	{
 		super();
 		this.result = result;

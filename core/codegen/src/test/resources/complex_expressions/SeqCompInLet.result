@@ -18,7 +18,7 @@ public class Entry {
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
             Number x = ((Number) iterator_1.next());
 
-            if (1L == 1L) {
+            if (Utils.equals(1L, 1L)) {
                 seqCompResult_1 = SeqUtil.conc(Utils.clone(seqCompResult_1),
                         SeqUtil.seq(x.longValue() * 2L));
             }

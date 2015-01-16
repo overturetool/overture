@@ -25,14 +25,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -111,7 +109,7 @@ public abstract class CtTestCaseBase extends TestResourcesResultTestCase4
 		}
 
 		File actualResultsFile = computeActualResults(TRACE_NAME);
-
+		
 		if (Properties.recordTestResults)
 		{
 			try
@@ -120,9 +118,7 @@ public abstract class CtTestCaseBase extends TestResourcesResultTestCase4
 				resultFile.getParentFile().mkdirs();
 
 				// Overwrite result file
-				Path from = actualResultsFile.toPath();
-				Path to = resultFile.toPath();
-				Files.copy(from, to, StandardCopyOption.REPLACE_EXISTING);
+				FileUtils.copyFile(actualResultsFile, resultFile);
 
 			} catch (Exception e)
 			{

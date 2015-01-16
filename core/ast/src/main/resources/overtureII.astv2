@@ -571,7 +571,6 @@ stm {-> package='org.overture.ast.statements'
     |   {forPatternBind} [patternBind]:patternBind.def [reverse]:java_Boolean [exp]:exp [statement]:stm (seqType):type.#seq
     |   {if} [ifExp]:exp [thenStm]:stm [elseIf]:stm.elseIf* [elseStm]:stm
     |   {letBeSt} [bind]:multipleBind [suchThat]:exp [statement]:stm (def):definition.multiBindList
-    //|   #LetDef
     |	{let} [localDefs]:definition* [statement]:stm
     |   {notYetSpecified} [opname]:LexNameToken [args]:exp* /* FIXME -- these params are probably useless */
     |   {return} [expression]:exp
@@ -582,7 +581,6 @@ stm {-> package='org.overture.ast.statements'
     |   {stop} [obj]:exp
     |   {subclassResponsibility}
     |   {tixe} [traps]:stmtAlternative.tixe* [body]:stm
-    //|   {traceVariable} //TODO why does this have a value inside?
     |   {trap} [patternBind]:patternBind.def [with]:stm [body]:stm
     |   {while} [exp]:exp [statement]:stm
     |   {periodic} [opname]:LexNameToken [args]:exp* (period):java_Long (jitter):java_Long (delay):java_Long (offset):java_Long

@@ -19,13 +19,13 @@ public class Entry {
                 iterator_1.hasNext() && (exists1Counter_1.longValue() < 2L);) {
             Number x = ((Number) iterator_1.next());
 
-            if ((x.longValue() -
-                    (2L * Math.round(Math.floor(x.longValue() / 2L)))) == 0L) {
+            if (Utils.equals((x.longValue() -
+                        (2L * Math.round(Math.floor(x.longValue() / 2L)))), 0L)) {
                 exists1Counter_1++;
             }
         }
 
-        Boolean x = exists1Counter_1.longValue() == 1L;
+        Boolean x = Utils.equals(exists1Counter_1, 1L);
 
         return x;
     }

@@ -24,13 +24,14 @@ package org.overture.typechecker.visitor;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
+import java.util.Map.Entry;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
-import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
+import org.overture.ast.definitions.AMultiBindListDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.ABooleanConstExp;
@@ -629,43 +630,8 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	public PType caseALetStm(ALetStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-
-		// Each local definition is in scope for later local definitions...
-
-		Environment local = question.env;
-
-		for (PDefinition d : node.getLocalDefs())
-		{
-			if (d instanceof AExplicitFunctionDefinition)
-			{
-				// Functions' names are in scope in their bodies, whereas
-				// simple variable declarations aren't
-
-				local = new FlatCheckedEnvironment(question.assistantFactory, d, local, question.scope); // cumulative
-				question.assistantFactory.createPDefinitionAssistant().implicitDefinitions(d, local);
-				question.assistantFactory.createPDefinitionAssistant().typeResolve(d, THIS, new TypeCheckInfo(question.assistantFactory, local));
-
-				if (question.env.isVDMPP())
-				{
-					SClassDefinition cdef = question.env.findClassDefinition();
-					d.setClassDefinition(cdef);
-					d.setAccess(question.assistantFactory.createPAccessSpecifierAssistant().getStatic(d, true));
-				}
-
-				d.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
-			} else
-			{
-				question.assistantFactory.createPDefinitionAssistant().implicitDefinitions(d, local);
-				question.assistantFactory.createPDefinitionAssistant().typeResolve(d, THIS, question);
-				d.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
-				local = new FlatCheckedEnvironment(question.assistantFactory, d, local, question.scope); // cumulative
-			}
-		}
-
-		PType r = node.getStatement().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
-		local.unusedCheck(question.env);
-		node.setType(r);
-		return r;
+		node.setType(typeCheckLet(node, node.getLocalDefs(),node.getStatement(),question));
+		return node.getType();
 	}
 
 	@Override
@@ -688,25 +654,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	public PType caseAElseIfStm(AElseIfStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		if (!question.assistantFactory.createPTypeAssistant().isType(node.getElseIf().apply(THIS, question), ABooleanBasicType.class))
-		{
-			TypeCheckerErrors.report(3218, "Expression is not boolean", node.getLocation(), node);
-		}
-
-		List<QualifiedDefinition> qualified = node.getElseIf().apply(question.assistantFactory.getQualificationVisitor(), question);
-
-		for (QualifiedDefinition qdef : qualified)
-		{
-			qdef.qualifyType();
-		}
-
-		node.setType(node.getThenStm().apply(THIS, question));
-
-		for (QualifiedDefinition qdef : qualified)
-		{
-			qdef.resetType();
-		}
-
+		node.setType(typeCheckAElseIf(node, node.getLocation(), node.getElseIf(), node.getThenStm(), question));
 		return node.getType();
 	}
 
@@ -799,45 +747,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	public PType caseAIfStm(AIfStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		PType test = node.getIfExp().apply(THIS, question);
-
-		if (!question.assistantFactory.createPTypeAssistant().isType(test, ABooleanBasicType.class))
-		{
-			TypeCheckerErrors.report(3224, "If expression is not boolean", node.getIfExp().getLocation(), node.getIfExp());
-		}
-
-		List<QualifiedDefinition> qualified = node.getIfExp().apply(question.assistantFactory.getQualificationVisitor(), question);
-
-		for (QualifiedDefinition qdef : qualified)
-		{
-			qdef.qualifyType();
-		}
-
-		PTypeSet rtypes = new PTypeSet(question.assistantFactory);
-		rtypes.add(node.getThenStm().apply(THIS, question));
-
-		for (QualifiedDefinition qdef : qualified)
-		{
-			qdef.resetType();
-		}
-
-		if (node.getElseIf() != null)
-		{
-			for (AElseIfStm stmt : node.getElseIf())
-			{
-				rtypes.add(stmt.apply(THIS, question));
-			}
-		}
-
-		if (node.getElseStm() != null)
-		{
-			rtypes.add(node.getElseStm().apply(THIS, question));
-		} else
-		{
-			rtypes.add(AstFactory.newAVoidType(node.getLocation()));
-		}
-
-		node.setType(rtypes.getType(node.getLocation()));
+		node.setType(typeCheckIf(node.getLocation(), node.getIfExp(), node.getThenStm(), node.getElseIf(), node.getElseStm(), question));//rtypes.getType(node.getLocation()));
 		return node.getType();
 	}
 
@@ -845,21 +755,10 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	public PType caseALetBeStStm(ALetBeStStm node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-
-		node.setDef(AstFactory.newAMultiBindListDefinition(node.getLocation(), question.assistantFactory.createPMultipleBindAssistant().getMultipleBindList(node.getBind())));
-		node.getDef().apply(THIS, question);
-		Environment local = new FlatCheckedEnvironment(question.assistantFactory, node.getDef(), question.env, question.scope);
-
-		if (node.getSuchThat() != null
-				&& !question.assistantFactory.createPTypeAssistant().isType(node.getSuchThat().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope)), ABooleanBasicType.class))
-		{
-			TypeCheckerErrors.report(3225, "Such that clause is not boolean", node.getLocation(), node);
-		}
-
-		PType r = node.getStatement().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
-		local.unusedCheck();
-		node.setType(r);
-		return r;
+		Entry<PType, AMultiBindListDefinition> res = typecheckLetBeSt(node, node.getLocation(), node.getBind(), node.getSuchThat(), node.getStatement(), question);
+		node.setDef(res.getValue());
+		node.setType(res.getKey());
+		return node.getType();
 	}
 
 	@Override
@@ -909,11 +808,8 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 	public PType caseANotYetSpecifiedStm(ANotYetSpecifiedStm node,
 			TypeCheckInfo question)
 	{
-		node.setType(AstFactory.newAUnknownType(node.getLocation())); // Because
-																		// we
-																		// terminate
-																		// anyway
-		return node.getType();
+		node.setType(typeCheckANotYetSpecifiedExp(node,node.getLocation()));
+		return node.getType(); 
 	}
 
 	@Override

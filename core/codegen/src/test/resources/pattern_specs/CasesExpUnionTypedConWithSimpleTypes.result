@@ -15,11 +15,11 @@ public class Entry {
         Number casesExpResult_1 = null;
 
         Object boolPattern_1 = c;
-        Boolean success_1 = boolPattern_1 == true;
+        Boolean success_1 = Utils.equals(boolPattern_1, true);
 
         if (!(success_1)) {
             Object charPattern_1 = c;
-            success_1 = charPattern_1 == 'a';
+            success_1 = Utils.equals(charPattern_1, 'a');
 
             if (success_1) {
                 casesExpResult_1 = 2L;

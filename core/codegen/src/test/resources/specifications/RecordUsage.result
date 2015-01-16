@@ -67,7 +67,7 @@ public class A {
 
             R1 other = ((R1) obj);
 
-            return x.longValue() == other.x.longValue();
+            return Utils.equals(x, other.x);
         }
 
         public int hashCode() {
@@ -79,7 +79,7 @@ public class A {
         }
 
         public String toString() {
-            return Utils.recordToString(this, x);
+            return "mk_A`R1" + Utils.formatFields(x);
         }
     }
 
@@ -99,8 +99,7 @@ public class A {
 
             R2 other = ((R2) obj);
 
-            return (Utils.equals(r1, other.r1)) &&
-            (x.longValue() == other.x.longValue());
+            return (Utils.equals(r1, other.r1)) && (Utils.equals(x, other.x));
         }
 
         public int hashCode() {
@@ -112,7 +111,7 @@ public class A {
         }
 
         public String toString() {
-            return Utils.recordToString(this, r1, x);
+            return "mk_A`R2" + Utils.formatFields(r1, x);
         }
     }
 }

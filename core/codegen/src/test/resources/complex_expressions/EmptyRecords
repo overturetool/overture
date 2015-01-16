@@ -11,6 +11,6 @@ Run () ==
 let m0 = mk_M(),
 	m1 = mk_M()
 in
-	return mk_(m0 = m0, m0 = m1, m1 = m1, m0);
+	return [m0 = m0, m0 = m1, m1 = m1, m1 = m0];
 
 end Entry

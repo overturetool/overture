@@ -90,7 +90,8 @@ public class PublicClassEnvironment extends Environment
 		PDefinition def = af.createSClassDefinitionAssistant().findName(classes, name, scope);
 
 		if (def != null
-				&& af.createPAccessSpecifierAssistant().isPublic(def.getAccess()))
+				&& af.createPAccessSpecifierAssistant().isPublic(def.getAccess())
+				&& !ExcludedDefinitions.isExcluded(def))
 		{
 			return def;
 		}

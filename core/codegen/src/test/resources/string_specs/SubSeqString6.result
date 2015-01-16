@@ -1,0 +1,19 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        return SeqUtil.subSeq("", -1L, -1L);
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########

@@ -3,6 +3,7 @@ package org.overture.interpreter.assistant.type;
 import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.factory.AstFactory;
 import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.patterns.PPattern;
@@ -16,7 +17,7 @@ import org.overture.interpreter.values.QuantifierList;
 import org.overture.interpreter.values.TupleValue;
 import org.overture.interpreter.values.ValueList;
 
-public class PTypeListAssistant
+public class PTypeListAssistant implements IAstAssistant
 {
 	protected static IInterpreterAssistantFactory af;
 
@@ -26,6 +27,7 @@ public class PTypeListAssistant
 		this.af = af;
 	}
 
+	//FIXME used in a single class. move it there
 	public ValueList getAllValues(List<PType> linkedList, Context ctxt)
 			throws AnalysisException
 	{

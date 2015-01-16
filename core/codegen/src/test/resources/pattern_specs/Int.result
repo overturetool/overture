@@ -8,14 +8,14 @@ public class A {
     }
 
     public Number intPatternOp(final Number intPattern_1) {
-        Boolean success_1 = intPattern_1.longValue() == 3L;
+        Boolean success_1 = Utils.equals(intPattern_1, 3L);
 
         if (!(success_1)) {
             throw new RuntimeException("Integer pattern match failed");
         }
 
         Number intPattern_2 = 1L;
-        Boolean success_2 = intPattern_2.longValue() == 1L;
+        Boolean success_2 = Utils.equals(intPattern_2, 1L);
 
         if (!(success_2)) {
             throw new RuntimeException("Integer pattern match failed");
@@ -25,14 +25,14 @@ public class A {
     }
 
     public static Number intPatternFun(final Number intPattern_3) {
-        Boolean success_3 = intPattern_3.longValue() == 3L;
+        Boolean success_3 = Utils.equals(intPattern_3, 3L);
 
         if (!(success_3)) {
             throw new RuntimeException("Integer pattern match failed");
         }
 
         Number intPattern_4 = 1L;
-        Boolean success_4 = intPattern_4.longValue() == 1L;
+        Boolean success_4 = Utils.equals(intPattern_4, 1L);
 
         if (!(success_4)) {
             throw new RuntimeException("Integer pattern match failed");

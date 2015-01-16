@@ -1,0 +1,5 @@
+#set( $exp = $JavaFormat.format($node.getExp()) )
+#set( $checkedType = $node.getCheckedType() )
+#set( $typeArg = $JavaFormat.formatTypeArg(${checkedType}) )
+##
+Utils.is_(${exp}, ${typeArg})

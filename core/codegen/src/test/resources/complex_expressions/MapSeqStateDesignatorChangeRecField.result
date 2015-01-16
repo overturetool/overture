@@ -42,7 +42,7 @@ public class Entry {
 
             Rec other = ((Rec) obj);
 
-            return field.longValue() == other.field.longValue();
+            return Utils.equals(field, other.field);
         }
 
         public int hashCode() {
@@ -54,7 +54,7 @@ public class Entry {
         }
 
         public String toString() {
-            return Utils.recordToString(this, field);
+            return "mk_Entry`Rec" + Utils.formatFields(field);
         }
     }
 }

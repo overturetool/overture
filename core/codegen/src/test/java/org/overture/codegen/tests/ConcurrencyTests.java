@@ -46,7 +46,7 @@ public class ConcurrencyTests extends BaseTestSuite
 		Properties.recordTestResults = TestFlags.CONCURRENCY_TESTS_ON;
 
 		String name = "Concurrency test case";
-		TestSuite test = createTestCompleteFile(name, ROOT, SpecificationTestCase.class, "");
+		TestSuite test = createTestCompleteFile(name, ROOT, ConcurrencyTestCase.class, "");
 		return test;
 	}
 }

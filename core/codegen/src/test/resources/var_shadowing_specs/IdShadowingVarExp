@@ -1,0 +1,13 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+  let x = 1,
+      mk_(x,a) = mk_(5,5)
+  in
+    return x;
+  
+
+end Entry

@@ -114,14 +114,16 @@ public class PTypeResolver extends
 		{
 			do
 			{
-				tmp = af.createPTypeAssistant().typeResolve(type.getType(), question.root, question.rootVisitor, question.question);
-			} while (tmp instanceof ABracketType);
+				tmp = af.createPTypeAssistant().typeResolve(((ABracketType)tmp).getType(), question.root, question.rootVisitor, question.question);
+			}
+			while (tmp instanceof ABracketType);
 
 			tmp = af.createPTypeAssistant().typeResolve(tmp, question.root, question.rootVisitor, question.question);
 
 			tmp.parent(type.parent());// re-link tree after bracket removal
 			return tmp;
-		} catch (TypeCheckException e)
+		}
+		catch (TypeCheckException e)
 		{
 			af.createPTypeAssistant().unResolve(type);
 			throw e;

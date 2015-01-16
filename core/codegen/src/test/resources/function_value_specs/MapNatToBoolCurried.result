@@ -10,8 +10,8 @@ public class Entry {
     public static Object Run() {
         Func_1<Number, Boolean> f = new Func_1<Number, Boolean>() {
                 public Boolean eval(final Number x) {
-                    return (x.longValue() -
-                    (2L * Math.round(Math.floor(x.longValue() / 2L)))) == 0L;
+                    return Utils.equals((x.longValue() -
+                        (2L * Math.round(Math.floor(x.longValue() / 2L)))), 0L);
                 }
             };
 
@@ -24,10 +24,17 @@ public class Entry {
         final VDMSeq s) {
         return new Func_1<Func_1<Number, Boolean>, VDMSeq>() {
                 public VDMSeq eval(final Func_1<Number, Boolean> f) {
-                    return s.isEmpty() ? SeqUtil.seq()
-                                       : SeqUtil.conc(SeqUtil.seq(f.eval(((Number) s.get(
-                                    0)))),
-                        nat_map(SeqUtil.tail(Utils.clone(s))).eval(f));
+                    VDMSeq ternaryIfExp_1 = null;
+
+                    if (s.isEmpty()) {
+                        ternaryIfExp_1 = SeqUtil.seq();
+                    } else {
+                        ternaryIfExp_1 = SeqUtil.conc(SeqUtil.seq(f.eval(((Number) s.get(
+                                            0)))),
+                                nat_map(SeqUtil.tail(Utils.clone(s))).eval(f));
+                    }
+
+                    return Utils.clone(ternaryIfExp_1);
                 }
             };
     }

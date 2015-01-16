@@ -27,8 +27,7 @@ public class A {
 
             Vector2D other = ((Vector2D) obj);
 
-            return (x.longValue() == other.x.longValue()) &&
-            (y.longValue() == other.y.longValue());
+            return (Utils.equals(x, other.x)) && (Utils.equals(y, other.y));
         }
 
         public int hashCode() {
@@ -40,7 +39,7 @@ public class A {
         }
 
         public String toString() {
-            return Utils.recordToString(this, x, y);
+            return "mk_A`Vector2D" + Utils.formatFields(x, y);
         }
     }
 
@@ -58,7 +57,7 @@ public class A {
 
             Real other = ((Real) obj);
 
-            return r.doubleValue() == other.r.doubleValue();
+            return Utils.equals(r, other.r);
         }
 
         public int hashCode() {
@@ -70,7 +69,7 @@ public class A {
         }
 
         public String toString() {
-            return Utils.recordToString(this, r);
+            return "mk_A`Real" + Utils.formatFields(r);
         }
     }
 }

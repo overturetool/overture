@@ -1,6 +1,1 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.interpreter.tests.InterpreterStringPpTestCase">
-<result>
-<output object="mk_(0, 0, 0)" resource="buffersPP" value="mk_(0, 0, 0)"/>
-</result>
-</testResult>
+{"result":"mk_(0, 0, 0)","warnings":[],"errors":[]}

@@ -117,7 +117,7 @@ public class Company {
     }
 
     private Number start_calc(final Number sum, final VDMSeq emps) {
-        if (emps.size() == 0L) {
+        if (Utils.equals(emps.size(), 0L)) {
             return sum;
         } else {
             return start_calc(sum.doubleValue() +

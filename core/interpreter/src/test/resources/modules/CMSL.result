@@ -1,6 +1,1 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.interpreter.tests.InterpreterStringSlTestCase">
-<result>
-<output object="{mk_token(&quot;Magazine 1&quot;) |-&gt; [mk_(&lt;FlareOneA&gt;, 0), mk_(&lt;FlareTwoB&gt;, 100), mk_(&lt;FlareOneC&gt;, 300), mk_(&lt;DoNothingC&gt;, 700), mk_(&lt;FlareTwoC&gt;, 800), mk_(&lt;FlareOneC&gt;, 1200)], mk_token(&quot;Magazine 3&quot;) |-&gt; [mk_(&lt;FlareOneA&gt;, 200), mk_(&lt;FlareTwoA&gt;, 1100), mk_(&lt;DoNothingA&gt;, 1600), mk_(&lt;FlareOneA&gt;, 1700)]}" resource="CMSL" value="{mk_token(&quot;Magazine 1&quot;) |-&gt; [mk_(&lt;FlareOneA&gt;, 0), mk_(&lt;FlareTwoB&gt;, 100), mk_(&lt;FlareOneC&gt;, 300), mk_(&lt;DoNothingC&gt;, 700), mk_(&lt;FlareTwoC&gt;, 800), mk_(&lt;FlareOneC&gt;, 1200)], mk_token(&quot;Magazine 3&quot;) |-&gt; [mk_(&lt;FlareOneA&gt;, 200), mk_(&lt;FlareTwoA&gt;, 1100), mk_(&lt;DoNothingA&gt;, 1600), mk_(&lt;FlareOneA&gt;, 1700)]}"/>
-</result>
-</testResult>
+{"result":"{mk_token(\"Magazine 1\") |-\u003e [mk_(\u003cFlareOneA\u003e, 0), mk_(\u003cFlareTwoB\u003e, 100), mk_(\u003cFlareOneC\u003e, 300), mk_(\u003cDoNothingC\u003e, 700), mk_(\u003cFlareTwoC\u003e, 800), mk_(\u003cFlareOneC\u003e, 1200)], mk_token(\"Magazine 3\") |-\u003e [mk_(\u003cFlareOneA\u003e, 200), mk_(\u003cFlareTwoA\u003e, 1100), mk_(\u003cDoNothingA\u003e, 1600), mk_(\u003cFlareOneA\u003e, 1700)]}","warnings":[],"errors":[]}

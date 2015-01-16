@@ -1,0 +1,78 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class B {
+    public Number x = 2L;
+
+    public B() {
+    }
+
+    public String toString() {
+        return "B{" + "x := " + Utils.toString(x) + "}";
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class A {
+    public Number x = 1L;
+
+    public A() {
+    }
+
+    public static Number StaticOp(final Number a) {
+        return a;
+    }
+
+    public String toString() {
+        return "A{" + "x := " + Utils.toString(x) + "}";
+    }
+}
+
+##########
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    private static VDMSeq hr = SeqUtil.seq(new A(), new B(), new B());
+
+    public Entry() {
+    }
+
+    public static Object Run() {
+        Number sum = 0L;
+        long toVar_1 = hr.size();
+
+        for (Long i = 1L; i <= toVar_1; i++) {
+            Object obj_1 = hr.get(Utils.index(i));
+
+            Number apply_1 = null;
+
+            if (obj_1 instanceof A) {
+                apply_1 = ((A) obj_1).x;
+            } else if (obj_1 instanceof B) {
+                apply_1 = ((B) obj_1).x;
+            } else {
+                throw new RuntimeException("Missing member: x");
+            }
+
+            sum = sum.longValue() + A.StaticOp(apply_1).longValue();
+        }
+
+        return sum;
+    }
+
+    public String toString() {
+        return "Entry{" + "hr := " + Utils.toString(hr) + "}";
+    }
+}
+
+##########

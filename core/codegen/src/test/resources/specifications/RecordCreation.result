@@ -33,8 +33,7 @@ public class Records {
 
             Vector2D other = ((Vector2D) obj);
 
-            return (x.longValue() == other.x.longValue()) &&
-            (y.longValue() == other.y.longValue());
+            return (Utils.equals(x, other.x)) && (Utils.equals(y, other.y));
         }
 
         public int hashCode() {
@@ -46,7 +45,7 @@ public class Records {
         }
 
         public String toString() {
-            return Utils.recordToString(this, x, y);
+            return "mk_Records`Vector2D" + Utils.formatFields(x, y);
         }
     }
 }

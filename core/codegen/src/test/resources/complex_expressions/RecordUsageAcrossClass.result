@@ -28,7 +28,7 @@ public class A {
         }
 
         public String toString() {
-            return "mk_Rec()";
+            return "mk_A`Rec()";
         }
     }
 }

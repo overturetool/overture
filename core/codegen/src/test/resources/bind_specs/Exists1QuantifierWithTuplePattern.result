@@ -54,13 +54,13 @@ public class Entry {
                 continue;
             }
 
-            if ((c.longValue() -
-                    (2L * Math.round(Math.floor(c.longValue() / 2L)))) == 1L) {
+            if (Utils.equals((c.longValue() -
+                        (2L * Math.round(Math.floor(c.longValue() / 2L)))), 1L)) {
                 exists1Counter_1++;
             }
         }
 
-        return exists1Counter_1.longValue() == 1L;
+        return Utils.equals(exists1Counter_1, 1L);
     }
 
     public String toString() {

@@ -73,32 +73,45 @@ public class Entry {
         Object c2 = true;
         Object c3 = 'a';
         VDMSeq objs = SeqUtil.seq(new A(), new B(), new C());
-        long toVar_1 = 3L;
 
-        for (Long i = 1L; i <= toVar_1; i++) {
-            Object callStmObj_1 = objs.get(Utils.index(i));
+        {
+            long toVar_1 = 3L;
 
-            if (callStmObj_1 instanceof A) {
-                ((A) callStmObj_1).op(((Number) a), ((Boolean) b),
-                    ((Number) ((i.longValue() == 1L) ? c1
-                                                     : ((i.longValue() == 2L)
-                    ? c2 : c3))));
-            } else if (callStmObj_1 instanceof B) {
-                ((B) callStmObj_1).op(((Number) a), ((Boolean) b),
-                    ((Boolean) ((i.longValue() == 1L) ? c1
-                                                      : ((i.longValue() == 2L)
-                    ? c2 : c3))));
-            } else if (callStmObj_1 instanceof C) {
-                ((C) callStmObj_1).op(((Number) a), ((Boolean) b),
-                    ((Character) ((i.longValue() == 1L) ? c1
-                                                        : ((i.longValue() == 2L)
-                    ? c2 : c3))));
-            } else {
-                throw new RuntimeException("Missing operation member: op");
+            for (Long i = 1L; i <= toVar_1; i++) {
+                Object ternaryIfExp_1 = null;
+
+                if (Utils.equals(i, 1L)) {
+                    ternaryIfExp_1 = c1;
+                } else {
+                    Object ternaryIfExp_2 = null;
+
+                    if (Utils.equals(i, 2L)) {
+                        ternaryIfExp_2 = c2;
+                    } else {
+                        ternaryIfExp_2 = c3;
+                    }
+
+                    ternaryIfExp_1 = ternaryIfExp_2;
+                }
+
+                Object callStmObj_1 = objs.get(Utils.index(i));
+
+                if (callStmObj_1 instanceof A) {
+                    ((A) callStmObj_1).op(((Number) a), ((Boolean) b),
+                        ((Number) ternaryIfExp_1));
+                } else if (callStmObj_1 instanceof B) {
+                    ((B) callStmObj_1).op(((Number) a), ((Boolean) b),
+                        ((Boolean) ternaryIfExp_1));
+                } else if (callStmObj_1 instanceof C) {
+                    ((C) callStmObj_1).op(((Number) a), ((Boolean) b),
+                        ((Character) ternaryIfExp_1));
+                } else {
+                    throw new RuntimeException("Missing operation member: op");
+                }
             }
-        }
 
-        return c;
+            return c;
+        }
     }
 
     public String toString() {

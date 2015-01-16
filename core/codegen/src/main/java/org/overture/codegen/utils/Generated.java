@@ -26,35 +26,41 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.overture.codegen.ir.NodeInfo;
+import org.overture.codegen.ir.IrNodeInfo;
+import org.overture.codegen.ir.VdmNodeInfo;
 
 public class Generated
 {
 	protected String content;
-	protected Set<NodeInfo> unsupportedNodes;
+	protected Set<VdmNodeInfo> unsupportedInIr;
+	protected Set<IrNodeInfo> unsupportedInTargLang;
+	protected Set<IrNodeInfo> transformationWarnings;
 	protected List<Exception> mergeErrors;
 
-	public Generated(String content, Set<NodeInfo> unsupportedNodes,
+	public Generated(String content, Set<VdmNodeInfo> unsupportedInIr,
+			Set<IrNodeInfo> unsupportedInTargLang,
 			List<Exception> mergeErrors)
 	{
 		this.content = content;
-		this.unsupportedNodes = unsupportedNodes;
+		this.unsupportedInIr = unsupportedInIr;
+		this.unsupportedInTargLang = unsupportedInTargLang;
+		this.transformationWarnings = new HashSet<IrNodeInfo>();
 		this.mergeErrors = mergeErrors;
 	}
 
 	public Generated(String content)
 	{
-		this(content, new HashSet<NodeInfo>(), new LinkedList<Exception>());
+		this(content, new HashSet<VdmNodeInfo>(), new HashSet<IrNodeInfo>(),new LinkedList<Exception>());
 	}
 
-	public Generated(Set<NodeInfo> unsupportedNodes)
+	public Generated(Set<VdmNodeInfo> unsupportedNodes, Set<IrNodeInfo> unsupportedInTargLang)
 	{
-		this(null, unsupportedNodes, new LinkedList<Exception>());
+		this(null, unsupportedNodes, unsupportedInTargLang,new LinkedList<Exception>());
 	}
 
 	public Generated(List<Exception> mergeErrrors)
 	{
-		this(null, new HashSet<NodeInfo>(), mergeErrrors);
+		this(null, new HashSet<VdmNodeInfo>(), new HashSet<IrNodeInfo>(),mergeErrrors);
 	}
 
 	public String getContent()
@@ -62,9 +68,14 @@ public class Generated
 		return content;
 	}
 
-	public Set<NodeInfo> getUnsupportedNodes()
+	public Set<VdmNodeInfo> getUnsupportedInIr()
 	{
-		return unsupportedNodes;
+		return unsupportedInIr;
+	}
+	
+	public Set<IrNodeInfo> getUnsupportedInTargLang()
+	{
+		return unsupportedInTargLang;
 	}
 
 	public List<Exception> getMergeErrors()
@@ -74,7 +85,27 @@ public class Generated
 
 	public boolean canBeGenerated()
 	{
-		return unsupportedNodes.isEmpty();
+		return unsupportedInIr.isEmpty() && unsupportedInTargLang.isEmpty();
+	}
+	
+	public boolean hasUnsupportedIrNodes()
+	{
+		return !unsupportedInIr.isEmpty();
+	}
+	
+	public boolean hasUnsupportedTargLangNodes()
+	{
+		return !unsupportedInTargLang.isEmpty();
+	}
+
+	public Set<IrNodeInfo> getTransformationWarnings()
+	{
+		return transformationWarnings;
+	}
+
+	public void setTransformationWarnings(Set<IrNodeInfo> transformationWarnings)
+	{
+		this.transformationWarnings = transformationWarnings;
 	}
 
 	public boolean hasMergeErrors()

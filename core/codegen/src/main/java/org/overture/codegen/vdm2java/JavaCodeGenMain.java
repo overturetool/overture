@@ -23,12 +23,15 @@ package org.overture.codegen.vdm2java;
 
 import java.io.File;
 import java.util.List;
+import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.lex.Dialect;
+import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.ir.IRSettings;
+import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
@@ -51,10 +54,10 @@ public class JavaCodeGenMain
 
 		IRSettings irSettings = new IRSettings();
 		irSettings.setCharSeqAsString(false);
-		irSettings.setGeneratePreConds(true);
-		irSettings.setGeneratePreCondChecks(true);
-		irSettings.setGeneratePostConds(true);
-		irSettings.setGeneratePostCondChecks(true);
+		irSettings.setGeneratePreConds(false);
+		irSettings.setGeneratePreCondChecks(false);
+		irSettings.setGeneratePostConds(false);
+		irSettings.setGeneratePostCondChecks(false);
 		
 		JavaSettings javaSettings = new JavaSettings();
 		javaSettings.setDisableCloning(false);
@@ -85,21 +88,43 @@ public class JavaCodeGenMain
 					{
 						Logger.getLog().println("Could not generate class: "
 								+ generatedClass.getName() + "\n");
-						JavaCodeGenUtil.printUnsupportedNodes(generatedClass.getUnsupportedNodes());
+						
+						if(generatedClass.hasUnsupportedIrNodes())
+						{
+							JavaCodeGenUtil.printUnsupportedIrNodes(generatedClass.getUnsupportedInIr());
+						}
+						
+						if(generatedClass.hasUnsupportedTargLangNodes())
+						{
+							JavaCodeGenUtil.printUnsupportedNodes(generatedClass.getUnsupportedInTargLang());
+						}
+						
 					} else
 					{
 						Logger.getLog().println(generatedClass.getContent());
+						
+						Set<IrNodeInfo> warnings = generatedClass.getTransformationWarnings();
+						
+						if(!warnings.isEmpty())
+						{
+							Logger.getLog().println("Following transformation warnings were found:");
+							JavaCodeGenUtil.printUnsupportedNodes(generatedClass.getTransformationWarnings());
+						}
 					}
 
 					Logger.getLog().println("\n");
 				}
 
-				GeneratedModule quotes = data.getQuoteValues();
+				List<GeneratedModule> quotes = data.getQuoteValues();
 
-				if (quotes != null)
+				Logger.getLog().println("Generated following quotes:");
+				
+				if (quotes != null && !quotes.isEmpty())
 				{
-					Logger.getLog().println("**********");
-					Logger.getLog().println(quotes.getContent());
+					for(GeneratedModule q : quotes)
+					{
+						Logger.getLog().println(q.getName());
+					}
 				}
 
 				InvalidNamesResult invalidName = data.getInvalidNamesResult();
@@ -107,6 +132,15 @@ public class JavaCodeGenMain
 				if (!invalidName.isEmpty())
 				{
 					Logger.getLog().println(JavaCodeGenUtil.constructNameViolationsString(invalidName));
+				}
+				
+				List<Renaming> allRenamings = data.getAllRenamings();
+				
+				if (!allRenamings.isEmpty())
+				{
+					Logger.getLog().println("\nFollowing renamings of shadowing variables were made: ");
+
+					Logger.getLog().println(JavaCodeGenUtil.constructVarRenamingString(allRenamings));
 				}
 
 			} catch (AnalysisException e)
@@ -133,7 +167,17 @@ public class JavaCodeGenMain
 				{
 					Logger.getLog().println("Could not generate VDM expression: "
 							+ args[1]);
-					JavaCodeGenUtil.printUnsupportedNodes(generated.getUnsupportedNodes());
+					
+					if(generated.hasUnsupportedIrNodes())
+					{
+						JavaCodeGenUtil.printUnsupportedIrNodes(generated.getUnsupportedInIr());
+					}
+					
+					if(generated.hasUnsupportedTargLangNodes())
+					{
+						JavaCodeGenUtil.printUnsupportedNodes(generated.getUnsupportedInTargLang());
+					}
+					
 				} else
 				{
 					Logger.getLog().println(generated.getContent().trim());

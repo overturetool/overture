@@ -8,7 +8,7 @@ public class A {
     }
 
     public Number cg_double(final Number Character) {
-        if (1L != 2L) {
+        if (!(Utils.equals(1L, 2L))) {
             return cg_double(3L);
         } else {
             return cg_double(3L);

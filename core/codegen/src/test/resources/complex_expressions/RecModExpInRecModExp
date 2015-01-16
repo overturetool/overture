@@ -1,0 +1,27 @@
+class Entry
+
+types
+
+public Rec1 ::
+  a : int
+  b : Rec2;
+  
+public Rec2 ::
+  c : int
+  d : [Rec1];
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+(
+  dcl r1 : Rec1 := mk_Rec1(5, mk_Rec2(10, nil));
+  dcl r2 : Rec2 := mk_Rec2(55, nil);
+  dcl x : nat := 1;
+  dcl r3 : Rec1 := mu(r1, a |-> 100, b |-> mu(r2, c |-> 200, d |-> nil));
+  dcl y : nat := 2;
+  
+  return mk_(r3.a, r3.b.c, r3.b.d); 
+);
+
+end Entry

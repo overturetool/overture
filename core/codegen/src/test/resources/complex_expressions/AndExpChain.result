@@ -44,7 +44,7 @@ public class Entry {
                 }
             }
 
-            if (exists1Counter_1.longValue() == 1L) {
+            if (Utils.equals(exists1Counter_1, 1L)) {
                 Boolean existsExpResult_1 = false;
                 VDMSet set_3 = SetUtil.set(1L, 2L);
 

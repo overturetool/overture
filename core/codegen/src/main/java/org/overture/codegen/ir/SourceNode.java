@@ -37,4 +37,10 @@ public class SourceNode
 	{
 		return vdmNode;
 	}
+	
+	@Override
+	public String toString()
+	{
+		return vdmNode.toString();
+	}
 }

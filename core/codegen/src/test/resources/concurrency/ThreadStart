@@ -1,0 +1,46 @@
+class ThreadClass
+
+instance variables
+
+public x : nat := 0;
+
+thread
+(
+	x := 2;
+       --setX();
+       --subX();
+)       
+sync
+	
+	--per setX => #act(setX) = 0 and x = 0;
+	--per subX => #act(setX,subX, setX) > 10; -- and x < 1;
+	--mutex(setX,subX);
+	
+--operations
+
+--public setX : () ==> ()
+--setX () ==
+ --     x := 2; 
+
+--public subX:() ==> ()
+--subX() == 
+--			x := x - 1;
+			
+end ThreadClass
+
+class Entry
+
+operations
+
+public static Run : () ==> ?
+
+Run () ==
+(
+       dcl t : ThreadClass := new ThreadClass();
+
+       start(t);
+
+       while t.x <> 2 do skip;
+       return t.x;
+);
+end Entry

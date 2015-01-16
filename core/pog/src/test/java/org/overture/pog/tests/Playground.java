@@ -54,7 +54,7 @@ public class Playground
 		boolean show_result = false;
 		// show_result = true;
 
-		String result = "src/test/resources/adhoc/sandbox.RESULT";
+		String result = "src/test/resources/adhoc/sandbox.result";
 
 		List<INode> ast = ParseTcFacade.typedAst(model, "Playground");
 

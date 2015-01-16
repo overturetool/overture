@@ -31,7 +31,7 @@ public class Entry {
             }
         }
 
-        if (exists1Counter_1.longValue() == 1L) {
+        if (Utils.equals(exists1Counter_1, 1L)) {
             orResult_1 = true;
         } else {
             Boolean orResult_2 = false;
@@ -49,7 +49,7 @@ public class Entry {
                 }
             }
 
-            if (exists1Counter_2.longValue() == 1L) {
+            if (Utils.equals(exists1Counter_2, 1L)) {
                 orResult_2 = true;
             } else {
                 Boolean forAllExpResult_1 = true;

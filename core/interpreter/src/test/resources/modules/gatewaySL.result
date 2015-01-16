@@ -1,6 +1,1 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<testResult type="org.overture.interpreter.tests.InterpreterStringSlTestCase">
-<result>
-<output object="false" resource="gatewaySL" value="false"/>
-</result>
-</testResult>
+{"result":"false","warnings":[],"errors":[]}

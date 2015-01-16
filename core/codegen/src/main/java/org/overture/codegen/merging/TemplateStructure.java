@@ -36,6 +36,7 @@ public class TemplateStructure
 
 	public final String EXP_PATH;
 	public final String BINARY_EXP_PATH;
+	public final String IS_EXP_PATH;
 	public final String NUMERIC_BINARY_EXP_PATH;
 	public final String BOOL_BINARY_EXP_PATH;
 	public final String UNARY_EXP_PATH;
@@ -67,6 +68,7 @@ public class TemplateStructure
 
 		EXP_PATH = root + "Expressions" + File.separatorChar;
 		BINARY_EXP_PATH = EXP_PATH + "Binary" + File.separatorChar;
+		IS_EXP_PATH = EXP_PATH + "Is" + File.separatorChar;
 		NUMERIC_BINARY_EXP_PATH = BINARY_EXP_PATH + "Numeric"
 				+ File.separatorChar;
 		BOOL_BINARY_EXP_PATH = BINARY_EXP_PATH + "Bool" + File.separatorChar;

@@ -21,7 +21,7 @@ public class Entry {
             a = recordPattern_1.x;
 
             Number intPattern_1 = recordPattern_1.y;
-            success_1 = intPattern_1.longValue() == 33L;
+            success_1 = Utils.equals(intPattern_1, 33L);
 
             if (!(success_1)) {
                 continue;
@@ -61,8 +61,7 @@ public class Entry {
 
             Vec other = ((Vec) obj);
 
-            return (x.longValue() == other.x.longValue()) &&
-            (y.longValue() == other.y.longValue());
+            return (Utils.equals(x, other.x)) && (Utils.equals(y, other.y));
         }
 
         public int hashCode() {
@@ -74,7 +73,7 @@ public class Entry {
         }
 
         public String toString() {
-            return Utils.recordToString(this, x, y);
+            return "mk_Entry`Vec" + Utils.formatFields(x, y);
         }
     }
 }

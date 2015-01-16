@@ -21,9 +21,11 @@
  */
 package org.overture.typechecker.assistant.type;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.assistant.pattern.PTypeList;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.SClassDefinition;
@@ -35,7 +37,7 @@ import org.overture.ast.types.AVoidType;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class AOperationTypeAssistantTC
+public class AOperationTypeAssistantTC implements IAstAssistant
 {
 	protected ITypeCheckerAssistantFactory af;
 
@@ -44,6 +46,7 @@ public class AOperationTypeAssistantTC
 		this.af = af;
 	}
 
+	@SuppressWarnings("unchecked")
 	public AFunctionType getPreType(AOperationType type,
 			AStateDefinition state, SClassDefinition classname, boolean isStatic)
 	{
@@ -51,18 +54,18 @@ public class AOperationTypeAssistantTC
 		if (state != null)
 		{
 			PTypeList params = new PTypeList();
-			params.addAll((LinkedList<PType>) type.getParameters());
+			params.addAll((LinkedList<PType>) type.getParameters().clone());
 			params.add(AstFactory.newAUnresolvedType(state.getName()));
 			return AstFactory.newAFunctionType(type.getLocation(), false, params, AstFactory.newABooleanBasicType(type.getLocation()));
 		} else if (classname != null && !isStatic)
 		{
 			PTypeList params = new PTypeList();
-			params.addAll(type.getParameters());
+			params.addAll((Collection<? extends PType>) type.getParameters().clone());
 			params.add(AstFactory.newAUnresolvedType(classname.getName()));
 			return AstFactory.newAFunctionType(type.getLocation(), false, params, AstFactory.newABooleanBasicType(type.getLocation()));
 		} else
 		{
-			return AstFactory.newAFunctionType(type.getLocation(), false, (List<PType>) type.getParameters(), AstFactory.newABooleanBasicType(type.getLocation()));
+			return AstFactory.newAFunctionType(type.getLocation(), false, (List<PType>) type.getParameters().clone(), AstFactory.newABooleanBasicType(type.getLocation()));
 		}
 	}
 

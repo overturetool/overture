@@ -20,7 +20,7 @@ public class Entry {
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
             Number x = ((Number) iterator_1.next());
 
-            if (1L == 1L) {
+            if (Utils.equals(1L, 1L)) {
                 setCompResult_1 = SetUtil.union(Utils.clone(setCompResult_1),
                         SetUtil.set(x));
             }

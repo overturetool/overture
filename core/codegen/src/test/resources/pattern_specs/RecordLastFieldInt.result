@@ -14,7 +14,7 @@ public class A {
         a = recordPattern_1.n1;
 
         Number intPattern_1 = recordPattern_1.n2;
-        success_1 = intPattern_1.longValue() == 5L;
+        success_1 = Utils.equals(intPattern_1, 5L);
 
         if (!(success_1)) {
             throw new RuntimeException("Record pattern match failed");
@@ -43,8 +43,8 @@ public class A {
 
             Rec other = ((Rec) obj);
 
-            return (n1.longValue() == other.n1.longValue()) &&
-            (n2.longValue() == other.n2.longValue());
+            return (Utils.equals(n1, other.n1)) &&
+            (Utils.equals(n2, other.n2));
         }
 
         public int hashCode() {
@@ -56,7 +56,7 @@ public class A {
         }
 
         public String toString() {
-            return Utils.recordToString(this, n1, n2);
+            return "mk_A`Rec" + Utils.formatFields(n1, n2);
         }
     }
 }

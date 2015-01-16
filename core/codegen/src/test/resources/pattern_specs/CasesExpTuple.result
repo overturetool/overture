@@ -36,15 +36,15 @@ public class Entry {
 
         if (success_1) {
             Number intPattern_1 = ((Number) tuplePattern_1.get(0));
-            success_1 = intPattern_1.longValue() == 2L;
+            success_1 = Utils.equals(intPattern_1, 2L);
 
             if (success_1) {
                 Number intPattern_2 = ((Number) tuplePattern_1.get(1));
-                success_1 = intPattern_2.longValue() == 2L;
+                success_1 = Utils.equals(intPattern_2, 2L);
 
                 if (success_1) {
                     Number intPattern_3 = ((Number) tuplePattern_1.get(2));
-                    success_1 = intPattern_3.longValue() == 2L;
+                    success_1 = Utils.equals(intPattern_3, 2L);
                 }
             }
         }
@@ -59,7 +59,7 @@ public class Entry {
                 a = ((Number) tuplePattern_2.get(0));
 
                 Number intPattern_4 = ((Number) tuplePattern_2.get(2));
-                success_1 = intPattern_4.longValue() == 1L;
+                success_1 = Utils.equals(intPattern_4, 1L);
             }
 
             if (!(success_1)) {
@@ -71,7 +71,7 @@ public class Entry {
 
                 if (success_1) {
                     Number intPattern_5 = ((Number) tuplePattern_3.get(0));
-                    success_1 = intPattern_5.longValue() == 1L;
+                    success_1 = Utils.equals(intPattern_5, 1L);
 
                     if (success_1) {
                         b = ((Number) tuplePattern_3.get(1));

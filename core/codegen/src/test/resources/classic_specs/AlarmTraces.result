@@ -5,21 +5,21 @@ import java.util.*;
 
 public class Alarm {
     private VDMSeq descr;
-    private Number reqQuali;
+    private Object reqQuali;
 
-    public Alarm(final Number quali, final VDMSeq str) {
-        cg_init_Alarm_1(quali, Utils.clone(str));
+    public Alarm(final Object quali, final VDMSeq str) {
+        cg_init_Alarm_1(((Object) quali), Utils.clone(str));
     }
 
     public Alarm() {
     }
 
-    public void cg_init_Alarm_1(final Number quali, final VDMSeq str) {
+    public void cg_init_Alarm_1(final Object quali, final VDMSeq str) {
         descr = Utils.clone(str);
         reqQuali = quali;
     }
 
-    public Number GetReqQuali() {
+    public Object GetReqQuali() {
         return reqQuali;
     }
 
@@ -119,21 +119,34 @@ public class Plant {
     }
 
     public void AddExpertToSchedule(final Token p, final Expert ex) {
-        schedule.put(p,
-            MapUtil.dom(Utils.clone(schedule)).contains(p)
-            ? SetUtil.union(Utils.clone(((VDMSet) schedule.get(p))),
-                SetUtil.set(ex)) : SetUtil.set(ex));
+        VDMSet ternaryIfExp_1 = null;
+
+        if (MapUtil.dom(Utils.clone(schedule)).contains(p)) {
+            ternaryIfExp_1 = SetUtil.union(Utils.clone(
+                        ((VDMSet) schedule.get(p))), SetUtil.set(ex));
+        } else {
+            ternaryIfExp_1 = SetUtil.set(ex);
+        }
+
+        schedule.put(p, Utils.clone(ternaryIfExp_1));
     }
 
     public void RemoveExpertFromSchedule(final Token p, final Expert ex) {
         VDMSet exs = Utils.clone(((VDMSet) schedule.get(p)));
 
-        schedule = (exs.size() == 1L)
-            ? MapUtil.domResBy(SetUtil.set(p), Utils.clone(schedule))
-            : MapUtil.override(Utils.clone(schedule),
-                MapUtil.map(
-                    new Maplet(p,
-                        SetUtil.diff(Utils.clone(exs), SetUtil.set(ex)))));
+        VDMMap ternaryIfExp_2 = null;
+
+        if (Utils.equals(exs.size(), 1L)) {
+            ternaryIfExp_2 = MapUtil.domResBy(SetUtil.set(p),
+                    Utils.clone(schedule));
+        } else {
+            ternaryIfExp_2 = MapUtil.override(Utils.clone(schedule),
+                    MapUtil.map(
+                        new Maplet(p,
+                            SetUtil.diff(Utils.clone(exs), SetUtil.set(ex)))));
+        }
+
+        schedule = Utils.clone(ternaryIfExp_2);
     }
 
     private static Boolean PlantInv(final VDMSet as, final VDMMap sch) {
@@ -194,8 +207,6 @@ public class Plant {
 ##########
 import org.overture.codegen.runtime.*;
 
-import quotes.*;
-
 import java.util.*;
 
 
@@ -209,17 +220,19 @@ public class Entry {
     private static final Token p4 = new Token(SeqUtil.seq('T', 'u', 'e', 's',
                 'd', 'a', 'y', ' ', 'n', 'i', 'g', 'h', 't'));
     private static final VDMSet ps = SetUtil.set(p1, p2, p3, p4);
-    private Alarm a1 = new Alarm(Quotes.Mech,
+    private Alarm a1 = new Alarm(quotes.Mech.getInstance(),
             SeqUtil.seq('M', 'e', 'c', 'h', 'a', 'n', 'i', 'c', 'a', 'l', ' ',
                 'f', 'a', 'u', 'l', 't'));
-    private Alarm a2 = new Alarm(Quotes.Chem,
+    private Alarm a2 = new Alarm(quotes.Chem.getInstance(),
             SeqUtil.seq('T', 'a', 'n', 'k', ' ', 'o', 'v', 'e', 'r', 'f', 'l',
                 'o', 'w'));
-    private Expert ex1 = new Expert(SetUtil.set(Quotes.Mech, Quotes.Bio));
-    private Expert ex2 = new Expert(SetUtil.set(Quotes.Elec));
-    private Expert ex3 = new Expert(SetUtil.set(Quotes.Chem, Quotes.Bio,
-                Quotes.Mech));
-    private Expert ex4 = new Expert(SetUtil.set(Quotes.Elec, Quotes.Chem));
+    private Expert ex1 = new Expert(SetUtil.set(quotes.Mech.getInstance(),
+                quotes.Bio.getInstance()));
+    private Expert ex2 = new Expert(SetUtil.set(quotes.Elec.getInstance()));
+    private Expert ex3 = new Expert(SetUtil.set(quotes.Chem.getInstance(),
+                quotes.Bio.getInstance(), quotes.Mech.getInstance()));
+    private Expert ex4 = new Expert(SetUtil.set(quotes.Elec.getInstance(),
+                quotes.Chem.getInstance()));
     private Plant plant = new Plant(SetUtil.set(a1),
             MapUtil.map(new Maplet(p1, SetUtil.set(ex1, ex4)),
                 new Maplet(p2, SetUtil.set(ex2, ex3))));
@@ -248,20 +261,6 @@ public class Entry {
 }
 
 ##########
-public interface Func_1<T_1, T_2, T_3, T_4> {
-    public abstract T_4 eval(final T_1 param_1, final T_2 param_2,
-        final T_3 param_3);
-}
-
-##########
-
-package quotes;
-
-public interface Quotes {
-    public static Number Bio = 1L;
-    public static Number Chem = 2L;
-    public static Number Elec = 3L;
-    public static Number Mech = 4L;
-}
-
+*Quotes*
+Bio,Chem,Elec,Mech
 ##########
