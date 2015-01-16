@@ -399,6 +399,38 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 	}
 	
 	@Override
+	public void caseAForIndexStm(AForIndexStm node) throws AnalysisException
+	{
+		if (!proceed(node))
+		{
+			return;
+		}
+
+		if(node.getFrom() != null)
+		{
+			node.getFrom().apply(this);
+		}
+		
+		if(node.getTo() != null)
+		{
+			node.getTo().apply(this);
+		}
+		
+		if(node.getBy() != null)
+		{
+			node.getBy().apply(this);
+		}
+
+		ILexNameToken var = node.getVar();
+
+		openLoop(var, null, node.getStatement());
+		
+		node.getStatement().apply(this);
+		
+		localDefsInScope.remove(var);
+	}
+	
+	@Override
 	public void caseACasesStm(ACasesStm node) throws AnalysisException
 	{
 		if (!proceed(node))
@@ -443,37 +475,11 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		
 		handleCase(node.getDefs(), node.getPattern(), node.getResult());
 	}
-	
+
 	@Override
-	public void caseAForIndexStm(AForIndexStm node) throws AnalysisException
+	public void caseILexNameToken(ILexNameToken node) throws AnalysisException
 	{
-		if (!proceed(node))
-		{
-			return;
-		}
-
-		if(node.getFrom() != null)
-		{
-			node.getFrom().apply(this);
-		}
-		
-		if(node.getTo() != null)
-		{
-			node.getTo().apply(this);
-		}
-		
-		if(node.getBy() != null)
-		{
-			node.getBy().apply(this);
-		}
-
-		ILexNameToken var = node.getVar();
-
-		openLoop(var, null, node.getStatement());
-		
-		node.getStatement().apply(this);
-		
-		localDefsInScope.remove(var);
+		// No need to visit names
 	}
 	
 	private void handleCaseNode(PExp cond, List<? extends INode> cases, INode others) throws AnalysisException
@@ -525,12 +531,6 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 				registerRenaming(varExp.getName(), newName);
 			}
 		}
-	}
-	
-	@Override
-	public void caseILexNameToken(ILexNameToken node) throws AnalysisException
-	{
-		// No need to visit names
 	}
 	
 	private void handleCase(LinkedList<PDefinition> localDefs, PPattern pattern, INode result) throws AnalysisException
@@ -796,7 +796,6 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 	{
 		if (!contains(name.getLocation()))
 		{
-			System.out.println("Hello: " + name.getLocation());
 			renamings.add(new Renaming(name.getLocation(), name.getName(), newName));
 		}
 	}
