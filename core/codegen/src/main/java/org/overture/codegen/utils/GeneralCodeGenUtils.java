@@ -30,6 +30,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -53,7 +54,7 @@ public class GeneralCodeGenUtils
 					+ file.getAbsolutePath());
 		}
 
-		ParserResult<List<SClassDefinition>> parseResult = ParserUtil.parseOo(file);
+		ParserResult<List<SClassDefinition>> parseResult = ParserUtil.parseOo(file, Charset.defaultCharset());
 
 		if (parseResult.errors.size() > 0)
 		{
