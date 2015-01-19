@@ -22,6 +22,7 @@
 package org.overture.parser.util;
 
 import java.io.File;
+import java.nio.charset.Charset;
 import java.util.List;
 
 import org.overture.ast.definitions.SClassDefinition;
@@ -89,17 +90,17 @@ public class ParserUtil
 	}
 	
 	
-	public static ParserResult<List<SClassDefinition>> parseOo(List<File> files)
+	public static ParserResult<List<SClassDefinition>> parseOo(List<File> files, Charset charset)
 	{
 		ParserResult<List<SClassDefinition>> res = null;
 		for (File file : files)
 		{
 			if(res==null)
 			{
-				res = parseOo(file);
+				res = parseOo(file, charset);
 			}else
 			{
-				res.combine(parseOo(file), new ParserResult.IResultCombiner<List<SClassDefinition>>()
+				res.combine(parseOo(file, charset), new ParserResult.IResultCombiner<List<SClassDefinition>>()
 				{
 
 					@Override
@@ -115,7 +116,7 @@ public class ParserUtil
 		return res;
 	}
 
-	public static ParserResult<List<SClassDefinition>> parseOo(File file)
+	public static ParserResult<List<SClassDefinition>> parseOo(File file, Charset charset)
 	{
 		LexTokenReader ltr = new LexTokenReader(file, Settings.dialect);
 		ClassReader reader = null;
@@ -139,17 +140,17 @@ public class ParserUtil
 		return new ParserResult<List<SClassDefinition>>(result, reader.getWarnings(), reader.getErrors());
 	}
 	
-	public static ParserResult<List<AModuleModules>> parseSl(List<File> files)
+	public static ParserResult<List<AModuleModules>> parseSl(List<File> files, Charset charset)
 	{
 		ParserResult<List<AModuleModules>> res = null;
 		for (File file : files)
 		{
 			if(res==null)
 			{
-				res = parseSl(file);
+				res = parseSl(file, charset);
 			}else
 			{
-				res.combine(parseSl(file), new ParserResult.IResultCombiner<List<AModuleModules>>()
+				res.combine(parseSl(file, charset), new ParserResult.IResultCombiner<List<AModuleModules>>()
 				{
 
 					@Override
@@ -165,9 +166,10 @@ public class ParserUtil
 		return res;
 	}
 
-	public static ParserResult<List<AModuleModules>> parseSl(File file)
+	public static ParserResult<List<AModuleModules>> parseSl(File file, Charset charset)
 	{
-		LexTokenReader ltr = new LexTokenReader(file, Settings.dialect);
+		
+		LexTokenReader ltr = new LexTokenReader(file, Settings.dialect, charset.name());
 		ModuleReader reader = null;
 		List<AModuleModules> result = null;
 
