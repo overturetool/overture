@@ -197,7 +197,7 @@ CG {-> package='org.overture.codegen.cgast'
            |	{assignment} [target]:CG.#stateDesignator [exp]:CG.#exp
            |	{localAssignment} [target]:CG.#exp [exp]:CG.#exp
            |	{localPatternAssignment} [target]:CG.#pattern [exp]:CG.#exp (nextElementDecl):CG.#decl.var
-           |	{block}	[localDefs]:CG.#decl.var* [statements]:CG.#stm*
+           |	{block}	[scoped]:java_Boolean [localDefs]:CG.#decl.var* [statements]:CG.#stm*
            |	{callObject} [type]:CG.#type [designator]:CG.#objectDesignator /*[className]:java_String*/ [fieldName]:java_String 
            					 [args]:CG.#exp*
            |	{callObjectExp} [type]:CG.#type [obj]:CG.#exp /*[className]:java_String*/ [fieldName]:java_String 
@@ -292,6 +292,7 @@ CG {-> package='org.overture.codegen.cgast'
     |	{subSeq} [seq]:CG.#exp [from]:CG.#exp [to]:CG.#exp
     |	{history}[histype]:java_String [opsname]:java_String [sentinelType]:CG.#type.class
     |	{time}
+    |	{assignExp} [target]:CG.#exp [value]:CG.#exp
     ;
 
 #modifier {-> package='org.overture.codegen.cgast.expressions'}

@@ -19,23 +19,25 @@ public class Entry {
                 break;
             }
 
-            Number x = null;
-            Boolean success_1 = false;
-            VDMSet set_1 = Utils.clone(xs);
+            {
+                Number x = null;
+                Boolean success_1 = false;
+                VDMSet set_1 = Utils.clone(xs);
 
-            for (Iterator iterator_1 = set_1.iterator();
-                    iterator_1.hasNext() && !(success_1);) {
-                x = ((Number) iterator_1.next());
-                success_1 = true;
+                for (Iterator iterator_1 = set_1.iterator();
+                        iterator_1.hasNext() && !(success_1);) {
+                    x = ((Number) iterator_1.next());
+                    success_1 = true;
+                }
+
+                if (!(success_1)) {
+                    throw new RuntimeException(
+                        "Let Be St found no applicable bindings");
+                }
+
+                sum = sum.longValue() + x.longValue();
+                xs = SetUtil.diff(Utils.clone(xs), SetUtil.set(x));
             }
-
-            if (!(success_1)) {
-                throw new RuntimeException(
-                    "Let Be St found no applicable bindings");
-            }
-
-            sum = sum.longValue() + x.longValue();
-            xs = SetUtil.diff(Utils.clone(xs), SetUtil.set(x));
         }
 
         return sum;
@@ -43,86 +45,6 @@ public class Entry {
 
     public String toString() {
         return "Entry{}";
-    }
-}
-
-##########
-
-package quotes;
-
-import org.overture.codegen.runtime.*;
-
-import java.util.*;
-
-
-public class start {
-    private static int hc = 0;
-    private static start instance = null;
-
-    public start() {
-        if (Utils.equals(hc, 0)) {
-            hc = super.hashCode();
-        }
-    }
-
-    public static start getInstance() {
-        if (Utils.equals(instance, null)) {
-            instance = new start();
-        }
-
-        return instance;
-    }
-
-    public int hashCode() {
-        return hc;
-    }
-
-    public boolean equals(final Object obj) {
-        return obj instanceof start;
-    }
-
-    public String toString() {
-        return "<start>";
-    }
-}
-
-##########
-
-package quotes;
-
-import org.overture.codegen.runtime.*;
-
-import java.util.*;
-
-
-public class append {
-    private static int hc = 0;
-    private static append instance = null;
-
-    public append() {
-        if (Utils.equals(hc, 0)) {
-            hc = super.hashCode();
-        }
-    }
-
-    public static append getInstance() {
-        if (Utils.equals(instance, null)) {
-            instance = new append();
-        }
-
-        return instance;
-    }
-
-    public int hashCode() {
-        return hc;
-    }
-
-    public boolean equals(final Object obj) {
-        return obj instanceof append;
-    }
-
-    public String toString() {
-        return "<append>";
     }
 }
 

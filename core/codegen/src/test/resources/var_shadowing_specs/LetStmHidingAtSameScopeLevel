@@ -1,0 +1,19 @@
+class Entry
+
+instance variables
+
+public x : nat;
+
+operations
+
+public Entry : (nat) ==> Entry
+Entry (p) == x := p;
+
+public static Run : () ==> nat
+Run () ==
+let a = new Entry(1),
+    a = new Entry(2)
+in
+   return a.x;
+
+end Entry

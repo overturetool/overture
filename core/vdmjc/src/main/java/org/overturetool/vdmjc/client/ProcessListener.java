@@ -94,7 +94,7 @@ public class ProcessListener extends Thread
 	    			}
 				}
 
-				pargs.add("org.overturetool.vdmj.debug.DBGPReader");
+				pargs.add("org.overture.interpreter.debug.DBGPReaderV2");
 			}
 
 			pargs.add("-h");

@@ -25,6 +25,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.SystemUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -42,6 +43,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.osgi.service.prefs.Preferences;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.analysis.violations.Violation;
@@ -199,8 +201,16 @@ public class Vdm2JavaCommand extends AbstractHandler
 						vdm2java.generateJavaSourceFiles(outputFolder, generatedData.getClasses());
 					} catch (Exception e)
 					{
-						CodeGenConsole.GetInstance().printErrorln("Problems saving the code generated Java source files to disk.\n"
-								+ "Try to run Overture with administrator privileges.\n");
+						CodeGenConsole.GetInstance().printErrorln("Problems saving the code generated Java source files to disk.");
+						CodeGenConsole.GetInstance().printErrorln("Try to run Overture with write permissions.\n");
+						
+						if(SystemUtils.IS_OS_WINDOWS)
+						{
+							CodeGenConsole.GetInstance().println("Operating System: Windows.");
+							CodeGenConsole.GetInstance().println("If you installed Overture in a location such as \"C:\\Program Files\\Overture\"");
+							CodeGenConsole.GetInstance().println("you may need to give Overture permissions to write to the file system. You can try");
+							CodeGenConsole.GetInstance().println("run Overture as administrator and see if this solves the problem.");
+						}
 						
 						return Status.CANCEL_STATUS;
 					}
@@ -210,14 +220,23 @@ public class Vdm2JavaCommand extends AbstractHandler
 					// Quotes generation
 					outputQuotes(vdmProject, outputFolder, vdm2java, generatedData.getQuoteValues());
 
+					// Renaming of variables shadowing other variables
+					outputRenamings(generatedData.getAllRenamings());
+					
 					InvalidNamesResult invalidNames = generatedData.getInvalidNamesResult();
 
 					if (invalidNames != null && !invalidNames.isEmpty())
 					{
 						handleInvalidNames(invalidNames);
 					}
+
+					int noOfClasses = generatedData.getClasses().size();
 					
-					CodeGenConsole.GetInstance().println(String.format("...finished Java code generation (generated %s class).", generatedData.getClasses().size()));
+					String msg = String.format("...finished Java code generation (generated %s %s).", 
+							noOfClasses, 
+							noOfClasses == 1 ? "class" : "classes");
+					
+					CodeGenConsole.GetInstance().println(msg);
 
 					project.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
 
@@ -292,6 +311,15 @@ public class Vdm2JavaCommand extends AbstractHandler
 			}
 
 			CodeGenConsole.GetInstance().println("\n");
+		}
+	}
+	
+	private void outputRenamings(List<Renaming> allRenamings)
+	{
+		if(!allRenamings.isEmpty())
+		{
+			CodeGenConsole.GetInstance().println("Hidden variables found! Following variable renamings were done: ");
+			CodeGenConsole.GetInstance().println(JavaCodeGenUtil.constructVarRenamingString(allRenamings));;
 		}
 	}
 

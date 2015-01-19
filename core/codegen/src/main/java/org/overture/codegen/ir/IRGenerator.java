@@ -43,6 +43,11 @@ public class IRGenerator
 		this.codeGenInfo = new IRInfo(objectInitCallPrefix);
 		Logger.setLog(log);
 	}
+	
+	public void clear()
+	{
+		codeGenInfo.clear();
+	}
 
 	public IRClassDeclStatus generateFrom(SClassDefinition classDef)
 			throws AnalysisException

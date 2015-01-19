@@ -27,6 +27,7 @@ import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.lex.Dialect;
+import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.ir.IRSettings;
@@ -132,6 +133,15 @@ public class JavaCodeGenMain
 				if (!invalidName.isEmpty())
 				{
 					Logger.getLog().println(JavaCodeGenUtil.constructNameViolationsString(invalidName));
+				}
+				
+				List<Renaming> allRenamings = data.getAllRenamings();
+				
+				if (!allRenamings.isEmpty())
+				{
+					Logger.getLog().println("\nFollowing renamings of shadowing variables were made: ");
+
+					Logger.getLog().println(JavaCodeGenUtil.constructVarRenamingString(allRenamings));
 				}
 
 			} catch (AnalysisException e)

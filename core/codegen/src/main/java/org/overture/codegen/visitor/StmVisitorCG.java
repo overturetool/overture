@@ -221,6 +221,7 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 			IRInfo question) throws AnalysisException
 	{
 		ABlockStmCG blockStm = new ABlockStmCG();
+		blockStm.setScoped(question.getStmAssistant().isScoped(node));
 
 		LinkedList<AAssignmentDefinition> assignmentDefs = node.getAssignmentDefs();
 
@@ -293,6 +294,7 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 			throws AnalysisException
 	{
 		ABlockStmCG block = new ABlockStmCG();
+		block.setScoped(question.getStmAssistant().isScoped(node));
 		
 		question.getDeclAssistant().setLocalDefs(node.getLocalDefs(), block.getLocalDefs(), question);
 
@@ -455,7 +457,7 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 					// is a sub class of S and 'a' is an instance of A then a.A`op();
 					//  is allowed (although it is the same as a.op()). However,
 					// a.S`op(); is not allowed.
-					question.addUnsupportedNode(node);
+					question.addUnsupportedNode(node, "A quoted object call statement is only supported if the explicit module name is equal to that of the enclosing class");
 				}
 			}
 			else

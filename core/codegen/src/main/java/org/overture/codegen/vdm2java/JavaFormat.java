@@ -69,6 +69,7 @@ import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
+import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AForLoopStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AStartStmCG;
@@ -926,5 +927,10 @@ public class JavaFormat
 	{
 		INode parent = node.parent();
 		return parent instanceof ASeqToStringUnaryExpCG || parent instanceof AStringToSeqUnaryExpCG;
+	}
+	
+	public static boolean isScoped(ABlockStmCG block)
+	{
+		return block != null && block.getScoped() != null && block.getScoped();
 	}
 }

@@ -29,8 +29,6 @@ public class CodeGenBase
 	public static final String FUNC_RESULT_NAME_PREFIX = "funcResult_";
 	public static final String POST_CHECK_METHOD_NAME = "postCheck";
 	public static final String QUOTES = "quotes";
-	public static final String QUOTE_START = "start";
-	public static final String QUOTE_APPEND = "append";
 
 	protected IRGenerator generator;
 	protected TransAssistantCG transAssistant;

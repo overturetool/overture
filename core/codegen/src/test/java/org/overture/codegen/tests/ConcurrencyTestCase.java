@@ -41,6 +41,7 @@ public class ConcurrencyTestCase extends SpecificationTestCase
 	@Override
 	protected void setUp() throws Exception
 	{
+		super.setUp();
 		Settings.release = Release.VDM_10;
 	}
 	

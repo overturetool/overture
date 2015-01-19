@@ -53,7 +53,7 @@ public class ExpressionTestCase extends CodeGenBaseTestCase
 			e.printStackTrace();
 			return null;
 		}
-		String generatedJava = JavaCodeGenUtil.generateJavaFromExp(fileContent, getIrSettings(), getJavaSettings()).getContent().trim();
+		String generatedJava = JavaCodeGenUtil.generateJavaFromExp(fileContent, vdmCodGen).getContent().trim();
 		String trimmed = GeneralUtils.cleanupWhiteSpaces(generatedJava);
 
 		return trimmed;

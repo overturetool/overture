@@ -1,0 +1,13 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () == f(1);
+
+functions 
+
+public f :  int -> nat
+f (a) == let a = 1 in a * a;
+
+end Entry

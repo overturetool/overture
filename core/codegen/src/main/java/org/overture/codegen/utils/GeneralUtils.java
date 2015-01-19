@@ -24,9 +24,11 @@ package org.overture.codegen.utils;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -68,6 +70,13 @@ public class GeneralUtils
 
 	public static String readFromFile(File file) throws IOException
 	{
+		return readLines(file, System.getProperty("line.separator")).toString().trim();
+	}
+
+	public static StringBuilder readLines(File file, String outputLineEnding)
+			throws UnsupportedEncodingException, FileNotFoundException,
+			IOException
+	{
 		StringBuilder data = new StringBuilder();
 		BufferedReader in = null;
 
@@ -79,7 +88,7 @@ public class GeneralUtils
 
 			while ((str = in.readLine()) != null)
 			{
-				data.append(str + System.getProperty("line.separator"));
+				data.append(str + outputLineEnding);
 			}
 
 		} finally
@@ -90,7 +99,7 @@ public class GeneralUtils
 			}
 		}
 
-		return data.toString().trim();
+		return data;
 	}
 
 	public static List<File> getFiles(File folder)

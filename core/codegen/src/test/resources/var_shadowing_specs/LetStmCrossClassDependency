@@ -1,0 +1,49 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+  return A`opA() + B`opB();
+
+end Entry
+
+class A
+
+instance variables
+
+public x : nat;
+
+operations
+
+public A : (nat) ==> A
+A (p) == x := p;
+
+public static opA : () ==> nat
+opA () ==
+let b = new B(1),
+    b = new B(2)
+in
+   return b.x;
+
+end A
+
+class B
+
+instance variables
+
+public x : nat;
+
+operations
+
+public B : (nat) ==> B
+B (p) == x := p;
+
+public static opB : () ==> nat
+opB () ==
+let a = new A(11),
+    a = new A(22)
+in
+  return a.x;
+
+end B

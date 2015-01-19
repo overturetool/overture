@@ -327,6 +327,8 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 
 		// Replace the let be st statement with the transformation
 		transformationAssistant.replaceNodeWithRecursively(node, outerBlock, this);
+		
+		outerBlock.setScoped(info.getStmAssistant().isScoped(outerBlock));
 	}
 
 	@Override
@@ -356,8 +358,13 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 			String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_LET_BE_ST_EXP_NAME_PREFIX);
 			SExpCG value = node.getValue();
 
-			AVarDeclCG resultDecl = transformationAssistant.consDecl(var, value);
-			info.getStmAssistant().injectDeclAsStm(outerBlock, resultDecl);
+			AVarDeclCG resultDecl = transformationAssistant.consDecl(var, value.getType().clone(), transformationAssistant.consNullExp());
+			outerBlock.getLocalDefs().add(resultDecl);
+			
+			ALocalAssignmentStmCG setLetBeStResult = new ALocalAssignmentStmCG();
+			setLetBeStResult.setTarget(transformationAssistant.consIdentifierVar(var, value.getType().clone()));
+			setLetBeStResult.setExp(value);
+			outerBlock.getStatements().add(setLetBeStResult);
 
 			AIdentifierVarExpCG varExpResult = new AIdentifierVarExpCG();
 			varExpResult.setType(value.getType().clone());
@@ -379,6 +386,8 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		// And make sure to have the enclosing statement in the transformed tree
 		outerBlock.getStatements().add(enclosingStm);
 		outerBlock.apply(this);
+		
+		outerBlock.setScoped(info.getStmAssistant().isScoped(outerBlock));
 	}
 	
 	@Override
@@ -660,6 +669,8 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 
 		exp.apply(this);
 		topBlock.apply(this);
+		
+		topBlock.setScoped(info.getStmAssistant().isScoped(topBlock));
 	}
 
 	private void replaceCompWithTransformation(SStmCG enclosingStm,

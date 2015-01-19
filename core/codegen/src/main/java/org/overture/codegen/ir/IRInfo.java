@@ -88,7 +88,7 @@ public class IRInfo
 
 	// Object initialization call prefix
 	private String objectInitCallPrefix;
-
+	
 	public IRInfo(String objectInitCallPrefix)
 	{
 		super();
@@ -277,6 +277,14 @@ public class IRInfo
 	public ITempVarGen getTempVarNameGen()
 	{
 		return tempVarNameGen;
+	}
+	
+	public void clear()
+	{
+		quoteVaues.clear();
+		unsupportedNodes.clear();
+		transformationWarnings.clear();
+		tempVarNameGen.clear();
 	}
 
 	public IRSettings getSettings()

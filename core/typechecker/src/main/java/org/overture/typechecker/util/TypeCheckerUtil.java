@@ -22,6 +22,7 @@
 package org.overture.typechecker.util;
 
 import java.io.File;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Vector;
 
@@ -52,6 +53,8 @@ import org.overture.typechecker.visitor.TypeCheckVisitor;
 
 public class TypeCheckerUtil
 {
+	private static final Charset DEFAULT_CHARSET = Charset.defaultCharset(); 
+	
 	public static class TypeCheckResult<T>
 	{
 		public final ParserResult<T> parserResult;
@@ -141,7 +144,7 @@ public class TypeCheckerUtil
 
 	public static TypeCheckResult<List<AModuleModules>> typeCheckSl(File file)
 	{
-		ParserResult<List<AModuleModules>> parserResult = ParserUtil.parseSl(file);
+		ParserResult<List<AModuleModules>> parserResult = ParserUtil.parseSl(file, DEFAULT_CHARSET);
 		
 		ModuleList modules = new ModuleList(parserResult.result);
 		
@@ -150,7 +153,7 @@ public class TypeCheckerUtil
 	
 	public static TypeCheckResult<List<AModuleModules>> typeCheckSl(List<File> file)
 	{
-		ParserResult<List<AModuleModules>> parserResult = ParserUtil.parseSl(file);
+		ParserResult<List<AModuleModules>> parserResult = ParserUtil.parseSl(file, DEFAULT_CHARSET);
 		
 		ModuleList modules = new ModuleList(parserResult.result);
 		modules.combineDefaults();
@@ -166,13 +169,13 @@ public class TypeCheckerUtil
 
 	public static TypeCheckResult<List<SClassDefinition>> typeCheckPp(File file)
 	{
-		ParserResult<List<SClassDefinition>> parserResult = ParserUtil.parseOo(file);
+		ParserResult<List<SClassDefinition>> parserResult = ParserUtil.parseOo(file, DEFAULT_CHARSET);
 		return typeCheck(parserResult, parserResult.result, new ClassTypeChecker(parserResult.result));
 	}
 	
 	public static TypeCheckResult<List<SClassDefinition>> typeCheckPp(List<File> file)
 	{
-		ParserResult<List<SClassDefinition>> parserResult = ParserUtil.parseOo(file);
+		ParserResult<List<SClassDefinition>> parserResult = ParserUtil.parseOo(file, DEFAULT_CHARSET);
 		return typeCheck(parserResult, parserResult.result, new ClassTypeChecker(parserResult.result));
 	}
 
@@ -187,7 +190,7 @@ public class TypeCheckerUtil
 			throws ParserException, LexException
 	{
 		ITypeCheckerAssistantFactory af = new TypeCheckerAssistantFactory();
-		ParserResult<List<SClassDefinition>> parserResult = ParserUtil.parseOo(file);
+		ParserResult<List<SClassDefinition>> parserResult = ParserUtil.parseOo(file, DEFAULT_CHARSET);
 		List<SClassDefinition> classes = new Vector<SClassDefinition>();
 		classes.addAll(parserResult.result);
 		classes.add(AstFactoryTC.newACpuClassDefinition(af));
@@ -199,7 +202,7 @@ public class TypeCheckerUtil
 			throws ParserException, LexException
 	{
 		ITypeCheckerAssistantFactory af = new TypeCheckerAssistantFactory();
-		ParserResult<List<SClassDefinition>> parserResult = ParserUtil.parseOo(file);
+		ParserResult<List<SClassDefinition>> parserResult = ParserUtil.parseOo(file, DEFAULT_CHARSET);
 		List<SClassDefinition> classes = new Vector<SClassDefinition>();
 		classes.addAll(parserResult.result);
 		classes.add(AstFactoryTC.newACpuClassDefinition(af));
