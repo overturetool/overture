@@ -28,6 +28,7 @@ import org.overture.codegen.trans.patterns.PatternTransformation;
 import org.overture.codegen.trans.quantifier.Exists1CounterData;
 import org.overture.codegen.trans.uniontypes.UnionTypeTransformation;
 import org.overture.codegen.vdm2cpp.visitors.CallObjStmConverter;
+import org.overture.codegen.vdm2cpp.visitors.ConstructorVdmLibInit;
 import org.overture.codegen.vdm2cpp.visitors.MathRenamer;
 
 import static org.overture.codegen.ir.CodeGenBase.*;
@@ -90,6 +91,7 @@ public class CppTransSeries
 				mutexTransform,
 				mainclassTransform,
 				seqConversionTransformation,
+				new ConstructorVdmLibInit(),
 				new MathRenamer(),
 				new CallObjStmConverter(transAssistant, irInfo, classes)
 		};

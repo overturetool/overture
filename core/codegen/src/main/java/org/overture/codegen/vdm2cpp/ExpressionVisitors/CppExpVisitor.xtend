@@ -117,7 +117,7 @@ class CppExpVisitor extends MergeVisitor {
 	}
 	
 	override caseAIdentifierVarExpCG(AIdentifierVarExpCG node, StringWriter question) throws AnalysisException {
-		question.append('''«node.original»''')
+		question.append('''«node.name»''')
 	}
 	
 	override caseAEqualsBinaryExpCG(AEqualsBinaryExpCG node, StringWriter question) throws AnalysisException {

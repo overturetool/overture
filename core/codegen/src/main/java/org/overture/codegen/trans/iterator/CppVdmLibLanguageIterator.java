@@ -1,21 +1,27 @@
 package org.overture.codegen.trans.iterator;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SPatternCG;
+import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
+import org.overture.codegen.cgast.expressions.AAssignExpExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ADeRefExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
+import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.APostIncExpCG;
+import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
+import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.ir.ITempVarGen;
@@ -39,12 +45,30 @@ public class CppVdmLibLanguageIterator implements ILanguageIterator {
 		this.transformationAssistant = transformationAssistant;
 	}
 	
+	@Override
+	public List<SStmCG> getPreForLoopStms(AIdentifierVarExpCG setVar,
+			List<SPatternCG> patterns, SPatternCG pattern) {
+		// TODO Auto-generated method stub
+		iteratorName = tempGen.nextVarName(varPrefixes.getIteratorNamePrefix());
+		isEndName = tempGen.nextVarName(iteratorName+"has_next");
+		
+		AIdentifierVarExpCG exp = new AIdentifierVarExpCG();
+		exp.setName(iteratorName);
+		exp.setType(transformationAssistant.consClassType("Generic"));
+		
+		ALocalAssignmentStmCG s = new ALocalAssignmentStmCG();
+		s.setTarget(exp);
+		List<SStmCG> li = new LinkedList<SStmCG>();
+		li.add(s);
+		return li;
+	}
+	
 	public AVarDeclCG getForLoopInit(AIdentifierVarExpCG setVar,
 			List<SPatternCG> patterns, SPatternCG pattern)
 	{
 		AVarDeclCG iteratorDecl = new AVarDeclCG();
-		iteratorName = tempGen.nextVarName(varPrefixes.getIteratorNamePrefix());
-		isEndName = tempGen.nextVarName(varPrefixes.getIteratorNamePrefix());
+		
+		
 		
 		/*
 		 * Create set_var.First(iterator_var)
@@ -56,11 +80,11 @@ public class CppVdmLibLanguageIterator implements ILanguageIterator {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		as.setOriginal(iteratorName);
+		as.setName(iteratorName);
 		
 		
 		SExpCG getFirstElemExp = transformationAssistant.consInstanceCall(setVar.getType().clone(), 
-				setVar.getOriginal(), 
+				setVar.getName(), 
 				new ABoolBasicTypeCG(), 
 				"First", as);
 		
@@ -84,7 +108,7 @@ public class CppVdmLibLanguageIterator implements ILanguageIterator {
 	{
 		AIdentifierVarExpCG isEndVar = new AIdentifierVarExpCG();
 		isEndVar.setType(new ABoolBasicTypeCG());
-		isEndVar.setOriginal(isEndName);
+		isEndVar.setName(isEndName);
 		
 		ABoolLiteralExpCG tr = new ABoolLiteralExpCG();
 		tr.setType(new ABoolBasicTypeCG());
@@ -99,8 +123,38 @@ public class CppVdmLibLanguageIterator implements ILanguageIterator {
 	public SExpCG getForLoopInc(AIdentifierVarExpCG setVar,
 			List<SPatternCG> patterns, SPatternCG pattern)
 	{
-		//AAssignmentStmCG
-		return null;
+		AIdentifierVarExpCG isEndVar = new AIdentifierVarExpCG();
+		isEndVar.setType(new ABoolBasicTypeCG());
+		isEndVar.setName(isEndName);
+		
+		AIdentifierVarExpCG iterVar = new AIdentifierVarExpCG();
+		try {
+			iterVar.setType(transformationAssistant.getSetTypeCloned(setVar).getSetOf());
+		} catch (AnalysisException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		iterVar.setName(iteratorName);
+		SExpCG getNext = null;
+		try {
+			getNext = transformationAssistant.consInstanceCall(setVar.getType().clone(), 
+					setVar.getName(),
+					transformationAssistant.getSetTypeCloned(setVar).getSetOf(), 
+					"Next", iterVar);
+		} catch (AnalysisException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		AAssignExpExpCG has_next_assignment = new AAssignExpExpCG();
+		
+		has_next_assignment.setTarget(isEndVar);
+		has_next_assignment.setType(isEndVar.getType().clone());
+		has_next_assignment.setValue(getNext);
+		
+		
+		return has_next_assignment;
 	}
 
 	public AVarDeclCG getNextElementDeclared(AIdentifierVarExpCG setVar,
@@ -111,12 +165,9 @@ public class CppVdmLibLanguageIterator implements ILanguageIterator {
 		
 		AIdentifierVarExpCG iterVar = new AIdentifierVarExpCG();
 		iterVar.setType(transformationAssistant.getSetTypeCloned(setVar).getSetOf());
-		iterVar.setOriginal(iteratorName);
+		iterVar.setName(iteratorName);
 		
-//		SExpCG getNext = transformationAssistant.consInstanceCall(setVar.getType().clone(), 
-//				setVar.getOriginal(),
-//				transformationAssistant.getSetTypeCloned(setVar).getSetOf(), 
-//				"Next", iterVar);
+//		
 //		
 		ACastUnaryExpCG cast_to_value = new ACastUnaryExpCG();
 		cast_to_value.setExp(iterVar);
@@ -151,6 +202,14 @@ public class CppVdmLibLanguageIterator implements ILanguageIterator {
 //		next.setTarget(pattern);
 		return null;
 	}
+
+	@Override
+	public SExpCG consNextElementCall(AIdentifierVarExpCG setVar)
+			throws AnalysisException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	
 
 }

@@ -59,7 +59,7 @@ public class CppLanguageIterator extends JavaLanguageIterator{
 		// setVar.getOriginal(), iteratorType.clone(), config.iteratorMethod(),
 		// null));
 		iterator.setExp(transformationAssistant.consInstanceCall(setVar.getType().clone(),
-				setVar.getOriginal(), setVar.getType().clone(), "begin", null));
+				setVar.getName(), setVar.getType().clone(), "begin", null));
 		return iterator;
 	}
 
@@ -74,13 +74,13 @@ public class CppLanguageIterator extends JavaLanguageIterator{
 
 		// AVariableExpCG instance = new AVariableExpCG();
 		AIdentifierVarExpCG instance = new AIdentifierVarExpCG();
-		instance.setOriginal(iteratorName);
+		instance.setName(iteratorName);
 		instance.setType(setVar.getType().clone());
 
 		i_end_comp.setLeft(instance);
 
 		i_end_comp.setRight(transformationAssistant.consInstanceCall( setVar.getType().clone(),
-				setVar.getOriginal(), new ABoolBasicTypeCG(), "end", null));
+				setVar.getName(), new ABoolBasicTypeCG(), "end", null));
 
 		return i_end_comp;
 	}
@@ -103,7 +103,7 @@ public class CppLanguageIterator extends JavaLanguageIterator{
 		deref_and_inc.setType(setVar.getType().clone());
 
 		AIdentifierVarExpCG var = new AIdentifierVarExpCG();
-		var.setOriginal(iteratorName);
+		var.setName(iteratorName);
 		var.setType(setVar.getType().clone());
 
 		APostIncExpCG inc_exp = new APostIncExpCG();

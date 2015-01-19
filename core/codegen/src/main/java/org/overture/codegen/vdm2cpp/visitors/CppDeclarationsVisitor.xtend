@@ -9,6 +9,7 @@ import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG
 import org.overture.codegen.cgast.declarations.AVarDeclCG
 import org.overture.codegen.cgast.statements.AForLoopStmCG
 import org.overture.codegen.vdm2cpp.XtendAnswerStringVisitor
+import org.overture.codegen.cgast.expressions.AUndefinedExpCG
 
 class CppDeclarationsVisitor extends XtendAnswerStringVisitor {
 	
@@ -78,7 +79,14 @@ class CppDeclarationsVisitor extends XtendAnswerStringVisitor {
 		}
 		else
 		{
-			'''«node.type.expand» «node.pattern.expand» = «node.exp.expand»;'''
+			if(node.exp instanceof AUndefinedExpCG)
+			{
+				'''«node.type.expand» «node.pattern.expand»;'''
+			}
+			else
+			{
+				'''«node.type.expand» «node.pattern.expand» = «node.exp.expand»;'''
+			}
 		}
 	}
 	

@@ -44,7 +44,7 @@ public class CppCodeGenMain
 		
 		List<File> nfiles = new LinkedList<File>();
 		List<String> cg_ignore = new LinkedList<String>();
-		cg_ignore.add("FileReader.vdmrt");
+		//cg_ignore.add("FileReader.vdmrt");
 		String setting = args[0];
 		if (setting.toLowerCase().equals("oo"))
 		{

@@ -75,7 +75,7 @@ class CGNew extends XtendAnswerStringVisitor {
 		{
 			if(node.definingClass != null)
 			{
-				return '''«node.definingClass»::«node.name»'''
+				return '''/*tn*/«node.definingClass»::«node.name»'''
 			}
 			else
 			{

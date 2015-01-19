@@ -55,6 +55,10 @@ import org.overture.codegen.cgast.types.ASeqSeqTypeCG
 import org.overture.codegen.cgast.types.ASetSetTypeCG
 import org.overture.codegen.cgast.types.SSeqTypeCG
 import org.overture.codegen.vdm2cpp.XtendAnswerStringVisitor
+import org.overture.codegen.cgast.expressions.AAssignExpExpCG
+import org.overture.codegen.cgast.types.ATupleTypeCG
+import org.overture.codegen.cgast.types.AMethodTypeCG
+import org.overture.codegen.cgast.expressions.APatternMatchRuntimeErrorExpCG
 
 class CppExpressionVisitor extends XtendAnswerStringVisitor {
 	
@@ -74,6 +78,10 @@ class CppExpressionVisitor extends XtendAnswerStringVisitor {
 		{
 			return '''static_cast<«type.expand»>'''
 		}
+//		else if (type instanceof ASeqSeqTypeCG)
+//		{
+//			
+//		}
 		else
 		{
 			return '''static_cast<«type.expand»>'''
@@ -148,7 +156,7 @@ class CppExpressionVisitor extends XtendAnswerStringVisitor {
 	'''*«node.exp.expand»'''
 	
 	override caseAIdentifierVarExpCG(AIdentifierVarExpCG node)
-	'''«node.original»'''
+	'''«node.name»'''
 	
 	override caseAEqualsBinaryExpCG(AEqualsBinaryExpCG node)
 	'''(«node.left.expand») == («node.right.expand»)'''
@@ -198,10 +206,10 @@ class CppExpressionVisitor extends XtendAnswerStringVisitor {
 	
 	
 	override caseAHeadUnaryExpCG(AHeadUnaryExpCG node)
-	'''ObjGet_«node.type.expand»((«node.exp.expand»).Hd())'''
+	'''«node.type.caseToType»((«node.exp.expand»).Hd())'''
 	
 	override caseATailUnaryExpCG(ATailUnaryExpCG node)
-	'''«node.exp.expand».Tl()'''
+	'''(«node.exp.expand»).Tl()'''
 	
 	override caseANullExpCG(ANullExpCG node)
 	'''Nil()'''
@@ -215,10 +223,24 @@ class CppExpressionVisitor extends XtendAnswerStringVisitor {
 	override caseAElemsUnaryExpCG(AElemsUnaryExpCG node)
 	'''(«node.exp.expand»).Elems()/*tes*/'''
 	
-	
+	def getTupleTypes(STypeCG node)
+	{
+		//
+		if(node instanceof AMethodTypeCG)
+		{
+			var tp = node as AMethodTypeCG
+			//System.out.println(tp.)
+			System.out.println(tp.class)
+			System.out.println(tp.result)
+			System.out.println(tp.params.class)
+			
+			return '''<«FOR p : tp.params SEPARATOR ','»«p.expand» «ENDFOR»>'''
+		}
+		return null;
+	}
 	
 	override caseAExplicitVarExpCG(AExplicitVarExpCG node)
-	'''«IF node.classType != null»«node.classType.getGetStaticCall»::«ENDIF»«node.name»'''
+	'''/*exv*/«IF node.classType != null»«node.classType.getGetStaticCall»::«ENDIF»«node.name»'''
 	
 	override caseATimesNumericBinaryExpCG(ATimesNumericBinaryExpCG node)
 	'''(«node.left.expand») * («node.right.expand»)'''
@@ -274,7 +296,7 @@ class CppExpressionVisitor extends XtendAnswerStringVisitor {
 	'''"«StringEscapeUtils.escapeJava( node.value)»"'''
 	
 	override caseALenUnaryExpCG(ALenUnaryExpCG node)
-	''' («node.exp»).size() '''
+	''' («node.exp»).Length() '''
 	
 	override caseAMinusUnaryExpCG(AMinusUnaryExpCG node)
 	'''-(«node.exp.expand»)'''
@@ -309,22 +331,25 @@ class CppExpressionVisitor extends XtendAnswerStringVisitor {
 	}
 	
 	override caseAUndefinedExpCG(AUndefinedExpCG node)
-	'''vdm::Void()/*fixme: undefined_expression*/'''
+	'''Nil()/*fixme: undefined_expression*/'''
 	
 	override caseAFieldNumberExpCG(AFieldNumberExpCG node)
-	'''(«node.type.expand»)«node.tuple.expand».get(«node.field»)'''
+	'''«node.tuple.expand».Get«node.type.expand»(«node.field»)'''
 	
 	override caseATupleCompatibilityExpCG(ATupleCompatibilityExpCG node)
-	'''«node.tuple».compatability(«FOR t : node.types SEPARATOR ","»«t.expand»«ENDFOR»)'''
+	'''vdm::compatible<«FOR t : node.types SEPARATOR ","»«t.expand»«ENDFOR»>(«node.tuple»)'''
 	
 	override caseAMethodInstantiationExpCG(AMethodInstantiationExpCG node)
 	'''«node.func.expand»'''
 	
 	override caseAStringToSeqUnaryExpCG(AStringToSeqUnaryExpCG node)
-	'''vdm::string_util::to_seq(«node.exp.expand»)'''
+	'''(«node.exp.expand»)/*«node.exp.type.expand», «node.type.expand»*/'''
 	
 	
+	override caseAAssignExpExpCG(AAssignExpExpCG node)
+	'''/*aex*/«node.target.expand» = «node.value.expand»'''
 	
-	
+	override caseAPatternMatchRuntimeErrorExpCG(APatternMatchRuntimeErrorExpCG node)
+	'''«node.message»'''
 	
 }

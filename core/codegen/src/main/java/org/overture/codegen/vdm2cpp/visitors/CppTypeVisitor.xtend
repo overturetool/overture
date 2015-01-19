@@ -101,7 +101,7 @@ class CppTypeVisitor extends XtendAnswerStringVisitor{
 	'''Bool'''
 	
 	override caseAStringTypeCG(AStringTypeCG node )
-	'''String'''
+	'''std::string'''
 	
 	override caseANat1NumericBasicTypeCG(ANat1NumericBasicTypeCG node )
 	'''Int'''

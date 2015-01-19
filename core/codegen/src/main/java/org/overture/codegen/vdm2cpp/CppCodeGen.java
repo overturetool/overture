@@ -38,6 +38,7 @@ import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.ANotYetSpecifiedStm;
+import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.analysis.violations.VdmAstAnalysis;
@@ -80,8 +81,6 @@ public class CppCodeGen extends CodeGenBase
 
 	private void init()
 	{
-		this.generator.getIRInfo().registerQuoteValue(QUOTE_START);
-		this.generator.getIRInfo().registerQuoteValue(QUOTE_APPEND);
 		
 		this.transAssistant = new TransAssistantCG(generator.getIRInfo(), varPrefixes);
 	}
@@ -293,7 +292,7 @@ public class CppCodeGen extends CodeGenBase
 		//javaFormat.clearFunctionValueAssistant();
 		//javaFormat.clearClasses();
 
-		return new GeneratedData(generated, generateJavaFromVdmQuotes(), invalidNamesResult, skipping);
+		return new GeneratedData(generated, generateJavaFromVdmQuotes(), invalidNamesResult, skipping,new LinkedList<Renaming>());
 	}
 
 	private void simplifyLibraryClass(SClassDefinition classDef)

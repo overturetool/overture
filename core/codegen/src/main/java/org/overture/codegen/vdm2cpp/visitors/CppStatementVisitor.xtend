@@ -21,6 +21,7 @@ import org.overture.codegen.cgast.types.AClassTypeCG
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG
 import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG
+import org.overture.codegen.cgast.statements.ARaiseErrorStmCG
 
 class CppStatementVisitor extends XtendAnswerStringVisitor {
 	
@@ -89,9 +90,12 @@ class CppStatementVisitor extends XtendAnswerStringVisitor {
 	}
 	'''
 	
+	override caseARaiseErrorStmCG(ARaiseErrorStmCG node)
+	'''Runtime2("«node.error.expand»",__FILE__,__LINE__);'''
+	
 	override caseAForIndexStmCG(AForIndexStmCG node)
 	'''
-	for(«node.from.type.expand» «node.^var» = «node.from.expand» ; «node.^var» <= «node.to.expand» ; «node.^var»++ )
+	for(«node.from.type.expand» «node.^var» = «node.from.expand» ; «node.^var» <= «node.to.expand» ; «node.^var».Incr() )
 	{
 		«node.body?.expand»
 	}
@@ -141,7 +145,7 @@ class CppStatementVisitor extends XtendAnswerStringVisitor {
 	
 	
 	override caseAPlainCallStmCG(APlainCallStmCG node)
-	'''«IF node.classType != null»«node.classType.getStaticCall»::«ENDIF»«node.name»(«FOR a : node.args SEPARATOR ','» «a.expand»«ENDFOR»);'''
+	'''/*pc*/«IF node.classType != null»«node.classType.getStaticCall»::«ENDIF»«node.name»/*«node.type»*/(«FOR a : node.args SEPARATOR ','» «a.expand»«ENDFOR»);'''
 	
 	
 	override caseASkipStmCG(ASkipStmCG node)'''
@@ -152,6 +156,15 @@ class CppStatementVisitor extends XtendAnswerStringVisitor {
 	'''break;'''
 	
 	override caseALocalAssignmentStmCG(ALocalAssignmentStmCG node)
-	'''«node.target.expand» = «node.exp.expand»;'''
+	{
+		if(node.exp == null)
+		{
+			'''«(node.target.type as AClassTypeCG).name» «node.target.expand»;'''
+		}
+		else
+		{
+			'''«node.target.expand» = «node.exp.expand»;'''
+		}
+	}
 	
 }
