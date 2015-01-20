@@ -292,6 +292,7 @@ CG {-> package='org.overture.codegen.cgast'
     |	{subSeq} [seq]:CG.#exp [from]:CG.#exp [to]:CG.#exp
     |	{history}[histype]:java_String [opsname]:java_String [sentinelType]:CG.#type.class
     |	{time}
+    |	{assignExp} [target]:CG.#exp [value]:CG.#exp
     ;
 
 #modifier {-> package='org.overture.codegen.cgast.expressions'}
