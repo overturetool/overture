@@ -1,0 +1,19 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+  f();
+
+functions
+
+public f :  () -> nat
+f () ==
+  let a,a in set {1,2,3} be st a = 1
+  in
+    let a,a in set {1,2,3} be st a = 2
+    in
+      a;
+
+end Entry

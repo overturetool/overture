@@ -6,3 +6,16 @@ import org.overture.ast.util.ToStringUtil;
 
 %CG->#decl->method = [name]
 %CG->#decl->class = [name]
+
+
+// Object designator
+%CG->#objectDesignator->identifier = [exp];
+%CG->#objectDesignator->apply = [object] "(" + $Utils.listToString($[args]$)$ + ")"
+%CG->#objectDesignator->field = [object]+"."+[fieldName]
+%CG->#objectDesignator->new = "new "+[exp]
+%CG->#objectDesignator->self = "self"
+
+// Vars
+%CG->#exp->#Var->identifier = [name]
+%CG->#exp->#Var->explicit = [name]
+%CG->#exp->#Var->super = [name]

@@ -100,6 +100,13 @@ public class DeclAssistantCG extends AssistantBase
 		while (superName != null)
 		{
 			AClassDeclCG superClassDecl = findClass(classes, superName);
+			
+			if(superClassDecl == null)
+			{
+				//This would be the case if the super class
+				// declaration is the VDMThread from the runtime
+				break;
+			}
 
 			for (T superDecl : strategy.getDecls(superClassDecl))
 			{
@@ -273,6 +280,8 @@ public class DeclAssistantCG extends AssistantBase
 			SPatternCG pattern, SExpCG exp)
 	{
 		AVarDeclCG localVarDecl = new AVarDeclCG();
+		
+		localVarDecl.setFinal(false);
 		localVarDecl.setSourceNode(new SourceNode(node));
 		localVarDecl.setType(type);
 		localVarDecl.setPattern(pattern);
@@ -470,14 +479,7 @@ public class DeclAssistantCG extends AssistantBase
 				field = currentField;
 			}
 		}
-
-		if (field == null)
-		{
-			throw new IllegalArgumentException("Could not find field '"
-					+ memberName + "' in record '" + recName + "' in class '"
-					+ definingClassName + "'");
-		}
-
+		
 		return field;
 	}
 }

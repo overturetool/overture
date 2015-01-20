@@ -33,6 +33,7 @@ import org.overture.ast.lex.Dialect;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralUtils;
+import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.codegen.vdm2java.JavaSettings;
 import org.overture.config.Release;
 import org.overture.config.Settings;
@@ -43,7 +44,8 @@ import org.overture.test.framework.Properties;
 
 public abstract class CodeGenBaseTestCase extends BaseTestCase
 {
-
+	protected static JavaCodeGen vdmCodGen = new JavaCodeGen();
+	
 	public CodeGenBaseTestCase()
 	{
 		super();
@@ -77,6 +79,10 @@ public abstract class CodeGenBaseTestCase extends BaseTestCase
 		Settings.dialect = Dialect.VDM_PP;
 		Settings.release = Release.VDM_10;
 		Logger.getLog().setSilent(true);
+		
+		vdmCodGen.clear();
+		vdmCodGen.setSettings(getIrSettings());
+		vdmCodGen.setJavaSettings(getJavaSettings());
 	}
 
 	public void test() throws ParserException, LexException, IOException

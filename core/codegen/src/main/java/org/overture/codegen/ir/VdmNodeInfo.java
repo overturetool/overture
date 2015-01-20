@@ -23,19 +23,19 @@ package org.overture.codegen.ir;
 
 import org.overture.ast.node.INode;
 
-public class NodeInfo
+public class VdmNodeInfo
 {
 	private INode node;
 	private String reason;
 
-	public NodeInfo(INode node)
+	public VdmNodeInfo(INode node)
 	{
 		super();
 		this.node = node;
 		this.reason = null;
 	}
 
-	public NodeInfo(INode node, String reason)
+	public VdmNodeInfo(INode node, String reason)
 	{
 		super();
 		this.node = node;
@@ -78,12 +78,12 @@ public class NodeInfo
 			return false;
 		}
 
-		if (!(obj instanceof NodeInfo))
+		if (!(obj instanceof VdmNodeInfo))
 		{
 			return false;
 		}
 
-		NodeInfo other = (NodeInfo) obj;
+		VdmNodeInfo other = (VdmNodeInfo) obj;
 
 		if (this.node == null && other.node != null || this.node != null
 				&& !this.node.equals(other.node))

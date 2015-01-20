@@ -1,0 +1,18 @@
+class Entry
+
+operations
+
+public static Run :  () ==> nat
+Run () ==
+  return 1;
+
+traces
+
+T1:
+let x,x in set {1,2,3} be st x = x
+in
+  let x,x in set {1,2,3}
+  in
+    Run();
+
+end Entry

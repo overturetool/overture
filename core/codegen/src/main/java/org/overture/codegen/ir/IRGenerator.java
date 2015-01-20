@@ -29,6 +29,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.logging.Logger;
@@ -42,6 +43,11 @@ public class IRGenerator
 		this.codeGenInfo = new IRInfo(objectInitCallPrefix);
 		Logger.setLog(log);
 	}
+	
+	public void clear()
+	{
+		codeGenInfo.clear();
+	}
 
 	public IRClassDeclStatus generateFrom(SClassDefinition classDef)
 			throws AnalysisException
@@ -49,9 +55,19 @@ public class IRGenerator
 		codeGenInfo.clearNodes();
 
 		AClassDeclCG classCg = classDef.apply(codeGenInfo.getClassVisitor(), codeGenInfo);
-		Set<NodeInfo> unsupportedNodes = copyGetUnsupportedNodes();
+		Set<VdmNodeInfo> unsupportedNodes = new HashSet<VdmNodeInfo>(codeGenInfo.getUnsupportedNodes());
 
 		return new IRClassDeclStatus(classDef.getName().getName(), classCg, unsupportedNodes);
+	}
+	
+	public void applyTransformation(IRClassDeclStatus status, DepthFirstAnalysisAdaptor transformation) throws org.overture.codegen.cgast.analysis.AnalysisException
+	{
+		codeGenInfo.clearTransformationWarnings();
+		
+		status.getClassCg().apply(transformation);
+		HashSet<IrNodeInfo> transformationWarnings = new HashSet<IrNodeInfo>(codeGenInfo.getTransformationWarnings());
+		
+		status.addTransformationWarnings(transformationWarnings);
 	}
 
 	public IRExpStatus generateFrom(PExp exp) throws AnalysisException
@@ -59,14 +75,9 @@ public class IRGenerator
 		codeGenInfo.clearNodes();
 
 		SExpCG expCg = exp.apply(codeGenInfo.getExpVisitor(), codeGenInfo);
-		Set<NodeInfo> unsupportedNodes = copyGetUnsupportedNodes();
+		Set<VdmNodeInfo> unsupportedNodes = new HashSet<VdmNodeInfo>(codeGenInfo.getUnsupportedNodes());
 
 		return new IRExpStatus(expCg, unsupportedNodes);
-	}
-
-	private Set<NodeInfo> copyGetUnsupportedNodes()
-	{
-		return new HashSet<NodeInfo>(codeGenInfo.getUnsupportedNodes());
 	}
 
 	public List<String> getQuoteValues()

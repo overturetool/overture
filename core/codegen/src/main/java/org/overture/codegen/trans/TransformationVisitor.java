@@ -78,7 +78,7 @@ import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.comp.ComplexCompStrategy;
 import org.overture.codegen.trans.comp.MapCompStrategy;
 import org.overture.codegen.trans.comp.SeqCompStrategy;
@@ -97,7 +97,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	//TODO: consider putting in ir info
 	private List<AClassDeclCG> classes;
 	
-	private TransformationAssistantCG transformationAssistant;
+	private TransAssistantCG transformationAssistant;
 
 	private Exists1CounterData counterData;
 	
@@ -111,7 +111,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	private String recModifierExpPrefix;
 
 	public TransformationVisitor(IRInfo info, List<AClassDeclCG> classes, TempVarPrefixes varPrefixes,
-			TransformationAssistantCG transformationAssistant, Exists1CounterData counterData,
+			TransAssistantCG transformationAssistant, Exists1CounterData counterData,
 			ILanguageIterator langIterator, String ternaryIfExpPrefix, String casesExpPrefix, String andExpPrefix, String orExpPrefix, String whileCondExpPrefix, String recModifierExpPrefix)
 	{
 		this.info = info;
@@ -327,6 +327,8 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 
 		// Replace the let be st statement with the transformation
 		transformationAssistant.replaceNodeWithRecursively(node, outerBlock, this);
+		
+		outerBlock.setScoped(info.getStmAssistant().isScoped(outerBlock));
 	}
 
 	@Override
@@ -356,12 +358,18 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 			String var = tempVarNameGen.nextVarName(IRConstants.GENERATED_TEMP_LET_BE_ST_EXP_NAME_PREFIX);
 			SExpCG value = node.getValue();
 
-			AVarDeclCG resultDecl = transformationAssistant.consDecl(var, value);
-			info.getStmAssistant().injectDeclAsStm(outerBlock, resultDecl);
+			AVarDeclCG resultDecl = transformationAssistant.consDecl(var, value.getType().clone(), transformationAssistant.consNullExp());
+			outerBlock.getLocalDefs().add(resultDecl);
+			
+			ALocalAssignmentStmCG setLetBeStResult = new ALocalAssignmentStmCG();
+			setLetBeStResult.setTarget(transformationAssistant.consIdentifierVar(var, value.getType().clone()));
+			setLetBeStResult.setExp(value);
+			outerBlock.getStatements().add(setLetBeStResult);
 
 			AIdentifierVarExpCG varExpResult = new AIdentifierVarExpCG();
 			varExpResult.setType(value.getType().clone());
-			varExpResult.setOriginal(var);
+			varExpResult.setIsLocal(true);
+			varExpResult.setName(var);
 			letBeStResult = varExpResult;
 		}
 
@@ -378,6 +386,8 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		// And make sure to have the enclosing statement in the transformed tree
 		outerBlock.getStatements().add(enclosingStm);
 		outerBlock.apply(this);
+		
+		outerBlock.setScoped(info.getStmAssistant().isScoped(outerBlock));
 	}
 	
 	@Override
@@ -395,7 +405,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		AIdentifierVarExpCG recVar = transformationAssistant.consIdentifierVar(recModifierName, node.getType().clone());
 
 		AIdentifierStateDesignatorCG rec = new AIdentifierStateDesignatorCG();
-		rec.setName(recVar.getOriginal());
+		rec.setName(recVar.getName());
 		rec.setType(node.getRecType().clone());
 		rec.setExplicit(false);
 		
@@ -560,8 +570,9 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		} else
 		{
 			AIdentifierVarExpCG forAllResult = new AIdentifierVarExpCG();
+			forAllResult.setIsLocal(true);
 			forAllResult.setType(new ABoolBasicTypeCG());
-			forAllResult.setOriginal(var);
+			forAllResult.setName(var);
 
 			transform(enclosingStm, block, forAllResult, node);
 			block.apply(this);
@@ -590,8 +601,9 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		} else
 		{
 			AIdentifierVarExpCG existsResult = new AIdentifierVarExpCG();
+			existsResult.setIsLocal(true);
 			existsResult.setType(new ABoolBasicTypeCG());
-			existsResult.setOriginal(var);
+			existsResult.setName(var);
 
 			transform(enclosingStm, block, existsResult, node);
 			block.apply(this);
@@ -621,7 +633,8 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		{
 			AIdentifierVarExpCG counter = new AIdentifierVarExpCG();
 			counter.setType(new AIntNumericBasicTypeCG());
-			counter.setOriginal(var);
+			counter.setIsLocal(true);
+			counter.setName(var);
 
 			AEqualsBinaryExpCG exists1Result = new AEqualsBinaryExpCG();
 			exists1Result.setType(new ABoolBasicTypeCG());
@@ -656,6 +669,8 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 
 		exp.apply(this);
 		topBlock.apply(this);
+		
+		topBlock.setScoped(info.getStmAssistant().isScoped(topBlock));
 	}
 
 	private void replaceCompWithTransformation(SStmCG enclosingStm,
@@ -663,7 +678,9 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	{
 		AIdentifierVarExpCG compResult = new AIdentifierVarExpCG();
 		compResult.setType(type.clone());
-		compResult.setOriginal(var);
+		compResult.setName(var);
+		compResult.setIsLambda(false);
+		compResult.setIsLocal(true);
 
 		transform(enclosingStm, block, compResult, comp);
 	}
@@ -701,13 +718,15 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		idPattern.setName(casesExpResultName);
 
 		AVarDeclCG resultVarDecl = new AVarDeclCG();
+		resultVarDecl.setFinal(false);
 		resultVarDecl.setPattern(idPattern);
 		resultVarDecl.setType(node.getType().clone());
 		resultVarDecl.setExp(new AUndefinedExpCG());
 
 		AIdentifierVarExpCG resultVar = new AIdentifierVarExpCG();
+		resultVar.setIsLocal(true);
 		resultVar.setIsLambda(false);
-		resultVar.setOriginal(casesExpResultName);
+		resultVar.setName(casesExpResultName);
 		resultVar.setType(node.getType().clone());
 
 		ACasesStmCG casesStm = new ACasesStmCG();

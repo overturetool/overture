@@ -141,11 +141,16 @@ public class TypeAssistantCG extends AssistantBase
 		return null;
 	}
 	
-	public STypeCG getFieldType(List<AClassDeclCG> classes, ARecordTypeCG recordType, String memberName)
+	public STypeCG getFieldType(List<AClassDeclCG> classes,
+			ARecordTypeCG recordType, String memberName)
 	{
 		AFieldDeclCG field = assistantManager.getDeclAssistant().getFieldDecl(classes, recordType, memberName);
-		
-		return field.getType().clone();
+
+		if (field != null)
+		{
+			return field.getType().clone();
+		}
+		return null;
 	}
 
 	public List<STypeCG> getFieldTypes(ARecordDeclCG record)

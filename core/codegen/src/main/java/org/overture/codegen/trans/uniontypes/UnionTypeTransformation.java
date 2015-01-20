@@ -82,7 +82,6 @@ import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.BaseTransformationAssistant;
 
 public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
@@ -327,6 +326,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 
 		String applyResultName = info.getTempVarNameGen().nextVarName(applyExpResulPrefix);
 		AVarDeclCG resultDecl = new AVarDeclCG();
+		resultDecl.setFinal(false);
 		resultDecl.setSourceNode(node.getSourceNode());
 		resultDecl.setExp(new ANullExpCG());
 		resultDecl.setType(resultType);
@@ -338,7 +338,8 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		AIdentifierVarExpCG resultVar = new AIdentifierVarExpCG();
 		resultVar.setSourceNode(node.getSourceNode());
 		resultVar.setIsLambda(false);
-		resultVar.setOriginal(applyResultName);
+		resultVar.setIsLocal(true);
+		resultVar.setName(applyResultName);
 		resultVar.setType(resultDecl.getType().clone());
 
 		ABlockStmCG replacementBlock = new ABlockStmCG();
@@ -348,6 +349,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		{
 			String objName = info.getTempVarNameGen().nextVarName(objExpPrefix);
 			AVarDeclCG objectDecl = new AVarDeclCG();
+			objectDecl.setFinal(false);
 			objectDecl.setExp(subject.clone());
 			objectDecl.setType(subject.getType().clone());
 			AIdentifierPatternCG objectVarId = new AIdentifierPatternCG();
@@ -358,7 +360,8 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 
 			AIdentifierVarExpCG objectVar = new AIdentifierVarExpCG();
 			objectVar.setIsLambda(false);
-			objectVar.setOriginal(objName);
+			objectVar.setIsLocal(true);
+			objectVar.setName(objName);
 			objectVar.setType(objectDecl.getType().clone());
 			obj = objectVar;
 		} else
@@ -700,7 +703,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 
 		STypeCG type = node.getType();
 		LinkedList<SExpCG> args = node.getArgs();
-		String className = node.getClassName();
+		//String className = node.getClassName();
 		String fieldName = node.getFieldName();
 		SourceNode sourceNode = node.getSourceNode();
 
@@ -708,7 +711,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		call.setObj(objExp);
 		call.setType(type.clone());
 		call.setArgs((List<? extends SExpCG>) args.clone());
-		call.setClassName(className);
+		//call.setClassName(className);
 		call.setFieldName(fieldName);
 		call.setSourceNode(sourceNode);
 
@@ -718,6 +721,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		{
 			String callStmObjName = info.getTempVarNameGen().nextVarName(callStmObjPrefix);
 			AVarDeclCG objDecl = new AVarDeclCG();
+			objDecl.setFinal(false);
 			objDecl.setSourceNode(node.getSourceNode());
 			objDecl.setExp(objExp.clone());
 			objDecl.setType(objType.clone());
@@ -728,7 +732,8 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			AIdentifierVarExpCG objVar = new AIdentifierVarExpCG();
 			objVar.setSourceNode(node.getSourceNode());
 			objVar.setIsLambda(false);
-			objVar.setOriginal(callStmObjName);
+			objVar.setIsLocal(true);
+			objVar.setName(callStmObjName);
 			objVar.setType(objDecl.getType().clone());
 
 			objExp = objVar;
@@ -951,7 +956,16 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 
 			if(fieldType == null)
 			{
-				Logger.getLog().printErrorln(String.format("Could not find field type with member name %s for type %s", memberName, currentType));
+				// The field type may not be found if the member does not exist
+				// For example:
+				// 
+				// types
+				// R1 :: x : int;
+				// R2 :: y : int;
+				// ...
+				//let inlines : seq of Inline = [mk_R1(4), mk_R2(5)]
+				//in 
+				//		  return inlines(1).x + inlines(2).y;
 				continue;
 			}
 			

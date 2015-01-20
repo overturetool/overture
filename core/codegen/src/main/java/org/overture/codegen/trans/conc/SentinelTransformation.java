@@ -43,6 +43,7 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 
 
 		AClassDeclCG innerClass = new AClassDeclCG();
+		innerClass.setStatic(true);
 
 		String classname = node.getName();
 		LinkedList<AMethodDeclCG> allMethods;
@@ -121,9 +122,34 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 		AMethodDeclCG method_pp = new AMethodDeclCG();
 		//adding the first constructor to the innerclass
 		method_pp.setIsConstructor(true);
+		//method_pp.setStatic(true);
 		method_pp.setAccess("public");
 		method_pp.setName(innerClass.getName());
 		//Set up body for first constructor.
+//		AExternalTypeCG evalPpstaticType = new AExternalTypeCG();
+//		evalPpstaticType.setName("EvaluatePP");
+		
+//		AIdentifierVarExpCG instancestaticParam = new AIdentifierVarExpCG();
+//		instancestaticParam.setIsLambda(false);
+//		instancestaticParam.setOriginal("instance");
+//		instancestaticParam.setType(evalPpstaticType.clone());
+//		ANewExpCG instancestaticParam = new ANewExpCG();
+//		ATypeNameCG typename = new ATypeNameCG();
+//		typename.setName(node.getName());
+//		instancestaticParam.setName(typename);
+//		
+//		AIdentifierVarExpCG function_sumstatic = new AIdentifierVarExpCG();
+//		function_sumstatic.setIsLambda(false);
+//		function_sumstatic.setOriginal("function_sum");
+//		function_sumstatic.setType(new AIntNumericBasicTypeCG());
+//				
+//		APlainCallStmCG staticinit = new APlainCallStmCG();
+//		staticinit.setType(new AVoidTypeCG());
+//		staticinit.getArgs().add(instancestaticParam);
+//		staticinit.getArgs().add(function_sumstatic);
+//		staticinit.setName("init");
+		
+		//method_pp.setBody(staticinit);
 		method_pp.setBody(new ABlockStmCG());
 		innerClass.getMethods().add(method_pp);
 
@@ -154,12 +180,14 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 
 		AIdentifierVarExpCG instanceParam = new AIdentifierVarExpCG();
 		instanceParam.setIsLambda(false);
-		instanceParam.setOriginal("instance");
+		instanceParam.setIsLocal(true);
+		instanceParam.setName("instance");
 		instanceParam.setType(evalPpType.clone());
 
 		AIdentifierVarExpCG function_sum = new AIdentifierVarExpCG();
 		function_sum.setIsLambda(false);
-		function_sum.setOriginal("function_sum");
+		function_sum.setIsLocal(false);
+		function_sum.setName("function_sum");
 		function_sum.setType(new AIntNumericBasicTypeCG());
 
 		//the init method

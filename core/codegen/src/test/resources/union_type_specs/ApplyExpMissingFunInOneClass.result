@@ -43,22 +43,25 @@ public class Entry {
 
     public static Number Run() {
         VDMSeq xs = SeqUtil.seq(new A(), new A());
-        Number sum = 0L;
 
-        for (Iterator iterator_1 = xs.iterator(); iterator_1.hasNext();) {
-            Object x = (Object) iterator_1.next();
-            Number apply_1 = null;
+        {
+            Number sum = 0L;
 
-            if (x instanceof A) {
-                apply_1 = ((A) x).fun();
-            } else {
-                throw new RuntimeException("Missing member: fun");
+            for (Iterator iterator_1 = xs.iterator(); iterator_1.hasNext();) {
+                Object x = (Object) iterator_1.next();
+                Number apply_1 = null;
+
+                if (x instanceof A) {
+                    apply_1 = ((A) x).fun();
+                } else {
+                    throw new RuntimeException("Missing member: fun");
+                }
+
+                sum = sum.longValue() + apply_1.longValue();
             }
 
-            sum = sum.longValue() + apply_1.longValue();
+            return sum;
         }
-
-        return sum;
     }
 
     public String toString() {
@@ -69,86 +72,6 @@ public class Entry {
 ##########
 public interface Func_1<T_1> {
     public abstract T_1 eval();
-}
-
-##########
-
-package quotes;
-
-import org.overture.codegen.runtime.*;
-
-import java.util.*;
-
-
-public class start {
-    private static int hc = 0;
-    private static start instance = null;
-
-    public start() {
-        if (Utils.equals(hc, 0)) {
-            hc = super.hashCode();
-        }
-    }
-
-    public static start getInstance() {
-        if (Utils.equals(instance, null)) {
-            instance = new start();
-        }
-
-        return instance;
-    }
-
-    public int hashCode() {
-        return hc;
-    }
-
-    public boolean equals(final Object obj) {
-        return obj instanceof start;
-    }
-
-    public String toString() {
-        return "<start>";
-    }
-}
-
-##########
-
-package quotes;
-
-import org.overture.codegen.runtime.*;
-
-import java.util.*;
-
-
-public class append {
-    private static int hc = 0;
-    private static append instance = null;
-
-    public append() {
-        if (Utils.equals(hc, 0)) {
-            hc = super.hashCode();
-        }
-    }
-
-    public static append getInstance() {
-        if (Utils.equals(instance, null)) {
-            instance = new append();
-        }
-
-        return instance;
-    }
-
-    public int hashCode() {
-        return hc;
-    }
-
-    public boolean equals(final Object obj) {
-        return obj instanceof append;
-    }
-
-    public String toString() {
-        return "<append>";
-    }
 }
 
 ##########

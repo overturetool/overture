@@ -85,13 +85,13 @@ import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.DeclarationTag;
 import org.overture.codegen.trans.TempVarPrefixes;
-import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class PatternTransformation extends DepthFirstAnalysisAdaptor
 {
 	private List<AClassDeclCG> classes;
 	private IRInfo info;
-	private TransformationAssistantCG transformationAssistant;
+	private TransAssistantCG transformationAssistant;
 
 	private PatternMatchConfig config;
 
@@ -99,7 +99,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 
 	public PatternTransformation(List<AClassDeclCG> classes,
 			TempVarPrefixes varPrefixes, IRInfo info,
-			TransformationAssistantCG transformationAssistant,
+			TransAssistantCG transformationAssistant,
 			PatternMatchConfig config)
 	{
 		this.classes = classes;
@@ -423,9 +423,10 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 			if (nextDeclPattern instanceof AIdentifierPatternCG)
 			{
 				AIdentifierVarExpCG varExp = new AIdentifierVarExpCG();
-				varExp.setIsLambda(false);
 				varExp.setType(nextDeclCopy.getType());
-				varExp.setOriginal(((AIdentifierPatternCG) nextDeclPattern).getName());
+				varExp.setIsLocal(true);
+				varExp.setIsLambda(false);
+				varExp.setName(((AIdentifierPatternCG) nextDeclPattern).getName());
 
 				ALocalAssignmentStmCG assignment = new ALocalAssignmentStmCG();
 				assignment.setTarget(varExp);
@@ -681,8 +682,9 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 
 		AIdentifierVarExpCG recordPatternVar = new AIdentifierVarExpCG();
 		recordPatternVar.setType(recordType.clone());
-		recordPatternVar.setOriginal(idPattern.getName());
+		recordPatternVar.setName(idPattern.getName());
 		recordPatternVar.setIsLambda(false);
+		recordPatternVar.setIsLocal(true);
 
 		ABlockStmCG fieldCheckBlock = consFieldCheckBlock(patternData, recordPatternVar, recordPattern.getPatterns(), types);
 
@@ -724,8 +726,9 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 
 		AIdentifierVarExpCG tuplePatternVar = new AIdentifierVarExpCG();
 		tuplePatternVar.setType(tupleType.clone());
-		tuplePatternVar.setOriginal(idPattern.getName());
+		tuplePatternVar.setName(idPattern.getName());
 		tuplePatternVar.setIsLambda(false);
+		tuplePatternVar.setIsLocal(true);
 
 		ATupleCompatibilityExpCG tupleCheck = new ATupleCompatibilityExpCG();
 		tupleCheck.setType(new ABoolBasicTypeCG());
@@ -807,7 +810,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 			SStmCG noMatchStm)
 	{
 		AIfStmCG ifCheck = new AIfStmCG();
-		ifCheck.setIfExp(transformationAssistant.consBoolCheck(successVar.getOriginal(), true));
+		ifCheck.setIfExp(transformationAssistant.consBoolCheck(successVar.getName(), true));
 		ifCheck.setThenStm(noMatchStm);
 
 		return ifCheck;
@@ -850,6 +853,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 			SPatternCG idPattern)
 	{
 		AVarDeclCG patternDecl = new AVarDeclCG();
+		patternDecl.setFinal(false);
 		patternDecl.setType(type);
 		patternDecl.setExp(valueToMatch);
 		patternDecl.setPattern(idPattern);
@@ -985,7 +989,8 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 
 		AIdentifierVarExpCG var = new AIdentifierVarExpCG();
 		var.setType(currentType.clone());
-		var.setOriginal(currentId.getName());
+		var.setName(currentId.getName());
+		var.setIsLocal(true);
 		var.setIsLambda(false);
 
 		ALocalAssignmentStmCG localAssignment = new ALocalAssignmentStmCG();
@@ -1011,6 +1016,8 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		if (declarePatternVar)
 		{
 			AVarDeclCG patternDecl = new AVarDeclCG();
+			
+			patternDecl.setFinal(false);
 			patternDecl.setPattern(idPattern.clone());
 			patternDecl.setType(actualValue.getType().clone());
 			patternDecl.setExp(actualValue.clone());
@@ -1020,8 +1027,9 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 
 		AIdentifierVarExpCG var = new AIdentifierVarExpCG();
 		var.setType(valueToMatch.getType().clone());
-		var.setOriginal(idPattern.getName());
+		var.setName(idPattern.getName());
 		var.setIsLambda(false);
+		var.setIsLocal(true);
 
 		AEqualsBinaryExpCG check = new AEqualsBinaryExpCG();
 		check.setType(new ABoolBasicTypeCG());

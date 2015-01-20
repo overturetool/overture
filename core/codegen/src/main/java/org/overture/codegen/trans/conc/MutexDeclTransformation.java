@@ -21,12 +21,12 @@ import org.overture.codegen.ir.IRInfo;
 public class MutexDeclTransformation extends DepthFirstAnalysisAdaptor
 {
 	private IRInfo info;
-	//private List<AClassDeclCG> classes;
+	
 	
 	public MutexDeclTransformation(IRInfo info, List<AClassDeclCG> classes)
 	{
 		this.info = info;
-		//this.classes = classes;
+		
 	}
 	
 	@Override
@@ -40,16 +40,16 @@ public class MutexDeclTransformation extends DepthFirstAnalysisAdaptor
 				
 		for(AMutexSyncDeclCG mutex : node.getMutexSyncs())
 		{
-			//System.out.println(node.getMutexSyncs());
+			
 			if (mutex.getOpnames().size() == 1)
 			{
 				Boolean foundsame = false;
 				int foundplace = 0;
-				// System.out.println(mutex);
+			
 				APersyncDeclCG perpred = new APersyncDeclCG();
 				perpred.setOpname(mutex.getOpnames().getFirst().toString());
 
-				// System.out.println(perpred.getOpname());
+				
 				AEqualsBinaryExpCG guard = new AEqualsBinaryExpCG();
 
 				AHistoryExpCG histcount = new AHistoryExpCG();
@@ -62,7 +62,7 @@ public class MutexDeclTransformation extends DepthFirstAnalysisAdaptor
 
 				histcount.setSentinelType(innerclass);
 
-				//TODO: This should be checked for correctness
+				
 				AIntLiteralExpCG zero = new AIntLiteralExpCG();
 				zero.setValue(0L);
 
@@ -72,8 +72,7 @@ public class MutexDeclTransformation extends DepthFirstAnalysisAdaptor
 				
 				for (int i = 0; i < node.getPerSyncs().size(); i++)
 				{
-					//System.out.println(perpred.getOpname());
-					//System.out.println(node.getPerSyncs().get(i));
+					
 					if (node.getPerSyncs().get(i).getOpname().equals(perpred.getOpname()))
 					{
 
@@ -82,13 +81,13 @@ public class MutexDeclTransformation extends DepthFirstAnalysisAdaptor
 					}
 				}
 
-				//System.out.println(foundsame);
+				
 				if (!foundsame)
 				{
 
 					perpred.setPred(guard);
 					node.getPerSyncs().add(perpred);
-					//System.out.println(node.getPerSyncs().getLast());
+					
 				} else
 				{
 					AAndBoolBinaryExpCG newpred = new AAndBoolBinaryExpCG();
@@ -107,18 +106,21 @@ public class MutexDeclTransformation extends DepthFirstAnalysisAdaptor
 					{
 						APersyncDeclCG perpred = new APersyncDeclCG();
 						perpred.setOpname(((ATokenNameCG) operation).getName());
-						//System.out.println(mutex.getOpnames().getFirst());
+						
 						AClassTypeCG innerclass = new AClassTypeCG();
 						innerclass.setName(node.getName() + "_sentinel");
 
 						APlusNumericBinaryExpCG addedhistcounter = new APlusNumericBinaryExpCG();
+						
 						AHistoryExpCG firsthistcount = new AHistoryExpCG();
 						firsthistcount.setHistype(hop);
 						firsthistcount.setSentinelType(innerclass.clone());
 						firsthistcount.setOpsname(mutex.getOpnames().getFirst().toString());
 						firsthistcount.setType(new AIntNumericBasicTypeCG());
+						
 						addedhistcounter.setLeft(firsthistcount);
-
+						APlusNumericBinaryExpCG addition1 = new APlusNumericBinaryExpCG();
+						addition1 = addedhistcounter;
 						for (int i = 1; i < mutex.getOpnames().size() - 1; i++)
 						{
 							String nextOpName = mutex.getOpnames().get(i).toString();
@@ -132,15 +134,12 @@ public class MutexDeclTransformation extends DepthFirstAnalysisAdaptor
 							APlusNumericBinaryExpCG addition = new APlusNumericBinaryExpCG();
 							addition.setLeft(histcountleft);
 							
-							addedhistcounter.setRight(addition);
+							addition1.setRight(addition);
 							
-							addedhistcounter = addition;
-							//addition.setRight(addedhistcounter);
-
+							addition1 = addition;
 						}
 						String lastOpName = mutex.getOpnames().getLast().toString();
-						//AClassTypeCG innerclass = new AClassTypeCG();
-						//innerclass.setName(node.getName() + "_sentinel");
+						
 						
 						AHistoryExpCG lastHistoryExpCG = new AHistoryExpCG();
 						
@@ -148,8 +147,8 @@ public class MutexDeclTransformation extends DepthFirstAnalysisAdaptor
 						lastHistoryExpCG.setHistype(hop);
 						lastHistoryExpCG.setType(new AIntNumericBasicTypeCG());
 						lastHistoryExpCG.setSentinelType(innerclass.clone());
+						addition1.setRight(lastHistoryExpCG);
 						
-						addedhistcounter.setRight(lastHistoryExpCG);
 						AIntLiteralExpCG zeronum = new AIntLiteralExpCG();
 						zeronum.setValue(0L);
 						
@@ -171,7 +170,7 @@ public class MutexDeclTransformation extends DepthFirstAnalysisAdaptor
 
 							perpred.setPred(equalzero);
 							node.getPerSyncs().add(perpred);
-							//System.out.println(node.getPerSyncs().getLast());
+							
 						} else
 						{
 							AAndBoolBinaryExpCG newpred = new AAndBoolBinaryExpCG();

@@ -43,11 +43,14 @@ import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
+import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
+import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.statements.AForLoopStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.AIncrementStmCG;
@@ -57,6 +60,8 @@ import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
+import org.overture.codegen.cgast.types.AUnknownTypeCG;
+import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.ir.IRInfo;
@@ -66,12 +71,12 @@ import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.IIterationStrategy;
 import org.overture.codegen.trans.TempVarPrefixes;
 
-public class TransformationAssistantCG extends BaseTransformationAssistant
+public class TransAssistantCG extends BaseTransformationAssistant
 {
 	protected IRInfo info;
 	protected TempVarPrefixes varPrefixes;
 
-	public TransformationAssistantCG(IRInfo info, TempVarPrefixes varPrefixes)
+	public TransAssistantCG(IRInfo info, TempVarPrefixes varPrefixes)
 	{
 		this.info = info;
 		this.varPrefixes = varPrefixes;
@@ -164,7 +169,8 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 	{
 		AIdentifierVarExpCG successVar = new AIdentifierVarExpCG();
 		successVar.setIsLambda(false);
-		successVar.setOriginal(successVarName);
+		successVar.setIsLocal(true);
+		successVar.setName(successVarName);
 		successVar.setType(new ABoolBasicTypeCG());
 
 		return successVar;
@@ -174,6 +180,7 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 	{
 		AVarDeclCG boolVarDecl = new AVarDeclCG();
 
+		boolVarDecl.setFinal(false);
 		boolVarDecl.setType(new ABoolBasicTypeCG());
 
 		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
@@ -199,7 +206,8 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 	{
 		AIdentifierVarExpCG left = new AIdentifierVarExpCG();
 		left.setType(new AIntNumericBasicTypeCG());
-		left.setOriginal(varName);
+		left.setIsLocal(true);
+		left.setName(varName);
 
 		AIntLiteralExpCG right = info.getExpAssistant().consIntLiteral(value);
 
@@ -215,7 +223,8 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 	{
 		AIdentifierVarExpCG boolVarExp = new AIdentifierVarExpCG();
 		boolVarExp.setType(new ABoolBasicTypeCG());
-		boolVarExp.setOriginal(boolVarName);
+		boolVarExp.setIsLocal(true);
+		boolVarExp.setName(boolVarName);
 
 		if (negate)
 		{
@@ -246,6 +255,7 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 	{
 		AVarDeclCG setBindDecl = new AVarDeclCG();
 
+		setBindDecl.setFinal(false);
 		setBindDecl.setType(getSetTypeCloned(set));
 
 		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
@@ -262,6 +272,7 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 	{
 		AVarDeclCG idDecl = new AVarDeclCG();
 
+		idDecl.setFinal(false);
 		idDecl.setType(getSetTypeCloned(setType).getSetOf());
 
 		idDecl.setPattern(pattern.clone());
@@ -274,11 +285,20 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 	{
 		return consDecl(varName, exp.getType().clone(), exp);
 	}
+	
+	public ANullExpCG consNullExp()
+	{
+		ANullExpCG nullExp = new ANullExpCG();
+		nullExp.setType(new AUnknownTypeCG());
+		
+		return nullExp;
+	}
 
 	public AVarDeclCG consDecl(String varName, STypeCG type, SExpCG exp)
 	{
 		AVarDeclCG resultDecl = new AVarDeclCG();
 
+		resultDecl.setFinal(false);
 		resultDecl.setType(type);
 
 		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
@@ -292,18 +312,19 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 
 	public AClassTypeCG consClassType(String classTypeName)
 	{
-		AClassTypeCG iteratorType = new AClassTypeCG();
-		iteratorType.setName(classTypeName);
+		AClassTypeCG classType = new AClassTypeCG();
+		classType.setName(classTypeName);
 
-		return iteratorType;
+		return classType;
 	}
 
 	public SExpCG consInstanceCall(STypeCG instanceType, String instanceName,
 			STypeCG returnType, String memberName, SExpCG arg)
 	{
 		AIdentifierVarExpCG instance = new AIdentifierVarExpCG();
-		instance.setOriginal(instanceName);
 		instance.setType(instanceType.clone());
+		instance.setName(instanceName);
+		instance.setIsLocal(true);
 
 		AFieldExpCG fieldExp = new AFieldExpCG();
 		fieldExp.setMemberName(memberName);
@@ -328,16 +349,37 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 
 		return instanceCall;
 	}
+	
+	public ACallObjectExpStmCG consInstanceCallStm(STypeCG instanceType,
+			String instanceName, String memberName, SExpCG arg)
+	{
+		AIdentifierVarExpCG instance = new AIdentifierVarExpCG();
+		instance.setName(instanceName);
+		instance.setType(instanceType.clone());
+
+		ACallObjectExpStmCG call = new ACallObjectExpStmCG();
+		call.setType(new AVoidTypeCG());
+		call.setFieldName(memberName);
+		call.setObj(instance);
+		
+		if(arg != null)
+		{
+			call.getArgs().add(arg);
+		}
+
+		return call;
+	}
 
 	public AVarDeclCG consNextElementDeclared(String iteratorTypeName,
 			STypeCG elementType, SPatternCG id, String iteratorName,
 			String nextElementMethod) throws AnalysisException
 	{
 		ACastUnaryExpCG cast = consNextElementCall(iteratorTypeName, iteratorName, elementType, nextElementMethod);
+
 		AVarDeclCG decl = new AVarDeclCG();
 
+		decl.setFinal(false);
 		decl.setType(elementType);
-
 		decl.setPattern(id.clone());
 		decl.setExp(cast);
 
@@ -363,6 +405,29 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 
 		return assignment;
 	}
+	
+	public ANewExpCG consDefaultConsCall(String className)
+	{
+		return consDefaultConsCall(consClassType(className));
+	}
+	
+	public ANewExpCG consDefaultConsCall(AClassTypeCG classType)
+	{
+		ANewExpCG initAltNode = new ANewExpCG();
+		initAltNode.setType(classType.clone());
+		initAltNode.setName(consTypeNameForClass(classType.getName()));
+		
+		return initAltNode;
+	}
+	
+	public ATypeNameCG consTypeNameForClass(String classTypeName)
+	{
+		ATypeNameCG typeName = new ATypeNameCG();
+		typeName.setDefiningClass(null);
+		typeName.setName(classTypeName);
+		
+		return typeName;
+	}
 
 	public ACastUnaryExpCG consNextElementCall(String iteratorType,
 			String iteratorName, STypeCG elementType, String nextElementMethod)
@@ -377,7 +442,9 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 	{
 		AIdentifierVarExpCG col = new AIdentifierVarExpCG();
 		col.setType(new AIntNumericBasicTypeCG());
-		col.setOriginal(counterName);
+		col.setIsLambda(false);
+		col.setIsLocal(true);
+		col.setName(counterName);
 
 		AIncrementStmCG inc = new AIncrementStmCG();
 		inc.setVar(col);
@@ -411,9 +478,10 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 
 		STypeCG setType = set.getType().clone();
 
-		setVar.setOriginal(setName);
 		setVar.setType(setType);
-
+		setVar.setName(setName);
+		setVar.setIsLocal(true);
+		
 		return setVar;
 	}
 
@@ -576,8 +644,9 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 	{
 		AIdentifierVarExpCG var = new AIdentifierVarExpCG();
 		var.setIsLambda(false);
+		var.setIsLocal(true);
 		var.setType(type);
-		var.setOriginal(name);
+		var.setName(name);
 		
 		return var;
 	}
@@ -587,8 +656,9 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 	{
 		AIdentifierVarExpCG condVar = new AIdentifierVarExpCG();
 		condVar.setType(predMethod.getMethodType().clone());
-		condVar.setOriginal(predMethod.getName());
+		condVar.setName(predMethod.getName());
 		condVar.setIsLambda(false);
+		condVar.setIsLocal(true);
 		
 		AApplyExpCG condCall = new AApplyExpCG();
 		condCall.setType(new ABoolBasicTypeCG());
@@ -609,9 +679,10 @@ public class TransformationAssistantCG extends BaseTransformationAssistant
 			AIdentifierPatternCG paramId = (AIdentifierPatternCG) paramPattern;
 			
 			AIdentifierVarExpCG paramArg = new AIdentifierVarExpCG();
-			paramArg.setIsLambda(false);
 			paramArg.setType(p.getType().clone());
-			paramArg.setOriginal(paramId.getName());
+			paramArg.setIsLocal(true);
+			paramArg.setIsLambda(false);
+			paramArg.setName(paramId.getName());
 			
 			condCall.getArgs().add(paramArg);
 		}

@@ -16,6 +16,7 @@ public class SharedCounter implements EvaluatePP {
 
         try {
             counter = counter.longValue() + 1L;
+            sentinel.stateChanged();
         } finally {
             sentinel.leaving(((SharedCounter_sentinel) sentinel).inc);
         }
@@ -51,7 +52,7 @@ public class SharedCounter implements EvaluatePP {
         }
     }
 
-    public class SharedCounter_sentinel extends Sentinel {
+    public static class SharedCounter_sentinel extends Sentinel {
         public static final int inc = 0;
         public static final int getValue = 1;
         public static final int SharedCounter = 2;
@@ -79,9 +80,9 @@ public class Incrementer extends VDMThread implements EvaluatePP {
     public volatile Sentinel sentinel;
 
     public Incrementer(final SharedCounter s) {
-        cg_init_Incrementer_1(s);
-
         sentinel = new Incrementer_sentinel(this);
+
+        cg_init_Incrementer_1(s);
     }
 
     public Incrementer() {
@@ -108,6 +109,7 @@ public class Incrementer extends VDMThread implements EvaluatePP {
         try {
             sharedCounter.inc();
             isFinished = true;
+            sentinel.stateChanged();
         } finally {
             sentinel.leaving(((Incrementer_sentinel) sentinel).incCounter);
         }
@@ -139,7 +141,7 @@ public class Incrementer extends VDMThread implements EvaluatePP {
         incCounter();
     }
 
-    public class Incrementer_sentinel extends Sentinel {
+    public static class Incrementer_sentinel extends Sentinel {
         public static final int cg_init_Incrementer_1 = 0;
         public static final int Incrementer = 1;
         public static final int joined = 2;
@@ -200,7 +202,7 @@ public class Entry implements EvaluatePP {
         }
     }
 
-    public class Entry_sentinel extends Sentinel {
+    public static class Entry_sentinel extends Sentinel {
         public static final int Run = 0;
         public static final int Entry = 1;
         public static final int toString = 2;
@@ -212,86 +214,6 @@ public class Entry implements EvaluatePP {
         public Entry_sentinel(final EvaluatePP instance) {
             init(instance, function_sum);
         }
-    }
-}
-
-##########
-
-package quotes;
-
-import org.overture.codegen.runtime.*;
-
-import java.util.*;
-
-
-public class start {
-    private static int hc = 0;
-    private static start instance = null;
-
-    public start() {
-        if (Utils.equals(hc, 0)) {
-            hc = super.hashCode();
-        }
-    }
-
-    public static start getInstance() {
-        if (Utils.equals(instance, null)) {
-            instance = new start();
-        }
-
-        return instance;
-    }
-
-    public int hashCode() {
-        return hc;
-    }
-
-    public boolean equals(final Object obj) {
-        return obj instanceof start;
-    }
-
-    public String toString() {
-        return "<start>";
-    }
-}
-
-##########
-
-package quotes;
-
-import org.overture.codegen.runtime.*;
-
-import java.util.*;
-
-
-public class append {
-    private static int hc = 0;
-    private static append instance = null;
-
-    public append() {
-        if (Utils.equals(hc, 0)) {
-            hc = super.hashCode();
-        }
-    }
-
-    public static append getInstance() {
-        if (Utils.equals(instance, null)) {
-            instance = new append();
-        }
-
-        return instance;
-    }
-
-    public int hashCode() {
-        return hc;
-    }
-
-    public boolean equals(final Object obj) {
-        return obj instanceof append;
-    }
-
-    public String toString() {
-        return "<append>";
     }
 }
 

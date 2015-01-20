@@ -34,8 +34,9 @@ public class JavaPostCheckCreator implements IPostCheckCreator
 		methodType.getParams().add(new AStringTypeCG());
 
 		AExplicitVarExpCG explicitVar = new AExplicitVarExpCG();
-		explicitVar.setIsLambda(false);
 		explicitVar.setType(methodType);
+		explicitVar.setIsLambda(false);
+		explicitVar.setIsLocal(false);
 		explicitVar.setName(postCheckMethodName);
 		explicitVar.setClassType(externalType);
 

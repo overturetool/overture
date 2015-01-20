@@ -29,6 +29,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
+import org.overture.codegen.utils.GeneratedModule;
+import org.overture.codegen.vdm2java.JavaCodeGen;
+
 public class TestUtils
 {
 	public static List<File> getFiles(File file, String extension)
@@ -111,12 +114,36 @@ public class TestUtils
 			{
 				while (input.read() == DELIMITER_CHAR)
 				{
-					;
 				}
-
-				if (!data.toString().trim().startsWith("*Name Violations*"))
+				
+				String dataStr = data.toString();
+				
+				String QUOTES_INDICATOR = "*Quotes*";
+				if(dataStr.trim().startsWith(QUOTES_INDICATOR))
 				{
-					classes.add(data);
+					String[] quotes = dataStr.replace(QUOTES_INDICATOR, "").trim().split(",");
+					
+					JavaCodeGen javaCodeGen = new JavaCodeGen();
+					
+					for(String q : quotes)
+					{
+						javaCodeGen.getInfo().registerQuoteValue(q);
+					}
+					
+					List<GeneratedModule> genQuotes = javaCodeGen.generateJavaFromVdmQuotes();
+					
+					for(GeneratedModule q : genQuotes)
+					{
+						classes.add(new StringBuffer(q.getContent()));
+					}
+					
+				} else
+				{
+					String NAME_VIOLATIONS_INDICATOR = "*Name Violations*";
+					if (!dataStr.trim().startsWith(NAME_VIOLATIONS_INDICATOR))
+					{
+						classes.add(data);
+					}
 				}
 
 				data = new StringBuffer();

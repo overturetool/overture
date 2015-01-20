@@ -1,0 +1,17 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () == 
+let x = 999 in
+(
+  let x = 123 in
+  (
+    dcl x : nat := x + x;
+    skip;
+  );
+  return x;
+)
+
+end Entry

@@ -37,7 +37,7 @@ public class A extends VDMThread implements EvaluatePP {
         }
     }
 
-    public class A_sentinel extends Sentinel {
+    public static class A_sentinel extends Sentinel {
         public static final int opA = 0;
         public static final int A = 1;
         public static final int toString = 2;
@@ -71,6 +71,7 @@ public class B extends A implements EvaluatePP {
 
         try {
             predA = 1L;
+            sentinel.stateChanged();
         } finally {
             sentinel.leaving(((B_sentinel) sentinel).opB);
         }
@@ -103,7 +104,7 @@ public class B extends A implements EvaluatePP {
         super.opA();
     }
 
-    public class B_sentinel extends A_sentinel {
+    public static class B_sentinel extends A_sentinel {
         public static final int opB = 0;
         public static final int B = 1;
         public static final int toString = 2;
@@ -157,7 +158,7 @@ public class Entry implements EvaluatePP {
         }
     }
 
-    public class Entry_sentinel extends Sentinel {
+    public static class Entry_sentinel extends Sentinel {
         public static final int Run = 0;
         public static final int Entry = 1;
         public static final int toString = 2;
@@ -169,86 +170,6 @@ public class Entry implements EvaluatePP {
         public Entry_sentinel(final EvaluatePP instance) {
             init(instance, function_sum);
         }
-    }
-}
-
-##########
-
-package quotes;
-
-import org.overture.codegen.runtime.*;
-
-import java.util.*;
-
-
-public class start {
-    private static int hc = 0;
-    private static start instance = null;
-
-    public start() {
-        if (Utils.equals(hc, 0)) {
-            hc = super.hashCode();
-        }
-    }
-
-    public static start getInstance() {
-        if (Utils.equals(instance, null)) {
-            instance = new start();
-        }
-
-        return instance;
-    }
-
-    public int hashCode() {
-        return hc;
-    }
-
-    public boolean equals(final Object obj) {
-        return obj instanceof start;
-    }
-
-    public String toString() {
-        return "<start>";
-    }
-}
-
-##########
-
-package quotes;
-
-import org.overture.codegen.runtime.*;
-
-import java.util.*;
-
-
-public class append {
-    private static int hc = 0;
-    private static append instance = null;
-
-    public append() {
-        if (Utils.equals(hc, 0)) {
-            hc = super.hashCode();
-        }
-    }
-
-    public static append getInstance() {
-        if (Utils.equals(instance, null)) {
-            instance = new append();
-        }
-
-        return instance;
-    }
-
-    public int hashCode() {
-        return hc;
-    }
-
-    public boolean equals(final Object obj) {
-        return obj instanceof append;
-    }
-
-    public String toString() {
-        return "<append>";
     }
 }
 

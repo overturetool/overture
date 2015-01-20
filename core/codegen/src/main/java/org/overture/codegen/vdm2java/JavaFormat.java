@@ -37,6 +37,7 @@ import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
+import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
@@ -68,6 +69,7 @@ import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
+import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AForLoopStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AStartStmCG;
@@ -89,8 +91,10 @@ import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.ir.IRAnalysis;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
+import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateCallable;
+import org.overture.codegen.merging.TemplateStructure;
 import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
 import org.overture.codegen.utils.GeneralUtils;
@@ -116,15 +120,22 @@ public class JavaFormat
 	private FunctionValueAssistant functionValueAssistant;
 	private MergeVisitor mergeVisitor;
 	private JavaValueSemantics valueSemantics;
+	private JavaFormatAssistant javaFormatAssistant;
 
-	public JavaFormat(TempVarPrefixes varPrefixes, IRInfo info)
+	public JavaFormat(TempVarPrefixes varPrefixes, TemplateStructure templateStructure, IRInfo info)
 	{
 		this.valueSemantics = new JavaValueSemantics(this);
-		JavaObjectCreator recordCreator = new JavaRecordCreator(this);
+		JavaClassCreatorBase recordCreator = new JavaRecordCreator(this);
 		TemplateCallable[] templateCallables = TemplateCallableManager.constructTemplateCallables(this, IRAnalysis.class, varPrefixes, valueSemantics, recordCreator);
-		this.mergeVisitor = new MergeVisitor(JavaCodeGen.JAVA_TEMPLATE_STRUCTURE, templateCallables);
+		this.mergeVisitor = new MergeVisitor(templateStructure, templateCallables);
 		this.functionValueAssistant = null;
 		this.info = info;
+		this.javaFormatAssistant = new JavaFormatAssistant();
+	}
+	
+	public JavaFormatAssistant getJavaFormatAssistant()
+	{
+		return javaFormatAssistant;
 	}
 
 	public String getJavaNumber()
@@ -704,12 +715,32 @@ public class JavaFormat
 		StringWriter generatedBody = new StringWriter();
 
 		generatedBody.append("{" + NEWLINE + NEWLINE);
-		generatedBody.append(format(body));
+		generatedBody.append(handleOpBody(body));
 		generatedBody.append(NEWLINE + "}");
 
 		return generatedBody.toString();
 	}
 
+	private String handleOpBody(SStmCG body) throws AnalysisException
+	{
+		AMethodDeclCG method = body.getAncestor(AMethodDeclCG.class);
+		
+		if(method == null)
+		{
+			Logger.getLog().printErrorln("Could not find enclosing method when formatting operation body. Got: " + body);
+		}
+		else if(method.getAsync() != null && method.getAsync())
+		{
+			return "new VDMThread(){ "
+			+ "\tpublic void run() {"
+			+ "\t " + format(body)
+			+ "\t} "
+			+ "}.start();";
+		}
+		
+		return format(body);
+	}
+	
 	public String formatTemplateParam(INode potentialBasicType)
 			throws AnalysisException
 	{
@@ -896,5 +927,10 @@ public class JavaFormat
 	{
 		INode parent = node.parent();
 		return parent instanceof ASeqToStringUnaryExpCG || parent instanceof AStringToSeqUnaryExpCG;
+	}
+	
+	public static boolean isScoped(ABlockStmCG block)
+	{
+		return block != null && block.getScoped() != null && block.getScoped();
 	}
 }

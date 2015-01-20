@@ -16,18 +16,18 @@ import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class PostCheckTransformation extends DepthFirstAnalysisAdaptor
 {
 	private IPostCheckCreator postCheckCreator;
 	private IRInfo info;
-	private TransformationAssistantCG transformationAssistant;
+	private TransAssistantCG transformationAssistant;
 	private String funcResultNamePrefix;
 	private Object conditionalCallTag;
 
 	public PostCheckTransformation(IPostCheckCreator postCheckCreator,
-			IRInfo info, TransformationAssistantCG transformationAssistant,
+			IRInfo info, TransAssistantCG transformationAssistant,
 			String funcResultNamePrefix, Object conditionalCallTag)
 	{
 		this.postCheckCreator = postCheckCreator;

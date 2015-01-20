@@ -35,7 +35,7 @@ import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.TempVarPrefixes;
-import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class JavaLanguageIterator extends AbstractLanguageIterator
 {
@@ -45,7 +45,7 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 	private static final String ITERATOR_TYPE = "Iterator";
 
 	public JavaLanguageIterator(
-			TransformationAssistantCG transformationAssistant,
+			TransAssistantCG transformationAssistant,
 			ITempVarGen tempGen, TempVarPrefixes varPrefixes)
 	{
 		super(transformationAssistant, tempGen, varPrefixes);
@@ -58,12 +58,13 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 			List<SPatternCG> patterns, SPatternCG pattern)
 	{
 		iteratorName = tempGen.nextVarName(varPrefixes.getIteratorNamePrefix());
-		String setName = setVar.getOriginal();
+		String setName = setVar.getName();
 		AClassTypeCG iteratorType = transformationAssistant.consClassType(ITERATOR_TYPE);
 		STypeCG setType = setVar.getType().clone();
 		SExpCG getIteratorCall = transformationAssistant.consInstanceCall(setType, setName, iteratorType.clone(), GET_ITERATOR, null);
 
 		AVarDeclCG iteratorDecl = new AVarDeclCG();
+		iteratorDecl.setFinal(false);
 
 		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
 		idPattern.setName(iteratorName);
@@ -111,5 +112,13 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 		STypeCG elementType = transformationAssistant.getSetTypeCloned(setVar).getSetOf();
 
 		return transformationAssistant.consNextElementAssignment(ITERATOR_TYPE, elementType, pattern, iteratorName, NEXT_ELEMENT_ITERATOR, nextElementDecl);
+	}
+	
+	@Override
+	public SExpCG consNextElementCall(AIdentifierVarExpCG setVar) throws AnalysisException
+	{
+		STypeCG elementType = transformationAssistant.getSetTypeCloned(setVar).getSetOf();
+		
+		return transformationAssistant.consNextElementCall(ITERATOR_TYPE, iteratorName, elementType, NEXT_ELEMENT_ITERATOR);
 	}
 }

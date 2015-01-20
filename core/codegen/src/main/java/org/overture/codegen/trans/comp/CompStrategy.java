@@ -38,7 +38,7 @@ import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.trans.AbstractIterationStrategy;
 import org.overture.codegen.trans.TempVarPrefixes;
-import org.overture.codegen.trans.assistants.TransformationAssistantCG;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 
 public abstract class CompStrategy extends AbstractIterationStrategy
@@ -47,7 +47,7 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 	protected AIdentifierPatternCG idPattern;
 	protected STypeCG compType;
 
-	public CompStrategy(TransformationAssistantCG transformationAssistant,
+	public CompStrategy(TransAssistantCG transformationAssistant,
 			SExpCG predicate, String varName, STypeCG compType,
 			ILanguageIterator langIterator, ITempVarGen tempGen,
 			TempVarPrefixes varPrefixes)
@@ -74,7 +74,7 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 	{
 		AIdentifierStateDesignatorCG result = new AIdentifierStateDesignatorCG();
 		result.setType(compResult.getType().clone());
-		result.setName(compResult.getOriginal());
+		result.setName(compResult.getName());
 
 		AAssignmentStmCG updateCompResult = new AAssignmentStmCG();
 		updateCompResult.setTarget(result);
@@ -101,6 +101,7 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 		emptyCollection.setType(compType.clone());
 
 		AVarDeclCG compResultInit = new AVarDeclCG();
+		compResultInit.setFinal(false);
 		compResultInit.setType(compType.clone());
 		compResultInit.setPattern(idPattern.clone());
 		compResultInit.setExp(emptyCollection);

@@ -32,7 +32,7 @@ public class Entry implements EvaluatePP {
         }
     }
 
-    public class Entry_sentinel extends Sentinel {
+    public static class Entry_sentinel extends Sentinel {
         public static final int Run = 0;
         public static final int Entry = 1;
         public static final int toString = 2;
@@ -67,6 +67,7 @@ public class Log implements EvaluatePP {
 
         try {
             messages = SeqUtil.seq();
+            sentinel.stateChanged();
         } finally {
             sentinel.leaving(((Log_sentinel) sentinel).clear);
         }
@@ -85,6 +86,8 @@ public class Log implements EvaluatePP {
 
         try {
             messages = SeqUtil.conc(Utils.clone(messages), SeqUtil.seq(msg));
+
+            sentinel.stateChanged();
         } finally {
             sentinel.leaving(((Log_sentinel) sentinel).log);
         }
@@ -100,6 +103,8 @@ public class Log implements EvaluatePP {
                     iterator_13.hasNext();) {
                 String m = (String) iterator_13.next();
                 output = output + m + "\n";
+
+                sentinel.stateChanged();
             }
 
             return output;
@@ -131,7 +136,7 @@ public class Log implements EvaluatePP {
         }
     }
 
-    public class Log_sentinel extends Sentinel {
+    public static class Log_sentinel extends Sentinel {
         public static final int clear = 0;
         public static final int getInstance = 1;
         public static final int log = 2;
@@ -168,6 +173,7 @@ public class MessageChannelBuffer implements EvaluatePP {
 
         try {
             data = msg;
+            sentinel.stateChanged();
         } finally {
             sentinel.leaving(((MessageChannelBuffer_sentinel) sentinel).Put);
         }
@@ -179,6 +185,7 @@ public class MessageChannelBuffer implements EvaluatePP {
         try {
             MessageChannel d = data;
             data = null;
+            sentinel.stateChanged();
 
             return d;
         } finally {
@@ -215,7 +222,7 @@ public class MessageChannelBuffer implements EvaluatePP {
         }
     }
 
-    public class MessageChannelBuffer_sentinel extends Sentinel {
+    public static class MessageChannelBuffer_sentinel extends Sentinel {
         public static final int Put = 0;
         public static final int Get = 1;
         public static final int MessageChannelBuffer = 2;
@@ -251,6 +258,7 @@ public class MessageChannel implements EvaluatePP {
 
         try {
             data = msg;
+            sentinel.stateChanged();
         } finally {
             sentinel.leaving(((MessageChannel_sentinel) sentinel).Send);
         }
@@ -262,6 +270,7 @@ public class MessageChannel implements EvaluatePP {
         try {
             Object d = data;
             data = null;
+            sentinel.stateChanged();
 
             return d;
         } finally {
@@ -295,13 +304,15 @@ public class MessageChannel implements EvaluatePP {
                 Log.getInstance().log("***> ClientListen");
             }
 
-            Object r = Listen();
+            {
+                Object r = Listen();
 
-            if (debug) {
-                Log.getInstance().log("***> fin ClientListen");
+                if (debug) {
+                    Log.getInstance().log("***> fin ClientListen");
+                }
+
+                return r;
             }
-
-            return r;
         } finally {
             sentinel.leaving(((MessageChannel_sentinel) sentinel).ClientListen);
         }
@@ -333,13 +344,15 @@ public class MessageChannel implements EvaluatePP {
                 Log.getInstance().log("***> ServerListen");
             }
 
-            Object c = Listen();
+            {
+                Object c = Listen();
 
-            if (debug) {
-                Log.getInstance().log("***> fin ServerListen");
+                if (debug) {
+                    Log.getInstance().log("***> fin ServerListen");
+                }
+
+                return c;
             }
-
-            return c;
         } finally {
             sentinel.leaving(((MessageChannel_sentinel) sentinel).ServerListen);
         }
@@ -385,7 +398,7 @@ public class MessageChannel implements EvaluatePP {
         }
     }
 
-    public class MessageChannel_sentinel extends Sentinel {
+    public static class MessageChannel_sentinel extends Sentinel {
         public static final int Send = 0;
         public static final int Listen = 1;
         public static final int ServerSend = 2;
@@ -430,9 +443,9 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
     public volatile Sentinel sentinel;
 
     public POP3ClientHandler(final POP3Server nparent, final MessageChannel nch) {
-        cg_init_POP3ClientHandler_1(nparent, nch);
-
         sentinel = new POP3ClientHandler_sentinel(this);
+
+        cg_init_POP3ClientHandler_1(nparent, nch);
     }
 
     public POP3ClientHandler() {
@@ -580,8 +593,10 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
 
             if (Utils.is_(c, POP3Types.USER.class)) {
                 lastWasUser = true;
+                sentinel.stateChanged();
             } else {
                 lastWasUser = false;
+                sentinel.stateChanged();
             }
 
             return response;
@@ -605,24 +620,33 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
                         quotes.Transaction.getInstance());
 
                 if (success_4) {
-                    Boolean b = parent.RemoveDeletedMessages(user);
-                    ss = quotes.Update.getInstance();
-                    parent.ReleaseLock(id);
+                    {
+                        Boolean b = parent.RemoveDeletedMessages(user);
 
-                    Object ternaryIfExp_1 = null;
+                        {
+                            ss = quotes.Update.getInstance();
+                            sentinel.stateChanged();
 
-                    if (b) {
-                        ternaryIfExp_1 = new POP3Types.OkResponse(quitMsg);
-                    } else {
-                        ternaryIfExp_1 = new POP3Types.ErrResponse(deleteFailMsg);
+                            parent.ReleaseLock(id);
+
+                            Object ternaryIfExp_1 = null;
+
+                            if (b) {
+                                ternaryIfExp_1 = new POP3Types.OkResponse(quitMsg);
+                            } else {
+                                ternaryIfExp_1 = new POP3Types.ErrResponse(deleteFailMsg);
+                            }
+
+                            response = ternaryIfExp_1;
+                            sentinel.stateChanged();
+                        }
                     }
-
-                    response = ternaryIfExp_1;
                 } else {
                     throw new RuntimeException("ERROR statement reached");
                 }
             } else {
                 response = new POP3Types.OkResponse(quitMsg);
+                sentinel.stateChanged();
             }
 
             return response;
@@ -811,6 +835,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
         try {
             if (Utils.equals(ss, quotes.Authorization.getInstance())) {
                 user = usercmd.name;
+                sentinel.stateChanged();
 
                 return new POP3Types.OkResponse(submitPasswordMsg);
             } else {
@@ -835,6 +860,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
 
             if (andResult_1) {
                 lastWasUser = false;
+                sentinel.stateChanged();
 
                 if (parent.AuthenticateUser(user, pass.string)) {
                     if (parent.IsLocked(user)) {
@@ -842,6 +868,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
                     } else {
                         parent.AcquireLock(id, user);
                         ss = quotes.Transaction.getInstance();
+                        sentinel.stateChanged();
 
                         return new POP3Types.OkResponse(maildropReadyMsg);
                     }
@@ -884,6 +911,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
         if (s.isEmpty()) {
             return SeqUtil.seq();
         } else {
+            VDMSeq letBeStExp_1 = null;
             tp v = null;
             Boolean success_1 = false;
             VDMSet set_2 = Utils.clone(s);
@@ -899,7 +927,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
                     "Let Be St found no applicable bindings");
             }
 
-            VDMSeq letBeStExp_1 = SeqUtil.conc(SeqUtil.seq(v),
+            letBeStExp_1 = SeqUtil.conc(SeqUtil.seq(v),
                     set2seq(SetUtil.diff(Utils.clone(s), SetUtil.set(v))));
 
             return Utils.clone(letBeStExp_1);
@@ -997,6 +1025,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
         if (s.isEmpty()) {
             return 0L;
         } else {
+            Number letBeStExp_2 = null;
             Number e = null;
             Boolean success_2 = false;
             VDMSet set_4 = Utils.clone(s);
@@ -1012,8 +1041,8 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
                     "Let Be St found no applicable bindings");
             }
 
-            Number letBeStExp_2 = sum(SetUtil.diff(Utils.clone(s),
-                        SetUtil.set(e))).longValue() + e.longValue();
+            letBeStExp_2 = sum(SetUtil.diff(Utils.clone(s), SetUtil.set(e)))
+                               .longValue() + e.longValue();
 
             return letBeStExp_2;
         }
@@ -1213,7 +1242,10 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
         Object cmd = null;
         id = Thread.currentThread().getId();
 
+        sentinel.stateChanged();
+
         cmd = msgChannel.ServerListen();
+        sentinel.stateChanged();
 
         Boolean whileCond1 = true;
 
@@ -1226,12 +1258,13 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
 
             msgChannel.ServerSend(ReceiveCommand(((Object) cmd)));
             cmd = msgChannel.ServerListen();
+            sentinel.stateChanged();
         }
 
         msgChannel.ServerSend(ReceiveCommand(((Object) cmd)));
     }
 
-    public class POP3ClientHandler_sentinel extends Sentinel {
+    public static class POP3ClientHandler_sentinel extends Sentinel {
         public static final int cg_init_POP3ClientHandler_1 = 0;
         public static final int POP3ClientHandler = 1;
         public static final int ReceiveCommand = 2;
@@ -1286,9 +1319,9 @@ public class POP3Message implements EvaluatePP {
 
     public POP3Message(final String nheader, final String nbody,
         final String nuniqueId) {
-        cg_init_POP3Message_1(nheader, nbody, nuniqueId);
-
         sentinel = new POP3Message_sentinel(this);
+
+        cg_init_POP3Message_1(nheader, nbody, nuniqueId);
     }
 
     public POP3Message() {
@@ -1338,6 +1371,7 @@ public class POP3Message implements EvaluatePP {
 
         try {
             deleted = true;
+            sentinel.stateChanged();
 
             return this;
         } finally {
@@ -1360,6 +1394,7 @@ public class POP3Message implements EvaluatePP {
 
         try {
             deleted = false;
+            sentinel.stateChanged();
 
             return this;
         } finally {
@@ -1422,7 +1457,7 @@ public class POP3Message implements EvaluatePP {
         }
     }
 
-    public class POP3Message_sentinel extends Sentinel {
+    public static class POP3Message_sentinel extends Sentinel {
         public static final int cg_init_POP3Message_1 = 0;
         public static final int POP3Message = 1;
         public static final int GetBody = 2;
@@ -1461,9 +1496,9 @@ public class POP3Server extends VDMThread implements EvaluatePP {
 
     public POP3Server(final VDMMap nmd, final MessageChannelBuffer nch,
         final VDMMap npasswords) {
-        cg_init_POP3Server_1(Utils.clone(nmd), nch, Utils.clone(npasswords));
-
         sentinel = new POP3Server_sentinel(this);
+
+        cg_init_POP3Server_1(Utils.clone(nmd), nch, Utils.clone(npasswords));
     }
 
     public POP3Server() {
@@ -1513,7 +1548,10 @@ public class POP3Server extends VDMThread implements EvaluatePP {
             MailBox recModifierExp_1 = Utils.clone(((MailBox) maildrop.get(user)));
 
             recModifierExp_1.msgs = Utils.clone(newMsgs);
+            sentinel.stateChanged();
+
             maildrop.put(user, Utils.clone(recModifierExp_1));
+            sentinel.stateChanged();
         } finally {
             sentinel.leaving(((POP3Server_sentinel) sentinel).SetUserMessages);
         }
@@ -1554,6 +1592,8 @@ public class POP3Server extends VDMThread implements EvaluatePP {
                     seqCompResult_2 = SeqUtil.conc(Utils.clone(seqCompResult_2),
                             SeqUtil.seq(
                                 ((POP3Message) oldMsgs.get(Utils.index(i)))));
+
+                    sentinel.stateChanged();
                 }
             }
 
@@ -1572,6 +1612,7 @@ public class POP3Server extends VDMThread implements EvaluatePP {
         try {
             locks = MapUtil.override(Utils.clone(locks),
                     MapUtil.map(new Maplet(clId, user)));
+            sentinel.stateChanged();
         } finally {
             sentinel.leaving(((POP3Server_sentinel) sentinel).AcquireLock);
         }
@@ -1582,6 +1623,7 @@ public class POP3Server extends VDMThread implements EvaluatePP {
 
         try {
             locks = MapUtil.domResBy(SetUtil.set(clId), Utils.clone(locks));
+            sentinel.stateChanged();
         } finally {
             sentinel.leaving(((POP3Server_sentinel) sentinel).ReleaseLock);
         }
@@ -1700,6 +1742,8 @@ public class POP3Server extends VDMThread implements EvaluatePP {
                 seqCompResult_3 = SeqUtil.conc(Utils.clone(seqCompResult_3),
                         SeqUtil.seq(
                             ((POP3Message) oldMsgs.get(Utils.index(i))).Undelete()));
+
+                sentinel.stateChanged();
             }
 
             VDMSeq newMsgs = Utils.clone(seqCompResult_3);
@@ -1748,6 +1792,8 @@ public class POP3Server extends VDMThread implements EvaluatePP {
                                     seqCompResult_4),
                                 SeqUtil.seq(
                                     new MessageInfo(i, GetMessageSize(user, i))));
+
+                        sentinel.stateChanged();
                     }
                 }
 
@@ -1786,6 +1832,8 @@ public class POP3Server extends VDMThread implements EvaluatePP {
                 Number index = ((Number) iterator_8.next());
                 seqCompResult_5 = SeqUtil.conc(Utils.clone(seqCompResult_5),
                         SeqUtil.seq(GetUidl(user, index)));
+
+                sentinel.stateChanged();
             }
 
             return Utils.clone(seqCompResult_5);
@@ -1817,6 +1865,8 @@ public class POP3Server extends VDMThread implements EvaluatePP {
                 seqCompResult_6 = SeqUtil.conc(Utils.clone(seqCompResult_6),
                         SeqUtil.seq(
                             ((POP3Message) mb.msgs.get(Utils.index(i))).GetSize()));
+
+                sentinel.stateChanged();
             }
 
             return sumseq(Utils.clone(seqCompResult_6));
@@ -1873,7 +1923,8 @@ public class POP3Server extends VDMThread implements EvaluatePP {
         } else if (Utils.equals(fnr, 2L)) {
             return true;
         } else if (Utils.equals(fnr, 3L)) {
-            return Utils.equals(sentinel.active[((POP3Server_sentinel) sentinel).ReleaseLock] +
+            return Utils.equals(sentinel.active[((POP3Server_sentinel) sentinel).AcquireLock] +
+                sentinel.active[((POP3Server_sentinel) sentinel).ReleaseLock] +
                 sentinel.active[((POP3Server_sentinel) sentinel).IsLocked], 0L);
         } else if (Utils.equals(fnr, 4L)) {
             return (Utils.equals(sentinel.active[((POP3Server_sentinel) sentinel).SetUserMessages],
@@ -1892,12 +1943,14 @@ public class POP3Server extends VDMThread implements EvaluatePP {
         } else if (Utils.equals(fnr, 8L)) {
             return (Utils.equals(sentinel.active[((POP3Server_sentinel) sentinel).AcquireLock],
                 0L)) &&
-            (Utils.equals(sentinel.active[((POP3Server_sentinel) sentinel).ReleaseLock] +
+            (Utils.equals(sentinel.active[((POP3Server_sentinel) sentinel).AcquireLock] +
+                sentinel.active[((POP3Server_sentinel) sentinel).ReleaseLock] +
                 sentinel.active[((POP3Server_sentinel) sentinel).IsLocked], 0L));
         } else if (Utils.equals(fnr, 9L)) {
             return (Utils.equals(sentinel.active[((POP3Server_sentinel) sentinel).ReleaseLock],
                 0L)) &&
-            (Utils.equals(sentinel.active[((POP3Server_sentinel) sentinel).ReleaseLock] +
+            (Utils.equals(sentinel.active[((POP3Server_sentinel) sentinel).AcquireLock] +
+                sentinel.active[((POP3Server_sentinel) sentinel).ReleaseLock] +
                 sentinel.active[((POP3Server_sentinel) sentinel).IsLocked], 0L));
         } else if (Utils.equals(fnr, 10L)) {
             return true;
@@ -1954,14 +2007,17 @@ public class POP3Server extends VDMThread implements EvaluatePP {
                 break;
             }
 
-            MessageChannel msgChannel = connChannel.Get();
-            CreateClientHandler(msgChannel);
+            {
+                MessageChannel msgChannel = connChannel.Get();
+                CreateClientHandler(msgChannel);
+            }
 
             serverStarted = true;
+            sentinel.stateChanged();
         }
     }
 
-    public class POP3Server_sentinel extends Sentinel {
+    public static class POP3Server_sentinel extends Sentinel {
         public static final int cg_init_POP3Server_1 = 0;
         public static final int POP3Server = 1;
         public static final int AuthenticateUser = 2;
@@ -2106,9 +2162,9 @@ public class POP3Test implements EvaluatePP {
     public volatile Sentinel sentinel;
 
     public POP3Test() {
-        cg_init_POP3Test_1();
-
         sentinel = new POP3Test_sentinel(this);
+
+        cg_init_POP3Test_1();
     }
 
     public void StartServer(final POP3Server myserver) {
@@ -2128,18 +2184,24 @@ public class POP3Test implements EvaluatePP {
             MessageChannelBuffer ch = new MessageChannelBuffer();
             POP3Server server = new POP3Server(MakeMailDrop(), ch,
                     MakePasswordMap());
-            MessageChannel mc = new MessageChannel();
-            server.start();
-            ch.Put(mc);
 
-            VDMSeq run = TestRun1();
-            POP3TestSender send = new POP3TestSender("c", Utils.clone(run), mc);
-            POP3TestListener listen = new POP3TestListener("l", mc);
-            send.start();
-            listen.start();
-            listen.IsFinished();
+            {
+                MessageChannel mc = new MessageChannel();
+                server.start();
+                ch.Put(mc);
 
-            return Log.getInstance().output();
+                {
+                    VDMSeq run = TestRun1();
+                    POP3TestSender send = new POP3TestSender("c",
+                            Utils.clone(run), mc);
+                    POP3TestListener listen = new POP3TestListener("l", mc);
+                    send.start();
+                    listen.start();
+                    listen.IsFinished();
+                }
+
+                return Log.getInstance().output();
+            }
         } finally {
             sentinel.leaving(((POP3Test_sentinel) sentinel).Test1);
         }
@@ -2152,27 +2214,32 @@ public class POP3Test implements EvaluatePP {
             MessageChannelBuffer ch = new MessageChannelBuffer();
             POP3Server server = new POP3Server(MakeMailDrop(), ch,
                     MakePasswordMap());
-            MessageChannel mc1 = new MessageChannel();
-            MessageChannel mc2 = new MessageChannel();
-            server.start();
-            ch.Put(mc1);
-            ch.Put(mc2);
 
-            VDMSeq run = TestRun1();
-            POP3TestSender send1 = new POP3TestSender("c1", Utils.clone(run),
-                    mc1);
-            POP3TestSender send2 = new POP3TestSender("c2", Utils.clone(run),
-                    mc2);
-            POP3TestListener listen1 = new POP3TestListener("l1", mc1);
-            POP3TestListener listen2 = new POP3TestListener("l2", mc2);
-            send1.start();
-            send2.start();
-            listen1.start();
-            listen2.start();
-            listen1.IsFinished();
-            listen2.IsFinished();
+            {
+                MessageChannel mc1 = new MessageChannel();
+                MessageChannel mc2 = new MessageChannel();
+                server.start();
+                ch.Put(mc1);
+                ch.Put(mc2);
 
-            return Log.getInstance().output();
+                {
+                    VDMSeq run = TestRun1();
+                    POP3TestSender send1 = new POP3TestSender("c1",
+                            Utils.clone(run), mc1);
+                    POP3TestSender send2 = new POP3TestSender("c2",
+                            Utils.clone(run), mc2);
+                    POP3TestListener listen1 = new POP3TestListener("l1", mc1);
+                    POP3TestListener listen2 = new POP3TestListener("l2", mc2);
+                    send1.start();
+                    send2.start();
+                    listen1.start();
+                    listen2.start();
+                    listen1.IsFinished();
+                    listen2.IsFinished();
+                }
+
+                return Log.getInstance().output();
+            }
         } finally {
             sentinel.leaving(((POP3Test_sentinel) sentinel).Test2);
         }
@@ -2301,7 +2368,7 @@ public class POP3Test implements EvaluatePP {
         }
     }
 
-    public class POP3Test_sentinel extends Sentinel {
+    public static class POP3Test_sentinel extends Sentinel {
         public static final int StartServer = 0;
         public static final int Test1 = 1;
         public static final int Test2 = 2;
@@ -2338,9 +2405,9 @@ public class POP3TestSender extends VDMThread implements EvaluatePP {
 
     public POP3TestSender(final String idarg, final VDMSeq cmdsarg,
         final MessageChannel mcarg) {
-        cg_init_POP3TestSender_1(idarg, Utils.clone(cmdsarg), mcarg);
-
         sentinel = new POP3TestSender_sentinel(this);
+
+        cg_init_POP3TestSender_1(idarg, Utils.clone(cmdsarg), mcarg);
     }
 
     public POP3TestSender() {
@@ -2404,7 +2471,7 @@ public class POP3TestSender extends VDMThread implements EvaluatePP {
         }
     }
 
-    public class POP3TestSender_sentinel extends Sentinel {
+    public static class POP3TestSender_sentinel extends Sentinel {
         public static final int cg_init_POP3TestSender_1 = 0;
         public static final int POP3TestSender = 1;
         public static final int LogClient = 2;
@@ -2434,9 +2501,9 @@ public class POP3TestListener extends VDMThread implements EvaluatePP {
     public volatile Sentinel sentinel;
 
     public POP3TestListener(final String idarg, final MessageChannel mcarg) {
-        cg_init_POP3TestListener_1(idarg, mcarg);
-
         sentinel = new POP3TestListener_sentinel(this);
+
+        cg_init_POP3TestListener_1(idarg, mcarg);
     }
 
     public POP3TestListener() {
@@ -2506,13 +2573,15 @@ public class POP3TestListener extends VDMThread implements EvaluatePP {
 
             LogServer(((Object) response));
             response = mc.ClientListen();
+            sentinel.stateChanged();
         }
 
         LogServer(((Object) response));
         finished = true;
+        sentinel.stateChanged();
     }
 
-    public class POP3TestListener_sentinel extends Sentinel {
+    public static class POP3TestListener_sentinel extends Sentinel {
         public static final int cg_init_POP3TestListener_1 = 0;
         public static final int POP3TestListener = 1;
         public static final int LogServer = 2;
@@ -2556,7 +2625,7 @@ public class POP3Types implements EvaluatePP {
         }
     }
 
-    public class POP3Types_sentinel extends Sentinel {
+    public static class POP3Types_sentinel extends Sentinel {
         public static final int POP3Types = 0;
         public static final int toString = 1;
         public final int function_sum = 2;
@@ -2962,203 +3031,6 @@ public class POP3Types implements EvaluatePP {
 }
 
 ##########
-
-package quotes;
-
-import org.overture.codegen.runtime.*;
-
-import java.util.*;
-
-
-public class start {
-    private static int hc = 0;
-    private static start instance = null;
-
-    public start() {
-        if (Utils.equals(hc, 0)) {
-            hc = super.hashCode();
-        }
-    }
-
-    public static start getInstance() {
-        if (Utils.equals(instance, null)) {
-            instance = new start();
-        }
-
-        return instance;
-    }
-
-    public int hashCode() {
-        return hc;
-    }
-
-    public boolean equals(final Object obj) {
-        return obj instanceof start;
-    }
-
-    public String toString() {
-        return "<start>";
-    }
-}
-
-##########
-
-package quotes;
-
-import org.overture.codegen.runtime.*;
-
-import java.util.*;
-
-
-public class append {
-    private static int hc = 0;
-    private static append instance = null;
-
-    public append() {
-        if (Utils.equals(hc, 0)) {
-            hc = super.hashCode();
-        }
-    }
-
-    public static append getInstance() {
-        if (Utils.equals(instance, null)) {
-            instance = new append();
-        }
-
-        return instance;
-    }
-
-    public int hashCode() {
-        return hc;
-    }
-
-    public boolean equals(final Object obj) {
-        return obj instanceof append;
-    }
-
-    public String toString() {
-        return "<append>";
-    }
-}
-
-##########
-
-package quotes;
-
-import org.overture.codegen.runtime.*;
-
-import java.util.*;
-
-
-public class Authorization {
-    private static int hc = 0;
-    private static Authorization instance = null;
-
-    public Authorization() {
-        if (Utils.equals(hc, 0)) {
-            hc = super.hashCode();
-        }
-    }
-
-    public static Authorization getInstance() {
-        if (Utils.equals(instance, null)) {
-            instance = new Authorization();
-        }
-
-        return instance;
-    }
-
-    public int hashCode() {
-        return hc;
-    }
-
-    public boolean equals(final Object obj) {
-        return obj instanceof Authorization;
-    }
-
-    public String toString() {
-        return "<Authorization>";
-    }
-}
-
-##########
-
-package quotes;
-
-import org.overture.codegen.runtime.*;
-
-import java.util.*;
-
-
-public class Transaction {
-    private static int hc = 0;
-    private static Transaction instance = null;
-
-    public Transaction() {
-        if (Utils.equals(hc, 0)) {
-            hc = super.hashCode();
-        }
-    }
-
-    public static Transaction getInstance() {
-        if (Utils.equals(instance, null)) {
-            instance = new Transaction();
-        }
-
-        return instance;
-    }
-
-    public int hashCode() {
-        return hc;
-    }
-
-    public boolean equals(final Object obj) {
-        return obj instanceof Transaction;
-    }
-
-    public String toString() {
-        return "<Transaction>";
-    }
-}
-
-##########
-
-package quotes;
-
-import org.overture.codegen.runtime.*;
-
-import java.util.*;
-
-
-public class Update {
-    private static int hc = 0;
-    private static Update instance = null;
-
-    public Update() {
-        if (Utils.equals(hc, 0)) {
-            hc = super.hashCode();
-        }
-    }
-
-    public static Update getInstance() {
-        if (Utils.equals(instance, null)) {
-            instance = new Update();
-        }
-
-        return instance;
-    }
-
-    public int hashCode() {
-        return hc;
-    }
-
-    public boolean equals(final Object obj) {
-        return obj instanceof Update;
-    }
-
-    public String toString() {
-        return "<Update>";
-    }
-}
-
+*Quotes*
+Authorization,Transaction,Update
 ##########

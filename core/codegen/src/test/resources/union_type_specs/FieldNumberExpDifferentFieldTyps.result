@@ -10,112 +10,35 @@ public class Entry {
     public static Object Run() {
         VDMSeq s = SeqUtil.seq(Tuple.mk_(5L, true), Tuple.mk_(true, 2L, 3L),
                 Tuple.mk_('a', 'b', true));
-        VDMSeq ss = SeqUtil.seq();
-        long toVar_1 = 3L;
 
-        for (Long i = 1L; i <= toVar_1; i++) {
-            Object obj_1 = s.get(Utils.index(i));
+        {
+            VDMSeq ss = SeqUtil.seq();
+            long toVar_1 = 3L;
 
-            Object apply_1 = null;
+            for (Long i = 1L; i <= toVar_1; i++) {
+                Object obj_1 = s.get(Utils.index(i));
 
-            if (obj_1 instanceof Tuple) {
-                apply_1 = ((Object) ((Tuple) obj_1).get(1));
-            } else if (obj_1 instanceof Tuple) {
-                apply_1 = ((Object) ((Tuple) obj_1).get(1));
-            } else if (obj_1 instanceof Tuple) {
-                apply_1 = ((Object) ((Tuple) obj_1).get(1));
-            } else {
-                throw new RuntimeException("Missing member: field number 2");
+                Object apply_1 = null;
+
+                if (obj_1 instanceof Tuple) {
+                    apply_1 = ((Object) ((Tuple) obj_1).get(1));
+                } else if (obj_1 instanceof Tuple) {
+                    apply_1 = ((Object) ((Tuple) obj_1).get(1));
+                } else if (obj_1 instanceof Tuple) {
+                    apply_1 = ((Object) ((Tuple) obj_1).get(1));
+                } else {
+                    throw new RuntimeException("Missing member: field number 2");
+                }
+
+                ss = SeqUtil.conc(Utils.clone(ss), SeqUtil.seq(apply_1));
             }
 
-            ss = SeqUtil.conc(Utils.clone(ss), SeqUtil.seq(apply_1));
+            return Utils.clone(ss);
         }
-
-        return Utils.clone(ss);
     }
 
     public String toString() {
         return "Entry{}";
-    }
-}
-
-##########
-
-package quotes;
-
-import org.overture.codegen.runtime.*;
-
-import java.util.*;
-
-
-public class start {
-    private static int hc = 0;
-    private static start instance = null;
-
-    public start() {
-        if (Utils.equals(hc, 0)) {
-            hc = super.hashCode();
-        }
-    }
-
-    public static start getInstance() {
-        if (Utils.equals(instance, null)) {
-            instance = new start();
-        }
-
-        return instance;
-    }
-
-    public int hashCode() {
-        return hc;
-    }
-
-    public boolean equals(final Object obj) {
-        return obj instanceof start;
-    }
-
-    public String toString() {
-        return "<start>";
-    }
-}
-
-##########
-
-package quotes;
-
-import org.overture.codegen.runtime.*;
-
-import java.util.*;
-
-
-public class append {
-    private static int hc = 0;
-    private static append instance = null;
-
-    public append() {
-        if (Utils.equals(hc, 0)) {
-            hc = super.hashCode();
-        }
-    }
-
-    public static append getInstance() {
-        if (Utils.equals(instance, null)) {
-            instance = new append();
-        }
-
-        return instance;
-    }
-
-    public int hashCode() {
-        return hc;
-    }
-
-    public boolean equals(final Object obj) {
-        return obj instanceof append;
-    }
-
-    public String toString() {
-        return "<append>";
     }
 }
 

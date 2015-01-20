@@ -112,7 +112,9 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 
 					ACastUnaryExpCG cast = new ACastUnaryExpCG();
 					AIdentifierVarExpCG varSentinel = new AIdentifierVarExpCG();
-					varSentinel.setOriginal("sentinel");
+					varSentinel.setIsLocal(true);
+					varSentinel.setIsLambda(false);
+					varSentinel.setName("sentinel");
 
 					AExternalTypeCG etype = new AExternalTypeCG();
 					etype.setName(node.getName() + "_sentinel");
@@ -146,7 +148,8 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 
 				AIdentifierVarExpCG field = new AIdentifierVarExpCG();
 
-				field.setOriginal("sentinel");
+				field.setName("sentinel");
+				field.setIsLocal(false);
 
 				ANewExpCG newexp = new ANewExpCG();
 
@@ -159,8 +162,8 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 				stm.setExp(newexp);
 				stm.setTarget(field);
 
-				bodyConst.getStatements().add(methodCG.getBody());
 				bodyConst.getStatements().add(stm);
+				bodyConst.getStatements().add(methodCG.getBody());
 
 				methodCG.setBody(bodyConst);
 			}
@@ -187,9 +190,7 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 		if (node.getMethods().size() != 0){
 			
 			//fixing the overloaded operation problem
-			@SuppressWarnings("unchecked")
 			LinkedList<AMethodDeclCG> classuniqueMethods = (LinkedList<AMethodDeclCG>) node.getMethods().clone();
-			//LinkedList<APersyncDeclCG> inheritedmethodper = new LinkedList<APersyncDeclCG>();
 			classuniqueMethods.clear();
 			
 			LinkedList<AMethodDeclCG>  allMethods;
@@ -216,8 +217,9 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 			{
 				
 				AIdentifierVarExpCG testVar = new AIdentifierVarExpCG();
-				testVar.setOriginal("fnr");
 				testVar.setType(new AIntNumericBasicTypeCG());
+				testVar.setName("fnr");
+				testVar.setIsLocal(true);
 				
 				if (i == 0){
 				
@@ -238,15 +240,12 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 							if(per.getOpname().equals(classuniqueMethods.get(i).getName())){
 								ret.setExp(per.getPred());
 							}
-//							else
-//							{
-//								inheritedmethodper.add(per);
-//							}
+
 						}
 						bodyif.setIfExp(firstBranch);
 						bodyif.setThenStm(ret);
 					}
-				//}
+
 				else
 				{
 					AReturnStmCG ret = new AReturnStmCG();
@@ -258,13 +257,6 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 						if(per.getOpname().equals(classuniqueMethods.get(i).getName())){						
 								ret.setExp(per.getPred());
 						}
-//						else
-//						{
-//							if(!inheritedmethodper.contains(per))
-//							{
-//								inheritedmethodper.add(per);
-//							}
-//						}
 					}					
 					AElseIfStmCG newBranch = new AElseIfStmCG();
 																				
@@ -282,11 +274,6 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 					bodyif.getElseIf().add(newBranch);
 				}
 			}
-//			if(inheritedmethodper.size() != 0)
-//			{
-//				bodyif.setElseStm(isInheritedmethod(node,inheritedmethodper));
-//			}
-//			else{
 				AReturnStmCG ret = new AReturnStmCG();
 
 				ABoolLiteralExpCG defaultPer = new ABoolLiteralExpCG();
@@ -294,8 +281,7 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 
 				ret.setExp(defaultPer);
 				bodyif.setElseStm(ret.clone());
-//			}
-			
+
 			evaluatePPmethod.setBody(bodyif);
 		}
 		
