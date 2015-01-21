@@ -144,7 +144,6 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <version>2.13</version>
           <configuration>
-            <testFailureIgnore>true</testFailureIgnore>
 	    <!-- required for java7 to avoid verifier errors-->
 	    <argLine>-XX:-UseSplitVerifier -Djava.awt.headless=true</argLine>
           </configuration>
