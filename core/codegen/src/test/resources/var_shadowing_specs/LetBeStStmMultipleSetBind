@@ -1,0 +1,11 @@
+class Entry
+
+operations
+
+public static Run :  () ==> nat
+Run () ==
+let a,a,a in set {1,2,3}
+in
+  return a;
+
+end Entry

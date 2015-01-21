@@ -65,7 +65,7 @@ public class ExternalClassesPpTest extends AbstractExternalTest
 	@Parameters(name = "{1}")
 	public static Collection<Object[]> getData()
 	{
-		return getData("Interpreter_PP_Classes_TestSuite_External", "pptest/cgip", Dialect.VDM_PP, "vpp");
+		return getData("Interpreter_PP_Classes_TestSuite_External", "cgip/pptest", Dialect.VDM_PP, "vpp");
 	}
 
 	@Override

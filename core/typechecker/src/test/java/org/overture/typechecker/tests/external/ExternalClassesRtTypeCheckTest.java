@@ -42,7 +42,7 @@ public class ExternalClassesRtTypeCheckTest extends AbstractExternalTest
 	@Parameters(name = "{1}")
 	public static Collection<Object[]> getData()
 	{
-		return getData("Type_Check_RT_Classes_TestSuite_External", "rttest/tc", Dialect.VDM_RT, "vpp");
+		return getData("Type_Check_RT_Classes_TestSuite_External", "tc/rttest", Dialect.VDM_RT, "vpp");
 	}
 
 	@Override

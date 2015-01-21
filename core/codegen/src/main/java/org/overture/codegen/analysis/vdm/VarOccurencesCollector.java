@@ -8,17 +8,23 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.expressions.AVariableExp;
+import org.overture.ast.intf.lex.ILexLocation;
 
 
 public class VarOccurencesCollector extends DepthFirstAnalysisAdaptor
 {
-	private PDefinition def;
+	private ILexLocation defLoc;
 	private Set<AVariableExp> varOccurences;
 	private List<? extends PDefinition> defsOutsideScope;
 	
-	public VarOccurencesCollector(PDefinition def, List<? extends PDefinition> defsOutsideScope)
+	public VarOccurencesCollector(ILexLocation defLoc)
 	{
-		this.def = def;
+		this(defLoc, null);
+	}
+	
+	public VarOccurencesCollector(ILexLocation defLoc, List<? extends PDefinition> defsOutsideScope)
+	{
+		this.defLoc = defLoc;
 		this.varOccurences = new HashSet<AVariableExp>();
 		this.defsOutsideScope = defsOutsideScope;
 	}
@@ -36,15 +42,18 @@ public class VarOccurencesCollector extends DepthFirstAnalysisAdaptor
 			return;
 		}
 		
-		for(PDefinition d : defsOutsideScope)
+		if (defsOutsideScope != null)
 		{
-			if(d == node.getVardef())
+			for (PDefinition d : defsOutsideScope)
 			{
-				return;
+				if (d == node.getVardef())
+				{
+					return;
+				}
 			}
 		}
 		
-		if(node.getVardef().getLocation().equals(def.getLocation()))
+		if(node.getVardef().getLocation().equals(defLoc))
 		{
 			varOccurences.add(node);
 		}
