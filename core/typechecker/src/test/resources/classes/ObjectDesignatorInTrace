@@ -1,0 +1,19 @@
+class A
+operations
+	public op : nat ==> nat
+	op(x) == return x;
+end A
+
+class B
+instance variables
+	private a : A := new A();	-- NB private!
+end B
+
+class C
+instance variables
+	b : B := new B();
+
+operations
+	op: () ==> nat
+	op() == b.a.op(1);	-- This didn't raise an error
+end C
