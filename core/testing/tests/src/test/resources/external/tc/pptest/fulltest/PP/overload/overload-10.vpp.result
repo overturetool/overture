@@ -1,1 +1,1 @@
-["Name fn((A | bool)) is ambiguous","Value is not of the right type","Function returns unexpected type"]
+["Error 3010: overload-10.vpp at 25:14 Name fn((A | bool)) is ambiguous","Error 3327: overload-10.vpp at 25:6 Value is not of the right type","Error 3018: overload-10.vpp at 22:1 Function returns unexpected type"]

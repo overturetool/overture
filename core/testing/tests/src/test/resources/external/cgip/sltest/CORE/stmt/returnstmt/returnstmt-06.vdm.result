@@ -1,1 +1,1 @@
-["Statement may return void value","Operation returns unexpected type"]
+["Error 3328: returnstmt-06.vdm at 15:3 Statement may return void value","Error 3027: returnstmt-06.vdm at 13:1 Operation returns unexpected type"]
