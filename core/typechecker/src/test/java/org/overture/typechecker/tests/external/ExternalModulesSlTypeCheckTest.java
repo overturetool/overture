@@ -42,7 +42,7 @@ public class ExternalModulesSlTypeCheckTest extends AbstractExternalTest
 	@Parameters(name = "{1}")
 	public static Collection<Object[]> getData()
 	{
-		return getData("Type_Check_SL_Modules_TestSuite_External", "sltest/tc", Dialect.VDM_SL, "vdm");
+		return getData("Type_Check_SL_Modules_TestSuite_External", "tc/sltest", Dialect.VDM_SL, "vdm");
 	}
 
 	@Override

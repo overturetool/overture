@@ -43,7 +43,7 @@ public class ExternalClassesPpTypeCheckTest extends AbstractExternalTest
 	@Parameters(name = "{1}")
 	public static Collection<Object[]> getData()
 	{
-		return getData("Type_Check_PP_Classes_TestSuite_External", "pptest/tc", Dialect.VDM_PP, "vpp");
+		return getData("Type_Check_PP_Classes_TestSuite_External", "tc/pptest", Dialect.VDM_PP, "vpp");
 	}
 
 	@Override

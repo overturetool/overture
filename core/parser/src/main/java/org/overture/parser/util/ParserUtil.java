@@ -22,11 +22,11 @@
 package org.overture.parser.util;
 
 import java.io.File;
-import java.nio.charset.Charset;
 import java.util.List;
 
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.lex.Dialect;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.config.Settings;
 import org.overture.parser.lex.LexException;
@@ -46,6 +46,7 @@ public class ParserUtil
 		{
 			public void combine(T source, T other);
 		}
+
 		public final T result;
 		public final List<VDMWarning> warnings;
 		public final List<VDMError> errors;
@@ -57,12 +58,12 @@ public class ParserUtil
 			this.warnings = warnings;
 			this.errors = errors;
 		}
-		
-		public void combine(ParserResult<T> other,IResultCombiner<T> combiner)
+
+		public void combine(ParserResult<T> other, IResultCombiner<T> combiner)
 		{
 			this.errors.addAll(other.errors);
 			this.warnings.addAll(other.warnings);
-			combiner.combine(this.result,other.result);
+			combiner.combine(this.result, other.result);
 		}
 
 		public String getErrorString()
@@ -88,17 +89,22 @@ public class ParserUtil
 			return sb.toString();
 		}
 	}
-	
-	
-	public static ParserResult<List<SClassDefinition>> parseOo(List<File> files, Charset charset)
+
+	public static ParserResult<List<SClassDefinition>> parseOo(List<File> files)
+	{
+		return parseOo(files, null);
+	}
+
+	public static ParserResult<List<SClassDefinition>> parseOo(
+			List<File> files, String charset)
 	{
 		ParserResult<List<SClassDefinition>> res = null;
 		for (File file : files)
 		{
-			if(res==null)
+			if (res == null)
 			{
 				res = parseOo(file, charset);
-			}else
+			} else
 			{
 				res.combine(parseOo(file, charset), new ParserResult.IResultCombiner<List<SClassDefinition>>()
 				{
@@ -112,13 +118,19 @@ public class ParserUtil
 				});
 			}
 		}
-		
+
 		return res;
 	}
 
-	public static ParserResult<List<SClassDefinition>> parseOo(File file, Charset charset)
+	public static ParserResult<List<SClassDefinition>> parseOo(File file)
 	{
-		LexTokenReader ltr = new LexTokenReader(file, Settings.dialect);
+		return parseOo(file, null);
+	}
+
+	public static ParserResult<List<SClassDefinition>> parseOo(File file,
+			String charset)
+	{
+		LexTokenReader ltr = getReader(file, Settings.dialect, charset);
 		ClassReader reader = null;
 		List<SClassDefinition> result = null;
 
@@ -126,11 +138,35 @@ public class ParserUtil
 		result = reader.readClasses();
 
 		return new ParserResult<List<SClassDefinition>>(result, reader.getWarnings(), reader.getErrors());
+	}
+
+	private static LexTokenReader getReader(File file, Dialect dialect,
+			String charset)
+	{
+		if (charset == null)
+			return new LexTokenReader(file, Settings.dialect);
+		else
+			return new LexTokenReader(file, Settings.dialect, charset);
+	}
+
+	private static LexTokenReader getReader(String content, Dialect dialect,
+			String charset)
+	{
+		if (charset == null)
+			return new LexTokenReader(content, Settings.dialect);
+		else
+			return new LexTokenReader(content, Settings.dialect, charset);
 	}
 
 	public static ParserResult<List<SClassDefinition>> parseOo(String content)
 	{
-		LexTokenReader ltr = new LexTokenReader(content, Settings.dialect);
+		return parseOo(content, null);
+	}
+
+	public static ParserResult<List<SClassDefinition>> parseOo(String content,
+			String charset)
+	{
+		LexTokenReader ltr = getReader(content, Settings.dialect, charset);
 		ClassReader reader = null;
 		List<SClassDefinition> result = null;
 
@@ -139,16 +175,22 @@ public class ParserUtil
 
 		return new ParserResult<List<SClassDefinition>>(result, reader.getWarnings(), reader.getErrors());
 	}
-	
-	public static ParserResult<List<AModuleModules>> parseSl(List<File> files, Charset charset)
+
+	public static ParserResult<List<AModuleModules>> parseSl(List<File> files)
+	{
+		return parseSl(files, null);
+	}
+
+	public static ParserResult<List<AModuleModules>> parseSl(List<File> files,
+			String charset)
 	{
 		ParserResult<List<AModuleModules>> res = null;
 		for (File file : files)
 		{
-			if(res==null)
+			if (res == null)
 			{
-				res = parseSl(file, charset);
-			}else
+				res = parseSl(file);
+			} else
 			{
 				res.combine(parseSl(file, charset), new ParserResult.IResultCombiner<List<AModuleModules>>()
 				{
@@ -162,14 +204,19 @@ public class ParserUtil
 				});
 			}
 		}
-		
+
 		return res;
 	}
 
-	public static ParserResult<List<AModuleModules>> parseSl(File file, Charset charset)
+	public static ParserResult<List<AModuleModules>> parseSl(File file)
 	{
-		
-		LexTokenReader ltr = new LexTokenReader(file, Settings.dialect, charset.name());
+		return parseSl(file, null);
+	}
+
+	public static ParserResult<List<AModuleModules>> parseSl(File file,
+			String charset)
+	{
+		LexTokenReader ltr = getReader(file, Settings.dialect, charset);
 		ModuleReader reader = null;
 		List<AModuleModules> result = null;
 
@@ -181,7 +228,13 @@ public class ParserUtil
 
 	public static ParserResult<List<AModuleModules>> parseSl(String content)
 	{
-		LexTokenReader ltr = new LexTokenReader(content, Settings.dialect);
+		return parseSl(content, null);
+	}
+
+	public static ParserResult<List<AModuleModules>> parseSl(String content,
+			String charset)
+	{
+		LexTokenReader ltr = getReader(content, Settings.dialect, charset);
 		ModuleReader reader = null;
 		List<AModuleModules> result = null;
 

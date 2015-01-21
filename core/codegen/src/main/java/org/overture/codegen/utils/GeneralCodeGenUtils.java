@@ -54,7 +54,7 @@ public class GeneralCodeGenUtils
 					+ file.getAbsolutePath());
 		}
 
-		ParserResult<List<SClassDefinition>> parseResult = ParserUtil.parseOo(file, Charset.defaultCharset());
+		ParserResult<List<SClassDefinition>> parseResult = ParserUtil.parseOo(file, "UTF-8");
 
 		if (parseResult.errors.size() > 0)
 		{
