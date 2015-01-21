@@ -30,15 +30,14 @@ import com.google.gson.reflect.TypeToken;
 
 /**
  * A simple test to demo the use of external test inputs. This class reuses {@link IdTestResult} but rather than
- * printing the entire test model, it just prints a success/failure message regarding the type checking
- * of the test source.
- * <br>
+ * printing the entire test model, it just prints a success/failure message regarding the type checking of the test
+ * source. <br>
  * Also note that since this test works with external inputs, the data provider is already set up in
  * {@link ParamExternalsTest}. To launch these tests simply use the property
  * <code>-DexternalTestsPath=/path/to/files/</code>. This test is intended to run on the tc external tests only.<br>
  * <br>
- * <b>Note:</b> Due to some quirks with Parameterized JUnit tests, if the property is not set, the test will still launch, only with
- * 0 cases. It's fine in Maven but in Eclipse you will get a single test run that does nothing.
+ * <b>Note:</b> Due to some quirks with Parameterized JUnit tests, if the property is not set, the test will still
+ * launch, only with 0 cases. It's fine in Maven but in Eclipse you will get a single test run that does nothing.
  * 
  * @author ldc
  */
@@ -47,7 +46,7 @@ public class ExternalsDemoTest extends ParamExternalsTest<IdTestResult>
 {
 
 	// the update property for this test
-	private static final String UPDATE_PROPERTY = "tests.update.example.ExternalSkip";
+	private static final String UPDATE_PROPERTY = "tests.update.example.ExternalsDemo";
 
 	/**
 	 * As usual in the new tests, the constructor only needs to pass the parameters up to super.
@@ -82,8 +81,8 @@ public class ExternalsDemoTest extends ParamExternalsTest<IdTestResult>
 	}
 
 	/**
-	 * Return the {@link Type} or reulst for this test. This is needed to help out with reflection
-	 * in the deserialization of results.
+	 * Return the {@link Type} or reulst for this test. This is needed to help out with reflection in the
+	 * deserialization of results.
 	 */
 	@Override
 	public Type getResultType()
@@ -134,7 +133,8 @@ public class ExternalsDemoTest extends ParamExternalsTest<IdTestResult>
 		}
 
 		r = new IdTestResult();
-		r.add("Could not test " + testName+" unable to locate model in path: "+modelPath);
+		r.add("Could not test " + testName
+				+ " unable to locate model in path: " + modelPath);
 		return r;
 	}
 
@@ -154,14 +154,14 @@ public class ExternalsDemoTest extends ParamExternalsTest<IdTestResult>
 			{
 				for (VDMError e : tr.errors)
 				{
-					r.add(e.message);
+					r.add(makeErrorMsg(e));
 				}
 			}
 		} else
 		{
 			for (VDMError e : pr.errors)
 			{
-				r.add(e.message);
+				r.add(makeErrorMsg(e));
 			}
 		}
 		return r;
@@ -188,14 +188,14 @@ public class ExternalsDemoTest extends ParamExternalsTest<IdTestResult>
 			{
 				for (VDMError e : tr.errors)
 				{
-					r.add(e.message);
+					r.add(makeErrorMsg(e));
 				}
 			}
 		} else
 		{
 			for (VDMError e : pr.errors)
 			{
-				r.add(e.message);
+				r.add(makeErrorMsg(e));
 			}
 		}
 		return r;
@@ -217,16 +217,34 @@ public class ExternalsDemoTest extends ParamExternalsTest<IdTestResult>
 			{
 				for (VDMError e : tr.errors)
 				{
-					r.add(e.message);
+					r.add(makeErrorMsg(e));
 				}
 			}
 		} else
 		{
 			for (VDMError e : pr.errors)
 			{
-				r.add(e.message);
+				r.add(makeErrorMsg(e));
 			}
 		}
 		return r;
+	}
+
+	private String makeErrorMsg(VDMError e)
+	{
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("Error ");
+		sb.append(e.number);
+		sb.append(": ");
+		sb.append(e.location.getFile().getName());
+		sb.append(" at ");
+		sb.append(e.location.getStartLine());
+		sb.append(":");
+		sb.append(e.location.getStartPos());
+		sb.append(" ");
+		sb.append(e.message.toString());
+
+		return sb.toString();
 	}
 }
