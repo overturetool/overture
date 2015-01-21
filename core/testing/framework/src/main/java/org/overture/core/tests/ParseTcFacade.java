@@ -26,7 +26,6 @@ import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
@@ -58,9 +57,14 @@ import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
  * @author ldc
  */
 public abstract class ParseTcFacade {
+	
+	
 	static {
+		// Omit paths from locations. Allows error comparison on multiple machines.
 		LexLocation.absoluteToStringLocation = false;
 	}
+	
+	public static String UTF8 = "UTF-8";
 
 	/**
 	 * Parse and type check a VDM model. This method will try to check the model
@@ -257,7 +261,7 @@ public abstract class ParseTcFacade {
 		Settings.dialect = Dialect.VDM_RT;
 
 		TypeCheckResult<List<SClassDefinition>> TC = TypeCheckerUtil
-				.typeCheckRt(content, StandardCharsets.UTF_8.name());
+				.typeCheckRt(content, UTF8);
 
 		// retry with other dialect
 		if (retry
@@ -285,7 +289,7 @@ public abstract class ParseTcFacade {
 		Settings.dialect = Dialect.VDM_PP;
 
 		TypeCheckResult<List<SClassDefinition>> TC = TypeCheckerUtil
-				.typeCheckPp(content, StandardCharsets.UTF_8.name());
+				.typeCheckPp(content,UTF8);
 
 		// retry with other dialect
 		if (retry
@@ -313,7 +317,7 @@ public abstract class ParseTcFacade {
 		Settings.dialect = Dialect.VDM_SL;
 
 		TypeCheckResult<List<AModuleModules>> TC = TypeCheckerUtil
-				.typeCheckSl(content, StandardCharsets.UTF_8.name());
+				.typeCheckSl(content, UTF8);
 
 		// retry with other dialect
 		if (retry

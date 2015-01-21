@@ -28,7 +28,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.io.IOUtils;
 import org.overture.parser.lex.LexException;
@@ -82,7 +81,7 @@ public abstract class AbsResultTest<R>
 			throw new FileNotFoundException(resultPath);
 		}
 		
-		InputStreamReader reader = new InputStreamReader(new FileInputStream(new File(resultPath)), StandardCharsets.UTF_8);
+		InputStreamReader reader = new InputStreamReader(new FileInputStream(new File(resultPath)), ParseTcFacade.UTF8);
 		String json = IOUtils.toString(reader);
 		R result = gson.fromJson(json, resultType);
 		return result;
@@ -136,7 +135,7 @@ public abstract class AbsResultTest<R>
 			f.getParentFile().mkdirs();
 		}
 		
-		IOUtils.write(json, new FileOutputStream(resultPath),StandardCharsets.UTF_8);
+		IOUtils.write(json, new FileOutputStream(resultPath),ParseTcFacade.UTF8);
 	}
 
 	/**
