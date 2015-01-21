@@ -501,7 +501,14 @@ public class TypeCheckerOthersVisitor extends AbstractTypeCheckVisitor
 				TypeCheckerErrors.concern(unique, 3260, "Unknown class member name, '"
 						+ field + "'", node.getLocation(), node);
 				result.add(AstFactory.newAUnknownType(node.getLocation()));
-			} else
+			}
+			else if (!question.assistantFactory.createSClassDefinitionAssistant().isAccessible(question.env, fdef, false))
+			{
+				TypeCheckerErrors.concern(unique, 3260, "Inaccessible class member name, '"
+					+ field + "'", node.getLocation(), node);
+				result.add(AstFactory.newAUnknownType(node.getLocation()));
+			}
+			else
 			{
 				result.add(question.assistantFactory.createPDefinitionAssistant().getType(fdef));
 			}

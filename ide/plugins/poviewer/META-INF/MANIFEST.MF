@@ -14,9 +14,6 @@ Export-Package: org.overture.ide.plugins.poviewer,org.overture.ide.plu
  rture.pof,org.overture.pog.contexts,org.overture.pog.obligation,org.o
  verture.pog.pub,org.overture.pog.utility,org.overture.pog.visitors
 Require-Bundle: org.eclipse.ui.console,
- org.overture.ide.vdmpp.core,
- org.overture.ide.vdmrt.core,
- org.overture.ide.vdmsl.core,
  org.overture.ide.core,
  org.overture.ide.ui,
  org.overture.ide.parsers.vdmj,

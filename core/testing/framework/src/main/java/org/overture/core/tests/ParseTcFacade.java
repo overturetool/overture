@@ -57,13 +57,18 @@ import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
  * @author ldc
  */
 public abstract class ParseTcFacade {
+	
+	
 	static {
+		// Omit paths from locations. Allows error comparison on multiple machines.
 		LexLocation.absoluteToStringLocation = false;
 	}
+	
+	public static String UTF8 = "UTF-8";
 
 	/**
 	 * Parse and type check a VDM model. This method will try to check the model
-	 * in VDM classic and VDM 10.
+	 * in VDM classic and VDM 10. It assumes the model sources are encoded in UTF-8.
 	 * 
 	 * @param sources
 	 *            the {@link List} of {@link File} containing the model's
@@ -156,7 +161,7 @@ public abstract class ParseTcFacade {
 
 	/**
 	 * Parse and type check a VDM model. This method will check the model in
-	 * whatever language release is currently set.
+	 * whatever language release is currently set. It assumes the model sources are encoded in UTF-8.
 	 * 
 	 * @param sources
 	 *            the {@link List} of {@link File} containing the model's
@@ -177,7 +182,7 @@ public abstract class ParseTcFacade {
 	}
 
 	/**
-	 * Parse and type check a single VDM source file.
+	 * Parse and type check a single VDM source file. It assumes the model source is encoded in UTF-8.
 	 * 
 	 * @param sourcePath
 	 *            a {@link String} with the path to a single VDM model source
@@ -250,14 +255,13 @@ public abstract class ParseTcFacade {
 
 	// These 3 methods have so much duplicated code because we cannot
 	// return the TC results since their types are all different.
-	// FIXME unify parsing and TCing of VDM dialects
 	private static List<INode> parseTcRtContent(List<File> content,
 			String testName, boolean retry) throws ParserException,
 			LexException {
 		Settings.dialect = Dialect.VDM_RT;
 
 		TypeCheckResult<List<SClassDefinition>> TC = TypeCheckerUtil
-				.typeCheckRt(content);
+				.typeCheckRt(content, UTF8);
 
 		// retry with other dialect
 		if (retry
@@ -285,7 +289,7 @@ public abstract class ParseTcFacade {
 		Settings.dialect = Dialect.VDM_PP;
 
 		TypeCheckResult<List<SClassDefinition>> TC = TypeCheckerUtil
-				.typeCheckPp(content);
+				.typeCheckPp(content,UTF8);
 
 		// retry with other dialect
 		if (retry
@@ -313,7 +317,7 @@ public abstract class ParseTcFacade {
 		Settings.dialect = Dialect.VDM_SL;
 
 		TypeCheckResult<List<AModuleModules>> TC = TypeCheckerUtil
-				.typeCheckSl(content);
+				.typeCheckSl(content, UTF8);
 
 		// retry with other dialect
 		if (retry

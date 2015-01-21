@@ -72,7 +72,6 @@
 	<configuration>
 		<!-- the tests use std out a lot so we dont want that in the console -->
 	  <redirectTestOutputToFile>true</redirectTestOutputToFile>
-	  <testFailureIgnore>false</testFailureIgnore>
 	  <includes>
 	    <include>**/*Test.java</include>
 	    <include>**/*Test?.java</include>
