@@ -19,19 +19,19 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #~%
  */
-package ctruntime;
+package org.overture.ct.ctruntime.utils;
 
 import java.util.Iterator;
 
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
-public class NodeIterator implements Iterator<Node>, Iterable<Node>
+public class NamedNodeMapIterator implements Iterator<Node>, Iterable<Node>
 {
-	private final NodeList list;
+	private final NamedNodeMap list;
 	private int index = 0;
 
-	public NodeIterator(NodeList list)
+	public NamedNodeMapIterator(NamedNodeMap list)
 	{
 		this.list = list;
 	}
@@ -39,7 +39,7 @@ public class NodeIterator implements Iterator<Node>, Iterable<Node>
 	@Override
 	public boolean hasNext()
 	{
-		return index < list.getLength();
+		return list != null && index < list.getLength();
 	}
 
 	@Override
