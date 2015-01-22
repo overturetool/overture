@@ -38,8 +38,8 @@ import com.google.gson.reflect.TypeToken;
 
 /**
  * Top level class for new tests framework. Provides common result handling code to all other test classes. This class
- * should <b>not</b> be subclassed directly. Use one of its existing subclasses instead. Test results are always stored with
- * UTF-8 encoding.
+ * should <b>not</b> be subclassed directly. Use one of its existing subclasses instead. Test results are always stored
+ * with UTF-8 encoding.
  * 
  * @see ParamExamplesTest
  * @see ParamExternalsTest
@@ -58,8 +58,8 @@ public abstract class AbsResultTest<R>
 
 	/**
 	 * Deserialize test results. This method is capable of deserializing most results, provided the correct type
-	 * information is provided via getResultType(). If your results are too complex for this method or if you
-	 * are not using JSON to store then, them you must override the entire method.
+	 * information is provided via getResultType(). If your results are too complex for this method or if you are not
+	 * using JSON to store then, them you must override the entire method.
 	 * 
 	 * @param resultPath
 	 *            the file path to the stored result file
@@ -80,7 +80,7 @@ public abstract class AbsResultTest<R>
 			f.getParentFile().mkdirs();
 			throw new FileNotFoundException(resultPath);
 		}
-		
+
 		InputStreamReader reader = new InputStreamReader(new FileInputStream(new File(resultPath)), ParseTcFacade.UTF8);
 		String json = IOUtils.toString(reader);
 		R result = gson.fromJson(json, resultType);
@@ -113,6 +113,20 @@ public abstract class AbsResultTest<R>
 	protected abstract String getUpdatePropertyString();
 
 	/**
+	 * Returns a message on how to update test results. Should be used in {@link #compareResults(Object, Object)}. * @return
+	 * the result update message
+	 */
+	protected String getTestResultUpdateMessage()
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("Use -D\"");
+		sb.append(getUpdatePropertyString());
+		sb.append("\" to update the result file");
+
+		return sb.toString();
+	}
+
+	/**
 	 * Update the result file for this test. Result serialization is done with JSON and this should adequate for most
 	 * users. If you need an alternative format, you may override this method.
 	 * 
@@ -127,15 +141,15 @@ public abstract class AbsResultTest<R>
 	{
 		Gson gson = new Gson();
 		String json = gson.toJson(actual);
-		
+
 		// Make sure file can be created
 		File f = new File(resultPath);
 		if (!f.exists())
 		{
 			f.getParentFile().mkdirs();
 		}
-		
-		IOUtils.write(json, new FileOutputStream(resultPath),ParseTcFacade.UTF8);
+
+		IOUtils.write(json, new FileOutputStream(resultPath), ParseTcFacade.UTF8);
 	}
 
 	/**
@@ -164,7 +178,8 @@ public abstract class AbsResultTest<R>
 
 	/**
 	 * Compare output of the processed model with previously stored result. This method must be overridden to implement
-	 * result comparison behavior. Don't forget to assert something!
+	 * result comparison behavior. Don't forget to assert something! In case of test failures, use {@link #getResultType()}
+	 * to tell the tester how to update the result file. 
 	 * 
 	 * @param actual
 	 *            the processed model
