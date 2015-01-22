@@ -19,7 +19,7 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #~%
  */
-package org.overture.ct.ctruntime.tests.util;
+package org.overture.ct.ctruntime.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -42,8 +42,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
-import ctruntime.NodeIterator;
 
 public class TraceResultReader
 {
