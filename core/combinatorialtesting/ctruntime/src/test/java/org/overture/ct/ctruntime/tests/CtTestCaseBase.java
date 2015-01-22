@@ -39,10 +39,10 @@ import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.ct.ctruntime.TraceRunnerMain;
-import org.overture.ct.ctruntime.tests.util.CtTestHelper;
-import org.overture.ct.ctruntime.tests.util.Data;
 import org.overture.ct.ctruntime.tests.util.TraceResult;
 import org.overture.ct.ctruntime.tests.util.TraceResultReader;
+import org.overture.ct.ctruntime.utils.CtHelper;
+import org.overture.ct.ctruntime.utils.Data;
 import org.overture.test.framework.Properties;
 import org.overture.test.framework.TestResourcesResultTestCase4;
 import org.w3c.dom.Document;
@@ -177,7 +177,7 @@ public abstract class CtTestCaseBase extends TestResourcesResultTestCase4
 
 		final File actualOutputFile = new File(traceFolder,"DEFAULT-" + traceName + ".xml");
 
-		CtTestHelper testHelper = new CtTestHelper();
+		CtHelper testHelper = new CtHelper();
 		Thread t = testHelper.consCtClientThread(socket, data);
 		t.setDaemon(false);
 		t.start();

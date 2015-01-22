@@ -19,7 +19,7 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #~%
  */
-package org.overture.ct.ctruntime.tests.util;
+package org.overture.ct.ctruntime.utils;
 
 import org.overture.interpreter.traces.TraceReductionType;
 
