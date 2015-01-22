@@ -15,6 +15,7 @@ import org.overture.core.tests.ParamStandardTest;
 import org.overture.core.tests.PathsProvider;
 import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.pub.ProofObligationGenerator;
+import org.overture.pog.tests.newtests.PogTestResult.ResultComparison;
 
 import com.google.gson.reflect.TypeToken;
 
@@ -61,7 +62,12 @@ public class PogBasicTest extends ParamStandardTest<PogTestResult>
 	@Override
 	public void compareResults(PogTestResult actual, PogTestResult expected)
 	{
-		PogTestResult.compare(actual, expected);
+		ResultComparison r = PogTestResult.compare(actual, expected);
+
+		if (!r.isMatch())
+		{
+			fail(r.getMessage() + getTestResultUpdateMessage());
+		}
 	}
 
 	@Override

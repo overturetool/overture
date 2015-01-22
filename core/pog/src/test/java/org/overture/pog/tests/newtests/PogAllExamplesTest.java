@@ -13,6 +13,7 @@ import org.overture.ast.node.INode;
 import org.overture.core.tests.examples.ParamExamplesTest;
 import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.pub.ProofObligationGenerator;
+import org.overture.pog.tests.newtests.PogTestResult.ResultComparison;
 
 import com.google.gson.reflect.TypeToken;
 
@@ -48,7 +49,11 @@ public class PogAllExamplesTest extends ParamExamplesTest<PogTestResult>
 	@Override
 	public void compareResults(PogTestResult actual, PogTestResult expected)
 	{
-		PogTestResult.compare(actual, expected);
+		ResultComparison r = PogTestResult.compare(actual, expected);
+
+		if (!r.isMatch()) {
+			fail(r.getMessage() + getTestResultUpdateMessage());
+		}
 	}
 
 	@Override
@@ -70,7 +75,8 @@ public class PogAllExamplesTest extends ParamExamplesTest<PogTestResult>
 	private static String EXAMPLES_ROOT = "../../externals/examples/target/classes/";
 	
 	@Override
-	protected String getRelativeExamplesPath() {
+	protected String getRelativeExamplesPath()
+	{
 		return EXAMPLES_ROOT;
 	}
 
