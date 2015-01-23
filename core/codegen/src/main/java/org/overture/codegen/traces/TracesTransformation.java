@@ -6,12 +6,14 @@ import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ANamedTraceDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.ATypeArgExpCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.APlainCallStmCG;
+import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
@@ -94,10 +96,20 @@ public class TracesTransformation extends DepthFirstAnalysisAdaptor
 	private AMethodDeclCG consTraceMethod(ANamedTraceDeclCG node)
 			throws AnalysisException
 	{
+		AClassTypeCG testAccType = transAssistant.consClassType(tracePrefixes.testAccumulatorClassName());
+		
 		AMethodTypeCG methodType = new AMethodTypeCG();
 		methodType.setResult(new AVoidTypeCG());
+		methodType.getParams().add(testAccType);
+		
+		AFormalParamLocalParamCG instanceParam = new AFormalParamLocalParamCG();
+		instanceParam.setType(testAccType.clone());
+		instanceParam.setPattern(transAssistant.consIdPattern(tracePrefixes.traceMethodParamName()));
 
 		AMethodDeclCG traceMethod = new AMethodDeclCG();
+		
+		traceMethod.getFormalParams().add(instanceParam);
+		
 		traceMethod.setAbstract(false);
 		traceMethod.setAccess(IRConstants.PUBLIC);
 		traceMethod.setBody(consTraceMethodBody(node));
@@ -126,6 +138,8 @@ public class TracesTransformation extends DepthFirstAnalysisAdaptor
 
 		executeTestsCall.getArgs().add(nodeVar.clone());
 		executeTestsCall.getArgs().add(typeArg);
+		executeTestsCall.getArgs().add(transAssistant.consIdentifierVar(tracePrefixes.traceMethodParamName(),
+				transAssistant.consClassType(tracePrefixes.testAccumulatorClassName())));
 
 		return executeTestsCall;
 	}

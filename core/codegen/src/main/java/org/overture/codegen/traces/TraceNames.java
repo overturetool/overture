@@ -137,4 +137,14 @@ public class TraceNames
 	{
 		return "VOID_VALUE";
 	}
+	
+	public String testAccumulatorClassName()
+	{
+		return "TestAccumulator";
+	}
+	
+	public String traceMethodParamName()
+	{
+		return "testAccumulator";
+	}
 }
