@@ -933,4 +933,9 @@ public class JavaFormat
 	{
 		return block != null && block.getScoped() != null && block.getScoped();
 	}
+	
+	public boolean importTraceSupport(AClassDeclCG node)
+	{
+		return info.getSettings().generateTraces() && !node.getTraces().isEmpty();
+	}
 }
