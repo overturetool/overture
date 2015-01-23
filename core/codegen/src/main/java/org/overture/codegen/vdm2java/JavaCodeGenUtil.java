@@ -337,7 +337,8 @@ public class JavaCodeGenUtil
 
 		for (VdmNodeInfo vdmNodeInfo : nodesSorted)
 		{
-			Logger.getLog().print(vdmNodeInfo.getNode().toString());
+			Logger.getLog().print(vdmNodeInfo.getNode().toString() + 
+					" (" + vdmNodeInfo.getNode().getClass().getSimpleName() + ")");
 
 			ILexLocation location = locationAssistant.findLocation(vdmNodeInfo.getNode());
 
