@@ -20,7 +20,15 @@ public class TermVisitorCG extends AbstractVisitorCG<IRInfo, STermCG>
 		for(PTraceDefinition traceDef : node.getList())
 		{
 			STraceDeclCG traceDefCg = traceDef.apply(question.getTraceDeclVisitor(), question);
-			termCg.getTraceDecls().add(traceDefCg);
+			
+			if(traceDefCg != null)
+			{
+				termCg.getTraceDecls().add(traceDefCg);
+			}
+			else
+			{
+				return null;
+			}
 		}
 		
 		return termCg;

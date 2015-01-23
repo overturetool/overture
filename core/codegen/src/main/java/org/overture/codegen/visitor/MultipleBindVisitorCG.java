@@ -49,7 +49,15 @@ public class MultipleBindVisitorCG extends
 		for (PPattern pattern : patterns)
 		{
 			SPatternCG patternTempCg = pattern.apply(question.getPatternVisitor(), question);
-			patternsCg.add(patternTempCg);
+			
+			if(patternTempCg != null)
+			{
+				patternsCg.add(patternTempCg);
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 		SExpCG setCg = set.apply(question.getExpVisitor(), question);

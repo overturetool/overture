@@ -56,8 +56,6 @@ public class TraceDeclVisitorCG extends AbstractVisitorCG<IRInfo, STraceDeclCG>
 		
 		if (!(multipleBindCg instanceof ASetMultipleBindCG))
 		{
-			question.addUnsupportedNode(node, "Generation of a multiple set bind was expected to yield "
-					+ "a ASetMultipleBindCG. Got: " + multipleBindCg);
 			return null;
 		}
 		

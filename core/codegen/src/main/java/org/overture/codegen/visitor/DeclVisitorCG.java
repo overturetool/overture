@@ -117,7 +117,8 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 			}
 			else
 			{
-				Logger.getLog().printErrorln("Expected term to be of type ATraceDeclTermCG. Got: " + termCg);
+				// Some sub-construct of the term must be unsupported
+				return null;
 			}
 		}
 		
