@@ -29,6 +29,9 @@ import org.overture.ast.lex.Dialect;
 import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.config.Release;
+import org.overture.config.Settings;
+import org.overture.interpreter.util.InterpreterUtil;
+import org.overture.interpreter.values.Value;
 
 public class ExecutableSpecTestHandler extends EntryBasedTestHandler
 {
@@ -41,7 +44,7 @@ public class ExecutableSpecTestHandler extends EntryBasedTestHandler
 	public void writeGeneratedCode(File parent, File resultFile)
 			throws IOException
 	{
-		injectArgIntoMainClassFile(parent, JAVA_ENTRY_CALL);
+		injectArgIntoMainClassFile(parent, getJavaEntry());
 
 		List<StringBuffer> content = TestUtils.readJavaModulesFromResultFile(resultFile);
 
@@ -106,5 +109,23 @@ public class ExecutableSpecTestHandler extends EntryBasedTestHandler
 
 			classCgStr.replace(min, firstLeftBraceIdx, replacement);
 		}
+	}
+
+	@Override
+	public String getJavaEntry()
+	{
+		return "Entry.Run()";
+	}
+
+	@Override
+	public String getVdmEntry()
+	{
+		return "Entry`Run()";
+	}
+
+	@Override
+	public Value interpretVdm(File intputFile) throws Exception
+	{
+		return InterpreterUtil.interpret(Settings.dialect, getVdmEntry(), intputFile);
 	}
 }
