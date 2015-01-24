@@ -1,0 +1,47 @@
+import org.overture.codegen.runtime.*;
+import org.overture.codegen.runtime.traces.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    private static Number fun(final Number a) {
+        return a;
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+
+    public static void Entry_T1_Run(final TestAccumulator testAccumulator) {
+        SequenceTraceNode sequence_1 = new SequenceTraceNode();
+        AlternativeTraceNode alternatives_2 = new AlternativeTraceNode();
+        VDMSet set_1 = SetUtil.set(1L, 2L, 3L);
+
+        for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
+            final Number a = ((Number) iterator_1.next());
+            CallStatement callStm_1 = new CallStatement() {
+                    public Object execute(final Object instance) {
+                        return fun(a);
+                    }
+
+                    public String toString() {
+                        return "fun(" + Utils.toString(a) + ")";
+                    }
+                };
+
+            StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+
+            alternatives_2.add(apply_1);
+        }
+
+        sequence_1.add(alternatives_2);
+
+        TraceNode.executeTests(sequence_1, Entry.class, testAccumulator);
+    }
+}
+
+##########

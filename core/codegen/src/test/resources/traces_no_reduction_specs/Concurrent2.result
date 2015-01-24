@@ -1,0 +1,67 @@
+import org.overture.codegen.runtime.*;
+import org.overture.codegen.runtime.traces.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    private static Number fun1(final Number a) {
+        return a;
+    }
+
+    private static Number fun2(final Number b) {
+        return b;
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+
+    public static void Entry_T1_Run(final TestAccumulator testAccumulator) {
+        SequenceTraceNode sequence_1 = new SequenceTraceNode();
+        AlternativeTraceNode alternatives_2 = new AlternativeTraceNode();
+        VDMSet set_1 = SetUtil.set(1L, 2L, 3L);
+
+        for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
+            final Number x = ((Number) iterator_1.next());
+            ConcurrentTraceNode concurrent_1 = new ConcurrentTraceNode();
+            CallStatement callStm_1 = new CallStatement() {
+                    public Object execute(final Object instance) {
+                        return fun1(x);
+                    }
+
+                    public String toString() {
+                        return "fun1(" + Utils.toString(x) + ")";
+                    }
+                };
+
+            StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+
+            CallStatement callStm_2 = new CallStatement() {
+                    public Object execute(final Object instance) {
+                        return fun2(x);
+                    }
+
+                    public String toString() {
+                        return "fun2(" + Utils.toString(x) + ")";
+                    }
+                };
+
+            StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
+
+            concurrent_1.add(apply_1);
+            concurrent_1.add(apply_2);
+
+            alternatives_2.add(concurrent_1);
+        }
+
+        sequence_1.add(alternatives_2);
+
+        TraceNode.executeTests(sequence_1, Entry.class, testAccumulator);
+    }
+}
+
+##########
