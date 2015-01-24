@@ -115,6 +115,8 @@ public class TraceStmsBuilder extends AnswerAdaptor<TraceNodeData>
 				stms.getStatements().add(nodeData.getStms());
 				addStms.add(transAssistant.consInstanceCallStm(classType, name, tracePrefixes.addMethodName(), nodeData.getNodeVar()));
 			}
+			
+			stms.getStatements().addAll(addStms);
 
 			return new TraceNodeData(transAssistant.consIdentifierVar(name, classType.clone()), stms);
 		}
