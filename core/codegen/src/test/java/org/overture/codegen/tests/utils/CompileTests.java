@@ -22,9 +22,7 @@
 package org.overture.codegen.tests.utils;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -45,6 +43,7 @@ import org.overture.codegen.tests.PatternTest;
 import org.overture.codegen.tests.PrePostTest;
 import org.overture.codegen.tests.RtTest;
 import org.overture.codegen.tests.SpecificationTest;
+import org.overture.codegen.tests.TracesNoReductionTest;
 import org.overture.codegen.tests.UnionTypeTest;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
@@ -54,8 +53,6 @@ import org.overture.interpreter.values.Value;
 
 public class CompileTests
 {
-	private static final String CG_VALUE_BINARY_FILE = "target"
-			+ File.separatorChar + "cgtest" + File.separatorChar + "myData.bin";
 	private static final String TEMP_DIR = "target" + File.separatorChar
 			+ "cgtest";
 	private static final String SRC_JAVA_LIB = ".." + File.separatorChar
@@ -86,7 +83,8 @@ public class CompileTests
 	public static final boolean PRE_POST_TESTS = true;
 	public static final boolean RUN_EXECUTING_CLASSIC_SPEC_TESTS = true;
 	public static final boolean RUN_CONFIGURED_CLONE_TESTS = true;
-
+	public static final boolean RUN_TRACE_TESTS = true;
+	
 	private List<File> testInputFiles;
 	private List<File> resultFiles;
 
@@ -183,6 +181,11 @@ public class CompileTests
 			runConfiguredCloningTests();
 		}
 		
+		if(RUN_TRACE_TESTS)
+		{
+			runTraceTests();
+		}
+		
 		long endTimeMs = System.currentTimeMillis();
 
 		long totalTimeMs = endTimeMs - startTimeMs;
@@ -192,6 +195,20 @@ public class CompileTests
 
 		System.out.println("Time: "
 				+ String.format("%02d:%02d", minutes, seconds) + ".");
+	}
+
+	private void runTraceTests() throws IOException
+	{
+		System.out.println("Beginning Trace no reduction tests..\n");
+
+		testInputFiles = TestUtils.getTestInputFiles(new File(TracesNoReductionTest.ROOT));
+		resultFiles = TestUtils.getFiles(new File(TracesNoReductionTest.ROOT), RESULT_FILE_EXTENSION);
+
+		runTests(testInputFiles, resultFiles, new TraceHandler(Release.VDM_10, Dialect.VDM_RT), false);
+
+		System.out.println("\n********");
+		System.out.println("Finished with Trace no reduction tests");
+		System.out.println("********\n");	
 	}
 
 	private void runRtTests() throws IOException
@@ -438,16 +455,18 @@ public class CompileTests
 		for (int i = 0; i < testCount; i++)
 		{
 			File currentInputFile = testInputFiles.get(i);
+			testHandler.setCurrentInputFile(currentInputFile);
 			
 			GeneralUtils.deleteFolderContents(parent, FOLDER_NAMES_TO_AVOID);
 
 			// Calculating the Java result:
-			File file = resultFiles.get(i);
+			File currentResultFile = resultFiles.get(i);
 
-			testHandler.writeGeneratedCode(parent, file);
+			testHandler.setCurrentResultFile(currentResultFile);
+			testHandler.writeGeneratedCode(parent, currentResultFile);
 
 			boolean compileOk = JavaCommandLineCompiler.compile(parent, null);
-			System.out.println("Test:" + testNumber + " (" + (1 + i) + "). Name: " + file.getName()
+			System.out.println("Test:" + testNumber + " (" + (1 + i) + "). Name: " + currentResultFile.getName()
 					+ " " + (compileOk ? "Compile OK" : "ERROR"));
 
 			if (!compileOk)
@@ -460,11 +479,16 @@ public class CompileTests
 				ExecutableTestHandler executableTestHandler = (ExecutableTestHandler) testHandler;
 
 				// Calculating the VDM Result:
-				Object vdmResult;
-
+				Object vdmResult = null;
+				
 				try
 				{
 					vdmResult = executableTestHandler.interpretVdm(currentInputFile);
+					
+					if(vdmResult == null)
+					{
+						return;
+					}
 				} 
 				catch (ContextException ce1)
 				{
@@ -475,31 +499,19 @@ public class CompileTests
 					e1.printStackTrace();
 					return;
 				}
-
-				String javaResult = JavaExecution.run(parent, TestHandler.MAIN_CLASS);
+			
+				JavaExecutionResult javaResult = executableTestHandler.runJava(parent);
 				
-				File dataFile = new File(CG_VALUE_BINARY_FILE);
-				FileInputStream fin = new FileInputStream(dataFile);
-				ObjectInputStream ois = new ObjectInputStream(fin);
-
-				Object cgValue = null;
-				try
+				if(javaResult == null)
 				{
-					cgValue = (Object) ois.readObject();
-				} catch (ClassNotFoundException e)
-				{
-					e.printStackTrace();
 					return;
-				} finally
-				{
-					ois.close();
 				}
-
+				
 				boolean equal = false;
 				
 				if(vdmResult instanceof ContextException)
 				{
-					String cgValueStr = cgValue.toString();
+					String cgValueStr = javaResult.getExecutionResult().toString();
 					String vdmValueStr = ((ContextException) vdmResult).getMessage();
 					
 					equal = vdmValueStr.contains(cgValueStr);
@@ -508,7 +520,7 @@ public class CompileTests
 				{
 					// Comparison of VDM and Java results
 					ComparisonCG comp = new ComparisonCG(currentInputFile);
-					equal = comp.compare(cgValue, (Value) vdmResult);
+					equal = comp.compare(javaResult.getExecutionResult(), (Value) vdmResult);
 				}
 
 				if (printInput)
@@ -516,7 +528,7 @@ public class CompileTests
 					String vdmInput = GeneralUtils.readFromFile(currentInputFile);
 					System.out.println("VDM:  " + vdmInput);
 
-					String generatedCode = GeneralUtils.readFromFile(file).replace('#', ' ');
+					String generatedCode = GeneralUtils.readFromFile(currentResultFile).replace('#', ' ');
 					System.out.println("Java: " + generatedCode);
 				} else
 				{
@@ -524,7 +536,7 @@ public class CompileTests
 				}
 
 				System.out.println("VDM ~>  " + toShortString(vdmResult));
-				System.out.print("Java ~> " + toShortString(javaResult));
+				System.out.print("Java ~> " + toShortString(javaResult.getProcessOutput()));
 
 				if (equal)
 				{
@@ -540,7 +552,7 @@ public class CompileTests
 
 	private String toShortString(Object result)
 	{
-		final int MAX = 200;
+		final int MAX = 1000;
 		String str = result.toString();
 
 		if (str.length() > MAX)
