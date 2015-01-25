@@ -169,7 +169,6 @@ public class TestSourceFinder
 			{
 				return true;
 			}
-			// System.out.println("Skipping: "+file.getName());
 		}
 		return false;
 	}
@@ -186,9 +185,6 @@ public class TestSourceFinder
 		}
 		if (file.isDirectory())
 		{
-			// System.out.println("Creating test for:" + file);
-			// Object instance = ctor.newInstance(new Object[] { file });
-			// suite.addTest((Test) instance);
 			tests.add(new Object[] { dialect, suite, null, file });
 		}
 
@@ -240,10 +236,6 @@ public class TestSourceFinder
 				{
 					for (int i = 0; i < lines.size(); i++)
 					{
-						// Object instance = ctor.newInstance(new Object[] { file,
-						// file.getName() + "_L" + i + "_" + lines.get(i),
-						// lines.get(i) });
-						// suite.addTest((Test) instance);
 						System.err.println("not supported");
 						tests.add(new Object[] { dialect,
 								file.getName() + "_L" + i + "_" + lines.get(i),

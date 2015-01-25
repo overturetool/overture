@@ -45,12 +45,6 @@ import org.xml.sax.SAXException;
 
 public class TraceResultReader
 {
-	// @Test
-	// public void test() throws XPathExpressionException, SAXException, IOException, ParserConfigurationException
-	// {
-	// System.out.println(read(new File("target/trace-output/T1/DEFAULT-T1.xml".replace('/', File.separatorChar))));
-	// }
-
 	public List<TraceResult> read(File file) throws SAXException, IOException,
 			ParserConfigurationException, XPathExpressionException
 	{
