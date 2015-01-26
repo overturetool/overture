@@ -177,7 +177,11 @@ public class TraceInterpreter
 			}
 
 			infoCompleted();
-			System.out.println("Completed");
+			
+			if (DEBUG)
+			{
+				System.out.println("Completed");
+			}
 		} catch (ContextException e)
 		{
 			error(e.getMessage());

@@ -411,10 +411,4 @@ public class XMLParser
 
 		return p;
 	}
-
-	public static void main(String[] args) throws IOException
-	{
-		XMLParser p = new XMLParser("<![CDATA[]]]>".getBytes());
-		System.out.println(p.readNode());
-	}
 }
