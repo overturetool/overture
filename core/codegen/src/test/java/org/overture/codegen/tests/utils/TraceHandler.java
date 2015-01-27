@@ -102,9 +102,7 @@ public class TraceHandler extends ExecutableSpecTestHandler
 	{
 		JavaExecutionResult javaResult = super.runJava(folder);
 
-		TestAccumulator acc = (TestAccumulator) javaResult.getExecutionResult();
-
-		return new JavaExecutionResult(javaResult.getProcessOutput(), acc.toString());
+		return new JavaExecutionResult(javaResult.getProcessOutput(), javaResult.getExecutionResult().toString());
 	}
 
 	public File computeVdmTraceResult(File specFile) throws IOException,
