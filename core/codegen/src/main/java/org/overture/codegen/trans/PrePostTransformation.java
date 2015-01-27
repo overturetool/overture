@@ -1,8 +1,12 @@
 package org.overture.codegen.trans;
 
+import java.util.LinkedList;
+
 import org.overture.codegen.cgast.SDeclCG;
+import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
@@ -34,22 +38,39 @@ public class PrePostTransformation extends DepthFirstAnalysisAdaptor {
 		}
 		
 		SDeclCG preCond = node.getPreCond();
-		handleCond(enclosingClass, preCond);
-		
-		SDeclCG postCond = node.getPostCond();
-		handleCond(enclosingClass, postCond);
-	}
-
-	private void handleCond(AClassDeclCG enclosingClass, SDeclCG cond) {
-		if(cond != null)
+		if(preCond instanceof AMethodDeclCG)
 		{
-			if(!(cond instanceof AMethodDeclCG))
+			AMethodDeclCG preCondMethod = (AMethodDeclCG) preCond;			
+			enclosingClass.getMethods().add(preCondMethod);
+
+			if(node.getStatic() != null && !node.getStatic())
 			{
-				Logger.getLog().printErrorln("Expected pre/post condition to be a method declaration at this point. Got: " + cond);
-				return;
+				preCondMethod.setStatic(false);
+				
+				//No need to pass self as the last argument
+				LinkedList<STypeCG> paramTypes = preCondMethod.getMethodType().getParams();
+				paramTypes.remove(paramTypes.size() - 1);
+				
+				LinkedList<AFormalParamLocalParamCG> formalParams = preCondMethod.getFormalParams();
+				formalParams.remove(formalParams.size() - 1);
 			}
-			
-			enclosingClass.getMethods().add((AMethodDeclCG) cond);			
+		}
+
+		SDeclCG postCond = node.getPostCond();
+		if(postCond instanceof AMethodDeclCG)
+		{
+			AMethodDeclCG postCondMethod = (AMethodDeclCG) postCond;
+
+			// Generation of a post condition is only supported for static operations
+			// where no 'self' and '~self' are being passed
+			if(node.getStatic() != null && node.getStatic())
+			{
+				enclosingClass.getMethods().add(postCondMethod);
+			}
+			else
+			{
+				info.addTransformationWarning(postCondMethod, "Generation of a post condition is only supported for static operations");
+			}
 		}
 	}
 }

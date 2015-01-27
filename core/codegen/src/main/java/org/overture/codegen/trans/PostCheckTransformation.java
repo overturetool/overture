@@ -102,6 +102,13 @@ public class PostCheckTransformation extends DepthFirstAnalysisAdaptor
 			Logger.getLog().printError("Could not find enclosing method for a return statement in the post check transformation");
 			return;
 		}
+		
+		if(method.getStatic() == null || !method.getStatic())
+		{
+			// Generation of a post condition is only supported for static operations
+			// where no 'self' and '~self' are being passed
+			return;
+		}
 
 		SDeclCG postCond = method.getPostCond();
 		
