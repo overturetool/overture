@@ -4,14 +4,14 @@ import java.io.File;
 
 import org.overture.codegen.ir.IRSettings;
 
-public class TracesNoReductionTestCase extends SpecificationTestCase
+public class TracesExpansionTestCase extends SpecificationTestCase
 {
-	public TracesNoReductionTestCase()
+	public TracesExpansionTestCase()
 	{
 		super();
 	}
 
-	public TracesNoReductionTestCase(File file)
+	public TracesExpansionTestCase(File file)
 	{
 		super(file);
 	}

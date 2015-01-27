@@ -43,7 +43,7 @@ import org.overture.codegen.tests.PatternTest;
 import org.overture.codegen.tests.PrePostTest;
 import org.overture.codegen.tests.RtTest;
 import org.overture.codegen.tests.SpecificationTest;
-import org.overture.codegen.tests.TracesNoReductionTest;
+import org.overture.codegen.tests.TracesExpansionTest;
 import org.overture.codegen.tests.UnionTypeTest;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
@@ -83,7 +83,7 @@ public class CompileTests
 	public static final boolean PRE_POST_TESTS = true;
 	public static final boolean RUN_EXECUTING_CLASSIC_SPEC_TESTS = true;
 	public static final boolean RUN_CONFIGURED_CLONE_TESTS = true;
-	public static final boolean RUN_TRACE_TESTS = true;
+	public static final boolean RUN_TRACES_EXPANSION_TESTS = true;
 	
 	private List<File> testInputFiles;
 	private List<File> resultFiles;
@@ -181,7 +181,7 @@ public class CompileTests
 			runConfiguredCloningTests();
 		}
 		
-		if(RUN_TRACE_TESTS)
+		if(RUN_TRACES_EXPANSION_TESTS)
 		{
 			runTraceTests();
 		}
@@ -199,15 +199,15 @@ public class CompileTests
 
 	private void runTraceTests() throws IOException
 	{
-		System.out.println("Beginning Trace no reduction tests..\n");
+		System.out.println("Beginning Trace expansion tests..\n");
 
-		testInputFiles = TestUtils.getTestInputFiles(new File(TracesNoReductionTest.ROOT));
-		resultFiles = TestUtils.getFiles(new File(TracesNoReductionTest.ROOT), RESULT_FILE_EXTENSION);
+		testInputFiles = TestUtils.getTestInputFiles(new File(TracesExpansionTest.ROOT));
+		resultFiles = TestUtils.getFiles(new File(TracesExpansionTest.ROOT), RESULT_FILE_EXTENSION);
 
 		runTests(testInputFiles, resultFiles, new TraceHandler(Release.VDM_10, Dialect.VDM_RT), false);
 
 		System.out.println("\n********");
-		System.out.println("Finished with Trace no reduction tests");
+		System.out.println("Finished with Trace expansion tests");
 		System.out.println("********\n");	
 	}
 
