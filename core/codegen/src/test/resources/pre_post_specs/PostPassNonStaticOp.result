@@ -1,0 +1,26 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public Number op(final Number x) {
+        return x;
+    }
+
+    public static Object Run() {
+        Entry e = new Entry();
+        Number r = e.op(42L);
+
+        return r;
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########

@@ -25,10 +25,10 @@ public class Entry {
             throw new RuntimeException("Tuple pattern match failed");
         }
 
-        Number funcResult_ = a.longValue() + b.longValue();
+        Number funcResult_1 = a.longValue() + b.longValue();
 
-        return Utils.postCheck(funcResult_,
-            post_f(tuplePattern_1, funcResult_), "f");
+        return Utils.postCheck(funcResult_1,
+            post_f(tuplePattern_1, funcResult_1), "f");
     }
 
     public static Boolean post_f(final Tuple tuplePattern_2, final Number RESULT) {

@@ -363,8 +363,6 @@ public class JavaCodeGenUtil
 		LocationAssistantCG locationAssistant = assistantManager.getLocationAssistant();
 		
 		List<IrNodeInfo> nodesSorted = locationAssistant.getIrNodeInfoLocationSorted(unsupportedNodes);
-		
-		Logger.getLog().println("Following IR constructs are not supported by the backend/target languages:");
 
 		for (IrNodeInfo nodeInfo : nodesSorted)
 		{
