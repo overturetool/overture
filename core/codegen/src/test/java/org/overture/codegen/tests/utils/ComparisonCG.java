@@ -34,6 +34,8 @@ import org.overture.codegen.runtime.Tuple;
 import org.overture.codegen.runtime.VDMMap;
 import org.overture.codegen.runtime.VDMSeq;
 import org.overture.codegen.runtime.VDMSet;
+import org.overture.ct.ctruntime.utils.TraceTest;
+import org.overture.interpreter.traces.Verdict;
 import org.overture.interpreter.values.BooleanValue;
 import org.overture.interpreter.values.CharacterValue;
 import org.overture.interpreter.values.FieldMap;
@@ -63,8 +65,68 @@ public class ComparisonCG
 		}
 	}
 
-	public boolean compare(Object cgValue, Value vdmValue)
+	@SuppressWarnings("rawtypes")
+	public boolean compare(Object cgValue, Object vdmResult)
 	{
+		if(!(vdmResult instanceof Value))
+		{
+			if(vdmResult instanceof List && cgValue instanceof List)
+			{
+				List vdmList = (List) vdmResult;
+				List cgList = (List) cgValue;
+				
+				if(vdmList.size() != cgList.size())
+				{
+					return false;
+				}
+				
+				for(int i = 0; i < vdmList.size(); i++)
+				{
+					Object vdmElem = vdmList.get(i);
+					Object cgElem = cgList.get(i);
+					
+					if(vdmElem instanceof TraceTest && 
+							cgElem instanceof org.overture.codegen.runtime.traces.TraceTest)
+					{
+						TraceTest vdmTest = (TraceTest) vdmElem;
+						org.overture.codegen.runtime.traces.TraceTest cgTest = (org.overture.codegen.runtime.traces.TraceTest) cgElem;
+						
+						if(vdmTest.getVerdict().toString().equals(cgTest.getVerdict().toString()))
+						{
+							if(!(vdmTest.getNo().equals(cgTest.getNo()) && vdmTest.getTest().equals(cgTest.getTest())))
+							{
+								return false;
+							}
+							
+							if(vdmTest.getVerdict() == Verdict.PASSED)
+							{
+								if(!vdmTest.getResult().equals(cgTest.getResult()))
+								{
+									return false;
+								}
+							}
+						}
+						else 
+						{
+							return false;
+						}
+					}
+					else 
+					{
+						return false;
+					}
+				}
+				return true;
+			}
+			else
+			{
+			  return false;
+			}
+		}
+		
+		Value vdmValue = (Value) vdmResult;
+		
+		
 		while (vdmValue instanceof UpdatableValue)
 		{
 			UpdatableValue upValue = (UpdatableValue) vdmValue;

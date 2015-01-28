@@ -44,12 +44,12 @@ import org.overture.codegen.tests.PrePostTest;
 import org.overture.codegen.tests.RtTest;
 import org.overture.codegen.tests.SpecificationTest;
 import org.overture.codegen.tests.TracesExpansionTest;
+import org.overture.codegen.tests.TracesVerdictTest;
 import org.overture.codegen.tests.UnionTypeTest;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.config.Release;
 import org.overture.interpreter.runtime.ContextException;
-import org.overture.interpreter.values.Value;
 
 public class CompileTests
 {
@@ -84,6 +84,7 @@ public class CompileTests
 	public static final boolean RUN_EXECUTING_CLASSIC_SPEC_TESTS = true;
 	public static final boolean RUN_CONFIGURED_CLONE_TESTS = true;
 	public static final boolean RUN_TRACES_EXPANSION_TESTS = true;
+	public static final boolean RUN_TRACES_VERDICT_TESTS = true;
 	
 	private List<File> testInputFiles;
 	private List<File> resultFiles;
@@ -183,7 +184,12 @@ public class CompileTests
 		
 		if(RUN_TRACES_EXPANSION_TESTS)
 		{
-			runTraceTests();
+			runTraceExpansionTests();
+		}
+
+		if(RUN_TRACES_VERDICT_TESTS)
+		{
+			runTraceVerdictTests();
 		}
 		
 		long endTimeMs = System.currentTimeMillis();
@@ -197,7 +203,21 @@ public class CompileTests
 				+ String.format("%02d:%02d", minutes, seconds) + ".");
 	}
 
-	private void runTraceTests() throws IOException
+	private void runTraceVerdictTests() throws IOException
+	{
+		System.out.println("Beginning Trace verdict tests..\n");
+
+		testInputFiles = TestUtils.getTestInputFiles(new File(TracesVerdictTest.ROOT));
+		resultFiles = TestUtils.getFiles(new File(TracesVerdictTest.ROOT), RESULT_FILE_EXTENSION);
+
+		runTests(testInputFiles, resultFiles, new TraceHandler(Release.VDM_10, Dialect.VDM_RT), false);
+
+		System.out.println("\n********");
+		System.out.println("Finished with Trace verdict tests");
+		System.out.println("********\n");	
+	}
+
+	private void runTraceExpansionTests() throws IOException
 	{
 		System.out.println("Beginning Trace expansion tests..\n");
 
@@ -520,7 +540,7 @@ public class CompileTests
 				{
 					// Comparison of VDM and Java results
 					ComparisonCG comp = new ComparisonCG(currentInputFile);
-					equal = comp.compare(javaResult.getExecutionResult(), (Value) vdmResult);
+					equal = comp.compare(javaResult.getExecutionResult(), vdmResult);
 				}
 
 				if (printInput)
