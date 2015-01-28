@@ -37,5 +37,6 @@ public class TestFlags
 	public static final boolean BIND_TESTS_ON = false;
 	public static final boolean PRE_POST_TESTS_ON = false;
 	public static final boolean RT_TESTS_ON = false;
-	public static final boolean TRACES_NO_REDUCTION_TESTS_ON = false;
+	public static final boolean TRACES_EXPANSION_TESTS_ON = false;
+	public static final boolean TRACES_VERDICT_TESTS_ON = false;
 }
