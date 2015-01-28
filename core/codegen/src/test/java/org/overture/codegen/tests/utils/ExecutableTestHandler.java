@@ -31,7 +31,6 @@ import java.util.List;
 import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
 import org.overture.config.Settings;
-import org.overture.interpreter.values.Value;
 
 public abstract class ExecutableTestHandler extends TestHandler
 {
@@ -96,7 +95,7 @@ public abstract class ExecutableTestHandler extends TestHandler
 		Settings.dialect = dialect;
 	}
 	
-	public abstract Value interpretVdm(File intputFile) throws Exception;
+	public abstract Object interpretVdm(File intputFile) throws Exception;
 	
 	public List<String> getMainClassMethods()
 	{
