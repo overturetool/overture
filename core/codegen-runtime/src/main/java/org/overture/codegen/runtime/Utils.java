@@ -203,6 +203,30 @@ public class Utils
 		return exp != null && exp.getClass() == type;
 	}
 
+	public static long div(Number left, Number right)
+	{
+		if(!(is_int(left) && is_int(right)))
+		{
+			throw new ArithmeticException("Operands of the 'div' must be integers. Got left " + left + " and right" + right);
+		}
+		
+		if(right.longValue() == 0L)
+		{
+			throw new ArithmeticException("Division by zero is undefined");
+		}
+		
+		double lv = left.doubleValue();
+		double rv = right.doubleValue();
+		
+		if (lv / rv < 0)
+		{
+			return (long) -Math.floor(Math.abs(lv / rv));
+		} else
+		{
+			return (long) Math.floor(Math.abs(-lv / rv));
+		}
+	}
+	
 	private static boolean is_int(Double doubleValue)
 	{
 		return doubleValue != null && (doubleValue == Math.floor(doubleValue)) && !Double.isInfinite(doubleValue);

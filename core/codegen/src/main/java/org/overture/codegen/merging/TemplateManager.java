@@ -617,6 +617,9 @@ public class TemplateManager
 		nodeTemplateFileNames.put(ADivideNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXP_PATH
 				+ "Divide");
 
+		nodeTemplateFileNames.put(AIntDivNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXP_PATH
+				+ "IntDiv");
+
 		nodeTemplateFileNames.put(AGreaterEqualNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXP_PATH
 				+ "GreaterEqual");
 

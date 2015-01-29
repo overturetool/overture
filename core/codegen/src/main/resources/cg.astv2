@@ -382,7 +382,7 @@ CG {-> package='org.overture.codegen.cgast'
     ;
  
 #Numeric {-> package='org.overture.codegen.cgast.expressions'}
-    =	{div}
+    =	{intDiv}
     |	{divide}
     |	{greaterEqual}
     |	{greater}

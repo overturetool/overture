@@ -96,6 +96,7 @@ import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AInSetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AIndicesUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
+import org.overture.codegen.cgast.expressions.AIntDivNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ALambdaExpCG;
 import org.overture.codegen.cgast.expressions.ALenUnaryExpCG;
@@ -1479,7 +1480,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseADivNumericBinaryExp(ADivNumericBinaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return (ADivideNumericBinaryExpCG) question.getExpAssistant().handleBinaryExp(node, new ADivideNumericBinaryExpCG(), question);
+		return (AIntDivNumericBinaryExpCG) question.getExpAssistant().handleBinaryExp(node, new AIntDivNumericBinaryExpCG(), question);
 	}
 
 	@Override
