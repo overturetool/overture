@@ -634,7 +634,13 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(APowerNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXP_PATH
 				+ "Power");
-
+		
+		nodeTemplateFileNames.put(ARemNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXP_PATH
+				+ "Rem");
+		
+		nodeTemplateFileNames.put(AModNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXP_PATH
+				+ "Mod");		
+		
 		// Connective binary expressions
 
 		nodeTemplateFileNames.put(AOrBoolBinaryExpCG.class, templateStructure.BOOL_BINARY_EXP_PATH

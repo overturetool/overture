@@ -205,19 +205,46 @@ public class Utils
 
 	public static long div(Number left, Number right)
 	{
+		validateInput(left, right);
+		
+		return div(left.doubleValue(), right.doubleValue());
+	}
+	
+	public static long mod(Number left, Number right)
+	{
+		validateInput(left, right);
+		
+		double lv = left.doubleValue();
+		double rv = right.doubleValue();
+		
+		return (long) (lv - rv * (long) Math.floor(lv / rv));
+	}
+	
+	public static long rem(Number left, Number right)
+	{
+		validateInput(left, right);
+
+		double lv = left.doubleValue();
+		double rv = right.doubleValue();
+
+		return (long) (lv - rv * div(lv, rv));
+	}
+
+	private static void validateInput(Number left, Number right)
+	{
 		if(!(is_int(left) && is_int(right)))
 		{
-			throw new ArithmeticException("Operands of the 'div' must be integers. Got left " + left + " and right" + right);
+			throw new ArithmeticException("Operands must be integers. Got left " + left + " and right" + right);
 		}
 		
 		if(right.longValue() == 0L)
 		{
 			throw new ArithmeticException("Division by zero is undefined");
 		}
-		
-		double lv = left.doubleValue();
-		double rv = right.doubleValue();
-		
+	}
+	
+	private static long div(double lv, double rv)
+	{
 		if (lv / rv < 0)
 		{
 			return (long) -Math.floor(Math.abs(lv / rv));
