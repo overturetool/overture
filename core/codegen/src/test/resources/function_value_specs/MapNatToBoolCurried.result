@@ -10,8 +10,7 @@ public class Entry {
     public static Object Run() {
         Func_1<Number, Boolean> f = new Func_1<Number, Boolean>() {
                 public Boolean eval(final Number x) {
-                    return Utils.equals((x.longValue() -
-                        (2L * Math.round(Math.floor(x.longValue() / 2L)))), 0L);
+                    return Utils.equals(Utils.mod(x.longValue(), 2L), 0L);
                 }
             };
 

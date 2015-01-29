@@ -1073,8 +1073,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
             return "";
         } else {
             Number first = Utils.div(n.longValue(), 10L);
-            Number last = n.longValue() -
-                (10L * Math.round(Math.floor(n.longValue() / 10L)));
+            Number last = Utils.mod(n.longValue(), 10L);
 
             String casesExpResult_2 = null;
 
