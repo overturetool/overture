@@ -202,48 +202,52 @@ public class Utils
 	{
 		return exp != null && exp.getClass() == type;
 	}
+	
+	public static double divide(double left, double right)
+	{
+		if(right == 0L)
+		{
+			throw new ArithmeticException("Division by zero is undefined");
+		}
+		
+		return left/right;
+	}
 
-	public static long div(Number left, Number right)
+	public static long div(double left, double right)
 	{
 		validateInput(left, right);
 		
-		return div(left.doubleValue(), right.doubleValue());
+		return computeDiv(left, right);
 	}
 	
-	public static long mod(Number left, Number right)
+	public static long mod(double left, double right)
 	{
 		validateInput(left, right);
 		
-		double lv = left.doubleValue();
-		double rv = right.doubleValue();
-		
-		return (long) (lv - rv * (long) Math.floor(lv / rv));
+		return (long) (left - right * (long) Math.floor(left / right));
 	}
 	
-	public static long rem(Number left, Number right)
+	public static long rem(double left, double right)
 	{
 		validateInput(left, right);
 
-		double lv = left.doubleValue();
-		double rv = right.doubleValue();
-
-		return (long) (lv - rv * div(lv, rv));
+		return (long) (left - right * computeDiv(left, right));
 	}
 
-	private static void validateInput(Number left, Number right)
+	private static void validateInput(double left, double right)
 	{
 		if(!(is_int(left) && is_int(right)))
 		{
 			throw new ArithmeticException("Operands must be integers. Got left " + left + " and right" + right);
 		}
 		
-		if(right.longValue() == 0L)
+		if(right == 0L)
 		{
 			throw new ArithmeticException("Division by zero is undefined");
 		}
 	}
 	
-	private static long div(double lv, double rv)
+	private static long computeDiv(double lv, double rv)
 	{
 		if (lv / rv < 0)
 		{
