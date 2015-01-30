@@ -117,7 +117,7 @@ public class Utils
 			Long leftLong = (Long) left;
 			Long rightLong = (Long) right;
 			
-			return Long.compare(leftLong.longValue(), rightLong.longValue()) == 0;
+			return leftLong.compareTo(rightLong) == 0;
 		}
 		
 		if(left instanceof Integer && right instanceof Integer)
@@ -125,15 +125,15 @@ public class Utils
 			Integer leftInt = (Integer) left;
 			Integer rightInt = (Integer) right;
 			
-			return Integer.compare(leftInt.intValue(), rightInt.intValue()) == 0;
+			return leftInt.compareTo(rightInt) == 0;
 		}
 		
 		if(left instanceof Number && right instanceof Number)
 		{
-			Number leftNumber = (Number) left;
-			Number rightNumber = (Number) right;
+			Double leftNumber = ((Number) left).doubleValue();
+			Double rightNumber = ((Number) right).doubleValue();
 			
-			return Double.compare(leftNumber.doubleValue(), rightNumber.doubleValue()) == 0;
+			return leftNumber.compareTo(rightNumber) == 0;
 		}
 		
 		return left != null ? left.equals(right) : right == null; 
