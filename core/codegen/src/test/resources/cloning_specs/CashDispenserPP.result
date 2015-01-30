@@ -51,9 +51,9 @@ public class SimpleTest {
                 resource.AddLetterbox(clock, new Letterbox());
                 ((Till) tills.get(1L)).InsertCard(c1);
 
-                if (Utils.equals(((Till) tills.get(1L)).Validate(123456L),
-                            quotes.PinOk.getInstance())) {
-                    return ((Till) tills.get(1L)).MakeWithdrawal(800L);
+                if (Utils.equals(((Till) MapUtil.get(tills, 1L)).Validate(
+                                123456L), quotes.PinOk.getInstance())) {
+                    return ((Till) MapUtil.get(tills, 1L)).MakeWithdrawal(800L);
                 } else {
                     return false;
                 }
@@ -124,8 +124,8 @@ public class Account {
     }
 
     public Letter MakeStatement(final Number cardId, final VDMSeq date) {
-        VDMSeq nm = ((Cardholder) cards.get(cardId)).GetName();
-        VDMSeq addr = ((Cardholder) cards.get(cardId)).GetAddress();
+        VDMSeq nm = ((Cardholder) MapUtil.get(cards, cardId)).GetName();
+        VDMSeq addr = ((Cardholder) MapUtil.get(cards, cardId)).GetAddress();
 
         {
             Letter letter = new Letter();
@@ -359,7 +359,7 @@ public class CentralResource {
 
     public Boolean PostStatement(final Number accountId, final Number cardId) {
         if (IsLegalCard(accountId, cardId)) {
-            letterbox.PostStatement(((Account) accounts.get(accountId)).MakeStatement(
+            letterbox.PostStatement(((Account) MapUtil.get(accounts, accountId)).MakeStatement(
                     cardId, clock.GetDate()));
 
             return true;
@@ -375,7 +375,7 @@ public class CentralResource {
             Boolean andResult_3 = false;
 
             if (MapUtil.dom(accounts).contains(accountId)) {
-                if (((Account) accounts.get(accountId)).GetCardIds()
+                if (((Account) MapUtil.get(accounts, accountId)).GetCardIds()
                          .contains(cardId)) {
                     andResult_3 = true;
                 }
@@ -390,7 +390,7 @@ public class CentralResource {
     }
 
     public Boolean NumberOfTriesExceeded(final Number cardId) {
-        return ((Number) numberOfTries.get(cardId)).longValue() >= maxNumberOfTries.longValue();
+        return ((Number) MapUtil.get(numberOfTries, cardId)).longValue() >= maxNumberOfTries.longValue();
     }
 
     public void ResetNumberOfTries(final Number cardId) {
@@ -399,7 +399,7 @@ public class CentralResource {
 
     public void IncrNumberOfTries(final Number cardId) {
         numberOfTries.put(cardId,
-            ((Number) numberOfTries.get(cardId)).longValue() + 1L);
+            ((Number) MapUtil.get(numberOfTries, cardId)).longValue() + 1L);
     }
 
     public void AddAccount(final Number accId, final Account acc) {
@@ -849,7 +849,7 @@ public class System {
     }
 
     public Till GetTill(final Number tid) {
-        return ((Till) tills.get(tid));
+        return ((Till) MapUtil.get(tills, tid));
     }
 
     public CentralResource GetResource() {

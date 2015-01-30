@@ -11,7 +11,7 @@ public class Entry {
     }
 
     public Object app(final Token id, final Token index) {
-        return ((VDMMap) m.get(id)).get(index);
+        return MapUtil.get(((VDMMap) MapUtil.get(m, id)), index);
     }
 
     public static Object Run() {
