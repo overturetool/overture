@@ -1519,7 +1519,8 @@ public class POP3Server extends VDMThread implements EvaluatePP {
             Boolean andResult_2 = false;
 
             if (MapUtil.dom(Utils.clone(passwords)).contains(user)) {
-                if (Utils.equals(((String) passwords.get(user)), password)) {
+                if (Utils.equals(((String) MapUtil.get(passwords, user)),
+                            password)) {
                     andResult_2 = true;
                 }
             }
@@ -1544,7 +1545,8 @@ public class POP3Server extends VDMThread implements EvaluatePP {
         sentinel.entering(((POP3Server_sentinel) sentinel).SetUserMessages);
 
         try {
-            MailBox recModifierExp_1 = Utils.clone(((MailBox) maildrop.get(user)));
+            MailBox recModifierExp_1 = Utils.clone(((MailBox) MapUtil.get(
+                        maildrop, user)));
 
             recModifierExp_1.msgs = Utils.clone(newMsgs);
             sentinel.stateChanged();
@@ -1560,7 +1562,7 @@ public class POP3Server extends VDMThread implements EvaluatePP {
         sentinel.entering(((POP3Server_sentinel) sentinel).GetUserMail);
 
         try {
-            return Utils.clone(((MailBox) maildrop.get(user)));
+            return Utils.clone(((MailBox) MapUtil.get(maildrop, user)));
         } finally {
             sentinel.leaving(((POP3Server_sentinel) sentinel).GetUserMail);
         }

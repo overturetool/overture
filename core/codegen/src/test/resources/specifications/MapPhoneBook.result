@@ -189,12 +189,12 @@ public class PhoneBook {
     }
 
     public VDMSeq getNumber(final VDMSeq name) {
-        return Utils.clone(((VDMSeq) phoneNumbers.get(name)));
+        return Utils.clone(((VDMSeq) MapUtil.get(phoneNumbers, name)));
     }
 
     public VDMSeq getName(final VDMSeq number) {
-        return Utils.clone(((VDMSeq) MapUtil.inverse(Utils.clone(phoneNumbers))
-                                            .get(number)));
+        return Utils.clone(((VDMSeq) MapUtil.get(MapUtil.inverse(Utils.clone(
+                        phoneNumbers)), number)));
     }
 
     public PhoneBook invertPhoneBook() {
