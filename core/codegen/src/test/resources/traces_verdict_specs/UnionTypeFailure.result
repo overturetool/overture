@@ -1,0 +1,77 @@
+import org.overture.codegen.runtime.*;
+import org.overture.codegen.runtime.traces.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Number f(final Object e) {
+        return 1L + ((Number) e).longValue();
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+
+    public static void Entry_T1_Run(final TestAccumulator testAccumulator) {
+        SequenceTraceNode sequence_1 = new SequenceTraceNode();
+        final Number a = 1L;
+
+        final Character b = 'x';
+
+        final Number c = 3L;
+
+        SequenceTraceNode sequence_2 = new SequenceTraceNode();
+        AlternativeTraceNode alternatives_2 = new AlternativeTraceNode();
+        CallStatement callStm_1 = new CallStatement() {
+                public Object execute(final Object instance) {
+                    return f(a);
+                }
+
+                public String toString() {
+                    return "f(" + Utils.toString(a) + ")";
+                }
+            };
+
+        StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+
+        CallStatement callStm_2 = new CallStatement() {
+                public Object execute(final Object instance) {
+                    return f(b);
+                }
+
+                public String toString() {
+                    return "f(" + Utils.toString(b) + ")";
+                }
+            };
+
+        StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
+
+        CallStatement callStm_3 = new CallStatement() {
+                public Object execute(final Object instance) {
+                    return f(c);
+                }
+
+                public String toString() {
+                    return "f(" + Utils.toString(c) + ")";
+                }
+            };
+
+        StatementTraceNode apply_3 = new StatementTraceNode(callStm_3);
+
+        alternatives_2.add(apply_1);
+        alternatives_2.add(apply_2);
+        alternatives_2.add(apply_3);
+
+        sequence_2.add(alternatives_2);
+
+        sequence_1.add(sequence_2);
+
+        TraceNode.executeTests(sequence_1, Entry.class, testAccumulator);
+    }
+}
+
+##########
