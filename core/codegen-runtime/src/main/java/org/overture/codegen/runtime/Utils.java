@@ -129,7 +129,7 @@ public class Utils
 			Long leftLong = (Long) left;
 			Long rightLong = (Long) right;
 			
-			return Long.compare(leftLong.longValue(), rightLong.longValue()) == 0;
+			return leftLong.compareTo(rightLong) == 0;
 		}
 		
 		if(left instanceof Integer && right instanceof Integer)
@@ -137,15 +137,15 @@ public class Utils
 			Integer leftInt = (Integer) left;
 			Integer rightInt = (Integer) right;
 			
-			return Integer.compare(leftInt.intValue(), rightInt.intValue()) == 0;
+			return leftInt.compareTo(rightInt) == 0;
 		}
 		
 		if(left instanceof Number && right instanceof Number)
 		{
-			Number leftNumber = (Number) left;
-			Number rightNumber = (Number) right;
+			Double leftNumber = ((Number) left).doubleValue();
+			Double rightNumber = ((Number) right).doubleValue();
 			
-			return Double.compare(leftNumber.doubleValue(), rightNumber.doubleValue()) == 0;
+			return leftNumber.compareTo(rightNumber) == 0;
 		}
 		
 		return left != null ? left.equals(right) : right == null; 
@@ -214,7 +214,62 @@ public class Utils
 	{
 		return exp != null && exp.getClass() == type;
 	}
+	
+	public static double divide(double left, double right)
+	{
+		if(right == 0L)
+		{
+			throw new ArithmeticException("Division by zero is undefined");
+		}
+		
+		return left/right;
+	}
 
+	public static long div(double left, double right)
+	{
+		validateInput(left, right);
+		
+		return computeDiv(left, right);
+	}
+	
+	public static long mod(double left, double right)
+	{
+		validateInput(left, right);
+		
+		return (long) (left - right * (long) Math.floor(left / right));
+	}
+	
+	public static long rem(double left, double right)
+	{
+		validateInput(left, right);
+
+		return (long) (left - right * computeDiv(left, right));
+	}
+
+	private static void validateInput(double left, double right)
+	{
+		if(!(is_int(left) && is_int(right)))
+		{
+			throw new ArithmeticException("Operands must be integers. Got left " + left + " and right" + right);
+		}
+		
+		if(right == 0L)
+		{
+			throw new ArithmeticException("Division by zero is undefined");
+		}
+	}
+	
+	private static long computeDiv(double lv, double rv)
+	{
+		if (lv / rv < 0)
+		{
+			return (long) -Math.floor(Math.abs(lv / rv));
+		} else
+		{
+			return (long) Math.floor(Math.abs(-lv / rv));
+		}
+	}
+	
 	private static boolean is_int(Double doubleValue)
 	{
 		return doubleValue != null && (doubleValue == Math.floor(doubleValue)) && !Double.isInfinite(doubleValue);

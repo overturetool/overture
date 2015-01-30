@@ -436,6 +436,11 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 			double lv = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt).intValue(ctxt);
 			double rv = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt).intValue(ctxt);
 
+			if (rv == 0)
+			{
+				throw new ValueException(4134, "Infinite or NaN trouble", ctxt);
+			}
+
 			return NumericValue.valueOf(div(lv, rv), ctxt);
 		} catch (ValueException e)
 		{
@@ -562,6 +567,11 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 			double lv = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt).intValue(ctxt);
 			double rv = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt).intValue(ctxt);
 
+			if (rv == 0)
+			{
+				throw new ValueException(4134, "Infinite or NaN trouble", ctxt);
+			}
+
 			return NumericValue.valueOf(lv - rv * (long) Math.floor(lv / rv), ctxt);
 		} catch (ValueException e)
 		{
@@ -609,6 +619,11 @@ public class BinaryExpressionEvaluator extends UnaryExpressionEvaluator
 
 			double lv = node.getLeft().apply(VdmRuntime.getExpressionEvaluator(), ctxt).intValue(ctxt);
 			double rv = node.getRight().apply(VdmRuntime.getExpressionEvaluator(), ctxt).intValue(ctxt);
+
+			if (rv == 0)
+			{
+				throw new ValueException(4134, "Infinite or NaN trouble", ctxt);
+			}
 
 			return NumericValue.valueOf(lv - rv * div(lv, rv), ctxt);
 		} catch (ValueException e)

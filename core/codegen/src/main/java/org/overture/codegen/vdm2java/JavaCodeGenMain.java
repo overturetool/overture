@@ -160,7 +160,7 @@ public class JavaCodeGenMain
 		{
 			try
 			{
-				Generated generated = JavaCodeGenUtil.generateJavaFromExp(args[1], irSettings, javaSettings);
+				Generated generated = JavaCodeGenUtil.generateJavaFromExp(args[1], irSettings, javaSettings, dialect);
 
 				if (generated.hasMergeErrors())
 				{

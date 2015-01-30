@@ -20,6 +20,8 @@ operations
 
 public static Run : () ==> ?
 Run () ==
-	return new A().op();
-
+	let r = new A().op()
+	in
+		return r.r.r.r.r.e;
+	  
 end Entry

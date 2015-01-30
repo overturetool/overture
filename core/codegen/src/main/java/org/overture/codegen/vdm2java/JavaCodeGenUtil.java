@@ -53,6 +53,7 @@ import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
+import org.overture.config.Settings;
 import org.overture.interpreter.VDMPP;
 import org.overture.interpreter.VDMRT;
 import org.overture.interpreter.util.ClassListInterpreter;
@@ -90,6 +91,7 @@ public class JavaCodeGenUtil
 	public static List<SClassDefinition> consMergedParseList(List<File> files, Dialect dialect)
 			throws AnalysisException
 	{
+		Settings.dialect = dialect;
 		VDMPP vdmrt = (dialect == Dialect.VDM_RT ? new VDMRT() : new VDMPP());
 		vdmrt.setQuiet(true);
 
@@ -136,21 +138,22 @@ public class JavaCodeGenUtil
 	}
 
 	public static Generated generateJavaFromExp(String exp,
-			IRSettings irSettings, JavaSettings javaSettings)
+			IRSettings irSettings, JavaSettings javaSettings, Dialect dialect)
 			throws AnalysisException
 	{
 		JavaCodeGen vdmCodeGen = new JavaCodeGen();
 		vdmCodeGen.setSettings(irSettings);
 		vdmCodeGen.setJavaSettings(javaSettings);
 
-		return generateJavaFromExp(exp, vdmCodeGen);
+		return generateJavaFromExp(exp, vdmCodeGen, dialect);
 	}
 
 	public static Generated generateJavaFromExp(String exp,
-			JavaCodeGen vdmCodeGen)
+			JavaCodeGen vdmCodeGen, Dialect dialect)
 			throws AnalysisException
 
 	{
+		Settings.dialect = dialect;
 		TypeCheckResult<PExp> typeCheckResult = GeneralCodeGenUtils.validateExp(exp);
 
 		if (typeCheckResult.errors.size() > 0)

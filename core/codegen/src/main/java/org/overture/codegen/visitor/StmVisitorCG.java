@@ -227,9 +227,6 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 
 		for (AAssignmentDefinition def : assignmentDefs)
 		{
-			// No protection against hidden definitions
-			// dcl s : real := 1
-			// dcl s : real := 2
 			PType type = def.getType();
 			String name = def.getName().getName();
 			PExp exp = def.getExpression();
