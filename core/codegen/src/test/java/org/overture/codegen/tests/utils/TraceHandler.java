@@ -21,6 +21,7 @@ import org.overture.ct.ctruntime.utils.Data;
 import org.overture.ct.ctruntime.utils.TraceReductionInfo;
 import org.overture.ct.ctruntime.utils.TraceResult;
 import org.overture.ct.ctruntime.utils.TraceResultReader;
+import org.overture.ct.ctruntime.utils.TraceTest;
 import org.xml.sax.SAXException;
 
 public class TraceHandler extends ExecutableSpecTestHandler
@@ -69,7 +70,7 @@ public class TraceHandler extends ExecutableSpecTestHandler
 	}
 
 	@Override
-	public Object interpretVdm(File intputFile) throws Exception
+	public ExecutionResult interpretVdm(File intputFile) throws Exception
 	{
 		File vdmTraceResultFile = computeVdmTraceResult(currentInputFile);
 
@@ -83,14 +84,21 @@ public class TraceHandler extends ExecutableSpecTestHandler
 		}
 
 		TraceResult t1 = testResult.get(0);
-
-		return t1.tests;
+		
+		StringBuilder sb = new StringBuilder();
+		
+		for(TraceTest t : t1.tests)
+		{
+			sb.append(t).append('\n');
+		}
+		
+		return new ExecutionResult(sb.toString(), t1.tests);
 	}
 
 	@Override
-	public JavaExecutionResult runJava(File folder)
+	public ExecutionResult runJava(File folder)
 	{
-		JavaExecutionResult javaResult = super.runJava(folder);
+		ExecutionResult javaResult = super.runJava(folder);
 
 		Object executionResult = javaResult.getExecutionResult();
 
@@ -98,11 +106,11 @@ public class TraceHandler extends ExecutableSpecTestHandler
 		{
 			TestAccumulator acc = (TestAccumulator) executionResult;
 
-			return new JavaExecutionResult(javaResult.getProcessOutput(), acc.getAllTests());
+			return new ExecutionResult(javaResult.getStrRepresentation(), acc.getAllTests());
 		}
 		else
 		{
-			return new JavaExecutionResult(javaResult.getProcessOutput(), javaResult.getExecutionResult().toString());
+			return new ExecutionResult(javaResult.getStrRepresentation(), javaResult.getExecutionResult().toString());
 		}
 	}
 

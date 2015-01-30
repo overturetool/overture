@@ -520,7 +520,7 @@ public class CompileTests
 					return;
 				}
 			
-				JavaExecutionResult javaResult = executableTestHandler.runJava(parent);
+				ExecutionResult javaResult = executableTestHandler.runJava(parent);
 				
 				if(javaResult == null)
 				{
@@ -536,11 +536,17 @@ public class CompileTests
 					
 					equal = vdmValueStr.contains(cgValueStr);
 				}
-				else
+				else if(vdmResult instanceof ExecutionResult)
 				{
 					// Comparison of VDM and Java results
 					ComparisonCG comp = new ComparisonCG(currentInputFile);
-					equal = comp.compare(javaResult.getExecutionResult(), vdmResult);
+					equal = comp.compare(javaResult.getExecutionResult(), 
+							((ExecutionResult) vdmResult).getExecutionResult());
+				}
+				else
+				{
+					System.err.println("Expected the VDM execution result to be of type ExecutionResult. Got: " + vdmResult);
+					return;
 				}
 
 				if (printInput)
@@ -555,8 +561,12 @@ public class CompileTests
 					System.out.println("CG Test: " + currentInputFile.getName());
 				}
 
-				System.out.println("VDM ~>  " + toShortString(vdmResult));
-				System.out.print("Java ~> " + toShortString(javaResult.getProcessOutput()));
+				String vdmStrRep = vdmResult instanceof ExecutionResult ? 
+						toShortString(((ExecutionResult) vdmResult).getStrRepresentation()) :
+							toShortString(vdmResult); 
+				
+				System.out.println("VDM ~>  " + vdmStrRep);
+				System.out.print("Java ~> " + toShortString(javaResult.getStrRepresentation()));
 
 				if (equal)
 				{

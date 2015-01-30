@@ -31,6 +31,7 @@ import org.overture.codegen.ir.IRConstants;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.interpreter.util.InterpreterUtil;
+import org.overture.interpreter.values.Value;
 
 public class ExecutableSpecTestHandler extends EntryBasedTestHandler
 {
@@ -123,8 +124,9 @@ public class ExecutableSpecTestHandler extends EntryBasedTestHandler
 	}
 
 	@Override
-	public Object interpretVdm(File intputFile) throws Exception
+	public ExecutionResult interpretVdm(File intputFile) throws Exception
 	{
-		return InterpreterUtil.interpret(Settings.dialect, getVdmEntry(), intputFile);
+		Value val = InterpreterUtil.interpret(Settings.dialect, getVdmEntry(), intputFile);
+		return new ExecutionResult(val.toString(), val);
 	}
 }

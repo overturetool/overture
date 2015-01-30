@@ -95,7 +95,7 @@ public abstract class ExecutableTestHandler extends TestHandler
 		Settings.dialect = dialect;
 	}
 	
-	public abstract Object interpretVdm(File intputFile) throws Exception;
+	public abstract ExecutionResult interpretVdm(File intputFile) throws Exception;
 	
 	public List<String> getMainClassMethods()
 	{
@@ -114,7 +114,7 @@ public abstract class ExecutableTestHandler extends TestHandler
 		return getFile(parent, MAIN_CLASS);
 	}
 	
-	public JavaExecutionResult runJava(File folder)
+	public ExecutionResult runJava(File folder)
 	{
 		FileInputStream fin = null;
 		ObjectInputStream ois = null;
@@ -128,7 +128,7 @@ public abstract class ExecutableTestHandler extends TestHandler
 			ois = new ObjectInputStream(fin);
 			Object cgValue = (Object) ois.readObject();
 			
-			return new JavaExecutionResult(processOutput, cgValue);
+			return new ExecutionResult(processOutput, cgValue);
 			
 		} catch (Exception e)
 		{
