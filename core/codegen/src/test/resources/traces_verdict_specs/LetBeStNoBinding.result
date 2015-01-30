@@ -1,0 +1,94 @@
+import org.overture.codegen.runtime.*;
+import org.overture.codegen.runtime.traces.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Number f(final Number e) {
+        Number letBeStExp_1 = null;
+        Number x = null;
+        Boolean success_1 = false;
+        VDMSet set_1 = SetUtil.set(1L, 2L, 3L);
+
+        for (Iterator iterator_1 = set_1.iterator();
+                iterator_1.hasNext() && !(success_1);) {
+            x = ((Number) iterator_1.next());
+            success_1 = Utils.equals(x, e);
+        }
+
+        if (!(success_1)) {
+            throw new RuntimeException("Let Be St found no applicable bindings");
+        }
+
+        letBeStExp_1 = x;
+
+        return letBeStExp_1;
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+
+    public static void Entry_T1_Run(final TestAccumulator testAccumulator) {
+        SequenceTraceNode sequence_1 = new SequenceTraceNode();
+        final Number a = 1L;
+
+        final Number b = 10L;
+
+        final Number c = 3L;
+
+        SequenceTraceNode sequence_2 = new SequenceTraceNode();
+        AlternativeTraceNode alternatives_2 = new AlternativeTraceNode();
+        CallStatement callStm_1 = new CallStatement() {
+                public Object execute(final Object instance) {
+                    return f(a);
+                }
+
+                public String toString() {
+                    return "f(" + Utils.toString(a) + ")";
+                }
+            };
+
+        StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
+
+        CallStatement callStm_2 = new CallStatement() {
+                public Object execute(final Object instance) {
+                    return f(b);
+                }
+
+                public String toString() {
+                    return "f(" + Utils.toString(b) + ")";
+                }
+            };
+
+        StatementTraceNode apply_2 = new StatementTraceNode(callStm_2);
+
+        CallStatement callStm_3 = new CallStatement() {
+                public Object execute(final Object instance) {
+                    return f(c);
+                }
+
+                public String toString() {
+                    return "f(" + Utils.toString(c) + ")";
+                }
+            };
+
+        StatementTraceNode apply_3 = new StatementTraceNode(callStm_3);
+
+        alternatives_2.add(apply_1);
+        alternatives_2.add(apply_2);
+        alternatives_2.add(apply_3);
+
+        sequence_2.add(alternatives_2);
+
+        sequence_1.add(sequence_2);
+
+        TraceNode.executeTests(sequence_1, Entry.class, testAccumulator);
+    }
+}
+
+##########
