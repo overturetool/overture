@@ -1,0 +1,30 @@
+class Entry
+
+instance variables
+
+x : nat := 0;
+
+operations
+
+public op : () ==> nat
+op () ==
+(
+  x := x + 1;
+  
+  if x = 3 then
+  (
+    let e : [Entry] = nil
+    in
+      return e.x;
+  );
+  
+  return x;
+)
+pre x < 1;
+
+traces
+
+T1:
+  op(){1,3};
+
+end Entry
