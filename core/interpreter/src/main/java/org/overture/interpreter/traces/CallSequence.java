@@ -113,6 +113,11 @@ public class CallSequence extends Vector<PStm>
 
 		for (int count = 0; count < upto;)
 		{
+			if (i >= size())
+			{
+				return false;
+			}
+			
 			if (!compareItem(other, i))
 			{
 				return false;
