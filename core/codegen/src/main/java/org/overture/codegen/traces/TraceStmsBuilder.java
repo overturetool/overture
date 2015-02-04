@@ -252,12 +252,13 @@ public class TraceStmsBuilder extends AnswerAdaptor<TraceNodeData>
 
 		for (AVarDeclCG dec : node.getLocalDefs())
 		{
-			dec.setFinal(true);
-			declBlock.getLocalDefs().add(dec);
+			AVarDeclCG decCopy = dec.clone();
+			decCopy.setFinal(true);
+			declBlock.getLocalDefs().add(decCopy);
 			
-			if (dec.getPattern() instanceof AIdentifierPatternCG)
+			if (decCopy.getPattern() instanceof AIdentifierPatternCG)
 			{
-				storeAssistant.appendStoreRegStms(declBlock, dec.getType().clone(), ((AIdentifierPatternCG) dec.getPattern()).getName());
+				storeAssistant.appendStoreRegStms(declBlock, decCopy.getType().clone(), ((AIdentifierPatternCG) decCopy.getPattern()).getName());
 			}
 			else
 			{
