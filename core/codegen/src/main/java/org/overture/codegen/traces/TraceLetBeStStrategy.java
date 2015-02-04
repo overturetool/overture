@@ -17,6 +17,7 @@ import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.ir.ITempVarGen;
+import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
@@ -28,15 +29,17 @@ public class TraceLetBeStStrategy extends LetBeStStrategy
 	protected AVarDeclCG altTests;
 	protected AIdentifierPatternCG id;
 	protected TraceNames tracePrefixes;
-
+	protected StoreRegistrationAssistant storeAssistant;
+	
 	public TraceLetBeStStrategy(TransAssistantCG transformationAssistant,
 			SExpCG suchThat, SSetTypeCG setType,
 			ILanguageIterator langIterator, ITempVarGen tempGen,
-			TempVarPrefixes varPrefixes, TraceNames tracePrefixes,
+			TempVarPrefixes varPrefixes, StoreRegistrationAssistant storeAssistant,TraceNames tracePrefixes,
 			AIdentifierPatternCG id, AVarDeclCG altTests, TraceNodeData nodeData)
 	{
 		super(transformationAssistant, suchThat, setType, langIterator, tempGen, varPrefixes);
 
+		this.storeAssistant = storeAssistant;
 		this.tracePrefixes = tracePrefixes;
 		this.id = id;
 		this.altTests = altTests;
@@ -106,6 +109,20 @@ public class TraceLetBeStStrategy extends LetBeStStrategy
 			ifStm.setThenStm(new AContinueStmCG());
 			block.getStatements().add(ifStm);
 		}
+		
+		AVarDeclCG nextElementDecl = decls.get(count - 1);
+		if(nextElementDecl.getPattern() instanceof AIdentifierPatternCG)
+		{
+			AIdentifierPatternCG idToReg = (AIdentifierPatternCG) nextElementDecl.getPattern();
+			storeAssistant.appendStoreRegStms(block, setType.getSetOf().clone(), idToReg.getName());
+		}
+		else
+		{
+			Logger.getLog().printErrorln("This should not happen. Only identifier patterns "
+					+ "are currently supported in traces (see the TraceSupportedAnalysis class).");
+			return null;
+		}
+		
 		
 		block.getStatements().add(nodeData.getStms());
 

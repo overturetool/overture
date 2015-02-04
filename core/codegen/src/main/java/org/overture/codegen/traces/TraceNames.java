@@ -143,6 +143,11 @@ public class TraceNames
 		return "register";
 	}
 	
+	public String storeGetValueMethodName()
+	{
+		return "getValue";
+	}
+	
 	// ID Generator related
 	
 	public String idGeneratorClassName()

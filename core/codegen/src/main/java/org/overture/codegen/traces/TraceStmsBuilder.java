@@ -2,9 +2,11 @@ package org.overture.codegen.traces;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import org.apache.commons.collections4.map.HashedMap;
 import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.SDeclCG;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SObjectDesignatorCG;
 import org.overture.codegen.cgast.SPatternCG;
@@ -13,8 +15,8 @@ import org.overture.codegen.cgast.STraceDeclCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.AnswerAdaptor;
+import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
-import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
@@ -48,6 +50,7 @@ import org.overture.codegen.cgast.traces.ATraceDeclTermCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
+import org.overture.codegen.cgast.types.ANatNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
@@ -72,6 +75,10 @@ public class TraceStmsBuilder extends AnswerAdaptor<TraceNodeData>
 	private TraceNames tracePrefixes;
 	private String traceEnclosingClass;
 
+	private StoreRegistrationAssistant storeAssistant; 
+	
+	private Map<String, String> idConstNameMap;
+	
 	public TraceStmsBuilder(IRInfo info, List<AClassDeclCG> classes,
 			TransAssistantCG transAssistant, TempVarPrefixes varPrefixes,
 			TraceNames tracePrefixes, ILanguageIterator langIterator,
@@ -87,6 +94,10 @@ public class TraceStmsBuilder extends AnswerAdaptor<TraceNodeData>
 
 		this.tracePrefixes = tracePrefixes;
 		this.traceEnclosingClass = traceEnclosingClass;
+		
+		this.idConstNameMap = new HashedMap<String, String>();
+
+		this.storeAssistant = new StoreRegistrationAssistant(info, tracePrefixes, idConstNameMap, transAssistant);
 	}
 
 	@Override
@@ -192,6 +203,19 @@ public class TraceStmsBuilder extends AnswerAdaptor<TraceNodeData>
 	public TraceNodeData caseALetBeStBindingTraceDeclCG(
 			ALetBeStBindingTraceDeclCG node) throws AnalysisException
 	{
+
+		ASetMultipleBindCG bind = node.getBind();
+		LinkedList<SPatternCG> patterns = bind.getPatterns();
+		
+		for(SPatternCG p : patterns)
+		{
+			if(p instanceof AIdentifierPatternCG)
+			{
+				String idConstName = info.getTempVarNameGen().nextVarName(tracePrefixes.idConstNamePrefix());
+				idConstNameMap.put(((AIdentifierPatternCG) p).getName(), idConstName);
+			}
+		}
+		
 		String name = info.getTempVarNameGen().nextVarName(tracePrefixes.altTraceNodeNamePrefix());
 
 		AClassTypeCG classType = transAssistant.consClassType(tracePrefixes.altTraceNodeNodeClassName());
@@ -200,48 +224,47 @@ public class TraceStmsBuilder extends AnswerAdaptor<TraceNodeData>
 
 		AVarDeclCG altTests = transAssistant.consDecl(name, classType, transAssistant.consDefaultConsCall(classType));
 
-		ASetMultipleBindCG bind = node.getBind();
 		STraceDeclCG body = node.getBody();
 		SExpCG exp = node.getStExp();
 
 		TraceNodeData bodyTraceData = body.apply(this);
 
 		SSetTypeCG setType = transAssistant.getSetTypeCloned(bind.getSet());
-		TraceLetBeStStrategy strategy = new TraceLetBeStStrategy(transAssistant, exp, setType, langIterator, info.getTempVarNameGen(), varPrefixes, tracePrefixes, id, altTests, bodyTraceData);
+		TraceLetBeStStrategy strategy = new TraceLetBeStStrategy(transAssistant, exp, setType, langIterator, 
+				info.getTempVarNameGen(), varPrefixes, storeAssistant, tracePrefixes, id, altTests, bodyTraceData);
 
 		if (transAssistant.hasEmptySet(bind))
 		{
 			transAssistant.cleanUpBinding(bind);
-			return new TraceNodeData(null, wrap(new ASkipStmCG()));
+			return new TraceNodeData(null, transAssistant.wrap(new ASkipStmCG()));
 		}
 
-		LinkedList<SPatternCG> patterns = bind.getPatterns();
 		ABlockStmCG outerBlock = transAssistant.consIterationBlock(patterns, bind.getSet(), info.getTempVarNameGen(), strategy);
 
-		return new TraceNodeData(transAssistant.consIdentifierVar(name, classType.clone()), wrap(outerBlock));
+		return new TraceNodeData(transAssistant.consIdentifierVar(name, classType.clone()), transAssistant.wrap(outerBlock));
 	}
-
+	
 	@Override
 	public TraceNodeData caseALetDefBindingTraceDeclCG(
 			ALetDefBindingTraceDeclCG node) throws AnalysisException
 	{
 		ABlockStmCG declBlock = new ABlockStmCG();
 
-		for (SDeclCG dec : node.getLocalDecls())
+		for (AVarDeclCG dec : node.getLocalDefs())
 		{
-			if (dec instanceof AFieldDeclCG)
+			dec.setFinal(true);
+			declBlock.getLocalDefs().add(dec);
+			
+			if (dec.getPattern() instanceof AIdentifierPatternCG)
 			{
-				AFieldDeclCG field = (AFieldDeclCG) dec;
-
-				AVarDeclCG varDecl = transAssistant.consDecl(field.getName(), field.getType().clone(), field.getInitial().clone());
-				varDecl.setFinal(true);
-				declBlock.getLocalDefs().add(varDecl);
-			} else
-			{
-				Logger.getLog().printErrorln("Expected field declarations when processing the let def binding in a trace definition. Got: "
-						+ node);
+				storeAssistant.appendStoreRegStms(declBlock, dec.getType().clone(), ((AIdentifierPatternCG) dec.getPattern()).getName());
 			}
-
+			else
+			{
+				Logger.getLog().printErrorln("This should not happen. Only identifier patterns "
+						+ "are currently supported in traces (see the TraceSupportedAnalysis class).");
+				return null;
+			}
 		}
 		TraceNodeData bodyNodeData = node.getBody().apply(this);
 
@@ -328,12 +351,51 @@ public class TraceStmsBuilder extends AnswerAdaptor<TraceNodeData>
 		execMethod.setAbstract(false);
 		execMethod.setAccess(IRConstants.PUBLIC);
 		execMethod.setAsync(false);
-		execMethod.setBody(makeInstanceCall(stm));
 		execMethod.setIsConstructor(false);
 		execMethod.setMethodType(methodType);
 		execMethod.setName(tracePrefixes.callStmMethodNamePrefix());
 		execMethod.setStatic(false);
 
+		SStmCG body = makeInstanceCall(stm);
+		try
+		{
+			final Set<String> localVarNames = this.idConstNameMap.keySet();
+			
+			body.apply(new DepthFirstAnalysisAdaptor()
+			{
+				// No need to consider explicit variables because they cannot be local
+				
+				@Override
+				public void caseAIdentifierVarExpCG(AIdentifierVarExpCG node)
+						throws AnalysisException
+				{
+					if(localVarNames.contains(node.getName()))
+					{
+						AClassTypeCG storeType = transAssistant.consClassType(tracePrefixes.storeClassName());
+						
+						AIdentifierVarExpCG idArg = transAssistant.consIdentifierVar(idConstNameMap.get(node.getName()), 
+								new ANatNumericBasicTypeCG());
+						
+						SExpCG call = transAssistant.consInstanceCall(storeType, tracePrefixes.storeVarName(), 
+								node.getType(), tracePrefixes.storeGetValueMethodName(), idArg);
+						
+						ACastUnaryExpCG cast = new ACastUnaryExpCG();
+						cast.setType(node.getType().clone());
+						cast.setExp(call);
+						
+						
+						transAssistant.replaceNodeWith(node, cast);
+					}
+				}
+			});
+			
+		} catch (AnalysisException e)
+		{
+			Logger.getLog().printErrorln("Problem replacing variable expressions with storage lookups in TraceStmBuilder");
+			return null;
+		}
+		execMethod.setBody(body);
+		
 		AFormalParamLocalParamCG instanceParam = new AFormalParamLocalParamCG();
 		instanceParam.setType(new AObjectTypeCG());
 		instanceParam.setPattern(transAssistant.consIdPattern(tracePrefixes.callStmMethodParamName()));
@@ -377,9 +439,9 @@ public class TraceStmsBuilder extends AnswerAdaptor<TraceNodeData>
 		if (stm instanceof ACallObjectStmCG)
 		{
 			// Assume the class enclosing the trace to be S
-			// self.op(42) becomes ((S)instance).op(42)
-			// a.op(42) remains a.op(42) if a is local
-			// a.op(42) becomes ((S)instance).a.op(42) if a is an instance variable
+			// self.op(42) becomes ((S)instance).op(42L)
+			// a.op(42) remains a.op(42L) if a is local
+			// a.op(42) becomes ((S)instance).a.op(42L) if a is an instance variable
 
 			ACallObjectStmCG callObj = (ACallObjectStmCG) stm;
 			ensureLocalObjDesignator(callObj.getDesignator());
@@ -400,7 +462,7 @@ public class TraceStmsBuilder extends AnswerAdaptor<TraceNodeData>
 		} else if (stm instanceof APlainCallStmCG)
 		{
 			// Assume the class enclosing the trace to be S
-			// Example: op(42) becomes ((S)instance).op(42)
+			// Example: op(42) becomes ((S)instance).op(42L)
 			try
 			{
 				return handlePlainCallStm((APlainCallStmCG) stm);
@@ -577,23 +639,7 @@ public class TraceStmsBuilder extends AnswerAdaptor<TraceNodeData>
 			newExp.getArgs().add(arg);
 		}
 
-		return wrap(transAssistant.consDecl(varName, classType.clone(), newExp));
-	}
-
-	public ABlockStmCG wrap(AVarDeclCG decl)
-	{
-		ABlockStmCG block = new ABlockStmCG();
-		block.getLocalDefs().add(decl);
-
-		return block;
-	}
-
-	public ABlockStmCG wrap(SStmCG stm)
-	{
-		ABlockStmCG block = new ABlockStmCG();
-		block.getStatements().add(stm);
-
-		return block;
+		return transAssistant.wrap(transAssistant.consDecl(varName, classType.clone(), newExp));
 	}
 
 	@Override
