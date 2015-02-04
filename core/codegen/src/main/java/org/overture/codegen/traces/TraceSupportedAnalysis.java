@@ -1,7 +1,11 @@
 package org.overture.codegen.traces;
 
+import org.overture.codegen.cgast.INode;
+import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.codegen.cgast.declarations.ANamedTraceDeclCG;
+import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ASuperCallStmCG;
 
 /**
@@ -25,22 +29,70 @@ import org.overture.codegen.cgast.statements.ASuperCallStmCG;
  * generator when it does appear in traces. Therefore, this analysis
  * will detect this case.
  * 
+ * Finally, code generation of traces only support the identifier
+ * pattern among the different types of patterns. This analysis also
+ * checks that the only type of pattern occurring in a trace is the identifier
+ * pattern.
+ * 
  * @author pvj
  *
  */
 public class TraceSupportedAnalysis extends DepthFirstAnalysisAdaptor
 {
-	private boolean usesSuperCall = false;
+	private ANamedTraceDeclCG trace;
+	private boolean isUnsupported = false;
+	private String reason;
+	
+	public TraceSupportedAnalysis(ANamedTraceDeclCG trace)
+	{
+		this.trace = trace;
+	}
 	
 	@Override
 	public void caseASuperCallStmCG(ASuperCallStmCG node)
 			throws AnalysisException
 	{
-		usesSuperCall = true;
+		if(!isWithinTrace(node))
+		{
+			return;
+		}
+		
+		reason = "The super call statement is not supported in traces, and as a consequence the trace is not generated.";
+		isUnsupported = true;
 	}
 	
-	public boolean usesSuperCall()
+	@Override
+	public void defaultInSPatternCG(SPatternCG node) throws AnalysisException
 	{
-		return usesSuperCall;
+		if(!isWithinTrace(node))
+		{
+			return;
+		}
+		
+		if(!(node instanceof AIdentifierPatternCG))
+		{
+			reason = "Only identifier patterns are supported in traces, and as a consequence the trace is not generated.";
+			isUnsupported = true;
+		}
+	}
+	
+	public void run() throws AnalysisException
+	{
+		trace.apply(this);
+	}
+	
+	public String getReason()
+	{
+		return reason;
+	}
+	
+	private boolean isWithinTrace(INode node)
+	{
+		return node.getAncestor(ANamedTraceDeclCG.class) == trace;
+	}
+	
+	public boolean isUnsupported()
+	{
+		return isUnsupported;
 	}
 }

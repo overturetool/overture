@@ -58,10 +58,10 @@ public class TracesTransformation extends DepthFirstAnalysisAdaptor
 			return;
 		}
 		
-		if (!traceIsSupported(node))
+		TraceSupportedAnalysis supportedAnalysis = new TraceSupportedAnalysis(node);
+		if (!traceIsSupported(supportedAnalysis))
 		{
-			irInfo.addTransformationWarning(node, "The super call statement is not supported "
-					+ "in traces, and as a consequence the trace is not generated.");
+			irInfo.addTransformationWarning(node, supportedAnalysis.getReason());
 			return;
 		}
 
@@ -77,12 +77,12 @@ public class TracesTransformation extends DepthFirstAnalysisAdaptor
 		}
 	}
 
-	private boolean traceIsSupported(ANamedTraceDeclCG node)
+	private boolean traceIsSupported(TraceSupportedAnalysis supportedAnalysis)
 	{
-		TraceSupportedAnalysis supportedAnalysis = new TraceSupportedAnalysis();
+		
 		try
 		{
-			node.apply(supportedAnalysis);
+			supportedAnalysis.run();
 		} catch (AnalysisException e)
 		{
 			Logger.getLog().printErrorln("Could not determine if a trace could be code generated");
@@ -90,7 +90,7 @@ public class TracesTransformation extends DepthFirstAnalysisAdaptor
 			return false;
 		}
 
-		return !supportedAnalysis.usesSuperCall();
+		return !supportedAnalysis.isUnsupported();
 	}
 
 	private AMethodDeclCG consTraceMethod(ANamedTraceDeclCG node)
