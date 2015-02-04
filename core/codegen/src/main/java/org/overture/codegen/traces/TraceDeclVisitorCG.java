@@ -1,7 +1,6 @@
 package org.overture.codegen.traces;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.traces.AInstanceTraceDefinition;
 import org.overture.ast.definitions.traces.ALetBeStBindingTraceDefinition;
 import org.overture.ast.definitions.traces.ALetDefBindingTraceDefinition;
@@ -11,7 +10,6 @@ import org.overture.ast.definitions.traces.PTraceDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
-import org.overture.codegen.cgast.SDeclCG;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SMultipleBindCG;
 import org.overture.codegen.cgast.STraceCoreDeclCG;
@@ -79,11 +77,7 @@ public class TraceDeclVisitorCG extends AbstractVisitorCG<IRInfo, STraceDeclCG>
 		
 		ALetDefBindingTraceDeclCG letDef = new ALetDefBindingTraceDeclCG();
 		
-		for(PDefinition def : node.getLocalDefs())
-		{
-			SDeclCG declCg = def.apply(question.getDeclVisitor(),question);
-			letDef.getLocalDecls().add(declCg);
-		}
+		question.getDeclAssistant().setLocalDefs(node.getLocalDefs(), letDef.getLocalDefs(), question);
 		
 		STraceDeclCG bodyCg = body.apply(question.getTraceDeclVisitor(), question);
 		letDef.setBody(bodyCg);
