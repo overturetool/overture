@@ -59,18 +59,16 @@ public class ExecutableSpecTestHandler extends EntryBasedTestHandler
 		for (StringBuffer classCgStr : content)
 		{
 			String className = TestUtils.getJavaModuleName(classCgStr);
-			
-			
+
 			File out = null;
-			if(classCgStr.toString().contains("package quotes;"))
+			if (classCgStr.toString().contains("package quotes;"))
 			{
 				out = new File(parent, "quotes");
-			}
-			else
+			} else
 			{
 				out = parent;
 			}
-				
+
 			File tempFile = consTempFile(className, out, classCgStr);
 
 			injectSerializableInterface(classCgStr, className);
@@ -82,32 +80,37 @@ public class ExecutableSpecTestHandler extends EntryBasedTestHandler
 	private void injectSerializableInterface(StringBuffer classCgStr,
 			String className)
 	{
-		//TODO: Improve way that the EvaluatePP interface is handled
 		if (!className.equals(IRConstants.QUOTES_INTERFACE_NAME)
-				&& !className.startsWith(CodeGenBase.INTERFACE_NAME_PREFIX) && !classCgStr.toString().contains(" implements EvaluatePP"))
+				&& !className.startsWith(CodeGenBase.INTERFACE_NAME_PREFIX))
 		{
-			int classNameIdx = classCgStr.indexOf(className);
-
-			int prv = classCgStr.indexOf("private");
-			int pub = classCgStr.indexOf("public");
-			int abstr = classCgStr.indexOf("abstract");
-
-			int min = prv >= 0 && prv < pub ? prv : pub;
-			min = abstr >= 0 && abstr < min ? abstr : min;
-
-			if (min < 0)
+			// TODO: Improve way that the EvaluatePP/Serializable interface is handled
+			String classStr = classCgStr.toString();
+			if (!classStr.contains(" implements EvaluatePP")
+					&& !classStr.contains(" implements java.io.Serializable"))
 			{
-				min = classNameIdx;
+				int classNameIdx = classCgStr.indexOf(className);
+
+				int prv = classCgStr.indexOf("private");
+				int pub = classCgStr.indexOf("public");
+				int abstr = classCgStr.indexOf("abstract");
+
+				int min = prv >= 0 && prv < pub ? prv : pub;
+				min = abstr >= 0 && abstr < min ? abstr : min;
+
+				if (min < 0)
+				{
+					min = classNameIdx;
+				}
+
+				int firstLeftBraceIdx = classCgStr.indexOf("{", classNameIdx);
+
+				String toReplace = classCgStr.substring(min, firstLeftBraceIdx);
+
+				String replacement = "import java.io.*;\n\n" + toReplace
+						+ " implements Serializable";
+
+				classCgStr.replace(min, firstLeftBraceIdx, replacement);
 			}
-
-			int firstLeftBraceIdx = classCgStr.indexOf("{", classNameIdx);
-
-			String toReplace = classCgStr.substring(min, firstLeftBraceIdx);
-
-			String replacement = "import java.io.*;\n\n" + toReplace
-					+ " implements Serializable";
-
-			classCgStr.replace(min, firstLeftBraceIdx, replacement);
 		}
 	}
 
