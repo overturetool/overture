@@ -640,18 +640,35 @@ public class JavaFormat
 	{
 		LinkedList<AInterfaceDeclCG> interfaces = classDecl.getInterfaces();
 		
-		if(interfaces == null || interfaces.isEmpty())
+		if(interfaces == null)
 		{
 			return "";
 		}
 		
 		String implementsClause = "implements";
+		String sep = " ";
 		
-		implementsClause += " " + interfaces.get(0).getName();
-		
-		for(int i = 1; i < interfaces.size(); i++)
+		if(interfaces.isEmpty())
 		{
-			implementsClause += ", " + interfaces.get(i).getName();
+			if(importTraceSupport(classDecl))
+			{
+				return implementsClause + sep + java.io.Serializable.class.getName();
+			}
+			else
+			{
+				return "";
+			}
+		}
+		
+		for(int i = 0; i < interfaces.size(); i++)
+		{
+			implementsClause += sep + interfaces.get(i).getName();
+			sep = ", ";
+		}
+		
+		if(importTraceSupport(classDecl))
+		{
+			implementsClause += sep + java.io.Serializable.class.getName();
 		}
 		
 		return implementsClause;
