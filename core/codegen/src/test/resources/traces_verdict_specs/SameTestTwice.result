@@ -34,10 +34,12 @@ public class Entry implements java.io.Serializable {
         final Store store = new Store();
         final IdGenerator gen = new IdGenerator();
         SequenceTraceNode sequence_1 = new SequenceTraceNode();
-        final Entry a = new Entry(3L);
         final Number ID_1 = gen.inc();
 
-        store.register(ID_1, a);
+        {
+            final Entry a = new Entry(3L);
+            store.register(ID_1, a);
+        }
 
         SequenceTraceNode sequence_2 = new SequenceTraceNode();
         AlternativeTraceNode alternatives_2 = new AlternativeTraceNode();

@@ -20,10 +20,12 @@ public class Entry implements java.io.Serializable {
         final Store store = new Store();
         final IdGenerator gen = new IdGenerator();
         SequenceTraceNode sequence_1 = new SequenceTraceNode();
-        final Entry a = new Entry();
         final Number ID_1 = gen.inc();
 
-        store.register(ID_1, a);
+        {
+            final Entry a = new Entry();
+            store.register(ID_1, a);
+        }
 
         CallStatement callStm_1 = new CallStatement() {
                 public Object execute(final Object instance) {

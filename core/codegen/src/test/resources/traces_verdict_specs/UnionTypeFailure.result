@@ -16,20 +16,26 @@ public class Entry implements java.io.Serializable {
         final Store store = new Store();
         final IdGenerator gen = new IdGenerator();
         SequenceTraceNode sequence_1 = new SequenceTraceNode();
-        final Number a = 1L;
         final Number ID_1 = gen.inc();
 
-        store.register(ID_1, a);
+        {
+            final Number a = 1L;
+            store.register(ID_1, a);
+        }
 
-        final Character b = 'x';
         final Number ID_2 = gen.inc();
 
-        store.register(ID_2, b);
+        {
+            final Character b = 'x';
+            store.register(ID_2, b);
+        }
 
-        final Number c = 3L;
         final Number ID_3 = gen.inc();
 
-        store.register(ID_3, c);
+        {
+            final Number c = 3L;
+            store.register(ID_3, c);
+        }
 
         SequenceTraceNode sequence_2 = new SequenceTraceNode();
         AlternativeTraceNode alternatives_2 = new AlternativeTraceNode();
@@ -39,7 +45,8 @@ public class Entry implements java.io.Serializable {
                 }
 
                 public String toString() {
-                    return "f(" + Utils.toString(a) + ")";
+                    return "f(" +
+                    Utils.toString(((Number) store.getValue(ID_1))) + ")";
                 }
             };
 
@@ -51,7 +58,8 @@ public class Entry implements java.io.Serializable {
                 }
 
                 public String toString() {
-                    return "f(" + Utils.toString(b) + ")";
+                    return "f(" +
+                    Utils.toString(((Character) store.getValue(ID_2))) + ")";
                 }
             };
 
@@ -63,7 +71,8 @@ public class Entry implements java.io.Serializable {
                 }
 
                 public String toString() {
-                    return "f(" + Utils.toString(c) + ")";
+                    return "f(" +
+                    Utils.toString(((Number) store.getValue(ID_3))) + ")";
                 }
             };
 

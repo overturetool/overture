@@ -33,7 +33,8 @@ public class Entry implements java.io.Serializable {
                     }
 
                     public String toString() {
-                        return "f(" + Utils.toString(a) + ")";
+                        return "f(" +
+                        Utils.toString(((Number) store.getValue(ID_1))) + ")";
                     }
                 };
 

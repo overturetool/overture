@@ -28,10 +28,12 @@ public class Entry implements java.io.Serializable {
         final Store store = new Store();
         final IdGenerator gen = new IdGenerator();
         SequenceTraceNode sequence_1 = new SequenceTraceNode();
-        final Entry e1 = new Entry(2L);
         final Number ID_1 = gen.inc();
 
-        store.register(ID_1, e1);
+        {
+            final Entry e1 = new Entry(2L);
+            store.register(ID_1, e1);
+        }
 
         CallStatement callStm_1 = new CallStatement() {
                 public Object execute(final Object instance) {
@@ -47,10 +49,12 @@ public class Entry implements java.io.Serializable {
 
         StatementTraceNode apply_1 = new StatementTraceNode(callStm_1);
 
-        final Entry e2 = new Entry(3L);
         final Number ID_2 = gen.inc();
 
-        store.register(ID_2, e2);
+        {
+            final Entry e2 = new Entry(3L);
+            store.register(ID_2, e2);
+        }
 
         CallStatement callStm_2 = new CallStatement() {
                 public Object execute(final Object instance) {

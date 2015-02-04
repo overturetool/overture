@@ -32,20 +32,18 @@ public class Entry implements java.io.Serializable {
         final Store store = new Store();
         final IdGenerator gen = new IdGenerator();
         SequenceTraceNode sequence_1 = new SequenceTraceNode();
-        final Number x = op();
-        final Number y = op();
-        final Number z = op();
         final Number ID_1 = gen.inc();
-
-        store.register(ID_1, x);
-
         final Number ID_2 = gen.inc();
-
-        store.register(ID_2, y);
-
         final Number ID_3 = gen.inc();
 
-        store.register(ID_3, z);
+        {
+            final Number x = op();
+            final Number y = op();
+            final Number z = op();
+            store.register(ID_1, x);
+            store.register(ID_2, y);
+            store.register(ID_3, z);
+        }
 
         SequenceTraceNode sequence_2 = new SequenceTraceNode();
         CallStatement callStm_1 = new CallStatement() {
@@ -71,7 +69,8 @@ public class Entry implements java.io.Serializable {
                 }
 
                 public String toString() {
-                    return "id(" + Utils.toString(z) + ")";
+                    return "id(" +
+                    Utils.toString(((Number) store.getValue(ID_3))) + ")";
                 }
             };
 
