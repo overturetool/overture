@@ -59,7 +59,7 @@ public class TraceHandler extends ExecutableSpecTestHandler
 				" public static TestAccumulator computeTests()\n"
 				+ " {\n"
 				+ "    InMemoryTestAccumulator acc = new InMemoryTestAccumulator();\n"
-				+ "    Entry.Entry_T1_Run(acc);\n"
+				+ "    new Entry().Entry_T1_Run(acc);\n"
 				+ "    return acc;\n"
 				+ " }\n";
 
