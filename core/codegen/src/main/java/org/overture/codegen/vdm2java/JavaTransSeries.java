@@ -76,10 +76,10 @@ public class JavaTransSeries
 
 		DepthFirstAnalysisAdaptor[] analyses = new DepthFirstAnalysisAdaptor[] {
 				funcTransformation, prePostTransformation, ifExpTransformation,
-				funcValueTransformation, transVisitor, patternTransformation,
+				funcValueTransformation, transVisitor, tracesTransformation,patternTransformation,
 				preCheckTransformation, postCheckTransformation,
 				isExpTransformation, unionTypeTransformation,
-				javaToStringTransformation, concurrencytransform, tracesTransformation,
+				javaToStringTransformation, concurrencytransform,
 				mutexTransform, mainclassTransform, seqConversionTransformation, instanceVarPPEval };
 
 		return analyses;
