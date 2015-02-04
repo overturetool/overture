@@ -1,0 +1,23 @@
+class Entry
+
+instance variables
+
+x : nat := 0;
+
+operations
+
+public op : () ==> nat
+op () ==
+(
+  x := x + 1;
+  return x;
+)
+
+traces
+
+T1:
+let a = new Entry()
+in 
+  a.op(){1,3};
+
+end Entry
