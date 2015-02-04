@@ -1,0 +1,29 @@
+class Entry
+
+instance variables
+
+x : nat;
+
+operations
+
+public Entry : nat ==> Entry
+Entry (px) == x := px;
+
+public op : () ==> nat
+op () ==
+(
+  dcl e : [Entry] := nil;
+  if x = 4 then 
+    e.op(); -- Null reference error
+  x := x + 1;
+  return x;
+)
+
+traces
+
+T1:
+let a = new Entry(3)
+in 
+  (a.op(){1,2} | a.op());
+
+end Entry
