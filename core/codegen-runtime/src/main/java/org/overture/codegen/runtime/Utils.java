@@ -102,6 +102,10 @@ public class Utils
 				return Double.toString(n.doubleValue());
 			}
 		}
+		else if(obj instanceof Character)
+		{
+			return "'" + obj + "'";
+		}
 		else if(obj instanceof String)
 		{
 			return "\"" + obj.toString() + "\"";
