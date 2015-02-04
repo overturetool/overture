@@ -1,6 +1,7 @@
 package org.overture.codegen.traces;
 
 import java.util.LinkedList;
+import java.util.Map;
 
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SObjectDesignatorCG;
@@ -8,6 +9,7 @@ import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
+import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
 import org.overture.codegen.cgast.statements.ACallObjectStmCG;
 import org.overture.codegen.cgast.statements.APlainCallStmCG;
@@ -16,12 +18,13 @@ import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.vdm2java.JavaClassCreatorBase;
 
 public class JavaCallStmToStringBuilder extends JavaClassCreatorBase implements ICallStmToStringMethodBuilder
 {
 	@Override
-	public AMethodDeclCG consToString(IRInfo info, SStmCG callStm)
+	public AMethodDeclCG consToString(IRInfo info, SStmCG callStm, Map<String, String> idConstNameMap, StoreAssistant storeAssistant, TransAssistantCG transAssistant)
 	{
 		AMethodDeclCG toStringMethod = consToStringSignature();
 
@@ -44,7 +47,7 @@ public class JavaCallStmToStringBuilder extends JavaClassCreatorBase implements 
 
 			prefix += name;
 
-			body.setExp(appendArgs(info, args, prefix));
+			body.setExp(appendArgs(info, args, prefix, idConstNameMap, storeAssistant, transAssistant));
 
 		}  else if (callStm instanceof ACallObjectStmCG)
 		{
@@ -57,7 +60,7 @@ public class JavaCallStmToStringBuilder extends JavaClassCreatorBase implements 
 			String prefix = obj.toString();
 			prefix += "." + field;
 
-			body.setExp(appendArgs(info, args, prefix));
+			body.setExp(appendArgs(info, args, prefix, idConstNameMap, storeAssistant, transAssistant));
 		} else
 		{
 			Logger.getLog().printErrorln("Expected statement to be a call statement or call object statement. Got: "
@@ -70,7 +73,7 @@ public class JavaCallStmToStringBuilder extends JavaClassCreatorBase implements 
 		return toStringMethod;
 	}
 	
-	private SExpCG appendArgs(IRInfo info, LinkedList<SExpCG> args, String prefix)
+	private SExpCG appendArgs(IRInfo info, LinkedList<SExpCG> args, String prefix, Map<String, String> idConstNameMap, StoreAssistant storeAssistant, TransAssistantCG transAssistant)
 	{
 		if (args == null || args.isEmpty())
 		{
@@ -89,7 +92,17 @@ public class JavaCallStmToStringBuilder extends JavaClassCreatorBase implements 
 			tmp.setType(new AStringTypeCG());
 
 			AApplyExpCG utilsToStrCall = consUtilsToStringCall();
-			utilsToStrCall.getArgs().add(arg.clone());
+			
+			if(arg instanceof AIdentifierVarExpCG && idConstNameMap.containsKey(((AIdentifierVarExpCG) arg).getName()))
+			{
+				AIdentifierVarExpCG idVarExp = ((AIdentifierVarExpCG) arg);
+				utilsToStrCall.getArgs().add(storeAssistant.consStoreLookup(idVarExp));
+			}
+			else
+			{
+				utilsToStrCall.getArgs().add(arg.clone());
+			}
+			
 			tmp.setLeft(utilsToStrCall);
 
 			next.setRight(tmp);

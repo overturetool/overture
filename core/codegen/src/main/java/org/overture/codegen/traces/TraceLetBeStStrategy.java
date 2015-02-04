@@ -1,6 +1,7 @@
 package org.overture.codegen.traces;
 
 import java.util.List;
+import java.util.Map;
 
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SPatternCG;
@@ -29,17 +30,19 @@ public class TraceLetBeStStrategy extends LetBeStStrategy
 	protected AVarDeclCG altTests;
 	protected AIdentifierPatternCG id;
 	protected TraceNames tracePrefixes;
-	protected StoreRegistrationAssistant storeAssistant;
+	protected StoreAssistant storeAssistant;
+	protected Map<String, String> idConstNameMap;
 	
 	public TraceLetBeStStrategy(TransAssistantCG transformationAssistant,
 			SExpCG suchThat, SSetTypeCG setType,
 			ILanguageIterator langIterator, ITempVarGen tempGen,
-			TempVarPrefixes varPrefixes, StoreRegistrationAssistant storeAssistant,TraceNames tracePrefixes,
+			TempVarPrefixes varPrefixes, StoreAssistant storeAssistant,Map<String, String> idConstNameMap, TraceNames tracePrefixes,
 			AIdentifierPatternCG id, AVarDeclCG altTests, TraceNodeData nodeData)
 	{
 		super(transformationAssistant, suchThat, setType, langIterator, tempGen, varPrefixes);
 
 		this.storeAssistant = storeAssistant;
+		this.idConstNameMap = idConstNameMap;
 		this.tracePrefixes = tracePrefixes;
 		this.id = id;
 		this.altTests = altTests;
@@ -114,7 +117,9 @@ public class TraceLetBeStStrategy extends LetBeStStrategy
 		if(nextElementDecl.getPattern() instanceof AIdentifierPatternCG)
 		{
 			AIdentifierPatternCG idToReg = (AIdentifierPatternCG) nextElementDecl.getPattern();
-			storeAssistant.appendStoreRegStms(block, setType.getSetOf().clone(), idToReg.getName());
+			String idConstName = idConstNameMap.get(idToReg.getName());
+			block.getStatements().add(transAssistant.wrap(storeAssistant.consIdConstDecl(idConstName)));
+			storeAssistant.appendStoreRegStms(block, setType.getSetOf().clone(), idToReg.getName(), idConstName);
 		}
 		else
 		{
