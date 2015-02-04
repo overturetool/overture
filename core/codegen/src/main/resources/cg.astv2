@@ -530,7 +530,7 @@ externalType {-> package='org.overture.codegen.cgast.utils'}
     	[stExp]:CG.#exp
     	[body]:CG.#traceDecl
     |   {letDefBinding}
-    	[localDecls]:CG.#decl*
+    	[localDefs]:CG.#decl.var*//[localDecls]:CG.#decl*
     	[body]:CG.traceDecl
     |   {repeat} [core]:CG.#traceCoreDecl [from]:java_Long [to]:java_Long
     ;
