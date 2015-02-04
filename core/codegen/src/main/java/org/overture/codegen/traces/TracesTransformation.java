@@ -140,6 +140,9 @@ public class TracesTransformation extends DepthFirstAnalysisAdaptor
 		executeTestsCall.getArgs().add(typeArg);
 		executeTestsCall.getArgs().add(transAssistant.consIdentifierVar(tracePrefixes.traceMethodParamName(),
 				transAssistant.consClassType(tracePrefixes.testAccumulatorClassName())));
+		executeTestsCall.getArgs().add(transAssistant.consIdentifierVar(tracePrefixes.storeVarName(),
+				transAssistant.consClassType(tracePrefixes.storeClassName())));
+		
 
 		return executeTestsCall;
 	}
@@ -154,12 +157,14 @@ public class TracesTransformation extends DepthFirstAnalysisAdaptor
 		TraceNodeData nodeData = stmBuilder.buildFromDeclTerms(node.getTerms());
 
 		ABlockStmCG stms = new ABlockStmCG();
+		stms.getLocalDefs().add(transAssistant.consClassVarDeclDefaultCtor(tracePrefixes.storeClassName(), tracePrefixes.storeVarName()));
+		stms.getLocalDefs().add(transAssistant.consClassVarDeclDefaultCtor(tracePrefixes.idGeneratorClassName(), tracePrefixes.idGeneratorVarName()));
 		stms.getStatements().add(nodeData.getStms());
 		stms.getStatements().add(buildTestExecutionStms(nodeData.getNodeVar(), getClassName(node)));
 
 		return stms;
 	}
-
+	
 	private String getTraceEnclosingClass(ANamedTraceDeclCG trace)
 	{
 		if (trace != null)
