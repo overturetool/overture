@@ -4,7 +4,7 @@ import org.overture.codegen.runtime.traces.*;
 import java.util.*;
 
 
-public class Entry {
+public class Entry implements java.io.Serializable {
     public Entry() {
     }
 
@@ -33,15 +33,21 @@ public class Entry {
     }
 
     public static void Entry_T1_Run(final TestAccumulator testAccumulator) {
+        final Store store = new Store();
+        final IdGenerator gen = new IdGenerator();
         SequenceTraceNode sequence_1 = new SequenceTraceNode();
         AlternativeTraceNode alternatives_2 = new AlternativeTraceNode();
         VDMSet set_1 = SetUtil.set(1L, 2L, 3L, 4L, 5L);
 
         for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
             final Number x = ((Number) iterator_1.next());
+            final Number ID_1 = gen.inc();
+
+            store.register(ID_1, x);
+
             CallStatement callStm_1 = new CallStatement() {
                     public Object execute(final Object instance) {
-                        ((Entry) instance).op(x);
+                        ((Entry) instance).op(((Number) store.getValue(ID_1)));
 
                         return Utils.VOID_VALUE;
                     }
@@ -58,7 +64,7 @@ public class Entry {
 
         sequence_1.add(alternatives_2);
 
-        TraceNode.executeTests(sequence_1, Entry.class, testAccumulator);
+        TraceNode.executeTests(sequence_1, Entry.class, testAccumulator, store);
     }
 }
 

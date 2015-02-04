@@ -4,7 +4,7 @@ import org.overture.codegen.runtime.traces.*;
 import java.util.*;
 
 
-public class Entry {
+public class Entry implements java.io.Serializable {
     public Entry() {
     }
 
@@ -17,18 +17,29 @@ public class Entry {
     }
 
     public static void Entry_T1_Run(final TestAccumulator testAccumulator) {
+        final Store store = new Store();
+        final IdGenerator gen = new IdGenerator();
         SequenceTraceNode sequence_1 = new SequenceTraceNode();
         final Number a = 1L;
+        final Number ID_1 = gen.inc();
+
+        store.register(ID_1, a);
 
         final Character b = 'x';
+        final Number ID_2 = gen.inc();
+
+        store.register(ID_2, b);
 
         final Number c = 3L;
+        final Number ID_3 = gen.inc();
+
+        store.register(ID_3, c);
 
         SequenceTraceNode sequence_2 = new SequenceTraceNode();
         AlternativeTraceNode alternatives_2 = new AlternativeTraceNode();
         CallStatement callStm_1 = new CallStatement() {
                 public Object execute(final Object instance) {
-                    return f(a);
+                    return f(((Number) store.getValue(ID_1)));
                 }
 
                 public String toString() {
@@ -40,7 +51,7 @@ public class Entry {
 
         CallStatement callStm_2 = new CallStatement() {
                 public Object execute(final Object instance) {
-                    return f(b);
+                    return f(((Character) store.getValue(ID_2)));
                 }
 
                 public String toString() {
@@ -52,7 +63,7 @@ public class Entry {
 
         CallStatement callStm_3 = new CallStatement() {
                 public Object execute(final Object instance) {
-                    return f(c);
+                    return f(((Number) store.getValue(ID_3)));
                 }
 
                 public String toString() {
@@ -70,7 +81,7 @@ public class Entry {
 
         sequence_1.add(sequence_2);
 
-        TraceNode.executeTests(sequence_1, Entry.class, testAccumulator);
+        TraceNode.executeTests(sequence_1, Entry.class, testAccumulator, store);
     }
 }
 

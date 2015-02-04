@@ -4,7 +4,7 @@ import org.overture.codegen.runtime.traces.*;
 import java.util.*;
 
 
-public class Entry {
+public class Entry implements java.io.Serializable {
     public Entry() {
     }
 
@@ -21,6 +21,8 @@ public class Entry {
     }
 
     public static void Entry_T1_Run(final TestAccumulator testAccumulator) {
+        final Store store = new Store();
+        final IdGenerator gen = new IdGenerator();
         SequenceTraceNode sequence_1 = new SequenceTraceNode();
         SequenceTraceNode sequence_2 = new SequenceTraceNode();
         ConcurrentTraceNode concurrent_1 = new ConcurrentTraceNode();
@@ -61,7 +63,7 @@ public class Entry {
 
         sequence_1.add(repeat_1);
 
-        TraceNode.executeTests(sequence_1, Entry.class, testAccumulator);
+        TraceNode.executeTests(sequence_1, Entry.class, testAccumulator, store);
     }
 }
 
