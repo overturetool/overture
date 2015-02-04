@@ -24,11 +24,7 @@ public class Entry implements java.io.Serializable {
         return x;
     }
 
-    public String toString() {
-        return "Entry{" + "x := " + Utils.toString(x) + "}";
-    }
-
-    public static void Entry_T1_Run(final TestAccumulator testAccumulator) {
+    public void Entry_T1_Run(final TestAccumulator testAccumulator) {
         final Store store = new Store();
         final IdGenerator gen = new IdGenerator();
         SequenceTraceNode sequence_1 = new SequenceTraceNode();
@@ -74,6 +70,10 @@ public class Entry implements java.io.Serializable {
         sequence_1.add(apply_2);
 
         TraceNode.executeTests(sequence_1, Entry.class, testAccumulator, store);
+    }
+
+    public String toString() {
+        return "Entry{" + "x := " + Utils.toString(x) + "}";
     }
 }
 
