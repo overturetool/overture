@@ -126,6 +126,45 @@ public class TraceNames
 		return "add";
 	}
 	
+	// Storage related
+	
+	public String storeClassName()
+	{
+		return "Store";
+	}
+	
+	public String storeVarName()
+	{
+		return "store";
+	}
+	
+	public String storeRegisterMethodName()
+	{
+		return "register";
+	}
+	
+	// ID Generator related
+	
+	public String idGeneratorClassName()
+	{
+		return "IdGenerator";
+	}
+	
+	public String idGeneratorVarName()
+	{
+		return "gen";
+	}
+	
+	public String idConstNamePrefix()
+	{
+		return "ID_";
+	}
+	
+	public String idGeneratorIncrementMethodName()
+	{
+		return "inc";
+	}
+	
 	// Utility stuff
 	
 	public String voidValueEnclosingClassName()
