@@ -119,7 +119,7 @@ public class TraceLetBeStStrategy extends LetBeStStrategy
 			AIdentifierPatternCG idToReg = (AIdentifierPatternCG) nextElementDecl.getPattern();
 			String idConstName = idConstNameMap.get(idToReg.getName());
 			block.getStatements().add(transAssistant.wrap(storeAssistant.consIdConstDecl(idConstName)));
-			storeAssistant.appendStoreRegStms(block, setType.getSetOf().clone(), idToReg.getName(), idConstName);
+			storeAssistant.appendStoreRegStms(block, idToReg.getName(), idConstName);
 		}
 		else
 		{

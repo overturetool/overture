@@ -249,40 +249,26 @@ public class TraceStmsBuilder extends AnswerAdaptor<TraceNodeData>
 	{
 		ABlockStmCG outer = new ABlockStmCG();
 		
-		for(AVarDeclCG dec : node.getLocalDefs())
-		{
-			if (dec.getPattern() instanceof AIdentifierPatternCG)
-			{
-				String idConstName = info.getTempVarNameGen().nextVarName(tracePrefixes.idConstNamePrefix());
-				idConstNameMap.put(((AIdentifierPatternCG) dec.getPattern()).getName(), idConstName);
-				outer.getLocalDefs().add(storeAssistant.consIdConstDecl(idConstName));
-			}
-			else
-			{
-				Logger.getLog().printErrorln("This should not happen. Only identifier patterns "
-						+ "are currently supported in traces (see the TraceSupportedAnalysis class).");
-				return null;
-			}
-		}
+		IdentifierPatternCollector idCollector = new IdentifierPatternCollector();
 		
 		ABlockStmCG declBlock = new ABlockStmCG();
 		declBlock.setScoped(true);
 
 		for (AVarDeclCG dec : node.getLocalDefs())
 		{
+			idCollector.setTopNode(dec);
+			Set<AIdentifierPatternCG> idOccurences = idCollector.findOccurences();
+			
 			AVarDeclCG decCopy = dec.clone();
 			decCopy.setFinal(true);
 			declBlock.getLocalDefs().add(decCopy);
 			
-			if (decCopy.getPattern() instanceof AIdentifierPatternCG)
+			for(AIdentifierPatternCG occ : idOccurences)
 			{
-				storeAssistant.appendStoreRegStms(declBlock, decCopy.getType().clone(), ((AIdentifierPatternCG) decCopy.getPattern()).getName(), idConstNameMap.get(((AIdentifierPatternCG) dec.getPattern()).getName()));
-			}
-			else
-			{
-				Logger.getLog().printErrorln("This should not happen. Only identifier patterns "
-						+ "are currently supported in traces (see the TraceSupportedAnalysis class).");
-				return null;
+				String idConstName = info.getTempVarNameGen().nextVarName(tracePrefixes.idConstNamePrefix());
+				idConstNameMap.put(occ.getName(), idConstName);
+				outer.getLocalDefs().add(storeAssistant.consIdConstDecl(idConstName));
+				storeAssistant.appendStoreRegStms(declBlock, occ.getName(), idConstName);
 			}
 		}
 		TraceNodeData bodyNodeData = node.getBody().apply(this);

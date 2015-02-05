@@ -11,6 +11,7 @@ import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.ANatNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.AUnknownTypeCG;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class StoreAssistant
@@ -28,9 +29,11 @@ public class StoreAssistant
 		this.transAssistant = transAssistant;
 	}
 
-	public void appendStoreRegStms(ABlockStmCG declBlock, STypeCG varType, String varName, String idConstName)
+	public void appendStoreRegStms(ABlockStmCG declBlock, String varName, String idConstName)
 	{
-		declBlock.getStatements().add(consStoreRegistration(idConstName, varType, varName));
+		// Passing the variable type as the unknown type is not very accurate.
+		// However, it simplifies the store registration.
+		declBlock.getStatements().add(consStoreRegistration(idConstName, new AUnknownTypeCG(), varName));
 		idConstNameMap.put(varName, idConstName);
 	}
 
