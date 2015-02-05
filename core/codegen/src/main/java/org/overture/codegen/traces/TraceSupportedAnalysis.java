@@ -1,11 +1,9 @@
 package org.overture.codegen.traces;
 
 import org.overture.codegen.cgast.INode;
-import org.overture.codegen.cgast.SPatternCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.ANamedTraceDeclCG;
-import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ASuperCallStmCG;
 
 /**
@@ -28,11 +26,6 @@ import org.overture.codegen.cgast.statements.ASuperCallStmCG;
  * The super call statement is, however, not supported by the code
  * generator when it does appear in traces. Therefore, this analysis
  * will detect this case.
- * 
- * Finally, code generation of traces only support the identifier
- * pattern among the different types of patterns. This analysis also
- * checks that the only type of pattern occurring in a trace is the identifier
- * pattern.
  * 
  * @author pvj
  *
@@ -57,23 +50,9 @@ public class TraceSupportedAnalysis extends DepthFirstAnalysisAdaptor
 			return;
 		}
 		
-		reason = "The super call statement is not supported in traces, and as a consequence the trace is not generated.";
+		reason = "The super call statement is not supported in traces,"
+				+ "and as a consequence the trace is not generated.";
 		isUnsupported = true;
-	}
-	
-	@Override
-	public void defaultInSPatternCG(SPatternCG node) throws AnalysisException
-	{
-		if(!isWithinTrace(node))
-		{
-			return;
-		}
-		
-		if(!(node instanceof AIdentifierPatternCG))
-		{
-			reason = "Only identifier patterns are supported in traces, and as a consequence the trace is not generated.";
-			isUnsupported = true;
-		}
 	}
 	
 	public void run() throws AnalysisException
