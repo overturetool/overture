@@ -150,6 +150,7 @@ import org.overture.codegen.cgast.expressions.AThreadIdExpCG;
 import org.overture.codegen.cgast.expressions.ATimeExpCG;
 import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATupleExpCG;
+import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
 import org.overture.codegen.cgast.expressions.AXorBoolBinaryExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.patterns.ASetBindCG;
@@ -164,6 +165,13 @@ import org.overture.codegen.logging.Logger;
 
 public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 {
+	@Override
+	public SExpCG caseAUndefinedExp(AUndefinedExp node, IRInfo question)
+			throws AnalysisException
+	{
+		return new AUndefinedExpCG();
+	}
+	
 	@Override
 	public SExpCG caseAPreOpExp(APreOpExp node, IRInfo question)
 			throws AnalysisException
