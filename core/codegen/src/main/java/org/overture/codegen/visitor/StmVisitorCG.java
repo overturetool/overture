@@ -31,7 +31,6 @@ import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.ASelfExp;
-import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.ASetMultipleBind;
@@ -232,25 +231,11 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 			PExp exp = def.getExpression();
 
 			STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-
-			AVarDeclCG localDecl = new AVarDeclCG();
-			localDecl.setFinal(false);
-			localDecl.setType(typeCg);
-
 			AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
 			idPattern.setName(name);
-
-			localDecl.setPattern(idPattern);
-
-			if (exp instanceof AUndefinedExp)
-			{
-				question.getDeclAssistant().setDefaultValue(localDecl, typeCg);
-			} else
-			{
-				SExpCG expCg = exp.apply(question.getExpVisitor(), question);
-				localDecl.setExp(expCg);
-			}
-
+			SExpCG expCg = exp.apply(question.getExpVisitor(), question);
+			
+			AVarDeclCG localDecl = question.getDeclAssistant().consLocalVarDecl(def, typeCg, idPattern, expCg);
 			blockStm.getLocalDefs().add(localDecl);
 		}
 
