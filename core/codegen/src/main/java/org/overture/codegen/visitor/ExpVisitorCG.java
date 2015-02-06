@@ -767,7 +767,9 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseALetDefExp(ALetDefExp node, IRInfo question)
 			throws AnalysisException
 	{
-		return question.getExpAssistant().consLetDefExp(node, node.getLocalDefs(), node.getExpression(), node.getType(), question, "Generation of a let expression is not supported in assignments");
+		return question.getExpAssistant().consLetDefExp(node, node.getLocalDefs(), 
+				node.getExpression(), node.getType(), question,
+				"Generation of a let expression is not supported in assignments");
 	}
 	
 	@Override

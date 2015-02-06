@@ -72,6 +72,7 @@ import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AReverseUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
@@ -236,6 +237,15 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 			SExpCG expCg = exp.apply(question.getExpVisitor(), question);
 			
 			AVarDeclCG localDecl = question.getDeclAssistant().consLocalVarDecl(def, typeCg, idPattern, expCg);
+			
+			if (expCg instanceof AUndefinedExpCG)
+			{
+				question.getDeclAssistant().setDefaultValue(localDecl, typeCg);
+			} else
+			{
+				localDecl.setExp(expCg);
+			}
+			
 			blockStm.getLocalDefs().add(localDecl);
 		}
 

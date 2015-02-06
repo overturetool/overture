@@ -47,7 +47,6 @@ import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
-import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.patterns.ATuplePatternCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
@@ -280,6 +279,12 @@ public class DeclAssistantCG extends AssistantBase
 
 	}
 
+	public AVarDeclCG consLocalVarDecl(STypeCG type,
+			SPatternCG pattern, SExpCG exp)
+	{
+		return consLocalVarDecl(null, type, pattern, exp);
+	}
+
 	public AVarDeclCG consLocalVarDecl(INode node, STypeCG type,
 			SPatternCG pattern, SExpCG exp)
 	{
@@ -316,14 +321,7 @@ public class DeclAssistantCG extends AssistantBase
 		localVarDecl.setFinal(false);
 		localVarDecl.setSourceNode(new SourceNode(node));
 		localVarDecl.setPattern(pattern);
-		
-		if (exp instanceof AUndefinedExpCG)
-		{
-			setDefaultValue(localVarDecl, localVarDecl.getType());
-		} else
-		{
-			localVarDecl.setExp(exp);
-		}
+		localVarDecl.setExp(exp);
 		
 		return localVarDecl;
 	}
