@@ -61,6 +61,7 @@ import org.overture.codegen.cgast.expressions.AQuoteLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ASeqToStringUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AStringToSeqUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
 import org.overture.codegen.cgast.expressions.SBinaryExpCG;
 import org.overture.codegen.cgast.expressions.SLiteralExpCG;
 import org.overture.codegen.cgast.expressions.SNumericBinaryExpCG;
@@ -698,10 +699,11 @@ public class JavaFormat
 
 	public String formatInitialExp(SExpCG exp) throws AnalysisException
 	{
-		// private int a = 2; (when exp != null)
-		// private int a; (when exp == null)
+		// Examples:
+		// private int a; (exp == null || exp instanceof AUndefinedExpCG)
+		// private int a = 2; (otherwise)
 
-		return exp == null ? "" : " = " + format(exp);
+		return exp == null || exp instanceof AUndefinedExpCG ? "" : " = " + format(exp);
 	}
 
 	public String formatOperationBody(SStmCG body) throws AnalysisException
