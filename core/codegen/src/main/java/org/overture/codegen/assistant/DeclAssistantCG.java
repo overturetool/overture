@@ -47,7 +47,9 @@ import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
+import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
+import org.overture.codegen.cgast.patterns.ATuplePatternCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
@@ -56,6 +58,8 @@ import org.overture.codegen.cgast.types.ANatNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
+import org.overture.codegen.cgast.types.ATupleTypeCG;
+import org.overture.codegen.cgast.types.AUnionTypeCG;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
@@ -276,17 +280,51 @@ public class DeclAssistantCG extends AssistantBase
 
 	}
 
-	private AVarDeclCG consLocalVarDecl(INode node, STypeCG type,
+	public AVarDeclCG consLocalVarDecl(INode node, STypeCG type,
 			SPatternCG pattern, SExpCG exp)
 	{
 		AVarDeclCG localVarDecl = new AVarDeclCG();
+
+		if(pattern instanceof ATuplePatternCG && type instanceof AUnionTypeCG)
+		{
+			ATuplePatternCG tuplePattern = (ATuplePatternCG) pattern;
+			AUnionTypeCG unionType = (AUnionTypeCG) type;
+			
+			List<STypeCG> potentialTypes = new LinkedList<STypeCG>();
+			
+			for(STypeCG nextType : unionType.getTypes())
+			{
+				if(nextType instanceof ATupleTypeCG)
+				{
+					ATupleTypeCG nextTupleType = ((ATupleTypeCG) nextType);
+					
+					if(nextTupleType.getTypes().size() == tuplePattern.getPatterns().size())
+					{
+						potentialTypes.add(nextTupleType);
+					}
+				}
+			}
+			
+			unionType.setTypes(potentialTypes);
+			localVarDecl.setType(unionType);
+		}
+		else
+		{
+			localVarDecl.setType(type);
+		}
 		
 		localVarDecl.setFinal(false);
 		localVarDecl.setSourceNode(new SourceNode(node));
-		localVarDecl.setType(type);
 		localVarDecl.setPattern(pattern);
-		localVarDecl.setExp(exp);
-
+		
+		if (exp instanceof AUndefinedExpCG)
+		{
+			setDefaultValue(localVarDecl, localVarDecl.getType());
+		} else
+		{
+			localVarDecl.setExp(exp);
+		}
+		
 		return localVarDecl;
 	}
 
@@ -368,7 +406,6 @@ public class DeclAssistantCG extends AssistantBase
 	}
 
 	public void setDefaultValue(AVarDeclCG localDecl, STypeCG typeCg)
-			throws AnalysisException
 	{
 		ExpAssistantCG expAssistant = assistantManager.getExpAssistant();
 
