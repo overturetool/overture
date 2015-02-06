@@ -243,37 +243,8 @@ public class TransAssistantCG extends BaseTransformationAssistant
 	public AVarDeclCG consSetBindDecl(String setBindName, SExpCG set)
 			throws AnalysisException
 	{
-		AVarDeclCG setBindDecl = new AVarDeclCG();
-
-		setBindDecl.setFinal(false);
-		setBindDecl.setType(getSetTypeCloned(set));
-
-		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
-		idPattern.setName(setBindName);
-
-		setBindDecl.setPattern(idPattern);
-		setBindDecl.setExp(set.clone());
-
-		return setBindDecl;
-	}
-
-	public AVarDeclCG consIdDecl(STypeCG setType, SPatternCG pattern)
-			throws AnalysisException
-	{
-		AVarDeclCG idDecl = new AVarDeclCG();
-
-		idDecl.setFinal(false);
-		idDecl.setType(getSetTypeCloned(setType).getSetOf());
-
-		idDecl.setPattern(pattern.clone());
-		idDecl.setExp(new ANullExpCG());
-
-		return idDecl;
-	}
-
-	public AVarDeclCG consDecl(String varName, SExpCG exp)
-	{
-		return consDecl(varName, exp.getType().clone(), exp);
+		return info.getDeclAssistant().consLocalVarDecl(getSetTypeCloned(set),
+				consIdPattern(setBindName), set.clone());
 	}
 	
 	public ANullExpCG consNullExp()
@@ -355,14 +326,7 @@ public class TransAssistantCG extends BaseTransformationAssistant
 	{
 		ACastUnaryExpCG cast = consNextElementCall(iteratorTypeName, iteratorName, elementType, nextElementMethod);
 
-		AVarDeclCG decl = new AVarDeclCG();
-
-		decl.setFinal(false);
-		decl.setType(elementType);
-		decl.setPattern(id.clone());
-		decl.setExp(cast);
-
-		return decl;
+		return info.getDeclAssistant().consLocalVarDecl(elementType, id.clone(), cast);
 	}
 
 	public ALocalPatternAssignmentStmCG consNextElementAssignment(

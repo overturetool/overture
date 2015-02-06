@@ -487,7 +487,9 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 			SPatternCG currentPattern)
 	{
 		AIdentifierPatternCG idPattern = (AIdentifierPatternCG) currentPattern;
-		AVarDeclCG idPatternDecl = consVarDecl(currentInfo.getType().clone(), currentInfo.getActualValue().clone(), idPattern.clone());
+		AVarDeclCG idPatternDecl = info.getDeclAssistant().
+				consLocalVarDecl(currentInfo.getType().clone(),
+						idPattern.clone(), currentInfo.getActualValue().clone());
 
 		ABlockStmCG wrappingStatement = new ABlockStmCG();
 		wrappingStatement.getLocalDefs().add(idPatternDecl);
@@ -839,7 +841,9 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 
 		if (declare)
 		{
-			AVarDeclCG patternDecl = consVarDecl(type.clone(), actualValue.clone(), idPattern.clone());
+			AVarDeclCG patternDecl = info.getDeclAssistant().
+					consLocalVarDecl(type.clone(), idPattern.clone(),
+							actualValue.clone());
 			patternBlock.getLocalDefs().add(patternDecl);
 		} else
 		{
@@ -847,18 +851,6 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		}
 
 		return patternBlock;
-	}
-
-	private AVarDeclCG consVarDecl(STypeCG type, SExpCG valueToMatch,
-			SPatternCG idPattern)
-	{
-		AVarDeclCG patternDecl = new AVarDeclCG();
-		patternDecl.setFinal(false);
-		patternDecl.setType(type);
-		patternDecl.setExp(valueToMatch);
-		patternDecl.setPattern(idPattern);
-
-		return patternDecl;
 	}
 
 	private ABlockStmCG consFieldCheckBlock(PatternBlockData patternData,
@@ -983,7 +975,8 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 	{
 		AIdentifierPatternCG currentId = (AIdentifierPatternCG) currentPattern;
 
-		AVarDeclCG idVarDecl = consVarDecl(currentType.clone(), new AUndefinedExpCG(), currentPattern.clone());
+		AVarDeclCG idVarDecl = info.getDeclAssistant().consLocalVarDecl(currentType.clone(), 
+				currentPattern.clone(), new AUndefinedExpCG());
 
 		declBlock.getLocalDefs().add(idVarDecl);
 
@@ -1015,13 +1008,9 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 
 		if (declarePatternVar)
 		{
-			AVarDeclCG patternDecl = new AVarDeclCG();
-			
-			patternDecl.setFinal(false);
-			patternDecl.setPattern(idPattern.clone());
-			patternDecl.setType(actualValue.getType().clone());
-			patternDecl.setExp(actualValue.clone());
-
+			AVarDeclCG patternDecl = info.getDeclAssistant().
+					consLocalVarDecl(actualValue.getType().clone(), 
+					idPattern.clone(), actualValue.clone());
 			block.getLocalDefs().add(patternDecl);
 		}
 

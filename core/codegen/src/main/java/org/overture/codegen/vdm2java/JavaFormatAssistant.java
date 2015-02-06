@@ -47,10 +47,18 @@ import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AObjectTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
+import org.overture.codegen.ir.IRInfo;
 
 public class JavaFormatAssistant extends JavaClassCreatorBase
 {
-	public static ATypeNameCG consTypeName(ARecordDeclCG record)
+	private IRInfo info;
+
+	public JavaFormatAssistant(IRInfo info)
+	{
+		this.info = info;
+	}
+
+	public ATypeNameCG consTypeName(ARecordDeclCG record)
 			throws AnalysisException
 	{
 		AClassDeclCG classDef = record.getAncestor(AClassDeclCG.class);
@@ -74,17 +82,11 @@ public class JavaFormatAssistant extends JavaClassCreatorBase
 			String formalParamName, String varName) throws AnalysisException
 	{
 		// Construct a local var in a statement: RecordType varName = ((RecordType) formalParamName);
-
-		AVarDeclCG localVar = new AVarDeclCG();
-		localVar.setFinal(false);
-
 		ARecordTypeCG recordType = new ARecordTypeCG();
 		recordType.setName(consTypeName(record));
-		localVar.setType(recordType);
 
 		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
 		idPattern.setName(varName);
-		localVar.setPattern(idPattern);
 
 		ACastUnaryExpCG cast = new ACastUnaryExpCG();
 		cast.setType(recordType.clone());
@@ -95,8 +97,9 @@ public class JavaFormatAssistant extends JavaClassCreatorBase
 		varExp.setIsLocal(true);
 		
 		cast.setExp(varExp);
-		localVar.setExp(cast);
 
+		AVarDeclCG localVar = info.getDeclAssistant().consLocalVarDecl(recordType, idPattern, cast);
+				
 		ABlockStmCG stm = new ABlockStmCG();
 		stm.getLocalDefs().add(localVar);
 

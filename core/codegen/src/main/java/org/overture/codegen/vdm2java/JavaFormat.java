@@ -131,7 +131,7 @@ public class JavaFormat
 		this.mergeVisitor = new MergeVisitor(templateStructure, templateCallables);
 		this.functionValueAssistant = null;
 		this.info = info;
-		this.javaFormatAssistant = new JavaFormatAssistant();
+		this.javaFormatAssistant = new JavaFormatAssistant(this.info);
 	}
 	
 	public JavaFormatAssistant getJavaFormatAssistant()
