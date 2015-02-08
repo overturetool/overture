@@ -383,6 +383,15 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 				continue;
 			}
 			
+			
+			if (!(currentType instanceof AClassTypeCG)
+					&& !(currentType instanceof ATupleTypeCG)
+					&& !(currentType instanceof ARecordTypeCG))
+			{
+				// If the field cannot possibly exist then continue
+				continue;
+			}
+			
 			if(parent instanceof SExpCG)
 			{
 				boolean memberExists = false;
