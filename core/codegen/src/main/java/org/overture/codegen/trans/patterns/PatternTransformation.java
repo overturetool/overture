@@ -39,6 +39,7 @@ import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
+import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
@@ -487,7 +488,9 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 			SPatternCG currentPattern)
 	{
 		AIdentifierPatternCG idPattern = (AIdentifierPatternCG) currentPattern;
-		AVarDeclCG idPatternDecl = consVarDecl(currentInfo.getType().clone(), currentInfo.getActualValue().clone(), idPattern.clone());
+		AVarDeclCG idPatternDecl = info.getDeclAssistant().
+				consLocalVarDecl(currentInfo.getType().clone(),
+						idPattern.clone(), currentInfo.getActualValue().clone());
 
 		ABlockStmCG wrappingStatement = new ABlockStmCG();
 		wrappingStatement.getLocalDefs().add(idPatternDecl);
@@ -640,19 +643,92 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		} else if (pattern instanceof ATuplePatternCG)
 		{
 			ATuplePatternCG tuplePattern = (ATuplePatternCG) pattern;
-			ATupleTypeCG tupleType = (ATupleTypeCG) type;
+			
+			if (type instanceof ATupleTypeCG)
+			{
+				ATupleTypeCG tupleType = (ATupleTypeCG) type;
 
-			return consTuplePatternCheck(declarePatternVar, tuplePattern, tupleType, patternData, actualValue);
+				return consTuplePatternCheck(declarePatternVar, tuplePattern, 
+						tupleType, patternData, actualValue, false);
+			}
+			else if(type instanceof AUnionTypeCG)
+			{
+					return consUnionTypedTuplePatternCheck(declarePatternVar,
+							(AUnionTypeCG) type, patternData, actualValue, tuplePattern);
+			}
+			else
+			{
+				Logger.getLog().printErrorln("Expected tuple type or union type "
+						+ "in 'PatternTransformation'. Got: " + type);
+			}
 		} else if (pattern instanceof ARecordPatternCG)
 		{
 			ARecordPatternCG recordPattern = (ARecordPatternCG) pattern;
 			ARecordTypeCG recordType = (ARecordTypeCG) recordPattern.getType();
 			boolean checkRecordPattern = checkRecordPattern(actualValue);
 			
-			return consRecordPatternCheck(declarePatternVar, recordPattern, recordType, patternData, actualValue, checkRecordPattern);
+			return consRecordPatternCheck(declarePatternVar, recordPattern,
+					recordType, patternData, actualValue, checkRecordPattern);
 		}
 
 		return null;
+	}
+
+	private ABlockStmCG consUnionTypedTuplePatternCheck(
+			boolean declarePatternVar, AUnionTypeCG unionType,
+			PatternBlockData patternData, SExpCG actualValue,
+			ATuplePatternCG tuplePattern)
+	{
+		List<ATupleTypeCG> tupleTypes = new LinkedList<ATupleTypeCG>();
+
+		for (STypeCG nextType : unionType.getTypes())
+		{
+			if (nextType instanceof ATupleTypeCG)
+			{
+				ATupleTypeCG nextTupleType = ((ATupleTypeCG) nextType);
+
+				if (nextTupleType.getTypes().size() == tuplePattern.getPatterns().size())
+				{
+					tupleTypes.add(nextTupleType);
+				}
+			}
+		}
+
+		ATupleTypeCG resTupleType = new ATupleTypeCG();
+
+		if (tupleTypes.size() == 1)
+		{
+			resTupleType = tupleTypes.get(0);
+		} else
+		{
+			for (int i = 0; i < tuplePattern.getPatterns().size(); i++)
+			{
+				AUnionTypeCG fieldType = new AUnionTypeCG();
+
+				for (ATupleTypeCG t : tupleTypes)
+				{
+					fieldType.getTypes().add(t.getTypes().get(i).clone());
+				}
+
+				resTupleType.getTypes().add(fieldType);
+			}
+		}
+
+		ABlockStmCG tuplePatternCheck = consTuplePatternCheck(declarePatternVar, tuplePattern, resTupleType, patternData, actualValue, true);
+
+		AInstanceofExpCG instanceCheck = new AInstanceofExpCG();
+		instanceCheck.setType(new ABoolBasicTypeCG());
+		instanceCheck.setCheckedType(patternData.getRootPatternVar().getType().clone());
+		instanceCheck.setExp(patternData.getRootPatternVar().clone());
+
+		AIfStmCG typeCheck = new AIfStmCG();
+		typeCheck.setIfExp(instanceCheck);
+		typeCheck.setThenStm(tuplePatternCheck);
+
+		ABlockStmCG block = new ABlockStmCG();
+		block.getStatements().add(typeCheck);
+
+		return block;
 	}
 
 	private ABlockStmCG consRecordPatternCheck(boolean declarePattern,
@@ -686,7 +762,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		recordPatternVar.setIsLambda(false);
 		recordPatternVar.setIsLocal(true);
 
-		ABlockStmCG fieldCheckBlock = consFieldCheckBlock(patternData, recordPatternVar, recordPattern.getPatterns(), types);
+		ABlockStmCG fieldCheckBlock = consFieldCheckBlock(patternData, recordPatternVar, recordPattern.getPatterns(), types, false);
 
 		recordPatternBlock.getStatements().add(fieldCheckBlock);
 
@@ -718,7 +794,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 	@SuppressWarnings("unchecked")
 	private ABlockStmCG consTuplePatternCheck(boolean declarePatternVar,
 			ATuplePatternCG tuplePattern, ATupleTypeCG tupleType,
-			PatternBlockData patternData, SExpCG actualValue)
+			PatternBlockData patternData, SExpCG actualValue, boolean cast)
 	{
 		AIdentifierPatternCG idPattern = getIdPattern(config.getName(tuplePattern.getClass()));
 
@@ -729,10 +805,22 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		tuplePatternVar.setName(idPattern.getName());
 		tuplePatternVar.setIsLambda(false);
 		tuplePatternVar.setIsLocal(true);
+		patternData.setRootPatternVar(tuplePatternVar);
 
 		ATupleCompatibilityExpCG tupleCheck = new ATupleCompatibilityExpCG();
 		tupleCheck.setType(new ABoolBasicTypeCG());
-		tupleCheck.setTuple(tuplePatternVar.clone());
+		
+		if (!cast)
+		{
+			tupleCheck.setTuple(tuplePatternVar.clone());
+		} else
+		{
+			ACastUnaryExpCG castTuple = new ACastUnaryExpCG();
+			castTuple.setType(tupleType.clone());
+			castTuple.setExp(tuplePatternVar.clone());
+			tupleCheck.setTuple(castTuple);
+		}
+		
 		tupleCheck.setTypes((List<? extends STypeCG>) tupleType.getTypes().clone());
 
 		if (patternData.getSuccessVarDecl() == null)
@@ -748,7 +836,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 
 		AIfStmCG fieldSizeCheck = new AIfStmCG();
 		fieldSizeCheck.setIfExp(patternData.getSuccessVar().clone());
-		fieldSizeCheck.setThenStm(consFieldCheckBlock(patternData, tuplePatternVar, patterns, types));
+		fieldSizeCheck.setThenStm(consFieldCheckBlock(patternData, tuplePatternVar, patterns, types, cast));
 
 		tuplePatternBlock.getStatements().add(fieldSizeCheck);
 
@@ -839,7 +927,9 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 
 		if (declare)
 		{
-			AVarDeclCG patternDecl = consVarDecl(type.clone(), actualValue.clone(), idPattern.clone());
+			AVarDeclCG patternDecl = info.getDeclAssistant().
+					consLocalVarDecl(type.clone(), idPattern.clone(),
+							actualValue.clone());
 			patternBlock.getLocalDefs().add(patternDecl);
 		} else
 		{
@@ -849,21 +939,9 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		return patternBlock;
 	}
 
-	private AVarDeclCG consVarDecl(STypeCG type, SExpCG valueToMatch,
-			SPatternCG idPattern)
-	{
-		AVarDeclCG patternDecl = new AVarDeclCG();
-		patternDecl.setFinal(false);
-		patternDecl.setType(type);
-		patternDecl.setExp(valueToMatch);
-		patternDecl.setPattern(idPattern);
-
-		return patternDecl;
-	}
-
 	private ABlockStmCG consFieldCheckBlock(PatternBlockData patternData,
 			AIdentifierVarExpCG patternVar, List<SPatternCG> patterns,
-			List<STypeCG> types)
+			List<STypeCG> types, boolean cast)
 	{
 		ABlockStmCG thenPart = new ABlockStmCG();
 		ABlockStmCG topBlock = thenPart;
@@ -878,7 +956,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 				continue;
 			} else
 			{
-				SExpCG actualValue = consFieldValueToMatch(patternVar, i, currentType);
+				SExpCG actualValue = consFieldValueToMatch(patternVar, i, currentType, cast);
 
 				if (currentPattern instanceof AIdentifierPatternCG)
 				{
@@ -886,7 +964,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 					thenPart.getStatements().add(localAssignment);
 				} else
 				{
-					ABlockStmCG patternBlock = consPatternBlock(patternData, currentPattern, currentType, actualValue);
+					ABlockStmCG patternBlock = consPatternBlock(patternData, currentPattern, currentType, actualValue, cast);
 
 					if (patternBlock != null)
 					{
@@ -937,7 +1015,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 	}
 
 	private ABlockStmCG consPatternBlock(PatternBlockData patternData,
-			SPatternCG currentPattern, STypeCG currentType, SExpCG actualValue)
+			SPatternCG currentPattern, STypeCG currentType, SExpCG actualValue, boolean cast)
 	{
 		ABlockStmCG patternBlock = null;
 
@@ -946,7 +1024,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 			ATuplePatternCG nextTuplePattern = (ATuplePatternCG) currentPattern;
 			ATupleTypeCG nextTupleType = (ATupleTypeCG) currentType;
 
-			patternBlock = consTuplePatternCheck(true, nextTuplePattern, nextTupleType, patternData, actualValue);
+			patternBlock = consTuplePatternCheck(true, nextTuplePattern, nextTupleType, patternData, actualValue, cast);
 
 		} else if (currentPattern instanceof ARecordPatternCG)
 		{
@@ -964,11 +1042,11 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 	}
 
 	private SExpCG consFieldValueToMatch(AIdentifierVarExpCG patternVar,
-			int fieldNumber, STypeCG currentType)
+			int fieldNumber, STypeCG currentType, boolean cast)
 	{
 		if (patternVar.getType() instanceof ATupleTypeCG)
 		{
-			return consTupleFieldExp(patternVar, fieldNumber, currentType);
+			return consTupleFieldExp(patternVar, fieldNumber, currentType, cast);
 		} else if (patternVar.getType() instanceof ARecordTypeCG)
 		{
 			return consRecFieldExp(patternVar, fieldNumber, currentType);
@@ -983,7 +1061,8 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 	{
 		AIdentifierPatternCG currentId = (AIdentifierPatternCG) currentPattern;
 
-		AVarDeclCG idVarDecl = consVarDecl(currentType.clone(), new AUndefinedExpCG(), currentPattern.clone());
+		AVarDeclCG idVarDecl = info.getDeclAssistant().consLocalVarDecl(currentType.clone(), 
+				currentPattern.clone(), new AUndefinedExpCG());
 
 		declBlock.getLocalDefs().add(idVarDecl);
 
@@ -1015,13 +1094,9 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 
 		if (declarePatternVar)
 		{
-			AVarDeclCG patternDecl = new AVarDeclCG();
-			
-			patternDecl.setFinal(false);
-			patternDecl.setPattern(idPattern.clone());
-			patternDecl.setType(actualValue.getType().clone());
-			patternDecl.setExp(actualValue.clone());
-
+			AVarDeclCG patternDecl = info.getDeclAssistant().
+					consLocalVarDecl(actualValue.getType().clone(), 
+					idPattern.clone(), actualValue.clone());
 			block.getLocalDefs().add(patternDecl);
 		}
 
@@ -1030,6 +1105,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		var.setName(idPattern.getName());
 		var.setIsLambda(false);
 		var.setIsLocal(true);
+		patternData.setRootPatternVar(var);
 
 		AEqualsBinaryExpCG check = new AEqualsBinaryExpCG();
 		check.setType(new ABoolBasicTypeCG());
@@ -1109,11 +1185,23 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 	}
 
 	private AFieldNumberExpCG consTupleFieldExp(
-			AIdentifierVarExpCG tuplePatternVar, int i, STypeCG currentType)
+			AIdentifierVarExpCG tuplePatternVar, int i, STypeCG currentType, boolean cast)
 	{
 		AFieldNumberExpCG fieldNumberExp = new AFieldNumberExpCG();
 		fieldNumberExp.setType(currentType.clone());
-		fieldNumberExp.setTuple(tuplePatternVar.clone());
+		
+		if (!cast)
+		{
+			fieldNumberExp.setTuple(tuplePatternVar.clone());
+		}
+		else
+		{
+			ACastUnaryExpCG castedExp = new ACastUnaryExpCG();
+			castedExp.setType(tuplePatternVar.getType().clone());
+			castedExp.setExp(tuplePatternVar.clone());
+			fieldNumberExp.setTuple(castedExp);
+		}
+		
 		fieldNumberExp.setField(new Long(1 + i));
 
 		return fieldNumberExp;

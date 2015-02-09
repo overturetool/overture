@@ -37,7 +37,8 @@ public interface ISourceParser {
 	 * Parse a single file where the content is parsed and the file is set as the source file
 	 * @param file the file to be set as source
 	 * @param content the content to be parsed
+	 * @param forceAstUpdate if true the internal source file ast is updated
 	 */
-	void parse(IVdmSourceUnit file,String content);
+	void parse(IVdmSourceUnit file,String content, boolean forceAstUpdate);
 
 }

@@ -19,7 +19,7 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #~%
  */
-package org.overture.ct.ctruntime.tests.util;
+package org.overture.ct.ctruntime.utils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -29,7 +29,7 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class CtTestHelper
+public class CtHelper
 {
 	public String[] buildArgs(final String traceName, final int port,
 			File traceFolder, File specfile)

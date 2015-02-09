@@ -39,9 +39,10 @@ import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.ANotYetSpecifiedStm;
-import org.overture.codegen.analysis.vdm.VarShadowingRenamer;
 import org.overture.codegen.analysis.vdm.Renaming;
+import org.overture.codegen.analysis.vdm.UnreachableStmRemover;
 import org.overture.codegen.analysis.vdm.VarShadowingRenameCollector;
+import org.overture.codegen.analysis.vdm.VarShadowingRenamer;
 import org.overture.codegen.analysis.violations.GeneratedVarComparison;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.ReservedWordsComparison;
@@ -194,6 +195,7 @@ public class JavaCodeGen extends CodeGenBase
 			UnsupportedModelingException
 	{
 		// To document any renaming of variables shadowing other variables
+		removeUnreachableStms(mergedParseLists);
 		List<Renaming> allRenamings = performRenaming(mergedParseLists);
 		
 		for (SClassDefinition classDef : mergedParseLists)
@@ -332,6 +334,16 @@ public class JavaCodeGen extends CodeGenBase
 		javaFormat.clearClasses();
 
 		return new GeneratedData(generated, generateJavaFromVdmQuotes(), invalidNamesResult, skipping, allRenamings);
+	}
+
+	private void removeUnreachableStms(List<SClassDefinition> mergedParseLists) throws AnalysisException
+	{
+		UnreachableStmRemover remover = new UnreachableStmRemover();
+		
+		for(SClassDefinition clazz  : mergedParseLists)
+		{
+			clazz.apply(remover);
+		}
 	}
 
 	private List<Renaming> performRenaming(List<SClassDefinition> mergedParseLists)

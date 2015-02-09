@@ -19,45 +19,19 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #~%
  */
-package ctruntime;
+package org.overture.ct.ctruntime.utils;
 
-import java.util.Iterator;
-
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-public class NodeIterator implements Iterator<Node>, Iterable<Node>
+public class Data
 {
-	private final NodeList list;
-	private int index = 0;
+	private String message;
 
-	public NodeIterator(NodeList list)
+	public String getMessage()
 	{
-		this.list = list;
+		return message;
 	}
 
-	@Override
-	public boolean hasNext()
+	public void setMessage(String message)
 	{
-		return index < list.getLength();
+		this.message = message;
 	}
-
-	@Override
-	public Node next()
-	{
-		return list.item(index++);
-	}
-
-	@Override
-	public void remove()
-	{
-		throw new RuntimeException("Not implemented");
-	}
-
-	@Override
-	public Iterator<Node> iterator()
-	{
-		return this;
-	}
-
 }

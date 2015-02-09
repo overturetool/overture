@@ -55,18 +55,19 @@ public class Exists1QuantifierStrategy extends QuantifierBaseStrategy
 			AIdentifierVarExpCG setVar, List<SPatternCG> patterns)
 			throws AnalysisException
 	{
-		AVarDeclCG counter = new AVarDeclCG();
-
-		counter.setFinal(false);
-		counter.setType(counterData.getType().clone());
-		
-		AIdentifierPatternCG name = new AIdentifierPatternCG();
-		name.setName(resultVarName);
-		counter.setPattern(name);
-		
-		counter.setExp(counterData.getExp().clone());
-		
-		return firstBind ? packDecl(counter) : null;
+		if(firstBind)
+		{
+			AIdentifierPatternCG name = new AIdentifierPatternCG();
+			name.setName(resultVarName);
+			
+			return packDecl(transAssistant.getInfo().getDeclAssistant().
+					consLocalVarDecl(counterData.getType().clone(), name, 
+							counterData.getExp().clone()));
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	@Override

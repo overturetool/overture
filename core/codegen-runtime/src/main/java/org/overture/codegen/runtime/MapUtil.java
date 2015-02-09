@@ -32,6 +32,22 @@ public class MapUtil
 		return new VDMMap();
 	}
 	
+	public static Object get(VDMMap map, Object key)
+	{
+		Object value = map.get(key);
+		if (value != null) {
+		    return value;
+		} else {
+		    // The key may map to null
+		    if (map.containsKey(key)) {
+		       // The key is there
+		    	return null;
+		    } else {
+		    	throw new IllegalArgumentException("No such key in map: " + key);
+		    }
+		}
+	}
+	
 	@SuppressWarnings("unchecked")
 	public static VDMMap map(Maplet... elements)
 	{

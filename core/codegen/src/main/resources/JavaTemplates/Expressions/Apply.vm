@@ -25,9 +25,9 @@
 	#set( $key = $JavaFormat.format($node.getArgs().get(0)))
 	#set ( $mapRead = "" )
 	#if ($JavaFormat.castNotNeeded($node.getType()))
-		#set ( $mapRead = "${root}.get(${key})" )
+		#set ( $mapRead = "MapUtil.get(${root},${key})" )
 	#else
-		#set ( $mapRead = "(($JavaFormat.format($node.getType())) ${root}.get(${key}))" )
+		#set ( $mapRead = "(($JavaFormat.format($node.getType())) MapUtil.get(${root},${key}))" )
 	#end
 	#if ($ValueSemantics.shouldClone($node))
 		Utils.clone(${mapRead})
