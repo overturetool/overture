@@ -54,6 +54,7 @@ import org.overture.codegen.cgast.expressions.AQuoteLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ATupleCompatibilityExpCG;
 import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
+import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.patterns.ABoolPatternCG;
 import org.overture.codegen.cgast.patterns.ACharPatternCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
@@ -98,10 +99,12 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 
 	private TempVarPrefixes varPrefixes;
 
+	private String casesExpNamePrefix;
+	
 	public PatternTransformation(List<AClassDeclCG> classes,
 			TempVarPrefixes varPrefixes, IRInfo info,
 			TransAssistantCG transformationAssistant,
-			PatternMatchConfig config)
+			PatternMatchConfig config, String casesExpNamePrefix)
 	{
 		this.classes = classes;
 		this.info = info;
@@ -109,6 +112,8 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		this.varPrefixes = varPrefixes;
 
 		this.config = config;
+		
+		this.casesExpNamePrefix = casesExpNamePrefix;
 	}
 
 	@Override
@@ -135,13 +140,25 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		List<ACaseAltStmStmCG> nodeCases = node.getCases();
 		SPatternCG firstOriginal = nodeCases.get(0).getPattern().clone();
 		
-		List<PatternInfo> patternInfo = extractFromCases(nodeCases, node.getExp());
+		ABlockStmCG replacementBlock = new ABlockStmCG();
+		String expName = info.getTempVarNameGen().nextVarName(casesExpNamePrefix);
 
+		SExpCG exp = node.getExp();
+		
+		if (!(node.getExp() instanceof SVarExpCG))
+		{
+			AVarDeclCG expVarDecl = info.getDeclAssistant().consLocalVarDecl(node.getExp().getType().clone(),
+				transformationAssistant.consIdPattern(expName), node.getExp().clone());
+			replacementBlock.getLocalDefs().add(expVarDecl);
+			exp = transformationAssistant.consIdentifierVar(expName,
+					node.getExp().getType().clone());
+		}
+		
+		List<PatternInfo> patternInfo = extractFromCases(nodeCases, exp);
 		PatternBlockData patternData = new PatternBlockData(MismatchHandling.NONE);
 
 		List<ABlockStmCG> blocks = consPatternHandlingBlockCases(patternInfo, patternData);
 
-		ABlockStmCG replacementBlock = new ABlockStmCG();
 		replacementBlock.getStatements().add(blocks.get(0));
 
 		ANotUnaryExpCG notSuccess = info.getExpAssistant().negate(patternData.getSuccessVar());
