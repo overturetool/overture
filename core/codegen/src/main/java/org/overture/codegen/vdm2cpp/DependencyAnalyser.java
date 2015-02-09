@@ -25,6 +25,7 @@ public class DependencyAnalyser extends DepthFirstAnalysisAdaptorQuestion<Depend
 		question.addTargetLanguageType("cg", "", "cg.h");
 		question.addTargetLanguageType("cg_aux", "", "cg_aux.h");
 		question.addTargetLanguageType("CGBase", "", "CGBase.hpp");
+		question.addTargetLanguageType("VDMExtraUtils","vdm", "VDMExtraUtils.h");
 		question.addClassType(node.getName(), node.getName());
 	}
 	@Override

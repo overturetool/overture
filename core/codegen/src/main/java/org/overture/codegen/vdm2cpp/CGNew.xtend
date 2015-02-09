@@ -15,6 +15,10 @@ import org.overture.codegen.vdm2cpp.visitors.CppExpressionVisitor
 import org.overture.codegen.vdm2cpp.visitors.CppStatementVisitor
 import org.overture.codegen.vdm2cpp.visitors.CppTypeVisitor
 import org.overture.codegen.cgast.name.ATypeNameCG
+import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor
+import org.overture.codegen.cgast.expressions.ANewExpCG
+import org.overture.codegen.cgast.declarations.AMethodDeclCG
+import java.util.Vector
 
 class CGNew extends XtendAnswerStringVisitor {
 	
@@ -45,6 +49,21 @@ class CGNew extends XtendAnswerStringVisitor {
 	
 	def expand(INode node)
 	{
+		val nodes = new Vector<INode>();
+		
+		node.apply(new DepthFirstAnalysisAdaptor(){
+			
+			override defaultInINode(INode node) throws AnalysisException {
+				nodes.add(node);
+			}
+			
+			override caseANewExpCG(ANewExpCG node) throws AnalysisException {
+				if(node.getAncestor(AMethodDeclCG) != null){
+					nodes.add(node)
+				}
+			}
+		});
+		
 		return node.apply(this);
 	}
 	

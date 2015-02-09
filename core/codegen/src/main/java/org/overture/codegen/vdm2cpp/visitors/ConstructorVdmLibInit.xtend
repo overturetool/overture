@@ -17,17 +17,13 @@ class ConstructorVdmLibInit extends DepthFirstAnalysisAdaptor {
 			 
 			val class_name = node.getAncestor(AClassDeclCG).name;
 			
-			//construct call to vdm_init_CLASSNAME()
-			
 			var a = new APlainCallStmCG();
-			a.name = "vdm_init_"+class_name;
-			System.out.println(  node.body )
+			a.name = "vdm_init_" + class_name;
 			if(node.body instanceof ABlockStmCG)
 			{
 				var body = node.body as ABlockStmCG
 				body.statements.add(a)
 			}
-			
 		}
 		
 		super.caseAMethodDeclCG(node)

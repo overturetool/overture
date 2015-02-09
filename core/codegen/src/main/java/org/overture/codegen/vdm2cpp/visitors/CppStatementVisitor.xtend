@@ -22,6 +22,7 @@ import org.overture.codegen.cgast.statements.ACallObjectExpStmCG
 import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG
 import org.overture.codegen.cgast.statements.ARaiseErrorStmCG
+import org.overture.codegen.cgast.types.AVoidTypeCG
 
 class CppStatementVisitor extends XtendAnswerStringVisitor {
 	
@@ -46,11 +47,12 @@ class CppStatementVisitor extends XtendAnswerStringVisitor {
 			return "udef"
 		}
 	}
+	
 	def caseToType(STypeCG type)
 	{
 		if(type instanceof AClassTypeCG)
 		{
-			return '''/*t*/ObjGet_«type.name»/*t*/'''
+			return '''ObjGet_«type.name»'''
 		}
 		else if(type instanceof ARealBasicTypeWrappersTypeCG || type instanceof ARealNumericBasicTypeCG)
 		{
@@ -91,7 +93,7 @@ class CppStatementVisitor extends XtendAnswerStringVisitor {
 	'''
 	
 	override caseARaiseErrorStmCG(ARaiseErrorStmCG node)
-	'''Runtime2("«node.error.expand»",__FILE__,__LINE__);'''
+	'''vdm::Runtime2("«node.error.expand»",__FILE__,__LINE__);'''
 	
 	override caseAForIndexStmCG(AForIndexStmCG node)
 	'''
@@ -130,8 +132,17 @@ class CppStatementVisitor extends XtendAnswerStringVisitor {
 	«ENDIF»
 	'''
 	
+	def isVoidType(STypeCG type)
+	{
+		if(type instanceof AVoidTypeCG)
+		{
+			return true;
+		}
+		return false;
+	}
+	
 	override caseACallObjectExpStmCG(ACallObjectExpStmCG node)
-	'''«node.obj.type.caseToType»(«node.obj.expand»)->«node.fieldName»(«FOR a: node.args SEPARATOR ','» «a.expand»«ENDFOR»);'''
+	'''«IF !node.type.isVoidType » return «ENDIF»«node.obj.type.caseToType»(«node.obj.expand»)->«node.fieldName»(«FOR a: node.args SEPARATOR ','» «a.expand»«ENDFOR»);'''
 	
 	override caseACallObjectStmCG(ACallObjectStmCG node)
 	'''«node.designator»(«node.designator.expand»)->«node.fieldName»(«FOR a: node.args SEPARATOR ','» «a.expand»«ENDFOR»);'''
@@ -145,7 +156,7 @@ class CppStatementVisitor extends XtendAnswerStringVisitor {
 	
 	
 	override caseAPlainCallStmCG(APlainCallStmCG node)
-	'''/*pc*/«IF node.classType != null»«node.classType.getStaticCall»::«ENDIF»«node.name»/*«node.type»*/(«FOR a : node.args SEPARATOR ','» «a.expand»«ENDFOR»);'''
+	'''«IF node.classType != null»«node.classType.getStaticCall»::«ENDIF»«node.name»/*«node.type»*/(«FOR a : node.args SEPARATOR ','» «a.expand»«ENDFOR»);'''
 	
 	
 	override caseASkipStmCG(ASkipStmCG node)'''

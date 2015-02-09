@@ -72,7 +72,7 @@ class CppExpressionVisitor extends XtendAnswerStringVisitor {
 	{
 		if(type instanceof AClassTypeCG)
 		{
-			return '''/*t*/ObjGet_«type.name»/*t*/'''
+			return '''ObjGet_«type.name»'''
 		}
 		else if(type instanceof ARealBasicTypeWrappersTypeCG || type instanceof ARealNumericBasicTypeCG)
 		{
@@ -177,7 +177,7 @@ class CppExpressionVisitor extends XtendAnswerStringVisitor {
 		}
 		else
 		{
-			return '''/*ed*/type_ref_«node.name.expand»(new «node.name.expand»(«FOR a : node.args SEPARATOR ','»«a.expand»«ENDFOR»)) '''
+			return '''type_ref_«node.name.expand»(new «node.name.expand»(«FOR a : node.args SEPARATOR ','»«a.expand»«ENDFOR»)) '''
 		}
 	}
 	
@@ -185,11 +185,11 @@ class CppExpressionVisitor extends XtendAnswerStringVisitor {
 	{
 		if(node.members.length > 0)
 		{
-			'''/*eb«node.type.expand»*/ mk_sequence(«FOR v: node.members SEPARATOR ','»«v.expand»«ENDFOR»)'''		
+			'''mk_sequence(«FOR v: node.members SEPARATOR ','»«v.expand»«ENDFOR»)'''		
 		}
 		else
 		{
-			'''/*eb«node.type.expand»*/ Sequence()'''
+			'''Sequence()'''
 		}
 	}
 	
@@ -221,7 +221,7 @@ class CppExpressionVisitor extends XtendAnswerStringVisitor {
 	'''/*vdm::set_utils::union*/(«node.left.expand»).Union(«node.right.expand»)'''
 	
 	override caseAElemsUnaryExpCG(AElemsUnaryExpCG node)
-	'''(«node.exp.expand»).Elems()/*tes*/'''
+	'''(«node.exp.expand»).Elems()'''
 	
 	def getTupleTypes(STypeCG node)
 	{
@@ -240,7 +240,7 @@ class CppExpressionVisitor extends XtendAnswerStringVisitor {
 	}
 	
 	override caseAExplicitVarExpCG(AExplicitVarExpCG node)
-	'''/*exv*/«IF node.classType != null»«node.classType.getGetStaticCall»::«ENDIF»«node.name»'''
+	'''«IF node.classType != null»«node.classType.getGetStaticCall»::«ENDIF»«node.name»'''
 	
 	override caseATimesNumericBinaryExpCG(ATimesNumericBinaryExpCG node)
 	'''(«node.left.expand») * («node.right.expand»)'''
@@ -284,7 +284,7 @@ class CppExpressionVisitor extends XtendAnswerStringVisitor {
 		if(node.object.type instanceof AClassTypeCG)
 		{
 			val class_name = (node.object.type as AClassTypeCG).name
-			return '''/*r*/ObjGet_«class_name»(«node.object.expand»)->«node.memberName»/*r*/'''
+			return '''ObjGet_«class_name»(«node.object.expand»)->«node.memberName»'''
 		}
 		else
 		{
@@ -347,7 +347,7 @@ class CppExpressionVisitor extends XtendAnswerStringVisitor {
 	
 	
 	override caseAAssignExpExpCG(AAssignExpExpCG node)
-	'''/*aex*/«node.target.expand» = «node.value.expand»'''
+	'''«node.target.expand» = «node.value.expand»'''
 	
 	override caseAPatternMatchRuntimeErrorExpCG(APatternMatchRuntimeErrorExpCG node)
 	'''«node.message»'''
