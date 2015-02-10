@@ -60,6 +60,10 @@ import org.overture.codegen.cgast.types.ATupleTypeCG
 import org.overture.codegen.cgast.types.AMethodTypeCG
 import org.overture.codegen.cgast.expressions.APatternMatchRuntimeErrorExpCG
 import org.overture.codegen.cgast.expressions.APreIncExpCG
+import org.overture.codegen.cgast.expressions.AMapDomainUnaryExpCG
+import org.overture.codegen.cgast.expressions.AMapletExpCG
+import org.overture.codegen.cgast.expressions.AMapRangeUnaryExpCG
+import org.overture.codegen.cgast.expressions.AMapInverseUnaryExpCG
 
 class CppExpressionVisitor extends XtendAnswerStringVisitor {
 	
@@ -354,5 +358,17 @@ class CppExpressionVisitor extends XtendAnswerStringVisitor {
 	
 	override caseAPatternMatchRuntimeErrorExpCG(APatternMatchRuntimeErrorExpCG node)
 	'''«node.message»'''
+	
+	override caseAMapletExpCG(AMapletExpCG node)
+	'''std::pair<«node.left.type.expand», «node.right.type.expand»>(«node.left.expand», «node.right.expand»)'''
+	
+	override caseAMapDomainUnaryExpCG(AMapDomainUnaryExpCG node)
+	'''vdm::dom(«node.exp.expand»)'''
+
+	override caseAMapRangeUnaryExpCG(AMapRangeUnaryExpCG node)
+	'''vdm::rng(«node.exp.expand»)'''
+	
+	override caseAMapInverseUnaryExpCG(AMapInverseUnaryExpCG node)
+	'''vdm::map_inverse(«node.exp.expand»)'''
 	
 }

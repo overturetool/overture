@@ -80,7 +80,17 @@ class CppTypeVisitor extends XtendAnswerStringVisitor{
 
 	
 	override caseAClassTypeCG(AClassTypeCG node )
-	'''std::shared_ptr<«node.name»>'''
+	{
+		if(node.tag != null)
+		{
+			if(node.tag instanceof String)
+			{
+				node.tag.equals("internal");
+				return '''«node.name»'''
+			}
+		}
+	return '''std::shared_ptr<«node.name»>'''
+	}
 	
 	override caseAUnionTypeCG(AUnionTypeCG node )
 	'''«node.types.first.expand»'''

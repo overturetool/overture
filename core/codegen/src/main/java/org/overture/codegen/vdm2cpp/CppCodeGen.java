@@ -58,6 +58,8 @@ import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
+import org.overture.codegen.vdm2cpp.CppStdLib.TimingInjectorVisitor;
+import org.overture.codegen.vdm2cpp.CppStdLib.TimingMainCreator;
 
 public class CppCodeGen extends CodeGenBase
 {
@@ -200,6 +202,17 @@ public class CppCodeGen extends CodeGenBase
 					e.printStackTrace();
 				}
 			}
+		}
+		
+		for (DepthFirstAnalysisAdaptor tf : analyses)
+		{
+			if(tf instanceof TimingInjectorVisitor)
+			{
+				TimingInjectorVisitor a = (TimingInjectorVisitor) tf;
+				TimingMainCreator df = new TimingMainCreator();
+				System.out.println(df.generateMainMethod(a.getRegisteredMethods()));
+			}
+			
 		}
 
 		List<String> skipping = new LinkedList<String>();

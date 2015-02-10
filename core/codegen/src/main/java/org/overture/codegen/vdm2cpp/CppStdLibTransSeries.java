@@ -27,6 +27,7 @@ import org.overture.codegen.trans.patterns.PatternMatchConfig;
 import org.overture.codegen.trans.patterns.PatternTransformation;
 import org.overture.codegen.trans.quantifier.Exists1CounterData;
 import org.overture.codegen.trans.uniontypes.UnionTypeTransformation;
+import org.overture.codegen.vdm2cpp.CppStdLib.TimingInjectorVisitor;
 import org.overture.codegen.vdm2cpp.visitors.CallObjStmConverter;
 import org.overture.codegen.vdm2cpp.visitors.ConstructorVdmLibInit;
 import org.overture.codegen.vdm2cpp.visitors.MathRenamer;
@@ -60,7 +61,7 @@ public class CppStdLibTransSeries
 		
 		
 		TransformationVisitor transVisitor = new TransformationVisitor(irInfo, classes, varPrefixes, transAssistant, consExists1CounterData(), langIterator, TERNARY_IF_EXP_NAME_PREFIX, CASES_EXP_RESULT_NAME_PREFIX, AND_EXP_NAME_PREFIX, OR_EXP_NAME_PREFIX, WHILE_COND_NAME_PREFIX, REC_MODIFIER_NAME_PREFIX);
-		PatternTransformation patternTransformation = new PatternTransformation(classes, varPrefixes, irInfo, transAssistant, new PatternMatchConfig());
+		PatternTransformation patternTransformation = new PatternTransformation(classes, varPrefixes, irInfo, transAssistant, new PatternMatchConfig(),CASES_EXP_NAME_PREFIX);
 		//PreCheckTransformation preCheckTransformation = new PreCheckTransformation(irInfo, transAssistant, new JavaValueSemanticsTag(false));
 		//PostCheckTransformation postCheckTransformation = new PostCheckTransformation(postCheckCreator, irInfo, transAssistant, FUNC_RESULT_NAME_PREFIX, new JavaValueSemanticsTag(false));
 		IsExpTransformation isExpTransformation = new IsExpTransformation(irInfo, transAssistant, IS_EXP_SUBJECT_NAME_PREFIX);
@@ -73,7 +74,7 @@ public class CppStdLibTransSeries
 
 		UnionTypeTransformation unionTypeTransformation = new UnionTypeTransformation(transAssistant, irInfo, classes, APPLY_EXP_NAME_PREFIX, OBJ_EXP_NAME_PREFIX, CALL_STM_OBJ_NAME_PREFIX, MISSING_OP_MEMBER, MISSING_MEMBER);
 		//JavaClassToStringTrans javaToStringTransformation = new JavaClassToStringTrans(irInfo);
-		
+		TimingInjectorVisitor vik = new TimingInjectorVisitor();
 		DepthFirstAnalysisAdaptor[] analyses = new DepthFirstAnalysisAdaptor[] 
 		{		
 				funcTransformation,
@@ -93,6 +94,7 @@ public class CppStdLibTransSeries
 				seqConversionTransformation,
 				//new ConstructorVdmLibInit(),
 				//new MathRenamer(),
+				vik,
 				new CallObjStmConverter(transAssistant, irInfo, classes)
 		};
 		return analyses;

@@ -59,7 +59,7 @@ public class CppLanguageIterator extends JavaLanguageIterator{
 		//iterator.setExp(transformationAssistant.consInstanceCall(setVar.getType().clone(),
 		// setVar.getOriginal(), iteratorType.clone(), config.iteratorMethod(),
 		// null));
-		iterator.setExp(transformationAssistant.consInstanceCall(setVar.getType().clone(),
+		iterator.setExp(transAssistant.consInstanceCall(setVar.getType().clone(),
 				setVar.getName(), setVar.getType().clone(), "begin", null));
 		return iterator;
 	}
@@ -80,7 +80,7 @@ public class CppLanguageIterator extends JavaLanguageIterator{
 
 		i_end_comp.setLeft(instance);
 
-		i_end_comp.setRight(transformationAssistant.consInstanceCall( setVar.getType().clone(),
+		i_end_comp.setRight(transAssistant.consInstanceCall( setVar.getType().clone(),
 				setVar.getName(), new ABoolBasicTypeCG(), "end", null));
 
 		return i_end_comp;
@@ -124,11 +124,11 @@ public class CppLanguageIterator extends JavaLanguageIterator{
 		ACastUnaryExpCG cast_to_value = new ACastUnaryExpCG();
 		
 		cast_to_value.setExp(deref_and_inc);
-		STypeCG elementType = transformationAssistant.getSetTypeCloned(setVar).getSetOf();
+		STypeCG elementType = transAssistant.getSetTypeCloned(setVar).getSetOf();
 		cast_to_value.setType(elementType);
 		
 		cast.setPattern(pattern);
-		cast.setType(transformationAssistant.getSetTypeCloned(setVar).getSetOf());
+		cast.setType(transAssistant.getSetTypeCloned(setVar).getSetOf());
 
 		cast.setExp(deref_and_inc);
 

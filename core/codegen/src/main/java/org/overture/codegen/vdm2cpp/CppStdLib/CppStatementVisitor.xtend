@@ -23,6 +23,7 @@ import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG
 import org.overture.codegen.cgast.statements.ARaiseErrorStmCG
 import org.overture.codegen.cgast.types.AVoidTypeCG
+import org.overture.codegen.cgast.statements.AStackDeclStmCG
 
 class CppStatementVisitor extends XtendAnswerStringVisitor {
 	
@@ -177,5 +178,8 @@ class CppStatementVisitor extends XtendAnswerStringVisitor {
 			'''«node.target.expand» = «node.exp.expand»;'''
 		}
 	}
+	
+	override caseAStackDeclStmCG(AStackDeclStmCG node) throws AnalysisException
+	'''«node.type.expand» «node.name»(«FOR a:node.args»«a.expand»«ENDFOR»);'''
 	
 }
