@@ -141,17 +141,30 @@ public class TypeCheckerUtil
 
 	public static TypeCheckResult<List<AModuleModules>> typeCheckSl(File file)
 	{
-		ParserResult<List<AModuleModules>> parserResult = ParserUtil.parseSl(file);
-		
+		return typeCheckSl(file, null);
+	}
+
+	public static TypeCheckResult<List<AModuleModules>> typeCheckSl(File file,
+			String charset)
+	{
+		ParserResult<List<AModuleModules>> parserResult = ParserUtil.parseSl(file, charset);
+
 		ModuleList modules = new ModuleList(parserResult.result);
-		
+
 		return typeCheck(parserResult, parserResult.result, new ModuleTypeChecker(modules));
 	}
-	
-	public static TypeCheckResult<List<AModuleModules>> typeCheckSl(List<File> file)
+
+	public static TypeCheckResult<List<AModuleModules>> typeCheckSl(
+			List<File> file)
 	{
-		ParserResult<List<AModuleModules>> parserResult = ParserUtil.parseSl(file);
-		
+		return typeCheckSl(file, null);
+	}
+
+	public static TypeCheckResult<List<AModuleModules>> typeCheckSl(
+			List<File> file, String charset)
+	{
+		ParserResult<List<AModuleModules>> parserResult = ParserUtil.parseSl(file, charset);
+
 		ModuleList modules = new ModuleList(parserResult.result);
 		modules.combineDefaults();
 		return typeCheck(parserResult, parserResult.result, new ModuleTypeChecker(modules));
@@ -160,46 +173,97 @@ public class TypeCheckerUtil
 	public static TypeCheckResult<List<AModuleModules>> typeCheckSl(
 			String content)
 	{
-		ParserResult<List<AModuleModules>> parserResult = ParserUtil.parseSl(content);
+		return typeCheckSl(content, null);
+	}
+
+	public static TypeCheckResult<List<AModuleModules>> typeCheckSl(
+			String content, String charset)
+	{
+		ParserResult<List<AModuleModules>> parserResult = ParserUtil.parseSl(content, charset);
 		return typeCheck(parserResult, parserResult.result, new ModuleTypeChecker(parserResult.result));
 	}
 
 	public static TypeCheckResult<List<SClassDefinition>> typeCheckPp(File file)
 	{
-		ParserResult<List<SClassDefinition>> parserResult = ParserUtil.parseOo(file);
+		return typeCheckPp(file, null);
+	}
+
+	public static TypeCheckResult<List<SClassDefinition>> typeCheckPp(
+			File file, String charset)
+	{
+		ParserResult<List<SClassDefinition>> parserResult = ParserUtil.parseOo(file, charset);
 		return typeCheck(parserResult, parserResult.result, new ClassTypeChecker(parserResult.result));
 	}
-	
-	public static TypeCheckResult<List<SClassDefinition>> typeCheckPp(List<File> file)
+
+	public static TypeCheckResult<List<SClassDefinition>> typeCheckPp(
+			List<File> file)
 	{
-		ParserResult<List<SClassDefinition>> parserResult = ParserUtil.parseOo(file);
+		return typeCheckPp(file, null);
+	}
+
+	public static TypeCheckResult<List<SClassDefinition>> typeCheckPp(
+			List<File> file, String charset)
+	{
+		ParserResult<List<SClassDefinition>> parserResult = ParserUtil.parseOo(file, charset);
 		return typeCheck(parserResult, parserResult.result, new ClassTypeChecker(parserResult.result));
 	}
 
 	public static TypeCheckResult<List<SClassDefinition>> typeCheckPp(
 			String content)
 	{
-		ParserResult<List<SClassDefinition>> parserResult = ParserUtil.parseOo(content);
+		return typeCheckPp(content, null);
+	}
+
+	public static TypeCheckResult<List<SClassDefinition>> typeCheckPp(
+			String content, String charset)
+	{
+		ParserResult<List<SClassDefinition>> parserResult = ParserUtil.parseOo(content, charset);
 		return typeCheck(parserResult, parserResult.result, new ClassTypeChecker(parserResult.result));
 	}
-	
-	public static TypeCheckResult<List<SClassDefinition>> typeCheckRt(List<File> file)
-			throws ParserException, LexException
+
+	public static TypeCheckResult<List<SClassDefinition>> typeCheckRt(
+			List<File> file) throws ParserException, LexException
 	{
-		ITypeCheckerAssistantFactory af = new TypeCheckerAssistantFactory();
-		ParserResult<List<SClassDefinition>> parserResult = ParserUtil.parseOo(file);
-		List<SClassDefinition> classes = new Vector<SClassDefinition>();
-		classes.addAll(parserResult.result);
-		classes.add(AstFactoryTC.newACpuClassDefinition(af));
-		classes.add(AstFactoryTC.newABusClassDefinition(af));
-		return typeCheck(parserResult, classes, new ClassTypeChecker(classes, af));
+		return typeCheckRt(file, null);
+	}
+
+	public static TypeCheckResult<List<SClassDefinition>> typeCheckRt(
+			List<File> file, String charset) throws ParserException,
+			LexException
+	{
+		return typeCheckRt(ParserUtil.parseOo(file, charset));
 	}
 
 	public static TypeCheckResult<List<SClassDefinition>> typeCheckRt(File file)
 			throws ParserException, LexException
 	{
-		ITypeCheckerAssistantFactory af = new TypeCheckerAssistantFactory();
-		ParserResult<List<SClassDefinition>> parserResult = ParserUtil.parseOo(file);
+		return typeCheckRt(file, null);
+	}
+
+	public static TypeCheckResult<List<SClassDefinition>> typeCheckRt(
+			File file, String charset) throws ParserException, LexException
+	{
+		return typeCheckRt(ParserUtil.parseOo(file, charset));
+	}
+
+	public static TypeCheckResult<List<SClassDefinition>> typeCheckRt(
+			String content) throws ParserException, LexException
+	{
+		return typeCheckRt(content, null);
+	}
+
+	public static TypeCheckResult<List<SClassDefinition>> typeCheckRt(
+			String content, String charset) throws ParserException,
+			LexException
+	{
+		return typeCheckRt(ParserUtil.parseOo(content, charset));
+	}
+
+	protected static TypeCheckResult<List<SClassDefinition>> typeCheckRt(
+			ParserResult<List<SClassDefinition>> parserResult)
+			throws ParserException, LexException
+	{
+		final ITypeCheckerAssistantFactory af = new TypeCheckerAssistantFactory();
 		List<SClassDefinition> classes = new Vector<SClassDefinition>();
 		classes.addAll(parserResult.result);
 		classes.add(AstFactoryTC.newACpuClassDefinition(af));
@@ -212,18 +276,6 @@ public class TypeCheckerUtil
 	{
 		ParserResult<PExp> parserResult = ParserUtil.parseExpression(content);
 		return typeCheck(parserResult, parserResult.result, new ExpressionTypeChecker(parserResult.result));
-	}
-
-	public static TypeCheckResult<List<SClassDefinition>> typeCheckRt(
-			String content) throws ParserException, LexException
-	{
-		ITypeCheckerAssistantFactory af = new TypeCheckerAssistantFactory();
-		ParserResult<List<SClassDefinition>> parserResult = ParserUtil.parseOo(content);
-		List<SClassDefinition> classes = new Vector<SClassDefinition>();
-		classes.addAll(parserResult.result);
-		classes.add(AstFactoryTC.newACpuClassDefinition(af));
-		classes.add(AstFactoryTC.newABusClassDefinition(af));
-		return typeCheck(parserResult, classes, new ClassTypeChecker(classes, af));
 	}
 
 	public static <P> TypeCheckResult<P> typeCheck(

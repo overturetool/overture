@@ -1,0 +1,1 @@
+["Error 3213: invokestmt.vpp at 71:5 Operation InvokeStmt2(nat1, nat1) is not in scope","Error 3213: invokestmt.vpp at 75:5 Operation InvokeStmt2(bool) is not in scope","Error 3182: invokestmt.vpp at 91:5 Name \u0027InvokeStmtTest`d\u0027 is not in scope","Error 3209: invokestmt.vpp at 91:5 Member InvokeStmt9() is not in scope"]

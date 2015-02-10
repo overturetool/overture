@@ -52,4 +52,10 @@ public class PatternInfo
 	{
 		return actualValue;
 	}
+	
+	@Override
+	public String toString()
+	{
+		return String.format("Type: %s\nPattern: %s\nValue: %s", type, pattern, actualValue);
+	}
 }

@@ -54,8 +54,7 @@ public class Entry {
                 continue;
             }
 
-            forAllExpResult_1 = Utils.equals((c.longValue() -
-                    (2L * Math.round(Math.floor(c.longValue() / 2L)))), 0L);
+            forAllExpResult_1 = Utils.equals(Utils.mod(c.longValue(), 2L), 0L);
         }
 
         return forAllExpResult_1;

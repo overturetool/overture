@@ -13,10 +13,6 @@ public class A {
 
     public Number q2() {
         return op1();
-
-        return op1();
-
-        return op1();
     }
 
     public String toString() {

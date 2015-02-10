@@ -50,7 +50,7 @@ public class Entry {
                 Number apply_1 = null;
 
                 if (x instanceof A) {
-                    apply_1 = ((Number) ((A) x).xs.get(1L));
+                    apply_1 = ((Number) MapUtil.get(((A) x).xs, 1L));
                 } else {
                     throw new RuntimeException("Missing member: xs");
                 }

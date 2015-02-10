@@ -27,12 +27,6 @@ public class PogAssistantFactory extends TypeCheckerAssistantFactory implements
 	}
 
 	@Override
-	public ACaseAlternativeAssistantPOG createACaseAlternativeAssistant()
-	{
-		return new ACaseAlternativeAssistantPOG(this);
-	}
-
-	@Override
 	public StateDesignatorNameGetter getStateDesignatorNameGetter()
 	{
 		return new StateDesignatorNameGetter();

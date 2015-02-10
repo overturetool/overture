@@ -44,6 +44,9 @@ import org.overture.ast.statements.AForIndexStm;
 import org.overture.ast.statements.AForPatternBindStm;
 import org.overture.ast.statements.ALetBeStStm;
 import org.overture.ast.statements.ALetStm;
+import org.overture.ast.statements.ATixeStm;
+import org.overture.ast.statements.ATixeStmtAlternative;
+import org.overture.ast.statements.ATrapStm;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.PType;
@@ -52,6 +55,26 @@ import org.overture.codegen.logging.Logger;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
 
+/**
+ * 
+ * This analysis is used to compute new names for variables that shadow
+ * other variables. A renaming is suggested if a definition hides another variable
+ * or causes a duplicate definition. In addition to renaming the definition itself,
+ * occurrences of the definition must also be renamed. Occurrences include both
+ * variable expressions (e.g. return a) as well as identifier
+ * patterns (in mk_(a,a) the first 'a' is a definition whereas the second 'a'
+ * is an identifier pattern occurrence of the first 'a')
+ * 
+ * When computed, the renamings can be applied in order to get rid of warnings
+ * related to hidden variables and duplicate definitions.
+ * 
+ * The current version of this analysis only considers renamings in operations
+ * and functions. This is sufficient if the VDM AST is code generated to Java
+ * since Java allows hiding of class fields.
+ * 
+ * @author pvj
+ *
+ */
 public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 {
 	private PDefinition enclosingDef = null;
@@ -346,6 +369,62 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 	}
 	
 	@Override
+	public void caseATixeStm(ATixeStm node) throws AnalysisException
+	{
+		if(node.getBody() != null)
+		{
+			node.getBody().apply(this);
+		}
+		
+		// The trap alternatives will be responsible for opening/ending the scope
+		for(ATixeStmtAlternative trap : node.getTraps())
+		{
+			trap.apply(this);
+		}
+	}
+	
+	@Override
+	public void caseATixeStmtAlternative(ATixeStmtAlternative node)
+			throws AnalysisException
+	{
+		openScope(node.getPatternBind(), node.getPatternBind().getDefs(), node.getStatement());
+		
+		node.getStatement().apply(this);
+		
+		//End scope
+		for(PDefinition def : node.getPatternBind().getDefs())
+		{
+			removeLocalDefFromScope(def);
+		}
+	}
+	
+	@Override
+	public void caseATrapStm(ATrapStm node) throws AnalysisException
+	{
+		if (!proceed(node))
+		{
+			return;
+		}
+
+		if (node.getBody() != null)
+		{
+			node.getBody().apply(this);
+		}
+		
+		openScope(node.getPatternBind().getPattern(), node.getPatternBind().getDefs(), node.getWith());
+		
+		if(node.getWith() != null)
+		{
+			node.getWith().apply(this);
+		}
+
+		for(PDefinition def : node.getPatternBind().getDefs())
+		{
+			removeLocalDefFromScope(def);
+		}
+	}
+	
+	@Override
 	public void caseAForPatternBindStm(AForPatternBindStm node)
 			throws AnalysisException
 	{
@@ -399,6 +478,38 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 	}
 	
 	@Override
+	public void caseAForIndexStm(AForIndexStm node) throws AnalysisException
+	{
+		if (!proceed(node))
+		{
+			return;
+		}
+
+		if(node.getFrom() != null)
+		{
+			node.getFrom().apply(this);
+		}
+		
+		if(node.getTo() != null)
+		{
+			node.getTo().apply(this);
+		}
+		
+		if(node.getBy() != null)
+		{
+			node.getBy().apply(this);
+		}
+
+		ILexNameToken var = node.getVar();
+
+		openLoop(var, null, node.getStatement());
+		
+		node.getStatement().apply(this);
+		
+		localDefsInScope.remove(var);
+	}
+	
+	@Override
 	public void caseACasesStm(ACasesStm node) throws AnalysisException
 	{
 		if (!proceed(node))
@@ -443,37 +554,11 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		
 		handleCase(node.getDefs(), node.getPattern(), node.getResult());
 	}
-	
+
 	@Override
-	public void caseAForIndexStm(AForIndexStm node) throws AnalysisException
+	public void caseILexNameToken(ILexNameToken node) throws AnalysisException
 	{
-		if (!proceed(node))
-		{
-			return;
-		}
-
-		if(node.getFrom() != null)
-		{
-			node.getFrom().apply(this);
-		}
-		
-		if(node.getTo() != null)
-		{
-			node.getTo().apply(this);
-		}
-		
-		if(node.getBy() != null)
-		{
-			node.getBy().apply(this);
-		}
-
-		ILexNameToken var = node.getVar();
-
-		openLoop(var, null, node.getStatement());
-		
-		node.getStatement().apply(this);
-		
-		localDefsInScope.remove(var);
+		// No need to visit names
 	}
 	
 	private void handleCaseNode(PExp cond, List<? extends INode> cases, INode others) throws AnalysisException
@@ -483,7 +568,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 			cond.apply(this);
 		}
 		
-		// The cases will be responsible for opening of the scope
+		// The cases will be responsible for opening/ending the scope
 		for(INode c : cases)
 		{
 			c.apply(this);
@@ -525,12 +610,6 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 				registerRenaming(varExp.getName(), newName);
 			}
 		}
-	}
-	
-	@Override
-	public void caseILexNameToken(ILexNameToken node) throws AnalysisException
-	{
-		// No need to visit names
 	}
 	
 	private void handleCase(LinkedList<PDefinition> localDefs, PPattern pattern, INode result) throws AnalysisException
@@ -796,7 +875,6 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 	{
 		if (!contains(name.getLocation()))
 		{
-			System.out.println("Hello: " + name.getLocation());
 			renamings.add(new Renaming(name.getLocation(), name.getName(), newName));
 		}
 	}

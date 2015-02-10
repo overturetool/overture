@@ -276,17 +276,22 @@ public class DeclAssistantCG extends AssistantBase
 
 	}
 
-	private AVarDeclCG consLocalVarDecl(INode node, STypeCG type,
+	public AVarDeclCG consLocalVarDecl(STypeCG type,
+			SPatternCG pattern, SExpCG exp)
+	{
+		return consLocalVarDecl(null, type, pattern, exp);
+	}
+
+	public AVarDeclCG consLocalVarDecl(INode node, STypeCG type,
 			SPatternCG pattern, SExpCG exp)
 	{
 		AVarDeclCG localVarDecl = new AVarDeclCG();
-		
+		localVarDecl.setType(type);
 		localVarDecl.setFinal(false);
 		localVarDecl.setSourceNode(new SourceNode(node));
-		localVarDecl.setType(type);
 		localVarDecl.setPattern(pattern);
 		localVarDecl.setExp(exp);
-
+		
 		return localVarDecl;
 	}
 
@@ -368,7 +373,6 @@ public class DeclAssistantCG extends AssistantBase
 	}
 
 	public void setDefaultValue(AVarDeclCG localDecl, STypeCG typeCg)
-			throws AnalysisException
 	{
 		ExpAssistantCG expAssistant = assistantManager.getExpAssistant();
 

@@ -33,6 +33,7 @@ import org.overture.codegen.cgast.expressions.AAddrEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AAddrNotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.ACardUnaryExpCG;
+import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AExplicitVarExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
@@ -215,6 +216,11 @@ public class JavaValueSemantics
 
 	private boolean cloneNotNeeded(INode parent)
 	{
+		while(parent instanceof ACastUnaryExpCG)
+		{
+			parent = parent.parent();
+		}
+		
 		if (parent instanceof AApplyExpCG)
 		{
 			// Cloning is not needed if the expression is

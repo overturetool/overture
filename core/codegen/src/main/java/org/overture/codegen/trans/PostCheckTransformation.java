@@ -102,6 +102,13 @@ public class PostCheckTransformation extends DepthFirstAnalysisAdaptor
 			Logger.getLog().printError("Could not find enclosing method for a return statement in the post check transformation");
 			return;
 		}
+		
+		if(method.getStatic() == null || !method.getStatic())
+		{
+			// Generation of a post condition is only supported for static operations
+			// where no 'self' and '~self' are being passed
+			return;
+		}
 
 		SDeclCG postCond = method.getPostCond();
 		
@@ -115,8 +122,9 @@ public class PostCheckTransformation extends DepthFirstAnalysisAdaptor
 		AApplyExpCG postCondCall = transformationAssistant.consConditionalCall(method, (AMethodDeclCG) method.getPostCond());
 		postCondCall.setTag(conditionalCallTag);
 
-		AVarDeclCG resultDecl = transformationAssistant.consDecl(funcResultNamePrefix, method.getMethodType().getResult().clone(), node.getExp().clone());
-		AIdentifierVarExpCG resultVar = transformationAssistant.consIdentifierVar(funcResultNamePrefix, resultDecl.getType().clone());
+		String funcResultVarName = info.getTempVarNameGen().nextVarName(funcResultNamePrefix);
+		AVarDeclCG resultDecl = transformationAssistant.consDecl(funcResultVarName, method.getMethodType().getResult().clone(), node.getExp().clone());
+		AIdentifierVarExpCG resultVar = transformationAssistant.consIdentifierVar(funcResultVarName, resultDecl.getType().clone());
 
 		postCondCall.getArgs().add(resultVar.clone());
 		AStringLiteralExpCG methodName = info.getExpAssistant().consStringLiteral(method.getName(), false);

@@ -54,8 +54,7 @@ public class Entry {
                 continue;
             }
 
-            if (Utils.equals((c.longValue() -
-                        (2L * Math.round(Math.floor(c.longValue() / 2L)))), 1L)) {
+            if (Utils.equals(Utils.mod(c.longValue(), 2L), 1L)) {
                 exists1Counter_1++;
             }
         }

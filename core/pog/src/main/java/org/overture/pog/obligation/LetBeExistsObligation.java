@@ -85,8 +85,15 @@ public class LetBeExistsObligation extends ProofObligation
 		if (stmt.getSuchThat() != null)
 		{
 			exists.setPredicate(stmt.getSuchThat().clone());
-		}
+		} else
+		{
+			// we just use true since we cannot have
+			// exists by itself
+			ABooleanConstExp replacementNothing_exp = new ABooleanConstExp();
+			replacementNothing_exp.setValue(new LexBooleanToken(true, null));
 
+			exists.setPredicate(replacementNothing_exp);
+		}
 		stitch = exists;
 		valuetree.setPredicate(ctxt.getPredWithContext(exists));
 	}

@@ -13,6 +13,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.node.INode;
+import org.overture.config.Release;
+import org.overture.config.Settings;
 import org.overture.core.tests.ParseTcFacade;
 import org.overture.pog.pub.IProofObligation;
 import org.overture.pog.pub.IProofObligationList;
@@ -30,7 +32,6 @@ import com.google.gson.reflect.TypeToken;
 public class Playground
 {
 	
-	@Ignore
 	@Test
 	public void sandboxSl() throws AnalysisException, IOException, URISyntaxException{
 		quickPog("src/test/resources/adhoc/sandbox.vdmsl");
@@ -56,6 +57,7 @@ public class Playground
 
 		String result = "src/test/resources/adhoc/sandbox.result";
 
+		Settings.release = Release.VDM_10;
 		List<INode> ast = ParseTcFacade.typedAst(model, "Playground");
 
 		IProofObligationList ipol = ProofObligationGenerator.generateProofObligations(ast);

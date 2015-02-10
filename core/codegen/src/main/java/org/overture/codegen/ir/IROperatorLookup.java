@@ -28,7 +28,7 @@ import org.overture.codegen.cgast.expressions.AAddrEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AAddrNotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG;
-import org.overture.codegen.cgast.expressions.ADivNumericBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AIntDivNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AGreaterEqualNumericBinaryExpCG;
@@ -102,10 +102,10 @@ public class IROperatorLookup
 		lookup.put(APlusNumericBinaryExpCG.class, new IROperatorInfo(PLUS, "+"));
 		lookup.put(ASubtractNumericBinaryExpCG.class, new IROperatorInfo(SUB, "-"));
 		lookup.put(ATimesNumericBinaryExpCG.class, new IROperatorInfo(TIMES, "*"));
-		lookup.put(ADivNumericBinaryExpCG.class, new IROperatorInfo(DIVIDE, "/"));
+		lookup.put(AIntDivNumericBinaryExpCG.class, new IROperatorInfo(DIV, "/"));
 		lookup.put(ARemNumericBinaryExpCG.class, new IROperatorInfo(REM, "%"));
 		lookup.put(AModNumericBinaryExpCG.class, new IROperatorInfo(MOD, "%"));
-		lookup.put(ADivideNumericBinaryExpCG.class, new IROperatorInfo(DIV, "/"));
+		lookup.put(ADivideNumericBinaryExpCG.class, new IROperatorInfo(DIVIDE, "/"));
 
 		lookup.put(AEqualsBinaryExpCG.class, new IROperatorInfo(EQUALS, "="));
 		lookup.put(ANotEqualsBinaryExpCG.class, new IROperatorInfo(NOT_EQUALS, "<>"));

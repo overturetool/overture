@@ -96,6 +96,7 @@ import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AInSetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AIndicesUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
+import org.overture.codegen.cgast.expressions.AIntDivNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ALambdaExpCG;
 import org.overture.codegen.cgast.expressions.ALenUnaryExpCG;
@@ -111,6 +112,7 @@ import org.overture.codegen.cgast.expressions.AMapletExpCG;
 import org.overture.codegen.cgast.expressions.AMethodInstantiationExpCG;
 import org.overture.codegen.cgast.expressions.AMinusUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AMkBasicExpCG;
+import org.overture.codegen.cgast.expressions.AModNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ANotImplementedExpCG;
@@ -128,6 +130,7 @@ import org.overture.codegen.cgast.expressions.ARangeSetExpCG;
 import org.overture.codegen.cgast.expressions.ARealLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ARecordModExpCG;
 import org.overture.codegen.cgast.expressions.ARecordModifierCG;
+import org.overture.codegen.cgast.expressions.ARemNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AReverseUnaryExpCG;
 import org.overture.codegen.cgast.expressions.ASelfExpCG;
 import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
@@ -147,6 +150,7 @@ import org.overture.codegen.cgast.expressions.AThreadIdExpCG;
 import org.overture.codegen.cgast.expressions.ATimeExpCG;
 import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATupleExpCG;
+import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
 import org.overture.codegen.cgast.expressions.AXorBoolBinaryExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.patterns.ASetBindCG;
@@ -161,6 +165,13 @@ import org.overture.codegen.logging.Logger;
 
 public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 {
+	@Override
+	public SExpCG caseAUndefinedExp(AUndefinedExp node, IRInfo question)
+			throws AnalysisException
+	{
+		return new AUndefinedExpCG();
+	}
+	
 	@Override
 	public SExpCG caseAPreOpExp(APreOpExp node, IRInfo question)
 			throws AnalysisException
@@ -756,7 +767,9 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseALetDefExp(ALetDefExp node, IRInfo question)
 			throws AnalysisException
 	{
-		return question.getExpAssistant().consLetDefExp(node, node.getLocalDefs(), node.getExpression(), node.getType(), question, "Generation of a let expression is not supported in assignments");
+		return question.getExpAssistant().consLetDefExp(node, node.getLocalDefs(), 
+				node.getExpression(), node.getType(), question,
+				"Generation of a let expression is not supported in assignments");
 	}
 	
 	@Override
@@ -1479,73 +1492,21 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseADivNumericBinaryExp(ADivNumericBinaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		return (ADivideNumericBinaryExpCG) question.getExpAssistant().handleBinaryExp(node, new ADivideNumericBinaryExpCG(), question);
+		return (AIntDivNumericBinaryExpCG) question.getExpAssistant().handleBinaryExp(node, new AIntDivNumericBinaryExpCG(), question);
 	}
 
 	@Override
 	public SExpCG caseAModNumericBinaryExp(AModNumericBinaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		// VDM Language Reference Manual:
-		// x mod y = x - y * floor(x/y)
-
-		PType type = node.getType();
-		PExp leftExp = node.getLeft();
-		PExp rightExp = node.getRight();
-
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-
-		ADivideNumericBinaryExpCG div = (ADivideNumericBinaryExpCG) question.getExpAssistant().handleBinaryExp(node, new ADivideNumericBinaryExpCG(), question);
-		AFloorUnaryExpCG floor = new AFloorUnaryExpCG();
-		floor.setType(typeCg);
-		floor.setExp(div);
-
-		SExpCG leftExpCg = leftExp.apply(question.getExpVisitor(), question);
-		SExpCG rightExpCg = rightExp.apply(question.getExpVisitor(), question);
-
-		ATimesNumericBinaryExpCG times = new ATimesNumericBinaryExpCG();
-		times.setType(typeCg.clone());
-		times.setLeft(rightExpCg);
-		times.setRight(floor);
-
-		ASubtractNumericBinaryExpCG sub = new ASubtractNumericBinaryExpCG();
-		sub.setType(typeCg.clone());
-		sub.setLeft(leftExpCg);
-		sub.setRight(times);
-
-		return node.parent() instanceof SBinaryExp ? question.getExpAssistant().isolateExpression(sub)
-				: sub;
+		return (AModNumericBinaryExpCG) question.getExpAssistant().handleBinaryExp(node, new AModNumericBinaryExpCG(), question);
 	}
 
 	@Override
 	public SExpCG caseARemNumericBinaryExp(ARemNumericBinaryExp node,
 			IRInfo question) throws AnalysisException
 	{
-		// VDM Language Reference Manual:
-		// x rem y = x - y * (x div y)
-
-		PType type = node.getType();
-		PExp leftExp = node.getLeft();
-		PExp rightExp = node.getRight();
-
-		ADivideNumericBinaryExpCG div = (ADivideNumericBinaryExpCG) question.getExpAssistant().handleBinaryExp(node, new ADivideNumericBinaryExpCG(), question);
-
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-		SExpCG leftExpCg = leftExp.apply(question.getExpVisitor(), question);
-		SExpCG rightExpCg = rightExp.apply(question.getExpVisitor(), question);
-
-		ATimesNumericBinaryExpCG times = new ATimesNumericBinaryExpCG();
-		times.setType(typeCg);
-		times.setLeft(rightExpCg);
-		times.setRight(question.getExpAssistant().isolateExpression(div));
-
-		ASubtractNumericBinaryExpCG sub = new ASubtractNumericBinaryExpCG();
-		sub.setType(typeCg.clone());
-		sub.setLeft(leftExpCg);
-		sub.setRight(times);
-
-		return node.parent() instanceof SBinaryExp ? question.getExpAssistant().isolateExpression(sub)
-				: sub;
+		return (ARemNumericBinaryExpCG) question.getExpAssistant().handleBinaryExp(node, new ARemNumericBinaryExpCG(), question);
 	}
 
 	@Override
