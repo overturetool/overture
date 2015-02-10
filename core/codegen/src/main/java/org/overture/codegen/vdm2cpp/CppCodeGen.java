@@ -65,10 +65,11 @@ public class CppCodeGen extends CodeGenBase
 //			// Classes used from the Java standard library
 //			"Utils", "Record", "Long", "Double", "Character", "String", "List",
 //			"Set" };
-
-	public CppCodeGen()
+	String generator_type;
+	public CppCodeGen(String gen_type)
 	{
 		super(null);
+		generator_type = gen_type;
 		init();
 	}
 
@@ -172,7 +173,15 @@ public class CppCodeGen extends CodeGenBase
 		}
 		
 		FunctionValueAssistant functionValueAssistant = new FunctionValueAssistant();
-		DepthFirstAnalysisAdaptor[] analyses = new CppTransSeries(this).consAnalyses(classes, functionValueAssistant);
+		DepthFirstAnalysisAdaptor[] analyses = null;
+		if(generator_type.toLowerCase().equals("stdlib"))
+		{
+			analyses = new CppStdLibTransSeries(this).consAnalyses(classes, functionValueAssistant);
+		}
+		else
+		{
+			analyses = new CppTransSeries(this).consAnalyses(classes, functionValueAssistant);
+		}
 
 		for (DepthFirstAnalysisAdaptor transformation : analyses)
 		{
@@ -206,8 +215,20 @@ public class CppCodeGen extends CodeGenBase
 			}
 		}
 		
-		 CGNew mergeVisitor = new CGNew(tan);
-		 CGGenHelper helper = new CGGenHelper();
+		XtendAnswerStringVisitor mergeVisitor = null;
+		CGGenHelper helper = null;
+		if(generator_type.toLowerCase().equals("stdlib"))
+		{
+			mergeVisitor = new CGcppstdlib(tan);
+		}
+		else
+		{
+			mergeVisitor = new CGvdmtools(tan);
+			helper = new CGGenHelper();
+		}
+		 //CGNew mergeVisitor = new CGNew(tan);
+		 
+		
 		//FunctionValueAssistant functionValue = funcValueTransformation.getFunctionValueAssistant();
 		//javaFormat.setFunctionValueAssistant(functionValue);
 		
@@ -246,7 +267,10 @@ public class CppCodeGen extends CodeGenBase
 //					}
 					
 					String code = classCg.apply(mergeVisitor);
-					helper.addClass(classCg);
+					if(helper != null)
+					{
+						helper.addClass(classCg);
+					}
 					generated.add(new GeneratedModule(className,classCg,code));
 
 				}
@@ -266,7 +290,10 @@ public class CppCodeGen extends CodeGenBase
 				e.printStackTrace();
 			}
 		}
-		generated.add(new GeneratedModule("CGBase",null,(String) helper.GenerateHelper()));
+		if(helper != null)
+		{
+			generated.add(new GeneratedModule("CGBase",null,(String) helper.GenerateHelper()));
+		}
 
 //		List<AInterfaceDeclCG> funcValueInterfaces = functionValue.getFunctionValueInterfaces();
 //
@@ -349,7 +376,7 @@ public class CppCodeGen extends CodeGenBase
 			if (expStatus.canBeGenerated())
 			{
 				//javaFormat.init();
-				CGNew mergeVisitor = new CGNew();//vdm2cppGen(null,null,null);//javaFormat.getMergeVisitor();
+				CGvdmtools mergeVisitor = new CGvdmtools();//vdm2cppGen(null,null,null);//javaFormat.getMergeVisitor();
 				return new Generated(expCg.apply(mergeVisitor));
 
 

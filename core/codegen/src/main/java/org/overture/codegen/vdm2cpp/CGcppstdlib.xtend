@@ -1,27 +1,27 @@
 package org.overture.codegen.vdm2cpp
 
+import org.overture.codegen.vdm2cpp.XtendAnswerStringVisitor
+import org.overture.codegen.vdm2cpp.CppStdLib.CppExpressionVisitor
+import org.overture.codegen.vdm2cpp.CppStdLib.CppStatementVisitor
+import org.overture.codegen.vdm2cpp.CppStdLib.CppTypeVisitor
+import org.overture.codegen.vdm2cpp.CppStdLib.CppDeclarationsVisitor
 import org.overture.codegen.cgast.INode
-import org.overture.codegen.cgast.SDeclCG
-import org.overture.codegen.cgast.SExpCG
-import org.overture.codegen.cgast.SStmCG
-import org.overture.codegen.cgast.STypeCG
-import org.overture.codegen.cgast.analysis.AnalysisException
-import org.overture.codegen.cgast.declarations.AClassDeclCG
-import org.overture.codegen.cgast.patterns.AIdentifierPatternCG
-import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG
-import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG
-import org.overture.codegen.vdm2cpp.visitors.CppDeclarationsVisitor
-import org.overture.codegen.vdm2cpp.visitors.CppExpressionVisitor
-import org.overture.codegen.vdm2cpp.visitors.CppStatementVisitor
-import org.overture.codegen.vdm2cpp.visitors.CppTypeVisitor
-import org.overture.codegen.cgast.name.ATypeNameCG
+import java.util.Vector
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor
+import org.overture.codegen.cgast.analysis.AnalysisException
 import org.overture.codegen.cgast.expressions.ANewExpCG
 import org.overture.codegen.cgast.declarations.AMethodDeclCG
-import java.util.Vector
+import org.overture.codegen.cgast.STypeCG
+import org.overture.codegen.cgast.SExpCG
+import org.overture.codegen.cgast.SStmCG
+import org.overture.codegen.cgast.SDeclCG
+import org.overture.codegen.cgast.name.ATypeNameCG
+import org.overture.codegen.cgast.declarations.AClassDeclCG
+import org.overture.codegen.cgast.patterns.AIdentifierPatternCG
+import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG
+import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG
 
-class CGNew extends XtendAnswerStringVisitor {
-	
+class CGcppstdlib extends XtendAnswerStringVisitor {
 	CppExpressionVisitor exps;
 	CppStatementVisitor stms;
 	CppTypeVisitor typs;
@@ -122,55 +122,9 @@ class CGNew extends XtendAnswerStringVisitor {
 	#define VDMCPP«node.name.toUpperCase»_HPP
 	«node.generateIncludes»
 	
-	class type_ref_«node.name» : public virtual ObjectRef {
-	public:
 	
-		type_ref_«node.name» () : ObjectRef() {}
-	
-	
-		type_ref_«node.name» (const Common &c) : ObjectRef(c) {}
-	
-	
-		type_ref_«node.name» (vdmBase * p) : ObjectRef(p) {}
-	
-	
-		const wchar_t * GetTypeName () const   {
-	
-	    	return L"type_ref_«node.name»";
-	  }
-	
-	};
-	
-	
-	class «node.name» «IF node.superName != null» : public «node.superName»«ELSE» : public virtual CGBase «ENDIF»
-	{
-	public:
-		/*register derived / base*/
-		void vdm_init_«node.name» () 
-		{
-			«IF node.superName != null»
-			RegisterAsDerived(vdm_GetId());
-			«ELSE»
-			RegisterAsBase(vdm_GetId());
-  			«ENDIF»
-		}
-		
-		/*vdm lib methods*/
-		«node.name» * Get_«node.name» ()
-		{
-			return this;
-		}
-
-		ObjectRef Self ()
-		{
-			return ObjectRef(Get_«node.name»());
-		}
-
-		int vdm_GetId ()
-		{
-			return VDM_«node.name»;
-		}
-		
+	class «node.name» «IF node.superName != null» : public «node.superName»«ENDIF»
+	{		
 	public:
 		«FOR method : node.methods.filter[access == "public"]»
 		«method.expand»
@@ -218,8 +172,6 @@ class CGNew extends XtendAnswerStringVisitor {
 		«ENDFOR»
 		'''
 	}
-	
-	
 	
 	
 }

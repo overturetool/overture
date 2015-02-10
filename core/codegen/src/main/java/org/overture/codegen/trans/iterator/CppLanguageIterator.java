@@ -13,6 +13,7 @@ import org.overture.codegen.cgast.expressions.ADeRefExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.APostIncExpCG;
+import org.overture.codegen.cgast.expressions.APreIncExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
@@ -89,7 +90,15 @@ public class CppLanguageIterator extends JavaLanguageIterator{
 	public SExpCG getForLoopInc(AIdentifierVarExpCG setVar,
 			List<SPatternCG> patterns, SPatternCG pattern) {
 		// TODO Auto-generated method stub
-		return null;
+		AIdentifierVarExpCG var = new AIdentifierVarExpCG();
+		var.setName(iteratorName);
+		var.setType(setVar.getType().clone());
+		
+		APreIncExpCG inc_exp = new APreIncExpCG();
+		inc_exp.setType(setVar.getType().clone());
+		inc_exp.setExp(var);
+
+		return inc_exp;
 	}
 
 	@Override
@@ -110,7 +119,7 @@ public class CppLanguageIterator extends JavaLanguageIterator{
 		inc_exp.setType(setVar.getType().clone());
 		inc_exp.setExp(var);
 
-		deref_and_inc.setExp(inc_exp);
+		deref_and_inc.setExp(var);
 		
 		ACastUnaryExpCG cast_to_value = new ACastUnaryExpCG();
 		
@@ -121,7 +130,7 @@ public class CppLanguageIterator extends JavaLanguageIterator{
 		cast.setPattern(pattern);
 		cast.setType(transformationAssistant.getSetTypeCloned(setVar).getSetOf());
 
-		cast.setExp(cast_to_value);
+		cast.setExp(deref_and_inc);
 
 		return cast;
 	}

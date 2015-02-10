@@ -46,11 +46,12 @@ public class CppCodeGenMain
 		List<String> cg_ignore = new LinkedList<String>();
 		//cg_ignore.add("FileReader.vdmrt");
 		String setting = args[0];
+		String cpp_gen_type = args[1];
 		if (setting.toLowerCase().equals("oo"))
 		{
 			try
 			{
-				List<File> files = GeneralUtils.getFilesRecursive(new File(args[1]));
+				List<File> files = GeneralUtils.getFilesRecursive(new File(args[2]));
 				for( File f : files)
 				{
 					
@@ -70,7 +71,7 @@ public class CppCodeGenMain
 				List<File> libFiles = GeneralUtils.getFiles(new File("src\\test\\resources\\lib"));
 				nfiles.addAll(libFiles);
 
-				GeneratedData data = CppCodeGenUtil.generateCppFromFiles(nfiles, irSettings, cppSettings, dialect);
+				GeneratedData data = CppCodeGenUtil.generateCppFromFiles(nfiles, irSettings, cppSettings, dialect,cpp_gen_type);
 				List<GeneratedModule> generatedClasses = data.getClasses();
 
 				for (GeneratedModule generatedClass : generatedClasses)
@@ -90,7 +91,7 @@ public class CppCodeGenMain
 					} else
 					{
 						//Logger.getLog().println(generatedClass.getContent());
-						CppCodeGenUtil.saveCppClass(new File("src-gen/"), generatedClass.getName()+".hpp", generatedClass.getContent());
+						CppCodeGenUtil.saveCppClass(new File("src-gen/m2"), generatedClass.getName()+".hpp", generatedClass.getContent());
 					}
 
 					Logger.getLog().println("\n");

@@ -61,12 +61,12 @@ public class CppCodeGenUtil
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
 	public static GeneratedData generateCppFromFiles(List<File> files,
-			IRSettings irSettings, CppSettings javaSettings, Dialect dialect)
+			IRSettings irSettings, CppSettings javaSettings, Dialect dialect, String gen_type)
 			throws AnalysisException, UnsupportedModelingException
 	{
 		List<SClassDefinition> mergedParseList = consMergedParseList(files, dialect);
 
-		CppCodeGen vdmCodGen = new CppCodeGen();
+		CppCodeGen vdmCodGen = new CppCodeGen(gen_type);
 
 		vdmCodGen.setSettings(irSettings);
 		//vdmCodGen.setJavaSettings(javaSettings);
@@ -134,7 +134,7 @@ public class CppCodeGenUtil
 					+ exp);
 		}
 
-		CppCodeGen vdmCodGen = new CppCodeGen();
+		CppCodeGen vdmCodGen = new CppCodeGen("");
 		vdmCodGen.setSettings(irSettings);
 		//vdmCodGen.setJavaSettings(javaSettings);
 
@@ -209,7 +209,7 @@ public class CppCodeGenUtil
 	public static void generateJavaSourceFiles(File outputFolder,
 			List<GeneratedModule> classes)
 	{
-		CppCodeGen vdmCodGen = new CppCodeGen();
+		CppCodeGen vdmCodGen = new CppCodeGen("");
 		vdmCodGen.generateJavaSourceFiles(outputFolder, classes);
 	}
 

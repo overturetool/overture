@@ -1,4 +1,4 @@
-package org.overture.codegen.vdm2cpp;
+package org.overture.codegen.vdm2cpp.CppStdLib;
 
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
@@ -13,6 +13,7 @@ import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AMapMapTypeCG;
 import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
 import org.overture.codegen.cgast.types.ASetSetTypeCG;
+import org.overture.codegen.vdm2cpp.DependencyManager;
 
 public class DependencyAnalyser extends DepthFirstAnalysisAdaptorQuestion<DependencyManager> 
 {
@@ -26,11 +27,6 @@ public class DependencyAnalyser extends DepthFirstAnalysisAdaptorQuestion<Depend
 		question.addTargetLanguageType("map", "std", "map");
 		question.addTargetLanguageType("vdm_types", "vdm", "vdm_types.hpp");
 		question.addTargetLanguageType("vdm", "vdm", "vdm.hpp");
-		//question.addTargetLanguageType("metaiv", "", "metaiv.h");
-		//question.addTargetLanguageType("cg", "", "cg.h");
-		//question.addTargetLanguageType("cg_aux", "", "cg_aux.h");
-		//question.addTargetLanguageType("CGBase", "", "CGBase.hpp");
-		//question.addTargetLanguageType("VDMExtraUtils","vdm", "VDMExtraUtils.h");
 		question.addClassType(node.getName(), node.getName());
 	}
 	@Override
