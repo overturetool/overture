@@ -19,6 +19,7 @@ import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor
 import org.overture.codegen.cgast.expressions.ANewExpCG
 import org.overture.codegen.cgast.declarations.AMethodDeclCG
 import java.util.Vector
+import org.overture.codegen.vdm2cpp.vdmtools.DependencyAnalyser
 
 class CGvdmtools extends XtendAnswerStringVisitor {
 	

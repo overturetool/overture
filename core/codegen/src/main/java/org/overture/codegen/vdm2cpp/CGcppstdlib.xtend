@@ -20,6 +20,7 @@ import org.overture.codegen.cgast.declarations.AClassDeclCG
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG
 import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG
+import org.overture.codegen.vdm2cpp.stdlib.DependencyAnalyser
 
 class CGcppstdlib extends XtendAnswerStringVisitor {
 	CppExpressionVisitor exps;
