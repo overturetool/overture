@@ -1,4 +1,4 @@
-package org.overture.codegen.vdm2cpp
+package org.overture.codegen.vdm2cpp.vdmtools
 
 import java.util.List
 import org.overture.codegen.cgast.declarations.AClassDeclCG

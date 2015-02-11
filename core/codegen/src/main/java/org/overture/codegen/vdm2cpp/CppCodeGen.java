@@ -60,6 +60,7 @@ import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overture.codegen.vdm2cpp.stdlib.TimingInjectorVisitor;
 import org.overture.codegen.vdm2cpp.stdlib.TimingMainCreator;
+import org.overture.codegen.vdm2cpp.vdmtools.CGGenHelper;
 
 public class CppCodeGen extends CodeGenBase
 {
@@ -182,7 +183,7 @@ public class CppCodeGen extends CodeGenBase
 		}
 		else
 		{
-			analyses = new CppTransSeries(this).consAnalyses(classes, functionValueAssistant);
+			analyses = new CppVdmtoolsTransSeries(this).consAnalyses(classes, functionValueAssistant);
 		}
 
 		for (DepthFirstAnalysisAdaptor transformation : analyses)

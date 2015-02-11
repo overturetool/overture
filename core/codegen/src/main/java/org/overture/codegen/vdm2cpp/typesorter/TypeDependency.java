@@ -1,4 +1,4 @@
-package org.overture.codegen.vdm2cpp;
+package org.overture.codegen.vdm2cpp.typesorter;
 
 import java.util.ArrayList;
 import java.util.Collections;

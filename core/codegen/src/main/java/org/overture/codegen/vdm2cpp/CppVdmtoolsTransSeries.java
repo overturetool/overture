@@ -32,11 +32,11 @@ import org.overture.codegen.vdm2cpp.vdmtools.MathRenamer;
 
 import static org.overture.codegen.ir.CodeGenBase.*;
 
-public class CppTransSeries
+public class CppVdmtoolsTransSeries
 {
 	private CppCodeGen codeGen;
 	
-	public CppTransSeries(CppCodeGen codeGen)
+	public CppVdmtoolsTransSeries(CppCodeGen codeGen)
 	{
 		this.codeGen = codeGen;
 	}
