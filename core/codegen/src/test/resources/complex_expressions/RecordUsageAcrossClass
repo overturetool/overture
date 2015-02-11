@@ -14,8 +14,9 @@ operations
 public static Run : () ==> ?
 Run () ==
 	return
-	let recs = [mk_A`Rec()]
+	let recs = [mk_A`Rec()],
+		r = recs(1)
 	in
-		recs(1);
+		42;
 
 end Entry

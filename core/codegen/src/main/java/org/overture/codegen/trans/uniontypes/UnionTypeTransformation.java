@@ -325,16 +325,13 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		SStmCG enclosingStatement = baseAssistant.getEnclosingStm(node, "field expression");
 
 		String applyResultName = info.getTempVarNameGen().nextVarName(applyExpResulPrefix);
-		AVarDeclCG resultDecl = new AVarDeclCG();
-		resultDecl.setFinal(false);
-		resultDecl.setSourceNode(node.getSourceNode());
-		resultDecl.setExp(new ANullExpCG());
-		resultDecl.setType(resultType);
-		
+
 		AIdentifierPatternCG id = new AIdentifierPatternCG();
 		id.setName(applyResultName);
-		resultDecl.setPattern(id);
 
+		AVarDeclCG resultDecl = info.getDeclAssistant().
+				consLocalVarDecl(node.getSourceNode().getVdmNode(), resultType, id, new ANullExpCG());
+		
 		AIdentifierVarExpCG resultVar = new AIdentifierVarExpCG();
 		resultVar.setSourceNode(node.getSourceNode());
 		resultVar.setIsLambda(false);
@@ -348,14 +345,13 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		if (!(subject instanceof SVarExpBase))
 		{
 			String objName = info.getTempVarNameGen().nextVarName(objExpPrefix);
-			AVarDeclCG objectDecl = new AVarDeclCG();
-			objectDecl.setFinal(false);
-			objectDecl.setExp(subject.clone());
-			objectDecl.setType(subject.getType().clone());
-			AIdentifierPatternCG objectVarId = new AIdentifierPatternCG();
-			objectVarId.setName(objName);
-			objectDecl.setPattern(objectVarId);
 
+			AIdentifierPatternCG objId = new AIdentifierPatternCG();
+			objId.setName(objName);
+
+			AVarDeclCG objectDecl = info.getDeclAssistant().
+					consLocalVarDecl(subject.getType().clone(), objId, subject.clone());
+			
 			replacementBlock.getLocalDefs().add(objectDecl);
 
 			AIdentifierVarExpCG objectVar = new AIdentifierVarExpCG();
@@ -384,6 +380,15 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			{
 				// If we are accessing an element of (say) the sequence [new A(), new B(), nil] of type A | B | [?]
 				// then the current IR type will be the unknown type at some point. This case is simply skipped.
+				continue;
+			}
+			
+			
+			if (!(currentType instanceof AClassTypeCG)
+					&& !(currentType instanceof ATupleTypeCG)
+					&& !(currentType instanceof ARecordTypeCG))
+			{
+				// If the field cannot possibly exist then continue
 				continue;
 			}
 			
@@ -720,14 +725,13 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 		if (!(designator instanceof AIdentifierObjectDesignatorCG))
 		{
 			String callStmObjName = info.getTempVarNameGen().nextVarName(callStmObjPrefix);
-			AVarDeclCG objDecl = new AVarDeclCG();
-			objDecl.setFinal(false);
-			objDecl.setSourceNode(node.getSourceNode());
-			objDecl.setExp(objExp.clone());
-			objDecl.setType(objType.clone());
+			
+			
 			AIdentifierPatternCG id = new AIdentifierPatternCG();
 			id.setName(callStmObjName);
-			objDecl.setPattern(id);
+			AVarDeclCG objDecl = info.getDeclAssistant().
+					consLocalVarDecl(node.getSourceNode().getVdmNode(),
+							objType.clone(), id, objExp.clone());
 
 			AIdentifierVarExpCG objVar = new AIdentifierVarExpCG();
 			objVar.setSourceNode(node.getSourceNode());

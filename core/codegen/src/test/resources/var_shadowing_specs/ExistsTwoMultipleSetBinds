@@ -1,0 +1,9 @@
+class Entry
+
+operations
+
+public static Run :  () ==> ?
+Run () ==
+	return exists a,a,a in set {1,2,3}, b, b, b in set {1} & a+b = 3;
+
+end Entry

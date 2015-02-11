@@ -21,6 +21,7 @@ import org.overture.ast.patterns.AIgnorePattern;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
+import org.overture.ast.patterns.PPattern;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AFunctionType;
 import org.overture.ast.types.AProductType;
@@ -30,12 +31,14 @@ import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SMapType;
 import org.overture.pog.contexts.OpPostConditionContext;
+import org.overture.pog.contexts.POCaseContext;
 import org.overture.pog.contexts.PODefContext;
 import org.overture.pog.contexts.POForAllContext;
 import org.overture.pog.contexts.POForAllPredicateContext;
 import org.overture.pog.contexts.POImpliesContext;
 import org.overture.pog.contexts.POLetDefContext;
 import org.overture.pog.contexts.PONameContext;
+import org.overture.pog.contexts.PONotCaseContext;
 import org.overture.pog.contexts.PONotImpliesContext;
 import org.overture.pog.obligation.CasesExhaustiveObligation;
 import org.overture.pog.obligation.FiniteMapObligation;
@@ -247,10 +250,15 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 				hasIgnore = true;
 			}
 
-			obligations.addAll(aF.createACaseAlternativeAssistant().getProofObligations(alt, rootVisitor, question, node.getExpression().getType()));
-			/*
-			 * obligations.addAll(alt.apply(rootVisitor, question));
-			 */
+			PPattern pattern = alt.getPattern();
+			PExp cexp = alt.getCexp();
+			PType type = node.getExpression().getType();
+
+			question.push(new POCaseContext(pattern, type, cexp.clone(), aF));
+			obligations.addAll(alt.getResult().apply(rootVisitor, question));
+			question.pop();
+			question.push(new PONotCaseContext(pattern, type, cexp.clone(), aF));
+
 			count++;
 		}
 

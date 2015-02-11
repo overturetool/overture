@@ -74,7 +74,7 @@ public class VarShadowingTestCase extends BaseTestCase
 			
 			// Perform the renaming in a string buffer
 			rename(renamings, sb);
-			
+
 			// Type check the renamed specification
 			TypeCheckResult<List<SClassDefinition>> renamed = TypeCheckerUtil.typeCheckPp(sb.toString());
 
@@ -123,7 +123,7 @@ public class VarShadowingTestCase extends BaseTestCase
 
 		for (VDMWarning w : warnings)
 		{
-			if (w.number == 5008)
+			if (w.number == 5007 || w.number == 5008)
 			{
 				filtered.add(w);
 			}

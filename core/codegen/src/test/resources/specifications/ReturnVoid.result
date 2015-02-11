@@ -10,7 +10,6 @@ public class A {
     public void op() {
         if (true) {
             return;
-            op();
         } else {
             op();
         }

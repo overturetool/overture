@@ -24,6 +24,9 @@ package org.overture.ide.plugins.poviewer.view;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -49,25 +52,35 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.progress.UIJob;
+import org.overture.ide.core.ElementChangedEvent;
+import org.overture.ide.core.ElementChangedEvent.DeltaType;
+import org.overture.ide.core.IElementChangedListener;
+import org.overture.ide.core.IVdmElement;
+import org.overture.ide.core.IVdmElementDelta;
+import org.overture.ide.core.IVdmModel;
+import org.overture.ide.core.VdmCore;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.plugins.poviewer.Activator;
 import org.overture.ide.plugins.poviewer.IPoviewerConstants;
+import org.overture.ide.plugins.poviewer.PoGeneratorUtil;
 import org.overture.ide.ui.utility.EditorUtility;
 import org.overture.pog.obligation.ProofObligation;
-import org.overture.pog.pub.POStatus;
 import org.overture.pog.pub.IProofObligation;
+import org.overture.pog.pub.POStatus;
 
-public class PoOverviewTableView extends ViewPart implements ISelectionListener
-{
+public class PoOverviewTableView extends ViewPart implements ISelectionListener {
 
 	protected TableViewer viewer;
 	protected Action doubleClickAction;
 	protected Display display = Display.getCurrent();
 	protected IVdmProject project;
-	
+
 	private ViewerFilter provedFilter = new ViewerFilter() {
 
 		@Override
@@ -83,20 +96,15 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener
 	};
 	private Action actionSetProvedFilter;
 
-	protected class ViewContentProvider implements IStructuredContentProvider
-	{
-		public void inputChanged(Viewer v, Object oldInput, Object newInput)
-		{
+	protected class ViewContentProvider implements IStructuredContentProvider {
+		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 		}
 
-		public void dispose()
-		{
+		public void dispose() {
 		}
 
-		public Object[] getElements(Object inputElement)
-		{
-			if (inputElement instanceof List)
-			{
+		public Object[] getElements(Object inputElement) {
+			if (inputElement instanceof List) {
 				@SuppressWarnings("rawtypes")
 				List list = (List) inputElement;
 				return list.toArray();
@@ -107,29 +115,26 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener
 	}
 
 	class ViewLabelProvider extends LabelProvider implements
-			ITableLabelProvider
-	{
+			ITableLabelProvider {
 
-		public void resetCounter()
-		{
+		public void resetCounter() {
 			count = 0;
 		}
 
 		private Integer count = 0;
 
-		public String getColumnText(Object element, int columnIndex)
-		{
+		public String getColumnText(Object element, int columnIndex) {
 			ProofObligation data = (ProofObligation) element;
 			String columnText;
-			switch (columnIndex)
-			{
+			switch (columnIndex) {
 			case 0:
 				count++;
-				columnText =new Integer(data.number).toString();// count.toString();
+				columnText = new Integer(data.number).toString();// count.toString();
 				break;
 			case 1:
 				if (!data.getLocation().getModule().equals("DEFAULT"))
-					columnText = data.getLocation().getModule() + "`" + data.name;
+					columnText = data.getLocation().getModule() + "`"
+							+ data.name;
 				else
 					columnText = data.name;
 				break;
@@ -137,7 +142,7 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener
 				columnText = data.kind.toString();
 				break;
 			case 3:
-				columnText ="";//data.status.toString();
+				columnText = "";// data.status.toString();
 				break;
 			default:
 				columnText = "not set";
@@ -146,39 +151,103 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener
 
 		}
 
-		public Image getColumnImage(Object obj, int index)
-		{
-			if (index == 3)
-			{
+		public Image getColumnImage(Object obj, int index) {
+			if (index == 3) {
 				return getImage(obj);
 			}
 			return null;
 		}
 
 		@Override
-		public Image getImage(Object obj)
-		{
+		public Image getImage(Object obj) {
 			ProofObligation data = (ProofObligation) obj;
 
 			String imgPath = "icons/cview16/caution.png";
 
 			if (data.status == POStatus.PROVED)
 				imgPath = "icons/cview16/proved.png";
-			
 
 			return Activator.getImageDescriptor(imgPath).createImage();
 		}
 
 	}
 
-	class IdSorter extends ViewerSorter
-	{
+	class IdSorter extends ViewerSorter {
 	}
+
+	private IElementChangedListener vdmlistner = new IElementChangedListener() {
+
+		@Override
+		public void elementChanged(ElementChangedEvent event) {
+
+			if (event.getType() == DeltaType.POST_RECONCILE) {
+
+				if (event.getDelta().getKind() == IVdmElementDelta.F_TYPE_CHECKED) {
+
+					final IVdmElement source = event.getDelta().getElement();
+
+					final UIJob showJob = new UIJob("Generating Proof Obligations") {
+
+						@Override
+						public IStatus runInUIThread(IProgressMonitor monitor) {
+
+							if (source instanceof IVdmModel) {
+								IVdmModel castSource = (IVdmModel) source;
+
+								IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+								PoGeneratorUtil util = new PoGeneratorUtil(
+										display.getActiveShell(), page
+												.getActivePart().getSite());
+
+					
+								util.generate(castSource);
+
+								System.out.println("built something");
+							}
+
+							if (viewer != null && viewer.getControl() != null
+									&& viewer.getControl().getDisplay() != null)
+								viewer.getControl().getDisplay()
+										.asyncExec(new Runnable() {
+											/*
+											 * (non-Javadoc)
+											 * 
+											 * @see java.lang.Runnable#run()
+											 */
+											public void run() {
+												if (!viewer.getControl()
+														.isDisposed()) {
+													viewer.refresh();
+												}
+											}
+										});
+
+							return new Status(IStatus.OK,
+									"org.overture.ide.plugins.poviewer", "Ok");
+						}
+
+					};
+					showJob.schedule();
+
+				}
+
+			}
+
+		}
+
+	};
 
 	/**
 	 * The constructor.
 	 */
 	public PoOverviewTableView() {
+		VdmCore.addElementChangedListener(vdmlistner);
+	}
+
+	@Override
+	public void dispose() {
+		super.dispose();
+		VdmCore.removeElementChangedListener(vdmlistner);
 	}
 
 	/**
@@ -186,16 +255,15 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener
 	 * it.
 	 */
 	@Override
-	public void createPartControl(Composite parent)
-	{
+	public void createPartControl(Composite parent) {
 		viewer = new TableViewer(parent, SWT.FULL_SELECTION | SWT.H_SCROLL
 				| SWT.V_SCROLL);
 		// test setup columns...
 		TableLayout layout = new TableLayout();
-		layout.addColumnData(new ColumnWeightData(20,  true));
-		layout.addColumnData(new ColumnWeightData(100,  true));
-		layout.addColumnData(new ColumnWeightData(60,  false));
-		layout.addColumnData(new ColumnWeightData(20,  false));
+		layout.addColumnData(new ColumnWeightData(20, true));
+		layout.addColumnData(new ColumnWeightData(100, true));
+		layout.addColumnData(new ColumnWeightData(60, false));
+		layout.addColumnData(new ColumnWeightData(20, false));
 		viewer.getTable().setLayout(layout);
 		viewer.getTable().setLinesVisible(true);
 		viewer.getTable().setHeaderVisible(true);
@@ -227,22 +295,19 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener
 
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
-			public void selectionChanged(SelectionChangedEvent event)
-			{
+			public void selectionChanged(SelectionChangedEvent event) {
 
-				Object first = ((IStructuredSelection) event.getSelection()).getFirstElement();
-				if (first instanceof ProofObligation)
-				{
-					try
-					{
-						IViewPart v = getSite().getPage()
-								.showView(IPoviewerConstants.PoTableViewId);
+				Object first = ((IStructuredSelection) event.getSelection())
+						.getFirstElement();
+				if (first instanceof ProofObligation) {
+					try {
+						IViewPart v = getSite().getPage().showView(
+								IPoviewerConstants.PoTableViewId);
 
 						if (v instanceof PoTableView)
 							((PoTableView) v).setDataList(project,
 									(ProofObligation) first);
-					} catch (PartInitException e)
-					{
+					} catch (PartInitException e) {
 
 						e.printStackTrace();
 					}
@@ -251,49 +316,48 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener
 			}
 		});
 	}
-	
+
 	protected void contributeToActionBars() {
 		IActionBars bars = getViewSite().getActionBars();
-		
+
 		fillLocalToolBar(bars.getToolBarManager());
 	}
-	
+
 	protected void fillLocalToolBar(IToolBarManager manager) {
 
 		manager.add(actionSetProvedFilter);
-		
-		//drillDownAdapter.addNavigationActions(manager);
+
+		// drillDownAdapter.addNavigationActions(manager);
 	}
 
-	protected void makeActions()
-	{
+	protected void makeActions() {
 		doubleClickAction = new Action() {
 			@Override
-			public void run()
-			{
+			public void run() {
 				ISelection selection = viewer.getSelection();
-				Object obj = ((IStructuredSelection) selection).getFirstElement();
-				if (obj instanceof ProofObligation)
-				{
+				Object obj = ((IStructuredSelection) selection)
+						.getFirstElement();
+				if (obj instanceof ProofObligation) {
 					gotoDefinition((ProofObligation) obj);
 					// showMessage(((ProofObligation) obj).toString());
 				}
 			}
 
-			private void gotoDefinition(ProofObligation po)
-			{
+			private void gotoDefinition(ProofObligation po) {
 				IFile file = project.findIFile(po.getLocation().getFile());
-				if(IVdmProject.externalFileContentType.isAssociatedWith(file.getName()))
-				{
-					EditorUtility.gotoLocation(IPoviewerConstants.ExternalEditorId,file, po.getLocation(), po.name);
-				}else{
-					EditorUtility.gotoLocation(file, po.getLocation(), po.name);	
+				if (IVdmProject.externalFileContentType.isAssociatedWith(file
+						.getName())) {
+					EditorUtility.gotoLocation(
+							IPoviewerConstants.ExternalEditorId, file,
+							po.getLocation(), po.name);
+				} else {
+					EditorUtility.gotoLocation(file, po.getLocation(), po.name);
 				}
-				
+
 			}
 		};
-		
-		actionSetProvedFilter = new Action("Filter proved",Action.AS_CHECK_BOX) {
+
+		actionSetProvedFilter = new Action("Filter proved", Action.AS_CHECK_BOX) {
 			@Override
 			public void run() {
 				ViewerFilter[] filters = viewer.getFilters();
@@ -304,31 +368,30 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener
 				}
 				if (isSet) {
 					viewer.removeFilter(provedFilter);
-					
+
 				} else {
 					viewer.addFilter(provedFilter);
-					
+
 				}
 				if (viewer.getLabelProvider() instanceof ViewLabelProvider)
-					((ViewLabelProvider) viewer.getLabelProvider()).resetCounter(); // this
-																					// is
-																					// needed
-																					// to
-																					// reset
-																					// the
+					((ViewLabelProvider) viewer.getLabelProvider())
+							.resetCounter(); // this
+												// is
+												// needed
+												// to
+												// reset
+												// the
 				// numbering
 				viewer.refresh();
 			}
 
 		};
-	
+
 	}
 
-	protected void hookDoubleClickAction()
-	{
+	protected void hookDoubleClickAction() {
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event)
-			{
+			public void doubleClick(DoubleClickEvent event) {
 				doubleClickAction.run();
 			}
 		});
@@ -346,31 +409,27 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener
 	 * Passing the focus request to the viewer's control.
 	 */
 	@Override
-	public void setFocus()
-	{
+	public void setFocus() {
 		viewer.getControl().setFocus();
 	}
 
-	public void selectionChanged(IWorkbenchPart part, ISelection selection)
-	{
+	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 
 		if (selection instanceof IStructuredSelection
-				&& part instanceof PoOverviewTableView)
-		{
+				&& part instanceof PoOverviewTableView) {
 			Object first = ((IStructuredSelection) selection).getFirstElement();
-			if (first instanceof ProofObligation)
-			{
-				try
-				{
-					IViewPart v = part.getSite()
+			if (first instanceof ProofObligation) {
+				try {
+					IViewPart v = part
+							.getSite()
 							.getPage()
-							.showView("org.overture.ide.plugins.poviewer.views.PoTableView");
+							.showView(
+									"org.overture.ide.plugins.poviewer.views.PoTableView");
 
 					if (v instanceof PoTableView)
 						((PoTableView) v).setDataList(project,
 								(ProofObligation) first);
-				} catch (PartInitException e)
-				{
+				} catch (PartInitException e) {
 
 					e.printStackTrace();
 				}
@@ -379,12 +438,10 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener
 
 	}
 
-	public void refreshList()
-	{
+	public void refreshList() {
 		display.asyncExec(new Runnable() {
 
-			public void run()
-			{
+			public void run() {
 				viewer.refresh();
 			}
 
@@ -392,26 +449,24 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener
 	}
 
 	public void setDataList(final IVdmProject project,
-			final List<IProofObligation> data)
-	{
+			final List<IProofObligation> data) {
 		this.project = project;
 		display.asyncExec(new Runnable() {
 
-			public void run()
-			{
+			public void run() {
 				if (viewer.getLabelProvider() instanceof ViewLabelProvider)
-					((ViewLabelProvider) viewer.getLabelProvider()).resetCounter(); // this
-																					// is
-																					// needed
-																					// to
-																					// reset
-																					// the
+					((ViewLabelProvider) viewer.getLabelProvider())
+							.resetCounter(); // this
+												// is
+												// needed
+												// to
+												// reset
+												// the
 				// numbering
 
 				viewer.setInput(data);
-				
-				for (TableColumn col : viewer.getTable().getColumns())
-				{
+
+				for (TableColumn col : viewer.getTable().getColumns()) {
 					col.pack();
 				}
 			}

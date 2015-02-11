@@ -1,0 +1,9 @@
+class Entry
+
+operations
+
+public static Run :  () ==> ?
+Run () ==
+return {a+b| a,a,a in set {1,2,3}, b, b, b in set {1}}
+
+end Entry

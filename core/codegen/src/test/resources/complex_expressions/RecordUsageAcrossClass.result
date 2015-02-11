@@ -45,8 +45,9 @@ public class Entry {
 
     public static Object Run() {
         VDMSeq recs = SeqUtil.seq(new A.Rec());
+        A.Rec r = Utils.clone(((A.Rec) recs.get(Utils.index(1L))));
 
-        return Utils.clone(((A.Rec) recs.get(Utils.index(1L))));
+        return 42L;
     }
 
     public String toString() {

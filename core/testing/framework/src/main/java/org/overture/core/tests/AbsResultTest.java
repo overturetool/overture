@@ -22,10 +22,11 @@
 package org.overture.core.tests;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 
 import org.apache.commons.io.IOUtils;
@@ -37,7 +38,8 @@ import com.google.gson.reflect.TypeToken;
 
 /**
  * Top level class for new tests framework. Provides common result handling code to all other test classes. This class
- * should <b>not</b> be subclassed directly. Use one of its existing subclasses instead.
+ * should <b>not</b> be subclassed directly. Use one of its existing subclasses instead. Test results are always stored with
+ * UTF-8 encoding.
  * 
  * @see ParamExamplesTest
  * @see ParamExternalsTest
@@ -49,6 +51,7 @@ import com.google.gson.reflect.TypeToken;
  */
 public abstract class AbsResultTest<R>
 {
+
 	protected boolean updateResult;
 	protected String resultPath;
 	protected String testName;
@@ -77,7 +80,9 @@ public abstract class AbsResultTest<R>
 			f.getParentFile().mkdirs();
 			throw new FileNotFoundException(resultPath);
 		}
-		String json = IOUtils.toString(new FileReader(resultPath));
+		
+		InputStreamReader reader = new InputStreamReader(new FileInputStream(new File(resultPath)), ParseTcFacade.UTF8);
+		String json = IOUtils.toString(reader);
 		R result = gson.fromJson(json, resultType);
 		return result;
 	}
@@ -122,7 +127,15 @@ public abstract class AbsResultTest<R>
 	{
 		Gson gson = new Gson();
 		String json = gson.toJson(actual);
-		IOUtils.write(json, new FileOutputStream(resultPath));
+		
+		// Make sure file can be created
+		File f = new File(resultPath);
+		if (!f.exists())
+		{
+			f.getParentFile().mkdirs();
+		}
+		
+		IOUtils.write(json, new FileOutputStream(resultPath),ParseTcFacade.UTF8);
 	}
 
 	/**

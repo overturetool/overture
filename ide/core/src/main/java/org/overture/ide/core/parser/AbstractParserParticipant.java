@@ -40,7 +40,6 @@ import org.overture.parser.lex.BacktrackInputReader.ReaderType;
 import org.overture.parser.messages.VDMError;
 import org.overture.parser.messages.VDMWarning;
 
-
 public abstract class AbstractParserParticipant implements ISourceParser
 {
 
@@ -86,7 +85,7 @@ public abstract class AbstractParserParticipant implements ISourceParser
 	/**
 	 * Parses a file and updates file markers and the AstManager with the result
 	 */
-	public void parse(IVdmSourceUnit file, String data)
+	public void parse(IVdmSourceUnit file, String data, boolean forceAstUpdate)
 	{
 
 		ParseResult result;
@@ -98,7 +97,10 @@ public abstract class AbstractParserParticipant implements ISourceParser
 				FileUtility.deleteMarker(file.getFile(), IMarker.PROBLEM, ICoreConstants.PLUGIN_ID);
 				addError(file.getFile(), "Linked file not found "
 						+ file.getFile(), 0);
-				file.reconcile(null, true);
+				if (forceAstUpdate)
+				{
+					file.reconcile(null, true);
+				}
 			} else
 			{
 				LexLocation.getAllLocations().clear();
@@ -106,7 +108,10 @@ public abstract class AbstractParserParticipant implements ISourceParser
 				setFileMarkers(file.getFile(), result);
 				if (result != null && result.getAst() != null)
 				{
-					file.reconcile(result.getAst(), result.hasParseErrors());
+					if (forceAstUpdate)
+					{
+						file.reconcile(result.getAst(), result.hasParseErrors());
+					}
 				}
 			}
 
@@ -126,7 +131,10 @@ public abstract class AbstractParserParticipant implements ISourceParser
 				VdmCore.log("AbstractParserParticipant:parse IVdmSourceUnit", e);
 			}
 
-			file.reconcile(null, true);
+			if (forceAstUpdate)
+			{
+				file.reconcile(null, true);
+			}
 		} catch (Exception e)
 		{
 			if (VdmCore.DEBUG)
@@ -135,7 +143,10 @@ public abstract class AbstractParserParticipant implements ISourceParser
 			}
 			FileUtility.deleteMarker(file.getFile(), IMarker.PROBLEM, ICoreConstants.PLUGIN_ID);
 			addError(file.getFile(), "Internal error: " + e.getMessage(), 0);
-			file.reconcile(null, true);
+			if (forceAstUpdate)
+			{
+				file.reconcile(null, true);
+			}
 		}
 
 	}
@@ -147,7 +158,7 @@ public abstract class AbstractParserParticipant implements ISourceParser
 	 *            the file where the markers should be set
 	 * @param result
 	 *            the result indicating if parse errors occurred
-	 * @param content 
+	 * @param content
 	 * @throws CoreException
 	 */
 	private void setFileMarkers(IFile file, ParseResult result)
@@ -168,13 +179,12 @@ public abstract class AbstractParserParticipant implements ISourceParser
 						// error fall
 						// through
 						continue;
-					}
-					else
+					} else
 					{
 						previousErrorNumber = error.number;
 					}
-					
-						FileUtility.addMarker(file, error.toProblemString(), error.location, IMarker.SEVERITY_ERROR, ICoreConstants.PLUGIN_ID,-1);
+
+					FileUtility.addMarker(file, error.toProblemString(), error.location, IMarker.SEVERITY_ERROR, ICoreConstants.PLUGIN_ID, -1);
 				}
 			}
 
@@ -185,7 +195,7 @@ public abstract class AbstractParserParticipant implements ISourceParser
 			{
 				for (VDMWarning warning : result.getWarnings())
 				{
-						FileUtility.addMarker(file, warning.toProblemString(), warning.location, IMarker.SEVERITY_WARNING, ICoreConstants.PLUGIN_ID,-1);
+					FileUtility.addMarker(file, warning.toProblemString(), warning.location, IMarker.SEVERITY_WARNING, ICoreConstants.PLUGIN_ID, -1);
 				}
 			}
 		}
@@ -229,10 +239,10 @@ public abstract class AbstractParserParticipant implements ISourceParser
 		if (file.getFileExtension().endsWith("doc"))
 		{
 			streamReaderType = ReaderType.Doc;
-		}else if(file.getFileExtension().endsWith("docx"))
+		} else if (file.getFileExtension().endsWith("docx"))
 		{
 			streamReaderType = ReaderType.Docx;
-		}else if(file.getFileExtension().endsWith("odt"))
+		} else if (file.getFileExtension().endsWith("odt"))
 		{
 			streamReaderType = ReaderType.Odf;
 		}
@@ -258,8 +268,8 @@ public abstract class AbstractParserParticipant implements ISourceParser
 
 		public void setAst(List<INode> ast)
 		{
-//			Assert.isNotNull(ast, "AST cannot be null");
-//			Assert.isTrue(ast.size() != 0, "AST cannot be an empty list");
+			// Assert.isNotNull(ast, "AST cannot be null");
+			// Assert.isTrue(ast.size() != 0, "AST cannot be an empty list");
 			this.ast = ast;
 		}
 

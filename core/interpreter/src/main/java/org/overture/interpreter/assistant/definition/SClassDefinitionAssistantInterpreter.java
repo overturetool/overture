@@ -414,8 +414,8 @@ public class SClassDefinitionAssistantInterpreter extends
 				setStaticValues(sdef, initCtxt);
 			}
 
-			setStaticValues(node, node.getDefinitions(), initCtxt, false);
 			setStaticValues(node, node.getLocalInheritedDefinitions(), initCtxt, true);
+			setStaticValues(node, node.getDefinitions(), initCtxt, false);
 		}
 	}
 

@@ -27,6 +27,7 @@ import java.io.IOException;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.vdm2java.JavaCodeGenUtil;
+import org.overture.config.Settings;
 
 public class ExpressionTestCase extends CodeGenBaseTestCase
 {
@@ -53,7 +54,7 @@ public class ExpressionTestCase extends CodeGenBaseTestCase
 			e.printStackTrace();
 			return null;
 		}
-		String generatedJava = JavaCodeGenUtil.generateJavaFromExp(fileContent, vdmCodGen).getContent().trim();
+		String generatedJava = JavaCodeGenUtil.generateJavaFromExp(fileContent, vdmCodGen, Settings.dialect).getContent().trim();
 		String trimmed = GeneralUtils.cleanupWhiteSpaces(generatedJava);
 
 		return trimmed;

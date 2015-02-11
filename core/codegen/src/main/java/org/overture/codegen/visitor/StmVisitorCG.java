@@ -31,7 +31,6 @@ import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.ASelfExp;
-import org.overture.ast.expressions.AUndefinedExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.ASetMultipleBind;
@@ -73,6 +72,7 @@ import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AReverseUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
@@ -227,33 +227,25 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 
 		for (AAssignmentDefinition def : assignmentDefs)
 		{
-			// No protection against hidden definitions
-			// dcl s : real := 1
-			// dcl s : real := 2
 			PType type = def.getType();
 			String name = def.getName().getName();
 			PExp exp = def.getExpression();
 
 			STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-
-			AVarDeclCG localDecl = new AVarDeclCG();
-			localDecl.setFinal(false);
-			localDecl.setType(typeCg);
-
 			AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
 			idPattern.setName(name);
-
-			localDecl.setPattern(idPattern);
-
-			if (exp instanceof AUndefinedExp)
+			SExpCG expCg = exp.apply(question.getExpVisitor(), question);
+			
+			AVarDeclCG localDecl = question.getDeclAssistant().consLocalVarDecl(def, typeCg, idPattern, expCg);
+			
+			if (expCg instanceof AUndefinedExpCG)
 			{
 				question.getDeclAssistant().setDefaultValue(localDecl, typeCg);
 			} else
 			{
-				SExpCG expCg = exp.apply(question.getExpVisitor(), question);
 				localDecl.setExp(expCg);
 			}
-
+			
 			blockStm.getLocalDefs().add(localDecl);
 		}
 

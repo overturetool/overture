@@ -1,1 +1,1 @@
-["type invariant satisfiable obligation:(exists a:A \u0026 true)","type compatibility obligation:(inv_A(a) and is_(a, map (nat) to (set of (nat))))"]
+["type invariant satisfiable obligation:(exists a:A \u0026 true)","type compatibility obligation:inv_A(a)"]

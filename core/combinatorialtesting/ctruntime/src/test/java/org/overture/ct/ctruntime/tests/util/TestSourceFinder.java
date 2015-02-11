@@ -34,6 +34,7 @@ import java.util.Vector;
 
 import org.overture.ast.lex.Dialect;
 import org.overture.ct.ctruntime.tests.CtTestCaseBase;
+import org.overture.ct.ctruntime.utils.CtHelper;
 
 public class TestSourceFinder
 {
@@ -141,7 +142,7 @@ public class TestSourceFinder
 			traceName = traceName.substring(0, traceName.length() - 6);
 
 			File traceFolder = new File((CtTestCaseBase.TRACE_OUTPUT_FOLDER + traceName).replace('/', File.separatorChar));
-			CtTestHelper testHelper = new CtTestHelper();
+			CtHelper testHelper = new CtHelper();
 
 			String[] args = testHelper.buildArgs("T1", CtTestCaseBase.PORT, traceFolder, file);
 
@@ -168,7 +169,6 @@ public class TestSourceFinder
 			{
 				return true;
 			}
-			// System.out.println("Skipping: "+file.getName());
 		}
 		return false;
 	}
@@ -185,9 +185,6 @@ public class TestSourceFinder
 		}
 		if (file.isDirectory())
 		{
-			// System.out.println("Creating test for:" + file);
-			// Object instance = ctor.newInstance(new Object[] { file });
-			// suite.addTest((Test) instance);
 			tests.add(new Object[] { dialect, suite, null, file });
 		}
 
@@ -239,10 +236,6 @@ public class TestSourceFinder
 				{
 					for (int i = 0; i < lines.size(); i++)
 					{
-						// Object instance = ctor.newInstance(new Object[] { file,
-						// file.getName() + "_L" + i + "_" + lines.get(i),
-						// lines.get(i) });
-						// suite.addTest((Test) instance);
 						System.err.println("not supported");
 						tests.add(new Object[] { dialect,
 								file.getName() + "_L" + i + "_" + lines.get(i),

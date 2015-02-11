@@ -18,8 +18,7 @@ public class Entry {
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && !(existsExpResult_1);) {
             Number x = ((Number) iterator_1.next());
-            existsExpResult_1 = Utils.equals((x.longValue() -
-                    (2L * Math.round(Math.floor(x.longValue() / 2L)))), 0L);
+            existsExpResult_1 = Utils.equals(Utils.mod(x.longValue(), 2L), 0L);
         }
 
         Boolean x = existsExpResult_1;

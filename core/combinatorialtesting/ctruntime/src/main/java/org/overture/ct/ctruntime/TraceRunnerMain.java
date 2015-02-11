@@ -65,6 +65,8 @@ import org.overture.util.Base64;
 public class TraceRunnerMain implements IProgressMonitor
 {
 	public static boolean USE_SYSTEM_EXIT = true;
+	private final static boolean DEBUG = false;
+	
 	protected final String host;
 	protected final int port;
 	protected final String ideKey;
@@ -621,7 +623,11 @@ public class TraceRunnerMain implements IProgressMonitor
 		{
 			if (port > 0)
 			{
-				System.out.println("Trying to connect to CT IDE");
+				if (DEBUG)
+				{
+					System.out.println("Trying to connect to CT IDE");
+				}
+				
 				try
 				{
 					InetAddress server = InetAddress.getByName(host);
@@ -713,7 +719,10 @@ public class TraceRunnerMain implements IProgressMonitor
 
 		try
 		{
-			System.out.println("Closing socket");
+			if (DEBUG)
+			{
+				System.out.println("Closing socket");
+			}
 			socket.close();
 		} catch (IOException e)
 		{
@@ -724,7 +733,11 @@ public class TraceRunnerMain implements IProgressMonitor
 
 	private void init() throws IOException
 	{
-		System.out.println("Connected");
+		if (DEBUG)
+		{
+			System.out.println("Connected");
+		}
+		
 		StringBuilder sb = new StringBuilder();
 		// interpreter.init(null);
 		sb.append("<init ");
@@ -732,7 +745,11 @@ public class TraceRunnerMain implements IProgressMonitor
 		sb.append("/>\n");
 
 		write(sb);
-		System.out.println("Wrote init");
+		
+		if (DEBUG)
+		{
+			System.out.println("Wrote init");
+		}
 	}
 
 	private String currentTraceName = "";

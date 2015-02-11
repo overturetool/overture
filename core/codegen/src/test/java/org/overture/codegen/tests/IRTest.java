@@ -107,11 +107,9 @@ public class IRTest
 		AIdentifierPatternCG id = new AIdentifierPatternCG();
 		id.setName("x");
 		
-		AVarDeclCG varDecl = new AVarDeclCG();
+		AVarDeclCG varDecl = javaCodeGen.getInfo().getDeclAssistant().
+				consLocalVarDecl(new ARealNumericBasicTypeCG(), id, new ANullExpCG());
 		varDecl.setFinal(true);
-		varDecl.setType(new ARealNumericBasicTypeCG());
-		varDecl.setExp(new ANullExpCG());
-		varDecl.setPattern(id);
 		
 		String expected = "final Number x = null;";
 		

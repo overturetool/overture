@@ -99,12 +99,8 @@ public abstract class CompStrategy extends AbstractIterationStrategy
 	{
 		SExpCG emptyCollection = getEmptyCollection();
 		emptyCollection.setType(compType.clone());
-
-		AVarDeclCG compResultInit = new AVarDeclCG();
-		compResultInit.setFinal(false);
-		compResultInit.setType(compType.clone());
-		compResultInit.setPattern(idPattern.clone());
-		compResultInit.setExp(emptyCollection);
+		AVarDeclCG compResultInit = transAssistant.getInfo().getDeclAssistant().
+				consLocalVarDecl(compType.clone(), idPattern.clone(), emptyCollection);
 
 		return packDecl(compResultInit);
 	}

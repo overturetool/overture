@@ -13,7 +13,7 @@
   <groupId>org.overturetool</groupId>
   <artifactId>root</artifactId>
 
-  <version>2.1.6</version>
+  <version>2.2.0</version>
 
   <name>The Overture Tool Platform root</name>
   <description>
@@ -90,8 +90,8 @@
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.0</version>
           <configuration>
-            <source>1.6</source>
-            <target>1.6</target>
+            <source>1.7</source>
+            <target>1.7</target>
           </configuration>
         </plugin>
 
@@ -144,7 +144,6 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <version>2.13</version>
           <configuration>
-            <testFailureIgnore>true</testFailureIgnore>
 	    <!-- required for java7 to avoid verifier errors-->
 	    <argLine>-XX:-UseSplitVerifier -Djava.awt.headless=true</argLine>
           </configuration>
@@ -303,7 +302,7 @@
     <url>git@github.com:overturetool/overture.git</url>
     <connection>scm:git:git://github.com/overturetool/overture.git</connection>
     <developerConnection>scm:git:git@github.com:overturetool/overture.git</developerConnection>
-    <tag>Release/2.1.6</tag>
+    <tag>Release/2.2.0</tag>
   </scm>
 
   <developers>

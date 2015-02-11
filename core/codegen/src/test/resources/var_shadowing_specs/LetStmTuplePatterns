@@ -1,0 +1,12 @@
+class Entry
+
+operations
+
+public static Run :  () ==> nat
+Run () ==
+  let mk_(a,a) = mk_(1,1),
+      mk_(a,a) = mk_(2,2) 
+  in
+    return a+a;
+
+end Entry

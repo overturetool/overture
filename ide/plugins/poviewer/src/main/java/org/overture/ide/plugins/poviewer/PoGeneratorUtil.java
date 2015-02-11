@@ -46,10 +46,10 @@ import org.overture.ide.core.ast.NotAllowedException;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.plugins.poviewer.view.PoOverviewTableView;
 import org.overture.ide.ui.utility.VdmTypeCheckerUi;
-import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.contexts.POContextStack;
-import org.overture.pog.visitors.PogVisitor;
 import org.overture.pog.obligation.ProofObligationList;
+import org.overture.pog.pub.IProofObligationList;
+import org.overture.pog.visitors.PogVisitor;
 
 public class PoGeneratorUtil
 {
@@ -113,6 +113,40 @@ public class PoGeneratorUtil
 			libFolder = new File(selectedProject.getLocation().toFile(), "lib");
 
 			viewPos(project);
+
+		} catch (Exception e)
+		{
+			System.err.println(e.getMessage() + e.getStackTrace());
+			Activator.getDefault().getLog().log(new Status(IStatus.ERROR, IPoviewerConstants.PLUGIN_ID, "Error in po generation", e));
+		}
+
+	}
+	
+	public void generate(IVdmModel model)
+	{
+		try
+		{
+			if (model == null)
+			{
+				return;
+			}
+
+			if (model.getSourceUnits() == null){
+				return;
+						
+			}
+			
+			if (model.getSourceUnits().isEmpty()){
+				return;
+			}
+			
+			IVdmProject vdmproject = (IVdmProject) model.getSourceUnits().get(0).getProject();
+			
+			IProject iproject = (IProject) vdmproject.getAdapter(IProject.class);
+			
+			libFolder = new File(iproject.getLocation().toFile(), "lib");
+
+			viewPos(vdmproject);
 
 		} catch (Exception e)
 		{
