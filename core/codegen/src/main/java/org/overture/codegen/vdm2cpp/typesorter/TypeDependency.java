@@ -19,7 +19,6 @@ public class TypeDependency extends DepthFirstAnalysisAdaptor {
 	private ArrayList<INode> node_list;
 	
 	public TypeDependency() {
-		// TODO Auto-generated constructor stub
 		temporary_list = new ArrayList<TypeContainer>();
 		final_list = new ArrayList<TypeContainer>();
 		node_list = new ArrayList<INode>();
@@ -27,7 +26,6 @@ public class TypeDependency extends DepthFirstAnalysisAdaptor {
 	
 	@Override
 	public void inARecordDeclCG(ARecordDeclCG node) throws AnalysisException {
-		// TODO Auto-generated method stub
 		
 		AClassDeclCG name = node.getAncestor(AClassDeclCG.class);
 		
@@ -35,7 +33,6 @@ public class TypeDependency extends DepthFirstAnalysisAdaptor {
 		
 		if(temporary_list.contains(t))
 		{
-			// abort
 			throw new AnalysisException("Cyclic dependency found");
 		}
 		
@@ -57,7 +54,6 @@ public class TypeDependency extends DepthFirstAnalysisAdaptor {
 						nn.apply(this);
 					}
 				}
-				//System.out.println();
 			}
 			
 			final_list.add(t);

@@ -14,7 +14,6 @@ public class TypeContainer {
 	
 	@Override
 	public boolean equals(Object obj) {
-		// TODO Auto-generated method stub
 		if(obj instanceof TypeContainer)
 		{
 			TypeContainer t_other = (TypeContainer) obj;

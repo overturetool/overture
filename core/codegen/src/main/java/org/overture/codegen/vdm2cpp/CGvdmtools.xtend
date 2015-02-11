@@ -28,7 +28,7 @@ class CGvdmtools extends XtendAnswerStringVisitor {
 	CppTypeVisitor typs;
 	CppDeclarationsVisitor decls;
 	
-	TypeHierachyAnalyser type_info;
+	TypeHierarchyAnalyser type_info;
 
 	new()
 	{
@@ -39,7 +39,7 @@ class CGvdmtools extends XtendAnswerStringVisitor {
 		decls = new CppDeclarationsVisitor(this);
 	}
 	
-	new(TypeHierachyAnalyser tan) {
+	new(TypeHierarchyAnalyser tan) {
 		type_info = tan;
 		exps = new CppExpressionVisitor(this);
 		stms = new CppStatementVisitor(this);
@@ -50,21 +50,6 @@ class CGvdmtools extends XtendAnswerStringVisitor {
 	
 	def expand(INode node)
 	{
-		val nodes = new Vector<INode>();
-		
-		node.apply(new DepthFirstAnalysisAdaptor(){
-			
-			override defaultInINode(INode node) throws AnalysisException {
-				nodes.add(node);
-			}
-			
-			override caseANewExpCG(ANewExpCG node) throws AnalysisException {
-				if(node.getAncestor(AMethodDeclCG) != null){
-					nodes.add(node)
-				}
-			}
-		});
-		
 		return node.apply(this);
 	}
 	
@@ -95,7 +80,7 @@ class CGvdmtools extends XtendAnswerStringVisitor {
 		{
 			if(node.definingClass != null)
 			{
-				return '''/*tn*/«node.definingClass»::«node.name»'''
+				return '''«node.definingClass»::«node.name»'''
 			}
 			else
 			{
@@ -116,7 +101,7 @@ class CGvdmtools extends XtendAnswerStringVisitor {
 	'''«node.name»'''
 	
 	override caseAIdentifierObjectDesignatorCG(AIdentifierObjectDesignatorCG node)
-	'''/*d*/«node.exp.expand»/*d*/'''
+	'''«node.exp.expand»'''
 	
 	override caseAClassDeclCG(AClassDeclCG node)'''
 	#ifndef VDMCPP«node.name.toUpperCase»_HPP

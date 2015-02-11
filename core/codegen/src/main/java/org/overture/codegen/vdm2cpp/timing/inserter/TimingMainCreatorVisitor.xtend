@@ -1,4 +1,4 @@
-package org.overture.codegen.vdm2cpp.stdlib
+package org.overture.codegen.vdm2cpp.timing.inserter
 
 import java.util.HashMap
 import java.io.StringWriter

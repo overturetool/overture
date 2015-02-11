@@ -1,4 +1,4 @@
-package org.overture.codegen.vdm2cpp.stdlib
+package org.overture.codegen.vdm2cpp.timing.inserter
 
 import java.util.HashMap
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor
@@ -15,11 +15,6 @@ class TimingInjectorVisitor extends DepthFirstAnalysisAdaptor {
 	var id = 0L;
 	
 	var registered_methods = new HashMap<Long,String>()
-	
-	new() {
-		
-	}
-	
 	
 	def getRegisteredMethods()
 	{

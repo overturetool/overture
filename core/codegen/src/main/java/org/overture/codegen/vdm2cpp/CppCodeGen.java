@@ -58,8 +58,6 @@ import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
-import org.overture.codegen.vdm2cpp.stdlib.TimingInjectorVisitor;
-import org.overture.codegen.vdm2cpp.stdlib.TimingMainCreator;
 import org.overture.codegen.vdm2cpp.vdmtools.CGGenHelper;
 
 public class CppCodeGen extends CodeGenBase
@@ -205,19 +203,9 @@ public class CppCodeGen extends CodeGenBase
 			}
 		}
 		
-		for (DepthFirstAnalysisAdaptor tf : analyses)
-		{
-			if(tf instanceof TimingInjectorVisitor)
-			{
-				TimingInjectorVisitor a = (TimingInjectorVisitor) tf;
-				TimingMainCreator df = new TimingMainCreator();
-				System.out.println(df.generateMainMethod(a.getRegisteredMethods()));
-			}
-			
-		}
 
 		List<String> skipping = new LinkedList<String>();
-		TypeHierachyAnalyser tan = new TypeHierachyAnalyser();
+		TypeHierarchyAnalyser tan = new TypeHierarchyAnalyser();
 		
 		for (IRClassDeclStatus status : canBeGenerated) {
 			AClassDeclCG cls = status.getClassCg();
