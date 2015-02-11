@@ -166,7 +166,9 @@ CG {-> package='org.overture.codegen.cgast'
     |	{namedType}
     	[name]:java_String
     	[type]:CG.#type
-    |	{namedTrace} [pathname]:CG.#name.token* [terms]:CG.#term.traceDecl*
+    |	{namedTrace}
+    	[pathname]:CG.#name.token*
+    	[terms]:CG.#term.traceDecl*
 	;
 	
 #stateDesignator {-> package='org.overture.codegen.cgast.statements'
@@ -223,6 +225,10 @@ CG {-> package='org.overture.codegen.cgast'
            |	{try} [stm]:CG.#stm [catchClauses]:CG.#decl.catchClause* [finally]:CG.#stm
            |	{periodic} [opname]:java_String [args]:CG.#exp*
          //|	Sporadic
+           |	{stackDecl}
+           		[type]:CG.#type
+           		[name]:java_String
+           		[args]:CG.#exp*
            ;
 
 #call {-> package='org.overture.codegen.cgast.statements'

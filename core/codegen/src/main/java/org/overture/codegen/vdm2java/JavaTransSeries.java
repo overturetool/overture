@@ -56,7 +56,7 @@ public class JavaTransSeries
 		FunctionValueTransformation funcValueTransformation = new FunctionValueTransformation(irInfo, transAssistant, functionValueAssistant, INTERFACE_NAME_PREFIX, TEMPLATE_TYPE_PREFIX, EVAL_METHOD_PREFIX, PARAM_NAME_PREFIX);
 		ILanguageIterator langIterator = new JavaLanguageIterator(transAssistant, irInfo.getTempVarNameGen(), codeGen.getTempVarPrefixes());
 		TransformationVisitor transVisitor = new TransformationVisitor(irInfo, classes, codeGen.getTempVarPrefixes(), transAssistant, consExists1CounterData(), langIterator, TERNARY_IF_EXP_NAME_PREFIX, CASES_EXP_RESULT_NAME_PREFIX, AND_EXP_NAME_PREFIX, OR_EXP_NAME_PREFIX, WHILE_COND_NAME_PREFIX, REC_MODIFIER_NAME_PREFIX);
-		PatternTransformation patternTransformation = new PatternTransformation(classes, codeGen.getTempVarPrefixes(), irInfo, transAssistant, new PatternMatchConfig());
+		PatternTransformation patternTransformation = new PatternTransformation(classes, codeGen.getTempVarPrefixes(), irInfo, transAssistant, new PatternMatchConfig(), CASES_EXP_NAME_PREFIX);
 		PreCheckTransformation preCheckTransformation = new PreCheckTransformation(irInfo, transAssistant, new JavaValueSemanticsTag(false));
 		PostCheckTransformation postCheckTransformation = new PostCheckTransformation(postCheckCreator, irInfo, transAssistant, FUNC_RESULT_NAME_PREFIX, new JavaValueSemanticsTag(false));
 		IsExpTransformation isExpTransformation = new IsExpTransformation(irInfo, transAssistant, IS_EXP_SUBJECT_NAME_PREFIX);
