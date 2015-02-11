@@ -1,19 +1,14 @@
 package org.overture.codegen.vdm2cpp.stdlib
 
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor
-import org.overture.codegen.cgast.declarations.AMethodDeclCG
-import org.overture.codegen.cgast.analysis.AnalysisException
-import org.overture.codegen.cgast.statements.ABlockStmCG
-import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG
-import org.overture.codegen.cgast.statements.AAssignmentStmCG
-import org.overture.codegen.cgast.expressions.ANullExpCG
-import org.overture.codegen.cgast.expressions.AMethodInstantiationExpCG
-import org.overture.codegen.cgast.statements.AStackDeclStmCG
-import org.overture.codegen.cgast.types.AClassTypeCG
-import org.overture.codegen.cgast.expressions.AIntLiteralExpCG
-import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG
 import java.util.HashMap
+import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor
 import org.overture.codegen.cgast.declarations.AClassDeclCG
+import org.overture.codegen.cgast.declarations.AMethodDeclCG
+import org.overture.codegen.cgast.expressions.AIntLiteralExpCG
+import org.overture.codegen.cgast.statements.ABlockStmCG
+import org.overture.codegen.cgast.statements.AStackDeclStmCG
+import org.overture.codegen.cgast.types.AExternalTypeCG
+import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG
 
 class TimingInjectorVisitor extends DepthFirstAnalysisAdaptor {
 	
@@ -37,9 +32,8 @@ class TimingInjectorVisitor extends DepthFirstAnalysisAdaptor {
 		{
 			var cl = node.getAncestor(AClassDeclCG)
 			registered_methods.put(id,cl.name + "::" + node.name)
-			var timeScopetype = new AClassTypeCG();
+			var timeScopetype = new AExternalTypeCG();
 			timeScopetype.setName("TimedScope");
-			timeScopetype.tag = new String("internal")
 			var zero = new AIntLiteralExpCG();
 			zero.setType(new AIntNumericBasicTypeCG());
 			zero.value =  id

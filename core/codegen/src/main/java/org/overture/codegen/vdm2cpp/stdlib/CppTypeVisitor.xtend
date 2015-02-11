@@ -23,6 +23,7 @@ import org.overture.codegen.cgast.types.AUnionTypeCG
 import org.overture.codegen.cgast.types.AUnknownTypeCG
 import org.overture.codegen.cgast.types.AVoidTypeCG
 import org.overture.codegen.vdm2cpp.XtendAnswerStringVisitor
+import org.overture.codegen.cgast.types.AExternalTypeCG
 
 class CppTypeVisitor extends XtendAnswerStringVisitor{
 		XtendAnswerStringVisitor root_generator;
@@ -38,7 +39,7 @@ class CppTypeVisitor extends XtendAnswerStringVisitor{
 			System.out.println("unhandled type node: " + node.getClass.toString() )
 			System.out.println( (node as STypeCGBase).tag)
 			System.out.println("In Class: " + node.getAncestor(AClassDeclCG).name)
-			return '''/*unhandled type*/'''
+			return '''/*unhandled type «node.getClass.toString()»*/'''
 		}
 		else
 		{
@@ -80,17 +81,8 @@ class CppTypeVisitor extends XtendAnswerStringVisitor{
 
 	
 	override caseAClassTypeCG(AClassTypeCG node )
-	{
-		if(node.tag != null)
-		{
-			if(node.tag instanceof String)
-			{
-				node.tag.equals("internal");
-				return '''«node.name»'''
-			}
-		}
-	return '''std::shared_ptr<«node.name»>'''
-	}
+	'''std::shared_ptr<«node.name»>'''
+	
 	
 	override caseAUnionTypeCG(AUnionTypeCG node )
 	'''«node.types.first.expand»'''
@@ -115,4 +107,8 @@ class CppTypeVisitor extends XtendAnswerStringVisitor{
 	
 	override caseANat1NumericBasicTypeCG(ANat1NumericBasicTypeCG node )
 	'''int'''
+	
+	override caseAExternalTypeCG(AExternalTypeCG node)
+	'''«node.name»'''
+	
 }
