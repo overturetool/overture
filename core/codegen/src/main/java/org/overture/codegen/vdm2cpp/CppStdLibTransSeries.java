@@ -97,11 +97,11 @@ public class CppStdLibTransSeries
 		return analyses;
 	}
 	
-	//FIXME: Should be updated to use CPP specific type
 	private Exists1CounterData consExists1CounterData()
 	{
 		AExternalTypeCG type = new AExternalTypeCG();
-		type.setName("Long");
+		type.setName("long int");
+		
 
 		IRInfo irInfo = codeGen.getIRGenerator().getIRInfo();
 		AIntLiteralExpCG initExp = irInfo.getExpAssistant().consIntLiteral(0);
