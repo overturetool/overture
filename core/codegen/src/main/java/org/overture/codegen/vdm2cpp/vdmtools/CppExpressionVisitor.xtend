@@ -1,4 +1,4 @@
-package org.overture.codegen.vdm2cpp.visitors
+package org.overture.codegen.vdm2cpp.vdmtools
 
 import org.apache.commons.lang.StringEscapeUtils
 import org.overture.codegen.cgast.INode

@@ -27,7 +27,7 @@ import org.overture.codegen.trans.patterns.PatternTransformation;
 import org.overture.codegen.trans.quantifier.Exists1CounterData;
 import org.overture.codegen.trans.uniontypes.UnionTypeTransformation;
 import org.overture.codegen.vdm2cpp.stdlib.TimingInjectorVisitor;
-import org.overture.codegen.vdm2cpp.visitors.CallObjStmConverter;
+import org.overture.codegen.vdm2cpp.vdmtools.CallObjStmConverter;
 
 import static org.overture.codegen.ir.CodeGenBase.*;
 

@@ -10,10 +10,10 @@ import org.overture.codegen.cgast.declarations.AClassDeclCG
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG
 import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG
-import org.overture.codegen.vdm2cpp.visitors.CppDeclarationsVisitor
-import org.overture.codegen.vdm2cpp.visitors.CppExpressionVisitor
-import org.overture.codegen.vdm2cpp.visitors.CppStatementVisitor
-import org.overture.codegen.vdm2cpp.visitors.CppTypeVisitor
+import org.overture.codegen.vdm2cpp.vdmtools.CppDeclarationsVisitor
+import org.overture.codegen.vdm2cpp.vdmtools.CppExpressionVisitor
+import org.overture.codegen.vdm2cpp.vdmtools.CppStatementVisitor
+import org.overture.codegen.vdm2cpp.vdmtools.CppTypeVisitor
 import org.overture.codegen.cgast.name.ATypeNameCG
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor
 import org.overture.codegen.cgast.expressions.ANewExpCG

@@ -1,4 +1,4 @@
-package org.overture.codegen.vdm2cpp.visitors
+package org.overture.codegen.vdm2cpp.vdmtools
 
 import org.overture.codegen.cgast.analysis.AnalysisException
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor

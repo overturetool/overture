@@ -18,7 +18,6 @@ import org.overture.codegen.trans.conc.MutexDeclTransformation;
 import org.overture.codegen.trans.conc.SentinelTransformation;
 import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
 import org.overture.codegen.trans.funcvalues.FunctionValueTransformation;
-import org.overture.codegen.trans.iterator.CppLanguageIterator;
 import org.overture.codegen.trans.iterator.CppVdmLibLanguageIterator;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
 import org.overture.codegen.trans.letexps.FuncTransformation;
@@ -27,9 +26,9 @@ import org.overture.codegen.trans.patterns.PatternMatchConfig;
 import org.overture.codegen.trans.patterns.PatternTransformation;
 import org.overture.codegen.trans.quantifier.Exists1CounterData;
 import org.overture.codegen.trans.uniontypes.UnionTypeTransformation;
-import org.overture.codegen.vdm2cpp.visitors.CallObjStmConverter;
-import org.overture.codegen.vdm2cpp.visitors.ConstructorVdmLibInit;
-import org.overture.codegen.vdm2cpp.visitors.MathRenamer;
+import org.overture.codegen.vdm2cpp.vdmtools.CallObjStmConverter;
+import org.overture.codegen.vdm2cpp.vdmtools.ConstructorVdmLibInit;
+import org.overture.codegen.vdm2cpp.vdmtools.MathRenamer;
 
 import static org.overture.codegen.ir.CodeGenBase.*;
 
