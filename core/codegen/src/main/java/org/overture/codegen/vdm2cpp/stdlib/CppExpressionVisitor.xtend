@@ -1,4 +1,4 @@
-package org.overture.codegen.vdm2cpp.CppStdLib
+package org.overture.codegen.vdm2cpp.stdlib
 
 import org.apache.commons.lang.StringEscapeUtils
 import org.overture.codegen.cgast.INode

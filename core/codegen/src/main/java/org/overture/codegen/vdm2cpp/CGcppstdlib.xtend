@@ -1,10 +1,10 @@
 package org.overture.codegen.vdm2cpp
 
 import org.overture.codegen.vdm2cpp.XtendAnswerStringVisitor
-import org.overture.codegen.vdm2cpp.CppStdLib.CppExpressionVisitor
-import org.overture.codegen.vdm2cpp.CppStdLib.CppStatementVisitor
-import org.overture.codegen.vdm2cpp.CppStdLib.CppTypeVisitor
-import org.overture.codegen.vdm2cpp.CppStdLib.CppDeclarationsVisitor
+import org.overture.codegen.vdm2cpp.stdlib.CppExpressionVisitor
+import org.overture.codegen.vdm2cpp.stdlib.CppStatementVisitor
+import org.overture.codegen.vdm2cpp.stdlib.CppTypeVisitor
+import org.overture.codegen.vdm2cpp.stdlib.CppDeclarationsVisitor
 import org.overture.codegen.cgast.INode
 import java.util.Vector
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor

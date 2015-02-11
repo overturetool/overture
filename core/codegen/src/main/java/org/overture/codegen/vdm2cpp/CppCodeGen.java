@@ -58,8 +58,8 @@ import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
-import org.overture.codegen.vdm2cpp.CppStdLib.TimingInjectorVisitor;
-import org.overture.codegen.vdm2cpp.CppStdLib.TimingMainCreator;
+import org.overture.codegen.vdm2cpp.stdlib.TimingInjectorVisitor;
+import org.overture.codegen.vdm2cpp.stdlib.TimingMainCreator;
 
 public class CppCodeGen extends CodeGenBase
 {
