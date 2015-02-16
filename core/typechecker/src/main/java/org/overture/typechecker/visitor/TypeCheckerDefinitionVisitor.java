@@ -1543,7 +1543,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		for (PDefinition d : node.getLocalDefs())
 		{
 			question.assistantFactory.createPDefinitionAssistant().typeResolve(d, THIS, question);
-			d.apply(THIS, question);
+			d.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
 			local = new FlatCheckedEnvironment(question.assistantFactory, d, local, question.scope);
 		}
 
