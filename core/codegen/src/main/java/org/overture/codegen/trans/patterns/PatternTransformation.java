@@ -682,10 +682,24 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		{
 			ARecordPatternCG recordPattern = (ARecordPatternCG) pattern;
 			ARecordTypeCG recordType = (ARecordTypeCG) recordPattern.getType();
-			boolean checkRecordPattern = checkRecordPattern(actualValue);
 			
-			return consRecordPatternCheck(declarePatternVar, recordPattern,
-					recordType, patternData, actualValue, checkRecordPattern);
+			if(type instanceof ARecordTypeCG)
+			{
+				
+				return consRecordPatternCheck(declarePatternVar, recordPattern,
+						recordType, patternData, actualValue, checkRecordPattern(actualValue));
+				
+			}
+			else if(type instanceof AUnionTypeCG)
+			{
+				return consRecordPatternCheck(declarePatternVar, recordPattern,
+						recordType, patternData, actualValue, true);
+			}
+			else
+			{
+				Logger.getLog().printErrorln("Expected record type or union type"
+						+ "in PatternTransformation. Got: " + type);
+			}
 		}
 
 		return null;
@@ -754,6 +768,18 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 	{
 		AIdentifierPatternCG idPattern = getIdPattern(config.getName(recordPattern.getClass()));
 
+		AIdentifierVarExpCG recordPatternVar = new AIdentifierVarExpCG();
+		recordPatternVar.setType(recordType.clone());
+		recordPatternVar.setName(idPattern.getName());
+		recordPatternVar.setIsLambda(false);
+		recordPatternVar.setIsLocal(true);
+		patternData.setRootPatternVar(recordPatternVar);
+		
+		if(!declarePattern)
+		{
+			actualValue = recordPatternVar;
+		}
+		
 		ABlockStmCG recordPatternBlock = initPattern(declarePattern, recordPattern, recordType, actualValue, idPattern);
 
 		ARecordDeclCG record = info.getAssistantManager().getDeclAssistant().findRecord(classes, recordType);
@@ -773,13 +799,8 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 			types.add(currentField.getType());
 		}
 
-		AIdentifierVarExpCG recordPatternVar = new AIdentifierVarExpCG();
-		recordPatternVar.setType(recordType.clone());
-		recordPatternVar.setName(idPattern.getName());
-		recordPatternVar.setIsLambda(false);
-		recordPatternVar.setIsLocal(true);
-
-		ABlockStmCG fieldCheckBlock = consFieldCheckBlock(patternData, recordPatternVar, recordPattern.getPatterns(), types, false);
+		ABlockStmCG fieldCheckBlock = consFieldCheckBlock(patternData, recordPatternVar, 
+				recordPattern.getPatterns(), types, checkRecordType && !declarePattern);
 
 		recordPatternBlock.getStatements().add(fieldCheckBlock);
 
@@ -1066,7 +1087,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 			return consTupleFieldExp(patternVar, fieldNumber, currentType, cast);
 		} else if (patternVar.getType() instanceof ARecordTypeCG)
 		{
-			return consRecFieldExp(patternVar, fieldNumber, currentType);
+			return consRecFieldExp(patternVar, fieldNumber, currentType, cast);
 		}
 
 		return null;
@@ -1224,8 +1245,8 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		return fieldNumberExp;
 	}
 
-	private AFieldExpCG consRecFieldExp(AIdentifierVarExpCG patternVar, int i,
-			STypeCG currentType)
+	private SExpCG consRecFieldExp(AIdentifierVarExpCG patternVar, int i,
+			STypeCG currentType, boolean cast)
 	{
 		ARecordTypeCG recordType = (ARecordTypeCG) patternVar.getType();
 
@@ -1233,7 +1254,16 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		String fieldName = recordField.getName();
 
 		AFieldExpCG fieldExp = consRecFieldExp(patternVar, currentType, fieldName);
-
+		
+		if(cast)
+		{
+			ACastUnaryExpCG casted = new ACastUnaryExpCG();
+			casted.setType(recordType.clone());
+			casted.setExp(fieldExp.getObject());
+			
+			fieldExp.setObject(casted);
+		}
+		
 		return fieldExp;
 	}
 
@@ -1264,7 +1294,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 
 		return null;
 	}
-	
+
 	private boolean checkRecordPattern(SExpCG actualValue)
 	{
 		return actualValue != null && actualValue.getType() instanceof AUnionTypeCG;
