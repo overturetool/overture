@@ -287,10 +287,13 @@ public class TransAssistantCG extends BaseTransformationAssistant
 
 		instanceCall.setType(returnType.clone());
 
-		for (SExpCG arg : args)
+		if (args != null)
 		{
-			methodType.getParams().add(arg.getType().clone());
-			instanceCall.getArgs().add(arg);
+			for (SExpCG arg : args)
+			{
+				methodType.getParams().add(arg.getType().clone());
+				instanceCall.getArgs().add(arg);
+			}
 		}
 
 		fieldExp.setType(methodType.clone());
