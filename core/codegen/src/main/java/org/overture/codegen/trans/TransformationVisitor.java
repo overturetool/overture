@@ -717,11 +717,8 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		String casesExpResultName = info.getTempVarNameGen().nextVarName(casesExpResultPrefix);
 		idPattern.setName(casesExpResultName);
 
-		AVarDeclCG resultVarDecl = new AVarDeclCG();
-		resultVarDecl.setFinal(false);
-		resultVarDecl.setPattern(idPattern);
-		resultVarDecl.setType(node.getType().clone());
-		resultVarDecl.setExp(new AUndefinedExpCG());
+		AVarDeclCG resultVarDecl = info.getDeclAssistant().consLocalVarDecl(node.getType().clone(),
+				idPattern, new AUndefinedExpCG());
 
 		AIdentifierVarExpCG resultVar = new AIdentifierVarExpCG();
 		resultVar.setIsLocal(true);

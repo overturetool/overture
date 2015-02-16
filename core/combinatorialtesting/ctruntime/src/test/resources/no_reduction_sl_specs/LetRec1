@@ -1,0 +1,13 @@
+operations
+
+op : () ==> ()
+op () ==
+  skip;
+
+traces
+
+T1:
+let mk_(a,b) = mk_(1,2),
+    r = a+b
+in
+  op();

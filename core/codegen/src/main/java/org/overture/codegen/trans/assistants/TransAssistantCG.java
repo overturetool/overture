@@ -178,18 +178,8 @@ public class TransAssistantCG extends BaseTransformationAssistant
 
 	public AVarDeclCG consBoolVarDecl(String boolVarName, boolean initValue)
 	{
-		AVarDeclCG boolVarDecl = new AVarDeclCG();
-
-		boolVarDecl.setFinal(false);
-		boolVarDecl.setType(new ABoolBasicTypeCG());
-
-		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
-		idPattern.setName(boolVarName);
-
-		boolVarDecl.setPattern(idPattern);
-		boolVarDecl.setExp(info.getExpAssistant().consBoolLiteral(initValue));
-
-		return boolVarDecl;
+		return info.getDeclAssistant().consLocalVarDecl(new ABoolBasicTypeCG(),
+				consIdPattern(boolVarName), info.getExpAssistant().consBoolLiteral(initValue));
 	}
 
 	public SExpCG consAndExp(SExpCG left, SExpCG right)
@@ -253,37 +243,8 @@ public class TransAssistantCG extends BaseTransformationAssistant
 	public AVarDeclCG consSetBindDecl(String setBindName, SExpCG set)
 			throws AnalysisException
 	{
-		AVarDeclCG setBindDecl = new AVarDeclCG();
-
-		setBindDecl.setFinal(false);
-		setBindDecl.setType(getSetTypeCloned(set));
-
-		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
-		idPattern.setName(setBindName);
-
-		setBindDecl.setPattern(idPattern);
-		setBindDecl.setExp(set.clone());
-
-		return setBindDecl;
-	}
-
-	public AVarDeclCG consIdDecl(STypeCG setType, SPatternCG pattern)
-			throws AnalysisException
-	{
-		AVarDeclCG idDecl = new AVarDeclCG();
-
-		idDecl.setFinal(false);
-		idDecl.setType(getSetTypeCloned(setType).getSetOf());
-
-		idDecl.setPattern(pattern.clone());
-		idDecl.setExp(new ANullExpCG());
-
-		return idDecl;
-	}
-
-	public AVarDeclCG consDecl(String varName, SExpCG exp)
-	{
-		return consDecl(varName, exp.getType().clone(), exp);
+		return info.getDeclAssistant().consLocalVarDecl(getSetTypeCloned(set),
+				consIdPattern(setBindName), set.clone());
 	}
 
 	public ANullExpCG consNullExp()
@@ -296,18 +257,7 @@ public class TransAssistantCG extends BaseTransformationAssistant
 
 	public AVarDeclCG consDecl(String varName, STypeCG type, SExpCG exp)
 	{
-		AVarDeclCG resultDecl = new AVarDeclCG();
-
-		resultDecl.setFinal(false);
-		resultDecl.setType(type);
-
-		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
-		idPattern.setName(varName);
-
-		resultDecl.setPattern(idPattern);
-		resultDecl.setExp(exp);
-
-		return resultDecl;
+		return info.getDeclAssistant().consLocalVarDecl(type, consIdPattern(varName), exp);
 	}
 
 	public AClassTypeCG consClassType(String classTypeName)
@@ -377,14 +327,7 @@ public class TransAssistantCG extends BaseTransformationAssistant
 	{
 		ACastUnaryExpCG cast = consNextElementCall(iteratorTypeName, iteratorName, elementType, nextElementMethod);
 
-		AVarDeclCG decl = new AVarDeclCG();
-
-		decl.setFinal(false);
-		decl.setType(elementType);
-		decl.setPattern(id.clone());
-		decl.setExp(cast);
-
-		return decl;
+		return info.getDeclAssistant().consLocalVarDecl(elementType, id.clone(), cast);
 	}
 
 	public ALocalPatternAssignmentStmCG consNextElementAssignment(

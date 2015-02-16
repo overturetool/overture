@@ -16,6 +16,7 @@ public class CodeGenBase
 	public static final String OBJ_EXP_NAME_PREFIX = "obj_";
 	public static final String TERNARY_IF_EXP_NAME_PREFIX = "ternaryIfExp_";
 	public static final String CALL_STM_OBJ_NAME_PREFIX = "callStmObj_";
+	public static final String CASES_EXP_NAME_PREFIX = "casesExp_";
 	public static final String CASES_EXP_RESULT_NAME_PREFIX = "casesExpResult_";
 	public static final String AND_EXP_NAME_PREFIX = "andResult_";
 	public static final String OR_EXP_NAME_PREFIX = "orResult_";

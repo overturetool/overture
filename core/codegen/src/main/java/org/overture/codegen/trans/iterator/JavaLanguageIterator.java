@@ -30,7 +30,6 @@ import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
@@ -68,21 +67,12 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 	{
 		iteratorName = tempGen.nextVarName(varPrefixes.getIteratorNamePrefix());
 		String setName = setVar.getName();
-		AClassTypeCG iteratorType = transformationAssistant.consClassType(ITERATOR_TYPE);
+		AClassTypeCG iteratorType = transAssistant.consClassType(ITERATOR_TYPE);
 		STypeCG setType = setVar.getType().clone();
-		SExpCG getIteratorCall = transformationAssistant.consInstanceCall(setType, setName, iteratorType.clone(), GET_ITERATOR);
+		SExpCG getIteratorCall = transAssistant.consInstanceCall(setType, setName, iteratorType.clone(), GET_ITERATOR, null);
 
-		AVarDeclCG iteratorDecl = new AVarDeclCG();
-		iteratorDecl.setFinal(false);
-
-		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
-		idPattern.setName(iteratorName);
-
-		iteratorDecl.setPattern(idPattern);
-		iteratorDecl.setType(iteratorType);
-		iteratorDecl.setExp(getIteratorCall);
-
-		return iteratorDecl;
+		return transAssistant.getInfo().getDeclAssistant().
+				consLocalVarDecl(iteratorType, transAssistant.consIdPattern(iteratorName), getIteratorCall);
 	}
 
 	@Override
@@ -90,9 +80,9 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 			List<SPatternCG> patterns, SPatternCG pattern)
 			throws AnalysisException
 	{
-		AClassTypeCG iteratorType = transformationAssistant.consClassType(ITERATOR_TYPE);
+		AClassTypeCG iteratorType = transAssistant.consClassType(ITERATOR_TYPE);
 
-		return transformationAssistant.consInstanceCall(iteratorType, iteratorName, new ABoolBasicTypeCG(), HAS_NEXT_ELEMENT_ITERATOR);
+		return transAssistant.consInstanceCall(iteratorType, iteratorName, new ABoolBasicTypeCG(), HAS_NEXT_ELEMENT_ITERATOR, null);
 	}
 
 	@Override
@@ -107,9 +97,9 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 			List<SPatternCG> patterns, SPatternCG pattern)
 			throws AnalysisException
 	{
-		STypeCG elementType = transformationAssistant.getSetTypeCloned(setVar).getSetOf();
+		STypeCG elementType = transAssistant.getSetTypeCloned(setVar).getSetOf();
 
-		return transformationAssistant.consNextElementDeclared(ITERATOR_TYPE, elementType, pattern, iteratorName, NEXT_ELEMENT_ITERATOR);
+		return transAssistant.consNextElementDeclared(ITERATOR_TYPE, elementType, pattern, iteratorName, NEXT_ELEMENT_ITERATOR);
 	}
 
 	@Override
@@ -118,16 +108,16 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 			SPatternCG pattern, AVarDeclCG successVarDecl,
 			AVarDeclCG nextElementDecl) throws AnalysisException
 	{
-		STypeCG elementType = transformationAssistant.getSetTypeCloned(setVar).getSetOf();
+		STypeCG elementType = transAssistant.getSetTypeCloned(setVar).getSetOf();
 
-		return transformationAssistant.consNextElementAssignment(ITERATOR_TYPE, elementType, pattern, iteratorName, NEXT_ELEMENT_ITERATOR, nextElementDecl);
+		return transAssistant.consNextElementAssignment(ITERATOR_TYPE, elementType, pattern, iteratorName, NEXT_ELEMENT_ITERATOR, nextElementDecl);
 	}
 	
 	@Override
 	public SExpCG consNextElementCall(AIdentifierVarExpCG setVar) throws AnalysisException
 	{
-		STypeCG elementType = transformationAssistant.getSetTypeCloned(setVar).getSetOf();
+		STypeCG elementType = transAssistant.getSetTypeCloned(setVar).getSetOf();
 		
-		return transformationAssistant.consNextElementCall(ITERATOR_TYPE, iteratorName, elementType, NEXT_ELEMENT_ITERATOR);
+		return transAssistant.consNextElementCall(ITERATOR_TYPE, iteratorName, elementType, NEXT_ELEMENT_ITERATOR);
 	}
 }

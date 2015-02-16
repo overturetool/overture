@@ -13,7 +13,8 @@ instructions.configure=\
   copy(source:${repo.root}/core/commandline/target/Overture-${project.version}.jar,target:${installFolder}/commandline/Overture-${project.version}.jar,overwrite:true);\
   remove(path:${installFolder}/epl-v10.html);\
   remove(path:${installFolder}/notice.html);\
-  remove(path:${installFolder}/readme);\
+  remove(path:${installFolder}/readme);
+comment.add.this.to.instructions.configure.after.fixing.the.url=\
   addRepository(type:0,name:Overture,enabled:true,location:http${#58}//overture.sourceforge.net/updates/release/);\
   addRepository(type:1,name:Overture,enabled:true,location:http${#58}//overture.sourceforge.net/updates/release/);
 instructions.configure.import=\

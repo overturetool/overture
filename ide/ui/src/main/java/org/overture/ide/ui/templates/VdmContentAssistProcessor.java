@@ -91,6 +91,7 @@ public abstract class VdmContentAssistProcessor extends
 		StringBuffer fieldType = new StringBuffer();
 		boolean afterNew = false;
 		boolean afterMk = false;
+		public StringBuffer prefix= new StringBuffer();
 
 		public void add(char c)
 		{
@@ -109,7 +110,9 @@ public abstract class VdmContentAssistProcessor extends
 					break;
 
 			}
-
+			
+			if(Character.isJavaIdentifierPart(c))
+prefix.append(c);
 		}
 
 		public void reverse()
@@ -117,6 +120,7 @@ public abstract class VdmContentAssistProcessor extends
 			proposal = proposal.reverse();
 			field = field.reverse();
 			// fieldType = fieldType.reverse();
+			prefix =prefix.reverse();
 		}
 
 		@Override

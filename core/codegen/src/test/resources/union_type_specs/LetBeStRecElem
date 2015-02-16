@@ -1,0 +1,19 @@
+class Entry
+
+values 
+
+xs : set of (nat | A) = {mk_A(5)}
+
+types
+
+A :: a : int;  
+
+operations
+
+public static Run : () ==> ?
+Run () == 
+let r in set xs be st r.a = 5 
+in
+  return r.a;
+
+end Entry

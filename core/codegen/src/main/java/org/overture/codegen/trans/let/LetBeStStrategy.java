@@ -31,6 +31,7 @@ import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.ALetBeStNoBindingRuntimeErrorExpCG;
+import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
@@ -77,7 +78,9 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 
 		for (SPatternCG id : patterns)
 		{
-			AVarDeclCG decl = transAssistant.consIdDecl(setType, id);
+			AVarDeclCG decl = transAssistant.getInfo().getDeclAssistant().
+					consLocalVarDecl(transAssistant.getSetTypeCloned(setType).getSetOf(),
+					id.clone(), new ANullExpCG());
 			decls.add(decl);
 			outerBlockDecls.add(decl);
 		}

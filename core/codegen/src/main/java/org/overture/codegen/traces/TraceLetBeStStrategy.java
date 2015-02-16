@@ -33,13 +33,13 @@ public class TraceLetBeStStrategy extends LetBeStStrategy
 	protected StoreAssistant storeAssistant;
 	protected Map<String, String> idConstNameMap;
 	
-	public TraceLetBeStStrategy(TransAssistantCG transformationAssistant,
+	public TraceLetBeStStrategy(TransAssistantCG transAssistant,
 			SExpCG suchThat, SSetTypeCG setType,
 			ILanguageIterator langIterator, ITempVarGen tempGen,
 			TempVarPrefixes varPrefixes, StoreAssistant storeAssistant,Map<String, String> idConstNameMap, TraceNames tracePrefixes,
 			AIdentifierPatternCG id, AVarDeclCG altTests, TraceNodeData nodeData)
 	{
-		super(transformationAssistant, suchThat, setType, langIterator, tempGen, varPrefixes);
+		super(transAssistant, suchThat, setType, langIterator, tempGen, varPrefixes);
 
 		this.storeAssistant = storeAssistant;
 		this.idConstNameMap = idConstNameMap;
@@ -55,7 +55,8 @@ public class TraceLetBeStStrategy extends LetBeStStrategy
 	{
 		for (SPatternCG id : patterns)
 		{
-			AVarDeclCG decl = transAssistant.consIdDecl(setType, id);
+			AVarDeclCG decl = transAssistant.getInfo().getDeclAssistant().
+					consLocalVarDecl(setType, id, null);
 			decl.setFinal(true);
 			decls.add(decl);
 		}
