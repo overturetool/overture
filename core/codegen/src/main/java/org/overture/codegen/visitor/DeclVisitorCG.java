@@ -58,8 +58,8 @@ import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AFuncDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.AMutexSyncDeclCG;
-import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
 import org.overture.codegen.cgast.declarations.ANamedTraceDeclCG;
+import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
 import org.overture.codegen.cgast.declarations.APersyncDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.AThreadDeclCG;
@@ -320,44 +320,24 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 
 		return method;
 	}
-
+	
 	@Override
 	public SDeclCG caseAExplicitOperationDefinition(
 			AExplicitOperationDefinition node, IRInfo question)
 			throws AnalysisException
 	{
-		String access = node.getAccess().getAccess().toString();
-		boolean isStatic = question.getTcFactory().createPDefinitionAssistant().isStatic(node);
-		boolean isAsync = question.getTcFactory().createPAccessSpecifierAssistant().isAsync(node.getAccess());
-		String operationName = node.getName().getName();
-		STypeCG type = node.getType().apply(question.getTypeVisitor(), question);
-
-		if (!(type instanceof AMethodTypeCG))
+		AMethodDeclCG method = question.getDeclAssistant().initMethod(node, question);
+		
+		if(method == null)
 		{
 			question.addUnsupportedNode(node, "Expected method type for explicit operation. Got: "
-					+ type);
+					+ node.getType());
 			return null;
 		}
-
-		AMethodTypeCG methodType = (AMethodTypeCG) type;
-		SStmCG body = node.getBody().apply(question.getStmVisitor(), question);
-		boolean isConstructor = node.getIsConstructor();
-		boolean isAbstract = body == null;
-
-		AMethodDeclCG method = new AMethodDeclCG();
-
-		method.setAccess(access);
-		method.setStatic(isStatic);
-		method.setAsync(isAsync);
-		method.setMethodType(methodType);
-		method.setName(operationName);
-		method.setBody(body);
-		method.setIsConstructor(isConstructor);
-		method.setAbstract(isAbstract);
-
+		
 		List<PType> ptypes = ((AOperationType) node.getType()).getParameters();
 		LinkedList<PPattern> paramPatterns = node.getParameterPatterns();
-
+		
 		LinkedList<AFormalParamLocalParamCG> formalParameters = method.getFormalParams();
 
 		for (int i = 0; i < ptypes.size(); i++)
@@ -371,14 +351,6 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 
 			formalParameters.add(param);
 		}
-		
-		AExplicitFunctionDefinition preCond = node.getPredef();
-		SDeclCG preCondCg = preCond != null ? preCond.apply(question.getDeclVisitor(), question) : null;
-		method.setPreCond(preCondCg);
-		
-		AExplicitFunctionDefinition postCond = node.getPostdef();
-		SDeclCG postCondCg = postCond != null ? postCond.apply(question.getDeclVisitor(), question) : null;
-		method.setPostCond(postCondCg);
 
 		return method;
 	}
