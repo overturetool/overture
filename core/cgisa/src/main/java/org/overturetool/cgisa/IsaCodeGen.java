@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.velocity.app.Velocity;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
@@ -58,11 +59,15 @@ public class IsaCodeGen extends CodeGenBase
 	public IsaCodeGen(ILogger log)
 	{
 		super(log);
-
-		// TODO: Set up template engine (see JavaCodeGen)
-		// TODO Auto-generated constructor stub
+		initVelocity();
 	}
 
+	private void initVelocity()
+	{
+		Velocity.setProperty("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.NullLogSystem");
+		Velocity.init();
+	}
+	
 	/**
 	 * Main entry point into the Isabelle CG component. Takes an AST and returns corresponding Isabelle Syntax.
 	 * 
@@ -96,7 +101,10 @@ public class IsaCodeGen extends CodeGenBase
 		// No utility methods (template callables) added for now
 
 		TemplateStructure ts = new TemplateStructure("IsaTemplates");
-		MergeVisitor pp = new MergeVisitor(ts, new TemplateCallable[] {});
+
+		Isa isa = new Isa(ts);
+		
+		MergeVisitor pp = isa.getMergeVisitor();
 
 		StringWriter sw = new StringWriter();
 
@@ -120,6 +128,7 @@ public class IsaCodeGen extends CodeGenBase
 				// Here should code be formatted
 				GeneratedModule generatedModule = new GeneratedModule(irClass.getName(), irClass, sw.toString());
 				generatedModule.setTransformationWarnings(status.getTransformationWarnings());
+				generated.add(generatedModule);
 			}
 
 		}
