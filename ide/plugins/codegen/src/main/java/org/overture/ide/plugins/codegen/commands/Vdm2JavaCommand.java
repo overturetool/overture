@@ -348,7 +348,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 					LocationAssistantCG locationAssistant = assistantManager.getLocationAssistant();
 
 					List<VdmNodeInfo> unsupportedInIr = locationAssistant.getVdmNodeInfoLocationSorted(generatedModule.getUnsupportedInIr());
-					CodeGenConsole.GetInstance().println("Following VDM constructs are not supported by the IR: ");
+					CodeGenConsole.GetInstance().println("Following VDM constructs are not supported by the code generator:");
 
 					for (VdmNodeInfo  nodeInfo : unsupportedInIr)
 					{
@@ -362,7 +362,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 				if(generatedModule.hasUnsupportedTargLangNodes())
 				{
 					Set<IrNodeInfo> unsupportedInTargLang = generatedModule.getUnsupportedInTargLang();
-					CodeGenConsole.GetInstance().println("Following constructs are not supported by the backend/target language:");
+					CodeGenConsole.GetInstance().println("Following constructs are not supported by the code generator:");
 
 					for (IrNodeInfo  nodeInfo : unsupportedInTargLang)
 					{
@@ -383,7 +383,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 				
 				if(!warnings.isEmpty())
 				{
-					CodeGenConsole.GetInstance().println("The following transformation warnings were found for class " + generatedModule.getName() + ":");
+					CodeGenConsole.GetInstance().println("The following warnings were found for class " + generatedModule.getName() + ":");
 
 					for (IrNodeInfo  nodeInfo : warnings)
 					{
