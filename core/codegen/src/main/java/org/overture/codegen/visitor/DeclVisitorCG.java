@@ -364,8 +364,6 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 
 		func.setAbstract(false);
 		func.setAccess(accessCg);
-		// TODO: Why can this be async?
-		func.setAsync(false);
 		func.setBody(new ANotImplementedExpCG());
 		func.setFormalParams(question.getDeclAssistant().
 				consFormalParams(node.getParamPatterns(), question));
