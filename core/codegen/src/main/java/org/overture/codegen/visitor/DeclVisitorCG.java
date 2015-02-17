@@ -29,6 +29,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.definitions.AImplicitFunctionDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.AMutexSyncDefinition;
@@ -40,7 +41,6 @@ import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.traces.ATraceDefinitionTerm;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
-import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AFieldField;
@@ -325,6 +325,61 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 	}
 	
 	@Override
+	public SDeclCG caseAImplicitFunctionDefinition(
+			AImplicitFunctionDefinition node, IRInfo question)
+			throws AnalysisException
+	{
+		String accessCg = node.getAccess().getAccess().toString();
+		String funcNameCg = node.getName().getName();
+		
+		STypeCG typeCg = node.getType().apply(question.getTypeVisitor(), question);
+		
+		if (!(typeCg instanceof AMethodTypeCG))
+		{
+			question.addUnsupportedNode(node, "Expected method type for implicit function. Got: "
+					+ typeCg);
+			return null;
+		}
+
+		AFuncDeclCG func = new AFuncDeclCG();
+		AExplicitFunctionDefinition preCond = node.getPredef();
+		SDeclCG preCondCg = preCond != null ? preCond.apply(question.getDeclVisitor(), question) : null;
+		func.setPreCond(preCondCg);
+		
+		AExplicitFunctionDefinition postCond = node.getPostdef();
+		SDeclCG postCondCg = postCond != null ? postCond.apply(question.getDeclVisitor(), question) : null;
+		func.setPostCond(postCondCg);
+
+
+		// If the function uses any type parameters they will be
+		// registered as part of the method declaration
+		List<ILexNameToken> typeParams = node.getTypeParams();
+		for (int i = 0; i < typeParams.size(); i++)
+		{
+			ILexNameToken typeParam = typeParams.get(i);
+			ATemplateTypeCG templateType = new ATemplateTypeCG();
+			templateType.setName(typeParam.getName());
+			func.getTemplateTypes().add(templateType);
+		}
+
+		func.setAbstract(false);
+		func.setAccess(accessCg);
+		// TODO: Why can this be async?
+		func.setAsync(false);
+		func.setBody(new ANotImplementedExpCG());
+		func.setFormalParams(question.getDeclAssistant().
+				consFormalParams(node.getParamPatterns(), question));
+		func.setMethodType((AMethodTypeCG) typeCg);
+		func.setName(funcNameCg);
+		
+		// The implicit function is currently constructed without the result information:
+		//SPatternCG resPatternCg = node.getResult().getPattern().apply(question.getPatternVisitor(), question);
+		//STypeCG resTypeCg = node.getResult().getType().apply(question.getTypeVisitor(), question);
+
+		return func;
+	}
+	
+	@Override
 	public SDeclCG caseAExplicitOperationDefinition(
 			AExplicitOperationDefinition node, IRInfo question)
 			throws AnalysisException
@@ -382,23 +437,8 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 		// LinkedList<AErrorCase> errors = node.getErrors();
 		
 		method.setBody(new ANotImplementedStmCG());
-		
-		for(APatternListTypePair patternListPair : node.getParameterPatterns())
-		{
-			STypeCG pairTypeCg = patternListPair.getType().apply(question.getTypeVisitor(), question);
-			
-			for(PPattern p : patternListPair.getPatterns())
-			{
-				SPatternCG patternCg = p.apply(question.getPatternVisitor(), question);
-				
-				AFormalParamLocalParamCG paramCg = new AFormalParamLocalParamCG();
-				paramCg.setPattern(patternCg);
-				paramCg.setType(pairTypeCg.clone());
-				
-				method.getFormalParams().add(paramCg);
-			}
-		}
-		
+		method.setFormalParams(question.getDeclAssistant().
+				consFormalParams(node.getParameterPatterns(), question));
 		return method;
 	}
 

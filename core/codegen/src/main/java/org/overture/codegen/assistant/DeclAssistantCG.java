@@ -37,6 +37,8 @@ import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.node.INode;
+import org.overture.ast.patterns.APatternListTypePair;
+import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.codegen.cgast.SDeclCG;
 import org.overture.codegen.cgast.SExpCG;
@@ -45,6 +47,7 @@ import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
+import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
@@ -535,5 +538,29 @@ public class DeclAssistantCG extends AssistantBase
 		method.setPostCond(postCondCg);
 		
 		return method;
+	}
+	
+
+	public List<AFormalParamLocalParamCG> consFormalParams(
+			List<APatternListTypePair> params, IRInfo question)
+			throws AnalysisException
+	{
+		List<AFormalParamLocalParamCG> paramsCg = new LinkedList<>();
+		for(APatternListTypePair patternListPair : params)
+		{
+			STypeCG pairTypeCg = patternListPair.getType().apply(question.getTypeVisitor(), question);
+			
+			for(PPattern p : patternListPair.getPatterns())
+			{
+				SPatternCG patternCg = p.apply(question.getPatternVisitor(), question);
+				
+				AFormalParamLocalParamCG paramCg = new AFormalParamLocalParamCG();
+				paramCg.setPattern(patternCg);
+				paramCg.setType(pairTypeCg.clone());
+				
+				paramsCg.add(paramCg);
+			}
+		}
+		return paramsCg;
 	}
 }
