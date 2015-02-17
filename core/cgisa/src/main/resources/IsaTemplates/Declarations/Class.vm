@@ -1,6 +1,9 @@
-Hello from $node.getName()
+theory $Isa.norm($node.Name)
+  imports utp_cml
+begin
 
-
-#foreach( $func in $node.getFunctions() )
+#foreach( $func in $node.Functions )
 $Isa.trans($func)
 #end
+
+end
