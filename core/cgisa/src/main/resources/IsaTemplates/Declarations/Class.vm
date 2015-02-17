@@ -1,0 +1,6 @@
+Hello from $node.getName()
+
+
+#foreach( $func in $node.getFunctions() )
+$Isa.trans($func)
+#end
