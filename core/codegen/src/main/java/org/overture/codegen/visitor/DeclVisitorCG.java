@@ -29,6 +29,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.AMutexSyncDefinition;
 import org.overture.ast.definitions.ANamedTraceDefinition;
@@ -39,6 +40,7 @@ import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.traces.ATraceDefinitionTerm;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AFieldField;
@@ -67,6 +69,7 @@ import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.expressions.ALambdaExpCG;
 import org.overture.codegen.cgast.expressions.ANotImplementedExpCG;
 import org.overture.codegen.cgast.name.ATokenNameCG;
+import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
 import org.overture.codegen.cgast.traces.ATraceDeclTermCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
@@ -352,6 +355,50 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 			formalParameters.add(param);
 		}
 
+		return method;
+	}
+	
+	@Override
+	public SDeclCG caseAImplicitOperationDefinition(
+			AImplicitOperationDefinition node, IRInfo question)
+			throws AnalysisException
+	{
+		AMethodDeclCG method = question.getDeclAssistant().initMethod(node, question);
+		
+		if(method == null)
+		{
+			question.addUnsupportedNode(node, "Expected method type for explicit operation. Got: "
+					+ node.getType());
+			return null;
+		}
+
+		// The curent IR construction does not include:
+		//
+		// Name of result and its type:
+		// APatternTypePair res = node.getResult();
+		// Ext clauses (read and write):
+		// LinkedList<AExternalClause> externals = node.getExternals();
+		// Exceptions thrown:
+		// LinkedList<AErrorCase> errors = node.getErrors();
+		
+		method.setBody(new ANotImplementedStmCG());
+		
+		for(APatternListTypePair patternListPair : node.getParameterPatterns())
+		{
+			STypeCG pairTypeCg = patternListPair.getType().apply(question.getTypeVisitor(), question);
+			
+			for(PPattern p : patternListPair.getPatterns())
+			{
+				SPatternCG patternCg = p.apply(question.getPatternVisitor(), question);
+				
+				AFormalParamLocalParamCG paramCg = new AFormalParamLocalParamCG();
+				paramCg.setPattern(patternCg);
+				paramCg.setType(pairTypeCg.clone());
+				
+				method.getFormalParams().add(paramCg);
+			}
+		}
+		
 		return method;
 	}
 
