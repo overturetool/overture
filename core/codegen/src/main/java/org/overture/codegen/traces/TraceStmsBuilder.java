@@ -206,6 +206,7 @@ public class TraceStmsBuilder extends AnswerAdaptor<TraceNodeData>
 		ASetMultipleBindCG bind = node.getBind();
 		LinkedList<SPatternCG> patterns = bind.getPatterns();
 		
+		//TODO: Can the pattern not be other patterns? Use a pattern collector here?
 		for(SPatternCG p : patterns)
 		{
 			if(p instanceof AIdentifierPatternCG)
@@ -257,7 +258,7 @@ public class TraceStmsBuilder extends AnswerAdaptor<TraceNodeData>
 		for (AVarDeclCG dec : node.getLocalDefs())
 		{
 			idCollector.setTopNode(dec);
-			Set<AIdentifierPatternCG> idOccurences = idCollector.findOccurences();
+			List<AIdentifierPatternCG> idOccurences = idCollector.findOccurences();
 			
 			AVarDeclCG decCopy = dec.clone();
 			decCopy.setFinal(true);

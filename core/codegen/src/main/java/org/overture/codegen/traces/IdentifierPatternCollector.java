@@ -1,6 +1,8 @@
 package org.overture.codegen.traces;
 
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import org.overture.codegen.cgast.INode;
@@ -12,7 +14,7 @@ import org.overture.codegen.logging.Logger;
 public class IdentifierPatternCollector extends DepthFirstAnalysisAdaptor
 {
 	private INode topNode;
-	private Set<AIdentifierPatternCG> idOccurences;
+	private List<AIdentifierPatternCG> idOccurences;
 	
 	public IdentifierPatternCollector()
 	{
@@ -25,9 +27,9 @@ public class IdentifierPatternCollector extends DepthFirstAnalysisAdaptor
 		this.topNode = topNode;
 	}
 	
-	public Set<AIdentifierPatternCG> findOccurences()
+	public List<AIdentifierPatternCG> findOccurences()
 	{
-		this.idOccurences = new HashSet<AIdentifierPatternCG>();
+		idOccurences = new LinkedList<AIdentifierPatternCG>();
 		
 		try
 		{
