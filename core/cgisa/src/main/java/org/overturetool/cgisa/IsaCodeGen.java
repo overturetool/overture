@@ -1,8 +1,8 @@
 /*
  * #%~
- * VDM to Isabelle Code Generator
+ * VDM to Isabelle Code Generation
  * %%
- * Copyright (C) 2008 - 2014 Overture
+ * Copyright (C) 2008 - 2015 Overture
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -19,6 +19,7 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #~%
  */
+
 package org.overturetool.cgisa;
 
 import java.io.StringWriter;
@@ -33,16 +34,11 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRClassDeclStatus;
-import org.overture.codegen.ir.IRGenerator;
-import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.ir.VdmNodeInfo;
 import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.merging.MergeVisitor;
-import org.overture.codegen.merging.TemplateCallable;
-import org.overture.codegen.merging.TemplateManager;
 import org.overture.codegen.merging.TemplateStructure;
 import org.overture.codegen.utils.GeneratedModule;
-import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 
 /**
  * Main facade class for VDM 2 Isabelle CG
