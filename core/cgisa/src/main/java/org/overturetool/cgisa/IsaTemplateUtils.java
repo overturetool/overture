@@ -22,34 +22,59 @@
 package org.overturetool.cgisa;
 
 import java.io.StringWriter;
+import java.util.Iterator;
+import java.util.List;
 
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
+import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateCallable;
 import org.overture.codegen.merging.TemplateStructure;
 
-public class Isa
+public class IsaTemplateUtils
 {
+
+	private static final String TEMPLATE_CALLABLE_NAME = "Isa";
+	private static final Object PARAM_SEP = " and ";
 	private MergeVisitor mergeVisitor;
-	
-	public Isa(TemplateStructure templateStructure)
+
+	public IsaTemplateUtils(TemplateStructure templateStructure)
 	{
-		TemplateCallable[] templateCallables = new TemplateCallable[]{new TemplateCallable("Isa",this)};
+		TemplateCallable[] templateCallables = new TemplateCallable[] { new TemplateCallable(TEMPLATE_CALLABLE_NAME, this) };
 		this.mergeVisitor = new MergeVisitor(new IsaTemplateManager(templateStructure), templateCallables);
 	}
-	
-	
-	
-	
+
 	public MergeVisitor getMergeVisitor()
 	{
 		return mergeVisitor;
 	}
 
+	public String norm(String name)
+	{
+		return name;
+	}
 
-
-
+	public String trans(List<AFormalParamLocalParamCG> params) throws AnalysisException{
+		StringBuilder sb = new StringBuilder();
+		
+		Iterator<AFormalParamLocalParamCG> it = params.iterator();
+		
+		while (it.hasNext()){
+			StringWriter writer = new StringWriter();
+			it.next().apply(mergeVisitor, writer);
+			sb.append(writer.toString());
+			if (it.hasNext()){
+				sb.append(PARAM_SEP);
+			}
+		
+		}
+		
+		
+		return sb.toString();
+		
+	}
+	
 	public String trans(INode node) throws AnalysisException
 	{
 		StringWriter writer = new StringWriter();
@@ -57,5 +82,4 @@ public class Isa
 
 		return writer.toString();
 	}
-
 }
