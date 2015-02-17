@@ -37,6 +37,7 @@ import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.node.INode;
+import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.codegen.cgast.SDeclCG;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SPatternCG;
@@ -504,9 +505,15 @@ public class DeclAssistantCG extends AssistantBase
 		}
 
 		AMethodTypeCG methodType = (AMethodTypeCG) type;
-		SStmCG body = node.getBody().apply(question.getStmVisitor(), question);
+
+		SStmCG bodyCg = null; 
+		if (node.getBody() != null)
+		{
+			bodyCg = node.getBody().apply(question.getStmVisitor(), question);
+		}
+		
 		boolean isConstructor = node.getIsConstructor();
-		boolean isAbstract = body == null;
+		boolean isAbstract = node.getBody() instanceof ASubclassResponsibilityStm;
 
 		AMethodDeclCG method = new AMethodDeclCG();
 
@@ -515,7 +522,7 @@ public class DeclAssistantCG extends AssistantBase
 		method.setAsync(isAsync);
 		method.setMethodType(methodType);
 		method.setName(operationName);
-		method.setBody(body);
+		method.setBody(bodyCg);
 		method.setIsConstructor(isConstructor);
 		method.setAbstract(isAbstract);
 		
