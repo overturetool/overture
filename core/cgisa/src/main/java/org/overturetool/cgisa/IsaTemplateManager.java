@@ -21,6 +21,7 @@
  */
 package org.overturetool.cgisa;
 
+import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AFuncDeclCG;
 import org.overture.codegen.merging.TemplateManager;
 import org.overture.codegen.merging.TemplateStructure;
@@ -29,7 +30,8 @@ import org.overture.codegen.merging.TemplateStructure;
 public class IsaTemplateManager extends TemplateManager
 {
 
-	private static final String FUNCTEMPLATE = "Function";
+	private static final String FUNC_TEMPLATE = "Function";
+	private static final String FORMAL_PARAM = "FormalParam";
 
 	public IsaTemplateManager(TemplateStructure templateStructure)
 	{
@@ -39,7 +41,8 @@ public class IsaTemplateManager extends TemplateManager
 
 	private void initIsaNodes()
 	{
-		nodeTemplateFileNames.put(AFuncDeclCG.class,  templateStructure.DECL_PATH + FUNCTEMPLATE);
+		nodeTemplateFileNames.put(AFuncDeclCG.class,  templateStructure.DECL_PATH + FUNC_TEMPLATE);
+		nodeTemplateFileNames.put(AFormalParamLocalParamCG.class, templateStructure.LOCAL_DECLS_PATH + FORMAL_PARAM);
 		
 	}
 
