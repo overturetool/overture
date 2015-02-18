@@ -204,9 +204,11 @@ public class TraceStmsBuilder extends AnswerAdaptor<TraceNodeData>
 	{
 
 		ASetMultipleBindCG bind = node.getBind();
-		LinkedList<SPatternCG> patterns = bind.getPatterns();
 		
-		//TODO: Can the pattern not be other patterns? Use a pattern collector here?
+		IdentifierPatternCollector idCollector = new IdentifierPatternCollector();
+		idCollector.setTopNode(bind);
+		List<AIdentifierPatternCG> patterns = idCollector.findOccurences();
+		
 		for(SPatternCG p : patterns)
 		{
 			if(p instanceof AIdentifierPatternCG)
@@ -239,7 +241,7 @@ public class TraceStmsBuilder extends AnswerAdaptor<TraceNodeData>
 			return new TraceNodeData(null, transAssistant.wrap(new ASkipStmCG()));
 		}
 
-		ABlockStmCG outerBlock = transAssistant.consIterationBlock(patterns, bind.getSet(), info.getTempVarNameGen(), strategy);
+		ABlockStmCG outerBlock = transAssistant.consIterationBlock(node.getBind().getPatterns(), bind.getSet(), info.getTempVarNameGen(), strategy);
 
 		return new TraceNodeData(transAssistant.consIdentifierVar(name, classType.clone()), transAssistant.wrap(outerBlock));
 	}

@@ -10,6 +10,7 @@ import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
+import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
@@ -18,7 +19,7 @@ import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.ir.ITempVarGen;
-import org.overture.codegen.logging.Logger;
+import org.overture.codegen.trans.DeclarationTag;
 import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
@@ -56,7 +57,7 @@ public class TraceLetBeStStrategy extends LetBeStStrategy
 		for (SPatternCG id : patterns)
 		{
 			AVarDeclCG decl = transAssistant.getInfo().getDeclAssistant().
-					consLocalVarDecl(setType, id, null);
+					consLocalVarDecl(setType.getSetOf().clone(), id.clone(), new ANullExpCG());
 			decl.setFinal(true);
 			decls.add(decl);
 		}
@@ -77,6 +78,12 @@ public class TraceLetBeStStrategy extends LetBeStStrategy
 			throws AnalysisException
 	{
 		return langIterator.getForLoopCond(setVar, patterns, pattern);
+	}
+
+	@Override
+	public DeclarationTag consDeclarationTag()
+	{
+		return new DeclarationTag(false, successVarDecl);
 	}
 
 	@Override
@@ -115,20 +122,17 @@ public class TraceLetBeStStrategy extends LetBeStStrategy
 		}
 		
 		AVarDeclCG nextElementDecl = decls.get(count - 1);
-		if(nextElementDecl.getPattern() instanceof AIdentifierPatternCG)
+		
+		
+		IdentifierPatternCollector idCollector = new IdentifierPatternCollector();
+		idCollector.setTopNode(nextElementDecl);
+		
+		for(AIdentifierPatternCG idToReg : idCollector.findOccurences())
 		{
-			AIdentifierPatternCG idToReg = (AIdentifierPatternCG) nextElementDecl.getPattern();
 			String idConstName = idConstNameMap.get(idToReg.getName());
 			block.getStatements().add(transAssistant.wrap(storeAssistant.consIdConstDecl(idConstName)));
 			storeAssistant.appendStoreRegStms(block, idToReg.getName(), idConstName);
 		}
-		else
-		{
-			Logger.getLog().printErrorln("This should not happen. Only identifier patterns "
-					+ "are currently supported in traces (see the TraceSupportedAnalysis class).");
-			return null;
-		}
-		
 		
 		block.getStatements().add(nodeData.getStms());
 
