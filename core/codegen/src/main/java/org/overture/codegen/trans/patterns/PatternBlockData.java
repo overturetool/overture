@@ -32,6 +32,7 @@ public class PatternBlockData
 	private AVarDeclCG successVarDecl;
 	private AIdentifierVarExpCG successVar;
 	private ABlockStmCG declBlock;
+	private AIdentifierVarExpCG rootPatternVar;
 	private MismatchHandling mismatchHandling;
 
 	public PatternBlockData(SPatternCG pattern, ABlockStmCG declBlock,
@@ -39,6 +40,7 @@ public class PatternBlockData
 	{
 		this.pattern = pattern;
 		this.declBlock = declBlock;
+		this.rootPatternVar = null;
 		this.mismatchHandling = mismatchHandling;
 	}
 
@@ -91,9 +93,36 @@ public class PatternBlockData
 	{
 		this.declBlock = declBlock;
 	}
+	
+	public void setRootPatternVar(AIdentifierVarExpCG var)
+	{
+		// There can only be one root pattern variable
+		if(this.rootPatternVar == null)
+		{
+			this.rootPatternVar = var;
+		}
+	}
+	
+	public AIdentifierVarExpCG getRootPatternVar()
+	{
+		return rootPatternVar;
+	}
+	
+	public void setMismatchHandling(MismatchHandling mismatchHandling)
+	{
+		this.mismatchHandling = mismatchHandling;
+	}
 
 	public MismatchHandling getMismatchHandling()
 	{
 		return mismatchHandling;
+	}
+
+	@Override
+	public String toString()
+	{
+		return String.format("Pattern %s\nSuccess var: %s\n"
+				+ "Mismatch handling: %s\nDeclaration block: %s"
+				, pattern, successVar, mismatchHandling, declBlock);
 	}
 }

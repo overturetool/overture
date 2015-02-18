@@ -29,8 +29,8 @@ import java.util.Vector;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import org.overture.ct.ctruntime.tests.util.CtTestHelper;
-import org.overture.ct.ctruntime.tests.util.TraceReductionInfo;
+import org.overture.ct.ctruntime.utils.CtHelper;
+import org.overture.ct.ctruntime.utils.TraceReductionInfo;
 import org.overture.interpreter.traces.TraceReductionType;
 import org.overture.interpreter.traces.util.Pair;
 import org.overture.test.framework.Properties;
@@ -68,7 +68,7 @@ public class CtRandomReductionTestCase extends CtTestCaseBase
 		testReductionInfo2.add(new Pair<String, TraceReductionInfo>("PaperCaseStudy", new TraceReductionInfo(0.01F, TraceReductionType.SHAPES_VARVALUES, SEED)));
 
 		Collection<Object[]> tests = new Vector<Object[]>();
-		CtTestHelper testHelper = new CtTestHelper();
+		CtHelper testHelper = new CtHelper();
 
 		File root = new File(RESOURCES);
 

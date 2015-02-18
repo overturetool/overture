@@ -112,9 +112,13 @@ import org.overture.codegen.utils.GeneralUtils;
 
 public class TemplateManager
 {
-	private HashMap<Class<? extends INode>, String> nodeTemplateFileNames;
+	/**
+	 * Mapping IR classes and template locations. Initialize with {@link TemplateManager#initNodeTemplateFileNames()}
+	 * and insert/update as necessary.
+	 */
+	protected HashMap<Class<? extends INode>, String> nodeTemplateFileNames;
 
-	private TemplateStructure templateStructure;
+	protected TemplateStructure templateStructure;
 
 	public TemplateManager(TemplateStructure templateStructure)
 	{
@@ -122,7 +126,11 @@ public class TemplateManager
 		initNodeTemplateFileNames();
 	}
 
-	private void initNodeTemplateFileNames()
+	/**
+	 * Initialize the mapping of IR nodes and templates with the most common
+	 * nodes used. Folder structure is specified with {@link TemplateStructure}
+	 */
+	protected void initNodeTemplateFileNames()
 	{
 		nodeTemplateFileNames = new HashMap<Class<? extends INode>, String>();
 
@@ -617,6 +625,9 @@ public class TemplateManager
 		nodeTemplateFileNames.put(ADivideNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXP_PATH
 				+ "Divide");
 
+		nodeTemplateFileNames.put(AIntDivNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXP_PATH
+				+ "IntDiv");
+
 		nodeTemplateFileNames.put(AGreaterEqualNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXP_PATH
 				+ "GreaterEqual");
 
@@ -631,7 +642,13 @@ public class TemplateManager
 
 		nodeTemplateFileNames.put(APowerNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXP_PATH
 				+ "Power");
-
+		
+		nodeTemplateFileNames.put(ARemNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXP_PATH
+				+ "Rem");
+		
+		nodeTemplateFileNames.put(AModNumericBinaryExpCG.class, templateStructure.NUMERIC_BINARY_EXP_PATH
+				+ "Mod");		
+		
 		// Connective binary expressions
 
 		nodeTemplateFileNames.put(AOrBoolBinaryExpCG.class, templateStructure.BOOL_BINARY_EXP_PATH

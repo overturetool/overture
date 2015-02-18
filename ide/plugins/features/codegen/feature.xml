@@ -2,7 +2,7 @@
 <feature
       id="org.overture.ide.plugins.features.codegen"
       label="Code Generator"
-      version="2.1.7.qualifier">
+      version="2.2.1.qualifier">
 
    <description>
       %description
@@ -15,14 +15,6 @@
    <license url="%licenseURL">
       %agreement
    </license>
-
-   <includes
-         id="org.eclipse.emf.common"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.emf.ecore"
-         version="0.0.0"/>
 
    <requires>
       <import plugin="org.eclipse.ui.console"/>

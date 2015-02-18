@@ -19,7 +19,7 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #~%
  */
-package org.overture.ct.ctruntime.tests.util;
+package org.overture.ct.ctruntime.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -43,16 +43,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import ctruntime.NodeIterator;
-
 public class TraceResultReader
 {
-	// @Test
-	// public void test() throws XPathExpressionException, SAXException, IOException, ParserConfigurationException
-	// {
-	// System.out.println(read(new File("target/trace-output/T1/DEFAULT-T1.xml".replace('/', File.separatorChar))));
-	// }
-
 	public List<TraceResult> read(File file) throws SAXException, IOException,
 			ParserConfigurationException, XPathExpressionException
 	{

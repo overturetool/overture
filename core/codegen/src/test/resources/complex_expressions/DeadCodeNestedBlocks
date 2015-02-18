@@ -1,0 +1,23 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+(
+  skip;
+  (dcl a : nat := 1;
+    skip;
+    (
+       skip;
+       return 2;
+       return 3;
+       (
+         return 4;
+         return 5;
+       );
+    );
+  );
+);
+
+end Entry

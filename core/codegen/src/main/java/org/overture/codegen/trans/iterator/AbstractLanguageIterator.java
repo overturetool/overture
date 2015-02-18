@@ -35,7 +35,7 @@ import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public abstract class AbstractLanguageIterator implements ILanguageIterator
 {
-	protected TransAssistantCG transformationAssistant;
+	protected TransAssistantCG transAssistant;
 	protected ITempVarGen tempGen;
 	protected TempVarPrefixes varPrefixes;
 
@@ -43,7 +43,7 @@ public abstract class AbstractLanguageIterator implements ILanguageIterator
 			TransAssistantCG transformationAssistant,
 			ITempVarGen tempGen, TempVarPrefixes varPrefixes)
 	{
-		this.transformationAssistant = transformationAssistant;
+		this.transAssistant = transformationAssistant;
 		this.tempGen = tempGen;
 		this.varPrefixes = varPrefixes;
 	}

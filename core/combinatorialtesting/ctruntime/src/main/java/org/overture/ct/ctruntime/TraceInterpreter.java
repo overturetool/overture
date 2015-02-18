@@ -177,7 +177,11 @@ public class TraceInterpreter
 			}
 
 			infoCompleted();
-			System.out.println("Completed");
+			
+			if (DEBUG)
+			{
+				System.out.println("Completed");
+			}
 		} catch (ContextException e)
 		{
 			error(e.getMessage());
@@ -264,8 +268,6 @@ public class TraceInterpreter
 		int inconclusiveCount = 0;
 		int skippedCount = 0;
 
-		boolean saveAll = true;
-
 		StopWatch.set();
 		
 		for (CallSequence test : tests)
@@ -274,99 +276,94 @@ public class TraceInterpreter
 
 			infoProcessingTest(className, mtd.getName().getName(), n, size);
 
+			List<Object> result = null;
+			Verdict verdict = null;
+
+			// type check
+			boolean typeOk = false;
+			try
+			{
+				typeCheck(mtd.getClassDefinition(), interpreter, test);
+				typeOk = true;
+			} catch (Exception e)
+			{
+				result = new Vector<Object>();
+				result.add(e);
+				verdict = Verdict.FAILED;
+				result.add(verdict);
+
+			}
+
+			// interpret
+			if (typeOk)
+			{
+				StopWatch.set();
+				result = evaluateCallSequence(mtd, test);
+				StopWatch.stop("Executing   ");
+				StopWatch.set();
+
+				verdict = (Verdict) result.get(result.size() - 1);
+
+				if (verdict == Verdict.ERROR)
+				{
+				} else
+				{
+					tests.filter(result, test, n);
+				}
+			}
+
+			switch (verdict)
+			{
+				case FAILED:
+					faildCount++;
+					break;
+				case INCONCLUSIVE:
+					inconclusiveCount++;
+					break;
+				default:
+					break;
+			}
+
+			if (storage != null)
+			{/*
+			 * Bodge until we figure out how to not have explicit op names.
+			 */
+				String clean = test.toString().replaceAll("\\.\\w+`", ".");
+				storage.StartTest(new Integer(n).toString(), clean);
+				storage.StopElement();
+			}
+
 			if (test.getFilter() > 0)
 			{
-			} else
+				skippedCount++;
+				infoTestFiltered(n, test.getFilter(), test);
+				if (storage != null)
+				{
+					storage.AddSkippedResult(new Integer(n).toString());
+				}
+			}
+			else
 			{
-				List<Object> result = null;
-				Verdict verdict = null;
 
-				// type check
-				boolean typeOk = false;
-				try
+				if (verdict == Verdict.ERROR)
 				{
-					typeCheck(mtd.getClassDefinition(), interpreter, test);
-					typeOk = true;
-				} catch (Exception e)
-				{
-					result = new Vector<Object>();
-					result.add(e);
-					verdict = Verdict.FAILED;
-					result.add(verdict);
-
-				}
-
-				// interpret
-				if (typeOk)
-				{
-					StopWatch.set();
-					result = evaluateCallSequence(mtd, test);
-					StopWatch.stop("Executing   ");
-					StopWatch.set();
-
-					verdict = (Verdict) result.get(result.size() - 1);
-
-					if (verdict == Verdict.ERROR)
-					{
-					} else
-					{
-						tests.filter(result, test, n);
-					}
-				}
-
-				switch (verdict)
-				{
-					case FAILED:
-						faildCount++;
-						break;
-					case INCONCLUSIVE:
-						inconclusiveCount++;
-						break;
-				}
-
-				if (saveAll || verdict != Verdict.PASSED)
-				{
-
-					if (storage != null)
-					{/*
-					 * Bodge until we figure out how to not have explicit op names.
-					 */
-						String clean = test.toString().replaceAll("\\.\\w+`", ".");
-						storage.StartTest(new Integer(n).toString(), clean);
-						storage.StopElement();
-					}
-
-					if (test.getFilter() > 0)
-					{
-						skippedCount++;
-						infoTestFiltered(n, test.getFilter(), test);
-						if (storage != null)
-						{
-							storage.AddSkippedResult(new Integer(n).toString());
-						}
-					}
-
-					if (verdict == Verdict.ERROR)
-					{
-						if (storage != null)
-						{
-							storage.AddResults(new Integer(n).toString(), result);
-							storage.AddTraceStatus(Verdict.valueOf(Verdict.FAILED.toString()), size, skippedCount, faildCount, inconclusiveCount);
-							storage.StopElement();
-						}
-
-						Exception e = (Exception) result.get(result.size() - 2);
-						result.remove(result.size() - 2);
-
-						throw e;
-					}
-
 					if (storage != null)
 					{
 						storage.AddResults(new Integer(n).toString(), result);
+						storage.AddTraceStatus(Verdict.valueOf(Verdict.FAILED.toString()), size, skippedCount, faildCount, inconclusiveCount);
+						storage.StopElement();
 					}
+
+					Exception e = (Exception) result.get(result.size() - 2);
+					result.remove(result.size() - 2);
+
+					throw e;
 				}
 
+				if (storage != null)
+				{
+					storage.AddResults(new Integer(n).toString(), result);
+				}
 			}
 
 			n++;

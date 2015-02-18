@@ -2470,6 +2470,14 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		if (!question.assistantFactory.createPTypeAssistant().isNumeric(ftype))
 		{
 			TypeCheckerErrors.report(3166, "Set range type must be an number", ftype.getLocation(), ftype);
+			ftype = AstFactory.newAIntNumericBasicType(node.getLocation());
+		}
+		
+		SNumericBasicType ntype = question.assistantFactory.createPTypeAssistant().getNumeric(ftype);
+		
+		if (question.assistantFactory.createSNumericBasicTypeAssistant().getWeight(ntype) > 1)
+		{
+			ftype = AstFactory.newAIntNumericBasicType(node.getLocation());	// Caused by ceiling/floor
 		}
 
 		if (!question.assistantFactory.createPTypeAssistant().isNumeric(ltype))
@@ -2477,7 +2485,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			TypeCheckerErrors.report(3167, "Set range type must be an number", ltype.getLocation(), ltype);
 		}
 
-		node.setType(AstFactory.newASetType(first.getLocation(), AstFactory.newAIntNumericBasicType(node.getLocation())));
+		node.setType(AstFactory.newASetType(first.getLocation(), ftype));
 		return question.assistantFactory.createPTypeAssistant().possibleConstraint(question.constraint, node.getType(), node.getLocation());
 	}
 

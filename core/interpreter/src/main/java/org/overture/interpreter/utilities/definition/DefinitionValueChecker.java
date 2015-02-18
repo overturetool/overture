@@ -4,6 +4,7 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.AnswerAdaptor;
 import org.overture.ast.definitions.AImportedDefinition;
 import org.overture.ast.definitions.AInheritedDefinition;
+import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.ARenamedDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -52,6 +53,13 @@ public class DefinitionValueChecker extends AnswerAdaptor<Boolean>
 			throws AnalysisException
 	{
 		return true;
+	}
+
+	@Override
+	public Boolean caseALocalDefinition(ALocalDefinition def)
+			throws AnalysisException
+	{
+		return def.getValueDefinition();
 	}
 
 	@Override

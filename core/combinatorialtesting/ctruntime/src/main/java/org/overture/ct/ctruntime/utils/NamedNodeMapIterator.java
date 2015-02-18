@@ -19,49 +19,45 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #~%
  */
-package org.overture.ct.ctruntime.tests.util;
+package org.overture.ct.ctruntime.utils;
 
-import org.overture.interpreter.traces.TraceReductionType;
+import java.util.Iterator;
 
-public class TraceReductionInfo
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+
+public class NamedNodeMapIterator implements Iterator<Node>, Iterable<Node>
 {
-	private float subset;
-	private TraceReductionType reductionType;
-	private long seed;
+	private final NamedNodeMap list;
+	private int index = 0;
 
-	public TraceReductionInfo()
+	public NamedNodeMapIterator(NamedNodeMap list)
 	{
-		this.subset = 1.0F;
-		this.reductionType = TraceReductionType.NONE;
-		this.seed = 999;
-	}
-
-	public TraceReductionInfo(float subset, TraceReductionType reductionType,
-			long seed)
-	{
-		this.subset = subset;
-		this.reductionType = reductionType;
-		this.seed = seed;
-	}
-
-	public float getSubset()
-	{
-		return subset;
-	}
-
-	public TraceReductionType getReductionType()
-	{
-		return reductionType;
-	}
-
-	public long getSeed()
-	{
-		return seed;
+		this.list = list;
 	}
 
 	@Override
-	public String toString()
+	public boolean hasNext()
 	{
-		return String.format("%.2f", subset * 100) + "%" + reductionType;
+		return list != null && index < list.getLength();
 	}
+
+	@Override
+	public Node next()
+	{
+		return list.item(index++);
+	}
+
+	@Override
+	public void remove()
+	{
+		throw new RuntimeException("Not implemented");
+	}
+
+	@Override
+	public Iterator<Node> iterator()
+	{
+		return this;
+	}
+
 }

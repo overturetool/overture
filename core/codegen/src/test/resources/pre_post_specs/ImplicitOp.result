@@ -1,0 +1,42 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        Boolean b = !true;
+
+        if (b) {
+            return addImpl(5L, 7L);
+        } else {
+            return 5L + 7L;
+        }
+    }
+
+    private static Number addImpl(final Number left, final Number right) {
+        if (!(pre_addImpl(left, right))) {
+            throw new RuntimeException("Precondition failure: pre_addImpl");
+        }
+
+        throw new UnsupportedOperationException();
+    }
+
+    private static Boolean pre_addImpl(final Number left, final Number right) {
+        return true;
+    }
+
+    private static Boolean post_addImpl(final Number left, final Number right,
+        final Number res, final VDMMap self) {
+        return Utils.equals(left.longValue() + right.longValue(), res);
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########
