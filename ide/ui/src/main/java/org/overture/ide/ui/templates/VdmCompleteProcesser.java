@@ -52,7 +52,6 @@ import org.overture.ast.types.PType;
 import org.overture.ide.ui.VdmUIPlugin;
 import org.overture.ide.ui.editor.core.VdmDocument;
 import org.overture.ide.ui.internal.viewsupport.VdmElementImageProvider;
-import org.overture.ide.ui.templates.VdmContentAssistProcessor.VdmCompletionContext;
 import org.overture.ide.ui.utility.ast.AstLocationSearcher2;
 import org.overture.ide.ui.utility.ast.AstLocationSearcher2.TextReference;
 import org.overture.ide.ui.utility.ast.AstNameUtil;
@@ -72,8 +71,7 @@ public class VdmCompleteProcesser
 		// } else
 		// {
 		// completeFields(info, document, calculatedProposals, offset);
-		// }
-		completeFields(info, document, calculatedProposals, offset);
+		// 		completeFields(info, document, calculatedProposals, offset);
 		completeTypes(info, document, calculatedProposals, offset);
 
 		List<String> replacementDisplayString = new Vector<String>();
@@ -99,27 +97,27 @@ public class VdmCompleteProcesser
 	public void completeTypes(VdmCompletionContext info, VdmDocument document,
 			List<ICompletionProposal> proposals, int offset)
 	{
-		boolean modulesOnly = info.afterNew || info.isEmpty;
-		boolean recordTypesOnly = info.afterMk || info.isEmpty;
-		String typeName = info.field.toString();
+//		boolean modulesOnly = info.afterNew || info.isEmpty;
+//		boolean recordTypesOnly = info.afterMk || info.isEmpty;
+//		String typeName = info.field.toString();
 
 		for (INode element : getAst(document))
 		{
-			if (modulesOnly)
+			if (info.type==SearchType.Types)
 			{
 				String name = AstNameUtil.getName(element);
-				if (name.startsWith(typeName) || name.length() == 0)
+				if (name.startsWith(info.proposalPrefix) || name.length() == 0)
 				{
 					IContextInformation ctxtInfo = new ContextInformation(name, name); //$NON-NLS-1$
 					proposals.add(new CompletionProposal(name, offset, 0, name.length(), imgProvider.getImageLabel(element, 0), name, ctxtInfo, name));
 				}
 			}
-			addContainerTypes(element, recordTypesOnly, offset, proposals, info);
+			addContainerTypes(element,  offset, proposals, info);
 
 		}
 	}
 
-	private void addContainerTypes(INode def, boolean recordTypesOnly,
+	private void addContainerTypes(INode def, 
 			final int offset, final List<ICompletionProposal> proposals,
 			final VdmCompletionContext info2)
 	{
@@ -151,10 +149,10 @@ public class VdmCompleteProcesser
 					String name = prefix + element.getName();
 					IContextInformation info = new ContextInformation(name, name); //$NON-NLS-1$
 
-					if (name.toLowerCase().startsWith(info2.prefix.toString().toLowerCase()))
+					if (name.toLowerCase().startsWith(info2.proposalPrefix.toString().toLowerCase()))
 					{
 						proposals.add(new CompletionProposal(name, offset
-								- info2.prefix.length(), info2.prefix.length(), name.length(), imgProvider.getImageLabel(element, 0), name, info, element.toString()));
+								- info2.proposalPrefix.length(), info2.proposalPrefix.length(), name.length(), imgProvider.getImageLabel(element, 0), name, info, element.toString()));
 					}
 				}
 			}
@@ -185,11 +183,11 @@ public class VdmCompleteProcesser
 
 							IContextInformation info = new ContextInformation(name, name); //$NON-NLS-1$
 
-							int curOffset = offset - info2.prefix.length();
+							int curOffset = offset - info2.proposalPrefix.length();
 							int length = name.length();
-							int replacementLength = info2.prefix.length();
+							int replacementLength = info2.proposalPrefix.length();
 
-							if (info2.prefix.toString().equals(baseValue))
+							if (info2.proposalPrefix.toString().equals("<"+baseValue+">"))
 							{
 								// replacementLength+=1;
 								// length+=1;
@@ -197,7 +195,7 @@ public class VdmCompleteProcesser
 								replacementLength = 0;
 							}
 
-							if (baseValue.toLowerCase().startsWith(info2.prefix.toString().toLowerCase()))
+							if (("<"+baseValue).toLowerCase().startsWith(info2.proposalPrefix.toString().toLowerCase()))
 							{
 								proposals.add(new CompletionProposal(name, curOffset, replacementLength, length, imgProvider.getImageLabel(node, 0), name, info, name));
 							}
@@ -240,7 +238,7 @@ public class VdmCompleteProcesser
 
 					for (AFieldField field : rt.getFields())
 					{
-						if (field.getTag().toLowerCase().startsWith(info.proposal.toString().toLowerCase()))
+						if (field.getTag().toLowerCase().startsWith(info.proposalPrefix.toString().toLowerCase()))
 						{
 							proposals.add(createProposal(field, offset, info));
 						}
@@ -250,29 +248,29 @@ public class VdmCompleteProcesser
 			{
 				// FIXME old code
 
-				if (info.fieldType.toString().trim().length() != 0)
-				{
-					completeFromType(info.fieldType.toString(), info.proposal.toString(), proposals, offset, ast);
-				} else
-				{
-					List<INode> possibleMatch = new Vector<INode>();
-					for (INode node : getLocalFileAst(document))
-					{
-						for (INode field : getFields(node))
-						{
-							if (AstNameUtil.getName(field).equals(info.field.toString()))
-							{
-								// Ok match then complete it
-								completeFromType(getTypeName(field), info.proposal.toString(), proposals, offset, ast);
-							} else if (AstNameUtil.getName(field).startsWith(info.field.toString()))
-							{
-								possibleMatch.add(field);
-							}
-
-						}
-
-					}
-				}
+//				if (info.fieldType.toString().trim().length() != 0)
+//				{
+//					completeFromType(info.fieldType.toString(), info.proposalPrefix.toString(), proposals, offset, ast);
+//				} else
+//				{
+//					List<INode> possibleMatch = new Vector<INode>();
+//					for (INode node : getLocalFileAst(document))
+//					{
+//						for (INode field : getFields(node))
+//						{
+//							if (AstNameUtil.getName(field).equals(info.field.toString()))
+//							{
+//								// Ok match then complete it
+//								completeFromType(getTypeName(field), info.proposalPrefix.toString(), proposals, offset, ast);
+//							} else if (AstNameUtil.getName(field).startsWith(info.field.toString()))
+//							{
+//								possibleMatch.add(field);
+//							}
+//
+//						}
+//
+//					}
+//				}
 			}
 		} catch (Exception e)
 		{
@@ -356,7 +354,7 @@ public class VdmCompleteProcesser
 					+ name;
 		}
 		IContextInformation info2 = new ContextInformation(name, name); //$NON-NLS-1$
-		return new CompletionProposal(name, offset - info.proposal.length(), info.proposal.length(), name.length(), imgProvider.getImageLabel(node, 0), name, info2, node.toString());
+		return new CompletionProposal(name, offset - info.proposalPrefix.length(), info.proposalPrefix.length(), name.length(), imgProvider.getImageLabel(node, 0), name, info2, node.toString());
 	}
 
 	private INode getType(String typeName, List<INode> ast)
