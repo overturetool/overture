@@ -105,6 +105,11 @@ public abstract class VdmContentAssistProcessor extends
 		{
 			try
 			{
+				if(documentOffset-1==-1)
+				{
+					//EOF
+					break;
+				}
 				// Read character backwards
 				char c = doc.getChar(--documentOffset);
 
@@ -131,6 +136,7 @@ public abstract class VdmContentAssistProcessor extends
 				e.printStackTrace();
 				VdmUIPlugin.log("completion failed", e);
 				// Document start reached, no tag found
+				break;
 			}
 		}
 		return new VdmCompletionContext(scanned.reverse());

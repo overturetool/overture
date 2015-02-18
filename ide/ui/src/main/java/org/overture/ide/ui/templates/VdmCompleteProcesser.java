@@ -75,8 +75,8 @@ public class VdmCompleteProcesser
 		// {
 		// completeFields(info, document, calculatedProposals, offset);
 		// completeFields(info, document, calculatedProposals, offset);
-		
-		switch(info.type)
+
+		switch (info.type)
 		{
 			case CallParam:
 				break;
@@ -88,17 +88,15 @@ public class VdmCompleteProcesser
 				completeNew(info, document, calculatedProposals, offset);
 				break;
 			case Quote:
+				completeQuotes(info, document, calculatedProposals, offset);
 				break;
 			case Types:
 				completeTypes(info, document, calculatedProposals, offset);
 				break;
 			default:
 				break;
-			
+
 		}
-		
-		
-		
 
 		List<String> replacementDisplayString = new Vector<String>();
 		for (ICompletionProposal proposal : calculatedProposals)
@@ -120,9 +118,20 @@ public class VdmCompleteProcesser
 		}
 	}
 
+	private void completeQuotes(final VdmCompletionContext info,
+			VdmDocument document, final List<ICompletionProposal> proposals,
+			int offset)
+	{
+		for (INode def : getAst(document))
+		{
+			completeQuotes(offset, proposals, info, def);
+		}
+
+	}
+
 	private void completeNew(final VdmCompletionContext info,
 			VdmDocument document, final List<ICompletionProposal> proposals,
-			final int offset) 
+			final int offset)
 	{
 		for (INode container : getAst(document))
 		{
@@ -144,20 +153,20 @@ public class VdmCompleteProcesser
 									|| name.toLowerCase().startsWith(info.proposalPrefix.toLowerCase()))
 							{
 								IContextInformation infoComplete = new ContextInformation(name, name);
-								
-								String replacementString =name+"(";
-								
+
+								String replacementString = name + "(";
+
 								for (Iterator<PPattern> iterator = node.getParameterPatterns().iterator(); iterator.hasNext();)
 								{
-									PPattern pattern =  iterator.next();
-									
-									replacementString+=pattern.toString();
-									if(iterator.hasNext())
-										replacementString+=", ";
-									
+									PPattern pattern = iterator.next();
+
+									replacementString += pattern.toString();
+									if (iterator.hasNext())
+										replacementString += ", ";
+
 								}
-								replacementString+=")";
-								
+								replacementString += ")";
+
 								proposals.add(new CompletionProposal(replacementString, offset
 										+ info.offset, info.proposalPrefix.length(), replacementString.length(), imgProvider.getImageLabel(node, 0), replacementString, infoComplete, node.toString()));
 							}
@@ -210,7 +219,9 @@ public class VdmCompleteProcesser
 					IContextInformation info = new ContextInformation(name, name); //$NON-NLS-1$
 					proposals.add(new CompletionProposal(name, offset, 0, name.length(), imgProvider.getImageLabel(element, 0), name, info, name));
 				}
+
 			}
+			completeQuotes(offset, proposals, info2, def);
 		} else if (def instanceof AModuleModules)
 		{
 			AModuleModules m = (AModuleModules) def;
@@ -235,60 +246,65 @@ public class VdmCompleteProcesser
 				}
 			}
 
-			try
-			{
-				m.apply(new DepthFirstAnalysisAdaptor()
-				{
-					@Override
-					public void caseAQuoteLiteralExp(AQuoteLiteralExp node)
-							throws AnalysisException
-					{
-						populateQuotes(node, node.getValue().getValue(), node.toString());
-					}
-
-					@Override
-					public void caseAQuoteType(AQuoteType node)
-							throws AnalysisException
-					{
-						populateQuotes(node, node.getValue().getValue(), node.toString());
-					}
-
-					void populateQuotes(INode node, String baseValue,
-							String name)
-					{
-						// if (!info2.prefix.toString().equals(baseValue))
-						{
-
-							IContextInformation info = new ContextInformation(name, name); //$NON-NLS-1$
-
-							int curOffset = offset + info2.offset;// - info2.proposalPrefix.length();
-							int length = name.length();
-							int replacementLength = info2.proposalPrefix.length();
-
-							if (info2.proposalPrefix.toString().equals("<"
-									+ baseValue + ">"))
-							{
-								// replacementLength+=1;
-								// length+=1;
-								curOffset = offset;
-								replacementLength = 0;
-							}
-
-							if (("<" + baseValue).toLowerCase().startsWith(info2.proposalPrefix.toString().toLowerCase()))
-							{
-								proposals.add(new CompletionProposal(name, curOffset, replacementLength, length, imgProvider.getImageLabel(node, 0), name, info, name));
-							}
-						}
-					}
-				});
-			} catch (AnalysisException e)
-			{
-				VdmUIPlugin.log("Completion error in "
-						+ getClass().getSimpleName()
-						+ "faild during quote search", e);
-			}
+			completeQuotes(offset, proposals, info2, m);
 		}
 
+	}
+
+	private void completeQuotes(final int offset,
+			final List<ICompletionProposal> proposals,
+			final VdmCompletionContext info2, INode m)
+	{
+		try
+		{
+			m.apply(new DepthFirstAnalysisAdaptor()
+			{
+				@Override
+				public void caseAQuoteLiteralExp(AQuoteLiteralExp node)
+						throws AnalysisException
+				{
+					populateQuotes(node, node.getValue().getValue(), node.toString());
+				}
+
+				@Override
+				public void caseAQuoteType(AQuoteType node)
+						throws AnalysisException
+				{
+					populateQuotes(node, node.getValue().getValue(), node.toString());
+				}
+
+				void populateQuotes(INode node, String baseValue, String name)
+				{
+					// if (!info2.prefix.toString().equals(baseValue))
+					{
+
+						IContextInformation info = new ContextInformation(name, name); //$NON-NLS-1$
+
+						int curOffset = offset + info2.offset;// - info2.proposalPrefix.length();
+						int length = name.length();
+						int replacementLength = info2.proposalPrefix.length();
+
+						if (info2.proposalPrefix.toString().equals("<"
+								+ baseValue + ">"))
+						{
+							// replacementLength+=1;
+							// length+=1;
+							curOffset = offset;
+							replacementLength = 0;
+						}
+
+						if (("<" + baseValue).toLowerCase().startsWith(info2.proposalPrefix.toString().toLowerCase()))
+						{
+							proposals.add(new CompletionProposal(name, curOffset, replacementLength, length, imgProvider.getImageLabel(node, 0), name, info, name));
+						}
+					}
+				}
+			});
+		} catch (AnalysisException e)
+		{
+			VdmUIPlugin.log("Completion error in " + getClass().getSimpleName()
+					+ "faild during quote search", e);
+		}
 	}
 
 	public void completeFields(VdmCompletionContext info, VdmDocument document,
