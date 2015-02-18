@@ -45,6 +45,9 @@ public abstract class VdmContentAssistProcessor extends
 		return true;
 	}
 
+	/**
+	 * @param offset an offset within the document for which completions should be computed
+	 */
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer,
 			int offset)
 	{
@@ -113,7 +116,15 @@ public abstract class VdmContentAssistProcessor extends
 						break;
 					}
 				}
+				
 				scanned.append(c);
+				
+				if(c=='n' && scanned.length()>3&& scanned.substring(scanned.length()-4, scanned.length()).matches("\\swen"))
+				{
+					
+					break;
+				}
+				
 
 			} catch (BadLocationException e)
 			{

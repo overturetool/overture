@@ -21,6 +21,7 @@
  */
 package org.overture.ide.ui.templates;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -30,6 +31,7 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.ast.assistant.definition.PAccessSpecifierAssistant;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitFunctionDefinition;
@@ -44,6 +46,7 @@ import org.overture.ast.expressions.AQuoteLiteralExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
+import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AQuoteType;
@@ -71,8 +74,31 @@ public class VdmCompleteProcesser
 		// } else
 		// {
 		// completeFields(info, document, calculatedProposals, offset);
-		// 		completeFields(info, document, calculatedProposals, offset);
-		completeTypes(info, document, calculatedProposals, offset);
+		// completeFields(info, document, calculatedProposals, offset);
+		
+		switch(info.type)
+		{
+			case CallParam:
+				break;
+			case Dot:
+				break;
+			case Mk:
+				break;
+			case New:
+				completeNew(info, document, calculatedProposals, offset);
+				break;
+			case Quote:
+				break;
+			case Types:
+				completeTypes(info, document, calculatedProposals, offset);
+				break;
+			default:
+				break;
+			
+		}
+		
+		
+		
 
 		List<String> replacementDisplayString = new Vector<String>();
 		for (ICompletionProposal proposal : calculatedProposals)
@@ -94,16 +120,68 @@ public class VdmCompleteProcesser
 		}
 	}
 
+	private void completeNew(final VdmCompletionContext info,
+			VdmDocument document, final List<ICompletionProposal> proposals,
+			final int offset) 
+	{
+		for (INode container : getAst(document))
+		{
+			try
+			{
+				container.apply(new DepthFirstAnalysisAdaptor()
+				{
+					@Override
+					public void caseAExplicitOperationDefinition(
+							AExplicitOperationDefinition node)
+							throws AnalysisException
+					{
+
+						if (node.getIsConstructor()
+								&& new PAccessSpecifierAssistant(null).isPublic(node.getAccess()))
+						{
+							String name = node.getName().getName();
+							if (info.proposalPrefix.isEmpty()
+									|| name.toLowerCase().startsWith(info.proposalPrefix.toLowerCase()))
+							{
+								IContextInformation infoComplete = new ContextInformation(name, name);
+								
+								String replacementString =name+"(";
+								
+								for (Iterator<PPattern> iterator = node.getParameterPatterns().iterator(); iterator.hasNext();)
+								{
+									PPattern pattern =  iterator.next();
+									
+									replacementString+=pattern.toString();
+									if(iterator.hasNext())
+										replacementString+=", ";
+									
+								}
+								replacementString+=")";
+								
+								proposals.add(new CompletionProposal(replacementString, offset
+										+ info.offset, info.proposalPrefix.length(), replacementString.length(), imgProvider.getImageLabel(node, 0), replacementString, infoComplete, node.toString()));
+							}
+						}
+					}
+				});
+			} catch (AnalysisException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
 	public void completeTypes(VdmCompletionContext info, VdmDocument document,
 			List<ICompletionProposal> proposals, int offset)
 	{
-//		boolean modulesOnly = info.afterNew || info.isEmpty;
-//		boolean recordTypesOnly = info.afterMk || info.isEmpty;
-//		String typeName = info.field.toString();
+		// boolean modulesOnly = info.afterNew || info.isEmpty;
+		// boolean recordTypesOnly = info.afterMk || info.isEmpty;
+		// String typeName = info.field.toString();
 
 		for (INode element : getAst(document))
 		{
-			if (info.type==SearchType.Types)
+			if (info.type == SearchType.Types)
 			{
 				String name = AstNameUtil.getName(element);
 				if (name.startsWith(info.proposalPrefix) || name.length() == 0)
@@ -112,13 +190,13 @@ public class VdmCompleteProcesser
 					proposals.add(new CompletionProposal(name, offset, 0, name.length(), imgProvider.getImageLabel(element, 0), name, ctxtInfo, name));
 				}
 			}
-			addContainerTypes(element,  offset, proposals, info);
+			addContainerTypes(element, offset, proposals, info);
 
 		}
 	}
 
-	private void addContainerTypes(INode def, 
-			final int offset, final List<ICompletionProposal> proposals,
+	private void addContainerTypes(INode def, final int offset,
+			final List<ICompletionProposal> proposals,
 			final VdmCompletionContext info2)
 	{
 		if (def instanceof SClassDefinition)
@@ -183,11 +261,12 @@ public class VdmCompleteProcesser
 
 							IContextInformation info = new ContextInformation(name, name); //$NON-NLS-1$
 
-							int curOffset = offset - info2.proposalPrefix.length();
+							int curOffset = offset + info2.offset;// - info2.proposalPrefix.length();
 							int length = name.length();
 							int replacementLength = info2.proposalPrefix.length();
 
-							if (info2.proposalPrefix.toString().equals("<"+baseValue+">"))
+							if (info2.proposalPrefix.toString().equals("<"
+									+ baseValue + ">"))
 							{
 								// replacementLength+=1;
 								// length+=1;
@@ -195,7 +274,7 @@ public class VdmCompleteProcesser
 								replacementLength = 0;
 							}
 
-							if (("<"+baseValue).toLowerCase().startsWith(info2.proposalPrefix.toString().toLowerCase()))
+							if (("<" + baseValue).toLowerCase().startsWith(info2.proposalPrefix.toString().toLowerCase()))
 							{
 								proposals.add(new CompletionProposal(name, curOffset, replacementLength, length, imgProvider.getImageLabel(node, 0), name, info, name));
 							}
@@ -248,29 +327,29 @@ public class VdmCompleteProcesser
 			{
 				// FIXME old code
 
-//				if (info.fieldType.toString().trim().length() != 0)
-//				{
-//					completeFromType(info.fieldType.toString(), info.proposalPrefix.toString(), proposals, offset, ast);
-//				} else
-//				{
-//					List<INode> possibleMatch = new Vector<INode>();
-//					for (INode node : getLocalFileAst(document))
-//					{
-//						for (INode field : getFields(node))
-//						{
-//							if (AstNameUtil.getName(field).equals(info.field.toString()))
-//							{
-//								// Ok match then complete it
-//								completeFromType(getTypeName(field), info.proposalPrefix.toString(), proposals, offset, ast);
-//							} else if (AstNameUtil.getName(field).startsWith(info.field.toString()))
-//							{
-//								possibleMatch.add(field);
-//							}
-//
-//						}
-//
-//					}
-//				}
+				// if (info.fieldType.toString().trim().length() != 0)
+				// {
+				// completeFromType(info.fieldType.toString(), info.proposalPrefix.toString(), proposals, offset, ast);
+				// } else
+				// {
+				// List<INode> possibleMatch = new Vector<INode>();
+				// for (INode node : getLocalFileAst(document))
+				// {
+				// for (INode field : getFields(node))
+				// {
+				// if (AstNameUtil.getName(field).equals(info.field.toString()))
+				// {
+				// // Ok match then complete it
+				// completeFromType(getTypeName(field), info.proposalPrefix.toString(), proposals, offset, ast);
+				// } else if (AstNameUtil.getName(field).startsWith(info.field.toString()))
+				// {
+				// possibleMatch.add(field);
+				// }
+				//
+				// }
+				//
+				// }
+				// }
 			}
 		} catch (Exception e)
 		{
@@ -354,7 +433,8 @@ public class VdmCompleteProcesser
 					+ name;
 		}
 		IContextInformation info2 = new ContextInformation(name, name); //$NON-NLS-1$
-		return new CompletionProposal(name, offset - info.proposalPrefix.length(), info.proposalPrefix.length(), name.length(), imgProvider.getImageLabel(node, 0), name, info2, node.toString());
+		return new CompletionProposal(name, offset
+				- info.proposalPrefix.length(), info.proposalPrefix.length(), name.length(), imgProvider.getImageLabel(node, 0), name, info2, node.toString());
 	}
 
 	private INode getType(String typeName, List<INode> ast)
@@ -461,7 +541,7 @@ public class VdmCompleteProcesser
 	{
 		List<INode> ast = new Vector<INode>();
 		ast.addAll(document.getProject().getModel().getRootElementList());
-		ast.addAll(document.getSourceUnit().getParseList());//maybe add broken parse tree
+		ast.addAll(document.getSourceUnit().getParseList());// maybe add broken parse tree
 		return ast;
 	}
 
