@@ -49,6 +49,11 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter>
 
 	private List<Exception> mergeErrors;
 
+	/**
+	 * Default constructor. <b>NOT</b> for use by extensions.
+	 * @param templateStructure
+	 * @param templateCallables
+	 */
 	public MergeVisitor(TemplateStructure templateStructure,
 			TemplateCallable[] templateCallables)
 	{
@@ -59,6 +64,19 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter>
 		this.unsupportedInTargLang = new HashSet<IrNodeInfo>();
 	}
 
+	/**
+	 * Extensible constructor.
+	 * @param templateManager
+	 * @param templateCallables
+	 */
+	public MergeVisitor(TemplateManager templateManager, TemplateCallable[] templateCallables){
+		this.templates = templateManager;
+		this.nodeContexts = new Stack<MergeContext>();
+		this.templateCallables = templateCallables;
+		this.mergeErrors = new LinkedList<Exception>();
+		this.unsupportedInTargLang = new HashSet<IrNodeInfo>();
+	}
+	
 	public List<Exception> getMergeErrors()
 	{
 		return mergeErrors;

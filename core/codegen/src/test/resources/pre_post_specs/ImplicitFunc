@@ -1,0 +1,20 @@
+class Entry
+
+operations
+
+public static Run : () ==> (nat * nat)
+Run () ==
+let b = not true
+in
+  if b then
+    return doImpl(5, 7)
+  else
+    return mk_(7, 5);
+
+functions
+
+doImpl (left,right: nat) res: nat, res2 : nat
+pre true
+post left + right = res;
+
+end Entry

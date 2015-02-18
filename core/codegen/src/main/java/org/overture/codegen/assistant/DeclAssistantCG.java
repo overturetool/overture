@@ -29,6 +29,7 @@ import java.util.Set;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AEqualsDefinition;
+import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
@@ -36,12 +37,17 @@ import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.node.INode;
+import org.overture.ast.patterns.APatternListTypePair;
+import org.overture.ast.patterns.PPattern;
+import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.codegen.cgast.SDeclCG;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SPatternCG;
+import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
+import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
@@ -51,6 +57,7 @@ import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
+import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ANat1NumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ANatNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
@@ -485,5 +492,75 @@ public class DeclAssistantCG extends AssistantBase
 		}
 		
 		return field;
+	}
+	
+	public AMethodDeclCG initMethod(SOperationDefinition node, IRInfo question) throws AnalysisException
+	{
+		String access = node.getAccess().getAccess().toString();
+		boolean isStatic = question.getTcFactory().createPDefinitionAssistant().isStatic(node);
+		boolean isAsync = question.getTcFactory().createPAccessSpecifierAssistant().isAsync(node.getAccess());
+		String operationName = node.getName().getName();
+		STypeCG type = node.getType().apply(question.getTypeVisitor(), question);
+
+		if (!(type instanceof AMethodTypeCG))
+		{
+			return null;
+		}
+
+		AMethodTypeCG methodType = (AMethodTypeCG) type;
+
+		SStmCG bodyCg = null; 
+		if (node.getBody() != null)
+		{
+			bodyCg = node.getBody().apply(question.getStmVisitor(), question);
+		}
+		
+		boolean isConstructor = node.getIsConstructor();
+		boolean isAbstract = node.getBody() instanceof ASubclassResponsibilityStm;
+
+		AMethodDeclCG method = new AMethodDeclCG();
+
+		method.setAccess(access);
+		method.setStatic(isStatic);
+		method.setAsync(isAsync);
+		method.setMethodType(methodType);
+		method.setName(operationName);
+		method.setBody(bodyCg);
+		method.setIsConstructor(isConstructor);
+		method.setAbstract(isAbstract);
+		
+		AExplicitFunctionDefinition preCond = node.getPredef();
+		SDeclCG preCondCg = preCond != null ? preCond.apply(question.getDeclVisitor(), question) : null;
+		method.setPreCond(preCondCg);
+		
+		AExplicitFunctionDefinition postCond = node.getPostdef();
+		SDeclCG postCondCg = postCond != null ? postCond.apply(question.getDeclVisitor(), question) : null;
+		method.setPostCond(postCondCg);
+		
+		return method;
+	}
+	
+
+	public List<AFormalParamLocalParamCG> consFormalParams(
+			List<APatternListTypePair> params, IRInfo question)
+			throws AnalysisException
+	{
+		List<AFormalParamLocalParamCG> paramsCg = new LinkedList<>();
+		for(APatternListTypePair patternListPair : params)
+		{
+			STypeCG pairTypeCg = patternListPair.getType().apply(question.getTypeVisitor(), question);
+			
+			for(PPattern p : patternListPair.getPatterns())
+			{
+				SPatternCG patternCg = p.apply(question.getPatternVisitor(), question);
+				
+				AFormalParamLocalParamCG paramCg = new AFormalParamLocalParamCG();
+				paramCg.setPattern(patternCg);
+				paramCg.setType(pairTypeCg.clone());
+				
+				paramsCg.add(paramCg);
+			}
+		}
+		return paramsCg;
 	}
 }

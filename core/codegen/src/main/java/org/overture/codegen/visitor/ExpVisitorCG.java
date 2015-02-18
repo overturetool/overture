@@ -201,7 +201,12 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseATimeExp(ATimeExp node, IRInfo question)
 			throws AnalysisException
 	{
-		return new ATimeExpCG();
+		STypeCG typeCg = node.getType().apply(question.getTypeVisitor(), question);
+		
+		ATimeExpCG timeExp = new ATimeExpCG();
+		timeExp.setType(typeCg);
+		
+		return timeExp;
 	}
 	
 	@Override

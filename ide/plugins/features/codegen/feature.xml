@@ -16,14 +16,6 @@
       %agreement
    </license>
 
-   <includes
-         id="org.eclipse.emf.common"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.emf.ecore"
-         version="0.0.0"/>
-
    <requires>
       <import plugin="org.eclipse.ui.console"/>
       <import plugin="org.overture.ide.ui"/>
