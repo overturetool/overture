@@ -98,7 +98,7 @@ public class IsaCodeGen extends CodeGenBase
 
 		TemplateStructure ts = new TemplateStructure("IsaTemplates");
 
-		IsaTemplateUtils isa = new IsaTemplateUtils(ts);
+		IsaTranslationUtils isa = new IsaTranslationUtils(ts);
 		
 		MergeVisitor pp = isa.getMergeVisitor();
 

@@ -32,14 +32,14 @@ import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateCallable;
 import org.overture.codegen.merging.TemplateStructure;
 
-public class IsaTemplateUtils
+public class IsaTranslationUtils
 {
 
 	private static final String TEMPLATE_CALLABLE_NAME = "Isa";
 	private static final Object PARAM_SEP = " and ";
 	private MergeVisitor mergeVisitor;
 
-	public IsaTemplateUtils(TemplateStructure templateStructure)
+	public IsaTranslationUtils(TemplateStructure templateStructure)
 	{
 		TemplateCallable[] templateCallables = new TemplateCallable[] { new TemplateCallable(TEMPLATE_CALLABLE_NAME, this) };
 		this.mergeVisitor = new MergeVisitor(new IsaTemplateManager(templateStructure), templateCallables);
