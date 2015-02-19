@@ -42,6 +42,7 @@ public class IsaTranslationUtils
 
 	private static final String TEMPLATE_CALLABLE_NAME = "Isa";
 	private static final Object PARAM_SEP = " and ";
+	private static final Object LIST_SEP = ", ";
 	private MergeVisitor mergeVisitor;
 
 	public IsaTranslationUtils(TemplateStructure templateStructure)
@@ -55,7 +56,7 @@ public class IsaTranslationUtils
 		return mergeVisitor;
 	}
 
-	// Translations (call merge visitor)
+	// Translations
 
 	public String trans(INode node) throws AnalysisException
 	{
@@ -100,7 +101,8 @@ public class IsaTranslationUtils
 		while (it.hasNext())
 		{
 			sb.append(trans(it.next()));
-			if (it.hasNext()){
+			if (it.hasNext())
+			{
 				sb.append(PARAM_SEP);
 			}
 		}
@@ -108,14 +110,7 @@ public class IsaTranslationUtils
 		return sb.toString();
 	}
 
-	// Auxiliary Constructions
-
-	public String norm(String name)
-	{
-		return name;
-	}
-
-	public String makeString(List<SExpCG> args) throws AnalysisException
+	public String transString(List<SExpCG> args) throws AnalysisException
 	{
 		StringBuilder sb = new StringBuilder();
 		sb.append("''");
@@ -127,7 +122,34 @@ public class IsaTranslationUtils
 		return sb.toString();
 	}
 
-	// Controlflow
+	public String transSeq(List<SExpCG> args) throws AnalysisException
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("[");
+
+		Iterator<SExpCG> it = args.iterator();
+
+		while (it.hasNext())
+		{
+			sb.append(trans(it.next()));
+			if (it.hasNext())
+			{
+				sb.append(LIST_SEP);
+			}
+		}
+
+		sb.append("]");
+		return sb.toString();
+	}
+
+	// Renamings
+
+	public String norm(String name)
+	{
+		return name.replaceAll("-", "_");
+	}
+
+	// Control flow
 
 	public String filter(AFieldDeclCG field) throws AnalysisException
 	{
