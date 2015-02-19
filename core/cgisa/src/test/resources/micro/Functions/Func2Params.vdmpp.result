@@ -1,0 +1,1 @@
+{"translation":"theory A\n  imports utp_cml\nbegin\n\ncmlefun f\n  inp x :: \"@nat\" and y :: \"@nat\"\n  out \"@type\"\n  is \"^x^\"\n\nend","errors":false}

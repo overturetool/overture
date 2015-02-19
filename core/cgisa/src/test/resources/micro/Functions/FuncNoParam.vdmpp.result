@@ -1,0 +1,1 @@
+{"translation":"theory A\n  imports utp_cml\nbegin\n\ncmlefun f\n  inp \n  out \"@type\"\n  is \"0\"\n\nend","errors":false}
