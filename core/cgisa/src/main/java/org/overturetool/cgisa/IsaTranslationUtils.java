@@ -1,6 +1,6 @@
 /*
  * #%~
- * VDM to Isabelle Code Generation
+ * VDM to Isabelle Translation
  * %%
  * Copyright (C) 2008 - 2015 Overture
  * %%
