@@ -1,2 +1,2 @@
-definition "$node.Name" = +|$Isa.trans($node.Initial) : $Isa.trans($node.type)|+"
+definition "$node.Name = +|$Isa.trans($node.Initial) : $Isa.trans($node.type)|+"
 declare ${node.Name}_def [eval,evalp]
