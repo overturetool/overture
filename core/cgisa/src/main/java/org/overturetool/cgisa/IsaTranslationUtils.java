@@ -21,11 +21,15 @@
  */
 package org.overturetool.cgisa;
 
+import helpers.IsSeqTypeVisitor;
+
 import java.io.StringWriter;
 import java.util.Iterator;
 import java.util.List;
 
 import org.overture.codegen.cgast.INode;
+import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
@@ -63,8 +67,8 @@ public class IsaTranslationUtils
 		
 		return "";
 	}
-
-	public String trans(List<AFormalParamLocalParamCG> params) throws AnalysisException{
+	
+	public String transParams(List<AFormalParamLocalParamCG> params) throws AnalysisException{
 		StringBuilder sb = new StringBuilder();
 		
 		Iterator<AFormalParamLocalParamCG> it = params.iterator();
@@ -84,11 +88,19 @@ public class IsaTranslationUtils
 		
 	}
 	
+	public String transArgs(List<SExpCG> args){
+		return "A list of dudes";
+	}
+	
 	public String trans(INode node) throws AnalysisException
 	{
 		StringWriter writer = new StringWriter();
 		node.apply(mergeVisitor, writer);
 
 		return writer.toString();
+	}
+	
+	public boolean isSeq(STypeCG node) throws AnalysisException{
+		return node.apply(new IsSeqTypeVisitor());
 	}
 }

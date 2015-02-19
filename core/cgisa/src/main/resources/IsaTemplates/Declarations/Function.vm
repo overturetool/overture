@@ -1,4 +1,4 @@
 cmlefun $node.Name
-  inp $Isa.trans($node.FormalParams)
+  inp $Isa.transParams($node.FormalParams)
   out "@type"
   is "$Isa.trans($node.Body)"
