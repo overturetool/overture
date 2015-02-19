@@ -87,12 +87,6 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter>
 		return !mergeErrors.isEmpty();
 	}
 
-	public void dropMergeErrors()
-	{
-		// Don't clear it if others are using the list
-		mergeErrors = new LinkedList<Exception>();
-	}
-	
 	public Set<IrNodeInfo> getUnsupportedInTargLang()
 	{
 		return unsupportedInTargLang;
@@ -103,6 +97,13 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter>
 		return unsupportedInTargLang != null && !unsupportedInTargLang.isEmpty();
 	}
 
+	public void init()
+	{
+		// Avoid clearing the data structures if others are using them
+		mergeErrors = new LinkedList<Exception>();
+		unsupportedInTargLang = new HashSet<IrNodeInfo>();
+	}
+	
 	private void initCodeGenContext(INode node,
 			TemplateCallable[] templateCallables)
 	{
