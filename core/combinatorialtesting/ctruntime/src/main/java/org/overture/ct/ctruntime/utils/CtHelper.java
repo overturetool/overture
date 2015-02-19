@@ -29,45 +29,59 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import org.overture.ast.lex.Dialect;
+import org.overture.config.Release;
+
 public class CtHelper
 {
-	public String[] buildArgs(final String traceName, final int port,
-			File traceFolder, File specfile)
-
+	public static class CtTestData
 	{
-		// Passing 'null' indicates no trace reduction
-		return buildArgs(traceName, port, traceFolder, specfile, null);
+		public final String traceName;
+		public final int port;
+		public final File traceFolder;
+		public final File specFile;
+		public TraceReductionInfo reduction;
+
+		public CtTestData(String traceName, int port, File traceFolder,
+				File specFile, TraceReductionInfo second)
+		{
+			this.traceName = traceName;
+			this.port = port;
+			this.traceFolder = traceFolder;
+			this.specFile = specFile;
+			this.reduction = second;
+
+		}
 	}
 
-	public String[] buildArgs(final String traceName, final int port,
-			File traceFolder, File specfile, TraceReductionInfo info)
+	public String[] buildArgs(Dialect dialect, Release release, CtTestData data)
 	{
-		if (info == null)
+		if (data.reduction == null)
 		{
-			info = new TraceReductionInfo();
+			data.reduction= new TraceReductionInfo();
 		}
 
 		String[] args = new String[] {
 				"-h",
 				"localhost",
 				"-p",
-				port + "",
+				data.port + "",
 				"-k",
 				"whatever",
 				"-e",
-				"DEFAULT",
-				"-vdmsl",
+				dialect == Dialect.VDM_SL ? "DEFAULT" : "Entry",
+				dialect.getArgstring(),
 				"-r",
 				"vdm10",
 				"-t",
-				traceName,
+				data.traceName,
 				"-tracefolder",
-				traceFolder.toURI().toASCIIString(),
-				specfile.toURI().toASCIIString(),
+				data.traceFolder.toURI().toASCIIString(),
+				data.specFile.toURI().toASCIIString(),
 				"-traceReduction",
-				"{" + info.getSubset() + ","
-						+ info.getReductionType().toString() + ","
-						+ info.getSeed() + "}" };
+				"{" + data.reduction.getSubset() + ","
+						+ data.reduction.getReductionType().toString() + ","
+						+ data.reduction.getSeed() + "}" };
 		return args;
 	}
 

@@ -13,21 +13,21 @@
 			<result no="5" verdict="PASSED">()</result>
 			<test no="6">op2(3)</test>
 			<result no="6" verdict="PASSED">()</result>
-			<test no="7">op2(5)</test>
+			<test no="7">op1(2, 3)</test>
 			<result no="7" verdict="PASSED">()</result>
-			<test no="8">op1(3, 1)</test>
+			<test no="8">op2(5)</test>
 			<result no="8" verdict="PASSED">()</result>
-			<test no="9">op2(4)</test>
+			<test no="9">op1(3, 1)</test>
 			<result no="9" verdict="PASSED">()</result>
-			<test no="10">op1(3, 2)</test>
+			<test no="10">op2(4)</test>
 			<result no="10" verdict="PASSED">()</result>
-			<test no="11">op1(2, 3)</test>
+			<test no="11">op1(3, 2)</test>
 			<result no="11" verdict="PASSED">()</result>
-			<test no="12">op1(2, 4)</test>
+			<test no="12">op2(5)</test>
 			<result no="12" verdict="PASSED">()</result>
-			<test no="13">op2(6)</test>
+			<test no="13">op1(2, 4)</test>
 			<result no="13" verdict="PASSED">()</result>
-			<test no="14">op2(5)</test>
+			<test no="14">op2(6)</test>
 			<result no="14" verdict="PASSED">()</result>
 			<test no="15">op1(3, 4)</test>
 			<result no="15" verdict="PASSED">()</result>
