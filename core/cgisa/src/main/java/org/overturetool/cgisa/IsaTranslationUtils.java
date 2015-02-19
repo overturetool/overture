@@ -21,8 +21,6 @@
  */
 package org.overturetool.cgisa;
 
-import helpers.IsSeqTypeVisitor;
-
 import java.io.StringWriter;
 import java.util.Iterator;
 import java.util.List;
@@ -36,6 +34,8 @@ import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateCallable;
 import org.overture.codegen.merging.TemplateStructure;
+import org.overturetool.cgisa.helpers.IsMethodTypeVisitor;
+import org.overturetool.cgisa.helpers.IsSeqOfCharTypeVisitor;
 
 public class IsaTranslationUtils
 {
@@ -55,43 +55,8 @@ public class IsaTranslationUtils
 		return mergeVisitor;
 	}
 
-	public String norm(String name)
-	{
-		return name;
-	}
-	
-	public String filter(AFieldDeclCG field) throws AnalysisException {
-		if (field.getFinal() && field.getStatic()){
-			return trans(field);
-		}
-		
-		return "";
-	}
-	
-	public String transParams(List<AFormalParamLocalParamCG> params) throws AnalysisException{
-		StringBuilder sb = new StringBuilder();
-		
-		Iterator<AFormalParamLocalParamCG> it = params.iterator();
-		
-		while (it.hasNext()){
-			StringWriter writer = new StringWriter();
-			it.next().apply(mergeVisitor, writer);
-			sb.append(writer.toString());
-			if (it.hasNext()){
-				sb.append(PARAM_SEP);
-			}
-		
-		}
-		
-		
-		return sb.toString();
-		
-	}
-	
-	public String transArgs(List<SExpCG> args){
-		return "A list of dudes";
-	}
-	
+	// Translations (call merge visitor)
+
 	public String trans(INode node) throws AnalysisException
 	{
 		StringWriter writer = new StringWriter();
@@ -99,8 +64,90 @@ public class IsaTranslationUtils
 
 		return writer.toString();
 	}
-	
-	public boolean isSeq(STypeCG node) throws AnalysisException{
-		return node.apply(new IsSeqTypeVisitor());
+
+	public String transParams(List<AFormalParamLocalParamCG> params)
+			throws AnalysisException
+	{
+		StringBuilder sb = new StringBuilder();
+
+		Iterator<AFormalParamLocalParamCG> it = params.iterator();
+
+		while (it.hasNext())
+		{
+			StringWriter writer = new StringWriter();
+			it.next().apply(mergeVisitor, writer);
+			sb.append(writer.toString());
+			if (it.hasNext())
+			{
+				sb.append(PARAM_SEP);
+			}
+
+		}
+
+		return sb.toString();
+	}
+
+	public String transArgs(List<INode> args) throws AnalysisException
+	{
+		if (args.isEmpty())
+		{
+			return "";
+		}
+		StringBuilder sb = new StringBuilder();
+
+		Iterator<INode> it = args.iterator();
+
+		while (it.hasNext())
+		{
+			sb.append(trans(it.next()));
+			if (it.hasNext()){
+				sb.append(PARAM_SEP);
+			}
+		}
+
+		return sb.toString();
+	}
+
+	// Auxiliary Constructions
+
+	public String norm(String name)
+	{
+		return name;
+	}
+
+	public String makeString(List<SExpCG> args) throws AnalysisException
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("''");
+		for (SExpCG arg : args)
+		{
+			sb.append(trans(arg));
+		}
+		sb.append("''");
+		return sb.toString();
+	}
+
+	// Controlflow
+
+	public String filter(AFieldDeclCG field) throws AnalysisException
+	{
+		if (field.getFinal() && field.getStatic())
+		{
+			return trans(field);
+		}
+
+		return "";
+	}
+
+	// Checks
+
+	public boolean isString(STypeCG node) throws AnalysisException
+	{
+		return node.apply(new IsSeqOfCharTypeVisitor());
+	}
+
+	public boolean isFunc(STypeCG node) throws AnalysisException
+	{
+		return node.apply(new IsMethodTypeVisitor());
 	}
 }
