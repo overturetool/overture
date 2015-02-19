@@ -4,6 +4,10 @@ begin
 
 #foreach( $func in $node.Functions )
 $Isa.trans($func)
-#end
 
+#end
+#foreach( $field in $node.Fields )
+$Isa.trans($field)
+
+#end
 end

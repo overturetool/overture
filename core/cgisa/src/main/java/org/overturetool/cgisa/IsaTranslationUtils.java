@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.analysis.AnalysisException;
+import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateCallable;
@@ -54,7 +55,25 @@ public class IsaTranslationUtils
 	{
 		return name;
 	}
+	
+	public String filter(AFieldDeclCG field) throws AnalysisException {
+		if (field.getFinal() && field.getStatic()){
+			trans(field.getInitial());
+		}
+		
+		return "";
+	}
 
+//	public String trans(AFieldDeclCG field) throws AnalysisException{
+//		
+//		
+//		// Only interested in VDM values - static and final
+//		if (field.getFinal() && field.getStatic()){
+//			trans(field.getInitial());
+//		}
+//		
+//		return "";
+//	}
 	public String trans(List<AFormalParamLocalParamCG> params) throws AnalysisException{
 		StringBuilder sb = new StringBuilder();
 		
