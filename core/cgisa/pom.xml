@@ -10,7 +10,7 @@
 
   <groupId>org.overturetool.core</groupId>
   <artifactId>cgisa</artifactId>
-  <name>VDM to Isabelle Code Generation</name>
+  <name>VDM to Isabelle Translation</name>
 
   <dependencies>
     <dependency>
