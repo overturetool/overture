@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.junit.runner.RunWith;
@@ -83,8 +83,7 @@ public class CgIsaParamTest extends ParamStandardTest<CgIsaTestResult>
 	@Override
 	public void compareResults(CgIsaTestResult actual, CgIsaTestResult expected)
 	{
-		assertEquals(expected, actual);
-
+		assertTrue("Expected: "+expected.translation + "\nGot: "+actual.translation, expected.compare(actual));
 	}
 
 }

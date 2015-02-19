@@ -1,20 +1,19 @@
 package org.overturetool.cgisa;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.codegen.utils.GeneratedModule;
 
 public class CgIsaTestResult
 {
-	List<String> translation;
+	String translation;
 	boolean errors;
 
 	public CgIsaTestResult()
 	{
 	}
 
-	private CgIsaTestResult(List<String> translation, boolean errors)
+	private CgIsaTestResult(String translation, boolean errors)
 	{
 		super();
 		this.translation = translation;
@@ -62,9 +61,20 @@ public class CgIsaTestResult
 		return true;
 	}
 
+	public boolean compare(CgIsaTestResult other){
+		if (errors != other.errors){
+			return false;
+		}
+		if (!translation.replaceAll("\\s",  "").equals(other.translation.replaceAll("\\s", ""))){
+			return false;
+		}
+		
+		return true;
+	}
+	
 	public static CgIsaTestResult convert(List<GeneratedModule> result)
 	{
-		List<String> trans = new LinkedList<>();
+		StringBuilder trans = new StringBuilder();
 		boolean err = false;
 
 		for (GeneratedModule g : result)
@@ -83,11 +93,11 @@ public class CgIsaTestResult
 
 			else
 			{
-				trans.add(g.getContent());
+				trans.append(g.getContent());
 
 			}
 
 		}
-		return new CgIsaTestResult(trans, err);
+		return new CgIsaTestResult(trans.toString(), err);
 	}
 }
