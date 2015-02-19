@@ -1,0 +1,3 @@
+#if ($Isa.isString($node.Type))
+$Isa.makeString($node.Members)#else
+$Isa.makeSeq($node.Members)#end
