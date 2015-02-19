@@ -36,10 +36,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.overture.ast.lex.Dialect;
-import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.ct.ctruntime.TraceRunnerMain;
 import org.overture.ct.ctruntime.utils.CtHelper;
+import org.overture.ct.ctruntime.utils.CtHelper.CtTestData;
 import org.overture.ct.ctruntime.utils.Data;
 import org.overture.ct.ctruntime.utils.TraceResult;
 import org.overture.ct.ctruntime.utils.TraceResultReader;
@@ -66,25 +66,30 @@ public abstract class CtTestCaseBase extends TestResourcesResultTestCase4
 	// protected CtTestHelper testHelper;
 	private String[] args;
 	private File traceFolder;
+	private CtTestData testdata;
 
 	public CtTestCaseBase()
 	{
 		super();
 	}
 
-	public CtTestCaseBase(File file, File traceFolder, String[] args)
+	public CtTestCaseBase(File file, File traceFolder, CtTestData args)
 	{
 		super(file);
-		this.args = args;
+		
+		this.testdata = args;
 		this.traceFolder = traceFolder;
 	}
 
 	@Before
-	public void setUp() throws Exception
+	public void internalSetup() throws Exception
 	{
-		Settings.dialect = Dialect.VDM_SL;
-		Settings.release = Release.VDM_10;
+		setUp();
+		CtHelper testHelper = new CtHelper();
+		this.args = testHelper.buildArgs(Settings.dialect, Settings.release, testdata);
 	}
+	
+	abstract public void setUp() throws Exception;
 
 	@After
 	public void tearDown() throws Exception
@@ -109,7 +114,7 @@ public abstract class CtTestCaseBase extends TestResourcesResultTestCase4
 		}
 
 		File actualResultsFile = computeActualResults(TRACE_NAME);
-		
+
 		if (Properties.recordTestResults)
 		{
 			try
@@ -153,11 +158,13 @@ public abstract class CtTestCaseBase extends TestResourcesResultTestCase4
 		}
 	}
 
+	@Override
 	protected File createResultFile(String filename)
 	{
 		return new File(filename + ".result");
 	}
 
+	@Override
 	protected File getResultFile(String filename)
 	{
 		return new File(filename + ".result");
@@ -175,7 +182,11 @@ public abstract class CtTestCaseBase extends TestResourcesResultTestCase4
 
 		String traceName = "T1";
 
-		final File actualOutputFile = new File(traceFolder,"DEFAULT-" + traceName + ".xml");
+		String actualOutputFileName = (Settings.dialect == Dialect.VDM_SL ? "DEFAULT-"
+				: "Entry-")
+				+ traceName + ".xml";
+
+		final File actualOutputFile = new File(traceFolder, actualOutputFileName);
 
 		CtHelper testHelper = new CtHelper();
 		Thread t = testHelper.consCtClientThread(socket, data);
