@@ -7,7 +7,7 @@ $Isa.trans($func)
 
 #end
 #foreach( $field in $node.Fields )
-$Isa.trans($field)
+$Isa.filter($field)
 
 #end
 end

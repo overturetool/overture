@@ -58,22 +58,12 @@ public class IsaTranslationUtils
 	
 	public String filter(AFieldDeclCG field) throws AnalysisException {
 		if (field.getFinal() && field.getStatic()){
-			trans(field.getInitial());
+			return trans(field);
 		}
 		
 		return "";
 	}
 
-//	public String trans(AFieldDeclCG field) throws AnalysisException{
-//		
-//		
-//		// Only interested in VDM values - static and final
-//		if (field.getFinal() && field.getStatic()){
-//			trans(field.getInitial());
-//		}
-//		
-//		return "";
-//	}
 	public String trans(List<AFormalParamLocalParamCG> params) throws AnalysisException{
 		StringBuilder sb = new StringBuilder();
 		
