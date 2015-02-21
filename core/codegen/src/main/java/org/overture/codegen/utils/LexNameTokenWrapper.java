@@ -46,10 +46,14 @@ public class LexNameTokenWrapper
 	@Override
 	public int hashCode()
 	{
-		return 0;
-		// This ensures that equals are being
-		// used when instances of this class are
-		// stored in collections
+		int hashCode = 0;
+		
+		if(name != null)
+		{
+			hashCode += name.hashCode();
+		}
+		
+		return hashCode;
 	}
 
 	@Override
