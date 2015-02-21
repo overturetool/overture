@@ -219,13 +219,25 @@ public class Vdm2JavaCommand extends AbstractHandler
 					
 					try
 					{
-						PluginVdm2JavaUtil.copyCodeGenFile(PluginVdm2JavaUtil.CODEGEN_RUNTIME_FILE_NAME,
+						PluginVdm2JavaUtil.copyCodeGenFile(PluginVdm2JavaUtil.CODEGEN_RUNTIME_BIN_FILE_NAME,
 								new File(outputFolder, PluginVdm2JavaUtil.CODEGEN_RUNTIME_LIB_FOLDER_NAME));
-						outputRuntime(outputFolder);
+						outputRuntimeBinaries(outputFolder);
 					}
 					catch(Exception e)
 					{
 						CodeGenConsole.GetInstance().printErrorln("Problems copying the Java code generator runtime library to " + outputFolder.getAbsolutePath());
+						CodeGenConsole.GetInstance().printErrorln("Reason: " + e.getMessage());
+					}
+					
+					try
+					{
+						PluginVdm2JavaUtil.copyCodeGenFile(PluginVdm2JavaUtil.CODEGEN_RUNTIME_SOURCES_FILE_NAME,
+								new File(outputFolder, PluginVdm2JavaUtil.CODEGEN_RUNTIME_LIB_FOLDER_NAME));
+						outputRuntimeSources(outputFolder);
+					}
+					catch(Exception e)
+					{
+						CodeGenConsole.GetInstance().printErrorln("Problems copying the Java code generator runtime library sources to " + outputFolder.getAbsolutePath());
 						CodeGenConsole.GetInstance().printErrorln("Reason: " + e.getMessage());
 					}
 					
@@ -356,10 +368,16 @@ public class Vdm2JavaCommand extends AbstractHandler
 		}
 	}
 	
-	private void outputRuntime(File outputFolder)
+	private void outputRuntimeBinaries(File outputFolder)
 	{
-		File runtime = new File(outputFolder, PluginVdm2JavaUtil.CODEGEN_RUNTIME_FILE_NAME);
-		CodeGenConsole.GetInstance().println("Copied Java code generator runtime library to " + runtime.getAbsolutePath() + "\n");
+		File runtime = new File(outputFolder, PluginVdm2JavaUtil.CODEGEN_RUNTIME_BIN_FILE_NAME);
+		CodeGenConsole.GetInstance().println("Copied the Java code generator runtime library to " + runtime.getAbsolutePath() + "\n");
+	}
+	
+	private void outputRuntimeSources(File outputFolder)
+	{
+		File runtime = new File(outputFolder, PluginVdm2JavaUtil.CODEGEN_RUNTIME_SOURCES_FILE_NAME);
+		CodeGenConsole.GetInstance().println("Copied the Java code generator runtime library sources to " + runtime.getAbsolutePath() + "\n");
 	}
 
 	private void outputUserspecifiedModules(File outputFolder,

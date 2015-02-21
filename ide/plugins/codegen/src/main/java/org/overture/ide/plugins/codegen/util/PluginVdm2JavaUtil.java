@@ -64,7 +64,8 @@ public class PluginVdm2JavaUtil
 	public static final String JAVA_FOLDER = "java";
 	public static final String QUOTES_FOLDER = "quotes";
 	public static final String UTILS_FOLDER = "utils";
-	public static final String CODEGEN_RUNTIME_FILE_NAME = "codegen-runtime.jar";
+	public static final String CODEGEN_RUNTIME_BIN_FILE_NAME = "codegen-runtime.jar";
+	public static final String CODEGEN_RUNTIME_SOURCES_FILE_NAME = "codegen-runtime-sources.jar";
 	public static final String ECLIPSE_CLASSPATH_FILE_NAME = ".classpath";
 	public static final String ECLIPSE_PROJECT_FILE_NAME = ".project";
 	public static final String ECLIPSE_RES_FILES_FOLDER_NAME = "eclipsefiles";
