@@ -89,6 +89,16 @@
 									<outputDirectory>${basedir}/target/runtime</outputDirectory>
 									<destFileName>codegen-runtime.jar</destFileName>
 								</artifactItem>
+								<artifactItem>
+									<groupId>org.overturetool.core</groupId>
+									<artifactId>codegen-runtime</artifactId>
+									<version>${project.version}</version>
+									<classifier>sources</classifier>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${basedir}/target/runtime</outputDirectory>
+									<destFileName>codegen-runtime-sources.jar</destFileName>
+								</artifactItem>
 							</artifactItems>
 						</configuration>
 					</execution>
