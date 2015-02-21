@@ -53,6 +53,7 @@ import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.ir.VdmNodeInfo;
 import org.overture.codegen.utils.AnalysisExceptionCG;
+import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
@@ -198,7 +199,8 @@ public class Vdm2JavaCommand extends AbstractHandler
 					
 					try
 					{
-						vdm2java.generateJavaSourceFiles(outputFolder, generatedData.getClasses());
+						File javaOutputFolder = new File(outputFolder, PluginVdm2JavaUtil.CODEGEN_RUNTIME_SRC_FOLDER_NAME);
+						vdm2java.generateJavaSourceFiles(javaOutputFolder, generatedData.getClasses());
 					} catch (Exception e)
 					{
 						CodeGenConsole.GetInstance().printErrorln("Problems saving the code generated Java source files to disk.");
@@ -213,6 +215,37 @@ public class Vdm2JavaCommand extends AbstractHandler
 						}
 						
 						return Status.CANCEL_STATUS;
+					}
+					
+					try
+					{
+						PluginVdm2JavaUtil.copyCodeGenFile(PluginVdm2JavaUtil.CODEGEN_RUNTIME_FILE_NAME,
+								new File(outputFolder, PluginVdm2JavaUtil.CODEGEN_RUNTIME_LIB_FOLDER_NAME));
+						outputRuntime(outputFolder);
+					}
+					catch(Exception e)
+					{
+						CodeGenConsole.GetInstance().printErrorln("Problems copying the Java code generator runtime library to " + outputFolder.getAbsolutePath());
+						CodeGenConsole.GetInstance().printErrorln("Reason: " + e.getMessage());
+					}
+					
+					try
+					{
+						PluginVdm2JavaUtil.copyCodeGenFile(PluginVdm2JavaUtil.ECLIPSE_RES_FILES_FOLDER_NAME +  "/"
+								+ PluginVdm2JavaUtil.ECLIPSE_PROJECT_FILE_NAME, PluginVdm2JavaUtil.ECLIPSE_PROJECT_FILE_NAME, outputFolder);
+						PluginVdm2JavaUtil.copyCodeGenFile(PluginVdm2JavaUtil.ECLIPSE_RES_FILES_FOLDER_NAME +  "/"
+								+ PluginVdm2JavaUtil.ECLIPSE_CLASSPATH_FILE_NAME, PluginVdm2JavaUtil.ECLIPSE_CLASSPATH_FILE_NAME, outputFolder);
+						
+						GeneralCodeGenUtils.replaceInFile(new File(outputFolder, PluginVdm2JavaUtil.ECLIPSE_PROJECT_FILE_NAME), "%s", project.getName());
+						
+						CodeGenConsole.GetInstance().println("Generated Eclipse project with Java generated code.\n");
+
+					} catch (Exception e)
+					{
+						e.printStackTrace();
+						CodeGenConsole.GetInstance().printErrorln("Problems generating the eclipse project with the generated Java code");
+						CodeGenConsole.GetInstance().printErrorln("Reason: "
+								+ e.getMessage());
 					}
 					
 					outputUserspecifiedModules(outputFolder, generatedData.getClasses());
@@ -321,6 +354,12 @@ public class Vdm2JavaCommand extends AbstractHandler
 			CodeGenConsole.GetInstance().println("Hidden variables found! Following variable renamings were done: ");
 			CodeGenConsole.GetInstance().println(JavaCodeGenUtil.constructVarRenamingString(allRenamings));;
 		}
+	}
+	
+	private void outputRuntime(File outputFolder)
+	{
+		File runtime = new File(outputFolder, PluginVdm2JavaUtil.CODEGEN_RUNTIME_FILE_NAME);
+		CodeGenConsole.GetInstance().println("Copied Java code generator runtime library to " + runtime.getAbsolutePath() + "\n");
 	}
 
 	private void outputUserspecifiedModules(File outputFolder,
