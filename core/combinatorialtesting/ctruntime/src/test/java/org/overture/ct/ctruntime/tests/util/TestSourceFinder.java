@@ -139,7 +139,10 @@ public class TestSourceFinder
 		} else
 		{
 			String traceName = file.getName();
-			traceName = traceName.substring(0, traceName.length() - 6);
+			if(traceName.contains("."))
+			{
+				traceName = traceName.substring(0, traceName.lastIndexOf('.'));
+			}
 
 			File traceFolder = new File((CtTestCaseBase.TRACE_OUTPUT_FOLDER + traceName).replace('/', File.separatorChar));
 			tests.add(new Object[] { traceName, file, traceFolder, new CtTestData("T1", CtTestCaseBase.PORT, traceFolder, file,null) });
