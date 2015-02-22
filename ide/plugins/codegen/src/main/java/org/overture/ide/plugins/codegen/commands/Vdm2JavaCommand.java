@@ -197,9 +197,10 @@ public class Vdm2JavaCommand extends AbstractHandler
 					outputUserSpecifiedSkippedClasses(classesToSkip);
 					outputSkippedClasses(generatedData.getSkippedClasses());
 					
+					File javaOutputFolder = new File(outputFolder, PluginVdm2JavaUtil.CODEGEN_RUNTIME_SRC_FOLDER_NAME);
+					
 					try
 					{
-						File javaOutputFolder = new File(outputFolder, PluginVdm2JavaUtil.CODEGEN_RUNTIME_SRC_FOLDER_NAME);
 						vdm2java.generateJavaSourceFiles(javaOutputFolder, generatedData.getClasses());
 					} catch (Exception e)
 					{
@@ -217,11 +218,11 @@ public class Vdm2JavaCommand extends AbstractHandler
 						return Status.CANCEL_STATUS;
 					}
 					
+					File libFolder = new File(outputFolder, PluginVdm2JavaUtil.CODEGEN_RUNTIME_LIB_FOLDER_NAME);
 					try
 					{
-						PluginVdm2JavaUtil.copyCodeGenFile(PluginVdm2JavaUtil.CODEGEN_RUNTIME_BIN_FILE_NAME,
-								new File(outputFolder, PluginVdm2JavaUtil.CODEGEN_RUNTIME_LIB_FOLDER_NAME));
-						outputRuntimeBinaries(outputFolder);
+						PluginVdm2JavaUtil.copyCodeGenFile(PluginVdm2JavaUtil.CODEGEN_RUNTIME_BIN_FILE_NAME, libFolder);
+						outputRuntimeBinaries(libFolder);
 					}
 					catch(Exception e)
 					{
@@ -231,9 +232,8 @@ public class Vdm2JavaCommand extends AbstractHandler
 					
 					try
 					{
-						PluginVdm2JavaUtil.copyCodeGenFile(PluginVdm2JavaUtil.CODEGEN_RUNTIME_SOURCES_FILE_NAME,
-								new File(outputFolder, PluginVdm2JavaUtil.CODEGEN_RUNTIME_LIB_FOLDER_NAME));
-						outputRuntimeSources(outputFolder);
+						PluginVdm2JavaUtil.copyCodeGenFile(PluginVdm2JavaUtil.CODEGEN_RUNTIME_SOURCES_FILE_NAME, libFolder);
+						outputRuntimeSources(libFolder);
 					}
 					catch(Exception e)
 					{
@@ -260,10 +260,11 @@ public class Vdm2JavaCommand extends AbstractHandler
 								+ e.getMessage());
 					}
 					
-					outputUserspecifiedModules(outputFolder, generatedData.getClasses());
+					outputUserspecifiedModules(javaOutputFolder, generatedData.getClasses());
 
 					// Quotes generation
-					outputQuotes(vdmProject, outputFolder, vdm2java, generatedData.getQuoteValues());
+					outputQuotes(vdmProject, new File(javaOutputFolder, PluginVdm2JavaUtil.QUOTES_FOLDER),
+							vdm2java, generatedData.getQuoteValues());
 
 					// Renaming of variables shadowing other variables
 					outputRenamings(generatedData.getAllRenamings());
@@ -459,15 +460,13 @@ public class Vdm2JavaCommand extends AbstractHandler
 	{
 		if (quotes != null && !quotes.isEmpty())
 		{
-			File quotesFolder = PluginVdm2JavaUtil.getQuotesFolder(vdmProject);
-			
 			for(GeneratedModule q : quotes)
 			{
-				vdm2java.generateJavaSourceFile(quotesFolder, q);
+				vdm2java.generateJavaSourceFile(outputFolder, q);
 			}
 
 			CodeGenConsole.GetInstance().println("Quotes generated to folder: "
-					+ quotesFolder.getAbsolutePath());
+					+ outputFolder.getAbsolutePath());
 			CodeGenConsole.GetInstance().println("");
 		}
 	}
