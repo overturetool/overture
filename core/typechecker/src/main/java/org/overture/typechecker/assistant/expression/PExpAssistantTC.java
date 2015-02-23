@@ -45,7 +45,7 @@ public class PExpAssistantTC implements IAstAssistant
 	{
 		try
 		{
-			return expression.apply(af.getPreNameFinder());// FIXME: should we handle exceptions like this
+			return expression.apply(af.getPreNameFinder());
 		} catch (AnalysisException e)
 		{
 			return null;
