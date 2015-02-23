@@ -46,10 +46,13 @@ public class IsaTranslationUtils
 	private static final String LIST_SEP = ", ";
 	private MergeVisitor mergeVisitor;
 
+	protected IsaCommonUtils isaUtils;
+	
 	public IsaTranslationUtils(TemplateStructure templateStructure)
 	{
 		TemplateCallable[] templateCallables = new TemplateCallable[] { new TemplateCallable(TEMPLATE_CALLABLE_NAME, this) };
 		this.mergeVisitor = new MergeVisitor(new IsaTemplateManager(templateStructure), templateCallables);
+		this.isaUtils = new IsaCommonUtils();
 	}
 
 	public MergeVisitor getMergeVisitor()
@@ -160,15 +163,7 @@ public class IsaTranslationUtils
 	
 	public boolean isRoot(INode node)
 	{
-		if (node.parent() instanceof AApplyExpCG)
-		{
-			AApplyExpCG par = (AApplyExpCG) node.parent();
-			if (par.getRoot() == node)
-			{
-				return true;
-			}
-		}
-		return false;
+		return isaUtils.isRoot(node);
 	}
 
 	public boolean isString(STypeCG node) throws AnalysisException
