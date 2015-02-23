@@ -31,12 +31,11 @@ import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
-import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateCallable;
 import org.overture.codegen.merging.TemplateStructure;
-import org.overturetool.cgisa.helpers.IsMethodTypeVisitor;
-import org.overturetool.cgisa.helpers.IsSeqOfCharTypeVisitor;
+import org.overturetool.cgisa.checkers.IsMethodTypeVisitor;
+import org.overturetool.cgisa.checkers.IsSeqOfCharTypeVisitor;
 
 public class IsaTranslationUtils
 {
