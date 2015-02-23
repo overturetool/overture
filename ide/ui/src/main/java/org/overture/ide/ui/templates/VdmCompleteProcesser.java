@@ -154,7 +154,7 @@ public class VdmCompleteProcesser
 					if (name.toLowerCase().startsWith(info2.prefix.toString().toLowerCase()))
 					{
 						proposals.add(new CompletionProposal(name, offset
-								- info2.prefix.length(), info2.prefix.length(), name.length(), imgProvider.getImageLabel(element, 0), name, info, name));
+								- info2.prefix.length(), info2.prefix.length(), name.length(), imgProvider.getImageLabel(element, 0), name, info, element.toString()));
 					}
 				}
 			}
@@ -356,7 +356,7 @@ public class VdmCompleteProcesser
 					+ name;
 		}
 		IContextInformation info2 = new ContextInformation(name, name); //$NON-NLS-1$
-		return new CompletionProposal(name, offset - info.proposal.length(), info.proposal.length(), name.length(), imgProvider.getImageLabel(node, 0), name, info2, name);
+		return new CompletionProposal(name, offset - info.proposal.length(), info.proposal.length(), name.length(), imgProvider.getImageLabel(node, 0), name, info2, node.toString());
 	}
 
 	private INode getType(String typeName, List<INode> ast)
@@ -463,7 +463,7 @@ public class VdmCompleteProcesser
 	{
 		List<INode> ast = new Vector<INode>();
 		ast.addAll(document.getProject().getModel().getRootElementList());
-		ast.addAll(document.getSourceUnit().getParseList());
+		ast.addAll(document.getSourceUnit().getParseList());//maybe add broken parse tree
 		return ast;
 	}
 

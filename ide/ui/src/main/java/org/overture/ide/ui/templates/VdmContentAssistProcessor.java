@@ -28,6 +28,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
+import org.overture.ast.lex.VDMToken;
 import org.overture.ide.ui.editor.core.VdmDocument;
 import org.overture.ide.ui.internal.viewsupport.VdmElementImageProvider;
 import org.overture.ide.ui.templates.VdmContentAssistProcessor.VdmCompletionContext.SearchType;
@@ -72,7 +73,9 @@ public abstract class VdmContentAssistProcessor extends
 		}
 
 		if (modList.size() > 0)
+		{
 			return (ICompletionProposal[]) modList.toArray(new ICompletionProposal[modList.size()]);
+		}
 
 		return completionProposals;
 	}
@@ -91,7 +94,7 @@ public abstract class VdmContentAssistProcessor extends
 		StringBuffer fieldType = new StringBuffer();
 		boolean afterNew = false;
 		boolean afterMk = false;
-		public StringBuffer prefix= new StringBuffer();
+		public StringBuffer prefix = new StringBuffer();
 
 		public void add(char c)
 		{
@@ -110,9 +113,11 @@ public abstract class VdmContentAssistProcessor extends
 					break;
 
 			}
-			
-			if(Character.isJavaIdentifierPart(c))
-prefix.append(c);
+
+			if (Character.isJavaIdentifierPart(c))
+			{
+				prefix.append(c);
+			}
 		}
 
 		public void reverse()
@@ -120,7 +125,7 @@ prefix.append(c);
 			proposal = proposal.reverse();
 			field = field.reverse();
 			// fieldType = fieldType.reverse();
-			prefix =prefix.reverse();
+			prefix = prefix.reverse();
 		}
 
 		@Override
@@ -133,12 +138,26 @@ prefix.append(c);
 		}
 	}
 
+	VDMToken getToken(char c)
+	{
+		String name = "" + c;
+		for (VDMToken token : VDMToken.values())
+		{
+			if (token.toString() != null && token.toString().equals(name))
+			{
+				return token;
+			}
+		}
+		return null;
+	}
+
 	private VdmCompletionContext computeVdmCompletionContext(IDocument doc,
 			int documentOffset)
 	{
 
 		// Use string buffer to collect characters
 		StringBuffer buf = new StringBuffer();
+		StringBuffer scanned = new StringBuffer();
 		char lastChar = '\0';
 		VdmCompletionContext info = new VdmCompletionContext();
 		while (true)
@@ -148,6 +167,20 @@ prefix.append(c);
 
 				// Read character backwards
 				char c = doc.getChar(--documentOffset);
+				
+
+				VDMToken token = null;
+				if ((token = getToken(c)) != null)//'`' == null
+				{
+					if (token != VDMToken.POINT/* . */|| token != VDMToken.BRA /* ( */)
+					{
+						break;
+					}
+				}
+				
+				scanned.append(c);
+				
+				
 
 				if (c == '.' && info.type == SearchType.Proposal)
 				{
