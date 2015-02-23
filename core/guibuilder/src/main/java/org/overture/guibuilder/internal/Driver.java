@@ -141,7 +141,7 @@ public class Driver
 	// // contents of directory
 	// for (File file: dir.listFiles(new FilenameFilter(){
 	// // filter for xml files (checks if the filename contains ".xml"
-	// // FIXME: ugly
+
 	// @Override
 	// public boolean accept(File arg0, String arg1) {
 	// if ( arg1.contains(".xml") )
