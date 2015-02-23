@@ -134,11 +134,14 @@ public abstract class CtTestCaseBase extends TestResourcesResultTestCase4
 		{
 			File resultFile = getResultFile(file.getAbsolutePath());
 
-			Assert.assertTrue("No result file found for test: " + file, resultFile.exists());
+			
 
 			TraceResultReader reader = new TraceResultReader();
-			List<TraceResult> expectedResults = reader.read(resultFile);
 			List<TraceResult> actualResults = reader.read(actualResultsFile);
+						
+			Assert.assertTrue("No result file found for test: " + file+"\n\n"+actualResults, resultFile.exists());
+			List<TraceResult> expectedResults = reader.read(resultFile);
+			
 
 			Assert.assertTrue(expectedResults.size() == actualResults.size());
 
