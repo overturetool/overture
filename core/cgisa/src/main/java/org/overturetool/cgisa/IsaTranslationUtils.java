@@ -31,6 +31,7 @@ import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
+import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateCallable;
 import org.overture.codegen.merging.TemplateStructure;
@@ -148,6 +149,14 @@ public class IsaTranslationUtils
 	{
 		return name.replaceAll("-", "_");
 	}
+	
+	public String varWrap(String v){
+		StringBuilder sb = new StringBuilder();
+		sb.append('<');
+		sb.append(v);
+		sb.append('>');
+		return sb.toString();
+	}
 
 	// Control flow
 
@@ -162,6 +171,19 @@ public class IsaTranslationUtils
 	}
 
 	// Checks
+	
+	public boolean isRoot(INode node)
+	{
+		if (node.parent() instanceof AApplyExpCG)
+		{
+			AApplyExpCG par = (AApplyExpCG) node.parent();
+			if (par.getRoot() == node)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 
 	public boolean isString(STypeCG node) throws AnalysisException
 	{
