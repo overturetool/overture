@@ -29,9 +29,9 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.overture.ast.lex.VDMToken;
+import org.overture.ide.ui.VdmUIPlugin;
 import org.overture.ide.ui.editor.core.VdmDocument;
 import org.overture.ide.ui.internal.viewsupport.VdmElementImageProvider;
-import org.overture.ide.ui.templates.VdmContentAssistProcessor.VdmCompletionContext.SearchType;
 
 public abstract class VdmContentAssistProcessor extends
 		VdmTemplateAssistProcessor
@@ -45,6 +45,9 @@ public abstract class VdmContentAssistProcessor extends
 		return true;
 	}
 
+	/**
+	 * @param offset an offset within the document for which completions should be computed
+	 */
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer,
 			int offset)
 	{
@@ -80,64 +83,6 @@ public abstract class VdmContentAssistProcessor extends
 		return completionProposals;
 	}
 
-	public static class VdmCompletionContext
-	{
-		enum SearchType
-		{
-			Proposal, Field, Unknown, Type
-		};
-
-		boolean isEmpty = false;
-		SearchType type = SearchType.Proposal;
-		StringBuffer proposal = new StringBuffer();
-		StringBuffer field = new StringBuffer();
-		StringBuffer fieldType = new StringBuffer();
-		boolean afterNew = false;
-		boolean afterMk = false;
-		public StringBuffer prefix = new StringBuffer();
-
-		public void add(char c)
-		{
-			switch (type)
-			{
-				case Field:
-					field.append(c);
-					break;
-				case Proposal:
-					proposal.append(c);
-					break;
-				case Type:
-					fieldType.append(c);
-					break;
-				case Unknown:
-					break;
-
-			}
-
-			if (Character.isJavaIdentifierPart(c))
-			{
-				prefix.append(c);
-			}
-		}
-
-		public void reverse()
-		{
-			proposal = proposal.reverse();
-			field = field.reverse();
-			// fieldType = fieldType.reverse();
-			prefix = prefix.reverse();
-		}
-
-		@Override
-		public String toString()
-		{
-			return "Type: \"" + fieldType + "\" " + (afterMk ? "mk_" : "")
-					+ (afterNew ? "new " : "") + "\""
-					+ (field.length() != 0 ? field + "." : "") + proposal
-					+ "\"";
-		}
-	}
-
 	VDMToken getToken(char c)
 	{
 		String name = "" + c;
@@ -154,25 +99,24 @@ public abstract class VdmContentAssistProcessor extends
 	private VdmCompletionContext computeVdmCompletionContext(IDocument doc,
 			int documentOffset)
 	{
-
 		// Use string buffer to collect characters
-		StringBuffer buf = new StringBuffer();
 		StringBuffer scanned = new StringBuffer();
-		char lastChar = '\0';
-		VdmCompletionContext info = new VdmCompletionContext();
 		while (true)
 		{
 			try
 			{
-
+				if(documentOffset-1==-1)
+				{
+					//EOF
+					break;
+				}
 				// Read character backwards
 				char c = doc.getChar(--documentOffset);
-				
 
 				VDMToken token = null;
-				if ((token = getToken(c)) != null)//'`' == null
+				if ((token = getToken(c)) != null)// '`' == null
 				{
-					if (token != VDMToken.POINT/* . */|| token != VDMToken.BRA /* ( */)
+					if (!(token == VDMToken.LT || token == VDMToken.POINT/* . */|| token == VDMToken.BRA /* ( */))
 					{
 						break;
 					}
@@ -180,106 +124,22 @@ public abstract class VdmContentAssistProcessor extends
 				
 				scanned.append(c);
 				
-				
-
-				if (c == '.' && info.type == SearchType.Proposal)
+				if(c=='n' && scanned.length()>3&& scanned.substring(scanned.length()-4, scanned.length()).matches("\\swen"))
 				{
-					info.type = SearchType.Field;
-					continue;
-				}
-				if (Character.isWhitespace(c)
-						&& info.type == SearchType.Proposal)
-				{
-					// Ok maybe this is a field, lets try to search for it
-					info.field = info.proposal;
-					info.proposal = new StringBuffer();
-					info.type = SearchType.Field;
-					// break;
-				}
-
-				if (info.type == SearchType.Field && Character.isWhitespace(c))
-				{
-					info.type = SearchType.Type;
-					continue;
-				}
-
-				if (info.type == SearchType.Type)
-				{
-					if (Character.isWhitespace(c))
-					{
-						continue;
-					}
-					buf.append(c);
-					// System.out.println("Buf: \""+buf+"\t\t\""+info.field+"\"");
-					if (buf.length() >= info.field.length()
-							&& buf.substring(buf.length() - info.field.length()).equals(info.field.toString()))
-					{
-						StringBuffer tmp = new StringBuffer(buf).reverse();
-						int index = tmp.indexOf("=");
-						int index2 = tmp.indexOf(":=");
-						int length = info.field.length() + 1;
-						if (index2 != -1 && index > index2)
-						{
-							index = index2;
-
-						}
-
-						if (index > 0 && length < index)
-						{
-
-							String tmp2 = tmp.substring(length, index);
-							info.fieldType.append(tmp2);
-						}
-						break;
-					}
-
-				} else
-				{
-					info.add(c);
-				}
-
-				if (c == '=' && lastChar == '=')
-				{
+					
 					break;
 				}
-				lastChar = c;
+				
 
 			} catch (BadLocationException e)
 			{
-
+				e.printStackTrace();
+				VdmUIPlugin.log("completion failed", e);
 				// Document start reached, no tag found
-				return info;
+				break;
 			}
 		}
+		return new VdmCompletionContext(scanned.reverse());
 
-		if (buf.length() >= 3)
-		{
-			if (buf.substring(0, 3).equals("wen"))
-			{
-				info.afterNew = true;
-			}
-			if (buf.substring(0, 3).equals("_km"))
-			{
-				info.afterMk = true;
-			}
-		}
-
-		info.reverse();
-
-		if (buf.length() >= 3 && info.field.length() >= 3
-				&& info.field.substring(0, 3).equals("mk_"))
-		{
-			info.afterMk = true;
-			info.field = info.field.delete(0, 3);
-		}
-
-		if (info.field.toString().trim().length() == 0)
-		{
-			info.isEmpty = true;
-		}
-
-		System.out.println(info);
-
-		return info;
 	}
 }
