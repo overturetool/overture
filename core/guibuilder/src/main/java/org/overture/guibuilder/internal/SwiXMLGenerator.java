@@ -109,7 +109,7 @@ public class SwiXMLGenerator
 		root = frame;
 	}
 
-	// FIXME: Generated window is very simple...
+	// Generated window is very simple...
 	/**
 	 * Function to build the elements of a main window
 	 * 
@@ -177,7 +177,7 @@ public class SwiXMLGenerator
 
 		Frame rootFrame = objFactory.createFrame();
 		rootFrame.setSize("320,520");
-		// FIXME: Get the name from the annotation
+		//  Get the name from the annotation
 		rootFrame.setTitle(classDef.getName());
 		// the root's id is based on the class's name
 		rootFrame.setId(NamingPolicies.getObjectWindowId(classDef.getName())); // id for the window
@@ -294,7 +294,7 @@ public class SwiXMLGenerator
 		Vector<VdmAnnotation> annotations = def.getAnnotations();
 		for (VdmAnnotation annotation : annotations)
 		{
-			// FIXME: with a press annotation we just call addGenericElements()
+			//  with a press annotation we just call addGenericElements()
 			// @press
 			if (annotation.getName().equals(NamingPolicies.PRESS_ANNOTATION))
 			{
@@ -360,7 +360,7 @@ public class SwiXMLGenerator
 	 */
 	private Panel createConstructorArgumentsPanel(VdmClass classDef)
 	{
-		// FIXME: we only handle one constructor
+		// we only handle one constructor
 		Panel panel = objFactory.createPanel();
 		panel.setId(NamingPolicies.getConstWidgetsContainerId(0));
 		for (IVdmDefinition vdmDef : classDef.getDefinitions())
