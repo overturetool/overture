@@ -24,6 +24,7 @@
 package org.overture.interpreter.values;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -35,6 +36,7 @@ import java.util.Vector;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.AImplicitOperationDefinition;
+import org.overture.ast.definitions.APerSyncDefinition;
 import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.ASystemClassDefinition;
 import org.overture.ast.definitions.PDefinition;
@@ -58,6 +60,7 @@ import org.overture.ast.util.Utils;
 import org.overture.config.Settings;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.assistant.definition.SClassDefinitionAssistantInterpreter;
+import org.overture.interpreter.debug.BreakpointManager;
 import org.overture.interpreter.messages.Console;
 import org.overture.interpreter.messages.rtlog.RTExtendedTextMessage;
 import org.overture.interpreter.messages.rtlog.RTLogger;
@@ -112,6 +115,7 @@ public class OperationValue extends Value
 	public boolean isAsync = false;
 
 	private PExp guard = null;
+	private Set<PExp> guardOriginalExpressions = new HashSet<PExp>();
 
 	private int hashAct = 0; // Number of activations
 	private int hashFin = 0; // Number of finishes
@@ -225,6 +229,7 @@ public class OperationValue extends Value
 
 	public void setGuard(PExp add, boolean isMutex)
 	{
+		guardOriginalExpressions.add(add);
 		if (guard == null)
 		{
 			guard = add;
@@ -623,6 +628,13 @@ public class OperationValue extends Value
 
 					try
 					{
+						if(!guardOriginalExpressions.isEmpty())
+						{
+							for (PExp originalGuardExp : guardOriginalExpressions)
+							{
+								BreakpointManager.getBreakpoint(originalGuardExp).check(originalGuardExp.getLocation(), ctxt);	
+							}
+						}
 						ok = guard.apply(VdmRuntime.getExpressionEvaluator(), ctxt).boolValue(ctxt);
 					} catch (AnalysisException e)
 					{
@@ -773,13 +785,17 @@ public class OperationValue extends Value
 	@Override
 	public Object clone()
 	{
+		OperationValue opVal = null;
+		
 		if (expldef != null)
 		{
-			return new OperationValue(expldef, precondition, postcondition, state, isAsync);
+			opVal = new OperationValue(expldef, precondition, postcondition, state, isAsync);
 		} else
 		{
-			return new OperationValue(impldef, precondition, postcondition, state, isAsync);
+			opVal = new OperationValue(impldef, precondition, postcondition, state, isAsync);
 		}
+		opVal.guardOriginalExpressions.addAll(guardOriginalExpressions);
+		return opVal;
 	}
 
 	private synchronized void req(boolean logreq)

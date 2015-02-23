@@ -87,7 +87,13 @@ public class ExpExpressionFinder extends QuestionAnswerAdaptor<Integer, PExp>
 	public PExp defaultSBinaryExp(SBinaryExp exp, Integer lineno)
 			throws AnalysisException
 	{
-		PExp found = exp.getLeft().apply(THIS, lineno);// PExpAssistantInterpreter.findExpression(exp.getLeft(),
+		PExp found = findExpressionBaseCase(exp, lineno);
+		if (found != null)
+		{
+			return found;
+		}
+		
+		found = exp.getLeft().apply(THIS, lineno);// PExpAssistantInterpreter.findExpression(exp.getLeft(),
 														// lineno);
 		if (found != null)
 		{
