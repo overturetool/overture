@@ -1,5 +1,5 @@
 #set( $root = $Isa.trans($node.Root) )
-#set( $args = $Isa.transArgs($node.Args) )
+#set( $args = $Isa.transApplyParams($node.Args))
 #if ($Isa.isFunc($node.Root.Type) ) 
 ${root}(${args})##
 #else 

@@ -42,8 +42,8 @@ public class IsaTranslationUtils
 {
 
 	private static final String TEMPLATE_CALLABLE_NAME = "Isa";
-	private static final Object PARAM_SEP = " and ";
-	private static final Object LIST_SEP = ", ";
+	private static final String TYPE_PARAM_SEP = " and ";
+	private static final String LIST_SEP = ", ";
 	private MergeVisitor mergeVisitor;
 
 	public IsaTranslationUtils(TemplateStructure templateStructure)
@@ -67,12 +67,22 @@ public class IsaTranslationUtils
 		return writer.toString();
 	}
 
-	public String transParams(List<AFormalParamLocalParamCG> params)
+	public String transApplyParams(List<SExpCG> params)
+			throws AnalysisException
+	{
+		return transParams(params, LIST_SEP);
+	}
+	
+	public String transTypeParams(List<AFormalParamLocalParamCG> params) throws AnalysisException
+	{
+		return transParams(params, TYPE_PARAM_SEP);
+	}
+	public String transParams(List<? extends INode> params, String sep)
 			throws AnalysisException
 	{
 		StringBuilder sb = new StringBuilder();
 
-		Iterator<AFormalParamLocalParamCG> it = params.iterator();
+		Iterator<? extends INode> it = params.iterator();
 
 		while (it.hasNext())
 		{
@@ -81,33 +91,9 @@ public class IsaTranslationUtils
 			sb.append(writer.toString());
 			if (it.hasNext())
 			{
-				sb.append(PARAM_SEP);
-			}
-
-		}
-
-		return sb.toString();
-	}
-
-	public String transArgs(List<INode> args) throws AnalysisException
-	{
-		if (args.isEmpty())
-		{
-			return "";
-		}
-		StringBuilder sb = new StringBuilder();
-
-		Iterator<INode> it = args.iterator();
-
-		while (it.hasNext())
-		{
-			sb.append(trans(it.next()));
-			if (it.hasNext())
-			{
-				sb.append(PARAM_SEP);
+				sb.append(sep);
 			}
 		}
-
 		return sb.toString();
 	}
 
