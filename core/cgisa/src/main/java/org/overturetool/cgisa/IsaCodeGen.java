@@ -39,6 +39,7 @@ import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateStructure;
 import org.overture.codegen.utils.GeneratedModule;
+import org.overturetool.cgisa.transformations.SortDependencies;
 
 /**
  * Main facade class for VDM 2 Isabelle CG
@@ -77,7 +78,6 @@ public class IsaCodeGen extends CodeGenBase
 			throws AnalysisException,
 			org.overture.codegen.cgast.analysis.AnalysisException
 	{
-
 		// <>
 		// Transform AST into IR
 		List<IRClassDeclStatus> statuses = new LinkedList<>();
@@ -102,14 +102,22 @@ public class IsaCodeGen extends CodeGenBase
 		
 		MergeVisitor pp = isa.getMergeVisitor();
 
-		StringWriter sw = new StringWriter();
 
 		List<GeneratedModule> generated = new ArrayList<GeneratedModule>();
 
+
+		for (IRClassDeclStatus status : statuses)
+		{
+			SortDependencies sortTrans = new SortDependencies(status.getClassCg().getFunctions());
+			generator.applyTransformation(status, sortTrans);
+		}
+		
 		for (IRClassDeclStatus status : statuses)
 		{
 			AClassDeclCG irClass = status.getClassCg();
 
+			StringWriter sw = new StringWriter();
+			
 			irClass.apply(pp, sw);
 
 			if (pp.hasMergeErrors())
@@ -128,7 +136,7 @@ public class IsaCodeGen extends CodeGenBase
 			}
 
 		}
-
+		
 		// Return syntax
 		return generated;
 
