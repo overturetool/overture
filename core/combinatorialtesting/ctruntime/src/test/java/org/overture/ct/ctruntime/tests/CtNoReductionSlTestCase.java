@@ -28,13 +28,16 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.overture.ast.lex.Dialect;
+import org.overture.config.Release;
+import org.overture.config.Settings;
 import org.overture.ct.ctruntime.tests.util.TestSourceFinder;
+import org.overture.ct.ctruntime.utils.CtHelper.CtTestData;
 import org.overture.test.framework.Properties;
 
 @RunWith(value = Parameterized.class)
-public class CtNoReductionTestCase extends CtTestCaseBase
+public class CtNoReductionSlTestCase extends CtTestCaseBase
 {
-	private static String TEST_NAME = "CT tests";
+	private static String TEST_NAME = "CT no reduction SL tests";
 	private static final String ROOT = "src/test/resources/no_reduction_sl_specs";
 
 	@Parameters(name = "{0}")
@@ -42,15 +45,21 @@ public class CtNoReductionTestCase extends CtTestCaseBase
 	{
 		Properties.recordTestResults = false;
 		
-		Collection<Object[]> tests = TestSourceFinder.createTestCompleteFile(Dialect.VDM_PP, TEST_NAME, ROOT, "", "");
+		Collection<Object[]> tests = TestSourceFinder.createTestCompleteFile(Dialect.VDM_SL, TEST_NAME, ROOT, "", "");
 
 		return tests;
 	}
 
-	public CtNoReductionTestCase(String name, File file, File traceFolder,
-			String[] args)
+	public CtNoReductionSlTestCase(String name, File file, File traceFolder,
+			CtTestData args)
 	{
 		super(file, traceFolder, args);
 	}
 
+	@Override
+	public void setUp() throws Exception
+	{
+		Settings.dialect = Dialect.VDM_SL;
+		Settings.release = Release.VDM_10;
+	}
 }

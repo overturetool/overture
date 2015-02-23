@@ -57,7 +57,7 @@ public class VdmjVdmInterpreterWrapper
 	{
 
 		// global VDMJ settings
-		Settings.usingCmdLine = true; // FIXME: not really sure what this is for...
+		Settings.usingCmdLine = true; 
 		Settings.usingDBGP = false;
 		Settings.dialect = dialect;
 

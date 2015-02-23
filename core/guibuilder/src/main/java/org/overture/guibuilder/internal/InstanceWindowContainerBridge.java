@@ -210,7 +210,7 @@ public class InstanceWindowContainerBridge implements IContainerBridge,
 		}
 
 		// updates the value of labels
-		// FIXME: It's better to use a list with the methods...
+		//  It's better to use a list with the methods...
 		if (methodWidgetsVisible)
 		{
 			for (String id : idMap.keySet())
@@ -240,7 +240,7 @@ public class InstanceWindowContainerBridge implements IContainerBridge,
 	 */
 	public void submitOK()
 	{
-		// FIXME: Only one constructor is taken into account...
+		//  Only one constructor is taken into account...
 		String className = NamingPolicies.extractClassName(id);
 		String instanceName = NamingPolicies.getInstanceName(className);
 

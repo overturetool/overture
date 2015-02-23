@@ -112,9 +112,13 @@ import org.overture.codegen.utils.GeneralUtils;
 
 public class TemplateManager
 {
-	private HashMap<Class<? extends INode>, String> nodeTemplateFileNames;
+	/**
+	 * Mapping IR classes and template locations. Initialize with {@link TemplateManager#initNodeTemplateFileNames()}
+	 * and insert/update as necessary.
+	 */
+	protected HashMap<Class<? extends INode>, String> nodeTemplateFileNames;
 
-	private TemplateStructure templateStructure;
+	protected TemplateStructure templateStructure;
 
 	public TemplateManager(TemplateStructure templateStructure)
 	{
@@ -122,7 +126,11 @@ public class TemplateManager
 		initNodeTemplateFileNames();
 	}
 
-	private void initNodeTemplateFileNames()
+	/**
+	 * Initialize the mapping of IR nodes and templates with the most common
+	 * nodes used. Folder structure is specified with {@link TemplateStructure}
+	 */
+	protected void initNodeTemplateFileNames()
 	{
 		nodeTemplateFileNames = new HashMap<Class<? extends INode>, String>();
 

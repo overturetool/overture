@@ -49,6 +49,11 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter>
 
 	private List<Exception> mergeErrors;
 
+	/**
+	 * Default constructor. <b>NOT</b> for use by extensions.
+	 * @param templateStructure
+	 * @param templateCallables
+	 */
 	public MergeVisitor(TemplateStructure templateStructure,
 			TemplateCallable[] templateCallables)
 	{
@@ -59,6 +64,19 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter>
 		this.unsupportedInTargLang = new HashSet<IrNodeInfo>();
 	}
 
+	/**
+	 * Extensible constructor.
+	 * @param templateManager
+	 * @param templateCallables
+	 */
+	public MergeVisitor(TemplateManager templateManager, TemplateCallable[] templateCallables){
+		this.templates = templateManager;
+		this.nodeContexts = new Stack<MergeContext>();
+		this.templateCallables = templateCallables;
+		this.mergeErrors = new LinkedList<Exception>();
+		this.unsupportedInTargLang = new HashSet<IrNodeInfo>();
+	}
+	
 	public List<Exception> getMergeErrors()
 	{
 		return mergeErrors;
@@ -69,12 +87,6 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter>
 		return !mergeErrors.isEmpty();
 	}
 
-	public void dropMergeErrors()
-	{
-		// Don't clear it if others are using the list
-		mergeErrors = new LinkedList<Exception>();
-	}
-	
 	public Set<IrNodeInfo> getUnsupportedInTargLang()
 	{
 		return unsupportedInTargLang;
@@ -85,6 +97,13 @@ public class MergeVisitor extends QuestionAdaptor<StringWriter>
 		return unsupportedInTargLang != null && !unsupportedInTargLang.isEmpty();
 	}
 
+	public void init()
+	{
+		// Avoid clearing the data structures if others are using them
+		mergeErrors = new LinkedList<Exception>();
+		unsupportedInTargLang = new HashSet<IrNodeInfo>();
+	}
+	
 	private void initCodeGenContext(INode node,
 			TemplateCallable[] templateCallables)
 	{

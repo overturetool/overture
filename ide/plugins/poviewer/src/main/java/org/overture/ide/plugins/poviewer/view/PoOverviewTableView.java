@@ -241,13 +241,13 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener 
 	 * The constructor.
 	 */
 	public PoOverviewTableView() {
-		VdmCore.addElementChangedListener(vdmlistner);
+//		VdmCore.addElementChangedListener(vdmlistner);
 	}
 
 	@Override
 	public void dispose() {
 		super.dispose();
-		VdmCore.removeElementChangedListener(vdmlistner);
+	//	VdmCore.removeElementChangedListener(vdmlistner);
 	}
 
 	/**

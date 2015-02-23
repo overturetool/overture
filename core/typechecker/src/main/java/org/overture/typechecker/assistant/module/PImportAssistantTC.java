@@ -44,7 +44,7 @@ public class PImportAssistantTC implements IAstAssistant
 	{
 		try
 		{
-			return imp.apply(af.getImportDefinitionFinder(), from);// FIXME: should we handle exceptions like this
+			return imp.apply(af.getImportDefinitionFinder(), from);
 		} catch (AnalysisException e)
 		{
 			return null;

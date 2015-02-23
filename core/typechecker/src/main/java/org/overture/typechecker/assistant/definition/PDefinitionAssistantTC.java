@@ -73,7 +73,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant implements IAst
 	{
 		try
 		{
-			return d.apply(af.getDefinitionEqualityChecker(), other);// FIXME: should we handle exceptions like this
+			return d.apply(af.getDefinitionEqualityChecker(), other);
 		} catch (AnalysisException e)
 		{
 			return false;
@@ -132,10 +132,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant implements IAst
 	{
 		try
 		{
-			return d.apply(af.getDefinitionFinder(), new DefinitionFinder.Newquestion(sought, fromModule));// FIXME:
-																											// should we
-			// handle exceptions
-			// like this
+			return d.apply(af.getDefinitionFinder(), new DefinitionFinder.Newquestion(sought, fromModule));
 		} catch (AnalysisException e)
 		{
 			return null;
@@ -148,8 +145,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant implements IAst
 
 		try
 		{
-			return d.apply(af.getNameFinder(), new NameFinder.Newquestion(sought, scope));// FIXME: should we handle
-																							// exceptions like this
+			return d.apply(af.getNameFinder(), new NameFinder.Newquestion(sought, scope));
 		} catch (AnalysisException e)
 		{
 			return null;
@@ -185,7 +181,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant implements IAst
 	{
 		try
 		{
-			d.apply(af.getUsedMarker());// FIXME: should we handle exceptions like this
+			d.apply(af.getUsedMarker());
 		} catch (AnalysisException e)
 		{
 
@@ -196,7 +192,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant implements IAst
 	{
 		try
 		{
-			d.apply(af.getUnusedChecker());// FIXME: should we handle exceptions like this
+			d.apply(af.getUnusedChecker());
 		} catch (AnalysisException e)
 		{
 
@@ -218,7 +214,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant implements IAst
 	{
 		try
 		{
-			return d.apply(af.getDefinitionCollector());// FIXME: should we handle exceptions like this
+			return d.apply(af.getDefinitionCollector());
 		} catch (AnalysisException e)
 		{
 			return null;
@@ -230,7 +226,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant implements IAst
 	{
 		try
 		{
-			return d.apply(af.getSelfDefinitionFinder());// FIXME: should we handle exceptions like this
+			return d.apply(af.getSelfDefinitionFinder());
 		} catch (AnalysisException e)
 		{
 			return null;
@@ -242,7 +238,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant implements IAst
 	{
 		try
 		{
-			return d.apply(af.getVariableNameCollector());// FIXME: should we handle exceptions like this
+			return d.apply(af.getVariableNameCollector());
 		} catch (AnalysisException e)
 		{
 			return null;
@@ -259,7 +255,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant implements IAst
 	{
 		try
 		{
-			return d.apply(af.getDereferer());// FIXME: should we handle exceptions like this
+			return d.apply(af.getDereferer());
 		} catch (AnalysisException e)
 		{
 			return null;
@@ -271,7 +267,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant implements IAst
 	{
 		try
 		{
-			return d.apply(af.getCallableOperationChecker());// FIXME: should we handle exceptions like this
+			return d.apply(af.getCallableOperationChecker());
 		} catch (AnalysisException e)
 		{
 			return false;
@@ -283,7 +279,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant implements IAst
 	{
 		try
 		{
-			return d.apply(af.getUsedChecker());// FIXME: should we handle exceptions like this
+			return d.apply(af.getUsedChecker());
 		} catch (AnalysisException e)
 		{
 			return false;
@@ -295,7 +291,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant implements IAst
 	{
 		try
 		{
-			d.apply(af.getImplicitDefinitionFinder(), env);// FIXME: should we handle exceptions like this
+			d.apply(af.getImplicitDefinitionFinder(), env);
 		} catch (AnalysisException e)
 		{
 
@@ -309,11 +305,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant implements IAst
 	{
 		try
 		{
-			d.apply(af.getDefinitionTypeResolver(), new DefinitionTypeResolver.NewQuestion(rootVisitor, question));// FIXME:
-																													// should
-																													// we
-			// handle exceptions
-			// like this
+			d.apply(af.getDefinitionTypeResolver(), new DefinitionTypeResolver.NewQuestion(rootVisitor, question));
 		} catch (AnalysisException e)
 		{
 
@@ -325,7 +317,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant implements IAst
 	{
 		try
 		{
-			return d.apply(af.getDefinitionTypeFinder());// FIXME: should we handle exceptions like this
+			return d.apply(af.getDefinitionTypeFinder());
 		} catch (AnalysisException e)
 		{
 			return null;
@@ -337,7 +329,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant implements IAst
 	{
 		try
 		{
-			return d.apply(af.getUpdatableChecker());// FIXME: should we handle exceptions like this
+			return d.apply(af.getUpdatableChecker());
 		} catch (AnalysisException e)
 		{
 			return false;
@@ -348,7 +340,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant implements IAst
 	{
 		try
 		{
-			return d.apply(af.getKindFinder());// FIXME: should we handle exceptions like this
+			return d.apply(af.getKindFinder());
 		} catch (AnalysisException e)
 		{
 			return null;
@@ -360,7 +352,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant implements IAst
 	{
 		try
 		{
-			return d.apply(af.getFunctionChecker());// FIXME: should we handle exceptions like this
+			return d.apply(af.getFunctionChecker());
 		} catch (AnalysisException e)
 		{
 			return false;
@@ -371,7 +363,7 @@ public class PDefinitionAssistantTC extends PDefinitionAssistant implements IAst
 	{
 		try
 		{
-			return d.apply(af.getOperationChecker());// FIXME: should we handle exceptions like this
+			return d.apply(af.getOperationChecker());
 		} catch (AnalysisException e)
 		{
 			return false;

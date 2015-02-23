@@ -177,7 +177,7 @@ public class JavaFormat
 
 	public void init()
 	{
-		mergeVisitor.dropMergeErrors();
+		mergeVisitor.init();
 	}
 
 	public void setClasses(List<AClassDeclCG> classes)

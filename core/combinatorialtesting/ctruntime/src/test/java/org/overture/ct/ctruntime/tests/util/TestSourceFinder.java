@@ -34,7 +34,7 @@ import java.util.Vector;
 
 import org.overture.ast.lex.Dialect;
 import org.overture.ct.ctruntime.tests.CtTestCaseBase;
-import org.overture.ct.ctruntime.utils.CtHelper;
+import org.overture.ct.ctruntime.utils.CtHelper.CtTestData;
 
 public class TestSourceFinder
 {
@@ -139,14 +139,13 @@ public class TestSourceFinder
 		} else
 		{
 			String traceName = file.getName();
-			traceName = traceName.substring(0, traceName.length() - 6);
+			if(traceName.contains("."))
+			{
+				traceName = traceName.substring(0, traceName.lastIndexOf('.'));
+			}
 
 			File traceFolder = new File((CtTestCaseBase.TRACE_OUTPUT_FOLDER + traceName).replace('/', File.separatorChar));
-			CtHelper testHelper = new CtHelper();
-
-			String[] args = testHelper.buildArgs("T1", CtTestCaseBase.PORT, traceFolder, file);
-
-			tests.add(new Object[] { traceName, file, traceFolder, args });
+			tests.add(new Object[] { traceName, file, traceFolder, new CtTestData("T1", CtTestCaseBase.PORT, traceFolder, file,null) });
 		}
 
 		return tests;

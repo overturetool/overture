@@ -91,13 +91,13 @@ public class JavaCodeGenMain
 						
 						if(generatedClass.hasUnsupportedIrNodes())
 						{
-							Logger.getLog().println("Following VDM constructs are not supported by the IR:");
+							Logger.getLog().println("Following VDM constructs are not supported by the code generator:");
 							JavaCodeGenUtil.printUnsupportedIrNodes(generatedClass.getUnsupportedInIr());
 						}
 						
 						if(generatedClass.hasUnsupportedTargLangNodes())
 						{
-							Logger.getLog().println("Following IR constructs are not supported by the backend/target languages:");
+							Logger.getLog().println("Following constructs are not supported by the code generator:");
 							JavaCodeGenUtil.printUnsupportedNodes(generatedClass.getUnsupportedInTargLang());
 						}
 						
