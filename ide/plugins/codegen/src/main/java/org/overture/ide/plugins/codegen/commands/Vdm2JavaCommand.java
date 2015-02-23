@@ -244,9 +244,9 @@ public class Vdm2JavaCommand extends AbstractHandler
 					try
 					{
 						PluginVdm2JavaUtil.copyCodeGenFile(PluginVdm2JavaUtil.ECLIPSE_RES_FILES_FOLDER_NAME +  "/"
-								+ PluginVdm2JavaUtil.ECLIPSE_PROJECT_FILE_NAME, PluginVdm2JavaUtil.ECLIPSE_PROJECT_FILE_NAME, outputFolder);
+								+ PluginVdm2JavaUtil.ECLIPSE_PROJECT_TEMPLATE_FILE_NAME, PluginVdm2JavaUtil.ECLIPSE_PROJECT_FILE_NAME, outputFolder);
 						PluginVdm2JavaUtil.copyCodeGenFile(PluginVdm2JavaUtil.ECLIPSE_RES_FILES_FOLDER_NAME +  "/"
-								+ PluginVdm2JavaUtil.ECLIPSE_CLASSPATH_FILE_NAME, PluginVdm2JavaUtil.ECLIPSE_CLASSPATH_FILE_NAME, outputFolder);
+								+ PluginVdm2JavaUtil.ECLIPSE_CLASSPATH_TEMPLATE_FILE_NAME, PluginVdm2JavaUtil.ECLIPSE_CLASSPATH_FILE_NAME, outputFolder);
 						
 						GeneralCodeGenUtils.replaceInFile(new File(outputFolder, PluginVdm2JavaUtil.ECLIPSE_PROJECT_FILE_NAME), "%s", project.getName());
 						
