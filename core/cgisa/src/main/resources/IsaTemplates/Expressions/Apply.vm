@@ -1,6 +1,7 @@
 #set( $root = $Isa.trans($node.Root) )
 #set( $args = $Isa.transArgs($node.Args) )
-#if ($Isa.isFuncType($node.Root.Type) ) 
-a func! 
+#if ($Isa.isFunc($node.Root.Type) ) 
+${root}(${args})##
 #else 
-$root<$args>#end
+$root<$args>##
+#end
