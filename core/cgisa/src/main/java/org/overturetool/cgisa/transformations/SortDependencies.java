@@ -12,7 +12,7 @@ import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFuncDeclCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
-import org.overturetool.cgisa.IsaCommonUtils;
+import org.overturetool.cgisa.IsaChecks;
 
 public class SortDependencies extends DepthFirstAnalysisAdaptor
 {
@@ -20,12 +20,12 @@ public class SortDependencies extends DepthFirstAnalysisAdaptor
 	Map<AFuncDeclCG, List<AFuncDeclCG>> depGraph;
 	private List<AFuncDeclCG> sorted;
 
-	protected IsaCommonUtils isaUtils;
+	protected IsaChecks isaUtils;
 
 	public SortDependencies(List<AFuncDeclCG> funcs)
 	{
 		this.funcs = funcs;
-		this.isaUtils = new IsaCommonUtils();
+		this.isaUtils = new IsaChecks();
 		this.depGraph = new HashMap<>();
 		this.sorted = new Vector<AFuncDeclCG>();
 		init();

@@ -3,7 +3,7 @@ package org.overturetool.cgisa;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 
-public class IsaCommonUtils
+public class IsaChecks
 {
 	public boolean isRoot(INode node)
 	{

@@ -37,7 +37,7 @@ import org.overture.codegen.merging.TemplateStructure;
 import org.overturetool.cgisa.checkers.IsMethodTypeVisitor;
 import org.overturetool.cgisa.checkers.IsSeqOfCharTypeVisitor;
 
-public class IsaTranslationUtils
+public class IsaTranslations
 {
 
 	private static final String TEMPLATE_CALLABLE_NAME = "Isa";
@@ -45,13 +45,13 @@ public class IsaTranslationUtils
 	private static final String LIST_SEP = ", ";
 	private MergeVisitor mergeVisitor;
 
-	protected IsaCommonUtils isaUtils;
+	protected IsaChecks isaUtils;
 	
-	public IsaTranslationUtils(TemplateStructure templateStructure)
+	public IsaTranslations(TemplateStructure templateStructure)
 	{
 		TemplateCallable[] templateCallables = new TemplateCallable[] { new TemplateCallable(TEMPLATE_CALLABLE_NAME, this) };
 		this.mergeVisitor = new MergeVisitor(new IsaTemplateManager(templateStructure), templateCallables);
-		this.isaUtils = new IsaCommonUtils();
+		this.isaUtils = new IsaChecks();
 	}
 
 	public MergeVisitor getMergeVisitor()
