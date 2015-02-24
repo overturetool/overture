@@ -75,8 +75,19 @@ public class ObjectDesignatorVisitorCG extends
 	{
 		PObjectDesignator obj = node.getObject();
 
-		String fieldCg = node.getFieldName().getName();
-		String fieldModuleCg = node.getField() != null ? node.getField().getModule() : null;
+		String fieldCg = null;
+		String fieldModuleCg = null;
+
+		if(node.getField() != null)
+		{
+			fieldCg = node.getField().getName();
+			fieldModuleCg = node.getField().getModule();
+		}
+		else
+		{
+			fieldCg = node.getFieldName() != null ? node.getFieldName().getName() : null;
+		}
+		
 		SObjectDesignatorCG objCg = obj.apply(question.getObjectDesignatorVisitor(), question);
 
 		AFieldObjectDesignatorCG fieldObjDesignator = new AFieldObjectDesignatorCG();
