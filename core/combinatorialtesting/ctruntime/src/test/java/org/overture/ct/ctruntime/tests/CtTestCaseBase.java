@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.util.List;
-import java.util.Vector;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
@@ -60,7 +59,6 @@ public abstract class CtTestCaseBase extends TestResourcesResultTestCase4
 	// The socket is used to communicate with the trace interpreter
 	protected ServerSocket socket;
 	protected static final int SOCKET_TIMEOUT = 0;
-//	public static final int PORT = 8889;
 	private static final int FROM_PORT = 10000;
 	private static final int TO_PORT = 50000;
 
@@ -69,8 +67,6 @@ public abstract class CtTestCaseBase extends TestResourcesResultTestCase4
 
 	public static final String TRACE_OUTPUT_FOLDER = "target/trace-output/";
 
-	// protected CtTestHelper testHelper;
-//	private String[] args;
 	private File traceFolder;
 	private CtTestData testdata;
 	
