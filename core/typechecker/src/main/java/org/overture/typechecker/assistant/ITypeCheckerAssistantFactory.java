@@ -83,7 +83,6 @@ import org.overture.typechecker.assistant.pattern.ATypeBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PMultipleBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.PPatternBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
 import org.overture.typechecker.assistant.pattern.PatternListTC;
 import org.overture.typechecker.assistant.statement.ABlockSimpleBlockStmAssistantTC;
@@ -221,7 +220,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	PPatternAssistantTC createPPatternAssistant();
 
-	PPatternBindAssistantTC createPPatternBindAssistant();
+	//PPatternBindAssistantTC createPPatternBindAssistant();
 
 	PPatternListAssistantTC createPPatternListAssistant();
 

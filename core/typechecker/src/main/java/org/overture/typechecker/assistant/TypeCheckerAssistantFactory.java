@@ -83,7 +83,6 @@ import org.overture.typechecker.assistant.pattern.ATypeBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PMultipleBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.PPatternBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
 import org.overture.typechecker.assistant.pattern.PatternListTC;
 import org.overture.typechecker.assistant.statement.ABlockSimpleBlockStmAssistantTC;
@@ -549,11 +548,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new PPatternAssistantTC(this);
 	}
 
-	@Override
-	public PPatternBindAssistantTC createPPatternBindAssistant()
-	{
-		return new PPatternBindAssistantTC(this);
-	}
+//	@Override
+//	public PPatternBindAssistantTC createPPatternBindAssistant()
+//	{
+//		return new PPatternBindAssistantTC(this);
+//	}
 
 	@Override
 	public PPatternListAssistantTC createPPatternListAssistant()
