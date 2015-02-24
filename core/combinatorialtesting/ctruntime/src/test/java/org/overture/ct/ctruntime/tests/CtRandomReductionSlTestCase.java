@@ -36,7 +36,6 @@ import org.overture.ct.ctruntime.utils.CtHelper.CtTestData;
 import org.overture.ct.ctruntime.utils.TraceReductionInfo;
 import org.overture.interpreter.traces.TraceReductionType;
 import org.overture.interpreter.traces.util.Pair;
-import org.overture.test.framework.Properties;
 
 @RunWith(value = Parameterized.class)
 public class CtRandomReductionSlTestCase extends CtTestCaseBase
@@ -57,7 +56,6 @@ public class CtRandomReductionSlTestCase extends CtTestCaseBase
 	@Parameters(name = "{0}")
 	public static Collection<Object[]> getData()
 	{
-		Properties.recordTestResults = false;
 		
 		List<Pair<String, TraceReductionInfo>> testReductionInfo2 = new Vector<Pair<String, TraceReductionInfo>>();
 		testReductionInfo2.add(new Pair<String, TraceReductionInfo>("OpRepeatedTenTimes", new TraceReductionInfo(0.15F, TraceReductionType.RANDOM, SEED)));
@@ -85,7 +83,7 @@ public class CtRandomReductionSlTestCase extends CtTestCaseBase
 					traceName + " " + entry.second,
 					specFile,
 					traceFolder,
-					new CtTestData( TRACE_NAME, PORT, traceFolder, specFile, entry.second),
+					new CtTestData( TRACE_NAME,  traceFolder, specFile, entry.second),
 					entry.second });
 		}
 
@@ -130,5 +128,11 @@ public class CtRandomReductionSlTestCase extends CtTestCaseBase
 		return filename.substring(0, index) + "-"
 				+ reductionInfo.toString().replace(',', '_').replace('.', '_')
 				+ filename.substring(index);
+	}
+
+	@Override
+	protected String getPropertyId()
+	{
+		return "sl.random";
 	}
 }

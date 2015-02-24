@@ -24,6 +24,8 @@ package org.overture.ct.ctruntime.tests;
 import java.io.File;
 import java.util.Collection;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
@@ -32,19 +34,30 @@ import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.ct.ctruntime.tests.util.TestSourceFinder;
 import org.overture.ct.ctruntime.utils.CtHelper.CtTestData;
-import org.overture.test.framework.Properties;
 
 @RunWith(value = Parameterized.class)
 public class CtNoReductionSlTestCase extends CtTestCaseBase
 {
+	@BeforeClass
+	public static void s()
+	{
+		System.out.println();
+	}
+	
+	@AfterClass
+	public static void e()
+	{
+		System.out.println();
+	}
+//	@Rule
+//	public TestRule benchmarkRun = new BenchmarkRule();
+	
 	private static String TEST_NAME = "CT no reduction SL tests";
 	private static final String ROOT = "src/test/resources/no_reduction_sl_specs";
 
 	@Parameters(name = "{0}")
 	public static Collection<Object[]> getData()
 	{
-		Properties.recordTestResults = false;
-		
 		Collection<Object[]> tests = TestSourceFinder.createTestCompleteFile(Dialect.VDM_SL, TEST_NAME, ROOT, "", "");
 
 		return tests;
@@ -61,5 +74,11 @@ public class CtNoReductionSlTestCase extends CtTestCaseBase
 	{
 		Settings.dialect = Dialect.VDM_SL;
 		Settings.release = Release.VDM_10;
+	}
+	
+	@Override
+	protected String getPropertyId()
+	{
+		return "sl.no";
 	}
 }

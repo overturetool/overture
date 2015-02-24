@@ -37,16 +37,15 @@ public class CtHelper
 	public static class CtTestData
 	{
 		public final String traceName;
-		public final int port;
+		public  int port;
 		public final File traceFolder;
 		public final File specFile;
 		public TraceReductionInfo reduction;
 
-		public CtTestData(String traceName, int port, File traceFolder,
+		public CtTestData(String traceName,  File traceFolder,
 				File specFile, TraceReductionInfo second)
 		{
 			this.traceName = traceName;
-			this.port = port;
 			this.traceFolder = traceFolder;
 			this.specFile = specFile;
 			this.reduction = second;

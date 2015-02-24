@@ -145,7 +145,7 @@ public class TestSourceFinder
 			}
 
 			File traceFolder = new File((CtTestCaseBase.TRACE_OUTPUT_FOLDER + traceName).replace('/', File.separatorChar));
-			tests.add(new Object[] { traceName, file, traceFolder, new CtTestData("T1", CtTestCaseBase.PORT, traceFolder, file,null) });
+			tests.add(new Object[] { traceName, file, traceFolder, new CtTestData("T1",  traceFolder, file,null) });
 		}
 
 		return tests;
