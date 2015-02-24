@@ -11,7 +11,6 @@ import org.overture.ast.lex.LexNameList;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.statements.PStm;
 import org.overture.interpreter.assistant.definition.ABusClassDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.AClassClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ACpuClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AExplicitFunctionDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AImplicitFunctionDefinitionAssistantInterpreter;
@@ -106,10 +105,10 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 		return new ABusClassDefinitionAssistantInterpreter(this);
 	}
 
-	public AClassClassDefinitionAssistantInterpreter createAClassClassDefinitionAssistant()
-	{
-		return new AClassClassDefinitionAssistantInterpreter(this);
-	}
+//	public AClassClassDefinitionAssistantInterpreter createAClassClassDefinitionAssistant()
+//	{
+//		return new AClassClassDefinitionAssistantInterpreter(this);
+//	}
 
 	// public AConcurrentExpressionTraceCoreDefinitionAssistantInterpreter
 	// createAConcurrentExpressionTraceCoreDefinitionAssistant()

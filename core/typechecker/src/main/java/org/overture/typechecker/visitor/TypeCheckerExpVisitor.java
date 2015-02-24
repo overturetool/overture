@@ -2690,7 +2690,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 						node.setType(AstFactory.newAUnknownType(node.getLocation()));
 						return node.getType();
 					}
-					// FIXME AKM: a little test
+					//AKM: a little test
 					// if(vardef.getClassDefinition().getName().getName().startsWith("$actionClass"))
 					// node.setName(name.getModifiedName(vardef.getClassDefinition().getName().getName()));
 				}
