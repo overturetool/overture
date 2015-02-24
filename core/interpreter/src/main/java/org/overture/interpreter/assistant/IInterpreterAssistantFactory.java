@@ -35,7 +35,6 @@ import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PPatternListAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.ACaseAlternativeStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.AStartStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ATixeStmtAlternativeAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.PStmAssistantInterpreter;
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.interpreter.assistant.type.PTypeListAssistant;
@@ -318,7 +317,7 @@ public interface IInterpreterAssistantFactory extends
 
 	// ATixeStmAssistantInterpreter createATixeStmAssistant();
 
-	ATixeStmtAlternativeAssistantInterpreter createATixeStmtAlternativeAssistant();
+	//ATixeStmtAlternativeAssistantInterpreter createATixeStmtAlternativeAssistant();
 
 	// ATrapStmAssistantInterpreter createATrapStmAssistant();
 
