@@ -133,7 +133,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 				&& aF.createPTypeAssistant().isFunction(type))
 		{
 			AFunctionType funcType = aF.createPTypeAssistant().getFunction(type);
-			ILexNameToken prename = aF.createPExpAssistant().getPreName(root);
+			ILexNameToken prename = getPreName(root);
 			if (prename == null
 					|| !prename.equals(PExpAssistantTC.NO_PRECONDITION))
 			{
@@ -1152,8 +1152,8 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 		if (aF.createPTypeAssistant().isFunction(lType))
 		{
-			ILexNameToken pref1 = aF.createPExpAssistant().getPreName(lExp);
-			ILexNameToken pref2 = aF.createPExpAssistant().getPreName(rExp);
+			ILexNameToken pref1 = getPreName(lExp);
+			ILexNameToken pref2 = getPreName(rExp);
 
 			if (pref1 == null || !pref1.equals(PExpAssistantTC.NO_PRECONDITION))
 			{
@@ -1378,7 +1378,7 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 		if (aF.createPTypeAssistant().isFunction(lType))
 		{
-			ILexNameToken preName = aF.createPExpAssistant().getPreName(lExp);
+			ILexNameToken preName = getPreName(lExp);
 			if (preName == null
 					|| !preName.equals(PExpAssistantTC.NO_PRECONDITION))
 			{
@@ -1873,6 +1873,17 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			IPOContextStack question)
 	{
 		return new ProofObligationList();
+	}
+	
+	public ILexNameToken getPreName(PExp expression)
+	{
+		try
+		{
+			return expression.apply(aF.getPreNameFinder());
+		} catch (AnalysisException e)
+		{
+			return null;
+		}
 	}
 
 }
