@@ -75,6 +75,7 @@ import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.types.SSeqType;
 import org.overture.ast.util.PTypeSet;
+import org.overture.ast.util.Utils;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.typechecker.Environment;
@@ -124,7 +125,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		if (inFunction)
 		{
-			PDefinition called = question.assistantFactory.createAApplyExpAssistant().getRecursiveDefinition(node, question);
+			PDefinition called = getRecursiveDefinition(node, question);
 
 			if (called instanceof AExplicitFunctionDefinition)
 			{
@@ -175,7 +176,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		{
 			AFunctionType ft = question.assistantFactory.createPTypeAssistant().getFunction(node.getType());
 			question.assistantFactory.createPTypeAssistant().typeResolve(ft, null, THIS, question);
-			results.add(question.assistantFactory.createAApplyExpAssistant().functionApply(node, isSimple, ft));
+			results.add(functionApply(node, isSimple, ft, question));
 		}
 
 		if (question.assistantFactory.createPTypeAssistant().isOperation(node.getType()))
@@ -190,20 +191,20 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 				results.add(AstFactory.newAUnknownType(node.getLocation()));
 			} else
 			{
-				results.add(question.assistantFactory.createAApplyExpAssistant().operationApply(node, isSimple, ot));
+				results.add(operationApply(node, isSimple, ot, question));
 			}
 		}
 
 		if (question.assistantFactory.createPTypeAssistant().isSeq(node.getType()))
 		{
 			SSeqType seq = question.assistantFactory.createPTypeAssistant().getSeq(node.getType());
-			results.add(question.assistantFactory.createAApplyExpAssistant().sequenceApply(node, isSimple, seq));
+			results.add(sequenceApply(node, isSimple, seq, question));
 		}
 
 		if (question.assistantFactory.createPTypeAssistant().isMap(node.getType()))
 		{
 			SMapType map = question.assistantFactory.createPTypeAssistant().getMap(node.getType());
-			results.add(question.assistantFactory.createAApplyExpAssistant().mapApply(node, isSimple, map));
+			results.add(mapApply(node, isSimple, map, question));
 		}
 
 		if (results.isEmpty())
@@ -3286,5 +3287,186 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			node.getRight().setType(AstFactory.newARealNumericBasicType(node.getLocation()));
 		}
 
+	}
+	
+	public PType functionApply(AApplyExp node, boolean isSimple,
+			AFunctionType ft,TypeCheckInfo question)
+	{
+		List<PType> ptypes = ft.getParameters();
+
+		if (node.getArgs().size() > ptypes.size())
+		{
+			TypeCheckerErrors.concern(isSimple, 3059, "Too many arguments", node.getLocation(), node);
+			TypeCheckerErrors.detail2(isSimple, "Args", node.getArgs(), "Params", ptypes);
+			return ft.getResult();
+		} else if (node.getArgs().size() < ptypes.size())
+		{
+			TypeCheckerErrors.concern(isSimple, 3060, "Too few arguments", node.getLocation(), node);
+			TypeCheckerErrors.detail2(isSimple, "Args", node.getArgs(), "Params", ptypes);
+			return ft.getResult();
+		}
+
+		int i = 0;
+
+		for (PType at : node.getArgtypes())
+		{
+			PType pt = ptypes.get(i++);
+
+			if (!question.assistantFactory.getTypeComparator().compatible(pt, at))
+			{
+				// TypeCheckerErrors.concern(isSimple, 3061, "Inappropriate type for argument " + i +
+				// ". (Expected: "+pt+" Actual: "+at+")",node.getLocation(),node);
+				TypeCheckerErrors.concern(isSimple, 3061, "Inappropriate type for argument "
+						+ i, node.getLocation(), node);
+				TypeCheckerErrors.detail2(isSimple, "Expect", pt, "Actual", at);
+			}
+		}
+
+		return ft.getResult();
+	}
+	
+	public PType operationApply(AApplyExp node, boolean isSimple,
+			AOperationType ot, TypeCheckInfo question)
+	{
+		List<PType> ptypes = ot.getParameters();
+
+		if (node.getArgs().size() > ptypes.size())
+		{
+			TypeCheckerErrors.concern(isSimple, 3062, "Too many arguments", node.getLocation(), node);
+			TypeCheckerErrors.detail2(isSimple, "Args", node.getArgs(), "Params", ptypes);
+			return ot.getResult();
+		} else if (node.getArgs().size() < ptypes.size())
+		{
+			TypeCheckerErrors.concern(isSimple, 3063, "Too few arguments", node.getLocation(), node);
+			TypeCheckerErrors.detail2(isSimple, "Args", node.getArgs(), "Params", ptypes);
+			return ot.getResult();
+		}
+
+		int i = 0;
+
+		for (PType at : node.getArgtypes())
+		{
+			PType pt = ptypes.get(i++);
+
+			if (!question.assistantFactory.getTypeComparator().compatible(pt, at))
+			{
+				// TypeCheckerErrors.concern(isSimple, 3064, "Inappropriate type for argument " + i
+				// +". (Expected: "+pt+" Actual: "+at+")",node.getLocation(),node);
+				TypeCheckerErrors.concern(isSimple, 3064, "Inappropriate type for argument "
+						+ i, node.getLocation(), node);
+				TypeCheckerErrors.detail2(isSimple, "Expect", pt, "Actual", at);
+			}
+		}
+
+		return ot.getResult();
+	}
+
+	public PType sequenceApply(AApplyExp node, boolean isSimple, SSeqType seq, TypeCheckInfo question)
+	{
+		if (node.getArgs().size() != 1)
+		{
+			TypeCheckerErrors.concern(isSimple, 3055, "Sequence selector must have one argument", node.getLocation(), node);
+		} else if (!question.assistantFactory.createPTypeAssistant().isNumeric(node.getArgtypes().get(0)))
+		{
+			TypeCheckerErrors.concern(isSimple, 3056, "Sequence application argument must be numeric", node.getLocation(), node);
+		} else if (seq.getEmpty())
+		{
+			TypeCheckerErrors.concern(isSimple, 3268, "Empty sequence cannot be applied", node.getLocation(), node);
+		}
+
+		return seq.getSeqof();
+	}
+
+	public PType mapApply(AApplyExp node, boolean isSimple, SMapType map, TypeCheckInfo question)
+	{
+		if (node.getArgs().size() != 1)
+		{
+			TypeCheckerErrors.concern(isSimple, 3057, "Map application must have one argument", node.getLocation(), node);
+		} else if (map.getEmpty())
+		{
+			TypeCheckerErrors.concern(isSimple, 3267, "Empty map cannot be applied", node.getLocation(), node);
+		}
+
+		PType argtype = node.getArgtypes().get(0);
+
+		if (!question.assistantFactory.getTypeComparator().compatible(map.getFrom(), argtype))
+		{
+			TypeCheckerErrors.concern(isSimple, 3058, "Map application argument is incompatible type", node.getLocation(), node);
+			TypeCheckerErrors.detail2(isSimple, "Map domain", map.getFrom(), "Argument", argtype);
+		}
+
+		return map.getTo();
+	}
+
+	public PDefinition getRecursiveDefinition(AApplyExp node,
+			TypeCheckInfo question)
+	{
+		ILexNameToken fname = null;
+		PExp root = node.getRoot();
+
+		if (root instanceof AApplyExp)
+		{
+			AApplyExp aexp = (AApplyExp) root;
+			return getRecursiveDefinition(aexp, question);
+		} else if (root instanceof AVariableExp)
+		{
+			AVariableExp var = (AVariableExp) root;
+			fname = var.getName();
+		} else if (root instanceof AFuncInstatiationExp)
+		{
+			AFuncInstatiationExp fie = (AFuncInstatiationExp) root;
+
+			if (fie.getExpdef() != null)
+			{
+				fname = fie.getExpdef().getName();
+			} else if (fie.getImpdef() != null)
+			{
+				fname = fie.getImpdef().getName();
+			}
+		}
+
+		if (fname != null)
+		{
+			return question.env.findName(fname, question.scope);
+		} else
+		{
+			return null;
+		}
+	}
+
+	/**
+	 * Create a measure application string from this apply, turning the root function name into the measure name passed,
+	 * and collapsing curried argument sets into one.
+	 * 
+	 * @param node
+	 * @param measure
+	 * @param close
+	 * @return
+	 */
+	public String getMeasureApply(AApplyExp node, ILexNameToken measure,
+			boolean close)
+	{
+		String start = null;
+		PExp root = node.getRoot();
+
+		if (root instanceof AApplyExp)
+		{
+			AApplyExp aexp = (AApplyExp) root;
+			start = getMeasureApply(aexp, measure, false);
+		} else if (root instanceof AVariableExp)
+		{
+			start = measure.getFullName() + "(";
+		} else if (root instanceof AFuncInstatiationExp)
+		{
+			AFuncInstatiationExp fie = (AFuncInstatiationExp) root;
+			start = measure.getFullName() + "["
+					+ Utils.listToString(fie.getActualTypes()) + "](";
+		} else
+		{
+			start = root.toString() + "(";
+		}
+
+		return start + Utils.listToString(node.getArgs())
+				+ (close ? ")" : ", ");
 	}
 }
