@@ -61,7 +61,6 @@ import org.overture.typechecker.assistant.definition.AExplicitOperationDefinitio
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitOperationDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AInstanceVariableDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.ALocalDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AStateDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AThreadDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ATypeDefinitionAssistantTC;
@@ -294,11 +293,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 		return new AInstanceVariableDefinitionAssistantTC(this);
 	}
 
-	@Override
-	public ALocalDefinitionAssistantTC createALocalDefinitionAssistant()
-	{
-		return new ALocalDefinitionAssistantTC(this);
-	}
+//	@Override
+//	public ALocalDefinitionAssistantTC createALocalDefinitionAssistant()
+//	{
+//		return new ALocalDefinitionAssistantTC(this);
+//	}
 
 	@Override
 	public AStateDefinitionAssistantTC createAStateDefinitionAssistant()
