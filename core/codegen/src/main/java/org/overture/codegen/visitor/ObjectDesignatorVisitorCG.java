@@ -27,7 +27,6 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.expressions.ANewExp;
 import org.overture.ast.expressions.AVariableExp;
 import org.overture.ast.expressions.PExp;
-import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.statements.AApplyObjectDesignator;
 import org.overture.ast.statements.AFieldObjectDesignator;
 import org.overture.ast.statements.AIdentifierObjectDesignator;
@@ -74,11 +73,10 @@ public class ObjectDesignatorVisitorCG extends
 			AFieldObjectDesignator node, IRInfo question)
 			throws AnalysisException
 	{
-		ILexNameToken field = node.getField();
 		PObjectDesignator obj = node.getObject();
 
-		String fieldCg = field.getName();
-		String fieldModuleCg = field.getModule();
+		String fieldCg = node.getFieldName().getName();
+		String fieldModuleCg = node.getField() != null ? node.getField().getModule() : null;
 		SObjectDesignatorCG objCg = obj.apply(question.getObjectDesignatorVisitor(), question);
 
 		AFieldObjectDesignatorCG fieldObjDesignator = new AFieldObjectDesignatorCG();
