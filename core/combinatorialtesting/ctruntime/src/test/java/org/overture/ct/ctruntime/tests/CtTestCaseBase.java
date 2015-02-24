@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.util.List;
+import java.util.Vector;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
@@ -72,6 +73,8 @@ public abstract class CtTestCaseBase extends TestResourcesResultTestCase4
 //	private String[] args;
 	private File traceFolder;
 	private CtTestData testdata;
+	
+	
 
 	public CtTestCaseBase()
 	{
