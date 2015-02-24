@@ -47,7 +47,9 @@ import org.overture.interpreter.traces.TestSequence;
 import org.overture.interpreter.traces.TraceReductionType;
 import org.overture.interpreter.traces.TraceVariableStatement;
 import org.overture.interpreter.traces.Verdict;
+import org.overture.typechecker.Environment;
 import org.overture.typechecker.FlatEnvironment;
+import org.overture.typechecker.ModuleEnvironment;
 import org.overture.typechecker.PrivateClassEnvironment;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
@@ -262,6 +264,16 @@ public class TraceInterpreter
 			storage.StartTrace(mtd.getName().getName(), mtd.getLocation().getFile().getName(), mtd.getLocation().getStartLine(), mtd.getLocation().getStartPos(), size, new Float(subset), TraceReductionType.valueOf(traceReductionType.toString()), new Long(seed));
 		}
 
+		Environment rootEnv = null;
+		if (interpreter instanceof ClassInterpreter)
+		{
+			rootEnv = new PrivateClassEnvironment(interpreter.getAssistantFactory(), mtd.getClassDefinition(), interpreter.getGlobalEnvironment());
+			;
+		} else
+		{
+			rootEnv = new ModuleEnvironment(interpreter.getAssistantFactory(), (AModuleModules) mtd.parent());
+		}
+
 		int n = 1;
 
 		int faildCount = 0;
@@ -285,10 +297,10 @@ public class TraceInterpreter
 			{
 				if (interpreter instanceof ClassInterpreter)
 				{
-					typeCheck(mtd.getClassDefinition(), interpreter, test);
+					typeCheck(mtd.getClassDefinition(), interpreter, test, rootEnv);
 				} else
 				{
-					typeCheck(mtd.parent(), interpreter, test);
+					typeCheck(mtd.parent(), interpreter, test, rootEnv);
 				}
 				typeOk = true;
 			} catch (Exception e)
@@ -404,16 +416,19 @@ public class TraceInterpreter
 	 * @throws Exception
 	 */
 	protected void typeCheck(INode classdef, Interpreter interpreter,
-			CallSequence test) throws AnalysisException, Exception
+			CallSequence test, Environment outer) throws AnalysisException,
+			Exception
 	{
 		FlatEnvironment env = null;
 
 		if (classdef instanceof SClassDefinition)
 		{
-			env = new FlatEnvironment(interpreter.getAssistantFactory(), classdef.apply(interpreter.getAssistantFactory().getSelfDefinitionFinder()), new PrivateClassEnvironment(interpreter.getAssistantFactory(), (SClassDefinition) classdef, interpreter.getGlobalEnvironment()));
+
+			env = new FlatEnvironment(interpreter.getAssistantFactory(), classdef.apply(interpreter.getAssistantFactory().getSelfDefinitionFinder()), outer);
 		} else
 		{
-			env = new FlatEnvironment(interpreter.getAssistantFactory(), new Vector<PDefinition>(), interpreter.getGlobalEnvironment());
+
+			env = new FlatEnvironment(interpreter.getAssistantFactory(), new Vector<PDefinition>(), outer);
 		}
 
 		for (int i = 0; i < test.size(); i++)
