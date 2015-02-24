@@ -124,7 +124,7 @@ public class AModuleModulesAssistantTC implements IAstAssistant
 		{
 			for (PExport exp : etype)
 			{
-				exportDefs.addAll(af.createPExportAssistant().getDefinition(exp, actualDefs));
+				exportDefs.addAll(getDefinition(exp, actualDefs));
 			}
 		}
 
@@ -147,7 +147,7 @@ public class AModuleModulesAssistantTC implements IAstAssistant
 		{
 			for (PExport exp : etype)
 			{
-				exportDefs.addAll(af.createPExportAssistant().getDefinition(exp));
+				exportDefs.addAll(getDefinition(exp));
 			}
 		}
 
@@ -159,6 +159,30 @@ public class AModuleModulesAssistantTC implements IAstAssistant
 		}
 
 		return exportDefs;
+	}
+	
+	public Collection<? extends PDefinition> getDefinition(PExport exp,
+			LinkedList<PDefinition> actualDefs)
+	{
+		try
+		{
+			return exp.apply(af.getExportDefinitionFinder(), actualDefs);
+		} catch (AnalysisException e)
+		{
+			return null;
+		}
+
+	}
+
+	public Collection<? extends PDefinition> getDefinition(PExport exp)
+	{
+		try
+		{
+			return exp.apply(af.getExportDefinitionListFinder());
+		} catch (AnalysisException e)
+		{
+			return null;
+		}
 	}
 
 }
