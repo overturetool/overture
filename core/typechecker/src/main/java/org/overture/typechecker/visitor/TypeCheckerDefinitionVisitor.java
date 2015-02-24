@@ -24,6 +24,7 @@ package org.overture.typechecker.visitor;
 import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
+import java.util.Map.Entry;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.intf.IQuestionAnswer;
@@ -1265,7 +1266,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		Boolean isStatic = null;
 
 		List<PDefinition> definitions = question.assistantFactory.createPDefinitionAssistant().getDefinitions(classdef);
-		
+
 		for (PDefinition def : definitions)
 		{
 			if (def.getName() != null
@@ -1539,18 +1540,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			ALetDefBindingTraceDefinition node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		Environment local = question.env;
-		for (PDefinition d : node.getLocalDefs())
-		{
-			question.assistantFactory.createPDefinitionAssistant().typeResolve(d, THIS, question);
-			d.apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
-			local = new FlatCheckedEnvironment(question.assistantFactory, d, local, question.scope);
-		}
-
-		node.getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
-		local.unusedCheck(question.env);
-
-		return null;
+		return typeCheckLet(node, node.getLocalDefs(), node.getBody(), question);
 	}
 
 	@Override
@@ -1558,37 +1548,25 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			ALetBeStBindingTraceDefinition node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		node.setDef(AstFactory.newAMultiBindListDefinition(node.getBind().getLocation(), question.assistantFactory.createPMultipleBindAssistant().getMultipleBindList(node.getBind())));
-		node.getDef().apply(THIS, question);
-		Environment local = new FlatCheckedEnvironment(question.assistantFactory, node.getDef(), question.env, question.scope);
-
-		if (node.getStexp() != null
-				&& !question.assistantFactory.createPTypeAssistant().isType(node.getStexp().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope)), ABooleanBasicType.class))
-		{
-			TypeCheckerErrors.report(3225, "Such that clause is not boolean", node.getStexp().getLocation(), node);
-		}
-
-		node.getBody().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope));
-		local.unusedCheck();
-
-		return null;
+		Entry<PType, AMultiBindListDefinition> res = typecheckLetBeSt(node, node.getLocation(), node.getBind(), node.getStexp(), node.getBody(), question);
+		node.setDef(res.getValue());
+		return res.getKey();
 	}
 
 	@Override
 	public PType caseARepeatTraceDefinition(ARepeatTraceDefinition node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-		// Environment local = question.env;
-		node.getCore().apply(THIS, question);
-
 		if (node.getFrom() > node.getTo())
 		{
 			TypeCheckerErrors.report(3277, "Trace repeat illegal values", node.getLocation(), node);
 		}
 
-		return null;
+		// Environment local = question.env;
+		return node.getCore().apply(THIS, question);
+
 	}
-	
+
 	@Override
 	public PType caseAConcurrentExpressionTraceCoreDefinition(
 			AConcurrentExpressionTraceCoreDefinition node,
@@ -1598,7 +1576,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		{
 			d.apply(THIS, question);
 		}
-		
+
 		return null;
 	}
 
@@ -1623,8 +1601,8 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 			AApplyExpressionTraceCoreDefinition node, TypeCheckInfo question)
 			throws AnalysisException
 	{
-		node.getCallStatement().apply(THIS, question);
-		return null;
+		return node.getCallStatement().apply(THIS, question);
+
 	}
 
 }
