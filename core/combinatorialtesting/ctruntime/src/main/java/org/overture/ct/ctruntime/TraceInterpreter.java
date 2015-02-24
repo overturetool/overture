@@ -48,7 +48,6 @@ import org.overture.interpreter.traces.TraceReductionType;
 import org.overture.interpreter.traces.TraceVariableStatement;
 import org.overture.interpreter.traces.Verdict;
 import org.overture.typechecker.FlatEnvironment;
-import org.overture.typechecker.ModuleEnvironment;
 import org.overture.typechecker.PrivateClassEnvironment;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
@@ -178,7 +177,7 @@ public class TraceInterpreter
 			}
 
 			infoCompleted();
-			
+
 			if (DEBUG)
 			{
 				System.out.println("Completed");
@@ -256,7 +255,7 @@ public class TraceInterpreter
 		tests = ctxt.assistantFactory.createANamedTraceDefinitionAssistant().getTests(mtd, ctxt, subset, traceReductionType, seed);
 
 		int size = tests.size();
-		
+
 		infoProcessingTrace(className, mtd.getName().getName(), size);
 		if (storage != null)
 		{
@@ -270,7 +269,7 @@ public class TraceInterpreter
 		int skippedCount = 0;
 
 		StopWatch.set();
-		
+
 		for (CallSequence test : tests)
 		{
 			StopWatch.stop("Getting test");
@@ -284,10 +283,11 @@ public class TraceInterpreter
 			boolean typeOk = false;
 			try
 			{
-				if(interpreter instanceof ClassInterpreter)
+				if (interpreter instanceof ClassInterpreter)
 				{
-				typeCheck(mtd.getClassDefinition(), interpreter, test);
-				}else{
+					typeCheck(mtd.getClassDefinition(), interpreter, test);
+				} else
+				{
 					typeCheck(mtd.parent(), interpreter, test);
 				}
 				typeOk = true;
@@ -347,8 +347,7 @@ public class TraceInterpreter
 				{
 					storage.AddSkippedResult(new Integer(n).toString());
 				}
-			}
-			else
+			} else
 			{
 
 				if (verdict == Verdict.ERROR)
@@ -404,23 +403,19 @@ public class TraceInterpreter
 	 * @throws AnalysisException
 	 * @throws Exception
 	 */
-	protected void typeCheck(INode classdef,
-			Interpreter interpreter, CallSequence test)
-			throws AnalysisException, Exception
+	protected void typeCheck(INode classdef, Interpreter interpreter,
+			CallSequence test) throws AnalysisException, Exception
 	{
 		FlatEnvironment env = null;
 
 		if (classdef instanceof SClassDefinition)
 		{
-			env = new FlatEnvironment(interpreter.getAssistantFactory(), classdef.apply(interpreter.getAssistantFactory().getSelfDefinitionFinder()), new PrivateClassEnvironment(interpreter.getAssistantFactory(), (SClassDefinition)classdef, interpreter.getGlobalEnvironment()));
+			env = new FlatEnvironment(interpreter.getAssistantFactory(), classdef.apply(interpreter.getAssistantFactory().getSelfDefinitionFinder()), new PrivateClassEnvironment(interpreter.getAssistantFactory(), (SClassDefinition) classdef, interpreter.getGlobalEnvironment()));
 		} else
 		{
-			List<PDefinition> defs = new Vector<PDefinition>();
-			defs.addAll(((AModuleModules)classdef).getDefs());
-			ModuleEnvironment	mEnv = new ModuleEnvironment(interpreter.getAssistantFactory(), (AModuleModules) classdef);
-			env = new FlatEnvironment(interpreter.getAssistantFactory(), new Vector<PDefinition>(),mEnv);
+			env = new FlatEnvironment(interpreter.getAssistantFactory(), new Vector<PDefinition>(), interpreter.getGlobalEnvironment());
 		}
-		
+
 		for (int i = 0; i < test.size(); i++)
 		{
 			PStm statement = test.get(i);
