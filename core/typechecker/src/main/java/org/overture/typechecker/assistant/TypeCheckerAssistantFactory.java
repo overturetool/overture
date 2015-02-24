@@ -74,7 +74,6 @@ import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC
 import org.overture.typechecker.assistant.expression.ACaseAlternativeAssistantTC;
 import org.overture.typechecker.assistant.expression.PExpAssistantTC;
 import org.overture.typechecker.assistant.expression.SBinaryExpAssistantTC;
-import org.overture.typechecker.assistant.module.AModuleExportsAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleImportsAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleModulesAssistantTC;
 import org.overture.typechecker.assistant.module.PExportAssistantTC;
@@ -404,11 +403,11 @@ public class TypeCheckerAssistantFactory extends AstAssistantFactory implements
 //		return new AFromModuleImportsAssistantTC(this);
 //	}
 
-	@Override
-	public AModuleExportsAssistantTC createAModuleExportsAssistant()
-	{
-		return new AModuleExportsAssistantTC(this);
-	}
+//	@Override
+//	public AModuleExportsAssistantTC createAModuleExportsAssistant()
+//	{
+//		return new AModuleExportsAssistantTC(this);
+//	}
 
 	@Override
 	public AModuleImportsAssistantTC createAModuleImportsAssistant()
