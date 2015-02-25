@@ -218,7 +218,7 @@ public abstract class CtTestCaseBase extends TestResourcesResultTestCase4
 
 		final String message = data.getMessage();
 
-		Assert.assertTrue("Test did not succed", message.contains("status=\"completed\" progress=\"100\""));
+		Assert.assertTrue("Test did not succed. Are you sure that it contains "+ (Settings.dialect==Dialect.VDM_SL?"'DEFAULT`T1'" : "'Entry`T1'"), message.contains("status=\"completed\" progress=\"100\""));
 
 		return actualOutputFile;
 	}
