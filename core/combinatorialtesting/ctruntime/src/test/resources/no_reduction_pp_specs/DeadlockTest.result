@@ -1,0 +1,9 @@
+<traces>
+	<class name="Entry">
+		<trace name="T1" testcount="1" filename="DeadlockTest" line="35" column="2" subset="1.0" reduction="NONE" seed="999">
+			<test no="1">get(); deadlock(); get()</test>
+			<result no="1" verdict="FAILED">0 ; DEADLOCK detected</result>
+			<status verdict="FAILED" testcount="1" skippedcount="0" faildcount="1" inconclusivecount="0"></status>
+		</trace>
+	</class>
+</traces>
