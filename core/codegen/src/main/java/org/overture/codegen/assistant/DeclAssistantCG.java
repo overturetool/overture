@@ -418,6 +418,19 @@ public class DeclAssistantCG extends AssistantBase
 
 		return record.getFields().get(number);
 	}
+	
+	public AFieldDeclCG getFieldDecl(AClassDeclCG clazz, String fieldName)
+	{
+		for(AFieldDeclCG field : clazz.getFields())
+		{
+			if(field.getName().equals(fieldName))
+			{
+				return field;
+			}
+		}
+		
+		return null;
+	}
 
 	public AFieldDeclCG getFieldDecl(List<AClassDeclCG> classes,
 			ARecordTypeCG recordType, String memberName)
