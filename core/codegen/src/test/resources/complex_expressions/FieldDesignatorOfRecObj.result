@@ -1,0 +1,57 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        return op1(new R(new Entry()));
+    }
+
+    public static Number op1(final R r) {
+        return r.e.getConst();
+    }
+
+    public Number getConst() {
+        return 1L;
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+
+    public static class R implements Record {
+        public Entry e;
+
+        public R(final Entry _e) {
+            e = (_e != null) ? _e : null;
+        }
+
+        public boolean equals(final Object obj) {
+            if (!(obj instanceof R)) {
+                return false;
+            }
+
+            R other = ((R) obj);
+
+            return Utils.equals(e, other.e);
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(e);
+        }
+
+        public R clone() {
+            return new R(e);
+        }
+
+        public String toString() {
+            return "mk_Entry`R" + Utils.formatFields(e);
+        }
+    }
+}
+
+##########

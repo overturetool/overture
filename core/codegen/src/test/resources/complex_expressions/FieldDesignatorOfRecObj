@@ -1,0 +1,19 @@
+class Entry
+
+types
+
+public R ::
+  e : [Entry];
+
+operations
+
+public static Run : () ==> ?
+Run () == op1(mk_R(new Entry()));
+
+public static op1 : R ==> nat
+op1(r) == r.e.getConst(); 
+
+public getConst: () ==> nat
+getConst() == return 1;
+
+end Entry
