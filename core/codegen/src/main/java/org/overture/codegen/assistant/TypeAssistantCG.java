@@ -39,6 +39,7 @@ import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SSeqTypeBase;
 import org.overture.ast.util.PTypeSet;
+import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SObjectDesignatorCG;
 import org.overture.codegen.cgast.STypeCG;
@@ -75,6 +76,7 @@ import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.ATokenBasicTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AUnionTypeCG;
+import org.overture.codegen.cgast.types.AUnknownTypeCG;
 import org.overture.codegen.cgast.types.SBasicTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
@@ -93,6 +95,114 @@ public class TypeAssistantCG extends AssistantBase
 		super(assistantManager);
 	}
 
+	public STypeCG getFieldExpType(IRInfo info, List<AClassDeclCG> classes, String fieldName, String fieldModule,
+			SObjectDesignatorCG obj, INode parent)
+			throws AnalysisException, org.overture.codegen.cgast.analysis.AnalysisException
+	{
+		if (parent instanceof AApplyObjectDesignatorCG)
+		{
+			AApplyObjectDesignatorCG apply = (AApplyObjectDesignatorCG) parent;
+			LinkedList<SExpCG> args = apply.getArgs();
+
+			if (fieldModule != null)
+			{
+				// It is a class
+				AClassDeclCG clazz = info.getDeclAssistant().findClass(classes, fieldModule);
+				AFieldDeclCG field = info.getDeclAssistant().getFieldDecl(clazz, fieldModule);
+				
+				if(field != null)
+				{
+					return field.getType().clone();
+				}
+				else
+				{
+					// It must be a method
+					return info.getTypeAssistant().getMethodType(info, classes, fieldModule, fieldName, args);
+				}
+			}
+		}
+		return getFieldType(info, classes, fieldName, fieldModule, obj);
+	}
+	
+	private STypeCG getFieldType(IRInfo info, List<AClassDeclCG> classes, String fieldName, String fieldModule,
+			SObjectDesignatorCG obj)
+	{
+		STypeCG fieldExpType;
+		if (fieldModule != null)
+		{
+			// It is a class
+			fieldExpType = info.getTypeAssistant().getFieldType(classes, fieldModule, fieldName);
+		}
+		else
+		{
+			boolean error = false;
+			ARecordTypeCG recType = null;
+
+			// It is a record so the obj must be an identifier or a field
+			if(obj instanceof AIdentifierObjectDesignatorCG)
+			{
+				SExpCG objId = ((AIdentifierObjectDesignatorCG) obj).getExp();
+				recType = (ARecordTypeCG) objId.getType();
+			}
+			else
+			{
+				List<String> fieldNames = new LinkedList<String>();
+				SObjectDesignatorCG nextField = obj;
+				
+				while(nextField instanceof AFieldObjectDesignatorCG)
+				{
+					AFieldObjectDesignatorCG tmpField = (AFieldObjectDesignatorCG) nextField;
+					fieldNames.add(0, tmpField.getFieldName());
+					nextField = tmpField.getObject();
+				}
+
+				if (nextField instanceof AIdentifierObjectDesignatorCG)
+				{
+					AIdentifierObjectDesignatorCG lastObj = ((AIdentifierObjectDesignatorCG) nextField);
+					
+					if (lastObj.getExp().getType() instanceof ARecordTypeCG)
+					{
+						recType = (ARecordTypeCG) lastObj.getExp().getType();
+
+						for (int i = 0; i < fieldNames.size(); i++)
+						{
+							String currentFieldName = fieldNames.get(i);
+							STypeCG currentFieldType = info.getTypeAssistant().getFieldType(classes, recType, currentFieldName);
+							
+							if (currentFieldType instanceof ARecordTypeCG)
+							{
+								recType = (ARecordTypeCG) currentFieldType;
+							}
+							else
+							{
+								error = true;
+								break;
+							}
+						}
+
+					}
+				}
+			}
+			
+			if(!error && recType != null)
+			{
+				fieldExpType = info.getTypeAssistant().getFieldType(classes, recType, fieldName);
+
+				if(fieldExpType == null)
+				{
+					Logger.getLog().printErrorln("Lookup of field type gave nothing in 'ObjectDesignatorToExpCG'");
+				}
+				
+			}
+			else
+			{
+				Logger.getLog().printErrorln("Could not determine field type of field expression in 'ObjectDesignatorToExpCG'");
+				fieldExpType = new AUnknownTypeCG();
+			}
+		}
+		return fieldExpType;
+	}
+	
 	public AMethodTypeCG getMethodType(IRInfo info, List<AClassDeclCG> classes,
 			String fieldModule, String fieldName, List<SExpCG> args)
 			throws org.overture.codegen.cgast.analysis.AnalysisException
@@ -358,7 +468,15 @@ public class TypeAssistantCG extends AssistantBase
 				AFieldObjectDesignatorCG fieldObj = (AFieldObjectDesignatorCG) object;
 				object = fieldObj.getObject();
 
-				return findElementType(classes, info, appliesCount, mostRecentApply, fieldObj);
+				try
+				{
+					return findElementType(classes, info, appliesCount, mostRecentApply, fieldObj);
+				} catch (AnalysisException
+						| org.overture.codegen.cgast.analysis.AnalysisException e)
+				{
+					Logger.getLog().printErrorln("Could not determine element type of " + fieldObj + " in 'TypeAssistantCG'");
+					return null;
+				}
 			} else
 			{
 				return null;
@@ -404,24 +522,11 @@ public class TypeAssistantCG extends AssistantBase
 
 	private STypeCG findElementType(List<AClassDeclCG> classes, IRInfo info,
 			int appliesCount, AApplyObjectDesignatorCG mostRecentApply,
-			AFieldObjectDesignatorCG fieldObj)
+			AFieldObjectDesignatorCG fieldObj) throws AnalysisException, org.overture.codegen.cgast.analysis.AnalysisException
 	{
-		try
-		{
-			STypeCG type = getFieldType(classes, fieldObj.getFieldModule(), fieldObj.getFieldName());
+		STypeCG type = getFieldExpType(info, classes, fieldObj.getFieldName(), fieldObj.getFieldModule(), fieldObj.getObject(), fieldObj.parent());
 
-			if (type == null)
-			{
-				type = getMethodType(info, classes, fieldObj.getFieldModule(), fieldObj.getFieldName(), mostRecentApply.getArgs());
-			}
-
-			return findElementType(appliesCount, type);
-
-		} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
-		{
-			e.printStackTrace();
-			return null;
-		}
+		return findElementType(appliesCount, type);
 	}
 
 	public PType getType(IRInfo question, AUnionType unionType, PPattern pattern)
