@@ -38,6 +38,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.overture.combinatorialtesting.vdmj.server.common.Utils;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
+import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.debug.core.IDebugPreferenceConstants;
 import org.overture.ide.debug.core.VdmDebugPlugin;
 import org.overture.ide.debug.core.launching.VdmLaunchConfigurationDelegate;
@@ -191,7 +192,22 @@ public class TestEngineDelegate
 	private Collection<? extends String> getVmArguments(
 			IPreferenceStore preferences)
 	{
-		return new Vector<String>();
+		List<String> options = new Vector<String>();
+		String opt = preferences.getString(IDebugConstants.VDM_LAUNCH_CONFIG_VM_MEMORY_OPTION);
+		if (opt.trim().length() != 0)
+		{
+			String[] opts = opt.split(" ");
+			for (String o : opts)
+			{
+				o = o.trim();
+				if (o.startsWith("-"))
+				{
+					options.add(o);
+				}
+			}
+		}
+
+		return options;
 	}
 
 	private synchronized int getSessionId()
