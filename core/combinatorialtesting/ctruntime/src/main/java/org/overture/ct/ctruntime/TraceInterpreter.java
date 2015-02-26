@@ -34,6 +34,7 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.typechecker.NameScope;
+import org.overture.ast.util.modules.CombinedDefaultModule;
 import org.overture.config.Settings;
 import org.overture.ct.utils.TraceXmlWrapper;
 import org.overture.interpreter.runtime.ClassInterpreter;
@@ -264,14 +265,29 @@ public class TraceInterpreter
 			storage.StartTrace(mtd.getName().getName(), mtd.getLocation().getFile().getName(), mtd.getLocation().getStartLine(), mtd.getLocation().getStartPos(), size, new Float(subset), TraceReductionType.valueOf(traceReductionType.toString()), new Long(seed));
 		}
 
+		INode traceContainer = null;
 		Environment rootEnv = null;
 		if (interpreter instanceof ClassInterpreter)
 		{
+			traceContainer = mtd.getClassDefinition();
 			rootEnv = new PrivateClassEnvironment(interpreter.getAssistantFactory(), mtd.getClassDefinition(), interpreter.getGlobalEnvironment());
 			;
 		} else
 		{
-			rootEnv = new ModuleEnvironment(interpreter.getAssistantFactory(), (AModuleModules) mtd.parent());
+			traceContainer = mtd.parent();
+			if(((AModuleModules)traceContainer).getIsFlat())
+			{
+				//search for the combined module
+				for(AModuleModules m : ((ModuleInterpreter)interpreter).modules)
+				{
+					if(m instanceof CombinedDefaultModule)
+					{
+						traceContainer = m;
+						break;
+					}
+				}
+			}
+			rootEnv = new ModuleEnvironment(interpreter.getAssistantFactory(), (AModuleModules) traceContainer);
 		}
 
 		int n = 1;
@@ -297,10 +313,10 @@ public class TraceInterpreter
 			{
 				if (interpreter instanceof ClassInterpreter)
 				{
-					typeCheck(mtd.getClassDefinition(), interpreter, test, rootEnv);
+					typeCheck(traceContainer, interpreter, test, rootEnv);
 				} else
 				{
-					typeCheck(mtd.parent(), interpreter, test, rootEnv);
+					typeCheck(traceContainer, interpreter, test, rootEnv);
 				}
 				typeOk = true;
 			} catch (Exception e)

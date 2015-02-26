@@ -22,6 +22,7 @@
 package org.overture.ide.plugins.combinatorialtesting.internal;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -53,7 +54,7 @@ public class TraceTestEngine
 			@Override
 			protected IStatus run(final IProgressMonitor monitor)
 			{
-				monitor.beginTask("Executing trace: "+texe.traceName, 100);
+				monitor.beginTask("Executing trace: " + texe.traceName, 100);
 				IPreferenceStore preferences = OvertureTracesPlugin.getDefault().getPreferenceStore();
 
 				if (!texe.coverageFolder.exists()
@@ -75,6 +76,9 @@ public class TraceTestEngine
 					{
 						port = 1213;
 					}
+
+					final long startTime = System.currentTimeMillis();
+
 					conn = new ConnectionListener(port, new IClientMonitor()
 					{
 						int worked = 0;
@@ -94,29 +98,43 @@ public class TraceTestEngine
 
 						public void progress(String traceName, Integer progress)
 						{
-							out.println(texe.project.getName() + ":"
-									+ traceName + " Worked " + progress + "%");
+							long millis = System.currentTimeMillis()
+									- startTime;
 
-							int tmp = progress-worked;
+							String elapsed = String.format("%d min, %d sec.", TimeUnit.MILLISECONDS.toMinutes(millis), TimeUnit.MILLISECONDS.toSeconds(millis)
+									- TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
+
+							out.println(texe.project.getName() + ":"
+									+ traceName + " Worked " + progress
+									+ "%. Time elapsed: " + elapsed);
+
+							int tmp = progress - worked;
 							if (worked == 0)
 							{
 								worked = progress;
 							} else
 							{
-								worked = progress ;
+								worked = progress;
 							}
 
 							if (tmp > 100)
 							{
-								tmp= 100;
+								tmp = 100;
 							}
 							monitor.worked(tmp);
 						}
 
 						public void completed()
 						{
+							long millis = System.currentTimeMillis()
+									- startTime;
+
+							String elapsed = String.format("%d min, %d sec.", TimeUnit.MILLISECONDS.toMinutes(millis), TimeUnit.MILLISECONDS.toSeconds(millis)
+									- TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
+
 							out.println(texe.project.getName()
-									+ " Completed execution");
+									+ " Completed execution. Time elapsed: "
+									+ elapsed);
 
 							monitor.done();
 							display.updateView(texe.project);

@@ -28,6 +28,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
 
 import org.overture.ast.lex.Dialect;
 import org.overture.config.Release;
@@ -39,7 +43,7 @@ public class CtHelper
 		public final String traceName;
 		public  int port;
 		public final File traceFolder;
-		public final File specFile;
+		public final List<File> specFiles= new Vector<>();
 		public TraceReductionInfo reduction;
 
 		public CtTestData(String traceName,  File traceFolder,
@@ -47,7 +51,16 @@ public class CtHelper
 		{
 			this.traceName = traceName;
 			this.traceFolder = traceFolder;
-			this.specFile = specFile;
+			this.specFiles.add( specFile);
+			this.reduction = second;
+
+		}
+		public CtTestData(String traceName,  File traceFolder,
+				List<File> specFiles, TraceReductionInfo second)
+		{
+			this.traceName = traceName;
+			this.traceFolder = traceFolder;
+			this.specFiles.addAll( specFiles);
 			this.reduction = second;
 
 		}
@@ -59,6 +72,8 @@ public class CtHelper
 		{
 			data.reduction= new TraceReductionInfo();
 		}
+		
+		
 
 		String[] args = new String[] {
 				"-h",
@@ -76,12 +91,22 @@ public class CtHelper
 				data.traceName,
 				"-tracefolder",
 				data.traceFolder.toURI().toASCIIString(),
-				data.specFile.toURI().toASCIIString(),
+				// spec files here
 				"-traceReduction",
 				"{" + data.reduction.getSubset() + ","
 						+ data.reduction.getReductionType().toString() + ","
 						+ data.reduction.getSeed() + "}" };
-		return args;
+		
+		List<String> argArray = new Vector<String>(Arrays.asList(args));
+		
+		
+		for (Iterator<File> itr = data.specFiles.iterator(); itr.hasNext();)
+		{
+			argArray.add(argArray.size()-2, itr.next().toURI().toASCIIString());
+			
+		}
+		
+		return argArray.toArray(new String[argArray.size()]);
 	}
 
 	public Thread consCtClientThread(final ServerSocket socket, final Data data)

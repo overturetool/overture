@@ -157,6 +157,10 @@ public class CTMainThread extends MainThread
 			}
 		} catch (Throwable e)
 		{
+			if (e instanceof ThreadDeath)
+			{
+				return;
+			}
 			if (result.lastIndexOf(Verdict.FAILED) < 0)
 			{
 				if (!getExceptions().isEmpty())
@@ -173,12 +177,29 @@ public class CTMainThread extends MainThread
 	}
 
 	@Override
+	public synchronized void setSignal(Signal sig)
+	{
+		if (sig == Signal.DEADLOCKED)
+		{
+			if (result.lastIndexOf(Verdict.FAILED) < 0)
+			{
+				result.add("DEADLOCK detected");
+				result.add(Verdict.FAILED);
+			}
+		}
+		super.setSignal(sig);
+	}
+
+	@Override
 	protected void handleSignal(Signal sig, Context lctxt, ILexLocation location)
 	{
 		if (sig == Signal.DEADLOCKED)
 		{
-			result.add("DEADLOCK detected");
-			result.add(Verdict.FAILED);
+			if (result.lastIndexOf(Verdict.FAILED) < 0)
+			{
+				result.add("DEADLOCK detected");
+				result.add(Verdict.FAILED);
+			}
 		}
 
 		super.handleSignal(sig, lctxt, location);

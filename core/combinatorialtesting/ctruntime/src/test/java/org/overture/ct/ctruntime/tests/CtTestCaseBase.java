@@ -59,7 +59,6 @@ public abstract class CtTestCaseBase extends TestResourcesResultTestCase4
 	// The socket is used to communicate with the trace interpreter
 	protected ServerSocket socket;
 	protected static final int SOCKET_TIMEOUT = 0;
-//	public static final int PORT = 8889;
 	private static final int FROM_PORT = 10000;
 	private static final int TO_PORT = 50000;
 
@@ -68,10 +67,10 @@ public abstract class CtTestCaseBase extends TestResourcesResultTestCase4
 
 	public static final String TRACE_OUTPUT_FOLDER = "target/trace-output/";
 
-	// protected CtTestHelper testHelper;
-//	private String[] args;
 	private File traceFolder;
 	private CtTestData testdata;
+	
+	
 
 	public CtTestCaseBase()
 	{
@@ -219,7 +218,7 @@ public abstract class CtTestCaseBase extends TestResourcesResultTestCase4
 
 		final String message = data.getMessage();
 
-		Assert.assertTrue("Test did not succed", message.contains("status=\"completed\" progress=\"100\""));
+		Assert.assertTrue("Test did not succed. Are you sure that it contains "+ (Settings.dialect==Dialect.VDM_SL?"'DEFAULT`T1'" : "'Entry`T1'"), message.contains("status=\"completed\" progress=\"100\""));
 
 		return actualOutputFile;
 	}

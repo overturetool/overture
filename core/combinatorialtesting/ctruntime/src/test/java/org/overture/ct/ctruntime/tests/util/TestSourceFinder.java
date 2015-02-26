@@ -39,6 +39,52 @@ import org.overture.ct.ctruntime.utils.CtHelper.CtTestData;
 public class TestSourceFinder
 {
 
+	public static Collection<Object[]> createTestMultiFileFile(Dialect dialect,
+			String name, String testRootPath, String... extensions)
+
+	{
+		File testRoot = getFile(testRootPath);
+
+		// TestSuite suite = new TestSourceFinder(name);
+		Collection<Object[]> tests = new LinkedList<Object[]>();
+
+		if (testRoot != null && testRoot.exists())
+		{
+			for (File file : testRoot.listFiles())
+			{
+				if (file.isDirectory() && !file.getName().startsWith("."))
+				{
+					//tests.addAll(createCompleteFile(dialect, name, file, testRoot, extensions));
+					List<File> specFiles = new Vector<File>();
+					for (File f : file.listFiles())
+					{
+						if(isNotAcceptedFile(f, Arrays.asList(extensions)))
+						{
+							continue;
+						}
+						specFiles.add(f);
+					}
+					
+					if(!specFiles.isEmpty())
+					{
+						String traceName = file.getName();
+						if (traceName.contains("."))
+						{
+							traceName = traceName.substring(0, traceName.lastIndexOf('.'));
+						}
+
+						File traceFolder = new File((CtTestCaseBase.TRACE_OUTPUT_FOLDER + traceName).replace('/', File.separatorChar));
+						tests.add(new Object[] { traceName, file, traceFolder,
+								new CtTestData("T1", traceFolder, specFiles, null) });
+					}
+					
+				}
+			}
+		}
+		return tests;
+
+	}
+
 	/**
 	 * Utility method to create a test suite from files
 	 * 
@@ -139,13 +185,14 @@ public class TestSourceFinder
 		} else
 		{
 			String traceName = file.getName();
-			if(traceName.contains("."))
+			if (traceName.contains("."))
 			{
 				traceName = traceName.substring(0, traceName.lastIndexOf('.'));
 			}
 
 			File traceFolder = new File((CtTestCaseBase.TRACE_OUTPUT_FOLDER + traceName).replace('/', File.separatorChar));
-			tests.add(new Object[] { traceName, file, traceFolder, new CtTestData("T1",  traceFolder, file,null) });
+			tests.add(new Object[] { traceName, file, traceFolder,
+					new CtTestData("T1", traceFolder, file, null) });
 		}
 
 		return tests;

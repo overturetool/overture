@@ -29,8 +29,10 @@ import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.IntegerFieldEditor;
+import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.overture.ide.debug.core.IDebugConstants;
 import org.overture.ide.plugins.combinatorialtesting.ITracesConstants;
 import org.overture.ide.plugins.combinatorialtesting.OvertureTracesPlugin;
 import org.overture.interpreter.traces.TraceReductionType;
@@ -82,6 +84,8 @@ public class WorkbenchPreferencePageMain extends FieldEditorPreferencePage
 		IntegerFieldEditor subsetLimitation = new IntegerFieldEditor(ITracesConstants.TRACE_SUBSET_LIMITATION, "Subset limitation (%)", getFieldEditorParent());
 		subsetLimitation.setValidRange(1, 100);
 		addField(subsetLimitation);
+		
+		addField(new StringFieldEditor(IDebugConstants.VDM_LAUNCH_CONFIG_VM_MEMORY_OPTION, "Additional VM arguments:", getFieldEditorParent()));
 	}
 
 	@Override
