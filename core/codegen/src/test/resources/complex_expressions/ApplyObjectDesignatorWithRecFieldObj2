@@ -1,0 +1,32 @@
+class Entry
+
+types
+
+public
+A ::
+  bs : seq of B;
+  
+public
+B ::
+  c : C;
+
+public
+C ::
+  e : Entry;
+
+  
+operations  
+
+public static Run : () ==> ?
+Run () ==
+let a = mk_A([mk_B(mk_C(new Entry()))])
+in
+  op(a);
+
+public static op : A ==> nat
+op (a) == a.bs(1).c.e.getConst();
+
+public getConst : () ==> nat
+getConst () == return 5;
+
+end Entry
