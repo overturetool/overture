@@ -7,6 +7,7 @@ import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.ir.IRInfo;
+import org.overture.codegen.trans.CallObjStmTransformation;
 import org.overture.codegen.trans.IPostCheckCreator;
 import org.overture.codegen.trans.IsExpTransformation;
 import org.overture.codegen.trans.PostCheckTransformation;
@@ -51,12 +52,13 @@ public class JavaTransSeries
 		FuncTransformation funcTransformation = new FuncTransformation(transAssistant);
 		IRInfo irInfo = codeGen.getIRGenerator().getIRInfo();
 
+		CallObjStmTransformation callObjTransformation = new CallObjStmTransformation(irInfo, classes);
 		PrePostTransformation prePostTransformation = new PrePostTransformation(irInfo);
 		IfExpTransformation ifExpTransformation = new IfExpTransformation(transAssistant);
 		FunctionValueTransformation funcValueTransformation = new FunctionValueTransformation(irInfo, transAssistant, functionValueAssistant, INTERFACE_NAME_PREFIX, TEMPLATE_TYPE_PREFIX, EVAL_METHOD_PREFIX, PARAM_NAME_PREFIX);
 		ILanguageIterator langIterator = new JavaLanguageIterator(transAssistant, irInfo.getTempVarNameGen(), codeGen.getTempVarPrefixes());
 		TransformationVisitor transVisitor = new TransformationVisitor(irInfo, classes, codeGen.getTempVarPrefixes(), transAssistant, consExists1CounterData(), langIterator, TERNARY_IF_EXP_NAME_PREFIX, CASES_EXP_RESULT_NAME_PREFIX, AND_EXP_NAME_PREFIX, OR_EXP_NAME_PREFIX, WHILE_COND_NAME_PREFIX, REC_MODIFIER_NAME_PREFIX);
-		PatternTransformation patternTransformation = new PatternTransformation(classes, codeGen.getTempVarPrefixes(), irInfo, transAssistant, new PatternMatchConfig());
+		PatternTransformation patternTransformation = new PatternTransformation(classes, codeGen.getTempVarPrefixes(), irInfo, transAssistant, new PatternMatchConfig(), CASES_EXP_NAME_PREFIX);
 		PreCheckTransformation preCheckTransformation = new PreCheckTransformation(irInfo, transAssistant, new JavaValueSemanticsTag(false));
 		PostCheckTransformation postCheckTransformation = new PostCheckTransformation(postCheckCreator, irInfo, transAssistant, FUNC_RESULT_NAME_PREFIX, new JavaValueSemanticsTag(false));
 		IsExpTransformation isExpTransformation = new IsExpTransformation(irInfo, transAssistant, IS_EXP_SUBJECT_NAME_PREFIX);
@@ -72,6 +74,7 @@ public class JavaTransSeries
 		JavaClassToStringTrans javaToStringTransformation = new JavaClassToStringTrans(irInfo);
 
 		DepthFirstAnalysisAdaptor[] analyses = new DepthFirstAnalysisAdaptor[] {
+				callObjTransformation,
 				funcTransformation, prePostTransformation, ifExpTransformation,
 				funcValueTransformation, transVisitor, patternTransformation,
 				preCheckTransformation, postCheckTransformation,

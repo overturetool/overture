@@ -186,6 +186,9 @@ import org.overture.ast.util.ToStringUtil;
 %definition->value = [pattern] +$($[type]$ == null ? "" : ":" + $[type]$) + " = " +$ [expression]
 
 
+%modules->module= "module " [name]$.getName()+  "\n definitions\n" + ToStringUtil.getDefinitionListString($[defs]$)$ +
+                "end "  [name]$.getName()$ + "\n"
+//return (_name!=null?_name.toString():this.getClass().getSimpleName())+ (_imports!=null?_imports.toString():this.getClass().getSimpleName())+ (_exports!=null?_exports.toString():this.getClass().getSimpleName())+ (_defs!=null?_defs.toString():this.getClass().getSimpleName())+ (_files!=null?_files.toString():this.getClass().getSimpleName())+ (_importdefs!=null?_importdefs.toString():this.getClass().getSimpleName())+ (_exportdefs!=null?_exportdefs.toString():this.getClass().getSimpleName())+ (_isFlat!=null?_isFlat.toString():this.getClass().getSimpleName())+ (_typeChecked!=null?_typeChecked.toString():this.getClass().getSimpleName())+ (_isDLModule!=null?_isDLModule.toString():this.getClass().getSimpleName());
 
 //%definition->value = [pattern] " : " [expType] " = " [expression]
 

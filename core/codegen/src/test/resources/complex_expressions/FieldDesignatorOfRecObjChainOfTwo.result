@@ -1,0 +1,87 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        return op1(new R1(new R2(new Entry())));
+    }
+
+    public static Number op1(final R1 r1) {
+        return r1.r2.e.getConst();
+    }
+
+    public Number getConst() {
+        return 2L;
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+
+    public static class R1 implements Record {
+        public R2 r2;
+
+        public R1(final R2 _r2) {
+            r2 = (_r2 != null) ? Utils.clone(_r2) : null;
+        }
+
+        public boolean equals(final Object obj) {
+            if (!(obj instanceof R1)) {
+                return false;
+            }
+
+            R1 other = ((R1) obj);
+
+            return Utils.equals(r2, other.r2);
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(r2);
+        }
+
+        public R1 clone() {
+            return new R1(r2);
+        }
+
+        public String toString() {
+            return "mk_Entry`R1" + Utils.formatFields(r2);
+        }
+    }
+
+    public static class R2 implements Record {
+        public Entry e;
+
+        public R2(final Entry _e) {
+            e = (_e != null) ? _e : null;
+        }
+
+        public boolean equals(final Object obj) {
+            if (!(obj instanceof R2)) {
+                return false;
+            }
+
+            R2 other = ((R2) obj);
+
+            return Utils.equals(e, other.e);
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(e);
+        }
+
+        public R2 clone() {
+            return new R2(e);
+        }
+
+        public String toString() {
+            return "mk_Entry`R2" + Utils.formatFields(e);
+        }
+    }
+}
+
+##########

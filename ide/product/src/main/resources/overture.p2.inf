@@ -14,8 +14,10 @@ instructions.configure=\
   remove(path:${installFolder}/epl-v10.html);\
   remove(path:${installFolder}/notice.html);\
   remove(path:${installFolder}/readme);\
-  addRepository(type:0,name:Overture,enabled:true,location:http${#58}//overture.sourceforge.net/updates/release/);\
-  addRepository(type:1,name:Overture,enabled:true,location:http${#58}//overture.sourceforge.net/updates/release/);
+  addRepository(type:0,name:Overture,enabled:false,location:http${#58}//dl.bintray.com/overturetool/overturetool/);\
+  addRepository(type:1,name:Overture,enabled:false,location:http${#58}//dl.bintray.com/overturetool/overturetool/);\
+  addRepository(type:0,name:Overture Development,enabled:true,location:http${#58}//dl.bintray.com/overturetool/overturetool-development/);\
+  addRepository(type:1,name:Overture Development,enabled:true,location:http${#58}//dl.bintray.com/overturetool/overturetool-development/);
 instructions.configure.import=\
   org.eclipse.equinox.p2.touchpoint.natives.chmod,\
   org.eclipse.equinox.p2.touchpoint.natives.copy,\

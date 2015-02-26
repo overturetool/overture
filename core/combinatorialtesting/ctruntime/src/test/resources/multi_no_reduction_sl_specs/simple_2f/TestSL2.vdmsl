@@ -1,0 +1,6 @@
+operations
+	op: R ==> nat
+	op(a) == return a.f + 1;
+	
+traces
+	T1: op(mk_R(11));

@@ -27,6 +27,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+import org.overture.ide.debug.core.IDebugConstants;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -151,6 +152,8 @@ public class OvertureTracesPlugin extends AbstractUIPlugin
 		store.setDefault(ITracesConstants.TRACE_REDUCTION_TYPE, ITracesConstants.TRACE_REDUCTION_DEFAULT_TYPE);
 		store.setDefault(ITracesConstants.TRACE_SEED, ITracesConstants.TRACE_FILTERING_DEFAULT_SEED);
 		store.setDefault(ITracesConstants.TRACE_SUBSET_LIMITATION, ITracesConstants.TRACE_SUBSET_LIMITATION_DEFAULT);
+		store.setDefault(IDebugConstants.VDM_LAUNCH_CONFIG_VM_MEMORY_OPTION, "");
+		
 	}
 
 }

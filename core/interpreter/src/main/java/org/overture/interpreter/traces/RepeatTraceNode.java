@@ -148,7 +148,6 @@ public class RepeatTraceNode extends TraceNode implements IIterableTraceNode
 				size++;
 			}
 		}
-		System.out.println(size);
 		return size;
 	}
 

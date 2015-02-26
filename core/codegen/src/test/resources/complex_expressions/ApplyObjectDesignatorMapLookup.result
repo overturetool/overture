@@ -48,7 +48,7 @@ public class Entry {
     public static Object Run() {
         Storage s = new Storage();
 
-        return ((X) s.getXs().get(1L)).fun();
+        return ((X) MapUtil.get(s.getXs(), 1L)).fun();
     }
 
     public String toString() {

@@ -38,7 +38,6 @@ import org.overture.ast.typechecker.NameScope;
 import org.overture.interpreter.runtime.Context;
 import org.overture.interpreter.values.Value;
 import org.overture.interpreter.values.VoidValue;
-import org.overture.typechecker.Environment;
 import org.overture.typechecker.FlatEnvironment;
 
 public class TraceVariableStatement extends PStmBase
@@ -53,27 +52,10 @@ public class TraceVariableStatement extends PStmBase
 		this.var = var;
 	}
 
-	public void typeCheck(Environment env, NameScope scope)
+	public void typeCheck(FlatEnvironment env, NameScope scope)
 	{
-		FlatEnvironment flat = (FlatEnvironment) env;
-		flat.add(AstFactoryTC.newALocalDefinition(var.name.getLocation(), var.name, scope, var.type));
-		// return var.type;
+		env.add(AstFactoryTC.newALocalDefinition(var.name.getLocation(), var.name, scope, var.type));
 	}
-
-	// @Override
-	// public Value eval(Context ctxt)
-	// {
-	// location.hit();
-	// Value val = var.value;
-	//
-	// if (val.isType(ObjectValue.class))
-	// {
-	// val = (Value)var.value.clone(); // To allow updates to objects
-	// }
-	//
-	// ctxt.put(var.name, val);
-	// return new VoidValue();
-	// }
 
 	public static Value eval(TraceVariableStatement stmt, Context ctxt)
 	{
@@ -89,13 +71,6 @@ public class TraceVariableStatement extends PStmBase
 		return new VoidValue();
 	}
 
-	//
-	// @Override
-	// public String kind()
-	// {
-	// return "trace variable";
-	// }
-
 	// @Override
 	public String toString()
 	{
@@ -105,28 +80,24 @@ public class TraceVariableStatement extends PStmBase
 	@Override
 	public PStm clone()
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public PStm clone(Map<INode, INode> oldToNewMap)
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void apply(IAnalysis analysis) throws AnalysisException
 	{
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public <A> A apply(IAnswer<A> caller) throws AnalysisException
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -134,7 +105,6 @@ public class TraceVariableStatement extends PStmBase
 	public <Q> void apply(IQuestion<Q> caller, Q question)
 			throws AnalysisException
 	{
-		// TODO Auto-generated method stub
 
 	}
 
@@ -142,15 +112,7 @@ public class TraceVariableStatement extends PStmBase
 	public <Q, A> A apply(IQuestionAnswer<Q, A> caller, Q question)
 			throws AnalysisException
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
-	// @Override
-	// public Type typeCheck(Environment env, NameScope scope)
-	// {
-	// FlatEnvironment flat = (FlatEnvironment)env;
-	// flat.add(new LocalDefinition(location, var.name, scope, var.type));
-	// return var.type;
-	// }
 }

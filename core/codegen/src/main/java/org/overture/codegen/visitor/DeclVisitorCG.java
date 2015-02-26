@@ -29,6 +29,8 @@ import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.definitions.AImplicitFunctionDefinition;
+import org.overture.ast.definitions.AImplicitOperationDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.AMutexSyncDefinition;
 import org.overture.ast.definitions.ANamedTraceDefinition;
@@ -58,8 +60,8 @@ import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AFuncDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.AMutexSyncDeclCG;
-import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
 import org.overture.codegen.cgast.declarations.ANamedTraceDeclCG;
+import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
 import org.overture.codegen.cgast.declarations.APersyncDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.declarations.AThreadDeclCG;
@@ -67,6 +69,7 @@ import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.expressions.ALambdaExpCG;
 import org.overture.codegen.cgast.expressions.ANotImplementedExpCG;
 import org.overture.codegen.cgast.name.ATokenNameCG;
+import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
 import org.overture.codegen.cgast.traces.ATraceDeclTermCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ATemplateTypeCG;
@@ -118,6 +121,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 			else
 			{
 				Logger.getLog().printErrorln("Expected term to be of type ATraceDeclTermCG. Got: " + termCg);
+				return null;
 			}
 		}
 		
@@ -161,8 +165,6 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 				recordFields.add(fieldDecl);
 			} else
 			{
-				question.addUnsupportedNode(node,
-						"Could not generate fields of record: " + name);
 				return null;
 			}
 		}
@@ -320,44 +322,77 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 
 		return method;
 	}
+	
+	@Override
+	public SDeclCG caseAImplicitFunctionDefinition(
+			AImplicitFunctionDefinition node, IRInfo question)
+			throws AnalysisException
+	{
+		String accessCg = node.getAccess().getAccess().toString();
+		String funcNameCg = node.getName().getName();
+		
+		STypeCG typeCg = node.getType().apply(question.getTypeVisitor(), question);
+		
+		if (!(typeCg instanceof AMethodTypeCG))
+		{
+			question.addUnsupportedNode(node, "Expected method type for implicit function. Got: "
+					+ typeCg);
+			return null;
+		}
 
+		AFuncDeclCG func = new AFuncDeclCG();
+		AExplicitFunctionDefinition preCond = node.getPredef();
+		SDeclCG preCondCg = preCond != null ? preCond.apply(question.getDeclVisitor(), question) : null;
+		func.setPreCond(preCondCg);
+		
+		AExplicitFunctionDefinition postCond = node.getPostdef();
+		SDeclCG postCondCg = postCond != null ? postCond.apply(question.getDeclVisitor(), question) : null;
+		func.setPostCond(postCondCg);
+
+
+		// If the function uses any type parameters they will be
+		// registered as part of the method declaration
+		List<ILexNameToken> typeParams = node.getTypeParams();
+		for (int i = 0; i < typeParams.size(); i++)
+		{
+			ILexNameToken typeParam = typeParams.get(i);
+			ATemplateTypeCG templateType = new ATemplateTypeCG();
+			templateType.setName(typeParam.getName());
+			func.getTemplateTypes().add(templateType);
+		}
+
+		func.setAbstract(false);
+		func.setAccess(accessCg);
+		func.setBody(new ANotImplementedExpCG());
+		func.setFormalParams(question.getDeclAssistant().
+				consFormalParams(node.getParamPatterns(), question));
+		func.setMethodType((AMethodTypeCG) typeCg);
+		func.setName(funcNameCg);
+		
+		// The implicit function is currently constructed without the result information:
+		//SPatternCG resPatternCg = node.getResult().getPattern().apply(question.getPatternVisitor(), question);
+		//STypeCG resTypeCg = node.getResult().getType().apply(question.getTypeVisitor(), question);
+
+		return func;
+	}
+	
 	@Override
 	public SDeclCG caseAExplicitOperationDefinition(
 			AExplicitOperationDefinition node, IRInfo question)
 			throws AnalysisException
 	{
-		String access = node.getAccess().getAccess().toString();
-		boolean isStatic = question.getTcFactory().createPDefinitionAssistant().isStatic(node);
-		boolean isAsync = question.getTcFactory().createPAccessSpecifierAssistant().isAsync(node.getAccess());
-		String operationName = node.getName().getName();
-		STypeCG type = node.getType().apply(question.getTypeVisitor(), question);
-
-		if (!(type instanceof AMethodTypeCG))
+		AMethodDeclCG method = question.getDeclAssistant().initMethod(node, question);
+		
+		if(method == null)
 		{
 			question.addUnsupportedNode(node, "Expected method type for explicit operation. Got: "
-					+ type);
+					+ node.getType());
 			return null;
 		}
-
-		AMethodTypeCG methodType = (AMethodTypeCG) type;
-		SStmCG body = node.getBody().apply(question.getStmVisitor(), question);
-		boolean isConstructor = node.getIsConstructor();
-		boolean isAbstract = body == null;
-
-		AMethodDeclCG method = new AMethodDeclCG();
-
-		method.setAccess(access);
-		method.setStatic(isStatic);
-		method.setAsync(isAsync);
-		method.setMethodType(methodType);
-		method.setName(operationName);
-		method.setBody(body);
-		method.setIsConstructor(isConstructor);
-		method.setAbstract(isAbstract);
-
+		
 		List<PType> ptypes = ((AOperationType) node.getType()).getParameters();
 		LinkedList<PPattern> paramPatterns = node.getParameterPatterns();
-
+		
 		LinkedList<AFormalParamLocalParamCG> formalParameters = method.getFormalParams();
 
 		for (int i = 0; i < ptypes.size(); i++)
@@ -371,15 +406,36 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 
 			formalParameters.add(param);
 		}
-		
-		AExplicitFunctionDefinition preCond = node.getPredef();
-		SDeclCG preCondCg = preCond != null ? preCond.apply(question.getDeclVisitor(), question) : null;
-		method.setPreCond(preCondCg);
-		
-		AExplicitFunctionDefinition postCond = node.getPostdef();
-		SDeclCG postCondCg = postCond != null ? postCond.apply(question.getDeclVisitor(), question) : null;
-		method.setPostCond(postCondCg);
 
+		return method;
+	}
+	
+	@Override
+	public SDeclCG caseAImplicitOperationDefinition(
+			AImplicitOperationDefinition node, IRInfo question)
+			throws AnalysisException
+	{
+		AMethodDeclCG method = question.getDeclAssistant().initMethod(node, question);
+		
+		if(method == null)
+		{
+			question.addUnsupportedNode(node, "Expected method type for explicit operation. Got: "
+					+ node.getType());
+			return null;
+		}
+
+		// The curent IR construction does not include:
+		//
+		// Name of result and its type:
+		// APatternTypePair res = node.getResult();
+		// Ext clauses (read and write):
+		// LinkedList<AExternalClause> externals = node.getExternals();
+		// Exceptions thrown:
+		// LinkedList<AErrorCase> errors = node.getErrors();
+		
+		method.setBody(new ANotImplementedStmCG());
+		method.setFormalParams(question.getDeclAssistant().
+				consFormalParams(node.getParameterPatterns(), question));
 		return method;
 	}
 

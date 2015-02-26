@@ -71,7 +71,7 @@ public class PTypeAssistantTC extends PTypeAssistant implements IAstAssistant
 	{
 		try
 		{
-			return type.apply(af.getPTypeExtendedChecker(), typeclass);// FIXME: should we handle exceptions like this
+			return type.apply(af.getPTypeExtendedChecker(), typeclass);
 		} catch (AnalysisException e)
 		{
 			return false;
@@ -108,7 +108,7 @@ public class PTypeAssistantTC extends PTypeAssistant implements IAstAssistant
 	{
 		try
 		{
-			return type.apply(af.getUnionBasisChecker());// FIXME: should we handle exceptions like this
+			return type.apply(af.getUnionBasisChecker());
 		} catch (AnalysisException e)
 		{
 			return false;
@@ -119,7 +119,7 @@ public class PTypeAssistantTC extends PTypeAssistant implements IAstAssistant
 	{
 		try
 		{
-			return type.apply(af.getUnionTypeFinder());// FIXME: should we handle exceptions like this
+			return type.apply(af.getUnionTypeFinder());
 		} catch (AnalysisException e)
 		{
 			return null;
@@ -130,7 +130,7 @@ public class PTypeAssistantTC extends PTypeAssistant implements IAstAssistant
 	{
 		try
 		{
-			return type.apply(af.getPTypeFunctionChecker());// FIXME: should we handle exceptions like this
+			return type.apply(af.getPTypeFunctionChecker());
 		} catch (AnalysisException e)
 		{
 			return false;
@@ -141,7 +141,7 @@ public class PTypeAssistantTC extends PTypeAssistant implements IAstAssistant
 	{
 		try
 		{
-			return type.apply(af.getFunctionTypeFinder());// FIXME: should we handle exceptions like this
+			return type.apply(af.getFunctionTypeFinder());
 		} catch (AnalysisException e)
 		{
 			return null;
@@ -165,7 +165,7 @@ public class PTypeAssistantTC extends PTypeAssistant implements IAstAssistant
 	{
 		try
 		{
-			type.apply(af.getTypeUnresolver());// FIXME: should we handle exceptions like this
+			type.apply(af.getTypeUnresolver());
 		} catch (AnalysisException e)
 		{
 

@@ -1,0 +1,59 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        A a = new A(SeqUtil.seq(new Entry()));
+
+        return op(Utils.clone(a));
+    }
+
+    public static Number op(final A a) {
+        return ((Entry) a.es.get(Utils.index(1L))).getConst();
+    }
+
+    public Number getConst() {
+        return 5L;
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+
+    public static class A implements Record {
+        public VDMSeq es;
+
+        public A(final VDMSeq _es) {
+            es = (_es != null) ? Utils.clone(_es) : null;
+        }
+
+        public boolean equals(final Object obj) {
+            if (!(obj instanceof A)) {
+                return false;
+            }
+
+            A other = ((A) obj);
+
+            return Utils.equals(es, other.es);
+        }
+
+        public int hashCode() {
+            return Utils.hashCode(es);
+        }
+
+        public A clone() {
+            return new A(es);
+        }
+
+        public String toString() {
+            return "mk_Entry`A" + Utils.formatFields(es);
+        }
+    }
+}
+
+##########

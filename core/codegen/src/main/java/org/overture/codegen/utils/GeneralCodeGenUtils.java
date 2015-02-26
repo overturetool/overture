@@ -109,6 +109,11 @@ public class GeneralCodeGenUtils
 		return typeCheckResult;
 	}
 
+	public static void replaceInFile(File file, String regex, String replacement)
+	{
+		replaceInFile(file.getAbsolutePath(), regex, replacement);
+	}
+
 	public static void replaceInFile(String filePath, String regex,
 			String replacement)
 	{
