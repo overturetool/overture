@@ -473,12 +473,12 @@ public class Vdm2JavaCommand extends AbstractHandler
 
 	private void handleUnexpectedException(Exception ex)
 	{
-		String errorMessage = "Unexpected exception caught when attempting to code generate VDM model.";
+		String errorMessage = 
+				"Unexpected problem encountered when attempting to code generate the VDM model.\n"
+				+ "The details of this problem have been reported in the Error Log.";
 
 		Activator.log(errorMessage, ex);
-
-		CodeGenConsole.GetInstance().println(errorMessage);
-		CodeGenConsole.GetInstance().println(ex.getMessage());
+		CodeGenConsole.GetInstance().printErrorln(errorMessage);
 		ex.printStackTrace();
 	}
 
