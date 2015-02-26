@@ -29,6 +29,7 @@ import java.util.Set;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
+import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
@@ -349,7 +350,7 @@ public class ExpAssistantCG extends AssistantBase
 		return header;
 	}
 
-	public boolean existsOutsideOpOrFunc(PExp exp)
+	public boolean existsOutsideMethodOrTrace(PExp exp)
 	{
 		// The transformation of the 'and' and 'or' logical expressions also assumes that the
 		// expressions exist within a statement. However, in case it does not, the transformation
@@ -357,14 +358,15 @@ public class ExpAssistantCG extends AssistantBase
 		// still be used (say) in instance variable assignment.
 		
 		return exp.getAncestor(SOperationDefinition.class) == null
-				&& exp.getAncestor(SFunctionDefinition.class) == null;
+				&& exp.getAncestor(SFunctionDefinition.class) == null
+				&& exp.getAncestor(ANamedTraceDefinition.class) == null;
 	}
 
 	public SExpCG handleQuantifier(PExp node, List<PMultipleBind> bindings,
 			PExp predicate, SQuantifierExpCG quantifier, IRInfo question,
 			String nodeStr) throws AnalysisException
 	{
-		if (question.getExpAssistant().existsOutsideOpOrFunc(node))
+		if (question.getExpAssistant().existsOutsideMethodOrTrace(node))
 		{
 			question.addUnsupportedNode(node, String.format("Generation of a %s is only supported within operations/functions", nodeStr));
 			return null;
