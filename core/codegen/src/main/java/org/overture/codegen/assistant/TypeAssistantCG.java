@@ -50,8 +50,6 @@ import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.SBinaryExpCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
-import org.overture.codegen.cgast.statements.AFieldObjectDesignatorCG;
-import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
@@ -398,95 +396,7 @@ public class TypeAssistantCG extends AssistantBase
 
 		return true;
 	}
-
-	public STypeCG findElementType(AApplyObjectDesignatorCG designator,
-			List<AClassDeclCG> classes, IRInfo info)
-	{
-		int appliesCount = 0;
-
-		AApplyObjectDesignatorCG mostRecentApply = designator;
-		SObjectDesignatorCG object = designator.getObject();
-
-		while (object != null)
-		{
-			if (object instanceof AIdentifierObjectDesignatorCG)
-			{
-				AIdentifierObjectDesignatorCG id = (AIdentifierObjectDesignatorCG) object;
-
-				STypeCG type = id.getExp().getType();
-
-				return findElementType(appliesCount, type);
-			} else if (object instanceof AApplyObjectDesignatorCG)
-			{
-				mostRecentApply = (AApplyObjectDesignatorCG) object;
-				appliesCount++;
-				object = mostRecentApply.getObject();
-			} else if (object instanceof AFieldObjectDesignatorCG)
-			{
-				AFieldObjectDesignatorCG fieldObj = (AFieldObjectDesignatorCG) object;
-				object = fieldObj.getObject();
-
-				try
-				{
-					return findElementType(classes, info, appliesCount, mostRecentApply, fieldObj);
-				} catch (AnalysisException
-						| org.overture.codegen.cgast.analysis.AnalysisException e)
-				{
-					Logger.getLog().printErrorln("Could not determine element type of " + fieldObj + " in 'TypeAssistantCG'");
-					return null;
-				}
-			} else
-			{
-				return null;
-			}
-		}
-
-		return null;
-	}
-
-	private STypeCG findElementType(int appliesCount, STypeCG type)
-	{
-		int methodTypesCount = 0;
-
-		while (type instanceof AMethodTypeCG)
-		{
-			methodTypesCount++;
-			AMethodTypeCG methodType = (AMethodTypeCG) type;
-			type = methodType.getResult();
-		}
-
-		while (type instanceof SSeqTypeCG || type instanceof SMapTypeCG)
-		{
-			if (type instanceof SSeqTypeCG)
-			{
-				type = ((SSeqTypeCG) type).getSeqOf();
-			}
-
-			if (type instanceof SMapTypeCG)
-			{
-				type = ((SMapTypeCG) type).getTo();
-			}
-
-			if (appliesCount == methodTypesCount)
-			{
-				return type;
-			}
-
-			methodTypesCount++;
-		}
-
-		return null;
-	}
-
-	private STypeCG findElementType(List<AClassDeclCG> classes, IRInfo info,
-			int appliesCount, AApplyObjectDesignatorCG mostRecentApply,
-			AFieldObjectDesignatorCG fieldObj) throws AnalysisException, org.overture.codegen.cgast.analysis.AnalysisException
-	{
-		STypeCG type = getFieldExpType(info, classes, fieldObj.getFieldName(), fieldObj.getFieldModule(), fieldObj.getObject(), fieldObj.parent());
-
-		return findElementType(appliesCount, type);
-	}
-
+	
 	public PType getType(IRInfo question, AUnionType unionType, PPattern pattern)
 	{
 		PTypeSet possibleTypes = new PTypeSet(question.getTcFactory());
