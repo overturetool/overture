@@ -19,6 +19,6 @@ public static Run : () ==> ?
 Run () ==
 let e = new Entry()
 in
-	return e.app(mk_token(1), mk_token(1));
+	return <A> = e.app(mk_token(1), mk_token(1));
 
 end Entry
