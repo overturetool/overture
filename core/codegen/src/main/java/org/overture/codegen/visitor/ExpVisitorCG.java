@@ -526,6 +526,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			{
 				question.addUnsupportedNode(node, "Generation of a multiple set bind was expected to yield a ASetMultipleBindCG. Got: "
 						+ multipleBindCg);
+				return null;
 			}
 
 			bindingsCg.add((ASetMultipleBindCG) multipleBindCg);
