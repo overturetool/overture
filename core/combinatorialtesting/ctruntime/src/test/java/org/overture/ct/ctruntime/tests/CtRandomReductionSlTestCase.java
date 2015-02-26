@@ -29,14 +29,16 @@ import java.util.Vector;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import org.overture.ct.ctruntime.utils.CtHelper;
+import org.overture.ast.lex.Dialect;
+import org.overture.config.Release;
+import org.overture.config.Settings;
+import org.overture.ct.ctruntime.utils.CtHelper.CtTestData;
 import org.overture.ct.ctruntime.utils.TraceReductionInfo;
 import org.overture.interpreter.traces.TraceReductionType;
 import org.overture.interpreter.traces.util.Pair;
-import org.overture.test.framework.Properties;
 
 @RunWith(value = Parameterized.class)
-public class CtRandomReductionTestCase extends CtTestCaseBase
+public class CtRandomReductionSlTestCase extends CtTestCaseBase
 {
 	//The name of the test input folder
 	private static final String TEST_INPUT_FOLDER = "random_reduction_sl_specs";
@@ -54,7 +56,6 @@ public class CtRandomReductionTestCase extends CtTestCaseBase
 	@Parameters(name = "{0}")
 	public static Collection<Object[]> getData()
 	{
-		Properties.recordTestResults = false;
 		
 		List<Pair<String, TraceReductionInfo>> testReductionInfo2 = new Vector<Pair<String, TraceReductionInfo>>();
 		testReductionInfo2.add(new Pair<String, TraceReductionInfo>("OpRepeatedTenTimes", new TraceReductionInfo(0.15F, TraceReductionType.RANDOM, SEED)));
@@ -68,7 +69,7 @@ public class CtRandomReductionTestCase extends CtTestCaseBase
 		testReductionInfo2.add(new Pair<String, TraceReductionInfo>("PaperCaseStudy", new TraceReductionInfo(0.01F, TraceReductionType.SHAPES_VARVALUES, SEED)));
 
 		Collection<Object[]> tests = new Vector<Object[]>();
-		CtHelper testHelper = new CtHelper();
+		
 
 		File root = new File(RESOURCES);
 
@@ -82,18 +83,26 @@ public class CtRandomReductionTestCase extends CtTestCaseBase
 					traceName + " " + entry.second,
 					specFile,
 					traceFolder,
-					testHelper.buildArgs(TRACE_NAME, PORT, traceFolder, specFile, entry.second),
+					new CtTestData( TRACE_NAME,  traceFolder, specFile, entry.second),
 					entry.second });
 		}
 
 		return tests;
 	}
-
-	public CtRandomReductionTestCase(String name, File file, File traceFolder,
-			String[] args, TraceReductionInfo reductionInfo)
+	
+	public CtRandomReductionSlTestCase(String name, File file, File traceFolder,
+			CtTestData args, TraceReductionInfo reductionInfo)
 	{
 		super(file, traceFolder, args);
 		this.reductionInfo = reductionInfo;
+	}
+	
+	
+	@Override
+	public void setUp() throws Exception
+	{
+		Settings.dialect = Dialect.VDM_SL;
+		Settings.release = Release.VDM_10;
 	}
 	
 	@Override
@@ -119,5 +128,11 @@ public class CtRandomReductionTestCase extends CtTestCaseBase
 		return filename.substring(0, index) + "-"
 				+ reductionInfo.toString().replace(',', '_').replace('.', '_')
 				+ filename.substring(index);
+	}
+
+	@Override
+	protected String getPropertyId()
+	{
+		return "sl.random";
 	}
 }

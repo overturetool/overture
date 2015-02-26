@@ -10,8 +10,7 @@ import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
-import org.overture.codegen.cgast.statements.ACallObjectStmCG;
-import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
+import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.ir.IRGeneratedTag;
 import org.overture.codegen.ir.IRInfo;
@@ -82,11 +81,8 @@ public class InstanceVarPPEvalTransformation extends DepthFirstAnalysisAdaptor
 		sentinelVar.setName(SENTINEL_FIELD_NAME);
 		sentinelVar.setType(fieldType);
 		
-		AIdentifierObjectDesignatorCG sentinel = new AIdentifierObjectDesignatorCG();
-		sentinel.setExp(sentinelVar);
-		
-		ACallObjectStmCG callSentinel = new ACallObjectStmCG();
-		callSentinel.setDesignator(sentinel);
+		ACallObjectExpStmCG callSentinel = new ACallObjectExpStmCG();
+		callSentinel.setObj(sentinelVar);
 		callSentinel.setFieldName("stateChanged");
 		callSentinel.setType(new AVoidTypeCG());
 		

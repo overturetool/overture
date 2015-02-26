@@ -28,47 +28,85 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
+
+import org.overture.ast.lex.Dialect;
+import org.overture.config.Release;
 
 public class CtHelper
 {
-	public String[] buildArgs(final String traceName, final int port,
-			File traceFolder, File specfile)
-
+	public static class CtTestData
 	{
-		// Passing 'null' indicates no trace reduction
-		return buildArgs(traceName, port, traceFolder, specfile, null);
+		public final String traceName;
+		public  int port;
+		public final File traceFolder;
+		public final List<File> specFiles= new Vector<>();
+		public TraceReductionInfo reduction;
+
+		public CtTestData(String traceName,  File traceFolder,
+				File specFile, TraceReductionInfo second)
+		{
+			this.traceName = traceName;
+			this.traceFolder = traceFolder;
+			this.specFiles.add( specFile);
+			this.reduction = second;
+
+		}
+		public CtTestData(String traceName,  File traceFolder,
+				List<File> specFiles, TraceReductionInfo second)
+		{
+			this.traceName = traceName;
+			this.traceFolder = traceFolder;
+			this.specFiles.addAll( specFiles);
+			this.reduction = second;
+
+		}
 	}
 
-	public String[] buildArgs(final String traceName, final int port,
-			File traceFolder, File specfile, TraceReductionInfo info)
+	public String[] buildArgs(Dialect dialect, Release release, CtTestData data)
 	{
-		if (info == null)
+		if (data.reduction == null)
 		{
-			info = new TraceReductionInfo();
+			data.reduction= new TraceReductionInfo();
 		}
+		
+		
 
 		String[] args = new String[] {
 				"-h",
 				"localhost",
 				"-p",
-				port + "",
+				data.port + "",
 				"-k",
 				"whatever",
 				"-e",
-				"DEFAULT",
-				"-vdmsl",
+				dialect == Dialect.VDM_SL ? "DEFAULT" : "Entry",
+				dialect.getArgstring(),
 				"-r",
 				"vdm10",
 				"-t",
-				traceName,
+				data.traceName,
 				"-tracefolder",
-				traceFolder.toURI().toASCIIString(),
-				specfile.toURI().toASCIIString(),
+				data.traceFolder.toURI().toASCIIString(),
+				// spec files here
 				"-traceReduction",
-				"{" + info.getSubset() + ","
-						+ info.getReductionType().toString() + ","
-						+ info.getSeed() + "}" };
-		return args;
+				"{" + data.reduction.getSubset() + ","
+						+ data.reduction.getReductionType().toString() + ","
+						+ data.reduction.getSeed() + "}" };
+		
+		List<String> argArray = new Vector<String>(Arrays.asList(args));
+		
+		
+		for (Iterator<File> itr = data.specFiles.iterator(); itr.hasNext();)
+		{
+			argArray.add(argArray.size()-2, itr.next().toURI().toASCIIString());
+			
+		}
+		
+		return argArray.toArray(new String[argArray.size()]);
 	}
 
 	public Thread consCtClientThread(final ServerSocket socket, final Data data)

@@ -83,7 +83,7 @@ public class UiInterface
 			containerTable.put(name, c);
 		} else
 		{
-			// FIXME: Find a better identifier than 'main' when main String is null
+			//  Find a better identifier than 'main' when main String is null
 			containerTable.put("main", c);
 		}
 	}
@@ -107,7 +107,7 @@ public class UiInterface
 			containerTable.put(name, c);
 		} else
 		{
-			// FIXME: Find a better identifier than 'main' when main String is null
+			//  Find a better identifier than 'main' when main String is null
 			containerTable.put("main", c);
 		}
 	}
@@ -130,7 +130,7 @@ public class UiInterface
 			containerTable.put(name, c);
 		} else
 		{
-			// FIXME: Find a better identifier than 'main' when main String is null
+			//  Find a better identifier than 'main' when main String is null
 			containerTable.put("main", c);
 		}
 	}
@@ -335,7 +335,7 @@ public class UiInterface
 				// checking if we have more than one class to use
 				for (IVdmDefinition c : this.classList)
 				{
-					// FIXME: this works as there is only one possible annotation for classes
+					//  this works as there is only one possible annotation for classes
 					if (c.hasAnnotations())
 					{
 						--i;
@@ -405,7 +405,7 @@ public class UiInterface
 				// checking if we have more than one class to use
 				for (IVdmDefinition c : this.classList)
 				{
-					// FIXME: this works as there is only one possible annotation for classes
+					//  this works as there is only one possible annotation for classes
 					if (c.hasAnnotations())
 					{
 						--i;

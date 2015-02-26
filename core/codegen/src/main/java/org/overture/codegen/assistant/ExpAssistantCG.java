@@ -21,18 +21,20 @@
  */
 package org.overture.codegen.assistant;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.expressions.ACaseAlternative;
+import org.overture.ast.expressions.ALambdaExp;
 import org.overture.ast.expressions.ARealLiteralExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.expressions.SBinaryExp;
@@ -299,17 +301,41 @@ public class ExpAssistantCG extends AssistantBase
 
 	public boolean isAssigned(PExp exp)
 	{
-		SClassDefinition classDef = exp.getAncestor(SClassDefinition.class);
+		org.overture.ast.node.INode parent = exp.parent();
 
-		if (classDef == null)
+		if (parent == null)
 		{
 			return false;
 		}
 
-		return exp.getAncestor(AInstanceVariableDefinition.class) != null
-				|| exp.getAncestor(AValueDefinition.class) != null
-				|| exp.getAncestor(AAssignmentDefinition.class) != null
-				|| exp.getAncestor(AAssignmentStm.class) != null;
+		Set<org.overture.ast.node.INode> visitedNodes = new HashSet<>();
+		visitedNodes.add(parent);
+
+		do
+		{
+			if (parent instanceof AInstanceVariableDefinition
+					| parent instanceof AValueDefinition
+					| parent instanceof AAssignmentDefinition
+					| parent instanceof AAssignmentStm)
+			{
+				return true;
+			}
+
+			if (parent instanceof ALambdaExp)
+			{
+				return false;
+			}
+
+			parent = parent.parent();
+
+			if (parent != null)
+			{
+				visitedNodes.add(parent);
+			}
+			
+		} while (parent != null && !visitedNodes.contains(parent));
+		
+		return false;
 	}
 
 	public AHeaderLetBeStCG consHeader(ASetMultipleBindCG binding,

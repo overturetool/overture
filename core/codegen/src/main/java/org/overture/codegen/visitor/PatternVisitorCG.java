@@ -159,7 +159,15 @@ public class PatternVisitorCG extends AbstractVisitorCG<IRInfo, SPatternCG>
 		for (PPattern currentPattern : node.getPlist())
 		{
 			SPatternCG patternCg = currentPattern.apply(question.getPatternVisitor(), question);
-			tuplePatternCg.getPatterns().add(patternCg);
+			
+			if(patternCg != null)
+			{
+				tuplePatternCg.getPatterns().add(patternCg);
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 		return tuplePatternCg;
@@ -181,7 +189,15 @@ public class PatternVisitorCG extends AbstractVisitorCG<IRInfo, SPatternCG>
 		for (PPattern currentPattern : node.getPlist())
 		{
 			SPatternCG patternCg = currentPattern.apply(question.getPatternVisitor(), question);
-			recordPatternCg.getPatterns().add(patternCg);
+			
+			if(patternCg != null)
+			{
+				recordPatternCg.getPatterns().add(patternCg);
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 		return recordPatternCg;

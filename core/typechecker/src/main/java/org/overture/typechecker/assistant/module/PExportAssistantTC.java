@@ -45,7 +45,7 @@ public class PExportAssistantTC implements IAstAssistant
 	{
 		try
 		{
-			return exp.apply(af.getExportDefinitionFinder(), actualDefs);// FIXME: should we handle exceptions like this
+			return exp.apply(af.getExportDefinitionFinder(), actualDefs);
 		} catch (AnalysisException e)
 		{
 			return null;
@@ -57,7 +57,7 @@ public class PExportAssistantTC implements IAstAssistant
 	{
 		try
 		{
-			return exp.apply(af.getExportDefinitionListFinder());// FIXME: should we handle exceptions like this
+			return exp.apply(af.getExportDefinitionListFinder());
 		} catch (AnalysisException e)
 		{
 			return null;

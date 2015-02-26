@@ -31,8 +31,10 @@ import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.node.INode;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.typechecker.NameScope;
+import org.overture.ast.util.modules.CombinedDefaultModule;
 import org.overture.config.Settings;
 import org.overture.ct.utils.TraceXmlWrapper;
 import org.overture.interpreter.runtime.ClassInterpreter;
@@ -48,6 +50,7 @@ import org.overture.interpreter.traces.TraceVariableStatement;
 import org.overture.interpreter.traces.Verdict;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.FlatEnvironment;
+import org.overture.typechecker.ModuleEnvironment;
 import org.overture.typechecker.PrivateClassEnvironment;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
@@ -177,7 +180,7 @@ public class TraceInterpreter
 			}
 
 			infoCompleted();
-			
+
 			if (DEBUG)
 			{
 				System.out.println("Completed");
@@ -255,11 +258,36 @@ public class TraceInterpreter
 		tests = ctxt.assistantFactory.createANamedTraceDefinitionAssistant().getTests(mtd, ctxt, subset, traceReductionType, seed);
 
 		int size = tests.size();
-		
+
 		infoProcessingTrace(className, mtd.getName().getName(), size);
 		if (storage != null)
 		{
 			storage.StartTrace(mtd.getName().getName(), mtd.getLocation().getFile().getName(), mtd.getLocation().getStartLine(), mtd.getLocation().getStartPos(), size, new Float(subset), TraceReductionType.valueOf(traceReductionType.toString()), new Long(seed));
+		}
+
+		INode traceContainer = null;
+		Environment rootEnv = null;
+		if (interpreter instanceof ClassInterpreter)
+		{
+			traceContainer = mtd.getClassDefinition();
+			rootEnv = new PrivateClassEnvironment(interpreter.getAssistantFactory(), mtd.getClassDefinition(), interpreter.getGlobalEnvironment());
+			;
+		} else
+		{
+			traceContainer = mtd.parent();
+			if(((AModuleModules)traceContainer).getIsFlat())
+			{
+				//search for the combined module
+				for(AModuleModules m : ((ModuleInterpreter)interpreter).modules)
+				{
+					if(m instanceof CombinedDefaultModule)
+					{
+						traceContainer = m;
+						break;
+					}
+				}
+			}
+			rootEnv = new ModuleEnvironment(interpreter.getAssistantFactory(), (AModuleModules) traceContainer);
 		}
 
 		int n = 1;
@@ -269,7 +297,7 @@ public class TraceInterpreter
 		int skippedCount = 0;
 
 		StopWatch.set();
-		
+
 		for (CallSequence test : tests)
 		{
 			StopWatch.stop("Getting test");
@@ -283,7 +311,13 @@ public class TraceInterpreter
 			boolean typeOk = false;
 			try
 			{
-				typeCheck(mtd.getClassDefinition(), interpreter, test);
+				if (interpreter instanceof ClassInterpreter)
+				{
+					typeCheck(traceContainer, interpreter, test, rootEnv);
+				} else
+				{
+					typeCheck(traceContainer, interpreter, test, rootEnv);
+				}
 				typeOk = true;
 			} catch (Exception e)
 			{
@@ -341,8 +375,7 @@ public class TraceInterpreter
 				{
 					storage.AddSkippedResult(new Integer(n).toString());
 				}
-			}
-			else
+			} else
 			{
 
 				if (verdict == Verdict.ERROR)
@@ -398,28 +431,34 @@ public class TraceInterpreter
 	 * @throws AnalysisException
 	 * @throws Exception
 	 */
-	protected void typeCheck(SClassDefinition classdef,
-			Interpreter interpreter, CallSequence test)
-			throws AnalysisException, Exception
+	protected void typeCheck(INode classdef, Interpreter interpreter,
+			CallSequence test, Environment outer) throws AnalysisException,
+			Exception
 	{
-		Environment env = null;
+		FlatEnvironment env = null;
 
-		if (interpreter instanceof ClassInterpreter)
+		if (classdef instanceof SClassDefinition)
 		{
-			env = new FlatEnvironment(interpreter.getAssistantFactory(), classdef.apply(interpreter.getAssistantFactory().getSelfDefinitionFinder()), new PrivateClassEnvironment(interpreter.getAssistantFactory(), classdef, interpreter.getGlobalEnvironment()));
+
+			env = new FlatEnvironment(interpreter.getAssistantFactory(), classdef.apply(interpreter.getAssistantFactory().getSelfDefinitionFinder()), outer);
 		} else
 		{
-			env = new FlatEnvironment(interpreter.getAssistantFactory(), new Vector<PDefinition>(), interpreter.getGlobalEnvironment());
+
+			env = new FlatEnvironment(interpreter.getAssistantFactory(), new Vector<PDefinition>(), outer);
 		}
 
-		for (PStm statement : test)
+		for (int i = 0; i < test.size(); i++)
 		{
+			PStm statement = test.get(i);
+
 			if (statement instanceof TraceVariableStatement)
 			{
 				((TraceVariableStatement) statement).typeCheck(env, NameScope.NAMESANDSTATE);
 			} else
 			{
-				interpreter.typeCheck(statement.clone(), env);
+				statement = statement.clone();
+				test.set(i, statement);
+				interpreter.typeCheck(statement, env);
 			}
 
 		}

@@ -170,14 +170,13 @@ public class VdmjVdmClassReader implements IVdmClassReader
 			if (assistantFactory.createPDefinitionAssistant().isFunctionOrOperation(def))
 			{
 				// now we check what sub class it is...
-				// FIXME: Better way of doing this ?
 				if (def instanceof AExplicitOperationDefinition)
 				{
 					AExplicitOperationDefinition operation = (AExplicitOperationDefinition) def;
-					// FIXME: In terms of type only 'class types' are treated
+					// In terms of type only 'class types' are treated
 					VdmType type = getType(((AOperationType) operation.getType()).getResult(), assistantFactory);
 					newDefinition = new VdmMethod(operation.getName().getName(), operation.getIsConstructor(), type);
-					// FIXME: Temporary solution, just to check if there's a return
+					// Temporary solution, just to check if there's a return
 					/*
 					 * if (!operation.type.result.equals("()")) newDefinition.setType( "" );
 					 */// fetching the arguments
@@ -203,7 +202,7 @@ public class VdmjVdmClassReader implements IVdmClassReader
 				{
 					AImplicitOperationDefinition operation = (AImplicitOperationDefinition) def;
 					VdmType type = null;
-					// FIXME: In terms of type only 'class types' are treated
+					//  In terms of type only 'class types' are treated
 					type = getType(((AOperationType) operation.getType()).getResult(), assistantFactory);
 					newDefinition = new VdmMethod(operation.getName().getName(), operation.getIsConstructor(), type);
 
@@ -231,7 +230,7 @@ public class VdmjVdmClassReader implements IVdmClassReader
 				{
 					AExplicitFunctionDefinition function = (AExplicitFunctionDefinition) def;
 					VdmType type = null;
-					// FIXME: In terms of type only 'class types' are treated
+					//  In terms of type only 'class types' are treated
 					type = getType(((AFunctionType) function.getType()).getResult(), assistantFactory);
 					newDefinition = new VdmMethod(function.getName().getName(), false, type);
 					// fetching the arguments
@@ -259,7 +258,7 @@ public class VdmjVdmClassReader implements IVdmClassReader
 				{
 					AImplicitFunctionDefinition function = (AImplicitFunctionDefinition) def;
 					VdmType type = null;
-					// FIXME: In terms of type only 'class types' are treated
+					//  In terms of type only 'class types' are treated
 					type = getType(((AFunctionType) function.getType()).getResult(), assistantFactory);
 					newDefinition = new VdmMethod(function.getName().getName(), false, type);
 					// fetching the arguments
@@ -309,7 +308,7 @@ public class VdmjVdmClassReader implements IVdmClassReader
 			}
 		}
 
-		// FIXME we only have one annotation for classes, so we can get away with this, but
+		//  we only have one annotation for classes, so we can get away with this, but
 		// a sanity check is needed...
 		if (!(ToolSettings.GENERATION_SETTINGS == ToolSettings.GENERATION_MODE.ANNOTATIONS && vdmClass.hasAnnotations()))
 		{
@@ -318,34 +317,8 @@ public class VdmjVdmClassReader implements IVdmClassReader
 
 	}
 
-	// public static boolean isClass(PType type)
-	// {
-	// // FIXME
-	// if (type instanceof ANamedInvariantType)
-	// {
-	// ANamedInvariantType in = (ANamedInvariantType) type;
-	// if (in.getOpaque())
-	// {
-	// return false;
-	// }
-	// return isClass(in.getType());
-	// } else if (type instanceof AOptionalType)
-	// {
-	// AOptionalType opt = (AOptionalType) type;
-	// return isClass(opt.getType());
-	// } else if (type instanceof AParameterType)
-	// {
-	// return true;
-	// } else if (type instanceof AUnionType)
-	// {
-	// AUnionType ut = (AUnionType) type;
-	// return AUnionTypeAssistantInterpreter.getClassType(ut) != null;
-	// } else if (type instanceof AUnknownType)
-	// {
-	// return true;
-	// }
-	// return false;
-	// }
+	
+
 
 	public static VdmType getType(PType type,
 			ITypeCheckerAssistantFactory assistantFactory) // added parameter for the assistantFactory
@@ -379,7 +352,7 @@ public class VdmjVdmClassReader implements IVdmClassReader
 	 */
 	private String extractTypeName(PType type, int n)
 	{
-		// FIXME: rewrite
+		//  rewrite
 		String ret = type.toString();
 		// System.out.println(ret);
 		ret = ret.replaceAll("\\(", "");

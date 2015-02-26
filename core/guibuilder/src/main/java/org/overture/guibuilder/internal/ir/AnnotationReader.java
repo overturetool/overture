@@ -90,7 +90,7 @@ public class AnnotationReader
 		}
 	}
 
-	// FIXME: DIRTY, VERY DIRTY. A proper parser should be used for this.
+	//  DIRTY, VERY DIRTY. A proper parser should be used for this.
 	// This method only does simple line by line reading.
 	/**
 	 * Reads a single plain text file containing a vdm++ specification
@@ -121,7 +121,7 @@ public class AnnotationReader
 				}
 
 				// found a annotation
-				// FIXME: We don't take into account multiple annotations for a class or method
+				//  We don't take into account multiple annotations for a class or method
 				if (annotationPatern.matcher(strLine).lookingAt())
 				{
 					String[] result = strLine.split("=");
@@ -178,7 +178,7 @@ public class AnnotationReader
 							} // lookinAt()
 							else if (strLine.contains("public")
 									|| strLine.contains("private"))
-							{ // FIXME: Redundant
+							{ // Redundant
 								String split[] = strLine.split(" ");
 								if (split.length >= 2)
 								{

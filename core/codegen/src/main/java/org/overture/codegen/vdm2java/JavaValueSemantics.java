@@ -49,9 +49,7 @@ import org.overture.codegen.cgast.expressions.ASetProperSubsetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetSubsetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATupleCompatibilityExpCG;
 import org.overture.codegen.cgast.expressions.ATupleSizeExpCG;
-import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AForAllStmCG;
-import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
@@ -164,19 +162,6 @@ public class JavaValueSemantics
 		if (cloneNotNeeded(parent))
 		{
 			return false;
-		}
-
-		if (parent instanceof AIdentifierObjectDesignatorCG)
-		{
-			// Don't clone the variable associated with an identifier object designator
-			return false;
-		}
-
-		if (parent instanceof AApplyObjectDesignatorCG)
-		{
-			// No need to clone the expression - we only use it for lookup
-			return usesStructuralEquivalence(exp.getType())
-					&& javaFormat.findElementType((AApplyObjectDesignatorCG) parent) == null;
 		}
 
 		if (parent instanceof ALocalAssignmentStmCG)

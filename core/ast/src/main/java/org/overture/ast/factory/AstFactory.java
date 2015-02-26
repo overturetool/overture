@@ -989,6 +989,11 @@ public class AstFactory
 
 		result.setOpname(opname);
 		result.setGuard(guard);
+		
+		if(guard != null)
+		{
+			guard.parent(result);
+		}
 
 		return result;
 	}

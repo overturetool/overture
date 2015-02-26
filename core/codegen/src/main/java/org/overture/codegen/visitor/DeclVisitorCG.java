@@ -121,6 +121,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 			else
 			{
 				Logger.getLog().printErrorln("Expected term to be of type ATraceDeclTermCG. Got: " + termCg);
+				return null;
 			}
 		}
 		
@@ -164,8 +165,6 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 				recordFields.add(fieldDecl);
 			} else
 			{
-				question.addUnsupportedNode(node,
-						"Could not generate fields of record: " + name);
 				return null;
 			}
 		}

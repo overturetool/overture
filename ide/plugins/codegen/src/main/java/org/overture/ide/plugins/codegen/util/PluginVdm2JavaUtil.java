@@ -22,6 +22,10 @@
 package org.overture.ide.plugins.codegen.util;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -53,13 +57,24 @@ import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.core.utility.FileUtility;
 import org.overture.ide.plugins.codegen.ICodeGenConstants;
+import org.overture.ide.plugins.codegen.commands.Vdm2JavaCommand;
 
 public class PluginVdm2JavaUtil
 {
-	private static final String JAVA_FOLDER = "java";
-	private static final String QUOTES_FOLDER = "quotes";
-	private static final String UTILS_FOLDER = "utils";
+	public static final String JAVA_FOLDER = "java";
+	public static final String QUOTES_FOLDER = "quotes";
+	public static final String UTILS_FOLDER = "utils";
+	public static final String CODEGEN_RUNTIME_BIN_FILE_NAME = "codegen-runtime.jar";
+	public static final String CODEGEN_RUNTIME_SOURCES_FILE_NAME = "codegen-runtime-sources.jar";
+	public static final String ECLIPSE_CLASSPATH_TEMPLATE_FILE_NAME = "cg.classpath";
+	public static final String ECLIPSE_PROJECT_TEMPLATE_FILE_NAME = "cg.project";
+	public static final String ECLIPSE_CLASSPATH_FILE_NAME = ".classpath";
+	public static final String ECLIPSE_PROJECT_FILE_NAME = ".project";
+	public static final String ECLIPSE_RES_FILES_FOLDER_NAME = "eclipsefiles";
+	public static final String CODEGEN_RUNTIME_SRC_FOLDER_NAME = "src";
+	public static final String CODEGEN_RUNTIME_LIB_FOLDER_NAME = "lib";
 
+	
 	private PluginVdm2JavaUtil()
 	{
 	}
@@ -239,6 +254,45 @@ public class PluginVdm2JavaUtil
 		File resultingFolder = new File(parent, folder);
 		resultingFolder.mkdirs();
 		return resultingFolder;
+	}
+	
+	public static void copyCodeGenFile(String inOutFileName, File outputFolder) throws IOException
+	{
+		copyCodeGenFile(inOutFileName, inOutFileName, outputFolder);
+	}
+	
+	public static void copyCodeGenFile(String inputFileName, String outputFileName, File outputFolder) throws IOException
+	{
+		InputStream input = Vdm2JavaCommand.class.getResourceAsStream('/' + inputFileName);
+		
+		if(input == null)
+		{
+			throw new IOException("Could not find resource: " + inputFileName);
+		}
+		
+		byte[] buffer = new byte[8 * 1024];
+
+		try {
+		  File outputFile = new File(outputFolder, outputFileName);
+		  
+		  outputFile.getParentFile().mkdirs();
+		  if(!outputFile.exists())
+		  {
+			  outputFile.createNewFile();
+		  }
+		  
+		OutputStream output = new FileOutputStream(outputFile);
+		  try {
+		    int bytesRead;
+		    while ((bytesRead = input.read(buffer)) != -1) {
+		      output.write(buffer, 0, bytesRead);
+		    }
+		  } finally {
+		    output.close();
+		  }
+		} finally {
+		  input.close();
+		}
 	}
 	
 	public static List<String> getClassesToSkip()
