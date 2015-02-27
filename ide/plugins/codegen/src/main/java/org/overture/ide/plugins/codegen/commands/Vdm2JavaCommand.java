@@ -64,7 +64,6 @@ import org.overture.codegen.vdm2java.JavaSettings;
 import org.overture.config.Settings;
 import org.overture.ide.core.IVdmModel;
 import org.overture.ide.core.resources.IVdmProject;
-import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.plugins.codegen.Activator;
 import org.overture.ide.plugins.codegen.CodeGenConsole;
 import org.overture.ide.plugins.codegen.ICodeGenConstants;
@@ -152,6 +151,11 @@ public class Vdm2JavaCommand extends AbstractHandler
 			return null;
 		}
 
+		final List<SClassDefinition> mergedParseLists = consMergedParseList(project, model);
+		final List<String> classesToSkip = PluginVdm2JavaUtil.getClassesToSkip();
+		final IRSettings irSettings = getIrSettings(project);
+		final JavaSettings javaSettings = getJavaSettings(project, classesToSkip);
+		
 		Job codeGenerate = new Job("Code generate")
 		{
 			@Override
@@ -159,23 +163,6 @@ public class Vdm2JavaCommand extends AbstractHandler
 			{
 				// Begin code generation
 				final JavaCodeGen vdm2java = new JavaCodeGen();
-
-				Preferences preferences = InstanceScope.INSTANCE.getNode(ICodeGenConstants.PLUGIN_ID);
-				
-				boolean generateCharSeqsAsStrings = preferences.getBoolean(ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRINGS, ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRING_DEFAULT);
-				boolean generateConcMechanisms = preferences.getBoolean(ICodeGenConstants.GENERATE_CONCURRENCY_MECHANISMS, ICodeGenConstants.GENERATE_CONCURRENCY_MECHANISMS_DEFAULT);
-				
-				IRSettings irSettings = new IRSettings();
-				irSettings.setCharSeqAsString(generateCharSeqsAsStrings);
-				irSettings.setGenerateConc(generateConcMechanisms);
-
-				boolean disableCloning = preferences.getBoolean(ICodeGenConstants.DISABLE_CLONING, ICodeGenConstants.DISABLE_CLONING_DEFAULT);
-
-				JavaSettings javaSettings = new JavaSettings();
-				javaSettings.setDisableCloning(disableCloning);
-				List<String> classesToSkip = PluginVdm2JavaUtil.getClassesToSkip();
-				javaSettings.setClassesToSkip(classesToSkip);
-
 				vdm2java.setSettings(irSettings);
 				vdm2java.setJavaSettings(javaSettings);
 
@@ -190,8 +177,6 @@ public class Vdm2JavaCommand extends AbstractHandler
 					GeneralUtils.deleteFolderContents(outputFolder);
 
 					// Generate user specified classes
-					List<IVdmSourceUnit> sources = model.getSourceUnits();
-					List<SClassDefinition> mergedParseLists = PluginVdm2JavaUtil.mergeParseLists(sources);
 					GeneratedData generatedData = vdm2java.generateJavaFromVdm(mergedParseLists);
 					
 					outputUserSpecifiedSkippedClasses(classesToSkip);
@@ -306,7 +291,40 @@ public class Vdm2JavaCommand extends AbstractHandler
 
 		return null;
 	}
+	
+	public IRSettings getIrSettings(final IProject project)
+	{
+		Preferences preferences = InstanceScope.INSTANCE.getNode(ICodeGenConstants.PLUGIN_ID);
+		
+		boolean generateCharSeqsAsStrings = preferences.getBoolean(ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRINGS, ICodeGenConstants.GENERATE_CHAR_SEQUENCES_AS_STRING_DEFAULT);
+		boolean generateConcMechanisms = preferences.getBoolean(ICodeGenConstants.GENERATE_CONCURRENCY_MECHANISMS, ICodeGenConstants.GENERATE_CONCURRENCY_MECHANISMS_DEFAULT);
+		
+		IRSettings irSettings = new IRSettings();
+		irSettings.setCharSeqAsString(generateCharSeqsAsStrings);
+		irSettings.setGenerateConc(generateConcMechanisms);
+		
+		return irSettings;
+	}
+	
+	public JavaSettings getJavaSettings(final IProject project, List<String> classesToSkip)
+	{
+		Preferences preferences = InstanceScope.INSTANCE.getNode(ICodeGenConstants.PLUGIN_ID);
+		
+		boolean disableCloning = preferences.getBoolean(ICodeGenConstants.DISABLE_CLONING, ICodeGenConstants.DISABLE_CLONING_DEFAULT);
+		
+		JavaSettings javaSettings = new JavaSettings();
+		javaSettings.setDisableCloning(disableCloning);
+		javaSettings.setClassesToSkip(classesToSkip);
+		
+		return javaSettings;
+	}
 
+	public List<SClassDefinition> consMergedParseList(final IProject project,
+			final IVdmModel model)
+	{
+		return PluginVdm2JavaUtil.mergeParseLists(model.getSourceUnits());
+	}
+	
 	private void deleteMarkers(IProject project)
 	{
 		if (project == null)
@@ -372,7 +390,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 	private void outputRuntimeBinaries(File outputFolder)
 	{
 		File runtime = new File(outputFolder, PluginVdm2JavaUtil.CODEGEN_RUNTIME_BIN_FILE_NAME);
-		CodeGenConsole.GetInstance().println("Copied the Java code generator runtime library to " + runtime.getAbsolutePath() + "\n");
+		CodeGenConsole.GetInstance().println("Copied the Java code generator runtime library to " + runtime.getAbsolutePath());
 	}
 	
 	private void outputRuntimeSources(File outputFolder)

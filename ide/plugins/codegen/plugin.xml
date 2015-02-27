@@ -10,6 +10,11 @@
 		name="VDM to Java">
 	</command>
 	<command
+		defaultHandler="org.overture.ide.plugins.codegen.commands.Vdm2JavaLaunchConfigCommand"
+		id="org.overture.ide.plugins.codegen.vdm2java_launchconfig"
+		name="VDM to Java (Launch Configuration Based)">
+	</command>
+	<command
 		defaultHandler="org.overture.ide.plugins.codegen.commands.ConfigCommand"
 		id="org.overture.ide.plugins.codegen.config"
 		name="Configuration">
@@ -32,6 +37,23 @@
 			<command
 				commandId="org.overture.ide.plugins.codegen.vdm2java"
 				label="Generate Java"
+				style="push">
+				<visibleWhen
+					checkEnabled="false">
+					<iterate ifEmpty="false">
+						<adapt
+							type="org.overture.ide.core.resources.IVdmProject">
+							<test
+								property="org.overture.ide.core.resources.dialect"
+								value="VDM_PP">
+							</test>
+						</adapt>
+					</iterate>
+				</visibleWhen>
+			</command>
+			<command
+				commandId="org.overture.ide.plugins.codegen.vdm2java_launchconfig"
+				label="VDM to Java (Launch Configuration Based)"
 				style="push">
 				<visibleWhen
 					checkEnabled="false">
@@ -91,6 +113,16 @@
 		contextId="org.eclipse.ui.contexts.window"
 		schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
 		sequence="Ctrl+Alt+C">
+	</key>
+</extension>
+
+ <extension
+ 	point="org.eclipse.ui.bindings">
+	<key
+		commandId="org.overture.ide.plugins.codegen.vdm2java_launchconfig"
+		contextId="org.eclipse.ui.contexts.window"
+		schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+		sequence="Ctrl+Alt+B">
 	</key>
 </extension>
 
