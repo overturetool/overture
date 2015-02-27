@@ -100,6 +100,11 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 	public SDeclCG caseANamedTraceDefinition(ANamedTraceDefinition node,
 			IRInfo question) throws AnalysisException
 	{
+		if(!question.getSettings().generateTraces())
+		{
+			return null;
+		}
+		
 		ANamedTraceDeclCG namedTraceDecl = new ANamedTraceDeclCG();
 
 		for(ClonableString cloStr : node.getPathname())

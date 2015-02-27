@@ -17,7 +17,8 @@ public class Entry {
     public static Object Run() {
         Entry e = new Entry();
 
-        return ((Object) e.app(new Token(1L), new Token(1L)));
+        return Utils.equals(quotes.A.getInstance(),
+            e.app(new Token(1L), new Token(1L)));
     }
 
     public String toString() {

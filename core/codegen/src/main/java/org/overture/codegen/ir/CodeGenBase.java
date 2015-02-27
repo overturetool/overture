@@ -41,6 +41,10 @@ public class CodeGenBase
 		this.generator = new IRGenerator(log, OBJ_INIT_CALL_NAME_PREFIX);
 	}
 	
+	protected CodeGenBase(){
+		super();
+	}
+	
 	public void setIRGenerator(IRGenerator generator)
 	{
 		this.generator = generator;

@@ -37,7 +37,7 @@ import org.overture.codegen.logging.Logger;
 
 public class IRGenerator
 {
-	private IRInfo codeGenInfo;
+	protected IRInfo codeGenInfo;
 
 	public IRGenerator(ILogger log, String objectInitCallPrefix)
 	{
