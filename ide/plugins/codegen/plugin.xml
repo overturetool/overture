@@ -53,7 +53,7 @@
 			</command>
 			<command
 				commandId="org.overture.ide.plugins.codegen.vdm2java_launchconfig"
-				label="VDM to Java (Launch Configuration Based)"
+				label="Generate Java (Launch Configuration Based)"
 				style="push">
 				<visibleWhen
 					checkEnabled="false">

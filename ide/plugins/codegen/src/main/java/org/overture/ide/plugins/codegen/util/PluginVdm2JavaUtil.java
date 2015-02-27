@@ -319,17 +319,15 @@ public class PluginVdm2JavaUtil
 		return GeneralCodeGenUtils.getClassesToSkip(userInput);
 	}
 
-	public static String dialog(final IProject project)
+	public static String dialog(List<LaunchConfigData> launchConfigs)
 	{
-		List<LaunchConfigData> matches = getProjectLaunchConfigs(project);
-
 		Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
 
 		ElementListSelectionDialog dialog = new ElementListSelectionDialog(shell, new LabelProvider());
 		dialog.setTitle("Launch Configuration Selection");
 		dialog.setMessage("Select a Launch configuration (* = any string, ? = any char):");
 		dialog.setMultipleSelection(false);
-		dialog.setElements(matches.toArray());
+		dialog.setElements(launchConfigs.toArray());
 
 		int resCode = dialog.open();
 
@@ -349,7 +347,7 @@ public class PluginVdm2JavaUtil
 		return null;
 	}
 
-	private static List<LaunchConfigData> getProjectLaunchConfigs(final IProject project)
+	public static List<LaunchConfigData> getProjectLaunchConfigs(final IProject project)
 	{
 		List<LaunchConfigData> matches = new LinkedList<>();
 

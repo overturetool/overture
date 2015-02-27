@@ -112,7 +112,8 @@ public class Vdm2JavaCommand extends AbstractHandler
 		}
 
 		CodeGenConsole.GetInstance().activate();
-
+		CodeGenConsole.GetInstance().clearConsole();
+		
 		deleteMarkers(project);
 
 		final IVdmModel model = vdmProject.getModel();
@@ -151,6 +152,8 @@ public class Vdm2JavaCommand extends AbstractHandler
 			return null;
 		}
 
+		CodeGenConsole.GetInstance().println("Starting VDM++ to Java code generation...\n");
+		
 		final List<SClassDefinition> mergedParseLists = consMergedParseList(project, model);
 		final List<String> classesToSkip = PluginVdm2JavaUtil.getClassesToSkip();
 		final IRSettings irSettings = getIrSettings(project);
@@ -168,9 +171,6 @@ public class Vdm2JavaCommand extends AbstractHandler
 
 				try
 				{
-					CodeGenConsole.GetInstance().clearConsole();
-					CodeGenConsole.GetInstance().println("Starting VDM++ to Java code generation...\n");
-
 					File outputFolder = PluginVdm2JavaUtil.getOutputFolder(vdmProject);
 
 					// Clean folder with generated Java code
