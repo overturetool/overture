@@ -23,6 +23,8 @@ package org.overture.codegen.runtime;
 
 public class Utils
 {
+	public static final Object VOID_VALUE = new Object();
+	
 	public static int hashCode(Object... fields)
 	{
 		if(fields == null)
@@ -88,6 +90,10 @@ public class Utils
 		if(obj == null)
 		{
 			return "nil";
+		}
+		else if(obj == VOID_VALUE)
+		{
+			return "()";
 		}
 		else if(obj instanceof Number)
 		{
