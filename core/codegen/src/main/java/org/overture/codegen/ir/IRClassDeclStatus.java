@@ -27,8 +27,8 @@ import org.overture.codegen.cgast.declarations.AClassDeclCG;
 
 public class IRClassDeclStatus extends IRStatus
 {
-	private String className;
-	private AClassDeclCG classCg;
+	protected String className;
+	protected AClassDeclCG classCg;
 
 	public IRClassDeclStatus(String className, AClassDeclCG classCg,
 			Set<VdmNodeInfo> unsupportedNodes)

@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.analysis.intf.IAnalysis;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
 import org.overture.codegen.cgast.SExpCG;
@@ -60,7 +61,7 @@ public class IRGenerator
 		return new IRClassDeclStatus(classDef.getName().getName(), classCg, unsupportedNodes);
 	}
 	
-	public void applyTransformation(IRClassDeclStatus status, DepthFirstAnalysisAdaptor transformation) throws org.overture.codegen.cgast.analysis.AnalysisException
+	public void applyTransformation(IRClassDeclStatus status, org.overture.codegen.cgast.analysis.intf.IAnalysis transformation) throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
 		codeGenInfo.clearTransformationWarnings();
 		
