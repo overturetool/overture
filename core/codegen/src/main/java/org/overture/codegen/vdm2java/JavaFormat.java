@@ -929,4 +929,9 @@ public class JavaFormat
 	{
 		return block != null && block.getScoped() != null && block.getScoped();
 	}
+	
+	public static boolean isMainClass(AClassDeclCG clazz)
+	{
+		return clazz != null && clazz.getTag() instanceof JavaMainTag;
+	}
 }
