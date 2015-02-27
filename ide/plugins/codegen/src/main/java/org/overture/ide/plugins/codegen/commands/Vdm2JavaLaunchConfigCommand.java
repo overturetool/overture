@@ -11,24 +11,34 @@ import org.overture.ide.plugins.codegen.util.PluginVdm2JavaUtil;
 public class Vdm2JavaLaunchConfigCommand extends Vdm2JavaCommand
 {
 	private static final String WARNING = "[WARNING]";
+
 	@Override
 	public JavaSettings getJavaSettings(IProject project,
 			List<String> classesToSkip)
 	{
-		JavaSettings javaSettings = super.getJavaSettings(project, classesToSkip);
-
 		List<LaunchConfigData> launchConfigs = PluginVdm2JavaUtil.getProjectLaunchConfigs(project);
 
 		if (!launchConfigs.isEmpty())
 		{
 			String entryExp = PluginVdm2JavaUtil.dialog(launchConfigs);
-			javaSettings.setVdmEntryExp(entryExp);
+
+			if (entryExp != null)
+			{
+				JavaSettings javaSettings = super.getJavaSettings(project, classesToSkip);
+				javaSettings.setVdmEntryExp(entryExp);
+				return javaSettings;
+			}
+			else
+			{
+				CodeGenConsole.GetInstance().println("Process cancelled by user.");
+			}
 		} else
 		{
-			CodeGenConsole.GetInstance().println(WARNING + " No launch configuration could be found for this project.");
-			CodeGenConsole.GetInstance().println(WARNING + " Continuing Java code generation without launch configuration...\n");
+			CodeGenConsole.GetInstance().println(WARNING
+					+ " No launch configuration could be found for this project.\n");
+			CodeGenConsole.GetInstance().println("Cancelling launch configuration based code generation...\n");
 		}
 
-		return javaSettings;
+		return null;
 	}
 }

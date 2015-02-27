@@ -151,19 +151,26 @@ public class Vdm2JavaCommand extends AbstractHandler
 					+ project.getName());
 			return null;
 		}
-
+		
 		CodeGenConsole.GetInstance().println("Starting VDM++ to Java code generation...\n");
 		
-		final List<SClassDefinition> mergedParseLists = consMergedParseList(project, model);
 		final List<String> classesToSkip = PluginVdm2JavaUtil.getClassesToSkip();
-		final IRSettings irSettings = getIrSettings(project);
 		final JavaSettings javaSettings = getJavaSettings(project, classesToSkip);
+
+		final IRSettings irSettings = getIrSettings(project);
+		final List<SClassDefinition> mergedParseLists = consMergedParseList(project, model);
+
 		
-		Job codeGenerate = new Job("Code generate")
+		Job codeGenerate = new Job("VDM++ to Java code generation")
 		{
 			@Override
 			protected IStatus run(IProgressMonitor monitor)
 			{
+				if(javaSettings == null)
+				{
+					return Status.CANCEL_STATUS;
+				}
+				
 				// Begin code generation
 				final JavaCodeGen vdm2java = new JavaCodeGen();
 				vdm2java.setSettings(irSettings);
