@@ -35,10 +35,12 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.cgisa.extast.declarations.AExtClassDeclCG;
 import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRClassDeclStatus;
+import org.overture.codegen.ir.IRGenerator;
 import org.overture.codegen.ir.VdmNodeInfo;
 import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateStructure;
+import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.utils.GeneratedModule;
 import org.overturetool.cgisa.ir.ExtIrClassDeclStatus;
 import org.overturetool.cgisa.transformations.GroupMutRecs;
@@ -55,11 +57,15 @@ public class IsaCodeGen extends CodeGenBase
 	{
 		this(null);
 	}
-	
+
 	public IsaCodeGen(ILogger log)
 	{
-		super(log);
+
+		super();
+		this.varPrefixes = new TempVarPrefixes();
+		this.generator = new ExtIrGenerator(log, OBJ_INIT_CALL_NAME_PREFIX);
 		initVelocity();
+
 	}
 
 	private void initVelocity()
@@ -67,7 +73,7 @@ public class IsaCodeGen extends CodeGenBase
 		Velocity.setProperty("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.NullLogSystem");
 		Velocity.init();
 	}
-	
+
 	/**
 	 * Main entry point into the Isabelle CG component. Takes an AST and returns corresponding Isabelle Syntax.
 	 * 
@@ -95,39 +101,35 @@ public class IsaCodeGen extends CodeGenBase
 		}
 
 		// Apply transformations (none atm...)
-		
+
 		List<ExtIrClassDeclStatus> transformed = new Vector<>();
-		
+
 		for (IRClassDeclStatus status : statuses)
 		{
 			SortDependencies sortTrans = new SortDependencies(status.getClassCg().getFunctions());
 			generator.applyTransformation(status, sortTrans);
-			ExtIrClassDeclStatus eStatus =new ExtIrClassDeclStatus(status);
+			ExtIrClassDeclStatus eStatus = new ExtIrClassDeclStatus(status);
 			GroupMutRecs groupMR = new GroupMutRecs();
 			generator.applyTransformation(eStatus, groupMR);
 			transformed.add(eStatus);
 		}
-		
-		
-		// Apply merge visitor to pretty print isabelle syntax
 
+		// Apply merge visitor to pretty print isabelle syntax
 
 		TemplateStructure ts = new TemplateStructure("IsaTemplates");
 
 		IsaTranslations isa = new IsaTranslations(ts);
-		
+
 		MergeVisitor pp = isa.getMergeVisitor();
 
-
 		List<GeneratedModule> generated = new ArrayList<GeneratedModule>();
-
 
 		for (ExtIrClassDeclStatus status : transformed)
 		{
 			AExtClassDeclCG irClass = status.getEClassCg();
 
 			StringWriter sw = new StringWriter();
-			
+
 			irClass.apply(pp, sw);
 
 			if (pp.hasMergeErrors())
@@ -146,7 +148,7 @@ public class IsaCodeGen extends CodeGenBase
 			}
 
 		}
-		
+
 		// Return syntax
 		return generated;
 
