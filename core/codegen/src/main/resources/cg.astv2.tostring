@@ -51,3 +51,9 @@ import org.overture.ast.util.ToStringUtil;
 %CG->#exp->#Var->identifier = [name]
 %CG->#exp->#Var->explicit = [name]
 %CG->#exp->#Var->super = [name]
+
+
+%CG->#exp->apply = [root] "(" + $Utils.listToString($[args]$)$ + ")"
+%CG->#exp->field = [object] + "." + [memberName]
+%CG->#exp->new = [name] "(" + $Utils.listToString($[args]$)$ + ")"
+%CG->#exp->self = "self"
