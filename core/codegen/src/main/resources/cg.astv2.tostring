@@ -8,6 +8,23 @@ import org.overture.ast.util.ToStringUtil;
 %CG->#decl->class = [name]
 
 
+//start
+
+//patterns
+%CG->#pattern->identifier = [name]
+%CG->#pattern->ignore = "-" 
+%CG->#pattern->bool = [value]
+%CG->#pattern->char = [value]
+%CG->#pattern->int = [value]
+%CG->#pattern->null = "null"
+%CG->#pattern->quote =  [value]
+%CG->#pattern->real =  [value]
+%CG->#pattern->string =  [value]
+%CG->#pattern->tuple = "mk_(" + $Utils.listToString($[patterns]$)$ + ")"
+%CG->#pattern->record = [typename] "_(" + $Utils.listToString($[patterns]$)$ + ")"
+
+//end
+
 // Object designator
 %CG->#objectDesignator->identifier = [exp];
 %CG->#objectDesignator->apply = [object] "(" + $Utils.listToString($[args]$)$ + ")"
