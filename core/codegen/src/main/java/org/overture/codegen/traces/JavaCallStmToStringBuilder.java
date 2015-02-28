@@ -4,14 +4,13 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.SObjectDesignatorCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
-import org.overture.codegen.cgast.statements.ACallObjectStmCG;
+import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.statements.APlainCallStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
@@ -49,11 +48,11 @@ public class JavaCallStmToStringBuilder extends JavaClassCreatorBase implements 
 
 			body.setExp(appendArgs(info, args, prefix, idConstNameMap, storeAssistant, transAssistant));
 
-		}  else if (callStm instanceof ACallObjectStmCG)
+		}  else if (callStm instanceof ACallObjectExpStmCG)
 		{
-			ACallObjectStmCG callObj = (ACallObjectStmCG) callStm;
+			ACallObjectExpStmCG callObj = (ACallObjectExpStmCG) callStm;
 
-			SObjectDesignatorCG obj = callObj.getDesignator();
+			SExpCG obj = callObj.getObj();
 			String field = callObj.getFieldName();
 			LinkedList<SExpCG> args = callObj.getArgs();
 
@@ -61,7 +60,9 @@ public class JavaCallStmToStringBuilder extends JavaClassCreatorBase implements 
 			prefix += "." + field;
 
 			body.setExp(appendArgs(info, args, prefix, idConstNameMap, storeAssistant, transAssistant));
-		} else
+		}
+		// The CallObjectStmCG node has been transformed out of the tree
+		else
 		{
 			Logger.getLog().printErrorln("Expected statement to be a call statement or call object statement. Got: "
 					+ callStm);
