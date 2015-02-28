@@ -44,6 +44,11 @@ import org.overture.ast.util.ToStringUtil;
 %CG->#objectDesignator->new = "new "+[exp]
 %CG->#objectDesignator->self = "self"
 
+// State designators
+%CG->#stateDesignator->identifier = [name]
+%CG->#stateDesignator->field = [object] "." [field]
+%CG->#stateDesignator->mapSeq = [mapseq] "(" + [exp] + ")"
+
 // Types
 //#basic
 %CG->#type->#basic->char = "char"
