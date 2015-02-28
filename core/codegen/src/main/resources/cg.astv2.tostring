@@ -10,7 +10,7 @@ import org.overture.ast.util.ToStringUtil;
 
 //start
 
-//patterns
+// patterns
 %CG->#pattern->identifier = [name]
 %CG->#pattern->ignore = "-" 
 %CG->#pattern->bool = [value]
@@ -22,6 +22,18 @@ import org.overture.ast.util.ToStringUtil;
 %CG->#pattern->string =  [value]
 %CG->#pattern->tuple = "mk_(" + $Utils.listToString($[patterns]$)$ + ")"
 %CG->#pattern->record = [typename] "_(" + $Utils.listToString($[patterns]$)$ + ")"
+
+// binds
+%CG->#bind->set = ""+ [pattern] + " in set " [set];
+
+
+// multiple binds
+%CG->multipleBind->set = ""+ $Utils.listToString($[patterns]$)$ + " in set " [set];
+
+
+// names
+%CG->name->type = [name]
+%CG->name->token = [name] 
 
 //end
 
