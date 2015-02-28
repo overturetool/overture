@@ -30,9 +30,6 @@ import java.util.List;
 
 public class IO {
 	
-	//private static final Number START = 1;
-	private static final Number APPEND = 2;
-	
 	private static File BaseDIr = new File(".").getParentFile();
 	
 	private static final String NOT_SUPPORTED_MSG = "Operation is currently not supported";
@@ -47,12 +44,12 @@ public class IO {
     	return true;
     }
 
-    public static <p> boolean fwriteval(String filename, p val, Number fdir) {
+    public static <p> boolean fwriteval(String filename, p val, Object fdir) {
 
     	throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
     }
     
-    public static <p> boolean fwriteval(VDMSeq filename, p val, Number fdir) {
+    public static <p> boolean fwriteval(VDMSeq filename, p val, Object fdir) {
 
     	throw new UnsupportedOperationException(NOT_SUPPORTED_MSG);
     }
@@ -93,7 +90,7 @@ public class IO {
     	return fecho("[]", SeqUtil.toStr(text), null);
     }
 
-    public boolean fecho(String filename, String text, Number fdir) {
+    public boolean fecho(String filename, String text, Object fdir) {
     	
 		if (filename.equals("[]"))
 		{
@@ -104,7 +101,7 @@ public class IO {
 			try
 			{
 				File file = getFile(filename);
-				FileOutputStream fos = new FileOutputStream(file, fdir == APPEND);
+				FileOutputStream fos = new FileOutputStream(file, fdir.getClass().getName().equals("quotes.append"));
 
 				fos.write(text.getBytes(Charset.defaultCharset().name()));
 				fos.close();
@@ -117,7 +114,7 @@ public class IO {
 		return true;
     }
     
-    public boolean fecho(VDMSeq filename, VDMSeq text, Number fdir) {
+    public boolean fecho(VDMSeq filename, VDMSeq text, Object fdir) {
     	
     	return fecho(filename.toString(), text.toString(), fdir);
     }
@@ -157,17 +154,7 @@ public class IO {
     	for(int i = 0; i < args.size(); i++)
     	{
     		Object arg = args.get(i);
-    		
-    		if(arg instanceof Number)
-    		{
-    			Number n = (Number) arg;
-    			
-    			if(n.doubleValue() % 1 == 0)
-    			{
-    				int intVal = n.intValue();
-    				args.set(i, intVal);
-    			}
-    		}
+    		args.set(i, formatArg(arg));
     	}
     	
     	return args.toArray();
@@ -175,16 +162,6 @@ public class IO {
     
     private static String formatArg(Object arg)
     {
-    	if(arg instanceof Number)
-    	{
-    		Number n = (Number) arg;
-    		
-    		if(n.doubleValue() % 1 == 0)
-    		{
-    			return Integer.toString(n.intValue());
-    		}
-    	}
-    	
-    	return arg.toString();
+    	return Utils.toString(arg);
     }
 }

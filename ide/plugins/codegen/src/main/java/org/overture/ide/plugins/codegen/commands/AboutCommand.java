@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.ide.plugins.codegen.Activator;
+import org.overture.ide.plugins.codegen.util.PluginVdm2JavaUtil;
 
 public class AboutCommand extends AbstractHandler
 {
@@ -46,6 +47,9 @@ public class AboutCommand extends AbstractHandler
 			Shell shell = HandlerUtil.getActiveWorkbenchWindow(event).getShell();
 			String title = "VDM++ to Java Code Generator";
 			String about = GeneralUtils.readFromInputStream(fileStream).toString();
+			about = String.format(about, PluginVdm2JavaUtil.CODEGEN_RUNTIME_BIN_FILE_NAME,
+					PluginVdm2JavaUtil.CODEGEN_RUNTIME_SOURCES_FILE_NAME,
+					PluginVdm2JavaUtil.CODEGEN_RUNTIME_LIB_FOLDER_NAME);
 
 			MessageDialog.openInformation(shell, title, about);
 

@@ -11,7 +11,6 @@ import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.ct.ctruntime.tests.util.TestSourceFinder;
 import org.overture.ct.ctruntime.utils.CtHelper.CtTestData;
-import org.overture.test.framework.Properties;
 
 @RunWith(value = Parameterized.class)
 public class CtNoReductionPpTestCase extends CtTestCaseBase
@@ -22,8 +21,6 @@ public class CtNoReductionPpTestCase extends CtTestCaseBase
 	@Parameters(name = "{0}")
 	public static Collection<Object[]> getData()
 	{
-		Properties.recordTestResults = false;
-		
 		Collection<Object[]> tests = TestSourceFinder.createTestCompleteFile(Dialect.VDM_PP, TEST_NAME, ROOT, "", "");
 
 		return tests;
@@ -40,6 +37,12 @@ public class CtNoReductionPpTestCase extends CtTestCaseBase
 	{
 		Settings.dialect = Dialect.VDM_PP;
 		Settings.release = Release.VDM_10;
+	}
+	
+	@Override
+	protected String getPropertyId()
+	{
+		return "pp.no";
 	}
 
 }

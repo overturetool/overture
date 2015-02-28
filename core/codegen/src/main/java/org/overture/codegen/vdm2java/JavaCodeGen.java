@@ -68,10 +68,12 @@ import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateStructure;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
+import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
+import org.overture.config.Settings;
 
 public class JavaCodeGen extends CodeGenBase
 {
@@ -81,6 +83,8 @@ public class JavaCodeGen extends CodeGenBase
 			// Classes used from the Java standard library
 			"Utils", "Record", "Long", "Double", "Character", "String", "List",
 			"Set" };
+	
+	public static final String JAVA_MAIN_CLASS_NAME = "Main";
 	
 	private JavaFormat javaFormat;
 	private TemplateStructure javaTemplateStructure;
@@ -189,11 +193,20 @@ public class JavaCodeGen extends CodeGenBase
 
 		return null;
 	}
-
+	
 	public GeneratedData generateJavaFromVdm(
 			List<SClassDefinition> mergedParseLists) throws AnalysisException,
 			UnsupportedModelingException
 	{
+		SClassDefinition mainClass = null;
+		
+		if(getJavaSettings().getVdmEntryExp() != null)
+		{
+			mainClass = GeneralCodeGenUtils.consMainClass(mergedParseLists, getJavaSettings().getVdmEntryExp(),
+					Settings.dialect, JAVA_MAIN_CLASS_NAME, getInfo().getTempVarNameGen());
+			mergedParseLists.add(mainClass);
+		}
+		
 		// To document any renaming of variables shadowing other variables
 		removeUnreachableStms(mergedParseLists);
 		List<Renaming> allRenamings = performRenaming(mergedParseLists);
@@ -266,16 +279,21 @@ public class JavaCodeGen extends CodeGenBase
 			StringWriter writer = new StringWriter();
 			AClassDeclCG classCg = status.getClassCg();
 			String className = status.getClassName();
+			SClassDefinition vdmClass = (SClassDefinition) status.getClassCg().getSourceNode().getVdmNode();
+			
+			if(vdmClass == mainClass)
+			{
+				classCg.setTag(new JavaMainTag(classCg));
+			}
 
 			javaFormat.init();
 
 			try
 			{
-				SClassDefinition vdmClass = (SClassDefinition) status.getClassCg().getSourceNode().getVdmNode();
 				if (shouldBeGenerated(vdmClass, generator.getIRInfo().getAssistantManager().getDeclAssistant()))
 				{
 					classCg.apply(mergeVisitor, writer);
-
+					
 					if (mergeVisitor.hasMergeErrors())
 					{
 						generated.add(new GeneratedModule(className, classCg, mergeVisitor.getMergeErrors()));

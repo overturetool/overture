@@ -30,7 +30,6 @@ import org.overture.codegen.ir.IRInfo;
 public class AbstractVisitorCG<Q extends IRInfo, A extends org.overture.codegen.cgast.INode>
 		extends QuestionAnswerAdaptor<Q, A>
 {
-
 	@Override
 	public A defaultINode(INode node, Q question) throws AnalysisException
 	{
@@ -40,8 +39,6 @@ public class AbstractVisitorCG<Q extends IRInfo, A extends org.overture.codegen.
 		}
 
 		question.addUnsupportedNode(node);
-		// Logger.getLog().printErrorln("Code generation does not support the following VDM construct: " +
-		// node.getClass().getName() + ": " + node.toString());
 
 		return null;
 	}
@@ -59,5 +56,4 @@ public class AbstractVisitorCG<Q extends IRInfo, A extends org.overture.codegen.
 	{
 		return null;
 	}
-
 }

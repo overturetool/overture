@@ -49,7 +49,7 @@ public class SimpleTest {
                 Number pglid1 = 1L;
                 resource.AddAccount(pglid1, pglacc1);
                 resource.AddLetterbox(clock, new Letterbox());
-                ((Till) tills.get(1L)).InsertCard(c1);
+                ((Till) MapUtil.get(tills, 1L)).InsertCard(c1);
 
                 if (Utils.equals(((Till) MapUtil.get(tills, 1L)).Validate(
                                 123456L), quotes.PinOk.getInstance())) {
@@ -341,7 +341,7 @@ public class CentralResource {
 
     public Number GetBalance(final Number accountId) {
         if (MapUtil.dom(accounts).contains(accountId)) {
-            return ((Account) accounts.get(accountId)).GetBalance();
+            return ((Account) MapUtil.get(accounts, accountId)).GetBalance();
         } else {
             return null;
         }
@@ -350,7 +350,7 @@ public class CentralResource {
     public Boolean Withdrawal(final Number accountId, final Number cardId,
         final Number amount) {
         if (IsLegalCard(accountId, cardId)) {
-            return ((Account) accounts.get(accountId)).Withdrawal(cardId,
+            return ((Account) MapUtil.get(accounts, accountId)).Withdrawal(cardId,
                 amount, clock.GetDate());
         } else {
             return false;

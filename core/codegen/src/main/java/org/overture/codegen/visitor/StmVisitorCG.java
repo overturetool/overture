@@ -126,7 +126,15 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 		for(PExp exp : node.getArgs())
 		{
 			SExpCG expCg = exp.apply(question.getExpVisitor(), question);
-			periodicStmCg.getArgs().add(expCg);
+			
+			if(expCg != null)
+			{
+				periodicStmCg.getArgs().add(expCg);
+			}
+			else
+			{
+				return null;
+			}
 		}
 		
 		return periodicStmCg;
@@ -143,7 +151,16 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 
 		for (AAssignmentStm assignment : assignments)
 		{
-			stmsCg.add(assignment.apply(question.getStmVisitor(), question));
+			SStmCG stmCg = assignment.apply(question.getStmVisitor(), question);
+			
+			if(stmCg != null)
+			{
+				stmsCg.add(stmCg);
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 		return stmBlock;
@@ -168,8 +185,6 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 
 		if (!(multipleBindCg instanceof ASetMultipleBindCG))
 		{
-			question.addUnsupportedNode(node, "Generation of a multiple set bind was expected to yield a ASetMultipleBindCG. Got: "
-					+ multipleBindCg);
 			return null;
 		}
 
@@ -259,6 +274,10 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 			{
 				blockStm.getStatements().add(stmCg);
 			}
+			else
+			{
+				return null;
+			}
 		}
 
 		return blockStm;
@@ -340,19 +359,18 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 
 		List<SExpCG> argsCg = new LinkedList<SExpCG>();
 		
-		for (int i = 0; i < args.size(); i++)
+		for (PExp arg : args)
 		{
-			PExp arg = args.get(i);
 			SExpCG argCg = arg.apply(question.getExpVisitor(), question);
 
-			if (argCg == null)
+			if (argCg != null)
 			{
-				question.addUnsupportedNode(node, "A Call statement is not supported for the argument: "
-						+ arg);
+				argsCg.add(argCg);
+			}
+			else
+			{
 				return null;
 			}
-
-			argsCg.add(argCg);
 		}
 		
 		boolean isStatic = question.getTcFactory().createPDefinitionAssistant().isStatic(rootdef);
@@ -465,19 +483,18 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 		callObject.setDesignator(objectDesignatorCg);
 		callObject.setFieldName(fieldNameCg);
 
-		for (int i = 0; i < args.size(); i++)
+		for (PExp arg : args)
 		{
-			PExp arg = args.get(i);
 			SExpCG argCg = arg.apply(question.getExpVisitor(), question);
 
-			if (argCg == null)
+			if (argCg != null)
 			{
-				question.addUnsupportedNode(node, "A Call object statement is not supported for the argument: "
-						+ arg);
+				callObject.getArgs().add(argCg);
+			}
+			else
+			{
 				return null;
 			}
-
-			callObject.getArgs().add(argCg);
 		}
 
 		return callObject;

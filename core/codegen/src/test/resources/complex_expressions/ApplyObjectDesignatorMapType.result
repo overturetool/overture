@@ -15,15 +15,16 @@ public class X {
     }
 
     public Number m1() {
-        return ((X) xs.get(1L)).f();
+        return ((X) MapUtil.get(xs, 1L)).f();
     }
 
     public Number m2() {
-        return ((X) ((VDMMap) ys.get(1L)).get(1L)).f();
+        return ((X) MapUtil.get(((VDMMap) MapUtil.get(ys, 1L)), 1L)).f();
     }
 
     public Number m3() {
-        return ((X) ((VDMMap) ((VDMMap) zs.get(1L)).get(1L)).get(1L)).f();
+        return ((X) MapUtil.get(((VDMMap) MapUtil.get(
+                ((VDMMap) MapUtil.get(zs, 1L)), 1L)), 1L)).f();
     }
 
     public Number m4() {
@@ -31,15 +32,16 @@ public class X {
     }
 
     public Number m5() {
-        return ((X) map_xs(1L, 2L).get(1L)).f();
+        return ((X) MapUtil.get(map_xs(1L, 2L), 1L)).f();
     }
 
     public Number m6() {
-        return ((X) ((VDMMap) map_ys(1L, 2L).get(1L)).get(1L)).f();
+        return ((X) MapUtil.get(((VDMMap) MapUtil.get(map_ys(1L, 2L), 1L)), 1L)).f();
     }
 
     public Number m7() {
-        return ((X) ((VDMMap) ((VDMMap) map_zs(1L, 2L).get(1L)).get(1L)).get(1L)).f();
+        return ((X) MapUtil.get(((VDMMap) MapUtil.get(
+                ((VDMMap) MapUtil.get(map_zs(1L, 2L), 1L)), 1L)), 1L)).f();
     }
 
     public VDMMap map_xs(final Number pa, final Number pb) {

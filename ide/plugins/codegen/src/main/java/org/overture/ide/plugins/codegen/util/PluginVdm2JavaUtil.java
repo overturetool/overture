@@ -22,7 +22,12 @@
 package org.overture.ide.plugins.codegen.util;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -36,8 +41,14 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.osgi.service.prefs.Preferences;
 import org.overture.ast.definitions.SClassDefinition;
@@ -52,13 +63,25 @@ import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.ide.core.resources.IVdmProject;
 import org.overture.ide.core.resources.IVdmSourceUnit;
 import org.overture.ide.core.utility.FileUtility;
+import org.overture.ide.debug.core.IDebugConstants;
+import org.overture.ide.plugins.codegen.CodeGenConsole;
 import org.overture.ide.plugins.codegen.ICodeGenConstants;
+import org.overture.ide.plugins.codegen.commands.Vdm2JavaCommand;
 
 public class PluginVdm2JavaUtil
 {
-	private static final String JAVA_FOLDER = "java";
-	private static final String QUOTES_FOLDER = "quotes";
-	private static final String UTILS_FOLDER = "utils";
+	public static final String JAVA_FOLDER = "java";
+	public static final String QUOTES_FOLDER = "quotes";
+	public static final String UTILS_FOLDER = "utils";
+	public static final String CODEGEN_RUNTIME_BIN_FILE_NAME = "codegen-runtime.jar";
+	public static final String CODEGEN_RUNTIME_SOURCES_FILE_NAME = "codegen-runtime-sources.jar";
+	public static final String ECLIPSE_CLASSPATH_TEMPLATE_FILE_NAME = "cg.classpath";
+	public static final String ECLIPSE_PROJECT_TEMPLATE_FILE_NAME = "cg.project";
+	public static final String ECLIPSE_CLASSPATH_FILE_NAME = ".classpath";
+	public static final String ECLIPSE_PROJECT_FILE_NAME = ".project";
+	public static final String ECLIPSE_RES_FILES_FOLDER_NAME = "eclipsefiles";
+	public static final String CODEGEN_RUNTIME_SRC_FOLDER_NAME = "src";
+	public static final String CODEGEN_RUNTIME_LIB_FOLDER_NAME = "lib";
 
 	private PluginVdm2JavaUtil()
 	{
@@ -240,13 +263,117 @@ public class PluginVdm2JavaUtil
 		resultingFolder.mkdirs();
 		return resultingFolder;
 	}
-	
+
+	public static void copyCodeGenFile(String inOutFileName, File outputFolder)
+			throws IOException
+	{
+		copyCodeGenFile(inOutFileName, inOutFileName, outputFolder);
+	}
+
+	public static void copyCodeGenFile(String inputFileName,
+			String outputFileName, File outputFolder) throws IOException
+	{
+		InputStream input = Vdm2JavaCommand.class.getResourceAsStream('/' + inputFileName);
+
+		if (input == null)
+		{
+			throw new IOException("Could not find resource: " + inputFileName);
+		}
+
+		byte[] buffer = new byte[8 * 1024];
+
+		try
+		{
+			File outputFile = new File(outputFolder, outputFileName);
+
+			outputFile.getParentFile().mkdirs();
+			if (!outputFile.exists())
+			{
+				outputFile.createNewFile();
+			}
+
+			OutputStream output = new FileOutputStream(outputFile);
+			try
+			{
+				int bytesRead;
+				while ((bytesRead = input.read(buffer)) != -1)
+				{
+					output.write(buffer, 0, bytesRead);
+				}
+			} finally
+			{
+				output.close();
+			}
+		} finally
+		{
+			input.close();
+		}
+	}
+
 	public static List<String> getClassesToSkip()
 	{
 		Preferences preferences = InstanceScope.INSTANCE.getNode(ICodeGenConstants.PLUGIN_ID);
-		
+
 		String userInput = preferences.get(ICodeGenConstants.CLASSES_TO_SKIP, ICodeGenConstants.CLASSES_TO_SKIP_DEFAULT);
-		
+
 		return GeneralCodeGenUtils.getClassesToSkip(userInput);
+	}
+
+	public static String dialog(List<LaunchConfigData> launchConfigs)
+	{
+		Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+
+		ElementListSelectionDialog dialog = new ElementListSelectionDialog(shell, new LabelProvider());
+		dialog.setTitle("Launch Configuration Selection");
+		dialog.setMessage("Select a Launch configuration (* = any string, ? = any char):");
+		dialog.setMultipleSelection(false);
+		dialog.setElements(launchConfigs.toArray());
+
+		int resCode = dialog.open();
+
+		if (resCode == ElementListSelectionDialog.OK)
+		{
+			Object[] dialogResult = dialog.getResult();
+
+			if (dialogResult.length == 1
+					&& dialogResult[0] instanceof LaunchConfigData)
+			{
+				LaunchConfigData chosenConfig = (LaunchConfigData) dialogResult[0];
+				
+				return chosenConfig.getExp();
+			}
+		}
+		
+		return null;
+	}
+
+	public static List<LaunchConfigData> getProjectLaunchConfigs(final IProject project)
+	{
+		List<LaunchConfigData> matches = new LinkedList<>();
+
+		try
+		{
+			ILaunchConfiguration[] configs = DebugPlugin.getDefault().getLaunchManager().getLaunchConfigurations();
+
+			for (ILaunchConfiguration launchConfig : configs)
+			{
+				String launchConfigProjectName = launchConfig.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_PROJECT, "");
+
+				if (launchConfigProjectName != null && !launchConfigProjectName.equals("")
+						&& launchConfigProjectName.equals(project.getName()))
+				{
+					String exp = launchConfig.getAttribute(IDebugConstants.VDM_LAUNCH_CONFIG_EXPRESSION, "");
+					matches.add(new LaunchConfigData(launchConfig.getName(), exp));
+				}
+			}
+		} catch (CoreException e)
+		{
+
+			CodeGenConsole.GetInstance().printErrorln("Problem looking up launch configurations for project "
+					+ project.getName() + ": " + e.getMessage());
+			e.printStackTrace();
+		}
+		
+		return matches;
 	}
 }

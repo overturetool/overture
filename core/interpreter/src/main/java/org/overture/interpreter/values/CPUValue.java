@@ -131,6 +131,8 @@ public class CPUValue extends ObjectValue
 	{
 		return resource.isVirtual();
 	}
+	
+	transient static AClassType cpuType = null;
 
 	public static void init(ResourceScheduler scheduler,
 			IInterpreterAssistantFactory assistantFactory)
@@ -138,8 +140,12 @@ public class CPUValue extends ObjectValue
 		try
 		{
 			CPUResource.init();
-			SClassDefinition def = AstFactoryTC.newACpuClassDefinition(assistantFactory);
-			vCPU = new CPUValue((AClassType) assistantFactory.createSClassDefinitionAssistant().getType(def));
+			if(cpuType==null)
+			{
+				SClassDefinition cpu = AstFactoryTC.newACpuClassDefinition(assistantFactory);
+				cpuType = (AClassType) assistantFactory.createSClassDefinitionAssistant().getType(cpu);
+			}
+			vCPU = new CPUValue(cpuType);
 			vCPU.setup(scheduler, "vCPU");
 		} catch (Exception e)
 		{

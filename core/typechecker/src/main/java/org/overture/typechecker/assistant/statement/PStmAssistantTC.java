@@ -41,7 +41,7 @@ public class PStmAssistantTC implements IAstAssistant
 	{
 		try
 		{
-			return statement.apply(af.getExitTypeCollector());// FIXME: should we handle exceptions like this
+			return statement.apply(af.getExitTypeCollector());
 		} catch (AnalysisException e)
 		{
 			return new PTypeSet(af);

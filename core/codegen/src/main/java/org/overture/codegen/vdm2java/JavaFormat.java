@@ -68,7 +68,6 @@ import org.overture.codegen.cgast.expressions.SNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.SUnaryExpCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
-import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AForLoopStmCG;
@@ -858,12 +857,7 @@ public class JavaFormat
 	{
 		return info.getTempVarNameGen().nextVarName(prefix);
 	}
-
-	public STypeCG findElementType(AApplyObjectDesignatorCG designator)
-	{
-		return info.getAssistantManager().getTypeAssistant().findElementType(designator, classes, info);
-	}
-
+	
 	public boolean isLoopVar(AVarDeclCG localVar)
 	{
 		return localVar.parent() instanceof AForLoopStmCG;
@@ -953,9 +947,14 @@ public class JavaFormat
 	{
 		return block != null && block.getScoped() != null && block.getScoped();
 	}
-	
+
 	public boolean importTraceSupport(AClassDeclCG node)
 	{
 		return info.getSettings().generateTraces() && !node.getTraces().isEmpty();
+	}
+	
+	public static boolean isMainClass(AClassDeclCG clazz)
+	{
+		return clazz != null && clazz.getTag() instanceof JavaMainTag;
 	}
 }

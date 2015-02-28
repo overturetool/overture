@@ -24,7 +24,6 @@ package org.overture.codegen.trans.uniontypes;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.codegen.assistant.TypeAssistantCG;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SObjectDesignatorCG;
@@ -42,10 +41,12 @@ import org.overture.codegen.cgast.statements.ANewObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.ASelfObjectDesignatorCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
+import org.overture.codegen.cgast.types.AUnknownTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
+import org.overture.codegen.logging.Logger;
 
 public class ObjectDesignatorToExpCG extends AnswerAdaptor<SExpCG>
 {
@@ -103,20 +104,16 @@ public class ObjectDesignatorToExpCG extends AnswerAdaptor<SExpCG>
 		SObjectDesignatorCG obj = node.getObject();
 		SourceNode sourceNode = node.getSourceNode();
 
-		STypeCG fieldExpType = null;
-
-		TypeAssistantCG typeAssistant = info.getAssistantManager().getTypeAssistant();
-
 		INode parent = node.parent();
 
-		if (parent instanceof AApplyObjectDesignatorCG)
+		STypeCG fieldExpType = null;
+		try
 		{
-			AApplyObjectDesignatorCG apply = (AApplyObjectDesignatorCG) parent;
-			LinkedList<SExpCG> args = apply.getArgs();
-			fieldExpType = typeAssistant.getMethodType(info, classes, fieldModule, fieldName, args);
-		} else
+			fieldExpType = info.getTypeAssistant().getFieldExpType(info, classes, fieldName, fieldModule, obj, parent);
+		} catch (org.overture.ast.analysis.AnalysisException e)
 		{
-			fieldExpType = typeAssistant.getFieldType(classes, fieldModule, fieldName);
+			Logger.getLog().printErrorln("Could not find field expression type of " + node + " in 'ObjectDesignatorToExpCG'");
+			fieldExpType = new AUnknownTypeCG();
 		}
 
 		SExpCG objExp = obj.apply(this);

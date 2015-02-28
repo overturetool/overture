@@ -432,7 +432,14 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 
 		for (PExp member : members)
 		{
-			membersCg.add(member.apply(question.getExpVisitor(), question));
+			SExpCG memberCg = member.apply(question.getExpVisitor(), question);
+			if (memberCg != null)
+			{
+				membersCg.add(memberCg);
+			} else
+			{
+				return null;
+			}
 		}
 
 		return enumSet;
@@ -495,7 +502,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseASetCompSetExp(ASetCompSetExp node, IRInfo question)
 			throws AnalysisException
 	{
-		if (question.getExpAssistant().existsOutsideOpOrFunc(node))
+		if (question.getExpAssistant().existsOutsideMethodOrTrace(node))
 		{
 			question.addUnsupportedNode(node, "Generation of a set comprehension is only supported within operations/functions");
 			return null;
@@ -519,6 +526,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 			{
 				question.addUnsupportedNode(node, "Generation of a multiple set bind was expected to yield a ASetMultipleBindCG. Got: "
 						+ multipleBindCg);
+				return null;
 			}
 
 			bindingsCg.add((ASetMultipleBindCG) multipleBindCg);
@@ -666,7 +674,15 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		for (PExp exp : args)
 		{
 			SExpCG expCg = exp.apply(question.getExpVisitor(), question);
-			tupleExp.getArgs().add(expCg);
+			
+			if (expCg != null)
+			{
+				tupleExp.getArgs().add(expCg);
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 		return tupleExp;
@@ -707,7 +723,14 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		for (PType actualType : actualTypes)
 		{
 			STypeCG actualTypeCg = actualType.apply(question.getTypeVisitor(), question);
-			methodInst.getActualTypes().add(actualTypeCg);
+			
+			if (actualTypeCg != null)
+			{
+				methodInst.getActualTypes().add(actualTypeCg);
+			} else
+			{
+				return null;
+			}
 		}
 
 		methodInst.setFunc(funcCg);
@@ -720,7 +743,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseALetBeStExp(ALetBeStExp node, IRInfo question)
 			throws AnalysisException
 	{
-		if (question.getExpAssistant().existsOutsideOpOrFunc(node))
+		if (question.getExpAssistant().existsOutsideMethodOrTrace(node))
 		{
 			question.addUnsupportedNode(node, "Generation of a let be st expression is only supported within operations/functions");
 			return null;
@@ -856,7 +879,15 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 
 		for (PExp arg : nodeArgs)
 		{
-			newExpArgs.add(arg.apply(question.getExpVisitor(), question));
+			SExpCG argCg = arg.apply(question.getExpVisitor(), question);
+			
+			if (argCg != null)
+			{
+				newExpArgs.add(argCg);
+			} else
+			{
+				return null;
+			}
 		}
 
 		return newExp;
@@ -931,7 +962,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseASeqCompSeqExp(ASeqCompSeqExp node, IRInfo question)
 			throws AnalysisException
 	{
-		if (question.getExpAssistant().existsOutsideOpOrFunc(node))
+		if (question.getExpAssistant().existsOutsideMethodOrTrace(node))
 		{
 			question.addUnsupportedNode(node, "Generation of a sequence comprehension is only supported within operations/functions");
 			return null;
@@ -1009,16 +1040,18 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		LinkedList<AMapletExp> members = node.getMembers();
 		for (PExp member : members)
 		{
-			SExpCG exp = member.apply(question.getExpVisitor(), question);
+			SExpCG memberCg = member.apply(question.getExpVisitor(), question);
 
-			if (!(exp instanceof AMapletExpCG))
+			if (!(memberCg instanceof AMapletExpCG))
 			{
 				question.addUnsupportedNode(node,
-						"Got expected map enumeration member: " + exp);
+						"Got expected map enumeration member: " + memberCg);
 				return null;
 			}
-
-			enumMap.getMembers().add((AMapletExpCG) exp);
+			else
+			{
+				enumMap.getMembers().add((AMapletExpCG) memberCg);
+			}
 		}
 
 		return enumMap;
@@ -1050,7 +1083,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseAMapCompMapExp(AMapCompMapExp node, IRInfo question)
 			throws AnalysisException
 	{
-		if (question.getExpAssistant().existsOutsideOpOrFunc(node))
+		if (question.getExpAssistant().existsOutsideMethodOrTrace(node))
 		{
 			question.addUnsupportedNode(node, "Generation of a map comprehension is only supported within operations/functions");
 			return null;
@@ -1091,6 +1124,7 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		{
 			question.addUnsupportedNode(node, "Generation of map comprehension expected a maplet expression. Got: "
 					+ firstCg);
+			return null;
 		}
 
 		AMapletExpCG mapletExpCg = (AMapletExpCG) firstCg;
@@ -1213,12 +1247,14 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		{
 			SExpCG memberCg = member.apply(question.getExpVisitor(), question);
 			
-			if(memberCg == null)
+			if(memberCg != null)
+			{
+				enumSeq.getMembers().add(memberCg);
+			}
+			else
 			{
 				return null;
 			}
-			
-			enumSeq.getMembers().add(memberCg);
 		}
 
 		return enumSeq;
@@ -1275,14 +1311,15 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		{
 			SExpCG argCg = arg.apply(question.getExpVisitor(), question);
 
-			if (argCg == null)
+			if (argCg != null)
 			{
-				question.addUnsupportedNode(node, "Apply expression is not supported for the argument: "
-						+ arg);
+				applyExp.getArgs().add(argCg);
+			}
+			else
+			{
 				return null;
 			}
 
-			applyExp.getArgs().add(argCg);
 		}
 
 		return applyExp;
@@ -1398,7 +1435,15 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		LinkedList<SExpCG> newExpArgs = newExp.getArgs();
 		for (PExp arg : nodeArgs)
 		{
-			newExpArgs.add(arg.apply(question.getExpVisitor(), question));
+			SExpCG argCg = arg.apply(question.getExpVisitor(), question);
+			
+			if (argCg != null)
+			{
+				newExpArgs.add(argCg);
+			} else
+			{
+				return null;
+			}
 		}
 
 		return newExp;

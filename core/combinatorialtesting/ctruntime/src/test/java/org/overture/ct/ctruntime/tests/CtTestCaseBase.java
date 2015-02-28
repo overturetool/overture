@@ -36,6 +36,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.overture.ast.lex.Dialect;
+import org.overture.ast.lex.LexLocation;
 import org.overture.config.Settings;
 import org.overture.ct.ctruntime.TraceRunnerMain;
 import org.overture.ct.ctruntime.utils.CtHelper;
@@ -53,20 +54,23 @@ import org.xml.sax.SAXException;
 @SuppressWarnings("rawtypes")
 public abstract class CtTestCaseBase extends TestResourcesResultTestCase4
 {
+	private static final String TESTS_CT_RUNTIME_PROPERTY_PREFIX = "tests.ctruntime.override.";
+
 	// The socket is used to communicate with the trace interpreter
 	protected ServerSocket socket;
 	protected static final int SOCKET_TIMEOUT = 0;
-	public static final int PORT = 8889;
+	private static final int FROM_PORT = 10000;
+	private static final int TO_PORT = 50000;
 
 	// Used a fixed trace name for simplicity
 	protected static final String TRACE_NAME = "T1";
 
 	public static final String TRACE_OUTPUT_FOLDER = "target/trace-output/";
 
-	// protected CtTestHelper testHelper;
-	private String[] args;
 	private File traceFolder;
 	private CtTestData testdata;
+	
+	
 
 	public CtTestCaseBase()
 	{
@@ -76,7 +80,7 @@ public abstract class CtTestCaseBase extends TestResourcesResultTestCase4
 	public CtTestCaseBase(File file, File traceFolder, CtTestData args)
 	{
 		super(file);
-		
+
 		this.testdata = args;
 		this.traceFolder = traceFolder;
 	}
@@ -85,10 +89,9 @@ public abstract class CtTestCaseBase extends TestResourcesResultTestCase4
 	public void internalSetup() throws Exception
 	{
 		setUp();
-		CtHelper testHelper = new CtHelper();
-		this.args = testHelper.buildArgs(Settings.dialect, Settings.release, testdata);
+		
 	}
-	
+
 	abstract public void setUp() throws Exception;
 
 	@After
@@ -113,49 +116,59 @@ public abstract class CtTestCaseBase extends TestResourcesResultTestCase4
 			return;
 		}
 
-		File actualResultsFile = computeActualResults(TRACE_NAME);
-
-		if (Properties.recordTestResults)
+		try
 		{
-			try
-			{
-				File resultFile = createResultFile(file.getAbsolutePath());
-				resultFile.getParentFile().mkdirs();
+			configureResultGeneration();
 
-				// Overwrite result file
-				FileUtils.copyFile(actualResultsFile, resultFile);
+			File actualResultsFile = computeActualResults(TRACE_NAME);
 
-			} catch (Exception e)
+			if (Properties.recordTestResults)
 			{
-				Assert.fail("The produced results could not be stored: "
-						+ e.getMessage());
+				try
+				{
+					File resultFile = createResultFile(file.getAbsolutePath());
+					resultFile.getParentFile().mkdirs();
+
+					// Overwrite result file
+					FileUtils.copyFile(actualResultsFile, resultFile);
+
+				} catch (Exception e)
+				{
+					Assert.fail("The produced results could not be stored: "
+							+ e.getMessage());
+				}
+			} else
+			{
+				File resultFile = getResultFile(file.getAbsolutePath());
+
+				TraceResultReader reader = new TraceResultReader();
+				List<TraceResult> actualResults = reader.read(actualResultsFile);
+
+				Assert.assertTrue("No result file found for test: " + file
+						+ "\n\n" + actualResults, resultFile.exists());
+				List<TraceResult> expectedResults = reader.read(resultFile);
+
+				Assert.assertTrue(expectedResults.size() == actualResults.size());
+
+				int size = expectedResults.size();
+
+				for (int i = 0; i < size; i++)
+				{
+					TraceResult expected = expectedResults.get(i);
+					TraceResult actual = actualResults.get(i);
+
+					Assert.assertTrue("Actual results differs from expected results for test: "
+							+ file
+							+ "\nExpected: "
+							+ expectedResults
+							+ "\n\nActual: " + actualResults, expected.equals(actual));
+				}
 			}
-		} else
+		} finally
 		{
-			File resultFile = getResultFile(file.getAbsolutePath());
-
-			Assert.assertTrue("No result file found for test: " + file, resultFile.exists());
-
-			TraceResultReader reader = new TraceResultReader();
-			List<TraceResult> expectedResults = reader.read(resultFile);
-			List<TraceResult> actualResults = reader.read(actualResultsFile);
-
-			Assert.assertTrue(expectedResults.size() == actualResults.size());
-
-			int size = expectedResults.size();
-
-			for (int i = 0; i < size; i++)
-			{
-				TraceResult expected = expectedResults.get(i);
-				TraceResult actual = actualResults.get(i);
-
-				Assert.assertTrue("Actual results differs from expected results for test: "
-						+ file
-						+ "\nExpected: "
-						+ expectedResults
-						+ "\n\nActual: " + actualResults, expected.equals(actual));
-			}
+			unconfigureResultGeneration();
 		}
+
 	}
 
 	@Override
@@ -174,7 +187,8 @@ public abstract class CtTestCaseBase extends TestResourcesResultTestCase4
 			XPathExpressionException, SAXException,
 			ParserConfigurationException
 	{
-		socket = new ServerSocket(PORT);
+		int port =findAvailablePort(FROM_PORT, TO_PORT);
+		socket = new ServerSocket(port);
 		socket.setSoTimeout(SOCKET_TIMEOUT);
 		final Data data = new Data();
 
@@ -194,11 +208,17 @@ public abstract class CtTestCaseBase extends TestResourcesResultTestCase4
 		t.start();
 
 		TraceRunnerMain.USE_SYSTEM_EXIT = false;
+		
+		this.testdata.port = port;
+		
+		
+		String[] args = testHelper.buildArgs(Settings.dialect, Settings.release, testdata);
+		
 		TraceRunnerMain.main(args);
 
 		final String message = data.getMessage();
 
-		Assert.assertTrue("Test did not succed", message.contains("status=\"completed\" progress=\"100\""));
+		Assert.assertTrue("Test did not succed. Are you sure that it contains "+ (Settings.dialect==Dialect.VDM_SL?"'DEFAULT`T1'" : "'Entry`T1'"), message.contains("status=\"completed\" progress=\"100\""));
 
 		return actualOutputFile;
 	}
@@ -220,5 +240,63 @@ public abstract class CtTestCaseBase extends TestResourcesResultTestCase4
 			PrintWriter out)
 	{
 		return false;
+	}
+
+	protected void configureResultGeneration()
+	{
+		LexLocation.absoluteToStringLocation = false;
+		if (System.getProperty(TESTS_CT_RUNTIME_PROPERTY_PREFIX + "all") != null
+				|| getPropertyId() != null
+				&& System.getProperty(TESTS_CT_RUNTIME_PROPERTY_PREFIX
+						+ getPropertyId()) != null)
+		{
+			Properties.recordTestResults = true;
+		}
+
+	}
+
+	protected void unconfigureResultGeneration()
+	{
+		Properties.recordTestResults = false;
+	}
+
+	protected abstract String getPropertyId();
+	
+	
+	
+	public static int findAvailablePort(int fromPort, int toPort)
+	{
+		if (fromPort > toPort)
+		{
+			throw new IllegalArgumentException("startPortShouldBeLessThanOrEqualToEndPort");
+		}
+
+		int port = fromPort;
+		ServerSocket socket = null;
+		while (port <= toPort)
+		{
+			try
+			{
+				socket = new ServerSocket(port);
+				return port;
+			} catch (IOException e)
+			{
+				++port;
+			} finally
+			{
+				if (socket != null)
+				{
+					try
+					{
+						socket.close();
+					} catch (IOException e)
+					{
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+
+		return -1;
 	}
 }

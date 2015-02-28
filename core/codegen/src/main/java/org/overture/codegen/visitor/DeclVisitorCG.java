@@ -100,6 +100,11 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 	public SDeclCG caseANamedTraceDefinition(ANamedTraceDefinition node,
 			IRInfo question) throws AnalysisException
 	{
+		if(!question.getSettings().generateTraces())
+		{
+			return null;
+		}
+		
 		ANamedTraceDeclCG namedTraceDecl = new ANamedTraceDeclCG();
 
 		for(ClonableString cloStr : node.getPathname())
@@ -120,7 +125,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 			}
 			else
 			{
-				// Some sub-construct of the term must be unsupported
+				Logger.getLog().printErrorln("Expected term to be of type ATraceDeclTermCG. Got: " + termCg);
 				return null;
 			}
 		}
@@ -165,8 +170,6 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 				recordFields.add(fieldDecl);
 			} else
 			{
-				question.addUnsupportedNode(node,
-						"Could not generate fields of record: " + name);
 				return null;
 			}
 		}

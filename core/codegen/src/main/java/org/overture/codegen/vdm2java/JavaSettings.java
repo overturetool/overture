@@ -28,10 +28,13 @@ public class JavaSettings
 {
 	private boolean disableCloning;
 	private List<String> classesToSkip;
+	private String vdmEntryExp;
 	
 	public JavaSettings()
 	{
+		this.disableCloning = false;
 		this.classesToSkip = new LinkedList<String>();
+		this.vdmEntryExp = null;
 	}
 	
 	public List<String> getClassesToSkip()
@@ -55,5 +58,15 @@ public class JavaSettings
 	public void setDisableCloning(boolean disableCloning)
 	{
 		this.disableCloning = disableCloning;
+	}
+
+	public String getVdmEntryExp()
+	{
+		return vdmEntryExp;
+	}
+
+	public void setVdmEntryExp(String vdmLaunchConfigEntryExp)
+	{
+		this.vdmEntryExp = vdmLaunchConfigEntryExp;
 	}
 }

@@ -36,11 +36,33 @@ import java.util.List;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.factory.AstFactory;
+import org.overture.ast.lex.Dialect;
+import org.overture.ast.lex.LexLocation;
+import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.typechecker.NameScope;
+import org.overture.ast.types.AVoidType;
+import org.overture.ast.util.definitions.ClassList;
+import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.logging.Logger;
+import org.overture.parser.lex.LexException;
+import org.overture.parser.lex.LexTokenReader;
+import org.overture.parser.messages.Console;
+import org.overture.parser.messages.VDMErrorsException;
+import org.overture.parser.syntax.ClassReader;
+import org.overture.parser.syntax.ExpressionReader;
+import org.overture.parser.syntax.ParserException;
 import org.overture.parser.util.ParserUtil;
 import org.overture.parser.util.ParserUtil.ParserResult;
+import org.overture.typechecker.ClassTypeChecker;
+import org.overture.typechecker.Environment;
+import org.overture.typechecker.PublicClassEnvironment;
+import org.overture.typechecker.TypeCheckInfo;
+import org.overture.typechecker.TypeChecker;
+import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 import org.overture.typechecker.util.TypeCheckerUtil;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
+import org.overture.typechecker.visitor.TypeCheckVisitor;
 
 public class GeneralCodeGenUtils
 {
@@ -107,6 +129,152 @@ public class GeneralCodeGenUtils
 		}
 
 		return typeCheckResult;
+	}
+	
+	public static SClassDefinition consMainClass(List<SClassDefinition> mergedParseLists,
+			String expression, Dialect dialect, String mainClassName,
+			ITempVarGen nameGen)
+	{
+		try
+		{
+			ClassList classes = new ClassList();
+			classes.addAll(mergedParseLists);
+			PExp entryExp = typeCheckEntryPoint(classes, expression, dialect);
+
+			String resultTypeStr = entryExp.getType() instanceof AVoidType ? "()"
+					: "?";
+
+			// Collect all the class names
+			List<String> namesToAvoid = new LinkedList<>();
+
+			for (SClassDefinition c : classes)
+			{
+				namesToAvoid.add(c.getName().getName());
+			}
+
+			// If the user already uses the name proposed for the main class
+			// we have to find a new name for the main class
+			if (namesToAvoid.contains(mainClassName))
+			{
+				String prefix = mainClassName + "_";
+				mainClassName = nameGen.nextVarName(prefix);
+
+				while (namesToAvoid.contains(mainClassName))
+				{
+					mainClassName = nameGen.nextVarName(prefix);
+				}
+			}
+
+			String entryClassTemplate = 
+					"class " + mainClassName + "\n"
+					+ "operations\n" + "public static Run : () ==> "
+					+ resultTypeStr + "\n" + "Run () == " + expression + ";\n"
+					+ "end " + mainClassName;
+
+			SClassDefinition clazz = parseClass(entryClassTemplate, mainClassName, dialect);
+
+			return tcClass(classes, clazz);
+
+		} catch (VDMErrorsException | AnalysisException e)
+		{
+			Logger.getLog().printErrorln("Problems encountered when constructing the main class in 'GeneralCodeGenUtils'");
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public static PExp typeCheckEntryPoint(ClassList classes, String expression, Dialect dialect)
+			throws VDMErrorsException, AnalysisException
+	{
+		SClassDefinition defaultModule = null;
+
+		LexNameToken name =new LexNameToken("CLASS", "DEFAULT", new LexLocation());
+		defaultModule = AstFactory.newAClassClassDefinition(name, null, null);
+		defaultModule.setUsed(true);
+		PExp exp = parseExpression(expression, defaultModule.getName().getName(),dialect);
+
+		return tcExp(classes, exp);
+	}
+	
+	public static PExp tcExp(ClassList classes, PExp exp)
+			throws AnalysisException, VDMErrorsException
+	{
+		TypeCheckerAssistantFactory af = new TypeCheckerAssistantFactory();
+		ClassTypeChecker.clearErrors();
+		ClassTypeChecker classTc = new ClassTypeChecker(classes, af);
+
+		classTc.typeCheck();
+
+		TypeCheckVisitor tc = new TypeCheckVisitor();
+		TypeChecker.clearErrors();
+		Environment env = new PublicClassEnvironment(af, classes, null);
+
+		exp.apply(tc, new TypeCheckInfo(af, env, NameScope.NAMESANDSTATE));
+
+		if (TypeChecker.getErrorCount() > 0)
+		{
+			throw new VDMErrorsException(TypeChecker.getErrors());
+		}
+		else
+		{
+			return exp;
+		}
+	}
+
+	public static SClassDefinition tcClass(ClassList classes,
+			SClassDefinition clazz) throws AnalysisException,
+			VDMErrorsException
+
+	{
+		TypeCheckerAssistantFactory af = new TypeCheckerAssistantFactory();
+		ClassTypeChecker.clearErrors();
+		ClassTypeChecker classTc = new ClassTypeChecker(classes, af);
+
+		classes.add(clazz);
+		classTc.typeCheck();
+		
+		if (TypeChecker.getErrorCount() > 0)
+		{
+			throw new VDMErrorsException(TypeChecker.getErrors());
+		}
+		else
+		{
+			return clazz;
+		}
+	}
+	
+	public static PExp parseExpression(String expression,
+			String defaultModuleName, Dialect dialect) throws ParserException, LexException
+	{
+		LexTokenReader ltr = new LexTokenReader(expression, dialect, Console.charset);
+		ExpressionReader reader = new ExpressionReader(ltr);
+		reader.setCurrentModule(defaultModuleName);
+		
+		return reader.readExpression();
+	}
+	
+	public static SClassDefinition parseClass(String classStr,
+			String defaultModuleName, Dialect dialect) throws ParserException, LexException
+	{
+		LexTokenReader ltr = new LexTokenReader(classStr, dialect, Console.charset);
+		ClassReader reader = new ClassReader(ltr);
+		reader.setCurrentModule(defaultModuleName);
+		
+		// There should be only one class
+		for(SClassDefinition clazz : reader.readClasses())
+		{
+			if(clazz.getName().getName().equals(defaultModuleName))
+			{
+				return clazz;
+			}
+		}
+		
+		return null;
+	}
+
+	public static void replaceInFile(File file, String regex, String replacement)
+	{
+		replaceInFile(file.getAbsolutePath(), regex, replacement);
 	}
 
 	public static void replaceInFile(String filePath, String regex,

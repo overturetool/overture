@@ -21,7 +21,6 @@
  */
 package org.overture.codegen.runtime;
 
-
 public class Utils
 {
 	public static final Object VOID_VALUE = new Object();

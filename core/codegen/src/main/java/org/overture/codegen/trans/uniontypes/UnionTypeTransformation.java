@@ -30,7 +30,6 @@ import org.overture.ast.types.SSeqType;
 import org.overture.codegen.assistant.TypeAssistantCG;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.SObjectDesignatorCG;
 import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
@@ -57,12 +56,11 @@ import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG;
 import org.overture.codegen.cgast.expressions.SNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.SUnaryExpCG;
 import org.overture.codegen.cgast.expressions.SVarExpBase;
+import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
-import org.overture.codegen.cgast.statements.ACallObjectStmCG;
 import org.overture.codegen.cgast.statements.AElseIfStmCG;
-import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
 import org.overture.codegen.cgast.statements.APlainCallStmCG;
@@ -686,7 +684,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public void inACallObjectStmCG(ACallObjectStmCG node)
+	public void inACallObjectExpStmCG(ACallObjectExpStmCG node)
 			throws AnalysisException
 	{
 		for (SExpCG arg : node.getArgs())
@@ -694,11 +692,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 			arg.apply(this);
 		}
 
-		SObjectDesignatorCG designator = node.getDesignator();
-
-		ObjectDesignatorToExpCG converter = new ObjectDesignatorToExpCG(info, classes);
-
-		SExpCG objExp = designator.apply(converter);
+		SExpCG objExp = node.getObj();
 
 		STypeCG objType = objExp.getType();
 		if (!(objType instanceof AUnionTypeCG))
@@ -722,10 +716,9 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 
 		ABlockStmCG replacementBlock = new ABlockStmCG();
 
-		if (!(designator instanceof AIdentifierObjectDesignatorCG))
+		if (!(objExp instanceof SVarExpCG))
 		{
 			String callStmObjName = info.getTempVarNameGen().nextVarName(callStmObjPrefix);
-			
 			
 			AIdentifierPatternCG id = new AIdentifierPatternCG();
 			id.setName(callStmObjName);

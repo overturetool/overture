@@ -50,7 +50,7 @@ public class MultipleBindVisitorCG extends
 		{
 			SPatternCG patternTempCg = pattern.apply(question.getPatternVisitor(), question);
 			
-			if(patternTempCg != null)
+			if (patternTempCg != null)
 			{
 				patternsCg.add(patternTempCg);
 			}
