@@ -45,9 +45,7 @@ public class Entry implements java.io.Serializable {
         AlternativeTraceNode alternatives_2 = new AlternativeTraceNode();
         CallStatement callStm_1 = new CallStatement() {
                 public Object execute(final Object instance) {
-                    Number result_1 = ((Entry) store.getValue(ID_1)).op();
-
-                    return result_1;
+                    return ((Entry) store.getValue(ID_1)).op();
                 }
 
                 public String toString() {
@@ -61,9 +59,7 @@ public class Entry implements java.io.Serializable {
 
         CallStatement callStm_2 = new CallStatement() {
                 public Object execute(final Object instance) {
-                    Number result_2 = ((Entry) store.getValue(ID_1)).op();
-
-                    return result_2;
+                    return ((Entry) store.getValue(ID_1)).op();
                 }
 
                 public String toString() {
