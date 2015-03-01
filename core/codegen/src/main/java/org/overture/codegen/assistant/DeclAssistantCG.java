@@ -54,6 +54,7 @@ import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
+import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
@@ -66,6 +67,7 @@ import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
+import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.LexNameTokenWrapper;
 
 public class DeclAssistantCG extends AssistantBase
@@ -575,5 +577,42 @@ public class DeclAssistantCG extends AssistantBase
 			}
 		}
 		return paramsCg;
+	}
+	
+	/**
+	 * Checks if an identifier state designator represents a local variable. 
+	 * Please note that variable hiding and shadowing is assumed to be removed
+	 * from the model.
+	 * 
+	 * @param node the identifier 
+	 * @param classes all classes in the model
+	 * @return true if the identifier represents a local variable - false otherwise
+	 */
+	public boolean isLocal(AIdentifierStateDesignatorCG node, List<AClassDeclCG> classes)
+	{
+		AClassDeclCG encClass = node.getAncestor(AClassDeclCG.class);
+		
+		if(encClass == null)
+		{
+			Logger.getLog().printErrorln("Could not find enclosing class of " + node + 
+					" in '" + this.getClass().getName() + "'");
+			return false;
+		}
+		
+		String fieldName = node.getName();
+		
+		List<AFieldDeclCG> encClassFields = getAllFields(encClass, classes);
+		
+		for(AFieldDeclCG field : encClassFields)
+		{
+			if(field.getName().equals(fieldName))
+			{
+				// So it must be a global identifier
+				return false;
+			}
+		}
+		
+		// If we could not find a field with this name then it must be local
+		return true;
 	}
 }
