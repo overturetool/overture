@@ -14,15 +14,15 @@ import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
-import org.overture.codegen.trans.conv.FieldDesignatorToExpCG;
+import org.overture.codegen.trans.conv.StateDesignatorToExpCG;
 
 public class AssignStmTransformation extends DepthFirstAnalysisAdaptor
 {
-	private FieldDesignatorToExpCG converter;
+	private StateDesignatorToExpCG converter;
 	
 	public AssignStmTransformation(IRInfo info, List<AClassDeclCG> classes, TransAssistantCG transAssistant)
 	{
-		this.converter = new FieldDesignatorToExpCG(info, classes, transAssistant);
+		this.converter = new StateDesignatorToExpCG(info, classes, transAssistant);
 	}
 	
 	@Override
