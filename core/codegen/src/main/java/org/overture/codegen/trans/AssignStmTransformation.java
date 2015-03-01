@@ -7,8 +7,8 @@ import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
-import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
 import org.overture.codegen.cgast.statements.AMapPutStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
 import org.overture.codegen.ir.IRInfo;
@@ -51,13 +51,13 @@ public class AssignStmTransformation extends DepthFirstAnalysisAdaptor
 		}
 		else
 		{
-			ALocalAssignmentStmCG localAssign = new ALocalAssignmentStmCG();
-			localAssign.setTarget(node.getTarget().apply(converter));
-			localAssign.setExp(node.getExp().clone());
-			localAssign.setSourceNode(node.getSourceNode());
-			localAssign.setTag(node.getTag());
+			AAssignToExpStmCG assign = new AAssignToExpStmCG();
+			assign.setTarget(node.getTarget().apply(converter));
+			assign.setExp(node.getExp().clone());
+			assign.setSourceNode(node.getSourceNode());
+			assign.setTag(node.getTag());
 			
-			newNode = localAssign;
+			newNode = assign;
 		}
 		
 		if(node.parent() != null)

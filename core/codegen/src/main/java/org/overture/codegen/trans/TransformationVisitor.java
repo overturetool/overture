@@ -59,6 +59,7 @@ import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
 import org.overture.codegen.cgast.expressions.SBoolBinaryExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
+import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ABreakStmCG;
@@ -68,7 +69,6 @@ import org.overture.codegen.cgast.statements.AFieldStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.ALetBeStStmCG;
-import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
 import org.overture.codegen.cgast.statements.AWhileStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
@@ -153,11 +153,11 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		SExpCG trueValue = node.getTrueValue();
 		SExpCG falseValue = node.getFalseValue();
 		
-		ALocalAssignmentStmCG trueBranch = new ALocalAssignmentStmCG();
+		AAssignToExpStmCG trueBranch = new AAssignToExpStmCG();
 		trueBranch.setTarget(resultVar.clone());
 		trueBranch.setExp(trueValue.clone());
 		
-		ALocalAssignmentStmCG falseBranch = new ALocalAssignmentStmCG();
+		AAssignToExpStmCG falseBranch = new AAssignToExpStmCG();
 		falseBranch.setTarget(resultVar.clone());
 		falseBranch.setExp(falseValue);
 
@@ -361,7 +361,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 			AVarDeclCG resultDecl = transformationAssistant.consDecl(var, value.getType().clone(), transformationAssistant.consNullExp());
 			outerBlock.getLocalDefs().add(resultDecl);
 			
-			ALocalAssignmentStmCG setLetBeStResult = new ALocalAssignmentStmCG();
+			AAssignToExpStmCG setLetBeStResult = new AAssignToExpStmCG();
 			setLetBeStResult.setTarget(transformationAssistant.consIdentifierVar(var, value.getType().clone()));
 			setLetBeStResult.setExp(value);
 			outerBlock.getStatements().add(setLetBeStResult);
@@ -698,10 +698,10 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		block.getStatements().add(enclosingStm);
 	}
 
-	private ALocalAssignmentStmCG assignToVar(AIdentifierVarExpCG var,
+	private AAssignToExpStmCG assignToVar(AIdentifierVarExpCG var,
 			SExpCG exp)
 	{
-		ALocalAssignmentStmCG assignment = new ALocalAssignmentStmCG();
+		AAssignToExpStmCG assignment = new AAssignToExpStmCG();
 		assignment.setTarget(var.clone());
 		assignment.setExp(exp.clone());
 
@@ -768,7 +768,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		AIfStmCG rightCheck = new AIfStmCG();
 		rightCheck.setIfExp(right);
 		
-		ALocalAssignmentStmCG assignAndVar = new ALocalAssignmentStmCG();
+		AAssignToExpStmCG assignAndVar = new AAssignToExpStmCG();
 		assignAndVar.setTarget(transformationAssistant.consBoolCheck(andResultVarName, false));
 		assignAndVar.setExp(info.getAssistantManager().getExpAssistant().consBoolLiteral(true));
 		
@@ -787,13 +787,13 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		AIfStmCG leftCheck = new AIfStmCG();
 		leftCheck.setIfExp(left);
 		
-		ALocalAssignmentStmCG setOrResultVarTrue = new ALocalAssignmentStmCG();
+		AAssignToExpStmCG setOrResultVarTrue = new AAssignToExpStmCG();
 		setOrResultVarTrue.setTarget(transformationAssistant.consBoolCheck(orResultVarName, false));
 		setOrResultVarTrue.setExp(info.getAssistantManager().getExpAssistant().consBoolLiteral(true));
 		
 		leftCheck.setThenStm(setOrResultVarTrue);
 
-		ALocalAssignmentStmCG setOrResultVarToRightExp = new ALocalAssignmentStmCG();
+		AAssignToExpStmCG setOrResultVarToRightExp = new AAssignToExpStmCG();
 		setOrResultVarToRightExp.setTarget(transformationAssistant.consBoolCheck(orResultVarName, false));
 		setOrResultVarToRightExp.setExp(right);
 		

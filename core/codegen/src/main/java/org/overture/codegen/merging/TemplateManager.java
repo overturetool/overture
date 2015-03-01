@@ -44,6 +44,7 @@ import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.*;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
+import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ABreakStmCG;
@@ -61,7 +62,6 @@ import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.AIncrementStmCG;
-import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
 import org.overture.codegen.cgast.statements.AMapPutStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
@@ -277,7 +277,7 @@ public class TemplateManager
 		nodeTemplateFileNames.put(ASkipStmCG.class, templateStructure.STM_PATH
 				+ "Skip");
 
-		nodeTemplateFileNames.put(ALocalAssignmentStmCG.class, templateStructure.STM_PATH
+		nodeTemplateFileNames.put(AAssignToExpStmCG.class, templateStructure.STM_PATH
 				+ "LocalAssignment");
 
 		nodeTemplateFileNames.put(ALocalPatternAssignmentStmCG.class, templateStructure.STM_PATH

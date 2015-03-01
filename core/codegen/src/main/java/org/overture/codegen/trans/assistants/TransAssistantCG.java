@@ -49,12 +49,12 @@ import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
+import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.statements.AForLoopStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.AIncrementStmCG;
-import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
@@ -229,10 +229,10 @@ public class TransAssistantCG extends BaseTransformationAssistant
 		}
 	}
 
-	public ALocalAssignmentStmCG consBoolVarAssignment(SExpCG predicate,
+	public AAssignToExpStmCG consBoolVarAssignment(SExpCG predicate,
 			String boolVarName)
 	{
-		ALocalAssignmentStmCG boolVarAssignment = new ALocalAssignmentStmCG();
+		AAssignToExpStmCG boolVarAssignment = new AAssignToExpStmCG();
 		boolVarAssignment.setTarget(consBoolCheck(boolVarName, false));
 		boolVarAssignment.setExp(predicate != null ? predicate.clone()
 				: info.getExpAssistant().consBoolLiteral(true));

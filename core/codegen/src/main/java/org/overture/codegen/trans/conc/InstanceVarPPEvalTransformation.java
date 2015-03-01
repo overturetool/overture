@@ -10,10 +10,10 @@ import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
+import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
-import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
 import org.overture.codegen.cgast.statements.AMapPutStmCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.ir.IRGeneratedTag;
@@ -51,7 +51,7 @@ public class InstanceVarPPEvalTransformation extends DepthFirstAnalysisAdaptor
 	}
 	
 	@Override
-	public void caseALocalAssignmentStmCG(ALocalAssignmentStmCG node)
+	public void caseAAssignToExpStmCG(AAssignToExpStmCG node)
 			throws AnalysisException
 	{
 		if(node.getTarget() instanceof SVarExpCG)
