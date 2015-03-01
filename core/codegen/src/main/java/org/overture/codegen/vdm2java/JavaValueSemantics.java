@@ -43,6 +43,7 @@ import org.overture.codegen.cgast.expressions.AInSetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AIndicesUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
 import org.overture.codegen.cgast.expressions.ALenUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AMapGetExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetProperSubsetBinaryExpCG;
@@ -51,6 +52,7 @@ import org.overture.codegen.cgast.expressions.ATupleCompatibilityExpCG;
 import org.overture.codegen.cgast.expressions.ATupleSizeExpCG;
 import org.overture.codegen.cgast.statements.AForAllStmCG;
 import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
+import org.overture.codegen.cgast.statements.AMapPutStmCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
@@ -94,12 +96,16 @@ public class JavaValueSemantics
 		{
 			return false;
 		}
-
+		
+		if(cloneNotNeededMapPutGet(exp))
+		{
+			return false;
+		}
+		
 		STypeCG type = exp.getTuple().getType();
 
 		if (type instanceof ATupleTypeCG)
 		{
-
 			ATupleTypeCG tupleType = (ATupleTypeCG) type;
 
 			long field = exp.getField();
@@ -123,6 +129,11 @@ public class JavaValueSemantics
 
 		INode parent = exp.parent();
 		if (cloneNotNeeded(parent))
+		{
+			return false;
+		}
+		
+		if(cloneNotNeededMapPutGet(exp))
 		{
 			return false;
 		}
@@ -173,6 +184,11 @@ public class JavaValueSemantics
 			}
 		}
 		
+		if(cloneNotNeededMapPutGet(exp))
+		{
+			return false;
+		}
+		
 		if(isPrePostArgument(exp))
 		{
 			return false;
@@ -194,6 +210,33 @@ public class JavaValueSemantics
 			}
 
 			return true;
+		}
+
+		return false;
+	}
+
+	private boolean cloneNotNeededMapPutGet(SExpCG exp)
+	{
+		INode parent = exp.parent();
+		
+		if(parent instanceof AMapPutStmCG)
+		{
+			AMapPutStmCG mapPut = (AMapPutStmCG) parent;
+			
+			if(mapPut.getMap() == exp)
+			{
+				return true;
+			}
+		}
+		
+		if(parent instanceof AMapGetExpCG)
+		{
+			AMapGetExpCG mapGet = (AMapGetExpCG) parent;
+			
+			if(mapGet.getMap() == exp)
+			{
+				return true;
+			}
 		}
 
 		return false;
