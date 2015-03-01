@@ -19,7 +19,7 @@
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #~%
  */
-package org.overture.codegen.trans.uniontypes;
+package org.overture.codegen.trans.conv;
 
 import java.util.LinkedList;
 import java.util.List;
