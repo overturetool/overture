@@ -430,7 +430,7 @@ public class TemplateManager
 				+ "SubSeq");
 		
 		nodeTemplateFileNames.put(AHistoryExpCG.class, templateStructure.EXP_PATH 
-				+ "hisCounter");
+				+ "HistoryExp");
 		
 		nodeTemplateFileNames.put(AMapGetExpCG.class, templateStructure.EXP_PATH 
 				+ "MapGet");
