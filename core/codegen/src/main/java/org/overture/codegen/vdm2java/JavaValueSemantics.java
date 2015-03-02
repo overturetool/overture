@@ -102,6 +102,11 @@ public class JavaValueSemantics
 			return false;
 		}
 		
+		if(cloneNotNeededAssign(exp))
+		{
+			return false;
+		}
+		
 		STypeCG type = exp.getTuple().getType();
 
 		if (type instanceof ATupleTypeCG)
@@ -119,7 +124,7 @@ public class JavaValueSemantics
 
 		return false;
 	}
-
+	
 	public boolean cloneMember(AFieldExpCG exp)
 	{
 		if (javaSettings.getDisableCloning())
@@ -134,6 +139,11 @@ public class JavaValueSemantics
 		}
 		
 		if(cloneNotNeededMapPutGet(exp))
+		{
+			return false;
+		}
+		
+		if(cloneNotNeededAssign(exp))
 		{
 			return false;
 		}
@@ -352,5 +362,21 @@ public class JavaValueSemantics
 		return type instanceof ARecordTypeCG || type instanceof ATupleTypeCG
 				|| type instanceof SSeqTypeCG || type instanceof SSetTypeCG
 				|| type instanceof SMapTypeCG;
+	}
+	
+	private boolean cloneNotNeededAssign(SExpCG exp)
+	{
+		INode parent = exp.parent();
+		
+		if (parent instanceof AAssignToExpStmCG)
+		{
+			AAssignToExpStmCG assignment = (AAssignToExpStmCG) parent;
+			if (assignment.getTarget() == exp)
+			{
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }
