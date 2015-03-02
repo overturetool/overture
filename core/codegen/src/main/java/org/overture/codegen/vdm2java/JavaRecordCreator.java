@@ -42,9 +42,8 @@ import org.overture.codegen.cgast.expressions.AStringLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ATernaryIfExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
-import org.overture.codegen.cgast.statements.AAssignmentStmCG;
+import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
-import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
@@ -94,9 +93,12 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 
 			// Construct the initialization of the record field using the
 			// corresponding formal parameter.
-			AAssignmentStmCG assignment = new AAssignmentStmCG();
-			AIdentifierStateDesignatorCG id = new AIdentifierStateDesignatorCG();
+			AAssignToExpStmCG assignment = new AAssignToExpStmCG();
+			AIdentifierVarExpCG id = new AIdentifierVarExpCG();
 			id.setName(name);
+			id.setType(field.getType().clone());
+			id.setIsLambda(false);
+			id.setIsLocal(true);
 
 			AIdentifierVarExpCG varExp = new AIdentifierVarExpCG();
 			varExp.setType(field.getType().clone());

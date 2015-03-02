@@ -14,9 +14,8 @@ import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.expressions.ASuperVarExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
-import org.overture.codegen.cgast.statements.AAssignmentStmCG;
+import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
-import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
@@ -114,11 +113,7 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 		hashcodeCompare.setLeft(hashcodeVar);
 		hashcodeCompare.setRight(consZero());
 		
-		AIdentifierStateDesignatorCG hashCodeId = new AIdentifierStateDesignatorCG();
-		hashCodeId.setClassName(name);
-		hashCodeId.setExplicit(false);
-		hashCodeId.setName(HASHCODE_FIELD);
-		hashCodeId.setType(consFieldType());
+		AIdentifierVarExpCG hashCodeId = transformationAssistant.consIdentifierVar(HASHCODE_FIELD, consFieldType());
 		
 		AMethodTypeCG hashCodeMethodType = new AMethodTypeCG();
 		hashCodeMethodType.setResult(consFieldType());
@@ -133,7 +128,7 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 		superCall.setType(consFieldType());
 		superCall.setRoot(superVar);
 		
-		AAssignmentStmCG assignHashcode = new AAssignmentStmCG();
+		AAssignToExpStmCG assignHashcode = new AAssignToExpStmCG();
 		assignHashcode.setTarget(hashCodeId);
 		assignHashcode.setExp(superCall);
 		
@@ -162,11 +157,8 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 		nullCompare.setLeft(instanceVar);
 		nullCompare.setRight(new ANullExpCG());
 		
-		AIdentifierStateDesignatorCG instanceId = new AIdentifierStateDesignatorCG();
-		instanceId.setClassName(name);
-		instanceId.setExplicit(false);
-		instanceId.setName(INSTANCE_FIELD);
-		instanceId.setType(quoteClassType.clone());
+		AIdentifierVarExpCG instanceId = transformationAssistant.consIdentifierVar(INSTANCE_FIELD,
+				quoteClassType.clone());
 		
 		ATypeNameCG typeName = new ATypeNameCG();
 		typeName.setDefiningClass(null);
@@ -176,7 +168,7 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 		newQuote.setName(typeName);
 		newQuote.setType(quoteClassType);
 		
-		AAssignmentStmCG assignInstance = new AAssignmentStmCG();
+		AAssignToExpStmCG assignInstance = new AAssignToExpStmCG();
 		assignInstance.setTarget(instanceId);
 		assignInstance.setExp(newQuote);
 		

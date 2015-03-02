@@ -7,14 +7,11 @@ import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.AnswerAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
-import org.overture.codegen.cgast.expressions.AExplicitVarExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
-import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AMapGetExpCG;
 import org.overture.codegen.cgast.statements.AFieldStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
-import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
@@ -42,33 +39,7 @@ public class StateDesignatorToExpCG extends AnswerAdaptor<SExpCG>
 	public SExpCG caseAIdentifierStateDesignatorCG(
 			AIdentifierStateDesignatorCG node) throws AnalysisException
 	{
-		boolean isLocal = info.getDeclAssistant().isLocal(node, classes);
-		
-		if(node.getExplicit())
-		{
-			AClassTypeCG classType = new AClassTypeCG();
-			classType.setName(node.getClassName());
-			
-			AExplicitVarExpCG explicitVar = new AExplicitVarExpCG();
-			explicitVar.setClassType(classType);
-			explicitVar.setIsLambda(false);
-			explicitVar.setIsLocal(isLocal);
-			explicitVar.setName(node.getName());
-			explicitVar.setSourceNode(node.getSourceNode());
-			explicitVar.setTag(node.getTag());
-			explicitVar.setType(node.getType().clone());
-			
-			return explicitVar;
-		}
-		else
-		{
-			AIdentifierVarExpCG idVar = transAssistant.consIdentifierVar(node.getName(), node.getType().clone());
-			idVar.setTag(node.getTag());
-			idVar.setSourceNode(node.getSourceNode());
-			idVar.setIsLocal(isLocal);
-			
-			return idVar;
-		}
+		return info.getExpAssistant().idStateDesignatorToExp(info, transAssistant, classes, node);
 	}
 	
 	@Override
