@@ -564,7 +564,7 @@ public class ExpAssistantCG extends AssistantBase
 	
 	public SExpCG idStateDesignatorToExp(IRInfo info, TransAssistantCG transAssistant, List<AClassDeclCG> classes, AIdentifierStateDesignatorCG node)
 	{
-		boolean isLocal = info.getDeclAssistant().isLocal(node, classes);
+		boolean isLocal = info.getDeclAssistant().isLocal(node);
 		
 		if(node.getExplicit())
 		{
