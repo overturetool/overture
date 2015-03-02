@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.velocity.app.Velocity;
@@ -38,7 +39,9 @@ import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.node.INode;
+import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.ANotYetSpecifiedStm;
+import org.overture.codegen.analysis.vdm.IdStateDesignatorDefCollector;
 import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.vdm.UnreachableStmRemover;
 import org.overture.codegen.analysis.vdm.VarShadowingRenameCollector;
@@ -207,6 +210,8 @@ public class JavaCodeGen extends CodeGenBase
 			mergedParseLists.add(mainClass);
 		}
 		
+		computeDefTable(mergedParseLists);
+		
 		// To document any renaming of variables shadowing other variables
 		removeUnreachableStms(mergedParseLists);
 		List<Renaming> allRenamings = performRenaming(mergedParseLists);
@@ -352,6 +357,23 @@ public class JavaCodeGen extends CodeGenBase
 		javaFormat.clearClasses();
 
 		return new GeneratedData(generated, generateJavaFromVdmQuotes(), invalidNamesResult, skipping, allRenamings);
+	}
+
+	private void computeDefTable(List<SClassDefinition> mergedParseLists)
+			throws AnalysisException
+	{
+		List<SClassDefinition> classesToConsider = new LinkedList<>();
+		
+		for(SClassDefinition c : mergedParseLists)
+		{
+			if(!getInfo().getDeclAssistant().classIsLibrary(c))
+			{
+				classesToConsider.add(c);
+			}
+		}
+		
+		Map<AIdentifierStateDesignator, PDefinition> idDefs = IdStateDesignatorDefCollector.getIdDefs(classesToConsider);
+		getInfo().setIdStateDesignatorDefs(idDefs);
 	}
 
 	private void removeUnreachableStms(List<SClassDefinition> mergedParseLists) throws AnalysisException

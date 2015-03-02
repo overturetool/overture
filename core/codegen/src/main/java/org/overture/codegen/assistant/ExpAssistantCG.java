@@ -564,8 +564,6 @@ public class ExpAssistantCG extends AssistantBase
 	
 	public SExpCG idStateDesignatorToExp(IRInfo info, TransAssistantCG transAssistant, List<AClassDeclCG> classes, AIdentifierStateDesignatorCG node)
 	{
-		boolean isLocal = info.getDeclAssistant().isLocal(node);
-		
 		if(node.getExplicit())
 		{
 			AClassTypeCG classType = new AClassTypeCG();
@@ -574,7 +572,7 @@ public class ExpAssistantCG extends AssistantBase
 			AExplicitVarExpCG explicitVar = new AExplicitVarExpCG();
 			explicitVar.setClassType(classType);
 			explicitVar.setIsLambda(false);
-			explicitVar.setIsLocal(isLocal);
+			explicitVar.setIsLocal(node.getIsLocal());
 			explicitVar.setName(node.getName());
 			explicitVar.setSourceNode(node.getSourceNode());
 			explicitVar.setTag(node.getTag());
@@ -587,7 +585,7 @@ public class ExpAssistantCG extends AssistantBase
 			AIdentifierVarExpCG idVar = transAssistant.consIdentifierVar(node.getName(), node.getType().clone());
 			idVar.setTag(node.getTag());
 			idVar.setSourceNode(node.getSourceNode());
-			idVar.setIsLocal(isLocal);
+			idVar.setIsLocal(node.getIsLocal());
 			
 			return idVar;
 		}

@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AEqualsDefinition;
 import org.overture.ast.definitions.AExplicitFunctionDefinition;
@@ -39,6 +40,7 @@ import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.PPattern;
+import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.codegen.cgast.SDeclCG;
 import org.overture.codegen.cgast.SExpCG;
@@ -54,7 +56,6 @@ import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
-import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
@@ -67,6 +68,7 @@ import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
+import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.LexNameTokenWrapper;
 
 public class DeclAssistantCG extends AssistantBase
@@ -578,9 +580,19 @@ public class DeclAssistantCG extends AssistantBase
 		return paramsCg;
 	}
 	
-	public boolean isLocal(AIdentifierStateDesignatorCG node)
+	public boolean isLocal(AIdentifierStateDesignator id, IRInfo info)
 	{
-		IsLocalAnalysis an = new IsLocalAnalysis(node);
-		return an.isLocal();
+		PDefinition idDef = info.getIdStateDesignatorDefs().get(id);
+		
+		if(idDef == null)
+		{
+			Logger.getLog().printErrorln("Could not find definition for identifier "
+					+ "state designator " + id + " in '" + this.getClass().getSimpleName() + "'");
+			return false;
+		}
+		else
+		{
+			return idDef instanceof AAssignmentDefinition;
+		}
 	}
 }
