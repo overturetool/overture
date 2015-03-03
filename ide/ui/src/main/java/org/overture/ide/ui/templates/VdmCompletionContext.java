@@ -34,7 +34,6 @@ public class VdmCompletionContext
 	private void init()
 	{
 		calcSearchType();
-
 		System.out.println("Computed completion context: "+toString());
 	}
 
@@ -75,14 +74,7 @@ public class VdmCompletionContext
 		}
 	}
 
-	@Override
-	public String toString()
-	{
-		return type + " - Root: '" + getQualifiedSource() + "' Proposal: '"
-				+ proposalPrefix+"'" +" offset: "+offset;
-	}
-
-	String getQualifiedSource()
+	private String getQualifiedSource()
 	{
 		String res = "";
 		if (root != null && !root.isEmpty())
@@ -96,12 +88,11 @@ public class VdmCompletionContext
 		}
 		return res;
 	}
-
-	// @Override
-	// public String toString()
-	// {
-	// return "Type: \"" + fieldType + "\" " + (afterMk ? "mk_" : "")
-	// + (afterNew ? "new " : "") + "\""
-	// + (field.length() != 0 ? field + "." : "") + proposal + "\"";
-	// }
+	
+	@Override
+	public String toString()
+	{
+		return type + " - Root: '" + getQualifiedSource() + "' Proposal: '"
+				+ proposalPrefix+"'" +" offset: "+offset;
+	}
 }

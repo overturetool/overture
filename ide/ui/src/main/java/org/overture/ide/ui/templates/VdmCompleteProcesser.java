@@ -104,13 +104,11 @@ public class VdmCompleteProcesser
 			if (proposal instanceof CompletionProposal)
 			{
 				CompletionProposal cp = (CompletionProposal) proposal;
-				if (replacementDisplayString.contains(cp.getDisplayString())
-				// || !cp.getDisplayString().toLowerCase().replace('<',
-				// ' ').trim().startsWith(info.prefix.toString().toLowerCase())
-				)
+				if (replacementDisplayString.contains(cp.getDisplayString()))
 				{
 					continue;
 				}
+				
 				replacementDisplayString.add(cp.getDisplayString());
 			}
 			proposals.add(proposal);
@@ -175,7 +173,6 @@ public class VdmCompleteProcesser
 				});
 			} catch (AnalysisException e)
 			{
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -275,28 +272,25 @@ public class VdmCompleteProcesser
 
 				void populateQuotes(INode node, String baseValue, String name)
 				{
-					// if (!info2.prefix.toString().equals(baseValue))
+
+					IContextInformation info = new ContextInformation(name, name); //$NON-NLS-1$
+
+					int curOffset = offset + info2.offset;// - info2.proposalPrefix.length();
+					int length = name.length();
+					int replacementLength = info2.proposalPrefix.length();
+
+					if (info2.proposalPrefix.toString().equals("<" + baseValue
+							+ ">"))
 					{
+						// replacementLength+=1;
+						// length+=1;
+						curOffset = offset;
+						replacementLength = 0;
+					}
 
-						IContextInformation info = new ContextInformation(name, name); //$NON-NLS-1$
-
-						int curOffset = offset + info2.offset;// - info2.proposalPrefix.length();
-						int length = name.length();
-						int replacementLength = info2.proposalPrefix.length();
-
-						if (info2.proposalPrefix.toString().equals("<"
-								+ baseValue + ">"))
-						{
-							// replacementLength+=1;
-							// length+=1;
-							curOffset = offset;
-							replacementLength = 0;
-						}
-
-						if (("<" + baseValue).toLowerCase().startsWith(info2.proposalPrefix.toString().toLowerCase()))
-						{
-							proposals.add(new CompletionProposal(name, curOffset, replacementLength, length, imgProvider.getImageLabel(node, 0), name, info, name));
-						}
+					if (("<" + baseValue).toLowerCase().startsWith(info2.proposalPrefix.toString().toLowerCase()))
+					{
+						proposals.add(new CompletionProposal(name, curOffset, replacementLength, length, imgProvider.getImageLabel(node, 0), name, info, name));
 					}
 				}
 			});
@@ -312,8 +306,6 @@ public class VdmCompleteProcesser
 	{
 		try
 		{
-			List<INode> ast = getAst(document);
-
 			INode found = new AstLocationSearcher2().getNode(new TextReference(document.getSourceUnit().getSystemFile(), offset), getLocalFileAst(document));
 
 			if (found != null)
