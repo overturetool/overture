@@ -805,8 +805,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 			{
 				if (contains(localDef))
 				{
-					List<PDefinition> localDefsOusideScope = defInfo.getLocalDefs(nodeDefs.subList(0, i));
-					findRenamings(localDef, parentDef, defScope, localDefsOusideScope);
+					findRenamings(localDef, parentDef, defScope);
 				} else
 				{
 					localDefsInScope.add(localDef.getName());
@@ -821,7 +820,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			if (contains(localDef))
 			{
-				findRenamings(localDef, parentNode, defScope, new LinkedList<PDefinition>());
+				findRenamings(localDef, parentNode, defScope);
 			} else
 			{
 				localDefsInScope.add(localDef.getName());
@@ -839,7 +838,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		localDefsInScope.remove(localDef.getName());
 	}
 
-	private void findRenamings(PDefinition localDefToRename, INode parentNode, INode defScope, List<PDefinition> localDefsOusideScope)
+	private void findRenamings(PDefinition localDefToRename, INode parentNode, INode defScope)
 			throws AnalysisException
 	{
 		ILexNameToken localDefName = getName(localDefToRename);
@@ -856,7 +855,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 			registerRenaming(localDefName, newName);
 		}
 
-		Set<AVariableExp> occurences = collectVarOccurences(localDefToRename.getLocation(), defScope, localDefsOusideScope);
+		Set<AVariableExp> occurences = collectVarOccurences(localDefToRename.getLocation(), defScope);
 
 		for (AVariableExp varExp : occurences)
 		{
@@ -892,22 +891,14 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		return false;
 	}
 
-	private Set<AVariableExp> collectVarOccurences(ILexLocation defLoc,
-			INode defScope, List<? extends PDefinition> defsOutsideScope)
+	private Set<AVariableExp> collectVarOccurences(ILexLocation defLoc, INode defScope)
 			throws AnalysisException
 	{
-		VarOccurencesCollector collector = new VarOccurencesCollector(defLoc, defsOutsideScope);
+		VarOccurencesCollector collector = new VarOccurencesCollector(defLoc);
 
 		defScope.apply(collector);
 
 		return collector.getVars();
-	}
-	
-	private Set<AVariableExp> collectVarOccurences(ILexLocation defLoc,
-			INode defScope)
-			throws AnalysisException
-	{
-		return collectVarOccurences(defLoc, defScope, null);
 	}
 	
 	private Set<AIdentifierPattern> collectIdOccurences(ILexNameToken name, INode parent) throws AnalysisException
