@@ -214,7 +214,7 @@ public class JavaCodeGen extends CodeGenBase
 		
 		// To document any renaming of variables shadowing other variables
 		removeUnreachableStms(mergedParseLists);
-		List<Renaming> allRenamings = performRenaming(mergedParseLists);
+		List<Renaming> allRenamings = performRenaming(mergedParseLists, getInfo().getIdStateDesignatorDefs());
 		
 		for (SClassDefinition classDef : mergedParseLists)
 		{
@@ -386,12 +386,12 @@ public class JavaCodeGen extends CodeGenBase
 		}
 	}
 
-	private List<Renaming> performRenaming(List<SClassDefinition> mergedParseLists)
+	private List<Renaming> performRenaming(List<SClassDefinition> mergedParseLists, Map<AIdentifierStateDesignator, PDefinition> idDefs)
 			throws AnalysisException
 	{
 		List<Renaming> allRenamings = new LinkedList<Renaming>();
 		
-		VarShadowingRenameCollector renamingsCollector = new VarShadowingRenameCollector(generator.getIRInfo().getTcFactory());
+		VarShadowingRenameCollector renamingsCollector = new VarShadowingRenameCollector(generator.getIRInfo().getTcFactory(), idDefs);
 		VarShadowingRenamer renamer = new VarShadowingRenamer();
 		
 		for (SClassDefinition classDef : mergedParseLists)
