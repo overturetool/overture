@@ -32,7 +32,7 @@ import org.overture.ide.ui.editor.core.VdmDocument;
 public abstract class VdmContentAssistProcessor extends
 		VdmTemplateAssistProcessor
 {
-	private VdmCompleteProcesser processer = new VdmCompleteProcesser();
+	private VdmCompleteProcessor processer = new VdmCompleteProcessor();
 
 	public boolean enableTemplate()
 	{
