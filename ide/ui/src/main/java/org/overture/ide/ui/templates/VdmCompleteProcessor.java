@@ -32,14 +32,8 @@ import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.assistant.definition.PAccessSpecifierAssistant;
-import org.overture.ast.definitions.AExplicitFunctionDefinition;
 import org.overture.ast.definitions.AExplicitOperationDefinition;
-import org.overture.ast.definitions.AImplicitFunctionDefinition;
-import org.overture.ast.definitions.AImplicitOperationDefinition;
-import org.overture.ast.definitions.AInstanceVariableDefinition;
-import org.overture.ast.definitions.ALocalDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
-import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.AQuoteLiteralExp;
@@ -68,13 +62,6 @@ public class VdmCompleteProcessor
 			int offset)
 	{
 		List<ICompletionProposal> calculatedProposals = new Vector<ICompletionProposal>();
-		// if (info.afterNew || info.afterMk || info.isEmpty)
-		// {
-		// completeTypes(info, document, calculatedProposals, offset);
-		// } else
-		// {
-		// completeFields(info, document, calculatedProposals, offset);
-		// completeFields(info, document, calculatedProposals, offset);
 
 		switch (info.getType())
 		{
@@ -108,7 +95,7 @@ public class VdmCompleteProcessor
 				{
 					continue;
 				}
-				
+
 				replacementDisplayString.add(cp.getDisplayString());
 			}
 			proposals.add(proposal);
@@ -181,16 +168,13 @@ public class VdmCompleteProcessor
 	public void completeTypes(VdmCompletionContext info, VdmDocument document,
 			List<ICompletionProposal> proposals, int offset)
 	{
-		// boolean modulesOnly = info.afterNew || info.isEmpty;
-		// boolean recordTypesOnly = info.afterMk || info.isEmpty;
-		// String typeName = info.field.toString();
-
 		for (INode element : getAst(document))
 		{
 			if (info.getType() == SearchType.Types)
 			{
 				String name = AstNameUtil.getName(element);
-				if (name.startsWith(info.getProposalPrefix()) || name.length() == 0)
+				if (name.startsWith(info.getProposalPrefix())
+						|| name.length() == 0)
 				{
 					IContextInformation ctxtInfo = new ContextInformation(name, name); //$NON-NLS-1$
 					proposals.add(new CompletionProposal(name, offset, 0, name.length(), imgProvider.getImageLabel(element, 0), name, ctxtInfo, name));
@@ -279,11 +263,8 @@ public class VdmCompleteProcessor
 					int length = name.length();
 					int replacementLength = info2.getProposalPrefix().length();
 
-					if (info2.getProposalPrefix().equals("<" + baseValue
-							+ ">"))
+					if (info2.getProposalPrefix().equals("<" + baseValue + ">"))
 					{
-						// replacementLength+=1;
-						// length+=1;
 						curOffset = offset;
 						replacementLength = 0;
 					}
@@ -331,104 +312,11 @@ public class VdmCompleteProcessor
 						}
 					}
 				}
-			} else
-			{
-				// FIXME old code
-
-				// if (info.fieldType.toString().trim().length() != 0)
-				// {
-				// completeFromType(info.fieldType.toString(), info.proposalPrefix.toString(), proposals, offset, ast);
-				// } else
-				// {
-				// List<INode> possibleMatch = new Vector<INode>();
-				// for (INode node : getLocalFileAst(document))
-				// {
-				// for (INode field : getFields(node))
-				// {
-				// if (AstNameUtil.getName(field).equals(info.field.toString()))
-				// {
-				// // Ok match then complete it
-				// completeFromType(getTypeName(field), info.proposalPrefix.toString(), proposals, offset, ast);
-				// } else if (AstNameUtil.getName(field).startsWith(info.field.toString()))
-				// {
-				// possibleMatch.add(field);
-				// }
-				//
-				// }
-				//
-				// }
-				// }
 			}
 		} catch (Exception e)
 		{
 			VdmUIPlugin.log("Completion error in " + getClass().getSimpleName(), e);
 		}
-	}
-
-	private String getTypeName(INode field)
-	{
-		if (field instanceof AInstanceVariableDefinition)
-		{
-			return ((AInstanceVariableDefinition) field).getType().toString();
-		}
-		return "";
-	}
-
-	private void completeFromType(String typeName, String proposal,
-			List<ICompletionProposal> proposals, int offset, List<INode> ast)
-	{
-		// System.out.println("Complete for type: " + typeName
-		// + " with proposal: " + proposal);
-		INode type = getType(typeName, ast);
-
-		// Fields
-		for (INode field : getFields(type))
-		{
-			if (AstNameUtil.getName(field).startsWith(proposal)
-					|| proposal.isEmpty())
-			{
-				proposals.add(createProposal(field, offset));
-			}
-		}
-		// Operations
-		for (INode op : getOperations(type))
-		{
-			if (AstNameUtil.getName(op).startsWith(proposal)
-					|| proposal.isEmpty())
-			{
-				proposals.add(createProposal(op, offset));
-			}
-		}
-		// Functions
-		for (INode fn : getFunctions(type))
-		{
-			if (AstNameUtil.getName(fn).startsWith(proposal)
-					|| proposal.isEmpty())
-			{
-				proposals.add(createProposal(fn, offset));
-			}
-		}
-		// Types
-		for (INode tp : getTypes(type))
-		{
-			if (AstNameUtil.getName(tp).startsWith(proposal)
-					|| proposal.isEmpty())
-			{
-				proposals.add(createProposal(tp, offset));
-			}
-		}
-	}
-
-	private ICompletionProposal createProposal(INode node, int offset)
-	{
-		String name = AstNameUtil.getName(node);
-		if (node instanceof ATypeDefinition)
-		{
-			name = ((ATypeDefinition) node).getLocation().getModule() + "`"
-					+ name;
-		}
-		IContextInformation info = new ContextInformation(name, name); //$NON-NLS-1$
-		return new CompletionProposal(name, offset, 0, name.length(), imgProvider.getImageLabel(node, 0), name, info, name);
 	}
 
 	private ICompletionProposal createProposal(INode node, int offset,
@@ -443,106 +331,6 @@ public class VdmCompleteProcessor
 		IContextInformation info2 = new ContextInformation(name, name); //$NON-NLS-1$
 		return new CompletionProposal(name, offset
 				- info.getProposalPrefix().length(), info.getProposalPrefix().length(), name.length(), imgProvider.getImageLabel(node, 0), name, info2, node.toString());
-	}
-
-	private INode getType(String typeName, List<INode> ast)
-	{
-		for (INode node : ast)
-		{
-			if (AstNameUtil.getName(node).equals(typeName))
-			{
-				return node;
-			}
-		}
-		return null;
-	}
-
-	private List<INode> getFields(INode node)
-	{
-		List<INode> fields = new Vector<INode>();
-		List<PDefinition> list = getDefinitions(node);
-
-		if (list != null)
-		{
-			for (PDefinition definition : list)
-			{
-				if (definition instanceof ALocalDefinition
-						|| definition instanceof AValueDefinition
-						|| definition instanceof AInstanceVariableDefinition)
-				{
-					fields.add(definition);
-				}
-			}
-		}
-		return fields;
-	}
-
-	private List<INode> getTypes(INode node)
-	{
-		List<INode> types = new Vector<INode>();
-		List<PDefinition> list = getDefinitions(node);
-		if (list != null)
-		{
-			for (PDefinition definition : list)
-			{
-				if (definition instanceof ATypeDefinition)
-				{
-					types.add(definition);
-				}
-			}
-		}
-		return types;
-	}
-
-	private List<INode> getOperations(INode node)
-	{
-		List<INode> ops = new Vector<INode>();
-		List<PDefinition> list = getDefinitions(node);
-
-		if (list != null)
-		{
-			for (PDefinition definition : list)
-			{
-				if (definition instanceof AExplicitOperationDefinition
-						|| definition instanceof AImplicitOperationDefinition)
-				{
-					ops.add(definition);
-				}
-			}
-		}
-		return ops;
-	}
-
-	private List<INode> getFunctions(INode node)
-	{
-		List<INode> fns = new Vector<INode>();
-		List<PDefinition> list = getDefinitions(node);
-
-		if (list != null)
-		{
-			for (PDefinition definition : list)
-			{
-				if (definition instanceof AExplicitFunctionDefinition
-						|| definition instanceof AImplicitFunctionDefinition)
-				{
-					fns.add(definition);
-				}
-			}
-		}
-		return fns;
-	}
-
-	private List<PDefinition> getDefinitions(INode node)
-	{
-		List<PDefinition> list = null;
-		if (node instanceof SClassDefinition)
-		{
-			list = ((SClassDefinition) node).getDefinitions();
-		} else if (node instanceof AModuleModules)
-		{
-			list = ((AModuleModules) node).getDefs();
-		}
-		return list;
 	}
 
 	private List<INode> getAst(VdmDocument document)
