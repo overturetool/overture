@@ -714,15 +714,30 @@ public class FunctionValue extends Value
 			if (type.equals(to) || assistant.isUnknown(to))
 			{
 				return this;
-			} else
+			}
+			else
 			{
 				AFunctionType restrictedType = assistant.getFunction(to);
+				
+				if (type.equals(restrictedType))
+				{
+					return this;
+				}
+				else if (ctxt.assistantFactory.getTypeComparator().isSubType(type, restrictedType))
+				{
+					// Create a new function with restricted dom/rng
+					FunctionValue restricted = new FunctionValue(location, name,
+						restrictedType, paramPatternList, body, precondition, postcondition,
+						freeVariables, checkInvariants, curriedArgs, measureName,
+						measureValues, result);
 
-				// Create a new function with restricted dom/rng
-				FunctionValue restricted = new FunctionValue(location, name, restrictedType, paramPatternList, body, precondition, postcondition, freeVariables, checkInvariants, curriedArgs, measureName, measureValues, result);
-
-				restricted.typeValues = typeValues;
-				return restricted;
+					restricted.typeValues = typeValues;
+					return restricted;
+				}
+				else
+				{
+					return abort(4165, "Cannot convert " + this + " to " + restrictedType, ctxt);
+				}
 			}
 		} else
 		{
