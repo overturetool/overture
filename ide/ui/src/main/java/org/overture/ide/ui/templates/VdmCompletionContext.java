@@ -18,8 +18,13 @@ public class VdmCompletionContext
 	// new
 	private StringBuffer rawScan;
 	private StringBuffer processedScan;
+
+	/**
+	 * Index where replacement must start. For example, if the
+	 * rawScan is '<q' then the offset is -2 since the complete text '<q' should be replaced
+	 */
 	public int offset;
-	SearchType type = SearchType.Types;
+	public SearchType type = SearchType.Types;
 
 	public String proposalPrefix = "";
 
@@ -34,7 +39,7 @@ public class VdmCompletionContext
 	private void init()
 	{
 		calcSearchType();
-		System.out.println("Computed completion context: "+toString());
+		System.out.println("Computed completion context: " + toString());
 	}
 
 	private void calcSearchType()
@@ -43,35 +48,61 @@ public class VdmCompletionContext
 
 		if (index != -1)
 		{
-			// quote
-			processedScan = new StringBuffer(rawScan.subSequence(index, rawScan.length()));
-			proposalPrefix = processedScan.toString();
-			offset = -(rawScan.length() - index);
-			type = SearchType.Quote;
+			// Completion of quote, e.g. <Green>
+			consQuoteContext(index);
 			return;
 		}
 
 		index = rawScan.toString().indexOf("new");
 
+		// New must appear at the first index of the raw scan
 		if (index == 0)
 		{
-			// quote
-			processedScan = new StringBuffer(rawScan.subSequence(index
-					+ "new".length(), rawScan.length()));
-			proposalPrefix = processedScan.toString().trim();
-
-			for (int i = index + "new".length(); i < rawScan.length(); i++)
-			{
-				if (Character.isJavaIdentifierStart(rawScan.charAt(i)))
-				{
-					offset = -(rawScan.length() - i);
-					break;
-				}
-			}
-
-			type = SearchType.New;
+			// Completion of constructors
+			consConstructorCallContext();
 			return;
 		}
+	}
+
+	/**
+	 * Constructs the completion context for a constructor call
+	 * 
+	 * @param index
+	 */
+	private void consConstructorCallContext()
+	{
+		// The processed scan contains what
+		final int NEW_LENGTH = "new".length();
+
+		// This gives us everything after new, e.g. ' MyClass' if you type 'new MyClass'
+		CharSequence subSeq = rawScan.subSequence(NEW_LENGTH, rawScan.length());
+
+		processedScan = new StringBuffer(subSeq);
+		proposalPrefix = processedScan.toString().trim();
+
+		for (int i = NEW_LENGTH; i < rawScan.length(); i++)
+		{
+			if (Character.isJavaIdentifierStart(rawScan.charAt(i)))
+			{
+				offset = -(rawScan.length() - i);
+				break;
+			}
+		}
+
+		type = SearchType.New;
+	}
+
+/**
+	 * Constructs the completion context for quotes
+	 * 
+	 * @param index The index of the '<' character
+	 */
+	private void consQuoteContext(int index)
+	{
+		processedScan = new StringBuffer(rawScan.subSequence(index, rawScan.length()));
+		proposalPrefix = processedScan.toString();
+		offset = -(rawScan.length() - index);
+		type = SearchType.Quote;
 	}
 
 	private String getQualifiedSource()
@@ -88,11 +119,11 @@ public class VdmCompletionContext
 		}
 		return res;
 	}
-	
+
 	@Override
 	public String toString()
 	{
 		return type + " - Root: '" + getQualifiedSource() + "' Proposal: '"
-				+ proposalPrefix+"'" +" offset: "+offset;
+				+ proposalPrefix + "'" + " offset: " + offset;
 	}
 }
