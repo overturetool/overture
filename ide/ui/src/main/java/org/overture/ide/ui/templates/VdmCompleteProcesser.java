@@ -61,7 +61,7 @@ import org.overture.ide.ui.utility.ast.AstNameUtil;
 
 public class VdmCompleteProcesser
 {
-	VdmElementImageProvider imgProvider = new VdmElementImageProvider();
+	private VdmElementImageProvider imgProvider = new VdmElementImageProvider();
 
 	public void computeCompletionProposals(VdmCompletionContext info,
 			VdmDocument document, List<ICompletionProposal> proposals,
