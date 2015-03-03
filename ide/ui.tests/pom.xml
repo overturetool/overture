@@ -3,17 +3,17 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.overturetool.ide</groupId>
-    <artifactId>org.overture.ide.tests</artifactId>
+    <groupId>org.overturetool</groupId>
+    <artifactId>ide</artifactId>
     <version>2.2.3-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <packaging>eclipse-test-plugin</packaging>
 
-  <groupId>org.overturetool.ide.tests</groupId>
-  <artifactId>org.overture.ide.tests.ui</artifactId>
-  <name>org.overture.ide.tests.ui</name>
+  <groupId>org.overturetool.ide</groupId>
+  <artifactId>org.overture.ide.ui.tests</artifactId>
+  <name>Overture UI Tests</name>
   
   <build>
     <sourceDirectory>src/main/java</sourceDirectory>
