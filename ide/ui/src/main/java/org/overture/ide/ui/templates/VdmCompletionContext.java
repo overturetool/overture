@@ -6,29 +6,18 @@ import java.util.Vector;
 
 public class VdmCompletionContext
 {
-	// boolean isEmpty = false;
-	// // SearchType type = SearchType.Proposal;
-	// StringBuffer proposal = new StringBuffer();
-	// StringBuffer field = new StringBuffer();
-	// StringBuffer fieldType = new StringBuffer();
-	// boolean afterNew = false;
-	// boolean afterMk = false;
-	// public StringBuffer prefix = new StringBuffer();
-
-	// new
 	private StringBuffer rawScan;
 	private StringBuffer processedScan;
 
-	/**
+/**
 	 * Index where replacement must start. For example, if the
 	 * rawScan is '<q' then the offset is -2 since the complete text '<q' should be replaced
 	 */
-	public int offset;
-	public SearchType type = SearchType.Types;
+	private SearchType type = SearchType.Types;
 
-	public String proposalPrefix = "";
+	private String proposalPrefix = "";
 
-	public List<String> root = new Vector<String>();
+	private List<String> root = new Vector<String>();
 
 	public VdmCompletionContext(StringBuffer rawScan)
 	{
@@ -37,12 +26,6 @@ public class VdmCompletionContext
 	}
 
 	private void init()
-	{
-		calcSearchType();
-		System.out.println("Computed completion context: " + toString());
-	}
-
-	private void calcSearchType()
 	{
 		int index = rawScan.toString().lastIndexOf("<");
 
@@ -62,6 +45,25 @@ public class VdmCompletionContext
 			consConstructorCallContext();
 			return;
 		}
+
+		// Completion for foo.bar. This covers things such as instance variables,
+		// values, a record, a tuple, operations and functions
+
+		String[] split = rawScan.toString().split("\\.");
+		if (split.length == 2)
+		{ // only works for one . atm
+			consDotContext(split);
+			return;
+		}
+	}
+
+	private void consDotContext(String[] split)
+	{
+		this.type = SearchType.Dot;
+		this.proposalPrefix = split[1];
+
+		this.root = new Vector<>();
+		root.add(split[0]);
 	}
 
 	/**
@@ -80,15 +82,6 @@ public class VdmCompletionContext
 		processedScan = new StringBuffer(subSeq);
 		proposalPrefix = processedScan.toString().trim();
 
-		for (int i = NEW_LENGTH; i < rawScan.length(); i++)
-		{
-			if (Character.isJavaIdentifierStart(rawScan.charAt(i)))
-			{
-				offset = -(rawScan.length() - i);
-				break;
-			}
-		}
-
 		type = SearchType.New;
 	}
 
@@ -101,7 +94,6 @@ public class VdmCompletionContext
 	{
 		processedScan = new StringBuffer(rawScan.subSequence(index, rawScan.length()));
 		proposalPrefix = processedScan.toString();
-		offset = -(rawScan.length() - index);
 		type = SearchType.Quote;
 	}
 
@@ -120,10 +112,30 @@ public class VdmCompletionContext
 		return res;
 	}
 
+	public int getReplacementOffset()
+	{
+		return -proposalPrefix.length();
+	}
+	
+	public SearchType getType()
+	{
+		return type;
+	}
+
+	public String getProposalPrefix()
+	{
+		return proposalPrefix;
+	}
+
+	public List<String> getRoot()
+	{
+		return root;
+	}
+
 	@Override
 	public String toString()
 	{
 		return type + " - Root: '" + getQualifiedSource() + "' Proposal: '"
-				+ proposalPrefix + "'" + " offset: " + offset;
+				+ proposalPrefix + "'" + " offset: ";
 	}
 }
