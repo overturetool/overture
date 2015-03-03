@@ -24,22 +24,15 @@ package org.overture.ide.ui.templates;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
-import org.overture.ast.lex.VDMToken;
-import org.overture.ide.ui.VdmUIPlugin;
 import org.overture.ide.ui.completion.CompletionUtil;
 import org.overture.ide.ui.editor.core.VdmDocument;
-import org.overture.ide.ui.internal.viewsupport.VdmElementImageProvider;
 
 public abstract class VdmContentAssistProcessor extends
 		VdmTemplateAssistProcessor
 {
-
-	VdmElementImageProvider imgProvider = new VdmElementImageProvider();
-	VdmCompleteProcesser processer = new VdmCompleteProcesser();
+	private VdmCompleteProcesser processer = new VdmCompleteProcesser();
 
 	public boolean enableTemplate()
 	{
