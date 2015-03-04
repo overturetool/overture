@@ -1545,7 +1545,7 @@ public class POP3Server extends VDMThread implements EvaluatePP {
             recModifierExp_1.msgs = Utils.clone(newMsgs);
             sentinel.stateChanged();
 
-            maildrop.put(user, Utils.clone(recModifierExp_1));
+            Utils.mapSeqUpdate(maildrop, user, Utils.clone(recModifierExp_1));
             sentinel.stateChanged();
         } finally {
             sentinel.leaving(((POP3Server_sentinel) sentinel).SetUserMessages);

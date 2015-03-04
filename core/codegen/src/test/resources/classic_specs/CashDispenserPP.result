@@ -399,11 +399,11 @@ public class CentralResource {
     }
 
     public void ResetNumberOfTries(final Number cardId) {
-        numberOfTries.put(cardId, 0L);
+        Utils.mapSeqUpdate(numberOfTries, cardId, 0L);
     }
 
     public void IncrNumberOfTries(final Number cardId) {
-        numberOfTries.put(cardId,
+        Utils.mapSeqUpdate(numberOfTries, cardId,
             ((Number) MapUtil.get(numberOfTries, cardId)).longValue() + 1L);
     }
 
