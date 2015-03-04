@@ -46,6 +46,7 @@ import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.intf.lex.ILexRealToken;
 import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.patterns.AExpressionPattern;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
@@ -80,6 +81,7 @@ import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.FlatCheckedEnvironment;
+import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
@@ -1121,7 +1123,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		for (ACaseAlternative c : node.getCases())
 		{
-			rtypes.add(question.assistantFactory.createACaseAlternativeAssistant().typeCheck(c, THIS, question, expType));
+			rtypes.add(typeCheck(c, THIS, question, expType));
 		}
 
 		if (node.getOthers() != null)
@@ -3468,5 +3470,54 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		return start + Utils.listToString(node.getArgs())
 				+ (close ? ")" : ", ");
+	}
+	
+	public PType typeCheck(ACaseAlternative c,
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
+			TypeCheckInfo question, PType expType) throws AnalysisException
+	{
+
+		if (c.getDefs().size() == 0)
+		{
+			// c.setDefs(new ArrayList<PDefinition>());
+			question.assistantFactory.createPPatternAssistant().typeResolve(c.getPattern(), rootVisitor, new TypeCheckInfo(question.assistantFactory, question.env));
+
+			if (c.getPattern() instanceof AExpressionPattern)
+			{
+				// Only expression patterns need type checking...
+				AExpressionPattern ep = (AExpressionPattern) c.getPattern();
+				PType ptype = ep.getExp().apply(rootVisitor, new TypeCheckInfo(question.assistantFactory, question.env, question.scope));
+
+				if (!question.assistantFactory.getTypeComparator().compatible(ptype, expType))
+				{
+					TypeCheckerErrors.report(3311, "Pattern cannot match", c.getPattern().getLocation(), c.getPattern());
+				}
+			}
+
+			try
+			{
+				question.assistantFactory.createPPatternAssistant().typeResolve(c.getPattern(), rootVisitor, new TypeCheckInfo(question.assistantFactory, question.env));
+				c.getDefs().addAll(question.assistantFactory.createPPatternAssistant().getDefinitions(c.getPattern(), expType, NameScope.LOCAL));
+			}
+			catch (TypeCheckException e)
+			{
+				c.getDefs().clear();
+				throw e;
+			}
+		}
+
+		question.assistantFactory.createPPatternAssistant().typeCheck(c.getPattern(), question, rootVisitor);
+		question.assistantFactory.createPDefinitionListAssistant().typeCheck(c.getDefs(), rootVisitor, new TypeCheckInfo(question.assistantFactory, question.env, question.scope));
+
+		if (!question.assistantFactory.createPPatternAssistant().matches(c.getPattern(), expType))
+		{
+			TypeCheckerErrors.report(3311, "Pattern cannot match", c.getPattern().getLocation(), c.getPattern());
+		}
+
+		Environment local = new FlatCheckedEnvironment(question.assistantFactory, c.getDefs(), question.env, question.scope);
+		question = question.newInfo(local);
+		c.setType(c.getResult().apply(rootVisitor, question));
+		local.unusedCheck();
+		return c.getType();
 	}
 }
