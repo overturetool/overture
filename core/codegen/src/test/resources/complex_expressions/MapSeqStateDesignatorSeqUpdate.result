@@ -4,19 +4,18 @@ import java.util.*;
 
 
 public class Entry {
-    private static VDMMap x = MapUtil.map(new Maplet(1L, true));
-
     public Entry() {
     }
 
     public static Object Run() {
-        x.put(4L, false);
+        VDMSeq xs = SeqUtil.seq(1L, 2L, 3L);
+        Utils.mapSeqUpdate(xs, 2L, 5L);
 
-        return Utils.clone(x);
+        return ((Number) xs.get(Utils.index(2L)));
     }
 
     public String toString() {
-        return "Entry{" + "x := " + Utils.toString(x) + "}";
+        return "Entry{}";
     }
 }
 

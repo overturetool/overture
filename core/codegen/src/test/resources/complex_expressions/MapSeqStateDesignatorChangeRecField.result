@@ -10,7 +10,7 @@ public class Entry {
     }
 
     public void modify() {
-        ((Rec) m.get(true)).field = 20L;
+        ((Rec) Utils.get(m, true)).field = 20L;
     }
 
     public Number read() {

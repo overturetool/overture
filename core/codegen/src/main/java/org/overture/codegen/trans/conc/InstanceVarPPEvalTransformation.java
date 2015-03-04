@@ -14,7 +14,7 @@ import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
-import org.overture.codegen.cgast.statements.AMapPutStmCG;
+import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.ir.IRGeneratedTag;
 import org.overture.codegen.ir.IRInfo;
@@ -67,7 +67,7 @@ public class InstanceVarPPEvalTransformation extends DepthFirstAnalysisAdaptor
 	}
 	
 	@Override
-	public void caseAMapPutStmCG(AMapPutStmCG node) throws AnalysisException
+	public void caseAMapSeqUpdateStmCG(AMapSeqUpdateStmCG node) throws AnalysisException
 	{
 		handleStateUpdate(node);
 	}

@@ -63,8 +63,8 @@ import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.AIncrementStmCG;
 import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
-import org.overture.codegen.cgast.statements.AMapPutStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
+import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
 import org.overture.codegen.cgast.statements.ANewObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
 import org.overture.codegen.cgast.statements.APlainCallStmCG;
@@ -346,8 +346,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AStartlistStmCG.class, templateStructure.STM_PATH 
 				+ "Startlist");
 
-		nodeTemplateFileNames.put(AMapPutStmCG.class, templateStructure.STM_PATH 
-				+ "MapPut");
+		nodeTemplateFileNames.put(AMapSeqUpdateStmCG.class, templateStructure.STM_PATH 
+				+ "MapSeqUpdate");
 		
 		// Expressions
 
@@ -432,8 +432,8 @@ public class TemplateManager
 		nodeTemplateFileNames.put(AHistoryExpCG.class, templateStructure.EXP_PATH 
 				+ "HistoryExp");
 		
-		nodeTemplateFileNames.put(AMapGetExpCG.class, templateStructure.EXP_PATH 
-				+ "MapGet");
+		nodeTemplateFileNames.put(AMapSeqGetExpCG.class, templateStructure.EXP_PATH 
+				+ "MapSeqGet");
 		
 		// Is expressions
 		

@@ -127,7 +127,7 @@ public class Plant {
             ternaryIfExp_1 = SetUtil.set(ex);
         }
 
-        schedule.put(p, ternaryIfExp_1);
+        Utils.mapSeqUpdate(schedule, p, ternaryIfExp_1);
     }
 
     public void RemoveExpertFromSchedule(final Token p, final Expert ex) {

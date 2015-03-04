@@ -9,8 +9,8 @@ import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
-import org.overture.codegen.cgast.statements.AMapPutStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
+import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
@@ -30,23 +30,23 @@ public class AssignStmTransformation extends DepthFirstAnalysisAdaptor
 			throws AnalysisException
 	{
 		SStmCG newNode = null;
+		
 		if(node.getTarget() instanceof AMapSeqStateDesignatorCG)
 		{
 			AMapSeqStateDesignatorCG target = (AMapSeqStateDesignatorCG) node.getTarget();
 
-			SExpCG mapExp = target.getMapseq().apply(converter);
-			
-			SExpCG domValue = target.getExp();
-			SExpCG rngValue = node.getExp();
+			SExpCG col = target.getMapseq().apply(converter);
+			SExpCG index = target.getExp();
+			SExpCG value = node.getExp();
 
-			AMapPutStmCG mapPut = new AMapPutStmCG();
-			mapPut.setMap(mapExp);
-			mapPut.setDomValue(domValue.clone());
-			mapPut.setRngValue(rngValue.clone());
-			mapPut.setSourceNode(node.getSourceNode());
-			mapPut.setTag(node.getTag());
+			AMapSeqUpdateStmCG mapSeqUpd = new AMapSeqUpdateStmCG();
+			mapSeqUpd.setCol(col);
+			mapSeqUpd.setIndex(index.clone());
+			mapSeqUpd.setValue(value.clone());
+			mapSeqUpd.setSourceNode(node.getSourceNode());
+			mapSeqUpd.setTag(node.getTag());
 			
-			newNode = mapPut;
+			newNode = mapSeqUpd;
 
 		}
 		else

@@ -3,11 +3,15 @@ package org.overture.codegen.tests;
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Assert;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.node.INode;
+import org.overture.ast.statements.AIdentifierStateDesignator;
+import org.overture.codegen.analysis.vdm.IdStateDesignatorDefCollector;
 import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.vdm.VarShadowingRenamer;
 import org.overture.codegen.logging.Logger;
@@ -64,11 +68,13 @@ public class VarShadowingTestCase extends BaseTestCase
 		try
 		{
 			TypeCheckResult<List<SClassDefinition>> originalSpecTcResult = TypeCheckerUtil.typeCheckPp(file);
+			Map<AIdentifierStateDesignator, PDefinition> idDefs = IdStateDesignatorDefCollector.getIdDefs(originalSpecTcResult.result);
 
 			Assert.assertTrue(getName() + " has type errors", originalSpecTcResult.errors.isEmpty());
 			Value orgSpecResult = evalSpec(originalSpecTcResult.result);
 			
-			List<Renaming> renamings = new VarShadowingRenamer().computeRenamings(originalSpecTcResult.result, af);
+			
+			List<Renaming> renamings = new VarShadowingRenamer().computeRenamings(originalSpecTcResult.result, af, idDefs);
 
 			StringBuilder sb = GeneralUtils.readLines(file, "\n");
 			

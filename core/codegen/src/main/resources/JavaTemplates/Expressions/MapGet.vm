@@ -1,5 +1,0 @@
-#set( $map = $JavaFormat.format($node.getMap()) )
-#set( $domValue = $JavaFormat.format($node.getDomValue()) )
-#set( $type = $JavaFormat.format($node.getType()) )
-##
-((${type}) ${map}.get(${domValue}))

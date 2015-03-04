@@ -1,9 +1,12 @@
 package org.overture.codegen.analysis.vdm;
 
 import java.util.List;
+import java.util.Map;
 
 import org.overture.ast.analysis.AnalysisException;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class VarShadowingRenamer
@@ -15,9 +18,9 @@ public class VarShadowingRenamer
 	}
 
 	public List<Renaming> computeRenamings(List<SClassDefinition> classes,
-			ITypeCheckerAssistantFactory af) throws AnalysisException
+			ITypeCheckerAssistantFactory af, Map<AIdentifierStateDesignator, PDefinition> idDefs) throws AnalysisException
 	{
-		VarShadowingRenameCollector renamer = new VarShadowingRenameCollector(af);
+		VarShadowingRenameCollector renamer = new VarShadowingRenameCollector(af, idDefs);
 
 		for (SClassDefinition clazz : classes)
 		{
