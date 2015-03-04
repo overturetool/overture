@@ -2,4 +2,4 @@
 #set( $index = $JavaFormat.format($node.getIndex()) )
 #set( $type = $JavaFormat.format($node.getType()) )
 ##
-((${type}) ${col}.get(${index}))
+((${type}) Utils.get(${col},${index}))

@@ -41,6 +41,24 @@ public class Utils
 		return hashcode;
 	}
 	
+	public static Object get(Object col, Object index)
+	{
+		if(col instanceof VDMSeq)
+		{
+			VDMSeq seq = (VDMSeq) col;
+			return seq.get(Utils.index(index));
+		}
+		else if(col instanceof VDMMap)
+		{
+			VDMMap map = (VDMMap) col;
+			return map.get(index);
+		}
+		else
+		{
+			throw new IllegalArgumentException("Only a map or a sequence can be read");
+		}
+	}
+	
 	@SuppressWarnings("unchecked")
 	public static void mapSeqUpdate(Object col, Object index, Object value)
 	{
