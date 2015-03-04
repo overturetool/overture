@@ -50,8 +50,7 @@ public class Utils
 		}
 		else if(col instanceof VDMMap)
 		{
-			VDMMap map = (VDMMap) col;
-			return map.get(index);
+			return MapUtil.get((VDMMap) col, index);
 		}
 		else
 		{
