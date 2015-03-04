@@ -98,10 +98,8 @@ public class TypeEqualityChecker extends QuestionAnswerAdaptor<Object, Boolean>
 		}
 
 		AFunctionType fo = (AFunctionType) other;
-		return type.getPartial() == fo.getPartial() && // FIXME:The Below statement doesn't work correct. I cannot Apply
-														// with this syntax.
-				type.getResult().apply(this, fo.getResult()) && // type.getParameters().apply(this,fo.getParameters()));
-				// PTypeAssistantTC.equals(type.getResult(),fo.getResult()) &&
+		return type.getPartial() == fo.getPartial() && 
+				type.getResult().apply(this, fo.getResult()) && 
 				af.createPTypeAssistant().equals(type.getParameters(), fo.getParameters());
 	}
 
@@ -152,7 +150,7 @@ public class TypeEqualityChecker extends QuestionAnswerAdaptor<Object, Boolean>
 			// return PTypeAssistantTC.equals(type.getFrom(),mt.getFrom()) && PTypeAssistantTC.equals(type.getTo(),
 			// mt.getTo());
 			return type.getFrom().apply(this, mt.getFrom())
-					&& type.getTo().apply(this, mt.getTo()); // FIXME:The same problem here. THIS doesn't seem to work.
+					&& type.getTo().apply(this, mt.getTo());
 		}
 
 		return false;
@@ -172,9 +170,7 @@ public class TypeEqualityChecker extends QuestionAnswerAdaptor<Object, Boolean>
 		AOperationType oother = (AOperationType) other;
 		return type.getResult().apply(this, oother.getResult())
 				&& af.createPTypeAssistant().equals(type.getParameters(), oother.getParameters());
-		// FIXME:The above statement cannot be changed to apply form.
-		// PTypeAssistantTC.equals(type.getResult(),oother.getResult()) &&
-		// PTypeAssistantTC.equals(type.getParameters(), oother.getParameters()));
+		
 	}
 
 	@Override
