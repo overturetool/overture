@@ -228,7 +228,7 @@ CG {-> package='org.overture.codegen.cgast'
            		[type]:CG.#type
            		[name]:java_String
            		[args]:CG.#exp*
-			|	{mapPut} [map]:CG.#exp [domValue]:CG.#exp [rngValue]:CG.#exp
+			|	{mapSeqUpdate} [col]:CG.#exp [index]:CG.#exp [value]:CG.#exp
            ;
 
 #call {-> package='org.overture.codegen.cgast.statements'
@@ -299,7 +299,7 @@ CG {-> package='org.overture.codegen.cgast'
     |	{history}[histype]:java_String [opsname]:java_String [sentinelType]:CG.#type.class
     |	{time}
     |	{assignExp} [target]:CG.#exp [value]:CG.#exp
-    |	{mapGet} [map]:CG.#exp [domValue]:CG.#exp
+    |	{mapSeqGet} [col]:CG.#exp [index]:CG.#exp
     ;
 
 #modifier {-> package='org.overture.codegen.cgast.expressions'}

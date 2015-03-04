@@ -1,5 +1,0 @@
-#set( $map = $JavaFormat.format($node.getMap()) )
-#set( $domValue = $JavaFormat.format($node.getDomValue()) )
-#set( $rngValue = $JavaFormat.format($node.getRngValue()) )
-##
-${map}.put(${domValue}, ${rngValue});

@@ -43,7 +43,7 @@ import org.overture.codegen.cgast.expressions.AInSetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AIndicesUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
 import org.overture.codegen.cgast.expressions.ALenUnaryExpCG;
-import org.overture.codegen.cgast.expressions.AMapGetExpCG;
+import org.overture.codegen.cgast.expressions.AMapSeqGetExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetProperSubsetBinaryExpCG;
@@ -52,7 +52,7 @@ import org.overture.codegen.cgast.expressions.ATupleCompatibilityExpCG;
 import org.overture.codegen.cgast.expressions.ATupleSizeExpCG;
 import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
 import org.overture.codegen.cgast.statements.AForAllStmCG;
-import org.overture.codegen.cgast.statements.AMapPutStmCG;
+import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
@@ -229,21 +229,21 @@ public class JavaValueSemantics
 	{
 		INode parent = exp.parent();
 		
-		if(parent instanceof AMapPutStmCG)
+		if(parent instanceof AMapSeqUpdateStmCG)
 		{
-			AMapPutStmCG mapPut = (AMapPutStmCG) parent;
+			AMapSeqUpdateStmCG mapSeqUpd = (AMapSeqUpdateStmCG) parent;
 			
-			if(mapPut.getMap() == exp)
+			if(mapSeqUpd.getCol() == exp)
 			{
 				return true;
 			}
 		}
 		
-		if(parent instanceof AMapGetExpCG)
+		if(parent instanceof AMapSeqGetExpCG)
 		{
-			AMapGetExpCG mapGet = (AMapGetExpCG) parent;
+			AMapSeqGetExpCG mapSeqGet = (AMapSeqGetExpCG) parent;
 			
-			if(mapGet.getMap() == exp)
+			if(mapSeqGet.getCol() == exp)
 			{
 				return true;
 			}

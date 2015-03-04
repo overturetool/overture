@@ -8,7 +8,7 @@ import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.AnswerAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
-import org.overture.codegen.cgast.expressions.AMapGetExpCG;
+import org.overture.codegen.cgast.expressions.AMapSeqGetExpCG;
 import org.overture.codegen.cgast.statements.AFieldStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
@@ -62,18 +62,20 @@ public class StateDesignatorToExpCG extends AnswerAdaptor<SExpCG>
 	public SExpCG caseAMapSeqStateDesignatorCG(AMapSeqStateDesignatorCG node)
 			throws AnalysisException
 	{
-		SExpCG domValue = node.getExp();
-		SExpCG mapSeq = node.getMapseq().apply(this);
+		// Reading a map or a sequence on the left hand
+		// side of an assignment, e.g. m(1).field := 5;
+		
+		SExpCG index = node.getExp();
+		SExpCG col = node.getMapseq().apply(this);
 
-		AMapGetExpCG mapGet = new AMapGetExpCG();
-		mapGet.setType(node.getType().clone());
-		mapGet.setDomValue(domValue.clone());
-		mapGet.setMap(mapSeq);
-		mapGet.setSourceNode(node.getSourceNode());
-		mapGet.setTag(node.getTag());
+		AMapSeqGetExpCG mapSeqGet = new AMapSeqGetExpCG();
+		mapSeqGet.setType(node.getType().clone());
+		mapSeqGet.setIndex(index.clone());
+		mapSeqGet.setCol(col);
+		mapSeqGet.setSourceNode(node.getSourceNode());
+		mapSeqGet.setTag(node.getTag());
 
-		// e.g. ((Rec) m(true)).field := 2;
-		return mapGet;
+		return mapSeqGet;
 	}
 	
 	@Override
