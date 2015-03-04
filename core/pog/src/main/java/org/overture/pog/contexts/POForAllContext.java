@@ -39,6 +39,7 @@ import org.overture.ast.expressions.ASeqCompSeqExp;
 import org.overture.ast.expressions.ASetCompSetExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.factory.AstFactory;
+import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
 import org.overture.ast.patterns.ATypeMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
@@ -63,7 +64,7 @@ public class POForAllContext extends POContext
 	public POForAllContext(ASeqCompSeqExp exp,
 			IPogAssistantFactory assistantFactory)
 	{
-		this.bindings = assistantFactory.createASetBindAssistant().getMultipleBindList(exp.getSetBind());
+		this.bindings = getMultipleBindList(exp.getSetBind());
 	}
 
 	public POForAllContext(AForAllExp exp)
@@ -153,5 +154,15 @@ public class POForAllContext extends POContext
 		sb.append(" &");
 
 		return sb.toString();
+	}
+	
+	public List<PMultipleBind> getMultipleBindList(ASetBind bind)
+	{
+
+		List<PPattern> plist = new ArrayList<PPattern>();
+		plist.add(bind.getPattern());
+		List<PMultipleBind> mblist = new Vector<PMultipleBind>();
+		mblist.add(AstFactory.newASetMultipleBind(plist, bind.getSet()));
+		return mblist;
 	}
 }

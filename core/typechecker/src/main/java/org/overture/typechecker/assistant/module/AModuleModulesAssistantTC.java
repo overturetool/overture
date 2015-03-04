@@ -21,13 +21,18 @@
  */
 package org.overture.typechecker.assistant.module;
 
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Vector;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.assistant.IAstAssistant;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.intf.lex.ILexIdentifierToken;
+import org.overture.ast.modules.AModuleExports;
 import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.modules.PExport;
 import org.overture.typechecker.ModuleEnvironment;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
@@ -52,10 +57,10 @@ public class AModuleModulesAssistantTC implements IAstAssistant
 		{
 			if (!m.getIsDLModule())
 			{
-				m.getExportdefs().addAll(af.createAModuleExportsAssistant().getDefinitions(m.getExports(), m.getDefs()));
+				m.getExportdefs().addAll(getDefinitions(m.getExports(), m.getDefs()));
 			} else
 			{
-				m.getExportdefs().addAll(af.createAModuleExportsAssistant().getDefinitions(m.getExports()));
+				m.getExportdefs().addAll(getDefinitions(m.getExports()));
 			}
 		}
 	}
@@ -108,6 +113,76 @@ public class AModuleModulesAssistantTC implements IAstAssistant
 			af.createAModuleImportsAssistant().typeCheck(m.getImports(), new ModuleEnvironment(af, m));
 		}
 
+	}
+	
+	public Collection<? extends PDefinition> getDefinitions(
+			AModuleExports aModuleExports, LinkedList<PDefinition> actualDefs)
+	{
+		List<PDefinition> exportDefs = new Vector<PDefinition>();
+
+		for (List<PExport> etype : aModuleExports.getExports())
+		{
+			for (PExport exp : etype)
+			{
+				exportDefs.addAll(getDefinition(exp, actualDefs));
+			}
+		}
+
+		// Mark all exports as used
+
+		for (PDefinition d : exportDefs)
+		{
+			af.createPDefinitionAssistant().markUsed(d);
+		}
+
+		return exportDefs;
+	}
+
+	public Collection<? extends PDefinition> getDefinitions(
+			AModuleExports aModuleExports)
+	{
+		List<PDefinition> exportDefs = new Vector<PDefinition>();
+
+		for (List<PExport> etype : aModuleExports.getExports())
+		{
+			for (PExport exp : etype)
+			{
+				exportDefs.addAll(getDefinition(exp));
+			}
+		}
+
+		// Mark all exports as used
+
+		for (PDefinition d : exportDefs)
+		{
+			af.createPDefinitionAssistant().markUsed(d);
+		}
+
+		return exportDefs;
+	}
+	
+	public Collection<? extends PDefinition> getDefinition(PExport exp,
+			LinkedList<PDefinition> actualDefs)
+	{
+		try
+		{
+			return exp.apply(af.getExportDefinitionFinder(), actualDefs);
+		} catch (AnalysisException e)
+		{
+			return null;
+		}
+
+	}
+
+	public Collection<? extends PDefinition> getDefinition(PExport exp)
+	{
+		try
+		{
+			return exp.apply(af.getExportDefinitionListFinder());
+		} catch (AnalysisException e)
+		{
+			return null;
+		}
 	}
 
 }

@@ -317,7 +317,7 @@ public abstract class VdmToBExpressionConverter extends
 	}
 
 	@Override
-	public Node caseABooleanConstExp(ABooleanConstExp node)// FIXME: not yet check
+	public Node caseABooleanConstExp(ABooleanConstExp node)
 			throws AnalysisException
 	{
 
@@ -535,7 +535,7 @@ public abstract class VdmToBExpressionConverter extends
 	}
 
 	@Override
-	public Node caseAIndicesUnaryExp(AIndicesUnaryExp node)// FIXME: not yet check
+	public Node caseAIndicesUnaryExp(AIndicesUnaryExp node)
 			throws AnalysisException
 	{
 		LinkedList<PExp> seqmem = ((ASeqEnumSeqExp) node.getExp()).getMembers();
