@@ -95,7 +95,7 @@ public class AModuleImportsAssistantTC implements IAstAssistant
 		{
 			for (PImport imp : ofType)
 			{
-				defs.addAll(af.createPImportAssistant().getDefinitions(imp, from));
+				defs.addAll(getDefinitions(imp, from));
 			}
 		}
 
@@ -118,6 +118,17 @@ public class AModuleImportsAssistantTC implements IAstAssistant
 			}
 		}
 
+	}
+	
+	public List<PDefinition> getDefinitions(PImport imp, AModuleModules from)
+	{
+		try
+		{
+			return imp.apply(af.getImportDefinitionFinder(), from);
+		} catch (AnalysisException e)
+		{
+			return null;
+		}
 	}
 
 }

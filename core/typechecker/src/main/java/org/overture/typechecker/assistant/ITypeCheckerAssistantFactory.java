@@ -72,7 +72,6 @@ import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC
 import org.overture.typechecker.assistant.expression.SBinaryExpAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleImportsAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleModulesAssistantTC;
-import org.overture.typechecker.assistant.module.PImportAssistantTC;
 import org.overture.typechecker.assistant.pattern.AMapletPatternMapletAssistantTC;
 import org.overture.typechecker.assistant.pattern.APatternTypePairAssistant;
 import org.overture.typechecker.assistant.pattern.ATypeBindAssistantTC;
@@ -175,7 +174,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	//PExportAssistantTC createPExportAssistant();
 
-	PImportAssistantTC createPImportAssistant();
+	//PImportAssistantTC createPImportAssistant();
 
 	// pattern
 	// ABooleanPatternAssistantTC createABooleanPatternAssistant();
