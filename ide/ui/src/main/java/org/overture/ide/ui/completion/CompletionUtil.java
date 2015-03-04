@@ -51,9 +51,15 @@ public class CompletionUtil
 				
 				scanned.append(c);
 				
+				// The 'new' keyword
 				if(c=='n' && scanned.length()>3&& scanned.substring(scanned.length()-4, scanned.length()).matches("\\swen"))
 				{
 					
+					break;
+				}
+				// The 'mk_"
+				else if(c == 'm' && scanned.length() >= 3 && scanned.substring(scanned.length() - 3, scanned.length()).matches("_km"))
+				{
 					break;
 				}
 				

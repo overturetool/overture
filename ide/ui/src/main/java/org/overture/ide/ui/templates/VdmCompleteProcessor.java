@@ -70,6 +70,7 @@ public class VdmCompleteProcessor
 			case Dot:
 				break;
 			case Mk:
+				completeMK(info, document, calculatedProposals,offset);
 				break;
 			case New:
 				completeNew(info, document, calculatedProposals, offset);
@@ -100,6 +101,15 @@ public class VdmCompleteProcessor
 			}
 			proposals.add(proposal);
 
+		}
+	}
+
+	private void completeMK(VdmCompletionContext info, VdmDocument document,
+			List<ICompletionProposal> calculatedProposals, int offset) {
+
+		for(INode def : getAst(document))
+		{
+			completeRecords(offset, calculatedProposals, info, def);
 		}
 	}
 
@@ -162,6 +172,50 @@ public class VdmCompleteProcessor
 			{
 				e.printStackTrace();
 			}
+		}
+	}
+	
+	private void completeRecords(final int offset,
+			final List<ICompletionProposal> calculatedProposals,
+			VdmCompletionContext info, final INode def) {
+
+		try {
+			def.apply(new DepthFirstAnalysisAdaptor() {
+
+				@Override
+				public void caseARecordInvariantType(ARecordInvariantType arg0)
+						throws AnalysisException {
+					
+					String name = arg0.getName().getName();
+					IContextInformation info = new ContextInformation(name, name); //$NON-NLS-1$
+					
+					
+					
+					
+					String replacementString = name + "(";
+					String displayString = replacementString;
+					
+					String sep = "";
+
+					for (Iterator<AFieldField> iterator = arg0.getFields().iterator(); iterator.hasNext();)
+					{
+						AFieldField field = iterator.next();
+
+						replacementString += sep + field.getTagname().getName();
+						displayString += sep + field.toString();
+						sep = ", ";
+
+					}
+					
+					replacementString += ")";
+					displayString += ")";
+					
+					calculatedProposals.add(new CompletionProposal(replacementString , offset, 0, replacementString.length(), imgProvider.getImageLabel(def, 0), replacementString, info, displayString));
+				}
+			});
+		} catch (AnalysisException e) {
+			VdmUIPlugin.log("Completion error in " + getClass().getSimpleName()
+					+ "faild during record search", e);
 		}
 	}
 

@@ -38,11 +38,20 @@ public class VdmCompletionContext
 
 		index = rawScan.toString().indexOf("new");
 
-		// New must appear at the first index of the raw scan
+		// 'new' must appear at the first index of the raw scan
 		if (index == 0)
 		{
 			// Completion of constructors
 			consConstructorCallContext();
+			return;
+		}
+		
+		index = rawScan.toString().indexOf("mk_");
+		
+		// 'mk_' must appear at the first index of the raw scan
+		if(index == 0)
+		{
+			consMkContext();
 			return;
 		}
 
@@ -84,6 +93,22 @@ public class VdmCompletionContext
 
 		type = SearchType.New;
 	}
+	
+	/**
+	 * Constructs the completion context for a 'mk_' call
+	 * 
+	 */
+	private void consMkContext() {
+		
+		final int MK_LENGTH = "mk_".length();
+		
+		CharSequence subSeq = rawScan.subSequence(MK_LENGTH, rawScan.length());
+		processedScan = new StringBuffer(subSeq);
+		proposalPrefix = processedScan.toString().trim();
+		
+		type = SearchType.Mk;
+	}
+	
 
 /**
 	 * Constructs the completion context for quotes
