@@ -13,13 +13,13 @@ public class Entry {
         Utils.mapSeqUpdate(((VDMSeq) Utils.get(xs, SeqUtil.seq('a'))), 1L, 'x');
 
         if (Utils.equals(
-                    ((Character) ((VDMSeq) MapUtil.get(xs, SeqUtil.seq('a'))).get(
-                        Utils.index(1L))), 'x')) {
-            return ((Character) ((VDMSeq) MapUtil.get(xs, SeqUtil.seq('c'))).get(Utils.index(
-                    1L)));
+                    ((Character) Utils.get(
+                        ((VDMSeq) Utils.get(xs, SeqUtil.seq('a'))), 1L)), 'x')) {
+            return ((Character) Utils.get(((VDMSeq) Utils.get(xs,
+                    SeqUtil.seq('c'))), 1L));
         } else {
-            return ((Character) ((VDMSeq) MapUtil.get(xs, SeqUtil.seq('a'))).get(Utils.index(
-                    1L)));
+            return ((Character) Utils.get(((VDMSeq) Utils.get(xs,
+                    SeqUtil.seq('a'))), 1L));
         }
     }
 

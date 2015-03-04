@@ -120,7 +120,7 @@ public class NoteBook {
 
             for (Long i = 1L; i <= toVar_1; i++) {
                 VDMSeq reversed = nb1.getReverseMessages();
-                IO.println(Utils.clone(((VDMSeq) reversed.get(Utils.index(i)))));
+                IO.println(Utils.clone(((VDMSeq) Utils.get(reversed, i))));
             }
 
             IO.print(SeqUtil.seq('\n'));
@@ -214,7 +214,7 @@ public class NoteBook {
     }
 
     public VDMSeq getMessage(final Number index) {
-        return Utils.clone(((VDMSeq) messages.get(Utils.index(index))));
+        return Utils.clone(((VDMSeq) Utils.get(messages, index)));
     }
 
     public Boolean isMessage(final Number index, final VDMSeq message) {

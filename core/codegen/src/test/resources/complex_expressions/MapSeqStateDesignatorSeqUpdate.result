@@ -11,7 +11,7 @@ public class Entry {
         VDMSeq xs = SeqUtil.seq(1L, 2L, 3L);
         Utils.mapSeqUpdate(xs, 2L, 5L);
 
-        return ((Number) xs.get(Utils.index(2L)));
+        return ((Number) Utils.get(xs, 2L));
     }
 
     public String toString() {

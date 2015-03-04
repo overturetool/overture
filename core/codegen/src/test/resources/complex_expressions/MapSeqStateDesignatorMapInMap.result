@@ -16,13 +16,13 @@ public class Entry {
                 MapUtil.map(new Maplet(3L, 4L)))), 'c', 'x');
 
         if (Utils.equals(
-                    ((Character) MapUtil.get(
-                        ((VDMMap) MapUtil.get(xs,
-                            MapUtil.map(new Maplet(3L, 4L)))), 'c')), 'x')) {
-            return ((Character) MapUtil.get(((VDMMap) MapUtil.get(xs,
+                    ((Character) Utils.get(
+                        ((VDMMap) Utils.get(xs, MapUtil.map(new Maplet(3L, 4L)))),
+                        'c')), 'x')) {
+            return ((Character) Utils.get(((VDMMap) Utils.get(xs,
                     MapUtil.map(new Maplet(1L, 2L)))), 'a'));
         } else {
-            return ((Character) MapUtil.get(((VDMMap) MapUtil.get(xs,
+            return ((Character) Utils.get(((VDMMap) Utils.get(xs,
                     MapUtil.map(new Maplet(3L, 4L)))), 'c'));
         }
     }

@@ -15,13 +15,14 @@ public class Entry {
             1L, 'x');
 
         if (Utils.equals(
-                    ((Character) ((VDMSeq) ((VDMSeq) xs.get(Utils.index(2L))).get(
-                        Utils.index(1L))).get(Utils.index(1L))), 'x')) {
-            return ((Character) ((VDMSeq) ((VDMSeq) xs.get(Utils.index(2L))).get(Utils.index(
-                    2L))).get(Utils.index(2L)));
+                    ((Character) Utils.get(
+                        ((VDMSeq) Utils.get(((VDMSeq) Utils.get(xs, 2L)), 1L)),
+                        1L)), 'x')) {
+            return ((Character) Utils.get(((VDMSeq) Utils.get(
+                    ((VDMSeq) Utils.get(xs, 2L)), 2L)), 2L));
         } else {
-            return ((Character) ((VDMSeq) ((VDMSeq) xs.get(Utils.index(1L))).get(Utils.index(
-                    2L))).get(Utils.index(1L)));
+            return ((Character) Utils.get(((VDMSeq) Utils.get(
+                    ((VDMSeq) Utils.get(xs, 1L)), 2L)), 1L));
         }
     }
 

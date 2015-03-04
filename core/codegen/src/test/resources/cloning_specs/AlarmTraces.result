@@ -78,7 +78,7 @@ public class Plant {
     public Expert ExpertToPage(final Alarm a, final Token p) {
         Expert expert = null;
         Boolean success_1 = false;
-        VDMSet set_1 = ((VDMSet) MapUtil.get(schedule, p));
+        VDMSet set_1 = ((VDMSet) Utils.get(schedule, p));
 
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && !(success_1);) {
@@ -94,7 +94,7 @@ public class Plant {
     }
 
     public Number NumberOfExperts(final Token p) {
-        return ((VDMSet) MapUtil.get(schedule, p)).size();
+        return ((VDMSet) Utils.get(schedule, p)).size();
     }
 
     public VDMSet ExpertIsOnDuty(final Expert ex) {
@@ -104,7 +104,7 @@ public class Plant {
         for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext();) {
             Token p = ((Token) iterator_2.next());
 
-            if (((VDMSet) MapUtil.get(schedule, p)).contains(ex)) {
+            if (((VDMSet) Utils.get(schedule, p)).contains(ex)) {
                 setCompResult_1 = SetUtil.union(setCompResult_1, SetUtil.set(p));
             }
         }
@@ -121,7 +121,7 @@ public class Plant {
         VDMSet ternaryIfExp_1 = null;
 
         if (MapUtil.dom(schedule).contains(p)) {
-            ternaryIfExp_1 = SetUtil.union(((VDMSet) MapUtil.get(schedule, p)),
+            ternaryIfExp_1 = SetUtil.union(((VDMSet) Utils.get(schedule, p)),
                     SetUtil.set(ex));
         } else {
             ternaryIfExp_1 = SetUtil.set(ex);
@@ -131,7 +131,7 @@ public class Plant {
     }
 
     public void RemoveExpertFromSchedule(final Token p, final Expert ex) {
-        VDMSet exs = ((VDMSet) MapUtil.get(schedule, p));
+        VDMSet exs = ((VDMSet) Utils.get(schedule, p));
 
         VDMMap ternaryIfExp_2 = null;
 
@@ -155,7 +155,7 @@ public class Plant {
         for (Iterator iterator_3 = set_3.iterator();
                 iterator_3.hasNext() && forAllExpResult_1;) {
             Token p = ((Token) iterator_3.next());
-            forAllExpResult_1 = !(((VDMSet) MapUtil.get(sch, p)).isEmpty());
+            forAllExpResult_1 = !(((VDMSet) Utils.get(sch, p)).isEmpty());
         }
 
         if (forAllExpResult_1) {
@@ -172,7 +172,7 @@ public class Plant {
                         iterator_5.hasNext() && forAllExpResult_3;) {
                     Token p = ((Token) iterator_5.next());
                     Boolean existsExpResult_1 = false;
-                    VDMSet set_6 = ((VDMSet) MapUtil.get(sch, p));
+                    VDMSet set_6 = ((VDMSet) Utils.get(sch, p));
 
                     for (Iterator iterator_6 = set_6.iterator();
                             iterator_6.hasNext() && !(existsExpResult_1);) {

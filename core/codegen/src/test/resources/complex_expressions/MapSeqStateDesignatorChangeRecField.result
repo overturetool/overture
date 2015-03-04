@@ -14,7 +14,7 @@ public class Entry {
     }
 
     public Number read() {
-        return ((Rec) MapUtil.get(m, true)).field;
+        return ((Rec) Utils.get(m, true)).field;
     }
 
     public static Object Run() {

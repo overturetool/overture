@@ -49,7 +49,7 @@ public class Entry {
 
         for (Long i = 1L; i <= toVar_1; i++) {
             if (!(Utils.equals(i, 3L))) {
-                Object obj_1 = hr.get(Utils.index(i));
+                Object obj_1 = Utils.get(hr, i);
 
                 Number apply_1 = null;
 
