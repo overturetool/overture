@@ -10,10 +10,12 @@ Abstract Syntax Tree
 CG = #decl
     ;
 
+
 #decl {-> package='org.overture.cgisa.extast.declarations'}
-    = {mrFuncGroup}
-        [funcs]:CG.#decl.func*
-    | {extClass}
-       [baseClass]:CG.#decl.class
-     [mutrecfuncs]:CG.#decl.mrFuncGroup*
-    ;
+       = {mrFuncGroup}
+          [funcs]:CG.#decl.func*
+       | {class}
+           [mutrecfuncs]:CG.#decl.mrFuncGroup*
+       | {extClass}
+           [baseClass]:CG.#decl.class
+       ;
