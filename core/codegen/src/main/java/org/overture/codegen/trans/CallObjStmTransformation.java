@@ -9,7 +9,7 @@ import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectStmCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.trans.uniontypes.ObjectDesignatorToExpCG;
+import org.overture.codegen.trans.conv.ObjectDesignatorToExpCG;
 
 public class CallObjStmTransformation extends DepthFirstAnalysisAdaptor
 {

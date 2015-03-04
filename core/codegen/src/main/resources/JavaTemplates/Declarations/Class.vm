@@ -40,7 +40,11 @@ $abstract $node.getAccess() $static class $node.getName() $JavaFormat.formatSupe
 	#foreach( $method in $node.getMethods() )
 	$JavaFormat.format($method)
 	#end
-
+	##
+	#if ($JavaFormat.isMainClass($node))
+	$node.getTag().getMainMethod()
+	#end
+	
 	#foreach( $typeDecl in $node.getTypeDecls() )
 		#if (!$JavaFormat.isNamedTypeDecl($typeDecl))
 		$JavaFormat.format($typeDecl)

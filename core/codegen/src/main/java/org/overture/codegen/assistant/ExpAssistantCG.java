@@ -29,6 +29,7 @@ import java.util.Set;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AAssignmentDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
+import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
@@ -51,6 +52,7 @@ import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SMultipleBindCG;
 import org.overture.codegen.cgast.STypeCG;
+import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.expressions.ABoolIsExpCG;
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG;
 import org.overture.codegen.cgast.expressions.ACaseAltExpExpCG;
@@ -58,7 +60,9 @@ import org.overture.codegen.cgast.expressions.ACharIsExpCG;
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AEnumSeqExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
+import org.overture.codegen.cgast.expressions.AExplicitVarExpCG;
 import org.overture.codegen.cgast.expressions.AGeneralIsExpCG;
+import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.AIntIsExpCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.expressions.AIsolationUnaryExpCG;
@@ -79,6 +83,7 @@ import org.overture.codegen.cgast.expressions.SQuantifierExpCG;
 import org.overture.codegen.cgast.expressions.SUnaryExpCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.statements.AForLoopStmCG;
+import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AWhileStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
@@ -97,6 +102,7 @@ import org.overture.codegen.cgast.types.AUnionTypeCG;
 import org.overture.codegen.cgast.types.SBasicTypeCG;
 import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
 import org.overture.codegen.ir.IRInfo;
+import org.overture.codegen.trans.assistants.TransAssistantCG;
 
 public class ExpAssistantCG extends AssistantBase
 {
@@ -349,7 +355,7 @@ public class ExpAssistantCG extends AssistantBase
 		return header;
 	}
 
-	public boolean existsOutsideOpOrFunc(PExp exp)
+	public boolean existsOutsideMethodOrTrace(PExp exp)
 	{
 		// The transformation of the 'and' and 'or' logical expressions also assumes that the
 		// expressions exist within a statement. However, in case it does not, the transformation
@@ -357,14 +363,15 @@ public class ExpAssistantCG extends AssistantBase
 		// still be used (say) in instance variable assignment.
 		
 		return exp.getAncestor(SOperationDefinition.class) == null
-				&& exp.getAncestor(SFunctionDefinition.class) == null;
+				&& exp.getAncestor(SFunctionDefinition.class) == null
+				&& exp.getAncestor(ANamedTraceDefinition.class) == null;
 	}
 
 	public SExpCG handleQuantifier(PExp node, List<PMultipleBind> bindings,
 			PExp predicate, SQuantifierExpCG quantifier, IRInfo question,
 			String nodeStr) throws AnalysisException
 	{
-		if (question.getExpAssistant().existsOutsideOpOrFunc(node))
+		if (question.getExpAssistant().existsOutsideMethodOrTrace(node))
 		{
 			question.addUnsupportedNode(node, String.format("Generation of a %s is only supported within operations/functions", nodeStr));
 			return null;
@@ -553,5 +560,34 @@ public class ExpAssistantCG extends AssistantBase
 		basicIsExp.setExp(expCg);
 
 		return basicIsExp;
+	}
+	
+	public SExpCG idStateDesignatorToExp(IRInfo info, TransAssistantCG transAssistant, List<AClassDeclCG> classes, AIdentifierStateDesignatorCG node)
+	{
+		if(node.getExplicit())
+		{
+			AClassTypeCG classType = new AClassTypeCG();
+			classType.setName(node.getClassName());
+			
+			AExplicitVarExpCG explicitVar = new AExplicitVarExpCG();
+			explicitVar.setClassType(classType);
+			explicitVar.setIsLambda(false);
+			explicitVar.setIsLocal(node.getIsLocal());
+			explicitVar.setName(node.getName());
+			explicitVar.setSourceNode(node.getSourceNode());
+			explicitVar.setTag(node.getTag());
+			explicitVar.setType(node.getType().clone());
+			
+			return explicitVar;
+		}
+		else
+		{
+			AIdentifierVarExpCG idVar = transAssistant.consIdentifierVar(node.getName(), node.getType().clone());
+			idVar.setTag(node.getTag());
+			idVar.setSourceNode(node.getSourceNode());
+			idVar.setIsLocal(node.getIsLocal());
+			
+			return idVar;
+		}
 	}
 }

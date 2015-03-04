@@ -8,12 +8,46 @@ import org.overture.ast.util.ToStringUtil;
 %CG->#decl->class = [name]
 
 
+//start
+
+// patterns
+%CG->#pattern->identifier = [name]
+%CG->#pattern->ignore = "-" 
+%CG->#pattern->bool = [value]
+%CG->#pattern->char = [value]
+%CG->#pattern->int = [value]
+%CG->#pattern->null = "null"
+%CG->#pattern->quote =  [value]
+%CG->#pattern->real =  [value]
+%CG->#pattern->string =  [value]
+%CG->#pattern->tuple = "mk_(" + $Utils.listToString($[patterns]$)$ + ")"
+%CG->#pattern->record = [typename] "_(" + $Utils.listToString($[patterns]$)$ + ")"
+
+// binds
+%CG->#bind->set = ""+ [pattern] + " in set " [set];
+
+
+// multiple binds
+%CG->multipleBind->set = ""+ $Utils.listToString($[patterns]$)$ + " in set " [set];
+
+
+// names
+%CG->name->type = [name]
+%CG->name->token = [name] 
+
+//end
+
 // Object designator
 %CG->#objectDesignator->identifier = [exp];
 %CG->#objectDesignator->apply = [object] "(" + $Utils.listToString($[args]$)$ + ")"
 %CG->#objectDesignator->field = [object]+"."+[fieldName]
 %CG->#objectDesignator->new = "new "+[exp]
 %CG->#objectDesignator->self = "self"
+
+// State designators
+%CG->#stateDesignator->identifier = [name]
+%CG->#stateDesignator->field = [object] "." [field]
+%CG->#stateDesignator->mapSeq = [mapseq] "(" + [exp] + ")"
 
 // Types
 //#basic
@@ -51,3 +85,9 @@ import org.overture.ast.util.ToStringUtil;
 %CG->#exp->#Var->identifier = [name]
 %CG->#exp->#Var->explicit = [name]
 %CG->#exp->#Var->super = [name]
+
+
+%CG->#exp->apply = [root] "(" + $Utils.listToString($[args]$)$ + ")"
+%CG->#exp->field = [object] + "." + [memberName]
+%CG->#exp->new = [name] "(" + $Utils.listToString($[args]$)$ + ")"
+%CG->#exp->self = "self"

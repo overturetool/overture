@@ -6,4 +6,16 @@ public class VDMUtil
 	{
 		return Utils.toString(value);
 	}
+
+	public static String classname(Object obj)
+	{
+		if(obj != null && obj.getClass().getEnclosingClass() == null)
+		{
+			return obj.getClass().getSimpleName();
+		}
+		else
+		{
+			return null;
+		}
+	}
 }

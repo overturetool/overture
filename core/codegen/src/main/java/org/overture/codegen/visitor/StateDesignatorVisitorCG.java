@@ -68,7 +68,8 @@ public class StateDesignatorVisitorCG extends
 		String name = node.getName().getName();
 		String className = node.getName().getModule();
 		boolean explicit = node.getName().getExplicit();
-
+		boolean isLocal = question.getDeclAssistant().isLocal(node, question);
+		
 		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
 
 		AIdentifierStateDesignatorCG idStateDesignatorCg = new AIdentifierStateDesignatorCG();
@@ -76,6 +77,7 @@ public class StateDesignatorVisitorCG extends
 		idStateDesignatorCg.setName(name);
 		idStateDesignatorCg.setClassName(className);
 		idStateDesignatorCg.setExplicit(explicit);
+		idStateDesignatorCg.setIsLocal(isLocal);
 
 		return idStateDesignatorCg;
 	}

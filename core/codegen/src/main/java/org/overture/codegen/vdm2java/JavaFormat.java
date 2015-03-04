@@ -68,7 +68,6 @@ import org.overture.codegen.cgast.expressions.SNumericBinaryExpCG;
 import org.overture.codegen.cgast.expressions.SUnaryExpCG;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
-import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AForLoopStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
@@ -290,37 +289,6 @@ public class JavaFormat
 	public static boolean isMapSeq(SStateDesignatorCG stateDesignator)
 	{
 		return stateDesignator instanceof AMapSeqStateDesignatorCG;
-	}
-
-	public String formatMapSeqStateDesignator(AMapSeqStateDesignatorCG mapSeq)
-			throws AnalysisException
-	{
-		INode parent = mapSeq.parent();
-
-		SStateDesignatorCG stateDesignator = mapSeq.getMapseq();
-		SExpCG domValue = mapSeq.getExp();
-
-		String stateDesignatorStr = format(stateDesignator);
-		String domValStr = format(domValue);
-
-		if (parent instanceof AAssignmentStmCG)
-		{
-			AAssignmentStmCG assignment = (AAssignmentStmCG) parent;
-			SExpCG rngValue = assignment.getExp();
-			String rngValStr = format(rngValue);
-
-			// e.g. counters.put("c1", 4);
-			return stateDesignatorStr + ".put(" + domValStr + ", " + rngValStr
-					+ ")";
-		} else
-		{
-			STypeCG type = mapSeq.getType();
-			String typeStr = format(type);
-
-			// e.g. ((Rec) m(true)).field := 2;
-			return "( (" + typeStr + ")" + format(mapSeq.getMapseq()) + ".get("
-					+ domValStr + "))";
-		}
 	}
 
 	private String getNumberDereference(INode node, boolean ignoreContext)
@@ -928,5 +896,10 @@ public class JavaFormat
 	public static boolean isScoped(ABlockStmCG block)
 	{
 		return block != null && block.getScoped() != null && block.getScoped();
+	}
+	
+	public static boolean isMainClass(AClassDeclCG clazz)
+	{
+		return clazz != null && clazz.getTag() instanceof JavaMainTag;
 	}
 }

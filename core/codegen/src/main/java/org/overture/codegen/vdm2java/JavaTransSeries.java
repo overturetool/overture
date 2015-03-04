@@ -7,6 +7,7 @@ import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.ir.IRInfo;
+import org.overture.codegen.trans.AssignStmTransformation;
 import org.overture.codegen.trans.CallObjStmTransformation;
 import org.overture.codegen.trans.IPostCheckCreator;
 import org.overture.codegen.trans.IsExpTransformation;
@@ -53,6 +54,8 @@ public class JavaTransSeries
 		IRInfo irInfo = codeGen.getIRGenerator().getIRInfo();
 
 		CallObjStmTransformation callObjTransformation = new CallObjStmTransformation(irInfo, classes);
+		AssignStmTransformation assignTransformation = new AssignStmTransformation(irInfo, classes, transAssistant);
+		
 		PrePostTransformation prePostTransformation = new PrePostTransformation(irInfo);
 		IfExpTransformation ifExpTransformation = new IfExpTransformation(transAssistant);
 		FunctionValueTransformation funcValueTransformation = new FunctionValueTransformation(irInfo, transAssistant, functionValueAssistant, INTERFACE_NAME_PREFIX, TEMPLATE_TYPE_PREFIX, EVAL_METHOD_PREFIX, PARAM_NAME_PREFIX);
@@ -74,6 +77,7 @@ public class JavaTransSeries
 		JavaClassToStringTrans javaToStringTransformation = new JavaClassToStringTrans(irInfo);
 
 		DepthFirstAnalysisAdaptor[] analyses = new DepthFirstAnalysisAdaptor[] {
+				assignTransformation,
 				callObjTransformation,
 				funcTransformation, prePostTransformation, ifExpTransformation,
 				funcValueTransformation, transVisitor, patternTransformation,

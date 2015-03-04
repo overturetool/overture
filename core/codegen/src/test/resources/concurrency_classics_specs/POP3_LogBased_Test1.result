@@ -103,8 +103,6 @@ public class Log implements EvaluatePP {
                     iterator_13.hasNext();) {
                 String m = (String) iterator_13.next();
                 output = output + m + "\n";
-
-                sentinel.stateChanged();
             }
 
             return output;
@@ -638,7 +636,6 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
                             }
 
                             response = ternaryIfExp_1;
-                            sentinel.stateChanged();
                         }
                     }
                 } else {
@@ -646,7 +643,6 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
                 }
             } else {
                 response = new POP3Types.OkResponse(quitMsg);
-                sentinel.stateChanged();
             }
 
             return response;
@@ -1244,7 +1240,6 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
         sentinel.stateChanged();
 
         cmd = msgChannel.ServerListen();
-        sentinel.stateChanged();
 
         Boolean whileCond1 = true;
 
@@ -1257,7 +1252,6 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
 
             msgChannel.ServerSend(ReceiveCommand(((Object) cmd)));
             cmd = msgChannel.ServerListen();
-            sentinel.stateChanged();
         }
 
         msgChannel.ServerSend(ReceiveCommand(((Object) cmd)));
@@ -1593,8 +1587,6 @@ public class POP3Server extends VDMThread implements EvaluatePP {
                     seqCompResult_2 = SeqUtil.conc(Utils.clone(seqCompResult_2),
                             SeqUtil.seq(
                                 ((POP3Message) oldMsgs.get(Utils.index(i)))));
-
-                    sentinel.stateChanged();
                 }
             }
 
@@ -1743,8 +1735,6 @@ public class POP3Server extends VDMThread implements EvaluatePP {
                 seqCompResult_3 = SeqUtil.conc(Utils.clone(seqCompResult_3),
                         SeqUtil.seq(
                             ((POP3Message) oldMsgs.get(Utils.index(i))).Undelete()));
-
-                sentinel.stateChanged();
             }
 
             VDMSeq newMsgs = Utils.clone(seqCompResult_3);
@@ -1793,8 +1783,6 @@ public class POP3Server extends VDMThread implements EvaluatePP {
                                     seqCompResult_4),
                                 SeqUtil.seq(
                                     new MessageInfo(i, GetMessageSize(user, i))));
-
-                        sentinel.stateChanged();
                     }
                 }
 
@@ -1833,8 +1821,6 @@ public class POP3Server extends VDMThread implements EvaluatePP {
                 Number index = ((Number) iterator_8.next());
                 seqCompResult_5 = SeqUtil.conc(Utils.clone(seqCompResult_5),
                         SeqUtil.seq(GetUidl(user, index)));
-
-                sentinel.stateChanged();
             }
 
             return Utils.clone(seqCompResult_5);
@@ -1866,8 +1852,6 @@ public class POP3Server extends VDMThread implements EvaluatePP {
                 seqCompResult_6 = SeqUtil.conc(Utils.clone(seqCompResult_6),
                         SeqUtil.seq(
                             ((POP3Message) mb.msgs.get(Utils.index(i))).GetSize()));
-
-                sentinel.stateChanged();
             }
 
             return sumseq(Utils.clone(seqCompResult_6));
@@ -2574,7 +2558,6 @@ public class POP3TestListener extends VDMThread implements EvaluatePP {
 
             LogServer(((Object) response));
             response = mc.ClientListen();
-            sentinel.stateChanged();
         }
 
         LogServer(((Object) response));

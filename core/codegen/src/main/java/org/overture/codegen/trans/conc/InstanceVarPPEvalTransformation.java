@@ -2,23 +2,35 @@ package org.overture.codegen.trans.conc;
 
 import java.util.List;
 
+import org.overture.codegen.cgast.SStmCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
+import org.overture.codegen.cgast.expressions.SVarExpCG;
+import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
+import org.overture.codegen.cgast.statements.AMapPutStmCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
 import org.overture.codegen.ir.IRGeneratedTag;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 
+/**
+ * This transformation generates a "state change" call to the Sentinel class to make it re-evaluate permission
+ * predicates. It assumes all state updates to come from the local assignment statement, the assignment statement
+ * or the "map put statement".
+ * 
+ * @author pvj
+ */
 public class InstanceVarPPEvalTransformation extends DepthFirstAnalysisAdaptor
 {
+	//TODO: put constants somewhere appropriate
 	private static final String SENTINEL_FIELD_NAME = "sentinel";
 	private TransAssistantCG transAssistant;
 	private IRInfo info;
@@ -34,6 +46,33 @@ public class InstanceVarPPEvalTransformation extends DepthFirstAnalysisAdaptor
 	@Override
 	public void caseAAssignmentStmCG(AAssignmentStmCG node)
 			throws AnalysisException
+	{
+		handleStateUpdate(node);
+	}
+	
+	@Override
+	public void caseAAssignToExpStmCG(AAssignToExpStmCG node)
+			throws AnalysisException
+	{
+		if(node.getTarget() instanceof SVarExpCG)
+		{
+			SVarExpCG var = (SVarExpCG)node.getTarget();
+			if(var.getIsLocal())
+			{
+				return;
+			}
+		}
+		
+		handleStateUpdate(node);
+	}
+	
+	@Override
+	public void caseAMapPutStmCG(AMapPutStmCG node) throws AnalysisException
+	{
+		handleStateUpdate(node);
+	}
+	
+	private void handleStateUpdate(SStmCG node)
 	{
 		if(!info.getSettings().generateConc())
 		{
@@ -83,6 +122,7 @@ public class InstanceVarPPEvalTransformation extends DepthFirstAnalysisAdaptor
 		
 		ACallObjectExpStmCG callSentinel = new ACallObjectExpStmCG();
 		callSentinel.setObj(sentinelVar);
+		//TODO: put constants somewhere appropriate
 		callSentinel.setFieldName("stateChanged");
 		callSentinel.setType(new AVoidTypeCG());
 		
@@ -94,7 +134,7 @@ public class InstanceVarPPEvalTransformation extends DepthFirstAnalysisAdaptor
 		replacementBlock.getStatements().add(callSentinel);
 	}
 
-	private STypeCG getSentinelFieldType(AAssignmentStmCG node)
+	private STypeCG getSentinelFieldType(SStmCG node)
 	{
 		AClassDeclCG enclosingClass = node.getAncestor(AClassDeclCG.class);
 		
