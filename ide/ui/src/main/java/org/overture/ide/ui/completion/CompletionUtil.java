@@ -57,11 +57,17 @@ public class CompletionUtil
 					
 					break;
 				}
+//				//The 'mk_token'
+//				else if (c == 't' && scanned.length() >= 4 && scanned.substring(scanned.length() - 4, scanned.length()).matches("t_km"))
+//				{
+//					break;
+//				}
 				// The 'mk_"
 				else if(c == 'm' && scanned.length() >= 3 && scanned.substring(scanned.length() - 3, scanned.length()).matches("_km"))
 				{
 					break;
 				}
+				
 				
 
 			} catch (BadLocationException e)

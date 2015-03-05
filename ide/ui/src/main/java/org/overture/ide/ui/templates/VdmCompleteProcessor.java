@@ -36,6 +36,7 @@ import org.overture.ast.definitions.AExplicitOperationDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.expressions.AMkBasicExp;
 import org.overture.ast.expressions.AQuoteLiteralExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.modules.AModuleModules;
@@ -45,6 +46,7 @@ import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ARecordInvariantType;
+import org.overture.ast.types.ATokenBasicType;
 import org.overture.ast.types.PType;
 import org.overture.ide.ui.VdmUIPlugin;
 import org.overture.ide.ui.editor.core.VdmDocument;
@@ -110,7 +112,8 @@ public class VdmCompleteProcessor
 		for(INode def : getAst(document))
 		{
 			completeRecords(offset, calculatedProposals, info, def);
-		}
+			completeMk_tokens(offset,calculatedProposals,info, def);
+		}	
 	}
 
 	private void completeQuotes(final VdmCompletionContext info,
@@ -181,7 +184,6 @@ public class VdmCompleteProcessor
 
 		try {
 			def.apply(new DepthFirstAnalysisAdaptor() {
-
 				@Override
 				public void caseARecordInvariantType(ARecordInvariantType arg0)
 						throws AnalysisException {
@@ -217,6 +219,18 @@ public class VdmCompleteProcessor
 			VdmUIPlugin.log("Completion error in " + getClass().getSimpleName()
 					+ "faild during record search", e);
 		}
+		
+	}
+	
+	private void completeMk_tokens(final int offset,
+			final List<ICompletionProposal> calculatedProposals,
+			final VdmCompletionContext info, INode def) {
+		
+		String name = "token()";
+		String display = "mk_token() Token Representation, can take arbitary expression";
+		IContextInformation ctxtInfo = new ContextInformation(name, name); //$NON-NLS-1$
+		calculatedProposals.add(new CompletionProposal(name, offset, 0, name.length() - 1, imgProvider.getImageLabel(def, 0), name, ctxtInfo, display));
+		
 	}
 
 	public void completeTypes(VdmCompletionContext info, VdmDocument document,

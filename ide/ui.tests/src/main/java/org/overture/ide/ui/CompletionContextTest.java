@@ -12,7 +12,7 @@ public class CompletionContextTest
 	private static final String SEARCH_TYPE_ERROR_MSG = "Incorrect search type";
 	private static final String PROPOSAL_PREFIX_ERROR_MSG = "Incorrect proposal prefix";
 	private static final String OFFSET_ERROR_MSG = "Incorrect offset";
-
+	
 	@Test
 	public void testMk_RecName()
 	{

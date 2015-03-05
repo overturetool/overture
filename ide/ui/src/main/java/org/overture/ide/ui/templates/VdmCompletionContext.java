@@ -54,6 +54,15 @@ public class VdmCompletionContext
 			consMkContext();
 			return;
 		}
+		
+//		index = rawScan.toString().indexOf("mk_t");
+		
+		//for the 'mk_token' the user have to type mk_t
+//		if(index == 0)
+//		{
+//			consMK_tokenContext();
+//			return;
+//		}
 
 		// Completion for foo.bar. This covers things such as instance variables,
 		// values, a record, a tuple, operations and functions
@@ -109,6 +118,19 @@ public class VdmCompletionContext
 		type = SearchType.Mk;
 	}
 	
+	/**
+	 * Contrusts the completion context for the 'mk_token' call
+	 */
+//	private void consMK_tokenContext() {
+//		final int MK_LENGTH = "mk_t".length();
+//		
+//		CharSequence subSeq = rawScan.subSequence(MK_LENGTH, rawScan.length());
+//		processedScan = new StringBuffer(subSeq);
+//		proposalPrefix = processedScan.toString().trim();
+//		
+//		type = SearchType.Mk;
+//		
+//	}
 
 /**
 	 * Constructs the completion context for quotes
