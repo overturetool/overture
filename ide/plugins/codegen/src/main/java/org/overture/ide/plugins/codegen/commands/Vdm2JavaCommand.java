@@ -318,10 +318,18 @@ public class Vdm2JavaCommand extends AbstractHandler
 		Preferences preferences = InstanceScope.INSTANCE.getNode(ICodeGenConstants.PLUGIN_ID);
 		
 		boolean disableCloning = preferences.getBoolean(ICodeGenConstants.DISABLE_CLONING, ICodeGenConstants.DISABLE_CLONING_DEFAULT);
+		String javaPackage = preferences.get(ICodeGenConstants.JAVA_PACKAGE, ICodeGenConstants.JAVA_PACKAGE_DEFAULT);
 		
 		JavaSettings javaSettings = new JavaSettings();
 		javaSettings.setDisableCloning(disableCloning);
 		javaSettings.setClassesToSkip(classesToSkip);
+		javaSettings.setJavaRootPackage(javaPackage);
+		
+		if (!GeneralCodeGenUtils.isValidJavaPackage(javaSettings.getJavaRootPackage()))
+		{
+			javaSettings.setJavaRootPackage(project.getName());
+
+		}
 		
 		return javaSettings;
 	}

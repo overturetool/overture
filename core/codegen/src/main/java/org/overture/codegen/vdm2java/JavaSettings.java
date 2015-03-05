@@ -83,7 +83,7 @@ public class JavaSettings
 	{
 		if (GeneralCodeGenUtils.isValidJavaPackage(javaRootPackage))
 		{
-			this.javaRootPackage = javaRootPackage;
+			this.javaRootPackage = javaRootPackage.trim();
 		}
 	}
 }
