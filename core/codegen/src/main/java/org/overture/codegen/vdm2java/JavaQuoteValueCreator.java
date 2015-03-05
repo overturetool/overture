@@ -26,6 +26,7 @@ import org.overture.codegen.cgast.types.AObjectTypeCG;
 import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.utils.GeneralCodeGenUtils;
 
 public class JavaQuoteValueCreator extends JavaClassCreatorBase
 {
@@ -45,7 +46,7 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 		this.transformationAssistant = transformationAssistant;
 	}
 	
-	public AClassDeclCG consQuoteValue(String name)
+	public AClassDeclCG consQuoteValue(String name, String userCodePackage)
 	{
 		AClassDeclCG decl = new AClassDeclCG();
 		decl.setAbstract(false);
@@ -53,7 +54,16 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 		decl.setName(name);
 		decl.setStatic(false);
 		
-		decl.setPackage(CodeGenBase.QUOTES);
+		// The package where the quotes are put is userCode.quotes
+		if(GeneralCodeGenUtils.isValidJavaPackage(userCodePackage))
+		{
+			String quotePackage = userCodePackage + "." + CodeGenBase.QUOTES;
+			decl.setPackage(quotePackage);
+		}
+		else
+		{
+			decl.setPackage(CodeGenBase.QUOTES);
+		}
 		
 		decl.getFields().add(consHashcodeField());
 		decl.getFields().add(consInstanceField(name));

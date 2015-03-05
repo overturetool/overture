@@ -170,7 +170,8 @@ public class JavaCodeGen extends CodeGenBase
 			List<GeneratedModule> modules = new LinkedList<GeneratedModule>();
 			for(String quoteNameVdm : quoteValues)
 			{
-				AClassDeclCG quoteDecl = quoteValueCreator.consQuoteValue(quoteNameVdm + JAVA_QUOTE_NAME_SUFFIX);
+				AClassDeclCG quoteDecl = quoteValueCreator.consQuoteValue(quoteNameVdm
+						+ JAVA_QUOTE_NAME_SUFFIX, getJavaSettings().getJavaRootPackage());
 				
 				StringWriter writer = new StringWriter();
 				quoteDecl.apply(javaFormat.getMergeVisitor(), writer);
@@ -228,6 +229,15 @@ public class JavaCodeGen extends CodeGenBase
 		{
 			statuses.add(generator.generateFrom(classDef));
 		}
+		
+		if(getJavaSettings().getJavaRootPackage() != null)
+		{
+			for(IRClassDeclStatus irStatus : statuses)
+			{
+				irStatus.getClassCg().setPackage(getJavaSettings().getJavaRootPackage());
+			}
+		}
+		
 
 		List<AClassDeclCG> classes = getClassDecls(statuses);
 		javaFormat.setClasses(classes);
