@@ -1,0 +1,19 @@
+class A
+
+instance variables
+
+public x : nat := 42;
+
+end A
+
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let a = new A()
+in
+  return a.x;
+
+end Entry

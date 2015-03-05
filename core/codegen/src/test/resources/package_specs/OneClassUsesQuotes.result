@@ -1,0 +1,27 @@
+package my.model;
+
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        my.model.quotes.AQuote q = my.model.quotes.AQuote.getInstance();
+        my.model.quotes.AQuote b = q;
+
+        return Utils.equals(b, q);
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########
+*Quotes*
+A
+##########
