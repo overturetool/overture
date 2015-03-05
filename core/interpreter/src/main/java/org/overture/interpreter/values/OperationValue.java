@@ -256,23 +256,37 @@ public class OperationValue extends Value
 	public Value eval(ILexLocation from, ValueList argValues, Context ctxt)
 			throws AnalysisException
 	{
-		// Note args cannot be Updateable, so we convert them here. This means
-		// that TransactionValues pass the local "new" value to the far end.
-		ValueList constValues = argValues.getConstant();
+		long start = System.currentTimeMillis();
 
-		if (Settings.dialect == Dialect.VDM_RT)
+		try
 		{
-			if (!isStatic && (ctxt.threadState.CPU != self.getCPU() || isAsync))
+
+			// Note args cannot be Updateable, so we convert them here. This means
+			// that TransactionValues pass the local "new" value to the far end.
+			ValueList constValues = argValues.getConstant();
+
+			if (Settings.dialect == Dialect.VDM_RT)
 			{
-				return asyncEval(constValues, ctxt);
+				if (!isStatic
+						&& (ctxt.threadState.CPU != self.getCPU() || isAsync))
+				{
+					return asyncEval(constValues, ctxt);
+				} else
+				{
+					return localEval(from, constValues, ctxt, true);
+				}
 			} else
 			{
 				return localEval(from, constValues, ctxt, true);
 			}
-		} else
+		} finally
 		{
-			return localEval(from, constValues, ctxt, true);
+			System.err.println("timecheck,"
+					+ this.expldef.getName().getClassName().getFullName()
+					+"." + this.expldef.getName().getFullName() + ","
+					+ (System.currentTimeMillis() - start));
 		}
+
 	}
 
 	public Value localEval(ILexLocation from, ValueList argValues,
