@@ -87,6 +87,7 @@ import org.overture.codegen.cgast.types.SBasicTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
 import org.overture.codegen.cgast.types.SSetTypeCG;
+import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRAnalysis;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
@@ -901,5 +902,19 @@ public class JavaFormat
 	public static boolean isMainClass(AClassDeclCG clazz)
 	{
 		return clazz != null && clazz.getTag() instanceof JavaMainTag;
+	}
+	
+	public String getQuotePackagePrefix()
+	{
+		String settings = getJavaSettings().getJavaRootPackage();
+		
+		if(settings != null && !settings.trim().isEmpty())
+		{
+			return settings + "." + CodeGenBase.QUOTES + ".";
+		}
+		else
+		{
+			return CodeGenBase.QUOTES + ".";
+		}
 	}
 }
