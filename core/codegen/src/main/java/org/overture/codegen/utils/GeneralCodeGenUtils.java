@@ -32,6 +32,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
@@ -362,5 +363,31 @@ public class GeneralCodeGenUtils
 		}
 		
 		return classesToSkip;
+	}
+	
+	public static boolean isValidJavaPackage(String pack)
+	{
+		if(pack == null)
+		{
+			return false;
+		}
+		
+		pack = pack.trim();
+		
+		Pattern pattern = Pattern.compile("^[a-zA-Z_\\$][\\w\\$]*(?:\\.[a-zA-Z_\\$][\\w\\$]*)*$");
+		
+		return pattern.matcher(pack).matches();
+	}
+	
+	public static String getFolderFromJavaRootPackage(String pack)
+	{
+		if(!isValidJavaPackage(pack))
+		{
+			return null;
+		}
+		else
+		{
+			return pack.replaceAll("\\.", "/");
+		}
 	}
 }
