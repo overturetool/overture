@@ -85,7 +85,7 @@ public abstract class TestHandler
 		Settings.dialect = Dialect.VDM_PP;
 	}
 
-	public abstract void writeGeneratedCode(File parent, File resultFile)
+	public abstract void writeGeneratedCode(File parent, File resultFile, String rootPackage)
 			throws IOException;
 
 	public void injectArgIntoMainClassFile(File parent, String argument)

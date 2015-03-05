@@ -41,6 +41,7 @@ import org.overture.codegen.tests.ConfiguredCloningTest;
 import org.overture.codegen.tests.ConfiguredStringGenerationTest;
 import org.overture.codegen.tests.ExpressionTest;
 import org.overture.codegen.tests.FunctionValueTest;
+import org.overture.codegen.tests.PackageTest;
 import org.overture.codegen.tests.PatternTest;
 import org.overture.codegen.tests.PrePostTest;
 import org.overture.codegen.tests.RtTest;
@@ -82,6 +83,7 @@ public class CompileTests
 	public static final boolean RUN_CONCURRENCY_TESTS = true;
 	public static final boolean RUN_CONCURRENCY_CLASSIC_TESTS = true;
 	public static final boolean RUN_RT_TESTS = true;
+	public static final boolean RUN_PACKAGE_TESTS = true;
 	public static final boolean RUN_BIND_TESTS = true;
 	public static final boolean PRE_POST_TESTS = true;
 	public static final boolean RUN_EXECUTING_CLASSIC_SPEC_TESTS = true;
@@ -163,6 +165,11 @@ public class CompileTests
 			runRtTests();
 		}
 		
+		if(RUN_PACKAGE_TESTS)
+		{
+			runPackageTests();
+		}
+		
 		if (RUN_BIND_TESTS)
 		{
 			runBindTests();
@@ -192,6 +199,20 @@ public class CompileTests
 
 		System.out.println("Time: "
 				+ String.format("%02d:%02d", minutes, seconds) + ".");
+	}
+
+	private void runPackageTests() throws IOException
+	{
+		System.out.println("Beginning package tests..\n");
+
+		testInputFiles = TestUtils.getTestInputFiles(new File(PackageTest.ROOT));
+		resultFiles = TestUtils.getFiles(new File(PackageTest.ROOT), RESULT_FILE_EXTENSION);
+
+		runTests(testInputFiles, resultFiles, new ExecutableSpecTestHandler(Release.VDM_10, Dialect.VDM_RT), false, "my.model");
+
+		System.out.println("\n********");
+		System.out.println("Finished with package tests");
+		System.out.println("********\n");
 	}
 
 	private void runRtTests() throws IOException
@@ -411,6 +432,12 @@ public class CompileTests
 	public void runTests(List<File> testInputFiles, List<File> resultFiles,
 			TestHandler testHandler, boolean printInput) throws IOException
 	{
+		runTests(testInputFiles, resultFiles, testHandler, printInput, null);
+	}
+
+	public void runTests(List<File> testInputFiles, List<File> resultFiles,
+			TestHandler testHandler, boolean printInput, String rootPackage) throws IOException
+	{
 		if (testInputFiles.size() != resultFiles.size())
 		{
 			throw new IllegalArgumentException("Number of test input files and number of result files differ");
@@ -444,7 +471,7 @@ public class CompileTests
 			// Calculating the Java result:
 			File file = resultFiles.get(i);
 
-			testHandler.writeGeneratedCode(parent, file);
+			testHandler.writeGeneratedCode(parent, file, rootPackage);
 
 			boolean compileOk = JavaCommandLineCompiler.compile(parent, null);
 			System.out.println("Test:" + testNumber + " (" + (1 + i) + "). Name: " + file.getName()

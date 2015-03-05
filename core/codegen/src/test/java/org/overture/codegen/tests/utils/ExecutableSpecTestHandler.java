@@ -28,6 +28,7 @@ import java.util.List;
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRConstants;
+import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.config.Release;
 
 public class ExecutableSpecTestHandler extends EntryBasedTestHandler
@@ -38,12 +39,10 @@ public class ExecutableSpecTestHandler extends EntryBasedTestHandler
 	}
 
 	@Override
-	public void writeGeneratedCode(File parent, File resultFile)
+	public void writeGeneratedCode(File parent, File resultFile, String rootPackage)
 			throws IOException
 	{
-		injectArgIntoMainClassFile(parent, JAVA_ENTRY_CALL);
-
-		List<StringBuffer> content = TestUtils.readJavaModulesFromResultFile(resultFile);
+		List<StringBuffer> content = TestUtils.readJavaModulesFromResultFile(resultFile, rootPackage);
 
 		if (content.isEmpty())
 		{
@@ -51,15 +50,22 @@ public class ExecutableSpecTestHandler extends EntryBasedTestHandler
 			return;
 		}
 
+		injectArgIntoMainClassFile(parent, rootPackage != null ? (rootPackage  + "." + JAVA_ENTRY_CALL) : JAVA_ENTRY_CALL);
+		
+		if (rootPackage != null)
+		{
+			parent = new File(parent, GeneralCodeGenUtils.getFolderFromJavaRootPackage(rootPackage));
+		}
+		
 		parent.mkdirs();
-
+		
+		
 		for (StringBuffer classCgStr : content)
 		{
 			String className = TestUtils.getJavaModuleName(classCgStr);
-			
-			
+
 			File out = null;
-			if(classCgStr.toString().contains("package quotes;"))
+			if(classCgStr.toString().contains("quotes;"))
 			{
 				out = new File(parent, "quotes");
 			}
