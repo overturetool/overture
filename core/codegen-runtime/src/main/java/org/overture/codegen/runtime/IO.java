@@ -101,7 +101,7 @@ public class IO {
 			try
 			{
 				File file = getFile(filename);
-				FileOutputStream fos = new FileOutputStream(file, fdir.getClass().getName().equals("quotes.append"));
+				FileOutputStream fos = new FileOutputStream(file, fdir.getClass().getName().equals("quotes.appendQuote"));
 
 				fos.write(text.getBytes(Charset.defaultCharset().name()));
 				fos.close();

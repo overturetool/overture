@@ -1,1 +1,1 @@
-quotes.$node.getValue()
+quotes.${node.getValue()}Quote

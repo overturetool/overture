@@ -87,6 +87,7 @@ public class JavaCodeGen extends CodeGenBase
 			"Utils", "Record", "Long", "Double", "Character", "String", "List",
 			"Set" };
 	
+	public static final String JAVA_QUOTE_NAME_SUFFIX = "Quote";
 	public static final String JAVA_MAIN_CLASS_NAME = "Main";
 	
 	private JavaFormat javaFormat;
@@ -163,28 +164,22 @@ public class JavaCodeGen extends CodeGenBase
 
 			javaFormat.init();
 			
-			JavaQuoteValueCreator quoteValueCreator = new JavaQuoteValueCreator(generator.getIRInfo(), transAssistant);
+			JavaQuoteValueCreator quoteValueCreator = new JavaQuoteValueCreator(generator.getIRInfo(),
+					transAssistant);
 			
-			List<AClassDeclCG> quoteDecls = new LinkedList<AClassDeclCG>();
-			
-			for(String qv : quoteValues)
-			{
-				quoteDecls.add(quoteValueCreator.consQuoteValue(qv));
-			}
-
 			List<GeneratedModule> modules = new LinkedList<GeneratedModule>();
-			
-			for (AClassDeclCG q : quoteDecls)
+			for(String quoteNameVdm : quoteValues)
 			{
+				AClassDeclCG quoteDecl = quoteValueCreator.consQuoteValue(quoteNameVdm + JAVA_QUOTE_NAME_SUFFIX);
+				
 				StringWriter writer = new StringWriter();
-				q.apply(javaFormat.getMergeVisitor(), writer);
+				quoteDecl.apply(javaFormat.getMergeVisitor(), writer);
 				String code = writer.toString();
 				String formattedJavaCode = JavaCodeGenUtil.formatJavaCode(code);
 				
-				modules.add(new GeneratedModule(q.getName(), q, formattedJavaCode));
+				modules.add(new GeneratedModule(quoteNameVdm, quoteDecl, formattedJavaCode));
 			}
-
-
+			
 			return modules;
 
 		} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
