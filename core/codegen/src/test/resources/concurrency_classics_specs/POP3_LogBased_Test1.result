@@ -452,7 +452,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
 
     public void cg_init_POP3ClientHandler_1(final POP3Server nparent,
         final MessageChannel nch) {
-        ss = quotes.Authorization.getInstance();
+        ss = quotes.AuthorizationQuote.getInstance();
         parent = nparent;
         msgChannel = nch;
     }
@@ -610,19 +610,19 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
             Object response = null;
             Object quotePattern_1 = ss;
             Boolean success_4 = Utils.equals(quotePattern_1,
-                    quotes.Authorization.getInstance());
+                    quotes.AuthorizationQuote.getInstance());
 
             if (!(success_4)) {
                 Object quotePattern_2 = ss;
                 success_4 = Utils.equals(quotePattern_2,
-                        quotes.Transaction.getInstance());
+                        quotes.TransactionQuote.getInstance());
 
                 if (success_4) {
                     {
                         Boolean b = parent.RemoveDeletedMessages(user);
 
                         {
-                            ss = quotes.Update.getInstance();
+                            ss = quotes.UpdateQuote.getInstance();
                             sentinel.stateChanged();
 
                             parent.ReleaseLock(id);
@@ -655,7 +655,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
         sentinel.entering(((POP3ClientHandler_sentinel) sentinel).ReceiveSTAT);
 
         try {
-            if (Utils.equals(ss, quotes.Transaction.getInstance())) {
+            if (Utils.equals(ss, quotes.TransactionQuote.getInstance())) {
                 return new POP3Types.OkResponse(" " +
                     int2string(parent.GetNumberOfMessages(user)) + " " +
                     int2string(parent.GetMailBoxSize(user)));
@@ -671,7 +671,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
         sentinel.entering(((POP3ClientHandler_sentinel) sentinel).ReceiveLIST);
 
         try {
-            if (Utils.equals(ss, quotes.Transaction.getInstance())) {
+            if (Utils.equals(ss, quotes.TransactionQuote.getInstance())) {
                 Boolean orResult_1 = false;
 
                 if (Utils.equals(list.messageNumber, null)) {
@@ -702,7 +702,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
         sentinel.entering(((POP3ClientHandler_sentinel) sentinel).ReceiveRETR);
 
         try {
-            if (Utils.equals(ss, quotes.Transaction.getInstance())) {
+            if (Utils.equals(ss, quotes.TransactionQuote.getInstance())) {
                 if (parent.IsValidMessageNumber(user, retr.messageNumber)) {
                     String msgText = parent.GetMessageText(user,
                             retr.messageNumber);
@@ -725,7 +725,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
         sentinel.entering(((POP3ClientHandler_sentinel) sentinel).ReceiveDELE);
 
         try {
-            if (Utils.equals(ss, quotes.Transaction.getInstance())) {
+            if (Utils.equals(ss, quotes.TransactionQuote.getInstance())) {
                 if (parent.IsValidMessageNumber(user, retr.messageNumber)) {
                     parent.DeleteMessage(user, retr.messageNumber);
 
@@ -750,7 +750,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
         sentinel.entering(((POP3ClientHandler_sentinel) sentinel).ReceiveNOOP);
 
         try {
-            if (Utils.equals(ss, quotes.Transaction.getInstance())) {
+            if (Utils.equals(ss, quotes.TransactionQuote.getInstance())) {
                 return new POP3Types.OkResponse("");
             } else {
                 return new POP3Types.ErrResponse(negativeStatusMsg);
@@ -764,7 +764,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
         sentinel.entering(((POP3ClientHandler_sentinel) sentinel).ReceiveRSET);
 
         try {
-            if (Utils.equals(ss, quotes.Transaction.getInstance())) {
+            if (Utils.equals(ss, quotes.TransactionQuote.getInstance())) {
                 parent.ResetDeletedMessages(user);
 
                 return new POP3Types.OkResponse("maildrop has " +
@@ -781,7 +781,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
         sentinel.entering(((POP3ClientHandler_sentinel) sentinel).ReceiveTOP);
 
         try {
-            if (Utils.equals(ss, quotes.Transaction.getInstance())) {
+            if (Utils.equals(ss, quotes.TransactionQuote.getInstance())) {
                 if (parent.IsValidMessageNumber(user, top.messageNumber)) {
                     String header = parent.GetMsgHeader(user, top.messageNumber);
                     String body = parent.GetMsgBody(user, top.messageNumber);
@@ -805,7 +805,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
         sentinel.entering(((POP3ClientHandler_sentinel) sentinel).ReceiveUIDL);
 
         try {
-            if (Utils.equals(ss, quotes.Transaction.getInstance())) {
+            if (Utils.equals(ss, quotes.TransactionQuote.getInstance())) {
                 if (Utils.equals(uidl.messageNumber, null)) {
                     VDMSeq uidlTxt = parent.GetAllUidls(user);
 
@@ -829,7 +829,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
         sentinel.entering(((POP3ClientHandler_sentinel) sentinel).ReceiveUSER);
 
         try {
-            if (Utils.equals(ss, quotes.Authorization.getInstance())) {
+            if (Utils.equals(ss, quotes.AuthorizationQuote.getInstance())) {
                 user = usercmd.name;
                 sentinel.stateChanged();
 
@@ -848,7 +848,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
         try {
             Boolean andResult_1 = false;
 
-            if (Utils.equals(ss, quotes.Authorization.getInstance())) {
+            if (Utils.equals(ss, quotes.AuthorizationQuote.getInstance())) {
                 if (lastWasUser) {
                     andResult_1 = true;
                 }
@@ -863,7 +863,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
                         return new POP3Types.ErrResponse(maildropLockedMsg);
                     } else {
                         parent.AcquireLock(id, user);
-                        ss = quotes.Transaction.getInstance();
+                        ss = quotes.TransactionQuote.getInstance();
                         sentinel.stateChanged();
 
                         return new POP3Types.OkResponse(maildropReadyMsg);

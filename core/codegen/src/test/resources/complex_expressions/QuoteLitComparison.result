@@ -8,9 +8,9 @@ public class Entry {
     }
 
     public static Object Run() {
-        quotes.A a = quotes.A.getInstance();
+        quotes.AQuote a = quotes.AQuote.getInstance();
 
-        return Utils.equals(a, quotes.A.getInstance());
+        return Utils.equals(a, quotes.AQuote.getInstance());
     }
 
     public String toString() {

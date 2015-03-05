@@ -8,23 +8,24 @@ public class Entry {
     }
 
     public static Object Run() {
-        quotes.Q isExpSubject_1 = quotes.Q.getInstance();
-        quotes.A isExpSubject_2 = quotes.A.getInstance();
-        quotes.A isExpSubject_3 = quotes.A.getInstance();
-        quotes.D isExpSubject_4 = quotes.D.getInstance();
+        quotes.QQuote isExpSubject_1 = quotes.QQuote.getInstance();
+        quotes.AQuote isExpSubject_2 = quotes.AQuote.getInstance();
+        quotes.AQuote isExpSubject_3 = quotes.AQuote.getInstance();
+        quotes.DQuote isExpSubject_4 = quotes.DQuote.getInstance();
 
-        return SeqUtil.seq((Utils.equals(isExpSubject_1, quotes.A.getInstance())) ||
-            (Utils.equals(isExpSubject_1, quotes.B.getInstance())) ||
-            (Utils.equals(isExpSubject_1, quotes.C.getInstance())) ||
-            (Utils.equals(isExpSubject_1, quotes.D.getInstance())),
-            (Utils.equals(isExpSubject_2, quotes.A.getInstance())) ||
-            (Utils.equals(isExpSubject_2, quotes.B.getInstance())) ||
-            (Utils.equals(isExpSubject_2, quotes.C.getInstance())) ||
-            (Utils.equals(isExpSubject_2, quotes.D.getInstance())),
-            (Utils.equals(isExpSubject_3, quotes.C.getInstance())) ||
-            (Utils.equals(isExpSubject_3, quotes.D.getInstance())),
-            (Utils.equals(isExpSubject_4, quotes.C.getInstance())) ||
-            (Utils.equals(isExpSubject_4, quotes.D.getInstance())));
+        return SeqUtil.seq((Utils.equals(isExpSubject_1,
+                quotes.AQuote.getInstance())) ||
+            (Utils.equals(isExpSubject_1, quotes.BQuote.getInstance())) ||
+            (Utils.equals(isExpSubject_1, quotes.CQuote.getInstance())) ||
+            (Utils.equals(isExpSubject_1, quotes.DQuote.getInstance())),
+            (Utils.equals(isExpSubject_2, quotes.AQuote.getInstance())) ||
+            (Utils.equals(isExpSubject_2, quotes.BQuote.getInstance())) ||
+            (Utils.equals(isExpSubject_2, quotes.CQuote.getInstance())) ||
+            (Utils.equals(isExpSubject_2, quotes.DQuote.getInstance())),
+            (Utils.equals(isExpSubject_3, quotes.CQuote.getInstance())) ||
+            (Utils.equals(isExpSubject_3, quotes.DQuote.getInstance())),
+            (Utils.equals(isExpSubject_4, quotes.CQuote.getInstance())) ||
+            (Utils.equals(isExpSubject_4, quotes.DQuote.getInstance())));
     }
 
     public String toString() {

@@ -217,19 +217,20 @@ public class Entry {
     private static final Token p4 = new Token(SeqUtil.seq('T', 'u', 'e', 's',
                 'd', 'a', 'y', ' ', 'n', 'i', 'g', 'h', 't'));
     private static final VDMSet ps = SetUtil.set(p1, p2, p3, p4);
-    private Alarm a1 = new Alarm(quotes.Mech.getInstance(),
+    private Alarm a1 = new Alarm(quotes.MechQuote.getInstance(),
             SeqUtil.seq('M', 'e', 'c', 'h', 'a', 'n', 'i', 'c', 'a', 'l', ' ',
                 'f', 'a', 'u', 'l', 't'));
-    private Alarm a2 = new Alarm(quotes.Chem.getInstance(),
+    private Alarm a2 = new Alarm(quotes.ChemQuote.getInstance(),
             SeqUtil.seq('T', 'a', 'n', 'k', ' ', 'o', 'v', 'e', 'r', 'f', 'l',
                 'o', 'w'));
-    private Expert ex1 = new Expert(SetUtil.set(quotes.Mech.getInstance(),
-                quotes.Bio.getInstance()));
-    private Expert ex2 = new Expert(SetUtil.set(quotes.Elec.getInstance()));
-    private Expert ex3 = new Expert(SetUtil.set(quotes.Chem.getInstance(),
-                quotes.Bio.getInstance(), quotes.Mech.getInstance()));
-    private Expert ex4 = new Expert(SetUtil.set(quotes.Elec.getInstance(),
-                quotes.Chem.getInstance()));
+    private Expert ex1 = new Expert(SetUtil.set(
+                quotes.MechQuote.getInstance(), quotes.BioQuote.getInstance()));
+    private Expert ex2 = new Expert(SetUtil.set(quotes.ElecQuote.getInstance()));
+    private Expert ex3 = new Expert(SetUtil.set(
+                quotes.ChemQuote.getInstance(), quotes.BioQuote.getInstance(),
+                quotes.MechQuote.getInstance()));
+    private Expert ex4 = new Expert(SetUtil.set(
+                quotes.ElecQuote.getInstance(), quotes.ChemQuote.getInstance()));
     private Plant plant = new Plant(SetUtil.set(a1),
             MapUtil.map(new Maplet(p1, SetUtil.set(ex1, ex4)),
                 new Maplet(p2, SetUtil.set(ex2, ex3))));

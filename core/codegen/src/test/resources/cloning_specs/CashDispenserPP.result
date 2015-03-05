@@ -52,7 +52,7 @@ public class SimpleTest {
                 ((Till) Utils.get(tills, 1L)).InsertCard(c1);
 
                 if (Utils.equals(((Till) Utils.get(tills, 1L)).Validate(123456L),
-                            quotes.PinOk.getInstance())) {
+                            quotes.PinOkQuote.getInstance())) {
                     return ((Till) Utils.get(tills, 1L)).MakeWithdrawal(800L);
                 } else {
                     return false;
@@ -565,7 +565,7 @@ public class Till {
                         SetUtil.set(curCard));
                 curCard = null;
 
-                return quotes.Retained.getInstance();
+                return quotes.RetainedQuote.getInstance();
             } else if (codeOk) {
                 resource.ResetNumberOfTries(cardId);
             } else {
@@ -577,14 +577,14 @@ public class Till {
                     cardOk = false;
                     curCard = null;
 
-                    return quotes.Retained.getInstance();
+                    return quotes.RetainedQuote.getInstance();
                 }
             }
 
             if (cardOk) {
-                return quotes.PinOk.getInstance();
+                return quotes.PinOkQuote.getInstance();
             } else {
-                return quotes.PinNotOk.getInstance();
+                return quotes.PinNotOkQuote.getInstance();
             }
         }
     }

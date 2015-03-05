@@ -8,7 +8,7 @@ public class A {
     }
 
     public static Object f() {
-        return quotes.T.getInstance();
+        return quotes.TQuote.getInstance();
     }
 
     public String toString() {
@@ -27,7 +27,7 @@ public class B {
     }
 
     public static Object f() {
-        return quotes.T.getInstance();
+        return quotes.TQuote.getInstance();
     }
 
     public String toString() {
@@ -60,7 +60,7 @@ public class Entry {
                 throw new RuntimeException("Missing member: f");
             }
 
-            if (Utils.equals(apply_1, quotes.A.getInstance())) {
+            if (Utils.equals(apply_1, quotes.AQuote.getInstance())) {
                 return 1L;
             }
         }

@@ -8,7 +8,8 @@ public class Entry {
     }
 
     public static Object Run() {
-        return Utils.equals(quotes.C.getInstance(), quotes.C.getInstance());
+        return Utils.equals(quotes.CQuote.getInstance(),
+            quotes.CQuote.getInstance());
     }
 
     public String toString() {
