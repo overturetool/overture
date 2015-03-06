@@ -199,11 +199,20 @@ public class JavaCodeGen extends CodeGenBase
 	{
 		SClassDefinition mainClass = null;
 		
+		List<String> warnings = new LinkedList<String>();
 		if(getJavaSettings().getVdmEntryExp() != null)
 		{
-			mainClass = GeneralCodeGenUtils.consMainClass(mergedParseLists, getJavaSettings().getVdmEntryExp(),
-					Settings.dialect, JAVA_MAIN_CLASS_NAME, getInfo().getTempVarNameGen());
-			mergedParseLists.add(mainClass);
+			try
+			{
+				mainClass = GeneralCodeGenUtils.consMainClass(mergedParseLists, getJavaSettings().getVdmEntryExp(),
+						Settings.dialect, JAVA_MAIN_CLASS_NAME, getInfo().getTempVarNameGen());
+				mergedParseLists.add(mainClass);
+			} catch (Exception e)
+			{
+				// It can go wrong if the VDM entry point does not type check
+				warnings.add("The chosen launch configuration could not be type checked: " + e.getMessage());
+				warnings.add("Skipping launch configuration..");
+			}
 		}
 		
 		computeDefTable(mergedParseLists);
@@ -361,7 +370,15 @@ public class JavaCodeGen extends CodeGenBase
 		javaFormat.clearFunctionValueAssistant();
 		javaFormat.clearClasses();
 
-		return new GeneratedData(generated, generateJavaFromVdmQuotes(), invalidNamesResult, skipping, allRenamings);
+		GeneratedData data = new GeneratedData();
+		data.setClasses(generated);
+		data.setQuoteValues(generateJavaFromVdmQuotes());
+		data.setInvalidNamesResult(invalidNamesResult);
+		data.setSkippedClasses(skipping);
+		data.setAllRenamings(allRenamings);
+		data.setWarnings(warnings);
+		
+		return data;
 	}
 
 	private void computeDefTable(List<SClassDefinition> mergedParseLists)

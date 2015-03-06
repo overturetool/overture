@@ -135,56 +135,46 @@ public class GeneralCodeGenUtils
 		return typeCheckResult;
 	}
 	
-	public static SClassDefinition consMainClass(List<SClassDefinition> mergedParseLists,
-			String expression, Dialect dialect, String mainClassName,
-			ITempVarGen nameGen)
+	public static SClassDefinition consMainClass(
+			List<SClassDefinition> mergedParseLists, String expression,
+			Dialect dialect, String mainClassName, ITempVarGen nameGen) throws VDMErrorsException, AnalysisException
 	{
-		try
+		ClassList classes = new ClassList();
+		classes.addAll(mergedParseLists);
+		PExp entryExp = typeCheckEntryPoint(classes, expression, dialect);
+
+		String resultTypeStr = entryExp.getType() instanceof AVoidType ? "()"
+				: "?";
+
+		// Collect all the class names
+		List<String> namesToAvoid = new LinkedList<>();
+
+		for (SClassDefinition c : classes)
 		{
-			ClassList classes = new ClassList();
-			classes.addAll(mergedParseLists);
-			PExp entryExp = typeCheckEntryPoint(classes, expression, dialect);
-
-			String resultTypeStr = entryExp.getType() instanceof AVoidType ? "()"
-					: "?";
-
-			// Collect all the class names
-			List<String> namesToAvoid = new LinkedList<>();
-
-			for (SClassDefinition c : classes)
-			{
-				namesToAvoid.add(c.getName().getName());
-			}
-
-			// If the user already uses the name proposed for the main class
-			// we have to find a new name for the main class
-			if (namesToAvoid.contains(mainClassName))
-			{
-				String prefix = mainClassName + "_";
-				mainClassName = nameGen.nextVarName(prefix);
-
-				while (namesToAvoid.contains(mainClassName))
-				{
-					mainClassName = nameGen.nextVarName(prefix);
-				}
-			}
-
-			String entryClassTemplate = 
-					"class " + mainClassName + "\n"
-					+ "operations\n" + "public static Run : () ==> "
-					+ resultTypeStr + "\n" + "Run () == " + expression + ";\n"
-					+ "end " + mainClassName;
-
-			SClassDefinition clazz = parseClass(entryClassTemplate, mainClassName, dialect);
-
-			return tcClass(classes, clazz);
-
-		} catch (VDMErrorsException | AnalysisException e)
-		{
-			Logger.getLog().printErrorln("Problems encountered when constructing the main class in 'GeneralCodeGenUtils'");
-			e.printStackTrace();
-			return null;
+			namesToAvoid.add(c.getName().getName());
 		}
+
+		// If the user already uses the name proposed for the main class
+		// we have to find a new name for the main class
+		if (namesToAvoid.contains(mainClassName))
+		{
+			String prefix = mainClassName + "_";
+			mainClassName = nameGen.nextVarName(prefix);
+
+			while (namesToAvoid.contains(mainClassName))
+			{
+				mainClassName = nameGen.nextVarName(prefix);
+			}
+		}
+
+		String entryClassTemplate = "class " + mainClassName + "\n"
+				+ "operations\n" + "public static Run : () ==> "
+				+ resultTypeStr + "\n" + "Run () == " + expression + ";\n"
+				+ "end " + mainClassName;
+
+		SClassDefinition clazz = parseClass(entryClassTemplate, mainClassName, dialect);
+
+		return tcClass(classes, clazz);
 	}
 	
 	public static PExp typeCheckEntryPoint(ClassList classes, String expression, Dialect dialect)
@@ -258,7 +248,7 @@ public class GeneralCodeGenUtils
 	}
 	
 	public static SClassDefinition parseClass(String classStr,
-			String defaultModuleName, Dialect dialect) throws ParserException, LexException
+			String defaultModuleName, Dialect dialect)
 	{
 		LexTokenReader ltr = new LexTokenReader(classStr, dialect, Console.charset);
 		ClassReader reader = new ClassReader(ltr);
