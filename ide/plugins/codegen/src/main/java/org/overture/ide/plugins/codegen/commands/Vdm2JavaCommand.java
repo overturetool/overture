@@ -178,16 +178,18 @@ public class Vdm2JavaCommand extends AbstractHandler
 
 				try
 				{
-					File javaCodeOutputFolder = PluginVdm2JavaUtil.getJavaCodeOutputFolder(vdmProject, javaSettings);
-
+					File eclipseProjectFolder = PluginVdm2JavaUtil.getEclipseProjectFolder(vdmProject);
+					
 					// Clean folder with generated Java code
-					GeneralUtils.deleteFolderContents(javaCodeOutputFolder);
+					GeneralUtils.deleteFolderContents(eclipseProjectFolder);
 
 					// Generate user specified classes
 					GeneratedData generatedData = vdm2java.generateJavaFromVdm(mergedParseLists);
 					
 					outputUserSpecifiedSkippedClasses(classesToSkip);
 					outputSkippedClasses(generatedData.getSkippedClasses());
+					
+					File javaCodeOutputFolder = PluginVdm2JavaUtil.getJavaCodeOutputFolder(vdmProject, javaSettings);
 					
 					try
 					{
@@ -234,7 +236,6 @@ public class Vdm2JavaCommand extends AbstractHandler
 					
 					try
 					{
-						File eclipseProjectFolder = PluginVdm2JavaUtil.getEclipseProjectFolder(vdmProject);
 						PluginVdm2JavaUtil.copyCodeGenFile(PluginVdm2JavaUtil.ECLIPSE_RES_FILES_FOLDER +  "/"
 								+ PluginVdm2JavaUtil.ECLIPSE_PROJECT_TEMPLATE_FILE, PluginVdm2JavaUtil.ECLIPSE_PROJECT_FILE, eclipseProjectFolder);
 						PluginVdm2JavaUtil.copyCodeGenFile(PluginVdm2JavaUtil.ECLIPSE_RES_FILES_FOLDER +  "/"
