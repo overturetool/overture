@@ -24,7 +24,6 @@ package org.overture.codegen.trans.uniontypes;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.codegen.assistant.TypeAssistantCG;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SObjectDesignatorCG;
@@ -42,7 +41,6 @@ import org.overture.codegen.cgast.statements.ANewObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.ASelfObjectDesignatorCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
-import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.cgast.types.AUnknownTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
@@ -106,91 +104,16 @@ public class ObjectDesignatorToExpCG extends AnswerAdaptor<SExpCG>
 		SObjectDesignatorCG obj = node.getObject();
 		SourceNode sourceNode = node.getSourceNode();
 
-		STypeCG fieldExpType = null;
-
-		TypeAssistantCG typeAssistant = info.getAssistantManager().getTypeAssistant();
-
 		INode parent = node.parent();
 
-		if (parent instanceof AApplyObjectDesignatorCG)
+		STypeCG fieldExpType = null;
+		try
 		{
-			AApplyObjectDesignatorCG apply = (AApplyObjectDesignatorCG) parent;
-			LinkedList<SExpCG> args = apply.getArgs();
-			fieldExpType = typeAssistant.getMethodType(info, classes, fieldModule, fieldName, args);
-		} else
+			fieldExpType = info.getTypeAssistant().getFieldExpType(info, classes, fieldName, fieldModule, obj, parent);
+		} catch (org.overture.ast.analysis.AnalysisException e)
 		{
-			if (fieldModule != null)
-			{
-				// It is a class
-				fieldExpType = typeAssistant.getFieldType(classes, fieldModule, fieldName);
-			}
-			else
-			{
-				boolean error = false;
-				ARecordTypeCG recType = null;
-
-				// It is a record so the obj must be an identifier or a field
-				if(obj instanceof AIdentifierObjectDesignatorCG)
-				{
-					SExpCG objId = ((AIdentifierObjectDesignatorCG) obj).getExp();
-					recType = (ARecordTypeCG) objId.getType();
-				}
-				else
-				{
-					List<String> fieldNames = new LinkedList<String>();
-					SObjectDesignatorCG nextField = obj;
-					
-					while(nextField instanceof AFieldObjectDesignatorCG)
-					{
-						AFieldObjectDesignatorCG tmpField = (AFieldObjectDesignatorCG) nextField;
-						fieldNames.add(0, tmpField.getFieldName());
-						nextField = tmpField.getObject();
-					}
-
-					if (nextField instanceof AIdentifierObjectDesignatorCG)
-					{
-						AIdentifierObjectDesignatorCG lastObj = ((AIdentifierObjectDesignatorCG) nextField);
-						
-						if (lastObj.getExp().getType() instanceof ARecordTypeCG)
-						{
-							recType = (ARecordTypeCG) lastObj.getExp().getType();
-
-							for (int i = 0; i < fieldNames.size(); i++)
-							{
-								String currentFieldName = fieldNames.get(i);
-								STypeCG currentFieldType = info.getTypeAssistant().getFieldType(classes, recType, currentFieldName);
-								
-								if (currentFieldType instanceof ARecordTypeCG)
-								{
-									recType = (ARecordTypeCG) currentFieldType;
-								}
-								else
-								{
-									error = true;
-									break;
-								}
-							}
-
-						}
-					}
-				}
-				
-				if(!error && recType != null)
-				{
-					fieldExpType = info.getTypeAssistant().getFieldType(classes, recType, fieldName);
-
-					if(fieldExpType == null)
-					{
-						Logger.getLog().printErrorln("Lookup of field type gave nothing in 'ObjectDesignatorToExpCG'");
-					}
-					
-				}
-				else
-				{
-					Logger.getLog().printErrorln("Could not determine field type of field expression in 'ObjectDesignatorToExpCG'");
-					fieldExpType = new AUnknownTypeCG();
-				}
-			}
+			Logger.getLog().printErrorln("Could not find field expression type of " + node + " in 'ObjectDesignatorToExpCG'");
+			fieldExpType = new AUnknownTypeCG();
 		}
 
 		SExpCG objExp = obj.apply(this);

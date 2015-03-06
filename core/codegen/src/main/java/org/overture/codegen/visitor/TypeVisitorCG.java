@@ -113,7 +113,15 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 			for (PType type : types)
 			{
 				STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-				unionTypeCg.getTypes().add(typeCg);
+				
+				if(typeCg != null)
+				{
+					unionTypeCg.getTypes().add(typeCg);	
+				}
+				else
+				{
+					return null;
+				}
 			}
 
 			return unionTypeCg;
@@ -188,8 +196,15 @@ public class TypeVisitorCG extends AbstractVisitorCG<IRInfo, STypeCG>
 		for (PType type : types)
 		{
 			STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-			tuple.getTypes().add(typeCg);
-
+			
+			if (typeCg != null)
+			{
+				tuple.getTypes().add(typeCg);
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 		return tuple;

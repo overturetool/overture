@@ -63,7 +63,6 @@ import org.overture.pog.pub.IPOContextStack;
 import org.overture.pog.pub.IPogAssistantFactory;
 import org.overture.pog.pub.IProofObligationList;
 import org.overture.pog.utility.PogAssistantFactory;
-import org.overture.typechecker.assistant.expression.PExpAssistantTC;
 
 public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofObligationList>
 		extends QuestionAnswerAdaptor<IPOContextStack, IProofObligationList>
@@ -71,6 +70,8 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 	final private QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> rootVisitor;
 	final private QuestionAnswerAdaptor<IPOContextStack, ? extends IProofObligationList> mainVisitor;
+	
+	public final static LexNameToken NO_PRECONDITION = new LexNameToken("", "", null);
 
 	final private IPogAssistantFactory aF;
 
@@ -133,9 +134,9 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 				&& aF.createPTypeAssistant().isFunction(type))
 		{
 			AFunctionType funcType = aF.createPTypeAssistant().getFunction(type);
-			ILexNameToken prename = aF.createPExpAssistant().getPreName(root);
+			ILexNameToken prename = getPreName(root);
 			if (prename == null
-					|| !prename.equals(PExpAssistantTC.NO_PRECONDITION))
+					|| !prename.equals(NO_PRECONDITION))
 			{
 				obligations.add(new FunctionApplyObligation(node.getRoot(), node.getArgs(), prename, question, aF));
 			}
@@ -1152,10 +1153,10 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 		if (aF.createPTypeAssistant().isFunction(lType))
 		{
-			ILexNameToken pref1 = aF.createPExpAssistant().getPreName(lExp);
-			ILexNameToken pref2 = aF.createPExpAssistant().getPreName(rExp);
+			ILexNameToken pref1 = getPreName(lExp);
+			ILexNameToken pref2 = getPreName(rExp);
 
-			if (pref1 == null || !pref1.equals(PExpAssistantTC.NO_PRECONDITION))
+			if (pref1 == null || !pref1.equals(NO_PRECONDITION))
 			{
 				obligations.add(new FuncComposeObligation(node, pref1, pref2, question, aF));// gkanos:add on more
 																								// argument for the
@@ -1378,9 +1379,9 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 
 		if (aF.createPTypeAssistant().isFunction(lType))
 		{
-			ILexNameToken preName = aF.createPExpAssistant().getPreName(lExp);
+			ILexNameToken preName = getPreName(lExp);
 			if (preName == null
-					|| !preName.equals(PExpAssistantTC.NO_PRECONDITION))
+					|| !preName.equals(NO_PRECONDITION))
 			{
 				obligations.add(new org.overture.pog.obligation.FuncIterationObligation(node, preName, question, aF));
 			}
@@ -1873,6 +1874,17 @@ public class PogParamExpVisitor<Q extends IPOContextStack, A extends IProofOblig
 			IPOContextStack question)
 	{
 		return new ProofObligationList();
+	}
+	
+	public ILexNameToken getPreName(PExp expression)
+	{
+		try
+		{
+			return expression.apply(aF.getPreNameFinder());
+		} catch (AnalysisException e)
+		{
+			return null;
+		}
 	}
 
 }

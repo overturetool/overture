@@ -62,7 +62,14 @@ public class ObjectDesignatorVisitorCG extends
 		for (PExp arg : node.getArgs())
 		{
 			SExpCG argCg = arg.apply(question.getExpVisitor(), question);
-			newExpArgs.add(argCg);
+			
+			if (argCg != null)
+			{
+				newExpArgs.add(argCg);
+			} else
+			{
+				return null;
+			}
 		}
 
 		return applyObjDesignator;

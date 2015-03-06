@@ -1,0 +1,23 @@
+class Entry
+
+types
+
+public
+A ::
+  es : seq of Entry;
+  
+operations  
+
+public static Run : () ==> ?
+Run () ==
+let a = mk_A([new Entry()])
+in
+  op(a);
+
+public static op : A ==> nat
+op (a) == a.es(1).getConst();
+
+public getConst : () ==> nat
+getConst () == return 5;
+
+end Entry

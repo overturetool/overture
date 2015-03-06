@@ -406,7 +406,7 @@ public class DefinitionTypeResolver extends
 			}
 
 			ALocalDefinition ld = (ALocalDefinition) d;
-			af.createALocalDefinitionAssistant().setValueDefinition(ld);
+			setValueDefinition(ld);
 		}
 
 		node.setDefs(newdefs);
@@ -430,5 +430,12 @@ public class DefinitionTypeResolver extends
 	{
 		return;
 	}
+	
+	public void setValueDefinition(ALocalDefinition ld)
+	{
+		ld.setValueDefinition(true);
+
+	}
+
 
 }

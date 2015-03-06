@@ -39,6 +39,7 @@ import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ast.types.SSeqTypeBase;
 import org.overture.ast.util.PTypeSet;
+import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SObjectDesignatorCG;
 import org.overture.codegen.cgast.STypeCG;
@@ -49,8 +50,6 @@ import org.overture.codegen.cgast.declarations.ARecordDeclCG;
 import org.overture.codegen.cgast.expressions.AApplyExpCG;
 import org.overture.codegen.cgast.expressions.SBinaryExpCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
-import org.overture.codegen.cgast.statements.AFieldObjectDesignatorCG;
-import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeWrappersTypeCG;
 import org.overture.codegen.cgast.types.ACharBasicTypeCG;
@@ -75,6 +74,7 @@ import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.cgast.types.ATokenBasicTypeCG;
 import org.overture.codegen.cgast.types.ATupleTypeCG;
 import org.overture.codegen.cgast.types.AUnionTypeCG;
+import org.overture.codegen.cgast.types.AUnknownTypeCG;
 import org.overture.codegen.cgast.types.SBasicTypeCG;
 import org.overture.codegen.cgast.types.SMapTypeCG;
 import org.overture.codegen.cgast.types.SSeqTypeCG;
@@ -82,6 +82,7 @@ import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.logging.Logger;
+import org.overture.codegen.trans.uniontypes.ObjectDesignatorToExpCG;
 import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;
@@ -93,6 +94,71 @@ public class TypeAssistantCG extends AssistantBase
 		super(assistantManager);
 	}
 
+	public STypeCG getFieldExpType(IRInfo info, List<AClassDeclCG> classes, String fieldName, String fieldModule,
+			SObjectDesignatorCG obj, INode parent)
+			throws AnalysisException, org.overture.codegen.cgast.analysis.AnalysisException
+	{
+		if (parent instanceof AApplyObjectDesignatorCG)
+		{
+			AApplyObjectDesignatorCG apply = (AApplyObjectDesignatorCG) parent;
+			LinkedList<SExpCG> args = apply.getArgs();
+
+			if (fieldModule != null)
+			{
+				// It is a class
+				AClassDeclCG clazz = info.getDeclAssistant().findClass(classes, fieldModule);
+				AFieldDeclCG field = info.getDeclAssistant().getFieldDecl(clazz, fieldModule);
+				
+				if(field != null)
+				{
+					return field.getType().clone();
+				}
+				else
+				{
+					// It must be a method
+					return info.getTypeAssistant().getMethodType(info, classes, fieldModule, fieldName, args);
+				}
+			}
+		}
+		return getFieldType(info, classes, fieldName, fieldModule, obj);
+	}
+	
+	private STypeCG getFieldType(IRInfo info, List<AClassDeclCG> classes,
+			String fieldName, String fieldModule, SObjectDesignatorCG obj)
+	{
+		if (fieldModule != null)
+		{
+			// It is a class
+			return info.getTypeAssistant().getFieldType(classes, fieldModule, fieldName);
+		} else
+		{
+			// It is a record
+			try
+			{
+				ObjectDesignatorToExpCG converter = new ObjectDesignatorToExpCG(info, classes);
+				SExpCG objExp = obj.apply(converter);
+
+				if (objExp.getType() instanceof ARecordTypeCG)
+				{
+					STypeCG fieldExpType = info.getTypeAssistant().getFieldType(classes, (ARecordTypeCG) objExp.getType(), fieldName);
+
+					if (fieldExpType == null)
+					{
+						Logger.getLog().printErrorln("Lookup of field type gave nothing in 'TypeAssistantCG'");
+					}
+
+					return fieldExpType;
+				}
+			} 
+			catch (org.overture.codegen.cgast.analysis.AnalysisException e)
+			{
+			}
+		}
+
+		Logger.getLog().printErrorln("Could not determine field type of field expression in 'TypeAssistantCG'");
+		return new AUnknownTypeCG();
+	}
+	
 	public AMethodTypeCG getMethodType(IRInfo info, List<AClassDeclCG> classes,
 			String fieldModule, String fieldName, List<SExpCG> args)
 			throws org.overture.codegen.cgast.analysis.AnalysisException
@@ -330,100 +396,7 @@ public class TypeAssistantCG extends AssistantBase
 
 		return true;
 	}
-
-	public STypeCG findElementType(AApplyObjectDesignatorCG designator,
-			List<AClassDeclCG> classes, IRInfo info)
-	{
-		int appliesCount = 0;
-
-		AApplyObjectDesignatorCG mostRecentApply = designator;
-		SObjectDesignatorCG object = designator.getObject();
-
-		while (object != null)
-		{
-			if (object instanceof AIdentifierObjectDesignatorCG)
-			{
-				AIdentifierObjectDesignatorCG id = (AIdentifierObjectDesignatorCG) object;
-
-				STypeCG type = id.getExp().getType();
-
-				return findElementType(appliesCount, type);
-			} else if (object instanceof AApplyObjectDesignatorCG)
-			{
-				mostRecentApply = (AApplyObjectDesignatorCG) object;
-				appliesCount++;
-				object = mostRecentApply.getObject();
-			} else if (object instanceof AFieldObjectDesignatorCG)
-			{
-				AFieldObjectDesignatorCG fieldObj = (AFieldObjectDesignatorCG) object;
-				object = fieldObj.getObject();
-
-				return findElementType(classes, info, appliesCount, mostRecentApply, fieldObj);
-			} else
-			{
-				return null;
-			}
-		}
-
-		return null;
-	}
-
-	private STypeCG findElementType(int appliesCount, STypeCG type)
-	{
-		int methodTypesCount = 0;
-
-		while (type instanceof AMethodTypeCG)
-		{
-			methodTypesCount++;
-			AMethodTypeCG methodType = (AMethodTypeCG) type;
-			type = methodType.getResult();
-		}
-
-		while (type instanceof SSeqTypeCG || type instanceof SMapTypeCG)
-		{
-			if (type instanceof SSeqTypeCG)
-			{
-				type = ((SSeqTypeCG) type).getSeqOf();
-			}
-
-			if (type instanceof SMapTypeCG)
-			{
-				type = ((SMapTypeCG) type).getTo();
-			}
-
-			if (appliesCount == methodTypesCount)
-			{
-				return type;
-			}
-
-			methodTypesCount++;
-		}
-
-		return null;
-	}
-
-	private STypeCG findElementType(List<AClassDeclCG> classes, IRInfo info,
-			int appliesCount, AApplyObjectDesignatorCG mostRecentApply,
-			AFieldObjectDesignatorCG fieldObj)
-	{
-		try
-		{
-			STypeCG type = getFieldType(classes, fieldObj.getFieldModule(), fieldObj.getFieldName());
-
-			if (type == null)
-			{
-				type = getMethodType(info, classes, fieldObj.getFieldModule(), fieldObj.getFieldName(), mostRecentApply.getArgs());
-			}
-
-			return findElementType(appliesCount, type);
-
-		} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
-		{
-			e.printStackTrace();
-			return null;
-		}
-	}
-
+	
 	public PType getType(IRInfo question, AUnionType unionType, PPattern pattern)
 	{
 		PTypeSet possibleTypes = new PTypeSet(question.getTcFactory());
