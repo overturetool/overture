@@ -58,6 +58,8 @@ import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedData;
 import org.overture.codegen.utils.GeneratedModule;
+import org.overture.codegen.vdm2cpp.timing.inserter.TimingInjectorVisitor;
+import org.overture.codegen.vdm2cpp.timing.inserter.TimingMainCreator;
 import org.overture.codegen.vdm2cpp.vdmtools.CGGenHelper;
 
 public class CppCodeGen extends CodeGenBase
@@ -67,10 +69,13 @@ public class CppCodeGen extends CodeGenBase
 //			"Utils", "Record", "Long", "Double", "Character", "String", "List",
 //			"Set" };
 	String generator_type;
-	public CppCodeGen(String gen_type)
+	boolean generate_timing;
+	
+	public CppCodeGen(String gen_type,boolean gen_timing)
 	{
 		super(null);
 		generator_type = gen_type;
+		generate_timing = gen_timing;
 		init();
 	}
 
@@ -89,47 +94,6 @@ public class CppCodeGen extends CodeGenBase
 
 	public List<GeneratedModule> generateJavaFromVdmQuotes()
 	{
-//		try
-//		{
-//			List<String> quoteValues = generator.getQuoteValues();
-//
-//			if (quoteValues.isEmpty())
-//			{
-//				return null; // Nothing to generate
-//			}
-//
-//			//javaFormat.init();
-//			
-//			//JavaQuoteValueCreator quoteValueCreator = new JavaQuoteValueCreator(irInfo, transformationAssistant);
-//			
-//			List<AClassDeclCG> quoteDecls = new LinkedList<AClassDeclCG>();
-//			
-////			for(String qv : quoteValues)
-////			{
-////				quoteDecls.add(quoteValueCreator.consQuoteValue(qv));
-////			}
-//
-//			List<GeneratedModule> modules = new LinkedList<GeneratedModule>();
-//			
-//			for (AClassDeclCG q : quoteDecls)
-//			{
-//				//StringWriter writer = new StringWriter();
-//				//q.apply(javaFormat.getMergeVisitor(), writer);
-//				//String code = writer.toString();
-//				//String formattedJavaCode = JavaCodeGenUtil.formatJavaCode(code);
-//				
-//				//modules.add(new GeneratedModule(q.getName(), q, formattedJavaCode));
-//			}
-//
-//
-//			return modules;
-//
-//		} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
-//		{
-//			Logger.getLog().printErrorln("Error when formatting quotes: "
-//					+ e.getMessage());
-//			e.printStackTrace();
-//		}
 
 		return null;
 	}
@@ -183,6 +147,8 @@ public class CppCodeGen extends CodeGenBase
 		{
 			analyses = new CppVdmtoolsTransSeries(this).consAnalyses(classes, functionValueAssistant);
 		}
+		
+		
 
 		for (DepthFirstAnalysisAdaptor transformation : analyses)
 		{
@@ -229,7 +195,8 @@ public class CppCodeGen extends CodeGenBase
 			helper = new CGGenHelper();
 		}
 		 //CGNew mergeVisitor = new CGNew(tan);
-		 
+		
+		TimingInjectorVisitor timing = new TimingInjectorVisitor();
 		
 		//FunctionValueAssistant functionValue = funcValueTransformation.getFunctionValueAssistant();
 		//javaFormat.setFunctionValueAssistant(functionValue);
@@ -267,7 +234,10 @@ public class CppCodeGen extends CodeGenBase
 //						String formattedJavaCode = writer.toString();
 //						generated.add(new GeneratedModule(className, classCg, formattedJavaCode));
 //					}
-					
+					if(generate_timing)
+					{
+						classCg.apply(timing);
+					}
 					String code = classCg.apply(mergeVisitor);
 					if(helper != null)
 					{
@@ -295,6 +265,10 @@ public class CppCodeGen extends CodeGenBase
 		if(helper != null)
 		{
 			generated.add(new GeneratedModule("CGBase",null,(String) helper.GenerateHelper()));
+		}
+		if(generate_timing)
+		{
+			System.out.println(TimingMainCreator.generateMainMethod( timing.getRegisteredMethods()));
 		}
 
 //		List<AInterfaceDeclCG> funcValueInterfaces = functionValue.getFunctionValueInterfaces();

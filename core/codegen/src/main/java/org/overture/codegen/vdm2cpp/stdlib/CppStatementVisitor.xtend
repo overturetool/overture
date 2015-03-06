@@ -24,6 +24,7 @@ import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG
 import org.overture.codegen.cgast.statements.ARaiseErrorStmCG
 import org.overture.codegen.cgast.types.AVoidTypeCG
 import org.overture.codegen.cgast.statements.AStackDeclStmCG
+import org.overture.codegen.cgast.statements.AForAllStmCG
 
 class CppStatementVisitor extends XtendAnswerStringVisitor {
 	
@@ -91,6 +92,20 @@ class CppStatementVisitor extends XtendAnswerStringVisitor {
 	{
 		«node.body?.expand»
 	}
+	'''
+	
+	override caseAForAllStmCG(AForAllStmCG node)
+	'''
+	/*«node.exp» 
+	«node.pattern» */
+	«node.exp.type.expand» sasdf =  «node.exp.expand»;
+	for(«node.exp.type.expand»::iterator it =sasdf.begin(); it!=sasdf.end();++it)
+		{
+			«node.exp.type.expand»::value_type «node.pattern.expand» = *it;
+			
+			//
+			«node.body.expand»
+		}
 	'''
 	
 	override caseARaiseErrorStmCG(ARaiseErrorStmCG node)

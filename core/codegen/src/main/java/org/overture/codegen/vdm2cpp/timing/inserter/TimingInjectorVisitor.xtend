@@ -9,6 +9,8 @@ import org.overture.codegen.cgast.statements.ABlockStmCG
 import org.overture.codegen.cgast.statements.AStackDeclStmCG
 import org.overture.codegen.cgast.types.AExternalTypeCG
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG
+import java.util.LinkedList
+import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG
 
 class TimingInjectorVisitor extends DepthFirstAnalysisAdaptor {
 	
@@ -26,7 +28,7 @@ class TimingInjectorVisitor extends DepthFirstAnalysisAdaptor {
 		if(b instanceof ABlockStmCG)
 		{
 			var cl = node.getAncestor(AClassDeclCG)
-			registered_methods.put(id,cl.name + "::" + node.name)
+			registered_methods.put(id,cl.name + "::" + node.name+ ":" + (node.methodType))
 			var timeScopetype = new AExternalTypeCG();
 			timeScopetype.setName("TimedScope");
 			var zero = new AIntLiteralExpCG();
@@ -45,6 +47,9 @@ class TimingInjectorVisitor extends DepthFirstAnalysisAdaptor {
 			
 		}
 	}
+	
+	def toIden(LinkedList<AFormalParamLocalParamCG> cgs)
+	'''«FOR a: cgs SEPARATOR ','»«a.type»«ENDFOR»'''
 	
 	
 }

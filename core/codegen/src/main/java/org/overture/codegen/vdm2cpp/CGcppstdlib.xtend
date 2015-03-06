@@ -1,27 +1,22 @@
 package org.overture.codegen.vdm2cpp
 
-import org.overture.codegen.vdm2cpp.XtendAnswerStringVisitor
+import org.overture.codegen.cgast.INode
+import org.overture.codegen.cgast.SDeclCG
+import org.overture.codegen.cgast.SExpCG
+import org.overture.codegen.cgast.SStmCG
+import org.overture.codegen.cgast.STypeCG
+import org.overture.codegen.cgast.analysis.AnalysisException
+import org.overture.codegen.cgast.declarations.AClassDeclCG
+import org.overture.codegen.cgast.name.ATypeNameCG
+import org.overture.codegen.cgast.patterns.AIdentifierPatternCG
+import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG
+import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG
+import org.overture.codegen.vdm2cpp.stdlib.CppDeclarationsVisitor
 import org.overture.codegen.vdm2cpp.stdlib.CppExpressionVisitor
 import org.overture.codegen.vdm2cpp.stdlib.CppStatementVisitor
 import org.overture.codegen.vdm2cpp.stdlib.CppTypeVisitor
-import org.overture.codegen.vdm2cpp.stdlib.CppDeclarationsVisitor
-import org.overture.codegen.cgast.INode
-import java.util.Vector
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor
-import org.overture.codegen.cgast.analysis.AnalysisException
-import org.overture.codegen.cgast.expressions.ANewExpCG
-import org.overture.codegen.cgast.declarations.AMethodDeclCG
-import org.overture.codegen.cgast.STypeCG
-import org.overture.codegen.cgast.SExpCG
-import org.overture.codegen.cgast.SStmCG
-import org.overture.codegen.cgast.SDeclCG
-import org.overture.codegen.cgast.name.ATypeNameCG
-import org.overture.codegen.cgast.declarations.AClassDeclCG
-import org.overture.codegen.cgast.patterns.AIdentifierPatternCG
-import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG
-import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG
 import org.overture.codegen.vdm2cpp.stdlib.DependencyAnalyser
-
+import org.overture.codegen.cgast.expressions.AUndefinedExpCG
 
 class CGcppstdlib extends XtendAnswerStringVisitor {
 	CppExpressionVisitor exps;
@@ -109,6 +104,9 @@ class CGcppstdlib extends XtendAnswerStringVisitor {
 	#define VDMCPP«node.name.toUpperCase»_HPP
 	«node.generateIncludes»
 	
+	class «node.name»;
+	
+	typedef std::shared_ptr<«node.name»> «node.name»Ptr;
 	
 	class «node.name» «IF node.superName != null» : public «node.superName»«ENDIF»
 	{		
@@ -136,9 +134,10 @@ class CGcppstdlib extends XtendAnswerStringVisitor {
 		«ENDFOR»
 		
 		«FOR inst : node.fields.filter[access == "private"]»
-		«inst.type.expand» «inst.name»;
+		«inst.type.expand» «inst.name» «IF inst.initial instanceof AUndefinedExpCG»;«ELSE» = «inst.initial.expand»;«ENDIF»
 		«ENDFOR»
 	};
+	
 	#endif /*VDMCPP«node.name.toUpperCase»_HPP*/
 	'''
 	

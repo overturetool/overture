@@ -26,6 +26,8 @@ public class CppCodeGenMain
 	{
 		Settings.release = Release.VDM_10;
 		Dialect dialect = Dialect.VDM_RT;
+		
+		boolean gen_timing = false;
 
 		if (args.length <= 1)
 		{
@@ -47,11 +49,20 @@ public class CppCodeGenMain
 		//cg_ignore.add("FileReader.vdmrt");
 		String setting = args[0];
 		String cpp_gen_type = args[1];
+		
+		if(args.length > 2)
+		{
+			if(Boolean.parseBoolean(args[2]))
+			{
+				gen_timing = true;
+			}
+		}
+		
 		if (setting.toLowerCase().equals("oo"))
 		{
 			try
 			{
-				List<File> files = GeneralUtils.getFilesRecursive(new File(args[2]));
+				List<File> files = GeneralUtils.getFilesRecursive(new File(args[3]));
 				for( File f : files)
 				{
 					
@@ -71,7 +82,7 @@ public class CppCodeGenMain
 				List<File> libFiles = GeneralUtils.getFiles(new File("src\\test\\resources\\lib"));
 				nfiles.addAll(libFiles);
 
-				GeneratedData data = CppCodeGenUtil.generateCppFromFiles(nfiles, irSettings, cppSettings, dialect,cpp_gen_type);
+				GeneratedData data = CppCodeGenUtil.generateCppFromFiles(nfiles, irSettings, cppSettings, dialect,cpp_gen_type,gen_timing);
 				List<GeneratedModule> generatedClasses = data.getClasses();
 
 				for (GeneratedModule generatedClass : generatedClasses)

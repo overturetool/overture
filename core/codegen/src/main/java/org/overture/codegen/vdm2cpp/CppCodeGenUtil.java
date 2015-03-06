@@ -59,14 +59,17 @@ import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
 public class CppCodeGenUtil
 {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+	
+	private static boolean generate_timing;
 
 	public static GeneratedData generateCppFromFiles(List<File> files,
-			IRSettings irSettings, CppSettings javaSettings, Dialect dialect, String gen_type)
+			IRSettings irSettings, CppSettings javaSettings, Dialect dialect, String gen_type,boolean timing)
 			throws AnalysisException, UnsupportedModelingException
 	{
+		generate_timing = timing;
 		List<SClassDefinition> mergedParseList = consMergedParseList(files, dialect);
 
-		CppCodeGen vdmCodGen = new CppCodeGen(gen_type);
+		CppCodeGen vdmCodGen = new CppCodeGen(gen_type,generate_timing);
 
 		vdmCodGen.setSettings(irSettings);
 		//vdmCodGen.setJavaSettings(javaSettings);
@@ -134,7 +137,7 @@ public class CppCodeGenUtil
 					+ exp);
 		}
 
-		CppCodeGen vdmCodGen = new CppCodeGen("");
+		CppCodeGen vdmCodGen = new CppCodeGen("",false);
 		vdmCodGen.setSettings(irSettings);
 		//vdmCodGen.setJavaSettings(javaSettings);
 
@@ -209,7 +212,7 @@ public class CppCodeGenUtil
 	public static void generateJavaSourceFiles(File outputFolder,
 			List<GeneratedModule> classes)
 	{
-		CppCodeGen vdmCodGen = new CppCodeGen("");
+		CppCodeGen vdmCodGen = new CppCodeGen("",false);
 		vdmCodGen.generateJavaSourceFiles(outputFolder, classes);
 	}
 

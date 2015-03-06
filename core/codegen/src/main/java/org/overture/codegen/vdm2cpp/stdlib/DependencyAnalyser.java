@@ -3,17 +3,13 @@ package org.overture.codegen.vdm2cpp.stdlib;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptorQuestion;
-import org.overture.codegen.cgast.declarations.AClassDeclCG;
-import org.overture.codegen.cgast.declarations.ARecordDeclCG;
-import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.expressions.AExplicitVarExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.statements.APlainCallStmCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
-import org.overture.codegen.cgast.types.AMapMapTypeCG;
-import org.overture.codegen.cgast.types.ASeqSeqTypeCG;
-import org.overture.codegen.cgast.types.ASetSetTypeCG;
+import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.vdm2cpp.DependencyManager;
+
 
 public class DependencyAnalyser extends DepthFirstAnalysisAdaptorQuestion<DependencyManager> 
 {
@@ -27,8 +23,21 @@ public class DependencyAnalyser extends DepthFirstAnalysisAdaptorQuestion<Depend
 		question.addTargetLanguageType("map", "std", "map");
 		question.addTargetLanguageType("vdm_types", "vdm", "vdm_types.hpp");
 		question.addTargetLanguageType("vdm", "vdm", "vdm.hpp");
+		
 		question.addClassType(node.getName(), node.getName());
 	}
+	
+	@Override
+	public void inAExternalTypeCG(AExternalTypeCG node,
+			DependencyManager question) throws AnalysisException {
+		// TODO Auto-generated method stub
+		question.addTargetLanguageType(node.getName(), "", node.getName()+".hpp");
+		
+		super.inAExternalTypeCG(node, question);
+		
+		
+	}
+	
 	@Override
 	public void inATypeNameCG(ATypeNameCG node, DependencyManager question)
 			throws AnalysisException 

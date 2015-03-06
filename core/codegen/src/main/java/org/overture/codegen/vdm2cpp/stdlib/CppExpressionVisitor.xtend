@@ -64,6 +64,12 @@ import org.overture.codegen.cgast.expressions.AMapDomainUnaryExpCG
 import org.overture.codegen.cgast.expressions.AMapletExpCG
 import org.overture.codegen.cgast.expressions.AMapRangeUnaryExpCG
 import org.overture.codegen.cgast.expressions.AMapInverseUnaryExpCG
+import org.overture.codegen.cgast.expressions.ATupleExpCG
+import org.overture.codegen.cgast.expressions.ASubSeqExpCG
+import org.overture.codegen.cgast.expressions.ASelfExpCG
+import org.overture.codegen.cgast.expressions.APowerNumericBinaryExpCG
+import org.overture.codegen.cgast.expressions.AIndicesUnaryExpCG
+import org.overture.codegen.cgast.expressions.ACharLiteralExpCG
 
 class CppExpressionVisitor extends XtendAnswerStringVisitor {
 	
@@ -293,9 +299,13 @@ class CppExpressionVisitor extends XtendAnswerStringVisitor {
 		{
 			return '''(«node.object.expand»)->«node.memberName»'''
 		}
+		else if (node.object.type == null)
+		{
+			return '''«node.object.expand»->«node.memberName»'''
+		}
 		else
 		{
-			return '''«node.object».«node.memberName»'''
+			return '''«node.object.expand».«node.memberName»'''
 		}
 	}
 	
@@ -303,7 +313,7 @@ class CppExpressionVisitor extends XtendAnswerStringVisitor {
 	'''"«StringEscapeUtils.escapeJava( node.value)»"'''
 	
 	override caseALenUnaryExpCG(ALenUnaryExpCG node)
-	''' vdm::len(«node.exp»)'''
+	''' vdm::len(«node.exp.expand»)'''
 	
 	override caseAMinusUnaryExpCG(AMinusUnaryExpCG node)
 	'''-(«node.exp.expand»)'''
@@ -324,16 +334,16 @@ class CppExpressionVisitor extends XtendAnswerStringVisitor {
 			if(node.args.head instanceof AIntLiteralExpCG)
 			{
 				var v = node.args.head as AIntLiteralExpCG
-				return '''«node.root.expand»[«FOR n : node.args SEPARATOR ','»«v.value-1»«ENDFOR»]'''	
+				return '''«node.root.expand»[«FOR n : node.args SEPARATOR ','»«v.value-1»«ENDFOR»]/*c1*/'''	
 			}
 			else
 			{
-				return '''«node.root.expand»[«FOR n : node.args SEPARATOR ','»(«n.expand»)«ENDFOR»]'''
+				return '''«node.root.expand»[«FOR n : node.args SEPARATOR ','»(«n.expand»)-1«ENDFOR»]/*c2*/'''
 			}
 		}
 		else
 		{
-			return '''«node.root.expand»(«FOR n : node.args SEPARATOR ','»«n.expand»«ENDFOR»)'''	
+			return '''«node.root.expand»(«FOR n : node.args SEPARATOR ','»«n.expand»«ENDFOR»)/*c3*/'''	
 		}
 	}
 	
@@ -370,5 +380,23 @@ class CppExpressionVisitor extends XtendAnswerStringVisitor {
 	
 	override caseAMapInverseUnaryExpCG(AMapInverseUnaryExpCG node)
 	'''vdm::map_inverse(«node.exp.expand»)'''
+	
+	
+	override caseATupleExpCG(ATupleExpCG node)
+	'''std::make_tuple(«FOR arg : node.args SEPARATOR ','»«arg.expand»«ENDFOR»)'''
+
+	override caseASubSeqExpCG(ASubSeqExpCG node)
+	'''vdm::subseq(«node.seq.expand»,«node.from.expand»,«node.to.expand»)'''
+	
+	
+	override caseASelfExpCG(ASelfExpCG node)'''this'''
+	
+	override caseAPowerNumericBinaryExpCG(APowerNumericBinaryExpCG node)'''pow(«node.left.expand»,«node.right.expand»)'''
+	
+	override caseAIndicesUnaryExpCG(AIndicesUnaryExpCG node)
+	'''vdm::inds(«node.exp.expand»)''' 
+	
+	override caseACharLiteralExpCG(ACharLiteralExpCG node) 
+	''' '«node.value»' '''
 	
 }
