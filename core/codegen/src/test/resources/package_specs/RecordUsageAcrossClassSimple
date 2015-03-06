@@ -1,0 +1,19 @@
+class A
+
+types
+
+public
+Rec ::
+  n : int;
+
+end A
+
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+	return mk_A`Rec(15).n;
+
+end Entry
