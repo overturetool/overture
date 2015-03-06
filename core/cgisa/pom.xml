@@ -57,7 +57,7 @@
       </plugin>
 
           <plugin>
-	<groupId>org.overture.astcreator</groupId>
+	<groupId>org.overturetool.astcreator</groupId>
 	<artifactId>astcreator-plugin</artifactId>
 	<version>${astcreator.version}</version>
 	<executions>
@@ -72,7 +72,7 @@
 	<configuration>
 	  <ast>cg.astv2</ast>
 	  <extendedAst>isacg.ast</extendedAst>
-	  <extendedName>Ext</extendedName>
+	  <extendedName>Isa</extendedName>
 	  <extendedTreeOnly>true</extendedTreeOnly>
 	  <useSrcOutput>false</useSrcOutput>
 

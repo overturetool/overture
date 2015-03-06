@@ -1,7 +1,7 @@
 Packages
 
-base org.overturetool.cgisa.extast.node;
-analysis org.overturetool.cgisa.extast.analysis;
+base org.overture.cgisa.extast.node;
+analysis org.overture.cgisa.extast.analysis;
 
 Tokens
 
@@ -18,4 +18,5 @@ CG = #decl
            [mutrecfuncs]:CG.#decl.mrFuncGroup*
        | {extClass}
            [baseClass]:CG.#decl.class
+           [mutrecfuncs]:CG.#decl.mrFuncGroup*
        ;

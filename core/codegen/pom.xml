@@ -13,7 +13,7 @@
   <name>VDM Code Generator</name>
 
   <properties> 
-    <astcreator.version>1.6.4</astcreator.version>
+    <astcreator.version>1.6.7-SNAPSHOT</astcreator.version>
   </properties>
 
   <dependencies>
