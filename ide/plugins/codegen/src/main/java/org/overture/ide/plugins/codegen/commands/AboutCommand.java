@@ -48,7 +48,7 @@ public class AboutCommand extends AbstractHandler
 			String title = "VDM++ to Java Code Generator";
 			String about = GeneralUtils.readFromInputStream(fileStream).toString();
 			about = String.format(about, PluginVdm2JavaUtil.CODEGEN_RUNTIME_BIN_FILE,
-					PluginVdm2JavaUtil.CODEGEN_RUNTIME_SOURCES_FILE_NAME,
+					PluginVdm2JavaUtil.CODEGEN_RUNTIME_SOURCES_FILE,
 					PluginVdm2JavaUtil.CODEGEN_RUNTIME_LIB_FOLDER);
 
 			MessageDialog.openInformation(shell, title, about);
