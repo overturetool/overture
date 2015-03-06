@@ -268,7 +268,12 @@ public class Vdm2JavaCommand extends AbstractHandler
 					{
 						handleInvalidNames(invalidNames);
 					}
+					
+					// Output any warnings such as problems with the user's launch configuration
+					outputWarnings(generatedData.getWarnings());
 
+					
+					// Summarize the code generation process
 					int noOfClasses = generatedData.getClasses().size();
 					
 					String msg = String.format("...finished Java code generation (generated %s %s).", 
@@ -356,6 +361,19 @@ public class Vdm2JavaCommand extends AbstractHandler
 			Activator.log("Could not delete markers for project: "
 					+ project.toString(), ex);
 			ex.printStackTrace();
+		}
+	}
+
+	private void outputWarnings(List<String> warnings)
+	{
+		if(warnings != null && !warnings.isEmpty())
+		{
+			for(String warning : warnings)
+			{
+				CodeGenConsole.GetInstance().println(PluginVdm2JavaUtil.WARNING + " " + warning);
+			}
+			
+			CodeGenConsole.GetInstance().printErrorln("");
 		}
 	}
 	

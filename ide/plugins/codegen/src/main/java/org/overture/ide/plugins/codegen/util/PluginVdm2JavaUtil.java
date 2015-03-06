@@ -87,6 +87,8 @@ public class PluginVdm2JavaUtil
 	public static final String ECLIPSE_RES_FILES_FOLDER = "eclipsefiles";
 	public static final String ECLIPSE_PROJECT_SRC_FOLDER = "src"; 
 
+	public static final String WARNING = "[WARNING]";
+	
 	private PluginVdm2JavaUtil()
 	{
 	}

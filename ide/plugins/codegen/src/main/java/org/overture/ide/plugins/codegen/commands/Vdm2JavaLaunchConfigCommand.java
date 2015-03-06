@@ -10,8 +10,6 @@ import org.overture.ide.plugins.codegen.util.PluginVdm2JavaUtil;
 
 public class Vdm2JavaLaunchConfigCommand extends Vdm2JavaCommand
 {
-	private static final String WARNING = "[WARNING]";
-
 	@Override
 	public JavaSettings getJavaSettings(IProject project,
 			List<String> classesToSkip)
@@ -34,7 +32,7 @@ public class Vdm2JavaLaunchConfigCommand extends Vdm2JavaCommand
 			}
 		} else
 		{
-			CodeGenConsole.GetInstance().println(WARNING
+			CodeGenConsole.GetInstance().println(PluginVdm2JavaUtil.WARNING
 					+ " No launch configuration could be found for this project.\n");
 			CodeGenConsole.GetInstance().println("Cancelling launch configuration based code generation...\n");
 		}
