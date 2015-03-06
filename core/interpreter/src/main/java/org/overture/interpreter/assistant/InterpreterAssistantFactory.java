@@ -11,7 +11,6 @@ import org.overture.ast.lex.LexNameList;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.statements.PStm;
 import org.overture.interpreter.assistant.definition.ABusClassDefinitionAssistantInterpreter;
-import org.overture.interpreter.assistant.definition.AClassClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.ACpuClassDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AExplicitFunctionDefinitionAssistantInterpreter;
 import org.overture.interpreter.assistant.definition.AImplicitFunctionDefinitionAssistantInterpreter;
@@ -37,7 +36,6 @@ import org.overture.interpreter.assistant.pattern.PPatternAssistantInterpreter;
 import org.overture.interpreter.assistant.pattern.PPatternListAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.ACaseAlternativeStmAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.AStartStmAssistantInterpreter;
-import org.overture.interpreter.assistant.statement.ATixeStmtAlternativeAssistantInterpreter;
 import org.overture.interpreter.assistant.statement.PStmAssistantInterpreter;
 import org.overture.interpreter.assistant.type.PTypeAssistantInterpreter;
 import org.overture.interpreter.assistant.type.PTypeListAssistant;
@@ -106,10 +104,10 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 		return new ABusClassDefinitionAssistantInterpreter(this);
 	}
 
-	public AClassClassDefinitionAssistantInterpreter createAClassClassDefinitionAssistant()
-	{
-		return new AClassClassDefinitionAssistantInterpreter(this);
-	}
+//	public AClassClassDefinitionAssistantInterpreter createAClassClassDefinitionAssistant()
+//	{
+//		return new AClassClassDefinitionAssistantInterpreter(this);
+//	}
 
 	// public AConcurrentExpressionTraceCoreDefinitionAssistantInterpreter
 	// createAConcurrentExpressionTraceCoreDefinitionAssistant()
@@ -731,10 +729,10 @@ public class InterpreterAssistantFactory extends TypeCheckerAssistantFactory
 	// return new ATixeStmAssistantInterpreter(this);
 	// }
 	//
-	public ATixeStmtAlternativeAssistantInterpreter createATixeStmtAlternativeAssistant()
-	{
-		return new ATixeStmtAlternativeAssistantInterpreter(this);
-	}
+//	public ATixeStmtAlternativeAssistantInterpreter createATixeStmtAlternativeAssistant()
+//	{
+//		return new ATixeStmtAlternativeAssistantInterpreter(this);
+//	}
 
 	//
 	// public ATrapStmAssistantInterpreter createATrapStmAssistant()

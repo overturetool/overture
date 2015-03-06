@@ -60,8 +60,6 @@ import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinition
 import org.overture.typechecker.assistant.definition.AExplicitOperationDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitFunctionDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AImplicitOperationDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.AInstanceVariableDefinitionAssistantTC;
-import org.overture.typechecker.assistant.definition.ALocalDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AStateDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.AThreadDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.ATypeDefinitionAssistantTC;
@@ -71,24 +69,15 @@ import org.overture.typechecker.assistant.definition.PDefinitionListAssistantTC;
 import org.overture.typechecker.assistant.definition.PDefinitionSet;
 import org.overture.typechecker.assistant.definition.PTraceDefinitionAssistantTC;
 import org.overture.typechecker.assistant.definition.SClassDefinitionAssistantTC;
-import org.overture.typechecker.assistant.expression.AApplyExpAssistantTC;
-import org.overture.typechecker.assistant.expression.ACaseAlternativeAssistantTC;
-import org.overture.typechecker.assistant.expression.PExpAssistantTC;
 import org.overture.typechecker.assistant.expression.SBinaryExpAssistantTC;
-import org.overture.typechecker.assistant.module.AFromModuleImportsAssistantTC;
-import org.overture.typechecker.assistant.module.AModuleExportsAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleImportsAssistantTC;
 import org.overture.typechecker.assistant.module.AModuleModulesAssistantTC;
-import org.overture.typechecker.assistant.module.PExportAssistantTC;
-import org.overture.typechecker.assistant.module.PImportAssistantTC;
 import org.overture.typechecker.assistant.pattern.AMapletPatternMapletAssistantTC;
 import org.overture.typechecker.assistant.pattern.APatternTypePairAssistant;
-import org.overture.typechecker.assistant.pattern.ASetBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.ATypeBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PMultipleBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternAssistantTC;
-import org.overture.typechecker.assistant.pattern.PPatternBindAssistantTC;
 import org.overture.typechecker.assistant.pattern.PPatternListAssistantTC;
 import org.overture.typechecker.assistant.pattern.PatternListTC;
 import org.overture.typechecker.assistant.statement.ABlockSimpleBlockStmAssistantTC;
@@ -138,9 +127,9 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	// AImportedDefinitionAssistantTC createAImportedDefinitionAssistant();
 
-	AInstanceVariableDefinitionAssistantTC createAInstanceVariableDefinitionAssistant();
+	//AInstanceVariableDefinitionAssistantTC createAInstanceVariableDefinitionAssistant();
 
-	ALocalDefinitionAssistantTC createALocalDefinitionAssistant();
+	//ALocalDefinitionAssistantTC createALocalDefinitionAssistant();
 
 	AStateDefinitionAssistantTC createAStateDefinitionAssistant();
 
@@ -165,27 +154,27 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 	SClassDefinitionAssistantTC createSClassDefinitionAssistant();
 
 	// expression
-	AApplyExpAssistantTC createAApplyExpAssistant();
+	//AApplyExpAssistantTC createAApplyExpAssistant();
 
-	ACaseAlternativeAssistantTC createACaseAlternativeAssistant();
+	//ACaseAlternativeAssistantTC createACaseAlternativeAssistant();
 
-	PExpAssistantTC createPExpAssistant();
+	//PExpAssistantTC createPExpAssistant();
 
 	SBinaryExpAssistantTC createSBinaryExpAssistant();
 
 	// module
 
-	AFromModuleImportsAssistantTC createAFromModuleImportsAssistant();
+	//AFromModuleImportsAssistantTC createAFromModuleImportsAssistant();
 
-	AModuleExportsAssistantTC createAModuleExportsAssistant();
+	//AModuleExportsAssistantTC createAModuleExportsAssistant();
 
 	AModuleImportsAssistantTC createAModuleImportsAssistant();
 
 	AModuleModulesAssistantTC createAModuleModulesAssistant();
 
-	PExportAssistantTC createPExportAssistant();
+	//PExportAssistantTC createPExportAssistant();
 
-	PImportAssistantTC createPImportAssistant();
+	//PImportAssistantTC createPImportAssistant();
 
 	// pattern
 	// ABooleanPatternAssistantTC createABooleanPatternAssistant();
@@ -208,7 +197,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	// ASeqPatternAssistantTC createASeqPatternAssistant();
 
-	ASetBindAssistantTC createASetBindAssistant();
+	//ASetBindAssistantTC createASetBindAssistant();
 
 	// ASetPatternAssistantTC createASetPatternAssistant();
 
@@ -226,7 +215,7 @@ public interface ITypeCheckerAssistantFactory extends IAstAssistantFactory
 
 	PPatternAssistantTC createPPatternAssistant();
 
-	PPatternBindAssistantTC createPPatternBindAssistant();
+	//PPatternBindAssistantTC createPPatternBindAssistant();
 
 	PPatternListAssistantTC createPPatternListAssistant();
 

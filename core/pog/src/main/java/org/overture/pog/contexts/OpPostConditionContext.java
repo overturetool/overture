@@ -271,7 +271,7 @@ public class OpPostConditionContext extends StatefulContext implements
 			}
 		} catch (AnalysisException e)
 		{
-			// FIXME consider handling of exceptions inside final context construction
+			//consider handling of exceptions inside final context construction
 			e.printStackTrace();
 		}
 		return null;
