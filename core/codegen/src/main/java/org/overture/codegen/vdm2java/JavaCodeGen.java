@@ -506,8 +506,16 @@ public class JavaCodeGen extends CodeGenBase
 		if (generatedModule != null && generatedModule.canBeGenerated()
 				&& !generatedModule.hasMergeErrors())
 		{
-			JavaCodeGenUtil.saveJavaClass(outputFolder, generatedModule.getName()
-					+ IJavaCodeGenConstants.JAVA_FILE_EXTENSION, generatedModule.getContent());
+			String javaFileName = generatedModule.getName();
+			
+			if(GeneralCodeGenUtils.isQuote(generatedModule.getIrDecl()))
+			{
+				javaFileName += JAVA_QUOTE_NAME_SUFFIX;
+			}
+			
+			javaFileName += IJavaCodeGenConstants.JAVA_FILE_EXTENSION;
+			
+			JavaCodeGenUtil.saveJavaClass(outputFolder, javaFileName, generatedModule.getContent());
 		}
 	}
 

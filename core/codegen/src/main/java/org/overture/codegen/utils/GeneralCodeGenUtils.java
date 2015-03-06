@@ -44,8 +44,11 @@ import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.util.definitions.ClassList;
+import org.overture.codegen.cgast.SDeclCG;
+import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.logging.Logger;
+import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.lex.LexTokenReader;
 import org.overture.parser.messages.Console;
@@ -388,6 +391,20 @@ public class GeneralCodeGenUtils
 		else
 		{
 			return pack.replaceAll("\\.", "/");
+		}
+	}
+	
+	public static boolean isQuote(SDeclCG decl)
+	{
+		if(decl instanceof AClassDeclCG)
+		{
+			AClassDeclCG clazz = (AClassDeclCG) decl;
+			
+			return clazz.getPackage() != null && clazz.getPackage().endsWith("." + JavaCodeGen.QUOTES);
+		}
+		else
+		{
+			return false;
 		}
 	}
 }

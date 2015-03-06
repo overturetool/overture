@@ -466,7 +466,7 @@ public class CompileTests
 		{
 			File currentInputFile = testInputFiles.get(i);
 			
-			GeneralUtils.deleteFolderContents(parent, FOLDER_NAMES_TO_AVOID);
+			GeneralUtils.deleteFolderContents(parent, FOLDER_NAMES_TO_AVOID, false);
 
 			// Calculating the Java result:
 			File file = resultFiles.get(i);

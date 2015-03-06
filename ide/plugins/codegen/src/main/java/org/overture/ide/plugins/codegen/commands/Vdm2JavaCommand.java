@@ -181,7 +181,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 					File eclipseProjectFolder = PluginVdm2JavaUtil.getEclipseProjectFolder(vdmProject);
 					
 					// Clean folder with generated Java code
-					GeneralUtils.deleteFolderContents(eclipseProjectFolder);
+					GeneralUtils.deleteFolderContents(eclipseProjectFolder, true);
 
 					// Generate user specified classes
 					GeneratedData generatedData = vdm2java.generateJavaFromVdm(mergedParseLists);
