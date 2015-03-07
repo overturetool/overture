@@ -150,6 +150,16 @@ public class IO {
 		System.out.flush();
     }
     
+    public static String sprintf(String format, List<Object> args) {
+        
+		return String.format(format, args.toArray());
+    }
+    
+    public static VDMSeq sprintf(VDMSeq seq, List<Object> args) {
+		
+    	throw new UnsupportedOperationException("sprintf is only supported for formats of type String");
+    }
+    
     private static Object[] formatList(List<Object> args)
     {
     	for(int i = 0; i < args.size(); i++)
