@@ -124,20 +124,6 @@ public class GeneralUtils
 		return fileList;
 	}
 
-	public static List<File> getFilesFromPaths(String[] args)
-	{
-		List<File> files = new LinkedList<File>();
-
-		for (int i = 1; i < args.length; i++)
-		{
-			String fileName = args[i];
-			File file = new File(fileName);
-			files.add(file);
-		}
-
-		return files;
-	}
-
 	public static void deleteFolderContents(File folder, boolean removeFolders)
 	{
 		deleteFolderContents(folder, new ArrayList<String>(), removeFolders);
