@@ -301,7 +301,7 @@ public class LexTokenReader extends BacktrackInputReader
 	private void throwMessage(int number, int line, int pos, String msg)
 			throws LexException
 	{
-		throw new LexException(number, msg, new LexLocation(file, currentModule, line, pos, line, pos, -1, -1));// FIXME
+		throw new LexException(number, msg, new LexLocation(file, currentModule, line, pos, line, pos, -1, -1));//
 	}
 
 	/**

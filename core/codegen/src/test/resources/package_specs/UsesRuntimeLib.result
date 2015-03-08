@@ -1,0 +1,23 @@
+package my.model;
+
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        VDMSeq xs = SeqUtil.seq(3L, 4L, 5L);
+
+        return ((Number) Utils.get(xs, 3L));
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########

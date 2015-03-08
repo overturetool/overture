@@ -8,11 +8,11 @@ public class Entry {
     }
 
     public static Object Run() {
-        quotes.A x = quotes.A.getInstance();
-        quotes.B y = quotes.B.getInstance();
+        quotes.AQuote x = quotes.AQuote.getInstance();
+        quotes.BQuote y = quotes.BQuote.getInstance();
 
-        return SeqUtil.seq(Utils.equals(x, quotes.A.getInstance()),
-            Utils.equals(y, quotes.A.getInstance()));
+        return SeqUtil.seq(Utils.equals(x, quotes.AQuote.getInstance()),
+            Utils.equals(y, quotes.AQuote.getInstance()));
     }
 
     public String toString() {

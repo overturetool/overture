@@ -1,0 +1,18 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+(
+  dcl xs : seq of seq of seq of char := [[['a', 'b'],['c','d']], [['e', 'f'], ['g', 'h']]];
+  
+  xs(2)(1)(1) := 'x';
+  
+  if xs(2)(1)(1) = 'x' then
+    return xs(2)(2)(2)
+  else
+    return xs(1)(2)(1);
+);
+
+end Entry

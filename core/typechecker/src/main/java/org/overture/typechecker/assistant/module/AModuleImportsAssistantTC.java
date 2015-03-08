@@ -30,9 +30,12 @@ import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.modules.AFromModuleImports;
 import org.overture.ast.modules.AModuleImports;
 import org.overture.ast.modules.AModuleModules;
+import org.overture.ast.modules.PImport;
 import org.overture.typechecker.ModuleEnvironment;
+import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
+import org.overture.typechecker.visitor.TypeCheckVisitor;
 
 public class AModuleImportsAssistantTC implements IAstAssistant
 {
@@ -64,7 +67,7 @@ public class AModuleImportsAssistantTC implements IAstAssistant
 						+ ifm.getName(), ifm.getName().getLocation(), ifm);
 			} else
 			{
-				defs.addAll(af.createAFromModuleImportsAssistant().getDefinitions(ifm, from));
+				defs.addAll(getDefinitions(ifm, from));
 			}
 		}
 
@@ -77,9 +80,55 @@ public class AModuleImportsAssistantTC implements IAstAssistant
 
 		for (AFromModuleImports ifm : imports.getImports())
 		{
-			af.createAFromModuleImportsAssistant().typeCheck(ifm, env);
+			typeCheck(ifm, env);
 		}
 
+	}
+	
+	public List<PDefinition> getDefinitions(AFromModuleImports ifm,
+			AModuleModules from)
+	{
+
+		List<PDefinition> defs = new Vector<PDefinition>();
+
+		for (List<PImport> ofType : ifm.getSignatures())
+		{
+			for (PImport imp : ofType)
+			{
+				defs.addAll(getDefinitions(imp, from));
+			}
+		}
+
+		return defs;
+	}
+	
+	//Move from an old Assistant called AFromModuleImportsAssistantTC
+	//Overloads the typeCheck method of this class.
+	public void typeCheck(AFromModuleImports ifm, ModuleEnvironment env)
+			throws AnalysisException
+	{
+		TypeCheckVisitor tc = new TypeCheckVisitor();
+		TypeCheckInfo question = new TypeCheckInfo(af, env, null, null);
+
+		for (List<PImport> ofType : ifm.getSignatures())
+		{
+			for (PImport imp : ofType)
+			{
+				imp.apply(tc, question);
+			}
+		}
+
+	}
+	
+	public List<PDefinition> getDefinitions(PImport imp, AModuleModules from)
+	{
+		try
+		{
+			return imp.apply(af.getImportDefinitionFinder(), from);
+		} catch (AnalysisException e)
+		{
+			return null;
+		}
 	}
 
 }

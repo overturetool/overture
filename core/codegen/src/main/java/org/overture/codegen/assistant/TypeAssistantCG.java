@@ -82,7 +82,7 @@ import org.overture.codegen.cgast.types.SSetTypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.trans.uniontypes.ObjectDesignatorToExpCG;
+import org.overture.codegen.trans.conv.ObjectDesignatorToExpCG;
 import org.overture.typechecker.TypeComparator;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
 import org.overture.typechecker.assistant.type.PTypeAssistantTC;

@@ -73,7 +73,10 @@ public class VDMSeq extends ArrayList implements ValueType
 			while (iterator.hasNext())
 			{
 				Object element = iterator.next();
-				sb.append(Utils.toString(element));
+				
+				// Do not use Utils.toString(..) to avoid single quotes
+				// around the chars 
+				sb.append(element);
 			}
 			
 			return sb.toString();

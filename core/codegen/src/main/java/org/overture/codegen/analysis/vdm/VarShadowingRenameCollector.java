@@ -1,8 +1,10 @@
 package org.overture.codegen.analysis.vdm;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
@@ -42,6 +44,7 @@ import org.overture.ast.statements.ACasesStm;
 import org.overture.ast.statements.AForAllStm;
 import org.overture.ast.statements.AForIndexStm;
 import org.overture.ast.statements.AForPatternBindStm;
+import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.ALetBeStStm;
 import org.overture.ast.statements.ALetStm;
 import org.overture.ast.statements.ATixeStm;
@@ -56,45 +59,41 @@ import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 import org.overture.typechecker.assistant.definition.AExplicitFunctionDefinitionAssistantTC;
 
 /**
- * 
- * This analysis is used to compute new names for variables that shadow
- * other variables. A renaming is suggested if a definition hides another variable
- * or causes a duplicate definition. In addition to renaming the definition itself,
- * occurrences of the definition must also be renamed. Occurrences include both
- * variable expressions (e.g. return a) as well as identifier
- * patterns (in mk_(a,a) the first 'a' is a definition whereas the second 'a'
- * is an identifier pattern occurrence of the first 'a')
- * 
- * When computed, the renamings can be applied in order to get rid of warnings
- * related to hidden variables and duplicate definitions.
- * 
- * The current version of this analysis only considers renamings in operations
- * and functions. This is sufficient if the VDM AST is code generated to Java
- * since Java allows hiding of class fields.
+ * This analysis is used to compute new names for variables that shadow other variables. A renaming is suggested if a
+ * definition hides another variable or causes a duplicate definition. In addition to renaming the definition itself,
+ * occurrences of the definition must also be renamed. Occurrences include both variable expressions (e.g. return a),
+ * identifier state designators (e.g. x := 5) as well as identifier patterns (in mk_(a,a) the first 'a' is a definition
+ * whereas the second 'a' is an identifier pattern occurrence of the first 'a') When computed, the renamings can be
+ * applied in order to get rid of warnings related to hidden variables and duplicate definitions. The current version of
+ * this analysis only considers renamings in operations and functions. This is sufficient if the VDM AST is code
+ * generated to Java since Java allows hiding of class fields.
  * 
  * @author pvj
- *
  */
 public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 {
-	private PDefinition enclosingDef = null;
-	private Stack<ILexNameToken> localDefsInScope;
-	private List<Renaming> renamings;
-	private int enclosingCounter;
-	private List<String> namesToAvoid;
-
 	private ITypeCheckerAssistantFactory af;
 
+	private PDefinition enclosingDef;
+	private Map<AIdentifierStateDesignator, PDefinition> idDefs;
+	private Stack<ILexNameToken> localDefsInScope;
+	private int enclosingCounter;
+	
+	private List<Renaming> renamings;
+	private Set<String> namesToAvoid;
 	private TempVarNameGen nameGen;
-
-	public VarShadowingRenameCollector(ITypeCheckerAssistantFactory af)
+	
+	public VarShadowingRenameCollector(ITypeCheckerAssistantFactory af, Map<AIdentifierStateDesignator, PDefinition> idDefs)
 	{
-		this.enclosingDef = null;
-		this.localDefsInScope = new Stack<ILexNameToken>();
-		this.renamings = new LinkedList<Renaming>();
-		this.enclosingCounter = 0;
-		this.namesToAvoid = new LinkedList<String>();
 		this.af = af;
+
+		this.enclosingDef = null;
+		this.idDefs = idDefs;
+		this.localDefsInScope = new Stack<ILexNameToken>();
+		this.enclosingCounter = 0;
+
+		this.renamings = new LinkedList<Renaming>();
+		this.namesToAvoid = new HashSet<String>();
 		this.nameGen = new TempVarNameGen();
 	}
 
@@ -595,19 +594,26 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 			
 			if(varParent != null)
 			{
-				Set<AIdentifierPattern> idOccurences = collectIdOccurences(var, varParent);
+				Set<AIdentifierPattern> idPatterns = collectIdOccurences(var, varParent);
 				
-				for(AIdentifierPattern id : idOccurences)
+				for(AIdentifierPattern id : idPatterns)
 				{
 					registerRenaming(id.getName(), newName);
 				}
 			}
 			
-			Set<AVariableExp> varOccurences = collectVarOccurences(var.getLocation(), body);
+			Set<AVariableExp> vars = collectVarOccurences(var.getLocation(), body);
 
-			for (AVariableExp varExp : varOccurences)
+			for (AVariableExp varExp : vars)
 			{
 				registerRenaming(varExp.getName(), newName);
+			}
+			
+			Set<AIdentifierStateDesignator> idStateDesignators = collectIdDesignatorOccurrences(var.getLocation(), body);
+			
+			for(AIdentifierStateDesignator id : idStateDesignators)
+			{
+				registerRenaming(id.getName(), newName);
 			}
 		}
 	}
@@ -805,8 +811,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 			{
 				if (contains(localDef))
 				{
-					List<PDefinition> localDefsOusideScope = defInfo.getLocalDefs(nodeDefs.subList(0, i));
-					findRenamings(localDef, parentDef, defScope, localDefsOusideScope);
+					findRenamings(localDef, parentDef, defScope);
 				} else
 				{
 					localDefsInScope.add(localDef.getName());
@@ -821,7 +826,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		{
 			if (contains(localDef))
 			{
-				findRenamings(localDef, parentNode, defScope, new LinkedList<PDefinition>());
+				findRenamings(localDef, parentNode, defScope);
 			} else
 			{
 				localDefsInScope.add(localDef.getName());
@@ -839,7 +844,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		localDefsInScope.remove(localDef.getName());
 	}
 
-	private void findRenamings(PDefinition localDefToRename, INode parentNode, INode defScope, List<PDefinition> localDefsOusideScope)
+	private void findRenamings(PDefinition localDefToRename, INode parentNode, INode defScope)
 			throws AnalysisException
 	{
 		ILexNameToken localDefName = getName(localDefToRename);
@@ -856,18 +861,25 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 			registerRenaming(localDefName, newName);
 		}
 
-		Set<AVariableExp> occurences = collectVarOccurences(localDefToRename.getLocation(), defScope, localDefsOusideScope);
+		Set<AVariableExp> vars = collectVarOccurences(localDefToRename.getLocation(), defScope);
 
-		for (AVariableExp varExp : occurences)
+		for (AVariableExp varExp : vars)
 		{
 			registerRenaming(varExp.getName(), newName);
 		}
-
-		Set<AIdentifierPattern> patternsOcc = collectIdOccurences(localDefName, parentNode);
-
-		for (AIdentifierPattern p : patternsOcc)
+		
+		Set<AIdentifierStateDesignator> idStateDesignators = collectIdDesignatorOccurrences(localDefToRename.getLocation(), defScope);
+		
+		for(AIdentifierStateDesignator id : idStateDesignators)
 		{
-			registerRenaming(p.getName(), newName);
+			registerRenaming(id.getName(), newName);
+		}
+
+		Set<AIdentifierPattern> idPatterns = collectIdOccurences(localDefName, parentNode);
+
+		for (AIdentifierPattern id : idPatterns)
+		{
+			registerRenaming(id.getName(), newName);
 		}
 	}
 
@@ -892,22 +904,24 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		return false;
 	}
 
-	private Set<AVariableExp> collectVarOccurences(ILexLocation defLoc,
-			INode defScope, List<? extends PDefinition> defsOutsideScope)
+	private Set<AVariableExp> collectVarOccurences(ILexLocation defLoc, INode defScope)
 			throws AnalysisException
 	{
-		VarOccurencesCollector collector = new VarOccurencesCollector(defLoc, defsOutsideScope);
+		VarOccurencesCollector collector = new VarOccurencesCollector(defLoc);
 
 		defScope.apply(collector);
 
 		return collector.getVars();
 	}
 	
-	private Set<AVariableExp> collectVarOccurences(ILexLocation defLoc,
-			INode defScope)
-			throws AnalysisException
+	private Set<AIdentifierStateDesignator> collectIdDesignatorOccurrences(
+			ILexLocation defLoc, INode defScope) throws AnalysisException
 	{
-		return collectVarOccurences(defLoc, defScope, null);
+		IdDesignatorOccurencesCollector collector = new IdDesignatorOccurencesCollector(defLoc, idDefs);
+
+		defScope.apply(collector);
+
+		return collector.getIds();
 	}
 	
 	private Set<AIdentifierPattern> collectIdOccurences(ILexNameToken name, INode parent) throws AnalysisException

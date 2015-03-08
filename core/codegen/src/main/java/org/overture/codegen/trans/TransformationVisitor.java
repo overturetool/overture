@@ -45,6 +45,7 @@ import org.overture.codegen.cgast.expressions.AEnumSetExpCG;
 import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AExists1QuantifierExpCG;
 import org.overture.codegen.cgast.expressions.AExistsQuantifierExpCG;
+import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AForAllQuantifierExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.ALetBeStExpCG;
@@ -59,16 +60,13 @@ import org.overture.codegen.cgast.expressions.AUndefinedExpCG;
 import org.overture.codegen.cgast.expressions.SBoolBinaryExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
-import org.overture.codegen.cgast.statements.AAssignmentStmCG;
+import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ABreakStmCG;
 import org.overture.codegen.cgast.statements.ACaseAltStmStmCG;
 import org.overture.codegen.cgast.statements.ACasesStmCG;
-import org.overture.codegen.cgast.statements.AFieldStateDesignatorCG;
-import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.ALetBeStStmCG;
-import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
 import org.overture.codegen.cgast.statements.AWhileStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
@@ -77,7 +75,6 @@ import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.ITempVarGen;
-import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.comp.ComplexCompStrategy;
 import org.overture.codegen.trans.comp.MapCompStrategy;
@@ -153,11 +150,11 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		SExpCG trueValue = node.getTrueValue();
 		SExpCG falseValue = node.getFalseValue();
 		
-		ALocalAssignmentStmCG trueBranch = new ALocalAssignmentStmCG();
+		AAssignToExpStmCG trueBranch = new AAssignToExpStmCG();
 		trueBranch.setTarget(resultVar.clone());
 		trueBranch.setExp(trueValue.clone());
 		
-		ALocalAssignmentStmCG falseBranch = new ALocalAssignmentStmCG();
+		AAssignToExpStmCG falseBranch = new AAssignToExpStmCG();
 		falseBranch.setTarget(resultVar.clone());
 		falseBranch.setExp(falseValue);
 
@@ -361,7 +358,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 			AVarDeclCG resultDecl = transformationAssistant.consDecl(var, value.getType().clone(), transformationAssistant.consNullExp());
 			outerBlock.getLocalDefs().add(resultDecl);
 			
-			ALocalAssignmentStmCG setLetBeStResult = new ALocalAssignmentStmCG();
+			AAssignToExpStmCG setLetBeStResult = new AAssignToExpStmCG();
 			setLetBeStResult.setTarget(transformationAssistant.consIdentifierVar(var, value.getType().clone()));
 			setLetBeStResult.setExp(value);
 			outerBlock.getStatements().add(setLetBeStResult);
@@ -394,8 +391,6 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 	public void caseARecordModExpCG(ARecordModExpCG node)
 			throws AnalysisException
 	{
-		AClassDeclCG enclosingClass = node.getAncestor(AClassDeclCG.class);
-		
 		String recModifierName = info.getTempVarNameGen().nextVarName(recModifierExpPrefix);
 		
 		AVarDeclCG recDecl = transformationAssistant.consDecl(recModifierName, node.getType().clone(), node.getRec().clone());
@@ -403,20 +398,6 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		declStm.getLocalDefs().add(recDecl);
 		
 		AIdentifierVarExpCG recVar = transformationAssistant.consIdentifierVar(recModifierName, node.getType().clone());
-
-		AIdentifierStateDesignatorCG rec = new AIdentifierStateDesignatorCG();
-		rec.setName(recVar.getName());
-		rec.setType(node.getRecType().clone());
-		rec.setExplicit(false);
-		
-		if(enclosingClass != null)
-		{
-			rec.setClassName(enclosingClass.getName());
-		}
-		else
-		{
-			Logger.getLog().printErrorln("Could not find enclosing class for node: " + node);
-		}
 		
 		ABlockStmCG replacementBlock = new ABlockStmCG();
 		replacementBlock.getStatements().add(declStm);
@@ -428,13 +409,13 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 			
 			STypeCG fieldType = info.getTypeAssistant().getFieldType(classes, node.getRecType(), name);
 			
-			AFieldStateDesignatorCG fieldDesignator = new AFieldStateDesignatorCG();
-			fieldDesignator.setType(fieldType);
-			fieldDesignator.setObject(rec.clone());
-			fieldDesignator.setField(name);
+			AFieldExpCG field = new AFieldExpCG();
+			field.setType(fieldType);
+			field.setObject(recVar.clone());
+			field.setMemberName(name);
 			
-			AAssignmentStmCG assignment = new AAssignmentStmCG();
-			assignment.setTarget(fieldDesignator);
+			AAssignToExpStmCG assignment = new AAssignToExpStmCG();
+			assignment.setTarget(field);
 			assignment.setExp(value);
 			
 			replacementBlock.getStatements().add(assignment);
@@ -442,7 +423,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		
 		SStmCG enclosingStm = transformationAssistant.getEnclosingStm(node, "record modification expression");
 		
-		transform(enclosingStm, replacementBlock, recVar, node);
+		transform(enclosingStm, replacementBlock, recVar.clone(), node);
 		
 		replacementBlock.apply(this);
 	}
@@ -698,10 +679,10 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		block.getStatements().add(enclosingStm);
 	}
 
-	private ALocalAssignmentStmCG assignToVar(AIdentifierVarExpCG var,
+	private AAssignToExpStmCG assignToVar(AIdentifierVarExpCG var,
 			SExpCG exp)
 	{
-		ALocalAssignmentStmCG assignment = new ALocalAssignmentStmCG();
+		AAssignToExpStmCG assignment = new AAssignToExpStmCG();
 		assignment.setTarget(var.clone());
 		assignment.setExp(exp.clone());
 
@@ -768,7 +749,7 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		AIfStmCG rightCheck = new AIfStmCG();
 		rightCheck.setIfExp(right);
 		
-		ALocalAssignmentStmCG assignAndVar = new ALocalAssignmentStmCG();
+		AAssignToExpStmCG assignAndVar = new AAssignToExpStmCG();
 		assignAndVar.setTarget(transformationAssistant.consBoolCheck(andResultVarName, false));
 		assignAndVar.setExp(info.getAssistantManager().getExpAssistant().consBoolLiteral(true));
 		
@@ -787,13 +768,13 @@ public class TransformationVisitor extends DepthFirstAnalysisAdaptor
 		AIfStmCG leftCheck = new AIfStmCG();
 		leftCheck.setIfExp(left);
 		
-		ALocalAssignmentStmCG setOrResultVarTrue = new ALocalAssignmentStmCG();
+		AAssignToExpStmCG setOrResultVarTrue = new AAssignToExpStmCG();
 		setOrResultVarTrue.setTarget(transformationAssistant.consBoolCheck(orResultVarName, false));
 		setOrResultVarTrue.setExp(info.getAssistantManager().getExpAssistant().consBoolLiteral(true));
 		
 		leftCheck.setThenStm(setOrResultVarTrue);
 
-		ALocalAssignmentStmCG setOrResultVarToRightExp = new ALocalAssignmentStmCG();
+		AAssignToExpStmCG setOrResultVarToRightExp = new AAssignToExpStmCG();
 		setOrResultVarToRightExp.setTarget(transformationAssistant.consBoolCheck(orResultVarName, false));
 		setOrResultVarToRightExp.setExp(right);
 		

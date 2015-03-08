@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.velocity.app.Velocity;
@@ -38,11 +39,15 @@ import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.PExp;
 import org.overture.ast.node.INode;
+import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.ANotYetSpecifiedStm;
+import org.overture.codegen.analysis.vdm.IdStateDesignatorDefCollector;
+import org.overture.codegen.analysis.vdm.JavaIdentifierNormaliser;
+import org.overture.codegen.analysis.vdm.NameCollector;
 import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.vdm.UnreachableStmRemover;
 import org.overture.codegen.analysis.vdm.VarShadowingRenameCollector;
-import org.overture.codegen.analysis.vdm.VarShadowingRenamer;
+import org.overture.codegen.analysis.vdm.VarRenamer;
 import org.overture.codegen.analysis.violations.GeneratedVarComparison;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.ReservedWordsComparison;
@@ -84,6 +89,7 @@ public class JavaCodeGen extends CodeGenBase
 			"Utils", "Record", "Long", "Double", "Character", "String", "List",
 			"Set" };
 	
+	public static final String JAVA_QUOTE_NAME_SUFFIX = "Quote";
 	public static final String JAVA_MAIN_CLASS_NAME = "Main";
 	
 	private JavaFormat javaFormat;
@@ -160,28 +166,23 @@ public class JavaCodeGen extends CodeGenBase
 
 			javaFormat.init();
 			
-			JavaQuoteValueCreator quoteValueCreator = new JavaQuoteValueCreator(generator.getIRInfo(), transAssistant);
+			JavaQuoteValueCreator quoteValueCreator = new JavaQuoteValueCreator(generator.getIRInfo(),
+					transAssistant);
 			
-			List<AClassDeclCG> quoteDecls = new LinkedList<AClassDeclCG>();
-			
-			for(String qv : quoteValues)
-			{
-				quoteDecls.add(quoteValueCreator.consQuoteValue(qv));
-			}
-
 			List<GeneratedModule> modules = new LinkedList<GeneratedModule>();
-			
-			for (AClassDeclCG q : quoteDecls)
+			for(String quoteNameVdm : quoteValues)
 			{
+				AClassDeclCG quoteDecl = quoteValueCreator.consQuoteValue(quoteNameVdm
+						+ JAVA_QUOTE_NAME_SUFFIX, getJavaSettings().getJavaRootPackage());
+				
 				StringWriter writer = new StringWriter();
-				q.apply(javaFormat.getMergeVisitor(), writer);
+				quoteDecl.apply(javaFormat.getMergeVisitor(), writer);
 				String code = writer.toString();
 				String formattedJavaCode = JavaCodeGenUtil.formatJavaCode(code);
 				
-				modules.add(new GeneratedModule(q.getName(), q, formattedJavaCode));
+				modules.add(new GeneratedModule(quoteNameVdm, quoteDecl, formattedJavaCode));
 			}
-
-
+			
 			return modules;
 
 		} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
@@ -195,23 +196,38 @@ public class JavaCodeGen extends CodeGenBase
 	}
 	
 	public GeneratedData generateJavaFromVdm(
-			List<SClassDefinition> mergedParseLists) throws AnalysisException,
+			List<SClassDefinition> ast) throws AnalysisException,
 			UnsupportedModelingException
 	{
 		SClassDefinition mainClass = null;
 		
+		List<String> warnings = new LinkedList<String>();
 		if(getJavaSettings().getVdmEntryExp() != null)
 		{
-			mainClass = GeneralCodeGenUtils.consMainClass(mergedParseLists, getJavaSettings().getVdmEntryExp(),
-					Settings.dialect, JAVA_MAIN_CLASS_NAME, getInfo().getTempVarNameGen());
-			mergedParseLists.add(mainClass);
+			try
+			{
+				mainClass = GeneralCodeGenUtils.consMainClass(ast, getJavaSettings().getVdmEntryExp(),
+						Settings.dialect, JAVA_MAIN_CLASS_NAME, getInfo().getTempVarNameGen());
+				ast.add(mainClass);
+			} catch (Exception e)
+			{
+				// It can go wrong if the VDM entry point does not type check
+				warnings.add("The chosen launch configuration could not be type checked: " + e.getMessage());
+				warnings.add("Skipping launch configuration..");
+			}
 		}
+	
+		List<SClassDefinition> userClasses = getUserClasses(ast);
+		
+		List<Renaming> allRenamings = normaliseIdentifiers(userClasses);
+		computeDefTable(userClasses);
 		
 		// To document any renaming of variables shadowing other variables
-		removeUnreachableStms(mergedParseLists);
-		List<Renaming> allRenamings = performRenaming(mergedParseLists);
+		removeUnreachableStms(ast);
 		
-		for (SClassDefinition classDef : mergedParseLists)
+		allRenamings.addAll(performRenaming(userClasses, getInfo().getIdStateDesignatorDefs()));
+		
+		for (SClassDefinition classDef : ast)
 		{
 			if (generator.getIRInfo().getAssistantManager().getDeclAssistant().classIsLibrary(classDef))
 			{
@@ -219,15 +235,24 @@ public class JavaCodeGen extends CodeGenBase
 			}
 		}
 
-		InvalidNamesResult invalidNamesResult = validateVdmModelNames(mergedParseLists);
-		validateVdmModelingConstructs(mergedParseLists);
+		InvalidNamesResult invalidNamesResult = validateVdmModelNames(userClasses);
+		validateVdmModelingConstructs(userClasses);
 
 		List<IRClassDeclStatus> statuses = new ArrayList<IRClassDeclStatus>();
 
-		for (SClassDefinition classDef : mergedParseLists)
+		for (SClassDefinition classDef : ast)
 		{
 			statuses.add(generator.generateFrom(classDef));
 		}
+		
+		if(getJavaSettings().getJavaRootPackage() != null)
+		{
+			for(IRClassDeclStatus irStatus : statuses)
+			{
+				irStatus.getClassCg().setPackage(getJavaSettings().getJavaRootPackage());
+			}
+		}
+		
 
 		List<AClassDeclCG> classes = getClassDecls(statuses);
 		javaFormat.setClasses(classes);
@@ -257,7 +282,10 @@ public class JavaCodeGen extends CodeGenBase
 			{
 				try
 				{
-					generator.applyTransformation(status, transformation);
+					if (!getInfo().getDeclAssistant().isLibraryName(status.getClassName()))
+					{
+						generator.applyTransformation(status, transformation);
+					}
 
 				} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 				{
@@ -351,7 +379,78 @@ public class JavaCodeGen extends CodeGenBase
 		javaFormat.clearFunctionValueAssistant();
 		javaFormat.clearClasses();
 
-		return new GeneratedData(generated, generateJavaFromVdmQuotes(), invalidNamesResult, skipping, allRenamings);
+		GeneratedData data = new GeneratedData();
+		data.setClasses(generated);
+		data.setQuoteValues(generateJavaFromVdmQuotes());
+		data.setInvalidNamesResult(invalidNamesResult);
+		data.setSkippedClasses(skipping);
+		data.setAllRenamings(allRenamings);
+		data.setWarnings(warnings);
+		
+		return data;
+	}
+
+	private List<SClassDefinition> getUserClasses(
+			List<SClassDefinition> mergedParseLists)
+	{
+		List<SClassDefinition> userClasses = new LinkedList<SClassDefinition>();
+		
+		for (SClassDefinition clazz : mergedParseLists)
+		{
+			if (!getInfo().getDeclAssistant().classIsLibrary(clazz))
+			{
+				userClasses.add(clazz);
+			}
+		}
+		return userClasses;
+	}
+
+	private List<Renaming> normaliseIdentifiers(List<SClassDefinition> userClasses)
+			throws AnalysisException
+	{
+		NameCollector collector = new NameCollector();
+
+		for (SClassDefinition clazz : userClasses)
+		{
+			clazz.apply(collector);
+		}
+
+		Set<String> allNames = collector.namesToAvoid();
+
+		JavaIdentifierNormaliser normaliser = new JavaIdentifierNormaliser(allNames, getInfo().getTempVarNameGen());
+
+		for (SClassDefinition clazz : userClasses)
+		{
+			clazz.apply(normaliser);
+		}
+		
+		VarRenamer renamer = new VarRenamer();
+		
+		List<Renaming> renamings = normaliser.getRenamings();
+		
+		for (SClassDefinition clazz : userClasses)
+		{
+			renamer.rename(clazz, renamings);
+		}
+		
+		return renamings;
+	}
+
+	private void computeDefTable(List<SClassDefinition> mergedParseLists)
+			throws AnalysisException
+	{
+		List<SClassDefinition> classesToConsider = new LinkedList<>();
+		
+		for(SClassDefinition c : mergedParseLists)
+		{
+			if(!getInfo().getDeclAssistant().classIsLibrary(c))
+			{
+				classesToConsider.add(c);
+			}
+		}
+		
+		Map<AIdentifierStateDesignator, PDefinition> idDefs = IdStateDesignatorDefCollector.getIdDefs(classesToConsider);
+		getInfo().setIdStateDesignatorDefs(idDefs);
 	}
 
 	private void removeUnreachableStms(List<SClassDefinition> mergedParseLists) throws AnalysisException
@@ -364,13 +463,13 @@ public class JavaCodeGen extends CodeGenBase
 		}
 	}
 
-	private List<Renaming> performRenaming(List<SClassDefinition> mergedParseLists)
+	private List<Renaming> performRenaming(List<SClassDefinition> mergedParseLists, Map<AIdentifierStateDesignator, PDefinition> idDefs)
 			throws AnalysisException
 	{
 		List<Renaming> allRenamings = new LinkedList<Renaming>();
 		
-		VarShadowingRenameCollector renamingsCollector = new VarShadowingRenameCollector(generator.getIRInfo().getTcFactory());
-		VarShadowingRenamer renamer = new VarShadowingRenamer();
+		VarShadowingRenameCollector renamingsCollector = new VarShadowingRenameCollector(generator.getIRInfo().getTcFactory(), idDefs);
+		VarRenamer renamer = new VarRenamer();
 		
 		for (SClassDefinition classDef : mergedParseLists)
 		{
@@ -479,8 +578,16 @@ public class JavaCodeGen extends CodeGenBase
 		if (generatedModule != null && generatedModule.canBeGenerated()
 				&& !generatedModule.hasMergeErrors())
 		{
-			JavaCodeGenUtil.saveJavaClass(outputFolder, generatedModule.getName()
-					+ IJavaCodeGenConstants.JAVA_FILE_EXTENSION, generatedModule.getContent());
+			String javaFileName = generatedModule.getName();
+			
+			if(GeneralCodeGenUtils.isQuote(generatedModule.getIrDecl()))
+			{
+				javaFileName += JAVA_QUOTE_NAME_SUFFIX;
+			}
+			
+			javaFileName += IJavaCodeGenConstants.JAVA_FILE_EXTENSION;
+			
+			JavaCodeGenUtil.saveJavaClass(outputFolder, javaFileName, generatedModule.getContent());
 		}
 	}
 

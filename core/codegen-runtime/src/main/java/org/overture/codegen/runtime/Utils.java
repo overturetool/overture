@@ -46,12 +46,55 @@ public class Utils
 		return hashcode;
 	}
 	
-	public static int index(Number value)
+	public static Object get(Object col, Object index)
 	{
-		if(value.longValue() < 1)
+		if(col instanceof VDMSeq)
+		{
+			VDMSeq seq = (VDMSeq) col;
+			return seq.get(Utils.index(index));
+		}
+		else if(col instanceof VDMMap)
+		{
+			return MapUtil.get((VDMMap) col, index);
+		}
+		else
+		{
+			throw new IllegalArgumentException("Only a map or a sequence can be read");
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static void mapSeqUpdate(Object col, Object index, Object value)
+	{
+		if(col instanceof VDMSeq)
+		{
+			VDMSeq seq = (VDMSeq) col;
+			seq.set(index(index), value);
+		}
+		else if(col instanceof VDMMap)
+		{
+			VDMMap map = (VDMMap) col;
+			map.put(index, value);
+		}
+		else
+		{
+			throw new IllegalArgumentException("Only a map or a sequence can be updated");
+		}
+	}
+	
+	public static int index(Object value)
+	{
+		if(!(value instanceof Number))
+		{
+			throw new IllegalArgumentException("The value to be converted must be a java.lang.Number");
+		}
+		
+		Number numberValue = (Number) value;
+		
+		if(numberValue.longValue() < 1)
 			throw new IllegalArgumentException("VDM subscripts must be >= 1");
 		
-		return toInt(value) - 1;
+		return toInt(numberValue) - 1;
 	}
 	
 	public static int toInt(Number value) {

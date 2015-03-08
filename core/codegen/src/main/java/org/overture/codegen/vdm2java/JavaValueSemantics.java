@@ -43,14 +43,16 @@ import org.overture.codegen.cgast.expressions.AInSetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AIndicesUnaryExpCG;
 import org.overture.codegen.cgast.expressions.AInstanceofExpCG;
 import org.overture.codegen.cgast.expressions.ALenUnaryExpCG;
+import org.overture.codegen.cgast.expressions.AMapSeqGetExpCG;
 import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetProperSubsetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ASetSubsetBinaryExpCG;
 import org.overture.codegen.cgast.expressions.ATupleCompatibilityExpCG;
 import org.overture.codegen.cgast.expressions.ATupleSizeExpCG;
+import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
 import org.overture.codegen.cgast.statements.AForAllStmCG;
-import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
+import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
@@ -94,12 +96,21 @@ public class JavaValueSemantics
 		{
 			return false;
 		}
-
+		
+		if(cloneNotNeededMapPutGet(exp))
+		{
+			return false;
+		}
+		
+		if(cloneNotNeededAssign(exp))
+		{
+			return false;
+		}
+		
 		STypeCG type = exp.getTuple().getType();
 
 		if (type instanceof ATupleTypeCG)
 		{
-
 			ATupleTypeCG tupleType = (ATupleTypeCG) type;
 
 			long field = exp.getField();
@@ -113,7 +124,7 @@ public class JavaValueSemantics
 
 		return false;
 	}
-
+	
 	public boolean cloneMember(AFieldExpCG exp)
 	{
 		if (javaSettings.getDisableCloning())
@@ -123,6 +134,16 @@ public class JavaValueSemantics
 
 		INode parent = exp.parent();
 		if (cloneNotNeeded(parent))
+		{
+			return false;
+		}
+		
+		if(cloneNotNeededMapPutGet(exp))
+		{
+			return false;
+		}
+		
+		if(cloneNotNeededAssign(exp))
 		{
 			return false;
 		}
@@ -164,13 +185,18 @@ public class JavaValueSemantics
 			return false;
 		}
 
-		if (parent instanceof ALocalAssignmentStmCG)
+		if (parent instanceof AAssignToExpStmCG)
 		{
-			ALocalAssignmentStmCG assignment = (ALocalAssignmentStmCG) parent;
+			AAssignToExpStmCG assignment = (AAssignToExpStmCG) parent;
 			if (assignment.getTarget() == exp)
 			{
 				return false;
 			}
+		}
+		
+		if(cloneNotNeededMapPutGet(exp))
+		{
+			return false;
 		}
 		
 		if(isPrePostArgument(exp))
@@ -194,6 +220,33 @@ public class JavaValueSemantics
 			}
 
 			return true;
+		}
+
+		return false;
+	}
+
+	private boolean cloneNotNeededMapPutGet(SExpCG exp)
+	{
+		INode parent = exp.parent();
+		
+		if(parent instanceof AMapSeqUpdateStmCG)
+		{
+			AMapSeqUpdateStmCG mapSeqUpd = (AMapSeqUpdateStmCG) parent;
+			
+			if(mapSeqUpd.getCol() == exp)
+			{
+				return true;
+			}
+		}
+		
+		if(parent instanceof AMapSeqGetExpCG)
+		{
+			AMapSeqGetExpCG mapSeqGet = (AMapSeqGetExpCG) parent;
+			
+			if(mapSeqGet.getCol() == exp)
+			{
+				return true;
+			}
 		}
 
 		return false;
@@ -309,5 +362,21 @@ public class JavaValueSemantics
 		return type instanceof ARecordTypeCG || type instanceof ATupleTypeCG
 				|| type instanceof SSeqTypeCG || type instanceof SSetTypeCG
 				|| type instanceof SMapTypeCG;
+	}
+	
+	private boolean cloneNotNeededAssign(SExpCG exp)
+	{
+		INode parent = exp.parent();
+		
+		if (parent instanceof AAssignToExpStmCG)
+		{
+			AAssignToExpStmCG assignment = (AAssignToExpStmCG) parent;
+			if (assignment.getTarget() == exp)
+			{
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }

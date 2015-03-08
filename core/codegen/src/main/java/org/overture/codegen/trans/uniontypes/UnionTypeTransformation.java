@@ -58,11 +58,11 @@ import org.overture.codegen.cgast.expressions.SUnaryExpCG;
 import org.overture.codegen.cgast.expressions.SVarExpBase;
 import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
+import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.statements.AElseIfStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
-import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
 import org.overture.codegen.cgast.statements.APlainCallStmCG;
 import org.overture.codegen.cgast.statements.ARaiseErrorStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
@@ -409,7 +409,7 @@ public class UnionTypeTransformation extends DepthFirstAnalysisAdaptor
 
 			setSubject(fieldExp, castedFieldExp);
 
-			ALocalAssignmentStmCG assignment = new ALocalAssignmentStmCG();
+			AAssignToExpStmCG assignment = new AAssignToExpStmCG();
 			assignment.setTarget(resultVar.clone());
 			assignment.setExp(getAssignmentExp(node, fieldExp));
 

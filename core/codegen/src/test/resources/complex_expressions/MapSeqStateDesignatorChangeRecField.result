@@ -10,11 +10,11 @@ public class Entry {
     }
 
     public void modify() {
-        ((Rec) m.get(true)).field = 20L;
+        ((Rec) Utils.get(m, true)).field = 20L;
     }
 
     public Number read() {
-        return ((Rec) MapUtil.get(m, true)).field;
+        return ((Rec) Utils.get(m, true)).field;
     }
 
     public static Object Run() {

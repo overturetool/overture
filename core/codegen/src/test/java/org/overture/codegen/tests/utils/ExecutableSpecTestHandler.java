@@ -28,6 +28,7 @@ import java.util.List;
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRConstants;
+import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.interpreter.util.InterpreterUtil;
@@ -41,12 +42,10 @@ public class ExecutableSpecTestHandler extends EntryBasedTestHandler
 	}
 
 	@Override
-	public void writeGeneratedCode(File parent, File resultFile)
+	public void writeGeneratedCode(File parent, File resultFile, String rootPackage)
 			throws IOException
 	{
-		injectArgIntoMainClassFile(parent, getJavaEntry());
-
-		List<StringBuffer> content = TestUtils.readJavaModulesFromResultFile(resultFile);
+		List<StringBuffer> content = TestUtils.readJavaModulesFromResultFile(resultFile, rootPackage);
 
 		if (content.isEmpty())
 		{
@@ -54,14 +53,22 @@ public class ExecutableSpecTestHandler extends EntryBasedTestHandler
 			return;
 		}
 
+		injectArgIntoMainClassFile(parent, rootPackage != null ? (rootPackage  + "." + JAVA_ENTRY_CALL) : JAVA_ENTRY_CALL);
+		
+		if (rootPackage != null)
+		{
+			parent = new File(parent, GeneralCodeGenUtils.getFolderFromJavaRootPackage(rootPackage));
+		}
+		
 		parent.mkdirs();
-
+		
+		
 		for (StringBuffer classCgStr : content)
 		{
 			String className = TestUtils.getJavaModuleName(classCgStr);
 
 			File out = null;
-			if (classCgStr.toString().contains("package quotes;"))
+			if(classCgStr.toString().contains("quotes;"))
 			{
 				out = new File(parent, "quotes");
 			} else
@@ -85,7 +92,7 @@ public class ExecutableSpecTestHandler extends EntryBasedTestHandler
 		{
 			// TODO: Improve way that the EvaluatePP/Serializable interface is handled
 			String classStr = classCgStr.toString();
-			if (!classStr.contains(" implements EvaluatePP")
+			if (!className.equals(IRConstants.QUOTES_INTERFACE_NAME) && !classStr.contains(" implements EvaluatePP")
 					&& !classStr.contains(" implements java.io.Serializable"))
 			{
 				int classNameIdx = classCgStr.indexOf(className);

@@ -37,7 +37,7 @@ class ExpressionTestHandler extends ExecutableTestHandler
 		super(release, dialect);
 	}
 
-	public void writeGeneratedCode(File parent, File resultFile)
+	public void writeGeneratedCode(File parent, File resultFile, String rootPackage)
 			throws IOException
 	{
 		String generatedExpression = readFromFile(resultFile);

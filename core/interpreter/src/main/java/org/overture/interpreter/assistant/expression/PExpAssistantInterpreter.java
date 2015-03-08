@@ -11,16 +11,15 @@ import org.overture.ast.lex.LexNameList;
 import org.overture.interpreter.assistant.IInterpreterAssistantFactory;
 import org.overture.interpreter.runtime.ObjectContext;
 import org.overture.interpreter.values.ValueList;
-import org.overture.typechecker.assistant.expression.PExpAssistantTC;
 
-public class PExpAssistantInterpreter extends PExpAssistantTC implements IAstAssistant
+public class PExpAssistantInterpreter implements IAstAssistant
 {
 	protected static IInterpreterAssistantFactory af;
 
 	@SuppressWarnings("static-access")
 	public PExpAssistantInterpreter(IInterpreterAssistantFactory af)
 	{
-		super(af);
+		//super(af);
 		this.af = af;
 	}
 

@@ -17,6 +17,6 @@ Run () ==
 let xs = [1,2,3],
 		func = (lambda x : int & x + 1)
 in
-	return seq_map[nat,nat](xs,func);
+	return seq_map[int,int](xs,func);
 	
 end Entry

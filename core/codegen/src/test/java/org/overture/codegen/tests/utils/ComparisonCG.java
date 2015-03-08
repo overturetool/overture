@@ -285,7 +285,8 @@ public class ComparisonCG
 			return false;
 		}
 		
-		return cgValue.toString().equals(vdmValue.toString());
+		// For example, the replacement constructs <A> from <AQuote> 
+		return cgValue.toString().replace("Quote>", ">").equals(vdmValue.toString());
 	}
 
 	private boolean handleToken(Object cgValue, Value vdmValue)

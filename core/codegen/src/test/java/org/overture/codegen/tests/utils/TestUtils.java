@@ -97,7 +97,7 @@ public class TestUtils
 		return className;
 	}
 
-	public static List<StringBuffer> readJavaModulesFromResultFile(File file)
+	public static List<StringBuffer> readJavaModulesFromResultFile(File file, String rootPackage)
 			throws IOException
 	{
 		final char DELIMITER_CHAR = '#';
@@ -124,6 +124,7 @@ public class TestUtils
 					String[] quotes = dataStr.replace(QUOTES_INDICATOR, "").trim().split(",");
 					
 					JavaCodeGen javaCodeGen = new JavaCodeGen();
+					javaCodeGen.getJavaSettings().setJavaRootPackage(rootPackage);
 					
 					for(String q : quotes)
 					{

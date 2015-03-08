@@ -66,13 +66,13 @@ import org.overture.codegen.cgast.patterns.ARealPatternCG;
 import org.overture.codegen.cgast.patterns.ARecordPatternCG;
 import org.overture.codegen.cgast.patterns.AStringPatternCG;
 import org.overture.codegen.cgast.patterns.ATuplePatternCG;
+import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACaseAltStmStmCG;
 import org.overture.codegen.cgast.statements.ACasesStmCG;
 import org.overture.codegen.cgast.statements.AContinueStmCG;
 import org.overture.codegen.cgast.statements.AForAllStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
-import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ARaiseErrorStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
@@ -446,7 +446,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 				varExp.setIsLambda(false);
 				varExp.setName(((AIdentifierPatternCG) nextDeclPattern).getName());
 
-				ALocalAssignmentStmCG assignment = new ALocalAssignmentStmCG();
+				AAssignToExpStmCG assignment = new AAssignToExpStmCG();
 				assignment.setTarget(varExp);
 				assignment.setExp(assignedExp.clone());
 				replacementBlock.getStatements().addFirst(assignment);
@@ -815,7 +815,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 			ifStm.setIfExp(instanceOfExp);
 			ifStm.setThenStm(recordPatternBlock);
 
-			ALocalAssignmentStmCG setFalse = new ALocalAssignmentStmCG();
+			AAssignToExpStmCG setFalse = new AAssignToExpStmCG();
 			setFalse.setTarget(patternData.getSuccessVar().clone());
 			setFalse.setExp(info.getExpAssistant().consBoolLiteral(false));
 			ifStm.setElseStm(setFalse);
@@ -950,7 +950,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 			patternData.getSuccessVarDecl().setExp(initExp);
 		} else
 		{
-			ALocalAssignmentStmCG successVarAssignment = new ALocalAssignmentStmCG();
+			AAssignToExpStmCG successVarAssignment = new AAssignToExpStmCG();
 			successVarAssignment.setTarget(patternData.getSuccessVar().clone());
 			successVarAssignment.setExp(initExp);
 
@@ -998,7 +998,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 
 				if (currentPattern instanceof AIdentifierPatternCG)
 				{
-					ALocalAssignmentStmCG localAssignment = declareAndAssignIdVarAssignment(patternData.getDeclBlock(), currentPattern, currentType, actualValue);
+					AAssignToExpStmCG localAssignment = declareAndAssignIdVarAssignment(patternData.getDeclBlock(), currentPattern, currentType, actualValue);
 					thenPart.getStatements().add(localAssignment);
 				} else
 				{
@@ -1093,7 +1093,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		return null;
 	}
 
-	private ALocalAssignmentStmCG declareAndAssignIdVarAssignment(
+	private AAssignToExpStmCG declareAndAssignIdVarAssignment(
 			ABlockStmCG declBlock, SPatternCG currentPattern,
 			STypeCG currentType, SExpCG valueToMatch)
 	{
@@ -1110,7 +1110,7 @@ public class PatternTransformation extends DepthFirstAnalysisAdaptor
 		var.setIsLocal(true);
 		var.setIsLambda(false);
 
-		ALocalAssignmentStmCG localAssignment = new ALocalAssignmentStmCG();
+		AAssignToExpStmCG localAssignment = new AAssignToExpStmCG();
 		localAssignment.setTarget(var);
 		localAssignment.setExp(valueToMatch);
 

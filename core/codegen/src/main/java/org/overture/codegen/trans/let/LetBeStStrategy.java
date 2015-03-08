@@ -32,8 +32,8 @@ import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
 import org.overture.codegen.cgast.expressions.ALetBeStNoBindingRuntimeErrorExpCG;
 import org.overture.codegen.cgast.expressions.ANullExpCG;
+import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
-import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ARaiseErrorStmCG;
 import org.overture.codegen.cgast.types.AErrorTypeCG;
@@ -97,7 +97,7 @@ public class LetBeStStrategy extends AbstractIterationStrategy
 	{
 		if (count > 0)
 		{
-			ALocalAssignmentStmCG successAssignment = new ALocalAssignmentStmCG();
+			AAssignToExpStmCG successAssignment = new AAssignToExpStmCG();
 			successAssignment.setExp(transAssistant.getInfo().getExpAssistant().consBoolLiteral(false));
 			successAssignment.setTarget(transAssistant.consSuccessVar(successVarName));
 

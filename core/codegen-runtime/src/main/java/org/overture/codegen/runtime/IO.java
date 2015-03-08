@@ -101,7 +101,8 @@ public class IO {
 			try
 			{
 				File file = getFile(filename);
-				FileOutputStream fos = new FileOutputStream(file, fdir.getClass().getName().equals("quotes.append"));
+				FileOutputStream fos = new FileOutputStream(file, fdir.getClass().getName().
+						endsWith("quotes.appendQuote"));
 
 				fos.write(text.getBytes(Charset.defaultCharset().name()));
 				fos.close();
@@ -147,6 +148,16 @@ public class IO {
 		
     	System.out.printf(seq.toString(), formatList(args));
 		System.out.flush();
+    }
+    
+    public static String sprintf(String format, List<Object> args) {
+        
+		return String.format(format, args.toArray());
+    }
+    
+    public static VDMSeq sprintf(VDMSeq seq, List<Object> args) {
+		
+    	throw new UnsupportedOperationException("sprintf is only supported for formats of type String");
     }
     
     private static Object[] formatList(List<Object> args)

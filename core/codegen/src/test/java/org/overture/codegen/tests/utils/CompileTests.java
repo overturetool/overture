@@ -39,6 +39,8 @@ import org.overture.codegen.tests.ConfiguredCloningTest;
 import org.overture.codegen.tests.ConfiguredStringGenerationTest;
 import org.overture.codegen.tests.ExpressionTest;
 import org.overture.codegen.tests.FunctionValueTest;
+import org.overture.codegen.tests.NameNormalising;
+import org.overture.codegen.tests.PackageTest;
 import org.overture.codegen.tests.PatternTest;
 import org.overture.codegen.tests.PrePostTest;
 import org.overture.codegen.tests.RtTest;
@@ -79,6 +81,8 @@ public class CompileTests
 	public static final boolean RUN_CONCURRENCY_TESTS = true;
 	public static final boolean RUN_CONCURRENCY_CLASSIC_TESTS = true;
 	public static final boolean RUN_RT_TESTS = true;
+	public static final boolean RUN_PACKAGE_TESTS = true;
+	public static final boolean RUN_NAMING_NORMALISING_TESTS = true;
 	public static final boolean RUN_BIND_TESTS = true;
 	public static final boolean PRE_POST_TESTS = true;
 	public static final boolean RUN_EXECUTING_CLASSIC_SPEC_TESTS = true;
@@ -162,6 +166,16 @@ public class CompileTests
 			runRtTests();
 		}
 		
+		if(RUN_PACKAGE_TESTS)
+		{
+			runPackageTests();
+		}
+		
+		if(RUN_NAMING_NORMALISING_TESTS)
+		{
+			runNamingNormalisingTests();
+		}
+		
 		if (RUN_BIND_TESTS)
 		{
 			runBindTests();
@@ -228,7 +242,35 @@ public class CompileTests
 
 		System.out.println("\n********");
 		System.out.println("Finished with Trace expansion tests");
-		System.out.println("********\n");	
+		System.out.println("********\n");
+	}
+	
+	private void runNamingNormalisingTests() throws IOException
+	{
+		System.out.println("Beginning name normalising tests..\n");
+
+		testInputFiles = TestUtils.getTestInputFiles(new File(NameNormalising.ROOT));
+		resultFiles = TestUtils.getFiles(new File(NameNormalising.ROOT), RESULT_FILE_EXTENSION);
+
+		runTests(testInputFiles, resultFiles, new ExecutableSpecTestHandler(Release.VDM_10, Dialect.VDM_RT), false);
+
+		System.out.println("\n********");
+		System.out.println("Finished with name normalising tests");
+		System.out.println("********\n");
+	}
+
+	private void runPackageTests() throws IOException
+	{
+		System.out.println("Beginning package tests..\n");
+
+		testInputFiles = TestUtils.getTestInputFiles(new File(PackageTest.ROOT));
+		resultFiles = TestUtils.getFiles(new File(PackageTest.ROOT), RESULT_FILE_EXTENSION);
+
+		runTests(testInputFiles, resultFiles, new ExecutableSpecTestHandler(Release.VDM_10, Dialect.VDM_RT), false, "my.model");
+
+		System.out.println("\n********");
+		System.out.println("Finished with package tests");
+		System.out.println("********\n");
 	}
 
 	private void runRtTests() throws IOException
@@ -448,6 +490,12 @@ public class CompileTests
 	public void runTests(List<File> testInputFiles, List<File> resultFiles,
 			TestHandler testHandler, boolean printInput) throws IOException
 	{
+		runTests(testInputFiles, resultFiles, testHandler, printInput, null);
+	}
+
+	public void runTests(List<File> testInputFiles, List<File> resultFiles,
+			TestHandler testHandler, boolean printInput, String rootPackage) throws IOException
+	{
 		if (testInputFiles.size() != resultFiles.size())
 		{
 			throw new IllegalArgumentException("Number of test input files and number of result files differ");
@@ -477,13 +525,14 @@ public class CompileTests
 			File currentInputFile = testInputFiles.get(i);
 			testHandler.setCurrentInputFile(currentInputFile);
 			
-			GeneralUtils.deleteFolderContents(parent, FOLDER_NAMES_TO_AVOID);
+			GeneralUtils.deleteFolderContents(parent, FOLDER_NAMES_TO_AVOID, false);
 
 			// Calculating the Java result:
 			File currentResultFile = resultFiles.get(i);
 
 			testHandler.setCurrentResultFile(currentResultFile);
-			testHandler.writeGeneratedCode(parent, currentResultFile);
+			testHandler.writeGeneratedCode(parent, currentResultFile, rootPackage);
+
 
 			boolean compileOk = JavaCommandLineCompiler.compile(parent, null);
 			System.out.println("Test:" + testNumber + " (" + (1 + i) + "). Name: " + currentResultFile.getName()

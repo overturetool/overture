@@ -46,7 +46,7 @@ public class SetTests extends AllTest
 
 		Collection<Object[]> tests = new LinkedList<Object[]>();
 
-		tests.addAll(getTests(new File(root), "Set-0024"));// FIXME
+		tests.addAll(getTests(new File(root), "Set-0024"));
 
 		return tests;
 	}

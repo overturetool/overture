@@ -9,26 +9,27 @@ public class Entry {
 
     public static Object casesQuote(final Object e) {
         Object quotePattern_1 = e;
-        Boolean success_1 = Utils.equals(quotePattern_1, quotes.A.getInstance());
+        Boolean success_1 = Utils.equals(quotePattern_1,
+                quotes.AQuote.getInstance());
 
         if (!(success_1)) {
             Object quotePattern_2 = e;
-            success_1 = Utils.equals(quotePattern_2, quotes.B.getInstance());
+            success_1 = Utils.equals(quotePattern_2, quotes.BQuote.getInstance());
 
             if (success_1) {
-                return quotes.B.getInstance();
+                return quotes.BQuote.getInstance();
             } else {
-                return quotes.C.getInstance();
+                return quotes.CQuote.getInstance();
             }
         } else {
-            return quotes.A.getInstance();
+            return quotes.AQuote.getInstance();
         }
     }
 
     public static Object Run() {
-        return SeqUtil.seq(casesQuote(quotes.A.getInstance()),
-            casesQuote(quotes.B.getInstance()),
-            casesQuote(quotes.C.getInstance()));
+        return SeqUtil.seq(casesQuote(quotes.AQuote.getInstance()),
+            casesQuote(quotes.BQuote.getInstance()),
+            casesQuote(quotes.CQuote.getInstance()));
     }
 
     public String toString() {

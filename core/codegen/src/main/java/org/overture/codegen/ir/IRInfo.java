@@ -29,8 +29,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.overture.ast.definitions.AExplicitOperationDefinition;
+import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.node.INode;
+import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.assistant.BindAssistantCG;
 import org.overture.codegen.assistant.DeclAssistantCG;
@@ -89,6 +91,9 @@ public class IRInfo
 	// Object initialization call prefix
 	private String objectInitCallPrefix;
 	
+	// Definitions for identifier state designators
+	private Map<AIdentifierStateDesignator, PDefinition> idStateDesignatorDefs;
+	
 	public IRInfo(String objectInitCallPrefix)
 	{
 		super();
@@ -105,6 +110,8 @@ public class IRInfo
 
 		this.objectInitCallPrefix = objectInitCallPrefix;
 		this.objectInitCallNames = new HashMap<AExplicitOperationDefinition, String>();
+		
+		this.idStateDesignatorDefs = new HashMap<AIdentifierStateDesignator, PDefinition>();
 	}
 
 	public AssistantManager getAssistantManager()
@@ -311,5 +318,15 @@ public class IRInfo
 
 			return initName;
 		}
+	}
+
+	public Map<AIdentifierStateDesignator, PDefinition> getIdStateDesignatorDefs()
+	{
+		return idStateDesignatorDefs;
+	}
+
+	public void setIdStateDesignatorDefs(Map<AIdentifierStateDesignator, PDefinition> idDefs)
+	{
+		this.idStateDesignatorDefs = idDefs;
 	}
 }

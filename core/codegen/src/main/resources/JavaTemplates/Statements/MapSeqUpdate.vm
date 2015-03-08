@@ -1,0 +1,5 @@
+#set( $col = $JavaFormat.format($node.getCol()) )
+#set( $index = $JavaFormat.format($node.getIndex()) )
+#set( $value = $JavaFormat.format($node.getValue()) )
+##
+Utils.mapSeqUpdate(${col},${index},${value});

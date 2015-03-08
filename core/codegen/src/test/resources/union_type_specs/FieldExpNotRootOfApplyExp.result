@@ -31,7 +31,7 @@ public class Entry {
 
             for (Iterator iterator_1 = set_1.iterator(); iterator_1.hasNext();) {
                 VDMSeq hr = ((VDMSeq) iterator_1.next());
-                Object obj_1 = hr.get(Utils.index(hr.size()));
+                Object obj_1 = Utils.get(hr, hr.size());
 
                 Rec apply_1 = null;
 

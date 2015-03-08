@@ -49,11 +49,11 @@ public class SimpleTest {
                 Number pglid1 = 1L;
                 resource.AddAccount(pglid1, pglacc1);
                 resource.AddLetterbox(clock, new Letterbox());
-                ((Till) MapUtil.get(tills, 1L)).InsertCard(c1);
+                ((Till) Utils.get(tills, 1L)).InsertCard(c1);
 
-                if (Utils.equals(((Till) MapUtil.get(tills, 1L)).Validate(
-                                123456L), quotes.PinOk.getInstance())) {
-                    return ((Till) MapUtil.get(tills, 1L)).MakeWithdrawal(800L);
+                if (Utils.equals(((Till) Utils.get(tills, 1L)).Validate(123456L),
+                            quotes.PinOkQuote.getInstance())) {
+                    return ((Till) Utils.get(tills, 1L)).MakeWithdrawal(800L);
                 } else {
                     return false;
                 }
@@ -125,8 +125,8 @@ public class Account {
     }
 
     public Letter MakeStatement(final Number cardId, final VDMSeq date) {
-        VDMSeq nm = ((Cardholder) MapUtil.get(cards, cardId)).GetName();
-        VDMSeq addr = ((Cardholder) MapUtil.get(cards, cardId)).GetAddress();
+        VDMSeq nm = ((Cardholder) Utils.get(cards, cardId)).GetName();
+        VDMSeq addr = ((Cardholder) Utils.get(cards, cardId)).GetAddress();
 
         {
             Letter letter = new Letter();
@@ -158,7 +158,7 @@ public class Account {
             Number i = ((Number) iterator_2.next());
             setCompResult_1 = SetUtil.union(Utils.clone(setCompResult_1),
                     SetUtil.set(Utils.clone(
-                            ((Transaction) ts.get(Utils.index(i))).date)));
+                            ((Transaction) Utils.get(ts, i)).date)));
         }
 
         VDMSet set_1 = Utils.clone(setCompResult_1);
@@ -180,10 +180,9 @@ public class Account {
         for (Iterator iterator_3 = set_3.iterator(); iterator_3.hasNext();) {
             Number i = ((Number) iterator_3.next());
 
-            if (Utils.equals(((Transaction) ts.get(Utils.index(i))).date, date)) {
+            if (Utils.equals(((Transaction) Utils.get(ts, i)).date, date)) {
                 seqCompResult_1 = SeqUtil.conc(Utils.clone(seqCompResult_1),
-                        SeqUtil.seq(
-                            ((Transaction) ts.get(Utils.index(i))).amount));
+                        SeqUtil.seq(((Transaction) Utils.get(ts, i)).amount));
             }
         }
 
@@ -346,7 +345,7 @@ public class CentralResource {
 
     public Number GetBalance(final Number accountId) {
         if (MapUtil.dom(Utils.clone(accounts)).contains(accountId)) {
-            return ((Account) MapUtil.get(accounts, accountId)).GetBalance();
+            return ((Account) Utils.get(accounts, accountId)).GetBalance();
         } else {
             return null;
         }
@@ -355,7 +354,7 @@ public class CentralResource {
     public Boolean Withdrawal(final Number accountId, final Number cardId,
         final Number amount) {
         if (IsLegalCard(accountId, cardId)) {
-            return ((Account) MapUtil.get(accounts, accountId)).Withdrawal(cardId,
+            return ((Account) Utils.get(accounts, accountId)).Withdrawal(cardId,
                 amount, clock.GetDate());
         } else {
             return false;
@@ -364,7 +363,7 @@ public class CentralResource {
 
     public Boolean PostStatement(final Number accountId, final Number cardId) {
         if (IsLegalCard(accountId, cardId)) {
-            letterbox.PostStatement(((Account) MapUtil.get(accounts, accountId)).MakeStatement(
+            letterbox.PostStatement(((Account) Utils.get(accounts, accountId)).MakeStatement(
                     cardId, clock.GetDate()));
 
             return true;
@@ -380,7 +379,7 @@ public class CentralResource {
             Boolean andResult_3 = false;
 
             if (MapUtil.dom(Utils.clone(accounts)).contains(accountId)) {
-                if (((Account) MapUtil.get(accounts, accountId)).GetCardIds()
+                if (((Account) Utils.get(accounts, accountId)).GetCardIds()
                          .contains(cardId)) {
                     andResult_3 = true;
                 }
@@ -395,16 +394,16 @@ public class CentralResource {
     }
 
     public Boolean NumberOfTriesExceeded(final Number cardId) {
-        return ((Number) MapUtil.get(numberOfTries, cardId)).longValue() >= maxNumberOfTries.longValue();
+        return ((Number) Utils.get(numberOfTries, cardId)).longValue() >= maxNumberOfTries.longValue();
     }
 
     public void ResetNumberOfTries(final Number cardId) {
-        numberOfTries.put(cardId, 0L);
+        Utils.mapSeqUpdate(numberOfTries, cardId, 0L);
     }
 
     public void IncrNumberOfTries(final Number cardId) {
-        numberOfTries.put(cardId,
-            ((Number) MapUtil.get(numberOfTries, cardId)).longValue() + 1L);
+        Utils.mapSeqUpdate(numberOfTries, cardId,
+            ((Number) Utils.get(numberOfTries, cardId)).longValue() + 1L);
     }
 
     public void AddAccount(final Number accId, final Account acc) {
@@ -515,7 +514,7 @@ public class Letterbox {
     }
 
     public Letter GetLastStatement() {
-        return ((Letter) statements.get(Utils.index(statements.size())));
+        return ((Letter) Utils.get(statements, statements.size()));
     }
 
     public String toString() {
@@ -572,7 +571,7 @@ public class Till {
                         SetUtil.set(curCard));
                 curCard = null;
 
-                return quotes.Retained.getInstance();
+                return quotes.RetainedQuote.getInstance();
             } else if (codeOk) {
                 resource.ResetNumberOfTries(cardId);
             } else {
@@ -584,14 +583,14 @@ public class Till {
                     cardOk = false;
                     curCard = null;
 
-                    return quotes.Retained.getInstance();
+                    return quotes.RetainedQuote.getInstance();
                 }
             }
 
             if (cardOk) {
-                return quotes.PinOk.getInstance();
+                return quotes.PinOkQuote.getInstance();
             } else {
-                return quotes.PinNotOk.getInstance();
+                return quotes.PinNotOkQuote.getInstance();
             }
         }
     }
@@ -855,7 +854,7 @@ public class System {
     }
 
     public Till GetTill(final Number tid) {
-        return ((Till) MapUtil.get(tills, tid));
+        return ((Till) Utils.get(tills, tid));
     }
 
     public CentralResource GetResource() {

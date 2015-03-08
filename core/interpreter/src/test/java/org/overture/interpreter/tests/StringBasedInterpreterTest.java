@@ -64,7 +64,6 @@ public abstract class StringBasedInterpreterTest extends
 	protected boolean assertEqualResults(String expected, String actual,
 			PrintWriter out)
 	{
-		// FIXME: check is not sufficient
 		if (expected == null)
 		{
 			assert false : "No result file";

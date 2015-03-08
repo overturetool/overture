@@ -124,27 +124,13 @@ public class GeneralUtils
 		return fileList;
 	}
 
-	public static List<File> getFilesFromPaths(String[] args)
+	public static void deleteFolderContents(File folder, boolean removeFolders)
 	{
-		List<File> files = new LinkedList<File>();
-
-		for (int i = 1; i < args.length; i++)
-		{
-			String fileName = args[i];
-			File file = new File(fileName);
-			files.add(file);
-		}
-
-		return files;
-	}
-
-	public static void deleteFolderContents(File folder)
-	{
-		deleteFolderContents(folder, new ArrayList<String>());
+		deleteFolderContents(folder, new ArrayList<String>(), removeFolders);
 	}
 
 	public static void deleteFolderContents(File folder,
-			List<String> folderNamesToAvoid)
+			List<String> folderNamesToAvoid, boolean removeFolders)
 	{
 		if (folder == null)
 		{
@@ -164,9 +150,14 @@ public class GeneralUtils
 			{
 				if (!folderNamesToAvoid.contains(f.getName()))
 				{
-					deleteFolderContents(f, folderNamesToAvoid);
+					deleteFolderContents(f, folderNamesToAvoid, removeFolders);
 				}
 			} else
+			{
+				f.delete();
+			}
+			
+			if(removeFolders)
 			{
 				f.delete();
 			}

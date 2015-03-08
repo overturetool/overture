@@ -1,0 +1,42 @@
+package my.model;
+
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class A {
+    public Number x = 42L;
+
+    public A() {
+    }
+
+    public String toString() {
+        return "A{" + "x := " + Utils.toString(x) + "}";
+    }
+}
+
+##########
+package my.model;
+
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        A a = new A();
+
+        return a.x;
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########

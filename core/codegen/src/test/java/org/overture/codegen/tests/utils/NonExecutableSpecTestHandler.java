@@ -28,10 +28,10 @@ import java.util.List;
 public class NonExecutableSpecTestHandler extends TestHandler
 {
 	@Override
-	public void writeGeneratedCode(File parent, File resultFile)
+	public void writeGeneratedCode(File parent, File resultFile, String rootPackage)
 			throws IOException
 	{
-		List<StringBuffer> content = TestUtils.readJavaModulesFromResultFile(resultFile);
+		List<StringBuffer> content = TestUtils.readJavaModulesFromResultFile(resultFile, rootPackage);
 
 		if (content.size() == 0)
 		{
