@@ -58,9 +58,16 @@ public class GenerateJavaSources extends AstCreatorBaseMojo
 		}
 
 		Collection<File> files = null;
-		if (getProjectVdmSrcDirectory() != null)
+		File specificationRoot = getResourcesDir();
+		
+		if(specificationDir!=null && !specificationDir.isEmpty())
 		{
-			files = FileUtils.listFiles(getProjectVdmSrcDirectory(), new RegexFileFilter(".+\\.vpp|.+\\.vdmpp"), DirectoryFileFilter.DIRECTORY);
+			specificationRoot = new File(specificationRoot,specificationDir);
+		}
+		
+		if (specificationRoot != null && specificationRoot.exists())
+		{
+			files = FileUtils.listFiles(specificationRoot, new RegexFileFilter(".+\\.vpp|.+\\.vdmpp"), DirectoryFileFilter.DIRECTORY);
 		}
 
 		if (files == null || files.isEmpty())
