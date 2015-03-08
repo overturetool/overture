@@ -41,6 +41,7 @@ import org.overture.codegen.tests.ConfiguredCloningTest;
 import org.overture.codegen.tests.ConfiguredStringGenerationTest;
 import org.overture.codegen.tests.ExpressionTest;
 import org.overture.codegen.tests.FunctionValueTest;
+import org.overture.codegen.tests.NameNormalising;
 import org.overture.codegen.tests.PackageTest;
 import org.overture.codegen.tests.PatternTest;
 import org.overture.codegen.tests.PrePostTest;
@@ -84,6 +85,7 @@ public class CompileTests
 	public static final boolean RUN_CONCURRENCY_CLASSIC_TESTS = true;
 	public static final boolean RUN_RT_TESTS = true;
 	public static final boolean RUN_PACKAGE_TESTS = true;
+	public static final boolean RUN_NAMING_NORMALISING_TESTS = true;
 	public static final boolean RUN_BIND_TESTS = true;
 	public static final boolean PRE_POST_TESTS = true;
 	public static final boolean RUN_EXECUTING_CLASSIC_SPEC_TESTS = true;
@@ -170,6 +172,11 @@ public class CompileTests
 			runPackageTests();
 		}
 		
+		if(RUN_NAMING_NORMALISING_TESTS)
+		{
+			runNamingNormalisingTests();
+		}
+		
 		if (RUN_BIND_TESTS)
 		{
 			runBindTests();
@@ -199,6 +206,20 @@ public class CompileTests
 
 		System.out.println("Time: "
 				+ String.format("%02d:%02d", minutes, seconds) + ".");
+	}
+
+	private void runNamingNormalisingTests() throws IOException
+	{
+		System.out.println("Beginning name normalising tests..\n");
+
+		testInputFiles = TestUtils.getTestInputFiles(new File(NameNormalising.ROOT));
+		resultFiles = TestUtils.getFiles(new File(NameNormalising.ROOT), RESULT_FILE_EXTENSION);
+
+		runTests(testInputFiles, resultFiles, new ExecutableSpecTestHandler(Release.VDM_10, Dialect.VDM_RT), false);
+
+		System.out.println("\n********");
+		System.out.println("Finished with name normalising tests");
+		System.out.println("********\n");
 	}
 
 	private void runPackageTests() throws IOException
