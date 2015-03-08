@@ -196,7 +196,7 @@ public class JavaCodeGen extends CodeGenBase
 	}
 	
 	public GeneratedData generateJavaFromVdm(
-			List<SClassDefinition> mergedParseLists) throws AnalysisException,
+			List<SClassDefinition> ast) throws AnalysisException,
 			UnsupportedModelingException
 	{
 		SClassDefinition mainClass = null;
@@ -206,9 +206,9 @@ public class JavaCodeGen extends CodeGenBase
 		{
 			try
 			{
-				mainClass = GeneralCodeGenUtils.consMainClass(mergedParseLists, getJavaSettings().getVdmEntryExp(),
+				mainClass = GeneralCodeGenUtils.consMainClass(ast, getJavaSettings().getVdmEntryExp(),
 						Settings.dialect, JAVA_MAIN_CLASS_NAME, getInfo().getTempVarNameGen());
-				mergedParseLists.add(mainClass);
+				ast.add(mainClass);
 			} catch (Exception e)
 			{
 				// It can go wrong if the VDM entry point does not type check
@@ -216,16 +216,18 @@ public class JavaCodeGen extends CodeGenBase
 				warnings.add("Skipping launch configuration..");
 			}
 		}
+	
+		List<SClassDefinition> userClasses = getUserClasses(ast);
 		
-		List<Renaming> allRenamings = normaliseIdentifiers(mergedParseLists);
-		computeDefTable(mergedParseLists);
+		List<Renaming> allRenamings = normaliseIdentifiers(userClasses);
+		computeDefTable(userClasses);
 		
 		// To document any renaming of variables shadowing other variables
-		removeUnreachableStms(mergedParseLists);
+		removeUnreachableStms(ast);
 		
-		allRenamings.addAll(performRenaming(mergedParseLists, getInfo().getIdStateDesignatorDefs()));
+		allRenamings.addAll(performRenaming(userClasses, getInfo().getIdStateDesignatorDefs()));
 		
-		for (SClassDefinition classDef : mergedParseLists)
+		for (SClassDefinition classDef : ast)
 		{
 			if (generator.getIRInfo().getAssistantManager().getDeclAssistant().classIsLibrary(classDef))
 			{
@@ -233,12 +235,12 @@ public class JavaCodeGen extends CodeGenBase
 			}
 		}
 
-		InvalidNamesResult invalidNamesResult = validateVdmModelNames(mergedParseLists);
-		validateVdmModelingConstructs(mergedParseLists);
+		InvalidNamesResult invalidNamesResult = validateVdmModelNames(userClasses);
+		validateVdmModelingConstructs(userClasses);
 
 		List<IRClassDeclStatus> statuses = new ArrayList<IRClassDeclStatus>();
 
-		for (SClassDefinition classDef : mergedParseLists)
+		for (SClassDefinition classDef : ast)
 		{
 			statuses.add(generator.generateFrom(classDef));
 		}
@@ -280,7 +282,10 @@ public class JavaCodeGen extends CodeGenBase
 			{
 				try
 				{
-					generator.applyTransformation(status, transformation);
+					if (!getInfo().getDeclAssistant().isLibraryName(status.getClassName()))
+					{
+						generator.applyTransformation(status, transformation);
+					}
 
 				} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
 				{
@@ -385,8 +390,8 @@ public class JavaCodeGen extends CodeGenBase
 		return data;
 	}
 
-	private List<Renaming> normaliseIdentifiers(List<SClassDefinition> mergedParseLists)
-			throws AnalysisException
+	private List<SClassDefinition> getUserClasses(
+			List<SClassDefinition> mergedParseLists)
 	{
 		List<SClassDefinition> userClasses = new LinkedList<SClassDefinition>();
 		
@@ -397,7 +402,12 @@ public class JavaCodeGen extends CodeGenBase
 				userClasses.add(clazz);
 			}
 		}
-		
+		return userClasses;
+	}
+
+	private List<Renaming> normaliseIdentifiers(List<SClassDefinition> userClasses)
+			throws AnalysisException
+	{
 		NameCollector collector = new NameCollector();
 
 		for (SClassDefinition clazz : userClasses)
