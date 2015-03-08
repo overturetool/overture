@@ -38,4 +38,5 @@ public class TestFlags
 	public static final boolean PRE_POST_TESTS_ON = false;
 	public static final boolean RT_TESTS_ON = false;
 	public static final boolean PACKAGE_TESTS_ON = false;
+	public static final boolean NAME_NORMALISING_TESTS_ON = false;
 }

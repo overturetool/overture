@@ -355,7 +355,7 @@ public class JavaCodeGenMain
 
 			if (!allRenamings.isEmpty())
 			{
-				Logger.getLog().println("\nFollowing renamings of shadowing variables were made: ");
+				Logger.getLog().println("\nDue to variable shadowing or normalisation of Java identifiers the following renamings of variables have been made: ");
 
 				Logger.getLog().println(JavaCodeGenUtil.constructVarRenamingString(allRenamings));
 			}

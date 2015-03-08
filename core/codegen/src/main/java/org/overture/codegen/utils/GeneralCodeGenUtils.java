@@ -48,6 +48,7 @@ import org.overture.codegen.cgast.SDeclCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.logging.Logger;
+import org.overture.codegen.vdm2java.IJavaCodeGenConstants;
 import org.overture.codegen.vdm2java.JavaCodeGen;
 import org.overture.parser.lex.LexException;
 import org.overture.parser.lex.LexTokenReader;
@@ -369,7 +370,22 @@ public class GeneralCodeGenUtils
 		
 		Pattern pattern = Pattern.compile("^[a-zA-Z_\\$][\\w\\$]*(?:\\.[a-zA-Z_\\$][\\w\\$]*)*$");
 		
-		return pattern.matcher(pack).matches();
+		if(!pattern.matcher(pack).matches())
+		{
+			return false;
+		}
+		
+		String [] split = pack.split("\\.");
+		
+		for(String s : split)
+		{
+			if(isJavaKeyword(s))
+			{
+				return false;
+			}
+		}
+		
+		return true;
 	}
 	
 	public static String getFolderFromJavaRootPackage(String pack)
@@ -396,5 +412,93 @@ public class GeneralCodeGenUtils
 		{
 			return false;
 		}
+	}
+	
+	public static boolean isJavaKeyword(String s)
+	{
+		if(s == null || s.isEmpty())
+		{
+			return false;
+		}
+		
+		for(String kw : IJavaCodeGenConstants.RESERVED_WORDS)
+		{
+			if(s.equals(kw))
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Checks whether the given String is a valid Java identifier.
+	 *
+	 * @param s the String to check
+	 * @return <code>true</code> if 's' is an identifier, <code>false</code> otherwise
+	 */
+	public static boolean isValidJavaIdentifier(String s)
+	{
+		if (s == null || s.length() == 0)
+		{
+			return false;
+		}
+		
+		if(isJavaKeyword(s))
+		{
+			return false;
+		}
+
+		char[] c = s.toCharArray();
+		if (!Character.isJavaIdentifierStart(c[0]))
+		{
+			return false;
+		}
+
+		for (int i = 1; i < c.length; i++)
+		{
+			if (!Character.isJavaIdentifierPart(c[i]))
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Computes the indices of characters that need to be replaced with valid characters in order to make 's' a valid
+	 * Java identifier. Please note that this method assumes that 's' is NOT a keyword.
+	 * 
+	 * @param s the identifier to compute correction indices for.
+	 * @return the indices of the characters that need to be corrected in order to make the identifier a valid Java
+	 * identifier
+	 */
+	public static List<Integer> computeJavaIdentifierCorrections(String s)
+	{
+		List<Integer> correctionIndices = new LinkedList<Integer>();
+
+		if (s == null || s.length() == 0)
+		{
+			return correctionIndices;
+		}
+
+		char[] c = s.toCharArray();
+		
+		if (!Character.isJavaIdentifierStart(c[0]))
+		{
+			correctionIndices.add(0);
+		}
+
+		for (int i = 1; i < c.length; i++)
+		{
+			if (!Character.isJavaIdentifierPart(c[i]))
+			{
+				correctionIndices.add(i);
+			}
+		}
+
+		return correctionIndices;
 	}
 }

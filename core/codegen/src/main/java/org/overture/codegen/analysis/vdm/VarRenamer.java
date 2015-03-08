@@ -9,7 +9,7 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
-public class VarShadowingRenamer
+public class VarRenamer
 {
 	public void rename(SClassDefinition clazz, List<Renaming> renamings)
 			throws AnalysisException

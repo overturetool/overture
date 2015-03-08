@@ -416,7 +416,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 	{
 		if(!allRenamings.isEmpty())
 		{
-			CodeGenConsole.GetInstance().println("Hidden variables found! Following variable renamings were done: ");
+			CodeGenConsole.GetInstance().println("Due to variable shadowing or normalisation of Java identifiers the following renamings of variables have been made:");
 			CodeGenConsole.GetInstance().println(JavaCodeGenUtil.constructVarRenamingString(allRenamings));;
 		}
 	}

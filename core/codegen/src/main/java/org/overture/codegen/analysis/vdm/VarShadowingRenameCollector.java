@@ -1,6 +1,7 @@
 package org.overture.codegen.analysis.vdm;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -79,7 +80,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 	private int enclosingCounter;
 	
 	private List<Renaming> renamings;
-	private List<String> namesToAvoid;
+	private Set<String> namesToAvoid;
 	private TempVarNameGen nameGen;
 	
 	public VarShadowingRenameCollector(ITypeCheckerAssistantFactory af, Map<AIdentifierStateDesignator, PDefinition> idDefs)
@@ -92,7 +93,7 @@ public class VarShadowingRenameCollector extends DepthFirstAnalysisAdaptor
 		this.enclosingCounter = 0;
 
 		this.renamings = new LinkedList<Renaming>();
-		this.namesToAvoid = new LinkedList<String>();
+		this.namesToAvoid = new HashSet<String>();
 		this.nameGen = new TempVarNameGen();
 	}
 

@@ -13,7 +13,7 @@ import org.overture.ast.node.INode;
 import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.codegen.analysis.vdm.IdStateDesignatorDefCollector;
 import org.overture.codegen.analysis.vdm.Renaming;
-import org.overture.codegen.analysis.vdm.VarShadowingRenamer;
+import org.overture.codegen.analysis.vdm.VarRenamer;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.config.Release;
@@ -74,7 +74,7 @@ public class VarShadowingTestCase extends BaseTestCase
 			Value orgSpecResult = evalSpec(originalSpecTcResult.result);
 			
 			
-			List<Renaming> renamings = new VarShadowingRenamer().computeRenamings(originalSpecTcResult.result, af, idDefs);
+			List<Renaming> renamings = new VarRenamer().computeRenamings(originalSpecTcResult.result, af, idDefs);
 
 			StringBuilder sb = GeneralUtils.readLines(file, "\n");
 			

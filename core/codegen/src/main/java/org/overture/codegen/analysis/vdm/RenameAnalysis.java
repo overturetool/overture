@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.node.INode;
 
 class RenameAnalysis extends DepthFirstAnalysisAdaptor
 {
@@ -17,14 +19,31 @@ class RenameAnalysis extends DepthFirstAnalysisAdaptor
 	}
 	
 	@Override
+	public void caseAInstanceVariableDefinition(AInstanceVariableDefinition node)
+			throws AnalysisException
+	{
+		handleNameToken(node, node.getName());
+		handleNameToken(node, node.getOldname());
+		
+		node.getExpression().apply(this);
+		node.getType().apply(this);
+	}
+	
+	@Override
 	public void caseILexNameToken(ILexNameToken node)
 			throws AnalysisException
+	{
+		handleNameToken(node.parent(), node);
+	}
+
+	private void handleNameToken(INode parent, ILexNameToken node)
 	{
 		for (Renaming r : renamings)
 		{
 			if (node.getLocation().equals(r.getLoc()))
 			{
-				node.parent().replaceChild(node, consLexNameToken(node, r.getNewName()));
+				parent.replaceChild(node, consLexNameToken(node, r.getNewName()));
+				break;
 			}
 		}
 	}
