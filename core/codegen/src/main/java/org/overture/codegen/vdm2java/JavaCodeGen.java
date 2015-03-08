@@ -42,10 +42,12 @@ import org.overture.ast.node.INode;
 import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.ANotYetSpecifiedStm;
 import org.overture.codegen.analysis.vdm.IdStateDesignatorDefCollector;
+import org.overture.codegen.analysis.vdm.JavaIdentifierNormaliser;
+import org.overture.codegen.analysis.vdm.NameCollector;
 import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.vdm.UnreachableStmRemover;
 import org.overture.codegen.analysis.vdm.VarShadowingRenameCollector;
-import org.overture.codegen.analysis.vdm.VarShadowingRenamer;
+import org.overture.codegen.analysis.vdm.VarRenamer;
 import org.overture.codegen.analysis.violations.GeneratedVarComparison;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.ReservedWordsComparison;
@@ -215,6 +217,7 @@ public class JavaCodeGen extends CodeGenBase
 			}
 		}
 		
+		normaliseIdentifiers(mergedParseLists);
 		computeDefTable(mergedParseLists);
 		
 		// To document any renaming of variables shadowing other variables
@@ -381,6 +384,42 @@ public class JavaCodeGen extends CodeGenBase
 		return data;
 	}
 
+	private void normaliseIdentifiers(List<SClassDefinition> mergedParseLists)
+			throws AnalysisException
+	{
+		List<SClassDefinition> userClasses = new LinkedList<SClassDefinition>();
+		
+		for (SClassDefinition clazz : mergedParseLists)
+		{
+			if (!getInfo().getDeclAssistant().classIsLibrary(clazz))
+			{
+				userClasses.add(clazz);
+			}
+		}
+		
+		NameCollector collector = new NameCollector();
+
+		for (SClassDefinition clazz : userClasses)
+		{
+			clazz.apply(collector);
+		}
+
+		Set<String> allNames = collector.namesToAvoid();
+
+		JavaIdentifierNormaliser normaliser = new JavaIdentifierNormaliser(allNames, getInfo().getTempVarNameGen());
+
+		for (SClassDefinition clazz : userClasses)
+		{
+			clazz.apply(normaliser);
+		}
+		
+		VarRenamer renamer = new VarRenamer();
+		for (SClassDefinition clazz : userClasses)
+		{
+			renamer.rename(clazz, normaliser.getRenamings());
+		}
+	}
+
 	private void computeDefTable(List<SClassDefinition> mergedParseLists)
 			throws AnalysisException
 	{
@@ -414,7 +453,7 @@ public class JavaCodeGen extends CodeGenBase
 		List<Renaming> allRenamings = new LinkedList<Renaming>();
 		
 		VarShadowingRenameCollector renamingsCollector = new VarShadowingRenameCollector(generator.getIRInfo().getTcFactory(), idDefs);
-		VarShadowingRenamer renamer = new VarShadowingRenamer();
+		VarRenamer renamer = new VarRenamer();
 		
 		for (SClassDefinition classDef : mergedParseLists)
 		{
