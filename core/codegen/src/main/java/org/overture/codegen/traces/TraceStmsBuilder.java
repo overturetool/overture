@@ -59,8 +59,8 @@ import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.TempVarPrefixes;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
+import org.overture.codegen.trans.conv.ObjectDesignatorToExpCG;
 import org.overture.codegen.trans.iterator.ILanguageIterator;
-import org.overture.codegen.trans.uniontypes.ObjectDesignatorToExpCG;
 
 public class TraceStmsBuilder extends AnswerAdaptor<TraceNodeData>
 {

@@ -53,7 +53,7 @@ public class ExecutableSpecTestHandler extends EntryBasedTestHandler
 			return;
 		}
 
-		injectArgIntoMainClassFile(parent, rootPackage != null ? (rootPackage  + "." + JAVA_ENTRY_CALL) : JAVA_ENTRY_CALL);
+		injectArgIntoMainClassFile(parent, rootPackage != null ? (rootPackage  + "." + getJavaEntry()) : getJavaEntry());
 		
 		if (rootPackage != null)
 		{
