@@ -217,12 +217,13 @@ public class JavaCodeGen extends CodeGenBase
 			}
 		}
 		
-		normaliseIdentifiers(mergedParseLists);
+		List<Renaming> allRenamings = normaliseIdentifiers(mergedParseLists);
 		computeDefTable(mergedParseLists);
 		
 		// To document any renaming of variables shadowing other variables
 		removeUnreachableStms(mergedParseLists);
-		List<Renaming> allRenamings = performRenaming(mergedParseLists, getInfo().getIdStateDesignatorDefs());
+		
+		allRenamings.addAll(performRenaming(mergedParseLists, getInfo().getIdStateDesignatorDefs()));
 		
 		for (SClassDefinition classDef : mergedParseLists)
 		{
@@ -384,7 +385,7 @@ public class JavaCodeGen extends CodeGenBase
 		return data;
 	}
 
-	private void normaliseIdentifiers(List<SClassDefinition> mergedParseLists)
+	private List<Renaming> normaliseIdentifiers(List<SClassDefinition> mergedParseLists)
 			throws AnalysisException
 	{
 		List<SClassDefinition> userClasses = new LinkedList<SClassDefinition>();
@@ -414,10 +415,15 @@ public class JavaCodeGen extends CodeGenBase
 		}
 		
 		VarRenamer renamer = new VarRenamer();
+		
+		List<Renaming> renamings = normaliser.getRenamings();
+		
 		for (SClassDefinition clazz : userClasses)
 		{
-			renamer.rename(clazz, normaliser.getRenamings());
+			renamer.rename(clazz, renamings);
 		}
+		
+		return renamings;
 	}
 
 	private void computeDefTable(List<SClassDefinition> mergedParseLists)
