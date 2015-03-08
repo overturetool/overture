@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
+import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.codegen.ir.ITempVarGen;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
@@ -34,8 +35,24 @@ public class JavaIdentifierNormaliser extends DepthFirstAnalysisAdaptor
 		{
 			String newName = getReplacementName(node.getName());
 			
-			this.renamings.add(new Renaming(node.getLocation(), node.getName(), newName));
+			if (!contains(node.getLocation()))
+			{
+				this.renamings.add(new Renaming(node.getLocation(), node.getName(), newName));
+			}
 		}
+	}
+	
+	private boolean contains(ILexLocation loc)
+	{
+		for (Renaming r : renamings)
+		{
+			if (r.getLoc().equals(loc))
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 	
 	public List<Renaming> getRenamings()
