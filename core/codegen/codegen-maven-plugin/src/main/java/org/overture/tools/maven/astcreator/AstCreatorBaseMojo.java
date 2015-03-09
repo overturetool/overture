@@ -71,13 +71,13 @@ public abstract class AstCreatorBaseMojo extends AbstractMojo
 	 */
 	 protected String packageName;
 
-//	/**
-//	 * The use src folder instead of generate-sources for the generated classes.
-//	 * 
-//	 * @parameter
-//	 */
-//	protected Boolean useSrcOutput;
-//
+	/**
+	 * The name of the folder under resources where the specification is stored.
+	 * 
+	 * @parameter
+	 */
+	protected String specificationDir;
+
 	/**
 	 * Name of the directory into which the astCreatorPlugin should dump the ast files.
 	 * 
@@ -141,11 +141,11 @@ public abstract class AstCreatorBaseMojo extends AbstractMojo
 		return output;
 	}
 
-	protected File getProjectVdmSrcDirectory()
-	{
-		File output = new File(project.getFile().getParentFile(), "src/main/vpp".replace('/', File.separatorChar));
-		return output;
-	}
+//	protected File getProjectVdmSrcDirectory()
+//	{
+//		File output = new File(project.getFile().getParentFile(), "src/main/vdm".replace('/', File.separatorChar));
+//		return output;
+//	}
 
 	protected File getResourcesDir()
 	{
