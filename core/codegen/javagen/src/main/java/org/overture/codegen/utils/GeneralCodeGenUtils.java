@@ -416,9 +416,18 @@ public class GeneralCodeGenUtils
 	
 	public static boolean isJavaKeyword(String s)
 	{
-		if(s == null || s.isEmpty())
+		if(s == null)
 		{
 			return false;
+		}
+		else
+		{
+			s = s.trim();
+			
+			if(s.isEmpty())
+			{
+				return false;
+			}
 		}
 		
 		for(String kw : IJavaCodeGenConstants.RESERVED_WORDS)
