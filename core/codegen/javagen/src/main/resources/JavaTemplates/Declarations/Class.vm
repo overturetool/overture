@@ -1,0 +1,60 @@
+#set( $package = "")
+#if (!$JavaFormat.isNull($node.getPackage()))
+	#set( $package = "package ${node.getPackage()};")
+#end
+##
+$package
+##
+#if (!$JavaFormat.isInnerClass($node))
+#**#import org.overture.codegen.runtime.*;
+#**#import java.util.*;
+#elseif ( !$JavaFormat.isInnerClass($node) && !$JavaFormat.isQuote($node))
+#**#import org.overture.codegen.runtime.*;
+#end
+##
+#if ($JavaFormat.importTraceSupport($node))
+#**#import org.overture.codegen.runtime.traces.*;##
+#end
+##
+##
+#set( $abstract = "")
+#if ($node.getAbstract())
+	#set( $abstract = "abstract")
+#end
+##
+#set( $static = "")
+#if ($node.getStatic())
+	#set( $static = "static")
+#end
+#set( $threadMethod = "")
+#if (!$JavaFormat.isNull($node.getThread()))
+	#set( $threadMethod = $JavaFormat.format($node.getThread()))
+#end
+##
+
+$abstract $node.getAccess() $static class $node.getName() $JavaFormat.formatSuperType($node) $JavaFormat.formatInterfaces($node)
+{
+	#foreach( $class in $node.getInnerClasses() )
+	$JavaFormat.format($class)
+	#end##
+	#foreach( $field in $node.getFields() )
+	$JavaFormat.format($field)
+	#end
+	##
+	
+	#foreach( $method in $node.getMethods() )
+	$JavaFormat.format($method)
+	#end
+	##
+	#if ($JavaFormat.isMainClass($node))
+	$node.getTag().getMainMethod()
+	#end
+	
+	#foreach( $typeDecl in $node.getTypeDecls() )
+		#if (!$JavaFormat.isNamedTypeDecl($typeDecl))
+		$JavaFormat.format($typeDecl)
+		#end
+	#end
+	##
+	${threadMethod}##
+}
