@@ -11,7 +11,7 @@
   <packaging>maven-plugin</packaging>
 
   <artifactId>codegen-plugin</artifactId>  
-  <name>Overture CodeGen Maven Plugin</name>
+  <name>The Java Code Generator Maven Plugin</name>
 
 
 
@@ -59,8 +59,8 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.overturetool.core</groupId>
-  <artifactId>codegen</artifactId>
+      <groupId>org.overturetool.core.codegen</groupId>
+  <artifactId>javagen</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

@@ -14,7 +14,7 @@ Require-Bundle: org.eclipse.ui.console,
 Bundle-Activator: org.overture.ide.plugins.codegen.Activator
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ClassPath: .,
- jars/codegen.jar,
+ jars/javagen.jar,
  jars/commons-collections.jar,
  jars/commons-lang.jar,
  jars/jalopy.jar,
