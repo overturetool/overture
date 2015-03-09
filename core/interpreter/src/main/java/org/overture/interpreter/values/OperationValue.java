@@ -282,8 +282,8 @@ public class OperationValue extends Value
 			}
 		} finally
 		{
-			QuickProfiler.printDuration(start, this.expldef.getName().getClassName().getFullName()
-					+"." + this.expldef.getName().getFullName());
+			QuickProfiler.printDuration(start, this.name.getModule() + "."
+					+ this.toTitle());
 		}
 
 	}
