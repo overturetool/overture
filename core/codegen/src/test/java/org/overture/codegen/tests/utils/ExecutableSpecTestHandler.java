@@ -28,7 +28,11 @@ import java.util.List;
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRConstants;
+import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.config.Release;
+import org.overture.config.Settings;
+import org.overture.interpreter.util.InterpreterUtil;
+import org.overture.interpreter.values.Value;
 
 public class ExecutableSpecTestHandler extends EntryBasedTestHandler
 {
@@ -38,12 +42,10 @@ public class ExecutableSpecTestHandler extends EntryBasedTestHandler
 	}
 
 	@Override
-	public void writeGeneratedCode(File parent, File resultFile)
+	public void writeGeneratedCode(File parent, File resultFile, String rootPackage)
 			throws IOException
 	{
-		injectArgIntoMainClassFile(parent, JAVA_ENTRY_CALL);
-
-		List<StringBuffer> content = TestUtils.readJavaModulesFromResultFile(resultFile);
+		List<StringBuffer> content = TestUtils.readJavaModulesFromResultFile(resultFile, rootPackage);
 
 		if (content.isEmpty())
 		{
@@ -51,23 +53,29 @@ public class ExecutableSpecTestHandler extends EntryBasedTestHandler
 			return;
 		}
 
+		injectArgIntoMainClassFile(parent, rootPackage != null ? (rootPackage  + "." + getJavaEntry()) : getJavaEntry());
+		
+		if (rootPackage != null)
+		{
+			parent = new File(parent, GeneralCodeGenUtils.getFolderFromJavaRootPackage(rootPackage));
+		}
+		
 		parent.mkdirs();
-
+		
+		
 		for (StringBuffer classCgStr : content)
 		{
 			String className = TestUtils.getJavaModuleName(classCgStr);
-			
-			
+
 			File out = null;
-			if(classCgStr.toString().contains("package quotes;"))
+			if(classCgStr.toString().contains("quotes;"))
 			{
 				out = new File(parent, "quotes");
-			}
-			else
+			} else
 			{
 				out = parent;
 			}
-				
+
 			File tempFile = consTempFile(className, out, classCgStr);
 
 			injectSerializableInterface(classCgStr, className);
@@ -79,32 +87,56 @@ public class ExecutableSpecTestHandler extends EntryBasedTestHandler
 	private void injectSerializableInterface(StringBuffer classCgStr,
 			String className)
 	{
-		//TODO: Improve way that the EvaluatePP interface is handled
 		if (!className.equals(IRConstants.QUOTES_INTERFACE_NAME)
-				&& !className.startsWith(CodeGenBase.INTERFACE_NAME_PREFIX) && !classCgStr.toString().contains(" implements EvaluatePP"))
+				&& !className.startsWith(CodeGenBase.INTERFACE_NAME_PREFIX))
 		{
-			int classNameIdx = classCgStr.indexOf(className);
-
-			int prv = classCgStr.indexOf("private");
-			int pub = classCgStr.indexOf("public");
-			int abstr = classCgStr.indexOf("abstract");
-
-			int min = prv >= 0 && prv < pub ? prv : pub;
-			min = abstr >= 0 && abstr < min ? abstr : min;
-
-			if (min < 0)
+			// TODO: Improve way that the EvaluatePP/Serializable interface is handled
+			String classStr = classCgStr.toString();
+			if (!className.equals(IRConstants.QUOTES_INTERFACE_NAME) && !classStr.contains(" implements EvaluatePP")
+					&& !classStr.contains(" implements java.io.Serializable"))
 			{
-				min = classNameIdx;
+				int classNameIdx = classCgStr.indexOf(className);
+
+				int prv = classCgStr.indexOf("private");
+				int pub = classCgStr.indexOf("public");
+				int abstr = classCgStr.indexOf("abstract");
+
+				int min = prv >= 0 && prv < pub ? prv : pub;
+				min = abstr >= 0 && abstr < min ? abstr : min;
+
+				if (min < 0)
+				{
+					min = classNameIdx;
+				}
+
+				int firstLeftBraceIdx = classCgStr.indexOf("{", classNameIdx);
+
+				String toReplace = classCgStr.substring(min, firstLeftBraceIdx);
+
+				String replacement = "import java.io.*;\n\n" + toReplace
+						+ " implements Serializable";
+
+				classCgStr.replace(min, firstLeftBraceIdx, replacement);
 			}
-
-			int firstLeftBraceIdx = classCgStr.indexOf("{", classNameIdx);
-
-			String toReplace = classCgStr.substring(min, firstLeftBraceIdx);
-
-			String replacement = "import java.io.*;\n\n" + toReplace
-					+ " implements Serializable";
-
-			classCgStr.replace(min, firstLeftBraceIdx, replacement);
 		}
+	}
+
+	@Override
+	public String getJavaEntry()
+	{
+		return "Entry.Run()";
+	}
+
+	@Override
+	public String getVdmEntry()
+	{
+		return "Entry`Run()";
+	}
+
+	@Override
+	public ExecutionResult interpretVdm(File intputFile) throws Exception
+	{
+		Value val = InterpreterUtil.interpret(Settings.dialect, getVdmEntry(), intputFile);
+		return new ExecutionResult(val.toString(), val);
 	}
 }

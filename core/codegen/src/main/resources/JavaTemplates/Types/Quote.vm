@@ -1,1 +1,3 @@
-quotes.$node.getValue()
+#set( $packagePrefix = $JavaFormat.getQuotePackagePrefix() )
+##
+${packagePrefix}${node.getValue()}Quote

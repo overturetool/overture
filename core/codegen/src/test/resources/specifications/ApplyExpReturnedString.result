@@ -8,7 +8,7 @@ public class A {
     }
 
     public Character op() {
-        return ((Character) s().get(Utils.index(1L)));
+        return ((Character) Utils.get(s(), 1L));
     }
 
     public VDMSeq s() {

@@ -52,7 +52,7 @@ public class Entry {
         long toVar_1 = hr.size();
 
         for (Long i = 1L; i <= toVar_1; i++) {
-            Object obj_1 = hr.get(Utils.index(i));
+            Object obj_1 = Utils.get(hr, i);
 
             Number apply_1 = null;
 

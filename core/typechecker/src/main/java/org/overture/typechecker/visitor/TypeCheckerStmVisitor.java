@@ -200,7 +200,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		{
 			node.setSeqType(question.assistantFactory.createPTypeAssistant().getSeq(stype));
 			node.getPatternBind().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env, question.scope));
-			List<PDefinition> defs = question.assistantFactory.createPPatternBindAssistant().getDefinitions(node.getPatternBind());
+			List<PDefinition> defs = getDefinitions(node.getPatternBind());
 			question.assistantFactory.createPDefinitionListAssistant().typeCheck(defs, THIS, new TypeCheckInfo(question.assistantFactory, question.env, question.scope));
 			local = new FlatCheckedEnvironment(question.assistantFactory, defs, question.env, question.scope);
 		} else
@@ -946,7 +946,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		node.setType(ptype);
 		node.getPatternBind().apply(THIS, question);
 		// TODO: PatternBind stuff
-		List<PDefinition> defs = question.assistantFactory.createPPatternBindAssistant().getDefinitions(node.getPatternBind());
+		List<PDefinition> defs = getDefinitions(node.getPatternBind());
 		question.assistantFactory.createPDefinitionListAssistant().typeCheck(defs, THIS, question);
 		Environment local = new FlatCheckedEnvironment(question.assistantFactory, defs, question.env, question.scope);
 		rtypes.add(node.getWith().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers)));
@@ -1278,7 +1278,7 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 		// THIS, question);
 		// DefinitionList defs = patternBind.getDefinitions();
 		node.getPatternBind().apply(THIS, new TypeCheckInfo(question.assistantFactory, question.env, question.scope));
-		List<PDefinition> defs = question.assistantFactory.createPPatternBindAssistant().getDefinitions(node.getPatternBind());
+		List<PDefinition> defs = getDefinitions(node.getPatternBind());
 		question.assistantFactory.createPDefinitionListAssistant().typeCheck(defs, THIS, question);
 		Environment local = new FlatCheckedEnvironment(question.assistantFactory, defs, question.env, question.scope);
 		node.getStatement().apply(THIS, new TypeCheckInfo(question.assistantFactory, local, question.scope, question.qualifiers));
@@ -1335,6 +1335,13 @@ public class TypeCheckerStmVisitor extends AbstractTypeCheckVisitor
 			node.setDefs(question.assistantFactory.createPPatternAssistant().getDefinitions(node.getPattern(), type, NameScope.LOCAL));
 		}
 		return null;
+	}
+	
+	public List<PDefinition> getDefinitions(ADefPatternBind patternBind)
+	{
+		assert patternBind.getDefs() != null : "PatternBind must be type checked before getDefinitions";
+
+		return patternBind.getDefs();
 	}
 
 }

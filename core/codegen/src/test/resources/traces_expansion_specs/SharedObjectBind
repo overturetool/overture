@@ -1,0 +1,42 @@
+class Counter
+
+instance variables
+
+n : nat := 0;
+
+operations
+
+public inc : () ==> nat
+inc () ==
+(
+  n := n + 1;
+  return n;
+);
+
+end Counter
+
+class Entry
+
+instance variables
+
+counter : Counter;
+
+operations
+
+public Entry : Counter ==> Entry
+Entry (pC) == counter := pC;
+
+public inc : () ==> nat
+inc () == counter.inc();
+
+traces
+
+T1:
+let c = new Counter(),
+    a1 = new Entry(c),
+    a2 = new Entry(c)
+in
+  (a1.inc();a1.inc();a2.inc();a2.inc()){1,2};
+
+
+end Entry

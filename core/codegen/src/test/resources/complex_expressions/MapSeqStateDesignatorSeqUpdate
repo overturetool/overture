@@ -1,0 +1,13 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+(
+  dcl xs : seq of nat := [1,2,3];
+  xs(2) := 5;
+  return xs(2);
+);
+
+end Entry

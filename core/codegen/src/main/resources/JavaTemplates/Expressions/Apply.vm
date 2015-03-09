@@ -10,9 +10,9 @@
 	#set( $index = $JavaFormat.format($node.getArgs().get(0)))
 	#set ( $seqRead = "" )
 	#if ($JavaFormat.castNotNeeded($node.getType()))
-		#set ( $seqRead = "${root}.get(Utils.index($index))" )
+		#set ( $seqRead = "Utils.get(${root},${index})" )
 	#else
-		#set ( $seqRead = "(($JavaFormat.format($node.getType())) ${root}.get(Utils.index($index)))" )
+		#set ( $seqRead = "(($JavaFormat.format($node.getType())) Utils.get(${root},${index}))" )
 	#end
 ##
 	#if ($ValueSemantics.shouldClone($node))
@@ -25,9 +25,9 @@
 	#set( $key = $JavaFormat.format($node.getArgs().get(0)))
 	#set ( $mapRead = "" )
 	#if ($JavaFormat.castNotNeeded($node.getType()))
-		#set ( $mapRead = "MapUtil.get(${root},${key})" )
+		#set ( $mapRead = "Utils.get(${root},${key})" )
 	#else
-		#set ( $mapRead = "(($JavaFormat.format($node.getType())) MapUtil.get(${root},${key}))" )
+		#set ( $mapRead = "(($JavaFormat.format($node.getType())) Utils.get(${root},${key}))" )
 	#end
 	#if ($ValueSemantics.shouldClone($node))
 		Utils.clone(${mapRead})

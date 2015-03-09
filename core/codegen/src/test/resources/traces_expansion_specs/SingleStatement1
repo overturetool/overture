@@ -1,0 +1,14 @@
+class Entry
+
+operations
+
+op : () ==> ()
+op () == skip;
+
+traces
+
+T1:
+
+op();
+
+end Entry

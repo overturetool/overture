@@ -1,0 +1,15 @@
+class Entry
+
+functions
+
+public f :  nat -> nat
+f (x) == x;
+
+traces
+
+T1:
+let mk_(a,b) = mk_(1,2)
+in
+  (f(a);f(b))
+
+end Entry

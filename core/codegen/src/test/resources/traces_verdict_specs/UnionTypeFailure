@@ -1,0 +1,20 @@
+class Entry
+
+functions
+
+public f :  nat | char -> nat
+f (e) ==
+  1 + e;
+
+traces
+
+T1:
+  let a = 1
+  in
+    let b = 'x'
+    in 
+      let c = 3
+      in
+        (f(a) | f(b) | f(c));
+
+end Entry

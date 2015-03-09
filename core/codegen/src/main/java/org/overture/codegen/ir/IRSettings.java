@@ -94,7 +94,7 @@ public class IRSettings
 	{
 		this.generatePostCondChecks = generatePostCondChecks;
 	}
-	
+
 	public boolean generateTraces()
 	{
 		return generateTraces;
@@ -105,4 +105,3 @@ public class IRSettings
 		this.generateTraces = generateTraces;
 	}
 }
-

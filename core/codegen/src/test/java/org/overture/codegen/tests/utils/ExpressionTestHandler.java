@@ -37,7 +37,7 @@ class ExpressionTestHandler extends ExecutableTestHandler
 		super(release, dialect);
 	}
 
-	public void writeGeneratedCode(File parent, File resultFile)
+	public void writeGeneratedCode(File parent, File resultFile, String rootPackage)
 			throws IOException
 	{
 		String generatedExpression = readFromFile(resultFile);
@@ -45,12 +45,14 @@ class ExpressionTestHandler extends ExecutableTestHandler
 	}
 
 	@Override
-	public Value interpretVdm(File intputFile) throws Exception
+	public ExecutionResult interpretVdm(File intputFile) throws Exception
 	{
 		initVdmEnv();
 
 		String input = GeneralUtils.readFromFile(intputFile);
 
-		return InterpreterUtil.interpret(input);
+		Value val = InterpreterUtil.interpret(input);
+		
+		return new ExecutionResult(val.toString(), val);
 	}
 }

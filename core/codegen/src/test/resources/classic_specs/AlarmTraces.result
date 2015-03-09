@@ -78,7 +78,7 @@ public class Plant {
     public Expert ExpertToPage(final Alarm a, final Token p) {
         Expert expert = null;
         Boolean success_1 = false;
-        VDMSet set_1 = Utils.clone(((VDMSet) MapUtil.get(schedule, p)));
+        VDMSet set_1 = Utils.clone(((VDMSet) Utils.get(schedule, p)));
 
         for (Iterator iterator_1 = set_1.iterator();
                 iterator_1.hasNext() && !(success_1);) {
@@ -94,7 +94,7 @@ public class Plant {
     }
 
     public Number NumberOfExperts(final Token p) {
-        return ((VDMSet) MapUtil.get(schedule, p)).size();
+        return ((VDMSet) Utils.get(schedule, p)).size();
     }
 
     public VDMSet ExpertIsOnDuty(final Expert ex) {
@@ -104,7 +104,7 @@ public class Plant {
         for (Iterator iterator_2 = set_2.iterator(); iterator_2.hasNext();) {
             Token p = ((Token) iterator_2.next());
 
-            if (((VDMSet) MapUtil.get(schedule, p)).contains(ex)) {
+            if (((VDMSet) Utils.get(schedule, p)).contains(ex)) {
                 setCompResult_1 = SetUtil.union(Utils.clone(setCompResult_1),
                         SetUtil.set(p));
             }
@@ -123,16 +123,16 @@ public class Plant {
 
         if (MapUtil.dom(Utils.clone(schedule)).contains(p)) {
             ternaryIfExp_1 = SetUtil.union(Utils.clone(
-                        ((VDMSet) MapUtil.get(schedule, p))), SetUtil.set(ex));
+                        ((VDMSet) Utils.get(schedule, p))), SetUtil.set(ex));
         } else {
             ternaryIfExp_1 = SetUtil.set(ex);
         }
 
-        schedule.put(p, Utils.clone(ternaryIfExp_1));
+        Utils.mapSeqUpdate(schedule, p, Utils.clone(ternaryIfExp_1));
     }
 
     public void RemoveExpertFromSchedule(final Token p, final Expert ex) {
-        VDMSet exs = Utils.clone(((VDMSet) MapUtil.get(schedule, p)));
+        VDMSet exs = Utils.clone(((VDMSet) Utils.get(schedule, p)));
 
         VDMMap ternaryIfExp_2 = null;
 
@@ -158,7 +158,7 @@ public class Plant {
         for (Iterator iterator_3 = set_3.iterator();
                 iterator_3.hasNext() && forAllExpResult_1;) {
             Token p = ((Token) iterator_3.next());
-            forAllExpResult_1 = !(((VDMSet) MapUtil.get(sch, p)).isEmpty());
+            forAllExpResult_1 = !(((VDMSet) Utils.get(sch, p)).isEmpty());
         }
 
         if (forAllExpResult_1) {
@@ -175,7 +175,7 @@ public class Plant {
                         iterator_5.hasNext() && forAllExpResult_3;) {
                     Token p = ((Token) iterator_5.next());
                     Boolean existsExpResult_1 = false;
-                    VDMSet set_6 = Utils.clone(((VDMSet) MapUtil.get(sch, p)));
+                    VDMSet set_6 = Utils.clone(((VDMSet) Utils.get(sch, p)));
 
                     for (Iterator iterator_6 = set_6.iterator();
                             iterator_6.hasNext() && !(existsExpResult_1);) {
@@ -220,19 +220,20 @@ public class Entry {
     private static final Token p4 = new Token(SeqUtil.seq('T', 'u', 'e', 's',
                 'd', 'a', 'y', ' ', 'n', 'i', 'g', 'h', 't'));
     private static final VDMSet ps = SetUtil.set(p1, p2, p3, p4);
-    private Alarm a1 = new Alarm(quotes.Mech.getInstance(),
+    private Alarm a1 = new Alarm(quotes.MechQuote.getInstance(),
             SeqUtil.seq('M', 'e', 'c', 'h', 'a', 'n', 'i', 'c', 'a', 'l', ' ',
                 'f', 'a', 'u', 'l', 't'));
-    private Alarm a2 = new Alarm(quotes.Chem.getInstance(),
+    private Alarm a2 = new Alarm(quotes.ChemQuote.getInstance(),
             SeqUtil.seq('T', 'a', 'n', 'k', ' ', 'o', 'v', 'e', 'r', 'f', 'l',
                 'o', 'w'));
-    private Expert ex1 = new Expert(SetUtil.set(quotes.Mech.getInstance(),
-                quotes.Bio.getInstance()));
-    private Expert ex2 = new Expert(SetUtil.set(quotes.Elec.getInstance()));
-    private Expert ex3 = new Expert(SetUtil.set(quotes.Chem.getInstance(),
-                quotes.Bio.getInstance(), quotes.Mech.getInstance()));
-    private Expert ex4 = new Expert(SetUtil.set(quotes.Elec.getInstance(),
-                quotes.Chem.getInstance()));
+    private Expert ex1 = new Expert(SetUtil.set(
+                quotes.MechQuote.getInstance(), quotes.BioQuote.getInstance()));
+    private Expert ex2 = new Expert(SetUtil.set(quotes.ElecQuote.getInstance()));
+    private Expert ex3 = new Expert(SetUtil.set(
+                quotes.ChemQuote.getInstance(), quotes.BioQuote.getInstance(),
+                quotes.MechQuote.getInstance()));
+    private Expert ex4 = new Expert(SetUtil.set(
+                quotes.ElecQuote.getInstance(), quotes.ChemQuote.getInstance()));
     private Plant plant = new Plant(SetUtil.set(a1),
             MapUtil.map(new Maplet(p1, SetUtil.set(ex1, ex4)),
                 new Maplet(p2, SetUtil.set(ex2, ex3))));

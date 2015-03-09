@@ -1,0 +1,19 @@
+class Entry
+
+functions
+
+fun1 : nat -> nat
+fun1 (a) == a;
+
+fun2 : nat -> nat
+fun2 (b) == b;
+
+traces
+
+T1:
+
+let x in set {1,2,3}
+in
+	|| (fun1(x), fun2(x));
+
+end Entry

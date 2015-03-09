@@ -49,12 +49,12 @@ import org.overture.codegen.cgast.expressions.ANullExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
+import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ACallObjectExpStmCG;
 import org.overture.codegen.cgast.statements.AForLoopStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.AIncrementStmCG;
-import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
 import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
@@ -229,10 +229,10 @@ public class TransAssistantCG extends BaseTransformationAssistant
 		}
 	}
 
-	public ALocalAssignmentStmCG consBoolVarAssignment(SExpCG predicate,
+	public AAssignToExpStmCG consBoolVarAssignment(SExpCG predicate,
 			String boolVarName)
 	{
-		ALocalAssignmentStmCG boolVarAssignment = new ALocalAssignmentStmCG();
+		AAssignToExpStmCG boolVarAssignment = new AAssignToExpStmCG();
 		boolVarAssignment.setTarget(consBoolCheck(boolVarName, false));
 		boolVarAssignment.setExp(predicate != null ? predicate.clone()
 				: info.getExpAssistant().consBoolLiteral(true));
@@ -246,12 +246,12 @@ public class TransAssistantCG extends BaseTransformationAssistant
 		return info.getDeclAssistant().consLocalVarDecl(getSetTypeCloned(set),
 				consIdPattern(setBindName), set.clone());
 	}
-	
+
 	public ANullExpCG consNullExp()
 	{
 		ANullExpCG nullExp = new ANullExpCG();
 		nullExp.setType(new AUnknownTypeCG());
-		
+
 		return nullExp;
 	}
 
@@ -269,7 +269,7 @@ public class TransAssistantCG extends BaseTransformationAssistant
 	}
 
 	public SExpCG consInstanceCall(STypeCG instanceType, String instanceName,
-			STypeCG returnType, String memberName, SExpCG arg)
+			STypeCG returnType, String memberName, SExpCG... args)
 	{
 		AIdentifierVarExpCG instance = new AIdentifierVarExpCG();
 		instance.setType(instanceType.clone());
@@ -287,10 +287,13 @@ public class TransAssistantCG extends BaseTransformationAssistant
 
 		instanceCall.setType(returnType.clone());
 
-		if (arg != null)
+		if (args != null)
 		{
-			methodType.getParams().add(arg.getType().clone());
-			instanceCall.getArgs().add(arg);
+			for (SExpCG arg : args)
+			{
+				methodType.getParams().add(arg.getType().clone());
+				instanceCall.getArgs().add(arg);
+			}
 		}
 
 		fieldExp.setType(methodType.clone());
@@ -299,9 +302,10 @@ public class TransAssistantCG extends BaseTransformationAssistant
 
 		return instanceCall;
 	}
-	
+
+	// TODO: This actually forces the return type to be 'void'. Maybe generalise?
 	public ACallObjectExpStmCG consInstanceCallStm(STypeCG instanceType,
-			String instanceName, String memberName, SExpCG arg)
+			String instanceName, String memberName, SExpCG... args)
 	{
 		AIdentifierVarExpCG instance = new AIdentifierVarExpCG();
 		instance.setName(instanceName);
@@ -311,8 +315,8 @@ public class TransAssistantCG extends BaseTransformationAssistant
 		call.setType(new AVoidTypeCG());
 		call.setFieldName(memberName);
 		call.setObj(instance);
-		
-		if(arg != null)
+
+		for (SExpCG arg : args)
 		{
 			call.getArgs().add(arg);
 		}
@@ -348,27 +352,27 @@ public class TransAssistantCG extends BaseTransformationAssistant
 
 		return assignment;
 	}
-	
+
 	public ANewExpCG consDefaultConsCall(String className)
 	{
 		return consDefaultConsCall(consClassType(className));
 	}
-	
+
 	public ANewExpCG consDefaultConsCall(AClassTypeCG classType)
 	{
 		ANewExpCG initAltNode = new ANewExpCG();
 		initAltNode.setType(classType.clone());
 		initAltNode.setName(consTypeNameForClass(classType.getName()));
-		
+
 		return initAltNode;
 	}
-	
+
 	public ATypeNameCG consTypeNameForClass(String classTypeName)
 	{
 		ATypeNameCG typeName = new ATypeNameCG();
 		typeName.setDefiningClass(null);
 		typeName.setName(classTypeName);
-		
+
 		return typeName;
 	}
 
@@ -377,7 +381,7 @@ public class TransAssistantCG extends BaseTransformationAssistant
 	{
 		ACastUnaryExpCG cast = new ACastUnaryExpCG();
 		cast.setType(elementType.clone());
-		cast.setExp(consInstanceCall(consClassType(iteratorType), iteratorName, elementType.clone(), nextElementMethod, null));
+		cast.setExp(consInstanceCall(consClassType(iteratorType), iteratorName, elementType.clone(), nextElementMethod));
 		return cast;
 	}
 
@@ -424,7 +428,7 @@ public class TransAssistantCG extends BaseTransformationAssistant
 		setVar.setType(setType);
 		setVar.setName(setName);
 		setVar.setIsLocal(true);
-		
+
 		return setVar;
 	}
 
@@ -558,7 +562,7 @@ public class TransAssistantCG extends BaseTransformationAssistant
 
 		STypeCG elementType = getSeqTypeCloned(seqComp).getSeqOf();
 
-		SExpCG nextCall = consInstanceCall(consClassType(iteratorTypeName), instance, elementType.clone(), member, null);
+		SExpCG nextCall = consInstanceCall(consClassType(iteratorTypeName), instance, elementType.clone(), member);
 		ACastUnaryExpCG cast = new ACastUnaryExpCG();
 		cast.setType(elementType.clone());
 		cast.setExp(nextCall);
@@ -582,7 +586,7 @@ public class TransAssistantCG extends BaseTransformationAssistant
 		binding.setSet(null);
 		binding.getPatterns().clear();
 	}
-	
+
 	public AIdentifierVarExpCG consIdentifierVar(String name, STypeCG type)
 	{
 		AIdentifierVarExpCG var = new AIdentifierVarExpCG();
@@ -590,10 +594,10 @@ public class TransAssistantCG extends BaseTransformationAssistant
 		var.setIsLocal(true);
 		var.setType(type);
 		var.setName(name);
-		
+
 		return var;
 	}
-	
+
 	public AApplyExpCG consConditionalCall(AMethodDeclCG node,
 			AMethodDeclCG predMethod)
 	{
@@ -602,42 +606,71 @@ public class TransAssistantCG extends BaseTransformationAssistant
 		condVar.setName(predMethod.getName());
 		condVar.setIsLambda(false);
 		condVar.setIsLocal(true);
-		
+
 		AApplyExpCG condCall = new AApplyExpCG();
 		condCall.setType(new ABoolBasicTypeCG());
 		condCall.setRoot(condVar);
-		
+
 		LinkedList<AFormalParamLocalParamCG> params = node.getFormalParams();
-		
-		for(AFormalParamLocalParamCG p : params)
+
+		for (AFormalParamLocalParamCG p : params)
 		{
 			SPatternCG paramPattern = p.getPattern();
-			
-			if(!(paramPattern instanceof AIdentifierPatternCG))
+
+			if (!(paramPattern instanceof AIdentifierPatternCG))
 			{
-				Logger.getLog().printErrorln("Expected parameter pattern to be an identifier pattern at this point. Got: " + paramPattern);
+				Logger.getLog().printErrorln("Expected parameter pattern to be an identifier pattern at this point. Got: "
+						+ paramPattern);
 				return null;
 			}
-			
+
 			AIdentifierPatternCG paramId = (AIdentifierPatternCG) paramPattern;
-			
+
 			AIdentifierVarExpCG paramArg = new AIdentifierVarExpCG();
 			paramArg.setType(p.getType().clone());
 			paramArg.setIsLocal(true);
 			paramArg.setIsLambda(false);
 			paramArg.setName(paramId.getName());
-			
+
 			condCall.getArgs().add(paramArg);
 		}
-		
+
 		return condCall;
 	}
-	
+
 	public AIdentifierPatternCG consIdPattern(String name)
 	{
 		AIdentifierPatternCG idPattern = new AIdentifierPatternCG();
 		idPattern.setName(name);
-		
+
 		return idPattern;
+	}
+
+	public AVarDeclCG consClassVarDeclDefaultCtor(String className,
+			String varName)
+	{
+		AClassTypeCG classType = consClassType(className);
+		ANewExpCG init = consDefaultConsCall(className);
+
+		AVarDeclCG classDecl = consDecl(varName, classType, init);
+		classDecl.setFinal(true);
+
+		return classDecl;
+	}
+
+	public ABlockStmCG wrap(AVarDeclCG decl)
+	{
+		ABlockStmCG block = new ABlockStmCG();
+		block.getLocalDefs().add(decl);
+
+		return block;
+	}
+
+	public ABlockStmCG wrap(SStmCG stm)
+	{
+		ABlockStmCG block = new ABlockStmCG();
+		block.getStatements().add(stm);
+
+		return block;
 	}
 }

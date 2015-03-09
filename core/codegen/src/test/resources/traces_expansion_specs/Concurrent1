@@ -1,0 +1,19 @@
+class Entry
+
+operations
+
+op1 : () ==> ()
+op1 () == skip;
+
+op2 : () ==> ()
+op2 () == skip;
+
+op3 : () ==> ()
+op3 () == skip;
+
+traces
+
+T1:
+|| (op1(), op2(), op3());
+
+end Entry

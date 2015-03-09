@@ -94,7 +94,7 @@ public class Entry {
                     ternaryIfExp_1 = ternaryIfExp_2;
                 }
 
-                Object callStmObj_1 = objs.get(Utils.index(i));
+                Object callStmObj_1 = Utils.get(objs, i);
 
                 if (callStmObj_1 instanceof A) {
                     ((A) callStmObj_1).op(((Number) a), ((Boolean) b),

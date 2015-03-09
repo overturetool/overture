@@ -1,0 +1,5 @@
+#set( $counterType = $node.getHistype() )
+#set( $innerClass = $JavaFormat.format($node.getSentinelType()) )
+#set( $opName = $node.getOpsname() )
+##
+sentinel.${counterType}[(( ${innerClass} )sentinel).${opName}]

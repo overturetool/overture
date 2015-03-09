@@ -1,0 +1,16 @@
+class Entry
+
+functions
+
+fun : nat -> nat
+fun (a) == a;
+
+traces
+
+T1:
+
+let a in set {1,2,3}
+in
+	fun(a);
+
+end Entry

@@ -19,9 +19,9 @@ public class Entry {
         }
 
         VDMSeq m = Utils.clone(ternaryIfExp_1);
-        VDMSeq s = Utils.clone(((VDMSeq) m.get(Utils.index(1L))));
+        VDMSeq s = Utils.clone(((VDMSeq) Utils.get(m, 1L)));
 
-        Object obj_1 = s.get(Utils.index(s.size()));
+        Object obj_1 = Utils.get(s, s.size());
 
         Number apply_1 = null;
 

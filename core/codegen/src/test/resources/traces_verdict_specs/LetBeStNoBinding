@@ -1,0 +1,22 @@
+class Entry
+
+functions
+
+public f :  nat -> nat
+f (e) ==
+let x in set {1,2,3} be st x = e
+in
+  x;
+
+traces
+
+T1:
+  let a = 1
+  in
+    let b = 10
+    in 
+      let c = 3
+      in
+        (f(a) | f(b) | f(c));
+
+end Entry

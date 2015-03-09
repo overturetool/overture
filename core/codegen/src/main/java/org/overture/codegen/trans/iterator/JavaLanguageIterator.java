@@ -69,7 +69,7 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 		String setName = setVar.getName();
 		AClassTypeCG iteratorType = transAssistant.consClassType(ITERATOR_TYPE);
 		STypeCG setType = setVar.getType().clone();
-		SExpCG getIteratorCall = transAssistant.consInstanceCall(setType, setName, iteratorType.clone(), GET_ITERATOR, null);
+		SExpCG getIteratorCall = transAssistant.consInstanceCall(setType, setName, iteratorType.clone(), GET_ITERATOR);
 
 		return transAssistant.getInfo().getDeclAssistant().
 				consLocalVarDecl(iteratorType, transAssistant.consIdPattern(iteratorName), getIteratorCall);
@@ -82,7 +82,7 @@ public class JavaLanguageIterator extends AbstractLanguageIterator
 	{
 		AClassTypeCG iteratorType = transAssistant.consClassType(ITERATOR_TYPE);
 
-		return transAssistant.consInstanceCall(iteratorType, iteratorName, new ABoolBasicTypeCG(), HAS_NEXT_ELEMENT_ITERATOR, null);
+		return transAssistant.consInstanceCall(iteratorType, iteratorName, new ABoolBasicTypeCG(), HAS_NEXT_ELEMENT_ITERATOR);
 	}
 
 	@Override

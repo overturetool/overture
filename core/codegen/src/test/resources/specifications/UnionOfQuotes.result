@@ -8,19 +8,19 @@ public class A {
     }
 
     public void op(final Object v) {
-        if (Utils.equals(v, quotes.Red.getInstance())) {
+        if (Utils.equals(v, quotes.RedQuote.getInstance())) {
             //Skip;
         }
     }
 
     public void op2(final Object v) {
-        if (Utils.equals(v, quotes.A.getInstance())) {
+        if (Utils.equals(v, quotes.AQuote.getInstance())) {
             //Skip;
         }
     }
 
     public Object op3() {
-        return quotes.Red.getInstance();
+        return quotes.RedQuote.getInstance();
     }
 
     public String toString() {

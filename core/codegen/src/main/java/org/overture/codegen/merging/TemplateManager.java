@@ -44,6 +44,7 @@ import org.overture.codegen.cgast.declarations.AVarDeclCG;
 import org.overture.codegen.cgast.expressions.*;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
 import org.overture.codegen.cgast.statements.AApplyObjectDesignatorCG;
+import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
 import org.overture.codegen.cgast.statements.AAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.ABreakStmCG;
@@ -61,9 +62,9 @@ import org.overture.codegen.cgast.statements.AIdentifierObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
 import org.overture.codegen.cgast.statements.AIncrementStmCG;
-import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
 import org.overture.codegen.cgast.statements.ALocalPatternAssignmentStmCG;
 import org.overture.codegen.cgast.statements.AMapSeqStateDesignatorCG;
+import org.overture.codegen.cgast.statements.AMapSeqUpdateStmCG;
 import org.overture.codegen.cgast.statements.ANewObjectDesignatorCG;
 import org.overture.codegen.cgast.statements.ANotImplementedStmCG;
 import org.overture.codegen.cgast.statements.APlainCallStmCG;
@@ -276,7 +277,7 @@ public class TemplateManager
 		nodeTemplateFileNames.put(ASkipStmCG.class, templateStructure.STM_PATH
 				+ "Skip");
 
-		nodeTemplateFileNames.put(ALocalAssignmentStmCG.class, templateStructure.STM_PATH
+		nodeTemplateFileNames.put(AAssignToExpStmCG.class, templateStructure.STM_PATH
 				+ "LocalAssignment");
 
 		nodeTemplateFileNames.put(ALocalPatternAssignmentStmCG.class, templateStructure.STM_PATH
@@ -344,6 +345,10 @@ public class TemplateManager
 		
 		nodeTemplateFileNames.put(AStartlistStmCG.class, templateStructure.STM_PATH 
 				+ "Startlist");
+
+		nodeTemplateFileNames.put(AMapSeqUpdateStmCG.class, templateStructure.STM_PATH 
+				+ "MapSeqUpdate");
+		
 		// Expressions
 
 		nodeTemplateFileNames.put(AApplyExpCG.class, templateStructure.EXP_PATH
@@ -425,8 +430,11 @@ public class TemplateManager
 				+ "SubSeq");
 		
 		nodeTemplateFileNames.put(AHistoryExpCG.class, templateStructure.EXP_PATH 
-				+ "hisCounter");
-
+				+ "HistoryExp");
+		
+		nodeTemplateFileNames.put(AMapSeqGetExpCG.class, templateStructure.EXP_PATH 
+				+ "MapSeqGet");
+		
 		// Is expressions
 		
 		nodeTemplateFileNames.put(ABoolIsExpCG.class, templateStructure.IS_EXP_PATH

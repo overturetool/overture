@@ -1,0 +1,15 @@
+class Entry
+
+functions
+
+private f :  real -> real
+f (x) == 1 / x;
+
+traces
+
+T1:
+let x in set {-2,-1,0,1,2}
+in
+  f(x);
+
+end Entry

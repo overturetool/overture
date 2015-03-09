@@ -896,7 +896,8 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 				{
 					for (ATixeStmtAlternative tsa : node.getTraps())
 					{
-						rv = ctxt.assistantFactory.createATixeStmtAlternativeAssistant().eval(tsa, node.getLocation(), exval, ctxt);
+						rv = //ctxt.assistantFactory.createATixeStmtAlternativeAssistant().
+								eval(tsa, node.getLocation(), exval, ctxt);
 
 						if (rv != null) // Statement was executed
 						{
@@ -1383,6 +1384,51 @@ public class StatementEvaluator extends DelegateExpressionEvaluator
 		}
 
 		return new VoidValue();
+	}
+	
+	public Value eval(ATixeStmtAlternative node, ILexLocation location,
+			Value exval, Context ctxt) throws AnalysisException
+	{
+		Context evalContext = null;
+
+		try
+		{
+			if (node.getPatternBind().getPattern() != null)
+			{
+				evalContext = new Context(ctxt.assistantFactory, location, "tixe pattern", ctxt);
+				evalContext.putList(ctxt.assistantFactory.createPPatternAssistant().getNamedValues(node.getPatternBind().getPattern(), exval, ctxt));
+			} else if (node.getPatternBind().getBind() instanceof ASetBind)
+			{
+				ASetBind setbind = (ASetBind) node.getPatternBind().getBind();
+				ValueSet set = setbind.getSet().apply(VdmRuntime.getStatementEvaluator(), ctxt).setValue(ctxt);
+
+				if (set.contains(exval))
+				{
+					evalContext = new Context(ctxt.assistantFactory, location, "tixe set", ctxt);
+					evalContext.putList(ctxt.assistantFactory.createPPatternAssistant().getNamedValues(setbind.getPattern(), exval, ctxt));
+				} else
+				{
+					VdmRuntimeError.abort(setbind.getLocation(), 4049, "Value "
+							+ exval + " is not in set bind", ctxt);
+				}
+			} else
+			{
+				ATypeBind typebind = (ATypeBind) node.getPatternBind().getBind();
+				// Note we always perform DTC checks here...
+				Value converted = exval.convertValueTo(typebind.getType(), ctxt);
+				evalContext = new Context(ctxt.assistantFactory, location, "tixe type", ctxt);
+				evalContext.putList(ctxt.assistantFactory.createPPatternAssistant().getNamedValues(typebind.getPattern(), converted, ctxt));
+			}
+		} catch (ValueException ve) // Type bind convert failure
+		{
+			evalContext = null;
+		} catch (PatternMatchException e)
+		{
+			evalContext = null;
+		}
+
+		return evalContext == null ? null
+				: node.getStatement().apply(VdmRuntime.getStatementEvaluator(), evalContext);
 	}
 
 }

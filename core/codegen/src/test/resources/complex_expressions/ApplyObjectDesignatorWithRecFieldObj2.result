@@ -14,7 +14,7 @@ public class Entry {
     }
 
     public static Number op(final A a) {
-        return ((B) a.bs.get(Utils.index(1L))).c.e.getConst();
+        return ((B) Utils.get(a.bs, 1L)).c.e.getConst();
     }
 
     public Number getConst() {

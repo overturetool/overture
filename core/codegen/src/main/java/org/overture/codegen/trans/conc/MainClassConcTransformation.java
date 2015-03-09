@@ -24,10 +24,10 @@ import org.overture.codegen.cgast.expressions.ANewExpCG;
 import org.overture.codegen.cgast.expressions.ASelfExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.patterns.AIdentifierPatternCG;
+import org.overture.codegen.cgast.statements.AAssignToExpStmCG;
 import org.overture.codegen.cgast.statements.ABlockStmCG;
 import org.overture.codegen.cgast.statements.AElseIfStmCG;
 import org.overture.codegen.cgast.statements.AIfStmCG;
-import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG;
 import org.overture.codegen.cgast.statements.APlainCallStmCG;
 import org.overture.codegen.cgast.statements.AReturnStmCG;
 import org.overture.codegen.cgast.statements.ATryStmCG;
@@ -144,7 +144,7 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 			{
 				ABlockStmCG bodyConst = new ABlockStmCG();
 
-				ALocalAssignmentStmCG stm = new ALocalAssignmentStmCG();
+				AAssignToExpStmCG stm = new AAssignToExpStmCG();
 
 				AIdentifierVarExpCG field = new AIdentifierVarExpCG();
 

@@ -24,14 +24,21 @@ package org.overture.codegen.vdm2java;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.overture.codegen.utils.GeneralCodeGenUtils;
+
 public class JavaSettings
 {
 	private boolean disableCloning;
 	private List<String> classesToSkip;
+	private String vdmEntryExp;
+	private String javaRootPackage;
 	
 	public JavaSettings()
 	{
+		this.disableCloning = false;
 		this.classesToSkip = new LinkedList<String>();
+		this.vdmEntryExp = null;
+		this.javaRootPackage = null;
 	}
 	
 	public List<String> getClassesToSkip()
@@ -55,5 +62,28 @@ public class JavaSettings
 	public void setDisableCloning(boolean disableCloning)
 	{
 		this.disableCloning = disableCloning;
+	}
+
+	public String getVdmEntryExp()
+	{
+		return vdmEntryExp;
+	}
+
+	public void setVdmEntryExp(String vdmLaunchConfigEntryExp)
+	{
+		this.vdmEntryExp = vdmLaunchConfigEntryExp;
+	}
+
+	public String getJavaRootPackage()
+	{
+		return javaRootPackage;
+	}
+
+	public void setJavaRootPackage(String javaRootPackage)
+	{
+		if (GeneralCodeGenUtils.isValidJavaPackage(javaRootPackage))
+		{
+			this.javaRootPackage = javaRootPackage.trim();
+		}
 	}
 }

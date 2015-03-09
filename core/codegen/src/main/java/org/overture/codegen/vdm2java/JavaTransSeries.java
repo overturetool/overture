@@ -7,6 +7,9 @@ import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.ir.IRInfo;
+import org.overture.codegen.traces.JavaCallStmToStringBuilder;
+import org.overture.codegen.traces.TracesTransformation;
+import org.overture.codegen.trans.AssignStmTransformation;
 import org.overture.codegen.trans.CallObjStmTransformation;
 import org.overture.codegen.trans.IPostCheckCreator;
 import org.overture.codegen.trans.IsExpTransformation;
@@ -36,7 +39,7 @@ import static org.overture.codegen.ir.CodeGenBase.*;
 public class JavaTransSeries
 {
 	private JavaCodeGen codeGen;
-
+	
 	public JavaTransSeries(JavaCodeGen codeGen)
 	{
 		this.codeGen = codeGen;
@@ -53,6 +56,8 @@ public class JavaTransSeries
 		IRInfo irInfo = codeGen.getIRGenerator().getIRInfo();
 
 		CallObjStmTransformation callObjTransformation = new CallObjStmTransformation(irInfo, classes);
+		AssignStmTransformation assignTransformation = new AssignStmTransformation(irInfo, classes, transAssistant);
+		
 		PrePostTransformation prePostTransformation = new PrePostTransformation(irInfo);
 		IfExpTransformation ifExpTransformation = new IfExpTransformation(transAssistant);
 		FunctionValueTransformation funcValueTransformation = new FunctionValueTransformation(irInfo, transAssistant, functionValueAssistant, INTERFACE_NAME_PREFIX, TEMPLATE_TYPE_PREFIX, EVAL_METHOD_PREFIX, PARAM_NAME_PREFIX);
@@ -63,7 +68,8 @@ public class JavaTransSeries
 		PostCheckTransformation postCheckTransformation = new PostCheckTransformation(postCheckCreator, irInfo, transAssistant, FUNC_RESULT_NAME_PREFIX, new JavaValueSemanticsTag(false));
 		IsExpTransformation isExpTransformation = new IsExpTransformation(irInfo, transAssistant, IS_EXP_SUBJECT_NAME_PREFIX);
 		SeqConversionTransformation seqConversionTransformation = new SeqConversionTransformation(transAssistant);
-
+		TracesTransformation tracesTransformation = new TracesTransformation(irInfo, classes, transAssistant, codeGen.getTempVarPrefixes(), codeGen.getTracePrefixes(), langIterator, new JavaCallStmToStringBuilder());
+		
 		// Concurrency related transformations
 		SentinelTransformation concurrencytransform = new SentinelTransformation(irInfo, classes);
 		MainClassConcTransformation mainclassTransform = new MainClassConcTransformation(irInfo, classes);
@@ -74,9 +80,10 @@ public class JavaTransSeries
 		JavaClassToStringTrans javaToStringTransformation = new JavaClassToStringTrans(irInfo);
 
 		DepthFirstAnalysisAdaptor[] analyses = new DepthFirstAnalysisAdaptor[] {
+				assignTransformation,
 				callObjTransformation,
 				funcTransformation, prePostTransformation, ifExpTransformation,
-				funcValueTransformation, transVisitor, patternTransformation,
+				funcValueTransformation, transVisitor, tracesTransformation,patternTransformation,
 				preCheckTransformation, postCheckTransformation,
 				isExpTransformation, unionTypeTransformation,
 				javaToStringTransformation, concurrencytransform,

@@ -24,8 +24,6 @@
 package org.overture.interpreter;
 
 import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Iterator;

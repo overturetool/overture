@@ -1,6 +1,7 @@
 package org.overture.interpreter.assistant.definition;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -137,7 +138,14 @@ public class SClassDefinitionAssistantInterpreter extends
 			return af.createABusClassDefinitionAssitant().newInstance((ABusClassDefinition) node, ctorDefinition, argvals, ctxt);
 		} else if (node instanceof AClassClassDefinition)
 		{
-			return af.createAClassClassDefinitionAssistant().newInstance((AClassClassDefinition) node, ctorDefinition, argvals, ctxt);
+			if (node.getIsAbstract())
+			{
+				VdmRuntimeError.abort(node.getLocation(), 4000, "Cannot instantiate abstract class "
+						+ node.getName(), ctxt);
+			}
+
+			return af.createSClassDefinitionAssistant().makeNewInstance(node, ctorDefinition, argvals, ctxt, new HashMap<ILexNameToken, ObjectValue>(), false);
+			//return af.createAClassClassDefinitionAssistant().newInstance((AClassClassDefinition) node, ctorDefinition, argvals, ctxt);
 		} else if (node instanceof ACpuClassDefinition)
 		{
 			return af.createACpuClassDefinitionAssistant().newInstance((ACpuClassDefinition) node, ctorDefinition, argvals, ctxt);

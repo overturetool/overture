@@ -15,16 +15,16 @@ public class X {
     }
 
     public Number m1() {
-        return ((X) MapUtil.get(xs, 1L)).f();
+        return ((X) Utils.get(xs, 1L)).f();
     }
 
     public Number m2() {
-        return ((X) MapUtil.get(((VDMMap) MapUtil.get(ys, 1L)), 1L)).f();
+        return ((X) Utils.get(((VDMMap) Utils.get(ys, 1L)), 1L)).f();
     }
 
     public Number m3() {
-        return ((X) MapUtil.get(((VDMMap) MapUtil.get(
-                ((VDMMap) MapUtil.get(zs, 1L)), 1L)), 1L)).f();
+        return ((X) Utils.get(((VDMMap) Utils.get(
+                ((VDMMap) Utils.get(zs, 1L)), 1L)), 1L)).f();
     }
 
     public Number m4() {
@@ -32,16 +32,16 @@ public class X {
     }
 
     public Number m5() {
-        return ((X) MapUtil.get(map_xs(1L, 2L), 1L)).f();
+        return ((X) Utils.get(map_xs(1L, 2L), 1L)).f();
     }
 
     public Number m6() {
-        return ((X) MapUtil.get(((VDMMap) MapUtil.get(map_ys(1L, 2L), 1L)), 1L)).f();
+        return ((X) Utils.get(((VDMMap) Utils.get(map_ys(1L, 2L), 1L)), 1L)).f();
     }
 
     public Number m7() {
-        return ((X) MapUtil.get(((VDMMap) MapUtil.get(
-                ((VDMMap) MapUtil.get(map_zs(1L, 2L), 1L)), 1L)), 1L)).f();
+        return ((X) Utils.get(((VDMMap) Utils.get(
+                ((VDMMap) Utils.get(map_zs(1L, 2L), 1L)), 1L)), 1L)).f();
     }
 
     public VDMMap map_xs(final Number pa, final Number pb) {
