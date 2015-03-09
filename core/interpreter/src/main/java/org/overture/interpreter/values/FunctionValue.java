@@ -70,6 +70,7 @@ import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.solver.IConstraintSolver;
 import org.overture.interpreter.solver.SolverFactory;
+import org.overture.interpreter.util.QuickProfiler;
 import org.overture.typechecker.assistant.pattern.PatternListTC;
 
 public class FunctionValue extends Value
@@ -271,8 +272,18 @@ public class FunctionValue extends Value
 	public Value eval(ILexLocation from, Value arg, Context ctxt)
 			throws AnalysisException
 	{
-		ValueList args = new ValueList(arg);
-		return eval(from, args, ctxt, null);
+		long start = System.currentTimeMillis();
+
+		try
+		{
+			ValueList args = new ValueList(arg);
+			return eval(from, args, ctxt, null);
+		} finally
+		{
+			QuickProfiler.printDuration(start, this.classdef.getName().getFullName()
+					+ "." + this.name);
+		}
+
 	}
 
 	public Value eval(ILexLocation from, ValueList argValues, Context ctxt)

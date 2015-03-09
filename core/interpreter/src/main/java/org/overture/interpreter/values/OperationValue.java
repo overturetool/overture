@@ -87,6 +87,7 @@ import org.overture.interpreter.scheduler.MessageResponse;
 import org.overture.interpreter.scheduler.ResourceScheduler;
 import org.overture.interpreter.solver.IConstraintSolver;
 import org.overture.interpreter.solver.SolverFactory;
+import org.overture.interpreter.util.QuickProfiler;
 import org.overture.parser.config.Properties;
 
 public class OperationValue extends Value
@@ -281,10 +282,8 @@ public class OperationValue extends Value
 			}
 		} finally
 		{
-			System.err.println("timecheck,"
-					+ this.expldef.getName().getClassName().getFullName()
-					+"." + this.expldef.getName().getFullName() + ","
-					+ (System.currentTimeMillis() - start));
+			QuickProfiler.printDuration(start, this.expldef.getName().getClassName().getFullName()
+					+"." + this.expldef.getName().getFullName());
 		}
 
 	}
