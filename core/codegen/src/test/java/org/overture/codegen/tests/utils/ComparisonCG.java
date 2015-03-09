@@ -34,8 +34,6 @@ import org.overture.codegen.runtime.Tuple;
 import org.overture.codegen.runtime.VDMMap;
 import org.overture.codegen.runtime.VDMSeq;
 import org.overture.codegen.runtime.VDMSet;
-import org.overture.ct.ctruntime.utils.TraceTest;
-import org.overture.interpreter.traces.Verdict;
 import org.overture.interpreter.values.BooleanValue;
 import org.overture.interpreter.values.CharacterValue;
 import org.overture.interpreter.values.FieldMap;
@@ -65,9 +63,9 @@ public class ComparisonCG
 		}
 	}
 
-	@SuppressWarnings("rawtypes")
 	public boolean compare(Object cgValue, Object vdmResult)
 	{
+		/*
 		if(!(vdmResult instanceof Value))
 		{
 			if(vdmResult instanceof List && cgValue instanceof List)
@@ -122,7 +120,7 @@ public class ComparisonCG
 			{
 			  return false;
 			}
-		}
+		}*/
 		
 		Value vdmValue = (Value) vdmResult;
 		
