@@ -14,6 +14,12 @@ public class CompletionContextTest
 	private static final String OFFSET_ERROR_MSG = "Incorrect offset";
 	
 	@Test
+	public void testMK_tuples()
+	{
+		commonTest("let x = mk_(", 12, "(", SearchType.Mk);
+	}
+	
+	@Test
 	public void testMk_RecName()
 	{
 		commonTest("let x = mk_F", 12, "F", SearchType.Mk);

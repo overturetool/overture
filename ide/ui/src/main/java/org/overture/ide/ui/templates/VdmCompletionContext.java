@@ -54,15 +54,6 @@ public class VdmCompletionContext
 			consMkContext();
 			return;
 		}
-		
-//		index = rawScan.toString().indexOf("mk_t");
-		
-		//for the 'mk_token' the user have to type mk_t
-//		if(index == 0)
-//		{
-//			consMK_tokenContext();
-//			return;
-//		}
 
 		// Completion for foo.bar. This covers things such as instance variables,
 		// values, a record, a tuple, operations and functions

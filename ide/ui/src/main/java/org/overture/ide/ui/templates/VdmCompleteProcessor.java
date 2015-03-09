@@ -44,9 +44,11 @@ import org.overture.ast.node.INode;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.PStm;
 import org.overture.ast.types.AFieldField;
+import org.overture.ast.types.AProductType;
 import org.overture.ast.types.AQuoteType;
 import org.overture.ast.types.ARecordInvariantType;
 import org.overture.ast.types.ATokenBasicType;
+import org.overture.ast.types.AUnionType;
 import org.overture.ast.types.PType;
 import org.overture.ide.ui.VdmUIPlugin;
 import org.overture.ide.ui.editor.core.VdmDocument;
@@ -113,6 +115,7 @@ public class VdmCompleteProcessor
 		{
 			completeRecords(offset, calculatedProposals, info, def);
 			completeMk_tokens(offset,calculatedProposals,info, def);
+			completetuples(offset, calculatedProposals, info,def);
 		}	
 	}
 
@@ -222,12 +225,55 @@ public class VdmCompleteProcessor
 		
 	}
 	
+	private void completetuples(final int offset,
+			final List<ICompletionProposal> calculatedProposals,
+			final VdmCompletionContext info, final INode def) {
+		try
+		{
+			def.apply(new DepthFirstAnalysisAdaptor() {			
+				@Override
+				public void caseAProductType(AProductType arg0)
+						throws AnalysisException {
+					
+					String name = arg0.toString();
+					IContextInformation info = new ContextInformation(name, name);
+					
+					String replacementString = "(";
+					//String display = replacementString;
+					
+					String sep = "";
+					
+					for(Iterator<PDefinition> iterator = arg0.getDefinitions().iterator(); iterator.hasNext();)
+					{
+						PDefinition type = iterator.next();
+						replacementString += sep + type.getType();
+						//display += sep + type.toString();
+						sep = ", ";
+					}
+					replacementString += ")";
+					//display += ")";
+					
+					calculatedProposals.add(new CompletionProposal(replacementString , offset, 0, replacementString.length(), imgProvider.getImageLabel(def, 0), replacementString, info, replacementString));
+				}
+			});
+			
+		}
+		catch(AnalysisException e)
+		{
+			VdmUIPlugin.log("Completion error in " + getClass().getSimpleName()
+					+ "faild during tuple search", e);
+		}
+		//
+		
+		
+	}
+	
 	private void completeMk_tokens(final int offset,
 			final List<ICompletionProposal> calculatedProposals,
 			final VdmCompletionContext info, INode def) {
 		
 		String name = "token()";
-		String display = "mk_token() Token Representation, can take arbitary expression";
+		String display = "mk_token() Token Representation, can take an arbitary expression";
 		IContextInformation ctxtInfo = new ContextInformation(name, name); //$NON-NLS-1$
 		calculatedProposals.add(new CompletionProposal(name, offset, 0, name.length() - 1, imgProvider.getImageLabel(def, 0), name, ctxtInfo, display));
 		
