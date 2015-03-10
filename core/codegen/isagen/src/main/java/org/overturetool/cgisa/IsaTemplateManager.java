@@ -22,6 +22,7 @@
 package org.overturetool.cgisa;
 
 import org.overture.cgisa.extast.declarations.AExtClassDeclCG;
+import org.overture.cgisa.extast.declarations.AIsaClassDeclCG;
 import org.overture.cgisa.extast.declarations.AMrFuncGroupDeclCG;
 import org.overture.codegen.cgast.declarations.AFormalParamLocalParamCG;
 import org.overture.codegen.cgast.declarations.AFuncDeclCG;
@@ -36,6 +37,7 @@ public class IsaTemplateManager extends TemplateManager
 	private static final String FORMAL_PARAM = "FormalParam";
 	private static final String EXT_CLASS = "ExtClass";
 	private static final String MUT_REC = "MutRec";
+	private static final String ISA_CLASS = "IsaClass";
 
 	public IsaTemplateManager(TemplateStructure templateStructure)
 	{
@@ -49,6 +51,7 @@ public class IsaTemplateManager extends TemplateManager
 		nodeTemplateFileNames.put(AFormalParamLocalParamCG.class, templateStructure.LOCAL_DECLS_PATH + FORMAL_PARAM);
 		nodeTemplateFileNames.put(AExtClassDeclCG.class,  templateStructure.DECL_PATH + EXT_CLASS);
 		nodeTemplateFileNames.put(AMrFuncGroupDeclCG.class, templateStructure.DECL_PATH + MUT_REC);
+		nodeTemplateFileNames.put(AIsaClassDeclCG.class, templateStructure.DECL_PATH + ISA_CLASS);
 	}
 
 	
