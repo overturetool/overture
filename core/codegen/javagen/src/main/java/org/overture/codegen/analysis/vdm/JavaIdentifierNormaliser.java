@@ -31,6 +31,12 @@ public class JavaIdentifierNormaliser extends DepthFirstAnalysisAdaptor
 	@Override
 	public void inILexNameToken(ILexNameToken node) throws AnalysisException
 	{
+		// "?" is used for implicitly named things
+		if(node.getName().equals("?"))
+		{
+			return;
+		}
+		
 		if(!GeneralCodeGenUtils.isValidJavaIdentifier(node.getName()))
 		{
 			String newName = getReplacementName(node.getName());
