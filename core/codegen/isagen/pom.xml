@@ -12,10 +12,6 @@
   <artifactId>isagen</artifactId>
   <name>The VDM to Isabelle Translator</name>
 
-  <properties>
-    <astcreator.version>1.6.7-SNAPSHOT</astcreator.version>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>org.overturetool.core</groupId>

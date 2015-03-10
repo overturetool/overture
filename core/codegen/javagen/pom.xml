@@ -12,10 +12,6 @@
   <artifactId>javagen</artifactId>
   <name>The Java Code Generator</name>
 
-  <properties> 
-    <astcreator.version>1.6.6</astcreator.version>
-  </properties>
-
   <dependencies>
    	<dependency>
    		<groupId>junit</groupId>
