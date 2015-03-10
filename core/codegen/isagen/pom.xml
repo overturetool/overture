@@ -9,7 +9,7 @@
   </parent>
 
   <groupId>org.overturetool.core.codegen</groupId>
-  <artifactId>cgisa</artifactId>
+  <artifactId>isagen</artifactId>
   <name>The VDM to Isabelle Translator</name>
 
   <properties>
