@@ -10,6 +10,8 @@ import org.overture.codegen.cgast.declarations.AVarDeclCG
 import org.overture.codegen.cgast.statements.AForLoopStmCG
 import org.overture.codegen.vdm2cpp.XtendAnswerStringVisitor
 import org.overture.codegen.cgast.expressions.AUndefinedExpCG
+import org.overture.codegen.cgast.declarations.ATypeDeclCG
+import org.overture.codegen.cgast.declarations.ARecordDeclCG
 
 class CppDeclarationsVisitor extends XtendAnswerStringVisitor {
 	
@@ -38,6 +40,26 @@ class CppDeclarationsVisitor extends XtendAnswerStringVisitor {
 		}
 	}
 	
+	override caseATypeDeclCG(ATypeDeclCG node)
+	'''
+	«node.decl.expand»
+	'''
+	
+	override caseARecordDeclCG(ARecordDeclCG node)'''
+	struct «node.name»
+	{
+		«node.name»(){};
+		«node.name»(«FOR field : node.fields SEPARATOR ','» «field.type.expand» «field.name» «ENDFOR»)
+		{
+			«FOR field: node.fields»
+			this->«field.name» = «field.name»;
+			«ENDFOR»
+		}
+		«FOR field: node.fields»
+		«field.type.expand» «field.name» «IF field.initial != null» = «field?.initial?.expand»«ENDIF»;
+		«ENDFOR»
+	};
+	'''
 	
 	
 	override caseAMethodDeclCG(AMethodDeclCG node)
@@ -67,7 +89,7 @@ class CppDeclarationsVisitor extends XtendAnswerStringVisitor {
 	'''
 	
 	override caseANamedTypeDeclCG(ANamedTypeDeclCG node)
-	'''typedef «node.type.expand» «node.name»'''
+	'''typedef «node.type.expand» «node.name»;'''
 	
 	
 	override caseAVarDeclCG(AVarDeclCG node)

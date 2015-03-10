@@ -111,6 +111,10 @@ class CGcppstdlib extends XtendAnswerStringVisitor {
 	class «node.name» «IF node.superName != null» : public «node.superName»«ENDIF»
 	{		
 	public:
+	
+		«FOR rec : node.typeDecls.filter[access== "public"]»
+		«rec.expand»
+		«ENDFOR»
 		«FOR method : node.methods.filter[access == "public"]»
 		«method.expand»
 		«ENDFOR»

@@ -70,6 +70,7 @@ import org.overture.codegen.cgast.expressions.ASelfExpCG
 import org.overture.codegen.cgast.expressions.APowerNumericBinaryExpCG
 import org.overture.codegen.cgast.expressions.AIndicesUnaryExpCG
 import org.overture.codegen.cgast.expressions.ACharLiteralExpCG
+import org.overture.codegen.cgast.expressions.ASetDifferenceBinaryExpCG
 
 class CppExpressionVisitor extends XtendAnswerStringVisitor {
 	
@@ -233,6 +234,9 @@ class CppExpressionVisitor extends XtendAnswerStringVisitor {
 	
 	override caseASetUnionBinaryExpCG(ASetUnionBinaryExpCG node)
 	'''vdm::set_utils::union(«node.left.expand»,«node.right.expand»)'''
+	
+	override caseASetDifferenceBinaryExpCG(ASetDifferenceBinaryExpCG node)
+	'''vdm::set_utils::difference(«node.left.expand»,«node.right.expand»)'''
 	
 	override caseAElemsUnaryExpCG(AElemsUnaryExpCG node)
 	'''vdm::elems<«node.type.expand»>(«node.exp.expand»)'''
