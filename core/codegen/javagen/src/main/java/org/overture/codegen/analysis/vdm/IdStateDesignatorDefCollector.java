@@ -17,10 +17,13 @@ import org.overture.ast.definitions.AThreadDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
+import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
 import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.PStm;
+import org.overture.codegen.logging.Logger;
+import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 /**
  * Computes the definitions of identifier state designators
@@ -33,22 +36,24 @@ public class IdStateDesignatorDefCollector extends VdmAnalysis
 	private List<PDefinition> defsInScope;
 	private Map<AIdentifierStateDesignator, PDefinition> idDefs;
 	private Set<INode> visited;
+	private ITypeCheckerAssistantFactory af;
 	
-	public IdStateDesignatorDefCollector(INode topNode)
+	public IdStateDesignatorDefCollector(INode topNode, ITypeCheckerAssistantFactory af)
 	{
 		super(topNode);
 		this.defsInScope = new LinkedList<PDefinition>();
 		this.idDefs = new HashMap<>();
 		this.visited = new HashSet<>();
+		this.af = af;
 	}
 	
-	public static Map<AIdentifierStateDesignator, PDefinition> getIdDefs(List<SClassDefinition> classes) throws AnalysisException
+	public static Map<AIdentifierStateDesignator, PDefinition> getIdDefs(List<SClassDefinition> classes, ITypeCheckerAssistantFactory af) throws AnalysisException
 	{
 		Map<AIdentifierStateDesignator, PDefinition> allDefs = new HashMap<>();
 		
 		for(SClassDefinition clazz : classes)
 		{
-			IdStateDesignatorDefCollector collector = new IdStateDesignatorDefCollector(clazz);
+			IdStateDesignatorDefCollector collector = new IdStateDesignatorDefCollector(clazz, af);
 			clazz.apply(collector);
 			allDefs.putAll(collector.idDefs);
 		}
@@ -65,10 +70,13 @@ public class IdStateDesignatorDefCollector extends VdmAnalysis
 			return;
 		}
 		
+		LinkedList<PDefinition> allDefs = new LinkedList<PDefinition>(node.getAllInheritedDefinitions());
+		allDefs.addAll(node.getDefinitions());
+		
 		// Instance variables and values are visible to all operations
-		for(int i = 0; i < node.getDefinitions().size(); i++)
+		for(int i = 0; i < allDefs.size(); i++)
 		{
-			PDefinition def = node.getDefinitions().get(i);
+			PDefinition def = allDefs.get(i);
 			
 			while(def instanceof AInheritedDefinition)
 			{
@@ -77,7 +85,7 @@ public class IdStateDesignatorDefCollector extends VdmAnalysis
 			
 			if(def instanceof AInstanceVariableDefinition || def instanceof AValueDefinition)
 			{
-				defsInScope.add(def);
+				defsInScope.addAll(af.createPDefinitionAssistant().getDefinitions(def));
 			}
 		}
 		
@@ -131,7 +139,13 @@ public class IdStateDesignatorDefCollector extends VdmAnalysis
 		{
 			PDefinition nextDef = defsInScope.get(i);
 			
-			if(node.getName().equals(nextDef.getName()))
+			ILexNameToken defname = nextDef.getName();
+			
+			if(defname == null)
+			{
+				Logger.getLog().printErrorln("Found definition name to be null in '" + this.getClass().getSimpleName() + "'");
+			}
+			else if(node.getName().getName().equals(nextDef.getName().getName()))
 			{
 				this.idDefs.put(node, nextDef);
 				break;

@@ -449,7 +449,7 @@ public class JavaCodeGen extends CodeGenBase
 			}
 		}
 		
-		Map<AIdentifierStateDesignator, PDefinition> idDefs = IdStateDesignatorDefCollector.getIdDefs(classesToConsider);
+		Map<AIdentifierStateDesignator, PDefinition> idDefs = IdStateDesignatorDefCollector.getIdDefs(classesToConsider, getInfo().getTcFactory());
 		getInfo().setIdStateDesignatorDefs(idDefs);
 	}
 
