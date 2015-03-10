@@ -31,7 +31,7 @@ public class IRStatus<T extends INode>
 	protected Set<VdmNodeInfo> unsupportedInIr;
 	protected Set<IrNodeInfo> transformationWarnings;
 	protected T node;
-	protected String nodeName;
+	protected String irNodeName;
 
 	public IRStatus(Set<VdmNodeInfo> unsupportedInIr)
 	{
@@ -39,14 +39,13 @@ public class IRStatus<T extends INode>
 		this.transformationWarnings = new HashSet<IrNodeInfo>();
 	}
 
-	public IRStatus(String nodeName, T node,
-			Set<VdmNodeInfo> unsupportedNodes)
+	public IRStatus(String nodeName, T node, Set<VdmNodeInfo> unsupportedNodes)
 	{
 		this(unsupportedNodes);
-		this.nodeName = nodeName;
+		this.irNodeName = nodeName;
 		this.node = node;
 	}
-	
+
 	public Set<VdmNodeInfo> getUnsupportedInIr()
 	{
 		return unsupportedInIr;
@@ -77,7 +76,13 @@ public class IRStatus<T extends INode>
 		this.node = newNode;
 	}
 
-	public String getIrNodeName(){
-		return nodeName;
+	public String getIrNodeName()
+	{
+		return irNodeName;
+	}
+
+	public void setIrNodeName(String irNodeName)
+	{
+		this.irNodeName = irNodeName;
 	}
 }

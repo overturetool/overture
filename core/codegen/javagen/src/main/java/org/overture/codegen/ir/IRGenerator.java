@@ -50,7 +50,7 @@ public class IRGenerator
 		codeGenInfo.clear();
 	}
 
-	public IRStatus<AClassDeclCG> generateFrom(SClassDefinition classDef)
+	public IRStatus<INode> generateFrom(SClassDefinition classDef)
 			throws AnalysisException
 	{
 		codeGenInfo.clearNodes();
@@ -58,10 +58,10 @@ public class IRGenerator
 		AClassDeclCG classCg = classDef.apply(codeGenInfo.getClassVisitor(), codeGenInfo);
 		Set<VdmNodeInfo> unsupportedNodes = new HashSet<VdmNodeInfo>(codeGenInfo.getUnsupportedNodes());
 
-		return new IRStatus<AClassDeclCG>(classDef.getName().getName(), classCg, unsupportedNodes);
+		return new IRStatus<INode>(classDef.getName().getName(), classCg, unsupportedNodes);
 	}
 
-	public void applyPartialTransformation(IRStatus<AClassDeclCG> status,
+	public void applyPartialTransformation(IRStatus<? extends INode> status,
 			org.overture.codegen.cgast.analysis.intf.IAnalysis transformation)
 			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
@@ -83,7 +83,6 @@ public class IRGenerator
 		HashSet<IrNodeInfo> transformationWarnings = new HashSet<IrNodeInfo>(codeGenInfo.getTransformationWarnings());
 		status.addTransformationWarnings(transformationWarnings);
 		status.setIrNode(trans.getResult());
-
 	}
 
 	public IRStatus<SExpCG> generateFrom(PExp exp) throws AnalysisException
