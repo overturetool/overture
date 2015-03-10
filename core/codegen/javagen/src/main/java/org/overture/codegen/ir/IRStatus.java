@@ -24,10 +24,14 @@ package org.overture.codegen.ir;
 import java.util.HashSet;
 import java.util.Set;
 
-public class IRStatus
+import org.overture.codegen.cgast.INode;
+
+public class IRStatus<T extends INode>
 {
 	protected Set<VdmNodeInfo> unsupportedInIr;
 	protected Set<IrNodeInfo> transformationWarnings;
+	protected T node;
+	protected String nodeName;
 
 	public IRStatus(Set<VdmNodeInfo> unsupportedInIr)
 	{
@@ -35,11 +39,19 @@ public class IRStatus
 		this.transformationWarnings = new HashSet<IrNodeInfo>();
 	}
 
+	public IRStatus(String nodeName, T node,
+			Set<VdmNodeInfo> unsupportedNodes)
+	{
+		this(unsupportedNodes);
+		this.nodeName = nodeName;
+		this.node = node;
+	}
+	
 	public Set<VdmNodeInfo> getUnsupportedInIr()
 	{
 		return unsupportedInIr;
 	}
-	
+
 	public void addTransformationWarnings(Set<IrNodeInfo> transformationWarnings)
 	{
 		this.transformationWarnings.addAll(transformationWarnings);
@@ -53,5 +65,19 @@ public class IRStatus
 	public Set<IrNodeInfo> getTransformationWarnings()
 	{
 		return transformationWarnings;
+	}
+
+	public T getIrNode()
+	{
+		return node;
+	}
+
+	public void setIrNode(T newNode)
+	{
+		this.node = newNode;
+	}
+
+	public String getIrNodeName(){
+		return nodeName;
 	}
 }
