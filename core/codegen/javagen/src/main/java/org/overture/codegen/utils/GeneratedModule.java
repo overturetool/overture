@@ -24,20 +24,20 @@ package org.overture.codegen.utils;
 import java.util.List;
 import java.util.Set;
 
-import org.overture.codegen.cgast.SDeclCG;
+import org.overture.codegen.cgast.INode;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.ir.VdmNodeInfo;
 
 public class GeneratedModule extends Generated
 {
 	private String name;
-	private SDeclCG irDecl;
+	private INode irNode;
 
-	public GeneratedModule(String name, SDeclCG irDecl, String content)
+	public GeneratedModule(String name, INode irDecl, String content)
 	{
 		super(content);
 		this.name = name;
-		this.irDecl = irDecl;
+		this.irNode = irDecl;
 	}
 
 	public GeneratedModule(String name, Set<VdmNodeInfo> unsupportedIrNodes, Set<IrNodeInfo> unsupportedInTargLang)
@@ -46,11 +46,11 @@ public class GeneratedModule extends Generated
 		this.name = name;
 	}
 
-	public GeneratedModule(String name, SDeclCG irDecl, List<Exception> mergeErrors)
+	public GeneratedModule(String name, INode irDecl, List<Exception> mergeErrors)
 	{
 		super(mergeErrors);
 		this.name = name;
-		this.irDecl = irDecl;
+		this.irNode = irDecl;
 	}
 
 	public String getName()
@@ -58,8 +58,8 @@ public class GeneratedModule extends Generated
 		return name;
 	}
 	
-	public SDeclCG getIrDecl()
+	public INode getIrNode()
 	{
-		return irDecl;
+		return irNode;
 	}
 }

@@ -44,6 +44,7 @@ import org.overture.ast.lex.LexNameToken;
 import org.overture.ast.typechecker.NameScope;
 import org.overture.ast.types.AVoidType;
 import org.overture.ast.util.definitions.ClassList;
+import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SDeclCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.ir.ITempVarGen;
@@ -400,7 +401,7 @@ public class GeneralCodeGenUtils
 		}
 	}
 	
-	public static boolean isQuote(SDeclCG decl)
+	public static boolean isQuote(INode decl)
 	{
 		if(decl instanceof AClassDeclCG)
 		{

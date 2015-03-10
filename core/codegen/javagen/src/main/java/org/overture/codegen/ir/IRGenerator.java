@@ -26,14 +26,14 @@ import java.util.List;
 import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
-import org.overture.ast.analysis.intf.IAnalysis;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
-import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.logging.Logger;
+import org.overture.codegen.trans.ITotalTransformation;
 
 public class IRGenerator
 {
@@ -44,13 +44,13 @@ public class IRGenerator
 		this.codeGenInfo = new IRInfo(objectInitCallPrefix);
 		Logger.setLog(log);
 	}
-	
+
 	public void clear()
 	{
 		codeGenInfo.clear();
 	}
 
-	public IRClassDeclStatus generateFrom(SClassDefinition classDef)
+	public IRStatus<INode> generateFrom(SClassDefinition classDef)
 			throws AnalysisException
 	{
 		codeGenInfo.clearNodes();
@@ -58,27 +58,41 @@ public class IRGenerator
 		AClassDeclCG classCg = classDef.apply(codeGenInfo.getClassVisitor(), codeGenInfo);
 		Set<VdmNodeInfo> unsupportedNodes = new HashSet<VdmNodeInfo>(codeGenInfo.getUnsupportedNodes());
 
-		return new IRClassDeclStatus(classDef.getName().getName(), classCg, unsupportedNodes);
+		return new IRStatus<INode>(classDef.getName().getName(), classCg, unsupportedNodes);
 	}
-	
-	public void applyTransformation(IRClassDeclStatus status, org.overture.codegen.cgast.analysis.intf.IAnalysis transformation) throws org.overture.codegen.cgast.analysis.AnalysisException
+
+	public void applyPartialTransformation(IRStatus<? extends INode> status,
+			org.overture.codegen.cgast.analysis.intf.IAnalysis transformation)
+			throws org.overture.codegen.cgast.analysis.AnalysisException
 	{
 		codeGenInfo.clearTransformationWarnings();
-		
-		status.getClassCg().apply(transformation);
+
+		status.getIrNode().apply(transformation);
 		HashSet<IrNodeInfo> transformationWarnings = new HashSet<IrNodeInfo>(codeGenInfo.getTransformationWarnings());
-		
+
 		status.addTransformationWarnings(transformationWarnings);
 	}
 
-	public IRExpStatus generateFrom(PExp exp) throws AnalysisException
+	public void applyTotalTransformation(IRStatus<INode> status,
+			ITotalTransformation trans)
+			throws org.overture.codegen.cgast.analysis.AnalysisException
+	{
+		codeGenInfo.clearTransformationWarnings();
+
+		status.getIrNode().apply(trans);
+		HashSet<IrNodeInfo> transformationWarnings = new HashSet<IrNodeInfo>(codeGenInfo.getTransformationWarnings());
+		status.addTransformationWarnings(transformationWarnings);
+		status.setIrNode(trans.getResult());
+	}
+
+	public IRStatus<SExpCG> generateFrom(PExp exp) throws AnalysisException
 	{
 		codeGenInfo.clearNodes();
 
 		SExpCG expCg = exp.apply(codeGenInfo.getExpVisitor(), codeGenInfo);
 		Set<VdmNodeInfo> unsupportedNodes = new HashSet<VdmNodeInfo>(codeGenInfo.getUnsupportedNodes());
 
-		return new IRExpStatus(expCg, unsupportedNodes);
+		return new IRStatus<SExpCG>("expression",expCg, unsupportedNodes);
 	}
 
 	public List<String> getQuoteValues()
