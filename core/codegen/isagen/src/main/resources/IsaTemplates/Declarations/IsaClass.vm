@@ -10,4 +10,8 @@ $Isa.trans($func)
 $Isa.filter($field)
 
 #end
+#foreach ($mr in $node.Mutrecfuncs )
+$Isa.trans($mr)
+
+#end
 end
