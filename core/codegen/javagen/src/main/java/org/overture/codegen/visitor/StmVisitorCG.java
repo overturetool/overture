@@ -310,7 +310,11 @@ public class StmVisitorCG extends AbstractVisitorCG<IRInfo, SStmCG>
 		question.getDeclAssistant().setLocalDefs(node.getLocalDefs(), block.getLocalDefs(), question);
 
 		SStmCG stm = node.getStatement().apply(question.getStmVisitor(), question);
-		block.getStatements().add(stm);
+		
+		if (stm != null)
+		{
+			block.getStatements().add(stm);
+		}
 
 		return block;
 	}
