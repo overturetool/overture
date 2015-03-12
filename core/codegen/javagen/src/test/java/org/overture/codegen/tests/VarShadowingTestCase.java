@@ -1,10 +1,10 @@
 package org.overture.codegen.tests;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.junit.Assert;
 import org.overture.ast.definitions.PDefinition;
@@ -75,7 +75,12 @@ public class VarShadowingTestCase extends BaseTestCase
 			Value orgSpecResult = evalSpec(originalSpecTcResult.result);
 			
 			
-			Set<Renaming> renamings = new VarRenamer().computeRenamings(originalSpecTcResult.result, af, idDefs);
+			List<Renaming> renamings = new LinkedList<Renaming>(new VarRenamer().computeRenamings(originalSpecTcResult.result, af, idDefs));
+			
+			// It is very important that renamings are performed from the bottom, right to left, in order
+			// not to mess up the location of the names!!
+			Collections.sort(renamings);
+			
 
 			StringBuilder sb = GeneralUtils.readLines(file, "\n");
 			
@@ -108,7 +113,7 @@ public class VarShadowingTestCase extends BaseTestCase
 		}	
 	}
 
-	private void rename(Set<Renaming> renamings, StringBuilder sb)
+	private void rename(List<Renaming> renamings, StringBuilder sb)
 	{
 		for (Renaming r : renamings)
 		{
