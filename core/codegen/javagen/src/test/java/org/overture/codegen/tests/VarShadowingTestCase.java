@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.junit.Assert;
 import org.overture.ast.definitions.PDefinition;
@@ -74,7 +75,7 @@ public class VarShadowingTestCase extends BaseTestCase
 			Value orgSpecResult = evalSpec(originalSpecTcResult.result);
 			
 			
-			List<Renaming> renamings = new VarRenamer().computeRenamings(originalSpecTcResult.result, af, idDefs);
+			Set<Renaming> renamings = new VarRenamer().computeRenamings(originalSpecTcResult.result, af, idDefs);
 
 			StringBuilder sb = GeneralUtils.readLines(file, "\n");
 			
@@ -107,7 +108,7 @@ public class VarShadowingTestCase extends BaseTestCase
 		}	
 	}
 
-	private void rename(List<Renaming> renamings, StringBuilder sb)
+	private void rename(Set<Renaming> renamings, StringBuilder sb)
 	{
 		for (Renaming r : renamings)
 		{

@@ -413,16 +413,16 @@ public class JavaCodeGen extends CodeGenBase
 
 		Set<String> allNames = collector.namesToAvoid();
 
-		JavaIdentifierNormaliser normaliser = new JavaIdentifierNormaliser(allNames, getInfo().getTempVarNameGen());
 
+		List<Renaming> renamings = new LinkedList<Renaming>();
 		for (SClassDefinition clazz : userClasses)
 		{
+			JavaIdentifierNormaliser normaliser = new JavaIdentifierNormaliser(clazz, allNames, getInfo().getTempVarNameGen());
+			renamings.addAll(normaliser.getRenamings());
 			clazz.apply(normaliser);
 		}
 
 		VarRenamer renamer = new VarRenamer();
-
-		List<Renaming> renamings = normaliser.getRenamings();
 
 		for (SClassDefinition clazz : userClasses)
 		{
