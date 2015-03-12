@@ -353,6 +353,8 @@ public class JavaCodeGen extends CodeGenBase
 
 		for (AInterfaceDeclCG funcValueInterface : funcValueInterfaces)
 		{
+			funcValueInterface.setPackage(getJavaSettings().getJavaRootPackage());
+			
 			StringWriter writer = new StringWriter();
 
 			try
