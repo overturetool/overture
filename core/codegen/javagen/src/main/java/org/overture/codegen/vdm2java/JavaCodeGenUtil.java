@@ -45,6 +45,7 @@ import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.analysis.violations.Violation;
 import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.assistant.LocationAssistantCG;
+import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.ir.VdmNodeInfo;
@@ -385,5 +386,32 @@ public class JavaCodeGenUtil
 
 			Logger.getLog().println("");
 		}
+	}
+	
+	public static boolean isQuote(org.overture.codegen.cgast.INode decl, JavaSettings settings)
+	{
+		if(decl instanceof AClassDeclCG)
+		{
+			AClassDeclCG clazz = (AClassDeclCG) decl;
+			
+			if(clazz.getPackage() == null)
+			{
+				return false;
+			}
+			
+			String javaPackage = settings.getJavaRootPackage();
+
+			if(javaPackage == null || javaPackage.equals(""))
+			{
+				return clazz.getPackage().equals(JavaCodeGen.QUOTES);
+			}
+			
+			if(clazz.getPackage().equals(javaPackage + "." + JavaCodeGen.QUOTES))
+			{
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }

@@ -575,7 +575,7 @@ public class JavaCodeGen extends CodeGenBase
 		{
 			String javaFileName = generatedModule.getName();
 
-			if (GeneralCodeGenUtils.isQuote(generatedModule.getIrNode()))
+			if (JavaCodeGenUtil.isQuote(generatedModule.getIrNode(), getJavaSettings()))
 			{
 				javaFileName += JAVA_QUOTE_NAME_SUFFIX;
 			}
