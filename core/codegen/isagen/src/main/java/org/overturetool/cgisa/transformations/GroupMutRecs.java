@@ -1,9 +1,18 @@
 package org.overturetool.cgisa.transformations;
 
+import java.util.LinkedList;
+import java.util.Set;
+
+import org.jgrapht.DirectedGraph;
+import org.jgrapht.alg.StrongConnectivityInspector;
+import org.jgrapht.graph.DefaultDirectedGraph;
+import org.jgrapht.graph.DefaultEdge;
 import org.overture.cgisa.extast.analysis.DepthFirstAnalysisIsaAdaptor;
 import org.overture.cgisa.extast.declarations.AIsaClassDeclCG;
+import org.overture.cgisa.extast.declarations.AMrFuncGroupDeclCG;
 import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.AFuncDeclCG;
 import org.overture.codegen.trans.ITotalTransformation;
 
 public class GroupMutRecs extends DepthFirstAnalysisIsaAdaptor implements
@@ -11,6 +20,15 @@ public class GroupMutRecs extends DepthFirstAnalysisIsaAdaptor implements
 {
 
 	private AIsaClassDeclCG result = null;
+	Dependencies depUtils;
+	DirectedGraph<AFuncDeclCG, DefaultEdge> deps;
+
+	public GroupMutRecs()
+	{
+		super();
+		deps = new DefaultDirectedGraph<>(DefaultEdge.class);
+		depUtils = new Dependencies();
+	}
 
 	@Override
 	public void caseAClassDeclCG(AClassDeclCG node) throws AnalysisException
@@ -37,7 +55,35 @@ public class GroupMutRecs extends DepthFirstAnalysisIsaAdaptor implements
 		result.setTypeDecls(node.getTypeDecls());
 
 		// now compute the mr func groups
+		calcDependencies(result.getFunctions());
 
+	}
+
+	private void calcDependencies(LinkedList<AFuncDeclCG> funcs)
+	{
+		try
+		{
+			this.deps = depUtils.calDepsAsGraph(funcs);
+		} catch (AnalysisException e)
+		{
+			e.printStackTrace();
+		}
+		groupDeps();
+
+	}
+
+	private void groupDeps()
+	{
+		StrongConnectivityInspector<AFuncDeclCG, DefaultEdge> visitor = new StrongConnectivityInspector<>(deps);
+		for (Set<AFuncDeclCG> scs : visitor.stronglyConnectedSets())
+		{
+			if (scs.size() > 1)
+			{
+				AMrFuncGroupDeclCG aux = new AMrFuncGroupDeclCG();
+				aux.setFuncs(new LinkedList<>(scs));
+				result.getMutrecfuncs().add(aux);
+			}
+		}
 	}
 
 	@Override
