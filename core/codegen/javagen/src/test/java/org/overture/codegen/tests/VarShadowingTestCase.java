@@ -68,7 +68,7 @@ public class VarShadowingTestCase extends BaseTestCase
 		try
 		{
 			TypeCheckResult<List<SClassDefinition>> originalSpecTcResult = TypeCheckerUtil.typeCheckPp(file);
-			Map<AIdentifierStateDesignator, PDefinition> idDefs = IdStateDesignatorDefCollector.getIdDefs(originalSpecTcResult.result);
+			Map<AIdentifierStateDesignator, PDefinition> idDefs = IdStateDesignatorDefCollector.getIdDefs(originalSpecTcResult.result, af);
 
 			Assert.assertTrue(getName() + " has type errors", originalSpecTcResult.errors.isEmpty());
 			Value orgSpecResult = evalSpec(originalSpecTcResult.result);

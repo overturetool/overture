@@ -22,16 +22,18 @@
 package org.overture.codegen.ir;
 
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import org.overture.codegen.cgast.INode;
 
 public class IRStatus<T extends INode>
 {
+	protected String irNodeName;
+	protected T node;
 	protected Set<VdmNodeInfo> unsupportedInIr;
 	protected Set<IrNodeInfo> transformationWarnings;
-	protected T node;
-	protected String irNodeName;
 
 	public IRStatus(Set<VdmNodeInfo> unsupportedInIr)
 	{
@@ -44,6 +46,12 @@ public class IRStatus<T extends INode>
 		this(unsupportedNodes);
 		this.irNodeName = nodeName;
 		this.node = node;
+	}
+	
+	public IRStatus(String nodeName, T node, Set<VdmNodeInfo> unsupportedNodes, Set<IrNodeInfo> transformationWarnings)
+	{
+		this(nodeName, node, unsupportedNodes);
+		this.transformationWarnings = transformationWarnings;
 	}
 
 	public Set<VdmNodeInfo> getUnsupportedInIr()
@@ -65,6 +73,11 @@ public class IRStatus<T extends INode>
 	{
 		return transformationWarnings;
 	}
+	
+	public void setTransformationWarnings(Set<IrNodeInfo> transformationWarnings)
+	{
+		this.transformationWarnings = transformationWarnings;
+	}
 
 	public T getIrNode()
 	{
@@ -84,5 +97,41 @@ public class IRStatus<T extends INode>
 	public void setIrNodeName(String irNodeName)
 	{
 		this.irNodeName = irNodeName;
+	}
+	
+	public static <T extends INode> IRStatus<T> extract(
+			IRStatus<INode> inputStatus, Class<T> type)
+	{
+		String name = inputStatus.getIrNodeName();
+		INode node = inputStatus.getIrNode();
+		Set<VdmNodeInfo> unsupportedInIr = inputStatus.getUnsupportedInIr();
+		Set<IrNodeInfo> warnings = inputStatus.getTransformationWarnings();
+
+		if (node != null && type != null && type.isInstance(node))
+		{
+			return new IRStatus<T>(name, type.cast(node), unsupportedInIr, warnings);
+		} else
+		{
+			return null;
+		}
+
+	}
+
+	public static <T extends INode> List<IRStatus<T>> extract(
+			List<IRStatus<INode>> inputStatuses, Class<T> type)
+	{
+		List<IRStatus<T>> outputStatuses = new LinkedList<IRStatus<T>>();
+
+		for (IRStatus<INode> status : inputStatuses)
+		{
+			IRStatus<T> converted = extract(status, type);
+
+			if (converted != null)
+			{
+				outputStatuses.add(converted);
+			}
+		}
+
+		return outputStatuses;
 	}
 }

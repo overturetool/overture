@@ -23,7 +23,6 @@ package org.overture.codegen.vdm2java;
 
 import java.io.File;
 import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -46,8 +45,8 @@ import org.overture.codegen.analysis.vdm.JavaIdentifierNormaliser;
 import org.overture.codegen.analysis.vdm.NameCollector;
 import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.vdm.UnreachableStmRemover;
-import org.overture.codegen.analysis.vdm.VarShadowingRenameCollector;
 import org.overture.codegen.analysis.vdm.VarRenamer;
+import org.overture.codegen.analysis.vdm.VarShadowingRenameCollector;
 import org.overture.codegen.analysis.violations.GeneratedVarComparison;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.ReservedWordsComparison;
@@ -62,8 +61,8 @@ import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
 import org.overture.codegen.ir.CodeGenBase;
-import org.overture.codegen.ir.IRStatus;
 import org.overture.codegen.ir.IRConstants;
+import org.overture.codegen.ir.IRStatus;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.ir.VdmNodeInfo;
 import org.overture.codegen.logging.ILogger;
@@ -235,32 +234,18 @@ public class JavaCodeGen extends CodeGenBase
 		InvalidNamesResult invalidNamesResult = validateVdmModelNames(userClasses);
 		validateVdmModelingConstructs(userClasses);
 
-		List<IRStatus<org.overture.codegen.cgast.INode>> temp = new ArrayList<>();
-		List<IRStatus<AClassDeclCG>> statuses = new ArrayList<>();
+		List<IRStatus<org.overture.codegen.cgast.INode>> statuses = new LinkedList<>();
 
 		for (SClassDefinition classDef : ast)
 		{
-			temp.add(generator.generateFrom(classDef));
+			statuses.add(generator.generateFrom(classDef));
 		}
 
-		// All our transformations are partial so we need to
-		// cast the INodes down to Class Decls
-		//TODO add class extraction method as part of refactoring towards
-		// a more generic codegen framework
-		for (IRStatus<org.overture.codegen.cgast.INode> t : temp)
-		{
-			if (t.getIrNode() instanceof AClassDeclCG)
-			{
-				IRStatus<AClassDeclCG> newStatus = new IRStatus<AClassDeclCG>(t.getUnsupportedInIr());
-				newStatus.setIrNode((AClassDeclCG) t.getIrNode());
-				newStatus.setIrNodeName(t.getIrNodeName());
-				statuses.add(newStatus);
-			}
-		}
-
+		List<IRStatus<AClassDeclCG>> classStatuses = IRStatus.extract(statuses, AClassDeclCG.class);
+		
 		if (getJavaSettings().getJavaRootPackage() != null)
 		{
-			for (IRStatus<AClassDeclCG> irStatus : statuses)
+			for (IRStatus<AClassDeclCG> irStatus : classStatuses)
 			{
 				irStatus.getIrNode().setPackage(getJavaSettings().getJavaRootPackage());
 			}
@@ -270,9 +255,9 @@ public class JavaCodeGen extends CodeGenBase
 		javaFormat.setClasses(classes);
 
 		LinkedList<IRStatus<AClassDeclCG>> canBeGenerated = new LinkedList<IRStatus<AClassDeclCG>>();
-		List<GeneratedModule> generated = new ArrayList<GeneratedModule>();
+		List<GeneratedModule> generated = new LinkedList<GeneratedModule>();
 
-		for (IRStatus<AClassDeclCG> status : statuses)
+		for (IRStatus<AClassDeclCG> status : classStatuses)
 		{
 			if (status.canBeGenerated())
 			{
@@ -457,8 +442,8 @@ public class JavaCodeGen extends CodeGenBase
 				classesToConsider.add(c);
 			}
 		}
-
-		Map<AIdentifierStateDesignator, PDefinition> idDefs = IdStateDesignatorDefCollector.getIdDefs(classesToConsider);
+		
+		Map<AIdentifierStateDesignator, PDefinition> idDefs = IdStateDesignatorDefCollector.getIdDefs(classesToConsider, getInfo().getTcFactory());
 		getInfo().setIdStateDesignatorDefs(idDefs);
 	}
 
@@ -521,17 +506,17 @@ public class JavaCodeGen extends CodeGenBase
 	}
 
 	private List<AClassDeclCG> getClassDecls(
-			List<IRStatus<AClassDeclCG>> statuses)
+			List<IRStatus<org.overture.codegen.cgast.INode>> statuses)
 	{
 		List<AClassDeclCG> classDecls = new LinkedList<AClassDeclCG>();
 
-		for (IRStatus<AClassDeclCG> status : statuses)
+		for (IRStatus<org.overture.codegen.cgast.INode> status : statuses)
 		{
-			AClassDeclCG classCg = status.getIrNode();
+			org.overture.codegen.cgast.INode node = status.getIrNode();
 
-			if (classCg != null)
+			if (node instanceof AClassDeclCG)
 			{
-				classDecls.add(classCg);
+				classDecls.add((AClassDeclCG) node);
 			}
 		}
 
