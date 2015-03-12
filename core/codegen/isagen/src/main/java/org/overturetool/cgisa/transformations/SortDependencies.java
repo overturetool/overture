@@ -11,8 +11,6 @@ import org.overture.codegen.cgast.analysis.AnalysisException;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AFuncDeclCG;
-import org.overture.codegen.cgast.expressions.SVarExpCG;
-import org.overturetool.cgisa.IsaChecks;
 
 public class SortDependencies extends DepthFirstAnalysisAdaptor
 {
@@ -20,12 +18,14 @@ public class SortDependencies extends DepthFirstAnalysisAdaptor
 	Map<AFuncDeclCG, List<AFuncDeclCG>> depGraph;
 	private List<AFuncDeclCG> sorted;
 
-	protected IsaChecks isaUtils;
+	
+
+	protected Dependencies depUtils;
 
 	public SortDependencies(List<AFuncDeclCG> funcs)
 	{
 		this.funcs = funcs;
-		this.isaUtils = new IsaChecks();
+		this.depUtils = new Dependencies();
 		this.depGraph = new HashMap<>();
 		this.sorted = new Vector<AFuncDeclCG>();
 		init();
@@ -35,7 +35,7 @@ public class SortDependencies extends DepthFirstAnalysisAdaptor
 	public void caseAClassDeclCG(AClassDeclCG node) throws AnalysisException
 	{
 		List<AFuncDeclCG> clonedList = new Vector<AFuncDeclCG>();
-		
+
 		for (AFuncDeclCG f : sorted)
 		{
 			clonedList.add(f.clone());
@@ -45,26 +45,8 @@ public class SortDependencies extends DepthFirstAnalysisAdaptor
 
 	private void init()
 	{
-		for (AFuncDeclCG func : funcs)
-		{
-			try
-			{
-				List<AFuncDeclCG> dependencies = findDependencies(func);
-				if (!dependencies.isEmpty())
-				{
-					depGraph.put(func, dependencies);
-				} else
-				{
-					depGraph.put(func, new Vector<AFuncDeclCG>());
-				}
-			} catch (AnalysisException e)
-			{
-				e.printStackTrace();
-			}
-		}
-
+		this.depGraph = depUtils.calcDepsAsMap(funcs);
 		sortDeps();
-
 	}
 
 	private void sortDeps()
@@ -85,7 +67,7 @@ public class SortDependencies extends DepthFirstAnalysisAdaptor
 		if (tempMarks.contains(n))
 		{
 			throw new RuntimeException("Cyclic dependency");
-		} 
+		}
 		if (unmarked.contains(n))
 		{
 			tempMarks.add(n);
@@ -98,38 +80,5 @@ public class SortDependencies extends DepthFirstAnalysisAdaptor
 			tempMarks.remove(n);
 			sorted.add(n); // we want reverse topological order since its dependencies.
 		}
-	}
-
-	private List<AFuncDeclCG> findDependencies(AFuncDeclCG func)
-			throws AnalysisException
-	{
-		final Set<SVarExpCG> vars = new HashSet<SVarExpCG>();
-
-		func.getBody().apply(new DepthFirstAnalysisAdaptor()
-		{
-			public void defaultInSVarExpCG(SVarExpCG node)
-					throws AnalysisException
-			{
-				if (isaUtils.isRoot(node))
-				{
-					vars.add(node);
-				}
-			}
-		});
-
-		List<AFuncDeclCG> deps = new Vector<AFuncDeclCG>();
-		for (SVarExpCG v : vars)
-		{
-			for (AFuncDeclCG f : funcs)
-			{
-				if (v.getName().equals(f.getName()))
-				{
-					deps.add(f);
-					break;
-				}
-			}
-		}
-
-		return deps;
 	}
 }
