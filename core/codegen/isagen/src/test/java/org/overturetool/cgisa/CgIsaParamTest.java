@@ -104,7 +104,7 @@ public class CgIsaParamTest extends ParamStandardTest<CgIsaTestResult>
 	@Override
 	public void compareResults(CgIsaTestResult actual, CgIsaTestResult expected)
 	{
-		assertTrue("Expected: \n"+expected.translation + "\nGot: \n"+actual.translation, expected.compare(actual));
+		assertTrue("\n --- Expected: ---\n"+expected.translation + "\n --- Got: ---\n"+actual.translation, expected.compare(actual));
 	}
 
 }
