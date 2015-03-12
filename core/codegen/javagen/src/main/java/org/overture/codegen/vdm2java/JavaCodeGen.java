@@ -23,6 +23,7 @@ package org.overture.codegen.vdm2java;
 
 import java.io.File;
 import java.io.StringWriter;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -413,23 +414,32 @@ public class JavaCodeGen extends CodeGenBase
 
 		Set<String> allNames = collector.namesToAvoid();
 
-
-		List<Renaming> renamings = new LinkedList<Renaming>();
+		JavaIdentifierNormaliser normaliser = new JavaIdentifierNormaliser(allNames, getInfo().getTempVarNameGen());
+		
 		for (SClassDefinition clazz : userClasses)
 		{
-			JavaIdentifierNormaliser normaliser = new JavaIdentifierNormaliser(clazz, allNames, getInfo().getTempVarNameGen());
-			renamings.addAll(normaliser.getRenamings());
 			clazz.apply(normaliser);
 		}
 
 		VarRenamer renamer = new VarRenamer();
 
+		
+		Set<Renaming> filteredRenamings = new HashSet<Renaming>();
+		
+		for(Renaming r : normaliser.getRenamings())
+		{
+			if(!getInfo().getDeclAssistant().isLibraryName(r.getLoc().getModule()))
+			{
+				filteredRenamings.add(r);
+			}
+		}
+		
 		for (SClassDefinition clazz : userClasses)
 		{
-			renamer.rename(clazz, renamings);
+			renamer.rename(clazz, filteredRenamings);
 		}
 
-		return renamings;
+		return new LinkedList<Renaming>(filteredRenamings);
 	}
 
 	private void computeDefTable(List<SClassDefinition> mergedParseLists)
@@ -472,7 +482,7 @@ public class JavaCodeGen extends CodeGenBase
 
 		for (SClassDefinition classDef : mergedParseLists)
 		{
-			List<Renaming> classRenamings = renamer.computeRenamings(classDef, renamingsCollector);
+			Set<Renaming> classRenamings = renamer.computeRenamings(classDef, renamingsCollector);
 
 			if (!classRenamings.isEmpty())
 			{
@@ -481,6 +491,8 @@ public class JavaCodeGen extends CodeGenBase
 			}
 		}
 
+		Collections.sort(allRenamings);
+		
 		return allRenamings;
 	}
 
