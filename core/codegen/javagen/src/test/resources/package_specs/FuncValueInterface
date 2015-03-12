@@ -1,0 +1,11 @@
+class Entry
+
+operations
+
+public static Run : () ==> int
+Run () ==
+let f = (lambda x : nat & x * x)
+in
+  return f(2);
+  
+end Entry
