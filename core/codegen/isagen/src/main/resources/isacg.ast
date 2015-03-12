@@ -16,7 +16,4 @@ CG = #decl
           [funcs]:CG.#decl.func*
        | {class}
            [mutrecfuncs]:CG.#decl.mrFuncGroup*
-       | {extClass}
-           [baseClass]:CG.#decl.class
-           [mutrecfuncs]:CG.#decl.mrFuncGroup*
        ;
