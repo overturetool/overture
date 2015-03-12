@@ -87,7 +87,6 @@ import org.overture.interpreter.scheduler.MessageResponse;
 import org.overture.interpreter.scheduler.ResourceScheduler;
 import org.overture.interpreter.solver.IConstraintSolver;
 import org.overture.interpreter.solver.SolverFactory;
-import org.overture.interpreter.util.QuickProfiler;
 import org.overture.parser.config.Properties;
 
 public class OperationValue extends Value
@@ -257,35 +256,23 @@ public class OperationValue extends Value
 	public Value eval(ILexLocation from, ValueList argValues, Context ctxt)
 			throws AnalysisException
 	{
-		long start = System.currentTimeMillis();
+		// Note args cannot be Updateable, so we convert them here. This means
+		// that TransactionValues pass the local "new" value to the far end.
+		ValueList constValues = argValues.getConstant();
 
-		try
+		if (Settings.dialect == Dialect.VDM_RT)
 		{
-
-			// Note args cannot be Updateable, so we convert them here. This means
-			// that TransactionValues pass the local "new" value to the far end.
-			ValueList constValues = argValues.getConstant();
-
-			if (Settings.dialect == Dialect.VDM_RT)
+			if (!isStatic && (ctxt.threadState.CPU != self.getCPU() || isAsync))
 			{
-				if (!isStatic
-						&& (ctxt.threadState.CPU != self.getCPU() || isAsync))
-				{
-					return asyncEval(constValues, ctxt);
-				} else
-				{
-					return localEval(from, constValues, ctxt, true);
-				}
+				return asyncEval(constValues, ctxt);
 			} else
 			{
 				return localEval(from, constValues, ctxt, true);
 			}
-		} finally
+		} else
 		{
-			QuickProfiler.printDuration(start, this.name.getModule() + "."
-					+ this.toTitle());
+			return localEval(from, constValues, ctxt, true);
 		}
-
 	}
 
 	public Value localEval(ILexLocation from, ValueList argValues,

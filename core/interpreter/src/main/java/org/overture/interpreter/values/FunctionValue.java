@@ -70,7 +70,6 @@ import org.overture.interpreter.runtime.VdmRuntime;
 import org.overture.interpreter.runtime.VdmRuntimeError;
 import org.overture.interpreter.solver.IConstraintSolver;
 import org.overture.interpreter.solver.SolverFactory;
-import org.overture.interpreter.util.QuickProfiler;
 import org.overture.typechecker.assistant.pattern.PatternListTC;
 
 public class FunctionValue extends Value
@@ -303,312 +302,303 @@ public class FunctionValue extends Value
 	public Value eval(ILexLocation from, ValueList argValues, Context ctxt,
 			Context sctxt) throws AnalysisException
 	{
-		long start = System.currentTimeMillis();
-
-		try
+		if (uninstantiated)
 		{
-			if (uninstantiated)
+			abort(3033, "Polymorphic function has not been instantiated: "
+					+ name, ctxt);
+		}
+
+		List<PPattern> paramPatterns = paramPatternList.get(0);
+		RootContext evalContext = newContext(from, toTitle(), ctxt, sctxt);
+
+		if (typeValues != null)
+		{
+			// Add any @T type values, for recursive polymorphic functions
+			evalContext.putList(typeValues);
+		}
+
+		if (argValues.size() != paramPatterns.size())
+		{
+			VdmRuntimeError.abort(type.getLocation(), 4052, "Wrong number of arguments passed to "
+					+ name, ctxt);
+		}
+
+		Iterator<Value> valIter = argValues.iterator();
+		Iterator<PType> typeIter = type.getParameters().iterator();
+		NameValuePairMap args = new NameValuePairMap();
+
+		for (PPattern p : paramPatterns)
+		{
+			Value pv = valIter.next();
+
+			if (checkInvariants) // Don't even convert invariant arg values
 			{
-				abort(3033, "Polymorphic function has not been instantiated: "
-						+ name, ctxt);
+				pv = pv.convertTo(typeIter.next(), ctxt);
 			}
 
-			List<PPattern> paramPatterns = paramPatternList.get(0);
-			RootContext evalContext = newContext(from, toTitle(), ctxt, sctxt);
-
-			if (typeValues != null)
+			try
 			{
-				// Add any @T type values, for recursive polymorphic functions
-				evalContext.putList(typeValues);
-			}
-
-			if (argValues.size() != paramPatterns.size())
-			{
-				VdmRuntimeError.abort(type.getLocation(), 4052, "Wrong number of arguments passed to "
-						+ name, ctxt);
-			}
-
-			Iterator<Value> valIter = argValues.iterator();
-			Iterator<PType> typeIter = type.getParameters().iterator();
-			NameValuePairMap args = new NameValuePairMap();
-
-			for (PPattern p : paramPatterns)
-			{
-				Value pv = valIter.next();
-
-				if (checkInvariants) // Don't even convert invariant arg values
+				for (NameValuePair nvp : ctxt.assistantFactory.createPPatternAssistant().getNamedValues(p, pv, ctxt))
 				{
-					pv = pv.convertTo(typeIter.next(), ctxt);
+					Value v = args.get(nvp.name);
+
+					if (v == null)
+					{
+						args.put(nvp);
+					} else
+					// Names match, so values must also
+					{
+						if (!v.equals(nvp.value))
+						{
+							abort(4053, "Parameter patterns do not match arguments", ctxt);
+						}
+					}
 				}
+			} catch (PatternMatchException e)
+			{
+				abort(e.number, e, ctxt);
+			}
+		}
+
+		if (self != null)
+		{
+			evalContext.put(new LexNameToken(location.getModule(), "self", location), self);
+		}
+
+		evalContext.putAll(args);
+
+		if (paramPatternList.size() == 1)
+		{
+			if (precondition != null && Settings.prechecks)
+			{
+				// Evaluate pre/post in evalContext as it includes the type
+				// variables, if any. We disable the swapping and time (RT)
+				// as precondition checks should be "free".
 
 				try
 				{
-					for (NameValuePair nvp : ctxt.assistantFactory.createPPatternAssistant().getNamedValues(p, pv, ctxt))
-					{
-						Value v = args.get(nvp.name);
-
-						if (v == null)
-						{
-							args.put(nvp);
-						} else
-						// Names match, so values must also
-						{
-							if (!v.equals(nvp.value))
-							{
-								abort(4053, "Parameter patterns do not match arguments", ctxt);
-							}
-						}
-					}
-				} catch (PatternMatchException e)
+					evalContext.threadState.setAtomic(true);
+					evalContext.setPrepost(4055, "Precondition failure: ");
+					precondition.eval(from, argValues, evalContext);
+				} finally
 				{
-					abort(e.number, e, ctxt);
+					evalContext.setPrepost(0, null);
+					evalContext.threadState.setAtomic(false);
 				}
 			}
 
-			if (self != null)
+			Long tid = Thread.currentThread().getId();
+
+			if (isMeasure)
 			{
-				evalContext.put(new LexNameToken(location.getModule(), "self", location), self);
+				if (measuringThreads.contains(tid)) // We are measuring on this thread
+				{
+					if (!callingThreads.add(tid)) // And we've been here already
+					{
+						abort(4148, "Measure function is called recursively: "
+								+ name, evalContext);
+					}
+				}
 			}
 
-			evalContext.putAll(args);
-
-			if (paramPatternList.size() == 1)
+			if (measureName != null)
 			{
-				if (precondition != null && Settings.prechecks)
+				if (measure == null)
 				{
-					// Evaluate pre/post in evalContext as it includes the type
-					// variables, if any. We disable the swapping and time (RT)
-					// as precondition checks should be "free".
+					measure = evalContext.lookup(measureName).functionValue(ctxt);
 
-					try
+					if (typeValues != null) // Function is polymorphic, so measure copies type args
 					{
-						evalContext.threadState.setAtomic(true);
-						evalContext.setPrepost(4055, "Precondition failure: ");
-						precondition.eval(from, argValues, evalContext);
-					} finally
+						measure = (FunctionValue) measure.clone();
+						measure.uninstantiated = false;
+						measure.typeValues = typeValues;
+					}
+
+					measure.measuringThreads = Collections.synchronizedSet(new HashSet<Long>());
+					measure.callingThreads = Collections.synchronizedSet(new HashSet<Long>());
+					measure.isMeasure = true;
+				}
+
+				// If this is a curried function, then the measure is called with all of the
+				// previously applied argument values, in addition to the argValues.
+
+				ValueList measureArgs = null;
+
+				if (curriedArgs == null)
+				{
+					measureArgs = argValues;
+				} else
+				{
+					measureArgs = new ValueList();
+					measureArgs.addAll(curriedArgs); // Previous args
+					measureArgs.addAll(argValues); // Final args
+				}
+
+				// We disable the swapping and time (RT) as measure checks should be "free".
+				Value mv;
+
+				try
+				{
+					measure.measuringThreads.add(tid);
+					evalContext.threadState.setAtomic(true);
+					mv = measure.eval(measure.location, measureArgs, evalContext);
+				} finally
+				{
+					evalContext.threadState.setAtomic(false);
+					measure.measuringThreads.remove(tid);
+				}
+
+				Stack<Value> stack = measureValues.get(tid);
+
+				if (stack == null)
+				{
+					stack = new Stack<Value>();
+					measureValues.put(tid, stack);
+				}
+
+				if (!stack.isEmpty())
+				{
+					Value old = stack.peek(); // Previous value
+
+					if (old != null && mv.compareTo(old) >= 0) // Not decreasing order
 					{
-						evalContext.setPrepost(0, null);
-						evalContext.threadState.setAtomic(false);
+						abort(4146, "Measure failure: " + name
+								+ Utils.listToString("(", argValues, ", ", ")")
+								+ ", measure " + measure.name + ", current "
+								+ mv + ", previous " + old, evalContext);
 					}
 				}
 
-				Long tid = Thread.currentThread().getId();
+				stack.push(mv);
+			}
 
-				if (isMeasure)
+			Value rv = null;
+
+			if (body == null)
+			{
+
+				IConstraintSolver solver = SolverFactory.getSolver(Settings.dialect);
+
+				if (solver != null)
 				{
-					if (measuringThreads.contains(tid)) // We are measuring on this thread
-					{
-						if (!callingThreads.add(tid)) // And we've been here already
-						{
-							abort(4148, "Measure function is called recursively: "
-									+ name, evalContext);
-						}
-					}
-				}
-
-				if (measureName != null)
-				{
-					if (measure == null)
-					{
-						measure = evalContext.lookup(measureName).functionValue(ctxt);
-
-						if (typeValues != null) // Function is polymorphic, so measure copies type args
-						{
-							measure = (FunctionValue) measure.clone();
-							measure.uninstantiated = false;
-							measure.typeValues = typeValues;
-						}
-
-						measure.measuringThreads = Collections.synchronizedSet(new HashSet<Long>());
-						measure.callingThreads = Collections.synchronizedSet(new HashSet<Long>());
-						measure.isMeasure = true;
-					}
-
-					// If this is a curried function, then the measure is called with all of the
-					// previously applied argument values, in addition to the argValues.
-
-					ValueList measureArgs = null;
-
-					if (curriedArgs == null)
-					{
-						measureArgs = argValues;
-					} else
-					{
-						measureArgs = new ValueList();
-						measureArgs.addAll(curriedArgs); // Previous args
-						measureArgs.addAll(argValues); // Final args
-					}
-
-					// We disable the swapping and time (RT) as measure checks should be "free".
-					Value mv;
-
-					try
-					{
-						measure.measuringThreads.add(tid);
-						evalContext.threadState.setAtomic(true);
-						mv = measure.eval(measure.location, measureArgs, evalContext);
-					} finally
-					{
-						evalContext.threadState.setAtomic(false);
-						measure.measuringThreads.remove(tid);
-					}
-
-					Stack<Value> stack = measureValues.get(tid);
-
-					if (stack == null)
-					{
-						stack = new Stack<Value>();
-						measureValues.put(tid, stack);
-					}
-
-					if (!stack.isEmpty())
-					{
-						Value old = stack.peek(); // Previous value
-
-						if (old != null && mv.compareTo(old) >= 0) // Not decreasing order
-						{
-							abort(4146, "Measure failure: "
-									+ name
-									+ Utils.listToString("(", argValues, ", ", ")")
-									+ ", measure " + measure.name
-									+ ", current " + mv + ", previous " + old, evalContext);
-						}
-					}
-
-					stack.push(mv);
-				}
-
-				Value rv = null;
-
-				if (body == null)
-				{
-
-					IConstraintSolver solver = SolverFactory.getSolver(Settings.dialect);
-
-					if (solver != null)
-					{
-						rv = invokeSolver(ctxt, evalContext, args, solver);
-
-					} else
-					{
-						abort(4051, "Cannot apply implicit function: " + name, ctxt);
-					}
+					rv = invokeSolver(ctxt, evalContext, args, solver);
 
 				} else
 				{
-					try
+					abort(4051, "Cannot apply implicit function: " + name, ctxt);
+				}
+
+			} else
+			{
+				try
+				{
+					rv = body.apply(VdmRuntime.getExpressionEvaluator(), evalContext).convertTo(type.getResult(), evalContext);
+				} catch (AnalysisException e)
+				{
+					if (e instanceof ValueException)
 					{
-						rv = body.apply(VdmRuntime.getExpressionEvaluator(), evalContext).convertTo(type.getResult(), evalContext);
-					} catch (AnalysisException e)
-					{
-						if (e instanceof ValueException)
-						{
-							throw (ValueException) e;
-						}
-						e.printStackTrace();
+						throw (ValueException) e;
 					}
+					e.printStackTrace();
 				}
+			}
 
-				if (ctxt.prepost > 0) // Note, caller's context is checked
+			if (ctxt.prepost > 0) // Note, caller's context is checked
+			{
+				if (!rv.boolValue(ctxt))
 				{
-					if (!rv.boolValue(ctxt))
-					{
-						// Note that this calls getLocation to find out where the body
-						// wants to report its location for this error - this may be an
-						// errs clause in some circumstances.
+					// Note that this calls getLocation to find out where the body
+					// wants to report its location for this error - this may be an
+					// errs clause in some circumstances.
 
-						throw new ContextException(ctxt.prepost, ctxt.prepostMsg
-								+ name, body.getLocation(), evalContext);
-					}
+					throw new ContextException(ctxt.prepost, ctxt.prepostMsg
+							+ name, body.getLocation(), evalContext);
 				}
+			}
 
-				if (postcondition != null && Settings.postchecks)
+			if (postcondition != null && Settings.postchecks)
+			{
+				ValueList postArgs = new ValueList(argValues);
+				postArgs.add(rv);
+
+				// Evaluate pre/post in evalContext as it includes the type
+				// variables, if any. We disable the swapping and time (RT)
+				// as postcondition checks should be "free".
+
+				try
 				{
-					ValueList postArgs = new ValueList(argValues);
-					postArgs.add(rv);
-
-					// Evaluate pre/post in evalContext as it includes the type
-					// variables, if any. We disable the swapping and time (RT)
-					// as postcondition checks should be "free".
-
-					try
-					{
-						evalContext.threadState.setAtomic(true);
-						evalContext.setPrepost(4056, "Postcondition failure: ");
-						postcondition.eval(from, postArgs, evalContext);
-					} finally
-					{
-						evalContext.setPrepost(0, null);
-						evalContext.threadState.setAtomic(false);
-					}
-				}
-
-				if (measure != null)
+					evalContext.threadState.setAtomic(true);
+					evalContext.setPrepost(4056, "Postcondition failure: ");
+					postcondition.eval(from, postArgs, evalContext);
+				} finally
 				{
-					measureValues.get(tid).pop();
+					evalContext.setPrepost(0, null);
+					evalContext.threadState.setAtomic(false);
+				}
+			}
+
+			if (measure != null)
+			{
+				measureValues.get(tid).pop();
+			}
+
+			if (isMeasure)
+			{
+				callingThreads.remove(tid);
+			}
+
+			return rv;
+		} else
+		// This is a curried function
+		{
+			if (type.getResult() instanceof AFunctionType)
+			{
+				// If a curried function has a pre/postcondition, then the
+				// result of a partial application has a pre/post condition
+				// with its free variables taken from the environment (so
+				// that parameters passed are fixed in subsequent applies).
+
+				FunctionValue newpre = null;
+
+				if (precondition != null)
+				{
+					newpre = precondition.curry(evalContext);
 				}
 
-				if (isMeasure)
+				FunctionValue newpost = null;
+
+				if (postcondition != null)
 				{
-					callingThreads.remove(tid);
+					newpost = postcondition.curry(evalContext);
 				}
+
+				if (freeVariables != null)
+				{
+					evalContext.putAll(freeVariables);
+				}
+
+				// Curried arguments are collected so that we can invoke any measure functions
+				// once we reach the final apply that does not return a function.
+
+				ValueList argList = new ValueList();
+
+				if (curriedArgs != null)
+				{
+					argList.addAll(curriedArgs);
+				}
+
+				argList.addAll(argValues);
+
+				FunctionValue rv = new FunctionValue(location, "curried", (AFunctionType) type.getResult(), paramPatternList.subList(1, paramPatternList.size()), body, newpre, newpost, evalContext, false, argList, measureName, measureValues, result);
+
+				rv.setSelf(self);
+				rv.typeValues = typeValues;
 
 				return rv;
-			} else
-			// This is a curried function
-			{
-				if (type.getResult() instanceof AFunctionType)
-				{
-					// If a curried function has a pre/postcondition, then the
-					// result of a partial application has a pre/post condition
-					// with its free variables taken from the environment (so
-					// that parameters passed are fixed in subsequent applies).
-
-					FunctionValue newpre = null;
-
-					if (precondition != null)
-					{
-						newpre = precondition.curry(evalContext);
-					}
-
-					FunctionValue newpost = null;
-
-					if (postcondition != null)
-					{
-						newpost = postcondition.curry(evalContext);
-					}
-
-					if (freeVariables != null)
-					{
-						evalContext.putAll(freeVariables);
-					}
-
-					// Curried arguments are collected so that we can invoke any measure functions
-					// once we reach the final apply that does not return a function.
-
-					ValueList argList = new ValueList();
-
-					if (curriedArgs != null)
-					{
-						argList.addAll(curriedArgs);
-					}
-
-					argList.addAll(argValues);
-
-					FunctionValue rv = new FunctionValue(location, "curried", (AFunctionType) type.getResult(), paramPatternList.subList(1, paramPatternList.size()), body, newpre, newpost, evalContext, false, argList, measureName, measureValues, result);
-
-					rv.setSelf(self);
-					rv.typeValues = typeValues;
-
-					return rv;
-				}
-
-				VdmRuntimeError.abort(type.getLocation(), 4057, "Curried function return type is not a function", ctxt);
-				return null;
 			}
-		} finally
-		{
-			QuickProfiler.printDuration(start,this.location.getModule()+"."+this.toTitle());
+
+			VdmRuntimeError.abort(type.getLocation(), 4057, "Curried function return type is not a function", ctxt);
+			return null;
 		}
 	}
 

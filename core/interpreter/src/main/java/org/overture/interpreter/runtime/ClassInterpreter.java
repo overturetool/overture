@@ -63,7 +63,6 @@ import org.overture.interpreter.scheduler.Signal;
 import org.overture.interpreter.scheduler.SystemClock;
 import org.overture.interpreter.traces.CallSequence;
 import org.overture.interpreter.util.ClassListInterpreter;
-import org.overture.interpreter.util.QuickProfiler;
 import org.overture.interpreter.values.BUSValue;
 import org.overture.interpreter.values.CPUValue;
 import org.overture.interpreter.values.NameValuePair;
@@ -247,7 +246,6 @@ public class ClassInterpreter extends Interpreter
 
 		RuntimeValidator.stop();
 
-		QuickProfiler.print();
 		return main.getResult(); // Can throw ContextException
 	}
 
