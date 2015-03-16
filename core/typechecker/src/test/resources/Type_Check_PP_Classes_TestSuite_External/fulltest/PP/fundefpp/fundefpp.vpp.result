@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.external.ExternalClassesPpTypeCheckTest">
-<message column="11" line="13" message="Definition 'a' not used" messageType="warning" number="5000" resource="fundefpp.vpp"/>
 <message column="13" line="13" message="Definition 'b' not used" messageType="warning" number="5000" resource="fundefpp.vpp"/>
+<message column="11" line="13" message="Definition 'a' not used" messageType="warning" number="5000" resource="fundefpp.vpp"/>
 <message column="9" line="33" message="Definition 'i' not used" messageType="warning" number="5000" resource="fundefpp.vpp"/>
 <message column="13" line="44" message="Definition 'b' not used" messageType="warning" number="5000" resource="fundefpp.vpp"/>
 <message column="11" line="44" message="Definition 'a' not used" messageType="warning" number="5000" resource="fundefpp.vpp"/>

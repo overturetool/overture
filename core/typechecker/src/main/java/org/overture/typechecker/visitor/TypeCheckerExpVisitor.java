@@ -770,6 +770,15 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		PType ltype = node.getLeft().getType();
 		PType rtype = node.getRight().getType();
 
+		if (question.assistantFactory.createPTypeAssistant().isSet(ltype) &&
+			question.assistantFactory.createPTypeAssistant().isSet(rtype) &&
+			!question.assistantFactory.getTypeComparator().compatible(ltype, rtype))
+		{
+			TypeCheckerErrors.report(3335, "Subset will only be true if the LHS set is empty", node.getLocation(), node);
+			TypeCheckerErrors.detail("Left", ltype);
+			TypeCheckerErrors.detail("Right", rtype);
+		}
+
 		if (!question.assistantFactory.createPTypeAssistant().isSet(ltype))
 		{
 			TypeCheckerErrors.report(3146, "Left hand of " + node.getOp()
@@ -1083,6 +1092,15 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		PType ltype = node.getLeft().getType();
 		PType rtype = node.getRight().getType();
+
+		if (question.assistantFactory.createPTypeAssistant().isSet(ltype) &&
+			question.assistantFactory.createPTypeAssistant().isSet(rtype) &&
+			!question.assistantFactory.getTypeComparator().compatible(ltype, rtype))
+		{
+			TypeCheckerErrors.report(3335, "Subset will only be true if the LHS set is empty", node.getLocation(), node);
+			TypeCheckerErrors.detail("Left", ltype);
+			TypeCheckerErrors.detail("Right", rtype);
+		}
 
 		if (!question.assistantFactory.createPTypeAssistant().isSet(ltype))
 		{
