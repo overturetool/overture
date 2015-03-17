@@ -1,1 +1,7 @@
-Mutual Recursion oh no!
+begin mutrec
+
+#foreach ($func in $node.Funcs)
+$Isa.trans($func)
+
+#end
+end mutrec
