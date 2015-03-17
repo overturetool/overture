@@ -81,6 +81,7 @@ public class GroupMutRecs extends DepthFirstAnalysisIsaAdaptor implements
 			{
 				AMrFuncGroupDeclCG aux = new AMrFuncGroupDeclCG();
 				aux.setFuncs(new LinkedList<>(scs));
+				// this line also removes the function from the functions block 
 				result.getMutrecfuncs().add(aux);
 			}
 		}
