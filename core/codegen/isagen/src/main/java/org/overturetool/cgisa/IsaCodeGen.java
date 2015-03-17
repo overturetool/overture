@@ -95,22 +95,17 @@ public class IsaCodeGen extends CodeGenBase
 		// Apply transformations
 		for (IRStatus<INode> status : statuses)
 		{
+			// first, transform away any recursion cycles
+			GroupMutRecs groupMR = new GroupMutRecs();
+			generator.applyTotalTransformation(status, groupMR);
 
 			if (status.getIrNode() instanceof AClassDeclCG)
 			{
 				AClassDeclCG cClass = (AClassDeclCG) status.getIrNode();
+				// then sort remaining dependencies
+				SortDependencies sortTrans = new SortDependencies(cClass.getFunctions());
+				generator.applyPartialTransformation(status, sortTrans);
 
-				try
-				{
-
-					SortDependencies sortTrans = new SortDependencies(cClass.getFunctions());
-					generator.applyPartialTransformation(status, sortTrans);
-
-				} catch (RuntimeException e)
-				{
-					GroupMutRecs groupMR = new GroupMutRecs();
-					generator.applyTotalTransformation(status, groupMR);
-				}
 			}
 		}
 
