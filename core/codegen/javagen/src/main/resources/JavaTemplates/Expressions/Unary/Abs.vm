@@ -1,6 +1,1 @@
-##
-## Java has overloads for Math.abs that both take/return the same type.
-## Therefore this template will adapt accordingly to how numbers are 
-## represented in the OO AST.
-##
-Math.abs( $JavaFormat.format($node.getExp()))
+Utils.abs($JavaFormat.format($node.getExp()))
