@@ -1061,7 +1061,7 @@ public class POP3ClientHandler extends VDMThread implements EvaluatePP {
     }
 
     private static Number Abs(final Number i) {
-        return Math.abs(i.longValue());
+        return Utils.abs(i.longValue());
     }
 
     private static String int2stringR(final Number n) {

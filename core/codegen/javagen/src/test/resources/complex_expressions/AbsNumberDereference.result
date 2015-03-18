@@ -10,7 +10,7 @@ public class Entry {
     public static Object Run() {
         Number x0 = -1.1;
 
-        return Math.abs(x0.doubleValue());
+        return Utils.abs(x0.doubleValue());
     }
 
     public String toString() {
