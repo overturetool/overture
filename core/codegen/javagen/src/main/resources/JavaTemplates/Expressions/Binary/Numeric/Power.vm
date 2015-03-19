@@ -1,1 +1,1 @@
-Math.pow($JavaFormat.format($node.getLeft()), $JavaFormat.format($node.getRight()))
+Utils.pow($JavaFormat.format($node.getLeft()), $JavaFormat.format($node.getRight()))
