@@ -761,8 +761,10 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 					TypeCheckerErrors.detail(unique, "Type", mr.getFrom());
 				}
 				
-				result.add(AstFactory.newASeqSeqType(node.getLocation(),
-					AstFactory.newAUnionType(node.getLocation(), st.getSeqof(), mr.getTo())));
+				PTypeSet type = new PTypeSet(question.assistantFactory);
+				type.add(st.getSeqof());
+				type.add(mr.getTo());
+				result.add(AstFactory.newASeqSeqType(node.getLocation(), type.getType(node.getLocation())));
 			}
 		}
 
