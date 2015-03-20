@@ -178,6 +178,12 @@ public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
 						+ name + ": " + def.getName().getName() + " at " + def.getLocation());
 			}
 		}
+		
+		if(node.getInvariant() != null && question.getSettings().generateInvariantChecks())
+		{
+			SDeclCG invCg = node.getInvariant().apply(question.getDeclVisitor(), question);
+			classCg.setInvariant(invCg);
+		}
 
 		boolean defaultConstructorExplicit = false;
 		for (AMethodDeclCG method : methods)
