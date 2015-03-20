@@ -60,7 +60,7 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 		this.javaFormat = javaFormat;
 	}
 	
-	public String formatRecordConstructor(ARecordDeclCG record)
+	public void formatRecordConstructor(ARecordDeclCG record)
 			throws AnalysisException
 	{
 		// Since Java does not have records but the OO AST does a record is generated as a Java class.
@@ -125,11 +125,9 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 		}
 
 		record.getMethods().add(constructor);
-
-		return javaFormat.format(constructor);
 	}
 
-	public String generateCloneMethod(ARecordDeclCG record)
+	public void generateCloneMethod(ARecordDeclCG record)
 			throws AnalysisException
 	{
 
@@ -169,11 +167,9 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 		method.setBody(body);
 
 		record.getMethods().add(method);
-
-		return javaFormat.format(method);
 	}
 
-	public String generateEqualsMethod(ARecordDeclCG record)
+	public void generateEqualsMethod(ARecordDeclCG record)
 			throws AnalysisException
 	{
 		String paramName = "obj";
@@ -234,11 +230,9 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 		equalsMethod.setBody(equalsMethodBody);
 
 		record.getMethods().add(equalsMethod);
-
-		return javaFormat.format(equalsMethod);
 	}
 
-	public String generateHashcodeMethod(ARecordDeclCG record)
+	public void generateHashcodeMethod(ARecordDeclCG record)
 			throws AnalysisException
 	{
 		AMethodDeclCG hashcodeMethod = consHashcodeMethodSignature();
@@ -259,11 +253,9 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 		hashcodeMethod.setBody(returnStm);
 
 		record.getMethods().add(hashcodeMethod);
-
-		return javaFormat.format(hashcodeMethod);
 	}
 
-	public String generateToStringMethod(ARecordDeclCG record)
+	public void generateToStringMethod(ARecordDeclCG record)
 			throws AnalysisException
 	{
 		AMethodDeclCG toStringMethod = consToStringSignature();
@@ -307,7 +299,5 @@ public class JavaRecordCreator extends JavaClassCreatorBase
 		toStringMethod.setBody(returnStm);
 
 		record.getMethods().add(toStringMethod);
-
-		return javaFormat.format(toStringMethod);
 	}
 }
