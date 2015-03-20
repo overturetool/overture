@@ -402,20 +402,21 @@ public class CentralResource {
     }
 
     public void AddAccount(final Number accId, final Account acc) {
-        accounts = MapUtil.override(accounts,
-                MapUtil.map(new Maplet(accId, acc)));
+        { /* Start of atomic statement */
+            accounts = MapUtil.override(accounts,
+                    MapUtil.map(new Maplet(accId, acc)));
 
-        VDMMap mapCompResult_1 = MapUtil.map();
-        VDMSet set_4 = acc.GetCardIds();
+            VDMMap mapCompResult_1 = MapUtil.map();
+            VDMSet set_4 = acc.GetCardIds();
 
-        for (Iterator iterator_4 = set_4.iterator(); iterator_4.hasNext();) {
-            Number cId = ((Number) iterator_4.next());
-            mapCompResult_1 = MapUtil.munion(mapCompResult_1,
-                    MapUtil.map(new Maplet(cId, 0L)));
-        }
+            for (Iterator iterator_4 = set_4.iterator(); iterator_4.hasNext();) {
+                Number cId = ((Number) iterator_4.next());
+                mapCompResult_1 = MapUtil.munion(mapCompResult_1,
+                        MapUtil.map(new Maplet(cId, 0L)));
+            }
 
-        numberOfTries = MapUtil.override(numberOfTries, mapCompResult_1);
-    }
+            numberOfTries = MapUtil.override(numberOfTries, mapCompResult_1);
+        } /* End of atomic statement */}
 
     public void AddIllegalCard(final Number cId) {
         illegalCards = SetUtil.union(illegalCards, SetUtil.set(cId));
