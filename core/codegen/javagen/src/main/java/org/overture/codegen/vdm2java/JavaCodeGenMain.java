@@ -190,7 +190,7 @@ public class JavaCodeGenMain
 				usage("Input files are missing");
 			}
 			
-			if(outputDir == null)
+			if(outputDir == null && !printClasses)
 			{
 				Logger.getLog().println("No output directory specified - printing code generated classes instead..\n");
 				printClasses = true;
