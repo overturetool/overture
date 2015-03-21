@@ -28,6 +28,7 @@ import java.util.Set;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AAssignmentDefinition;
+import org.overture.ast.definitions.AClassInvariantDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.AValueDefinition;
@@ -43,6 +44,7 @@ import org.overture.ast.expressions.SUnaryExp;
 import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.statements.AAssignmentStm;
+import org.overture.ast.statements.AClassInvariantStm;
 import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;
@@ -81,6 +83,7 @@ import org.overture.codegen.cgast.expressions.SBinaryExpCG;
 import org.overture.codegen.cgast.expressions.SIsExpCG;
 import org.overture.codegen.cgast.expressions.SQuantifierExpCG;
 import org.overture.codegen.cgast.expressions.SUnaryExpCG;
+import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
 import org.overture.codegen.cgast.statements.AForLoopStmCG;
 import org.overture.codegen.cgast.statements.AIdentifierStateDesignatorCG;
@@ -355,7 +358,7 @@ public class ExpAssistantCG extends AssistantBase
 		return header;
 	}
 
-	public boolean existsOutsideMethodOrTrace(PExp exp)
+	public boolean outsideImperativeContext(PExp exp)
 	{
 		// The transformation of the 'and' and 'or' logical expressions also assumes that the
 		// expressions exist within a statement. However, in case it does not, the transformation
@@ -364,14 +367,15 @@ public class ExpAssistantCG extends AssistantBase
 		
 		return exp.getAncestor(SOperationDefinition.class) == null
 				&& exp.getAncestor(SFunctionDefinition.class) == null
-				&& exp.getAncestor(ANamedTraceDefinition.class) == null;
+				&& exp.getAncestor(ANamedTraceDefinition.class) == null
+				&& exp.getAncestor(AClassInvariantDefinition.class) == null;
 	}
 
 	public SExpCG handleQuantifier(PExp node, List<PMultipleBind> bindings,
 			PExp predicate, SQuantifierExpCG quantifier, IRInfo question,
 			String nodeStr) throws AnalysisException
 	{
-		if (question.getExpAssistant().existsOutsideMethodOrTrace(node))
+		if (question.getExpAssistant().outsideImperativeContext(node))
 		{
 			question.addUnsupportedNode(node, String.format("Generation of a %s is only supported within operations/functions", nodeStr));
 			return null;
@@ -562,7 +566,7 @@ public class ExpAssistantCG extends AssistantBase
 		return basicIsExp;
 	}
 	
-	public SExpCG idStateDesignatorToExp(IRInfo info, TransAssistantCG transAssistant, List<AClassDeclCG> classes, AIdentifierStateDesignatorCG node)
+	public SVarExpCG idStateDesignatorToExp(IRInfo info, TransAssistantCG transAssistant, List<AClassDeclCG> classes, AIdentifierStateDesignatorCG node)
 	{
 		if(node.getExplicit())
 		{
