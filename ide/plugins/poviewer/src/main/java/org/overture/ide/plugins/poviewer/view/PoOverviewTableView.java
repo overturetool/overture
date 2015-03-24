@@ -193,13 +193,20 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener 
 
 							if (source instanceof IVdmModel) {
 								IVdmModel castSource = (IVdmModel) source;
-
 								IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+								if (!page.getPerspective().getId().equals(IPoviewerConstants.ProofObligationPerspectiveId))
+								{
+									return new Status(IStatus.OK,
+											"org.overture.ide.plugins.poviewer", "Ok");
+								}
 								PoGeneratorUtil util = new PoGeneratorUtil(
 										display.getActiveShell(), page
 												.getActivePart().getSite());
 
-					
+								if (!util.isPoggedModel(castSource)){
+									return new Status(IStatus.OK,
+											"org.overture.ide.plugins.poviewer", "Ok");
+								}
 								util.generate(castSource);
 
 								System.out.println("built something");
@@ -241,13 +248,13 @@ public class PoOverviewTableView extends ViewPart implements ISelectionListener 
 	 * The constructor.
 	 */
 	public PoOverviewTableView() {
-//		VdmCore.addElementChangedListener(vdmlistner);
+		VdmCore.addElementChangedListener(vdmlistner);
 	}
 
 	@Override
 	public void dispose() {
 		super.dispose();
-	//	VdmCore.removeElementChangedListener(vdmlistner);
+	VdmCore.removeElementChangedListener(vdmlistner);
 	}
 
 	/**
