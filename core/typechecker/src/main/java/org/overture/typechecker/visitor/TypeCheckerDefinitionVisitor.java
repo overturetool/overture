@@ -1501,7 +1501,7 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		if (expType instanceof AVoidType)
 		{
 			TypeCheckerErrors.report(3048, "Expression does not return a value", node.getExpression().getLocation(), node.getExpression());
-		} else if (type != null)
+		} else if (type != null && !(type instanceof AUnknownType))
 		{
 			if (!question.assistantFactory.getTypeComparator().compatible(type, expType))
 			{
