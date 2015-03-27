@@ -171,7 +171,7 @@ public class JavaCodeGen extends CodeGenBase
 			for (String quoteNameVdm : quoteValues)
 			{
 				AClassDeclCG quoteDecl = quoteValueCreator.consQuoteValue(quoteNameVdm
-						+ JAVA_QUOTE_NAME_SUFFIX, getJavaSettings().getJavaRootPackage());
+						+ JAVA_QUOTE_NAME_SUFFIX, quoteNameVdm, getJavaSettings().getJavaRootPackage());
 
 				StringWriter writer = new StringWriter();
 				quoteDecl.apply(javaFormat.getMergeVisitor(), writer);
