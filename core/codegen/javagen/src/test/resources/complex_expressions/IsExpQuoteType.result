@@ -1,0 +1,26 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public Entry() {
+    }
+
+    public static Object Run() {
+        quotes.AQuote x = quotes.AQuote.getInstance();
+        quotes.BQuote y = quotes.BQuote.getInstance();
+
+        return SeqUtil.seq(Utils.equals(x, quotes.AQuote.getInstance()),
+            Utils.equals(y, quotes.AQuote.getInstance()));
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########
+*Quotes*
+A,B
+##########

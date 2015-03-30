@@ -1,0 +1,23 @@
+class Entry
+ 
+operations
+
+public static Run : () ==> ?
+Run () ==
+let a = new A'()
+in
+  return  a.op();
+
+end Entry
+
+class A'
+
+operations
+
+public op : () ==> nat
+op () ==
+let y' = 43
+in
+  return y';
+
+end A'

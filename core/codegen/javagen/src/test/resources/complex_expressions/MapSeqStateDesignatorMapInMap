@@ -1,0 +1,18 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+(
+  dcl xs : map (map nat to nat) to (map char to char) := {{1 |-> 2} |-> {'a' |-> 'b'}, {3 |-> 4} |-> {'c' |-> 'd'}};
+  
+  xs({3 |-> 4})('c') := 'x';
+  
+  if xs({3 |-> 4})('c') = 'x' then
+    return xs({1 |-> 2})('a')
+  else
+    return xs({3 |-> 4})('c');
+);
+
+end Entry

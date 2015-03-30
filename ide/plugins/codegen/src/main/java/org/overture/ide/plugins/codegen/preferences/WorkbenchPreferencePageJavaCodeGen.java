@@ -31,10 +31,14 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.PlatformUI;
 import org.osgi.service.prefs.Preferences;
+import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.ide.plugins.codegen.Activator;
 import org.overture.ide.plugins.codegen.ICodeGenConstants;
 import org.overture.ide.plugins.codegen.util.PluginVdm2JavaUtil;
@@ -46,7 +50,8 @@ public class WorkbenchPreferencePageJavaCodeGen extends PreferencePage implement
 	private Button generateAsStrCheckBox;
 	private Button generateConcMechanismsCheckBox;
 	private Text classesToSkipField;
-
+	private Text packageField;
+	
 	@Override
 	protected IPreferenceStore doGetPreferenceStore()
 	{
@@ -68,6 +73,15 @@ public class WorkbenchPreferencePageJavaCodeGen extends PreferencePage implement
 		generateConcMechanismsCheckBox = new Button(composite, SWT.CHECK);
 		generateConcMechanismsCheckBox.setText("Generate concurrency mechanisms");
 
+		Label packageLabel = new Label(composite, SWT.NULL);
+		packageLabel.setText("Output package of the generated Java code (e.g. my.pack)");
+		final GridData gridData2 = new GridData();
+		gridData2.horizontalAlignment = GridData.FILL;
+		gridData2.verticalAlignment = GridData.FILL;
+		packageField = new Text(composite, SWT.BORDER);
+		packageField.setLayoutData(gridData2);
+		packageField.setText("");
+		
 		GridData gridData = new GridData();
 		gridData.horizontalAlignment = GridData.FILL;
 		gridData.verticalAlignment = GridData.FILL;
@@ -114,8 +128,32 @@ public class WorkbenchPreferencePageJavaCodeGen extends PreferencePage implement
 		
 		String userSpecifiedClassesToSkip = classesToSkipField.getText();
 		store.setDefault(ICodeGenConstants.CLASSES_TO_SKIP, userSpecifiedClassesToSkip);
+		
+		String javaPackage = packageField.getText().trim();
+		
+		if(javaPackage.isEmpty())
+		{
+			// The project name will be used as the package
+		}
+		else if(GeneralCodeGenUtils.isValidJavaPackage(javaPackage))
+		{
+			store.setDefault(ICodeGenConstants.JAVA_PACKAGE, javaPackage);
+		}
+		else
+		{
+			Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+			MessageBox messageBox = new MessageBox(shell, SWT.ICON_WARNING
+					| SWT.OK);
 
-		Activator.savePluginSettings(disableCloning, generateAsStrings, generateConcMechanisms, userSpecifiedClassesToSkip);;
+			messageBox.setText("Not a valid Java package!");
+			messageBox.setMessage("Please specify a valid java package (e.g. my.pack).");
+			messageBox.open();
+			
+			// To indicate that we do not want the user specified package to be saved
+			javaPackage = null;
+		}
+
+		Activator.savePluginSettings(disableCloning, generateAsStrings, generateConcMechanisms, userSpecifiedClassesToSkip, javaPackage);
 		
 		refreshControls();
 	}
@@ -143,6 +181,11 @@ public class WorkbenchPreferencePageJavaCodeGen extends PreferencePage implement
 		if(classesToSkipField != null)
 		{
 			classesToSkipField.setText(ICodeGenConstants.CLASSES_TO_SKIP_DEFAULT);
+		}
+		
+		if(packageField != null)
+		{
+			packageField.setText(ICodeGenConstants.JAVA_PACKAGE_DEFAULT);
 		}
 	}
 	
@@ -175,6 +218,10 @@ public class WorkbenchPreferencePageJavaCodeGen extends PreferencePage implement
 		{
 			classesToSkipField.setText(preferences.get(ICodeGenConstants.CLASSES_TO_SKIP, ICodeGenConstants.CLASSES_TO_SKIP_DEFAULT));
 		}
+		
+		if(packageField != null)
+		{
+			packageField.setText(preferences.get(ICodeGenConstants.JAVA_PACKAGE, ICodeGenConstants.JAVA_PACKAGE_DEFAULT));
+		}
 	}
-
 }

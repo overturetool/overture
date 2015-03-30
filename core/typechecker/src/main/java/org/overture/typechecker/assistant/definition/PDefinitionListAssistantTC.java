@@ -41,6 +41,7 @@ import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.PType;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.TypeCheckInfo;
+import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.ITypeCheckerAssistantFactory;
 
 public class PDefinitionListAssistantTC implements IAstAssistant
@@ -207,7 +208,7 @@ public class PDefinitionListAssistantTC implements IAstAssistant
 			if (d instanceof AInstanceVariableDefinition)
 			{
 				AInstanceVariableDefinition ivd = (AInstanceVariableDefinition) d;
-				af.createAInstanceVariableDefinitionAssistant().initializedCheck(ivd);
+				initializedCheck(ivd);
 			}
 		}
 	}
@@ -262,5 +263,16 @@ public class PDefinitionListAssistantTC implements IAstAssistant
 			definitions.clear();
 			definitions.addAll(fixed);
 		}
+	}
+	
+	public void initializedCheck(AInstanceVariableDefinition ivd)
+	{
+		if (!ivd.getInitialized()
+				&& !af.createPAccessSpecifierAssistant().isStatic(ivd.getAccess()))
+		{
+			TypeCheckerErrors.warning(5001, "Instance variable '"
+					+ ivd.getName() + "' is not initialized", ivd.getLocation(), ivd);
+		}
+
 	}
 }

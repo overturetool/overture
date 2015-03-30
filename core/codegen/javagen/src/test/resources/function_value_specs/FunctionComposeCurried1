@@ -1,0 +1,20 @@
+class Entry
+
+functions
+
+static	
+
+func_compose : (nat-> nat) -> (nat-> nat) -> (nat-> nat)
+func_compose(f) (g) == (lambda x : nat & g(f(x)));
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let f = (lambda x : nat & x + 1),
+		g = (lambda x : nat & x + 2),
+		h = func_compose(f)(g)
+in
+	return h(2);
+	
+end Entry

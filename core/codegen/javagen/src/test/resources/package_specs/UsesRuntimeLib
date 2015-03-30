@@ -1,0 +1,11 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let xs = [3,4,5]
+in
+  return xs(3);
+
+end Entry

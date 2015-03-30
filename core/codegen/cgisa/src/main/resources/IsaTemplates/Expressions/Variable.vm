@@ -1,0 +1,5 @@
+#if ($Isa.isRoot($node) )
+${node.Name}##
+#else##
+^${node.Name}^##
+#end

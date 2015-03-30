@@ -1,0 +1,19 @@
+class Entry
+
+operations
+
+op : () ==> ()
+op () == skip;
+
+functions
+
+fun :  () -> nat
+fun () == 1;
+
+traces
+
+T1:
+
+||( op(){1,2} , fun(){1,2} );
+
+end Entry

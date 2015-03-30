@@ -1,0 +1,20 @@
+class Entry
+
+types
+
+Rec :: x : int;
+
+functions
+
+id :  int -> int
+id (x) == x;
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let r : Rec | nat =  mk_Rec(8)
+in 
+  return id(r.x);
+ 
+end Entry

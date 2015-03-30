@@ -10,10 +10,10 @@ Before you download and try to use the code provided in this open-source reposit
 
 This directory contains several subdirectories:
 
-* The core Overture libraries are found in `code`, and are pure Java with no Eclipse dependencies
-* The Overture IDE, based on Eclipse, are found in `ide`
-* Documentation for VDM and Overture is in `documentation`
-* Auxiliary code that supports the build process are found in `tools`
+* The core Overture libraries are found in `core`, and are pure Java with no Eclipse dependencies
+* The Overture IDE, based on Eclipse, is found in `ide`
+* Technical Documentation for Overture is in `documentation`
+* Auxiliary code that supports the build process is found in `tools`
 
 
 

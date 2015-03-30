@@ -1,0 +1,23 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class A {
+    public A() {
+    }
+
+    public Character op() {
+        return ((Character) Utils.get(s(), 1L));
+    }
+
+    public VDMSeq s() {
+        return SeqUtil.seq('h', 'e', 'j');
+    }
+
+    public String toString() {
+        return "A{}";
+    }
+}
+
+##########

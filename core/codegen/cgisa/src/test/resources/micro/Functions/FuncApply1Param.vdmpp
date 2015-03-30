@@ -1,0 +1,11 @@
+class A
+
+functions
+f : int -> int
+f (x) == 0;
+
+values
+x = f(1);
+
+
+end A

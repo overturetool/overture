@@ -1,0 +1,23 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    private Object xs = SeqUtil.seq(SeqUtil.seq(10L));
+
+    public Entry() {
+    }
+
+    public static Object Run() {
+        Entry e = new Entry();
+
+        return ((Object) Utils.get(((VDMSeq) Utils.get(((VDMSeq) e.xs), 1L)), 1L));
+    }
+
+    public String toString() {
+        return "Entry{" + "xs := " + Utils.toString(xs) + "}";
+    }
+}
+
+##########

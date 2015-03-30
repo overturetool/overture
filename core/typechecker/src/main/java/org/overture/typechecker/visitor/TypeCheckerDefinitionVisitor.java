@@ -77,6 +77,7 @@ import org.overture.ast.statements.AExternalClause;
 import org.overture.ast.statements.ANotYetSpecifiedStm;
 import org.overture.ast.statements.ASubclassResponsibilityStm;
 import org.overture.ast.typechecker.NameScope;
+import org.overture.ast.typechecker.Pass;
 import org.overture.ast.types.ABooleanBasicType;
 import org.overture.ast.types.AClassType;
 import org.overture.ast.types.AFieldField;
@@ -1491,10 +1492,16 @@ public class TypeCheckerDefinitionVisitor extends AbstractTypeCheckVisitor
 		ExcludedDefinitions.clearExcluded();
 		node.setExpType(expType);
 		PType type = node.getType(); // PDefinitionAssistant.getType(node);
+		
+		if (expType instanceof AUnknownType)
+		{
+			node.setPass(Pass.FINAL);	// Do it again later
+		}
+		
 		if (expType instanceof AVoidType)
 		{
 			TypeCheckerErrors.report(3048, "Expression does not return a value", node.getExpression().getLocation(), node.getExpression());
-		} else if (type != null)
+		} else if (type != null && !(type instanceof AUnknownType))
 		{
 			if (!question.assistantFactory.getTypeComparator().compatible(type, expType))
 			{

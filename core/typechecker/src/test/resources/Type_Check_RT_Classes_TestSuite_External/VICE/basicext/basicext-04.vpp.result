@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <testResult type="org.overture.typechecker.tests.external.ExternalClassesRtTypeCheckTest">
 <message column="9" line="51" message="Definition 'i' not used" messageType="warning" number="5000" resource="basicext-04.vpp"/>
-<message column="15" line="50" message="Definition 'argc' not used" messageType="warning" number="5000" resource="basicext-04.vpp"/>
 <message column="10" line="50" message="Definition 'mapv' not used" messageType="warning" number="5000" resource="basicext-04.vpp"/>
+<message column="15" line="50" message="Definition 'argc' not used" messageType="warning" number="5000" resource="basicext-04.vpp"/>
 <message column="10" line="62" message="Definition 'i' not used" messageType="warning" number="5000" resource="basicext-04.vpp"/>
 <result/>
 </testResult>

@@ -1,0 +1,28 @@
+class Entry
+
+instance variables
+
+x : nat;
+
+operations
+
+public Entry : nat ==> Entry
+Entry (px) == x := px;
+
+public op : () ==> nat
+op () ==
+(
+  x := x + 1;
+  return x;
+)
+
+traces
+
+T1:
+let a in set {new Entry(3), new Entry(4)}
+in
+  let b in set {new Entry(5), new Entry(6)}
+  in
+    (a.op();b.op());
+
+end Entry

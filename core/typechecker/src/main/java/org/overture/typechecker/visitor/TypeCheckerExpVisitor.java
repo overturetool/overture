@@ -46,6 +46,7 @@ import org.overture.ast.factory.AstFactory;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.intf.lex.ILexRealToken;
 import org.overture.ast.lex.LexNameToken;
+import org.overture.ast.patterns.AExpressionPattern;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ATypeBind;
@@ -75,10 +76,12 @@ import org.overture.ast.types.SMapType;
 import org.overture.ast.types.SNumericBasicType;
 import org.overture.ast.types.SSeqType;
 import org.overture.ast.util.PTypeSet;
+import org.overture.ast.util.Utils;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.typechecker.Environment;
 import org.overture.typechecker.FlatCheckedEnvironment;
+import org.overture.typechecker.TypeCheckException;
 import org.overture.typechecker.TypeCheckInfo;
 import org.overture.typechecker.TypeCheckerErrors;
 import org.overture.typechecker.assistant.definition.PDefinitionAssistantTC;
@@ -124,7 +127,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		if (inFunction)
 		{
-			PDefinition called = question.assistantFactory.createAApplyExpAssistant().getRecursiveDefinition(node, question);
+			PDefinition called = getRecursiveDefinition(node, question);
 
 			if (called instanceof AExplicitFunctionDefinition)
 			{
@@ -175,7 +178,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		{
 			AFunctionType ft = question.assistantFactory.createPTypeAssistant().getFunction(node.getType());
 			question.assistantFactory.createPTypeAssistant().typeResolve(ft, null, THIS, question);
-			results.add(question.assistantFactory.createAApplyExpAssistant().functionApply(node, isSimple, ft));
+			results.add(functionApply(node, isSimple, ft, question));
 		}
 
 		if (question.assistantFactory.createPTypeAssistant().isOperation(node.getType()))
@@ -190,20 +193,20 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 				results.add(AstFactory.newAUnknownType(node.getLocation()));
 			} else
 			{
-				results.add(question.assistantFactory.createAApplyExpAssistant().operationApply(node, isSimple, ot));
+				results.add(operationApply(node, isSimple, ot, question));
 			}
 		}
 
 		if (question.assistantFactory.createPTypeAssistant().isSeq(node.getType()))
 		{
 			SSeqType seq = question.assistantFactory.createPTypeAssistant().getSeq(node.getType());
-			results.add(question.assistantFactory.createAApplyExpAssistant().sequenceApply(node, isSimple, seq));
+			results.add(sequenceApply(node, isSimple, seq, question));
 		}
 
 		if (question.assistantFactory.createPTypeAssistant().isMap(node.getType()))
 		{
 			SMapType map = question.assistantFactory.createPTypeAssistant().getMap(node.getType());
-			results.add(question.assistantFactory.createAApplyExpAssistant().mapApply(node, isSimple, map));
+			results.add(mapApply(node, isSimple, map, question));
 		}
 
 		if (results.isEmpty())
@@ -688,10 +691,26 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 	public PType caseAPlusPlusBinaryExp(APlusPlusBinaryExp node,
 			TypeCheckInfo question) throws AnalysisException
 	{
-		TypeCheckInfo noConstraint = question.newConstraint(null);
-
-		node.getLeft().apply(THIS, noConstraint);
-		node.getRight().apply(THIS, noConstraint);
+		TypeCheckInfo leftcons = question.newConstraint(null);
+		TypeCheckInfo mapcons = question.newConstraint(null);
+		
+		if (question.constraint != null && question.assistantFactory.createPTypeAssistant().isSeq(question.constraint))
+		{
+			SSeqType st = question.assistantFactory.createPTypeAssistant().getSeq(question.constraint);
+			mapcons = question.newConstraint(AstFactory.newAMapMapType(node.getLocation(),
+				AstFactory.newANatOneNumericBasicType(node.getLocation()), st.getSeqof()));
+			leftcons = question.newConstraint(AstFactory.newASeqSeqType(node.getLocation()));
+		}
+		else if (question.constraint != null && question.assistantFactory.createPTypeAssistant().isMap(question.constraint))
+		{
+			SMapType mt = question.assistantFactory.createPTypeAssistant().getMap(question.constraint);
+			mapcons = question.newConstraint(mt);
+			leftcons = question.newConstraint(AstFactory.newAMapMapType(node.getLocation(),
+				mt.getFrom(), AstFactory.newAUnknownType(node.getLocation())));
+		}
+		
+		node.getLeft().apply(THIS, leftcons);
+		node.getRight().apply(THIS, mapcons);
 
 		PTypeSet result = new PTypeSet(question.assistantFactory);
 
@@ -730,7 +749,9 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			{
 				TypeCheckerErrors.concern(unique, 3142, "Right hand of '++' is not a map", node.getLocation(), node);
 				TypeCheckerErrors.detail(unique, "Type", node.getRight().getType());
-			} else
+				result.add(st);
+			}
+			else
 			{
 				SMapType mr = question.assistantFactory.createPTypeAssistant().getMap(node.getRight().getType());
 
@@ -739,9 +760,12 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 					TypeCheckerErrors.concern(unique, 3143, "Domain of right hand of '++' must be nat1", node.getLocation(), node);
 					TypeCheckerErrors.detail(unique, "Type", mr.getFrom());
 				}
+				
+				PTypeSet type = new PTypeSet(question.assistantFactory);
+				type.add(st.getSeqof());
+				type.add(mr.getTo());
+				result.add(AstFactory.newASeqSeqType(node.getLocation(), type.getType(node.getLocation())));
 			}
-
-			result.add(st);
 		}
 
 		if (result.isEmpty())
@@ -766,6 +790,15 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		PType ltype = node.getLeft().getType();
 		PType rtype = node.getRight().getType();
+
+		if (question.assistantFactory.createPTypeAssistant().isSet(ltype) &&
+			question.assistantFactory.createPTypeAssistant().isSet(rtype) &&
+			!question.assistantFactory.getTypeComparator().compatible(ltype, rtype))
+		{
+			TypeCheckerErrors.report(3335, "Subset will only be true if the LHS set is empty", node.getLocation(), node);
+			TypeCheckerErrors.detail("Left", ltype);
+			TypeCheckerErrors.detail("Right", rtype);
+		}
 
 		if (!question.assistantFactory.createPTypeAssistant().isSet(ltype))
 		{
@@ -1081,6 +1114,15 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 		PType ltype = node.getLeft().getType();
 		PType rtype = node.getRight().getType();
 
+		if (question.assistantFactory.createPTypeAssistant().isSet(ltype) &&
+			question.assistantFactory.createPTypeAssistant().isSet(rtype) &&
+			!question.assistantFactory.getTypeComparator().compatible(ltype, rtype))
+		{
+			TypeCheckerErrors.report(3335, "Subset will only be true if the LHS set is empty", node.getLocation(), node);
+			TypeCheckerErrors.detail("Left", ltype);
+			TypeCheckerErrors.detail("Right", rtype);
+		}
+
 		if (!question.assistantFactory.createPTypeAssistant().isSet(ltype))
 		{
 			TypeCheckerErrors.report(3177, "Left hand of " + node.getOp()
@@ -1120,7 +1162,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 
 		for (ACaseAlternative c : node.getCases())
 		{
-			rtypes.add(question.assistantFactory.createACaseAlternativeAssistant().typeCheck(c, THIS, question, expType));
+			rtypes.add(typeCheck(c, THIS, question, expType));
 		}
 
 		if (node.getOthers() != null)
@@ -2690,7 +2732,7 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 						node.setType(AstFactory.newAUnknownType(node.getLocation()));
 						return node.getType();
 					}
-					// FIXME AKM: a little test
+					//AKM: a little test
 					// if(vardef.getClassDefinition().getName().getName().startsWith("$actionClass"))
 					// node.setName(name.getModifiedName(vardef.getClassDefinition().getName().getName()));
 				}
@@ -3286,5 +3328,235 @@ public class TypeCheckerExpVisitor extends AbstractTypeCheckVisitor
 			node.getRight().setType(AstFactory.newARealNumericBasicType(node.getLocation()));
 		}
 
+	}
+	
+	public PType functionApply(AApplyExp node, boolean isSimple,
+			AFunctionType ft,TypeCheckInfo question)
+	{
+		List<PType> ptypes = ft.getParameters();
+
+		if (node.getArgs().size() > ptypes.size())
+		{
+			TypeCheckerErrors.concern(isSimple, 3059, "Too many arguments", node.getLocation(), node);
+			TypeCheckerErrors.detail2(isSimple, "Args", node.getArgs(), "Params", ptypes);
+			return ft.getResult();
+		} else if (node.getArgs().size() < ptypes.size())
+		{
+			TypeCheckerErrors.concern(isSimple, 3060, "Too few arguments", node.getLocation(), node);
+			TypeCheckerErrors.detail2(isSimple, "Args", node.getArgs(), "Params", ptypes);
+			return ft.getResult();
+		}
+
+		int i = 0;
+
+		for (PType at : node.getArgtypes())
+		{
+			PType pt = ptypes.get(i++);
+
+			if (!question.assistantFactory.getTypeComparator().compatible(pt, at))
+			{
+				// TypeCheckerErrors.concern(isSimple, 3061, "Inappropriate type for argument " + i +
+				// ". (Expected: "+pt+" Actual: "+at+")",node.getLocation(),node);
+				TypeCheckerErrors.concern(isSimple, 3061, "Inappropriate type for argument "
+						+ i, node.getLocation(), node);
+				TypeCheckerErrors.detail2(isSimple, "Expect", pt, "Actual", at);
+			}
+		}
+
+		return ft.getResult();
+	}
+	
+	public PType operationApply(AApplyExp node, boolean isSimple,
+			AOperationType ot, TypeCheckInfo question)
+	{
+		List<PType> ptypes = ot.getParameters();
+
+		if (node.getArgs().size() > ptypes.size())
+		{
+			TypeCheckerErrors.concern(isSimple, 3062, "Too many arguments", node.getLocation(), node);
+			TypeCheckerErrors.detail2(isSimple, "Args", node.getArgs(), "Params", ptypes);
+			return ot.getResult();
+		} else if (node.getArgs().size() < ptypes.size())
+		{
+			TypeCheckerErrors.concern(isSimple, 3063, "Too few arguments", node.getLocation(), node);
+			TypeCheckerErrors.detail2(isSimple, "Args", node.getArgs(), "Params", ptypes);
+			return ot.getResult();
+		}
+
+		int i = 0;
+
+		for (PType at : node.getArgtypes())
+		{
+			PType pt = ptypes.get(i++);
+
+			if (!question.assistantFactory.getTypeComparator().compatible(pt, at))
+			{
+				// TypeCheckerErrors.concern(isSimple, 3064, "Inappropriate type for argument " + i
+				// +". (Expected: "+pt+" Actual: "+at+")",node.getLocation(),node);
+				TypeCheckerErrors.concern(isSimple, 3064, "Inappropriate type for argument "
+						+ i, node.getLocation(), node);
+				TypeCheckerErrors.detail2(isSimple, "Expect", pt, "Actual", at);
+			}
+		}
+
+		return ot.getResult();
+	}
+
+	public PType sequenceApply(AApplyExp node, boolean isSimple, SSeqType seq, TypeCheckInfo question)
+	{
+		if (node.getArgs().size() != 1)
+		{
+			TypeCheckerErrors.concern(isSimple, 3055, "Sequence selector must have one argument", node.getLocation(), node);
+		} else if (!question.assistantFactory.createPTypeAssistant().isNumeric(node.getArgtypes().get(0)))
+		{
+			TypeCheckerErrors.concern(isSimple, 3056, "Sequence application argument must be numeric", node.getLocation(), node);
+		} else if (seq.getEmpty())
+		{
+			TypeCheckerErrors.concern(isSimple, 3268, "Empty sequence cannot be applied", node.getLocation(), node);
+		}
+
+		return seq.getSeqof();
+	}
+
+	public PType mapApply(AApplyExp node, boolean isSimple, SMapType map, TypeCheckInfo question)
+	{
+		if (node.getArgs().size() != 1)
+		{
+			TypeCheckerErrors.concern(isSimple, 3057, "Map application must have one argument", node.getLocation(), node);
+		} else if (map.getEmpty())
+		{
+			TypeCheckerErrors.concern(isSimple, 3267, "Empty map cannot be applied", node.getLocation(), node);
+		}
+
+		PType argtype = node.getArgtypes().get(0);
+
+		if (!question.assistantFactory.getTypeComparator().compatible(map.getFrom(), argtype))
+		{
+			TypeCheckerErrors.concern(isSimple, 3058, "Map application argument is incompatible type", node.getLocation(), node);
+			TypeCheckerErrors.detail2(isSimple, "Map domain", map.getFrom(), "Argument", argtype);
+		}
+
+		return map.getTo();
+	}
+
+	public PDefinition getRecursiveDefinition(AApplyExp node,
+			TypeCheckInfo question)
+	{
+		ILexNameToken fname = null;
+		PExp root = node.getRoot();
+
+		if (root instanceof AApplyExp)
+		{
+			AApplyExp aexp = (AApplyExp) root;
+			return getRecursiveDefinition(aexp, question);
+		} else if (root instanceof AVariableExp)
+		{
+			AVariableExp var = (AVariableExp) root;
+			fname = var.getName();
+		} else if (root instanceof AFuncInstatiationExp)
+		{
+			AFuncInstatiationExp fie = (AFuncInstatiationExp) root;
+
+			if (fie.getExpdef() != null)
+			{
+				fname = fie.getExpdef().getName();
+			} else if (fie.getImpdef() != null)
+			{
+				fname = fie.getImpdef().getName();
+			}
+		}
+
+		if (fname != null)
+		{
+			return question.env.findName(fname, question.scope);
+		} else
+		{
+			return null;
+		}
+	}
+
+	/**
+	 * Create a measure application string from this apply, turning the root function name into the measure name passed,
+	 * and collapsing curried argument sets into one.
+	 * 
+	 * @param node
+	 * @param measure
+	 * @param close
+	 * @return
+	 */
+	public String getMeasureApply(AApplyExp node, ILexNameToken measure,
+			boolean close)
+	{
+		String start = null;
+		PExp root = node.getRoot();
+
+		if (root instanceof AApplyExp)
+		{
+			AApplyExp aexp = (AApplyExp) root;
+			start = getMeasureApply(aexp, measure, false);
+		} else if (root instanceof AVariableExp)
+		{
+			start = measure.getFullName() + "(";
+		} else if (root instanceof AFuncInstatiationExp)
+		{
+			AFuncInstatiationExp fie = (AFuncInstatiationExp) root;
+			start = measure.getFullName() + "["
+					+ Utils.listToString(fie.getActualTypes()) + "](";
+		} else
+		{
+			start = root.toString() + "(";
+		}
+
+		return start + Utils.listToString(node.getArgs())
+				+ (close ? ")" : ", ");
+	}
+	
+	public PType typeCheck(ACaseAlternative c,
+			IQuestionAnswer<TypeCheckInfo, PType> rootVisitor,
+			TypeCheckInfo question, PType expType) throws AnalysisException
+	{
+
+		if (c.getDefs().size() == 0)
+		{
+			// c.setDefs(new ArrayList<PDefinition>());
+			question.assistantFactory.createPPatternAssistant().typeResolve(c.getPattern(), rootVisitor, new TypeCheckInfo(question.assistantFactory, question.env));
+
+			if (c.getPattern() instanceof AExpressionPattern)
+			{
+				// Only expression patterns need type checking...
+				AExpressionPattern ep = (AExpressionPattern) c.getPattern();
+				PType ptype = ep.getExp().apply(rootVisitor, new TypeCheckInfo(question.assistantFactory, question.env, question.scope));
+
+				if (!question.assistantFactory.getTypeComparator().compatible(ptype, expType))
+				{
+					TypeCheckerErrors.report(3311, "Pattern cannot match", c.getPattern().getLocation(), c.getPattern());
+				}
+			}
+
+			try
+			{
+				question.assistantFactory.createPPatternAssistant().typeResolve(c.getPattern(), rootVisitor, new TypeCheckInfo(question.assistantFactory, question.env));
+				c.getDefs().addAll(question.assistantFactory.createPPatternAssistant().getDefinitions(c.getPattern(), expType, NameScope.LOCAL));
+			}
+			catch (TypeCheckException e)
+			{
+				c.getDefs().clear();
+				throw e;
+			}
+		}
+
+		question.assistantFactory.createPPatternAssistant().typeCheck(c.getPattern(), question, rootVisitor);
+		question.assistantFactory.createPDefinitionListAssistant().typeCheck(c.getDefs(), rootVisitor, new TypeCheckInfo(question.assistantFactory, question.env, question.scope));
+
+		if (!question.assistantFactory.createPPatternAssistant().matches(c.getPattern(), expType))
+		{
+			TypeCheckerErrors.report(3311, "Pattern cannot match", c.getPattern().getLocation(), c.getPattern());
+		}
+
+		Environment local = new FlatCheckedEnvironment(question.assistantFactory, c.getDefs(), question.env, question.scope);
+		question = question.newInfo(local);
+		c.setType(c.getResult().apply(rootVisitor, question));
+		local.unusedCheck();
+		return c.getType();
 	}
 }

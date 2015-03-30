@@ -1,0 +1,23 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class A {
+    public A() {
+    }
+
+    public Number double_(final Number Character) {
+        if (!(Utils.equals(1L, 2L))) {
+            return double_(3L);
+        } else {
+            return double_(3L);
+        }
+    }
+
+    public String toString() {
+        return "A{}";
+    }
+}
+
+##########

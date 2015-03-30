@@ -10,7 +10,6 @@ import org.overture.pog.visitors.VdmInvExpGetVisitor;
 import org.overture.pog.visitors.VdmLocaleExtractor;
 import org.overture.typechecker.assistant.TypeCheckerAssistantFactory;
 
-//FIXME Add assistant Javadoc
 /**
  * THe assistant factory for the pog. It provides all the functionality of the overture typechecker (maybe that is what
  * we parameterize?) PLus any new pog bits!

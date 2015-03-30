@@ -1,1 +1,0 @@
-((Boolean) MapUtil.get(MapUtil.map(new Maplet(Tuple.mk_(3L, true), true)),Tuple.mk_(3L, true)))

@@ -1,0 +1,22 @@
+class Entry
+
+functions
+	
+static
+seq_map[@A, @B] : (seq of @A) * (@A -> @B) -> seq of @B
+seq_map(s,f) == 
+if s = [] then 
+	[]
+else
+	[f(hd s)] ^ seq_map[@A,@B](tl s,f);
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let xs = [1,2,3],
+		func = (lambda x : int & x + 1)
+in
+	return seq_map[int,int](xs,func);
+	
+end Entry

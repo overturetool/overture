@@ -1,0 +1,35 @@
+class Entry
+ 
+operations
+
+public static Run : () ==> ?
+Run () ==
+let a = new A'(),
+    b = new B'()
+in
+  return  a.op'() + b.op'();
+
+end Entry
+
+class A'
+
+operations
+
+public op' : () ==> nat
+op' () ==
+(dcl y' : nat := 6;
+ return y';);
+    
+end A'
+
+class B'
+
+operations
+
+public op' : () ==> nat
+op' () ==
+let y' = 42
+in
+  return y';
+
+end B'

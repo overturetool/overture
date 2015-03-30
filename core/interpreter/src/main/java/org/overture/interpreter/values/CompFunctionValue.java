@@ -77,14 +77,28 @@ public class CompFunctionValue extends FunctionValue
 			else
 			{
 				AFunctionType restrictedType = assistant.getFunction(to);
-
-				if (!type.equals(restrictedType))
+				
+				if (type.equals(restrictedType))
 				{
-					return abort(4164, "Compose function cannot be restricted to " + restrictedType, ctxt);
+					return this;
+				}
+				else if (ctxt.assistantFactory.getTypeComparator().isSubType(type, restrictedType))
+				{
+					// The new function amends the parameters of ff2 and the result of ff1
+					
+					FunctionValue leftValue = (FunctionValue)ff1.clone();
+					leftValue.type = AstFactory.newAFunctionType(ff1.location,
+						ff1.type.getPartial(), ff1.type.getParameters(), restrictedType.getResult());
+					
+					FunctionValue rightValue = (FunctionValue)ff2.clone();
+					rightValue.type = AstFactory.newAFunctionType(ff2.location,
+						ff2.type.getPartial(), restrictedType.getParameters(), ff2.type.getResult());
+					
+					return new CompFunctionValue(leftValue, rightValue);
 				}
 				else
 				{
-					return this;
+					return abort(4165, "Cannot convert " + this + " to " + restrictedType, ctxt);
 				}
 			}
 		}

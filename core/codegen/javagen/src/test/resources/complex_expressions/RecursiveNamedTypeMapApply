@@ -1,0 +1,24 @@
+class Entry
+
+types
+
+public Id = token;
+public T = <A> | <B> | map Id to T;
+
+instance variables
+
+m : map Id to T := {mk_token(1) |-> {mk_token(1) |-> <A>}};
+
+operations
+
+public app: Id * Id ==> T
+app(id,index) ==
+  return m(id)(index);
+  
+public static Run : () ==> ?
+Run () ==
+let e = new Entry()
+in
+	return <A> = e.app(mk_token(1), mk_token(1));
+
+end Entry

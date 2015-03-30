@@ -1,0 +1,31 @@
+class Entry
+
+instance variables
+
+x : nat := 1;
+
+operations
+
+public Entry : nat ==> Entry
+Entry (px) == x := px;
+
+public op : () ==> nat
+op () ==
+(
+  x := x + 1;
+  return x;
+);
+
+public id : nat ==> nat
+id (a) == return a;
+
+traces
+
+T1:
+let x = op(),
+    y = op(),
+    z = op()
+in 
+ (op();id(z)){1,2};
+
+end Entry

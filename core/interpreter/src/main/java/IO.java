@@ -231,6 +231,13 @@ public class IO implements Serializable
 		Console.out.flush();
 		return new VoidValue();
 	}
+	
+	public static Value sprintf(Value fv, Value vs) throws ValueException
+	{
+		String format = stringOf(fv);
+		ValueList values = vs.seqValue(null);
+		return new SeqValue(String.format(format, values.toArray()));
+	}
 
 	public static Value toString(Value v)
 	{

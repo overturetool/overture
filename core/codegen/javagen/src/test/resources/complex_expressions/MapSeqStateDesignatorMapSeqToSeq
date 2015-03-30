@@ -1,0 +1,18 @@
+class Entry
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+(
+  dcl xs : map (seq of char) to (seq of char) := {['a'] |-> ['b'], ['c'] |-> ['d']};
+  
+  xs(['a'])(1) := 'x';
+  
+  if xs(['a'])(1) = 'x' then
+    return xs(['c'])(1)
+  else
+    return xs(['a'])(1);
+);
+
+end Entry

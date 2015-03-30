@@ -1,0 +1,16 @@
+class Entry
+
+operations
+
+public op : (nat) ==> ()
+op (x) == skip
+pre x <> 2 and x <> 4;
+
+traces
+
+T1:
+let x in set {1,2,3,4,5}
+in
+   op(x);
+
+end Entry

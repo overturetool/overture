@@ -1,1 +1,1 @@
-["Error 3142: polyfun-24.vpp at 6:15 Right hand of \u0027++\u0027 is not a map","Error 3092: polyfun-24.vpp at 17:18 Inaccessible member post_f(seq1 of (nat1), seq1 of (nat1)) of class A"]
+["Error 3327: polyfun-24.vpp at 6:18 Value is not of the right type","Error 3142: polyfun-24.vpp at 6:15 Right hand of \u0027++\u0027 is not a map","Error 3092: polyfun-24.vpp at 17:18 Inaccessible member post_f(seq1 of (nat1), seq1 of (nat1)) of class A"]
