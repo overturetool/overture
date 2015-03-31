@@ -183,7 +183,7 @@ public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 	{
 		// Record fields are public
 		String access = IRConstants.PUBLIC;
-		String name = node.getTag();
+		String name = node.getTagname().getName();
 		boolean isStatic = false;
 		boolean isFinal = false;
 		STypeCG type = node.getType().apply(question.getTypeVisitor(), question);
