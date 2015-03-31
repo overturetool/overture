@@ -44,7 +44,7 @@ public class WhileLoopObligation extends ProofObligation
 		whileStmt.setExp(stmt.getExp().clone());
 		whileStmt.setStatement(new ASkipStm());
 
-		AVariableExp nyexp = getVarExp(new LexNameToken("", "NotYetImplemented", null));
+		AVariableExp nyexp = getVarExp(new LexNameToken("", "...", null));
 		valuetree.setPredicate(nyexp);
 
 		// valuetree.setPredicate(whileStmt);
