@@ -1,0 +1,17 @@
+class Entry
+types
+
+public A ::
+  nat
+  nat;
+
+operations
+
+public static Run : () ==> ?
+Run () ==
+let a = mk_A(1,2),
+    mk_A(x,y) = a
+in
+  return x+y;
+
+end Entry
