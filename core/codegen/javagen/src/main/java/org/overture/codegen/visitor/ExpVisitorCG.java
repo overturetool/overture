@@ -899,7 +899,14 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseASelfExp(ASelfExp node, IRInfo question)
 			throws AnalysisException
 	{
-		return new ASelfExpCG();
+		PType type = node.getType();
+		
+		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		
+		ASelfExpCG selfExpCg = new ASelfExpCG();
+		selfExpCg.setType(typeCg);
+		
+		return selfExpCg;
 	}
 
 	@Override
