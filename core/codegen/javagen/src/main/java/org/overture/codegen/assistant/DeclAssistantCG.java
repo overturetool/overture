@@ -37,6 +37,7 @@ import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.ast.patterns.APatternListTypePair;
 import org.overture.ast.patterns.PPattern;
@@ -78,11 +79,14 @@ public class DeclAssistantCG extends AssistantBase
 		super(assistantManager);
 	}
 
-	public boolean classIsLibrary(SClassDefinition classDef)
-	{
-		String className = classDef.getName().getName();
+	public boolean classIsLibrary(INode node) {
+		if (node instanceof SClassDefinition) {
+			return isLibraryName(((SClassDefinition) node).getName().getName());
+		} else if (node instanceof AModuleModules) {
+			return isLibraryName(((AModuleModules) node).getName().getName());
+		}
 
-		return isLibraryName(className);
+		return false;
 	}
 
 	public boolean isLibraryName(String className)
