@@ -155,6 +155,7 @@ import org.overture.codegen.cgast.expressions.AXorBoolBinaryExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.patterns.ASetBindCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
+import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
@@ -1213,7 +1214,20 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseAEqualsBinaryExp(AEqualsBinaryExp node, IRInfo question)
 			throws AnalysisException
 	{
-		return question.getExpAssistant().handleBinaryExp(node, new AEqualsBinaryExpCG(), question);
+		SExpCG eqBinExpCg = question.getExpAssistant().handleBinaryExp(node, new AEqualsBinaryExpCG(), question);
+		
+		// TODO: Update the type checker?
+		// PVJ: For some reason the type checker does not decorate the SL
+		// init expression (e.g. s = mk_StateName(1,2).) in state
+		// definitions with a type (the type is null)
+		// So this is really just to prevent null types
+		// in the IR
+		if(eqBinExpCg.getType() == null)
+		{
+			eqBinExpCg.setType(new ABoolBasicTypeCG());
+		}
+		
+		return eqBinExpCg;
 	}
 
 	@Override

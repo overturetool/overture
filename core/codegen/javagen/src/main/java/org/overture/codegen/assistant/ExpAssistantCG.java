@@ -170,7 +170,7 @@ public class ExpAssistantCG extends AssistantBase
 	{
 		PType type = vdmExp.getType();
 
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		STypeCG typeCg = type != null ? type.apply(question.getTypeVisitor(), question) : null;
 		codeGenExp.setType(typeCg);
 
 		PExp vdmExpLeft = vdmExp.getLeft();
