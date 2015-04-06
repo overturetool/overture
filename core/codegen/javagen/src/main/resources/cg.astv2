@@ -176,6 +176,16 @@ CG {-> package='org.overture.codegen.cgast'
     	[decls]:CG.#decl*
     	[isFlat]:java_Boolean
     	[isDLModule]:java_Boolean
+    |   {state}
+    	[access]:java_String
+    	[name]:java_String
+    	[fields]:CG.#decl.field*
+    	[invPattern]:CG.#pattern
+    	[invExp]:CG.#exp
+    	[invDecl]:CG.#decl.func
+    	[initPattern]:CG.#pattern
+    	[initExp]:CG.#exp
+    	[initDecl]:CG.#decl.func
     |	{interface}
     	[templateTypes]:CG.#type.template*
     	[package]:java_String
@@ -183,6 +193,7 @@ CG {-> package='org.overture.codegen.cgast'
     	[fields]:field*
     	[methodSignatures]:CG.#decl.method*
     |	{record}
+    	//TODO: Should have [access]:java_String
     	[name]:java_String
     	[fields]:field*
     	[methods]:CG.#decl.method*
