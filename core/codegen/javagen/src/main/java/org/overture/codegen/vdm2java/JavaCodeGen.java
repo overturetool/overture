@@ -38,6 +38,7 @@ import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.expressions.ANotYetSpecifiedExp;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.ANotYetSpecifiedStm;
@@ -193,6 +194,12 @@ public class JavaCodeGen extends CodeGenBase
 		return null;
 	}
 
+	public GeneratedData generateJavaFromVdmModules(List<AModuleModules> ast)
+			throws AnalysisException, UnsupportedModelingException {
+
+		return generateVdmFromNodes(ast, null, new LinkedList<String>());
+	}
+	
 	public GeneratedData generateJavaFromVdm(List<SClassDefinition> ast)
 			throws AnalysisException, UnsupportedModelingException
 	{
@@ -214,32 +221,44 @@ public class JavaCodeGen extends CodeGenBase
 			}
 		}
 
-		List<SClassDefinition> userClasses = getUserClasses(ast);
+		return generateVdmFromNodes(ast, mainClass, warnings);
+	}
 
-		List<Renaming> allRenamings = normaliseIdentifiers(userClasses);
-		computeDefTable(userClasses);
+	private GeneratedData generateVdmFromNodes(List<? extends INode> ast,
+			SClassDefinition mainClass, List<String> warnings)
+			throws AnalysisException, UnsupportedModelingException {
+		
+		List<INode> userModules = getUserModules(ast);
+
+		List<Renaming> allRenamings = normaliseIdentifiers(userModules);
+		computeDefTable(userModules);
 
 		// To document any renaming of variables shadowing other variables
 		removeUnreachableStms(ast);
 
-		allRenamings.addAll(performRenaming(userClasses, getInfo().getIdStateDesignatorDefs()));
+		allRenamings.addAll(performRenaming(userModules, getInfo().getIdStateDesignatorDefs()));
 
-		for (SClassDefinition classDef : ast)
+		for (INode node : ast)
 		{
-			if (generator.getIRInfo().getAssistantManager().getDeclAssistant().classIsLibrary(classDef))
+			if (generator.getIRInfo().getAssistantManager().getDeclAssistant().isLibrary(node))
 			{
-				simplifyLibraryClass(classDef);
+				simplifyLibrary(node);
 			}
 		}
 
-		InvalidNamesResult invalidNamesResult = validateVdmModelNames(userClasses);
-		validateVdmModelingConstructs(userClasses);
+		InvalidNamesResult invalidNamesResult = validateVdmModelNames(userModules);
+		validateVdmModelingConstructs(userModules);
 
 		List<IRStatus<org.overture.codegen.cgast.INode>> statuses = new LinkedList<>();
 
-		for (SClassDefinition classDef : ast)
+		for (INode node : ast)
 		{
-			statuses.add(generator.generateFrom(classDef));
+			IRStatus<org.overture.codegen.cgast.INode> status = generator.generateFrom(node);
+			
+			if(status != null)
+			{
+				statuses.add(status);
+			}
 		}
 
 		List<IRStatus<AClassDeclCG>> classStatuses = IRStatus.extract(statuses, AClassDeclCG.class);
@@ -305,7 +324,7 @@ public class JavaCodeGen extends CodeGenBase
 			StringWriter writer = new StringWriter();
 			AClassDeclCG classCg = status.getIrNode();
 			String className = status.getIrNodeName();
-			SClassDefinition vdmClass = (SClassDefinition) status.getIrNode().getSourceNode().getVdmNode();
+			INode vdmClass = status.getIrNode().getSourceNode().getVdmNode();
 
 			if (vdmClass == mainClass)
 			{
@@ -335,9 +354,9 @@ public class JavaCodeGen extends CodeGenBase
 					}
 				} else
 				{
-					if (!skipping.contains(vdmClass.getName().getName()))
+					if (!skipping.contains(className))
 					{
-						skipping.add(vdmClass.getName().getName());
+						skipping.add(className);
 					}
 				}
 
@@ -387,42 +406,41 @@ public class JavaCodeGen extends CodeGenBase
 		return data;
 	}
 
-	private List<SClassDefinition> getUserClasses(
-			List<SClassDefinition> mergedParseLists)
+	private List<INode> getUserModules(
+			List<? extends INode> mergedParseLists)
 	{
-		List<SClassDefinition> userClasses = new LinkedList<SClassDefinition>();
+		List<INode> userModules = new LinkedList<INode>();
 
-		for (SClassDefinition clazz : mergedParseLists)
+		for (INode node : mergedParseLists)
 		{
-			if (!getInfo().getDeclAssistant().classIsLibrary(clazz))
+			if(!getInfo().getDeclAssistant().isLibrary(node))
 			{
-				userClasses.add(clazz);
+				userModules.add(node);
 			}
 		}
-		return userClasses;
+		return userModules;
 	}
 
 	private List<Renaming> normaliseIdentifiers(
-			List<SClassDefinition> userClasses) throws AnalysisException
+			List<INode> userModules) throws AnalysisException
 	{
 		NameCollector collector = new NameCollector();
 
-		for (SClassDefinition clazz : userClasses)
+		for (INode node : userModules)
 		{
-			clazz.apply(collector);
+			node.apply(collector);
 		}
 
 		Set<String> allNames = collector.namesToAvoid();
 
 		JavaIdentifierNormaliser normaliser = new JavaIdentifierNormaliser(allNames, getInfo().getTempVarNameGen());
 		
-		for (SClassDefinition clazz : userClasses)
+		for (INode node : userModules)
 		{
-			clazz.apply(normaliser);
+			node.apply(normaliser);
 		}
 
 		VarRenamer renamer = new VarRenamer();
-
 		
 		Set<Renaming> filteredRenamings = new HashSet<Renaming>();
 		
@@ -434,24 +452,24 @@ public class JavaCodeGen extends CodeGenBase
 			}
 		}
 		
-		for (SClassDefinition clazz : userClasses)
+		for (INode node : userModules)
 		{
-			renamer.rename(clazz, filteredRenamings);
+			renamer.rename(node, filteredRenamings);
 		}
 
 		return new LinkedList<Renaming>(filteredRenamings);
 	}
 
-	private void computeDefTable(List<SClassDefinition> mergedParseLists)
+	private void computeDefTable(List<INode> mergedParseLists)
 			throws AnalysisException
 	{
-		List<SClassDefinition> classesToConsider = new LinkedList<>();
+		List<INode> classesToConsider = new LinkedList<>();
 
-		for (SClassDefinition c : mergedParseLists)
+		for (INode node : mergedParseLists)
 		{
-			if (!getInfo().getDeclAssistant().classIsLibrary(c))
+			if (!getInfo().getDeclAssistant().isLibrary(node))
 			{
-				classesToConsider.add(c);
+				classesToConsider.add(node);
 			}
 		}
 		
@@ -459,19 +477,19 @@ public class JavaCodeGen extends CodeGenBase
 		getInfo().setIdStateDesignatorDefs(idDefs);
 	}
 
-	private void removeUnreachableStms(List<SClassDefinition> mergedParseLists)
+	private void removeUnreachableStms(List<? extends INode> mergedParseLists)
 			throws AnalysisException
 	{
 		UnreachableStmRemover remover = new UnreachableStmRemover();
 
-		for (SClassDefinition clazz : mergedParseLists)
+		for (INode node : mergedParseLists)
 		{
-			clazz.apply(remover);
+			node.apply(remover);
 		}
 	}
 
 	private List<Renaming> performRenaming(
-			List<SClassDefinition> mergedParseLists,
+			List<INode> mergedParseLists,
 			Map<AIdentifierStateDesignator, PDefinition> idDefs)
 			throws AnalysisException
 	{
@@ -480,14 +498,14 @@ public class JavaCodeGen extends CodeGenBase
 		VarShadowingRenameCollector renamingsCollector = new VarShadowingRenameCollector(generator.getIRInfo().getTcFactory(), idDefs);
 		VarRenamer renamer = new VarRenamer();
 
-		for (SClassDefinition classDef : mergedParseLists)
+		for (INode node : mergedParseLists)
 		{
-			Set<Renaming> classRenamings = renamer.computeRenamings(classDef, renamingsCollector);
+			Set<Renaming> currentRenamings = renamer.computeRenamings(node, renamingsCollector);
 
-			if (!classRenamings.isEmpty())
+			if (!currentRenamings.isEmpty())
 			{
-				renamer.rename(classDef, classRenamings);
-				allRenamings.addAll(classRenamings);
+				renamer.rename(node, currentRenamings);
+				allRenamings.addAll(currentRenamings);
 			}
 		}
 
@@ -496,9 +514,25 @@ public class JavaCodeGen extends CodeGenBase
 		return allRenamings;
 	}
 
-	private void simplifyLibraryClass(SClassDefinition classDef)
+	private void simplifyLibrary(INode node)
 	{
-		for (PDefinition def : classDef.getDefinitions())
+		List<PDefinition> defs = null;
+		
+		if(node instanceof SClassDefinition)
+		{
+			defs = ((SClassDefinition) node).getDefinitions();
+		}
+		else if(node instanceof AModuleModules)
+		{
+			defs = ((AModuleModules) node).getDefs();
+		}
+		else
+		{
+			// Nothing to do
+			return;
+		}
+		
+		for (PDefinition def : defs)
 		{
 			if (def instanceof SOperationDefinition)
 			{
@@ -610,7 +644,7 @@ public class JavaCodeGen extends CodeGenBase
 	}
 
 	private InvalidNamesResult validateVdmModelNames(
-			List<SClassDefinition> mergedParseLists) throws AnalysisException
+			List<INode> mergedParseLists) throws AnalysisException
 	{
 		AssistantManager assistantManager = generator.getIRInfo().getAssistantManager();
 		VdmAstAnalysis analysis = new VdmAstAnalysis(assistantManager);
@@ -646,17 +680,30 @@ public class JavaCodeGen extends CodeGenBase
 		}
 	}
 
-	private boolean shouldBeGenerated(SClassDefinition classDef,
+	private boolean shouldBeGenerated(INode node,
 			DeclAssistantCG declAssistant)
 	{
-		if (declAssistant.classIsLibrary(classDef))
+		if (declAssistant.isLibrary(node))
 		{
 			return false;
 		}
 
-		String name = classDef.getName().getName();
+		String name = null;
+		
+		if(node instanceof SClassDefinition)
+		{
+			name = ((SClassDefinition) node).getName().getName();
+		}
+		else if(node instanceof AModuleModules)
+		{
+			name = ((AModuleModules) node).getName().getName();
+		}
+		else
+		{
+			return true;
+		}
 
-		if (getJavaSettings().getClassesToSkip().contains(name))
+		if (getJavaSettings().getModulesToSkip().contains(name))
 		{
 			return false;
 		}
