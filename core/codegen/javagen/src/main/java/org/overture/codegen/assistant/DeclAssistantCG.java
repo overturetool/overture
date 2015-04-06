@@ -79,7 +79,7 @@ public class DeclAssistantCG extends AssistantBase
 		super(assistantManager);
 	}
 
-	public boolean classIsLibrary(INode node) {
+	public boolean isLibrary(INode node) {
 		if (node instanceof SClassDefinition) {
 			return isLibraryName(((SClassDefinition) node).getName().getName());
 		} else if (node instanceof AModuleModules) {

@@ -54,7 +54,7 @@ public class NameViolationAnalysis extends ViolationAnalysis
 
 				if (enclosingClass == null
 						|| enclosingClass != null
-						&& !assistantManager.getDeclAssistant().classIsLibrary(enclosingClass))
+						&& !assistantManager.getDeclAssistant().isLibrary(enclosingClass))
 				{
 					String name = nameToken.getName();
 					ILexLocation location = nameToken.getLocation();
