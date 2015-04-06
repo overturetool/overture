@@ -36,6 +36,10 @@ CG {-> package='org.overture.codegen.cgast'
 	| #multipleBind
 	| #name
 	| #decl
+	| #imports
+	| #import
+	| #exports
+	| #export
 	| #stateDesignator
 	| #objectDesignator
 	| #localParam
@@ -48,6 +52,40 @@ CG {-> package='org.overture.codegen.cgast'
 	| #traceDecl
 	| #traceCoreDecl
 	;
+
+#imports {-> package='org.overture.codegen.cgast.declarations'} 
+    = {module} [name]:java_String [imports]:CG.#imports.fromModule*
+    | {fromModule} [name]:java_String [signatures]:CG.#import**
+    ;
+    
+#import {-> package='org.overture.codegen.cgast.declarations'
+	|	[name]:java_String 
+	|	[renamed]:java_String 
+	|	[fromModuleName]:java_String/*(from):CG.#decl.module*/}
+    =   {all}
+    |   {type} [decl]:CG.#decl.type
+    |   #value
+    ;
+    
+#value {-> package='org.overture.codegen.cgast.declarations'
+	|	(importType):CG.#type}
+    =   {value}
+    |   {function} [typeParams]:CG.#name.token* //Because [typeParams]:java_String* is not supported by the AstCreator
+    |   {operation}
+    ;
+
+#exports {-> package='org.overture.codegen.cgast.declarations'}
+    =   {module} [exports]:CG.#export**
+    ;
+
+#export {-> package='org.overture.codegen.cgast.declarations'
+	|	[decl]:CG.#decl*}
+    =   {all}
+    |   {function} [nameList]:CG.#name.token* (exportType):CG.#type
+    |   {operation} [nameList]:CG.#name.token* (exportType):CG.#type
+    |   {type} [name]:java_String [struct]:java_Boolean
+    |   {value} [nameList]:CG.#name.token* (exportType):CG.#type
+    ;
 
 #pattern {-> package='org.overture.codegen.cgast.patterns'}
 	= {identifier} [name]:java_String
@@ -131,6 +169,13 @@ CG {-> package='org.overture.codegen.cgast'
     	[typeDecls]:CG.#decl.type*
     	[perSyncs]:CG.#decl.persync*
     	[mutexSyncs]:CG.#decl.mutexSync*
+    |	{module}
+    	[name]:java_String
+    	[import]:CG.#imports.module
+    	[exports]:CG.#exports.module
+    	[decls]:CG.#decl*
+    	[isFlat]:java_Boolean
+    	[isDLModule]:java_Boolean
     |	{interface}
     	[templateTypes]:CG.#type.template*
     	[package]:java_String
