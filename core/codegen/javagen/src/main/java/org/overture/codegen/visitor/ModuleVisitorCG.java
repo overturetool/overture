@@ -8,6 +8,7 @@ import org.overture.ast.modules.AModuleModules;
 import org.overture.codegen.cgast.SDeclCG;
 import org.overture.codegen.cgast.SExportsCG;
 import org.overture.codegen.cgast.SImportsCG;
+import org.overture.codegen.cgast.declarations.AFieldDeclCG;
 import org.overture.codegen.cgast.declarations.AFuncDeclCG;
 import org.overture.codegen.cgast.declarations.AMethodDeclCG;
 import org.overture.codegen.cgast.declarations.AModuleDeclCG;
@@ -67,7 +68,6 @@ public class ModuleVisitorCG extends AbstractVisitorCG<IRInfo, AModuleDeclCG>
 		moduleCg.setIsDLModule(isDlModule);
 		moduleCg.setIsFlat(isFlat);
 
-		// TODO: Value in modules?
 		for (PDefinition def : node.getDefs())
 		{
 			SDeclCG declCg = def.apply(question.getDeclVisitor(), question);
@@ -81,14 +81,13 @@ public class ModuleVisitorCG extends AbstractVisitorCG<IRInfo, AModuleDeclCG>
 					|| declCg instanceof AFuncDeclCG
 					|| declCg instanceof ATypeDeclCG
 					|| declCg instanceof AStateDeclCG
-					|| declCg instanceof ANamedTraceDeclCG)
+					|| declCg instanceof ANamedTraceDeclCG
+					|| declCg instanceof AFieldDeclCG)
 			{
 				moduleCg.getDecls().add(declCg);
 			} else
 			{
-				Logger.getLog().printErrorln("Unexpected definition in class: "
-						+ name + ": " + def.getName().getName() + " at "
-						+ def.getLocation());
+				Logger.getLog().printErrorln("Unexpected definition in module: " + def);
 			}
 		}
 
