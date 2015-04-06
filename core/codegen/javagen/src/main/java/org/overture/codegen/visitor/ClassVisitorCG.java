@@ -22,7 +22,6 @@
 package org.overture.codegen.visitor;
 
 import java.util.LinkedList;
-import java.util.List;
 
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.AClassClassDefinition;
@@ -83,12 +82,7 @@ public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
 		}
 
 		LinkedList<PDefinition> defs = node.getDefinitions();
-
-		List<AFieldDeclCG> fields = classCg.getFields();
-		List<AMethodDeclCG> methods = classCg.getMethods();
-		List<ATypeDeclCG> typeDecls = classCg.getTypeDecls();
-		List<AFuncDeclCG> functions = classCg.getFunctions();
-
+		
 		for (PDefinition def : defs)
 		{
 			SDeclCG decl = def.apply(question.getDeclVisitor(), question);
@@ -99,7 +93,7 @@ public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
 			}
 			if (decl instanceof AFieldDeclCG)
 			{
-				fields.add((AFieldDeclCG) decl);
+				classCg.getFields().add((AFieldDeclCG) decl);
 			} else if (decl instanceof AMethodDeclCG)
 			{
 
@@ -117,7 +111,7 @@ public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
 					objInitializer.setPreCond(null);
 					objInitializer.setPostCond(null);
 					
-					methods.add(objInitializer);
+					classCg.getMethods().add(objInitializer);
 
 					APlainCallStmCG initCall = new APlainCallStmCG();
 					initCall.setType(objInitializer.getMethodType().getResult().clone());
@@ -146,13 +140,13 @@ public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
 					method.setBody(initCall);
 				}
 
-				methods.add(method);
+				classCg.getMethods().add(method);
 			} else if (decl instanceof ATypeDeclCG)
 			{
-				typeDecls.add((ATypeDeclCG) decl);
+				classCg.getTypeDecls().add((ATypeDeclCG) decl);
 			} else if (decl instanceof AFuncDeclCG)
 			{
-				functions.add((AFuncDeclCG) decl);
+				classCg.getFunctions().add((AFuncDeclCG) decl);
 			} else if (decl instanceof AThreadDeclCG)
 			{
 				if (question.getSettings().generateConc())
@@ -186,7 +180,7 @@ public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
 		}
 
 		boolean defaultConstructorExplicit = false;
-		for (AMethodDeclCG method : methods)
+		for (AMethodDeclCG method : classCg.getMethods())
 		{
 			if (method.getIsConstructor() && method.getFormalParams().isEmpty())
 			{
@@ -212,10 +206,9 @@ public class ClassVisitorCG extends AbstractVisitorCG<IRInfo, AClassDeclCG>
 			constructor.setName(name);
 			constructor.setBody(new ABlockStmCG());
 
-			methods.add(constructor);
+			classCg.getMethods().add(constructor);
 		}
 
 		return classCg;
 	}
-
 }
