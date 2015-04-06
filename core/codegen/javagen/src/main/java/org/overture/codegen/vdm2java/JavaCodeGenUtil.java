@@ -39,6 +39,7 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.lex.Dialect;
 import org.overture.ast.node.INode;
+import org.overture.ast.util.modules.ModuleList;
 import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.violations.InvalidNamesResult;
 import org.overture.codegen.analysis.violations.UnsupportedModelingException;
@@ -57,6 +58,7 @@ import org.overture.codegen.utils.GeneratedModule;
 import org.overture.config.Settings;
 import org.overture.interpreter.VDMPP;
 import org.overture.interpreter.VDMRT;
+import org.overture.interpreter.VDMSL;
 import org.overture.interpreter.util.ClassListInterpreter;
 import org.overture.interpreter.util.ExitStatus;
 import org.overture.typechecker.util.TypeCheckerUtil.TypeCheckResult;
@@ -130,6 +132,37 @@ public class JavaCodeGenUtil
 
 		return mergedParseList;
 	}
+	
+	public static ModuleList consModulesList(List<File> files) throws AnalysisException
+	{
+		Settings.dialect = Dialect.VDM_SL;
+		VDMSL vdmSl = new VDMSL();
+		vdmSl.setQuiet(true);
+
+		ExitStatus status = vdmSl.parse(files);
+
+		if (status != ExitStatus.EXIT_OK)
+		{
+			throw new AnalysisException("Could not parse files!");
+		}
+
+		status = vdmSl.typeCheck();
+
+		if (status != ExitStatus.EXIT_OK)
+		{
+			throw new AnalysisException("Could not type check files!");
+		}
+
+		try
+		{
+			return vdmSl.getInterpreter().getModules();
+		} catch (Exception e)
+		{
+			throw new AnalysisException("Could not get classes from class list interpreter!");
+		}
+	}
+	
+	
 
 	private static GeneratedData generateJavaFromVdm(
 			List<SClassDefinition> mergedParseLists, JavaCodeGen vdmCodGen)
