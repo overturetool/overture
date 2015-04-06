@@ -14,6 +14,7 @@ import org.overture.codegen.cgast.declarations.AModuleDeclCG;
 import org.overture.codegen.cgast.declarations.AModuleExportsCG;
 import org.overture.codegen.cgast.declarations.AModuleImportsCG;
 import org.overture.codegen.cgast.declarations.ANamedTraceDeclCG;
+import org.overture.codegen.cgast.declarations.AStateDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
@@ -66,27 +67,23 @@ public class ModuleVisitorCG extends AbstractVisitorCG<IRInfo, AModuleDeclCG>
 		moduleCg.setIsDLModule(isDlModule);
 		moduleCg.setIsFlat(isFlat);
 
-		// TODO: other definitions like state definitions
+		// TODO: Value in modules?
 		for (PDefinition def : node.getDefs())
 		{
 			SDeclCG declCg = def.apply(question.getDeclVisitor(), question);
 
 			if (declCg == null)
 			{
-				continue;// Unspported stuff returns null by default
-			}
-			if (declCg instanceof AMethodDeclCG)
+				// Unspported stuff returns null by default
+				continue;
+				
+			} else if (declCg instanceof AMethodDeclCG
+					|| declCg instanceof AFuncDeclCG
+					|| declCg instanceof ATypeDeclCG
+					|| declCg instanceof AStateDeclCG
+					|| declCg instanceof ANamedTraceDeclCG)
 			{
-				moduleCg.getDecls().add((AMethodDeclCG) declCg);
-			} else if (declCg instanceof AFuncDeclCG)
-			{
-				moduleCg.getDecls().add((AFuncDeclCG) declCg);
-			} else if (declCg instanceof ATypeDeclCG)
-			{
-				moduleCg.getDecls().add((ATypeDeclCG) declCg);
-			} else if (declCg instanceof ANamedTraceDeclCG)
-			{
-				moduleCg.getDecls().add((ANamedTraceDeclCG) declCg);
+				moduleCg.getDecls().add(declCg);
 			} else
 			{
 				Logger.getLog().printErrorln("Unexpected definition in class: "
