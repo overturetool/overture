@@ -43,6 +43,10 @@ import org.overture.codegen.assistant.TypeAssistantCG;
 import org.overture.codegen.cgast.SBindCG;
 import org.overture.codegen.cgast.SDeclCG;
 import org.overture.codegen.cgast.SExpCG;
+import org.overture.codegen.cgast.SExportCG;
+import org.overture.codegen.cgast.SExportsCG;
+import org.overture.codegen.cgast.SImportCG;
+import org.overture.codegen.cgast.SImportsCG;
 import org.overture.codegen.cgast.SModifierCG;
 import org.overture.codegen.cgast.SMultipleBindCG;
 import org.overture.codegen.cgast.SObjectDesignatorCG;
@@ -54,6 +58,7 @@ import org.overture.codegen.cgast.STraceCoreDeclCG;
 import org.overture.codegen.cgast.STraceDeclCG;
 import org.overture.codegen.cgast.STypeCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.AModuleDeclCG;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.visitor.CGVisitor;
 import org.overture.codegen.visitor.VisitorManager;
@@ -123,7 +128,32 @@ public class IRInfo
 	{
 		return visitorManager.getClassVisitor();
 	}
+	
+	public CGVisitor<AModuleDeclCG> getModuleVisitor()
+	{
+		return visitorManager.getModuleVisitor();
+	}
+	
+	public CGVisitor<SImportsCG> getImportsVisitor()
+	{
+		return visitorManager.getImportsVisitor();
+	}
+	
+	public CGVisitor<SImportCG> getImportVisitor()
+	{
+		return visitorManager.getImportVisitor();
+	}
 
+	public CGVisitor<SExportsCG> getExportsVisitor()
+	{
+		return visitorManager.getExportsVisitor();
+	}
+	
+	public CGVisitor<SExportCG> getExportVisitor()
+	{
+		return visitorManager.getExportVisitor();
+	}
+	
 	public CGVisitor<SDeclCG> getDeclVisitor()
 	{
 		return visitorManager.getDeclVisitor();
