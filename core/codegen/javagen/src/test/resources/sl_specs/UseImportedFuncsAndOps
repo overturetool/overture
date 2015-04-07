@@ -1,0 +1,27 @@
+module Entry
+
+exports all
+imports from Func operations op functions id
+definitions 
+
+operations 
+
+Run : () ==> ?
+Run () == return Func`op() + Func`id(8);
+
+end Entry
+
+
+module Func
+
+exports all
+definitions
+operations
+op : () ==> nat
+op () == return 1;
+
+functions
+id :  nat -> nat
+id (x) == x;
+
+end Func
