@@ -1,0 +1,16 @@
+import org.overture.codegen.runtime.*;
+
+import java.util.*;
+
+
+public class Entry {
+    public static Object Run() {
+        return 2L;
+    }
+
+    public String toString() {
+        return "Entry{}";
+    }
+}
+
+##########
