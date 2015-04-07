@@ -47,6 +47,7 @@ import org.overture.codegen.analysis.violations.Violation;
 import org.overture.codegen.assistant.AssistantManager;
 import org.overture.codegen.assistant.LocationAssistantCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.AModuleDeclCG;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.ir.VdmNodeInfo;
@@ -86,9 +87,22 @@ public class JavaCodeGenUtil
 			JavaCodeGen vdmCodGen, Dialect dialect)
 			throws AnalysisException, UnsupportedModelingException
 	{
-		List<SClassDefinition> mergedParseList = consMergedParseList(files, dialect);
+		if (dialect == Dialect.VDM_PP || dialect == Dialect.VDM_RT)
+		{
+			List<SClassDefinition> mergedParseList = consMergedParseList(files, dialect);
 
-		return generateJavaFromVdm(mergedParseList, vdmCodGen);
+			return vdmCodGen.generateJavaFromVdm(mergedParseList);
+		}
+		else if(dialect == Dialect.VDM_SL)
+		{
+			ModuleList modules = consModulesList(files);
+			
+			return vdmCodGen.generateJavaFromVdmModules(modules);
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	public static List<SClassDefinition> consMergedParseList(List<File> files, Dialect dialect)
@@ -160,15 +174,6 @@ public class JavaCodeGenUtil
 		{
 			throw new AnalysisException("Could not get classes from class list interpreter!");
 		}
-	}
-	
-	
-
-	private static GeneratedData generateJavaFromVdm(
-			List<SClassDefinition> mergedParseLists, JavaCodeGen vdmCodGen)
-			throws AnalysisException, UnsupportedModelingException
-	{
-		return vdmCodGen.generateJavaFromVdm(mergedParseLists);
 	}
 
 	public static Generated generateJavaFromExp(String exp,
