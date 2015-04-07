@@ -62,6 +62,7 @@ import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.declarations.AInterfaceDeclCG;
+import org.overture.codegen.cgast.declarations.AModuleDeclCG;
 import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRStatus;
@@ -71,6 +72,7 @@ import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.merging.MergeVisitor;
 import org.overture.codegen.merging.TemplateStructure;
+import org.overture.codegen.trans.ModuleToClassTransformation;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
 import org.overture.codegen.trans.funcvalues.FunctionValueAssistant;
 import org.overture.codegen.utils.GeneralCodeGenUtils;
@@ -260,8 +262,33 @@ public class JavaCodeGen extends CodeGenBase
 				statuses.add(status);
 			}
 		}
+		
+		List<IRStatus<AModuleDeclCG>> moduleStatuses = IRStatus.extract(statuses, AModuleDeclCG.class);
+		List<IRStatus<org.overture.codegen.cgast.INode>> modulesAsNodes = IRStatus.extract(moduleStatuses);
+			
+		ModuleToClassTransformation moduleTransformation = new ModuleToClassTransformation(transAssistant);
+		
+		for(IRStatus<org.overture.codegen.cgast.INode> moduleStatus : modulesAsNodes)
+		{
+			try
+			{
+				if (!getInfo().getDeclAssistant().isLibraryName(moduleStatus.getIrNodeName()))
+				{
+					generator.applyTotalTransformation(moduleStatus, moduleTransformation);
+				}
 
-		List<IRStatus<AClassDeclCG>> classStatuses = IRStatus.extract(statuses, AClassDeclCG.class);
+			} catch (org.overture.codegen.cgast.analysis.AnalysisException e)
+			{
+				Logger.getLog().printErrorln("Error when generating code for module "
+						+ moduleStatus.getIrNodeName() + ": " + e.getMessage());
+				Logger.getLog().printErrorln("Skipping module..");
+				e.printStackTrace();
+			}
+			
+		}
+
+		List<IRStatus<AClassDeclCG>> classStatuses = IRStatus.extract(modulesAsNodes, AClassDeclCG.class);
+		classStatuses.addAll(IRStatus.extract(statuses, AClassDeclCG.class));
 		
 		if (getJavaSettings().getJavaRootPackage() != null)
 		{
@@ -271,7 +298,7 @@ public class JavaCodeGen extends CodeGenBase
 			}
 		}
 
-		List<AClassDeclCG> classes = getClassDecls(statuses);
+		List<AClassDeclCG> classes = getClassDecls(classStatuses);
 		javaFormat.setClasses(classes);
 
 		LinkedList<IRStatus<AClassDeclCG>> canBeGenerated = new LinkedList<IRStatus<AClassDeclCG>>();
@@ -554,18 +581,13 @@ public class JavaCodeGen extends CodeGenBase
 	}
 
 	private List<AClassDeclCG> getClassDecls(
-			List<IRStatus<org.overture.codegen.cgast.INode>> statuses)
+			List<IRStatus<AClassDeclCG>> statuses)
 	{
 		List<AClassDeclCG> classDecls = new LinkedList<AClassDeclCG>();
 
-		for (IRStatus<org.overture.codegen.cgast.INode> status : statuses)
+		for (IRStatus<AClassDeclCG> status : statuses)
 		{
-			org.overture.codegen.cgast.INode node = status.getIrNode();
-
-			if (node instanceof AClassDeclCG)
-			{
-				classDecls.add((AClassDeclCG) node);
-			}
+			classDecls.add(status.getIrNode());
 		}
 
 		return classDecls;
