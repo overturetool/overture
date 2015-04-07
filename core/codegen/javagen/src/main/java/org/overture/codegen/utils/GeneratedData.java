@@ -21,6 +21,7 @@
  */
 package org.overture.codegen.utils;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.codegen.analysis.vdm.Renaming;
@@ -34,6 +35,21 @@ public class GeneratedData
 	private List<String> skippedClasses;
 	private List<Renaming> allRenamings;
 	private List<String> warnings;
+	
+	public GeneratedData() {
+	}
+	
+	public GeneratedData(List<GeneratedModule> classes,
+			List<GeneratedModule> quoteValues, InvalidNamesResult invalidNamesResult, List<String> skippedClasses)
+	{
+		super();
+		this.classes = classes;
+		this.quoteValues = quoteValues;
+		this.invalidNamesResult = invalidNamesResult;
+		this.skippedClasses = skippedClasses;
+	}
+
+	
 
 	public List<GeneratedModule> getClasses()
 	{
