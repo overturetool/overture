@@ -2,11 +2,10 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-
 	<parent>
 		<groupId>org.overturetool.core</groupId>
 		<artifactId>codegen</artifactId>
-		  <version>2.2.5-SNAPSHOT<!--Replaceable: Main Version--></version>
+		<version>2.2.5-SNAPSHOT<!--Replaceable: Main Version--></version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -77,100 +76,92 @@
 					</includes>
 				</configuration>
 			</plugin>
-			
 
-			
 			<!--plugin>
-				<groupId>org.eclipse.xtend</groupId>
-				<artifactId>xtend-maven-plugin</artifactId>
-				<version>${xtend.version}</version>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<skipTests>true</skipTests>
+				</configuration>
+			</plugin-->
+			<!--plugin> <groupId>org.eclipse.xtend</groupId> <artifactId>xtend-maven-plugin</artifactId> 
+				<version>${xtend.version}</version> <executions> <execution> <goals> <goal>compile</goal> 
+				<goal>testCompile</goal> </goals> <configuration> <outputDirectory>${project.build.directory}/xtend-gen/main</outputDirectory> 
+				<testOutputDirectory>${project.build.directory}/xtend-gen/test</testOutputDirectory> 
+				</configuration> </execution> </executions> </plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
 				<executions>
 					<execution>
-						<goals>
-							<goal>compile</goal>
-							<goal>testCompile</goal>
-						</goals>
-						<configuration>
-
-							<outputDirectory>${project.build.directory}/xtend-gen/main</outputDirectory>
-
-							<testOutputDirectory>${project.build.directory}/xtend-gen/test</testOutputDirectory>
-						</configuration>
+						<id>default-compile</id>
+						<phase>none</phase>
 					</execution>
 				</executions>
-			</plugin-->
-			<plugin>
-          			<groupId>org.apache.maven.plugins</groupId>
-          			<artifactId>maven-compiler-plugin</artifactId>
-<executions>
-                <execution>
-                    <id>default-compile</id>
-                    <phase>none</phase>
-                </execution>
-            </executions>
-        		</plugin>
+      <configuration>
+         <skip>true</skip>
+      </configuration>
+			</plugin>
 		</plugins>
-
-		
-
 	</build>
 
-<profiles>
-	<profile>
-		<id>cppgen</id>
+	<profiles>
+		<profile>
+			<id>cppgen</id>
+			<build>
+				<plugins>
 
-  <build>
-                <plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>default-compile</id>
+								<phase>compile</phase>
+							</execution>
+						</executions>
+					</plugin>
 
-  <plugin>
-                                <groupId>org.apache.maven.plugins</groupId>
-                                <artifactId>maven-compiler-plugin</artifactId>
-<executions>
-                <execution>
-                    <id>default-compile</id>
-                    <phase>compile</phase>
-                </execution>
-            </executions>
-                        </plugin>
+					<plugin>
+						<groupId>org.eclipse.xtend</groupId>
+						<artifactId>xtend-maven-plugin</artifactId>
+						<version>${xtend.version}</version>
+						<executions>
+							<execution>
+								<goals>
+									<goal>compile</goal>
+									<goal>testCompile</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${project.build.directory}/xtend-gen/main</outputDirectory>
+									<testOutputDirectory>${project.build.directory}/xtend-gen/test</testOutputDirectory>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<!--plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<skipTests>false</skipTests>
+						</configuration>
+					</plugin-->
+         <plugin>
+				  <groupId>org.apache.maven.plugins</groupId>
+				  <artifactId>maven-compiler-plugin</artifactId>
+				  <executions>
+					  <execution>
+						  <id>default-compile</id>
+						  <phase>none</phase>
+					    </execution>
+				  </executions>
+          <configuration>
+            <skip>false</skip>
+          </configuration>
+			  </plugin>
 
-
-  <plugin>
-                                <groupId>org.eclipse.xtend</groupId>
-                                <artifactId>xtend-maven-plugin</artifactId>
-                                <version>${xtend.version}</version>
-                                <executions>
-                                        <execution>
-                                                <goals>
-                                                        <goal>compile</goal>
-                                                        <goal>testCompile</goal>
-                                                </goals>
-                                                <configuration>
-                                        
-                                                        
- <outputDirectory>${project.build.directory}/xtend-gen/main</outputDirectory>
-
-                                                        <testOutputDirectory>${project.build.directory}/xtend-gen/test</testOutputDirectory>
-
-                                                </configuration>
-                                        </execution>
-                                </executions>
-                        </plugin>
-                </plugins>
-
-
-
-        </build>
-
-
-
-
-
-	</profile>
-
-
-
-
-
-</profiles>
-
+			</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
