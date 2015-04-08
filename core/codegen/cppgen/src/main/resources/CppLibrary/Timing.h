@@ -17,8 +17,12 @@
 #include <math.h>
 #include <fstream>
 #include <sched.h>
+#include <chrono>
+#include <sstream>
+
 
 namespace timing {
+
 
 class TimedFunction;
 class Timing;
@@ -26,18 +30,20 @@ class TimedScope;
 
 typedef std::vector<TimedFunction> measurements_t;
 
+typedef std::chrono::time_point<std::chrono::steady_clock> Time;
+typedef std::chrono::steady_clock TimeType;
 
 class TimedFunction
 {
 public:
 
-	typedef std::vector<timespec> container_t;
+	typedef std::vector<Time> container_t;
 
 	TimedFunction();
 
 
-	void add_start(const timespec& t);
-	void add_end(const timespec& t);
+	void add_start(const Time& t);
+	void add_end(const Time& t);
 
 	double get_number_of_measurements();
 
@@ -61,6 +67,7 @@ public:
 	measurements_t get_measurements();
 
 	void to_file(const std::string& filename_prefix);
+	void to_xml();
 	void set_name_for(const uint32_t uid,const std::string& name);
 	std::string get_name(uint32_t uid);
 
@@ -70,10 +77,11 @@ private:
 
 	measurements_t timing_list;
 	std::map<uint32_t,std::string> names_map;
-	struct timespec t;
 
 	static Timing* instance_;
 };
+
+
 
 
 

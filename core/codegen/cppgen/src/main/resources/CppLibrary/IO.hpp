@@ -14,19 +14,17 @@
 class IO
 {
 public:
-	static void print(const char* )
+
+	template<typename T>
+	static void print(const T& str)
 	{
+		std::cout << str;
+	}
 
-	};
-
-	static void print(const int& val )
+	template<typename T>
+	static void println(const T& str)
 	{
-
-	};
-
-	static void println(const std::string& str)
-	{
-
+		std::cout <<str << std::endl;
 	};
 };
 

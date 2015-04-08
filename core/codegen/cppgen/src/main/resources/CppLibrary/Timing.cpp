@@ -10,30 +10,10 @@
 #ifndef TIMING_N_METHODS
 #define TIMING_N_METHODS 1000
 #endif
+
+
+
 namespace timing {
-
-timespec diff(const timespec& start,const timespec& end)
-{
-	timespec temp;
-	if ((end.tv_nsec-start.tv_nsec)<0) {
-		temp.tv_sec = end.tv_sec-start.tv_sec-1;
-		temp.tv_nsec = 1000000000+end.tv_nsec-start.tv_nsec;
-	} else {
-		temp.tv_sec = end.tv_sec-start.tv_sec;
-		temp.tv_nsec = end.tv_nsec-start.tv_nsec;
-	}
-	return temp;
-}
-
-double to_secs(const timespec& tim)
-{
-	return tim.tv_sec + tim.tv_nsec / 1E9;
-}
-
-double to_nsecs(const timespec& tim)
-{
-	return tim.tv_sec * 1E9 + tim.tv_nsec;
-}
 
 
 Timing* Timing::instance_ = NULL;
@@ -42,16 +22,16 @@ Timing* Timing::instance_ = NULL;
 
 TimedFunction::TimedFunction()
 {
-	start_measurements.reserve(10000);
-	end_measurements.reserve(10000);
+	start_measurements.reserve(60000);
+	end_measurements.reserve(60000);
 };
 
-void TimedFunction::add_start(const timespec& t)
+void TimedFunction::add_start(const Time& t)
 	{
 		start_measurements.push_back(t);
 	};
 
-void TimedFunction::add_end(const timespec& t)
+void TimedFunction::add_end(const Time& t)
 {
 	end_measurements.push_back(t);
 }
@@ -69,7 +49,8 @@ std::vector<double> TimedFunction::get_measurements()
 
 	for(; (a != start_measurements.end()); ++a)
 	{
-		double dif = to_nsecs(diff(*a,*b));
+		double dif =  std::chrono::duration_cast<std::chrono::nanoseconds>(*b - *a).count();
+
 		out.push_back(dif);
 		++b;
 	}
@@ -96,16 +77,16 @@ Timing* Timing::get_instance()
 void Timing::log_start(const uint32_t uid)
 {
 	// get time
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID,&t);
+	//clock_gettime(CLOCK_PROCESS_CPUTIME_ID,&t);
+
 	// put in list at index
-	timing_list[uid].add_start(t);
+	timing_list[uid].add_start(TimeType::now());
 
 }
 
 void Timing::log_end(const uint32_t uid)
 {
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID,&t);
-	timing_list[uid].add_end(t);
+	timing_list[uid].add_end(TimeType::now());
 }
 
 measurements_t Timing::get_measurements()
@@ -120,9 +101,13 @@ void Timing::to_file(const std::string& filename_prefix)
 	for(std::vector<TimedFunction>::iterator it = timing_list.begin(); it != timing_list.end();++it)
 	{
 		std::map<uint32_t,std::string>::iterator n;
-		if((n = names_map.find(i)) != names_map.end())
+		if((n = names_map.find(i)) != names_map.end() && it->get_number_of_measurements() > 0)
 		{
-			std::string fname =  filename_prefix + n->second + ".tim";
+			std::stringstream ss;
+
+			ss << filename_prefix << n->first << ".tim";
+			std::string fname =  ss.str();
+			std::cout << fname << std::endl;
 			std::ofstream fd;
 
 			fd.open(fname.c_str());
@@ -136,6 +121,10 @@ void Timing::to_file(const std::string& filename_prefix)
 		i++;
 	}
 }
+
+
+
+
 
 void Timing::set_name_for(const uint32_t uid,const std::string& name)
 {
@@ -159,5 +148,5 @@ std::string Timing::get_name(uint32_t uid)
 
 
 
-
 } /* namespace timing */
+

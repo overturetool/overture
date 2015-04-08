@@ -86,5 +86,43 @@ void print_stats( measurements_t& meas)
 	}
 }
 
+void stats_to_xml(measurements_t& meas)
+{
+	std::string fname =  "results.xml";
+	std::ofstream fd;
+
+	fd.open(fname.c_str());
+
+	uint32_t uid = 0;
+	//std::cout << "Statistics: " << std::endl;
+
+	fd << "<stats>" << std::endl;
+	for(timing::measurements_t::iterator a = meas.begin();a!= meas.end();++a)
+	{
+		std::string name = timing::Timing::get_instance()->get_name(uid);
+		if(!name.empty())
+		{
+
+			std::vector<double> mm = a->get_measurements();
+			if(mm.size()> 0)
+			{
+				//std::cout << "Function: " << name << std::endl;
+				fd << "<function " << "name=\"" << name << " \">" << std::endl;
+				timing::stats::Stats s = timing::stats::calculate_statistics(mm);
+				fd << "<samples>" 			<< mm.size() 	<< "</samples>" << std::endl;
+				fd << "<mean unit=\"ns\">" 	<< s.mean 		<< "</mean>" 	<< std::endl;
+				fd << "<median unit=\"ns\">" << s.median 	<< "</median>"	<< std::endl;
+				fd << "<min unit=\"ns\">" 	<< s.min 		<< "</min>"		<< std::endl;
+				fd << "<max unit=\"ns\">" 	<< s.max 		<< "</max>"		<< std::endl;
+				fd << "<stddev>" 			<< s.stddev		<< "</stddev>"	<< std::endl;
+				fd << "</function>" << std::endl;
+			}
+
+		}
+		uid++;
+	}
+	fd << "</stats>"  << std::endl;
+}
+
 } /* namespace stats */
 } /* namespace timing */

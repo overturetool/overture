@@ -27,6 +27,8 @@ struct Stats
 
 Stats calculate_statistics(const std::vector<double>& measurements);
 
+void stats_to_xml(measurements_t& meas);
+
 void print_stats(measurements_t& meas);
 
 } /* namespace stats */

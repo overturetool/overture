@@ -19,6 +19,17 @@
 namespace vdm
 {
 
+namespace set_utils
+{
+	template<typename T>
+	T difference(const T& left, const T& right)
+	{
+		T ret;
+		std::set_difference(left.begin(),left.end(),right.begin(),right.end(),std::inserter(ret,ret.begin()));
+		return ret;
+	}
+}
+
 template<typename T, typename T2,typename T3>
 bool compatible(const T3& v)
 {
@@ -28,10 +39,41 @@ bool compatible(const T3& v)
 
 
 template<typename T>
-std::set<typename T::value_type> elems(std::initializer_list<typename T::value_type> elems)
+std::set<typename T::value_type> elems(std::initializer_list<typename T::value_type> elem)
 {
-	return std::set<typename T::value_type>(elems);
+	return std::set<typename T::value_type>(elem);
+}
 
+template<typename T>
+std::set<typename T::value_type> elems(std::vector<typename T::value_type> elem)
+{
+	return std::set<typename T::value_type>(elem.begin(),elem.end());
+}
+
+template<typename T>
+T subseq(const T& se,int start,int end)
+{
+	start = start-1;
+	end = end;
+	int length = se.size();
+
+	T out;
+	if(start >= length)
+	{
+		return out;
+	}
+
+	if(end >= length)
+	{
+		end = se.size();
+	}
+
+	for(int i= start;i<(end);++i)
+	{
+		out.push_back(se[i]);
+	}
+
+	return out;
 }
 
 void Runtime2(std::string msg,std::string file,int line)
@@ -73,6 +115,19 @@ T tail(const T& v)
 		return new_;
 	}
 
+}
+
+template<typename T>
+std::set<int> inds(T iter)
+{
+	int l = iter.size();
+	std::vector<int> s;
+
+	for(int i=1; i<=l;++i)
+	{
+		s.push_back(i);
+	}
+	return std::set<int>(s.begin(),s.end());
 }
 
 template<typename T>
