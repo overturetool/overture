@@ -23,6 +23,7 @@ import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG
 import org.overture.codegen.cgast.statements.ARaiseErrorStmCG
 import org.overture.codegen.cgast.types.AVoidTypeCG
+import org.overture.codegen.cgast.statements.AAssignToExpStmCG
 
 class CppStatementVisitor extends XtendAnswerStringVisitor {
 	
@@ -158,6 +159,8 @@ class CppStatementVisitor extends XtendAnswerStringVisitor {
 	override caseAPlainCallStmCG(APlainCallStmCG node)
 	'''«IF node.classType != null»«node.classType.getStaticCall»::«ENDIF»«node.name»/*«node.type»*/(«FOR a : node.args SEPARATOR ','» «a.expand»«ENDFOR»);'''
 	
+	override caseAAssignToExpStmCG(AAssignToExpStmCG node)
+	'''«node.target.expand» = «node.exp.expand»;'''
 	
 	override caseASkipStmCG(ASkipStmCG node)'''
 	/*skip*/

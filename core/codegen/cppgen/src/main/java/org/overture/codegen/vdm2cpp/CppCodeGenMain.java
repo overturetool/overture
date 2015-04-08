@@ -106,8 +106,8 @@ public class CppCodeGenMain
 						//Logger.getLog().println(generatedClass.getContent());
 						File output = new File("target/test-results/"+inputRoot.getName());
 						
-						if(args.length>3)
-							output = new File(args[4]);
+//						if(args.length>3)
+//							output = new File(args[4]);
 						
 						CppCodeGenUtil.saveCppClass(output, generatedClass.getName()+".hpp", generatedClass.getContent());
 					}

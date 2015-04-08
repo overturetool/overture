@@ -1,37 +1,44 @@
 package org.overture.codegen.vdm2cpp.stdlib
 
 import org.overture.codegen.cgast.INode
-import org.overture.codegen.cgast.analysis.AnalysisException
 import org.overture.codegen.cgast.SStmCG
-import org.overture.codegen.cgast.statements.ABlockStmCG
+import org.overture.codegen.cgast.STypeCG
+import org.overture.codegen.cgast.analysis.AnalysisException
 import org.overture.codegen.cgast.statements.AAssignmentStmCG
-import org.overture.codegen.cgast.statements.AReturnStmCG
-import org.overture.codegen.cgast.statements.APlainCallStmCG
-import org.overture.codegen.cgast.statements.ASkipStmCG
+import org.overture.codegen.cgast.statements.ABlockStmCG
+import org.overture.codegen.cgast.statements.ABreakStmCG
+import org.overture.codegen.cgast.statements.ACallObjectExpStmCG
+import org.overture.codegen.cgast.statements.ACallObjectStmCG
+import org.overture.codegen.cgast.statements.AForAllStmCG
+import org.overture.codegen.cgast.statements.AForIndexStmCG
 import org.overture.codegen.cgast.statements.AForLoopStmCG
 import org.overture.codegen.cgast.statements.AIfStmCG
 import org.overture.codegen.cgast.statements.ALocalAssignmentStmCG
-import org.overture.codegen.cgast.statements.ACallObjectStmCG
-import org.overture.codegen.cgast.statements.AWhileStmCG
-import org.overture.codegen.cgast.statements.ABreakStmCG
-import org.overture.codegen.cgast.statements.AForIndexStmCG
-import org.overture.codegen.vdm2cpp.XtendAnswerStringVisitor
-import org.overture.codegen.cgast.STypeCG
-import org.overture.codegen.cgast.types.AClassTypeCG
-import org.overture.codegen.cgast.statements.ACallObjectExpStmCG
-import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG
-import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG
+import org.overture.codegen.cgast.statements.APlainCallStmCG
 import org.overture.codegen.cgast.statements.ARaiseErrorStmCG
-import org.overture.codegen.cgast.types.AVoidTypeCG
+import org.overture.codegen.cgast.statements.AReturnStmCG
+import org.overture.codegen.cgast.statements.ASkipStmCG
 import org.overture.codegen.cgast.statements.AStackDeclStmCG
-import org.overture.codegen.cgast.statements.AForAllStmCG
+import org.overture.codegen.cgast.statements.AWhileStmCG
+import org.overture.codegen.cgast.types.AClassTypeCG
+import org.overture.codegen.cgast.types.AVoidTypeCG
+import org.overture.codegen.vdm2cpp.XtendAnswerStringVisitor
+import org.overture.codegen.cgast.statements.AAssignToExpStmCG
 
 class CppStatementVisitor extends XtendAnswerStringVisitor {
 	
 	XtendAnswerStringVisitor root;
+	int uid = 0;
 	
 	new(XtendAnswerStringVisitor root_visitor) {
 		root = root_visitor
+		
+	}
+	
+	def uniqueName(String name)
+	{
+		uid += 1;
+		return '''«name»_«uid»'''
 	}
 	
 	def expand(INode node)
@@ -48,23 +55,6 @@ class CppStatementVisitor extends XtendAnswerStringVisitor {
 		{
 			return "udef"
 		}
-	}
-	
-	def caseToType(STypeCG type)
-	{
-		if(type instanceof AClassTypeCG)
-		{
-			return '''ObjGet_«type.name»'''
-		}
-		else if(type instanceof ARealBasicTypeWrappersTypeCG || type instanceof ARealNumericBasicTypeCG)
-		{
-			return '''static_cast<«type.expand»>'''
-		}
-		else
-		{
-			return '''static_cast<«type.expand»>'''
-		}
-		
 	}
 	
 	
@@ -95,19 +85,19 @@ class CppStatementVisitor extends XtendAnswerStringVisitor {
 	'''
 	
 	override caseAForAllStmCG(AForAllStmCG node)
+	{
+		
+	val set_name = "forall_stm_set".uniqueName
 	'''
-	/*«node.exp» 
-	«node.pattern» */
-	«node.exp.type.expand» sasdf =  «node.exp.expand»;
-	for(«node.exp.type.expand»::iterator it =sasdf.begin(); it!=sasdf.end();++it)
-		{
-			«node.exp.type.expand»::value_type «node.pattern.expand» = *it;
-			
-			//
-			«node.body.expand»
-		}
+	«node.exp.type.expand» «set_name» =  «node.exp.expand»;
+	for(«node.exp.type.expand»::iterator it =«set_name».begin(); it!=«set_name».end();++it)
+	{
+		«node.exp.type.expand»::value_type «node.pattern.expand» = *it;
+		
+		«node.body.expand»
+	}
 	'''
-	
+	}
 	override caseARaiseErrorStmCG(ARaiseErrorStmCG node)
 	'''vdm::Runtime2("«node.error.expand»",__FILE__,__LINE__);'''
 	
@@ -150,11 +140,7 @@ class CppStatementVisitor extends XtendAnswerStringVisitor {
 	
 	def isVoidType(STypeCG type)
 	{
-		if(type instanceof AVoidTypeCG)
-		{
-			return true;
-		}
-		return false;
+		return type instanceof AVoidTypeCG;
 	}
 	
 	override caseACallObjectExpStmCG(ACallObjectExpStmCG node)
@@ -172,7 +158,7 @@ class CppStatementVisitor extends XtendAnswerStringVisitor {
 	
 	
 	override caseAPlainCallStmCG(APlainCallStmCG node)
-	'''«IF node.classType != null»«node.classType.getStaticCall»::«ENDIF»«node.name»/*«node.type»*/(«FOR a : node.args SEPARATOR ','» «a.expand»«ENDFOR»);'''
+	'''«IF node.classType != null»«node.classType.getStaticCall»::«ENDIF»«node.name»(«FOR a : node.args SEPARATOR ','» «a.expand»«ENDFOR»);'''
 	
 	
 	override caseASkipStmCG(ASkipStmCG node)'''
@@ -184,7 +170,7 @@ class CppStatementVisitor extends XtendAnswerStringVisitor {
 	
 	override caseALocalAssignmentStmCG(ALocalAssignmentStmCG node)
 	{
-		if(node.exp == null)
+		if(node.exp == null && node.target.type instanceof AClassTypeCG) // TODO: Hack for constructing a class on the stack
 		{
 			'''«(node.target.type as AClassTypeCG).name» «node.target.expand»;'''
 		}
@@ -193,6 +179,9 @@ class CppStatementVisitor extends XtendAnswerStringVisitor {
 			'''«node.target.expand» = «node.exp.expand»;'''
 		}
 	}
+	
+	override caseAAssignToExpStmCG(AAssignToExpStmCG node)
+	'''«node.target.expand» = «node.exp.expand»;'''
 	
 	override caseAStackDeclStmCG(AStackDeclStmCG node) throws AnalysisException
 	'''«node.type.expand» «node.name»(«FOR a:node.args»«a.expand»«ENDFOR»);'''

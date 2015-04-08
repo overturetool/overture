@@ -9,8 +9,10 @@ import org.overture.codegen.cgast.declarations.AClassDeclCG
 import org.overture.codegen.cgast.expressions.AAbsUnaryExpCG
 import org.overture.codegen.cgast.expressions.AAndBoolBinaryExpCG
 import org.overture.codegen.cgast.expressions.AApplyExpCG
+import org.overture.codegen.cgast.expressions.AAssignExpExpCG
 import org.overture.codegen.cgast.expressions.ABoolLiteralExpCG
 import org.overture.codegen.cgast.expressions.ACastUnaryExpCG
+import org.overture.codegen.cgast.expressions.ACharLiteralExpCG
 import org.overture.codegen.cgast.expressions.ADeRefExpCG
 import org.overture.codegen.cgast.expressions.ADivideNumericBinaryExpCG
 import org.overture.codegen.cgast.expressions.AElemsUnaryExpCG
@@ -24,53 +26,48 @@ import org.overture.codegen.cgast.expressions.AGreaterEqualNumericBinaryExpCG
 import org.overture.codegen.cgast.expressions.AGreaterNumericBinaryExpCG
 import org.overture.codegen.cgast.expressions.AHeadUnaryExpCG
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG
+import org.overture.codegen.cgast.expressions.AIndicesUnaryExpCG
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG
 import org.overture.codegen.cgast.expressions.ALenUnaryExpCG
 import org.overture.codegen.cgast.expressions.ALessEqualNumericBinaryExpCG
 import org.overture.codegen.cgast.expressions.ALessNumericBinaryExpCG
+import org.overture.codegen.cgast.expressions.AMapDomainUnaryExpCG
+import org.overture.codegen.cgast.expressions.AMapInverseUnaryExpCG
+import org.overture.codegen.cgast.expressions.AMapRangeUnaryExpCG
+import org.overture.codegen.cgast.expressions.AMapletExpCG
 import org.overture.codegen.cgast.expressions.AMethodInstantiationExpCG
 import org.overture.codegen.cgast.expressions.AMinusUnaryExpCG
 import org.overture.codegen.cgast.expressions.ANewExpCG
 import org.overture.codegen.cgast.expressions.ANotEqualsBinaryExpCG
 import org.overture.codegen.cgast.expressions.ANotUnaryExpCG
 import org.overture.codegen.cgast.expressions.ANullExpCG
+import org.overture.codegen.cgast.expressions.APatternMatchRuntimeErrorExpCG
 import org.overture.codegen.cgast.expressions.APlusNumericBinaryExpCG
 import org.overture.codegen.cgast.expressions.APostIncExpCG
+import org.overture.codegen.cgast.expressions.APowerNumericBinaryExpCG
+import org.overture.codegen.cgast.expressions.APreIncExpCG
 import org.overture.codegen.cgast.expressions.ARealLiteralExpCG
+import org.overture.codegen.cgast.expressions.ASelfExpCG
 import org.overture.codegen.cgast.expressions.ASeqConcatBinaryExpCG
+import org.overture.codegen.cgast.expressions.ASetDifferenceBinaryExpCG
 import org.overture.codegen.cgast.expressions.ASetUnionBinaryExpCG
 import org.overture.codegen.cgast.expressions.AStringLiteralExpCG
 import org.overture.codegen.cgast.expressions.AStringToSeqUnaryExpCG
+import org.overture.codegen.cgast.expressions.ASubSeqExpCG
 import org.overture.codegen.cgast.expressions.ASubtractNumericBinaryExpCG
 import org.overture.codegen.cgast.expressions.ATailUnaryExpCG
 import org.overture.codegen.cgast.expressions.ATimesNumericBinaryExpCG
 import org.overture.codegen.cgast.expressions.ATupleCompatibilityExpCG
+import org.overture.codegen.cgast.expressions.ATupleExpCG
 import org.overture.codegen.cgast.expressions.AUndefinedExpCG
 import org.overture.codegen.cgast.types.AClassTypeCG
 import org.overture.codegen.cgast.types.AMapMapTypeCG
-import org.overture.codegen.cgast.types.ARealBasicTypeWrappersTypeCG
-import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG
+import org.overture.codegen.cgast.types.AMethodTypeCG
 import org.overture.codegen.cgast.types.ARecordTypeCG
 import org.overture.codegen.cgast.types.ASeqSeqTypeCG
 import org.overture.codegen.cgast.types.ASetSetTypeCG
 import org.overture.codegen.cgast.types.SSeqTypeCG
 import org.overture.codegen.vdm2cpp.XtendAnswerStringVisitor
-import org.overture.codegen.cgast.expressions.AAssignExpExpCG
-import org.overture.codegen.cgast.types.ATupleTypeCG
-import org.overture.codegen.cgast.types.AMethodTypeCG
-import org.overture.codegen.cgast.expressions.APatternMatchRuntimeErrorExpCG
-import org.overture.codegen.cgast.expressions.APreIncExpCG
-import org.overture.codegen.cgast.expressions.AMapDomainUnaryExpCG
-import org.overture.codegen.cgast.expressions.AMapletExpCG
-import org.overture.codegen.cgast.expressions.AMapRangeUnaryExpCG
-import org.overture.codegen.cgast.expressions.AMapInverseUnaryExpCG
-import org.overture.codegen.cgast.expressions.ATupleExpCG
-import org.overture.codegen.cgast.expressions.ASubSeqExpCG
-import org.overture.codegen.cgast.expressions.ASelfExpCG
-import org.overture.codegen.cgast.expressions.APowerNumericBinaryExpCG
-import org.overture.codegen.cgast.expressions.AIndicesUnaryExpCG
-import org.overture.codegen.cgast.expressions.ACharLiteralExpCG
-import org.overture.codegen.cgast.expressions.ASetDifferenceBinaryExpCG
 
 class CppExpressionVisitor extends XtendAnswerStringVisitor {
 	
@@ -82,23 +79,7 @@ class CppExpressionVisitor extends XtendAnswerStringVisitor {
 	
 	def caseToType(STypeCG type)
 	{
-		if(type instanceof AClassTypeCG)
-		{
-			return '''ObjGet_«type.name»'''
-		}
-		else if(type instanceof ARealBasicTypeWrappersTypeCG || type instanceof ARealNumericBasicTypeCG)
-		{
-			return '''static_cast<«type.expand»>'''
-		}
-//		else if (type instanceof ASeqSeqTypeCG)
-//		{
-//			
-//		}
-		else
-		{
-			return '''static_cast<«type.expand»>'''
-		}
-		
+		return '''static_cast<«type.expand»>'''
 	}
 	
 	def expand(INode node)
@@ -128,21 +109,6 @@ class CppExpressionVisitor extends XtendAnswerStringVisitor {
 		return cg.seqOf.expand;
 	}
 	
-	def getElemType(STypeCG cg)
-	{
-		if(cg instanceof ASetSetTypeCG)
-		{
-			return (cg as ASetSetTypeCG).setOf.expand;
-		}
-		else if(cg instanceof ASeqSeqTypeCG)
-		{
-			return (cg as ASeqSeqTypeCG).seqOf.expand;
-		}
-		else
-		{
-			return "nont"
-		}
-	}
 	
 	override defaultINode(INode node) throws AnalysisException {
 		if( node instanceof SExpCGBase )
@@ -243,15 +209,9 @@ class CppExpressionVisitor extends XtendAnswerStringVisitor {
 	
 	def getTupleTypes(STypeCG node)
 	{
-		//
 		if(node instanceof AMethodTypeCG)
 		{
 			var tp = node as AMethodTypeCG
-			//System.out.println(tp.)
-			System.out.println(tp.class)
-			System.out.println(tp.result)
-			System.out.println(tp.params.class)
-			
 			return '''<«FOR p : tp.params SEPARATOR ','»«p.expand» «ENDFOR»>'''
 		}
 		return null;
