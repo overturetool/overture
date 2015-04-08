@@ -169,9 +169,9 @@ public class PluginVdm2JavaUtil
 		outputDir = getFolder(outputDir, ECLIPSE_PROJECT_SRC_FOLDER);
 		
 		String javaPackage = settings.getJavaRootPackage();
-		if(GeneralCodeGenUtils.isValidJavaPackage(javaPackage))
+		if(JavaCodeGenUtil.isValidJavaPackage(javaPackage))
 		{
-			outputDir = getFolder(outputDir, GeneralCodeGenUtils
+			outputDir = getFolder(outputDir, JavaCodeGenUtil
 					.getFolderFromJavaRootPackage(javaPackage));
 		}
 		

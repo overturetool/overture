@@ -12,8 +12,8 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.ir.IRSettings;
-import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.vdm2java.JavaCodeGenMain;
+import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.codegen.vdm2java.JavaSettings;
 import org.overture.config.Release;
 import org.overture.config.Settings;
@@ -48,7 +48,7 @@ public class GenerateJavaSources extends AstCreatorBaseMojo
 		JavaSettings javaSettings = new JavaSettings();
 		javaSettings.setDisableCloning(false);
 
-		if (GeneralCodeGenUtils.isValidJavaPackage(packageName))
+		if (JavaCodeGenUtil.isValidJavaPackage(packageName))
 		{
 			javaSettings.setJavaRootPackage(packageName);
 		} else

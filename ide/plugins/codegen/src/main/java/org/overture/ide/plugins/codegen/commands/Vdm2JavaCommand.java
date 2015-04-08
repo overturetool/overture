@@ -331,7 +331,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 		javaSettings.setClassesToSkip(classesToSkip);
 		javaSettings.setJavaRootPackage(javaPackage);
 		
-		if (!GeneralCodeGenUtils.isValidJavaPackage(javaSettings.getJavaRootPackage()))
+		if (!JavaCodeGenUtil.isValidJavaPackage(javaSettings.getJavaRootPackage()))
 		{
 			javaSettings.setJavaRootPackage(project.getName());
 

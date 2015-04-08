@@ -38,7 +38,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
 import org.osgi.service.prefs.Preferences;
-import org.overture.codegen.utils.GeneralCodeGenUtils;
+import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.ide.plugins.codegen.Activator;
 import org.overture.ide.plugins.codegen.ICodeGenConstants;
 import org.overture.ide.plugins.codegen.util.PluginVdm2JavaUtil;
@@ -135,7 +135,7 @@ public class WorkbenchPreferencePageJavaCodeGen extends PreferencePage implement
 		{
 			// The project name will be used as the package
 		}
-		else if(GeneralCodeGenUtils.isValidJavaPackage(javaPackage))
+		else if(JavaCodeGenUtil.isValidJavaPackage(javaPackage))
 		{
 			store.setDefault(ICodeGenConstants.JAVA_PACKAGE, javaPackage);
 		}

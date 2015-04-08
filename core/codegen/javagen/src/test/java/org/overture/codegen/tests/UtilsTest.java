@@ -4,55 +4,55 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-import org.overture.codegen.utils.GeneralCodeGenUtils;
+import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 
 public class UtilsTest
 {
 	@Test
 	public void testValidPackage1()
 	{
-		assertTrue(GeneralCodeGenUtils.isValidJavaPackage("org.overture.codegen.tests"));
+		assertTrue(JavaCodeGenUtil.isValidJavaPackage("org.overture.codegen.tests"));
 	}
 	
 	@Test
 	public void testStartWithCapLetter()
 	{
-		assertTrue(GeneralCodeGenUtils.isValidJavaPackage("Hello.hello"));
+		assertTrue(JavaCodeGenUtil.isValidJavaPackage("Hello.hello"));
 	}
 	
 	@Test
 	public void testEmptyPackage()
 	{
-		assertFalse(GeneralCodeGenUtils.isValidJavaPackage(""));
+		assertFalse(JavaCodeGenUtil.isValidJavaPackage(""));
 	}
 	
 	@Test
 	public void testTwoDotsInPackage()
 	{
-		assertFalse(GeneralCodeGenUtils.isValidJavaPackage("org..overture"));
+		assertFalse(JavaCodeGenUtil.isValidJavaPackage("org..overture"));
 	}
 	
 	@Test
 	public void testNoDotsPackage()
 	{
-		assertTrue(GeneralCodeGenUtils.isValidJavaPackage("myPackage"));
+		assertTrue(JavaCodeGenUtil.isValidJavaPackage("myPackage"));
 	}
 	
 	@Test
 	public void spaceAroundPackage()
 	{
-		assertTrue(GeneralCodeGenUtils.isValidJavaPackage("   org.overture    "));
+		assertTrue(JavaCodeGenUtil.isValidJavaPackage("   org.overture    "));
 	}
 	
 	@Test
 	public void spaceInPackage()
 	{
-		assertFalse(GeneralCodeGenUtils.isValidJavaPackage("org. overture"));
+		assertFalse(JavaCodeGenUtil.isValidJavaPackage("org. overture"));
 	}
 	
 	@Test
 	public void testNumberNamePackage()
 	{
-		assertFalse(GeneralCodeGenUtils.isValidJavaPackage("2be.or.not.to.be"));
+		assertFalse(JavaCodeGenUtil.isValidJavaPackage("2be.or.not.to.be"));
 	}
 }

@@ -37,7 +37,6 @@ import org.overture.codegen.analysis.violations.UnsupportedModelingException;
 import org.overture.codegen.ir.IRSettings;
 import org.overture.codegen.ir.IrNodeInfo;
 import org.overture.codegen.logging.Logger;
-import org.overture.codegen.utils.GeneralCodeGenUtils;
 import org.overture.codegen.utils.GeneralUtils;
 import org.overture.codegen.utils.Generated;
 import org.overture.codegen.utils.GeneratedData;
@@ -128,7 +127,7 @@ public class JavaCodeGenMain
 				{
 					String javaPackage = i.next();
 					
-					if(GeneralCodeGenUtils.isValidJavaPackage(javaPackage))
+					if(JavaCodeGenUtil.isValidJavaPackage(javaPackage))
 					{
 						javaSettings.setJavaRootPackage(javaPackage);
 					}
@@ -264,9 +263,9 @@ public class JavaCodeGenMain
 			if (outputDir != null)
 			{
 				String javaPackage = javaSettings.getJavaRootPackage();
-				if(GeneralCodeGenUtils.isValidJavaPackage(javaPackage))
+				if(JavaCodeGenUtil.isValidJavaPackage(javaPackage))
 				{
-					String packageFolderPath = GeneralCodeGenUtils.getFolderFromJavaRootPackage(javaPackage);
+					String packageFolderPath = JavaCodeGenUtil.getFolderFromJavaRootPackage(javaPackage);
 					outputDir = new File(outputDir, packageFolderPath);
 				}
 			}

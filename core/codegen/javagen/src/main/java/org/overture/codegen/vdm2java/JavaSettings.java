@@ -24,8 +24,6 @@ package org.overture.codegen.vdm2java;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.overture.codegen.utils.GeneralCodeGenUtils;
-
 public class JavaSettings
 {
 	private boolean disableCloning;
@@ -81,7 +79,7 @@ public class JavaSettings
 
 	public void setJavaRootPackage(String javaRootPackage)
 	{
-		if (GeneralCodeGenUtils.isValidJavaPackage(javaRootPackage))
+		if (JavaCodeGenUtil.isValidJavaPackage(javaRootPackage))
 		{
 			this.javaRootPackage = javaRootPackage.trim();
 		}

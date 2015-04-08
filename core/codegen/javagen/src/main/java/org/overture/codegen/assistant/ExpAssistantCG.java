@@ -44,7 +44,6 @@ import org.overture.ast.expressions.SUnaryExp;
 import org.overture.ast.patterns.ASetMultipleBind;
 import org.overture.ast.patterns.PMultipleBind;
 import org.overture.ast.statements.AAssignmentStm;
-import org.overture.ast.statements.AClassInvariantStm;
 import org.overture.ast.types.AIntNumericBasicType;
 import org.overture.ast.types.ANatNumericBasicType;
 import org.overture.ast.types.ANatOneNumericBasicType;

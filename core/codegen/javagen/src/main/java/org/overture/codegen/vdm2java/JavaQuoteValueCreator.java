@@ -26,7 +26,6 @@ import org.overture.codegen.cgast.types.AObjectTypeCG;
 import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
-import org.overture.codegen.utils.GeneralCodeGenUtils;
 
 public class JavaQuoteValueCreator extends JavaClassCreatorBase
 {
@@ -55,7 +54,7 @@ public class JavaQuoteValueCreator extends JavaClassCreatorBase
 		decl.setStatic(false);
 		
 		// The package where the quotes are put is userCode.quotes
-		if(GeneralCodeGenUtils.isValidJavaPackage(userCodePackage))
+		if(JavaCodeGenUtil.isValidJavaPackage(userCodePackage))
 		{
 			String quotePackage = userCodePackage + "." + CodeGenBase.QUOTES;
 			decl.setPackage(quotePackage);

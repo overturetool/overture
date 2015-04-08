@@ -28,7 +28,7 @@ import java.util.List;
 import org.overture.ast.lex.Dialect;
 import org.overture.codegen.ir.CodeGenBase;
 import org.overture.codegen.ir.IRConstants;
-import org.overture.codegen.utils.GeneralCodeGenUtils;
+import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 import org.overture.config.Release;
 import org.overture.config.Settings;
 import org.overture.interpreter.util.InterpreterUtil;
@@ -57,7 +57,7 @@ public class ExecutableSpecTestHandler extends EntryBasedTestHandler
 		
 		if (rootPackage != null)
 		{
-			parent = new File(parent, GeneralCodeGenUtils.getFolderFromJavaRootPackage(rootPackage));
+			parent = new File(parent, JavaCodeGenUtil.getFolderFromJavaRootPackage(rootPackage));
 		}
 		
 		parent.mkdirs();

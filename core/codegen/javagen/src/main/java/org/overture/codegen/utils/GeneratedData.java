@@ -21,7 +21,6 @@
  */
 package org.overture.codegen.utils;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.overture.codegen.analysis.vdm.Renaming;

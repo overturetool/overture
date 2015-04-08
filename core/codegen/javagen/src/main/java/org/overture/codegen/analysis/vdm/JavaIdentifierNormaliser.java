@@ -11,7 +11,7 @@ import org.overture.ast.analysis.DepthFirstAnalysisAdaptor;
 import org.overture.ast.intf.lex.ILexLocation;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.codegen.ir.ITempVarGen;
-import org.overture.codegen.utils.GeneralCodeGenUtils;
+import org.overture.codegen.vdm2java.JavaCodeGenUtil;
 
 public class JavaIdentifierNormaliser extends DepthFirstAnalysisAdaptor
 {
@@ -37,7 +37,7 @@ public class JavaIdentifierNormaliser extends DepthFirstAnalysisAdaptor
 			return;
 		}
 		
-		if(!GeneralCodeGenUtils.isValidJavaIdentifier(node.getName()))
+		if(!JavaCodeGenUtil.isValidJavaIdentifier(node.getName()))
 		{
 			String newName = getReplacementName(node.getName());
 			
@@ -78,7 +78,7 @@ public class JavaIdentifierNormaliser extends DepthFirstAnalysisAdaptor
 		
 		String suggestion = "";
 		
-		if (GeneralCodeGenUtils.isJavaKeyword(invalidName))
+		if (JavaCodeGenUtil.isJavaKeyword(invalidName))
 		{
 			// appending '_' to a Java keyword makes it a valid identifier
 			suggestion = invalidName + "_";
@@ -115,7 +115,7 @@ public class JavaIdentifierNormaliser extends DepthFirstAnalysisAdaptor
 	{
 		// Say we have an invalid name such as s'
 		final String PATCH = "_X_";
-		List<Integer> correctionIndices = GeneralCodeGenUtils.computeJavaIdentifierCorrections(invalidName);
+		List<Integer> correctionIndices = JavaCodeGenUtil.computeJavaIdentifierCorrections(invalidName);
 		
 		String tmp = "";
 		char[] chars = invalidName.toCharArray();
