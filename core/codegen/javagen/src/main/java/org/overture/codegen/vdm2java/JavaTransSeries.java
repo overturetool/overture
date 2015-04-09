@@ -7,7 +7,6 @@ import org.overture.codegen.cgast.declarations.AClassDeclCG;
 import org.overture.codegen.cgast.expressions.AIntLiteralExpCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.traces.JavaCallStmToStringBuilder;
 import org.overture.codegen.traces.TracesTransformation;
 import org.overture.codegen.trans.AssignStmTransformation;
 import org.overture.codegen.trans.CallObjStmTransformation;

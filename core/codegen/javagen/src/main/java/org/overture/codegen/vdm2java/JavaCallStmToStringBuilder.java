@@ -1,4 +1,4 @@
-package org.overture.codegen.traces;
+package org.overture.codegen.vdm2java;
 
 import java.util.LinkedList;
 import java.util.Map;
@@ -17,8 +17,9 @@ import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.AStringTypeCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.logging.Logger;
+import org.overture.codegen.traces.ICallStmToStringMethodBuilder;
+import org.overture.codegen.traces.StoreAssistant;
 import org.overture.codegen.trans.assistants.TransAssistantCG;
-import org.overture.codegen.vdm2java.JavaClassCreatorBase;
 
 public class JavaCallStmToStringBuilder extends JavaClassCreatorBase implements ICallStmToStringMethodBuilder
 {

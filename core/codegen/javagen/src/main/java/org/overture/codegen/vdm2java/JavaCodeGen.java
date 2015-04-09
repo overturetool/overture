@@ -43,7 +43,6 @@ import org.overture.ast.node.INode;
 import org.overture.ast.statements.AIdentifierStateDesignator;
 import org.overture.ast.statements.ANotYetSpecifiedStm;
 import org.overture.codegen.analysis.vdm.IdStateDesignatorDefCollector;
-import org.overture.codegen.analysis.vdm.JavaIdentifierNormaliser;
 import org.overture.codegen.analysis.vdm.NameCollector;
 import org.overture.codegen.analysis.vdm.Renaming;
 import org.overture.codegen.analysis.vdm.UnreachableStmRemover;
