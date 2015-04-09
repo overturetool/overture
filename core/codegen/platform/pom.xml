@@ -44,11 +44,6 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.overturetool.core.codegen</groupId>
-      <artifactId>codegen-runtime</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
       <groupId>org.overturetool.core</groupId>
       <artifactId>testframework</artifactId>
       <version>${project.version}</version>
@@ -57,11 +52,6 @@
       <groupId>org.apache.velocity</groupId>
       <artifactId>velocity</artifactId>
       <version>1.7</version>
-    </dependency>
-    <dependency>
-      <groupId>jalopy</groupId>
-      <artifactId>jalopy</artifactId>
-      <version>1.5rc3</version>
     </dependency>
     <dependency>
       <groupId>org.overturetool.core.combinatorialtesting</groupId>
