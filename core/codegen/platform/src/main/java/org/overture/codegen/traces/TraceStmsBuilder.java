@@ -1,11 +1,11 @@
 package org.overture.codegen.traces;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.collections4.map.HashedMap;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.SObjectDesignatorCG;
@@ -94,7 +94,7 @@ public class TraceStmsBuilder extends AnswerAdaptor<TraceNodeData>
 		this.tracePrefixes = tracePrefixes;
 		this.traceEnclosingClass = traceEnclosingClass;
 		
-		this.idConstNameMap = new HashedMap<String, String>();
+		this.idConstNameMap = new HashMap<String, String>();
 
 		this.storeAssistant = new StoreAssistant(tracePrefixes, idConstNameMap, transAssistant);
 	}
