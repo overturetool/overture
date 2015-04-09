@@ -20,6 +20,7 @@
 
   <modules>
     <module>ir</module>
+    <module>platform</module>
     <module>javagen</module>
     <module>codegen-runtime</module>
     <module>codegen-maven-plugin</module>
