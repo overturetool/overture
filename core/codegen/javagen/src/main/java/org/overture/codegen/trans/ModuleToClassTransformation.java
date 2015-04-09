@@ -1,7 +1,5 @@
 package org.overture.codegen.trans;
 
-import org.overture.ast.modules.AModuleModules;
-import org.overture.ast.types.AClassType;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SDeclCG;
 import org.overture.codegen.cgast.SExpCG;
@@ -20,9 +18,7 @@ import org.overture.codegen.cgast.expressions.AEqualsBinaryExpCG;
 import org.overture.codegen.cgast.expressions.AExplicitVarExpCG;
 import org.overture.codegen.cgast.expressions.AFieldExpCG;
 import org.overture.codegen.cgast.expressions.AIdentifierVarExpCG;
-import org.overture.codegen.cgast.expressions.SVarExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
-import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
 import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.logging.Logger;

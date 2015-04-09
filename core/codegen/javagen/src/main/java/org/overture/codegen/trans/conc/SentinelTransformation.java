@@ -17,14 +17,19 @@ import org.overture.codegen.cgast.statements.APlainCallStmCG;
 import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
+import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.vdm2java.JavaFormat;
 
 
 public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 {
 	private IRInfo info;
 	private List<AClassDeclCG> classes;
+	
+	// TODO: If this is suppose to be a general transformation then the integer type
+	// can not be stored like this. Instead it could be passed as a parameter to the
+	// transformation
+	private String INTTYPE = "int";
 
 	public SentinelTransformation(IRInfo info, List<AClassDeclCG> classes)
 	{
@@ -40,7 +45,6 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 		{
 			return;
 		}
-
 
 		AClassDeclCG innerClass = new AClassDeclCG();
 		innerClass.setStatic(true);
@@ -80,7 +84,7 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 			}
 			else{
 				//Set up of the int type of the fields.
-				String intTypeName = JavaFormat.JAVA_INT;
+				String intTypeName = INTTYPE;
 				AExternalTypeCG intBasicType = new AExternalTypeCG();
 				//intBasicType.setName(intTypeName);
 				intBasicType.setName(intTypeName);
@@ -88,7 +92,7 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 				AFieldDeclCG field = new AFieldDeclCG();
 
 				field.setName(method.getName());
-				field.setAccess(JavaFormat.JAVA_PUBLIC);
+				field.setAccess(IRConstants.PUBLIC);
 				field.setFinal(true);
 				field.setType(intBasicType);
 				field.setStatic(true);
@@ -106,7 +110,7 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 		}
 
 		//setting up initial values
-		String intTypeName = JavaFormat.JAVA_INT;
+		String intTypeName = INTTYPE;
 		AExternalTypeCG intBasicType = new AExternalTypeCG();
 		//intBasicType.setName(intTypeName);
 		intBasicType.setName(intTypeName);
@@ -163,7 +167,7 @@ public class SentinelTransformation extends DepthFirstAnalysisAdaptor
 
 		method_con.setName(innerClass.getName());
 		method_con.setIsConstructor(true);
-		method_con.setAccess(JavaFormat.JAVA_PUBLIC);
+		method_con.setAccess(IRConstants.PUBLIC);
 
 		AFormalParamLocalParamCG formalParam = new AFormalParamLocalParamCG();
 		formalParam.setType(evalPpType);

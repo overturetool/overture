@@ -37,9 +37,9 @@ import org.overture.codegen.cgast.types.AExternalTypeCG;
 import org.overture.codegen.cgast.types.AIntNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.AMethodTypeCG;
 import org.overture.codegen.cgast.types.AVoidTypeCG;
+import org.overture.codegen.ir.IRConstants;
 import org.overture.codegen.ir.IRGeneratedTag;
 import org.overture.codegen.ir.IRInfo;
-import org.overture.codegen.vdm2java.JavaFormat;
 
 /**
  * @author gkanos
@@ -83,7 +83,7 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 		AFieldDeclCG sentinelfld = new AFieldDeclCG();
 		sentinelfld.setName("sentinel");
 		sentinelfld.setType(sentType);
-		sentinelfld.setAccess(JavaFormat.JAVA_PUBLIC);
+		sentinelfld.setAccess(IRConstants.PUBLIC);
 		sentinelfld.setVolatile(true);
 		sentinelfld.setStatic(false);
 		
@@ -180,7 +180,7 @@ public class MainClassConcTransformation extends DepthFirstAnalysisAdaptor
 		methType.setResult(new ABoolBasicTypeCG());
 		
 		AMethodDeclCG evaluatePPmethod = new AMethodDeclCG();
-		evaluatePPmethod.setAccess(JavaFormat.JAVA_PUBLIC);
+		evaluatePPmethod.setAccess(IRConstants.PUBLIC);
 		evaluatePPmethod.setName("evaluatePP");
 		evaluatePPmethod.setMethodType(methType);
 		
