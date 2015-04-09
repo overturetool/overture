@@ -28,9 +28,11 @@ import java.util.Set;
 import org.overture.ast.analysis.AnalysisException;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.expressions.PExp;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.codegen.cgast.INode;
 import org.overture.codegen.cgast.SExpCG;
 import org.overture.codegen.cgast.declarations.AClassDeclCG;
+import org.overture.codegen.cgast.declarations.AModuleDeclCG;
 import org.overture.codegen.logging.ILogger;
 import org.overture.codegen.logging.Logger;
 import org.overture.codegen.trans.ITotalTransformation;
@@ -50,17 +52,31 @@ public class IRGenerator
 		codeGenInfo.clear();
 	}
 
-	public IRStatus<INode> generateFrom(SClassDefinition classDef)
+	public IRStatus<INode> generateFrom(org.overture.ast.node.INode node)
 			throws AnalysisException
 	{
 		codeGenInfo.clearNodes();
 
-		AClassDeclCG classCg = classDef.apply(codeGenInfo.getClassVisitor(), codeGenInfo);
-		Set<VdmNodeInfo> unsupportedNodes = new HashSet<VdmNodeInfo>(codeGenInfo.getUnsupportedNodes());
-
-		return new IRStatus<INode>(classDef.getName().getName(), classCg, unsupportedNodes);
+		if(node instanceof SClassDefinition)
+		{
+			AClassDeclCG classCg = node.apply(codeGenInfo.getClassVisitor(), codeGenInfo);
+			Set<VdmNodeInfo> unsupportedNodes = new HashSet<VdmNodeInfo>(codeGenInfo.getUnsupportedNodes());
+			String name = ((SClassDefinition) node).getName().getName();
+			
+			return new IRStatus<INode>(name, classCg, unsupportedNodes);
+		}
+		else if(node instanceof AModuleModules)
+		{
+			AModuleDeclCG module = node.apply(codeGenInfo.getModuleVisitor(), codeGenInfo);
+			Set<VdmNodeInfo> unsupportedNodes = new HashSet<VdmNodeInfo>(codeGenInfo.getUnsupportedNodes());
+			String name = ((AModuleModules) node).getName().getName();
+			
+			return new IRStatus<INode>(name, module, unsupportedNodes);
+		}
+		
+		return null;
 	}
-
+	
 	public void applyPartialTransformation(IRStatus<? extends INode> status,
 			org.overture.codegen.cgast.analysis.intf.IAnalysis transformation)
 			throws org.overture.codegen.cgast.analysis.AnalysisException

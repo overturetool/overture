@@ -30,12 +30,15 @@ import org.overture.ast.definitions.AClassClassDefinition;
 import org.overture.ast.definitions.AInheritedDefinition;
 import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.ALocalDefinition;
+import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.PDefinition;
 import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.definitions.SFunctionDefinition;
 import org.overture.ast.definitions.SOperationDefinition;
 import org.overture.ast.expressions.*;
 import org.overture.ast.intf.lex.ILexToken;
+import org.overture.ast.lex.Dialect;
+import org.overture.ast.modules.AModuleModules;
 import org.overture.ast.patterns.AIdentifierPattern;
 import org.overture.ast.patterns.ASetBind;
 import org.overture.ast.patterns.ASetMultipleBind;
@@ -155,6 +158,7 @@ import org.overture.codegen.cgast.expressions.AXorBoolBinaryExpCG;
 import org.overture.codegen.cgast.name.ATypeNameCG;
 import org.overture.codegen.cgast.patterns.ASetBindCG;
 import org.overture.codegen.cgast.patterns.ASetMultipleBindCG;
+import org.overture.codegen.cgast.types.ABoolBasicTypeCG;
 import org.overture.codegen.cgast.types.AClassTypeCG;
 import org.overture.codegen.cgast.types.ARealNumericBasicTypeCG;
 import org.overture.codegen.cgast.types.ARecordTypeCG;
@@ -162,9 +166,17 @@ import org.overture.codegen.cgast.utils.AHeaderLetBeStCG;
 import org.overture.codegen.ir.IRInfo;
 import org.overture.codegen.ir.SourceNode;
 import org.overture.codegen.logging.Logger;
+import org.overture.config.Settings;
 
 public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 {
+	@Override
+	public SExpCG caseAStateInitExp(AStateInitExp node, IRInfo question)
+			throws AnalysisException
+	{
+		return node.getState().getInitExpression().apply(question.getExpVisitor(), question);
+	}
+	
 	@Override
 	public SExpCG caseAUndefinedExp(AUndefinedExp node, IRInfo question)
 			throws AnalysisException
@@ -1213,7 +1225,20 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 	public SExpCG caseAEqualsBinaryExp(AEqualsBinaryExp node, IRInfo question)
 			throws AnalysisException
 	{
-		return question.getExpAssistant().handleBinaryExp(node, new AEqualsBinaryExpCG(), question);
+		SExpCG eqBinExpCg = question.getExpAssistant().handleBinaryExp(node, new AEqualsBinaryExpCG(), question);
+		
+		// TODO: Update the type checker?
+		// PVJ: For some reason the type checker does not decorate the SL
+		// init expression (e.g. s = mk_StateName(1,2).) in state
+		// definitions with a type (the type is null)
+		// So this is really just to prevent null types
+		// in the IR
+		if(eqBinExpCg.getType() == null)
+		{
+			eqBinExpCg.setType(new ABoolBasicTypeCG());
+		}
+		
+		return eqBinExpCg;
 	}
 
 	@Override
@@ -1340,25 +1365,6 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		PType type = node.getType();
 		String name = node.getName().getName();
 
-		SClassDefinition owningClass = varDef.getAncestor(SClassDefinition.class);
-		SClassDefinition nodeParentClass = node.getAncestor(SClassDefinition.class);
-
-		boolean inOwningClass = owningClass == nodeParentClass;
-
-		boolean isLocalDef = varDef instanceof ALocalDefinition;
-		boolean isInstanceVarDef = varDef instanceof AInstanceVariableDefinition;
-		boolean isExplOp = varDef instanceof SOperationDefinition;
-		boolean isExplFunc = varDef instanceof SFunctionDefinition;
-		boolean isAssignmentDef = varDef instanceof AAssignmentDefinition;
-
-		boolean isDefInOwningClass = inOwningClass
-				&& (isLocalDef || isInstanceVarDef || isExplOp || isExplFunc || isAssignmentDef);
-
-		boolean explicit = node.getName().getExplicit();
-		boolean isImplicit = !explicit;
-
-		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
-
 		PDefinition unfolded = varDef;
 		
 		while(unfolded instanceof AInheritedDefinition)
@@ -1369,56 +1375,111 @@ public class ExpVisitorCG extends AbstractVisitorCG<IRInfo, SExpCG>
 		boolean isLambda = question.getTcFactory().createPTypeAssistant().isFunction(type)
 				&& !(unfolded instanceof SFunctionDefinition);
 		
-		boolean isInheritedDef = varDef instanceof AInheritedDefinition;
-
-		if(isExplOp && !isDefInOwningClass && !question.getTcFactory().createPDefinitionAssistant().isStatic(varDef))
+		boolean explicit = node.getName().getExplicit();
+		
+		STypeCG typeCg = type.apply(question.getTypeVisitor(), question);
+		
+		if(Settings.dialect == Dialect.VDM_PP || Settings.dialect == Dialect.VDM_RT)
 		{
-			ASuperVarExpCG superVarExp = new ASuperVarExpCG();
-
-			superVarExp.setType(typeCg);
-			superVarExp.setIsLocal(isLocalDef);
-			superVarExp.setName(name);
-			superVarExp.setIsLambda(isLambda);
-
-			return superVarExp;
+			SClassDefinition owningClass = varDef.getAncestor(SClassDefinition.class);
+			SClassDefinition nodeParentClass = node.getAncestor(SClassDefinition.class);
+			
+			boolean inOwningClass = owningClass == nodeParentClass;
+	
+			boolean isLocalDef = varDef instanceof ALocalDefinition;
+			boolean isInstanceVarDef = varDef instanceof AInstanceVariableDefinition;
+			boolean isExplOp = varDef instanceof SOperationDefinition;
+			boolean isExplFunc = varDef instanceof SFunctionDefinition;
+			boolean isAssignmentDef = varDef instanceof AAssignmentDefinition;
+	
+			boolean isDefInOwningClass = inOwningClass
+					&& (isLocalDef || isInstanceVarDef || isExplOp || isExplFunc || isAssignmentDef);
+			
+			boolean isImplicit = !explicit;
+	
+			boolean isInheritedDef = varDef instanceof AInheritedDefinition;
+	
+			if(isExplOp && !isDefInOwningClass && !question.getTcFactory().createPDefinitionAssistant().isStatic(varDef))
+			{
+				ASuperVarExpCG superVarExp = new ASuperVarExpCG();
+	
+				superVarExp.setType(typeCg);
+				superVarExp.setIsLocal(isLocalDef);
+				superVarExp.setName(name);
+				superVarExp.setIsLambda(isLambda);
+	
+				return superVarExp;
+			}
+			else if (owningClass == null
+					|| nodeParentClass == null
+					|| isDefInOwningClass
+					|| isInheritedDef
+					|| isImplicit
+					|| explicit
+					&& !question.getTcFactory().createPDefinitionAssistant().isStatic(varDef))
+			{
+				return consIdVar(name, isLambda, typeCg, isLocalDef);
+			} else if (explicit)
+			{
+				return consExplicitVar(node.getName().getModule(), name, isLambda, typeCg, isLocalDef);
+			} else
+			{
+				question.addUnsupportedNode(node, "Reached unexpected case when generating a variable expression in a PP model in '" + this.getClass().getSimpleName() + "'");
+				return null;
+			}
 		}
-		else if (owningClass == null
-				|| nodeParentClass == null
-				|| isDefInOwningClass
-				|| isInheritedDef
-				|| isImplicit
-				|| explicit
-				&& !question.getTcFactory().createPDefinitionAssistant().isStatic(varDef))
+		else if(Settings.dialect == Dialect.VDM_SL)
 		{
-			AIdentifierVarExpCG varExp = new AIdentifierVarExpCG();
-
-			varExp.setType(typeCg);
-			varExp.setIsLocal(isLocalDef);
-			varExp.setName(name);
-			varExp.setIsLambda(isLambda);
-
-			return varExp;
-		} else if (explicit)
+			AModuleModules owningModule = varDef.getAncestor(AModuleModules.class);
+			AModuleModules nodeParentModule = node.getAncestor(AModuleModules.class);
+			
+			boolean inOwningModule = owningModule == nodeParentModule;
+			boolean isLocalDef = varDef.getAncestor(AStateDefinition.class) == null;
+			
+			if(inOwningModule)
+			{
+				return consIdVar(name, isLambda, typeCg, isLocalDef);
+			}
+			else
+			{
+				return consExplicitVar(node.getName().getModule(), name, isLambda, typeCg, isLocalDef);
+			}
+		}
+		else
 		{
-			AExplicitVarExpCG varExp = new AExplicitVarExpCG();
-
-			String className = node.getName().getModule();
-
-			AClassTypeCG classType = new AClassTypeCG();
-			classType.setName(className);
-
-			varExp.setType(typeCg);
-			varExp.setIsLocal(isLocalDef);
-			varExp.setClassType(classType);
-			varExp.setName(name);
-			varExp.setIsLambda(isLambda);
-
-			return varExp;
-		} else
-		{
-			question.addUnsupportedNode(node, "Reached unexpected case when generating a variable expression");
+			Logger.getLog().printErrorln("Got unexpected dialect " + Settings.dialect + " in '" + this.getClass().getSimpleName() + "'");
 			return null;
 		}
+	}
+
+	private SExpCG consExplicitVar(String className, String name, boolean isLambda,
+			STypeCG typeCg, boolean isLocalDef)
+	{
+		AExplicitVarExpCG varExp = new AExplicitVarExpCG();
+
+		AClassTypeCG classType = new AClassTypeCG();
+		classType.setName(className);
+
+		varExp.setType(typeCg);
+		varExp.setIsLocal(isLocalDef);
+		varExp.setClassType(classType);
+		varExp.setName(name);
+		varExp.setIsLambda(isLambda);
+
+		return varExp;
+	}
+
+	private SExpCG consIdVar(String name, boolean isLambda, STypeCG typeCg,
+			boolean isLocalDef)
+	{
+		AIdentifierVarExpCG varExp = new AIdentifierVarExpCG();
+
+		varExp.setType(typeCg);
+		varExp.setIsLocal(isLocalDef);
+		varExp.setName(name);
+		varExp.setIsLambda(isLambda);
+
+		return varExp;
 	}
 
 	@Override

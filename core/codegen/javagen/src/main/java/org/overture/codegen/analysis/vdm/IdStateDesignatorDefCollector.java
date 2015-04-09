@@ -16,7 +16,6 @@ import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.AThreadDefinition;
 import org.overture.ast.definitions.AValueDefinition;
 import org.overture.ast.definitions.PDefinition;
-import org.overture.ast.definitions.SClassDefinition;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.node.INode;
 import org.overture.ast.statements.ABlockSimpleBlockStm;
@@ -47,14 +46,14 @@ public class IdStateDesignatorDefCollector extends VdmAnalysis
 		this.af = af;
 	}
 	
-	public static Map<AIdentifierStateDesignator, PDefinition> getIdDefs(List<SClassDefinition> classes, ITypeCheckerAssistantFactory af) throws AnalysisException
+	public static Map<AIdentifierStateDesignator, PDefinition> getIdDefs(List<? extends INode> classes, ITypeCheckerAssistantFactory af) throws AnalysisException
 	{
 		Map<AIdentifierStateDesignator, PDefinition> allDefs = new HashMap<>();
 		
-		for(SClassDefinition clazz : classes)
+		for(INode node : classes)
 		{
-			IdStateDesignatorDefCollector collector = new IdStateDesignatorDefCollector(clazz, af);
-			clazz.apply(collector);
+			IdStateDesignatorDefCollector collector = new IdStateDesignatorDefCollector(node, af);
+			node.apply(collector);
 			allDefs.putAll(collector.idDefs);
 		}
 		

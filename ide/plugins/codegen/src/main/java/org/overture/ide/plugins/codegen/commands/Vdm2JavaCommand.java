@@ -328,7 +328,7 @@ public class Vdm2JavaCommand extends AbstractHandler
 		
 		JavaSettings javaSettings = new JavaSettings();
 		javaSettings.setDisableCloning(disableCloning);
-		javaSettings.setClassesToSkip(classesToSkip);
+		javaSettings.setModulesToSkip(classesToSkip);
 		javaSettings.setJavaRootPackage(javaPackage);
 		
 		if (!JavaCodeGenUtil.isValidJavaPackage(javaSettings.getJavaRootPackage()))

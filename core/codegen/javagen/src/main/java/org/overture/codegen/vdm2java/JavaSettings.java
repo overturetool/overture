@@ -27,28 +27,28 @@ import java.util.List;
 public class JavaSettings
 {
 	private boolean disableCloning;
-	private List<String> classesToSkip;
+	private List<String> modulesToSkip;
 	private String vdmEntryExp;
 	private String javaRootPackage;
 	
 	public JavaSettings()
 	{
 		this.disableCloning = false;
-		this.classesToSkip = new LinkedList<String>();
+		this.modulesToSkip = new LinkedList<String>();
 		this.vdmEntryExp = null;
 		this.javaRootPackage = null;
 	}
 	
-	public List<String> getClassesToSkip()
+	public List<String> getModulesToSkip()
 	{
-		return classesToSkip;
+		return modulesToSkip;
 	}
 
-	public void setClassesToSkip(List<String> classesToSkip)
+	public void setModulesToSkip(List<String> modulesToSkip)
 	{
-		if (classesToSkip != null)
+		if (modulesToSkip != null)
 		{
-			this.classesToSkip = classesToSkip;
+			this.modulesToSkip = modulesToSkip;
 		}
 	}
 

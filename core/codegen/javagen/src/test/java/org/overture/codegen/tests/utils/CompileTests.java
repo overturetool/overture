@@ -44,6 +44,7 @@ import org.overture.codegen.tests.PackageTest;
 import org.overture.codegen.tests.PatternTest;
 import org.overture.codegen.tests.PrePostTest;
 import org.overture.codegen.tests.RtTest;
+import org.overture.codegen.tests.SlTest;
 import org.overture.codegen.tests.SpecificationTest;
 import org.overture.codegen.tests.TracesExpansionTest;
 import org.overture.codegen.tests.TracesVerdictTest;
@@ -72,6 +73,7 @@ public class CompileTests
 	private static final String RESULT_FILE_EXTENSION = ".result";
 
 	public static final boolean RUN_EXP_TESTS = true;
+	public static final boolean RUN_SL_TESTS = true;
 	public static final boolean RUN_COMPLEX_EXP_TESTS = true;
 	public static final boolean RUN_NON_EXECUTING_VDM10_SPEC_TESTS = true;
 	public static final boolean RUN_FUNCTION_VALUE_TESTS = true;
@@ -119,6 +121,11 @@ public class CompileTests
 		if (RUN_EXP_TESTS)
 		{
 			runExpTests();
+		}
+		
+		if(RUN_SL_TESTS)
+		{
+			runSlTests();
 		}
 
 		if (RUN_COMPLEX_EXP_TESTS)
@@ -215,6 +222,20 @@ public class CompileTests
 
 		System.out.println("Time: "
 				+ String.format("%02d:%02d", minutes, seconds) + ".");
+	}
+
+	private void runSlTests() throws IOException
+	{
+		System.out.println("Beginning SL tests..\n");
+
+		testInputFiles = TestUtils.getTestInputFiles(new File(SlTest.ROOT));
+		resultFiles = TestUtils.getFiles(new File(SlTest.ROOT), RESULT_FILE_EXTENSION);
+
+		runTests(testInputFiles, resultFiles, new ExecutableSpecTestHandler(Release.VDM_10, Dialect.VDM_SL), false);
+
+		System.out.println("\n********");
+		System.out.println("Finished with SL tests");
+		System.out.println("********\n");		
 	}
 
 	private void runTraceVerdictTests() throws IOException

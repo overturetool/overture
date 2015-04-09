@@ -35,6 +35,7 @@ import org.overture.ast.definitions.AInstanceVariableDefinition;
 import org.overture.ast.definitions.AMutexSyncDefinition;
 import org.overture.ast.definitions.ANamedTraceDefinition;
 import org.overture.ast.definitions.APerSyncDefinition;
+import org.overture.ast.definitions.AStateDefinition;
 import org.overture.ast.definitions.AThreadDefinition;
 import org.overture.ast.definitions.ATypeDefinition;
 import org.overture.ast.definitions.AValueDefinition;
@@ -43,6 +44,7 @@ import org.overture.ast.expressions.PExp;
 import org.overture.ast.intf.lex.ILexNameToken;
 import org.overture.ast.patterns.PPattern;
 import org.overture.ast.statements.PStm;
+import org.overture.ast.types.AAccessSpecifierAccessSpecifier;
 import org.overture.ast.types.AFieldField;
 import org.overture.ast.types.ANamedInvariantType;
 import org.overture.ast.types.AOperationType;
@@ -64,6 +66,7 @@ import org.overture.codegen.cgast.declarations.ANamedTraceDeclCG;
 import org.overture.codegen.cgast.declarations.ANamedTypeDeclCG;
 import org.overture.codegen.cgast.declarations.APersyncDeclCG;
 import org.overture.codegen.cgast.declarations.ARecordDeclCG;
+import org.overture.codegen.cgast.declarations.AStateDeclCG;
 import org.overture.codegen.cgast.declarations.AThreadDeclCG;
 import org.overture.codegen.cgast.declarations.ATypeDeclCG;
 import org.overture.codegen.cgast.expressions.ALambdaExpCG;
@@ -79,6 +82,68 @@ import org.overture.codegen.logging.Logger;
 
 public class DeclVisitorCG extends AbstractVisitorCG<IRInfo, SDeclCG>
 {
+	@Override
+	public SDeclCG caseAStateDefinition(AStateDefinition node, IRInfo question)
+			throws AnalysisException
+	{
+		AAccessSpecifierAccessSpecifier access = node.getAccess();
+		ILexNameToken name = node.getName();
+		AExplicitFunctionDefinition initdef = node.getInitdef();
+		PExp initExp = node.getInitExpression();
+		PPattern initPattern = node.getInitPattern();
+		AExplicitFunctionDefinition invdef = node.getInvdef();
+		PExp invExp = node.getInvExpression();
+		PPattern invPattern = node.getInvPattern();
+
+		String accessCg = access.getAccess().toString();
+		String nameCg = name != null ? name.getName() : null;
+		SDeclCG initDeclCg = initdef != null ? initdef.apply(question.getDeclVisitor(), question)
+				: null;
+		SExpCG initExpCg = initExp != null ? initExp.apply(question.getExpVisitor(), question)
+				: null;
+		SPatternCG initPatternCg = initPattern != null ? initPattern.apply(question.getPatternVisitor(), question)
+				: null;
+		SDeclCG invDeclCg = invdef != null ? invdef.apply(question.getDeclVisitor(), question)
+				: null;
+		SExpCG invExpCg = invExp != null ? invExp.apply(question.getExpVisitor(), question)
+				: null;
+		SPatternCG invPatternCg = invPattern != null ? invPattern.apply(question.getPatternVisitor(), question)
+				: null;
+
+		AStateDeclCG stateDeclCg = new AStateDeclCG();
+		stateDeclCg.setAccess(accessCg);
+		stateDeclCg.setName(nameCg);
+
+		if (initDeclCg instanceof AFuncDeclCG)
+		{
+			stateDeclCg.setInitDecl((AFuncDeclCG) initDeclCg);
+		}
+		stateDeclCg.setInitExp(initExpCg);
+		stateDeclCg.setInitPattern(initPatternCg);
+
+		if (invDeclCg instanceof AFuncDeclCG)
+		{
+			stateDeclCg.setInvDecl((AFuncDeclCG) invDeclCg);
+		}
+		stateDeclCg.setInvExp(invExpCg);
+		stateDeclCg.setInvPattern(invPatternCg);
+
+		for (AFieldField field : node.getFields())
+		{
+			SDeclCG fieldCg = field.apply(question.getDeclVisitor(), question);
+
+			if (fieldCg instanceof AFieldDeclCG)
+			{
+				stateDeclCg.getFields().add((AFieldDeclCG) fieldCg);
+			} else
+			{
+				return null;
+			}
+		}
+
+		return stateDeclCg;
+	}
+	
 	@Override
 	public SDeclCG caseAClassInvariantDefinition(
 			AClassInvariantDefinition node, IRInfo question)

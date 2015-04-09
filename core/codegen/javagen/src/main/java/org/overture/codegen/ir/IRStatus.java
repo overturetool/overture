@@ -28,7 +28,7 @@ import java.util.Set;
 
 import org.overture.codegen.cgast.INode;
 
-public class IRStatus<T extends INode>
+public final class IRStatus<T extends INode>
 {
 	protected String irNodeName;
 	protected T node;
@@ -99,6 +99,12 @@ public class IRStatus<T extends INode>
 		this.irNodeName = irNodeName;
 	}
 	
+	@Override
+	public String toString()
+	{
+		return getIrNodeName();
+	}
+	
 	public static <T extends INode> IRStatus<T> extract(
 			IRStatus<INode> inputStatus, Class<T> type)
 	{
@@ -114,7 +120,6 @@ public class IRStatus<T extends INode>
 		{
 			return null;
 		}
-
 	}
 
 	public static <T extends INode> List<IRStatus<T>> extract(
@@ -132,6 +137,33 @@ public class IRStatus<T extends INode>
 			}
 		}
 
+		return outputStatuses;
+	}
+	
+	public static <T extends INode> IRStatus<INode> extract(IRStatus<T> inputStatus)
+	{
+		String name = inputStatus.getIrNodeName();
+		INode node = inputStatus.getIrNode();
+		Set<VdmNodeInfo> unsupportedInIr = inputStatus.getUnsupportedInIr();
+		Set<IrNodeInfo> warnings = inputStatus.getTransformationWarnings();
+
+		return new IRStatus<INode>(name, node, unsupportedInIr, warnings);
+	}
+	
+	public static <T extends INode> List<IRStatus<INode>> extract(List<IRStatus<T>> inputStatuses)
+	{
+		List<IRStatus<INode>> outputStatuses = new LinkedList<IRStatus<INode>>();
+		
+		for(IRStatus<T> status : inputStatuses)
+		{
+			IRStatus<INode> converted = extract(status);
+
+			if (converted != null)
+			{
+				outputStatuses.add(converted);
+			}
+		}
+		
 		return outputStatuses;
 	}
 }
