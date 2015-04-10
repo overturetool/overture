@@ -47,88 +47,92 @@ public class ModuleToClassTransformation extends DepthFirstAnalysisAdaptor
 		clazz.setName(node.getName());
 
 		makeStateAccessExplicit(node);
-
-		for (int i = 0; i < node.getDecls().size(); i++)
+		
+		for (SDeclCG decl : node.getDecls())
 		{
 			// Note that this declaration is disconnected from the IR
-			SDeclCG declCopy = node.getDecls().get(i).clone();
+			decl = decl.clone();
 
-			if (declCopy instanceof AMethodDeclCG)
+			if (decl instanceof AMethodDeclCG)
 			{
-				AMethodDeclCG method = (AMethodDeclCG) declCopy;
+				AMethodDeclCG method = (AMethodDeclCG) decl;
 				method.setAccess(IRConstants.PUBLIC);
 				method.setStatic(true);
 
 				clazz.getMethods().add(method);
 
-			} else if (declCopy instanceof AFuncDeclCG)
+			} else if (decl instanceof AFuncDeclCG)
 			{
 				// Functions are static by definition
-				AFuncDeclCG func = (AFuncDeclCG) declCopy;
+				AFuncDeclCG func = (AFuncDeclCG) decl;
 				func.setAccess(IRConstants.PUBLIC);
 
 				clazz.getFunctions().add(func);
 
-			} else if (declCopy instanceof ATypeDeclCG)
+			} else if (decl instanceof ATypeDeclCG)
 			{
-				ATypeDeclCG typeDecl = (ATypeDeclCG) declCopy;
+				ATypeDeclCG typeDecl = (ATypeDeclCG) decl;
 				typeDecl.setAccess(IRConstants.PUBLIC);
 
 				clazz.getTypeDecls().add(typeDecl);
 
-			} else if (declCopy instanceof AStateDeclCG)
+			} else if (decl instanceof AStateDeclCG)
 			{
-				AStateDeclCG stateDecl = (AStateDeclCG) declCopy;
-
-				ARecordDeclCG record = new ARecordDeclCG();
-				record.setName(stateDecl.getName());
-
-				for (AFieldDeclCG field : stateDecl.getFields())
-				{
-					record.getFields().add(field.clone());
-				}
-
-				ATypeDeclCG typeDecl = new ATypeDeclCG();
-				typeDecl.setAccess(IRConstants.PUBLIC);
-				typeDecl.setDecl(record);
-
-				clazz.getTypeDecls().add(typeDecl);
-
-				ATypeNameCG typeName = new ATypeNameCG();
-				typeName.setName(stateDecl.getName());
-				typeName.setDefiningClass(clazz.getName());
-
-				ARecordTypeCG stateType = new ARecordTypeCG();
-				stateType.setName(typeName);
-
-				AFieldDeclCG stateField = new AFieldDeclCG();
-				stateField.setAccess(IRConstants.PRIVATE);
-				stateField.setFinal(true);
-				// We need the context the declaration appears in so we cannot use the copy
-				stateField.setInitial(getInitExp((AStateDeclCG) node.getDecls().get(i)));
-				stateField.setName(stateDecl.getName());
-				stateField.setStatic(true);
-				stateField.setType(stateType);
-				stateField.setVolatile(false);
-
-				clazz.getFields().add(stateField);
-
-			} else if (declCopy instanceof ANamedTraceDeclCG)
+				// Handle this as the last thing since it may depend on value definitions
+				continue;
+			} else if (decl instanceof ANamedTraceDeclCG)
 			{
-				clazz.getTraces().add((ANamedTraceDeclCG) declCopy);
+				clazz.getTraces().add((ANamedTraceDeclCG) decl);
 
-			} else if (declCopy instanceof AFieldDeclCG)
+			} else if (decl instanceof AFieldDeclCG)
 			{
-				AFieldDeclCG field = (AFieldDeclCG) declCopy;
+				AFieldDeclCG field = (AFieldDeclCG) decl;
 				field.setStatic(true);
 
 				clazz.getFields().add(field);
 			} else
 			{
 				Logger.getLog().printErrorln("Got unexpected declaration: "
-						+ declCopy + " in '" + this.getClass().getSimpleName()
+						+ decl + " in '" + this.getClass().getSimpleName()
 						+ "'");
 			}
+		}
+		
+		AStateDeclCG stateDecl = getStateDecl(node);
+
+		if (stateDecl != null)
+		{
+			ARecordDeclCG record = new ARecordDeclCG();
+			record.setName(stateDecl.getName());
+
+			for (AFieldDeclCG field : stateDecl.getFields())
+			{
+				record.getFields().add(field.clone());
+			}
+
+			ATypeDeclCG typeDecl = new ATypeDeclCG();
+			typeDecl.setAccess(IRConstants.PUBLIC);
+			typeDecl.setDecl(record);
+
+			clazz.getTypeDecls().add(typeDecl);
+
+			ATypeNameCG typeName = new ATypeNameCG();
+			typeName.setName(stateDecl.getName());
+			typeName.setDefiningClass(clazz.getName());
+
+			ARecordTypeCG stateType = new ARecordTypeCG();
+			stateType.setName(typeName);
+
+			AFieldDeclCG stateField = new AFieldDeclCG();
+			stateField.setAccess(IRConstants.PRIVATE);
+			stateField.setFinal(true);
+			stateField.setInitial(getInitExp(stateDecl));
+			stateField.setName(stateDecl.getName());
+			stateField.setStatic(true);
+			stateField.setType(stateType);
+			stateField.setVolatile(false);
+
+			clazz.getFields().add(stateField);
 		}
 	}
 
